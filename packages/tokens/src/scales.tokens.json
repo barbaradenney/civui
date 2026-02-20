@@ -1,0 +1,39 @@
+{
+  "$description": "CivDS contextual type & spacing scales — content (editorial), product (default), compact (admin)",
+  "scales": {
+    "content": {
+      "$description": "Editorial, reading-heavy, public-facing. Fluid responsive via clamp().",
+      "ratio": { "min": 1.2, "max": 1.333 },
+      "basePx": { "min": 16, "max": 18 },
+      "viewportPx": { "min": 320, "max": 1200 },
+      "spacingFactor": 1.25,
+      "lineHeight": { "body": 1.6, "heading": 1.3 }
+    },
+    "product": {
+      "$description": "Standard UI, forms, applications. This is the default scale.",
+      "ratio": 1.2,
+      "basePx": 16,
+      "spacingFactor": 1,
+      "lineHeight": { "body": 1.5, "heading": 1.2 }
+    },
+    "compact": {
+      "$description": "Admin dashboards, data tables, power users.",
+      "ratio": 1.125,
+      "basePx": 14,
+      "spacingFactor": 0.75,
+      "lineHeight": { "body": 1.4, "heading": 1.15 }
+    }
+  },
+  "fontSizeSteps": [
+    { "step": -2, "name": "xs" },
+    { "step": -1, "name": "sm" },
+    { "step": 0, "name": "base" },
+    { "step": 1, "name": "lg" },
+    { "step": 2, "name": "xl" },
+    { "step": 3, "name": "2xl" },
+    { "step": 4, "name": "3xl" },
+    { "step": 5, "name": "4xl" },
+    { "step": 6, "name": "5xl" }
+  ],
+  "spacingTokens": ["1", "2", "3", "4", "5", "6", "8", "10", "12", "16", "20"]
+}

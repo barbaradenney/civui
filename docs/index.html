@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CivDS - Civic Design System</title>
+  <title>CivUI - Civic Design System</title>
   <style>
     :root {
       --color-primary: #005ea2;
@@ -144,7 +144,7 @@
 </head>
 <body>
   <div class="hero">
-    <h1>CivDS</h1>
+    <h1>CivUI</h1>
     <p>Accessibility-first web components for modern government applications. Built with Lit, Light DOM, and ElementInternals.</p>
     <div class="hero-badges">
       <span class="badge">Light DOM</span>
@@ -155,27 +155,27 @@
     <div class="hero-links">
       <a href="./storybook/" class="hero-link hero-link--primary">Web Components Storybook</a>
       <a href="./react-native/" class="hero-link hero-link--secondary">React Native Storybook</a>
-      <a href="https://github.com/barbaradenney/civds" class="hero-link hero-link--secondary">GitHub</a>
+      <a href="https://github.com/barbaradenney/civui" class="hero-link hero-link--secondary">GitHub</a>
     </div>
   </div>
 
   <div class="content">
     <h2>Quick Start</h2>
-    <pre><code>npm install @civds/forms
+    <pre><code>npm install @civui/forms
 
 # Use in HTML
 &lt;script type="module"&gt;
-  import '@civds/forms';
+  import '@civui/forms';
 &lt;/script&gt;
 
-&lt;civds-text-input
+&lt;civ-text-input
   label="Email address"
   name="email"
   type="email"
   required
-&gt;&lt;/civds-text-input&gt;</code></pre>
+&gt;&lt;/civ-text-input&gt;</code></pre>
 
-    <h2>Why CivDS?</h2>
+    <h2>Why CivUI?</h2>
     <div class="features">
       <div class="feature">
         <h3>Accessibility First</h3>
@@ -198,64 +198,64 @@
     <h2>Packages</h2>
     <div class="packages">
       <div class="package-card">
-        <h3>@civds/tokens</h3>
+        <h3>@civui/tokens</h3>
         <p>Design tokens in W3C DTCG format. Outputs CSS custom properties, Tailwind preset, JS constants, and React Native values.</p>
       </div>
       <div class="package-card">
-        <h3>@civds/core</h3>
-        <p>Base classes (CivdsBaseElement, CivdsFormElement), accessibility utilities, and shared helpers.</p>
+        <h3>@civui/core</h3>
+        <p>Base classes (CivBaseElement, CivFormElement), accessibility utilities, and shared helpers.</p>
       </div>
       <div class="package-card">
-        <h3>@civds/forms</h3>
+        <h3>@civui/forms</h3>
         <p>Form components: text-input, textarea, select, checkbox, radio, combobox, date-input, file-upload, and more.</p>
       </div>
       <div class="package-card">
-        <h3>@civds/react-native</h3>
+        <h3>@civui/react-native</h3>
         <p>React Native companion with matching API. TextInput, Textarea, Select, Checkbox, Radio, and useForm() hook.</p>
       </div>
       <div class="package-card">
-        <h3>@civds/cli</h3>
+        <h3>@civui/cli</h3>
         <p>Developer CLI for generating components, building, testing, validating, and releasing.</p>
       </div>
       <div class="package-card">
-        <h3>@civds/test-utils</h3>
+        <h3>@civui/test-utils</h3>
         <p>Shared test utilities for component testing with Vitest and jsdom.</p>
       </div>
     </div>
 
     <h2>Form Example</h2>
     <pre><code>&lt;form&gt;
-  &lt;civds-text-input label="Full name" name="name" required&gt;&lt;/civds-text-input&gt;
-  &lt;civds-text-input label="Email" name="email" type="email" required&gt;&lt;/civds-text-input&gt;
-  &lt;civds-select label="State" name="state" .options=&quot;${JSON.stringify([
+  &lt;civ-text-input label="Full name" name="name" required&gt;&lt;/civ-text-input&gt;
+  &lt;civ-text-input label="Email" name="email" type="email" required&gt;&lt;/civ-text-input&gt;
+  &lt;civ-select label="State" name="state" .options=&quot;${JSON.stringify([
     { value: '', label: 'Select a state' },
     { value: 'CA', label: 'California' },
     { value: 'NY', label: 'New York' },
-  ])}&quot;&gt;&lt;/civds-select&gt;
-  &lt;civds-textarea label="Message" name="message" hint="Max 500 characters"&gt;&lt;/civds-textarea&gt;
-  &lt;civds-checkbox label="I agree to the terms" name="terms" required&gt;&lt;/civds-checkbox&gt;
+  ])}&quot;&gt;&lt;/civ-select&gt;
+  &lt;civ-textarea label="Message" name="message" hint="Max 500 characters"&gt;&lt;/civ-textarea&gt;
+  &lt;civ-checkbox label="I agree to the terms" name="terms" required&gt;&lt;/civ-checkbox&gt;
   &lt;button type="submit"&gt;Submit&lt;/button&gt;
 &lt;/form&gt;</code></pre>
 
     <h2>CLI</h2>
     <pre><code># Generate a new component
-civds generate component my-widget
+civui generate component my-widget
 
 # Build packages
-civds build all
+civui build all
 
 # Run tests
-civds test --unit
+civui test --unit
 
 # Validate everything
-civds validate
+civui validate
 
 # Release
-civds release patch --dry-run</code></pre>
+civui release patch --dry-run</code></pre>
   </div>
 
   <footer>
-    <p>CivDS &mdash; Civic Design System. MIT License.</p>
+    <p>CivUI &mdash; Civic Design System. MIT License.</p>
   </footer>
 </body>
 </html>

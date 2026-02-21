@@ -1,6 +1,6 @@
 {
   "motion": {
-    "$description": "CivDS motion tokens — respects prefers-reduced-motion",
+    "$description": "CivUI motion tokens — respects prefers-reduced-motion",
     "duration": {
       "instant": { "$type": "duration", "$value": "0ms" },
       "fast": { "$type": "duration", "$value": "100ms" },

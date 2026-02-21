@@ -1,4 +1,4 @@
-export const ANALYTICS_EVENT_NAME = 'civds-analytics';
+export const ANALYTICS_EVENT_NAME = 'civ-analytics';
 
 export type AnalyticsAction =
   | 'change'

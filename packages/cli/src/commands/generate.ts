@@ -3,7 +3,7 @@ import { resolve } from 'node:path';
 import { findRoot, toPascalCase, success, header } from '../utils.js';
 
 /**
- * civds generate component <name>
+ * civui generate component <name>
  *
  * Scaffolds a new web component with:
  * - Component source (.ts)
@@ -22,18 +22,18 @@ export async function generate(
 
   const name = args[0];
   if (!name) {
-    throw new Error('Component name is required. Usage: civds generate component <name>');
+    throw new Error('Component name is required. Usage: civui generate component <name>');
   }
 
   if (!/^[a-z][a-z0-9-]*$/.test(name)) {
     throw new Error('Component name must be kebab-case (e.g., date-range-picker)');
   }
 
-  header(`Generating component: civds-${name}`);
+  header(`Generating component: civ-${name}`);
 
   const root = findRoot();
-  const className = `Civds${toPascalCase(name)}`;
-  const tagName = `civds-${name}`;
+  const className = `Civ${toPascalCase(name)}`;
+  const tagName = `civ-${name}`;
   const dir = resolve(root, 'packages/forms/src', name);
 
   if (existsSync(dir)) {
@@ -75,16 +75,16 @@ export async function generate(
   console.log(`  1. Implement the component in ${tagName}.ts`);
   console.log(`  2. Add exports to packages/forms/src/index.ts`);
   console.log(`  3. Write tests and stories`);
-  console.log(`  4. Run: civds build forms && civds test --unit`);
+  console.log(`  4. Run: civui build forms && civui test --unit`);
 }
 
 function componentTemplate(className: string, tagName: string): string {
   return `import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivdsFormElement } from '@civds/core';
+import { CivFormElement } from '@civui/core';
 
 /**
- * CivDS ${className.replace('Civds', '')}
+ * CivUI ${className.replace('Civ', '')}
  *
  * @element ${tagName}
  *
@@ -96,37 +96,37 @@ import { CivdsFormElement } from '@civds/core';
  * @prop {boolean} required - Whether the field is required
  * @prop {boolean} disabled - Whether the field is disabled
  *
- * @fires civds-change - When the value changes
+ * @fires civ-change - When the value changes
  */
 @customElement('${tagName}')
-export class ${className} extends CivdsFormElement {
+export class ${className} extends CivFormElement {
   override render() {
     return html\`
-      <div class="civds-mb-4">
+      <div class="civ-mb-4">
         \${this.label
           ? html\`
               <label
-                class="civds-block civds-mb-1 civds-text-base-darkest civds-font-bold civds-text-base"
+                class="civ-block civ-mb-1 civ-text-base-darkest civ-font-bold civ-text-base"
                 for="\${this._inputId}"
               >
                 \${this.label}
                 \${this.required
-                  ? html\`<abbr class="civds-text-error civds-no-underline" title="required">*</abbr>\`
+                  ? html\`<abbr class="civ-text-error civ-no-underline" title="required">*</abbr>\`
                   : nothing}
               </label>
             \`
           : nothing}
         \${this.hint
-          ? html\`<span class="civds-block civds-mb-1 civds-text-sm civds-text-base" id="\${this._hintId}">\${this.hint}</span>\`
+          ? html\`<span class="civ-block civ-mb-1 civ-text-sm civ-text-base" id="\${this._hintId}">\${this.hint}</span>\`
           : nothing}
         \${this.error
-          ? html\`<span class="civds-block civds-mb-1 civds-text-sm civds-text-error civds-font-bold" id="\${this._errorId}" role="alert">\${this.error}</span>\`
+          ? html\`<span class="civ-block civ-mb-1 civ-text-sm civ-text-error civ-font-bold" id="\${this._errorId}" role="alert">\${this.error}</span>\`
           : nothing}
 
         <input
           id="\${this._inputId}"
           type="text"
-          class="civds-block civds-w-full civds-border civds-border-base-light civds-rounded civds-px-2 civds-py-1.5 civds-text-base"
+          class="civ-block civ-w-full civ-border civ-border-base-light civ-rounded civ-px-2 civ-py-1.5 civ-text-base"
           .value="\${this.value}"
           ?disabled="\${this.disabled}"
           ?required="\${this.required}"

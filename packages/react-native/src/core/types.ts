@@ -3,8 +3,8 @@
  * These ensure API parity between web and React Native.
  */
 
-/** Base props shared by all CivDS form components. */
-export interface CivdsFormProps {
+/** Base props shared by all CivUI form components. */
+export interface CivFormProps {
   /** Field name for form data collection. */
   name: string;
   /** Current field value. */

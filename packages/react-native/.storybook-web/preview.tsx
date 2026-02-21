@@ -1,6 +1,6 @@
 import type { Preview, Decorator } from '@storybook/react';
 import { useArgs } from '@storybook/preview-api';
-import { CivdsThemeProvider } from '../src/core/theme';
+import { CivThemeProvider } from '../src/core/theme';
 import './device-frame.css';
 
 /**
@@ -35,13 +35,13 @@ const preview: Preview = {
   decorators: [
     withControlledState,
     (Story) => (
-      <CivdsThemeProvider>
+      <CivThemeProvider>
         <div className="device-frame">
           <div className="device-frame__screen">
             <Story />
           </div>
         </div>
-      </CivdsThemeProvider>
+      </CivThemeProvider>
     ),
   ],
 };

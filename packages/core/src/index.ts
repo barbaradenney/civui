@@ -1,6 +1,6 @@
 // Base classes
-export { CivdsBaseElement } from './base/civds-base-element.js';
-export { CivdsFormElement } from './base/civds-form-element.js';
+export { CivBaseElement } from './base/civ-base-element.js';
+export { CivFormElement } from './base/civ-form-element.js';
 
 // A11y utilities
 export { announce } from './a11y/live-region.js';

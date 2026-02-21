@@ -1,2 +1,2 @@
-export { CivdsTextInput } from './civds-text-input.js';
-export type { TextInputType, TextInputWidth } from './civds-text-input.js';
+export { CivTextInput } from './civ-text-input.js';
+export type { TextInputType, TextInputWidth } from './civ-text-input.js';

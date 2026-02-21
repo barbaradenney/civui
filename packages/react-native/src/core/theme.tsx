@@ -2,35 +2,35 @@ import { createContext, useContext, useMemo } from 'react';
 import type { ReactNode } from 'react';
 import { colors, spacing, typography, border } from './tokens.js';
 
-export interface CivdsTheme {
+export interface CivTheme {
   colors: typeof colors;
   spacing: typeof spacing;
   typography: typeof typography;
   border: typeof border;
 }
 
-const defaultTheme: CivdsTheme = {
+const defaultTheme: CivTheme = {
   colors,
   spacing,
   typography,
   border,
 };
 
-const ThemeContext = createContext<CivdsTheme>(defaultTheme);
+const ThemeContext = createContext<CivTheme>(defaultTheme);
 
 export interface ThemeProviderProps {
-  theme?: Partial<CivdsTheme>;
+  theme?: Partial<CivTheme>;
   children: ReactNode;
 }
 
 /**
- * CivDS Theme Provider.
+ * CivUI Theme Provider.
  *
- * Wraps your app to provide design tokens to all CivDS components.
+ * Wraps your app to provide design tokens to all CivUI components.
  * Pass a partial theme to override specific token values.
  */
-export function CivdsThemeProvider({ theme, children }: ThemeProviderProps) {
-  const merged = useMemo<CivdsTheme>(
+export function CivThemeProvider({ theme, children }: ThemeProviderProps) {
+  const merged = useMemo<CivTheme>(
     () => ({
       ...defaultTheme,
       ...theme,
@@ -42,9 +42,9 @@ export function CivdsThemeProvider({ theme, children }: ThemeProviderProps) {
 }
 
 /**
- * Access the current CivDS theme.
+ * Access the current CivUI theme.
  */
-export function useTheme(): CivdsTheme {
+export function useTheme(): CivTheme {
   return useContext(ThemeContext);
 }
 

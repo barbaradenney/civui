@@ -98,9 +98,9 @@ const styles = StyleSheet.create({
 });
 
 /**
- * CivDS RadioGroup for React Native.
+ * CivUI RadioGroup for React Native.
  *
- * Mirrors the civds-radio-group web component API.
+ * Mirrors the civ-radio-group web component API.
  * Renders a group of radio options with mutual exclusivity.
  */
 export function RadioGroup({
@@ -130,7 +130,7 @@ export function RadioGroup({
     <View
       style={formStyles.container}
       accessibilityRole="radiogroup"
-      testID={`civds-radio-group-${name}`}
+      testID={`civ-radio-group-${name}`}
     >
       <Text style={styles.legend}>
         {label}
@@ -184,7 +184,7 @@ export function RadioGroup({
             accessibilityRole="radio"
             accessibilityLabel={buildAccessibilityLabel({ label: option.label })}
             accessibilityState={{ selected, disabled: isDisabled }}
-            testID={`civds-radio-${name}-${option.value}`}
+            testID={`civ-radio-${name}-${option.value}`}
           >
             {content}
           </TouchableOpacity>

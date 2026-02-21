@@ -1,7 +1,7 @@
 {
-  "name": "@civds/core",
+  "name": "@civui/core",
   "version": "0.1.0",
-  "description": "CivDS core — Base classes, a11y utilities, and shared helpers",
+  "description": "CivUI core — Base classes, a11y utilities, and shared helpers",
   "license": "MIT",
   "type": "module",
   "main": "dist/index.js",
@@ -27,7 +27,7 @@
     "lit": "^3.2.0"
   },
   "devDependencies": {
-    "@civds/tokens": "workspace:*",
+    "@civui/tokens": "workspace:*",
     "typescript": "^5.6.0",
     "vitest": "^2.0.0"
   }

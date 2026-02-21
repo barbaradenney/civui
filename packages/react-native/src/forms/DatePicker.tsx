@@ -10,7 +10,7 @@ import {
 import { formStyles } from '../core/styles.js';
 import { buildAccessibilityLabel } from '../core/a11y.js';
 import { colors, spacing, typography, border } from '../core/tokens.js';
-import type { CivdsFormProps } from '../core/types.js';
+import type { CivFormProps } from '../core/types.js';
 import {
   parseISODate,
   toISODateString,
@@ -23,9 +23,9 @@ import {
   isDateDisabled,
   isMonthDisabled,
   type DateConstraints,
-} from '@civds/core/date';
+} from '@civui/core/date';
 
-export interface DatePickerProps extends CivdsFormProps {
+export interface DatePickerProps extends CivFormProps {
   /** Minimum selectable date in YYYY-MM-DD format. */
   min?: string;
   /** Maximum selectable date in YYYY-MM-DD format. */
@@ -156,10 +156,10 @@ const styles = StyleSheet.create({
 });
 
 /**
- * CivDS Date Picker for React Native.
+ * CivUI Date Picker for React Native.
  *
  * Renders a trigger button that opens a modal calendar grid.
- * Mirrors the civds-date-picker web component API.
+ * Mirrors the civ-date-picker web component API.
  */
 export function DatePicker({
   name,
@@ -265,7 +265,7 @@ export function DatePicker({
   }, [disabled, selectedDate]);
 
   return (
-    <View style={formStyles.container} testID={`civds-date-picker-${name}`}>
+    <View style={formStyles.container} testID={`civ-date-picker-${name}`}>
       <Text style={formStyles.label}>
         {label}
         {required && <Text style={formStyles.requiredIndicator}> *</Text>}
@@ -292,7 +292,7 @@ export function DatePicker({
         accessibilityRole="button"
         accessibilityLabel={buildAccessibilityLabel({ label, hint, error, required })}
         accessibilityState={{ disabled }}
-        testID={`civds-date-picker-${name}-trigger`}
+        testID={`civ-date-picker-${name}-trigger`}
       >
         <Text
           style={[styles.triggerText, !selectedDate ? styles.placeholderText : null]}

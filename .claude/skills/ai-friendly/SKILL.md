@@ -1,6 +1,6 @@
 ---
 name: ai-friendly
-description: Audit code for AI-agent readability and suggest improvements that make the CivDS repo efficient for future AI sessions
+description: Audit code for AI-agent readability and suggest improvements that make the CivUI repo efficient for future AI sessions
 disable-model-invocation: true
 allowed-tools: Bash, Read, Grep, Glob
 argument-hint: [file-or-path]
@@ -8,9 +8,9 @@ argument-hint: [file-or-path]
 
 # AI-Friendly Code Audit
 
-You are auditing code to ensure it is **optimized for AI agent consumption** — meaning future Claude Code sessions (and other AI tools) can understand, navigate, and modify this CivDS codebase efficiently with minimal context-gathering overhead.
+You are auditing code to ensure it is **optimized for AI agent consumption** — meaning future Claude Code sessions (and other AI tools) can understand, navigate, and modify this CivUI codebase efficiently with minimal context-gathering overhead.
 
-CivDS uses: **Lit web components**, **Light DOM**, **Tailwind CSS** with `civds-` prefix, **ElementInternals** for forms, **pnpm workspaces + Turborepo**, and a **React Native** package.
+CivUI uses: **Lit web components**, **Light DOM**, **Tailwind CSS** with `civ-` prefix, **ElementInternals** for forms, **pnpm workspaces + Turborepo**, and a **React Native** package.
 
 ## What to Audit
 
@@ -22,13 +22,13 @@ Read every changed file in full to understand context.
 ## Audit Dimensions
 
 ### 1. Naming & Discoverability
-- **`civds-` prefix**: Component tag names and custom Tailwind classes must consistently use the `civds-` prefix. Can an agent grep for `civds-text-input` and find all relevant files?
-- **File names**: Do they clearly describe what's inside? Components named to match their tag (`civds-select` → `select.ts`)
-- **Barrel exports**: Does each package have a clean `index.ts` re-exporting public APIs? Can an agent import from `@civds/forms` without knowing internal file paths?
+- **`civ-` prefix**: Component tag names and custom Tailwind classes must consistently use the `civ-` prefix. Can an agent grep for `civ-text-input` and find all relevant files?
+- **File names**: Do they clearly describe what's inside? Components named to match their tag (`civ-select` → `select.ts`)
+- **Barrel exports**: Does each package have a clean `index.ts` re-exporting public APIs? Can an agent import from `@civui/forms` without knowing internal file paths?
 - **Function/variable names**: Self-documenting? No abbreviations, acronyms, or overloaded names
 
 ### 2. Code Navigability
-- **Monorepo package boundaries**: Is it clear which package owns which code? Can an agent follow `@civds/core` → `@civds/forms` → `@civds/react-native` import chains?
+- **Monorepo package boundaries**: Is it clear which package owns which code? Can an agent follow `@civui/core` → `@civui/forms` → `@civui/react-native` import chains?
 - **TypeScript project references**: Does `tsconfig.json` correctly reference dependent packages? Are path aliases clear?
 - **Single responsibility**: Each file/function does one thing. Large files (>300 lines) are harder for AI to reason about
 - **Consistent patterns**: Does new code follow existing Lit component patterns? (`@property`, `render()`, `createRenderRoot()`, test structure)
@@ -42,12 +42,12 @@ Read every changed file in full to understand context.
 ### 4. Testability & Verifiability
 - **Vitest jsdom environment**: Tests run in jsdom. Are they structured so an AI agent can run `pnpm test` and verify changes?
 - **`updateComplete` async patterns**: Lit tests must `await element.updateComplete` after property changes. Missing awaits cause flaky tests
-- **`createFixture`/`cleanup` helpers**: Are test utilities from `@civds/test-utils` used consistently? Can an agent copy an existing test as a template?
+- **`createFixture`/`cleanup` helpers**: Are test utilities from `@civui/test-utils` used consistently? Can an agent copy an existing test as a template?
 - **Test co-location**: Tests next to source files. Can an agent find `select.test.ts` from `select.ts` without searching?
 
 ### 5. Maintenance Signals
 - **Dead code**: Unused imports, unreachable branches, commented-out code — these waste AI context window tokens
-- **Duplicated logic across packages**: If the same pattern appears in `@civds/core` and `@civds/forms`, it should live in core. AI agents may modify one copy and miss the others
+- **Duplicated logic across packages**: If the same pattern appears in `@civui/core` and `@civui/forms`, it should live in core. AI agents may modify one copy and miss the others
 - **Stale TODOs**: `// TODO` comments that reference completed work or outdated plans
 - **Implicit coupling via CSS class names**: Are there hidden dependencies between components that rely on Tailwind class names defined elsewhere rather than explicit imports?
 

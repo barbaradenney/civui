@@ -1,10 +1,10 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
-import { CivdsBaseElement } from '../base/civds-base-element.js';
-import { CivdsFormElement } from '../base/civds-form-element.js';
+import { CivBaseElement } from '../base/civ-base-element.js';
+import { CivFormElement } from '../base/civ-form-element.js';
 import { ANALYTICS_EVENT_NAME } from './analytics-types.js';
 
 // Register test elements
-class TestBase extends CivdsBaseElement {
+class TestBase extends CivBaseElement {
   name = 'test-field';
   label = 'Test Label';
 
@@ -13,7 +13,7 @@ class TestBase extends CivdsBaseElement {
   }
 }
 
-class TestForm extends CivdsFormElement {
+class TestForm extends CivFormElement {
   override connectedCallback() {
     super.connectedCallback();
     this.addEventListener('change', (e: Event) => this._handleChange(e));
@@ -42,7 +42,7 @@ function cleanup(): void {
 afterEach(cleanup);
 
 describe('sendAnalytics', () => {
-  it('dispatches civds-analytics event with correct payload', () => {
+  it('dispatches civ-analytics event with correct payload', () => {
     const el = document.createElement('test-analytics-base') as TestBase;
     document.body.appendChild(el);
 
@@ -126,7 +126,7 @@ describe('sendAnalytics', () => {
   });
 });
 
-describe('CivdsFormElement analytics integration', () => {
+describe('CivFormElement analytics integration', () => {
   it('fires analytics on _handleChange', async () => {
     const el = document.createElement('test-analytics-form') as TestForm;
     el.label = 'Email';

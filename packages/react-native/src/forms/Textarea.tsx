@@ -8,9 +8,9 @@ import {
 import { formStyles } from '../core/styles.js';
 import { buildAccessibilityLabel } from '../core/a11y.js';
 import { colors, typography } from '../core/tokens.js';
-import type { CivdsFormProps } from '../core/types.js';
+import type { CivFormProps } from '../core/types.js';
 
-export interface TextareaProps extends CivdsFormProps {
+export interface TextareaProps extends CivFormProps {
   /** Number of visible text lines. Defaults to 5. */
   rows?: number;
   /** Maximum character length. Shows character count when set. */
@@ -37,9 +37,9 @@ const styles = StyleSheet.create({
 });
 
 /**
- * CivDS Textarea for React Native.
+ * CivUI Textarea for React Native.
  *
- * Mirrors the civds-textarea web component API.
+ * Mirrors the civ-textarea web component API.
  */
 export function Textarea({
   name,
@@ -70,7 +70,7 @@ export function Textarea({
   const isOverLimit = maxLength !== undefined && charCount > maxLength;
 
   return (
-    <View style={formStyles.container} testID={`civds-textarea-${name}`}>
+    <View style={formStyles.container} testID={`civ-textarea-${name}`}>
       <Text style={formStyles.label}>
         {label}
         {required && <Text style={formStyles.requiredIndicator}> *</Text>}
@@ -101,7 +101,7 @@ export function Textarea({
         numberOfLines={rows}
         accessibilityLabel={buildAccessibilityLabel({ label, hint, error, required })}
         accessibilityState={{ disabled }}
-        testID={`civds-textarea-${name}-input`}
+        testID={`civ-textarea-${name}-input`}
       />
       {maxLength !== undefined ? (
         <Text style={[styles.charCount, isOverLimit ? styles.charCountOver : null]}>

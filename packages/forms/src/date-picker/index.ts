@@ -1,1 +1,1 @@
-export { CivdsDatePicker } from './civds-date-picker.js';
+export { CivDatePicker } from './civ-date-picker.js';

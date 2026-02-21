@@ -1,1 +1,1 @@
-export { CivdsFileUpload } from './civds-file-upload.js';
+export { CivFileUpload } from './civ-file-upload.js';

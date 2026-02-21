@@ -1,7 +1,7 @@
 {
-  "name": "@civds/test-utils",
+  "name": "@civui/test-utils",
   "version": "0.1.0",
-  "description": "CivDS shared test utilities",
+  "description": "CivUI shared test utilities",
   "license": "MIT",
   "type": "module",
   "main": "dist/index.js",

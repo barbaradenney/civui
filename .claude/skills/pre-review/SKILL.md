@@ -1,6 +1,6 @@
 ---
 name: pre-review
-description: Multi-persona code review simulating Senior Developer, Security, UX, QA, Accessibility, and Performance reviewers for CivDS
+description: Multi-persona code review simulating Senior Developer, Security, UX, QA, Accessibility, and Performance reviewers for CivUI
 disable-model-invocation: true
 allowed-tools: Bash, Read, Grep, Glob
 argument-hint: [file-or-path]
@@ -8,9 +8,9 @@ argument-hint: [file-or-path]
 
 # Multi-Persona Code Review
 
-You are conducting a pre-commit/pre-push code review from **six expert perspectives** for the CivDS web component library. Your job is to catch issues before they reach a PR review.
+You are conducting a pre-commit/pre-push code review from **six expert perspectives** for the CivUI web component library. Your job is to catch issues before they reach a PR review.
 
-CivDS uses: **Lit web components**, **Light DOM** (no Shadow DOM), **Tailwind CSS** with `civds-` prefix, **ElementInternals** for form participation, **pnpm workspaces + Turborepo** monorepo, and a **React Native** package.
+CivUI uses: **Lit web components**, **Light DOM** (no Shadow DOM), **Tailwind CSS** with `civ-` prefix, **ElementInternals** for form participation, **pnpm workspaces + Turborepo** monorepo, and a **React Native** package.
 
 ## What to Review
 
@@ -27,8 +27,8 @@ For each persona, provide **only actionable findings**. If a persona has nothing
 - **Lit patterns**: Correct use of `@property`, `@state`, `render()`, lifecycle hooks (`connectedCallback`, `disconnectedCallback`, `firstUpdated`, `updated`)
 - **Light DOM**: Components must return `this` from `createRenderRoot()` — no Shadow DOM. Verify slotted content works without encapsulation
 - **ElementInternals**: Proper `static formAssociated = true`, `attachInternals()` in constructor, `setFormValue()` calls guarded with typeof check (jsdom lacks support)
-- **Monorepo boundaries**: Imports stay within package boundaries. Core utilities come from `@civds/core`, tokens from `@civds/tokens`. No circular cross-package imports
-- **Tailwind conventions**: Custom classes use `civds-` prefix. No ad-hoc utility classes that bypass the design token system
+- **Monorepo boundaries**: Imports stay within package boundaries. Core utilities come from `@civui/core`, tokens from `@civui/tokens`. No circular cross-package imports
+- **Tailwind conventions**: Custom classes use `civ-` prefix. No ad-hoc utility classes that bypass the design token system
 - **Code quality**: Dead code, unused imports, naming consistency, DRY violations
 - **Error handling**: Missing error paths, swallowed errors, unhandled promise rejections
 - **API contract**: Are types correct? Do interfaces match what callers expect?
@@ -41,7 +41,7 @@ For each persona, provide **only actionable findings**. If a persona has nothing
 - **Dependency surface**: Unnecessary new dependencies or packages with known vulnerabilities
 
 ### 3. UX Reviewer
-- **Tailwind token consistency**: Are spacing, color, and typography values using design tokens from `@civds/tokens`? No magic Tailwind values that bypass the system
+- **Tailwind token consistency**: Are spacing, color, and typography values using design tokens from `@civui/tokens`? No magic Tailwind values that bypass the system
 - **Component composition**: Do components compose cleanly? Can they be used together without layout conflicts?
 - **Responsive classes**: Are Tailwind responsive breakpoint classes (`sm:`, `md:`, `lg:`) used correctly? Will this break on narrow viewports?
 - **Error/hint/label patterns**: Do form components follow consistent error message, hint text, and label rendering patterns?

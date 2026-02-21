@@ -101,9 +101,9 @@ const styles = StyleSheet.create({
 });
 
 /**
- * CivDS Checkbox for React Native.
+ * CivUI Checkbox for React Native.
  *
- * Mirrors the civds-checkbox web component API.
+ * Mirrors the civ-checkbox web component API.
  */
 export function Checkbox({
   name,
@@ -155,7 +155,7 @@ export function Checkbox({
   );
 
   return (
-    <View style={formStyles.container} testID={`civds-checkbox-${name}`}>
+    <View style={formStyles.container} testID={`civ-checkbox-${name}`}>
       {error ? (
         <Text style={formStyles.error} accessibilityRole="alert">
           {error}
@@ -174,7 +174,7 @@ export function Checkbox({
         accessibilityRole="checkbox"
         accessibilityLabel={buildAccessibilityLabel({ label, hint, error, required })}
         accessibilityState={{ checked: indeterminate ? 'mixed' : checked, disabled }}
-        testID={`civds-checkbox-${name}-control`}
+        testID={`civ-checkbox-${name}-control`}
       >
         {content}
       </TouchableOpacity>

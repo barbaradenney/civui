@@ -1,8 +1,8 @@
 {
-  "name": "civds",
+  "name": "civui",
   "version": "0.1.0",
   "private": true,
-  "description": "CivDS - Civic Design System: Accessibility-first web components for government applications",
+  "description": "CivUI - Civic Design System: Accessibility-first web components for government applications",
   "license": "MIT",
   "type": "module",
   "scripts": {
@@ -18,7 +18,7 @@
     "storybook": "storybook dev -p 6006",
     "storybook:build": "storybook build",
     "validate": "pnpm lint && pnpm typecheck && pnpm test",
-    "storybook:native": "pnpm --filter @civds/react-native storybook:web"
+    "storybook:native": "pnpm --filter @civui/react-native storybook:web"
   },
   "devDependencies": {
     "@storybook/addon-a11y": "^8.4.0",

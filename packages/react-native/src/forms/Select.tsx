@@ -11,9 +11,9 @@ import {
 import { formStyles } from '../core/styles.js';
 import { buildAccessibilityLabel } from '../core/a11y.js';
 import { colors, spacing, typography, border } from '../core/tokens.js';
-import type { CivdsFormProps, SelectOption } from '../core/types.js';
+import type { CivFormProps, SelectOption } from '../core/types.js';
 
-export interface SelectProps extends CivdsFormProps {
+export interface SelectProps extends CivFormProps {
   /** Available options. */
   options: SelectOption[];
   /** Placeholder text shown when no value is selected. */
@@ -91,10 +91,10 @@ const styles = StyleSheet.create({
 });
 
 /**
- * CivDS Select for React Native.
+ * CivUI Select for React Native.
  *
  * Renders a trigger button that opens a modal picker.
- * Mirrors the civds-select web component API.
+ * Mirrors the civ-select web component API.
  */
 export function Select({
   name,
@@ -123,7 +123,7 @@ export function Select({
   );
 
   return (
-    <View style={formStyles.container} testID={`civds-select-${name}`}>
+    <View style={formStyles.container} testID={`civ-select-${name}`}>
       <Text style={formStyles.label}>
         {label}
         {required && <Text style={formStyles.requiredIndicator}> *</Text>}
@@ -150,7 +150,7 @@ export function Select({
         accessibilityRole="combobox"
         accessibilityLabel={buildAccessibilityLabel({ label, hint, error, required })}
         accessibilityState={{ disabled, expanded: open }}
-        testID={`civds-select-${name}-trigger`}
+        testID={`civ-select-${name}-trigger`}
       >
         <Text
           style={[styles.triggerText, !selectedOption ? styles.placeholderText : null]}

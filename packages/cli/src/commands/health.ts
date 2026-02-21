@@ -3,7 +3,7 @@ import { resolve, join } from 'node:path';
 import { findRoot, header, runCapture } from '../utils.js';
 
 /**
- * civds health
+ * civui health
  *
  * Health dashboard showing project status:
  *   - Package count and versions
@@ -15,7 +15,7 @@ import { findRoot, header, runCapture } from '../utils.js';
 export async function health(): Promise<void> {
   const root = findRoot();
 
-  header('CivDS Health Dashboard');
+  header('CivUI Health Dashboard');
 
   // Package info
   const rootPkg = JSON.parse(readFileSync(resolve(root, 'package.json'), 'utf-8'));
@@ -27,7 +27,7 @@ export async function health(): Promise<void> {
   console.log(`\n  Packages: ${packages.length}`);
   for (const pkg of packages) {
     const status = existsSync(resolve(root, 'packages', pkg, 'dist')) ? '[built]' : '[not built]';
-    console.log(`    @civds/${pkg} ${status}`);
+    console.log(`    @civui/${pkg} ${status}`);
   }
 
   // Components
@@ -49,7 +49,7 @@ export async function health(): Promise<void> {
     const distPath = resolve(root, 'packages', pkg, 'dist');
     if (existsSync(distPath)) {
       const size = getDirSize(distPath);
-      console.log(`    @civds/${pkg}: ${formatSize(size)}`);
+      console.log(`    @civui/${pkg}: ${formatSize(size)}`);
     }
   }
 

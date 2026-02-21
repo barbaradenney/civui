@@ -1,6 +1,6 @@
 {
   "border": {
-    "$description": "CivDS border tokens",
+    "$description": "CivUI border tokens",
     "radius": {
       "none": { "$type": "dimension", "$value": "0px" },
       "sm": { "$type": "dimension", "$value": "2px" },

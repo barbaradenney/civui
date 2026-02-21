@@ -1,7 +1,7 @@
 {
-  "name": "@civds/react-native",
+  "name": "@civui/react-native",
   "version": "0.1.0",
-  "description": "CivDS React Native components — mobile companion to @civds/forms",
+  "description": "CivUI React Native components — mobile companion to @civui/forms",
   "license": "MIT",
   "type": "module",
   "main": "dist/index.js",
@@ -24,7 +24,7 @@
     "storybook:web:build": "storybook build -c .storybook-web -o storybook-static"
   },
   "dependencies": {
-    "@civds/core": "workspace:*"
+    "@civui/core": "workspace:*"
   },
   "peerDependencies": {
     "react": ">=18.0.0",

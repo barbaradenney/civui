@@ -1,2 +1,2 @@
-export { CivdsDateInput } from './civds-date-input.js';
-export { CivdsMemorableDate } from './civds-memorable-date.js';
+export { CivDateInput } from './civ-date-input.js';
+export { CivMemorableDate } from './civ-memorable-date.js';

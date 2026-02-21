@@ -1,1 +1,1 @@
-export { CivdsFormGroup } from './civds-form-group.js';
+export { CivFormGroup } from './civ-form-group.js';

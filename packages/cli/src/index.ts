@@ -9,10 +9,10 @@ import { release } from './commands/release.js';
 import { health } from './commands/health.js';
 
 const HELP = `
-civds — CivDS Developer CLI
+civui — CivUI Developer CLI
 
 Usage:
-  civds <command> [options]
+  civui <command> [options]
 
 Commands:
   generate component <name>    Scaffold a new component
@@ -27,12 +27,12 @@ Options:
   --version, -v  Show version
 
 Examples:
-  civds generate component date-range-picker
-  civds build forms
-  civds test --unit
-  civds validate --a11y
-  civds release patch
-  civds health
+  civui generate component date-range-picker
+  civui build forms
+  civui test --unit
+  civui validate --a11y
+  civui release patch
+  civui health
 `;
 
 async function main(): Promise<void> {

@@ -1,11 +1,11 @@
 {
-  "name": "@civds/cli",
+  "name": "@civui/cli",
   "version": "0.1.0",
-  "description": "CivDS developer CLI — generate, build, test, validate, release",
+  "description": "CivUI developer CLI — generate, build, test, validate, release",
   "license": "MIT",
   "type": "module",
   "bin": {
-    "civds": "./dist/index.js"
+    "civ": "./dist/index.js"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

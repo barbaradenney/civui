@@ -1,0 +1,137 @@
+import { html, nothing } from 'lit';
+import { customElement, property, state } from 'lit/decorators.js';
+import { CivFormElement } from '@civui/core';
+
+/**
+ * CivUI Textarea
+ *
+ * Multi-line text input with optional character count display.
+ * Uses ElementInternals for native form participation.
+ *
+ * @element civ-textarea
+ *
+ * @prop {string} label - Textarea label text
+ * @prop {string} name - Form field name
+ * @prop {string} value - Current value
+ * @prop {string} hint - Hint text displayed below label
+ * @prop {string} error - Error message (shows error state)
+ * @prop {number} rows - Number of visible text rows
+ * @prop {number} maxlength - Maximum character length (enables character count)
+ * @prop {string} placeholder - Placeholder text
+ * @prop {boolean} required - Whether the field is required
+ * @prop {boolean} disabled - Whether the field is disabled
+ *
+ * @fires civ-input - When value changes (on input)
+ * @fires civ-change - When value changes (on change/blur)
+ */
+@customElement('civ-textarea')
+export class CivTextarea extends CivFormElement {
+  @property({ type: Number }) rows = 5;
+  @property({ type: Number }) maxlength?: number;
+  @property({ type: String }) placeholder = '';
+
+  @state() private _charCount = 0;
+
+  private _charCountId = this.generateId('charcount');
+
+  protected override get _ariaDescribedBy(): string {
+    const ids: string[] = [];
+    if (this.hint) ids.push(this._hintId);
+    if (this.error) ids.push(this._errorId);
+    if (this.maxlength != null && this.maxlength > 0) ids.push(this._charCountId);
+    return ids.join(' ') || '';
+  }
+
+  override render() {
+    const textareaClasses = [
+      'civ-block',
+      'civ-w-full',
+      'civ-border',
+      'civ-rounded',
+      'civ-px-2',
+      'civ-py-1.5',
+      'civ-text-base',
+      'civ-font-sans',
+      'civ-text-base-darkest',
+      'civ-bg-white',
+      'civ-resize-y',
+      this.error ? 'civ-border-error civ-border-l-4' : 'civ-border-base-light',
+      this.disabled ? 'civ-opacity-50 civ-cursor-not-allowed civ-bg-base-lightest' : '',
+      'focus-visible:civ-focus-ring',
+    ]
+      .filter(Boolean)
+      .join(' ');
+
+    const showCharCount = this.maxlength != null && this.maxlength > 0;
+    const remaining = showCharCount ? this.maxlength! - this._charCount : 0;
+
+    return html`
+      <div class="civ-mb-4">
+        ${this.label
+          ? html`
+              <label
+                class="civ-block civ-mb-1 civ-text-base-darkest civ-font-bold civ-text-base"
+                for="${this._inputId}"
+              >
+                ${this.label}
+                ${this.required
+                  ? html`<abbr class="civ-text-error civ-no-underline" title="required">*</abbr>`
+                  : nothing}
+              </label>
+            `
+          : nothing}
+        ${this.hint
+          ? html`<span class="civ-block civ-mb-1 civ-text-sm civ-text-base" id="${this._hintId}">${this.hint}</span>`
+          : nothing}
+        ${this.error
+          ? html`<span class="civ-block civ-mb-1 civ-text-sm civ-text-error civ-font-bold" id="${this._errorId}" role="alert">${this.error}</span>`
+          : nothing}
+        <textarea
+          class="${textareaClasses}"
+          id="${this._inputId}"
+          name="${this.name}"
+          rows="${this.rows}"
+          .value="${this.value}"
+          placeholder="${this.placeholder || nothing}"
+          maxlength="${this.maxlength ?? nothing}"
+          ?disabled="${this.disabled}"
+          ?required="${this.required}"
+          aria-required="${this.required}"
+          aria-describedby="${this._ariaDescribedBy || nothing}"
+          aria-invalid="${this.error ? 'true' : 'false'}"
+          @input="${this._onInput}"
+          @change="${this._handleChange}"
+        ></textarea>
+        ${showCharCount
+          ? html`
+              <span
+                id="${this._charCountId}"
+                class="civ-block civ-mt-0.5 civ-text-sm ${remaining < 0
+                  ? 'civ-text-error civ-font-bold'
+                  : 'civ-text-base'}"
+                aria-live="polite"
+              >
+                ${remaining} characters remaining
+              </span>
+            `
+          : nothing}
+      </div>
+    `;
+  }
+
+  private _onInput(e: Event): void {
+    const target = e.target as HTMLTextAreaElement;
+    this.value = target.value;
+    this._charCount = target.value.length;
+    this.updateFormValue(this.value);
+    this.dispatchEvent(
+      new CustomEvent('civ-input', { detail: { value: this.value }, bubbles: true, composed: true }),
+    );
+  }
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'civ-textarea': CivTextarea;
+  }
+}

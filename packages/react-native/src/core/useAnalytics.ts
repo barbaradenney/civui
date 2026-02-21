@@ -25,7 +25,7 @@ export interface UseAnalyticsReturn {
 }
 
 /**
- * useAnalytics — React hook for CivDS analytics tracking.
+ * useAnalytics — React hook for CivUI analytics tracking.
  *
  * Provides a `trackInteraction` function that builds analytics payloads
  * and forwards them to the provided handler. Payloads never contain

@@ -1,2 +1,2 @@
-export { CivdsRadio } from './civds-radio.js';
-export { CivdsRadioGroup } from './civds-radio-group.js';
+export { CivRadio } from './civ-radio.js';
+export { CivRadioGroup } from './civ-radio-group.js';

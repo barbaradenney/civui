@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native';
 import { colors, spacing, typography, border } from './tokens.js';
 
 /**
- * Shared styles used across all CivDS form components.
+ * Shared styles used across all CivUI form components.
  * Keeps visual consistency without duplicating StyleSheet.create calls.
  */
 export const formStyles = StyleSheet.create({

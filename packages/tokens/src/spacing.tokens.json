@@ -1,6 +1,6 @@
 {
   "spacing": {
-    "$description": "CivDS spacing scale — consistent spatial rhythm",
+    "$description": "CivUI spacing scale — consistent spatial rhythm",
     "0": { "$type": "dimension", "$value": "0px" },
     "px": { "$type": "dimension", "$value": "1px" },
     "0.5": { "$type": "dimension", "$value": "2px" },

@@ -1,7 +1,7 @@
 {
-  "name": "@civds/content",
+  "name": "@civui/content",
   "version": "0.1.0",
-  "description": "CivDS content management — JSON-based content files for labels, hints, errors, and placeholders",
+  "description": "CivUI content management — JSON-based content files for labels, hints, errors, and placeholders",
   "license": "MIT",
   "type": "module",
   "main": "dist/index.js",

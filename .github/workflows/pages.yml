@@ -39,7 +39,7 @@ jobs:
       - run: pnpm storybook:build -o storybook-static
 
       # Build React Native web Storybook
-      - run: pnpm --filter @civds/react-native storybook:web:build
+      - run: pnpm --filter @civui/react-native storybook:web:build
 
       # Assemble site: docs + /storybook/ + /react-native/
       - run: |

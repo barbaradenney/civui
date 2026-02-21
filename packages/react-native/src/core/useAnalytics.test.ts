@@ -14,7 +14,7 @@ describe('useAnalytics event shape', () => {
 
     // Simulate what trackInteraction does internally
     const event = {
-      componentName: 'civds-text-input',
+      componentName: 'civ-text-input',
       action: 'change',
       timestamp: new Date().toISOString(),
       fieldName: 'email',
@@ -23,7 +23,7 @@ describe('useAnalytics event shape', () => {
     handler(event);
 
     expect(events).toHaveLength(1);
-    expect(events[0].componentName).toBe('civds-text-input');
+    expect(events[0].componentName).toBe('civ-text-input');
     expect(events[0].action).toBe('change');
     expect(events[0].fieldName).toBe('email');
     expect(events[0].label).toBe('Email');
@@ -32,7 +32,7 @@ describe('useAnalytics event shape', () => {
 
   it('never includes value in event payload (PII safety)', () => {
     const event = {
-      componentName: 'civds-text-input',
+      componentName: 'civ-text-input',
       action: 'change',
       timestamp: new Date().toISOString(),
       fieldName: 'email',
@@ -43,7 +43,7 @@ describe('useAnalytics event shape', () => {
 
   it('supports details metadata', () => {
     const event = {
-      componentName: 'civds-file-upload',
+      componentName: 'civ-file-upload',
       action: 'upload',
       timestamp: new Date().toISOString(),
       details: { fileCount: 3 },

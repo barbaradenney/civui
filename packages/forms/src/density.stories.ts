@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
-import './text-input/civds-text-input.js';
-import './select/civds-select.js';
-import './textarea/civds-textarea.js';
-import './checkbox/civds-checkbox.js';
+import './text-input/civ-text-input.js';
+import './select/civ-select.js';
+import './textarea/civ-textarea.js';
+import './checkbox/civ-checkbox.js';
 
 const meta: Meta = {
   title: 'Foundations/Density',
@@ -12,7 +12,7 @@ const meta: Meta = {
     scale: {
       control: 'select',
       options: ['default', 'spacious', 'dense'],
-      description: 'Set data-civds-scale on the wrapper to switch density',
+      description: 'Set data-civ-scale on the wrapper to switch density',
     },
   },
 };
@@ -21,20 +21,20 @@ export default meta;
 type Story = StoryObj;
 
 const formTemplate = () => html`
-  <civds-text-input
+  <civ-text-input
     label="Full name"
     name="name"
     hint="First and last name"
     required
-  ></civds-text-input>
-  <civds-text-input
+  ></civ-text-input>
+  <civ-text-input
     label="Email address"
     name="email"
     type="email"
     hint="We'll use this to contact you"
     required
-  ></civds-text-input>
-  <civds-select
+  ></civ-text-input>
+  <civ-select
     label="State"
     name="state"
     .options="${[
@@ -42,31 +42,31 @@ const formTemplate = () => html`
       { value: 'ny', label: 'New York' },
       { value: 'tx', label: 'Texas' },
     ]}"
-  ></civds-select>
-  <civds-textarea
+  ></civ-select>
+  <civ-textarea
     label="Comments"
     name="comments"
     hint="Optional feedback"
     rows="3"
     maxlength="200"
-  ></civds-textarea>
-  <civds-checkbox
+  ></civ-textarea>
+  <civ-checkbox
     label="I agree to the terms"
     name="terms"
     required
-  ></civds-checkbox>
+  ></civ-checkbox>
 `;
 
 /**
  * Switch density with the `scale` control. The same form components
  * automatically resize their fonts, padding, and spacing based on
- * the `data-civds-scale` attribute on a parent element.
+ * the `data-civ-scale` attribute on a parent element.
  */
 export const Interactive: Story = {
   args: { scale: 'default' },
   render: (args) => html`
-    <div data-civds-scale="${args.scale}">
-      <p class="civds-text-sm civds-mb-4" style="color: var(--civds-color-base-dark);">
+    <div data-civ-scale="${args.scale}">
+      <p class="civ-text-sm civ-mb-4" style="color: var(--civ-color-base-dark);">
         Current density: <strong>${args.scale}</strong>
       </p>
       ${formTemplate()}
@@ -82,20 +82,20 @@ export const Interactive: Story = {
 export const SideBySide: Story = {
   render: () => html`
     <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 32px; align-items: start;">
-      <div data-civds-scale="spacious">
-        <h3 class="civds-text-lg civds-font-bold civds-mb-4" style="color: var(--civds-color-primary-dark);">
+      <div data-civ-scale="spacious">
+        <h3 class="civ-text-lg civ-font-bold civ-mb-4" style="color: var(--civ-color-primary-dark);">
           Spacious
         </h3>
         ${formTemplate()}
       </div>
       <div>
-        <h3 class="civds-text-lg civds-font-bold civds-mb-4" style="color: var(--civds-color-primary-dark);">
+        <h3 class="civ-text-lg civ-font-bold civ-mb-4" style="color: var(--civ-color-primary-dark);">
           Default
         </h3>
         ${formTemplate()}
       </div>
-      <div data-civds-scale="dense">
-        <h3 class="civds-text-lg civds-font-bold civds-mb-4" style="color: var(--civds-color-primary-dark);">
+      <div data-civ-scale="dense">
+        <h3 class="civ-text-lg civ-font-bold civ-mb-4" style="color: var(--civ-color-primary-dark);">
           Dense
         </h3>
         ${formTemplate()}

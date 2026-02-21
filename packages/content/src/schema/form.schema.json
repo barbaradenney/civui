@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://civds.dev/schemas/form-content.json",
-  "title": "CivDS Form Content",
-  "description": "Schema for CivDS form content files that define labels, hints, errors, and placeholders.",
+  "$id": "https://civui.dev/schemas/form-content.json",
+  "title": "CivUI Form Content",
+  "description": "Schema for CivUI form content files that define labels, hints, errors, and placeholders.",
   "type": "object",
   "properties": {
     "$schema": {

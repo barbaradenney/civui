@@ -1,1 +1,1 @@
-export { CivdsTextarea } from './civds-textarea.js';
+export { CivTextarea } from './civ-textarea.js';

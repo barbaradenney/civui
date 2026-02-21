@@ -46,10 +46,10 @@ export interface UseFormReturn {
 }
 
 /**
- * useForm — React hook for CivDS form state management.
+ * useForm — React hook for CivUI form state management.
  *
  * Manages values, validation, errors, and submit handling.
- * Mirrors the validation behavior of the civds-form web component.
+ * Mirrors the validation behavior of the civ-form web component.
  *
  * @example
  * ```tsx
@@ -132,14 +132,14 @@ export function useForm(options: UseFormOptions = {}): UseFormReturn {
     if (validate()) {
       onSubmit?.(values);
       onAnalytics?.({
-        componentName: 'civds-form',
+        componentName: 'civ-form',
         action: 'submit',
         timestamp: new Date().toISOString(),
       });
     } else {
       const errorCount = Object.keys(errors).length;
       onAnalytics?.({
-        componentName: 'civds-form',
+        componentName: 'civ-form',
         action: 'invalid',
         timestamp: new Date().toISOString(),
         details: { errorCount },

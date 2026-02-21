@@ -1,7 +1,7 @@
 {
-  "name": "@civds/forms",
+  "name": "@civui/forms",
   "version": "0.1.0",
-  "description": "CivDS form components — Accessible form controls with ElementInternals",
+  "description": "CivUI form components — Accessible form controls with ElementInternals",
   "license": "MIT",
   "type": "module",
   "main": "dist/index.js",
@@ -32,11 +32,11 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@civds/core": "workspace:*",
+    "@civui/core": "workspace:*",
     "lit": "^3.2.0"
   },
   "devDependencies": {
-    "@civds/tokens": "workspace:*",
+    "@civui/tokens": "workspace:*",
     "typescript": "^5.6.0",
     "vitest": "^2.0.0"
   }

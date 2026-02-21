@@ -99,7 +99,7 @@ importers:
         specifier: ^3.2.0
         version: 3.3.2
     devDependencies:
-      '@civds/tokens':
+      '@civui/tokens':
         specifier: workspace:*
         version: link:../tokens
       typescript:
@@ -111,14 +111,14 @@ importers:
 
   packages/forms:
     dependencies:
-      '@civds/core':
+      '@civui/core':
         specifier: workspace:*
         version: link:../core
       lit:
         specifier: ^3.2.0
         version: 3.3.2
     devDependencies:
-      '@civds/tokens':
+      '@civui/tokens':
         specifier: workspace:*
         version: link:../tokens
       typescript:
@@ -130,7 +130,7 @@ importers:
 
   packages/react-native:
     dependencies:
-      '@civds/core':
+      '@civui/core':
         specifier: workspace:*
         version: link:../core
     devDependencies:

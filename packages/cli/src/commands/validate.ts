@@ -1,7 +1,7 @@
 import { run, header, success, fail } from '../utils.js';
 
 /**
- * civds validate [options]
+ * civui validate [options]
  *
  * Run all validation checks:
  *   1. Lint (ESLint)
@@ -14,7 +14,7 @@ import { run, header, success, fail } from '../utils.js';
  *   --fix    Auto-fix linting issues
  */
 export async function validate(flags: Record<string, boolean | string>): Promise<void> {
-  header('CivDS Validation');
+  header('CivUI Validation');
 
   const steps: { name: string; cmd: string }[] = [
     { name: 'Lint', cmd: flags.fix ? 'pnpm lint:fix' : 'pnpm lint' },

@@ -11,7 +11,7 @@ const PACKAGES = [
 ];
 
 /**
- * civds release patch|minor|major
+ * civui release patch|minor|major
  *
  * Release workflow:
  *   1. Validate (lint, typecheck, test)
@@ -34,7 +34,7 @@ export async function release(
   const dryRun = flags['dry-run'] === true;
   const root = findRoot();
 
-  header(`CivDS Release: ${bump}${dryRun ? ' (dry run)' : ''}`);
+  header(`CivUI Release: ${bump}${dryRun ? ' (dry run)' : ''}`);
 
   // Step 1: Get current version
   const rootPkg = JSON.parse(readFileSync(resolve(root, 'package.json'), 'utf-8'));

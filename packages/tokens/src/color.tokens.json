@@ -1,6 +1,6 @@
 {
   "color": {
-    "$description": "CivDS color palette — WCAG AA accessible combinations inspired by USWDS",
+    "$description": "CivUI color palette — WCAG AA accessible combinations inspired by USWDS",
     "primary": {
       "$type": "color",
       "lightest": { "$value": "#d9e8f6" },

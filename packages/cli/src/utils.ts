@@ -13,7 +13,7 @@ export function findRoot(): string {
     if (parent === dir) break;
     dir = parent;
   }
-  throw new Error('Could not find CivDS monorepo root (no pnpm-workspace.yaml found)');
+  throw new Error('Could not find CivUI monorepo root (no pnpm-workspace.yaml found)');
 }
 
 /**

@@ -1,7 +1,7 @@
 import { run, header, success } from '../utils.js';
 
 /**
- * civds test [options]
+ * civui test [options]
  *
  * Run tests. Options:
  *   --unit          Run unit tests only (vitest)

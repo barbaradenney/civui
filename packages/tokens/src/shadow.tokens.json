@@ -1,6 +1,6 @@
 {
   "shadow": {
-    "$description": "CivDS shadow tokens",
+    "$description": "CivUI shadow tokens",
     "none": { "$type": "shadow", "$value": { "offsetX": "0px", "offsetY": "0px", "blur": "0px", "spread": "0px", "color": "transparent" } },
     "sm": { "$type": "shadow", "$value": { "offsetX": "0px", "offsetY": "1px", "blur": "2px", "spread": "0px", "color": "rgba(0,0,0,0.05)" } },
     "DEFAULT": { "$type": "shadow", "$value": { "offsetX": "0px", "offsetY": "1px", "blur": "3px", "spread": "0px", "color": "rgba(0,0,0,0.1)" } },

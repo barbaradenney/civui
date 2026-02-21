@@ -1,7 +1,7 @@
 {
-  "name": "@civds/tokens",
+  "name": "@civui/tokens",
   "version": "0.1.0",
-  "description": "CivDS design tokens — W3C DTCG format with Style Dictionary v4",
+  "description": "CivUI design tokens — W3C DTCG format with Style Dictionary v4",
   "license": "MIT",
   "type": "module",
   "main": "dist/js/tokens.js",

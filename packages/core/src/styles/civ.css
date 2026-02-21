@@ -1,0 +1,61 @@
+@layer civ {
+  @tailwind base;
+  @tailwind components;
+  @tailwind utilities;
+}
+
+/* Import design tokens as CSS custom properties */
+@import '@civui/tokens/css';
+
+/* Focus-visible fallback for browsers without :focus-visible support */
+@supports not selector(:focus-visible) {
+  .civ-focus-ring:focus {
+    outline: var(--civ-focus-outline-width) solid var(--civ-focus-outline-color);
+    outline-offset: var(--civ-focus-outline-offset);
+    box-shadow: 0 0 0 calc(var(--civ-focus-outline-offset) + var(--civ-focus-outline-width) + var(--civ-focus-shadow-spread)) var(--civ-focus-shadow-color);
+  }
+  .civ-focus-ring-inverse:focus {
+    outline: var(--civ-focus-outline-width) solid var(--civ-focus-shadow-color);
+    outline-offset: var(--civ-focus-outline-offset);
+    box-shadow: 0 0 0 calc(var(--civ-focus-outline-offset) + var(--civ-focus-outline-width) + var(--civ-focus-shadow-spread)) var(--civ-focus-outline-color);
+  }
+}
+
+/* Windows High Contrast Mode: transparent outline becomes system highlight color */
+@media (forced-colors: active) {
+  .civ-focus-ring:focus-visible,
+  .civ-focus-ring-inverse:focus-visible {
+    outline: var(--civ-focus-outline-width) solid transparent;
+    outline-offset: var(--civ-focus-outline-offset);
+    box-shadow: none;
+  }
+
+  /* Selected day cell in date picker — bg-primary disappears */
+  [data-civ-day][aria-selected="true"] {
+    outline: 2px solid transparent;
+    outline-offset: -2px;
+  }
+
+  /* Active combobox option — bg-primary disappears */
+  [role="option"][data-active] {
+    outline: 2px solid transparent;
+    outline-offset: -2px;
+  }
+
+  /* Checkbox/radio tile checked — bg-primary-lightest disappears */
+  [data-civ-tile]:has(:checked) {
+    outline: 2px solid transparent;
+    outline-offset: -2px;
+  }
+
+  /* File upload drag-over — bg-primary-lightest disappears */
+  [role="button"][data-dragging] {
+    border-style: solid;
+    border-width: 3px;
+  }
+
+  /* File upload file list items — bg-base-lightest disappears */
+  [aria-label="Selected files"] li {
+    border: 1px solid transparent;
+  }
+}

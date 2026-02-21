@@ -1,5 +1,5 @@
 {
-  "$description": "CivDS density scales — spacious (relaxed), default (standard), dense (tight)",
+  "$description": "CivUI density scales — spacious (relaxed), default (standard), dense (tight)",
   "scales": {
     "spacious": {
       "$description": "Relaxed density with generous spacing. Fluid responsive via clamp().",

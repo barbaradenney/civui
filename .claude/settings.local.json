@@ -1,4 +1,10 @@
 {
+  "permissions": {
+    "allow": [
+      "Bash(pnpm build 2>&1)",
+      "Bash(git commit -m \"$\\(cat <<'EOF'\nfeat\\(forms\\): add indeterminate state, form participation, and group syncing to checkbox components\n\nUpgrade checkbox with indeterminate \\(tri-state\\) support, hint rendering,\naria-checked, civ-input event, and defaultChecked-based form reset.\nRewrite checkbox-group to extend CivFormElement with name/disabled/tile\nsyncing, comma-separated value tracking, orientation, and formResetCallback.\nUpdate React Native Checkbox with indeterminate visual and hint accessibility.\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")"
+    ]
+  },
   "allow": [
     "Bash(ls *)",
     "Bash(git diff *)",

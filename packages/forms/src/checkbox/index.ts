@@ -1,2 +1,2 @@
-export { CivdsCheckbox } from './civds-checkbox.js';
-export { CivdsCheckboxGroup } from './civds-checkbox-group.js';
+export { CivCheckbox } from './civ-checkbox.js';
+export { CivCheckboxGroup } from './civ-checkbox-group.js';

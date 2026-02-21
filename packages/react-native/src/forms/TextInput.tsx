@@ -7,9 +7,9 @@ import {
 import type { TextInputProps as RNTextInputProps, NativeSyntheticEvent, TextInputFocusEventData } from 'react-native';
 import { formStyles } from '../core/styles.js';
 import { buildAccessibilityLabel } from '../core/a11y.js';
-import type { CivdsFormProps } from '../core/types.js';
+import type { CivFormProps } from '../core/types.js';
 
-export interface TextInputProps extends CivdsFormProps {
+export interface TextInputProps extends CivFormProps {
   /** Input type — maps to RN keyboardType/secureTextEntry. */
   type?: 'text' | 'email' | 'password' | 'tel' | 'number' | 'url';
   /** Placeholder text. */
@@ -21,9 +21,9 @@ export interface TextInputProps extends CivdsFormProps {
 }
 
 /**
- * CivDS TextInput for React Native.
+ * CivUI TextInput for React Native.
  *
- * Mirrors the civds-text-input web component API.
+ * Mirrors the civ-text-input web component API.
  */
 export function TextInput({
   name,
@@ -68,7 +68,7 @@ export function TextInput({
   const secureTextEntry = type === 'password';
 
   return (
-    <View style={formStyles.container} testID={`civds-text-input-${name}`}>
+    <View style={formStyles.container} testID={`civ-text-input-${name}`}>
       <Text style={formStyles.label}>
         {label}
         {required && <Text style={formStyles.requiredIndicator}> *</Text>}
@@ -98,7 +98,7 @@ export function TextInput({
         autoCapitalize={type === 'email' || type === 'url' ? 'none' : 'sentences'}
         accessibilityLabel={buildAccessibilityLabel({ label, hint, error, required })}
         accessibilityState={{ disabled }}
-        testID={`civds-text-input-${name}-input`}
+        testID={`civ-text-input-${name}-input`}
         {...textInputProps}
       />
     </View>

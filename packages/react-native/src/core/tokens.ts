@@ -1,7 +1,7 @@
 /**
- * CivDS React Native token values.
+ * CivUI React Native token values.
  *
- * Inline token definitions matching @civds/tokens react-native output.
+ * Inline token definitions matching @civui/tokens react-native output.
  * Numeric values for use with React Native StyleSheet.
  */
 

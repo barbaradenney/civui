@@ -1,12 +1,12 @@
 import type { Preview } from '@storybook/react';
-import { CivdsThemeProvider } from '../src/core/theme';
+import { CivThemeProvider } from '../src/core/theme';
 
 const preview: Preview = {
   decorators: [
     (Story) => (
-      <CivdsThemeProvider>
+      <CivThemeProvider>
         <Story />
-      </CivdsThemeProvider>
+      </CivThemeProvider>
     ),
   ],
 };

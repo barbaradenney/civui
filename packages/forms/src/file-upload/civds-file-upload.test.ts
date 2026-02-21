@@ -132,6 +132,19 @@ describe('civds-file-upload', () => {
     expect(dropzone!.className).toContain('focus-visible:civds-focus-ring');
   });
 
+  it('applies focus-visible ring class to Remove button', async () => {
+    const el = createFixture('<civds-file-upload label="Upload" name="doc"></civds-file-upload>') as any;
+    await waitForUpdate(el);
+
+    const file = new File(['content'], 'test.pdf', { type: 'application/pdf' });
+    el._addFiles([file]);
+    await waitForUpdate(el);
+
+    const removeBtn = el.querySelector('button[aria-label^="Remove"]');
+    expect(removeBtn).not.toBeNull();
+    expect(removeBtn!.className).toContain('focus-visible:civds-focus-ring');
+  });
+
   it('does not use deprecated focus: outline classes on dropzone', async () => {
     const el = createFixture('<civds-file-upload label="Upload" name="doc"></civds-file-upload>');
     await waitForUpdate(el);
@@ -140,6 +153,75 @@ describe('civds-file-upload', () => {
     expect(dropzone!.className).not.toContain('focus:civds-outline-2');
     expect(dropzone!.className).not.toContain('focus:civds-outline-primary');
     expect(dropzone!.className).not.toContain('focus:civds-outline-offset-0');
+  });
+
+  it('announces when files are added', async () => {
+    const el = createFixture('<civds-file-upload label="Upload" name="doc"></civds-file-upload>') as any;
+    await waitForUpdate(el);
+
+    const file = new File(['content'], 'test.pdf', { type: 'application/pdf' });
+    el._addFiles([file]);
+
+    // announce() updates the live region after a rAF
+    await new Promise((r) => requestAnimationFrame(r));
+    const liveRegion = document.querySelector('[aria-live]');
+    expect(liveRegion).not.toBeNull();
+    expect(liveRegion!.textContent).toContain('1 file added');
+    expect(liveRegion!.textContent).toContain('1 file selected');
+  });
+
+  describe('i18n overrides', () => {
+    it('uses custom drag-text', async () => {
+      const el = createFixture('<civds-file-upload label="Upload" drag-text="Arrastra archivos aquí o"></civds-file-upload>');
+      await waitForUpdate(el);
+
+      const dropzone = el.querySelector('[role="button"]');
+      expect(dropzone!.textContent).toContain('Arrastra archivos aquí o');
+    });
+
+    it('uses custom browse-text', async () => {
+      const el = createFixture('<civds-file-upload label="Upload" browse-text="elegir de carpeta"></civds-file-upload>');
+      await waitForUpdate(el);
+
+      const dropzone = el.querySelector('[role="button"]');
+      expect(dropzone!.textContent).toContain('elegir de carpeta');
+    });
+
+    it('uses custom remove-text and remove-aria-label', async () => {
+      const el = createFixture('<civds-file-upload label="Upload" remove-text="Eliminar" remove-aria-label="Eliminar {name}"></civds-file-upload>') as any;
+      await waitForUpdate(el);
+
+      const file = new File(['content'], 'test.pdf', { type: 'application/pdf' });
+      el._addFiles([file]);
+      await waitForUpdate(el);
+
+      const btn = Array.from(el.querySelectorAll('button')).find((b: any) => b.textContent.trim() === 'Eliminar') as HTMLElement;
+      expect(btn).not.toBeNull();
+      expect(btn!.getAttribute('aria-label')).toBe('Eliminar test.pdf');
+    });
+
+    it('uses custom file-size-error with interpolation', async () => {
+      const el = createFixture('<civds-file-upload label="Upload" max-size="1024" file-size-error="{name} supera el tamaño máximo de {size}"></civds-file-upload>') as any;
+      await waitForUpdate(el);
+
+      const file = new File(['x'.repeat(2048)], 'big.pdf', { type: 'application/pdf' });
+      el._addFiles([file]);
+      await waitForUpdate(el);
+
+      expect(el.error).toBe('big.pdf supera el tamaño máximo de 1.0 KB');
+    });
+
+    it('uses custom files-list-label', async () => {
+      const el = createFixture('<civds-file-upload label="Upload" files-list-label="Archivos seleccionados"></civds-file-upload>') as any;
+      await waitForUpdate(el);
+
+      const file = new File(['content'], 'test.pdf', { type: 'application/pdf' });
+      el._addFiles([file]);
+      await waitForUpdate(el);
+
+      const ul = el.querySelector('ul');
+      expect(ul!.getAttribute('aria-label')).toBe('Archivos seleccionados');
+    });
   });
 
   describe('analytics', () => {

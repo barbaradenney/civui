@@ -110,6 +110,22 @@ describe('civds-checkbox', () => {
     expect(outerDiv).not.toBeNull();
   });
 
+  it('sets data-civds-tile on tile wrapper', async () => {
+    const el = createFixture('<civds-checkbox label="Option A" tile></civds-checkbox>');
+    await waitForUpdate(el);
+
+    const wrapper = el.querySelector('[data-civds-tile]');
+    expect(wrapper).not.toBeNull();
+  });
+
+  it('does not set data-civds-tile when not tile variant', async () => {
+    const el = createFixture('<civds-checkbox label="Option A"></civds-checkbox>');
+    await waitForUpdate(el);
+
+    const wrapper = el.querySelector('[data-civds-tile]');
+    expect(wrapper).toBeNull();
+  });
+
   it('renders error message', async () => {
     const el = createFixture('<civds-checkbox label="Agree" error="You must agree"></civds-checkbox>');
     await waitForUpdate(el);

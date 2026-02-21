@@ -33,6 +33,7 @@ export interface ComboboxOption {
 export class CivdsCombobox extends CivdsFormElement {
   @property({ type: Array }) options: ComboboxOption[] = [];
   @property({ type: String }) placeholder = '';
+  @property({ type: String, attribute: 'no-results-text' }) noResultsText = 'No results found';
 
   @state() private _open = false;
   @state() private _filter = '';
@@ -156,6 +157,7 @@ export class CivdsCombobox extends CivdsFormElement {
                             ? 'civds-font-bold'
                             : ''}"
                         aria-selected="${option.value === this.value}"
+                        data-active="${i === this._activeIndex || nothing}"
                         @click="${() => this._selectOption(option)}"
                         @mouseenter="${() => { this._activeIndex = i; }}"
                       >
@@ -171,8 +173,9 @@ export class CivdsCombobox extends CivdsFormElement {
                 <div
                   class="civds-absolute civds-z-10 civds-w-full civds-mt-0.5 civds-bg-white civds-border civds-border-base-light civds-rounded civds-shadow-md civds-p-3 civds-text-base civds-text-base-dark"
                   role="status"
+                  aria-live="polite"
                 >
-                  No results found
+                  ${this.noResultsText}
                 </div>
               `
             : nothing}

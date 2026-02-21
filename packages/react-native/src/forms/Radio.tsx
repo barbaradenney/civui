@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import {
   View,
   Text,
@@ -115,6 +115,8 @@ export function RadioGroup({
   tile,
   onChange,
 }: RadioGroupProps) {
+  const [focusedValue, setFocusedValue] = useState<string | null>(null);
+
   const handleSelect = useCallback(
     (optionValue: string) => {
       if (!disabled) {
@@ -165,14 +167,19 @@ export function RadioGroup({
           </View>
         );
 
+        const optionFocused = focusedValue === option.value;
+
         return (
           <TouchableOpacity
             key={option.value}
             style={[
               tile ? styles.tile : null,
               tile && selected ? styles.tileSelected : null,
+              optionFocused ? formStyles.inputFocused : null,
             ]}
             onPress={() => handleSelect(option.value)}
+            onFocus={() => setFocusedValue(option.value)}
+            onBlur={() => setFocusedValue(null)}
             disabled={isDisabled}
             accessibilityRole="radio"
             accessibilityLabel={buildAccessibilityLabel({ label: option.label })}

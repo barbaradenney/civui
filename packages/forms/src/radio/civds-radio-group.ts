@@ -66,6 +66,7 @@ export class CivdsRadioGroup extends CivdsFormElement {
         class="civds-border-0 civds-p-0 civds-m-0 civds-mb-4"
         aria-describedby="${describedBy || nothing}"
         aria-invalid="${this.error ? 'true' : 'false'}"
+        aria-required="${this.required}"
       >
         ${this.legend
           ? html`

@@ -104,7 +104,7 @@ export class CivdsCheckbox extends CivdsFormElement {
     `;
 
     return html`
-      <div class="civds-mb-2 ${wrapperClasses}">
+      <div class="civds-mb-2 ${wrapperClasses}" data-civds-tile="${this.tile || nothing}">
         ${this.error
           ? html`<span class="civds-block civds-mb-1 civds-text-sm civds-text-error civds-font-bold" id="${this._errorId}" role="alert">${this.error}</span>`
           : nothing}

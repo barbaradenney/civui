@@ -632,6 +632,23 @@ describe('civds-date-picker', () => {
       expect(dayButton!.className).toContain('focus-visible:civds-focus-ring');
     });
 
+    it('applies inverse focus-visible ring class to selected day cells', async () => {
+      const el = createFixture('<civds-date-picker label="Date" name="date" value="2026-03-15"></civds-date-picker>') as any;
+      el._open = true;
+      el._displayMonth = 2;
+      el._displayYear = 2026;
+      await waitForUpdate(el);
+
+      const selectedDay = el.querySelector('[data-date="2026-03-15"]');
+      expect(selectedDay!.className).toContain('focus-visible:civds-focus-ring-inverse');
+      expect(selectedDay!.className).not.toContain('focus-visible:civds-focus-ring ');
+
+      // Unselected day should use standard focus ring
+      const unselectedDay = el.querySelector('[data-date="2026-03-16"]');
+      expect(unselectedDay!.className).toContain('focus-visible:civds-focus-ring');
+      expect(unselectedDay!.className).not.toContain('focus-visible:civds-focus-ring-inverse');
+    });
+
     it('applies focus-visible ring class to navigation buttons', async () => {
       const el = createFixture('<civds-date-picker label="Date" name="date"></civds-date-picker>') as any;
       el._open = true;
@@ -657,6 +674,36 @@ describe('civds-date-picker', () => {
 
       const dayButton = el.querySelector('[data-civds-day]');
       expect(dayButton!.className).not.toContain('focus:civds-outline-2');
+    });
+  });
+
+  describe('i18n overrides', () => {
+    it('uses custom dialog-label', async () => {
+      const el = createFixture('<civds-date-picker label="Date" dialog-label="Elegir fecha"></civds-date-picker>') as any;
+      el._open = true;
+      await waitForUpdate(el);
+
+      const dialog = el.querySelector('[role="dialog"]');
+      expect(dialog!.getAttribute('aria-label')).toBe('Elegir fecha');
+    });
+
+    it('uses custom previous-month-label and next-month-label', async () => {
+      const el = createFixture('<civds-date-picker label="Date" previous-month-label="Mes anterior" next-month-label="Mes siguiente"></civds-date-picker>') as any;
+      el._open = true;
+      await waitForUpdate(el);
+
+      const prevBtn = el.querySelector('[aria-label="Mes anterior"]');
+      const nextBtn = el.querySelector('[aria-label="Mes siguiente"]');
+      expect(prevBtn).not.toBeNull();
+      expect(nextBtn).not.toBeNull();
+    });
+
+    it('uses custom choose-date-label', async () => {
+      const el = createFixture('<civds-date-picker label="Date" choose-date-label="Elegir"></civds-date-picker>');
+      await waitForUpdate(el);
+
+      const button = el.querySelector('button[aria-label="Elegir"]');
+      expect(button).not.toBeNull();
     });
   });
 

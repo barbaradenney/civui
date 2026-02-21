@@ -114,15 +114,15 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
   },
   dayHeader: {
-    width: 40,
+    width: 44,
     textAlign: 'center',
     fontSize: typography.fontSize.sm,
     color: colors.base.dark,
     paddingVertical: spacing[1],
   },
   dayCell: {
-    width: 40,
-    height: 40,
+    width: 44,
+    height: 44,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: border.radius.full,
@@ -178,6 +178,7 @@ export function DatePicker({
   onChange,
 }: DatePickerProps) {
   const [open, setOpen] = useState(false);
+  const [focused, setFocused] = useState(false);
   const [displayMonth, setDisplayMonth] = useState(() => {
     const parsed = value ? parseISODate(value) : null;
     return parsed ? parsed.getMonth() : new Date().getMonth();
@@ -282,8 +283,11 @@ export function DatePicker({
           styles.trigger,
           error ? formStyles.inputError : null,
           disabled ? formStyles.inputDisabled : null,
+          focused ? formStyles.inputFocused : null,
         ]}
         onPress={handleOpen}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
         disabled={disabled}
         accessibilityRole="button"
         accessibilityLabel={buildAccessibilityLabel({ label, hint, error, required })}

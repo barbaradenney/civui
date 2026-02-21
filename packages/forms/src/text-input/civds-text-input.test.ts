@@ -246,6 +246,13 @@ describe('civds-text-input', () => {
     expect(Ctor.formAssociated).toBe(true);
   });
 
+  it('accepts custom required-message property', async () => {
+    const el = createFixture('<civds-text-input label="Email" required required-message="Campo requerido"></civds-text-input>') as any;
+    await waitForUpdate(el);
+
+    expect(el.requiredMessage).toBe('Campo requerido');
+  });
+
   it('applies focus-visible ring class', async () => {
     const el = createFixture('<civds-text-input label="Email"></civds-text-input>');
     await waitForUpdate(el);

@@ -11,6 +11,7 @@ export { createKeyboardHandler, type KeyBinding } from './a11y/keyboard-handler.
 export { generateId } from './utils/id-generator.js';
 export { debounce } from './utils/debounce.js';
 export { dispatch } from './utils/events.js';
+export { interpolate } from './utils/interpolate.js';
 
 // Date utilities
 export {

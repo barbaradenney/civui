@@ -48,7 +48,12 @@ export const formStyles = StyleSheet.create({
     backgroundColor: colors.base.lightest,
   },
   inputFocused: {
-    borderColor: colors.primary.DEFAULT,
-    borderWidth: border.width[2],
+    borderColor: '#005ea2',
+    borderWidth: 3,
+    shadowColor: '#ffffff',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 1,
+    shadowRadius: 3,
+    elevation: 3,
   },
 });

@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import {
   View,
   Text,
@@ -98,6 +98,8 @@ export function Checkbox({
   tile,
   onChange,
 }: CheckboxProps) {
+  const [focused, setFocused] = useState(false);
+
   const handlePress = useCallback(() => {
     if (!disabled) {
       onChange?.(!checked);
@@ -111,6 +113,7 @@ export function Checkbox({
           styles.box,
           checked ? styles.boxChecked : null,
           disabled ? styles.boxDisabled : null,
+          !tile && focused ? formStyles.inputFocused : null,
         ]}
       >
         {checked && <Text style={styles.checkmark}>{'\u2713'}</Text>}
@@ -136,8 +139,11 @@ export function Checkbox({
         style={[
           tile ? styles.tile : null,
           tile && checked ? styles.tileChecked : null,
+          tile && focused ? formStyles.inputFocused : null,
         ]}
         onPress={handlePress}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
         disabled={disabled}
         accessibilityRole="checkbox"
         accessibilityLabel={buildAccessibilityLabel({ label, error, required })}

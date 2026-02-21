@@ -19,6 +19,7 @@ import {
   isDateDisabled,
   isMonthDisabled,
   dispatch,
+  interpolate,
   type CalendarDay,
   type DateConstraints,
 } from '@civds/core';
@@ -55,6 +56,14 @@ export class CivdsDatePicker extends CivdsFormElement {
   @property({ type: String }) placeholder = 'mm/dd/yyyy';
   @property({ type: String }) locale = 'en-US';
   @property({ type: Number, attribute: 'week-starts-on' }) weekStartsOn = 0;
+
+  @property({ type: String, attribute: 'choose-date-label' }) chooseDateLabel = 'Choose date';
+  @property({ type: String, attribute: 'selected-date-label' }) selectedDateLabel = 'Choose date, selected date is {date}';
+  @property({ type: String, attribute: 'dialog-label' }) dialogLabel = 'Choose Date';
+  @property({ type: String, attribute: 'previous-month-label' }) previousMonthLabel = 'Previous month';
+  @property({ type: String, attribute: 'next-month-label' }) nextMonthLabel = 'Next month';
+  @property({ type: String, attribute: 'dialog-opened-message' }) dialogOpenedMessage = 'Calendar dialog opened';
+  @property({ type: String, attribute: 'date-selected-message' }) dateSelectedMessage = 'Selected {date}';
 
   @state() private _open = false;
   @state() private _focusedDate: Date = new Date();
@@ -133,8 +142,8 @@ export class CivdsDatePicker extends CivdsFormElement {
 
     const selectedDate = this.value ? parseISODate(this.value) : null;
     const buttonLabel = selectedDate
-      ? `Choose date, selected date is ${formatDateLong(selectedDate, this.locale)}`
-      : 'Choose date';
+      ? interpolate(this.selectedDateLabel, { date: formatDateLong(selectedDate, this.locale) })
+      : this.chooseDateLabel;
 
     return html`
       <div class="civds-mb-4 civds-relative">
@@ -214,7 +223,7 @@ export class CivdsDatePicker extends CivdsFormElement {
         data-civds-dialog
         role="dialog"
         aria-modal="true"
-        aria-label="Choose Date"
+        aria-label="${this.dialogLabel}"
         class="civds-absolute civds-z-50 civds-mt-1 civds-bg-white civds-border civds-border-base-light civds-rounded civds-shadow-lg civds-p-4"
         @keydown="${this._onDialogKeydown}"
       >
@@ -222,7 +231,7 @@ export class CivdsDatePicker extends CivdsFormElement {
           <button
             type="button"
             class="civds-p-1 civds-rounded hover:civds-bg-base-lightest focus-visible:civds-focus-ring"
-            aria-label="Previous month"
+            aria-label="${this.previousMonthLabel}"
             ?disabled="${prevMonthDisabled}"
             @click="${this._prevMonth}"
           >
@@ -236,7 +245,7 @@ export class CivdsDatePicker extends CivdsFormElement {
           <button
             type="button"
             class="civds-p-1 civds-rounded hover:civds-bg-base-lightest focus-visible:civds-focus-ring"
-            aria-label="Next month"
+            aria-label="${this.nextMonthLabel}"
             ?disabled="${nextMonthDisabled}"
             @click="${this._nextMonth}"
           >
@@ -276,8 +285,8 @@ export class CivdsDatePicker extends CivdsFormElement {
     const tabIdx = focused && day.inCurrentMonth ? 0 : -1;
 
     const cellClasses = [
-      'civds-w-8',
-      'civds-h-8',
+      'civds-w-10',
+      'civds-h-10',
       'civds-text-center',
       'civds-text-sm',
       'civds-rounded',
@@ -285,7 +294,7 @@ export class CivdsDatePicker extends CivdsFormElement {
       disabled ? 'civds-opacity-40 civds-cursor-not-allowed' : 'civds-cursor-pointer hover:civds-bg-primary-lightest',
       selected ? 'civds-bg-primary civds-text-white civds-font-bold' : '',
       day.isToday && !selected ? 'civds-font-bold civds-underline' : '',
-      'focus-visible:civds-focus-ring',
+      selected ? 'focus-visible:civds-focus-ring-inverse' : 'focus-visible:civds-focus-ring',
     ]
       .filter(Boolean)
       .join(' ');
@@ -328,7 +337,7 @@ export class CivdsDatePicker extends CivdsFormElement {
     this._displayMonth = initial.getMonth();
     this._displayYear = initial.getFullYear();
     this._open = true;
-    this.announce('Calendar dialog opened');
+    this.announce(this.dialogOpenedMessage);
   }
 
   private _closeDialog(): void {
@@ -349,7 +358,7 @@ export class CivdsDatePicker extends CivdsFormElement {
     this.updateFormValue(iso);
     dispatch(this, 'civds-change', { value: iso });
     this.sendAnalytics('change');
-    this.announce(`Selected ${formatDateLong(date, this.locale)}`);
+    this.announce(interpolate(this.dateSelectedMessage, { date: formatDateLong(date, this.locale) }));
     this._closeDialog();
   }
 

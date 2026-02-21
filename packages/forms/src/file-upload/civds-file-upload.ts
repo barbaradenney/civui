@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivdsFormElement } from '@civds/core';
+import { CivdsFormElement, interpolate } from '@civds/core';
 
 interface UploadedFile {
   name: string;
@@ -40,6 +40,17 @@ export class CivdsFileUpload extends CivdsFormElement {
   @property({ type: String }) accept = '';
   @property({ type: Boolean }) multiple = false;
   @property({ type: Number, attribute: 'max-size' }) maxSize = 0;
+
+  @property({ type: String, attribute: 'drag-text' }) dragText = 'Drag files here or';
+  @property({ type: String, attribute: 'browse-text' }) browseText = 'choose from folder';
+  @property({ type: String, attribute: 'accepted-label' }) acceptedLabel = 'Accepted: ';
+  @property({ type: String, attribute: 'max-size-label' }) maxSizeLabel = 'Max size: ';
+  @property({ type: String, attribute: 'remove-text' }) removeText = 'Remove';
+  @property({ type: String, attribute: 'remove-aria-label' }) removeAriaLabel = 'Remove {name}';
+  @property({ type: String, attribute: 'files-list-label' }) filesListLabel = 'Selected files';
+  @property({ type: String, attribute: 'file-added-message' }) fileAddedMessage = '{count} file added. {total} file selected.';
+  @property({ type: String, attribute: 'file-removed-message' }) fileRemovedMessage = 'File removed. {total} file selected.';
+  @property({ type: String, attribute: 'file-size-error' }) fileSizeError = '{name} exceeds maximum size of {size}';
 
   @state() private _files: UploadedFile[] = [];
   @state() private _dragging = false;
@@ -102,16 +113,17 @@ export class CivdsFileUpload extends CivdsFormElement {
           tabindex="${this.disabled ? '-1' : '0'}"
           aria-describedby="${this._ariaDescribedBy || nothing}"
           @keydown="${this._onDropzoneKeydown}"
+          data-dragging="${this._dragging || nothing}"
         >
           <span class="civds-block civds-text-base-dark civds-text-base">
-            Drag files here or
-            <span class="civds-text-primary civds-underline">choose from folder</span>
+            ${this.dragText}
+            <span class="civds-text-primary civds-underline">${this.browseText}</span>
           </span>
           ${this.accept
-            ? html`<span class="civds-block civds-text-sm civds-text-base civds-mt-1">Accepted: ${this.accept}</span>`
+            ? html`<span class="civds-block civds-text-sm civds-text-base civds-mt-1">${this.acceptedLabel}${this.accept}</span>`
             : nothing}
           ${this.maxSize > 0
-            ? html`<span class="civds-block civds-text-sm civds-text-base civds-mt-0.5">Max size: ${formatFileSize(this.maxSize)}</span>`
+            ? html`<span class="civds-block civds-text-sm civds-text-base civds-mt-0.5">${this.maxSizeLabel}${formatFileSize(this.maxSize)}</span>`
             : nothing}
         </div>
 
@@ -131,7 +143,7 @@ export class CivdsFileUpload extends CivdsFormElement {
 
         ${this._files.length > 0
           ? html`
-              <ul class="civds-list-none civds-p-0 civds-mt-2 civds-space-y-1" aria-label="Selected files">
+              <ul class="civds-list-none civds-p-0 civds-mt-2 civds-space-y-1" aria-label="${this.filesListLabel}">
                 ${this._files.map(
                   (file, index) => html`
                     <li class="civds-flex civds-items-center civds-justify-between civds-p-2 civds-bg-base-lightest civds-rounded civds-text-sm">
@@ -141,12 +153,12 @@ export class CivdsFileUpload extends CivdsFormElement {
                       </span>
                       <button
                         type="button"
-                        class="civds-text-error civds-text-sm civds-underline civds-bg-transparent civds-border-0 civds-cursor-pointer civds-p-0"
+                        class="civds-text-error civds-text-sm civds-underline civds-bg-transparent civds-border-0 civds-cursor-pointer civds-py-1 civds-px-2 focus-visible:civds-focus-ring"
                         @click="${() => this._removeFile(index)}"
-                        aria-label="Remove ${file.name}"
+                        aria-label="${interpolate(this.removeAriaLabel, { name: file.name })}"
                         ?disabled="${this.disabled}"
                       >
-                        Remove
+                        ${this.removeText}
                       </button>
                     </li>
                   `,
@@ -200,7 +212,7 @@ export class CivdsFileUpload extends CivdsFormElement {
 
     for (const file of newFiles) {
       if (this.maxSize > 0 && file.size > this.maxSize) {
-        this.error = `${file.name} exceeds maximum size of ${formatFileSize(this.maxSize)}`;
+        this.error = interpolate(this.fileSizeError, { name: file.name, size: formatFileSize(this.maxSize) });
         continue;
       }
       validated.push({ name: file.name, size: file.size, type: file.type, file });
@@ -215,6 +227,7 @@ export class CivdsFileUpload extends CivdsFormElement {
     this._updateFormData();
     this._dispatchChange();
     this.sendAnalytics('upload', { fileCount: this._files.length });
+    this.announce(interpolate(this.fileAddedMessage, { count: validated.length, total: this._files.length }));
   }
 
   private _removeFile(index: number): void {
@@ -223,7 +236,7 @@ export class CivdsFileUpload extends CivdsFormElement {
     this._updateFormData();
     this._dispatchChange();
     this.sendAnalytics('remove', { fileCount: this._files.length });
-    this.announce(`File removed. ${this._files.length} file${this._files.length !== 1 ? 's' : ''} selected.`);
+    this.announce(interpolate(this.fileRemovedMessage, { total: this._files.length }));
   }
 
   private _updateFormData(): void {

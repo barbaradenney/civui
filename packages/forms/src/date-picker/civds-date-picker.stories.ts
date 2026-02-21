@@ -96,7 +96,7 @@ export const InNativeForm: Story = {
         name="date"
         required
       ></civds-date-picker>
-      <button type="submit" class="civds-mt-2 civds-px-4 civds-py-2 civds-bg-primary civds-text-white civds-rounded">Submit</button>
+      <button type="submit" class="civds-mt-2 civds-px-4 civds-py-2 civds-bg-primary civds-text-white civds-rounded focus-visible:civds-focus-ring-inverse">Submit</button>
     </form>
   `,
 };

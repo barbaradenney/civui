@@ -69,7 +69,7 @@ export class CivdsRadio extends CivdsBaseElement {
     ].join(' ');
 
     return html`
-      <div class="civds-mb-2 ${wrapperClasses}">
+      <div class="civds-mb-2 ${wrapperClasses}" data-civds-tile="${this.tile || nothing}">
         <div class="civds-flex civds-items-start">
           <input
             class="${inputClasses}"

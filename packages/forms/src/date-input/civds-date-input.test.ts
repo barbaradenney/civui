@@ -190,6 +190,32 @@ describe('civds-memorable-date', () => {
     expect(hint).not.toBeNull();
   });
 
+  it('uses custom month-label on child select', async () => {
+    const el = createFixture('<civds-memorable-date legend="DOB" name="dob" month-label="Mes"></civds-memorable-date>');
+    await waitForUpdate(el);
+
+    const select = el.querySelector('civds-select') as any;
+    expect(select.label).toBe('Mes');
+  });
+
+  it('uses locale-aware month names with locale="es"', async () => {
+    const el = createFixture('<civds-memorable-date legend="DOB" name="dob" locale="es"></civds-memorable-date>');
+    await waitForUpdate(el);
+
+    const select = el.querySelector('civds-select') as any;
+    expect(select.options[0].label).toBe('enero');
+    expect(select.options[11].label).toBe('diciembre');
+  });
+
+  it('uses custom day-label and year-label', async () => {
+    const el = createFixture('<civds-memorable-date legend="DOB" name="dob" day-label="Día" year-label="Año"></civds-memorable-date>');
+    await waitForUpdate(el);
+
+    const textInputs = el.querySelectorAll('civds-text-input');
+    expect((textInputs[0] as any).label).toBe('Día');
+    expect((textInputs[1] as any).label).toBe('Año');
+  });
+
   it('lays out fields horizontally', async () => {
     const el = createFixture('<civds-memorable-date legend="DOB" name="dob"></civds-memorable-date>');
     await waitForUpdate(el);

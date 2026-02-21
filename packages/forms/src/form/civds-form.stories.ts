@@ -21,7 +21,7 @@ export const Default: Story = {
       <civds-textarea label="Message" name="message"></civds-textarea>
       <button
         type="submit"
-        class="civds-inline-block civds-px-5 civds-py-2.5 civds-bg-primary civds-text-white civds-font-bold civds-border-0 civds-rounded civds-cursor-pointer hover:civds-bg-primary-dark"
+        class="civds-inline-block civds-px-5 civds-py-2.5 civds-bg-primary civds-text-white civds-font-bold civds-border-0 civds-rounded civds-cursor-pointer hover:civds-bg-primary-dark focus-visible:civds-focus-ring-inverse"
       >
         Submit
       </button>
@@ -47,7 +47,7 @@ export const WithValidation: Story = {
       <div class="civds-mt-4 civds-flex civds-gap-2">
         <button
           type="submit"
-          class="civds-inline-block civds-px-5 civds-py-2.5 civds-bg-primary civds-text-white civds-font-bold civds-border-0 civds-rounded civds-cursor-pointer hover:civds-bg-primary-dark"
+          class="civds-inline-block civds-px-5 civds-py-2.5 civds-bg-primary civds-text-white civds-font-bold civds-border-0 civds-rounded civds-cursor-pointer hover:civds-bg-primary-dark focus-visible:civds-focus-ring-inverse"
         >
           Submit
         </button>
@@ -70,7 +70,7 @@ export const WithResetButton: Story = {
       <div class="civds-mt-4 civds-flex civds-gap-2">
         <button
           type="submit"
-          class="civds-inline-block civds-px-5 civds-py-2.5 civds-bg-primary civds-text-white civds-font-bold civds-border-0 civds-rounded civds-cursor-pointer"
+          class="civds-inline-block civds-px-5 civds-py-2.5 civds-bg-primary civds-text-white civds-font-bold civds-border-0 civds-rounded civds-cursor-pointer focus-visible:civds-focus-ring-inverse"
         >
           Login
         </button>

@@ -1,6 +1,7 @@
 import { property } from 'lit/decorators.js';
 import { CivdsBaseElement } from './civds-base-element.js';
 import { dispatch } from '../utils/events.js';
+import { interpolate } from '../utils/interpolate.js';
 
 /**
  * Base element for all CivDS form components.
@@ -28,6 +29,7 @@ export class CivdsFormElement extends CivdsBaseElement {
   @property({ type: String }) error = '';
   @property({ type: String }) hint = '';
   @property({ type: String }) label = '';
+  @property({ type: String, attribute: 'required-message' }) requiredMessage = '{label} is required';
 
   constructor() {
     super();
@@ -111,7 +113,7 @@ export class CivdsFormElement extends CivdsBaseElement {
     if (this.required && !this.value) {
       this._internals.setValidity(
         { valueMissing: true },
-        this.error || `${this.label || 'This field'} is required`,
+        this.error || interpolate(this.requiredMessage, { label: this.label || 'This field' }),
         anchor ?? undefined,
       );
     } else {

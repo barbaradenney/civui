@@ -35,7 +35,7 @@ export class CivdsDateInput extends CivdsFormElement {
     const inputClasses = [
       'civds-block',
       'civds-w-full',
-      'civds-max-w-xs',
+      'civds-max-w-sm',
       'civds-border',
       'civds-rounded',
       'civds-px-2',

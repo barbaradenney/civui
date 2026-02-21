@@ -265,6 +265,32 @@ describe('civds-combobox', () => {
     expect(label!.id).toBe(labelledBy);
   });
 
+  it('sets data-active on the active option', async () => {
+    const el = createFixture('<civds-combobox label="State"></civds-combobox>') as any;
+    el.options = STATES;
+    el._open = true;
+    el._activeIndex = 1;
+    await waitForUpdate(el);
+
+    const options = el.querySelectorAll('[role="option"]');
+    expect(options[1].hasAttribute('data-active')).toBe(true);
+    expect(options[0].hasAttribute('data-active')).toBe(false);
+  });
+
+  it('sets aria-live="polite" on no-results status', async () => {
+    const el = createFixture('<civds-combobox label="State"></civds-combobox>') as any;
+    el.options = STATES;
+    await waitForUpdate(el);
+
+    const input = el.querySelector('input') as HTMLInputElement;
+    input.value = 'ZZZ';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    await waitForUpdate(el);
+
+    const noResults = el.querySelector('[role="status"]');
+    expect(noResults!.getAttribute('aria-live')).toBe('polite');
+  });
+
   it('applies focus-visible ring class', async () => {
     const el = createFixture('<civds-combobox label="State" name="state"></civds-combobox>') as any;
     el.options = [{ value: 'CA', label: 'California' }];
@@ -283,6 +309,23 @@ describe('civds-combobox', () => {
     expect(input!.className).not.toContain('focus:civds-outline-2');
     expect(input!.className).not.toContain('focus:civds-outline-primary');
     expect(input!.className).not.toContain('focus:civds-outline-offset-0');
+  });
+
+  describe('i18n overrides', () => {
+    it('uses custom no-results-text', async () => {
+      const el = createFixture('<civds-combobox label="State" no-results-text="Sin resultados"></civds-combobox>') as any;
+      el.options = STATES;
+      await waitForUpdate(el);
+
+      const input = el.querySelector('input') as HTMLInputElement;
+      input.value = 'ZZZ';
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      await waitForUpdate(el);
+
+      const noResults = el.querySelector('[role="status"]');
+      expect(noResults).not.toBeNull();
+      expect(noResults!.textContent).toContain('Sin resultados');
+    });
   });
 
   describe('analytics', () => {

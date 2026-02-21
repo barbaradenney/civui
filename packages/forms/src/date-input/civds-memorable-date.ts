@@ -1,25 +1,10 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivdsFormElement } from '@civds/core';
+import { CivdsFormElement, getMonthNames, interpolate } from '@civds/core';
 
 // Import child components
 import '../select/civds-select.js';
 import '../text-input/civds-text-input.js';
-
-const MONTHS = [
-  { value: '01', label: 'January' },
-  { value: '02', label: 'February' },
-  { value: '03', label: 'March' },
-  { value: '04', label: 'April' },
-  { value: '05', label: 'May' },
-  { value: '06', label: 'June' },
-  { value: '07', label: 'July' },
-  { value: '08', label: 'August' },
-  { value: '09', label: 'September' },
-  { value: '10', label: 'October' },
-  { value: '11', label: 'November' },
-  { value: '12', label: 'December' },
-];
 
 /**
  * CivDS Memorable Date
@@ -43,6 +28,14 @@ const MONTHS = [
 @customElement('civds-memorable-date')
 export class CivdsMemorableDate extends CivdsFormElement {
   @property({ type: String }) legend = '';
+  @property({ type: String, attribute: 'month-label' }) monthLabel = 'Month';
+  @property({ type: String, attribute: 'day-label' }) dayLabel = 'Day';
+  @property({ type: String, attribute: 'year-label' }) yearLabel = 'Year';
+  @property({ type: String, attribute: 'month-empty-label' }) monthEmptyLabel = '- Month -';
+  @property({ type: String, attribute: 'day-placeholder' }) dayPlaceholder = 'DD';
+  @property({ type: String, attribute: 'year-placeholder' }) yearPlaceholder = 'YYYY';
+  @property({ type: String, attribute: 'date-set-message' }) dateSetMessage = 'Date set to {date}';
+  @property({ type: String }) locale = 'en-US';
 
   @state() private _month = '';
   @state() private _day = '';
@@ -50,6 +43,8 @@ export class CivdsMemorableDate extends CivdsFormElement {
 
   private _legendId = this.generateId('legend');
   private _boundFieldChange = this._onFieldChange.bind(this);
+  private _cachedLocale = '';
+  private _cachedMonthOptions: { value: string; label: string }[] = [];
 
   override connectedCallback(): void {
     super.connectedCallback();
@@ -87,6 +82,18 @@ export class CivdsMemorableDate extends CivdsFormElement {
     return '';
   }
 
+  private get _monthOptions(): { value: string; label: string }[] {
+    if (this._cachedLocale !== this.locale) {
+      this._cachedLocale = this.locale;
+      const names = getMonthNames(this.locale);
+      this._cachedMonthOptions = names.map((label, i) => ({
+        value: String(i + 1).padStart(2, '0'),
+        label,
+      }));
+    }
+    return this._cachedMonthOptions;
+  }
+
   override render() {
     const describedBy = [
       this.hint ? this._hintId : '',
@@ -122,11 +129,11 @@ export class CivdsMemorableDate extends CivdsFormElement {
         <div class="civds-flex civds-gap-4 civds-items-end" data-civds-memorable-date>
           <div class="civds-w-40">
             <civds-select
-              label="Month"
+              label="${this.monthLabel}"
               name="${this.name ? `${this.name}-month` : 'month'}"
-              .options="${MONTHS}"
+              .options="${this._monthOptions}"
               .value="${this._month}"
-              empty-label="- Month -"
+              empty-label="${this.monthEmptyLabel}"
               ?required="${this.required}"
               ?disabled="${this.disabled}"
               disable-analytics
@@ -134,11 +141,11 @@ export class CivdsMemorableDate extends CivdsFormElement {
           </div>
           <div class="civds-w-20">
             <civds-text-input
-              label="Day"
+              label="${this.dayLabel}"
               name="${this.name ? `${this.name}-day` : 'day'}"
               type="number"
               .value="${this._day}"
-              placeholder="DD"
+              placeholder="${this.dayPlaceholder}"
               maxlength="2"
               ?required="${this.required}"
               ?disabled="${this.disabled}"
@@ -147,11 +154,11 @@ export class CivdsMemorableDate extends CivdsFormElement {
           </div>
           <div class="civds-w-24">
             <civds-text-input
-              label="Year"
+              label="${this.yearLabel}"
               name="${this.name ? `${this.name}-year` : 'year'}"
               type="number"
               .value="${this._year}"
-              placeholder="YYYY"
+              placeholder="${this.yearPlaceholder}"
               maxlength="4"
               ?required="${this.required}"
               ?disabled="${this.disabled}"
@@ -194,6 +201,9 @@ export class CivdsMemorableDate extends CivdsFormElement {
       }),
     );
     this.sendAnalytics('change');
+    if (this.value) {
+      this.announce(interpolate(this.dateSetMessage, { date: `${this._month}/${this._day}/${this._year}` }));
+    }
   }
 
   override formResetCallback(): void {

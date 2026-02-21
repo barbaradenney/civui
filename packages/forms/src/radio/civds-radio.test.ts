@@ -107,6 +107,22 @@ describe('civds-radio', () => {
     expect(border).not.toBeNull();
   });
 
+  it('sets data-civds-tile on tile wrapper', async () => {
+    const el = createFixture('<civds-radio label="Option A" value="a" tile></civds-radio>');
+    await waitForUpdate(el);
+
+    const wrapper = el.querySelector('[data-civds-tile]');
+    expect(wrapper).not.toBeNull();
+  });
+
+  it('does not set data-civds-tile when not tile variant', async () => {
+    const el = createFixture('<civds-radio label="Option A" value="a"></civds-radio>');
+    await waitForUpdate(el);
+
+    const wrapper = el.querySelector('[data-civds-tile]');
+    expect(wrapper).toBeNull();
+  });
+
   it('renders disabled state', async () => {
     const el = createFixture('<civds-radio label="Option A" value="a" disabled></civds-radio>');
     await waitForUpdate(el);
@@ -311,6 +327,30 @@ describe('civds-radio-group accessibility', () => {
 
     const fieldset = el.querySelector('fieldset');
     expect(fieldset!.getAttribute('aria-invalid')).toBe('false');
+  });
+
+  it('sets aria-required on fieldset when required', async () => {
+    const el = createFixture(`
+      <civds-radio-group legend="Color" name="color" required>
+        <civds-radio label="Red" value="red"></civds-radio>
+      </civds-radio-group>
+    `);
+    await waitForUpdate(el);
+
+    const fieldset = el.querySelector('fieldset');
+    expect(fieldset!.getAttribute('aria-required')).toBe('true');
+  });
+
+  it('sets aria-required="false" on fieldset when not required', async () => {
+    const el = createFixture(`
+      <civds-radio-group legend="Color" name="color">
+        <civds-radio label="Red" value="red"></civds-radio>
+      </civds-radio-group>
+    `);
+    await waitForUpdate(el);
+
+    const fieldset = el.querySelector('fieldset');
+    expect(fieldset!.getAttribute('aria-required')).toBe('false');
   });
 });
 

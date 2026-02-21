@@ -109,6 +109,7 @@ export function Select({
   onChange,
 }: SelectProps) {
   const [open, setOpen] = useState(false);
+  const [focused, setFocused] = useState(false);
 
   const selectedOption = options.find((o) => o.value === value);
 
@@ -140,8 +141,11 @@ export function Select({
           styles.trigger,
           error ? formStyles.inputError : null,
           disabled ? formStyles.inputDisabled : null,
+          focused ? formStyles.inputFocused : null,
         ]}
         onPress={() => !disabled && setOpen(true)}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
         disabled={disabled}
         accessibilityRole="combobox"
         accessibilityLabel={buildAccessibilityLabel({ label, hint, error, required })}

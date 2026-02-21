@@ -2,8 +2,21 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
 <style>
-  /* Token CSS custom properties */
+  /* CivDS design tokens — auto-generated values from @civds/tokens */
   :root {
+    /* Border */
+    --civds-border-radius-none: 0px;
+    --civds-border-radius-sm: 2px;
+    --civds-border-radius-DEFAULT: 4px;
+    --civds-border-radius-md: 6px;
+    --civds-border-radius-lg: 8px;
+    --civds-border-radius-full: 9999px;
+    --civds-border-width-0: 0px;
+    --civds-border-width-2: 2px;
+    --civds-border-width-4: 4px;
+    --civds-border-width-DEFAULT: 1px;
+
+    /* Colors */
     --civds-color-primary-lightest: #d9e8f6;
     --civds-color-primary-lighter: #73b3e7;
     --civds-color-primary-light: #2378c3;
@@ -36,6 +49,131 @@
     --civds-color-base-darkest: #1b1b1b;
     --civds-color-white-DEFAULT: #ffffff;
     --civds-color-black-DEFAULT: #000000;
+    --civds-color-accent-cool-lightest: #e1f3f8;
+    --civds-color-accent-cool-light: #97d4ea;
+    --civds-color-accent-cool-DEFAULT: #00bde3;
+    --civds-color-accent-cool-dark: #28a0cb;
+    --civds-color-accent-warm-lightest: #f2e4d4;
+    --civds-color-accent-warm-light: #ffbc78;
+    --civds-color-accent-warm-DEFAULT: #fa9441;
+    --civds-color-accent-warm-dark: #c05600;
+
+    /* Spacing — default density (1x factor) */
+    --civds-spacing-0: 0px;
+    --civds-spacing-px: 1px;
+    --civds-spacing-0.5: 2px;
+    --civds-spacing-1: 4px;
+    --civds-spacing-1.5: 6px;
+    --civds-spacing-2: 8px;
+    --civds-spacing-2.5: 10px;
+    --civds-spacing-3: 12px;
+    --civds-spacing-4: 16px;
+    --civds-spacing-5: 20px;
+    --civds-spacing-6: 24px;
+    --civds-spacing-8: 32px;
+    --civds-spacing-10: 40px;
+    --civds-spacing-12: 48px;
+    --civds-spacing-16: 64px;
+    --civds-spacing-20: 80px;
+
+    /* Typography */
+    --civds-typography-fontFamily-sans: "Public Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --civds-typography-fontFamily-mono: "Roboto Mono", Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+    --civds-typography-fontSize-xs: 12px;
+    --civds-typography-fontSize-sm: 14px;
+    --civds-typography-fontSize-base: 16px;
+    --civds-typography-fontSize-lg: 18px;
+    --civds-typography-fontSize-xl: 20px;
+    --civds-typography-fontSize-2xl: 24px;
+    --civds-typography-fontSize-3xl: 28px;
+    --civds-typography-fontSize-4xl: 36px;
+    --civds-typography-fontSize-5xl: 48px;
+    --civds-typography-fontWeight-light: 300;
+    --civds-typography-fontWeight-regular: 400;
+    --civds-typography-fontWeight-semibold: 600;
+    --civds-typography-fontWeight-bold: 700;
+    --civds-typography-lineHeight-none: 1;
+    --civds-typography-lineHeight-tight: 1.25;
+    --civds-typography-lineHeight-snug: 1.375;
+    --civds-typography-lineHeight-normal: 1.5;
+    --civds-typography-lineHeight-relaxed: 1.625;
+    --civds-typography-lineHeight-loose: 2;
+
+    /* Motion */
+    --civds-motion-duration-instant: 0ms;
+    --civds-motion-duration-fast: 100ms;
+    --civds-motion-duration-normal: 200ms;
+    --civds-motion-duration-slow: 300ms;
+    --civds-motion-duration-slower: 500ms;
+    --civds-motion-easing-linear: cubic-bezier(0, 0, 1, 1);
+    --civds-motion-easing-ease-in: cubic-bezier(0.4, 0, 1, 1);
+    --civds-motion-easing-ease-out: cubic-bezier(0, 0, 0.2, 1);
+    --civds-motion-easing-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* Shadows */
+    --civds-shadow-none: 0px 0px 0px 0px transparent;
+    --civds-shadow-sm: 0px 1px 2px 0px rgba(0,0,0,0.05);
+    --civds-shadow-DEFAULT: 0px 1px 3px 0px rgba(0,0,0,0.1);
+    --civds-shadow-md: 0px 4px 6px -1px rgba(0,0,0,0.1);
+    --civds-shadow-lg: 0px 10px 15px -3px rgba(0,0,0,0.1);
+  }
+
+  /* Spacious density — larger fonts, more spacing (1.25x factor) */
+  [data-civds-scale="spacious"] {
+    --civds-typography-fontSize-xs: 0.694rem;
+    --civds-typography-fontSize-sm: clamp(0.833rem, calc(0.8295rem + 0.0193vw), 0.844rem);
+    --civds-typography-fontSize-base: clamp(1rem, calc(0.9545rem + 0.2273vw), 1.125rem);
+    --civds-typography-fontSize-lg: clamp(1.2rem, calc(1.091rem + 0.5448vw), 1.5rem);
+    --civds-typography-fontSize-xl: clamp(1.44rem, calc(1.2367rem + 1.0164vw), 1.999rem);
+    --civds-typography-fontSize-2xl: clamp(1.728rem, calc(1.3874rem + 1.703vw), 2.665rem);
+    --civds-typography-fontSize-3xl: clamp(2.074rem, calc(1.536rem + 2.688vw), 3.552rem);
+    --civds-typography-fontSize-4xl: clamp(2.488rem, calc(1.6714rem + 4.0845vw), 4.735rem);
+    --civds-typography-fontSize-5xl: clamp(2.986rem, calc(1.7767rem + 6.0464vw), 6.312rem);
+    --civds-spacing-0.5: 3px;
+    --civds-spacing-1: 5px;
+    --civds-spacing-1.5: 8px;
+    --civds-spacing-2: 10px;
+    --civds-spacing-2.5: 13px;
+    --civds-spacing-3: 15px;
+    --civds-spacing-4: 20px;
+    --civds-spacing-5: 25px;
+    --civds-spacing-6: 30px;
+    --civds-spacing-8: 40px;
+    --civds-spacing-10: 50px;
+    --civds-spacing-12: 60px;
+    --civds-spacing-16: 80px;
+    --civds-spacing-20: 100px;
+    --civds-typography-lineHeight-normal: 1.6;
+    --civds-typography-lineHeight-tight: 1.3;
+  }
+
+  /* Dense density — smaller fonts, tighter spacing (0.75x factor) */
+  [data-civds-scale="dense"] {
+    --civds-typography-fontSize-xs: 0.691rem;
+    --civds-typography-fontSize-sm: 0.778rem;
+    --civds-typography-fontSize-base: 0.875rem;
+    --civds-typography-fontSize-lg: 0.984rem;
+    --civds-typography-fontSize-xl: 1.107rem;
+    --civds-typography-fontSize-2xl: 1.246rem;
+    --civds-typography-fontSize-3xl: 1.402rem;
+    --civds-typography-fontSize-4xl: 1.577rem;
+    --civds-typography-fontSize-5xl: 1.774rem;
+    --civds-spacing-0.5: 2px;
+    --civds-spacing-1: 3px;
+    --civds-spacing-1.5: 5px;
+    --civds-spacing-2: 6px;
+    --civds-spacing-2.5: 8px;
+    --civds-spacing-3: 9px;
+    --civds-spacing-4: 12px;
+    --civds-spacing-5: 15px;
+    --civds-spacing-6: 18px;
+    --civds-spacing-8: 24px;
+    --civds-spacing-10: 30px;
+    --civds-spacing-12: 36px;
+    --civds-spacing-16: 48px;
+    --civds-spacing-20: 60px;
+    --civds-typography-lineHeight-normal: 1.4;
+    --civds-typography-lineHeight-tight: 1.15;
   }
 
   body {

@@ -1,4 +1,5 @@
 import type { Preview } from '@storybook/web-components';
+import '../packages/core/src/styles/civds.css';
 
 const preview: Preview = {
   parameters: {

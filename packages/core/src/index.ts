@@ -12,6 +12,38 @@ export { generateId } from './utils/id-generator.js';
 export { debounce } from './utils/debounce.js';
 export { dispatch } from './utils/events.js';
 
+// Date utilities
+export {
+  parseISODate,
+  toISODateString,
+  formatDate,
+  formatDateLong,
+  parseDateString,
+  isValidDate,
+  isSameDay,
+  isSameMonth,
+  addDays,
+  addMonths,
+  addYears,
+  startOfWeek,
+  endOfWeek,
+} from './date/date-utils.js';
+export {
+  generateCalendarMonth,
+  getDayOfWeekHeaders,
+  getMonthNames,
+  type CalendarDay,
+  type CalendarMonth,
+  type CalendarOptions,
+} from './date/calendar.js';
+export {
+  isDateInRange,
+  isDateDisabled,
+  clampDate,
+  isMonthDisabled,
+  type DateConstraints,
+} from './date/date-constraints.js';
+
 // Analytics
 export { ANALYTICS_EVENT_NAME } from './analytics/index.js';
 export type { AnalyticsEventDetail, AnalyticsAction } from './analytics/index.js';

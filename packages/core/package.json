@@ -10,7 +10,8 @@
     ".": "./dist/index.js",
     "./base": "./dist/base/index.js",
     "./a11y": "./dist/a11y/index.js",
-    "./utils": "./dist/utils/index.js"
+    "./utils": "./dist/utils/index.js",
+    "./date": "./dist/date/index.js"
   },
   "files": ["dist"],
   "publishConfig": {

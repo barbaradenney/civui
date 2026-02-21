@@ -24,6 +24,9 @@ export { CivdsFieldset } from './fieldset/index.js';
 // Date Input
 export { CivdsDateInput, CivdsMemorableDate } from './date-input/index.js';
 
+// Date Picker
+export { CivdsDatePicker } from './date-picker/index.js';
+
 // File Upload
 export { CivdsFileUpload } from './file-upload/index.js';
 

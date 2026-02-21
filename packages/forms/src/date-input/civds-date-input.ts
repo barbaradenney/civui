@@ -8,6 +8,10 @@ import { CivdsFormElement } from '@civds/core';
  * Uses native `<input type="date">` for the browser's date picker.
  * Handles value formatting and min/max validation.
  *
+ * @deprecated Use `civds-date-picker` instead for better accessibility.
+ * Native `<input type="date">` has known issues with Dragon NaturallySpeaking,
+ * VoiceOver on Safari, and TalkBack on Firefox. Will be removed in v1.0.
+ *
  * @element civds-date-input
  *
  * @prop {string} label - Label text

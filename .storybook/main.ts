@@ -11,12 +11,7 @@ const config: StorybookConfig = {
     options: {},
   },
   viteFinal: async (config) => {
-    config.css = {
-      ...config.css,
-      postcss: {
-        plugins: [],
-      },
-    };
+    // Use root postcss.config.js (tailwindcss + autoprefixer)
     return config;
   },
 };

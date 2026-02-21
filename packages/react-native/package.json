@@ -23,6 +23,9 @@
     "storybook:web": "storybook dev -p 6007 -c .storybook-web",
     "storybook:web:build": "storybook build -c .storybook-web -o storybook-static"
   },
+  "dependencies": {
+    "@civds/core": "workspace:*"
+  },
   "peerDependencies": {
     "react": ">=18.0.0",
     "react-native": ">=0.72.0"

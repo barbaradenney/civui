@@ -13,5 +13,8 @@ export type { CheckboxProps } from './Checkbox.js';
 export { RadioGroup } from './Radio.js';
 export type { RadioGroupProps, RadioOption } from './Radio.js';
 
+export { DatePicker } from './DatePicker.js';
+export type { DatePickerProps } from './DatePicker.js';
+
 export { useForm } from './useForm.js';
 export type { UseFormOptions, UseFormReturn } from './useForm.js';

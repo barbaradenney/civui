@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CivDS - Civic Design System</title>
+  <style>
+    :root {
+      --color-primary: #005ea2;
+      --color-primary-dark: #1a4480;
+      --color-base-darkest: #1b1b1b;
+      --color-base-dark: #565c65;
+      --color-base-light: #a9aeb1;
+      --color-base-lightest: #f0f0f0;
+      --color-white: #ffffff;
+      --color-error: #b50909;
+      --color-success: #00a91c;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Public Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: var(--color-base-darkest);
+      line-height: 1.6;
+    }
+
+    .hero {
+      background: var(--color-primary-dark);
+      color: var(--color-white);
+      padding: 4rem 2rem;
+      text-align: center;
+    }
+
+    .hero h1 { font-size: 3rem; margin-bottom: 1rem; }
+    .hero p { font-size: 1.25rem; max-width: 600px; margin: 0 auto 2rem; opacity: 0.9; }
+
+    .hero-badges {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      background: rgba(255,255,255,0.15);
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      font-size: 0.875rem;
+    }
+
+    .content { max-width: 960px; margin: 0 auto; padding: 3rem 2rem; }
+
+    h2 { font-size: 1.75rem; margin: 2rem 0 1rem; color: var(--color-primary-dark); }
+    h3 { font-size: 1.25rem; margin: 1.5rem 0 0.75rem; }
+
+    .packages {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin: 1.5rem 0;
+    }
+
+    .package-card {
+      border: 1px solid var(--color-base-light);
+      border-radius: 8px;
+      padding: 1.5rem;
+    }
+
+    .package-card h3 {
+      margin-top: 0;
+      font-family: monospace;
+      font-size: 1rem;
+      color: var(--color-primary);
+    }
+
+    .package-card p { color: var(--color-base-dark); font-size: 0.9rem; }
+
+    pre {
+      background: var(--color-base-lightest);
+      padding: 1rem 1.5rem;
+      border-radius: 4px;
+      overflow-x: auto;
+      font-size: 0.875rem;
+      margin: 1rem 0;
+    }
+
+    code {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin: 1.5rem 0;
+    }
+
+    .feature { padding: 1rem 0; }
+    .feature h3 { margin-top: 0; }
+    .feature p { color: var(--color-base-dark); font-size: 0.9rem; }
+
+    footer {
+      border-top: 1px solid var(--color-base-light);
+      padding: 2rem;
+      text-align: center;
+      color: var(--color-base-dark);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="hero">
+    <h1>CivDS</h1>
+    <p>Accessibility-first web components for modern government applications. Built with Lit, Light DOM, and ElementInternals.</p>
+    <div class="hero-badges">
+      <span class="badge">Light DOM</span>
+      <span class="badge">WCAG 2.1 AA</span>
+      <span class="badge">ElementInternals</span>
+      <span class="badge">Web + Mobile</span>
+    </div>
+  </div>
+
+  <div class="content">
+    <h2>Quick Start</h2>
+    <pre><code>npm install @civds/forms
+
+# Use in HTML
+&lt;script type="module"&gt;
+  import '@civds/forms';
+&lt;/script&gt;
+
+&lt;civds-text-input
+  label="Email address"
+  name="email"
+  type="email"
+  required
+&gt;&lt;/civds-text-input&gt;</code></pre>
+
+    <h2>Why CivDS?</h2>
+    <div class="features">
+      <div class="feature">
+        <h3>Accessibility First</h3>
+        <p>Light DOM means external labels, ARIA IDREFs, and focus management work without Shadow DOM workarounds. Every component is WCAG 2.1 AA compliant.</p>
+      </div>
+      <div class="feature">
+        <h3>Native Form Participation</h3>
+        <p>ElementInternals enables custom elements to participate in native HTML forms. No hidden inputs or JavaScript hacks.</p>
+      </div>
+      <div class="feature">
+        <h3>Design Tokens</h3>
+        <p>W3C DTCG format tokens as the single source of truth. Auto-generated CSS custom properties, Tailwind preset, JS constants, and React Native values.</p>
+      </div>
+      <div class="feature">
+        <h3>Cross-Platform</h3>
+        <p>Web components for browsers plus a React Native companion package with the same API. Build once, deploy everywhere.</p>
+      </div>
+    </div>
+
+    <h2>Packages</h2>
+    <div class="packages">
+      <div class="package-card">
+        <h3>@civds/tokens</h3>
+        <p>Design tokens in W3C DTCG format. Outputs CSS custom properties, Tailwind preset, JS constants, and React Native values.</p>
+      </div>
+      <div class="package-card">
+        <h3>@civds/core</h3>
+        <p>Base classes (CivdsBaseElement, CivdsFormElement), accessibility utilities, and shared helpers.</p>
+      </div>
+      <div class="package-card">
+        <h3>@civds/forms</h3>
+        <p>Form components: text-input, textarea, select, checkbox, radio, combobox, date-input, file-upload, and more.</p>
+      </div>
+      <div class="package-card">
+        <h3>@civds/react-native</h3>
+        <p>React Native companion with matching API. TextInput, Textarea, Select, Checkbox, Radio, and useForm() hook.</p>
+      </div>
+      <div class="package-card">
+        <h3>@civds/cli</h3>
+        <p>Developer CLI for generating components, building, testing, validating, and releasing.</p>
+      </div>
+      <div class="package-card">
+        <h3>@civds/test-utils</h3>
+        <p>Shared test utilities for component testing with Vitest and jsdom.</p>
+      </div>
+    </div>
+
+    <h2>Form Example</h2>
+    <pre><code>&lt;form&gt;
+  &lt;civds-text-input label="Full name" name="name" required&gt;&lt;/civds-text-input&gt;
+  &lt;civds-text-input label="Email" name="email" type="email" required&gt;&lt;/civds-text-input&gt;
+  &lt;civds-select label="State" name="state" .options=&quot;${JSON.stringify([
+    { value: '', label: 'Select a state' },
+    { value: 'CA', label: 'California' },
+    { value: 'NY', label: 'New York' },
+  ])}&quot;&gt;&lt;/civds-select&gt;
+  &lt;civds-textarea label="Message" name="message" hint="Max 500 characters"&gt;&lt;/civds-textarea&gt;
+  &lt;civds-checkbox label="I agree to the terms" name="terms" required&gt;&lt;/civds-checkbox&gt;
+  &lt;button type="submit"&gt;Submit&lt;/button&gt;
+&lt;/form&gt;</code></pre>
+
+    <h2>CLI</h2>
+    <pre><code># Generate a new component
+civds generate component my-widget
+
+# Build packages
+civds build all
+
+# Run tests
+civds test --unit
+
+# Validate everything
+civds validate
+
+# Release
+civds release patch --dry-run</code></pre>
+  </div>
+
+  <footer>
+    <p>CivDS &mdash; Civic Design System. MIT License.</p>
+  </footer>
+</body>
+</html>

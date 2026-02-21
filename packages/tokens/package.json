@@ -1,0 +1,26 @@
+{
+  "name": "@civds/tokens",
+  "version": "0.1.0",
+  "description": "CivDS design tokens — W3C DTCG format with Style Dictionary v4",
+  "license": "MIT",
+  "type": "module",
+  "main": "dist/js/tokens.js",
+  "types": "dist/js/tokens.d.ts",
+  "exports": {
+    ".": "./dist/js/tokens.js",
+    "./css": "./dist/css/tokens.css",
+    "./tailwind": "./dist/tailwind/preset.js",
+    "./react-native": "./dist/react-native/tokens.js"
+  },
+  "files": ["dist"],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "node build/build-tokens.js",
+    "dev": "node build/build-tokens.js --watch"
+  },
+  "devDependencies": {
+    "style-dictionary": "^4.0.0"
+  }
+}

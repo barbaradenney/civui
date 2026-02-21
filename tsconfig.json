@@ -1,0 +1,29 @@
+{
+  "files": [],
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "experimentalDecorators": true,
+    "useDefineForClassFields": false
+  },
+  "references": [
+    { "path": "./packages/core" },
+    { "path": "./packages/forms" },
+    { "path": "./packages/test-utils" },
+    { "path": "./packages/react-native" },
+    { "path": "./packages/cli" },
+    { "path": "./packages/content" }
+  ]
+}

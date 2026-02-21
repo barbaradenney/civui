@@ -1,0 +1,19 @@
+{
+  "$schema": "../../src/schema/form.schema.json",
+  "meta": {
+    "title": "",
+    "description": "",
+    "submitLabel": "Submit",
+    "cancelLabel": "Cancel"
+  },
+  "fields": {
+    "example_field": {
+      "label": "Field label",
+      "hint": "Help text for this field",
+      "placeholder": "",
+      "errors": {
+        "required": "This field is required"
+      }
+    }
+  }
+}

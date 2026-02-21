@@ -1,0 +1,15 @@
+{
+  "allow": [
+    "Bash(ls *)",
+    "Bash(git diff *)",
+    "Bash(git diff --cached *)",
+    "Bash(git log *)",
+    "Bash(git status *)",
+    "Bash(pnpm test *)",
+    "Bash(pnpm run build *)",
+    "Bash(pnpm run lint *)",
+    "Bash(pnpm run typecheck *)"
+  ],
+  "deny": [],
+  "ask": []
+}

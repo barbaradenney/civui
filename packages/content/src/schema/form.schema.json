@@ -1,0 +1,61 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://civds.dev/schemas/form-content.json",
+  "title": "CivDS Form Content",
+  "description": "Schema for CivDS form content files that define labels, hints, errors, and placeholders.",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "meta": {
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "submitLabel": { "type": "string" },
+        "cancelLabel": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "fields": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/FieldContent"
+      }
+    }
+  },
+  "required": ["fields"],
+  "additionalProperties": false,
+  "definitions": {
+    "FieldContent": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Visible label for the field."
+        },
+        "hint": {
+          "type": "string",
+          "description": "Help text displayed below the label."
+        },
+        "placeholder": {
+          "type": "string",
+          "description": "Placeholder text shown inside the input."
+        },
+        "description": {
+          "type": "string",
+          "description": "Descriptive text for checkbox/radio options."
+        },
+        "errors": {
+          "type": "object",
+          "additionalProperties": { "type": "string" },
+          "description": "Error messages keyed by validation rule name."
+        }
+      },
+      "required": ["label"],
+      "additionalProperties": false
+    }
+  }
+}

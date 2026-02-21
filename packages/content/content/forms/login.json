@@ -1,0 +1,25 @@
+{
+  "$schema": "../../src/schema/form.schema.json",
+  "meta": {
+    "title": "Sign in to your account",
+    "submitLabel": "Sign in"
+  },
+  "fields": {
+    "email": {
+      "label": "Email address",
+      "hint": "We'll only use this to contact you",
+      "placeholder": "you@example.com",
+      "errors": {
+        "required": "Email address is required",
+        "invalid": "Enter a valid email address"
+      }
+    },
+    "password": {
+      "label": "Password",
+      "errors": {
+        "required": "Password is required",
+        "minLength": "Password must be at least 8 characters"
+      }
+    }
+  }
+}

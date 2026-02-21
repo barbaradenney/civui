@@ -1,0 +1,48 @@
+{
+  "name": "@civds/content",
+  "version": "0.1.0",
+  "description": "CivDS content management — JSON-based content files for labels, hints, errors, and placeholders",
+  "license": "MIT",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js",
+    "./types": "./dist/types/index.js",
+    "./loader": "./dist/loader/index.js",
+    "./react": "./dist/react/index.js",
+    "./validate": "./dist/validate/index.js",
+    "./content/*": "./content/*"
+  },
+  "files": [
+    "dist",
+    "content"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "dev": "tsc -b --watch",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "validate": "node --import tsx src/validate/cli.ts"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@testing-library/react": "^16.3.2",
+    "@types/react": "^18.2.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.6.0",
+    "vitest": "^2.0.0"
+  }
+}

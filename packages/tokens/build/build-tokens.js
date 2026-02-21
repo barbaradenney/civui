@@ -106,7 +106,7 @@ function buildScales(tokens, scalesConfig) {
   const rnScales = {};
 
   for (const [scaleName, scale] of Object.entries(scales)) {
-    if (scaleName === 'product') continue; // product = :root default
+    if (scaleName === 'default') continue; // default = :root baseline
 
     const isFluid = typeof scale.ratio === 'object'; // has min/max
     const desc = scale.$description || scaleName;

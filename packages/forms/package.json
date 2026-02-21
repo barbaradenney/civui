@@ -1,0 +1,42 @@
+{
+  "name": "@civds/forms",
+  "version": "0.1.0",
+  "description": "CivDS form components — Accessible form controls with ElementInternals",
+  "license": "MIT",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js",
+    "./text-input": "./dist/text-input/index.js",
+    "./select": "./dist/select/index.js",
+    "./textarea": "./dist/textarea/index.js",
+    "./checkbox": "./dist/checkbox/index.js",
+    "./radio": "./dist/radio/index.js",
+    "./date-input": "./dist/date-input/index.js",
+    "./file-upload": "./dist/file-upload/index.js",
+    "./form-group": "./dist/form-group/index.js",
+    "./fieldset": "./dist/fieldset/index.js",
+    "./form": "./dist/form/index.js",
+    "./combobox": "./dist/combobox/index.js"
+  },
+  "files": ["dist"],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "dev": "tsc -b --watch",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@civds/core": "workspace:*",
+    "lit": "^3.2.0"
+  },
+  "devDependencies": {
+    "@civds/tokens": "workspace:*",
+    "typescript": "^5.6.0",
+    "vitest": "^2.0.0"
+  }
+}

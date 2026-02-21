@@ -14,19 +14,23 @@ import { CivdsFormElement } from '@civds/core';
  * @prop {string} name - Form field name
  * @prop {string} value - Form submission value when checked
  * @prop {boolean} checked - Whether the checkbox is checked
+ * @prop {boolean} indeterminate - Tri-state mixed state
  * @prop {string} description - Description text below the label
  * @prop {boolean} tile - Tile variant (bordered card style)
  * @prop {boolean} required - Whether the field is required
  * @prop {boolean} disabled - Whether the field is disabled
  *
  * @fires civds-change - When checked state changes
+ * @fires civds-input - When checked state changes (input event)
  */
 @customElement('civds-checkbox')
 export class CivdsCheckbox extends CivdsFormElement {
   @property({ type: Boolean, reflect: true }) checked = false;
+  @property({ type: Boolean, reflect: true }) indeterminate = false;
   @property({ type: String }) description = '';
   @property({ type: Boolean, reflect: true }) tile = false;
 
+  private _defaultChecked = false;
   private _descriptionId = this.generateId('desc');
 
   protected override get _ariaDescribedBy(): string {
@@ -40,16 +44,18 @@ export class CivdsCheckbox extends CivdsFormElement {
   override connectedCallback(): void {
     super.connectedCallback();
     if (!this.value) this.value = 'on';
+    this._defaultChecked = this.checked;
   }
 
   override render() {
+    const isActive = this.checked || this.indeterminate;
     const wrapperClasses = this.tile
       ? [
           'civds-relative',
           'civds-border',
           'civds-rounded',
           'civds-p-4',
-          this.checked ? 'civds-border-primary civds-bg-primary-lightest' : 'civds-border-base-light',
+          isActive ? 'civds-border-primary civds-bg-primary-lightest' : 'civds-border-base-light',
           this.disabled ? 'civds-opacity-50 civds-cursor-not-allowed' : 'civds-cursor-pointer',
         ]
           .filter(Boolean)
@@ -85,6 +91,7 @@ export class CivdsCheckbox extends CivdsFormElement {
           ?disabled="${this.disabled}"
           ?required="${this.required}"
           aria-required="${this.required}"
+          aria-checked="${this.indeterminate ? 'mixed' : this.checked ? 'true' : 'false'}"
           aria-invalid="${this.error ? 'true' : 'false'}"
           aria-describedby="${this._ariaDescribedBy || nothing}"
           @change="${this._onCheckboxChange}"
@@ -105,6 +112,9 @@ export class CivdsCheckbox extends CivdsFormElement {
 
     return html`
       <div class="civds-mb-2 ${wrapperClasses}" data-civds-tile="${this.tile || nothing}">
+        ${this.hint
+          ? html`<span class="civds-block civds-mb-1 civds-text-sm civds-text-base" id="${this._hintId}">${this.hint}</span>`
+          : nothing}
         ${this.error
           ? html`<span class="civds-block civds-mb-1 civds-text-sm civds-text-error civds-font-bold" id="${this._errorId}" role="alert">${this.error}</span>`
           : nothing}
@@ -113,10 +123,26 @@ export class CivdsCheckbox extends CivdsFormElement {
     `;
   }
 
+  override updated(changed: Map<string, unknown>): void {
+    super.updated(changed);
+    if (changed.has('indeterminate')) {
+      const input = this.querySelector('input') as HTMLInputElement | null;
+      if (input) input.indeterminate = this.indeterminate;
+    }
+  }
+
   private _onCheckboxChange(e: Event): void {
     const target = e.target as HTMLInputElement;
     this.checked = target.checked;
+    this.indeterminate = false;
     this.updateFormValue(this.checked ? this.value : null);
+    this.dispatchEvent(
+      new CustomEvent('civds-input', {
+        detail: { checked: this.checked, value: this.value },
+        bubbles: true,
+        composed: true,
+      }),
+    );
     this.dispatchEvent(
       new CustomEvent('civds-change', {
         detail: { checked: this.checked, value: this.value },
@@ -128,9 +154,10 @@ export class CivdsCheckbox extends CivdsFormElement {
   }
 
   override formResetCallback(): void {
-    this.checked = false;
+    this.checked = this._defaultChecked;
+    this.indeterminate = false;
     this.error = '';
-    this.updateFormValue(null);
+    this.updateFormValue(this._defaultChecked ? this.value : null);
     this.dispatchEvent(new CustomEvent('civds-reset', { bubbles: true, composed: true }));
   }
 }

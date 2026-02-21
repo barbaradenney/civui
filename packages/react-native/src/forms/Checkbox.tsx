@@ -16,10 +16,14 @@ export interface CheckboxProps {
   label: string;
   /** Whether the checkbox is checked. */
   checked?: boolean;
+  /** Tri-state mixed/indeterminate state. */
+  indeterminate?: boolean;
   /** The value submitted with form data. Defaults to "on". */
   value?: string;
   /** Description text below the label. */
   description?: string;
+  /** Hint text below description. */
+  hint?: string;
   /** Error message. */
   error?: string;
   /** Whether the field is required. */
@@ -80,6 +84,20 @@ const styles = StyleSheet.create({
     borderColor: colors.primary.DEFAULT,
     backgroundColor: colors.primary.lightest,
   },
+  boxIndeterminate: {
+    backgroundColor: colors.primary.DEFAULT,
+    borderColor: colors.primary.DEFAULT,
+  },
+  indeterminateMark: {
+    color: colors.white,
+    fontSize: 14,
+    fontWeight: typography.fontWeight.bold,
+  },
+  hint: {
+    fontSize: typography.fontSize.sm,
+    color: colors.base.DEFAULT,
+    marginTop: 2,
+  },
 });
 
 /**
@@ -91,7 +109,9 @@ export function Checkbox({
   name,
   label,
   checked = false,
+  indeterminate = false,
   description,
+  hint,
   error,
   required,
   disabled,
@@ -112,11 +132,16 @@ export function Checkbox({
         style={[
           styles.box,
           checked ? styles.boxChecked : null,
+          indeterminate ? styles.boxIndeterminate : null,
           disabled ? styles.boxDisabled : null,
           !tile && focused ? formStyles.inputFocused : null,
         ]}
       >
-        {checked && <Text style={styles.checkmark}>{'\u2713'}</Text>}
+        {indeterminate
+          ? <Text style={styles.indeterminateMark}>{'\u2014'}</Text>
+          : checked
+            ? <Text style={styles.checkmark}>{'\u2713'}</Text>
+            : null}
       </View>
       <View style={{ flex: 1 }}>
         <Text style={styles.labelText}>
@@ -124,6 +149,7 @@ export function Checkbox({
           {required && <Text style={formStyles.requiredIndicator}> *</Text>}
         </Text>
         {description ? <Text style={styles.description}>{description}</Text> : null}
+        {hint ? <Text style={styles.hint}>{hint}</Text> : null}
       </View>
     </View>
   );
@@ -138,7 +164,7 @@ export function Checkbox({
       <TouchableOpacity
         style={[
           tile ? styles.tile : null,
-          tile && checked ? styles.tileChecked : null,
+          tile && (checked || indeterminate) ? styles.tileChecked : null,
           tile && focused ? formStyles.inputFocused : null,
         ]}
         onPress={handlePress}
@@ -146,8 +172,8 @@ export function Checkbox({
         onBlur={() => setFocused(false)}
         disabled={disabled}
         accessibilityRole="checkbox"
-        accessibilityLabel={buildAccessibilityLabel({ label, error, required })}
-        accessibilityState={{ checked, disabled }}
+        accessibilityLabel={buildAccessibilityLabel({ label, hint, error, required })}
+        accessibilityState={{ checked: indeterminate ? 'mixed' : checked, disabled }}
         testID={`civds-checkbox-${name}-control`}
       >
         {content}

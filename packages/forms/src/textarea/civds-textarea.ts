@@ -32,6 +32,16 @@ export class CivdsTextarea extends CivdsFormElement {
 
   @state() private _charCount = 0;
 
+  private _charCountId = this.generateId('charcount');
+
+  protected override get _ariaDescribedBy(): string {
+    const ids: string[] = [];
+    if (this.hint) ids.push(this._hintId);
+    if (this.error) ids.push(this._errorId);
+    if (this.maxlength != null && this.maxlength > 0) ids.push(this._charCountId);
+    return ids.join(' ') || '';
+  }
+
   override render() {
     const textareaClasses = [
       'civds-block',
@@ -47,9 +57,7 @@ export class CivdsTextarea extends CivdsFormElement {
       'civds-resize-y',
       this.error ? 'civds-border-error civds-border-l-4' : 'civds-border-base-light',
       this.disabled ? 'civds-opacity-50 civds-cursor-not-allowed civds-bg-base-lightest' : '',
-      'focus:civds-outline-2',
-      'focus:civds-outline-primary',
-      'focus:civds-outline-offset-0',
+      'focus-visible:civds-focus-ring',
     ]
       .filter(Boolean)
       .join(' ');
@@ -88,6 +96,7 @@ export class CivdsTextarea extends CivdsFormElement {
           maxlength="${this.maxlength ?? nothing}"
           ?disabled="${this.disabled}"
           ?required="${this.required}"
+          aria-required="${this.required}"
           aria-describedby="${this._ariaDescribedBy || nothing}"
           aria-invalid="${this.error ? 'true' : 'false'}"
           @input="${this._onInput}"
@@ -96,6 +105,7 @@ export class CivdsTextarea extends CivdsFormElement {
         ${showCharCount
           ? html`
               <span
+                id="${this._charCountId}"
                 class="civds-block civds-mt-0.5 civds-text-sm ${remaining < 0
                   ? 'civds-text-error civds-font-bold'
                   : 'civds-text-base'}"

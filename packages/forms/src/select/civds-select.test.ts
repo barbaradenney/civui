@@ -168,9 +168,35 @@ describe('civds-select', () => {
     expect(el.querySelector('select')).not.toBeNull();
   });
 
+  it('sets aria-required when required', async () => {
+    const el = createFixture('<civds-select label="State" required></civds-select>');
+    await waitForUpdate(el);
+
+    const select = el.querySelector('select');
+    expect(select!.getAttribute('aria-required')).toBe('true');
+  });
+
   it('has static formAssociated = true', () => {
     const Ctor = customElements.get('civds-select') as any;
     expect(Ctor.formAssociated).toBe(true);
+  });
+
+  it('applies focus-visible ring class', async () => {
+    const el = createFixture('<civds-select label="State" name="state"></civds-select>');
+    await waitForUpdate(el);
+
+    const select = el.querySelector('select');
+    expect(select!.className).toContain('focus-visible:civds-focus-ring');
+  });
+
+  it('does not use deprecated focus: outline classes', async () => {
+    const el = createFixture('<civds-select label="State" name="state"></civds-select>');
+    await waitForUpdate(el);
+
+    const select = el.querySelector('select');
+    expect(select!.className).not.toContain('focus:civds-outline-2');
+    expect(select!.className).not.toContain('focus:civds-outline-primary');
+    expect(select!.className).not.toContain('focus:civds-outline-offset-0');
   });
 
   describe('analytics', () => {

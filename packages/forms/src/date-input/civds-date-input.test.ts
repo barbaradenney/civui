@@ -93,6 +93,14 @@ describe('civds-date-input', () => {
     expect(abbr).not.toBeNull();
   });
 
+  it('sets aria-required when required', async () => {
+    const el = createFixture('<civds-date-input label="Date" required></civds-date-input>');
+    await waitForUpdate(el);
+
+    const input = el.querySelector('input');
+    expect(input!.getAttribute('aria-required')).toBe('true');
+  });
+
   it('uses Light DOM', async () => {
     const el = createFixture('<civds-date-input label="Date"></civds-date-input>');
     await waitForUpdate(el);
@@ -103,6 +111,24 @@ describe('civds-date-input', () => {
   it('has static formAssociated = true', () => {
     const Ctor = customElements.get('civds-date-input') as any;
     expect(Ctor.formAssociated).toBe(true);
+  });
+
+  it('applies focus-visible ring class', async () => {
+    const el = createFixture('<civds-date-input label="Start date" name="start"></civds-date-input>');
+    await waitForUpdate(el);
+
+    const input = el.querySelector('input');
+    expect(input!.className).toContain('focus-visible:civds-focus-ring');
+  });
+
+  it('does not use deprecated focus: outline classes', async () => {
+    const el = createFixture('<civds-date-input label="Start date" name="start"></civds-date-input>');
+    await waitForUpdate(el);
+
+    const input = el.querySelector('input');
+    expect(input!.className).not.toContain('focus:civds-outline-2');
+    expect(input!.className).not.toContain('focus:civds-outline-primary');
+    expect(input!.className).not.toContain('focus:civds-outline-offset-0');
   });
 });
 

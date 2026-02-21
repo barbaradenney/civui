@@ -122,6 +122,24 @@ describe('civds-radio', () => {
     expect(el.shadowRoot).toBeNull();
     expect(el.querySelector('input')).not.toBeNull();
   });
+
+  it('applies focus-visible ring class to radio input', async () => {
+    const el = createFixture('<civds-radio label="Option A" value="a"></civds-radio>');
+    await waitForUpdate(el);
+
+    const input = el.querySelector('input[type="radio"]');
+    expect(input!.className).toContain('focus-visible:civds-focus-ring');
+  });
+
+  it('does not use deprecated focus: outline classes on radio', async () => {
+    const el = createFixture('<civds-radio label="Option A" value="a"></civds-radio>');
+    await waitForUpdate(el);
+
+    const input = el.querySelector('input[type="radio"]');
+    expect(input!.className).not.toContain('focus:civds-outline-2');
+    expect(input!.className).not.toContain('focus:civds-outline-primary');
+    expect(input!.className).not.toContain('focus:civds-outline-offset-0');
+  });
 });
 
 describe('civds-radio-group', () => {
@@ -220,6 +238,79 @@ describe('civds-radio-group', () => {
   it('has static formAssociated = true', () => {
     const Ctor = customElements.get('civds-radio-group') as any;
     expect(Ctor.formAssociated).toBe(true);
+  });
+});
+
+describe('civds-radio accessibility', () => {
+  it('sets aria-invalid when error is present', async () => {
+    const el = createFixture('<civds-radio label="Option A" value="a" error="Required"></civds-radio>');
+    await waitForUpdate(el);
+
+    const input = el.querySelector('input') as HTMLInputElement;
+    expect(input.getAttribute('aria-invalid')).toBe('true');
+  });
+
+  it('sets aria-invalid to false when no error', async () => {
+    const el = createFixture('<civds-radio label="Option A" value="a"></civds-radio>');
+    await waitForUpdate(el);
+
+    const input = el.querySelector('input') as HTMLInputElement;
+    expect(input.getAttribute('aria-invalid')).toBe('false');
+  });
+
+  it('includes description in aria-describedby', async () => {
+    const el = createFixture(
+      '<civds-radio label="Option A" value="a" description="This is option A"></civds-radio>',
+    );
+    await waitForUpdate(el);
+
+    const input = el.querySelector('input') as HTMLInputElement;
+    const describedBy = input.getAttribute('aria-describedby');
+    expect(describedBy).toBeTruthy();
+
+    const descSpan = el.querySelector('span[id]');
+    expect(descSpan).not.toBeNull();
+    expect(describedBy).toContain(descSpan!.id);
+  });
+
+  it('does not include error in aria-describedby (error handled by group)', async () => {
+    const el = createFixture(
+      '<civds-radio label="Option A" value="a" description="Details" error="Required"></civds-radio>',
+    );
+    await waitForUpdate(el);
+
+    const input = el.querySelector('input') as HTMLInputElement;
+    const describedBy = input.getAttribute('aria-describedby')!;
+    // Only description ID, no error ID (error is displayed by the radio-group)
+    const ids = describedBy.split(' ');
+    expect(ids.length).toBe(1);
+    expect(el.querySelector(`#${ids[0]}`)).not.toBeNull();
+  });
+});
+
+describe('civds-radio-group accessibility', () => {
+  it('sets aria-invalid on fieldset when error is present', async () => {
+    const el = createFixture(`
+      <civds-radio-group legend="Color" name="color" error="Required">
+        <civds-radio label="Red" value="red"></civds-radio>
+      </civds-radio-group>
+    `);
+    await waitForUpdate(el);
+
+    const fieldset = el.querySelector('fieldset');
+    expect(fieldset!.getAttribute('aria-invalid')).toBe('true');
+  });
+
+  it('sets aria-invalid to false on fieldset when no error', async () => {
+    const el = createFixture(`
+      <civds-radio-group legend="Color" name="color">
+        <civds-radio label="Red" value="red"></civds-radio>
+      </civds-radio-group>
+    `);
+    await waitForUpdate(el);
+
+    const fieldset = el.querySelector('fieldset');
+    expect(fieldset!.getAttribute('aria-invalid')).toBe('false');
   });
 });
 

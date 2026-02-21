@@ -28,8 +28,14 @@ export class CivdsRadio extends CivdsBaseElement {
   @property({ type: Boolean, reflect: true }) tile = false;
   @property({ type: Boolean, reflect: true }) disabled = false;
   @property({ type: String }) name = '';
+  @property({ type: String }) error = '';
 
   private _inputId = this.generateId('input');
+  private _descriptionId = this.generateId('desc');
+
+  private get _ariaDescribedBy(): string {
+    return this.description ? this._descriptionId : '';
+  }
 
   override render() {
     const wrapperClasses = this.tile
@@ -51,6 +57,7 @@ export class CivdsRadio extends CivdsBaseElement {
       'civds-mr-2',
       'civds-align-middle',
       'civds-accent-primary',
+      'focus-visible:civds-focus-ring',
       this.disabled ? 'civds-cursor-not-allowed' : 'civds-cursor-pointer',
     ].join(' ');
 
@@ -72,12 +79,14 @@ export class CivdsRadio extends CivdsBaseElement {
             .value="${this.value}"
             .checked="${this.checked}"
             ?disabled="${this.disabled}"
+            aria-invalid="${this.error ? 'true' : 'false'}"
+            aria-describedby="${this._ariaDescribedBy || nothing}"
             @change="${this._onRadioChange}"
           />
           <div>
             <label class="${labelClasses}" for="${this._inputId}">${this.label}</label>
             ${this.description
-              ? html`<span class="civds-block civds-text-sm civds-text-base civds-mt-0.5">${this.description}</span>`
+              ? html`<span id="${this._descriptionId}" class="civds-block civds-text-sm civds-text-base civds-mt-0.5">${this.description}</span>`
               : nothing}
           </div>
         </div>

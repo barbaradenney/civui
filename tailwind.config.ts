@@ -1,4 +1,5 @@
 import type { Config } from 'tailwindcss';
+import plugin from 'tailwindcss/plugin';
 
 const config: Config = {
   prefix: 'civds-',
@@ -111,7 +112,26 @@ const config: Config = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    plugin(function ({ addUtilities }) {
+      addUtilities({
+        '.civds-focus-ring': {
+          outline:
+            'var(--civds-focus-outline-width) solid var(--civds-focus-outline-color)',
+          'outline-offset': 'var(--civds-focus-outline-offset)',
+          'box-shadow':
+            '0 0 0 calc(var(--civds-focus-outline-offset) + var(--civds-focus-outline-width) + var(--civds-focus-shadow-spread)) var(--civds-focus-shadow-color)',
+        },
+        '.civds-focus-ring-inverse': {
+          outline:
+            'var(--civds-focus-outline-width) solid var(--civds-focus-shadow-color)',
+          'outline-offset': 'var(--civds-focus-outline-offset)',
+          'box-shadow':
+            '0 0 0 calc(var(--civds-focus-outline-offset) + var(--civds-focus-outline-width) + var(--civds-focus-shadow-spread)) var(--civds-focus-outline-color)',
+        },
+      });
+    }),
+  ],
 };
 
 export default config;

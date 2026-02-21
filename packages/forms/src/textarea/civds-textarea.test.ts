@@ -162,8 +162,64 @@ describe('civds-textarea', () => {
     expect(el.querySelector('textarea')).not.toBeNull();
   });
 
+  it('sets aria-required when required', async () => {
+    const el = createFixture('<civds-textarea label="Bio" required></civds-textarea>');
+    await waitForUpdate(el);
+
+    const textarea = el.querySelector('textarea');
+    expect(textarea!.getAttribute('aria-required')).toBe('true');
+  });
+
+  it('includes character count in aria-describedby when maxlength is set', async () => {
+    const el = createFixture('<civds-textarea label="Bio" maxlength="200"></civds-textarea>');
+    await waitForUpdate(el);
+
+    const textarea = el.querySelector('textarea');
+    const describedBy = textarea!.getAttribute('aria-describedby');
+    expect(describedBy).toBeTruthy();
+
+    const charCount = el.querySelector('[aria-live="polite"]');
+    expect(charCount).not.toBeNull();
+    expect(charCount!.id).toBeTruthy();
+    expect(describedBy).toContain(charCount!.id);
+  });
+
+  it('includes hint, error, and character count in aria-describedby', async () => {
+    const el = createFixture(
+      '<civds-textarea label="Bio" hint="Keep brief" error="Too short" maxlength="200"></civds-textarea>',
+    );
+    await waitForUpdate(el);
+
+    const textarea = el.querySelector('textarea');
+    const describedBy = textarea!.getAttribute('aria-describedby')!;
+    const ids = describedBy.split(' ');
+    expect(ids.length).toBe(3);
+
+    for (const id of ids) {
+      expect(el.querySelector(`#${id}`)).not.toBeNull();
+    }
+  });
+
   it('has static formAssociated = true', () => {
     const Ctor = customElements.get('civds-textarea') as any;
     expect(Ctor.formAssociated).toBe(true);
+  });
+
+  it('applies focus-visible ring class', async () => {
+    const el = createFixture('<civds-textarea label="Comments"></civds-textarea>');
+    await waitForUpdate(el);
+
+    const textarea = el.querySelector('textarea');
+    expect(textarea!.className).toContain('focus-visible:civds-focus-ring');
+  });
+
+  it('does not use deprecated focus: outline classes', async () => {
+    const el = createFixture('<civds-textarea label="Comments"></civds-textarea>');
+    await waitForUpdate(el);
+
+    const textarea = el.querySelector('textarea');
+    expect(textarea!.className).not.toContain('focus:civds-outline-2');
+    expect(textarea!.className).not.toContain('focus:civds-outline-primary');
+    expect(textarea!.className).not.toContain('focus:civds-outline-offset-0');
   });
 });

@@ -225,8 +225,42 @@ describe('civds-text-input', () => {
     expect(input!.className).toContain('civds-w-24');
   });
 
+  it('sets aria-required when required', async () => {
+    const el = createFixture('<civds-text-input label="Email" required></civds-text-input>');
+    await waitForUpdate(el);
+
+    const input = el.querySelector('input');
+    expect(input!.getAttribute('aria-required')).toBe('true');
+  });
+
+  it('sets aria-required to false when not required', async () => {
+    const el = createFixture('<civds-text-input label="Email"></civds-text-input>');
+    await waitForUpdate(el);
+
+    const input = el.querySelector('input');
+    expect(input!.getAttribute('aria-required')).toBe('false');
+  });
+
   it('has static formAssociated = true', () => {
     const Ctor = customElements.get('civds-text-input') as any;
     expect(Ctor.formAssociated).toBe(true);
+  });
+
+  it('applies focus-visible ring class', async () => {
+    const el = createFixture('<civds-text-input label="Email"></civds-text-input>');
+    await waitForUpdate(el);
+
+    const input = el.querySelector('input');
+    expect(input!.className).toContain('focus-visible:civds-focus-ring');
+  });
+
+  it('does not use deprecated focus: outline classes', async () => {
+    const el = createFixture('<civds-text-input label="Email"></civds-text-input>');
+    await waitForUpdate(el);
+
+    const input = el.querySelector('input');
+    expect(input!.className).not.toContain('focus:civds-outline-2');
+    expect(input!.className).not.toContain('focus:civds-outline-primary');
+    expect(input!.className).not.toContain('focus:civds-outline-offset-0');
   });
 });

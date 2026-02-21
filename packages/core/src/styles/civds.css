@@ -6,3 +6,22 @@
 
 /* Import design tokens as CSS custom properties */
 @import '@civds/tokens/css';
+
+/* Focus-visible fallback for browsers without :focus-visible support */
+@supports not selector(:focus-visible) {
+  .civds-focus-ring:focus {
+    outline: var(--civds-focus-outline-width) solid var(--civds-focus-outline-color);
+    outline-offset: var(--civds-focus-outline-offset);
+    box-shadow: 0 0 0 calc(var(--civds-focus-outline-offset) + var(--civds-focus-outline-width) + var(--civds-focus-shadow-spread)) var(--civds-focus-shadow-color);
+  }
+}
+
+/* Windows High Contrast Mode: transparent outline becomes system highlight color */
+@media (forced-colors: active) {
+  .civds-focus-ring:focus-visible,
+  .civds-focus-ring-inverse:focus-visible {
+    outline: var(--civds-focus-outline-width) solid transparent;
+    outline-offset: var(--civds-focus-outline-offset);
+    box-shadow: none;
+  }
+}

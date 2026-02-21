@@ -226,6 +226,65 @@ describe('civds-combobox', () => {
     expect(Ctor.formAssociated).toBe(true);
   });
 
+  it('sets aria-required when required', async () => {
+    const el = createFixture('<civds-combobox label="State" required></civds-combobox>');
+    await waitForUpdate(el);
+
+    const input = el.querySelector('input');
+    expect(input!.getAttribute('aria-required')).toBe('true');
+  });
+
+  it('opens dropdown on ArrowUp when closed', async () => {
+    const el = createFixture('<civds-combobox label="State"></civds-combobox>') as any;
+    el.options = STATES;
+    await waitForUpdate(el);
+
+    expect(el._open).toBe(false);
+
+    const input = el.querySelector('input') as HTMLInputElement;
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true }));
+    await waitForUpdate(el);
+
+    expect(el._open).toBe(true);
+  });
+
+  it('uses aria-labelledby on listbox instead of aria-label', async () => {
+    const el = createFixture('<civds-combobox label="State"></civds-combobox>') as any;
+    el.options = STATES;
+    el._open = true;
+    await waitForUpdate(el);
+
+    const listbox = el.querySelector('[role="listbox"]');
+    expect(listbox).not.toBeNull();
+    expect(listbox!.hasAttribute('aria-label')).toBe(false);
+
+    const labelledBy = listbox!.getAttribute('aria-labelledby');
+    expect(labelledBy).toBeTruthy();
+
+    const label = el.querySelector('label');
+    expect(label!.id).toBe(labelledBy);
+  });
+
+  it('applies focus-visible ring class', async () => {
+    const el = createFixture('<civds-combobox label="State" name="state"></civds-combobox>') as any;
+    el.options = [{ value: 'CA', label: 'California' }];
+    await waitForUpdate(el);
+
+    const input = el.querySelector('input');
+    expect(input!.className).toContain('focus-visible:civds-focus-ring');
+  });
+
+  it('does not use deprecated focus: outline classes', async () => {
+    const el = createFixture('<civds-combobox label="State" name="state"></civds-combobox>') as any;
+    el.options = [{ value: 'CA', label: 'California' }];
+    await waitForUpdate(el);
+
+    const input = el.querySelector('input');
+    expect(input!.className).not.toContain('focus:civds-outline-2');
+    expect(input!.className).not.toContain('focus:civds-outline-primary');
+    expect(input!.className).not.toContain('focus:civds-outline-offset-0');
+  });
+
   describe('analytics', () => {
     it('fires civds-analytics with select action on option pick', async () => {
       const el = createFixture('<civds-combobox label="State" name="state"></civds-combobox>') as any;

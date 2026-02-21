@@ -44,6 +44,7 @@ export class CivdsRadioGroup extends CivdsFormElement {
   }
 
   override updated(changed: Map<string, unknown>): void {
+    super.updated(changed);
     if (changed.has('name')) {
       this._syncRadioNames();
     }
@@ -64,6 +65,7 @@ export class CivdsRadioGroup extends CivdsFormElement {
       <fieldset
         class="civds-border-0 civds-p-0 civds-m-0 civds-mb-4"
         aria-describedby="${describedBy || nothing}"
+        aria-invalid="${this.error ? 'true' : 'false'}"
       >
         ${this.legend
           ? html`

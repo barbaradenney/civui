@@ -112,6 +112,14 @@ describe('civds-date-picker', () => {
       expect(button.disabled).toBe(true);
     });
 
+    it('sets aria-required when required', async () => {
+      const el = createFixture('<civds-date-picker label="Date" required></civds-date-picker>');
+      await waitForUpdate(el);
+
+      const input = el.querySelector('input');
+      expect(input!.getAttribute('aria-required')).toBe('true');
+    });
+
     it('sets placeholder on input', async () => {
       const el = createFixture('<civds-date-picker label="Date" placeholder="MM/DD/YYYY"></civds-date-picker>');
       await waitForUpdate(el);
@@ -593,6 +601,62 @@ describe('civds-date-picker', () => {
       );
       expect(tabbable.length).toBe(1);
       expect((tabbable[0] as HTMLElement).getAttribute('data-date')).toBe('2026-03-15');
+    });
+  });
+
+  describe('focus-visible', () => {
+    it('applies focus-visible ring class to text input', async () => {
+      const el = createFixture('<civds-date-picker label="Date" name="date"></civds-date-picker>');
+      await waitForUpdate(el);
+
+      const input = el.querySelector('input[type="text"]');
+      expect(input!.className).toContain('focus-visible:civds-focus-ring');
+    });
+
+    it('applies focus-visible ring class to calendar button', async () => {
+      const el = createFixture('<civds-date-picker label="Date" name="date"></civds-date-picker>');
+      await waitForUpdate(el);
+
+      const button = el.querySelector('button[type="button"]');
+      expect(button!.className).toContain('focus-visible:civds-focus-ring');
+    });
+
+    it('applies focus-visible ring class to day cells', async () => {
+      const el = createFixture('<civds-date-picker label="Date" name="date"></civds-date-picker>') as any;
+      el._open = true;
+      el._displayMonth = 2;
+      el._displayYear = 2026;
+      await waitForUpdate(el);
+
+      const dayButton = el.querySelector('[data-civds-day]');
+      expect(dayButton!.className).toContain('focus-visible:civds-focus-ring');
+    });
+
+    it('applies focus-visible ring class to navigation buttons', async () => {
+      const el = createFixture('<civds-date-picker label="Date" name="date"></civds-date-picker>') as any;
+      el._open = true;
+      el._displayMonth = 2;
+      el._displayYear = 2026;
+      await waitForUpdate(el);
+
+      const navButtons = el.querySelectorAll('[data-civds-dialog] > div > button');
+      for (const btn of navButtons) {
+        expect(btn.className).toContain('focus-visible:civds-focus-ring');
+      }
+    });
+
+    it('does not use deprecated focus: outline classes', async () => {
+      const el = createFixture('<civds-date-picker label="Date" name="date"></civds-date-picker>') as any;
+      el._open = true;
+      el._displayMonth = 2;
+      el._displayYear = 2026;
+      await waitForUpdate(el);
+
+      const input = el.querySelector('input[type="text"]');
+      expect(input!.className).not.toContain('focus:civds-outline-2');
+
+      const dayButton = el.querySelector('[data-civds-day]');
+      expect(dayButton!.className).not.toContain('focus:civds-outline-2');
     });
   });
 

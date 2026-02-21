@@ -41,6 +41,7 @@ export class CivdsCheckboxGroup extends CivdsBaseElement {
       <fieldset
         class="civds-border-0 civds-p-0 civds-m-0 civds-mb-4"
         aria-describedby="${describedBy || nothing}"
+        aria-invalid="${this.error ? 'true' : 'false'}"
       >
         ${this.legend
           ? html`

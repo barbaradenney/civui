@@ -72,9 +72,7 @@ export class CivdsTextInput extends CivdsFormElement {
       this.disabled
         ? 'civds-opacity-50 civds-cursor-not-allowed civds-bg-base-lightest'
         : '',
-      'focus:civds-outline-2',
-      'focus:civds-outline-primary',
-      'focus:civds-outline-offset-0',
+      'focus-visible:civds-focus-ring',
     ]
       .filter(Boolean)
       .join(' ');
@@ -126,6 +124,7 @@ export class CivdsTextInput extends CivdsFormElement {
           placeholder="${this.placeholder || nothing}"
           ?disabled="${this.disabled}"
           ?required="${this.required}"
+          aria-required="${this.required}"
           pattern="${this.pattern || nothing}"
           maxlength="${this.maxlength ?? nothing}"
           minlength="${this.minlength ?? nothing}"

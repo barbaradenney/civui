@@ -39,6 +39,7 @@ export class CivdsCombobox extends CivdsFormElement {
   @state() private _activeIndex = -1;
 
   private _listboxId = this.generateId('listbox');
+  private _labelId = this.generateId('label');
   private _boundDocClick = this._onDocumentClick.bind(this);
 
   override connectedCallback(): void {
@@ -83,9 +84,7 @@ export class CivdsCombobox extends CivdsFormElement {
       'civds-bg-white',
       this.error ? 'civds-border-error civds-border-l-4' : 'civds-border-base-light',
       this.disabled ? 'civds-opacity-50 civds-cursor-not-allowed civds-bg-base-lightest' : '',
-      'focus:civds-outline-2',
-      'focus:civds-outline-primary',
-      'focus:civds-outline-offset-0',
+      'focus-visible:civds-focus-ring',
     ]
       .filter(Boolean)
       .join(' ');
@@ -95,6 +94,7 @@ export class CivdsCombobox extends CivdsFormElement {
         ${this.label
           ? html`
               <label
+                id="${this._labelId}"
                 class="civds-block civds-mb-1 civds-text-base-darkest civds-font-bold civds-text-base"
                 for="${this._inputId}"
               >
@@ -128,6 +128,7 @@ export class CivdsCombobox extends CivdsFormElement {
             placeholder="${this.placeholder || nothing}"
             ?disabled="${this.disabled}"
             ?required="${this.required}"
+            aria-required="${this.required}"
             autocomplete="off"
             @input="${this._onFilterInput}"
             @focus="${this._onFocus}"
@@ -140,7 +141,7 @@ export class CivdsCombobox extends CivdsFormElement {
                   id="${this._listboxId}"
                   role="listbox"
                   class="civds-absolute civds-z-10 civds-w-full civds-mt-0.5 civds-bg-white civds-border civds-border-base-light civds-rounded civds-shadow-md civds-max-h-60 civds-overflow-y-auto civds-list-none civds-p-0 civds-m-0"
-                  aria-label="${this.label}"
+                  aria-labelledby="${this._labelId}"
                 >
                   ${filtered.map(
                     (option, i) => html`
@@ -218,7 +219,11 @@ export class CivdsCombobox extends CivdsFormElement {
 
       case 'ArrowUp':
         e.preventDefault();
-        this._activeIndex = Math.max(this._activeIndex - 1, 0);
+        if (!this._open) {
+          this._open = true;
+        } else {
+          this._activeIndex = Math.max(this._activeIndex - 1, 0);
+        }
         break;
 
       case 'Enter':

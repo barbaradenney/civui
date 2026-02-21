@@ -27,6 +27,16 @@ export class CivdsCheckbox extends CivdsFormElement {
   @property({ type: String }) description = '';
   @property({ type: Boolean, reflect: true }) tile = false;
 
+  private _descriptionId = this.generateId('desc');
+
+  protected override get _ariaDescribedBy(): string {
+    const ids: string[] = [];
+    if (this.description) ids.push(this._descriptionId);
+    if (this.hint) ids.push(this._hintId);
+    if (this.error) ids.push(this._errorId);
+    return ids.join(' ') || '';
+  }
+
   override connectedCallback(): void {
     super.connectedCallback();
     if (!this.value) this.value = 'on';
@@ -52,6 +62,7 @@ export class CivdsCheckbox extends CivdsFormElement {
       'civds-mr-2',
       'civds-align-middle',
       'civds-accent-primary',
+      'focus-visible:civds-focus-ring',
       this.disabled ? 'civds-cursor-not-allowed' : 'civds-cursor-pointer',
     ].join(' ');
 
@@ -73,6 +84,8 @@ export class CivdsCheckbox extends CivdsFormElement {
           .checked="${this.checked}"
           ?disabled="${this.disabled}"
           ?required="${this.required}"
+          aria-required="${this.required}"
+          aria-invalid="${this.error ? 'true' : 'false'}"
           aria-describedby="${this._ariaDescribedBy || nothing}"
           @change="${this._onCheckboxChange}"
         />
@@ -84,7 +97,7 @@ export class CivdsCheckbox extends CivdsFormElement {
               : nothing}
           </label>
           ${this.description
-            ? html`<span class="civds-block civds-text-sm civds-text-base civds-mt-0.5">${this.description}</span>`
+            ? html`<span id="${this._descriptionId}" class="civds-block civds-text-sm civds-text-base civds-mt-0.5">${this.description}</span>`
             : nothing}
         </div>
       </div>

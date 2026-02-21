@@ -46,9 +46,7 @@ export class CivdsDateInput extends CivdsFormElement {
       'civds-bg-white',
       this.error ? 'civds-border-error civds-border-l-4' : 'civds-border-base-light',
       this.disabled ? 'civds-opacity-50 civds-cursor-not-allowed civds-bg-base-lightest' : '',
-      'focus:civds-outline-2',
-      'focus:civds-outline-primary',
-      'focus:civds-outline-offset-0',
+      'focus-visible:civds-focus-ring',
     ]
       .filter(Boolean)
       .join(' ');
@@ -84,6 +82,7 @@ export class CivdsDateInput extends CivdsFormElement {
           max="${this.max || nothing}"
           ?disabled="${this.disabled}"
           ?required="${this.required}"
+          aria-required="${this.required}"
           aria-describedby="${this._ariaDescribedBy || nothing}"
           aria-invalid="${this.error ? 'true' : 'false'}"
           @change="${this._handleChange}"

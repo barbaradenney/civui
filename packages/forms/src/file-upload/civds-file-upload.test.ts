@@ -124,6 +124,24 @@ describe('civds-file-upload', () => {
     expect(Ctor.formAssociated).toBe(true);
   });
 
+  it('applies focus-visible ring class to dropzone', async () => {
+    const el = createFixture('<civds-file-upload label="Upload" name="doc"></civds-file-upload>');
+    await waitForUpdate(el);
+
+    const dropzone = el.querySelector('[role="button"]');
+    expect(dropzone!.className).toContain('focus-visible:civds-focus-ring');
+  });
+
+  it('does not use deprecated focus: outline classes on dropzone', async () => {
+    const el = createFixture('<civds-file-upload label="Upload" name="doc"></civds-file-upload>');
+    await waitForUpdate(el);
+
+    const dropzone = el.querySelector('[role="button"]');
+    expect(dropzone!.className).not.toContain('focus:civds-outline-2');
+    expect(dropzone!.className).not.toContain('focus:civds-outline-primary');
+    expect(dropzone!.className).not.toContain('focus:civds-outline-offset-0');
+  });
+
   describe('analytics', () => {
     it('fires civds-analytics with upload action on file add', async () => {
       const el = createFixture('<civds-file-upload label="Upload" name="doc"></civds-file-upload>') as any;

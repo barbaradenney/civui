@@ -223,6 +223,107 @@ describe('civds-checkbox-group', () => {
   });
 });
 
+describe('civds-checkbox accessibility', () => {
+  it('sets aria-invalid when error is present', async () => {
+    const el = createFixture('<civds-checkbox label="Agree" error="Must agree"></civds-checkbox>');
+    await waitForUpdate(el);
+
+    const input = el.querySelector('input') as HTMLInputElement;
+    expect(input.getAttribute('aria-invalid')).toBe('true');
+  });
+
+  it('sets aria-invalid to false when no error', async () => {
+    const el = createFixture('<civds-checkbox label="Agree"></civds-checkbox>');
+    await waitForUpdate(el);
+
+    const input = el.querySelector('input') as HTMLInputElement;
+    expect(input.getAttribute('aria-invalid')).toBe('false');
+  });
+
+  it('sets aria-required when required', async () => {
+    const el = createFixture('<civds-checkbox label="Agree" required></civds-checkbox>');
+    await waitForUpdate(el);
+
+    const input = el.querySelector('input') as HTMLInputElement;
+    expect(input.getAttribute('aria-required')).toBe('true');
+  });
+
+  it('includes description in aria-describedby', async () => {
+    const el = createFixture(
+      '<civds-checkbox label="Agree" description="By checking this you agree"></civds-checkbox>',
+    );
+    await waitForUpdate(el);
+
+    const input = el.querySelector('input') as HTMLInputElement;
+    const describedBy = input.getAttribute('aria-describedby');
+    expect(describedBy).toBeTruthy();
+
+    const descSpan = el.querySelector('span[id]');
+    expect(descSpan).not.toBeNull();
+    expect(describedBy).toContain(descSpan!.id);
+  });
+
+  it('includes both description and error in aria-describedby', async () => {
+    const el = createFixture(
+      '<civds-checkbox label="Agree" description="Terms" error="Required"></civds-checkbox>',
+    );
+    await waitForUpdate(el);
+
+    const input = el.querySelector('input') as HTMLInputElement;
+    const describedBy = input.getAttribute('aria-describedby')!;
+    const ids = describedBy.split(' ');
+    expect(ids.length).toBe(2);
+
+    for (const id of ids) {
+      expect(el.querySelector(`#${id}`)).not.toBeNull();
+    }
+  });
+});
+
+describe('civds-checkbox-group accessibility', () => {
+  it('sets aria-invalid on fieldset when error is present', async () => {
+    const el = createFixture(`
+      <civds-checkbox-group legend="Toppings" error="Required">
+        <civds-checkbox label="Cheese"></civds-checkbox>
+      </civds-checkbox-group>
+    `);
+    await waitForUpdate(el);
+
+    const fieldset = el.querySelector('fieldset');
+    expect(fieldset!.getAttribute('aria-invalid')).toBe('true');
+  });
+
+  it('sets aria-invalid to false on fieldset when no error', async () => {
+    const el = createFixture(`
+      <civds-checkbox-group legend="Toppings">
+        <civds-checkbox label="Cheese"></civds-checkbox>
+      </civds-checkbox-group>
+    `);
+    await waitForUpdate(el);
+
+    const fieldset = el.querySelector('fieldset');
+    expect(fieldset!.getAttribute('aria-invalid')).toBe('false');
+  });
+
+  it('applies focus-visible ring class to checkbox input', async () => {
+    const el = createFixture('<civds-checkbox label="Agree"></civds-checkbox>');
+    await waitForUpdate(el);
+
+    const input = el.querySelector('input[type="checkbox"]');
+    expect(input!.className).toContain('focus-visible:civds-focus-ring');
+  });
+
+  it('does not use deprecated focus: outline classes on checkbox', async () => {
+    const el = createFixture('<civds-checkbox label="Agree"></civds-checkbox>');
+    await waitForUpdate(el);
+
+    const input = el.querySelector('input[type="checkbox"]');
+    expect(input!.className).not.toContain('focus:civds-outline-2');
+    expect(input!.className).not.toContain('focus:civds-outline-primary');
+    expect(input!.className).not.toContain('focus:civds-outline-offset-0');
+  });
+});
+
 describe('civds-checkbox analytics', () => {
   it('fires civds-analytics with checked detail on change', async () => {
     const el = createFixture('<civds-checkbox label="Agree" name="agree"></civds-checkbox>');

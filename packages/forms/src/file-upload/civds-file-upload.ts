@@ -62,6 +62,7 @@ export class CivdsFileUpload extends CivdsFormElement {
       'civds-p-6',
       'civds-text-center',
       'civds-transition-colors',
+      'focus-visible:civds-focus-ring',
       this._dragging ? 'civds-border-primary civds-bg-primary-lightest' : '',
       this.error ? 'civds-border-error' : 'civds-border-base-light',
       this.disabled ? 'civds-opacity-50 civds-cursor-not-allowed' : 'civds-cursor-pointer',

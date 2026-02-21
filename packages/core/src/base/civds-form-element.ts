@@ -136,6 +136,13 @@ export class CivdsFormElement extends CivdsBaseElement {
     this.disabled = disabled;
   }
 
+  override updated(changed: Map<string, unknown>): void {
+    super.updated(changed);
+    if (changed.has('error') && this.error) {
+      this.announce(this.error, 'assertive');
+    }
+  }
+
   /**
    * Handle input events from the inner input element.
    */

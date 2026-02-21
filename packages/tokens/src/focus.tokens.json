@@ -1,0 +1,14 @@
+{
+  "focus": {
+    "$description": "W3C Two-Color Technique (C40) focus tokens. WCAG 2.2 SC 2.4.13 compliant.",
+    "outline": {
+      "color": { "$type": "color", "$value": "#005ea2", "$description": "Dark outline color (primary blue)" },
+      "width": { "$type": "dimension", "$value": "3px", "$description": "Exceeds WCAG 2.2 minimum of 2px" },
+      "offset": { "$type": "dimension", "$value": "2px", "$description": "Gap between element and outline" }
+    },
+    "shadow": {
+      "color": { "$type": "color", "$value": "#ffffff", "$description": "Light halo color (white)" },
+      "spread": { "$type": "dimension", "$value": "3px", "$description": "Halo width beyond outline" }
+    }
+  }
+}

@@ -126,9 +126,7 @@ export class CivdsDatePicker extends CivdsFormElement {
       'civds-bg-white',
       this.error ? 'civds-border-error civds-border-l-4' : 'civds-border-base-light',
       this.disabled ? 'civds-opacity-50 civds-cursor-not-allowed civds-bg-base-lightest' : '',
-      'focus:civds-outline-2',
-      'focus:civds-outline-primary',
-      'focus:civds-outline-offset-0',
+      'focus-visible:civds-focus-ring',
     ]
       .filter(Boolean)
       .join(' ');
@@ -168,6 +166,7 @@ export class CivdsDatePicker extends CivdsFormElement {
             placeholder="${this.placeholder}"
             ?disabled="${this.disabled}"
             ?required="${this.required}"
+            aria-required="${this.required}"
             aria-describedby="${this._ariaDescribedBy || nothing}"
             aria-invalid="${this.error ? 'true' : 'false'}"
             @input="${this._onTextInput}"
@@ -176,7 +175,7 @@ export class CivdsDatePicker extends CivdsFormElement {
           <button
             id="${this._buttonId}"
             type="button"
-            class="civds-border civds-border-l-0 civds-border-base-light civds-rounded-r civds-px-2 civds-py-1.5 civds-bg-base-lightest hover:civds-bg-base-lighter focus:civds-outline-2 focus:civds-outline-primary focus:civds-outline-offset-0 ${this.disabled ? 'civds-opacity-50 civds-cursor-not-allowed' : ''}"
+            class="civds-border civds-border-l-0 civds-border-base-light civds-rounded-r civds-px-2 civds-py-1.5 civds-bg-base-lightest hover:civds-bg-base-lighter focus-visible:civds-focus-ring ${this.disabled ? 'civds-opacity-50 civds-cursor-not-allowed' : ''}"
             aria-label="${buttonLabel}"
             ?disabled="${this.disabled}"
             @click="${this._toggleDialog}"
@@ -222,7 +221,7 @@ export class CivdsDatePicker extends CivdsFormElement {
         <div class="civds-flex civds-items-center civds-justify-between civds-mb-2">
           <button
             type="button"
-            class="civds-p-1 civds-rounded hover:civds-bg-base-lightest focus:civds-outline-2 focus:civds-outline-primary"
+            class="civds-p-1 civds-rounded hover:civds-bg-base-lightest focus-visible:civds-focus-ring"
             aria-label="Previous month"
             ?disabled="${prevMonthDisabled}"
             @click="${this._prevMonth}"
@@ -236,7 +235,7 @@ export class CivdsDatePicker extends CivdsFormElement {
           </div>
           <button
             type="button"
-            class="civds-p-1 civds-rounded hover:civds-bg-base-lightest focus:civds-outline-2 focus:civds-outline-primary"
+            class="civds-p-1 civds-rounded hover:civds-bg-base-lightest focus-visible:civds-focus-ring"
             aria-label="Next month"
             ?disabled="${nextMonthDisabled}"
             @click="${this._nextMonth}"
@@ -286,9 +285,7 @@ export class CivdsDatePicker extends CivdsFormElement {
       disabled ? 'civds-opacity-40 civds-cursor-not-allowed' : 'civds-cursor-pointer hover:civds-bg-primary-lightest',
       selected ? 'civds-bg-primary civds-text-white civds-font-bold' : '',
       day.isToday && !selected ? 'civds-font-bold civds-underline' : '',
-      'focus:civds-outline-2',
-      'focus:civds-outline-primary',
-      'focus:civds-outline-offset-0',
+      'focus-visible:civds-focus-ring',
     ]
       .filter(Boolean)
       .join(' ');

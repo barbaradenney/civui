@@ -23,11 +23,38 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # Build design tokens (needed by Storybook)
+      - run: node packages/tokens/build/build-tokens.js
+
+      # Build web components Storybook
+      - run: pnpm storybook:build -o storybook-static
+
+      # Build React Native web Storybook
+      - run: pnpm --filter @civds/react-native storybook:web:build
+
+      # Assemble site: docs + /storybook/ + /react-native/
+      - run: |
+          mkdir -p _site
+          cp docs/index.html _site/
+          mv storybook-static _site/storybook
+          mv packages/react-native/storybook-static _site/react-native
+
       - uses: actions/configure-pages@v5
 
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: docs
+          path: _site
 
       - id: deployment
         uses: actions/deploy-pages@v4

@@ -49,6 +49,39 @@
       font-size: 0.875rem;
     }
 
+    .hero-links {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+    }
+
+    .hero-link {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      border-radius: 4px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: background 0.15s;
+    }
+
+    .hero-link--primary {
+      background: var(--color-white);
+      color: var(--color-primary-dark);
+    }
+
+    .hero-link--primary:hover { background: #e6e6e6; }
+
+    .hero-link--secondary {
+      background: rgba(255,255,255,0.15);
+      color: var(--color-white);
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+
+    .hero-link--secondary:hover { background: rgba(255,255,255,0.25); }
+
     .content { max-width: 960px; margin: 0 auto; padding: 3rem 2rem; }
 
     h2 { font-size: 1.75rem; margin: 2rem 0 1rem; color: var(--color-primary-dark); }
@@ -118,6 +151,11 @@
       <span class="badge">WCAG 2.1 AA</span>
       <span class="badge">ElementInternals</span>
       <span class="badge">Web + Mobile</span>
+    </div>
+    <div class="hero-links">
+      <a href="./storybook/" class="hero-link hero-link--primary">Web Components Storybook</a>
+      <a href="./react-native/" class="hero-link hero-link--secondary">React Native Storybook</a>
+      <a href="https://github.com/barbaradenney/civds" class="hero-link hero-link--secondary">GitHub</a>
     </div>
   </div>
 

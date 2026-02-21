@@ -32,8 +32,8 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      # Build design tokens (needed by Storybook)
-      - run: node packages/tokens/build/build-tokens.js
+      # Build all packages (tokens → core → forms → react-native)
+      - run: pnpm build
 
       # Build web components Storybook
       - run: pnpm storybook:build -o storybook-static

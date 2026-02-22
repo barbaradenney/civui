@@ -387,6 +387,332 @@ describe('civ-radio analytics', () => {
   });
 });
 
+describe('civ-radio-group roving tabindex', () => {
+  it('sets tabindex="0" on checked radio and tabindex="-1" on others', async () => {
+    const el = createFixture(`
+      <civ-radio-group legend="Color" name="color" value="blue">
+        <civ-radio label="Red" value="red"></civ-radio>
+        <civ-radio label="Blue" value="blue"></civ-radio>
+        <civ-radio label="Green" value="green"></civ-radio>
+      </civ-radio-group>
+    `);
+    await waitForUpdate(el);
+
+    const inputs = el.querySelectorAll('input[type="radio"]') as NodeListOf<HTMLInputElement>;
+    expect(inputs[0].tabIndex).toBe(-1);
+    expect(inputs[1].tabIndex).toBe(0);
+    expect(inputs[2].tabIndex).toBe(-1);
+  });
+
+  it('sets tabindex="0" on first radio when none checked', async () => {
+    const el = createFixture(`
+      <civ-radio-group legend="Color" name="color">
+        <civ-radio label="Red" value="red"></civ-radio>
+        <civ-radio label="Blue" value="blue"></civ-radio>
+      </civ-radio-group>
+    `);
+    await waitForUpdate(el);
+
+    const inputs = el.querySelectorAll('input[type="radio"]') as NodeListOf<HTMLInputElement>;
+    expect(inputs[0].tabIndex).toBe(0);
+    expect(inputs[1].tabIndex).toBe(-1);
+  });
+});
+
+describe('civ-radio-group keyboard navigation', () => {
+  it('ArrowDown moves to next radio', async () => {
+    const el = createFixture(`
+      <civ-radio-group legend="Color" name="color" value="red">
+        <civ-radio label="Red" value="red"></civ-radio>
+        <civ-radio label="Blue" value="blue"></civ-radio>
+        <civ-radio label="Green" value="green"></civ-radio>
+      </civ-radio-group>
+    `);
+    await waitForUpdate(el);
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    await waitForUpdate(el);
+
+    expect((el as any).value).toBe('blue');
+  });
+
+  it('ArrowRight moves to next radio', async () => {
+    const el = createFixture(`
+      <civ-radio-group legend="Color" name="color" value="red">
+        <civ-radio label="Red" value="red"></civ-radio>
+        <civ-radio label="Blue" value="blue"></civ-radio>
+      </civ-radio-group>
+    `);
+    await waitForUpdate(el);
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
+    await waitForUpdate(el);
+
+    expect((el as any).value).toBe('blue');
+  });
+
+  it('ArrowUp moves to previous radio', async () => {
+    const el = createFixture(`
+      <civ-radio-group legend="Color" name="color" value="blue">
+        <civ-radio label="Red" value="red"></civ-radio>
+        <civ-radio label="Blue" value="blue"></civ-radio>
+      </civ-radio-group>
+    `);
+    await waitForUpdate(el);
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true }));
+    await waitForUpdate(el);
+
+    expect((el as any).value).toBe('red');
+  });
+
+  it('ArrowLeft moves to previous radio', async () => {
+    const el = createFixture(`
+      <civ-radio-group legend="Color" name="color" value="blue">
+        <civ-radio label="Red" value="red"></civ-radio>
+        <civ-radio label="Blue" value="blue"></civ-radio>
+      </civ-radio-group>
+    `);
+    await waitForUpdate(el);
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true }));
+    await waitForUpdate(el);
+
+    expect((el as any).value).toBe('red');
+  });
+
+  it('wraps from last to first on ArrowDown', async () => {
+    const el = createFixture(`
+      <civ-radio-group legend="Color" name="color" value="green">
+        <civ-radio label="Red" value="red"></civ-radio>
+        <civ-radio label="Blue" value="blue"></civ-radio>
+        <civ-radio label="Green" value="green"></civ-radio>
+      </civ-radio-group>
+    `);
+    await waitForUpdate(el);
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    await waitForUpdate(el);
+
+    expect((el as any).value).toBe('red');
+  });
+
+  it('wraps from first to last on ArrowUp', async () => {
+    const el = createFixture(`
+      <civ-radio-group legend="Color" name="color" value="red">
+        <civ-radio label="Red" value="red"></civ-radio>
+        <civ-radio label="Blue" value="blue"></civ-radio>
+        <civ-radio label="Green" value="green"></civ-radio>
+      </civ-radio-group>
+    `);
+    await waitForUpdate(el);
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true }));
+    await waitForUpdate(el);
+
+    expect((el as any).value).toBe('green');
+  });
+
+  it('Home moves to first radio', async () => {
+    const el = createFixture(`
+      <civ-radio-group legend="Color" name="color" value="green">
+        <civ-radio label="Red" value="red"></civ-radio>
+        <civ-radio label="Blue" value="blue"></civ-radio>
+        <civ-radio label="Green" value="green"></civ-radio>
+      </civ-radio-group>
+    `);
+    await waitForUpdate(el);
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home', bubbles: true }));
+    await waitForUpdate(el);
+
+    expect((el as any).value).toBe('red');
+  });
+
+  it('End moves to last radio', async () => {
+    const el = createFixture(`
+      <civ-radio-group legend="Color" name="color" value="red">
+        <civ-radio label="Red" value="red"></civ-radio>
+        <civ-radio label="Blue" value="blue"></civ-radio>
+        <civ-radio label="Green" value="green"></civ-radio>
+      </civ-radio-group>
+    `);
+    await waitForUpdate(el);
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'End', bubbles: true }));
+    await waitForUpdate(el);
+
+    expect((el as any).value).toBe('green');
+  });
+
+  it('skips disabled radios', async () => {
+    const el = createFixture(`
+      <civ-radio-group legend="Color" name="color" value="red">
+        <civ-radio label="Red" value="red"></civ-radio>
+        <civ-radio label="Blue" value="blue" disabled></civ-radio>
+        <civ-radio label="Green" value="green"></civ-radio>
+      </civ-radio-group>
+    `);
+    await waitForUpdate(el);
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    await waitForUpdate(el);
+
+    expect((el as any).value).toBe('green');
+  });
+});
+
+describe('civ-radio-group ARIA attributes', () => {
+  it('has role="radiogroup" on fieldset', async () => {
+    const el = createFixture(`
+      <civ-radio-group legend="Color" name="color">
+        <civ-radio label="Red" value="red"></civ-radio>
+      </civ-radio-group>
+    `);
+    await waitForUpdate(el);
+
+    const fieldset = el.querySelector('fieldset');
+    expect(fieldset!.getAttribute('role')).toBe('radiogroup');
+  });
+
+  it('sets aria-orientation matching orientation property', async () => {
+    const el = createFixture(`
+      <civ-radio-group legend="Color" name="color" orientation="horizontal">
+        <civ-radio label="Red" value="red"></civ-radio>
+      </civ-radio-group>
+    `);
+    await waitForUpdate(el);
+
+    const fieldset = el.querySelector('fieldset');
+    expect(fieldset!.getAttribute('aria-orientation')).toBe('horizontal');
+  });
+
+  it('defaults aria-orientation to vertical', async () => {
+    const el = createFixture(`
+      <civ-radio-group legend="Color" name="color">
+        <civ-radio label="Red" value="red"></civ-radio>
+      </civ-radio-group>
+    `);
+    await waitForUpdate(el);
+
+    const fieldset = el.querySelector('fieldset');
+    expect(fieldset!.getAttribute('aria-orientation')).toBe('vertical');
+  });
+});
+
+describe('civ-radio aria-checked', () => {
+  it('sets aria-checked="true" when checked', async () => {
+    const el = createFixture('<civ-radio label="Option A" value="a" checked></civ-radio>');
+    await waitForUpdate(el);
+
+    const input = el.querySelector('input') as HTMLInputElement;
+    expect(input.getAttribute('aria-checked')).toBe('true');
+  });
+
+  it('sets aria-checked="false" when unchecked', async () => {
+    const el = createFixture('<civ-radio label="Option A" value="a"></civ-radio>');
+    await waitForUpdate(el);
+
+    const input = el.querySelector('input') as HTMLInputElement;
+    expect(input.getAttribute('aria-checked')).toBe('false');
+  });
+});
+
+describe('civ-radio-group orientation rendering', () => {
+  it('uses flex-row for horizontal orientation', async () => {
+    const el = createFixture(`
+      <civ-radio-group legend="Color" name="color" orientation="horizontal">
+        <civ-radio label="Red" value="red"></civ-radio>
+        <civ-radio label="Blue" value="blue"></civ-radio>
+      </civ-radio-group>
+    `);
+    await waitForUpdate(el);
+
+    const slotWrapper = el.querySelector('fieldset > div');
+    expect(slotWrapper!.className).toContain('civ-flex-row');
+    expect(slotWrapper!.className).toContain('civ-flex-wrap');
+    expect(slotWrapper!.className).toContain('civ-gap-4');
+  });
+
+  it('uses flex-col for vertical orientation', async () => {
+    const el = createFixture(`
+      <civ-radio-group legend="Color" name="color">
+        <civ-radio label="Red" value="red"></civ-radio>
+        <civ-radio label="Blue" value="blue"></civ-radio>
+      </civ-radio-group>
+    `);
+    await waitForUpdate(el);
+
+    const slotWrapper = el.querySelector('fieldset > div');
+    expect(slotWrapper!.className).toContain('civ-flex-col');
+    expect(slotWrapper!.className).toContain('civ-gap-1');
+  });
+});
+
+describe('civ-radio civ-input event', () => {
+  it('fires civ-input from individual radio', async () => {
+    const el = createFixture('<civ-radio label="Option A" value="a" name="choice"></civ-radio>');
+    await waitForUpdate(el);
+
+    const input = el.querySelector('input') as HTMLInputElement;
+    let eventDetail: any = null;
+
+    el.addEventListener('civ-input', ((e: CustomEvent) => {
+      eventDetail = e.detail;
+    }) as EventListener);
+
+    input.checked = true;
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+
+    expect(eventDetail).toEqual({ value: 'a' });
+  });
+
+  it('fires civ-input from group on keyboard navigation', async () => {
+    const el = createFixture(`
+      <civ-radio-group legend="Color" name="color" value="red">
+        <civ-radio label="Red" value="red"></civ-radio>
+        <civ-radio label="Blue" value="blue"></civ-radio>
+      </civ-radio-group>
+    `);
+    await waitForUpdate(el);
+
+    let eventDetail: any = null;
+    el.addEventListener('civ-input', ((e: CustomEvent) => {
+      eventDetail = e.detail;
+    }) as EventListener);
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    await waitForUpdate(el);
+
+    expect(eventDetail).toEqual({ value: 'blue' });
+  });
+});
+
+describe('civ-radio-group form reset', () => {
+  it('restores initial value on form reset', async () => {
+    const el = createFixture(`
+      <civ-radio-group legend="Color" name="color" value="blue">
+        <civ-radio label="Red" value="red"></civ-radio>
+        <civ-radio label="Blue" value="blue"></civ-radio>
+        <civ-radio label="Green" value="green"></civ-radio>
+      </civ-radio-group>
+    `);
+    await waitForUpdate(el);
+
+    // Change value
+    (el as any).value = 'green';
+    await waitForUpdate(el);
+
+    // Reset
+    (el as any).formResetCallback();
+    await waitForUpdate(el);
+
+    expect((el as any).value).toBe('blue');
+    const radios = el.querySelectorAll('civ-radio');
+    expect((radios[1] as any).checked).toBe(true);
+  });
+});
+
 describe('civ-radio-group analytics', () => {
   it('fires civ-analytics from group on child radio change', async () => {
     const el = createFixture(`

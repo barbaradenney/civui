@@ -25,7 +25,7 @@ import { CivFormElement } from '@civui/core';
 export class CivSegmentedControl extends CivFormElement {
   @property({ type: String }) legend = '';
 
-  private _defaultValue = '';
+  protected override _defaultValue = '';
   private _boundOnChildChange = this._onChildChange.bind(this);
   private _boundOnKeydown = this._onKeydown.bind(this);
 
@@ -59,6 +59,14 @@ export class CivSegmentedControl extends CivFormElement {
     if (changed.has('value')) {
       this._syncSegmentSelected();
     }
+    if (changed.has('disabled')) {
+      this._syncSegmentDisabled();
+    }
+  }
+
+  override formDisabledCallback(disabled: boolean): void {
+    this.disabled = disabled;
+    this._syncSegmentDisabled();
   }
 
   override render() {
@@ -73,6 +81,7 @@ export class CivSegmentedControl extends CivFormElement {
       <fieldset
         class="civ-border-0 civ-p-0 civ-m-0 civ-mb-4"
         role="radiogroup"
+        aria-orientation="horizontal"
         aria-describedby="${describedBy || nothing}"
         aria-invalid="${this.error ? 'true' : 'false'}"
         aria-required="${this.required}"
@@ -106,6 +115,13 @@ export class CivSegmentedControl extends CivFormElement {
     });
   }
 
+  private _syncSegmentDisabled(): void {
+    if (!this.disabled) return;
+    this._getSegments().forEach((segment: any) => {
+      segment.disabled = true;
+    });
+  }
+
   private _syncSegmentPositions(): void {
     const segments = this._getSegments();
     segments.forEach((segment, i) => {
@@ -136,6 +152,13 @@ export class CivSegmentedControl extends CivFormElement {
 
     // Stop the child event and re-dispatch from the group
     e.stopPropagation();
+    this.dispatchEvent(
+      new CustomEvent('civ-input', {
+        detail: { value: this.value },
+        bubbles: true,
+        composed: true,
+      }),
+    );
     this.dispatchEvent(
       new CustomEvent('civ-change', {
         detail: { value: this.value },
@@ -186,6 +209,13 @@ export class CivSegmentedControl extends CivFormElement {
       const btn = segment.querySelector('button');
       if (btn) btn.focus();
 
+      this.dispatchEvent(
+        new CustomEvent('civ-input', {
+          detail: { value: this.value },
+          bubbles: true,
+          composed: true,
+        }),
+      );
       this.dispatchEvent(
         new CustomEvent('civ-change', {
           detail: { value: this.value },

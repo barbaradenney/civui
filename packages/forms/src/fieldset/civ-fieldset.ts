@@ -23,6 +23,7 @@ export class CivFieldset extends CivBaseElement {
   @property({ type: String }) hint = '';
   @property({ type: String }) error = '';
   @property({ type: Boolean, reflect: true }) required = false;
+  @property({ type: Boolean, reflect: true }) disabled = false;
 
   private _hintId = this.generateId('hint');
   private _errorId = this.generateId('error');
@@ -39,6 +40,8 @@ export class CivFieldset extends CivBaseElement {
       <fieldset
         class="civ-border-0 civ-p-0 civ-m-0 civ-mb-4"
         aria-describedby="${describedBy || nothing}"
+        aria-invalid="${this.error ? 'true' : 'false'}"
+        ?disabled="${this.disabled}"
       >
         ${this.legend
           ? html`

@@ -2,6 +2,8 @@ import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { CivBaseElement } from '@civui/core';
 
+const FORM_INPUT_SELECTOR = 'input, select, textarea';
+
 /**
  * CivUI Form Group
  *
@@ -29,6 +31,28 @@ export class CivFormGroup extends CivBaseElement {
 
   private _hintId = this.generateId('hint');
   private _errorId = this.generateId('error');
+
+  override updated(): void {
+    this._wireAriaDescribedBy();
+  }
+
+  private _wireAriaDescribedBy(): void {
+    const ids = [
+      this.hint ? this._hintId : '',
+      this.error ? this._errorId : '',
+    ]
+      .filter(Boolean)
+      .join(' ');
+
+    const input = this.querySelector(FORM_INPUT_SELECTOR) as HTMLElement | null;
+    if (!input) return;
+
+    if (ids) {
+      input.setAttribute('aria-describedby', ids);
+    } else {
+      input.removeAttribute('aria-describedby');
+    }
+  }
 
   override render() {
     return html`

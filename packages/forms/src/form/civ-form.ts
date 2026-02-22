@@ -92,7 +92,7 @@ export class CivForm extends CivBaseElement {
   validate(): FormFieldError[] {
     const errors: FormFieldError[] = [];
     const formElements = this.querySelectorAll<HTMLElement>(
-      'civ-text-input, civ-textarea, civ-select, civ-combobox, civ-checkbox, civ-radio-group, civ-date-input, civ-memorable-date, civ-file-upload',
+      '[data-civ-form-field]',
     );
 
     for (const el of formElements) {
@@ -101,6 +101,16 @@ export class CivForm extends CivBaseElement {
         const message = formEl.error || `${formEl.label || formEl.name || 'This field'} is required`;
         formEl.error = message;
         errors.push({ name: formEl.name || '', message, element: el });
+      } else {
+        try {
+          if (typeof formEl.checkValidity === 'function' && !formEl.checkValidity()) {
+            const message = formEl.validationMessage || formEl.error || `${formEl.label || formEl.name || 'This field'} is invalid`;
+            formEl.error = message;
+            errors.push({ name: formEl.name || '', message, element: el });
+          }
+        } catch {
+          // ElementInternals.checkValidity may not be available in all environments
+        }
       }
     }
 
@@ -113,7 +123,7 @@ export class CivForm extends CivBaseElement {
   clearErrors(): void {
     this._errors = [];
     const formElements = this.querySelectorAll<HTMLElement>(
-      'civ-text-input, civ-textarea, civ-select, civ-combobox, civ-checkbox, civ-radio-group, civ-date-input, civ-memorable-date, civ-file-upload',
+      '[data-civ-form-field]',
     );
     for (const el of formElements) {
       (el as any).error = '';
@@ -126,7 +136,7 @@ export class CivForm extends CivBaseElement {
   getFormData(): Record<string, string> {
     const data: Record<string, string> = {};
     const formElements = this.querySelectorAll<HTMLElement>(
-      'civ-text-input, civ-textarea, civ-select, civ-combobox, civ-checkbox, civ-radio-group, civ-date-input, civ-memorable-date, civ-file-upload',
+      '[data-civ-form-field]',
     );
 
     for (const el of formElements) {
@@ -191,10 +201,12 @@ export class CivForm extends CivBaseElement {
   private _onReset(): void {
     this.clearErrors();
     const formElements = this.querySelectorAll<HTMLElement>(
-      'civ-text-input, civ-textarea, civ-select, civ-combobox, civ-checkbox, civ-radio-group, civ-date-input, civ-memorable-date, civ-file-upload',
+      '[data-civ-form-field]',
     );
     for (const el of formElements) {
-      (el as any).value = '';
+      if (typeof (el as any).formResetCallback === 'function') {
+        (el as any).formResetCallback();
+      }
     }
   }
 

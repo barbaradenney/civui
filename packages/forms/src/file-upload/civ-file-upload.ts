@@ -30,16 +30,19 @@ function formatFileSize(bytes: number): string {
  * @prop {string} accept - Accepted file types (e.g. ".pdf,.jpg,image/*")
  * @prop {boolean} multiple - Allow multiple files
  * @prop {number} maxSize - Maximum file size in bytes (per file)
+ * @prop {number} maxFiles - Maximum number of files allowed (0 = unlimited)
  * @prop {boolean} required - Whether a file is required
  * @prop {boolean} disabled - Whether the upload is disabled
  *
- * @fires civ-change - When files are added or removed
+ * @fires civ-input - When files change, detail: { files }
+ * @fires civ-change - When files are added or removed, detail: { files }
  */
 @customElement('civ-file-upload')
 export class CivFileUpload extends CivFormElement {
   @property({ type: String }) accept = '';
   @property({ type: Boolean }) multiple = false;
   @property({ type: Number, attribute: 'max-size' }) maxSize = 0;
+  @property({ type: Number, attribute: 'max-files' }) maxFiles = 0;
 
   @property({ type: String, attribute: 'drag-text' }) dragText = 'Drag files here or';
   @property({ type: String, attribute: 'browse-text' }) browseText = 'choose from folder';
@@ -51,6 +54,8 @@ export class CivFileUpload extends CivFormElement {
   @property({ type: String, attribute: 'file-added-message' }) fileAddedMessage = '{count} file added. {total} file selected.';
   @property({ type: String, attribute: 'file-removed-message' }) fileRemovedMessage = 'File removed. {total} file selected.';
   @property({ type: String, attribute: 'file-size-error' }) fileSizeError = '{name} exceeds maximum size of {size}';
+  @property({ type: String, attribute: 'file-type-error' }) fileTypeError = '{name} is not an accepted file type';
+  @property({ type: String, attribute: 'max-files-error' }) maxFilesError = 'Maximum of {max} files allowed';
 
   @state() private _files: UploadedFile[] = [];
   @state() private _dragging = false;
@@ -111,6 +116,8 @@ export class CivFileUpload extends CivFormElement {
           @click="${this._onDropzoneClick}"
           role="button"
           tabindex="${this.disabled ? '-1' : '0'}"
+          aria-required="${this.required}"
+          aria-invalid="${this.error ? 'true' : 'false'}"
           aria-describedby="${this._ariaDescribedBy || nothing}"
           @keydown="${this._onDropzoneKeydown}"
           data-dragging="${this._dragging || nothing}"
@@ -207,15 +214,50 @@ export class CivFileUpload extends CivFormElement {
     input.value = '';
   }
 
+  private _isFileTypeAccepted(file: File): boolean {
+    if (!this.accept) return true;
+    const accepted = this.accept.split(',').map((s) => s.trim().toLowerCase());
+    const fileName = file.name.toLowerCase();
+    const fileType = file.type.toLowerCase();
+
+    return accepted.some((pattern) => {
+      if (pattern.startsWith('.')) {
+        // Extension match (e.g. ".pdf")
+        return fileName.endsWith(pattern);
+      }
+      if (pattern.endsWith('/*')) {
+        // MIME type wildcard (e.g. "image/*")
+        return fileType.startsWith(pattern.slice(0, -1));
+      }
+      // Exact MIME type match (e.g. "application/pdf")
+      return fileType === pattern;
+    });
+  }
+
   private _addFiles(newFiles: File[]): void {
     const validated: UploadedFile[] = [];
 
     for (const file of newFiles) {
+      if (this.accept && !this._isFileTypeAccepted(file)) {
+        this.error = interpolate(this.fileTypeError, { name: file.name });
+        this.announce(this.error, 'assertive');
+        continue;
+      }
       if (this.maxSize > 0 && file.size > this.maxSize) {
         this.error = interpolate(this.fileSizeError, { name: file.name, size: formatFileSize(this.maxSize) });
+        this.announce(this.error, 'assertive');
         continue;
       }
       validated.push({ name: file.name, size: file.size, type: file.type, file });
+    }
+
+    if (this.maxFiles > 0) {
+      const totalCount = this.multiple ? this._files.length + validated.length : validated.length;
+      if (totalCount > this.maxFiles) {
+        this.error = interpolate(this.maxFilesError, { max: this.maxFiles });
+        this.announce(this.error, 'assertive');
+        return;
+      }
     }
 
     if (this.multiple) {
@@ -254,9 +296,17 @@ export class CivFileUpload extends CivFormElement {
   }
 
   private _dispatchChange(): void {
+    const files = this._files.map((f) => f.file);
+    this.dispatchEvent(
+      new CustomEvent('civ-input', {
+        detail: { files },
+        bubbles: true,
+        composed: true,
+      }),
+    );
     this.dispatchEvent(
       new CustomEvent('civ-change', {
-        detail: { files: this._files.map((f) => f.file) },
+        detail: { files },
         bubbles: true,
         composed: true,
       }),

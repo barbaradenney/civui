@@ -39,8 +39,8 @@ const WIDTH_CLASSES: Record<TextInputWidth, string> = {
  * @prop {number} minlength - Minimum character length
  * @prop {string} autocomplete - Autocomplete hint
  *
- * @fires civ-input - When value changes (on input)
- * @fires civ-change - When value changes (on change/blur)
+ * @fires civ-input - When value changes (on input), detail: { value }
+ * @fires civ-change - When value changes (on change/blur), detail: { value }
  */
 @customElement('civ-text-input')
 export class CivTextInput extends CivFormElement {
@@ -51,6 +51,7 @@ export class CivTextInput extends CivFormElement {
   @property({ type: Number }) maxlength?: number;
   @property({ type: Number }) minlength?: number;
   @property({ type: String }) autocomplete = '';
+  @property({ type: String }) inputmode = '';
 
   override render() {
     const widthClass = WIDTH_CLASSES[this.width] || WIDTH_CLASSES['default'];
@@ -126,9 +127,10 @@ export class CivTextInput extends CivFormElement {
           ?required="${this.required}"
           aria-required="${this.required}"
           pattern="${this.pattern || nothing}"
-          maxlength="${this.maxlength ?? nothing}"
+          maxlength="${this.maxlength && this.maxlength > 0 ? this.maxlength : nothing}"
           minlength="${this.minlength ?? nothing}"
           autocomplete="${this.autocomplete || nothing}"
+          inputmode="${this.inputmode || nothing}"
           aria-describedby="${this._ariaDescribedBy || nothing}"
           aria-invalid="${this.error ? 'true' : 'false'}"
           @input="${this._handleInput}"

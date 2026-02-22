@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivFormElement } from '@civui/core';
+import { CivFormElement, debounce } from '@civui/core';
 
 /**
  * CivUI Textarea
@@ -21,8 +21,8 @@ import { CivFormElement } from '@civui/core';
  * @prop {boolean} required - Whether the field is required
  * @prop {boolean} disabled - Whether the field is disabled
  *
- * @fires civ-input - When value changes (on input)
- * @fires civ-change - When value changes (on change/blur)
+ * @fires civ-input - When value changes (on input), detail: { value }
+ * @fires civ-change - When value changes (on change/blur), detail: { value }
  */
 @customElement('civ-textarea')
 export class CivTextarea extends CivFormElement {
@@ -31,8 +31,23 @@ export class CivTextarea extends CivFormElement {
   @property({ type: String }) placeholder = '';
 
   @state() private _charCount = 0;
+  @state() private _announcedCharCount = 0;
 
   private _charCountId = this.generateId('charcount');
+  private _debouncedAnnounceCount = debounce(() => {
+    this._announcedCharCount = this._charCount;
+  }, 1000);
+
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this._charCount = this.value?.length || 0;
+    this._announcedCharCount = this._charCount;
+  }
+
+  override disconnectedCallback(): void {
+    super.disconnectedCallback();
+    this._debouncedAnnounceCount.cancel();
+  }
 
   protected override get _ariaDescribedBy(): string {
     const ids: string[] = [];
@@ -109,9 +124,11 @@ export class CivTextarea extends CivFormElement {
                 class="civ-block civ-mt-0.5 civ-text-sm ${remaining < 0
                   ? 'civ-text-error civ-font-bold'
                   : 'civ-text-base'}"
-                aria-live="polite"
               >
                 ${remaining} characters remaining
+              </span>
+              <span class="civ-sr-only" aria-live="polite">
+                ${this.maxlength! - this._announcedCharCount} characters remaining
               </span>
             `
           : nothing}
@@ -123,6 +140,7 @@ export class CivTextarea extends CivFormElement {
     const target = e.target as HTMLTextAreaElement;
     this.value = target.value;
     this._charCount = target.value.length;
+    this._debouncedAnnounceCount();
     this.updateFormValue(this.value);
     this.dispatchEvent(
       new CustomEvent('civ-input', { detail: { value: this.value }, bubbles: true, composed: true }),

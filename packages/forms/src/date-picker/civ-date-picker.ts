@@ -47,8 +47,8 @@ import {
  * @prop {boolean} required - Whether a date is required
  * @prop {boolean} disabled - Whether the picker is disabled
  *
- * @fires civ-change - When a date is selected
- * @fires civ-input - When the text input changes
+ * @fires civ-change - When a date is selected, detail: { value }
+ * @fires civ-input - When the text input changes, detail: { value }
  */
 @customElement('civ-date-picker')
 export class CivDatePicker extends CivFormElement {
@@ -65,6 +65,7 @@ export class CivDatePicker extends CivFormElement {
   @property({ type: String, attribute: 'next-month-label' }) nextMonthLabel = 'Next month';
   @property({ type: String, attribute: 'dialog-opened-message' }) dialogOpenedMessage = 'Calendar dialog opened';
   @property({ type: String, attribute: 'date-selected-message' }) dateSelectedMessage = 'Selected {date}';
+  @property({ type: String, attribute: 'today-label' }) todayLabel = 'today';
 
   @state() private _open = false;
   @state() private _focusedDate: Date = new Date();
@@ -311,7 +312,7 @@ export class CivDatePicker extends CivFormElement {
               <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
             </svg>
           </button>
-          <div id="${this._headingId}" aria-live="polite" class="civ-font-bold civ-text-base">
+          <div id="${this._headingId}" role="status" aria-live="polite" class="civ-font-bold civ-text-base">
             ${headingText}
           </div>
           <button
@@ -381,7 +382,7 @@ export class CivDatePicker extends CivFormElement {
           tabindex="${tabIdx}"
           aria-selected="${selected}"
           aria-disabled="${disabled}"
-          aria-label="${formatDateLong(day.date, this.locale)}"
+          aria-label="${formatDateLong(day.date, this.locale)}${day.isToday ? `, ${this.todayLabel}` : ''}"
           @click="${() => !disabled && this._selectDate(day.date)}"
         >
           ${day.day}

@@ -26,7 +26,7 @@ export interface ComboboxOption {
  * @prop {boolean} required - Whether a selection is required
  * @prop {boolean} disabled - Whether the combobox is disabled
  *
- * @fires civ-change - When a selection is made
+ * @fires civ-change - When a selection is made, detail: { value, label }
  * @fires civ-input - When the filter text changes, detail: { value }
  */
 @customElement('civ-combobox')
@@ -116,7 +116,7 @@ export class CivCombobox extends CivFormElement {
             role="combobox"
             aria-autocomplete="list"
             aria-expanded="${this._open}"
-            aria-controls="${this._listboxId}"
+            aria-controls="${this._open ? this._listboxId : nothing}"
             aria-activedescendant="${activeOptionId || nothing}"
             aria-describedby="${this._ariaDescribedBy || nothing}"
             aria-invalid="${this.error ? 'true' : 'false'}"

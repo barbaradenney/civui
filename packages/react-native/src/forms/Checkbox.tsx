@@ -35,9 +35,9 @@ export interface CheckboxProps {
   /** Display as a tile (bordered card). */
   tile?: boolean;
   /** Called when checked state changes. */
-  onChange?: (checked: boolean) => void;
+  onChange?: (checked: boolean, value: string) => void;
   /** Called on input (mirrors web civ-input event). */
-  onInput?: (checked: boolean) => void;
+  onInput?: (checked: boolean, value: string) => void;
   /** Analytics event handler. */
   onAnalytics?: AnalyticsHandler;
 }
@@ -116,6 +116,7 @@ export function Checkbox({
   label,
   checked = false,
   indeterminate = false,
+  value = 'on',
   description,
   hint,
   error,
@@ -132,11 +133,11 @@ export function Checkbox({
   const handlePress = useCallback(() => {
     if (!disabled) {
       const next = !checked;
-      onInput?.(next);
-      onChange?.(next);
+      onInput?.(next, value);
+      onChange?.(next, value);
       trackInteraction('Checkbox', 'change', { fieldName: name, label });
     }
-  }, [checked, disabled, onChange, onInput, trackInteraction, name, label]);
+  }, [checked, disabled, onChange, onInput, value, trackInteraction, name, label]);
 
   const content = (
     <View style={styles.row}>

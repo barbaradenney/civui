@@ -28,6 +28,12 @@ export class CivFieldset extends CivBaseElement {
   private _hintId = this.generateId('hint');
   private _errorId = this.generateId('error');
 
+  override updated(changed: Map<string, unknown>): void {
+    if (changed.has('error') && this.error) {
+      this.announce(this.error, 'assertive');
+    }
+  }
+
   override render() {
     const describedBy = [
       this.hint ? this._hintId : '',

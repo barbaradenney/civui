@@ -27,12 +27,24 @@ export interface SelectOption {
  * @prop {boolean} required - Whether the field is required
  * @prop {boolean} disabled - Whether the field is disabled
  *
- * @fires civ-change - When selection changes
+ * @fires civ-input - When selection changes, detail: { value }
+ * @fires civ-change - When selection changes, detail: { value }
  */
 @customElement('civ-select')
 export class CivSelect extends CivFormElement {
   @property({ type: Array }) options: SelectOption[] = [];
   @property({ type: String, attribute: 'empty-label' }) emptyLabel = '- Select -';
+
+  override updated(changed: Map<string, unknown>): void {
+    super.updated(changed);
+    if (changed.has('options') && this.value) {
+      // Re-sync the native select element when options change
+      const select = this.querySelector('select') as HTMLSelectElement | null;
+      if (select && select.value !== this.value) {
+        select.value = this.value;
+      }
+    }
+  }
 
   override render() {
     const selectClasses = [
@@ -108,6 +120,9 @@ export class CivSelect extends CivFormElement {
     const target = e.target as HTMLSelectElement;
     this.value = target.value;
     this.updateFormValue(this.value);
+    this.dispatchEvent(
+      new CustomEvent('civ-input', { detail: { value: this.value }, bubbles: true, composed: true }),
+    );
     this.dispatchEvent(
       new CustomEvent('civ-change', { detail: { value: this.value }, bubbles: true, composed: true }),
     );

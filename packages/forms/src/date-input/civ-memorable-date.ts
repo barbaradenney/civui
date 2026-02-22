@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivFormElement, getMonthNames, interpolate } from '@civui/core';
+import { CivFormElement, getMonthNames, interpolate, parseISODate } from '@civui/core';
 
 // Import child components
 import '../select/civ-select.js';
@@ -23,7 +23,8 @@ import '../text-input/civ-text-input.js';
  * @prop {boolean} required - Whether the date is required
  * @prop {boolean} disabled - Whether the fields are disabled
  *
- * @fires civ-change - When any date field changes, with assembled YYYY-MM-DD value
+ * @fires civ-input - When any date field changes, detail: { value, month, day, year }
+ * @fires civ-change - When any date field changes, detail: { value, month, day, year }
  */
 @customElement('civ-memorable-date')
 export class CivMemorableDate extends CivFormElement {
@@ -35,6 +36,7 @@ export class CivMemorableDate extends CivFormElement {
   @property({ type: String, attribute: 'day-placeholder' }) dayPlaceholder = 'DD';
   @property({ type: String, attribute: 'year-placeholder' }) yearPlaceholder = 'YYYY';
   @property({ type: String, attribute: 'date-set-message' }) dateSetMessage = 'Date set to {date}';
+  @property({ type: String, attribute: 'invalid-date-message' }) invalidDateMessage = 'Enter a valid date';
   @property({ type: String }) locale = 'en-US';
 
   @state() private _month = '';
@@ -60,6 +62,7 @@ export class CivMemorableDate extends CivFormElement {
   }
 
   override updated(changed: Map<string, unknown>): void {
+    super.updated(changed);
     if (changed.has('value') && !changed.has('_month')) {
       this._parseValue();
     }
@@ -77,7 +80,12 @@ export class CivMemorableDate extends CivFormElement {
 
   private _assembleValue(): string {
     if (this._year && this._month && this._day) {
-      return `${this._year.padStart(4, '0')}-${this._month.padStart(2, '0')}-${this._day.padStart(2, '0')}`;
+      const assembled = `${this._year.padStart(4, '0')}-${this._month.padStart(2, '0')}-${this._day.padStart(2, '0')}`;
+      // Validate the assembled date is a real date (e.g., not Feb 30)
+      if (!parseISODate(assembled)) {
+        return '';
+      }
+      return assembled;
     }
     return '';
   }
@@ -106,6 +114,8 @@ export class CivMemorableDate extends CivFormElement {
       <fieldset
         class="civ-border-0 civ-p-0 civ-m-0 civ-mb-4"
         aria-describedby="${describedBy || nothing}"
+        aria-invalid="${this.error ? 'true' : 'false'}"
+        aria-required="${this.required}"
       >
         ${this.legend
           ? html`
@@ -143,9 +153,11 @@ export class CivMemorableDate extends CivFormElement {
             <civ-text-input
               label="${this.dayLabel}"
               name="${this.name ? `${this.name}-day` : 'day'}"
-              type="number"
+              type="text"
+              inputmode="numeric"
               .value="${this._day}"
               placeholder="${this.dayPlaceholder}"
+              pattern="[0-9]*"
               maxlength="2"
               ?required="${this.required}"
               ?disabled="${this.disabled}"
@@ -156,9 +168,11 @@ export class CivMemorableDate extends CivFormElement {
             <civ-text-input
               label="${this.yearLabel}"
               name="${this.name ? `${this.name}-year` : 'year'}"
-              type="number"
+              type="text"
+              inputmode="numeric"
               .value="${this._year}"
               placeholder="${this.yearPlaceholder}"
+              pattern="[0-9]*"
               maxlength="4"
               ?required="${this.required}"
               ?disabled="${this.disabled}"
@@ -185,17 +199,35 @@ export class CivMemorableDate extends CivFormElement {
     if (dayInput) this._day = dayInput.value || '';
     if (yearInput) this._year = yearInput.value || '';
 
-    this.value = this._assembleValue();
+    const assembled = this._assembleValue();
+
+    // If all fields are filled but the date is invalid, show error
+    if (this._year && this._month && this._day && !assembled) {
+      this.error = this.invalidDateMessage;
+      this.value = '';
+      this.updateFormValue('');
+      return;
+    }
+
+    this.value = assembled;
     this.updateFormValue(this.value);
 
+    const detail = {
+      value: this.value,
+      month: this._month,
+      day: this._day,
+      year: this._year,
+    };
+    this.dispatchEvent(
+      new CustomEvent('civ-input', {
+        detail,
+        bubbles: true,
+        composed: true,
+      }),
+    );
     this.dispatchEvent(
       new CustomEvent('civ-change', {
-        detail: {
-          value: this.value,
-          month: this._month,
-          day: this._day,
-          year: this._year,
-        },
+        detail,
         bubbles: true,
         composed: true,
       }),

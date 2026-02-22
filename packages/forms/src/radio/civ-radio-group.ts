@@ -21,8 +21,8 @@ import { CivFormElement } from '@civui/core';
  * @prop {boolean} required - Whether a selection is required
  * @prop {'vertical' | 'horizontal'} orientation - Layout direction
  *
- * @fires civ-change - When the selected value changes
- * @fires civ-input - When the selected value changes (input event)
+ * @fires civ-change - When the selected value changes, detail: { value }
+ * @fires civ-input - When the selected value changes (input event), detail: { value }
  */
 @customElement('civ-radio-group')
 export class CivRadioGroup extends CivFormElement {
@@ -30,7 +30,7 @@ export class CivRadioGroup extends CivFormElement {
   @property({ type: Boolean, reflect: true }) tile = false;
   @property({ type: String, reflect: true }) orientation: 'vertical' | 'horizontal' = 'vertical';
 
-  private _defaultValue = '';
+  protected override _defaultValue = '';
   private _boundOnChildChange = this._onChildChange.bind(this);
   private _boundOnKeydown = this._onKeydown.bind(this);
 
@@ -46,15 +46,12 @@ export class CivRadioGroup extends CivFormElement {
     this.removeEventListener('keydown', this._boundOnKeydown as EventListener);
   }
 
-  override async firstUpdated(): Promise<void> {
+  override firstUpdated(): void {
     this._syncRadioNames();
     this._syncRadioChecked();
-    this._defaultValue = this.value;
-
-    // Wait for child radios to render their inputs before managing tabindex
-    const radios = this._getRadios();
-    await Promise.all(radios.map((r: any) => r.updateComplete));
     this._syncTabindex();
+    this._syncRadioRequired();
+    this._defaultValue = this.value;
   }
 
   override updated(changed: Map<string, unknown>): void {
@@ -66,6 +63,20 @@ export class CivRadioGroup extends CivFormElement {
       this._syncRadioChecked();
       this._syncTabindex();
     }
+    if (changed.has('error')) {
+      this._syncRadioError();
+    }
+    if (changed.has('disabled')) {
+      this._syncRadioDisabled();
+    }
+    if (changed.has('required')) {
+      this._syncRadioRequired();
+    }
+  }
+
+  override formDisabledCallback(disabled: boolean): void {
+    this.disabled = disabled;
+    this._syncRadioDisabled();
   }
 
   override render() {
@@ -89,6 +100,7 @@ export class CivRadioGroup extends CivFormElement {
         aria-describedby="${describedBy || nothing}"
         aria-invalid="${this.error ? 'true' : 'false'}"
         aria-required="${this.required}"
+        ?disabled="${this.disabled}"
       >
         ${this.legend
           ? html`
@@ -135,17 +147,34 @@ export class CivRadioGroup extends CivFormElement {
     });
   }
 
+  private _syncRadioError(): void {
+    const hasError = !!this.error;
+    this._getRadios().forEach((radio: any) => {
+      radio.error = hasError ? this.error : '';
+    });
+  }
+
+  private _syncRadioDisabled(): void {
+    if (!this.disabled) return;
+    this._getRadios().forEach((radio: any) => {
+      radio.disabled = true;
+    });
+  }
+
+  private _syncRadioRequired(): void {
+    this._getRadios().forEach((radio: any) => {
+      radio.required = this.required;
+    });
+  }
+
   private _syncTabindex(): void {
     const radios = this._getRadios();
     const checkedRadio = radios.find((r: any) => r.checked);
     const enabledRadios = radios.filter((r: any) => !r.disabled);
     const focusTarget = checkedRadio || enabledRadios[0];
 
-    radios.forEach((radio) => {
-      const input = radio.querySelector('input[type="radio"]') as HTMLInputElement | null;
-      if (input) {
-        input.tabIndex = radio === focusTarget ? 0 : -1;
-      }
+    radios.forEach((radio: any) => {
+      radio.managedTabIndex = radio === focusTarget ? 0 : -1;
     });
   }
 

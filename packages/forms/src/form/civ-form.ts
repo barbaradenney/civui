@@ -40,6 +40,7 @@ export class CivForm extends CivBaseElement {
   @state() private _errors: FormFieldError[] = [];
 
   private _summaryId = this.generateId('summary');
+  private _summaryHeadingId = this.generateId('summary-heading');
   private _boundOnClick = this._onButtonClick.bind(this);
 
   override connectedCallback(): void {
@@ -60,10 +61,11 @@ export class CivForm extends CivBaseElement {
         id="${this._summaryId}"
         class="civ-border-l-4 civ-border-error civ-bg-error-lighter civ-p-4 civ-mb-4"
         role="alert"
+        aria-labelledby="${this._summaryHeadingId}"
         data-civ-error-summary
         tabindex="-1"
       >
-        <h3 class="civ-text-error civ-font-bold civ-text-lg civ-mt-0 civ-mb-2">
+        <h3 id="${this._summaryHeadingId}" class="civ-text-error civ-font-bold civ-text-lg civ-mt-0 civ-mb-2">
           There ${this._errors.length === 1 ? 'is 1 error' : `are ${this._errors.length} errors`} in this form
         </h3>
         <ul class="civ-list-none civ-p-0 civ-m-0">

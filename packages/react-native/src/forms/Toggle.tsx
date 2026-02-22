@@ -125,12 +125,12 @@ export function Toggle({
 
   return (
     <View style={formStyles.container} testID={`civ-toggle-${name}`}>
+      {hint ? <Text style={formStyles.hint}>{hint}</Text> : null}
       {error ? (
         <Text style={formStyles.error} accessibilityRole="alert">
           {error}
         </Text>
       ) : null}
-      {hint ? <Text style={formStyles.hint}>{hint}</Text> : null}
       <TouchableOpacity
         style={styles.row}
         onPress={handlePress}

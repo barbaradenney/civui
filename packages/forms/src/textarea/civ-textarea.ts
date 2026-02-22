@@ -137,6 +137,13 @@ export class CivTextarea extends CivFormElement {
     `;
   }
 
+  override formResetCallback(): void {
+    super.formResetCallback();
+    this._charCount = this._defaultValue?.length || 0;
+    this._announcedCharCount = this._charCount;
+    this._debouncedAnnounceCount.cancel();
+  }
+
   private _onInput(e: Event): void {
     const target = e.target as HTMLTextAreaElement;
     this.value = target.value;

@@ -12,8 +12,10 @@ const FOCUSABLE_SELECTOR = [
  */
 function isVisible(el: HTMLElement): boolean {
   if (el.hasAttribute('aria-hidden')) return false;
-  if (!el.offsetParent && getComputedStyle(el).position !== 'fixed') return false;
-  return getComputedStyle(el).visibility !== 'hidden';
+  const style = getComputedStyle(el);
+  if (style.display === 'none') return false;
+  if (!el.offsetParent && style.position !== 'fixed') return false;
+  return style.visibility !== 'hidden';
 }
 
 /**

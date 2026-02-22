@@ -175,7 +175,10 @@ export class CivRadioGroup extends CivFormElement {
     const radios = this._getRadios();
     const checkedRadio = radios.find((r: any) => r.checked);
     const enabledRadios = radios.filter((r: any) => !r.disabled);
-    const focusTarget = checkedRadio || enabledRadios[0];
+    const focusTarget =
+      checkedRadio && !(checkedRadio as any).disabled
+        ? checkedRadio
+        : enabledRadios[0];
 
     radios.forEach((radio: any) => {
       radio.managedTabIndex = radio === focusTarget ? 0 : -1;

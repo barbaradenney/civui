@@ -21,6 +21,7 @@ import { CivFormElement, dispatch } from '@civui/core';
  *
  * @fires civ-input - When the selected value changes (input event), detail: { value }
  * @fires civ-change - When the selected value changes, detail: { value }
+ * @fires civ-reset - When the form is reset
  */
 @customElement('civ-segmented-control')
 export class CivSegmentedControl extends CivFormElement {
@@ -28,17 +29,20 @@ export class CivSegmentedControl extends CivFormElement {
 
   protected override _defaultValue = '';
   private _boundOnChildChange = this._onChildChange.bind(this);
+  private _boundStopChildInput = this._stopChildInput.bind(this);
   private _boundOnKeydown = this._onKeydown.bind(this);
 
   override connectedCallback(): void {
     super.connectedCallback();
     this.addEventListener('civ-change', this._boundOnChildChange as EventListener);
+    this.addEventListener('civ-input', this._boundStopChildInput as EventListener);
     this.addEventListener('keydown', this._boundOnKeydown as EventListener);
   }
 
   override disconnectedCallback(): void {
     super.disconnectedCallback();
     this.removeEventListener('civ-change', this._boundOnChildChange as EventListener);
+    this.removeEventListener('civ-input', this._boundStopChildInput as EventListener);
     this.removeEventListener('keydown', this._boundOnKeydown as EventListener);
   }
 
@@ -138,6 +142,10 @@ export class CivSegmentedControl extends CivFormElement {
       }
       segment.setAttribute('data-civ-segment-position', position);
     });
+  }
+
+  private _stopChildInput(e: Event): void {
+    if (e.target !== this) e.stopPropagation();
   }
 
   private _onChildChange(e: Event): void {

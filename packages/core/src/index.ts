@@ -3,7 +3,7 @@ export { CivBaseElement } from './base/civ-base-element.js';
 export { CivFormElement } from './base/civ-form-element.js';
 
 // A11y utilities
-export { announce } from './a11y/live-region.js';
+export { announce, cleanupLiveRegions } from './a11y/live-region.js';
 export { getFocusableElements, trapFocus, focusFirst } from './a11y/focus-manager.js';
 export { createKeyboardHandler, type KeyBinding } from './a11y/keyboard-handler.js';
 

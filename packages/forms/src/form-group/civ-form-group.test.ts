@@ -115,4 +115,29 @@ describe('civ-form-group', () => {
 
     expect(input.hasAttribute('aria-describedby')).toBe(false);
   });
+
+  it('sets aria-invalid on slotted input when error is present', async () => {
+    const el = await fixture(`
+      <civ-form-group label="Name" error="Required">
+        <input type="text" id="name" />
+      </civ-form-group>
+    `) as any;
+
+    const input = el.querySelector('input')!;
+    expect(input.getAttribute('aria-invalid')).toBe('true');
+  });
+
+  it('sets aria-invalid to false when error is cleared', async () => {
+    const el = await fixture(`
+      <civ-form-group label="Name" error="Required">
+        <input type="text" id="name" />
+      </civ-form-group>
+    `) as any;
+
+    el.error = '';
+    await el.updateComplete;
+
+    const input = el.querySelector('input')!;
+    expect(input.getAttribute('aria-invalid')).toBe('false');
+  });
 });

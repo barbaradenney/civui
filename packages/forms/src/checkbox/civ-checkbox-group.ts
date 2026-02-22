@@ -23,6 +23,7 @@ import { CivFormElement, dispatch } from '@civui/core';
  *
  * @fires civ-input - When the set of checked values changes (before civ-change), detail: { values }
  * @fires civ-change - When the set of checked values changes, detail: { values }
+ * @fires civ-reset - When the form is reset
  */
 @customElement('civ-checkbox-group')
 export class CivCheckboxGroup extends CivFormElement {
@@ -32,15 +33,18 @@ export class CivCheckboxGroup extends CivFormElement {
 
   protected override _defaultValue = '';
   private _boundOnChildChange = this._onChildChange.bind(this);
+  private _boundStopChildInput = this._stopChildInput.bind(this);
 
   override connectedCallback(): void {
     super.connectedCallback();
     this.addEventListener('civ-change', this._boundOnChildChange as EventListener);
+    this.addEventListener('civ-input', this._boundStopChildInput as EventListener);
   }
 
   override disconnectedCallback(): void {
     super.disconnectedCallback();
     this.removeEventListener('civ-change', this._boundOnChildChange as EventListener);
+    this.removeEventListener('civ-input', this._boundStopChildInput as EventListener);
   }
 
   override firstUpdated(): void {
@@ -201,6 +205,10 @@ export class CivCheckboxGroup extends CivFormElement {
       fd.append(this.name, v);
     }
     this.updateFormValue(fd);
+  }
+
+  private _stopChildInput(e: Event): void {
+    if (e.target !== this) e.stopPropagation();
   }
 
   private _onChildChange(e: Event): void {

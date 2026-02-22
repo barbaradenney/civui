@@ -192,7 +192,7 @@ export function Select({
                   ]}
                   onPress={() => handleSelect(item)}
                   disabled={item.disabled}
-                  accessibilityRole="radio"
+                  accessibilityRole="menuitem"
                   accessibilityState={buildAccessibilityState({ selected: item.value === value, disabled: item.disabled })}
                 >
                   <Text

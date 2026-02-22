@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { formStyles } from '../core/styles.js';
+import { buildAccessibilityLabel } from '../core/a11y.js';
 import { colors, spacing, typography } from '../core/tokens.js';
 
 export interface FieldsetProps {
@@ -46,7 +47,12 @@ export function Fieldset({
   children,
 }: FieldsetProps) {
   return (
-    <View style={[formStyles.container, disabled ? styles.disabled : null]} pointerEvents={disabled ? 'none' : 'auto'}>
+    <View
+      style={[formStyles.container, disabled ? styles.disabled : null]}
+      pointerEvents={disabled ? 'none' : 'auto'}
+      accessibilityRole="summary"
+      accessibilityLabel={buildAccessibilityLabel({ label: legend, hint, error, required })}
+    >
       {legend ? (
         <Text style={styles.legend}>
           {legend}

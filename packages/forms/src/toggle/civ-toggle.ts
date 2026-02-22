@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivFormElement } from '@civui/core';
+import { CivFormElement, dispatch } from '@civui/core';
 
 /**
  * CivUI Toggle Switch
@@ -96,7 +96,6 @@ export class CivToggle extends CivFormElement {
             aria-describedby="${this._ariaDescribedBy || nothing}"
             ?disabled="${this.disabled}"
             @click="${this._onToggle}"
-            @keydown="${this._onKeydown}"
             class="${trackClasses}"
           >
             <span class="${thumbClasses}" style="${thumbStyle}"></span>
@@ -121,35 +120,16 @@ export class CivToggle extends CivFormElement {
     if (this.disabled) return;
     this.checked = !this.checked;
     this.updateFormValue(this.checked ? this.value : null);
-    this.dispatchEvent(
-      new CustomEvent('civ-input', {
-        detail: { checked: this.checked, value: this.value },
-        bubbles: true,
-        composed: true,
-      }),
-    );
-    this.dispatchEvent(
-      new CustomEvent('civ-change', {
-        detail: { checked: this.checked, value: this.value },
-        bubbles: true,
-        composed: true,
-      }),
-    );
+    dispatch(this, 'civ-input', { checked: this.checked, value: this.value });
+    dispatch(this, 'civ-change', { checked: this.checked, value: this.value });
     this.sendAnalytics('change', { checked: this.checked });
-  }
-
-  private _onKeydown(e: KeyboardEvent): void {
-    if (e.key === ' ') {
-      e.preventDefault();
-      this._onToggle();
-    }
   }
 
   override formResetCallback(): void {
     this.checked = this._defaultChecked;
     this.error = '';
     this.updateFormValue(this._defaultChecked ? this.value : null);
-    this.dispatchEvent(new CustomEvent('civ-reset', { bubbles: true, composed: true }));
+    dispatch(this, 'civ-reset');
   }
 }
 

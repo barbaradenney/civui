@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivFormElement, interpolate } from '@civui/core';
+import { CivFormElement, dispatch, interpolate } from '@civui/core';
 
 interface UploadedFile {
   name: string;
@@ -297,20 +297,8 @@ export class CivFileUpload extends CivFormElement {
 
   private _dispatchChange(): void {
     const files = this._files.map((f) => f.file);
-    this.dispatchEvent(
-      new CustomEvent('civ-input', {
-        detail: { files },
-        bubbles: true,
-        composed: true,
-      }),
-    );
-    this.dispatchEvent(
-      new CustomEvent('civ-change', {
-        detail: { files },
-        bubbles: true,
-        composed: true,
-      }),
-    );
+    dispatch(this, 'civ-input', { files });
+    dispatch(this, 'civ-change', { files });
   }
 
   override formResetCallback(): void {
@@ -318,7 +306,7 @@ export class CivFileUpload extends CivFormElement {
     this.value = '';
     this.error = '';
     this.updateFormValue(null);
-    this.dispatchEvent(new CustomEvent('civ-reset', { bubbles: true, composed: true }));
+    dispatch(this, 'civ-reset');
   }
 }
 

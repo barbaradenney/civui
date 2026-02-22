@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivBaseElement } from '@civui/core';
+import { CivBaseElement, dispatch } from '@civui/core';
 
 export interface FormFieldError {
   name: string;
@@ -167,13 +167,7 @@ export class CivForm extends CivBaseElement {
     this._errors = errors;
 
     if (errors.length > 0) {
-      this.dispatchEvent(
-        new CustomEvent('civ-invalid', {
-          detail: { errors },
-          bubbles: true,
-          composed: true,
-        }),
-      );
+      dispatch(this, 'civ-invalid', { errors });
       this.sendAnalytics('invalid', { errorCount: errors.length });
 
       // Focus the error summary after render
@@ -190,13 +184,7 @@ export class CivForm extends CivBaseElement {
       return;
     }
 
-    this.dispatchEvent(
-      new CustomEvent('civ-submit', {
-        detail: { formData: this.getFormData() },
-        bubbles: true,
-        composed: true,
-      }),
-    );
+    dispatch(this, 'civ-submit', { formData: this.getFormData() });
     this.sendAnalytics('submit');
   }
 

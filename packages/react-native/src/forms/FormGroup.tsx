@@ -1,8 +1,11 @@
 import type { ReactNode } from 'react';
 import { View, Text } from 'react-native';
 import { formStyles } from '../core/styles.js';
+import { buildAccessibilityLabel } from '../core/a11y.js';
 
 export interface FormGroupProps {
+  /** Field name (used for testID). */
+  name?: string;
   /** Label text displayed above the group. */
   label?: string;
   /** Hint text displayed below the label. */
@@ -22,6 +25,7 @@ export interface FormGroupProps {
  * Mirrors the civ-form-group web component API.
  */
 export function FormGroup({
+  name,
   label,
   hint,
   error,
@@ -29,7 +33,11 @@ export function FormGroup({
   children,
 }: FormGroupProps) {
   return (
-    <View style={formStyles.container}>
+    <View
+      style={formStyles.container}
+      accessibilityLabel={label ? buildAccessibilityLabel({ label, hint, error, required }) : undefined}
+      testID={name ? `civ-form-group-${name}` : undefined}
+    >
       {label ? (
         <Text style={formStyles.label}>
           {label}

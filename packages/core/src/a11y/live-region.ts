@@ -1,39 +1,93 @@
 /**
- * Announce a message to screen readers via a live region.
- * Creates a shared live region element on first use.
+ * Announce a message to screen readers via live regions.
+ * Uses two separate regions (polite and assertive) to avoid conflicts.
+ * Queues rapid announcements so they don't overwrite each other.
  */
 
-let liveRegion: HTMLElement | null = null;
+let politeRegion: HTMLElement | null = null;
+let assertiveRegion: HTMLElement | null = null;
 
-function ensureLiveRegion(): HTMLElement {
-  if (liveRegion && document.body.contains(liveRegion)) {
-    return liveRegion;
-  }
-  liveRegion = document.createElement('div');
-  liveRegion.setAttribute('role', 'status');
-  liveRegion.setAttribute('aria-live', 'polite');
-  liveRegion.setAttribute('aria-atomic', 'true');
-  Object.assign(liveRegion.style, {
-    position: 'absolute',
-    width: '1px',
-    height: '1px',
-    padding: '0',
-    margin: '-1px',
-    overflow: 'hidden',
-    clip: 'rect(0, 0, 0, 0)',
-    whiteSpace: 'nowrap',
-    borderWidth: '0',
-  });
-  document.body.appendChild(liveRegion);
-  return liveRegion;
+const QUEUE_DELAY = 150;
+let politeQueue: string[] = [];
+let assertiveQueue: string[] = [];
+let politeTimer: ReturnType<typeof setTimeout> | null = null;
+let assertiveTimer: ReturnType<typeof setTimeout> | null = null;
+
+const SR_ONLY_STYLES = {
+  position: 'absolute',
+  width: '1px',
+  height: '1px',
+  padding: '0',
+  margin: '-1px',
+  overflow: 'hidden',
+  clip: 'rect(0, 0, 0, 0)',
+  whiteSpace: 'nowrap',
+  borderWidth: '0',
+};
+
+function createRegion(priority: 'polite' | 'assertive'): HTMLElement {
+  const el = document.createElement('div');
+  el.setAttribute('role', priority === 'assertive' ? 'alert' : 'status');
+  el.setAttribute('aria-live', priority);
+  el.setAttribute('aria-atomic', 'true');
+  Object.assign(el.style, SR_ONLY_STYLES);
+  document.body.appendChild(el);
+  return el;
 }
 
-export function announce(message: string, priority: 'polite' | 'assertive' = 'polite'): void {
-  const region = ensureLiveRegion();
-  region.setAttribute('aria-live', priority);
+function ensureRegion(priority: 'polite' | 'assertive'): HTMLElement {
+  if (priority === 'assertive') {
+    if (!assertiveRegion || !document.body.contains(assertiveRegion)) {
+      assertiveRegion = createRegion('assertive');
+    }
+    return assertiveRegion;
+  }
+  if (!politeRegion || !document.body.contains(politeRegion)) {
+    politeRegion = createRegion('polite');
+  }
+  return politeRegion;
+}
+
+function processQueue(priority: 'polite' | 'assertive'): void {
+  const queue = priority === 'assertive' ? assertiveQueue : politeQueue;
+  if (queue.length === 0) return;
+
+  const message = queue.shift()!;
+  const region = ensureRegion(priority);
+
   // Clear then set to ensure announcement even if same message
   region.textContent = '';
   requestAnimationFrame(() => {
     region.textContent = message;
   });
+
+  // Schedule next message if queue has more
+  if (queue.length > 0) {
+    const timer = setTimeout(() => processQueue(priority), QUEUE_DELAY);
+    if (priority === 'assertive') {
+      assertiveTimer = timer;
+    } else {
+      politeTimer = timer;
+    }
+  } else {
+    if (priority === 'assertive') {
+      assertiveTimer = null;
+    } else {
+      politeTimer = null;
+    }
+  }
+}
+
+export function announce(message: string, priority: 'polite' | 'assertive' = 'polite'): void {
+  if (priority === 'assertive') {
+    assertiveQueue.push(message);
+    if (!assertiveTimer) {
+      processQueue('assertive');
+    }
+  } else {
+    politeQueue.push(message);
+    if (!politeTimer) {
+      processQueue('polite');
+    }
+  }
 }

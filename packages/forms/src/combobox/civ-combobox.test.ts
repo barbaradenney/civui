@@ -1,20 +1,6 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
+import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
 import './civ-combobox.js';
-
-function createFixture(html: string): HTMLElement {
-  const container = document.createElement('div');
-  container.innerHTML = html;
-  document.body.appendChild(container);
-  return container.firstElementChild as HTMLElement;
-}
-
-function cleanup(): void {
-  document.body.innerHTML = '';
-}
-
-async function waitForUpdate(el: HTMLElement): Promise<void> {
-  if ('updateComplete' in el) await (el as any).updateComplete;
-}
 
 const STATES = [
   { value: 'CA', label: 'California' },
@@ -24,12 +10,11 @@ const STATES = [
   { value: 'TX', label: 'Texas' },
 ];
 
-afterEach(cleanup);
+afterEach(cleanupFixtures);
 
 describe('civ-combobox', () => {
   it('renders with a label', async () => {
-    const el = createFixture('<civ-combobox label="State"></civ-combobox>');
-    await waitForUpdate(el);
+    const el = await fixture('<civ-combobox label="State"></civ-combobox>');
 
     const label = el.querySelector('label');
     expect(label).not.toBeNull();
@@ -37,37 +22,34 @@ describe('civ-combobox', () => {
   });
 
   it('renders a text input with combobox role', async () => {
-    const el = createFixture('<civ-combobox label="State" name="state"></civ-combobox>');
-    await waitForUpdate(el);
+    const el = await fixture('<civ-combobox label="State" name="state"></civ-combobox>');
 
     const input = el.querySelector('input[role="combobox"]');
     expect(input).not.toBeNull();
   });
 
   it('sets aria-autocomplete="list"', async () => {
-    const el = createFixture('<civ-combobox label="State"></civ-combobox>');
-    await waitForUpdate(el);
+    const el = await fixture('<civ-combobox label="State"></civ-combobox>');
 
     const input = el.querySelector('input');
     expect(input!.getAttribute('aria-autocomplete')).toBe('list');
   });
 
   it('starts with aria-expanded="false"', async () => {
-    const el = createFixture('<civ-combobox label="State"></civ-combobox>');
-    await waitForUpdate(el);
+    const el = await fixture('<civ-combobox label="State"></civ-combobox>');
 
     const input = el.querySelector('input');
     expect(input!.getAttribute('aria-expanded')).toBe('false');
   });
 
   it('opens listbox on focus', async () => {
-    const el = createFixture('<civ-combobox label="State"></civ-combobox>') as any;
+    const el = await fixture('<civ-combobox label="State"></civ-combobox>') as any;
     el.options = STATES;
-    await waitForUpdate(el);
+    await elementUpdated(el);
 
     const input = el.querySelector('input') as HTMLInputElement;
     input.dispatchEvent(new Event('focus'));
-    await waitForUpdate(el);
+    await elementUpdated(el);
 
     expect(input.getAttribute('aria-expanded')).toBe('true');
     const listbox = el.querySelector('[role="listbox"]');
@@ -75,10 +57,10 @@ describe('civ-combobox', () => {
   });
 
   it('renders options in listbox', async () => {
-    const el = createFixture('<civ-combobox label="State"></civ-combobox>') as any;
+    const el = await fixture('<civ-combobox label="State"></civ-combobox>') as any;
     el.options = STATES;
     el._open = true;
-    await waitForUpdate(el);
+    await elementUpdated(el);
 
     const options = el.querySelectorAll('[role="option"]');
     expect(options.length).toBe(5);
@@ -86,28 +68,28 @@ describe('civ-combobox', () => {
   });
 
   it('filters options on input', async () => {
-    const el = createFixture('<civ-combobox label="State"></civ-combobox>') as any;
+    const el = await fixture('<civ-combobox label="State"></civ-combobox>') as any;
     el.options = STATES;
-    await waitForUpdate(el);
+    await elementUpdated(el);
 
     const input = el.querySelector('input') as HTMLInputElement;
     input.value = 'Co';
     input.dispatchEvent(new Event('input', { bubbles: true }));
-    await waitForUpdate(el);
+    await elementUpdated(el);
 
     const options = el.querySelectorAll('[role="option"]');
     expect(options.length).toBe(2); // Colorado, Connecticut
   });
 
   it('shows "No results found" when no matches', async () => {
-    const el = createFixture('<civ-combobox label="State"></civ-combobox>') as any;
+    const el = await fixture('<civ-combobox label="State"></civ-combobox>') as any;
     el.options = STATES;
-    await waitForUpdate(el);
+    await elementUpdated(el);
 
     const input = el.querySelector('input') as HTMLInputElement;
     input.value = 'ZZZ';
     input.dispatchEvent(new Event('input', { bubbles: true }));
-    await waitForUpdate(el);
+    await elementUpdated(el);
 
     const noResults = el.querySelector('[role="status"]');
     expect(noResults).not.toBeNull();
@@ -115,10 +97,10 @@ describe('civ-combobox', () => {
   });
 
   it('selects option on click', async () => {
-    const el = createFixture('<civ-combobox label="State"></civ-combobox>') as any;
+    const el = await fixture('<civ-combobox label="State"></civ-combobox>') as any;
     el.options = STATES;
     el._open = true;
-    await waitForUpdate(el);
+    await elementUpdated(el);
 
     let eventDetail: any = null;
     el.addEventListener('civ-change', ((e: CustomEvent) => {
@@ -127,96 +109,91 @@ describe('civ-combobox', () => {
 
     const firstOption = el.querySelector('[role="option"]') as HTMLElement;
     firstOption.click();
-    await waitForUpdate(el);
+    await elementUpdated(el);
 
     expect(eventDetail).toEqual({ value: 'CA', label: 'California' });
     expect(el.value).toBe('CA');
   });
 
   it('closes on Escape', async () => {
-    const el = createFixture('<civ-combobox label="State"></civ-combobox>') as any;
+    const el = await fixture('<civ-combobox label="State"></civ-combobox>') as any;
     el.options = STATES;
     el._open = true;
-    await waitForUpdate(el);
+    await elementUpdated(el);
 
     const input = el.querySelector('input') as HTMLInputElement;
     input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
-    await waitForUpdate(el);
+    await elementUpdated(el);
 
     expect(el._open).toBe(false);
   });
 
   it('navigates with arrow keys', async () => {
-    const el = createFixture('<civ-combobox label="State"></civ-combobox>') as any;
+    const el = await fixture('<civ-combobox label="State"></civ-combobox>') as any;
     el.options = STATES;
     el._open = true;
-    await waitForUpdate(el);
+    await elementUpdated(el);
 
     const input = el.querySelector('input') as HTMLInputElement;
 
     input.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
-    await waitForUpdate(el);
+    await elementUpdated(el);
     expect(el._activeIndex).toBe(0);
 
     input.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
-    await waitForUpdate(el);
+    await elementUpdated(el);
     expect(el._activeIndex).toBe(1);
 
     input.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true }));
-    await waitForUpdate(el);
+    await elementUpdated(el);
     expect(el._activeIndex).toBe(0);
   });
 
   it('selects on Enter', async () => {
-    const el = createFixture('<civ-combobox label="State"></civ-combobox>') as any;
+    const el = await fixture('<civ-combobox label="State"></civ-combobox>') as any;
     el.options = STATES;
     el._open = true;
     el._activeIndex = 1;
-    await waitForUpdate(el);
+    await elementUpdated(el);
 
     const input = el.querySelector('input') as HTMLInputElement;
     input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
-    await waitForUpdate(el);
+    await elementUpdated(el);
 
     expect(el.value).toBe('CO');
     expect(el._open).toBe(false);
   });
 
   it('renders error with alert role', async () => {
-    const el = createFixture('<civ-combobox label="State" error="Required"></civ-combobox>');
-    await waitForUpdate(el);
+    const el = await fixture('<civ-combobox label="State" error="Required"></civ-combobox>');
 
     const errorEl = el.querySelector('[role="alert"]');
     expect(errorEl).not.toBeNull();
   });
 
   it('sets aria-invalid when error is present', async () => {
-    const el = createFixture('<civ-combobox label="State" error="Bad"></civ-combobox>');
-    await waitForUpdate(el);
+    const el = await fixture('<civ-combobox label="State" error="Bad"></civ-combobox>');
 
     const input = el.querySelector('input');
     expect(input!.getAttribute('aria-invalid')).toBe('true');
   });
 
   it('shows required indicator', async () => {
-    const el = createFixture('<civ-combobox label="State" required></civ-combobox>');
-    await waitForUpdate(el);
+    const el = await fixture('<civ-combobox label="State" required></civ-combobox>');
 
     const abbr = el.querySelector('abbr');
     expect(abbr).not.toBeNull();
   });
 
   it('renders disabled state', async () => {
-    const el = createFixture('<civ-combobox label="State" disabled></civ-combobox>');
-    await waitForUpdate(el);
+    const el = await fixture('<civ-combobox label="State" disabled></civ-combobox>');
 
     const input = el.querySelector('input') as HTMLInputElement;
     expect(input.disabled).toBe(true);
   });
 
   it('uses Light DOM', async () => {
-    const el = createFixture('<civ-combobox label="State"></civ-combobox>');
-    await waitForUpdate(el);
+    const el = await fixture('<civ-combobox label="State"></civ-combobox>');
 
     expect(el.shadowRoot).toBeNull();
   });
@@ -227,32 +204,31 @@ describe('civ-combobox', () => {
   });
 
   it('sets aria-required when required', async () => {
-    const el = createFixture('<civ-combobox label="State" required></civ-combobox>');
-    await waitForUpdate(el);
+    const el = await fixture('<civ-combobox label="State" required></civ-combobox>');
 
     const input = el.querySelector('input');
     expect(input!.getAttribute('aria-required')).toBe('true');
   });
 
   it('opens dropdown on ArrowUp when closed', async () => {
-    const el = createFixture('<civ-combobox label="State"></civ-combobox>') as any;
+    const el = await fixture('<civ-combobox label="State"></civ-combobox>') as any;
     el.options = STATES;
-    await waitForUpdate(el);
+    await elementUpdated(el);
 
     expect(el._open).toBe(false);
 
     const input = el.querySelector('input') as HTMLInputElement;
     input.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true }));
-    await waitForUpdate(el);
+    await elementUpdated(el);
 
     expect(el._open).toBe(true);
   });
 
   it('uses aria-labelledby on listbox instead of aria-label', async () => {
-    const el = createFixture('<civ-combobox label="State"></civ-combobox>') as any;
+    const el = await fixture('<civ-combobox label="State"></civ-combobox>') as any;
     el.options = STATES;
     el._open = true;
-    await waitForUpdate(el);
+    await elementUpdated(el);
 
     const listbox = el.querySelector('[role="listbox"]');
     expect(listbox).not.toBeNull();
@@ -266,11 +242,11 @@ describe('civ-combobox', () => {
   });
 
   it('sets data-active on the active option', async () => {
-    const el = createFixture('<civ-combobox label="State"></civ-combobox>') as any;
+    const el = await fixture('<civ-combobox label="State"></civ-combobox>') as any;
     el.options = STATES;
     el._open = true;
     el._activeIndex = 1;
-    await waitForUpdate(el);
+    await elementUpdated(el);
 
     const options = el.querySelectorAll('[role="option"]');
     expect(options[1].hasAttribute('data-active')).toBe(true);
@@ -278,32 +254,32 @@ describe('civ-combobox', () => {
   });
 
   it('sets aria-live="polite" on no-results status', async () => {
-    const el = createFixture('<civ-combobox label="State"></civ-combobox>') as any;
+    const el = await fixture('<civ-combobox label="State"></civ-combobox>') as any;
     el.options = STATES;
-    await waitForUpdate(el);
+    await elementUpdated(el);
 
     const input = el.querySelector('input') as HTMLInputElement;
     input.value = 'ZZZ';
     input.dispatchEvent(new Event('input', { bubbles: true }));
-    await waitForUpdate(el);
+    await elementUpdated(el);
 
     const noResults = el.querySelector('[role="status"]');
     expect(noResults!.getAttribute('aria-live')).toBe('polite');
   });
 
   it('applies focus-visible ring class', async () => {
-    const el = createFixture('<civ-combobox label="State" name="state"></civ-combobox>') as any;
+    const el = await fixture('<civ-combobox label="State" name="state"></civ-combobox>') as any;
     el.options = [{ value: 'CA', label: 'California' }];
-    await waitForUpdate(el);
+    await elementUpdated(el);
 
     const input = el.querySelector('input');
     expect(input!.className).toContain('focus-visible:civ-focus-ring');
   });
 
   it('does not use deprecated focus: outline classes', async () => {
-    const el = createFixture('<civ-combobox label="State" name="state"></civ-combobox>') as any;
+    const el = await fixture('<civ-combobox label="State" name="state"></civ-combobox>') as any;
     el.options = [{ value: 'CA', label: 'California' }];
-    await waitForUpdate(el);
+    await elementUpdated(el);
 
     const input = el.querySelector('input');
     expect(input!.className).not.toContain('focus:civ-outline-2');
@@ -313,14 +289,14 @@ describe('civ-combobox', () => {
 
   describe('i18n overrides', () => {
     it('uses custom no-results-text', async () => {
-      const el = createFixture('<civ-combobox label="State" no-results-text="Sin resultados"></civ-combobox>') as any;
+      const el = await fixture('<civ-combobox label="State" no-results-text="Sin resultados"></civ-combobox>') as any;
       el.options = STATES;
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       const input = el.querySelector('input') as HTMLInputElement;
       input.value = 'ZZZ';
       input.dispatchEvent(new Event('input', { bubbles: true }));
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       const noResults = el.querySelector('[role="status"]');
       expect(noResults).not.toBeNull();
@@ -330,12 +306,12 @@ describe('civ-combobox', () => {
 
   describe('analytics', () => {
     it('fires civ-analytics with select action on option pick', async () => {
-      const el = createFixture('<civ-combobox label="State" name="state"></civ-combobox>') as any;
+      const el = await fixture('<civ-combobox label="State" name="state"></civ-combobox>') as any;
       el.options = [
         { value: 'CA', label: 'California' },
         { value: 'NY', label: 'New York' },
       ];
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       const handler = vi.fn();
       el.addEventListener('civ-analytics', handler as EventListener);
@@ -351,9 +327,9 @@ describe('civ-combobox', () => {
     });
 
     it('suppresses analytics when disable-analytics is set', async () => {
-      const el = createFixture('<civ-combobox label="State" name="state" disable-analytics></civ-combobox>') as any;
+      const el = await fixture('<civ-combobox label="State" name="state" disable-analytics></civ-combobox>') as any;
       el.options = [{ value: 'CA', label: 'California' }];
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       const handler = vi.fn();
       el.addEventListener('civ-analytics', handler as EventListener);
@@ -364,9 +340,9 @@ describe('civ-combobox', () => {
     });
 
     it('never includes value in analytics payload', async () => {
-      const el = createFixture('<civ-combobox label="State" name="state"></civ-combobox>') as any;
+      const el = await fixture('<civ-combobox label="State" name="state"></civ-combobox>') as any;
       el.options = [{ value: 'CA', label: 'California' }];
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       const handler = vi.fn();
       el.addEventListener('civ-analytics', handler as EventListener);

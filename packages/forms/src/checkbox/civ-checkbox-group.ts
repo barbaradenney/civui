@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivFormElement } from '@civui/core';
+import { CivFormElement, dispatch } from '@civui/core';
 
 /**
  * CivUI Checkbox Group
@@ -218,20 +218,8 @@ export class CivCheckboxGroup extends CivFormElement {
     this.value = this._serializeValue(values);
     this._updateGroupFormValue();
 
-    this.dispatchEvent(
-      new CustomEvent('civ-input', {
-        detail: { values: this.getCheckedValues() },
-        bubbles: true,
-        composed: true,
-      }),
-    );
-    this.dispatchEvent(
-      new CustomEvent('civ-change', {
-        detail: { values: this.getCheckedValues() },
-        bubbles: true,
-        composed: true,
-      }),
-    );
+    dispatch(this, 'civ-input', { values: this.getCheckedValues() });
+    dispatch(this, 'civ-change', { values: this.getCheckedValues() });
     this.sendAnalytics('change');
   }
 
@@ -240,7 +228,7 @@ export class CivCheckboxGroup extends CivFormElement {
     this.error = '';
     this._syncCheckboxChecked();
     this._updateGroupFormValue();
-    this.dispatchEvent(new CustomEvent('civ-reset', { bubbles: true, composed: true }));
+    dispatch(this, 'civ-reset');
   }
 }
 

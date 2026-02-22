@@ -555,14 +555,15 @@ export class CivDatePicker extends CivFormElement {
   // --- Form integration ---
 
   override formResetCallback(): void {
-    this.value = '';
-    this._inputValue = '';
+    this.value = this._defaultValue;
+    const initial = this._defaultValue ? parseISODate(this._defaultValue) : null;
+    this._inputValue = initial ? formatDate(initial, this.locale) : '';
     this._open = false;
     this.error = '';
-    this._focusedDate = new Date();
-    this._displayMonth = new Date().getMonth();
-    this._displayYear = new Date().getFullYear();
-    this.updateFormValue('');
+    this._focusedDate = initial || new Date();
+    this._displayMonth = (initial || new Date()).getMonth();
+    this._displayYear = (initial || new Date()).getFullYear();
+    this.updateFormValue(this._defaultValue || '');
     dispatch(this, 'civ-reset');
   }
 

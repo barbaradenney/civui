@@ -1,6 +1,6 @@
 import { html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBaseElement } from '@civui/core';
+import { CivBaseElement, dispatch } from '@civui/core';
 
 /**
  * CivUI Segment
@@ -64,13 +64,8 @@ export class CivSegment extends CivBaseElement {
 
   private _onSelect(): void {
     if (this.disabled) return;
-    this.dispatchEvent(
-      new CustomEvent('civ-change', {
-        detail: { value: this.value },
-        bubbles: true,
-        composed: true,
-      }),
-    );
+    dispatch(this, 'civ-input', { value: this.value });
+    dispatch(this, 'civ-change', { value: this.value });
   }
 }
 

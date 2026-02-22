@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBaseElement } from '@civui/core';
+import { CivBaseElement, dispatch } from '@civui/core';
 
 /**
  * CivUI Radio
@@ -104,20 +104,8 @@ export class CivRadio extends CivBaseElement {
     const target = e.target as HTMLInputElement;
     if (target.checked) {
       this.checked = true;
-      this.dispatchEvent(
-        new CustomEvent('civ-input', {
-          detail: { value: this.value },
-          bubbles: true,
-          composed: true,
-        }),
-      );
-      this.dispatchEvent(
-        new CustomEvent('civ-change', {
-          detail: { value: this.value },
-          bubbles: true,
-          composed: true,
-        }),
-      );
+      dispatch(this, 'civ-input', { value: this.value });
+      dispatch(this, 'civ-change', { value: this.value });
       this.sendAnalytics('change');
     }
   }

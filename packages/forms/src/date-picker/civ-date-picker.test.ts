@@ -1,28 +1,13 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
+import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
 import './civ-date-picker.js';
 
-function createFixture(html: string): HTMLElement {
-  const container = document.createElement('div');
-  container.innerHTML = html;
-  document.body.appendChild(container);
-  return container.firstElementChild as HTMLElement;
-}
-
-function cleanup(): void {
-  document.body.innerHTML = '';
-}
-
-async function waitForUpdate(el: HTMLElement): Promise<void> {
-  if ('updateComplete' in el) await (el as any).updateComplete;
-}
-
-afterEach(cleanup);
+afterEach(cleanupFixtures);
 
 describe('civ-date-picker', () => {
   describe('rendering', () => {
     it('renders with a label', async () => {
-      const el = createFixture('<civ-date-picker label="Appointment date"></civ-date-picker>');
-      await waitForUpdate(el);
+      const el = await fixture('<civ-date-picker label="Appointment date"></civ-date-picker>');
 
       const label = el.querySelector('label');
       expect(label).not.toBeNull();
@@ -30,24 +15,21 @@ describe('civ-date-picker', () => {
     });
 
     it('renders a text input', async () => {
-      const el = createFixture('<civ-date-picker label="Date" name="date"></civ-date-picker>');
-      await waitForUpdate(el);
+      const el = await fixture('<civ-date-picker label="Date" name="date"></civ-date-picker>');
 
       const input = el.querySelector('input[type="text"]');
       expect(input).not.toBeNull();
     });
 
     it('renders a calendar button', async () => {
-      const el = createFixture('<civ-date-picker label="Date"></civ-date-picker>');
-      await waitForUpdate(el);
+      const el = await fixture('<civ-date-picker label="Date"></civ-date-picker>');
 
       const button = el.querySelector('button[aria-label^="Choose date"]');
       expect(button).not.toBeNull();
     });
 
     it('associates label with input', async () => {
-      const el = createFixture('<civ-date-picker label="Date"></civ-date-picker>');
-      await waitForUpdate(el);
+      const el = await fixture('<civ-date-picker label="Date"></civ-date-picker>');
 
       const label = el.querySelector('label');
       const input = el.querySelector('input');
@@ -55,8 +37,7 @@ describe('civ-date-picker', () => {
     });
 
     it('uses Light DOM', async () => {
-      const el = createFixture('<civ-date-picker label="Date"></civ-date-picker>');
-      await waitForUpdate(el);
+      const el = await fixture('<civ-date-picker label="Date"></civ-date-picker>');
 
       expect(el.shadowRoot).toBeNull();
     });
@@ -69,16 +50,14 @@ describe('civ-date-picker', () => {
 
   describe('states', () => {
     it('shows required indicator', async () => {
-      const el = createFixture('<civ-date-picker label="Date" required></civ-date-picker>');
-      await waitForUpdate(el);
+      const el = await fixture('<civ-date-picker label="Date" required></civ-date-picker>');
 
       const abbr = el.querySelector('abbr');
       expect(abbr).not.toBeNull();
     });
 
     it('renders hint text', async () => {
-      const el = createFixture('<civ-date-picker label="Date" hint="Select a date"></civ-date-picker>');
-      await waitForUpdate(el);
+      const el = await fixture('<civ-date-picker label="Date" hint="Select a date"></civ-date-picker>');
 
       const hint = el.querySelector('span');
       expect(hint).not.toBeNull();
@@ -86,8 +65,7 @@ describe('civ-date-picker', () => {
     });
 
     it('renders error with alert role', async () => {
-      const el = createFixture('<civ-date-picker label="Date" error="Date is required"></civ-date-picker>');
-      await waitForUpdate(el);
+      const el = await fixture('<civ-date-picker label="Date" error="Date is required"></civ-date-picker>');
 
       const errorEl = el.querySelector('[role="alert"]');
       expect(errorEl).not.toBeNull();
@@ -95,16 +73,14 @@ describe('civ-date-picker', () => {
     });
 
     it('sets aria-invalid when error is present', async () => {
-      const el = createFixture('<civ-date-picker label="Date" error="Bad"></civ-date-picker>');
-      await waitForUpdate(el);
+      const el = await fixture('<civ-date-picker label="Date" error="Bad"></civ-date-picker>');
 
       const input = el.querySelector('input');
       expect(input!.getAttribute('aria-invalid')).toBe('true');
     });
 
     it('renders disabled state', async () => {
-      const el = createFixture('<civ-date-picker label="Date" disabled></civ-date-picker>');
-      await waitForUpdate(el);
+      const el = await fixture('<civ-date-picker label="Date" disabled></civ-date-picker>');
 
       const input = el.querySelector('input') as HTMLInputElement;
       expect(input.disabled).toBe(true);
@@ -113,16 +89,14 @@ describe('civ-date-picker', () => {
     });
 
     it('sets aria-required when required', async () => {
-      const el = createFixture('<civ-date-picker label="Date" required></civ-date-picker>');
-      await waitForUpdate(el);
+      const el = await fixture('<civ-date-picker label="Date" required></civ-date-picker>');
 
       const input = el.querySelector('input');
       expect(input!.getAttribute('aria-required')).toBe('true');
     });
 
     it('sets placeholder on input', async () => {
-      const el = createFixture('<civ-date-picker label="Date" placeholder="MM/DD/YYYY"></civ-date-picker>');
-      await waitForUpdate(el);
+      const el = await fixture('<civ-date-picker label="Date" placeholder="MM/DD/YYYY"></civ-date-picker>');
 
       const input = el.querySelector('input') as HTMLInputElement;
       expect(input.placeholder).toBe('MM/DD/YYYY');
@@ -131,66 +105,65 @@ describe('civ-date-picker', () => {
 
   describe('dialog', () => {
     it('opens dialog on button click', async () => {
-      const el = createFixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
-      await waitForUpdate(el);
+      const el = await fixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
 
       const button = el.querySelector('button[aria-label^="Choose date"]') as HTMLButtonElement;
       button.click();
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       const dialog = el.querySelector('[role="dialog"]');
       expect(dialog).not.toBeNull();
     });
 
     it('dialog has aria-modal="true"', async () => {
-      const el = createFixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
+      const el = await fixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
       el._open = true;
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       const dialog = el.querySelector('[role="dialog"]');
       expect(dialog!.getAttribute('aria-modal')).toBe('true');
     });
 
     it('dialog has aria-label', async () => {
-      const el = createFixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
+      const el = await fixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
       el._open = true;
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       const dialog = el.querySelector('[role="dialog"]');
       expect(dialog!.getAttribute('aria-label')).toBe('Choose Date');
     });
 
     it('renders a grid with role="grid"', async () => {
-      const el = createFixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
+      const el = await fixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
       el._open = true;
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       const grid = el.querySelector('[role="grid"]');
       expect(grid).not.toBeNull();
     });
 
     it('renders 7 day-of-week headers', async () => {
-      const el = createFixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
+      const el = await fixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
       el._open = true;
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       const headers = el.querySelectorAll('th');
       expect(headers.length).toBe(7);
     });
 
     it('renders 6 weeks of days', async () => {
-      const el = createFixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
+      const el = await fixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
       el._open = true;
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       const rows = el.querySelectorAll('tbody tr');
       expect(rows.length).toBe(6);
     });
 
     it('renders previous/next month buttons', async () => {
-      const el = createFixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
+      const el = await fixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
       el._open = true;
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       const prevBtn = el.querySelector('[aria-label="Previous month"]');
       const nextBtn = el.querySelector('[aria-label="Next month"]');
@@ -199,11 +172,11 @@ describe('civ-date-picker', () => {
     });
 
     it('shows month/year heading with aria-live', async () => {
-      const el = createFixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
+      const el = await fixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
       el._open = true;
       el._displayMonth = 2; // March
       el._displayYear = 2026;
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       const heading = el.querySelector('[aria-live="polite"]');
       expect(heading).not.toBeNull();
@@ -214,11 +187,11 @@ describe('civ-date-picker', () => {
 
   describe('date selection', () => {
     it('selects a date on click and fires civ-change', async () => {
-      const el = createFixture('<civ-date-picker label="Date" name="date"></civ-date-picker>') as any;
+      const el = await fixture('<civ-date-picker label="Date" name="date"></civ-date-picker>') as any;
       el._open = true;
       el._displayMonth = 2; // March
       el._displayYear = 2026;
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       let eventDetail: any = null;
       el.addEventListener('civ-change', ((e: CustomEvent) => {
@@ -232,42 +205,42 @@ describe('civ-date-picker', () => {
       ) as HTMLElement;
       expect(day15).not.toBeNull();
       day15!.click();
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       expect(el.value).toBe('2026-03-15');
       expect(eventDetail).toEqual({ value: '2026-03-15' });
     });
 
     it('closes dialog after selection', async () => {
-      const el = createFixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
+      const el = await fixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
       el._open = true;
       el._displayMonth = 2;
       el._displayYear = 2026;
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       const dayButtons = el.querySelectorAll('[data-civ-day]');
       const day15 = Array.from(dayButtons).find(
         (btn: any) => btn.getAttribute('data-date') === '2026-03-15',
       ) as HTMLElement;
       day15!.click();
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       expect(el._open).toBe(false);
     });
 
     it('updates the text input with formatted date', async () => {
-      const el = createFixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
+      const el = await fixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
       el._open = true;
       el._displayMonth = 2;
       el._displayYear = 2026;
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       const dayButtons = el.querySelectorAll('[data-civ-day]');
       const day15 = Array.from(dayButtons).find(
         (btn: any) => btn.getAttribute('data-date') === '2026-03-15',
       ) as HTMLElement;
       day15!.click();
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       const input = el.querySelector('input') as HTMLInputElement;
       expect(input.value).toContain('3');
@@ -285,153 +258,153 @@ describe('civ-date-picker', () => {
     }
 
     it('closes on Escape', async () => {
-      const el = createFixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
+      const el = await fixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
       el._open = true;
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       sendKey(el, 'Escape');
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       expect(el._open).toBe(false);
     });
 
     it('moves focus right with ArrowRight', async () => {
-      const el = createFixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
+      const el = await fixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
       el._open = true;
       el._focusedDate = new Date(2026, 2, 15);
       el._displayMonth = 2;
       el._displayYear = 2026;
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       sendKey(el, 'ArrowRight');
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       expect(el._focusedDate.getDate()).toBe(16);
     });
 
     it('moves focus left with ArrowLeft', async () => {
-      const el = createFixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
+      const el = await fixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
       el._open = true;
       el._focusedDate = new Date(2026, 2, 15);
       el._displayMonth = 2;
       el._displayYear = 2026;
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       sendKey(el, 'ArrowLeft');
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       expect(el._focusedDate.getDate()).toBe(14);
     });
 
     it('moves focus down with ArrowDown (+7 days)', async () => {
-      const el = createFixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
+      const el = await fixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
       el._open = true;
       el._focusedDate = new Date(2026, 2, 15);
       el._displayMonth = 2;
       el._displayYear = 2026;
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       sendKey(el, 'ArrowDown');
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       expect(el._focusedDate.getDate()).toBe(22);
     });
 
     it('moves focus up with ArrowUp (-7 days)', async () => {
-      const el = createFixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
+      const el = await fixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
       el._open = true;
       el._focusedDate = new Date(2026, 2, 22);
       el._displayMonth = 2;
       el._displayYear = 2026;
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       sendKey(el, 'ArrowUp');
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       expect(el._focusedDate.getDate()).toBe(15);
     });
 
     it('moves to next month with PageDown', async () => {
-      const el = createFixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
+      const el = await fixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
       el._open = true;
       el._focusedDate = new Date(2026, 2, 15);
       el._displayMonth = 2;
       el._displayYear = 2026;
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       sendKey(el, 'PageDown');
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       expect(el._focusedDate.getMonth()).toBe(3); // April
     });
 
     it('moves to previous month with PageUp', async () => {
-      const el = createFixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
+      const el = await fixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
       el._open = true;
       el._focusedDate = new Date(2026, 2, 15);
       el._displayMonth = 2;
       el._displayYear = 2026;
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       sendKey(el, 'PageUp');
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       expect(el._focusedDate.getMonth()).toBe(1); // February
     });
 
     it('moves to next year with Shift+PageDown', async () => {
-      const el = createFixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
+      const el = await fixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
       el._open = true;
       el._focusedDate = new Date(2026, 2, 15);
       el._displayMonth = 2;
       el._displayYear = 2026;
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       sendKey(el, 'PageDown', { shiftKey: true });
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       expect(el._focusedDate.getFullYear()).toBe(2027);
     });
 
     it('moves to previous year with Shift+PageUp', async () => {
-      const el = createFixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
+      const el = await fixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
       el._open = true;
       el._focusedDate = new Date(2026, 2, 15);
       el._displayMonth = 2;
       el._displayYear = 2026;
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       sendKey(el, 'PageUp', { shiftKey: true });
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       expect(el._focusedDate.getFullYear()).toBe(2025);
     });
 
     it('selects focused date on Enter', async () => {
-      const el = createFixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
+      const el = await fixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
       el._open = true;
       el._focusedDate = new Date(2026, 2, 15);
       el._displayMonth = 2;
       el._displayYear = 2026;
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       sendKey(el, 'Enter');
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       expect(el.value).toBe('2026-03-15');
       expect(el._open).toBe(false);
     });
 
     it('selects focused date on Space', async () => {
-      const el = createFixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
+      const el = await fixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
       el._open = true;
       el._focusedDate = new Date(2026, 2, 20);
       el._displayMonth = 2;
       el._displayYear = 2026;
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       sendKey(el, ' ');
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       expect(el.value).toBe('2026-03-20');
     });
@@ -439,11 +412,11 @@ describe('civ-date-picker', () => {
 
   describe('constraints', () => {
     it('disables dates before min', async () => {
-      const el = createFixture('<civ-date-picker label="Date" min="2026-03-15"></civ-date-picker>') as any;
+      const el = await fixture('<civ-date-picker label="Date" min="2026-03-15"></civ-date-picker>') as any;
       el._open = true;
       el._displayMonth = 2;
       el._displayYear = 2026;
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       const day10 = el.querySelector('[data-date="2026-03-10"]') as HTMLElement;
       expect(day10).not.toBeNull();
@@ -451,11 +424,11 @@ describe('civ-date-picker', () => {
     });
 
     it('disables dates after max', async () => {
-      const el = createFixture('<civ-date-picker label="Date" max="2026-03-20"></civ-date-picker>') as any;
+      const el = await fixture('<civ-date-picker label="Date" max="2026-03-20"></civ-date-picker>') as any;
       el._open = true;
       el._displayMonth = 2;
       el._displayYear = 2026;
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       const day25 = el.querySelector('[data-date="2026-03-25"]') as HTMLElement;
       expect(day25).not.toBeNull();
@@ -463,15 +436,15 @@ describe('civ-date-picker', () => {
     });
 
     it('does not select disabled date on click', async () => {
-      const el = createFixture('<civ-date-picker label="Date" min="2026-03-15"></civ-date-picker>') as any;
+      const el = await fixture('<civ-date-picker label="Date" min="2026-03-15"></civ-date-picker>') as any;
       el._open = true;
       el._displayMonth = 2;
       el._displayYear = 2026;
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       const day10 = el.querySelector('[data-date="2026-03-10"]') as HTMLElement;
       day10!.click();
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       expect(el.value).toBe('');
     });
@@ -479,37 +452,34 @@ describe('civ-date-picker', () => {
 
   describe('text input', () => {
     it('parses typed date and updates value', async () => {
-      const el = createFixture('<civ-date-picker label="Date" name="date"></civ-date-picker>') as any;
-      await waitForUpdate(el);
+      const el = await fixture('<civ-date-picker label="Date" name="date"></civ-date-picker>') as any;
 
       const input = el.querySelector('input') as HTMLInputElement;
       input.value = '3/15/2026';
       input.dispatchEvent(new Event('change', { bubbles: true }));
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       expect(el.value).toBe('2026-03-15');
     });
 
     it('clears value on empty text', async () => {
-      const el = createFixture('<civ-date-picker label="Date" value="2026-03-15"></civ-date-picker>') as any;
-      await waitForUpdate(el);
+      const el = await fixture('<civ-date-picker label="Date" value="2026-03-15"></civ-date-picker>') as any;
 
       const input = el.querySelector('input') as HTMLInputElement;
       input.value = '';
       input.dispatchEvent(new Event('change', { bubbles: true }));
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       expect(el.value).toBe('');
     });
 
     it('keeps invalid text in input', async () => {
-      const el = createFixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
-      await waitForUpdate(el);
+      const el = await fixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
 
       const input = el.querySelector('input') as HTMLInputElement;
       input.value = 'not a date';
       input.dispatchEvent(new Event('input', { bubbles: true }));
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       expect(el._inputValue).toBe('not a date');
     });
@@ -517,15 +487,15 @@ describe('civ-date-picker', () => {
 
   describe('focus management', () => {
     it('returns focus to calendar button on close', async () => {
-      const el = createFixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
+      const el = await fixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
       el._open = true;
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       const button = el.querySelector('button[aria-label^="Choose date"]') as HTMLElement;
       const focusSpy = vi.spyOn(button, 'focus');
 
       sendKeyToDialog(el, 'Escape');
-      await waitForUpdate(el);
+      await elementUpdated(el);
       // Wait for requestAnimationFrame
       await new Promise((r) => requestAnimationFrame(r));
 
@@ -535,25 +505,29 @@ describe('civ-date-picker', () => {
 
   describe('form integration', () => {
     it('updates form value on date selection', async () => {
-      const el = createFixture('<civ-date-picker label="Date" name="date"></civ-date-picker>') as any;
+      const el = await fixture('<civ-date-picker label="Date" name="date"></civ-date-picker>') as any;
       el._open = true;
       el._displayMonth = 2;
       el._displayYear = 2026;
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       const day15 = el.querySelector('[data-date="2026-03-15"]') as HTMLElement;
       day15!.click();
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       expect(el.value).toBe('2026-03-15');
     });
 
     it('resets on formResetCallback', async () => {
-      const el = createFixture('<civ-date-picker label="Date" value="2026-03-15"></civ-date-picker>') as any;
-      await waitForUpdate(el);
+      const el = await fixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
+      await elementUpdated(el);
+
+      // Simulate a user changing the value
+      el.value = '2026-03-15';
+      await elementUpdated(el);
 
       el.formResetCallback();
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       expect(el.value).toBe('');
       expect(el._inputValue).toBe('');
@@ -563,22 +537,22 @@ describe('civ-date-picker', () => {
 
   describe('day cell ARIA', () => {
     it('sets aria-selected on selected date', async () => {
-      const el = createFixture('<civ-date-picker label="Date" value="2026-03-15"></civ-date-picker>') as any;
+      const el = await fixture('<civ-date-picker label="Date" value="2026-03-15"></civ-date-picker>') as any;
       el._open = true;
       el._displayMonth = 2;
       el._displayYear = 2026;
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       const day15 = el.querySelector('[data-date="2026-03-15"]') as HTMLElement;
       expect(day15.getAttribute('aria-selected')).toBe('true');
     });
 
     it('sets aria-label with long date format', async () => {
-      const el = createFixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
+      const el = await fixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
       el._open = true;
       el._displayMonth = 2;
       el._displayYear = 2026;
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       const day15 = el.querySelector('[data-date="2026-03-15"]') as HTMLElement;
       const ariaLabel = day15.getAttribute('aria-label')!;
@@ -588,12 +562,12 @@ describe('civ-date-picker', () => {
     });
 
     it('uses roving tabindex — only focused date has tabindex=0', async () => {
-      const el = createFixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
+      const el = await fixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
       el._open = true;
       el._focusedDate = new Date(2026, 2, 15);
       el._displayMonth = 2;
       el._displayYear = 2026;
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       const dayButtons = el.querySelectorAll('[data-civ-day]');
       const tabbable = Array.from(dayButtons).filter(
@@ -606,38 +580,36 @@ describe('civ-date-picker', () => {
 
   describe('focus-visible', () => {
     it('applies focus-visible ring class to text input', async () => {
-      const el = createFixture('<civ-date-picker label="Date" name="date"></civ-date-picker>');
-      await waitForUpdate(el);
+      const el = await fixture('<civ-date-picker label="Date" name="date"></civ-date-picker>');
 
       const input = el.querySelector('input[type="text"]');
       expect(input!.className).toContain('focus-visible:civ-focus-ring');
     });
 
     it('applies focus-visible ring class to calendar button', async () => {
-      const el = createFixture('<civ-date-picker label="Date" name="date"></civ-date-picker>');
-      await waitForUpdate(el);
+      const el = await fixture('<civ-date-picker label="Date" name="date"></civ-date-picker>');
 
       const button = el.querySelector('button[type="button"]');
       expect(button!.className).toContain('focus-visible:civ-focus-ring');
     });
 
     it('applies focus-visible ring class to day cells', async () => {
-      const el = createFixture('<civ-date-picker label="Date" name="date"></civ-date-picker>') as any;
+      const el = await fixture('<civ-date-picker label="Date" name="date"></civ-date-picker>') as any;
       el._open = true;
       el._displayMonth = 2;
       el._displayYear = 2026;
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       const dayButton = el.querySelector('[data-civ-day]');
       expect(dayButton!.className).toContain('focus-visible:civ-focus-ring');
     });
 
     it('applies inverse focus-visible ring class to selected day cells', async () => {
-      const el = createFixture('<civ-date-picker label="Date" name="date" value="2026-03-15"></civ-date-picker>') as any;
+      const el = await fixture('<civ-date-picker label="Date" name="date" value="2026-03-15"></civ-date-picker>') as any;
       el._open = true;
       el._displayMonth = 2;
       el._displayYear = 2026;
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       const selectedDay = el.querySelector('[data-date="2026-03-15"]');
       expect(selectedDay!.className).toContain('focus-visible:civ-focus-ring-inverse');
@@ -650,11 +622,11 @@ describe('civ-date-picker', () => {
     });
 
     it('applies focus-visible ring class to navigation buttons', async () => {
-      const el = createFixture('<civ-date-picker label="Date" name="date"></civ-date-picker>') as any;
+      const el = await fixture('<civ-date-picker label="Date" name="date"></civ-date-picker>') as any;
       el._open = true;
       el._displayMonth = 2;
       el._displayYear = 2026;
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       const navButtons = el.querySelectorAll('[data-civ-dialog] > div > button');
       for (const btn of navButtons) {
@@ -663,11 +635,11 @@ describe('civ-date-picker', () => {
     });
 
     it('does not use deprecated focus: outline classes', async () => {
-      const el = createFixture('<civ-date-picker label="Date" name="date"></civ-date-picker>') as any;
+      const el = await fixture('<civ-date-picker label="Date" name="date"></civ-date-picker>') as any;
       el._open = true;
       el._displayMonth = 2;
       el._displayYear = 2026;
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       const input = el.querySelector('input[type="text"]');
       expect(input!.className).not.toContain('focus:civ-outline-2');
@@ -679,18 +651,18 @@ describe('civ-date-picker', () => {
 
   describe('i18n overrides', () => {
     it('uses custom dialog-label', async () => {
-      const el = createFixture('<civ-date-picker label="Date" dialog-label="Elegir fecha"></civ-date-picker>') as any;
+      const el = await fixture('<civ-date-picker label="Date" dialog-label="Elegir fecha"></civ-date-picker>') as any;
       el._open = true;
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       const dialog = el.querySelector('[role="dialog"]');
       expect(dialog!.getAttribute('aria-label')).toBe('Elegir fecha');
     });
 
     it('uses custom previous-month-label and next-month-label', async () => {
-      const el = createFixture('<civ-date-picker label="Date" previous-month-label="Mes anterior" next-month-label="Mes siguiente"></civ-date-picker>') as any;
+      const el = await fixture('<civ-date-picker label="Date" previous-month-label="Mes anterior" next-month-label="Mes siguiente"></civ-date-picker>') as any;
       el._open = true;
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       const prevBtn = el.querySelector('[aria-label="Mes anterior"]');
       const nextBtn = el.querySelector('[aria-label="Mes siguiente"]');
@@ -699,8 +671,7 @@ describe('civ-date-picker', () => {
     });
 
     it('uses custom choose-date-label', async () => {
-      const el = createFixture('<civ-date-picker label="Date" choose-date-label="Elegir"></civ-date-picker>');
-      await waitForUpdate(el);
+      const el = await fixture('<civ-date-picker label="Date" choose-date-label="Elegir"></civ-date-picker>');
 
       const button = el.querySelector('button[aria-label="Elegir"]');
       expect(button).not.toBeNull();
@@ -709,18 +680,18 @@ describe('civ-date-picker', () => {
 
   describe('analytics', () => {
     it('fires civ-analytics on date selection', async () => {
-      const el = createFixture('<civ-date-picker label="Date" name="date"></civ-date-picker>') as any;
+      const el = await fixture('<civ-date-picker label="Date" name="date"></civ-date-picker>') as any;
       el._open = true;
       el._displayMonth = 2;
       el._displayYear = 2026;
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       const handler = vi.fn();
       el.addEventListener('civ-analytics', handler as EventListener);
 
       const day15 = el.querySelector('[data-date="2026-03-15"]') as HTMLElement;
       day15!.click();
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       expect(handler).toHaveBeenCalledOnce();
       const detail = handler.mock.calls[0][0].detail;

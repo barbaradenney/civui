@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivFormElement } from '@civui/core';
+import { CivFormElement, dispatch } from '@civui/core';
 
 /**
  * CivUI Segmented Control
@@ -153,20 +153,8 @@ export class CivSegmentedControl extends CivFormElement {
 
     // Stop the child event and re-dispatch from the group
     e.stopPropagation();
-    this.dispatchEvent(
-      new CustomEvent('civ-input', {
-        detail: { value: this.value },
-        bubbles: true,
-        composed: true,
-      }),
-    );
-    this.dispatchEvent(
-      new CustomEvent('civ-change', {
-        detail: { value: this.value },
-        bubbles: true,
-        composed: true,
-      }),
-    );
+    dispatch(this, 'civ-input', { value: this.value });
+    dispatch(this, 'civ-change', { value: this.value });
     this.sendAnalytics('change');
   }
 
@@ -210,20 +198,8 @@ export class CivSegmentedControl extends CivFormElement {
       const btn = segment.querySelector('button');
       if (btn) btn.focus();
 
-      this.dispatchEvent(
-        new CustomEvent('civ-input', {
-          detail: { value: this.value },
-          bubbles: true,
-          composed: true,
-        }),
-      );
-      this.dispatchEvent(
-        new CustomEvent('civ-change', {
-          detail: { value: this.value },
-          bubbles: true,
-          composed: true,
-        }),
-      );
+      dispatch(this, 'civ-input', { value: this.value });
+      dispatch(this, 'civ-change', { value: this.value });
       this.sendAnalytics('change');
     }
   }
@@ -233,7 +209,7 @@ export class CivSegmentedControl extends CivFormElement {
     this.error = '';
     this._syncSegmentSelected();
     this.updateFormValue(this._defaultValue || '');
-    this.dispatchEvent(new CustomEvent('civ-reset', { bubbles: true, composed: true }));
+    dispatch(this, 'civ-reset');
   }
 }
 

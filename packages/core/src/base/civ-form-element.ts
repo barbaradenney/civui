@@ -21,6 +21,7 @@ export class CivFormElement extends CivBaseElement {
   protected _inputId: string;
   protected _hintId: string;
   protected _errorId: string;
+  protected _defaultValue = '';
 
   @property({ type: String }) name = '';
   @property({ type: String }) value = '';
@@ -37,6 +38,12 @@ export class CivFormElement extends CivBaseElement {
     this._inputId = this.generateId('input');
     this._hintId = this.generateId('hint');
     this._errorId = this.generateId('error');
+  }
+
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this._defaultValue = this.value;
+    this.setAttribute('data-civ-form-field', '');
   }
 
   /**
@@ -125,9 +132,9 @@ export class CivFormElement extends CivBaseElement {
    * Called by the browser when the associated form is reset.
    */
   formResetCallback(): void {
-    this.value = '';
+    this.value = this._defaultValue;
     this.error = '';
-    this.updateFormValue('');
+    this.updateFormValue(this._defaultValue || '');
     dispatch(this, 'civ-reset');
   }
 

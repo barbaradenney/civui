@@ -12,6 +12,8 @@ export interface FieldsetProps {
   error?: string;
   /** Whether the group is required. */
   required?: boolean;
+  /** Whether the group is disabled. */
+  disabled?: boolean;
   /** Child form elements. */
   children: ReactNode;
 }
@@ -22,6 +24,9 @@ const styles = StyleSheet.create({
     fontWeight: typography.fontWeight.bold,
     color: colors.base.darkest,
     marginBottom: spacing[2],
+  },
+  disabled: {
+    opacity: 0.5,
   },
 });
 
@@ -37,10 +42,11 @@ export function Fieldset({
   hint,
   error,
   required,
+  disabled,
   children,
 }: FieldsetProps) {
   return (
-    <View style={formStyles.container}>
+    <View style={[formStyles.container, disabled ? styles.disabled : null]} pointerEvents={disabled ? 'none' : 'auto'}>
       {legend ? (
         <Text style={styles.legend}>
           {legend}

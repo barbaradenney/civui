@@ -27,7 +27,7 @@ export interface ComboboxOption {
  * @prop {boolean} disabled - Whether the combobox is disabled
  *
  * @fires civ-change - When a selection is made
- * @fires civ-input - When the filter text changes
+ * @fires civ-input - When the filter text changes, detail: { value }
  */
 @customElement('civ-combobox')
 export class CivCombobox extends CivFormElement {
@@ -42,11 +42,6 @@ export class CivCombobox extends CivFormElement {
   private _listboxId = this.generateId('listbox');
   private _labelId = this.generateId('label');
   private _boundDocClick = this._onDocumentClick.bind(this);
-
-  override connectedCallback(): void {
-    super.connectedCallback();
-    document.addEventListener('click', this._boundDocClick);
-  }
 
   override disconnectedCallback(): void {
     super.disconnectedCallback();
@@ -184,17 +179,27 @@ export class CivCombobox extends CivFormElement {
     `;
   }
 
+  private _setOpen(open: boolean): void {
+    if (open === this._open) return;
+    this._open = open;
+    if (open) {
+      document.addEventListener('click', this._boundDocClick);
+    } else {
+      document.removeEventListener('click', this._boundDocClick);
+    }
+  }
+
   private _onFilterInput(e: Event): void {
     const target = e.target as HTMLInputElement;
     this._filter = target.value;
-    this._open = true;
+    this._setOpen(true);
     this._activeIndex = -1;
     // Clear the selected value when typing
     this.value = '';
     this.updateFormValue('');
     this.dispatchEvent(
       new CustomEvent('civ-input', {
-        detail: { filter: this._filter },
+        detail: { value: this._filter },
         bubbles: true,
         composed: true,
       }),
@@ -203,7 +208,7 @@ export class CivCombobox extends CivFormElement {
 
   private _onFocus(): void {
     if (!this.disabled) {
-      this._open = true;
+      this._setOpen(true);
     }
   }
 
@@ -214,7 +219,7 @@ export class CivCombobox extends CivFormElement {
       case 'ArrowDown':
         e.preventDefault();
         if (!this._open) {
-          this._open = true;
+          this._setOpen(true);
         } else {
           this._activeIndex = Math.min(this._activeIndex + 1, filtered.length - 1);
         }
@@ -223,7 +228,7 @@ export class CivCombobox extends CivFormElement {
       case 'ArrowUp':
         e.preventDefault();
         if (!this._open) {
-          this._open = true;
+          this._setOpen(true);
         } else {
           this._activeIndex = Math.max(this._activeIndex - 1, 0);
         }
@@ -237,12 +242,12 @@ export class CivCombobox extends CivFormElement {
         break;
 
       case 'Escape':
-        this._open = false;
+        this._setOpen(false);
         this._activeIndex = -1;
         break;
 
       case 'Tab':
-        this._open = false;
+        this._setOpen(false);
         break;
     }
   }
@@ -250,7 +255,7 @@ export class CivCombobox extends CivFormElement {
   private _selectOption(option: ComboboxOption): void {
     this.value = option.value;
     this._filter = option.label;
-    this._open = false;
+    this._setOpen(false);
     this._activeIndex = -1;
     this.updateFormValue(this.value);
     this.dispatchEvent(
@@ -266,14 +271,14 @@ export class CivCombobox extends CivFormElement {
   private _onDocumentClick(e: MouseEvent): void {
     const path = e.composedPath();
     if (!path.includes(this)) {
-      this._open = false;
+      this._setOpen(false);
     }
   }
 
   override formResetCallback(): void {
     this.value = '';
     this._filter = '';
-    this._open = false;
+    this._setOpen(false);
     this._activeIndex = -1;
     this.error = '';
     this.updateFormValue('');

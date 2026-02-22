@@ -20,8 +20,10 @@ export interface SegmentOption {
 export interface SegmentedControlProps {
   /** Field name for form data. */
   name: string;
-  /** Accessible group label. */
-  label: string;
+  /** Group legend text. */
+  legend: string;
+  /** @deprecated Use `legend` instead. */
+  label?: string;
   /** Currently selected value. */
   value?: string;
   /** Available segment options. */
@@ -81,6 +83,12 @@ const styles = StyleSheet.create({
   segmentLabelSelected: {
     color: colors.white,
   },
+  legend: {
+    fontSize: typography.fontSize.base,
+    fontWeight: typography.fontWeight.bold,
+    color: colors.base.darkest,
+    marginBottom: spacing[2],
+  },
 });
 
 /**
@@ -91,7 +99,8 @@ const styles = StyleSheet.create({
  */
 export function SegmentedControl({
   name,
-  label,
+  legend,
+  label: deprecatedLabel,
   value = '',
   options,
   hint,
@@ -102,6 +111,7 @@ export function SegmentedControl({
   onInput,
   onAnalytics,
 }: SegmentedControlProps) {
+  const label = legend || deprecatedLabel || '';
   const [focusedValue, setFocusedValue] = useState<string | null>(null);
   const { trackInteraction } = useAnalytics({ onAnalytics });
 
@@ -123,6 +133,12 @@ export function SegmentedControl({
       accessibilityLabel={buildAccessibilityLabel({ label, hint, error, required })}
       testID={`civ-segmented-control-${name}`}
     >
+      {label ? (
+        <Text style={styles.legend}>
+          {label}
+          {required && <Text style={formStyles.requiredIndicator}> *</Text>}
+        </Text>
+      ) : null}
       {hint ? <Text style={formStyles.hint}>{hint}</Text> : null}
       {error ? (
         <Text style={formStyles.error} accessibilityRole="alert">

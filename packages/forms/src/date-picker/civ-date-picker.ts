@@ -18,6 +18,7 @@ import {
   addYears,
   isDateDisabled,
   isMonthDisabled,
+  clampDate,
   dispatch,
   interpolate,
   type CalendarDay,
@@ -81,10 +82,81 @@ export class CivDatePicker extends CivFormElement {
     return { min: this.min || undefined, max: this.max || undefined };
   }
 
-  override connectedCallback(): void {
-    super.connectedCallback();
-    document.addEventListener('click', this._boundDocClick);
-  }
+  private _dialogKeyHandler = createKeyboardHandler([
+    {
+      key: 'Escape',
+      handler: () => this._closeDialog(),
+    },
+    {
+      key: 'ArrowRight',
+      handler: () => this._moveFocusSkipDisabled(1),
+    },
+    {
+      key: 'ArrowLeft',
+      handler: () => this._moveFocusSkipDisabled(-1),
+    },
+    {
+      key: 'ArrowDown',
+      handler: () => this._moveFocusSkipDisabled(7),
+    },
+    {
+      key: 'ArrowUp',
+      handler: () => this._moveFocusSkipDisabled(-7),
+    },
+    {
+      key: 'Home',
+      handler: () => {
+        const d = new Date(this._focusedDate);
+        const day = d.getDay();
+        const diff = (day - this.weekStartsOn + 7) % 7;
+        this._moveFocus(addDays(d, -diff));
+      },
+    },
+    {
+      key: 'End',
+      handler: () => {
+        const d = new Date(this._focusedDate);
+        const day = d.getDay();
+        const weekEnd = (this.weekStartsOn + 6) % 7;
+        const diff = (weekEnd - day + 7) % 7;
+        this._moveFocus(addDays(d, diff));
+      },
+    },
+    {
+      key: 'PageDown',
+      shiftKey: true,
+      handler: () => this._moveFocus(addYears(this._focusedDate, 1)),
+    },
+    {
+      key: 'PageUp',
+      shiftKey: true,
+      handler: () => this._moveFocus(addYears(this._focusedDate, -1)),
+    },
+    {
+      key: 'PageDown',
+      handler: () => this._moveFocus(addMonths(this._focusedDate, 1)),
+    },
+    {
+      key: 'PageUp',
+      handler: () => this._moveFocus(addMonths(this._focusedDate, -1)),
+    },
+    {
+      key: 'Enter',
+      handler: () => {
+        if (!isDateDisabled(this._focusedDate, this._constraints)) {
+          this._selectDate(this._focusedDate);
+        }
+      },
+    },
+    {
+      key: ' ',
+      handler: () => {
+        if (!isDateDisabled(this._focusedDate, this._constraints)) {
+          this._selectDate(this._focusedDate);
+        }
+      },
+    },
+  ]);
 
   override disconnectedCallback(): void {
     super.disconnectedCallback();
@@ -337,11 +409,13 @@ export class CivDatePicker extends CivFormElement {
     this._displayMonth = initial.getMonth();
     this._displayYear = initial.getFullYear();
     this._open = true;
+    document.addEventListener('click', this._boundDocClick);
     this.announce(this.dialogOpenedMessage);
   }
 
   private _closeDialog(): void {
     this._open = false;
+    document.removeEventListener('click', this._boundDocClick);
     this._cleanupTrap?.();
     this._cleanupTrap = null;
     // Return focus to calendar button
@@ -365,6 +439,7 @@ export class CivDatePicker extends CivFormElement {
   private _onTextInput(e: Event): void {
     const target = e.target as HTMLInputElement;
     this._inputValue = target.value;
+    dispatch(this, 'civ-input', { value: target.value });
   }
 
   private _onTextChange(e: Event): void {
@@ -381,6 +456,11 @@ export class CivDatePicker extends CivFormElement {
 
     const parsed = parseDateString(text, this.locale);
     if (parsed) {
+      // Validate against min/max constraints
+      if (isDateDisabled(parsed, this._constraints)) {
+        // Keep input text but don't set as value
+        return;
+      }
       const iso = toISODateString(parsed);
       this.value = iso;
       this._inputValue = formatDate(parsed, this.locale);
@@ -436,88 +516,35 @@ export class CivDatePicker extends CivFormElement {
     });
   }
 
-  private _onDialogKeydown(e: KeyboardEvent): void {
-    const handler = createKeyboardHandler([
-      {
-        key: 'Escape',
-        handler: () => this._closeDialog(),
-      },
-      {
-        key: 'ArrowRight',
-        handler: () => this._moveFocus(addDays(this._focusedDate, 1)),
-      },
-      {
-        key: 'ArrowLeft',
-        handler: () => this._moveFocus(addDays(this._focusedDate, -1)),
-      },
-      {
-        key: 'ArrowDown',
-        handler: () => this._moveFocus(addDays(this._focusedDate, 7)),
-      },
-      {
-        key: 'ArrowUp',
-        handler: () => this._moveFocus(addDays(this._focusedDate, -7)),
-      },
-      {
-        key: 'Home',
-        handler: () => {
-          const d = new Date(this._focusedDate);
-          const day = d.getDay();
-          const diff = (day - this.weekStartsOn + 7) % 7;
-          this._moveFocus(addDays(d, -diff));
-        },
-      },
-      {
-        key: 'End',
-        handler: () => {
-          const d = new Date(this._focusedDate);
-          const day = d.getDay();
-          const weekEnd = (this.weekStartsOn + 6) % 7;
-          const diff = (weekEnd - day + 7) % 7;
-          this._moveFocus(addDays(d, diff));
-        },
-      },
-      {
-        key: 'PageDown',
-        shiftKey: true,
-        handler: () => this._moveFocus(addYears(this._focusedDate, 1)),
-      },
-      {
-        key: 'PageUp',
-        shiftKey: true,
-        handler: () => this._moveFocus(addYears(this._focusedDate, -1)),
-      },
-      {
-        key: 'PageDown',
-        handler: () => this._moveFocus(addMonths(this._focusedDate, 1)),
-      },
-      {
-        key: 'PageUp',
-        handler: () => this._moveFocus(addMonths(this._focusedDate, -1)),
-      },
-      {
-        key: 'Enter',
-        handler: () => {
-          if (!isDateDisabled(this._focusedDate, this._constraints)) {
-            this._selectDate(this._focusedDate);
-          }
-        },
-      },
-      {
-        key: ' ',
-        handler: () => {
-          if (!isDateDisabled(this._focusedDate, this._constraints)) {
-            this._selectDate(this._focusedDate);
-          }
-        },
-      },
-    ]);
+  /**
+   * Move focus by the given number of days, skipping disabled dates.
+   * Clamps to the valid min/max range.
+   */
+  private _moveFocusSkipDisabled(days: number): void {
+    const direction = days > 0 ? 1 : -1;
+    let candidate = addDays(this._focusedDate, days);
+    const maxAttempts = 31;
+    for (let i = 0; i < maxAttempts; i++) {
+      if (!isDateDisabled(candidate, this._constraints)) {
+        this._moveFocus(candidate);
+        return;
+      }
+      candidate = addDays(candidate, direction);
+    }
+    // If no valid date found within range, clamp to boundary
+    if (this._constraints.min || this._constraints.max) {
+      const clamped = clampDate(this._focusedDate, this._constraints);
+      if (!isDateDisabled(clamped, this._constraints)) {
+        this._moveFocus(clamped);
+      }
+    }
+  }
 
-    handler(e);
+  private _onDialogKeydown(e: KeyboardEvent): void {
+    this._dialogKeyHandler(e);
   }
 
   private _onDocumentClick(e: MouseEvent): void {
-    if (!this._open) return;
     const path = e.composedPath();
     if (!path.includes(this)) {
       this._closeDialog();

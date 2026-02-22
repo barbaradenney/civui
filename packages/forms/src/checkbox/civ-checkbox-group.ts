@@ -21,6 +21,7 @@ import { CivFormElement } from '@civui/core';
  * @prop {boolean} disabled - Whether the group is disabled
  * @prop {'vertical' | 'horizontal'} orientation - Layout direction
  *
+ * @fires civ-input - When the set of checked values changes (before civ-change)
  * @fires civ-change - When the set of checked values changes
  */
 @customElement('civ-checkbox-group')
@@ -29,7 +30,7 @@ export class CivCheckboxGroup extends CivFormElement {
   @property({ type: Boolean, reflect: true }) tile = false;
   @property({ type: String, reflect: true }) orientation: 'vertical' | 'horizontal' = 'vertical';
 
-  private _defaultValue = '';
+  protected override _defaultValue = '';
   private _boundOnChildChange = this._onChildChange.bind(this);
 
   override connectedCallback(): void {
@@ -76,6 +77,11 @@ export class CivCheckboxGroup extends CivFormElement {
     if (changed.has('value') && changed.get('value') !== undefined) {
       this._syncCheckboxChecked();
     }
+  }
+
+  override formDisabledCallback(disabled: boolean): void {
+    this.disabled = disabled;
+    this._syncCheckboxDisabled();
   }
 
   override render() {
@@ -156,8 +162,9 @@ export class CivCheckboxGroup extends CivFormElement {
   }
 
   private _syncCheckboxDisabled(): void {
+    if (!this.disabled) return;
     this._getCheckboxes().forEach((cb: any) => {
-      cb.disabled = this.disabled;
+      cb.disabled = true;
     });
   }
 
@@ -211,6 +218,13 @@ export class CivCheckboxGroup extends CivFormElement {
     this.value = this._serializeValue(values);
     this._updateGroupFormValue();
 
+    this.dispatchEvent(
+      new CustomEvent('civ-input', {
+        detail: { values: this.getCheckedValues() },
+        bubbles: true,
+        composed: true,
+      }),
+    );
     this.dispatchEvent(
       new CustomEvent('civ-change', {
         detail: { values: this.getCheckedValues() },

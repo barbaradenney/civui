@@ -21,8 +21,10 @@ export interface RadioOption {
 export interface RadioGroupProps {
   /** Field name for form data. */
   name: string;
-  /** Group legend/label. */
-  label: string;
+  /** Group legend text. */
+  legend: string;
+  /** @deprecated Use `legend` instead. */
+  label?: string;
   /** Currently selected value. */
   value?: string;
   /** Available radio options. */
@@ -118,7 +120,8 @@ const styles = StyleSheet.create({
  */
 export function RadioGroup({
   name,
-  label,
+  legend,
+  label: deprecatedLabel,
   value = '',
   options,
   hint,
@@ -131,6 +134,7 @@ export function RadioGroup({
   onInput,
   onAnalytics,
 }: RadioGroupProps) {
+  const label = legend || deprecatedLabel || '';
   const [focusedValue, setFocusedValue] = useState<string | null>(null);
   const { trackInteraction } = useAnalytics({ onAnalytics });
 

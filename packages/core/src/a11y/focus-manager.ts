@@ -8,10 +8,21 @@ const FOCUSABLE_SELECTOR = [
 ].join(', ');
 
 /**
+ * Check if an element is visible (not hidden via CSS or aria-hidden).
+ */
+function isVisible(el: HTMLElement): boolean {
+  if (el.hasAttribute('aria-hidden')) return false;
+  if (!el.offsetParent && getComputedStyle(el).position !== 'fixed') return false;
+  return getComputedStyle(el).visibility !== 'hidden';
+}
+
+/**
  * Get all focusable elements within a container.
+ * Filters out hidden, aria-hidden, and visibility:hidden elements.
  */
 export function getFocusableElements(container: HTMLElement): HTMLElement[] {
-  return Array.from(container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR));
+  return Array.from(container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR))
+    .filter(isVisible);
 }
 
 /**

@@ -137,15 +137,24 @@ export function useForm(options: UseFormOptions = {}): UseFormReturn {
         timestamp: new Date().toISOString(),
       });
     } else {
-      const errorCount = Object.keys(errors).length;
+      // Compute error count from current validation, not stale closure
+      const currentErrors: Record<string, string> = {};
+      for (const [name, config] of Object.entries(fields)) {
+        if (config.required && !values[name]) {
+          currentErrors[name] = `${config.label || name} is required`;
+        } else if (config.validate) {
+          const msg = config.validate(values[name] ?? '');
+          if (msg) currentErrors[name] = msg;
+        }
+      }
       onAnalytics?.({
         componentName: 'civ-form',
         action: 'invalid',
         timestamp: new Date().toISOString(),
-        details: { errorCount },
+        details: { errorCount: Object.keys(currentErrors).length },
       });
     }
-  }, [validate, onSubmit, onAnalytics, values, errors]);
+  }, [validate, onSubmit, onAnalytics, values, fields]);
 
   const reset = useCallback(() => {
     setValues({ ...initialValues });

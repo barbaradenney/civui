@@ -3,6 +3,8 @@
  * These ensure API parity between web and React Native.
  */
 
+import type { AnalyticsHandler } from './useAnalytics.js';
+
 /** Base props shared by all CivUI form components. */
 export interface CivFormProps {
   /** Field name for form data collection. */
@@ -21,6 +23,8 @@ export interface CivFormProps {
   disabled?: boolean;
   /** Called when the value changes. */
   onChange?: (value: string) => void;
+  /** Analytics event handler. */
+  onAnalytics?: AnalyticsHandler;
 }
 
 /** Option type for select and combobox components. */

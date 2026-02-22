@@ -18,6 +18,7 @@ import { CivBaseElement } from '@civui/core';
  * @prop {boolean} disabled - Whether the radio is disabled
  *
  * @fires civ-change - When selection changes (bubbles to radio-group)
+ * @fires civ-input - When selection changes (input event)
  */
 @customElement('civ-radio')
 export class CivRadio extends CivBaseElement {
@@ -79,6 +80,7 @@ export class CivRadio extends CivBaseElement {
             .value="${this.value}"
             .checked="${this.checked}"
             ?disabled="${this.disabled}"
+            aria-checked="${this.checked ? 'true' : 'false'}"
             aria-invalid="${this.error ? 'true' : 'false'}"
             aria-describedby="${this._ariaDescribedBy || nothing}"
             @change="${this._onRadioChange}"
@@ -98,6 +100,13 @@ export class CivRadio extends CivBaseElement {
     const target = e.target as HTMLInputElement;
     if (target.checked) {
       this.checked = true;
+      this.dispatchEvent(
+        new CustomEvent('civ-input', {
+          detail: { value: this.value },
+          bubbles: true,
+          composed: true,
+        }),
+      );
       this.dispatchEvent(
         new CustomEvent('civ-change', {
           detail: { value: this.value },

@@ -22,5 +22,17 @@ export type { ToggleProps } from './Toggle.js';
 export { SegmentedControl } from './SegmentedControl.js';
 export type { SegmentedControlProps, SegmentOption } from './SegmentedControl.js';
 
+export { CheckboxGroup } from './CheckboxGroup.js';
+export type { CheckboxGroupProps, CheckboxOption } from './CheckboxGroup.js';
+
+export { Combobox } from './Combobox.js';
+export type { ComboboxProps } from './Combobox.js';
+
+export { FormGroup } from './FormGroup.js';
+export type { FormGroupProps } from './FormGroup.js';
+
+export { Fieldset } from './Fieldset.js';
+export type { FieldsetProps } from './Fieldset.js';
+
 export { useForm } from './useForm.js';
 export type { UseFormOptions, UseFormReturn } from './useForm.js';

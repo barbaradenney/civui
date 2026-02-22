@@ -107,6 +107,16 @@ export const TileVariant: Story = {
   `,
 };
 
+export const Horizontal: Story = {
+  render: () => html`
+    <civ-radio-group legend="Contact preference" name="contact" orientation="horizontal">
+      <civ-radio label="Email" value="email"></civ-radio>
+      <civ-radio label="Phone" value="phone"></civ-radio>
+      <civ-radio label="Mail" value="mail"></civ-radio>
+    </civ-radio-group>
+  `,
+};
+
 export const DisabledOption: Story = {
   render: () => html`
     <civ-radio-group legend="Availability" name="time">

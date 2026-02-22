@@ -6,8 +6,10 @@ import {
   StyleSheet,
 } from 'react-native';
 import { formStyles } from '../core/styles.js';
-import { buildAccessibilityLabel } from '../core/a11y.js';
+import { buildAccessibilityLabel, buildAccessibilityState } from '../core/a11y.js';
 import { colors, spacing, typography, border } from '../core/tokens.js';
+import { useAnalytics } from '../core/useAnalytics.js';
+import type { AnalyticsHandler } from '../core/useAnalytics.js';
 
 export interface SegmentOption {
   value: string;
@@ -34,6 +36,10 @@ export interface SegmentedControlProps {
   disabled?: boolean;
   /** Called when selection changes. */
   onChange?: (value: string) => void;
+  /** Called on input (mirrors web civ-input event). */
+  onInput?: (value: string) => void;
+  /** Analytics event handler. */
+  onAnalytics?: AnalyticsHandler;
 }
 
 const styles = StyleSheet.create({
@@ -93,16 +99,21 @@ export function SegmentedControl({
   required,
   disabled,
   onChange,
+  onInput,
+  onAnalytics,
 }: SegmentedControlProps) {
   const [focusedValue, setFocusedValue] = useState<string | null>(null);
+  const { trackInteraction } = useAnalytics({ onAnalytics });
 
   const handleSelect = useCallback(
     (optionValue: string) => {
       if (!disabled) {
+        onInput?.(optionValue);
         onChange?.(optionValue);
+        trackInteraction('SegmentedControl', 'change', { fieldName: name, label });
       }
     },
-    [disabled, onChange],
+    [disabled, onChange, onInput, trackInteraction, name, label],
   );
 
   return (
@@ -145,8 +156,8 @@ export function SegmentedControl({
               onBlur={() => setFocusedValue(null)}
               disabled={isDisabled}
               accessibilityRole="radio"
-              accessibilityLabel={option.label}
-              accessibilityState={{ selected, disabled: isDisabled }}
+              accessibilityLabel={buildAccessibilityLabel({ label: option.label })}
+              accessibilityState={buildAccessibilityState({ selected, disabled: isDisabled })}
               testID={`civ-segment-${name}-${option.value}`}
             >
               <Text

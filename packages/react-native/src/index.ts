@@ -8,7 +8,11 @@ export { useAnalytics } from './core/index.js';
 export type { AnalyticsEvent, AnalyticsHandler, UseAnalyticsOptions, UseAnalyticsReturn } from './core/index.js';
 
 // Forms
-export { TextInput, Textarea, Select, Checkbox, RadioGroup, Toggle, SegmentedControl, useForm } from './forms/index.js';
+export {
+  TextInput, Textarea, Select, Checkbox, RadioGroup, Toggle, SegmentedControl,
+  CheckboxGroup, Combobox, FormGroup, Fieldset,
+  useForm,
+} from './forms/index.js';
 export type {
   TextInputProps,
   TextareaProps,
@@ -19,6 +23,11 @@ export type {
   ToggleProps,
   SegmentedControlProps,
   SegmentOption,
+  CheckboxGroupProps,
+  CheckboxOption,
+  ComboboxProps,
+  FormGroupProps,
+  FieldsetProps,
   UseFormOptions,
   UseFormReturn,
 } from './forms/index.js';

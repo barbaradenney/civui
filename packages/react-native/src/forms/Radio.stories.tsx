@@ -75,6 +75,15 @@ export const WithError: Story = {
   },
 };
 
+export const Horizontal: Story = {
+  args: {
+    name: 'size',
+    label: 'Size',
+    options: SIZES,
+    orientation: 'horizontal',
+  },
+};
+
 export const Disabled: Story = {
   args: {
     name: 'size',

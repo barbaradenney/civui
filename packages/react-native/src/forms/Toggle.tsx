@@ -6,8 +6,10 @@ import {
   StyleSheet,
 } from 'react-native';
 import { formStyles } from '../core/styles.js';
-import { buildAccessibilityLabel } from '../core/a11y.js';
+import { buildAccessibilityLabel, buildAccessibilityState } from '../core/a11y.js';
 import { colors, spacing, typography, border } from '../core/tokens.js';
+import { useAnalytics } from '../core/useAnalytics.js';
+import type { AnalyticsHandler } from '../core/useAnalytics.js';
 
 export interface ToggleProps {
   /** Field name. */
@@ -26,8 +28,14 @@ export interface ToggleProps {
   required?: boolean;
   /** Whether the field is disabled. */
   disabled?: boolean;
+  /** The value submitted with form data. Defaults to "on". */
+  value?: string;
   /** Called when checked state changes. */
   onChange?: (checked: boolean) => void;
+  /** Called on input (mirrors web civ-input event). */
+  onInput?: (checked: boolean) => void;
+  /** Analytics event handler. */
+  onAnalytics?: AnalyticsHandler;
 }
 
 const TRACK_WIDTH = 40;
@@ -97,15 +105,23 @@ export function Toggle({
   error,
   required,
   disabled,
+  // Accepted for API parity with web civ-toggle; consumed by useForm, not rendered.
+  value: _value = 'on',
   onChange,
+  onInput,
+  onAnalytics,
 }: ToggleProps) {
   const [focused, setFocused] = useState(false);
+  const { trackInteraction } = useAnalytics({ onAnalytics });
 
   const handlePress = useCallback(() => {
     if (!disabled) {
-      onChange?.(!checked);
+      const next = !checked;
+      onInput?.(next);
+      onChange?.(next);
+      trackInteraction('Toggle', 'change', { fieldName: name, label });
     }
-  }, [checked, disabled, onChange]);
+  }, [checked, disabled, onChange, onInput, trackInteraction, name, label]);
 
   return (
     <View style={formStyles.container} testID={`civ-toggle-${name}`}>
@@ -123,7 +139,7 @@ export function Toggle({
         disabled={disabled}
         accessibilityRole="switch"
         accessibilityLabel={buildAccessibilityLabel({ label, hint, error, required })}
-        accessibilityState={{ checked, disabled }}
+        accessibilityState={buildAccessibilityState({ checked, disabled })}
         testID={`civ-toggle-${name}-control`}
       >
         <View

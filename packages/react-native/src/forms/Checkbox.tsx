@@ -6,8 +6,10 @@ import {
   StyleSheet,
 } from 'react-native';
 import { formStyles } from '../core/styles.js';
-import { buildAccessibilityLabel } from '../core/a11y.js';
+import { buildAccessibilityLabel, buildAccessibilityState } from '../core/a11y.js';
 import { colors, spacing, typography, border } from '../core/tokens.js';
+import { useAnalytics } from '../core/useAnalytics.js';
+import type { AnalyticsHandler } from '../core/useAnalytics.js';
 
 export interface CheckboxProps {
   /** Field name. */
@@ -34,6 +36,10 @@ export interface CheckboxProps {
   tile?: boolean;
   /** Called when checked state changes. */
   onChange?: (checked: boolean) => void;
+  /** Called on input (mirrors web civ-input event). */
+  onInput?: (checked: boolean) => void;
+  /** Analytics event handler. */
+  onAnalytics?: AnalyticsHandler;
 }
 
 const styles = StyleSheet.create({
@@ -117,14 +123,20 @@ export function Checkbox({
   disabled,
   tile,
   onChange,
+  onInput,
+  onAnalytics,
 }: CheckboxProps) {
   const [focused, setFocused] = useState(false);
+  const { trackInteraction } = useAnalytics({ onAnalytics });
 
   const handlePress = useCallback(() => {
     if (!disabled) {
-      onChange?.(!checked);
+      const next = !checked;
+      onInput?.(next);
+      onChange?.(next);
+      trackInteraction('Checkbox', 'change', { fieldName: name, label });
     }
-  }, [checked, disabled, onChange]);
+  }, [checked, disabled, onChange, onInput, trackInteraction, name, label]);
 
   const content = (
     <View style={styles.row}>
@@ -173,7 +185,7 @@ export function Checkbox({
         disabled={disabled}
         accessibilityRole="checkbox"
         accessibilityLabel={buildAccessibilityLabel({ label, hint, error, required })}
-        accessibilityState={{ checked: indeterminate ? 'mixed' : checked, disabled }}
+        accessibilityState={buildAccessibilityState({ checked: indeterminate ? 'mixed' : checked, disabled })}
         testID={`civ-checkbox-${name}-control`}
       >
         {content}

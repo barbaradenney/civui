@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import {
   View,
   Text,
@@ -6,9 +6,10 @@ import {
   StyleSheet,
 } from 'react-native';
 import { formStyles } from '../core/styles.js';
-import { buildAccessibilityLabel } from '../core/a11y.js';
+import { buildAccessibilityLabel, buildAccessibilityState } from '../core/a11y.js';
 import { colors, typography } from '../core/tokens.js';
 import type { CivFormProps } from '../core/types.js';
+import { useAnalytics } from '../core/useAnalytics.js';
 
 export interface TextareaProps extends CivFormProps {
   /** Number of visible text lines. Defaults to 5. */
@@ -17,6 +18,8 @@ export interface TextareaProps extends CivFormProps {
   maxLength?: number;
   /** Placeholder text. */
   placeholder?: string;
+  /** Called on input (mirrors web civ-input event). */
+  onInput?: (value: string) => void;
 }
 
 const styles = StyleSheet.create({
@@ -53,21 +56,36 @@ export function Textarea({
   maxLength,
   placeholder,
   onChange,
+  onInput,
+  onAnalytics,
 }: TextareaProps) {
   const [focused, setFocused] = useState(false);
+  const { trackInteraction } = useAnalytics({ onAnalytics });
+  const dirtyRef = useRef(false);
 
   const handleChange = useCallback(
     (text: string) => {
+      dirtyRef.current = true;
+      onInput?.(text);
       onChange?.(text);
     },
-    [onChange],
+    [onChange, onInput],
   );
 
-  const handleFocus = useCallback(() => setFocused(true), []);
-  const handleBlur = useCallback(() => setFocused(false), []);
+  const handleFocus = useCallback(() => {
+    setFocused(true);
+    dirtyRef.current = false;
+  }, []);
+  const handleBlur = useCallback(() => {
+    setFocused(false);
+    if (dirtyRef.current) {
+      trackInteraction('Textarea', 'change', { fieldName: name, label });
+      dirtyRef.current = false;
+    }
+  }, [trackInteraction, name, label]);
 
-  const charCount = value.length;
-  const isOverLimit = maxLength !== undefined && charCount > maxLength;
+  const remaining = maxLength !== undefined ? maxLength - value.length : undefined;
+  const isOverLimit = remaining !== undefined && remaining < 0;
 
   return (
     <View style={formStyles.container} testID={`civ-textarea-${name}`}>
@@ -100,12 +118,17 @@ export function Textarea({
         multiline
         numberOfLines={rows}
         accessibilityLabel={buildAccessibilityLabel({ label, hint, error, required })}
-        accessibilityState={{ disabled }}
+        accessibilityState={buildAccessibilityState({ disabled })}
         testID={`civ-textarea-${name}-input`}
       />
-      {maxLength !== undefined ? (
-        <Text style={[styles.charCount, isOverLimit ? styles.charCountOver : null]}>
-          {charCount}/{maxLength}
+      {remaining !== undefined ? (
+        <Text
+          style={[styles.charCount, isOverLimit ? styles.charCountOver : null]}
+          accessibilityLiveRegion="polite"
+        >
+          {isOverLimit
+            ? `${Math.abs(remaining)} characters over limit`
+            : `${remaining} characters remaining`}
         </Text>
       ) : null}
     </View>

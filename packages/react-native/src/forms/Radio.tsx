@@ -208,7 +208,7 @@ export function RadioGroup({
               disabled={isDisabled}
               accessibilityRole="radio"
               accessibilityLabel={buildAccessibilityLabel({ label: option.label, hint: option.description })}
-              accessibilityState={buildAccessibilityState({ selected, disabled: isDisabled })}
+              accessibilityState={buildAccessibilityState({ checked: selected, disabled: isDisabled })}
               testID={`civ-radio-${name}-${option.value}`}
             >
               {content}

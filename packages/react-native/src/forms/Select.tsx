@@ -173,7 +173,7 @@ export function Select({
 
       <Modal visible={open} transparent animationType="fade" onRequestClose={() => setOpen(false)}>
         <Pressable style={styles.overlay} onPress={() => setOpen(false)}>
-          <Pressable style={styles.modal} onPress={() => {}}>
+          <Pressable style={styles.modal} onPress={() => {}} accessibilityViewIsModal>
             <View style={styles.modalHeader}>
               <Text style={styles.modalTitle}>{label}</Text>
               <TouchableOpacity onPress={() => setOpen(false)}>

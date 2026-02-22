@@ -341,7 +341,7 @@ export function DatePicker({
         onRequestClose={() => setOpen(false)}
       >
         <Pressable style={styles.overlay} onPress={() => setOpen(false)}>
-          <Pressable style={styles.modal} onPress={() => {}}>
+          <Pressable style={styles.modal} onPress={() => {}} accessibilityViewIsModal>
             <View style={styles.header}>
               <Text style={styles.headerTitle}>{dialogLabel}</Text>
               <TouchableOpacity onPress={() => setOpen(false)}>

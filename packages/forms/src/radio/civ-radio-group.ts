@@ -188,7 +188,7 @@ export class CivRadioGroup extends CivFormElement {
 
   private _onChildChange(e: Event): void {
     const detail = (e as CustomEvent).detail;
-    if (!detail?.value) return;
+    if (detail?.value == null) return;
 
     // Prevent re-dispatch loop — only handle events from child radios
     if (e.target === this) return;

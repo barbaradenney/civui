@@ -97,26 +97,26 @@ export class CivForm extends CivBaseElement {
       '[data-civ-form-field]',
     );
 
+    // Clear all field errors for a fresh validation pass
+    for (const el of formElements) {
+      (el as any).error = '';
+    }
+
     for (const el of formElements) {
       const formEl = el as any;
       if (formEl.required && !formEl.value) {
-        const message = formEl.error || `${formEl.label || formEl.name || 'This field'} is required`;
+        const message = `${formEl.label || formEl.name || 'This field'} is required`;
         formEl.error = message;
         errors.push({ name: formEl.name || '', message, element: el });
       } else {
-        let invalid = false;
         try {
           if (typeof formEl.checkValidity === 'function' && !formEl.checkValidity()) {
-            const message = formEl.validationMessage || formEl.error || `${formEl.label || formEl.name || 'This field'} is invalid`;
+            const message = formEl.validationMessage || `${formEl.label || formEl.name || 'This field'} is invalid`;
             formEl.error = message;
             errors.push({ name: formEl.name || '', message, element: el });
-            invalid = true;
           }
         } catch {
           // ElementInternals.checkValidity may not be available in all environments
-        }
-        if (!invalid) {
-          formEl.error = '';
         }
       }
     }

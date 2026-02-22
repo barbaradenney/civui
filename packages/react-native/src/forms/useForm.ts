@@ -140,10 +140,11 @@ export function useForm(options: UseFormOptions = {}): UseFormReturn {
       // Compute error count from current validation, not stale closure
       const currentErrors: Record<string, string> = {};
       for (const [name, config] of Object.entries(fields)) {
-        if (config.required && !values[name]) {
+        const val = values[name] ?? '';
+        if (config.required && !val.trim()) {
           currentErrors[name] = `${config.label || name} is required`;
-        } else if (config.validate) {
-          const msg = config.validate(values[name] ?? '');
+        } else if (config.validate && val) {
+          const msg = config.validate(val);
           if (msg) currentErrors[name] = msg;
         }
       }

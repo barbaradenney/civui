@@ -150,7 +150,7 @@ export class CivSegmentedControl extends CivFormElement {
 
   private _onChildChange(e: Event): void {
     const detail = (e as CustomEvent).detail;
-    if (!detail?.value) return;
+    if (detail?.value == null) return;
 
     // Prevent re-dispatch loop — only handle events from child segments
     if (e.target === this) return;

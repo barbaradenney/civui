@@ -173,7 +173,7 @@ export function SegmentedControl({
               disabled={isDisabled}
               accessibilityRole="radio"
               accessibilityLabel={buildAccessibilityLabel({ label: option.label })}
-              accessibilityState={buildAccessibilityState({ selected, disabled: isDisabled })}
+              accessibilityState={buildAccessibilityState({ checked: selected, disabled: isDisabled })}
               testID={`civ-segment-${name}-${option.value}`}
             >
               <Text

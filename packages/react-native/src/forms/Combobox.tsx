@@ -217,7 +217,7 @@ export function Combobox({
 
       <Modal visible={open} transparent animationType="fade" onRequestClose={() => setOpen(false)}>
         <Pressable style={styles.overlay} onPress={() => setOpen(false)}>
-          <Pressable style={styles.modal} onPress={() => {}}>
+          <Pressable style={styles.modal} onPress={() => {}} accessibilityViewIsModal>
             <View style={styles.modalHeader}>
               <View style={styles.doneRow}>
                 <Text style={styles.modalTitle}>{label}</Text>
@@ -230,6 +230,7 @@ export function Combobox({
                 value={filter}
                 onChangeText={setFilter}
                 placeholder={filterPlaceholder}
+                accessibilityLabel={filterPlaceholder}
                 autoFocus
                 testID={`civ-combobox-${name}-filter`}
               />

@@ -209,6 +209,7 @@ export class CivMemorableDate extends CivFormElement {
 
     this.value = assembled;
     this.updateFormValue(this.value);
+    if (this.value) this.error = '';
 
     const detail = {
       value: this.value,

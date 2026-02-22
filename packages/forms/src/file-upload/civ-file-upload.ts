@@ -310,6 +310,8 @@ export class CivFileUpload extends CivFormElement {
     this.value = '';
     this.error = '';
     this.updateFormValue(null);
+    const input = this.querySelector(`#${this._inputId}`) as HTMLInputElement | null;
+    if (input) input.value = '';
     dispatch(this, 'civ-reset');
   }
 }

@@ -117,7 +117,7 @@ export class CivCombobox extends CivFormElement {
             aria-autocomplete="list"
             aria-expanded="${this._open}"
             aria-controls="${this._open ? this._listboxId : nothing}"
-            aria-activedescendant="${activeOptionId || nothing}"
+            aria-activedescendant="${this._open && activeOptionId ? activeOptionId : nothing}"
             aria-describedby="${this._ariaDescribedBy || nothing}"
             aria-invalid="${this.error ? 'true' : 'false'}"
             .value="${this._displayValue}"
@@ -235,10 +235,14 @@ export class CivCombobox extends CivFormElement {
         }
         break;
 
-      case 'Escape':
+      case 'Escape': {
+        // Restore display to the currently selected option's label
+        const selected = this.options.find((o) => o.value === this.value);
+        this._filter = selected ? selected.label : '';
         this._setOpen(false);
         this._activeIndex = -1;
         break;
+      }
 
       case 'Tab':
         this._setOpen(false);

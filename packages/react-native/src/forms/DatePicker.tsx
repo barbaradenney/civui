@@ -323,7 +323,7 @@ export function DatePicker({
           error,
           required,
         })}
-        accessibilityState={buildAccessibilityState({ disabled })}
+        accessibilityState={buildAccessibilityState({ disabled, expanded: open })}
         testID={`civ-date-picker-${name}-trigger`}
       >
         <Text

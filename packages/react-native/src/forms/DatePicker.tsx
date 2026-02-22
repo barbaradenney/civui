@@ -8,9 +8,10 @@ import {
   StyleSheet,
 } from 'react-native';
 import { formStyles } from '../core/styles.js';
-import { buildAccessibilityLabel } from '../core/a11y.js';
+import { buildAccessibilityLabel, buildAccessibilityState } from '../core/a11y.js';
 import { colors, spacing, typography, border } from '../core/tokens.js';
 import type { CivFormProps } from '../core/types.js';
+import { useAnalytics } from '../core/useAnalytics.js';
 import {
   parseISODate,
   toISODateString,
@@ -38,6 +39,18 @@ export interface DatePickerProps extends CivFormProps {
   isDateDisabled?: (date: Date) => boolean;
   /** Placeholder text for the trigger. */
   placeholder?: string;
+  /** Called on input (mirrors web civ-input event). */
+  onInput?: (value: string) => void;
+  /** Accessible label for the trigger when no date is selected. */
+  chooseDateLabel?: string;
+  /** Accessible label for the trigger when a date is selected. Uses {date} placeholder. */
+  selectedDateLabel?: string;
+  /** Title shown in the calendar dialog header. */
+  dialogLabel?: string;
+  /** Accessible label for the previous month button. */
+  previousMonthLabel?: string;
+  /** Accessible label for the next month button. */
+  nextMonthLabel?: string;
 }
 
 const styles = StyleSheet.create({
@@ -176,6 +189,13 @@ export function DatePicker({
   isDateDisabled: customIsDisabled,
   placeholder = 'Select a date',
   onChange,
+  onInput,
+  onAnalytics,
+  chooseDateLabel = 'Choose date',
+  selectedDateLabel = 'Choose date, selected date is {date}',
+  dialogLabel = 'Choose Date',
+  previousMonthLabel = 'Previous month',
+  nextMonthLabel = 'Next month',
 }: DatePickerProps) {
   const [open, setOpen] = useState(false);
   const [focused, setFocused] = useState(false);
@@ -187,6 +207,8 @@ export function DatePicker({
     const parsed = value ? parseISODate(value) : null;
     return parsed ? parsed.getFullYear() : new Date().getFullYear();
   });
+
+  const { trackInteraction } = useAnalytics({ onAnalytics });
 
   const constraints: DateConstraints = useMemo(
     () => ({ min, max, isDateDisabled: customIsDisabled }),
@@ -217,10 +239,13 @@ export function DatePicker({
   const handleSelect = useCallback(
     (date: Date) => {
       if (isDateDisabled(date, constraints)) return;
-      onChange?.(toISODateString(date));
+      const iso = toISODateString(date);
+      onInput?.(iso);
+      onChange?.(iso);
+      trackInteraction('DatePicker', 'change', { fieldName: name, label });
       setOpen(false);
     },
-    [onChange, constraints],
+    [onChange, onInput, trackInteraction, name, label, constraints],
   );
 
   const prevMonth = useCallback(() => {
@@ -290,8 +315,15 @@ export function DatePicker({
         onBlur={() => setFocused(false)}
         disabled={disabled}
         accessibilityRole="button"
-        accessibilityLabel={buildAccessibilityLabel({ label, hint, error, required })}
-        accessibilityState={{ disabled }}
+        accessibilityLabel={buildAccessibilityLabel({
+          label: selectedDate
+            ? selectedDateLabel.replace('{date}', displayText)
+            : chooseDateLabel,
+          hint,
+          error,
+          required,
+        })}
+        accessibilityState={buildAccessibilityState({ disabled })}
         testID={`civ-date-picker-${name}-trigger`}
       >
         <Text
@@ -311,7 +343,7 @@ export function DatePicker({
         <Pressable style={styles.overlay} onPress={() => setOpen(false)}>
           <Pressable style={styles.modal} onPress={() => {}}>
             <View style={styles.header}>
-              <Text style={styles.headerTitle}>{label}</Text>
+              <Text style={styles.headerTitle}>{dialogLabel}</Text>
               <TouchableOpacity onPress={() => setOpen(false)}>
                 <Text style={styles.doneButton}>Done</Text>
               </TouchableOpacity>
@@ -323,7 +355,7 @@ export function DatePicker({
                 onPress={prevMonth}
                 disabled={prevDisabled}
                 accessibilityRole="button"
-                accessibilityLabel="Previous month"
+                accessibilityLabel={previousMonthLabel}
               >
                 <Text style={styles.navButtonText}>{'\u25C0'}</Text>
               </TouchableOpacity>
@@ -335,7 +367,7 @@ export function DatePicker({
                 onPress={nextMonth}
                 disabled={nextDisabled}
                 accessibilityRole="button"
-                accessibilityLabel="Next month"
+                accessibilityLabel={nextMonthLabel}
               >
                 <Text style={styles.navButtonText}>{'\u25B6'}</Text>
               </TouchableOpacity>
@@ -372,10 +404,10 @@ export function DatePicker({
                         disabled={dayDisabled}
                         accessibilityRole="button"
                         accessibilityLabel={formatDateLong(day.date, locale)}
-                        accessibilityState={{
+                        accessibilityState={buildAccessibilityState({
                           selected,
                           disabled: dayDisabled,
-                        }}
+                        })}
                       >
                         <Text
                           style={[

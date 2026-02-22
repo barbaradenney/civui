@@ -36,7 +36,7 @@ export function mapAriaRole(role: string): AccessibilityRole | undefined {
  */
 export function buildAccessibilityState(props: {
   disabled?: boolean;
-  checked?: boolean;
+  checked?: boolean | 'mixed';
   selected?: boolean;
   busy?: boolean;
   expanded?: boolean;

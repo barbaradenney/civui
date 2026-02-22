@@ -6,8 +6,10 @@ import {
   StyleSheet,
 } from 'react-native';
 import { formStyles } from '../core/styles.js';
-import { buildAccessibilityLabel } from '../core/a11y.js';
+import { buildAccessibilityLabel, buildAccessibilityState } from '../core/a11y.js';
 import { colors, spacing, typography, border } from '../core/tokens.js';
+import { useAnalytics } from '../core/useAnalytics.js';
+import type { AnalyticsHandler } from '../core/useAnalytics.js';
 
 export interface RadioOption {
   value: string;
@@ -35,8 +37,14 @@ export interface RadioGroupProps {
   disabled?: boolean;
   /** Display as tiles (bordered cards). */
   tile?: boolean;
+  /** Layout direction. */
+  orientation?: 'vertical' | 'horizontal';
   /** Called when selection changes. */
   onChange?: (value: string) => void;
+  /** Called on input (mirrors web civ-input event). */
+  onInput?: (value: string) => void;
+  /** Analytics event handler. */
+  onAnalytics?: AnalyticsHandler;
 }
 
 const styles = StyleSheet.create({
@@ -95,6 +103,11 @@ const styles = StyleSheet.create({
     borderColor: colors.primary.DEFAULT,
     backgroundColor: colors.primary.lightest,
   },
+  horizontal: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing[4],
+  },
 });
 
 /**
@@ -113,23 +126,30 @@ export function RadioGroup({
   required,
   disabled,
   tile,
+  orientation = 'vertical',
   onChange,
+  onInput,
+  onAnalytics,
 }: RadioGroupProps) {
   const [focusedValue, setFocusedValue] = useState<string | null>(null);
+  const { trackInteraction } = useAnalytics({ onAnalytics });
 
   const handleSelect = useCallback(
     (optionValue: string) => {
       if (!disabled) {
+        onInput?.(optionValue);
         onChange?.(optionValue);
+        trackInteraction('RadioGroup', 'change', { fieldName: name, label });
       }
     },
-    [disabled, onChange],
+    [disabled, onChange, onInput, trackInteraction, name, label],
   );
 
   return (
     <View
       style={formStyles.container}
       accessibilityRole="radiogroup"
+      accessibilityLabel={buildAccessibilityLabel({ label, hint, error, required })}
       testID={`civ-radio-group-${name}`}
     >
       <Text style={styles.legend}>
@@ -143,53 +163,55 @@ export function RadioGroup({
         </Text>
       ) : null}
 
-      {options.map((option) => {
-        const selected = option.value === value;
-        const isDisabled = disabled || option.disabled;
+      <View style={orientation === 'horizontal' ? styles.horizontal : undefined}>
+        {options.map((option) => {
+          const selected = option.value === value;
+          const isDisabled = disabled || option.disabled;
 
-        const content = (
-          <View style={styles.optionRow}>
-            <View
+          const content = (
+            <View style={styles.optionRow}>
+              <View
+                style={[
+                  styles.circle,
+                  selected ? styles.circleSelected : null,
+                  isDisabled ? styles.circleDisabled : null,
+                ]}
+              >
+                {selected && <View style={styles.circleDot} />}
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.optionLabel}>{option.label}</Text>
+                {option.description ? (
+                  <Text style={styles.optionDescription}>{option.description}</Text>
+                ) : null}
+              </View>
+            </View>
+          );
+
+          const optionFocused = focusedValue === option.value;
+
+          return (
+            <TouchableOpacity
+              key={option.value}
               style={[
-                styles.circle,
-                selected ? styles.circleSelected : null,
-                isDisabled ? styles.circleDisabled : null,
+                tile ? styles.tile : null,
+                tile && selected ? styles.tileSelected : null,
+                optionFocused ? formStyles.inputFocused : null,
               ]}
+              onPress={() => handleSelect(option.value)}
+              onFocus={() => setFocusedValue(option.value)}
+              onBlur={() => setFocusedValue(null)}
+              disabled={isDisabled}
+              accessibilityRole="radio"
+              accessibilityLabel={buildAccessibilityLabel({ label: option.label, hint: option.description })}
+              accessibilityState={buildAccessibilityState({ selected, disabled: isDisabled })}
+              testID={`civ-radio-${name}-${option.value}`}
             >
-              {selected && <View style={styles.circleDot} />}
-            </View>
-            <View style={{ flex: 1 }}>
-              <Text style={styles.optionLabel}>{option.label}</Text>
-              {option.description ? (
-                <Text style={styles.optionDescription}>{option.description}</Text>
-              ) : null}
-            </View>
-          </View>
-        );
-
-        const optionFocused = focusedValue === option.value;
-
-        return (
-          <TouchableOpacity
-            key={option.value}
-            style={[
-              tile ? styles.tile : null,
-              tile && selected ? styles.tileSelected : null,
-              optionFocused ? formStyles.inputFocused : null,
-            ]}
-            onPress={() => handleSelect(option.value)}
-            onFocus={() => setFocusedValue(option.value)}
-            onBlur={() => setFocusedValue(null)}
-            disabled={isDisabled}
-            accessibilityRole="radio"
-            accessibilityLabel={buildAccessibilityLabel({ label: option.label })}
-            accessibilityState={{ selected, disabled: isDisabled }}
-            testID={`civ-radio-${name}-${option.value}`}
-          >
-            {content}
-          </TouchableOpacity>
-        );
-      })}
+              {content}
+            </TouchableOpacity>
+          );
+        })}
+      </View>
     </View>
   );
 }

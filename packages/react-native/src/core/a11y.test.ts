@@ -43,6 +43,11 @@ describe('buildAccessibilityState', () => {
     expect(state.checked).toBe(true);
   });
 
+  it('includes mixed checked state', () => {
+    const state = buildAccessibilityState({ checked: 'mixed' });
+    expect(state.checked).toBe('mixed');
+  });
+
   it('includes selected', () => {
     const state = buildAccessibilityState({ selected: false });
     expect(state.selected).toBe(false);

@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import {
   View,
   Text,
@@ -6,8 +6,9 @@ import {
 } from 'react-native';
 import type { TextInputProps as RNTextInputProps, NativeSyntheticEvent, TextInputFocusEventData } from 'react-native';
 import { formStyles } from '../core/styles.js';
-import { buildAccessibilityLabel } from '../core/a11y.js';
+import { buildAccessibilityLabel, buildAccessibilityState } from '../core/a11y.js';
 import type { CivFormProps } from '../core/types.js';
+import { useAnalytics } from '../core/useAnalytics.js';
 
 export interface TextInputProps extends CivFormProps {
   /** Input type — maps to RN keyboardType/secureTextEntry. */
@@ -18,6 +19,8 @@ export interface TextInputProps extends CivFormProps {
   maxLength?: number;
   /** Additional TextInput props passed through. */
   textInputProps?: Partial<RNTextInputProps>;
+  /** Called on input (mirrors web civ-input event). */
+  onInput?: (value: string) => void;
 }
 
 /**
@@ -37,20 +40,27 @@ export function TextInput({
   placeholder,
   maxLength,
   onChange,
+  onInput,
+  onAnalytics,
   textInputProps,
 }: TextInputProps) {
   const [focused, setFocused] = useState(false);
+  const { trackInteraction } = useAnalytics({ onAnalytics });
+  const dirtyRef = useRef(false);
 
   const handleChange = useCallback(
     (text: string) => {
+      dirtyRef.current = true;
+      onInput?.(text);
       onChange?.(text);
     },
-    [onChange],
+    [onChange, onInput],
   );
 
   const handleFocus = useCallback(
     (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
       setFocused(true);
+      dirtyRef.current = false;
       textInputProps?.onFocus?.(e);
     },
     [textInputProps],
@@ -59,9 +69,13 @@ export function TextInput({
   const handleBlur = useCallback(
     (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
       setFocused(false);
+      if (dirtyRef.current) {
+        trackInteraction('TextInput', 'change', { fieldName: name, label });
+        dirtyRef.current = false;
+      }
       textInputProps?.onBlur?.(e);
     },
-    [textInputProps],
+    [textInputProps, trackInteraction, name, label],
   );
 
   const keyboardType = getKeyboardType(type);
@@ -97,7 +111,7 @@ export function TextInput({
         secureTextEntry={secureTextEntry}
         autoCapitalize={type === 'email' || type === 'url' ? 'none' : 'sentences'}
         accessibilityLabel={buildAccessibilityLabel({ label, hint, error, required })}
-        accessibilityState={{ disabled }}
+        accessibilityState={buildAccessibilityState({ disabled })}
         testID={`civ-text-input-${name}-input`}
         {...textInputProps}
       />

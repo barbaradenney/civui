@@ -104,14 +104,19 @@ export class CivForm extends CivBaseElement {
         formEl.error = message;
         errors.push({ name: formEl.name || '', message, element: el });
       } else {
+        let invalid = false;
         try {
           if (typeof formEl.checkValidity === 'function' && !formEl.checkValidity()) {
             const message = formEl.validationMessage || formEl.error || `${formEl.label || formEl.name || 'This field'} is invalid`;
             formEl.error = message;
             errors.push({ name: formEl.name || '', message, element: el });
+            invalid = true;
           }
         } catch {
           // ElementInternals.checkValidity may not be available in all environments
+        }
+        if (!invalid) {
+          formEl.error = '';
         }
       }
     }

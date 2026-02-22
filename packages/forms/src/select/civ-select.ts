@@ -29,6 +29,7 @@ export interface SelectOption {
  *
  * @fires civ-input - When selection changes, detail: { value }
  * @fires civ-change - When selection changes, detail: { value }
+ * @fires civ-reset - When the form is reset
  */
 @customElement('civ-select')
 export class CivSelect extends CivFormElement {

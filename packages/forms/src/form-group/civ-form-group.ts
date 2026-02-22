@@ -61,6 +61,12 @@ export class CivFormGroup extends CivBaseElement {
     } else {
       input.setAttribute('aria-invalid', 'false');
     }
+
+    if (this.required) {
+      input.setAttribute('aria-required', 'true');
+    } else {
+      input.removeAttribute('aria-required');
+    }
   }
 
   override render() {

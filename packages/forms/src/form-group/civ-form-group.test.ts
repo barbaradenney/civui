@@ -140,4 +140,29 @@ describe('civ-form-group', () => {
     const input = el.querySelector('input')!;
     expect(input.getAttribute('aria-invalid')).toBe('false');
   });
+
+  it('wires aria-required on slotted input when required', async () => {
+    const el = await fixture(`
+      <civ-form-group label="Name" required>
+        <input type="text" id="name" />
+      </civ-form-group>
+    `);
+
+    const input = el.querySelector('input')!;
+    expect(input.getAttribute('aria-required')).toBe('true');
+  });
+
+  it('removes aria-required when required is cleared', async () => {
+    const el = await fixture(`
+      <civ-form-group label="Name" required>
+        <input type="text" id="name" />
+      </civ-form-group>
+    `) as any;
+
+    el.required = false;
+    await el.updateComplete;
+
+    const input = el.querySelector('input')!;
+    expect(input.hasAttribute('aria-required')).toBe(false);
+  });
 });

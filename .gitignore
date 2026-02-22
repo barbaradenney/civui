@@ -3,6 +3,12 @@ dist/
 .turbo/
 *.tsbuildinfo
 
+# Root config build artifacts (Tailwind reads .ts natively)
+tailwind.config.js
+tailwind.config.js.map
+tailwind.config.d.ts
+tailwind.config.d.ts.map
+
 # Storybook
 storybook-static/
 

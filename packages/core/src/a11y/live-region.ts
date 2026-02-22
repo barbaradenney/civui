@@ -91,3 +91,16 @@ export function announce(message: string, priority: 'polite' | 'assertive' = 'po
     }
   }
 }
+
+/**
+ * Clean up live region state. Call this between tests to prevent
+ * state leakage. Clears queues, timers, and removes DOM elements.
+ */
+export function cleanupLiveRegions(): void {
+  politeQueue = [];
+  assertiveQueue = [];
+  if (politeTimer) { clearTimeout(politeTimer); politeTimer = null; }
+  if (assertiveTimer) { clearTimeout(assertiveTimer); assertiveTimer = null; }
+  if (politeRegion) { politeRegion.remove(); politeRegion = null; }
+  if (assertiveRegion) { assertiveRegion.remove(); assertiveRegion = null; }
+}

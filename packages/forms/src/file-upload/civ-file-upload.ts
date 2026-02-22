@@ -260,6 +260,9 @@ export class CivFileUpload extends CivFormElement {
       }
     }
 
+    // Clear any previous validation error on successful add
+    if (validated.length > 0) this.error = '';
+
     if (this.multiple) {
       this._files = [...this._files, ...validated];
     } else {

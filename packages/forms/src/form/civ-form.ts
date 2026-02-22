@@ -207,10 +207,13 @@ export class CivForm extends CivBaseElement {
 
   private _focusField(e: Event, element: Element): void {
     e.preventDefault();
-    const input = element.querySelector('input, select, textarea') as HTMLElement | null;
-    if (input) {
-      input.focus();
-      input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    // Prefer visible interactive elements over hidden file inputs
+    const focusTarget =
+      element.querySelector('[role="button"], [role="switch"], button') as HTMLElement | null
+      ?? element.querySelector('input:not([aria-hidden="true"]), select, textarea') as HTMLElement | null;
+    if (focusTarget) {
+      focusTarget.focus();
+      focusTarget.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
   }
 }

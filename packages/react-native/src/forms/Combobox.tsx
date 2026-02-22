@@ -15,7 +15,7 @@ import { colors, spacing, typography, border } from '../core/tokens.js';
 import type { CivFormProps, ComboboxOption } from '../core/types.js';
 import { useAnalytics } from '../core/useAnalytics.js';
 
-export interface ComboboxProps extends CivFormProps {
+export interface ComboboxProps extends Omit<CivFormProps, 'onChange'> {
   /** Available options. */
   options: ComboboxOption[];
   /** Placeholder text shown when no value is selected. */
@@ -24,6 +24,8 @@ export interface ComboboxProps extends CivFormProps {
   noResultsText?: string;
   /** Placeholder text for the filter input. */
   filterPlaceholder?: string;
+  /** Called when a selection is made (value and label). */
+  onChange?: (value: string, label: string) => void;
   /** Called on input (mirrors web civ-input event). */
   onInput?: (value: string) => void;
 }
@@ -160,7 +162,7 @@ export function Combobox({
     (option: ComboboxOption) => {
       if (option.disabled) return;
       onInput?.(option.value);
-      onChange?.(option.value);
+      onChange?.(option.value, option.label);
       trackInteraction('Combobox', 'change', { fieldName: name, label });
       setFilter('');
       setOpen(false);

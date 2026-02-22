@@ -50,7 +50,7 @@ export function Fieldset({
     <View
       style={[formStyles.container, disabled ? styles.disabled : null]}
       pointerEvents={disabled ? 'none' : 'auto'}
-      accessibilityRole="summary"
+      accessibilityRole="none"
       accessibilityLabel={buildAccessibilityLabel({ label: legend, hint, error, required })}
     >
       {legend ? (

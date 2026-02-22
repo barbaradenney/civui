@@ -15,7 +15,8 @@ import { CivBaseElement, dispatch } from '@civui/core';
  * @prop {boolean} selected - Whether this segment is currently selected
  * @prop {boolean} disabled - Whether this segment is disabled
  *
- * @fires civ-change - When this segment is selected (bubbles to parent group)
+ * @fires civ-input - When this segment is selected (input event), detail: { value }
+ * @fires civ-change - When this segment is selected (bubbles to parent group), detail: { value }
  */
 @customElement('civ-segment')
 export class CivSegment extends CivBaseElement {

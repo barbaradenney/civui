@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivFormElement } from '@civui/core';
+import { CivFormElement, dispatch } from '@civui/core';
 
 export interface SelectOption {
   value: string;
@@ -120,12 +120,8 @@ export class CivSelect extends CivFormElement {
     const target = e.target as HTMLSelectElement;
     this.value = target.value;
     this.updateFormValue(this.value);
-    this.dispatchEvent(
-      new CustomEvent('civ-input', { detail: { value: this.value }, bubbles: true, composed: true }),
-    );
-    this.dispatchEvent(
-      new CustomEvent('civ-change', { detail: { value: this.value }, bubbles: true, composed: true }),
-    );
+    dispatch(this, 'civ-input', { value: this.value });
+    dispatch(this, 'civ-change', { value: this.value });
     this.sendAnalytics('change');
   }
 }

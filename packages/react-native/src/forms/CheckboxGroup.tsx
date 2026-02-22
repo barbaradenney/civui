@@ -117,11 +117,7 @@ export function CheckboxGroup({
         </Text>
       ) : null}
 
-      <View
-        style={orientation === 'horizontal' ? styles.horizontal : undefined}
-        accessible={true}
-        accessibilityLabel={legend}
-      >
+      <View style={orientation === 'horizontal' ? styles.horizontal : undefined}>
         {options.map((option) => (
           <Checkbox
             key={option.value}

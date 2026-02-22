@@ -118,6 +118,9 @@ importers:
         specifier: ^3.2.0
         version: 3.3.2
     devDependencies:
+      '@civui/test-utils':
+        specifier: workspace:*
+        version: link:../test-utils
       '@civui/tokens':
         specifier: workspace:*
         version: link:../tokens

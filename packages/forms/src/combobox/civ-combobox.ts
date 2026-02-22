@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivFormElement } from '@civui/core';
+import { CivFormElement, dispatch } from '@civui/core';
 
 export interface ComboboxOption {
   value: string;
@@ -197,13 +197,7 @@ export class CivCombobox extends CivFormElement {
     // Clear the selected value when typing
     this.value = '';
     this.updateFormValue('');
-    this.dispatchEvent(
-      new CustomEvent('civ-input', {
-        detail: { value: this._filter },
-        bubbles: true,
-        composed: true,
-      }),
-    );
+    dispatch(this, 'civ-input', { value: this._filter });
   }
 
   private _onFocus(): void {
@@ -258,13 +252,7 @@ export class CivCombobox extends CivFormElement {
     this._setOpen(false);
     this._activeIndex = -1;
     this.updateFormValue(this.value);
-    this.dispatchEvent(
-      new CustomEvent('civ-change', {
-        detail: { value: this.value, label: option.label },
-        bubbles: true,
-        composed: true,
-      }),
-    );
+    dispatch(this, 'civ-change', { value: this.value, label: option.label });
     this.sendAnalytics('select');
   }
 
@@ -276,13 +264,14 @@ export class CivCombobox extends CivFormElement {
   }
 
   override formResetCallback(): void {
-    this.value = '';
-    this._filter = '';
+    this.value = this._defaultValue;
+    const selected = this.options.find((o) => o.value === this._defaultValue);
+    this._filter = selected ? selected.label : '';
     this._setOpen(false);
     this._activeIndex = -1;
     this.error = '';
-    this.updateFormValue('');
-    this.dispatchEvent(new CustomEvent('civ-reset', { bubbles: true, composed: true }));
+    this.updateFormValue(this._defaultValue || '');
+    dispatch(this, 'civ-reset');
   }
 }
 

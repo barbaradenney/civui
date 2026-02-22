@@ -1,29 +1,12 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
+import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
 import './civ-select.js';
 
-function createFixture(html: string): HTMLElement {
-  const container = document.createElement('div');
-  container.innerHTML = html;
-  document.body.appendChild(container);
-  return container.firstElementChild as HTMLElement;
-}
-
-function cleanup(): void {
-  document.body.innerHTML = '';
-}
-
-async function waitForUpdate(el: HTMLElement): Promise<void> {
-  if ('updateComplete' in el) {
-    await (el as any).updateComplete;
-  }
-}
-
-afterEach(cleanup);
+afterEach(cleanupFixtures);
 
 describe('civ-select', () => {
   it('renders with a label', async () => {
-    const el = createFixture('<civ-select label="State"></civ-select>');
-    await waitForUpdate(el);
+    const el = await fixture('<civ-select label="State"></civ-select>');
 
     const label = el.querySelector('label');
     expect(label).not.toBeNull();
@@ -31,8 +14,7 @@ describe('civ-select', () => {
   });
 
   it('renders a select element', async () => {
-    const el = createFixture('<civ-select label="State" name="state"></civ-select>');
-    await waitForUpdate(el);
+    const el = await fixture('<civ-select label="State" name="state"></civ-select>');
 
     const select = el.querySelector('select');
     expect(select).not.toBeNull();
@@ -40,8 +22,7 @@ describe('civ-select', () => {
   });
 
   it('associates label with select via for/id', async () => {
-    const el = createFixture('<civ-select label="State"></civ-select>');
-    await waitForUpdate(el);
+    const el = await fixture('<civ-select label="State"></civ-select>');
 
     const label = el.querySelector('label');
     const select = el.querySelector('select');
@@ -49,8 +30,7 @@ describe('civ-select', () => {
   });
 
   it('renders default empty option', async () => {
-    const el = createFixture('<civ-select label="State"></civ-select>');
-    await waitForUpdate(el);
+    const el = await fixture('<civ-select label="State"></civ-select>');
 
     const options = el.querySelectorAll('option');
     expect(options.length).toBe(1);
@@ -59,21 +39,20 @@ describe('civ-select', () => {
   });
 
   it('renders custom empty label', async () => {
-    const el = createFixture('<civ-select label="State" empty-label="Choose one"></civ-select>');
-    await waitForUpdate(el);
+    const el = await fixture('<civ-select label="State" empty-label="Choose one"></civ-select>');
 
     const options = el.querySelectorAll('option');
     expect(options[0].textContent).toContain('Choose one');
   });
 
   it('renders options from property', async () => {
-    const el = createFixture('<civ-select label="State" name="state"></civ-select>') as any;
+    const el = await fixture('<civ-select label="State" name="state"></civ-select>') as any;
     el.options = [
       { value: 'CA', label: 'California' },
       { value: 'NY', label: 'New York' },
       { value: 'TX', label: 'Texas' },
     ];
-    await waitForUpdate(el);
+    await elementUpdated(el);
 
     const options = el.querySelectorAll('option');
     // 1 empty + 3 real options
@@ -85,20 +64,19 @@ describe('civ-select', () => {
   });
 
   it('renders disabled options', async () => {
-    const el = createFixture('<civ-select label="State"></civ-select>') as any;
+    const el = await fixture('<civ-select label="State"></civ-select>') as any;
     el.options = [
       { value: 'CA', label: 'California' },
       { value: 'XX', label: 'Unavailable', disabled: true },
     ];
-    await waitForUpdate(el);
+    await elementUpdated(el);
 
     const options = el.querySelectorAll('option');
     expect(options[2].disabled).toBe(true);
   });
 
   it('renders error message with alert role', async () => {
-    const el = createFixture('<civ-select label="State" error="Selection required"></civ-select>');
-    await waitForUpdate(el);
+    const el = await fixture('<civ-select label="State" error="Selection required"></civ-select>');
 
     const errorEl = el.querySelector('[role="alert"]');
     expect(errorEl).not.toBeNull();
@@ -106,16 +84,14 @@ describe('civ-select', () => {
   });
 
   it('sets aria-invalid when error is present', async () => {
-    const el = createFixture('<civ-select label="State" error="Required"></civ-select>');
-    await waitForUpdate(el);
+    const el = await fixture('<civ-select label="State" error="Required"></civ-select>');
 
     const select = el.querySelector('select');
     expect(select!.getAttribute('aria-invalid')).toBe('true');
   });
 
   it('renders hint text', async () => {
-    const el = createFixture('<civ-select label="State" hint="Your state of residence"></civ-select>');
-    await waitForUpdate(el);
+    const el = await fixture('<civ-select label="State" hint="Your state of residence"></civ-select>');
 
     const spans = el.querySelectorAll('span');
     const hintSpan = Array.from(spans).find((s) => s.textContent === 'Your state of residence');
@@ -123,8 +99,7 @@ describe('civ-select', () => {
   });
 
   it('shows required indicator', async () => {
-    const el = createFixture('<civ-select label="State" required></civ-select>');
-    await waitForUpdate(el);
+    const el = await fixture('<civ-select label="State" required></civ-select>');
 
     const abbr = el.querySelector('abbr');
     expect(abbr).not.toBeNull();
@@ -132,20 +107,19 @@ describe('civ-select', () => {
   });
 
   it('renders disabled state', async () => {
-    const el = createFixture('<civ-select label="State" disabled></civ-select>');
-    await waitForUpdate(el);
+    const el = await fixture('<civ-select label="State" disabled></civ-select>');
 
     const select = el.querySelector('select');
     expect(select!.disabled).toBe(true);
   });
 
   it('fires civ-change event on selection', async () => {
-    const el = createFixture('<civ-select label="State" name="state"></civ-select>') as any;
+    const el = await fixture('<civ-select label="State" name="state"></civ-select>') as any;
     el.options = [
       { value: 'CA', label: 'California' },
       { value: 'NY', label: 'New York' },
     ];
-    await waitForUpdate(el);
+    await elementUpdated(el);
 
     const select = el.querySelector('select')!;
     let eventDetail: any = null;
@@ -161,16 +135,14 @@ describe('civ-select', () => {
   });
 
   it('uses Light DOM (no shadow root)', async () => {
-    const el = createFixture('<civ-select label="State"></civ-select>');
-    await waitForUpdate(el);
+    const el = await fixture('<civ-select label="State"></civ-select>');
 
     expect(el.shadowRoot).toBeNull();
     expect(el.querySelector('select')).not.toBeNull();
   });
 
   it('sets aria-required when required', async () => {
-    const el = createFixture('<civ-select label="State" required></civ-select>');
-    await waitForUpdate(el);
+    const el = await fixture('<civ-select label="State" required></civ-select>');
 
     const select = el.querySelector('select');
     expect(select!.getAttribute('aria-required')).toBe('true');
@@ -182,16 +154,14 @@ describe('civ-select', () => {
   });
 
   it('applies focus-visible ring class', async () => {
-    const el = createFixture('<civ-select label="State" name="state"></civ-select>');
-    await waitForUpdate(el);
+    const el = await fixture('<civ-select label="State" name="state"></civ-select>');
 
     const select = el.querySelector('select');
     expect(select!.className).toContain('focus-visible:civ-focus-ring');
   });
 
   it('does not use deprecated focus: outline classes', async () => {
-    const el = createFixture('<civ-select label="State" name="state"></civ-select>');
-    await waitForUpdate(el);
+    const el = await fixture('<civ-select label="State" name="state"></civ-select>');
 
     const select = el.querySelector('select');
     expect(select!.className).not.toContain('focus:civ-outline-2');
@@ -201,9 +171,9 @@ describe('civ-select', () => {
 
   describe('analytics', () => {
     it('fires civ-analytics on selection change', async () => {
-      const el = createFixture('<civ-select label="State" name="state"></civ-select>') as any;
+      const el = await fixture('<civ-select label="State" name="state"></civ-select>') as any;
       el.options = [{ value: 'CA', label: 'California' }];
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       const handler = vi.fn();
       el.addEventListener('civ-analytics', handler as EventListener);
@@ -220,9 +190,9 @@ describe('civ-select', () => {
     });
 
     it('suppresses analytics when disable-analytics is set', async () => {
-      const el = createFixture('<civ-select label="State" name="state" disable-analytics></civ-select>') as any;
+      const el = await fixture('<civ-select label="State" name="state" disable-analytics></civ-select>') as any;
       el.options = [{ value: 'CA', label: 'California' }];
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       const handler = vi.fn();
       el.addEventListener('civ-analytics', handler as EventListener);
@@ -235,9 +205,9 @@ describe('civ-select', () => {
     });
 
     it('never includes value in analytics payload', async () => {
-      const el = createFixture('<civ-select label="State" name="state"></civ-select>') as any;
+      const el = await fixture('<civ-select label="State" name="state"></civ-select>') as any;
       el.options = [{ value: 'CA', label: 'California' }];
-      await waitForUpdate(el);
+      await elementUpdated(el);
 
       const handler = vi.fn();
       el.addEventListener('civ-analytics', handler as EventListener);
@@ -249,5 +219,29 @@ describe('civ-select', () => {
       const detail = handler.mock.calls[0][0].detail;
       expect(detail).not.toHaveProperty('value');
     });
+  });
+});
+
+describe('civ-select civ-input event', () => {
+  it('fires civ-input event on selection change', async () => {
+    const el = await fixture<HTMLElement>('<civ-select label="State" name="state"></civ-select>');
+    (el as any).options = [
+      { value: 'CA', label: 'California' },
+      { value: 'NY', label: 'New York' },
+    ];
+    await elementUpdated(el);
+
+    const select = el.querySelector('select')!;
+    let eventDetail: any = null;
+
+    el.addEventListener('civ-input', ((e: CustomEvent) => {
+      eventDetail = e.detail;
+    }) as EventListener);
+
+    select.value = 'NY';
+    select.dispatchEvent(new Event('change', { bubbles: true }));
+
+    expect(eventDetail).not.toBeNull();
+    expect(eventDetail.value).toBe('NY');
   });
 });

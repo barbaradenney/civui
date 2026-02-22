@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivFormElement, debounce } from '@civui/core';
+import { CivFormElement, debounce, dispatch } from '@civui/core';
 
 /**
  * CivUI Textarea
@@ -142,9 +142,7 @@ export class CivTextarea extends CivFormElement {
     this._charCount = target.value.length;
     this._debouncedAnnounceCount();
     this.updateFormValue(this.value);
-    this.dispatchEvent(
-      new CustomEvent('civ-input', { detail: { value: this.value }, bubbles: true, composed: true }),
-    );
+    dispatch(this, 'civ-input', { value: this.value });
   }
 }
 

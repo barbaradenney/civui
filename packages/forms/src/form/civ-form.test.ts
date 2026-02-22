@@ -1,42 +1,27 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
+import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
 import './civ-form.js';
 import '../text-input/civ-text-input.js';
 
-function createFixture(html: string): HTMLElement {
-  const container = document.createElement('div');
-  container.innerHTML = html;
-  document.body.appendChild(container);
-  return container.firstElementChild as HTMLElement;
-}
-
-function cleanup(): void {
-  document.body.innerHTML = '';
-}
-
-async function waitForUpdate(el: HTMLElement): Promise<void> {
-  if ('updateComplete' in el) await (el as any).updateComplete;
-}
-
 async function waitForChildren(el: HTMLElement): Promise<void> {
-  await waitForUpdate(el);
+  await elementUpdated(el);
   const children = el.querySelectorAll('civ-text-input');
   for (const child of children) {
-    await waitForUpdate(child);
+    await elementUpdated(child);
   }
 }
 
-afterEach(cleanup);
+afterEach(cleanupFixtures);
 
 describe('civ-form', () => {
   it('uses Light DOM', async () => {
-    const el = createFixture('<civ-form></civ-form>');
-    await waitForUpdate(el);
+    const el = await fixture('<civ-form></civ-form>');
 
     expect(el.shadowRoot).toBeNull();
   });
 
   it('renders children as descendants', async () => {
-    const el = createFixture(`
+    const el = await fixture(`
       <civ-form>
         <civ-text-input label="Name" name="name"></civ-text-input>
       </civ-form>
@@ -48,15 +33,14 @@ describe('civ-form', () => {
   });
 
   it('does not show error summary initially', async () => {
-    const el = createFixture('<civ-form></civ-form>');
-    await waitForUpdate(el);
+    const el = await fixture('<civ-form></civ-form>');
 
     const summary = el.querySelector('[data-civ-error-summary]');
     expect(summary).toBeNull();
   });
 
   it('validates required fields', async () => {
-    const el = createFixture(`
+    const el = await fixture(`
       <civ-form>
         <civ-text-input label="Name" name="name" required></civ-text-input>
       </civ-form>
@@ -70,7 +54,7 @@ describe('civ-form', () => {
   });
 
   it('returns empty errors for valid form', async () => {
-    const el = createFixture(`
+    const el = await fixture(`
       <civ-form>
         <civ-text-input label="Name" name="name"></civ-text-input>
       </civ-form>
@@ -82,7 +66,7 @@ describe('civ-form', () => {
   });
 
   it('returns no errors when required field has a value', async () => {
-    const el = createFixture(`
+    const el = await fixture(`
       <civ-form>
         <civ-text-input label="Name" name="name" value="John" required></civ-text-input>
       </civ-form>
@@ -94,7 +78,7 @@ describe('civ-form', () => {
   });
 
   it('shows error summary after validation fails', async () => {
-    const el = createFixture(`
+    const el = await fixture(`
       <civ-form>
         <civ-text-input label="Name" name="name" required></civ-text-input>
       </civ-form>
@@ -103,7 +87,7 @@ describe('civ-form', () => {
 
     // Trigger validation by clicking submit
     el._errors = el.validate();
-    await waitForUpdate(el);
+    await elementUpdated(el);
 
     const summary = el.querySelector('[data-civ-error-summary]');
     expect(summary).not.toBeNull();
@@ -111,7 +95,7 @@ describe('civ-form', () => {
   });
 
   it('fires civ-invalid on invalid submit', async () => {
-    const el = createFixture(`
+    const el = await fixture(`
       <civ-form>
         <civ-text-input label="Email" name="email" required></civ-text-input>
         <button type="submit">Submit</button>
@@ -127,14 +111,14 @@ describe('civ-form', () => {
     // Click the submit button
     const btn = el.querySelector('button[type="submit"]') as HTMLElement;
     btn.click();
-    await waitForUpdate(el);
+    await elementUpdated(el);
 
     expect(eventDetail).not.toBeNull();
     expect(eventDetail.errors.length).toBe(1);
   });
 
   it('fires civ-submit when form is valid', async () => {
-    const el = createFixture(`
+    const el = await fixture(`
       <civ-form>
         <civ-text-input label="Name" name="name" value="John"></civ-text-input>
         <button type="submit">Submit</button>
@@ -149,13 +133,13 @@ describe('civ-form', () => {
 
     const btn = el.querySelector('button[type="submit"]') as HTMLElement;
     btn.click();
-    await waitForUpdate(el);
+    await elementUpdated(el);
 
     expect(submitted).toBe(true);
   });
 
   it('clears errors on clearErrors()', async () => {
-    const el = createFixture(`
+    const el = await fixture(`
       <civ-form>
         <civ-text-input label="Name" name="name" required></civ-text-input>
       </civ-form>
@@ -163,10 +147,10 @@ describe('civ-form', () => {
     await waitForChildren(el);
 
     el._errors = el.validate();
-    await waitForUpdate(el);
+    await elementUpdated(el);
 
     el.clearErrors();
-    await waitForUpdate(el);
+    await elementUpdated(el);
 
     expect(el._errors.length).toBe(0);
     const summary = el.querySelector('[data-civ-error-summary]');
@@ -174,7 +158,7 @@ describe('civ-form', () => {
   });
 
   it('clears errors on reset button click', async () => {
-    const el = createFixture(`
+    const el = await fixture(`
       <civ-form>
         <civ-text-input label="Name" name="name" required></civ-text-input>
         <button type="reset">Reset</button>
@@ -183,17 +167,17 @@ describe('civ-form', () => {
     await waitForChildren(el);
 
     el._errors = el.validate();
-    await waitForUpdate(el);
+    await elementUpdated(el);
 
     const btn = el.querySelector('button[type="reset"]') as HTMLElement;
     btn.click();
-    await waitForUpdate(el);
+    await elementUpdated(el);
 
     expect(el._errors.length).toBe(0);
   });
 
   it('error summary contains links for each error', async () => {
-    const el = createFixture(`
+    const el = await fixture(`
       <civ-form>
         <civ-text-input label="Name" name="name" required></civ-text-input>
         <civ-text-input label="Email" name="email" required></civ-text-input>
@@ -202,7 +186,7 @@ describe('civ-form', () => {
     await waitForChildren(el);
 
     el._errors = el.validate();
-    await waitForUpdate(el);
+    await elementUpdated(el);
 
     const links = el.querySelectorAll('[data-civ-error-summary] a');
     expect(links.length).toBe(2);
@@ -214,7 +198,7 @@ describe('civ-form', () => {
   });
 
   it('counts multiple errors correctly', async () => {
-    const el = createFixture(`
+    const el = await fixture(`
       <civ-form>
         <civ-text-input label="First" name="first" required></civ-text-input>
         <civ-text-input label="Last" name="last" required></civ-text-input>
@@ -224,14 +208,14 @@ describe('civ-form', () => {
     await waitForChildren(el);
 
     el._errors = el.validate();
-    await waitForUpdate(el);
+    await elementUpdated(el);
 
     const summary = el.querySelector('[data-civ-error-summary]');
     expect(summary!.textContent).toContain('3 errors');
   });
 
   it('collects form data from children', async () => {
-    const el = createFixture(`
+    const el = await fixture(`
       <civ-form>
         <civ-text-input label="Name" name="name" value="John"></civ-text-input>
         <civ-text-input label="Email" name="email" value="john@test.com"></civ-text-input>
@@ -246,7 +230,7 @@ describe('civ-form', () => {
 
   describe('analytics', () => {
     it('fires civ-analytics with submit action on valid submission', async () => {
-      const el = createFixture(`
+      const el = await fixture(`
         <civ-form>
           <civ-text-input label="Name" name="name" value="John"></civ-text-input>
           <button type="submit">Submit</button>
@@ -266,7 +250,7 @@ describe('civ-form', () => {
     });
 
     it('fires civ-analytics with invalid action on validation failure', async () => {
-      const el = createFixture(`
+      const el = await fixture(`
         <civ-form>
           <civ-text-input label="Name" name="name" required></civ-text-input>
           <button type="submit">Submit</button>
@@ -286,7 +270,7 @@ describe('civ-form', () => {
     });
 
     it('suppresses analytics when disable-analytics is set', async () => {
-      const el = createFixture(`
+      const el = await fixture(`
         <civ-form disable-analytics>
           <civ-text-input label="Name" name="name" value="John"></civ-text-input>
           <button type="submit">Submit</button>
@@ -307,7 +291,7 @@ describe('civ-form', () => {
     });
 
     it('never includes form data in analytics payload', async () => {
-      const el = createFixture(`
+      const el = await fixture(`
         <civ-form>
           <civ-text-input label="Name" name="name" value="John Doe"></civ-text-input>
           <button type="submit">Submit</button>
@@ -327,5 +311,45 @@ describe('civ-form', () => {
         expect(detail).not.toHaveProperty('value');
       }
     });
+  });
+});
+
+describe('form reset', () => {
+  it('calls formResetCallback() on children instead of just setting value to empty', async () => {
+    const el = await fixture(`
+      <civ-form>
+        <civ-text-input label="Name" name="name" value="John"></civ-text-input>
+        <button type="reset">Reset</button>
+      </civ-form>
+    `) as any;
+    await waitForChildren(el);
+
+    const textInput = el.querySelector('civ-text-input') as any;
+    const spy = vi.spyOn(textInput, 'formResetCallback');
+
+    const btn = el.querySelector('button[type="reset"]') as HTMLElement;
+    btn.click();
+    await elementUpdated(el);
+
+    expect(spy).toHaveBeenCalledOnce();
+    spy.mockRestore();
+  });
+
+  it('uses [data-civ-form-field] selector to discover form elements', async () => {
+    const el = await fixture(`
+      <civ-form>
+        <civ-text-input label="Name" name="name" required></civ-text-input>
+      </civ-form>
+    `) as any;
+    await waitForChildren(el);
+
+    // Any CivFormElement should be discoverable via [data-civ-form-field]
+    const fields = el.querySelectorAll('[data-civ-form-field]');
+    expect(fields.length).toBeGreaterThanOrEqual(1);
+
+    // Validation should find required fields through this selector
+    const errors = el.validate();
+    expect(errors.length).toBe(1);
+    expect(errors[0].name).toBe('name');
   });
 });

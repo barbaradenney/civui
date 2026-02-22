@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivFormElement, getMonthNames, interpolate, parseISODate } from '@civui/core';
+import { CivFormElement, dispatch, getMonthNames, interpolate, parseISODate } from '@civui/core';
 
 // Import child components
 import '../select/civ-select.js';
@@ -51,13 +51,11 @@ export class CivMemorableDate extends CivFormElement {
   override connectedCallback(): void {
     super.connectedCallback();
     this._parseValue();
-    this.addEventListener('civ-change', this._boundFieldChange as EventListener);
     this.addEventListener('civ-input', this._boundFieldChange as EventListener);
   }
 
   override disconnectedCallback(): void {
     super.disconnectedCallback();
-    this.removeEventListener('civ-change', this._boundFieldChange as EventListener);
     this.removeEventListener('civ-input', this._boundFieldChange as EventListener);
   }
 
@@ -218,20 +216,8 @@ export class CivMemorableDate extends CivFormElement {
       day: this._day,
       year: this._year,
     };
-    this.dispatchEvent(
-      new CustomEvent('civ-input', {
-        detail,
-        bubbles: true,
-        composed: true,
-      }),
-    );
-    this.dispatchEvent(
-      new CustomEvent('civ-change', {
-        detail,
-        bubbles: true,
-        composed: true,
-      }),
-    );
+    dispatch(this, 'civ-input', detail);
+    dispatch(this, 'civ-change', detail);
     this.sendAnalytics('change');
     if (this.value) {
       this.announce(interpolate(this.dateSetMessage, { date: `${this._month}/${this._day}/${this._year}` }));
@@ -245,7 +231,7 @@ export class CivMemorableDate extends CivFormElement {
     this.value = '';
     this.error = '';
     this.updateFormValue('');
-    this.dispatchEvent(new CustomEvent('civ-reset', { bubbles: true, composed: true }));
+    dispatch(this, 'civ-reset');
   }
 }
 

@@ -150,6 +150,18 @@ export class CivFormElement extends CivBaseElement {
     if (changed.has('error') && this.error) {
       this.announce(this.error, 'assertive');
     }
+    if (changed.has('value')) {
+      this._syncFormValue();
+    }
+  }
+
+  /**
+   * Sync the current value to ElementInternals for form participation.
+   * Called automatically when the `value` property changes.
+   * Override in subclasses with custom form value logic (e.g. checkbox, toggle).
+   */
+  protected _syncFormValue(): void {
+    this.updateFormValue(this.value || '');
   }
 
   /**

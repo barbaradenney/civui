@@ -52,7 +52,7 @@ export class CivBaseElement extends LitElement {
   ): void {
     if (this.disableAnalytics) return;
 
-    const self = this as any;
+    const self = this as unknown as Partial<{ name: string; label: string; legend: string }>;
     const payload: AnalyticsEventDetail = {
       componentName: this.tagName.toLowerCase(),
       action,

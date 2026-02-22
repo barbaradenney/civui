@@ -127,6 +127,22 @@ describe('civ-textarea', () => {
     expect(eventDetail).toEqual({ value: 'Hello' });
   });
 
+  it('fires civ-change event on blur', async () => {
+    const el = await fixture('<civ-textarea label="Bio" name="bio"></civ-textarea>');
+
+    const textarea = el.querySelector('textarea')!;
+    let eventDetail: any = null;
+
+    el.addEventListener('civ-change', ((e: CustomEvent) => {
+      eventDetail = e.detail;
+    }) as EventListener);
+
+    textarea.value = 'Hello';
+    textarea.dispatchEvent(new Event('change', { bubbles: true }));
+
+    expect(eventDetail).toEqual({ value: 'Hello' });
+  });
+
   it('uses Light DOM (no shadow root)', async () => {
     const el = await fixture('<civ-textarea label="Bio"></civ-textarea>');
 

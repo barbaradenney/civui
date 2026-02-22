@@ -473,7 +473,9 @@ export class CivDatePicker extends CivFormElement {
       this.sendAnalytics('change');
       this.announce(interpolate(this.dateSelectedMessage, { date: formatDateLong(parsed, this.locale) }));
     }
-    // Keep invalid text in the input — don't clear it
+    // Keep invalid text in the input — don't clear it.
+    // This lets users correct typos without losing their input.
+    // The value property remains unchanged until a valid date is entered.
   }
 
   private _prevMonth(): void {

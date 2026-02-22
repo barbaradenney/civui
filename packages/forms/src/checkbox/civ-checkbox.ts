@@ -131,6 +131,10 @@ export class CivCheckbox extends CivFormElement {
     }
   }
 
+  protected override _syncFormValue(): void {
+    this.updateFormValue(this.checked ? this.value : null);
+  }
+
   private _onCheckboxChange(e: Event): void {
     const target = e.target as HTMLInputElement;
     this.checked = target.checked;

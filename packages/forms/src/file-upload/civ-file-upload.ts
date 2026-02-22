@@ -178,6 +178,10 @@ export class CivFileUpload extends CivFormElement {
     `;
   }
 
+  protected override _syncFormValue(): void {
+    // File upload manages its own FormData via _updateFormData()
+  }
+
   private _onDropzoneClick(): void {
     if (this.disabled) return;
     const input = this.querySelector(`#${this._inputId}`) as HTMLInputElement;

@@ -83,6 +83,10 @@ export class CivCheckboxGroup extends CivFormElement {
     }
   }
 
+  protected override _syncFormValue(): void {
+    this._updateGroupFormValue();
+  }
+
   override formDisabledCallback(disabled: boolean): void {
     this.disabled = disabled;
     this._syncCheckboxDisabled();

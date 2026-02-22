@@ -116,6 +116,10 @@ export class CivToggle extends CivFormElement {
     `;
   }
 
+  protected override _syncFormValue(): void {
+    this.updateFormValue(this.checked ? this.value : null);
+  }
+
   private _onToggle(): void {
     if (this.disabled) return;
     this.checked = !this.checked;

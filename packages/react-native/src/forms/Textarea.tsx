@@ -22,6 +22,8 @@ export interface TextareaProps extends CivFormProps {
   onInput?: (value: string) => void;
 }
 
+const LINE_HEIGHT_PX = 20;
+
 const styles = StyleSheet.create({
   textarea: {
     textAlignVertical: 'top',
@@ -103,7 +105,7 @@ export function Textarea({
         style={[
           formStyles.input,
           styles.textarea,
-          { minHeight: rows * 20 },
+          { minHeight: rows * LINE_HEIGHT_PX },
           error ? formStyles.inputError : null,
           disabled ? formStyles.inputDisabled : null,
           focused ? formStyles.inputFocused : null,

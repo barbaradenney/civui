@@ -8,6 +8,7 @@ let politeRegion: HTMLElement | null = null;
 let assertiveRegion: HTMLElement | null = null;
 
 const QUEUE_DELAY = 150;
+const MAX_QUEUE_SIZE = 10;
 let politeQueue: string[] = [];
 let assertiveQueue: string[] = [];
 let politeTimer: ReturnType<typeof setTimeout> | null = null;
@@ -81,11 +82,13 @@ function processQueue(priority: 'polite' | 'assertive'): void {
 
 export function announce(message: string, priority: 'polite' | 'assertive' = 'polite'): void {
   if (priority === 'assertive') {
+    if (assertiveQueue.length >= MAX_QUEUE_SIZE) assertiveQueue.shift();
     assertiveQueue.push(message);
     if (!assertiveTimer) {
       processQueue('assertive');
     }
   } else {
+    if (politeQueue.length >= MAX_QUEUE_SIZE) politeQueue.shift();
     politeQueue.push(message);
     if (!politeTimer) {
       processQueue('polite');

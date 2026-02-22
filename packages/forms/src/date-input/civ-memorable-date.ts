@@ -204,6 +204,9 @@ export class CivMemorableDate extends CivFormElement {
       this.error = this.invalidDateMessage;
       this.value = '';
       this.updateFormValue('');
+      const detail = { value: '', month: this._month, day: this._day, year: this._year };
+      dispatch(this, 'civ-input', detail);
+      dispatch(this, 'civ-change', detail);
       return;
     }
 

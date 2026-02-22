@@ -4,6 +4,7 @@ export type KeyBinding = {
   ctrlKey?: boolean;
   shiftKey?: boolean;
   altKey?: boolean;
+  metaKey?: boolean;
   preventDefault?: boolean;
 };
 
@@ -15,9 +16,10 @@ export function createKeyboardHandler(bindings: KeyBinding[]): (e: KeyboardEvent
     for (const binding of bindings) {
       if (
         e.key === binding.key &&
-        (!binding.ctrlKey || e.ctrlKey) &&
-        (!binding.shiftKey || e.shiftKey) &&
-        (!binding.altKey || e.altKey)
+        e.ctrlKey === !!binding.ctrlKey &&
+        e.shiftKey === !!binding.shiftKey &&
+        e.altKey === !!binding.altKey &&
+        e.metaKey === !!binding.metaKey
       ) {
         if (binding.preventDefault !== false) {
           e.preventDefault();

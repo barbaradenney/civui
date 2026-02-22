@@ -24,7 +24,8 @@ import { CivFormElement } from '@civui/core';
  * @prop {boolean} required - Whether a date is required
  * @prop {boolean} disabled - Whether the input is disabled
  *
- * @fires civ-change - When the date changes
+ * @fires civ-input - When the date value changes (on input), detail: { value }
+ * @fires civ-change - When the date changes, detail: { value }
  */
 @customElement('civ-date-input')
 export class CivDateInput extends CivFormElement {
@@ -85,6 +86,7 @@ export class CivDateInput extends CivFormElement {
           aria-required="${this.required}"
           aria-describedby="${this._ariaDescribedBy || nothing}"
           aria-invalid="${this.error ? 'true' : 'false'}"
+          @input="${this._handleInput}"
           @change="${this._handleChange}"
         />
       </div>

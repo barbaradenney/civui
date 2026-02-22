@@ -18,8 +18,8 @@ import { CivFormElement } from '@civui/core';
  * @prop {boolean} required - Whether the field is required
  * @prop {boolean} disabled - Whether the field is disabled
  *
- * @fires civ-change - When checked state changes
- * @fires civ-input - When checked state changes (input event)
+ * @fires civ-change - When checked state changes, detail: { checked, value }
+ * @fires civ-input - When checked state changes (input event), detail: { checked, value }
  */
 @customElement('civ-toggle')
 export class CivToggle extends CivFormElement {
@@ -141,6 +141,7 @@ export class CivToggle extends CivFormElement {
   private _onKeydown(e: KeyboardEvent): void {
     if (e.key === ' ') {
       e.preventDefault();
+      this._onToggle();
     }
   }
 

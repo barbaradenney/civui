@@ -32,8 +32,11 @@ export class CivFormGroup extends CivBaseElement {
   private _hintId = this.generateId('hint');
   private _errorId = this.generateId('error');
 
-  override updated(): void {
+  override updated(changed: Map<string, unknown>): void {
     this._wireAriaDescribedBy();
+    if (changed.has('error') && this.error) {
+      this.announce(this.error, 'assertive');
+    }
   }
 
   private _wireAriaDescribedBy(): void {

@@ -19,7 +19,8 @@ import { CivFormElement } from '@civui/core';
  * @prop {boolean} required - Whether a selection is required
  * @prop {boolean} disabled - Whether the control is disabled
  *
- * @fires civ-change - When the selected value changes
+ * @fires civ-input - When the selected value changes (input event), detail: { value }
+ * @fires civ-change - When the selected value changes, detail: { value }
  */
 @customElement('civ-segmented-control')
 export class CivSegmentedControl extends CivFormElement {

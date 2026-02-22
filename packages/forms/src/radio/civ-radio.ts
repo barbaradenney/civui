@@ -17,8 +17,8 @@ import { CivBaseElement } from '@civui/core';
  * @prop {boolean} tile - Tile variant (bordered card style)
  * @prop {boolean} disabled - Whether the radio is disabled
  *
- * @fires civ-change - When selection changes (bubbles to radio-group)
- * @fires civ-input - When selection changes (input event)
+ * @fires civ-change - When selection changes (bubbles to radio-group), detail: { value }
+ * @fires civ-input - When selection changes (input event), detail: { value }
  */
 @customElement('civ-radio')
 export class CivRadio extends CivBaseElement {
@@ -30,6 +30,8 @@ export class CivRadio extends CivBaseElement {
   @property({ type: Boolean, reflect: true }) disabled = false;
   @property({ type: String }) name = '';
   @property({ type: String }) error = '';
+  @property({ type: Boolean, reflect: true }) required = false;
+  @property({ type: Number, attribute: false }) managedTabIndex?: number;
 
   private _inputId = this.generateId('input');
   private _descriptionId = this.generateId('desc');
@@ -80,7 +82,9 @@ export class CivRadio extends CivBaseElement {
             .value="${this.value}"
             .checked="${this.checked}"
             ?disabled="${this.disabled}"
+            tabindex="${this.managedTabIndex ?? nothing}"
             aria-checked="${this.checked ? 'true' : 'false'}"
+            aria-required="${this.required}"
             aria-invalid="${this.error ? 'true' : 'false'}"
             aria-describedby="${this._ariaDescribedBy || nothing}"
             @change="${this._onRadioChange}"

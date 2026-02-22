@@ -17,6 +17,8 @@ export interface TextInputProps extends CivFormProps {
   placeholder?: string;
   /** Maximum character length. */
   maxLength?: number;
+  /** Input mode — maps directly to RN inputMode. */
+  inputMode?: RNTextInputProps['inputMode'];
   /** Additional TextInput props passed through. */
   textInputProps?: Partial<RNTextInputProps>;
   /** Called on input (mirrors web civ-input event). */
@@ -39,6 +41,7 @@ export function TextInput({
   type = 'text',
   placeholder,
   maxLength,
+  inputMode,
   onChange,
   onInput,
   onAnalytics,
@@ -109,6 +112,7 @@ export function TextInput({
         editable={!disabled}
         keyboardType={keyboardType}
         secureTextEntry={secureTextEntry}
+        inputMode={inputMode}
         autoCapitalize={type === 'email' || type === 'url' ? 'none' : 'sentences'}
         accessibilityLabel={buildAccessibilityLabel({ label, hint, error, required })}
         accessibilityState={buildAccessibilityState({ disabled })}

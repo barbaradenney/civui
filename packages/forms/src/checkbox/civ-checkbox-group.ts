@@ -21,8 +21,8 @@ import { CivFormElement } from '@civui/core';
  * @prop {boolean} disabled - Whether the group is disabled
  * @prop {'vertical' | 'horizontal'} orientation - Layout direction
  *
- * @fires civ-input - When the set of checked values changes (before civ-change)
- * @fires civ-change - When the set of checked values changes
+ * @fires civ-input - When the set of checked values changes (before civ-change), detail: { values }
+ * @fires civ-change - When the set of checked values changes, detail: { values }
  */
 @customElement('civ-checkbox-group')
 export class CivCheckboxGroup extends CivFormElement {

@@ -19,6 +19,8 @@ export interface SelectProps extends CivFormProps {
   options: SelectOption[];
   /** Placeholder text shown when no value is selected. */
   placeholder?: string;
+  /** Label for the modal dismiss button. */
+  doneLabel?: string;
   /** Called on input (mirrors web civ-input event). */
   onInput?: (value: string) => void;
 }
@@ -109,6 +111,7 @@ export function Select({
   disabled,
   options,
   placeholder = 'Select an option',
+  doneLabel = 'Done',
   onChange,
   onInput,
   onAnalytics,
@@ -174,7 +177,7 @@ export function Select({
             <View style={styles.modalHeader}>
               <Text style={styles.modalTitle}>{label}</Text>
               <TouchableOpacity onPress={() => setOpen(false)}>
-                <Text style={styles.doneButton}>Done</Text>
+                <Text style={styles.doneButton}>{doneLabel}</Text>
               </TouchableOpacity>
             </View>
             <FlatList

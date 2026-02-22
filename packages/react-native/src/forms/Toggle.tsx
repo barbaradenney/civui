@@ -31,9 +31,9 @@ export interface ToggleProps {
   /** The value submitted with form data. Defaults to "on". */
   value?: string;
   /** Called when checked state changes. */
-  onChange?: (checked: boolean) => void;
+  onChange?: (checked: boolean, value: string) => void;
   /** Called on input (mirrors web civ-input event). */
-  onInput?: (checked: boolean) => void;
+  onInput?: (checked: boolean, value: string) => void;
   /** Analytics event handler. */
   onAnalytics?: AnalyticsHandler;
 }
@@ -106,7 +106,7 @@ export function Toggle({
   required,
   disabled,
   // Accepted for API parity with web civ-toggle; consumed by useForm, not rendered.
-  value: _value = 'on',
+  value = 'on',
   onChange,
   onInput,
   onAnalytics,
@@ -117,11 +117,11 @@ export function Toggle({
   const handlePress = useCallback(() => {
     if (!disabled) {
       const next = !checked;
-      onInput?.(next);
-      onChange?.(next);
+      onInput?.(next, value);
+      onChange?.(next, value);
       trackInteraction('Toggle', 'change', { fieldName: name, label });
     }
-  }, [checked, disabled, onChange, onInput, trackInteraction, name, label]);
+  }, [checked, disabled, onChange, onInput, value, trackInteraction, name, label]);
 
   return (
     <View style={formStyles.container} testID={`civ-toggle-${name}`}>

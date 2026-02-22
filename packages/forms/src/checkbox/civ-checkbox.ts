@@ -20,8 +20,8 @@ import { CivFormElement } from '@civui/core';
  * @prop {boolean} required - Whether the field is required
  * @prop {boolean} disabled - Whether the field is disabled
  *
- * @fires civ-change - When checked state changes
- * @fires civ-input - When checked state changes (input event)
+ * @fires civ-change - When checked state changes, detail: { checked, value }
+ * @fires civ-input - When checked state changes (input event), detail: { checked, value }
  */
 @customElement('civ-checkbox')
 export class CivCheckbox extends CivFormElement {

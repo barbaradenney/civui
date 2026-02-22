@@ -1,11 +1,11 @@
+/* Import design tokens as CSS custom properties */
+@import '@civui/tokens/css';
+
 @layer civ {
   @tailwind base;
   @tailwind components;
   @tailwind utilities;
 }
-
-/* Import design tokens as CSS custom properties */
-@import '@civui/tokens/css';
 
 /* Focus-visible fallback for browsers without :focus-visible support */
 @supports not selector(:focus-visible) {

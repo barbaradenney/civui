@@ -148,8 +148,8 @@ export class CivForm extends CivBaseElement {
 
     for (const el of formElements) {
       const formEl = el as any;
-      if (formEl.name && formEl.value) {
-        data[formEl.name] = formEl.value;
+      if (formEl.name) {
+        data[formEl.name] = formEl.value ?? '';
       }
     }
 

@@ -471,6 +471,7 @@ export class CivDatePicker extends CivFormElement {
       this.updateFormValue(iso);
       dispatch(this, 'civ-change', { value: iso });
       this.sendAnalytics('change');
+      this.announce(interpolate(this.dateSelectedMessage, { date: formatDateLong(parsed, this.locale) }));
     }
     // Keep invalid text in the input — don't clear it
   }

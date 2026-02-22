@@ -23,6 +23,7 @@ import { CivFormElement, debounce, dispatch } from '@civui/core';
  *
  * @fires civ-input - When value changes (on input), detail: { value }
  * @fires civ-change - When value changes (on change/blur), detail: { value }
+ * @fires civ-reset - When the form is reset
  */
 @customElement('civ-textarea')
 export class CivTextarea extends CivFormElement {

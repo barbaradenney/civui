@@ -158,7 +158,7 @@ export function Select({
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
         disabled={disabled}
-        accessibilityRole="combobox"
+        accessibilityRole="button"
         accessibilityLabel={buildAccessibilityLabel({ label, hint, error, required })}
         accessibilityState={buildAccessibilityState({ disabled, expanded: open })}
         testID={`civ-select-${name}-trigger`}

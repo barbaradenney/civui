@@ -47,6 +47,7 @@ export class CivFieldset extends CivBaseElement {
         class="civ-border-0 civ-p-0 civ-m-0 civ-mb-4"
         aria-describedby="${describedBy || nothing}"
         aria-invalid="${this.error ? 'true' : 'false'}"
+        aria-required="${this.required}"
         ?disabled="${this.disabled}"
       >
         ${this.legend

@@ -41,6 +41,7 @@ const WIDTH_CLASSES: Record<TextInputWidth, string> = {
  *
  * @fires civ-input - When value changes (on input), detail: { value }
  * @fires civ-change - When value changes (on change/blur), detail: { value }
+ * @fires civ-reset - When the form is reset
  */
 @customElement('civ-text-input')
 export class CivTextInput extends CivFormElement {

@@ -116,6 +116,7 @@ export class CivFileUpload extends CivFormElement {
           @click="${this._onDropzoneClick}"
           role="button"
           tabindex="${this.disabled ? '-1' : '0'}"
+          aria-label="${this.label}"
           aria-required="${this.required}"
           aria-invalid="${this.error ? 'true' : 'false'}"
           aria-describedby="${this._ariaDescribedBy || nothing}"

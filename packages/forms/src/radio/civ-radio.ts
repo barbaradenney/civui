@@ -82,6 +82,7 @@ export class CivRadio extends CivBaseElement {
             .value="${this.value}"
             .checked="${this.checked}"
             ?disabled="${this.disabled}"
+            ?required="${this.required}"
             tabindex="${this.managedTabIndex ?? nothing}"
             aria-checked="${this.checked ? 'true' : 'false'}"
             aria-required="${this.required}"

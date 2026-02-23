@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivFormElement, dispatch } from '@civui/core';
+import { CivFormElement, dispatch, renderHint, renderError } from '@civui/core';
 
 /**
  * CivUI Toggle Switch
@@ -79,12 +79,8 @@ export class CivToggle extends CivFormElement {
 
     return html`
       <div class="civ-mb-2">
-        ${this.hint
-          ? html`<span class="civ-block civ-mb-1 civ-text-sm civ-text-base" id="${this._hintId}">${this.hint}</span>`
-          : nothing}
-        ${this.error
-          ? html`<span class="civ-block civ-mb-1 civ-text-sm civ-text-error civ-font-bold" id="${this._errorId}" role="alert">${this.error}</span>`
-          : nothing}
+        ${renderHint(this._hintId, this.hint)}
+        ${renderError(this._errorId, this.error)}
         <div class="civ-flex civ-items-center civ-gap-3">
           <button
             type="button"

@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivFormElement, dispatch, getMonthNames, interpolate, parseISODate } from '@civui/core';
+import { CivFormElement, dispatch, getMonthNames, interpolate, parseISODate, renderLegend, renderHint, renderError } from '@civui/core';
 
 // Import child components
 import '../select/civ-select.js';
@@ -59,6 +59,13 @@ export class CivMemorableDate extends CivFormElement {
     this.removeEventListener('civ-input', this._boundFieldChange as EventListener);
   }
 
+  protected override willUpdate(changed: Map<string, unknown>): void {
+    super.willUpdate(changed);
+    if (changed.has('legend')) {
+      this.label = this.legend;
+    }
+  }
+
   override updated(changed: Map<string, unknown>): void {
     super.updated(changed);
     if (changed.has('value') && !changed.has('_month')) {
@@ -100,40 +107,31 @@ export class CivMemorableDate extends CivFormElement {
     return this._cachedMonthOptions;
   }
 
-  override render() {
-    const describedBy = [
-      this.hint ? this._hintId : '',
-      this.error ? this._errorId : '',
-    ]
-      .filter(Boolean)
-      .join(' ');
+  override formDisabledCallback(disabled: boolean): void {
+    this.disabled = disabled;
+    this._syncChildDisabled();
+  }
 
+  private _syncChildDisabled(): void {
+    if (!this.disabled) return;
+    const select = this.querySelector('civ-select') as HTMLElement & { disabled: boolean } | null;
+    if (select) select.disabled = true;
+    (this.querySelectorAll('civ-text-input') as NodeListOf<HTMLElement & { disabled: boolean }>).forEach((input) => {
+      input.disabled = true;
+    });
+  }
+
+  override render() {
     return html`
       <fieldset
         class="civ-border-0 civ-p-0 civ-m-0 civ-mb-4"
-        aria-describedby="${describedBy || nothing}"
+        aria-describedby="${this._ariaDescribedBy || nothing}"
         aria-invalid="${this.error ? 'true' : 'false'}"
         aria-required="${this.required}"
       >
-        ${this.legend
-          ? html`
-              <legend
-                class="civ-block civ-mb-1 civ-text-base-darkest civ-font-bold civ-text-base"
-                id="${this._legendId}"
-              >
-                ${this.legend}
-                ${this.required
-                  ? html`<abbr class="civ-text-error civ-no-underline" title="required">*</abbr>`
-                  : nothing}
-              </legend>
-            `
-          : nothing}
-        ${this.hint
-          ? html`<span class="civ-block civ-mb-1 civ-text-sm civ-text-base" id="${this._hintId}">${this.hint}</span>`
-          : nothing}
-        ${this.error
-          ? html`<span class="civ-block civ-mb-2 civ-text-sm civ-text-error civ-font-bold" id="${this._errorId}" role="alert">${this.error}</span>`
-          : nothing}
+        ${renderLegend({ legend: this.legend, required: this.required, legendId: this._legendId })}
+        ${renderHint(this._hintId, this.hint, true)}
+        ${renderError(this._errorId, this.error, true)}
         <div class="civ-flex civ-gap-4 civ-items-end" data-civ-memorable-date>
           <div class="civ-w-40">
             <civ-select

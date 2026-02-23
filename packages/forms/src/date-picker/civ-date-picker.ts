@@ -21,6 +21,10 @@ import {
   clampDate,
   dispatch,
   interpolate,
+  renderLabel,
+  renderHint,
+  renderError,
+  inputClasses,
   type CalendarDay,
   type DateConstraints,
 } from '@civui/core';
@@ -195,23 +199,10 @@ export class CivDatePicker extends CivFormElement {
   }
 
   override render() {
-    const inputClasses = [
-      'civ-block',
-      'civ-w-full',
-      'civ-border',
-      'civ-rounded-l',
-      'civ-px-2',
-      'civ-py-1.5',
-      'civ-text-base',
-      'civ-font-sans',
-      'civ-text-base-darkest',
-      'civ-bg-white',
-      this.error ? 'civ-border-error civ-border-l-4' : 'civ-border-base-light',
-      this.disabled ? 'civ-opacity-50 civ-cursor-not-allowed civ-bg-base-lightest' : '',
-      'focus-visible:civ-focus-ring',
-    ]
-      .filter(Boolean)
-      .join(' ');
+    const classes = inputClasses({
+      error: this.error, disabled: this.disabled,
+      rounded: 'civ-rounded-l',
+    });
 
     const selectedDate = this.value ? parseISODate(this.value) : null;
     const buttonLabel = selectedDate
@@ -220,28 +211,12 @@ export class CivDatePicker extends CivFormElement {
 
     return html`
       <div class="civ-mb-4 civ-relative">
-        ${this.label
-          ? html`
-              <label
-                class="civ-block civ-mb-1 civ-text-base-darkest civ-font-bold civ-text-base"
-                for="${this._inputId}"
-              >
-                ${this.label}
-                ${this.required
-                  ? html`<abbr class="civ-text-error civ-no-underline" title="required">*</abbr>`
-                  : nothing}
-              </label>
-            `
-          : nothing}
-        ${this.hint
-          ? html`<span class="civ-block civ-mb-1 civ-text-sm civ-text-base" id="${this._hintId}">${this.hint}</span>`
-          : nothing}
-        ${this.error
-          ? html`<span class="civ-block civ-mb-1 civ-text-sm civ-text-error civ-font-bold" id="${this._errorId}" role="alert">${this.error}</span>`
-          : nothing}
+        ${renderLabel({ label: this.label, inputId: this._inputId, required: this.required })}
+        ${renderHint(this._hintId, this.hint)}
+        ${renderError(this._errorId, this.error)}
         <div class="civ-flex civ-items-center">
           <input
-            class="${inputClasses}"
+            class="${classes}"
             id="${this._inputId}"
             type="text"
             .value="${this._inputValue}"

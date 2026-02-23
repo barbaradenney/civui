@@ -5,7 +5,7 @@ export { CivFormElement } from './base/civ-form-element.js';
 // A11y utilities
 export { announce, cleanupLiveRegions } from './a11y/live-region.js';
 export { getFocusableElements, trapFocus, focusFirst } from './a11y/focus-manager.js';
-export { createKeyboardHandler, type KeyBinding } from './a11y/keyboard-handler.js';
+export { createKeyboardHandler, resolveGroupNavIndex, type KeyBinding } from './a11y/keyboard-handler.js';
 
 // Utilities
 export { generateId } from './utils/id-generator.js';
@@ -44,6 +44,15 @@ export {
   isMonthDisabled,
   type DateConstraints,
 } from './date/date-constraints.js';
+
+// Template helpers
+export {
+  renderLabel,
+  renderLegend,
+  renderHint,
+  renderError,
+  inputClasses,
+} from './templates/form-templates.js';
 
 // Analytics
 export { ANALYTICS_EVENT_NAME } from './analytics/index.js';

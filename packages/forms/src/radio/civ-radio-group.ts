@@ -1,6 +1,7 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivFormElement, dispatch } from '@civui/core';
+import { CivFormElement, dispatch, renderLegend, renderHint, renderError, resolveGroupNavIndex } from '@civui/core';
+import type { CivRadio } from './civ-radio.js';
 
 /**
  * CivUI Radio Group
@@ -50,6 +51,13 @@ export class CivRadioGroup extends CivFormElement {
     this.removeEventListener('keydown', this._boundOnKeydown as EventListener);
   }
 
+  protected override willUpdate(changed: Map<string, unknown>): void {
+    super.willUpdate(changed);
+    if (changed.has('legend')) {
+      this.label = this.legend;
+    }
+  }
+
   override firstUpdated(): void {
     this._syncRadioNames();
     this._syncRadioChecked();
@@ -84,13 +92,6 @@ export class CivRadioGroup extends CivFormElement {
   }
 
   override render() {
-    const describedBy = [
-      this.hint ? this._hintId : '',
-      this.error ? this._errorId : '',
-    ]
-      .filter(Boolean)
-      .join(' ');
-
     const slotClasses =
       this.orientation === 'horizontal'
         ? 'civ-flex civ-flex-row civ-flex-wrap civ-gap-4'
@@ -101,27 +102,14 @@ export class CivRadioGroup extends CivFormElement {
         class="civ-border-0 civ-p-0 civ-m-0 civ-mb-4"
         role="radiogroup"
         aria-orientation="${this.orientation}"
-        aria-describedby="${describedBy || nothing}"
+        aria-describedby="${this._ariaDescribedBy || nothing}"
         aria-invalid="${this.error ? 'true' : 'false'}"
         aria-required="${this.required}"
         ?disabled="${this.disabled}"
       >
-        ${this.legend
-          ? html`
-              <legend class="civ-block civ-mb-1 civ-text-base-darkest civ-font-bold civ-text-base">
-                ${this.legend}
-                ${this.required
-                  ? html`<abbr class="civ-text-error civ-no-underline" title="required">*</abbr>`
-                  : nothing}
-              </legend>
-            `
-          : nothing}
-        ${this.hint
-          ? html`<span class="civ-block civ-mb-2 civ-text-sm civ-text-base" id="${this._hintId}">${this.hint}</span>`
-          : nothing}
-        ${this.error
-          ? html`<span class="civ-block civ-mb-2 civ-text-sm civ-text-error civ-font-bold" id="${this._errorId}" role="alert">${this.error}</span>`
-          : nothing}
+        ${renderLegend({ legend: this.legend, required: this.required })}
+        ${renderHint(this._hintId, this.hint, true)}
+        ${renderError(this._errorId, this.error, true)}
         <div class="${slotClasses}">
           <slot></slot>
         </div>
@@ -129,58 +117,58 @@ export class CivRadioGroup extends CivFormElement {
     `;
   }
 
-  private _getRadios(): Element[] {
-    return Array.from(this.querySelectorAll('civ-radio'));
+  private _getRadios(): CivRadio[] {
+    return Array.from(this.querySelectorAll('civ-radio')) as CivRadio[];
   }
 
-  private _getEnabledRadios(): Element[] {
-    return this._getRadios().filter((r: any) => !r.disabled);
+  private _getEnabledRadios(): CivRadio[] {
+    return this._getRadios().filter((r) => !r.disabled);
   }
 
   private _syncRadioNames(): void {
     if (!this.name) return;
-    this._getRadios().forEach((radio: any) => {
+    this._getRadios().forEach((radio) => {
       radio.name = this.name;
       radio.disableAnalytics = true;
     });
   }
 
   private _syncRadioChecked(): void {
-    this._getRadios().forEach((radio: any) => {
+    this._getRadios().forEach((radio) => {
       radio.checked = radio.value === this.value;
     });
   }
 
   private _syncRadioError(): void {
     const hasError = !!this.error;
-    this._getRadios().forEach((radio: any) => {
+    this._getRadios().forEach((radio) => {
       radio.error = hasError ? this.error : '';
     });
   }
 
   private _syncRadioDisabled(): void {
     if (!this.disabled) return;
-    this._getRadios().forEach((radio: any) => {
+    this._getRadios().forEach((radio) => {
       radio.disabled = true;
     });
   }
 
   private _syncRadioRequired(): void {
-    this._getRadios().forEach((radio: any) => {
+    this._getRadios().forEach((radio) => {
       radio.required = this.required;
     });
   }
 
   private _syncTabindex(): void {
     const radios = this._getRadios();
-    const checkedRadio = radios.find((r: any) => r.checked);
-    const enabledRadios = radios.filter((r: any) => !r.disabled);
+    const checkedRadio = radios.find((r) => r.checked);
+    const enabledRadios = radios.filter((r) => !r.disabled);
     const focusTarget =
-      checkedRadio && !(checkedRadio as any).disabled
+      checkedRadio && !checkedRadio.disabled
         ? checkedRadio
         : enabledRadios[0];
 
-    radios.forEach((radio: any) => {
+    radios.forEach((radio) => {
       radio.managedTabIndex = radio === focusTarget ? 0 : -1;
     });
   }
@@ -212,33 +200,12 @@ export class CivRadioGroup extends CivFormElement {
     const radios = this._getEnabledRadios();
     if (radios.length === 0) return;
 
-    const currentIndex = radios.findIndex((r: any) => r.checked);
-
-    let nextIndex: number | undefined;
-
-    switch (e.key) {
-      case 'ArrowRight':
-      case 'ArrowDown':
-        e.preventDefault();
-        nextIndex = currentIndex < radios.length - 1 ? currentIndex + 1 : 0;
-        break;
-      case 'ArrowLeft':
-      case 'ArrowUp':
-        e.preventDefault();
-        nextIndex = currentIndex > 0 ? currentIndex - 1 : radios.length - 1;
-        break;
-      case 'Home':
-        e.preventDefault();
-        nextIndex = 0;
-        break;
-      case 'End':
-        e.preventDefault();
-        nextIndex = radios.length - 1;
-        break;
-    }
+    const currentIndex = radios.findIndex((r) => r.checked);
+    const nextIndex = resolveGroupNavIndex(e.key, currentIndex, radios.length);
 
     if (nextIndex !== undefined) {
-      const radio = radios[nextIndex] as any;
+      e.preventDefault();
+      const radio = radios[nextIndex];
       radio.checked = true;
       this.value = radio.value;
       this.updateFormValue(this.value);

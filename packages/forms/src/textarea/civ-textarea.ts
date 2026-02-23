@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivFormElement, debounce, dispatch } from '@civui/core';
+import { CivFormElement, debounce, dispatch, renderLabel, renderHint, renderError, inputClasses } from '@civui/core';
 
 /**
  * CivUI Textarea
@@ -59,51 +59,21 @@ export class CivTextarea extends CivFormElement {
   }
 
   override render() {
-    const textareaClasses = [
-      'civ-block',
-      'civ-w-full',
-      'civ-border',
-      'civ-rounded',
-      'civ-px-2',
-      'civ-py-1.5',
-      'civ-text-base',
-      'civ-font-sans',
-      'civ-text-base-darkest',
-      'civ-bg-white',
-      'civ-resize-y',
-      this.error ? 'civ-border-error civ-border-l-4' : 'civ-border-base-light',
-      this.disabled ? 'civ-opacity-50 civ-cursor-not-allowed civ-bg-base-lightest' : '',
-      'focus-visible:civ-focus-ring',
-    ]
-      .filter(Boolean)
-      .join(' ');
+    const classes = inputClasses({
+      error: this.error, disabled: this.disabled,
+      extra: ['civ-resize-y'],
+    });
 
     const showCharCount = this.maxlength != null && this.maxlength > 0;
     const remaining = showCharCount ? this.maxlength! - this._charCount : 0;
 
     return html`
       <div class="civ-mb-4">
-        ${this.label
-          ? html`
-              <label
-                class="civ-block civ-mb-1 civ-text-base-darkest civ-font-bold civ-text-base"
-                for="${this._inputId}"
-              >
-                ${this.label}
-                ${this.required
-                  ? html`<abbr class="civ-text-error civ-no-underline" title="required">*</abbr>`
-                  : nothing}
-              </label>
-            `
-          : nothing}
-        ${this.hint
-          ? html`<span class="civ-block civ-mb-1 civ-text-sm civ-text-base" id="${this._hintId}">${this.hint}</span>`
-          : nothing}
-        ${this.error
-          ? html`<span class="civ-block civ-mb-1 civ-text-sm civ-text-error civ-font-bold" id="${this._errorId}" role="alert">${this.error}</span>`
-          : nothing}
+        ${renderLabel({ label: this.label, inputId: this._inputId, required: this.required })}
+        ${renderHint(this._hintId, this.hint)}
+        ${renderError(this._errorId, this.error)}
         <textarea
-          class="${textareaClasses}"
+          class="${classes}"
           id="${this._inputId}"
           name="${this.name}"
           rows="${this.rows}"

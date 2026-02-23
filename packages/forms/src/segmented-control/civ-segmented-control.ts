@@ -1,6 +1,7 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivFormElement, dispatch } from '@civui/core';
+import { CivFormElement, dispatch, renderLegend, renderHint, renderError, resolveGroupNavIndex } from '@civui/core';
+import type { CivSegment } from './civ-segment.js';
 
 /**
  * CivUI Segmented Control
@@ -75,30 +76,19 @@ export class CivSegmentedControl extends CivFormElement {
   }
 
   override render() {
-    const describedBy = [
-      this.hint ? this._hintId : '',
-      this.error ? this._errorId : '',
-    ]
-      .filter(Boolean)
-      .join(' ');
-
     return html`
       <fieldset
         class="civ-border-0 civ-p-0 civ-m-0 civ-mb-4"
         role="radiogroup"
         aria-orientation="horizontal"
-        aria-describedby="${describedBy || nothing}"
+        aria-describedby="${this._ariaDescribedBy || nothing}"
         aria-invalid="${this.error ? 'true' : 'false'}"
         aria-required="${this.required}"
         ?disabled="${this.disabled}"
       >
-        <legend class="civ-sr-only">${this.legend}</legend>
-        ${this.hint
-          ? html`<span class="civ-block civ-mb-2 civ-text-sm civ-text-base" id="${this._hintId}">${this.hint}</span>`
-          : nothing}
-        ${this.error
-          ? html`<span class="civ-block civ-mb-2 civ-text-sm civ-text-error civ-font-bold" id="${this._errorId}" role="alert">${this.error}</span>`
-          : nothing}
+        ${renderLegend({ legend: this.legend, required: this.required, srOnly: true })}
+        ${renderHint(this._hintId, this.hint, true)}
+        ${renderError(this._errorId, this.error, true)}
         <div class="civ-inline-flex">
           <slot></slot>
         </div>
@@ -106,23 +96,23 @@ export class CivSegmentedControl extends CivFormElement {
     `;
   }
 
-  private _getSegments(): Element[] {
-    return Array.from(this.querySelectorAll('civ-segment'));
+  private _getSegments(): CivSegment[] {
+    return Array.from(this.querySelectorAll('civ-segment')) as CivSegment[];
   }
 
-  private _getEnabledSegments(): Element[] {
-    return this._getSegments().filter((s: any) => !s.disabled);
+  private _getEnabledSegments(): CivSegment[] {
+    return this._getSegments().filter((s) => !s.disabled);
   }
 
   private _syncSegmentSelected(): void {
-    this._getSegments().forEach((segment: any) => {
+    this._getSegments().forEach((segment) => {
       segment.selected = segment.value === this.value;
     });
   }
 
   private _syncSegmentDisabled(): void {
     if (!this.disabled) return;
-    this._getSegments().forEach((segment: any) => {
+    this._getSegments().forEach((segment) => {
       segment.disabled = true;
     });
   }
@@ -170,33 +160,12 @@ export class CivSegmentedControl extends CivFormElement {
     const segments = this._getEnabledSegments();
     if (segments.length === 0) return;
 
-    const currentIndex = segments.findIndex((s: any) => s.selected);
-
-    let nextIndex: number | undefined;
-
-    switch (e.key) {
-      case 'ArrowRight':
-      case 'ArrowDown':
-        e.preventDefault();
-        nextIndex = currentIndex < segments.length - 1 ? currentIndex + 1 : 0;
-        break;
-      case 'ArrowLeft':
-      case 'ArrowUp':
-        e.preventDefault();
-        nextIndex = currentIndex > 0 ? currentIndex - 1 : segments.length - 1;
-        break;
-      case 'Home':
-        e.preventDefault();
-        nextIndex = 0;
-        break;
-      case 'End':
-        e.preventDefault();
-        nextIndex = segments.length - 1;
-        break;
-    }
+    const currentIndex = segments.findIndex((s) => s.selected);
+    const nextIndex = resolveGroupNavIndex(e.key, currentIndex, segments.length);
 
     if (nextIndex !== undefined) {
-      const segment = segments[nextIndex] as any;
+      e.preventDefault();
+      const segment = segments[nextIndex];
       segment.selected = true;
       this.value = segment.value;
       this.updateFormValue(this.value);

@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivFormElement, dispatch } from '@civui/core';
+import { CivFormElement, dispatch, renderLabel, renderHint, renderError, inputClasses } from '@civui/core';
 
 export interface SelectOption {
   value: string;
@@ -48,48 +48,18 @@ export class CivSelect extends CivFormElement {
   }
 
   override render() {
-    const selectClasses = [
-      'civ-block',
-      'civ-w-full',
-      'civ-border',
-      'civ-rounded',
-      'civ-px-2',
-      'civ-py-1.5',
-      'civ-text-base',
-      'civ-font-sans',
-      'civ-text-base-darkest',
-      'civ-bg-white',
-      'civ-appearance-auto',
-      this.error ? 'civ-border-error civ-border-l-4' : 'civ-border-base-light',
-      this.disabled ? 'civ-opacity-50 civ-cursor-not-allowed civ-bg-base-lightest' : '',
-      'focus-visible:civ-focus-ring',
-    ]
-      .filter(Boolean)
-      .join(' ');
+    const classes = inputClasses({
+      error: this.error, disabled: this.disabled,
+      extra: ['civ-appearance-auto'],
+    });
 
     return html`
       <div class="civ-mb-4">
-        ${this.label
-          ? html`
-              <label
-                class="civ-block civ-mb-1 civ-text-base-darkest civ-font-bold civ-text-base"
-                for="${this._inputId}"
-              >
-                ${this.label}
-                ${this.required
-                  ? html`<abbr class="civ-text-error civ-no-underline" title="required">*</abbr>`
-                  : nothing}
-              </label>
-            `
-          : nothing}
-        ${this.hint
-          ? html`<span class="civ-block civ-mb-1 civ-text-sm civ-text-base" id="${this._hintId}">${this.hint}</span>`
-          : nothing}
-        ${this.error
-          ? html`<span class="civ-block civ-mb-1 civ-text-sm civ-text-error civ-font-bold" id="${this._errorId}" role="alert">${this.error}</span>`
-          : nothing}
+        ${renderLabel({ label: this.label, inputId: this._inputId, required: this.required })}
+        ${renderHint(this._hintId, this.hint)}
+        ${renderError(this._errorId, this.error)}
         <select
-          class="${selectClasses}"
+          class="${classes}"
           id="${this._inputId}"
           name="${this.name}"
           .value="${this.value}"

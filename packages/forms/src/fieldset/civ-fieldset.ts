@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBaseElement } from '@civui/core';
+import { CivBaseElement, renderLegend, renderHint, renderError } from '@civui/core';
 
 /**
  * CivUI Fieldset
@@ -50,22 +50,9 @@ export class CivFieldset extends CivBaseElement {
         aria-required="${this.required}"
         ?disabled="${this.disabled}"
       >
-        ${this.legend
-          ? html`
-              <legend class="civ-block civ-mb-1 civ-text-base-darkest civ-font-bold civ-text-lg">
-                ${this.legend}
-                ${this.required
-                  ? html`<abbr class="civ-text-error civ-no-underline" title="required">*</abbr>`
-                  : nothing}
-              </legend>
-            `
-          : nothing}
-        ${this.hint
-          ? html`<span class="civ-block civ-mb-2 civ-text-sm civ-text-base" id="${this._hintId}">${this.hint}</span>`
-          : nothing}
-        ${this.error
-          ? html`<span class="civ-block civ-mb-2 civ-text-sm civ-text-error civ-font-bold" id="${this._errorId}" role="alert">${this.error}</span>`
-          : nothing}
+        ${renderLegend({ legend: this.legend, required: this.required, textSizeClass: 'civ-text-lg' })}
+        ${renderHint(this._hintId, this.hint, true)}
+        ${renderError(this._errorId, this.error, true)}
         <slot></slot>
       </fieldset>
     `;

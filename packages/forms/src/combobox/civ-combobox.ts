@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivFormElement, dispatch } from '@civui/core';
+import { CivFormElement, dispatch, renderLabel, renderHint, renderError, inputClasses } from '@civui/core';
 
 export interface ComboboxOption {
   value: string;
@@ -67,50 +67,17 @@ export class CivCombobox extends CivFormElement {
         ? `${this._listboxId}-option-${this._activeIndex}`
         : '';
 
-    const inputClasses = [
-      'civ-block',
-      'civ-w-full',
-      'civ-border',
-      'civ-rounded',
-      'civ-px-2',
-      'civ-py-1.5',
-      'civ-text-base',
-      'civ-font-sans',
-      'civ-text-base-darkest',
-      'civ-bg-white',
-      this.error ? 'civ-border-error civ-border-l-4' : 'civ-border-base-light',
-      this.disabled ? 'civ-opacity-50 civ-cursor-not-allowed civ-bg-base-lightest' : '',
-      'focus-visible:civ-focus-ring',
-    ]
-      .filter(Boolean)
-      .join(' ');
+    const classes = inputClasses({ error: this.error, disabled: this.disabled });
 
     return html`
       <div class="civ-mb-4 civ-relative">
-        ${this.label
-          ? html`
-              <label
-                id="${this._labelId}"
-                class="civ-block civ-mb-1 civ-text-base-darkest civ-font-bold civ-text-base"
-                for="${this._inputId}"
-              >
-                ${this.label}
-                ${this.required
-                  ? html`<abbr class="civ-text-error civ-no-underline" title="required">*</abbr>`
-                  : nothing}
-              </label>
-            `
-          : nothing}
-        ${this.hint
-          ? html`<span class="civ-block civ-mb-1 civ-text-sm civ-text-base" id="${this._hintId}">${this.hint}</span>`
-          : nothing}
-        ${this.error
-          ? html`<span class="civ-block civ-mb-1 civ-text-sm civ-text-error civ-font-bold" id="${this._errorId}" role="alert">${this.error}</span>`
-          : nothing}
+        ${renderLabel({ label: this.label, inputId: this._inputId, required: this.required, labelId: this._labelId })}
+        ${renderHint(this._hintId, this.hint)}
+        ${renderError(this._errorId, this.error)}
 
         <div class="civ-relative" data-civ-combobox>
           <input
-            class="${inputClasses}"
+            class="${classes}"
             id="${this._inputId}"
             type="text"
             role="combobox"

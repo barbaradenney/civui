@@ -1,6 +1,7 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivFormElement, dispatch } from '@civui/core';
+import { CivFormElement, dispatch, renderLegend, renderHint, renderError } from '@civui/core';
+import type { CivCheckbox } from './civ-checkbox.js';
 
 /**
  * CivUI Checkbox Group
@@ -62,6 +63,7 @@ export class CivCheckboxGroup extends CivFormElement {
   }
 
   protected override willUpdate(changed: Map<string, unknown>): void {
+    super.willUpdate(changed);
     if (changed.has('legend')) {
       this.label = this.legend;
     }
@@ -93,13 +95,6 @@ export class CivCheckboxGroup extends CivFormElement {
   }
 
   override render() {
-    const describedBy = [
-      this.hint ? this._hintId : '',
-      this.error ? this._errorId : '',
-    ]
-      .filter(Boolean)
-      .join(' ');
-
     const slotClasses =
       this.orientation === 'horizontal'
         ? 'civ-flex civ-flex-row civ-flex-wrap civ-gap-4'
@@ -108,27 +103,14 @@ export class CivCheckboxGroup extends CivFormElement {
     return html`
       <fieldset
         class="civ-border-0 civ-p-0 civ-m-0 civ-mb-4"
-        aria-describedby="${describedBy || nothing}"
+        aria-describedby="${this._ariaDescribedBy || nothing}"
         aria-invalid="${this.error ? 'true' : 'false'}"
         aria-required="${this.required}"
         ?disabled="${this.disabled}"
       >
-        ${this.legend
-          ? html`
-              <legend class="civ-block civ-mb-1 civ-text-base-darkest civ-font-bold civ-text-base">
-                ${this.legend}
-                ${this.required
-                  ? html`<abbr class="civ-text-error civ-no-underline" title="required">*</abbr>`
-                  : nothing}
-              </legend>
-            `
-          : nothing}
-        ${this.hint
-          ? html`<span class="civ-block civ-mb-2 civ-text-sm civ-text-base" id="${this._hintId}">${this.hint}</span>`
-          : nothing}
-        ${this.error
-          ? html`<span class="civ-block civ-mb-2 civ-text-sm civ-text-error civ-font-bold" id="${this._errorId}" role="alert">${this.error}</span>`
-          : nothing}
+        ${renderLegend({ legend: this.legend, required: this.required })}
+        ${renderHint(this._hintId, this.hint, true)}
+        ${renderError(this._errorId, this.error, true)}
         <div class="${slotClasses}">
           <slot></slot>
         </div>
@@ -143,8 +125,8 @@ export class CivCheckboxGroup extends CivFormElement {
     return this._parseValue(this.value);
   }
 
-  private _getCheckboxes(): NodeListOf<Element> {
-    return this.querySelectorAll('civ-checkbox');
+  private _getCheckboxes(): CivCheckbox[] {
+    return Array.from(this.querySelectorAll('civ-checkbox')) as CivCheckbox[];
   }
 
   /**
@@ -163,7 +145,7 @@ export class CivCheckboxGroup extends CivFormElement {
 
   private _syncCheckboxNames(): void {
     if (!this.name) return;
-    this._getCheckboxes().forEach((cb: any) => {
+    this._getCheckboxes().forEach((cb) => {
       cb.name = this.name;
       cb.disableAnalytics = true;
     });
@@ -171,27 +153,27 @@ export class CivCheckboxGroup extends CivFormElement {
 
   private _syncCheckboxDisabled(): void {
     if (!this.disabled) return;
-    this._getCheckboxes().forEach((cb: any) => {
+    this._getCheckboxes().forEach((cb) => {
       cb.disabled = true;
     });
   }
 
   private _syncCheckboxTile(): void {
-    this._getCheckboxes().forEach((cb: any) => {
+    this._getCheckboxes().forEach((cb) => {
       cb.tile = this.tile;
     });
   }
 
   private _syncCheckboxChecked(): void {
     const selected = this._parseValue(this.value);
-    this._getCheckboxes().forEach((cb: any) => {
+    this._getCheckboxes().forEach((cb) => {
       cb.checked = selected.includes(cb.value);
     });
   }
 
   private _readCheckedFromChildren(): void {
     const values: string[] = [];
-    this._getCheckboxes().forEach((cb: any) => {
+    this._getCheckboxes().forEach((cb) => {
       if (cb.checked) values.push(cb.value);
     });
     this.value = this._serializeValue(values);
@@ -223,7 +205,7 @@ export class CivCheckboxGroup extends CivFormElement {
 
     // Re-read checked state from children
     const values: string[] = [];
-    this._getCheckboxes().forEach((cb: any) => {
+    this._getCheckboxes().forEach((cb) => {
       if (cb.checked) values.push(cb.value);
     });
 

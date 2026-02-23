@@ -197,6 +197,44 @@ describe('civ-memorable-date', () => {
   });
 });
 
+describe('memorable-date consistency', () => {
+  it('syncs legend to label via willUpdate', async () => {
+    const el = await fixture('<civ-memorable-date legend="Date of birth"></civ-memorable-date>') as any;
+    await elementUpdated(el);
+    expect(el.label).toBe('Date of birth');
+
+    el.legend = 'Birthday';
+    await elementUpdated(el);
+    expect(el.label).toBe('Birthday');
+  });
+
+  it('hint uses group spacing (civ-mb-2)', async () => {
+    const el = await fixture('<civ-memorable-date legend="DOB" hint="Example hint"></civ-memorable-date>');
+    await elementUpdated(el);
+
+    const spans = el.querySelectorAll('span');
+    const hint = Array.from(spans).find((s) => s.textContent === 'Example hint');
+    expect(hint).not.toBeNull();
+    expect(hint!.classList.contains('civ-mb-2')).toBe(true);
+  });
+
+  it('cascades disabled to child components via formDisabledCallback', async () => {
+    const el = await fixture('<civ-memorable-date legend="DOB" name="dob"></civ-memorable-date>') as any;
+    await elementUpdated(el);
+
+    // Simulate what the browser does when the form is disabled
+    el.formDisabledCallback(true);
+    await elementUpdated(el);
+
+    expect(el.disabled).toBe(true);
+    const select = el.querySelector('civ-select') as any;
+    const textInputs = el.querySelectorAll('civ-text-input');
+    expect(select.disabled).toBe(true);
+    expect((textInputs[0] as any).disabled).toBe(true);
+    expect((textInputs[1] as any).disabled).toBe(true);
+  });
+});
+
 describe('memorable-date validation', () => {
   it('produces empty value and shows error for invalid dates like Feb 30', async () => {
     const el = await fixture<HTMLElement>('<civ-memorable-date legend="DOB" name="dob"></civ-memorable-date>');

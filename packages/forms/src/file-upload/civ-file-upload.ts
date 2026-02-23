@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivFormElement, dispatch, interpolate } from '@civui/core';
+import { CivFormElement, dispatch, interpolate, renderLabel, renderHint, renderError } from '@civui/core';
 
 interface UploadedFile {
   name: string;
@@ -88,25 +88,9 @@ export class CivFileUpload extends CivFormElement {
 
     return html`
       <div class="civ-mb-4">
-        ${this.label
-          ? html`
-              <label
-                class="civ-block civ-mb-1 civ-text-base-darkest civ-font-bold civ-text-base"
-                for="${this._inputId}"
-              >
-                ${this.label}
-                ${this.required
-                  ? html`<abbr class="civ-text-error civ-no-underline" title="required">*</abbr>`
-                  : nothing}
-              </label>
-            `
-          : nothing}
-        ${this.hint
-          ? html`<span class="civ-block civ-mb-1 civ-text-sm civ-text-base" id="${this._hintId}">${this.hint}</span>`
-          : nothing}
-        ${this.error
-          ? html`<span class="civ-block civ-mb-1 civ-text-sm civ-text-error civ-font-bold" id="${this._errorId}" role="alert">${this.error}</span>`
-          : nothing}
+        ${renderLabel({ label: this.label, inputId: this._inputId, required: this.required })}
+        ${renderHint(this._hintId, this.hint)}
+        ${renderError(this._errorId, this.error)}
 
         <div
           class="${dropzoneClasses}"

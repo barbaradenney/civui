@@ -30,3 +30,29 @@ export function createKeyboardHandler(bindings: KeyBinding[]): (e: KeyboardEvent
     }
   };
 }
+
+/**
+ * Resolve the next index for arrow/Home/End keyboard navigation
+ * within a group of items (radio buttons, segmented controls, etc.).
+ * Returns undefined for unrecognized keys.
+ */
+export function resolveGroupNavIndex(
+  key: string,
+  currentIndex: number,
+  length: number,
+): number | undefined {
+  switch (key) {
+    case 'ArrowRight':
+    case 'ArrowDown':
+      return currentIndex < length - 1 ? currentIndex + 1 : 0;
+    case 'ArrowLeft':
+    case 'ArrowUp':
+      return currentIndex > 0 ? currentIndex - 1 : length - 1;
+    case 'Home':
+      return 0;
+    case 'End':
+      return length - 1;
+    default:
+      return undefined;
+  }
+}

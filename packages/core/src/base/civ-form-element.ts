@@ -159,6 +159,8 @@ export class CivFormElement extends CivBaseElement {
    * Sync the current value to ElementInternals for form participation.
    * Called automatically when the `value` property changes.
    * Override in subclasses with custom form value logic (e.g. checkbox, toggle).
+   *
+   * Overridden by: CivCheckbox, CivToggle, CivCheckboxGroup, CivFileUpload
    */
   protected _syncFormValue(): void {
     this.updateFormValue(this.value || '');

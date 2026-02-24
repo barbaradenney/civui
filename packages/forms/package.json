@@ -19,7 +19,9 @@
     "./fieldset": "./dist/fieldset/index.js",
     "./form": "./dist/form/index.js",
     "./combobox": "./dist/combobox/index.js",
-    "./date-picker": "./dist/date-picker/index.js"
+    "./date-picker": "./dist/date-picker/index.js",
+    "./toggle": "./dist/toggle/index.js",
+    "./segmented-control": "./dist/segmented-control/index.js"
   },
   "files": ["dist"],
   "publishConfig": {

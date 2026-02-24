@@ -16,6 +16,10 @@ import { CivBaseElement, dispatch } from '@civui/core';
  * @prop {string} description - Description text below the label
  * @prop {boolean} tile - Tile variant (bordered card style)
  * @prop {boolean} disabled - Whether the radio is disabled
+ * @prop {string} name - Form field name (set by parent civ-radio-group)
+ * @prop {string} error - Error state (set by parent civ-radio-group, used for aria-invalid)
+ * @prop {boolean} required - Required state (set by parent civ-radio-group)
+ * @prop {number} managedTabIndex - Tabindex for roving tabindex (set by parent civ-radio-group)
  *
  * @fires civ-change - When selection changes (bubbles to radio-group), detail: { value }
  * @fires civ-input - When selection changes (input event), detail: { value }
@@ -41,41 +45,11 @@ export class CivRadio extends CivBaseElement {
   }
 
   override render() {
-    const wrapperClasses = this.tile
-      ? [
-          'civ-relative',
-          'civ-border',
-          'civ-rounded',
-          'civ-p-4',
-          this.checked ? 'civ-border-primary civ-bg-primary-lightest' : 'civ-border-base-light',
-          this.disabled ? 'civ-opacity-50 civ-cursor-not-allowed' : 'civ-cursor-pointer',
-        ]
-          .filter(Boolean)
-          .join(' ')
-      : '';
-
-    const inputClasses = [
-      'civ-w-5',
-      'civ-h-5',
-      'civ-mr-2',
-      'civ-align-middle',
-      'civ-accent-primary',
-      'focus-visible:civ-focus-ring',
-      this.disabled ? 'civ-cursor-not-allowed' : 'civ-cursor-pointer',
-    ].join(' ');
-
-    const labelClasses = [
-      'civ-text-base',
-      'civ-font-sans',
-      'civ-text-base-darkest',
-      this.disabled ? 'civ-cursor-not-allowed' : 'civ-cursor-pointer',
-    ].join(' ');
-
     return html`
-      <div class="civ-mb-2 ${wrapperClasses}" data-civ-tile="${this.tile || nothing}">
+      <div class="civ-mb-2 ${this.tile ? 'civ-check-tile' : ''}" data-civ-tile="${this.tile || nothing}">
         <div class="civ-flex civ-items-start">
           <input
-            class="${inputClasses}"
+            class="civ-check-input focus-visible:civ-focus-ring"
             id="${this._inputId}"
             type="radio"
             name="${this.name}"
@@ -84,16 +58,15 @@ export class CivRadio extends CivBaseElement {
             ?disabled="${this.disabled}"
             ?required="${this.required}"
             tabindex="${this.managedTabIndex ?? nothing}"
-            aria-checked="${this.checked ? 'true' : 'false'}"
-            aria-required="${this.required}"
-            aria-invalid="${this.error ? 'true' : 'false'}"
+            aria-required="${this.required || nothing}"
+            aria-invalid="${this.error ? 'true' : nothing}"
             aria-describedby="${this._ariaDescribedBy || nothing}"
             @change="${this._onRadioChange}"
           />
           <div>
-            <label class="${labelClasses}" for="${this._inputId}">${this.label}</label>
+            <label class="civ-check-label" for="${this._inputId}">${this.label}</label>
             ${this.description
-              ? html`<span id="${this._descriptionId}" class="civ-block civ-text-sm civ-text-base civ-mt-0.5">${this.description}</span>`
+              ? html`<span id="${this._descriptionId}" class="civ-check-description">${this.description}</span>`
               : nothing}
           </div>
         </div>

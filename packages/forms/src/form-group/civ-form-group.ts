@@ -11,6 +11,11 @@ const FORM_INPUT_SELECTOR = 'input, select, textarea';
  * Use this when composing custom form layouts or wrapping
  * non-CivUI inputs with consistent styling.
  *
+ * ARIA attributes (aria-describedby, aria-invalid, aria-required) are
+ * automatically wired to the **first** `input`, `select`, or `textarea`
+ * found in the slot. For groups with multiple inputs (e.g., address
+ * fields), use `<civ-fieldset>` instead.
+ *
  * @element civ-form-group
  *
  * @prop {string} label - Label text
@@ -19,7 +24,7 @@ const FORM_INPUT_SELECTOR = 'input, select, textarea';
  * @prop {string} inputId - ID of the associated input (for label `for` attribute)
  * @prop {boolean} required - Shows required indicator
  *
- * @slot - The form control to wrap
+ * @slot - A single form control to wrap
  */
 @customElement('civ-form-group')
 export class CivFormGroup extends CivBaseElement {
@@ -59,7 +64,7 @@ export class CivFormGroup extends CivBaseElement {
     if (this.error) {
       input.setAttribute('aria-invalid', 'true');
     } else {
-      input.setAttribute('aria-invalid', 'false');
+      input.removeAttribute('aria-invalid');
     }
 
     if (this.required) {

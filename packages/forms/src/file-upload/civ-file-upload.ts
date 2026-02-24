@@ -34,8 +34,12 @@ function formatFileSize(bytes: number): string {
  * @prop {boolean} required - Whether a file is required
  * @prop {boolean} disabled - Whether the upload is disabled
  *
- * @fires civ-input - When files change, detail: { files }
- * @fires civ-change - When files are added or removed, detail: { files }
+ * @fires civ-input - When files change, detail: { files: File[] }
+ * @fires civ-change - When files are added or removed, detail: { files: File[] }
+ *
+ * Note: Event detail uses `{ files }` instead of the standard `{ value }`
+ * because file data cannot be represented as a single string. Use the
+ * `files` getter or `toFormData()` on the parent civ-form for submission.
  */
 @customElement('civ-file-upload')
 export class CivFileUpload extends CivFormElement {
@@ -69,23 +73,6 @@ export class CivFileUpload extends CivFormElement {
   }
 
   override render() {
-    const dropzoneClasses = [
-      'civ-block',
-      'civ-w-full',
-      'civ-border-2',
-      'civ-border-dashed',
-      'civ-rounded',
-      'civ-p-6',
-      'civ-text-center',
-      'civ-transition-colors',
-      'focus-visible:civ-focus-ring',
-      this._dragging ? 'civ-border-primary civ-bg-primary-lightest' : '',
-      this.error ? 'civ-border-error' : 'civ-border-base-light',
-      this.disabled ? 'civ-opacity-50 civ-cursor-not-allowed' : 'civ-cursor-pointer',
-    ]
-      .filter(Boolean)
-      .join(' ');
-
     return html`
       <div class="civ-mb-4">
         ${renderLabel({ label: this.label, inputId: this._inputId, required: this.required })}
@@ -93,7 +80,7 @@ export class CivFileUpload extends CivFormElement {
         ${renderError(this._errorId, this.error)}
 
         <div
-          class="${dropzoneClasses}"
+          class="civ-dropzone focus-visible:civ-focus-ring"
           @dragover="${this._boundDragOver}"
           @dragleave="${this._boundDragLeave}"
           @drop="${this._boundDrop}"
@@ -101,8 +88,9 @@ export class CivFileUpload extends CivFormElement {
           role="button"
           tabindex="${this.disabled ? '-1' : '0'}"
           aria-label="${this.label}"
-          aria-required="${this.required}"
-          aria-invalid="${this.error ? 'true' : 'false'}"
+          aria-required="${this.required || nothing}"
+          aria-invalid="${this.error ? 'true' : nothing}"
+          aria-disabled="${this.disabled || nothing}"
           aria-describedby="${this._ariaDescribedBy || nothing}"
           @keydown="${this._onDropzoneKeydown}"
           data-dragging="${this._dragging || nothing}"
@@ -138,14 +126,14 @@ export class CivFileUpload extends CivFormElement {
               <ul class="civ-list-none civ-p-0 civ-mt-2 civ-space-y-1" aria-label="${this.filesListLabel}">
                 ${this._files.map(
                   (file, index) => html`
-                    <li class="civ-flex civ-items-center civ-justify-between civ-p-2 civ-bg-base-lightest civ-rounded civ-text-sm">
+                    <li class="civ-file-item">
                       <span>
                         <span class="civ-font-semibold">${file.name}</span>
-                        <span class="civ-text-base civ-ml-2">(${formatFileSize(file.size)})</span>
+                        <span class="civ-text-base civ-ms-2">(${formatFileSize(file.size)})</span>
                       </span>
                       <button
                         type="button"
-                        class="civ-text-error civ-text-sm civ-underline civ-bg-transparent civ-border-0 civ-cursor-pointer civ-py-1 civ-px-2 focus-visible:civ-focus-ring"
+                        class="civ-file-remove-btn focus-visible:civ-focus-ring"
                         @click="${() => this._removeFile(index)}"
                         aria-label="${interpolate(this.removeAriaLabel, { name: file.name })}"
                         ?disabled="${this.disabled}"
@@ -271,6 +259,18 @@ export class CivFileUpload extends CivFormElement {
     this._dispatchChange();
     this.sendAnalytics('remove', { fileCount: this._files.length });
     this.announce(interpolate(this.fileRemovedMessage, { total: this._files.length }));
+
+    // Move focus to the next remove button, or the dropzone if no files remain
+    this.updateComplete.then(() => {
+      const buttons = this.querySelectorAll<HTMLButtonElement>('.civ-file-remove-btn');
+      if (buttons.length > 0) {
+        const next = buttons[Math.min(index, buttons.length - 1)];
+        next.focus();
+      } else {
+        const dropzone = this.querySelector<HTMLElement>('.civ-dropzone');
+        dropzone?.focus();
+      }
+    });
   }
 
   private _updateFormData(): void {

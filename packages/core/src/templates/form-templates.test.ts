@@ -21,20 +21,22 @@ describe('renderLabel', () => {
     expect(output).not.toContain('<label');
   });
 
-  it('renders a label with for attribute', () => {
+  it('renders a label with for attribute and civ-label class', () => {
     const result = renderLabel({ label: 'Email', inputId: 'email-1', required: false });
     const output = renderToString(result);
     expect(output).toContain('<label');
     expect(output).toContain('for="email-1"');
     expect(output).toContain('Email');
+    expect(output).toContain('civ-label');
     expect(output).not.toContain('<abbr');
   });
 
-  it('renders required indicator', () => {
+  it('renders required indicator with civ-required-mark', () => {
     const result = renderLabel({ label: 'Name', inputId: 'name-1', required: true });
     const output = renderToString(result);
     expect(output).toContain('<abbr');
     expect(output).toContain('title="required"');
+    expect(output).toContain('civ-required-mark');
     expect(output).toContain('*');
   });
 
@@ -68,18 +70,20 @@ describe('renderLegend', () => {
     expect(output).not.toContain('<legend');
   });
 
-  it('renders legend with default text size', () => {
+  it('renders legend with civ-legend class and default text size', () => {
     const result = renderLegend({ legend: 'Options', required: false });
     const output = renderToString(result);
     expect(output).toContain('<legend');
     expect(output).toContain('Options');
+    expect(output).toContain('civ-legend');
     expect(output).toContain('civ-text-base');
   });
 
-  it('renders required indicator', () => {
+  it('renders required indicator with civ-required-mark', () => {
     const result = renderLegend({ legend: 'Choose one', required: true });
     const output = renderToString(result);
     expect(output).toContain('<abbr');
+    expect(output).toContain('civ-required-mark');
     expect(output).toContain('*');
   });
 
@@ -119,19 +123,19 @@ describe('renderHint', () => {
     expect(output).not.toContain('<span');
   });
 
-  it('renders hint with id and default spacing', () => {
+  it('renders hint with civ-hint class and default spacing', () => {
     const result = renderHint('hint-1', 'Enter your email');
     const output = renderToString(result);
     expect(output).toContain('id="hint-1"');
     expect(output).toContain('Enter your email');
-    expect(output).toContain('civ-mb-1');
-    expect(output).not.toContain('civ-mb-2');
+    expect(output).toContain('civ-hint');
+    expect(output).not.toContain('civ-hint--group');
   });
 
-  it('uses group spacing when requested', () => {
+  it('uses group spacing class when requested', () => {
     const result = renderHint('hint-2', 'Pick one', true);
     const output = renderToString(result);
-    expect(output).toContain('civ-mb-2');
+    expect(output).toContain('civ-hint--group');
   });
 });
 
@@ -142,65 +146,44 @@ describe('renderError', () => {
     expect(output).not.toContain('<span');
   });
 
-  it('renders error with role="alert" and default spacing', () => {
+  it('renders error with civ-error-text class and role="alert"', () => {
     const result = renderError('err-1', 'Field is required');
     const output = renderToString(result);
     expect(output).toContain('id="err-1"');
     expect(output).toContain('role="alert"');
     expect(output).toContain('Field is required');
-    expect(output).toContain('civ-text-error');
-    expect(output).toContain('civ-mb-1');
+    expect(output).toContain('civ-error-text');
+    expect(output).not.toContain('civ-error-text--group');
   });
 
-  it('uses group spacing when requested', () => {
+  it('uses group spacing class when requested', () => {
     const result = renderError('err-2', 'Select an option', true);
     const output = renderToString(result);
-    expect(output).toContain('civ-mb-2');
+    expect(output).toContain('civ-error-text--group');
   });
 });
 
 describe('inputClasses', () => {
-  it('returns base classes with no arguments', () => {
+  it('returns civ-input base class with no arguments', () => {
     const result = inputClasses();
-    expect(result).toContain('civ-block');
-    expect(result).toContain('civ-w-full');
-    expect(result).toContain('civ-border');
-    expect(result).toContain('civ-rounded');
-    expect(result).toContain('civ-border-base-light');
+    expect(result).toContain('civ-input');
     expect(result).toContain('focus-visible:civ-focus-ring');
-    expect(result).not.toContain('civ-border-error');
-  });
-
-  it('includes error border when error is set', () => {
-    const result = inputClasses({ error: 'Bad input' });
-    expect(result).toContain('civ-border-error');
-    expect(result).toContain('civ-border-l-4');
-    expect(result).not.toContain('civ-border-base-light');
-  });
-
-  it('includes disabled classes when disabled', () => {
-    const result = inputClasses({ disabled: true });
-    expect(result).toContain('civ-opacity-50');
-    expect(result).toContain('civ-cursor-not-allowed');
-    expect(result).toContain('civ-bg-base-lightest');
   });
 
   it('appends extra classes', () => {
     const result = inputClasses({ extra: ['civ-resize-y', 'civ-max-w-full'] });
+    expect(result).toContain('civ-input');
     expect(result).toContain('civ-resize-y');
     expect(result).toContain('civ-max-w-full');
   });
 
   it('overrides rounded class', () => {
-    const result = inputClasses({ rounded: 'civ-rounded-l' });
-    expect(result).toContain('civ-rounded-l');
-    const classes = result.split(' ');
-    expect(classes).not.toContain('civ-rounded');
+    const result = inputClasses({ rounded: 'civ-rounded-s' });
+    expect(result).toContain('civ-rounded-s');
   });
 
   it('overrides width class', () => {
     const result = inputClasses({ width: 'civ-w-40' });
     expect(result).toContain('civ-w-40');
-    expect(result).not.toContain('civ-w-full');
   });
 });

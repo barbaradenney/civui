@@ -1,5 +1,6 @@
 /* Import design tokens as CSS custom properties */
 @import '@civui/tokens/css';
+@import './components.css';
 
 @layer civ {
   @tailwind base;
@@ -18,6 +19,16 @@
     outline: var(--civ-focus-outline-width) solid var(--civ-focus-shadow-color);
     outline-offset: var(--civ-focus-outline-offset);
     box-shadow: 0 0 0 calc(var(--civ-focus-outline-offset) + var(--civ-focus-outline-width) + var(--civ-focus-shadow-spread)) var(--civ-focus-outline-color);
+  }
+}
+
+/* Dark mode: ensure focus rings remain visible on dark backgrounds.
+   Uses token palette values (primary-lighter, primary-darker) to stay
+   in sync with the design token system. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --civ-focus-outline-color: var(--civ-color-primary-lighter);
+    --civ-focus-shadow-color: var(--civ-color-primary-darker);
   }
 }
 

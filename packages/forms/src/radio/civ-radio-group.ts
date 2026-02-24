@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivFormElement, dispatch, renderLegend, renderHint, renderError, resolveGroupNavIndex } from '@civui/core';
+import { CivFormElement, dispatch, renderLegend, renderHint, renderError, resolveGroupNavIndex, isRtl } from '@civui/core';
 import type { CivRadio } from './civ-radio.js';
 
 /**
@@ -63,6 +63,7 @@ export class CivRadioGroup extends CivFormElement {
     this._syncRadioChecked();
     this._syncTabindex();
     this._syncRadioRequired();
+    this._syncRadioTile();
     this._defaultValue = this.value;
   }
 
@@ -84,33 +85,36 @@ export class CivRadioGroup extends CivFormElement {
     if (changed.has('required')) {
       this._syncRadioRequired();
     }
+    if (changed.has('tile')) {
+      this._syncRadioTile();
+    }
   }
 
   override formDisabledCallback(disabled: boolean): void {
-    this.disabled = disabled;
+    super.formDisabledCallback(disabled);
     this._syncRadioDisabled();
   }
 
   override render() {
-    const slotClasses =
+    const layoutClass =
       this.orientation === 'horizontal'
-        ? 'civ-flex civ-flex-row civ-flex-wrap civ-gap-4'
-        : 'civ-flex civ-flex-col civ-gap-1';
+        ? 'civ-group-layout--horizontal'
+        : 'civ-group-layout--vertical';
 
     return html`
       <fieldset
-        class="civ-border-0 civ-p-0 civ-m-0 civ-mb-4"
+        class="civ-fieldset"
         role="radiogroup"
         aria-orientation="${this.orientation}"
         aria-describedby="${this._ariaDescribedBy || nothing}"
-        aria-invalid="${this.error ? 'true' : 'false'}"
-        aria-required="${this.required}"
+        aria-invalid="${this.error ? 'true' : nothing}"
+        aria-required="${this.required || nothing}"
         ?disabled="${this.disabled}"
       >
         ${renderLegend({ legend: this.legend, required: this.required })}
         ${renderHint(this._hintId, this.hint, true)}
         ${renderError(this._errorId, this.error, true)}
-        <div class="${slotClasses}">
+        <div class="${layoutClass}">
           <slot></slot>
         </div>
       </fieldset>
@@ -146,16 +150,34 @@ export class CivRadioGroup extends CivFormElement {
     });
   }
 
+  private _groupDisabledSet = new WeakSet<Element>();
+
   private _syncRadioDisabled(): void {
-    if (!this.disabled) return;
-    this._getRadios().forEach((radio) => {
-      radio.disabled = true;
-    });
+    const radios = this._getRadios();
+    if (this.disabled) {
+      radios.forEach((radio) => {
+        if (!radio.disabled) this._groupDisabledSet.add(radio);
+        radio.disabled = true;
+      });
+    } else {
+      radios.forEach((radio) => {
+        if (this._groupDisabledSet.has(radio)) {
+          radio.disabled = false;
+        }
+      });
+      this._groupDisabledSet = new WeakSet();
+    }
   }
 
   private _syncRadioRequired(): void {
     this._getRadios().forEach((radio) => {
       radio.required = this.required;
+    });
+  }
+
+  private _syncRadioTile(): void {
+    this._getRadios().forEach((radio) => {
+      radio.tile = this.tile;
     });
   }
 
@@ -201,7 +223,7 @@ export class CivRadioGroup extends CivFormElement {
     if (radios.length === 0) return;
 
     const currentIndex = radios.findIndex((r) => r.checked);
-    const nextIndex = resolveGroupNavIndex(e.key, currentIndex, radios.length);
+    const nextIndex = resolveGroupNavIndex(e.key, currentIndex, radios.length, isRtl(this));
 
     if (nextIndex !== undefined) {
       e.preventDefault();
@@ -215,11 +237,16 @@ export class CivRadioGroup extends CivFormElement {
       // Focus the input inside the radio
       const input = radio.querySelector('input[type="radio"]') as HTMLInputElement | null;
       if (input) input.focus();
+      this.announce(radio.label);
 
       dispatch(this, 'civ-input', { value: this.value });
       dispatch(this, 'civ-change', { value: this.value });
       this.sendAnalytics('change');
     }
+  }
+
+  protected override _syncFormValue(): void {
+    this.updateFormValue(this.value || '');
   }
 
   override formResetCallback(): void {

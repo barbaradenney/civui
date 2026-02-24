@@ -127,7 +127,7 @@ describe('civ-form-group', () => {
     expect(input.getAttribute('aria-invalid')).toBe('true');
   });
 
-  it('sets aria-invalid to false when error is cleared', async () => {
+  it('omits aria-invalid when error is cleared', async () => {
     const el = await fixture(`
       <civ-form-group label="Name" error="Required">
         <input type="text" id="name" />
@@ -138,7 +138,7 @@ describe('civ-form-group', () => {
     await el.updateComplete;
 
     const input = el.querySelector('input')!;
-    expect(input.getAttribute('aria-invalid')).toBe('false');
+    expect(input.getAttribute('aria-invalid')).toBeNull();
   });
 
   it('wires aria-required on slotted input when required', async () => {

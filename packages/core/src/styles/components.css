@@ -1,0 +1,241 @@
+/* Semantic component classes — DaisyUI-style @apply wrappers.
+ * These encapsulate repeated Tailwind utility patterns so components
+ * render `class="civ-input"` instead of 15+ utilities.
+ *
+ * Note: focus-visible:civ-focus-ring stays as a utility class on DOM
+ * elements (not via @apply) so forced-colors rules in civ.css keep
+ * matching `.civ-focus-ring:focus-visible`.
+ */
+
+@layer components {
+  /* ── Shared form primitives ─────────────────────────────────── */
+
+  .civ-label {
+    @apply civ-block civ-mb-1 civ-text-base-darkest civ-font-bold civ-text-base;
+  }
+
+  .civ-legend {
+    @apply civ-block civ-mb-1 civ-text-base-darkest civ-font-bold;
+  }
+
+  .civ-required-mark {
+    @apply civ-text-error civ-no-underline;
+  }
+
+  .civ-hint {
+    @apply civ-block civ-mb-1 civ-text-sm civ-text-base;
+  }
+
+  .civ-hint--group {
+    @apply civ-block civ-mb-2 civ-text-sm civ-text-base;
+  }
+
+  .civ-error-text {
+    @apply civ-block civ-mb-1 civ-text-sm civ-text-error civ-font-bold;
+  }
+
+  .civ-error-text--group {
+    @apply civ-block civ-mb-2 civ-text-sm civ-text-error civ-font-bold;
+  }
+
+  .civ-input {
+    @apply civ-block civ-w-full civ-border civ-rounded civ-px-2 civ-py-1.5
+           civ-text-base civ-font-sans civ-text-base-darkest civ-bg-white civ-border-base-light;
+  }
+
+  .civ-fieldset {
+    @apply civ-border-0 civ-p-0 civ-m-0 civ-mb-4;
+  }
+
+  .civ-group-layout--vertical {
+    @apply civ-flex civ-flex-col civ-gap-1;
+  }
+
+  .civ-group-layout--horizontal {
+    @apply civ-flex civ-flex-row civ-flex-wrap civ-gap-4;
+  }
+
+  /* ── Checkbox / Radio ───────────────────────────────────────── */
+
+  .civ-check-input {
+    @apply civ-w-5 civ-h-5 civ-me-2 civ-align-middle civ-accent-primary;
+  }
+
+  .civ-check-label {
+    @apply civ-text-base civ-font-sans civ-text-base-darkest;
+  }
+
+  .civ-check-description {
+    @apply civ-block civ-text-sm civ-text-base civ-mt-0.5;
+  }
+
+  .civ-check-tile {
+    @apply civ-relative civ-border civ-rounded civ-p-4 civ-border-base-light civ-cursor-pointer;
+  }
+
+  /* ── Toggle ─────────────────────────────────────────────────── */
+
+  .civ-toggle-track {
+    @apply civ-relative civ-inline-flex civ-items-center civ-w-10 civ-h-6
+           civ-rounded-full civ-border civ-transition-colors
+           civ-bg-base-light civ-border-base civ-cursor-pointer;
+  }
+
+  .civ-toggle-thumb {
+    @apply civ-absolute civ-bg-white civ-rounded-full civ-shadow-sm civ-transition-transform;
+  }
+
+  /* ── Segment ────────────────────────────────────────────────── */
+
+  .civ-segment-btn {
+    @apply civ-px-4 civ-py-2 civ-text-sm civ-font-sans civ-font-medium civ-border
+           civ-bg-white civ-text-base-darkest civ-border-base-light civ-cursor-pointer;
+  }
+
+  /* ── File Upload ────────────────────────────────────────────── */
+
+  .civ-dropzone {
+    @apply civ-block civ-w-full civ-border-2 civ-border-dashed civ-rounded
+           civ-p-6 civ-text-center civ-transition-colors civ-border-base-light civ-cursor-pointer;
+  }
+
+  .civ-file-item {
+    @apply civ-flex civ-items-center civ-justify-between civ-p-2
+           civ-bg-base-lightest civ-rounded civ-text-sm;
+  }
+
+  .civ-file-remove-btn {
+    @apply civ-text-error civ-text-sm civ-underline civ-bg-transparent
+           civ-border-0 civ-cursor-pointer civ-py-1 civ-px-2;
+  }
+
+  /* ── Combobox ───────────────────────────────────────────────── */
+
+  .civ-combobox-listbox {
+    @apply civ-absolute civ-z-10 civ-w-full civ-mt-0.5 civ-bg-white civ-border
+           civ-border-base-light civ-rounded civ-shadow-md civ-max-h-60
+           civ-overflow-y-auto civ-list-none civ-p-0 civ-m-0;
+  }
+
+  .civ-combobox-option {
+    @apply civ-px-3 civ-py-2 civ-text-base civ-cursor-pointer;
+  }
+
+  /* ── Date Picker ────────────────────────────────────────────── */
+
+  .civ-datepicker-dialog {
+    @apply civ-absolute civ-z-50 civ-mt-1 civ-bg-white civ-border
+           civ-border-base-light civ-rounded civ-shadow-lg civ-p-4;
+  }
+
+  .civ-datepicker-day {
+    @apply civ-w-10 civ-h-10 civ-text-center civ-text-sm civ-rounded civ-cursor-pointer;
+  }
+
+  .civ-datepicker-nav-btn {
+    @apply civ-p-1 civ-rounded;
+  }
+
+  .civ-datepicker-cal-btn {
+    @apply civ-border civ-border-s-0 civ-border-base-light civ-rounded-e
+           civ-px-2 civ-py-1.5 civ-bg-base-lightest;
+  }
+
+  /* ── Form error summary ─────────────────────────────────────── */
+
+  .civ-form-error-summary {
+    @apply civ-border-s-4 civ-border-error civ-bg-error-lighter civ-p-4 civ-mb-4;
+  }
+
+  .civ-form-error-heading {
+    @apply civ-text-error civ-font-bold civ-text-lg civ-mt-0 civ-mb-2;
+  }
+
+  /* ── State selectors (Phase 3) ──────────────────────────────── */
+
+  /* Input error/disabled via ARIA */
+  .civ-input[aria-invalid="true"] {
+    @apply civ-border-error civ-border-s-4;
+  }
+
+  .civ-input:disabled {
+    @apply civ-opacity-50 civ-cursor-not-allowed civ-bg-base-lightest;
+  }
+
+  /* Tile checked (handles both checked and indeterminate) */
+  .civ-check-tile:has(:checked),
+  .civ-check-tile:has([aria-checked="mixed"]) {
+    @apply civ-border-primary civ-bg-primary-lightest;
+  }
+
+  .civ-check-tile:has(:disabled) {
+    @apply civ-opacity-50 civ-cursor-not-allowed;
+  }
+
+  /* Toggle checked */
+  .civ-toggle-track[aria-checked="true"] {
+    @apply civ-bg-primary civ-border-primary;
+  }
+
+  .civ-toggle-track:disabled {
+    @apply civ-opacity-50 civ-cursor-not-allowed;
+  }
+
+  /* Segment selected */
+  .civ-segment-btn[aria-checked="true"] {
+    @apply civ-bg-primary civ-text-white civ-border-primary;
+  }
+
+  .civ-segment-btn:disabled {
+    @apply civ-opacity-50 civ-cursor-not-allowed;
+  }
+
+  civ-segment[data-civ-segment-position="first"] > .civ-segment-btn {
+    @apply civ-rounded-s;
+  }
+
+  civ-segment[data-civ-segment-position="last"] > .civ-segment-btn {
+    @apply civ-rounded-e;
+  }
+
+  civ-segment[data-civ-segment-position="only"] > .civ-segment-btn {
+    @apply civ-rounded;
+  }
+
+  civ-segment[data-civ-segment-position="middle"] > .civ-segment-btn,
+  civ-segment[data-civ-segment-position="last"] > .civ-segment-btn {
+    @apply civ-border-s-0;
+  }
+
+  /* Dropzone states */
+  .civ-dropzone[data-dragging] {
+    @apply civ-border-primary civ-bg-primary-lightest;
+  }
+
+  .civ-dropzone[aria-invalid="true"] {
+    @apply civ-border-error;
+  }
+
+  .civ-dropzone[aria-disabled="true"] {
+    @apply civ-opacity-50 civ-cursor-not-allowed;
+  }
+
+  /* Combobox active option */
+  .civ-combobox-option[data-active] {
+    @apply civ-bg-primary civ-text-white;
+  }
+
+  /* Date picker day states */
+  .civ-datepicker-day[aria-selected="true"] {
+    @apply civ-bg-primary civ-text-white civ-font-bold;
+  }
+
+  .civ-datepicker-day[aria-disabled="true"] {
+    @apply civ-opacity-40 civ-cursor-not-allowed;
+  }
+
+  /* Disabled cursor on check/radio inputs */
+  .civ-check-input:disabled {
+    @apply civ-cursor-not-allowed;
+  }
+}

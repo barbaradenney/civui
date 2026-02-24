@@ -32,9 +32,18 @@ export class CivDateInput extends CivFormElement {
   @property({ type: String }) min = '';
   @property({ type: String }) max = '';
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    if (typeof console !== 'undefined') {
+      console.warn(
+        '[CivUI] <civ-date-input> is deprecated. Use <civ-date-picker> or <civ-memorable-date> instead. ' +
+        'Native <input type="date"> has known issues with Dragon NaturallySpeaking, VoiceOver on Safari, and TalkBack on Firefox.',
+      );
+    }
+  }
+
   override render() {
     const classes = inputClasses({
-      error: this.error, disabled: this.disabled,
       extra: ['civ-max-w-sm'],
     });
 
@@ -53,9 +62,9 @@ export class CivDateInput extends CivFormElement {
           max="${this.max || nothing}"
           ?disabled="${this.disabled}"
           ?required="${this.required}"
-          aria-required="${this.required}"
+          aria-required="${this.required || nothing}"
           aria-describedby="${this._ariaDescribedBy || nothing}"
-          aria-invalid="${this.error ? 'true' : 'false'}"
+          aria-invalid="${this.error ? 'true' : nothing}"
           @input="${this._handleInput}"
           @change="${this._handleChange}"
         />

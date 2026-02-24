@@ -44,38 +44,7 @@ export class CivToggle extends CivFormElement {
   }
 
   override render() {
-    const trackClasses = [
-      'civ-toggle-track',
-      'civ-relative',
-      'civ-inline-flex',
-      'civ-items-center',
-      'civ-w-10',
-      'civ-h-6',
-      'civ-rounded-full',
-      'civ-border',
-      'civ-transition-colors',
-      this.checked ? 'civ-bg-primary civ-border-primary' : 'civ-bg-base-light civ-border-base',
-      this.disabled ? 'civ-opacity-50 civ-cursor-not-allowed' : 'civ-cursor-pointer',
-      'focus-visible:civ-focus-ring',
-    ].join(' ');
-
-    const thumbClasses = [
-      'civ-toggle-thumb',
-      'civ-absolute',
-      'civ-bg-white',
-      'civ-rounded-full',
-      'civ-shadow-sm',
-      'civ-transition-transform',
-    ].join(' ');
-
-    const thumbStyle = `width: 18px; height: 18px; top: 2px; left: ${this.checked ? '18px' : '2px'};`;
-
-    const labelClasses = [
-      'civ-text-base',
-      'civ-font-sans',
-      'civ-text-base-darkest',
-      this.disabled ? 'civ-cursor-not-allowed' : 'civ-cursor-pointer',
-    ].join(' ');
+    const thumbStyle = `width: 18px; height: 18px; top: 2px; inset-inline-start: ${this.checked ? '18px' : '2px'};`;
 
     return html`
       <div class="civ-mb-2">
@@ -87,24 +56,24 @@ export class CivToggle extends CivFormElement {
             role="switch"
             id="${this._inputId}"
             aria-checked="${this.checked ? 'true' : 'false'}"
-            aria-required="${this.required}"
-            aria-invalid="${this.error ? 'true' : 'false'}"
+            aria-required="${this.required || nothing}"
+            aria-invalid="${this.error ? 'true' : nothing}"
             aria-describedby="${this._ariaDescribedBy || nothing}"
             ?disabled="${this.disabled}"
             @click="${this._onToggle}"
-            class="${trackClasses}"
+            class="civ-toggle-track focus-visible:civ-focus-ring"
           >
-            <span class="${thumbClasses}" style="${thumbStyle}"></span>
+            <span class="civ-toggle-thumb" style="${thumbStyle}"></span>
           </button>
           <div>
-            <label class="${labelClasses}" for="${this._inputId}">
+            <label class="civ-check-label" for="${this._inputId}">
               ${this.label}
               ${this.required
-                ? html`<abbr class="civ-text-error civ-no-underline" title="required">*</abbr>`
+                ? html`<abbr class="civ-required-mark" title="required">*</abbr>`
                 : nothing}
             </label>
             ${this.description
-              ? html`<span id="${this._descriptionId}" class="civ-block civ-text-sm civ-text-base civ-mt-0.5">${this.description}</span>`
+              ? html`<span id="${this._descriptionId}" class="civ-check-description">${this.description}</span>`
               : nothing}
           </div>
         </div>
@@ -114,6 +83,20 @@ export class CivToggle extends CivFormElement {
 
   protected override _syncFormValue(): void {
     this.updateFormValue(this.checked ? this.value : null);
+  }
+
+  protected override _updateValidity(): void {
+    if (typeof this._internals?.setValidity !== 'function') return;
+    const anchor = this.querySelector('button') as HTMLElement | null;
+    if (this.required && !this.checked) {
+      this._internals.setValidity(
+        { valueMissing: true },
+        this.error || `${this.label || 'This field'} is required`,
+        anchor ?? undefined,
+      );
+    } else {
+      this._internals.setValidity({});
+    }
   }
 
   private _onToggle(): void {

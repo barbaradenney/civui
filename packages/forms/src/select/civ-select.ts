@@ -12,8 +12,7 @@ export interface SelectOption {
  * CivUI Select
  *
  * Dropdown select with label, hint, error support.
- * Options can be set via the `options` property (array) or via
- * slotted `<option>` elements in Light DOM.
+ * Options are set via the `options` property (array of `{ value, label }`).
  *
  * @element civ-select
  *
@@ -22,7 +21,7 @@ export interface SelectOption {
  * @prop {string} value - Current selected value
  * @prop {string} hint - Hint text displayed below label
  * @prop {string} error - Error message (shows error state)
- * @prop {SelectOption[]} options - Options array (alternative to slotted options)
+ * @prop {SelectOption[]} options - Options array
  * @prop {string} emptyLabel - Label for the empty/default option
  * @prop {boolean} required - Whether the field is required
  * @prop {boolean} disabled - Whether the field is disabled
@@ -49,7 +48,6 @@ export class CivSelect extends CivFormElement {
 
   override render() {
     const classes = inputClasses({
-      error: this.error, disabled: this.disabled,
       extra: ['civ-appearance-auto'],
     });
 
@@ -65,9 +63,9 @@ export class CivSelect extends CivFormElement {
           .value="${this.value}"
           ?disabled="${this.disabled}"
           ?required="${this.required}"
-          aria-required="${this.required}"
+          aria-required="${this.required || nothing}"
           aria-describedby="${this._ariaDescribedBy || nothing}"
-          aria-invalid="${this.error ? 'true' : 'false'}"
+          aria-invalid="${this.error ? 'true' : nothing}"
           @change="${this._onSelectChange}"
         >
           <option value="">${this.emptyLabel}</option>
@@ -87,6 +85,11 @@ export class CivSelect extends CivFormElement {
     `;
   }
 
+  /**
+   * Native <select> only fires `change` (no `input`), but we dispatch both
+   * civ-input and civ-change for consistency with other CivUI form components.
+   * Every selection in a <select> is both an input and a committed change.
+   */
   private _onSelectChange(e: Event): void {
     const target = e.target as HTMLSelectElement;
     this.value = target.value;

@@ -206,4 +206,22 @@ describe('civ-textarea', () => {
     expect(textarea!.className).not.toContain('focus:civ-outline-primary');
     expect(textarea!.className).not.toContain('focus:civ-outline-offset-0');
   });
+
+  it('omits aria-invalid when no error', async () => {
+    const el = await fixture('<civ-textarea label="Comments"></civ-textarea>');
+
+    const textarea = el.querySelector('textarea');
+    expect(textarea!.hasAttribute('aria-invalid')).toBe(false);
+  });
+
+  it('resets to default value on formResetCallback', async () => {
+    const el = await fixture('<civ-textarea label="Bio" value="hello"></civ-textarea>') as any;
+
+    el.value = 'changed';
+    await elementUpdated(el);
+
+    el.formResetCallback();
+    await elementUpdated(el);
+    expect(el.value).toBe('hello');
+  });
 });

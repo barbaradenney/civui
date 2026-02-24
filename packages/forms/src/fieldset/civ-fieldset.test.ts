@@ -74,6 +74,18 @@ describe('civ-fieldset', () => {
 
     expect(el.shadowRoot).toBeNull();
   });
+
+  it('removes aria-invalid when error is cleared', async () => {
+    const el = await fixture('<civ-fieldset legend="Address" error="Missing"></civ-fieldset>') as any;
+
+    const fieldset = el.querySelector('fieldset');
+    expect(fieldset!.getAttribute('aria-invalid')).toBe('true');
+
+    el.error = '';
+    await elementUpdated(el);
+
+    expect(fieldset!.hasAttribute('aria-invalid')).toBe(false);
+  });
 });
 
 describe('fieldset disabled', () => {

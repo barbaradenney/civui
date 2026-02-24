@@ -44,10 +44,10 @@ export class CivFieldset extends CivBaseElement {
 
     return html`
       <fieldset
-        class="civ-border-0 civ-p-0 civ-m-0 civ-mb-4"
+        class="civ-fieldset"
         aria-describedby="${describedBy || nothing}"
-        aria-invalid="${this.error ? 'true' : 'false'}"
-        aria-required="${this.required}"
+        aria-invalid="${this.error ? 'true' : nothing}"
+        aria-required="${this.required || nothing}"
         ?disabled="${this.disabled}"
       >
         ${renderLegend({ legend: this.legend, required: this.required, textSizeClass: 'civ-text-lg' })}

@@ -57,7 +57,6 @@ export class CivTextInput extends CivFormElement {
   override render() {
     const widthClass = WIDTH_CLASSES[this.width] || WIDTH_CLASSES['default'];
     const classes = inputClasses({
-      error: this.error, disabled: this.disabled,
       extra: [widthClass, 'civ-max-w-full'],
     });
 
@@ -75,14 +74,14 @@ export class CivTextInput extends CivFormElement {
           placeholder="${this.placeholder || nothing}"
           ?disabled="${this.disabled}"
           ?required="${this.required}"
-          aria-required="${this.required}"
+          aria-required="${this.required || nothing}"
           pattern="${this.pattern || nothing}"
           maxlength="${this.maxlength && this.maxlength > 0 ? this.maxlength : nothing}"
           minlength="${this.minlength ?? nothing}"
           autocomplete="${this.autocomplete || nothing}"
           inputmode="${this.inputmode || nothing}"
           aria-describedby="${this._ariaDescribedBy || nothing}"
-          aria-invalid="${this.error ? 'true' : 'false'}"
+          aria-invalid="${this.error ? 'true' : nothing}"
           @input="${this._handleInput}"
           @change="${this._handleChange}"
         />

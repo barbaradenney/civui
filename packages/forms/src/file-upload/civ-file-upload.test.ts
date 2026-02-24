@@ -325,6 +325,24 @@ describe('file type validation', () => {
   });
 });
 
+describe('aria-disabled', () => {
+  it('dropzone has aria-disabled="true" when disabled', async () => {
+    const el = await fixture<HTMLElement>('<civ-file-upload label="Upload" disabled></civ-file-upload>');
+
+    const dropzone = el.querySelector('[role="button"]');
+    expect(dropzone).not.toBeNull();
+    expect(dropzone!.getAttribute('aria-disabled')).toBe('true');
+  });
+
+  it('dropzone omits aria-disabled when not disabled', async () => {
+    const el = await fixture<HTMLElement>('<civ-file-upload label="Upload"></civ-file-upload>');
+
+    const dropzone = el.querySelector('[role="button"]');
+    expect(dropzone).not.toBeNull();
+    expect(dropzone!.hasAttribute('aria-disabled')).toBe(false);
+  });
+});
+
 describe('aria-required', () => {
   it('dropzone has aria-required="true" when required', async () => {
     const el = await fixture<HTMLElement>('<civ-file-upload label="Upload" required></civ-file-upload>');
@@ -334,11 +352,11 @@ describe('aria-required', () => {
     expect(dropzone!.getAttribute('aria-required')).toBe('true');
   });
 
-  it('dropzone has aria-required="false" when not required', async () => {
+  it('dropzone omits aria-required when not required', async () => {
     const el = await fixture<HTMLElement>('<civ-file-upload label="Upload"></civ-file-upload>');
 
     const dropzone = el.querySelector('[role="button"]');
     expect(dropzone).not.toBeNull();
-    expect(dropzone!.getAttribute('aria-required')).toBe('false');
+    expect(dropzone!.hasAttribute('aria-required')).toBe(false);
   });
 });

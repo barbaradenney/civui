@@ -10,7 +10,7 @@ Accessibility-first web components for government applications.
 - **pnpm workspaces + Turborepo** monorepo
 - **Vitest + jsdom** for testing
 - **Storybook** for component documentation
-- **W3C DTCG design tokens** via Style Dictionary
+- **W3C DTCG design tokens** with custom build pipeline (`packages/tokens/build/build-tokens.js`)
 
 ## Package Structure
 
@@ -59,7 +59,13 @@ Group components use `legend` instead of `label`.
 - `civ-input` — fires on every value change (like native `input`)
 - `civ-change` — fires on committed value change (like native `change`)
 - `civ-analytics` — analytics tracking events
-- Event detail shape: `{ value: string }` for single-value, `{ values: string[] }` for multi-value
+- Event detail shapes:
+  - `{ value: string }` — single-value (text-input, textarea, select, radio-group, segmented-control, date-picker)
+  - `{ values: string[] }` — multi-value (checkbox-group)
+  - `{ checked: boolean, value: string }` — boolean controls (checkbox, toggle)
+  - `{ files: File[] }` — file-upload
+  - `{ value: string, label: string }` — combobox civ-change
+  - `{ value: string, month: string, day: string, year: string }` — memorable-date
 
 ### Rendering Order
 Label → hint → error → control → supplementary info (character count, file list).
@@ -69,6 +75,17 @@ Use `focus-visible:civ-focus-ring` (not deprecated `focus:civ-outline-*` classes
 
 ### Screen Reader Announcements
 `announce(message, priority)` from `@civui/core` queues messages to `aria-live` regions. Uses polite/assertive priorities. Queue is capped at 10 messages with oldest-drop strategy.
+
+### Dark Mode
+- `darkMode: 'media'` in Tailwind config — uses `prefers-color-scheme`
+- `color-dark.tokens.json` provides dark palette with parity validation against light tokens
+- Build script generates `@media (prefers-color-scheme: dark)` CSS overrides
+- Focus ring colors switch to token-based values (`primary-lighter`, `primary-darker`) in dark mode
+
+### Density System
+- `scales.tokens.json` defines `dense`, `spacious`, and `fluid` scale variants
+- Applied via `[data-civ-scale="dense|spacious"]` on a parent element
+- Spacing and font size CSS variables adjust per scale
 
 ## Testing Patterns
 
@@ -84,3 +101,16 @@ Use `focus-visible:civ-focus-ring` (not deprecated `focus:civ-outline-*` classes
 - Component test: `packages/forms/src/{name}/civ-{name}.test.ts`
 - RN counterpart: `packages/react-native/src/forms/{Name}.tsx`
 - Each component dir has an `index.ts` barrel export
+
+## AI Component Usage Guide
+
+For comprehensive component usage, HTML examples, government design patterns,
+and accessibility requirements, see `docs/ai-guide.md`.
+
+That guide covers:
+- Component catalog with props, events, and HTML examples for all 15 components (plus 2 child-only tags)
+- Component selection decision tables (checkbox vs toggle, select vs combobox, date picker vs memorable date)
+- Government design patterns (Section 508, plain language, form validation for .gov)
+- WCAG 2.1 AA checklist specific to CivUI
+- Anti-patterns to avoid
+- Tailwind CSS reference (civ- prefix, semantic colors, density system, focus ring)

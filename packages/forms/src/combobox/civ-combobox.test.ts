@@ -339,6 +339,25 @@ describe('civ-combobox', () => {
       expect(handler).not.toHaveBeenCalled();
     });
 
+    it('resets to default value on formResetCallback', async () => {
+      const el = await fixture('<civ-combobox label="State" name="state"></civ-combobox>') as any;
+      el.options = STATES;
+      el.value = 'NY';
+      el._filter = 'New York';
+      await elementUpdated(el);
+
+      // Change selection
+      el._selectOption({ value: 'CA', label: 'California' });
+      await elementUpdated(el);
+      expect(el.value).toBe('CA');
+
+      el.formResetCallback();
+      await elementUpdated(el);
+
+      expect(el.value).toBe('');
+      expect(el._open).toBe(false);
+    });
+
     it('never includes value in analytics payload', async () => {
       const el = await fixture('<civ-combobox label="State" name="state"></civ-combobox>') as any;
       el.options = [{ value: 'CA', label: 'California' }];

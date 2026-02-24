@@ -208,14 +208,14 @@ describe('memorable-date consistency', () => {
     expect(el.label).toBe('Birthday');
   });
 
-  it('hint uses group spacing (civ-mb-2)', async () => {
+  it('hint uses group spacing (civ-hint--group)', async () => {
     const el = await fixture('<civ-memorable-date legend="DOB" hint="Example hint"></civ-memorable-date>');
     await elementUpdated(el);
 
     const spans = el.querySelectorAll('span');
     const hint = Array.from(spans).find((s) => s.textContent === 'Example hint');
     expect(hint).not.toBeNull();
-    expect(hint!.classList.contains('civ-mb-2')).toBe(true);
+    expect(hint!.classList.contains('civ-hint--group')).toBe(true);
   });
 
   it('cascades disabled to child components via formDisabledCallback', async () => {
@@ -268,13 +268,13 @@ describe('memorable-date validation', () => {
     expect(fieldset!.getAttribute('aria-invalid')).toBe('true');
   });
 
-  it('fieldset has aria-invalid="false" when no error', async () => {
+  it('fieldset omits aria-invalid when no error', async () => {
     const el = await fixture<HTMLElement>('<civ-memorable-date legend="DOB"></civ-memorable-date>');
     await elementUpdated(el);
 
     const fieldset = el.querySelector('fieldset');
     expect(fieldset).not.toBeNull();
-    expect(fieldset!.getAttribute('aria-invalid')).toBe('false');
+    expect(fieldset!.getAttribute('aria-invalid')).toBeNull();
   });
 
   it('fieldset has aria-required attribute when required', async () => {
@@ -312,5 +312,38 @@ describe('memorable-date validation', () => {
       expect(input!.type).toBe('text');
       expect(input!.getAttribute('inputmode')).toBe('numeric');
     }
+  });
+
+  it('resets to default value on formResetCallback', async () => {
+    const el = await fixture('<civ-memorable-date legend="DOB" name="dob" value="2000-01-19"></civ-memorable-date>') as any;
+    await elementUpdated(el);
+
+    expect(el.value).toBe('2000-01-19');
+
+    el.value = '2024-06-15';
+    await elementUpdated(el);
+
+    el.formResetCallback();
+    await elementUpdated(el);
+    expect(el.value).toBe('2000-01-19');
+  });
+
+  it('re-enables child components after disabled is cleared', async () => {
+    const el = await fixture('<civ-memorable-date legend="DOB" name="dob"></civ-memorable-date>') as any;
+    await elementUpdated(el);
+
+    el.formDisabledCallback(true);
+    await elementUpdated(el);
+    expect(el.disabled).toBe(true);
+
+    el.formDisabledCallback(false);
+    await elementUpdated(el);
+    expect(el.disabled).toBe(false);
+
+    const select = el.querySelector('civ-select') as any;
+    const textInputs = el.querySelectorAll('civ-text-input');
+    expect(select.disabled).toBe(false);
+    expect((textInputs[0] as any).disabled).toBe(false);
+    expect((textInputs[1] as any).disabled).toBe(false);
   });
 });

@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach } from 'vitest';
-import { fixture, cleanupFixtures } from '@civui/test-utils';
+import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
 import './civ-text-input.js';
 
 afterEach(cleanupFixtures);
@@ -77,11 +77,11 @@ describe('civ-text-input', () => {
     expect(input!.getAttribute('aria-invalid')).toBe('true');
   });
 
-  it('sets aria-invalid to false when no error', async () => {
+  it('omits aria-invalid when no error', async () => {
     const el = await fixture('<civ-text-input label="Email"></civ-text-input>');
 
     const input = el.querySelector('input');
-    expect(input!.getAttribute('aria-invalid')).toBe('false');
+    expect(input!.getAttribute('aria-invalid')).toBeNull();
   });
 
   it('sets aria-describedby for hint and error', async () => {
@@ -172,14 +172,14 @@ describe('civ-text-input', () => {
     expect(el.querySelector('input')).not.toBeNull();
   });
 
-  it('applies error border classes when error is set', async () => {
+  it('uses civ-input class and sets aria-invalid for error styling', async () => {
     const el = await fixture(
       '<civ-text-input label="Email" error="Required"></civ-text-input>',
     );
 
     const input = el.querySelector('input');
-    expect(input!.className).toContain('civ-border-error');
-    expect(input!.className).toContain('civ-border-l-4');
+    expect(input!.className).toContain('civ-input');
+    expect(input!.getAttribute('aria-invalid')).toBe('true');
   });
 
   it('applies width variant classes', async () => {
@@ -198,11 +198,11 @@ describe('civ-text-input', () => {
     expect(input!.getAttribute('aria-required')).toBe('true');
   });
 
-  it('sets aria-required to false when not required', async () => {
+  it('omits aria-required when not required', async () => {
     const el = await fixture('<civ-text-input label="Email"></civ-text-input>');
 
     const input = el.querySelector('input');
-    expect(input!.getAttribute('aria-required')).toBe('false');
+    expect(input!.hasAttribute('aria-required')).toBe(false);
   });
 
   it('has static formAssociated = true', () => {
@@ -264,5 +264,17 @@ describe('text-input maxlength guard', () => {
     const input = el.querySelector('input');
     expect(input).not.toBeNull();
     expect(input!.hasAttribute('inputmode')).toBe(false);
+  });
+
+  it('resets to default value on formResetCallback', async () => {
+    const el = await fixture('<civ-text-input label="Email" value="original"></civ-text-input>') as any;
+
+    el.value = 'changed';
+    await elementUpdated(el);
+    expect(el.value).toBe('changed');
+
+    el.formResetCallback();
+    await elementUpdated(el);
+    expect(el.value).toBe('original');
   });
 });

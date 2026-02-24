@@ -171,14 +171,14 @@ describe('civ-date-picker', () => {
       expect(nextBtn).not.toBeNull();
     });
 
-    it('shows month/year heading with aria-live', async () => {
+    it('shows month/year heading', async () => {
       const el = await fixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
       el._open = true;
       el._displayMonth = 2; // March
       el._displayYear = 2026;
       await elementUpdated(el);
 
-      const heading = el.querySelector('[aria-live="polite"]');
+      const heading = el.querySelector('[aria-label="Current month"]');
       expect(heading).not.toBeNull();
       expect(heading!.textContent).toContain('March');
       expect(heading!.textContent).toContain('2026');

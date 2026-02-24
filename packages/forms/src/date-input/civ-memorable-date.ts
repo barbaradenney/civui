@@ -44,19 +44,22 @@ export class CivMemorableDate extends CivFormElement {
   @state() private _year = '';
 
   private _legendId = this.generateId('legend');
-  private _boundFieldChange = this._onFieldChange.bind(this);
+  private _boundFieldInput = this._onFieldInput.bind(this);
+  private _boundFieldChange = this._onFieldCommit.bind(this);
   private _cachedLocale = '';
   private _cachedMonthOptions: { value: string; label: string }[] = [];
 
   override connectedCallback(): void {
     super.connectedCallback();
     this._parseValue();
-    this.addEventListener('civ-input', this._boundFieldChange as EventListener);
+    this.addEventListener('civ-input', this._boundFieldInput as EventListener);
+    this.addEventListener('civ-change', this._boundFieldChange as EventListener);
   }
 
   override disconnectedCallback(): void {
     super.disconnectedCallback();
-    this.removeEventListener('civ-input', this._boundFieldChange as EventListener);
+    this.removeEventListener('civ-input', this._boundFieldInput as EventListener);
+    this.removeEventListener('civ-change', this._boundFieldChange as EventListener);
   }
 
   protected override willUpdate(changed: Map<string, unknown>): void {
@@ -113,21 +116,20 @@ export class CivMemorableDate extends CivFormElement {
   }
 
   private _syncChildDisabled(): void {
-    if (!this.disabled) return;
     const select = this.querySelector('civ-select') as HTMLElement & { disabled: boolean } | null;
-    if (select) select.disabled = true;
+    if (select) select.disabled = this.disabled;
     (this.querySelectorAll('civ-text-input') as NodeListOf<HTMLElement & { disabled: boolean }>).forEach((input) => {
-      input.disabled = true;
+      input.disabled = this.disabled;
     });
   }
 
   override render() {
     return html`
       <fieldset
-        class="civ-border-0 civ-p-0 civ-m-0 civ-mb-4"
+        class="civ-fieldset"
         aria-describedby="${this._ariaDescribedBy || nothing}"
-        aria-invalid="${this.error ? 'true' : 'false'}"
-        aria-required="${this.required}"
+        aria-invalid="${this.error ? 'true' : nothing}"
+        aria-required="${this.required || nothing}"
       >
         ${renderLegend({ legend: this.legend, required: this.required, legendId: this._legendId })}
         ${renderHint(this._hintId, this.hint, true)}
@@ -180,21 +182,25 @@ export class CivMemorableDate extends CivFormElement {
     `;
   }
 
-  private _onFieldChange(e: Event): void {
-    // Only handle events from child components, not re-dispatched ones
-    if (e.target === this) return;
-    e.stopPropagation();
-
-    // Read values from child components
-    const monthSelect = this.querySelector('civ-select') as any;
-    const inputs = this.querySelectorAll('civ-text-input');
-    const dayInput = inputs[0] as any;
-    const yearInput = inputs[1] as any;
+  private _readChildValues(): void {
+    const baseName = this.name || '';
+    const monthSelect = this.querySelector(
+      `civ-select[name="${baseName ? `${baseName}-month` : 'month'}"]`,
+    ) as any;
+    const dayInput = this.querySelector(
+      `civ-text-input[name="${baseName ? `${baseName}-day` : 'day'}"]`,
+    ) as any;
+    const yearInput = this.querySelector(
+      `civ-text-input[name="${baseName ? `${baseName}-year` : 'year'}"]`,
+    ) as any;
 
     if (monthSelect) this._month = monthSelect.value || '';
     if (dayInput) this._day = dayInput.value || '';
     if (yearInput) this._year = yearInput.value || '';
+  }
 
+  private _updateFromChildren(fireChange: boolean): void {
+    this._readChildValues();
     const assembled = this._assembleValue();
 
     // If all fields are filled but the date is invalid, show error
@@ -204,7 +210,7 @@ export class CivMemorableDate extends CivFormElement {
       this.updateFormValue('');
       const detail = { value: '', month: this._month, day: this._day, year: this._year };
       dispatch(this, 'civ-input', detail);
-      dispatch(this, 'civ-change', detail);
+      if (fireChange) dispatch(this, 'civ-change', detail);
       return;
     }
 
@@ -219,20 +225,38 @@ export class CivMemorableDate extends CivFormElement {
       year: this._year,
     };
     dispatch(this, 'civ-input', detail);
-    dispatch(this, 'civ-change', detail);
-    this.sendAnalytics('change');
-    if (this.value) {
-      this.announce(interpolate(this.dateSetMessage, { date: `${this._month}/${this._day}/${this._year}` }));
+    if (fireChange) {
+      dispatch(this, 'civ-change', detail);
+      this.sendAnalytics('change');
+      if (this.value) {
+        this.announce(interpolate(this.dateSetMessage, { date: `${this._month}/${this._day}/${this._year}` }));
+      }
     }
   }
 
+  private _onFieldInput(e: Event): void {
+    if (e.target === this) return;
+    e.stopPropagation();
+    this._updateFromChildren(false);
+  }
+
+  private _onFieldCommit(e: Event): void {
+    if (e.target === this) return;
+    e.stopPropagation();
+    this._updateFromChildren(true);
+  }
+
   override formResetCallback(): void {
-    this._month = '';
-    this._day = '';
-    this._year = '';
-    this.value = '';
+    this.value = this._defaultValue;
     this.error = '';
-    this.updateFormValue('');
+    if (this._defaultValue) {
+      this._parseValue();
+    } else {
+      this._month = '';
+      this._day = '';
+      this._year = '';
+    }
+    this.updateFormValue(this._defaultValue || '');
     dispatch(this, 'civ-reset');
   }
 }

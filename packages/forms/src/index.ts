@@ -42,4 +42,4 @@ export { CivSegmentedControl, CivSegment } from './segmented-control/index.js';
 
 // Form
 export { CivForm } from './form/index.js';
-export type { FormFieldError } from './form/index.js';
+export type { FormFieldError, CivFormFieldLike } from './form/index.js';

@@ -244,4 +244,49 @@ describe('civ-select civ-input event', () => {
     expect(eventDetail).not.toBeNull();
     expect(eventDetail.value).toBe('NY');
   });
+
+  it('omits aria-invalid when no error', async () => {
+    const el = await fixture('<civ-select label="State"></civ-select>');
+
+    const select = el.querySelector('select');
+    expect(select!.hasAttribute('aria-invalid')).toBe(false);
+  });
+
+  it('omits aria-required when not required', async () => {
+    const el = await fixture('<civ-select label="State"></civ-select>');
+
+    const select = el.querySelector('select');
+    expect(select!.hasAttribute('aria-required')).toBe(false);
+  });
+
+  it('sets aria-describedby for hint and error', async () => {
+    const el = await fixture(
+      '<civ-select label="State" hint="Your state" error="Required"></civ-select>',
+    );
+
+    const select = el.querySelector('select');
+    const describedBy = select!.getAttribute('aria-describedby');
+    expect(describedBy).toBeTruthy();
+    const ids = describedBy!.split(' ');
+    expect(ids.length).toBe(2);
+    for (const id of ids) {
+      expect(el.querySelector(`#${id}`)).not.toBeNull();
+    }
+  });
+
+  it('resets to default value on formResetCallback', async () => {
+    const el = await fixture('<civ-select label="State" name="state"></civ-select>') as any;
+    el.options = [
+      { value: 'CA', label: 'California' },
+      { value: 'NY', label: 'New York' },
+    ];
+    await elementUpdated(el);
+
+    el.value = 'NY';
+    await elementUpdated(el);
+
+    el.formResetCallback();
+    await elementUpdated(el);
+    expect(el.value).toBe('');
+  });
 });

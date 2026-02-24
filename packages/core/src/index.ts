@@ -12,6 +12,7 @@ export { generateId } from './utils/id-generator.js';
 export { debounce } from './utils/debounce.js';
 export { dispatch } from './utils/events.js';
 export { interpolate } from './utils/interpolate.js';
+export { isRtl } from './utils/direction.js';
 
 // Date utilities
 export {

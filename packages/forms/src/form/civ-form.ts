@@ -9,6 +9,25 @@ export interface FormFieldError {
 }
 
 /**
+ * Duck-typed interface for CivUI form fields discovered via
+ * `[data-civ-form-field]`. Avoids importing concrete component
+ * classes while providing type safety for form operations.
+ */
+export interface CivFormFieldLike extends HTMLElement {
+  name: string;
+  value: string;
+  label: string;
+  error: string;
+  required: boolean;
+  disabled: boolean;
+  files?: File[];
+  checkValidity?(): boolean;
+  validationMessage?: string;
+  formResetCallback?(): void;
+  getCheckedValues?(): string[];
+}
+
+/**
  * CivUI Form
  *
  * Validation coordinator with accessible error summary.
@@ -59,13 +78,13 @@ export class CivForm extends CivBaseElement {
     return html`
       <div
         id="${this._summaryId}"
-        class="civ-border-l-4 civ-border-error civ-bg-error-lighter civ-p-4 civ-mb-4"
+        class="civ-form-error-summary"
         role="alert"
         aria-labelledby="${this._summaryHeadingId}"
         data-civ-error-summary
         tabindex="-1"
       >
-        <h3 id="${this._summaryHeadingId}" class="civ-text-error civ-font-bold civ-text-lg civ-mt-0 civ-mb-2">
+        <h3 id="${this._summaryHeadingId}" class="civ-form-error-heading">
           There ${this._errors.length === 1 ? 'is 1 error' : `are ${this._errors.length} errors`} in this form
         </h3>
         <ul class="civ-list-none civ-p-0 civ-m-0">
@@ -99,11 +118,11 @@ export class CivForm extends CivBaseElement {
 
     // Clear all field errors for a fresh validation pass
     for (const el of formElements) {
-      (el as any).error = '';
+      (el as unknown as CivFormFieldLike).error = '';
     }
 
     for (const el of formElements) {
-      const formEl = el as any;
+      const formEl = el as unknown as CivFormFieldLike;
       if (formEl.required && !formEl.value) {
         const message = `${formEl.label || formEl.name || 'This field'} is required`;
         formEl.error = message;
@@ -133,12 +152,15 @@ export class CivForm extends CivBaseElement {
       '[data-civ-form-field]',
     );
     for (const el of formElements) {
-      (el as any).error = '';
+      (el as unknown as CivFormFieldLike).error = '';
     }
   }
 
   /**
-   * Collect form data from all CivUI form elements.
+   * Collect form data as a simple key-value record.
+   * For file-upload fields, the value is a comma-joined string of file names.
+   * For checkbox-group, the value is a comma-joined string of checked values.
+   * Use `toFormData()` when you need actual File objects or multi-value fields.
    */
   getFormData(): Record<string, string> {
     const data: Record<string, string> = {};
@@ -147,7 +169,7 @@ export class CivForm extends CivBaseElement {
     );
 
     for (const el of formElements) {
-      const formEl = el as any;
+      const formEl = el as unknown as CivFormFieldLike;
       if (formEl.name) {
         data[formEl.name] = formEl.value ?? '';
       }
@@ -156,12 +178,51 @@ export class CivForm extends CivBaseElement {
     return data;
   }
 
+  /**
+   * Collect form data as a FormData object, preserving File objects
+   * from file-upload fields and multi-values from checkbox-group.
+   */
+  toFormData(): FormData {
+    const fd = new FormData();
+    const formElements = this.querySelectorAll<HTMLElement>(
+      '[data-civ-form-field]',
+    );
+
+    for (const el of formElements) {
+      const formEl = el as unknown as CivFormFieldLike;
+      if (!formEl.name) continue;
+
+      // file-upload: append actual File objects
+      if (Array.isArray(formEl.files) && formEl.files.length > 0) {
+        for (const file of formEl.files) {
+          fd.append(formEl.name, file);
+        }
+      }
+      // checkbox-group: append each checked value separately
+      else if (typeof formEl.getCheckedValues === 'function') {
+        for (const v of formEl.getCheckedValues()) {
+          fd.append(formEl.name, v);
+        }
+      }
+      // standard single-value field
+      else if (formEl.value != null && formEl.value !== '') {
+        fd.append(formEl.name, formEl.value);
+      }
+    }
+
+    return fd;
+  }
+
   private _onButtonClick(e: Event): void {
     const target = e.target as HTMLElement;
-    if (target.matches('button[type="submit"], button:not([type])')) {
+    const button = target.closest('button') as HTMLButtonElement | null;
+    if (!button || !this.contains(button)) return;
+
+    const type = button.getAttribute('type');
+    if (type === 'submit' || type === null) {
       e.preventDefault();
       this._onSubmit();
-    } else if (target.matches('button[type="reset"]')) {
+    } else if (type === 'reset') {
       e.preventDefault();
       this._onReset();
     }
@@ -199,14 +260,15 @@ export class CivForm extends CivBaseElement {
       '[data-civ-form-field]',
     );
     for (const el of formElements) {
-      if (typeof (el as any).formResetCallback === 'function') {
-        (el as any).formResetCallback();
+      const formEl = el as unknown as CivFormFieldLike;
+      if (typeof formEl.formResetCallback === 'function') {
+        formEl.formResetCallback();
       }
     }
   }
 
   private _getFieldInputId(element: Element): string {
-    const input = element.querySelector('input, select, textarea');
+    const input = element.querySelector('input, select, textarea, button, [role="button"], [tabindex]');
     return input?.id || element.id || '';
   }
 

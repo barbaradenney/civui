@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivFormElement, dispatch, renderLegend, renderHint, renderError, resolveGroupNavIndex } from '@civui/core';
+import { CivFormElement, dispatch, renderLegend, renderHint, renderError, resolveGroupNavIndex, isRtl } from '@civui/core';
 import type { CivSegment } from './civ-segment.js';
 
 /**
@@ -78,12 +78,12 @@ export class CivSegmentedControl extends CivFormElement {
   override render() {
     return html`
       <fieldset
-        class="civ-border-0 civ-p-0 civ-m-0 civ-mb-4"
+        class="civ-fieldset"
         role="radiogroup"
         aria-orientation="horizontal"
         aria-describedby="${this._ariaDescribedBy || nothing}"
-        aria-invalid="${this.error ? 'true' : 'false'}"
-        aria-required="${this.required}"
+        aria-invalid="${this.error ? 'true' : nothing}"
+        aria-required="${this.required || nothing}"
         ?disabled="${this.disabled}"
       >
         ${renderLegend({ legend: this.legend, required: this.required, srOnly: true })}
@@ -110,11 +110,23 @@ export class CivSegmentedControl extends CivFormElement {
     });
   }
 
+  private _groupDisabledSet = new WeakSet<Element>();
+
   private _syncSegmentDisabled(): void {
-    if (!this.disabled) return;
-    this._getSegments().forEach((segment) => {
-      segment.disabled = true;
-    });
+    const segments = this._getSegments();
+    if (this.disabled) {
+      segments.forEach((segment) => {
+        if (!segment.disabled) this._groupDisabledSet.add(segment);
+        segment.disabled = true;
+      });
+    } else {
+      segments.forEach((segment) => {
+        if (this._groupDisabledSet.has(segment)) {
+          segment.disabled = false;
+        }
+      });
+      this._groupDisabledSet = new WeakSet();
+    }
   }
 
   private _syncSegmentPositions(): void {
@@ -161,7 +173,7 @@ export class CivSegmentedControl extends CivFormElement {
     if (segments.length === 0) return;
 
     const currentIndex = segments.findIndex((s) => s.selected);
-    const nextIndex = resolveGroupNavIndex(e.key, currentIndex, segments.length);
+    const nextIndex = resolveGroupNavIndex(e.key, currentIndex, segments.length, isRtl(this));
 
     if (nextIndex !== undefined) {
       e.preventDefault();
@@ -174,6 +186,7 @@ export class CivSegmentedControl extends CivFormElement {
       // Focus the button inside the segment
       const btn = segment.querySelector('button');
       if (btn) btn.focus();
+      this.announce(segment.label);
 
       dispatch(this, 'civ-input', { value: this.value });
       dispatch(this, 'civ-change', { value: this.value });

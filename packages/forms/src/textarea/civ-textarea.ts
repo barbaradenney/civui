@@ -35,6 +35,9 @@ export class CivTextarea extends CivFormElement {
   @state() private _announcedCharCount = 0;
 
   private _charCountId = this.generateId('charcount');
+  // Debounce SR character count announcements at 1000ms to avoid
+  // spamming screen readers on every keystroke. The visual counter
+  // updates immediately; the aria-live region updates after a pause.
   private _debouncedAnnounceCount = debounce(() => {
     this._announcedCharCount = this._charCount;
   }, 1000);
@@ -60,7 +63,6 @@ export class CivTextarea extends CivFormElement {
 
   override render() {
     const classes = inputClasses({
-      error: this.error, disabled: this.disabled,
       extra: ['civ-resize-y'],
     });
 
@@ -82,9 +84,9 @@ export class CivTextarea extends CivFormElement {
           maxlength="${this.maxlength ?? nothing}"
           ?disabled="${this.disabled}"
           ?required="${this.required}"
-          aria-required="${this.required}"
+          aria-required="${this.required || nothing}"
           aria-describedby="${this._ariaDescribedBy || nothing}"
-          aria-invalid="${this.error ? 'true' : 'false'}"
+          aria-invalid="${this.error ? 'true' : nothing}"
           @input="${this._onInput}"
           @change="${this._handleChange}"
         ></textarea>

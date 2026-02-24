@@ -191,4 +191,12 @@ describe('civ-toggle', () => {
     expect(el.shadowRoot).toBeNull();
     expect(el.querySelector('button[role="switch"]')).not.toBeNull();
   });
+
+  it('applies focus-visible:civ-focus-ring to the toggle button', async () => {
+    const el = await fixture('<civ-toggle label="Dark mode"></civ-toggle>');
+
+    const btn = el.querySelector('button[role="switch"]') as HTMLButtonElement;
+    expect(btn.className).toContain('focus-visible:civ-focus-ring');
+    expect(btn.className).not.toContain('focus:civ-outline');
+  });
 });

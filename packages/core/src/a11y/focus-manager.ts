@@ -11,7 +11,7 @@ const FOCUSABLE_SELECTOR = [
  * Check if an element is visible (not hidden via CSS or aria-hidden).
  */
 function isVisible(el: HTMLElement): boolean {
-  if (el.hasAttribute('aria-hidden')) return false;
+  if (el.getAttribute('aria-hidden') === 'true') return false;
   if (el.closest('[inert]')) return false;
   const style = getComputedStyle(el);
   if (style.display === 'none') return false;
@@ -42,10 +42,11 @@ export function trapFocus(container: HTMLElement): () => void {
     const first = focusable[0];
     const last = focusable[focusable.length - 1];
 
-    if (e.shiftKey && document.activeElement === first) {
+    const active = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    if (e.shiftKey && active === first) {
       e.preventDefault();
       last.focus();
-    } else if (!e.shiftKey && document.activeElement === last) {
+    } else if (!e.shiftKey && active === last) {
       e.preventDefault();
       first.focus();
     }

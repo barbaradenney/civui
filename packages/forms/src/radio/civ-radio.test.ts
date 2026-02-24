@@ -73,8 +73,8 @@ describe('civ-radio', () => {
   it('renders tile variant', async () => {
     const el = await fixture('<civ-radio label="Option A" value="a" tile></civ-radio>');
 
-    const border = el.querySelector('.civ-border');
-    expect(border).not.toBeNull();
+    const tile = el.querySelector('.civ-check-tile');
+    expect(tile).not.toBeNull();
   });
 
   it('sets data-civ-tile on tile wrapper', async () => {
@@ -222,11 +222,11 @@ describe('civ-radio accessibility', () => {
     expect(input.getAttribute('aria-invalid')).toBe('true');
   });
 
-  it('sets aria-invalid to false when no error', async () => {
+  it('omits aria-invalid when no error', async () => {
     const el = await fixture('<civ-radio label="Option A" value="a"></civ-radio>');
 
     const input = el.querySelector('input') as HTMLInputElement;
-    expect(input.getAttribute('aria-invalid')).toBe('false');
+    expect(input.getAttribute('aria-invalid')).toBeNull();
   });
 
   it('includes description in aria-describedby', async () => {
@@ -269,7 +269,7 @@ describe('civ-radio-group accessibility', () => {
     expect(fieldset!.getAttribute('aria-invalid')).toBe('true');
   });
 
-  it('sets aria-invalid to false on fieldset when no error', async () => {
+  it('omits aria-invalid on fieldset when no error', async () => {
     const el = await fixture(`
       <civ-radio-group legend="Color" name="color">
         <civ-radio label="Red" value="red"></civ-radio>
@@ -277,7 +277,7 @@ describe('civ-radio-group accessibility', () => {
     `);
 
     const fieldset = el.querySelector('fieldset');
-    expect(fieldset!.getAttribute('aria-invalid')).toBe('false');
+    expect(fieldset!.getAttribute('aria-invalid')).toBeNull();
   });
 
   it('sets aria-required on fieldset when required', async () => {
@@ -291,7 +291,7 @@ describe('civ-radio-group accessibility', () => {
     expect(fieldset!.getAttribute('aria-required')).toBe('true');
   });
 
-  it('sets aria-required="false" on fieldset when not required', async () => {
+  it('omits aria-required on fieldset when not required', async () => {
     const el = await fixture(`
       <civ-radio-group legend="Color" name="color">
         <civ-radio label="Red" value="red"></civ-radio>
@@ -299,7 +299,7 @@ describe('civ-radio-group accessibility', () => {
     `);
 
     const fieldset = el.querySelector('fieldset');
-    expect(fieldset!.getAttribute('aria-required')).toBe('false');
+    expect(fieldset!.hasAttribute('aria-required')).toBe(false);
   });
 });
 
@@ -534,23 +534,25 @@ describe('civ-radio-group ARIA attributes', () => {
 });
 
 describe('civ-radio aria-checked', () => {
-  it('sets aria-checked="true" when checked', async () => {
+  it('omits aria-checked (native radio conveys checked state)', async () => {
     const el = await fixture('<civ-radio label="Option A" value="a" checked></civ-radio>');
 
     const input = el.querySelector('input') as HTMLInputElement;
-    expect(input.getAttribute('aria-checked')).toBe('true');
+    expect(input.hasAttribute('aria-checked')).toBe(false);
+    expect(input.checked).toBe(true);
   });
 
-  it('sets aria-checked="false" when unchecked', async () => {
+  it('omits aria-checked when unchecked (native radio conveys state)', async () => {
     const el = await fixture('<civ-radio label="Option A" value="a"></civ-radio>');
 
     const input = el.querySelector('input') as HTMLInputElement;
-    expect(input.getAttribute('aria-checked')).toBe('false');
+    expect(input.hasAttribute('aria-checked')).toBe(false);
+    expect(input.checked).toBe(false);
   });
 });
 
 describe('civ-radio-group orientation rendering', () => {
-  it('uses flex-row for horizontal orientation', async () => {
+  it('uses civ-group-layout--horizontal for horizontal orientation', async () => {
     const el = await fixture(`
       <civ-radio-group legend="Color" name="color" orientation="horizontal">
         <civ-radio label="Red" value="red"></civ-radio>
@@ -559,12 +561,10 @@ describe('civ-radio-group orientation rendering', () => {
     `);
 
     const slotWrapper = el.querySelector('fieldset > div');
-    expect(slotWrapper!.className).toContain('civ-flex-row');
-    expect(slotWrapper!.className).toContain('civ-flex-wrap');
-    expect(slotWrapper!.className).toContain('civ-gap-4');
+    expect(slotWrapper!.className).toContain('civ-group-layout--horizontal');
   });
 
-  it('uses flex-col for vertical orientation', async () => {
+  it('uses civ-group-layout--vertical for vertical orientation', async () => {
     const el = await fixture(`
       <civ-radio-group legend="Color" name="color">
         <civ-radio label="Red" value="red"></civ-radio>
@@ -573,8 +573,7 @@ describe('civ-radio-group orientation rendering', () => {
     `);
 
     const slotWrapper = el.querySelector('fieldset > div');
-    expect(slotWrapper!.className).toContain('civ-flex-col');
-    expect(slotWrapper!.className).toContain('civ-gap-1');
+    expect(slotWrapper!.className).toContain('civ-group-layout--vertical');
   });
 });
 

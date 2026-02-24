@@ -48,41 +48,10 @@ export class CivCheckbox extends CivFormElement {
   }
 
   override render() {
-    const isActive = this.checked || this.indeterminate;
-    const wrapperClasses = this.tile
-      ? [
-          'civ-relative',
-          'civ-border',
-          'civ-rounded',
-          'civ-p-4',
-          isActive ? 'civ-border-primary civ-bg-primary-lightest' : 'civ-border-base-light',
-          this.disabled ? 'civ-opacity-50 civ-cursor-not-allowed' : 'civ-cursor-pointer',
-        ]
-          .filter(Boolean)
-          .join(' ')
-      : '';
-
-    const inputClasses = [
-      'civ-w-5',
-      'civ-h-5',
-      'civ-mr-2',
-      'civ-align-middle',
-      'civ-accent-primary',
-      'focus-visible:civ-focus-ring',
-      this.disabled ? 'civ-cursor-not-allowed' : 'civ-cursor-pointer',
-    ].join(' ');
-
-    const labelClasses = [
-      'civ-text-base',
-      'civ-font-sans',
-      'civ-text-base-darkest',
-      this.disabled ? 'civ-cursor-not-allowed' : 'civ-cursor-pointer',
-    ].join(' ');
-
     const content = html`
       <div class="civ-flex civ-items-start">
         <input
-          class="${inputClasses}"
+          class="civ-check-input focus-visible:civ-focus-ring"
           id="${this._inputId}"
           type="checkbox"
           name="${this.name}"
@@ -90,28 +59,28 @@ export class CivCheckbox extends CivFormElement {
           .checked="${this.checked}"
           ?disabled="${this.disabled}"
           ?required="${this.required}"
-          aria-required="${this.required}"
-          aria-checked="${this.indeterminate ? 'mixed' : this.checked ? 'true' : 'false'}"
-          aria-invalid="${this.error ? 'true' : 'false'}"
+          aria-required="${this.required || nothing}"
+          aria-checked="${this.indeterminate ? 'mixed' : nothing}"
+          aria-invalid="${this.error ? 'true' : nothing}"
           aria-describedby="${this._ariaDescribedBy || nothing}"
           @change="${this._onCheckboxChange}"
         />
         <div>
-          <label class="${labelClasses}" for="${this._inputId}">
+          <label class="civ-check-label" for="${this._inputId}">
             ${this.label}
             ${this.required
-              ? html`<abbr class="civ-text-error civ-no-underline" title="required">*</abbr>`
+              ? html`<abbr class="civ-required-mark" title="required">*</abbr>`
               : nothing}
           </label>
           ${this.description
-            ? html`<span id="${this._descriptionId}" class="civ-block civ-text-sm civ-text-base civ-mt-0.5">${this.description}</span>`
+            ? html`<span id="${this._descriptionId}" class="civ-check-description">${this.description}</span>`
             : nothing}
         </div>
       </div>
     `;
 
     return html`
-      <div class="civ-mb-2 ${wrapperClasses}" data-civ-tile="${this.tile || nothing}">
+      <div class="civ-mb-2 ${this.tile ? 'civ-check-tile' : ''}" data-civ-tile="${this.tile || nothing}">
         ${renderHint(this._hintId, this.hint)}
         ${renderError(this._errorId, this.error)}
         ${content}
@@ -129,6 +98,20 @@ export class CivCheckbox extends CivFormElement {
 
   protected override _syncFormValue(): void {
     this.updateFormValue(this.checked ? this.value : null);
+  }
+
+  protected override _updateValidity(): void {
+    if (typeof this._internals?.setValidity !== 'function') return;
+    const anchor = this.querySelector('input') as HTMLElement | null;
+    if (this.required && !this.checked) {
+      this._internals.setValidity(
+        { valueMissing: true },
+        this.error || `${this.label || 'This field'} is required`,
+        anchor ?? undefined,
+      );
+    } else {
+      this._internals.setValidity({});
+    }
   }
 
   private _onCheckboxChange(e: Event): void {

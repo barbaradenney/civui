@@ -21,6 +21,7 @@ import {
   clampDate,
   dispatch,
   interpolate,
+  isRtl,
   renderLabel,
   renderHint,
   renderError,
@@ -94,11 +95,11 @@ export class CivDatePicker extends CivFormElement {
     },
     {
       key: 'ArrowRight',
-      handler: () => this._moveFocusSkipDisabled(1),
+      handler: () => this._moveFocusSkipDisabled(isRtl(this) ? -1 : 1),
     },
     {
       key: 'ArrowLeft',
-      handler: () => this._moveFocusSkipDisabled(-1),
+      handler: () => this._moveFocusSkipDisabled(isRtl(this) ? 1 : -1),
     },
     {
       key: 'ArrowDown',
@@ -199,10 +200,7 @@ export class CivDatePicker extends CivFormElement {
   }
 
   override render() {
-    const classes = inputClasses({
-      error: this.error, disabled: this.disabled,
-      rounded: 'civ-rounded-l',
-    });
+    const classes = inputClasses({ rounded: 'civ-rounded-s' });
 
     const selectedDate = this.value ? parseISODate(this.value) : null;
     const buttonLabel = selectedDate
@@ -223,17 +221,20 @@ export class CivDatePicker extends CivFormElement {
             placeholder="${this.placeholder}"
             ?disabled="${this.disabled}"
             ?required="${this.required}"
-            aria-required="${this.required}"
+            aria-required="${this.required || nothing}"
             aria-describedby="${this._ariaDescribedBy || nothing}"
-            aria-invalid="${this.error ? 'true' : 'false'}"
+            aria-invalid="${this.error ? 'true' : nothing}"
             @input="${this._onTextInput}"
             @change="${this._onTextChange}"
           />
           <button
             id="${this._buttonId}"
             type="button"
-            class="civ-border civ-border-l-0 civ-border-base-light civ-rounded-r civ-px-2 civ-py-1.5 civ-bg-base-lightest hover:civ-bg-base-lighter focus-visible:civ-focus-ring ${this.disabled ? 'civ-opacity-50 civ-cursor-not-allowed' : ''}"
+            class="civ-datepicker-cal-btn hover:civ-bg-base-lighter focus-visible:civ-focus-ring"
             aria-label="${buttonLabel}"
+            aria-haspopup="dialog"
+            aria-expanded="${this._open}"
+            aria-controls="${this._open ? this._gridId : nothing}"
             ?disabled="${this.disabled}"
             @click="${this._toggleDialog}"
           >
@@ -272,13 +273,13 @@ export class CivDatePicker extends CivFormElement {
         role="dialog"
         aria-modal="true"
         aria-label="${this.dialogLabel}"
-        class="civ-absolute civ-z-50 civ-mt-1 civ-bg-white civ-border civ-border-base-light civ-rounded civ-shadow-lg civ-p-4"
+        class="civ-datepicker-dialog"
         @keydown="${this._onDialogKeydown}"
       >
         <div class="civ-flex civ-items-center civ-justify-between civ-mb-2">
           <button
             type="button"
-            class="civ-p-1 civ-rounded hover:civ-bg-base-lightest focus-visible:civ-focus-ring"
+            class="civ-datepicker-nav-btn hover:civ-bg-base-lightest focus-visible:civ-focus-ring"
             aria-label="${this.previousMonthLabel}"
             ?disabled="${prevMonthDisabled}"
             @click="${this._prevMonth}"
@@ -287,12 +288,12 @@ export class CivDatePicker extends CivFormElement {
               <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
             </svg>
           </button>
-          <div id="${this._headingId}" role="status" aria-live="polite" class="civ-font-bold civ-text-base">
+          <div id="${this._headingId}" aria-label="Current month" class="civ-font-bold civ-text-base">
             ${headingText}
           </div>
           <button
             type="button"
-            class="civ-p-1 civ-rounded hover:civ-bg-base-lightest focus-visible:civ-focus-ring"
+            class="civ-datepicker-nav-btn hover:civ-bg-base-lightest focus-visible:civ-focus-ring"
             aria-label="${this.nextMonthLabel}"
             ?disabled="${nextMonthDisabled}"
             @click="${this._nextMonth}"
@@ -332,15 +333,9 @@ export class CivDatePicker extends CivFormElement {
     const focused = isSameDay(day.date, this._focusedDate);
     const tabIdx = focused && day.inCurrentMonth ? 0 : -1;
 
-    const cellClasses = [
-      'civ-w-10',
-      'civ-h-10',
-      'civ-text-center',
-      'civ-text-sm',
-      'civ-rounded',
+    const extraClasses = [
       !day.inCurrentMonth ? 'civ-text-base-light' : '',
-      disabled ? 'civ-opacity-40 civ-cursor-not-allowed' : 'civ-cursor-pointer hover:civ-bg-primary-lightest',
-      selected ? 'civ-bg-primary civ-text-white civ-font-bold' : '',
+      !disabled ? 'hover:civ-bg-primary-lightest' : '',
       day.isToday && !selected ? 'civ-font-bold civ-underline' : '',
       selected ? 'focus-visible:civ-focus-ring-inverse' : 'focus-visible:civ-focus-ring',
     ]
@@ -353,7 +348,7 @@ export class CivDatePicker extends CivFormElement {
           type="button"
           data-civ-day
           data-date="${toISODateString(day.date)}"
-          class="${cellClasses}"
+          class="civ-datepicker-day ${extraClasses}"
           tabindex="${tabIdx}"
           aria-selected="${selected}"
           aria-disabled="${disabled}"

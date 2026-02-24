@@ -17,7 +17,8 @@ import { interpolate } from '../utils/interpolate.js';
 export class CivFormElement extends CivBaseElement {
   static formAssociated = true;
 
-  private _internals: ElementInternals;
+  protected _internals: ElementInternals;
+  private _cachedAnchor: HTMLElement | null | undefined;
   protected _inputId: string;
   protected _hintId: string;
   protected _errorId: string;
@@ -90,6 +91,9 @@ export class CivFormElement extends CivBaseElement {
 
   /**
    * Build the aria-describedby value from hint and error IDs.
+   * Returns empty string when no IDs apply; templates should use
+   * `aria-describedby="${this._ariaDescribedBy || nothing}"` to
+   * omit the attribute entirely when empty.
    */
   protected get _ariaDescribedBy(): string {
     const ids: string[] = [];
@@ -115,7 +119,11 @@ export class CivFormElement extends CivBaseElement {
   protected _updateValidity(): void {
     if (typeof this._internals.setValidity !== 'function') return;
 
-    const anchor = this.querySelector('input, select, textarea') as HTMLElement | null;
+    // Cache the anchor element to avoid DOM query on every value change
+    if (this._cachedAnchor === undefined) {
+      this._cachedAnchor = this.querySelector('input, select, textarea') as HTMLElement | null;
+    }
+    const anchor = this._cachedAnchor;
 
     if (this.required && !this.value) {
       this._internals.setValidity(
@@ -147,6 +155,8 @@ export class CivFormElement extends CivBaseElement {
 
   override updated(changed: Map<string, unknown>): void {
     super.updated(changed);
+    // Invalidate cached anchor — DOM may have changed after render
+    this._cachedAnchor = undefined;
     if (changed.has('error') && this.error) {
       this.announce(this.error, 'assertive');
     }
@@ -160,7 +170,8 @@ export class CivFormElement extends CivBaseElement {
    * Called automatically when the `value` property changes.
    * Override in subclasses with custom form value logic (e.g. checkbox, toggle).
    *
-   * Overridden by: CivCheckbox, CivToggle, CivCheckboxGroup, CivFileUpload
+   * Overridden by: CivCheckbox (boolean), CivToggle (boolean),
+   * CivCheckboxGroup (FormData), CivFileUpload (FormData)
    */
   protected _syncFormValue(): void {
     this.updateFormValue(this.value || '');
@@ -172,7 +183,7 @@ export class CivFormElement extends CivBaseElement {
   protected _handleInput(e: Event): void {
     const target = e.target as HTMLInputElement;
     this.value = target.value;
-    this.updateFormValue(this.value);
+    // Form value sync handled by _syncFormValue() in updated()
     dispatch(this, 'civ-input', { value: this.value });
   }
 
@@ -182,7 +193,7 @@ export class CivFormElement extends CivBaseElement {
   protected _handleChange(e: Event): void {
     const target = e.target as HTMLInputElement;
     this.value = target.value;
-    this.updateFormValue(this.value);
+    // Form value sync handled by _syncFormValue() in updated()
     dispatch(this, 'civ-change', { value: this.value });
     this.sendAnalytics('change');
   }

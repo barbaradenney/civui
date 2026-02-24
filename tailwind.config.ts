@@ -3,6 +3,7 @@ import plugin from 'tailwindcss/plugin';
 
 const config: Config = {
   prefix: 'civ-',
+  darkMode: 'media',
   content: ['./packages/*/src/**/*.ts'],
   theme: {
     extend: {
@@ -49,27 +50,36 @@ const config: Config = {
           darker: 'var(--civ-color-base-darker)',
           darkest: 'var(--civ-color-base-darkest)',
         },
+        white: {
+          DEFAULT: 'var(--civ-color-white-DEFAULT)',
+        },
+        black: {
+          DEFAULT: 'var(--civ-color-black-DEFAULT)',
+        },
+        accent: {
+          cool: {
+            lightest: 'var(--civ-color-accent-cool-lightest)',
+            light: 'var(--civ-color-accent-cool-light)',
+            DEFAULT: 'var(--civ-color-accent-cool-DEFAULT)',
+            dark: 'var(--civ-color-accent-cool-dark)',
+          },
+          warm: {
+            lightest: 'var(--civ-color-accent-warm-lightest)',
+            light: 'var(--civ-color-accent-warm-light)',
+            DEFAULT: 'var(--civ-color-accent-warm-DEFAULT)',
+            dark: 'var(--civ-color-accent-warm-dark)',
+          },
+        },
       },
       fontFamily: {
-        sans: [
-          'Public Sans',
-          'system-ui',
-          '-apple-system',
-          'BlinkMacSystemFont',
-          'Segoe UI',
-          'Roboto',
-          'Helvetica Neue',
-          'Arial',
-          'sans-serif',
-        ],
-        mono: [
-          'Roboto Mono',
-          'Consolas',
-          'Monaco',
-          'Andale Mono',
-          'Ubuntu Mono',
-          'monospace',
-        ],
+        sans: ['var(--civ-typography-fontFamily-sans)'],
+        mono: ['var(--civ-typography-fontFamily-mono)'],
+      },
+      fontWeight: {
+        light: 'var(--civ-typography-fontWeight-light)',
+        normal: 'var(--civ-typography-fontWeight-regular)',
+        semibold: 'var(--civ-typography-fontWeight-semibold)',
+        bold: 'var(--civ-typography-fontWeight-bold)',
       },
       // Density-responsive: these resolve to CSS variables that change
       // when [data-civ-scale="spacious|dense"] is set on a parent element
@@ -129,6 +139,24 @@ const config: Config = {
           'box-shadow':
             '0 0 0 calc(var(--civ-focus-outline-offset) + var(--civ-focus-outline-width) + var(--civ-focus-shadow-spread)) var(--civ-focus-outline-color)',
         },
+
+        // Logical border-width (replaces border-l-4 / border-l-0)
+        '.civ-border-s-4': { 'border-inline-start-width': '4px' },
+        '.civ-border-s-0': { 'border-inline-start-width': '0' },
+
+        // Logical rounding (replaces rounded-l / rounded-r)
+        '.civ-rounded-s': {
+          'border-start-start-radius': 'var(--civ-border-radius-DEFAULT, 0.25rem)',
+          'border-end-start-radius': 'var(--civ-border-radius-DEFAULT, 0.25rem)',
+        },
+        '.civ-rounded-e': {
+          'border-start-end-radius': 'var(--civ-border-radius-DEFAULT, 0.25rem)',
+          'border-end-end-radius': 'var(--civ-border-radius-DEFAULT, 0.25rem)',
+        },
+
+        // Logical margin (replaces mr-2 / ml-2)
+        '.civ-me-2': { 'margin-inline-end': 'var(--civ-spacing-2)' },
+        '.civ-ms-2': { 'margin-inline-start': 'var(--civ-spacing-2)' },
       });
     }),
   ],

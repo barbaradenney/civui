@@ -90,28 +90,28 @@ export class CivCheckboxGroup extends CivFormElement {
   }
 
   override formDisabledCallback(disabled: boolean): void {
-    this.disabled = disabled;
+    super.formDisabledCallback(disabled);
     this._syncCheckboxDisabled();
   }
 
   override render() {
-    const slotClasses =
+    const layoutClass =
       this.orientation === 'horizontal'
-        ? 'civ-flex civ-flex-row civ-flex-wrap civ-gap-4'
-        : 'civ-flex civ-flex-col civ-gap-1';
+        ? 'civ-group-layout--horizontal'
+        : 'civ-group-layout--vertical';
 
     return html`
       <fieldset
-        class="civ-border-0 civ-p-0 civ-m-0 civ-mb-4"
+        class="civ-fieldset"
         aria-describedby="${this._ariaDescribedBy || nothing}"
-        aria-invalid="${this.error ? 'true' : 'false'}"
-        aria-required="${this.required}"
+        aria-invalid="${this.error ? 'true' : nothing}"
+        aria-required="${this.required || nothing}"
         ?disabled="${this.disabled}"
       >
         ${renderLegend({ legend: this.legend, required: this.required })}
         ${renderHint(this._hintId, this.hint, true)}
         ${renderError(this._errorId, this.error, true)}
-        <div class="${slotClasses}">
+        <div class="${layoutClass}">
           <slot></slot>
         </div>
       </fieldset>
@@ -125,6 +125,8 @@ export class CivCheckboxGroup extends CivFormElement {
     return this._parseValue(this.value);
   }
 
+  // Called by multiple sync methods per update cycle. querySelectorAll is
+  // efficient for typical group sizes (3–10 children) and avoids stale caches.
   private _getCheckboxes(): CivCheckbox[] {
     return Array.from(this.querySelectorAll('civ-checkbox')) as CivCheckbox[];
   }
@@ -151,11 +153,23 @@ export class CivCheckboxGroup extends CivFormElement {
     });
   }
 
+  private _groupDisabledSet = new WeakSet<Element>();
+
   private _syncCheckboxDisabled(): void {
-    if (!this.disabled) return;
-    this._getCheckboxes().forEach((cb) => {
-      cb.disabled = true;
-    });
+    const children = this._getCheckboxes();
+    if (this.disabled) {
+      children.forEach((cb) => {
+        if (!cb.disabled) this._groupDisabledSet.add(cb);
+        cb.disabled = true;
+      });
+    } else {
+      children.forEach((cb) => {
+        if (this._groupDisabledSet.has(cb)) {
+          cb.disabled = false;
+        }
+      });
+      this._groupDisabledSet = new WeakSet();
+    }
   }
 
   private _syncCheckboxTile(): void {

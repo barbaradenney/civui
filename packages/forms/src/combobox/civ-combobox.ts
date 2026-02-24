@@ -42,10 +42,12 @@ export class CivCombobox extends CivFormElement {
   private _listboxId = this.generateId('listbox');
   private _labelId = this.generateId('label');
   private _boundDocClick = this._onDocumentClick.bind(this);
+  private _announceTimer?: ReturnType<typeof setTimeout>;
 
   override disconnectedCallback(): void {
     super.disconnectedCallback();
     document.removeEventListener('click', this._boundDocClick);
+    clearTimeout(this._announceTimer);
   }
 
   private get _filteredOptions(): ComboboxOption[] {
@@ -67,7 +69,7 @@ export class CivCombobox extends CivFormElement {
         ? `${this._listboxId}-option-${this._activeIndex}`
         : '';
 
-    const classes = inputClasses({ error: this.error, disabled: this.disabled });
+    const classes = inputClasses();
 
     return html`
       <div class="civ-mb-4 civ-relative">
@@ -82,16 +84,17 @@ export class CivCombobox extends CivFormElement {
             type="text"
             role="combobox"
             aria-autocomplete="list"
+            aria-haspopup="listbox"
             aria-expanded="${this._open}"
             aria-controls="${this._open ? this._listboxId : nothing}"
             aria-activedescendant="${this._open && activeOptionId ? activeOptionId : nothing}"
             aria-describedby="${this._ariaDescribedBy || nothing}"
-            aria-invalid="${this.error ? 'true' : 'false'}"
+            aria-invalid="${this.error ? 'true' : nothing}"
             .value="${this._displayValue}"
             placeholder="${this.placeholder || nothing}"
             ?disabled="${this.disabled}"
             ?required="${this.required}"
-            aria-required="${this.required}"
+            aria-required="${this.required || nothing}"
             autocomplete="off"
             @input="${this._onFilterInput}"
             @focus="${this._onFocus}"
@@ -103,7 +106,7 @@ export class CivCombobox extends CivFormElement {
                 <ul
                   id="${this._listboxId}"
                   role="listbox"
-                  class="civ-absolute civ-z-10 civ-w-full civ-mt-0.5 civ-bg-white civ-border civ-border-base-light civ-rounded civ-shadow-md civ-max-h-60 civ-overflow-y-auto civ-list-none civ-p-0 civ-m-0"
+                  class="civ-combobox-listbox"
                   aria-labelledby="${this._labelId}"
                 >
                   ${filtered.map(
@@ -111,10 +114,8 @@ export class CivCombobox extends CivFormElement {
                       <li
                         id="${this._listboxId}-option-${i}"
                         role="option"
-                        class="civ-px-3 civ-py-2 civ-text-base civ-cursor-pointer
-                          ${i === this._activeIndex
-                            ? 'civ-bg-primary civ-text-white'
-                            : 'hover:civ-bg-base-lightest'}
+                        class="civ-combobox-option
+                          ${i !== this._activeIndex ? 'hover:civ-bg-base-lightest' : ''}
                           ${option.value === this.value && i !== this._activeIndex
                             ? 'civ-font-bold'
                             : ''}"
@@ -161,10 +162,22 @@ export class CivCombobox extends CivFormElement {
     this._filter = target.value;
     this._setOpen(true);
     this._activeIndex = -1;
-    // Clear the selected value when typing
+    // Clear the selected value when the user types — filtering invalidates
+    // the previous selection. A new selection is committed via _selectOption().
     this.value = '';
     this.updateFormValue('');
     dispatch(this, 'civ-input', { value: this._filter });
+
+    // Announce filtered results count for screen readers (debounced)
+    clearTimeout(this._announceTimer);
+    this._announceTimer = setTimeout(() => {
+      const count = this._filteredOptions.length;
+      this.announce(
+        count === 0
+          ? this.noResultsText
+          : `${count} ${count === 1 ? 'result' : 'results'} available`,
+      );
+    }, 300);
   }
 
   private _onFocus(): void {
@@ -191,7 +204,7 @@ export class CivCombobox extends CivFormElement {
         if (!this._open) {
           this._setOpen(true);
         } else {
-          this._activeIndex = Math.max(this._activeIndex - 1, 0);
+          this._activeIndex = Math.max(this._activeIndex - 1, -1);
         }
         break;
 
@@ -225,6 +238,7 @@ export class CivCombobox extends CivFormElement {
     this.updateFormValue(this.value);
     dispatch(this, 'civ-change', { value: this.value, label: option.label });
     this.sendAnalytics('select');
+    this.announce(`${option.label}, selected`);
   }
 
   private _onDocumentClick(e: MouseEvent): void {

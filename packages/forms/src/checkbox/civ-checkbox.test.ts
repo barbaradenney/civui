@@ -74,8 +74,8 @@ describe('civ-checkbox', () => {
 
     const wrapper = el.querySelector('div > div');
     expect(wrapper).not.toBeNull();
-    // Tile variant should have border classes on outer wrapper
-    const outerDiv = el.querySelector('.civ-border');
+    // Tile variant should have civ-check-tile class on outer wrapper
+    const outerDiv = el.querySelector('.civ-check-tile');
     expect(outerDiv).not.toBeNull();
   });
 
@@ -204,11 +204,11 @@ describe('civ-checkbox accessibility', () => {
     expect(input.getAttribute('aria-invalid')).toBe('true');
   });
 
-  it('sets aria-invalid to false when no error', async () => {
+  it('omits aria-invalid when no error', async () => {
     const el = await fixture('<civ-checkbox label="Agree"></civ-checkbox>');
 
     const input = el.querySelector('input') as HTMLInputElement;
-    expect(input.getAttribute('aria-invalid')).toBe('false');
+    expect(input.getAttribute('aria-invalid')).toBeNull();
   });
 
   it('sets aria-required when required', async () => {
@@ -411,18 +411,18 @@ describe('civ-checkbox-group form association', () => {
 });
 
 describe('civ-checkbox-group orientation', () => {
-  it('applies vertical classes by default', async () => {
+  it('applies civ-group-layout--vertical by default', async () => {
     const el = await fixture(`
       <civ-checkbox-group legend="Options">
         <civ-checkbox label="A" value="a"></civ-checkbox>
       </civ-checkbox-group>
     `);
 
-    const container = el.querySelector('.civ-flex-col');
+    const container = el.querySelector('.civ-group-layout--vertical');
     expect(container).not.toBeNull();
   });
 
-  it('applies horizontal classes when orientation is horizontal', async () => {
+  it('applies civ-group-layout--horizontal when orientation is horizontal', async () => {
     const el = await fixture(`
       <civ-checkbox-group legend="Options" orientation="horizontal">
         <civ-checkbox label="A" value="a"></civ-checkbox>
@@ -430,10 +430,8 @@ describe('civ-checkbox-group orientation', () => {
       </civ-checkbox-group>
     `);
 
-    const container = el.querySelector('.civ-flex-row');
+    const container = el.querySelector('.civ-group-layout--horizontal');
     expect(container).not.toBeNull();
-    expect(container!.classList.contains('civ-flex-wrap')).toBe(true);
-    expect(container!.classList.contains('civ-gap-4')).toBe(true);
   });
 
   it('sets aria-required on fieldset when required', async () => {
@@ -460,7 +458,7 @@ describe('civ-checkbox-group accessibility', () => {
     expect(fieldset!.getAttribute('aria-invalid')).toBe('true');
   });
 
-  it('sets aria-invalid to false on fieldset when no error', async () => {
+  it('omits aria-invalid on fieldset when no error', async () => {
     const el = await fixture(`
       <civ-checkbox-group legend="Toppings">
         <civ-checkbox label="Cheese"></civ-checkbox>
@@ -468,7 +466,7 @@ describe('civ-checkbox-group accessibility', () => {
     `);
 
     const fieldset = el.querySelector('fieldset');
-    expect(fieldset!.getAttribute('aria-invalid')).toBe('false');
+    expect(fieldset!.getAttribute('aria-invalid')).toBeNull();
   });
 
   it('applies focus-visible ring class to checkbox input', async () => {
@@ -512,30 +510,36 @@ describe('civ-checkbox indeterminate', () => {
     await elementUpdated(el);
 
     expect(el.indeterminate).toBe(false);
-    expect(input.getAttribute('aria-checked')).toBe('true');
+    // aria-checked only emitted for indeterminate/mixed; native checked state suffices
+    expect(input.hasAttribute('aria-checked')).toBe(false);
   });
 
-  it('applies tile active styling when indeterminate', async () => {
+  it('applies tile class and aria-checked mixed when indeterminate', async () => {
     const el = await fixture('<civ-checkbox label="Option" tile indeterminate></civ-checkbox>');
 
-    const wrapper = el.querySelector('.civ-border-primary');
-    expect(wrapper).not.toBeNull();
+    const tile = el.querySelector('.civ-check-tile');
+    expect(tile).not.toBeNull();
+
+    const input = el.querySelector('input') as HTMLInputElement;
+    expect(input.getAttribute('aria-checked')).toBe('mixed');
   });
 });
 
 describe('civ-checkbox aria-checked', () => {
-  it('sets aria-checked to true when checked', async () => {
+  it('omits aria-checked when checked (native checkbox conveys state)', async () => {
     const el = await fixture('<civ-checkbox label="Agree" checked></civ-checkbox>');
 
     const input = el.querySelector('input') as HTMLInputElement;
-    expect(input.getAttribute('aria-checked')).toBe('true');
+    expect(input.hasAttribute('aria-checked')).toBe(false);
+    expect(input.checked).toBe(true);
   });
 
-  it('sets aria-checked to false when unchecked', async () => {
+  it('omits aria-checked when unchecked (native checkbox conveys state)', async () => {
     const el = await fixture('<civ-checkbox label="Agree"></civ-checkbox>');
 
     const input = el.querySelector('input') as HTMLInputElement;
-    expect(input.getAttribute('aria-checked')).toBe('false');
+    expect(input.hasAttribute('aria-checked')).toBe(false);
+    expect(input.checked).toBe(false);
   });
 });
 

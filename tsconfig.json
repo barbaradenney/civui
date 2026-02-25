@@ -24,6 +24,7 @@
     { "path": "./packages/test-utils" },
     { "path": "./packages/react-native" },
     { "path": "./packages/cli" },
-    { "path": "./packages/content" }
+    { "path": "./packages/content" },
+    { "path": "./packages/mcp-server" }
   ]
 }

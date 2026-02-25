@@ -38,7 +38,10 @@ export class CivFormGroup extends CivBaseElement {
   private _errorId = this.generateId('error');
 
   override updated(changed: Map<string, unknown>): void {
-    this._wireAriaDescribedBy();
+    super.updated(changed);
+    if (changed.has('hint') || changed.has('error') || changed.has('required')) {
+      this._wireAriaDescribedBy();
+    }
     if (changed.has('error') && this.error) {
       this.announce(this.error, 'assertive');
     }
@@ -80,7 +83,6 @@ export class CivFormGroup extends CivBaseElement {
         ${renderLabel({ label: this.label, inputId: this.inputId, required: this.required })}
         ${renderHint(this._hintId, this.hint)}
         ${renderError(this._errorId, this.error)}
-        <slot></slot>
       </div>
     `;
   }

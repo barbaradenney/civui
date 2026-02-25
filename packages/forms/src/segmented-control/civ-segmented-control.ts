@@ -157,6 +157,9 @@ export class CivSegmentedControl extends CivFormElement {
     // Prevent re-dispatch loop — only handle events from child segments
     if (e.target === this) return;
 
+    // Skip if same value already selected
+    if (this.value === detail.value) { e.stopPropagation(); return; }
+
     this.value = detail.value;
     this.updateFormValue(this.value);
     this._syncSegmentSelected();
@@ -178,6 +181,7 @@ export class CivSegmentedControl extends CivFormElement {
     if (nextIndex !== undefined) {
       e.preventDefault();
       const segment = segments[nextIndex];
+      if (segment.value === this.value) return;
       segment.selected = true;
       this.value = segment.value;
       this.updateFormValue(this.value);

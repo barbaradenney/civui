@@ -178,7 +178,7 @@ describe('civ-date-picker', () => {
       el._displayYear = 2026;
       await elementUpdated(el);
 
-      const heading = el.querySelector('[aria-label="Current month"]');
+      const heading = el.querySelector('[aria-live="polite"]');
       expect(heading).not.toBeNull();
       expect(heading!.textContent).toContain('March');
       expect(heading!.textContent).toContain('2026');

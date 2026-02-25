@@ -8,7 +8,7 @@ export { getFocusableElements, trapFocus, focusFirst } from './a11y/focus-manage
 export { createKeyboardHandler, resolveGroupNavIndex, type KeyBinding } from './a11y/keyboard-handler.js';
 
 // Utilities
-export { generateId } from './utils/id-generator.js';
+export { generateId, resetIdCounter } from './utils/id-generator.js';
 export { debounce } from './utils/debounce.js';
 export { dispatch } from './utils/events.js';
 export { interpolate } from './utils/interpolate.js';

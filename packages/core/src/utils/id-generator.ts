@@ -6,3 +6,10 @@ let counter = 0;
 export function generateId(prefix = 'civ'): string {
   return `${prefix}-${++counter}`;
 }
+
+/**
+ * Reset the ID counter. Call between tests to ensure isolation.
+ */
+export function resetIdCounter(): void {
+  counter = 0;
+}

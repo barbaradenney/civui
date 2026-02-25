@@ -320,6 +320,36 @@ describe('civ-segmented-control', () => {
     expect(legend!.classList.contains('civ-sr-only')).toBe(true);
   });
 
+  it('ArrowRight moves backward in RTL', async () => {
+    const el = await fixture(`
+      <civ-segmented-control legend="View" name="view" value="grid" dir="rtl">
+        <civ-segment label="List" value="list"></civ-segment>
+        <civ-segment label="Grid" value="grid"></civ-segment>
+        <civ-segment label="Table" value="table"></civ-segment>
+      </civ-segmented-control>
+    `) as any;
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
+    await elementUpdated(el);
+
+    expect(el.value).toBe('list');
+  });
+
+  it('ArrowLeft moves forward in RTL', async () => {
+    const el = await fixture(`
+      <civ-segmented-control legend="View" name="view" value="grid" dir="rtl">
+        <civ-segment label="List" value="list"></civ-segment>
+        <civ-segment label="Grid" value="grid"></civ-segment>
+        <civ-segment label="Table" value="table"></civ-segment>
+      </civ-segmented-control>
+    `) as any;
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true }));
+    await elementUpdated(el);
+
+    expect(el.value).toBe('table');
+  });
+
   it('uses Light DOM (no shadowRoot)', async () => {
     const el = await fixture(`
       <civ-segmented-control legend="View" name="view" value="list">

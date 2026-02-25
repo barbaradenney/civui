@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivFormElement, dispatch, renderHint, renderError } from '@civui/core';
+import { CivFormElement, dispatch, interpolate, renderHint, renderError } from '@civui/core';
 
 /**
  * CivUI Toggle Switch
@@ -48,8 +48,6 @@ export class CivToggle extends CivFormElement {
 
     return html`
       <div class="civ-mb-2">
-        ${renderHint(this._hintId, this.hint)}
-        ${renderError(this._errorId, this.error)}
         <div class="civ-flex civ-items-center civ-gap-3">
           <button
             type="button"
@@ -77,8 +75,17 @@ export class CivToggle extends CivFormElement {
               : nothing}
           </div>
         </div>
+        ${renderHint(this._hintId, this.hint)}
+        ${renderError(this._errorId, this.error)}
       </div>
     `;
+  }
+
+  override updated(changed: Map<string, unknown>): void {
+    super.updated(changed);
+    if (changed.has('checked')) {
+      this._syncFormValue();
+    }
   }
 
   protected override _syncFormValue(): void {
@@ -91,7 +98,7 @@ export class CivToggle extends CivFormElement {
     if (this.required && !this.checked) {
       this._internals.setValidity(
         { valueMissing: true },
-        this.error || `${this.label || 'This field'} is required`,
+        this.error || interpolate(this.requiredMessage, { label: this.label || 'This field' }),
         anchor ?? undefined,
       );
     } else {
@@ -102,7 +109,7 @@ export class CivToggle extends CivFormElement {
   private _onToggle(): void {
     if (this.disabled) return;
     this.checked = !this.checked;
-    this.updateFormValue(this.checked ? this.value : null);
+    // Form value sync handled by _syncFormValue() in updated() watching checked
     dispatch(this, 'civ-input', { checked: this.checked, value: this.value });
     dispatch(this, 'civ-change', { checked: this.checked, value: this.value });
     this.sendAnalytics('change', { checked: this.checked });

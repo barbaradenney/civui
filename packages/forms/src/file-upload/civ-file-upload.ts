@@ -55,8 +55,8 @@ export class CivFileUpload extends CivFormElement {
   @property({ type: String, attribute: 'remove-text' }) removeText = 'Remove';
   @property({ type: String, attribute: 'remove-aria-label' }) removeAriaLabel = 'Remove {name}';
   @property({ type: String, attribute: 'files-list-label' }) filesListLabel = 'Selected files';
-  @property({ type: String, attribute: 'file-added-message' }) fileAddedMessage = '{count} file added. {total} file selected.';
-  @property({ type: String, attribute: 'file-removed-message' }) fileRemovedMessage = 'File removed. {total} file selected.';
+  @property({ type: String, attribute: 'file-added-message' }) fileAddedMessage = '{count} file(s) added. {total} file(s) selected.';
+  @property({ type: String, attribute: 'file-removed-message' }) fileRemovedMessage = 'File removed. {total} file(s) selected.';
   @property({ type: String, attribute: 'file-size-error' }) fileSizeError = '{name} exceeds maximum size of {size}';
   @property({ type: String, attribute: 'file-type-error' }) fileTypeError = '{name} is not an accepted file type';
   @property({ type: String, attribute: 'max-files-error' }) maxFilesError = 'Maximum of {max} files allowed';
@@ -213,32 +213,38 @@ export class CivFileUpload extends CivFormElement {
 
   private _addFiles(newFiles: File[]): void {
     const validated: UploadedFile[] = [];
+    const errors: string[] = [];
 
     for (const file of newFiles) {
       if (this.accept && !this._isFileTypeAccepted(file)) {
-        this.error = interpolate(this.fileTypeError, { name: file.name });
-        this.announce(this.error, 'assertive');
+        errors.push(interpolate(this.fileTypeError, { name: file.name }));
         continue;
       }
       if (this.maxSize > 0 && file.size > this.maxSize) {
-        this.error = interpolate(this.fileSizeError, { name: file.name, size: formatFileSize(this.maxSize) });
-        this.announce(this.error, 'assertive');
+        errors.push(interpolate(this.fileSizeError, { name: file.name, size: formatFileSize(this.maxSize) }));
         continue;
       }
       validated.push({ name: file.name, size: file.size, type: file.type, file });
     }
 
-    if (this.maxFiles > 0) {
-      const totalCount = this.multiple ? this._files.length + validated.length : validated.length;
-      if (totalCount > this.maxFiles) {
-        this.error = interpolate(this.maxFilesError, { max: this.maxFiles });
-        this.announce(this.error, 'assertive');
-        return;
+    // Accept files up to the maxFiles limit
+    if (this.maxFiles > 0 && this.multiple) {
+      const available = this.maxFiles - this._files.length;
+      if (validated.length > available) {
+        validated.splice(available);
+        errors.push(interpolate(this.maxFilesError, { max: this.maxFiles }));
       }
     }
 
-    // Clear any previous validation error on successful add
-    if (validated.length > 0) this.error = '';
+    if (errors.length > 0) {
+      this.error = errors.join('. ');
+      this.announce(this.error, 'assertive');
+    }
+
+    if (validated.length === 0) return;
+
+    // Clear error only if no validation errors occurred
+    if (errors.length === 0) this.error = '';
 
     if (this.multiple) {
       this._files = [...this._files, ...validated];

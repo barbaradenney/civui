@@ -136,8 +136,8 @@ describe('civ-file-upload', () => {
     await new Promise((r) => requestAnimationFrame(r));
     const liveRegion = document.querySelector('[aria-live]');
     expect(liveRegion).not.toBeNull();
-    expect(liveRegion!.textContent).toContain('1 file added');
-    expect(liveRegion!.textContent).toContain('1 file selected');
+    expect(liveRegion!.textContent).toContain('1 file(s) added');
+    expect(liveRegion!.textContent).toContain('1 file(s) selected');
   });
 
   describe('i18n overrides', () => {

@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach } from 'vitest';
-import { fixture, cleanupFixtures } from '@civui/test-utils';
+import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
 import './civ-form-group.js';
 
 afterEach(cleanupFixtures);
@@ -111,7 +111,7 @@ describe('civ-form-group', () => {
     expect(input.hasAttribute('aria-describedby')).toBe(true);
 
     el.hint = '';
-    await el.updateComplete;
+    await elementUpdated(el);
 
     expect(input.hasAttribute('aria-describedby')).toBe(false);
   });
@@ -135,7 +135,7 @@ describe('civ-form-group', () => {
     `) as any;
 
     el.error = '';
-    await el.updateComplete;
+    await elementUpdated(el);
 
     const input = el.querySelector('input')!;
     expect(input.getAttribute('aria-invalid')).toBeNull();
@@ -160,7 +160,7 @@ describe('civ-form-group', () => {
     `) as any;
 
     el.required = false;
-    await el.updateComplete;
+    await elementUpdated(el);
 
     const input = el.querySelector('input')!;
     expect(input.hasAttribute('aria-required')).toBe(false);

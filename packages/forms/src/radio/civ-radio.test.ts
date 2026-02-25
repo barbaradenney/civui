@@ -638,6 +638,57 @@ describe('civ-radio-group form reset', () => {
   });
 });
 
+describe('civ-radio-group RTL keyboard navigation', () => {
+  it('ArrowRight moves backward in RTL', async () => {
+    const el = await fixture(`
+      <civ-radio-group legend="Color" name="color" value="blue" dir="rtl">
+        <civ-radio label="Red" value="red"></civ-radio>
+        <civ-radio label="Blue" value="blue"></civ-radio>
+        <civ-radio label="Green" value="green"></civ-radio>
+      </civ-radio-group>
+    `) as any;
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
+    await elementUpdated(el);
+
+    expect(el.value).toBe('red');
+  });
+
+  it('ArrowLeft moves forward in RTL', async () => {
+    const el = await fixture(`
+      <civ-radio-group legend="Color" name="color" value="red" dir="rtl">
+        <civ-radio label="Red" value="red"></civ-radio>
+        <civ-radio label="Blue" value="blue"></civ-radio>
+        <civ-radio label="Green" value="green"></civ-radio>
+      </civ-radio-group>
+    `) as any;
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true }));
+    await elementUpdated(el);
+
+    expect(el.value).toBe('blue');
+  });
+});
+
+describe('civ-radio-group initial checked from children', () => {
+  it('reads initial value from child with checked attribute', async () => {
+    const el = await fixture(`
+      <civ-radio-group legend="Color" name="color">
+        <civ-radio label="Red" value="red"></civ-radio>
+        <civ-radio label="Blue" value="blue" checked></civ-radio>
+        <civ-radio label="Green" value="green"></civ-radio>
+      </civ-radio-group>
+    `);
+
+    expect((el as any).value).toBe('blue');
+
+    const radios = el.querySelectorAll('civ-radio');
+    expect((radios[0] as any).checked).toBe(false);
+    expect((radios[1] as any).checked).toBe(true);
+    expect((radios[2] as any).checked).toBe(false);
+  });
+});
+
 describe('civ-radio-group analytics', () => {
   it('fires civ-analytics from group on child radio change', async () => {
     const el = await fixture(`

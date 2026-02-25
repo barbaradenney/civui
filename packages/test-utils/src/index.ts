@@ -1,3 +1,5 @@
+import { resetIdCounter, cleanupLiveRegions } from '@civui/core';
+
 /**
  * Create a fixture element in the DOM and return it.
  * Automatically cleans up after each test.
@@ -19,9 +21,12 @@ export async function fixture<T extends HTMLElement>(html: string): Promise<T> {
 
 /**
  * Clean up all fixture containers from the DOM.
+ * Also resets shared state (ID counter, live regions) to prevent test leakage.
  */
 export function cleanupFixtures(): void {
   document.body.innerHTML = '';
+  resetIdCounter();
+  cleanupLiveRegions();
 }
 
 /**

@@ -103,6 +103,8 @@ export class CivCheckboxGroup extends CivFormElement {
     return html`
       <fieldset
         class="civ-fieldset"
+        role="group"
+        aria-orientation="${this.orientation}"
         aria-describedby="${this._ariaDescribedBy || nothing}"
         aria-invalid="${this.error ? 'true' : nothing}"
         aria-required="${this.required || nothing}"
@@ -146,9 +148,8 @@ export class CivCheckboxGroup extends CivFormElement {
   }
 
   private _syncCheckboxNames(): void {
-    if (!this.name) return;
     this._getCheckboxes().forEach((cb) => {
-      cb.name = this.name;
+      if (this.name) cb.name = this.name;
       cb.disableAnalytics = true;
     });
   }

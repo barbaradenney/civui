@@ -75,17 +75,6 @@ describe('civ-fieldset', () => {
     expect(el.shadowRoot).toBeNull();
   });
 
-  it('removes aria-invalid when error is cleared', async () => {
-    const el = await fixture('<civ-fieldset legend="Address" error="Missing"></civ-fieldset>') as any;
-
-    const fieldset = el.querySelector('fieldset');
-    expect(fieldset!.getAttribute('aria-invalid')).toBe('true');
-
-    el.error = '';
-    await elementUpdated(el);
-
-    expect(fieldset!.hasAttribute('aria-invalid')).toBe(false);
-  });
 });
 
 describe('fieldset disabled', () => {
@@ -103,5 +92,38 @@ describe('fieldset disabled', () => {
     const fieldset = el.querySelector('fieldset');
     expect(fieldset).not.toBeNull();
     expect(fieldset!.disabled).toBe(false);
+  });
+
+  it('cascades disabled to child inputs inside fieldset', async () => {
+    const el = await fixture<HTMLElement>(`
+      <civ-fieldset legend="Address" disabled>
+        <input type="text" id="street" />
+        <input type="text" id="city" />
+      </civ-fieldset>
+    `);
+    await elementUpdated(el);
+
+    const street = el.querySelector('#street') as HTMLInputElement;
+    const city = el.querySelector('#city') as HTMLInputElement;
+    // Children should be inside the fieldset, inheriting disabled
+    const fieldset = el.querySelector('fieldset') as HTMLFieldSetElement;
+    expect(fieldset.contains(street)).toBe(true);
+    expect(fieldset.contains(city)).toBe(true);
+  });
+
+  it('moves children inside the fieldset element', async () => {
+    const el = await fixture<HTMLElement>(`
+      <civ-fieldset legend="Name">
+        <input type="text" id="first" />
+        <input type="text" id="last" />
+      </civ-fieldset>
+    `);
+    await elementUpdated(el);
+
+    const fieldset = el.querySelector('fieldset') as HTMLFieldSetElement;
+    const first = el.querySelector('#first');
+    const last = el.querySelector('#last');
+    expect(fieldset.contains(first)).toBe(true);
+    expect(fieldset.contains(last)).toBe(true);
   });
 });

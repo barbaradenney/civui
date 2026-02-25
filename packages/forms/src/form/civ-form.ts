@@ -55,21 +55,37 @@ export interface CivFormFieldLike extends HTMLElement {
 export class CivForm extends CivBaseElement {
   @property({ type: String }) action = '';
   @property({ type: String }) method: 'get' | 'post' = 'post';
+  @property({ type: String, attribute: 'form-label' }) formLabel = '';
 
   @state() private _errors: FormFieldError[] = [];
 
   private _summaryId = this.generateId('summary');
   private _summaryHeadingId = this.generateId('summary-heading');
   private _boundOnClick = this._onButtonClick.bind(this);
+  private _boundOnKeydown = this._onKeydown.bind(this);
 
   override connectedCallback(): void {
     super.connectedCallback();
+    this.setAttribute('role', 'form');
+    if (this.formLabel) this.setAttribute('aria-label', this.formLabel);
     this.addEventListener('click', this._boundOnClick);
+    this.addEventListener('keydown', this._boundOnKeydown);
   }
 
   override disconnectedCallback(): void {
     super.disconnectedCallback();
     this.removeEventListener('click', this._boundOnClick);
+    this.removeEventListener('keydown', this._boundOnKeydown);
+  }
+
+  override updated(changed: Map<string, unknown>): void {
+    if (changed.has('formLabel')) {
+      if (this.formLabel) {
+        this.setAttribute('aria-label', this.formLabel);
+      } else {
+        this.removeAttribute('aria-label');
+      }
+    }
   }
 
   override render() {
@@ -118,11 +134,13 @@ export class CivForm extends CivBaseElement {
 
     // Clear all field errors for a fresh validation pass
     for (const el of formElements) {
-      (el as unknown as CivFormFieldLike).error = '';
+      const formEl = el as unknown as CivFormFieldLike;
+      if (!formEl.disabled) formEl.error = '';
     }
 
     for (const el of formElements) {
       const formEl = el as unknown as CivFormFieldLike;
+      if (formEl.disabled) continue;
       if (formEl.required && !formEl.value) {
         const message = `${formEl.label || formEl.name || 'This field'} is required`;
         formEl.error = message;
@@ -170,6 +188,7 @@ export class CivForm extends CivBaseElement {
 
     for (const el of formElements) {
       const formEl = el as unknown as CivFormFieldLike;
+      if (formEl.disabled) continue;
       if (formEl.name) {
         data[formEl.name] = formEl.value ?? '';
       }
@@ -190,7 +209,7 @@ export class CivForm extends CivBaseElement {
 
     for (const el of formElements) {
       const formEl = el as unknown as CivFormFieldLike;
-      if (!formEl.name) continue;
+      if (!formEl.name || formEl.disabled) continue;
 
       // file-upload: append actual File objects
       if (Array.isArray(formEl.files) && formEl.files.length > 0) {
@@ -226,6 +245,18 @@ export class CivForm extends CivBaseElement {
       e.preventDefault();
       this._onReset();
     }
+  }
+
+  private _onKeydown(e: KeyboardEvent): void {
+    if (e.key !== 'Enter') return;
+    const target = e.target as HTMLElement;
+    // Don't submit if user is in a textarea or a button
+    if (target.tagName === 'TEXTAREA') return;
+    if (target.tagName === 'BUTTON') return;
+    // Only submit if Enter is pressed inside a form field
+    if (!target.closest('[data-civ-form-field]') && target.tagName !== 'INPUT') return;
+    e.preventDefault();
+    this._onSubmit();
   }
 
   private _onSubmit(): void {
@@ -269,7 +300,12 @@ export class CivForm extends CivBaseElement {
 
   private _getFieldInputId(element: Element): string {
     const input = element.querySelector('input, select, textarea, button, [role="button"], [tabindex]');
-    return input?.id || element.id || '';
+    if (input?.id) return input.id;
+    if (element.id) return element.id;
+    // Generate an ID so error summary links always work
+    const id = `civ-field-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
+    (input || element).id = id;
+    return id;
   }
 
   private _focusField(e: Event, element: Element): void {

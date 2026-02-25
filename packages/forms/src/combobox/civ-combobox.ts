@@ -85,7 +85,7 @@ export class CivCombobox extends CivFormElement {
             role="combobox"
             aria-autocomplete="list"
             aria-haspopup="listbox"
-            aria-expanded="${this._open}"
+            aria-expanded="${this._open && this._filteredOptions.length > 0}"
             aria-controls="${this._open ? this._listboxId : nothing}"
             aria-activedescendant="${this._open && activeOptionId ? activeOptionId : nothing}"
             aria-describedby="${this._ariaDescribedBy || nothing}"

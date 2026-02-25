@@ -94,6 +94,9 @@ export class CivCheckbox extends CivFormElement {
       const input = this.querySelector('input') as HTMLInputElement | null;
       if (input) input.indeterminate = this.indeterminate;
     }
+    if (changed.has('checked')) {
+      this._syncFormValue();
+    }
   }
 
   protected override _syncFormValue(): void {
@@ -118,7 +121,7 @@ export class CivCheckbox extends CivFormElement {
     const target = e.target as HTMLInputElement;
     this.checked = target.checked;
     this.indeterminate = false;
-    this.updateFormValue(this.checked ? this.value : null);
+    // Form value sync handled by _syncFormValue() in updated() watching checked
     dispatch(this, 'civ-input', { checked: this.checked, value: this.value });
     dispatch(this, 'civ-change', { checked: this.checked, value: this.value });
     this.sendAnalytics('change', { checked: this.checked });

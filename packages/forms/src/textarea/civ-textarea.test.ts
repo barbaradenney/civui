@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
 import './civ-textarea.js';
 
@@ -223,5 +223,76 @@ describe('civ-textarea', () => {
     el.formResetCallback();
     await elementUpdated(el);
     expect(el.value).toBe('hello');
+  });
+});
+
+describe('textarea formDisabledCallback', () => {
+  it('disables the textarea when formDisabledCallback is called', async () => {
+    const el = await fixture('<civ-textarea label="Bio" name="bio"></civ-textarea>') as any;
+
+    el.formDisabledCallback(true);
+    await elementUpdated(el);
+
+    const textarea = el.querySelector('textarea');
+    expect(textarea!.disabled).toBe(true);
+  });
+
+  it('re-enables the textarea when formDisabledCallback(false) is called', async () => {
+    const el = await fixture('<civ-textarea label="Bio" name="bio"></civ-textarea>') as any;
+
+    el.formDisabledCallback(true);
+    await elementUpdated(el);
+    el.formDisabledCallback(false);
+    await elementUpdated(el);
+
+    const textarea = el.querySelector('textarea');
+    expect(textarea!.disabled).toBe(false);
+  });
+});
+
+describe('textarea analytics', () => {
+  it('fires civ-analytics on change', async () => {
+    const el = await fixture('<civ-textarea label="Bio" name="bio"></civ-textarea>');
+
+    const handler = vi.fn();
+    el.addEventListener('civ-analytics', handler as EventListener);
+
+    const textarea = el.querySelector('textarea')!;
+    textarea.value = 'My biography';
+    textarea.dispatchEvent(new Event('change', { bubbles: true }));
+
+    expect(handler).toHaveBeenCalledOnce();
+    const detail = handler.mock.calls[0][0].detail;
+    expect(detail.componentName).toBe('civ-textarea');
+    expect(detail.action).toBe('change');
+  });
+
+  it('never includes user input value in analytics payload (PII safety)', async () => {
+    const el = await fixture('<civ-textarea label="Medical notes" name="notes"></civ-textarea>');
+
+    const handler = vi.fn();
+    el.addEventListener('civ-analytics', handler as EventListener);
+
+    const textarea = el.querySelector('textarea')!;
+    textarea.value = 'Sensitive medical information';
+    textarea.dispatchEvent(new Event('change', { bubbles: true }));
+
+    expect(handler).toHaveBeenCalledOnce();
+    const detail = handler.mock.calls[0][0].detail;
+    expect(detail).not.toHaveProperty('value');
+    expect(JSON.stringify(detail)).not.toContain('Sensitive medical information');
+  });
+
+  it('suppresses analytics when disable-analytics is set', async () => {
+    const el = await fixture('<civ-textarea label="Bio" name="bio" disable-analytics></civ-textarea>');
+
+    const handler = vi.fn();
+    el.addEventListener('civ-analytics', handler as EventListener);
+
+    const textarea = el.querySelector('textarea')!;
+    textarea.value = 'Hello';
+    textarea.dispatchEvent(new Event('change', { bubbles: true }));
+
+    expect(handler).not.toHaveBeenCalled();
   });
 });

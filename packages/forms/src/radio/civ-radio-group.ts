@@ -60,7 +60,14 @@ export class CivRadioGroup extends CivFormElement {
 
   override firstUpdated(): void {
     this._syncRadioNames();
-    this._syncRadioChecked();
+    if (this.value) {
+      this._syncRadioChecked();
+    } else {
+      // Read initial checked state from children (e.g., set via HTML attribute)
+      const checked = this._getRadios().find((r) => r.checked);
+      if (checked) this.value = checked.value;
+      this._syncRadioChecked();
+    }
     this._syncTabindex();
     this._syncRadioRequired();
     this._syncRadioTile();

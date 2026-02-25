@@ -228,6 +228,75 @@ describe('civ-form', () => {
     expect(data.email).toBe('john@test.com');
   });
 
+  it('skips disabled fields during validation', async () => {
+    const el = await fixture(`
+      <civ-form>
+        <civ-text-input label="Name" name="name" required disabled></civ-text-input>
+        <civ-text-input label="Email" name="email" required></civ-text-input>
+      </civ-form>
+    `) as any;
+    await waitForChildren(el);
+
+    const errors = el.validate();
+    expect(errors.length).toBe(1);
+    expect(errors[0].name).toBe('email');
+  });
+
+  it('excludes disabled fields from getFormData()', async () => {
+    const el = await fixture(`
+      <civ-form>
+        <civ-text-input label="Name" name="name" value="John" disabled></civ-text-input>
+        <civ-text-input label="Email" name="email" value="john@test.com"></civ-text-input>
+      </civ-form>
+    `) as any;
+    await waitForChildren(el);
+
+    const data = el.getFormData();
+    expect(data).not.toHaveProperty('name');
+    expect(data.email).toBe('john@test.com');
+  });
+
+  it('excludes disabled fields from toFormData()', async () => {
+    const el = await fixture(`
+      <civ-form>
+        <civ-text-input label="Name" name="name" value="John" disabled></civ-text-input>
+        <civ-text-input label="Email" name="email" value="john@test.com"></civ-text-input>
+      </civ-form>
+    `) as any;
+    await waitForChildren(el);
+
+    const fd = el.toFormData();
+    expect(fd.get('name')).toBeNull();
+    expect(fd.get('email')).toBe('john@test.com');
+  });
+
+  it('sets role="form" on the host element', async () => {
+    const el = await fixture('<civ-form></civ-form>');
+    expect(el.getAttribute('role')).toBe('form');
+  });
+
+  it('sets aria-label from form-label attribute', async () => {
+    const el = await fixture('<civ-form form-label="Registration"></civ-form>');
+    expect(el.getAttribute('aria-label')).toBe('Registration');
+  });
+
+  it('submits on Enter key in a text input', async () => {
+    const el = await fixture(`
+      <civ-form>
+        <civ-text-input label="Name" name="name" value="John"></civ-text-input>
+      </civ-form>
+    `) as any;
+    await waitForChildren(el);
+
+    let submitted = false;
+    el.addEventListener('civ-submit', () => { submitted = true; });
+
+    const input = el.querySelector('input');
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+
+    expect(submitted).toBe(true);
+  });
+
   describe('analytics', () => {
     it('fires civ-analytics with submit action on valid submission', async () => {
       const el = await fixture(`

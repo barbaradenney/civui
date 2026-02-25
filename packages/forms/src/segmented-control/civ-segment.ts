@@ -27,7 +27,6 @@ import { CivBaseElement, dispatch } from '@civui/core';
  * @prop {boolean} selected - Whether this segment is currently selected (managed by parent)
  * @prop {boolean} disabled - Whether this segment is disabled
  *
- * @fires civ-input - When this segment is selected (input event), detail: { value }
  * @fires civ-change - When this segment is selected (bubbles to parent group), detail: { value }
  */
 @customElement('civ-segment')
@@ -55,7 +54,7 @@ export class CivSegment extends CivBaseElement {
 
   private _onSelect(): void {
     if (this.disabled) return;
-    dispatch(this, 'civ-input', { value: this.value });
+    // Only dispatch civ-change — parent group intercepts and re-dispatches both events
     dispatch(this, 'civ-change', { value: this.value });
   }
 }

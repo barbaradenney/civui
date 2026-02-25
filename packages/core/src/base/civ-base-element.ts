@@ -52,16 +52,21 @@ export class CivBaseElement extends LitElement {
   ): void {
     if (this.disableAnalytics) return;
 
-    const self = this as unknown as Partial<{ name: string; label: string; legend: string }>;
     const payload: AnalyticsEventDetail = {
       componentName: this.tagName.toLowerCase(),
       action,
       timestamp: new Date().toISOString(),
     };
 
-    if (self.name) payload.fieldName = self.name;
-    if (self.label) payload.label = self.label;
-    if (self.legend) payload.label = self.legend;
+    if ('name' in this && typeof (this as Record<string, unknown>).name === 'string') {
+      payload.fieldName = (this as Record<string, unknown>).name as string;
+    }
+    // Use legend (group label) if available, otherwise label
+    if ('legend' in this && typeof (this as Record<string, unknown>).legend === 'string') {
+      payload.label = (this as Record<string, unknown>).legend as string;
+    } else if ('label' in this && typeof (this as Record<string, unknown>).label === 'string') {
+      payload.label = (this as Record<string, unknown>).label as string;
+    }
     if (details) payload.details = details;
 
     dispatch(this, ANALYTICS_EVENT_NAME, payload);

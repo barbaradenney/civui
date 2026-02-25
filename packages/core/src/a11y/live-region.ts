@@ -54,7 +54,7 @@ function processQueue(priority: 'polite' | 'assertive'): void {
   const queue = priority === 'assertive' ? assertiveQueue : politeQueue;
   if (queue.length === 0) return;
 
-  const message = queue.shift()!;
+  const message = queue.shift() ?? '';
   const region = ensureRegion(priority);
 
   // Clear then set to ensure announcement even if same message

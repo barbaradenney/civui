@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
 import './civ-text-input.js';
 
@@ -276,5 +276,92 @@ describe('text-input maxlength guard', () => {
     el.formResetCallback();
     await elementUpdated(el);
     expect(el.value).toBe('original');
+  });
+});
+
+describe('text-input autocomplete', () => {
+  it('renders autocomplete attribute when set', async () => {
+    const el = await fixture('<civ-text-input label="Email" autocomplete="email"></civ-text-input>');
+
+    const input = el.querySelector('input');
+    expect(input!.getAttribute('autocomplete')).toBe('email');
+  });
+
+  it('omits autocomplete attribute when not set', async () => {
+    const el = await fixture('<civ-text-input label="Email"></civ-text-input>');
+
+    const input = el.querySelector('input');
+    expect(input!.hasAttribute('autocomplete')).toBe(false);
+  });
+});
+
+describe('text-input formDisabledCallback', () => {
+  it('disables the input when formDisabledCallback is called', async () => {
+    const el = await fixture('<civ-text-input label="Email" name="email"></civ-text-input>') as any;
+
+    el.formDisabledCallback(true);
+    await elementUpdated(el);
+
+    const input = el.querySelector('input');
+    expect(input!.disabled).toBe(true);
+  });
+
+  it('re-enables the input when formDisabledCallback(false) is called', async () => {
+    const el = await fixture('<civ-text-input label="Email" name="email"></civ-text-input>') as any;
+
+    el.formDisabledCallback(true);
+    await elementUpdated(el);
+    el.formDisabledCallback(false);
+    await elementUpdated(el);
+
+    const input = el.querySelector('input');
+    expect(input!.disabled).toBe(false);
+  });
+});
+
+describe('text-input analytics', () => {
+  it('fires civ-analytics on input', async () => {
+    const el = await fixture('<civ-text-input label="Email" name="email"></civ-text-input>');
+
+    const handler = vi.fn();
+    el.addEventListener('civ-analytics', handler as EventListener);
+
+    const input = el.querySelector('input')!;
+    input.value = 'test@example.com';
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+
+    expect(handler).toHaveBeenCalledOnce();
+    const detail = handler.mock.calls[0][0].detail;
+    expect(detail.componentName).toBe('civ-text-input');
+    expect(detail.action).toBe('change');
+  });
+
+  it('never includes user input value in analytics payload (PII safety)', async () => {
+    const el = await fixture('<civ-text-input label="SSN" name="ssn"></civ-text-input>');
+
+    const handler = vi.fn();
+    el.addEventListener('civ-analytics', handler as EventListener);
+
+    const input = el.querySelector('input')!;
+    input.value = '123-45-6789';
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+
+    expect(handler).toHaveBeenCalledOnce();
+    const detail = handler.mock.calls[0][0].detail;
+    expect(detail).not.toHaveProperty('value');
+    expect(JSON.stringify(detail)).not.toContain('123-45-6789');
+  });
+
+  it('suppresses analytics when disable-analytics is set', async () => {
+    const el = await fixture('<civ-text-input label="Email" name="email" disable-analytics></civ-text-input>');
+
+    const handler = vi.fn();
+    el.addEventListener('civ-analytics', handler as EventListener);
+
+    const input = el.querySelector('input')!;
+    input.value = 'test@example.com';
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+
+    expect(handler).not.toHaveBeenCalled();
   });
 });

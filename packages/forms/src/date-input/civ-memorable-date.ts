@@ -74,6 +74,33 @@ export class CivMemorableDate extends CivFormElement {
     if (changed.has('value') && !changed.has('_month')) {
       this._parseValue();
     }
+    if (changed.has('hint') || changed.has('error')) {
+      this._propagateAriaToChildren();
+    }
+  }
+
+  private _propagateAriaToChildren(): void {
+    const describedBy = this._ariaDescribedBy;
+    // Propagate aria-describedby to all child form controls
+    const monthSelect = this.querySelector('civ-select');
+    const innerSelect = monthSelect?.querySelector('select');
+    if (innerSelect) {
+      if (describedBy) {
+        innerSelect.setAttribute('aria-describedby', describedBy);
+      } else {
+        innerSelect.removeAttribute('aria-describedby');
+      }
+    }
+    this.querySelectorAll('civ-text-input').forEach((textInput) => {
+      const innerInput = textInput.querySelector('input');
+      if (innerInput) {
+        if (describedBy) {
+          innerInput.setAttribute('aria-describedby', describedBy);
+        } else {
+          innerInput.removeAttribute('aria-describedby');
+        }
+      }
+    });
   }
 
   private _parseValue(): void {
@@ -229,7 +256,11 @@ export class CivMemorableDate extends CivFormElement {
       dispatch(this, 'civ-change', detail);
       this.sendAnalytics('change');
       if (this.value) {
-        this.announce(interpolate(this.dateSetMessage, { date: `${this._month}/${this._day}/${this._year}` }));
+        const parsedDate = parseISODate(this.value);
+        const formattedDate = parsedDate
+          ? new Intl.DateTimeFormat(this.locale, { dateStyle: 'long' }).format(parsedDate)
+          : `${this._month}/${this._day}/${this._year}`;
+        this.announce(interpolate(this.dateSetMessage, { date: formattedDate }));
       }
     }
   }

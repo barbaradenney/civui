@@ -121,7 +121,7 @@ export class CivTextarea extends CivFormElement {
     this.value = target.value;
     this._charCount = target.value.length;
     this._debouncedAnnounceCount();
-    this.updateFormValue(this.value);
+    // Form value sync handled by _syncFormValue() in updated()
     dispatch(this, 'civ-input', { value: this.value });
   }
 }

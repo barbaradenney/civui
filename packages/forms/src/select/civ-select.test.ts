@@ -222,6 +222,32 @@ describe('civ-select', () => {
   });
 });
 
+describe('select formDisabledCallback', () => {
+  it('disables the select when formDisabledCallback is called', async () => {
+    const el = await fixture('<civ-select label="State" name="state"></civ-select>') as any;
+    el.options = [{ value: 'CA', label: 'California' }];
+    await elementUpdated(el);
+
+    el.formDisabledCallback(true);
+    await elementUpdated(el);
+
+    const select = el.querySelector('select');
+    expect(select!.disabled).toBe(true);
+  });
+
+  it('re-enables the select when formDisabledCallback(false) is called', async () => {
+    const el = await fixture('<civ-select label="State" name="state"></civ-select>') as any;
+
+    el.formDisabledCallback(true);
+    await elementUpdated(el);
+    el.formDisabledCallback(false);
+    await elementUpdated(el);
+
+    const select = el.querySelector('select');
+    expect(select!.disabled).toBe(false);
+  });
+});
+
 describe('civ-select civ-input event', () => {
   it('fires civ-input event on selection change', async () => {
     const el = await fixture<HTMLElement>('<civ-select label="State" name="state"></civ-select>');

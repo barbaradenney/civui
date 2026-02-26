@@ -3,7 +3,12 @@ import { z } from 'zod';
 import { FormSchema } from './schema/index.js';
 import { parseHTML, parsePDF } from './parsers/index.js';
 import { generateCivUI } from './generator/index.js';
-import { COMPONENT_CATALOG, GOVERNMENT_PATTERNS } from './resources/index.js';
+import {
+  COMPONENT_CATALOG,
+  GOVERNMENT_PATTERNS,
+  TAILWIND_REFERENCE,
+} from './resources/index.js';
+import { lookupStyle, ELEMENT_TYPES } from './tools/index.js';
 
 /** 50 MB base64 ≈ ~37.5 MB decoded PDF — generous but bounded. */
 const MAX_PDF_BASE64_LENGTH = 50 * 1024 * 1024;
@@ -35,6 +40,16 @@ export function createServer(): McpServer {
         uri: uri.href,
         mimeType: 'text/markdown',
         text: GOVERNMENT_PATTERNS,
+      },
+    ],
+  }));
+
+  server.resource('tailwind-reference', 'civui://tailwind', async (uri) => ({
+    contents: [
+      {
+        uri: uri.href,
+        mimeType: 'text/markdown',
+        text: TAILWIND_REFERENCE,
       },
     ],
   }));
@@ -148,6 +163,56 @@ export function createServer(): McpServer {
             {
               type: 'text' as const,
               text: `Error generating CivUI markup: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'style_civui_element',
+    'Look up the correct CSS classes, state selectors, and focus ring for a CivUI element. ' +
+      'Returns semantic component classes from components.css, state-triggered classes ' +
+      '(error, disabled, checked, etc.), and focus ring guidance. ' +
+      'Use this to style CivUI elements without guessing class names.',
+    {
+      element: z
+        .enum(ELEMENT_TYPES)
+        .describe('The CivUI element type to look up'),
+      variant: z
+        .string()
+        .optional()
+        .describe(
+          'Optional variant: "tile" (checkbox/radio), "group" (hint/error-text), ' +
+            '"horizontal"/"vertical" (group-layout)',
+        ),
+      state: z
+        .array(z.string())
+        .optional()
+        .describe(
+          'Optional state filter: "error", "disabled", "checked", "active", "selected", "dragging". ' +
+            'Omit to see all available states.',
+        ),
+    },
+    async ({ element, variant, state }) => {
+      try {
+        const result = lookupStyle(element, variant, state);
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error looking up style: ${err instanceof Error ? err.message : String(err)}`,
             },
           ],
           isError: true,

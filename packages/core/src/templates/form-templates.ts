@@ -50,7 +50,7 @@ export function renderLegend({
 }) {
   if (!legend) return nothing;
   if (srOnly) {
-    return html`<legend class="civ-sr-only">${legend}${required ? html` <span class="civ-sr-only">(required)</span>` : nothing}</legend>`;
+    return html`<legend class="civ-sr-only">${legend}${required ? html` <span>(required)</span>` : nothing}</legend>`;
   }
   const sizeClass = textSizeClass ?? 'civ-text-base';
   return html`

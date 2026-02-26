@@ -5,7 +5,7 @@ export { mapAriaRole, buildAccessibilityState, buildAccessibilityLabel } from '.
 
 export { colors, spacing, typography, border } from './tokens.js';
 
-export { formStyles } from './styles.js';
+export { formStyles, OVERLAY_BACKGROUND } from './styles.js';
 
 export type {
   CivFormProps,

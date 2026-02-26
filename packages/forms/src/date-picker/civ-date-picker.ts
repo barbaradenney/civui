@@ -75,8 +75,8 @@ export class CivDatePicker extends CivFormElement {
 
   @state() private _open = false;
   @state() private _focusedDate: Date = new Date();
-  @state() private _displayMonth = new Date().getMonth();
-  @state() private _displayYear = new Date().getFullYear();
+  @state() private _displayMonth = this._focusedDate.getMonth();
+  @state() private _displayYear = this._focusedDate.getFullYear();
   @state() private _inputValue = '';
 
   private _headingId = this.generateId('heading');
@@ -444,10 +444,11 @@ export class CivDatePicker extends CivFormElement {
       dispatch(this, 'civ-change', { value: iso });
       this.sendAnalytics('change');
       this.announce(interpolate(this.dateSelectedMessage, { date: formatDateLong(parsed, this.locale) }));
+    } else {
+      // Invalid text: keep it in the input so users can correct typos,
+      // but announce the error for screen readers.
+      this.announce('Invalid date format', 'assertive');
     }
-    // Invalid text: keep it in the input so users can correct typos,
-    // but announce the error for screen readers.
-    this.announce('Invalid date format', 'assertive');
   }
 
   private _navigateMonth(delta: number): void {

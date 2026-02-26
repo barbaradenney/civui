@@ -7,8 +7,9 @@ import {
   FlatList,
   StyleSheet,
   TextInput as RNTextInput,
+  Dimensions,
 } from 'react-native';
-import { formStyles } from '../core/styles.js';
+import { formStyles, OVERLAY_BACKGROUND } from '../core/styles.js';
 import { buildAccessibilityLabel, buildAccessibilityState } from '../core/a11y.js';
 import { colors, spacing, typography, border } from '../core/tokens.js';
 import type { CivFormProps, ComboboxOption } from '../core/types.js';
@@ -53,13 +54,13 @@ const styles = StyleSheet.create({
   overlay: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: OVERLAY_BACKGROUND,
     padding: spacing[4],
   },
   modal: {
     backgroundColor: colors.white,
     borderRadius: border.radius.lg,
-    maxHeight: '70%' as unknown as number,
+    maxHeight: Dimensions.get('window').height * 0.7,
     overflow: 'hidden',
   },
   modalHeader: {

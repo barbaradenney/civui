@@ -178,18 +178,16 @@ describe('civ-button', () => {
     expect(btn.textContent).toContain('Submit');
   });
 
-  // keyboard tests
-  it('fires analytics on button click', async () => {
-    const el = await fixture('<civ-button>Click</civ-button>');
+  it('suppresses analytics when disable-analytics is set', async () => {
+    const el = await fixture('<civ-button disable-analytics>Click</civ-button>');
 
     const handler = vi.fn();
     el.addEventListener('civ-analytics', handler as EventListener);
 
     const btn = el.querySelector('button') as HTMLButtonElement;
-    // Native <button> fires click on Enter
     btn.click();
 
-    expect(handler).toHaveBeenCalledOnce();
+    expect(handler).not.toHaveBeenCalled();
   });
 
   it('fires analytics on link click', async () => {

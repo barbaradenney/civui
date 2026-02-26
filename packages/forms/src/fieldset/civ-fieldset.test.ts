@@ -111,6 +111,27 @@ describe('fieldset disabled', () => {
     expect(fieldset.contains(city)).toBe(true);
   });
 
+  it('re-moves children after disconnect and reconnect', async () => {
+    const el = await fixture<HTMLElement>(`
+      <civ-fieldset legend="Name">
+        <input type="text" id="first" />
+      </civ-fieldset>
+    `);
+    await elementUpdated(el);
+
+    const fieldset = el.querySelector('fieldset') as HTMLFieldSetElement;
+    expect(fieldset.contains(el.querySelector('#first'))).toBe(true);
+
+    // Disconnect and reconnect
+    const parent = el.parentElement!;
+    parent.removeChild(el);
+    parent.appendChild(el);
+    await elementUpdated(el);
+
+    const fieldset2 = el.querySelector('fieldset') as HTMLFieldSetElement;
+    expect(fieldset2.contains(el.querySelector('#first'))).toBe(true);
+  });
+
   it('moves children inside the fieldset element', async () => {
     const el = await fixture<HTMLElement>(`
       <civ-fieldset legend="Name">

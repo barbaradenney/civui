@@ -242,6 +242,22 @@ describe('text-input maxlength guard', () => {
     expect(input!.hasAttribute('maxlength')).toBe(false);
   });
 
+  it('does not render minlength attribute on input when minlength="0"', async () => {
+    const el = await fixture('<civ-text-input label="Code" minlength="0"></civ-text-input>');
+
+    const input = el.querySelector('input');
+    expect(input).not.toBeNull();
+    expect(input!.hasAttribute('minlength')).toBe(false);
+  });
+
+  it('renders minlength attribute when minlength is a positive number', async () => {
+    const el = await fixture('<civ-text-input label="Code" minlength="3"></civ-text-input>');
+
+    const input = el.querySelector('input');
+    expect(input).not.toBeNull();
+    expect(input!.getAttribute('minlength')).toBe('3');
+  });
+
   it('renders maxlength attribute when maxlength is a positive number', async () => {
     const el = await fixture('<civ-text-input label="Code" maxlength="5"></civ-text-input>');
 

@@ -1,6 +1,9 @@
 import { StyleSheet } from 'react-native';
 import { colors, spacing, typography, border } from './tokens.js';
 
+/** Modal overlay background used across all picker/modal components. */
+export const OVERLAY_BACKGROUND = 'rgba(0, 0, 0, 0.5)';
+
 /**
  * Shared styles used across all CivUI form components.
  * Keeps visual consistency without duplicating StyleSheet.create calls.

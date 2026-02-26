@@ -255,6 +255,25 @@ describe('civ-alert', () => {
     expect(detail.action).toBe('dismiss');
   });
 
+  it('suppresses analytics when disable-analytics is set', async () => {
+    const el = await fixture('<civ-alert dismissible disable-analytics>Alert.</civ-alert>');
+
+    const handler = vi.fn();
+    el.addEventListener('civ-analytics', handler as EventListener);
+
+    const btn = el.querySelector('.civ-alert__dismiss') as HTMLButtonElement;
+    btn.click();
+
+    expect(handler).not.toHaveBeenCalled();
+  });
+
+  it('clamps heading level to upper bound of 6', async () => {
+    const el = await fixture('<civ-alert heading="Title" heading-level="9">Body.</civ-alert>') as CivAlert;
+
+    const heading = el.querySelector('.civ-alert__heading')!;
+    expect(heading.getAttribute('aria-level')).toBe('6');
+  });
+
   it('uses Light DOM (no shadowRoot)', async () => {
     const el = await fixture('<civ-alert>Message.</civ-alert>');
 

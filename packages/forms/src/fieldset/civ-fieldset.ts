@@ -42,9 +42,7 @@ export class CivFieldset extends CivBaseElement {
 
   override updated(changed: Map<string, unknown>): void {
     super.updated(changed);
-    if (changed.has('error') && this.error) {
-      this.announce(this.error, 'assertive');
-    }
+    // Error announcement handled by renderError()'s role="alert" — no manual announce needed.
     if (!this._childrenMoved) {
       this._moveChildrenIntoFieldset();
     }

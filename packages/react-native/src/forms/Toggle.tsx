@@ -128,6 +128,12 @@ export function Toggle({
 
   return (
     <View style={formStyles.container} testID={`civ-toggle-${name}`}>
+      {hint ? <Text style={formStyles.hint}>{hint}</Text> : null}
+      {error ? (
+        <Text style={formStyles.error} accessibilityRole="alert">
+          {error}
+        </Text>
+      ) : null}
       <Pressable
         style={({ pressed }) => [styles.row, pressed ? { opacity: 0.7 } : null]}
         onPress={handlePress}
@@ -158,12 +164,6 @@ export function Toggle({
           {description ? <Text style={styles.description}>{description}</Text> : null}
         </View>
       </Pressable>
-      {hint ? <Text style={formStyles.hint}>{hint}</Text> : null}
-      {error ? (
-        <Text style={formStyles.error} accessibilityRole="alert">
-          {error}
-        </Text>
-      ) : null}
     </View>
   );
 }

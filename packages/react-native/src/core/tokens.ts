@@ -48,6 +48,20 @@ export const colors = {
     darker: '#3d4551',
     darkest: '#1b1b1b',
   },
+  accent: {
+    cool: {
+      lightest: '#e1f3f8',
+      light: '#97d4ea',
+      DEFAULT: '#00bde3',
+      dark: '#28a0cb',
+    },
+    warm: {
+      lightest: '#f2e4d4',
+      light: '#ffbc78',
+      DEFAULT: '#fa9441',
+      dark: '#c05600',
+    },
+  },
   white: '#ffffff',
   black: '#000000',
 } as const;

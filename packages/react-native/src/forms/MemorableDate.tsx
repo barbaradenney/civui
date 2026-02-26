@@ -7,9 +7,10 @@ import {
   FlatList,
   Pressable,
   StyleSheet,
+  Dimensions,
 } from 'react-native';
 import type { NativeSyntheticEvent, TextInputFocusEventData } from 'react-native';
-import { formStyles } from '../core/styles.js';
+import { formStyles, OVERLAY_BACKGROUND } from '../core/styles.js';
 import { buildAccessibilityLabel, buildAccessibilityState } from '../core/a11y.js';
 import { colors, spacing, typography, border } from '../core/tokens.js';
 import { useAnalytics } from '../core/useAnalytics.js';
@@ -105,13 +106,13 @@ const styles = StyleSheet.create({
   overlay: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: OVERLAY_BACKGROUND,
     padding: spacing[4],
   },
   modal: {
     backgroundColor: colors.white,
     borderRadius: border.radius.lg,
-    maxHeight: '60%' as unknown as number,
+    maxHeight: Dimensions.get('window').height * 0.6,
     overflow: 'hidden',
   },
   modalHeader: {

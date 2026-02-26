@@ -287,6 +287,64 @@ describe('civ-combobox', () => {
     expect(input!.className).not.toContain('focus:civ-outline-offset-0');
   });
 
+  it('Home key moves to first option', async () => {
+    const el = await fixture('<civ-combobox label="State"></civ-combobox>') as any;
+    el.options = STATES;
+    el._open = true;
+    el._activeIndex = 3;
+    await elementUpdated(el);
+
+    const input = el.querySelector('input') as HTMLInputElement;
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home', bubbles: true }));
+    await elementUpdated(el);
+
+    expect(el._activeIndex).toBe(0);
+  });
+
+  it('End key moves to last option', async () => {
+    const el = await fixture('<civ-combobox label="State"></civ-combobox>') as any;
+    el.options = STATES;
+    el._open = true;
+    el._activeIndex = 1;
+    await elementUpdated(el);
+
+    const input = el.querySelector('input') as HTMLInputElement;
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'End', bubbles: true }));
+    await elementUpdated(el);
+
+    expect(el._activeIndex).toBe(4); // last option index
+  });
+
+  it('Home/End do nothing when listbox is closed', async () => {
+    const el = await fixture('<civ-combobox label="State"></civ-combobox>') as any;
+    el.options = STATES;
+    await elementUpdated(el);
+
+    expect(el._open).toBe(false);
+
+    const input = el.querySelector('input') as HTMLInputElement;
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home', bubbles: true }));
+    await elementUpdated(el);
+    expect(el._open).toBe(false);
+
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'End', bubbles: true }));
+    await elementUpdated(el);
+    expect(el._open).toBe(false);
+  });
+
+  it('Enter does not preventDefault when listbox is closed', async () => {
+    const el = await fixture('<civ-combobox label="State"></civ-combobox>') as any;
+    el.options = STATES;
+    await elementUpdated(el);
+
+    const input = el.querySelector('input') as HTMLInputElement;
+    const event = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true });
+    input.dispatchEvent(event);
+
+    // When closed, Enter should NOT be prevented (allows form submission)
+    expect(event.defaultPrevented).toBe(false);
+  });
+
   describe('i18n overrides', () => {
     it('uses custom no-results-text', async () => {
       const el = await fixture('<civ-combobox label="State" no-results-text="Sin resultados"></civ-combobox>') as any;

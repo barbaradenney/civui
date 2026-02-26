@@ -6,7 +6,7 @@ import {
   Modal,
   StyleSheet,
 } from 'react-native';
-import { formStyles } from '../core/styles.js';
+import { formStyles, OVERLAY_BACKGROUND } from '../core/styles.js';
 import { buildAccessibilityLabel, buildAccessibilityState } from '../core/a11y.js';
 import { colors, spacing, typography, border } from '../core/tokens.js';
 import type { CivFormProps } from '../core/types.js';
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
   overlay: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: OVERLAY_BACKGROUND,
     padding: spacing[4],
   },
   modal: {

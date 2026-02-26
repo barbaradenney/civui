@@ -224,8 +224,8 @@ export class CivCombobox extends CivFormElement {
         break;
 
       case 'Enter':
-        e.preventDefault();
         if (this._open && this._activeIndex >= 0 && this._activeIndex < filtered.length) {
+          e.preventDefault();
           this._selectOption(filtered[this._activeIndex]);
         }
         break;

@@ -58,3 +58,15 @@ export {
 // Analytics
 export { ANALYTICS_EVENT_NAME } from './analytics/index.js';
 export type { AnalyticsEventDetail, AnalyticsAction } from './analytics/index.js';
+
+// Event types
+import type { AnalyticsEventDetail as _AnalyticsEventDetail } from './analytics/index.js';
+export interface CivEventMap {
+  'civ-input': CustomEvent<{ value: string }>;
+  'civ-change': CustomEvent<{ value: string }>;
+  'civ-reset': CustomEvent<void>;
+  'civ-dismiss': CustomEvent<void>;
+  'civ-submit': CustomEvent<void>;
+  'civ-invalid': CustomEvent<{ errors: Array<{ name: string; message: string }> }>;
+  'civ-analytics': CustomEvent<_AnalyticsEventDetail>;
+}

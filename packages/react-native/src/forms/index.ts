@@ -34,5 +34,8 @@ export type { FormGroupProps } from './FormGroup.js';
 export { Fieldset } from './Fieldset.js';
 export type { FieldsetProps } from './Fieldset.js';
 
+export { MemorableDate } from './MemorableDate.js';
+export type { MemorableDateProps } from './MemorableDate.js';
+
 export { useForm } from './useForm.js';
 export type { UseFormOptions, UseFormReturn } from './useForm.js';

@@ -2,11 +2,10 @@ import { useState, useCallback, useMemo } from 'react';
 import {
   View,
   Text,
-  TouchableOpacity,
+  Pressable,
   Modal,
   FlatList,
   StyleSheet,
-  Pressable,
   TextInput as RNTextInput,
 } from 'react-native';
 import { formStyles } from '../core/styles.js';
@@ -28,6 +27,8 @@ export interface ComboboxProps extends Omit<CivFormProps, 'onChange'> {
   onChange?: (value: string, label: string) => void;
   /** Called on input (mirrors web civ-input event). */
   onInput?: (value: string) => void;
+  /** Accessibility hint for screen readers. */
+  accessibilityHint?: string;
 }
 
 const styles = StyleSheet.create({
@@ -142,6 +143,7 @@ export function Combobox({
   onChange,
   onInput,
   onAnalytics,
+  accessibilityHint,
 }: ComboboxProps) {
   const [open, setOpen] = useState(false);
   const [focused, setFocused] = useState(false);
@@ -190,13 +192,14 @@ export function Combobox({
         </Text>
       ) : null}
 
-      <TouchableOpacity
-        style={[
+      <Pressable
+        style={({ pressed }) => [
           formStyles.input,
           styles.trigger,
           error ? formStyles.inputError : null,
           disabled ? formStyles.inputDisabled : null,
           focused ? formStyles.inputFocused : null,
+          pressed ? { opacity: 0.7 } : null,
         ]}
         onPress={handleOpen}
         onFocus={() => setFocused(true)}
@@ -205,6 +208,7 @@ export function Combobox({
         accessibilityRole="combobox"
         accessibilityLabel={buildAccessibilityLabel({ label, hint, error, required })}
         accessibilityState={buildAccessibilityState({ disabled, expanded: open })}
+        accessibilityHint={accessibilityHint}
         testID={`civ-combobox-${name}-trigger`}
       >
         <Text
@@ -213,7 +217,7 @@ export function Combobox({
           {selectedOption ? selectedOption.label : placeholder}
         </Text>
         <Text style={styles.arrow}>{open ? '\u25B2' : '\u25BC'}</Text>
-      </TouchableOpacity>
+      </Pressable>
 
       <Modal visible={open} transparent animationType="fade" onRequestClose={() => setOpen(false)}>
         <Pressable style={styles.overlay} onPress={() => setOpen(false)}>
@@ -221,9 +225,9 @@ export function Combobox({
             <View style={styles.modalHeader}>
               <View style={styles.doneRow}>
                 <Text style={styles.modalTitle}>{label}</Text>
-                <TouchableOpacity onPress={() => setOpen(false)}>
+                <Pressable onPress={() => setOpen(false)}>
                   <Text style={styles.doneButton}>Done</Text>
-                </TouchableOpacity>
+                </Pressable>
               </View>
               <RNTextInput
                 style={styles.filterInput}
@@ -244,7 +248,7 @@ export function Combobox({
                 data={filteredOptions}
                 keyExtractor={(item) => item.value}
                 renderItem={({ item }) => (
-                  <TouchableOpacity
+                  <Pressable
                     style={[
                       styles.option,
                       item.value === value ? styles.optionSelected : null,
@@ -266,7 +270,7 @@ export function Combobox({
                     >
                       {item.label}
                     </Text>
-                  </TouchableOpacity>
+                  </Pressable>
                 )}
               />
             )}

@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react';
 import {
   View,
   Text,
-  TouchableOpacity,
+  Pressable,
   StyleSheet,
 } from 'react-native';
 import { formStyles } from '../core/styles.js';
@@ -36,6 +36,8 @@ export interface ToggleProps {
   onInput?: (checked: boolean, value: string) => void;
   /** Analytics event handler. */
   onAnalytics?: AnalyticsHandler;
+  /** Accessibility hint for screen readers. */
+  accessibilityHint?: string;
 }
 
 const TRACK_WIDTH = 40;
@@ -110,6 +112,7 @@ export function Toggle({
   onChange,
   onInput,
   onAnalytics,
+  accessibilityHint,
 }: ToggleProps) {
   const [focused, setFocused] = useState(false);
   const { trackInteraction } = useAnalytics({ onAnalytics });
@@ -125,14 +128,8 @@ export function Toggle({
 
   return (
     <View style={formStyles.container} testID={`civ-toggle-${name}`}>
-      {hint ? <Text style={formStyles.hint}>{hint}</Text> : null}
-      {error ? (
-        <Text style={formStyles.error} accessibilityRole="alert">
-          {error}
-        </Text>
-      ) : null}
-      <TouchableOpacity
-        style={styles.row}
+      <Pressable
+        style={({ pressed }) => [styles.row, pressed ? { opacity: 0.7 } : null]}
         onPress={handlePress}
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
@@ -140,6 +137,7 @@ export function Toggle({
         accessibilityRole="switch"
         accessibilityLabel={buildAccessibilityLabel({ label, hint, error, required })}
         accessibilityState={buildAccessibilityState({ checked, disabled })}
+        accessibilityHint={accessibilityHint}
         testID={`civ-toggle-${name}-control`}
       >
         <View
@@ -159,7 +157,13 @@ export function Toggle({
           </Text>
           {description ? <Text style={styles.description}>{description}</Text> : null}
         </View>
-      </TouchableOpacity>
+      </Pressable>
+      {hint ? <Text style={formStyles.hint}>{hint}</Text> : null}
+      {error ? (
+        <Text style={formStyles.error} accessibilityRole="alert">
+          {error}
+        </Text>
+      ) : null}
     </View>
   );
 }

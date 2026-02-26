@@ -20,6 +20,8 @@ export interface TextareaProps extends CivFormProps {
   placeholder?: string;
   /** Called on input (mirrors web civ-input event). */
   onInput?: (value: string) => void;
+  /** Accessibility hint for screen readers. */
+  accessibilityHint?: string;
 }
 
 const LINE_HEIGHT_PX = 20;
@@ -60,6 +62,7 @@ export function Textarea({
   onChange,
   onInput,
   onAnalytics,
+  accessibilityHint,
 }: TextareaProps) {
   const [focused, setFocused] = useState(false);
   const { trackInteraction } = useAnalytics({ onAnalytics });
@@ -121,6 +124,7 @@ export function Textarea({
         numberOfLines={rows}
         accessibilityLabel={buildAccessibilityLabel({ label, hint, error, required })}
         accessibilityState={buildAccessibilityState({ disabled })}
+        accessibilityHint={accessibilityHint}
         testID={`civ-textarea-${name}-input`}
       />
       {remaining !== undefined ? (

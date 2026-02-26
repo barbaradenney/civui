@@ -28,6 +28,7 @@ export interface ComboboxOption {
  *
  * @fires civ-change - When a selection is made, detail: { value, label }
  * @fires civ-input - When the filter text changes, detail: { value }
+ * @fires civ-analytics - Analytics tracking event on change
  */
 @customElement('civ-combobox')
 export class CivCombobox extends CivFormElement {

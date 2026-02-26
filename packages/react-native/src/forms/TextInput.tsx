@@ -23,6 +23,8 @@ export interface TextInputProps extends CivFormProps {
   textInputProps?: Partial<RNTextInputProps>;
   /** Called on input (mirrors web civ-input event). */
   onInput?: (value: string) => void;
+  /** Accessibility hint for screen readers. */
+  accessibilityHint?: string;
 }
 
 /**
@@ -46,6 +48,7 @@ export function TextInput({
   onInput,
   onAnalytics,
   textInputProps,
+  accessibilityHint,
 }: TextInputProps) {
   const [focused, setFocused] = useState(false);
   const { trackInteraction } = useAnalytics({ onAnalytics });
@@ -116,6 +119,7 @@ export function TextInput({
         autoCapitalize={type === 'email' || type === 'url' ? 'none' : 'sentences'}
         accessibilityLabel={buildAccessibilityLabel({ label, hint, error, required })}
         accessibilityState={buildAccessibilityState({ disabled })}
+        accessibilityHint={accessibilityHint}
         testID={`civ-text-input-${name}-input`}
         {...textInputProps}
       />

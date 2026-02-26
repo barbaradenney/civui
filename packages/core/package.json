@@ -14,6 +14,7 @@
     "./date": "./dist/date/index.js",
     "./templates": "./dist/templates/index.js"
   },
+  "sideEffects": false,
   "files": ["dist"],
   "publishConfig": {
     "access": "public"

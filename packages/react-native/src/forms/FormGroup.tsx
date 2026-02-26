@@ -16,6 +16,8 @@ export interface FormGroupProps {
   required?: boolean;
   /** Child form elements. */
   children: ReactNode;
+  /** Accessibility hint for screen readers. */
+  accessibilityHint?: string;
 }
 
 /**
@@ -31,11 +33,13 @@ export function FormGroup({
   error,
   required,
   children,
+  accessibilityHint,
 }: FormGroupProps) {
   return (
     <View
       style={formStyles.container}
       accessibilityLabel={label ? buildAccessibilityLabel({ label, hint, error, required }) : undefined}
+      accessibilityHint={accessibilityHint}
       testID={name ? `civ-form-group-${name}` : undefined}
     >
       {label ? (

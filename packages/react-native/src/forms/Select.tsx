@@ -2,11 +2,10 @@ import { useState, useCallback } from 'react';
 import {
   View,
   Text,
-  TouchableOpacity,
+  Pressable,
   Modal,
   FlatList,
   StyleSheet,
-  Pressable,
 } from 'react-native';
 import { formStyles } from '../core/styles.js';
 import { buildAccessibilityLabel, buildAccessibilityState } from '../core/a11y.js';
@@ -23,6 +22,8 @@ export interface SelectProps extends CivFormProps {
   doneLabel?: string;
   /** Called on input (mirrors web civ-input event). */
   onInput?: (value: string) => void;
+  /** Accessibility hint for screen readers. */
+  accessibilityHint?: string;
 }
 
 const styles = StyleSheet.create({
@@ -115,6 +116,7 @@ export function Select({
   onChange,
   onInput,
   onAnalytics,
+  accessibilityHint,
 }: SelectProps) {
   const [open, setOpen] = useState(false);
   const [focused, setFocused] = useState(false);
@@ -146,13 +148,14 @@ export function Select({
         </Text>
       ) : null}
 
-      <TouchableOpacity
-        style={[
+      <Pressable
+        style={({ pressed }) => [
           formStyles.input,
           styles.trigger,
           error ? formStyles.inputError : null,
           disabled ? formStyles.inputDisabled : null,
           focused ? formStyles.inputFocused : null,
+          pressed ? { opacity: 0.7 } : null,
         ]}
         onPress={() => !disabled && setOpen(true)}
         onFocus={() => setFocused(true)}
@@ -161,6 +164,7 @@ export function Select({
         accessibilityRole="button"
         accessibilityLabel={buildAccessibilityLabel({ label, hint, error, required })}
         accessibilityState={buildAccessibilityState({ disabled, expanded: open })}
+        accessibilityHint={accessibilityHint}
         testID={`civ-select-${name}-trigger`}
       >
         <Text
@@ -169,22 +173,22 @@ export function Select({
           {selectedOption ? selectedOption.label : placeholder}
         </Text>
         <Text style={styles.arrow}>{open ? '\u25B2' : '\u25BC'}</Text>
-      </TouchableOpacity>
+      </Pressable>
 
       <Modal visible={open} transparent animationType="fade" onRequestClose={() => setOpen(false)}>
         <Pressable style={styles.overlay} onPress={() => setOpen(false)}>
           <Pressable style={styles.modal} onPress={() => {}} accessibilityViewIsModal>
             <View style={styles.modalHeader}>
               <Text style={styles.modalTitle}>{label}</Text>
-              <TouchableOpacity onPress={() => setOpen(false)}>
+              <Pressable onPress={() => setOpen(false)}>
                 <Text style={styles.doneButton}>{doneLabel}</Text>
-              </TouchableOpacity>
+              </Pressable>
             </View>
             <FlatList
               data={options}
               keyExtractor={(item) => item.value}
               renderItem={({ item }) => (
-                <TouchableOpacity
+                <Pressable
                   style={[
                     styles.option,
                     item.value === value ? styles.optionSelected : null,
@@ -203,7 +207,7 @@ export function Select({
                   >
                     {item.label}
                   </Text>
-                </TouchableOpacity>
+                </Pressable>
               )}
             />
           </Pressable>

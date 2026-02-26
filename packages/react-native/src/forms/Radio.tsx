@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react';
 import {
   View,
   Text,
-  TouchableOpacity,
+  Pressable,
   StyleSheet,
 } from 'react-native';
 import { formStyles } from '../core/styles.js';
@@ -47,6 +47,8 @@ export interface RadioGroupProps {
   onInput?: (value: string) => void;
   /** Analytics event handler. */
   onAnalytics?: AnalyticsHandler;
+  /** Accessibility hint for screen readers. */
+  accessibilityHint?: string;
 }
 
 const styles = StyleSheet.create({
@@ -133,6 +135,7 @@ export function RadioGroup({
   onChange,
   onInput,
   onAnalytics,
+  accessibilityHint,
 }: RadioGroupProps) {
   const label = legend || deprecatedLabel || '';
   const [focusedValue, setFocusedValue] = useState<string | null>(null);
@@ -154,6 +157,7 @@ export function RadioGroup({
       style={formStyles.container}
       accessibilityRole="radiogroup"
       accessibilityLabel={buildAccessibilityLabel({ label, hint, error, required })}
+      accessibilityHint={accessibilityHint}
       testID={`civ-radio-group-${name}`}
     >
       <Text style={styles.legend}>
@@ -195,12 +199,13 @@ export function RadioGroup({
           const optionFocused = focusedValue === option.value;
 
           return (
-            <TouchableOpacity
+            <Pressable
               key={option.value}
-              style={[
+              style={({ pressed }) => [
                 tile ? styles.tile : null,
                 tile && selected ? styles.tileSelected : null,
                 optionFocused ? formStyles.inputFocused : null,
+                pressed ? { opacity: 0.7 } : null,
               ]}
               onPress={() => handleSelect(option.value)}
               onFocus={() => setFocusedValue(option.value)}
@@ -212,7 +217,7 @@ export function RadioGroup({
               testID={`civ-radio-${name}-${option.value}`}
             >
               {content}
-            </TouchableOpacity>
+            </Pressable>
           );
         })}
       </View>

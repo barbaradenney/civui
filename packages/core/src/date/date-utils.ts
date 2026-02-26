@@ -55,7 +55,7 @@ export function parseDateString(text: string, _locale = 'en-US'): Date | null {
   if (slashMatch) {
     let [, mStr, dStr, yStr] = slashMatch;
     let y = Number(yStr);
-    if (y < 100) y += 2000;
+    if (y < 100) y += y < 50 ? 2000 : 1900;
     const m = Number(mStr);
     const d = Number(dStr);
     const date = new Date(y, m - 1, d);

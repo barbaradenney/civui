@@ -199,4 +199,41 @@ describe('civ-toggle', () => {
     expect(btn.className).toContain('focus-visible:civ-focus-ring');
     expect(btn.className).not.toContain('focus:civ-outline');
   });
+
+  it('formDisabledCallback cascades disabled state', async () => {
+    const el = await fixture('<civ-toggle label="Dark mode"></civ-toggle>') as any;
+
+    el.formDisabledCallback(true);
+    await elementUpdated(el);
+
+    const btn = el.querySelector('button[role="switch"]') as HTMLButtonElement;
+    expect(btn.disabled).toBe(true);
+    expect(el.disabled).toBe(true);
+  });
+
+  it('suppresses analytics when disable-analytics is set', async () => {
+    const el = await fixture('<civ-toggle label="Dark mode" disable-analytics></civ-toggle>');
+
+    const handler = vi.fn();
+    el.addEventListener('civ-analytics', handler as EventListener);
+
+    const btn = el.querySelector('button[role="switch"]') as HTMLButtonElement;
+    btn.click();
+
+    expect(handler).not.toHaveBeenCalled();
+  });
+
+  it('uses custom value prop in events and form data', async () => {
+    const el = await fixture('<civ-toggle label="Dark mode" value="yes"></civ-toggle>');
+
+    let eventDetail: any = null;
+    el.addEventListener('civ-change', ((e: CustomEvent) => {
+      eventDetail = e.detail;
+    }) as EventListener);
+
+    const btn = el.querySelector('button[role="switch"]') as HTMLButtonElement;
+    btn.click();
+
+    expect(eventDetail).toEqual({ checked: true, value: 'yes' });
+  });
 });

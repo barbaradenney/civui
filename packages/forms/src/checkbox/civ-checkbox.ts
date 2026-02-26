@@ -22,6 +22,7 @@ import { CivFormElement, dispatch, renderHint, renderError } from '@civui/core';
  *
  * @fires civ-change - When checked state changes, detail: { checked, value }
  * @fires civ-input - When checked state changes (input event), detail: { checked, value }
+ * @fires civ-analytics - Analytics tracking event on change
  */
 @customElement('civ-checkbox')
 export class CivCheckbox extends CivFormElement {

@@ -2,9 +2,8 @@ import { useState, useCallback, useMemo } from 'react';
 import {
   View,
   Text,
-  TouchableOpacity,
-  Modal,
   Pressable,
+  Modal,
   StyleSheet,
 } from 'react-native';
 import { formStyles } from '../core/styles.js';
@@ -41,6 +40,8 @@ export interface DatePickerProps extends CivFormProps {
   placeholder?: string;
   /** Called on input (mirrors web civ-input event). */
   onInput?: (value: string) => void;
+  /** Accessibility hint for screen readers. */
+  accessibilityHint?: string;
   /** Accessible label for the trigger when no date is selected. */
   chooseDateLabel?: string;
   /** Accessible label for the trigger when a date is selected. Uses {date} placeholder. */
@@ -191,6 +192,7 @@ export function DatePicker({
   onChange,
   onInput,
   onAnalytics,
+  accessibilityHint,
   chooseDateLabel = 'Choose date',
   selectedDateLabel = 'Choose date, selected date is {date}',
   dialogLabel = 'Choose Date',
@@ -302,7 +304,7 @@ export function DatePicker({
         </Text>
       ) : null}
 
-      <TouchableOpacity
+      <Pressable
         style={[
           formStyles.input,
           styles.trigger,
@@ -324,6 +326,7 @@ export function DatePicker({
           required,
         })}
         accessibilityState={buildAccessibilityState({ disabled, expanded: open })}
+        accessibilityHint={accessibilityHint}
         testID={`civ-date-picker-${name}-trigger`}
       >
         <Text
@@ -332,7 +335,7 @@ export function DatePicker({
           {selectedDate ? displayText : placeholder}
         </Text>
         <Text style={styles.calendarIcon}>{'\uD83D\uDCC5'}</Text>
-      </TouchableOpacity>
+      </Pressable>
 
       <Modal
         visible={open}
@@ -344,13 +347,13 @@ export function DatePicker({
           <Pressable style={styles.modal} onPress={() => {}} accessibilityViewIsModal>
             <View style={styles.header}>
               <Text style={styles.headerTitle}>{dialogLabel}</Text>
-              <TouchableOpacity onPress={() => setOpen(false)}>
+              <Pressable onPress={() => setOpen(false)}>
                 <Text style={styles.doneButton}>Done</Text>
-              </TouchableOpacity>
+              </Pressable>
             </View>
 
             <View style={styles.navRow}>
-              <TouchableOpacity
+              <Pressable
                 style={[styles.navButton, prevDisabled ? styles.navButtonDisabled : null]}
                 onPress={prevMonth}
                 disabled={prevDisabled}
@@ -358,11 +361,11 @@ export function DatePicker({
                 accessibilityLabel={previousMonthLabel}
               >
                 <Text style={styles.navButtonText}>{'\u25C0'}</Text>
-              </TouchableOpacity>
+              </Pressable>
               <Text style={styles.monthYearText}>
                 {monthNames[displayMonth]} {displayYear}
               </Text>
-              <TouchableOpacity
+              <Pressable
                 style={[styles.navButton, nextDisabled ? styles.navButtonDisabled : null]}
                 onPress={nextMonth}
                 disabled={nextDisabled}
@@ -370,7 +373,7 @@ export function DatePicker({
                 accessibilityLabel={nextMonthLabel}
               >
                 <Text style={styles.navButtonText}>{'\u25B6'}</Text>
-              </TouchableOpacity>
+              </Pressable>
             </View>
 
             <View style={styles.grid}>
@@ -391,7 +394,7 @@ export function DatePicker({
                       : false;
 
                     return (
-                      <TouchableOpacity
+                      <Pressable
                         key={toISODateString(day.date)}
                         style={[
                           styles.dayCell,
@@ -417,7 +420,7 @@ export function DatePicker({
                         >
                           {day.day}
                         </Text>
-                      </TouchableOpacity>
+                      </Pressable>
                     );
                   })}
                 </View>

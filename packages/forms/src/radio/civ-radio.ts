@@ -23,6 +23,7 @@ import { CivBaseElement, dispatch } from '@civui/core';
  *
  * @fires civ-change - When selection changes (bubbles to radio-group), detail: { value }
  * @fires civ-input - When selection changes (input event), detail: { value }
+ * @fires civ-analytics - Analytics tracking event on change
  */
 @customElement('civ-radio')
 export class CivRadio extends CivBaseElement {

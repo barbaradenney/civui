@@ -25,6 +25,7 @@ import type { CivCheckbox } from './civ-checkbox.js';
  * @fires civ-input - When the set of checked values changes (before civ-change), detail: { values }
  * @fires civ-change - When the set of checked values changes, detail: { values }
  * @fires civ-reset - When the form is reset
+ * @fires civ-analytics - Analytics tracking event on change
  */
 @customElement('civ-checkbox-group')
 export class CivCheckboxGroup extends CivFormElement {
@@ -113,9 +114,7 @@ export class CivCheckboxGroup extends CivFormElement {
         ${renderLegend({ legend: this.legend, required: this.required })}
         ${renderHint(this._hintId, this.hint, true)}
         ${renderError(this._errorId, this.error, true)}
-        <div class="${layoutClass}">
-          <slot></slot>
-        </div>
+        <div class="${layoutClass}"></div>
       </fieldset>
     `;
   }

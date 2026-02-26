@@ -50,6 +50,7 @@ export interface CivFormFieldLike extends HTMLElement {
  *
  * @fires civ-submit - When validation passes
  * @fires civ-invalid - When validation fails, detail contains errors
+ * @fires civ-analytics - Analytics tracking event on submit
  */
 @customElement('civ-form')
 export class CivForm extends CivBaseElement {

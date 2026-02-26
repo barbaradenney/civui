@@ -20,6 +20,7 @@ import { CivFormElement, dispatch, interpolate, renderHint, renderError } from '
  *
  * @fires civ-change - When checked state changes, detail: { checked, value }
  * @fires civ-input - When checked state changes (input event), detail: { checked, value }
+ * @fires civ-analytics - Analytics tracking event on change
  */
 @customElement('civ-toggle')
 export class CivToggle extends CivFormElement {

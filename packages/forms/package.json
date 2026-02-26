@@ -23,6 +23,7 @@
     "./toggle": "./dist/toggle/index.js",
     "./segmented-control": "./dist/segmented-control/index.js"
   },
+  "sideEffects": false,
   "files": ["dist"],
   "publishConfig": {
     "access": "public"

@@ -10,7 +10,7 @@ export type { AnalyticsEvent, AnalyticsHandler, UseAnalyticsOptions, UseAnalytic
 // Forms
 export {
   TextInput, Textarea, Select, Checkbox, RadioGroup, Toggle, SegmentedControl,
-  CheckboxGroup, Combobox, FormGroup, Fieldset,
+  CheckboxGroup, Combobox, FormGroup, Fieldset, MemorableDate,
   useForm,
 } from './forms/index.js';
 export type {
@@ -28,6 +28,7 @@ export type {
   ComboboxProps,
   FormGroupProps,
   FieldsetProps,
+  MemorableDateProps,
   UseFormOptions,
   UseFormReturn,
 } from './forms/index.js';

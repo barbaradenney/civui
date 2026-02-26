@@ -23,6 +23,7 @@ import type { CivSegment } from './civ-segment.js';
  * @fires civ-input - When the selected value changes (input event), detail: { value }
  * @fires civ-change - When the selected value changes, detail: { value }
  * @fires civ-reset - When the form is reset
+ * @fires civ-analytics - Analytics tracking event on change
  */
 @customElement('civ-segmented-control')
 export class CivSegmentedControl extends CivFormElement {

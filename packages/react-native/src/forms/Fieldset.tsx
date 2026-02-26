@@ -17,6 +17,8 @@ export interface FieldsetProps {
   disabled?: boolean;
   /** Child form elements. */
   children: ReactNode;
+  /** Accessibility hint for screen readers. */
+  accessibilityHint?: string;
 }
 
 const styles = StyleSheet.create({
@@ -45,6 +47,7 @@ export function Fieldset({
   required,
   disabled,
   children,
+  accessibilityHint,
 }: FieldsetProps) {
   return (
     <View
@@ -52,6 +55,7 @@ export function Fieldset({
       pointerEvents={disabled ? 'none' : 'auto'}
       accessibilityRole="none"
       accessibilityLabel={buildAccessibilityLabel({ label: legend, hint, error, required })}
+      accessibilityHint={accessibilityHint}
     >
       {legend ? (
         <Text style={styles.legend}>

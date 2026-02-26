@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react';
 import {
   View,
   Text,
-  TouchableOpacity,
+  Pressable,
   StyleSheet,
 } from 'react-native';
 import { formStyles } from '../core/styles.js';
@@ -40,6 +40,8 @@ export interface CheckboxProps {
   onInput?: (checked: boolean, value: string) => void;
   /** Analytics event handler. */
   onAnalytics?: AnalyticsHandler;
+  /** Accessibility hint for screen readers. */
+  accessibilityHint?: string;
 }
 
 const styles = StyleSheet.create({
@@ -126,6 +128,7 @@ export function Checkbox({
   onChange,
   onInput,
   onAnalytics,
+  accessibilityHint,
 }: CheckboxProps) {
   const [focused, setFocused] = useState(false);
   const { trackInteraction } = useAnalytics({ onAnalytics });
@@ -162,23 +165,18 @@ export function Checkbox({
           {required && <Text style={formStyles.requiredIndicator}> *</Text>}
         </Text>
         {description ? <Text style={styles.description}>{description}</Text> : null}
-        {hint ? <Text style={styles.hint}>{hint}</Text> : null}
       </View>
     </View>
   );
 
   return (
     <View style={formStyles.container} testID={`civ-checkbox-${name}`}>
-      {error ? (
-        <Text style={formStyles.error} accessibilityRole="alert">
-          {error}
-        </Text>
-      ) : null}
-      <TouchableOpacity
-        style={[
+      <Pressable
+        style={({ pressed }) => [
           tile ? styles.tile : null,
           tile && (checked || indeterminate) ? styles.tileChecked : null,
           tile && focused ? formStyles.inputFocused : null,
+          pressed ? { opacity: 0.7 } : null,
         ]}
         onPress={handlePress}
         onFocus={() => setFocused(true)}
@@ -187,10 +185,17 @@ export function Checkbox({
         accessibilityRole="checkbox"
         accessibilityLabel={buildAccessibilityLabel({ label, hint, error, required })}
         accessibilityState={buildAccessibilityState({ checked: indeterminate ? 'mixed' : checked, disabled })}
+        accessibilityHint={accessibilityHint}
         testID={`civ-checkbox-${name}-control`}
       >
         {content}
-      </TouchableOpacity>
+      </Pressable>
+      {hint ? <Text style={styles.hint}>{hint}</Text> : null}
+      {error ? (
+        <Text style={formStyles.error} accessibilityRole="alert">
+          {error}
+        </Text>
+      ) : null}
     </View>
   );
 }

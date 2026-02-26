@@ -36,6 +36,7 @@ function formatFileSize(bytes: number): string {
  *
  * @fires civ-input - When files change, detail: { files: File[] }
  * @fires civ-change - When files are added or removed, detail: { files: File[] }
+ * @fires civ-analytics - Analytics tracking event on file add/remove
  *
  * Note: Event detail uses `{ files }` instead of the standard `{ value }`
  * because file data cannot be represented as a single string. Use the

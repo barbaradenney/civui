@@ -25,6 +25,7 @@ import type { CivRadio } from './civ-radio.js';
  * @fires civ-change - When the selected value changes, detail: { value }
  * @fires civ-input - When the selected value changes (input event), detail: { value }
  * @fires civ-reset - When the form is reset
+ * @fires civ-analytics - Analytics tracking event on change
  */
 @customElement('civ-radio-group')
 export class CivRadioGroup extends CivFormElement {
@@ -121,9 +122,7 @@ export class CivRadioGroup extends CivFormElement {
         ${renderLegend({ legend: this.legend, required: this.required })}
         ${renderHint(this._hintId, this.hint, true)}
         ${renderError(this._errorId, this.error, true)}
-        <div class="${layoutClass}">
-          <slot></slot>
-        </div>
+        <div class="${layoutClass}"></div>
       </fieldset>
     `;
   }

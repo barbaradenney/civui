@@ -35,12 +35,14 @@ export interface CheckboxGroupProps {
   tile?: boolean;
   /** Layout direction. */
   orientation?: 'vertical' | 'horizontal';
-  /** Called when selection changes (comma-separated value string). */
-  onChange?: (value: string) => void;
+  /** Called when selection changes with array of selected values. */
+  onChange?: (values: string[]) => void;
   /** Called on input (mirrors web civ-input event). */
-  onInput?: (value: string) => void;
+  onInput?: (values: string[]) => void;
   /** Analytics event handler. */
   onAnalytics?: AnalyticsHandler;
+  /** Accessibility hint for screen readers. */
+  accessibilityHint?: string;
 }
 
 function parseCommaSeparated(val: string): string[] {
@@ -81,6 +83,7 @@ export function CheckboxGroup({
   onChange,
   onInput,
   onAnalytics,
+  accessibilityHint,
 }: CheckboxGroupProps) {
   const { trackInteraction } = useAnalytics({ onAnalytics });
 
@@ -92,9 +95,8 @@ export function CheckboxGroup({
       const next = checked
         ? [...current, optionValue]
         : current.filter((v) => v !== optionValue);
-      const nextValue = next.join(',');
-      onInput?.(nextValue);
-      onChange?.(nextValue);
+      onInput?.(next);
+      onChange?.(next);
       trackInteraction('CheckboxGroup', 'change', { fieldName: name, label: legend });
     },
     [value, onChange, onInput, trackInteraction, name, legend],
@@ -103,7 +105,9 @@ export function CheckboxGroup({
   return (
     <View
       style={formStyles.container}
+      accessibilityRole="none"
       accessibilityLabel={buildAccessibilityLabel({ label: legend, hint, error, required })}
+      accessibilityHint={accessibilityHint}
       testID={`civ-checkbox-group-${name}`}
     >
       <Text style={styles.legend}>

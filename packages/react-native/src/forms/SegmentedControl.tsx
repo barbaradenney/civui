@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react';
 import {
   View,
   Text,
-  TouchableOpacity,
+  Pressable,
   StyleSheet,
 } from 'react-native';
 import { formStyles } from '../core/styles.js';
@@ -42,6 +42,8 @@ export interface SegmentedControlProps {
   onInput?: (value: string) => void;
   /** Analytics event handler. */
   onAnalytics?: AnalyticsHandler;
+  /** Accessibility hint for screen readers. */
+  accessibilityHint?: string;
 }
 
 const styles = StyleSheet.create({
@@ -110,6 +112,7 @@ export function SegmentedControl({
   onChange,
   onInput,
   onAnalytics,
+  accessibilityHint,
 }: SegmentedControlProps) {
   const label = legend || deprecatedLabel || '';
   const [focusedValue, setFocusedValue] = useState<string | null>(null);
@@ -131,6 +134,7 @@ export function SegmentedControl({
       style={formStyles.container}
       accessibilityRole="radiogroup"
       accessibilityLabel={buildAccessibilityLabel({ label, hint, error, required })}
+      accessibilityHint={accessibilityHint}
       testID={`civ-segmented-control-${name}`}
     >
       {label ? (
@@ -156,7 +160,7 @@ export function SegmentedControl({
           const optionFocused = focusedValue === option.value;
 
           return (
-            <TouchableOpacity
+            <Pressable
               key={option.value}
               style={[
                 styles.segment,
@@ -184,7 +188,7 @@ export function SegmentedControl({
               >
                 {option.label}
               </Text>
-            </TouchableOpacity>
+            </Pressable>
           );
         })}
       </View>

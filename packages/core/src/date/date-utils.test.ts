@@ -94,9 +94,22 @@ describe('parseDateString', () => {
     expect(parseDateString('3.15.2026')).not.toBeNull();
   });
 
-  it('handles 2-digit years', () => {
+  it('handles 2-digit years (0-49 → 2000s)', () => {
     const d = parseDateString('3/15/26')!;
     expect(d.getFullYear()).toBe(2026);
+    const d2 = parseDateString('1/1/00')!;
+    expect(d2.getFullYear()).toBe(2000);
+    const d3 = parseDateString('6/15/49')!;
+    expect(d3.getFullYear()).toBe(2049);
+  });
+
+  it('handles 2-digit years (50-99 → 1900s)', () => {
+    const d = parseDateString('3/15/55')!;
+    expect(d.getFullYear()).toBe(1955);
+    const d2 = parseDateString('12/25/99')!;
+    expect(d2.getFullYear()).toBe(1999);
+    const d3 = parseDateString('1/1/50')!;
+    expect(d3.getFullYear()).toBe(1950);
   });
 
   it('returns null for empty or invalid', () => {

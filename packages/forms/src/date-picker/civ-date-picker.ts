@@ -54,6 +54,7 @@ import {
  *
  * @fires civ-change - When a date is selected, detail: { value }
  * @fires civ-input - When the text input changes, detail: { value }
+ * @fires civ-analytics - Analytics tracking event on change
  */
 @customElement('civ-date-picker')
 export class CivDatePicker extends CivFormElement {

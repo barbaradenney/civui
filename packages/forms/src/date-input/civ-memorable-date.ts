@@ -25,6 +25,7 @@ import '../text-input/civ-text-input.js';
  *
  * @fires civ-input - When any date field changes, detail: { value, month, day, year }
  * @fires civ-change - When any date field changes, detail: { value, month, day, year }
+ * @fires civ-analytics - Analytics tracking event on change
  */
 @customElement('civ-memorable-date')
 export class CivMemorableDate extends CivFormElement {

@@ -67,15 +67,15 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   segmentFirst: {
-    borderTopLeftRadius: border.radius.DEFAULT,
-    borderBottomLeftRadius: border.radius.DEFAULT,
+    borderTopStartRadius: border.radius.DEFAULT,
+    borderBottomStartRadius: border.radius.DEFAULT,
   },
   segmentLast: {
-    borderTopRightRadius: border.radius.DEFAULT,
-    borderBottomRightRadius: border.radius.DEFAULT,
+    borderTopEndRadius: border.radius.DEFAULT,
+    borderBottomEndRadius: border.radius.DEFAULT,
   },
   segmentMiddle: {
-    borderLeftWidth: 0,
+    borderStartWidth: 0,
   },
   segmentLabel: {
     fontSize: typography.fontSize.sm,

@@ -90,9 +90,7 @@ export class CivSegmentedControl extends CivFormElement {
         ${renderLegend({ legend: this.legend, required: this.required, srOnly: true })}
         ${renderHint(this._hintId, this.hint, true)}
         ${renderError(this._errorId, this.error, true)}
-        <div class="civ-inline-flex">
-          <slot></slot>
-        </div>
+        <div class="civ-inline-flex"></div>
       </fieldset>
     `;
   }

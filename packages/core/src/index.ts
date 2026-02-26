@@ -60,13 +60,27 @@ export { ANALYTICS_EVENT_NAME } from './analytics/index.js';
 export type { AnalyticsEventDetail, AnalyticsAction } from './analytics/index.js';
 
 // Event types
-import type { AnalyticsEventDetail as _AnalyticsEventDetail } from './analytics/index.js';
+import type { AnalyticsEventDetail } from './analytics/index.js';
+
+/** Detail shape for single-value controls (text-input, select, radio, combobox, date-picker, segmented-control). */
+export type CivInputDetail = { value: string };
+/** Detail shape for boolean controls (checkbox, toggle). */
+export type CivBooleanDetail = { checked: boolean; value: string };
+/** Detail shape for multi-value controls (checkbox-group). */
+export type CivMultiDetail = { values: string[] };
+/** Detail shape for file controls (file-upload). */
+export type CivFileDetail = { files: File[] };
+/** Detail shape for combobox selection. */
+export type CivComboboxDetail = { value: string; label: string };
+/** Detail shape for memorable-date. */
+export type CivMemorableDateDetail = { value: string; month: string; day: string; year: string };
+
 export interface CivEventMap {
-  'civ-input': CustomEvent<{ value: string }>;
-  'civ-change': CustomEvent<{ value: string }>;
+  'civ-input': CustomEvent<CivInputDetail | CivBooleanDetail | CivMultiDetail | CivFileDetail | CivMemorableDateDetail>;
+  'civ-change': CustomEvent<CivInputDetail | CivBooleanDetail | CivMultiDetail | CivFileDetail | CivComboboxDetail | CivMemorableDateDetail>;
   'civ-reset': CustomEvent<void>;
   'civ-dismiss': CustomEvent<void>;
-  'civ-submit': CustomEvent<void>;
+  'civ-submit': CustomEvent<{ formData: FormData }>;
   'civ-invalid': CustomEvent<{ errors: Array<{ name: string; message: string }> }>;
-  'civ-analytics': CustomEvent<_AnalyticsEventDetail>;
+  'civ-analytics': CustomEvent<AnalyticsEventDetail>;
 }

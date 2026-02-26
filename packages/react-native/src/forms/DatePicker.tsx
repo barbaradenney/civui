@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
   calendarIcon: {
     fontSize: typography.fontSize.lg,
     color: colors.base.DEFAULT,
-    marginLeft: spacing[2],
+    marginStart: spacing[2],
   },
   overlay: {
     flex: 1,

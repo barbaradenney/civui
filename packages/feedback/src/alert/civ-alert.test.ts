@@ -178,7 +178,22 @@ describe('civ-alert', () => {
     const btn = el.querySelector('.civ-alert__dismiss') as HTMLButtonElement;
     btn.click();
 
+    // Removal is deferred via queueMicrotask for screen reader announcement
+    await new Promise((r) => queueMicrotask(r));
     expect(parent.contains(el)).toBe(false);
+  });
+
+  it('prevents dismiss when civ-dismiss event is cancelled', async () => {
+    const el = await fixture('<civ-alert dismissible>Alert.</civ-alert>');
+    const parent = el.parentElement!;
+
+    el.addEventListener('civ-dismiss', (e) => e.preventDefault());
+
+    const btn = el.querySelector('.civ-alert__dismiss') as HTMLButtonElement;
+    btn.click();
+
+    await new Promise((r) => queueMicrotask(r));
+    expect(parent.contains(el)).toBe(true);
   });
 
   it('dismiss button has aria-label', async () => {

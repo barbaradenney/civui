@@ -37,10 +37,6 @@ const styles = StyleSheet.create({
     marginTop: 4,
     textAlign: 'right',
   },
-  charCountOver: {
-    color: colors.error.DEFAULT,
-    fontWeight: typography.fontWeight.bold,
-  },
 });
 
 /**
@@ -67,14 +63,15 @@ export function Textarea({
   const [focused, setFocused] = useState(false);
   const { trackInteraction } = useAnalytics({ onAnalytics });
   const dirtyRef = useRef(false);
+  const valueRef = useRef(value);
+  valueRef.current = value;
 
   const handleChange = useCallback(
     (text: string) => {
       dirtyRef.current = true;
       onInput?.(text);
-      onChange?.(text);
     },
-    [onChange, onInput],
+    [onInput],
   );
 
   const handleFocus = useCallback(() => {
@@ -85,12 +82,12 @@ export function Textarea({
     setFocused(false);
     if (dirtyRef.current) {
       trackInteraction('Textarea', 'change', { fieldName: name, label });
+      onChange?.(valueRef.current);
       dirtyRef.current = false;
     }
-  }, [trackInteraction, name, label]);
+  }, [trackInteraction, name, label, onChange]);
 
   const remaining = maxLength !== undefined ? maxLength - value.length : undefined;
-  const isOverLimit = remaining !== undefined && remaining < 0;
 
   return (
     <View style={formStyles.container} testID={`civ-textarea-${name}`}>
@@ -129,12 +126,10 @@ export function Textarea({
       />
       {remaining !== undefined ? (
         <Text
-          style={[styles.charCount, isOverLimit ? styles.charCountOver : null]}
+          style={styles.charCount}
           accessibilityLiveRegion="polite"
         >
-          {isOverLimit
-            ? `${Math.abs(remaining)} characters over limit`
-            : `${remaining} characters remaining`}
+          {`${remaining} characters remaining`}
         </Text>
       ) : null}
     </View>

@@ -26,6 +26,7 @@ import { CivFormElement, renderLabel, renderHint, renderError, inputClasses } fr
  *
  * @fires civ-input - When the date value changes (on input), detail: { value }
  * @fires civ-change - When the date changes, detail: { value }
+ * @fires civ-analytics - Analytics tracking event on change
  */
 @customElement('civ-date-input')
 export class CivDateInput extends CivFormElement {

@@ -24,6 +24,7 @@ import { CivFormElement, debounce, dispatch, renderLabel, renderHint, renderErro
  * @fires civ-input - When value changes (on input), detail: { value }
  * @fires civ-change - When value changes (on change/blur), detail: { value }
  * @fires civ-reset - When the form is reset
+ * @fires civ-analytics - Analytics tracking event on change
  */
 @customElement('civ-textarea')
 export class CivTextarea extends CivFormElement {
@@ -81,7 +82,7 @@ export class CivTextarea extends CivFormElement {
           rows="${this.rows}"
           .value="${this.value}"
           placeholder="${this.placeholder || nothing}"
-          maxlength="${this.maxlength ?? nothing}"
+          maxlength="${this.maxlength && this.maxlength > 0 ? this.maxlength : nothing}"
           ?disabled="${this.disabled}"
           ?required="${this.required}"
           aria-required="${this.required || nothing}"

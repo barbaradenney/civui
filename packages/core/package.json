@@ -12,7 +12,9 @@
     "./a11y": "./dist/a11y/index.js",
     "./utils": "./dist/utils/index.js",
     "./date": "./dist/date/index.js",
-    "./templates": "./dist/templates/index.js"
+    "./templates": "./dist/templates/index.js",
+    "./styles": "./src/styles/civ.css",
+    "./styles/components": "./src/styles/components.css"
   },
   "sideEffects": false,
   "files": ["dist"],

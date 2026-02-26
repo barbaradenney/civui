@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     borderRadius: border.radius.full,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: spacing[2],
+    marginEnd: spacing[2],
     marginTop: 2,
   },
   circleSelected: {
@@ -111,6 +111,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: spacing[4],
+  },
+  flexOne: {
+    flex: 1,
   },
 });
 
@@ -187,7 +190,7 @@ export function RadioGroup({
               >
                 {selected && <View style={styles.circleDot} />}
               </View>
-              <View style={{ flex: 1 }}>
+              <View style={styles.flexOne}>
                 <Text style={styles.optionLabel}>{option.label}</Text>
                 {option.description ? (
                   <Text style={styles.optionDescription}>{option.description}</Text>

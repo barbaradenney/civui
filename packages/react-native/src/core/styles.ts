@@ -41,16 +41,16 @@ export const formStyles = StyleSheet.create({
   },
   inputError: {
     borderColor: colors.error.DEFAULT,
-    borderLeftWidth: border.width[4],
+    borderStartWidth: border.width[4],
   },
   inputDisabled: {
     opacity: 0.5,
     backgroundColor: colors.base.lightest,
   },
   inputFocused: {
-    borderColor: '#005ea2',
+    borderColor: colors.primary.DEFAULT,
     borderWidth: 3,
-    shadowColor: '#ffffff',
+    shadowColor: colors.white,
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 1,
     shadowRadius: 3,

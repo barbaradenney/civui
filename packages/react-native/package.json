@@ -11,6 +11,7 @@
     "./forms": "./dist/forms/index.js",
     "./core": "./dist/core/index.js"
   },
+  "sideEffects": false,
   "files": ["dist"],
   "publishConfig": {
     "access": "public"
@@ -23,14 +24,13 @@
     "storybook:web": "storybook dev -p 6007 -c .storybook-web",
     "storybook:web:build": "storybook build -c .storybook-web -o storybook-static"
   },
-  "dependencies": {
-    "@civui/core": "workspace:*"
-  },
   "peerDependencies": {
+    "@civui/core": "workspace:*",
     "react": ">=18.0.0",
     "react-native": ">=0.72.0"
   },
   "devDependencies": {
+    "@civui/core": "workspace:*",
     "@jest/globals": "^29.0.0",
     "@testing-library/jest-native": "^5.0.0",
     "@testing-library/react": "^16.3.2",

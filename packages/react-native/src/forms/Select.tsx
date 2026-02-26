@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
   arrow: {
     fontSize: typography.fontSize.base,
     color: colors.base.DEFAULT,
-    marginLeft: spacing[2],
+    marginStart: spacing[2],
   },
   overlay: {
     flex: 1,

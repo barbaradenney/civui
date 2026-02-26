@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     borderRadius: border.radius.sm,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: spacing[2],
+    marginEnd: spacing[2],
     marginTop: 2,
   },
   boxChecked: {
@@ -105,6 +105,9 @@ const styles = StyleSheet.create({
     fontSize: typography.fontSize.sm,
     color: colors.base.DEFAULT,
     marginTop: 2,
+  },
+  flexOne: {
+    flex: 1,
   },
 });
 
@@ -159,7 +162,7 @@ export function Checkbox({
             ? <Text style={styles.checkmark}>{'\u2713'}</Text>
             : null}
       </View>
-      <View style={{ flex: 1 }}>
+      <View style={styles.flexOne}>
         <Text style={styles.labelText}>
           {label}
           {required && <Text style={formStyles.requiredIndicator}> *</Text>}
@@ -171,6 +174,12 @@ export function Checkbox({
 
   return (
     <View style={formStyles.container} testID={`civ-checkbox-${name}`}>
+      {hint ? <Text style={styles.hint}>{hint}</Text> : null}
+      {error ? (
+        <Text style={formStyles.error} accessibilityRole="alert">
+          {error}
+        </Text>
+      ) : null}
       <Pressable
         style={({ pressed }) => [
           tile ? styles.tile : null,
@@ -190,12 +199,6 @@ export function Checkbox({
       >
         {content}
       </Pressable>
-      {hint ? <Text style={styles.hint}>{hint}</Text> : null}
-      {error ? (
-        <Text style={formStyles.error} accessibilityRole="alert">
-          {error}
-        </Text>
-      ) : null}
     </View>
   );
 }

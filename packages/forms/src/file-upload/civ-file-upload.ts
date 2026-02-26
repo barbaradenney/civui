@@ -239,7 +239,7 @@ export class CivFileUpload extends CivFormElement {
 
     if (errors.length > 0) {
       this.error = errors.join('. ');
-      this.announce(this.error, 'assertive');
+      // Base class updated() announces errors assertively — no manual announce needed
     }
 
     if (validated.length === 0) return;

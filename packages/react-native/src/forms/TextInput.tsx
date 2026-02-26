@@ -53,14 +53,15 @@ export function TextInput({
   const [focused, setFocused] = useState(false);
   const { trackInteraction } = useAnalytics({ onAnalytics });
   const dirtyRef = useRef(false);
+  const valueRef = useRef(value);
+  valueRef.current = value;
 
   const handleChange = useCallback(
     (text: string) => {
       dirtyRef.current = true;
       onInput?.(text);
-      onChange?.(text);
     },
-    [onChange, onInput],
+    [onInput],
   );
 
   const handleFocus = useCallback(
@@ -77,11 +78,12 @@ export function TextInput({
       setFocused(false);
       if (dirtyRef.current) {
         trackInteraction('TextInput', 'change', { fieldName: name, label });
+        onChange?.(valueRef.current);
         dirtyRef.current = false;
       }
       textInputProps?.onBlur?.(e);
     },
-    [textInputProps, trackInteraction, name, label],
+    [textInputProps, trackInteraction, name, label, onChange],
   );
 
   const keyboardType = getKeyboardType(type);
@@ -100,6 +102,7 @@ export function TextInput({
         </Text>
       ) : null}
       <RNTextInput
+        {...textInputProps}
         style={[
           formStyles.input,
           error ? formStyles.inputError : null,
@@ -121,7 +124,6 @@ export function TextInput({
         accessibilityState={buildAccessibilityState({ disabled })}
         accessibilityHint={accessibilityHint}
         testID={`civ-text-input-${name}-input`}
-        {...textInputProps}
       />
     </View>
   );

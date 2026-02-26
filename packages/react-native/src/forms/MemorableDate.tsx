@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, useRef } from 'react';
+import { useState, useCallback, useMemo, useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -40,9 +40,9 @@ export interface MemorableDateProps {
   /** Locale for month names (default: 'en-US'). */
   locale?: string;
   /** Called when the value changes (mirrors web civ-change event). */
-  onChange?: (value: string) => void;
+  onChange?: (value: string, parts: { month: string; day: string; year: string }) => void;
   /** Called on input (mirrors web civ-input event). */
-  onInput?: (value: string) => void;
+  onInput?: (value: string, parts: { month: string; day: string; year: string }) => void;
   /** Analytics event handler. */
   onAnalytics?: AnalyticsHandler;
   /** Accessibility hint describing the expected input. */
@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
   arrow: {
     fontSize: typography.fontSize.base,
     color: colors.base.DEFAULT,
-    marginLeft: spacing[2],
+    marginStart: spacing[2],
   },
   // Month modal
   overlay: {
@@ -200,14 +200,12 @@ export function MemorableDate({
   const lastEmittedRef = useRef(value);
 
   // Sync from prop changes
-  const prevValueRef = useRef(value);
-  if (value !== prevValueRef.current) {
-    prevValueRef.current = value;
+  useEffect(() => {
     const parsed = parseParts(value);
     if (parsed.month !== month) setMonth(parsed.month);
     if (parsed.day !== day) setDay(parsed.day);
     if (parsed.year !== year) setYear(parsed.year);
-  }
+  }, [value]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const monthOptions = useMemo(() => {
     const names = getMonthNames(locale);
@@ -233,9 +231,10 @@ export function MemorableDate({
   const emitValues = useCallback(
     (m: string, d: string, y: string, fireChange: boolean) => {
       const assembled = assembleValue(m, d, y);
-      onInput?.(assembled);
+      const parts = { month: m, day: d, year: y };
+      onInput?.(assembled, parts);
       if (fireChange) {
-        onChange?.(assembled);
+        onChange?.(assembled, parts);
         trackInteraction('MemorableDate', 'change', { fieldName: name, label: legend });
         lastEmittedRef.current = assembled;
       }
@@ -269,7 +268,7 @@ export function MemorableDate({
       setDayFocused(false);
       const assembled = assembleValue(month, day, year);
       if (assembled !== lastEmittedRef.current) {
-        onChange?.(assembled);
+        onChange?.(assembled, { month, day, year });
         trackInteraction('MemorableDate', 'change', { fieldName: name, label: legend });
         lastEmittedRef.current = assembled;
       }
@@ -293,7 +292,7 @@ export function MemorableDate({
       setYearFocused(false);
       const assembled = assembleValue(month, day, year);
       if (assembled !== lastEmittedRef.current) {
-        onChange?.(assembled);
+        onChange?.(assembled, { month, day, year });
         trackInteraction('MemorableDate', 'change', { fieldName: name, label: legend });
         lastEmittedRef.current = assembled;
       }

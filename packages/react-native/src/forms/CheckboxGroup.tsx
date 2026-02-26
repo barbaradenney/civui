@@ -105,7 +105,6 @@ export function CheckboxGroup({
   return (
     <View
       style={formStyles.container}
-      accessibilityRole="none"
       accessibilityLabel={buildAccessibilityLabel({ label: legend, hint, error, required })}
       accessibilityHint={accessibilityHint}
       testID={`civ-checkbox-group-${name}`}

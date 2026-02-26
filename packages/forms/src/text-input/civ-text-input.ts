@@ -78,7 +78,7 @@ export class CivTextInput extends CivFormElement {
           aria-required="${this.required || nothing}"
           pattern="${this.pattern || nothing}"
           maxlength="${this.maxlength && this.maxlength > 0 ? this.maxlength : nothing}"
-          minlength="${this.minlength ?? nothing}"
+          minlength="${this.minlength && this.minlength > 0 ? this.minlength : nothing}"
           autocomplete="${this.autocomplete || nothing}"
           inputmode="${this.inputmode || nothing}"
           aria-describedby="${this._ariaDescribedBy || nothing}"

@@ -34,6 +34,12 @@ export class CivFieldset extends CivBaseElement {
   private _errorId = this.generateId('error');
   private _childrenMoved = false;
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    // Reset so children are re-moved into the fieldset if the element is reconnected
+    this._childrenMoved = false;
+  }
+
   override updated(changed: Map<string, unknown>): void {
     super.updated(changed);
     if (changed.has('error') && this.error) {

@@ -54,6 +54,7 @@ export class CivButton extends CivBaseElement {
       'civ-btn',
       `civ-btn--${this.variant}`,
       this.size === 'big' ? 'civ-btn--big' : '',
+      this.disabled ? 'civ-opacity-50 civ-cursor-not-allowed' : '',
       'focus-visible:civ-focus-ring',
     ]
       .filter(Boolean)
@@ -91,11 +92,7 @@ export class CivButton extends CivBaseElement {
     `;
   }
 
-  private _onClick(e: Event): void {
-    if (this.disabled) {
-      e.preventDefault();
-      return;
-    }
+  private _onClick(): void {
     this.sendAnalytics('click');
   }
 }

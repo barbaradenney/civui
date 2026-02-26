@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivBaseElement, dispatch } from '@civui/core';
+import { CivBaseElement, dispatch, generateId } from '@civui/core';
 
 export interface FormFieldError {
   name: string;
@@ -303,8 +303,8 @@ export class CivForm extends CivBaseElement {
     const input = element.querySelector('input, select, textarea, button, [role="button"], [tabindex]');
     if (input?.id) return input.id;
     if (element.id) return element.id;
-    // Generate an ID so error summary links always work
-    const id = `civ-field-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
+    // Generate a deterministic ID so error summary links always work
+    const id = generateId('civ-field');
     (input || element).id = id;
     return id;
   }

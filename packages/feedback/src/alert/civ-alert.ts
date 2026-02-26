@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBaseElement } from '@civui/core';
+import { CivBaseElement, dispatch } from '@civui/core';
 
 export type AlertVariant = 'info' | 'warning' | 'error' | 'success';
 export type AlertHeadingLevel = 2 | 3 | 4 | 5 | 6;
@@ -107,9 +107,7 @@ export class CivAlert extends CivBaseElement {
   }
 
   private _onDismiss(): void {
-    const allowed = this.dispatchEvent(
-      new CustomEvent('civ-dismiss', { bubbles: true, composed: true, cancelable: true }),
-    );
+    const allowed = dispatch(this, 'civ-dismiss', undefined, true);
     if (!allowed) return;
     this.sendAnalytics('dismiss');
     this.announce('Alert dismissed', 'polite');

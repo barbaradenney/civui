@@ -21,6 +21,10 @@ import { CivFormElement, dispatch, interpolate, renderHint, renderError } from '
  * @fires civ-change - When checked state changes, detail: { checked, value }
  * @fires civ-input - When checked state changes (input event), detail: { checked, value }
  * @fires civ-analytics - Analytics tracking event on change
+ *
+ * Note: Render order is control+label → hint → error (differs from standard
+ * label → hint → error → control) for inline toggle layout. Screen reader
+ * order is correct via aria-describedby linking.
  */
 @customElement('civ-toggle')
 export class CivToggle extends CivFormElement {

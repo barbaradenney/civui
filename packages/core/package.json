@@ -17,7 +17,7 @@
     "./styles/components": "./src/styles/components.css"
   },
   "sideEffects": false,
-  "files": ["dist"],
+  "files": ["dist", "src/styles"],
   "publishConfig": {
     "access": "public"
   },

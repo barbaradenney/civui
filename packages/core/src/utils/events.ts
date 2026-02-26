@@ -7,12 +7,13 @@
  * CivUI uses custom event names (`civ-input`, `civ-change`) to
  * avoid interference with native event flow.
  */
-export function dispatch<T>(element: HTMLElement, name: string, detail?: T): boolean {
+export function dispatch<T>(element: HTMLElement, name: string, detail?: T, cancelable = false): boolean {
   return element.dispatchEvent(
     new CustomEvent(name, {
       detail,
       bubbles: true,
       composed: true,
+      cancelable,
     }),
   );
 }

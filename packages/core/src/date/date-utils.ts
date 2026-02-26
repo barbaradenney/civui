@@ -41,7 +41,10 @@ export function formatDateLong(date: Date, locale = 'en-US'): string {
   }).format(date);
 }
 
-/** Try to parse a user-typed date string. Returns null if unparseable. */
+/**
+ * Try to parse a user-typed date string. Returns null if unparseable.
+ * Currently supports ISO (YYYY-MM-DD) and US (M/D/YYYY) formats only.
+ */
 export function parseDateString(text: string, _locale = 'en-US'): Date | null {
   const trimmed = text.trim();
   if (!trimmed) return null;

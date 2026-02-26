@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivFormElement, dispatch, renderHint, renderError } from '@civui/core';
+import { CivFormElement, dispatch, interpolate, renderHint, renderError } from '@civui/core';
 
 /**
  * CivUI Checkbox
@@ -110,7 +110,7 @@ export class CivCheckbox extends CivFormElement {
     if (this.required && !this.checked) {
       this._internals.setValidity(
         { valueMissing: true },
-        this.error || `${this.label || 'This field'} is required`,
+        this.error || interpolate(this.requiredMessage, { label: this.label || 'This field' }),
         anchor ?? undefined,
       );
     } else {

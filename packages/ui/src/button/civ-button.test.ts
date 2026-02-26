@@ -179,7 +179,7 @@ describe('civ-button', () => {
   });
 
   // keyboard tests
-  it('activates on Enter via native button behavior', async () => {
+  it('fires analytics on button click', async () => {
     const el = await fixture('<civ-button>Click</civ-button>');
 
     const handler = vi.fn();
@@ -192,7 +192,7 @@ describe('civ-button', () => {
     expect(handler).toHaveBeenCalledOnce();
   });
 
-  it('activates link on Enter via native anchor behavior', async () => {
+  it('fires analytics on link click', async () => {
     const el = await fixture('<civ-button href="/next">Go</civ-button>');
 
     const handler = vi.fn();

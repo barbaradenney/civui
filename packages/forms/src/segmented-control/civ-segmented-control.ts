@@ -65,6 +65,7 @@ export class CivSegmentedControl extends CivFormElement {
     super.updated(changed);
     if (changed.has('value')) {
       this._syncSegmentSelected();
+      this._syncSegmentPositions();
     }
     if (changed.has('disabled')) {
       this._syncSegmentDisabled();

@@ -157,9 +157,8 @@ export class CivFormElement extends CivBaseElement {
     super.updated(changed);
     // Invalidate cached anchor — DOM may have changed after render
     this._cachedAnchor = undefined;
-    if (changed.has('error') && this.error) {
-      this.announce(this.error, 'assertive');
-    }
+    // Error announcement is handled by renderError()'s role="alert" attribute.
+    // No manual announce() needed — role="alert" triggers immediate SR announcement.
     if (changed.has('value')) {
       this._syncFormValue();
     }

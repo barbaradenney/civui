@@ -205,7 +205,21 @@ export class CivCombobox extends CivFormElement {
         if (!this._open) {
           this._setOpen(true);
         } else {
-          this._activeIndex = Math.max(this._activeIndex - 1, -1);
+          this._activeIndex = Math.max(this._activeIndex - 1, 0);
+        }
+        break;
+
+      case 'Home':
+        if (this._open && filtered.length > 0) {
+          e.preventDefault();
+          this._activeIndex = 0;
+        }
+        break;
+
+      case 'End':
+        if (this._open && filtered.length > 0) {
+          e.preventDefault();
+          this._activeIndex = filtered.length - 1;
         }
         break;
 

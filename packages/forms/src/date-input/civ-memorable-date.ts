@@ -108,9 +108,15 @@ export class CivMemorableDate extends CivFormElement {
     if (!this.value) return;
     const parts = this.value.split('-');
     if (parts.length === 3) {
-      this._year = parts[0];
-      this._month = parts[1];
-      this._day = parts[2];
+      const [y, m, d] = parts;
+      const month = Number(m);
+      const day = Number(d);
+      // Only set segments if month/day are within valid ranges
+      if (month >= 1 && month <= 12 && day >= 1 && day <= 31) {
+        this._year = y;
+        this._month = m;
+        this._day = d;
+      }
     }
   }
 

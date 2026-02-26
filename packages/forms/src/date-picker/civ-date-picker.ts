@@ -423,6 +423,7 @@ export class CivDatePicker extends CivFormElement {
       this._inputValue = '';
       this.updateFormValue('');
       dispatch(this, 'civ-change', { value: '' });
+      this.sendAnalytics('change');
       return;
     }
 
@@ -444,33 +445,33 @@ export class CivDatePicker extends CivFormElement {
       this.sendAnalytics('change');
       this.announce(interpolate(this.dateSelectedMessage, { date: formatDateLong(parsed, this.locale) }));
     }
-    // Keep invalid text in the input — don't clear it.
-    // This lets users correct typos without losing their input.
-    // The value property remains unchanged until a valid date is entered.
+    // Invalid text: keep it in the input so users can correct typos,
+    // but announce the error for screen readers.
+    this.announce('Invalid date format', 'assertive');
   }
 
-  private _prevMonth(): void {
-    if (this._displayMonth === 0) {
+  private _navigateMonth(delta: number): void {
+    const newMonth = this._displayMonth + delta;
+    if (newMonth < 0) {
       this._displayMonth = 11;
       this._displayYear--;
-    } else {
-      this._displayMonth--;
-    }
-    this._focusedDate = new Date(this._displayYear, this._displayMonth, 1);
-    const monthNames = getMonthNames(this.locale);
-    this.announce(`${monthNames[this._displayMonth]} ${this._displayYear}`);
-  }
-
-  private _nextMonth(): void {
-    if (this._displayMonth === 11) {
+    } else if (newMonth > 11) {
       this._displayMonth = 0;
       this._displayYear++;
     } else {
-      this._displayMonth++;
+      this._displayMonth = newMonth;
     }
     this._focusedDate = new Date(this._displayYear, this._displayMonth, 1);
     const monthNames = getMonthNames(this.locale);
     this.announce(`${monthNames[this._displayMonth]} ${this._displayYear}`);
+  }
+
+  private _prevMonth(): void {
+    this._navigateMonth(-1);
+  }
+
+  private _nextMonth(): void {
+    this._navigateMonth(1);
   }
 
   private _moveFocus(newDate: Date): void {
@@ -535,9 +536,10 @@ export class CivDatePicker extends CivFormElement {
     this._inputValue = initial ? formatDate(initial, this.locale) : '';
     this._open = false;
     this.error = '';
-    this._focusedDate = initial || new Date();
-    this._displayMonth = (initial || new Date()).getMonth();
-    this._displayYear = (initial || new Date()).getFullYear();
+    const fallback = initial || new Date();
+    this._focusedDate = fallback;
+    this._displayMonth = fallback.getMonth();
+    this._displayYear = fallback.getFullYear();
     this.updateFormValue(this._defaultValue || '');
     dispatch(this, 'civ-reset');
   }

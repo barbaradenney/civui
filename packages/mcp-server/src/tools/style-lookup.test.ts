@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { lookupStyle, ELEMENT_TYPES } from './style-lookup.js';
-import type { ElementType, StyleResult } from './style-lookup.js';
+import type { ElementType } from './style-lookup.js';
 
 describe('ELEMENT_TYPES', () => {
   it('contains 17 element types', () => {
@@ -169,6 +169,7 @@ describe('lookupStyle', () => {
 
     it('includes checked and disabled states', () => {
       const result = lookupStyle('checkbox');
+      expect(result.stateClasses!.checked).toContain('accent-primary');
       expect(result.stateClasses!.checked).toContain('civ-border-primary');
       expect(result.stateClasses!.disabled).toContain('civ-opacity-50');
     });
@@ -338,6 +339,22 @@ describe('lookupStyle', () => {
 
     it('omits stateClasses when no states match', () => {
       const result = lookupStyle('label', undefined, ['error']);
+      expect(result.stateClasses).toBeUndefined();
+    });
+  });
+
+  describe('combined variant and state', () => {
+    it('returns tile classes with filtered checked state', () => {
+      const result = lookupStyle('checkbox', 'tile', ['checked']);
+      expect(result.classes).toContain('.civ-check-tile');
+      expect(result.stateClasses).toBeDefined();
+      expect(result.stateClasses!.checked).toBeDefined();
+      expect(result.stateClasses!.disabled).toBeUndefined();
+    });
+
+    it('returns group error-text variant with no states', () => {
+      const result = lookupStyle('error-text', 'group', ['error']);
+      expect(result.classes).toEqual(['.civ-error-text--group']);
       expect(result.stateClasses).toBeUndefined();
     });
   });

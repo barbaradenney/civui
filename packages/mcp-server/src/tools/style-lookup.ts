@@ -113,7 +113,7 @@ const ELEMENT_STYLES: Record<ElementType, ElementStyleDef> = {
       tile: ['.civ-check-tile', '.civ-check-input', '.civ-check-label'],
     },
     states: {
-      checked: '.civ-check-tile:has(:checked) triggers: civ-border-primary civ-bg-primary-lightest',
+      checked: 'Non-tile: native browser :checked styling via accent-primary. Tile variant: .civ-check-tile:has(:checked) triggers: civ-border-primary civ-bg-primary-lightest',
       disabled: '.civ-check-tile:has(:disabled) triggers: civ-opacity-50 civ-cursor-not-allowed; .civ-check-input:disabled triggers: civ-cursor-not-allowed',
     },
     focusRing: true,
@@ -130,7 +130,7 @@ const ELEMENT_STYLES: Record<ElementType, ElementStyleDef> = {
       tile: ['.civ-check-tile', '.civ-check-input', '.civ-check-label'],
     },
     states: {
-      checked: '.civ-check-tile:has(:checked) triggers: civ-border-primary civ-bg-primary-lightest',
+      checked: 'Non-tile: native browser :checked styling via accent-primary. Tile variant: .civ-check-tile:has(:checked) triggers: civ-border-primary civ-bg-primary-lightest',
       disabled: '.civ-check-tile:has(:disabled) triggers: civ-opacity-50 civ-cursor-not-allowed; .civ-check-input:disabled triggers: civ-cursor-not-allowed',
     },
     focusRing: true,

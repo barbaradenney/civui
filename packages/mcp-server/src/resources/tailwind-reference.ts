@@ -285,7 +285,7 @@ Spacing and font-size CSS variables automatically adjust per scale.
 
 ## 8. Dark Mode
 
-Dark mode activates automatically via \`prefers-color-scheme: media\`. No manual toggle needed.
+Dark mode activates automatically via the \`prefers-color-scheme\` media query (Tailwind \`darkMode: 'media'\`). No manual toggle needed.
 
 - All semantic color tokens have dark-mode counterparts (see color tables above)
 - CSS variables switch values automatically — no class changes needed

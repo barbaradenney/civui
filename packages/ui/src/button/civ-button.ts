@@ -1,4 +1,4 @@
-import { html, nothing } from 'lit';
+import { html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { CivBaseElement } from '@civui/core';
 
@@ -11,10 +11,13 @@ export type ButtonType = 'button' | 'submit' | 'reset';
  *
  * An accessible button component with variant and size options.
  * Renders as `<a>` when `href` is set, otherwise `<button>`.
- * Content is provided via Light DOM children.
+ *
+ * Content is set via the `label` property. If `label` is not set,
+ * initial Light DOM text content is used as a fallback.
  *
  * @element civ-button
  *
+ * @prop {string} label - Button text (preferred over child text)
  * @prop {ButtonVariant} variant - Visual variant
  * @prop {ButtonSize} size - Size variant
  * @prop {boolean} disabled - Disabled state
@@ -25,20 +28,25 @@ export type ButtonType = 'button' | 'submit' | 'reset';
  */
 @customElement('civ-button')
 export class CivButton extends CivBaseElement {
+  @property({ type: String }) label = '';
   @property({ type: String }) variant: ButtonVariant = 'primary';
   @property({ type: String }) size: ButtonSize = 'default';
   @property({ type: Boolean, reflect: true }) disabled = false;
   @property({ type: String }) type: ButtonType = 'button';
   @property({ type: String }) href = '';
 
-  private _labelText = '';
+  private _initialText = '';
 
   override connectedCallback(): void {
     super.connectedCallback();
-    // Capture initial text content before Lit renders
-    if (!this._labelText) {
-      this._labelText = this.textContent?.trim() || '';
+    // Capture initial text content before Lit renders (fallback for label prop)
+    if (!this._initialText) {
+      this._initialText = this.textContent?.trim() || '';
     }
+  }
+
+  private get _text(): string {
+    return this.label || this._initialText;
   }
 
   private get _classes(): string {
@@ -54,13 +62,22 @@ export class CivButton extends CivBaseElement {
 
   override render() {
     if (this.href) {
+      // When disabled, strip href and remove from tab order to prevent navigation
+      if (this.disabled) {
+        return html`
+          <a
+            class="${this._classes}"
+            aria-disabled="true"
+            tabindex="-1"
+          >${this._text}</a>
+        `;
+      }
       return html`
         <a
           href="${this.href}"
           class="${this._classes}"
-          aria-disabled="${this.disabled ? 'true' : nothing}"
           @click="${this._onClick}"
-        >${this._labelText}</a>
+        >${this._text}</a>
       `;
     }
 
@@ -70,7 +87,7 @@ export class CivButton extends CivBaseElement {
         class="${this._classes}"
         ?disabled="${this.disabled}"
         @click="${this._onClick}"
-      >${this._labelText}</button>
+      >${this._text}</button>
     `;
   }
 

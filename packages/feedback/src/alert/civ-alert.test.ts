@@ -1,6 +1,7 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
-import { fixture, cleanupFixtures } from '@civui/test-utils';
+import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
 import './civ-alert.js';
+import type { CivAlert } from './civ-alert.js';
 
 afterEach(cleanupFixtures);
 
@@ -69,19 +70,70 @@ describe('civ-alert', () => {
     expect(alert.getAttribute('role')).toBe('status');
   });
 
-  it('renders heading as <h4> when provided', async () => {
+  // heading tests
+  it('renders heading with role="heading" when provided', async () => {
     const el = await fixture('<civ-alert heading="Important">Body text.</civ-alert>');
 
-    const heading = el.querySelector('h4.civ-alert__heading');
+    const heading = el.querySelector('.civ-alert__heading');
     expect(heading).not.toBeNull();
     expect(heading!.textContent).toBe('Important');
+    expect(heading!.getAttribute('role')).toBe('heading');
+    expect(heading!.getAttribute('aria-level')).toBe('4');
+  });
+
+  it('renders heading with custom level', async () => {
+    const el = await fixture('<civ-alert heading="Title" heading-level="2">Body.</civ-alert>');
+
+    const heading = el.querySelector('.civ-alert__heading')!;
+    expect(heading.getAttribute('aria-level')).toBe('2');
+  });
+
+  it('clamps heading level to valid range', async () => {
+    const el = await fixture('<civ-alert heading="Title" heading-level="1">Body.</civ-alert>') as CivAlert;
+
+    const heading = el.querySelector('.civ-alert__heading')!;
+    // Level 1 is clamped to 2
+    expect(heading.getAttribute('aria-level')).toBe('2');
   });
 
   it('hides heading when slim is true', async () => {
     const el = await fixture('<civ-alert heading="Important" slim>Body text.</civ-alert>');
 
-    const heading = el.querySelector('h4.civ-alert__heading');
+    const heading = el.querySelector('.civ-alert__heading');
     expect(heading).toBeNull();
+  });
+
+  // aria-labelledby vs aria-label
+  it('uses aria-labelledby pointing to heading when heading is present', async () => {
+    const el = await fixture('<civ-alert heading="Important">Body.</civ-alert>');
+
+    const alert = el.querySelector('.civ-alert')!;
+    const headingEl = el.querySelector('.civ-alert__heading')!;
+    expect(alert.getAttribute('aria-labelledby')).toBe(headingEl.id);
+    expect(alert.hasAttribute('aria-label')).toBe(false);
+  });
+
+  it('uses aria-label fallback when no heading', async () => {
+    const el = await fixture('<civ-alert>Message.</civ-alert>');
+
+    const alert = el.querySelector('.civ-alert')!;
+    expect(alert.getAttribute('aria-label')).toBe('info alert');
+    expect(alert.hasAttribute('aria-labelledby')).toBe(false);
+  });
+
+  it('uses aria-label with variant name when no heading', async () => {
+    const el = await fixture('<civ-alert variant="error">Error.</civ-alert>');
+
+    const alert = el.querySelector('.civ-alert')!;
+    expect(alert.getAttribute('aria-label')).toBe('error alert');
+  });
+
+  it('uses aria-label when slim hides heading', async () => {
+    const el = await fixture('<civ-alert heading="Title" slim>Body.</civ-alert>');
+
+    const alert = el.querySelector('.civ-alert')!;
+    expect(alert.getAttribute('aria-label')).toBe('info alert');
+    expect(alert.hasAttribute('aria-labelledby')).toBe(false);
   });
 
   it('applies slim class when slim is true', async () => {
@@ -143,10 +195,34 @@ describe('civ-alert', () => {
     expect(btn.className).toContain('focus-visible:civ-focus-ring');
   });
 
-  it('renders body content', async () => {
+  it('renders body content with civ-alert__body class', async () => {
     const el = await fixture('<civ-alert>This is the body text.</civ-alert>');
 
-    expect(el.textContent).toContain('This is the body text.');
+    const body = el.querySelector('.civ-alert__body');
+    expect(body).not.toBeNull();
+    expect(body!.textContent).toContain('This is the body text.');
+  });
+
+  // label prop tests
+  it('uses label prop as body text', async () => {
+    const el = await fixture('<civ-alert label="From label prop."></civ-alert>');
+
+    expect(el.textContent).toContain('From label prop.');
+  });
+
+  it('label prop takes precedence over child text', async () => {
+    const el = await fixture('<civ-alert label="Label wins">Child text</civ-alert>');
+
+    expect(el.textContent).toContain('Label wins');
+  });
+
+  it('updates body when label prop changes', async () => {
+    const el = await fixture('<civ-alert label="Original"></civ-alert>') as CivAlert;
+
+    el.label = 'Updated';
+    await elementUpdated(el);
+
+    expect(el.textContent).toContain('Updated');
   });
 
   it('fires analytics event on dismiss', async () => {

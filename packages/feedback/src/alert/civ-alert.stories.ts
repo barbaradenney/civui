@@ -12,6 +12,10 @@ const meta: Meta = {
       options: ['info', 'warning', 'error', 'success'],
     },
     heading: { control: 'text' },
+    headingLevel: {
+      control: 'select',
+      options: [2, 3, 4, 5, 6],
+    },
     dismissible: { control: 'boolean' },
     slim: { control: 'boolean' },
   },
@@ -69,6 +73,15 @@ export const Slim: Story = {
       <civ-alert variant="error" slim>Error: File upload failed.</civ-alert>
       <civ-alert variant="success" slim>Success: Changes saved.</civ-alert>
     </div>
+  `,
+};
+
+export const CustomHeadingLevel: Story = {
+  render: () => html`
+    <civ-alert heading="Section notice" heading-level="2">
+      This alert uses a level-2 heading to fit within the page's heading
+      hierarchy.
+    </civ-alert>
   `,
 };
 

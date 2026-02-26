@@ -1,6 +1,7 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
-import { fixture, cleanupFixtures } from '@civui/test-utils';
+import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
 import './civ-button.js';
+import type { CivButton } from './civ-button.js';
 
 afterEach(cleanupFixtures);
 
@@ -80,11 +81,13 @@ describe('civ-button', () => {
     expect(btn.disabled).toBe(true);
   });
 
-  it('sets aria-disabled on link when disabled', async () => {
+  it('disabled link has aria-disabled, no href, and tabindex=-1', async () => {
     const el = await fixture('<civ-button href="/next" disabled>Click</civ-button>');
 
     const link = el.querySelector('a')!;
     expect(link.getAttribute('aria-disabled')).toBe('true');
+    expect(link.hasAttribute('href')).toBe(false);
+    expect(link.getAttribute('tabindex')).toBe('-1');
   });
 
   it('sets type="button" by default', async () => {
@@ -147,5 +150,57 @@ describe('civ-button', () => {
 
     expect(el.shadowRoot).toBeNull();
     expect(el.querySelector('button')).not.toBeNull();
+  });
+
+  // label prop tests
+  it('uses label prop as button text', async () => {
+    const el = await fixture('<civ-button label="Save changes"></civ-button>');
+
+    const btn = el.querySelector('button')!;
+    expect(btn.textContent).toContain('Save changes');
+  });
+
+  it('label prop takes precedence over child text', async () => {
+    const el = await fixture('<civ-button label="Save">Old text</civ-button>');
+
+    const btn = el.querySelector('button')!;
+    expect(btn.textContent).toContain('Save');
+    expect(btn.textContent).not.toContain('Old text');
+  });
+
+  it('updates text when label prop changes', async () => {
+    const el = await fixture('<civ-button label="Save"></civ-button>') as CivButton;
+
+    el.label = 'Submit';
+    await elementUpdated(el);
+
+    const btn = el.querySelector('button')!;
+    expect(btn.textContent).toContain('Submit');
+  });
+
+  // keyboard tests
+  it('activates on Enter via native button behavior', async () => {
+    const el = await fixture('<civ-button>Click</civ-button>');
+
+    const handler = vi.fn();
+    el.addEventListener('civ-analytics', handler as EventListener);
+
+    const btn = el.querySelector('button') as HTMLButtonElement;
+    // Native <button> fires click on Enter
+    btn.click();
+
+    expect(handler).toHaveBeenCalledOnce();
+  });
+
+  it('activates link on Enter via native anchor behavior', async () => {
+    const el = await fixture('<civ-button href="/next">Go</civ-button>');
+
+    const handler = vi.fn();
+    el.addEventListener('civ-analytics', handler as EventListener);
+
+    const link = el.querySelector('a') as HTMLAnchorElement;
+    link.click();
+
+    expect(handler).toHaveBeenCalledOnce();
   });
 });

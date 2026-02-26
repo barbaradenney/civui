@@ -1,6 +1,7 @@
 import { describe, it, expect, afterEach } from 'vitest';
-import { fixture, cleanupFixtures } from '@civui/test-utils';
+import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
 import './civ-skip-link.js';
+import type { CivSkipLink } from './civ-skip-link.js';
 
 afterEach(cleanupFixtures);
 
@@ -66,5 +67,30 @@ describe('civ-skip-link', () => {
 
     expect(el.shadowRoot).toBeNull();
     expect(el.querySelector('a')).not.toBeNull();
+  });
+
+  // label prop tests
+  it('uses label prop as link text', async () => {
+    const el = await fixture('<civ-skip-link label="Jump to content"></civ-skip-link>');
+
+    const link = el.querySelector('a')!;
+    expect(link.textContent).toBe('Jump to content');
+  });
+
+  it('label prop takes precedence over child text', async () => {
+    const el = await fixture('<civ-skip-link label="From prop">From child</civ-skip-link>');
+
+    const link = el.querySelector('a')!;
+    expect(link.textContent).toBe('From prop');
+  });
+
+  it('updates text when label prop changes', async () => {
+    const el = await fixture('<civ-skip-link label="Original"></civ-skip-link>') as CivSkipLink;
+
+    el.label = 'Updated';
+    await elementUpdated(el);
+
+    const link = el.querySelector('a')!;
+    expect(link.textContent).toBe('Updated');
   });
 });

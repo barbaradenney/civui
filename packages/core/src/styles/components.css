@@ -285,7 +285,7 @@
     @apply civ-bg-error-dark civ-border-error-dark;
   }
   .civ-btn--danger:active:not(:disabled):not([aria-disabled="true"]) {
-    @apply civ-bg-error-darker civ-border-error-darker;
+    @apply civ-bg-error-dark civ-border-error-dark;
   }
 
   .civ-btn--unstyled {
@@ -334,13 +334,15 @@
     @apply civ-font-bold civ-text-lg civ-mt-0 civ-mb-1;
   }
 
+  .civ-alert__body {
+    @apply civ-text-base civ-text-base-darkest;
+  }
+
   .civ-alert__dismiss {
-    @apply civ-bg-transparent civ-border-0 civ-p-2 civ-cursor-pointer civ-rounded;
+    @apply civ-inline-flex civ-items-center civ-justify-center
+           civ-bg-transparent civ-border-0 civ-p-2 civ-cursor-pointer civ-rounded;
     min-width: 44px;
     min-height: 44px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
   }
 
   /* ── Skip Link ─────────────────────────────────────────────── */

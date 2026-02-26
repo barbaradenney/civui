@@ -238,4 +238,129 @@
   .civ-check-input:disabled {
     @apply civ-cursor-not-allowed;
   }
+
+  /* ── Button ────────────────────────────────────────────────── */
+
+  .civ-btn {
+    @apply civ-inline-flex civ-items-center civ-justify-center civ-gap-2
+           civ-font-sans civ-font-bold civ-text-base civ-rounded
+           civ-px-5 civ-py-3 civ-border civ-cursor-pointer
+           civ-transition-colors;
+  }
+
+  .civ-btn--primary {
+    @apply civ-bg-primary civ-text-white civ-border-primary;
+  }
+  .civ-btn--primary:hover:not(:disabled):not([aria-disabled="true"]) {
+    @apply civ-bg-primary-dark civ-border-primary-dark;
+  }
+  .civ-btn--primary:active:not(:disabled):not([aria-disabled="true"]) {
+    @apply civ-bg-primary-darker civ-border-primary-darker;
+  }
+
+  .civ-btn--secondary {
+    @apply civ-bg-base-lightest civ-text-base-darkest civ-border-base-light;
+  }
+  .civ-btn--secondary:hover:not(:disabled):not([aria-disabled="true"]) {
+    @apply civ-bg-base-lighter;
+  }
+  .civ-btn--secondary:active:not(:disabled):not([aria-disabled="true"]) {
+    @apply civ-bg-base-light;
+  }
+
+  .civ-btn--outline {
+    @apply civ-bg-transparent civ-text-primary civ-border-primary;
+  }
+  .civ-btn--outline:hover:not(:disabled):not([aria-disabled="true"]) {
+    @apply civ-bg-primary civ-text-white;
+  }
+  .civ-btn--outline:active:not(:disabled):not([aria-disabled="true"]) {
+    @apply civ-bg-primary-dark civ-text-white civ-border-primary-dark;
+  }
+
+  .civ-btn--danger {
+    @apply civ-bg-error civ-text-white civ-border-error;
+  }
+  .civ-btn--danger:hover:not(:disabled):not([aria-disabled="true"]) {
+    @apply civ-bg-error-dark civ-border-error-dark;
+  }
+  .civ-btn--danger:active:not(:disabled):not([aria-disabled="true"]) {
+    @apply civ-bg-error-darker civ-border-error-darker;
+  }
+
+  .civ-btn--unstyled {
+    @apply civ-bg-transparent civ-text-primary civ-border-0 civ-p-0 civ-underline;
+  }
+  .civ-btn--unstyled:hover:not(:disabled):not([aria-disabled="true"]) {
+    @apply civ-text-primary-dark;
+  }
+
+  .civ-btn--big {
+    @apply civ-text-lg civ-px-6 civ-py-4;
+  }
+
+  .civ-btn:disabled,
+  .civ-btn[aria-disabled="true"] {
+    @apply civ-opacity-50 civ-cursor-not-allowed;
+  }
+
+  /* ── Alert ─────────────────────────────────────────────────── */
+
+  .civ-alert {
+    @apply civ-border-s-4 civ-p-4 civ-mb-4 civ-rounded;
+  }
+
+  .civ-alert--info {
+    @apply civ-bg-info-lighter civ-border-info;
+  }
+
+  .civ-alert--warning {
+    @apply civ-bg-warning-lighter civ-border-warning;
+  }
+
+  .civ-alert--error {
+    @apply civ-bg-error-lighter civ-border-error;
+  }
+
+  .civ-alert--success {
+    @apply civ-bg-success-lighter civ-border-success;
+  }
+
+  .civ-alert--slim {
+    @apply civ-py-2;
+  }
+
+  .civ-alert__heading {
+    @apply civ-font-bold civ-text-lg civ-mt-0 civ-mb-1;
+  }
+
+  .civ-alert__dismiss {
+    @apply civ-bg-transparent civ-border-0 civ-p-2 civ-cursor-pointer civ-rounded;
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ── Skip Link ─────────────────────────────────────────────── */
+
+  .civ-skip-link {
+    @apply civ-sr-only;
+  }
+
+  .civ-skip-link:focus {
+    position: fixed;
+    top: 0;
+    inset-inline-start: 0;
+    z-index: 9999;
+    @apply civ-bg-white civ-text-primary civ-font-bold civ-p-3
+           civ-border-2 civ-border-primary civ-rounded;
+    width: auto;
+    height: auto;
+    clip: auto;
+    clip-path: none;
+    overflow: visible;
+    white-space: nowrap;
+  }
 }

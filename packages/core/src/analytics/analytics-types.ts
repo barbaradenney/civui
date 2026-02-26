@@ -2,11 +2,13 @@ export const ANALYTICS_EVENT_NAME = 'civ-analytics';
 
 export type AnalyticsAction =
   | 'change'
+  | 'click'
   | 'submit'
   | 'invalid'
   | 'select'
   | 'upload'
   | 'remove'
+  | 'dismiss'
   | 'expand'
   | 'collapse';
 

@@ -9,6 +9,22 @@ import {
   TAILWIND_REFERENCE,
 } from './resources/index.js';
 import { lookupStyle, ELEMENT_TYPES } from './tools/index.js';
+import { validateForm } from './validators/index.js';
+import {
+  CONVERT_LEGACY_FORM_NAME,
+  CONVERT_LEGACY_FORM_DESCRIPTION,
+  convertLegacyFormPrompt,
+  BUILD_GOVERNMENT_FORM_NAME,
+  BUILD_GOVERNMENT_FORM_DESCRIPTION,
+  buildGovernmentFormPrompt,
+  AUDIT_508_COMPLIANCE_NAME,
+  AUDIT_508_COMPLIANCE_DESCRIPTION,
+  audit508CompliancePrompt,
+  ADD_FIELD_NAME,
+  ADD_FIELD_DESCRIPTION,
+  FIELD_TYPES,
+  addFieldPrompt,
+} from './prompts/index.js';
 
 /** 50 MB base64 ≈ ~37.5 MB decoded PDF — generous but bounded. */
 const MAX_PDF_BASE64_LENGTH = 50 * 1024 * 1024;
@@ -219,6 +235,92 @@ export function createServer(): McpServer {
         };
       }
     },
+  );
+
+  server.tool(
+    'validate_form',
+    'Validate CivUI HTML markup against Section 508 rules and best practices. ' +
+      'Checks for missing labels/legends, deprecated components, placeholder-as-label, ' +
+      'orphaned children, missing required-messages, abbreviations, autocomplete, and more. ' +
+      'Returns { valid, errors, warnings, summary }.',
+    {
+      html: z
+        .string()
+        .max(MAX_HTML_LENGTH, 'HTML exceeds 10 MB size limit')
+        .describe('CivUI HTML markup string to validate'),
+    },
+    async ({ html }) => {
+      try {
+        const result = validateForm(html);
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error validating form: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  // --- Prompts ---
+
+  server.prompt(
+    CONVERT_LEGACY_FORM_NAME,
+    CONVERT_LEGACY_FORM_DESCRIPTION,
+    {
+      source: z
+        .enum(['html', 'pdf'])
+        .describe('Source format of the legacy form'),
+    },
+    async ({ source }) => convertLegacyFormPrompt(source),
+  );
+
+  server.prompt(
+    BUILD_GOVERNMENT_FORM_NAME,
+    BUILD_GOVERNMENT_FORM_DESCRIPTION,
+    {
+      formPurpose: z
+        .string()
+        .describe('Plain-English description of the form purpose'),
+    },
+    async ({ formPurpose }) => buildGovernmentFormPrompt(formPurpose),
+  );
+
+  server.prompt(
+    AUDIT_508_COMPLIANCE_NAME,
+    AUDIT_508_COMPLIANCE_DESCRIPTION,
+    {
+      markup: z
+        .string()
+        .describe('CivUI HTML markup to audit for compliance'),
+    },
+    async ({ markup }) => audit508CompliancePrompt(markup),
+  );
+
+  server.prompt(
+    ADD_FIELD_NAME,
+    ADD_FIELD_DESCRIPTION,
+    {
+      fieldType: z
+        .enum(FIELD_TYPES)
+        .describe('The type of field to generate'),
+      label: z
+        .string()
+        .describe('The label text for the field'),
+    },
+    async ({ fieldType, label }) => addFieldPrompt(fieldType, label),
   );
 
   return server;

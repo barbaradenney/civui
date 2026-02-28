@@ -14,16 +14,36 @@ describe('mapAriaRole', () => {
     expect(mapAriaRole('checkbox')).toBe('checkbox');
   });
 
-  it('maps heading to header', () => {
+  it('maps heading to header (RN convention)', () => {
     expect(mapAriaRole('heading')).toBe('header');
+  });
+
+  it('maps img to image', () => {
+    expect(mapAriaRole('img')).toBe('image');
   });
 
   it('maps radio to radio', () => {
     expect(mapAriaRole('radio')).toBe('radio');
   });
 
+  it('maps switch to switch', () => {
+    expect(mapAriaRole('switch')).toBe('switch');
+  });
+
+  it('maps combobox to combobox', () => {
+    expect(mapAriaRole('combobox')).toBe('combobox');
+  });
+
+  it('maps listitem to none (RN has no listitem)', () => {
+    expect(mapAriaRole('listitem')).toBe('none');
+  });
+
   it('returns undefined for unknown roles', () => {
     expect(mapAriaRole('foobar')).toBeUndefined();
+  });
+
+  it('returns undefined for empty string', () => {
+    expect(mapAriaRole('')).toBeUndefined();
   });
 });
 
@@ -33,14 +53,24 @@ describe('buildAccessibilityState', () => {
     expect(state).toEqual({});
   });
 
-  it('includes disabled', () => {
+  it('includes disabled when true', () => {
     const state = buildAccessibilityState({ disabled: true });
     expect(state.disabled).toBe(true);
   });
 
-  it('includes checked', () => {
+  it('includes disabled when false', () => {
+    const state = buildAccessibilityState({ disabled: false });
+    expect(state.disabled).toBe(false);
+  });
+
+  it('includes checked when true', () => {
     const state = buildAccessibilityState({ checked: true });
     expect(state.checked).toBe(true);
+  });
+
+  it('includes checked when false', () => {
+    const state = buildAccessibilityState({ checked: false });
+    expect(state.checked).toBe(false);
   });
 
   it('includes mixed checked state', () => {
@@ -53,14 +83,24 @@ describe('buildAccessibilityState', () => {
     expect(state.selected).toBe(false);
   });
 
+  it('includes busy', () => {
+    const state = buildAccessibilityState({ busy: true });
+    expect(state.busy).toBe(true);
+  });
+
   it('includes expanded', () => {
     const state = buildAccessibilityState({ expanded: true });
     expect(state.expanded).toBe(true);
   });
 
+  it('omits undefined props from result', () => {
+    const state = buildAccessibilityState({ disabled: true });
+    expect(Object.keys(state)).toEqual(['disabled']);
+  });
+
   it('includes multiple states', () => {
-    const state = buildAccessibilityState({ disabled: true, checked: false });
-    expect(state).toEqual({ disabled: true, checked: false });
+    const state = buildAccessibilityState({ disabled: true, checked: false, expanded: true });
+    expect(state).toEqual({ disabled: true, checked: false, expanded: true });
   });
 });
 
@@ -73,6 +113,10 @@ describe('buildAccessibilityLabel', () => {
     expect(buildAccessibilityLabel({ label: 'Email', required: true })).toBe(
       'Email, required',
     );
+  });
+
+  it('does not add required when false', () => {
+    expect(buildAccessibilityLabel({ label: 'Email', required: false })).toBe('Email');
   });
 
   it('combines label and hint', () => {
@@ -100,5 +144,13 @@ describe('buildAccessibilityLabel', () => {
 
   it('handles empty parts', () => {
     expect(buildAccessibilityLabel({})).toBe('');
+  });
+
+  it('handles hint only (no label)', () => {
+    expect(buildAccessibilityLabel({ hint: 'Some hint' })).toBe('Some hint');
+  });
+
+  it('handles error only (no label)', () => {
+    expect(buildAccessibilityLabel({ error: 'Something wrong' })).toBe('Error: Something wrong');
   });
 });

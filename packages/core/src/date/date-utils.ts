@@ -56,7 +56,7 @@ export function parseDateString(text: string, _locale = 'en-US'): Date | null {
   // Try common US format: M/D/YYYY or MM/DD/YYYY
   const slashMatch = trimmed.match(/^(\d{1,2})[/\-.](\d{1,2})[/\-.](\d{2,4})$/);
   if (slashMatch) {
-    let [, mStr, dStr, yStr] = slashMatch;
+    const [, mStr, dStr, yStr] = slashMatch;
     let y = Number(yStr);
     if (y < 100) y += y < 50 ? 2000 : 1900;
     const m = Number(mStr);

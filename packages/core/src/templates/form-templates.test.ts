@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { html, render } from 'lit';
+import { type html, render } from 'lit';
 import {
   renderLabel,
   renderLegend,

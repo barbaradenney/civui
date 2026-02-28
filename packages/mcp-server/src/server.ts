@@ -7,8 +7,17 @@ import {
   COMPONENT_CATALOG,
   GOVERNMENT_PATTERNS,
   TAILWIND_REFERENCE,
+  FORM_TEMPLATES,
 } from './resources/index.js';
-import { lookupStyle, ELEMENT_TYPES } from './tools/index.js';
+import {
+  lookupStyle,
+  ELEMENT_TYPES,
+  suggestFix,
+  diffForms,
+  formToSchema,
+  exportSchema,
+  validateForms,
+} from './tools/index.js';
 import { validateForm } from './validators/index.js';
 import {
   CONVERT_LEGACY_FORM_NAME,
@@ -24,6 +33,9 @@ import {
   ADD_FIELD_DESCRIPTION,
   FIELD_TYPES,
   addFieldPrompt,
+  MIGRATE_FORM_NAME,
+  MIGRATE_FORM_DESCRIPTION,
+  migrateFormPrompt,
 } from './prompts/index.js';
 
 /** 50 MB base64 ≈ ~37.5 MB decoded PDF — generous but bounded. */
@@ -66,6 +78,16 @@ export function createServer(): McpServer {
         uri: uri.href,
         mimeType: 'text/markdown',
         text: TAILWIND_REFERENCE,
+      },
+    ],
+  }));
+
+  server.resource('form-templates', 'civui://templates', async (uri) => ({
+    contents: [
+      {
+        uri: uri.href,
+        mimeType: 'text/markdown',
+        text: FORM_TEMPLATES,
       },
     ],
   }));
@@ -248,10 +270,23 @@ export function createServer(): McpServer {
         .string()
         .max(MAX_HTML_LENGTH, 'HTML exceeds 10 MB size limit')
         .describe('CivUI HTML markup string to validate'),
+      config: z
+        .object({
+          promoteWarnings: z
+            .array(z.string())
+            .optional()
+            .describe('Rule IDs whose severity should be promoted from warning to error'),
+          suppressRules: z
+            .array(z.string())
+            .optional()
+            .describe('Rule IDs to skip entirely'),
+        })
+        .optional()
+        .describe('Optional validation config'),
     },
-    async ({ html }) => {
+    async ({ html, config }) => {
       try {
-        const result = validateForm(html);
+        const result = validateForm(html, config);
         return {
           content: [
             {
@@ -266,6 +301,203 @@ export function createServer(): McpServer {
             {
               type: 'text' as const,
               text: `Error validating form: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'suggest_fix',
+    'Auto-correct CivUI validation violations. Parses HTML, applies DOM fixes for ' +
+      'known rule violations (missing labels, deprecated tags, abbreviations, etc.), ' +
+      'then re-validates. Returns { originalHtml, fixedHtml, appliedFixes, remainingViolations }.',
+    {
+      html: z
+        .string()
+        .max(MAX_HTML_LENGTH, 'HTML exceeds 10 MB size limit')
+        .describe('CivUI HTML markup to fix'),
+      rules: z
+        .array(z.string())
+        .optional()
+        .describe('Optional rule IDs to limit fixes to (default: fix all)'),
+    },
+    async ({ html, rules }) => {
+      try {
+        const result = suggestFix(html, rules);
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error suggesting fixes: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'diff_forms',
+    'Compute a structured diff between two CivUI form markups. ' +
+      'Matches components by name then position, returns added/removed/changed/unchanged ' +
+      'with attribute-level changes and a summary string.',
+    {
+      before: z
+        .string()
+        .max(MAX_HTML_LENGTH, 'HTML exceeds 10 MB size limit')
+        .describe('Original CivUI HTML markup'),
+      after: z
+        .string()
+        .max(MAX_HTML_LENGTH, 'HTML exceeds 10 MB size limit')
+        .describe('Modified CivUI HTML markup'),
+    },
+    async ({ before, after }) => {
+      try {
+        const result = diffForms(before, after);
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error diffing forms: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'form_to_schema',
+    'Convert CivUI HTML markup back to a FormSchema object (reverse of generate_civui_form). ' +
+      'Extracts form-level attrs, sections from fieldsets, and fields with all attributes.',
+    {
+      html: z
+        .string()
+        .max(MAX_HTML_LENGTH, 'HTML exceeds 10 MB size limit')
+        .describe('CivUI HTML markup to convert to schema'),
+    },
+    async ({ html }) => {
+      try {
+        const schema = formToSchema(html);
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(schema, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error converting to schema: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'export_schema',
+    'Export a FormSchema as JSON Schema (Draft-07) or TypeScript interface. ' +
+      'JSON Schema includes types, constraints, enums, and required fields. ' +
+      'TypeScript generates an interface with camelCase props and union types.',
+    {
+      schema: FormSchema.describe('FormSchema to export'),
+      format: z
+        .enum(['json-schema', 'typescript'])
+        .describe('Output format'),
+    },
+    async ({ schema, format }) => {
+      try {
+        const result = exportSchema(schema, format);
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error exporting schema: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'validate_forms',
+    'Batch validate multiple CivUI form markups at once. ' +
+      'Returns individual results plus an overall summary like "3/5 forms valid".',
+    {
+      forms: z
+        .array(
+          z.object({
+            id: z.string().describe('Identifier for this form'),
+            html: z.string().describe('CivUI HTML markup to validate'),
+          }),
+        )
+        .describe('Array of { id, html } objects to validate'),
+      config: z
+        .object({
+          promoteWarnings: z.array(z.string()).optional(),
+          suppressRules: z.array(z.string()).optional(),
+        })
+        .optional()
+        .describe('Optional validation config applied to all forms'),
+    },
+    async ({ forms, config }) => {
+      try {
+        const result = validateForms(forms, config);
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error validating forms: ${err instanceof Error ? err.message : String(err)}`,
             },
           ],
           isError: true,
@@ -321,6 +553,17 @@ export function createServer(): McpServer {
         .describe('The label text for the field'),
     },
     async ({ fieldType, label }) => addFieldPrompt(fieldType, label),
+  );
+
+  server.prompt(
+    MIGRATE_FORM_NAME,
+    MIGRATE_FORM_DESCRIPTION,
+    {
+      source: z
+        .enum(['html', 'pdf'])
+        .describe('Source format of the legacy form'),
+    },
+    async ({ source }) => migrateFormPrompt(source),
   );
 
   return server;

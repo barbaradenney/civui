@@ -23,3 +23,9 @@ export {
   addFieldPrompt,
 } from './add-field.js';
 export type { FieldType } from './add-field.js';
+
+export {
+  MIGRATE_FORM_NAME,
+  MIGRATE_FORM_DESCRIPTION,
+  migrateFormPrompt,
+} from './migrate-form.js';

@@ -5,17 +5,19 @@ import { RULES } from './rules.js';
 describe('validateForm', () => {
   // ---- Meta ----
 
-  it('has 18 rules total (9 errors + 9 warnings)', () => {
+  it('has 26 rules total (12 errors + 14 warnings)', () => {
     const errors = RULES.filter((r) => r.severity === 'error');
     const warnings = RULES.filter((r) => r.severity === 'warning');
-    expect(errors).toHaveLength(9);
-    expect(warnings).toHaveLength(9);
-    expect(RULES).toHaveLength(18);
+    expect(errors).toHaveLength(12);
+    expect(warnings).toHaveLength(14);
+    expect(RULES).toHaveLength(26);
   });
 
   it('returns valid:true and empty arrays for valid markup', () => {
     const html = `
-      <civ-text-input label="Full name" name="fullName" required required-message="Enter your full name" autocomplete="name"></civ-text-input>
+      <civ-form>
+        <civ-text-input label="Full name" name="fullName" required required-message="Enter your full name" autocomplete="name"></civ-text-input>
+      </civ-form>
     `;
     const result = validateForm(html);
     expect(result.valid).toBe(true);
@@ -400,6 +402,234 @@ describe('validateForm', () => {
     it('does not flag logical properties', () => {
       const result = validateForm('<div class="civ-ms-2 civ-me-4 civ-ps-2 civ-border-s-2 civ-rounded-s-md"></div>');
       expect(result.warnings.filter((w) => w.rule === 'physical-css-property')).toHaveLength(0);
+    });
+  });
+
+  // ---- New error rules ----
+
+  describe('duplicate-name', () => {
+    it('flags two components with the same name', () => {
+      const result = validateForm(`
+        <civ-text-input label="First" name="field1"></civ-text-input>
+        <civ-textarea label="Second" name="field1"></civ-textarea>
+      `);
+      expect(result.errors.some((e) => e.rule === 'duplicate-name')).toBe(true);
+    });
+
+    it('does not flag unique names', () => {
+      const result = validateForm(`
+        <civ-text-input label="First" name="field1"></civ-text-input>
+        <civ-text-input label="Second" name="field2"></civ-text-input>
+      `);
+      expect(result.errors.filter((e) => e.rule === 'duplicate-name')).toHaveLength(0);
+    });
+
+    it('does not flag components without name', () => {
+      const result = validateForm(`
+        <civ-text-input label="First"></civ-text-input>
+        <civ-text-input label="Second"></civ-text-input>
+      `);
+      expect(result.errors.filter((e) => e.rule === 'duplicate-name')).toHaveLength(0);
+    });
+  });
+
+  describe('empty-select-options', () => {
+    it('flags civ-select without options', () => {
+      const result = validateForm('<civ-select label="Topic" name="topic"></civ-select>');
+      expect(result.errors.some((e) => e.rule === 'empty-select-options')).toBe(true);
+    });
+
+    it('flags civ-combobox without options', () => {
+      const result = validateForm('<civ-combobox label="State" name="state"></civ-combobox>');
+      expect(result.errors.some((e) => e.rule === 'empty-select-options')).toBe(true);
+    });
+
+    it('does not flag civ-select with options attr', () => {
+      const html = `<civ-select label="Topic" name="topic" options='[{"value":"a","label":"A"}]'></civ-select>`;
+      const result = validateForm(html);
+      expect(result.errors.filter((e) => e.rule === 'empty-select-options')).toHaveLength(0);
+    });
+
+    it('does not flag civ-select with child options', () => {
+      const result = validateForm(`
+        <civ-select label="Topic" name="topic">
+          <option value="a">A</option>
+        </civ-select>
+      `);
+      expect(result.errors.filter((e) => e.rule === 'empty-select-options')).toHaveLength(0);
+    });
+  });
+
+  describe('radio-group-single-option', () => {
+    it('flags radio group with 0 radios', () => {
+      const result = validateForm('<civ-radio-group legend="Pick" name="x"></civ-radio-group>');
+      expect(result.errors.some((e) => e.rule === 'radio-group-single-option')).toBe(true);
+    });
+
+    it('flags radio group with 1 radio', () => {
+      const result = validateForm(`
+        <civ-radio-group legend="Pick" name="x">
+          <civ-radio label="Only" value="only"></civ-radio>
+        </civ-radio-group>
+      `);
+      expect(result.errors.some((e) => e.rule === 'radio-group-single-option')).toBe(true);
+    });
+
+    it('does not flag radio group with 2 radios', () => {
+      const result = validateForm(`
+        <civ-radio-group legend="Pick" name="x">
+          <civ-radio label="A" value="a"></civ-radio>
+          <civ-radio label="B" value="b"></civ-radio>
+        </civ-radio-group>
+      `);
+      expect(result.errors.filter((e) => e.rule === 'radio-group-single-option')).toHaveLength(0);
+    });
+  });
+
+  // ---- New warning rules ----
+
+  describe('nested-fieldset', () => {
+    it('flags nested civ-fieldset', () => {
+      const result = validateForm(`
+        <civ-fieldset legend="Outer">
+          <civ-fieldset legend="Inner">
+            <civ-text-input label="Name" name="x"></civ-text-input>
+          </civ-fieldset>
+        </civ-fieldset>
+      `);
+      expect(result.warnings.some((w) => w.rule === 'nested-fieldset')).toBe(true);
+    });
+
+    it('does not flag non-nested fieldsets', () => {
+      const result = validateForm(`
+        <civ-fieldset legend="Section 1">
+          <civ-text-input label="Name" name="x"></civ-text-input>
+        </civ-fieldset>
+        <civ-fieldset legend="Section 2">
+          <civ-text-input label="Email" name="y"></civ-text-input>
+        </civ-fieldset>
+      `);
+      expect(result.warnings.filter((w) => w.rule === 'nested-fieldset')).toHaveLength(0);
+    });
+  });
+
+  describe('large-radio-group', () => {
+    it('flags radio group with 8 options', () => {
+      const radios = Array.from({ length: 8 }, (_, i) =>
+        `<civ-radio label="Opt ${i}" value="${i}"></civ-radio>`
+      ).join('\n');
+      const result = validateForm(`
+        <civ-radio-group legend="Pick" name="x">${radios}</civ-radio-group>
+      `);
+      expect(result.warnings.some((w) => w.rule === 'large-radio-group')).toBe(true);
+    });
+
+    it('does not flag radio group with 7 options', () => {
+      const radios = Array.from({ length: 7 }, (_, i) =>
+        `<civ-radio label="Opt ${i}" value="${i}"></civ-radio>`
+      ).join('\n');
+      const result = validateForm(`
+        <civ-radio-group legend="Pick" name="x">${radios}</civ-radio-group>
+      `);
+      expect(result.warnings.filter((w) => w.rule === 'large-radio-group')).toHaveLength(0);
+    });
+  });
+
+  describe('missing-form-wrapper', () => {
+    it('flags component not inside form', () => {
+      const result = validateForm('<civ-text-input label="Name" name="x"></civ-text-input>');
+      expect(result.warnings.some((w) => w.rule === 'missing-form-wrapper')).toBe(true);
+    });
+
+    it('does not flag component inside civ-form', () => {
+      const result = validateForm(`
+        <civ-form>
+          <civ-text-input label="Name" name="x"></civ-text-input>
+        </civ-form>
+      `);
+      expect(result.warnings.filter((w) => w.rule === 'missing-form-wrapper')).toHaveLength(0);
+    });
+
+    it('does not flag component inside native form', () => {
+      const result = validateForm(`
+        <form>
+          <civ-text-input label="Name" name="x"></civ-text-input>
+        </form>
+      `);
+      expect(result.warnings.filter((w) => w.rule === 'missing-form-wrapper')).toHaveLength(0);
+    });
+  });
+
+  describe('excessive-file-size', () => {
+    it('flags max-size > 25 MB', () => {
+      const thirtyMB = 30 * 1024 * 1024;
+      const result = validateForm(`<civ-file-upload label="Upload" name="doc" max-size="${thirtyMB}"></civ-file-upload>`);
+      expect(result.warnings.some((w) => w.rule === 'excessive-file-size')).toBe(true);
+    });
+
+    it('does not flag max-size <= 25 MB', () => {
+      const twentyMB = 20 * 1024 * 1024;
+      const result = validateForm(`<civ-file-upload label="Upload" name="doc" max-size="${twentyMB}"></civ-file-upload>`);
+      expect(result.warnings.filter((w) => w.rule === 'excessive-file-size')).toHaveLength(0);
+    });
+
+    it('does not flag file-upload without max-size', () => {
+      const result = validateForm('<civ-file-upload label="Upload" name="doc"></civ-file-upload>');
+      expect(result.warnings.filter((w) => w.rule === 'excessive-file-size')).toHaveLength(0);
+    });
+  });
+
+  describe('toggle-without-default', () => {
+    it('flags toggle without value', () => {
+      const result = validateForm('<civ-toggle label="Notify" name="x"></civ-toggle>');
+      expect(result.warnings.some((w) => w.rule === 'toggle-without-default')).toBe(true);
+    });
+
+    it('does not flag toggle with value', () => {
+      const result = validateForm('<civ-toggle label="Notify" name="x" value="true"></civ-toggle>');
+      expect(result.warnings.filter((w) => w.rule === 'toggle-without-default')).toHaveLength(0);
+    });
+  });
+
+  // ---- ValidationConfig ----
+
+  describe('ValidationConfig', () => {
+    it('suppressRules removes specified rules', () => {
+      const html = '<civ-text-input name="x"></civ-text-input>';
+      const full = validateForm(html);
+      expect(full.errors.some((e) => e.rule === 'missing-label')).toBe(true);
+
+      const suppressed = validateForm(html, { suppressRules: ['missing-label'] });
+      expect(suppressed.errors.filter((e) => e.rule === 'missing-label')).toHaveLength(0);
+    });
+
+    it('promoteWarnings promotes warnings to errors', () => {
+      const html = '<civ-text-input label="Name" name="email"></civ-text-input>';
+      const full = validateForm(html);
+      expect(full.warnings.some((w) => w.rule === 'missing-autocomplete')).toBe(true);
+      expect(full.errors.filter((e) => e.rule === 'missing-autocomplete')).toHaveLength(0);
+
+      const promoted = validateForm(html, { promoteWarnings: ['missing-autocomplete'] });
+      expect(promoted.errors.some((e) => e.rule === 'missing-autocomplete')).toBe(true);
+      expect(promoted.warnings.filter((w) => w.rule === 'missing-autocomplete')).toHaveLength(0);
+    });
+
+    it('suppressRules and promoteWarnings work together', () => {
+      const html = '<civ-text-input label="Name" name="email"></civ-text-input>';
+      const result = validateForm(html, {
+        suppressRules: ['missing-form-wrapper'],
+        promoteWarnings: ['missing-autocomplete'],
+      });
+      expect(result.warnings.filter((w) => w.rule === 'missing-form-wrapper')).toHaveLength(0);
+      expect(result.errors.some((e) => e.rule === 'missing-autocomplete')).toBe(true);
+    });
+
+    it('empty config has no effect', () => {
+      const html = '<civ-text-input label="Name" name="x"></civ-text-input>';
+      const noConfig = validateForm(html);
+      const emptyConfig = validateForm(html, {});
+      expect(emptyConfig.errors).toEqual(noConfig.errors);
+      expect(emptyConfig.warnings).toEqual(noConfig.warnings);
     });
   });
 

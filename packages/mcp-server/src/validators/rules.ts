@@ -47,13 +47,22 @@ const FORM_COMPONENTS = [
 ] as const;
 
 /** Common abbreviations that violate plain language guidelines. */
-const ABBREVIATIONS = /\b(DOB|SSN|DOD|VA|EIN|TIN)\b/;
+export const ABBREVIATIONS: Record<string, string> = {
+  DOB: 'Date of birth',
+  SSN: 'Social Security number',
+  DOD: 'Department of Defense',
+  VA: 'Department of Veterans Affairs',
+  EIN: 'Employer Identification Number',
+  TIN: 'Taxpayer Identification Number',
+};
+
+const ABBREVIATIONS_RE = /\b(DOB|SSN|DOD|VA|EIN|TIN)\b/;
 
 /** Generic required messages that should be replaced with field-specific text. */
 const GENERIC_REQUIRED = /^(this field is required|required|field is required)$/i;
 
 /** Identity-related field name patterns that should have autocomplete. */
-const IDENTITY_FIELDS: { pattern: RegExp; autocomplete: string }[] = [
+export const IDENTITY_FIELDS: { pattern: RegExp; autocomplete: string }[] = [
   { pattern: /(?:^|[-_])email(?:$|[-_])/i, autocomplete: 'email' },
   { pattern: /(?:^|[-_])phone(?:$|[-_])/i, autocomplete: 'tel' },
   { pattern: /(?:^|[-_])tel(?:$|[-_])/i, autocomplete: 'tel' },
@@ -260,6 +269,77 @@ const legendOnSingle: Rule = {
   },
 };
 
+const duplicateName: Rule = {
+  id: 'duplicate-name',
+  severity: 'error',
+  description: 'Multiple form components share the same name attribute',
+  check($, violations) {
+    const seen = new Map<string, string>();
+    for (const tag of FORM_COMPONENTS) {
+      $(tag).each((_, el) => {
+        const name = $(el).attr('name');
+        if (!name) return;
+        const prev = seen.get(name);
+        if (prev) {
+          violations.push({
+            rule: 'duplicate-name',
+            severity: 'error',
+            message: `<${tag}> shares name="${name}" with <${prev}>`,
+            element: tag,
+            fix: `Give each form component a unique name attribute`,
+          });
+        } else {
+          seen.set(name, tag);
+        }
+      });
+    }
+  },
+};
+
+const emptySelectOptions: Rule = {
+  id: 'empty-select-options',
+  severity: 'error',
+  description: 'Select or combobox with no options',
+  check($, violations) {
+    for (const tag of ['civ-select', 'civ-combobox'] as const) {
+      $(tag).each((_, el) => {
+        const $el = $(el);
+        const hasOptionsAttr = $el.attr('options') !== undefined;
+        const hasChildOptions = $el.children('option').length > 0;
+        if (!hasOptionsAttr && !hasChildOptions) {
+          violations.push({
+            rule: 'empty-select-options',
+            severity: 'error',
+            message: `<${tag}> has no options`,
+            element: tag,
+            fix: `Add options attribute or child <option> elements to <${tag}>`,
+          });
+        }
+      });
+    }
+  },
+};
+
+const radioGroupSingleOption: Rule = {
+  id: 'radio-group-single-option',
+  severity: 'error',
+  description: 'Radio group with fewer than 2 options',
+  check($, violations) {
+    $('civ-radio-group').each((_, el) => {
+      const childCount = $(el).find('civ-radio').length;
+      if (childCount < 2) {
+        violations.push({
+          rule: 'radio-group-single-option',
+          severity: 'error',
+          message: `<civ-radio-group> has ${childCount} radio option${childCount === 1 ? '' : 's'} (minimum 2)`,
+          element: 'civ-radio-group',
+          fix: 'A radio group must have at least 2 options; use a checkbox for a single boolean choice',
+        });
+      }
+    });
+  },
+};
+
 // --- Warning rules (best practices) ---
 
 const genericRequiredMessage: Rule = {
@@ -362,7 +442,7 @@ const abbreviationInLabel: Rule = {
     for (const tag of allComponents) {
       $(tag).each((_, el) => {
         const label = $(el).attr('label') ?? $(el).attr('legend') ?? '';
-        const match = ABBREVIATIONS.exec(label);
+        const match = ABBREVIATIONS_RE.exec(label);
         if (match) {
           violations.push({
             rule: 'abbreviation-in-label',
@@ -415,6 +495,112 @@ const missingName: Rule = {
         }
       });
     }
+  },
+};
+
+const nestedFieldset: Rule = {
+  id: 'nested-fieldset',
+  severity: 'warning',
+  description: 'Fieldset nested inside another fieldset',
+  check($, violations) {
+    $('civ-fieldset').each((_, el) => {
+      if ($(el).parents('civ-fieldset').length > 0) {
+        violations.push({
+          rule: 'nested-fieldset',
+          severity: 'warning',
+          message: '<civ-fieldset> is nested inside another <civ-fieldset>',
+          element: 'civ-fieldset',
+          fix: 'Avoid nesting fieldsets; use headings or separate sections instead',
+        });
+      }
+    });
+  },
+};
+
+const largeRadioGroup: Rule = {
+  id: 'large-radio-group',
+  severity: 'warning',
+  description: 'Radio group with more than 7 options',
+  check($, violations) {
+    $('civ-radio-group').each((_, el) => {
+      const childCount = $(el).find('civ-radio').length;
+      if (childCount > 7) {
+        violations.push({
+          rule: 'large-radio-group',
+          severity: 'warning',
+          message: `<civ-radio-group> has ${childCount} options (more than 7)`,
+          element: 'civ-radio-group',
+          fix: 'Consider using <civ-select> or <civ-combobox> for more than 7 options',
+        });
+      }
+    });
+  },
+};
+
+const missingFormWrapper: Rule = {
+  id: 'missing-form-wrapper',
+  severity: 'warning',
+  description: 'Form component not inside a form wrapper',
+  check($, violations) {
+    for (const tag of FORM_COMPONENTS) {
+      $(tag).each((_, el) => {
+        const $el = $(el);
+        if (
+          $el.parents('civ-form').length === 0 &&
+          $el.parents('form').length === 0
+        ) {
+          violations.push({
+            rule: 'missing-form-wrapper',
+            severity: 'warning',
+            message: `<${tag}> is not inside a <civ-form> or <form>`,
+            element: tag,
+            fix: 'Wrap form components in <civ-form> for error summary and submission handling',
+          });
+        }
+      });
+    }
+  },
+};
+
+const excessiveFileSize: Rule = {
+  id: 'excessive-file-size',
+  severity: 'warning',
+  description: 'File upload with max-size exceeding 25 MB',
+  check($, violations) {
+    $('civ-file-upload').each((_, el) => {
+      const maxSize = $(el).attr('max-size');
+      if (maxSize) {
+        const bytes = parseInt(maxSize, 10);
+        if (!isNaN(bytes) && bytes > 25 * 1024 * 1024) {
+          violations.push({
+            rule: 'excessive-file-size',
+            severity: 'warning',
+            message: `<civ-file-upload> has max-size of ${Math.round(bytes / (1024 * 1024))} MB (exceeds 25 MB)`,
+            element: 'civ-file-upload',
+            fix: 'Consider limiting max-size to 25 MB or less for government forms',
+          });
+        }
+      }
+    });
+  },
+};
+
+const toggleWithoutDefault: Rule = {
+  id: 'toggle-without-default',
+  severity: 'warning',
+  description: 'Toggle without explicit value attribute',
+  check($, violations) {
+    $('civ-toggle').each((_, el) => {
+      if ($(el).attr('value') === undefined) {
+        violations.push({
+          rule: 'toggle-without-default',
+          severity: 'warning',
+          message: '<civ-toggle> has no explicit value attribute',
+          element: 'civ-toggle',
+          fix: 'Add value="true" or another explicit default value to <civ-toggle>',
+        });
+      }
+    });
   },
 };
 
@@ -472,6 +658,9 @@ export const RULES: Rule[] = [
   orphanedSegment,
   labelOnGroup,
   legendOnSingle,
+  duplicateName,
+  emptySelectOptions,
+  radioGroupSingleOption,
   // Warnings
   genericRequiredMessage,
   missingHintDate,
@@ -480,6 +669,11 @@ export const RULES: Rule[] = [
   abbreviationInLabel,
   commaInCheckboxValue,
   missingName,
+  nestedFieldset,
+  largeRadioGroup,
+  missingFormWrapper,
+  excessiveFileSize,
+  toggleWithoutDefault,
   deprecatedFocusClass,
   physicalCssProperty,
 ];

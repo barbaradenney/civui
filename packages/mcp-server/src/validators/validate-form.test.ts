@@ -5,12 +5,12 @@ import { RULES } from './rules.js';
 describe('validateForm', () => {
   // ---- Meta ----
 
-  it('has 26 rules total (12 errors + 14 warnings)', () => {
+  it('has 34 rules total (15 errors + 19 warnings)', () => {
     const errors = RULES.filter((r) => r.severity === 'error');
     const warnings = RULES.filter((r) => r.severity === 'warning');
-    expect(errors).toHaveLength(12);
-    expect(warnings).toHaveLength(14);
-    expect(RULES).toHaveLength(26);
+    expect(errors).toHaveLength(15);
+    expect(warnings).toHaveLength(19);
+    expect(RULES).toHaveLength(34);
   });
 
   it('returns valid:true and empty arrays for valid markup', () => {

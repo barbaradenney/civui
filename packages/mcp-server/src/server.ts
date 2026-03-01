@@ -8,6 +8,9 @@ import {
   GOVERNMENT_PATTERNS,
   TAILWIND_REFERENCE,
   FORM_TEMPLATES,
+  CHANGELOG,
+  DECISION_TREE,
+  COMPLEX_PATTERNS,
 } from './resources/index.js';
 import {
   lookupStyle,
@@ -17,6 +20,15 @@ import {
   formToSchema,
   exportSchema,
   validateForms,
+  checkContrast,
+  estimateBurden,
+  generateTests,
+  generateStory,
+  extractStrings,
+  composeForms,
+  generateCompanionJs,
+  validateCrossField,
+  analyzeRelationships,
 } from './tools/index.js';
 import { validateForm } from './validators/index.js';
 import {
@@ -36,6 +48,15 @@ import {
   MIGRATE_FORM_NAME,
   MIGRATE_FORM_DESCRIPTION,
   migrateFormPrompt,
+  REVIEW_FORM_UX_NAME,
+  REVIEW_FORM_UX_DESCRIPTION,
+  reviewFormUxPrompt,
+  CONDITIONAL_FORM_NAME,
+  CONDITIONAL_FORM_DESCRIPTION,
+  conditionalFormPrompt,
+  BUILD_COMPLEX_FORM_NAME,
+  BUILD_COMPLEX_FORM_DESCRIPTION,
+  buildComplexFormPrompt,
 } from './prompts/index.js';
 
 /** 50 MB base64 ≈ ~37.5 MB decoded PDF — generous but bounded. */
@@ -88,6 +109,36 @@ export function createServer(): McpServer {
         uri: uri.href,
         mimeType: 'text/markdown',
         text: FORM_TEMPLATES,
+      },
+    ],
+  }));
+
+  server.resource('changelog', 'civui://changelog', async (uri) => ({
+    contents: [
+      {
+        uri: uri.href,
+        mimeType: 'text/markdown',
+        text: CHANGELOG,
+      },
+    ],
+  }));
+
+  server.resource('decision-tree', 'civui://decision-tree', async (uri) => ({
+    contents: [
+      {
+        uri: uri.href,
+        mimeType: 'text/markdown',
+        text: DECISION_TREE,
+      },
+    ],
+  }));
+
+  server.resource('complex-patterns', 'civui://complex-patterns', async (uri) => ({
+    contents: [
+      {
+        uri: uri.href,
+        mimeType: 'text/markdown',
+        text: COMPLEX_PATTERNS,
       },
     ],
   }));
@@ -506,6 +557,342 @@ export function createServer(): McpServer {
     },
   );
 
+  server.tool(
+    'check_contrast',
+    'Check WCAG 2.1 contrast ratio between two colors. ' +
+      'Accepts hex colors (#005ea2) or CivUI token names (primary, text-primary, civ-bg-error-light). ' +
+      'Returns ratio, AA/AAA pass status for normal and large text, and overall WCAG level.',
+    {
+      foreground: z
+        .string()
+        .describe('Foreground color — hex (#005ea2) or token name (primary, text-primary)'),
+      background: z
+        .string()
+        .describe('Background color — hex (#ffffff) or token name (white, bg-base-lightest)'),
+    },
+    async ({ foreground, background }) => {
+      try {
+        const result = checkContrast(foreground, background);
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error checking contrast: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'estimate_burden',
+    'Estimate PRA burden for a government form schema. ' +
+      'Calculates total/required/optional fields, estimated completion time, ' +
+      'complexity level (low/medium/high), and reading level assessment.',
+    {
+      schema: FormSchema.describe('Form schema to estimate burden for'),
+    },
+    async ({ schema }) => {
+      try {
+        const result = estimateBurden(schema);
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error estimating burden: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'generate_tests',
+    'Generate a Vitest test file from CivUI HTML markup. ' +
+      'Creates rendering tests, label/legend tests, required field tests, ' +
+      'event listener tests, and keyboard navigation tests.',
+    {
+      html: z
+        .string()
+        .max(MAX_HTML_LENGTH, 'HTML exceeds 10 MB size limit')
+        .describe('CivUI HTML markup to generate tests for'),
+      suiteName: z
+        .string()
+        .optional()
+        .describe('Name for the test suite (default: "Form")'),
+    },
+    async ({ html, suiteName }) => {
+      try {
+        const result = generateTests(html, suiteName);
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error generating tests: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'generate_story',
+    'Generate a Storybook CSF3 story file from CivUI HTML or FormSchema. ' +
+      'Creates Default, WithErrors, and Filled story variants with argTypes.',
+    {
+      html: z
+        .string()
+        .max(MAX_HTML_LENGTH, 'HTML exceeds 10 MB size limit')
+        .optional()
+        .describe('CivUI HTML markup (provide html or schema, not both)'),
+      schema: FormSchema.optional().describe(
+        'FormSchema object (provide html or schema, not both)',
+      ),
+      componentName: z
+        .string()
+        .optional()
+        .describe('Name for the component in Storybook (default: schema title or "Form")'),
+    },
+    async ({ html, schema, componentName }) => {
+      try {
+        const result = generateStory({ html, schema }, componentName);
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error generating story: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'extract_strings',
+    'Extract translatable strings from CivUI HTML markup for i18n. ' +
+      'Finds all text attributes (label, legend, hint, error, required-message, placeholder) ' +
+      'and option labels. Returns a keyed string map for translation files.',
+    {
+      html: z
+        .string()
+        .max(MAX_HTML_LENGTH, 'HTML exceeds 10 MB size limit')
+        .describe('CivUI HTML markup to extract strings from'),
+    },
+    async ({ html }) => {
+      try {
+        const result = extractStrings(html);
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error extracting strings: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'compose_forms',
+    'Merge multiple FormSchemas into one unified schema. ' +
+      'Resolves ref sections from subForms dictionary, applies namespace prefixes, ' +
+      'and validates no name collisions. Returns merged schema, namespaces, resolved refs, and field count.',
+    {
+      primary: FormSchema.describe('Primary form schema'),
+      subForms: z
+        .record(
+          z.string(),
+          z.object({
+            schema: FormSchema.describe('Schema to merge'),
+            namespace: z.string().describe('Namespace prefix for field names'),
+          }),
+        )
+        .optional()
+        .describe('Additional schemas to merge with namespaces'),
+    },
+    async ({ primary, subForms }) => {
+      try {
+        const result = composeForms(primary, subForms);
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error composing forms: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'generate_companion_js',
+    'Generate client-side JavaScript for repeatable sections and conditional visibility. ' +
+      'Produces a self-contained IIFE handling add/remove/re-index for repeatable sections, ' +
+      'show/hide for conditional fields, and conditional required toggling.',
+    {
+      schema: FormSchema.describe('Form schema to generate JavaScript for'),
+    },
+    async ({ schema }) => {
+      try {
+        const result = generateCompanionJs(schema);
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error generating companion JS: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'validate_cross_field',
+    'Evaluate cross-field rules and conditional requirements against field values. ' +
+      'Checks crossFieldRules and per-field requiredWhen/visibleWhen conditions. ' +
+      'Returns fired rules, conditionally required/visible/hidden fields, and errors.',
+    {
+      schema: FormSchema.describe('Form schema with cross-field rules'),
+      values: z
+        .record(z.string(), z.union([z.string(), z.array(z.string())]))
+        .describe('Field values to evaluate against (name → value)'),
+    },
+    async ({ schema, values }) => {
+      try {
+        const result = validateCrossField(schema, values);
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error validating cross-field rules: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'analyze_relationships',
+    'Analyze a FormSchema and produce an entity-relationship summary. ' +
+      'Identifies entities from sections, detects one-to-many from repeatable sections, ' +
+      'conditional dependencies from visibleWhen/requiredWhen, and cross-field rule relationships. ' +
+      'Infers entity types from field name patterns.',
+    {
+      schema: FormSchema.describe('Form schema to analyze'),
+    },
+    async ({ schema }) => {
+      try {
+        const result = analyzeRelationships(schema);
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error analyzing relationships: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
   // --- Prompts ---
 
   server.prompt(
@@ -564,6 +951,39 @@ export function createServer(): McpServer {
         .describe('Source format of the legacy form'),
     },
     async ({ source }) => migrateFormPrompt(source),
+  );
+
+  server.prompt(
+    REVIEW_FORM_UX_NAME,
+    REVIEW_FORM_UX_DESCRIPTION,
+    {
+      markup: z
+        .string()
+        .describe('CivUI HTML markup to review'),
+    },
+    async ({ markup }) => reviewFormUxPrompt(markup),
+  );
+
+  server.prompt(
+    CONDITIONAL_FORM_NAME,
+    CONDITIONAL_FORM_DESCRIPTION,
+    {
+      description: z
+        .string()
+        .describe('Plain-English description of the conditional form requirements'),
+    },
+    async ({ description }) => conditionalFormPrompt(description),
+  );
+
+  server.prompt(
+    BUILD_COMPLEX_FORM_NAME,
+    BUILD_COMPLEX_FORM_DESCRIPTION,
+    {
+      description: z
+        .string()
+        .describe('Plain-English description of the complex form requirements'),
+    },
+    async ({ description }) => buildComplexFormPrompt(description),
   );
 
   return server;

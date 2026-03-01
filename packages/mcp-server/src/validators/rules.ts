@@ -269,6 +269,9 @@ const legendOnSingle: Rule = {
   },
 };
 
+/** Pattern matching key[N].field inside repeatable containers. */
+const REPEATABLE_NAME_RE = /^[a-zA-Z_-]+\[\d+\]\./;
+
 const duplicateName: Rule = {
   id: 'duplicate-name',
   severity: 'error',
@@ -279,6 +282,10 @@ const duplicateName: Rule = {
       $(tag).each((_, el) => {
         const name = $(el).attr('name');
         if (!name) return;
+        // Skip names matching key[N].field inside repeatable containers
+        if (REPEATABLE_NAME_RE.test(name) && $(el).parents('[data-civ-repeatable]').length > 0) {
+          return;
+        }
         const prev = seen.get(name);
         if (prev) {
           violations.push({
@@ -646,6 +653,256 @@ const physicalCssProperty: Rule = {
   },
 };
 
+const readingLevel: Rule = {
+  id: 'reading-level',
+  severity: 'warning',
+  description: 'Labels and hints use complex language (high reading level)',
+  check($, violations) {
+    const allComponents = [...LABEL_COMPONENTS, ...LEGEND_COMPONENTS];
+    const words: string[] = [];
+
+    for (const tag of allComponents) {
+      $(tag).each((_, el) => {
+        const label = $(el).attr('label') ?? $(el).attr('legend') ?? '';
+        const hint = $(el).attr('hint') ?? '';
+        for (const text of [label, hint]) {
+          if (text.trim()) {
+            words.push(...text.trim().split(/\s+/));
+          }
+        }
+      });
+    }
+
+    if (words.length === 0) return;
+
+    const avgWordLength =
+      words.reduce((sum, w) => sum + w.replace(/[^a-zA-Z]/g, '').length, 0) / words.length;
+    const avgWordsPerSentence = words.length;
+
+    if (avgWordLength > 6 && avgWordsPerSentence > 15) {
+      violations.push({
+        rule: 'reading-level',
+        severity: 'warning',
+        message: `Form labels have high reading complexity (avg word length: ${avgWordLength.toFixed(1)} chars, ${words.length} total words)`,
+        element: 'form',
+        fix: 'Use plain language: shorter words and simpler sentences in labels and hints',
+      });
+    }
+  },
+};
+
+const missingInputmode: Rule = {
+  id: 'missing-inputmode',
+  severity: 'warning',
+  description: 'Numeric-entry field missing inputmode attribute',
+  check($, violations) {
+    $('civ-text-input').each((_, el) => {
+      const $el = $(el);
+      const type = $el.attr('type') ?? '';
+      const name = $el.attr('name') ?? '';
+
+      if (
+        (type === 'tel' || /ssn|zip|phone|postal/i.test(name)) &&
+        !$el.attr('inputmode')
+      ) {
+        violations.push({
+          rule: 'missing-inputmode',
+          severity: 'warning',
+          message: `<civ-text-input name="${name}"> should have an inputmode attribute for mobile keyboard optimization`,
+          element: 'civ-text-input',
+          fix: type === 'tel'
+            ? 'Add inputmode="tel"'
+            : 'Add inputmode="numeric"',
+        });
+      }
+    });
+  },
+};
+
+const formLength: Rule = {
+  id: 'form-length',
+  severity: 'warning',
+  description: 'Form or fieldset has too many fields',
+  check($, violations) {
+    const formSelector = FORM_COMPONENTS.join(', ');
+
+    // Check civ-form and form elements without fieldsets
+    $('civ-form, form').each((_, el) => {
+      const $el = $(el);
+      // Count direct form fields not inside a fieldset
+      let directCount = 0;
+      $el.find(formSelector).each((_, field) => {
+        if ($(field).closest('civ-fieldset').length === 0) {
+          directCount++;
+        }
+      });
+
+      if (directCount > 20) {
+        violations.push({
+          rule: 'form-length',
+          severity: 'warning',
+          message: `Form has ${directCount} fields without fieldset grouping (more than 20)`,
+          element: (el as unknown as { tagName: string }).tagName ?? 'form',
+          fix: 'Break the form into logical sections using <civ-fieldset> with descriptive legends',
+        });
+      }
+    });
+
+    // Check each fieldset for too many direct children
+    $('civ-fieldset').each((_, el) => {
+      const $el = $(el);
+      let directChildFields = 0;
+      $el.find(formSelector).each((_, field) => {
+        const closestFieldset = $(field).closest('civ-fieldset');
+        if (closestFieldset.length && closestFieldset[0] === el) {
+          directChildFields++;
+        }
+      });
+
+      if (directChildFields > 7) {
+        const legend = $el.attr('legend') ?? 'unnamed';
+        violations.push({
+          rule: 'form-length',
+          severity: 'warning',
+          message: `<civ-fieldset legend="${legend}"> has ${directChildFields} direct form fields (more than 7)`,
+          element: 'civ-fieldset',
+          fix: 'Consider splitting this fieldset into smaller logical groups',
+        });
+      }
+    });
+  },
+};
+
+// --- Repeatable / conditional rules ---
+
+const repeatableMissingKey: Rule = {
+  id: 'repeatable-missing-key',
+  severity: 'error',
+  description: 'Repeatable container missing key attribute value',
+  check($, violations) {
+    $('[data-civ-repeatable]').each((_, el) => {
+      const key = $(el).attr('data-civ-repeatable');
+      if (!key || key.trim() === '') {
+        violations.push({
+          rule: 'repeatable-missing-key',
+          severity: 'error',
+          message: '[data-civ-repeatable] has empty attribute value',
+          element: 'div',
+          fix: 'Set data-civ-repeatable to the array key, e.g., data-civ-repeatable="dependents"',
+        });
+      }
+    });
+  },
+};
+
+const repeatableMissingButtons: Rule = {
+  id: 'repeatable-missing-buttons',
+  severity: 'error',
+  description: 'Repeatable container missing add or remove buttons',
+  check($, violations) {
+    $('[data-civ-repeatable]').each((_, el) => {
+      const $el = $(el);
+      const key = $el.attr('data-civ-repeatable') ?? '';
+      if (!key) return; // already caught by repeatable-missing-key
+      const hasAdd = $el.find('[data-civ-repeatable-add]').length > 0;
+      const hasRemove = $el.find('[data-civ-repeatable-remove]').length > 0;
+      if (!hasAdd) {
+        violations.push({
+          rule: 'repeatable-missing-buttons',
+          severity: 'error',
+          message: `[data-civ-repeatable="${key}"] is missing an add button`,
+          element: 'div',
+          fix: 'Add a <button data-civ-repeatable-add> inside the repeatable container',
+        });
+      }
+      if (!hasRemove) {
+        violations.push({
+          rule: 'repeatable-missing-buttons',
+          severity: 'error',
+          message: `[data-civ-repeatable="${key}"] is missing a remove button`,
+          element: 'div',
+          fix: 'Add a <button data-civ-repeatable-remove> inside each repeatable item',
+        });
+      }
+    });
+  },
+};
+
+const conditionalTargetMissing: Rule = {
+  id: 'conditional-target-missing',
+  severity: 'error',
+  description: 'Conditional attribute references a field name that does not exist in the form',
+  check($, violations) {
+    // Collect all field names in the form
+    const fieldNames = new Set<string>();
+    for (const tag of FORM_COMPONENTS) {
+      $(tag).each((_, el) => {
+        const name = $(el).attr('name');
+        if (name) fieldNames.add(name);
+      });
+    }
+
+    const attrs = ['data-civ-show-when', 'data-civ-hide-when', 'data-civ-require-when'] as const;
+    for (const attrName of attrs) {
+      $(`[${attrName}]`).each((_, el) => {
+        const val = $(el).attr(attrName) ?? '';
+        // Extract the field reference (part before the operator)
+        const match = val.match(/^([a-zA-Z0-9_.-]+)/);
+        if (match) {
+          const refField = match[1];
+          if (!fieldNames.has(refField)) {
+            violations.push({
+              rule: 'conditional-target-missing',
+              severity: 'error',
+              message: `${attrName}="${val}" references field "${refField}" which does not exist in the form`,
+              element: (el as unknown as { tagName: string }).tagName ?? 'unknown',
+              fix: `Ensure a form component with name="${refField}" exists in the form`,
+            });
+          }
+        }
+      });
+    }
+  },
+};
+
+const repeatableNoAriaLive: Rule = {
+  id: 'repeatable-no-aria-live',
+  severity: 'warning',
+  description: 'Repeatable container missing aria-live attribute',
+  check($, violations) {
+    $('[data-civ-repeatable]').each((_, el) => {
+      if (!$(el).attr('aria-live')) {
+        violations.push({
+          rule: 'repeatable-no-aria-live',
+          severity: 'warning',
+          message: '[data-civ-repeatable] is missing aria-live attribute',
+          element: 'div',
+          fix: 'Add aria-live="polite" to the repeatable container for screen reader announcements',
+        });
+      }
+    });
+  },
+};
+
+const repeatableNoMin: Rule = {
+  id: 'repeatable-no-min',
+  severity: 'warning',
+  description: 'Repeatable container missing minimum item count',
+  check($, violations) {
+    $('[data-civ-repeatable]').each((_, el) => {
+      if (!$(el).attr('data-civ-repeatable-min')) {
+        violations.push({
+          rule: 'repeatable-no-min',
+          severity: 'warning',
+          message: '[data-civ-repeatable] is missing data-civ-repeatable-min attribute',
+          element: 'div',
+          fix: 'Add data-civ-repeatable-min="0" or another appropriate minimum',
+        });
+      }
+    });
+  },
+};
+
 /** All validation rules. */
 export const RULES: Rule[] = [
   // Errors
@@ -661,6 +918,9 @@ export const RULES: Rule[] = [
   duplicateName,
   emptySelectOptions,
   radioGroupSingleOption,
+  repeatableMissingKey,
+  repeatableMissingButtons,
+  conditionalTargetMissing,
   // Warnings
   genericRequiredMessage,
   missingHintDate,
@@ -676,4 +936,9 @@ export const RULES: Rule[] = [
   toggleWithoutDefault,
   deprecatedFocusClass,
   physicalCssProperty,
+  readingLevel,
+  missingInputmode,
+  formLength,
+  repeatableNoAriaLive,
+  repeatableNoMin,
 ];

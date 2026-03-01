@@ -1,4 +1,4 @@
-import type { FormSchema, FormField, FormSection } from '../schema/index.js';
+import type { FormSchema, FormField, FormSection, ConditionExpression } from '../schema/index.js';
 import { getComponentMapping } from './component-map.js';
 
 function escapeAttr(value: string): string {
@@ -28,12 +28,40 @@ function generateRequiredMessage(label: string): string {
   return `${label} is required`;
 }
 
+function conditionToDataAttr(cond: ConditionExpression): string {
+  const val = Array.isArray(cond.value) ? cond.value.join(',') : (cond.value ?? '');
+  switch (cond.operator) {
+    case 'eq': return `${cond.field}=${val}`;
+    case 'neq': return `${cond.field}!=${val}`;
+    case 'in': return `${cond.field} in ${val}`;
+    case 'notIn': return `${cond.field} notIn ${val}`;
+    case 'exists': return `${cond.field} exists`;
+    case 'notExists': return `${cond.field} notExists`;
+    default: return `${cond.field}=${val}`;
+  }
+}
+
+function appendConditionalAttrs(line: string, field: FormField): string {
+  if (field.visibleWhen) {
+    if (field.visibleWhen.operator === 'neq') {
+      line += attr('data-civ-hide-when', conditionToDataAttr(field.visibleWhen));
+    } else {
+      line += attr('data-civ-show-when', conditionToDataAttr(field.visibleWhen));
+    }
+  }
+  if (field.requiredWhen) {
+    line += attr('data-civ-require-when', conditionToDataAttr(field.requiredWhen));
+  }
+  return line;
+}
+
 function generateField(field: FormField, indentLevel: number): string {
   const mapping = getComponentMapping(field.type);
   const lines: string[] = [];
 
   const hint = field.hint ?? mapping.defaultHint;
-  const requiredMessage = field.required
+  const isConditionallyRequired = !!field.requiredWhen;
+  const requiredMessage = (field.required && !isConditionallyRequired)
     ? generateRequiredMessage(field.label)
     : undefined;
 
@@ -42,11 +70,12 @@ function generateField(field: FormField, indentLevel: number): string {
     opening += attr(mapping.labelProp, field.label);
     opening += attr('name', field.name);
     if (hint) opening += attr('hint', hint);
-    if (field.required) {
+    if (field.required && !isConditionallyRequired) {
       opening += ' required';
       opening += attr('required-message', requiredMessage!);
     }
     if (field.disabled) opening += ' disabled';
+    opening = appendConditionalAttrs(opening, field);
     opening += '>';
     lines.push(opening);
 
@@ -65,11 +94,12 @@ function generateField(field: FormField, indentLevel: number): string {
     opening += attr(mapping.labelProp, field.label);
     opening += attr('name', field.name);
     if (hint) opening += attr('hint', hint);
-    if (field.required) {
+    if (field.required && !isConditionallyRequired) {
       opening += ' required';
       opening += attr('required-message', requiredMessage!);
     }
     if (field.disabled) opening += ' disabled';
+    opening = appendConditionalAttrs(opening, field);
     opening += '>';
     lines.push(opening);
 
@@ -93,7 +123,7 @@ function generateField(field: FormField, indentLevel: number): string {
     }
 
     if (hint) line += attr('hint', hint);
-    if (field.required) {
+    if (field.required && !isConditionallyRequired) {
       line += ' required';
       line += attr('required-message', requiredMessage!);
     }
@@ -115,6 +145,7 @@ function generateField(field: FormField, indentLevel: number): string {
     if (inputmode) line += attr('inputmode', inputmode);
     if (field.rows !== undefined) line += attr('rows', field.rows);
 
+    line = appendConditionalAttrs(line, field);
     line += `></${mapping.tag}>`;
     lines.push(line);
   }
@@ -122,17 +153,59 @@ function generateField(field: FormField, indentLevel: number): string {
   return indent(lines.join('\n'), indentLevel);
 }
 
+function prefixFieldName(name: string, key: string, index: number): string {
+  return `${key}[${index}].${name}`;
+}
+
 function generateSection(section: FormSection, indentLevel: number): string {
   const parts: string[] = [];
 
-  if (section.heading) {
+  // For repeatable sections, prefix field names and wrap in container
+  const fields = section.repeatable && section.repeatableKey
+    ? section.fields.map((f) => ({
+        ...f,
+        name: prefixFieldName(f.name, section.repeatableKey!, 0),
+      }))
+    : section.fields;
+
+  const addLabel = section.repeatableAddLabel ?? 'Add another item';
+  const removeLabel = section.repeatableRemoveLabel ?? 'Remove this item';
+
+  if (section.repeatable && section.repeatableKey) {
+    let repeatableOpen = `<div data-civ-repeatable="${escapeAttr(section.repeatableKey)}"`;
+    if (section.repeatableMin !== undefined) {
+      repeatableOpen += ` data-civ-repeatable-min="${section.repeatableMin}"`;
+    }
+    if (section.repeatableMax !== undefined) {
+      repeatableOpen += ` data-civ-repeatable-max="${section.repeatableMax}"`;
+    }
+    repeatableOpen += ` aria-live="polite">`;
+    parts.push(indent(repeatableOpen, indentLevel));
+
+    if (section.heading) {
+      parts.push(indent(`<civ-fieldset legend="${escapeAttr(section.heading)}">`, indentLevel + 1));
+      for (const field of fields) {
+        parts.push(generateField(field, indentLevel + 2));
+      }
+      parts.push(indent(`<button type="button" data-civ-repeatable-remove>${escapeAttr(removeLabel)}</button>`, indentLevel + 2));
+      parts.push(indent('</civ-fieldset>', indentLevel + 1));
+    } else {
+      for (const field of fields) {
+        parts.push(generateField(field, indentLevel + 1));
+      }
+      parts.push(indent(`<button type="button" data-civ-repeatable-remove>${escapeAttr(removeLabel)}</button>`, indentLevel + 1));
+    }
+
+    parts.push(indent(`<button type="button" data-civ-repeatable-add>${escapeAttr(addLabel)}</button>`, indentLevel + 1));
+    parts.push(indent('</div>', indentLevel));
+  } else if (section.heading) {
     parts.push(indent(`<civ-fieldset legend="${escapeAttr(section.heading)}">`, indentLevel));
-    for (const field of section.fields) {
+    for (const field of fields) {
       parts.push(generateField(field, indentLevel + 1));
     }
     parts.push(indent('</civ-fieldset>', indentLevel));
   } else {
-    for (const field of section.fields) {
+    for (const field of fields) {
       parts.push(generateField(field, indentLevel));
     }
   }
@@ -144,6 +217,35 @@ export interface GenerateOptions {
   wrapInCivForm?: boolean;
 }
 
+function resolveRefSections(schema: FormSchema): FormSection[] {
+  if (!schema.subForms) return schema.sections;
+
+  return schema.sections.map((section) => {
+    if (!section.ref) return section;
+
+    const subForm = schema.subForms![section.ref];
+    if (!subForm) return section;
+
+    const ns = section.namespace ?? section.ref;
+    const resolvedFields = subForm.fields.map((f) => ({
+      ...f,
+      name: `${ns}.${f.name}`,
+      visibleWhen: f.visibleWhen
+        ? { ...f.visibleWhen, field: `${ns}.${f.visibleWhen.field}` }
+        : undefined,
+      requiredWhen: f.requiredWhen
+        ? { ...f.requiredWhen, field: `${ns}.${f.requiredWhen.field}` }
+        : undefined,
+    }));
+
+    return {
+      ...section,
+      fields: resolvedFields,
+      ref: undefined,
+    };
+  });
+}
+
 export function generateCivUI(
   schema: FormSchema,
   options: GenerateOptions = {},
@@ -151,6 +253,8 @@ export function generateCivUI(
   const { wrapInCivForm = true } = options;
   const parts: string[] = [];
   const baseIndent = wrapInCivForm ? 1 : 0;
+
+  const resolvedSections = resolveRefSections(schema);
 
   if (wrapInCivForm) {
     let formOpen = '<civ-form';
@@ -160,7 +264,7 @@ export function generateCivUI(
     parts.push(formOpen);
   }
 
-  for (const section of schema.sections) {
+  for (const section of resolvedSections) {
     parts.push(generateSection(section, baseIndent));
   }
 

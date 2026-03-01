@@ -118,6 +118,46 @@ describe('formToSchema', () => {
     expect(schema.sections).toHaveLength(0);
   });
 
+  it('parses repeatable section with data-civ-repeatable attributes', () => {
+    const html = `
+      <div data-civ-repeatable="dependents" data-civ-repeatable-min="1" data-civ-repeatable-max="5" aria-live="polite">
+        <civ-fieldset legend="Dependent">
+          <civ-text-input label="Name" name="dependents[0].name"></civ-text-input>
+          <civ-text-input label="Relationship" name="dependents[0].relationship"></civ-text-input>
+          <button type="button" data-civ-repeatable-remove>Remove</button>
+        </civ-fieldset>
+        <button type="button" data-civ-repeatable-add>Add another</button>
+      </div>
+    `;
+    const schema = formToSchema(html);
+    expect(schema.sections).toHaveLength(1);
+    const section = schema.sections[0];
+    expect(section.repeatable).toBe(true);
+    expect(section.repeatableKey).toBe('dependents');
+    expect(section.repeatableMin).toBe(1);
+    expect(section.repeatableMax).toBe(5);
+    // Field names should have array prefix stripped
+    expect(section.fields[0].name).toBe('name');
+    expect(section.fields[1].name).toBe('relationship');
+  });
+
+  it('parses conditional visibility attributes', () => {
+    const html = `
+      <civ-radio-group legend="Married?" name="married">
+        <civ-radio label="Yes" value="yes"></civ-radio>
+        <civ-radio label="No" value="no"></civ-radio>
+      </civ-radio-group>
+      <civ-text-input label="Spouse name" name="spouse-name" data-civ-show-when="married=yes"></civ-text-input>
+      <civ-text-input label="Service dates" name="service-dates" data-civ-require-when="is-veteran=yes"></civ-text-input>
+    `;
+    const schema = formToSchema(html);
+    const spouseField = schema.sections[0].fields.find((f) => f.name === 'spouse-name');
+    expect(spouseField?.visibleWhen).toEqual({ field: 'married', operator: 'eq', value: 'yes' });
+
+    const serviceField = schema.sections[0].fields.find((f) => f.name === 'service-dates');
+    expect(serviceField?.requiredWhen).toEqual({ field: 'is-veteran', operator: 'eq', value: 'yes' });
+  });
+
   it('handles mixed fieldset and non-fieldset components', () => {
     const html = `
       <civ-fieldset legend="Section A">

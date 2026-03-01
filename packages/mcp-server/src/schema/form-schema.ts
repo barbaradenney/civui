@@ -32,6 +32,14 @@ export const FieldOption = z.object({
 
 export type FieldOption = z.infer<typeof FieldOption>;
 
+export const ConditionExpression = z.object({
+  field: z.string(),
+  operator: z.enum(['eq', 'neq', 'in', 'notIn', 'exists', 'notExists']),
+  value: z.union([z.string(), z.array(z.string())]).optional(),
+});
+
+export type ConditionExpression = z.infer<typeof ConditionExpression>;
+
 export interface FormField {
   type: FieldType;
   name: string;
@@ -55,6 +63,9 @@ export interface FormField {
   inputmode?: string;
   rows?: number;
   children?: FormField[];
+  visibleWhen?: ConditionExpression;
+  requiredWhen?: ConditionExpression;
+  entityType?: string;
 }
 
 export const FormField: z.ZodType<FormField> = z.object({
@@ -80,14 +91,45 @@ export const FormField: z.ZodType<FormField> = z.object({
   inputmode: z.string().optional(),
   rows: z.number().optional(),
   children: z.lazy(() => z.array(FormField)).optional(),
+  visibleWhen: ConditionExpression.optional(),
+  requiredWhen: ConditionExpression.optional(),
+  entityType: z.string().optional(),
 });
 
 export const FormSection = z.object({
   heading: z.string().optional(),
   fields: z.array(FormField),
+  repeatable: z.boolean().optional(),
+  repeatableKey: z.string().optional(),
+  repeatableMin: z.number().optional(),
+  repeatableMax: z.number().optional(),
+  repeatableAddLabel: z.string().optional(),
+  repeatableRemoveLabel: z.string().optional(),
+  ref: z.string().optional(),
+  namespace: z.string().optional(),
 });
 
 export type FormSection = z.infer<typeof FormSection>;
+
+export const SubFormDefinition = z.object({
+  description: z.string().optional(),
+  fields: z.array(FormField),
+});
+
+export type SubFormDefinition = z.infer<typeof SubFormDefinition>;
+
+export const CrossFieldRule = z.object({
+  id: z.string(),
+  description: z.string(),
+  when: ConditionExpression,
+  then: z.object({
+    action: z.enum(['require', 'show', 'hide', 'setError']),
+    targets: z.array(z.string()),
+    message: z.string().optional(),
+  }),
+});
+
+export type CrossFieldRule = z.infer<typeof CrossFieldRule>;
 
 export const FormSchema = z.object({
   title: z.string().optional(),
@@ -95,6 +137,8 @@ export const FormSchema = z.object({
   action: z.string().optional(),
   method: z.string().optional(),
   sections: z.array(FormSection),
+  subForms: z.record(z.string(), SubFormDefinition).optional(),
+  crossFieldRules: z.array(CrossFieldRule).optional(),
 });
 
 export type FormSchema = z.infer<typeof FormSchema>;

@@ -4,7 +4,7 @@
  */
 import { load } from 'cheerio';
 import { getAllMappings } from '../generator/component-map.js';
-import type { FormSchema, FormSection, FormField, FieldOption } from '../schema/index.js';
+import type { FormSchema, FormSection, FormField, FieldOption, ConditionExpression } from '../schema/index.js';
 
 /** Build reverse map: (tag, inputType?) → FieldType */
 function buildReverseMap(): Map<string, string> {
@@ -54,14 +54,54 @@ function parseOptions(
   return options.length > 0 ? options : undefined;
 }
 
-function extractField($: ReturnType<typeof load>, el: any): FormField | null {
+/** Parse a data-civ-show-when/hide-when/require-when attribute into a ConditionExpression. */
+function parseConditionAttr(attrValue: string): ConditionExpression | undefined {
+  if (!attrValue) return undefined;
+
+  if (attrValue.endsWith(' exists')) {
+    return { field: attrValue.replace(/ exists$/, ''), operator: 'exists' };
+  }
+  if (attrValue.endsWith(' notExists')) {
+    return { field: attrValue.replace(/ notExists$/, ''), operator: 'notExists' };
+  }
+
+  const inMatch = attrValue.match(/^(.+?) in (.+)$/);
+  if (inMatch) {
+    return { field: inMatch[1], operator: 'in', value: inMatch[2].split(',') };
+  }
+
+  const notInMatch = attrValue.match(/^(.+?) notIn (.+)$/);
+  if (notInMatch) {
+    return { field: notInMatch[1], operator: 'notIn', value: notInMatch[2].split(',') };
+  }
+
+  const neqMatch = attrValue.match(/^(.+?)!=(.+)$/);
+  if (neqMatch) {
+    return { field: neqMatch[1], operator: 'neq', value: neqMatch[2] };
+  }
+
+  const eqMatch = attrValue.match(/^(.+?)=(.+)$/);
+  if (eqMatch) {
+    return { field: eqMatch[1], operator: 'eq', value: eqMatch[2] };
+  }
+
+  return undefined;
+}
+
+/** Strip array indices from field names: dependents[0].name → name */
+function stripArrayPrefix(name: string): string {
+  return name.replace(/^[^[]+\[\d+\]\./, '');
+}
+
+function extractField($: ReturnType<typeof load>, el: any, insideRepeatable = false): FormField | null {
   const $el = $(el);
   const tag = el.tagName;
   if (!tag || !tag.startsWith('civ-')) return null;
 
   const inputType = $el.attr('type') ?? undefined;
   const type = resolveFieldType(tag, inputType) as FormField['type'];
-  const name = $el.attr('name') ?? '';
+  const rawName = $el.attr('name') ?? '';
+  const name = insideRepeatable ? stripArrayPrefix(rawName) : rawName;
   const label = $el.attr('label') ?? $el.attr('legend') ?? '';
 
   const field: FormField = { type, name, label };
@@ -148,6 +188,26 @@ function extractField($: ReturnType<typeof load>, el: any): FormField | null {
     }
   }
 
+  // Conditional visibility / required
+  const showWhen = $el.attr('data-civ-show-when');
+  if (showWhen) {
+    const cond = parseConditionAttr(showWhen);
+    if (cond) field.visibleWhen = cond;
+  }
+  const hideWhen = $el.attr('data-civ-hide-when');
+  if (hideWhen) {
+    const cond = parseConditionAttr(hideWhen);
+    if (cond) {
+      // hide-when with neq operator means "visible when eq"
+      field.visibleWhen = cond;
+    }
+  }
+  const requireWhen = $el.attr('data-civ-require-when');
+  if (requireWhen) {
+    const cond = parseConditionAttr(requireWhen);
+    if (cond) field.requiredWhen = cond;
+  }
+
   return field;
 }
 
@@ -194,13 +254,59 @@ export function formToSchema(html: string): FormSchema {
     schema.title = $heading.text().trim();
   }
 
-  // Process fieldsets as sections
+  // Process repeatable containers first
   const processedEls = new Set<any>();
 
+  $('[data-civ-repeatable]').each((_, containerEl) => {
+    const $container = $(containerEl);
+    const repeatableKey = $container.attr('data-civ-repeatable') ?? '';
+    const repeatableMinAttr = $container.attr('data-civ-repeatable-min');
+    const repeatableMaxAttr = $container.attr('data-civ-repeatable-max');
+
+    // Look for a fieldset heading inside
+    const $innerFieldset = $container.children('civ-fieldset').first();
+    const heading = $innerFieldset.length ? $innerFieldset.attr('legend') : undefined;
+
+    const section: FormSection = {
+      heading,
+      fields: [],
+      repeatable: true,
+      repeatableKey,
+    };
+
+    if (repeatableMinAttr) section.repeatableMin = parseInt(repeatableMinAttr, 10);
+    if (repeatableMaxAttr) section.repeatableMax = parseInt(repeatableMaxAttr, 10);
+
+    const searchRoot = $innerFieldset.length ? $innerFieldset : $container;
+    searchRoot.find(FORM_SELECTOR).each((_, el) => {
+      // Skip template elements
+      if ($(el).closest('[data-civ-repeatable-template]').length > 0) return;
+      // Skip child components of groups
+      if ($(el).parents('civ-radio-group, civ-checkbox-group, civ-segmented-control').length > 0) return;
+
+      const field = extractField($, el, true);
+      if (field) {
+        section.fields.push(field);
+        processedEls.add(el);
+      }
+    });
+
+    if (section.fields.length > 0) {
+      schema.sections.push(section);
+    }
+    // Mark all elements inside the container as processed
+    $container.find(FORM_SELECTOR).each((_, el) => { processedEls.add(el); });
+    processedEls.add(containerEl);
+  });
+
+  // Process fieldsets as sections
   $('civ-fieldset').each((_, fieldsetEl) => {
+    if (processedEls.has(fieldsetEl)) return;
     const $fieldset = $(fieldsetEl);
     // Skip nested fieldsets (they'll be processed by their parent)
     if ($fieldset.parents('civ-fieldset').length > 0) return;
+    // Skip fieldsets inside repeatable containers
+    if ($fieldset.parents('[data-civ-repeatable]').length > 0) return;
 
     const section: FormSection = {
       heading: $fieldset.attr('legend'),
@@ -208,6 +314,7 @@ export function formToSchema(html: string): FormSchema {
     };
 
     $fieldset.find(FORM_SELECTOR).each((_, el) => {
+      if (processedEls.has(el)) return;
       // Skip components inside nested fieldsets
       const $el = $(el);
       const closestFieldset = $el.closest('civ-fieldset');
@@ -236,6 +343,11 @@ export function formToSchema(html: string): FormSchema {
     if ($el.parents('civ-radio-group, civ-checkbox-group, civ-segmented-control').length > 0) {
       return;
     }
+    // Skip elements inside repeatable containers
+    if ($el.parents('[data-civ-repeatable]').length > 0) return;
+    // Skip template elements
+    if ($el.closest('[data-civ-repeatable-template]').length > 0) return;
+
     const field = extractField($, el);
     if (field) {
       remainingSection.fields.push(field);

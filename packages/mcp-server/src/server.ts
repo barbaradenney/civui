@@ -35,6 +35,14 @@ import {
   visualizeFormFlow,
   generatePrintCss,
   migrateSavedData,
+  generateErrorMessages,
+  generateAnalyticsPlan,
+  lintFormLanguage,
+  generatePayloadSchema,
+  compareSchemas,
+  generateValidationSchema,
+  generateA11yTests,
+  generatePrefillMapping,
 } from './tools/index.js';
 import { validateForm } from './validators/index.js';
 import {
@@ -1103,6 +1111,290 @@ export function createServer(): McpServer {
             {
               type: 'text' as const,
               text: `Error migrating saved data: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'generate_error_messages',
+    'Generate a complete error message library for every field and constraint in a FormSchema. ' +
+      'Produces field-specific messages for required, pattern, length, range, and file constraints. ' +
+      'Includes cross-field rule error messages.',
+    {
+      schema: FormSchema.describe('Form schema to generate error messages for'),
+    },
+    async ({ schema }) => {
+      try {
+        const result = generateErrorMessages(schema);
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error generating error messages: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'generate_analytics_plan',
+    'Generate an analytics instrumentation plan for a form schema. ' +
+      'Produces per-field events, funnel steps with expected completion rates, ' +
+      'drop-off risk analysis, and PRA burden metrics.',
+    {
+      schema: FormSchema.describe('Form schema to generate analytics plan for'),
+    },
+    async ({ schema }) => {
+      try {
+        const result = generateAnalyticsPlan(schema);
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error generating analytics plan: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'lint_form_language',
+    'Lint a form schema for plain language issues. ' +
+      'Checks for jargon, abbreviations, passive voice, high reading level, ' +
+      'non-actionable hints, and terminology inconsistency. Returns issues, score, and suggestions.',
+    {
+      schema: FormSchema.describe('Form schema to lint for language issues'),
+    },
+    async ({ schema }) => {
+      try {
+        const result = lintFormLanguage(schema);
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error linting form language: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'generate_payload_schema',
+    'Generate the expected JSON submission payload shape for a form schema. ' +
+      'Respects structural hierarchy: repeatable sections become arrays, ' +
+      'namespaced sections become nested objects. Returns JSON Schema, TypeScript, and example.',
+    {
+      schema: FormSchema.describe('Form schema to generate payload schema for'),
+    },
+    async ({ schema }) => {
+      try {
+        const result = generatePayloadSchema(schema);
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error generating payload schema: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'compare_schemas',
+    'Compare two FormSchema versions and produce a structured diff. ' +
+      'Detects added, removed, changed, and moved fields/sections/steps/rules. ' +
+      'Identifies breaking changes like removed required fields or type changes.',
+    {
+      before: FormSchema.describe('Previous version of the form schema'),
+      after: FormSchema.describe('New version of the form schema'),
+    },
+    async ({ before, after }) => {
+      try {
+        const result = compareSchemas(before, after);
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error comparing schemas: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'generate_validation_schema',
+    'Generate runtime server-side validation code from a FormSchema. ' +
+      'Supports Zod (with superRefine for cross-field rules) and JSON Schema ' +
+      '(Draft-07 with if/then for conditional requirements).',
+    {
+      schema: FormSchema.describe('Form schema to generate validation for'),
+      format: z
+        .enum(['zod', 'json-schema-validation'])
+        .describe('Output format: "zod" or "json-schema-validation"'),
+    },
+    async ({ schema, format }) => {
+      try {
+        const result = generateValidationSchema(schema, format);
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error generating validation schema: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'generate_a11y_tests',
+    'Generate accessibility-focused Vitest tests from CivUI HTML markup. ' +
+      'Creates tests in 6 categories: aria-attributes, keyboard, focus-management, ' +
+      'announcements, semantics, and color-independence.',
+    {
+      html: z
+        .string()
+        .max(MAX_HTML_LENGTH, 'HTML exceeds 10 MB size limit')
+        .describe('CivUI HTML markup to generate accessibility tests for'),
+      suiteName: z
+        .string()
+        .optional()
+        .describe('Name for the test suite (default: "Accessibility")'),
+    },
+    async ({ html, suiteName }) => {
+      try {
+        const result = generateA11yTests(html, suiteName);
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error generating a11y tests: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'generate_prefill_mapping',
+    'Generate intelligent API-to-form field mappings. ' +
+      'Matches fields using exact, normalized, label, and type strategies. ' +
+      'Accepts JSON Schema or example JSON as API schema. ' +
+      'Returns mappings, unmapped fields, confidence score, and mapping code.',
+    {
+      schema: FormSchema.describe('Form schema with fields to map'),
+      apiSchema: z
+        .record(z.string(), z.any())
+        .describe('API schema — JSON Schema (with properties) or example JSON object'),
+      direction: z
+        .enum(['api-to-form', 'form-to-api'])
+        .optional()
+        .default('api-to-form')
+        .describe('Mapping direction (default: "api-to-form")'),
+    },
+    async ({ schema, apiSchema, direction }) => {
+      try {
+        const result = generatePrefillMapping(schema, apiSchema, direction);
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error generating prefill mapping: ${err instanceof Error ? err.message : String(err)}`,
             },
           ],
           isError: true,

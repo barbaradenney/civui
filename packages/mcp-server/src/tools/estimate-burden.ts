@@ -3,29 +3,7 @@
  * Calculates time estimates, complexity, and reading level.
  */
 import type { FormSchema, FormField } from '../schema/index.js';
-
-/** Estimated seconds per field type. */
-const TIME_PER_TYPE: Record<string, number> = {
-  text: 30,
-  email: 30,
-  tel: 30,
-  url: 30,
-  number: 20,
-  password: 20,
-  search: 15,
-  zip: 15,
-  select: 15,
-  radio: 15,
-  checkbox: 15,
-  'checkbox-group': 15,
-  combobox: 20,
-  textarea: 60,
-  ssn: 45,
-  date: 45,
-  'memorable-date': 45,
-  file: 60,
-  toggle: 10,
-};
+import { TIME_PER_TYPE, collectFields } from './shared-utils.js';
 
 export interface BurdenEstimate {
   totalFields: number;
@@ -40,22 +18,6 @@ export interface BurdenEstimate {
   complexity: 'low' | 'medium' | 'high';
   repeatableSections: number;
   estimatedRepeatableItems: number;
-}
-
-/** Flatten all fields including children. */
-function countFields(sections: FormSchema['sections']): FormField[] {
-  const fields: FormField[] = [];
-  for (const section of sections) {
-    for (const field of section.fields) {
-      fields.push(field);
-      if (field.children) {
-        for (const child of field.children) {
-          fields.push(child);
-        }
-      }
-    }
-  }
-  return fields;
 }
 
 /** Analyze reading level of labels and hints. */
@@ -89,7 +51,7 @@ function analyzeReadingLevel(fields: FormField[]): string {
  * Estimate the PRA burden for a form schema.
  */
 export function estimateBurden(schema: FormSchema): BurdenEstimate {
-  const allFields = countFields(schema.sections);
+  const allFields = collectFields(schema.sections);
   const totalFields = allFields.length;
   const requiredFields = allFields.filter((f) => f.required).length;
   const optionalFields = totalFields - requiredFields;

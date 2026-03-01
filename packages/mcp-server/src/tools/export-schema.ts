@@ -2,6 +2,7 @@
  * export_schema tool — export FormSchema as JSON Schema (Draft-07) or TypeScript interface.
  */
 import type { FormSchema, FormField } from '../schema/index.js';
+import { toCamelCase } from './shared-utils.js';
 
 export type ExportFormat = 'json-schema' | 'typescript';
 
@@ -53,10 +54,6 @@ function fieldToJsonSchemaType(field: FormField): Record<string, unknown> {
 
   prop.description = field.label;
   return prop;
-}
-
-function toCamelCase(str: string): string {
-  return str.replace(/[-_](\w)/g, (_, c) => c.toUpperCase());
 }
 
 function fieldToTsType(field: FormField): string {

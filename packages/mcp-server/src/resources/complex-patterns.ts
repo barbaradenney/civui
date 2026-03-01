@@ -444,4 +444,38 @@ Returns Mermaid syntax showing:
 ### Rendering Tips
 
 Paste the \`mermaid\` field into any Mermaid-compatible renderer (GitHub, VS Code, Mermaid Live Editor). The summary field provides a quick overview of complexity.
+
+## Advanced Analysis & Generation Tools
+
+### Error Message Generation
+
+Use \`generate_error_messages\` to produce a complete error message library for every field and constraint in a form schema. Messages follow government plain language guidelines and cover required, pattern, length, range, file, and cross-field rule constraints.
+
+### Analytics Instrumentation
+
+Use \`generate_analytics_plan\` to create a comprehensive analytics plan including per-field events (focus, blur, change), funnel steps with expected completion rates, drop-off risk analysis, and PRA burden metrics.
+
+### Language Linting
+
+Use \`lint_form_language\` to check form labels, hints, and placeholders for jargon, abbreviations, passive voice, high reading levels, and non-actionable text. Returns a 0–100 score and plain language suggestions.
+
+### Payload Schema Generation
+
+Use \`generate_payload_schema\` to generate the expected JSON submission shape. Unlike \`export_schema\`, this respects structural hierarchy: repeatable sections become arrays, namespaced sections become nested objects. Returns JSON Schema, TypeScript interfaces, and example values.
+
+### Schema Comparison
+
+Use \`compare_schemas\` to diff two FormSchema versions. Detects added, removed, changed, and moved fields, sections, steps, and rules. Automatically identifies breaking changes (removed required fields, type changes, removed options, repeatable→non-repeatable).
+
+### Validation Schema Generation
+
+Use \`generate_validation_schema\` to produce server-side validation code. Supports Zod (with \`.superRefine()\` for cross-field rules) and JSON Schema Draft-07 (with \`if/then\` for conditional requirements).
+
+### Accessibility Test Generation
+
+Use \`generate_a11y_tests\` to generate accessibility-focused Vitest tests from CivUI HTML. Tests cover 6 categories: aria-attributes, keyboard navigation, focus management, screen reader announcements, semantic HTML, and color independence.
+
+### Prefill Mapping
+
+Use \`generate_prefill_mapping\` to intelligently match API schema fields to form fields. Uses 4 strategies (exact, normalized, label, type) with confidence scoring. Generates ready-to-use mapping functions for both directions.
 `;

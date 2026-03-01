@@ -59,3 +59,33 @@ export type { PrintCssResult } from './generate-print-css.js';
 
 export { migrateSavedData } from './migrate-saved-data.js';
 export type { MigrateResult } from './migrate-saved-data.js';
+
+export { generateErrorMessages } from './generate-error-messages.js';
+export type { ErrorMessageMap } from './generate-error-messages.js';
+
+export { generateAnalyticsPlan } from './generate-analytics-plan.js';
+export type {
+  AnalyticsPlanResult,
+  AnalyticsEvent,
+  FunnelStep,
+  DropOffRisk,
+  PraMetrics,
+} from './generate-analytics-plan.js';
+
+export { lintFormLanguage } from './lint-form-language.js';
+export type { LintLanguageResult, LanguageIssue } from './lint-form-language.js';
+
+export { generatePayloadSchema } from './generate-payload-schema.js';
+export type { PayloadSchemaResult } from './generate-payload-schema.js';
+
+export { compareSchemas } from './compare-schemas.js';
+export type { CompareResult, SchemaChange } from './compare-schemas.js';
+
+export { generateValidationSchema } from './generate-validation-schema.js';
+export type { ValidationSchemaResult } from './generate-validation-schema.js';
+
+export { generateA11yTests } from './generate-a11y-tests.js';
+export type { A11yTestsResult } from './generate-a11y-tests.js';
+
+export { generatePrefillMapping } from './generate-prefill-mapping.js';
+export type { PrefillMappingResult, FieldMapping } from './generate-prefill-mapping.js';

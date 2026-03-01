@@ -291,4 +291,157 @@ Screen readers need \`aria-live="polite"\` on repeatable containers to announce 
 
 ### Repeatable Sections Without Keyboard Support
 Ensure add/remove buttons are focusable and operable with keyboard. Use \`<button type="button">\` — never \`<div>\` or \`<span>\` with click handlers.
+
+## Cascading/Dependent Options
+
+Use \`optionsFrom\` on a FormField to create dependent option lists (e.g., State → County → City).
+
+### Schema
+
+\`\`\`json
+{
+  "type": "select", "name": "county", "label": "County",
+  "optionsFrom": {
+    "field": "state",
+    "map": {
+      "CA": [{ "value": "la", "label": "Los Angeles" }, { "value": "sf", "label": "San Francisco" }],
+      "TX": [{ "value": "harris", "label": "Harris" }, { "value": "dallas", "label": "Dallas" }]
+    }
+  }
+}
+\`\`\`
+
+### Generated HTML
+
+\`\`\`html
+<civ-select label="County" name="county" data-civ-options-from="state"></civ-select>
+<script type="application/json" data-civ-options-map="county">{"CA":[...],"TX":[...]}</script>
+\`\`\`
+
+### Companion JS Behavior
+
+The \`generate_companion_js\` tool detects \`optionsFrom\` fields and generates an IIFE that:
+1. Listens for \`civ-change\` on the parent field
+2. Looks up the parent value in the JSON map
+3. Sets the child select's options to the matched array
+4. Clears the child value and dispatches \`civ-change\` for downstream cascading
+
+### Validation Rules
+
+- \`cascading-source-missing\` (error): Parent field name doesn't exist in the form
+- \`cascading-empty-map\` (warning): Options map has no entries
+
+## Table/Grid Input
+
+Use \`layout: 'table'\` on a repeatable FormSection to render fields as table columns.
+
+### Schema
+
+\`\`\`json
+{
+  "heading": "Income Sources",
+  "repeatable": true, "repeatableKey": "income",
+  "layout": "table",
+  "fields": [
+    { "type": "text", "name": "source", "label": "Source" },
+    { "type": "text", "name": "amount", "label": "Amount" }
+  ]
+}
+\`\`\`
+
+### Generated HTML
+
+\`\`\`html
+<div data-civ-repeatable="income" data-civ-layout="table" aria-live="polite">
+  <h3>Income Sources</h3>
+  <table class="civ-w-full civ-border-collapse">
+    <thead>
+      <tr>
+        <th scope="col">Source</th>
+        <th scope="col">Amount</th>
+        <th scope="col"><span class="civ-sr-only">Actions</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr data-civ-repeatable-item>
+        <td><civ-text-input aria-label="Source" name="income[0].source"></civ-text-input></td>
+        <td><civ-text-input aria-label="Amount" name="income[0].amount"></civ-text-input></td>
+        <td><button type="button" data-civ-repeatable-remove>Remove row</button></td>
+      </tr>
+    </tbody>
+  </table>
+  <button type="button" data-civ-repeatable-add>Add row</button>
+</div>
+\`\`\`
+
+### Key Notes
+
+- Fields use \`aria-label\` instead of visible \`label\` (the \`<th>\` serves as the visible label)
+- Use \`tableColumns\` array to control column order
+- Companion JS clones \`<tr>\` instead of \`<civ-fieldset>\` and appends to \`<tbody>\`
+- \`table-layout-not-repeatable\` (warning): table layout without repeatable container
+
+## Print Stylesheets
+
+Use \`generate_print_css\` to produce a \`@media print\` stylesheet for a form.
+
+### Usage
+
+\`\`\`
+generate_print_css({ schema: myFormSchema })
+\`\`\`
+
+Returns CSS with feature-specific rules:
+- **base**: Focus ring removal, page-break avoidance, \`<dl>\` grid formatting
+- **wizard**: Shows all steps, hides navigation and progress indicator
+- **repeatable**: Hides add/remove buttons
+- **conditional**: Shows all conditional sections
+- **table**: Table borders, thead repeat, cell padding
+
+## Schema Migration
+
+Use \`migrate_saved_data\` to map saved form values from an old schema version to a new version.
+
+### Usage
+
+\`\`\`
+migrate_saved_data({
+  oldSchema: v1Schema,
+  newSchema: v2Schema,
+  savedValues: { "first-name": "Jane", "ssn": "123-45-6789" },
+  fieldMappings: { "first-name": "given-name" }
+})
+\`\`\`
+
+### Mapping Strategy
+
+1. **Direct match** — same field name in both schemas → copy value
+2. **Explicit rename** — \`fieldMappings\` maps old name → new name
+3. **Repeatable fields** — parses \`key[N].field\`, applies mappings to base name + key
+4. **Type mismatch** — if a mapped field changed type, emits a warning
+5. **Dropped** — old field not in new schema → \`droppedFields\`
+6. **Unmapped** — new field with no value → \`unmappedFields\`
+
+## Branching Visualization
+
+Use \`visualize_form_flow\` to generate a Mermaid flowchart of a form's structure.
+
+### Usage
+
+\`\`\`
+visualize_form_flow({ schema: myFormSchema })
+\`\`\`
+
+Returns Mermaid syntax showing:
+- **Wizard steps** as stadium nodes with sequential flow
+- **Sections** as rounded rectangles linked to steps
+- **Repeatable sections** as hexagons
+- **Table sections** as trapezoids
+- **Conditional visibility** as dashed edges with condition labels
+- **Cross-field rules** as dashed edges with rule descriptions
+- **Cascading options** as solid edges labeled "cascading"
+
+### Rendering Tips
+
+Paste the \`mermaid\` field into any Mermaid-compatible renderer (GitHub, VS Code, Mermaid Live Editor). The summary field provides a quick overview of complexity.
 `;

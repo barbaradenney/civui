@@ -274,4 +274,99 @@ describe('formToSchema', () => {
     const infoSection = schema.sections.find((s) => s.heading === 'Info');
     expect(infoSection?.step).toBe(0);
   });
+
+  // ---- Cascading options ----
+
+  it('parses data-civ-options-from and script map', () => {
+    const html = `
+      <civ-select label="State" name="state" options='[{"value":"CA","label":"CA"}]'></civ-select>
+      <civ-select label="County" name="county" data-civ-options-from="state"></civ-select>
+      <script type="application/json" data-civ-options-map="county">{"CA":[{"value":"la","label":"Los Angeles"}]}</script>
+    `;
+    const schema = formToSchema(html);
+    const county = schema.sections[0].fields.find((f) => f.name === 'county');
+    expect(county?.optionsFrom).toBeDefined();
+    expect(county?.optionsFrom?.field).toBe('state');
+    expect(county?.optionsFrom?.map.CA).toEqual([{ value: 'la', label: 'Los Angeles' }]);
+  });
+
+  it('handles missing script gracefully for cascading options', () => {
+    const html = `
+      <civ-select label="County" name="county" data-civ-options-from="state"></civ-select>
+    `;
+    const schema = formToSchema(html);
+    const county = schema.sections[0].fields.find((f) => f.name === 'county');
+    expect(county?.optionsFrom).toBeDefined();
+    expect(county?.optionsFrom?.field).toBe('state');
+    expect(county?.optionsFrom?.map).toEqual({});
+  });
+
+  // ---- Table layout ----
+
+  it('detects table layout from data-civ-layout="table"', () => {
+    const html = `
+      <div data-civ-repeatable="income" data-civ-layout="table" aria-live="polite">
+        <h3>Income Sources</h3>
+        <table class="civ-w-full civ-border-collapse">
+          <thead><tr><th scope="col">Source</th><th scope="col">Amount</th><th scope="col"><span class="civ-sr-only">Actions</span></th></tr></thead>
+          <tbody>
+            <tr data-civ-repeatable-item>
+              <td><civ-text-input aria-label="Source" name="income[0].source"></civ-text-input></td>
+              <td><civ-text-input aria-label="Amount" name="income[0].amount"></civ-text-input></td>
+              <td><button type="button" data-civ-repeatable-remove>Remove row</button></td>
+            </tr>
+          </tbody>
+        </table>
+        <button type="button" data-civ-repeatable-add>Add row</button>
+      </div>
+    `;
+    const schema = formToSchema(html);
+    const section = schema.sections.find((s) => s.repeatableKey === 'income');
+    expect(section).toBeDefined();
+    expect(section!.layout).toBe('table');
+    expect(section!.heading).toBe('Income Sources');
+    expect(section!.repeatable).toBe(true);
+  });
+
+  it('extracts tableColumns from table layout', () => {
+    const html = `
+      <div data-civ-repeatable="items" data-civ-layout="table" aria-live="polite">
+        <table>
+          <thead><tr><th scope="col">Name</th><th scope="col">Price</th><th scope="col"><span class="civ-sr-only">Actions</span></th></tr></thead>
+          <tbody>
+            <tr data-civ-repeatable-item>
+              <td><civ-text-input aria-label="Name" name="items[0].name"></civ-text-input></td>
+              <td><civ-text-input aria-label="Price" name="items[0].price"></civ-text-input></td>
+              <td><button type="button" data-civ-repeatable-remove>Remove</button></td>
+            </tr>
+          </tbody>
+        </table>
+        <button type="button" data-civ-repeatable-add>Add</button>
+      </div>
+    `;
+    const schema = formToSchema(html);
+    const section = schema.sections.find((s) => s.repeatableKey === 'items');
+    expect(section?.tableColumns).toEqual(['name', 'price']);
+  });
+
+  it('extracts field labels from aria-label in table layout', () => {
+    const html = `
+      <div data-civ-repeatable="items" data-civ-layout="table" aria-live="polite">
+        <table>
+          <thead><tr><th scope="col">Source</th><th scope="col"><span class="civ-sr-only">Actions</span></th></tr></thead>
+          <tbody>
+            <tr data-civ-repeatable-item>
+              <td><civ-text-input aria-label="Source" name="items[0].source"></civ-text-input></td>
+              <td><button type="button" data-civ-repeatable-remove>Remove</button></td>
+            </tr>
+          </tbody>
+        </table>
+        <button type="button" data-civ-repeatable-add>Add</button>
+      </div>
+    `;
+    const schema = formToSchema(html);
+    const section = schema.sections.find((s) => s.repeatableKey === 'items');
+    expect(section?.fields[0].label).toBe('Source');
+    expect(section?.fields[0].name).toBe('source');
+  });
 });

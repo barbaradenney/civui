@@ -661,4 +661,180 @@ describe('generateCivUI', () => {
     expect(html).toContain('data-civ-step="0"');
     expect(html).toContain('name="x"');
   });
+
+  // ---- Cascading options ----
+
+  it('emits data-civ-options-from and script sibling for cascading select', () => {
+    const schema: FormSchema = {
+      sections: [
+        {
+          fields: [
+            {
+              type: 'select', name: 'county', label: 'County',
+              optionsFrom: {
+                field: 'state',
+                map: {
+                  CA: [{ value: 'la', label: 'Los Angeles' }],
+                  TX: [{ value: 'harris', label: 'Harris' }],
+                },
+              },
+            },
+          ],
+        },
+      ],
+    };
+    const html = generateCivUI(schema);
+    expect(html).toContain('data-civ-options-from="state"');
+    expect(html).toContain('data-civ-options-map="county"');
+    expect(html).toContain('"CA"');
+    expect(html).toContain('"TX"');
+    expect(html).toContain('Los Angeles');
+  });
+
+  it('escapes JSON in cascading options map script', () => {
+    const schema: FormSchema = {
+      sections: [
+        {
+          fields: [
+            {
+              type: 'select', name: 'sub', label: 'Sub',
+              optionsFrom: {
+                field: 'parent',
+                map: {
+                  'a"b': [{ value: 'x', label: 'X' }],
+                },
+              },
+            },
+          ],
+        },
+      ],
+    };
+    const html = generateCivUI(schema);
+    // Script content uses JSON.stringify which handles quotes
+    expect(html).toContain('data-civ-options-map="sub"');
+  });
+
+  // ---- Table layout ----
+
+  it('generates table structure for table layout repeatable section', () => {
+    const schema: FormSchema = {
+      sections: [
+        {
+          heading: 'Income Sources',
+          repeatable: true,
+          repeatableKey: 'income',
+          layout: 'table',
+          fields: [
+            { type: 'text', name: 'source', label: 'Source' },
+            { type: 'text', name: 'amount', label: 'Amount' },
+          ],
+        },
+      ],
+    };
+    const html = generateCivUI(schema);
+    expect(html).toContain('data-civ-repeatable="income"');
+    expect(html).toContain('data-civ-layout="table"');
+    expect(html).toContain('<table');
+    expect(html).toContain('<thead>');
+    expect(html).toContain('<tbody>');
+    expect(html).toContain('<th scope="col">Source</th>');
+    expect(html).toContain('<th scope="col">Amount</th>');
+    expect(html).toContain('<tr data-civ-repeatable-item>');
+    expect(html).toContain('aria-label="Source"');
+    expect(html).toContain('aria-label="Amount"');
+    expect(html).toContain('name="income[0].source"');
+    expect(html).toContain('name="income[0].amount"');
+    expect(html).toContain('data-civ-repeatable-remove');
+    expect(html).toContain('data-civ-repeatable-add');
+  });
+
+  it('table layout uses heading as h3', () => {
+    const schema: FormSchema = {
+      sections: [
+        {
+          heading: 'Line Items',
+          repeatable: true,
+          repeatableKey: 'items',
+          layout: 'table',
+          fields: [{ type: 'text', name: 'desc', label: 'Description' }],
+        },
+      ],
+    };
+    const html = generateCivUI(schema);
+    expect(html).toContain('<h3>Line Items</h3>');
+    expect(html).not.toContain('civ-fieldset');
+  });
+
+  it('table layout has sr-only Actions column header', () => {
+    const schema: FormSchema = {
+      sections: [
+        {
+          repeatable: true,
+          repeatableKey: 'items',
+          layout: 'table',
+          fields: [{ type: 'text', name: 'x', label: 'X' }],
+        },
+      ],
+    };
+    const html = generateCivUI(schema);
+    expect(html).toContain('<span class="civ-sr-only">Actions</span>');
+  });
+
+  it('tableColumns controls column order', () => {
+    const schema: FormSchema = {
+      sections: [
+        {
+          repeatable: true,
+          repeatableKey: 'items',
+          layout: 'table',
+          tableColumns: ['amount', 'source'],
+          fields: [
+            { type: 'text', name: 'source', label: 'Source' },
+            { type: 'text', name: 'amount', label: 'Amount' },
+          ],
+        },
+      ],
+    };
+    const html = generateCivUI(schema);
+    const amountPos = html.indexOf('Amount');
+    const sourcePos = html.indexOf('Source');
+    expect(amountPos).toBeLessThan(sourcePos);
+  });
+
+  it('table layout includes add button outside table', () => {
+    const schema: FormSchema = {
+      sections: [
+        {
+          repeatable: true,
+          repeatableKey: 'items',
+          layout: 'table',
+          fields: [{ type: 'text', name: 'x', label: 'X' }],
+        },
+      ],
+    };
+    const html = generateCivUI(schema);
+    const tableEndPos = html.indexOf('</table>');
+    const addBtnPos = html.indexOf('data-civ-repeatable-add');
+    expect(addBtnPos).toBeGreaterThan(tableEndPos);
+  });
+
+  it('table layout remove button is inside each row', () => {
+    const schema: FormSchema = {
+      sections: [
+        {
+          repeatable: true,
+          repeatableKey: 'items',
+          layout: 'table',
+          fields: [{ type: 'text', name: 'x', label: 'X' }],
+        },
+      ],
+    };
+    const html = generateCivUI(schema);
+    const trPos = html.indexOf('<tr data-civ-repeatable-item>');
+    const removeBtnPos = html.indexOf('data-civ-repeatable-remove');
+    // Find the </tr> after the repeatable item row, not the header row
+    const trEndPos = html.indexOf('</tr>', trPos);
+    expect(removeBtnPos).toBeGreaterThan(trPos);
+    expect(removeBtnPos).toBeLessThan(trEndPos);
+  });
 });

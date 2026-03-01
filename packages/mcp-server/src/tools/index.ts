@@ -50,3 +50,12 @@ export type { PrefillJsResult } from './generate-prefill-js.js';
 
 export { generateSummary } from './generate-summary.js';
 export type { SummaryResult } from './generate-summary.js';
+
+export { visualizeFormFlow } from './visualize-form-flow.js';
+export type { VisualizeResult } from './visualize-form-flow.js';
+
+export { generatePrintCss } from './generate-print-css.js';
+export type { PrintCssResult } from './generate-print-css.js';
+
+export { migrateSavedData } from './migrate-saved-data.js';
+export type { MigrateResult } from './migrate-saved-data.js';

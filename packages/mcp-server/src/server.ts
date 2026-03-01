@@ -32,6 +32,9 @@ import {
   generateWizard,
   generatePrefillJs,
   generateSummary,
+  visualizeFormFlow,
+  generatePrintCss,
+  migrateSavedData,
 } from './tools/index.js';
 import { validateForm } from './validators/index.js';
 import {
@@ -993,6 +996,113 @@ export function createServer(): McpServer {
             {
               type: 'text' as const,
               text: `Error generating summary: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'visualize_form_flow',
+    'Generate a Mermaid flowchart visualizing a form\'s conditional logic, ' +
+      'wizard steps, cascading options, and cross-field rules. ' +
+      'Returns Mermaid syntax plus node/edge counts and a summary.',
+    {
+      schema: FormSchema.describe('Form schema to visualize'),
+    },
+    async ({ schema }) => {
+      try {
+        const result = visualizeFormFlow(schema);
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error visualizing form flow: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'generate_print_css',
+    'Generate a @media print stylesheet for a CivUI form schema. ' +
+      'Includes base print styles plus feature-specific rules for wizards, ' +
+      'repeatable sections, conditional visibility, and table layouts.',
+    {
+      schema: FormSchema.describe('Form schema to generate print CSS for'),
+    },
+    async ({ schema }) => {
+      try {
+        const result = generatePrintCss(schema);
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error generating print CSS: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'migrate_saved_data',
+    'Migrate saved form values from an old schema to a new schema. ' +
+      'Handles direct matches, explicit renames via fieldMappings, ' +
+      'repeatable field index preservation, and type mismatch warnings.',
+    {
+      oldSchema: FormSchema.describe('Previous version of the form schema'),
+      newSchema: FormSchema.describe('Current version of the form schema'),
+      savedValues: z
+        .record(z.string(), z.union([z.string(), z.array(z.string())]))
+        .describe('Saved field values from the old form (name → value)'),
+      fieldMappings: z
+        .record(z.string(), z.string())
+        .optional()
+        .describe('Optional old field name → new field name mappings for renamed fields'),
+    },
+    async ({ oldSchema, newSchema, savedValues, fieldMappings }) => {
+      try {
+        const result = migrateSavedData(oldSchema, newSchema, savedValues, fieldMappings);
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error migrating saved data: ${err instanceof Error ? err.message : String(err)}`,
             },
           ],
           isError: true,

@@ -5,12 +5,12 @@ import { RULES } from './rules.js';
 describe('validateForm', () => {
   // ---- Meta ----
 
-  it('has 37 rules total (16 errors + 21 warnings)', () => {
+  it('has 40 rules total (17 errors + 23 warnings)', () => {
     const errors = RULES.filter((r) => r.severity === 'error');
     const warnings = RULES.filter((r) => r.severity === 'warning');
-    expect(errors).toHaveLength(16);
-    expect(warnings).toHaveLength(21);
-    expect(RULES).toHaveLength(37);
+    expect(errors).toHaveLength(17);
+    expect(warnings).toHaveLength(23);
+    expect(RULES).toHaveLength(40);
   });
 
   it('returns valid:true and empty arrays for valid markup', () => {
@@ -719,6 +719,102 @@ describe('validateForm', () => {
       `;
       const result = validateForm(html);
       expect(result.warnings.some((w) => w.rule === 'wizard-step-no-fields')).toBe(true);
+    });
+  });
+
+  // ---- Cascading rules ----
+
+  describe('cascading-source-missing', () => {
+    it('flags when parent field does not exist', () => {
+      const html = `
+        <civ-form>
+          <civ-select label="County" name="county" data-civ-options-from="nonexistent"></civ-select>
+          <script type="application/json" data-civ-options-map="county">{"CA":[]}</script>
+        </civ-form>
+      `;
+      const result = validateForm(html);
+      expect(result.errors.some((e) => e.rule === 'cascading-source-missing')).toBe(true);
+    });
+
+    it('does not flag when parent field exists', () => {
+      const html = `
+        <civ-form>
+          <civ-select label="State" name="state" options='[{"value":"CA","label":"CA"}]'></civ-select>
+          <civ-select label="County" name="county" data-civ-options-from="state"></civ-select>
+          <script type="application/json" data-civ-options-map="county">{"CA":[{"value":"la","label":"LA"}]}</script>
+        </civ-form>
+      `;
+      const result = validateForm(html);
+      expect(result.errors.some((e) => e.rule === 'cascading-source-missing')).toBe(false);
+    });
+  });
+
+  describe('cascading-empty-map', () => {
+    it('warns when options map is empty', () => {
+      const html = `
+        <civ-form>
+          <civ-select label="State" name="state" options='[{"value":"CA","label":"CA"}]'></civ-select>
+          <civ-select label="County" name="county" data-civ-options-from="state"></civ-select>
+          <script type="application/json" data-civ-options-map="county">{}</script>
+        </civ-form>
+      `;
+      const result = validateForm(html);
+      expect(result.warnings.some((w) => w.rule === 'cascading-empty-map')).toBe(true);
+    });
+
+    it('does not warn when options map has entries', () => {
+      const html = `
+        <civ-form>
+          <civ-select label="State" name="state" options='[{"value":"CA","label":"CA"}]'></civ-select>
+          <civ-select label="County" name="county" data-civ-options-from="state"></civ-select>
+          <script type="application/json" data-civ-options-map="county">{"CA":[{"value":"la","label":"LA"}]}</script>
+        </civ-form>
+      `;
+      const result = validateForm(html);
+      expect(result.warnings.some((w) => w.rule === 'cascading-empty-map')).toBe(false);
+    });
+  });
+
+  describe('empty-select-options with cascading', () => {
+    it('does not flag select with data-civ-options-from', () => {
+      const html = `
+        <civ-form>
+          <civ-select label="State" name="state" options='[{"value":"CA","label":"CA"}]'></civ-select>
+          <civ-select label="County" name="county" data-civ-options-from="state"></civ-select>
+          <script type="application/json" data-civ-options-map="county">{"CA":[{"value":"la","label":"LA"}]}</script>
+        </civ-form>
+      `;
+      const result = validateForm(html);
+      expect(result.errors.some((e) => e.rule === 'empty-select-options' && e.message.includes('county'))).toBe(false);
+    });
+  });
+
+  // ---- Table rules ----
+
+  describe('table-layout-not-repeatable', () => {
+    it('warns when table layout is used without repeatable', () => {
+      const html = `
+        <civ-form>
+          <div data-civ-layout="table">
+            <table><tbody><tr><td><civ-text-input label="X" name="x"></civ-text-input></td></tr></tbody></table>
+          </div>
+        </civ-form>
+      `;
+      const result = validateForm(html);
+      expect(result.warnings.some((w) => w.rule === 'table-layout-not-repeatable')).toBe(true);
+    });
+
+    it('does not warn when table layout has repeatable', () => {
+      const html = `
+        <civ-form>
+          <div data-civ-repeatable="items" data-civ-layout="table" aria-live="polite">
+            <table><tbody><tr data-civ-repeatable-item><td><civ-text-input aria-label="X" name="items[0].x"></civ-text-input></td><td><button type="button" data-civ-repeatable-remove>Remove</button></td></tr></tbody></table>
+            <button type="button" data-civ-repeatable-add>Add</button>
+          </div>
+        </civ-form>
+      `;
+      const result = validateForm(html);
+      expect(result.warnings.some((w) => w.rule === 'table-layout-not-repeatable')).toBe(false);
     });
   });
 });

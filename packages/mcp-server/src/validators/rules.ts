@@ -313,7 +313,8 @@ const emptySelectOptions: Rule = {
         const $el = $(el);
         const hasOptionsAttr = $el.attr('options') !== undefined;
         const hasChildOptions = $el.children('option').length > 0;
-        if (!hasOptionsAttr && !hasChildOptions) {
+        const hasCascading = $el.attr('data-civ-options-from') !== undefined;
+        if (!hasOptionsAttr && !hasChildOptions && !hasCascading) {
           violations.push({
             rule: 'empty-select-options',
             severity: 'error',
@@ -1010,6 +1011,89 @@ const wizardStepNoFields: Rule = {
   },
 };
 
+// --- Cascading / table rules ---
+
+const cascadingSourceMissing: Rule = {
+  id: 'cascading-source-missing',
+  severity: 'error',
+  description: 'Cascading options source field does not exist in the form',
+  check($, violations) {
+    const fieldNames = new Set<string>();
+    for (const tag of FORM_COMPONENTS) {
+      $(tag).each((_, el) => {
+        const name = $(el).attr('name');
+        if (name) fieldNames.add(name);
+      });
+    }
+
+    $('[data-civ-options-from]').each((_, el) => {
+      const parentField = $(el).attr('data-civ-options-from') ?? '';
+      if (parentField && !fieldNames.has(parentField)) {
+        violations.push({
+          rule: 'cascading-source-missing',
+          severity: 'error',
+          message: `data-civ-options-from references field "${parentField}" which does not exist in the form`,
+          element: (el as unknown as { tagName: string }).tagName ?? 'unknown',
+          fix: `Ensure a form component with name="${parentField}" exists in the form`,
+        });
+      }
+    });
+  },
+};
+
+const cascadingEmptyMap: Rule = {
+  id: 'cascading-empty-map',
+  severity: 'warning',
+  description: 'Cascading options map has no entries',
+  check($, violations) {
+    $('[data-civ-options-from]').each((_, el) => {
+      const childName = $(el).attr('name') ?? '';
+      const mapScript = $(`script[data-civ-options-map="${childName}"]`);
+      if (mapScript.length) {
+        try {
+          const map = JSON.parse(mapScript.text() || '{}');
+          if (Object.keys(map).length === 0) {
+            violations.push({
+              rule: 'cascading-empty-map',
+              severity: 'warning',
+              message: `Cascading options map for "${childName}" has no entries`,
+              element: (el as unknown as { tagName: string }).tagName ?? 'unknown',
+              fix: 'Add parent value → options entries to the cascading options map',
+            });
+          }
+        } catch {
+          violations.push({
+            rule: 'cascading-empty-map',
+            severity: 'warning',
+            message: `Cascading options map for "${childName}" contains invalid JSON`,
+            element: (el as unknown as { tagName: string }).tagName ?? 'unknown',
+            fix: 'Ensure the script[data-civ-options-map] contains valid JSON',
+          });
+        }
+      }
+    });
+  },
+};
+
+const tableLayoutNotRepeatable: Rule = {
+  id: 'table-layout-not-repeatable',
+  severity: 'warning',
+  description: 'Table layout used without repeatable container',
+  check($, violations) {
+    $('[data-civ-layout="table"]').each((_, el) => {
+      if (!$(el).attr('data-civ-repeatable')) {
+        violations.push({
+          rule: 'table-layout-not-repeatable',
+          severity: 'warning',
+          message: 'data-civ-layout="table" is used without data-civ-repeatable',
+          element: (el as unknown as { tagName: string }).tagName ?? 'unknown',
+          fix: 'Add data-civ-repeatable="key" to the table layout container',
+        });
+      }
+    });
+  },
+};
+
 /** All validation rules. */
 export const RULES: Rule[] = [
   // Errors
@@ -1029,6 +1113,7 @@ export const RULES: Rule[] = [
   repeatableMissingButtons,
   conditionalTargetMissing,
   wizardMissingProgress,
+  cascadingSourceMissing,
   // Warnings
   genericRequiredMessage,
   missingHintDate,
@@ -1051,4 +1136,6 @@ export const RULES: Rule[] = [
   repeatableNoMin,
   wizardStepGap,
   wizardStepNoFields,
+  cascadingEmptyMap,
+  tableLayoutNotRepeatable,
 ];

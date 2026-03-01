@@ -111,7 +111,7 @@ function extractField($: ReturnType<typeof load>, el: any, insideRepeatable = fa
   const type = resolveFieldType(tag, inputType) as FormField['type'];
   const rawName = $el.attr('name') ?? '';
   const name = insideRepeatable ? stripArrayPrefix(rawName) : rawName;
-  const label = $el.attr('label') ?? $el.attr('legend') ?? '';
+  const label = $el.attr('label') ?? $el.attr('legend') ?? $el.attr('aria-label') ?? '';
 
   const field: FormField = { type, name, label };
 
@@ -194,6 +194,24 @@ function extractField($: ReturnType<typeof load>, el: any, insideRepeatable = fa
         options.push({ value: val, label: lbl });
       });
       if (options.length > 0) field.options = options;
+    }
+  }
+
+  // Cascading options
+  const optionsFromField = $el.attr('data-civ-options-from');
+  if (optionsFromField) {
+    const fieldName = $el.attr('name') ?? '';
+    const mapScript = $(`script[data-civ-options-map="${fieldName}"]`);
+    if (mapScript.length) {
+      try {
+        const map = JSON.parse(mapScript.text());
+        field.optionsFrom = { field: optionsFromField, map };
+      } catch {
+        // If JSON is invalid, still record the dependency without map
+        field.optionsFrom = { field: optionsFromField, map: {} };
+      }
+    } else {
+      field.optionsFrom = { field: optionsFromField, map: {} };
     }
   }
 
@@ -287,9 +305,18 @@ export function formToSchema(html: string): FormSchema {
     const repeatableMinAttr = $container.attr('data-civ-repeatable-min');
     const repeatableMaxAttr = $container.attr('data-civ-repeatable-max');
 
-    // Look for a fieldset heading inside
+    // Detect table layout
+    const isTable = $container.attr('data-civ-layout') === 'table';
+
+    // Look for a fieldset heading inside, or h3 for table layout
     const $innerFieldset = $container.children('civ-fieldset').first();
-    const heading = $innerFieldset.length ? $innerFieldset.attr('legend') : undefined;
+    let heading: string | undefined;
+    if (isTable) {
+      const $h3 = $container.children('h3').first();
+      heading = $h3.length ? $h3.text().trim() : undefined;
+    } else {
+      heading = $innerFieldset.length ? $innerFieldset.attr('legend') : undefined;
+    }
 
     const section: FormSection = {
       heading,
@@ -297,6 +324,31 @@ export function formToSchema(html: string): FormSchema {
       repeatable: true,
       repeatableKey,
     };
+
+    if (isTable) {
+      section.layout = 'table';
+      // Extract tableColumns from thead
+      const tableColumns: string[] = [];
+      $container.find('thead th[scope="col"]').each((_, th) => {
+        const text = $(th).text().trim();
+        if (text && text !== 'Actions') {
+          tableColumns.push(text);
+        }
+      });
+      // Extract field names from first row to map column labels to field names
+      const fieldNames: string[] = [];
+      const $firstRow = $container.find('tbody tr[data-civ-repeatable-item]').first();
+      if ($firstRow.length) {
+        $firstRow.find(FORM_SELECTOR).each((_, el) => {
+          const rawName = $(el).attr('name') ?? '';
+          const name = stripArrayPrefix(rawName);
+          if (name) fieldNames.push(name);
+        });
+      }
+      if (fieldNames.length > 0) {
+        section.tableColumns = fieldNames;
+      }
+    }
 
     if (repeatableMinAttr) section.repeatableMin = parseInt(repeatableMinAttr, 10);
     if (repeatableMaxAttr) section.repeatableMax = parseInt(repeatableMaxAttr, 10);
@@ -314,19 +366,27 @@ export function formToSchema(html: string): FormSchema {
       section.step = parseInt($parentStep.attr('data-civ-step')!, 10);
     }
 
-    const searchRoot = $innerFieldset.length ? $innerFieldset : $container;
-    searchRoot.find(FORM_SELECTOR).each((_, el) => {
-      // Skip template elements
-      if ($(el).closest('[data-civ-repeatable-template]').length > 0) return;
-      // Skip child components of groups
-      if ($(el).parents('civ-radio-group, civ-checkbox-group, civ-segmented-control').length > 0) return;
+    let searchRoot;
+    if (isTable) {
+      // For table layout, extract from the first row only
+      searchRoot = $container.find('tbody tr[data-civ-repeatable-item]').first();
+    } else {
+      searchRoot = $innerFieldset.length ? $innerFieldset : $container;
+    }
+    if (searchRoot.length) {
+      searchRoot.find(FORM_SELECTOR).each((_, el) => {
+        // Skip template elements
+        if ($(el).closest('[data-civ-repeatable-template]').length > 0) return;
+        // Skip child components of groups
+        if ($(el).parents('civ-radio-group, civ-checkbox-group, civ-segmented-control').length > 0) return;
 
-      const field = extractField($, el, true);
-      if (field) {
-        section.fields.push(field);
-        processedEls.add(el);
-      }
-    });
+        const field = extractField($, el, true);
+        if (field) {
+          section.fields.push(field);
+          processedEls.add(el);
+        }
+      });
+    }
 
     if (section.fields.length > 0) {
       schema.sections.push(section);

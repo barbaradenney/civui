@@ -95,6 +95,10 @@ export interface FormField {
   visibleWhen?: ConditionExpression;
   requiredWhen?: ConditionExpression;
   entityType?: string;
+  optionsFrom?: {
+    field: string;
+    map: Record<string, FieldOption[]>;
+  };
 }
 
 export const FormField: z.ZodType<FormField> = z.object({
@@ -123,6 +127,10 @@ export const FormField: z.ZodType<FormField> = z.object({
   visibleWhen: ConditionExpression.optional(),
   requiredWhen: ConditionExpression.optional(),
   entityType: z.string().optional(),
+  optionsFrom: z.object({
+    field: z.string(),
+    map: z.record(z.string(), z.array(FieldOption)),
+  }).optional(),
 });
 
 export const FormSection = z.object({
@@ -138,6 +146,8 @@ export const FormSection = z.object({
   namespace: z.string().optional(),
   step: z.number().optional(),
   visibleWhen: ConditionExpression.optional(),
+  layout: z.enum(['default', 'table']).optional(),
+  tableColumns: z.array(z.string()).optional(),
 });
 
 export type FormSection = z.infer<typeof FormSection>;

@@ -268,4 +268,108 @@ describe('generateCompanionJs', () => {
     const result = generateCompanionJs(schema);
     expect(result.features).toContain('conditional-visibility');
   });
+
+  // ---- Cascading options ----
+
+  it('detects cascading-options feature', () => {
+    const schema: FormSchema = {
+      sections: [
+        {
+          fields: [
+            { type: 'select', name: 'state', label: 'State', options: [{ value: 'CA', label: 'CA' }] },
+            {
+              type: 'select', name: 'county', label: 'County',
+              optionsFrom: { field: 'state', map: { CA: [{ value: 'la', label: 'LA' }] } },
+            },
+          ],
+        },
+      ],
+    };
+    const result = generateCompanionJs(schema);
+    expect(result.features).toContain('cascading-options');
+  });
+
+  it('cascading JS references data-civ-options-from and options-map', () => {
+    const schema: FormSchema = {
+      sections: [
+        {
+          fields: [
+            { type: 'select', name: 'state', label: 'State', options: [{ value: 'CA', label: 'CA' }] },
+            {
+              type: 'select', name: 'county', label: 'County',
+              optionsFrom: { field: 'state', map: { CA: [{ value: 'la', label: 'LA' }] } },
+            },
+          ],
+        },
+      ],
+    };
+    const result = generateCompanionJs(schema);
+    expect(result.javascript).toContain('data-civ-options-from');
+    expect(result.javascript).toContain('data-civ-options-map');
+  });
+
+  it('does not add cascading-options for schemas without optionsFrom', () => {
+    const schema: FormSchema = {
+      sections: [
+        {
+          fields: [{ type: 'text', name: 'x', label: 'X' }],
+        },
+      ],
+    };
+    const result = generateCompanionJs(schema);
+    expect(result.features).not.toContain('cascading-options');
+  });
+
+  // ---- Table-aware repeatable ----
+
+  it('generates table-aware repeatable JS for table layout', () => {
+    const schema: FormSchema = {
+      sections: [
+        {
+          heading: 'Income',
+          repeatable: true,
+          repeatableKey: 'income',
+          layout: 'table',
+          fields: [{ type: 'text', name: 'source', label: 'Source' }],
+        },
+      ],
+    };
+    const result = generateCompanionJs(schema);
+    expect(result.features).toContain('repeatable');
+    expect(result.javascript).toContain('Table repeatable section: income');
+    expect(result.javascript).toContain('tbody');
+    expect(result.javascript).toContain('tr[data-civ-repeatable-item]');
+  });
+
+  it('table repeatable JS includes row add/remove announcements', () => {
+    const schema: FormSchema = {
+      sections: [
+        {
+          repeatable: true,
+          repeatableKey: 'items',
+          layout: 'table',
+          fields: [{ type: 'text', name: 'x', label: 'X' }],
+        },
+      ],
+    };
+    const result = generateCompanionJs(schema);
+    expect(result.javascript).toContain('Row added');
+    expect(result.javascript).toContain('Row removed');
+  });
+
+  it('uses standard repeatable JS for non-table repeatable sections', () => {
+    const schema: FormSchema = {
+      sections: [
+        {
+          heading: 'Items',
+          repeatable: true,
+          repeatableKey: 'items',
+          fields: [{ type: 'text', name: 'x', label: 'X' }],
+        },
+      ],
+    };
+    const result = generateCompanionJs(schema);
+    expect(result.javascript).not.toContain('Table repeatable');
+    expect(result.javascript).toContain('Repeatable section: items');
+  });
 });

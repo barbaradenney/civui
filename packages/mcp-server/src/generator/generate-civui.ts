@@ -150,11 +150,114 @@ function generateField(field: FormField, indentLevel: number): string {
     if (field.rows !== undefined) line += attr('rows', field.rows);
 
     line = appendConditionalAttrs(line, field);
+    if (field.optionsFrom) {
+      line += attr('data-civ-options-from', field.optionsFrom.field);
+    }
     line += `></${mapping.tag}>`;
     lines.push(line);
+
+    // Emit cascading options map as a sibling script
+    if (field.optionsFrom) {
+      lines.push(`<script type="application/json" data-civ-options-map="${escapeAttr(field.name)}">${JSON.stringify(field.optionsFrom.map)}</script>`);
+    }
   }
 
   return indent(lines.join('\n'), indentLevel);
+}
+
+function generateTableField(field: FormField, indentLevel: number): string {
+  const mapping = getComponentMapping(field.type);
+  let line = `<${mapping.tag}`;
+  line += attr('aria-label', field.label);
+  line += attr('name', field.name);
+  if (mapping.inputType) {
+    line += attr('type', mapping.inputType);
+  }
+  const hint = field.hint ?? mapping.defaultHint;
+  if (hint) line += attr('hint', hint);
+  if (field.required) {
+    line += ' required';
+    line += attr('required-message', generateRequiredMessage(field.label));
+  }
+  if (field.disabled) line += ' disabled';
+  if (field.placeholder) line += attr('placeholder', field.placeholder);
+  if (field.value) line += attr('value', field.value);
+  if (field.optionsFrom) {
+    line += attr('data-civ-options-from', field.optionsFrom.field);
+  }
+  line += `></${mapping.tag}>`;
+
+  const parts: string[] = [];
+  parts.push(indent(line, indentLevel));
+
+  if (field.optionsFrom) {
+    parts.push(indent(
+      `<script type="application/json" data-civ-options-map="${escapeAttr(field.name)}">${JSON.stringify(field.optionsFrom.map)}</script>`,
+      indentLevel,
+    ));
+  }
+
+  return parts.join('\n');
+}
+
+function generateTableSection(section: FormSection, indentLevel: number): string {
+  const parts: string[] = [];
+  const key = section.repeatableKey!;
+  const addLabel = section.repeatableAddLabel ?? 'Add row';
+  const removeLabel = section.repeatableRemoveLabel ?? 'Remove row';
+  const sectionVisibleWhen = section.visibleWhen;
+
+  // Determine column order
+  const columns = section.tableColumns?.length
+    ? section.fields.filter((f) => section.tableColumns!.includes(f.name))
+        .sort((a, b) => section.tableColumns!.indexOf(a.name) - section.tableColumns!.indexOf(b.name))
+    : section.fields;
+
+  let repeatableOpen = `<div data-civ-repeatable="${escapeAttr(key)}" data-civ-layout="table"`;
+  if (section.repeatableMin !== undefined) {
+    repeatableOpen += ` data-civ-repeatable-min="${section.repeatableMin}"`;
+  }
+  if (section.repeatableMax !== undefined) {
+    repeatableOpen += ` data-civ-repeatable-max="${section.repeatableMax}"`;
+  }
+  if (sectionVisibleWhen) {
+    repeatableOpen += attr('data-civ-show-when', conditionToDataAttr(sectionVisibleWhen));
+  }
+  repeatableOpen += ` aria-live="polite">`;
+  parts.push(indent(repeatableOpen, indentLevel));
+
+  if (section.heading) {
+    parts.push(indent(`<h3>${escapeAttr(section.heading)}</h3>`, indentLevel + 1));
+  }
+
+  parts.push(indent('<table class="civ-w-full civ-border-collapse">', indentLevel + 1));
+
+  // thead
+  parts.push(indent('<thead>', indentLevel + 2));
+  parts.push(indent('<tr>', indentLevel + 3));
+  for (const col of columns) {
+    parts.push(indent(`<th scope="col">${escapeAttr(col.label)}</th>`, indentLevel + 4));
+  }
+  parts.push(indent('<th scope="col"><span class="civ-sr-only">Actions</span></th>', indentLevel + 4));
+  parts.push(indent('</tr>', indentLevel + 3));
+  parts.push(indent('</thead>', indentLevel + 2));
+
+  // tbody with first row
+  parts.push(indent('<tbody>', indentLevel + 2));
+  parts.push(indent('<tr data-civ-repeatable-item>', indentLevel + 3));
+  for (const col of columns) {
+    const prefixed = { ...col, name: prefixFieldName(col.name, key, 0) };
+    parts.push(indent(`<td>${generateTableField(prefixed, 0).trim()}</td>`, indentLevel + 4));
+  }
+  parts.push(indent(`<td><button type="button" data-civ-repeatable-remove>${escapeAttr(removeLabel)}</button></td>`, indentLevel + 4));
+  parts.push(indent('</tr>', indentLevel + 3));
+  parts.push(indent('</tbody>', indentLevel + 2));
+
+  parts.push(indent('</table>', indentLevel + 1));
+  parts.push(indent(`<button type="button" data-civ-repeatable-add>${escapeAttr(addLabel)}</button>`, indentLevel + 1));
+  parts.push(indent('</div>', indentLevel));
+
+  return parts.join('\n');
 }
 
 function prefixFieldName(name: string, key: string, index: number): string {
@@ -162,6 +265,11 @@ function prefixFieldName(name: string, key: string, index: number): string {
 }
 
 function generateSection(section: FormSection, indentLevel: number): string {
+  // Dispatch to table generator for table layout
+  if (section.layout === 'table' && section.repeatable && section.repeatableKey) {
+    return generateTableSection(section, indentLevel);
+  }
+
   const parts: string[] = [];
 
   // For repeatable sections, prefix field names and wrap in container

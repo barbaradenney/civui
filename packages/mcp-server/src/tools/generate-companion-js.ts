@@ -19,8 +19,11 @@ function sanitizeKey(key: string): string {
   return key;
 }
 
-function generateRepeatableJs(key: string, min?: number, max?: number): string {
+function generateRepeatableJs(key: string, min?: number, max?: number, isTable?: boolean): string {
   const safeKey = sanitizeKey(key);
+  if (isTable) {
+    return generateTableRepeatableJs(safeKey, min, max);
+  }
   return `
   // Repeatable section: ${safeKey}
   (function() {
@@ -100,6 +103,95 @@ function generateRepeatableJs(key: string, min?: number, max?: number): string {
         var remaining = getItems();
         announce('Item removed. Total items: ' + remaining.length);
         // Focus management: focus previous item, next item, or add button
+        if (remaining.length > 0) {
+          var focusIdx = itemIndex > 0 ? itemIndex - 1 : 0;
+          var focusTarget = remaining[focusIdx] && remaining[focusIdx].querySelector('[name]');
+          if (focusTarget && focusTarget.focus) focusTarget.focus();
+        } else if (addBtn) {
+          addBtn.focus();
+        }
+      }
+    });
+
+    updateButtons();
+  })();`;
+}
+
+function generateTableRepeatableJs(safeKey: string, min?: number, max?: number): string {
+  return `
+  // Table repeatable section: ${safeKey}
+  (function() {
+    var container = document.querySelector('[data-civ-repeatable="${safeKey}"]');
+    if (!container) return;
+
+    var addBtn = container.querySelector('[data-civ-repeatable-add]');
+    var tbody = container.querySelector('tbody');
+    var min = ${min ?? 0};
+    var max = ${max ?? 'Infinity'};
+
+    function getItems() {
+      return tbody ? tbody.querySelectorAll('tr[data-civ-repeatable-item]') : [];
+    }
+
+    function reindex() {
+      var items = getItems();
+      items.forEach(function(item, idx) {
+        item.querySelectorAll('[name]').forEach(function(el) {
+          el.setAttribute('name', el.getAttribute('name').replace(/${safeKey}\\[\\d+\\]/, '${safeKey}[' + idx + ']'));
+        });
+      });
+      updateButtons();
+    }
+
+    function updateButtons() {
+      var count = getItems().length;
+      if (addBtn) addBtn.disabled = count >= max;
+      container.querySelectorAll('[data-civ-repeatable-remove]').forEach(function(btn) {
+        btn.disabled = count <= min;
+      });
+    }
+
+    function announce(msg) {
+      var region = container.closest('[aria-live]') || container;
+      if (region.getAttribute('aria-live')) {
+        var span = document.createElement('span');
+        span.className = 'civ-sr-only';
+        span.textContent = msg;
+        region.appendChild(span);
+        setTimeout(function() { span.remove(); }, 1000);
+      }
+    }
+
+    if (addBtn) {
+      addBtn.addEventListener('click', function() {
+        var items = getItems();
+        if (items.length >= max) return;
+        var template = items[items.length - 1];
+        var clone = template.cloneNode(true);
+        clone.querySelectorAll('[name]').forEach(function(el) {
+          if (el.setAttribute) el.setAttribute('value', '');
+          if ('value' in el) el.value = '';
+        });
+        if (tbody) tbody.appendChild(clone);
+        reindex();
+        announce('Row added. Total rows: ' + getItems().length);
+        var firstInput = clone.querySelector('[name]');
+        if (firstInput && firstInput.focus) firstInput.focus();
+      });
+    }
+
+    container.addEventListener('click', function(e) {
+      var removeBtn = e.target.closest('[data-civ-repeatable-remove]');
+      if (!removeBtn) return;
+      var items = getItems();
+      if (items.length <= min) return;
+      var item = removeBtn.closest('tr[data-civ-repeatable-item]');
+      if (item) {
+        var itemIndex = Array.prototype.indexOf.call(items, item);
+        item.remove();
+        reindex();
+        var remaining = getItems();
+        announce('Row removed. Total rows: ' + remaining.length);
         if (remaining.length > 0) {
           var focusIdx = itemIndex > 0 ? itemIndex - 1 : 0;
           var focusTarget = remaining[focusIdx] && remaining[focusIdx].querySelector('[name]');
@@ -266,6 +358,51 @@ function generateConditionalRequiredJs(): string {
   })();`;
 }
 
+function generateCascadingOptionsJs(): string {
+  return `
+  // Cascading/dependent options
+  (function() {
+    var SAFE_NAME = /^[a-zA-Z0-9_\\-\\.\\[\\]]+$/;
+
+    var selects = document.querySelectorAll('[data-civ-options-from]');
+    selects.forEach(function(child) {
+      var parentName = child.getAttribute('data-civ-options-from');
+      var childName = child.getAttribute('name');
+      if (!parentName || !childName) return;
+      if (!SAFE_NAME.test(parentName) || !SAFE_NAME.test(childName)) return;
+
+      var mapScript = document.querySelector('script[data-civ-options-map="' + childName + '"]');
+      if (!mapScript) return;
+      var map = {};
+      try { map = JSON.parse(mapScript.textContent || '{}'); } catch(e) {}
+
+      function updateOptions() {
+        var parentEl = document.querySelector('[name="' + parentName + '"]');
+        var parentVal = parentEl ? (parentEl.value || parentEl.getAttribute('value') || '') : '';
+        var options = map[parentVal] || [];
+
+        // Clear existing options
+        if (child.setAttribute) child.setAttribute('value', '');
+        if ('value' in child) child.value = '';
+
+        // Set new options as JSON attribute
+        child.setAttribute('options', JSON.stringify(options));
+
+        // Dispatch change to trigger downstream updates
+        child.dispatchEvent(new CustomEvent('civ-change', { detail: { value: '' }, bubbles: true }));
+      }
+
+      document.addEventListener('civ-change', function(e) {
+        var target = e.target;
+        if (target && target.getAttribute && target.getAttribute('name') === parentName) {
+          updateOptions();
+        }
+      });
+      updateOptions();
+    });
+  })();`;
+}
+
 export function generateWizardJs(stepCount: number): string {
   return `
   // Multi-step wizard navigation
@@ -377,7 +514,7 @@ export function generateCompanionJs(schema: FormSchema): CompanionJsResult {
   if (repeatableSections.length > 0) {
     features.push('repeatable');
     for (const section of repeatableSections) {
-      jsParts.push(generateRepeatableJs(section.repeatableKey!, section.repeatableMin, section.repeatableMax));
+      jsParts.push(generateRepeatableJs(section.repeatableKey!, section.repeatableMin, section.repeatableMax, section.layout === 'table'));
     }
   }
 
@@ -397,6 +534,15 @@ export function generateCompanionJs(schema: FormSchema): CompanionJsResult {
   if (hasRequiredWhen) {
     features.push('conditional-required');
     jsParts.push(generateConditionalRequiredJs());
+  }
+
+  // Check for cascading options
+  const hasCascading = schema.sections.some((s) =>
+    s.fields.some((f) => f.optionsFrom),
+  );
+  if (hasCascading) {
+    features.push('cascading-options');
+    jsParts.push(generateCascadingOptionsJs());
   }
 
   // Check for wizard steps

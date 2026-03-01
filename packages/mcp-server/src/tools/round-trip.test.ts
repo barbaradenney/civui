@@ -296,4 +296,104 @@ describe('round-trip: schema → HTML → schema', () => {
     expect(vw.allOf[0].field).toBe('married');
     expect(vw.allOf[1].field).toBe('filing');
   });
+
+  it('round-trips cascading options (optionsFrom)', () => {
+    const schema: FormSchema = {
+      sections: [
+        {
+          fields: [
+            {
+              type: 'select', name: 'county', label: 'County',
+              optionsFrom: {
+                field: 'state',
+                map: {
+                  CA: [{ value: 'la', label: 'Los Angeles' }, { value: 'sf', label: 'San Francisco' }],
+                  TX: [{ value: 'harris', label: 'Harris' }],
+                },
+              },
+            },
+          ],
+        },
+      ],
+    };
+    const html = generateCivUI(schema);
+    const recovered = formToSchema(html);
+    const field = recovered.sections.flatMap((s) => s.fields).find((f) => f.name === 'county');
+    expect(field!.optionsFrom).toBeDefined();
+    expect(field!.optionsFrom!.field).toBe('state');
+    expect(field!.optionsFrom!.map.CA).toHaveLength(2);
+    expect(field!.optionsFrom!.map.TX).toHaveLength(1);
+    expect(field!.optionsFrom!.map.CA[0].value).toBe('la');
+  });
+
+  it('round-trips table layout (layout, tableColumns, field labels)', () => {
+    const schema: FormSchema = {
+      sections: [
+        {
+          heading: 'Income Sources',
+          repeatable: true,
+          repeatableKey: 'income',
+          layout: 'table',
+          fields: [
+            { type: 'text', name: 'source', label: 'Source' },
+            { type: 'text', name: 'amount', label: 'Amount' },
+          ],
+        },
+      ],
+    };
+    const html = generateCivUI(schema);
+    const recovered = formToSchema(html);
+    const section = recovered.sections.find((s) => s.repeatableKey === 'income');
+    expect(section).toBeDefined();
+    expect(section!.layout).toBe('table');
+    expect(section!.heading).toBe('Income Sources');
+    expect(section!.repeatable).toBe(true);
+    expect(section!.fields).toHaveLength(2);
+    expect(section!.fields[0].name).toBe('source');
+    expect(section!.fields[0].label).toBe('Source');
+    expect(section!.fields[1].name).toBe('amount');
+    expect(section!.fields[1].label).toBe('Amount');
+    expect(section!.tableColumns).toEqual(['source', 'amount']);
+  });
+
+  it('round-trips cascading options inside a table section', () => {
+    const schema: FormSchema = {
+      sections: [
+        {
+          heading: 'Location',
+          repeatable: true,
+          repeatableKey: 'loc',
+          layout: 'table',
+          fields: [
+            { type: 'select', name: 'state', label: 'State', options: [
+              { value: 'CA', label: 'California' },
+              { value: 'TX', label: 'Texas' },
+            ] },
+            {
+              type: 'select', name: 'county', label: 'County',
+              optionsFrom: {
+                field: 'state',
+                map: {
+                  CA: [{ value: 'la', label: 'Los Angeles' }],
+                  TX: [{ value: 'harris', label: 'Harris' }],
+                },
+              },
+            },
+          ],
+        },
+      ],
+    };
+    const html = generateCivUI(schema);
+    const recovered = formToSchema(html);
+    const section = recovered.sections.find((s) => s.repeatableKey === 'loc');
+    expect(section).toBeDefined();
+    expect(section!.layout).toBe('table');
+    // Cascading field should round-trip
+    const countyField = section!.fields.find((f) => f.name === 'county');
+    expect(countyField).toBeDefined();
+    expect(countyField!.optionsFrom).toBeDefined();
+    expect(countyField!.optionsFrom!.field).toBe('state');
+    expect(countyField!.optionsFrom!.map.CA).toHaveLength(1);
+    expect(countyField!.optionsFrom!.map.TX).toHaveLength(1);
+  });
 });

@@ -1,6 +1,7 @@
 /**
  * generate_companion_js tool — generate client-side JavaScript for
- * repeatable sections and conditional visibility in CivUI forms.
+ * repeatable sections, conditional visibility, wizard navigation,
+ * and compound conditions in CivUI forms.
  */
 import type { FormSchema } from '../schema/index.js';
 
@@ -23,19 +24,19 @@ function generateRepeatableJs(key: string, min?: number, max?: number): string {
   return `
   // Repeatable section: ${safeKey}
   (function() {
-    const container = document.querySelector('[data-civ-repeatable="${safeKey}"]');
+    var container = document.querySelector('[data-civ-repeatable="${safeKey}"]');
     if (!container) return;
 
-    const addBtn = container.querySelector('[data-civ-repeatable-add]');
-    const min = ${min ?? 0};
-    const max = ${max ?? 'Infinity'};
+    var addBtn = container.querySelector('[data-civ-repeatable-add]');
+    var min = ${min ?? 0};
+    var max = ${max ?? 'Infinity'};
 
     function getItems() {
       return container.querySelectorAll(':scope > civ-fieldset, :scope > [data-civ-repeatable-item]');
     }
 
     function reindex() {
-      const items = getItems();
+      var items = getItems();
       items.forEach(function(item, idx) {
         item.querySelectorAll('[name]').forEach(function(el) {
           el.setAttribute('name', el.getAttribute('name').replace(/${safeKey}\\[\\d+\\]/, '${safeKey}[' + idx + ']'));
@@ -119,6 +120,10 @@ function generateConditionalVisibilityJs(): string {
   (function() {
     function parseCondition(attr) {
       if (!attr) return null;
+      // Compound JSON conditions
+      if (attr.charAt(0) === '{') {
+        try { return JSON.parse(attr); } catch(e) {}
+      }
       if (attr.endsWith(' exists')) return { field: attr.replace(/ exists$/, ''), op: 'exists' };
       if (attr.endsWith(' notExists')) return { field: attr.replace(/ notExists$/, ''), op: 'notExists' };
       var inMatch = attr.match(/^(.+?) in (.+)$/);
@@ -132,13 +137,21 @@ function generateConditionalVisibilityJs(): string {
       return null;
     }
 
-    function evaluate(cond, value) {
+    function evaluate(cond, getValue) {
       if (!cond) return true;
-      switch (cond.op) {
-        case 'eq': return value === cond.value;
-        case 'neq': return value !== cond.value;
-        case 'in': return cond.value.indexOf(value) !== -1;
-        case 'notIn': return cond.value.indexOf(value) === -1;
+      // Compound: allOf / anyOf
+      if (cond.allOf) {
+        return cond.allOf.every(function(c) { return evaluate(c, getValue); });
+      }
+      if (cond.anyOf) {
+        return cond.anyOf.some(function(c) { return evaluate(c, getValue); });
+      }
+      var value = getValue(cond.field);
+      switch (cond.op || cond.operator) {
+        case 'eq': return value === (cond.value || cond.val);
+        case 'neq': return value !== (cond.value || cond.val);
+        case 'in': return (cond.value || []).indexOf(value) !== -1;
+        case 'notIn': return (cond.value || []).indexOf(value) === -1;
         case 'exists': return value !== undefined && value !== null && value !== '';
         case 'notExists': return value === undefined || value === null || value === '';
         default: return true;
@@ -154,8 +167,7 @@ function generateConditionalVisibilityJs(): string {
     function updateVisibility() {
       document.querySelectorAll('[data-civ-show-when]').forEach(function(el) {
         var cond = parseCondition(el.getAttribute('data-civ-show-when'));
-        var val = cond ? getFieldValue(cond.field) : undefined;
-        var visible = evaluate(cond, val);
+        var visible = evaluate(cond, getFieldValue);
         el.style.display = visible ? '' : 'none';
         // Disable hidden required fields
         if (!visible) {
@@ -169,8 +181,7 @@ function generateConditionalVisibilityJs(): string {
 
       document.querySelectorAll('[data-civ-hide-when]').forEach(function(el) {
         var cond = parseCondition(el.getAttribute('data-civ-hide-when'));
-        var val = cond ? getFieldValue(cond.field) : undefined;
-        var hidden = evaluate(cond, val);
+        var hidden = evaluate(cond, getFieldValue);
         el.style.display = hidden ? 'none' : '';
         if (hidden) {
           el.querySelectorAll('[required]').forEach(function(req) { req.disabled = true; });
@@ -193,11 +204,42 @@ function generateConditionalRequiredJs(): string {
   (function() {
     function parseCondition(attr) {
       if (!attr) return null;
-      var eqMatch = attr.match(/^(.+?)=(.+)$/);
-      if (eqMatch) return { field: eqMatch[1], op: 'eq', value: eqMatch[2] };
+      // Compound JSON conditions
+      if (attr.charAt(0) === '{') {
+        try { return JSON.parse(attr); } catch(e) {}
+      }
+      if (attr.endsWith(' exists')) return { field: attr.replace(/ exists$/, ''), op: 'exists' };
+      if (attr.endsWith(' notExists')) return { field: attr.replace(/ notExists$/, ''), op: 'notExists' };
+      var inMatch = attr.match(/^(.+?) in (.+)$/);
+      if (inMatch) return { field: inMatch[1], op: 'in', value: inMatch[2].split(',') };
+      var notInMatch = attr.match(/^(.+?) notIn (.+)$/);
+      if (notInMatch) return { field: notInMatch[1], op: 'notIn', value: notInMatch[2].split(',') };
       var neqMatch = attr.match(/^(.+?)!=(.+)$/);
       if (neqMatch) return { field: neqMatch[1], op: 'neq', value: neqMatch[2] };
+      var eqMatch = attr.match(/^(.+?)=(.+)$/);
+      if (eqMatch) return { field: eqMatch[1], op: 'eq', value: eqMatch[2] };
       return null;
+    }
+
+    function evaluate(cond, getValue) {
+      if (!cond) return false;
+      // Compound: allOf / anyOf
+      if (cond.allOf) {
+        return cond.allOf.every(function(c) { return evaluate(c, getValue); });
+      }
+      if (cond.anyOf) {
+        return cond.anyOf.some(function(c) { return evaluate(c, getValue); });
+      }
+      var value = getValue(cond.field);
+      switch (cond.op || cond.operator) {
+        case 'eq': return value === (cond.value || cond.val);
+        case 'neq': return value !== (cond.value || cond.val);
+        case 'in': return (cond.value || []).indexOf(value) !== -1;
+        case 'notIn': return (cond.value || []).indexOf(value) === -1;
+        case 'exists': return value !== undefined && value !== null && value !== '';
+        case 'notExists': return value === undefined || value === null || value === '';
+        default: return false;
+      }
     }
 
     function getFieldValue(name) {
@@ -210,8 +252,7 @@ function generateConditionalRequiredJs(): string {
       document.querySelectorAll('[data-civ-require-when]').forEach(function(el) {
         var cond = parseCondition(el.getAttribute('data-civ-require-when'));
         if (!cond) return;
-        var val = getFieldValue(cond.field);
-        var shouldRequire = cond.op === 'eq' ? val === cond.value : val !== cond.value;
+        var shouldRequire = evaluate(cond, getFieldValue);
         if (shouldRequire) {
           el.setAttribute('required', '');
         } else {
@@ -222,6 +263,105 @@ function generateConditionalRequiredJs(): string {
 
     document.addEventListener('civ-change', updateRequired);
     updateRequired();
+  })();`;
+}
+
+export function generateWizardJs(stepCount: number): string {
+  return `
+  // Multi-step wizard navigation
+  (function() {
+    var stepCount = ${stepCount};
+    var current = 0;
+
+    var steps = document.querySelectorAll('[data-civ-step]');
+    var progressSteps = document.querySelectorAll('[data-civ-progress-step]');
+    var prevBtn = document.querySelector('[data-civ-step-prev]');
+    var nextBtn = document.querySelector('[data-civ-step-next]');
+
+    function showStep(idx) {
+      steps.forEach(function(s, i) {
+        if (i === idx) {
+          s.removeAttribute('hidden');
+        } else {
+          s.setAttribute('hidden', '');
+        }
+      });
+      progressSteps.forEach(function(p, i) {
+        if (i === idx) {
+          p.setAttribute('aria-current', 'step');
+        } else {
+          p.removeAttribute('aria-current');
+        }
+      });
+      if (prevBtn) prevBtn.disabled = idx === 0;
+      if (nextBtn) {
+        nextBtn.textContent = idx === stepCount - 1 ? 'Submit' : 'Next';
+      }
+      current = idx;
+      // Update hash for history
+      history.replaceState(null, '', '#step-' + idx);
+      // Screen reader announcement
+      var title = progressSteps[idx] ? progressSteps[idx].textContent : 'Step ' + (idx + 1);
+      announceStep(title);
+      // Focus management: focus the first focusable input in the new step
+      var target = steps[idx];
+      if (target) {
+        var firstInput = target.querySelector('[name]');
+        if (firstInput && firstInput.focus) firstInput.focus();
+      }
+    }
+
+    function announceStep(title) {
+      var region = document.querySelector('[aria-live]');
+      if (!region) {
+        region = document.createElement('div');
+        region.setAttribute('aria-live', 'polite');
+        region.className = 'civ-sr-only';
+        document.body.appendChild(region);
+      }
+      region.textContent = title;
+    }
+
+    function validateCurrentStep() {
+      var currentStep = steps[current];
+      if (!currentStep) return true;
+      var invalid = currentStep.querySelectorAll('[required]:not([disabled])');
+      var allValid = true;
+      invalid.forEach(function(el) {
+        var val = el.value || el.getAttribute('value') || '';
+        if (!val) allValid = false;
+      });
+      return allValid;
+    }
+
+    if (nextBtn) {
+      nextBtn.addEventListener('click', function() {
+        if (!validateCurrentStep()) return;
+        if (current < stepCount - 1) {
+          showStep(current + 1);
+        } else {
+          // Last step — submit the form
+          var form = nextBtn.closest('civ-form') || nextBtn.closest('form');
+          if (form && form.requestSubmit) form.requestSubmit();
+        }
+      });
+    }
+
+    if (prevBtn) {
+      prevBtn.addEventListener('click', function() {
+        if (current > 0) showStep(current - 1);
+      });
+    }
+
+    // Handle initial hash
+    var hash = window.location.hash;
+    var hashMatch = hash.match(/^#step-(\\d+)$/);
+    if (hashMatch) {
+      var idx = parseInt(hashMatch[1], 10);
+      if (idx >= 0 && idx < stepCount) showStep(idx);
+    }
+
+    showStep(current);
   })();`;
 }
 
@@ -241,9 +381,9 @@ export function generateCompanionJs(schema: FormSchema): CompanionJsResult {
     }
   }
 
-  // Check for conditional visibility
+  // Check for conditional visibility (field-level or section-level)
   const hasVisibleWhen = schema.sections.some((s) =>
-    s.fields.some((f) => f.visibleWhen),
+    s.fields.some((f) => f.visibleWhen) || s.visibleWhen,
   );
   if (hasVisibleWhen) {
     features.push('conditional-visibility');
@@ -257,6 +397,12 @@ export function generateCompanionJs(schema: FormSchema): CompanionJsResult {
   if (hasRequiredWhen) {
     features.push('conditional-required');
     jsParts.push(generateConditionalRequiredJs());
+  }
+
+  // Check for wizard steps
+  if (schema.steps && schema.steps.length > 0) {
+    features.push('wizard');
+    jsParts.push(generateWizardJs(schema.steps.length));
   }
 
   if (jsParts.length === 0) {

@@ -200,4 +200,73 @@ describe('composeForms', () => {
     expect(result.schema.sections[0].fields[0].name).toBe('fallback');
     expect(result.resolvedRefs).toEqual([]);
   });
+
+  // ---- Compound condition prefixing ----
+
+  it('prefixes field references in compound conditions recursively', () => {
+    const ext: FormSchema = {
+      sections: [
+        {
+          fields: [
+            {
+              type: 'text',
+              name: 'income',
+              label: 'Income',
+              visibleWhen: {
+                allOf: [
+                  { field: 'employed', operator: 'eq', value: 'yes' },
+                  {
+                    anyOf: [
+                      { field: 'filing', operator: 'eq', value: 'joint' },
+                      { field: 'filing', operator: 'eq', value: 'single' },
+                    ],
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      ],
+    };
+
+    const result = composeForms(
+      { sections: [] },
+      { tax: { schema: ext, namespace: 'tax' } },
+    );
+
+    const field = result.schema.sections[0].fields[0];
+    expect(field.name).toBe('tax.income');
+    const vw = field.visibleWhen as any;
+    expect(vw.allOf[0].field).toBe('tax.employed');
+    expect(vw.allOf[1].anyOf[0].field).toBe('tax.filing');
+    expect(vw.allOf[1].anyOf[1].field).toBe('tax.filing');
+  });
+
+  // ---- Section visibleWhen prefixing ----
+
+  it('prefixes section visibleWhen when composing with namespace', () => {
+    const ext: FormSchema = {
+      sections: [
+        {
+          heading: 'Spouse',
+          visibleWhen: { field: 'married', operator: 'eq', value: 'yes' },
+          fields: [
+            { type: 'text', name: 'spouse-name', label: 'Spouse name' },
+          ],
+        },
+      ],
+    };
+
+    const result = composeForms(
+      { sections: [] },
+      { partner: { schema: ext, namespace: 'partner' } },
+    );
+
+    const section = result.schema.sections[0];
+    expect(section.visibleWhen).toEqual({
+      field: 'partner.married',
+      operator: 'eq',
+      value: 'yes',
+    });
+  });
 });

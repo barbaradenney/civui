@@ -828,6 +828,44 @@ const repeatableMissingButtons: Rule = {
   },
 };
 
+/** Extract all field references from a condition attribute value (handles JSON compound). */
+function extractFieldRefs(attrValue: string): string[] {
+  const refs: string[] = [];
+
+  // Try JSON compound condition
+  if (attrValue.trimStart().startsWith('{')) {
+    try {
+      const parsed = JSON.parse(attrValue);
+      extractFieldRefsFromCondition(parsed, refs);
+      return refs;
+    } catch {
+      // Fall through to simple parsing
+    }
+  }
+
+  // Simple condition — extract the field reference
+  const match = attrValue.match(/^([a-zA-Z0-9_.-]+)/);
+  if (match) refs.push(match[1]);
+  return refs;
+}
+
+function extractFieldRefsFromCondition(cond: unknown, refs: string[]): void {
+  if (!cond || typeof cond !== 'object') return;
+  const obj = cond as Record<string, unknown>;
+
+  if ('field' in obj && typeof obj.field === 'string') {
+    refs.push(obj.field);
+    return;
+  }
+
+  if (Array.isArray(obj.allOf)) {
+    for (const c of obj.allOf) extractFieldRefsFromCondition(c, refs);
+  }
+  if (Array.isArray(obj.anyOf)) {
+    for (const c of obj.anyOf) extractFieldRefsFromCondition(c, refs);
+  }
+}
+
 const conditionalTargetMissing: Rule = {
   id: 'conditional-target-missing',
   severity: 'error',
@@ -846,15 +884,13 @@ const conditionalTargetMissing: Rule = {
     for (const attrName of attrs) {
       $(`[${attrName}]`).each((_, el) => {
         const val = $(el).attr(attrName) ?? '';
-        // Extract the field reference (part before the operator)
-        const match = val.match(/^([a-zA-Z0-9_.-]+)/);
-        if (match) {
-          const refField = match[1];
+        const refs = extractFieldRefs(val);
+        for (const refField of refs) {
           if (!fieldNames.has(refField)) {
             violations.push({
               rule: 'conditional-target-missing',
               severity: 'error',
-              message: `${attrName}="${val}" references field "${refField}" which does not exist in the form`,
+              message: `${attrName} references field "${refField}" which does not exist in the form`,
               element: (el as unknown as { tagName: string }).tagName ?? 'unknown',
               fix: `Ensure a form component with name="${refField}" exists in the form`,
             });
@@ -903,6 +939,77 @@ const repeatableNoMin: Rule = {
   },
 };
 
+// --- Wizard rules ---
+
+const wizardMissingProgress: Rule = {
+  id: 'wizard-missing-progress',
+  severity: 'error',
+  description: 'Wizard step containers found but no progress indicator',
+  check($, violations) {
+    const hasSteps = $('[data-civ-step]').length > 0;
+    const hasProgress = $('[data-civ-progress]').length > 0;
+    if (hasSteps && !hasProgress) {
+      violations.push({
+        rule: 'wizard-missing-progress',
+        severity: 'error',
+        message: 'Form has [data-civ-step] containers but no [data-civ-progress] indicator',
+        element: 'div',
+        fix: 'Add a <nav data-civ-progress> element with step titles for screen reader users',
+      });
+    }
+  },
+};
+
+const wizardStepGap: Rule = {
+  id: 'wizard-step-gap',
+  severity: 'warning',
+  description: 'Wizard has non-contiguous step numbers',
+  check($, violations) {
+    const stepNums: number[] = [];
+    $('[data-civ-step]').each((_, el) => {
+      const val = $(el).attr('data-civ-step');
+      if (val !== undefined) stepNums.push(parseInt(val, 10));
+    });
+    if (stepNums.length < 2) return;
+    stepNums.sort((a, b) => a - b);
+    for (let i = 1; i < stepNums.length; i++) {
+      if (stepNums[i] !== stepNums[i - 1] + 1) {
+        violations.push({
+          rule: 'wizard-step-gap',
+          severity: 'warning',
+          message: `Wizard steps are not contiguous: found steps ${stepNums.join(', ')}`,
+          element: 'div',
+          fix: 'Use sequential step numbers starting from 0: 0, 1, 2, ...',
+        });
+        return;
+      }
+    }
+  },
+};
+
+const wizardStepNoFields: Rule = {
+  id: 'wizard-step-no-fields',
+  severity: 'warning',
+  description: 'Wizard step contains no form fields',
+  check($, violations) {
+    const formSelector = FORM_COMPONENTS.join(', ');
+    $('[data-civ-step]').each((_, el) => {
+      const $el = $(el);
+      const stepNum = $el.attr('data-civ-step') ?? '?';
+      const fieldCount = $el.find(formSelector).length;
+      if (fieldCount === 0) {
+        violations.push({
+          rule: 'wizard-step-no-fields',
+          severity: 'warning',
+          message: `Wizard step ${stepNum} contains no form fields`,
+          element: 'div',
+          fix: 'Add form fields to this step or remove the empty step',
+        });
+      }
+    });
+  },
+};
+
 /** All validation rules. */
 export const RULES: Rule[] = [
   // Errors
@@ -921,6 +1028,7 @@ export const RULES: Rule[] = [
   repeatableMissingKey,
   repeatableMissingButtons,
   conditionalTargetMissing,
+  wizardMissingProgress,
   // Warnings
   genericRequiredMessage,
   missingHintDate,
@@ -941,4 +1049,6 @@ export const RULES: Rule[] = [
   formLength,
   repeatableNoAriaLive,
   repeatableNoMin,
+  wizardStepGap,
+  wizardStepNoFields,
 ];

@@ -5,12 +5,12 @@ import { RULES } from './rules.js';
 describe('validateForm', () => {
   // ---- Meta ----
 
-  it('has 34 rules total (15 errors + 19 warnings)', () => {
+  it('has 37 rules total (16 errors + 21 warnings)', () => {
     const errors = RULES.filter((r) => r.severity === 'error');
     const warnings = RULES.filter((r) => r.severity === 'warning');
-    expect(errors).toHaveLength(15);
-    expect(warnings).toHaveLength(19);
-    expect(RULES).toHaveLength(34);
+    expect(errors).toHaveLength(16);
+    expect(warnings).toHaveLength(21);
+    expect(RULES).toHaveLength(37);
   });
 
   it('returns valid:true and empty arrays for valid markup', () => {
@@ -654,6 +654,71 @@ describe('validateForm', () => {
       const result = validateForm('<civ-text-input name="email"></civ-text-input>');
       expect(result.summary).toContain('error');
       expect(result.summary).toContain('warning');
+    });
+  });
+
+  // ---- Wizard rules ----
+
+  describe('wizard-missing-progress', () => {
+    it('flags step containers without progress indicator', () => {
+      const html = `
+        <civ-form>
+          <div data-civ-step="0">
+            <civ-text-input label="Name" name="name" required required-message="Name is required"></civ-text-input>
+          </div>
+          <div data-civ-step="1">
+            <civ-text-input label="Email" name="email" required required-message="Email is required"></civ-text-input>
+          </div>
+        </civ-form>
+      `;
+      const result = validateForm(html);
+      expect(result.errors.some((e) => e.rule === 'wizard-missing-progress')).toBe(true);
+    });
+
+    it('does not flag when progress indicator is present', () => {
+      const html = `
+        <civ-form>
+          <nav data-civ-progress aria-label="Progress">
+            <ol><li data-civ-progress-step="0">Step 1</li><li data-civ-progress-step="1">Step 2</li></ol>
+          </nav>
+          <div data-civ-step="0">
+            <civ-text-input label="Name" name="name" required required-message="Name is required"></civ-text-input>
+          </div>
+          <div data-civ-step="1">
+            <civ-text-input label="Email" name="email" required required-message="Email is required"></civ-text-input>
+          </div>
+        </civ-form>
+      `;
+      const result = validateForm(html);
+      expect(result.errors.some((e) => e.rule === 'wizard-missing-progress')).toBe(false);
+    });
+  });
+
+  describe('wizard-step-gap', () => {
+    it('flags non-contiguous step numbers', () => {
+      const html = `
+        <civ-form>
+          <nav data-civ-progress aria-label="Progress"><ol><li>S1</li><li>S3</li></ol></nav>
+          <div data-civ-step="0"><civ-text-input label="A" name="a" required required-message="A is required"></civ-text-input></div>
+          <div data-civ-step="2"><civ-text-input label="B" name="b" required required-message="B is required"></civ-text-input></div>
+        </civ-form>
+      `;
+      const result = validateForm(html);
+      expect(result.warnings.some((w) => w.rule === 'wizard-step-gap')).toBe(true);
+    });
+  });
+
+  describe('wizard-step-no-fields', () => {
+    it('flags empty wizard step', () => {
+      const html = `
+        <civ-form>
+          <nav data-civ-progress aria-label="Progress"><ol><li>S1</li><li>S2</li></ol></nav>
+          <div data-civ-step="0"><civ-text-input label="A" name="a" required required-message="A is required"></civ-text-input></div>
+          <div data-civ-step="1"></div>
+        </civ-form>
+      `;
+      const result = validateForm(html);
+      expect(result.warnings.some((w) => w.rule === 'wizard-step-no-fields')).toBe(true);
     });
   });
 });

@@ -2,7 +2,8 @@
  * compose_forms tool — merge multiple FormSchemas into one unified schema.
  * Resolves ref sections, applies namespaces, validates no name collisions.
  */
-import type { FormSchema, FormSection, FormField, CrossFieldRule, ConditionExpression } from '../schema/index.js';
+import type { FormSchema, FormSection, FormField, CrossFieldRule, ConditionExpression, CompoundCondition } from '../schema/index.js';
+import { isSimpleCondition } from '../schema/index.js';
 
 export interface ComposeResult {
   schema: FormSchema;
@@ -11,9 +12,19 @@ export interface ComposeResult {
   fieldCount: number;
 }
 
-/** Prefix a field reference in a ConditionExpression with a namespace. */
+/** Prefix a field reference in a ConditionExpression with a namespace (recursive). */
 function prefixCondition(cond: ConditionExpression, ns: string): ConditionExpression {
-  return { ...cond, field: `${ns}.${cond.field}` };
+  if (isSimpleCondition(cond)) {
+    return { ...cond, field: `${ns}.${cond.field}` };
+  }
+  const result: CompoundCondition = {};
+  if (cond.allOf) {
+    result.allOf = cond.allOf.map((c) => prefixCondition(c, ns));
+  }
+  if (cond.anyOf) {
+    result.anyOf = cond.anyOf.map((c) => prefixCondition(c, ns));
+  }
+  return result;
 }
 
 /** Prefix all field names in a section with a namespace. */
@@ -34,7 +45,7 @@ function prefixRule(rule: CrossFieldRule, ns: string): CrossFieldRule {
   return {
     ...rule,
     id: `${ns}.${rule.id}`,
-    when: { ...rule.when, field: `${ns}.${rule.when.field}` },
+    when: prefixCondition(rule.when, ns),
     then: {
       ...rule.then,
       targets: rule.then.targets.map((t) => `${ns}.${t}`),
@@ -101,6 +112,7 @@ export function composeForms(
       resolvedSections.push({
         ...section,
         fields: prefixFields(subForm.fields, ns),
+        visibleWhen: section.visibleWhen ? prefixCondition(section.visibleWhen, ns) : undefined,
         ref: undefined,
       });
     } else {
@@ -116,6 +128,7 @@ export function composeForms(
         resolvedSections.push({
           ...section,
           fields: prefixFields(section.fields, namespace),
+          visibleWhen: section.visibleWhen ? prefixCondition(section.visibleWhen, namespace) : undefined,
         });
       }
       // Prefix cross-field rules from external schemas

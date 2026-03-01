@@ -32,13 +32,42 @@ export const FieldOption = z.object({
 
 export type FieldOption = z.infer<typeof FieldOption>;
 
-export const ConditionExpression = z.object({
+export const SimpleCondition = z.object({
   field: z.string(),
   operator: z.enum(['eq', 'neq', 'in', 'notIn', 'exists', 'notExists']),
   value: z.union([z.string(), z.array(z.string())]).optional(),
 });
 
-export type ConditionExpression = z.infer<typeof ConditionExpression>;
+export type SimpleCondition = z.infer<typeof SimpleCondition>;
+
+export interface CompoundCondition {
+  allOf?: ConditionExpression[];
+  anyOf?: ConditionExpression[];
+}
+
+export type ConditionExpression = SimpleCondition | CompoundCondition;
+
+export const CompoundCondition: z.ZodType<CompoundCondition> = z.object({
+  allOf: z.lazy(() => z.array(ConditionExpression)).optional(),
+  anyOf: z.lazy(() => z.array(ConditionExpression)).optional(),
+});
+
+export const ConditionExpression: z.ZodType<ConditionExpression> = z.union([
+  SimpleCondition,
+  CompoundCondition,
+]);
+
+/** Type guard: returns true if the condition is a simple field condition. */
+export function isSimpleCondition(cond: ConditionExpression): cond is SimpleCondition {
+  return 'field' in cond;
+}
+
+export const StepDefinition = z.object({
+  title: z.string(),
+  description: z.string().optional(),
+});
+
+export type StepDefinition = z.infer<typeof StepDefinition>;
 
 export interface FormField {
   type: FieldType;
@@ -107,6 +136,8 @@ export const FormSection = z.object({
   repeatableRemoveLabel: z.string().optional(),
   ref: z.string().optional(),
   namespace: z.string().optional(),
+  step: z.number().optional(),
+  visibleWhen: ConditionExpression.optional(),
 });
 
 export type FormSection = z.infer<typeof FormSection>;
@@ -139,6 +170,7 @@ export const FormSchema = z.object({
   sections: z.array(FormSection),
   subForms: z.record(z.string(), SubFormDefinition).optional(),
   crossFieldRules: z.array(CrossFieldRule).optional(),
+  steps: z.array(StepDefinition).optional(),
 });
 
 export type FormSchema = z.infer<typeof FormSchema>;

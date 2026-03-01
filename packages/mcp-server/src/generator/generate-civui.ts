@@ -1,4 +1,5 @@
-import type { FormSchema, FormField, FormSection, ConditionExpression } from '../schema/index.js';
+import type { FormSchema, FormField, FormSection, ConditionExpression, CompoundCondition, StepDefinition } from '../schema/index.js';
+import { isSimpleCondition } from '../schema/index.js';
 import { getComponentMapping } from './component-map.js';
 
 function escapeAttr(value: string): string {
@@ -29,6 +30,9 @@ function generateRequiredMessage(label: string): string {
 }
 
 function conditionToDataAttr(cond: ConditionExpression): string {
+  if (!isSimpleCondition(cond)) {
+    return JSON.stringify(cond);
+  }
   const val = Array.isArray(cond.value) ? cond.value.join(',') : (cond.value ?? '');
   switch (cond.operator) {
     case 'eq': return `${cond.field}=${val}`;
@@ -43,7 +47,7 @@ function conditionToDataAttr(cond: ConditionExpression): string {
 
 function appendConditionalAttrs(line: string, field: FormField): string {
   if (field.visibleWhen) {
-    if (field.visibleWhen.operator === 'neq') {
+    if (isSimpleCondition(field.visibleWhen) && field.visibleWhen.operator === 'neq') {
       line += attr('data-civ-hide-when', conditionToDataAttr(field.visibleWhen));
     } else {
       line += attr('data-civ-show-when', conditionToDataAttr(field.visibleWhen));
@@ -171,6 +175,10 @@ function generateSection(section: FormSection, indentLevel: number): string {
   const addLabel = section.repeatableAddLabel ?? 'Add another item';
   const removeLabel = section.repeatableRemoveLabel ?? 'Remove this item';
 
+  // Determine if we need a section visibleWhen wrapper
+  const sectionVisibleWhen = section.visibleWhen;
+  const needsVisibilityWrapper = !!sectionVisibleWhen && !section.repeatable && !section.heading;
+
   if (section.repeatable && section.repeatableKey) {
     let repeatableOpen = `<div data-civ-repeatable="${escapeAttr(section.repeatableKey)}"`;
     if (section.repeatableMin !== undefined) {
@@ -178,6 +186,9 @@ function generateSection(section: FormSection, indentLevel: number): string {
     }
     if (section.repeatableMax !== undefined) {
       repeatableOpen += ` data-civ-repeatable-max="${section.repeatableMax}"`;
+    }
+    if (sectionVisibleWhen) {
+      repeatableOpen += attr('data-civ-show-when', conditionToDataAttr(sectionVisibleWhen));
     }
     repeatableOpen += ` aria-live="polite">`;
     parts.push(indent(repeatableOpen, indentLevel));
@@ -199,11 +210,25 @@ function generateSection(section: FormSection, indentLevel: number): string {
     parts.push(indent(`<button type="button" data-civ-repeatable-add>${escapeAttr(addLabel)}</button>`, indentLevel + 1));
     parts.push(indent('</div>', indentLevel));
   } else if (section.heading) {
-    parts.push(indent(`<civ-fieldset legend="${escapeAttr(section.heading)}">`, indentLevel));
+    let fieldsetOpen = `<civ-fieldset legend="${escapeAttr(section.heading)}"`;
+    if (sectionVisibleWhen) {
+      fieldsetOpen += attr('data-civ-show-when', conditionToDataAttr(sectionVisibleWhen));
+    }
+    fieldsetOpen += '>';
+    parts.push(indent(fieldsetOpen, indentLevel));
     for (const field of fields) {
       parts.push(generateField(field, indentLevel + 1));
     }
     parts.push(indent('</civ-fieldset>', indentLevel));
+  } else if (needsVisibilityWrapper) {
+    let wrapperOpen = `<div`;
+    wrapperOpen += attr('data-civ-show-when', conditionToDataAttr(sectionVisibleWhen!));
+    wrapperOpen += '>';
+    parts.push(indent(wrapperOpen, indentLevel));
+    for (const field of fields) {
+      parts.push(generateField(field, indentLevel + 1));
+    }
+    parts.push(indent('</div>', indentLevel));
   } else {
     for (const field of fields) {
       parts.push(generateField(field, indentLevel));
@@ -211,6 +236,28 @@ function generateSection(section: FormSection, indentLevel: number): string {
   }
 
   return parts.join('\n');
+}
+
+function generateProgressIndicator(steps: StepDefinition[], indentLevel: number): string {
+  const lines: string[] = [];
+  lines.push(indent('<nav data-civ-progress aria-label="Form progress">', indentLevel));
+  lines.push(indent('<ol>', indentLevel + 1));
+  for (let i = 0; i < steps.length; i++) {
+    const ariaCurrent = i === 0 ? ' aria-current="step"' : '';
+    lines.push(indent(`<li data-civ-progress-step="${i}"${ariaCurrent}>${escapeAttr(steps[i].title)}</li>`, indentLevel + 2));
+  }
+  lines.push(indent('</ol>', indentLevel + 1));
+  lines.push(indent('</nav>', indentLevel));
+  return lines.join('\n');
+}
+
+function generateStepNav(indentLevel: number): string {
+  const lines: string[] = [];
+  lines.push(indent('<div data-civ-step-nav>', indentLevel));
+  lines.push(indent('<button type="button" data-civ-step-prev disabled>Previous</button>', indentLevel + 1));
+  lines.push(indent('<button type="button" data-civ-step-next>Next</button>', indentLevel + 1));
+  lines.push(indent('</div>', indentLevel));
+  return lines.join('\n');
 }
 
 export interface GenerateOptions {
@@ -231,10 +278,10 @@ function resolveRefSections(schema: FormSchema): FormSection[] {
       ...f,
       name: `${ns}.${f.name}`,
       visibleWhen: f.visibleWhen
-        ? { ...f.visibleWhen, field: `${ns}.${f.visibleWhen.field}` }
+        ? prefixConditionFields(f.visibleWhen, ns)
         : undefined,
       requiredWhen: f.requiredWhen
-        ? { ...f.requiredWhen, field: `${ns}.${f.requiredWhen.field}` }
+        ? prefixConditionFields(f.requiredWhen, ns)
         : undefined,
     }));
 
@@ -244,6 +291,20 @@ function resolveRefSections(schema: FormSchema): FormSection[] {
       ref: undefined,
     };
   });
+}
+
+function prefixConditionFields(cond: ConditionExpression, ns: string): ConditionExpression {
+  if (isSimpleCondition(cond)) {
+    return { ...cond, field: `${ns}.${cond.field}` };
+  }
+  const result: CompoundCondition = {};
+  if (cond.allOf) {
+    result.allOf = cond.allOf.map((c) => prefixConditionFields(c, ns));
+  }
+  if (cond.anyOf) {
+    result.anyOf = cond.anyOf.map((c) => prefixConditionFields(c, ns));
+  }
+  return result;
 }
 
 export function generateCivUI(
@@ -264,8 +325,35 @@ export function generateCivUI(
     parts.push(formOpen);
   }
 
-  for (const section of resolvedSections) {
-    parts.push(generateSection(section, baseIndent));
+  // Wizard mode: group sections by step
+  if (schema.steps && schema.steps.length > 0) {
+    parts.push(generateProgressIndicator(schema.steps, baseIndent));
+    parts.push('');
+
+    // Group sections by step
+    const stepSections = new Map<number, FormSection[]>();
+    for (const section of resolvedSections) {
+      const step = section.step ?? 0;
+      if (!stepSections.has(step)) stepSections.set(step, []);
+      stepSections.get(step)!.push(section);
+    }
+
+    for (let i = 0; i < schema.steps.length; i++) {
+      const hidden = i > 0 ? ' hidden' : '';
+      parts.push(indent(`<div data-civ-step="${i}"${hidden}>`, baseIndent));
+      const sections = stepSections.get(i) ?? [];
+      for (const section of sections) {
+        parts.push(generateSection(section, baseIndent + 1));
+      }
+      parts.push(indent('</div>', baseIndent));
+      parts.push('');
+    }
+
+    parts.push(generateStepNav(baseIndent));
+  } else {
+    for (const section of resolvedSections) {
+      parts.push(generateSection(section, baseIndent));
+    }
   }
 
   if (wrapInCivForm) {

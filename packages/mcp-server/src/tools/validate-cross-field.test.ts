@@ -239,4 +239,153 @@ describe('validateCrossField', () => {
     const hidden = validateCrossField(schema, { married: 'no' });
     expect(hidden.conditionallyHidden).toContain('spouse-name');
   });
+
+  // ---- Compound conditions ----
+
+  it('evaluates allOf compound condition', () => {
+    const schema: FormSchema = {
+      crossFieldRules: [
+        {
+          id: 'compound-require',
+          description: 'Require spouse income when married and filing jointly',
+          when: {
+            allOf: [
+              { field: 'married', operator: 'eq', value: 'yes' },
+              { field: 'filing', operator: 'eq', value: 'joint' },
+            ],
+          },
+          then: { action: 'require', targets: ['spouse-income'] },
+        },
+      ],
+      sections: [{ fields: [] }],
+    };
+
+    const bothMet = validateCrossField(schema, { married: 'yes', filing: 'joint' });
+    expect(bothMet.firedRules).toHaveLength(1);
+    expect(bothMet.conditionallyRequired).toContain('spouse-income');
+
+    const onlyOne = validateCrossField(schema, { married: 'yes', filing: 'single' });
+    expect(onlyOne.firedRules).toHaveLength(0);
+  });
+
+  it('evaluates anyOf compound condition', () => {
+    const schema: FormSchema = {
+      crossFieldRules: [
+        {
+          id: 'any-status',
+          description: 'Show tax field for certain statuses',
+          when: {
+            anyOf: [
+              { field: 'status', operator: 'eq', value: 'employed' },
+              { field: 'status', operator: 'eq', value: 'self-employed' },
+            ],
+          },
+          then: { action: 'show', targets: ['tax-id'] },
+        },
+      ],
+      sections: [{ fields: [] }],
+    };
+
+    const employed = validateCrossField(schema, { status: 'employed' });
+    expect(employed.conditionallyVisible).toContain('tax-id');
+
+    const unemployed = validateCrossField(schema, { status: 'retired' });
+    expect(unemployed.firedRules).toHaveLength(0);
+  });
+
+  it('evaluates nested compound conditions', () => {
+    const schema: FormSchema = {
+      crossFieldRules: [
+        {
+          id: 'nested',
+          description: 'Nested allOf/anyOf',
+          when: {
+            allOf: [
+              { field: 'citizen', operator: 'eq', value: 'yes' },
+              {
+                anyOf: [
+                  { field: 'age', operator: 'eq', value: '18' },
+                  { field: 'age', operator: 'eq', value: '21' },
+                ],
+              },
+            ],
+          },
+          then: { action: 'show', targets: ['voter-reg'] },
+        },
+      ],
+      sections: [{ fields: [] }],
+    };
+
+    const match = validateCrossField(schema, { citizen: 'yes', age: '18' });
+    expect(match.conditionallyVisible).toContain('voter-reg');
+
+    const noMatch = validateCrossField(schema, { citizen: 'no', age: '18' });
+    expect(noMatch.firedRules).toHaveLength(0);
+  });
+
+  it('empty compound condition (no allOf/anyOf) evaluates to false', () => {
+    const schema: FormSchema = {
+      crossFieldRules: [
+        {
+          id: 'empty-compound',
+          description: 'Empty compound',
+          when: {} as any,
+          then: { action: 'show', targets: ['x'] },
+        },
+      ],
+      sections: [{ fields: [] }],
+    };
+    const result = validateCrossField(schema, { x: 'y' });
+    expect(result.firedRules).toHaveLength(0);
+  });
+
+  // ---- Section visibleWhen ----
+
+  it('section visibleWhen hides all section fields when condition not met', () => {
+    const schema: FormSchema = {
+      sections: [
+        {
+          heading: 'Spouse info',
+          visibleWhen: { field: 'married', operator: 'eq', value: 'yes' },
+          fields: [
+            { type: 'text', name: 'spouse-name', label: 'Spouse name' },
+            { type: 'text', name: 'spouse-ssn', label: 'Spouse SSN' },
+          ],
+        },
+      ],
+    };
+
+    const hidden = validateCrossField(schema, { married: 'no' });
+    expect(hidden.conditionallyHidden).toContain('spouse-name');
+    expect(hidden.conditionallyHidden).toContain('spouse-ssn');
+
+    const visible = validateCrossField(schema, { married: 'yes' });
+    expect(visible.conditionallyHidden).not.toContain('spouse-name');
+    expect(visible.conditionallyHidden).not.toContain('spouse-ssn');
+  });
+
+  it('section visibleWhen skips per-field evaluation for hidden sections', () => {
+    const schema: FormSchema = {
+      sections: [
+        {
+          heading: 'Spouse info',
+          visibleWhen: { field: 'married', operator: 'eq', value: 'yes' },
+          fields: [
+            {
+              type: 'text',
+              name: 'spouse-employer',
+              label: 'Spouse employer',
+              requiredWhen: { field: 'married', operator: 'eq', value: 'yes' },
+            },
+          ],
+        },
+      ],
+    };
+
+    // Section hidden — the requiredWhen on the field should NOT fire
+    const hidden = validateCrossField(schema, { married: 'no' });
+    expect(hidden.conditionallyRequired).not.toContain('spouse-employer');
+    expect(hidden.conditionallyHidden).toContain('spouse-employer');
+    expect(hidden.errors).toHaveLength(0);
+  });
 });

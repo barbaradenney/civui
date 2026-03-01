@@ -2,7 +2,8 @@
  * analyze_relationships tool — analyze a FormSchema and produce an
  * entity-relationship summary.
  */
-import type { FormSchema, FormSection } from '../schema/index.js';
+import type { FormSchema, FormSection, ConditionExpression } from '../schema/index.js';
+import { isSimpleCondition } from '../schema/index.js';
 
 export interface Entity {
   name: string;
@@ -33,6 +34,21 @@ const ENTITY_PATTERNS: { pattern: RegExp; type: string }[] = [
   { pattern: /(?:employer|company|organization)/i, type: 'organization' },
   { pattern: /(?:account|routing|bank)/i, type: 'financial' },
 ];
+
+/** Extract all field names referenced in a ConditionExpression (recursive). */
+function extractConditionFields(cond: ConditionExpression): string[] {
+  if (isSimpleCondition(cond)) {
+    return [cond.field];
+  }
+  const fields: string[] = [];
+  if (cond.allOf) {
+    for (const c of cond.allOf) fields.push(...extractConditionFields(c));
+  }
+  if (cond.anyOf) {
+    for (const c of cond.anyOf) fields.push(...extractConditionFields(c));
+  }
+  return fields;
+}
 
 function inferEntityType(fieldNames: string[]): string {
   const typeCounts: Record<string, number> = {};
@@ -104,20 +120,26 @@ export function analyzeRelationships(schema: FormSchema): RelationshipAnalysis {
   for (const section of schema.sections) {
     for (const field of section.fields) {
       if (field.visibleWhen) {
-        relationships.push({
-          from: field.visibleWhen.field,
-          to: field.name,
-          type: 'conditional',
-          description: `${field.name} is visible when ${field.visibleWhen.field} ${field.visibleWhen.operator} ${field.visibleWhen.value ?? ''}`.trim(),
-        });
+        const condFields = extractConditionFields(field.visibleWhen);
+        for (const fromField of condFields) {
+          relationships.push({
+            from: fromField,
+            to: field.name,
+            type: 'conditional',
+            description: `${field.name} is conditionally visible based on ${fromField}`,
+          });
+        }
       }
       if (field.requiredWhen) {
-        relationships.push({
-          from: field.requiredWhen.field,
-          to: field.name,
-          type: 'conditional',
-          description: `${field.name} is required when ${field.requiredWhen.field} ${field.requiredWhen.operator} ${field.requiredWhen.value ?? ''}`.trim(),
-        });
+        const condFields = extractConditionFields(field.requiredWhen);
+        for (const fromField of condFields) {
+          relationships.push({
+            from: fromField,
+            to: field.name,
+            type: 'conditional',
+            description: `${field.name} is conditionally required based on ${fromField}`,
+          });
+        }
       }
     }
   }
@@ -125,13 +147,16 @@ export function analyzeRelationships(schema: FormSchema): RelationshipAnalysis {
   // Detect cross-field rule relationships
   if (schema.crossFieldRules) {
     for (const rule of schema.crossFieldRules) {
+      const condFields = extractConditionFields(rule.when);
       for (const target of rule.then.targets) {
-        relationships.push({
-          from: rule.when.field,
-          to: target,
-          type: 'cross-field',
-          description: rule.description,
-        });
+        for (const fromField of condFields) {
+          relationships.push({
+            from: fromField,
+            to: target,
+            type: 'cross-field',
+            description: rule.description,
+          });
+        }
       }
     }
   }

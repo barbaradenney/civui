@@ -483,4 +483,182 @@ describe('generateCivUI', () => {
     const html = generateCivUI(schema);
     expect(html).toContain("label=\"It&#39;s a label\"");
   });
+
+  // ---- Compound conditions ----
+
+  it('serializes compound allOf condition as JSON in data attr', () => {
+    const schema: FormSchema = {
+      sections: [
+        {
+          fields: [
+            {
+              type: 'text',
+              name: 'spouse-income',
+              label: 'Spouse income',
+              visibleWhen: {
+                allOf: [
+                  { field: 'married', operator: 'eq', value: 'yes' },
+                  { field: 'filing', operator: 'eq', value: 'joint' },
+                ],
+              },
+            },
+          ],
+        },
+      ],
+    };
+    const html = generateCivUI(schema);
+    expect(html).toContain('data-civ-show-when=');
+    // JSON is HTML-escaped in attributes
+    expect(html).toContain('&quot;allOf&quot;');
+    expect(html).toContain('&quot;married&quot;');
+    expect(html).toContain('&quot;filing&quot;');
+  });
+
+  it('serializes compound anyOf condition as JSON in data attr', () => {
+    const schema: FormSchema = {
+      sections: [
+        {
+          fields: [
+            {
+              type: 'text',
+              name: 'tax-id',
+              label: 'Tax ID',
+              visibleWhen: {
+                anyOf: [
+                  { field: 'status', operator: 'eq', value: 'employed' },
+                  { field: 'status', operator: 'eq', value: 'self-employed' },
+                ],
+              },
+            },
+          ],
+        },
+      ],
+    };
+    const html = generateCivUI(schema);
+    expect(html).toContain('data-civ-show-when=');
+    expect(html).toContain('&quot;anyOf&quot;');
+  });
+
+  // ---- Section visibleWhen ----
+
+  it('adds data-civ-show-when to fieldset when section has visibleWhen', () => {
+    const schema: FormSchema = {
+      sections: [
+        {
+          heading: 'Spouse info',
+          visibleWhen: { field: 'married', operator: 'eq', value: 'yes' },
+          fields: [
+            { type: 'text', name: 'spouse-name', label: 'Spouse name' },
+          ],
+        },
+      ],
+    };
+    const html = generateCivUI(schema);
+    expect(html).toContain('<civ-fieldset legend="Spouse info" data-civ-show-when="married=yes">');
+  });
+
+  it('wraps headless section in div with data-civ-show-when', () => {
+    const schema: FormSchema = {
+      sections: [
+        {
+          visibleWhen: { field: 'has-dependents', operator: 'eq', value: 'yes' },
+          fields: [
+            { type: 'text', name: 'dep-name', label: 'Dependent name' },
+          ],
+        },
+      ],
+    };
+    const html = generateCivUI(schema);
+    expect(html).toContain('<div data-civ-show-when="has-dependents=yes">');
+    expect(html).toContain('</div>');
+  });
+
+  it('adds data-civ-show-when to repeatable container when section has visibleWhen', () => {
+    const schema: FormSchema = {
+      sections: [
+        {
+          heading: 'Dependents',
+          repeatable: true,
+          repeatableKey: 'deps',
+          visibleWhen: { field: 'has-dependents', operator: 'eq', value: 'yes' },
+          fields: [
+            { type: 'text', name: 'name', label: 'Name' },
+          ],
+        },
+      ],
+    };
+    const html = generateCivUI(schema);
+    expect(html).toContain('data-civ-repeatable="deps"');
+    expect(html).toContain('data-civ-show-when="has-dependents=yes"');
+  });
+
+  // ---- Wizard generation ----
+
+  it('generates wizard step containers and progress indicator', () => {
+    const schema: FormSchema = {
+      steps: [
+        { title: 'Personal Info' },
+        { title: 'Contact Info' },
+      ],
+      sections: [
+        {
+          step: 0,
+          heading: 'Personal',
+          fields: [{ type: 'text', name: 'first-name', label: 'First name' }],
+        },
+        {
+          step: 1,
+          heading: 'Contact',
+          fields: [{ type: 'email', name: 'email', label: 'Email' }],
+        },
+      ],
+    };
+    const html = generateCivUI(schema);
+    expect(html).toContain('<nav data-civ-progress');
+    expect(html).toContain('Personal Info');
+    expect(html).toContain('Contact Info');
+    expect(html).toContain('data-civ-step="0"');
+    expect(html).toContain('data-civ-step="1"');
+    expect(html).toContain('data-civ-step-nav');
+    expect(html).toContain('data-civ-step-prev');
+    expect(html).toContain('data-civ-step-next');
+  });
+
+  it('hides non-first wizard steps', () => {
+    const schema: FormSchema = {
+      steps: [{ title: 'Step 1' }, { title: 'Step 2' }],
+      sections: [
+        { step: 0, fields: [{ type: 'text', name: 'a', label: 'A' }] },
+        { step: 1, fields: [{ type: 'text', name: 'b', label: 'B' }] },
+      ],
+    };
+    const html = generateCivUI(schema);
+    expect(html).toContain('data-civ-step="0">');
+    expect(html).toContain('data-civ-step="1" hidden>');
+  });
+
+  it('sets aria-current on first progress step', () => {
+    const schema: FormSchema = {
+      steps: [{ title: 'S1' }, { title: 'S2' }],
+      sections: [
+        { step: 0, fields: [{ type: 'text', name: 'a', label: 'A' }] },
+        { step: 1, fields: [{ type: 'text', name: 'b', label: 'B' }] },
+      ],
+    };
+    const html = generateCivUI(schema);
+    expect(html).toContain('data-civ-progress-step="0" aria-current="step"');
+    expect(html).not.toContain('data-civ-progress-step="1" aria-current');
+  });
+
+  it('defaults sections without step to step 0', () => {
+    const schema: FormSchema = {
+      steps: [{ title: 'Step 1' }],
+      sections: [
+        { fields: [{ type: 'text', name: 'x', label: 'X' }] },
+      ],
+    };
+    const html = generateCivUI(schema);
+    expect(html).toContain('data-civ-step="0"');
+    expect(html).toContain('name="x"');
+  });
 });

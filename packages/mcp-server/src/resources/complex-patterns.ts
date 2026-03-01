@@ -143,6 +143,138 @@ The system infers entity types from field name patterns:
 - \`employer\`, \`company\` → **organization**
 - \`account\`, \`routing\`, \`bank\` → **financial**
 
+## Multi-Step Wizard
+
+Use \`steps\` on the FormSchema and \`step\` on each FormSection to create a multi-step wizard.
+
+### Schema
+
+\`\`\`json
+{
+  "steps": [
+    { "title": "Personal Info", "description": "Your basic details" },
+    { "title": "Contact Info" },
+    { "title": "Review" }
+  ],
+  "sections": [
+    { "step": 0, "heading": "Personal", "fields": [...] },
+    { "step": 1, "heading": "Contact", "fields": [...] },
+    { "step": 2, "fields": [...] }
+  ]
+}
+\`\`\`
+
+### Generated HTML Structure
+
+\`\`\`html
+<nav data-civ-progress aria-label="Form progress">
+  <ol>
+    <li data-civ-progress-step="0" aria-current="step">Personal Info</li>
+    <li data-civ-progress-step="1">Contact Info</li>
+    <li data-civ-progress-step="2">Review</li>
+  </ol>
+</nav>
+<div data-civ-step="0">...</div>
+<div data-civ-step="1" hidden>...</div>
+<div data-civ-step="2" hidden>...</div>
+<div data-civ-step-nav>
+  <button type="button" data-civ-step-prev disabled>Previous</button>
+  <button type="button" data-civ-step-next>Next</button>
+</div>
+\`\`\`
+
+### Companion JS Features
+
+- Step show/hide with \`hidden\` attribute
+- Progress indicator updates (\`aria-current\`)
+- Per-step required field validation before advancing
+- Hash-based history (\`#step-0\`, \`#step-1\`)
+- Screen reader announcements on step change
+- Focus management (focus first input in new step)
+- "Submit" label on last step's next button
+
+### Validation Rules
+
+- \`wizard-missing-progress\` (error): Step containers without a progress indicator
+- \`wizard-step-gap\` (warning): Non-contiguous step numbers
+- \`wizard-step-no-fields\` (warning): Empty wizard step
+
+## Compound Conditions
+
+Use \`allOf\` and \`anyOf\` for AND/OR logic in condition expressions.
+
+### Schema
+
+\`\`\`json
+{
+  "visibleWhen": {
+    "allOf": [
+      { "field": "married", "operator": "eq", "value": "yes" },
+      { "field": "filing", "operator": "eq", "value": "joint" }
+    ]
+  }
+}
+\`\`\`
+
+\`\`\`json
+{
+  "visibleWhen": {
+    "anyOf": [
+      { "field": "status", "operator": "eq", "value": "employed" },
+      { "field": "status", "operator": "eq", "value": "self-employed" }
+    ]
+  }
+}
+\`\`\`
+
+Compound conditions can be nested: \`allOf\` containing \`anyOf\` and vice versa.
+
+### HTML Serialization
+
+Compound conditions are serialized as JSON in \`data-civ-show-when\` attributes. The parser detects JSON (starts with \`{\`) and uses \`JSON.parse()\`.
+
+## Section-Level Visibility
+
+Use \`visibleWhen\` on a FormSection to show/hide the entire section conditionally.
+
+### Schema
+
+\`\`\`json
+{
+  "sections": [
+    {
+      "heading": "Spouse Information",
+      "visibleWhen": { "field": "marital-status", "operator": "eq", "value": "married" },
+      "fields": [...]
+    }
+  ]
+}
+\`\`\`
+
+- For sections with a heading: \`data-civ-show-when\` is added to the \`<civ-fieldset>\`
+- For headless sections: a wrapper \`<div data-civ-show-when="...">\` is generated
+- For repeatable sections: \`data-civ-show-when\` is added to the repeatable container
+- When the section is hidden, all fields inside are added to \`conditionallyHidden\`
+- Per-field \`requiredWhen\` is skipped for hidden sections
+
+## Prefill & Save-Resume
+
+Use \`generate_prefill_js\` to produce JavaScript that populates form fields from a saved values object.
+
+### Features
+
+- Handles all field types: text, radio, checkbox, select, toggle
+- Includes \`window.civSerializeForm()\` for serializing form state back to a values object
+- Supports repeatable section field names (\`key[index].field\`)
+
+### Pattern
+
+1. User fills out part of a form
+2. Call \`window.civSerializeForm('civ-form')\` to get current values
+3. Store values (localStorage, server, etc.)
+4. On return, use \`generate_prefill_js\` to create JS that restores values
+5. Include the generated JS on the page
+
 ## Anti-Patterns
 
 ### Unbounded Repeatable Sections

@@ -170,4 +170,108 @@ describe('formToSchema', () => {
     expect(schema.sections[0].heading).toBe('Section A');
     expect(schema.sections[1].heading).toBeUndefined();
   });
+
+  // ---- Compound JSON conditions ----
+
+  it('parses compound JSON condition from data-civ-show-when attribute', () => {
+    const cond = JSON.stringify({
+      allOf: [
+        { field: 'married', operator: 'eq', value: 'yes' },
+        { field: 'filing', operator: 'eq', value: 'joint' },
+      ],
+    });
+    const html = `<civ-text-input label="Spouse income" name="spouse-income" data-civ-show-when='${cond}'></civ-text-input>`;
+    const schema = formToSchema(html);
+    const field = schema.sections[0].fields[0];
+    expect(field.visibleWhen).toHaveProperty('allOf');
+    const vw = field.visibleWhen as any;
+    expect(vw.allOf).toHaveLength(2);
+    expect(vw.allOf[0].field).toBe('married');
+    expect(vw.allOf[1].field).toBe('filing');
+  });
+
+  it('parses compound anyOf condition from data attr', () => {
+    const cond = JSON.stringify({
+      anyOf: [
+        { field: 'status', operator: 'eq', value: 'employed' },
+        { field: 'status', operator: 'eq', value: 'self-employed' },
+      ],
+    });
+    const html = `<civ-text-input label="Tax ID" name="tax-id" data-civ-show-when='${cond}'></civ-text-input>`;
+    const schema = formToSchema(html);
+    const field = schema.sections[0].fields[0];
+    expect(field.visibleWhen).toHaveProperty('anyOf');
+  });
+
+  // ---- Section visibleWhen ----
+
+  it('extracts section visibleWhen from fieldset data-civ-show-when', () => {
+    const html = `
+      <civ-fieldset legend="Spouse" data-civ-show-when="married=yes">
+        <civ-text-input label="Spouse name" name="spouse-name"></civ-text-input>
+      </civ-fieldset>
+    `;
+    const schema = formToSchema(html);
+    expect(schema.sections[0].visibleWhen).toEqual({
+      field: 'married', operator: 'eq', value: 'yes',
+    });
+  });
+
+  it('extracts section visibleWhen from div wrapper', () => {
+    const html = `
+      <div data-civ-show-when="has-deps=yes">
+        <civ-text-input label="Dep name" name="dep-name"></civ-text-input>
+      </div>
+    `;
+    const schema = formToSchema(html);
+    const section = schema.sections.find((s) => s.visibleWhen);
+    expect(section).toBeDefined();
+    expect(section!.visibleWhen).toEqual({
+      field: 'has-deps', operator: 'eq', value: 'yes',
+    });
+  });
+
+  // ---- Wizard step detection ----
+
+  it('detects wizard steps from data-civ-step containers', () => {
+    const html = `
+      <civ-form>
+        <nav data-civ-progress aria-label="Progress">
+          <ol>
+            <li data-civ-progress-step="0">Personal</li>
+            <li data-civ-progress-step="1">Contact</li>
+          </ol>
+        </nav>
+        <div data-civ-step="0">
+          <civ-text-input label="Name" name="name"></civ-text-input>
+        </div>
+        <div data-civ-step="1">
+          <civ-text-input label="Email" name="email"></civ-text-input>
+        </div>
+      </civ-form>
+    `;
+    const schema = formToSchema(html);
+    expect(schema.steps).toHaveLength(2);
+    expect(schema.steps![0].title).toBe('Personal');
+    expect(schema.steps![1].title).toBe('Contact');
+  });
+
+  it('assigns step number to sections from parent data-civ-step', () => {
+    const html = `
+      <civ-form>
+        <nav data-civ-progress><ol><li data-civ-progress-step="0">S1</li><li data-civ-progress-step="1">S2</li></ol></nav>
+        <div data-civ-step="0">
+          <civ-fieldset legend="Info">
+            <civ-text-input label="Name" name="name"></civ-text-input>
+          </civ-fieldset>
+        </div>
+        <div data-civ-step="1">
+          <civ-text-input label="Email" name="email"></civ-text-input>
+        </div>
+      </civ-form>
+    `;
+    const schema = formToSchema(html);
+    const infoSection = schema.sections.find((s) => s.heading === 'Info');
+    expect(infoSection?.step).toBe(0);
+  });
 });

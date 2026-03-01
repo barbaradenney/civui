@@ -3,6 +3,7 @@
  * requirements against field values.
  */
 import type { FormSchema, ConditionExpression } from '../schema/index.js';
+import { isSimpleCondition } from '../schema/index.js';
 
 export interface CrossFieldError {
   ruleId: string;
@@ -44,7 +45,7 @@ function getFieldValue(values: Values, field: string): string | string[] | undef
   return undefined;
 }
 
-function evaluateCondition(cond: ConditionExpression, values: Values): boolean {
+function evaluateSimpleCondition(cond: { field: string; operator: string; value?: string | string[] }, values: Values): boolean {
   const raw = getFieldValue(values, cond.field);
   const val = Array.isArray(raw) ? raw : (raw !== undefined ? String(raw) : undefined);
 
@@ -70,6 +71,22 @@ function evaluateCondition(cond: ConditionExpression, values: Values): boolean {
     default:
       return false;
   }
+}
+
+function evaluateCondition(cond: ConditionExpression, values: Values): boolean {
+  if (isSimpleCondition(cond)) {
+    return evaluateSimpleCondition(cond, values);
+  }
+
+  // Compound condition
+  if (cond.allOf) {
+    return cond.allOf.every((c) => evaluateCondition(c, values));
+  }
+  if (cond.anyOf) {
+    return cond.anyOf.some((c) => evaluateCondition(c, values));
+  }
+
+  return false;
 }
 
 /**
@@ -130,8 +147,19 @@ export function validateCrossField(
     }
   }
 
-  // Evaluate per-field requiredWhen
+  // Evaluate per-field requiredWhen and visibleWhen
   for (const section of schema.sections) {
+    // Evaluate section-level visibleWhen
+    if (section.visibleWhen) {
+      if (!evaluateCondition(section.visibleWhen, values)) {
+        // Section is hidden — add all section fields to conditionallyHidden
+        for (const field of section.fields) {
+          conditionallyHidden.push(field.name);
+        }
+        continue; // Skip per-field evaluation for hidden sections
+      }
+    }
+
     for (const field of section.fields) {
       if (field.requiredWhen && evaluateCondition(field.requiredWhen, values)) {
         conditionallyRequired.push(field.name);

@@ -163,4 +163,109 @@ describe('generateCompanionJs', () => {
     expect(result.javascript).toContain('dependents');
     expect(result.javascript).toContain('employers');
   });
+
+  // ---- Compound conditions in client JS ----
+
+  it('includes JSON.parse handling for compound conditions', () => {
+    const schema: FormSchema = {
+      sections: [
+        {
+          fields: [
+            {
+              type: 'text',
+              name: 'spouse',
+              label: 'Spouse',
+              visibleWhen: {
+                allOf: [
+                  { field: 'married', operator: 'eq', value: 'yes' },
+                  { field: 'filing', operator: 'eq', value: 'joint' },
+                ],
+              },
+            },
+          ],
+        },
+      ],
+    };
+    const result = generateCompanionJs(schema);
+    expect(result.features).toContain('conditional-visibility');
+    expect(result.javascript).toContain('JSON.parse');
+    expect(result.javascript).toContain('allOf');
+    expect(result.javascript).toContain('anyOf');
+  });
+
+  it('includes compound evaluate logic with allOf/anyOf', () => {
+    const schema: FormSchema = {
+      sections: [
+        {
+          fields: [
+            {
+              type: 'text',
+              name: 'x',
+              label: 'X',
+              visibleWhen: { anyOf: [{ field: 'a', operator: 'eq', value: '1' }] },
+            },
+          ],
+        },
+      ],
+    };
+    const result = generateCompanionJs(schema);
+    expect(result.javascript).toContain('.every(');
+    expect(result.javascript).toContain('.some(');
+  });
+
+  // ---- Wizard JS ----
+
+  it('generates wizard JS when schema has steps', () => {
+    const schema: FormSchema = {
+      steps: [{ title: 'Step 1' }, { title: 'Step 2' }],
+      sections: [
+        { step: 0, fields: [{ type: 'text', name: 'a', label: 'A' }] },
+        { step: 1, fields: [{ type: 'text', name: 'b', label: 'B' }] },
+      ],
+    };
+    const result = generateCompanionJs(schema);
+    expect(result.features).toContain('wizard');
+    expect(result.javascript).toContain('data-civ-step');
+    expect(result.javascript).toContain('data-civ-progress');
+    expect(result.javascript).toContain('showStep');
+  });
+
+  it('wizard JS includes step count', () => {
+    const schema: FormSchema = {
+      steps: [{ title: 'A' }, { title: 'B' }, { title: 'C' }],
+      sections: [
+        { step: 0, fields: [{ type: 'text', name: 'x', label: 'X' }] },
+      ],
+    };
+    const result = generateCompanionJs(schema);
+    expect(result.javascript).toContain('stepCount = 3');
+  });
+
+  it('wizard JS handles hash-based navigation', () => {
+    const schema: FormSchema = {
+      steps: [{ title: 'S1' }, { title: 'S2' }],
+      sections: [
+        { step: 0, fields: [{ type: 'text', name: 'a', label: 'A' }] },
+      ],
+    };
+    const result = generateCompanionJs(schema);
+    expect(result.javascript).toContain('#step-');
+    expect(result.javascript).toContain('location.hash');
+  });
+
+  // ---- Section visibleWhen detection ----
+
+  it('detects section-level visibleWhen as conditional-visibility feature', () => {
+    const schema: FormSchema = {
+      sections: [
+        {
+          heading: 'Spouse',
+          visibleWhen: { field: 'married', operator: 'eq', value: 'yes' },
+          fields: [{ type: 'text', name: 'spouse-name', label: 'Spouse name' }],
+        },
+      ],
+    };
+    const result = generateCompanionJs(schema);
+    expect(result.features).toContain('conditional-visibility');
+  });
 });

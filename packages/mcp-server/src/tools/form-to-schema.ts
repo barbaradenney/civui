@@ -4,7 +4,7 @@
  */
 import { load } from 'cheerio';
 import { getAllMappings } from '../generator/component-map.js';
-import type { FormSchema, FormSection, FormField, FieldOption, ConditionExpression } from '../schema/index.js';
+import type { FormSchema, FormSection, FormField, FieldOption, ConditionExpression, StepDefinition } from '../schema/index.js';
 
 /** Build reverse map: (tag, inputType?) → FieldType */
 function buildReverseMap(): Map<string, string> {
@@ -57,6 +57,15 @@ function parseOptions(
 /** Parse a data-civ-show-when/hide-when/require-when attribute into a ConditionExpression. */
 function parseConditionAttr(attrValue: string): ConditionExpression | undefined {
   if (!attrValue) return undefined;
+
+  // Try JSON parse for compound conditions (starts with '{')
+  if (attrValue.trimStart().startsWith('{')) {
+    try {
+      return JSON.parse(attrValue) as ConditionExpression;
+    } catch {
+      // Fall through to simple parsing
+    }
+  }
 
   if (attrValue.endsWith(' exists')) {
     return { field: attrValue.replace(/ exists$/, ''), operator: 'exists' };
@@ -254,6 +263,21 @@ export function formToSchema(html: string): FormSchema {
     schema.title = $heading.text().trim();
   }
 
+  // Detect wizard steps
+  const $stepContainers = $('[data-civ-step]');
+  const $progress = $('[data-civ-progress]');
+  if ($stepContainers.length > 0 && $progress.length > 0) {
+    const steps: StepDefinition[] = [];
+    $progress.find('[data-civ-progress-step]').each((_, el) => {
+      const $el = $(el);
+      const title = $el.text().trim();
+      steps.push({ title });
+    });
+    if (steps.length > 0) {
+      schema.steps = steps;
+    }
+  }
+
   // Process repeatable containers first
   const processedEls = new Set<any>();
 
@@ -276,6 +300,19 @@ export function formToSchema(html: string): FormSchema {
 
     if (repeatableMinAttr) section.repeatableMin = parseInt(repeatableMinAttr, 10);
     if (repeatableMaxAttr) section.repeatableMax = parseInt(repeatableMaxAttr, 10);
+
+    // Detect section visibleWhen
+    const containerShowWhen = $container.attr('data-civ-show-when');
+    if (containerShowWhen) {
+      const cond = parseConditionAttr(containerShowWhen);
+      if (cond) section.visibleWhen = cond;
+    }
+
+    // Detect step assignment
+    const $parentStep = $container.closest('[data-civ-step]');
+    if ($parentStep.length) {
+      section.step = parseInt($parentStep.attr('data-civ-step')!, 10);
+    }
 
     const searchRoot = $innerFieldset.length ? $innerFieldset : $container;
     searchRoot.find(FORM_SELECTOR).each((_, el) => {
@@ -313,6 +350,19 @@ export function formToSchema(html: string): FormSchema {
       fields: [],
     };
 
+    // Detect section visibleWhen
+    const fieldsetShowWhen = $fieldset.attr('data-civ-show-when');
+    if (fieldsetShowWhen) {
+      const cond = parseConditionAttr(fieldsetShowWhen);
+      if (cond) section.visibleWhen = cond;
+    }
+
+    // Detect step assignment
+    const $parentStep = $fieldset.closest('[data-civ-step]');
+    if ($parentStep.length) {
+      section.step = parseInt($parentStep.attr('data-civ-step')!, 10);
+    }
+
     $fieldset.find(FORM_SELECTOR).each((_, el) => {
       if (processedEls.has(el)) return;
       // Skip components inside nested fieldsets
@@ -333,7 +383,48 @@ export function formToSchema(html: string): FormSchema {
     processedEls.add(fieldsetEl);
   });
 
-  // Process remaining non-fieldset components
+  // Process sections inside step containers that have data-civ-show-when wrappers (non-fieldset divs)
+  $('[data-civ-step] > div[data-civ-show-when], div[data-civ-show-when]').each((_, wrapperEl) => {
+    const $wrapper = $(wrapperEl);
+    // Skip repeatable containers and fieldsets — already handled
+    if ($wrapper.attr('data-civ-repeatable') !== undefined) return;
+    if (processedEls.has(wrapperEl)) return;
+
+    const section: FormSection = {
+      fields: [],
+    };
+
+    const showWhen = $wrapper.attr('data-civ-show-when');
+    if (showWhen) {
+      const cond = parseConditionAttr(showWhen);
+      if (cond) section.visibleWhen = cond;
+    }
+
+    const $parentStep = $wrapper.closest('[data-civ-step]');
+    if ($parentStep.length) {
+      section.step = parseInt($parentStep.attr('data-civ-step')!, 10);
+    }
+
+    $wrapper.find(FORM_SELECTOR).each((_, el) => {
+      if (processedEls.has(el)) return;
+      const $el = $(el);
+      if ($el.parents('civ-radio-group, civ-checkbox-group, civ-segmented-control').length > 0) return;
+      if ($el.parents('[data-civ-repeatable]').length > 0) return;
+
+      const field = extractField($, el);
+      if (field) {
+        section.fields.push(field);
+        processedEls.add(el);
+      }
+    });
+
+    if (section.fields.length > 0) {
+      schema.sections.push(section);
+    }
+    processedEls.add(wrapperEl);
+  });
+
+  // Process remaining non-fieldset components (including inside step containers)
   const remainingSection: FormSection = { fields: [] };
 
   $(FORM_SELECTOR).each((_, el) => {
@@ -350,7 +441,20 @@ export function formToSchema(html: string): FormSchema {
 
     const field = extractField($, el);
     if (field) {
-      remainingSection.fields.push(field);
+      // Detect step assignment for remaining fields
+      const $parentStep = $el.closest('[data-civ-step]');
+      if ($parentStep.length && schema.steps) {
+        const stepNum = parseInt($parentStep.attr('data-civ-step')!, 10);
+        // Create a per-step section for remaining fields
+        let stepSection = schema.sections.find((s) => s.step === stepNum && !s.heading && !s.repeatable && !s.visibleWhen);
+        if (!stepSection) {
+          stepSection = { fields: [], step: stepNum };
+          schema.sections.push(stepSection);
+        }
+        stepSection.fields.push(field);
+      } else {
+        remainingSection.fields.push(field);
+      }
     }
   });
 

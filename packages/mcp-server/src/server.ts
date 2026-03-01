@@ -29,6 +29,9 @@ import {
   generateCompanionJs,
   validateCrossField,
   analyzeRelationships,
+  generateWizard,
+  generatePrefillJs,
+  generateSummary,
 } from './tools/index.js';
 import { validateForm } from './validators/index.js';
 import {
@@ -885,6 +888,111 @@ export function createServer(): McpServer {
             {
               type: 'text' as const,
               text: `Error analyzing relationships: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'generate_wizard',
+    'Generate a multi-step wizard form from a FormSchema with steps defined. ' +
+      'Produces HTML with step containers, progress indicator, and navigation buttons, ' +
+      'plus companion JavaScript for step management. Returns step summary with field counts.',
+    {
+      schema: FormSchema.describe('Form schema with steps array'),
+    },
+    async ({ schema }) => {
+      try {
+        const result = generateWizard(schema);
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error generating wizard: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'generate_prefill_js',
+    'Generate client-side JavaScript to prefill a CivUI form from saved values. ' +
+      'Handles text inputs, radios, checkboxes, selects, and toggles. ' +
+      'Includes window.civSerializeForm() for save-resume serialization.',
+    {
+      schema: FormSchema.describe('Form schema'),
+      values: z
+        .record(z.string(), z.union([z.string(), z.array(z.string())]))
+        .describe('Field values to prefill (name → value)'),
+    },
+    async ({ schema, values }) => {
+      try {
+        const result = generatePrefillJs(schema, values);
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error generating prefill JS: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'generate_summary',
+    'Generate a read-only HTML summary of form values for review pages. ' +
+      'Groups by section with <dl> elements, handles repeatable sections, ' +
+      'and adds edit links for wizard forms.',
+    {
+      schema: FormSchema.describe('Form schema'),
+      values: z
+        .record(z.string(), z.union([z.string(), z.array(z.string())]))
+        .describe('Field values to summarize (name → value)'),
+    },
+    async ({ schema, values }) => {
+      try {
+        const result = generateSummary(schema, values);
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error generating summary: ${err instanceof Error ? err.message : String(err)}`,
             },
           ],
           isError: true,

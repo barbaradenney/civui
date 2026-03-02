@@ -173,3 +173,12 @@ export type { MockDataResult } from './generate-mock-data.js';
 
 export { generateApiHandler } from './generate-api-handler.js';
 export type { ApiHandlerResult } from './generate-api-handler.js';
+
+export { validateSchema } from './validate-schema.js';
+export type { ValidateSchemaResult, SchemaError } from './validate-schema.js';
+
+export { generateE2eTests } from './generate-e2e-tests.js';
+export type { E2eTestsResult } from './generate-e2e-tests.js';
+
+export { generateEmailTemplate } from './generate-email-template.js';
+export type { EmailTemplateResult } from './generate-email-template.js';

@@ -12,6 +12,7 @@ import {
   DECISION_TREE,
   COMPLEX_PATTERNS,
   WORKFLOW_PATTERNS,
+  SCHEMA_REFERENCE,
 } from './resources/index.js';
 import {
   lookupStyle,
@@ -72,6 +73,9 @@ import {
   generateFieldDependenciesGraph,
   generateMockData,
   generateApiHandler,
+  validateSchema,
+  generateE2eTests,
+  generateEmailTemplate,
 } from './tools/index.js';
 import { validateForm } from './validators/index.js';
 import {
@@ -195,6 +199,16 @@ export function createServer(): McpServer {
         uri: uri.href,
         mimeType: 'text/markdown',
         text: WORKFLOW_PATTERNS,
+      },
+    ],
+  }));
+
+  server.resource('schema-reference', 'civui://schema-reference', async (uri) => ({
+    contents: [
+      {
+        uri: uri.href,
+        mimeType: 'text/markdown',
+        text: SCHEMA_REFERENCE,
       },
     ],
   }));
@@ -2675,6 +2689,116 @@ export function createServer(): McpServer {
             {
               type: 'text' as const,
               text: `Error generating API handler: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'validate_schema',
+    'Validate a FormSchema for internal consistency — detects duplicate field names, ' +
+      'missing options, dangling condition references, invalid ranges, and more.',
+    {
+      schema: FormSchema.describe('Form schema to validate'),
+    },
+    async ({ schema }) => {
+      try {
+        const result = validateSchema(schema);
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error validating schema: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'generate_e2e_tests',
+    'Generate Playwright end-to-end tests from a FormSchema covering validation, ' +
+      'submission, wizard flow, conditional fields, repeatable sections, and save/resume.',
+    {
+      schema: FormSchema.describe('Form schema to generate tests for'),
+      baseUrl: z.string().optional().describe('Base URL for the form page (default: http://localhost:3000)'),
+      suiteName: z.string().optional().describe('Test suite name (default: schema title)'),
+    },
+    async ({ schema, baseUrl, suiteName }) => {
+      try {
+        const result = generateE2eTests(schema, { baseUrl, suiteName });
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error generating e2e tests: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'generate_email_template',
+    'Generate an HTML email (confirmation or decision) with inline CSS, ' +
+      'table layout, and plain text fallback. Email-client compatible.',
+    {
+      schema: FormSchema.describe('Form schema to generate email from'),
+      type: z.enum(['confirmation', 'decision']).describe('Email type'),
+      formData: z.record(z.string(), z.union([z.string(), z.array(z.string())])).optional()
+        .describe('Form submission data'),
+      decision: z.string().optional().describe('Decision key (required for decision type)'),
+      replyTo: z.string().optional().describe('Reply-to email address'),
+      subject: z.string().optional().describe('Custom email subject line'),
+    },
+    async ({ schema, type, formData, decision, replyTo, subject }) => {
+      try {
+        const result = generateEmailTemplate(schema, {
+          type,
+          formData,
+          decision,
+          replyTo,
+          subject,
+        });
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error generating email template: ${err instanceof Error ? err.message : String(err)}`,
             },
           ],
           isError: true,

@@ -47,3 +47,9 @@ export {
   BUILD_COMPLEX_FORM_DESCRIPTION,
   buildComplexFormPrompt,
 } from './build-complex-form.js';
+
+export {
+  BUILD_WORKFLOW_FORM_NAME,
+  BUILD_WORKFLOW_FORM_DESCRIPTION,
+  buildWorkflowFormPrompt,
+} from './build-workflow-form.js';

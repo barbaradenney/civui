@@ -89,3 +89,24 @@ export type { A11yTestsResult } from './generate-a11y-tests.js';
 
 export { generatePrefillMapping } from './generate-prefill-mapping.js';
 export type { PrefillMappingResult, FieldMapping } from './generate-prefill-mapping.js';
+
+export { generateWorkflowUi } from './generate-workflow-ui.js';
+export type { WorkflowUiResult } from './generate-workflow-ui.js';
+
+export { generateLockMatrix } from './generate-lock-matrix.js';
+export type { LockMatrixResult, LockMatrixEntry, SectionPermission } from './generate-lock-matrix.js';
+
+export { generateDelegationSections } from './generate-delegation-sections.js';
+export type { DelegationSectionsResult } from './generate-delegation-sections.js';
+
+export { generateFeedbackUi } from './generate-feedback-ui.js';
+export type { FeedbackUiResult, FeedbackComment } from './generate-feedback-ui.js';
+
+export { generateAuditTrail } from './generate-audit-trail.js';
+export type { AuditTrailResult, AuditEntry } from './generate-audit-trail.js';
+
+export { generateSectionProgress } from './generate-section-progress.js';
+export type { SectionProgressResult, SectionStatus } from './generate-section-progress.js';
+
+export { generateCaseDashboard } from './generate-case-dashboard.js';
+export type { CaseDashboardResult } from './generate-case-dashboard.js';

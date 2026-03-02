@@ -3,20 +3,12 @@
  * for review pages, grouped by section with <dl> elements.
  */
 import type { FormSchema, FormSection } from '../schema/index.js';
+import { escapeHtml } from './html-utils.js';
 
 export interface SummaryResult {
   html: string;
   fieldCount: number;
   sectionCount: number;
-}
-
-function escapeHtml(text: string): string {
-  return text
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
 }
 
 function formatValue(value: string | string[] | undefined): string {

@@ -11,6 +11,7 @@ import {
   CHANGELOG,
   DECISION_TREE,
   COMPLEX_PATTERNS,
+  WORKFLOW_PATTERNS,
 } from './resources/index.js';
 import {
   lookupStyle,
@@ -43,6 +44,13 @@ import {
   generateValidationSchema,
   generateA11yTests,
   generatePrefillMapping,
+  generateWorkflowUi,
+  generateLockMatrix,
+  generateDelegationSections,
+  generateFeedbackUi,
+  generateAuditTrail,
+  generateSectionProgress,
+  generateCaseDashboard,
 } from './tools/index.js';
 import { validateForm } from './validators/index.js';
 import {
@@ -71,6 +79,9 @@ import {
   BUILD_COMPLEX_FORM_NAME,
   BUILD_COMPLEX_FORM_DESCRIPTION,
   buildComplexFormPrompt,
+  BUILD_WORKFLOW_FORM_NAME,
+  BUILD_WORKFLOW_FORM_DESCRIPTION,
+  buildWorkflowFormPrompt,
 } from './prompts/index.js';
 
 /** 50 MB base64 ≈ ~37.5 MB decoded PDF — generous but bounded. */
@@ -153,6 +164,16 @@ export function createServer(): McpServer {
         uri: uri.href,
         mimeType: 'text/markdown',
         text: COMPLEX_PATTERNS,
+      },
+    ],
+  }));
+
+  server.resource('workflow-patterns', 'civui://workflow-patterns', async (uri) => ({
+    contents: [
+      {
+        uri: uri.href,
+        mimeType: 'text/markdown',
+        text: WORKFLOW_PATTERNS,
       },
     ],
   }));
@@ -1403,6 +1424,314 @@ export function createServer(): McpServer {
     },
   );
 
+  // --- Workflow & Case Tools ---
+
+  server.tool(
+    'generate_workflow_ui',
+    'Generate workflow status banner, transition buttons, and companion JavaScript ' +
+      'for multi-actor form workflows. Shows current state, available actions, and ' +
+      'handles confirmation dialogs, comment requirements, and section-complete validation.',
+    {
+      schema: FormSchema.describe('Form schema with workflow definition'),
+      currentState: z
+        .string()
+        .optional()
+        .describe('Current workflow state ID (default: initialState)'),
+      currentActor: z
+        .string()
+        .optional()
+        .describe('Current actor ID (default: first actor)'),
+    },
+    async ({ schema, currentState, currentActor }) => {
+      try {
+        const result = generateWorkflowUi(schema, currentState, currentActor);
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error generating workflow UI: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'generate_lock_matrix',
+    'Generate a state × actor permission matrix showing which sections are editable, ' +
+      'readonly, or hidden for each workflow state and actor combination. ' +
+      'Returns matrix data, markdown summary table, and data attribute documentation.',
+    {
+      schema: FormSchema.describe('Form schema with workflow and actors'),
+    },
+    async ({ schema }) => {
+      try {
+        const result = generateLockMatrix(schema);
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error generating lock matrix: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'generate_delegation_sections',
+    'Generate representative information, attestation, and consent sections for ' +
+      'delegation/representative forms. Produces FormSection objects ready to merge, ' +
+      'attestation HTML, and cross-field rules for conditional delegation fields.',
+    {
+      schema: FormSchema.describe('Form schema with delegation configuration'),
+      delegationType: z
+        .string()
+        .optional()
+        .describe('Filter to a specific delegation type ID (default: all types)'),
+    },
+    async ({ schema, delegationType }) => {
+      try {
+        const result = generateDelegationSections(schema, delegationType);
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error generating delegation sections: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'generate_feedback_ui',
+    'Generate inline comment/feedback panels for reviewer and applicant modes. ' +
+      'Supports section-level or field-level granularity, existing comments, ' +
+      'resolution tracking, and custom events for feedback submission.',
+    {
+      schema: FormSchema.describe('Form schema with feedback configuration or workflow with allowsFeedback'),
+      mode: z
+        .enum(['reviewer', 'applicant'])
+        .optional()
+        .default('reviewer')
+        .describe('Feedback mode: reviewer (add comments) or applicant (read-only)'),
+      existingComments: z
+        .array(
+          z.object({
+            target: z.string(),
+            author: z.string(),
+            text: z.string(),
+            timestamp: z.string().optional(),
+            resolved: z.boolean().optional(),
+          }),
+        )
+        .optional()
+        .describe('Existing comments to render'),
+    },
+    async ({ schema, mode, existingComments }) => {
+      try {
+        const result = generateFeedbackUi(schema, { mode, existingComments });
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error generating feedback UI: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'generate_audit_trail',
+    'Generate a timeline/history component for case-style forms. ' +
+      'Renders chronologically sorted entries with timestamps, actor badges, ' +
+      'action descriptions, state transitions, and detail text.',
+    {
+      schema: FormSchema.describe('Form schema with workflow or actors'),
+      entries: z
+        .array(
+          z.object({
+            timestamp: z.string().describe('ISO 8601 timestamp'),
+            actor: z.string().describe('Actor ID or name'),
+            action: z.string().describe('Action description'),
+            details: z.string().optional(),
+            stateFrom: z.string().optional(),
+            stateTo: z.string().optional(),
+          }),
+        )
+        .describe('Audit trail entries to render'),
+    },
+    async ({ schema, entries }) => {
+      try {
+        const result = generateAuditTrail(schema, entries);
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error generating audit trail: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'generate_section_progress',
+    'Generate a section completion checklist with progress tracking. ' +
+      'Shows complete/incomplete/not-started status per section, ' +
+      'overall percentage, anchor links, and JavaScript for dynamic updates.',
+    {
+      schema: FormSchema.describe('Form schema with sections'),
+      completedValues: z
+        .record(z.string(), z.union([z.string(), z.array(z.string())]))
+        .optional()
+        .describe('Map of field names to their current values for completion calculation'),
+    },
+    async ({ schema, completedValues }) => {
+      try {
+        const result = generateSectionProgress(schema, completedValues);
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error generating section progress: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'generate_case_dashboard',
+    'Generate a composed case-style dashboard combining workflow status, ' +
+      'section progress, and audit trail into a responsive two-column layout. ' +
+      'Returns merged HTML, JavaScript, and feature summary.',
+    {
+      schema: FormSchema.describe('Form schema with workflow definition'),
+      currentState: z
+        .string()
+        .optional()
+        .describe('Current workflow state ID'),
+      currentActor: z
+        .string()
+        .optional()
+        .describe('Current actor ID'),
+      completedValues: z
+        .record(z.string(), z.union([z.string(), z.array(z.string())]))
+        .optional()
+        .describe('Map of field names to their current values'),
+      auditEntries: z
+        .array(
+          z.object({
+            timestamp: z.string(),
+            actor: z.string(),
+            action: z.string(),
+            details: z.string().optional(),
+            stateFrom: z.string().optional(),
+            stateTo: z.string().optional(),
+          }),
+        )
+        .optional()
+        .describe('Audit trail entries'),
+    },
+    async ({ schema, currentState, currentActor, completedValues, auditEntries }) => {
+      try {
+        const result = generateCaseDashboard(schema, {
+          currentState,
+          currentActor,
+          completedValues,
+          auditEntries,
+        });
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error generating case dashboard: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
   // --- Prompts ---
 
   server.prompt(
@@ -1494,6 +1823,17 @@ export function createServer(): McpServer {
         .describe('Plain-English description of the complex form requirements'),
     },
     async ({ description }) => buildComplexFormPrompt(description),
+  );
+
+  server.prompt(
+    BUILD_WORKFLOW_FORM_NAME,
+    BUILD_WORKFLOW_FORM_DESCRIPTION,
+    {
+      description: z
+        .string()
+        .describe('Plain-English description of the multi-actor workflow form requirements'),
+    },
+    async ({ description }) => buildWorkflowFormPrompt(description),
   );
 
   return server;

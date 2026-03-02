@@ -11,4 +11,12 @@ export {
   CrossFieldRule,
   SubFormDefinition,
   StepDefinition,
+  ActorDefinition,
+  WorkflowState,
+  WorkflowTransition,
+  WorkflowDefinition,
+  DelegationType,
+  AttestationDefinition,
+  DelegationConfig,
+  FeedbackConfig,
 } from './form-schema.js';

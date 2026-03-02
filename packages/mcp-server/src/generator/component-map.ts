@@ -100,6 +100,12 @@ const COMPONENT_MAP: Record<FieldType, ComponentMapping> = {
   },
   file: { tag: 'civ-file-upload', labelProp: 'label', isGroup: false },
   toggle: { tag: 'civ-toggle', labelProp: 'label', isGroup: false },
+  'segmented-control': {
+    tag: 'civ-segmented-control',
+    labelProp: 'legend',
+    isGroup: true,
+    childTag: 'civ-segment',
+  },
 };
 
 export function getComponentMapping(fieldType: FieldType): ComponentMapping {

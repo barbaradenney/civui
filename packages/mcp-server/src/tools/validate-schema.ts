@@ -76,7 +76,7 @@ export function validateSchema(schema: FormSchema): ValidateSchemaResult {
   }
 
   // --- Checks 2–7: walk all fields including children ---
-  const choiceTypes = new Set(['select', 'radio', 'combobox', 'checkbox-group']);
+  const choiceTypes = new Set(['select', 'radio', 'combobox', 'checkbox-group', 'segmented-control']);
 
   for (let si = 0; si < schema.sections.length; si++) {
     const section = schema.sections[si];

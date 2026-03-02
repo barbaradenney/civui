@@ -49,6 +49,7 @@ function fieldToZod(field: FormField): string {
     case 'select':
     case 'radio':
     case 'combobox':
+    case 'segmented-control':
       if (field.options && field.options.length > 0) {
         const values = field.options.map((o) => `'${o.value}'`).join(', ');
         chain = `z.enum([${values}])`;
@@ -240,6 +241,7 @@ function fieldToJsonSchemaProp(field: FormField): Record<string, unknown> {
     case 'select':
     case 'radio':
     case 'combobox':
+    case 'segmented-control':
       prop.type = 'string';
       if (field.options) prop.enum = field.options.map((o) => o.value);
       break;

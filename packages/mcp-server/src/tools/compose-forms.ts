@@ -13,7 +13,7 @@ export interface ComposeResult {
 }
 
 /** Prefix a field reference in a ConditionExpression with a namespace (recursive). */
-function prefixCondition(cond: ConditionExpression, ns: string): ConditionExpression {
+export function prefixCondition(cond: ConditionExpression, ns: string): ConditionExpression {
   if (isSimpleCondition(cond)) {
     return { ...cond, field: `${ns}.${cond.field}` };
   }
@@ -28,7 +28,7 @@ function prefixCondition(cond: ConditionExpression, ns: string): ConditionExpres
 }
 
 /** Prefix all field names in a section with a namespace. */
-function prefixFields(fields: FormField[], ns: string): FormField[] {
+export function prefixFields(fields: FormField[], ns: string): FormField[] {
   return fields.map((f) => ({
     ...f,
     name: `${ns}.${f.name}`,
@@ -41,7 +41,7 @@ function prefixFields(fields: FormField[], ns: string): FormField[] {
 }
 
 /** Prefix field references in a CrossFieldRule. */
-function prefixRule(rule: CrossFieldRule, ns: string): CrossFieldRule {
+export function prefixRule(rule: CrossFieldRule, ns: string): CrossFieldRule {
   return {
     ...rule,
     id: `${ns}.${rule.id}`,

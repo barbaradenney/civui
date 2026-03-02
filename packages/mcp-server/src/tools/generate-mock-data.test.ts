@@ -105,6 +105,27 @@ describe('generateMockData', () => {
     expect(result.features).toContain('locale-aware');
   });
 
+  it('segmented-control picks from options', () => {
+    const s: FormSchema = {
+      sections: [{
+        fields: [{
+          type: 'segmented-control',
+          name: 'view',
+          label: 'View mode',
+          required: true,
+          options: [
+            { value: 'grid', label: 'Grid' },
+            { value: 'list', label: 'List' },
+          ],
+        }],
+      }],
+    };
+    const result = generateMockData(s, { count: 10, seed: 42 });
+    for (const record of result.data) {
+      expect(['grid', 'list']).toContain(record.view);
+    }
+  });
+
   it('number fields respect min/max range', () => {
     const result = generateMockData(schema(), { count: 20, seed: 42 });
     for (const record of result.data) {

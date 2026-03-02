@@ -149,6 +149,25 @@ describe('generateErrorMessages', () => {
     expect(result.messageCount).toBeGreaterThanOrEqual(2);
   });
 
+  it('generates required message for segmented-control with "Select"', () => {
+    const schema: FormSchema = {
+      sections: [{
+        fields: [{
+          type: 'segmented-control',
+          name: 'view',
+          label: 'View mode',
+          required: true,
+          options: [
+            { value: 'grid', label: 'Grid' },
+            { value: 'list', label: 'List' },
+          ],
+        }],
+      }],
+    };
+    const result = generateErrorMessages(schema);
+    expect(result.messages['view'].required).toBe('Select your View mode');
+  });
+
   it('generates type-based pattern for email type without explicit pattern', () => {
     const schema: FormSchema = {
       sections: [{ fields: [{ type: 'email', name: 'email', label: 'Email address' }] }],

@@ -61,6 +61,7 @@ Complete specification for the FormSchema JSON format used by CivUI MCP tools.
 | \`memorable-date\` | \`<civ-memorable-date>\` | Memorable date (3 fields) |
 | \`file\` | \`<civ-file-upload>\` | File upload |
 | \`toggle\` | \`<civ-toggle>\` | Toggle switch |
+| \`segmented-control\` | \`<civ-segmented-control>\` | Segmented control (single selection) |
 
 ---
 
@@ -76,7 +77,7 @@ Complete specification for the FormSchema JSON format used by CivUI MCP tools.
 | \`disabled\` | boolean | no | Whether field is disabled |
 | \`placeholder\` | string | no | Placeholder text (not a label substitute) |
 | \`value\` | string | no | Default/initial value |
-| \`options\` | FieldOption[] | no | Options for select/radio/combobox/checkbox-group |
+| \`options\` | FieldOption[] | no | Options for select/radio/combobox/checkbox-group/segmented-control |
 | \`maxlength\` | number | no | Maximum character count |
 | \`minlength\` | number | no | Minimum character count |
 | \`pattern\` | string | no | Regex validation pattern |

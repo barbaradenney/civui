@@ -182,3 +182,14 @@ export type { E2eTestsResult } from './generate-e2e-tests.js';
 
 export { generateEmailTemplate } from './generate-email-template.js';
 export type { EmailTemplateResult } from './generate-email-template.js';
+
+export { generateCrossFieldRules } from './generate-cross-field-rules.js';
+export type { CrossFieldRulesResult } from './generate-cross-field-rules.js';
+
+export { inlineSubForms } from './inline-sub-forms.js';
+export type { InlineSubFormsResult } from './inline-sub-forms.js';
+
+export { scaffoldFromTemplate } from './scaffold-from-template.js';
+export type { ScaffoldResult } from './scaffold-from-template.js';
+
+export { prefixFields, prefixCondition, prefixRule } from './compose-forms.js';

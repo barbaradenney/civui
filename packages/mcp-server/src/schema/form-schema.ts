@@ -20,6 +20,7 @@ export const FieldType = z.enum([
   'memorable-date',
   'file',
   'toggle',
+  'segmented-control',
 ]);
 
 export type FieldType = z.infer<typeof FieldType>;

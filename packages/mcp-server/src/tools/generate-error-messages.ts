@@ -27,6 +27,7 @@ function getRequiredMessage(field: FormField): string {
     case 'select':
     case 'combobox':
     case 'radio':
+    case 'segmented-control':
       return `Select your ${label}`;
     case 'checkbox':
     case 'toggle':

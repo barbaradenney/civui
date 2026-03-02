@@ -76,6 +76,9 @@ import {
   validateSchema,
   generateE2eTests,
   generateEmailTemplate,
+  generateCrossFieldRules,
+  inlineSubForms,
+  scaffoldFromTemplate,
 } from './tools/index.js';
 import { validateForm } from './validators/index.js';
 import {
@@ -2799,6 +2802,112 @@ export function createServer(): McpServer {
             {
               type: 'text' as const,
               text: `Error generating email template: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  // --- Phase 9 Tools ---
+
+  server.tool(
+    'generate_cross_field_rules',
+    'Parse natural-language descriptions into CrossFieldRule[] for cross-field validation. ' +
+      'Supports require/show/hide/setError actions with eq/neq/in/exists operators and compound and/or conditions.',
+    {
+      schema: FormSchema.describe('Form schema to validate field references against'),
+      descriptions: z.array(z.string()).describe(
+        'Natural-language rule descriptions, e.g. "require phone when contact-method is phone"',
+      ),
+    },
+    async ({ schema, descriptions }) => {
+      try {
+        const result = generateCrossFieldRules(schema, descriptions);
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error generating cross-field rules: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'inline_sub_forms',
+    'Flatten subForm refs into a single merged schema with no subForms or ref sections. ' +
+      'Applies namespace prefixes to field names, conditions, and cross-field rules.',
+    {
+      schema: FormSchema.describe('Form schema with subForms and ref sections to inline'),
+    },
+    async ({ schema }) => {
+      try {
+        const result = inlineSubForms(schema);
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error inlining sub-forms: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'scaffold_from_template',
+    'Return a pre-built FormSchema from a template library. ' +
+      'Includes 8 government form templates: Contact, Benefits, Change of Address, ' +
+      'Document Submission, Feedback, Benefits with Workflow, Petition with Delegation, Building Permit.',
+    {
+      templateName: z.string().describe('Template name (exact, case-insensitive, or partial match)'),
+      title: z.string().optional().describe('Override the form title'),
+      action: z.string().optional().describe('Override the form action URL'),
+      method: z.string().optional().describe('Override the HTTP method'),
+    },
+    async ({ templateName, title, action, method }) => {
+      try {
+        const overrides = title !== undefined || action !== undefined || method !== undefined ? { title, action, method } : undefined;
+        const result = scaffoldFromTemplate(templateName, overrides);
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error scaffolding from template: ${err instanceof Error ? err.message : String(err)}`,
             },
           ],
           isError: true,

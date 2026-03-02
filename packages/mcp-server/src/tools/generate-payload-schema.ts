@@ -71,6 +71,7 @@ function fieldExample(field: FormField): unknown {
     case 'select':
     case 'radio':
     case 'combobox':
+    case 'segmented-control':
       return field.options && field.options.length > 0 ? field.options[0].value : '';
     case 'url':
       return 'https://example.gov';

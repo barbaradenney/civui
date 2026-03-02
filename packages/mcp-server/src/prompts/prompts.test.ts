@@ -158,8 +158,8 @@ describe('addFieldPrompt', () => {
     expect(text).toContain('civ-text-input');
   });
 
-  it('FIELD_TYPES has 19 entries', () => {
-    expect(FIELD_TYPES).toHaveLength(19);
+  it('FIELD_TYPES has 20 entries', () => {
+    expect(FIELD_TYPES).toHaveLength(20);
   });
 
   it('FIELD_TYPES matches expected set', () => {

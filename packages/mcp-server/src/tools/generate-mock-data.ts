@@ -65,6 +65,7 @@ function generateFieldValue(
     case 'select':
     case 'radio':
     case 'combobox':
+    case 'segmented-control':
       if (field.options && field.options.length > 0) {
         return prng.pick(field.options).value;
       }

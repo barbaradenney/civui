@@ -110,6 +110,43 @@ describe('validateSchema', () => {
     expect(result.errors).toHaveLength(3);
   });
 
+  it('detects segmented-control missing options', () => {
+    const schema: FormSchema = {
+      sections: [
+        {
+          fields: [
+            { type: 'segmented-control', name: 'view', label: 'View mode' },
+          ],
+        },
+      ],
+    };
+    const result = validateSchema(schema);
+    expect(result.valid).toBe(false);
+    expect(result.errors[0].message).toContain('requires options');
+  });
+
+  it('validates segmented-control with options', () => {
+    const schema: FormSchema = {
+      sections: [
+        {
+          fields: [
+            {
+              type: 'segmented-control',
+              name: 'view',
+              label: 'View mode',
+              options: [
+                { value: 'grid', label: 'Grid' },
+                { value: 'list', label: 'List' },
+              ],
+            },
+          ],
+        },
+      ],
+    };
+    const result = validateSchema(schema);
+    expect(result.valid).toBe(true);
+  });
+
   it('detects number field with min > max', () => {
     const schema: FormSchema = {
       sections: [

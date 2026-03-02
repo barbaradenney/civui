@@ -110,3 +110,36 @@ export type { SectionProgressResult, SectionStatus } from './generate-section-pr
 
 export { generateCaseDashboard } from './generate-case-dashboard.js';
 export type { CaseDashboardResult } from './generate-case-dashboard.js';
+
+export { generateAddressBlock, US_STATES, US_TERRITORIES, MILITARY_ADDRESSES } from './generate-address-block.js';
+export type { AddressBlockResult } from './generate-address-block.js';
+
+export { generateConfirmationPage } from './generate-confirmation-page.js';
+export type { ConfirmationPageResult } from './generate-confirmation-page.js';
+
+export { generateSignatureBlock } from './generate-signature-block.js';
+export type { SignatureBlockResult } from './generate-signature-block.js';
+
+export { generateEligibilityScreener } from './generate-eligibility-screener.js';
+export type { EligibilityScreenerResult } from './generate-eligibility-screener.js';
+
+export { generateDocumentChecklist } from './generate-document-checklist.js';
+export type { DocumentChecklistResult } from './generate-document-checklist.js';
+
+export { generateDecisionNotice } from './generate-decision-notice.js';
+export type { DecisionNoticeResult } from './generate-decision-notice.js';
+
+export { generateAmendmentFlow } from './generate-amendment-flow.js';
+export type { AmendmentFlowResult } from './generate-amendment-flow.js';
+
+export { generateSaveResumeUi } from './generate-save-resume-ui.js';
+export type { SaveResumeResult } from './generate-save-resume-ui.js';
+
+export { generateBilingualForm } from './generate-bilingual-form.js';
+export type { BilingualFormResult } from './generate-bilingual-form.js';
+
+export { generateDataTable } from './generate-data-table.js';
+export type { DataTableResult } from './generate-data-table.js';
+
+export { generateFormChain } from './generate-form-chain.js';
+export type { FormChainResult } from './generate-form-chain.js';

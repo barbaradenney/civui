@@ -51,6 +51,17 @@ import {
   generateAuditTrail,
   generateSectionProgress,
   generateCaseDashboard,
+  generateAddressBlock,
+  generateConfirmationPage,
+  generateSignatureBlock,
+  generateEligibilityScreener,
+  generateDocumentChecklist,
+  generateDecisionNotice,
+  generateAmendmentFlow,
+  generateSaveResumeUi,
+  generateBilingualForm,
+  generateDataTable,
+  generateFormChain,
 } from './tools/index.js';
 import { validateForm } from './validators/index.js';
 import {
@@ -1724,6 +1735,489 @@ export function createServer(): McpServer {
             {
               type: 'text' as const,
               text: `Error generating case dashboard: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  // --- Form Lifecycle Tools ---
+
+  server.tool(
+    'generate_eligibility_screener',
+    'Generate an eligibility screening questionnaire with disqualification logic. ' +
+      'Produces yes-no radios, selects, and number inputs with configurable pass/fail conditions.',
+    {
+      schema: FormSchema.describe('Form schema with eligibility configuration'),
+    },
+    async ({ schema }) => {
+      try {
+        const result = generateEligibilityScreener(schema);
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error generating eligibility screener: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'generate_confirmation_page',
+    'Generate a post-submission confirmation page with receipt number, submission summary, ' +
+      'next steps, and print/copy controls.',
+    {
+      schema: FormSchema.describe('Form schema used for field labels and section headings'),
+      submissionData: z
+        .record(z.string(), z.union([z.string(), z.array(z.string())]))
+        .describe('Submitted field values (name → value)'),
+      showNextSteps: z
+        .boolean()
+        .optional()
+        .describe('Show next steps section (default: true)'),
+      nextSteps: z
+        .array(z.string())
+        .optional()
+        .describe('Custom next steps (overrides defaults)'),
+      agency: z
+        .string()
+        .optional()
+        .describe('Agency name for letterhead'),
+    },
+    async ({ schema, submissionData, showNextSteps, nextSteps, agency }) => {
+      try {
+        const result = generateConfirmationPage(schema, submissionData, {
+          showNextSteps,
+          nextSteps,
+          agency,
+        });
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error generating confirmation page: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'generate_document_checklist',
+    'Generate an evidence/document upload checklist with per-requirement file inputs, ' +
+      'format and size validation, status tracking, and civ-document-status events.',
+    {
+      schema: FormSchema.describe('Form schema with documents configuration'),
+    },
+    async ({ schema }) => {
+      try {
+        const result = generateDocumentChecklist(schema);
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error generating document checklist: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'generate_address_block',
+    'Generate a standalone US address fieldset with autocomplete attributes, ' +
+      'ZIP validation, optional territories and military addresses. Returns HTML, JS, and a FormSection.',
+    {
+      includeTerritories: z
+        .boolean()
+        .optional()
+        .describe('Include US territories (DC, AS, GU, MP, PR, VI)'),
+      includeMilitary: z
+        .boolean()
+        .optional()
+        .describe('Include military addresses (AA, AE, AP)'),
+      label: z
+        .string()
+        .optional()
+        .describe('Custom legend text (default: "Mailing address")'),
+    },
+    async ({ includeTerritories, includeMilitary, label }) => {
+      try {
+        const result = generateAddressBlock({ includeTerritories, includeMilitary, label });
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error generating address block: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'generate_save_resume_ui',
+    'Generate save-and-resume UI with auto-save, manual save, draft persistence via localStorage, ' +
+      'resume detection, and session timeout dialog with countdown.',
+    {
+      schema: FormSchema.describe('Form schema (title used for storage key)'),
+      autoSaveIntervalMs: z
+        .number()
+        .optional()
+        .describe('Auto-save interval in ms (default: 30000)'),
+      sessionTimeoutMs: z
+        .number()
+        .optional()
+        .describe('Session timeout in ms (default: 900000)'),
+      warningBeforeTimeoutMs: z
+        .number()
+        .optional()
+        .describe('Warning before timeout in ms (default: 120000)'),
+      storageKey: z
+        .string()
+        .optional()
+        .describe('localStorage key (default: slugified title)'),
+      showLastSaved: z
+        .boolean()
+        .optional()
+        .describe('Show last-saved timestamp (default: true)'),
+    },
+    async ({ schema, autoSaveIntervalMs, sessionTimeoutMs, warningBeforeTimeoutMs, storageKey, showLastSaved }) => {
+      try {
+        const result = generateSaveResumeUi(schema, {
+          autoSaveIntervalMs,
+          sessionTimeoutMs,
+          warningBeforeTimeoutMs,
+          storageKey,
+          showLastSaved,
+        });
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error generating save/resume UI: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'generate_amendment_flow',
+    'Generate a post-submission amendment request UI with a diff table showing ' +
+      'original vs amended values, optional reason textarea, and approval notice.',
+    {
+      schema: FormSchema.describe('Form schema for field labels'),
+      originalValues: z
+        .record(z.string(), z.string())
+        .describe('Original submitted values (name → value)'),
+      amendedValues: z
+        .record(z.string(), z.string())
+        .describe('Amended values (name → value)'),
+      requiresReason: z
+        .boolean()
+        .optional()
+        .describe('Show reason textarea (default: true)'),
+      requiresApproval: z
+        .boolean()
+        .optional()
+        .describe('Show approval notice (default: false)'),
+    },
+    async ({ schema, originalValues, amendedValues, requiresReason, requiresApproval }) => {
+      try {
+        const result = generateAmendmentFlow(schema, originalValues, amendedValues, {
+          requiresReason,
+          requiresApproval,
+        });
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error generating amendment flow: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'generate_form_chain',
+    'Generate a multi-form chain UI with step navigation, dependency-based locking, ' +
+      'data carry-over between forms, and back/next/submit-all buttons.',
+    {
+      schema: FormSchema.describe('Form schema with formChain configuration'),
+      currentStep: z
+        .number()
+        .optional()
+        .describe('Current active step index (default: 0)'),
+      completedSteps: z
+        .array(z.string())
+        .optional()
+        .describe('Array of completed step schemaRef IDs'),
+    },
+    async ({ schema, currentStep, completedSteps }) => {
+      try {
+        const result = generateFormChain(schema, { currentStep, completedSteps });
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error generating form chain: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'generate_decision_notice',
+    'Generate a formal approval/denial letter with merge-field substitution, ' +
+      'legal citations, appeal information, and print support.',
+    {
+      schema: FormSchema.describe('Form schema with decisionNotice configuration'),
+      decision: z
+        .string()
+        .describe('Decision key matching a template (e.g., "approved", "denied")'),
+      formData: z
+        .record(z.string(), z.string())
+        .describe('Form data for merge field substitution (fieldName → value)'),
+    },
+    async ({ schema, decision, formData }) => {
+      try {
+        const result = generateDecisionNotice(schema, decision, formData);
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error generating decision notice: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'generate_bilingual_form',
+    'Generate a bilingual form with language toggle, side-by-side, or inline rendering modes. ' +
+      'Supports RTL languages and localStorage-based language preference persistence.',
+    {
+      schema: FormSchema.describe('Form schema with bilingual configuration'),
+      translations: z
+        .record(z.string(), z.string())
+        .describe('Translation map (primary label → secondary label)'),
+      mode: z
+        .enum(['toggle', 'side-by-side', 'inline'])
+        .optional()
+        .describe('Rendering mode (default: from schema or "toggle")'),
+    },
+    async ({ schema, translations, mode }) => {
+      try {
+        const result = generateBilingualForm(schema, translations, { mode });
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error generating bilingual form: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'generate_data_table',
+    'Generate an accessible financial/itemized data entry table with add/remove rows, ' +
+      'column sorting, totals, and ARIA announcements.',
+    {
+      schema: FormSchema.describe('Form schema with dataTable configuration'),
+      initialRows: z
+        .number()
+        .optional()
+        .describe('Number of initial rows (default: minRows or 1)'),
+    },
+    async ({ schema, initialRows }) => {
+      try {
+        const result = generateDataTable(schema, { initialRows });
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error generating data table: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'generate_signature_block',
+    'Generate an e-signature block with typed, drawn (canvas), or checkbox modes. ' +
+      'Includes legal attestation text, optional witness, print name, title, and date fields.',
+    {
+      schema: FormSchema.describe('Form schema (optional signature configuration)'),
+      type: z
+        .enum(['typed', 'drawn', 'checkbox'])
+        .optional()
+        .describe('Signature type (default: from schema or "typed")'),
+      legalText: z
+        .string()
+        .optional()
+        .describe('Legal attestation text'),
+      witnessRequired: z
+        .boolean()
+        .optional()
+        .describe('Include witness fieldset'),
+      dateRequired: z
+        .boolean()
+        .optional()
+        .describe('Include date field'),
+      printNameRequired: z
+        .boolean()
+        .optional()
+        .describe('Include printed name field'),
+      titleRequired: z
+        .boolean()
+        .optional()
+        .describe('Include title field'),
+    },
+    async ({ schema, type, legalText, witnessRequired, dateRequired, printNameRequired, titleRequired }) => {
+      try {
+        const result = generateSignatureBlock(schema, {
+          type,
+          legalText,
+          witnessRequired,
+          dateRequired,
+          printNameRequired,
+          titleRequired,
+        });
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error generating signature block: ${err instanceof Error ? err.message : String(err)}`,
             },
           ],
           isError: true,

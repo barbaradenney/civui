@@ -255,6 +255,142 @@ export const FeedbackConfig = z.object({
 
 export type FeedbackConfig = z.infer<typeof FeedbackConfig>;
 
+// --- Eligibility Screener ---
+export const EligibilityQuestion = z.object({
+  id: z.string(),
+  text: z.string(),
+  type: z.enum(['yes-no', 'select', 'number']),
+  options: z.array(FieldOption).optional(),
+  disqualifyWhen: z.string().optional(),
+  explanation: z.string().optional(),
+});
+
+export type EligibilityQuestion = z.infer<typeof EligibilityQuestion>;
+
+export const EligibilityConfig = z.object({
+  questions: z.array(EligibilityQuestion).min(1),
+  passMessage: z.string().optional(),
+  failMessage: z.string().optional(),
+  partialMessage: z.string().optional(),
+});
+
+export type EligibilityConfig = z.infer<typeof EligibilityConfig>;
+
+// --- Document Checklist ---
+export const DocumentRequirement = z.object({
+  id: z.string(),
+  label: z.string(),
+  description: z.string().optional(),
+  required: z.boolean().optional(),
+  acceptedFormats: z.array(z.string()).optional(),
+  maxSizeMb: z.number().optional(),
+  examples: z.array(z.string()).optional(),
+  alternatives: z.array(z.string()).optional(),
+});
+
+export type DocumentRequirement = z.infer<typeof DocumentRequirement>;
+
+export const DocumentsConfig = z.object({
+  requirements: z.array(DocumentRequirement).min(1),
+  maxTotalSizeMb: z.number().optional(),
+});
+
+export type DocumentsConfig = z.infer<typeof DocumentsConfig>;
+
+// --- Save & Resume ---
+export const SaveResumeConfig = z.object({
+  autoSaveIntervalMs: z.number().optional(),
+  sessionTimeoutMs: z.number().optional(),
+  warningBeforeTimeoutMs: z.number().optional(),
+  storageKey: z.string().optional(),
+  showLastSaved: z.boolean().optional(),
+});
+
+export type SaveResumeConfig = z.infer<typeof SaveResumeConfig>;
+
+// --- Form Chain ---
+export const FormChainStep = z.object({
+  schemaRef: z.string(),
+  label: z.string(),
+  dependsOn: z.array(z.string()).optional(),
+  dataMapping: z.record(z.string(), z.string()).optional(),
+});
+
+export type FormChainStep = z.infer<typeof FormChainStep>;
+
+export const FormChainConfig = z.object({
+  forms: z.array(FormChainStep),
+  allowSkip: z.boolean().optional(),
+});
+
+export type FormChainConfig = z.infer<typeof FormChainConfig>;
+
+// --- Decision Notice ---
+export const DecisionNoticeTemplate = z.object({
+  decision: z.string(),
+  subject: z.string(),
+  bodyTemplate: z.string(),
+  legalCitations: z.array(z.string()).optional(),
+  appealInfo: z.string().optional(),
+});
+
+export type DecisionNoticeTemplate = z.infer<typeof DecisionNoticeTemplate>;
+
+export const DecisionNoticeConfig = z.object({
+  templates: z.array(DecisionNoticeTemplate),
+  agencyName: z.string().optional(),
+  agencyLogo: z.string().optional(),
+});
+
+export type DecisionNoticeConfig = z.infer<typeof DecisionNoticeConfig>;
+
+// --- Bilingual ---
+export const BilingualConfig = z.object({
+  primaryLanguage: z.string(),
+  secondaryLanguage: z.string(),
+  primaryLabel: z.string().optional(),
+  secondaryLabel: z.string().optional(),
+  mode: z.enum(['toggle', 'side-by-side', 'inline']).optional(),
+});
+
+export type BilingualConfig = z.infer<typeof BilingualConfig>;
+
+// --- Data Table ---
+export const DataTableColumn = z.object({
+  id: z.string(),
+  label: z.string(),
+  type: z.enum(['text', 'number', 'currency', 'date', 'select']),
+  options: z.array(z.object({ value: z.string(), label: z.string() })).optional(),
+  required: z.boolean().optional(),
+  width: z.string().optional(),
+});
+
+export type DataTableColumn = z.infer<typeof DataTableColumn>;
+
+export const DataTableConfig = z.object({
+  columns: z.array(DataTableColumn),
+  minRows: z.number().optional(),
+  maxRows: z.number().optional(),
+  showTotals: z.array(z.string()).optional(),
+  sortable: z.boolean().optional(),
+  caption: z.string(),
+});
+
+export type DataTableConfig = z.infer<typeof DataTableConfig>;
+
+// --- Signature ---
+export const SignatureConfig = z.object({
+  type: z.enum(['typed', 'drawn', 'checkbox']),
+  legalText: z.string(),
+  required: z.boolean().optional(),
+  witnessRequired: z.boolean().optional(),
+  dateRequired: z.boolean().optional(),
+  printNameRequired: z.boolean().optional(),
+  titleRequired: z.boolean().optional(),
+});
+
+export type SignatureConfig = z.infer<typeof SignatureConfig>;
+
 export const FormSchema = z.object({
   title: z.string().optional(),
   description: z.string().optional(),
@@ -268,6 +404,14 @@ export const FormSchema = z.object({
   workflow: WorkflowDefinition.optional(),
   delegation: DelegationConfig.optional(),
   feedback: FeedbackConfig.optional(),
+  eligibility: EligibilityConfig.optional(),
+  documents: DocumentsConfig.optional(),
+  saveResume: SaveResumeConfig.optional(),
+  formChain: FormChainConfig.optional(),
+  decisionNotice: DecisionNoticeConfig.optional(),
+  bilingual: BilingualConfig.optional(),
+  dataTable: DataTableConfig.optional(),
+  signature: SignatureConfig.optional(),
 });
 
 export type FormSchema = z.infer<typeof FormSchema>;

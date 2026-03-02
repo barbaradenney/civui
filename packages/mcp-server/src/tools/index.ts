@@ -143,3 +143,33 @@ export type { DataTableResult } from './generate-data-table.js';
 
 export { generateFormChain } from './generate-form-chain.js';
 export type { FormChainResult } from './generate-form-chain.js';
+
+export { generateRepeatableSection } from './generate-repeatable-section.js';
+export type { RepeatableSectionResult } from './generate-repeatable-section.js';
+
+export { generateProgressBar } from './generate-progress-bar.js';
+export type { ProgressBarResult } from './generate-progress-bar.js';
+
+export { generateTimeoutWarning } from './generate-timeout-warning.js';
+export type { TimeoutWarningResult } from './generate-timeout-warning.js';
+
+export { generateConditionalReveal } from './generate-conditional-reveal.js';
+export type { ConditionalRevealResult } from './generate-conditional-reveal.js';
+
+export { generateHelpPanel } from './generate-help-panel.js';
+export type { HelpPanelResult } from './generate-help-panel.js';
+
+export { validateReadingLevel } from './validate-reading-level.js';
+export type { ReadingLevelResult } from './validate-reading-level.js';
+
+export { generatePdfNotice } from './generate-pdf-notice.js';
+export type { PdfNoticeResult } from './generate-pdf-notice.js';
+
+export { generateFieldDependenciesGraph } from './generate-field-dependencies-graph.js';
+export type { FieldDependenciesGraphResult } from './generate-field-dependencies-graph.js';
+
+export { generateMockData } from './generate-mock-data.js';
+export type { MockDataResult } from './generate-mock-data.js';
+
+export { generateApiHandler } from './generate-api-handler.js';
+export type { ApiHandlerResult } from './generate-api-handler.js';

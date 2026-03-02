@@ -391,6 +391,17 @@ export const SignatureConfig = z.object({
 
 export type SignatureConfig = z.infer<typeof SignatureConfig>;
 
+// --- Timeout Warning ---
+export const TimeoutWarningConfig = z.object({
+  sessionTimeoutMs: z.number(),
+  warningBeforeMs: z.number(),
+  extendable: z.boolean().optional(),
+  maxExtensions: z.number().optional(),
+  redirectUrl: z.string().optional(),
+});
+
+export type TimeoutWarningConfig = z.infer<typeof TimeoutWarningConfig>;
+
 export const FormSchema = z.object({
   title: z.string().optional(),
   description: z.string().optional(),
@@ -412,6 +423,7 @@ export const FormSchema = z.object({
   bilingual: BilingualConfig.optional(),
   dataTable: DataTableConfig.optional(),
   signature: SignatureConfig.optional(),
+  timeoutWarning: TimeoutWarningConfig.optional(),
 });
 
 export type FormSchema = z.infer<typeof FormSchema>;

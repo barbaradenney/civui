@@ -32,4 +32,5 @@ export {
   DataTableColumn,
   DataTableConfig,
   SignatureConfig,
+  TimeoutWarningConfig,
 } from './form-schema.js';

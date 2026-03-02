@@ -1,6 +1,6 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
-import { FormSchema } from './schema/index.js';
+import { FormSchema, FormField } from './schema/index.js';
 import { parseHTML, parsePDF } from './parsers/index.js';
 import { generateCivUI } from './generator/index.js';
 import {
@@ -62,6 +62,16 @@ import {
   generateBilingualForm,
   generateDataTable,
   generateFormChain,
+  generateRepeatableSection,
+  generateProgressBar,
+  generateTimeoutWarning,
+  generateConditionalReveal,
+  generateHelpPanel,
+  validateReadingLevel,
+  generatePdfNotice,
+  generateFieldDependenciesGraph,
+  generateMockData,
+  generateApiHandler,
 } from './tools/index.js';
 import { validateForm } from './validators/index.js';
 import {
@@ -2218,6 +2228,453 @@ export function createServer(): McpServer {
             {
               type: 'text' as const,
               text: `Error generating signature block: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  // --- Phase 7: Utility & Integration Tools ---
+
+  server.tool(
+    'generate_repeatable_section',
+    'Generate an add-another repeatable section pattern with reindexing, ' +
+      'min/max enforcement, and ARIA live announcements.',
+    {
+      schema: FormSchema.describe('Form schema containing the section to repeat'),
+      sectionIndex: z
+        .number()
+        .describe('Index of the section in schema.sections to make repeatable'),
+      minRepeats: z.number().optional().describe('Minimum number of items (default: 1)'),
+      maxRepeats: z.number().optional().describe('Maximum number of items (default: unlimited)'),
+      addLabel: z.string().optional().describe('Label for the add button (default: "Add another")'),
+      removeLabel: z.string().optional().describe('Label for remove buttons (default: "Remove")'),
+    },
+    async ({ schema, sectionIndex, minRepeats, maxRepeats, addLabel, removeLabel }) => {
+      try {
+        const result = generateRepeatableSection(schema, sectionIndex, {
+          minRepeats,
+          maxRepeats,
+          addLabel,
+          removeLabel,
+        });
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error generating repeatable section: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'generate_progress_bar',
+    'Generate a step progress indicator with completed/current/upcoming states, ' +
+      'optional clickable navigation, and aria-current step marking.',
+    {
+      steps: z
+        .array(z.object({ id: z.string(), label: z.string() }))
+        .describe('Ordered array of step definitions'),
+      currentStep: z.string().describe('ID of the currently active step'),
+      clickable: z
+        .boolean()
+        .optional()
+        .describe('Allow clicking completed steps to navigate back'),
+    },
+    async ({ steps, currentStep, clickable }) => {
+      try {
+        const result = generateProgressBar(steps, currentStep, { clickable });
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error generating progress bar: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'generate_timeout_warning',
+    'Generate a WCAG 2.2.1-compliant session timeout warning dialog with ' +
+      'countdown timer, session extension, and optional redirect.',
+    {
+      schema: FormSchema.optional().describe(
+        'Form schema with timeoutWarning configuration (alternative to standalone params)',
+      ),
+      sessionTimeoutMs: z
+        .number()
+        .optional()
+        .describe('Session timeout in milliseconds (standalone mode)'),
+      warningBeforeMs: z
+        .number()
+        .optional()
+        .describe('Show warning this many ms before timeout (standalone mode)'),
+      extendable: z
+        .boolean()
+        .optional()
+        .describe('Allow session extension (default: true)'),
+      maxExtensions: z
+        .number()
+        .optional()
+        .describe('Maximum number of extensions allowed'),
+      redirectUrl: z
+        .string()
+        .optional()
+        .describe('URL to redirect to on timeout'),
+    },
+    async ({ schema, sessionTimeoutMs, warningBeforeMs, extendable, maxExtensions, redirectUrl }) => {
+      try {
+        let result;
+        if (sessionTimeoutMs && warningBeforeMs) {
+          result = generateTimeoutWarning({
+            sessionTimeoutMs,
+            warningBeforeMs,
+            extendable,
+            maxExtensions,
+            redirectUrl,
+          });
+        } else if (schema) {
+          result = generateTimeoutWarning(schema);
+        } else {
+          throw new Error('Provide either schema with timeoutWarning or standalone sessionTimeoutMs + warningBeforeMs');
+        }
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error generating timeout warning: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'generate_conditional_reveal',
+    'Generate a conditional reveal pattern that shows or hides field groups ' +
+      'based on a trigger field value, with aria-expanded and aria-controls.',
+    {
+      trigger: z
+        .object({
+          fieldName: z.string(),
+          value: z.union([z.string(), z.array(z.string())]),
+          operator: z.enum(['eq', 'neq', 'includes']).optional(),
+        })
+        .describe('Trigger field configuration'),
+      revealedFields: z
+        .array(FormField)
+        .describe('Fields to show/hide based on trigger'),
+      mode: z
+        .enum(['show', 'hide'])
+        .optional()
+        .describe('Whether trigger shows or hides the fields (default: "show")'),
+    },
+    async ({ trigger, revealedFields, mode }) => {
+      try {
+        const result = generateConditionalReveal(trigger, revealedFields, { mode });
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error generating conditional reveal: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'generate_help_panel',
+    'Generate a contextual help panel in sidebar, inline, or tooltip mode ' +
+      'with collapsible sections, keyboard navigation, and ARIA attributes.',
+    {
+      sections: z
+        .array(
+          z.object({
+            id: z.string(),
+            heading: z.string(),
+            body: z.string(),
+            relatedFields: z.array(z.string()).optional(),
+          }),
+        )
+        .describe('Help content sections'),
+      mode: z
+        .enum(['sidebar', 'inline', 'tooltip'])
+        .optional()
+        .describe('Display mode (default: "sidebar")'),
+    },
+    async ({ sections, mode }) => {
+      try {
+        const result = generateHelpPanel(sections, { mode });
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error generating help panel: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'validate_reading_level',
+    'Analyze text readability using Flesch-Kincaid scoring. Returns grade level, ' +
+      'reading ease score, and plain-language suggestions for government content.',
+    {
+      text: z.string().describe('Text content to analyze for readability'),
+      targetGradeLevel: z
+        .number()
+        .optional()
+        .describe('Target grade level (default: 8 for government content)'),
+    },
+    async ({ text, targetGradeLevel }) => {
+      try {
+        const result = validateReadingLevel(text, { targetGradeLevel });
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error validating reading level: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'generate_pdf_notice',
+    'Generate a print-optimized decision notice with @media print CSS, ' +
+      'page break rules, and running headers for PDF generation.',
+    {
+      schema: FormSchema.describe('Form schema with decisionNotice configuration'),
+      decision: z
+        .string()
+        .describe('Decision key matching a template (e.g., "approved", "denied")'),
+      formData: z
+        .record(z.string(), z.string())
+        .describe('Form data for merge field substitution'),
+      includeHeader: z
+        .boolean()
+        .optional()
+        .describe('Include running header with agency name (default: true)'),
+      pageSize: z
+        .enum(['letter', 'a4'])
+        .optional()
+        .describe('Page size (default: "letter")'),
+      orientation: z
+        .enum(['portrait', 'landscape'])
+        .optional()
+        .describe('Page orientation (default: "portrait")'),
+    },
+    async ({ schema, decision, formData, includeHeader, pageSize, orientation }) => {
+      try {
+        const result = generatePdfNotice(schema, decision, formData, {
+          includeHeader,
+          pageSize,
+          orientation,
+        });
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error generating PDF notice: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'generate_field_dependencies_graph',
+    'Generate a Mermaid dependency graph of field relationships from conditions, ' +
+      'visibility rules, cascading options, and cross-field rules.',
+    {
+      schema: FormSchema.describe('Form schema to analyze for field dependencies'),
+    },
+    async ({ schema }) => {
+      try {
+        const result = generateFieldDependenciesGraph(schema);
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error generating dependencies graph: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'generate_mock_data',
+    'Generate deterministic mock form data from a schema using a seeded PRNG. ' +
+      'Respects field types, options, ranges, and required/optional fill rates.',
+    {
+      schema: FormSchema.describe('Form schema to generate data for'),
+      seed: z.number().optional().describe('PRNG seed for deterministic output (default: 42)'),
+      count: z.number().optional().describe('Number of records to generate (default: 1)'),
+      locale: z.string().optional().describe('Locale hint for data generation'),
+    },
+    async ({ schema, seed, count, locale }) => {
+      try {
+        const result = generateMockData(schema, { seed, count, locale });
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error generating mock data: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'generate_api_handler',
+    'Generate a server-side API route handler with Zod validation, typed request bodies, ' +
+      'and per-field error responses. Supports Express, Hono, and Fastify.',
+    {
+      schema: FormSchema.describe('Form schema to derive handler from'),
+      framework: z
+        .enum(['express', 'hono', 'fastify'])
+        .optional()
+        .describe('Server framework (default: "express")'),
+      includeValidation: z
+        .boolean()
+        .optional()
+        .describe('Include Zod validation schema (default: true)'),
+      includeTypes: z
+        .boolean()
+        .optional()
+        .describe('Include TypeScript interface (default: true)'),
+    },
+    async ({ schema, framework, includeValidation, includeTypes }) => {
+      try {
+        const result = generateApiHandler(schema, {
+          framework,
+          includeValidation,
+          includeTypes,
+        });
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error generating API handler: ${err instanceof Error ? err.message : String(err)}`,
             },
           ],
           isError: true,

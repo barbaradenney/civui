@@ -199,3 +199,21 @@ export type { ContentRegistryResult, FormContent, FieldContent } from './generat
 
 export { generateReactNativeForm } from './generate-react-native-form.js';
 export type { ReactNativeFormResult } from './generate-react-native-form.js';
+
+export { queryTokens } from './query-tokens.js';
+export type { QueryTokensResult, TokenEntry } from './query-tokens.js';
+
+export { generate508Report } from './generate-508-report.js';
+export type { Section508Report, ReportViolation, WcagMapping } from './generate-508-report.js';
+
+export { generateOpenApiSpec } from './generate-openapi-spec.js';
+export type { OpenApiSpecResult } from './generate-openapi-spec.js';
+
+export { generateReactForm } from './generate-react-form.js';
+export type { ReactFormResult } from './generate-react-form.js';
+
+export { syncContentRegistry } from './sync-content-registry.js';
+export type { SyncContentResult, SyncIssue } from './sync-content-registry.js';
+
+export { generateI18nFiles } from './generate-i18n-files.js';
+export type { I18nFilesResult, LocaleBundle } from './generate-i18n-files.js';

@@ -82,6 +82,12 @@ import {
   scaffoldFromTemplate,
   generateContentRegistry,
   generateReactNativeForm,
+  queryTokens,
+  generate508Report,
+  generateOpenApiSpec,
+  generateReactForm,
+  syncContentRegistry,
+  generateI18nFiles,
 } from './tools/index.js';
 import { validateForm } from './validators/index.js';
 import {
@@ -3003,6 +3009,288 @@ export function createServer(): McpServer {
             {
               type: 'text' as const,
               text: `Error generating content registry: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'query_tokens',
+    'Look up CivUI design token values by category, name pattern, or type. ' +
+      'Returns token names, values, CSS custom property names, and Tailwind class equivalents. ' +
+      'Covers all 9 token files: color, color-dark, spacing, typography, border, focus, motion, shadow, scales.',
+    {
+      category: z
+        .string()
+        .optional()
+        .describe('Filter by category: color, color-dark, spacing, typography, border, focus, motion, shadow, scales'),
+      search: z
+        .string()
+        .optional()
+        .describe('Case-insensitive substring search on token name (e.g. "primary", "error")'),
+      type: z
+        .string()
+        .optional()
+        .describe('Filter by W3C DTCG $type: color, dimension, fontWeight, duration, cubicBezier, shadow, etc.'),
+    },
+    async ({ category, search, type }) => {
+      try {
+        const result = queryTokens({ category, search, type });
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error querying tokens: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'generate_508_report',
+    'Generate a prioritized Section 508 compliance report from CivUI HTML markup. ' +
+      'Maps each violation to a WCAG criterion, assigns severity scores and priority levels (P1–P4), ' +
+      'estimates remediation effort, and produces a markdown remediation plan.',
+    {
+      html: z
+        .string()
+        .max(MAX_HTML_LENGTH, 'HTML exceeds 10 MB size limit')
+        .describe('CivUI HTML markup to audit for Section 508 compliance'),
+    },
+    async ({ html }) => {
+      try {
+        const result = generate508Report(html);
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error generating 508 report: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'generate_openapi_spec',
+    'Generate an OpenAPI 3.0.3 specification from a FormSchema. ' +
+      'Produces request/response schemas with validation constraints, example payloads, ' +
+      'and both JSON and YAML output formats.',
+    {
+      schema: FormSchema.describe('Form schema to generate OpenAPI spec from'),
+      basePath: z
+        .string()
+        .optional()
+        .describe('Base path for the API endpoint (default: "/api")'),
+      operationId: z
+        .string()
+        .optional()
+        .describe('Custom operation ID (default: derived from schema title)'),
+      tags: z
+        .array(z.string())
+        .optional()
+        .describe('OpenAPI tags for the endpoint (default: ["Forms"])'),
+      includeExamples: z
+        .boolean()
+        .optional()
+        .describe('Include example payloads in the spec (default: true)'),
+    },
+    async ({ schema, basePath, operationId, tags, includeExamples }) => {
+      try {
+        const result = generateOpenApiSpec(schema, { basePath, operationId, tags, includeExamples });
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error generating OpenAPI spec: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'generate_react_form',
+    'Generate a React web component (TSX) from a FormSchema using CivUI custom elements in JSX. ' +
+      'Supports useState or react-hook-form state management, TypeScript types, ' +
+      'and useEffect/addEventListener pattern for custom element events.',
+    {
+      schema: FormSchema.describe('Form schema to generate React component from'),
+      componentName: z
+        .string()
+        .optional()
+        .describe('Name for the generated React component (default: "Form")'),
+      stateManagement: z
+        .enum(['useState', 'react-hook-form'])
+        .optional()
+        .describe('State management approach (default: "useState")'),
+      includeTypes: z
+        .boolean()
+        .optional()
+        .describe('Generate TypeScript FormData interface (default: true)'),
+    },
+    async ({ schema, componentName, stateManagement, includeTypes }) => {
+      try {
+        const result = generateReactForm(schema, { componentName, stateManagement, includeTypes });
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error generating React form: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'sync_content_registry',
+    'Compare a FormContent registry against a FormSchema to find missing, stale, and mismatched content entries. ' +
+      'Returns a patch object with corrected values and a markdown report.',
+    {
+      schema: FormSchema.describe('Form schema (source of truth)'),
+      content: z
+        .object({
+          meta: z.object({
+            title: z.string(),
+            description: z.string().optional(),
+            submitLabel: z.string(),
+          }),
+          fields: z.record(
+            z.object({
+              label: z.string(),
+              hint: z.string().optional(),
+              placeholder: z.string().optional(),
+              errors: z.record(z.string()).optional(),
+            }),
+          ),
+        })
+        .describe('Existing FormContent registry to compare against the schema'),
+    },
+    async ({ schema, content }) => {
+      try {
+        const result = syncContentRegistry(schema, content);
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error syncing content registry: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'generate_i18n_files',
+    'Generate JSON locale bundles for internationalization from a FormSchema. ' +
+      'Extracts all user-facing strings (labels, hints, placeholders, option labels) ' +
+      'and produces base locale + target locale placeholder files with a TypeScript helper.',
+    {
+      schema: FormSchema.describe('Form schema to extract strings from'),
+      baseLocale: z
+        .string()
+        .optional()
+        .describe('Base locale identifier (default: "en")'),
+      targetLocales: z
+        .array(z.string())
+        .optional()
+        .describe('Target locales for placeholder files (default: ["es"])'),
+      includeOptions: z
+        .boolean()
+        .optional()
+        .describe('Include option labels in locale bundles (default: true)'),
+      includeErrors: z
+        .boolean()
+        .optional()
+        .describe('Include error messages in locale bundles (default: false)'),
+      keyFormat: z
+        .enum(['flat', 'nested'])
+        .optional()
+        .describe('Key format: "flat" (dot notation) or "nested" (default: "flat")'),
+    },
+    async ({ schema, baseLocale, targetLocales, includeOptions, includeErrors, keyFormat }) => {
+      try {
+        const result = generateI18nFiles(schema, {
+          baseLocale,
+          targetLocales,
+          includeOptions,
+          includeErrors,
+          keyFormat,
+        });
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error generating i18n files: ${err instanceof Error ? err.message : String(err)}`,
             },
           ],
           isError: true,

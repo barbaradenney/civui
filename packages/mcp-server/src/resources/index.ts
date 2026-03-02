@@ -7,3 +7,4 @@ export { DECISION_TREE } from './decision-tree.js';
 export { COMPLEX_PATTERNS } from './complex-patterns.js';
 export { WORKFLOW_PATTERNS } from './workflow-patterns.js';
 export { SCHEMA_REFERENCE } from './schema-reference.js';
+export { AI_GUIDE } from './ai-guide.js';

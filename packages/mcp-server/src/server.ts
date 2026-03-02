@@ -13,6 +13,7 @@ import {
   COMPLEX_PATTERNS,
   WORKFLOW_PATTERNS,
   SCHEMA_REFERENCE,
+  AI_GUIDE,
 } from './resources/index.js';
 import {
   lookupStyle,
@@ -79,6 +80,8 @@ import {
   generateCrossFieldRules,
   inlineSubForms,
   scaffoldFromTemplate,
+  generateContentRegistry,
+  generateReactNativeForm,
 } from './tools/index.js';
 import { validateForm } from './validators/index.js';
 import {
@@ -212,6 +215,16 @@ export function createServer(): McpServer {
         uri: uri.href,
         mimeType: 'text/markdown',
         text: SCHEMA_REFERENCE,
+      },
+    ],
+  }));
+
+  server.resource('ai-guide', 'civui://ai-guide', async (uri) => ({
+    contents: [
+      {
+        uri: uri.href,
+        mimeType: 'text/markdown',
+        text: AI_GUIDE,
       },
     ],
   }));
@@ -2908,6 +2921,88 @@ export function createServer(): McpServer {
             {
               type: 'text' as const,
               text: `Error scaffolding from template: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'generate_react_native_form',
+    'Generate a full React Native screen (TSX) from a FormSchema. ' +
+      'Maps each field type to the corresponding @civui/react-native component. ' +
+      'Supports validation generation, section grouping, and custom screen names.',
+    {
+      schema: FormSchema.describe('Form schema to generate React Native screen from'),
+      screenName: z
+        .string()
+        .optional()
+        .describe('Name for the generated React component (default: FormScreen)'),
+      includeValidation: z
+        .boolean()
+        .optional()
+        .describe('Generate useForm validation hook (default: false)'),
+    },
+    async ({ schema, screenName, includeValidation }) => {
+      try {
+        const result = generateReactNativeForm(schema, { screenName, includeValidation });
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error generating React Native form: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'generate_content_registry',
+    'Generate a FormContent JSON from a FormSchema for use with registerContent() from @civui/content. ' +
+      'Produces field labels, hints, placeholders, and optionally error messages. ' +
+      'Outputs both the JSON content object and ready-to-use TypeScript code.',
+    {
+      schema: FormSchema.describe('Form schema to generate content registry from'),
+      locale: z
+        .string()
+        .optional()
+        .describe('Locale identifier for i18n-aware content (e.g. "es-US")'),
+      includeErrors: z
+        .boolean()
+        .optional()
+        .describe('Include generated error messages for each field (default: false)'),
+    },
+    async ({ schema, locale, includeErrors }) => {
+      try {
+        const result = generateContentRegistry(schema, { locale, includeErrors });
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error generating content registry: ${err instanceof Error ? err.message : String(err)}`,
             },
           ],
           isError: true,

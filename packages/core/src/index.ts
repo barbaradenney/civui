@@ -55,6 +55,11 @@ export {
   inputClasses,
 } from './templates/form-templates.js';
 
+// Icon
+export { CivIcon } from './icon/civ-icon.js';
+export { icons, registerIcon, getIconNames } from './icon/icon-library.js';
+export type { IconDef, IconLayer } from './icon/icon-library.js';
+
 // Analytics
 export { ANALYTICS_EVENT_NAME } from './analytics/index.js';
 export type { AnalyticsEventDetail, AnalyticsAction } from './analytics/index.js';

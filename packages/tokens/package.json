@@ -10,7 +10,9 @@
     ".": "./dist/js/tokens.js",
     "./css": "./dist/css/tokens.css",
     "./tailwind": "./dist/tailwind/preset.js",
-    "./react-native": "./dist/react-native/tokens.js"
+    "./react-native": "./dist/react-native/tokens.js",
+    "./swift": "./dist/swift/CivTokens.swift",
+    "./kotlin": "./dist/kotlin/CivTokens.kt"
   },
   "files": ["dist"],
   "publishConfig": {

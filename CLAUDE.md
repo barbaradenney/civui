@@ -14,14 +14,13 @@ Accessibility-first web components for government applications.
 
 ## Package Structure
 
-Build order: `tokens → core → forms → react-native`
+Build order: `tokens → core → forms`
 
 | Package | Path | Description |
 |---------|------|-------------|
 | `@civui/tokens` | `packages/tokens/` | Design tokens (colors, spacing, typography) |
 | `@civui/core` | `packages/core/` | Base classes, a11y utilities, analytics, date utils |
 | `@civui/forms` | `packages/forms/` | Form components (text-input, select, checkbox, etc.) |
-| `@civui/react-native` | `packages/react-native/` | React Native companion components |
 | `@civui/test-utils` | `packages/test-utils/` | Test helpers: `fixture`, `cleanupFixtures`, `elementUpdated`, `pressKey`, `typeText` |
 | `@civui/cli` | `packages/cli/` | CLI tooling |
 | `@civui/content` | `packages/content/` | Content/copy management |
@@ -99,7 +98,8 @@ Use `focus-visible:civ-focus-ring` (not deprecated `focus:civ-outline-*` classes
 
 - Component source: `packages/forms/src/{name}/civ-{name}.ts`
 - Component test: `packages/forms/src/{name}/civ-{name}.test.ts`
-- RN counterpart: `packages/react-native/src/forms/{Name}.tsx`
+- iOS counterpart: `packages/ios/Sources/CivUI/Civ{Name}.swift`
+- Android counterpart: `packages/android/src/main/kotlin/gov/civui/components/Civ{Name}.kt`
 - Each component dir has an `index.ts` barrel export
 
 ## AI Component Usage Guide

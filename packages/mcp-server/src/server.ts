@@ -81,7 +81,7 @@ import {
   inlineSubForms,
   scaffoldFromTemplate,
   generateContentRegistry,
-  generateReactNativeForm,
+
   queryTokens,
   generate508Report,
   generateOpenApiSpec,
@@ -2927,47 +2927,6 @@ export function createServer(): McpServer {
             {
               type: 'text' as const,
               text: `Error scaffolding from template: ${err instanceof Error ? err.message : String(err)}`,
-            },
-          ],
-          isError: true,
-        };
-      }
-    },
-  );
-
-  server.tool(
-    'generate_react_native_form',
-    'Generate a full React Native screen (TSX) from a FormSchema. ' +
-      'Maps each field type to the corresponding @civui/react-native component. ' +
-      'Supports validation generation, section grouping, and custom screen names.',
-    {
-      schema: FormSchema.describe('Form schema to generate React Native screen from'),
-      screenName: z
-        .string()
-        .optional()
-        .describe('Name for the generated React component (default: FormScreen)'),
-      includeValidation: z
-        .boolean()
-        .optional()
-        .describe('Generate useForm validation hook (default: false)'),
-    },
-    async ({ schema, screenName, includeValidation }) => {
-      try {
-        const result = generateReactNativeForm(schema, { screenName, includeValidation });
-        return {
-          content: [
-            {
-              type: 'text' as const,
-              text: JSON.stringify(result, null, 2),
-            },
-          ],
-        };
-      } catch (err) {
-        return {
-          content: [
-            {
-              type: 'text' as const,
-              text: `Error generating React Native form: ${err instanceof Error ? err.message : String(err)}`,
             },
           ],
           isError: true,

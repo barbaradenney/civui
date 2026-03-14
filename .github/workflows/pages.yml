@@ -32,21 +32,17 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      # Build all packages (tokens → core → forms → react-native)
+      # Build all packages (tokens → core → forms)
       - run: pnpm build
 
       # Build web components Storybook
       - run: pnpm storybook:build -o storybook-static
 
-      # Build React Native web Storybook
-      - run: pnpm --filter @civui/react-native storybook:web:build
-
-      # Assemble site: docs + /storybook/ + /react-native/
+      # Assemble site: docs + /storybook/
       - run: |
           mkdir -p _site
           cp docs/index.html _site/
           mv storybook-static _site/storybook
-          mv packages/react-native/storybook-static _site/react-native
 
       - uses: actions/configure-pages@v5
 

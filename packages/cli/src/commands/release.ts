@@ -6,7 +6,6 @@ const PACKAGES = [
   'packages/tokens/package.json',
   'packages/core/package.json',
   'packages/forms/package.json',
-  'packages/react-native/package.json',
   'packages/cli/package.json',
 ];
 

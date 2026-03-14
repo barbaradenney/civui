@@ -4,5 +4,5 @@ export default defineWorkspace([
   'packages/core',
   'packages/forms',
   'packages/test-utils',
-  'packages/react-native',
+
 ]);

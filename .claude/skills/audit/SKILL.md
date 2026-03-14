@@ -10,7 +10,7 @@ argument-hint: [component-name | package-path | "all"]
 
 You are performing a rigorous, production-readiness audit of the CivUI design system. Your goal is to ensure every component meets the highest standards across six dimensions, from the perspective of both end users and developers who will consume this design system.
 
-CivUI uses: **Lit 3 web components**, **Light DOM** (no Shadow DOM — `createRenderRoot()` returns `this`), **Tailwind CSS** with `civ-` prefix, **ElementInternals** for native form participation, **pnpm workspaces + Turborepo** monorepo, **W3C DTCG design tokens** via Style Dictionary, and a **React Native** companion package.
+CivUI uses: **Lit 3 web components**, **Light DOM** (no Shadow DOM — `createRenderRoot()` returns `this`), **Tailwind CSS** with `civ-` prefix, **ElementInternals** for native form participation, **pnpm workspaces + Turborepo** monorepo, **W3C DTCG design tokens** via Style Dictionary, and native **SwiftUI** and **Jetpack Compose** companion components.
 
 ---
 
@@ -20,7 +20,7 @@ CivUI uses: **Lit 3 web components**, **Light DOM** (no Shadow DOM — `createRe
 2. **Package audit**: If `$ARGUMENTS` is a package path (e.g., `packages/core`, `packages/forms`), audit the entire package directory.
 3. **Full audit** (`all` or no arguments): Audit every component in `packages/forms/src/`, then `packages/core/src/`, then cross-cutting concerns.
 
-For every file you audit, **read the full source** — never skim or skip sections. Cross-reference related files (base classes in `@civui/core`, token values in `@civui/tokens`, React Native counterparts in `@civui/react-native`).
+For every file you audit, **read the full source** — never skim or skip sections. Cross-reference related files (base classes in `@civui/core`, token values in `@civui/tokens`, native counterparts in `packages/ios/` and `packages/android/`).
 
 ---
 
@@ -243,9 +243,9 @@ Audit from the perspective of a developer adopting CivUI for their project.
 - Type exports so TypeScript users get autocomplete and type checking
 
 **Parity across platforms:**
-- Web component API matches React Native component API (same props, same events, same behavior)
-- Token values are consistent across CSS, Tailwind, and React Native outputs
-- Accessibility behavior matches across platforms (keyboard nav on web, VoiceOver/TalkBack on native)
+- Web component API matches native SwiftUI/Compose component APIs (same props, same events, same behavior)
+- Token values are consistent across CSS, Tailwind, SwiftUI, and Compose outputs
+- Accessibility behavior matches across platforms (keyboard nav on web, VoiceOver on iOS, TalkBack on Android)
 
 ---
 
@@ -258,7 +258,7 @@ Audit from the perspective of a developer adopting CivUI for their project.
 3. Read the stories file
 4. Read the index.ts exports
 5. Read the base class it extends (`CivBaseElement` or `CivFormElement`)
-6. Check the React Native counterpart (`packages/react-native/src/forms/{ComponentName}.tsx`)
+6. Check the native counterparts (`packages/ios/Sources/CivUI/Civ{Name}.swift`, `packages/android/src/main/kotlin/gov/civui/components/Civ{Name}.kt`)
 7. Score each dimension
 8. List all findings with file:line references
 9. Prioritize fixes

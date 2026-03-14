@@ -17,8 +17,7 @@
     "typecheck": "turbo typecheck",
     "storybook": "storybook dev -p 6006",
     "storybook:build": "storybook build",
-    "validate": "pnpm lint && pnpm typecheck && pnpm test",
-    "storybook:native": "pnpm --filter @civui/react-native storybook:web"
+    "validate": "pnpm lint && pnpm typecheck && pnpm test"
   },
   "devDependencies": {
     "@storybook/addon-a11y": "^8.4.0",

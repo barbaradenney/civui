@@ -33,7 +33,6 @@ export async function health(): Promise<void> {
   // Components
   const components = countComponents(root);
   console.log(`\n  Web Components:    ${components.web}`);
-  console.log(`  RN Components:     ${components.rn}`);
 
   // Tests
   const testFiles = countTestFiles(root);
@@ -76,7 +75,7 @@ function getPackages(root: string): string[] {
   );
 }
 
-function countComponents(root: string): { web: number; rn: number } {
+function countComponents(root: string): { web: number } {
   const formsDir = resolve(root, 'packages/forms/src');
   let web = 0;
   if (existsSync(formsDir)) {
@@ -86,13 +85,7 @@ function countComponents(root: string): { web: number; rn: number } {
     web = dirs.length;
   }
 
-  const rnDir = resolve(root, 'packages/react-native/src/forms');
-  let rn = 0;
-  if (existsSync(rnDir)) {
-    rn = readdirSync(rnDir).filter((f) => f.endsWith('.tsx') && !f.includes('.test.') && !f.includes('.stories.')).length;
-  }
-
-  return { web, rn };
+  return { web };
 }
 
 function countTestFiles(root: string): number {

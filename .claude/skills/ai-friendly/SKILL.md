@@ -28,7 +28,7 @@ Read every changed file in full to understand context.
 - **Function/variable names**: Self-documenting? No abbreviations, acronyms, or overloaded names
 
 ### 2. Code Navigability
-- **Monorepo package boundaries**: Is it clear which package owns which code? Can an agent follow `@civui/core` → `@civui/forms` → `@civui/react-native` import chains?
+- **Monorepo package boundaries**: Is it clear which package owns which code? Can an agent follow `@civui/core` → `@civui/forms` import chains?
 - **TypeScript project references**: Does `tsconfig.json` correctly reference dependent packages? Are path aliases clear?
 - **Single responsibility**: Each file/function does one thing. Large files (>300 lines) are harder for AI to reason about
 - **Consistent patterns**: Does new code follow existing Lit component patterns? (`@property`, `render()`, `createRenderRoot()`, test structure)

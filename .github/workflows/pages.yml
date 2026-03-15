@@ -38,7 +38,7 @@ jobs:
       # Build web components Storybook (base path matches deploy subdir)
       - run: pnpm storybook:build -o storybook-static
         env:
-          STORYBOOK_BASE: /storybook/
+          STORYBOOK_BASE: /civui/storybook/
 
       # Assemble site: docs + /storybook/
       - run: |

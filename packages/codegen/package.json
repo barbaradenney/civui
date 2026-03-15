@@ -1,0 +1,18 @@
+{
+  "name": "@civui/codegen",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Cross-platform code generator for CivUI components — generates Lit, SwiftUI, and Compose from component schemas",
+  "scripts": {
+    "generate": "tsx src/generate.ts",
+    "generate:dry-run": "tsx src/generate.ts --dry-run",
+    "generate:web": "tsx src/generate.ts --platform web",
+    "generate:ios": "tsx src/generate.ts --platform ios",
+    "generate:android": "tsx src/generate.ts --platform android"
+  },
+  "dependencies": {
+    "@civui/schema": "workspace:*",
+    "tsx": "^4.0.0"
+  }
+}

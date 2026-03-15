@@ -270,9 +270,17 @@ describe('Lit generator', () => {
       expect(output).toContain("export type RadioGroupOrientation = 'vertical' | 'horizontal'");
     });
 
-    it('renders slot with orientation layout', () => {
-      expect(output).toContain('data-civ-fieldset-content');
+    it('renders layout div with orientation classes', () => {
       expect(output).toContain('civ-group-layout--horizontal');
+      expect(output).toContain('civ-group-layout--vertical');
+    });
+
+    it('imports child type and has sync methods', () => {
+      expect(output).toContain("import type { CivRadio } from './civ-radio.js'");
+      expect(output).toContain('_syncRadioChecked');
+      expect(output).toContain('_syncTabindex');
+      expect(output).toContain('_onKeydown');
+      expect(output).toContain('resolveGroupNavIndex');
     });
   });
 

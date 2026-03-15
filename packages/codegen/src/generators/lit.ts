@@ -8,15 +8,23 @@
  * - Tailwind with civ- prefix
  * - renderLabel/renderHint/renderError helpers from @civui/core
  *
- * Supports component patterns:
- * - text-input / textarea (standard label → hint → error → control)
- * - checkbox (hint → error → inline control+label, boolean form value)
- * - toggle (inline control+label → hint → error, switch role, boolean form value)
- * - select (label → hint → error → native select with options)
+ * Supports all 15 component patterns. Simple patterns (text-input, checkbox,
+ * toggle, select, form, form-group, fieldset, combobox, memorable-date) use
+ * the generic pipeline. Complex patterns (textarea, radio-group, checkbox-group,
+ * segmented-control, date-picker, file-upload) dispatch to dedicated generators
+ * in lit-patterns.ts that produce complete behavioral code.
  */
 
 import type { ComponentSchema, PropDef, RenderElement } from '@civui/schema/types';
 import { toPascalCase, toComponentName } from '../utils/naming.js';
+import {
+  generateTextareaLit,
+  generateRadioGroupLit,
+  generateCheckboxGroupLit,
+  generateSegmentedLit,
+  generateDatePickerLit,
+  generateFileUploadLit,
+} from './lit-patterns.js';
 
 function litPropType(prop: PropDef): string {
   switch (prop.type) {
@@ -486,6 +494,17 @@ function generateRenderBody(schema: ComponentSchema): string {
 // ---------------------------------------------------------------------------
 
 export function generateLit(schema: ComponentSchema): string {
+  // Dispatch complex patterns to dedicated generators
+  switch (schema.name) {
+    case 'civ-textarea': return generateTextareaLit(schema);
+    case 'civ-radio-group': return generateRadioGroupLit(schema);
+    case 'civ-checkbox-group': return generateCheckboxGroupLit(schema);
+    case 'civ-segmented-control': return generateSegmentedLit(schema);
+    case 'civ-date-picker': return generateDatePickerLit(schema);
+    case 'civ-file-upload': return generateFileUploadLit(schema);
+  }
+
+  // Simple patterns use the generic pipeline
   const className = toPascalCase(schema.name);
   const componentName = toComponentName(schema.name);
   const baseClass = schema.extends;

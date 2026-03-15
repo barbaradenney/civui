@@ -7,6 +7,7 @@
   "exports": {
     "./types": "./src/schema.types.ts",
     "./naming-maps": "./src/naming-maps.ts",
+    "./validate": "./src/validate.ts",
     "./components/*": "./src/components/*"
   }
 }

@@ -9,10 +9,17 @@
     "generate:dry-run": "tsx src/generate.ts --dry-run",
     "generate:web": "tsx src/generate.ts --platform web",
     "generate:ios": "tsx src/generate.ts --platform ios",
-    "generate:android": "tsx src/generate.ts --platform android"
+    "generate:android": "tsx src/generate.ts --platform android",
+    "validate": "tsx src/validate-schemas.ts",
+    "diff": "tsx src/diff-check.ts",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@civui/schema": "workspace:*",
     "tsx": "^4.0.0"
+  },
+  "devDependencies": {
+    "vitest": "^2.0.0"
   }
 }

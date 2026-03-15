@@ -16,7 +16,11 @@
     "./styles": "./src/styles/civ.css",
     "./styles/components": "./src/styles/components.css"
   },
-  "sideEffects": false,
+  "sideEffects": [
+    "**/*.css",
+    "src/*/civ-*.ts",
+    "dist/*/civ-*.js"
+  ],
   "files": ["dist", "src/styles"],
   "publishConfig": {
     "access": "public"

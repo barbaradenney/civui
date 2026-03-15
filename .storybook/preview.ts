@@ -34,6 +34,15 @@ const preview: Preview = {
   ],
   parameters: {
     layout: 'padded',
+    docs: {
+      story: {
+        // Render stories in iframes within docs pages. Light DOM web
+        // components share the parent document when rendered inline,
+        // which causes style collisions, ID clashes, and broken
+        // formAssociated / attachInternals() lifecycle for form elements.
+        inline: false,
+      },
+    },
     controls: {
       matchers: {
         color: /(background|color)$/i,

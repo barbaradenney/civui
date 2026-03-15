@@ -150,7 +150,9 @@
       <span class="badge">Light DOM</span>
       <span class="badge">WCAG 2.1 AA</span>
       <span class="badge">ElementInternals</span>
-      <span class="badge">Web + Mobile</span>
+      <span class="badge">Web + iOS + Android</span>
+      <span class="badge">Schema-Driven Codegen</span>
+      <span class="badge">Dark Mode</span>
     </div>
     <div class="hero-links">
       <a href="./storybook/" class="hero-link hero-link--primary">Web Components Storybook</a>
@@ -178,7 +180,7 @@
     <div class="features">
       <div class="feature">
         <h3>Accessibility First</h3>
-        <p>Light DOM means external labels, ARIA IDREFs, and focus management work without Shadow DOM workarounds. Every component is WCAG 2.1 AA compliant.</p>
+        <p>Light DOM means external labels, ARIA IDREFs, and focus management work without Shadow DOM workarounds. Every component is WCAG 2.1 AA compliant with Section 508 standards.</p>
       </div>
       <div class="feature">
         <h3>Native Form Participation</h3>
@@ -186,31 +188,72 @@
       </div>
       <div class="feature">
         <h3>Design Tokens</h3>
-        <p>W3C DTCG format tokens as the single source of truth. Auto-generated CSS custom properties, Tailwind preset, JS constants, and React Native values.</p>
+        <p>W3C DTCG format tokens as the single source of truth. Auto-generated CSS custom properties, Tailwind preset, JS constants, SwiftUI, and Compose values.</p>
       </div>
       <div class="feature">
-        <h3>Cross-Platform</h3>
-        <p>Web components for browsers plus native SwiftUI and Jetpack Compose companions with the same API. Build once, deploy everywhere.</p>
+        <h3>Cross-Platform Native</h3>
+        <p>Web components (Lit) for browsers plus native SwiftUI (iOS 16+) and Jetpack Compose (Android 8+) companions — all generated from shared component schemas.</p>
+      </div>
+      <div class="feature">
+        <h3>Schema-Driven Codegen</h3>
+        <p>Define a component once in a platform-neutral schema and generate consistent Lit, SwiftUI, and Compose implementations automatically.</p>
+      </div>
+      <div class="feature">
+        <h3>Dark Mode &amp; Density</h3>
+        <p>Built-in dark mode via <code>prefers-color-scheme</code> with token parity validation. Dense, spacious, and fluid density scales for any context.</p>
       </div>
     </div>
 
     <h2>Packages</h2>
+    <h3>Web Components</h3>
     <div class="packages">
       <div class="package-card">
         <h3>@civui/tokens</h3>
-        <p>Design tokens in W3C DTCG format. Outputs CSS custom properties, Tailwind preset, JS constants, and React Native values.</p>
+        <p>Design tokens in W3C DTCG format. Outputs CSS custom properties, Tailwind preset, JS constants, SwiftUI, and Compose values. Includes dark mode and density scales.</p>
       </div>
       <div class="package-card">
         <h3>@civui/core</h3>
-        <p>Base classes (CivBaseElement, CivFormElement), accessibility utilities, and shared helpers.</p>
+        <p>Base classes (CivBaseElement, CivFormElement), accessibility utilities, screen reader announcements, civ-icon component, and shared helpers.</p>
       </div>
       <div class="package-card">
         <h3>@civui/forms</h3>
-        <p>Form components: text-input, textarea, select, checkbox, radio, combobox, date-input, file-upload, and more.</p>
+        <p>Form components: text-input, textarea, select, checkbox, radio-group, combobox, date-picker, memorable-date, file-upload, toggle, segmented-control, and more.</p>
+      </div>
+      <div class="package-card">
+        <h3>@civui/ui</h3>
+        <p>General-purpose UI components: Button, Link, Badge, and more.</p>
+      </div>
+      <div class="package-card">
+        <h3>@civui/feedback</h3>
+        <p>Feedback components: Alert, Banner, Modal, and more.</p>
+      </div>
+      <div class="package-card">
+        <h3>@civui/navigation</h3>
+        <p>Navigation components: Skip Link, Breadcrumb, Tabs, and more.</p>
+      </div>
+      <div class="package-card">
+        <h3>@civui/content</h3>
+        <p>JSON-based content management for labels, hints, errors, and placeholders across components.</p>
+      </div>
+    </div>
+
+    <h3>Tooling</h3>
+    <div class="packages">
+      <div class="package-card">
+        <h3>@civui/schema</h3>
+        <p>Platform-neutral component schemas — the single source of truth for generating cross-platform implementations.</p>
+      </div>
+      <div class="package-card">
+        <h3>@civui/codegen</h3>
+        <p>Cross-platform code generator — produces Lit, SwiftUI, and Compose components from shared schemas.</p>
       </div>
       <div class="package-card">
         <h3>@civui/cli</h3>
         <p>Developer CLI for generating components, building, testing, validating, and releasing.</p>
+      </div>
+      <div class="package-card">
+        <h3>@civui/mcp-server</h3>
+        <p>MCP server for converting legacy PDF/HTML forms into accessible CivUI web components.</p>
       </div>
       <div class="package-card">
         <h3>@civui/test-utils</h3>
@@ -218,23 +261,43 @@
       </div>
     </div>
 
+    <h3>Native</h3>
+    <div class="packages">
+      <div class="package-card">
+        <h3>CivUI for iOS</h3>
+        <p>SwiftUI components for iOS 16+ and macOS 13+. Accessibility-first government design system with native look and feel.</p>
+      </div>
+      <div class="package-card">
+        <h3>CivUI for Android</h3>
+        <p>Jetpack Compose components for Android 8+. Material 3 based government design system with shared design tokens.</p>
+      </div>
+    </div>
+
     <h2>Form Example</h2>
-    <pre><code>&lt;form&gt;
-  &lt;civ-text-input label="Full name" name="name" required&gt;&lt;/civ-text-input&gt;
-  &lt;civ-text-input label="Email" name="email" type="email" required&gt;&lt;/civ-text-input&gt;
+    <pre><code>&lt;civ-form&gt;
+  &lt;civ-text-input label="Full name" name="name" required
+    required-message="Enter your full name"&gt;&lt;/civ-text-input&gt;
+  &lt;civ-text-input label="Email address" name="email" type="email" required
+    hint="For example: name@agency.gov"&gt;&lt;/civ-text-input&gt;
+  &lt;civ-memorable-date label="Date of birth" name="dob"
+    hint="For example: January 15 1990"&gt;&lt;/civ-memorable-date&gt;
   &lt;civ-select label="State" name="state" .options=&quot;${JSON.stringify([
     { value: '', label: 'Select a state' },
     { value: 'CA', label: 'California' },
     { value: 'NY', label: 'New York' },
   ])}&quot;&gt;&lt;/civ-select&gt;
-  &lt;civ-textarea label="Message" name="message" hint="Max 500 characters"&gt;&lt;/civ-textarea&gt;
+  &lt;civ-textarea label="Message" name="message"
+    hint="Maximum 500 characters" maxlength="500"&gt;&lt;/civ-textarea&gt;
   &lt;civ-checkbox label="I agree to the terms" name="terms" required&gt;&lt;/civ-checkbox&gt;
   &lt;button type="submit"&gt;Submit&lt;/button&gt;
-&lt;/form&gt;</code></pre>
+&lt;/civ-form&gt;</code></pre>
 
     <h2>CLI</h2>
     <pre><code># Generate a new component
 civui generate component my-widget
+
+# Cross-platform codegen from schema
+civui codegen --schema checkbox --targets lit,swiftui,compose
 
 # Build packages
 civui build all
@@ -245,8 +308,8 @@ civui test --unit
 # Validate everything
 civui validate
 
-# Release
-civui release patch --dry-run</code></pre>
+# Convert legacy forms to CivUI
+civui convert legacy-form.pdf</code></pre>
   </div>
 
   <footer>

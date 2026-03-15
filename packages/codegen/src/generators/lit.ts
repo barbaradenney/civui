@@ -115,13 +115,18 @@ function generateWidthMap(schema: ComponentSchema): string {
 // ---------------------------------------------------------------------------
 
 function renderElement(el: RenderElement, schema: ComponentSchema, indent: string): string {
+  const isGroup = schema.isGroup;
   switch (el.type) {
     case 'label':
+      if (isGroup) {
+        const legendProp = schema.props['legend'] ? 'this.legend' : 'this.label';
+        return `${indent}\${renderLegend({ legend: ${legendProp}, required: this.required })}`;
+      }
       return `${indent}\${renderLabel({ label: this.label, inputId: this._inputId, required: this.required })}`;
     case 'hint':
-      return `${indent}\${renderHint(this._hintId, this.hint)}`;
+      return `${indent}\${renderHint(this._hintId, this.hint${isGroup ? ', true' : ''})}`;
     case 'error':
-      return `${indent}\${renderError(this._errorId, this.error)}`;
+      return `${indent}\${renderError(this._errorId, this.error${isGroup ? ', true' : ''})}`;
     case 'input':
       return renderInputElement(schema, indent);
     case 'select':
@@ -132,6 +137,8 @@ function renderElement(el: RenderElement, schema: ComponentSchema, indent: strin
       return renderSwitchElement(schema, indent);
     case 'container':
       return renderContainer(el, schema, indent);
+    case 'slot':
+      return `${indent}<div class="${el.bindings?.orientation ? `\${this.orientation === 'horizontal' ? 'civ-group-layout--horizontal' : 'civ-group-layout--vertical'}` : ''}" data-civ-fieldset-content></div>`;
     default:
       return '';
   }
@@ -303,6 +310,30 @@ function renderContainer(el: RenderElement, schema: ComponentSchema, indent: str
     ].join('\n');
   }
 
+  // Fieldset container (radio-group, checkbox-group, fieldset, segmented-control, memorable-date)
+  const isFieldset = el.bindings?.tag === 'fieldset';
+  if (isFieldset) {
+    const role = schema.a11y.role !== 'group' ? ` role="${schema.a11y.role}"` : '';
+    const orientation = schema.a11y.ariaAttributes?.['aria-orientation']
+      ? ` aria-orientation="${schema.a11y.ariaAttributes['aria-orientation'] === 'horizontal' ? 'horizontal' : `\${this.orientation}`}"`
+      : '';
+    const allChildLines = children
+      .map((child) => renderElement(child, schema, indent + '  '))
+      .filter(Boolean);
+
+    return [
+      `${indent}<fieldset`,
+      `${indent}  class="civ-fieldset"${role}${orientation}`,
+      `${indent}  aria-describedby="\${this._ariaDescribedBy || nothing}"`,
+      `${indent}  aria-invalid="\${this.error ? 'true' : nothing}"`,
+      `${indent}  aria-required="\${this.required || nothing}"`,
+      `${indent}  ?disabled="\${this.disabled}"`,
+      `${indent}>`,
+      ...allChildLines,
+      `${indent}</fieldset>`,
+    ].join('\n');
+  }
+
   return childLines.join('\n');
 }
 
@@ -467,7 +498,13 @@ export function generateLit(schema: ComponentSchema): string {
   const widthMap = generateWidthMap(schema);
 
   // Build imports
-  const coreImports = [baseClass, 'renderLabel', 'renderHint', 'renderError'];
+  const coreImports = [baseClass];
+  if (schema.isGroup) {
+    coreImports.push('renderLegend');
+  } else {
+    coreImports.push('renderLabel');
+  }
+  coreImports.push('renderHint', 'renderError');
   if (schema.widths || schema.platform?.web?.controlClasses) {
     coreImports.push('inputClasses');
   }

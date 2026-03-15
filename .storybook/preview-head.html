@@ -176,6 +176,52 @@
     --civ-typography-lineHeight-tight: 1.15;
   }
 
+  /* Dark mode — applied via Storybook toolbar toggle */
+  [data-civ-theme="dark"] {
+    --civ-color-primary-lightest: #1a3a5c;
+    --civ-color-primary-lighter: #2e6ca8;
+    --civ-color-primary-light: #5aa3e8;
+    --civ-color-primary-DEFAULT: #73b3e7;
+    --civ-color-primary-vivid: #5ea7f5;
+    --civ-color-primary-dark: #a4cef4;
+    --civ-color-primary-darker: #d0e4f8;
+    --civ-color-error-lighter: #4a2020;
+    --civ-color-error-light: #e87461;
+    --civ-color-error-DEFAULT: #f28b82;
+    --civ-color-error-dark: #f5b7b1;
+    --civ-color-warning-lighter: #4a3d1a;
+    --civ-color-warning-light: #f5d576;
+    --civ-color-warning-DEFAULT: #f5c542;
+    --civ-color-warning-dark: #c9a24d;
+    --civ-color-success-lighter: #1e3a20;
+    --civ-color-success-light: #81d88a;
+    --civ-color-success-DEFAULT: #5cb85c;
+    --civ-color-success-dark: #7ec97e;
+    --civ-color-info-lighter: #1a3a40;
+    --civ-color-info-light: #7dd3e0;
+    --civ-color-info-DEFAULT: #4dd0e1;
+    --civ-color-info-dark: #80deea;
+    --civ-color-base-lightest: #2d2d2d;
+    --civ-color-base-lighter: #3d3d3d;
+    --civ-color-base-light: #8a8a8a;
+    --civ-color-base-DEFAULT: #a0a0a0;
+    --civ-color-base-dark: #c4c4c4;
+    --civ-color-base-darker: #e0e0e0;
+    --civ-color-base-darkest: #f0f0f0;
+    --civ-color-white-DEFAULT: #1b1b1b;
+    --civ-color-black-DEFAULT: #ffffff;
+    --civ-color-accent-cool-lightest: #1a3a40;
+    --civ-color-accent-cool-light: #6bc5d8;
+    --civ-color-accent-cool-DEFAULT: #4dd0e1;
+    --civ-color-accent-cool-dark: #80deea;
+    --civ-color-accent-warm-lightest: #3d2d1a;
+    --civ-color-accent-warm-light: #f5b87a;
+    --civ-color-accent-warm-DEFAULT: #f5a654;
+    --civ-color-accent-warm-dark: #e8924a;
+    --civ-focus-outline-color: var(--civ-color-primary-lighter);
+    --civ-focus-shadow-color: var(--civ-color-primary-darker);
+  }
+
   body {
     font-family: 'Public Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     color: var(--civ-color-base-darkest);

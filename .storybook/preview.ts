@@ -24,9 +24,10 @@ const preview: Preview = {
       const theme = context.globals.theme || 'light';
       const isDark = theme === 'dark';
 
-      // Apply theme to the Storybook body so CSS variable overrides take effect
-      document.body.setAttribute('data-civ-theme', theme);
+      // Apply theme to <html> so :root[data-civ-theme="dark"] overrides take effect
+      document.documentElement.setAttribute('data-civ-theme', theme);
       document.body.style.backgroundColor = isDark ? '#1b1b1b' : '#ffffff';
+      document.body.style.color = isDark ? '#f0f0f0' : '#1b1b1b';
 
       return story();
     },

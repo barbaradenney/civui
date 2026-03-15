@@ -1,0 +1,13 @@
+{
+  "name": "@civui/schema",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Platform-neutral component schemas for CivUI — the single source of truth for generating cross-platform implementations",
+  "exports": {
+    "./types": "./src/schema.types.ts",
+    "./naming-maps": "./src/naming-maps.ts",
+    "./validate": "./src/validate.ts",
+    "./components/*": "./src/components/*"
+  }
+}

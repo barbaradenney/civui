@@ -17,6 +17,10 @@
     "typecheck": "turbo typecheck",
     "storybook": "storybook dev -p 6006",
     "storybook:build": "storybook build",
+    "generate": "pnpm --filter @civui/codegen generate",
+    "generate:dry-run": "pnpm --filter @civui/codegen generate:dry-run",
+    "generate:validate": "pnpm --filter @civui/codegen validate",
+    "generate:diff": "pnpm --filter @civui/codegen diff",
     "validate": "pnpm lint && pnpm typecheck && pnpm test"
   },
   "devDependencies": {

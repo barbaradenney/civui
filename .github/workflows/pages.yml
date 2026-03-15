@@ -35,8 +35,10 @@ jobs:
       # Build all packages (tokens → core → forms)
       - run: pnpm build
 
-      # Build web components Storybook
+      # Build web components Storybook (base path matches deploy subdir)
       - run: pnpm storybook:build -o storybook-static
+        env:
+          STORYBOOK_BASE: /storybook/
 
       # Assemble site: docs + /storybook/
       - run: |

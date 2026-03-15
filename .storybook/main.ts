@@ -16,6 +16,12 @@ const config: StorybookConfig = {
     options: {},
   },
   viteFinal: async (config) => {
+    // When deployed to a subpath (e.g. GitHub Pages /storybook/), Vite needs
+    // the correct base so asset URLs resolve properly.
+    if (process.env.STORYBOOK_BASE) {
+      config.base = process.env.STORYBOOK_BASE;
+    }
+
     // Resolve workspace packages to TypeScript source so Storybook dev
     // works without running `pnpm build` first.
     config.resolve = config.resolve || {};

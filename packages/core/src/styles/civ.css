@@ -32,6 +32,12 @@
   }
 }
 
+/* Same overrides for manual dark mode toggle (Storybook toolbar) */
+:root[data-civ-theme="dark"] {
+  --civ-focus-outline-color: var(--civ-color-primary-lighter);
+  --civ-focus-shadow-color: var(--civ-color-primary-darker);
+}
+
 /* Windows High Contrast Mode: transparent outline becomes system highlight color */
 @media (forced-colors: active) {
   .civ-focus-ring:focus-visible,

@@ -176,8 +176,10 @@
     --civ-typography-lineHeight-tight: 1.15;
   }
 
-  /* Dark mode — applied via Storybook toolbar toggle */
-  [data-civ-theme="dark"] {
+  /* Dark mode — applied via Storybook toolbar toggle.
+     :root[…] specificity (0,2,0) beats plain :root (0,1,0) from tokens.css,
+     ensuring dark vars win regardless of stylesheet load order. */
+  :root[data-civ-theme="dark"] {
     --civ-color-primary-lightest: #1a3a5c;
     --civ-color-primary-lighter: #2e6ca8;
     --civ-color-primary-light: #5aa3e8;

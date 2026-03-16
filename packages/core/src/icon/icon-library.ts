@@ -131,15 +131,15 @@ export const icons: Record<string, IconDef> = {
   error: {
     label: 'Error',
     layers: [
-      { char: '△', transform: 'scale(1.2)' },
-      { char: '!', transform: 'scale(0.65) translate(0%, 12%)' },
+      { char: '○', transform: 'scale(1.3)' },
+      { char: '!', transform: 'scale(0.65)' },
     ],
   },
   warning: {
     label: 'Warning',
     layers: [
-      { char: '△', transform: 'scale(1.2)' },
-      { char: '!', transform: 'scale(0.65) translate(0%, 12%)' },
+      { char: '△', transform: 'scale(1.4)' },
+      { char: '!', transform: 'scale(0.5) translate(0%, 10%)' },
     ],
   },
   info: {

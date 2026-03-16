@@ -49,12 +49,12 @@ describe('civ-memorable-date rendering', () => {
     expect(errorEl!.textContent).toBe('Date is required');
   });
 
-  it('shows required indicator asterisk', async () => {
+  it('shows required indicator text', async () => {
     const el = await fixture('<civ-memorable-date legend="Date of birth" required></civ-memorable-date>');
 
-    const abbr = el.querySelector('abbr');
-    expect(abbr).not.toBeNull();
-    expect(abbr!.textContent).toBe('*');
+    const requiredMark = el.querySelector('.civ-required-mark');
+    expect(requiredMark).not.toBeNull();
+    expect(requiredMark!.textContent).toContain('required');
   });
 
   it('uses Light DOM (no shadow root)', async () => {

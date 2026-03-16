@@ -42,7 +42,7 @@ export class CivCheckbox extends CivBooleanFormElement {
             <span class="civ-check-label">
               ${this.label}
               ${this.required
-                ? html`<abbr class="civ-required-mark" title="required">*</abbr>`
+                ? html`<span class="civ-required-mark">(required)</span>`
                 : nothing}
             </span>
             ${this.description

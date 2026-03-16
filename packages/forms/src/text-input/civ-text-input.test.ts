@@ -35,17 +35,16 @@ describe('civ-text-input', () => {
       '<civ-text-input label="Email" required></civ-text-input>',
     );
 
-    const abbr = el.querySelector('abbr');
-    expect(abbr).not.toBeNull();
-    expect(abbr!.textContent).toBe('*');
-    expect(abbr!.title).toBe('required');
+    const requiredMark = el.querySelector('.civ-required-mark');
+    expect(requiredMark).not.toBeNull();
+    expect(requiredMark!.textContent).toContain('required');
   });
 
   it('does not show required indicator when not required', async () => {
     const el = await fixture('<civ-text-input label="Email"></civ-text-input>');
 
-    const abbr = el.querySelector('abbr');
-    expect(abbr).toBeNull();
+    const requiredMark = el.querySelector('.civ-required-mark');
+    expect(requiredMark).toBeNull();
   });
 
   it('renders hint text', async () => {

@@ -39,9 +39,9 @@ describe('civ-form-group', () => {
   it('shows required indicator', async () => {
     const el = await fixture('<civ-form-group label="Name" required></civ-form-group>');
 
-    const abbr = el.querySelector('abbr');
-    expect(abbr).not.toBeNull();
-    expect(abbr!.textContent).toBe('*');
+    const requiredMark = el.querySelector('.civ-required-mark');
+    expect(requiredMark).not.toBeNull();
+    expect(requiredMark!.textContent).toContain('required');
   });
 
   it('renders slotted content', async () => {

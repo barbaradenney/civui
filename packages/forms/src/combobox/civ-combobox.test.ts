@@ -181,8 +181,8 @@ describe('civ-combobox', () => {
   it('shows required indicator', async () => {
     const el = await fixture('<civ-combobox label="State" required></civ-combobox>');
 
-    const abbr = el.querySelector('abbr');
-    expect(abbr).not.toBeNull();
+    const requiredMark = el.querySelector('.civ-required-mark');
+    expect(requiredMark).not.toBeNull();
   });
 
   it('renders disabled state', async () => {

@@ -192,9 +192,9 @@ describe('civ-radio-group', () => {
       </civ-radio-group>
     `);
 
-    const abbr = el.querySelector('abbr');
-    expect(abbr).not.toBeNull();
-    expect(abbr!.textContent).toBe('*');
+    const requiredMark = el.querySelector('.civ-required-mark');
+    expect(requiredMark).not.toBeNull();
+    expect(requiredMark!.textContent).toContain('required');
   });
 
   it('uses Light DOM', async () => {

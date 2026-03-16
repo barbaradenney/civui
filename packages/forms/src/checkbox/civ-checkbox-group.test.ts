@@ -45,16 +45,16 @@ describe('civ-checkbox-group rendering', () => {
     expect(errorEl!.textContent).toBe('Select at least one topping');
   });
 
-  it('shows required indicator asterisk', async () => {
+  it('shows required indicator text', async () => {
     const el = await fixture(`
       <civ-checkbox-group legend="Toppings" required>
         <civ-checkbox label="Cheese" value="cheese"></civ-checkbox>
       </civ-checkbox-group>
     `);
 
-    const abbr = el.querySelector('abbr');
-    expect(abbr).not.toBeNull();
-    expect(abbr!.textContent).toBe('*');
+    const requiredMark = el.querySelector('.civ-required-mark');
+    expect(requiredMark).not.toBeNull();
+    expect(requiredMark!.textContent).toContain('required');
   });
 
   it('uses Light DOM (no shadow root)', async () => {

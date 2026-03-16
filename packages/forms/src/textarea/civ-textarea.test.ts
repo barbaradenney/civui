@@ -99,9 +99,9 @@ describe('civ-textarea', () => {
   it('shows required indicator', async () => {
     const el = await fixture('<civ-textarea label="Bio" required></civ-textarea>');
 
-    const abbr = el.querySelector('abbr');
-    expect(abbr).not.toBeNull();
-    expect(abbr!.textContent).toBe('*');
+    const requiredMark = el.querySelector('.civ-required-mark');
+    expect(requiredMark).not.toBeNull();
+    expect(requiredMark!.textContent).toContain('required');
   });
 
   it('renders disabled state', async () => {

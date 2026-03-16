@@ -21,7 +21,7 @@
   }
 
   .civ-required-mark {
-    @apply civ-text-error civ-no-underline;
+    @apply civ-text-error civ-text-sm civ-font-normal civ-ms-2;
   }
 
   .civ-hint {

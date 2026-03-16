@@ -28,16 +28,14 @@ describe('renderLabel', () => {
     expect(output).toContain('for="email-1"');
     expect(output).toContain('Email');
     expect(output).toContain('civ-label');
-    expect(output).not.toContain('<abbr');
+    expect(output).not.toContain('(required)');
   });
 
   it('renders required indicator with civ-required-mark', () => {
     const result = renderLabel({ label: 'Name', inputId: 'name-1', required: true });
     const output = renderToString(result);
-    expect(output).toContain('<abbr');
-    expect(output).toContain('title="required"');
+    expect(output).toContain('(required)');
     expect(output).toContain('civ-required-mark');
-    expect(output).toContain('*');
   });
 
   it('renders optional labelId', () => {
@@ -82,9 +80,8 @@ describe('renderLegend', () => {
   it('renders required indicator with civ-required-mark', () => {
     const result = renderLegend({ legend: 'Choose one', required: true });
     const output = renderToString(result);
-    expect(output).toContain('<abbr');
+    expect(output).toContain('(required)');
     expect(output).toContain('civ-required-mark');
-    expect(output).toContain('*');
   });
 
   it('accepts custom text size class', () => {
@@ -108,11 +105,10 @@ describe('renderLegend', () => {
     expect(output).not.toContain('civ-font-bold');
   });
 
-  it('ignores required indicator when srOnly is true', () => {
+  it('includes required text when srOnly is true', () => {
     const result = renderLegend({ legend: 'Controls', required: true, srOnly: true });
     const output = renderToString(result);
-    expect(output).not.toContain('<abbr');
-    expect(output).not.toContain('*');
+    expect(output).toContain('(required)');
   });
 });
 

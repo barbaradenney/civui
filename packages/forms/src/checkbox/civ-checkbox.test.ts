@@ -109,9 +109,9 @@ describe('civ-checkbox', () => {
   it('shows required indicator', async () => {
     const el = await fixture('<civ-checkbox label="Agree" required></civ-checkbox>');
 
-    const abbr = el.querySelector('abbr');
-    expect(abbr).not.toBeNull();
-    expect(abbr!.textContent).toBe('*');
+    const requiredMark = el.querySelector('.civ-required-mark');
+    expect(requiredMark).not.toBeNull();
+    expect(requiredMark!.textContent).toContain('required');
   });
 
   it('uses Light DOM', async () => {

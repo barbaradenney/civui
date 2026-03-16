@@ -25,7 +25,7 @@ export function renderLabel({
     >
       ${label}
       ${required
-        ? html`<abbr class="civ-required-mark" title="required">*</abbr>`
+        ? html`<span class="civ-required-mark">(required)</span>`
         : nothing}
     </label>
   `;
@@ -60,7 +60,7 @@ export function renderLegend({
     >
       ${legend}
       ${required
-        ? html`<abbr class="civ-required-mark" title="required">*</abbr>`
+        ? html`<span class="civ-required-mark">(required)</span>`
         : nothing}
     </legend>
   `;

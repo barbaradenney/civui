@@ -68,8 +68,8 @@ describe('civ-file-upload', () => {
   it('shows required indicator', async () => {
     const el = await fixture('<civ-file-upload label="Upload" required></civ-file-upload>');
 
-    const abbr = el.querySelector('abbr');
-    expect(abbr).not.toBeNull();
+    const requiredMark = el.querySelector('.civ-required-mark');
+    expect(requiredMark).not.toBeNull();
   });
 
   it('renders hint text', async () => {

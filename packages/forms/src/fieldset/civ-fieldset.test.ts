@@ -52,9 +52,9 @@ describe('civ-fieldset', () => {
   it('shows required indicator on legend', async () => {
     const el = await fixture('<civ-fieldset legend="Address" required></civ-fieldset>');
 
-    const abbr = el.querySelector('abbr');
-    expect(abbr).not.toBeNull();
-    expect(abbr!.textContent).toBe('*');
+    const requiredMark = el.querySelector('.civ-required-mark');
+    expect(requiredMark).not.toBeNull();
+    expect(requiredMark!.textContent).toContain('required');
   });
 
   it('renders slotted children', async () => {

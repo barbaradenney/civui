@@ -101,9 +101,9 @@ describe('civ-select', () => {
   it('shows required indicator', async () => {
     const el = await fixture('<civ-select label="State" required></civ-select>');
 
-    const abbr = el.querySelector('abbr');
-    expect(abbr).not.toBeNull();
-    expect(abbr!.textContent).toBe('*');
+    const requiredMark = el.querySelector('.civ-required-mark');
+    expect(requiredMark).not.toBeNull();
+    expect(requiredMark!.textContent).toContain('required');
   });
 
   it('renders disabled state', async () => {

@@ -52,8 +52,8 @@ describe('civ-date-picker', () => {
     it('shows required indicator', async () => {
       const el = await fixture('<civ-date-picker label="Date" required></civ-date-picker>');
 
-      const abbr = el.querySelector('abbr');
-      expect(abbr).not.toBeNull();
+      const requiredMark = el.querySelector('.civ-required-mark');
+      expect(requiredMark).not.toBeNull();
     });
 
     it('renders hint text', async () => {

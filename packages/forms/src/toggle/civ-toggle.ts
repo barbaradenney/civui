@@ -26,7 +26,7 @@ export class CivToggle extends CivBooleanFormElement {
             <label class="civ-check-label" for="${this._inputId}">
               ${this.label}
               ${this.required
-                ? html`<abbr class="civ-required-mark" title="required">*</abbr>`
+                ? html`<span class="civ-required-mark">(required)</span>`
                 : nothing}
             </label>
             ${this.description

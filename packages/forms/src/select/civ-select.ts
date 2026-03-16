@@ -36,7 +36,7 @@ export class CivSelect extends CivFormElement {
 
   override render() {
     const classes = inputClasses({
-      extra: ['civ-appearance-auto'],
+      extra: ['civ-select-field'],
     });
 
     return html`

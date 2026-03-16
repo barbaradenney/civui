@@ -26,6 +26,23 @@ export class CivFormGroup extends CivBaseElement {
 
   private _hintId = this.generateId('hint');
   private _errorId = this.generateId('error');
+  private _userChildren: Node[] = [];
+
+  override connectedCallback(): void {
+    this._userChildren = Array.from(this.childNodes);
+    super.connectedCallback();
+  }
+
+  override firstUpdated(): void {
+    // Move authored children (the input) into the wrapper after label/hint/error
+    const wrapper = this.querySelector('[data-civ-form-group-content]');
+    if (wrapper) {
+      for (const child of this._userChildren) {
+        wrapper.appendChild(child);
+      }
+    }
+    this._wireAriaDescribedBy();
+  }
 
   override updated(changed: Map<string, unknown>): void {
     super.updated(changed);
@@ -73,6 +90,7 @@ export class CivFormGroup extends CivBaseElement {
         ${renderLabel({ label: this.label, inputId: this.inputId, required: this.required })}
         ${renderHint(this._hintId, this.hint)}
         ${renderError(this._errorId, this.error)}
+        <div data-civ-form-group-content></div>
       </div>
     `;
   }

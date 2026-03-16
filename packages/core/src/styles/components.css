@@ -310,6 +310,11 @@
            civ-transition-colors;
   }
 
+  /* When a button renders as a link (<a>), underline to signal navigation */
+  a.civ-btn {
+    @apply civ-underline;
+  }
+
   .civ-btn--primary {
     @apply civ-bg-primary civ-text-white civ-border-primary;
   }

@@ -384,7 +384,7 @@
   }
 
   .civ-alert__heading {
-    @apply civ-font-bold civ-text-lg civ-mt-0 civ-mb-1;
+    @apply civ-font-bold civ-text-lg civ-mt-0 civ-mb-0;
   }
 
   .civ-alert__body {

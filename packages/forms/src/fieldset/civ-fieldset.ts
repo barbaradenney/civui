@@ -27,34 +27,20 @@ export class CivFieldset extends CivBaseElement {
 
   private _hintId = this.generateId('hint');
   private _errorId = this.generateId('error');
-  private _childrenMoved = false;
+  private _userChildren: Node[] = [];
 
   override connectedCallback(): void {
+    this._userChildren = Array.from(this.childNodes);
     super.connectedCallback();
-    this._childrenMoved = false;
   }
 
-  override updated(changed: Map<string, unknown>): void {
-    super.updated(changed);
-    if (!this._childrenMoved) {
-      this._moveChildrenIntoFieldset();
+  override firstUpdated(): void {
+    const container = this.querySelector('[data-civ-fieldset-content]');
+    if (container) {
+      for (const child of this._userChildren) {
+        container.appendChild(child);
+      }
     }
-  }
-
-  private _moveChildrenIntoFieldset(): void {
-    const fieldset = this.querySelector('fieldset');
-    if (!fieldset) return;
-
-    const contentContainer = fieldset.querySelector('[data-civ-fieldset-content]');
-    if (!contentContainer) return;
-
-    const children = Array.from(this.childNodes).filter(
-      (node) => node !== fieldset && !(node instanceof Comment),
-    );
-    for (const child of children) {
-      contentContainer.appendChild(child);
-    }
-    this._childrenMoved = true;
   }
 
   override render() {

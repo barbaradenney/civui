@@ -34,7 +34,10 @@ export class CivSegmentedControl extends CivFormElement {
   private _boundStopChildInput = this._stopChildInput.bind(this);
   private _boundOnKeydown = this._onKeydown.bind(this);
 
+  private _userChildren: Node[] = [];
+
   override connectedCallback(): void {
+    this._userChildren = Array.from(this.childNodes);
     super.connectedCallback();
     this.addEventListener('civ-change', this._boundOnChildChange as EventListener);
     this.addEventListener('civ-input', this._boundStopChildInput as EventListener);
@@ -56,6 +59,13 @@ export class CivSegmentedControl extends CivFormElement {
   }
 
   override firstUpdated(): void {
+    const container = this.querySelector('.civ-inline-flex');
+    if (container) {
+      for (const child of this._userChildren) {
+        container.appendChild(child);
+      }
+    }
+
     this._syncSegmentSelected();
     this._syncSegmentPositions();
     this._defaultValue = this.value;

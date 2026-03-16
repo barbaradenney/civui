@@ -113,7 +113,11 @@
   }
 
   .civ-check-tile {
-    @apply civ-relative civ-border civ-rounded civ-p-4 civ-border-base-light civ-cursor-pointer;
+    @apply civ-relative civ-border civ-rounded civ-border-base-light civ-cursor-pointer;
+  }
+
+  .civ-check-tile > label {
+    @apply civ-p-4;
   }
 
   /* ── Toggle ─────────────────────────────────────────────────── */

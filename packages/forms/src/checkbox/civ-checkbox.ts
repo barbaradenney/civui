@@ -39,7 +39,7 @@ export class CivCheckbox extends CivFormElement {
 
   override render() {
     const content = html`
-      <label class="civ-flex civ-items-start ${this.tile ? 'civ-cursor-pointer' : ''}" for="${this._inputId}">
+      <label class="civ-flex civ-items-start civ-cursor-pointer" for="${this._inputId}">
         <input
           class="civ-check-input focus-visible:civ-focus-ring"
           id="${this._inputId}"

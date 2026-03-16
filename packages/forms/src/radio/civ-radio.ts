@@ -48,7 +48,7 @@ export class CivRadio extends CivBaseElement {
   override render() {
     return html`
       <div class="civ-mb-2 ${this.tile ? 'civ-check-tile' : ''}" data-civ-tile="${this.tile ? '' : nothing}">
-        <label class="civ-flex civ-items-start ${this.tile ? 'civ-cursor-pointer' : ''}" for="${this._inputId}">
+        <label class="civ-flex civ-items-start civ-cursor-pointer" for="${this._inputId}">
           <input
             class="civ-check-input focus-visible:civ-focus-ring"
             id="${this._inputId}"

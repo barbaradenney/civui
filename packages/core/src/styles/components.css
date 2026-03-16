@@ -11,7 +11,7 @@
   /* ── Shared form primitives ─────────────────────────────────── */
 
   .civ-label {
-    @apply civ-block civ-mb-0.5 civ-font-bold;
+    @apply civ-block civ-mb-0 civ-font-bold;
     font-size: var(--civ-typography-fontSize-base);
     color: var(--civ-color-base-darkest);
   }

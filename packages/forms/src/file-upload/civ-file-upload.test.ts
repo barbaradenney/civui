@@ -359,4 +359,75 @@ describe('aria-required', () => {
     expect(dropzone).not.toBeNull();
     expect(dropzone!.hasAttribute('aria-required')).toBe(false);
   });
+
+  it('enforces maxFiles limit', async () => {
+    const el = await fixture<HTMLElement>(
+      '<civ-file-upload label="Upload" multiple max-files="2"></civ-file-upload>',
+    ) as any;
+
+    const file1 = new File(['a'], 'a.pdf', { type: 'application/pdf' });
+    const file2 = new File(['b'], 'b.pdf', { type: 'application/pdf' });
+    const file3 = new File(['c'], 'c.pdf', { type: 'application/pdf' });
+
+    el._addFiles([file1, file2, file3]);
+    await el.updateComplete;
+
+    expect(el.files.length).toBe(2);
+    expect(el.error).toContain('2');
+  });
+
+  it('resets files on formResetCallback', async () => {
+    const el = await fixture<HTMLElement>(
+      '<civ-file-upload label="Upload" multiple></civ-file-upload>',
+    ) as any;
+
+    const file = new File(['test'], 'test.pdf', { type: 'application/pdf' });
+    el._addFiles([file]);
+    await el.updateComplete;
+    expect(el.files.length).toBe(1);
+
+    el.formResetCallback();
+    await el.updateComplete;
+    expect(el.files.length).toBe(0);
+    expect(el.value).toBe('');
+    expect(el.error).toBe('');
+  });
+
+  it('handles drop event with files', async () => {
+    const el = await fixture<HTMLElement>(
+      '<civ-file-upload label="Upload"></civ-file-upload>',
+    ) as any;
+
+    const file = new File(['content'], 'dropped.txt', { type: 'text/plain' });
+    const dropEvent = new Event('drop', { bubbles: true }) as any;
+    dropEvent.preventDefault = () => {};
+    dropEvent.dataTransfer = { files: [file] };
+
+    const dropzone = el.querySelector('[role="button"]');
+    el._onDrop(dropEvent);
+    await el.updateComplete;
+
+    expect(el.files.length).toBe(1);
+    expect(el.files[0].name).toBe('dropped.txt');
+  });
+
+  it('moves focus after file removal', async () => {
+    const el = await fixture<HTMLElement>(
+      '<civ-file-upload label="Upload" multiple></civ-file-upload>',
+    ) as any;
+
+    const file1 = new File(['a'], 'a.pdf', { type: 'application/pdf' });
+    const file2 = new File(['b'], 'b.pdf', { type: 'application/pdf' });
+    el._addFiles([file1, file2]);
+    await el.updateComplete;
+
+    const removeButtons = el.querySelectorAll('.civ-file-remove-btn');
+    expect(removeButtons.length).toBe(2);
+
+    el._removeFile(0);
+    await el.updateComplete;
+
+    expect(el.files.length).toBe(1);
+    expect(el.files[0].name).toBe('b.pdf');
+  });
 });

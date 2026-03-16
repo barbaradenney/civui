@@ -205,7 +205,10 @@ export class CivCombobox extends CivFormElement {
         if (!this._open) {
           this._setOpen(true);
         } else {
-          this._activeIndex = Math.max(this._activeIndex - 1, 0);
+          // APG: ArrowUp from no selection goes to last item
+          this._activeIndex = this._activeIndex <= 0
+            ? filtered.length - 1
+            : this._activeIndex - 1;
         }
         break;
 

@@ -43,8 +43,15 @@ export class CivFormElement extends CivBaseElement {
 
   override connectedCallback(): void {
     super.connectedCallback();
-    this._defaultValue = this.value;
     this.setAttribute('data-civ-form-field', '');
+  }
+
+  override firstUpdated(): void {
+    // Capture default value after first render so framework-bound
+    // initial values (e.g., React/Angular property bindings) are resolved.
+    if (!this._defaultValue) {
+      this._defaultValue = this.value;
+    }
   }
 
   /**

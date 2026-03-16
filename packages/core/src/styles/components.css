@@ -58,11 +58,11 @@
   /* ── Checkbox / Radio ───────────────────────────────────────── */
 
   .civ-check-input {
-    @apply civ-w-5 civ-h-5 civ-me-2 civ-align-middle civ-accent-primary;
+    @apply civ-w-5 civ-h-5 civ-me-2 civ-align-middle civ-accent-primary civ-cursor-pointer;
   }
 
   .civ-check-label {
-    @apply civ-text-base civ-font-sans civ-text-base-darkest;
+    @apply civ-text-base civ-font-sans civ-text-base-darkest civ-cursor-pointer;
   }
 
   .civ-check-description {

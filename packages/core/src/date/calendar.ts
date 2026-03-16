@@ -6,6 +6,9 @@
 
 import { isSameDay, startOfWeek, addDays } from './date-utils.js';
 
+const dayHeaderCache = new Map<string, { short: string; long: string }[]>();
+const monthNameCache = new Map<string, string[]>();
+
 /** A single day cell in the calendar grid. */
 export interface CalendarDay {
   date: Date;
@@ -62,6 +65,10 @@ export function getDayOfWeekHeaders(
   locale = 'en-US',
   weekStartsOn = 0,
 ): { short: string; long: string }[] {
+  const cacheKey = `${locale}:${weekStartsOn}`;
+  const cached = dayHeaderCache.get(cacheKey);
+  if (cached) return cached;
+
   const headers: { short: string; long: string }[] = [];
   // Use a known Sunday as reference: Jan 4, 1970 is a Sunday
   const refSunday = new Date(1970, 0, 4);
@@ -77,6 +84,7 @@ export function getDayOfWeekHeaders(
     });
   }
 
+  dayHeaderCache.set(cacheKey, headers);
   return headers;
 }
 
@@ -85,6 +93,12 @@ export function getMonthNames(
   locale = 'en-US',
   format: 'long' | 'short' = 'long',
 ): string[] {
+  const cacheKey = `${locale}:${format}`;
+  const cached = monthNameCache.get(cacheKey);
+  if (cached) return cached;
+
   const formatter = new Intl.DateTimeFormat(locale, { month: format });
-  return Array.from({ length: 12 }, (_, i) => formatter.format(new Date(2000, i, 1)));
+  const names = Array.from({ length: 12 }, (_, i) => formatter.format(new Date(2000, i, 1)));
+  monthNameCache.set(cacheKey, names);
+  return names;
 }

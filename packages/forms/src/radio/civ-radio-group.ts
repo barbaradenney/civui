@@ -62,41 +62,47 @@ export class CivRadioGroup extends LightDomContainerMixin(CivFormElement) {
   override firstUpdated(): void {
     this._relocateChildren('.civ-group-layout--vertical, .civ-group-layout--horizontal');
 
-    this._syncRadioNames();
+    const radios = this._getRadios();
+    this._syncRadioNames(radios);
     if (this.value) {
-      this._syncRadioChecked();
+      this._syncRadioChecked(radios);
     } else {
       // Read initial checked state from children (e.g., set via HTML attribute)
-      const checked = this._getRadios().find((r) => r.checked);
+      const checked = radios.find((r) => r.checked);
       if (checked) this.value = checked.value;
-      this._syncRadioChecked();
+      this._syncRadioChecked(radios);
     }
-    this._syncTabindex();
-    this._syncRadioRequired();
-    this._syncRadioTile();
+    this._syncTabindex(radios);
+    this._syncRadioRequired(radios);
+    this._syncRadioTile(radios);
     this._defaultValue = this.value;
   }
 
   override updated(changed: Map<string, unknown>): void {
     super.updated(changed);
+    const needsRadios =
+      changed.has('name') || changed.has('value') || changed.has('error') ||
+      changed.has('disabled') || changed.has('required') || changed.has('tile');
+    const radios = needsRadios ? this._getRadios() : undefined;
+
     if (changed.has('name')) {
-      this._syncRadioNames();
+      this._syncRadioNames(radios);
     }
     if (changed.has('value')) {
-      this._syncRadioChecked();
-      this._syncTabindex();
+      this._syncRadioChecked(radios);
+      this._syncTabindex(radios);
     }
     if (changed.has('error')) {
-      this._syncRadioError();
+      this._syncRadioError(radios);
     }
     if (changed.has('disabled')) {
-      this._syncRadioDisabled();
+      this._syncRadioDisabled(radios);
     }
     if (changed.has('required')) {
-      this._syncRadioRequired();
+      this._syncRadioRequired(radios);
     }
     if (changed.has('tile')) {
-      this._syncRadioTile();
+      this._syncRadioTile(radios);
     }
   }
 
@@ -137,55 +143,55 @@ export class CivRadioGroup extends LightDomContainerMixin(CivFormElement) {
     return this._getRadios().filter((r) => !r.disabled);
   }
 
-  private _syncRadioNames(): void {
+  private _syncRadioNames(radios?: CivRadio[]): void {
     if (!this.name) return;
-    this._getRadios().forEach((radio) => {
+    (radios ?? this._getRadios()).forEach((radio) => {
       radio.name = this.name;
       radio.disableAnalytics = true;
     });
   }
 
-  private _syncRadioChecked(): void {
-    this._getRadios().forEach((radio) => {
+  private _syncRadioChecked(radios?: CivRadio[]): void {
+    (radios ?? this._getRadios()).forEach((radio) => {
       radio.checked = radio.value === this.value;
     });
   }
 
-  private _syncRadioError(): void {
+  private _syncRadioError(radios?: CivRadio[]): void {
     const hasError = !!this.error;
-    this._getRadios().forEach((radio) => {
+    (radios ?? this._getRadios()).forEach((radio) => {
       radio.error = hasError ? this.error : '';
     });
   }
 
   private _groupDisabledSet = new WeakSet<Element>();
 
-  private _syncRadioDisabled(): void {
-    this._groupDisabledSet = syncGroupDisabled(this._getRadios(), this.disabled, this._groupDisabledSet);
+  private _syncRadioDisabled(radios?: CivRadio[]): void {
+    this._groupDisabledSet = syncGroupDisabled(radios ?? this._getRadios(), this.disabled, this._groupDisabledSet);
   }
 
-  private _syncRadioRequired(): void {
-    this._getRadios().forEach((radio) => {
+  private _syncRadioRequired(radios?: CivRadio[]): void {
+    (radios ?? this._getRadios()).forEach((radio) => {
       radio.required = this.required;
     });
   }
 
-  private _syncRadioTile(): void {
-    this._getRadios().forEach((radio) => {
+  private _syncRadioTile(radios?: CivRadio[]): void {
+    (radios ?? this._getRadios()).forEach((radio) => {
       radio.tile = this.tile;
     });
   }
 
-  private _syncTabindex(): void {
-    const radios = this._getRadios();
-    const checkedRadio = radios.find((r) => r.checked);
-    const enabledRadios = radios.filter((r) => !r.disabled);
+  private _syncTabindex(radios?: CivRadio[]): void {
+    const r = radios ?? this._getRadios();
+    const checkedRadio = r.find((r) => r.checked);
+    const enabledRadios = r.filter((r) => !r.disabled);
     const focusTarget =
       checkedRadio && !checkedRadio.disabled
         ? checkedRadio
         : enabledRadios[0];
 
-    radios.forEach((radio) => {
+    r.forEach((radio) => {
       radio.managedTabIndex = radio === focusTarget ? 0 : -1;
     });
   }
@@ -199,8 +205,6 @@ export class CivRadioGroup extends LightDomContainerMixin(CivFormElement) {
 
     this.value = detail.value;
     this.updateFormValue(this.value);
-    this._syncRadioChecked();
-    this._syncTabindex();
 
     // Stop the child event and re-dispatch from the group
     e.stopPropagation();
@@ -222,8 +226,6 @@ export class CivRadioGroup extends LightDomContainerMixin(CivFormElement) {
       radio.checked = true;
       this.value = radio.value;
       this.updateFormValue(this.value);
-      this._syncRadioChecked();
-      this._syncTabindex();
 
       // Focus the input inside the radio
       const input = radio.querySelector('input[type="radio"]') as HTMLInputElement | null;
@@ -243,8 +245,9 @@ export class CivRadioGroup extends LightDomContainerMixin(CivFormElement) {
   override formResetCallback(): void {
     this.value = this._defaultValue;
     this.error = '';
-    this._syncRadioChecked();
-    this._syncTabindex();
+    const radios = this._getRadios();
+    this._syncRadioChecked(radios);
+    this._syncTabindex(radios);
     this.updateFormValue(this._defaultValue || '');
     dispatch(this, 'civ-reset');
   }

@@ -58,19 +58,23 @@ export class CivSegmentedControl extends LightDomContainerMixin(CivFormElement) 
   override firstUpdated(): void {
     this._relocateChildren('[data-civ-segment-content]');
 
-    this._syncSegmentSelected();
-    this._syncSegmentPositions();
+    const segments = this._getSegments();
+    this._syncSegmentSelected(segments);
+    this._syncSegmentPositions(segments);
     this._defaultValue = this.value;
   }
 
   override updated(changed: Map<string, unknown>): void {
     super.updated(changed);
+    const needsSegments = changed.has('value') || changed.has('disabled');
+    const segments = needsSegments ? this._getSegments() : undefined;
+
     if (changed.has('value')) {
-      this._syncSegmentSelected();
-      this._syncSegmentPositions();
+      this._syncSegmentSelected(segments);
+      this._syncSegmentPositions(segments);
     }
     if (changed.has('disabled')) {
-      this._syncSegmentDisabled();
+      this._syncSegmentDisabled(segments);
     }
   }
 
@@ -102,22 +106,22 @@ export class CivSegmentedControl extends LightDomContainerMixin(CivFormElement) 
     return Array.from(this.querySelectorAll('civ-segment')) as CivSegment[];
   }
 
-  private _getEnabledSegments(): CivSegment[] {
-    return this._getSegments().filter((s) => !s.disabled);
+  private _getEnabledSegments(segments?: CivSegment[]): CivSegment[] {
+    return (segments ?? this._getSegments()).filter((s) => !s.disabled);
   }
 
-  private _syncSegmentSelected(): void {
-    const segments = this._getSegments();
-    segments.forEach((segment) => {
+  private _syncSegmentSelected(segments?: CivSegment[]): void {
+    const segs = segments ?? this._getSegments();
+    segs.forEach((segment) => {
       segment.selected = segment.value === this.value;
     });
 
     // Roving tabindex fallback: when no segment is selected,
     // set the first enabled segment to tabindex="0" so the control
     // remains reachable via Tab.
-    const hasSelection = segments.some((s) => s.selected);
+    const hasSelection = segs.some((s) => s.selected);
     if (!hasSelection) {
-      const enabledSegments = this._getEnabledSegments();
+      const enabledSegments = this._getEnabledSegments(segs);
       if (enabledSegments.length > 0) {
         // Wait for segment render, then fix tabindex on the button
         requestAnimationFrame(() => {
@@ -130,19 +134,19 @@ export class CivSegmentedControl extends LightDomContainerMixin(CivFormElement) 
 
   private _groupDisabledSet = new WeakSet<Element>();
 
-  private _syncSegmentDisabled(): void {
-    this._groupDisabledSet = syncGroupDisabled(this._getSegments(), this.disabled, this._groupDisabledSet);
+  private _syncSegmentDisabled(segments?: CivSegment[]): void {
+    this._groupDisabledSet = syncGroupDisabled(segments ?? this._getSegments(), this.disabled, this._groupDisabledSet);
   }
 
-  private _syncSegmentPositions(): void {
-    const segments = this._getSegments();
-    segments.forEach((segment, i) => {
+  private _syncSegmentPositions(segments?: CivSegment[]): void {
+    const segs = segments ?? this._getSegments();
+    segs.forEach((segment, i) => {
       let position: string;
-      if (segments.length === 1) {
+      if (segs.length === 1) {
         position = 'only';
       } else if (i === 0) {
         position = 'first';
-      } else if (i === segments.length - 1) {
+      } else if (i === segs.length - 1) {
         position = 'last';
       } else {
         position = 'middle';
@@ -186,7 +190,6 @@ export class CivSegmentedControl extends LightDomContainerMixin(CivFormElement) 
       segment.selected = true;
       this.value = segment.value;
       this.updateFormValue(this.value);
-      this._syncSegmentSelected();
 
       // Focus the button inside the segment
       const btn = segment.querySelector('button');

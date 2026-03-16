@@ -52,14 +52,15 @@ export class CivCheckboxGroup extends LightDomContainerMixin(CivFormElement) {
   override firstUpdated(): void {
     this._relocateChildren('.civ-group-layout--vertical, .civ-group-layout--horizontal');
 
-    this._syncCheckboxNames();
-    this._syncCheckboxDisabled();
-    this._syncCheckboxTile();
+    const checkboxes = this._getCheckboxes();
+    this._syncCheckboxNames(checkboxes);
+    this._syncCheckboxDisabled(checkboxes);
+    this._syncCheckboxTile(checkboxes);
 
     if (this.value) {
-      this._syncCheckboxChecked();
+      this._syncCheckboxChecked(checkboxes);
     } else {
-      this._readCheckedFromChildren();
+      this._readCheckedFromChildren(checkboxes);
     }
 
     this._defaultValue = this.value;
@@ -74,17 +75,22 @@ export class CivCheckboxGroup extends LightDomContainerMixin(CivFormElement) {
 
   override updated(changed: Map<string, unknown>): void {
     super.updated(changed);
+    const needsCheckboxes =
+      changed.has('name') || changed.has('disabled') ||
+      changed.has('tile') || (changed.has('value') && changed.get('value') !== undefined);
+    const checkboxes = needsCheckboxes ? this._getCheckboxes() : undefined;
+
     if (changed.has('name')) {
-      this._syncCheckboxNames();
+      this._syncCheckboxNames(checkboxes);
     }
     if (changed.has('disabled')) {
-      this._syncCheckboxDisabled();
+      this._syncCheckboxDisabled(checkboxes);
     }
     if (changed.has('tile')) {
-      this._syncCheckboxTile();
+      this._syncCheckboxTile(checkboxes);
     }
     if (changed.has('value') && changed.get('value') !== undefined) {
-      this._syncCheckboxChecked();
+      this._syncCheckboxChecked(checkboxes);
     }
   }
 
@@ -146,8 +152,8 @@ export class CivCheckboxGroup extends LightDomContainerMixin(CivFormElement) {
     return values.join(',');
   }
 
-  private _syncCheckboxNames(): void {
-    this._getCheckboxes().forEach((cb) => {
+  private _syncCheckboxNames(checkboxes?: CivCheckbox[]): void {
+    (checkboxes ?? this._getCheckboxes()).forEach((cb) => {
       if (this.name) cb.name = this.name;
       cb.disableAnalytics = true;
     });
@@ -155,26 +161,26 @@ export class CivCheckboxGroup extends LightDomContainerMixin(CivFormElement) {
 
   private _groupDisabledSet = new WeakSet<Element>();
 
-  private _syncCheckboxDisabled(): void {
-    this._groupDisabledSet = syncGroupDisabled(this._getCheckboxes(), this.disabled, this._groupDisabledSet);
+  private _syncCheckboxDisabled(checkboxes?: CivCheckbox[]): void {
+    this._groupDisabledSet = syncGroupDisabled(checkboxes ?? this._getCheckboxes(), this.disabled, this._groupDisabledSet);
   }
 
-  private _syncCheckboxTile(): void {
-    this._getCheckboxes().forEach((cb) => {
+  private _syncCheckboxTile(checkboxes?: CivCheckbox[]): void {
+    (checkboxes ?? this._getCheckboxes()).forEach((cb) => {
       cb.tile = this.tile;
     });
   }
 
-  private _syncCheckboxChecked(): void {
+  private _syncCheckboxChecked(checkboxes?: CivCheckbox[]): void {
     const selected = this._parseValue(this.value);
-    this._getCheckboxes().forEach((cb) => {
+    (checkboxes ?? this._getCheckboxes()).forEach((cb) => {
       cb.checked = selected.includes(cb.value);
     });
   }
 
-  private _readCheckedFromChildren(): void {
+  private _readCheckedFromChildren(checkboxes?: CivCheckbox[]): void {
     const values: string[] = [];
-    this._getCheckboxes().forEach((cb) => {
+    (checkboxes ?? this._getCheckboxes()).forEach((cb) => {
       if (cb.checked) values.push(cb.value);
     });
     this.value = this._serializeValue(values);

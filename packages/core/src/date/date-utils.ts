@@ -22,23 +22,36 @@ export function toISODateString(date: Date): string {
   return `${y}-${m}-${d}`;
 }
 
+const formatDateCache = new Map<string, Intl.DateTimeFormat>();
+const formatDateLongCache = new Map<string, Intl.DateTimeFormat>();
+
 /** Format a Date for display using the user's locale (e.g. "3/15/2026"). */
 export function formatDate(date: Date, locale = 'en-US'): string {
-  return new Intl.DateTimeFormat(locale, {
-    year: 'numeric',
-    month: 'numeric',
-    day: 'numeric',
-  }).format(date);
+  let fmt = formatDateCache.get(locale);
+  if (!fmt) {
+    fmt = new Intl.DateTimeFormat(locale, {
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+    });
+    formatDateCache.set(locale, fmt);
+  }
+  return fmt.format(date);
 }
 
 /** Format a Date for screen readers (e.g. "Friday, March 15, 2026"). */
 export function formatDateLong(date: Date, locale = 'en-US'): string {
-  return new Intl.DateTimeFormat(locale, {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  }).format(date);
+  let fmt = formatDateLongCache.get(locale);
+  if (!fmt) {
+    fmt = new Intl.DateTimeFormat(locale, {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+    formatDateLongCache.set(locale, fmt);
+  }
+  return fmt.format(date);
 }
 
 /**

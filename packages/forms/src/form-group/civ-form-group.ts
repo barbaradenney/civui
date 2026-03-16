@@ -35,9 +35,6 @@ export class CivFormGroup extends LightDomContainerMixin(CivBaseElement) {
     if (changed.has('hint') || changed.has('error') || changed.has('required')) {
       this._wireAriaDescribedBy();
     }
-    if (changed.has('error') && this.error) {
-      this.announce(this.error, 'assertive');
-    }
   }
 
   private _wireAriaDescribedBy(): void {

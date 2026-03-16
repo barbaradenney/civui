@@ -436,9 +436,13 @@
   }
 
   .civ-alert--style-unstyled.civ-alert--info .civ-alert__heading { color: var(--civ-color-info-dark); }
+  .civ-alert--style-unstyled.civ-alert--info .civ-alert__body { color: var(--civ-color-info-DEFAULT); }
   .civ-alert--style-unstyled.civ-alert--warning .civ-alert__heading { color: var(--civ-color-warning-dark); }
+  .civ-alert--style-unstyled.civ-alert--warning .civ-alert__body { color: var(--civ-color-warning-dark); }
   .civ-alert--style-unstyled.civ-alert--error .civ-alert__heading { color: var(--civ-color-error-DEFAULT); }
+  .civ-alert--style-unstyled.civ-alert--error .civ-alert__body { color: var(--civ-color-error-light); }
   .civ-alert--style-unstyled.civ-alert--success .civ-alert__heading { color: var(--civ-color-success-dark); }
+  .civ-alert--style-unstyled.civ-alert--success .civ-alert__body { color: var(--civ-color-success-DEFAULT); }
 
   .civ-alert__dismiss {
     @apply civ-inline-flex civ-items-center civ-justify-center

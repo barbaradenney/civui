@@ -68,8 +68,10 @@ export class CivForm extends CivBaseElement {
   private _summaryHeadingId = this.generateId('summary-heading');
   private _boundOnClick = this._onButtonClick.bind(this);
   private _boundOnKeydown = this._onKeydown.bind(this);
+  private _userChildren: Node[] = [];
 
   override connectedCallback(): void {
+    this._userChildren = Array.from(this.childNodes);
     super.connectedCallback();
     this.setAttribute('role', 'form');
     if (this.formLabel) this.setAttribute('aria-label', this.formLabel);
@@ -83,6 +85,15 @@ export class CivForm extends CivBaseElement {
     this.removeEventListener('keydown', this._boundOnKeydown);
   }
 
+  override firstUpdated(): void {
+    const container = this.querySelector('[data-civ-form-content]');
+    if (container) {
+      for (const child of this._userChildren) {
+        container.appendChild(child);
+      }
+    }
+  }
+
   override updated(changed: Map<string, unknown>): void {
     if (changed.has('formLabel')) {
       if (this.formLabel) {
@@ -94,36 +105,39 @@ export class CivForm extends CivBaseElement {
   }
 
   override render() {
-    if (this._errors.length === 0) return nothing;
-
     return html`
-      <div
-        id="${this._summaryId}"
-        class="civ-form-error-summary"
-        role="alert"
-        aria-labelledby="${this._summaryHeadingId}"
-        data-civ-error-summary
-        tabindex="-1"
-      >
-        <h3 id="${this._summaryHeadingId}" class="civ-form-error-heading">
-          There ${this._errors.length === 1 ? 'is 1 error' : `are ${this._errors.length} errors`} in this form
-        </h3>
-        <ul class="civ-list-none civ-p-0 civ-m-0">
-          ${this._errors.map(
-            (err) => html`
-              <li class="civ-mb-1">
-                <a
-                  href="#${this._getFieldInputId(err.element)}"
-                  class="civ-text-error civ-underline"
-                  @click="${(e: Event) => this._focusField(e, err.element)}"
-                >
-                  ${err.message}
-                </a>
-              </li>
-            `,
-          )}
-        </ul>
-      </div>
+      ${this._errors.length > 0
+        ? html`
+            <div
+              id="${this._summaryId}"
+              class="civ-form-error-summary"
+              role="alert"
+              aria-labelledby="${this._summaryHeadingId}"
+              data-civ-error-summary
+              tabindex="-1"
+            >
+              <h3 id="${this._summaryHeadingId}" class="civ-form-error-heading">
+                There ${this._errors.length === 1 ? 'is 1 error' : `are ${this._errors.length} errors`} in this form
+              </h3>
+              <ul class="civ-list-none civ-p-0 civ-m-0">
+                ${this._errors.map(
+                  (err) => html`
+                    <li class="civ-mb-1">
+                      <a
+                        href="#${this._getFieldInputId(err.element)}"
+                        class="civ-text-error civ-underline"
+                        @click="${(e: Event) => this._focusField(e, err.element)}"
+                      >
+                        ${err.message}
+                      </a>
+                    </li>
+                  `,
+                )}
+              </ul>
+            </div>
+          `
+        : nothing}
+      <div data-civ-form-content></div>
     `;
   }
 

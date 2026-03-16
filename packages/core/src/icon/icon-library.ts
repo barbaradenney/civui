@@ -108,17 +108,11 @@ export const icons: Record<string, IconDef> = {
   },
   search: {
     label: 'Search',
-    layers: [
-      { char: '○', transform: 'scale(0.7) translate(-15%, -15%)' },
-      { char: '╲', transform: 'scale(0.5) translate(40%, 40%)' },
-    ],
+    layers: [{ char: '⌕', transform: 'scale(1.3)' }],
   },
   edit: {
     label: 'Edit',
-    layers: [
-      { char: '╱', transform: 'scale(0.9) translate(-5%, 5%)' },
-      { char: '▁', transform: 'scale(0.3) translate(-60%, 120%)' },
-    ],
+    layers: [{ char: '✎', transform: 'scale(1.2)' }],
   },
 
   // ── Status / Feedback ───────────────────────────────────────

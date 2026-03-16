@@ -2,7 +2,7 @@
 
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBaseElement, LightDomContainerMixin, renderLegend, renderHint, renderError } from '@civui/core';
+import { CivBaseElement, LightDomContainerMixin, renderLegend, renderHint, renderError, buildDescribedBy } from '@civui/core';
 
 /**
  * CivUI Fieldset
@@ -31,12 +31,7 @@ export class CivFieldset extends LightDomContainerMixin(CivBaseElement) {
   }
 
   override render() {
-    const describedBy = [
-      this.hint ? this._hintId : '',
-      this.error ? this._errorId : '',
-    ]
-      .filter(Boolean)
-      .join(' ');
+    const describedBy = buildDescribedBy(this._hintId, this.hint, this._errorId, this.error);
 
     return html`
       <fieldset

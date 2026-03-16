@@ -22,6 +22,7 @@ import {
   dispatch,
   interpolate,
   isRtl,
+  clickOutside,
   renderLabel,
   renderHint,
   renderError,
@@ -83,7 +84,7 @@ export class CivDatePicker extends CivFormElement {
   private _gridId = this.generateId('grid');
   private _buttonId = this.generateId('btn');
   private _cleanupTrap: (() => void) | null = null;
-  private _boundDocClick = this._onDocumentClick.bind(this);
+  private _clickOutside = clickOutside(this, () => this._closeDialog());
   private _cachedLocale = '';
   private _cachedMonthNames: string[] = [];
   private _cachedDayHeaders: { short: string; long: string }[] = [];
@@ -188,7 +189,7 @@ export class CivDatePicker extends CivFormElement {
 
   override disconnectedCallback(): void {
     super.disconnectedCallback();
-    document.removeEventListener('click', this._boundDocClick);
+    this._clickOutside.remove();
     this._cleanupTrap?.();
   }
 
@@ -402,13 +403,13 @@ export class CivDatePicker extends CivFormElement {
     this._displayMonth = initial.getMonth();
     this._displayYear = initial.getFullYear();
     this._open = true;
-    document.addEventListener('click', this._boundDocClick);
+    this._clickOutside.add();
     this.announce(this.dialogOpenedMessage);
   }
 
   private _closeDialog(): void {
     this._open = false;
-    document.removeEventListener('click', this._boundDocClick);
+    this._clickOutside.remove();
     this._cleanupTrap?.();
     this._cleanupTrap = null;
     // Return focus to calendar button
@@ -546,13 +547,6 @@ export class CivDatePicker extends CivFormElement {
 
   private _onDialogKeydown(e: KeyboardEvent): void {
     this._dialogKeyHandler(e);
-  }
-
-  private _onDocumentClick(e: MouseEvent): void {
-    const path = e.composedPath();
-    if (!path.includes(this)) {
-      this._closeDialog();
-    }
   }
 
   // --- Form integration ---

@@ -2,7 +2,7 @@
 
 import { html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBaseElement, LightDomContainerMixin, renderLabel, renderHint, renderError } from '@civui/core';
+import { CivBaseElement, LightDomContainerMixin, renderLabel, renderHint, renderError, buildDescribedBy } from '@civui/core';
 
 const FORM_INPUT_SELECTOR = 'input, select, textarea';
 
@@ -38,12 +38,7 @@ export class CivFormGroup extends LightDomContainerMixin(CivBaseElement) {
   }
 
   private _wireAriaDescribedBy(): void {
-    const ids = [
-      this.hint ? this._hintId : '',
-      this.error ? this._errorId : '',
-    ]
-      .filter(Boolean)
-      .join(' ');
+    const ids = buildDescribedBy(this._hintId, this.hint, this._errorId, this.error);
 
     const input = this.querySelector(FORM_INPUT_SELECTOR) as HTMLElement | null;
     if (!input) return;

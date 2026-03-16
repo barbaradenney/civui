@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivFormElement, LightDomContainerMixin, dispatch, renderLegend, renderHint, renderError, resolveGroupNavIndex, isRtl, syncGroupDisabled, stopChildEvent } from '@civui/core';
+import { CivFormElement, LightDomContainerMixin, dispatch, renderLegend, renderHint, renderError, resolveGroupNavIndex, isRtl, syncGroupDisabled, stopChildEvent, syncLegendToLabel } from '@civui/core';
 import type { CivSegment } from './civ-segment.js';
 
 /**
@@ -50,9 +50,7 @@ export class CivSegmentedControl extends LightDomContainerMixin(CivFormElement) 
 
   override willUpdate(changed: Map<string, unknown>): void {
     super.willUpdate(changed);
-    if (changed.has('legend')) {
-      this.label = this.legend;
-    }
+    syncLegendToLabel(this, changed);
   }
 
   override firstUpdated(): void {
@@ -79,7 +77,7 @@ export class CivSegmentedControl extends LightDomContainerMixin(CivFormElement) 
   }
 
   override formDisabledCallback(disabled: boolean): void {
-    this.disabled = disabled;
+    super.formDisabledCallback(disabled);
     this._syncSegmentDisabled();
   }
 

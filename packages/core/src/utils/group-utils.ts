@@ -33,3 +33,13 @@ export function stopChildEvent(host: EventTarget): (e: Event) => void {
     if (e.target !== host) e.stopPropagation();
   };
 }
+
+/**
+ * Sync legend property to label in willUpdate. Call from willUpdate()
+ * in group components that use legend instead of label.
+ */
+export function syncLegendToLabel(component: { label: string; legend: string }, changed: Map<string, unknown>): void {
+  if (changed.has('legend')) {
+    component.label = component.legend;
+  }
+}

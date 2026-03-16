@@ -86,6 +86,11 @@ export function renderError(id: string, text: string, groupSpacing = false) {
   return html`<span class="${cls}" id="${id}" role="alert">${text}</span>`;
 }
 
+/** Build an aria-describedby value from hint and error IDs */
+export function buildDescribedBy(hintId: string, hint: string, errorId: string, error: string): string {
+  return [hint ? hintId : '', error ? errorId : ''].filter(Boolean).join(' ');
+}
+
 /**
  * Build the class string for standard form inputs (text-input, textarea, select, combobox, date-input, date-picker).
  * Error and disabled states are now handled by CSS attribute selectors in components.css.

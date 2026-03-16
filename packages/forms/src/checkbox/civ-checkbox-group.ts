@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivFormElement, LightDomContainerMixin, dispatch, renderLegend, renderHint, renderError, syncGroupDisabled, stopChildEvent } from '@civui/core';
+import { CivFormElement, LightDomContainerMixin, dispatch, renderLegend, renderHint, renderError, syncGroupDisabled, stopChildEvent, syncLegendToLabel } from '@civui/core';
 import type { CivCheckbox } from './civ-checkbox.js';
 
 /**
@@ -68,9 +68,7 @@ export class CivCheckboxGroup extends LightDomContainerMixin(CivFormElement) {
 
   protected override willUpdate(changed: Map<string, unknown>): void {
     super.willUpdate(changed);
-    if (changed.has('legend')) {
-      this.label = this.legend;
-    }
+    syncLegendToLabel(this, changed);
   }
 
   override updated(changed: Map<string, unknown>): void {

@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivFormElement, dispatch, renderLabel, renderHint, renderError, inputClasses } from '@civui/core';
+import { CivFormElement, dispatch, renderLabel, renderHint, renderError, inputClasses, clickOutside } from '@civui/core';
 
 export interface ComboboxOption {
   value: string;
@@ -42,12 +42,12 @@ export class CivCombobox extends CivFormElement {
 
   private _listboxId = this.generateId('listbox');
   private _labelId = this.generateId('label');
-  private _boundDocClick = this._onDocumentClick.bind(this);
+  private _clickOutside = clickOutside(this, () => this._setOpen(false));
   private _announceTimer?: ReturnType<typeof setTimeout>;
 
   override disconnectedCallback(): void {
     super.disconnectedCallback();
-    document.removeEventListener('click', this._boundDocClick);
+    this._clickOutside.remove();
     clearTimeout(this._announceTimer);
   }
 
@@ -152,9 +152,9 @@ export class CivCombobox extends CivFormElement {
     if (open === this._open) return;
     this._open = open;
     if (open) {
-      document.addEventListener('click', this._boundDocClick);
+      this._clickOutside.add();
     } else {
-      document.removeEventListener('click', this._boundDocClick);
+      this._clickOutside.remove();
     }
   }
 
@@ -254,13 +254,6 @@ export class CivCombobox extends CivFormElement {
     dispatch(this, 'civ-change', { value: this.value, label: option.label });
     this.sendAnalytics('select');
     this.announce(`${option.label}, selected`);
-  }
-
-  private _onDocumentClick(e: MouseEvent): void {
-    const path = e.composedPath();
-    if (!path.includes(this)) {
-      this._setOpen(false);
-    }
   }
 
   override formResetCallback(): void {

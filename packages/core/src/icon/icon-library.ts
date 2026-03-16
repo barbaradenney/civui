@@ -302,6 +302,18 @@ export function registerIcon(name: string, def: IconDef): void {
   icons[name] = def;
 }
 
+/** Store original icon keys for reset */
+const _builtInIconNames = new Set(Object.keys(icons));
+
+/** Reset icon registry to built-in icons only (for test isolation). */
+export function resetIcons(): void {
+  for (const key of Object.keys(icons)) {
+    if (!_builtInIconNames.has(key)) {
+      delete icons[key];
+    }
+  }
+}
+
 /**
  * Get all registered icon names.
  */

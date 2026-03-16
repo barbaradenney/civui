@@ -15,7 +15,8 @@ export { debounce } from './utils/debounce.js';
 export { dispatch } from './utils/events.js';
 export { interpolate } from './utils/interpolate.js';
 export { isRtl } from './utils/direction.js';
-export { syncGroupDisabled, stopChildEvent } from './utils/group-utils.js';
+export { syncGroupDisabled, stopChildEvent, syncLegendToLabel } from './utils/group-utils.js';
+export { clickOutside } from './utils/click-outside.js';
 
 // Date utilities
 export {
@@ -56,11 +57,12 @@ export {
   renderHint,
   renderError,
   inputClasses,
+  buildDescribedBy,
 } from './templates/form-templates.js';
 
 // Icon
 export { CivIcon } from './icon/civ-icon.js';
-export { icons, registerIcon, getIconNames } from './icon/icon-library.js';
+export { icons, registerIcon, getIconNames, resetIcons } from './icon/icon-library.js';
 export type { IconDef, IconLayer } from './icon/icon-library.js';
 
 // Analytics

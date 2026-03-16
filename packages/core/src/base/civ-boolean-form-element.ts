@@ -12,6 +12,7 @@ export class CivBooleanFormElement extends CivFormElement {
 
   protected _defaultChecked = false;
   protected _descriptionId = this.generateId('desc');
+  private _cachedBooleanAnchor?: HTMLElement | null;
 
   /** Override in subclass to specify the anchor element selector */
   protected get _anchorSelector(): string { return 'input'; }
@@ -43,7 +44,10 @@ export class CivBooleanFormElement extends CivFormElement {
 
   protected override _updateValidity(): void {
     if (typeof this._internals?.setValidity !== 'function') return;
-    const anchor = this.querySelector(this._anchorSelector) as HTMLElement | null;
+    if (this._cachedBooleanAnchor === undefined) {
+      this._cachedBooleanAnchor = this.querySelector(this._anchorSelector) as HTMLElement | null;
+    }
+    const anchor = this._cachedBooleanAnchor;
     if (this.required && !this.checked) {
       this._internals.setValidity(
         { valueMissing: true },

@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivFormElement, dispatch, getMonthNames, interpolate, parseISODate, renderLegend, renderHint, renderError } from '@civui/core';
+import { CivFormElement, dispatch, getMonthNames, interpolate, parseISODate, renderLegend, renderHint, renderError, syncLegendToLabel } from '@civui/core';
 
 // Import child components
 import '../select/civ-select.js';
@@ -65,9 +65,7 @@ export class CivMemorableDate extends CivFormElement {
 
   protected override willUpdate(changed: Map<string, unknown>): void {
     super.willUpdate(changed);
-    if (changed.has('legend')) {
-      this.label = this.legend;
-    }
+    syncLegendToLabel(this, changed);
   }
 
   override updated(changed: Map<string, unknown>): void {
@@ -150,7 +148,7 @@ export class CivMemorableDate extends CivFormElement {
   }
 
   override formDisabledCallback(disabled: boolean): void {
-    this.disabled = disabled;
+    super.formDisabledCallback(disabled);
     this._syncChildDisabled();
   }
 

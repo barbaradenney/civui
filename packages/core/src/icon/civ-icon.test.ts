@@ -86,19 +86,17 @@ describe('civ-icon', () => {
     });
   });
 
-  it('container has correct base styles for micro-canvas', async () => {
+  it('container has civ-icon class for micro-canvas styles', async () => {
     const el = await create('<civ-icon name="check"></civ-icon>');
     const container = el.querySelector('.civ-icon') as HTMLElement;
-    expect(container.style.position).toBe('relative');
-    expect(container.style.width).toBe('1em');
-    expect(container.style.height).toBe('1em');
-    expect(container.style.overflow).toBe('hidden');
+    expect(container).toBeTruthy();
+    expect(container.classList.contains('civ-icon')).toBe(true);
   });
 
-  it('layers are absolutely positioned', async () => {
+  it('layers have civ-icon__layer class for positioning', async () => {
     const el = await create('<civ-icon name="check"></civ-icon>');
     const layer = el.querySelector('.civ-icon > span') as HTMLElement;
-    expect(layer.style.position).toBe('absolute');
+    expect(layer.classList.contains('civ-icon__layer')).toBe(true);
   });
 
   // ── Size prop ───────────────────────────────────────────────

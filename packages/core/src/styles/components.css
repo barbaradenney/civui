@@ -55,6 +55,33 @@
     @apply civ-flex civ-flex-row civ-flex-wrap civ-gap-4;
   }
 
+  /* ── Icon ──────────────────────────────────────────────────── */
+
+  .civ-icon {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1em;
+    height: 1em;
+    vertical-align: middle;
+    overflow: hidden;
+    line-height: 1;
+  }
+
+  .civ-icon__layer {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    user-select: none;
+  }
+
   /* ── Checkbox / Radio ───────────────────────────────────────── */
 
   .civ-check-input {

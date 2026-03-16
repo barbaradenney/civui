@@ -61,26 +61,10 @@ export class CivIcon extends CivBaseElement {
       ? CivIcon._sizeMap[this.size] ?? this.size
       : undefined;
 
-    // Container styles — the "micro canvas"
-    const containerStyle = [
-      'position:relative',
-      'display:inline-flex',
-      'align-items:center',
-      'justify-content:center',
-      'width:1em',
-      'height:1em',
-      'vertical-align:middle',
-      'overflow:hidden',
-      'line-height:1',
-      fontSize ? `font-size:${fontSize}` : '',
-    ]
-      .filter(Boolean)
-      .join(';');
-
     return html`
       <span
         class="civ-icon"
-        style=${containerStyle}
+        style=${fontSize ? `font-size:${fontSize}` : nothing}
         role=${isDecorative ? 'presentation' : 'img'}
         aria-hidden=${isDecorative ? 'true' : 'false'}
         aria-label=${isDecorative ? nothing : accessibleLabel}
@@ -89,23 +73,13 @@ export class CivIcon extends CivBaseElement {
   }
 
   private _renderLayer(layer: IconLayer) {
-    const layerStyle = [
-      'position:absolute',
-      'display:flex',
-      'align-items:center',
-      'justify-content:center',
-      'width:100%',
-      'height:100%',
-      'top:0',
-      'left:0',
+    const style = [
       layer.transform ? `transform:${layer.transform}` : '',
       layer.opacity !== undefined ? `opacity:${layer.opacity}` : '',
-      'pointer-events:none',
-      'user-select:none',
     ]
       .filter(Boolean)
       .join(';');
 
-    return html`<span style=${layerStyle} aria-hidden="true">${layer.char}</span>`;
+    return html`<span class="civ-icon__layer" style=${style || nothing} aria-hidden="true">${layer.char}</span>`;
   }
 }

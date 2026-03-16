@@ -18,42 +18,38 @@ export class CivCheckbox extends CivBooleanFormElement {
   @property({ type: Boolean, reflect: true }) tile = false;
 
   override render() {
-    const content = html`
-      <label class="civ-flex civ-items-start civ-cursor-pointer" for="${this._inputId}">
-        <input
-          class="civ-check-input focus-visible:civ-focus-ring"
-          id="${this._inputId}"
-          type="checkbox"
-          name="${this.name}"
-          .value="${this.value}"
-          .checked="${this.checked}"
-          ?disabled="${this.disabled}"
-          ?required="${this.required}"
-          aria-required="${this.required || nothing}"
-          aria-checked="${this.indeterminate ? 'mixed' : nothing}"
-          aria-invalid="${this.error ? 'true' : nothing}"
-          aria-describedby="${this._ariaDescribedBy || nothing}"
-          @change="${this._onCheckboxChange}"
-        />
-        <div>
-          <span class="civ-check-label">
-            ${this.label}
-            ${this.required
-              ? html`<abbr class="civ-required-mark" title="required">*</abbr>`
-              : nothing}
-          </span>
-          ${this.description
-            ? html`<span id="${this._descriptionId}" class="civ-check-description">${this.description}</span>`
-            : nothing}
-        </div>
-      </label>
-    `;
-
     return html`
       <div class="civ-mb-2 ${this.tile ? 'civ-check-tile' : ''}" data-civ-tile="${this.tile ? '' : nothing}">
-        ${content}
-        ${renderHint(this._hintId, this.hint)}
-        ${renderError(this._errorId, this.error)}
+        <label class="civ-flex civ-items-start civ-cursor-pointer civ-w-full" for="${this._inputId}">
+          <input
+            class="civ-check-input focus-visible:civ-focus-ring"
+            id="${this._inputId}"
+            type="checkbox"
+            name="${this.name}"
+            .value="${this.value}"
+            .checked="${this.checked}"
+            ?disabled="${this.disabled}"
+            ?required="${this.required}"
+            aria-required="${this.required || nothing}"
+            aria-checked="${this.indeterminate ? 'mixed' : nothing}"
+            aria-invalid="${this.error ? 'true' : nothing}"
+            aria-describedby="${this._ariaDescribedBy || nothing}"
+            @change="${this._onCheckboxChange}"
+          />
+          <div class="civ-flex-1">
+            <span class="civ-check-label">
+              ${this.label}
+              ${this.required
+                ? html`<abbr class="civ-required-mark" title="required">*</abbr>`
+                : nothing}
+            </span>
+            ${this.description
+              ? html`<span id="${this._descriptionId}" class="civ-check-description">${this.description}</span>`
+              : nothing}
+            ${renderHint(this._hintId, this.hint)}
+            ${renderError(this._errorId, this.error)}
+          </div>
+        </label>
       </div>
     `;
   }

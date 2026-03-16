@@ -3,6 +3,7 @@ import { customElement, property } from 'lit/decorators.js';
 import { CivBaseElement, LightDomTextMixin, dispatch } from '@civui/core';
 
 export type AlertVariant = 'info' | 'warning' | 'error' | 'success';
+export type AlertStyle = 'primary' | 'secondary' | 'outline' | 'unstyled';
 export type AlertHeadingLevel = 2 | 3 | 4 | 5 | 6;
 
 // Inline SVG close icon (16x16) — avoids external icon dependency
@@ -21,6 +22,7 @@ const closeIcon = html`<svg xmlns="http://www.w3.org/2000/svg" width="16" height
  * @element civ-alert
  *
  * @prop {AlertVariant} variant - Alert type (sets colors + ARIA role)
+ * @prop {AlertStyle} alertStyle - Visual treatment (primary, secondary, outline, unstyled)
  * @prop {string} heading - Optional heading text
  * @prop {AlertHeadingLevel} headingLevel - Heading element level (2-6)
  * @prop {string} label - Body text (preferred over child text)
@@ -33,6 +35,7 @@ const closeIcon = html`<svg xmlns="http://www.w3.org/2000/svg" width="16" height
 @customElement('civ-alert')
 export class CivAlert extends LightDomTextMixin(CivBaseElement) {
   @property({ type: String }) variant: AlertVariant = 'info';
+  @property({ type: String, attribute: 'alert-style' }) alertStyle: AlertStyle = 'secondary';
   @property({ type: String }) heading = '';
   @property({ type: Number, attribute: 'heading-level' }) headingLevel: AlertHeadingLevel = 4;
   @property({ type: String }) label = '';
@@ -62,6 +65,7 @@ export class CivAlert extends LightDomTextMixin(CivBaseElement) {
     const classes = [
       'civ-alert',
       `civ-alert--${this.variant}`,
+      `civ-alert--style-${this.alertStyle}`,
       this.slim ? 'civ-alert--slim' : '',
     ]
       .filter(Boolean)

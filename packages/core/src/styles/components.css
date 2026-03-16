@@ -376,23 +376,7 @@
   /* ── Alert ─────────────────────────────────────────────────── */
 
   .civ-alert {
-    @apply civ-border-s-4 civ-p-4 civ-mb-4 civ-rounded;
-  }
-
-  .civ-alert--info {
-    @apply civ-bg-info-lighter civ-border-info;
-  }
-
-  .civ-alert--warning {
-    @apply civ-bg-warning-lighter civ-border-warning;
-  }
-
-  .civ-alert--error {
-    @apply civ-bg-error-lighter civ-border-error;
-  }
-
-  .civ-alert--success {
-    @apply civ-bg-success-lighter civ-border-success;
+    @apply civ-p-4 civ-mb-4 civ-rounded;
   }
 
   .civ-alert--slim {
@@ -404,7 +388,113 @@
   }
 
   .civ-alert__body {
-    @apply civ-text-base civ-text-base-darkest;
+    font-size: var(--civ-typography-fontSize-base);
+    color: var(--civ-color-base-darkest);
+  }
+
+  /* ── Alert: Secondary (default — light tinted bg, left border) ── */
+
+  .civ-alert--style-secondary {
+    @apply civ-border-s-4;
+  }
+
+  .civ-alert--style-secondary.civ-alert--info {
+    @apply civ-bg-info-lighter civ-border-info;
+  }
+
+  .civ-alert--style-secondary.civ-alert--warning {
+    @apply civ-bg-warning-lighter civ-border-warning;
+  }
+
+  .civ-alert--style-secondary.civ-alert--error {
+    @apply civ-bg-error-lighter civ-border-error;
+  }
+
+  .civ-alert--style-secondary.civ-alert--success {
+    @apply civ-bg-success-lighter civ-border-success;
+  }
+
+  /* ── Alert: Primary (dark/saturated bg, white text) ───────────── */
+
+  .civ-alert--style-primary {
+    @apply civ-text-white civ-border-0;
+  }
+
+  .civ-alert--style-primary .civ-alert__heading,
+  .civ-alert--style-primary .civ-alert__body {
+    color: var(--civ-color-white-DEFAULT);
+  }
+
+  .civ-alert--style-primary.civ-alert--info {
+    background-color: var(--civ-color-info-dark);
+  }
+
+  .civ-alert--style-primary.civ-alert--warning {
+    background-color: var(--civ-color-warning-dark);
+  }
+
+  .civ-alert--style-primary.civ-alert--error {
+    background-color: var(--civ-color-error-DEFAULT);
+  }
+
+  .civ-alert--style-primary.civ-alert--success {
+    background-color: var(--civ-color-success-dark);
+  }
+
+  /* ── Alert: Outline (transparent bg, colored border all around) ─ */
+
+  .civ-alert--style-outline {
+    @apply civ-bg-white civ-border;
+  }
+
+  .civ-alert--style-outline.civ-alert--info {
+    @apply civ-border-info;
+    color: var(--civ-color-info-dark);
+  }
+
+  .civ-alert--style-outline.civ-alert--warning {
+    @apply civ-border-warning;
+    color: var(--civ-color-warning-dark);
+  }
+
+  .civ-alert--style-outline.civ-alert--error {
+    @apply civ-border-error;
+    color: var(--civ-color-error-DEFAULT);
+  }
+
+  .civ-alert--style-outline.civ-alert--success {
+    @apply civ-border-success;
+    color: var(--civ-color-success-dark);
+  }
+
+  .civ-alert--style-outline .civ-alert__body {
+    color: var(--civ-color-base-darkest);
+  }
+
+  /* ── Alert: Unstyled (no bg, no border, colored text) ─────────── */
+
+  .civ-alert--style-unstyled {
+    @apply civ-bg-transparent civ-border-0 civ-p-0 civ-rounded-none;
+  }
+
+  .civ-alert--style-unstyled.civ-alert--info .civ-alert__heading {
+    color: var(--civ-color-info-dark);
+  }
+
+  .civ-alert--style-unstyled.civ-alert--warning .civ-alert__heading {
+    color: var(--civ-color-warning-dark);
+  }
+
+  .civ-alert--style-unstyled.civ-alert--error .civ-alert__heading {
+    color: var(--civ-color-error-DEFAULT);
+  }
+
+  .civ-alert--style-unstyled.civ-alert--success .civ-alert__heading {
+    color: var(--civ-color-success-dark);
+  }
+
+  .civ-alert--style-unstyled .civ-alert__body {
+    color: var(--civ-color-base-darkest);
   }
 
   .civ-alert__dismiss {

@@ -14,7 +14,9 @@ const meta: Meta = {
     alertStyle: {
       control: 'select',
       options: ['primary', 'secondary', 'outline', 'unstyled'],
+      name: 'alert-style',
     },
+    label: { control: 'text' },
     heading: { control: 'text' },
     headingLevel: {
       control: 'select',

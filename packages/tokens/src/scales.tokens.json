@@ -2,19 +2,20 @@
   "$description": "CivUI density scales — spacious (relaxed), default (standard), dense (tight)",
   "scales": {
     "spacious": {
-      "$description": "Relaxed density with generous spacing. Fluid responsive via clamp().",
+      "$description": "Extra-generous density for accessibility-focused or large-screen layouts.",
+      "ratio": { "min": 1.25, "max": 1.414 },
+      "basePx": { "min": 18, "max": 22 },
+      "viewportPx": { "min": 320, "max": 1200 },
+      "spacingFactor": 1.5,
+      "lineHeight": { "body": 1.75, "heading": 1.4 }
+    },
+    "default": {
+      "$description": "Standard density — relaxed spacing for comfortable reading.",
       "ratio": { "min": 1.2, "max": 1.333 },
       "basePx": { "min": 16, "max": 18 },
       "viewportPx": { "min": 320, "max": 1200 },
-      "spacingFactor": 1.25,
-      "lineHeight": { "body": 1.6, "heading": 1.3 }
-    },
-    "default": {
-      "$description": "Standard density. This is the baseline scale.",
-      "ratio": 1.2,
-      "basePx": 16,
       "spacingFactor": 1,
-      "lineHeight": { "body": 1.5, "heading": 1.2 }
+      "lineHeight": { "body": 1.6, "heading": 1.3 }
     },
     "dense": {
       "$description": "Tight density with reduced spacing for information-heavy layouts.",

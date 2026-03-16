@@ -169,7 +169,7 @@ function buildScales(tokens, scalesConfig) {
   const rnScales = {};
 
   for (const [scaleName, scale] of Object.entries(scales)) {
-    if (scaleName === 'default') continue; // default = :root baseline
+    if (scaleName === 'default' && typeof scale.ratio !== 'object') continue; // skip static default
 
     const isFluid = typeof scale.ratio === 'object'; // has min/max
     const desc = scale.$description || scaleName;
@@ -221,7 +221,8 @@ function buildScales(tokens, scalesConfig) {
     lines.push(
       `/* ${scaleName.charAt(0).toUpperCase() + scaleName.slice(1)} scale — ${desc} */`,
     );
-    lines.push(`[data-civ-scale="${scaleName}"] {`);
+    // Default fluid scale overrides :root; contextual scales use data attribute
+    lines.push(scaleName === 'default' ? ':root {' : `[data-civ-scale="${scaleName}"] {`);
     for (const [name, value] of Object.entries(cssFontSize)) {
       lines.push(`  --civ-typography-fontSize-${name}: ${value};`);
     }

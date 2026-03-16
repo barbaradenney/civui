@@ -21,8 +21,8 @@ export { CivFormGroup } from './form-group/index.js';
 // Fieldset
 export { CivFieldset } from './fieldset/index.js';
 
-// Date Input
-export { CivDateInput, CivMemorableDate } from './date-input/index.js';
+// Memorable Date
+export { CivMemorableDate } from './date-input/index.js';
 
 // Date Picker
 export { CivDatePicker } from './date-picker/index.js';

@@ -13,7 +13,7 @@
     "./textarea": "./dist/textarea/index.js",
     "./checkbox": "./dist/checkbox/index.js",
     "./radio": "./dist/radio/index.js",
-    "./date-input": "./dist/date-input/index.js",
+    "./memorable-date": "./dist/date-input/index.js",
     "./file-upload": "./dist/file-upload/index.js",
     "./form-group": "./dist/form-group/index.js",
     "./fieldset": "./dist/fieldset/index.js",

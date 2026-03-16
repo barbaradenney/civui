@@ -37,7 +37,11 @@ export class CivCheckboxGroup extends CivFormElement {
   private _boundOnChildChange = this._onChildChange.bind(this);
   private _boundStopChildInput = this._stopChildInput.bind(this);
 
+  private _userChildren: Node[] = [];
+
   override connectedCallback(): void {
+    // Capture authored children before Lit's first render replaces them
+    this._userChildren = Array.from(this.childNodes);
     super.connectedCallback();
     this.addEventListener('civ-change', this._boundOnChildChange as EventListener);
     this.addEventListener('civ-input', this._boundStopChildInput as EventListener);
@@ -50,6 +54,14 @@ export class CivCheckboxGroup extends CivFormElement {
   }
 
   override firstUpdated(): void {
+    // Move authored children into the layout container
+    const layoutDiv = this.querySelector('.civ-group-layout--vertical, .civ-group-layout--horizontal');
+    if (layoutDiv) {
+      for (const child of this._userChildren) {
+        layoutDiv.appendChild(child);
+      }
+    }
+
     this._syncCheckboxNames();
     this._syncCheckboxDisabled();
     this._syncCheckboxTile();

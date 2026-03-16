@@ -38,11 +38,13 @@ export class CivButton extends CivBaseElement {
   private _initialText = '';
 
   override connectedCallback(): void {
-    super.connectedCallback();
     // Capture initial text content before Lit renders (fallback for label prop)
     if (!this._initialText) {
       this._initialText = this.textContent?.trim() || '';
     }
+    // Clear authored children so they don't persist alongside Lit's Light DOM output
+    this.textContent = '';
+    super.connectedCallback();
   }
 
   private get _text(): string {

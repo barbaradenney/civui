@@ -123,16 +123,18 @@
   /* ── Toggle ─────────────────────────────────────────────────── */
 
   .civ-toggle-track {
-    @apply civ-relative civ-inline-flex civ-items-center civ-w-10 civ-h-6
+    @apply civ-relative civ-inline-flex civ-items-center
            civ-rounded-full civ-border civ-transition-colors
            civ-bg-base-light civ-border-base civ-cursor-pointer;
+    width: 2.5em;
+    height: 1.5em;
   }
 
   .civ-toggle-thumb {
     @apply civ-absolute civ-bg-white civ-rounded-full civ-shadow-sm;
-    width: 18px;
-    height: 18px;
-    top: 2px;
+    width: 1.125em;
+    height: 1.125em;
+    top: 0.125em;
     transition: inset-inline-start 0.15s ease;
   }
 

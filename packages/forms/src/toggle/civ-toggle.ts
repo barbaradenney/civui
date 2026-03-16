@@ -17,7 +17,7 @@ export class CivToggle extends CivBooleanFormElement {
   protected override get _anchorSelector(): string { return 'button'; }
 
   override render() {
-    const thumbStyle = `inset-inline-start: ${this.checked ? '18px' : '2px'};`;
+    const thumbStyle = `inset-inline-start: ${this.checked ? '1.25em' : '0.125em'};`;
 
     return html`
       <div class="civ-mb-2">

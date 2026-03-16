@@ -8,14 +8,31 @@ const meta: Meta = {
   title: 'Forms/Form',
   component: 'civ-form',
   tags: ['autodocs'],
+  argTypes: {
+    action: { control: 'text' },
+    method: {
+      control: 'select',
+      options: ['get', 'post'],
+    },
+    'form-label': { control: 'text' },
+  },
 };
 
 export default meta;
 type Story = StoryObj;
 
 export const Default: Story = {
-  render: () => html`
-    <civ-form>
+  args: {
+    action: '',
+    method: 'post',
+    'form-label': 'Contact form',
+  },
+  render: (args) => html`
+    <civ-form
+      action="${args.action}"
+      method="${args.method}"
+      form-label="${args['form-label']}"
+    >
       <civ-text-input label="Full name" name="name" required></civ-text-input>
       <civ-text-input label="Email" name="email" type="email" required></civ-text-input>
       <civ-textarea label="Message" name="message"></civ-textarea>

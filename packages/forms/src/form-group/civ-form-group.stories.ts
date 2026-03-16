@@ -6,14 +6,34 @@ const meta: Meta = {
   title: 'Forms/Form Group',
   component: 'civ-form-group',
   tags: ['autodocs'],
+  argTypes: {
+    label: { control: 'text' },
+    hint: { control: 'text' },
+    error: { control: 'text' },
+    'input-id': { control: 'text' },
+    required: { control: 'boolean' },
+  },
 };
 
 export default meta;
 type Story = StoryObj;
 
 export const Default: Story = {
-  render: () => html`
-    <civ-form-group label="Custom input" input-id="custom" hint="Wraps any input with consistent styling">
+  args: {
+    label: 'Custom input',
+    hint: 'Wraps any input with consistent styling',
+    error: '',
+    'input-id': 'custom',
+    required: false,
+  },
+  render: (args) => html`
+    <civ-form-group
+      label="${args.label}"
+      hint="${args.hint}"
+      error="${args.error}"
+      input-id="${args['input-id']}"
+      ?required="${args.required}"
+    >
       <input type="text" id="custom" style="width: 100%; padding: 6px 8px; border: 1px solid #a9aeb1; border-radius: 4px;" />
     </civ-form-group>
   `,

@@ -6,14 +6,49 @@ const meta: Meta = {
   title: 'Forms/File Upload',
   component: 'civ-file-upload',
   tags: ['autodocs'],
+  argTypes: {
+    label: { control: 'text' },
+    name: { control: 'text' },
+    hint: { control: 'text' },
+    error: { control: 'text' },
+    accept: { control: 'text' },
+    multiple: { control: 'boolean' },
+    maxSize: { control: 'number' },
+    maxFiles: { control: 'number' },
+    required: { control: 'boolean' },
+    disabled: { control: 'boolean' },
+  },
 };
 
 export default meta;
 type Story = StoryObj;
 
 export const Default: Story = {
-  render: () => html`
-    <civ-file-upload label="Upload a file" name="document"></civ-file-upload>
+  args: {
+    label: 'Upload a file',
+    name: 'document',
+    hint: '',
+    error: '',
+    accept: '',
+    multiple: false,
+    maxSize: 0,
+    maxFiles: 0,
+    required: false,
+    disabled: false,
+  },
+  render: (args) => html`
+    <civ-file-upload
+      label="${args.label}"
+      name="${args.name}"
+      hint="${args.hint}"
+      error="${args.error}"
+      accept="${args.accept}"
+      ?multiple="${args.multiple}"
+      max-size="${args.maxSize}"
+      max-files="${args.maxFiles}"
+      ?required="${args.required}"
+      ?disabled="${args.disabled}"
+    ></civ-file-upload>
   `,
 };
 

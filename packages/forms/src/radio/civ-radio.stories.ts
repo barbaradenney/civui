@@ -5,15 +5,21 @@ import './civ-radio-group.js';
 
 const meta: Meta = {
   title: 'Forms/Radio',
-  component: 'civ-radio',
+  component: 'civ-radio-group',
   tags: ['autodocs'],
   argTypes: {
-    label: { control: 'text' },
+    legend: { control: 'text' },
+    name: { control: 'text' },
     value: { control: 'text' },
-    description: { control: 'text' },
-    checked: { control: 'boolean' },
+    hint: { control: 'text' },
+    error: { control: 'text' },
     tile: { control: 'boolean' },
+    required: { control: 'boolean' },
     disabled: { control: 'boolean' },
+    orientation: {
+      control: 'select',
+      options: ['vertical', 'horizontal'],
+    },
   },
 };
 
@@ -21,8 +27,29 @@ export default meta;
 type Story = StoryObj;
 
 export const Default: Story = {
-  render: () => html`
-    <civ-radio-group legend="Color preference" name="color">
+  args: {
+    legend: 'Color preference',
+    name: 'color',
+    value: '',
+    hint: '',
+    error: '',
+    tile: false,
+    required: false,
+    disabled: false,
+    orientation: 'vertical',
+  },
+  render: (args) => html`
+    <civ-radio-group
+      legend="${args.legend}"
+      name="${args.name}"
+      value="${args.value}"
+      hint="${args.hint}"
+      error="${args.error}"
+      ?tile="${args.tile}"
+      ?required="${args.required}"
+      ?disabled="${args.disabled}"
+      orientation="${args.orientation}"
+    >
       <civ-radio label="Red" value="red"></civ-radio>
       <civ-radio label="Blue" value="blue"></civ-radio>
       <civ-radio label="Green" value="green"></civ-radio>

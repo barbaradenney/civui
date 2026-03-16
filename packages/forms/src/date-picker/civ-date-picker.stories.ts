@@ -6,16 +6,46 @@ const meta: Meta = {
   title: 'Forms/DatePicker',
   component: 'civ-date-picker',
   tags: ['autodocs'],
+  argTypes: {
+    label: { control: 'text' },
+    name: { control: 'text' },
+    value: { control: 'text' },
+    hint: { control: 'text' },
+    error: { control: 'text' },
+    min: { control: 'text' },
+    max: { control: 'text' },
+    placeholder: { control: 'text' },
+    required: { control: 'boolean' },
+    disabled: { control: 'boolean' },
+  },
 };
 
 export default meta;
 type Story = StoryObj;
 
 export const Default: Story = {
-  render: () => html`
+  args: {
+    label: 'Appointment date',
+    name: 'appointment',
+    hint: '',
+    error: '',
+    min: '',
+    max: '',
+    placeholder: 'mm/dd/yyyy',
+    required: false,
+    disabled: false,
+  },
+  render: (args) => html`
     <civ-date-picker
-      label="Appointment date"
-      name="appointment"
+      label="${args.label}"
+      name="${args.name}"
+      hint="${args.hint}"
+      error="${args.error}"
+      min="${args.min}"
+      max="${args.max}"
+      placeholder="${args.placeholder}"
+      ?required="${args.required}"
+      ?disabled="${args.disabled}"
     ></civ-date-picker>
   `,
 };

@@ -21,6 +21,7 @@ const meta: Meta = {
   argTypes: {
     label: { control: 'text' },
     name: { control: 'text' },
+    value: { control: 'text' },
     hint: { control: 'text' },
     error: { control: 'text' },
     emptyLabel: { control: 'text' },
@@ -33,11 +34,27 @@ export default meta;
 type Story = StoryObj;
 
 export const Default: Story = {
-  render: () => {
+  args: {
+    label: 'State',
+    name: 'state',
+    value: '',
+    hint: '',
+    error: '',
+    emptyLabel: '- Select -',
+    required: false,
+    disabled: false,
+  },
+  render: (args) => {
     const el = document.createElement('civ-select') as any;
-    el.label = 'State';
-    el.name = 'state';
+    el.label = args.label;
+    el.name = args.name;
+    el.value = args.value;
+    el.hint = args.hint;
+    el.error = args.error;
+    el.emptyLabel = args.emptyLabel;
     el.options = STATES;
+    el.required = args.required;
+    el.disabled = args.disabled;
     return el;
   },
 };

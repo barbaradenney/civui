@@ -5,15 +5,46 @@ import './civ-memorable-date.js';
 
 const meta: Meta = {
   title: 'Forms/Date Input',
+  component: 'civ-date-input',
   tags: ['autodocs'],
+  argTypes: {
+    label: { control: 'text' },
+    name: { control: 'text' },
+    value: { control: 'text' },
+    hint: { control: 'text' },
+    error: { control: 'text' },
+    min: { control: 'text' },
+    max: { control: 'text' },
+    required: { control: 'boolean' },
+    disabled: { control: 'boolean' },
+  },
 };
 
 export default meta;
 type Story = StoryObj;
 
-export const NativeDatePicker: Story = {
-  render: () => html`
-    <civ-date-input label="Appointment date" name="appointment" hint="Select a date"></civ-date-input>
+export const Default: Story = {
+  args: {
+    label: 'Appointment date',
+    name: 'appointment',
+    hint: 'Select a date',
+    error: '',
+    min: '',
+    max: '',
+    required: false,
+    disabled: false,
+  },
+  render: (args) => html`
+    <civ-date-input
+      label="${args.label}"
+      name="${args.name}"
+      hint="${args.hint}"
+      error="${args.error}"
+      min="${args.min}"
+      max="${args.max}"
+      ?required="${args.required}"
+      ?disabled="${args.disabled}"
+    ></civ-date-input>
   `,
 };
 

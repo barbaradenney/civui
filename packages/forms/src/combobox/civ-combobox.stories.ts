@@ -22,18 +22,46 @@ const meta: Meta = {
   title: 'Forms/Combobox',
   component: 'civ-combobox',
   tags: ['autodocs'],
+  argTypes: {
+    label: { control: 'text' },
+    name: { control: 'text' },
+    value: { control: 'text' },
+    hint: { control: 'text' },
+    error: { control: 'text' },
+    placeholder: { control: 'text' },
+    noResultsText: { control: 'text' },
+    required: { control: 'boolean' },
+    disabled: { control: 'boolean' },
+  },
 };
 
 export default meta;
 type Story = StoryObj;
 
 export const Default: Story = {
-  render: () => {
+  args: {
+    label: 'State',
+    name: 'state',
+    placeholder: 'Start typing to filter...',
+    hint: '',
+    error: '',
+    value: '',
+    noResultsText: 'No results found',
+    required: false,
+    disabled: false,
+  },
+  render: (args) => {
     const el = document.createElement('civ-combobox') as any;
-    el.label = 'State';
-    el.name = 'state';
-    el.placeholder = 'Start typing to filter...';
+    el.label = args.label;
+    el.name = args.name;
+    el.placeholder = args.placeholder;
+    el.hint = args.hint;
+    el.error = args.error;
+    el.value = args.value;
+    el.noResultsText = args.noResultsText;
     el.options = STATES;
+    el.required = args.required;
+    el.disabled = args.disabled;
     return el;
   },
 };

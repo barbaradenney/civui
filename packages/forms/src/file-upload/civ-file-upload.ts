@@ -94,7 +94,7 @@ export class CivFileUpload extends CivFormElement {
           aria-disabled="${this.disabled || nothing}"
           aria-describedby="${this._ariaDescribedBy || nothing}"
           @keydown="${this._onDropzoneKeydown}"
-          data-dragging="${this._dragging || nothing}"
+          data-dragging="${this._dragging ? '' : nothing}"
         >
           <span class="civ-block civ-text-base-dark civ-text-base">
             ${this.dragText}

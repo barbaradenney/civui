@@ -76,6 +76,7 @@ export class CivSelect extends CivFormElement {
   private _onSelectChange(e: Event): void {
     const target = e.target as HTMLSelectElement;
     this.value = target.value;
+    this.updateFormValue(this.value);
     dispatch(this, 'civ-input', { value: this.value });
     dispatch(this, 'civ-change', { value: this.value });
     this.sendAnalytics('change');

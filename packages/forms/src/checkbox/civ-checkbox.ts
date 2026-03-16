@@ -70,10 +70,10 @@ export class CivCheckbox extends CivFormElement {
     `;
 
     return html`
-      <div class="civ-mb-2 ${this.tile ? 'civ-check-tile' : ''}" data-civ-tile="${this.tile || nothing}">
+      <div class="civ-mb-2 ${this.tile ? 'civ-check-tile' : ''}" data-civ-tile="${this.tile ? '' : nothing}">
+        ${content}
         ${renderHint(this._hintId, this.hint)}
         ${renderError(this._errorId, this.error)}
-        ${content}
       </div>
     `;
   }

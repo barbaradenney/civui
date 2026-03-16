@@ -41,6 +41,17 @@ export class CivToggle extends CivFormElement {
     return html`
       <div class="civ-mb-2">
         <div class="civ-flex civ-items-center civ-gap-3">
+          <div>
+            <label class="civ-check-label" for="${this._inputId}">
+              ${this.label}
+              ${this.required
+                ? html`<abbr class="civ-required-mark" title="required">*</abbr>`
+                : nothing}
+            </label>
+            ${this.description
+              ? html`<span id="${this._descriptionId}" class="civ-check-description">${this.description}</span>`
+              : nothing}
+          </div>
           <button
             type="button"
             role="switch"
@@ -55,17 +66,6 @@ export class CivToggle extends CivFormElement {
           >
             <span class="civ-toggle-thumb" style="${thumbStyle}"></span>
           </button>
-          <div>
-            <label class="civ-check-label" for="${this._inputId}">
-              ${this.label}
-              ${this.required
-                ? html`<abbr class="civ-required-mark" title="required">*</abbr>`
-                : nothing}
-            </label>
-            ${this.description
-              ? html`<span id="${this._descriptionId}" class="civ-check-description">${this.description}</span>`
-              : nothing}
-          </div>
         </div>
         ${renderHint(this._hintId, this.hint)}
         ${renderError(this._errorId, this.error)}

@@ -108,7 +108,7 @@ export class CivCombobox extends CivFormElement {
                   id="${this._listboxId}"
                   role="listbox"
                   class="civ-combobox-listbox"
-                  aria-labelledby="${this._labelId}"
+                  aria-labelledby="${this.label ? this._labelId : nothing}"
                 >
                   ${filtered.map(
                     (option, i) => html`
@@ -121,7 +121,7 @@ export class CivCombobox extends CivFormElement {
                             ? 'civ-font-bold'
                             : ''}"
                         aria-selected="${option.value === this.value}"
-                        data-active="${i === this._activeIndex || nothing}"
+                        data-active="${i === this._activeIndex ? '' : nothing}"
                         @click="${() => this._selectOption(option)}"
                         @mouseenter="${() => { this._activeIndex = i; }}"
                       >

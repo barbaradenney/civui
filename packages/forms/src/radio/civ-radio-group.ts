@@ -194,9 +194,8 @@ export class CivRadioGroup extends CivFormElement {
   }
 
   private _syncRadioTile(): void {
-    if (!this.tile) return;
     this._getRadios().forEach((radio) => {
-      radio.tile = true;
+      radio.tile = this.tile;
     });
   }
 

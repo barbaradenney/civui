@@ -59,7 +59,7 @@ export class CivSegmentedControl extends CivFormElement {
   }
 
   override firstUpdated(): void {
-    const container = this.querySelector('.civ-inline-flex');
+    const container = this.querySelector('[data-civ-segment-content]');
     if (container) {
       for (const child of this._userChildren) {
         container.appendChild(child);
@@ -101,7 +101,7 @@ export class CivSegmentedControl extends CivFormElement {
         ${renderLegend({ legend: this.legend, required: this.required, srOnly: true })}
         ${renderHint(this._hintId, this.hint, true)}
         ${renderError(this._errorId, this.error, true)}
-        <div class="civ-inline-flex"></div>
+        <div class="civ-inline-flex" data-civ-segment-content></div>
       </fieldset>
     `;
   }
@@ -115,9 +115,25 @@ export class CivSegmentedControl extends CivFormElement {
   }
 
   private _syncSegmentSelected(): void {
-    this._getSegments().forEach((segment) => {
+    const segments = this._getSegments();
+    segments.forEach((segment) => {
       segment.selected = segment.value === this.value;
     });
+
+    // Roving tabindex fallback: when no segment is selected,
+    // set the first enabled segment to tabindex="0" so the control
+    // remains reachable via Tab.
+    const hasSelection = segments.some((s) => s.selected);
+    if (!hasSelection) {
+      const enabledSegments = this._getEnabledSegments();
+      if (enabledSegments.length > 0) {
+        // Wait for segment render, then fix tabindex on the button
+        requestAnimationFrame(() => {
+          const firstBtn = enabledSegments[0].querySelector('button');
+          if (firstBtn) firstBtn.setAttribute('tabindex', '0');
+        });
+      }
+    }
   }
 
   private _groupDisabledSet = new WeakSet<Element>();

@@ -13,6 +13,8 @@ let politeQueue: string[] = [];
 let assertiveQueue: string[] = [];
 let politeTimer: ReturnType<typeof setTimeout> | null = null;
 let assertiveTimer: ReturnType<typeof setTimeout> | null = null;
+let politeRafId: number | null = null;
+let assertiveRafId: number | null = null;
 
 const SR_ONLY_STYLES = {
   position: 'absolute',
@@ -59,9 +61,19 @@ function processQueue(priority: 'polite' | 'assertive'): void {
 
   // Clear then set to ensure announcement even if same message
   region.textContent = '';
-  requestAnimationFrame(() => {
+  const rafId = requestAnimationFrame(() => {
     region.textContent = message;
+    if (priority === 'assertive') {
+      assertiveRafId = null;
+    } else {
+      politeRafId = null;
+    }
   });
+  if (priority === 'assertive') {
+    assertiveRafId = rafId;
+  } else {
+    politeRafId = rafId;
+  }
 
   // Schedule next message if queue has more
   if (queue.length > 0) {
@@ -105,6 +117,8 @@ export function cleanupLiveRegions(): void {
   assertiveQueue = [];
   if (politeTimer) { clearTimeout(politeTimer); politeTimer = null; }
   if (assertiveTimer) { clearTimeout(assertiveTimer); assertiveTimer = null; }
+  if (politeRafId != null) { cancelAnimationFrame(politeRafId); politeRafId = null; }
+  if (assertiveRafId != null) { cancelAnimationFrame(assertiveRafId); assertiveRafId = null; }
   if (politeRegion) { politeRegion.remove(); politeRegion = null; }
   if (assertiveRegion) { assertiveRegion.remove(); assertiveRegion = null; }
 }

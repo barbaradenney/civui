@@ -105,7 +105,12 @@ export class CivMemorableDate extends CivFormElement {
   }
 
   private _parseValue(): void {
-    if (!this.value) return;
+    if (!this.value) {
+      this._month = '';
+      this._day = '';
+      this._year = '';
+      return;
+    }
     const parts = this.value.split('-');
     if (parts.length === 3) {
       const [y, m, d] = parts;

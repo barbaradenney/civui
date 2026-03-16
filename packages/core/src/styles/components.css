@@ -53,6 +53,12 @@
     @apply civ-pe-10 civ-cursor-pointer;
   }
 
+  @media (prefers-color-scheme: dark) {
+    .civ-select-field {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23a0a0a0' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    }
+  }
+
   .civ-fieldset {
     @apply civ-border-0 civ-p-0 civ-m-0 civ-mb-4;
   }
@@ -119,7 +125,11 @@
   }
 
   .civ-toggle-thumb {
-    @apply civ-absolute civ-bg-white civ-rounded-full civ-shadow-sm civ-transition-transform;
+    @apply civ-absolute civ-bg-white civ-rounded-full civ-shadow-sm;
+    width: 18px;
+    height: 18px;
+    top: 2px;
+    transition: inset-inline-start 0.15s ease;
   }
 
   /* ── Segment ────────────────────────────────────────────────── */

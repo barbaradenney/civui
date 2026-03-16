@@ -431,7 +431,13 @@ export class CivDatePicker extends CivFormElement {
     if (parsed) {
       // Validate against min/max constraints
       if (isDateDisabled(parsed, this._constraints)) {
-        // Keep input text but don't set as value
+        const msg = this.min && this.max
+          ? `Date must be between ${formatDateLong(parseISODate(this.min)!, this.locale)} and ${formatDateLong(parseISODate(this.max)!, this.locale)}`
+          : this.min
+            ? `Date must be on or after ${formatDateLong(parseISODate(this.min)!, this.locale)}`
+            : `Date must be on or before ${formatDateLong(parseISODate(this.max)!, this.locale)}`;
+        this.error = msg;
+        this.announce(msg, 'assertive');
         return;
       }
       const iso = toISODateString(parsed);

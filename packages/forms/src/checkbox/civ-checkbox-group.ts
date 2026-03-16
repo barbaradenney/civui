@@ -183,8 +183,9 @@ export class CivCheckboxGroup extends CivFormElement {
   }
 
   private _syncCheckboxTile(): void {
+    if (!this.tile) return;
     this._getCheckboxes().forEach((cb) => {
-      cb.tile = this.tile;
+      cb.tile = true;
     });
   }
 

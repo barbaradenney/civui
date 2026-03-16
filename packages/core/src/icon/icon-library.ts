@@ -38,19 +38,19 @@ export const icons: Record<string, IconDef> = {
 
   'chevron-right': {
     label: 'Next',
-    layers: [{ char: '›', transform: 'scale(1.4)' }],
+    layers: [{ char: '⌃', transform: 'scale(1.2) rotate(90deg)' }],
   },
   'chevron-left': {
     label: 'Previous',
-    layers: [{ char: '‹', transform: 'scale(1.4)' }],
+    layers: [{ char: '⌃', transform: 'scale(1.2) rotate(-90deg)' }],
   },
   'chevron-down': {
     label: 'Expand',
-    layers: [{ char: '›', transform: 'scale(1.4) rotate(90deg)' }],
+    layers: [{ char: '⌃', transform: 'scale(1.2) rotate(180deg)' }],
   },
   'chevron-up': {
     label: 'Collapse',
-    layers: [{ char: '›', transform: 'scale(1.4) rotate(-90deg)' }],
+    layers: [{ char: '⌃', transform: 'scale(1.2)' }],
   },
   'arrow-right': {
     label: 'Right',

@@ -2,7 +2,7 @@
 
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBaseElement, renderLegend, renderHint, renderError } from '@civui/core';
+import { CivBaseElement, LightDomContainerMixin, renderLegend, renderHint, renderError } from '@civui/core';
 
 /**
  * CivUI Fieldset
@@ -17,7 +17,7 @@ import { CivBaseElement, renderLegend, renderHint, renderError } from '@civui/co
  * @element civ-fieldset
  */
 @customElement('civ-fieldset')
-export class CivFieldset extends CivBaseElement {
+export class CivFieldset extends LightDomContainerMixin(CivBaseElement) {
   @property({ type: String }) legend = '';
   @property({ type: String }) hint = '';
   @property({ type: String }) error = '';
@@ -26,20 +26,8 @@ export class CivFieldset extends CivBaseElement {
 
   private _hintId = this.generateId('hint');
   private _errorId = this.generateId('error');
-  private _userChildren: Node[] = [];
-
-  override connectedCallback(): void {
-    this._userChildren = Array.from(this.childNodes);
-    super.connectedCallback();
-  }
-
   override firstUpdated(): void {
-    const container = this.querySelector('[data-civ-fieldset-content]');
-    if (container) {
-      for (const child of this._userChildren) {
-        container.appendChild(child);
-      }
-    }
+    this._relocateChildren('[data-civ-fieldset-content]');
   }
 
   override render() {

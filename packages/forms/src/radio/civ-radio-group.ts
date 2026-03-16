@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivFormElement, dispatch, renderLegend, renderHint, renderError, resolveGroupNavIndex, isRtl } from '@civui/core';
+import { CivFormElement, LightDomContainerMixin, dispatch, renderLegend, renderHint, renderError, resolveGroupNavIndex, isRtl, syncGroupDisabled, stopChildEvent } from '@civui/core';
 import type { CivRadio } from './civ-radio.js';
 
 /**
@@ -28,21 +28,17 @@ import type { CivRadio } from './civ-radio.js';
  * @fires civ-analytics - Analytics tracking event on change
  */
 @customElement('civ-radio-group')
-export class CivRadioGroup extends CivFormElement {
+export class CivRadioGroup extends LightDomContainerMixin(CivFormElement) {
   @property({ type: String }) legend = '';
   @property({ type: Boolean, reflect: true }) tile = false;
   @property({ type: String, reflect: true }) orientation: 'vertical' | 'horizontal' = 'vertical';
 
   protected override _defaultValue = '';
   private _boundOnChildChange = this._onChildChange.bind(this);
-  private _boundStopChildInput = this._stopChildInput.bind(this);
+  private _boundStopChildInput = stopChildEvent(this);
   private _boundOnKeydown = this._onKeydown.bind(this);
 
-  private _userChildren: Node[] = [];
-
   override connectedCallback(): void {
-    // Capture authored children before Lit's first render replaces them
-    this._userChildren = Array.from(this.childNodes);
     super.connectedCallback();
     this.addEventListener('civ-change', this._boundOnChildChange as EventListener);
     this.addEventListener('civ-input', this._boundStopChildInput as EventListener);
@@ -64,13 +60,7 @@ export class CivRadioGroup extends CivFormElement {
   }
 
   override firstUpdated(): void {
-    // Move authored children into the layout container
-    const layoutDiv = this.querySelector('.civ-group-layout--vertical, .civ-group-layout--horizontal');
-    if (layoutDiv) {
-      for (const child of this._userChildren) {
-        layoutDiv.appendChild(child);
-      }
-    }
+    this._relocateChildren('.civ-group-layout--vertical, .civ-group-layout--horizontal');
 
     this._syncRadioNames();
     if (this.value) {
@@ -171,20 +161,7 @@ export class CivRadioGroup extends CivFormElement {
   private _groupDisabledSet = new WeakSet<Element>();
 
   private _syncRadioDisabled(): void {
-    const radios = this._getRadios();
-    if (this.disabled) {
-      radios.forEach((radio) => {
-        if (!radio.disabled) this._groupDisabledSet.add(radio);
-        radio.disabled = true;
-      });
-    } else {
-      radios.forEach((radio) => {
-        if (this._groupDisabledSet.has(radio)) {
-          radio.disabled = false;
-        }
-      });
-      this._groupDisabledSet = new WeakSet();
-    }
+    this._groupDisabledSet = syncGroupDisabled(this._getRadios(), this.disabled, this._groupDisabledSet);
   }
 
   private _syncRadioRequired(): void {
@@ -211,10 +188,6 @@ export class CivRadioGroup extends CivFormElement {
     radios.forEach((radio) => {
       radio.managedTabIndex = radio === focusTarget ? 0 : -1;
     });
-  }
-
-  private _stopChildInput(e: Event): void {
-    if (e.target !== this) e.stopPropagation();
   }
 
   private _onChildChange(e: Event): void {

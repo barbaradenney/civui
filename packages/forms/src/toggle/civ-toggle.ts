@@ -1,8 +1,8 @@
 // Schema: packages/schema/src/components/civ-toggle.schema.ts
 
 import { html, nothing } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
-import { CivFormElement, dispatch, interpolate, renderHint, renderError } from '@civui/core';
+import { customElement } from 'lit/decorators.js';
+import { CivBooleanFormElement, dispatch, renderHint, renderError } from '@civui/core';
 
 /**
  * CivUI Toggle
@@ -13,26 +13,8 @@ import { CivFormElement, dispatch, interpolate, renderHint, renderError } from '
  * @element civ-toggle
  */
 @customElement('civ-toggle')
-export class CivToggle extends CivFormElement {
-  @property({ type: Boolean, reflect: true }) checked = false;
-  @property({ type: String }) description = '';
-
-  private _defaultChecked = false;
-  private _descriptionId = this.generateId('desc');
-
-  protected override get _ariaDescribedBy(): string {
-    const ids: string[] = [];
-    if (this.description) ids.push(this._descriptionId);
-    if (this.hint) ids.push(this._hintId);
-    if (this.error) ids.push(this._errorId);
-    return ids.join(' ') || '';
-  }
-
-  override connectedCallback(): void {
-    super.connectedCallback();
-    if (!this.value) this.value = 'on';
-    this._defaultChecked = this.checked;
-  }
+export class CivToggle extends CivBooleanFormElement {
+  protected override get _anchorSelector(): string { return 'button'; }
 
   override render() {
     const thumbStyle = `inset-inline-start: ${this.checked ? '18px' : '2px'};`;
@@ -72,31 +54,6 @@ export class CivToggle extends CivFormElement {
     `;
   }
 
-  override updated(changed: Map<string, unknown>): void {
-    super.updated(changed);
-    if (changed.has('checked')) {
-      this._syncFormValue();
-    }
-  }
-
-  protected override _syncFormValue(): void {
-    this.updateFormValue(this.checked ? this.value : null);
-  }
-
-  protected override _updateValidity(): void {
-    if (typeof this._internals?.setValidity !== 'function') return;
-    const anchor = this.querySelector('button') as HTMLElement | null;
-    if (this.required && !this.checked) {
-      this._internals.setValidity(
-        { valueMissing: true },
-        this.error || interpolate(this.requiredMessage, { label: this.label || 'This field' }),
-        anchor ?? undefined,
-      );
-    } else {
-      this._internals.setValidity({});
-    }
-  }
-
   private _onToggle(): void {
     if (this.disabled) return;
     this.checked = !this.checked;
@@ -106,9 +63,7 @@ export class CivToggle extends CivFormElement {
   }
 
   override formResetCallback(): void {
-    this.checked = this._defaultChecked;
-    this.error = '';
-    this.updateFormValue(this._defaultChecked ? this.value : null);
+    super.formResetCallback();
     dispatch(this, 'civ-reset');
   }
 }

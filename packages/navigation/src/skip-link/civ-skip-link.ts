@@ -1,6 +1,6 @@
 import { html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBaseElement } from '@civui/core';
+import { CivBaseElement, LightDomTextMixin } from '@civui/core';
 
 /**
  * CivUI Skip Link
@@ -19,20 +19,9 @@ import { CivBaseElement } from '@civui/core';
  * @prop {string} href - Target anchor for the skip link
  */
 @customElement('civ-skip-link')
-export class CivSkipLink extends CivBaseElement {
+export class CivSkipLink extends LightDomTextMixin(CivBaseElement) {
   @property({ type: String }) label = '';
   @property({ type: String }) href = '#main-content';
-
-  private _initialText = '';
-
-  override connectedCallback(): void {
-    // Capture initial text content before Lit renders (fallback for label prop)
-    if (!this._initialText) {
-      this._initialText = this.textContent?.trim() || '';
-    }
-    this.textContent = '';
-    super.connectedCallback();
-  }
 
   private get _text(): string {
     return this.label || this._initialText || 'Skip to main content';

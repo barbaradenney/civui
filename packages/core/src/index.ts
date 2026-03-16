@@ -1,6 +1,8 @@
 // Base classes
 export { CivBaseElement } from './base/civ-base-element.js';
 export { CivFormElement } from './base/civ-form-element.js';
+export { CivBooleanFormElement } from './base/civ-boolean-form-element.js';
+export { LightDomContainerMixin, LightDomTextMixin } from './base/light-dom-mixins.js';
 
 // A11y utilities
 export { announce, cleanupLiveRegions } from './a11y/live-region.js';
@@ -13,6 +15,7 @@ export { debounce } from './utils/debounce.js';
 export { dispatch } from './utils/events.js';
 export { interpolate } from './utils/interpolate.js';
 export { isRtl } from './utils/direction.js';
+export { syncGroupDisabled, stopChildEvent } from './utils/group-utils.js';
 
 // Date utilities
 export {

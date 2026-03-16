@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBaseElement, dispatch } from '@civui/core';
+import { CivBaseElement, LightDomTextMixin, dispatch } from '@civui/core';
 
 export type AlertVariant = 'info' | 'warning' | 'error' | 'success';
 export type AlertHeadingLevel = 2 | 3 | 4 | 5 | 6;
@@ -31,7 +31,7 @@ const closeIcon = html`<svg xmlns="http://www.w3.org/2000/svg" width="16" height
  * @fires civ-analytics - Analytics tracking event on dismiss
  */
 @customElement('civ-alert')
-export class CivAlert extends CivBaseElement {
+export class CivAlert extends LightDomTextMixin(CivBaseElement) {
   @property({ type: String }) variant: AlertVariant = 'info';
   @property({ type: String }) heading = '';
   @property({ type: Number, attribute: 'heading-level' }) headingLevel: AlertHeadingLevel = 4;
@@ -39,18 +39,7 @@ export class CivAlert extends CivBaseElement {
   @property({ type: Boolean }) dismissible = false;
   @property({ type: Boolean }) slim = false;
 
-  private _initialText = '';
   private _headingId = this.generateId('heading');
-
-  override connectedCallback(): void {
-    // Capture initial text content before Lit renders (fallback for label prop)
-    if (!this._initialText) {
-      this._initialText = this.textContent?.trim() || '';
-    }
-    // Clear authored children so they don't persist alongside Lit's Light DOM output
-    this.textContent = '';
-    super.connectedCallback();
-  }
 
   private get _bodyText(): string {
     return this.label || this._initialText;

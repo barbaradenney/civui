@@ -2,7 +2,7 @@
 
 import { html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBaseElement, renderLabel, renderHint, renderError } from '@civui/core';
+import { CivBaseElement, LightDomContainerMixin, renderLabel, renderHint, renderError } from '@civui/core';
 
 const FORM_INPUT_SELECTOR = 'input, select, textarea';
 
@@ -16,7 +16,7 @@ const FORM_INPUT_SELECTOR = 'input, select, textarea';
  * @element civ-form-group
  */
 @customElement('civ-form-group')
-export class CivFormGroup extends CivBaseElement {
+export class CivFormGroup extends LightDomContainerMixin(CivBaseElement) {
   @property({ type: String }) label = '';
   @property({ type: String }) hint = '';
   @property({ type: String }) error = '';
@@ -25,21 +25,8 @@ export class CivFormGroup extends CivBaseElement {
 
   private _hintId = this.generateId('hint');
   private _errorId = this.generateId('error');
-  private _userChildren: Node[] = [];
-
-  override connectedCallback(): void {
-    this._userChildren = Array.from(this.childNodes);
-    super.connectedCallback();
-  }
-
   override firstUpdated(): void {
-    // Move authored children (the input) into the wrapper after label/hint/error
-    const wrapper = this.querySelector('[data-civ-form-group-content]');
-    if (wrapper) {
-      for (const child of this._userChildren) {
-        wrapper.appendChild(child);
-      }
-    }
+    this._relocateChildren('[data-civ-form-group-content]');
     this._wireAriaDescribedBy();
   }
 

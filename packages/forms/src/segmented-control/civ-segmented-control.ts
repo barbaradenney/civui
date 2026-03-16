@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivFormElement, dispatch, renderLegend, renderHint, renderError, resolveGroupNavIndex, isRtl } from '@civui/core';
+import { CivFormElement, LightDomContainerMixin, dispatch, renderLegend, renderHint, renderError, resolveGroupNavIndex, isRtl, syncGroupDisabled, stopChildEvent } from '@civui/core';
 import type { CivSegment } from './civ-segment.js';
 
 /**
@@ -26,18 +26,15 @@ import type { CivSegment } from './civ-segment.js';
  * @fires civ-analytics - Analytics tracking event on change
  */
 @customElement('civ-segmented-control')
-export class CivSegmentedControl extends CivFormElement {
+export class CivSegmentedControl extends LightDomContainerMixin(CivFormElement) {
   @property({ type: String }) legend = '';
 
   protected override _defaultValue = '';
   private _boundOnChildChange = this._onChildChange.bind(this);
-  private _boundStopChildInput = this._stopChildInput.bind(this);
+  private _boundStopChildInput = stopChildEvent(this);
   private _boundOnKeydown = this._onKeydown.bind(this);
 
-  private _userChildren: Node[] = [];
-
   override connectedCallback(): void {
-    this._userChildren = Array.from(this.childNodes);
     super.connectedCallback();
     this.addEventListener('civ-change', this._boundOnChildChange as EventListener);
     this.addEventListener('civ-input', this._boundStopChildInput as EventListener);
@@ -59,12 +56,7 @@ export class CivSegmentedControl extends CivFormElement {
   }
 
   override firstUpdated(): void {
-    const container = this.querySelector('[data-civ-segment-content]');
-    if (container) {
-      for (const child of this._userChildren) {
-        container.appendChild(child);
-      }
-    }
+    this._relocateChildren('[data-civ-segment-content]');
 
     this._syncSegmentSelected();
     this._syncSegmentPositions();
@@ -139,20 +131,7 @@ export class CivSegmentedControl extends CivFormElement {
   private _groupDisabledSet = new WeakSet<Element>();
 
   private _syncSegmentDisabled(): void {
-    const segments = this._getSegments();
-    if (this.disabled) {
-      segments.forEach((segment) => {
-        if (!segment.disabled) this._groupDisabledSet.add(segment);
-        segment.disabled = true;
-      });
-    } else {
-      segments.forEach((segment) => {
-        if (this._groupDisabledSet.has(segment)) {
-          segment.disabled = false;
-        }
-      });
-      this._groupDisabledSet = new WeakSet();
-    }
+    this._groupDisabledSet = syncGroupDisabled(this._getSegments(), this.disabled, this._groupDisabledSet);
   }
 
   private _syncSegmentPositions(): void {
@@ -170,10 +149,6 @@ export class CivSegmentedControl extends CivFormElement {
       }
       segment.setAttribute('data-civ-segment-position', position);
     });
-  }
-
-  private _stopChildInput(e: Event): void {
-    if (e.target !== this) e.stopPropagation();
   }
 
   private _onChildChange(e: Event): void {

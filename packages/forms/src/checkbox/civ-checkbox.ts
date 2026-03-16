@@ -2,7 +2,7 @@
 
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivFormElement, dispatch, interpolate, renderHint, renderError } from '@civui/core';
+import { CivBooleanFormElement, dispatch, renderHint, renderError } from '@civui/core';
 
 /**
  * CivUI Checkbox
@@ -13,28 +13,9 @@ import { CivFormElement, dispatch, interpolate, renderHint, renderError } from '
  * @element civ-checkbox
  */
 @customElement('civ-checkbox')
-export class CivCheckbox extends CivFormElement {
-  @property({ type: Boolean, reflect: true }) checked = false;
+export class CivCheckbox extends CivBooleanFormElement {
   @property({ type: Boolean, reflect: true }) indeterminate = false;
-  @property({ type: String }) description = '';
   @property({ type: Boolean, reflect: true }) tile = false;
-
-  private _defaultChecked = false;
-  private _descriptionId = this.generateId('desc');
-
-  protected override get _ariaDescribedBy(): string {
-    const ids: string[] = [];
-    if (this.description) ids.push(this._descriptionId);
-    if (this.hint) ids.push(this._hintId);
-    if (this.error) ids.push(this._errorId);
-    return ids.join(' ') || '';
-  }
-
-  override connectedCallback(): void {
-    super.connectedCallback();
-    if (!this.value) this.value = 'on';
-    this._defaultChecked = this.checked;
-  }
 
   override render() {
     const content = html`
@@ -83,27 +64,6 @@ export class CivCheckbox extends CivFormElement {
       const input = this.querySelector('input') as HTMLInputElement | null;
       if (input) input.indeterminate = this.indeterminate;
     }
-    if (changed.has('checked')) {
-      this._syncFormValue();
-    }
-  }
-
-  protected override _syncFormValue(): void {
-    this.updateFormValue(this.checked ? this.value : null);
-  }
-
-  protected override _updateValidity(): void {
-    if (typeof this._internals?.setValidity !== 'function') return;
-    const anchor = this.querySelector('input') as HTMLElement | null;
-    if (this.required && !this.checked) {
-      this._internals.setValidity(
-        { valueMissing: true },
-        this.error || interpolate(this.requiredMessage, { label: this.label || 'This field' }),
-        anchor ?? undefined,
-      );
-    } else {
-      this._internals.setValidity({});
-    }
   }
 
   private _onCheckboxChange(e: Event): void {
@@ -116,10 +76,8 @@ export class CivCheckbox extends CivFormElement {
   }
 
   override formResetCallback(): void {
-    this.checked = this._defaultChecked;
+    super.formResetCallback();
     this.indeterminate = false;
-    this.error = '';
-    this.updateFormValue(this._defaultChecked ? this.value : null);
     dispatch(this, 'civ-reset');
   }
 }

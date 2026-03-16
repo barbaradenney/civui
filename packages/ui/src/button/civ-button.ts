@@ -1,6 +1,6 @@
 import { html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBaseElement } from '@civui/core';
+import { CivBaseElement, LightDomTextMixin } from '@civui/core';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'danger' | 'unstyled';
 export type ButtonSize = 'default' | 'big';
@@ -27,25 +27,13 @@ export type ButtonType = 'button' | 'submit' | 'reset';
  * @fires civ-analytics - Analytics tracking event on click
  */
 @customElement('civ-button')
-export class CivButton extends CivBaseElement {
+export class CivButton extends LightDomTextMixin(CivBaseElement) {
   @property({ type: String }) label = '';
   @property({ type: String }) variant: ButtonVariant = 'primary';
   @property({ type: String }) size: ButtonSize = 'default';
   @property({ type: Boolean, reflect: true }) disabled = false;
   @property({ type: String }) type: ButtonType = 'button';
   @property({ type: String }) href = '';
-
-  private _initialText = '';
-
-  override connectedCallback(): void {
-    // Capture initial text content before Lit renders (fallback for label prop)
-    if (!this._initialText) {
-      this._initialText = this.textContent?.trim() || '';
-    }
-    // Clear authored children so they don't persist alongside Lit's Light DOM output
-    this.textContent = '';
-    super.connectedCallback();
-  }
 
   private get _text(): string {
     return this.label || this._initialText;

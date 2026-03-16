@@ -3,7 +3,7 @@
 
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivBaseElement, dispatch, generateId } from '@civui/core';
+import { CivBaseElement, LightDomContainerMixin, dispatch, generateId } from '@civui/core';
 
 export interface FormFieldError {
   name: string;
@@ -56,7 +56,7 @@ export interface CivFormFieldLike extends HTMLElement {
  * @fires civ-analytics - Analytics tracking event on submit
  */
 @customElement('civ-form')
-export class CivForm extends CivBaseElement {
+export class CivForm extends LightDomContainerMixin(CivBaseElement) {
   @property({ type: String }) action = '';
   @property({ type: String }) method: 'get' | 'post' = 'post';
   @property({ type: String, attribute: 'form-label' }) formLabel = '';
@@ -68,10 +68,7 @@ export class CivForm extends CivBaseElement {
   private _summaryHeadingId = this.generateId('summary-heading');
   private _boundOnClick = this._onButtonClick.bind(this);
   private _boundOnKeydown = this._onKeydown.bind(this);
-  private _userChildren: Node[] = [];
-
   override connectedCallback(): void {
-    this._userChildren = Array.from(this.childNodes);
     super.connectedCallback();
     this.setAttribute('role', 'form');
     if (this.formLabel) this.setAttribute('aria-label', this.formLabel);
@@ -86,12 +83,7 @@ export class CivForm extends CivBaseElement {
   }
 
   override firstUpdated(): void {
-    const container = this.querySelector('[data-civ-form-content]');
-    if (container) {
-      for (const child of this._userChildren) {
-        container.appendChild(child);
-      }
-    }
+    this._relocateChildren('[data-civ-form-content]');
   }
 
   override updated(changed: Map<string, unknown>): void {

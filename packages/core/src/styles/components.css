@@ -376,7 +376,7 @@
   /* ── Alert ─────────────────────────────────────────────────── */
 
   .civ-alert {
-    @apply civ-p-4 civ-mb-4 civ-rounded;
+    @apply civ-p-4 civ-mb-4;
   }
 
   .civ-alert--slim {

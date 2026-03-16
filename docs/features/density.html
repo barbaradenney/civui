@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Density Scale - CivUI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* CivUI design tokens */
+    :root {
+      --civ-border-radius-none: 0px;
+      --civ-border-radius-sm: 2px;
+      --civ-border-radius-DEFAULT: 4px;
+      --civ-border-radius-md: 6px;
+      --civ-border-radius-lg: 8px;
+      --civ-border-radius-full: 9999px;
+      --civ-border-width-0: 0px;
+      --civ-border-width-2: 2px;
+      --civ-border-width-4: 4px;
+      --civ-border-width-DEFAULT: 1px;
+
+      --civ-color-primary-lightest: #d9e8f6;
+      --civ-color-primary-lighter: #73b3e7;
+      --civ-color-primary-light: #2378c3;
+      --civ-color-primary-DEFAULT: #005ea2;
+      --civ-color-primary-vivid: #0050d8;
+      --civ-color-primary-dark: #1a4480;
+      --civ-color-primary-darker: #162e51;
+      --civ-color-error-lighter: #f4e3db;
+      --civ-color-error-light: #d63e04;
+      --civ-color-error-DEFAULT: #b50909;
+      --civ-color-error-dark: #8b0a03;
+      --civ-color-base-lightest: #f0f0f0;
+      --civ-color-base-lighter: #dfe1e2;
+      --civ-color-base-light: #a9aeb1;
+      --civ-color-base-DEFAULT: #71767a;
+      --civ-color-base-dark: #565c65;
+      --civ-color-base-darker: #3d4551;
+      --civ-color-base-darkest: #1b1b1b;
+      --civ-color-white-DEFAULT: #ffffff;
+      --civ-color-black-DEFAULT: #000000;
+      --civ-color-success-DEFAULT: #00a91c;
+
+      --civ-spacing-0: 0px;
+      --civ-spacing-px: 1px;
+      --civ-spacing-0_5: 3px;
+      --civ-spacing-1: 5px;
+      --civ-spacing-1_5: 8px;
+      --civ-spacing-2: 10px;
+      --civ-spacing-2_5: 13px;
+      --civ-spacing-3: 15px;
+      --civ-spacing-4: 20px;
+      --civ-spacing-5: 25px;
+      --civ-spacing-6: 30px;
+      --civ-spacing-8: 40px;
+      --civ-spacing-10: 50px;
+      --civ-spacing-12: 60px;
+      --civ-spacing-16: 80px;
+      --civ-spacing-20: 100px;
+
+      --civ-typography-fontFamily-sans: "Public Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --civ-typography-fontFamily-mono: "Roboto Mono", Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+      --civ-typography-fontSize-xs: 12px;
+      --civ-typography-fontSize-sm: 14px;
+      --civ-typography-fontSize-base: 16px;
+      --civ-typography-fontSize-lg: 18px;
+      --civ-typography-fontSize-xl: 20px;
+      --civ-typography-fontSize-2xl: 24px;
+      --civ-typography-fontSize-3xl: 28px;
+      --civ-typography-fontSize-4xl: 36px;
+      --civ-typography-fontSize-5xl: 48px;
+      --civ-typography-fontWeight-light: 300;
+      --civ-typography-fontWeight-regular: 400;
+      --civ-typography-fontWeight-semibold: 600;
+      --civ-typography-fontWeight-bold: 700;
+      --civ-typography-lineHeight-none: 1;
+      --civ-typography-lineHeight-tight: 1.25;
+      --civ-typography-lineHeight-snug: 1.375;
+      --civ-typography-lineHeight-normal: 1.5;
+      --civ-typography-lineHeight-relaxed: 1.625;
+      --civ-typography-lineHeight-loose: 2;
+
+      --civ-shadow-sm: 0px 1px 2px 0px rgba(0,0,0,0.05);
+      --civ-shadow-DEFAULT: 0px 1px 3px 0px rgba(0,0,0,0.1);
+      --civ-shadow-md: 0px 4px 6px -1px rgba(0,0,0,0.1);
+
+      --color-primary: #005ea2;
+      --color-primary-dark: #1a4480;
+      --color-base-darkest: #1b1b1b;
+      --color-base-dark: #565c65;
+      --color-base-light: #a9aeb1;
+      --color-base-lightest: #f0f0f0;
+      --color-white: #ffffff;
+    }
+
+    /* Spacious density (1.5x) */
+    [data-civ-scale="spacious"] {
+      --civ-typography-fontSize-xs: 0.72rem;
+      --civ-typography-fontSize-sm: clamp(0.9rem, calc(0.8737rem + 0.1317vw), 0.972rem);
+      --civ-typography-fontSize-base: clamp(1.125rem, calc(1.0341rem + 0.4545vw), 1.375rem);
+      --civ-typography-fontSize-lg: clamp(1.406rem, calc(1.2106rem + 0.9782vw), 1.944rem);
+      --civ-typography-fontSize-xl: clamp(1.758rem, calc(1.3973rem + 1.8025vw), 2.749rem);
+      --civ-typography-fontSize-2xl: clamp(2.197rem, calc(1.5827rem + 3.0728vw), 3.887rem);
+      --civ-typography-fontSize-3xl: clamp(2.747rem, calc(1.7465rem + 5.0002vw), 5.497rem);
+      --civ-typography-fontSize-4xl: clamp(3.433rem, calc(1.8554rem + 7.8892vw), 7.772rem);
+      --civ-typography-fontSize-5xl: clamp(4.292rem, calc(1.8557rem + 12.1791vw), 10.99rem);
+      --civ-spacing-0_5: 5px;
+      --civ-spacing-1: 8px;
+      --civ-spacing-1_5: 12px;
+      --civ-spacing-2: 15px;
+      --civ-spacing-2_5: 20px;
+      --civ-spacing-3: 23px;
+      --civ-spacing-4: 30px;
+      --civ-spacing-5: 38px;
+      --civ-spacing-6: 45px;
+      --civ-spacing-8: 60px;
+      --civ-spacing-10: 75px;
+      --civ-spacing-12: 90px;
+      --civ-spacing-16: 120px;
+      --civ-spacing-20: 150px;
+      --civ-typography-lineHeight-normal: 1.75;
+      --civ-typography-lineHeight-tight: 1.4;
+    }
+
+    /* Dense density (0.75x) */
+    [data-civ-scale="dense"] {
+      --civ-typography-fontSize-xs: 0.691rem;
+      --civ-typography-fontSize-sm: 0.778rem;
+      --civ-typography-fontSize-base: 0.875rem;
+      --civ-typography-fontSize-lg: 0.984rem;
+      --civ-typography-fontSize-xl: 1.107rem;
+      --civ-typography-fontSize-2xl: 1.246rem;
+      --civ-typography-fontSize-3xl: 1.402rem;
+      --civ-typography-fontSize-4xl: 1.577rem;
+      --civ-typography-fontSize-5xl: 1.774rem;
+      --civ-spacing-0_5: 2px;
+      --civ-spacing-1: 3px;
+      --civ-spacing-1_5: 5px;
+      --civ-spacing-2: 6px;
+      --civ-spacing-2_5: 8px;
+      --civ-spacing-3: 9px;
+      --civ-spacing-4: 12px;
+      --civ-spacing-5: 15px;
+      --civ-spacing-6: 18px;
+      --civ-spacing-8: 24px;
+      --civ-spacing-10: 30px;
+      --civ-spacing-12: 36px;
+      --civ-spacing-16: 48px;
+      --civ-spacing-20: 60px;
+      --civ-typography-lineHeight-normal: 1.4;
+      --civ-typography-lineHeight-tight: 1.15;
+    }
+
+    /* Page styles — matching docs/index.html design language */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Public Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: var(--color-base-darkest);
+      line-height: 1.6;
+    }
+
+    .top-nav {
+      background: var(--color-base-lightest);
+      padding: 0.75rem 2rem;
+      border-bottom: 1px solid var(--color-base-light);
+    }
+
+    .top-nav a {
+      color: var(--color-primary);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+
+    .top-nav a:hover { text-decoration: underline; }
+
+    .hero {
+      background: var(--color-primary-dark);
+      color: var(--color-white);
+      padding: 4rem 2rem;
+      text-align: center;
+    }
+
+    .hero h1 { font-size: 3rem; margin-bottom: 1rem; }
+    .hero p { font-size: 1.25rem; max-width: 600px; margin: 0 auto; opacity: 0.9; }
+
+    .content { max-width: 960px; margin: 0 auto; padding: 3rem 2rem; }
+
+    h2 { font-size: 1.75rem; margin: 2.5rem 0 1rem; color: var(--color-primary-dark); }
+    h2:first-child { margin-top: 0; }
+    h3 { font-size: 1.25rem; margin: 1.5rem 0 0.75rem; }
+
+    p { margin: 0.5rem 0; color: var(--color-base-dark); font-size: 0.95rem; line-height: 1.7; }
+
+    pre {
+      background: var(--color-base-lightest);
+      padding: 1rem 1.5rem;
+      border-radius: 4px;
+      overflow-x: auto;
+      font-size: 0.875rem;
+      margin: 1rem 0;
+    }
+
+    code {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+    }
+
+    code:not(pre code) {
+      background: var(--color-base-lightest);
+      padding: 0.15rem 0.4rem;
+      border-radius: 3px;
+      font-size: 0.85em;
+    }
+
+    /* Comparison table */
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+
+    .comparison-table th,
+    .comparison-table td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--color-base-light);
+    }
+
+    .comparison-table thead th {
+      background: var(--color-primary-dark);
+      color: var(--color-white);
+      font-weight: 600;
+    }
+
+    .comparison-table tbody tr:nth-child(even) {
+      background: var(--color-base-lightest);
+    }
+
+    .comparison-table td:first-child {
+      font-weight: 600;
+      color: var(--color-base-darkest);
+    }
+
+    /* Scale badge */
+    .scale-badge {
+      display: inline-block;
+      background: var(--color-primary);
+      color: var(--color-white);
+      padding: 0.15rem 0.5rem;
+      border-radius: 3px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      vertical-align: middle;
+      margin-left: 0.25rem;
+    }
+
+    /* Interactive demo */
+    .demo-section {
+      background: var(--color-base-lightest);
+      border-radius: 8px;
+      padding: 2rem;
+      margin: 1.5rem 0;
+    }
+
+    .demo-controls {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .demo-btn {
+      padding: 0.6rem 1.25rem;
+      border: 2px solid var(--color-primary);
+      background: var(--color-white);
+      color: var(--color-primary);
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .demo-btn:hover {
+      background: var(--civ-color-primary-lightest);
+    }
+
+    .demo-btn[aria-pressed="true"] {
+      background: var(--color-primary);
+      color: var(--color-white);
+    }
+
+    .demo-btn:focus-visible {
+      outline: 3px solid var(--civ-color-primary-lighter);
+      outline-offset: 2px;
+    }
+
+    .demo-form {
+      background: var(--color-white);
+      border: 1px solid var(--color-base-light);
+      border-radius: 6px;
+      padding: var(--civ-spacing-6);
+      transition: padding 0.2s ease;
+    }
+
+    .demo-field {
+      margin-bottom: var(--civ-spacing-4);
+    }
+
+    .demo-field:last-child {
+      margin-bottom: 0;
+    }
+
+    .demo-label {
+      display: block;
+      font-size: var(--civ-typography-fontSize-base);
+      font-weight: var(--civ-typography-fontWeight-semibold);
+      line-height: var(--civ-typography-lineHeight-normal);
+      color: var(--civ-color-base-darkest);
+      margin-bottom: var(--civ-spacing-1);
+    }
+
+    .demo-hint {
+      display: block;
+      font-size: var(--civ-typography-fontSize-sm);
+      color: var(--civ-color-base-dark);
+      margin-bottom: var(--civ-spacing-1);
+    }
+
+    .demo-input {
+      display: block;
+      width: 100%;
+      padding: var(--civ-spacing-2) var(--civ-spacing-2);
+      font-size: var(--civ-typography-fontSize-base);
+      font-family: inherit;
+      line-height: var(--civ-typography-lineHeight-normal);
+      color: var(--civ-color-base-darkest);
+      background: var(--civ-color-white-DEFAULT);
+      border: 1px solid var(--civ-color-base-dark);
+      border-radius: var(--civ-border-radius-DEFAULT);
+      transition: font-size 0.2s ease, padding 0.2s ease;
+    }
+
+    .demo-input:focus-visible {
+      outline: 3px solid var(--civ-color-primary-lighter);
+      outline-offset: 0;
+      border-color: var(--civ-color-primary-DEFAULT);
+    }
+
+    .demo-select {
+      display: block;
+      width: 100%;
+      padding: var(--civ-spacing-2);
+      font-size: var(--civ-typography-fontSize-base);
+      font-family: inherit;
+      line-height: var(--civ-typography-lineHeight-normal);
+      color: var(--civ-color-base-darkest);
+      background: var(--civ-color-white-DEFAULT);
+      border: 1px solid var(--civ-color-base-dark);
+      border-radius: var(--civ-border-radius-DEFAULT);
+      transition: font-size 0.2s ease, padding 0.2s ease;
+    }
+
+    .demo-select:focus-visible {
+      outline: 3px solid var(--civ-color-primary-lighter);
+      outline-offset: 0;
+      border-color: var(--civ-color-primary-DEFAULT);
+    }
+
+    .demo-checkbox-wrapper {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--civ-spacing-2);
+    }
+
+    .demo-checkbox {
+      margin-top: 0.2em;
+      width: 1.15em;
+      height: 1.15em;
+      accent-color: var(--civ-color-primary-DEFAULT);
+      flex-shrink: 0;
+    }
+
+    .demo-checkbox-label {
+      font-size: var(--civ-typography-fontSize-base);
+      line-height: var(--civ-typography-lineHeight-normal);
+      color: var(--civ-color-base-darkest);
+    }
+
+    .demo-indicator {
+      margin-top: 1rem;
+      padding: 0.75rem 1rem;
+      background: var(--civ-color-primary-lightest);
+      border-left: 4px solid var(--civ-color-primary-DEFAULT);
+      border-radius: 0 4px 4px 0;
+      font-size: 0.85rem;
+      color: var(--civ-color-primary-dark);
+    }
+
+    /* Fluid typography diagram */
+    .fluid-diagram {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 1.5rem 0;
+      padding: 1.5rem;
+      background: var(--color-base-lightest);
+      border-radius: 8px;
+      flex-wrap: wrap;
+    }
+
+    .fluid-endpoint {
+      text-align: center;
+      padding: 0.75rem 1rem;
+      background: var(--color-white);
+      border-radius: 6px;
+      border: 1px solid var(--color-base-light);
+      min-width: 120px;
+    }
+
+    .fluid-endpoint .label {
+      font-size: 0.75rem;
+      color: var(--color-base-dark);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.25rem;
+    }
+
+    .fluid-endpoint .value {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--color-primary-dark);
+    }
+
+    .fluid-arrow {
+      flex: 1;
+      min-width: 60px;
+      height: 3px;
+      background: linear-gradient(to right, var(--color-primary), var(--civ-color-primary-lighter));
+      position: relative;
+    }
+
+    .fluid-arrow::after {
+      content: '';
+      position: absolute;
+      right: -1px;
+      top: -4px;
+      border: 5px solid transparent;
+      border-left-color: var(--civ-color-primary-lighter);
+    }
+
+    .fluid-arrow-label {
+      position: absolute;
+      top: -1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.75rem;
+      color: var(--color-base-dark);
+      white-space: nowrap;
+    }
+
+    /* Usage card */
+    .usage-card {
+      border: 1px solid var(--color-base-light);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+    }
+
+    .usage-card h3 { margin-top: 0; }
+
+    /* Links section */
+    .links {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin: 1.5rem 0;
+    }
+
+    .link-card {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      border-radius: 4px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: background 0.15s;
+      border: 1px solid var(--color-primary);
+      color: var(--color-primary);
+    }
+
+    .link-card:hover {
+      background: var(--civ-color-primary-lightest);
+    }
+
+    .link-card--primary {
+      background: var(--color-primary);
+      color: var(--color-white);
+    }
+
+    .link-card--primary:hover {
+      background: var(--color-primary-dark);
+    }
+
+    footer {
+      border-top: 1px solid var(--color-base-light);
+      padding: 2rem;
+      text-align: center;
+      color: var(--color-base-dark);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <nav class="top-nav" aria-label="Breadcrumb">
+    <a href="../">&larr; Back to CivUI</a>
+  </nav>
+
+  <div class="hero">
+    <h1>Density Scale</h1>
+    <p>Responsive spacing and typography that adapts to context &mdash; from data-heavy dashboards to accessibility-focused citizen forms.</p>
+  </div>
+
+  <div class="content">
+    <h2>Three Density Modes</h2>
+    <p>
+      CivUI ships three density scales that adjust spacing and font sizes across all components.
+      Each mode overrides the design token CSS variables, so every component automatically responds
+      when a parent element sets <code>data-civ-scale</code>.
+    </p>
+
+    <table class="comparison-table">
+      <thead>
+        <tr>
+          <th>Property</th>
+          <th>Dense <span class="scale-badge">0.75x</span></th>
+          <th>Default <span class="scale-badge">1x</span></th>
+          <th>Spacious <span class="scale-badge">1.5x</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Base font size</td>
+          <td>14px (0.875rem)</td>
+          <td>16&ndash;18px fluid</td>
+          <td>18&ndash;22px fluid</td>
+        </tr>
+        <tr>
+          <td>Line height</td>
+          <td>1.4</td>
+          <td>1.6</td>
+          <td>1.75</td>
+        </tr>
+        <tr>
+          <td>Spacing factor</td>
+          <td>0.75x (e.g., 12px for <code>spacing-4</code>)</td>
+          <td>1x (e.g., 20px for <code>spacing-4</code>)</td>
+          <td>1.5x (e.g., 30px for <code>spacing-4</code>)</td>
+        </tr>
+        <tr>
+          <td>Best for</td>
+          <td>Data-heavy dashboards, admin panels, tables</td>
+          <td>Standard forms and pages</td>
+          <td>Accessibility-focused, large touch targets</td>
+        </tr>
+        <tr>
+          <td>Font scaling</td>
+          <td>Fixed sizes (no fluid)</td>
+          <td>Fixed sizes</td>
+          <td>Fluid <code>clamp()</code> values</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Interactive Demo</h2>
+    <p>Click a density mode to see how it affects the form below. All spacing, font sizes, and line heights update in real time via CSS custom properties.</p>
+
+    <div class="demo-section">
+      <div class="demo-controls" role="group" aria-label="Density scale selector">
+        <button class="demo-btn" data-scale="dense" aria-pressed="false" type="button">Dense</button>
+        <button class="demo-btn" data-scale="" aria-pressed="true" type="button">Default</button>
+        <button class="demo-btn" data-scale="spacious" aria-pressed="false" type="button">Spacious</button>
+      </div>
+
+      <div id="demo-form-container">
+        <div class="demo-form">
+          <div class="demo-field">
+            <label class="demo-label" for="demo-name">Full name</label>
+            <span class="demo-hint">First and last name as shown on your government ID</span>
+            <input class="demo-input" type="text" id="demo-name" placeholder="Maria Garcia" />
+          </div>
+
+          <div class="demo-field">
+            <label class="demo-label" for="demo-state">State</label>
+            <span class="demo-hint">Select your state of residence</span>
+            <select class="demo-select" id="demo-state">
+              <option value="">Select a state</option>
+              <option value="CA">California</option>
+              <option value="NY">New York</option>
+              <option value="TX">Texas</option>
+              <option value="FL">Florida</option>
+            </select>
+          </div>
+
+          <div class="demo-field">
+            <div class="demo-checkbox-wrapper">
+              <input class="demo-checkbox" type="checkbox" id="demo-agree" />
+              <label class="demo-checkbox-label" for="demo-agree">I certify that the information provided is accurate</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="demo-indicator" id="demo-indicator">
+          Active scale: <strong>Default (1x)</strong> &mdash; base font 16px, line-height 1.5, spacing-4 = 20px
+        </div>
+      </div>
+    </div>
+
+    <h2>Fluid Typography</h2>
+    <p>
+      In <strong>spacious</strong> mode, font sizes use CSS <code>clamp()</code> to scale fluidly
+      between a minimum and maximum value based on viewport width. This ensures text is comfortable
+      to read on any screen size without abrupt breakpoints.
+    </p>
+
+    <div class="fluid-diagram">
+      <div class="fluid-endpoint">
+        <div class="label">320px viewport</div>
+        <div class="value">18px</div>
+      </div>
+      <div class="fluid-arrow" style="position: relative;">
+        <span class="fluid-arrow-label">Scales smoothly</span>
+      </div>
+      <div class="fluid-endpoint">
+        <div class="label">1200px viewport</div>
+        <div class="value">22px</div>
+      </div>
+    </div>
+
+    <p>The formula follows the pattern:</p>
+    <pre><code>font-size: clamp(min, preferred, max);
+
+/* Example: spacious base font size */
+font-size: clamp(1.125rem, calc(1.0341rem + 0.4545vw), 1.375rem);
+/*         18px min    fluid middle               22px max */</code></pre>
+    <p>
+      The preferred value uses <code>calc()</code> with a <code>vw</code> unit so the font
+      size interpolates linearly between the min (at 320px viewport) and max (at 1200px viewport).
+      Larger type scales like headings grow more aggressively, creating a natural typographic
+      hierarchy that adapts to screen size.
+    </p>
+
+    <h2>How to Use</h2>
+    <p>
+      Set the <code>data-civ-scale</code> attribute on any parent element. All CivUI components
+      inside that element inherit the density scale via CSS custom property overrides.
+    </p>
+
+    <div class="usage-card">
+      <h3>Wrap a section</h3>
+      <pre><code>&lt;!-- Dense: compact dashboard layout --&gt;
+&lt;div data-civ-scale="dense"&gt;
+  &lt;civ-text-input label="Search" name="q"&gt;&lt;/civ-text-input&gt;
+  &lt;civ-select label="Filter" name="filter" .options="..."&gt;&lt;/civ-select&gt;
+&lt;/div&gt;</code></pre>
+    </div>
+
+    <div class="usage-card">
+      <h3>Wrap an entire page</h3>
+      <pre><code>&lt;!-- Spacious: accessibility-first citizen form --&gt;
+&lt;body data-civ-scale="spacious"&gt;
+  &lt;civ-form&gt;
+    &lt;civ-text-input label="Full name" name="name" required
+      required-message="Enter your full name"&gt;&lt;/civ-text-input&gt;
+    &lt;civ-memorable-date label="Date of birth" name="dob"
+      hint="For example: January 15 1990"&gt;&lt;/civ-memorable-date&gt;
+    &lt;button type="submit"&gt;Submit&lt;/button&gt;
+  &lt;/civ-form&gt;
+&lt;/body&gt;</code></pre>
+    </div>
+
+    <div class="usage-card">
+      <h3>Mix densities on one page</h3>
+      <pre><code>&lt;!-- Dense sidebar + spacious main content --&gt;
+&lt;aside data-civ-scale="dense"&gt;
+  &lt;!-- Compact navigation and filters --&gt;
+&lt;/aside&gt;
+&lt;main data-civ-scale="spacious"&gt;
+  &lt;!-- Generous form with large touch targets --&gt;
+&lt;/main&gt;</code></pre>
+    </div>
+
+    <div class="usage-card">
+      <h3>Toggle dynamically with JavaScript</h3>
+      <pre><code>// Let the user pick their preferred density
+function setDensity(scale) {
+  if (scale === 'default') {
+    document.body.removeAttribute('data-civ-scale');
+  } else {
+    document.body.setAttribute('data-civ-scale', scale);
+  }
+}
+
+// Example: respond to a user preference control
+densitySelect.addEventListener('change', (e) => {
+  setDensity(e.target.value);
+});</code></pre>
+    </div>
+
+    <h2>How It Works</h2>
+    <p>
+      The density system is powered entirely by CSS custom properties. The
+      <code>scales.tokens.json</code> file in <code>@civui/tokens</code> defines three scale
+      variants: <strong>dense</strong>, <strong>spacious</strong>, and <strong>fluid</strong>.
+      The token build pipeline generates CSS variable overrides scoped to the
+      <code>[data-civ-scale]</code> attribute selector.
+    </p>
+    <p>
+      Because CivUI uses Light DOM, there are no Shadow DOM boundaries blocking CSS inheritance.
+      Setting <code>data-civ-scale</code> on a parent element cascades the overridden spacing
+      and typography variables to every descendant component.
+    </p>
+    <p>
+      Default density requires no attribute &mdash; the base <code>:root</code> token values apply.
+      Dense and spacious modes override only the values that change, keeping the CSS payload small.
+    </p>
+
+    <h2>Resources</h2>
+    <div class="links">
+      <a href="../storybook/?path=/story/foundations-density--default" class="link-card link-card--primary">Storybook Density Story</a>
+      <a href="../" class="link-card">CivUI Documentation</a>
+    </div>
+  </div>
+
+  <footer>
+    <p>CivUI &mdash; Civic Design System. MIT License.</p>
+  </footer>
+
+  <script>
+    (function () {
+      var container = document.getElementById('demo-form-container');
+      var indicator = document.getElementById('demo-indicator');
+      var buttons = document.querySelectorAll('.demo-btn');
+
+      var scaleInfo = {
+        '': { label: 'Default (1x)', detail: 'base font 16px, line-height 1.5, spacing-4 = 20px' },
+        'dense': { label: 'Dense (0.75x)', detail: 'base font 14px, line-height 1.4, spacing-4 = 12px' },
+        'spacious': { label: 'Spacious (1.5x)', detail: 'base font 18\u201322px fluid, line-height 1.75, spacing-4 = 30px' }
+      };
+
+      buttons.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var scale = btn.getAttribute('data-scale');
+
+          // Update button states
+          buttons.forEach(function (b) { b.setAttribute('aria-pressed', 'false'); });
+          btn.setAttribute('aria-pressed', 'true');
+
+          // Update the data-civ-scale attribute
+          if (scale) {
+            container.setAttribute('data-civ-scale', scale);
+          } else {
+            container.removeAttribute('data-civ-scale');
+          }
+
+          // Update indicator
+          var info = scaleInfo[scale];
+          indicator.innerHTML = 'Active scale: <strong>' + info.label + '</strong> \u2014 ' + info.detail;
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

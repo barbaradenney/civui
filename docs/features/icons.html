@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zero-Dependency Icons - CivUI</title>
+  <style>
+    :root {
+      --color-primary: #005ea2;
+      --color-primary-dark: #1a4480;
+      --color-base-darkest: #1b1b1b;
+      --color-base-dark: #565c65;
+      --color-base-light: #a9aeb1;
+      --color-base-lightest: #f0f0f0;
+      --color-white: #ffffff;
+      --color-error: #b50909;
+      --color-success: #00a91c;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Public Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: var(--color-base-darkest);
+      line-height: 1.6;
+    }
+
+    .top-nav {
+      background: var(--color-base-darkest);
+      padding: 0.75rem 2rem;
+    }
+
+    .top-nav a {
+      color: var(--color-white);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+
+    .top-nav a:hover { text-decoration: underline; }
+
+    .hero {
+      background: var(--color-primary-dark);
+      color: var(--color-white);
+      padding: 4rem 2rem;
+      text-align: center;
+    }
+
+    .hero h1 { font-size: 3rem; margin-bottom: 1rem; }
+    .hero p { font-size: 1.25rem; max-width: 600px; margin: 0 auto; opacity: 0.9; }
+
+    .hero-badges {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 1.5rem;
+    }
+
+    .badge {
+      background: rgba(255,255,255,0.15);
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      font-size: 0.875rem;
+    }
+
+    .content { max-width: 960px; margin: 0 auto; padding: 3rem 2rem; }
+
+    h2 { font-size: 1.75rem; margin: 2rem 0 1rem; color: var(--color-primary-dark); }
+    h3 { font-size: 1.25rem; margin: 1.5rem 0 0.75rem; }
+
+    p { margin: 0.5rem 0; }
+    p + p { margin-top: 0.75rem; }
+
+    .approach {
+      background: var(--color-base-lightest);
+      border-left: 4px solid var(--color-primary);
+      padding: 1.5rem;
+      border-radius: 0 4px 4px 0;
+      margin: 1.5rem 0;
+    }
+
+    .approach p { color: var(--color-base-dark); font-size: 0.95rem; }
+
+    .benefits {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin: 1.5rem 0;
+    }
+
+    .benefit {
+      border: 1px solid var(--color-base-light);
+      border-radius: 8px;
+      padding: 1.5rem;
+    }
+
+    .benefit h3 { margin-top: 0; color: var(--color-primary); }
+    .benefit p { color: var(--color-base-dark); font-size: 0.9rem; }
+
+    .icon-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .icon-cell {
+      border: 1px solid var(--color-base-light);
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: center;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .icon-cell:hover {
+      border-color: var(--color-primary);
+      box-shadow: 0 2px 8px rgba(0, 94, 162, 0.12);
+    }
+
+    .icon-char {
+      font-size: 2rem;
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--color-base-darkest);
+      line-height: 1;
+    }
+
+    .icon-name {
+      font-size: 0.75rem;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      color: var(--color-base-dark);
+      word-break: break-all;
+    }
+
+    pre {
+      background: var(--color-base-lightest);
+      padding: 1rem 1.5rem;
+      border-radius: 4px;
+      overflow-x: auto;
+      font-size: 0.875rem;
+      margin: 1rem 0;
+    }
+
+    code {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+    }
+
+    .inline-code {
+      background: var(--color-base-lightest);
+      padding: 0.15rem 0.4rem;
+      border-radius: 3px;
+      font-size: 0.85em;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+    }
+
+    .sizes-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+    }
+
+    .sizes-table th,
+    .sizes-table td {
+      text-align: left;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--color-base-light);
+    }
+
+    .sizes-table th {
+      background: var(--color-base-lightest);
+      font-size: 0.875rem;
+      color: var(--color-base-dark);
+      font-weight: 600;
+    }
+
+    .sizes-table td { font-size: 0.9rem; }
+
+    .sizes-table code {
+      background: var(--color-base-lightest);
+      padding: 0.15rem 0.4rem;
+      border-radius: 3px;
+      font-size: 0.85em;
+    }
+
+    .hero-links {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+    }
+
+    .hero-link {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      border-radius: 4px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: background 0.15s;
+    }
+
+    .hero-link--primary {
+      background: var(--color-white);
+      color: var(--color-primary-dark);
+    }
+
+    .hero-link--primary:hover { background: #e6e6e6; }
+
+    .hero-link--secondary {
+      background: rgba(255,255,255,0.15);
+      color: var(--color-white);
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+
+    .hero-link--secondary:hover { background: rgba(255,255,255,0.25); }
+
+    footer {
+      border-top: 1px solid var(--color-base-light);
+      padding: 2rem;
+      text-align: center;
+      color: var(--color-base-dark);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <nav class="top-nav">
+    <a href="../">&larr; Back to CivUI</a>
+  </nav>
+
+  <div class="hero">
+    <h1>Zero-Dependency Icons</h1>
+    <p>Icons built from layered Unicode characters. No icon fonts, no SVG sprites, no external dependencies.</p>
+    <div class="hero-badges">
+      <span class="badge">No Network Requests</span>
+      <span class="badge">Inherits Color</span>
+      <span class="badge">Scales with Font Size</span>
+      <span class="badge">Works Everywhere</span>
+    </div>
+  </div>
+
+  <div class="content">
+    <h2>The Approach</h2>
+    <div class="approach">
+      <p>CivUI icons are composed from layered Unicode characters, rendered entirely with the browser's native text engine. There are no icon font files to load, no SVG sprite sheets to manage, and no external CDN dependencies. Each icon is a <span class="inline-code">&lt;civ-icon&gt;</span> custom element that inherits color from its parent, scales with <span class="inline-code">font-size</span>, and works in any context where text renders &mdash; including email, print, and high-contrast modes.</p>
+    </div>
+
+    <h2>Benefits</h2>
+    <div class="benefits">
+      <div class="benefit">
+        <h3>Inherit Color</h3>
+        <p>Icons use <span class="inline-code">currentColor</span>, so they match surrounding text automatically. Change the parent color and the icon follows.</p>
+      </div>
+      <div class="benefit">
+        <h3>Scale with Font Size</h3>
+        <p>Icons are sized in <span class="inline-code">em</span> units. They scale proportionally with the text around them, no extra sizing needed.</p>
+      </div>
+      <div class="benefit">
+        <h3>Zero Network Requests</h3>
+        <p>No font files, no SVGs, no CDN. Icons are part of the component bundle. Nothing extra to download at runtime.</p>
+      </div>
+      <div class="benefit">
+        <h3>Works in Any Context</h3>
+        <p>Renders in email clients, print stylesheets, high-contrast mode, and screen readers with proper <span class="inline-code">aria-label</span> support.</p>
+      </div>
+    </div>
+
+    <h2>Icon Library</h2>
+    <div class="icon-grid">
+      <div class="icon-cell">
+        <span class="icon-char" style="transform: rotate(90deg); display: inline-block;">&#x2303;</span>
+        <span class="icon-name">chevron-right</span>
+      </div>
+      <div class="icon-cell">
+        <span class="icon-char" style="transform: rotate(-90deg); display: inline-block;">&#x2303;</span>
+        <span class="icon-name">chevron-left</span>
+      </div>
+      <div class="icon-cell">
+        <span class="icon-char" style="transform: rotate(180deg); display: inline-block;">&#x2303;</span>
+        <span class="icon-name">chevron-down</span>
+      </div>
+      <div class="icon-cell">
+        <span class="icon-char">&#x2303;</span>
+        <span class="icon-name">chevron-up</span>
+      </div>
+      <div class="icon-cell">
+        <span class="icon-char">&rarr;</span>
+        <span class="icon-name">arrow-right</span>
+      </div>
+      <div class="icon-cell">
+        <span class="icon-char">&larr;</span>
+        <span class="icon-name">arrow-left</span>
+      </div>
+      <div class="icon-cell">
+        <span class="icon-char">&uarr;</span>
+        <span class="icon-name">arrow-up</span>
+      </div>
+      <div class="icon-cell">
+        <span class="icon-char">&darr;</span>
+        <span class="icon-name">arrow-down</span>
+      </div>
+      <div class="icon-cell">
+        <span class="icon-char">&#x2715;</span>
+        <span class="icon-name">close</span>
+      </div>
+      <div class="icon-cell">
+        <span class="icon-char">+</span>
+        <span class="icon-name">plus</span>
+      </div>
+      <div class="icon-cell">
+        <span class="icon-char">&minus;</span>
+        <span class="icon-name">minus</span>
+      </div>
+      <div class="icon-cell">
+        <span class="icon-char">&equiv;</span>
+        <span class="icon-name">menu</span>
+      </div>
+      <div class="icon-cell">
+        <span class="icon-char">&#x2315;</span>
+        <span class="icon-name">search</span>
+      </div>
+      <div class="icon-cell">
+        <span class="icon-char">&#x270E;</span>
+        <span class="icon-name">edit</span>
+      </div>
+      <div class="icon-cell">
+        <span class="icon-char">&#x2713;</span>
+        <span class="icon-name">check</span>
+      </div>
+      <div class="icon-cell">
+        <span class="icon-char">&#x25CB;!</span>
+        <span class="icon-name">error</span>
+      </div>
+      <div class="icon-cell">
+        <span class="icon-char">&#x25B3;!</span>
+        <span class="icon-name">warning</span>
+      </div>
+      <div class="icon-cell">
+        <span class="icon-char">&#x25CB;i</span>
+        <span class="icon-name">info</span>
+      </div>
+      <div class="icon-cell">
+        <span class="icon-char">&#x25CB;?</span>
+        <span class="icon-name">help</span>
+      </div>
+      <div class="icon-cell">
+        <span class="icon-char">&#x2606;</span>
+        <span class="icon-name">star</span>
+      </div>
+      <div class="icon-cell">
+        <span class="icon-char">&#x2605;</span>
+        <span class="icon-name">star-filled</span>
+      </div>
+      <div class="icon-cell">
+        <span class="icon-char">&#x1F4C5;</span>
+        <span class="icon-name">calendar</span>
+      </div>
+      <div class="icon-cell">
+        <span class="icon-char">&#x21E7;</span>
+        <span class="icon-name">upload</span>
+      </div>
+      <div class="icon-cell">
+        <span class="icon-char">&#x21E9;</span>
+        <span class="icon-name">download</span>
+      </div>
+      <div class="icon-cell">
+        <span class="icon-char">&#x2398;</span>
+        <span class="icon-name">copy</span>
+      </div>
+      <div class="icon-cell">
+        <span class="icon-char">&#x2421;</span>
+        <span class="icon-name">trash</span>
+      </div>
+      <div class="icon-cell">
+        <span class="icon-char">&#x1F512;</span>
+        <span class="icon-name">lock</span>
+      </div>
+      <div class="icon-cell">
+        <span class="icon-char">&#x2302;</span>
+        <span class="icon-name">home</span>
+      </div>
+      <div class="icon-cell">
+        <span class="icon-char">&#x2295;</span>
+        <span class="icon-name">settings</span>
+      </div>
+      <div class="icon-cell">
+        <span class="icon-char">&#x25BD;</span>
+        <span class="icon-name">filter</span>
+      </div>
+      <div class="icon-cell">
+        <span class="icon-char">&#x2399;</span>
+        <span class="icon-name">print</span>
+      </div>
+      <div class="icon-cell">
+        <span class="icon-char">&#x263A;</span>
+        <span class="icon-name">user</span>
+      </div>
+      <div class="icon-cell">
+        <span class="icon-char">&#x2709;</span>
+        <span class="icon-name">mail</span>
+      </div>
+      <div class="icon-cell">
+        <span class="icon-char">&#x283F;</span>
+        <span class="icon-name">grip</span>
+      </div>
+      <div class="icon-cell">
+        <span class="icon-char">&#x25D4;</span>
+        <span class="icon-name">loading</span>
+      </div>
+      <div class="icon-cell">
+        <span class="icon-char">&#x25B2;</span>
+        <span class="icon-name">sort-asc</span>
+      </div>
+      <div class="icon-cell">
+        <span class="icon-char">&#x25BC;</span>
+        <span class="icon-name">sort-desc</span>
+      </div>
+    </div>
+
+    <h2>Usage</h2>
+    <pre><code>&lt;!-- Basic usage --&gt;
+&lt;civ-icon name="check"&gt;&lt;/civ-icon&gt;
+
+&lt;!-- With size variant --&gt;
+&lt;civ-icon name="search" size="lg"&gt;&lt;/civ-icon&gt;
+
+&lt;!-- Inherits parent color --&gt;
+&lt;span style="color: #00a91c;"&gt;
+  &lt;civ-icon name="check"&gt;&lt;/civ-icon&gt; Approved
+&lt;/span&gt;
+
+&lt;!-- Inside a button --&gt;
+&lt;button&gt;
+  &lt;civ-icon name="plus"&gt;&lt;/civ-icon&gt; Add item
+&lt;/button&gt;
+
+&lt;!-- Accessible label for standalone icons --&gt;
+&lt;civ-icon name="close" aria-label="Close dialog"&gt;&lt;/civ-icon&gt;</code></pre>
+
+    <h2>Size Variants</h2>
+    <table class="sizes-table">
+      <thead>
+        <tr>
+          <th>Size</th>
+          <th>Attribute</th>
+          <th>Computed Size</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Small</td>
+          <td><code>size="sm"</code></td>
+          <td>0.75em</td>
+        </tr>
+        <tr>
+          <td>Medium (default)</td>
+          <td><code>size="md"</code></td>
+          <td>1em</td>
+        </tr>
+        <tr>
+          <td>Large</td>
+          <td><code>size="lg"</code></td>
+          <td>1.5em</td>
+        </tr>
+        <tr>
+          <td>Extra Large</td>
+          <td><code>size="xl"</code></td>
+          <td>2em</td>
+        </tr>
+        <tr>
+          <td>2X Large</td>
+          <td><code>size="2xl"</code></td>
+          <td>3em</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Custom Icons</h2>
+    <p>Register custom icons using the <span class="inline-code">registerIcon()</span> API to extend the built-in library with your own Unicode compositions.</p>
+    <pre><code>import { registerIcon } from '@civui/core';
+
+// Register a single custom icon
+registerIcon('agency-seal', {
+  characters: ['\u2B21', '\u2605'],  // hexagon + star
+  label: 'Agency seal',
+});
+
+// Use it like any built-in icon
+// &lt;civ-icon name="agency-seal"&gt;&lt;/civ-icon&gt;</code></pre>
+
+    <div class="hero-links" style="justify-content: flex-start; margin-top: 2rem;">
+      <a href="../storybook/?path=/docs/core-civ-icon--docs" class="hero-link hero-link--primary" style="background: var(--color-primary); color: var(--color-white);">View Icon Stories</a>
+    </div>
+  </div>
+
+  <footer>
+    <p>CivUI &mdash; Civic Design System. MIT License.</p>
+  </footer>
+</body>
+</html>

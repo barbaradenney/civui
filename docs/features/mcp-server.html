@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MCP Server - CivUI</title>
+  <style>
+    :root {
+      --color-primary: #005ea2;
+      --color-primary-dark: #1a4480;
+      --color-base-darkest: #1b1b1b;
+      --color-base-dark: #565c65;
+      --color-base-light: #a9aeb1;
+      --color-base-lightest: #f0f0f0;
+      --color-white: #ffffff;
+      --color-error: #b50909;
+      --color-success: #00a91c;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Public Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: var(--color-base-darkest);
+      line-height: 1.6;
+    }
+
+    .top-nav {
+      background: var(--color-base-darkest);
+      padding: 0.75rem 2rem;
+    }
+
+    .top-nav a {
+      color: var(--color-white);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+
+    .top-nav a:hover { text-decoration: underline; }
+
+    .hero {
+      background: var(--color-primary-dark);
+      color: var(--color-white);
+      padding: 4rem 2rem;
+      text-align: center;
+    }
+
+    .hero h1 { font-size: 3rem; margin-bottom: 1rem; }
+    .hero p { font-size: 1.25rem; max-width: 700px; margin: 0 auto; opacity: 0.9; }
+
+    .hero-badges {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 1.5rem;
+    }
+
+    .badge {
+      background: rgba(255,255,255,0.15);
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      font-size: 0.875rem;
+    }
+
+    .content { max-width: 960px; margin: 0 auto; padding: 3rem 2rem; }
+
+    h2 { font-size: 1.75rem; margin: 2rem 0 1rem; color: var(--color-primary-dark); }
+    h3 { font-size: 1.25rem; margin: 1.5rem 0 0.75rem; }
+
+    p { margin: 0.5rem 0; }
+
+    pre {
+      background: var(--color-base-lightest);
+      padding: 1rem 1.5rem;
+      border-radius: 4px;
+      overflow-x: auto;
+      font-size: 0.875rem;
+      margin: 1rem 0;
+    }
+
+    code {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+    }
+
+    .inline-code {
+      background: var(--color-base-lightest);
+      padding: 0.15rem 0.4rem;
+      border-radius: 3px;
+      font-size: 0.85em;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+    }
+
+    /* Workflow diagram */
+    .workflow {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      margin: 2rem 0;
+      overflow-x: auto;
+      padding: 1rem 0;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .workflow-step {
+      background: var(--color-white);
+      border: 2px solid var(--color-primary);
+      border-radius: 8px;
+      padding: 0.75rem 1.25rem;
+      text-align: center;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--color-primary-dark);
+      white-space: nowrap;
+    }
+
+    .workflow-step--highlight {
+      background: var(--color-primary);
+      color: var(--color-white);
+    }
+
+    .workflow-arrow {
+      font-size: 1.25rem;
+      color: var(--color-base-light);
+      padding: 0 0.5rem;
+      flex-shrink: 0;
+    }
+
+    /* Stats */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin: 1.5rem 0;
+    }
+
+    .stat {
+      border: 1px solid var(--color-base-light);
+      border-radius: 8px;
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--color-primary);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: var(--color-base-dark);
+      margin-top: 0.5rem;
+    }
+
+    /* Tool categories */
+    .tool-categories {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin: 1.5rem 0;
+    }
+
+    .tool-category {
+      border: 1px solid var(--color-base-light);
+      border-radius: 8px;
+      padding: 1.5rem;
+    }
+
+    .tool-category h3 {
+      margin-top: 0;
+      color: var(--color-primary);
+      font-size: 1.1rem;
+    }
+
+    .tool-list {
+      list-style: none;
+      margin: 0.75rem 0 0;
+    }
+
+    .tool-list li {
+      padding: 0.35rem 0;
+      font-size: 0.875rem;
+      color: var(--color-base-dark);
+      border-bottom: 1px solid var(--color-base-lightest);
+    }
+
+    .tool-list li:last-child { border-bottom: none; }
+
+    .tool-list code {
+      background: var(--color-base-lightest);
+      padding: 0.15rem 0.4rem;
+      border-radius: 3px;
+      font-size: 0.8em;
+      color: var(--color-base-darkest);
+    }
+
+    /* Resources table */
+    .resources-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+    }
+
+    .resources-table th,
+    .resources-table td {
+      text-align: left;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--color-base-light);
+    }
+
+    .resources-table th {
+      background: var(--color-base-lightest);
+      font-size: 0.875rem;
+      color: var(--color-base-dark);
+      font-weight: 600;
+    }
+
+    .resources-table td { font-size: 0.9rem; }
+
+    .resources-table code {
+      background: var(--color-base-lightest);
+      padding: 0.15rem 0.4rem;
+      border-radius: 3px;
+      font-size: 0.85em;
+    }
+
+    .setup-box {
+      background: var(--color-base-lightest);
+      border: 1px solid var(--color-base-light);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+    }
+
+    .setup-box h3 { margin-top: 0; }
+
+    .hero-links {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+    }
+
+    .hero-link {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      border-radius: 4px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: background 0.15s;
+    }
+
+    .hero-link--primary {
+      background: var(--color-white);
+      color: var(--color-primary-dark);
+    }
+
+    .hero-link--primary:hover { background: #e6e6e6; }
+
+    .hero-link--secondary {
+      background: rgba(255,255,255,0.15);
+      color: var(--color-white);
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+
+    .hero-link--secondary:hover { background: rgba(255,255,255,0.25); }
+
+    footer {
+      border-top: 1px solid var(--color-base-light);
+      padding: 2rem;
+      text-align: center;
+      color: var(--color-base-dark);
+      font-size: 0.875rem;
+    }
+
+    @media (max-width: 640px) {
+      .stats { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 2rem; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="top-nav">
+    <a href="../">&larr; Back to CivUI</a>
+  </nav>
+
+  <div class="hero">
+    <h1>MCP Server</h1>
+    <p>AI-powered form modernization. Convert legacy PDF and HTML government forms into accessible, Section 508 compliant CivUI web components.</p>
+    <div class="hero-badges">
+      <span class="badge">83 Tools</span>
+      <span class="badge">10 Resources</span>
+      <span class="badge">8 Guided Prompts</span>
+      <span class="badge">Section 508</span>
+    </div>
+  </div>
+
+  <div class="content">
+    <h2>What It Does</h2>
+    <p>The CivUI MCP Server connects to AI assistants like Claude Desktop, providing tools that parse legacy government forms (PDF, HTML), convert them into structured FormSchema definitions, and generate accessible CivUI web components. Every generated form is automatically validated against Section 508 accessibility standards.</p>
+
+    <h2>Workflow</h2>
+    <div class="workflow">
+      <div class="workflow-step">Legacy Form</div>
+      <span class="workflow-arrow">&rarr;</span>
+      <div class="workflow-step">Parse</div>
+      <span class="workflow-arrow">&rarr;</span>
+      <div class="workflow-step workflow-step--highlight">FormSchema</div>
+      <span class="workflow-arrow">&rarr;</span>
+      <div class="workflow-step">Generate</div>
+      <span class="workflow-arrow">&rarr;</span>
+      <div class="workflow-step workflow-step--highlight">CivUI HTML</div>
+      <span class="workflow-arrow">&rarr;</span>
+      <div class="workflow-step">Validate</div>
+      <span class="workflow-arrow">&rarr;</span>
+      <div class="workflow-step">508 Report</div>
+    </div>
+
+    <h2>Key Capabilities</h2>
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-number">83</div>
+        <div class="stat-label">Tools</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">10</div>
+        <div class="stat-label">Resources</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">8</div>
+        <div class="stat-label">Guided Prompts</div>
+      </div>
+    </div>
+
+    <h2>Tool Categories</h2>
+    <div class="tool-categories">
+      <div class="tool-category">
+        <h3>Parsing</h3>
+        <ul class="tool-list">
+          <li><code>parse_html_form</code> &mdash; Extract fields from HTML forms</li>
+          <li><code>parse_pdf_form</code> &mdash; Extract fields from PDF forms</li>
+        </ul>
+      </div>
+      <div class="tool-category">
+        <h3>Generation</h3>
+        <ul class="tool-list">
+          <li><code>generate_civui_form</code> &mdash; Generate accessible CivUI markup</li>
+          <li><code>generate_wizard</code> &mdash; Multi-step form wizard</li>
+          <li><code>generate_tests</code> &mdash; Vitest test suite for forms</li>
+        </ul>
+      </div>
+      <div class="tool-category">
+        <h3>Validation</h3>
+        <ul class="tool-list">
+          <li><code>validate_form</code> &mdash; Validate form schema structure</li>
+          <li><code>generate_508_report</code> &mdash; Section 508 compliance audit</li>
+          <li><code>check_contrast</code> &mdash; Color contrast ratio checking</li>
+        </ul>
+      </div>
+      <div class="tool-category">
+        <h3>Government</h3>
+        <ul class="tool-list">
+          <li><code>generate_address_block</code> &mdash; Standard US address form</li>
+          <li><code>generate_eligibility_screener</code> &mdash; Benefits eligibility flow</li>
+          <li><code>generate_save_resume_ui</code> &mdash; Save and resume long forms</li>
+        </ul>
+      </div>
+      <div class="tool-category">
+        <h3>Export</h3>
+        <ul class="tool-list">
+          <li><code>generate_validation_schema</code> &mdash; Zod/Yup validation schema</li>
+          <li><code>generate_api_handler</code> &mdash; Server-side form handler</li>
+          <li><code>export_schema</code> &mdash; Export FormSchema as JSON</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2>Setup</h2>
+    <div class="setup-box">
+      <h3>Claude Desktop Configuration</h3>
+      <p>Add this to your Claude Desktop <span class="inline-code">claude_desktop_config.json</span>:</p>
+      <pre><code>{
+  "mcpServers": {
+    "civui": {
+      "command": "npx",
+      "args": ["@civui/mcp-server"]
+    }
+  }
+}</code></pre>
+      <p>Once configured, Claude Desktop will have access to all 83 tools, 10 resources, and 8 guided prompts for converting legacy forms into accessible CivUI components.</p>
+    </div>
+
+    <h2>Resources</h2>
+    <table class="resources-table">
+      <thead>
+        <tr>
+          <th>URI</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>civui://components</code></td>
+          <td>Full component catalog with props, events, and examples</td>
+        </tr>
+        <tr>
+          <td><code>civui://tokens</code></td>
+          <td>Design token reference (colors, spacing, typography)</td>
+        </tr>
+        <tr>
+          <td><code>civui://patterns</code></td>
+          <td>Government form patterns and best practices</td>
+        </tr>
+        <tr>
+          <td><code>civui://accessibility</code></td>
+          <td>WCAG 2.1 AA and Section 508 requirements</td>
+        </tr>
+        <tr>
+          <td><code>civui://schema</code></td>
+          <td>FormSchema JSON Schema reference</td>
+        </tr>
+        <tr>
+          <td><code>civui://examples</code></td>
+          <td>Example forms (contact, application, registration)</td>
+        </tr>
+        <tr>
+          <td><code>civui://validation</code></td>
+          <td>Validation rules and error message guidelines</td>
+        </tr>
+        <tr>
+          <td><code>civui://i18n</code></td>
+          <td>Internationalization and localization guide</td>
+        </tr>
+        <tr>
+          <td><code>civui://testing</code></td>
+          <td>Testing patterns and utilities reference</td>
+        </tr>
+        <tr>
+          <td><code>civui://ai-guide</code></td>
+          <td>AI-optimized component usage guide</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="hero-links" style="justify-content: flex-start; margin-top: 2rem;">
+      <a href="https://github.com/barbaradenney/civui" class="hero-link" style="background: var(--color-primary); color: var(--color-white);">View on GitHub</a>
+    </div>
+  </div>
+
+  <footer>
+    <p>CivUI &mdash; Civic Design System. MIT License.</p>
+  </footer>
+</body>
+</html>

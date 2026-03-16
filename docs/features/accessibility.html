@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Accessibility - CivUI</title>
+  <style>
+    :root {
+      --color-primary: #005ea2;
+      --color-primary-dark: #1a4480;
+      --color-base-darkest: #1b1b1b;
+      --color-base-dark: #565c65;
+      --color-base-light: #a9aeb1;
+      --color-base-lightest: #f0f0f0;
+      --color-white: #ffffff;
+      --color-error: #b50909;
+      --color-success: #00a91c;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Public Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: var(--color-base-darkest);
+      line-height: 1.6;
+    }
+
+    .top-nav {
+      background: var(--color-base-darkest);
+      padding: 0.75rem 2rem;
+    }
+
+    .top-nav a {
+      color: var(--color-white);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 600;
+      transition: opacity 0.15s;
+    }
+
+    .top-nav a:hover { opacity: 0.8; }
+
+    .hero {
+      background: var(--color-primary-dark);
+      color: var(--color-white);
+      padding: 4rem 2rem;
+      text-align: center;
+    }
+
+    .hero h1 { font-size: 3rem; margin-bottom: 1rem; }
+    .hero p { font-size: 1.25rem; max-width: 600px; margin: 0 auto; opacity: 0.9; }
+
+    .content { max-width: 960px; margin: 0 auto; padding: 3rem 2rem; }
+
+    h2 { font-size: 1.75rem; margin: 2.5rem 0 1rem; color: var(--color-primary-dark); }
+    h2:first-child { margin-top: 0; }
+    h3 { font-size: 1.25rem; margin: 1.5rem 0 0.75rem; }
+
+    p { margin-bottom: 1rem; color: var(--color-base-dark); }
+
+    .section-card {
+      border: 1px solid var(--color-base-light);
+      border-radius: 8px;
+      padding: 2rem;
+      margin: 1.5rem 0;
+    }
+
+    .section-card h3 { margin-top: 0; color: var(--color-primary); }
+
+    .advantages {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.25rem;
+      margin: 1.5rem 0;
+    }
+
+    .advantage {
+      background: var(--color-base-lightest);
+      border-radius: 8px;
+      padding: 1.25rem;
+    }
+
+    .advantage h4 {
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+      color: var(--color-base-darkest);
+    }
+
+    .advantage p {
+      font-size: 0.875rem;
+      margin-bottom: 0;
+    }
+
+    .checklist {
+      list-style: none;
+      margin: 1.5rem 0;
+      padding: 0;
+    }
+
+    .checklist li {
+      position: relative;
+      padding: 0.75rem 0 0.75rem 2.25rem;
+      border-bottom: 1px solid var(--color-base-lightest);
+      color: var(--color-base-dark);
+      font-size: 0.95rem;
+    }
+
+    .checklist li:last-child { border-bottom: none; }
+
+    .checklist li::before {
+      content: "\2713";
+      position: absolute;
+      left: 0;
+      top: 0.75rem;
+      width: 1.5rem;
+      height: 1.5rem;
+      background: var(--color-success);
+      color: var(--color-white);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      line-height: 1;
+      text-align: center;
+    }
+
+    .internals-features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin: 1.5rem 0;
+    }
+
+    .internals-feature {
+      border-left: 4px solid var(--color-primary);
+      padding: 1rem 1.25rem;
+      background: var(--color-base-lightest);
+      border-radius: 0 8px 8px 0;
+    }
+
+    .internals-feature h4 {
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+      color: var(--color-base-darkest);
+    }
+
+    .internals-feature p {
+      font-size: 0.875rem;
+      margin-bottom: 0;
+    }
+
+    code {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      background: var(--color-base-lightest);
+      padding: 0.15rem 0.4rem;
+      border-radius: 3px;
+      font-size: 0.85em;
+    }
+
+    pre {
+      background: var(--color-base-lightest);
+      padding: 1rem 1.5rem;
+      border-radius: 4px;
+      overflow-x: auto;
+      font-size: 0.875rem;
+      margin: 1rem 0;
+    }
+
+    pre code {
+      background: none;
+      padding: 0;
+    }
+
+    .rendering-order {
+      display: flex;
+      gap: 0;
+      margin: 1.5rem 0;
+      flex-wrap: wrap;
+    }
+
+    .rendering-step {
+      flex: 1;
+      min-width: 140px;
+      padding: 1rem;
+      text-align: center;
+      background: var(--color-primary-dark);
+      color: var(--color-white);
+      position: relative;
+    }
+
+    .rendering-step:first-child { border-radius: 8px 0 0 8px; }
+    .rendering-step:last-child { border-radius: 0 8px 8px 0; }
+
+    .rendering-step .step-number {
+      display: block;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+
+    .rendering-step .step-label {
+      font-size: 0.85rem;
+      opacity: 0.9;
+    }
+
+    .rendering-step + .rendering-step {
+      border-left: 2px solid rgba(255,255,255,0.2);
+    }
+
+    .cta-section {
+      background: var(--color-base-lightest);
+      border-radius: 8px;
+      padding: 2rem;
+      margin: 2.5rem 0;
+      text-align: center;
+    }
+
+    .cta-section h3 { margin-top: 0; color: var(--color-primary-dark); }
+    .cta-section p { max-width: 600px; margin: 0 auto 1.5rem; }
+
+    .cta-link {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      border-radius: 4px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      background: var(--color-primary);
+      color: var(--color-white);
+      transition: background 0.15s;
+    }
+
+    .cta-link:hover { background: var(--color-primary-dark); }
+
+    footer {
+      border-top: 1px solid var(--color-base-light);
+      padding: 2rem;
+      text-align: center;
+      color: var(--color-base-dark);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <nav class="top-nav" aria-label="Back navigation">
+    <a href="../">&larr; Back to CivUI</a>
+  </nav>
+
+  <div class="hero">
+    <h1>Accessibility First</h1>
+    <p>CivUI is built from the ground up for Section 508 compliance and WCAG 2.1 AA conformance, ensuring government digital services are usable by everyone.</p>
+  </div>
+
+  <div class="content">
+    <h2>Light DOM Architecture</h2>
+    <p>CivUI components render to the Light DOM instead of Shadow DOM. Where most web component libraries isolate their internals behind a shadow root, CivUI keeps everything in the real document tree. This architectural decision eliminates entire categories of accessibility barriers.</p>
+
+    <div class="advantages">
+      <div class="advantage">
+        <h4>External Labels Work Naturally</h4>
+        <p>The <code>for</code>/<code>id</code> relationship between labels and inputs works without workarounds. Assistive technologies see the connection natively.</p>
+      </div>
+      <div class="advantage">
+        <h4>ARIA IDREFs Cross Boundaries</h4>
+        <p>Attributes like <code>aria-describedby</code> and <code>aria-labelledby</code> can reference any element in the document, not just those within a shadow root.</p>
+      </div>
+      <div class="advantage">
+        <h4>Straightforward Focus Management</h4>
+        <p>Focus order follows the DOM naturally. No shadow root boundaries to manage, no delegatesFocus complexity, no unexpected focus traps.</p>
+      </div>
+      <div class="advantage">
+        <h4>Real DOM for Screen Readers</h4>
+        <p>Screen readers see the actual document structure. No flattened tree ambiguity, no slot reassignment confusion, no double-announcement issues.</p>
+      </div>
+    </div>
+
+    <h2>Native Form Participation with ElementInternals</h2>
+    <p>CivUI form components use the <code>ElementInternals</code> API for native form participation. There are no hidden <code>&lt;input&gt;</code> elements injected into the DOM. Components work directly with the browser's form system.</p>
+
+    <div class="internals-features">
+      <div class="internals-feature">
+        <h4>Works with <code>&lt;form&gt;</code> and FormData</h4>
+        <p>Component values appear in <code>FormData</code> automatically. Standard form submission, both traditional and via <code>fetch</code>, includes CivUI field values without extra JavaScript.</p>
+      </div>
+      <div class="internals-feature">
+        <h4>Constraint Validation API</h4>
+        <p>Components integrate with the browser's built-in validation. Methods like <code>checkValidity()</code> and <code>reportValidity()</code> work as expected on CivUI elements.</p>
+      </div>
+      <div class="internals-feature">
+        <h4><code>formResetCallback()</code></h4>
+        <p>When a form is reset, each CivUI component automatically restores its initial value. No manual event listeners needed.</p>
+      </div>
+      <div class="internals-feature">
+        <h4><code>formDisabledCallback()</code></h4>
+        <p>Disabling a <code>&lt;fieldset&gt;</code> cascades the disabled state to all CivUI components inside it, matching native element behavior.</p>
+      </div>
+    </div>
+
+    <h2>Government Compliance Checklist</h2>
+    <p>Every CivUI component enforces these accessibility requirements by default. This is not optional configuration. These behaviors are built into the component architecture.</p>
+
+    <ul class="checklist" role="list">
+      <li>Every input has a visible <code>label</code> (or <code>legend</code> for group components)</li>
+      <li>Required fields render an asterisk and set <code>aria-required="true"</code></li>
+      <li>Error messages use <code>role="alert"</code> for immediate screen reader announcement</li>
+      <li>Color is never the sole error indicator &mdash; errors use text and a border</li>
+      <li>All interactive elements display a visible focus ring via <code>focus-visible</code></li>
+      <li>Labels use plain language: "Date of birth" not "DOB", "Social Security number" not "SSN"</li>
+      <li>Keyboard navigation throughout &mdash; roving tabindex for radio groups and segmented controls</li>
+      <li>Screen reader announcements queued via <code>aria-live</code> regions with polite and assertive priorities</li>
+    </ul>
+
+    <h2>Dark Mode</h2>
+    <p>CivUI supports dark mode automatically via <code>prefers-color-scheme: dark</code>. The system respects the user's operating system preference with no toggle required.</p>
+    <p>The design token build pipeline validates that every light mode token has a corresponding dark mode counterpart. This parity validation runs at build time, ensuring no component is left unstyled in either mode. Focus ring colors, error states, and all semantic colors adapt to the active color scheme.</p>
+
+    <h2>Density System</h2>
+    <p>The density system provides <code>dense</code>, <code>spacious</code>, and <code>fluid</code> scale variants, applied via a <code>data-civ-scale</code> attribute on any parent element. Spacing and font sizes adjust per scale, supporting WCAG 1.4.4 (Resize Text) by ensuring content remains usable when users configure larger text sizes or when agencies need compact layouts for data-heavy screens.</p>
+    <pre><code>&lt;!-- Dense layout for data tables --&gt;
+&lt;div data-civ-scale="dense"&gt;
+  &lt;civ-text-input label="Search" name="q"&gt;&lt;/civ-text-input&gt;
+&lt;/div&gt;
+
+&lt;!-- Spacious layout for public-facing forms --&gt;
+&lt;div data-civ-scale="spacious"&gt;
+  &lt;civ-text-input label="Full name" name="name" required&gt;&lt;/civ-text-input&gt;
+&lt;/div&gt;</code></pre>
+
+    <h2>Consistent Rendering Order</h2>
+    <p>Every CivUI form component renders its parts in the same predictable order. Screen reader users, keyboard users, and sighted users all encounter information in the same sequence. This consistency reduces cognitive load and makes forms easier to navigate.</p>
+
+    <div class="rendering-order" role="img" aria-label="Rendering order: label, then hint, then error, then control">
+      <div class="rendering-step">
+        <span class="step-number">1</span>
+        <span class="step-label">Label</span>
+      </div>
+      <div class="rendering-step">
+        <span class="step-number">2</span>
+        <span class="step-label">Hint</span>
+      </div>
+      <div class="rendering-step">
+        <span class="step-number">3</span>
+        <span class="step-label">Error</span>
+      </div>
+      <div class="rendering-step">
+        <span class="step-number">4</span>
+        <span class="step-label">Control</span>
+      </div>
+    </div>
+
+    <div class="cta-section">
+      <h3>Explore Components in Storybook</h3>
+      <p>Each component story includes an Accessibility panel powered by axe-core. Inspect ARIA attributes, contrast ratios, and keyboard behavior in real time.</p>
+      <a href="../storybook/" class="cta-link">Open Storybook</a>
+    </div>
+  </div>
+
+  <footer>
+    <p>CivUI &mdash; Civic Design System. MIT License.</p>
+  </footer>
+</body>
+</html>

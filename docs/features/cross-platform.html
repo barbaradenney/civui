@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cross-Platform Components - CivUI</title>
+  <style>
+    :root {
+      --color-primary: #005ea2;
+      --color-primary-dark: #1a4480;
+      --color-base-darkest: #1b1b1b;
+      --color-base-dark: #565c65;
+      --color-base-light: #a9aeb1;
+      --color-base-lightest: #f0f0f0;
+      --color-white: #ffffff;
+      --color-error: #b50909;
+      --color-success: #00a91c;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Public Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: var(--color-base-darkest);
+      line-height: 1.6;
+    }
+
+    .top-nav {
+      background: var(--color-base-darkest);
+      padding: 0.75rem 2rem;
+    }
+
+    .top-nav a {
+      color: var(--color-white);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 600;
+      opacity: 0.9;
+      transition: opacity 0.15s;
+    }
+
+    .top-nav a:hover { opacity: 1; }
+
+    .hero {
+      background: var(--color-primary-dark);
+      color: var(--color-white);
+      padding: 4rem 2rem;
+      text-align: center;
+    }
+
+    .hero h1 { font-size: 3rem; margin-bottom: 1rem; }
+    .hero p { font-size: 1.25rem; max-width: 600px; margin: 0 auto; opacity: 0.9; }
+
+    .content { max-width: 960px; margin: 0 auto; padding: 3rem 2rem; }
+
+    h2 { font-size: 1.75rem; margin: 2.5rem 0 1rem; color: var(--color-primary-dark); }
+    h2:first-child { margin-top: 0; }
+    h3 { font-size: 1.25rem; margin: 1.5rem 0 0.75rem; }
+
+    p + p { margin-top: 1rem; }
+    .section-intro { color: var(--color-base-dark); font-size: 1.05rem; margin-bottom: 1.5rem; }
+
+    pre {
+      background: var(--color-base-lightest);
+      padding: 1rem 1.5rem;
+      border-radius: 4px;
+      overflow-x: auto;
+      font-size: 0.875rem;
+      margin: 1rem 0;
+    }
+
+    code {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+    }
+
+    .code-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .code-card {
+      border: 1px solid var(--color-base-light);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .code-card-header {
+      background: var(--color-primary-dark);
+      color: var(--color-white);
+      padding: 0.5rem 1rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+
+    .code-card pre {
+      margin: 0;
+      border-radius: 0;
+    }
+
+    .arch-diagram {
+      background: var(--color-base-lightest);
+      border: 1px solid var(--color-base-light);
+      border-radius: 8px;
+      padding: 2rem;
+      margin: 1.5rem 0;
+      text-align: center;
+    }
+
+    .arch-diagram pre {
+      background: none;
+      display: inline-block;
+      text-align: left;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      padding: 0;
+      margin: 0;
+    }
+
+    .token-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+
+    .token-table th,
+    .token-table td {
+      border: 1px solid var(--color-base-light);
+      padding: 0.6rem 1rem;
+      text-align: left;
+    }
+
+    .token-table th {
+      background: var(--color-primary-dark);
+      color: var(--color-white);
+      font-weight: 600;
+    }
+
+    .token-table tr:nth-child(even) {
+      background: var(--color-base-lightest);
+    }
+
+    .token-table code {
+      font-size: 0.8rem;
+    }
+
+    .packages {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin: 1.5rem 0;
+    }
+
+    .package-card {
+      border: 1px solid var(--color-base-light);
+      border-radius: 8px;
+      padding: 1.5rem;
+    }
+
+    .package-card h3 {
+      margin-top: 0;
+      font-family: monospace;
+      font-size: 1rem;
+      color: var(--color-primary);
+    }
+
+    .package-card p { color: var(--color-base-dark); font-size: 0.9rem; }
+
+    .cta-section {
+      text-align: center;
+      padding: 2.5rem 0;
+      margin-top: 1rem;
+    }
+
+    .cta-link {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      border-radius: 4px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      background: var(--color-primary);
+      color: var(--color-white);
+      transition: background 0.15s;
+    }
+
+    .cta-link:hover { background: var(--color-primary-dark); }
+
+    footer {
+      border-top: 1px solid var(--color-base-light);
+      padding: 2rem;
+      text-align: center;
+      color: var(--color-base-dark);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <nav class="top-nav">
+    <a href="../">&larr; Back to CivUI</a>
+  </nav>
+
+  <div class="hero">
+    <h1>Cross-Platform Components</h1>
+    <p>Define once, generate for Web, iOS, Android, and React Native. Consistent behavior and design across every platform.</p>
+  </div>
+
+  <div class="content">
+    <h2>Schema-Driven Approach</h2>
+    <p class="section-intro">
+      CivUI uses a platform-neutral schema as the single source of truth for every component. Each schema captures the component's properties, events, accessibility requirements, and validation rules. The codegen pipeline then generates idiomatic implementations for each target platform, ensuring consistent APIs and behavior without manual synchronization.
+    </p>
+    <p>
+      This means a component defined in one schema file produces a Lit web component, a SwiftUI view, a Jetpack Compose composable, and a React Native component, all with matching props, events, and accessibility semantics. When the schema changes, every platform updates in lockstep.
+    </p>
+
+    <h2>One Component, Four Platforms</h2>
+    <p class="section-intro">
+      The same text input, written idiomatically for each platform. All four are generated from a single <code>text-input.schema.json</code> definition.
+    </p>
+
+    <div class="code-grid">
+      <div class="code-card">
+        <div class="code-card-header">WEB (Lit)</div>
+        <pre><code>&lt;civ-text-input
+  label="Email"
+  type="email"
+  required
+&gt;&lt;/civ-text-input&gt;</code></pre>
+      </div>
+
+      <div class="code-card">
+        <div class="code-card-header">iOS (SwiftUI)</div>
+        <pre><code>CivTextInput(
+    label: "Email",
+    type: .email,
+    isRequired: true
+)</code></pre>
+      </div>
+
+      <div class="code-card">
+        <div class="code-card-header">ANDROID (Jetpack Compose)</div>
+        <pre><code>CivTextInput(
+    label = "Email",
+    type = TextInputType.Email,
+    required = true
+)</code></pre>
+      </div>
+
+      <div class="code-card">
+        <div class="code-card-header">REACT NATIVE</div>
+        <pre><code>&lt;CivTextInput
+  label="Email"
+  type="email"
+  required
+/&gt;</code></pre>
+      </div>
+    </div>
+
+    <h2>Architecture</h2>
+    <p class="section-intro">
+      Component schemas flow through the codegen pipeline to produce platform-specific implementations. Design tokens follow the same path, ensuring colors, spacing, and typography are identical everywhere.
+    </p>
+
+    <div class="arch-diagram">
+      <pre><code>                    +---------------------+
+                    |   Component Schema  |
+                    |  (text-input.json)  |
+                    +----------+----------+
+                               |
+                    +----------+----------+
+                    |      @civui/codegen  |
+                    +----------+----------+
+                               |
+          +--------------------+--------------------+
+          |            |              |              |
+  +-------+------+  +-+----------+  ++-----------+  +--------+------+
+  |     Lit      |  |  SwiftUI   |  |  Compose   |  | React Native  |
+  | Web Component|  | iOS 16+    |  | Android 8+ |  |   Component   |
+  +--------------+  +------------+  +------------+  +---------------+
+
+                    +---------------------+
+                    |    Design Tokens     |
+                    |   (W3C DTCG JSON)   |
+                    +----------+----------+
+                               |
+          +--------------------+--------------------+
+          |            |              |              |
+    CSS Variables  SwiftUI Assets  Compose Theme   RN StyleSheet</code></pre>
+    </div>
+
+    <h2>Shared Design Tokens</h2>
+    <p class="section-intro">
+      Design tokens are defined once in W3C DTCG format and compiled to platform-native formats. Every platform gets the exact same values.
+    </p>
+
+    <table class="token-table">
+      <thead>
+        <tr>
+          <th>Token</th>
+          <th>CSS</th>
+          <th>SwiftUI</th>
+          <th>Compose</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Primary</td>
+          <td><code>var(--civ-color-primary)</code></td>
+          <td><code>Color.civPrimary</code></td>
+          <td><code>CivTheme.colors.primary</code></td>
+        </tr>
+        <tr>
+          <td>Spacing 4</td>
+          <td><code>var(--civ-spacing-4)</code></td>
+          <td><code>CivSpacing.s4</code></td>
+          <td><code>CivTheme.spacing.s4</code></td>
+        </tr>
+        <tr>
+          <td>Font Body</td>
+          <td><code>var(--civ-font-body)</code></td>
+          <td><code>CivFont.body</code></td>
+          <td><code>CivTheme.typography.body</code></td>
+        </tr>
+        <tr>
+          <td>Error</td>
+          <td><code>var(--civ-color-error)</code></td>
+          <td><code>Color.civError</code></td>
+          <td><code>CivTheme.colors.error</code></td>
+        </tr>
+        <tr>
+          <td>Focus Ring</td>
+          <td><code>var(--civ-focus-ring)</code></td>
+          <td><code>CivStyle.focusRing</code></td>
+          <td><code>CivTheme.focusRing</code></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Package Structure</h2>
+    <div class="packages">
+      <div class="package-card">
+        <h3>@civui/schema</h3>
+        <p>Platform-neutral component schemas. The single source of truth for props, events, accessibility, and validation across all platforms.</p>
+      </div>
+      <div class="package-card">
+        <h3>@civui/codegen</h3>
+        <p>Code generator that reads schemas and produces idiomatic Lit, SwiftUI, Compose, and React Native components.</p>
+      </div>
+      <div class="package-card">
+        <h3>@civui/tokens</h3>
+        <p>W3C DTCG tokens compiled to CSS custom properties, Tailwind preset, JS constants, SwiftUI color/spacing assets, and Compose theme values.</p>
+      </div>
+      <div class="package-card">
+        <h3>@civui/forms</h3>
+        <p>Web components built with Lit 3 and Light DOM. Text input, select, checkbox, radio, combobox, date picker, file upload, and more.</p>
+      </div>
+      <div class="package-card">
+        <h3>CivUI for iOS</h3>
+        <p>SwiftUI views for iOS 16+ and macOS 13+. Native accessibility, Dynamic Type, and VoiceOver support built in.</p>
+      </div>
+      <div class="package-card">
+        <h3>CivUI for Android</h3>
+        <p>Jetpack Compose components for Android 8+. Material 3 foundation with CivUI design tokens and accessibility semantics.</p>
+      </div>
+      <div class="package-card">
+        <h3>@civui/react-native</h3>
+        <p>React Native companion components sharing the same prop APIs and design tokens as the web components.</p>
+      </div>
+    </div>
+
+    <div class="cta-section">
+      <a href="../storybook/" class="cta-link">Explore Components in Storybook</a>
+    </div>
+  </div>
+
+  <footer>
+    <p>CivUI &mdash; Civic Design System. MIT License.</p>
+  </footer>
+</body>
+</html>

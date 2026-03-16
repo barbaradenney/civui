@@ -42,8 +42,9 @@ jobs:
 
       # Assemble site: docs + /storybook/
       - run: |
-          mkdir -p _site
+          mkdir -p _site/features
           cp docs/index.html _site/
+          cp docs/features/*.html _site/features/
           mv storybook-static _site/storybook
 
       - uses: actions/configure-pages@v5

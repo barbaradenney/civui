@@ -91,13 +91,19 @@ function loadScalesConfig() {
   return JSON.parse(readFileSync(join(srcDir, 'scales.tokens.json'), 'utf-8'));
 }
 
+// Sanitize a token path segment for use in CSS custom property names.
+// CSS custom properties cannot contain dots, so replace them with underscores.
+function sanitizeCSSIdent(segment) {
+  return segment.replace(/\./g, '_');
+}
+
 // Flatten nested tokens into dot-path entries
 function flattenTokens(obj, prefix = '', result = []) {
   for (const [key, value] of Object.entries(obj)) {
     if (key.startsWith('$')) continue;
-    const path = prefix ? `${prefix}-${key}` : key;
+    const path = prefix ? `${prefix}-${sanitizeCSSIdent(key)}` : sanitizeCSSIdent(key);
     if (value.$value !== undefined) {
-      result.push({ path, value: value.$value, type: value.$type || '' });
+      result.push({ path, key, value: value.$value, type: value.$type || '' });
     } else if (typeof value === 'object') {
       flattenTokens(value, path, result);
     }
@@ -220,7 +226,7 @@ function buildScales(tokens, scalesConfig) {
       lines.push(`  --civ-typography-fontSize-${name}: ${value};`);
     }
     for (const [key, value] of Object.entries(cssSpacing)) {
-      lines.push(`  --civ-spacing-${key}: ${value};`);
+      lines.push(`  --civ-spacing-${sanitizeCSSIdent(key)}: ${value};`);
     }
     lines.push(`  --civ-typography-lineHeight-normal: ${lineHeight.body};`);
     lines.push(`  --civ-typography-lineHeight-tight: ${lineHeight.heading};`);

@@ -45,7 +45,11 @@ export class CivToggle extends CivBooleanFormElement {
             @click="${this._onToggle}"
             class="civ-toggle-track focus-visible:civ-focus-ring"
           >
-            <span class="civ-toggle-thumb" style="${thumbStyle}"></span>
+            <span class="civ-toggle-thumb" style="${thumbStyle}">
+              ${this.checked
+                ? html`<svg class="civ-toggle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>`
+                : nothing}
+            </span>
           </button>
         </div>
         ${renderHint(this._hintId, this.hint)}

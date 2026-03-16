@@ -132,10 +132,19 @@
 
   .civ-toggle-thumb {
     @apply civ-absolute civ-bg-white civ-rounded-full civ-shadow-sm;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 1.125em;
     height: 1.125em;
     top: 0.125em;
     transition: inset-inline-start 0.15s ease;
+  }
+
+  .civ-toggle-check {
+    width: 0.7em;
+    height: 0.7em;
+    color: var(--civ-color-primary-DEFAULT);
   }
 
   /* ── Segment ────────────────────────────────────────────────── */

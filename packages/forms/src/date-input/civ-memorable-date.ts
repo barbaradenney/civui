@@ -225,17 +225,17 @@ export class CivMemorableDate extends CivFormElement {
     const baseName = this.name || '';
     const monthSelect = this.querySelector(
       `civ-select[name="${baseName ? `${baseName}-month` : 'month'}"]`,
-    ) as any;
+    ) as HTMLElement | null;
     const dayInput = this.querySelector(
       `civ-text-input[name="${baseName ? `${baseName}-day` : 'day'}"]`,
-    ) as any;
+    ) as HTMLElement | null;
     const yearInput = this.querySelector(
       `civ-text-input[name="${baseName ? `${baseName}-year` : 'year'}"]`,
-    ) as any;
+    ) as HTMLElement | null;
 
-    if (monthSelect) this._month = monthSelect.value || '';
-    if (dayInput) this._day = dayInput.value || '';
-    if (yearInput) this._year = yearInput.value || '';
+    if (monthSelect) this._month = (monthSelect as HTMLElement & { value: string }).value || '';
+    if (dayInput) this._day = (dayInput as HTMLElement & { value: string }).value || '';
+    if (yearInput) this._year = (yearInput as HTMLElement & { value: string }).value || '';
   }
 
   private _updateFromChildren(fireChange: boolean): void {

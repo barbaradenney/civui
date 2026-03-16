@@ -301,7 +301,7 @@ export class CivForm extends CivBaseElement {
       return;
     }
 
-    dispatch(this, 'civ-submit', { formData: this.getFormData() });
+    dispatch(this, 'civ-submit', { formData: this.toFormData() });
     this.sendAnalytics('submit');
   }
 

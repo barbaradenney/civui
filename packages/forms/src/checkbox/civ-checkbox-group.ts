@@ -228,16 +228,17 @@ export class CivCheckboxGroup extends CivFormElement {
     e.stopPropagation();
 
     // Re-read checked state from children
-    const values: string[] = [];
+    const checkedValues: string[] = [];
     this._getCheckboxes().forEach((cb) => {
-      if (cb.checked) values.push(cb.value);
+      if (cb.checked) checkedValues.push(cb.value);
     });
 
-    this.value = this._serializeValue(values);
+    this.value = this._serializeValue(checkedValues);
     this._updateGroupFormValue();
 
-    dispatch(this, 'civ-input', { values: this.getCheckedValues() });
-    dispatch(this, 'civ-change', { values: this.getCheckedValues() });
+    const values = this.getCheckedValues();
+    dispatch(this, 'civ-input', { values });
+    dispatch(this, 'civ-change', { values });
     this.sendAnalytics('change');
   }
 

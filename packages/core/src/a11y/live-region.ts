@@ -29,7 +29,8 @@ const SR_ONLY_STYLES = {
   borderWidth: '0',
 };
 
-function createRegion(priority: 'polite' | 'assertive'): HTMLElement {
+function createRegion(priority: 'polite' | 'assertive'): HTMLElement | null {
+  if (typeof document === 'undefined') return null;
   const el = document.createElement('div');
   el.setAttribute('role', priority === 'assertive' ? 'alert' : 'status');
   el.setAttribute('aria-live', priority);
@@ -39,7 +40,8 @@ function createRegion(priority: 'polite' | 'assertive'): HTMLElement {
   return el;
 }
 
-function ensureRegion(priority: 'polite' | 'assertive'): HTMLElement {
+function ensureRegion(priority: 'polite' | 'assertive'): HTMLElement | null {
+  if (typeof document === 'undefined') return null;
   if (priority === 'assertive') {
     if (!assertiveRegion || !document.body.contains(assertiveRegion)) {
       assertiveRegion = createRegion('assertive');
@@ -58,6 +60,7 @@ function processQueue(priority: 'polite' | 'assertive'): void {
 
   const message = queue.shift() ?? '';
   const region = ensureRegion(priority);
+  if (!region) return;
 
   // Clear then set to ensure announcement even if same message
   region.textContent = '';

@@ -84,6 +84,27 @@ export class CivDatePicker extends CivFormElement {
   private _buttonId = this.generateId('btn');
   private _cleanupTrap: (() => void) | null = null;
   private _boundDocClick = this._onDocumentClick.bind(this);
+  private _cachedLocale = '';
+  private _cachedMonthNames: string[] = [];
+  private _cachedDayHeaders: { short: string; long: string }[] = [];
+
+  private get _monthNames(): string[] {
+    if (this._cachedLocale !== this.locale) {
+      this._cachedLocale = this.locale;
+      this._cachedMonthNames = getMonthNames(this.locale);
+      this._cachedDayHeaders = getDayOfWeekHeaders(this.locale, this.weekStartsOn);
+    }
+    return this._cachedMonthNames;
+  }
+
+  private get _dayHeaders(): { short: string; long: string }[] {
+    if (this._cachedLocale !== this.locale) {
+      this._cachedLocale = this.locale;
+      this._cachedMonthNames = getMonthNames(this.locale);
+      this._cachedDayHeaders = getDayOfWeekHeaders(this.locale, this.weekStartsOn);
+    }
+    return this._cachedDayHeaders;
+  }
 
   private get _constraints(): DateConstraints {
     return { min: this.min || undefined, max: this.max || undefined };
@@ -253,8 +274,8 @@ export class CivDatePicker extends CivFormElement {
     const cal = generateCalendarMonth(this._displayYear, this._displayMonth, {
       weekStartsOn: this.weekStartsOn,
     });
-    const headers = getDayOfWeekHeaders(this.locale, this.weekStartsOn);
-    const monthNames = getMonthNames(this.locale);
+    const headers = this._dayHeaders;
+    const monthNames = this._monthNames;
     const headingText = `${monthNames[this._displayMonth]} ${this._displayYear}`;
 
     const prevMonthDisabled = isMonthDisabled(
@@ -469,8 +490,7 @@ export class CivDatePicker extends CivFormElement {
       this._displayMonth = newMonth;
     }
     this._focusedDate = new Date(this._displayYear, this._displayMonth, 1);
-    const monthNames = getMonthNames(this.locale);
-    this.announce(`${monthNames[this._displayMonth]} ${this._displayYear}`);
+    this.announce(`${this._monthNames[this._displayMonth]} ${this._displayYear}`);
   }
 
   private _prevMonth(): void {

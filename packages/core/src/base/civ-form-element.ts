@@ -155,8 +155,6 @@ export class CivFormElement extends CivBaseElement {
 
   override updated(changed: Map<string, unknown>): void {
     super.updated(changed);
-    // Invalidate cached anchor — DOM may have changed after render
-    this._cachedAnchor = undefined;
     // Error announcement is handled by renderError()'s role="alert" attribute.
     // No manual announce() needed — role="alert" triggers immediate SR announcement.
     if (changed.has('value')) {

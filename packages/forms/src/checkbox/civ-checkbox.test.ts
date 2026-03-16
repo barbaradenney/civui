@@ -64,7 +64,7 @@ describe('civ-checkbox', () => {
       '<civ-checkbox label="Agree" description="By checking this you agree to our terms"></civ-checkbox>',
     );
 
-    const desc = el.querySelector('span');
+    const desc = el.querySelector('.civ-check-description');
     expect(desc).not.toBeNull();
     expect(desc!.textContent).toContain('By checking this');
   });
@@ -72,8 +72,6 @@ describe('civ-checkbox', () => {
   it('renders tile variant with border', async () => {
     const el = await fixture('<civ-checkbox label="Option A" tile></civ-checkbox>');
 
-    const wrapper = el.querySelector('div > div');
-    expect(wrapper).not.toBeNull();
     // Tile variant should have civ-check-tile class on outer wrapper
     const outerDiv = el.querySelector('.civ-check-tile');
     expect(outerDiv).not.toBeNull();

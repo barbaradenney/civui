@@ -39,7 +39,7 @@ export class CivCheckbox extends CivFormElement {
 
   override render() {
     const content = html`
-      <div class="civ-flex civ-items-start">
+      <label class="civ-flex civ-items-start ${this.tile ? 'civ-cursor-pointer' : ''}" for="${this._inputId}">
         <input
           class="civ-check-input focus-visible:civ-focus-ring"
           id="${this._inputId}"
@@ -56,17 +56,17 @@ export class CivCheckbox extends CivFormElement {
           @change="${this._onCheckboxChange}"
         />
         <div>
-          <label class="civ-check-label" for="${this._inputId}">
+          <span class="civ-check-label">
             ${this.label}
             ${this.required
               ? html`<abbr class="civ-required-mark" title="required">*</abbr>`
               : nothing}
-          </label>
+          </span>
           ${this.description
             ? html`<span id="${this._descriptionId}" class="civ-check-description">${this.description}</span>`
             : nothing}
         </div>
-      </div>
+      </label>
     `;
 
     return html`

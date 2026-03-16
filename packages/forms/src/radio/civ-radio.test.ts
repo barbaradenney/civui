@@ -65,7 +65,7 @@ describe('civ-radio', () => {
       '<civ-radio label="Option A" value="a" description="This is option A"></civ-radio>',
     );
 
-    const desc = el.querySelector('span');
+    const desc = el.querySelector('.civ-check-description');
     expect(desc).not.toBeNull();
     expect(desc!.textContent).toContain('This is option A');
   });

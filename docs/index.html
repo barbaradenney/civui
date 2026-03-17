@@ -223,6 +223,34 @@
       </div>
     </div>
 
+    <h2>Design Philosophy</h2>
+    <div class="features">
+      <div class="feature">
+        <h3>Use the Platform</h3>
+        <p>CivUI uses native <code>&lt;select&gt;</code>, <code>&lt;input&gt;</code>, <code>&lt;textarea&gt;</code>, <code>&lt;fieldset&gt;</code>, and <code>&lt;button&gt;</code> elements &mdash; not JavaScript re-implementations. Native elements get keyboard navigation, form participation, and screen reader support for free. Custom code is only added for components that don't exist natively.</p>
+      </div>
+      <div class="feature">
+        <h3>System Fonts, No Downloads</h3>
+        <p>Public Sans with a system font fallback stack. On most government devices, these fonts are already installed &mdash; zero network requests. No Google Fonts CDN, no flash of unstyled text, no layout shift.</p>
+      </div>
+      <div class="feature">
+        <h3>CSS Over JavaScript</h3>
+        <p>Visual states like error borders, disabled opacity, and selection highlights are handled with CSS attribute selectors (<code>[aria-invalid]</code>, <code>:disabled</code>, <code>:has(:checked)</code>) &mdash; not JavaScript class toggling. The browser handles styling; JavaScript just sets the semantic attributes.</p>
+      </div>
+      <div class="feature">
+        <h3>Border Radius Signals Interactivity</h3>
+        <p>Only clickable elements get rounded corners &mdash; buttons, inputs, tiles. Static containers like alerts and error summaries use sharp edges. This visual convention helps users identify interactive elements at a glance.</p>
+      </div>
+      <div class="feature">
+        <h3>Underlines Signal Navigation</h3>
+        <p>Text is only underlined when it navigates somewhere. Buttons styled as links (<code>href</code> prop) get underlines; action buttons do not. This preserves the semantic distinction between navigation and action.</p>
+      </div>
+      <div class="feature">
+        <h3>Every Byte Is Earned</h3>
+        <p>No icon fonts (Unicode characters), no CSS-in-JS (static Tailwind), no hidden input hacks (ElementInternals), no polyfills (ES2022 target). Lit (~16K gzipped) is the only runtime dependency. The full forms package is 113K minified.</p>
+      </div>
+    </div>
+
     <h2>Packages</h2>
     <h3>Web Components</h3>
     <div class="packages">

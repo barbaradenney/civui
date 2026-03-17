@@ -7,6 +7,8 @@
   "type": "module",
   "scripts": {
     "build": "turbo build",
+    "postbuild": "node scripts/minify.js",
+    "minify": "node scripts/minify.js",
     "dev": "turbo dev",
     "test": "turbo test",
     "test:unit": "vitest run",
@@ -23,6 +25,7 @@
     "generate:dry-run": "pnpm --filter @civui/codegen generate:dry-run",
     "generate:validate": "pnpm --filter @civui/codegen validate",
     "generate:diff": "pnpm --filter @civui/codegen diff",
+    "build:cdn": "node scripts/build-cdn.js",
     "validate": "pnpm lint && pnpm typecheck && pnpm test"
   },
   "devDependencies": {
@@ -34,6 +37,7 @@
     "@typescript-eslint/eslint-plugin": "^8.0.0",
     "@typescript-eslint/parser": "^8.0.0",
     "autoprefixer": "^10.4.0",
+    "esbuild": "^0.27.4",
     "eslint": "^9.0.0",
     "jsdom": "^28.1.0",
     "postcss": "^8.4.0",

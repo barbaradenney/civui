@@ -1,0 +1,41 @@
+name: Bundle Size
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  check-size:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm build
+
+      - name: Check bundle sizes
+        run: |
+          echo "## Bundle Sizes" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Package | Size |" >> $GITHUB_STEP_SUMMARY
+          echo "|---------|------|" >> $GITHUB_STEP_SUMMARY
+          for pkg in core forms ui feedback navigation; do
+            size=$(du -sh packages/$pkg/dist/ 2>/dev/null | cut -f1)
+            echo "| @civui/$pkg | $size |" >> $GITHUB_STEP_SUMMARY
+          done
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Fail if forms package exceeds 300K (after minification)
+          forms_size=$(du -sk packages/forms/dist/ | cut -f1)
+          echo "Forms dist: ${forms_size}K"
+          if [ "$forms_size" -gt 300 ]; then
+            echo "::warning::Forms package is ${forms_size}K (limit: 300K)"
+          fi

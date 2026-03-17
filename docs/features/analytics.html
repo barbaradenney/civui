@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Analytics Events - CivUI</title>
+  <style>
+    :root {
+      --color-primary: #005ea2;
+      --color-primary-dark: #1a4480;
+      --color-base-darkest: #1b1b1b;
+      --color-base-dark: #565c65;
+      --color-base-light: #a9aeb1;
+      --color-base-lightest: #f0f0f0;
+      --color-white: #ffffff;
+      --color-error: #b50909;
+      --color-success: #00a91c;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Public Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: var(--color-base-darkest);
+      line-height: 1.6;
+    }
+
+    .top-nav {
+      background: var(--color-base-lightest);
+      padding: 0.75rem 2rem;
+    }
+
+    .top-nav a {
+      color: var(--color-primary);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+
+    .top-nav a:hover { text-decoration: underline; }
+
+    .hero {
+      background: var(--color-primary-dark);
+      color: var(--color-white);
+      padding: 4rem 2rem;
+      text-align: center;
+    }
+
+    .hero h1 { font-size: 3rem; margin-bottom: 1rem; }
+    .hero p { font-size: 1.25rem; max-width: 600px; margin: 0 auto 2rem; opacity: 0.9; }
+
+    .content { max-width: 960px; margin: 0 auto; padding: 3rem 2rem; }
+
+    h2 { font-size: 1.75rem; margin: 2rem 0 1rem; color: var(--color-primary-dark); }
+    h3 { font-size: 1.25rem; margin: 1.5rem 0 0.75rem; }
+
+    p { margin-bottom: 1rem; }
+
+    pre {
+      background: var(--color-base-lightest);
+      padding: 1rem 1.5rem;
+      border-radius: 4px;
+      overflow-x: auto;
+      font-size: 0.875rem;
+      margin: 1rem 0;
+    }
+
+    code {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+    }
+
+    code:not(pre code) {
+      background: var(--color-base-lightest);
+      padding: 0.125rem 0.375rem;
+      border-radius: 3px;
+      font-size: 0.875em;
+    }
+
+    .analytics-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0 1.5rem;
+    }
+
+    .analytics-table th,
+    .analytics-table td {
+      text-align: left;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--color-base-light);
+      font-size: 0.875rem;
+      vertical-align: top;
+    }
+
+    .analytics-table th {
+      background: var(--color-base-lightest);
+      font-weight: 600;
+    }
+
+    .analytics-table td code {
+      font-size: 0.8125rem;
+    }
+
+    .steps {
+      list-style: none;
+      padding: 0;
+      margin: 1.5rem 0;
+      counter-reset: step-counter;
+    }
+
+    .steps li {
+      padding: 0.75rem 0 0.75rem 2.5rem;
+      position: relative;
+      border-bottom: 1px solid var(--color-base-lightest);
+      counter-increment: step-counter;
+    }
+
+    .steps li::before {
+      content: counter(step-counter);
+      position: absolute;
+      left: 0;
+      top: 0.75rem;
+      width: 1.75rem;
+      height: 1.75rem;
+      background: var(--color-primary);
+      color: var(--color-white);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.875rem;
+      font-weight: 700;
+    }
+
+    .callout {
+      background: var(--color-base-lightest);
+      border-left: 4px solid var(--color-primary);
+      padding: 1rem 1.5rem;
+      margin: 1.5rem 0;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .callout strong {
+      color: var(--color-primary-dark);
+    }
+
+    .bottom-links {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+    }
+
+    .bottom-link {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      border-radius: 4px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: background 0.15s;
+    }
+
+    .bottom-link--primary {
+      background: var(--color-primary);
+      color: var(--color-white);
+    }
+
+    .bottom-link--primary:hover { background: var(--color-primary-dark); }
+
+    .bottom-link--secondary {
+      background: var(--color-base-lightest);
+      color: var(--color-base-darkest);
+      border: 1px solid var(--color-base-light);
+    }
+
+    .bottom-link--secondary:hover { background: #e6e6e6; }
+
+    footer {
+      border-top: 1px solid var(--color-base-light);
+      padding: 2rem;
+      text-align: center;
+      color: var(--color-base-dark);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <nav class="top-nav">
+    <a href="../">&larr; Back to CivUI</a>
+  </nav>
+
+  <div class="hero">
+    <h1>Analytics Events</h1>
+    <p>PII-safe, composable analytics events built into every component. Wire to Google Analytics, Mixpanel, or any platform with a single listener.</p>
+  </div>
+
+  <div class="content">
+
+    <h2>How It Works</h2>
+    <p>
+      CivUI's analytics system uses standard DOM events. There is no vendor lock-in, no SDK to
+      install, and no configuration file. Every component emits a <code>civ-analytics</code> custom
+      event on user interactions, and you wire that event to whatever analytics platform your agency uses.
+    </p>
+    <ol class="steps">
+      <li>
+        <strong>Components fire <code>civ-analytics</code> custom DOM events</strong> on user
+        interactions &mdash; form changes, button clicks, form submissions, and more.
+      </li>
+      <li>
+        <strong>Events bubble up through the DOM</strong> &mdash; listen at the document level, on a
+        specific form, or on an individual component. Standard event propagation, no magic.
+      </li>
+      <li>
+        <strong>Wire the listener to your analytics platform</strong> &mdash; Google Analytics,
+        Mixpanel, Amplitude, a custom backend, or anything else that accepts JavaScript calls.
+      </li>
+    </ol>
+    <p>The simplest possible setup:</p>
+    <pre><code>document.addEventListener('civ-analytics', (e) => {
+  const { componentName, action, fieldName } = e.detail;
+
+  // Google Analytics
+  gtag('event', action, {
+    event_category: componentName,
+    event_label: fieldName,
+  });
+});</code></pre>
+
+    <h2>Event Payload</h2>
+    <p>
+      Every <code>civ-analytics</code> event carries a detail object with the
+      <code>AnalyticsEventDetail</code> shape:
+    </p>
+    <pre><code>{
+  componentName: string;    // "civ-text-input", "civ-checkbox"
+  action: string;           // "change", "click", "submit"
+  fieldName?: string;       // from the name prop
+  label?: string;           // from the label/legend prop
+  timestamp: string;        // ISO 8601
+  details?: Record&lt;string, string | number | boolean&gt;;
+}</code></pre>
+    <div class="callout">
+      <strong>PII Safety: Values are never included.</strong> The event payload contains only metadata
+      &mdash; component name, field name, action type. A checkbox fires
+      <code>{ action: "change", checked: true }</code> but never the checkbox's value. A text input
+      fires <code>{ action: "change" }</code> but never what the user typed. This means analytics
+      events are safe to send to third-party platforms without risking personally identifiable
+      information.
+    </div>
+
+    <h2>What Each Component Tracks</h2>
+    <p>
+      Every CivUI component fires analytics events automatically. The table below shows what each
+      component tracks and when.
+    </p>
+    <table class="analytics-table">
+      <thead>
+        <tr>
+          <th>Component</th>
+          <th>Action</th>
+          <th>Extra Details</th>
+          <th>When</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>text-input</code></td>
+          <td><code>change</code></td>
+          <td>&mdash;</td>
+          <td>Value committed (blur/enter)</td>
+        </tr>
+        <tr>
+          <td><code>textarea</code></td>
+          <td><code>change</code></td>
+          <td>&mdash;</td>
+          <td>Value committed</td>
+        </tr>
+        <tr>
+          <td><code>select</code></td>
+          <td><code>change</code></td>
+          <td>&mdash;</td>
+          <td>Option selected</td>
+        </tr>
+        <tr>
+          <td><code>combobox</code></td>
+          <td><code>select</code></td>
+          <td>&mdash;</td>
+          <td>Option selected from dropdown</td>
+        </tr>
+        <tr>
+          <td><code>checkbox</code></td>
+          <td><code>change</code></td>
+          <td><code>{ checked }</code></td>
+          <td>Toggled</td>
+        </tr>
+        <tr>
+          <td><code>checkbox-group</code></td>
+          <td><code>change</code></td>
+          <td>&mdash;</td>
+          <td>Any child toggled</td>
+        </tr>
+        <tr>
+          <td><code>radio-group</code></td>
+          <td><code>change</code></td>
+          <td>&mdash;</td>
+          <td>Selection changed</td>
+        </tr>
+        <tr>
+          <td><code>toggle</code></td>
+          <td><code>change</code></td>
+          <td><code>{ checked }</code></td>
+          <td>Toggled</td>
+        </tr>
+        <tr>
+          <td><code>date-picker</code></td>
+          <td><code>change</code></td>
+          <td>&mdash;</td>
+          <td>Date selected</td>
+        </tr>
+        <tr>
+          <td><code>memorable-date</code></td>
+          <td><code>change</code></td>
+          <td>&mdash;</td>
+          <td>Date committed</td>
+        </tr>
+        <tr>
+          <td><code>segmented-control</code></td>
+          <td><code>change</code></td>
+          <td>&mdash;</td>
+          <td>Segment selected</td>
+        </tr>
+        <tr>
+          <td><code>file-upload</code></td>
+          <td><code>upload</code></td>
+          <td><code>{ fileCount }</code></td>
+          <td>Files added</td>
+        </tr>
+        <tr>
+          <td><code>file-upload</code></td>
+          <td><code>remove</code></td>
+          <td><code>{ fileCount }</code></td>
+          <td>File removed</td>
+        </tr>
+        <tr>
+          <td><code>form</code></td>
+          <td><code>submit</code></td>
+          <td>&mdash;</td>
+          <td>Valid submission</td>
+        </tr>
+        <tr>
+          <td><code>form</code></td>
+          <td><code>invalid</code></td>
+          <td><code>{ errorCount }</code></td>
+          <td>Validation failed</td>
+        </tr>
+        <tr>
+          <td><code>button</code></td>
+          <td><code>click</code></td>
+          <td>&mdash;</td>
+          <td>Clicked</td>
+        </tr>
+        <tr>
+          <td><code>alert</code></td>
+          <td><code>dismiss</code></td>
+          <td>&mdash;</td>
+          <td>Dismissed</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Opt-Out</h2>
+    <p>
+      Any component can opt out of analytics events with the <code>disable-analytics</code> attribute.
+      When present, the component will not fire any <code>civ-analytics</code> events.
+    </p>
+    <pre><code>&lt;!-- No analytics events fired for this field --&gt;
+&lt;civ-text-input label="SSN" name="ssn" disable-analytics&gt;&lt;/civ-text-input&gt;</code></pre>
+    <p>
+      This is useful for sensitive fields where even metadata could be a privacy concern. For example,
+      a Social Security number field should not emit analytics events because the field name alone
+      (<code>ssn</code>) reveals that a user interacted with that field on the form. Use
+      <code>disable-analytics</code> on any field where tracking interaction metadata is inappropriate.
+    </p>
+
+    <h2>Platform Integration Examples</h2>
+    <p>
+      The <code>civ-analytics</code> event works with any analytics platform that accepts JavaScript
+      calls. Here are three common integrations.
+    </p>
+
+    <h3>Google Analytics (gtag)</h3>
+    <pre><code>document.addEventListener('civ-analytics', (e) => {
+  gtag('event', e.detail.action, {
+    event_category: e.detail.componentName,
+    event_label: e.detail.fieldName,
+  });
+});</code></pre>
+
+    <h3>Mixpanel</h3>
+    <pre><code>document.addEventListener('civ-analytics', (e) => {
+  mixpanel.track(e.detail.action, {
+    component: e.detail.componentName,
+    field: e.detail.fieldName,
+  });
+});</code></pre>
+
+    <h3>Custom Backend</h3>
+    <pre><code>document.addEventListener('civ-analytics', (e) => {
+  fetch('/api/analytics', {
+    method: 'POST',
+    body: JSON.stringify(e.detail),
+  });
+});</code></pre>
+
+    <h2>Form Funnel Tracking</h2>
+    <p>
+      A common use case is tracking form completion funnels &mdash; how many users start a form, how
+      many hit validation errors, and how many successfully submit. The <code>civ-analytics</code>
+      events make this straightforward.
+    </p>
+    <pre><code>document.addEventListener('civ-analytics', (e) => {
+  const { action, componentName, details } = e.detail;
+
+  if (action === 'submit') {
+    gtag('event', 'form_complete', { form: componentName });
+  }
+  if (action === 'invalid') {
+    gtag('event', 'form_error', {
+      form: componentName,
+      error_count: details?.errorCount,
+    });
+  }
+});</code></pre>
+    <p>
+      Combined with field-level <code>change</code> events, you can build a complete picture of how
+      users move through a form &mdash; which fields they interact with, where they encounter errors,
+      and where they drop off &mdash; all without capturing any PII.
+    </p>
+
+    <div class="bottom-links">
+      <a href="../storybook/" class="bottom-link bottom-link--primary">View Storybook</a>
+      <a href="../" class="bottom-link bottom-link--secondary">Back to CivUI</a>
+    </div>
+  </div>
+
+  <footer>
+    <p>CivUI &mdash; Civic Design System. MIT License.</p>
+  </footer>
+</body>
+</html>

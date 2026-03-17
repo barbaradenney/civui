@@ -24,10 +24,16 @@ const preview: Preview = {
       const theme = context.globals.theme || 'light';
       const isDark = theme === 'dark';
 
-      // Apply theme to <html> so :root[data-civ-theme="dark"] overrides take effect
-      document.documentElement.setAttribute('data-civ-theme', theme);
-      document.body.style.backgroundColor = isDark ? '#1b1b1b' : '#ffffff';
-      document.body.style.color = isDark ? '#f0f0f0' : '#1b1b1b';
+      // Apply theme to both the current document AND any parent document
+      // (handles both canvas mode and iframe-based docs mode)
+      const docs = [document];
+      try { if (window.parent?.document) docs.push(window.parent.document); } catch {}
+
+      for (const doc of docs) {
+        doc.documentElement.setAttribute('data-civ-theme', theme);
+        doc.body.style.backgroundColor = isDark ? '#1b1b1b' : '#ffffff';
+        doc.body.style.color = isDark ? '#f0f0f0' : '#1b1b1b';
+      }
 
       return story();
     },

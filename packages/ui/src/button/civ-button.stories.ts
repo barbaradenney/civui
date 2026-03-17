@@ -7,6 +7,7 @@ const meta: Meta = {
   component: 'civ-button',
   tags: ['autodocs'],
   argTypes: {
+    label: { control: 'text' },
     variant: {
       control: 'select',
       options: ['primary', 'secondary', 'outline', 'danger', 'unstyled'],
@@ -28,7 +29,24 @@ export default meta;
 type Story = StoryObj;
 
 export const Default: Story = {
-  render: () => html`<civ-button>Default button</civ-button>`,
+  args: {
+    label: 'Default button',
+    variant: 'primary',
+    size: 'default',
+    type: 'button',
+    disabled: false,
+    href: '',
+  },
+  render: (args) => html`
+    <civ-button
+      label="${args.label}"
+      variant="${args.variant}"
+      size="${args.size}"
+      type="${args.type}"
+      href="${args.href || ''}"
+      ?disabled="${args.disabled}"
+    ></civ-button>
+  `,
 };
 
 export const Variants: Story = {

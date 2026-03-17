@@ -25,11 +25,13 @@
   }
 
   .civ-hint {
-    @apply civ-block civ-mb-1 civ-text-sm civ-text-base;
+    @apply civ-block civ-mb-1 civ-text-sm;
+    color: var(--civ-color-base-DEFAULT);
   }
 
   .civ-hint--group {
-    @apply civ-block civ-mb-2 civ-text-sm civ-text-base;
+    @apply civ-block civ-mb-2 civ-text-sm;
+    color: var(--civ-color-base-DEFAULT);
   }
 
   .civ-error-text {
@@ -42,7 +44,9 @@
 
   .civ-input {
     @apply civ-block civ-w-full civ-border civ-rounded civ-px-2 civ-py-1.5
-           civ-text-base civ-font-sans civ-text-base-darkest civ-bg-white civ-border-base-light;
+           civ-font-sans civ-bg-white civ-border-base-light;
+    font-size: var(--civ-typography-fontSize-base);
+    color: var(--civ-color-base-darkest);
   }
 
   .civ-select-field {
@@ -181,7 +185,8 @@
   }
 
   .civ-combobox-option {
-    @apply civ-px-3 civ-py-2 civ-text-base civ-cursor-pointer;
+    @apply civ-px-3 civ-py-2 civ-cursor-pointer;
+    font-size: var(--civ-typography-fontSize-base);
   }
 
   /* ── Date Picker ────────────────────────────────────────────── */
@@ -306,9 +311,10 @@
 
   .civ-btn {
     @apply civ-inline-flex civ-items-center civ-justify-center civ-gap-2
-           civ-font-sans civ-font-bold civ-text-base civ-rounded
+           civ-font-sans civ-font-bold civ-rounded
            civ-px-5 civ-py-3 civ-border civ-cursor-pointer
            civ-transition-colors;
+    font-size: var(--civ-typography-fontSize-base);
   }
 
   /* When a button renders as a link (<a>), underline to signal navigation */

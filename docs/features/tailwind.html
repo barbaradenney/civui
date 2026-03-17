@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tailwind CSS Architecture - CivUI</title>
+  <style>
+    :root {
+      --color-primary: #005ea2;
+      --color-primary-dark: #1a4480;
+      --color-base-darkest: #1b1b1b;
+      --color-base-dark: #565c65;
+      --color-base-light: #a9aeb1;
+      --color-base-lightest: #f0f0f0;
+      --color-white: #ffffff;
+      --color-error: #b50909;
+      --color-success: #00a91c;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Public Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: var(--color-base-darkest);
+      line-height: 1.6;
+    }
+
+    .top-nav {
+      background: var(--color-base-lightest);
+      padding: 0.75rem 2rem;
+    }
+
+    .top-nav a {
+      color: var(--color-primary);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+
+    .top-nav a:hover { text-decoration: underline; }
+
+    .hero {
+      background: var(--color-primary-dark);
+      color: var(--color-white);
+      padding: 4rem 2rem;
+      text-align: center;
+    }
+
+    .hero h1 { font-size: 3rem; margin-bottom: 1rem; }
+    .hero p { font-size: 1.25rem; max-width: 600px; margin: 0 auto 2rem; opacity: 0.9; }
+
+    .content { max-width: 960px; margin: 0 auto; padding: 3rem 2rem; }
+
+    h2 { font-size: 1.75rem; margin: 2rem 0 1rem; color: var(--color-primary-dark); }
+    h3 { font-size: 1.25rem; margin: 1.5rem 0 0.75rem; }
+
+    p { margin-bottom: 1rem; }
+
+    pre {
+      background: var(--color-base-lightest);
+      padding: 1rem 1.5rem;
+      border-radius: 4px;
+      overflow-x: auto;
+      font-size: 0.875rem;
+      margin: 1rem 0;
+    }
+
+    code {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+    }
+
+    code:not(pre code) {
+      background: var(--color-base-lightest);
+      padding: 0.125rem 0.375rem;
+      border-radius: 3px;
+      font-size: 0.875em;
+    }
+
+    .apply-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0 1.5rem;
+    }
+
+    .apply-table th,
+    .apply-table td {
+      text-align: left;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--color-base-light);
+      font-size: 0.875rem;
+      vertical-align: top;
+    }
+
+    .apply-table th {
+      background: var(--color-base-lightest);
+      font-weight: 600;
+    }
+
+    .apply-table td code {
+      font-size: 0.8125rem;
+    }
+
+    .chain {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin: 1.5rem 0;
+    }
+
+    .chain-step {
+      background: var(--color-base-lightest);
+      border: 1px solid var(--color-base-light);
+      border-radius: 4px;
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+
+    .chain-arrow {
+      color: var(--color-base-dark);
+      font-size: 1.25rem;
+    }
+
+    .principle-list {
+      list-style: none;
+      padding: 0;
+      margin: 1rem 0;
+    }
+
+    .principle-list li {
+      padding: 0.5rem 0 0.5rem 1.5rem;
+      position: relative;
+      border-bottom: 1px solid var(--color-base-lightest);
+    }
+
+    .principle-list li::before {
+      content: "\2713";
+      position: absolute;
+      left: 0;
+      color: var(--color-success);
+      font-weight: bold;
+    }
+
+    .prefix-examples {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+
+    .prefix-example {
+      background: var(--color-base-lightest);
+      padding: 0.75rem 1rem;
+      border-radius: 4px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.875rem;
+    }
+
+    .bottom-links {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+    }
+
+    .bottom-link {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      border-radius: 4px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: background 0.15s;
+    }
+
+    .bottom-link--primary {
+      background: var(--color-primary);
+      color: var(--color-white);
+    }
+
+    .bottom-link--primary:hover { background: var(--color-primary-dark); }
+
+    .bottom-link--secondary {
+      background: var(--color-base-lightest);
+      color: var(--color-base-darkest);
+      border: 1px solid var(--color-base-light);
+    }
+
+    .bottom-link--secondary:hover { background: #e6e6e6; }
+
+    footer {
+      border-top: 1px solid var(--color-base-light);
+      padding: 2rem;
+      text-align: center;
+      color: var(--color-base-dark);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <nav class="top-nav">
+    <a href="../">&larr; Back to CivUI</a>
+  </nav>
+
+  <div class="hero">
+    <h1>Tailwind CSS Architecture</h1>
+    <p>How CivUI uses Tailwind with the <code style="background: rgba(255,255,255,0.15); padding: 0.125rem 0.5rem; border-radius: 3px;">civ-</code> prefix and <code style="background: rgba(255,255,255,0.15); padding: 0.125rem 0.5rem; border-radius: 3px;">@apply</code> for consistent, conflict-free component styling.</p>
+  </div>
+
+  <div class="content">
+
+    <h2>The civ- Prefix</h2>
+    <p>
+      Every Tailwind utility in CivUI uses the <code>civ-</code> prefix. Government websites frequently
+      ship with existing CSS frameworks — Tailwind, Bootstrap, USWDS — and bare utility classes like
+      <code>p-4</code> or <code>text-sm</code> would collide with those. The prefix guarantees that
+      CivUI styles never interfere with the host page's CSS, no matter what else is loaded.
+    </p>
+    <div class="prefix-examples">
+      <div class="prefix-example">civ-p-4</div>
+      <div class="prefix-example">civ-text-error</div>
+      <div class="prefix-example">civ-border-primary</div>
+      <div class="prefix-example">civ-bg-white</div>
+      <div class="prefix-example">civ-font-bold</div>
+      <div class="prefix-example">civ-rounded</div>
+      <div class="prefix-example">civ-w-full</div>
+      <div class="prefix-example">civ-block</div>
+    </div>
+    <p>
+      This means a government agency can drop CivUI into an existing site that already uses
+      unprefixed Tailwind or Bootstrap without any class name conflicts. Each <code>civ-</code> utility
+      maps one-to-one with its standard Tailwind counterpart — <code>civ-p-4</code> does exactly what
+      <code>p-4</code> does, but in its own namespace.
+    </p>
+
+    <h2>Component Classes with @apply</h2>
+    <p>
+      Rather than scattering 10-15 utility classes across every component template, CivUI defines
+      semantic component classes like <code>.civ-input</code>, <code>.civ-label</code>, and
+      <code>.civ-btn</code>. Each class bundles its Tailwind utilities via <code>@apply</code>,
+      keeping templates clean and styling consistent across all components.
+    </p>
+
+    <table class="apply-table">
+      <thead>
+        <tr>
+          <th>Component Class</th>
+          <th>@apply Utilities</th>
+          <th>Purpose</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>.civ-label</code></td>
+          <td><code>civ-block civ-mb-0 civ-font-bold</code><br>+ <code>font-size: var(--civ-typography-fontSize-base)</code><br>+ <code>color: var(--civ-color-base-darkest)</code></td>
+          <td>Bold label text in the darkest base color, displayed as a block element</td>
+        </tr>
+        <tr>
+          <td><code>.civ-input</code></td>
+          <td><code>civ-block civ-w-full civ-border civ-rounded civ-px-2 civ-py-1.5 civ-text-base civ-font-sans civ-text-base-darkest civ-bg-white civ-border-base-light</code></td>
+          <td>Full-width block input with border, rounded corners, horizontal and vertical padding, system font</td>
+        </tr>
+        <tr>
+          <td><code>.civ-btn</code></td>
+          <td><code>civ-inline-flex civ-items-center civ-justify-center civ-gap-2 civ-font-sans civ-font-bold civ-text-base civ-rounded civ-px-5 civ-py-3 civ-border civ-cursor-pointer civ-transition-colors</code></td>
+          <td>Inline-flex button with centered content, icon gap, bold font, generous padding, pointer cursor, color transitions</td>
+        </tr>
+        <tr>
+          <td><code>.civ-check-tile</code></td>
+          <td><code>civ-relative civ-border civ-rounded civ-border-base-light civ-cursor-pointer</code></td>
+          <td>Tile-style checkbox or radio with border and pointer cursor, becomes highlighted when checked</td>
+        </tr>
+        <tr>
+          <td><code>.civ-alert</code></td>
+          <td><code>civ-p-4 civ-mb-4 civ-border-s-4</code></td>
+          <td>Alert container with padding, bottom margin, and a left accent border for status indication</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>
+      The benefit: a component template uses <code>class="civ-input"</code> instead of listing 11
+      separate utility classes. This makes templates readable, keeps styling consistent across all
+      instances of each element type, and creates a single place to update the look of every input,
+      button, or label in the system.
+    </p>
+
+    <h2>Design Token Integration</h2>
+    <p>
+      Tailwind's color, spacing, and typography values in CivUI are not hardcoded. They come from
+      CSS custom properties generated by the token build pipeline. The token system is the single
+      source of truth.
+    </p>
+    <p>
+      For example, when you write <code>civ-text-primary</code>, Tailwind resolves it to
+      <code>color: var(--civ-color-primary-DEFAULT)</code>. That CSS variable is generated by the
+      token build from the design token <code>color.primary.DEFAULT</code> defined in the W3C DTCG
+      JSON files.
+    </p>
+    <p>The full chain:</p>
+    <div class="chain">
+      <span class="chain-step">Token JSON</span>
+      <span class="chain-arrow">&rarr;</span>
+      <span class="chain-step">Build Script</span>
+      <span class="chain-arrow">&rarr;</span>
+      <span class="chain-step">CSS Variables</span>
+      <span class="chain-arrow">&rarr;</span>
+      <span class="chain-step">Tailwind Config</span>
+      <span class="chain-arrow">&rarr;</span>
+      <span class="chain-step">Component Classes</span>
+    </div>
+    <pre><code>/* Token JSON (W3C DTCG format) */
+{
+  "color": {
+    "primary": {
+      "DEFAULT": { "$value": "#005ea2", "$type": "color" }
+    }
+  }
+}
+
+/* Generated CSS variable */
+--civ-color-primary-DEFAULT: #005ea2;
+
+/* Tailwind config maps to the variable */
+primary: { DEFAULT: 'var(--civ-color-primary-DEFAULT)' }
+
+/* Usage in @apply */
+.civ-btn--primary {
+  @apply civ-bg-primary civ-text-white civ-border-primary;
+}</code></pre>
+    <p>
+      This means changing a token value in the JSON source automatically propagates through the
+      CSS variables, into Tailwind, and out to every component that uses it. Dark mode works the
+      same way: a separate <code>color-dark.tokens.json</code> generates
+      <code>@media (prefers-color-scheme: dark)</code> overrides for the same CSS variables.
+    </p>
+
+    <h2>State Selectors</h2>
+    <p>
+      Component states are handled via CSS attribute selectors and pseudo-classes rather than
+      JavaScript class toggling. The component sets the appropriate ARIA attribute or native state,
+      and CSS handles the visual change. This keeps styling declarative and ensures that the visual
+      state always matches the accessibility state.
+    </p>
+
+    <table class="apply-table">
+      <thead>
+        <tr>
+          <th>Selector</th>
+          <th>Styles Applied</th>
+          <th>What it does</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>.civ-input[aria-invalid="true"]</code></td>
+          <td><code>civ-border-error civ-border-s-4</code></td>
+          <td>Red border with thicker left accent on invalid inputs</td>
+        </tr>
+        <tr>
+          <td><code>.civ-input:disabled</code></td>
+          <td><code>civ-opacity-50 civ-cursor-not-allowed civ-bg-base-lightest</code></td>
+          <td>Faded appearance with not-allowed cursor on disabled inputs</td>
+        </tr>
+        <tr>
+          <td><code>.civ-check-tile:has(:checked)</code></td>
+          <td><code>civ-border-primary civ-bg-primary-lightest</code></td>
+          <td>Blue border and light blue background on selected tile checkboxes/radios</td>
+        </tr>
+        <tr>
+          <td><code>.civ-toggle-track[aria-checked="true"]</code></td>
+          <td><code>civ-bg-primary civ-border-primary</code></td>
+          <td>Solid blue track when toggle is switched on</td>
+        </tr>
+        <tr>
+          <td><code>.civ-segment-btn[aria-checked="true"]</code></td>
+          <td><code>civ-bg-primary civ-text-white civ-border-primary</code></td>
+          <td>Blue background with white text for the active segment</td>
+        </tr>
+        <tr>
+          <td><code>.civ-dropzone[data-dragging]</code></td>
+          <td><code>civ-border-primary civ-bg-primary-lightest</code></td>
+          <td>Blue highlight when a file is dragged over the upload zone</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>
+      Because styles are tied to ARIA attributes and native pseudo-classes, a component cannot look
+      "selected" without actually being selected for assistive technology. The visual and accessible
+      states are always in sync.
+    </p>
+
+    <h2>Design Principles</h2>
+    <ul class="principle-list">
+      <li>
+        <strong>Border-radius on interactive elements only.</strong>
+        Buttons, inputs, tiles, and dropdowns get rounded corners. Static containers and layout
+        elements do not.
+      </li>
+      <li>
+        <strong>Underlines only on link-styled buttons.</strong>
+        When a <code>&lt;civ-button&gt;</code> renders as an anchor (<code>a.civ-btn</code>), it gets
+        an underline to signal navigation. Action buttons (<code>button.civ-btn</code>) do not.
+      </li>
+      <li>
+        <strong>Error states use color + border + text.</strong>
+        Color alone is never sufficient. Invalid inputs get a red border, a thicker left accent
+        (<code>civ-border-s-4</code>), and a text error message with <code>role="alert"</code>.
+      </li>
+      <li>
+        <strong>Focus uses <code>focus-visible:civ-focus-ring</code>.</strong>
+        The focus ring only appears on keyboard navigation (not mouse clicks), using the
+        <code>:focus-visible</code> pseudo-class rather than <code>:focus</code>.
+      </li>
+      <li>
+        <strong>Logical properties for RTL safety.</strong>
+        Utilities like <code>civ-border-s-4</code>, <code>civ-rounded-s</code>, and
+        <code>civ-me-2</code> use CSS logical properties so layouts work correctly in
+        right-to-left languages without any code changes.
+      </li>
+    </ul>
+
+    <h2>Usage</h2>
+    <p>
+      Developers using CivUI components do not need to know Tailwind or apply any utility classes.
+      The component handles all styling internally:
+    </p>
+    <pre><code>&lt;civ-text-input
+  label="Email address"
+  name="email"
+  type="email"
+  required
+  hint="For example: name@agency.gov"
+&gt;&lt;/civ-text-input&gt;</code></pre>
+    <p>
+      This single custom element renders a complete, styled input with label, hint text, and
+      validation — all using the semantic component classes internally. The rendered output includes
+      elements with <code>class="civ-label"</code>, <code>class="civ-hint"</code>, and
+      <code>class="civ-input"</code>, but the consumer never writes those classes directly.
+    </p>
+    <p>
+      For developers building custom layouts or extending CivUI, the component classes are available
+      to use directly:
+    </p>
+    <pre><code>&lt;!-- Using CivUI component classes in custom markup --&gt;
+&lt;label class="civ-label"&gt;Custom label&lt;/label&gt;
+&lt;span class="civ-hint"&gt;Helper text&lt;/span&gt;
+&lt;input class="civ-input focus-visible:civ-focus-ring" type="text" /&gt;
+&lt;button class="civ-btn civ-btn--primary focus-visible:civ-focus-ring"&gt;Submit&lt;/button&gt;</code></pre>
+
+    <div class="bottom-links">
+      <a href="../storybook/" class="bottom-link bottom-link--primary">View Storybook</a>
+      <a href="../" class="bottom-link bottom-link--secondary">Back to CivUI</a>
+    </div>
+  </div>
+
+  <footer>
+    <p>CivUI &mdash; Civic Design System. MIT License.</p>
+  </footer>
+</body>
+</html>

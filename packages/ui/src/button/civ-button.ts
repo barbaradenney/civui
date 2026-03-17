@@ -3,7 +3,6 @@ import { customElement, property } from 'lit/decorators.js';
 import { CivBaseElement, LightDomTextMixin } from '@civui/core';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'danger';
-export type ButtonSize = 'default' | 'big';
 export type ButtonType = 'button' | 'submit';
 
 /**
@@ -30,7 +29,6 @@ export type ButtonType = 'button' | 'submit';
 export class CivButton extends LightDomTextMixin(CivBaseElement) {
   @property({ type: String }) label = '';
   @property({ type: String }) variant: ButtonVariant = 'primary';
-  @property({ type: String }) size: ButtonSize = 'default';
   @property({ type: Boolean, reflect: true }) disabled = false;
   @property({ type: String }) type: ButtonType = 'button';
   @property({ type: String }) href = '';
@@ -43,7 +41,6 @@ export class CivButton extends LightDomTextMixin(CivBaseElement) {
     return [
       'civ-btn',
       `civ-btn--${this.variant}`,
-      this.size === 'big' ? 'civ-btn--big' : '',
       this.disabled ? 'civ-opacity-50 civ-cursor-not-allowed' : '',
       'focus-visible:civ-focus-ring',
     ]

@@ -357,10 +357,6 @@
     @apply civ-bg-error-dark civ-border-error-dark;
   }
 
-  .civ-btn--big {
-    @apply civ-text-lg civ-px-6 civ-py-4;
-  }
-
   .civ-btn:disabled,
   .civ-btn[aria-disabled="true"] {
     @apply civ-opacity-50 civ-cursor-not-allowed;

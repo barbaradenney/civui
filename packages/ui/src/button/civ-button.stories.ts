@@ -12,10 +12,6 @@ const meta: Meta = {
       control: 'select',
       options: ['primary', 'secondary', 'outline', 'danger'],
     },
-    size: {
-      control: 'select',
-      options: ['default', 'big'],
-    },
     type: {
       control: 'select',
       options: ['button', 'submit'],
@@ -32,7 +28,6 @@ export const Default: Story = {
   args: {
     label: 'Default button',
     variant: 'primary',
-    size: 'default',
     type: 'button',
     disabled: false,
     href: '',
@@ -41,7 +36,6 @@ export const Default: Story = {
     <civ-button
       label="${args.label}"
       variant="${args.variant}"
-      size="${args.size}"
       type="${args.type}"
       href="${args.href || ''}"
       ?disabled="${args.disabled}"
@@ -56,16 +50,6 @@ export const Variants: Story = {
       <civ-button variant="secondary">Secondary</civ-button>
       <civ-button variant="outline">Outline</civ-button>
       <civ-button variant="danger">Danger</civ-button>
-    </div>
-  `,
-};
-
-export const BigSize: Story = {
-  render: () => html`
-    <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
-      <civ-button size="big">Big primary</civ-button>
-      <civ-button variant="secondary" size="big">Big secondary</civ-button>
-      <civ-button variant="outline" size="big">Big outline</civ-button>
     </div>
   `,
 };

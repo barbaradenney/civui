@@ -53,27 +53,6 @@ describe('civ-button', () => {
     expect(btn.className).toContain('civ-btn--danger');
   });
 
-  it('applies unstyled variant class', async () => {
-    const el = await fixture('<civ-button variant="unstyled">Click</civ-button>');
-
-    const btn = el.querySelector('button')!;
-    expect(btn.className).toContain('civ-btn--unstyled');
-  });
-
-  it('applies big size class', async () => {
-    const el = await fixture('<civ-button size="big">Click</civ-button>');
-
-    const btn = el.querySelector('button')!;
-    expect(btn.className).toContain('civ-btn--big');
-  });
-
-  it('does not apply big class for default size', async () => {
-    const el = await fixture('<civ-button>Click</civ-button>');
-
-    const btn = el.querySelector('button')!;
-    expect(btn.className).not.toContain('civ-btn--big');
-  });
-
   it('sets disabled attribute on button', async () => {
     const el = await fixture('<civ-button disabled>Click</civ-button>');
 

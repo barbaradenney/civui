@@ -107,19 +107,18 @@
   }
 
   .civ-check-label {
-    @apply civ-text-base civ-font-sans civ-text-base-darkest civ-cursor-pointer;
+    @apply civ-font-sans civ-cursor-pointer;
+    font-size: var(--civ-typography-fontSize-base);
+    color: var(--civ-color-base-darkest);
   }
 
   .civ-check-description {
-    @apply civ-block civ-text-sm civ-text-base civ-mt-0.5;
+    @apply civ-block civ-text-sm civ-mt-0.5;
+    color: var(--civ-color-base-dark);
   }
 
   .civ-check-tile {
-    @apply civ-relative civ-border civ-rounded civ-border-base-light civ-cursor-pointer;
-  }
-
-  .civ-check-tile > label {
-    @apply civ-p-4;
+    @apply civ-relative civ-border civ-rounded civ-border-base-light civ-cursor-pointer civ-p-4;
   }
 
   /* ── Toggle ─────────────────────────────────────────────────── */

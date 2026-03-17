@@ -120,6 +120,14 @@ const config: Config = {
         'relaxed': 'var(--civ-typography-lineHeight-relaxed)',
         'loose': 'var(--civ-typography-lineHeight-loose)',
       },
+      borderRadius: {
+        'none': 'var(--civ-border-radius-none)',
+        'sm': 'var(--civ-border-radius-sm)',
+        'DEFAULT': 'var(--civ-border-radius-DEFAULT)',
+        'md': 'var(--civ-border-radius-md)',
+        'lg': 'var(--civ-border-radius-lg)',
+        'full': 'var(--civ-border-radius-full)',
+      },
     },
   },
   plugins: [

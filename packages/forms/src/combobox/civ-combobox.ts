@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivFormElement, dispatch, renderLabel, renderHint, renderError, inputClasses, clickOutside } from '@civui/core';
+import { CivFormElement, dispatch, renderLabel, renderHint, renderError, inputClasses, clickOutside, t, interpolate } from '@civui/core';
 
 export interface ComboboxOption {
   value: string;
@@ -34,7 +34,7 @@ export interface ComboboxOption {
 export class CivCombobox extends CivFormElement {
   @property({ type: Array }) options: ComboboxOption[] = [];
   @property({ type: String }) placeholder = '';
-  @property({ type: String, attribute: 'no-results-text' }) noResultsText = 'No results found';
+  @property({ type: String, attribute: 'no-results-text' }) noResultsText = '';
 
   @state() private _open = false;
   @state() private _filter = '';
@@ -139,7 +139,7 @@ export class CivCombobox extends CivFormElement {
                   role="status"
                   aria-live="polite"
                 >
-                  ${this.noResultsText}
+                  ${this.noResultsText || t('comboboxNoResults')}
                 </div>
               `
             : nothing}
@@ -175,8 +175,8 @@ export class CivCombobox extends CivFormElement {
       const count = this._filteredOptions.length;
       this.announce(
         count === 0
-          ? this.noResultsText
-          : `${count} ${count === 1 ? 'result' : 'results'} available`,
+          ? (this.noResultsText || t('comboboxNoResults'))
+          : interpolate(t('comboboxResultsAvailable'), { count }),
       );
     }, 300);
   }
@@ -256,7 +256,7 @@ export class CivCombobox extends CivFormElement {
     this.updateFormValue(this.value);
     dispatch(this, 'civ-change', { value: this.value, label: option.label });
     this.sendAnalytics('select');
-    this.announce(`${option.label}, selected`);
+    this.announce(interpolate(t('comboboxSelected'), { label: option.label }));
   }
 
   override formResetCallback(): void {

@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBaseElement, LightDomTextMixin, dispatch } from '@civui/core';
+import { CivBaseElement, LightDomTextMixin, dispatch, t } from '@civui/core';
 
 export type AlertVariant = 'info' | 'warning' | 'error' | 'success';
 export type AlertStyle = 'primary' | 'secondary' | 'outline' | 'unstyled';
@@ -91,7 +91,7 @@ export class CivAlert extends LightDomTextMixin(CivBaseElement) {
                 <button
                   type="button"
                   class="civ-alert__dismiss focus-visible:civ-focus-ring"
-                  aria-label="Dismiss alert"
+                  aria-label="${t('alertDismissLabel')}"
                   @click="${this._onDismiss}"
                 >${closeIcon}</button>
               `
@@ -105,7 +105,7 @@ export class CivAlert extends LightDomTextMixin(CivBaseElement) {
     const allowed = dispatch(this, 'civ-dismiss', undefined, true);
     if (!allowed) return;
     this.sendAnalytics('dismiss');
-    this.announce('Alert dismissed', 'polite');
+    this.announce(t('alertDismissedMessage'), 'polite');
     // Defer removal so screen readers can announce and event propagation completes
     queueMicrotask(() => this.remove());
   }

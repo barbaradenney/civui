@@ -2,7 +2,7 @@
 
 import { html, nothing } from 'lit';
 import { customElement } from 'lit/decorators.js';
-import { CivBooleanFormElement, dispatch, renderHint, renderError } from '@civui/core';
+import { CivBooleanFormElement, dispatch, renderHint, renderError, t } from '@civui/core';
 
 /**
  * CivUI Toggle
@@ -26,7 +26,7 @@ export class CivToggle extends CivBooleanFormElement {
             <label class="civ-check-label" for="${this._inputId}">
               ${this.label}
               ${this.required
-                ? html`<span class="civ-required-mark">(required)</span>`
+                ? html`<span class="civ-required-mark">${t('required')}</span>`
                 : nothing}
             </label>
             ${this.description

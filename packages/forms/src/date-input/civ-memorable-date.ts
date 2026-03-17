@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivFormElement, dispatch, getMonthNames, interpolate, parseISODate, renderLegend, renderHint, renderError, syncLegendToLabel } from '@civui/core';
+import { CivFormElement, dispatch, getMonthNames, interpolate, parseISODate, renderLegend, renderHint, renderError, syncLegendToLabel, t } from '@civui/core';
 
 // Import child components
 import '../select/civ-select.js';
@@ -30,14 +30,14 @@ import '../text-input/civ-text-input.js';
 @customElement('civ-memorable-date')
 export class CivMemorableDate extends CivFormElement {
   @property({ type: String }) legend = '';
-  @property({ type: String, attribute: 'month-label' }) monthLabel = 'Month';
-  @property({ type: String, attribute: 'day-label' }) dayLabel = 'Day';
-  @property({ type: String, attribute: 'year-label' }) yearLabel = 'Year';
-  @property({ type: String, attribute: 'month-empty-label' }) monthEmptyLabel = '- Month -';
-  @property({ type: String, attribute: 'day-placeholder' }) dayPlaceholder = 'DD';
-  @property({ type: String, attribute: 'year-placeholder' }) yearPlaceholder = 'YYYY';
-  @property({ type: String, attribute: 'date-set-message' }) dateSetMessage = 'Date set to {date}';
-  @property({ type: String, attribute: 'invalid-date-message' }) invalidDateMessage = 'Enter a valid date';
+  @property({ type: String, attribute: 'month-label' }) monthLabel = '';
+  @property({ type: String, attribute: 'day-label' }) dayLabel = '';
+  @property({ type: String, attribute: 'year-label' }) yearLabel = '';
+  @property({ type: String, attribute: 'month-empty-label' }) monthEmptyLabel = '';
+  @property({ type: String, attribute: 'day-placeholder' }) dayPlaceholder = '';
+  @property({ type: String, attribute: 'year-placeholder' }) yearPlaceholder = '';
+  @property({ type: String, attribute: 'date-set-message' }) dateSetMessage = '';
+  @property({ type: String, attribute: 'invalid-date-message' }) invalidDateMessage = '';
   @property({ type: String }) locale = 'en-US';
 
   @state() private _month = '';
@@ -174,11 +174,11 @@ export class CivMemorableDate extends CivFormElement {
         <div class="civ-flex civ-gap-4 civ-items-end" data-civ-memorable-date>
           <div class="civ-w-40">
             <civ-select
-              label="${this.monthLabel}"
+              label="${this.monthLabel || t('memorableDateMonthLabel')}"
               name="${this.name ? `${this.name}-month` : 'month'}"
               .options="${this._monthOptions}"
               .value="${this._month}"
-              empty-label="${this.monthEmptyLabel}"
+              empty-label="${this.monthEmptyLabel || t('memorableDateMonthEmptyLabel')}"
               ?required="${this.required}"
               ?disabled="${this.disabled}"
               disable-analytics
@@ -186,12 +186,12 @@ export class CivMemorableDate extends CivFormElement {
           </div>
           <div class="civ-w-20">
             <civ-text-input
-              label="${this.dayLabel}"
+              label="${this.dayLabel || t('memorableDateDayLabel')}"
               name="${this.name ? `${this.name}-day` : 'day'}"
               type="text"
               inputmode="numeric"
               .value="${this._day}"
-              placeholder="${this.dayPlaceholder}"
+              placeholder="${this.dayPlaceholder || t('memorableDateDayPlaceholder')}"
               pattern="[0-9]*"
               maxlength="2"
               ?required="${this.required}"
@@ -201,12 +201,12 @@ export class CivMemorableDate extends CivFormElement {
           </div>
           <div class="civ-w-24">
             <civ-text-input
-              label="${this.yearLabel}"
+              label="${this.yearLabel || t('memorableDateYearLabel')}"
               name="${this.name ? `${this.name}-year` : 'year'}"
               type="text"
               inputmode="numeric"
               .value="${this._year}"
-              placeholder="${this.yearPlaceholder}"
+              placeholder="${this.yearPlaceholder || t('memorableDateYearPlaceholder')}"
               pattern="[0-9]*"
               maxlength="4"
               ?required="${this.required}"
@@ -242,7 +242,7 @@ export class CivMemorableDate extends CivFormElement {
 
     // If all fields are filled but the date is invalid, show error
     if (this._year && this._month && this._day && !assembled) {
-      this.error = this.invalidDateMessage;
+      this.error = this.invalidDateMessage || t('memorableDateInvalidDateMessage');
       this.value = '';
       this.updateFormValue('');
       const detail = { value: '', month: this._month, day: this._day, year: this._year };
@@ -270,7 +270,7 @@ export class CivMemorableDate extends CivFormElement {
         const formattedDate = parsedDate
           ? new Intl.DateTimeFormat(this.locale, { dateStyle: 'long' }).format(parsedDate)
           : `${this._month}/${this._day}/${this._year}`;
-        this.announce(interpolate(this.dateSetMessage, { date: formattedDate }));
+        this.announce(interpolate(this.dateSetMessage || t('memorableDateDateSetMessage'), { date: formattedDate }));
       }
     }
   }

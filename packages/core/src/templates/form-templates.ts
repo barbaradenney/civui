@@ -1,4 +1,5 @@
 import { html, nothing } from 'lit';
+import { t } from '../i18n/locale.js';
 
 /**
  * Render a standard form label with optional required indicator.
@@ -25,7 +26,7 @@ export function renderLabel({
     >
       ${label}
       ${required
-        ? html`<span class="civ-required-mark">(required)</span>`
+        ? html`<span class="civ-required-mark">${t('required')}</span>`
         : nothing}
     </label>
   `;
@@ -50,7 +51,7 @@ export function renderLegend({
 }) {
   if (!legend) return nothing;
   if (srOnly) {
-    return html`<legend class="civ-sr-only">${legend}${required ? html` <span>(required)</span>` : nothing}</legend>`;
+    return html`<legend class="civ-sr-only">${legend}${required ? html` <span>${t('required')}</span>` : nothing}</legend>`;
   }
   const sizeClass = textSizeClass ?? 'civ-text-base';
   return html`
@@ -60,7 +61,7 @@ export function renderLegend({
     >
       ${legend}
       ${required
-        ? html`<span class="civ-required-mark">(required)</span>`
+        ? html`<span class="civ-required-mark">${t('required')}</span>`
         : nothing}
     </legend>
   `;

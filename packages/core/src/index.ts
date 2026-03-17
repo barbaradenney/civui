@@ -65,6 +65,10 @@ export { CivIcon } from './icon/civ-icon.js';
 export { icons, registerIcon, getIconNames, resetIcons } from './icon/icon-library.js';
 export type { IconDef, IconLayer } from './icon/icon-library.js';
 
+// i18n
+export { t, setLocaleStrings, resetLocaleStrings, getLocaleStrings } from './i18n/index.js';
+export type { CivLocaleStrings } from './i18n/index.js';
+
 // Analytics
 export { ANALYTICS_EVENT_NAME } from './analytics/index.js';
 export type { AnalyticsEventDetail, AnalyticsAction } from './analytics/index.js';

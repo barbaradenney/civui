@@ -2,7 +2,7 @@
 
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBooleanFormElement, dispatch, renderHint, renderError } from '@civui/core';
+import { CivBooleanFormElement, dispatch, renderHint, renderError, t } from '@civui/core';
 
 /**
  * CivUI Checkbox
@@ -42,7 +42,7 @@ export class CivCheckbox extends CivBooleanFormElement {
             <span class="civ-check-label">
               ${this.label}
               ${this.required
-                ? html`<span class="civ-required-mark">(required)</span>`
+                ? html`<span class="civ-required-mark">${t('required')}</span>`
                 : nothing}
             </span>
             ${this.description

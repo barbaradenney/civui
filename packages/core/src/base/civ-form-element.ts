@@ -2,6 +2,7 @@ import { property } from 'lit/decorators.js';
 import { CivBaseElement } from './civ-base-element.js';
 import { dispatch } from '../utils/events.js';
 import { interpolate } from '../utils/interpolate.js';
+import { t } from '../i18n/locale.js';
 
 /**
  * Base element for all CivUI form components.
@@ -31,7 +32,7 @@ export class CivFormElement extends CivBaseElement {
   @property({ type: String }) error = '';
   @property({ type: String }) hint = '';
   @property({ type: String }) label = '';
-  @property({ type: String, attribute: 'required-message' }) requiredMessage = '{label} is required';
+  @property({ type: String, attribute: 'required-message' }) requiredMessage = '';
 
   constructor() {
     super();
@@ -135,7 +136,7 @@ export class CivFormElement extends CivBaseElement {
     if (this.required && !this.value) {
       this._internals.setValidity(
         { valueMissing: true },
-        this.error || interpolate(this.requiredMessage, { label: this.label || 'This field' }),
+        this.error || interpolate(this.requiredMessage || t('fieldRequired'), { label: this.label || 'This field' }),
         anchor ?? undefined,
       );
     } else {

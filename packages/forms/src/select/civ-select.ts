@@ -2,7 +2,7 @@
 
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivFormElement, dispatch, renderLabel, renderHint, renderError, inputClasses } from '@civui/core';
+import { CivFormElement, dispatch, renderLabel, renderHint, renderError, inputClasses, t } from '@civui/core';
 
 export interface SelectOption {
   value: string;
@@ -21,7 +21,7 @@ export interface SelectOption {
 @customElement('civ-select')
 export class CivSelect extends CivFormElement {
   @property({ type: Array }) options: SelectOption[] = [];
-  @property({ type: String, attribute: 'empty-label' }) emptyLabel: string = '- Select -';
+  @property({ type: String, attribute: 'empty-label' }) emptyLabel: string = '';
 
   override updated(changed: Map<string, unknown>): void {
     super.updated(changed);
@@ -55,7 +55,7 @@ export class CivSelect extends CivFormElement {
           aria-invalid="${this.error ? 'true' : nothing}"
           @change="${this._onSelectChange}"
         >
-          <option value="">${this.emptyLabel}</option>
+          <option value="">${this.emptyLabel || t('selectEmpty')}</option>
           ${this.options.map(
             (opt) => html`
               <option

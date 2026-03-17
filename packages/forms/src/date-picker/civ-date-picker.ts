@@ -27,6 +27,7 @@ import {
   renderHint,
   renderError,
   inputClasses,
+  t,
   type CalendarDay,
   type DateConstraints,
 } from '@civui/core';
@@ -61,18 +62,18 @@ import {
 export class CivDatePicker extends CivFormElement {
   @property({ type: String }) min = '';
   @property({ type: String }) max = '';
-  @property({ type: String }) placeholder = 'mm/dd/yyyy';
+  @property({ type: String }) placeholder = '';
   @property({ type: String }) locale = 'en-US';
   @property({ type: Number, attribute: 'week-starts-on' }) weekStartsOn = 0;
 
-  @property({ type: String, attribute: 'choose-date-label' }) chooseDateLabel = 'Choose date';
-  @property({ type: String, attribute: 'selected-date-label' }) selectedDateLabel = 'Choose date, selected date is {date}';
-  @property({ type: String, attribute: 'dialog-label' }) dialogLabel = 'Choose Date';
-  @property({ type: String, attribute: 'previous-month-label' }) previousMonthLabel = 'Previous month';
-  @property({ type: String, attribute: 'next-month-label' }) nextMonthLabel = 'Next month';
-  @property({ type: String, attribute: 'dialog-opened-message' }) dialogOpenedMessage = 'Calendar dialog opened';
-  @property({ type: String, attribute: 'date-selected-message' }) dateSelectedMessage = 'Selected {date}';
-  @property({ type: String, attribute: 'today-label' }) todayLabel = 'today';
+  @property({ type: String, attribute: 'choose-date-label' }) chooseDateLabel = '';
+  @property({ type: String, attribute: 'selected-date-label' }) selectedDateLabel = '';
+  @property({ type: String, attribute: 'dialog-label' }) dialogLabel = '';
+  @property({ type: String, attribute: 'previous-month-label' }) previousMonthLabel = '';
+  @property({ type: String, attribute: 'next-month-label' }) nextMonthLabel = '';
+  @property({ type: String, attribute: 'dialog-opened-message' }) dialogOpenedMessage = '';
+  @property({ type: String, attribute: 'date-selected-message' }) dateSelectedMessage = '';
+  @property({ type: String, attribute: 'today-label' }) todayLabel = '';
 
   @state() private _open = false;
   @state() private _focusedDate: Date = new Date();
@@ -227,8 +228,8 @@ export class CivDatePicker extends CivFormElement {
 
     const selectedDate = this.value ? parseISODate(this.value) : null;
     const buttonLabel = selectedDate
-      ? interpolate(this.selectedDateLabel, { date: formatDateLong(selectedDate, this.locale) })
-      : this.chooseDateLabel;
+      ? interpolate(this.selectedDateLabel || t('datePickerSelectedDateLabel'), { date: formatDateLong(selectedDate, this.locale) })
+      : (this.chooseDateLabel || t('datePickerChooseDateLabel'));
 
     return html`
       <div class="civ-mb-4 civ-relative">
@@ -241,7 +242,7 @@ export class CivDatePicker extends CivFormElement {
             id="${this._inputId}"
             type="text"
             .value="${this._inputValue}"
-            placeholder="${this.placeholder}"
+            placeholder="${this.placeholder || t('datePickerPlaceholder')}"
             ?disabled="${this.disabled}"
             ?required="${this.required}"
             aria-required="${this.required || nothing}"
@@ -295,7 +296,7 @@ export class CivDatePicker extends CivFormElement {
         data-civ-dialog
         role="dialog"
         aria-modal="true"
-        aria-label="${this.dialogLabel}"
+        aria-label="${this.dialogLabel || t('datePickerDialogLabel')}"
         class="civ-datepicker-dialog"
         @keydown="${this._onDialogKeydown}"
       >
@@ -303,7 +304,7 @@ export class CivDatePicker extends CivFormElement {
           <button
             type="button"
             class="civ-datepicker-nav-btn hover:civ-bg-base-lightest focus-visible:civ-focus-ring"
-            aria-label="${this.previousMonthLabel}"
+            aria-label="${this.previousMonthLabel || t('datePickerPreviousMonthLabel')}"
             ?disabled="${prevMonthDisabled}"
             @click="${this._prevMonth}"
           >
@@ -317,7 +318,7 @@ export class CivDatePicker extends CivFormElement {
           <button
             type="button"
             class="civ-datepicker-nav-btn hover:civ-bg-base-lightest focus-visible:civ-focus-ring"
-            aria-label="${this.nextMonthLabel}"
+            aria-label="${this.nextMonthLabel || t('datePickerNextMonthLabel')}"
             ?disabled="${nextMonthDisabled}"
             @click="${this._nextMonth}"
           >
@@ -375,7 +376,7 @@ export class CivDatePicker extends CivFormElement {
           tabindex="${tabIdx}"
           aria-selected="${selected}"
           aria-disabled="${disabled}"
-          aria-label="${formatDateLong(day.date, this.locale)}${day.isToday ? `, ${this.todayLabel}` : ''}"
+          aria-label="${formatDateLong(day.date, this.locale)}${day.isToday ? `, ${this.todayLabel || t('datePickerTodayLabel')}` : ''}"
           @click="${() => !disabled && this._selectDate(day.date)}"
         >
           ${day.day}
@@ -404,7 +405,7 @@ export class CivDatePicker extends CivFormElement {
     this._displayYear = initial.getFullYear();
     this._open = true;
     this._clickOutside.add();
-    this.announce(this.dialogOpenedMessage);
+    this.announce(this.dialogOpenedMessage || t('datePickerDialogOpenedMessage'));
   }
 
   private _closeDialog(): void {
@@ -426,7 +427,7 @@ export class CivDatePicker extends CivFormElement {
     this.updateFormValue(iso);
     dispatch(this, 'civ-change', { value: iso });
     this.sendAnalytics('change');
-    this.announce(interpolate(this.dateSelectedMessage, { date: formatDateLong(date, this.locale) }));
+    this.announce(interpolate(this.dateSelectedMessage || t('datePickerDateSelectedMessage'), { date: formatDateLong(date, this.locale) }));
     this._closeDialog();
   }
 
@@ -471,7 +472,7 @@ export class CivDatePicker extends CivFormElement {
       this.updateFormValue(iso);
       dispatch(this, 'civ-change', { value: iso });
       this.sendAnalytics('change');
-      this.announce(interpolate(this.dateSelectedMessage, { date: formatDateLong(parsed, this.locale) }));
+      this.announce(interpolate(this.dateSelectedMessage || t('datePickerDateSelectedMessage'), { date: formatDateLong(parsed, this.locale) }));
     } else {
       // Invalid text: keep it in the input so users can correct typos,
       // but announce the error for screen readers.

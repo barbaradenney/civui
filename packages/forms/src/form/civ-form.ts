@@ -3,7 +3,7 @@
 
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivBaseElement, LightDomContainerMixin, dispatch, generateId } from '@civui/core';
+import { CivBaseElement, LightDomContainerMixin, dispatch, generateId, t } from '@civui/core';
 
 export interface FormFieldError {
   name: string;
@@ -110,7 +110,7 @@ export class CivForm extends LightDomContainerMixin(CivBaseElement) {
             >
               <p id="${this._summaryHeadingId}" class="civ-form-error-heading"
                  role="heading" aria-level="${this.errorHeadingLevel}">
-                There ${this._errors.length === 1 ? 'is 1 error' : `are ${this._errors.length} errors`} in this form
+                ${this._errors.length === 1 ? t('formErrorSingular') : t('formErrorPlural').replace('{count}', String(this._errors.length))}
               </p>
               <ul class="civ-list-none civ-p-0 civ-m-0">
                 ${this._errors.map(

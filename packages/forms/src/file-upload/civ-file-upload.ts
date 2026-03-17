@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivFormElement, dispatch, interpolate, renderLabel, renderHint, renderError } from '@civui/core';
+import { CivFormElement, dispatch, interpolate, renderLabel, renderHint, renderError, t } from '@civui/core';
 
 interface UploadedFile {
   name: string;
@@ -49,18 +49,18 @@ export class CivFileUpload extends CivFormElement {
   @property({ type: Number, attribute: 'max-size' }) maxSize = 0;
   @property({ type: Number, attribute: 'max-files' }) maxFiles = 0;
 
-  @property({ type: String, attribute: 'drag-text' }) dragText = 'Drag files here or';
-  @property({ type: String, attribute: 'browse-text' }) browseText = 'choose from folder';
-  @property({ type: String, attribute: 'accepted-label' }) acceptedLabel = 'Accepted: ';
-  @property({ type: String, attribute: 'max-size-label' }) maxSizeLabel = 'Max size: ';
-  @property({ type: String, attribute: 'remove-text' }) removeText = 'Remove';
-  @property({ type: String, attribute: 'remove-aria-label' }) removeAriaLabel = 'Remove {name}';
-  @property({ type: String, attribute: 'files-list-label' }) filesListLabel = 'Selected files';
-  @property({ type: String, attribute: 'file-added-message' }) fileAddedMessage = '{count} file(s) added. {total} file(s) selected.';
-  @property({ type: String, attribute: 'file-removed-message' }) fileRemovedMessage = 'File removed. {total} file(s) selected.';
-  @property({ type: String, attribute: 'file-size-error' }) fileSizeError = '{name} exceeds maximum size of {size}';
-  @property({ type: String, attribute: 'file-type-error' }) fileTypeError = '{name} is not an accepted file type';
-  @property({ type: String, attribute: 'max-files-error' }) maxFilesError = 'Maximum of {max} files allowed';
+  @property({ type: String, attribute: 'drag-text' }) dragText = '';
+  @property({ type: String, attribute: 'browse-text' }) browseText = '';
+  @property({ type: String, attribute: 'accepted-label' }) acceptedLabel = '';
+  @property({ type: String, attribute: 'max-size-label' }) maxSizeLabel = '';
+  @property({ type: String, attribute: 'remove-text' }) removeText = '';
+  @property({ type: String, attribute: 'remove-aria-label' }) removeAriaLabel = '';
+  @property({ type: String, attribute: 'files-list-label' }) filesListLabel = '';
+  @property({ type: String, attribute: 'file-added-message' }) fileAddedMessage = '';
+  @property({ type: String, attribute: 'file-removed-message' }) fileRemovedMessage = '';
+  @property({ type: String, attribute: 'file-size-error' }) fileSizeError = '';
+  @property({ type: String, attribute: 'file-type-error' }) fileTypeError = '';
+  @property({ type: String, attribute: 'max-files-error' }) maxFilesError = '';
 
   @state() private _files: UploadedFile[] = [];
   @state() private _dragging = false;
@@ -97,14 +97,14 @@ export class CivFileUpload extends CivFormElement {
           data-dragging="${this._dragging ? '' : nothing}"
         >
           <span class="civ-block civ-text-base-dark civ-text-base">
-            ${this.dragText}
-            <span class="civ-text-primary civ-underline">${this.browseText}</span>
+            ${this.dragText || t('fileUploadDragText')}
+            <span class="civ-text-primary civ-underline">${this.browseText || t('fileUploadBrowseText')}</span>
           </span>
           ${this.accept
-            ? html`<span class="civ-block civ-text-sm civ-text-base civ-mt-1">${this.acceptedLabel}${this.accept}</span>`
+            ? html`<span class="civ-block civ-text-sm civ-text-base civ-mt-1">${this.acceptedLabel || t('fileUploadAcceptedLabel')}${this.accept}</span>`
             : nothing}
           ${this.maxSize > 0
-            ? html`<span class="civ-block civ-text-sm civ-text-base civ-mt-0.5">${this.maxSizeLabel}${formatFileSize(this.maxSize)}</span>`
+            ? html`<span class="civ-block civ-text-sm civ-text-base civ-mt-0.5">${this.maxSizeLabel || t('fileUploadMaxSizeLabel')}${formatFileSize(this.maxSize)}</span>`
             : nothing}
         </div>
 
@@ -124,7 +124,7 @@ export class CivFileUpload extends CivFormElement {
 
         ${this._files.length > 0
           ? html`
-              <ul class="civ-list-none civ-p-0 civ-mt-2 civ-space-y-1" aria-label="${this.filesListLabel}">
+              <ul class="civ-list-none civ-p-0 civ-mt-2 civ-space-y-1" aria-label="${this.filesListLabel || t('fileUploadFilesListLabel')}">
                 ${this._files.map(
                   (file, index) => html`
                     <li class="civ-file-item">
@@ -136,10 +136,10 @@ export class CivFileUpload extends CivFormElement {
                         type="button"
                         class="civ-file-remove-btn focus-visible:civ-focus-ring"
                         @click="${() => this._removeFile(index)}"
-                        aria-label="${interpolate(this.removeAriaLabel, { name: file.name })}"
+                        aria-label="${interpolate(this.removeAriaLabel || t('fileUploadRemoveAriaLabel'), { name: file.name })}"
                         ?disabled="${this.disabled}"
                       >
-                        ${this.removeText}
+                        ${this.removeText || t('fileUploadRemoveText')}
                       </button>
                     </li>
                   `,
@@ -218,11 +218,11 @@ export class CivFileUpload extends CivFormElement {
 
     for (const file of newFiles) {
       if (this.accept && !this._isFileTypeAccepted(file)) {
-        errors.push(interpolate(this.fileTypeError, { name: file.name }));
+        errors.push(interpolate(this.fileTypeError || t('fileUploadFileTypeError'), { name: file.name }));
         continue;
       }
       if (this.maxSize > 0 && file.size > this.maxSize) {
-        errors.push(interpolate(this.fileSizeError, { name: file.name, size: formatFileSize(this.maxSize) }));
+        errors.push(interpolate(this.fileSizeError || t('fileUploadFileSizeError'), { name: file.name, size: formatFileSize(this.maxSize) }));
         continue;
       }
       validated.push({ name: file.name, size: file.size, type: file.type, file });
@@ -233,7 +233,7 @@ export class CivFileUpload extends CivFormElement {
       const available = this.maxFiles - this._files.length;
       if (validated.length > available) {
         validated.splice(available);
-        errors.push(interpolate(this.maxFilesError, { max: this.maxFiles }));
+        errors.push(interpolate(this.maxFilesError || t('fileUploadMaxFilesError'), { max: this.maxFiles }));
       }
     }
 
@@ -256,7 +256,7 @@ export class CivFileUpload extends CivFormElement {
     this._updateFormData();
     this._dispatchChange();
     this.sendAnalytics('upload', { fileCount: this._files.length });
-    this.announce(interpolate(this.fileAddedMessage, { count: validated.length, total: this._files.length }));
+    this.announce(interpolate(this.fileAddedMessage || t('fileUploadFileAddedMessage'), { count: validated.length, total: this._files.length }));
   }
 
   private _removeFile(index: number): void {
@@ -265,7 +265,7 @@ export class CivFileUpload extends CivFormElement {
     this._updateFormData();
     this._dispatchChange();
     this.sendAnalytics('remove', { fileCount: this._files.length });
-    this.announce(interpolate(this.fileRemovedMessage, { total: this._files.length }));
+    this.announce(interpolate(this.fileRemovedMessage || t('fileUploadFileRemovedMessage'), { total: this._files.length }));
 
     // Move focus to the next remove button, or the dropzone if no files remain
     this.updateComplete.then(() => {

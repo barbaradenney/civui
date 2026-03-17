@@ -357,13 +357,6 @@
     @apply civ-bg-error-dark civ-border-error-dark;
   }
 
-  .civ-btn--unstyled {
-    @apply civ-bg-transparent civ-text-primary civ-border-0 civ-p-0 civ-underline;
-  }
-  .civ-btn--unstyled:hover:not(:disabled):not([aria-disabled="true"]) {
-    @apply civ-text-primary-dark;
-  }
-
   .civ-btn--big {
     @apply civ-text-lg civ-px-6 civ-py-4;
   }
@@ -428,21 +421,6 @@
   .civ-alert--style-outline.civ-alert--warning { @apply civ-border-warning; }
   .civ-alert--style-outline.civ-alert--error { @apply civ-border-error; }
   .civ-alert--style-outline.civ-alert--success { @apply civ-border-success; }
-
-  /* ── Alert: Unstyled (no bg, no border, colored heading) ─────── */
-
-  .civ-alert--style-unstyled {
-    @apply civ-bg-transparent civ-border-0 civ-p-0;
-  }
-
-  .civ-alert--style-unstyled.civ-alert--info .civ-alert__heading { color: var(--civ-color-info-dark); }
-  .civ-alert--style-unstyled.civ-alert--info .civ-alert__body { color: var(--civ-color-info-DEFAULT); }
-  .civ-alert--style-unstyled.civ-alert--warning .civ-alert__heading { color: var(--civ-color-warning-dark); }
-  .civ-alert--style-unstyled.civ-alert--warning .civ-alert__body { color: var(--civ-color-warning-dark); }
-  .civ-alert--style-unstyled.civ-alert--error .civ-alert__heading { color: var(--civ-color-error-DEFAULT); }
-  .civ-alert--style-unstyled.civ-alert--error .civ-alert__body { color: var(--civ-color-error-light); }
-  .civ-alert--style-unstyled.civ-alert--success .civ-alert__heading { color: var(--civ-color-success-dark); }
-  .civ-alert--style-unstyled.civ-alert--success .civ-alert__body { color: var(--civ-color-success-DEFAULT); }
 
   .civ-alert__dismiss {
     @apply civ-inline-flex civ-items-center civ-justify-center

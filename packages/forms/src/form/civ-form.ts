@@ -255,9 +255,6 @@ export class CivForm extends LightDomContainerMixin(CivBaseElement) {
     if (type === 'submit' || type === null) {
       e.preventDefault();
       this._onSubmit();
-    } else if (type === 'reset') {
-      e.preventDefault();
-      this._onReset();
     }
   }
 
@@ -297,19 +294,6 @@ export class CivForm extends LightDomContainerMixin(CivBaseElement) {
 
     dispatch(this, 'civ-submit', { formData: this.toFormData() });
     this.sendAnalytics('submit');
-  }
-
-  private _onReset(): void {
-    this.clearErrors();
-    const formElements = this.querySelectorAll<HTMLElement>(
-      '[data-civ-form-field]',
-    );
-    for (const el of formElements) {
-      const formEl = el as unknown as CivFormFieldLike;
-      if (typeof formEl.formResetCallback === 'function') {
-        formEl.formResetCallback();
-      }
-    }
   }
 
   private _getFieldInputId(element: Element): string {

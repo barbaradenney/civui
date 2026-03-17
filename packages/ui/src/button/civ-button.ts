@@ -2,9 +2,9 @@ import { html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { CivBaseElement, LightDomTextMixin } from '@civui/core';
 
-export type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'danger' | 'unstyled';
+export type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'danger';
 export type ButtonSize = 'default' | 'big';
-export type ButtonType = 'button' | 'submit' | 'reset';
+export type ButtonType = 'button' | 'submit';
 
 /**
  * CivUI Button

@@ -120,7 +120,6 @@ export const InForm: Story = {
       </civ-segmented-control>
       <div class="civ-flex civ-gap-2 civ-mt-4">
         <button type="submit" class="civ-bg-primary civ-text-white civ-px-4 civ-py-2 civ-rounded">Submit</button>
-        <button type="reset" class="civ-border civ-px-4 civ-py-2 civ-rounded">Reset</button>
       </div>
     </form>
   `,

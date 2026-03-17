@@ -10,7 +10,7 @@ const meta: Meta = {
     label: { control: 'text' },
     variant: {
       control: 'select',
-      options: ['primary', 'secondary', 'outline', 'danger', 'unstyled'],
+      options: ['primary', 'secondary', 'outline', 'danger'],
     },
     size: {
       control: 'select',
@@ -18,7 +18,7 @@ const meta: Meta = {
     },
     type: {
       control: 'select',
-      options: ['button', 'submit', 'reset'],
+      options: ['button', 'submit'],
     },
     disabled: { control: 'boolean' },
     href: { control: 'text' },
@@ -56,7 +56,6 @@ export const Variants: Story = {
       <civ-button variant="secondary">Secondary</civ-button>
       <civ-button variant="outline">Outline</civ-button>
       <civ-button variant="danger">Danger</civ-button>
-      <civ-button variant="unstyled">Unstyled</civ-button>
     </div>
   `,
 };
@@ -101,7 +100,6 @@ export const InForm: Story = {
       <p style="margin-bottom: 16px;">Click Submit to trigger form submission.</p>
       <div style="display: flex; gap: 12px;">
         <civ-button type="submit">Submit</civ-button>
-        <civ-button type="reset" variant="outline">Reset</civ-button>
         <civ-button variant="secondary">Cancel</civ-button>
       </div>
     </form>

@@ -3,7 +3,7 @@ import { customElement, property } from 'lit/decorators.js';
 import { CivBaseElement, LightDomTextMixin, dispatch, t } from '@civui/core';
 
 export type AlertVariant = 'info' | 'warning' | 'error' | 'success';
-export type AlertStyle = 'primary' | 'secondary' | 'outline' | 'unstyled';
+export type AlertStyle = 'primary' | 'secondary' | 'outline';
 export type AlertHeadingLevel = 2 | 3 | 4 | 5 | 6;
 
 // Inline SVG close icon (16x16) — avoids external icon dependency
@@ -22,7 +22,7 @@ const closeIcon = html`<svg xmlns="http://www.w3.org/2000/svg" width="16" height
  * @element civ-alert
  *
  * @prop {AlertVariant} variant - Alert type (sets colors + ARIA role)
- * @prop {AlertStyle} alertStyle - Visual treatment (primary, secondary, outline, unstyled)
+ * @prop {AlertStyle} alertStyle - Visual treatment (primary, secondary, outline)
  * @prop {string} heading - Optional heading text
  * @prop {AlertHeadingLevel} headingLevel - Heading element level (2-6)
  * @prop {string} label - Body text (preferred over child text)

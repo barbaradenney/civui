@@ -68,35 +68,6 @@ export const WithValidation: Story = {
         >
           Submit
         </button>
-        <button
-          type="reset"
-          class="civ-inline-block civ-px-5 civ-py-2.5 civ-bg-white civ-text-base-darkest civ-font-bold civ-border civ-border-base-light civ-rounded civ-cursor-pointer"
-        >
-          Reset
-        </button>
-      </div>
-    </civ-form>
-  `,
-};
-
-export const WithResetButton: Story = {
-  render: () => html`
-    <civ-form>
-      <civ-text-input label="Username" name="username" required></civ-text-input>
-      <civ-text-input label="Password" name="password" type="password" required></civ-text-input>
-      <div class="civ-mt-4 civ-flex civ-gap-2">
-        <button
-          type="submit"
-          class="civ-inline-block civ-px-5 civ-py-2.5 civ-bg-primary civ-text-white civ-font-bold civ-border-0 civ-rounded civ-cursor-pointer focus-visible:civ-focus-ring-inverse"
-        >
-          Login
-        </button>
-        <button
-          type="reset"
-          class="civ-inline-block civ-px-5 civ-py-2.5 civ-bg-white civ-text-base-darkest civ-font-bold civ-border civ-border-base-light civ-rounded civ-cursor-pointer"
-        >
-          Clear
-        </button>
       </div>
     </civ-form>
   `,

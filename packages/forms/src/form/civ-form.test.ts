@@ -157,25 +157,6 @@ describe('civ-form', () => {
     expect(summary).toBeNull();
   });
 
-  it('clears errors on reset button click', async () => {
-    const el = await fixture(`
-      <civ-form>
-        <civ-text-input label="Name" name="name" required></civ-text-input>
-        <button type="reset">Reset</button>
-      </civ-form>
-    `) as any;
-    await waitForChildren(el);
-
-    el._errors = el.validate();
-    await elementUpdated(el);
-
-    const btn = el.querySelector('button[type="reset"]') as HTMLElement;
-    btn.click();
-    await elementUpdated(el);
-
-    expect(el._errors.length).toBe(0);
-  });
-
   it('error summary contains links for each error', async () => {
     const el = await fixture(`
       <civ-form>
@@ -384,26 +365,6 @@ describe('civ-form', () => {
 });
 
 describe('form reset', () => {
-  it('calls formResetCallback() on children instead of just setting value to empty', async () => {
-    const el = await fixture(`
-      <civ-form>
-        <civ-text-input label="Name" name="name" value="John"></civ-text-input>
-        <button type="reset">Reset</button>
-      </civ-form>
-    `) as any;
-    await waitForChildren(el);
-
-    const textInput = el.querySelector('civ-text-input') as any;
-    const spy = vi.spyOn(textInput, 'formResetCallback');
-
-    const btn = el.querySelector('button[type="reset"]') as HTMLElement;
-    btn.click();
-    await elementUpdated(el);
-
-    expect(spy).toHaveBeenCalledOnce();
-    spy.mockRestore();
-  });
-
   it('uses [data-civ-form-field] selector to discover form elements', async () => {
     const el = await fixture(`
       <civ-form>

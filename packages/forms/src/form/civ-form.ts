@@ -3,7 +3,7 @@
 
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivBaseElement, LightDomContainerMixin, dispatch, generateId, t } from '@civui/core';
+import { CivBaseElement, LightDomContainerMixin, dispatch, generateId, t, interpolate } from '@civui/core';
 
 export interface FormFieldError {
   name: string;
@@ -154,13 +154,15 @@ export class CivForm extends LightDomContainerMixin(CivBaseElement) {
       const formEl = el as unknown as CivFormFieldLike;
       if (formEl.disabled) continue;
       if (formEl.required && !formEl.value) {
-        const message = `${formEl.label || formEl.name || 'This field'} is required`;
+        const label = formEl.label || formEl.name || t('fieldFallbackLabel');
+        const message = interpolate(t('fieldRequired'), { label });
         formEl.error = message;
         errors.push({ name: formEl.name || '', message, element: el });
       } else {
         try {
           if (typeof formEl.checkValidity === 'function' && !formEl.checkValidity()) {
-            const message = formEl.validationMessage || `${formEl.label || formEl.name || 'This field'} is invalid`;
+            const label = formEl.label || formEl.name || t('fieldFallbackLabel');
+            const message = formEl.validationMessage || interpolate(t('fieldInvalid'), { label });
             formEl.error = message;
             errors.push({ name: formEl.name || '', message, element: el });
           }
@@ -285,7 +287,7 @@ export class CivForm extends LightDomContainerMixin(CivBaseElement) {
         if (summary) {
           summary.focus();
           this.announce(
-            `${errors.length} ${errors.length === 1 ? 'error' : 'errors'} found. Review the error summary.`,
+            interpolate(t('formErrorAnnouncement'), { count: errors.length }),
             'assertive',
           );
         }

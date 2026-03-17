@@ -1,6 +1,7 @@
 import { property } from 'lit/decorators.js';
 import { CivFormElement } from './civ-form-element.js';
 import { interpolate } from '../utils/interpolate.js';
+import { t } from '../i18n/locale.js';
 
 /**
  * Base class for boolean form controls (checkbox, toggle).
@@ -51,7 +52,7 @@ export class CivBooleanFormElement extends CivFormElement {
     if (this.required && !this.checked) {
       this._internals.setValidity(
         { valueMissing: true },
-        this.error || interpolate(this.requiredMessage, { label: this.label || 'This field' }),
+        this.error || interpolate(this.requiredMessage || t('fieldRequired'), { label: this.label || t('fieldFallbackLabel') }),
         anchor ?? undefined,
       );
     } else {

@@ -136,7 +136,7 @@ export class CivFormElement extends CivBaseElement {
     if (this.required && !this.value) {
       this._internals.setValidity(
         { valueMissing: true },
-        this.error || interpolate(this.requiredMessage || t('fieldRequired'), { label: this.label || 'This field' }),
+        this.error || interpolate(this.requiredMessage || t('fieldRequired'), { label: this.label || t('fieldFallbackLabel') }),
         anchor ?? undefined,
       );
     } else {

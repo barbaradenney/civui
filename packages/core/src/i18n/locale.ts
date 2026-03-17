@@ -24,6 +24,9 @@ export interface CivLocaleStrings {
 
   // Form validation
   fieldRequired: string; // "{label} is required"
+  fieldInvalid: string; // "{label} is invalid"
+  fieldFallbackLabel: string; // "This field" — fallback when no label provided
+  formErrorAnnouncement: string; // "{count} errors found. Review the error summary."
 
   // File upload
   fileUploadDragText: string;
@@ -78,6 +81,9 @@ const defaultStrings: CivLocaleStrings = {
   formErrorPlural: 'There are {count} errors in this form',
 
   fieldRequired: '{label} is required',
+  fieldInvalid: '{label} is invalid',
+  fieldFallbackLabel: 'This field',
+  formErrorAnnouncement: '{count} {count, plural, one {error} other {errors}} found. Review the error summary.',
 
   fileUploadDragText: 'Drag files here or',
   fileUploadBrowseText: 'choose from folder',

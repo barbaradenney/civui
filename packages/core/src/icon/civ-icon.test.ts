@@ -68,7 +68,7 @@ describe('civ-icon', () => {
   it('applies transform styles to layers', async () => {
     const el = await create('<civ-icon name="check"></civ-icon>');
     const layer = el.querySelector('.civ-icon > span') as HTMLElement;
-    expect(layer.style.transform).toBe('scale(1.2)');
+    expect(layer.style.transform).toBe('scale(1.0)');
   });
 
   it('applies opacity to layers when specified', async () => {

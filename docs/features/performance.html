@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Performance - CivUI</title>
+  <style>
+    :root {
+      --color-primary: #005ea2;
+      --color-primary-dark: #1a4480;
+      --color-base-darkest: #1b1b1b;
+      --color-base-dark: #565c65;
+      --color-base-light: #a9aeb1;
+      --color-base-lightest: #f0f0f0;
+      --color-white: #ffffff;
+      --color-error: #b50909;
+      --color-success: #00a91c;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Public Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: var(--color-base-darkest);
+      line-height: 1.6;
+    }
+
+    .top-nav {
+      background: var(--color-base-darkest);
+      padding: 0.75rem 2rem;
+    }
+
+    .top-nav a {
+      color: var(--color-white);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 600;
+      transition: opacity 0.15s;
+    }
+
+    .top-nav a:hover { opacity: 0.8; }
+
+    .hero {
+      background: var(--color-primary-dark);
+      color: var(--color-white);
+      padding: 4rem 2rem;
+      text-align: center;
+    }
+
+    .hero h1 { font-size: 3rem; margin-bottom: 1rem; }
+    .hero p { font-size: 1.25rem; max-width: 600px; margin: 0 auto; opacity: 0.9; }
+
+    .content { max-width: 960px; margin: 0 auto; padding: 3rem 2rem; }
+
+    h2 { font-size: 1.75rem; margin: 2.5rem 0 1rem; color: var(--color-primary-dark); }
+    h2:first-child { margin-top: 0; }
+    h3 { font-size: 1.25rem; margin: 1.5rem 0 0.75rem; }
+
+    p { margin-bottom: 1rem; color: var(--color-base-dark); }
+
+    code {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      background: var(--color-base-lightest);
+      padding: 0.15rem 0.4rem;
+      border-radius: 3px;
+      font-size: 0.85em;
+    }
+
+    pre {
+      background: var(--color-base-lightest);
+      padding: 1rem 1.5rem;
+      border-radius: 4px;
+      overflow-x: auto;
+      font-size: 0.875rem;
+      margin: 1rem 0;
+    }
+
+    pre code {
+      background: none;
+      padding: 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0 1.5rem;
+      font-size: 0.925rem;
+    }
+
+    th {
+      text-align: left;
+      padding: 0.75rem 1rem;
+      background: var(--color-primary-dark);
+      color: var(--color-white);
+      font-weight: 600;
+    }
+
+    th:first-child { border-radius: 4px 0 0 0; }
+    th:last-child { border-radius: 0 4px 0 0; }
+
+    td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--color-base-lightest);
+      color: var(--color-base-dark);
+    }
+
+    td:first-child {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.85em;
+      color: var(--color-base-darkest);
+    }
+
+    tr:last-child td { border-bottom: none; }
+
+    tbody tr:hover { background: rgba(0, 94, 162, 0.04); }
+
+    .section-card {
+      border: 1px solid var(--color-base-light);
+      border-radius: 8px;
+      padding: 2rem;
+      margin: 1.5rem 0;
+    }
+
+    .section-card h3 { margin-top: 0; color: var(--color-primary); }
+
+    .callout {
+      background: var(--color-base-lightest);
+      border-left: 4px solid var(--color-primary);
+      border-radius: 0 8px 8px 0;
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0;
+    }
+
+    .callout p { margin-bottom: 0; font-size: 0.925rem; }
+
+    .pipeline-steps {
+      display: flex;
+      gap: 0;
+      margin: 1.5rem 0;
+      flex-wrap: wrap;
+    }
+
+    .pipeline-step {
+      flex: 1;
+      min-width: 200px;
+      padding: 1.25rem;
+      text-align: center;
+      background: var(--color-primary-dark);
+      color: var(--color-white);
+      position: relative;
+    }
+
+    .pipeline-step:first-child { border-radius: 8px 0 0 8px; }
+    .pipeline-step:last-child { border-radius: 0 8px 8px 0; }
+
+    .pipeline-step + .pipeline-step {
+      border-left: 2px solid rgba(255,255,255,0.2);
+    }
+
+    .pipeline-step .step-number {
+      display: block;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+
+    .pipeline-step .step-label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .pipeline-step .step-detail {
+      font-size: 0.8rem;
+      opacity: 0.85;
+    }
+
+    .optimizations {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin: 1.5rem 0;
+    }
+
+    .optimization {
+      border-left: 4px solid var(--color-primary);
+      padding: 1rem 1.25rem;
+      background: var(--color-base-lightest);
+      border-radius: 0 8px 8px 0;
+    }
+
+    .optimization h4 {
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+      color: var(--color-base-darkest);
+    }
+
+    .optimization p {
+      font-size: 0.875rem;
+      margin-bottom: 0;
+    }
+
+    .zero-dep-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.25rem;
+      margin: 1.5rem 0;
+    }
+
+    .zero-dep-item {
+      background: var(--color-base-lightest);
+      border-radius: 8px;
+      padding: 1.25rem;
+    }
+
+    .zero-dep-item h4 {
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+      color: var(--color-base-darkest);
+    }
+
+    .zero-dep-item p {
+      font-size: 0.875rem;
+      margin-bottom: 0;
+    }
+
+    .checklist {
+      list-style: none;
+      margin: 1.5rem 0;
+      padding: 0;
+    }
+
+    .checklist li {
+      position: relative;
+      padding: 0.75rem 0 0.75rem 2.25rem;
+      border-bottom: 1px solid var(--color-base-lightest);
+      color: var(--color-base-dark);
+      font-size: 0.95rem;
+    }
+
+    .checklist li:last-child { border-bottom: none; }
+
+    .checklist li::before {
+      content: "\2713";
+      position: absolute;
+      left: 0;
+      top: 0.75rem;
+      width: 1.5rem;
+      height: 1.5rem;
+      background: var(--color-success);
+      color: var(--color-white);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      line-height: 1;
+      text-align: center;
+    }
+
+    .cta-section {
+      background: var(--color-base-lightest);
+      border-radius: 8px;
+      padding: 2rem;
+      margin: 2.5rem 0;
+      text-align: center;
+    }
+
+    .cta-section h3 { margin-top: 0; color: var(--color-primary-dark); }
+    .cta-section p { max-width: 600px; margin: 0 auto 1.5rem; }
+
+    .cta-link {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      border-radius: 4px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      background: var(--color-primary);
+      color: var(--color-white);
+      transition: background 0.15s;
+      margin: 0 0.5rem;
+    }
+
+    .cta-link:hover { background: var(--color-primary-dark); }
+
+    footer {
+      border-top: 1px solid var(--color-base-light);
+      padding: 2rem;
+      text-align: center;
+      color: var(--color-base-dark);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <nav class="top-nav" aria-label="Back navigation">
+    <a href="../">&larr; Back to CivUI</a>
+  </nav>
+
+  <div class="hero">
+    <h1>Performance</h1>
+    <p>Minimal footprint, maximum capability. Every byte is earned.</p>
+  </div>
+
+  <div class="content">
+    <h2>Bundle Sizes</h2>
+    <p>CivUI packages are compiled with TypeScript and minified with esbuild. These are the JavaScript output sizes for each package.</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Package</th>
+          <th>Raw (tsc)</th>
+          <th>Minified</th>
+          <th>Gzipped (est.)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>@civui/forms</td>
+          <td>656K</td>
+          <td>113K</td>
+          <td>~35K</td>
+        </tr>
+        <tr>
+          <td>@civui/core</td>
+          <td>528K</td>
+          <td>90K</td>
+          <td>~28K</td>
+        </tr>
+        <tr>
+          <td>@civui/ui</td>
+          <td>48K</td>
+          <td>8K</td>
+          <td>~3K</td>
+        </tr>
+        <tr>
+          <td>@civui/feedback</td>
+          <td>52K</td>
+          <td>10K</td>
+          <td>~4K</td>
+        </tr>
+        <tr>
+          <td>@civui/navigation</td>
+          <td>48K</td>
+          <td>7K</td>
+          <td>~2K</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <p>CSS is an additional 46K unminified (8K gzipped). A typical form using text-input, select, checkbox, and button imports only what it uses via tree-shaking &mdash; you never pay for components you don't use.</p>
+    </div>
+
+    <h2>Build Pipeline</h2>
+    <p>CivUI uses a 3-step build pipeline that balances developer experience with production performance.</p>
+
+    <div class="pipeline-steps" role="img" aria-label="Build pipeline: TypeScript compilation, then esbuild minification, then optional CDN bundling">
+      <div class="pipeline-step">
+        <span class="step-number">1</span>
+        <span class="step-label">tsc -b</span>
+        <span class="step-detail">TypeScript compilation with project references</span>
+      </div>
+      <div class="pipeline-step">
+        <span class="step-number">2</span>
+        <span class="step-label">postbuild</span>
+        <span class="step-detail">esbuild minification (44% reduction), preserving file structure</span>
+      </div>
+      <div class="pipeline-step">
+        <span class="step-number">3</span>
+        <span class="step-label">build:cdn</span>
+        <span class="step-detail">Optional bundled ESM for CDN delivery</span>
+      </div>
+    </div>
+
+    <p>Step 2 preserves the individual file structure so that bundlers in consuming applications can tree-shake effectively. Step 3 is optional and produces self-contained bundles for CDN delivery without a build step.</p>
+
+    <h3>CDN Bundle Sizes</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Bundle</th>
+          <th>Size</th>
+          <th>Contains</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>civui.js</td>
+          <td>64K</td>
+          <td>All 15 form components</td>
+        </tr>
+        <tr>
+          <td>civui-core.js</td>
+          <td>21K</td>
+          <td>Base classes, utilities, i18n</td>
+        </tr>
+        <tr>
+          <td>civui-ui.js</td>
+          <td>1.4K</td>
+          <td>Button</td>
+        </tr>
+        <tr>
+          <td>civui-feedback.js</td>
+          <td>2.5K</td>
+          <td>Alert</td>
+        </tr>
+        <tr>
+          <td>civui-navigation.js</td>
+          <td>0.6K</td>
+          <td>Skip Link</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>CDN usage requires a single script tag &mdash; no bundler, no build step:</p>
+    <pre><code>&lt;script type="module" src="https://cdn.example.com/civui.js"&gt;&lt;/script&gt;</code></pre>
+
+    <h2>Tree-Shaking</h2>
+    <p>CivUI is designed from the ground up for effective tree-shaking. Bundlers like Rollup, Vite, and webpack can eliminate unused code at build time.</p>
+
+    <div class="section-card">
+      <h3>Sub-path Exports</h3>
+      <p>Import only the component you need. Each component has its own entry point, so your bundler never pulls in code for components you don't use.</p>
+      <pre><code>// Import only text-input (not all 15 form components)
+import '@civui/forms/text-input';</code></pre>
+    </div>
+
+    <div class="section-card">
+      <h3>Side Effects Configuration</h3>
+      <p>Each <code>package.json</code> declares <code>sideEffects</code> arrays that mark component files (which register custom elements) as side effects, while pure utilities remain fully tree-shakeable. Bundlers use this information to safely eliminate unused exports.</p>
+    </div>
+
+    <div class="section-card">
+      <h3>Barrel Exports</h3>
+      <p>For convenience, barrel exports are available when you need multiple components. Modern bundlers will still tree-shake unused exports from barrel imports.</p>
+      <pre><code>import { CivTextInput, CivSelect } from '@civui/forms';</code></pre>
+    </div>
+
+    <h2>CSS Optimization</h2>
+    <p>CivUI uses Tailwind CSS with aggressive optimization to minimize stylesheet size.</p>
+
+    <ul class="checklist" role="list">
+      <li>Tailwind CSS with content purging &mdash; only classes used in components are generated</li>
+      <li>Full CSS output: 46K unminified, 8K gzipped</li>
+      <li><code>@layer civ</code> prevents specificity conflicts with consumer styles</li>
+      <li><code>@apply</code> bundles 5&ndash;10 utilities into semantic classes, reducing HTML size</li>
+      <li>Design tokens as CSS custom properties &mdash; one source of truth, no duplication</li>
+    </ul>
+
+    <h2>Runtime Performance</h2>
+    <p>Beyond bundle size, CivUI components are optimized at runtime to minimize allocations, reflows, and unnecessary work.</p>
+
+    <div class="optimizations">
+      <div class="optimization">
+        <h4>Intl.DateTimeFormat Caching</h4>
+        <p>Formatters are cached per locale, not created per render. Eliminates 42+ allocations per calendar view.</p>
+      </div>
+      <div class="optimization">
+        <h4>isRtl() WeakMap Cache</h4>
+        <p><code>getComputedStyle()</code> is called once per element lifetime, not per keydown event.</p>
+      </div>
+      <div class="optimization">
+        <h4>Batched querySelectorAll</h4>
+        <p>Group components query children once per update cycle, not per sync method.</p>
+      </div>
+      <div class="optimization">
+        <h4>Debounced Announcements</h4>
+        <p>Textarea character count announced at 1-second intervals, not per keystroke.</p>
+      </div>
+      <div class="optimization">
+        <h4>Click-Outside Utility</h4>
+        <p>Document listener is only active when a dropdown is open, not permanently attached.</p>
+      </div>
+      <div class="optimization">
+        <h4>Event Listener Cleanup</h4>
+        <p>All listeners are removed in <code>disconnectedCallback</code> to prevent memory leaks.</p>
+      </div>
+      <div class="optimization">
+        <h4>requestAnimationFrame Cleanup</h4>
+        <p>RAF IDs are tracked and cancelled in live-region cleanup to avoid orphaned callbacks.</p>
+      </div>
+    </div>
+
+    <h2>Bundle Size Monitoring</h2>
+    <p>CivUI tracks bundle sizes in CI to prevent regressions.</p>
+
+    <ul class="checklist" role="list">
+      <li>CI checks bundle sizes on every pull request</li>
+      <li>Warns if the forms package exceeds 300K</li>
+      <li>Bundle report appears in the GitHub step summary</li>
+      <li><code>pnpm build:cdn</code> generates a <code>metafile.json</code> for visual analysis at <a href="https://esbuild.github.io/analyze" style="color: var(--color-primary);">esbuild.github.io/analyze</a></li>
+    </ul>
+
+    <h2>What CivUI Doesn't Ship</h2>
+    <p>CivUI follows a zero-dependency philosophy. Every kilobyte must justify its existence.</p>
+
+    <div class="zero-dep-grid">
+      <div class="zero-dep-item">
+        <h4>No Icon Fonts or SVG Sprites</h4>
+        <p>Icons are layered Unicode characters. 0KB additional payload, zero network requests.</p>
+      </div>
+      <div class="zero-dep-item">
+        <h4>No Runtime CSS-in-JS</h4>
+        <p>Tailwind generates static CSS at build time. No JavaScript runs to compute styles.</p>
+      </div>
+      <div class="zero-dep-item">
+        <h4>No Framework Wrappers</h4>
+        <p>Native web components work everywhere &mdash; React, Vue, Angular, vanilla HTML.</p>
+      </div>
+      <div class="zero-dep-item">
+        <h4>No Polyfills Required</h4>
+        <p>Targets ES2022 browsers. No compatibility shims shipped.</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      <p>Lit is the only external runtime dependency at ~16K gzipped. Everything else is built in-house or handled at build time.</p>
+    </div>
+
+    <div class="cta-section">
+      <h3>See the Components in Action</h3>
+      <p>Explore the full component library with live examples, accessibility audits, and source code.</p>
+      <a href="../storybook/" class="cta-link">Open Storybook</a>
+      <a href="../" class="cta-link">CivUI Home</a>
+    </div>
+  </div>
+
+  <footer>
+    <p>CivUI &mdash; Civic Design System. MIT License.</p>
+  </footer>
+</body>
+</html>

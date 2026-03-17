@@ -76,6 +76,7 @@ export class CivIcon extends CivBaseElement {
     const style = [
       layer.transform ? `transform:${layer.transform}` : '',
       layer.opacity !== undefined ? `opacity:${layer.opacity}` : '',
+      layer.weight ? `font-weight:${layer.weight}` : '',
     ]
       .filter(Boolean)
       .join(';');

@@ -16,6 +16,8 @@ export interface IconLayer {
   transform?: string;
   /** Optional opacity (0–1). */
   opacity?: number;
+  /** Optional font-weight (e.g., 'bold', '700', 'normal'). */
+  weight?: string;
 }
 
 export type IconDef = {
@@ -84,15 +86,15 @@ export const icons: Record<string, IconDef> = {
 
   close: {
     label: 'Close',
-    layers: [{ char: '✕', transform: 'scale(1.1)' }],
+    layers: [{ char: '✕', transform: 'scale(1.1)', weight: 'bold' }],
   },
   plus: {
     label: 'Add',
-    layers: [{ char: '+', transform: 'scale(1.3)' }],
+    layers: [{ char: '+', transform: 'scale(1.3)', weight: 'bold' }],
   },
   minus: {
     label: 'Remove',
-    layers: [{ char: '−', transform: 'scale(1.3)' }],
+    layers: [{ char: '−', transform: 'scale(1.3)', weight: 'bold' }],
   },
   menu: {
     label: 'Menu',
@@ -119,41 +121,41 @@ export const icons: Record<string, IconDef> = {
 
   check: {
     label: 'Success',
-    layers: [{ char: '✓', transform: 'scale(1.2)' }],
+    layers: [{ char: '✓', transform: 'scale(1.2)', weight: 'bold' }],
   },
   'check-circle': {
     label: 'Success',
     layers: [
       { char: '○', transform: 'scale(1.2)' },
-      { char: '✓', transform: 'scale(0.7)' },
+      { char: '✓', transform: 'scale(0.7)', weight: 'bold' },
     ],
   },
   error: {
     label: 'Error',
     layers: [
       { char: '○', transform: 'scale(1.3)' },
-      { char: '!', transform: 'scale(0.65)' },
+      { char: '!', transform: 'scale(0.65)', weight: 'bold' },
     ],
   },
   warning: {
     label: 'Warning',
     layers: [
       { char: '△', transform: 'scale(1.4)' },
-      { char: '!', transform: 'scale(0.5) translate(0%, 10%)' },
+      { char: '!', transform: 'scale(0.5) translate(0%, 10%)', weight: 'bold' },
     ],
   },
   info: {
     label: 'Information',
     layers: [
       { char: '○', transform: 'scale(1.2)' },
-      { char: 'i', transform: 'scale(0.7) translate(0%, 2%)' },
+      { char: 'i', transform: 'scale(0.7) translate(0%, 2%)', weight: 'bold' },
     ],
   },
   help: {
     label: 'Help',
     layers: [
       { char: '○', transform: 'scale(1.2)' },
-      { char: '?', transform: 'scale(0.7)' },
+      { char: '?', transform: 'scale(0.7)', weight: 'bold' },
     ],
   },
 

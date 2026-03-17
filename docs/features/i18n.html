@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Internationalization - CivUI</title>
+  <style>
+    :root {
+      --color-primary: #005ea2;
+      --color-primary-dark: #1a4480;
+      --color-base-darkest: #1b1b1b;
+      --color-base-dark: #565c65;
+      --color-base-light: #a9aeb1;
+      --color-base-lightest: #f0f0f0;
+      --color-white: #ffffff;
+      --color-error: #b50909;
+      --color-success: #00a91c;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Public Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: var(--color-base-darkest);
+      line-height: 1.6;
+    }
+
+    .top-nav {
+      background: var(--color-base-lightest);
+      padding: 0.75rem 2rem;
+    }
+
+    .top-nav a {
+      color: var(--color-primary);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+
+    .top-nav a:hover { text-decoration: underline; }
+
+    .hero {
+      background: var(--color-primary-dark);
+      color: var(--color-white);
+      padding: 4rem 2rem;
+      text-align: center;
+    }
+
+    .hero h1 { font-size: 3rem; margin-bottom: 1rem; }
+    .hero p { font-size: 1.25rem; max-width: 600px; margin: 0 auto 2rem; opacity: 0.9; }
+
+    .hero-badges {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      background: rgba(255,255,255,0.15);
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      font-size: 0.875rem;
+    }
+
+    .content { max-width: 960px; margin: 0 auto; padding: 3rem 2rem; }
+
+    h2 { font-size: 1.75rem; margin: 2rem 0 1rem; color: var(--color-primary-dark); }
+    h3 { font-size: 1.25rem; margin: 1.5rem 0 0.75rem; }
+
+    p { margin: 0.75rem 0; }
+    p, li { color: var(--color-base-dark); font-size: 0.95rem; }
+
+    ul { margin: 0.75rem 0 0.75rem 1.5rem; }
+    li { margin: 0.25rem 0; }
+
+    pre {
+      background: var(--color-base-lightest);
+      padding: 1rem 1.5rem;
+      border-radius: 4px;
+      overflow-x: auto;
+      font-size: 0.875rem;
+      margin: 1rem 0;
+    }
+
+    code {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+    }
+
+    code:not(pre code) {
+      background: var(--color-base-lightest);
+      padding: 0.15rem 0.4rem;
+      border-radius: 3px;
+      font-size: 0.85rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: 0.875rem;
+    }
+
+    th {
+      background: var(--color-primary-dark);
+      color: var(--color-white);
+      padding: 0.75rem 1rem;
+      text-align: left;
+      font-weight: 600;
+    }
+
+    td {
+      padding: 0.6rem 1rem;
+      border-bottom: 1px solid var(--color-base-light);
+      color: var(--color-base-dark);
+    }
+
+    td code {
+      font-size: 0.8rem;
+    }
+
+    tr:nth-child(even) td { background: var(--color-base-lightest); }
+
+    .category-row td {
+      background: #e8f0f8 !important;
+      font-weight: 600;
+      color: var(--color-primary-dark);
+      padding-top: 0.85rem;
+      padding-bottom: 0.85rem;
+    }
+
+    footer {
+      border-top: 1px solid var(--color-base-light);
+      padding: 2rem;
+      text-align: center;
+      color: var(--color-base-dark);
+      font-size: 0.875rem;
+    }
+
+    footer a {
+      color: var(--color-primary);
+      text-decoration: none;
+    }
+
+    footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <nav class="top-nav">
+    <a href="../">&larr; Back to CivUI</a>
+  </nav>
+
+  <div class="hero">
+    <h1>Internationalization</h1>
+    <p>Support multilingual government services with built-in RTL support, 42+ translatable strings, and locale-aware date formatting.</p>
+    <div class="hero-badges">
+      <span class="badge">42+ Translatable Strings</span>
+      <span class="badge">RTL Support</span>
+      <span class="badge">Locale-Aware Dates</span>
+      <span class="badge">One-Line Setup</span>
+    </div>
+  </div>
+
+  <div class="content">
+    <h2>One-Line Locale Setup</h2>
+    <p>Switching CivUI to another language takes a single function call. Set it once at app startup and every component picks it up automatically.</p>
+    <pre><code>import { setLocaleStrings } from '@civui/core';
+
+setLocaleStrings({
+  required: '(obligatorio)',
+  selectEmpty: '- Seleccionar -',
+  fieldRequired: '{label} es obligatorio',
+  comboboxNoResults: 'Sin resultados',
+});</code></pre>
+    <p>Only override what you need &mdash; everything else falls back to English defaults. The merge is shallow: your partial object is spread over the full default string set, so untouched keys keep their English values.</p>
+
+    <h2>Translatable String Catalog</h2>
+    <p>Every user-facing string in CivUI is centralized in the locale registry. The table below shows all 42 translatable keys grouped by category.</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Key</th>
+          <th>Default (English)</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="category-row"><td colspan="3">General</td></tr>
+        <tr>
+          <td><code>required</code></td>
+          <td>(required)</td>
+          <td>Required field indicator shown next to labels</td>
+        </tr>
+
+        <tr class="category-row"><td colspan="3">Select &amp; Combobox</td></tr>
+        <tr>
+          <td><code>selectEmpty</code></td>
+          <td>- Select -</td>
+          <td>Default empty/placeholder option in select dropdowns</td>
+        </tr>
+        <tr>
+          <td><code>comboboxNoResults</code></td>
+          <td>No results found</td>
+          <td>Shown when combobox filtering yields no matches</td>
+        </tr>
+        <tr>
+          <td><code>comboboxResultsAvailable</code></td>
+          <td>{count} {count, plural, one {result} other {results}} available</td>
+          <td>Screen reader announcement when results appear</td>
+        </tr>
+        <tr>
+          <td><code>comboboxSelected</code></td>
+          <td>{label}, selected</td>
+          <td>Screen reader announcement when an option is selected</td>
+        </tr>
+
+        <tr class="category-row"><td colspan="3">Form Validation</td></tr>
+        <tr>
+          <td><code>formErrorSingular</code></td>
+          <td>There is 1 error in this form</td>
+          <td>Error summary heading (singular)</td>
+        </tr>
+        <tr>
+          <td><code>formErrorPlural</code></td>
+          <td>There are {count} errors in this form</td>
+          <td>Error summary heading (plural)</td>
+        </tr>
+        <tr>
+          <td><code>formErrorAnnouncement</code></td>
+          <td>{count} {count, plural, one {error} other {errors}} found. Review the error summary.</td>
+          <td>Screen reader announcement on form validation</td>
+        </tr>
+        <tr>
+          <td><code>fieldRequired</code></td>
+          <td>{label} is required</td>
+          <td>Validation message for empty required fields</td>
+        </tr>
+        <tr>
+          <td><code>fieldInvalid</code></td>
+          <td>{label} is invalid</td>
+          <td>Validation message for invalid field values</td>
+        </tr>
+        <tr>
+          <td><code>fieldFallbackLabel</code></td>
+          <td>This field</td>
+          <td>Fallback label used in validation messages when no label is provided</td>
+        </tr>
+
+        <tr class="category-row"><td colspan="3">File Upload</td></tr>
+        <tr>
+          <td><code>fileUploadDragText</code></td>
+          <td>Drag files here or</td>
+          <td>Drag-and-drop zone text</td>
+        </tr>
+        <tr>
+          <td><code>fileUploadBrowseText</code></td>
+          <td>choose from folder</td>
+          <td>Browse button text</td>
+        </tr>
+        <tr>
+          <td><code>fileUploadAcceptedLabel</code></td>
+          <td>Accepted: </td>
+          <td>Label prefix for accepted file types</td>
+        </tr>
+        <tr>
+          <td><code>fileUploadMaxSizeLabel</code></td>
+          <td>Max size: </td>
+          <td>Label prefix for maximum file size</td>
+        </tr>
+        <tr>
+          <td><code>fileUploadRemoveText</code></td>
+          <td>Remove</td>
+          <td>Remove button text</td>
+        </tr>
+        <tr>
+          <td><code>fileUploadRemoveAriaLabel</code></td>
+          <td>Remove {name}</td>
+          <td>Accessible label for remove button, interpolated with file name</td>
+        </tr>
+        <tr>
+          <td><code>fileUploadFilesListLabel</code></td>
+          <td>Selected files</td>
+          <td>Accessible label for the file list region</td>
+        </tr>
+        <tr>
+          <td><code>fileUploadFileAddedMessage</code></td>
+          <td>{count} file(s) added. {total} file(s) selected.</td>
+          <td>Screen reader announcement when files are added</td>
+        </tr>
+        <tr>
+          <td><code>fileUploadFileRemovedMessage</code></td>
+          <td>File removed. {total} file(s) selected.</td>
+          <td>Screen reader announcement when a file is removed</td>
+        </tr>
+        <tr>
+          <td><code>fileUploadFileSizeError</code></td>
+          <td>{name} exceeds maximum size of {size}</td>
+          <td>Error when a file exceeds the size limit</td>
+        </tr>
+        <tr>
+          <td><code>fileUploadFileTypeError</code></td>
+          <td>{name} is not an accepted file type</td>
+          <td>Error when a file has a disallowed type</td>
+        </tr>
+        <tr>
+          <td><code>fileUploadMaxFilesError</code></td>
+          <td>Maximum of {max} files allowed</td>
+          <td>Error when the file count exceeds the maximum</td>
+        </tr>
+
+        <tr class="category-row"><td colspan="3">Date Picker</td></tr>
+        <tr>
+          <td><code>datePickerPlaceholder</code></td>
+          <td>mm/dd/yyyy</td>
+          <td>Placeholder text for the date input</td>
+        </tr>
+        <tr>
+          <td><code>datePickerChooseDateLabel</code></td>
+          <td>Choose date</td>
+          <td>Accessible label for the calendar toggle button</td>
+        </tr>
+        <tr>
+          <td><code>datePickerSelectedDateLabel</code></td>
+          <td>Choose date, selected date is {date}</td>
+          <td>Accessible label when a date is already selected</td>
+        </tr>
+        <tr>
+          <td><code>datePickerDialogLabel</code></td>
+          <td>Choose Date</td>
+          <td>Accessible label for the calendar dialog</td>
+        </tr>
+        <tr>
+          <td><code>datePickerPreviousMonthLabel</code></td>
+          <td>Previous month</td>
+          <td>Accessible label for the previous-month navigation button</td>
+        </tr>
+        <tr>
+          <td><code>datePickerNextMonthLabel</code></td>
+          <td>Next month</td>
+          <td>Accessible label for the next-month navigation button</td>
+        </tr>
+        <tr>
+          <td><code>datePickerDialogOpenedMessage</code></td>
+          <td>Calendar dialog opened</td>
+          <td>Screen reader announcement when the calendar opens</td>
+        </tr>
+        <tr>
+          <td><code>datePickerDateSelectedMessage</code></td>
+          <td>Selected {date}</td>
+          <td>Screen reader announcement when a date is chosen</td>
+        </tr>
+        <tr>
+          <td><code>datePickerTodayLabel</code></td>
+          <td>today</td>
+          <td>Suffix for today's date in the calendar grid</td>
+        </tr>
+
+        <tr class="category-row"><td colspan="3">Memorable Date</td></tr>
+        <tr>
+          <td><code>memorableDateMonthLabel</code></td>
+          <td>Month</td>
+          <td>Label for the month select</td>
+        </tr>
+        <tr>
+          <td><code>memorableDateDayLabel</code></td>
+          <td>Day</td>
+          <td>Label for the day input</td>
+        </tr>
+        <tr>
+          <td><code>memorableDateYearLabel</code></td>
+          <td>Year</td>
+          <td>Label for the year input</td>
+        </tr>
+        <tr>
+          <td><code>memorableDateMonthEmptyLabel</code></td>
+          <td>- Month -</td>
+          <td>Default empty option in the month select</td>
+        </tr>
+        <tr>
+          <td><code>memorableDateDayPlaceholder</code></td>
+          <td>DD</td>
+          <td>Placeholder for the day input</td>
+        </tr>
+        <tr>
+          <td><code>memorableDateYearPlaceholder</code></td>
+          <td>YYYY</td>
+          <td>Placeholder for the year input</td>
+        </tr>
+        <tr>
+          <td><code>memorableDateDateSetMessage</code></td>
+          <td>Date set to {date}</td>
+          <td>Screen reader announcement when a complete date is entered</td>
+        </tr>
+        <tr>
+          <td><code>memorableDateInvalidDateMessage</code></td>
+          <td>Enter a valid date</td>
+          <td>Error message for invalid date combinations</td>
+        </tr>
+
+        <tr class="category-row"><td colspan="3">Alert</td></tr>
+        <tr>
+          <td><code>alertDismissLabel</code></td>
+          <td>Dismiss alert</td>
+          <td>Accessible label for the alert dismiss button</td>
+        </tr>
+        <tr>
+          <td><code>alertDismissedMessage</code></td>
+          <td>Alert dismissed</td>
+          <td>Screen reader announcement when an alert is dismissed</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>RTL Support</h2>
+    <p>CivUI uses logical CSS properties throughout, so components render correctly in both LTR and RTL writing modes without any additional configuration.</p>
+    <ul>
+      <li><strong>Logical CSS properties throughout:</strong> <code>margin-inline-start</code> not <code>margin-left</code>, <code>inset-inline-start</code> not <code>left</code>, <code>border-inline-start</code> not <code>border-left</code>.</li>
+      <li><strong>Arrow key navigation respects direction:</strong> ArrowRight and ArrowLeft swap behavior in RTL via the <code>isRtl()</code> utility.</li>
+      <li><strong>Used in:</strong> radio groups, segmented controls, and date picker calendar navigation.</li>
+      <li><strong>Toggle positioning:</strong> the toggle thumb uses <code>inset-inline-start</code> for correct positioning in RTL.</li>
+    </ul>
+    <h3>How to enable RTL</h3>
+    <p>Set <code>dir="rtl"</code> on a parent element or the <code>&lt;html&gt;</code> tag. CivUI detects this automatically and adjusts all layout and navigation behavior.</p>
+    <pre><code>&lt;html dir="rtl" lang="ar"&gt;
+  &lt;civ-text-input label="&#x627;&#x644;&#x628;&#x631;&#x64A;&#x62F; &#x627;&#x644;&#x625;&#x644;&#x643;&#x62A;&#x631;&#x648;&#x646;&#x64A;" required&gt;&lt;/civ-text-input&gt;
+&lt;/html&gt;</code></pre>
+
+    <h2>Locale-Aware Dates</h2>
+    <p>The date picker and memorable date components use <code>Intl.DateTimeFormat</code> to produce locale-appropriate month names and day-of-week headers.</p>
+    <ul>
+      <li>Pass a <code>locale</code> prop to get localized month and day names: <code>&lt;civ-date-picker locale="fr-FR"&gt;</code></li>
+      <li><code>formatDateLong()</code> produces locale-appropriate long date strings for screen reader announcements (e.g., "15 janvier 2026" in French).</li>
+      <li>Locale data is cached per locale for performance &mdash; subsequent calls reuse the formatter.</li>
+    </ul>
+    <pre><code>&lt;!-- French locale: month/day names render in French --&gt;
+&lt;civ-date-picker
+  label="Date de rendez-vous"
+  locale="fr-FR"
+&gt;&lt;/civ-date-picker&gt;
+
+&lt;!-- Japanese locale --&gt;
+&lt;civ-memorable-date
+  label="&#x751F;&#x5E74;&#x6708;&#x65E5;"
+  locale="ja-JP"
+&gt;&lt;/civ-memorable-date&gt;</code></pre>
+
+    <h2>Component-Level Overrides</h2>
+    <p>Props always win over locale defaults. If a component has a prop for a translatable string, setting that prop overrides whatever the locale registry provides. This lets you customize individual instances without changing the global locale.</p>
+    <pre><code>&lt;!-- Uses locale default for empty label --&gt;
+&lt;civ-select label="State"&gt;&lt;/civ-select&gt;
+
+&lt;!-- Overrides with custom text --&gt;
+&lt;civ-select label="Estado" empty-label="- Elegir -"&gt;&lt;/civ-select&gt;</code></pre>
+
+    <h2>Full Spanish Example</h2>
+    <p>Here is a complete locale setup for a Spanish-language government form. This demonstrates how all i18n features work together &mdash; locale strings, date formatting, and component labels.</p>
+    <pre><code>import { setLocaleStrings } from '@civui/core';
+
+setLocaleStrings({
+  required: '(obligatorio)',
+  selectEmpty: '- Seleccionar -',
+  fieldRequired: '{label} es obligatorio',
+  fieldInvalid: '{label} no es v&aacute;lido',
+  formErrorSingular: 'Hay 1 error en este formulario',
+  formErrorPlural: 'Hay {count} errores en este formulario',
+  fileUploadDragText: 'Arrastra archivos aqu&iacute; o',
+  fileUploadBrowseText: 'elige desde carpeta',
+  datePickerChooseDateLabel: 'Elegir fecha',
+  memorableDateMonthLabel: 'Mes',
+  memorableDateDayLabel: 'D&iacute;a',
+  memorableDateYearLabel: 'A&ntilde;o',
+});</code></pre>
+    <pre><code>&lt;civ-form&gt;
+  &lt;civ-text-input
+    label="Nombre completo"
+    name="name"
+    required
+    required-message="Ingrese su nombre completo"
+  &gt;&lt;/civ-text-input&gt;
+
+  &lt;civ-text-input
+    label="Correo electr&oacute;nico"
+    name="email"
+    type="email"
+    required
+    hint="Por ejemplo: nombre@agencia.gov"
+  &gt;&lt;/civ-text-input&gt;
+
+  &lt;civ-memorable-date
+    label="Fecha de nacimiento"
+    name="dob"
+    locale="es-ES"
+    hint="Por ejemplo: 15 enero 1990"
+  &gt;&lt;/civ-memorable-date&gt;
+
+  &lt;civ-select
+    label="Estado"
+    name="state"
+  &gt;&lt;/civ-select&gt;
+
+  &lt;button type="submit"&gt;Enviar&lt;/button&gt;
+&lt;/civ-form&gt;</code></pre>
+  </div>
+
+  <footer>
+    <p>
+      <a href="../">CivUI</a> &mdash; Civic Design System.
+      <a href="../storybook/">Storybook</a> &middot;
+      <a href="https://github.com/barbaradenney/civui">GitHub</a>
+    </p>
+  </footer>
+</body>
+</html>

@@ -41,7 +41,7 @@
   }
 
   .civ-hint--group {
-    @apply civ-block civ-mb-2 civ-text-sm;
+    @apply civ-block civ-mb-1 civ-text-sm;
     color: var(--civ-color-base-DEFAULT);
   }
 
@@ -50,7 +50,7 @@
   }
 
   .civ-error-text--group {
-    @apply civ-block civ-mb-2 civ-text-sm civ-text-error civ-font-bold;
+    @apply civ-block civ-mb-1 civ-text-sm civ-text-error civ-font-bold;
   }
 
   .civ-input {

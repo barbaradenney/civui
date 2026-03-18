@@ -151,7 +151,7 @@ const defaultStrings: CivLocaleStrings = {
   maskZipError: 'Enter a 5-digit ZIP code',
   maskZip4Error: 'Enter a 9-digit ZIP+4 code',
   maskEinError: 'Enter a 9-digit Employer Identification Number',
-  maskPhoneIntlError: 'Enter a valid international phone number',
+  maskPhoneIntlError: 'Enter a valid phone number with country code',
   maskPatternError: '{label} does not match the expected format',
 
   alertDismissLabel: 'Dismiss alert',

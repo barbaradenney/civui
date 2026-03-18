@@ -11,8 +11,10 @@ import {
   MASK_PRESETS,
   applyMask,
   stripMask,
+  isComplete,
   computeCursorPosition,
   processRawInput,
+  interpolate,
   t,
 } from '@civui/core';
 import type { MaskDefinition } from '@civui/core';
@@ -53,7 +55,24 @@ export class CivTextInput extends CivFormElement {
   @property({ type: String }) autocomplete: string = '';
   @property({ type: String }) inputmode: string = '';
   @property({ type: String }) mask: TextInputMask = '';
+
+  /**
+   * Custom mask pattern string. Slot syntax:
+   * - `#` = digit (0-9)
+   * - `A` = letter (a-z, A-Z)
+   * - `*` = any printable character
+   *
+   * All other characters are treated as literals inserted automatically.
+   *
+   * @example
+   * ```html
+   * <civ-text-input label="Code" mask-pattern="AAA-####"></civ-text-input>
+   * ```
+   */
   @property({ type: String, attribute: 'mask-pattern' }) maskPattern: string = '';
+
+  /** Tracks whether the current error was set by the mask system. */
+  private _maskError = false;
 
   /**
    * Returns the active MaskDefinition from a preset, or builds one
@@ -95,6 +114,17 @@ export class CivTextInput extends CivFormElement {
     return this.value;
   }
 
+  /**
+   * Strip any formatted initial value through the mask engine on first render.
+   * For example, `value="123-45-6789"` with `mask="ssn"` becomes raw `"123456789"`.
+   */
+  override firstUpdated(): void {
+    super.firstUpdated();
+    if (this._activePattern && this.value) {
+      this.value = processRawInput(stripMask(this.value, this._activePattern), this._activePattern);
+    }
+  }
+
   override render() {
     const widthClass = WIDTH_CLASSES[this.width] || WIDTH_CLASSES['default'];
     const classes = inputClasses({
@@ -121,6 +151,11 @@ export class CivTextInput extends CivFormElement {
     // Display value: formatted when mask is active, raw otherwise
     const displayValue = pattern ? this.formattedValue : this.value;
 
+    // Auto-set autocomplete="off" for PII masks unless user explicitly set autocomplete
+    const effectiveAutocomplete = (maskDef?.pii && !this.autocomplete)
+      ? 'off'
+      : this.autocomplete;
+
     return html`
       <div class="civ-mb-4">
         ${renderLabel({ label: this.label, inputId: this._inputId, required: this.required })}
@@ -139,7 +174,7 @@ export class CivTextInput extends CivFormElement {
           pattern="${this.pattern || nothing}"
           maxlength="${effectiveMaxlength ?? nothing}"
           minlength="${this.minlength && this.minlength > 0 ? this.minlength : nothing}"
-          autocomplete="${this.autocomplete || nothing}"
+          autocomplete="${effectiveAutocomplete || nothing}"
           inputmode="${effectiveInputmode || nothing}"
           aria-describedby="${this._ariaDescribedBy || nothing}"
           aria-invalid="${this.error ? 'true' : nothing}"
@@ -153,37 +188,109 @@ export class CivTextInput extends CivFormElement {
 
   /**
    * Handle input events when a mask is active.
-   * Strips the mask, filters invalid chars, reformats, and positions the cursor.
+   *
+   * Instead of trying to align input.value with the pattern positionally
+   * (which breaks on mid-string edits), we:
+   * 1. Count raw (non-literal) chars before the cursor in the current input
+   * 2. Strip ALL non-alphanumeric chars to get a clean raw string
+   * 3. For backspace/delete, splice the old raw value to remove the right char
+   * 4. Reformat and reposition cursor
    */
   private _onMaskInput(e: InputEvent): void {
     const input = e.target as HTMLInputElement;
     const pattern = this._activePattern;
+    if (!pattern) return;
 
-    // Strip mask literals from what the user typed, then filter invalid chars
-    const stripped = stripMask(input.value, pattern);
+    const cursorPos = input.selectionStart ?? input.value.length;
+    const inputType = e.inputType;
+
+    // Count how many alphanumeric (raw) characters appear before cursor
+    // in the current (already-modified-by-browser) input value
+    let rawCursorPos = 0;
+    for (let i = 0; i < cursorPos && i < input.value.length; i++) {
+      if (/[a-zA-Z0-9]/.test(input.value[i])) rawCursorPos++;
+    }
+
+    // Handle backspace: delete the raw character before the raw cursor position
+    if (inputType === 'deleteContentBackward') {
+      const oldRaw = this.value;
+      if (rawCursorPos >= 0 && rawCursorPos < oldRaw.length) {
+        // Remove the raw char at rawCursorPos (the char just before where cursor landed)
+        // When backspace removes a literal, rawCursorPos points at the raw char we want gone
+        const newRaw = oldRaw.substring(0, rawCursorPos) + oldRaw.substring(rawCursorPos + 1);
+        const processed = processRawInput(newRaw, pattern);
+        this.value = processed;
+        const formatted = applyMask(processed, pattern);
+        input.value = formatted;
+        const newCursor = computeCursorPosition(rawCursorPos, pattern);
+        input.setSelectionRange(newCursor, newCursor);
+        dispatch(this, 'civ-input', { value: this.value });
+        return;
+      }
+    }
+
+    // Handle forward delete
+    if (inputType === 'deleteContentForward') {
+      const oldRaw = this.value;
+      if (rawCursorPos >= 0 && rawCursorPos < oldRaw.length) {
+        const newRaw = oldRaw.substring(0, rawCursorPos) + oldRaw.substring(rawCursorPos + 1);
+        const processed = processRawInput(newRaw, pattern);
+        this.value = processed;
+        const formatted = applyMask(processed, pattern);
+        input.value = formatted;
+        const newCursor = computeCursorPosition(rawCursorPos, pattern);
+        input.setSelectionRange(newCursor, newCursor);
+        dispatch(this, 'civ-input', { value: this.value });
+        return;
+      }
+    }
+
+    // For insertions and all other input types:
+    // Strip ALL non-alphanumeric chars from input.value to get clean raw chars
+    const stripped = input.value.replace(/[^a-zA-Z0-9]/g, '');
     const raw = processRawInput(stripped, pattern);
 
-    // Update the raw value
     this.value = raw;
-
-    // Write formatted value back to the input imperatively
     const formatted = applyMask(raw, pattern);
     input.value = formatted;
 
-    // Position cursor after the last raw character
-    const cursorPos = computeCursorPosition(raw.length, pattern);
-    input.setSelectionRange(cursorPos, cursorPos);
+    // Map raw cursor position back to formatted position
+    const newCursor = computeCursorPosition(rawCursorPos, pattern);
+    input.setSelectionRange(newCursor, newCursor);
 
-    // Dispatch civ-input with the raw value
     dispatch(this, 'civ-input', { value: this.value });
-    this.updateFormValue(this.value);
   }
 
   /**
    * Handle change events when a mask is active.
+   * Validates completeness and sets/clears mask errors.
    */
   private _onMaskChange(_e: Event): void {
     const maskDef = this._maskDef;
+    const pattern = this._activePattern;
+
+    // Validate completeness on change
+    if (pattern && this.value) {
+      if (!isComplete(this.value, pattern)) {
+        // Set error from preset error key, or generic pattern error for custom masks
+        if (maskDef?.errorKey) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          this.error = t(maskDef.errorKey as any);
+        } else {
+          this.error = interpolate(t('maskPatternError'), { label: this.label || t('fieldFallbackLabel') });
+        }
+        this._maskError = true;
+      } else if (this._maskError) {
+        // Clear only mask-set errors
+        this.error = '';
+        this._maskError = false;
+      }
+    } else if (!this.value && this._maskError) {
+      // Empty value: clear mask error
+      this.error = '';
+      this._maskError = false;
+    }
+
     dispatch(this, 'civ-change', { value: this.value });
     this.sendAnalytics('change', maskDef?.pii ? { piiMasked: true } : undefined);
   }
@@ -212,7 +319,6 @@ export class CivTextInput extends CivFormElement {
     }
 
     dispatch(this, 'civ-input', { value: this.value });
-    this.updateFormValue(this.value);
   }
 
   /**

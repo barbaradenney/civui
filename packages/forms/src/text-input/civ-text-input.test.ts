@@ -1,5 +1,6 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
+import type { CivTextInput } from './civ-text-input.js';
 import './civ-text-input.js';
 
 afterEach(cleanupFixtures);
@@ -378,5 +379,63 @@ describe('text-input analytics', () => {
     input.dispatchEvent(new Event('change', { bubbles: true }));
 
     expect(handler).not.toHaveBeenCalled();
+  });
+});
+
+describe('text-input mask', () => {
+  afterEach(cleanupFixtures);
+
+  it('auto-populates hint from SSN preset', async () => {
+    const el = await fixture<CivTextInput>('<civ-text-input label="SSN" mask="ssn"></civ-text-input>');
+    expect(el.querySelector('.civ-hint')?.textContent).toContain('123-45-6789');
+  });
+
+  it('sets inputmode from preset', async () => {
+    const el = await fixture<CivTextInput>('<civ-text-input label="SSN" mask="ssn"></civ-text-input>');
+    const input = el.querySelector('input')!;
+    expect(input.getAttribute('inputmode')).toBe('numeric');
+  });
+
+  it('stores raw value without formatting', async () => {
+    const el = await fixture<CivTextInput>('<civ-text-input label="SSN" mask="ssn"></civ-text-input>');
+    el.value = '123456789';
+    await elementUpdated(el);
+    expect(el.value).toBe('123456789');
+    expect(el.formattedValue).toBe('123-45-6789');
+  });
+
+  it('strips formatted initial value', async () => {
+    const el = await fixture<CivTextInput>('<civ-text-input label="SSN" mask="ssn" value="123-45-6789"></civ-text-input>');
+    await elementUpdated(el);
+    expect(el.value).toBe('123456789');
+  });
+
+  it('dispatches civ-input with raw value', async () => {
+    const el = await fixture<CivTextInput>('<civ-text-input label="Phone" mask="phone-us"></civ-text-input>');
+    const input = el.querySelector('input')!;
+    let detail: any;
+    el.addEventListener('civ-input', ((e: CustomEvent) => { detail = e.detail; }) as EventListener);
+    input.value = '5551234567';
+    input.dispatchEvent(new InputEvent('input', { inputType: 'insertText', data: '7' }));
+    expect(detail?.value).toBe('5551234567');
+  });
+
+  it('sets autocomplete=off for PII masks', async () => {
+    const el = await fixture<CivTextInput>('<civ-text-input label="SSN" mask="ssn"></civ-text-input>');
+    const input = el.querySelector('input')!;
+    expect(input.getAttribute('autocomplete')).toBe('off');
+  });
+
+  it('sets maxlength from pattern', async () => {
+    const el = await fixture<CivTextInput>('<civ-text-input label="ZIP" mask="zip"></civ-text-input>');
+    const input = el.querySelector('input')!;
+    expect(input.getAttribute('maxlength')).toBe('5');
+  });
+
+  it('uses custom mask-pattern', async () => {
+    const el = await fixture<CivTextInput>('<civ-text-input label="Code" mask-pattern="AA-####"></civ-text-input>');
+    el.value = 'AB1234';
+    await elementUpdated(el);
+    expect(el.formattedValue).toBe('AB-1234');
   });
 });

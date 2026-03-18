@@ -259,3 +259,50 @@ export const MaskCustom: Story = {
     ></civ-text-input>
   `,
 };
+
+export const MaskInForm: Story = {
+  render: () => html`
+    <form
+      @submit="${(e: Event) => {
+        e.preventDefault();
+        const form = e.target as HTMLFormElement;
+        const data = new FormData(form);
+        const output = form.querySelector('#mask-form-output');
+        if (output) {
+          output.textContent = JSON.stringify(Object.fromEntries(data), null, 2);
+        }
+      }}"
+    >
+      <civ-text-input
+        label="Social Security number"
+        name="ssn"
+        mask="ssn"
+        required
+      ></civ-text-input>
+      <button
+        type="submit"
+        style="margin-top: 16px; padding: 8px 24px; background: #005ea2; color: white; border: none; border-radius: 4px; cursor: pointer;"
+      >
+        Submit
+      </button>
+      <pre id="mask-form-output" style="margin-top: 16px; padding: 12px; background: #f0f0f0; border-radius: 4px; min-height: 40px;"></pre>
+    </form>
+  `,
+};
+
+export const MaskWithError: Story = {
+  args: {
+    label: 'Social Security number',
+    name: 'ssn',
+    mask: 'ssn',
+    error: 'Enter a 9-digit Social Security number',
+  },
+  render: (args) => html`
+    <civ-text-input
+      label="${args.label}"
+      name="${args.name}"
+      mask="${args.mask}"
+      error="${args.error}"
+    ></civ-text-input>
+  `,
+};

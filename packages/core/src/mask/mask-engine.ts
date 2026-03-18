@@ -65,6 +65,7 @@ export const MASK_PRESETS: Record<string, MaskDefinition> = {
     inputmode: 'numeric',
     pii: true,
   },
+  // North American format (+1)
   'phone-intl': {
     pattern: '+# (###) ###-####',
     hintKey: 'maskPhoneIntlHint',
@@ -173,6 +174,15 @@ export function computeCursorPosition(rawIndex: number, pattern: string): number
 
   // rawIndex is at or past the end — return pattern length
   return pattern.length;
+}
+
+/**
+ * Returns true if the character at `index` in the pattern is a slot
+ * (#, A, *) rather than a literal character.
+ */
+export function isSlotPosition(index: number, pattern: string): boolean {
+  if (index < 0 || index >= pattern.length) return false;
+  return isSlot(pattern[index]);
 }
 
 /**

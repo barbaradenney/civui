@@ -14,12 +14,16 @@
     @apply civ-block civ-mb-0 civ-font-bold;
     font-size: var(--civ-typography-fontSize-base);
     color: var(--civ-color-base-darkest);
+    text-box-trim: both;
+    text-box-edge: cap alphabetic;
   }
 
   .civ-legend {
     @apply civ-block civ-mb-0 civ-font-bold;
     font-size: var(--civ-typography-fontSize-base);
     color: var(--civ-color-base-darkest);
+    text-box-trim: both;
+    text-box-edge: cap alphabetic;
   }
 
   .civ-text-body {
@@ -38,19 +42,27 @@
   .civ-hint {
     @apply civ-block civ-mb-1 civ-text-sm;
     color: var(--civ-color-base-DEFAULT);
+    text-box-trim: both;
+    text-box-edge: cap alphabetic;
   }
 
   .civ-hint--group {
     @apply civ-block civ-mb-1 civ-text-sm;
     color: var(--civ-color-base-DEFAULT);
+    text-box-trim: both;
+    text-box-edge: cap alphabetic;
   }
 
   .civ-error-text {
     @apply civ-block civ-mb-1 civ-text-sm civ-text-error civ-font-bold;
+    text-box-trim: both;
+    text-box-edge: cap alphabetic;
   }
 
   .civ-error-text--group {
     @apply civ-block civ-mb-1 civ-text-sm civ-text-error civ-font-bold;
+    text-box-trim: both;
+    text-box-edge: cap alphabetic;
   }
 
   .civ-input {
@@ -129,11 +141,15 @@
     @apply civ-font-sans civ-cursor-pointer;
     font-size: var(--civ-typography-fontSize-base);
     color: var(--civ-color-base-darkest);
+    text-box-trim: both;
+    text-box-edge: cap alphabetic;
   }
 
   .civ-check-description {
     @apply civ-block civ-text-sm civ-mt-0;
     color: var(--civ-color-base-dark);
+    text-box-trim: both;
+    text-box-edge: cap alphabetic;
   }
 
   .civ-check-tile {

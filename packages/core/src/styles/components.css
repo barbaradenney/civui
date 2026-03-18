@@ -17,7 +17,7 @@
   }
 
   .civ-legend {
-    @apply civ-block civ-mb-1 civ-font-bold;
+    @apply civ-block civ-mb-0 civ-font-bold;
     font-size: var(--civ-typography-fontSize-base);
     color: var(--civ-color-base-darkest);
   }
@@ -132,7 +132,7 @@
   }
 
   .civ-check-description {
-    @apply civ-block civ-text-sm civ-mt-0.5;
+    @apply civ-block civ-text-sm civ-mt-0;
     color: var(--civ-color-base-dark);
   }
 

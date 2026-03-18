@@ -119,27 +119,24 @@ export const GroupWithError: Story = {
 
 export const GroupTileVariant: Story = {
   render: () => html`
-    <civ-checkbox-group legend="Choose your plan" hint="Select all features you need">
+    <civ-checkbox-group legend="Choose your plan" hint="Select all features you need" tile>
       <civ-checkbox
         label="Basic"
         name="plan"
         value="basic"
         description="5 GB storage, email support"
-        tile
       ></civ-checkbox>
       <civ-checkbox
         label="Pro"
         name="plan"
         value="pro"
         description="50 GB storage, priority support"
-        tile
       ></civ-checkbox>
       <civ-checkbox
         label="Enterprise"
         name="plan"
         value="enterprise"
         description="Unlimited storage, dedicated support"
-        tile
       ></civ-checkbox>
     </civ-checkbox-group>
   `,

@@ -111,24 +111,21 @@ export const WithHint: Story = {
 
 export const TileVariant: Story = {
   render: () => html`
-    <civ-radio-group legend="Plan" name="plan">
+    <civ-radio-group legend="Plan" name="plan" tile>
       <civ-radio
         label="Free"
         value="free"
         description="Basic features, community support"
-        tile
       ></civ-radio>
       <civ-radio
         label="Pro"
         value="pro"
         description="All features, priority support, API access"
-        tile
       ></civ-radio>
       <civ-radio
         label="Enterprise"
         value="enterprise"
         description="Custom solutions, dedicated account manager"
-        tile
       ></civ-radio>
     </civ-radio-group>
   `,

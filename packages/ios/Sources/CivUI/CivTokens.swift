@@ -174,7 +174,7 @@ public enum CivTokens {
 
     public enum Typography {
         public enum FontFamily {
-            public static let sans = "Public Sans"
+            public static let sans = ".AppleSystemUIFont"
             public static let mono = "Roboto Mono"
         }
 

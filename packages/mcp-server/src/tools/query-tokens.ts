@@ -335,7 +335,6 @@ parseGroup(
     sans: {
       $type: 'fontFamily',
       $value: [
-        'Public Sans',
         'system-ui',
         '-apple-system',
         'BlinkMacSystemFont',

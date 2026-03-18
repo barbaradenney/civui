@@ -172,7 +172,7 @@ object CivTokens {
 
     object Typography {
         object FontFamily {
-            const val sans = "Public Sans"
+            const val sans = "sans-serif"
             const val mono = "Roboto Mono"
         }
 

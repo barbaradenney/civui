@@ -1,6 +1,6 @@
 {
   "typography": {
-    "$description": "CivUI typography — Public Sans primary, system-ui fallback",
+    "$description": "CivUI typography — system font stack",
     "fontFamily": {
       "sans": {
         "$type": "fontFamily",

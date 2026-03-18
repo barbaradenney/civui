@@ -112,7 +112,7 @@ Use semantic class names (e.g., \`civ-text-primary\`, \`civ-bg-error-lighter\`).
 ### Font Families
 | Token | Value | Class |
 |-------|-------|-------|
-| sans | Public Sans, system-ui, sans-serif | \`civ-font-sans\` |
+| sans | system-ui, sans-serif | \`civ-font-sans\` |
 | mono | Roboto Mono, monospace | \`civ-font-mono\` |
 
 ### Font Sizes

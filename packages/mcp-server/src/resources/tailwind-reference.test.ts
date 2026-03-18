@@ -62,7 +62,7 @@ describe('TAILWIND_REFERENCE', () => {
 
   describe('typography', () => {
     it('includes font families', () => {
-      expect(TAILWIND_REFERENCE).toContain('Public Sans');
+      expect(TAILWIND_REFERENCE).toContain('system-ui');
       expect(TAILWIND_REFERENCE).toContain('Roboto Mono');
       expect(TAILWIND_REFERENCE).toContain('civ-font-sans');
       expect(TAILWIND_REFERENCE).toContain('civ-font-mono');

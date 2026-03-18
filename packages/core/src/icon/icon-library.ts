@@ -83,8 +83,9 @@ export const icons: Record<string, IconDef> = {
   'external-link': {
     label: 'Opens in new tab',
     layers: [
-      { char: '□', transform: 'scale(0.75) translate(-10%, 10%)' },
-      { char: '↗', transform: 'scale(0.6) translate(25%, -25%)' },
+      { char: '↗', transform: 'scale(1) translate(8%, -8%)' },
+      { char: '¬', transform: 'scale(1) translate(-18%, 46%) rotate(-180deg)' },
+      { char: '¬', transform: 'scale(1) translate(-47%, -10%) rotate(-90deg)' },
     ],
   },
 
@@ -116,11 +117,18 @@ export const icons: Record<string, IconDef> = {
   },
   search: {
     label: 'Search',
-    layers: [{ char: '⌕', transform: 'scale(1.0)' }],
+    layers: [
+      { char: '○', transform: 'scale(0.8) translate(13%, -17%)', weight: 'bold' },
+      { char: '⏽', transform: 'scale(0.75) translate(-34%, 34%) rotate(45deg)', weight: 'bold' },
+    ],
   },
-  edit: {
+  'edit': {
     label: 'Edit',
-    layers: [{ char: '✎', transform: 'scale(1.0)' }],
+    layers: [
+      { char: '▯', transform: 'scale(1.15) translate(-14%, -11%) rotate(-45deg)' },
+      { char: '╶', transform: 'scale(0.75) translate(44%, 12%) rotate(90deg)' },
+      { char: '╶', transform: 'scale(0.75) translate(7%, 30%)' },
+    ],
   },
 
   // ── Status / Feedback ───────────────────────────────────────
@@ -146,8 +154,8 @@ export const icons: Record<string, IconDef> = {
   warning: {
     label: 'Warning',
     layers: [
-      { char: '△', transform: 'scale(1.1)' },
-      { char: '!', transform: 'scale(0.45) translate(0%, 10%)', weight: 'bold' },
+      { char: '△', transform: 'scale(1.15) translate(0%, -1%)' },
+      { char: '!', transform: 'scale(0.4) translate(0%, 24%)', weight: 'bold' },
     ],
   },
   info: {
@@ -197,18 +205,18 @@ export const icons: Record<string, IconDef> = {
 
   // ── Media / Content ─────────────────────────────────────────
 
-  upload: {
+  'upload': {
     label: 'Upload',
     layers: [
-      { char: '↑', transform: 'scale(0.9) translate(0%, -10%)' },
-      { char: '▔', transform: 'scale(0.6) translate(0%, 50%)' },
+      { char: '↑', transform: 'scale(1) translate(-2%, 9%)' },
+      { char: '▔', transform: 'scale(0.6) translate(-3%, -18%)' },
     ],
   },
-  download: {
+  'download': {
     label: 'Download',
     layers: [
-      { char: '↓', transform: 'scale(0.9) translate(0%, -10%)' },
-      { char: '▔', transform: 'scale(0.6) translate(0%, 50%)' },
+      { char: '↓', transform: 'scale(1) translate(0%, -10%)' },
+      { char: '▔', transform: 'scale(0.6) translate(1%, 23%) rotate(-180deg)' },
     ],
   },
   copy: {
@@ -218,14 +226,18 @@ export const icons: Record<string, IconDef> = {
       { char: '□', transform: 'scale(0.6) translate(12%, -12%)' },
     ],
   },
-  trash: {
+  'trash': {
     label: 'Delete',
     layers: [
-      { char: '▔', transform: 'scale(0.6) translate(0%, -35%)' },
-      { char: '▕', transform: 'scale(0.25) translate(0%, -80%)' },
-      { char: '□', transform: 'scale(0.55) translate(0%, 15%)' },
+      { char: '□', transform: 'scale(0.55) translate(-3%, 13%)' },
+      { char: '│', transform: 'scale(0.35) translate(-4%, 26%)' },
+      { char: '│', transform: 'scale(0.35) translate(23%, 26%)' },
+      { char: '│', transform: 'scale(0.35) translate(-33%, 26%)' },
+      { char: '‑', transform: 'scale(1.35) translate(-1%, -17%)' },
+      { char: '‐', transform: 'scale(0.55) translate(-3%, -24%) rotate(-180deg)' },
     ],
   },
+
 
   // ── UI Chrome ───────────────────────────────────────────────
 

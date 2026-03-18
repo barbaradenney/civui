@@ -69,6 +69,19 @@ export type { IconDef, IconLayer } from './icon/icon-library.js';
 export { t, setLocaleStrings, resetLocaleStrings, getLocaleStrings } from './i18n/index.js';
 export type { CivLocaleStrings } from './i18n/index.js';
 
+// Mask engine
+export {
+  MASK_PRESETS,
+  applyMask,
+  stripMask,
+  isComplete,
+  getMaxRawLength,
+  computeCursorPosition,
+  filterInput,
+  processRawInput,
+} from './mask/index.js';
+export type { MaskChar, MaskDefinition } from './mask/index.js';
+
 // Analytics
 export { ANALYTICS_EVENT_NAME } from './analytics/index.js';
 export type { AnalyticsEventDetail, AnalyticsAction } from './analytics/index.js';

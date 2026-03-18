@@ -179,3 +179,83 @@ export const ExternalLabel: Story = {
     <civ-text-input id="external-email" name="email" type="email"></civ-text-input>
   `,
 };
+
+export const MaskSSN: Story = {
+  args: {
+    label: 'Social Security number',
+    name: 'ssn',
+    mask: 'ssn',
+    required: true,
+  },
+  render: (args) => html`
+    <civ-text-input
+      label="${args.label}"
+      name="${args.name}"
+      mask="${args.mask}"
+      ?required="${args.required}"
+    ></civ-text-input>
+  `,
+};
+
+export const MaskPhoneUS: Story = {
+  args: {
+    label: 'Phone number',
+    name: 'phone',
+    mask: 'phone-us',
+  },
+  render: (args) => html`
+    <civ-text-input
+      label="${args.label}"
+      name="${args.name}"
+      mask="${args.mask}"
+    ></civ-text-input>
+  `,
+};
+
+export const MaskZip: Story = {
+  args: {
+    label: 'ZIP code',
+    name: 'zip',
+    mask: 'zip',
+  },
+  render: (args) => html`
+    <civ-text-input
+      label="${args.label}"
+      name="${args.name}"
+      mask="${args.mask}"
+      width="sm"
+    ></civ-text-input>
+  `,
+};
+
+export const MaskEIN: Story = {
+  args: {
+    label: 'Employer Identification Number',
+    name: 'ein',
+    mask: 'ein',
+  },
+  render: (args) => html`
+    <civ-text-input
+      label="${args.label}"
+      name="${args.name}"
+      mask="${args.mask}"
+    ></civ-text-input>
+  `,
+};
+
+export const MaskCustom: Story = {
+  args: {
+    label: 'Reference code',
+    name: 'ref-code',
+    maskPattern: 'AAA-####',
+    hint: 'For example: ABC-1234',
+  },
+  render: (args) => html`
+    <civ-text-input
+      label="${args.label}"
+      name="${args.name}"
+      mask-pattern="${args.maskPattern}"
+      hint="${args.hint}"
+    ></civ-text-input>
+  `,
+};

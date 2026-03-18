@@ -67,6 +67,21 @@ export interface CivLocaleStrings {
   memorableDateDateSetMessage: string;
   memorableDateInvalidDateMessage: string;
 
+  // Mask
+  maskSsnHint: string;
+  maskPhoneUsHint: string;
+  maskZipHint: string;
+  maskZip4Hint: string;
+  maskEinHint: string;
+  maskPhoneIntlHint: string;
+  maskSsnError: string;
+  maskPhoneUsError: string;
+  maskZipError: string;
+  maskZip4Error: string;
+  maskEinError: string;
+  maskPhoneIntlError: string;
+  maskPatternError: string;
+
   // Alert dismiss
   alertDismissLabel: string;
   alertDismissedMessage: string;
@@ -124,6 +139,20 @@ const defaultStrings: CivLocaleStrings = {
   memorableDateYearPlaceholder: 'YYYY',
   memorableDateDateSetMessage: 'Date set to {date}',
   memorableDateInvalidDateMessage: 'Enter a valid date',
+
+  maskSsnHint: 'For example: 123-45-6789',
+  maskPhoneUsHint: 'For example: (555) 123-4567',
+  maskZipHint: 'For example: 12345',
+  maskZip4Hint: 'For example: 12345-6789',
+  maskEinHint: 'For example: 12-3456789',
+  maskPhoneIntlHint: 'For example: +1 (555) 123-4567',
+  maskSsnError: 'Enter a 9-digit Social Security number',
+  maskPhoneUsError: 'Enter a 10-digit phone number',
+  maskZipError: 'Enter a 5-digit ZIP code',
+  maskZip4Error: 'Enter a 9-digit ZIP+4 code',
+  maskEinError: 'Enter a 9-digit Employer Identification Number',
+  maskPhoneIntlError: 'Enter a valid international phone number',
+  maskPatternError: '{label} does not match the expected format',
 
   alertDismissLabel: 'Dismiss alert',
   alertDismissedMessage: 'Alert dismissed',

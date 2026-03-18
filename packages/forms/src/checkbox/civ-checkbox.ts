@@ -2,7 +2,7 @@
 
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBooleanFormElement, dispatch, renderHint, renderError, t } from '@civui/core';
+import { CivBooleanFormElement, dispatch, forwardTileClick, renderHint, renderError, t } from '@civui/core';
 
 /**
  * CivUI Checkbox
@@ -19,7 +19,7 @@ export class CivCheckbox extends CivBooleanFormElement {
 
   override render() {
     return html`
-      <div class="civ-mb-2 ${this.tile ? 'civ-check-tile' : ''}" data-civ-tile="${this.tile ? '' : nothing}">
+      <div class="civ-mb-2 ${this.tile ? 'civ-check-tile' : ''}" data-civ-tile="${this.tile ? '' : nothing}" @click="${this.tile ? this._onTileClick : nothing}">
         ${renderHint(this._hintId, this.hint)}
         ${renderError(this._errorId, this.error)}
         <label class="civ-flex civ-items-start civ-cursor-pointer civ-w-full" for="${this._inputId}">
@@ -61,6 +61,8 @@ export class CivCheckbox extends CivBooleanFormElement {
       if (input) input.indeterminate = this.indeterminate;
     }
   }
+
+  private _onTileClick = (e: Event) => forwardTileClick(this, e);
 
   private _onCheckboxChange(e: Event): void {
     const target = e.target as HTMLInputElement;

@@ -12,7 +12,7 @@ export { createKeyboardHandler, resolveGroupNavIndex, type KeyBinding } from './
 // Utilities
 export { generateId, resetIdCounter } from './utils/id-generator.js';
 export { debounce } from './utils/debounce.js';
-export { dispatch } from './utils/events.js';
+export { dispatch, forwardTileClick } from './utils/events.js';
 export { interpolate } from './utils/interpolate.js';
 export { isRtl } from './utils/direction.js';
 export { syncGroupDisabled, stopChildEvent, syncLegendToLabel } from './utils/group-utils.js';

@@ -106,7 +106,7 @@ export class ${className} extends CivFormElement {
         \${this.label
           ? html\`
               <label
-                class="civ-block civ-mb-1 civ-text-base-darkest civ-font-bold civ-text-base"
+                class="civ-block civ-mb-1 civ-font-bold civ-text-body"
                 for="\${this._inputId}"
               >
                 \${this.label}
@@ -117,7 +117,7 @@ export class ${className} extends CivFormElement {
             \`
           : nothing}
         \${this.hint
-          ? html\`<span class="civ-block civ-mb-1 civ-text-sm civ-text-base" id="\${this._hintId}">\${this.hint}</span>\`
+          ? html\`<span class="civ-block civ-mb-1 civ-text-sm civ-text-muted" id="\${this._hintId}">\${this.hint}</span>\`
           : nothing}
         \${this.error
           ? html\`<span class="civ-block civ-mb-1 civ-text-sm civ-text-error civ-font-bold" id="\${this._errorId}" role="alert">\${this.error}</span>\`
@@ -126,7 +126,7 @@ export class ${className} extends CivFormElement {
         <input
           id="\${this._inputId}"
           type="text"
-          class="civ-block civ-w-full civ-border civ-border-base-light civ-rounded civ-px-2 civ-py-1.5 civ-text-base"
+          class="civ-block civ-w-full civ-border civ-border-base-light civ-rounded civ-px-2 civ-py-1.5 civ-text-body"
           .value="\${this.value}"
           ?disabled="\${this.disabled}"
           ?required="\${this.required}"

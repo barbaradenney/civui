@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBaseElement, dispatch } from '@civui/core';
+import { CivBaseElement, dispatch, forwardTileClick } from '@civui/core';
 
 /**
  * CivUI Radio
@@ -47,7 +47,7 @@ export class CivRadio extends CivBaseElement {
 
   override render() {
     return html`
-      <div class="civ-mb-2 ${this.tile ? 'civ-check-tile' : ''}" data-civ-tile="${this.tile ? '' : nothing}">
+      <div class="civ-mb-2 ${this.tile ? 'civ-check-tile' : ''}" data-civ-tile="${this.tile ? '' : nothing}" @click="${this.tile ? this._onTileClick : nothing}">
         <label class="civ-flex civ-items-start civ-cursor-pointer civ-w-full" for="${this._inputId}">
           <input
             class="civ-check-input focus-visible:civ-focus-ring"
@@ -74,6 +74,8 @@ export class CivRadio extends CivBaseElement {
       </div>
     `;
   }
+
+  private _onTileClick = (e: Event) => forwardTileClick(this, e);
 
   private _onRadioChange(e: Event): void {
     const target = e.target as HTMLInputElement;

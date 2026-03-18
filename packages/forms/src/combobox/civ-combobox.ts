@@ -135,7 +135,8 @@ export class CivCombobox extends CivFormElement {
           ${this._open && filtered.length === 0
             ? html`
                 <div
-                  class="civ-absolute civ-z-10 civ-w-full civ-mt-0.5 civ-bg-white civ-border civ-border-base-light civ-rounded civ-shadow-md civ-p-3 civ-text-base civ-text-base-dark"
+                  class="civ-absolute civ-z-10 civ-w-full civ-mt-0.5 civ-bg-white civ-border civ-border-base-light civ-rounded civ-shadow-md civ-p-3 civ-text-body"
+                  style="color: var(--civ-color-base-dark)"
                   role="status"
                   aria-live="polite"
                 >

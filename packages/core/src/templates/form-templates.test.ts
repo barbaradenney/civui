@@ -68,13 +68,12 @@ describe('renderLegend', () => {
     expect(output).not.toContain('<legend');
   });
 
-  it('renders legend with civ-legend class and default text size', () => {
+  it('renders legend with civ-legend class', () => {
     const result = renderLegend({ legend: 'Options', required: false });
     const output = renderToString(result);
     expect(output).toContain('<legend');
     expect(output).toContain('Options');
     expect(output).toContain('civ-legend');
-    expect(output).toContain('civ-text-base');
   });
 
   it('renders required indicator with civ-required-mark', () => {

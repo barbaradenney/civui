@@ -17,7 +17,18 @@
   }
 
   .civ-legend {
-    @apply civ-block civ-mb-1 civ-text-base-darkest civ-font-bold;
+    @apply civ-block civ-mb-1 civ-font-bold;
+    font-size: var(--civ-typography-fontSize-base);
+    color: var(--civ-color-base-darkest);
+  }
+
+  .civ-text-body {
+    font-size: var(--civ-typography-fontSize-base);
+    color: var(--civ-color-base-darkest);
+  }
+
+  .civ-text-muted {
+    color: var(--civ-color-base-DEFAULT);
   }
 
   .civ-required-mark {

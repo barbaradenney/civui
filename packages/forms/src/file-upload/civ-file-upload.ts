@@ -96,15 +96,15 @@ export class CivFileUpload extends CivFormElement {
           @keydown="${this._onDropzoneKeydown}"
           data-dragging="${this._dragging ? '' : nothing}"
         >
-          <span class="civ-block civ-text-base-dark civ-text-base">
+          <span class="civ-block civ-text-body" style="color: var(--civ-color-base-dark)">
             ${this.dragText || t('fileUploadDragText')}
             <span class="civ-text-primary civ-underline">${this.browseText || t('fileUploadBrowseText')}</span>
           </span>
           ${this.accept
-            ? html`<span class="civ-block civ-text-sm civ-text-base civ-mt-1">${this.acceptedLabel || t('fileUploadAcceptedLabel')}${this.accept}</span>`
+            ? html`<span class="civ-block civ-text-sm civ-text-muted civ-mt-1">${this.acceptedLabel || t('fileUploadAcceptedLabel')}${this.accept}</span>`
             : nothing}
           ${this.maxSize > 0
-            ? html`<span class="civ-block civ-text-sm civ-text-base civ-mt-0.5">${this.maxSizeLabel || t('fileUploadMaxSizeLabel')}${formatFileSize(this.maxSize)}</span>`
+            ? html`<span class="civ-block civ-text-sm civ-text-muted civ-mt-0.5">${this.maxSizeLabel || t('fileUploadMaxSizeLabel')}${formatFileSize(this.maxSize)}</span>`
             : nothing}
         </div>
 
@@ -130,7 +130,7 @@ export class CivFileUpload extends CivFormElement {
                     <li class="civ-file-item">
                       <span>
                         <span class="civ-font-semibold">${file.name}</span>
-                        <span class="civ-text-base civ-ms-2">(${formatFileSize(file.size)})</span>
+                        <span class="civ-ms-2">(${formatFileSize(file.size)})</span>
                       </span>
                       <button
                         type="button"

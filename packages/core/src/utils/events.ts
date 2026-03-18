@@ -17,3 +17,14 @@ export function dispatch<T>(element: HTMLElement, name: string, detail?: T, canc
     }),
   );
 }
+
+/**
+ * Forward clicks on tile padding to the inner input.
+ * Ignores clicks on the label (already handled natively) and
+ * any child content (hint, error) — only the tile div itself triggers.
+ */
+export function forwardTileClick(host: HTMLElement, e: Event): void {
+  if (e.target !== e.currentTarget) return;
+  const input = host.querySelector('input');
+  if (input && !input.disabled) input.click();
+}

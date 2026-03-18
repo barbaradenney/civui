@@ -97,7 +97,7 @@ export class CivTextarea extends CivFormElement {
                 id="${this._charCountId}"
                 class="civ-block civ-mt-0.5 civ-text-sm ${remaining < 0
                   ? 'civ-text-error civ-font-bold'
-                  : 'civ-text-base'}"
+                  : 'civ-text-muted'}"
               >
                 ${remaining} characters remaining
               </span>

@@ -188,7 +188,7 @@ ${propDecls}
                 id="\${this._charCountId}"
                 class="civ-block civ-mt-0.5 civ-text-sm \${remaining < 0
                   ? 'civ-text-error civ-font-bold'
-                  : 'civ-text-base'}"
+                  : 'civ-text-muted'}"
               >
                 \${remaining} characters remaining
               </span>
@@ -1073,7 +1073,7 @@ ${propDecls}
               <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
             </svg>
           </button>
-          <div id="\${this._headingId}" class="civ-font-bold civ-text-base" aria-live="polite">
+          <div id="\${this._headingId}" class="civ-font-bold civ-text-body" aria-live="polite">
             \${headingText}
           </div>
           <button
@@ -1368,15 +1368,15 @@ ${propDecls}
           @keydown="\${this._onDropzoneKeydown}"
           data-dragging="\${this._dragging || nothing}"
         >
-          <span class="civ-block civ-text-base-dark civ-text-base">
+          <span class="civ-block civ-text-body" style="color: var(--civ-color-base-dark)">
             \${this.dragText}
             <span class="civ-text-primary civ-underline">\${this.browseText}</span>
           </span>
           \${this.accept
-            ? html\`<span class="civ-block civ-text-sm civ-text-base civ-mt-1">\${this.acceptedLabel}\${this.accept}</span>\`
+            ? html\`<span class="civ-block civ-text-sm civ-text-muted civ-mt-1">\${this.acceptedLabel}\${this.accept}</span>\`
             : nothing}
           \${this.maxSize > 0
-            ? html\`<span class="civ-block civ-text-sm civ-text-base civ-mt-0.5">\${this.maxSizeLabel}\${formatFileSize(this.maxSize)}</span>\`
+            ? html\`<span class="civ-block civ-text-sm civ-text-muted civ-mt-0.5">\${this.maxSizeLabel}\${formatFileSize(this.maxSize)}</span>\`
             : nothing}
         </div>
 
@@ -1402,7 +1402,7 @@ ${propDecls}
                     <li class="civ-file-item">
                       <span>
                         <span class="civ-font-semibold">\${file.name}</span>
-                        <span class="civ-text-base civ-ms-2">(\${formatFileSize(file.size)})</span>
+                        <span class="civ-ms-2">(\${formatFileSize(file.size)})</span>
                       </span>
                       <button
                         type="button"

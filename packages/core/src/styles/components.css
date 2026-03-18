@@ -39,13 +39,7 @@
     @apply civ-text-error civ-font-normal civ-ms-0;
   }
 
-  .civ-hint {
-    @apply civ-block civ-mb-1 civ-text-sm;
-    color: var(--civ-color-base-DEFAULT);
-    text-box-trim: both;
-    text-box-edge: cap alphabetic;
-  }
-
+  .civ-hint,
   .civ-hint--group {
     @apply civ-block civ-mb-1 civ-text-sm;
     color: var(--civ-color-base-DEFAULT);
@@ -53,12 +47,7 @@
     text-box-edge: cap alphabetic;
   }
 
-  .civ-error-text {
-    @apply civ-block civ-mb-1 civ-text-sm civ-text-error civ-font-bold;
-    text-box-trim: both;
-    text-box-edge: cap alphabetic;
-  }
-
+  .civ-error-text,
   .civ-error-text--group {
     @apply civ-block civ-mb-1 civ-text-sm civ-text-error civ-font-bold;
     text-box-trim: both;
@@ -392,6 +381,7 @@
   }
   .civ-btn--danger:active:not(:disabled):not([aria-disabled="true"]) {
     @apply civ-bg-error-dark civ-border-error-dark;
+    filter: brightness(0.85);
   }
 
   .civ-btn:disabled,

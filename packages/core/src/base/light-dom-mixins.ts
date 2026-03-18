@@ -10,9 +10,15 @@ type Constructor<T = {}> = new (...args: any[]) => T;
 export function LightDomContainerMixin<T extends Constructor<LitElement>>(superClass: T) {
   class LightDomContainer extends superClass {
     private _userChildren: Node[] = [];
+    private _childrenCaptured = false;
 
     override connectedCallback(): void {
-      this._userChildren = Array.from(this.childNodes);
+      // Only capture children on first connection; reconnection would
+      // re-capture Lit's rendered output instead of the original children.
+      if (!this._childrenCaptured) {
+        this._userChildren = Array.from(this.childNodes);
+        this._childrenCaptured = true;
+      }
       super.connectedCallback();
     }
 

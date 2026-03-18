@@ -14,7 +14,7 @@ import type { CivCheckbox } from './civ-checkbox.js';
  *
  * @prop {string} legend - Group legend text
  * @prop {string} name - Shared form field name for all checkboxes
- * @prop {string} value - Comma-separated checked values
+ * @prop {string} value - Comma-separated checked values (individual values must not contain commas)
  * @prop {string} hint - Hint text displayed below legend
  * @prop {string} error - Error message for the group
  * @prop {boolean} tile - Apply tile variant to all child checkboxes

@@ -74,6 +74,10 @@ export class CivDatePicker extends CivFormElement {
   @property({ type: String, attribute: 'dialog-opened-message' }) dialogOpenedMessage = '';
   @property({ type: String, attribute: 'date-selected-message' }) dateSelectedMessage = '';
   @property({ type: String, attribute: 'today-label' }) todayLabel = '';
+  @property({ type: String, attribute: 'invalid-format-message' }) invalidFormatMessage = '';
+  @property({ type: String, attribute: 'date-range-message' }) dateRangeMessage = '';
+  @property({ type: String, attribute: 'min-date-message' }) minDateMessage = '';
+  @property({ type: String, attribute: 'max-date-message' }) maxDateMessage = '';
 
   @state() private _open = false;
   @state() private _focusedDate: Date = new Date();
@@ -455,10 +459,10 @@ export class CivDatePicker extends CivFormElement {
       // Validate against min/max constraints
       if (isDateDisabled(parsed, this._constraints)) {
         const msg = this.min && this.max
-          ? `Date must be between ${formatDateLong(parseISODate(this.min)!, this.locale)} and ${formatDateLong(parseISODate(this.max)!, this.locale)}`
+          ? interpolate(this.dateRangeMessage || t('datePickerDateRangeMessage'), { min: formatDateLong(parseISODate(this.min)!, this.locale), max: formatDateLong(parseISODate(this.max)!, this.locale) })
           : this.min
-            ? `Date must be on or after ${formatDateLong(parseISODate(this.min)!, this.locale)}`
-            : `Date must be on or before ${formatDateLong(parseISODate(this.max)!, this.locale)}`;
+            ? interpolate(this.minDateMessage || t('datePickerMinDateMessage'), { min: formatDateLong(parseISODate(this.min)!, this.locale) })
+            : interpolate(this.maxDateMessage || t('datePickerMaxDateMessage'), { max: formatDateLong(parseISODate(this.max)!, this.locale) });
         this.error = msg;
         this.announce(msg, 'assertive');
         return;
@@ -476,7 +480,7 @@ export class CivDatePicker extends CivFormElement {
     } else {
       // Invalid text: keep it in the input so users can correct typos,
       // but announce the error for screen readers.
-      this.announce('Invalid date format', 'assertive');
+      this.announce(this.invalidFormatMessage || t('datePickerInvalidFormatMessage'), 'assertive');
     }
   }
 

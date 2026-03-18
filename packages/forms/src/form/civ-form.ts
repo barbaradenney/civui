@@ -110,7 +110,7 @@ export class CivForm extends LightDomContainerMixin(CivBaseElement) {
             >
               <p id="${this._summaryHeadingId}" class="civ-form-error-heading"
                  role="heading" aria-level="${this.errorHeadingLevel}">
-                ${this._errors.length === 1 ? t('formErrorSingular') : t('formErrorPlural').replace('{count}', String(this._errors.length))}
+                ${this._errors.length === 1 ? t('formErrorSingular') : interpolate(t('formErrorPlural'), { count: this._errors.length })}
               </p>
               <ul class="civ-list-none civ-p-0 civ-m-0">
                 ${this._errors.map(

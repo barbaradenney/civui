@@ -408,6 +408,100 @@ describe('civ-date-picker', () => {
 
       expect(el.value).toBe('2026-03-20');
     });
+
+    it('moves focus to start of week row with Home', async () => {
+      const el = await fixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
+      el._open = true;
+      // March 18, 2026 is a Wednesday (week starts on Sunday by default)
+      el._focusedDate = new Date(2026, 2, 18);
+      el._displayMonth = 2;
+      el._displayYear = 2026;
+      await elementUpdated(el);
+
+      sendKey(el, 'Home');
+      await elementUpdated(el);
+
+      // Start of the week row (Sunday) is March 15
+      expect(el._focusedDate.getDate()).toBe(15);
+      expect(el._focusedDate.getMonth()).toBe(2);
+    });
+
+    it('stays in place when Home is pressed on the first day of the week', async () => {
+      const el = await fixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
+      el._open = true;
+      // March 15, 2026 is a Sunday (start of week)
+      el._focusedDate = new Date(2026, 2, 15);
+      el._displayMonth = 2;
+      el._displayYear = 2026;
+      await elementUpdated(el);
+
+      sendKey(el, 'Home');
+      await elementUpdated(el);
+
+      expect(el._focusedDate.getDate()).toBe(15);
+    });
+
+    it('moves focus to end of week row with End', async () => {
+      const el = await fixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
+      el._open = true;
+      // March 18, 2026 is a Wednesday (week starts on Sunday by default)
+      el._focusedDate = new Date(2026, 2, 18);
+      el._displayMonth = 2;
+      el._displayYear = 2026;
+      await elementUpdated(el);
+
+      sendKey(el, 'End');
+      await elementUpdated(el);
+
+      // End of the week row (Saturday) is March 21
+      expect(el._focusedDate.getDate()).toBe(21);
+      expect(el._focusedDate.getMonth()).toBe(2);
+    });
+
+    it('stays in place when End is pressed on the last day of the week', async () => {
+      const el = await fixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
+      el._open = true;
+      // March 21, 2026 is a Saturday (end of week)
+      el._focusedDate = new Date(2026, 2, 21);
+      el._displayMonth = 2;
+      el._displayYear = 2026;
+      await elementUpdated(el);
+
+      sendKey(el, 'End');
+      await elementUpdated(el);
+
+      expect(el._focusedDate.getDate()).toBe(21);
+    });
+
+    it('respects weekStartsOn for Home key', async () => {
+      const el = await fixture('<civ-date-picker label="Date" week-starts-on="1"></civ-date-picker>') as any;
+      el._open = true;
+      // March 18, 2026 is a Wednesday; with weekStartsOn=1 (Monday), start of week is March 16
+      el._focusedDate = new Date(2026, 2, 18);
+      el._displayMonth = 2;
+      el._displayYear = 2026;
+      await elementUpdated(el);
+
+      sendKey(el, 'Home');
+      await elementUpdated(el);
+
+      expect(el._focusedDate.getDate()).toBe(16);
+    });
+
+    it('respects weekStartsOn for End key', async () => {
+      const el = await fixture('<civ-date-picker label="Date" week-starts-on="1"></civ-date-picker>') as any;
+      el._open = true;
+      // March 18, 2026 is a Wednesday; with weekStartsOn=1 (Monday), end of week is March 22 (Sunday)
+      el._focusedDate = new Date(2026, 2, 18);
+      el._displayMonth = 2;
+      el._displayYear = 2026;
+      await elementUpdated(el);
+
+      sendKey(el, 'End');
+      await elementUpdated(el);
+
+      expect(el._focusedDate.getDate()).toBe(22);
+    });
   });
 
   describe('constraints', () => {

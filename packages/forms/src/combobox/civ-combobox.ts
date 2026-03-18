@@ -261,14 +261,11 @@ export class CivCombobox extends CivFormElement {
   }
 
   override formResetCallback(): void {
-    this.value = this._defaultValue;
+    super.formResetCallback();
     const selected = this.options.find((o) => o.value === this._defaultValue);
     this._filter = selected ? selected.label : '';
     this._setOpen(false);
     this._activeIndex = -1;
-    this.error = '';
-    this.updateFormValue(this._defaultValue || '');
-    dispatch(this, 'civ-reset');
   }
 }
 

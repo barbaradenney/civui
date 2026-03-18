@@ -34,6 +34,8 @@ export class CivBooleanFormElement extends CivFormElement {
 
   override updated(changed: Map<string, unknown>): void {
     super.updated(changed);
+    // Light DOM re-renders replace DOM nodes, so clear cached anchor reference.
+    this._cachedBooleanAnchor = undefined;
     if (changed.has('checked')) {
       this._syncFormValue();
     }

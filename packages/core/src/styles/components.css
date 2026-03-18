@@ -137,7 +137,7 @@
   }
 
   .civ-check-tile {
-    @apply civ-relative civ-border civ-rounded civ-border-base-light civ-cursor-pointer civ-p-4;
+    @apply civ-relative civ-border civ-rounded civ-border-base-light civ-cursor-pointer civ-p-3;
     border-style: solid;
   }
 

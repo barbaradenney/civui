@@ -84,6 +84,10 @@
     @apply civ-flex civ-flex-col civ-gap-1;
   }
 
+  [tile] .civ-group-layout--vertical {
+    @apply civ-gap-2;
+  }
+
   .civ-group-layout--horizontal {
     @apply civ-flex civ-flex-row civ-flex-wrap civ-gap-4;
   }

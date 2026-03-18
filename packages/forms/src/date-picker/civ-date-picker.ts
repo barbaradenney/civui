@@ -224,7 +224,7 @@ export class CivDatePicker extends CivFormElement {
   }
 
   override render() {
-    const classes = inputClasses({ rounded: 'civ-rounded-s' });
+    const classes = inputClasses({ rounded: 'civ-rounded-s civ-rounded-e-none' });
 
     const selectedDate = this.value ? parseISODate(this.value) : null;
     const buttonLabel = selectedDate

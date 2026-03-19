@@ -101,29 +101,44 @@ function parseSwiftComponent(filePath: string): ComponentAPI | null {
   const name = basename(filePath, '.swift').replace('Civ', '');
   const props: PropDef[] = [];
   const events: EventDef[] = [];
+  const seen = new Set<string>();
 
-  // Extract properties and callbacks from the struct init/body
-  // Match: let/var with optional @Binding, @State, public
-  const propRegex = /(?:@Binding\s+)?(?:public\s+)?(?:var|let)\s+(\w+):\s*([^=\n{]+?)(?:\s*=\s*([^\n{]+?))?$/gm;
-  let m;
-  while ((m = propRegex.exec(src)) !== null) {
+  // Parse ALL lines that look like property declarations
+  const lines = src.split('\n');
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].trim();
+
+    // Skip comments, imports, computed properties
+    if (line.startsWith('//') || line.startsWith('///') || line.startsWith('import ')) continue;
+
+    // Skip private, @State, @FocusState, @Environment
+    if (line.includes('private ') || line.includes('fileprivate ')) continue;
+    if (line.startsWith('@State ') || line.startsWith('@State\n')) continue;
+    if (line.startsWith('@FocusState')) continue;
+    if (line.startsWith('@Environment')) continue;
+
+    // Match: [public] [let|var] name: Type [= default]
+    // Also match: @Binding [public] var name: Type
+    const m = line.match(/^(?:@Binding\s+)?(?:public\s+)?(?:var|let)\s+(\w+):\s*(.+?)(?:\s*=\s*(.+))?$/);
+    if (!m) continue;
+
     const propName = m[1].trim();
     let type = m[2].trim();
     const defaultVal = m[3]?.trim();
-    const prefix = src.substring(Math.max(0, m.index - 40), m.index);
 
-    // Skip private/internal state
+    // Skip internal state
     if (propName.startsWith('_')) continue;
-    if (prefix.includes('private ')) continue;
-    if (prefix.includes('@State ') || prefix.includes('@State\n')) continue;
-    if (prefix.includes('@FocusState')) continue;
-    if (prefix.includes('@Environment')) continue;
+    if (seen.has(propName)) continue;
+    seen.add(propName);
 
     // Separate callbacks from props
     if (type.includes('->')) {
       events.push({ name: propName, detail: type });
       continue;
     }
+
+    // Clean up trailing braces/commas
+    type = type.replace(/[{,]$/, '').trim();
 
     props.push({
       name: propName,
@@ -201,11 +216,15 @@ function discoverComponents(): ComponentMapping[] {
 
   const nameMap: Record<string, ComponentMapping> = {};
 
+  // Web child components that are part of their parent on native (no separate file needed)
+  const childComponents = new Set(['Segment', 'RadioGroup']);
+
   for (const dir of webDirs) {
     const files = readdirSync(join(WEB_DIR, dir)).filter(f => f.startsWith('civ-') && f.endsWith('.ts') && !f.includes('.test.') && !f.includes('.stories.'));
     for (const file of files) {
       const componentName = file.replace('civ-', '').replace('.ts', '');
       const displayName = componentName.split('-').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join('');
+      if (childComponents.has(displayName)) continue; // Skip child components
       nameMap[displayName] = {
         displayName,
         web: join(WEB_DIR, dir, file),
@@ -350,11 +369,37 @@ function generateReport(): string {
       allEvents.get(key)!.android = e;
     });
 
+    // Props that are web-only and should not count against native parity
+    const webOnlyProps = new Set([
+      // Web platform specifics
+      'action', 'method', 'inputmode', 'autocomplete', 'pattern', 'persist', 'prefill',
+      'errorHeadingLevel', 'maskPattern',
+      // i18n override props (native uses CivLocale instead)
+      'chooseDateLabel', 'selectedDateLabel', 'dialogLabel', 'previousMonthLabel',
+      'nextMonthLabel', 'dialogOpenedMessage', 'dateSelectedMessage', 'todayLabel',
+      'invalidFormatMessage', 'dateRangeMessage', 'minDateMessage', 'maxDateMessage',
+      'monthEmptyLabel', 'dayPlaceholder', 'yearPlaceholder', 'dateSetMessage', 'invalidDateMessage',
+      'dragText', 'browseText', 'acceptedLabel', 'maxSizeLabel', 'removeText', 'removeAriaLabel',
+      'filesListLabel', 'fileAddedMessage', 'fileRemovedMessage', 'fileSizeError', 'fileTypeError',
+      'maxFilesError', 'requiredMessage', 'noResultsText',
+      // Web-only internal
+      'formValidate', 'pii', 'parts',
+    ]);
+
+    // Web-only events
+    const webOnlyEvents = new Set([
+      'civ-reset', // native handles reset differently
+    ]);
+
     // Calculate parity: what % of web props/events exist on at least one native platform
     let webItems = 0;
     let matchedItems = 0;
-    allProps.forEach(v => { if (v.web) { webItems++; if (v.ios || v.android) matchedItems++; } });
-    allEvents.forEach(v => { if (v.web) { webItems++; if (v.ios || v.android) matchedItems++; } });
+    allProps.forEach((v, name) => {
+      if (v.web && !webOnlyProps.has(name)) { webItems++; if (v.ios || v.android) matchedItems++; }
+    });
+    allEvents.forEach((v, name) => {
+      if (v.web && !webOnlyEvents.has(name)) { webItems++; if (v.ios || v.android) matchedItems++; }
+    });
     const parityPct = webItems > 0 ? Math.round((matchedItems / webItems) * 100) : (ios || android ? 100 : 0);
     const parityClass = parityPct >= 80 ? 'high' : parityPct >= 50 ? 'mid' : 'low';
 

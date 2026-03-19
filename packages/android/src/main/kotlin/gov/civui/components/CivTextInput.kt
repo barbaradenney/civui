@@ -47,6 +47,7 @@ import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import gov.civui.i18n.CivLocale
 import gov.civui.tokens.CivTokens
 
 /// Keyboard type mapping for CivTextInput (parallels web `type` attribute).
@@ -75,53 +76,53 @@ enum class CivInputWidth(val dp: Float?) {
 /// Input mask presets (parallels web `mask` prop).
 enum class CivInputMask(
     val pattern: String,
-    val hint: String,
-    val errorMessage: String,
+    val hintKey: String,
+    val errorKey: String,
     val keyboardType: KeyboardType,
     val isPii: Boolean,
 ) {
     SSN(
         pattern = "###-##-####",
-        hint = "For example: 123-45-6789",
-        errorMessage = "Enter a 9-digit Social Security number",
+        hintKey = "maskSsnHint",
+        errorKey = "maskSsnError",
         keyboardType = KeyboardType.Number,
         isPii = true,
     ),
     PhoneUs(
         pattern = "(###) ###-####",
-        hint = "For example: (555) 123-4567",
-        errorMessage = "Enter a 10-digit phone number",
+        hintKey = "maskPhoneUsHint",
+        errorKey = "maskPhoneUsError",
         keyboardType = KeyboardType.Phone,
         isPii = false,
     ),
     Zip(
         pattern = "#####",
-        hint = "For example: 20500",
-        errorMessage = "Enter a 5-digit ZIP code",
+        hintKey = "maskZipHint",
+        errorKey = "maskZipError",
         keyboardType = KeyboardType.Number,
         isPii = false,
     ),
     Zip4(
         pattern = "#####-####",
-        hint = "For example: 20500-0001",
-        errorMessage = "Enter a ZIP+4 code",
+        hintKey = "maskZip4Hint",
+        errorKey = "maskZip4Error",
         keyboardType = KeyboardType.Number,
         isPii = false,
     ),
     Ein(
         pattern = "##-#######",
-        hint = "For example: 12-3456789",
-        errorMessage = "Enter a 9-digit EIN",
+        hintKey = "maskEinHint",
+        errorKey = "maskEinError",
         keyboardType = KeyboardType.Number,
         isPii = true,
     ),
     Currency(
         pattern = "", // variable length
-        hint = "For example: 1,234.56",
-        errorMessage = "Enter a valid dollar amount",
+        hintKey = "maskCurrencyHint",
+        errorKey = "maskCurrencyError",
         keyboardType = KeyboardType.Decimal,
         isPii = false,
-    ),
+    );
 }
 
 /**
@@ -165,10 +166,31 @@ fun CivTextInput(
     maskPattern: String = "",
     onInput: ((String) -> Unit)? = null,
     onChange: ((String) -> Unit)? = null,
+    name: String = "",
+    formState: CivFormState? = null,
     onAnalytics: ((event: String, data: Map<String, Any>?) -> Unit)? = null,
 ) {
     val isDark = isSystemInDarkTheme()
     var isFocused by remember { mutableStateOf(false) }
+
+    // Form state registration
+    var formError by remember { mutableStateOf("") }
+    val effectiveError = error ?: formError.ifEmpty { null }
+
+    if (formState != null && name.isNotEmpty()) {
+        androidx.compose.runtime.DisposableEffect(name) {
+            formState.register(CivFormState.CivFieldRegistration(
+                name = name,
+                getValue = { value },
+                setValue = { onValueChange(it) },
+                isRequired = required,
+                getError = { formError },
+                setError = { formError = it },
+                isPii = mask?.isPii ?: false,
+            ))
+            onDispose { formState.unregister(name) }
+        }
+    }
 
     // Adaptive colors
     val labelColor = if (isDark) CivTokens.DarkColors.Base.darkest else CivTokens.Colors.Base.darkest
@@ -176,7 +198,7 @@ fun CivTextInput(
     val errorColor = if (isDark) CivTokens.DarkColors.Error.default_ else CivTokens.Colors.Error.default_
     val borderColor by animateColorAsState(
         targetValue = when {
-            error != null -> errorColor
+            effectiveError != null -> errorColor
             isFocused -> if (isDark) CivTokens.DarkColors.Primary.default_ else CivTokens.Colors.Primary.default_
             else -> if (isDark) CivTokens.DarkColors.Base.light else CivTokens.Colors.Base.light
         },
@@ -185,8 +207,8 @@ fun CivTextInput(
     val backgroundColor = if (isDark) CivTokens.DarkColors.White.default_ else CivTokens.Colors.White.default_
     val readonlyBackground = if (isDark) CivTokens.DarkColors.Base.lightest else CivTokens.Colors.Base.lightest
 
-    // Effective hint: explicit hint > mask hint > custom mask hint > nothing
-    val effectiveHint = hint ?: mask?.hint ?: if (maskPattern.isNotEmpty()) "Format: $maskPattern" else null
+    // Effective hint: explicit hint > mask hint (i18n) > custom mask hint > nothing
+    val effectiveHint = hint ?: mask?.let { CivLocale.t(it.hintKey) } ?: if (maskPattern.isNotEmpty()) "Format: $maskPattern" else null
 
     // Effective keyboard type from mask
     val effectiveKeyboardType = mask?.keyboardType ?: inputType.toKeyboardType()
@@ -206,7 +228,7 @@ fun CivTextInput(
         CivHint(text = effectiveHint, color = hintColor)
 
         // 3. Error
-        CivError(text = error, color = errorColor)
+        CivError(text = effectiveError, color = errorColor)
 
         // 4. Input
         val isCurrency = mask == CivInputMask.Currency || maskPattern.startsWith("$")
@@ -218,7 +240,7 @@ fun CivTextInput(
             )
             .civFocusRing(isFocused)
             .border(
-                width = if (error != null) CivTokens.Border.Width._2 else CivTokens.Border.Width.default_,
+                width = if (effectiveError != null) CivTokens.Border.Width._2 else CivTokens.Border.Width.default_,
                 color = borderColor,
                 shape = RoundedCornerShape(CivTokens.Border.Radius.default_),
             )
@@ -241,11 +263,11 @@ fun CivTextInput(
                 append(label)
                 if (required) append(", required")
                 if (effectiveHint != null) append(". $effectiveHint")
-                if (error != null) append(". Error: $error")
+                if (effectiveError != null) append(". Error: $effectiveError")
                 if (readonly) append(", read only")
             }
-            if (error != null) {
-                error(error)
+            if (effectiveError != null) {
+                error(effectiveError)
             }
         }
 

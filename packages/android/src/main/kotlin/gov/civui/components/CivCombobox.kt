@@ -44,6 +44,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import gov.civui.i18n.CivLocale
 import gov.civui.tokens.CivTokens
 
 /**
@@ -86,10 +87,30 @@ fun CivCombobox(
     required: Boolean = false,
     disabled: Boolean = false,
     placeholder: String? = null,
-    noResultsText: String = "No results found",
+    noResultsText: String = CivLocale.t("comboboxNoResults"),
+    name: String = "",
+    formState: CivFormState? = null,
     onAnalytics: ((event: String, data: Map<String, Any>?) -> Unit)? = null,
 ) {
     val isDark = isSystemInDarkTheme()
+
+    // Form state registration
+    var formError by remember { mutableStateOf("") }
+    val effectiveError = error ?: formError.ifEmpty { null }
+
+    if (formState != null && name.isNotEmpty()) {
+        androidx.compose.runtime.DisposableEffect(name) {
+            formState.register(CivFormState.CivFieldRegistration(
+                name = name,
+                getValue = { value },
+                setValue = { onValueChange(it) },
+                isRequired = required,
+                getError = { formError },
+                setError = { formError = it },
+            ))
+            onDispose { formState.unregister(name) }
+        }
+    }
 
     val labelColor = if (isDark) CivTokens.DarkColors.Base.darkest else CivTokens.Colors.Base.darkest
     val hintColor = if (isDark) CivTokens.DarkColors.Base.dark else CivTokens.Colors.Base.dark
@@ -118,7 +139,7 @@ fun CivCombobox(
     var resultsAnnouncement by remember { mutableStateOf("") }
     LaunchedEffect(filteredOptions.size, filterText) {
         if (filterText.isNotEmpty()) {
-            resultsAnnouncement = "${filteredOptions.size} results available"
+            resultsAnnouncement = CivLocale.t("comboboxResultsAvailable", "count" to filteredOptions.size)
         }
     }
 
@@ -137,7 +158,7 @@ fun CivCombobox(
         CivHint(text = hint, color = hintColor)
 
         // 3. Error
-        CivError(text = error, color = errorColor)
+        CivError(text = effectiveError, color = errorColor)
 
         // 4. Input with dropdown
         Column {
@@ -153,8 +174,8 @@ fun CivCombobox(
                 modifier = Modifier
                     .fillMaxWidth()
                     .border(
-                        width = if (error != null) CivTokens.Border.Width._2 else CivTokens.Border.Width.default_,
-                        color = if (error != null) errorColor else borderColor,
+                        width = if (effectiveError != null) CivTokens.Border.Width._2 else CivTokens.Border.Width.default_,
+                        color = if (effectiveError != null) errorColor else borderColor,
                         shape = RoundedCornerShape(CivTokens.Border.Radius.default_),
                     )
                     .onFocusChanged { focusState ->
@@ -209,11 +230,11 @@ fun CivCombobox(
                             append(label)
                             if (required) append(", required")
                             if (hint != null) append(". $hint")
-                            if (error != null) append(". Error: $error")
+                            if (effectiveError != null) append(". Error: $effectiveError")
                             append(", combobox")
                         }
-                        if (error != null) {
-                            error(error)
+                        if (effectiveError != null) {
+                            error(effectiveError)
                         }
                     },
                 enabled = !disabled,

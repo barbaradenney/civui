@@ -36,6 +36,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import gov.civui.i18n.CivLocale
 import gov.civui.tokens.CivTokens
 
 /**
@@ -76,10 +77,29 @@ fun CivTextarea(
     maxwords: Int? = null,
     onInput: ((String) -> Unit)? = null,
     onChange: ((String) -> Unit)? = null,
+    name: String = "",
+    formState: CivFormState? = null,
     onAnalytics: ((event: String, data: Map<String, Any>?) -> Unit)? = null,
 ) {
     val isDark = isSystemInDarkTheme()
     var isFocused by remember { mutableStateOf(false) }
+
+    // Form state registration
+    var formError by remember { mutableStateOf("") }
+
+    if (formState != null && name.isNotEmpty()) {
+        androidx.compose.runtime.DisposableEffect(name) {
+            formState.register(CivFormState.CivFieldRegistration(
+                name = name,
+                getValue = { value },
+                setValue = { onValueChange(it) },
+                isRequired = required,
+                getError = { formError },
+                setError = { formError = it },
+            ))
+            onDispose { formState.unregister(name) }
+        }
+    }
 
     val labelColor = if (isDark) CivTokens.DarkColors.Base.darkest else CivTokens.Colors.Base.darkest
     val hintColor = if (isDark) CivTokens.DarkColors.Base.dark else CivTokens.Colors.Base.dark
@@ -116,7 +136,7 @@ fun CivTextarea(
         "${wordCount - maxwords} words over limit"
     } else null
 
-    val effectiveError = error.ifEmpty { wordCountError ?: "" }
+    val effectiveError = error.ifEmpty { formError.ifEmpty { wordCountError ?: "" } }
 
     Column(
         modifier = modifier.padding(bottom = CivTokens.Spacing._4),
@@ -222,11 +242,11 @@ fun CivTextarea(
 
             LaunchedEffect(remaining) {
                 delay(1000)
-                debouncedCharAnnouncement = "$remaining characters remaining"
+                debouncedCharAnnouncement = CivLocale.t("textareaCharsRemaining", "count" to remaining)
             }
 
             Text(
-                text = "$remaining characters remaining",
+                text = CivLocale.t("textareaCharsRemaining", "count" to remaining),
                 style = TextStyle(
                     fontSize = CivTokens.Typography.FontSize.sm,
                     fontWeight = if (isOver) FontWeight.Bold else FontWeight.Normal,
@@ -249,11 +269,11 @@ fun CivTextarea(
 
             LaunchedEffect(remaining) {
                 delay(1000)
-                debouncedWordAnnouncement = "$remaining words remaining"
+                debouncedWordAnnouncement = CivLocale.t("textareaWordsRemaining", "count" to remaining)
             }
 
             Text(
-                text = "$remaining words remaining",
+                text = CivLocale.t("textareaWordsRemaining", "count" to remaining),
                 style = TextStyle(
                     fontSize = CivTokens.Typography.FontSize.sm,
                     fontWeight = if (isOver) FontWeight.Bold else FontWeight.Normal,

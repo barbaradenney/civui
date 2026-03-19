@@ -53,6 +53,21 @@ public struct CivMemorableDate: View {
     /// Called for analytics tracking (parallels `civ-analytics` event).
     public var onAnalytics: ((String, [String: Any]?) -> Void)?
 
+    /// Optional form state for centralized validation.
+    public var formState: CivFormState?
+
+    /// Field name for form state registration.
+    public var formName: String?
+
+    /// Custom required message for form validation.
+    public var requiredMessage: String?
+
+    /// Custom validation function. Returns error string or nil.
+    public var formValidate: (() -> String?)?
+
+    /// Whether the field contains PII (excluded from getFormData).
+    public var isPii: Bool
+
     // MARK: - Internal State
 
     @State private var month = ""
@@ -69,11 +84,16 @@ public struct CivMemorableDate: View {
         error: String? = nil,
         isRequired: Bool = false,
         isDisabled: Bool = false,
-        monthLabel: String = "Month",
-        dayLabel: String = "Day",
-        yearLabel: String = "Year",
+        monthLabel: String? = nil,
+        dayLabel: String? = nil,
+        yearLabel: String? = nil,
         onChange: ((String, String, String, String) -> Void)? = nil,
-        onAnalytics: ((String, [String: Any]?) -> Void)? = nil
+        onAnalytics: ((String, [String: Any]?) -> Void)? = nil,
+        formState: CivFormState? = nil,
+        formName: String? = nil,
+        requiredMessage: String? = nil,
+        formValidate: (() -> String?)? = nil,
+        isPii: Bool = false
     ) {
         self.legend = legend
         self._value = value
@@ -81,11 +101,16 @@ public struct CivMemorableDate: View {
         self.error = error
         self.isRequired = isRequired
         self.isDisabled = isDisabled
-        self.monthLabel = monthLabel
-        self.dayLabel = dayLabel
-        self.yearLabel = yearLabel
+        self.monthLabel = monthLabel ?? CivLocale.shared.t("memorableDateMonthLabel")
+        self.dayLabel = dayLabel ?? CivLocale.shared.t("memorableDateDayLabel")
+        self.yearLabel = yearLabel ?? CivLocale.shared.t("memorableDateYearLabel")
         self.onChange = onChange
         self.onAnalytics = onAnalytics
+        self.formState = formState
+        self.formName = formName
+        self.requiredMessage = requiredMessage
+        self.formValidate = formValidate
+        self.isPii = isPii
     }
 
     // MARK: - Month Options
@@ -141,7 +166,7 @@ public struct CivMemorableDate: View {
                         ))
 
                     Picker(monthLabel, selection: $month) {
-                        Text("- Select -").tag("")
+                        Text(CivLocale.shared.t("memorableDateMonthEmptyLabel")).tag("")
                         ForEach(Self.monthNames, id: \.value) { option in
                             Text(option.label).tag(option.value)
                         }
@@ -174,7 +199,7 @@ public struct CivMemorableDate: View {
                             dark: CivTokens.DarkColors.Base.darkest
                         ))
 
-                    TextField("DD", text: $day)
+                    TextField(CivLocale.shared.t("memorableDateDayPlaceholder"), text: $day)
                         .textFieldStyle(.plain)
                         .keyboardType(.numberPad)
                         .font(.system(size: CivTokens.Typography.FontSize.base))
@@ -202,7 +227,7 @@ public struct CivMemorableDate: View {
                             dark: CivTokens.DarkColors.Base.darkest
                         ))
 
-                    TextField("YYYY", text: $year)
+                    TextField(CivLocale.shared.t("memorableDateYearPlaceholder"), text: $year)
                         .textFieldStyle(.plain)
                         .keyboardType(.numberPad)
                         .font(.system(size: CivTokens.Typography.FontSize.base))
@@ -224,7 +249,11 @@ public struct CivMemorableDate: View {
         }
         .padding(.bottom, CivTokens.Spacing._4)
         .opacity(isDisabled ? 0.5 : 1.0)
-        .onAppear { parseValue() }
+        .onAppear {
+            parseValue()
+            registerWithFormState()
+        }
+        .onDisappear { unregisterFromFormState() }
         .onChange(of: value) { _ in parseValue() }
         .onChange(of: error) { newError in
             if let newError, !newError.isEmpty {
@@ -232,6 +261,27 @@ public struct CivMemorableDate: View {
             }
         }
         .accessibilityElement(children: .contain)
+    }
+
+    // MARK: - Form State Registration
+
+    private func registerWithFormState() {
+        guard let formState, let formName, !formName.isEmpty else { return }
+        formState.register(CivFormState.CivFieldRegistration(
+            name: formName,
+            label: legend,
+            getValue: { value },
+            setValue: { _ in },
+            isRequired: isRequired,
+            requiredMessage: requiredMessage ?? "",
+            validate: formValidate,
+            isPii: isPii
+        ))
+    }
+
+    private func unregisterFromFormState() {
+        guard let formState, let formName, !formName.isEmpty else { return }
+        formState.unregister(formName)
     }
 
     // MARK: - Subviews
@@ -325,7 +375,8 @@ public struct CivMemorableDate: View {
         displayFormatter.dateStyle = .long
         displayFormatter.locale = Locale(identifier: "en_US")
         let displayDate = displayFormatter.string(from: date)
-        UIAccessibility.post(notification: .announcement, argument: "Date entered: \(displayDate)")
+        let announcement = CivLocale.shared.t("memorableDateDateSetMessage").replacingOccurrences(of: "{date}", with: displayDate)
+        UIAccessibility.post(notification: .announcement, argument: announcement)
     }
 
     // MARK: - Color Helper

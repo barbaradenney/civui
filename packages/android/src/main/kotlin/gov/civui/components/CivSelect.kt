@@ -33,6 +33,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import gov.civui.i18n.CivLocale
 import gov.civui.tokens.CivTokens
 
 /**
@@ -77,18 +78,38 @@ fun CivSelect(
     error: String = "",
     required: Boolean = false,
     disabled: Boolean = false,
-    emptyLabel: String = "- Select -",
+    emptyLabel: String = CivLocale.t("selectEmpty"),
+    name: String = "",
+    formState: CivFormState? = null,
     onChange: ((String) -> Unit)? = null,
     onAnalytics: ((event: String, data: Map<String, Any>?) -> Unit)? = null,
 ) {
     val isDark = isSystemInDarkTheme()
+
+    // Form state registration
+    var formError by remember { mutableStateOf("") }
+    val effectiveError = error.ifEmpty { formError }
+
+    if (formState != null && name.isNotEmpty()) {
+        androidx.compose.runtime.DisposableEffect(name) {
+            formState.register(CivFormState.CivFieldRegistration(
+                name = name,
+                getValue = { value },
+                setValue = { onValueChange(it) },
+                isRequired = required,
+                getError = { formError },
+                setError = { formError = it },
+            ))
+            onDispose { formState.unregister(name) }
+        }
+    }
 
     val labelColor = if (isDark) CivTokens.DarkColors.Base.darkest else CivTokens.Colors.Base.darkest
     val hintColor = if (isDark) CivTokens.DarkColors.Base.dark else CivTokens.Colors.Base.dark
     val errorColor = if (isDark) CivTokens.DarkColors.Error.default_ else CivTokens.Colors.Error.default_
     val borderColor by animateColorAsState(
         targetValue = when {
-            error.isNotEmpty() -> errorColor
+            effectiveError.isNotEmpty() -> errorColor
             else -> if (isDark) CivTokens.DarkColors.Base.light else CivTokens.Colors.Base.light
         },
         label = "borderColor",
@@ -119,7 +140,7 @@ fun CivSelect(
 
         // 3. Error
         CivError(
-            text = error.ifEmpty { null },
+            text = effectiveError.ifEmpty { null },
             color = errorColor,
         )
 
@@ -136,7 +157,7 @@ fun CivSelect(
                     .menuAnchor(MenuAnchorType.PrimaryNotEditable)
                     .fillMaxWidth()
                     .border(
-                        width = if (error.isNotEmpty()) CivTokens.Border.Width._2 else CivTokens.Border.Width.default_,
+                        width = if (effectiveError.isNotEmpty()) CivTokens.Border.Width._2 else CivTokens.Border.Width.default_,
                         color = borderColor,
                         shape = RoundedCornerShape(CivTokens.Border.Radius.default_),
                     )
@@ -147,10 +168,10 @@ fun CivSelect(
                             if (required) append(", required")
                             if (selectedLabel.isNotEmpty()) append(", selected: $selectedLabel")
                             if (hint.isNotEmpty()) append(". $hint")
-                            if (error.isNotEmpty()) append(". Error: $error")
+                            if (effectiveError.isNotEmpty()) append(". Error: $effectiveError")
                         }
-                        if (error.isNotEmpty()) {
-                            error(error)
+                        if (effectiveError.isNotEmpty()) {
+                            error(effectiveError)
                         }
                     },
                 enabled = !disabled,

@@ -73,6 +73,21 @@ public struct CivCombobox: View {
     /// Called for analytics tracking (parallels `civ-analytics` event).
     public var onAnalytics: ((String, [String: Any]?) -> Void)?
 
+    /// Optional form state for centralized validation.
+    public var formState: CivFormState?
+
+    /// Field name for form state registration.
+    public var formName: String?
+
+    /// Custom required message for form validation.
+    public var requiredMessage: String?
+
+    /// Custom validation function. Returns error string or nil.
+    public var formValidate: (() -> String?)?
+
+    /// Whether the field contains PII (excluded from getFormData).
+    public var isPii: Bool
+
     // MARK: - Internal State
 
     @State private var filter = ""
@@ -91,12 +106,17 @@ public struct CivCombobox: View {
         hint: String? = nil,
         error: String? = nil,
         placeholder: String? = nil,
-        noResultsText: String = "No results found",
+        noResultsText: String? = nil,
         isRequired: Bool = false,
         isDisabled: Bool = false,
         onChange: ((String, String) -> Void)? = nil,
         onInput: ((String) -> Void)? = nil,
-        onAnalytics: ((String, [String: Any]?) -> Void)? = nil
+        onAnalytics: ((String, [String: Any]?) -> Void)? = nil,
+        formState: CivFormState? = nil,
+        formName: String? = nil,
+        requiredMessage: String? = nil,
+        formValidate: (() -> String?)? = nil,
+        isPii: Bool = false
     ) {
         self.label = label
         self._value = value
@@ -104,12 +124,17 @@ public struct CivCombobox: View {
         self.hint = hint
         self.error = error
         self.placeholder = placeholder
-        self.noResultsText = noResultsText
+        self.noResultsText = noResultsText ?? CivLocale.shared.t("comboboxNoResults")
         self.isRequired = isRequired
         self.isDisabled = isDisabled
         self.onChange = onChange
         self.onInput = onInput
         self.onAnalytics = onAnalytics
+        self.formState = formState
+        self.formName = formName
+        self.requiredMessage = requiredMessage
+        self.formValidate = formValidate
+        self.isPii = isPii
     }
 
     // MARK: - Computed
@@ -288,6 +313,29 @@ public struct CivCombobox: View {
             }
         }
         .accessibilityElement(children: .contain)
+        .onAppear { registerWithFormState() }
+        .onDisappear { unregisterFromFormState() }
+    }
+
+    // MARK: - Form State Registration
+
+    private func registerWithFormState() {
+        guard let formState, let formName, !formName.isEmpty else { return }
+        formState.register(CivFormState.CivFieldRegistration(
+            name: formName,
+            label: label,
+            getValue: { value },
+            setValue: { _ in },
+            isRequired: isRequired,
+            requiredMessage: requiredMessage ?? "",
+            validate: formValidate,
+            isPii: isPii
+        ))
+    }
+
+    private func unregisterFromFormState() {
+        guard let formState, let formName, !formName.isEmpty else { return }
+        formState.unregister(formName)
     }
 
     // MARK: - Keyboard Navigation
@@ -333,8 +381,8 @@ public struct CivCombobox: View {
         resultsAnnouncementTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { [self] _ in
             let count = filteredOptions.count
             let message = count == 0
-                ? "No results"
-                : "\(count) result\(count == 1 ? "" : "s") available"
+                ? CivLocale.shared.t("comboboxNoResults")
+                : CivLocale.shared.t("comboboxResultsAvailable").replacingOccurrences(of: "{count}", with: "\(count)")
             UIAccessibility.post(notification: .announcement, argument: message)
         }
     }

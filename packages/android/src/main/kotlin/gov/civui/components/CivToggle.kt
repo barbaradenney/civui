@@ -30,6 +30,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import gov.civui.i18n.CivLocale
 import gov.civui.tokens.CivTokens
 
 /**
@@ -67,10 +68,30 @@ fun CivToggle(
     required: Boolean = false,
     disabled: Boolean = false,
     onChange: ((Boolean) -> Unit)? = null,
+    name: String = "",
+    formState: CivFormState? = null,
     onInput: ((Boolean, String) -> Unit)? = null,
     onAnalytics: ((event: String, data: Map<String, Any>?) -> Unit)? = null,
 ) {
     val isDark = isSystemInDarkTheme()
+
+    // Form state registration
+    var formError by remember { mutableStateOf("") }
+    val effectiveError = error.ifEmpty { formError }
+
+    if (formState != null && name.isNotEmpty()) {
+        androidx.compose.runtime.DisposableEffect(name) {
+            formState.register(CivFormState.CivFieldRegistration(
+                name = name,
+                getValue = { if (checked) value.ifEmpty { "on" } else "" },
+                setValue = { onCheckedChange(it.isNotEmpty()) },
+                isRequired = required,
+                getError = { formError },
+                setError = { formError = it },
+            ))
+            onDispose { formState.unregister(name) }
+        }
+    }
 
     val labelColor = if (isDark) CivTokens.DarkColors.Base.darkest else CivTokens.Colors.Base.darkest
     val hintColor = if (isDark) CivTokens.DarkColors.Base.dark else CivTokens.Colors.Base.dark
@@ -102,10 +123,10 @@ fun CivToggle(
                         if (required) append(", required")
                         append(if (checked) ", on" else ", off")
                         if (description.isNotEmpty()) append(". $description")
-                        if (error.isNotEmpty()) append(". Error: $error")
+                        if (effectiveError.isNotEmpty()) append(". Error: $effectiveError")
                     }
-                    if (error.isNotEmpty()) {
-                        error(error)
+                    if (effectiveError.isNotEmpty()) {
+                        error(effectiveError)
                     }
                 },
             verticalAlignment = Alignment.CenterVertically,
@@ -166,7 +187,7 @@ fun CivToggle(
 
         // Error (below toggle row)
         CivError(
-            text = error.ifEmpty { null },
+            text = effectiveError.ifEmpty { null },
             color = errorColor,
         )
     }

@@ -42,6 +42,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import gov.civui.i18n.CivLocale
 import gov.civui.tokens.CivTokens
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -101,13 +102,33 @@ fun CivMemorableDate(
     error: String? = null,
     required: Boolean = false,
     disabled: Boolean = false,
-    monthLabel: String = "Month",
-    dayLabel: String = "Day",
-    yearLabel: String = "Year",
+    monthLabel: String = CivLocale.t("memorableDateMonthLabel"),
+    dayLabel: String = CivLocale.t("memorableDateDayLabel"),
+    yearLabel: String = CivLocale.t("memorableDateYearLabel"),
+    name: String = "",
+    formState: CivFormState? = null,
     onChange: ((CivMemorableDateValue) -> Unit)? = null,
     onAnalytics: ((event: String, data: Map<String, Any>?) -> Unit)? = null,
 ) {
     val isDark = isSystemInDarkTheme()
+
+    // Form state registration
+    var formError by remember { mutableStateOf("") }
+    val effectiveError = error ?: formError.ifEmpty { null }
+
+    if (formState != null && name.isNotEmpty()) {
+        androidx.compose.runtime.DisposableEffect(name) {
+            formState.register(CivFormState.CivFieldRegistration(
+                name = name,
+                getValue = { value },
+                setValue = { onValueChange(it) },
+                isRequired = required,
+                getError = { formError },
+                setError = { formError = it },
+            ))
+            onDispose { formState.unregister(name) }
+        }
+    }
 
     val labelColor = if (isDark) CivTokens.DarkColors.Base.darkest else CivTokens.Colors.Base.darkest
     val hintColor = if (isDark) CivTokens.DarkColors.Base.dark else CivTokens.Colors.Base.dark
@@ -169,7 +190,7 @@ fun CivMemorableDate(
         modifier = modifier
             .padding(bottom = CivTokens.Spacing._4)
             .then(
-                if (error != null) Modifier.semantics { error(error) } else Modifier
+                if (effectiveError != null) Modifier.semantics { error(effectiveError) } else Modifier
             ),
     ) {
         // 1. Legend
@@ -184,7 +205,7 @@ fun CivMemorableDate(
         CivHint(text = hint, color = hintColor)
 
         // 3. Error
-        CivError(text = error, color = errorColor)
+        CivError(text = effectiveError, color = errorColor)
 
         // 4. Date fields
         Row(
@@ -223,7 +244,7 @@ fun CivMemorableDate(
                                 contentDescription = "$monthLabel, $legend"
                             },
                         enabled = !disabled,
-                        placeholder = { Text("- Select -", color = hintColor) },
+                        placeholder = { Text(CivLocale.t("memorableDateMonthEmptyLabel"), color = hintColor) },
                         textStyle = TextStyle(fontSize = CivTokens.Typography.FontSize.base),
                         singleLine = true,
                         shape = RoundedCornerShape(CivTokens.Border.Radius.default_),
@@ -286,7 +307,7 @@ fun CivMemorableDate(
                             contentDescription = "$dayLabel, $legend"
                         },
                     enabled = !disabled,
-                    placeholder = { Text("DD", color = hintColor) },
+                    placeholder = { Text(CivLocale.t("memorableDateDayPlaceholder"), color = hintColor) },
                     textStyle = TextStyle(fontSize = CivTokens.Typography.FontSize.base),
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
@@ -332,7 +353,7 @@ fun CivMemorableDate(
                             contentDescription = "$yearLabel, $legend"
                         },
                     enabled = !disabled,
-                    placeholder = { Text("YYYY", color = hintColor) },
+                    placeholder = { Text(CivLocale.t("memorableDateYearPlaceholder"), color = hintColor) },
                     textStyle = TextStyle(fontSize = CivTokens.Typography.FontSize.base),
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),

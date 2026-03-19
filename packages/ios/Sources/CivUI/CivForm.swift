@@ -40,6 +40,9 @@ public struct CivForm<Content: View>: View {
     /// Accessible label for the form.
     public var formLabel: String?
 
+    /// Optional CivFormState for centralized validation and reset.
+    public var state: CivFormState?
+
     /// Called when the form is submitted (validation must be done by the caller).
     public var onSubmit: (() -> Void)?
 
@@ -58,12 +61,14 @@ public struct CivForm<Content: View>: View {
     public init(
         errors: Binding<[CivFormFieldError]>,
         formLabel: String? = nil,
+        state: CivFormState? = nil,
         onSubmit: (() -> Void)? = nil,
         onAnalytics: ((String, [String: Any]?) -> Void)? = nil,
         @ViewBuilder content: () -> Content
     ) {
         self._errors = errors
         self.formLabel = formLabel
+        self.state = state
         self.onSubmit = onSubmit
         self.onAnalytics = onAnalytics
         self.content = content()
@@ -86,8 +91,8 @@ public struct CivForm<Content: View>: View {
         .onChange(of: errors.count) { count in
             if count > 0 {
                 let message = count == 1
-                    ? "There is 1 error on this page"
-                    : "There are \(count) errors on this page"
+                    ? CivLocale.shared.t("formErrorSingular")
+                    : CivLocale.shared.t("formErrorPlural").replacingOccurrences(of: "{count}", with: "\(count)")
                 UIAccessibility.post(notification: .announcement, argument: message)
                 onAnalytics?("validation-error", ["errorCount": count])
             }
@@ -99,8 +104,8 @@ public struct CivForm<Content: View>: View {
     private var errorSummary: some View {
         VStack(alignment: .leading, spacing: CivTokens.Spacing._2) {
             Text(errors.count == 1
-                 ? "There is 1 error on this page"
-                 : "There are \(errors.count) errors on this page")
+                 ? CivLocale.shared.t("formErrorSingular")
+                 : CivLocale.shared.t("formErrorPlural").replacingOccurrences(of: "{count}", with: "\(errors.count)"))
                 .font(.system(size: CivTokens.Typography.FontSize.base,
                               weight: CivTokens.Typography.FontWeight.bold))
                 .foregroundColor(adaptiveColor(

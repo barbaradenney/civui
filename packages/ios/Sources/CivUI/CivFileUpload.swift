@@ -148,7 +148,7 @@ public struct CivFileUpload: View {
                     Image(systemName: "arrow.up.doc")
                         .font(.system(size: CivTokens.Typography.FontSize.base))
 
-                    Text("Choose file\(multiple ? "s" : "")")
+                    Text(CivLocale.shared.t("fileUploadBrowseText"))
                         .font(.system(size: CivTokens.Typography.FontSize.base))
                 }
                 .foregroundColor(adaptiveColor(
@@ -209,7 +209,7 @@ public struct CivFileUpload: View {
                             Spacer()
 
                             Button(action: { removeFile(file) }) {
-                                Text("Remove")
+                                Text(CivLocale.shared.t("fileUploadRemoveText"))
                                     .font(.system(size: CivTokens.Typography.FontSize.sm))
                                     .foregroundColor(adaptiveColor(
                                         light: CivTokens.Colors.Error.default_,
@@ -219,7 +219,7 @@ public struct CivFileUpload: View {
                             .buttonStyle(.plain)
                             .disabled(isDisabled)
                             .focused($focusedFileId, equals: file.id)
-                            .accessibilityLabel("Remove \(file.name)")
+                            .accessibilityLabel(CivLocale.shared.t("fileUploadRemoveAriaLabel").replacingOccurrences(of: "{name}", with: file.name))
                         }
                         .padding(CivTokens.Spacing._2)
                         .background(adaptiveColor(
@@ -257,7 +257,9 @@ public struct CivFileUpload: View {
                 let file = CivUploadedFile(url: url)
 
                 if maxSize > 0 && file.size > maxSize {
-                    errors.append("\(file.name) exceeds maximum size of \(formatFileSize(maxSize))")
+                    errors.append(CivLocale.shared.t("fileUploadFileSizeError")
+                        .replacingOccurrences(of: "{name}", with: file.name)
+                        .replacingOccurrences(of: "{size}", with: formatFileSize(maxSize)))
                     continue
                 }
 
@@ -268,7 +270,7 @@ public struct CivFileUpload: View {
                 let available = maxFiles - files.count
                 if newFiles.count > available {
                     newFiles = Array(newFiles.prefix(available))
-                    errors.append("Maximum \(maxFiles) files allowed")
+                    errors.append(CivLocale.shared.t("fileUploadMaxFilesError").replacingOccurrences(of: "{max}", with: "\(maxFiles)"))
                 }
             }
 
@@ -283,9 +285,10 @@ public struct CivFileUpload: View {
             }
 
             // Announce added files for VoiceOver
-            for file in newFiles {
-                UIAccessibility.post(notification: .announcement, argument: "File added: \(file.name)")
-            }
+            let addedMsg = CivLocale.shared.t("fileUploadFileAddedMessage")
+                .replacingOccurrences(of: "{count}", with: "\(newFiles.count)")
+                .replacingOccurrences(of: "{total}", with: "\(files.count)")
+            UIAccessibility.post(notification: .announcement, argument: addedMsg)
 
             onChange?(files)
             onAnalytics?("change", ["files": newFiles.map { $0.name }])
@@ -302,7 +305,8 @@ public struct CivFileUpload: View {
 
         // Announce removal for VoiceOver
         let remaining = files.count
-        let announcement = "File removed: \(file.name), \(remaining) file\(remaining == 1 ? "" : "s") remaining"
+        let announcement = CivLocale.shared.t("fileUploadFileRemovedMessage")
+            .replacingOccurrences(of: "{total}", with: "\(remaining)")
         UIAccessibility.post(notification: .announcement, argument: announcement)
 
         // Move focus: to next remove button or upload button if no files remain

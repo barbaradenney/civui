@@ -41,6 +41,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import gov.civui.i18n.CivLocale
 import gov.civui.tokens.CivTokens
 import java.time.Instant
 import java.time.LocalDate
@@ -79,10 +80,30 @@ fun CivDatePicker(
     required: Boolean = false,
     disabled: Boolean = false,
     placeholder: String = "MM/DD/YYYY",
+    name: String = "",
+    formState: CivFormState? = null,
     onChange: ((String) -> Unit)? = null,
     onAnalytics: ((event: String, data: Map<String, Any>?) -> Unit)? = null,
 ) {
     val isDark = isSystemInDarkTheme()
+
+    // Form state registration
+    var formError by remember { mutableStateOf("") }
+    val effectiveError = error ?: formError.ifEmpty { null }
+
+    if (formState != null && name.isNotEmpty()) {
+        androidx.compose.runtime.DisposableEffect(name) {
+            formState.register(CivFormState.CivFieldRegistration(
+                name = name,
+                getValue = { value },
+                setValue = { onValueChange(it) },
+                isRequired = required,
+                getError = { formError },
+                setError = { formError = it },
+            ))
+            onDispose { formState.unregister(name) }
+        }
+    }
 
     val labelColor = if (isDark) CivTokens.DarkColors.Base.darkest else CivTokens.Colors.Base.darkest
     val hintColor = if (isDark) CivTokens.DarkColors.Base.dark else CivTokens.Colors.Base.dark
@@ -126,7 +147,7 @@ fun CivDatePicker(
         CivHint(text = hint, color = hintColor)
 
         // 3. Error
-        CivError(text = error, color = errorColor)
+        CivError(text = effectiveError, color = errorColor)
 
         // 4. Input with calendar button
         Row(
@@ -147,8 +168,8 @@ fun CivDatePicker(
                 modifier = Modifier
                     .weight(1f)
                     .border(
-                        width = if (error != null) CivTokens.Border.Width._2 else CivTokens.Border.Width.default_,
-                        color = if (error != null) errorColor else borderColor,
+                        width = if (effectiveError != null) CivTokens.Border.Width._2 else CivTokens.Border.Width.default_,
+                        color = if (effectiveError != null) errorColor else borderColor,
                         shape = RoundedCornerShape(
                             topStart = CivTokens.Border.Radius.default_,
                             bottomStart = CivTokens.Border.Radius.default_,
@@ -162,10 +183,10 @@ fun CivDatePicker(
                             append(label)
                             if (required) append(", required")
                             if (hint != null) append(". $hint")
-                            if (error != null) append(". Error: $error")
+                            if (effectiveError != null) append(". Error: $effectiveError")
                         }
-                        if (error != null) {
-                            error(error)
+                        if (effectiveError != null) {
+                            error(effectiveError)
                         }
                     },
                 enabled = !disabled,
@@ -209,7 +230,7 @@ fun CivDatePicker(
             ) {
                 Icon(
                     imageVector = Icons.Default.DateRange,
-                    contentDescription = "Choose date",
+                    contentDescription = CivLocale.t("datePickerChooseDateLabel"),
                 )
             }
         }

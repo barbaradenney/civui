@@ -70,6 +70,21 @@ public struct CivTextarea: View {
     /// Called for analytics tracking (parallels `civ-analytics` event).
     public var onAnalytics: ((String, [String: Any]?) -> Void)?
 
+    /// Optional form state for centralized validation.
+    public var formState: CivFormState?
+
+    /// Field name for form state registration.
+    public var formName: String?
+
+    /// Custom required message for form validation.
+    public var requiredMessage: String?
+
+    /// Custom validation function. Returns error string or nil.
+    public var formValidate: (() -> String?)?
+
+    /// Whether the field contains PII (excluded from getFormData).
+    public var isPii: Bool
+
     // MARK: - Internal State
 
     @FocusState private var isFocused: Bool
@@ -94,7 +109,12 @@ public struct CivTextarea: View {
         maxwords: Int? = nil,
         onInput: ((String) -> Void)? = nil,
         onChange: ((String) -> Void)? = nil,
-        onAnalytics: ((String, [String: Any]?) -> Void)? = nil
+        onAnalytics: ((String, [String: Any]?) -> Void)? = nil,
+        formState: CivFormState? = nil,
+        formName: String? = nil,
+        requiredMessage: String? = nil,
+        formValidate: (() -> String?)? = nil,
+        isPii: Bool = false
     ) {
         self.label = label
         self._value = value
@@ -110,6 +130,11 @@ public struct CivTextarea: View {
         self.onInput = onInput
         self.onChange = onChange
         self.onAnalytics = onAnalytics
+        self.formState = formState
+        self.formName = formName
+        self.requiredMessage = requiredMessage
+        self.formValidate = formValidate
+        self.isPii = isPii
     }
 
     // MARK: - Body
@@ -155,6 +180,29 @@ public struct CivTextarea: View {
                 UIAccessibility.post(notification: .announcement, argument: newError)
             }
         }
+        .onAppear { registerWithFormState() }
+        .onDisappear { unregisterFromFormState() }
+    }
+
+    // MARK: - Form State Registration
+
+    private func registerWithFormState() {
+        guard let formState, let formName, !formName.isEmpty else { return }
+        formState.register(CivFormState.CivFieldRegistration(
+            name: formName,
+            label: label,
+            getValue: { value },
+            setValue: { _ in },
+            isRequired: isRequired,
+            requiredMessage: requiredMessage ?? "",
+            validate: formValidate,
+            isPii: isPii
+        ))
+    }
+
+    private func unregisterFromFormState() {
+        guard let formState, let formName, !formName.isEmpty else { return }
+        formState.unregister(formName)
     }
 
     // MARK: - Subviews
@@ -253,7 +301,7 @@ public struct CivTextarea: View {
                 .accessibilityIdentifier("civ-charcount")
         } else if showWordCount {
             let remaining = maxwords! - wordCount
-            Text("\(remaining) words remaining")
+            Text(CivLocale.shared.t("textareaWordsRemaining").replacingOccurrences(of: "{count}", with: "\(remaining)"))
                 .font(.system(size: CivTokens.Typography.FontSize.sm,
                               weight: remaining < 0 ? CivTokens.Typography.FontWeight.bold : CivTokens.Typography.FontWeight.regular))
                 .foregroundColor(remaining < 0
@@ -328,7 +376,8 @@ public struct CivTextarea: View {
                 let wc = currentValue.trimmingCharacters(in: .whitespacesAndNewlines)
                     .split(whereSeparator: { $0.isWhitespace }).count
                 let remaining = mw - wc
-                UIAccessibility.post(notification: .announcement, argument: "\(remaining) words remaining")
+                let msg = CivLocale.shared.t("textareaWordsRemaining").replacingOccurrences(of: "{count}", with: "\(remaining)")
+                UIAccessibility.post(notification: .announcement, argument: msg)
             }
         }
     }

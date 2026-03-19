@@ -28,6 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import gov.civui.i18n.CivLocale
 import gov.civui.tokens.CivTokens
 
 /**
@@ -67,13 +68,16 @@ data class CivFormFieldError(
  */
 @Composable
 fun CivForm(
-    errors: List<CivFormFieldError>,
+    errors: List<CivFormFieldError> = emptyList(),
     onSubmit: () -> Unit,
     modifier: Modifier = Modifier,
+    state: CivFormState? = null,
     formLabel: String? = null,
     onAnalytics: ((event: String, data: Map<String, Any>?) -> Unit)? = null,
     content: @Composable (onSubmit: () -> Unit) -> Unit,
 ) {
+    // Use state errors if state is provided and caller did not pass errors
+    val effectiveErrors = if (state != null && errors.isEmpty()) state.errors else errors
     val isDark = isSystemInDarkTheme()
 
     val errorColor = if (isDark) CivTokens.DarkColors.Error.default_ else CivTokens.Colors.Error.default_
@@ -91,7 +95,7 @@ fun CivForm(
             },
     ) {
         // Error summary (rendered above form content)
-        if (errors.isNotEmpty()) {
+        if (effectiveErrors.isNotEmpty()) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -107,18 +111,18 @@ fun CivForm(
                     .padding(CivTokens.Spacing._4)
                     .semantics {
                         liveRegion = LiveRegionMode.Assertive
-                        contentDescription = if (errors.size == 1) {
-                            "There is 1 error in this form"
+                        contentDescription = if (effectiveErrors.size == 1) {
+                            CivLocale.t("formErrorSingular")
                         } else {
-                            "There are ${errors.size} errors in this form"
+                            CivLocale.t("formErrorPlural", "count" to effectiveErrors.size)
                         }
                     },
             ) {
                 Text(
-                    text = if (errors.size == 1) {
-                        "There is 1 error in this form"
+                    text = if (effectiveErrors.size == 1) {
+                        CivLocale.t("formErrorSingular")
                     } else {
-                        "There are ${errors.size} errors in this form"
+                        CivLocale.t("formErrorPlural", "count" to effectiveErrors.size)
                     },
                     style = TextStyle(
                         fontSize = CivTokens.Typography.FontSize.lg,
@@ -128,7 +132,7 @@ fun CivForm(
                     modifier = Modifier.padding(bottom = CivTokens.Spacing._2),
                 )
 
-                errors.forEach { fieldError ->
+                effectiveErrors.forEach { fieldError ->
                     Text(
                         text = fieldError.message,
                         style = TextStyle(
@@ -151,7 +155,7 @@ fun CivForm(
 
         // Form content
         content {
-            onAnalytics?.invoke("form-submit", mapOf("errorCount" to errors.size))
+            onAnalytics?.invoke("form-submit", mapOf("errorCount" to effectiveErrors.size))
             onSubmit()
         }
     }

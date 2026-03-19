@@ -18,6 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.border
 import androidx.compose.foundation.shape.RoundedCornerShape
+import gov.civui.i18n.CivLocale
 import gov.civui.tokens.CivTokens
 
 /**
@@ -51,7 +52,7 @@ internal fun CivLabel(
                 ),
                 color = errorColor,
                 modifier = Modifier.semantics {
-                    contentDescription = "required"
+                    contentDescription = CivLocale.t("required")
                 },
             )
         }

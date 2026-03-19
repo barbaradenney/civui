@@ -66,12 +66,12 @@ public enum CivInputMask: String {
     /// Hint text describing the expected format.
     var hint: String {
         switch self {
-        case .ssn: return "For example: 123-45-6789"
-        case .phoneUS: return "For example: (555) 123-4567"
-        case .zip: return "For example: 20500"
-        case .zip4: return "For example: 20500-0001"
-        case .ein: return "For example: 12-3456789"
-        case .currency: return "For example: 1,234.56"
+        case .ssn: return CivLocale.shared.t("maskSsnHint")
+        case .phoneUS: return CivLocale.shared.t("maskPhoneUsHint")
+        case .zip: return CivLocale.shared.t("maskZipHint")
+        case .zip4: return CivLocale.shared.t("maskZip4Hint")
+        case .ein: return CivLocale.shared.t("maskEinHint")
+        case .currency: return CivLocale.shared.t("maskCurrencyHint")
         default: return ""
         }
     }
@@ -153,6 +153,21 @@ public struct CivTextInput: View {
     /// When set, overrides the `mask` preset pattern.
     public var maskPattern: String
 
+    /// Optional form state for centralized validation.
+    public var formState: CivFormState?
+
+    /// Field name for form state registration.
+    public var formName: String?
+
+    /// Custom required message for form validation.
+    public var requiredMessage: String?
+
+    /// Custom validation function. Returns error string or nil.
+    public var formValidate: (() -> String?)?
+
+    /// Whether the field contains PII (excluded from getFormData).
+    public var isPii: Bool
+
     // MARK: - Internal State
 
     @FocusState private var isFocused: Bool
@@ -175,7 +190,12 @@ public struct CivTextInput: View {
         onInput: ((String) -> Void)? = nil,
         onChange: ((String) -> Void)? = nil,
         onAnalytics: ((String, [String: Any]?) -> Void)? = nil,
-        maskPattern: String = ""
+        maskPattern: String = "",
+        formState: CivFormState? = nil,
+        formName: String? = nil,
+        requiredMessage: String? = nil,
+        formValidate: (() -> String?)? = nil,
+        isPii: Bool = false
     ) {
         self.label = label
         self._value = value
@@ -192,6 +212,11 @@ public struct CivTextInput: View {
         self.onChange = onChange
         self.onAnalytics = onAnalytics
         self.maskPattern = maskPattern
+        self.formState = formState
+        self.formName = formName
+        self.requiredMessage = requiredMessage
+        self.formValidate = formValidate
+        self.isPii = isPii
     }
 
     // MARK: - Body
@@ -238,6 +263,29 @@ public struct CivTextInput: View {
                 UIAccessibility.post(notification: .announcement, argument: newError)
             }
         }
+        .onAppear { registerWithFormState() }
+        .onDisappear { unregisterFromFormState() }
+    }
+
+    // MARK: - Form State Registration
+
+    private func registerWithFormState() {
+        guard let formState, let formName, !formName.isEmpty else { return }
+        formState.register(CivFormState.CivFieldRegistration(
+            name: formName,
+            label: label,
+            getValue: { value },
+            setValue: { _ in },
+            isRequired: isRequired,
+            requiredMessage: requiredMessage ?? "",
+            validate: formValidate,
+            isPii: isPii
+        ))
+    }
+
+    private func unregisterFromFormState() {
+        guard let formState, let formName, !formName.isEmpty else { return }
+        formState.unregister(formName)
     }
 
     // MARK: - Effective Hint

@@ -44,6 +44,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import gov.civui.i18n.CivLocale
 import gov.civui.tokens.CivTokens
 
 /**
@@ -99,8 +100,8 @@ fun CivFileUpload(
     maxFiles: Int = 0,
     required: Boolean = false,
     disabled: Boolean = false,
-    browseText: String = "Choose file",
-    removeText: String = "Remove",
+    browseText: String = CivLocale.t("fileUploadBrowseText"),
+    removeText: String = CivLocale.t("fileUploadRemoveText"),
     onAnalytics: ((event: String, data: Map<String, Any>?) -> Unit)? = null,
 ) {
     val isDark = isSystemInDarkTheme()
@@ -150,12 +151,12 @@ fun CivFileUpload(
             cursor?.close()
 
             if (maxSize > 0 && size > maxSize) {
-                currentError = "$name exceeds maximum file size of ${formatFileSize(maxSize)}"
+                currentError = CivLocale.t("fileUploadFileSizeError", "name" to name, "size" to formatFileSize(maxSize))
                 return@let
             }
 
             if (!isAcceptedType(uri)) {
-                currentError = "$name is not an accepted file type"
+                currentError = CivLocale.t("fileUploadFileTypeError", "name" to name)
                 return@let
             }
 
@@ -184,12 +185,12 @@ fun CivFileUpload(
             cursor?.close()
 
             if (maxSize > 0 && size > maxSize) {
-                errors.add("$name exceeds maximum file size of ${formatFileSize(maxSize)}")
+                errors.add(CivLocale.t("fileUploadFileSizeError", "name" to name, "size" to formatFileSize(maxSize)))
                 continue
             }
 
             if (!isAcceptedType(uri)) {
-                errors.add("$name is not an accepted file type")
+                errors.add(CivLocale.t("fileUploadFileTypeError", "name" to name))
                 continue
             }
 
@@ -199,7 +200,7 @@ fun CivFileUpload(
         // Enforce maxFiles limit
         val combined = files + newFiles
         val finalFiles = if (maxFiles > 0 && combined.size > maxFiles) {
-            errors.add("Maximum $maxFiles files allowed")
+            errors.add(CivLocale.t("fileUploadMaxFilesError", "max" to maxFiles))
             combined.take(maxFiles)
         } else {
             combined
@@ -289,7 +290,7 @@ fun CivFileUpload(
                 modifier = Modifier
                     .padding(top = CivTokens.Spacing._3)
                     .semantics {
-                        contentDescription = "Uploaded files, ${files.size} files"
+                        contentDescription = CivLocale.t("fileUploadFilesListLabel") + ", ${files.size} files"
                         liveRegion = LiveRegionMode.Polite
                     },
             ) {

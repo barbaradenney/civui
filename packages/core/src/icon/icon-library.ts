@@ -33,6 +33,10 @@ export type IconDef = {
   type?: IconType;
   /** Layers rendered bottom-to-top. Only used when type is 'layers'. */
   layers?: IconLayer[];
+  /** SF Symbol name for iOS/macOS (e.g., "checkmark"). */
+  ios?: string;
+  /** Material Symbol name for Android (e.g., "check"). */
+  android?: string;
 };
 
 /**
@@ -46,20 +50,22 @@ export type IconDef = {
 export const icons: Record<string, IconDef> = {
   // ── Navigation (CSS) ──────────────────────────────────────
 
-  'chevron-right': { label: 'Next' },
-  'chevron-left': { label: 'Previous' },
-  'chevron-down': { label: 'Expand' },
-  'chevron-up': { label: 'Collapse' },
-  'arrow-right': { label: 'Right' },
-  'arrow-left': { label: 'Left' },
-  'arrow-up': { label: 'Up' },
-  'arrow-down': { label: 'Down' },
+  'chevron-right': { label: 'Next', ios: 'chevron.right', android: 'chevron_right' },
+  'chevron-left': { label: 'Previous', ios: 'chevron.left', android: 'chevron_left' },
+  'chevron-down': { label: 'Expand', ios: 'chevron.down', android: 'expand_more' },
+  'chevron-up': { label: 'Collapse', ios: 'chevron.up', android: 'expand_less' },
+  'arrow-right': { label: 'Right', ios: 'arrow.right', android: 'arrow_forward' },
+  'arrow-left': { label: 'Left', ios: 'arrow.left', android: 'arrow_back' },
+  'arrow-up': { label: 'Up', ios: 'arrow.up', android: 'arrow_upward' },
+  'arrow-down': { label: 'Down', ios: 'arrow.down', android: 'arrow_downward' },
 
   // Navigation (Layers — complex shapes)
   'arrow-back': {
     label: 'Go back',
     type: 'layers',
     layers: [{ char: '↩', transform: 'scale(1.0)' }],
+    ios: 'arrow.uturn.backward',
+    android: 'undo',
   },
   'external-link': {
     label: 'Opens in new tab',
@@ -69,17 +75,19 @@ export const icons: Record<string, IconDef> = {
       { char: '¬', transform: 'scale(1) translate(-18%, 46%) rotate(-180deg)' },
       { char: '¬', transform: 'scale(1) translate(-47%, -10%) rotate(-90deg)' },
     ],
+    ios: 'arrow.up.right.square',
+    android: 'open_in_new',
   },
 
   // ── Actions (CSS) ─────────────────────────────────────────
 
-  close: { label: 'Close' },
-  plus: { label: 'Add' },
-  minus: { label: 'Remove' },
-  menu: { label: 'Menu' },
-  'more-vertical': { label: 'More options' },
-  'more-horizontal': { label: 'More options' },
-  search: { label: 'Search' },
+  close: { label: 'Close', ios: 'xmark', android: 'close' },
+  plus: { label: 'Add', ios: 'plus', android: 'add' },
+  minus: { label: 'Remove', ios: 'minus', android: 'remove' },
+  menu: { label: 'Menu', ios: 'line.3.horizontal', android: 'menu' },
+  'more-vertical': { label: 'More options', ios: 'ellipsis', android: 'more_vert' },
+  'more-horizontal': { label: 'More options', ios: 'ellipsis', android: 'more_horiz' },
+  search: { label: 'Search', ios: 'magnifyingglass', android: 'search' },
 
   // Actions (Layers — complex shapes)
   'edit': {
@@ -90,11 +98,13 @@ export const icons: Record<string, IconDef> = {
       { char: '╶', transform: 'scale(0.75) translate(44%, 12%) rotate(90deg)' },
       { char: '╶', transform: 'scale(0.75) translate(7%, 30%)' },
     ],
+    ios: 'pencil',
+    android: 'edit',
   },
 
   // ── Status / Feedback (CSS) ───────────────────────────────
 
-  check: { label: 'Success' },
+  check: { label: 'Success', ios: 'checkmark', android: 'check' },
 
   // Status (Layers — circle + inner symbol)
   'check-circle': {
@@ -104,6 +114,8 @@ export const icons: Record<string, IconDef> = {
       { char: '○', transform: 'scale(1.0)' },
       { char: '✓', transform: 'scale(0.6)', weight: 'bold' },
     ],
+    ios: 'checkmark.circle',
+    android: 'check_circle',
   },
   error: {
     label: 'Error',
@@ -112,6 +124,8 @@ export const icons: Record<string, IconDef> = {
       { char: '○', transform: 'scale(1.0)' },
       { char: '!', transform: 'scale(0.55)', weight: 'bold' },
     ],
+    ios: 'exclamationmark.circle',
+    android: 'error',
   },
   warning: {
     label: 'Warning',
@@ -120,6 +134,8 @@ export const icons: Record<string, IconDef> = {
       { char: '△', transform: 'scale(1.15) translate(0%, -1%)' },
       { char: '!', transform: 'scale(0.4) translate(0%, 24%)', weight: 'bold' },
     ],
+    ios: 'exclamationmark.triangle',
+    android: 'warning',
   },
   info: {
     label: 'Information',
@@ -128,6 +144,8 @@ export const icons: Record<string, IconDef> = {
       { char: '○', transform: 'scale(1.0)' },
       { char: 'i', transform: 'scale(0.55) translate(0%, 2%)', weight: 'bold' },
     ],
+    ios: 'info.circle',
+    android: 'info',
   },
   help: {
     label: 'Help',
@@ -136,14 +154,16 @@ export const icons: Record<string, IconDef> = {
       { char: '○', transform: 'scale(1.0)' },
       { char: '?', transform: 'scale(0.55)', weight: 'bold' },
     ],
+    ios: 'questionmark.circle',
+    android: 'help',
   },
 
   // ── Form / Input (CSS) ────────────────────────────────────
 
-  'required-indicator': { label: 'Required' },
-  'sort-asc': { label: 'Sorted ascending' },
-  'sort-desc': { label: 'Sorted descending' },
-  'sort-none': { label: 'Unsorted' },
+  'required-indicator': { label: 'Required', ios: 'asterisk', android: 'emergency' },
+  'sort-asc': { label: 'Sorted ascending', ios: 'chevron.up', android: 'arrow_upward' },
+  'sort-desc': { label: 'Sorted descending', ios: 'chevron.down', android: 'arrow_downward' },
+  'sort-none': { label: 'Unsorted', ios: 'arrow.up.arrow.down', android: 'unfold_more' },
 
   // Form (Layers — complex shapes)
   calendar: {
@@ -154,13 +174,15 @@ export const icons: Record<string, IconDef> = {
       { char: '▔', transform: 'scale(0.55) translate(0%, -42%)' },
       { char: '⋯', transform: 'scale(0.45) translate(0%, 15%)' },
     ],
+    ios: 'calendar',
+    android: 'calendar_today',
   },
 
   // ── Media / Content (CSS) ─────────────────────────────────
 
-  upload: { label: 'Upload' },
-  download: { label: 'Download' },
-  filter: { label: 'Filter' },
+  upload: { label: 'Upload', ios: 'arrow.up.doc', android: 'upload' },
+  download: { label: 'Download', ios: 'arrow.down.doc', android: 'download' },
+  filter: { label: 'Filter', ios: 'line.3.horizontal.decrease', android: 'filter_list' },
 
   // Media (Layers — complex shapes)
   copy: {
@@ -170,6 +192,8 @@ export const icons: Record<string, IconDef> = {
       { char: '□', transform: 'scale(0.6) translate(-12%, 12%)' },
       { char: '□', transform: 'scale(0.6) translate(12%, -12%)' },
     ],
+    ios: 'doc.on.doc',
+    android: 'content_copy',
   },
   'trash': {
     label: 'Delete',
@@ -182,17 +206,21 @@ export const icons: Record<string, IconDef> = {
       { char: '‑', transform: 'scale(1.35) translate(-1%, -17%)' },
       { char: '‐', transform: 'scale(0.55) translate(-3%, -24%) rotate(-180deg)' },
     ],
+    ios: 'trash',
+    android: 'delete',
   },
 
   // ── UI Chrome (CSS) ───────────────────────────────────────
 
-  grip: { label: 'Drag handle' },
+  grip: { label: 'Drag handle', ios: 'line.3.horizontal', android: 'drag_handle' },
 
   // UI Chrome (Layers — complex shapes)
   loading: {
     label: 'Loading',
     type: 'layers',
     layers: [{ char: '◔', transform: 'scale(1.0)' }],
+    ios: 'progress.indicator',
+    android: 'progress_activity',
   },
   lock: {
     label: 'Locked',
@@ -201,6 +229,8 @@ export const icons: Record<string, IconDef> = {
       { char: '□', transform: 'scale(0.6) translate(0%, 15%)' },
       { char: '◠', transform: 'scale(0.45) translate(0%, -30%)' },
     ],
+    ios: 'lock',
+    android: 'lock',
   },
   home: {
     label: 'Home',
@@ -209,21 +239,29 @@ export const icons: Record<string, IconDef> = {
       { char: '△', transform: 'scale(0.85) translate(0%, -15%)' },
       { char: '▪', transform: 'scale(0.3) translate(0%, 45%)' },
     ],
+    ios: 'house',
+    android: 'home',
   },
   settings: {
     label: 'Settings',
     type: 'layers',
     layers: [{ char: '⊕', transform: 'scale(1.0)' }],
+    ios: 'gearshape',
+    android: 'settings',
   },
   star: {
     label: 'Favorite',
     type: 'layers',
     layers: [{ char: '☆', transform: 'scale(1.0)' }],
+    ios: 'star',
+    android: 'star_border',
   },
   'star-filled': {
     label: 'Favorited',
     type: 'layers',
     layers: [{ char: '★', transform: 'scale(1.0)' }],
+    ios: 'star.fill',
+    android: 'star',
   },
   print: {
     label: 'Print',
@@ -233,6 +271,8 @@ export const icons: Record<string, IconDef> = {
       { char: '▔', transform: 'scale(0.45) translate(0%, -40%)' },
       { char: '▁', transform: 'scale(0.45) translate(0%, 48%)' },
     ],
+    ios: 'printer',
+    android: 'print',
   },
   user: {
     label: 'User account',
@@ -241,6 +281,8 @@ export const icons: Record<string, IconDef> = {
       { char: '○', transform: 'scale(0.5) translate(0%, -30%)' },
       { char: '◠', transform: 'scale(0.7) translate(0%, 30%)' },
     ],
+    ios: 'person',
+    android: 'person',
   },
   mail: {
     label: 'Email',
@@ -249,6 +291,8 @@ export const icons: Record<string, IconDef> = {
       { char: '□', transform: 'scale(0.9) translate(0%, 5%)' },
       { char: '▽', transform: 'scale(0.5) translate(0%, -18%)' },
     ],
+    ios: 'envelope',
+    android: 'mail',
   },
 };
 

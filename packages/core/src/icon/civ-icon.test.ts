@@ -48,15 +48,25 @@ describe('civ-icon', () => {
     expect(container.getAttribute('aria-label')).toBe('Approved');
   });
 
-  it('renders correct number of layers for single-layer icon', async () => {
+  // ── CSS icon rendering ────────────────────────────────────
+
+  it('renders CSS icon with modifier class and no inner spans', async () => {
     const el = await create('<civ-icon name="check"></civ-icon>');
     const container = el.querySelector('.civ-icon')!;
+    expect(container.classList.contains('civ-icon--check')).toBe(true);
     const layers = container.querySelectorAll(':scope > span');
-    expect(layers.length).toBe(1);
-    expect(layers[0].textContent).toBe('✓');
+    expect(layers.length).toBe(0);
   });
 
-  it('renders correct number of layers for multi-layer icon', async () => {
+  it('renders CSS icon modifier class for chevron-right', async () => {
+    const el = await create('<civ-icon name="chevron-right"></civ-icon>');
+    const container = el.querySelector('.civ-icon')!;
+    expect(container.classList.contains('civ-icon--chevron-right')).toBe(true);
+  });
+
+  // ── Layer icon rendering ──────────────────────────────────
+
+  it('renders correct number of layers for layer-based icon', async () => {
     const el = await create('<civ-icon name="check-circle"></civ-icon>');
     const container = el.querySelector('.civ-icon')!;
     const layers = container.querySelectorAll(':scope > span');
@@ -65,17 +75,16 @@ describe('civ-icon', () => {
     expect(layers[1].textContent).toBe('✓');
   });
 
-  it('applies transform styles to layers', async () => {
-    const el = await create('<civ-icon name="check"></civ-icon>');
-    const layer = el.querySelector('.civ-icon > span') as HTMLElement;
-    expect(layer.style.transform).toBe('scale(1.0)');
+  it('layer-based icons do not get modifier class', async () => {
+    const el = await create('<civ-icon name="check-circle"></civ-icon>');
+    const container = el.querySelector('.civ-icon')!;
+    expect(container.classList.contains('civ-icon--check-circle')).toBe(false);
   });
 
-  it('applies opacity to layers when specified', async () => {
-    const el = await create('<civ-icon name="sort-none"></civ-icon>');
-    const layers = el.querySelectorAll('.civ-icon > span') as NodeListOf<HTMLElement>;
-    expect(layers[0].style.opacity).toBe('0.4');
-    expect(layers[1].style.opacity).toBe('0.4');
+  it('applies transform styles to layers', async () => {
+    const el = await create('<civ-icon name="check-circle"></civ-icon>');
+    const layer = el.querySelector('.civ-icon > span') as HTMLElement;
+    expect(layer.style.transform).toBe('scale(1.0)');
   });
 
   it('all layers are aria-hidden', async () => {
@@ -94,7 +103,7 @@ describe('civ-icon', () => {
   });
 
   it('layers have civ-icon__layer class for positioning', async () => {
-    const el = await create('<civ-icon name="check"></civ-icon>');
+    const el = await create('<civ-icon name="check-circle"></civ-icon>');
     const layer = el.querySelector('.civ-icon > span') as HTMLElement;
     expect(layer.classList.contains('civ-icon__layer')).toBe(true);
   });
@@ -139,13 +148,24 @@ describe('civ-icon', () => {
 
   // ── Dynamic updates ─────────────────────────────────────────
 
-  it('re-renders when name changes', async () => {
+  it('re-renders when name changes from CSS to layer icon', async () => {
     const el = await create('<civ-icon name="check"></civ-icon>');
-    expect(el.querySelector('.civ-icon > span')!.textContent).toBe('✓');
+    expect(el.querySelector('.civ-icon')!.classList.contains('civ-icon--check')).toBe(true);
+
+    el.name = 'error';
+    await el.updateComplete;
+    // error is a layer icon
+    const container = el.querySelector('.civ-icon')!;
+    expect(container.querySelectorAll(':scope > span').length).toBe(2);
+  });
+
+  it('re-renders when name changes between CSS icons', async () => {
+    const el = await create('<civ-icon name="check"></civ-icon>');
+    expect(el.querySelector('.civ-icon')!.classList.contains('civ-icon--check')).toBe(true);
 
     el.name = 'close';
     await el.updateComplete;
-    expect(el.querySelector('.civ-icon > span')!.textContent).toBe('✕');
+    expect(el.querySelector('.civ-icon')!.classList.contains('civ-icon--close')).toBe(true);
   });
 
   it('re-renders when label changes', async () => {
@@ -161,9 +181,10 @@ describe('civ-icon', () => {
 
   // ── Icon library ────────────────────────────────────────────
 
-  it('registerIcon adds a custom icon', async () => {
+  it('registerIcon adds a custom layer icon', async () => {
     const customIcon: IconDef = {
       label: 'Custom',
+      type: 'layers',
       layers: [{ char: '◈' }],
     };
     registerIcon('custom-test', customIcon);
@@ -177,6 +198,22 @@ describe('civ-icon', () => {
     delete (icons as Record<string, IconDef>)['custom-test'];
   });
 
+  it('registerIcon adds a custom CSS icon', async () => {
+    const customIcon: IconDef = {
+      label: 'Custom CSS',
+    };
+    registerIcon('custom-css-test', customIcon);
+
+    const el = await create('<civ-icon name="custom-css-test"></civ-icon>');
+    const container = el.querySelector('.civ-icon')!;
+    expect(container).toBeTruthy();
+    expect(container.classList.contains('civ-icon--custom-css-test')).toBe(true);
+    expect(container.querySelectorAll(':scope > span').length).toBe(0);
+
+    // Clean up
+    delete (icons as Record<string, IconDef>)['custom-css-test'];
+  });
+
   it('getIconNames returns all registered icon names', () => {
     const names = getIconNames();
     expect(names).toContain('check');
@@ -188,15 +225,26 @@ describe('civ-icon', () => {
   // ── Every built-in icon renders ─────────────────────────────
 
   it('all built-in icons render without errors', async () => {
-    for (const name of Object.keys(icons)) {
+    for (const [name, def] of Object.entries(icons)) {
       const el = await create(`<civ-icon name="${name}"></civ-icon>`);
       const container = el.querySelector('.civ-icon');
       expect(container, `Icon "${name}" should render a container`).toBeTruthy();
-      const layers = container!.querySelectorAll(':scope > span');
-      expect(
-        layers.length,
-        `Icon "${name}" should have at least one layer`,
-      ).toBeGreaterThanOrEqual(1);
+
+      const isCss = !def.type || def.type === 'css';
+      if (isCss) {
+        // CSS icons should have the modifier class and no inner spans
+        expect(
+          container!.classList.contains(`civ-icon--${name}`),
+          `CSS icon "${name}" should have modifier class`,
+        ).toBe(true);
+      } else {
+        // Layer icons should have at least one layer span
+        const layers = container!.querySelectorAll(':scope > span');
+        expect(
+          layers.length,
+          `Layer icon "${name}" should have at least one layer`,
+        ).toBeGreaterThanOrEqual(1);
+      }
       // Clean up for next iteration
       el.remove();
     }

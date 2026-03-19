@@ -113,6 +113,7 @@
     line-height: 1;
   }
 
+  /* Layer-based icons (legacy/complex — Phase 2 SVG upgrade) */
   .civ-icon__layer {
     position: absolute;
     display: flex;
@@ -124,6 +125,314 @@
     left: 0;
     pointer-events: none;
     user-select: none;
+  }
+
+  /* ── CSS Icons ────────────────────────────────────────────── */
+
+  /* Chevrons (rotated border corner) */
+  .civ-icon--chevron-right::before {
+    content: '';
+    width: 0.35em;
+    height: 0.35em;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: rotate(-45deg) translate(-10%, 10%);
+  }
+
+  .civ-icon--chevron-left::before {
+    content: '';
+    width: 0.35em;
+    height: 0.35em;
+    border-left: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: rotate(45deg) translate(10%, 10%);
+  }
+
+  .civ-icon--chevron-down::before {
+    content: '';
+    width: 0.35em;
+    height: 0.35em;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: rotate(45deg) translate(-10%, -10%);
+  }
+
+  .civ-icon--chevron-up::before {
+    content: '';
+    width: 0.35em;
+    height: 0.35em;
+    border-left: 2px solid currentColor;
+    border-top: 2px solid currentColor;
+    transform: rotate(45deg) translate(10%, -10%);
+  }
+
+  /* Arrows (line + chevron) */
+  .civ-icon--arrow-right::before {
+    content: '';
+    width: 0.6em;
+    height: 2px;
+    background: currentColor;
+  }
+  .civ-icon--arrow-right::after {
+    content: '';
+    width: 0.3em;
+    height: 0.3em;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: rotate(-45deg);
+    position: absolute;
+    right: 0.15em;
+  }
+
+  .civ-icon--arrow-left::before {
+    content: '';
+    width: 0.6em;
+    height: 2px;
+    background: currentColor;
+  }
+  .civ-icon--arrow-left::after {
+    content: '';
+    width: 0.3em;
+    height: 0.3em;
+    border-left: 2px solid currentColor;
+    border-top: 2px solid currentColor;
+    transform: rotate(-45deg);
+    position: absolute;
+    left: 0.15em;
+  }
+
+  .civ-icon--arrow-up::before {
+    content: '';
+    width: 2px;
+    height: 0.6em;
+    background: currentColor;
+  }
+  .civ-icon--arrow-up::after {
+    content: '';
+    width: 0.3em;
+    height: 0.3em;
+    border-left: 2px solid currentColor;
+    border-top: 2px solid currentColor;
+    transform: rotate(45deg);
+    position: absolute;
+    top: 0.15em;
+  }
+
+  .civ-icon--arrow-down::before {
+    content: '';
+    width: 2px;
+    height: 0.6em;
+    background: currentColor;
+  }
+  .civ-icon--arrow-down::after {
+    content: '';
+    width: 0.3em;
+    height: 0.3em;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: rotate(45deg);
+    position: absolute;
+    bottom: 0.15em;
+  }
+
+  /* Close (X — two rotated bars) */
+  .civ-icon--close::before,
+  .civ-icon--close::after {
+    content: '';
+    position: absolute;
+    width: 0.7em;
+    height: 2px;
+    background: currentColor;
+  }
+  .civ-icon--close::before { transform: rotate(45deg); }
+  .civ-icon--close::after { transform: rotate(-45deg); }
+
+  /* Plus (+) */
+  .civ-icon--plus::before,
+  .civ-icon--plus::after {
+    content: '';
+    position: absolute;
+    background: currentColor;
+  }
+  .civ-icon--plus::before { width: 0.7em; height: 2px; }
+  .civ-icon--plus::after { width: 2px; height: 0.7em; }
+
+  /* Minus (−) */
+  .civ-icon--minus::before {
+    content: '';
+    width: 0.7em;
+    height: 2px;
+    background: currentColor;
+  }
+
+  /* Check (✓) */
+  .civ-icon--check::before {
+    content: '';
+    width: 0.55em;
+    height: 0.3em;
+    border-left: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: rotate(-45deg) translate(5%, -10%);
+  }
+
+  /* Menu (☰ — three horizontal lines) */
+  .civ-icon--menu::before {
+    content: '';
+    width: 0.7em;
+    height: 2px;
+    background: currentColor;
+    box-shadow: 0 0.22em 0 currentColor, 0 -0.22em 0 currentColor;
+  }
+
+  /* More-vertical (⋮ — three dots) */
+  .civ-icon--more-vertical::before {
+    content: '';
+    width: 3px;
+    height: 3px;
+    background: currentColor;
+    border-radius: 50%;
+    box-shadow: 0 0.28em 0 currentColor, 0 -0.28em 0 currentColor;
+  }
+
+  /* More-horizontal (⋯ — three dots) */
+  .civ-icon--more-horizontal::before {
+    content: '';
+    width: 3px;
+    height: 3px;
+    background: currentColor;
+    border-radius: 50%;
+    box-shadow: 0.28em 0 0 currentColor, -0.28em 0 0 currentColor;
+  }
+
+  /* Search (circle + line) */
+  .civ-icon--search::before {
+    content: '';
+    width: 0.45em;
+    height: 0.45em;
+    border: 2px solid currentColor;
+    border-radius: 50%;
+    transform: translate(-10%, -10%);
+  }
+  .civ-icon--search::after {
+    content: '';
+    width: 0.3em;
+    height: 2px;
+    background: currentColor;
+    position: absolute;
+    transform: rotate(45deg);
+    bottom: 0.18em;
+    right: 0.12em;
+  }
+
+  /* Sort ascending (▲) */
+  .civ-icon--sort-asc::before {
+    content: '';
+    width: 0;
+    height: 0;
+    border-left: 0.3em solid transparent;
+    border-right: 0.3em solid transparent;
+    border-bottom: 0.4em solid currentColor;
+  }
+
+  /* Sort descending (▼) */
+  .civ-icon--sort-desc::before {
+    content: '';
+    width: 0;
+    height: 0;
+    border-left: 0.3em solid transparent;
+    border-right: 0.3em solid transparent;
+    border-top: 0.4em solid currentColor;
+  }
+
+  /* Sort none (▲▼ stacked, dimmed) */
+  .civ-icon--sort-none::before,
+  .civ-icon--sort-none::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-left: 0.2em solid transparent;
+    border-right: 0.2em solid transparent;
+    opacity: 0.4;
+  }
+  .civ-icon--sort-none::before {
+    border-bottom: 0.25em solid currentColor;
+    top: 0.12em;
+  }
+  .civ-icon--sort-none::after {
+    border-top: 0.25em solid currentColor;
+    bottom: 0.12em;
+  }
+
+  /* Filter (▽ — downward triangle) */
+  .civ-icon--filter::before {
+    content: '';
+    width: 0;
+    height: 0;
+    border-left: 0.35em solid transparent;
+    border-right: 0.35em solid transparent;
+    border-top: 0.45em solid currentColor;
+  }
+
+  /* Upload (↑ + base line) */
+  .civ-icon--upload::before {
+    content: '';
+    width: 2px;
+    height: 0.45em;
+    background: currentColor;
+    transform: translateY(-0.08em);
+  }
+  .civ-icon--upload::after {
+    content: '';
+    width: 0.25em;
+    height: 0.25em;
+    border-left: 2px solid currentColor;
+    border-top: 2px solid currentColor;
+    transform: rotate(45deg);
+    position: absolute;
+    top: 0.12em;
+  }
+
+  /* Download (↓ + base line) */
+  .civ-icon--download::before {
+    content: '';
+    width: 2px;
+    height: 0.45em;
+    background: currentColor;
+    transform: translateY(0.08em);
+  }
+  .civ-icon--download::after {
+    content: '';
+    width: 0.25em;
+    height: 0.25em;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: rotate(45deg);
+    position: absolute;
+    bottom: 0.12em;
+  }
+
+  /* Grip (⠿ — 6 dots) */
+  .civ-icon--grip::before {
+    content: '';
+    width: 3px;
+    height: 3px;
+    background: currentColor;
+    border-radius: 50%;
+    box-shadow:
+      0.22em 0 0 currentColor,
+      0 0.22em 0 currentColor,
+      0.22em 0.22em 0 currentColor,
+      0 -0.22em 0 currentColor,
+      0.22em -0.22em 0 currentColor;
+  }
+
+  /* Required indicator (*) */
+  .civ-icon--required-indicator::before {
+    content: '*';
+    font-size: 0.8em;
+    color: currentColor;
+    font-weight: bold;
   }
 
   /* ── Checkbox / Radio ───────────────────────────────────────── */

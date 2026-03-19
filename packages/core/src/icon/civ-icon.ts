@@ -5,11 +5,14 @@ import { icons } from './icon-library.js';
 import type { IconDef, IconLayer } from './icon-library.js';
 
 /**
- * A zero-dependency icon component built from layered Unicode characters.
+ * An icon component using CSS-drawn shapes or layered Unicode characters.
  *
- * Each icon is rendered as a stack of absolutely-positioned `<span>` elements
- * inside a 1em × 1em box. Characters inherit `color` and scale with
- * `font-size`, so icons automatically match surrounding text.
+ * CSS icons render as a single `<span>` with no inner content — the icon
+ * shape is drawn entirely via `::before`/`::after` pseudo-elements.
+ * Legacy layer icons render as stacked Unicode character `<span>` elements.
+ *
+ * All icons inherit `color` and scale with `font-size`, so they
+ * automatically match surrounding text.
  *
  * @example
  * ```html
@@ -61,14 +64,16 @@ export class CivIcon extends CivBaseElement {
       ? CivIcon._sizeMap[this.size] ?? this.size
       : undefined;
 
+    const isCss = !def.type || def.type === 'css';
+
     return html`
       <span
-        class="civ-icon"
+        class="civ-icon ${isCss ? `civ-icon--${this.name}` : ''}"
         style=${fontSize ? `font-size:${fontSize}` : nothing}
         role=${isDecorative ? 'presentation' : 'img'}
         aria-hidden=${isDecorative ? 'true' : 'false'}
         aria-label=${isDecorative ? nothing : accessibleLabel}
-      >${def.layers.map((layer) => this._renderLayer(layer))}</span>
+      >${isCss ? nothing : def.layers?.map((layer) => this._renderLayer(layer))}</span>
     `;
   }
 

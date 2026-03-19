@@ -1,12 +1,16 @@
 /**
- * Icon definitions using layered Unicode characters.
+ * Icon definitions.
  *
- * Each icon is an array of "layers" — a Unicode character plus optional
- * CSS transforms (scale, rotate, translate) that position it within
- * a 1em × 1em box.  The container uses `position: relative` with
- * `overflow: hidden`, and every layer is `position: absolute` centered
- * in the box.  Because the characters are text, they inherit `color`
- * and scale with `font-size`.
+ * Icons are either CSS-based (rendered purely via CSS pseudo-elements)
+ * or layer-based (using layered Unicode characters for complex shapes).
+ *
+ * CSS icons render as `<span class="civ-icon civ-icon--{name}">` with
+ * no inner content — the CSS classes handle everything via `::before`
+ * and `::after` pseudo-elements.
+ *
+ * Layer icons render as a stack of absolutely-positioned `<span>` elements
+ * inside a 1em × 1em box.  Characters inherit `color` and scale with
+ * `font-size`, so icons automatically match surrounding text.
  */
 
 export interface IconLayer {
@@ -20,68 +24,46 @@ export interface IconLayer {
   weight?: string;
 }
 
+export type IconType = 'css' | 'layers';
+
 export type IconDef = {
   /** Human-readable name for aria-label fallback. */
   label: string;
-  /** Layers rendered bottom-to-top. */
-  layers: IconLayer[];
+  /** Rendering type: 'css' (default) or 'layers' (Unicode fallback). */
+  type?: IconType;
+  /** Layers rendered bottom-to-top. Only used when type is 'layers'. */
+  layers?: IconLayer[];
 };
 
 /**
  * Built-in icon definitions.
  *
- * Design constraints:
- * - Only Unicode box-drawing, block, geometric, math, and symbol characters
- * - No emoji (no codepoints above U+2FFF except box-drawing/blocks)
- * - Every icon must be legible at 16px (1em default)
- */
-/**
- * Base scale: 1.0 = fits the 1em box naturally.
- * All single-character icons use scale(1.0) as the baseline.
- * Multi-layer icons scale containers to ~0.9 and inner elements smaller.
- * This ensures all icons appear optically similar in size.
+ * CSS icons (type omitted or 'css') are rendered purely via CSS classes.
+ * Layer icons (type: 'layers') use Unicode characters for complex shapes
+ * that need more than 2 pseudo-elements — these will be upgraded to SVG
+ * in Phase 2.
  */
 export const icons: Record<string, IconDef> = {
-  // ── Navigation ──────────────────────────────────────────────
+  // ── Navigation (CSS) ──────────────────────────────────────
 
-  'chevron-right': {
-    label: 'Next',
-    layers: [{ char: '⌃', transform: 'scale(1.0) rotate(90deg)' }],
-  },
-  'chevron-left': {
-    label: 'Previous',
-    layers: [{ char: '⌃', transform: 'scale(1.0) rotate(-90deg)' }],
-  },
-  'chevron-down': {
-    label: 'Expand',
-    layers: [{ char: '⌃', transform: 'scale(1.0) rotate(180deg)' }],
-  },
-  'chevron-up': {
-    label: 'Collapse',
-    layers: [{ char: '⌃', transform: 'scale(1.0)' }],
-  },
-  'arrow-right': {
-    label: 'Right',
-    layers: [{ char: '→', transform: 'scale(1.0)' }],
-  },
-  'arrow-left': {
-    label: 'Left',
-    layers: [{ char: '←', transform: 'scale(1.0)' }],
-  },
-  'arrow-up': {
-    label: 'Up',
-    layers: [{ char: '↑', transform: 'scale(1.0)' }],
-  },
-  'arrow-down': {
-    label: 'Down',
-    layers: [{ char: '↓', transform: 'scale(1.0)' }],
-  },
+  'chevron-right': { label: 'Next' },
+  'chevron-left': { label: 'Previous' },
+  'chevron-down': { label: 'Expand' },
+  'chevron-up': { label: 'Collapse' },
+  'arrow-right': { label: 'Right' },
+  'arrow-left': { label: 'Left' },
+  'arrow-up': { label: 'Up' },
+  'arrow-down': { label: 'Down' },
+
+  // Navigation (Layers — complex shapes)
   'arrow-back': {
     label: 'Go back',
+    type: 'layers',
     layers: [{ char: '↩', transform: 'scale(1.0)' }],
   },
   'external-link': {
     label: 'Opens in new tab',
+    type: 'layers',
     layers: [
       { char: '↗', transform: 'scale(1) translate(8%, -8%)' },
       { char: '¬', transform: 'scale(1) translate(-18%, 46%) rotate(-180deg)' },
@@ -89,41 +71,20 @@ export const icons: Record<string, IconDef> = {
     ],
   },
 
-  // ── Actions ─────────────────────────────────────────────────
+  // ── Actions (CSS) ─────────────────────────────────────────
 
-  close: {
-    label: 'Close',
-    layers: [{ char: '✕', transform: 'scale(0.9)', weight: 'bold' }],
-  },
-  plus: {
-    label: 'Add',
-    layers: [{ char: '+', transform: 'scale(1.0)', weight: 'bold' }],
-  },
-  minus: {
-    label: 'Remove',
-    layers: [{ char: '−', transform: 'scale(1.0)', weight: 'bold' }],
-  },
-  menu: {
-    label: 'Menu',
-    layers: [{ char: '≡', transform: 'scale(1.0)' }],
-  },
-  'more-vertical': {
-    label: 'More options',
-    layers: [{ char: '⋮', transform: 'scale(1.0)' }],
-  },
-  'more-horizontal': {
-    label: 'More options',
-    layers: [{ char: '⋯', transform: 'scale(1.0)' }],
-  },
-  search: {
-    label: 'Search',
-    layers: [
-      { char: '○', transform: 'scale(0.8) translate(13%, -17%)', weight: 'bold' },
-      { char: '⏽', transform: 'scale(0.75) translate(-34%, 34%) rotate(45deg)', weight: 'bold' },
-    ],
-  },
+  close: { label: 'Close' },
+  plus: { label: 'Add' },
+  minus: { label: 'Remove' },
+  menu: { label: 'Menu' },
+  'more-vertical': { label: 'More options' },
+  'more-horizontal': { label: 'More options' },
+  search: { label: 'Search' },
+
+  // Actions (Layers — complex shapes)
   'edit': {
     label: 'Edit',
+    type: 'layers',
     layers: [
       { char: '▯', transform: 'scale(1.15) translate(-14%, -11%) rotate(-45deg)' },
       { char: '╶', transform: 'scale(0.75) translate(44%, 12%) rotate(90deg)' },
@@ -131,14 +92,14 @@ export const icons: Record<string, IconDef> = {
     ],
   },
 
-  // ── Status / Feedback ───────────────────────────────────────
+  // ── Status / Feedback (CSS) ───────────────────────────────
 
-  check: {
-    label: 'Success',
-    layers: [{ char: '✓', transform: 'scale(1.0)', weight: 'bold' }],
-  },
+  check: { label: 'Success' },
+
+  // Status (Layers — circle + inner symbol)
   'check-circle': {
     label: 'Success',
+    type: 'layers',
     layers: [
       { char: '○', transform: 'scale(1.0)' },
       { char: '✓', transform: 'scale(0.6)', weight: 'bold' },
@@ -146,6 +107,7 @@ export const icons: Record<string, IconDef> = {
   },
   error: {
     label: 'Error',
+    type: 'layers',
     layers: [
       { char: '○', transform: 'scale(1.0)' },
       { char: '!', transform: 'scale(0.55)', weight: 'bold' },
@@ -153,6 +115,7 @@ export const icons: Record<string, IconDef> = {
   },
   warning: {
     label: 'Warning',
+    type: 'layers',
     layers: [
       { char: '△', transform: 'scale(1.15) translate(0%, -1%)' },
       { char: '!', transform: 'scale(0.4) translate(0%, 24%)', weight: 'bold' },
@@ -160,6 +123,7 @@ export const icons: Record<string, IconDef> = {
   },
   info: {
     label: 'Information',
+    type: 'layers',
     layers: [
       { char: '○', transform: 'scale(1.0)' },
       { char: 'i', transform: 'scale(0.55) translate(0%, 2%)', weight: 'bold' },
@@ -167,35 +131,24 @@ export const icons: Record<string, IconDef> = {
   },
   help: {
     label: 'Help',
+    type: 'layers',
     layers: [
       { char: '○', transform: 'scale(1.0)' },
       { char: '?', transform: 'scale(0.55)', weight: 'bold' },
     ],
   },
 
-  // ── Form / Input ────────────────────────────────────────────
+  // ── Form / Input (CSS) ────────────────────────────────────
 
-  'required-indicator': {
-    label: 'Required',
-    layers: [{ char: '✱', transform: 'scale(0.7)' }],
-  },
-  'sort-asc': {
-    label: 'Sorted ascending',
-    layers: [{ char: '▲', transform: 'scale(0.7)' }],
-  },
-  'sort-desc': {
-    label: 'Sorted descending',
-    layers: [{ char: '▼', transform: 'scale(0.7)' }],
-  },
-  'sort-none': {
-    label: 'Unsorted',
-    layers: [
-      { char: '▲', transform: 'scale(0.5) translate(0%, -35%)', opacity: 0.4 },
-      { char: '▼', transform: 'scale(0.5) translate(0%, 35%)', opacity: 0.4 },
-    ],
-  },
+  'required-indicator': { label: 'Required' },
+  'sort-asc': { label: 'Sorted ascending' },
+  'sort-desc': { label: 'Sorted descending' },
+  'sort-none': { label: 'Unsorted' },
+
+  // Form (Layers — complex shapes)
   calendar: {
     label: 'Calendar',
+    type: 'layers',
     layers: [
       { char: '□', transform: 'scale(0.9) translate(0%, 5%)' },
       { char: '▔', transform: 'scale(0.55) translate(0%, -42%)' },
@@ -203,24 +156,16 @@ export const icons: Record<string, IconDef> = {
     ],
   },
 
-  // ── Media / Content ─────────────────────────────────────────
+  // ── Media / Content (CSS) ─────────────────────────────────
 
-  'upload': {
-    label: 'Upload',
-    layers: [
-      { char: '↑', transform: 'scale(1) translate(-2%, 9%)' },
-      { char: '▔', transform: 'scale(0.6) translate(-3%, -18%)' },
-    ],
-  },
-  'download': {
-    label: 'Download',
-    layers: [
-      { char: '↓', transform: 'scale(1) translate(0%, -10%)' },
-      { char: '▔', transform: 'scale(0.6) translate(1%, 23%) rotate(-180deg)' },
-    ],
-  },
+  upload: { label: 'Upload' },
+  download: { label: 'Download' },
+  filter: { label: 'Filter' },
+
+  // Media (Layers — complex shapes)
   copy: {
     label: 'Copy',
+    type: 'layers',
     layers: [
       { char: '□', transform: 'scale(0.6) translate(-12%, 12%)' },
       { char: '□', transform: 'scale(0.6) translate(12%, -12%)' },
@@ -228,6 +173,7 @@ export const icons: Record<string, IconDef> = {
   },
   'trash': {
     label: 'Delete',
+    type: 'layers',
     layers: [
       { char: '□', transform: 'scale(0.55) translate(-3%, 13%)' },
       { char: '│', transform: 'scale(0.35) translate(-4%, 26%)' },
@@ -238,23 +184,19 @@ export const icons: Record<string, IconDef> = {
     ],
   },
 
+  // ── UI Chrome (CSS) ───────────────────────────────────────
 
-  // ── UI Chrome ───────────────────────────────────────────────
+  grip: { label: 'Drag handle' },
 
-  grip: {
-    label: 'Drag handle',
-    layers: [
-      { char: '⠿', transform: 'scale(1.0)' },
-    ],
-  },
+  // UI Chrome (Layers — complex shapes)
   loading: {
     label: 'Loading',
-    layers: [
-      { char: '◔', transform: 'scale(1.0)' },
-    ],
+    type: 'layers',
+    layers: [{ char: '◔', transform: 'scale(1.0)' }],
   },
   lock: {
     label: 'Locked',
+    type: 'layers',
     layers: [
       { char: '□', transform: 'scale(0.6) translate(0%, 15%)' },
       { char: '◠', transform: 'scale(0.45) translate(0%, -30%)' },
@@ -262,6 +204,7 @@ export const icons: Record<string, IconDef> = {
   },
   home: {
     label: 'Home',
+    type: 'layers',
     layers: [
       { char: '△', transform: 'scale(0.85) translate(0%, -15%)' },
       { char: '▪', transform: 'scale(0.3) translate(0%, 45%)' },
@@ -269,30 +212,22 @@ export const icons: Record<string, IconDef> = {
   },
   settings: {
     label: 'Settings',
-    layers: [
-      { char: '⊕', transform: 'scale(1.0)' },
-    ],
-  },
-  filter: {
-    label: 'Filter',
-    layers: [
-      { char: '▽', transform: 'scale(0.9)' },
-    ],
+    type: 'layers',
+    layers: [{ char: '⊕', transform: 'scale(1.0)' }],
   },
   star: {
     label: 'Favorite',
-    layers: [
-      { char: '☆', transform: 'scale(1.0)' },
-    ],
+    type: 'layers',
+    layers: [{ char: '☆', transform: 'scale(1.0)' }],
   },
   'star-filled': {
     label: 'Favorited',
-    layers: [
-      { char: '★', transform: 'scale(1.0)' },
-    ],
+    type: 'layers',
+    layers: [{ char: '★', transform: 'scale(1.0)' }],
   },
   print: {
     label: 'Print',
+    type: 'layers',
     layers: [
       { char: '□', transform: 'scale(0.8) translate(0%, 5%)' },
       { char: '▔', transform: 'scale(0.45) translate(0%, -40%)' },
@@ -301,6 +236,7 @@ export const icons: Record<string, IconDef> = {
   },
   user: {
     label: 'User account',
+    type: 'layers',
     layers: [
       { char: '○', transform: 'scale(0.5) translate(0%, -30%)' },
       { char: '◠', transform: 'scale(0.7) translate(0%, 30%)' },
@@ -308,6 +244,7 @@ export const icons: Record<string, IconDef> = {
   },
   mail: {
     label: 'Email',
+    type: 'layers',
     layers: [
       { char: '□', transform: 'scale(0.9) translate(0%, 5%)' },
       { char: '▽', transform: 'scale(0.5) translate(0%, -18%)' },

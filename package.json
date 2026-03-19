@@ -25,6 +25,7 @@
     "generate:dry-run": "pnpm --filter @civui/codegen generate:dry-run",
     "generate:validate": "pnpm --filter @civui/codegen validate",
     "generate:diff": "pnpm --filter @civui/codegen diff",
+    "parity": "node --experimental-strip-types tools/parity-report.ts && open tools/parity-report.html",
     "build:cdn": "node scripts/build-cdn.js",
     "validate": "pnpm lint && pnpm typecheck && pnpm test"
   },

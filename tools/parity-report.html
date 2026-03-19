@@ -1,0 +1,2286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CivUI Platform Parity Report</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, sans-serif; background: #f5f5f5; color: #1b1b1b; padding: 24px; }
+  h1 { font-size: 22px; margin-bottom: 4px; }
+  .subtitle { color: #71767a; font-size: 14px; margin-bottom: 24px; }
+  .summary { display: flex; gap: 24px; margin-bottom: 24px; }
+  .summary-card { background: white; border: 1px solid #dfe1e2; border-radius: 8px; padding: 16px; flex: 1; text-align: center; }
+  .summary-card .num { font-size: 32px; font-weight: 700; }
+  .summary-card .label { font-size: 13px; color: #71767a; margin-top: 4px; }
+  .component { background: white; border: 1px solid #dfe1e2; border-radius: 8px; margin-bottom: 16px; overflow: hidden; }
+  .component-header { padding: 12px 16px; font-weight: 600; font-size: 15px; background: #f0f0f0; display: flex; align-items: center; gap: 12px; cursor: pointer; }
+  .component-header:hover { background: #e8e8e8; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; }
+  .badge.yes { background: #ecf3ec; color: #4d8055; }
+  .badge.no { background: #f4e3db; color: #8b0a03; }
+  .component-body { display: none; padding: 0; }
+  .component-body.open { display: block; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { text-align: left; padding: 8px 12px; background: #f9f9f9; border-bottom: 1px solid #dfe1e2; font-weight: 600; color: #3d4551; }
+  td { padding: 6px 12px; border-bottom: 1px solid #f0f0f0; vertical-align: top; }
+  tr:hover { background: #fafafa; }
+  .check { color: #00a91c; }
+  .cross { color: #b50909; }
+  .dash { color: #a9aeb1; }
+  .prop-type { color: #71767a; font-size: 11px; }
+  .section-label { font-size: 12px; font-weight: 600; color: #71767a; text-transform: uppercase; padding: 10px 12px 4px; letter-spacing: 0.05em; }
+  .file-path { font-size: 11px; color: #71767a; font-family: monospace; }
+  .gap-row { background: #fff8f0; }
+  .parity-meter { height: 6px; background: #dfe1e2; border-radius: 3px; overflow: hidden; width: 60px; display: inline-block; vertical-align: middle; margin-left: 8px; }
+  .parity-fill { height: 100%; border-radius: 3px; }
+  .parity-fill.high { background: #00a91c; }
+  .parity-fill.mid { background: #e5a000; }
+  .parity-fill.low { background: #b50909; }
+</style>
+</head>
+<body>
+<h1>CivUI Platform Parity Report</h1>
+<p class="subtitle">Auto-generated 3/18/2026 — extracted from source code</p>
+
+<div class="summary">
+  <div class="summary-card"><div class="num">18</div><div class="label">Components</div></div>
+  <div class="summary-card"><div class="num">17</div><div class="label">Web (Lit)</div></div>
+  <div class="summary-card"><div class="num">16</div><div class="label">iOS (SwiftUI)</div></div>
+  <div class="summary-card"><div class="num">16</div><div class="label">Android (Compose)</div></div>
+</div>
+
+<div class="component">
+  <div class="component-header" onclick="this.nextElementSibling.classList.toggle('open')">
+    Checkbox
+    <span class="badge yes">Web</span>
+    <span class="badge yes">iOS</span>
+    <span class="badge yes">Android</span>
+    <span class="parity-meter"><span class="parity-fill mid" style="width:60%"></span></span>
+    <span style="font-size:12px;color:#71767a;">60%</span>
+  </div>
+  <div class="component-body">
+    <div class="file-path" style="padding:8px 12px;">
+      Web: packages/forms/src/checkbox/civ-checkbox.ts
+      <br>iOS: packages/ios/Sources/CivUI/CivCheckbox.swift
+      <br>Android: packages/android/src/main/kotlin/gov/civui/components/CivCheckbox.kt
+    </div>
+    <div class="section-label">Properties</div>
+    <table>
+      <tr><th>Property</th><th>Web</th><th>iOS</th><th>Android</th></tr>
+      <tr class="gap-row">
+          <td><strong>indeterminate</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+        </tr><tr class="">
+          <td><strong>tile</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>label</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>checked</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>value</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>description</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>hint</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>error</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>required</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>disabled</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>parts</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">[String]</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>onCheckedChange</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">(Boolean</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>onChange</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">((Boolean</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>onAnalytics</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">((event: String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>data</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Map<String</span></td>
+        </tr>
+    </table>
+    <div class="section-label">Events / Callbacks</div>
+    <table>
+      <tr><th>Event</th><th>Web</th><th>iOS</th><th>Android</th></tr>
+      <tr class="gap-row">
+          <td><strong>civ-input</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>civ-change</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>civ-reset</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>civ-analytics</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr>
+    </table>
+  </div>
+</div>
+<div class="component">
+  <div class="component-header" onclick="this.nextElementSibling.classList.toggle('open')">
+    CheckboxGroup
+    <span class="badge yes">Web</span>
+    <span class="badge yes">iOS</span>
+    <span class="badge yes">Android</span>
+    <span class="parity-meter"><span class="parity-fill mid" style="width:71%"></span></span>
+    <span style="font-size:12px;color:#71767a;">71%</span>
+  </div>
+  <div class="component-body">
+    <div class="file-path" style="padding:8px 12px;">
+      Web: packages/forms/src/checkbox/civ-checkbox-group.ts
+      <br>iOS: packages/ios/Sources/CivUI/CivCheckboxGroup.swift
+      <br>Android: packages/android/src/main/kotlin/gov/civui/components/CivCheckboxGroup.kt
+    </div>
+    <div class="section-label">Properties</div>
+    <table>
+      <tr><th>Property</th><th>Web</th><th>iOS</th><th>Android</th></tr>
+      <tr class="">
+          <td><strong>legend</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="">
+          <td><strong>tile</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>orientation</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">CivOrientation</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>id</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>label</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>value</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>description</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>disabled</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>values</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">[String]</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">List<String></span></td>
+        </tr><tr class="gap-row">
+          <td><strong>options</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">[CivCheckboxOption]</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">List<CivCheckboxOption></span></td>
+        </tr><tr class="gap-row">
+          <td><strong>hint</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String?</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>error</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String?</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>required</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>onValuesChange</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">(List<String></span></td>
+        </tr><tr class="gap-row">
+          <td><strong>onAnalytics</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">((event: String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>data</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Map<String</span></td>
+        </tr>
+    </table>
+    <div class="section-label">Events / Callbacks</div>
+    <table>
+      <tr><th>Event</th><th>Web</th><th>iOS</th><th>Android</th></tr>
+      <tr class="gap-row">
+          <td><strong>civ-input</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>civ-change</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>civ-reset</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>civ-analytics</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr>
+    </table>
+  </div>
+</div>
+<div class="component">
+  <div class="component-header" onclick="this.nextElementSibling.classList.toggle('open')">
+    Combobox
+    <span class="badge yes">Web</span>
+    <span class="badge yes">iOS</span>
+    <span class="badge yes">Android</span>
+    <span class="parity-meter"><span class="parity-fill high" style="width:100%"></span></span>
+    <span style="font-size:12px;color:#71767a;">100%</span>
+  </div>
+  <div class="component-body">
+    <div class="file-path" style="padding:8px 12px;">
+      Web: packages/forms/src/combobox/civ-combobox.ts
+      <br>iOS: packages/ios/Sources/CivUI/CivCombobox.swift
+      <br>Android: packages/android/src/main/kotlin/gov/civui/components/CivCombobox.kt
+    </div>
+    <div class="section-label">Properties</div>
+    <table>
+      <tr><th>Property</th><th>Web</th><th>iOS</th><th>Android</th></tr>
+      <tr class="">
+          <td><strong>options</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Array</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">[CivComboboxOption]</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">List<CivComboboxOption></span></td>
+        </tr><tr class="">
+          <td><strong>placeholder</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String?</span></td>
+        </tr><tr class="">
+          <td><strong>noResultsText</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>id</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>value</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>label</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>hint</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String?</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>error</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String?</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>required</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>disabled</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>formState</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">CivFormState</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">CivFormState?</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>name</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>requiredMessage</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>pii</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>parts</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">[String]</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>onValueChange</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">(String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>onAnalytics</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">((event: String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>data</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Map<String</span></td>
+        </tr>
+    </table>
+    <div class="section-label">Events / Callbacks</div>
+    <table>
+      <tr><th>Event</th><th>Web</th><th>iOS</th><th>Android</th></tr>
+      <tr class="gap-row">
+          <td><strong>civ-input</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>civ-change</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>civ-analytics</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>formValidate</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr>
+    </table>
+  </div>
+</div>
+<div class="component">
+  <div class="component-header" onclick="this.nextElementSibling.classList.toggle('open')">
+    DatePicker
+    <span class="badge yes">Web</span>
+    <span class="badge yes">iOS</span>
+    <span class="badge yes">Android</span>
+    <span class="parity-meter"><span class="parity-fill low" style="width:24%"></span></span>
+    <span style="font-size:12px;color:#71767a;">24%</span>
+  </div>
+  <div class="component-body">
+    <div class="file-path" style="padding:8px 12px;">
+      Web: packages/forms/src/date-picker/civ-date-picker.ts
+      <br>iOS: packages/ios/Sources/CivUI/CivDatePicker.swift
+      <br>Android: packages/android/src/main/kotlin/gov/civui/components/CivDatePicker.kt
+    </div>
+    <div class="section-label">Properties</div>
+    <table>
+      <tr><th>Property</th><th>Web</th><th>iOS</th><th>Android</th></tr>
+      <tr class="">
+          <td><strong>min</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String?</span></td>
+        </tr><tr class="">
+          <td><strong>max</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String?</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>placeholder</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>locale</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>weekStartsOn</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Number</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>chooseDateLabel</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>selectedDateLabel</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>dialogLabel</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>previousMonthLabel</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>nextMonthLabel</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>dialogOpenedMessage</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>dateSelectedMessage</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>todayLabel</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>invalidFormatMessage</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>dateRangeMessage</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>minDateMessage</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>maxDateMessage</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>label</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>value</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>hint</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String?</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>error</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String?</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>required</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>disabled</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>formState</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">CivFormState</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">CivFormState?</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>name</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>requiredMessage</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>pii</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>parts</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">[String]</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>onValueChange</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">(String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>onChange</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">((String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>onAnalytics</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">((event: String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>data</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Map<String</span></td>
+        </tr>
+    </table>
+    <div class="section-label">Events / Callbacks</div>
+    <table>
+      <tr><th>Event</th><th>Web</th><th>iOS</th><th>Android</th></tr>
+      <tr class="gap-row">
+          <td><strong>civ-change</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>civ-input</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>civ-reset</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>civ-analytics</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>formValidate</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr>
+    </table>
+  </div>
+</div>
+<div class="component">
+  <div class="component-header" onclick="this.nextElementSibling.classList.toggle('open')">
+    Fieldset
+    <span class="badge yes">Web</span>
+    <span class="badge yes">iOS</span>
+    <span class="badge yes">Android</span>
+    <span class="parity-meter"><span class="parity-fill high" style="width:100%"></span></span>
+    <span style="font-size:12px;color:#71767a;">100%</span>
+  </div>
+  <div class="component-body">
+    <div class="file-path" style="padding:8px 12px;">
+      Web: packages/forms/src/fieldset/civ-fieldset.ts
+      <br>iOS: packages/ios/Sources/CivUI/CivFieldset.swift
+      <br>Android: packages/android/src/main/kotlin/gov/civui/components/CivFieldset.kt
+    </div>
+    <div class="section-label">Properties</div>
+    <table>
+      <tr><th>Property</th><th>Web</th><th>iOS</th><th>Android</th></tr>
+      <tr class="">
+          <td><strong>legend</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="">
+          <td><strong>hint</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String?</span></td>
+        </tr><tr class="">
+          <td><strong>error</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String?</span></td>
+        </tr><tr class="">
+          <td><strong>required</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+        </tr><tr class="">
+          <td><strong>disabled</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>content</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Content</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">@Composable (</span></td>
+        </tr>
+    </table>
+    <div class="section-label">Events / Callbacks</div>
+    <table>
+      <tr><th>Event</th><th>Web</th><th>iOS</th><th>Android</th></tr>
+      
+    </table>
+  </div>
+</div>
+<div class="component">
+  <div class="component-header" onclick="this.nextElementSibling.classList.toggle('open')">
+    FileUpload
+    <span class="badge yes">Web</span>
+    <span class="badge yes">iOS</span>
+    <span class="badge yes">Android</span>
+    <span class="parity-meter"><span class="parity-fill low" style="width:40%"></span></span>
+    <span style="font-size:12px;color:#71767a;">40%</span>
+  </div>
+  <div class="component-body">
+    <div class="file-path" style="padding:8px 12px;">
+      Web: packages/forms/src/file-upload/civ-file-upload.ts
+      <br>iOS: packages/ios/Sources/CivUI/CivFileUpload.swift
+      <br>Android: packages/android/src/main/kotlin/gov/civui/components/CivFileUpload.kt
+    </div>
+    <div class="section-label">Properties</div>
+    <table>
+      <tr><th>Property</th><th>Web</th><th>iOS</th><th>Android</th></tr>
+      <tr class="">
+          <td><strong>accept</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">[UTType]</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">List<String></span></td>
+        </tr><tr class="">
+          <td><strong>multiple</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+        </tr><tr class="">
+          <td><strong>maxSize</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Number</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Int64</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Long</span></td>
+        </tr><tr class="">
+          <td><strong>maxFiles</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Number</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Int</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Int</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>dragText</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>browseText</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>acceptedLabel</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>maxSizeLabel</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>removeText</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>removeAriaLabel</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>filesListLabel</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>fileAddedMessage</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>fileRemovedMessage</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>fileSizeError</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>fileTypeError</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>maxFilesError</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>url</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">URL</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>name</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>size</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Int64</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>label</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>files</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">[CivUploadedFile]</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">List<CivUploadedFile></span></td>
+        </tr><tr class="gap-row">
+          <td><strong>hint</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String?</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>error</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String?</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>disabled</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>required</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>newFiles</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">[CivUploadedFile]</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>errors</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">[String]</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>parts</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">[String]</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>onFilesChange</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">(List<CivUploadedFile></span></td>
+        </tr><tr class="gap-row">
+          <td><strong>onAnalytics</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">((event: String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>data</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Map<String</span></td>
+        </tr>
+    </table>
+    <div class="section-label">Events / Callbacks</div>
+    <table>
+      <tr><th>Event</th><th>Web</th><th>iOS</th><th>Android</th></tr>
+      <tr class="gap-row">
+          <td><strong>civ-input</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>civ-change</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>civ-reset</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>civ-analytics</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr>
+    </table>
+  </div>
+</div>
+<div class="component">
+  <div class="component-header" onclick="this.nextElementSibling.classList.toggle('open')">
+    Form
+    <span class="badge yes">Web</span>
+    <span class="badge yes">iOS</span>
+    <span class="badge yes">Android</span>
+    <span class="parity-meter"><span class="parity-fill low" style="width:33%"></span></span>
+    <span style="font-size:12px;color:#71767a;">33%</span>
+  </div>
+  <div class="component-body">
+    <div class="file-path" style="padding:8px 12px;">
+      Web: packages/forms/src/form/civ-form.ts
+      <br>iOS: packages/ios/Sources/CivUI/CivForm.swift
+      <br>Android: packages/android/src/main/kotlin/gov/civui/components/CivForm.kt
+    </div>
+    <div class="section-label">Properties</div>
+    <table>
+      <tr><th>Property</th><th>Web</th><th>iOS</th><th>Android</th></tr>
+      <tr class="gap-row">
+          <td><strong>action</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>method</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="">
+          <td><strong>formLabel</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String?</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>errorHeadingLevel</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Number</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>persist</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>prefill</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>fieldName</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>message</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>errors</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">[CivFormFieldError]</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">List<CivFormFieldError></span></td>
+        </tr><tr class="gap-row">
+          <td><strong>state</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">CivFormState</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">CivFormState?</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>content</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Content</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">@Composable (onSubmit: (</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>onSubmit</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">(</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>onAnalytics</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">((event: String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>data</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Map<String</span></td>
+        </tr>
+    </table>
+    <div class="section-label">Events / Callbacks</div>
+    <table>
+      <tr><th>Event</th><th>Web</th><th>iOS</th><th>Android</th></tr>
+      <tr class="gap-row">
+          <td><strong>civ-invalid</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>civ-submit</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>civ-analytics</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr>
+    </table>
+  </div>
+</div>
+<div class="component">
+  <div class="component-header" onclick="this.nextElementSibling.classList.toggle('open')">
+    FormGroup
+    <span class="badge yes">Web</span>
+    <span class="badge yes">iOS</span>
+    <span class="badge yes">Android</span>
+    <span class="parity-meter"><span class="parity-fill high" style="width:80%"></span></span>
+    <span style="font-size:12px;color:#71767a;">80%</span>
+  </div>
+  <div class="component-body">
+    <div class="file-path" style="padding:8px 12px;">
+      Web: packages/forms/src/form-group/civ-form-group.ts
+      <br>iOS: packages/ios/Sources/CivUI/CivFormGroup.swift
+      <br>Android: packages/android/src/main/kotlin/gov/civui/components/CivFormGroup.kt
+    </div>
+    <div class="section-label">Properties</div>
+    <table>
+      <tr><th>Property</th><th>Web</th><th>iOS</th><th>Android</th></tr>
+      <tr class="">
+          <td><strong>label</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="">
+          <td><strong>hint</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String?</span></td>
+        </tr><tr class="">
+          <td><strong>error</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String?</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>inputId</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="">
+          <td><strong>required</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>content</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Content</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">@Composable (</span></td>
+        </tr>
+    </table>
+    <div class="section-label">Events / Callbacks</div>
+    <table>
+      <tr><th>Event</th><th>Web</th><th>iOS</th><th>Android</th></tr>
+      
+    </table>
+  </div>
+</div>
+<div class="component">
+  <div class="component-header" onclick="this.nextElementSibling.classList.toggle('open')">
+    Icon
+    <span class="badge no">No Web</span>
+    <span class="badge yes">iOS</span>
+    <span class="badge yes">Android</span>
+    <span class="parity-meter"><span class="parity-fill high" style="width:100%"></span></span>
+    <span style="font-size:12px;color:#71767a;">100%</span>
+  </div>
+  <div class="component-body">
+    <div class="file-path" style="padding:8px 12px;">
+      
+      <br>iOS: packages/ios/Sources/CivUI/CivIcon.swift
+      <br>Android: packages/android/src/main/kotlin/gov/civui/components/CivIcon.kt
+    </div>
+    <div class="section-label">Properties</div>
+    <table>
+      <tr><th>Property</th><th>Web</th><th>iOS</th><th>Android</th></tr>
+      <tr class="gap-row">
+          <td><strong>name</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">CivIconName</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>size</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">CGFloat</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Dp</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>decorative</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>contentDescription</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String?</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>tint</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Color</span></td>
+        </tr>
+    </table>
+    <div class="section-label">Events / Callbacks</div>
+    <table>
+      <tr><th>Event</th><th>Web</th><th>iOS</th><th>Android</th></tr>
+      
+    </table>
+  </div>
+</div>
+<div class="component">
+  <div class="component-header" onclick="this.nextElementSibling.classList.toggle('open')">
+    MemorableDate
+    <span class="badge yes">Web</span>
+    <span class="badge yes">iOS</span>
+    <span class="badge yes">Android</span>
+    <span class="parity-meter"><span class="parity-fill low" style="width:43%"></span></span>
+    <span style="font-size:12px;color:#71767a;">43%</span>
+  </div>
+  <div class="component-body">
+    <div class="file-path" style="padding:8px 12px;">
+      Web: packages/forms/src/date-input/civ-memorable-date.ts
+      <br>iOS: packages/ios/Sources/CivUI/CivMemorableDate.swift
+      <br>Android: packages/android/src/main/kotlin/gov/civui/components/CivMemorableDate.kt
+    </div>
+    <div class="section-label">Properties</div>
+    <table>
+      <tr><th>Property</th><th>Web</th><th>iOS</th><th>Android</th></tr>
+      <tr class="">
+          <td><strong>legend</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="">
+          <td><strong>monthLabel</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="">
+          <td><strong>dayLabel</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="">
+          <td><strong>yearLabel</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>monthEmptyLabel</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>dayPlaceholder</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>yearPlaceholder</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>dateSetMessage</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>invalidDateMessage</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>locale</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>value</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>hint</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String?</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>error</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String?</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>required</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>disabled</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>formState</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">CivFormState</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">CivFormState?</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>name</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>requiredMessage</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>pii</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>onValueChange</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">(String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>onChange</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">((CivMemorableDateValue</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>onAnalytics</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">((event: String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>data</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Map<String</span></td>
+        </tr>
+    </table>
+    <div class="section-label">Events / Callbacks</div>
+    <table>
+      <tr><th>Event</th><th>Web</th><th>iOS</th><th>Android</th></tr>
+      <tr class="gap-row">
+          <td><strong>civ-reset</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>civ-input</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>civ-change</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>civ-analytics</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>formValidate</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr>
+    </table>
+  </div>
+</div>
+<div class="component">
+  <div class="component-header" onclick="this.nextElementSibling.classList.toggle('open')">
+    Radio
+    <span class="badge yes">Web</span>
+    <span class="badge yes">iOS</span>
+    <span class="badge yes">Android</span>
+    <span class="parity-meter"><span class="parity-fill mid" style="width:77%"></span></span>
+    <span style="font-size:12px;color:#71767a;">77%</span>
+  </div>
+  <div class="component-body">
+    <div class="file-path" style="padding:8px 12px;">
+      Web: packages/forms/src/radio/civ-radio.ts
+      <br>iOS: packages/ios/Sources/CivUI/CivRadio.swift
+      <br>Android: packages/android/src/main/kotlin/gov/civui/components/CivRadio.kt
+    </div>
+    <div class="section-label">Properties</div>
+    <table>
+      <tr><th>Property</th><th>Web</th><th>iOS</th><th>Android</th></tr>
+      <tr class="">
+          <td><strong>label</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="">
+          <td><strong>value</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>checked</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="">
+          <td><strong>description</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="">
+          <td><strong>tile</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+        </tr><tr class="">
+          <td><strong>disabled</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>name</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>error</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>required</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>managedTabIndex</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Number</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>id</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>legend</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>options</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">[CivRadioOption]</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>hint</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>selected</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>onSelect</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">(String</span></td>
+        </tr>
+    </table>
+    <div class="section-label">Events / Callbacks</div>
+    <table>
+      <tr><th>Event</th><th>Web</th><th>iOS</th><th>Android</th></tr>
+      <tr class="gap-row">
+          <td><strong>civ-input</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>civ-change</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>civ-analytics</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>onSelect</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr>
+    </table>
+  </div>
+</div>
+<div class="component">
+  <div class="component-header" onclick="this.nextElementSibling.classList.toggle('open')">
+    RadioGroup
+    <span class="badge yes">Web</span>
+    <span class="badge no">No iOS</span>
+    <span class="badge no">No Android</span>
+    <span class="parity-meter"><span class="parity-fill low" style="width:0%"></span></span>
+    <span style="font-size:12px;color:#71767a;">0%</span>
+  </div>
+  <div class="component-body">
+    <div class="file-path" style="padding:8px 12px;">
+      Web: packages/forms/src/radio/civ-radio-group.ts
+      
+      
+    </div>
+    <div class="section-label">Properties</div>
+    <table>
+      <tr><th>Property</th><th>Web</th><th>iOS</th><th>Android</th></tr>
+      <tr class="gap-row">
+          <td><strong>legend</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>tile</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>orientation</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr>
+    </table>
+    <div class="section-label">Events / Callbacks</div>
+    <table>
+      <tr><th>Event</th><th>Web</th><th>iOS</th><th>Android</th></tr>
+      <tr class="gap-row">
+          <td><strong>civ-input</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>civ-change</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>civ-reset</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>civ-analytics</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr>
+    </table>
+  </div>
+</div>
+<div class="component">
+  <div class="component-header" onclick="this.nextElementSibling.classList.toggle('open')">
+    Segment
+    <span class="badge yes">Web</span>
+    <span class="badge no">No iOS</span>
+    <span class="badge no">No Android</span>
+    <span class="parity-meter"><span class="parity-fill low" style="width:0%"></span></span>
+    <span style="font-size:12px;color:#71767a;">0%</span>
+  </div>
+  <div class="component-body">
+    <div class="file-path" style="padding:8px 12px;">
+      Web: packages/forms/src/segmented-control/civ-segment.ts
+      
+      
+    </div>
+    <div class="section-label">Properties</div>
+    <table>
+      <tr><th>Property</th><th>Web</th><th>iOS</th><th>Android</th></tr>
+      <tr class="gap-row">
+          <td><strong>label</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>value</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>selected</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>disabled</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr>
+    </table>
+    <div class="section-label">Events / Callbacks</div>
+    <table>
+      <tr><th>Event</th><th>Web</th><th>iOS</th><th>Android</th></tr>
+      <tr class="gap-row">
+          <td><strong>civ-change</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr>
+    </table>
+  </div>
+</div>
+<div class="component">
+  <div class="component-header" onclick="this.nextElementSibling.classList.toggle('open')">
+    SegmentedControl
+    <span class="badge yes">Web</span>
+    <span class="badge yes">iOS</span>
+    <span class="badge yes">Android</span>
+    <span class="parity-meter"><span class="parity-fill mid" style="width:60%"></span></span>
+    <span style="font-size:12px;color:#71767a;">60%</span>
+  </div>
+  <div class="component-body">
+    <div class="file-path" style="padding:8px 12px;">
+      Web: packages/forms/src/segmented-control/civ-segmented-control.ts
+      <br>iOS: packages/ios/Sources/CivUI/CivSegmentedControl.swift
+      <br>Android: packages/android/src/main/kotlin/gov/civui/components/CivSegmentedControl.kt
+    </div>
+    <div class="section-label">Properties</div>
+    <table>
+      <tr><th>Property</th><th>Web</th><th>iOS</th><th>Android</th></tr>
+      <tr class="">
+          <td><strong>legend</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>id</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>value</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>label</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>options</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">[CivSegmentOption]</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">List<CivSegmentOption></span></td>
+        </tr><tr class="gap-row">
+          <td><strong>hint</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String?</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>error</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String?</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>required</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>disabled</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>parts</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">[String]</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>onValueChange</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">(String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>onChange</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">((String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>onAnalytics</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">((event: String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>data</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Map<String</span></td>
+        </tr>
+    </table>
+    <div class="section-label">Events / Callbacks</div>
+    <table>
+      <tr><th>Event</th><th>Web</th><th>iOS</th><th>Android</th></tr>
+      <tr class="gap-row">
+          <td><strong>civ-input</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>civ-change</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>civ-reset</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>civ-analytics</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr>
+    </table>
+  </div>
+</div>
+<div class="component">
+  <div class="component-header" onclick="this.nextElementSibling.classList.toggle('open')">
+    Select
+    <span class="badge yes">Web</span>
+    <span class="badge yes">iOS</span>
+    <span class="badge yes">Android</span>
+    <span class="parity-meter"><span class="parity-fill mid" style="width:75%"></span></span>
+    <span style="font-size:12px;color:#71767a;">75%</span>
+  </div>
+  <div class="component-body">
+    <div class="file-path" style="padding:8px 12px;">
+      Web: packages/forms/src/select/civ-select.ts
+      <br>iOS: packages/ios/Sources/CivUI/CivSelect.swift
+      <br>Android: packages/android/src/main/kotlin/gov/civui/components/CivSelect.kt
+    </div>
+    <div class="section-label">Properties</div>
+    <table>
+      <tr><th>Property</th><th>Web</th><th>iOS</th><th>Android</th></tr>
+      <tr class="">
+          <td><strong>options</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Array</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">[CivSelectOption]</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">List<CivSelectOption></span></td>
+        </tr><tr class="">
+          <td><strong>emptyLabel</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>id</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>value</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>label</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>disabled</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>hint</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>error</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>required</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>formState</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">CivFormState</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">CivFormState?</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>name</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>requiredMessage</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>pii</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>parts</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">[String]</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>onValueChange</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">(String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>onChange</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">((String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>onAnalytics</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">((event: String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>data</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Map<String</span></td>
+        </tr>
+    </table>
+    <div class="section-label">Events / Callbacks</div>
+    <table>
+      <tr><th>Event</th><th>Web</th><th>iOS</th><th>Android</th></tr>
+      <tr class="gap-row">
+          <td><strong>civ-input</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>civ-change</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>civ-analytics</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>formValidate</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr>
+    </table>
+  </div>
+</div>
+<div class="component">
+  <div class="component-header" onclick="this.nextElementSibling.classList.toggle('open')">
+    Textarea
+    <span class="badge yes">Web</span>
+    <span class="badge yes">iOS</span>
+    <span class="badge yes">Android</span>
+    <span class="parity-meter"><span class="parity-fill high" style="width:88%"></span></span>
+    <span style="font-size:12px;color:#71767a;">88%</span>
+  </div>
+  <div class="component-body">
+    <div class="file-path" style="padding:8px 12px;">
+      Web: packages/forms/src/textarea/civ-textarea.ts
+      <br>iOS: packages/ios/Sources/CivUI/CivTextarea.swift
+      <br>Android: packages/android/src/main/kotlin/gov/civui/components/CivTextarea.kt
+    </div>
+    <div class="section-label">Properties</div>
+    <table>
+      <tr><th>Property</th><th>Web</th><th>iOS</th><th>Android</th></tr>
+      <tr class="">
+          <td><strong>rows</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Number</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Int</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Int</span></td>
+        </tr><tr class="">
+          <td><strong>maxlength</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Number</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Int</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Int?</span></td>
+        </tr><tr class="">
+          <td><strong>maxwords</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Number</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Int</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Int?</span></td>
+        </tr><tr class="">
+          <td><strong>placeholder</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>label</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>value</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>hint</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>error</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>required</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>disabled</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>readonly</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>formState</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">CivFormState</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">CivFormState?</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>name</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>requiredMessage</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>pii</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>parts</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">[String]</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>onValueChange</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">(String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>onInput</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">((String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>onChange</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">((String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>onAnalytics</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">((event: String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>data</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Map<String</span></td>
+        </tr>
+    </table>
+    <div class="section-label">Events / Callbacks</div>
+    <table>
+      <tr><th>Event</th><th>Web</th><th>iOS</th><th>Android</th></tr>
+      <tr class="gap-row">
+          <td><strong>civ-input</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>civ-change</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>civ-reset</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>civ-analytics</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>formValidate</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr>
+    </table>
+  </div>
+</div>
+<div class="component">
+  <div class="component-header" onclick="this.nextElementSibling.classList.toggle('open')">
+    TextInput
+    <span class="badge yes">Web</span>
+    <span class="badge yes">iOS</span>
+    <span class="badge yes">Android</span>
+    <span class="parity-meter"><span class="parity-fill mid" style="width:58%"></span></span>
+    <span style="font-size:12px;color:#71767a;">58%</span>
+  </div>
+  <div class="component-body">
+    <div class="file-path" style="padding:8px 12px;">
+      Web: packages/forms/src/text-input/civ-text-input.ts
+      <br>iOS: packages/ios/Sources/CivUI/CivTextInput.swift
+      <br>Android: packages/android/src/main/kotlin/gov/civui/components/CivTextInput.kt
+    </div>
+    <div class="section-label">Properties</div>
+    <table>
+      <tr><th>Property</th><th>Web</th><th>iOS</th><th>Android</th></tr>
+      <tr class="">
+          <td><strong>type</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">CivInputType</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">CivInputType</span></td>
+        </tr><tr class="">
+          <td><strong>width</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">CivInputWidth</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">CivInputWidth</span></td>
+        </tr><tr class="">
+          <td><strong>placeholder</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String?</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>pattern</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>maxlength</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Number</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>minlength</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Number</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>autocomplete</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>inputmode</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="">
+          <td><strong>mask</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">CivInputMask</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">CivInputMask?</span></td>
+        </tr><tr class="">
+          <td><strong>maskPattern</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>label</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>value</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>hint</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String?</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>error</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String?</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>required</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>disabled</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>readonly</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>formState</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">CivFormState</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">CivFormState?</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>name</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>requiredMessage</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>pii</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>parts</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">[String]</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>onValueChange</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">(String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>onInput</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">((String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>onChange</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">((String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>onAnalytics</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">((event: String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>data</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Map<String</span></td>
+        </tr>
+    </table>
+    <div class="section-label">Events / Callbacks</div>
+    <table>
+      <tr><th>Event</th><th>Web</th><th>iOS</th><th>Android</th></tr>
+      <tr class="gap-row">
+          <td><strong>civ-input</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>civ-change</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>civ-analytics</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>formValidate</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr>
+    </table>
+  </div>
+</div>
+<div class="component">
+  <div class="component-header" onclick="this.nextElementSibling.classList.toggle('open')">
+    Toggle
+    <span class="badge yes">Web</span>
+    <span class="badge yes">iOS</span>
+    <span class="badge yes">Android</span>
+    <span class="parity-meter"><span class="parity-fill low" style="width:33%"></span></span>
+    <span style="font-size:12px;color:#71767a;">33%</span>
+  </div>
+  <div class="component-body">
+    <div class="file-path" style="padding:8px 12px;">
+      Web: packages/forms/src/toggle/civ-toggle.ts
+      <br>iOS: packages/ios/Sources/CivUI/CivToggle.swift
+      <br>Android: packages/android/src/main/kotlin/gov/civui/components/CivToggle.kt
+    </div>
+    <div class="section-label">Properties</div>
+    <table>
+      <tr><th>Property</th><th>Web</th><th>iOS</th><th>Android</th></tr>
+      <tr class="gap-row">
+          <td><strong>label</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>checked</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>value</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>description</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>hint</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>error</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>required</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>disabled</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>formState</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">CivFormState</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">CivFormState?</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>name</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>requiredMessage</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>pii</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>parts</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">[String]</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>onCheckedChange</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">(Boolean</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>onChange</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">((Boolean</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>onInput</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">((Boolean</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>onAnalytics</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">((event: String</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>data</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Map<String</span></td>
+        </tr>
+    </table>
+    <div class="section-label">Events / Callbacks</div>
+    <table>
+      <tr><th>Event</th><th>Web</th><th>iOS</th><th>Android</th></tr>
+      <tr class="gap-row">
+          <td><strong>civ-input</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>civ-change</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>civ-reset</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>civ-analytics</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>formValidate</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr>
+    </table>
+  </div>
+</div>
+<script>
+  // Expand all / collapse all
+  document.addEventListener('keydown', e => {
+    if (e.key === 'e' && e.ctrlKey) {
+      e.preventDefault();
+      const bodies = document.querySelectorAll('.component-body');
+      const allOpen = Array.from(bodies).every(b => b.classList.contains('open'));
+      bodies.forEach(b => b.classList.toggle('open', !allOpen));
+    }
+  });
+</script>
+</body>
+</html>

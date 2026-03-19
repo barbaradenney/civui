@@ -246,6 +246,29 @@ Audit from the perspective of a developer adopting CivUI for their project.
 - Web component API matches native SwiftUI/Compose component APIs (same props, same events, same behavior)
 - Token values are consistent across CSS, Tailwind, SwiftUI, and Compose outputs
 - Accessibility behavior matches across platforms (keyboard nav on web, VoiceOver on iOS, TalkBack on Android)
+- Every web component MUST have a corresponding SwiftUI counterpart in `packages/ios/Sources/CivUI/Civ{Name}.swift`
+- Every web component MUST have a corresponding Compose counterpart in `packages/android/src/main/kotlin/gov/civui/components/Civ{Name}.kt`
+- New properties added to web components must be added to native counterparts (using platform-appropriate equivalents)
+- Icon names must map to SF Symbols (iOS) and Material Symbols (Android) via `ios`/`android` fields in icon-library.ts
+- Web-only features (CSS-specific, sessionStorage, URL params) should be documented as web-only — but equivalent native patterns should be used where applicable
+
+### 7. Native Platform Parity
+
+Audit the native counterparts for every web component. This is a **mandatory** audit dimension — a component is not complete until it has iOS and Android counterparts.
+
+**File locations:**
+- iOS: `packages/ios/Sources/CivUI/Civ{Name}.swift`
+- Android: `packages/android/src/main/kotlin/gov/civui/components/Civ{Name}.kt`
+
+**Check for:**
+- Native counterpart EXISTS for every web component
+- Property parity: same props available (label, name, value, hint, error, required, disabled, readonly, etc.)
+- Event parity: equivalent callbacks/delegates for civ-input, civ-change
+- Mask support: if web has mask="ssn", native should too (using platform input formatting)
+- Accessibility: VoiceOver labels (iOS), TalkBack contentDescription (Android) match web ARIA
+- Icon mappings: `ios` and `android` fields populated in icon-library.ts for all icons
+- Token usage: native components use generated token values from the build pipeline
+- Missing counterparts flagged as **Critical** severity
 
 ---
 
@@ -291,6 +314,7 @@ Audit from the perspective of a developer adopting CivUI for their project.
 | Simplicity | A-F | count |
 | Code Quality | A-F | count |
 | Developer Experience | A-F | count |
+| Native Parity | A-F | count |
 
 ---
 
@@ -338,11 +362,11 @@ After all individual component audits, produce a summary:
 
 ### Scorecard
 
-| Component | A11y | Perf | Consistency | Simplicity | Quality | DX | Overall |
-|-----------|------|------|-------------|------------|---------|-----|---------|
-| text-input | A | A | A | A | A | A | A |
-| textarea | A | B | A | A | A | A | A |
-| ... | ... | ... | ... | ... | ... | ... | ... |
+| Component | A11y | Perf | Consistency | Simplicity | Quality | DX | Native | Overall |
+|-----------|------|------|-------------|------------|---------|-----|--------|---------|
+| text-input | A | A | A | A | A | A | A | A |
+| textarea | A | B | A | A | A | A | A | A |
+| ... | ... | ... | ... | ... | ... | ... | ... | ... |
 
 ### Cross-Cutting Issues
 (patterns that affect multiple components — fix once, fix everywhere)

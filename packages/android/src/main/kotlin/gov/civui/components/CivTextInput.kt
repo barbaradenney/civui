@@ -1,6 +1,7 @@
 // CivUI — CivTextInput for Jetpack Compose
 // Accessible text input following government design system patterns.
-// Renders: label → hint → error → input (Section 508 compliant)
+// Renders: label -> hint -> error -> input (Section 508 compliant)
+// Supports input masking (ssn, phone-us, zip, zip4, ein, currency)
 
 package gov.civui.components
 
@@ -33,12 +34,15 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.error
 import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.OffsetMapping
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -67,6 +71,58 @@ enum class CivInputWidth(val dp: Float?) {
     XxLarge(384f),  // 2xl
 }
 
+/// Input mask presets (parallels web `mask` prop).
+enum class CivInputMask(
+    val pattern: String,
+    val hint: String,
+    val errorMessage: String,
+    val keyboardType: KeyboardType,
+    val isPii: Boolean,
+) {
+    SSN(
+        pattern = "###-##-####",
+        hint = "For example: 123-45-6789",
+        errorMessage = "Enter a 9-digit Social Security number",
+        keyboardType = KeyboardType.Number,
+        isPii = true,
+    ),
+    PhoneUs(
+        pattern = "(###) ###-####",
+        hint = "For example: (555) 123-4567",
+        errorMessage = "Enter a 10-digit phone number",
+        keyboardType = KeyboardType.Phone,
+        isPii = false,
+    ),
+    Zip(
+        pattern = "#####",
+        hint = "For example: 20500",
+        errorMessage = "Enter a 5-digit ZIP code",
+        keyboardType = KeyboardType.Number,
+        isPii = false,
+    ),
+    Zip4(
+        pattern = "#####-####",
+        hint = "For example: 20500-0001",
+        errorMessage = "Enter a ZIP+4 code",
+        keyboardType = KeyboardType.Number,
+        isPii = false,
+    ),
+    Ein(
+        pattern = "##-#######",
+        hint = "For example: 12-3456789",
+        errorMessage = "Enter a 9-digit EIN",
+        keyboardType = KeyboardType.Number,
+        isPii = true,
+    ),
+    Currency(
+        pattern = "", // variable length
+        hint = "For example: 1,234.56",
+        errorMessage = "Enter a valid dollar amount",
+        keyboardType = KeyboardType.Decimal,
+        isPii = false,
+    ),
+}
+
 /**
  * Accessible text input component for government applications.
  *
@@ -74,18 +130,19 @@ enum class CivInputWidth(val dp: Float?) {
  * - Visible label (required for Section 508)
  * - Optional hint text with expected format
  * - Error message with immediate TalkBack announcement (LiveRegion)
+ * - Input masking (SSN, phone, ZIP, EIN, currency)
+ * - Readonly mode
  * - Focus ring indicator
  * - Dark mode adaptive colors
  *
  * Usage:
  * ```kotlin
- * var email by remember { mutableStateOf("") }
+ * var ssn by remember { mutableStateOf("") }
  * CivTextInput(
- *     label = "Email address",
- *     value = email,
- *     onValueChange = { email = it },
- *     hint = "For example: name@agency.gov",
- *     inputType = CivInputType.Email,
+ *     label = "Social Security number",
+ *     value = ssn,
+ *     onValueChange = { ssn = it },
+ *     mask = CivInputMask.SSN,
  * )
  * ```
  */
@@ -97,11 +154,13 @@ fun CivTextInput(
     modifier: Modifier = Modifier,
     hint: String? = null,
     error: String? = null,
-    isRequired: Boolean = false,
-    isDisabled: Boolean = false,
+    required: Boolean = false,
+    disabled: Boolean = false,
+    readonly: Boolean = false,
     placeholder: String? = null,
     inputType: CivInputType = CivInputType.Text,
     width: CivInputWidth = CivInputWidth.Full,
+    mask: CivInputMask? = null,
     onInput: ((String) -> Unit)? = null,
     onChange: ((String) -> Unit)? = null,
 ) {
@@ -121,67 +180,30 @@ fun CivTextInput(
         label = "borderColor",
     )
     val backgroundColor = if (isDark) CivTokens.DarkColors.White.default_ else CivTokens.Colors.White.default_
+    val readonlyBackground = if (isDark) CivTokens.DarkColors.Base.lightest else CivTokens.Colors.Base.lightest
+
+    // Effective hint: explicit hint > mask hint > nothing
+    val effectiveHint = hint ?: mask?.hint
+
+    // Effective keyboard type from mask
+    val effectiveKeyboardType = mask?.keyboardType ?: inputType.toKeyboardType()
 
     Column(
         modifier = modifier.padding(bottom = CivTokens.Spacing._4),
     ) {
         // 1. Label
-        Row(
-            modifier = Modifier.padding(bottom = CivTokens.Spacing._1),
-        ) {
-            Text(
-                text = label,
-                style = TextStyle(
-                    fontSize = CivTokens.Typography.FontSize.base,
-                    fontWeight = FontWeight.Bold,
-                ),
-                color = labelColor,
-            )
-            if (isRequired) {
-                Text(
-                    text = " *",
-                    style = TextStyle(
-                        fontSize = CivTokens.Typography.FontSize.base,
-                        fontWeight = FontWeight.Bold,
-                    ),
-                    color = errorColor,
-                    modifier = Modifier.semantics {
-                        contentDescription = "required"
-                    },
-                )
-            }
-        }
+        CivLabel(
+            label = label,
+            required = required,
+            labelColor = labelColor,
+            errorColor = errorColor,
+        )
 
         // 2. Hint
-        if (hint != null) {
-            Text(
-                text = hint,
-                style = TextStyle(
-                    fontSize = CivTokens.Typography.FontSize.sm,
-                ),
-                color = hintColor,
-                modifier = Modifier.padding(bottom = CivTokens.Spacing._1),
-            )
-        }
+        CivHint(text = effectiveHint, color = hintColor)
 
         // 3. Error
-        if (error != null) {
-            Text(
-                text = error,
-                style = TextStyle(
-                    fontSize = CivTokens.Typography.FontSize.sm,
-                    fontWeight = FontWeight.Bold,
-                ),
-                color = errorColor,
-                modifier = Modifier
-                    .padding(bottom = CivTokens.Spacing._1)
-                    // role="alert" equivalent — TalkBack announces immediately
-                    .semantics {
-                        liveRegion = LiveRegionMode.Assertive
-                        error(error)
-                    },
-            )
-        }
+        CivError(text = error, color = errorColor)
 
         // 4. Input
         val fieldModifier = Modifier
@@ -202,46 +224,83 @@ fun CivTextInput(
                     onChange?.invoke(value)
                 }
             }
-            .alpha(if (isDisabled) 0.5f else 1f)
+            .alpha(if (disabled) 0.5f else 1f)
 
         val accessibilityModifier = Modifier.semantics {
             contentDescription = buildString {
                 append(label)
-                if (isRequired) append(", required")
-                if (hint != null) append(". $hint")
+                if (required) append(", required")
+                if (effectiveHint != null) append(". $effectiveHint")
                 if (error != null) append(". Error: $error")
+                if (readonly) append(", read only")
+            }
+        }
+
+        // Build visual transformation for mask
+        val visualTransformation = when {
+            inputType == CivInputType.Password -> PasswordVisualTransformation()
+            mask != null && mask != CivInputMask.Currency -> MaskVisualTransformation(mask.pattern)
+            else -> VisualTransformation.None
+        }
+
+        // Filter input for masks
+        val maskedOnValueChange: (String) -> Unit = if (mask != null) {
+            { newValue: String ->
+                val filtered = when (mask) {
+                    CivInputMask.Currency -> {
+                        // Allow digits and one decimal point, max 2 decimal places
+                        var raw = newValue.replace(Regex("[^\\d.]"), "")
+                        val parts = raw.split(".")
+                        if (parts.size > 2) {
+                            raw = parts[0] + "." + parts.subList(1, parts.size).joinToString("")
+                        }
+                        val finalParts = raw.split(".")
+                        if (finalParts.size == 2 && finalParts[1].length > 2) {
+                            finalParts[0] + "." + finalParts[1].substring(0, 2)
+                        } else {
+                            raw
+                        }
+                    }
+                    else -> {
+                        // Extract only characters that match mask slots
+                        val digits = newValue.replace(Regex("[^\\d]"), "")
+                        val maxRawLen = mask.pattern.count { it == '#' }
+                        digits.take(maxRawLen)
+                    }
+                }
+                onValueChange(filtered)
+                onInput?.invoke(filtered)
+            }
+        } else {
+            { newValue: String ->
+                onValueChange(newValue)
+                onInput?.invoke(newValue)
             }
         }
 
         TextField(
             value = value,
-            onValueChange = { newValue ->
-                onValueChange(newValue)
-                onInput?.invoke(newValue)
-            },
+            onValueChange = maskedOnValueChange,
             modifier = fieldModifier.then(accessibilityModifier),
-            enabled = !isDisabled,
+            enabled = !disabled,
+            readOnly = readonly,
             placeholder = placeholder?.let {
                 { Text(text = it, color = hintColor) }
             },
             textStyle = TextStyle(
                 fontSize = CivTokens.Typography.FontSize.base,
             ),
-            visualTransformation = if (inputType == CivInputType.Password) {
-                PasswordVisualTransformation()
-            } else {
-                VisualTransformation.None
-            },
+            visualTransformation = visualTransformation,
             keyboardOptions = KeyboardOptions(
-                keyboardType = inputType.toKeyboardType(),
-                capitalization = inputType.toCapitalization(),
+                keyboardType = effectiveKeyboardType,
+                capitalization = if (mask != null) KeyboardCapitalization.None else inputType.toCapitalization(),
                 imeAction = ImeAction.Done,
             ),
             singleLine = true,
             shape = RoundedCornerShape(CivTokens.Border.Radius.default_),
             colors = TextFieldDefaults.colors(
-                focusedContainerColor = backgroundColor,
-                unfocusedContainerColor = backgroundColor,
+                focusedContainerColor = if (readonly) readonlyBackground else backgroundColor,
+                unfocusedContainerColor = if (readonly) readonlyBackground else backgroundColor,
                 disabledContainerColor = backgroundColor,
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
@@ -249,13 +308,57 @@ fun CivTextInput(
                 errorIndicatorColor = Color.Transparent,
             ),
         )
+    }
+}
 
-        // Focus ring indicator (two-color technique)
-        if (isFocused) {
-            // The focus ring is implemented via the border color animation above
-            // plus the outline effect. On Android, the system focus highlight
-            // combined with our border color change provides equivalent visibility.
+// MARK: - Mask Visual Transformation
+
+/**
+ * Applies a mask pattern to raw input for display.
+ * `#` in the pattern represents a user-entered digit.
+ * All other characters are literals inserted automatically.
+ */
+internal class MaskVisualTransformation(private val pattern: String) : VisualTransformation {
+    override fun filter(text: AnnotatedString): TransformedText {
+        val rawText = text.text
+        val formatted = StringBuilder()
+        var rawIndex = 0
+
+        for (char in pattern) {
+            if (rawIndex >= rawText.length) break
+            if (char == '#' || char == 'A' || char == '*') {
+                formatted.append(rawText[rawIndex])
+                rawIndex++
+            } else {
+                formatted.append(char)
+            }
         }
+
+        val offsetMapping = object : OffsetMapping {
+            override fun originalToTransformed(offset: Int): Int {
+                var raw = 0
+                var transformed = 0
+                for (ch in pattern) {
+                    if (raw >= offset) break
+                    transformed++
+                    if (ch == '#' || ch == 'A' || ch == '*') raw++
+                }
+                return transformed.coerceAtMost(formatted.length)
+            }
+
+            override fun transformedToOriginal(offset: Int): Int {
+                var raw = 0
+                var transformed = 0
+                for (ch in pattern) {
+                    if (transformed >= offset) break
+                    transformed++
+                    if (ch == '#' || ch == 'A' || ch == '*') raw++
+                }
+                return raw.coerceAtMost(rawText.length)
+            }
+        }
+
+        return TransformedText(AnnotatedString(formatted.toString()), offsetMapping)
     }
 }
 
@@ -288,34 +391,38 @@ private fun CivTextInputPreview() {
             value = name,
             onValueChange = { name = it },
             hint = "First and last name",
-            isRequired = true,
+            required = true,
         )
 
-        var email by remember { mutableStateOf("") }
+        var ssn by remember { mutableStateOf("") }
         CivTextInput(
-            label = "Email address",
-            value = email,
-            onValueChange = { email = it },
-            hint = "For example: name@agency.gov",
-            error = if (email.isNotEmpty() && !email.contains("@")) "Enter a valid email address" else null,
-            isRequired = true,
-            inputType = CivInputType.Email,
+            label = "Social Security number",
+            value = ssn,
+            onValueChange = { ssn = it },
+            mask = CivInputMask.SSN,
         )
 
+        var phone by remember { mutableStateOf("") }
         CivTextInput(
             label = "Phone number",
-            value = "",
-            onValueChange = {},
-            hint = "For example: 202-555-0100",
-            inputType = CivInputType.Telephone,
+            value = phone,
+            onValueChange = { phone = it },
+            mask = CivInputMask.PhoneUs,
             width = CivInputWidth.Medium,
         )
 
         CivTextInput(
             label = "Notes",
+            value = "Read-only content",
+            onValueChange = {},
+            readonly = true,
+        )
+
+        CivTextInput(
+            label = "Disabled field",
             value = "",
             onValueChange = {},
-            isDisabled = true,
+            disabled = true,
             placeholder = "Disabled field",
         )
     }

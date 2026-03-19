@@ -102,6 +102,7 @@ fun CivMemorableDate(
     error: String? = null,
     required: Boolean = false,
     disabled: Boolean = false,
+    readonly: Boolean = false,
     monthLabel: String = CivLocale.t("memorableDateMonthLabel"),
     dayLabel: String = CivLocale.t("memorableDateDayLabel"),
     yearLabel: String = CivLocale.t("memorableDateYearLabel"),
@@ -225,7 +226,7 @@ fun CivMemorableDate(
 
                 ExposedDropdownMenuBox(
                     expanded = monthExpanded,
-                    onExpandedChange = { if (!disabled) monthExpanded = it },
+                    onExpandedChange = { if (!disabled && !readonly) monthExpanded = it },
                 ) {
                     TextField(
                         value = MONTH_OPTIONS.find { it.first == month }?.second ?: "",
@@ -243,7 +244,7 @@ fun CivMemorableDate(
                             .semantics {
                                 contentDescription = "$monthLabel, $legend"
                             },
-                        enabled = !disabled,
+                        enabled = !disabled && !readonly,
                         placeholder = { Text(CivLocale.t("memorableDateMonthEmptyLabel"), color = hintColor) },
                         textStyle = TextStyle(fontSize = CivTokens.Typography.FontSize.base),
                         singleLine = true,
@@ -306,7 +307,7 @@ fun CivMemorableDate(
                         .semantics {
                             contentDescription = "$dayLabel, $legend"
                         },
-                    enabled = !disabled,
+                    enabled = !disabled && !readonly,
                     placeholder = { Text(CivLocale.t("memorableDateDayPlaceholder"), color = hintColor) },
                     textStyle = TextStyle(fontSize = CivTokens.Typography.FontSize.base),
                     singleLine = true,
@@ -352,7 +353,7 @@ fun CivMemorableDate(
                         .semantics {
                             contentDescription = "$yearLabel, $legend"
                         },
-                    enabled = !disabled,
+                    enabled = !disabled && !readonly,
                     placeholder = { Text(CivLocale.t("memorableDateYearPlaceholder"), color = hintColor) },
                     textStyle = TextStyle(fontSize = CivTokens.Typography.FontSize.base),
                     singleLine = true,

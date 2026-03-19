@@ -69,6 +69,8 @@ fun CivSegmentedControl(
     error: String? = null,
     required: Boolean = false,
     disabled: Boolean = false,
+    readonly: Boolean = false,
+    name: String = "",
     onChange: ((String) -> Unit)? = null,
     onAnalytics: ((event: String, data: Map<String, Any>?) -> Unit)? = null,
 ) {
@@ -115,7 +117,7 @@ fun CivSegmentedControl(
                         onChange?.invoke(option.value)
                         onAnalytics?.invoke("change", mapOf("field" to legend, "value" to option.value))
                     },
-                    enabled = !disabled && !option.disabled,
+                    enabled = !disabled && !readonly && !option.disabled,
                     shape = SegmentedButtonDefaults.itemShape(
                         index = index,
                         count = options.size,

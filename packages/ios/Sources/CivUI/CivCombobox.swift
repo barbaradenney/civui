@@ -64,6 +64,9 @@ public struct CivCombobox: View {
     /// Whether the combobox is disabled.
     public var isDisabled: Bool
 
+    /// Whether the combobox is read-only (visible but non-interactive, no opacity change).
+    public var isReadonly: Bool
+
     /// Called when a selection is made.
     public var onChange: ((String, String) -> Void)?
 
@@ -109,6 +112,7 @@ public struct CivCombobox: View {
         noResultsText: String? = nil,
         isRequired: Bool = false,
         isDisabled: Bool = false,
+        isReadonly: Bool = false,
         onChange: ((String, String) -> Void)? = nil,
         onInput: ((String) -> Void)? = nil,
         onAnalytics: ((String, [String: Any]?) -> Void)? = nil,
@@ -127,6 +131,7 @@ public struct CivCombobox: View {
         self.noResultsText = noResultsText ?? CivLocale.shared.t("comboboxNoResults")
         self.isRequired = isRequired
         self.isDisabled = isDisabled
+        self.isReadonly = isReadonly
         self.onChange = onChange
         self.onInput = onInput
         self.onAnalytics = onAnalytics
@@ -199,7 +204,7 @@ public struct CivCombobox: View {
                         .overlay(borderOverlay)
                         .civFocusRing(isFocused)
                         .focused($isFocused)
-                        .disabled(isDisabled)
+                        .disabled(isDisabled || isReadonly)
                         .opacity(isDisabled ? 0.5 : 1.0)
                         .accessibilityLabel(accessibilityLabelText)
                         .accessibilityHint(accessibilityHintText)

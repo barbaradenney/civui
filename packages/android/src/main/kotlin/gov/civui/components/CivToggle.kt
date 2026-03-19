@@ -67,6 +67,7 @@ fun CivToggle(
     description: String = "",
     required: Boolean = false,
     disabled: Boolean = false,
+    readonly: Boolean = false,
     onChange: ((Boolean) -> Unit)? = null,
     name: String = "",
     formState: CivFormState? = null,
@@ -106,7 +107,7 @@ fun CivToggle(
         Row(
             modifier = Modifier
                 .clickable(
-                    enabled = !disabled,
+                    enabled = !disabled && !readonly,
                     role = Role.Switch,
                     onClick = {
                         val newChecked = !checked
@@ -136,7 +137,7 @@ fun CivToggle(
             Switch(
                 checked = checked,
                 onCheckedChange = null, // handled by Row clickable
-                enabled = !disabled,
+                enabled = !disabled && !readonly,
                 colors = SwitchDefaults.colors(
                     checkedTrackColor = primaryColor,
                     uncheckedTrackColor = trackColor,

@@ -48,6 +48,9 @@ public struct CivToggle: View {
     /// Whether the field is disabled.
     public var isDisabled: Bool
 
+    /// Whether the field is read-only (visible but non-interactive, no opacity change).
+    public var isReadonly: Bool
+
     /// Called on every checked state change (parallels `civ-input`/`civ-change` events).
     /// Parameters: (checked: Bool, value: String)
     public var onChange: ((Bool, String) -> Void)?
@@ -85,6 +88,7 @@ public struct CivToggle: View {
         error: String? = nil,
         isRequired: Bool = false,
         isDisabled: Bool = false,
+        isReadonly: Bool = false,
         onChange: ((Bool, String) -> Void)? = nil,
         onAnalytics: ((String, [String: Any]?) -> Void)? = nil,
         formState: CivFormState? = nil,
@@ -101,6 +105,7 @@ public struct CivToggle: View {
         self.error = error
         self.isRequired = isRequired
         self.isDisabled = isDisabled
+        self.isReadonly = isReadonly
         self.onChange = onChange
         self.onAnalytics = onAnalytics
         self.formState = formState
@@ -180,7 +185,7 @@ public struct CivToggle: View {
             }
         }
         .padding(.bottom, CivTokens.Spacing._2)
-        .disabled(isDisabled)
+        .disabled(isDisabled || isReadonly)
         .opacity(isDisabled ? 0.5 : 1.0)
         .accessibilityElement(children: .combine)
         .accessibilityLabel(accessibilityLabelText)

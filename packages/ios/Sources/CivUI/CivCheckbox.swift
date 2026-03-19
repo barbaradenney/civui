@@ -51,6 +51,12 @@ public struct CivCheckbox: View {
     /// Whether the field is disabled.
     public var isDisabled: Bool
 
+    /// Whether the field is read-only (visible but non-interactive, no opacity change).
+    public var isReadonly: Bool
+
+    /// Field name for form state registration.
+    public var formName: String
+
     /// Whether the checkbox is in an indeterminate (mixed) state.
     /// When true, displays a dash instead of a checkmark.
     public var isIndeterminate: Bool
@@ -80,6 +86,8 @@ public struct CivCheckbox: View {
         error: String? = nil,
         isRequired: Bool = false,
         isDisabled: Bool = false,
+        isReadonly: Bool = false,
+        formName: String = "",
         isIndeterminate: Bool = false,
         isTile: Bool = false,
         onChange: ((Bool, String) -> Void)? = nil,
@@ -93,6 +101,8 @@ public struct CivCheckbox: View {
         self.error = error
         self.isRequired = isRequired
         self.isDisabled = isDisabled
+        self.isReadonly = isReadonly
+        self.formName = formName
         self.isIndeterminate = isIndeterminate
         self.isTile = isTile
         self.onChange = onChange
@@ -185,7 +195,7 @@ public struct CivCheckbox: View {
             .overlay(tileOverlay)
         }
         .buttonStyle(.plain)
-        .disabled(isDisabled)
+        .disabled(isDisabled || isReadonly)
         .opacity(isDisabled ? 0.5 : 1.0)
         .accessibilityLabel(accessibilityLabelText)
         .accessibilityValue(isIndeterminate ? "mixed" : (checked ? "checked" : "unchecked"))

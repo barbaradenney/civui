@@ -69,6 +69,8 @@ fun CivCheckbox(
     description: String = "",
     required: Boolean = false,
     disabled: Boolean = false,
+    readonly: Boolean = false,
+    name: String = "",
     indeterminate: Boolean = false,
     tile: Boolean = false,
     onChange: ((Boolean) -> Unit)? = null,
@@ -112,7 +114,7 @@ fun CivCheckbox(
         Row(
             modifier = tileModifier
                 .clickable(
-                    enabled = !disabled,
+                    enabled = !disabled && !readonly,
                     role = Role.Checkbox,
                     onClick = {
                         val newChecked = !checked
@@ -144,7 +146,7 @@ fun CivCheckbox(
                         onChange?.invoke(true)
                         onAnalytics?.invoke("change", mapOf("field" to label, "checked" to true, "value" to value))
                     },
-                    enabled = !disabled,
+                    enabled = !disabled && !readonly,
                     colors = CheckboxDefaults.colors(
                         checkedColor = primaryColor,
                         checkmarkColor = if (isDark) CivTokens.DarkColors.White.default_ else CivTokens.Colors.White.default_,
@@ -154,7 +156,7 @@ fun CivCheckbox(
                 Checkbox(
                     checked = checked,
                     onCheckedChange = null, // handled by Row clickable
-                    enabled = !disabled,
+                    enabled = !disabled && !readonly,
                     colors = CheckboxDefaults.colors(
                         checkedColor = primaryColor,
                         checkmarkColor = if (isDark) CivTokens.DarkColors.White.default_ else CivTokens.Colors.White.default_,

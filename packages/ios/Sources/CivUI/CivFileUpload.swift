@@ -65,6 +65,9 @@ public struct CivFileUpload: View {
     /// Whether the upload is disabled.
     public var isDisabled: Bool
 
+    /// Whether the upload is read-only (visible but non-interactive, no opacity change).
+    public var isReadonly: Bool
+
     /// Whether a file is required.
     public var isRequired: Bool
 
@@ -94,6 +97,7 @@ public struct CivFileUpload: View {
         hint: String? = nil,
         error: String? = nil,
         isDisabled: Bool = false,
+        isReadonly: Bool = false,
         isRequired: Bool = false,
         onChange: (([CivUploadedFile]) -> Void)? = nil,
         onAnalytics: ((String, [String: Any]?) -> Void)? = nil
@@ -107,6 +111,7 @@ public struct CivFileUpload: View {
         self.hint = hint
         self.error = error
         self.isDisabled = isDisabled
+        self.isReadonly = isReadonly
         self.isRequired = isRequired
         self.onChange = onChange
         self.onAnalytics = onAnalytics
@@ -171,7 +176,7 @@ public struct CivFileUpload: View {
                 )
             }
             .buttonStyle(.plain)
-            .disabled(isDisabled)
+            .disabled(isDisabled || isReadonly)
             .opacity(isDisabled ? 0.5 : 1.0)
             .focused($isUploadButtonFocused)
             .accessibilityLabel(label)
@@ -217,7 +222,7 @@ public struct CivFileUpload: View {
                                     ))
                             }
                             .buttonStyle(.plain)
-                            .disabled(isDisabled)
+                            .disabled(isDisabled || isReadonly)
                             .focused($focusedFileId, equals: file.id)
                             .accessibilityLabel(CivLocale.shared.t("fileUploadRemoveAriaLabel").replacingOccurrences(of: "{name}", with: file.name))
                         }

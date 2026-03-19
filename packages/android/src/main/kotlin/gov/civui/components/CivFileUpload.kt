@@ -100,6 +100,7 @@ fun CivFileUpload(
     maxFiles: Int = 0,
     required: Boolean = false,
     disabled: Boolean = false,
+    readonly: Boolean = false,
     browseText: String = CivLocale.t("fileUploadBrowseText"),
     removeText: String = CivLocale.t("fileUploadRemoveText"),
     onAnalytics: ((event: String, data: Map<String, Any>?) -> Unit)? = null,
@@ -242,7 +243,7 @@ fun CivFileUpload(
                     singleFileLauncher.launch(mimeTypes)
                 }
             },
-            enabled = !disabled,
+            enabled = !disabled && !readonly,
             modifier = Modifier
                 .alpha(if (disabled) 0.5f else 1f)
                 .semantics {
@@ -345,7 +346,7 @@ fun CivFileUpload(
                                     try { focusRequesters[nextIndex].requestFocus() } catch (_: Exception) {}
                                 }
                             },
-                            enabled = !disabled,
+                            enabled = !disabled && !readonly,
                             modifier = if (index < focusRequesters.size) {
                                 Modifier.focusRequester(focusRequesters[index])
                             } else Modifier,

@@ -50,6 +50,9 @@ public struct CivDatePicker: View {
     /// Whether the picker is disabled.
     public var isDisabled: Bool
 
+    /// Whether the picker is read-only (visible but non-interactive, no opacity change).
+    public var isReadonly: Bool
+
     /// Called when the date changes.
     public var onChange: ((String) -> Void)?
 
@@ -87,6 +90,7 @@ public struct CivDatePicker: View {
         placeholder: String = "",
         isRequired: Bool = false,
         isDisabled: Bool = false,
+        isReadonly: Bool = false,
         onChange: ((String) -> Void)? = nil,
         onAnalytics: ((String, [String: Any]?) -> Void)? = nil,
         formState: CivFormState? = nil,
@@ -104,6 +108,7 @@ public struct CivDatePicker: View {
         self.placeholder = placeholder
         self.isRequired = isRequired
         self.isDisabled = isDisabled
+        self.isReadonly = isReadonly
         self.onChange = onChange
         self.onAnalytics = onAnalytics
         self.formState = formState
@@ -238,7 +243,7 @@ public struct CivDatePicker: View {
                     light: CivTokens.Colors.Primary.default_,
                     dark: CivTokens.DarkColors.Primary.default_
                 ))
-                .disabled(isDisabled)
+                .disabled(isDisabled || isReadonly)
                 .opacity(isDisabled ? 0.5 : 1.0)
                 .accessibilityLabel(accessibilityLabelText)
                 .accessibilityHint(accessibilityHintText)

@@ -58,6 +58,12 @@ public struct CivSegmentedControl: View {
     /// Whether the control is disabled.
     public var isDisabled: Bool
 
+    /// Whether the control is read-only (visible but non-interactive, no opacity change).
+    public var isReadonly: Bool
+
+    /// Field name for form state registration.
+    public var formName: String
+
     /// Called when the selected value changes.
     public var onChange: ((String) -> Void)?
 
@@ -78,6 +84,8 @@ public struct CivSegmentedControl: View {
         error: String? = nil,
         isRequired: Bool = false,
         isDisabled: Bool = false,
+        isReadonly: Bool = false,
+        formName: String = "",
         onChange: ((String) -> Void)? = nil,
         onAnalytics: ((String, [String: Any]?) -> Void)? = nil
     ) {
@@ -88,6 +96,8 @@ public struct CivSegmentedControl: View {
         self.error = error
         self.isRequired = isRequired
         self.isDisabled = isDisabled
+        self.isReadonly = isReadonly
+        self.formName = formName
         self.onChange = onChange
         self.onAnalytics = onAnalytics
     }
@@ -129,7 +139,7 @@ public struct CivSegmentedControl: View {
                 }
             }
             .pickerStyle(.segmented)
-            .disabled(isDisabled)
+            .disabled(isDisabled || isReadonly)
             .opacity(isDisabled ? 0.5 : 1.0)
             .accessibilityLabel(legend)
             .accessibilityHint(accessibilityHintText)

@@ -79,6 +79,7 @@ fun CivDatePicker(
     max: String? = null,
     required: Boolean = false,
     disabled: Boolean = false,
+    readonly: Boolean = false,
     placeholder: String = "MM/DD/YYYY",
     name: String = "",
     formState: CivFormState? = null,
@@ -189,7 +190,7 @@ fun CivDatePicker(
                             error(effectiveError)
                         }
                     },
-                enabled = !disabled,
+                enabled = !disabled && !readonly,
                 placeholder = { Text(text = placeholder, color = hintColor) },
                 textStyle = TextStyle(
                     fontSize = CivTokens.Typography.FontSize.base,
@@ -213,7 +214,7 @@ fun CivDatePicker(
 
             IconButton(
                 onClick = { showDialog = true },
-                enabled = !disabled,
+                enabled = !disabled && !readonly,
                 modifier = Modifier
                     .border(
                         width = CivTokens.Border.Width.default_,

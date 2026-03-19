@@ -38,6 +38,9 @@ public struct CivMemorableDate: View {
     /// Whether the fields are disabled.
     public var isDisabled: Bool
 
+    /// Whether the fields are read-only (visible but non-interactive, no opacity change).
+    public var isReadonly: Bool
+
     /// Custom label for the month field.
     public var monthLabel: String
 
@@ -84,6 +87,7 @@ public struct CivMemorableDate: View {
         error: String? = nil,
         isRequired: Bool = false,
         isDisabled: Bool = false,
+        isReadonly: Bool = false,
         monthLabel: String? = nil,
         dayLabel: String? = nil,
         yearLabel: String? = nil,
@@ -101,6 +105,7 @@ public struct CivMemorableDate: View {
         self.error = error
         self.isRequired = isRequired
         self.isDisabled = isDisabled
+        self.isReadonly = isReadonly
         self.monthLabel = monthLabel ?? CivLocale.shared.t("memorableDateMonthLabel")
         self.dayLabel = dayLabel ?? CivLocale.shared.t("memorableDateDayLabel")
         self.yearLabel = yearLabel ?? CivLocale.shared.t("memorableDateYearLabel")
@@ -184,7 +189,7 @@ public struct CivMemorableDate: View {
                     ))
                     .cornerRadius(CivTokens.Border.Radius.default_)
                     .overlay(fieldBorder)
-                    .disabled(isDisabled)
+                    .disabled(isDisabled || isReadonly)
                     .accessibilityLabel(monthLabel)
                 }
                 .frame(minWidth: 120)
@@ -211,7 +216,7 @@ public struct CivMemorableDate: View {
                         ))
                         .cornerRadius(CivTokens.Border.Radius.default_)
                         .overlay(fieldBorder)
-                        .disabled(isDisabled)
+                        .disabled(isDisabled || isReadonly)
                         .accessibilityLabel(dayLabel)
                         .onChange(of: day) { _ in limitDay(); assembleDate() }
                 }
@@ -239,7 +244,7 @@ public struct CivMemorableDate: View {
                         ))
                         .cornerRadius(CivTokens.Border.Radius.default_)
                         .overlay(fieldBorder)
-                        .disabled(isDisabled)
+                        .disabled(isDisabled || isReadonly)
                         .accessibilityLabel(yearLabel)
                         .onChange(of: year) { _ in limitYear(); assembleDate() }
                 }

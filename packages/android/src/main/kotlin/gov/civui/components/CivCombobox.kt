@@ -86,6 +86,7 @@ fun CivCombobox(
     error: String? = null,
     required: Boolean = false,
     disabled: Boolean = false,
+    readonly: Boolean = false,
     placeholder: String? = null,
     noResultsText: String = CivLocale.t("comboboxNoResults"),
     name: String = "",
@@ -180,7 +181,7 @@ fun CivCombobox(
                     )
                     .onFocusChanged { focusState ->
                         isFocused = focusState.isFocused
-                        if (focusState.isFocused && !disabled) {
+                        if (focusState.isFocused && !disabled && !readonly) {
                             expanded = true
                             onAnalytics?.invoke("focus", mapOf("field" to label))
                         }
@@ -237,7 +238,7 @@ fun CivCombobox(
                             error(effectiveError)
                         }
                     },
-                enabled = !disabled,
+                enabled = !disabled && !readonly,
                 placeholder = placeholder?.let {
                     { Text(text = it, color = hintColor) }
                 },

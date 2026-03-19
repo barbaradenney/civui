@@ -68,9 +68,14 @@ fun CivRadio(
     selected: Boolean,
     onSelect: (String) -> Unit,
     modifier: Modifier = Modifier,
+    checked: Boolean = selected,
+    error: String = "",
+    required: Boolean = false,
     description: String = "",
     tile: Boolean = false,
     disabled: Boolean = false,
+    readonly: Boolean = false,
+    name: String = "",
 ) {
     val isDark = isSystemInDarkTheme()
 
@@ -79,12 +84,14 @@ fun CivRadio(
     val primaryColor = if (isDark) CivTokens.DarkColors.Primary.default_ else CivTokens.Colors.Primary.default_
     val borderColor = if (isDark) CivTokens.DarkColors.Base.light else CivTokens.Colors.Base.light
 
+    val errorColor = if (isDark) CivTokens.DarkColors.Error.default_ else CivTokens.Colors.Error.default_
+
     val tileModifier = if (tile) {
         Modifier
             .fillMaxWidth()
             .border(
-                width = if (selected) CivTokens.Border.Width._2 else CivTokens.Border.Width.default_,
-                color = if (selected) primaryColor else borderColor,
+                width = if (checked) CivTokens.Border.Width._2 else CivTokens.Border.Width.default_,
+                color = if (checked) primaryColor else borderColor,
                 shape = RoundedCornerShape(CivTokens.Border.Radius.default_),
             )
             .padding(CivTokens.Spacing._3)
@@ -96,7 +103,7 @@ fun CivRadio(
         modifier = modifier
             .then(tileModifier)
             .clickable(
-                enabled = !disabled,
+                enabled = !disabled && !readonly,
                 role = Role.RadioButton,
                 onClick = { onSelect(value) },
             )
@@ -104,16 +111,21 @@ fun CivRadio(
             .semantics {
                 contentDescription = buildString {
                     append(label)
-                    if (selected) append(", selected")
+                    if (required) append(", required")
+                    if (checked) append(", selected")
                     if (description.isNotEmpty()) append(". $description")
+                    if (error.isNotEmpty()) append(". Error: $error")
+                }
+                if (error.isNotEmpty()) {
+                    error(error)
                 }
             },
         verticalAlignment = Alignment.Top,
     ) {
         RadioButton(
-            selected = selected,
+            selected = checked,
             onClick = null, // handled by Row clickable
-            enabled = !disabled,
+            enabled = !disabled && !readonly,
             colors = RadioButtonDefaults.colors(
                 selectedColor = primaryColor,
             ),
@@ -124,13 +136,37 @@ fun CivRadio(
                 .padding(start = CivTokens.Spacing._2)
                 .weight(1f),
         ) {
-            Text(
-                text = label,
-                style = TextStyle(
-                    fontSize = CivTokens.Typography.FontSize.base,
-                ),
-                color = labelColor,
-            )
+            Row {
+                Text(
+                    text = label,
+                    style = TextStyle(
+                        fontSize = CivTokens.Typography.FontSize.base,
+                    ),
+                    color = labelColor,
+                )
+                if (required) {
+                    Text(
+                        text = " *",
+                        style = TextStyle(
+                            fontSize = CivTokens.Typography.FontSize.base,
+                            fontWeight = FontWeight.Bold,
+                        ),
+                        color = errorColor,
+                    )
+                }
+            }
+
+            if (error.isNotEmpty()) {
+                Text(
+                    text = error,
+                    style = TextStyle(
+                        fontSize = CivTokens.Typography.FontSize.sm,
+                        fontWeight = FontWeight.Bold,
+                    ),
+                    color = errorColor,
+                    modifier = Modifier.padding(top = CivTokens.Spacing._0_5),
+                )
+            }
 
             if (description.isNotEmpty()) {
                 Text(

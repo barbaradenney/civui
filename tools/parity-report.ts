@@ -374,6 +374,10 @@ function generateReport(): string {
   .parity-fill.high { background: #00a91c; }
   .parity-fill.mid { background: #e5a000; }
   .parity-fill.low { background: #b50909; }
+  .excluded-row { display: none; }
+  .show-excluded .excluded-row { display: table-row; opacity: 0.5; }
+  .toggle-excluded { font-size: 11px; color: #71767a; background: #f0f0f0; border: 1px solid #dfe1e2; border-radius: 4px; padding: 3px 8px; cursor: pointer; margin-left: 8px; }
+  .toggle-excluded:hover { background: #e8e8e8; }
 </style>
 </head>
 <body>
@@ -441,6 +445,7 @@ function generateReport(): string {
       'maxFilesError', 'requiredMessage', 'noResultsText',
       // Web-only internal
       'formValidate', 'pii', 'parts',
+      'managedTabIndex', 'inputId',
     ]);
 
     // Props that are native-only and should not count as "missing on web"
@@ -448,6 +453,8 @@ function generateReport(): string {
       'body', 'parts', 'content', 'id', 'data', 'keyboardType', 'points',
       'selected', 'newFiles', 'errors', 'fieldName', 'message', 'url', 'size',
       'formValidate', 'modifier',
+      'formState', 'requiredMessage', 'pii', 'formName',
+      'options', 'values', 'files', 'state', 'onSelect',
     ]);
 
     // Web-only events
@@ -491,12 +498,15 @@ function generateReport(): string {
       ${ios ? `<br>iOS: ${ios.file}` : ''}
       ${android ? `<br>Android: ${android.file}` : ''}
     </div>
-    <div class="section-label">Properties</div>
+    <div class="section-label">Properties <button class="toggle-excluded" onclick="document.body.classList.toggle('show-excluded')">Toggle web-only / native-only props</button></div>
     <table>
       <tr><th>Property</th><th>Web</th><th>iOS</th><th>Android</th></tr>
       ${Array.from(allProps.entries()).map(([name, platforms]) => {
         const hasGap = (!platforms.web || !platforms.ios || !platforms.android) && (platforms.web || platforms.ios || platforms.android);
-        return `<tr class="${hasGap ? 'gap-row' : ''}">
+        const isExcluded = (webOnlyProps.has(name) && platforms.web && !platforms.ios && !platforms.android) ||
+                           (nativeOnlyProps.has(name) && !platforms.web && (platforms.ios || platforms.android));
+        const rowClass = isExcluded ? 'excluded-row' : (hasGap ? 'gap-row' : '');
+        return `<tr class="${rowClass}">
           <td><strong>${name}</strong></td>
           <td>${platforms.web ? `<span class="check">✓</span> <span class="prop-type">${platforms.web.type}</span>` : '<span class="cross">✗</span>'}</td>
           <td>${platforms.ios ? `<span class="check">✓</span> <span class="prop-type">${platforms.ios.type}</span>` : '<span class="cross">✗</span>'}</td>
@@ -509,7 +519,9 @@ function generateReport(): string {
       <tr><th>Event</th><th>Web</th><th>iOS</th><th>Android</th></tr>
       ${Array.from(allEvents.entries()).map(([name, platforms]) => {
         const hasGap = (!platforms.web || !platforms.ios || !platforms.android) && (platforms.web || platforms.ios || platforms.android);
-        return `<tr class="${hasGap ? 'gap-row' : ''}">
+        const isExcluded = (webOnlyEvents.has(name) && platforms.web && !platforms.ios && !platforms.android);
+        const rowClass = isExcluded ? 'excluded-row' : (hasGap ? 'gap-row' : '');
+        return `<tr class="${rowClass}">
           <td><strong>${name}</strong></td>
           <td>${platforms.web ? '<span class="check">✓</span>' : '<span class="cross">✗</span>'}</td>
           <td>${platforms.ios ? '<span class="check">✓</span>' : '<span class="cross">✗</span>'}</td>
@@ -569,6 +581,8 @@ function mapPropName(name: string, platform: 'ios' | 'android'): string {
     yearLabel: 'yearLabel',
     requiredMessage: 'requiredMessage',
     orientation: 'orientation',
+    maxLength: 'maxlength',
+    minLength: 'minlength',
     maxlength: 'maxlength',
     maxwords: 'maxwords',
     placeholder: 'placeholder',
@@ -609,6 +623,7 @@ function mapEventName(name: string): string {
     onValuesChange: 'civ-change',
     onFilesChange: 'civ-change',
     onDismiss: 'civ-dismiss',
+    onSelect: 'civ-change',
   };
   return map[name] || name;
 }

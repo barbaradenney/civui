@@ -63,6 +63,12 @@ public struct CivCheckboxGroup: View {
     /// Whether the group is disabled.
     public var isDisabled: Bool
 
+    /// Whether the group is read-only (visible but non-interactive, no opacity change).
+    public var isReadonly: Bool
+
+    /// Field name for form state registration.
+    public var formName: String
+
     /// Whether to render in tile (card) style.
     public var isTile: Bool
 
@@ -89,6 +95,8 @@ public struct CivCheckboxGroup: View {
         error: String? = nil,
         isRequired: Bool = false,
         isDisabled: Bool = false,
+        isReadonly: Bool = false,
+        formName: String = "",
         isTile: Bool = false,
         orientation: String = "vertical",
         onChange: (([String]) -> Void)? = nil,
@@ -101,6 +109,8 @@ public struct CivCheckboxGroup: View {
         self.error = error
         self.isRequired = isRequired
         self.isDisabled = isDisabled
+        self.isReadonly = isReadonly
+        self.formName = formName
         self.isTile = isTile
         self.orientation = orientation
         self.onChange = onChange
@@ -173,6 +183,7 @@ public struct CivCheckboxGroup: View {
                 value: option.value,
                 description: option.description,
                 isDisabled: isDisabled || option.isDisabled,
+                isReadonly: isReadonly,
                 isTile: isTile,
                 onChange: { checked, val in
                     if checked {

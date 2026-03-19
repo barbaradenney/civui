@@ -65,6 +65,8 @@ fun CivCheckboxGroup(
     orientation: CivOrientation = CivOrientation.Vertical,
     required: Boolean = false,
     disabled: Boolean = false,
+    readonly: Boolean = false,
+    name: String = "",
     onAnalytics: ((event: String, data: Map<String, Any>?) -> Unit)? = null,
 ) {
     val isDark = isSystemInDarkTheme()
@@ -113,6 +115,7 @@ fun CivCheckboxGroup(
                     description = option.description,
                     tile = tile,
                     disabled = disabled || option.disabled,
+                    readonly = readonly,
                 )
             }
         }

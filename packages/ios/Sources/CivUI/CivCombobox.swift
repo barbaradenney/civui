@@ -1,0 +1,382 @@
+// CivUI — CivCombobox for SwiftUI
+// Accessible combobox (autocomplete) following government design system patterns.
+// Renders: label → hint → error → searchable text field with dropdown (Section 508 compliant)
+
+import SwiftUI
+
+/// Option for CivCombobox.
+public struct CivComboboxOption: Identifiable, Equatable {
+    public let id: String
+    public let value: String
+    public let label: String
+
+    public init(value: String, label: String) {
+        self.id = value
+        self.value = value
+        self.label = label
+    }
+}
+
+/// Accessible combobox (autocomplete) for government applications.
+///
+/// Provides a searchable text field with a filtered dropdown list.
+/// Implements keyboard and VoiceOver navigation.
+///
+/// Usage:
+/// ```swift
+/// CivCombobox(
+///     label: "State",
+///     value: $selectedState,
+///     options: [
+///         CivComboboxOption(value: "DC", label: "District of Columbia"),
+///         CivComboboxOption(value: "MD", label: "Maryland"),
+///         CivComboboxOption(value: "VA", label: "Virginia"),
+///     ]
+/// )
+/// ```
+public struct CivCombobox: View {
+    // MARK: - Properties
+
+    /// Visible label text.
+    public let label: String
+
+    /// Bound selected value.
+    @Binding public var value: String
+
+    /// Available options.
+    public let options: [CivComboboxOption]
+
+    /// Help text shown below the label.
+    public var hint: String?
+
+    /// Error message.
+    public var error: String?
+
+    /// Placeholder text for the input.
+    public var placeholder: String?
+
+    /// Text shown when no results match the filter.
+    public var noResultsText: String
+
+    /// Whether a selection is required.
+    public var isRequired: Bool
+
+    /// Whether the combobox is disabled.
+    public var isDisabled: Bool
+
+    /// Called when a selection is made.
+    public var onChange: ((String, String) -> Void)?
+
+    /// Called on every filter text change.
+    public var onInput: ((String) -> Void)?
+
+    // MARK: - Internal State
+
+    @State private var filter = ""
+    @State private var isOpen = false
+    @FocusState private var isFocused: Bool
+    @Environment(\.colorScheme) private var colorScheme
+
+    // MARK: - Initializer
+
+    public init(
+        label: String,
+        value: Binding<String>,
+        options: [CivComboboxOption],
+        hint: String? = nil,
+        error: String? = nil,
+        placeholder: String? = nil,
+        noResultsText: String = "No results found",
+        isRequired: Bool = false,
+        isDisabled: Bool = false,
+        onChange: ((String, String) -> Void)? = nil,
+        onInput: ((String) -> Void)? = nil
+    ) {
+        self.label = label
+        self._value = value
+        self.options = options
+        self.hint = hint
+        self.error = error
+        self.placeholder = placeholder
+        self.noResultsText = noResultsText
+        self.isRequired = isRequired
+        self.isDisabled = isDisabled
+        self.onChange = onChange
+        self.onInput = onInput
+    }
+
+    // MARK: - Computed
+
+    private var filteredOptions: [CivComboboxOption] {
+        guard !filter.isEmpty else { return options }
+        let lower = filter.lowercased()
+        return options.filter { $0.label.lowercased().contains(lower) }
+    }
+
+    private var displayValue: String {
+        if isOpen { return filter }
+        if let selected = options.first(where: { $0.value == value }) {
+            return selected.label
+        }
+        return filter
+    }
+
+    // MARK: - Body
+
+    public var body: some View {
+        VStack(alignment: .leading, spacing: CivTokens.Spacing._1) {
+            // 1. Label
+            labelView
+
+            // 2. Hint
+            if let hint, !hint.isEmpty {
+                Text(hint)
+                    .font(.system(size: CivTokens.Typography.FontSize.sm))
+                    .foregroundColor(adaptiveColor(
+                        light: CivTokens.Colors.Base.dark,
+                        dark: CivTokens.DarkColors.Base.dark
+                    ))
+                    .accessibilityIdentifier("civ-hint")
+            }
+
+            // 3. Error
+            if let error, !error.isEmpty {
+                Text(error)
+                    .font(.system(size: CivTokens.Typography.FontSize.sm,
+                                  weight: CivTokens.Typography.FontWeight.bold))
+                    .foregroundColor(adaptiveColor(
+                        light: CivTokens.Colors.Error.default_,
+                        dark: CivTokens.DarkColors.Error.default_
+                    ))
+                    .accessibilityIdentifier("civ-error")
+                    .accessibilityAddTraits(.updatesFrequently)
+            }
+
+            // 4. Input + Dropdown
+            ZStack(alignment: .topLeading) {
+                VStack(spacing: 0) {
+                    TextField(placeholder ?? "", text: inputBinding)
+                        .textFieldStyle(.plain)
+                        .font(.system(size: CivTokens.Typography.FontSize.base))
+                        .padding(.horizontal, CivTokens.Spacing._2)
+                        .padding(.vertical, CivTokens.Spacing._1_5)
+                        .background(adaptiveColor(
+                            light: CivTokens.Colors.White.default_,
+                            dark: CivTokens.DarkColors.White.default_
+                        ))
+                        .cornerRadius(CivTokens.Border.Radius.default_)
+                        .overlay(borderOverlay)
+                        .civFocusRing(isFocused)
+                        .focused($isFocused)
+                        .disabled(isDisabled)
+                        .opacity(isDisabled ? 0.5 : 1.0)
+                        .accessibilityLabel(accessibilityLabelText)
+                        .accessibilityHint(accessibilityHintText)
+
+                    if isOpen && !filteredOptions.isEmpty {
+                        ScrollView {
+                            LazyVStack(alignment: .leading, spacing: 0) {
+                                ForEach(filteredOptions) { option in
+                                    Button(action: { selectOption(option) }) {
+                                        Text(option.label)
+                                            .font(.system(size: CivTokens.Typography.FontSize.base,
+                                                          weight: option.value == value ? .bold : .regular))
+                                            .foregroundColor(adaptiveColor(
+                                                light: CivTokens.Colors.Base.darkest,
+                                                dark: CivTokens.DarkColors.Base.darkest
+                                            ))
+                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                            .padding(.horizontal, CivTokens.Spacing._3)
+                                            .padding(.vertical, CivTokens.Spacing._2)
+                                    }
+                                    .buttonStyle(.plain)
+                                    .accessibilityLabel(option.label)
+                                    .accessibilityAddTraits(option.value == value ? .isSelected : [])
+                                }
+                            }
+                        }
+                        .frame(maxHeight: 200)
+                        .background(adaptiveColor(
+                            light: CivTokens.Colors.White.default_,
+                            dark: CivTokens.DarkColors.White.default_
+                        ))
+                        .cornerRadius(CivTokens.Border.Radius.default_)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: CivTokens.Border.Radius.default_)
+                                .stroke(adaptiveColor(
+                                    light: CivTokens.Colors.Base.light,
+                                    dark: CivTokens.DarkColors.Base.light
+                                ), lineWidth: CivTokens.Border.Width.default_)
+                        )
+                        .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 2)
+                    }
+
+                    if isOpen && filteredOptions.isEmpty && !filter.isEmpty {
+                        Text(noResultsText)
+                            .font(.system(size: CivTokens.Typography.FontSize.base))
+                            .foregroundColor(adaptiveColor(
+                                light: CivTokens.Colors.Base.dark,
+                                dark: CivTokens.DarkColors.Base.dark
+                            ))
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(CivTokens.Spacing._3)
+                            .background(adaptiveColor(
+                                light: CivTokens.Colors.White.default_,
+                                dark: CivTokens.DarkColors.White.default_
+                            ))
+                            .cornerRadius(CivTokens.Border.Radius.default_)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: CivTokens.Border.Radius.default_)
+                                    .stroke(adaptiveColor(
+                                        light: CivTokens.Colors.Base.light,
+                                        dark: CivTokens.DarkColors.Base.light
+                                    ), lineWidth: CivTokens.Border.Width.default_)
+                            )
+                    }
+                }
+            }
+        }
+        .padding(.bottom, CivTokens.Spacing._4)
+        .onChange(of: isFocused) { focused in
+            if focused {
+                isOpen = true
+            } else {
+                // Delay closing to allow tap on option
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                    isOpen = false
+                }
+            }
+        }
+        .accessibilityElement(children: .contain)
+    }
+
+    // MARK: - Input Binding
+
+    private var inputBinding: Binding<String> {
+        Binding(
+            get: { displayValue },
+            set: { newValue in
+                filter = newValue
+                isOpen = true
+                value = ""
+                onInput?(newValue)
+            }
+        )
+    }
+
+    // MARK: - Actions
+
+    private func selectOption(_ option: CivComboboxOption) {
+        value = option.value
+        filter = option.label
+        isOpen = false
+        isFocused = false
+        onChange?(option.value, option.label)
+    }
+
+    // MARK: - Border
+
+    private var borderOverlay: some View {
+        RoundedRectangle(cornerRadius: CivTokens.Border.Radius.default_)
+            .stroke(borderColor, lineWidth: error != nil
+                ? CivTokens.Border.Width._2
+                : CivTokens.Border.Width.default_)
+    }
+
+    private var borderColor: Color {
+        if error != nil {
+            return adaptiveColor(
+                light: CivTokens.Colors.Error.default_,
+                dark: CivTokens.DarkColors.Error.default_
+            )
+        }
+        return adaptiveColor(
+            light: CivTokens.Colors.Base.light,
+            dark: CivTokens.DarkColors.Base.light
+        )
+    }
+
+    // MARK: - Subviews
+
+    private var labelView: some View {
+        HStack(spacing: CivTokens.Spacing._0_5) {
+            Text(label)
+                .font(.system(size: CivTokens.Typography.FontSize.base,
+                              weight: CivTokens.Typography.FontWeight.bold))
+                .foregroundColor(adaptiveColor(
+                    light: CivTokens.Colors.Base.darkest,
+                    dark: CivTokens.DarkColors.Base.darkest
+                ))
+
+            if isRequired {
+                Text("*")
+                    .font(.system(size: CivTokens.Typography.FontSize.base,
+                                  weight: CivTokens.Typography.FontWeight.bold))
+                    .foregroundColor(adaptiveColor(
+                        light: CivTokens.Colors.Error.default_,
+                        dark: CivTokens.DarkColors.Error.default_
+                    ))
+                    .accessibilityLabel("required")
+            }
+        }
+    }
+
+    // MARK: - Accessibility
+
+    private var accessibilityLabelText: String {
+        var parts = [label]
+        if isRequired { parts.append("required") }
+        return parts.joined(separator: ", ")
+    }
+
+    private var accessibilityHintText: String {
+        var parts: [String] = []
+        if let hint, !hint.isEmpty { parts.append(hint) }
+        if let error, !error.isEmpty { parts.append("Error: \(error)") }
+        return parts.joined(separator: ". ")
+    }
+
+    // MARK: - Color Helper
+
+    private func adaptiveColor(light: Color, dark: Color) -> Color {
+        colorScheme == .dark ? dark : light
+    }
+}
+
+// MARK: - Preview
+
+#if DEBUG
+struct CivCombobox_Previews: PreviewProvider {
+    struct PreviewWrapper: View {
+        @State private var state = ""
+
+        var body: some View {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 0) {
+                    CivCombobox(
+                        label: "State or territory",
+                        value: $state,
+                        options: [
+                            CivComboboxOption(value: "DC", label: "District of Columbia"),
+                            CivComboboxOption(value: "MD", label: "Maryland"),
+                            CivComboboxOption(value: "VA", label: "Virginia"),
+                            CivComboboxOption(value: "PA", label: "Pennsylvania"),
+                        ],
+                        hint: "Start typing to search",
+                        isRequired: true
+                    )
+                }
+                .padding()
+            }
+        }
+    }
+
+    static var previews: some View {
+        PreviewWrapper()
+            .previewDisplayName("Light")
+        PreviewWrapper()
+            .preferredColorScheme(.dark)
+            .previewDisplayName("Dark")
+    }
+}
+#endif

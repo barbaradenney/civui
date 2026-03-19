@@ -29,6 +29,7 @@ export class CivFormElement extends CivBaseElement {
   @property({ type: String }) value = '';
   @property({ type: Boolean, reflect: true }) disabled = false;
   @property({ type: Boolean, reflect: true }) required = false;
+  @property({ type: Boolean, reflect: true }) readonly = false;
   @property({ type: String }) error = '';
   @property({ type: String }) hint = '';
   @property({ type: String }) label = '';

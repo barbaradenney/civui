@@ -95,3 +95,15 @@ export const Disabled: Story = {
     ></civ-textarea>
   `,
 };
+
+export const WordCount: Story = {
+  render: () => html`
+    <civ-textarea
+      label="Personal statement"
+      name="statement"
+      hint="Describe your qualifications in 250 words or fewer"
+      maxwords="250"
+      rows="8"
+    ></civ-textarea>
+  `,
+};

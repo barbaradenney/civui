@@ -81,6 +81,12 @@ export interface CivLocaleStrings {
   maskEinError: string;
   maskPhoneIntlError: string;
   maskPatternError: string;
+  maskCurrencyHint: string;
+  maskCurrencyError: string;
+
+  // Textarea word count
+  textareaWordsRemaining: string; // "{count} words remaining"
+  textareaWordLimit: string; // "Word limit: {max}"
 
   // Alert dismiss
   alertDismissLabel: string;
@@ -153,6 +159,11 @@ const defaultStrings: CivLocaleStrings = {
   maskEinError: 'Enter a 9-digit Employer Identification Number',
   maskPhoneIntlError: 'Enter a valid phone number with country code',
   maskPatternError: '{label} does not match the expected format',
+  maskCurrencyHint: 'For example: 1,234.56',
+  maskCurrencyError: 'Enter a valid dollar amount',
+
+  textareaWordsRemaining: '{count} words remaining',
+  textareaWordLimit: 'Word limit: {max}',
 
   alertDismissLabel: 'Dismiss alert',
   alertDismissedMessage: 'Alert dismissed',

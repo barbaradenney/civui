@@ -65,6 +65,13 @@ export const MASK_PRESETS: Record<string, MaskDefinition> = {
     inputmode: 'numeric',
     pii: true,
   },
+  currency: {
+    pattern: '',
+    hintKey: 'maskCurrencyHint',
+    errorKey: 'maskCurrencyError',
+    inputmode: 'decimal',
+    pii: false,
+  },
   // North American format (+1)
   'phone-intl': {
     pattern: '+# (###) ###-####',

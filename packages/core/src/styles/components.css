@@ -61,6 +61,12 @@
     color: var(--civ-color-base-darkest);
   }
 
+  .civ-input-prefix {
+    @apply civ-flex civ-items-center civ-px-2 civ-border civ-border-e-0 civ-rounded-s civ-border-base-light civ-bg-base-lightest;
+    font-size: var(--civ-typography-fontSize-base);
+    color: var(--civ-color-base-dark);
+  }
+
   .civ-select-field {
     appearance: none;
     -webkit-appearance: none;
@@ -238,6 +244,19 @@
 
   .civ-form-error-heading {
     @apply civ-text-error civ-font-bold civ-text-lg civ-mt-0 civ-mb-2;
+  }
+
+  /* ── Read-only mode ──────────────────────────────────────────── */
+
+  [readonly] .civ-input {
+    @apply civ-border-transparent civ-bg-transparent civ-px-0;
+    pointer-events: none;
+  }
+
+  .civ-readonly-value {
+    @apply civ-block;
+    font-size: var(--civ-typography-fontSize-base);
+    color: var(--civ-color-base-darkest);
   }
 
   /* ── State selectors (Phase 3) ──────────────────────────────── */

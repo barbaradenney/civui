@@ -61,6 +61,8 @@ export class CivForm extends LightDomContainerMixin(CivBaseElement) {
   @property({ type: String }) method: 'get' | 'post' = 'post';
   @property({ type: String, attribute: 'form-label' }) formLabel = '';
   @property({ type: Number, attribute: 'error-heading-level' }) errorHeadingLevel: 3 | 4 | 5 | 6 = 3;
+  @property({ type: String }) persist = '';
+  @property({ type: Boolean }) prefill = false;
 
   @state() private _errors: FormFieldError[] = [];
 
@@ -68,22 +70,33 @@ export class CivForm extends LightDomContainerMixin(CivBaseElement) {
   private _summaryHeadingId = this.generateId('summary-heading');
   private _boundOnClick = this._onButtonClick.bind(this);
   private _boundOnKeydown = this._onKeydown.bind(this);
+  private _boundOnCivInput = this._persistFormData.bind(this);
+  private _persistTimer: ReturnType<typeof setTimeout> | undefined;
   override connectedCallback(): void {
     super.connectedCallback();
     this.setAttribute('role', 'form');
     if (this.formLabel) this.setAttribute('aria-label', this.formLabel);
     this.addEventListener('click', this._boundOnClick);
     this.addEventListener('keydown', this._boundOnKeydown);
+    if (this.persist) {
+      this.addEventListener('civ-input', this._boundOnCivInput);
+      this._restorePersistedData();
+    }
   }
 
   override disconnectedCallback(): void {
     super.disconnectedCallback();
     this.removeEventListener('click', this._boundOnClick);
     this.removeEventListener('keydown', this._boundOnKeydown);
+    if (this.persist) {
+      this.removeEventListener('civ-input', this._boundOnCivInput);
+      clearTimeout(this._persistTimer);
+    }
   }
 
   override firstUpdated(): void {
     this._relocateChildren('[data-civ-form-content]');
+    this._prefillFromUrl();
   }
 
   override updated(changed: Map<string, unknown>): void {
@@ -176,6 +189,23 @@ export class CivForm extends LightDomContainerMixin(CivBaseElement) {
   }
 
   /**
+   * Reset the form: clear all field values, errors, and persisted data.
+   */
+  reset(): void {
+    const formElements = this.querySelectorAll<HTMLElement>(
+      '[data-civ-form-field]',
+    );
+    for (const el of formElements) {
+      const formEl = el as unknown as CivFormFieldLike;
+      if (typeof formEl.formResetCallback === 'function') {
+        formEl.formResetCallback();
+      }
+    }
+    this._errors = [];
+    this._clearPersistedData();
+  }
+
+  /**
    * Clear all errors from the form and its fields.
    */
   clearErrors(): void {
@@ -246,6 +276,54 @@ export class CivForm extends LightDomContainerMixin(CivBaseElement) {
     return fd;
   }
 
+  private _restorePersistedData(): void {
+    const saved = sessionStorage.getItem(`civ-form:${this.persist}`);
+    if (!saved) return;
+    try {
+      const data = JSON.parse(saved) as Record<string, string>;
+      requestAnimationFrame(() => {
+        const fields = this.querySelectorAll('[data-civ-form-field]') as NodeListOf<CivFormFieldLike>;
+        fields.forEach((field) => {
+          if (field.name && data[field.name] !== undefined) {
+            field.value = data[field.name];
+          }
+        });
+      });
+    } catch { /* ignore corrupt data */ }
+  }
+
+  private _persistFormData(): void {
+    if (!this.persist) return;
+    clearTimeout(this._persistTimer);
+    this._persistTimer = setTimeout(() => {
+      const data: Record<string, string> = {};
+      const fields = this.querySelectorAll('[data-civ-form-field]') as NodeListOf<CivFormFieldLike>;
+      fields.forEach((field) => {
+        if (field.name && !field.disabled) {
+          data[field.name] = field.value ?? '';
+        }
+      });
+      sessionStorage.setItem(`civ-form:${this.persist}`, JSON.stringify(data));
+    }, 500);
+  }
+
+  private _clearPersistedData(): void {
+    if (this.persist) sessionStorage.removeItem(`civ-form:${this.persist}`);
+  }
+
+  private _prefillFromUrl(): void {
+    if (!this.prefill) return;
+    const params = new URLSearchParams(window.location.search);
+    requestAnimationFrame(() => {
+      const fields = this.querySelectorAll('[data-civ-form-field]') as NodeListOf<CivFormFieldLike>;
+      fields.forEach((field) => {
+        if (field.name && params.has(field.name)) {
+          field.value = params.get(field.name)!;
+        }
+      });
+    });
+  }
+
   private _onButtonClick(e: Event): void {
     const target = e.target as HTMLElement;
     const button = target.closest('button') as HTMLButtonElement | null;
@@ -292,6 +370,7 @@ export class CivForm extends LightDomContainerMixin(CivBaseElement) {
       return;
     }
 
+    this._clearPersistedData();
     dispatch(this, 'civ-submit', { formData: this.toFormData() });
     this.sendAnalytics('submit');
   }

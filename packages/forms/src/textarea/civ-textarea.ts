@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivFormElement, debounce, dispatch, renderLabel, renderHint, renderError, inputClasses } from '@civui/core';
+import { CivFormElement, debounce, dispatch, renderLabel, renderHint, renderError, inputClasses, t, interpolate } from '@civui/core';
 
 /**
  * CivUI Textarea
@@ -30,12 +30,16 @@ import { CivFormElement, debounce, dispatch, renderLabel, renderHint, renderErro
 export class CivTextarea extends CivFormElement {
   @property({ type: Number }) rows = 5;
   @property({ type: Number }) maxlength?: number;
+  @property({ type: Number }) maxwords?: number;
   @property({ type: String }) placeholder = '';
 
   @state() private _charCount = 0;
   @state() private _announcedCharCount = 0;
+  @state() private _wordCount = 0;
+  @state() private _announcedWordCount = 0;
 
   private _charCountId = this.generateId('charcount');
+  private _wordCountId = this.generateId('wordcount');
   // Debounce SR character count announcements at 1000ms to avoid
   // spamming screen readers on every keystroke. The visual counter
   // updates immediately; the aria-live region updates after a pause.
@@ -43,15 +47,22 @@ export class CivTextarea extends CivFormElement {
     this._announcedCharCount = this._charCount;
   }, 1000);
 
+  private _debouncedAnnounceWordCount = debounce(() => {
+    this._announcedWordCount = this._wordCount;
+  }, 1000);
+
   override connectedCallback(): void {
     super.connectedCallback();
     this._charCount = this.value?.length || 0;
     this._announcedCharCount = this._charCount;
+    this._wordCount = this._countWords(this.value);
+    this._announcedWordCount = this._wordCount;
   }
 
   override disconnectedCallback(): void {
     super.disconnectedCallback();
     this._debouncedAnnounceCount.cancel();
+    this._debouncedAnnounceWordCount.cancel();
   }
 
   protected override get _ariaDescribedBy(): string {
@@ -59,7 +70,16 @@ export class CivTextarea extends CivFormElement {
     if (this.hint) ids.push(this._hintId);
     if (this.error) ids.push(this._errorId);
     if (this.maxlength != null && this.maxlength > 0) ids.push(this._charCountId);
+    if (this._showWordCount) ids.push(this._wordCountId);
     return ids.join(' ') || '';
+  }
+
+  private get _showWordCount(): boolean {
+    return this.maxwords != null && this.maxwords > 0 && !(this.maxlength != null && this.maxlength > 0);
+  }
+
+  private _countWords(text: string): number {
+    return text.trim().split(/\s+/).filter(Boolean).length;
   }
 
   override render() {
@@ -106,6 +126,21 @@ export class CivTextarea extends CivFormElement {
               </span>
             `
           : nothing}
+        ${this._showWordCount
+          ? html`
+              <span
+                id="${this._wordCountId}"
+                class="civ-block civ-mt-0.5 civ-text-sm ${this._wordCount > this.maxwords!
+                  ? 'civ-text-error civ-font-bold'
+                  : 'civ-text-muted'}"
+              >
+                ${interpolate(t('textareaWordsRemaining'), { count: this.maxwords! - this._wordCount })}
+              </span>
+              <span class="civ-sr-only" aria-live="polite">
+                ${interpolate(t('textareaWordsRemaining'), { count: this.maxwords! - this._announcedWordCount })}
+              </span>
+            `
+          : nothing}
       </div>
     `;
   }
@@ -114,7 +149,10 @@ export class CivTextarea extends CivFormElement {
     super.formResetCallback();
     this._charCount = this._defaultValue?.length || 0;
     this._announcedCharCount = this._charCount;
+    this._wordCount = this._countWords(this._defaultValue || '');
+    this._announcedWordCount = this._wordCount;
     this._debouncedAnnounceCount.cancel();
+    this._debouncedAnnounceWordCount.cancel();
   }
 
   private _onInput(e: Event): void {
@@ -122,6 +160,10 @@ export class CivTextarea extends CivFormElement {
     this.value = target.value;
     this._charCount = target.value.length;
     this._debouncedAnnounceCount();
+    if (this._showWordCount) {
+      this._wordCount = this._countWords(target.value);
+      this._debouncedAnnounceWordCount();
+    }
     // Form value sync handled by _syncFormValue() in updated()
     dispatch(this, 'civ-input', { value: this.value });
   }

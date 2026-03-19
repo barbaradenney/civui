@@ -19,6 +19,7 @@ describe('mask-engine', () => {
         'zip',
         'zip4',
         'ein',
+        'currency',
         'phone-intl',
       ]);
     });

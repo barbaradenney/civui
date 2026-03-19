@@ -243,6 +243,21 @@ export const MaskEIN: Story = {
   `,
 };
 
+export const MaskCurrency: Story = {
+  args: {
+    label: 'Annual salary',
+    name: 'salary',
+    mask: 'currency',
+  },
+  render: (args) => html`
+    <civ-text-input
+      label="${args.label}"
+      name="${args.name}"
+      mask="${args.mask}"
+    ></civ-text-input>
+  `,
+};
+
 export const MaskCustom: Story = {
   args: {
     label: 'Reference code',

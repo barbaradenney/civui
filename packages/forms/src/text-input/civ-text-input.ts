@@ -22,7 +22,7 @@ import { dispatch } from '@civui/core';
 
 export type TextInputType = 'text' | 'email' | 'number' | 'password' | 'search' | 'tel' | 'url';
 export type TextInputWidth = 'default' | '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
-export type TextInputMask = 'ssn' | 'phone-us' | 'zip' | 'zip4' | 'ein' | 'phone-intl' | '';
+export type TextInputMask = 'ssn' | 'phone-us' | 'zip' | 'zip4' | 'ein' | 'phone-intl' | 'currency' | '';
 
 const WIDTH_CLASSES: Record<TextInputWidth, string> = {
   'default': 'civ-w-full',
@@ -74,6 +74,11 @@ export class CivTextInput extends CivFormElement {
   /** Tracks whether the current error was set by the mask system. */
   private _maskError = false;
 
+  /** Returns true when the currency mask is active. */
+  private get _isCurrency(): boolean {
+    return this.mask === 'currency';
+  }
+
   /**
    * Returns the active MaskDefinition from a preset, or builds one
    * from `maskPattern`, or null if no mask is active.
@@ -107,6 +112,16 @@ export class CivTextInput extends CivFormElement {
    * is active, returns the raw value unchanged.
    */
   get formattedValue(): string {
+    if (this._isCurrency) {
+      if (!this.value) return '';
+      const num = Number(this.value);
+      if (isNaN(num)) return this.value;
+      const formatted = num.toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
+      return `$${formatted}`;
+    }
     const pattern = this._activePattern;
     if (pattern) {
       return applyMask(this.value, pattern);
@@ -127,8 +142,14 @@ export class CivTextInput extends CivFormElement {
 
   override render() {
     const widthClass = WIDTH_CLASSES[this.width] || WIDTH_CLASSES['default'];
+    const isCurrency = this._isCurrency;
+
     const classes = inputClasses({
-      extra: [widthClass, 'civ-max-w-full'],
+      extra: [
+        widthClass,
+        'civ-max-w-full',
+        ...(isCurrency ? ['civ-rounded-s-none', 'civ-text-end'] : []),
+      ],
     });
 
     const maskDef = this._maskDef;
@@ -144,46 +165,156 @@ export class CivTextInput extends CivFormElement {
     const effectiveHint = this.hint || (maskDef?.hintKey ? t(maskDef.hintKey as any) : '');
 
     // Determine maxlength: mask pattern length takes precedence when mask is active
-    const effectiveMaxlength = pattern
-      ? pattern.length
-      : (this.maxlength && this.maxlength > 0 ? this.maxlength : undefined);
+    // Currency has no maxlength (variable length)
+    const effectiveMaxlength = isCurrency
+      ? undefined
+      : pattern
+        ? pattern.length
+        : (this.maxlength && this.maxlength > 0 ? this.maxlength : undefined);
 
     // Display value: formatted when mask is active, raw otherwise
-    const displayValue = pattern ? this.formattedValue : this.value;
+    // Currency display is handled by focus/blur, so show raw value by default
+    const displayValue = isCurrency
+      ? this.value
+      : pattern ? this.formattedValue : this.value;
 
     // Auto-set autocomplete="off" for PII masks unless user explicitly set autocomplete
     const effectiveAutocomplete = (maskDef?.pii && !this.autocomplete)
       ? 'off'
       : this.autocomplete;
 
+    // Determine event handlers
+    const inputHandler = isCurrency
+      ? this._onCurrencyInput
+      : pattern ? this._onMaskInput : this._handleInput;
+    const changeHandler = isCurrency
+      ? this._onCurrencyChange
+      : pattern ? this._onMaskChange : this._handleChange;
+    const blurHandler = isCurrency ? this._onCurrencyBlur : nothing;
+    const focusHandler = isCurrency ? this._onCurrencyFocus : nothing;
+
+    const inputEl = html`
+      <input
+        class="${classes}"
+        id="${this._inputId}"
+        type="${this.type}"
+        name="${this.name}"
+        .value="${displayValue}"
+        placeholder="${this.placeholder || nothing}"
+        ?disabled="${this.disabled}"
+        ?required="${this.required}"
+        aria-required="${this.required || nothing}"
+        pattern="${this.pattern || nothing}"
+        maxlength="${effectiveMaxlength ?? nothing}"
+        minlength="${this.minlength && this.minlength > 0 ? this.minlength : nothing}"
+        autocomplete="${effectiveAutocomplete || nothing}"
+        inputmode="${effectiveInputmode || nothing}"
+        aria-describedby="${this._ariaDescribedBy || nothing}"
+        aria-invalid="${this.error ? 'true' : nothing}"
+        @input="${inputHandler}"
+        @change="${changeHandler}"
+        @paste="${pattern && !isCurrency ? this._onMaskPaste : nothing}"
+        @blur="${blurHandler}"
+        @focus="${focusHandler}"
+      />
+    `;
+
     return html`
       <div class="civ-mb-4">
         ${renderLabel({ label: this.label, inputId: this._inputId, required: this.required })}
         ${renderHint(this._hintId, effectiveHint)}
         ${renderError(this._errorId, this.error)}
-        <input
-          class="${classes}"
-          id="${this._inputId}"
-          type="${this.type}"
-          name="${this.name}"
-          .value="${displayValue}"
-          placeholder="${this.placeholder || nothing}"
-          ?disabled="${this.disabled}"
-          ?required="${this.required}"
-          aria-required="${this.required || nothing}"
-          pattern="${this.pattern || nothing}"
-          maxlength="${effectiveMaxlength ?? nothing}"
-          minlength="${this.minlength && this.minlength > 0 ? this.minlength : nothing}"
-          autocomplete="${effectiveAutocomplete || nothing}"
-          inputmode="${effectiveInputmode || nothing}"
-          aria-describedby="${this._ariaDescribedBy || nothing}"
-          aria-invalid="${this.error ? 'true' : nothing}"
-          @input="${this._activePattern ? this._onMaskInput : this._handleInput}"
-          @change="${this._activePattern ? this._onMaskChange : this._handleChange}"
-          @paste="${this._activePattern ? this._onMaskPaste : nothing}"
-        />
+        ${isCurrency
+          ? html`<div class="civ-flex ${widthClass} civ-max-w-full"
+            ><span class="civ-input-prefix">$</span>${inputEl}</div>`
+          : inputEl}
       </div>
     `;
+  }
+
+  /**
+   * Handle input events for currency mask.
+   * Filters to digits and one decimal point, limits to 2 decimal places.
+   */
+  private _onCurrencyInput(e: InputEvent): void {
+    const input = e.target as HTMLInputElement;
+    let raw = input.value;
+
+    // Remove all characters except digits and decimal point
+    raw = raw.replace(/[^\d.]/g, '');
+
+    // Allow only one decimal point
+    const parts = raw.split('.');
+    if (parts.length > 2) {
+      raw = parts[0] + '.' + parts.slice(1).join('');
+    }
+
+    // Limit to 2 decimal places
+    if (parts.length === 2 && parts[1].length > 2) {
+      raw = parts[0] + '.' + parts[1].substring(0, 2);
+    }
+
+    this.value = raw;
+    input.value = raw;
+    dispatch(this, 'civ-input', { value: this.value });
+  }
+
+  /**
+   * Handle blur events for currency mask.
+   * Formats display with commas and pads to 2 decimal places.
+   */
+  private _onCurrencyBlur(): void {
+    if (!this.value) return;
+    const num = Number(this.value);
+    if (isNaN(num)) return;
+
+    // Normalize raw value to 2 decimal places
+    this.value = num.toFixed(2);
+
+    const formatted = num.toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+
+    const input = this.querySelector('input') as HTMLInputElement;
+    if (input) {
+      input.value = formatted;
+    }
+  }
+
+  /**
+   * Handle focus events for currency mask.
+   * Shows raw numeric value for easy editing (removes commas).
+   */
+  private _onCurrencyFocus(): void {
+    const input = this.querySelector('input') as HTMLInputElement;
+    if (input) {
+      input.value = this.value;
+    }
+  }
+
+  /**
+   * Handle change events for currency mask.
+   * Validates and dispatches civ-change.
+   */
+  private _onCurrencyChange(): void {
+    if (this.value) {
+      const num = Number(this.value);
+      if (isNaN(num) || num < 0) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        this.error = t('maskCurrencyError' as any);
+        this._maskError = true;
+      } else if (this._maskError) {
+        this.error = '';
+        this._maskError = false;
+      }
+    } else if (this._maskError) {
+      this.error = '';
+      this._maskError = false;
+    }
+
+    dispatch(this, 'civ-change', { value: this.value });
+    this.sendAnalytics('change');
   }
 
   /**

@@ -143,6 +143,9 @@ public struct CivTextInput: View {
     /// Maximum number of characters allowed. When set, truncates input to this length.
     public var maxLength: Int?
 
+    /// Minimum number of characters expected. Stored for validation; not enforced during input.
+    public var minLength: Int?
+
     /// Called on every value change (parallels `civ-input` event).
     public var onInput: ((String) -> Void)?
 
@@ -188,6 +191,7 @@ public struct CivTextInput: View {
         isReadonly: Bool = false,
         placeholder: String? = nil,
         maxLength: Int? = nil,
+        minLength: Int? = nil,
         inputType: CivInputType = .text,
         width: CivInputWidth = .full,
         mask: CivInputMask = .none,
@@ -210,6 +214,7 @@ public struct CivTextInput: View {
         self.isReadonly = isReadonly
         self.placeholder = placeholder
         self.maxLength = maxLength
+        self.minLength = minLength
         self.inputType = inputType
         self.width = width
         self.mask = mask

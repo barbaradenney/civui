@@ -68,6 +68,9 @@ public struct CivMemorableDate: View {
     /// Custom validation function. Returns error string or nil.
     public var formValidate: (() -> String?)?
 
+    /// Locale identifier for date formatting (e.g., "es", "fr"). When empty, the system locale is used.
+    public var locale: String
+
     /// Whether the field contains PII (excluded from getFormData).
     public var isPii: Bool
 
@@ -97,6 +100,7 @@ public struct CivMemorableDate: View {
         formName: String? = nil,
         requiredMessage: String? = nil,
         formValidate: (() -> String?)? = nil,
+        locale: String = "",
         isPii: Bool = false
     ) {
         self.legend = legend
@@ -115,6 +119,7 @@ public struct CivMemorableDate: View {
         self.formName = formName
         self.requiredMessage = requiredMessage
         self.formValidate = formValidate
+        self.locale = locale
         self.isPii = isPii
     }
 

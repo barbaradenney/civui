@@ -164,6 +164,7 @@ fun CivTextInput(
     width: CivInputWidth = CivInputWidth.Full,
     mask: CivInputMask? = null,
     maxLength: Int? = null,
+    minLength: Int? = null,
     maskPattern: String = "",
     onInput: ((String) -> Unit)? = null,
     onChange: ((String) -> Unit)? = null,

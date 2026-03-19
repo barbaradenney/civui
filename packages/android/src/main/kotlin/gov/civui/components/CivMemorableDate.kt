@@ -107,6 +107,7 @@ fun CivMemorableDate(
     dayLabel: String = CivLocale.t("memorableDateDayLabel"),
     yearLabel: String = CivLocale.t("memorableDateYearLabel"),
     name: String = "",
+    locale: String = "",
     formState: CivFormState? = null,
     onChange: ((CivMemorableDateValue) -> Unit)? = null,
     onAnalytics: ((event: String, data: Map<String, Any>?) -> Unit)? = null,

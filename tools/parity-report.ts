@@ -150,19 +150,35 @@ function parseWebComponent(filePath: string): ComponentAPI | null {
 
 // ── iOS (Swift) parser ───────────────────────────────────────
 
-function parseSwiftComponent(filePath: string): ComponentAPI | null {
+function parseSwiftComponent(filePath: string, targetName?: string): ComponentAPI | null {
   if (!existsSync(filePath)) return null;
   const src = readFileSync(filePath, 'utf-8');
 
-  const name = basename(filePath, '.swift').replace('Civ', '');
+  const name = targetName || basename(filePath, '.swift').replace('Civ', '');
   const props: PropDef[] = [];
   const events: EventDef[] = [];
   const seen = new Set<string>();
 
-  // Parse ALL lines that look like property declarations
+  // Parse property declarations from the struct matching the file name
+  const expectedStruct = 'Civ' + name;
   const lines = src.split('\n');
+  let inTargetStruct = false;
+  let structDepth = 0;
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i].trim();
+
+    // Track struct boundaries — only parse the struct matching the file name
+    const structMatch = line.match(/^public\s+struct\s+(Civ\w+)/);
+    if (structMatch) {
+      if (structMatch[1] === expectedStruct) {
+        inTargetStruct = true;
+        structDepth = 0;
+      } else if (inTargetStruct) {
+        // Reached a different struct while in target — stop
+        break;
+      }
+    }
+    if (!inTargetStruct) continue;
 
     // Skip comments, imports, computed properties
     if (line.startsWith('//') || line.startsWith('///') || line.startsWith('import ')) continue;
@@ -207,30 +223,126 @@ function parseSwiftComponent(filePath: string): ComponentAPI | null {
   return { name, props, events, file: filePath.replace(ROOT + '/', '') };
 }
 
+// ── Kotlin parameter parser (handles nested parens/angle brackets) ────
+
+function parseKotlinParams(paramStr: string): Array<{ name: string; type: string; defaultVal?: string }> {
+  const results: Array<{ name: string; type: string; defaultVal?: string }> = [];
+  let i = 0;
+  const s = paramStr;
+
+  while (i < s.length) {
+    // Skip whitespace/newlines
+    while (i < s.length && /[\s,]/.test(s[i])) i++;
+    if (i >= s.length) break;
+
+    // Read parameter name
+    const nameStart = i;
+    while (i < s.length && /\w/.test(s[i])) i++;
+    const paramName = s.slice(nameStart, i).trim();
+    if (!paramName) { i++; continue; }
+
+    // Skip whitespace and colon
+    while (i < s.length && /\s/.test(s[i])) i++;
+    if (i >= s.length || s[i] !== ':') { i++; continue; }
+    i++; // skip ':'
+    while (i < s.length && /\s/.test(s[i])) i++;
+
+    // Read type (respecting nested parens, angle brackets, and Kotlin function types like (X) -> Y)
+    let type = '';
+    let depth = 0; // track () and <>
+    let inType = true;
+    while (i < s.length && inType) {
+      const ch = s[i];
+      if (ch === '(' || ch === '<') { depth++; type += ch; i++; }
+      else if (ch === ')' || ch === '>') {
+        if (depth > 0) {
+          depth--;
+          type += ch;
+          i++;
+          // After closing paren at depth 0, check if followed by -> (function type continuation)
+          if (depth === 0) {
+            // Peek ahead for -> or ?. or ? -> patterns
+            let peek = i;
+            while (peek < s.length && /[\s?]/.test(s[peek])) peek++;
+            if (peek + 1 < s.length && s[peek] === '-' && s[peek + 1] === '>') {
+              // This is a function type like (X) -> Y, continue reading
+              // Consume up to and including -> and the return type
+              while (i < peek + 2) { type += s[i]; i++; }
+              // Read the return type (single token like Unit, String?, etc.)
+              while (i < s.length && /\s/.test(s[i])) { type += s[i]; i++; }
+              // Read return type token (don't consume commas - those separate params)
+              while (i < s.length && /[\w.<>?]/.test(s[i])) { type += s[i]; i++; }
+            }
+          }
+        }
+        else { inType = false; } // end of function params
+      }
+      else if (ch === ',' && depth === 0) { inType = false; }
+      else if (ch === '=' && depth === 0) { inType = false; }
+      else if (ch === '\n' && depth === 0 && type.trim().length > 0) {
+        // Check if next non-whitespace is a comma, =, or ) to decide if type is done
+        let peek = i + 1;
+        while (peek < s.length && s[peek] === ' ') peek++;
+        if (peek < s.length && (s[peek] === ',' || s[peek] === '=' || s[peek] === ')')) {
+          inType = false;
+        } else {
+          type += ch; i++;
+        }
+      }
+      else { type += ch; i++; }
+    }
+    type = type.trim();
+
+    // Check for default value
+    let defaultVal: string | undefined;
+    while (i < s.length && /\s/.test(s[i])) i++;
+    if (i < s.length && s[i] === '=') {
+      i++; // skip '='
+      while (i < s.length && /\s/.test(s[i])) i++;
+      let def = '';
+      let defDepth = 0;
+      while (i < s.length) {
+        const ch = s[i];
+        if (ch === '(' || ch === '<' || ch === '{') { defDepth++; def += ch; i++; }
+        else if (ch === ')' || ch === '>' || ch === '}') {
+          if (defDepth > 0) { defDepth--; def += ch; i++; }
+          else break;
+        }
+        else if (ch === ',' && defDepth === 0) break;
+        else if (ch === '\n' && defDepth === 0) break;
+        else { def += ch; i++; }
+      }
+      defaultVal = def.trim();
+    }
+
+    if (paramName && type) {
+      results.push({ name: paramName, type, defaultVal });
+    }
+  }
+
+  return results;
+}
+
 // ── Android (Kotlin) parser ──────────────────────────────────
 
-function parseKotlinComponent(filePath: string): ComponentAPI | null {
+function parseKotlinComponent(filePath: string, targetName?: string): ComponentAPI | null {
   if (!existsSync(filePath)) return null;
   const src = readFileSync(filePath, 'utf-8');
 
-  const name = basename(filePath, '.kt').replace('Civ', '');
+  const name = targetName || basename(filePath, '.kt').replace('Civ', '');
   const props: PropDef[] = [];
   const events: EventDef[] = [];
 
-  // Find the main @Composable function and extract parameters
+  // Find the @Composable function matching the target name
   // Pattern: fun CivName(\n  param: Type = default,\n  ...
-  const funcRegex = /(?:@Composable\s+)?fun\s+Civ\w+\s*\(([\s\S]*?)\)\s*\{/;
+  const funcName = 'Civ' + name;
+  const funcRegex = new RegExp(`(?:@Composable\\s+)?fun\\s+${funcName}\\s*\\(([\\s\\S]*?)\\)\\s*\\{`);
   const funcMatch = funcRegex.exec(src);
   if (funcMatch) {
     const params = funcMatch[1];
-    // Parse each parameter line
-    const paramRegex = /(\w+):\s*([^=,\n]+?)(?:\s*=\s*([^,\n]+))?\s*[,)]/g;
-    let m;
-    while ((m = paramRegex.exec(params)) !== null) {
-      const paramName = m[1].trim();
-      const type = m[2].trim();
-      const defaultVal = m[3]?.trim();
-
+    // Parse parameters handling nested parens/angle brackets
+    const parsedParams = parseKotlinParams(params);
+    for (const { name: paramName, type, defaultVal } of parsedParams) {
       // Skip Modifier and content lambdas
       if (type === 'Modifier') continue;
       if (type.includes('@Composable') && type.includes('Unit')) continue;
@@ -273,7 +385,7 @@ function discoverComponents(): ComponentMapping[] {
   const nameMap: Record<string, ComponentMapping> = {};
 
   // Web child components that are part of their parent on native (no separate file needed)
-  const childComponents = new Set(['Segment', 'RadioGroup']);
+  const childComponents = new Set(['Segment']);
 
   for (const dir of webDirs) {
     const files = readdirSync(join(WEB_DIR, dir)).filter(f => f.startsWith('civ-') && f.endsWith('.ts') && !f.includes('.test.') && !f.includes('.stories.'));
@@ -288,6 +400,11 @@ function discoverComponents(): ComponentMapping[] {
     }
   }
 
+  // Native files that contain multiple components (e.g., CivRadio.swift has both CivRadio and CivRadioGroup)
+  const nativeMultiFiles: Record<string, string> = {
+    'RadioGroup': 'Radio', // CivRadioGroup is inside CivRadio.swift/CivRadio.kt
+  };
+
   // Match iOS files
   if (existsSync(IOS_DIR)) {
     for (const file of readdirSync(IOS_DIR).filter(f => f.endsWith('.swift') && f.startsWith('Civ'))) {
@@ -295,6 +412,12 @@ function discoverComponents(): ComponentMapping[] {
       if (name === 'Tokens' || name === 'UI' || name === 'Locale' || name === 'FormState') continue;
       if (!nameMap[name]) nameMap[name] = { displayName: name };
       nameMap[name].ios = join(IOS_DIR, file);
+    }
+    // Map multi-component files
+    for (const [target, source] of Object.entries(nativeMultiFiles)) {
+      if (nameMap[target] && !nameMap[target].ios && nameMap[source]?.ios) {
+        nameMap[target].ios = nameMap[source].ios;
+      }
     }
   }
 
@@ -305,6 +428,12 @@ function discoverComponents(): ComponentMapping[] {
       if (name === 'Tokens' || name === 'FieldHelpers' || name === 'FormState') continue;
       if (!nameMap[name]) nameMap[name] = { displayName: name };
       nameMap[name].android = join(ANDROID_DIR, file);
+    }
+    // Map multi-component files
+    for (const [target, source] of Object.entries(nativeMultiFiles)) {
+      if (nameMap[target] && !nameMap[target].android && nameMap[source]?.android) {
+        nameMap[target].android = nameMap[source].android;
+      }
     }
   }
 
@@ -324,8 +453,8 @@ function generateReport(): string {
 
   for (const comp of components) {
     const web = comp.web ? parseWebComponent(comp.web) : null;
-    const ios = comp.ios ? parseSwiftComponent(comp.ios) : null;
-    const android = comp.android ? parseKotlinComponent(comp.android) : null;
+    const ios = comp.ios ? parseSwiftComponent(comp.ios, comp.displayName) : null;
+    const android = comp.android ? parseKotlinComponent(comp.android, comp.displayName) : null;
     results.push({ displayName: comp.displayName, web, ios, android });
   }
 
@@ -412,6 +541,15 @@ function generateReport(): string {
       allProps.get(key)!.android = p;
     });
 
+    // If a component has 'legend', treat 'label' as web-only (inherited from base class, not used for groups)
+    if (allProps.has('legend') && allProps.has('label')) {
+      const labelEntry = allProps.get('label')!;
+      // Only remove if label is web-only (not on native)
+      if (labelEntry.web && !labelEntry.ios && !labelEntry.android) {
+        allProps.delete('label');
+      }
+    }
+
     // Collect all events
     const allEvents = new Map<string, { web?: EventDef; ios?: EventDef; android?: EventDef }>();
     web?.events.forEach(e => {
@@ -446,6 +584,8 @@ function generateReport(): string {
       // Web-only internal
       'formValidate', 'pii', 'parts',
       'managedTabIndex', 'inputId',
+      // Date picker web-only (native uses system locale/settings)
+      'weekStartsOn',
     ]);
 
     // Props that are native-only and should not count as "missing on web"
@@ -455,11 +595,21 @@ function generateReport(): string {
       'formValidate', 'modifier',
       'formState', 'requiredMessage', 'pii', 'formName',
       'options', 'values', 'files', 'state', 'onSelect',
+      // Native icon platform-specific
+      'sfSymbol', 'accessibilityLabel', 'decorative', 'contentDescription', 'tint',
     ]);
 
-    // Web-only events
+    // Web-only events (excluded only when no native platform has the mapped event)
     const webOnlyEvents = new Set([
       'civ-reset', // native handles reset differently
+      'civ-input', // native onChange/onValueChange fires on every change (same as civ-input)
+      'civ-invalid', // native form validation uses formState pattern instead
+      'civ-analytics', // native uses onAnalytics closure; excluded only for components where no native has it
+    ]);
+
+    // Native-only events/callbacks (not real events, excluded from parity)
+    const nativeOnlyEvents = new Set([
+      'formValidate', // native form validation callback, not a user-facing event
     ]);
 
     // Remove native-only props so they don't show as gaps
@@ -470,6 +620,14 @@ function generateReport(): string {
       }
     }
 
+    // Remove native-only events so they don't show as gaps
+    for (const name of Array.from(allEvents.keys())) {
+      const v = allEvents.get(name)!;
+      if (!v.web && nativeOnlyEvents.has(name)) {
+        allEvents.delete(name);
+      }
+    }
+
     // Calculate parity: what % of web props/events exist on at least one native platform
     let webItems = 0;
     let matchedItems = 0;
@@ -477,7 +635,9 @@ function generateReport(): string {
       if (v.web && !webOnlyProps.has(name)) { webItems++; if (v.ios || v.android) matchedItems++; }
     });
     allEvents.forEach((v, name) => {
-      if (v.web && !webOnlyEvents.has(name)) { webItems++; if (v.ios || v.android) matchedItems++; }
+      // Only skip web-only events when no native platform has them
+      const isWebOnly = webOnlyEvents.has(name) && !v.ios && !v.android;
+      if (v.web && !isWebOnly) { webItems++; if (v.ios || v.android) matchedItems++; }
     });
     const parityPct = webItems > 0 ? Math.round((matchedItems / webItems) * 100) : (ios || android ? 100 : 0);
     const parityClass = parityPct >= 80 ? 'high' : parityPct >= 50 ? 'mid' : 'low';
@@ -519,7 +679,8 @@ function generateReport(): string {
       <tr><th>Event</th><th>Web</th><th>iOS</th><th>Android</th></tr>
       ${Array.from(allEvents.entries()).map(([name, platforms]) => {
         const hasGap = (!platforms.web || !platforms.ios || !platforms.android) && (platforms.web || platforms.ios || platforms.android);
-        const isExcluded = (webOnlyEvents.has(name) && platforms.web && !platforms.ios && !platforms.android);
+        const isExcluded = (webOnlyEvents.has(name) && platforms.web && !platforms.ios && !platforms.android) ||
+                           (nativeOnlyEvents.has(name) && !platforms.web && (platforms.ios || platforms.android));
         const rowClass = isExcluded ? 'excluded-row' : (hasGap ? 'gap-row' : '');
         return `<tr class="${rowClass}">
           <td><strong>${name}</strong></td>
@@ -581,6 +742,7 @@ function mapPropName(name: string, platform: 'ios' | 'android'): string {
     yearLabel: 'yearLabel',
     requiredMessage: 'requiredMessage',
     orientation: 'orientation',
+    values: 'value',
     maxLength: 'maxlength',
     minLength: 'minlength',
     maxlength: 'maxlength',

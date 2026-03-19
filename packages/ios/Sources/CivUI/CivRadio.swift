@@ -37,6 +37,15 @@ public struct CivRadio: View {
     /// Whether the radio is disabled.
     public var isDisabled: Bool
 
+    /// Form name for the radio (typically managed by parent group).
+    public var name: String
+
+    /// Error message (typically managed by parent group).
+    public var error: String?
+
+    /// Whether a selection is required (typically managed by parent group).
+    public var isRequired: Bool
+
     /// Action when this radio is tapped.
     public var onSelect: (() -> Void)?
 
@@ -53,6 +62,9 @@ public struct CivRadio: View {
         isChecked: Bool = false,
         isTile: Bool = false,
         isDisabled: Bool = false,
+        name: String = "",
+        error: String? = nil,
+        isRequired: Bool = false,
         onSelect: (() -> Void)? = nil
     ) {
         self.label = label
@@ -61,6 +73,9 @@ public struct CivRadio: View {
         self.isChecked = isChecked
         self.isTile = isTile
         self.isDisabled = isDisabled
+        self.name = name
+        self.error = error
+        self.isRequired = isRequired
         self.onSelect = onSelect
     }
 
@@ -223,14 +238,26 @@ public struct CivRadioGroup: View {
     /// Whether the group is disabled.
     public var isDisabled: Bool
 
+    /// Whether the group is read-only (visible but non-interactive, no opacity change).
+    public var isReadonly: Bool
+
     /// Whether to render in tile (card) style.
     public var isTile: Bool
+
+    /// Layout orientation for the radio options.
+    public var orientation: String
 
     /// Called when the selected value changes.
     public var onChange: ((String) -> Void)?
 
     /// Called for analytics tracking (parallels `civ-analytics` event).
     public var onAnalytics: ((String, [String: Any]?) -> Void)?
+
+    /// Optional form state for centralized validation.
+    public var formState: CivFormState?
+
+    /// Field name for form state registration.
+    public var formName: String?
 
     // MARK: - Internal State
 
@@ -246,9 +273,13 @@ public struct CivRadioGroup: View {
         error: String? = nil,
         isRequired: Bool = false,
         isDisabled: Bool = false,
+        isReadonly: Bool = false,
         isTile: Bool = false,
+        orientation: String = "vertical",
         onChange: ((String) -> Void)? = nil,
-        onAnalytics: ((String, [String: Any]?) -> Void)? = nil
+        onAnalytics: ((String, [String: Any]?) -> Void)? = nil,
+        formState: CivFormState? = nil,
+        formName: String? = nil
     ) {
         self.legend = legend
         self._value = value
@@ -257,9 +288,13 @@ public struct CivRadioGroup: View {
         self.error = error
         self.isRequired = isRequired
         self.isDisabled = isDisabled
+        self.isReadonly = isReadonly
         self.isTile = isTile
+        self.orientation = orientation
         self.onChange = onChange
         self.onAnalytics = onAnalytics
+        self.formState = formState
+        self.formName = formName
     }
 
     // MARK: - Body

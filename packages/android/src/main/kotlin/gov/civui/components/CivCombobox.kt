@@ -91,6 +91,7 @@ fun CivCombobox(
     noResultsText: String = CivLocale.t("comboboxNoResults"),
     name: String = "",
     formState: CivFormState? = null,
+    onInput: ((String) -> Unit)? = null,
     onAnalytics: ((event: String, data: Map<String, Any>?) -> Unit)? = null,
 ) {
     val isDark = isSystemInDarkTheme()
@@ -171,6 +172,7 @@ fun CivCombobox(
                     activeIndex = -1
                     // Clear selected value when typing
                     onValueChange("")
+                    onInput?.invoke(newText)
                 },
                 modifier = Modifier
                     .fillMaxWidth()

@@ -103,6 +103,8 @@ fun CivFileUpload(
     readonly: Boolean = false,
     browseText: String = CivLocale.t("fileUploadBrowseText"),
     removeText: String = CivLocale.t("fileUploadRemoveText"),
+    name: String = "",
+    formState: CivFormState? = null,
     onAnalytics: ((event: String, data: Map<String, Any>?) -> Unit)? = null,
 ) {
     val isDark = isSystemInDarkTheme()

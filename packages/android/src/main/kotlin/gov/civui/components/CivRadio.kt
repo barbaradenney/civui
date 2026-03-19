@@ -216,6 +216,9 @@ fun CivRadioGroup(
     orientation: CivOrientation = CivOrientation.Vertical,
     required: Boolean = false,
     disabled: Boolean = false,
+    readonly: Boolean = false,
+    name: String = "",
+    formState: CivFormState? = null,
     onChange: ((String) -> Unit)? = null,
     onAnalytics: ((event: String, data: Map<String, Any>?) -> Unit)? = null,
 ) {

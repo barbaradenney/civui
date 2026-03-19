@@ -78,6 +78,7 @@ fun CivSelect(
     error: String = "",
     required: Boolean = false,
     disabled: Boolean = false,
+    readonly: Boolean = false,
     emptyLabel: String = CivLocale.t("selectEmpty"),
     name: String = "",
     formState: CivFormState? = null,
@@ -147,7 +148,7 @@ fun CivSelect(
         // 4. Dropdown
         ExposedDropdownMenuBox(
             expanded = expanded,
-            onExpandedChange = { if (!disabled) expanded = it },
+            onExpandedChange = { if (!disabled && !readonly) expanded = it },
         ) {
             TextField(
                 value = selectedLabel.ifEmpty { emptyLabel },
@@ -161,7 +162,7 @@ fun CivSelect(
                         color = borderColor,
                         shape = RoundedCornerShape(CivTokens.Border.Radius.default_),
                     )
-                    .alpha(if (disabled) 0.5f else 1f)
+                    .alpha(if (disabled && !readonly) 0.5f else 1f)
                     .semantics {
                         contentDescription = buildString {
                             append(label)
@@ -174,7 +175,7 @@ fun CivSelect(
                             error(effectiveError)
                         }
                     },
-                enabled = !disabled,
+                enabled = !disabled && !readonly,
                 textStyle = TextStyle(
                     fontSize = CivTokens.Typography.FontSize.base,
                     color = if (selectedLabel.isEmpty()) hintColor else labelColor,

@@ -83,6 +83,7 @@ fun CivDatePicker(
     placeholder: String = "MM/DD/YYYY",
     name: String = "",
     formState: CivFormState? = null,
+    locale: String = "",
     onChange: ((String) -> Unit)? = null,
     onAnalytics: ((event: String, data: Map<String, Any>?) -> Unit)? = null,
 ) {

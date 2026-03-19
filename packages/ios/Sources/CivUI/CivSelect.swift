@@ -63,6 +63,9 @@ public struct CivSelect: View {
     /// Whether the field is disabled.
     public var isDisabled: Bool
 
+    /// Whether the field is read-only (visible but non-interactive, no opacity change).
+    public var isReadonly: Bool
+
     /// Label for the empty/default option (parallels web `empty-label`).
     public var emptyLabel: String
 
@@ -101,6 +104,7 @@ public struct CivSelect: View {
         error: String? = nil,
         isRequired: Bool = false,
         isDisabled: Bool = false,
+        isReadonly: Bool = false,
         emptyLabel: String? = nil,
         onChange: ((String) -> Void)? = nil,
         onAnalytics: ((String, [String: Any]?) -> Void)? = nil,
@@ -117,6 +121,7 @@ public struct CivSelect: View {
         self.error = error
         self.isRequired = isRequired
         self.isDisabled = isDisabled
+        self.isReadonly = isReadonly
         self.emptyLabel = emptyLabel ?? CivLocale.shared.t("selectEmpty")
         self.onChange = onChange
         self.onAnalytics = onAnalytics
@@ -236,7 +241,7 @@ public struct CivSelect: View {
         ))
         .cornerRadius(CivTokens.Border.Radius.default_)
         .overlay(borderOverlay)
-        .disabled(isDisabled)
+        .disabled(isDisabled || isReadonly)
         .opacity(isDisabled ? 0.5 : 1.0)
         .accessibilityLabel(accessibilityLabelText)
         .accessibilityHint(accessibilityHintText)

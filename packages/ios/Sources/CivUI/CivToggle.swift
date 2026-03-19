@@ -51,9 +51,13 @@ public struct CivToggle: View {
     /// Whether the field is read-only (visible but non-interactive, no opacity change).
     public var isReadonly: Bool
 
-    /// Called on every checked state change (parallels `civ-input`/`civ-change` events).
+    /// Called on every checked state change (parallels `civ-change` event).
     /// Parameters: (checked: Bool, value: String)
     public var onChange: ((Bool, String) -> Void)?
+
+    /// Called on every checked state change (parallels `civ-input` event).
+    /// Parameters: (checked: Bool, value: String)
+    public var onInput: ((Bool, String) -> Void)?
 
     /// Called for analytics tracking (parallels `civ-analytics` event).
     public var onAnalytics: ((String, [String: Any]?) -> Void)?
@@ -90,6 +94,7 @@ public struct CivToggle: View {
         isDisabled: Bool = false,
         isReadonly: Bool = false,
         onChange: ((Bool, String) -> Void)? = nil,
+        onInput: ((Bool, String) -> Void)? = nil,
         onAnalytics: ((String, [String: Any]?) -> Void)? = nil,
         formState: CivFormState? = nil,
         formName: String? = nil,
@@ -107,6 +112,7 @@ public struct CivToggle: View {
         self.isDisabled = isDisabled
         self.isReadonly = isReadonly
         self.onChange = onChange
+        self.onInput = onInput
         self.onAnalytics = onAnalytics
         self.formState = formState
         self.formName = formName
@@ -228,6 +234,7 @@ public struct CivToggle: View {
             get: { checked },
             set: { newValue in
                 checked = newValue
+                onInput?(newValue, value)
                 onChange?(newValue, value)
                 onAnalytics?("change", ["checked": newValue, "value": value])
             }

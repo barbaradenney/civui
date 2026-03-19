@@ -74,8 +74,20 @@ public struct CivFileUpload: View {
     /// Called when files change.
     public var onChange: (([CivUploadedFile]) -> Void)?
 
+    /// Custom browse button text. When non-empty, overrides the CivLocale default.
+    public var browseText: String
+
+    /// Custom remove button text. When non-empty, overrides the CivLocale default.
+    public var removeText: String
+
     /// Called for analytics tracking (parallels `civ-analytics` event).
     public var onAnalytics: ((String, [String: Any]?) -> Void)?
+
+    /// Optional form state for centralized validation.
+    public var formState: CivFormState?
+
+    /// Field name for form state registration.
+    public var formName: String?
 
     // MARK: - Internal State
 
@@ -99,8 +111,12 @@ public struct CivFileUpload: View {
         isDisabled: Bool = false,
         isReadonly: Bool = false,
         isRequired: Bool = false,
+        browseText: String = "",
+        removeText: String = "",
         onChange: (([CivUploadedFile]) -> Void)? = nil,
-        onAnalytics: ((String, [String: Any]?) -> Void)? = nil
+        onAnalytics: ((String, [String: Any]?) -> Void)? = nil,
+        formState: CivFormState? = nil,
+        formName: String? = nil
     ) {
         self.label = label
         self._files = files
@@ -113,8 +129,12 @@ public struct CivFileUpload: View {
         self.isDisabled = isDisabled
         self.isReadonly = isReadonly
         self.isRequired = isRequired
+        self.browseText = browseText
+        self.removeText = removeText
         self.onChange = onChange
         self.onAnalytics = onAnalytics
+        self.formState = formState
+        self.formName = formName
     }
 
     // MARK: - Body
@@ -153,7 +173,7 @@ public struct CivFileUpload: View {
                     Image(systemName: "arrow.up.doc")
                         .font(.system(size: CivTokens.Typography.FontSize.base))
 
-                    Text(CivLocale.shared.t("fileUploadBrowseText"))
+                    Text(browseText.isEmpty ? CivLocale.shared.t("fileUploadBrowseText") : browseText)
                         .font(.system(size: CivTokens.Typography.FontSize.base))
                 }
                 .foregroundColor(adaptiveColor(
@@ -214,7 +234,7 @@ public struct CivFileUpload: View {
                             Spacer()
 
                             Button(action: { removeFile(file) }) {
-                                Text(CivLocale.shared.t("fileUploadRemoveText"))
+                                Text(removeText.isEmpty ? CivLocale.shared.t("fileUploadRemoveText") : removeText)
                                     .font(.system(size: CivTokens.Typography.FontSize.sm))
                                     .foregroundColor(adaptiveColor(
                                         light: CivTokens.Colors.Error.default_,

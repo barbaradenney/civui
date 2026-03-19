@@ -140,6 +140,15 @@ export class CivTextInput extends CivFormElement {
     }
   }
 
+  override updated(changed: Map<string, unknown>): void {
+    super.updated(changed);
+    if (this._maskDef?.pii) {
+      this.setAttribute('data-civ-pii', '');
+    } else {
+      this.removeAttribute('data-civ-pii');
+    }
+  }
+
   override render() {
     const widthClass = WIDTH_CLASSES[this.width] || WIDTH_CLASSES['default'];
     const isCurrency = this._isCurrency;
@@ -202,6 +211,7 @@ export class CivTextInput extends CivFormElement {
         .value="${displayValue}"
         placeholder="${this.placeholder || nothing}"
         ?disabled="${this.disabled}"
+        ?readonly="${this.readonly}"
         ?required="${this.required}"
         aria-required="${this.required || nothing}"
         pattern="${this.pattern || nothing}"
@@ -226,7 +236,7 @@ export class CivTextInput extends CivFormElement {
         ${renderError(this._errorId, this.error)}
         ${isCurrency
           ? html`<div class="civ-flex ${widthClass} civ-max-w-full"
-            ><span class="civ-input-prefix">$</span>${inputEl}</div>`
+            ><span class="civ-input-prefix" aria-hidden="true">$</span>${inputEl}</div>`
           : inputEl}
       </div>
     `;
@@ -249,9 +259,11 @@ export class CivTextInput extends CivFormElement {
       raw = parts[0] + '.' + parts.slice(1).join('');
     }
 
-    // Limit to 2 decimal places
-    if (parts.length === 2 && parts[1].length > 2) {
-      raw = parts[0] + '.' + parts[1].substring(0, 2);
+    // Re-split after dedup to get fresh parts for decimal check
+    const finalParts = raw.split('.');
+    if (finalParts.length === 2 && finalParts[1].length > 2) {
+      finalParts[1] = finalParts[1].substring(0, 2);
+      raw = finalParts.join('.');
     }
 
     this.value = raw;
@@ -265,8 +277,13 @@ export class CivTextInput extends CivFormElement {
    */
   private _onCurrencyBlur(): void {
     if (!this.value) return;
+    const input = this.querySelector('input') as HTMLInputElement;
     const num = Number(this.value);
-    if (isNaN(num)) return;
+    if (isNaN(num) || this.value === '.') {
+      this.value = '';
+      if (input) input.value = '';
+      return;
+    }
 
     // Normalize raw value to 2 decimal places
     this.value = num.toFixed(2);
@@ -276,7 +293,6 @@ export class CivTextInput extends CivFormElement {
       maximumFractionDigits: 2,
     });
 
-    const input = this.querySelector('input') as HTMLInputElement;
     if (input) {
       input.value = formatted;
     }

@@ -364,6 +364,67 @@ describe('civ-form', () => {
   });
 });
 
+describe('civ-form persistence', () => {
+  afterEach(() => {
+    cleanupFixtures();
+    sessionStorage.clear();
+  });
+
+  it('saves field values to sessionStorage on input', async () => {
+    const el = await fixture(`
+      <civ-form persist="test-form">
+        <civ-text-input label="Name" name="name" value=""></civ-text-input>
+      </civ-form>
+    `) as any;
+    await waitForChildren(el);
+
+    // Set value on the field
+    const field = el.querySelector('civ-text-input') as any;
+    field.value = 'Jane';
+
+    // Dispatch civ-input to trigger persist
+    el.dispatchEvent(new CustomEvent('civ-input', { bubbles: true }));
+
+    // Wait for the 500ms debounce in _persistFormData
+    await new Promise((r) => setTimeout(r, 600));
+
+    const saved = sessionStorage.getItem('civ-form:test-form');
+    expect(saved).not.toBeNull();
+    const data = JSON.parse(saved!);
+    expect(data.name).toBe('Jane');
+  });
+
+  it('clears persisted data on reset', async () => {
+    sessionStorage.setItem('civ-form:test-form', JSON.stringify({ name: 'Jane' }));
+
+    const el = await fixture(`
+      <civ-form persist="test-form">
+        <civ-text-input label="Name" name="name" value=""></civ-text-input>
+      </civ-form>
+    `) as any;
+    await waitForChildren(el);
+
+    el.reset();
+    expect(sessionStorage.getItem('civ-form:test-form')).toBeNull();
+  });
+});
+
+describe('civ-form URL prefill', () => {
+  afterEach(cleanupFixtures);
+
+  it('does not crash when window.location has no params', async () => {
+    const el = await fixture(`
+      <civ-form prefill>
+        <civ-text-input label="Name" name="name"></civ-text-input>
+      </civ-form>
+    `) as any;
+    await waitForChildren(el);
+
+    // Should not throw — just a smoke test
+    expect(el).toBeTruthy();
+  });
+});
+
 describe('form reset', () => {
   it('uses [data-civ-form-field] selector to discover form elements', async () => {
     const el = await fixture(`

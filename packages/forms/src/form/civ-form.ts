@@ -80,7 +80,6 @@ export class CivForm extends LightDomContainerMixin(CivBaseElement) {
     this.addEventListener('keydown', this._boundOnKeydown);
     if (this.persist) {
       this.addEventListener('civ-input', this._boundOnCivInput);
-      this._restorePersistedData();
     }
   }
 
@@ -96,6 +95,7 @@ export class CivForm extends LightDomContainerMixin(CivBaseElement) {
 
   override firstUpdated(): void {
     this._relocateChildren('[data-civ-form-content]');
+    if (this.persist) this._restorePersistedData();
     this._prefillFromUrl();
   }
 
@@ -277,9 +277,9 @@ export class CivForm extends LightDomContainerMixin(CivBaseElement) {
   }
 
   private _restorePersistedData(): void {
-    const saved = sessionStorage.getItem(`civ-form:${this.persist}`);
-    if (!saved) return;
     try {
+      const saved = sessionStorage.getItem(`civ-form:${this.persist}`);
+      if (!saved) return;
       const data = JSON.parse(saved) as Record<string, string>;
       requestAnimationFrame(() => {
         const fields = this.querySelectorAll('[data-civ-form-field]') as NodeListOf<CivFormFieldLike>;
@@ -289,30 +289,38 @@ export class CivForm extends LightDomContainerMixin(CivBaseElement) {
           }
         });
       });
-    } catch { /* ignore corrupt data */ }
+    } catch { /* ignore corrupt data or blocked sessionStorage */ }
   }
 
   private _persistFormData(): void {
     if (!this.persist) return;
     clearTimeout(this._persistTimer);
     this._persistTimer = setTimeout(() => {
-      const data: Record<string, string> = {};
-      const fields = this.querySelectorAll('[data-civ-form-field]') as NodeListOf<CivFormFieldLike>;
-      fields.forEach((field) => {
-        if (field.name && !field.disabled) {
-          data[field.name] = field.value ?? '';
-        }
-      });
-      sessionStorage.setItem(`civ-form:${this.persist}`, JSON.stringify(data));
+      try {
+        const data: Record<string, string> = {};
+        const fields = this.querySelectorAll('[data-civ-form-field]') as NodeListOf<CivFormFieldLike>;
+        fields.forEach((field) => {
+          if (field.hasAttribute('data-civ-pii')) return;
+          if (field.name && !field.disabled) {
+            data[field.name] = field.value ?? '';
+          }
+        });
+        sessionStorage.setItem(`civ-form:${this.persist}`, JSON.stringify(data));
+      } catch { /* sessionStorage may be blocked */ }
     }, 500);
   }
 
   private _clearPersistedData(): void {
-    if (this.persist) sessionStorage.removeItem(`civ-form:${this.persist}`);
+    if (this.persist) {
+      try {
+        sessionStorage.removeItem(`civ-form:${this.persist}`);
+      } catch { /* sessionStorage may be blocked */ }
+    }
   }
 
   private _prefillFromUrl(): void {
     if (!this.prefill) return;
+    if (typeof window === 'undefined' || !window.location) return;
     const params = new URLSearchParams(window.location.search);
     requestAnimationFrame(() => {
       const fields = this.querySelectorAll('[data-civ-form-field]') as NodeListOf<CivFormFieldLike>;

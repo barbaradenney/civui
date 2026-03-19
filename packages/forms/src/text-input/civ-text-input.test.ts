@@ -439,3 +439,91 @@ describe('text-input mask', () => {
     expect(el.formattedValue).toBe('AB-1234');
   });
 });
+
+describe('text-input currency mask', () => {
+  afterEach(cleanupFixtures);
+
+  it('renders $ prefix with aria-hidden', async () => {
+    const el = await fixture<CivTextInput>('<civ-text-input label="Amount" mask="currency"></civ-text-input>');
+    const prefix = el.querySelector('.civ-input-prefix');
+    expect(prefix).not.toBeNull();
+    expect(prefix!.textContent).toBe('$');
+    expect(prefix!.getAttribute('aria-hidden')).toBe('true');
+  });
+
+  it('sets inputmode="decimal"', async () => {
+    const el = await fixture<CivTextInput>('<civ-text-input label="Amount" mask="currency"></civ-text-input>');
+    const input = el.querySelector('input')!;
+    expect(input.getAttribute('inputmode')).toBe('decimal');
+  });
+
+  it('stores raw numeric value', async () => {
+    const el = await fixture<CivTextInput>('<civ-text-input label="Amount" mask="currency"></civ-text-input>');
+    const input = el.querySelector('input')!;
+    input.value = '1234.56';
+    input.dispatchEvent(new InputEvent('input', { inputType: 'insertText', bubbles: true }));
+    expect(el.value).toBe('1234.56');
+  });
+
+  it('formattedValue returns $ with commas', async () => {
+    const el = await fixture<CivTextInput>('<civ-text-input label="Amount" mask="currency"></civ-text-input>');
+    el.value = '1234.56';
+    await elementUpdated(el);
+    expect(el.formattedValue).toBe('$1,234.56');
+  });
+
+  it('handles empty value on blur', async () => {
+    const el = await fixture<CivTextInput>('<civ-text-input label="Amount" mask="currency"></civ-text-input>');
+    el.value = '';
+    await elementUpdated(el);
+    const input = el.querySelector('input')!;
+    input.dispatchEvent(new Event('blur', { bubbles: true }));
+    expect(el.value).toBe('');
+  });
+
+  it('handles "." only value on blur', async () => {
+    const el = await fixture<CivTextInput>('<civ-text-input label="Amount" mask="currency"></civ-text-input>');
+    el.value = '.';
+    await elementUpdated(el);
+    const input = el.querySelector('input')!;
+    input.dispatchEvent(new Event('blur', { bubbles: true }));
+    expect(el.value).toBe('');
+  });
+
+  it('limits to 2 decimal places', async () => {
+    const el = await fixture<CivTextInput>('<civ-text-input label="Amount" mask="currency"></civ-text-input>');
+    const input = el.querySelector('input')!;
+    input.value = '12.345';
+    input.dispatchEvent(new InputEvent('input', { inputType: 'insertText', bubbles: true }));
+    expect(el.value).toBe('12.34');
+  });
+
+  it('limits to 2 decimal places after decimal dedup', async () => {
+    const el = await fixture<CivTextInput>('<civ-text-input label="Amount" mask="currency"></civ-text-input>');
+    const input = el.querySelector('input')!;
+    // Simulate input with two decimal points and excess digits: "12.3.456"
+    // After dedup: "12.3456", after re-split limit: "12.34"
+    input.value = '12.3.456';
+    input.dispatchEvent(new InputEvent('input', { inputType: 'insertText', bubbles: true }));
+    expect(el.value).toBe('12.34');
+  });
+});
+
+describe('text-input readonly', () => {
+  afterEach(cleanupFixtures);
+
+  it('sets readonly attribute on inner input', async () => {
+    const el = await fixture('<civ-text-input label="Name" readonly></civ-text-input>');
+    const input = el.querySelector('input')!;
+    expect(input.hasAttribute('readonly')).toBe(true);
+  });
+
+  it('value is included in form data (unlike disabled)', async () => {
+    const el = await fixture('<civ-text-input label="Name" name="name" value="John" readonly></civ-text-input>') as any;
+    // readonly fields should still have a value accessible
+    expect(el.value).toBe('John');
+    // readonly should NOT set disabled
+    const input = el.querySelector('input')!;
+    expect(input.disabled).toBe(false);
+  });
+});

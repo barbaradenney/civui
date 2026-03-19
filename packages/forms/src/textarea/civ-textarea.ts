@@ -38,6 +38,9 @@ export class CivTextarea extends CivFormElement {
   @state() private _wordCount = 0;
   @state() private _announcedWordCount = 0;
 
+  /** Tracks whether the current error was set by the word count system. */
+  private _wordCountError = false;
+
   private _charCountId = this.generateId('charcount');
   private _wordCountId = this.generateId('wordcount');
   // Debounce SR character count announcements at 1000ms to avoid
@@ -104,6 +107,7 @@ export class CivTextarea extends CivFormElement {
           placeholder="${this.placeholder || nothing}"
           maxlength="${this.maxlength && this.maxlength > 0 ? this.maxlength : nothing}"
           ?disabled="${this.disabled}"
+          ?readonly="${this.readonly}"
           ?required="${this.required}"
           aria-required="${this.required || nothing}"
           aria-describedby="${this._ariaDescribedBy || nothing}"
@@ -163,6 +167,13 @@ export class CivTextarea extends CivFormElement {
     if (this._showWordCount) {
       this._wordCount = this._countWords(target.value);
       this._debouncedAnnounceWordCount();
+      if (this.maxwords && this._wordCount > this.maxwords && !this.error) {
+        this.error = interpolate(t('textareaWordsRemaining'), { count: this.maxwords - this._wordCount });
+        this._wordCountError = true;
+      } else if (this.maxwords && this._wordCount <= this.maxwords && this._wordCountError) {
+        this.error = '';
+        this._wordCountError = false;
+      }
     }
     // Form value sync handled by _syncFormValue() in updated()
     dispatch(this, 'civ-input', { value: this.value });

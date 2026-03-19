@@ -296,3 +296,73 @@ describe('textarea analytics', () => {
     expect(handler).not.toHaveBeenCalled();
   });
 });
+
+describe('textarea word count', () => {
+  afterEach(cleanupFixtures);
+
+  it('renders word count when maxwords is set', async () => {
+    const el = await fixture('<civ-textarea label="Bio" maxwords="50"></civ-textarea>');
+    const wordCountEl = el.querySelector('[id*="wordcount"]');
+    expect(wordCountEl).not.toBeNull();
+    expect(wordCountEl!.textContent).toContain('50');
+  });
+
+  it('counts words correctly', async () => {
+    const el = await fixture('<civ-textarea label="Bio" maxwords="50"></civ-textarea>');
+    const textarea = el.querySelector('textarea')!;
+    textarea.value = 'one two three';
+    textarea.dispatchEvent(new Event('input', { bubbles: true }));
+    await elementUpdated(el);
+
+    const wordCountEl = el.querySelector('[id*="wordcount"]');
+    expect(wordCountEl).not.toBeNull();
+    // 50 - 3 = 47 words remaining
+    expect(wordCountEl!.textContent).toContain('47');
+  });
+
+  it('does not show word count when maxlength is also set', async () => {
+    const el = await fixture('<civ-textarea label="Bio" maxwords="50" maxlength="200"></civ-textarea>');
+    const wordCountEl = el.querySelector('[id*="wordcount"]');
+    expect(wordCountEl).toBeNull();
+    // Should show character count instead
+    const charCountEl = el.querySelector('[id*="charcount"]');
+    expect(charCountEl).not.toBeNull();
+  });
+
+  it('shows error when over word limit', async () => {
+    const el = await fixture('<civ-textarea label="Bio" maxwords="3"></civ-textarea>');
+    const textarea = el.querySelector('textarea')!;
+    textarea.value = 'one two three four';
+    textarea.dispatchEvent(new Event('input', { bubbles: true }));
+    await elementUpdated(el);
+
+    const errorEl = el.querySelector('[role="alert"]');
+    expect(errorEl).not.toBeNull();
+  });
+
+  it('clears error when back under word limit', async () => {
+    const el = await fixture('<civ-textarea label="Bio" maxwords="3"></civ-textarea>');
+    const textarea = el.querySelector('textarea')!;
+
+    // Go over limit
+    textarea.value = 'one two three four';
+    textarea.dispatchEvent(new Event('input', { bubbles: true }));
+    await elementUpdated(el);
+    expect(el.querySelector('[role="alert"]')).not.toBeNull();
+
+    // Come back under limit
+    textarea.value = 'one two';
+    textarea.dispatchEvent(new Event('input', { bubbles: true }));
+    await elementUpdated(el);
+    expect(el.querySelector('[role="alert"]')).toBeNull();
+  });
+
+  it('word count ID is in aria-describedby', async () => {
+    const el = await fixture('<civ-textarea label="Bio" maxwords="50"></civ-textarea>');
+    const textarea = el.querySelector('textarea')!;
+    const describedBy = textarea.getAttribute('aria-describedby') || '';
+    const wordCountEl = el.querySelector('[id*="wordcount"]');
+    expect(wordCountEl).not.toBeNull();
+    expect(describedBy).toContain(wordCountEl!.id);
+  });
+});

@@ -48,7 +48,7 @@ export class CivSelect extends CivFormElement {
           id="${this._inputId}"
           name="${this.name}"
           .value="${this.value}"
-          ?disabled="${this.disabled}"
+          ?disabled="${this.disabled || this.readonly}"
           ?required="${this.required}"
           aria-required="${this.required || nothing}"
           aria-describedby="${this._ariaDescribedBy || nothing}"

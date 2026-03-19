@@ -1,54 +1,29 @@
 /**
- * Icon definitions.
+ * CivUI Icon Library
  *
- * Icons are either CSS-based (rendered purely via CSS pseudo-elements)
- * or layer-based (using layered Unicode characters for complex shapes).
+ * Icons are rendered purely via CSS pseudo-elements (::before / ::after).
+ * Each icon is a CSS class (`civ-icon--{name}`) applied to a 1em × 1em
+ * container. Icons inherit `color` and scale with `font-size`.
  *
- * CSS icons render as `<span class="civ-icon civ-icon--{name}">` with
- * no inner content — the CSS classes handle everything via `::before`
- * and `::after` pseudo-elements.
+ * Icons marked `svg: true` need SVG paths for complex shapes that CSS
+ * can't express — these render as empty placeholders until Phase 2.
  *
- * Layer icons render as a stack of absolutely-positioned `<span>` elements
- * inside a 1em × 1em box.  Characters inherit `color` and scale with
- * `font-size`, so icons automatically match surrounding text.
+ * Platform mappings: `ios` maps to SF Symbols, `android` to Material Symbols.
  */
-
-export interface IconLayer {
-  /** The Unicode character(s) to render. */
-  char: string;
-  /** CSS transform string applied to this layer. */
-  transform?: string;
-  /** Optional opacity (0–1). */
-  opacity?: number;
-  /** Optional font-weight (e.g., 'bold', '700', 'normal'). */
-  weight?: string;
-}
-
-export type IconType = 'css' | 'layers';
 
 export type IconDef = {
   /** Human-readable name for aria-label fallback. */
   label: string;
-  /** Rendering type: 'css' (default) or 'layers' (Unicode fallback). */
-  type?: IconType;
-  /** Layers rendered bottom-to-top. Only used when type is 'layers'. */
-  layers?: IconLayer[];
-  /** SF Symbol name for iOS/macOS (e.g., "checkmark"). */
+  /** True if this icon needs SVG (Phase 2) — CSS cannot render it. */
+  svg?: boolean;
+  /** SF Symbol name for iOS/macOS. */
   ios?: string;
-  /** Material Symbol name for Android (e.g., "check"). */
+  /** Material Symbol name for Android. */
   android?: string;
 };
 
-/**
- * Built-in icon definitions.
- *
- * CSS icons (type omitted or 'css') are rendered purely via CSS classes.
- * Layer icons (type: 'layers') use Unicode characters for complex shapes
- * that need more than 2 pseudo-elements — these will be upgraded to SVG
- * in Phase 2.
- */
 export const icons: Record<string, IconDef> = {
-  // ── Navigation (CSS) ──────────────────────────────────────
+  // ── Navigation ──────────────────────────────────────────────
 
   'chevron-right': { label: 'Next', ios: 'chevron.right', android: 'chevron_right' },
   'chevron-left': { label: 'Previous', ios: 'chevron.left', android: 'chevron_left' },
@@ -58,28 +33,10 @@ export const icons: Record<string, IconDef> = {
   'arrow-left': { label: 'Left', ios: 'arrow.left', android: 'arrow_back' },
   'arrow-up': { label: 'Up', ios: 'arrow.up', android: 'arrow_upward' },
   'arrow-down': { label: 'Down', ios: 'arrow.down', android: 'arrow_downward' },
+  'arrow-back': { label: 'Go back', svg: true, ios: 'arrow.uturn.backward', android: 'undo' },
+  'external-link': { label: 'Opens in new tab', svg: true, ios: 'arrow.up.right.square', android: 'open_in_new' },
 
-  // Navigation (Layers — complex shapes)
-  'arrow-back': {
-    label: 'Go back',
-    type: 'layers',
-    layers: [{ char: '↩', transform: 'scale(1.0)' }],
-    ios: 'arrow.uturn.backward',
-    android: 'undo',
-  },
-  'external-link': {
-    label: 'Opens in new tab',
-    type: 'layers',
-    layers: [
-      { char: '↗', transform: 'scale(1) translate(8%, -8%)' },
-      { char: '¬', transform: 'scale(1) translate(-18%, 46%) rotate(-180deg)' },
-      { char: '¬', transform: 'scale(1) translate(-47%, -10%) rotate(-90deg)' },
-    ],
-    ios: 'arrow.up.right.square',
-    android: 'open_in_new',
-  },
-
-  // ── Actions (CSS) ─────────────────────────────────────────
+  // ── Actions ─────────────────────────────────────────────────
 
   close: { label: 'Close', ios: 'xmark', android: 'close' },
   plus: { label: 'Add', ios: 'plus', android: 'add' },
@@ -88,212 +45,45 @@ export const icons: Record<string, IconDef> = {
   'more-vertical': { label: 'More options', ios: 'ellipsis', android: 'more_vert' },
   'more-horizontal': { label: 'More options', ios: 'ellipsis', android: 'more_horiz' },
   search: { label: 'Search', ios: 'magnifyingglass', android: 'search' },
+  edit: { label: 'Edit', svg: true, ios: 'pencil', android: 'edit' },
 
-  // Actions (Layers — complex shapes)
-  'edit': {
-    label: 'Edit',
-    type: 'layers',
-    layers: [
-      { char: '▯', transform: 'scale(1.15) translate(-14%, -11%) rotate(-45deg)' },
-      { char: '╶', transform: 'scale(0.75) translate(44%, 12%) rotate(90deg)' },
-      { char: '╶', transform: 'scale(0.75) translate(7%, 30%)' },
-    ],
-    ios: 'pencil',
-    android: 'edit',
-  },
-
-  // ── Status / Feedback (CSS) ───────────────────────────────
+  // ── Status / Feedback ───────────────────────────────────────
 
   check: { label: 'Success', ios: 'checkmark', android: 'check' },
+  'check-circle': { label: 'Success', svg: true, ios: 'checkmark.circle', android: 'check_circle' },
+  error: { label: 'Error', svg: true, ios: 'exclamationmark.circle', android: 'error' },
+  warning: { label: 'Warning', svg: true, ios: 'exclamationmark.triangle', android: 'warning' },
+  info: { label: 'Information', svg: true, ios: 'info.circle', android: 'info' },
+  help: { label: 'Help', svg: true, ios: 'questionmark.circle', android: 'help' },
 
-  // Status (Layers — circle + inner symbol)
-  'check-circle': {
-    label: 'Success',
-    type: 'layers',
-    layers: [
-      { char: '○', transform: 'scale(1.0)' },
-      { char: '✓', transform: 'scale(0.6)', weight: 'bold' },
-    ],
-    ios: 'checkmark.circle',
-    android: 'check_circle',
-  },
-  error: {
-    label: 'Error',
-    type: 'layers',
-    layers: [
-      { char: '○', transform: 'scale(1.0)' },
-      { char: '!', transform: 'scale(0.55)', weight: 'bold' },
-    ],
-    ios: 'exclamationmark.circle',
-    android: 'error',
-  },
-  warning: {
-    label: 'Warning',
-    type: 'layers',
-    layers: [
-      { char: '△', transform: 'scale(1.15) translate(0%, -1%)' },
-      { char: '!', transform: 'scale(0.4) translate(0%, 24%)', weight: 'bold' },
-    ],
-    ios: 'exclamationmark.triangle',
-    android: 'warning',
-  },
-  info: {
-    label: 'Information',
-    type: 'layers',
-    layers: [
-      { char: '○', transform: 'scale(1.0)' },
-      { char: 'i', transform: 'scale(0.55) translate(0%, 2%)', weight: 'bold' },
-    ],
-    ios: 'info.circle',
-    android: 'info',
-  },
-  help: {
-    label: 'Help',
-    type: 'layers',
-    layers: [
-      { char: '○', transform: 'scale(1.0)' },
-      { char: '?', transform: 'scale(0.55)', weight: 'bold' },
-    ],
-    ios: 'questionmark.circle',
-    android: 'help',
-  },
-
-  // ── Form / Input (CSS) ────────────────────────────────────
+  // ── Form / Input ────────────────────────────────────────────
 
   'required-indicator': { label: 'Required', ios: 'asterisk', android: 'emergency' },
   'sort-asc': { label: 'Sorted ascending', ios: 'chevron.up', android: 'arrow_upward' },
   'sort-desc': { label: 'Sorted descending', ios: 'chevron.down', android: 'arrow_downward' },
   'sort-none': { label: 'Unsorted', ios: 'arrow.up.arrow.down', android: 'unfold_more' },
+  calendar: { label: 'Calendar', svg: true, ios: 'calendar', android: 'calendar_today' },
 
-  // Form (Layers — complex shapes)
-  calendar: {
-    label: 'Calendar',
-    type: 'layers',
-    layers: [
-      { char: '□', transform: 'scale(0.9) translate(0%, 5%)' },
-      { char: '▔', transform: 'scale(0.55) translate(0%, -42%)' },
-      { char: '⋯', transform: 'scale(0.45) translate(0%, 15%)' },
-    ],
-    ios: 'calendar',
-    android: 'calendar_today',
-  },
-
-  // ── Media / Content (CSS) ─────────────────────────────────
+  // ── Media / Content ─────────────────────────────────────────
 
   upload: { label: 'Upload', ios: 'arrow.up.doc', android: 'upload' },
   download: { label: 'Download', ios: 'arrow.down.doc', android: 'download' },
   filter: { label: 'Filter', ios: 'line.3.horizontal.decrease', android: 'filter_list' },
+  copy: { label: 'Copy', svg: true, ios: 'doc.on.doc', android: 'content_copy' },
+  trash: { label: 'Delete', svg: true, ios: 'trash', android: 'delete' },
 
-  // Media (Layers — complex shapes)
-  copy: {
-    label: 'Copy',
-    type: 'layers',
-    layers: [
-      { char: '□', transform: 'scale(0.6) translate(-12%, 12%)' },
-      { char: '□', transform: 'scale(0.6) translate(12%, -12%)' },
-    ],
-    ios: 'doc.on.doc',
-    android: 'content_copy',
-  },
-  'trash': {
-    label: 'Delete',
-    type: 'layers',
-    layers: [
-      { char: '□', transform: 'scale(0.55) translate(-3%, 13%)' },
-      { char: '│', transform: 'scale(0.35) translate(-4%, 26%)' },
-      { char: '│', transform: 'scale(0.35) translate(23%, 26%)' },
-      { char: '│', transform: 'scale(0.35) translate(-33%, 26%)' },
-      { char: '‑', transform: 'scale(1.35) translate(-1%, -17%)' },
-      { char: '‐', transform: 'scale(0.55) translate(-3%, -24%) rotate(-180deg)' },
-    ],
-    ios: 'trash',
-    android: 'delete',
-  },
-
-  // ── UI Chrome (CSS) ───────────────────────────────────────
+  // ── UI Chrome ───────────────────────────────────────────────
 
   grip: { label: 'Drag handle', ios: 'line.3.horizontal', android: 'drag_handle' },
-
-  // UI Chrome (Layers — complex shapes)
-  loading: {
-    label: 'Loading',
-    type: 'layers',
-    layers: [{ char: '◔', transform: 'scale(1.0)' }],
-    ios: 'progress.indicator',
-    android: 'progress_activity',
-  },
-  lock: {
-    label: 'Locked',
-    type: 'layers',
-    layers: [
-      { char: '□', transform: 'scale(0.6) translate(0%, 15%)' },
-      { char: '◠', transform: 'scale(0.45) translate(0%, -30%)' },
-    ],
-    ios: 'lock',
-    android: 'lock',
-  },
-  home: {
-    label: 'Home',
-    type: 'layers',
-    layers: [
-      { char: '△', transform: 'scale(0.85) translate(0%, -15%)' },
-      { char: '▪', transform: 'scale(0.3) translate(0%, 45%)' },
-    ],
-    ios: 'house',
-    android: 'home',
-  },
-  settings: {
-    label: 'Settings',
-    type: 'layers',
-    layers: [{ char: '⊕', transform: 'scale(1.0)' }],
-    ios: 'gearshape',
-    android: 'settings',
-  },
-  star: {
-    label: 'Favorite',
-    type: 'layers',
-    layers: [{ char: '☆', transform: 'scale(1.0)' }],
-    ios: 'star',
-    android: 'star_border',
-  },
-  'star-filled': {
-    label: 'Favorited',
-    type: 'layers',
-    layers: [{ char: '★', transform: 'scale(1.0)' }],
-    ios: 'star.fill',
-    android: 'star',
-  },
-  print: {
-    label: 'Print',
-    type: 'layers',
-    layers: [
-      { char: '□', transform: 'scale(0.8) translate(0%, 5%)' },
-      { char: '▔', transform: 'scale(0.45) translate(0%, -40%)' },
-      { char: '▁', transform: 'scale(0.45) translate(0%, 48%)' },
-    ],
-    ios: 'printer',
-    android: 'print',
-  },
-  user: {
-    label: 'User account',
-    type: 'layers',
-    layers: [
-      { char: '○', transform: 'scale(0.5) translate(0%, -30%)' },
-      { char: '◠', transform: 'scale(0.7) translate(0%, 30%)' },
-    ],
-    ios: 'person',
-    android: 'person',
-  },
-  mail: {
-    label: 'Email',
-    type: 'layers',
-    layers: [
-      { char: '□', transform: 'scale(0.9) translate(0%, 5%)' },
-      { char: '▽', transform: 'scale(0.5) translate(0%, -18%)' },
-    ],
-    ios: 'envelope',
-    android: 'mail',
-  },
+  loading: { label: 'Loading', svg: true, ios: 'progress.indicator', android: 'progress_activity' },
+  lock: { label: 'Locked', svg: true, ios: 'lock', android: 'lock' },
+  home: { label: 'Home', svg: true, ios: 'house', android: 'home' },
+  settings: { label: 'Settings', svg: true, ios: 'gearshape', android: 'settings' },
+  star: { label: 'Favorite', svg: true, ios: 'star', android: 'star_border' },
+  'star-filled': { label: 'Favorited', svg: true, ios: 'star.fill', android: 'star' },
+  print: { label: 'Print', svg: true, ios: 'printer', android: 'print' },
+  user: { label: 'User account', svg: true, ios: 'person', android: 'person' },
+  mail: { label: 'Email', svg: true, ios: 'envelope', android: 'mail' },
 };
 
 /**

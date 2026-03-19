@@ -2,17 +2,21 @@ import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { CivBaseElement } from '../base/civ-base-element.js';
 import { icons } from './icon-library.js';
-import type { IconDef, IconLayer } from './icon-library.js';
+import type { IconDef } from './icon-library.js';
 
 /**
- * An icon component using CSS-drawn shapes or layered Unicode characters.
+ * A CSS-only icon component.
  *
- * CSS icons render as a single `<span>` with no inner content — the icon
- * shape is drawn entirely via `::before`/`::after` pseudo-elements.
- * Legacy layer icons render as stacked Unicode character `<span>` elements.
+ * Each icon is rendered as a single `<span>` with no inner content — the
+ * shape is drawn entirely via CSS `::before`/`::after` pseudo-elements
+ * defined in `components.css`.
  *
- * All icons inherit `color` and scale with `font-size`, so they
- * automatically match surrounding text.
+ * Icons inherit `color` and scale with `font-size`, so they automatically
+ * match surrounding text.
+ *
+ * Icons marked `svg: true` in the library need SVG paths (Phase 2) and
+ * currently render as empty placeholders on web. They work on native
+ * platforms via SF Symbols (iOS) and Material Symbols (Android).
  *
  * @example
  * ```html
@@ -64,28 +68,14 @@ export class CivIcon extends CivBaseElement {
       ? CivIcon._sizeMap[this.size] ?? this.size
       : undefined;
 
-    const isCss = !def.type || def.type === 'css';
-
     return html`
       <span
-        class="civ-icon ${isCss ? `civ-icon--${this.name}` : ''}"
+        class="civ-icon civ-icon--${this.name}"
         style=${fontSize ? `font-size:${fontSize}` : nothing}
         role=${isDecorative ? 'presentation' : 'img'}
         aria-hidden=${isDecorative ? 'true' : 'false'}
         aria-label=${isDecorative ? nothing : accessibleLabel}
-      >${isCss ? nothing : def.layers?.map((layer) => this._renderLayer(layer))}</span>
+      ></span>
     `;
-  }
-
-  private _renderLayer(layer: IconLayer) {
-    const style = [
-      layer.transform ? `transform:${layer.transform}` : '',
-      layer.opacity !== undefined ? `opacity:${layer.opacity}` : '',
-      layer.weight ? `font-weight:${layer.weight}` : '',
-    ]
-      .filter(Boolean)
-      .join(';');
-
-    return html`<span class="civ-icon__layer" style=${style || nothing} aria-hidden="true">${layer.char}</span>`;
   }
 }

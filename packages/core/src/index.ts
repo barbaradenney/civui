@@ -63,7 +63,7 @@ export {
 // Icon
 export { CivIcon } from './icon/civ-icon.js';
 export { icons, registerIcon, getIconNames, resetIcons } from './icon/icon-library.js';
-export type { IconDef, IconLayer, IconType } from './icon/icon-library.js';
+export type { IconDef } from './icon/icon-library.js';
 
 // i18n
 export { t, setLocaleStrings, resetLocaleStrings, getLocaleStrings } from './i18n/index.js';

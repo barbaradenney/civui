@@ -50,6 +50,9 @@ public struct CivDatePicker: View {
     /// Called when the date changes.
     public var onChange: ((String) -> Void)?
 
+    /// Called for analytics tracking (parallels `civ-analytics` event).
+    public var onAnalytics: ((String, [String: Any]?) -> Void)?
+
     // MARK: - Internal State
 
     @Environment(\.colorScheme) private var colorScheme
@@ -65,7 +68,8 @@ public struct CivDatePicker: View {
         max: String? = nil,
         isRequired: Bool = false,
         isDisabled: Bool = false,
-        onChange: ((String) -> Void)? = nil
+        onChange: ((String) -> Void)? = nil,
+        onAnalytics: ((String, [String: Any]?) -> Void)? = nil
     ) {
         self.label = label
         self._value = value
@@ -76,6 +80,7 @@ public struct CivDatePicker: View {
         self.isRequired = isRequired
         self.isDisabled = isDisabled
         self.onChange = onChange
+        self.onAnalytics = onAnalytics
     }
 
     // MARK: - Date Helpers
@@ -99,6 +104,7 @@ public struct CivDatePicker: View {
                 let iso = Self.isoFormatter.string(from: newDate)
                 value = iso
                 onChange?(iso)
+                onAnalytics?("change", ["value": iso])
             }
         )
     }
@@ -145,7 +151,6 @@ public struct CivDatePicker: View {
                         dark: CivTokens.DarkColors.Error.default_
                     ))
                     .accessibilityIdentifier("civ-error")
-                    .accessibilityAddTraits(.updatesFrequently)
             }
 
             // 4. DatePicker
@@ -179,6 +184,11 @@ public struct CivDatePicker: View {
         }
         .padding(.bottom, CivTokens.Spacing._4)
         .accessibilityElement(children: .contain)
+        .onChange(of: error) { newError in
+            if let newError, !newError.isEmpty {
+                UIAccessibility.post(notification: .announcement, argument: newError)
+            }
+        }
     }
 
     // MARK: - Subviews

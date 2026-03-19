@@ -70,10 +70,15 @@ public struct CivCombobox: View {
     /// Called on every filter text change.
     public var onInput: ((String) -> Void)?
 
+    /// Called for analytics tracking (parallels `civ-analytics` event).
+    public var onAnalytics: ((String, [String: Any]?) -> Void)?
+
     // MARK: - Internal State
 
     @State private var filter = ""
     @State private var isOpen = false
+    @State private var activeIndex: Int = -1
+    @State private var resultsAnnouncementTimer: Timer?
     @FocusState private var isFocused: Bool
     @Environment(\.colorScheme) private var colorScheme
 
@@ -90,7 +95,8 @@ public struct CivCombobox: View {
         isRequired: Bool = false,
         isDisabled: Bool = false,
         onChange: ((String, String) -> Void)? = nil,
-        onInput: ((String) -> Void)? = nil
+        onInput: ((String) -> Void)? = nil,
+        onAnalytics: ((String, [String: Any]?) -> Void)? = nil
     ) {
         self.label = label
         self._value = value
@@ -103,6 +109,7 @@ public struct CivCombobox: View {
         self.isDisabled = isDisabled
         self.onChange = onChange
         self.onInput = onInput
+        self.onAnalytics = onAnalytics
     }
 
     // MARK: - Computed
@@ -149,13 +156,12 @@ public struct CivCombobox: View {
                         dark: CivTokens.DarkColors.Error.default_
                     ))
                     .accessibilityIdentifier("civ-error")
-                    .accessibilityAddTraits(.updatesFrequently)
             }
 
             // 4. Input + Dropdown
             ZStack(alignment: .topLeading) {
                 VStack(spacing: 0) {
-                    TextField(placeholder ?? "", text: inputBinding)
+                    let textField = TextField(placeholder ?? "", text: inputBinding)
                         .textFieldStyle(.plain)
                         .font(.system(size: CivTokens.Typography.FontSize.base))
                         .padding(.horizontal, CivTokens.Spacing._2)
@@ -173,10 +179,33 @@ public struct CivCombobox: View {
                         .accessibilityLabel(accessibilityLabelText)
                         .accessibilityHint(accessibilityHintText)
 
+                    if #available(iOS 17.0, *) {
+                        textField
+                            .onKeyPress(.downArrow) {
+                                moveActiveIndex(by: 1)
+                                return .handled
+                            }
+                            .onKeyPress(.upArrow) {
+                                moveActiveIndex(by: -1)
+                                return .handled
+                            }
+                            .onKeyPress(.return) {
+                                selectActiveOption()
+                                return .handled
+                            }
+                            .onKeyPress(.escape) {
+                                isOpen = false
+                                activeIndex = -1
+                                return .handled
+                            }
+                    } else {
+                        textField
+                    }
+
                     if isOpen && !filteredOptions.isEmpty {
                         ScrollView {
                             LazyVStack(alignment: .leading, spacing: 0) {
-                                ForEach(filteredOptions) { option in
+                                ForEach(Array(filteredOptions.enumerated()), id: \.element.id) { index, option in
                                     Button(action: { selectOption(option) }) {
                                         Text(option.label)
                                             .font(.system(size: CivTokens.Typography.FontSize.base,
@@ -188,6 +217,11 @@ public struct CivCombobox: View {
                                             .frame(maxWidth: .infinity, alignment: .leading)
                                             .padding(.horizontal, CivTokens.Spacing._3)
                                             .padding(.vertical, CivTokens.Spacing._2)
+                                            .background(index == activeIndex
+                                                ? adaptiveColor(
+                                                    light: CivTokens.Colors.Primary.lightest,
+                                                    dark: CivTokens.DarkColors.Primary.lightest)
+                                                : Color.clear)
                                     }
                                     .buttonStyle(.plain)
                                     .accessibilityLabel(option.label)
@@ -244,10 +278,37 @@ public struct CivCombobox: View {
                 // Delay closing to allow tap on option
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                     isOpen = false
+                    activeIndex = -1
                 }
             }
         }
+        .onChange(of: error) { newError in
+            if let newError, !newError.isEmpty {
+                UIAccessibility.post(notification: .announcement, argument: newError)
+            }
+        }
         .accessibilityElement(children: .contain)
+    }
+
+    // MARK: - Keyboard Navigation
+
+    private func moveActiveIndex(by delta: Int) {
+        guard !filteredOptions.isEmpty else { return }
+        if !isOpen { isOpen = true }
+        let count = filteredOptions.count
+        if activeIndex < 0 {
+            activeIndex = delta > 0 ? 0 : count - 1
+        } else {
+            activeIndex = (activeIndex + delta + count) % count
+        }
+        // Announce the active option
+        let option = filteredOptions[activeIndex]
+        UIAccessibility.post(notification: .announcement, argument: option.label)
+    }
+
+    private func selectActiveOption() {
+        guard activeIndex >= 0 && activeIndex < filteredOptions.count else { return }
+        selectOption(filteredOptions[activeIndex])
     }
 
     // MARK: - Input Binding
@@ -259,9 +320,23 @@ public struct CivCombobox: View {
                 filter = newValue
                 isOpen = true
                 value = ""
+                activeIndex = -1
                 onInput?(newValue)
+                scheduleResultsAnnouncement()
             }
         )
+    }
+
+    /// Debounce the results count VoiceOver announcement.
+    private func scheduleResultsAnnouncement() {
+        resultsAnnouncementTimer?.invalidate()
+        resultsAnnouncementTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { [self] _ in
+            let count = filteredOptions.count
+            let message = count == 0
+                ? "No results"
+                : "\(count) result\(count == 1 ? "" : "s") available"
+            UIAccessibility.post(notification: .announcement, argument: message)
+        }
     }
 
     // MARK: - Actions
@@ -270,8 +345,10 @@ public struct CivCombobox: View {
         value = option.value
         filter = option.label
         isOpen = false
+        activeIndex = -1
         isFocused = false
         onChange?(option.value, option.label)
+        onAnalytics?("select", ["value": option.value, "label": option.label])
     }
 
     // MARK: - Border

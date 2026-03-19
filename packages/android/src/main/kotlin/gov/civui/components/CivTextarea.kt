@@ -16,17 +16,20 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import kotlinx.coroutines.delay
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.error
 import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
@@ -73,6 +76,7 @@ fun CivTextarea(
     maxwords: Int? = null,
     onInput: ((String) -> Unit)? = null,
     onChange: ((String) -> Unit)? = null,
+    onAnalytics: ((event: String, data: Map<String, Any>?) -> Unit)? = null,
 ) {
     val isDark = isSystemInDarkTheme()
     var isFocused by remember { mutableStateOf(false) }
@@ -144,6 +148,7 @@ fun CivTextarea(
         val fieldModifier = Modifier
             .fillMaxWidth()
             .heightIn(min = minHeight)
+            .civFocusRing(isFocused)
             .border(
                 width = if (effectiveError.isNotEmpty()) CivTokens.Border.Width._2 else CivTokens.Border.Width.default_,
                 color = borderColor,
@@ -154,6 +159,10 @@ fun CivTextarea(
                 isFocused = focusState.isFocused
                 if (wasFocused && !focusState.isFocused) {
                     onChange?.invoke(value)
+                    onAnalytics?.invoke("blur", mapOf("field" to label, "value" to value))
+                }
+                if (!wasFocused && focusState.isFocused) {
+                    onAnalytics?.invoke("focus", mapOf("field" to label))
                 }
             }
             .alpha(if (disabled) 0.5f else 1f)
@@ -165,6 +174,9 @@ fun CivTextarea(
                 if (hint.isNotEmpty()) append(". $hint")
                 if (effectiveError.isNotEmpty()) append(". Error: $effectiveError")
                 if (readonly) append(", read only")
+            }
+            if (effectiveError.isNotEmpty()) {
+                error(effectiveError)
             }
         }
 
@@ -202,10 +214,17 @@ fun CivTextarea(
             ),
         )
 
-        // 5. Character count
+        // 5. Character count (debounced SR announcement)
         if (showCharCount && maxlength != null) {
             val remaining = maxlength - charCount
             val isOver = remaining < 0
+            var debouncedCharAnnouncement by remember { mutableStateOf("") }
+
+            LaunchedEffect(remaining) {
+                delay(1000)
+                debouncedCharAnnouncement = "$remaining characters remaining"
+            }
+
             Text(
                 text = "$remaining characters remaining",
                 style = TextStyle(
@@ -217,14 +236,22 @@ fun CivTextarea(
                     .padding(top = CivTokens.Spacing._0_5)
                     .semantics {
                         liveRegion = LiveRegionMode.Polite
+                        contentDescription = debouncedCharAnnouncement
                     },
             )
         }
 
-        // 6. Word count
+        // 6. Word count (debounced SR announcement)
         if (showWordCount && maxwords != null) {
             val remaining = maxwords - wordCount
             val isOver = remaining < 0
+            var debouncedWordAnnouncement by remember { mutableStateOf("") }
+
+            LaunchedEffect(remaining) {
+                delay(1000)
+                debouncedWordAnnouncement = "$remaining words remaining"
+            }
+
             Text(
                 text = "$remaining words remaining",
                 style = TextStyle(
@@ -236,6 +263,7 @@ fun CivTextarea(
                     .padding(top = CivTokens.Spacing._0_5)
                     .semantics {
                         liveRegion = LiveRegionMode.Polite
+                        contentDescription = debouncedWordAnnouncement
                     },
             )
         }

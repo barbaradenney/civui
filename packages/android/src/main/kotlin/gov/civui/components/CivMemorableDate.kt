@@ -23,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,7 +33,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.error
+import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
@@ -42,6 +46,16 @@ import gov.civui.tokens.CivTokens
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
+
+/**
+ * Data class for CivMemorableDate onChange callback, providing individual segments.
+ */
+data class CivMemorableDateValue(
+    val value: String,
+    val month: String,
+    val day: String,
+    val year: String,
+)
 
 private val MONTH_OPTIONS = listOf(
     "01" to "January",
@@ -90,6 +104,8 @@ fun CivMemorableDate(
     monthLabel: String = "Month",
     dayLabel: String = "Day",
     yearLabel: String = "Year",
+    onChange: ((CivMemorableDateValue) -> Unit)? = null,
+    onAnalytics: ((event: String, data: Map<String, Any>?) -> Unit)? = null,
 ) {
     val isDark = isSystemInDarkTheme()
 
@@ -117,6 +133,7 @@ fun CivMemorableDate(
     }
 
     var monthExpanded by remember { mutableStateOf(false) }
+    var dateAnnouncement by remember { mutableStateOf("") }
 
     // Assemble and validate the date when any segment changes
     fun assembleAndNotify() {
@@ -129,6 +146,17 @@ fun CivMemorableDate(
             try {
                 LocalDate.parse(assembled, DateTimeFormatter.ISO_LOCAL_DATE)
                 onValueChange(assembled)
+                val dateValue = CivMemorableDateValue(
+                    value = assembled,
+                    month = paddedMonth,
+                    day = paddedDay,
+                    year = paddedYear,
+                )
+                onChange?.invoke(dateValue)
+                onAnalytics?.invoke("change", mapOf("field" to legend, "value" to assembled))
+                // SR announcement for valid date
+                val monthName = MONTH_OPTIONS.find { it.first == paddedMonth }?.second ?: paddedMonth
+                dateAnnouncement = "Date entered: $monthName $paddedDay, $paddedYear"
             } catch (_: DateTimeParseException) {
                 onValueChange("")
             }
@@ -138,7 +166,11 @@ fun CivMemorableDate(
     }
 
     Column(
-        modifier = modifier.padding(bottom = CivTokens.Spacing._4),
+        modifier = modifier
+            .padding(bottom = CivTokens.Spacing._4)
+            .then(
+                if (error != null) Modifier.semantics { error(error) } else Modifier
+            ),
     ) {
         // 1. Legend
         CivLabel(
@@ -315,6 +347,19 @@ fun CivMemorableDate(
                     ),
                 )
             }
+        }
+
+        // SR announcement when valid date is assembled
+        if (dateAnnouncement.isNotEmpty()) {
+            Text(
+                text = dateAnnouncement,
+                modifier = Modifier.semantics {
+                    liveRegion = LiveRegionMode.Polite
+                    contentDescription = dateAnnouncement
+                },
+                style = TextStyle(fontSize = CivTokens.Typography.FontSize.sm),
+                color = Color.Transparent,
+            )
         }
     }
 }

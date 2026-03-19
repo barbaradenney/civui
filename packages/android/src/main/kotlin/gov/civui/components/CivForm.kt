@@ -71,6 +71,7 @@ fun CivForm(
     onSubmit: () -> Unit,
     modifier: Modifier = Modifier,
     formLabel: String? = null,
+    onAnalytics: ((event: String, data: Map<String, Any>?) -> Unit)? = null,
     content: @Composable (onSubmit: () -> Unit) -> Unit,
 ) {
     val isDark = isSystemInDarkTheme()
@@ -149,7 +150,10 @@ fun CivForm(
         }
 
         // Form content
-        content(onSubmit)
+        content {
+            onAnalytics?.invoke("form-submit", mapOf("errorCount" to errors.size))
+            onSubmit()
+        }
     }
 }
 

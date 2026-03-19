@@ -52,6 +52,9 @@ public struct CivToggle: View {
     /// Parameters: (checked: Bool, value: String)
     public var onChange: ((Bool, String) -> Void)?
 
+    /// Called for analytics tracking (parallels `civ-analytics` event).
+    public var onAnalytics: ((String, [String: Any]?) -> Void)?
+
     // MARK: - Internal State
 
     @Environment(\.colorScheme) private var colorScheme
@@ -67,7 +70,8 @@ public struct CivToggle: View {
         error: String? = nil,
         isRequired: Bool = false,
         isDisabled: Bool = false,
-        onChange: ((Bool, String) -> Void)? = nil
+        onChange: ((Bool, String) -> Void)? = nil,
+        onAnalytics: ((String, [String: Any]?) -> Void)? = nil
     ) {
         self.label = label
         self._checked = checked
@@ -78,6 +82,7 @@ public struct CivToggle: View {
         self.isRequired = isRequired
         self.isDisabled = isDisabled
         self.onChange = onChange
+        self.onAnalytics = onAnalytics
     }
 
     // MARK: - Body
@@ -147,7 +152,6 @@ public struct CivToggle: View {
                         dark: CivTokens.DarkColors.Error.default_
                     ))
                     .accessibilityIdentifier("civ-error")
-                    .accessibilityAddTraits(.updatesFrequently)
             }
         }
         .padding(.bottom, CivTokens.Spacing._2)
@@ -157,6 +161,11 @@ public struct CivToggle: View {
         .accessibilityLabel(accessibilityLabelText)
         .accessibilityValue(checked ? "on" : "off")
         .accessibilityHint(accessibilityHintText)
+        .onChange(of: error) { newError in
+            if let newError, !newError.isEmpty {
+                UIAccessibility.post(notification: .announcement, argument: newError)
+            }
+        }
     }
 
     // MARK: - Toggle Binding
@@ -167,6 +176,7 @@ public struct CivToggle: View {
             set: { newValue in
                 checked = newValue
                 onChange?(newValue, value)
+                onAnalytics?("change", ["checked": newValue, "value": value])
             }
         )
     }

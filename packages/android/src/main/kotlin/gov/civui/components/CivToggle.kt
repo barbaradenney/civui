@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.error
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -66,6 +67,8 @@ fun CivToggle(
     required: Boolean = false,
     disabled: Boolean = false,
     onChange: ((Boolean) -> Unit)? = null,
+    onInput: ((Boolean, String) -> Unit)? = null,
+    onAnalytics: ((event: String, data: Map<String, Any>?) -> Unit)? = null,
 ) {
     val isDark = isSystemInDarkTheme()
 
@@ -88,6 +91,8 @@ fun CivToggle(
                         val newChecked = !checked
                         onCheckedChange(newChecked)
                         onChange?.invoke(newChecked)
+                        onInput?.invoke(newChecked, value)
+                        onAnalytics?.invoke("change", mapOf("field" to label, "checked" to newChecked, "value" to value))
                     },
                 )
                 .alpha(if (disabled) 0.5f else 1f)
@@ -98,6 +103,9 @@ fun CivToggle(
                         append(if (checked) ", on" else ", off")
                         if (description.isNotEmpty()) append(". $description")
                         if (error.isNotEmpty()) append(". Error: $error")
+                    }
+                    if (error.isNotEmpty()) {
+                        error(error)
                     }
                 },
             verticalAlignment = Alignment.CenterVertically,

@@ -43,6 +43,9 @@ public struct CivForm<Content: View>: View {
     /// Called when the form is submitted (validation must be done by the caller).
     public var onSubmit: (() -> Void)?
 
+    /// Called for analytics tracking (parallels `civ-analytics` event).
+    public var onAnalytics: ((String, [String: Any]?) -> Void)?
+
     /// Content rendered inside the form.
     public let content: Content
 
@@ -56,11 +59,13 @@ public struct CivForm<Content: View>: View {
         errors: Binding<[CivFormFieldError]>,
         formLabel: String? = nil,
         onSubmit: (() -> Void)? = nil,
+        onAnalytics: ((String, [String: Any]?) -> Void)? = nil,
         @ViewBuilder content: () -> Content
     ) {
         self._errors = errors
         self.formLabel = formLabel
         self.onSubmit = onSubmit
+        self.onAnalytics = onAnalytics
         self.content = content()
     }
 
@@ -78,6 +83,15 @@ public struct CivForm<Content: View>: View {
         }
         .accessibilityElement(children: .contain)
         .accessibilityLabel(formLabel ?? "Form")
+        .onChange(of: errors.count) { count in
+            if count > 0 {
+                let message = count == 1
+                    ? "There is 1 error on this page"
+                    : "There are \(count) errors on this page"
+                UIAccessibility.post(notification: .announcement, argument: message)
+                onAnalytics?("validation-error", ["errorCount": count])
+            }
+        }
     }
 
     // MARK: - Error Summary
@@ -123,7 +137,6 @@ public struct CivForm<Content: View>: View {
         )
         .cornerRadius(CivTokens.Border.Radius.default_)
         .padding(.bottom, CivTokens.Spacing._4)
-        .accessibilityAddTraits(.updatesFrequently)
         .accessibilityLabel("Form errors")
     }
 

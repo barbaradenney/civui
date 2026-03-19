@@ -61,6 +61,9 @@ public struct CivSegmentedControl: View {
     /// Called when the selected value changes.
     public var onChange: ((String) -> Void)?
 
+    /// Called for analytics tracking (parallels `civ-analytics` event).
+    public var onAnalytics: ((String, [String: Any]?) -> Void)?
+
     // MARK: - Internal State
 
     @Environment(\.colorScheme) private var colorScheme
@@ -75,7 +78,8 @@ public struct CivSegmentedControl: View {
         error: String? = nil,
         isRequired: Bool = false,
         isDisabled: Bool = false,
-        onChange: ((String) -> Void)? = nil
+        onChange: ((String) -> Void)? = nil,
+        onAnalytics: ((String, [String: Any]?) -> Void)? = nil
     ) {
         self.legend = legend
         self._value = value
@@ -85,6 +89,7 @@ public struct CivSegmentedControl: View {
         self.isRequired = isRequired
         self.isDisabled = isDisabled
         self.onChange = onChange
+        self.onAnalytics = onAnalytics
     }
 
     // MARK: - Body
@@ -115,7 +120,6 @@ public struct CivSegmentedControl: View {
                         dark: CivTokens.DarkColors.Error.default_
                     ))
                     .accessibilityIdentifier("civ-error")
-                    .accessibilityAddTraits(.updatesFrequently)
             }
 
             // 4. Segmented Picker
@@ -132,6 +136,11 @@ public struct CivSegmentedControl: View {
         }
         .padding(.bottom, CivTokens.Spacing._4)
         .accessibilityElement(children: .contain)
+        .onChange(of: error) { newError in
+            if let newError, !newError.isEmpty {
+                UIAccessibility.post(notification: .announcement, argument: newError)
+            }
+        }
     }
 
     // MARK: - Picker Binding
@@ -142,6 +151,7 @@ public struct CivSegmentedControl: View {
             set: { newValue in
                 value = newValue
                 onChange?(newValue)
+                onAnalytics?("change", ["value": newValue])
             }
         )
     }

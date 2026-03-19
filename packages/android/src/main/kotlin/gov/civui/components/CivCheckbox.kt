@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.error
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.text.TextStyle
@@ -70,6 +71,7 @@ fun CivCheckbox(
     indeterminate: Boolean = false,
     tile: Boolean = false,
     onChange: ((Boolean) -> Unit)? = null,
+    onAnalytics: ((event: String, data: Map<String, Any>?) -> Unit)? = null,
 ) {
     val isDark = isSystemInDarkTheme()
 
@@ -115,6 +117,7 @@ fun CivCheckbox(
                         val newChecked = !checked
                         onCheckedChange(newChecked)
                         onChange?.invoke(newChecked)
+                        onAnalytics?.invoke("change", mapOf("field" to label, "checked" to newChecked, "value" to value))
                     },
                 )
                 .alpha(if (disabled) 0.5f else 1f)
@@ -126,6 +129,9 @@ fun CivCheckbox(
                         if (description.isNotEmpty()) append(". $description")
                         if (error.isNotEmpty()) append(". Error: $error")
                     }
+                    if (error.isNotEmpty()) {
+                        error(error)
+                    }
                 },
             verticalAlignment = Alignment.Top,
         ) {
@@ -135,6 +141,7 @@ fun CivCheckbox(
                     onClick = {
                         onCheckedChange(true)
                         onChange?.invoke(true)
+                        onAnalytics?.invoke("change", mapOf("field" to label, "checked" to true, "value" to value))
                     },
                     enabled = !disabled,
                     colors = CheckboxDefaults.colors(

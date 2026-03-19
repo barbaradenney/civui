@@ -146,6 +146,13 @@ public struct CivTextInput: View {
     /// Called on committed change / focus loss (parallels `civ-change` event).
     public var onChange: ((String) -> Void)?
 
+    /// Called for analytics tracking (parallels `civ-analytics` event).
+    public var onAnalytics: ((String, [String: Any]?) -> Void)?
+
+    /// Custom mask pattern. `#` = digit, `A` = letter, `*` = any character.
+    /// When set, overrides the `mask` preset pattern.
+    public var maskPattern: String
+
     // MARK: - Internal State
 
     @FocusState private var isFocused: Bool
@@ -166,7 +173,9 @@ public struct CivTextInput: View {
         width: CivInputWidth = .full,
         mask: CivInputMask = .none,
         onInput: ((String) -> Void)? = nil,
-        onChange: ((String) -> Void)? = nil
+        onChange: ((String) -> Void)? = nil,
+        onAnalytics: ((String, [String: Any]?) -> Void)? = nil,
+        maskPattern: String = ""
     ) {
         self.label = label
         self._value = value
@@ -181,6 +190,8 @@ public struct CivTextInput: View {
         self.mask = mask
         self.onInput = onInput
         self.onChange = onChange
+        self.onAnalytics = onAnalytics
+        self.maskPattern = maskPattern
     }
 
     // MARK: - Body
@@ -211,8 +222,6 @@ public struct CivTextInput: View {
                         dark: CivTokens.DarkColors.Error.default_
                     ))
                     .accessibilityIdentifier("civ-error")
-                    // role="alert" equivalent — announce immediately
-                    .accessibilityAddTraits(.updatesFrequently)
             }
 
             // 4. Input
@@ -224,6 +233,11 @@ public struct CivTextInput: View {
         }
         .padding(.bottom, CivTokens.Spacing._4)
         .accessibilityElement(children: .contain)
+        .onChange(of: error) { newError in
+            if let newError, !newError.isEmpty {
+                UIAccessibility.post(notification: .announcement, argument: newError)
+            }
+        }
     }
 
     // MARK: - Effective Hint
@@ -307,6 +321,7 @@ public struct CivTextInput: View {
                 .onChange(of: isFocused) { oldValue, newValue in
                     if oldValue && !newValue {
                         onChange?(value)
+                        onAnalytics?("change", ["value": value])
                     }
                 }
         } else {
@@ -314,6 +329,7 @@ public struct CivTextInput: View {
                 .onChange(of: isFocused) { newValue in
                     if !newValue {
                         onChange?(value)
+                        onAnalytics?("change", ["value": value])
                     }
                 }
         }
@@ -369,6 +385,7 @@ public struct CivTextInput: View {
                 .onChange(of: isFocused) { oldValue, newValue in
                     if oldValue && !newValue {
                         onChange?(value)
+                        onAnalytics?("change", ["value": value])
                     }
                 }
         } else {
@@ -376,6 +393,7 @@ public struct CivTextInput: View {
                 .onChange(of: isFocused) { newValue in
                     if !newValue {
                         onChange?(value)
+                        onAnalytics?("change", ["value": value])
                     }
                 }
         }
@@ -383,9 +401,15 @@ public struct CivTextInput: View {
 
     // MARK: - Display Value
 
+    /// The effective mask pattern — custom maskPattern takes precedence over preset.
+    private var effectivePattern: String {
+        if !maskPattern.isEmpty { return maskPattern }
+        return mask.pattern
+    }
+
     /// Returns the formatted display value based on mask.
     private var displayValue: String {
-        let pattern = mask.pattern
+        let pattern = effectivePattern
         guard !pattern.isEmpty else { return value }
         return CivTextInput.applyMask(value, pattern: pattern)
     }
@@ -403,14 +427,14 @@ public struct CivTextInput: View {
 
     // MARK: - Mask Helpers
 
-    /// Applies a mask pattern to a raw digit string.
-    /// `#` in pattern = digit slot; other characters are literals.
+    /// Applies a mask pattern to a raw string.
+    /// `#` = digit slot, `A` = letter slot, `*` = any character slot; other characters are literals.
     static func applyMask(_ raw: String, pattern: String) -> String {
         var result = ""
         var rawIndex = raw.startIndex
         for ch in pattern {
             guard rawIndex < raw.endIndex else { break }
-            if ch == "#" {
+            if ch == "#" || ch == "A" || ch == "*" {
                 result.append(raw[rawIndex])
                 rawIndex = raw.index(after: rawIndex)
             } else {
@@ -420,16 +444,33 @@ public struct CivTextInput: View {
         return result
     }
 
-    /// Strips non-digit characters from a string.
+    /// Strips characters from a string keeping only those matching mask slot types.
+    /// For digit-only masks, strips non-digits. For mixed masks, strips non-alphanumerics.
     static func stripToDigits(_ text: String) -> String {
         text.filter { $0.isNumber }
     }
 
-    /// Returns the maximum raw digit count for the current mask.
+    /// Strips a string keeping only characters valid for the given mask pattern.
+    static func stripForPattern(_ text: String, pattern: String) -> String {
+        let hasLetterSlot = pattern.contains("A")
+        let hasAnySlot = pattern.contains("*")
+        if hasAnySlot {
+            // Keep all alphanumeric characters
+            return text.filter { $0.isLetter || $0.isNumber }
+        } else if hasLetterSlot {
+            // Keep letters and digits
+            return text.filter { $0.isLetter || $0.isNumber }
+        } else {
+            // Digit-only mask
+            return text.filter { $0.isNumber }
+        }
+    }
+
+    /// Returns the maximum raw character count for the current mask.
     private var maskMaxDigits: Int? {
-        let pattern = mask.pattern
+        let pattern = effectivePattern
         guard !pattern.isEmpty else { return nil }
-        return pattern.filter { $0 == "#" }.count
+        return pattern.filter { $0 == "#" || $0 == "A" || $0 == "*" }.count
     }
 
     // MARK: - Border
@@ -460,8 +501,15 @@ public struct CivTextInput: View {
         Binding(
             get: { displayValue },
             set: { newValue in
-                if mask != .none {
-                    // Strip to raw digits and limit to max
+                let pattern = effectivePattern
+                if !pattern.isEmpty {
+                    // Strip to raw characters valid for the pattern and limit to max
+                    var raw = CivTextInput.stripForPattern(newValue, pattern: pattern)
+                    if let max = maskMaxDigits, raw.count > max {
+                        raw = String(raw.prefix(max))
+                    }
+                    value = raw
+                } else if mask != .none {
                     var raw = CivTextInput.stripToDigits(newValue)
                     if let max = maskMaxDigits, raw.count > max {
                         raw = String(raw.prefix(max))
@@ -498,6 +546,11 @@ public struct CivTextInput: View {
     // MARK: - Keyboard & Content Type Mapping
 
     private var effectiveKeyboardType: UIKeyboardType {
+        if !maskPattern.isEmpty {
+            // Custom mask: use default keyboard if pattern has letter/any slots
+            let hasLetters = maskPattern.contains("A") || maskPattern.contains("*")
+            return hasLetters ? .default : .numberPad
+        }
         if mask != .none { return mask.keyboardType }
         switch inputType {
         case .email: return .emailAddress

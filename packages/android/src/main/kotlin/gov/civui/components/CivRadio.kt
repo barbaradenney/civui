@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.error
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -178,6 +179,8 @@ fun CivRadioGroup(
     orientation: CivOrientation = CivOrientation.Vertical,
     required: Boolean = false,
     disabled: Boolean = false,
+    onChange: ((String) -> Unit)? = null,
+    onAnalytics: ((event: String, data: Map<String, Any>?) -> Unit)? = null,
 ) {
     val isDark = isSystemInDarkTheme()
 
@@ -186,7 +189,11 @@ fun CivRadioGroup(
     val errorColor = if (isDark) CivTokens.DarkColors.Error.default_ else CivTokens.Colors.Error.default_
 
     Column(
-        modifier = modifier.padding(bottom = CivTokens.Spacing._4),
+        modifier = modifier
+            .padding(bottom = CivTokens.Spacing._4)
+            .then(
+                if (error != null) Modifier.semantics { error(error) } else Modifier
+            ),
     ) {
         // 1. Legend
         CivLabel(
@@ -212,7 +219,11 @@ fun CivRadioGroup(
                         label = option.label,
                         value = option.value,
                         selected = value == option.value,
-                        onSelect = { onValueChange(it) },
+                        onSelect = {
+                            onValueChange(it)
+                            onChange?.invoke(it)
+                            onAnalytics?.invoke("change", mapOf("field" to legend, "value" to it))
+                        },
                         description = option.description,
                         tile = tile,
                         disabled = disabled || option.disabled,
@@ -226,7 +237,11 @@ fun CivRadioGroup(
                         label = option.label,
                         value = option.value,
                         selected = value == option.value,
-                        onSelect = { onValueChange(it) },
+                        onSelect = {
+                            onValueChange(it)
+                            onChange?.invoke(it)
+                            onAnalytics?.invoke("change", mapOf("field" to legend, "value" to it))
+                        },
                         description = option.description,
                         tile = tile,
                         disabled = disabled || option.disabled,

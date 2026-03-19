@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.ui.Alignment
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -161,8 +162,10 @@ fun CivTextInput(
     inputType: CivInputType = CivInputType.Text,
     width: CivInputWidth = CivInputWidth.Full,
     mask: CivInputMask? = null,
+    maskPattern: String = "",
     onInput: ((String) -> Unit)? = null,
     onChange: ((String) -> Unit)? = null,
+    onAnalytics: ((event: String, data: Map<String, Any>?) -> Unit)? = null,
 ) {
     val isDark = isSystemInDarkTheme()
     var isFocused by remember { mutableStateOf(false) }
@@ -182,8 +185,8 @@ fun CivTextInput(
     val backgroundColor = if (isDark) CivTokens.DarkColors.White.default_ else CivTokens.Colors.White.default_
     val readonlyBackground = if (isDark) CivTokens.DarkColors.Base.lightest else CivTokens.Colors.Base.lightest
 
-    // Effective hint: explicit hint > mask hint > nothing
-    val effectiveHint = hint ?: mask?.hint
+    // Effective hint: explicit hint > mask hint > custom mask hint > nothing
+    val effectiveHint = hint ?: mask?.hint ?: if (maskPattern.isNotEmpty()) "Format: $maskPattern" else null
 
     // Effective keyboard type from mask
     val effectiveKeyboardType = mask?.keyboardType ?: inputType.toKeyboardType()
@@ -206,11 +209,14 @@ fun CivTextInput(
         CivError(text = error, color = errorColor)
 
         // 4. Input
+        val isCurrency = mask == CivInputMask.Currency || maskPattern.startsWith("$")
+
         val fieldModifier = Modifier
             .then(
                 if (width.dp != null) Modifier.width(width.dp!!.dp)
                 else Modifier.fillMaxWidth()
             )
+            .civFocusRing(isFocused)
             .border(
                 width = if (error != null) CivTokens.Border.Width._2 else CivTokens.Border.Width.default_,
                 color = borderColor,
@@ -222,6 +228,10 @@ fun CivTextInput(
                 // Fire onChange when focus leaves (parallels web change event)
                 if (wasFocused && !focusState.isFocused) {
                     onChange?.invoke(value)
+                    onAnalytics?.invoke("blur", mapOf("field" to label, "value" to value))
+                }
+                if (!wasFocused && focusState.isFocused) {
+                    onAnalytics?.invoke("focus", mapOf("field" to label))
                 }
             }
             .alpha(if (disabled) 0.5f else 1f)
@@ -234,16 +244,20 @@ fun CivTextInput(
                 if (error != null) append(". Error: $error")
                 if (readonly) append(", read only")
             }
+            if (error != null) {
+                error(error)
+            }
         }
 
         // Build visual transformation for mask
         val visualTransformation = when {
             inputType == CivInputType.Password -> PasswordVisualTransformation()
             mask != null && mask != CivInputMask.Currency -> MaskVisualTransformation(mask.pattern)
+            maskPattern.isNotEmpty() -> MaskVisualTransformation(maskPattern)
             else -> VisualTransformation.None
         }
 
-        // Filter input for masks
+        // Filter input for masks (preset or custom pattern)
         val maskedOnValueChange: (String) -> Unit = if (mask != null) {
             { newValue: String ->
                 val filtered = when (mask) {
@@ -271,6 +285,43 @@ fun CivTextInput(
                 onValueChange(filtered)
                 onInput?.invoke(filtered)
             }
+        } else if (maskPattern.isNotEmpty()) {
+            { newValue: String ->
+                // Custom mask pattern: # = digit, A = letter, * = any
+                val filtered = buildString {
+                    var rawIdx = 0
+                    for (ch in maskPattern) {
+                        if (rawIdx >= newValue.length) break
+                        when (ch) {
+                            '#' -> {
+                                // Find next digit in input
+                                while (rawIdx < newValue.length && !newValue[rawIdx].isDigit()) rawIdx++
+                                if (rawIdx < newValue.length) {
+                                    append(newValue[rawIdx])
+                                    rawIdx++
+                                }
+                            }
+                            'A' -> {
+                                // Find next letter in input
+                                while (rawIdx < newValue.length && !newValue[rawIdx].isLetter()) rawIdx++
+                                if (rawIdx < newValue.length) {
+                                    append(newValue[rawIdx])
+                                    rawIdx++
+                                }
+                            }
+                            '*' -> {
+                                append(newValue[rawIdx])
+                                rawIdx++
+                            }
+                            else -> {
+                                // Literal — skip it, don't consume input
+                            }
+                        }
+                    }
+                }
+                onValueChange(filtered)
+                onInput?.invoke(filtered)
+            }
         } else {
             { newValue: String ->
                 onValueChange(newValue)
@@ -278,36 +329,84 @@ fun CivTextInput(
             }
         }
 
-        TextField(
-            value = value,
-            onValueChange = maskedOnValueChange,
-            modifier = fieldModifier.then(accessibilityModifier),
-            enabled = !disabled,
-            readOnly = readonly,
-            placeholder = placeholder?.let {
-                { Text(text = it, color = hintColor) }
-            },
-            textStyle = TextStyle(
-                fontSize = CivTokens.Typography.FontSize.base,
-            ),
-            visualTransformation = visualTransformation,
-            keyboardOptions = KeyboardOptions(
-                keyboardType = effectiveKeyboardType,
-                capitalization = if (mask != null) KeyboardCapitalization.None else inputType.toCapitalization(),
-                imeAction = ImeAction.Done,
-            ),
-            singleLine = true,
-            shape = RoundedCornerShape(CivTokens.Border.Radius.default_),
-            colors = TextFieldDefaults.colors(
-                focusedContainerColor = if (readonly) readonlyBackground else backgroundColor,
-                unfocusedContainerColor = if (readonly) readonlyBackground else backgroundColor,
-                disabledContainerColor = backgroundColor,
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                disabledIndicatorColor = Color.Transparent,
-                errorIndicatorColor = Color.Transparent,
-            ),
-        )
+        // Currency prefix row
+        if (isCurrency) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = fieldModifier,
+            ) {
+                Text(
+                    text = "$",
+                    style = TextStyle(
+                        fontSize = CivTokens.Typography.FontSize.base,
+                        fontWeight = FontWeight.Bold,
+                    ),
+                    color = labelColor,
+                    modifier = Modifier.padding(start = CivTokens.Spacing._3),
+                )
+                TextField(
+                    value = value,
+                    onValueChange = maskedOnValueChange,
+                    modifier = Modifier.weight(1f).then(accessibilityModifier),
+                    enabled = !disabled,
+                    readOnly = readonly,
+                    placeholder = placeholder?.let {
+                        { Text(text = it, color = hintColor) }
+                    },
+                    textStyle = TextStyle(
+                        fontSize = CivTokens.Typography.FontSize.base,
+                    ),
+                    visualTransformation = visualTransformation,
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = effectiveKeyboardType,
+                        capitalization = if (mask != null) KeyboardCapitalization.None else inputType.toCapitalization(),
+                        imeAction = ImeAction.Done,
+                    ),
+                    singleLine = true,
+                    shape = RoundedCornerShape(CivTokens.Border.Radius.default_),
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = if (readonly) readonlyBackground else backgroundColor,
+                        unfocusedContainerColor = if (readonly) readonlyBackground else backgroundColor,
+                        disabledContainerColor = backgroundColor,
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent,
+                        disabledIndicatorColor = Color.Transparent,
+                        errorIndicatorColor = Color.Transparent,
+                    ),
+                )
+            }
+        } else {
+            TextField(
+                value = value,
+                onValueChange = maskedOnValueChange,
+                modifier = fieldModifier.then(accessibilityModifier),
+                enabled = !disabled,
+                readOnly = readonly,
+                placeholder = placeholder?.let {
+                    { Text(text = it, color = hintColor) }
+                },
+                textStyle = TextStyle(
+                    fontSize = CivTokens.Typography.FontSize.base,
+                ),
+                visualTransformation = visualTransformation,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = effectiveKeyboardType,
+                    capitalization = if (mask != null || maskPattern.isNotEmpty()) KeyboardCapitalization.None else inputType.toCapitalization(),
+                    imeAction = ImeAction.Done,
+                ),
+                singleLine = true,
+                shape = RoundedCornerShape(CivTokens.Border.Radius.default_),
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = if (readonly) readonlyBackground else backgroundColor,
+                    unfocusedContainerColor = if (readonly) readonlyBackground else backgroundColor,
+                    disabledContainerColor = backgroundColor,
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    disabledIndicatorColor = Color.Transparent,
+                    errorIndicatorColor = Color.Transparent,
+                ),
+            )
+        }
     }
 }
 

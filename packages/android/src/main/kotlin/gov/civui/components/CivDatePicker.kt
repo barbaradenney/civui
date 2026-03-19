@@ -36,6 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.error
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -78,6 +79,8 @@ fun CivDatePicker(
     required: Boolean = false,
     disabled: Boolean = false,
     placeholder: String = "MM/DD/YYYY",
+    onChange: ((String) -> Unit)? = null,
+    onAnalytics: ((event: String, data: Map<String, Any>?) -> Unit)? = null,
 ) {
     val isDark = isSystemInDarkTheme()
 
@@ -137,6 +140,8 @@ fun CivDatePicker(
                     val parsed = tryParseDisplayDate(newText)
                     if (parsed != null) {
                         onValueChange(parsed)
+                        onChange?.invoke(parsed)
+                        onAnalytics?.invoke("change", mapOf("field" to label, "value" to parsed))
                     }
                 },
                 modifier = Modifier
@@ -158,6 +163,9 @@ fun CivDatePicker(
                             if (required) append(", required")
                             if (hint != null) append(". $hint")
                             if (error != null) append(". Error: $error")
+                        }
+                        if (error != null) {
+                            error(error)
                         }
                     },
                 enabled = !disabled,
@@ -235,6 +243,8 @@ fun CivDatePicker(
                                 .toLocalDate()
                             val iso = date.format(DateTimeFormatter.ISO_LOCAL_DATE)
                             onValueChange(iso)
+                            onChange?.invoke(iso)
+                            onAnalytics?.invoke("change", mapOf("field" to label, "value" to iso))
                             inputText = date.format(DateTimeFormatter.ofPattern("MM/dd/yyyy"))
                         }
                         showDialog = false

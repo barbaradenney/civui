@@ -28,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.error
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -78,6 +79,7 @@ fun CivSelect(
     disabled: Boolean = false,
     emptyLabel: String = "- Select -",
     onChange: ((String) -> Unit)? = null,
+    onAnalytics: ((event: String, data: Map<String, Any>?) -> Unit)? = null,
 ) {
     val isDark = isSystemInDarkTheme()
 
@@ -147,6 +149,9 @@ fun CivSelect(
                             if (hint.isNotEmpty()) append(". $hint")
                             if (error.isNotEmpty()) append(". Error: $error")
                         }
+                        if (error.isNotEmpty()) {
+                            error(error)
+                        }
                     },
                 enabled = !disabled,
                 textStyle = TextStyle(
@@ -183,6 +188,7 @@ fun CivSelect(
                     onClick = {
                         onValueChange("")
                         onChange?.invoke("")
+                        onAnalytics?.invoke("change", mapOf("field" to label, "value" to ""))
                         expanded = false
                     },
                 )
@@ -203,6 +209,7 @@ fun CivSelect(
                             if (!option.disabled) {
                                 onValueChange(option.value)
                                 onChange?.invoke(option.value)
+                                onAnalytics?.invoke("change", mapOf("field" to label, "value" to option.value))
                                 expanded = false
                             }
                         },

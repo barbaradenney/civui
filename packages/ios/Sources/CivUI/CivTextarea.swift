@@ -67,10 +67,16 @@ public struct CivTextarea: View {
     /// Called on committed change / focus loss (parallels `civ-change` event).
     public var onChange: ((String) -> Void)?
 
+    /// Called for analytics tracking (parallels `civ-analytics` event).
+    public var onAnalytics: ((String, [String: Any]?) -> Void)?
+
     // MARK: - Internal State
 
     @FocusState private var isFocused: Bool
     @Environment(\.colorScheme) private var colorScheme
+
+    /// Timer for debounced SR count announcement.
+    @State private var countAnnouncementTimer: Timer?
 
     // MARK: - Initializer
 
@@ -87,7 +93,8 @@ public struct CivTextarea: View {
         maxlength: Int? = nil,
         maxwords: Int? = nil,
         onInput: ((String) -> Void)? = nil,
-        onChange: ((String) -> Void)? = nil
+        onChange: ((String) -> Void)? = nil,
+        onAnalytics: ((String, [String: Any]?) -> Void)? = nil
     ) {
         self.label = label
         self._value = value
@@ -102,6 +109,7 @@ public struct CivTextarea: View {
         self.maxwords = maxwords
         self.onInput = onInput
         self.onChange = onChange
+        self.onAnalytics = onAnalytics
     }
 
     // MARK: - Body
@@ -132,7 +140,6 @@ public struct CivTextarea: View {
                         dark: CivTokens.DarkColors.Error.default_
                     ))
                     .accessibilityIdentifier("civ-error")
-                    .accessibilityAddTraits(.updatesFrequently)
             }
 
             // 4. Textarea
@@ -143,6 +150,11 @@ public struct CivTextarea: View {
         }
         .padding(.bottom, CivTokens.Spacing._4)
         .accessibilityElement(children: .contain)
+        .onChange(of: error) { newError in
+            if let newError, !newError.isEmpty {
+                UIAccessibility.post(notification: .announcement, argument: newError)
+            }
+        }
     }
 
     // MARK: - Subviews
@@ -214,6 +226,7 @@ public struct CivTextarea: View {
                 .onChange(of: isFocused) { oldValue, newValue in
                     if oldValue && !newValue {
                         onChange?(value)
+                        onAnalytics?("change", ["value": value])
                     }
                 }
         } else {
@@ -221,6 +234,7 @@ public struct CivTextarea: View {
                 .onChange(of: isFocused) { newValue in
                     if !newValue {
                         onChange?(value)
+                        onAnalytics?("change", ["value": value])
                     }
                 }
         }
@@ -295,8 +309,28 @@ public struct CivTextarea: View {
             set: { newValue in
                 value = newValue
                 onInput?(newValue)
+                scheduleCountAnnouncement()
             }
         )
+    }
+
+    /// Debounce the character/word count VoiceOver announcement (1 second).
+    private func scheduleCountAnnouncement() {
+        countAnnouncementTimer?.invalidate()
+        let currentValue = value
+        let ml = maxlength
+        let mw = maxwords
+        countAnnouncementTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) { _ in
+            if let ml, ml > 0 {
+                let remaining = ml - currentValue.count
+                UIAccessibility.post(notification: .announcement, argument: "\(remaining) characters remaining")
+            } else if let mw, mw > 0 {
+                let wc = currentValue.trimmingCharacters(in: .whitespacesAndNewlines)
+                    .split(whereSeparator: { $0.isWhitespace }).count
+                let remaining = mw - wc
+                UIAccessibility.post(notification: .announcement, argument: "\(remaining) words remaining")
+            }
+        }
     }
 
     // MARK: - Accessibility

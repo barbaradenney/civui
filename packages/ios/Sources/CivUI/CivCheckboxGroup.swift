@@ -69,6 +69,9 @@ public struct CivCheckboxGroup: View {
     /// Called when the set of checked values changes.
     public var onChange: (([String]) -> Void)?
 
+    /// Called for analytics tracking (parallels `civ-analytics` event).
+    public var onAnalytics: ((String, [String: Any]?) -> Void)?
+
     // MARK: - Internal State
 
     @Environment(\.colorScheme) private var colorScheme
@@ -84,7 +87,8 @@ public struct CivCheckboxGroup: View {
         isRequired: Bool = false,
         isDisabled: Bool = false,
         isTile: Bool = false,
-        onChange: (([String]) -> Void)? = nil
+        onChange: (([String]) -> Void)? = nil,
+        onAnalytics: ((String, [String: Any]?) -> Void)? = nil
     ) {
         self.legend = legend
         self._values = values
@@ -95,6 +99,7 @@ public struct CivCheckboxGroup: View {
         self.isDisabled = isDisabled
         self.isTile = isTile
         self.onChange = onChange
+        self.onAnalytics = onAnalytics
     }
 
     // MARK: - Body
@@ -125,7 +130,6 @@ public struct CivCheckboxGroup: View {
                         dark: CivTokens.DarkColors.Error.default_
                     ))
                     .accessibilityIdentifier("civ-error")
-                    .accessibilityAddTraits(.updatesFrequently)
             }
 
             // 4. Checkbox options
@@ -147,6 +151,7 @@ public struct CivCheckboxGroup: View {
                                 values.removeAll { $0 == val }
                             }
                             onChange?(values)
+                            onAnalytics?("change", ["values": values])
                         }
                     )
                 }
@@ -154,6 +159,11 @@ public struct CivCheckboxGroup: View {
         }
         .padding(.bottom, CivTokens.Spacing._4)
         .accessibilityElement(children: .contain)
+        .onChange(of: error) { newError in
+            if let newError, !newError.isEmpty {
+                UIAccessibility.post(notification: .announcement, argument: newError)
+            }
+        }
     }
 
     // MARK: - Helpers

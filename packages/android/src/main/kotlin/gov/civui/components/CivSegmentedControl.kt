@@ -20,6 +20,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.error
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -67,6 +68,8 @@ fun CivSegmentedControl(
     error: String? = null,
     required: Boolean = false,
     disabled: Boolean = false,
+    onChange: ((String) -> Unit)? = null,
+    onAnalytics: ((event: String, data: Map<String, Any>?) -> Unit)? = null,
 ) {
     val isDark = isSystemInDarkTheme()
 
@@ -75,7 +78,11 @@ fun CivSegmentedControl(
     val errorColor = if (isDark) CivTokens.DarkColors.Error.default_ else CivTokens.Colors.Error.default_
 
     Column(
-        modifier = modifier.padding(bottom = CivTokens.Spacing._4),
+        modifier = modifier
+            .padding(bottom = CivTokens.Spacing._4)
+            .then(
+                if (error != null) Modifier.semantics { error(error) } else Modifier
+            ),
     ) {
         // 1. Legend
         CivLabel(
@@ -102,7 +109,11 @@ fun CivSegmentedControl(
             options.forEachIndexed { index, option ->
                 SegmentedButton(
                     selected = value == option.value,
-                    onClick = { onValueChange(option.value) },
+                    onClick = {
+                        onValueChange(option.value)
+                        onChange?.invoke(option.value)
+                        onAnalytics?.invoke("change", mapOf("field" to legend, "value" to option.value))
+                    },
                     enabled = !disabled && !option.disabled,
                     shape = SegmentedButtonDefaults.itemShape(
                         index = index,

@@ -4,6 +4,7 @@
 
 package gov.civui.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -19,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -28,8 +30,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.input.key.type
 import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.error
 import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
@@ -79,6 +87,7 @@ fun CivCombobox(
     disabled: Boolean = false,
     placeholder: String? = null,
     noResultsText: String = "No results found",
+    onAnalytics: ((event: String, data: Map<String, Any>?) -> Unit)? = null,
 ) {
     val isDark = isSystemInDarkTheme()
 
@@ -103,6 +112,14 @@ fun CivCombobox(
         options
     } else {
         options.filter { it.label.contains(filterText, ignoreCase = true) }
+    }
+
+    // Results count announcement via LiveRegion
+    var resultsAnnouncement by remember { mutableStateOf("") }
+    LaunchedEffect(filteredOptions.size, filterText) {
+        if (filterText.isNotEmpty()) {
+            resultsAnnouncement = "${filteredOptions.size} results available"
+        }
     }
 
     Column(
@@ -144,10 +161,47 @@ fun CivCombobox(
                         isFocused = focusState.isFocused
                         if (focusState.isFocused && !disabled) {
                             expanded = true
+                            onAnalytics?.invoke("focus", mapOf("field" to label))
                         }
                         if (!focusState.isFocused) {
                             expanded = false
+                            onAnalytics?.invoke("blur", mapOf("field" to label, "value" to value))
                         }
+                    }
+                    .onKeyEvent { keyEvent ->
+                        if (keyEvent.type == KeyEventType.KeyDown) {
+                            when (keyEvent.key) {
+                                Key.DirectionDown -> {
+                                    if (filteredOptions.isNotEmpty()) {
+                                        activeIndex = (activeIndex + 1).coerceAtMost(filteredOptions.size - 1)
+                                    }
+                                    true
+                                }
+                                Key.DirectionUp -> {
+                                    if (filteredOptions.isNotEmpty()) {
+                                        activeIndex = (activeIndex - 1).coerceAtLeast(0)
+                                    }
+                                    true
+                                }
+                                Key.Enter -> {
+                                    if (activeIndex in filteredOptions.indices) {
+                                        val option = filteredOptions[activeIndex]
+                                        onValueChange(option.value)
+                                        filterText = option.label
+                                        expanded = false
+                                        activeIndex = -1
+                                        onAnalytics?.invoke("change", mapOf("field" to label, "value" to option.value, "label" to option.label))
+                                    }
+                                    true
+                                }
+                                Key.Escape -> {
+                                    expanded = false
+                                    activeIndex = -1
+                                    true
+                                }
+                                else -> false
+                            }
+                        } else false
                     }
                     .alpha(if (disabled) 0.5f else 1f)
                     .semantics {
@@ -157,6 +211,9 @@ fun CivCombobox(
                             if (hint != null) append(". $hint")
                             if (error != null) append(". Error: $error")
                             append(", combobox")
+                        }
+                        if (error != null) {
+                            error(error)
                         }
                     },
                 enabled = !disabled,
@@ -189,6 +246,10 @@ fun CivCombobox(
                     modifier = Modifier.heightIn(max = 240.dp),
                 ) {
                     itemsIndexed(filteredOptions) { index, option ->
+                        val isActive = index == activeIndex
+                        val highlightColor = if (isActive) {
+                            if (isDark) CivTokens.DarkColors.Primary.lighter else CivTokens.Colors.Primary.lighter
+                        } else Color.Transparent
                         Text(
                             text = option.label,
                             style = TextStyle(
@@ -198,18 +259,20 @@ fun CivCombobox(
                             color = labelColor,
                             modifier = Modifier
                                 .fillMaxWidth()
+                                .background(highlightColor)
                                 .clickable {
                                     onValueChange(option.value)
                                     filterText = option.label
                                     expanded = false
                                     activeIndex = -1
+                                    onAnalytics?.invoke("change", mapOf("field" to label, "value" to option.value, "label" to option.label))
                                 }
                                 .padding(
                                     horizontal = CivTokens.Spacing._4,
                                     vertical = CivTokens.Spacing._3,
                                 )
                                 .semantics {
-                                    contentDescription = option.label
+                                    contentDescription = if (isActive) "${option.label}, highlighted" else option.label
                                 },
                         )
                     }
@@ -229,6 +292,21 @@ fun CivCombobox(
                         .semantics {
                             liveRegion = LiveRegionMode.Polite
                         },
+                )
+            }
+
+            // Results count SR announcement (hidden, LiveRegion.Polite)
+            if (resultsAnnouncement.isNotEmpty()) {
+                Text(
+                    text = resultsAnnouncement,
+                    modifier = Modifier
+                        .padding(0.dp)
+                        .semantics {
+                            liveRegion = LiveRegionMode.Polite
+                            contentDescription = resultsAnnouncement
+                        },
+                    style = TextStyle(fontSize = CivTokens.Typography.FontSize.sm),
+                    color = Color.Transparent,
                 )
             }
         }

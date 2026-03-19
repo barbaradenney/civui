@@ -69,6 +69,9 @@ public struct CivSelect: View {
     /// Called on value change (parallels `civ-input` and `civ-change` events).
     public var onChange: ((String) -> Void)?
 
+    /// Called for analytics tracking (parallels `civ-analytics` event).
+    public var onAnalytics: ((String, [String: Any]?) -> Void)?
+
     // MARK: - Internal State
 
     @Environment(\.colorScheme) private var colorScheme
@@ -84,7 +87,8 @@ public struct CivSelect: View {
         isRequired: Bool = false,
         isDisabled: Bool = false,
         emptyLabel: String = "- Select -",
-        onChange: ((String) -> Void)? = nil
+        onChange: ((String) -> Void)? = nil,
+        onAnalytics: ((String, [String: Any]?) -> Void)? = nil
     ) {
         self.label = label
         self._value = value
@@ -95,6 +99,7 @@ public struct CivSelect: View {
         self.isDisabled = isDisabled
         self.emptyLabel = emptyLabel
         self.onChange = onChange
+        self.onAnalytics = onAnalytics
     }
 
     // MARK: - Body
@@ -125,7 +130,6 @@ public struct CivSelect: View {
                         dark: CivTokens.DarkColors.Error.default_
                     ))
                     .accessibilityIdentifier("civ-error")
-                    .accessibilityAddTraits(.updatesFrequently)
             }
 
             // 4. Picker
@@ -133,6 +137,11 @@ public struct CivSelect: View {
         }
         .padding(.bottom, CivTokens.Spacing._4)
         .accessibilityElement(children: .contain)
+        .onChange(of: error) { newError in
+            if let newError, !newError.isEmpty {
+                UIAccessibility.post(notification: .announcement, argument: newError)
+            }
+        }
     }
 
     // MARK: - Subviews
@@ -215,6 +224,7 @@ public struct CivSelect: View {
             set: { newValue in
                 value = newValue
                 onChange?(newValue)
+                onAnalytics?("change", ["value": newValue])
             }
         )
     }

@@ -15,6 +15,9 @@ import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.border
+import androidx.compose.foundation.shape.RoundedCornerShape
 import gov.civui.tokens.CivTokens
 
 /**
@@ -54,6 +57,19 @@ internal fun CivLabel(
         }
     }
 }
+
+/**
+ * Focus ring modifier for form controls.
+ * Applies a visible border when the control is focused, matching the web
+ * `focus-visible:civ-focus-ring` pattern.
+ */
+fun Modifier.civFocusRing(isFocused: Boolean): Modifier = this.then(
+    if (isFocused) Modifier.border(
+        width = 3.dp,
+        color = CivTokens.Colors.Primary.default_,
+        shape = RoundedCornerShape(CivTokens.Border.Radius.default_)
+    ) else Modifier
+)
 
 /**
  * Renders hint text below the label.

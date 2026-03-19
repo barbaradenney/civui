@@ -229,6 +229,9 @@ public struct CivRadioGroup: View {
     /// Called when the selected value changes.
     public var onChange: ((String) -> Void)?
 
+    /// Called for analytics tracking (parallels `civ-analytics` event).
+    public var onAnalytics: ((String, [String: Any]?) -> Void)?
+
     // MARK: - Internal State
 
     @Environment(\.colorScheme) private var colorScheme
@@ -244,7 +247,8 @@ public struct CivRadioGroup: View {
         isRequired: Bool = false,
         isDisabled: Bool = false,
         isTile: Bool = false,
-        onChange: ((String) -> Void)? = nil
+        onChange: ((String) -> Void)? = nil,
+        onAnalytics: ((String, [String: Any]?) -> Void)? = nil
     ) {
         self.legend = legend
         self._value = value
@@ -255,6 +259,7 @@ public struct CivRadioGroup: View {
         self.isDisabled = isDisabled
         self.isTile = isTile
         self.onChange = onChange
+        self.onAnalytics = onAnalytics
     }
 
     // MARK: - Body
@@ -285,7 +290,6 @@ public struct CivRadioGroup: View {
                         dark: CivTokens.DarkColors.Error.default_
                     ))
                     .accessibilityIdentifier("civ-error")
-                    .accessibilityAddTraits(.updatesFrequently)
             }
 
             // 4. Radio options
@@ -301,6 +305,7 @@ public struct CivRadioGroup: View {
                         onSelect: {
                             value = option.value
                             onChange?(option.value)
+                            onAnalytics?("change", ["value": option.value])
                         }
                     )
                 }
@@ -308,6 +313,11 @@ public struct CivRadioGroup: View {
         }
         .padding(.bottom, CivTokens.Spacing._4)
         .accessibilityElement(children: .contain)
+        .onChange(of: error) { newError in
+            if let newError, !newError.isEmpty {
+                UIAccessibility.post(notification: .announcement, argument: newError)
+            }
+        }
     }
 
     // MARK: - Subviews

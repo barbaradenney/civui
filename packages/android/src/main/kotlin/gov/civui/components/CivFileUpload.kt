@@ -11,6 +11,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -32,6 +33,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.contentDescription
@@ -98,6 +101,7 @@ fun CivFileUpload(
     disabled: Boolean = false,
     browseText: String = "Choose file",
     removeText: String = "Remove",
+    onAnalytics: ((event: String, data: Map<String, Any>?) -> Unit)? = null,
 ) {
     val isDark = isSystemInDarkTheme()
     val context = LocalContext.current
@@ -109,10 +113,27 @@ fun CivFileUpload(
     val borderColor = if (isDark) CivTokens.DarkColors.Base.light else CivTokens.Colors.Base.light
 
     var currentError by remember { mutableStateOf(error) }
+    var fileAnnouncement by remember { mutableStateOf("") }
+    val focusRequesters = remember(files.size) {
+        List(files.size) { FocusRequester() }
+    }
 
     // Update currentError when error prop changes
     if (error != currentError && error != null) {
         currentError = error
+    }
+
+    // Helper to validate MIME type against accept list
+    fun isAcceptedType(uri: Uri): Boolean {
+        if (accept.isEmpty()) return true
+        val mimeType = context.contentResolver.getType(uri) ?: return true
+        return accept.any { pattern ->
+            if (pattern.endsWith("/*")) {
+                mimeType.startsWith(pattern.removeSuffix("*"))
+            } else {
+                mimeType == pattern
+            }
+        }
     }
 
     // File picker launcher for single file
@@ -133,9 +154,16 @@ fun CivFileUpload(
                 return@let
             }
 
+            if (!isAcceptedType(uri)) {
+                currentError = "$name is not an accepted file type"
+                return@let
+            }
+
             currentError = null
             val newFile = CivUploadedFile(name = name, size = size, uri = uri)
             onFilesChange(listOf(newFile))
+            fileAnnouncement = "File added: $name"
+            onAnalytics?.invoke("file-added", mapOf("field" to label, "fileName" to name, "fileSize" to size))
         }
     }
 
@@ -160,6 +188,11 @@ fun CivFileUpload(
                 continue
             }
 
+            if (!isAcceptedType(uri)) {
+                errors.add("$name is not an accepted file type")
+                continue
+            }
+
             newFiles.add(CivUploadedFile(name = name, size = size, uri = uri))
         }
 
@@ -174,6 +207,10 @@ fun CivFileUpload(
 
         currentError = if (errors.isNotEmpty()) errors.joinToString(". ") else null
         onFilesChange(finalFiles)
+        if (newFiles.isNotEmpty()) {
+            fileAnnouncement = "${newFiles.size} files added"
+            onAnalytics?.invoke("files-added", mapOf("field" to label, "count" to newFiles.size))
+        }
     }
 
     val mimeTypes = accept.ifEmpty { listOf("*/*") }.toTypedArray()
@@ -295,11 +332,22 @@ fun CivFileUpload(
 
                         IconButton(
                             onClick = {
+                                val removedName = files[index].name
                                 val newFiles = files.toMutableList()
                                 newFiles.removeAt(index)
                                 onFilesChange(newFiles)
+                                fileAnnouncement = "File removed: $removedName"
+                                onAnalytics?.invoke("file-removed", mapOf("field" to label, "fileName" to removedName))
+                                // Move focus to the next remove button (or previous if last)
+                                val nextIndex = if (index < newFiles.size) index else (newFiles.size - 1)
+                                if (nextIndex >= 0 && nextIndex < focusRequesters.size) {
+                                    try { focusRequesters[nextIndex].requestFocus() } catch (_: Exception) {}
+                                }
                             },
                             enabled = !disabled,
+                            modifier = if (index < focusRequesters.size) {
+                                Modifier.focusRequester(focusRequesters[index])
+                            } else Modifier,
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Close,
@@ -310,6 +358,19 @@ fun CivFileUpload(
                     }
                 }
             }
+        }
+
+        // SR announcement for file added/removed
+        if (fileAnnouncement.isNotEmpty()) {
+            Text(
+                text = fileAnnouncement,
+                modifier = Modifier.semantics {
+                    liveRegion = LiveRegionMode.Polite
+                    contentDescription = fileAnnouncement
+                },
+                style = TextStyle(fontSize = CivTokens.Typography.FontSize.sm),
+                color = Color.Transparent,
+            )
         }
     }
 }

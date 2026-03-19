@@ -58,6 +58,9 @@ public struct CivCheckbox: View {
     /// Parameters: (checked: Bool, value: String)
     public var onChange: ((Bool, String) -> Void)?
 
+    /// Called for analytics tracking (parallels `civ-analytics` event).
+    public var onAnalytics: ((String, [String: Any]?) -> Void)?
+
     // MARK: - Internal State
 
     @Environment(\.colorScheme) private var colorScheme
@@ -74,7 +77,8 @@ public struct CivCheckbox: View {
         isRequired: Bool = false,
         isDisabled: Bool = false,
         isTile: Bool = false,
-        onChange: ((Bool, String) -> Void)? = nil
+        onChange: ((Bool, String) -> Void)? = nil,
+        onAnalytics: ((String, [String: Any]?) -> Void)? = nil
     ) {
         self.label = label
         self._checked = checked
@@ -86,6 +90,7 @@ public struct CivCheckbox: View {
         self.isDisabled = isDisabled
         self.isTile = isTile
         self.onChange = onChange
+        self.onAnalytics = onAnalytics
     }
 
     // MARK: - Body
@@ -113,7 +118,6 @@ public struct CivCheckbox: View {
                         dark: CivTokens.DarkColors.Error.default_
                     ))
                     .accessibilityIdentifier("civ-error")
-                    .accessibilityAddTraits(.updatesFrequently)
             }
 
             // 3. Checkbox + Label
@@ -121,6 +125,11 @@ public struct CivCheckbox: View {
         }
         .padding(.bottom, CivTokens.Spacing._2)
         .accessibilityElement(children: .contain)
+        .onChange(of: error) { newError in
+            if let newError, !newError.isEmpty {
+                UIAccessibility.post(notification: .announcement, argument: newError)
+            }
+        }
     }
 
     // MARK: - Subviews
@@ -239,6 +248,7 @@ public struct CivCheckbox: View {
     private func toggle() {
         checked.toggle()
         onChange?(checked, value)
+        onAnalytics?("change", ["checked": checked, "value": value])
     }
 
     // MARK: - Accessibility

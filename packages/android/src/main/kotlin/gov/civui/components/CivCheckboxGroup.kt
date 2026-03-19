@@ -15,6 +15,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.error
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import gov.civui.tokens.CivTokens
@@ -62,6 +64,7 @@ fun CivCheckboxGroup(
     orientation: CivOrientation = CivOrientation.Vertical,
     required: Boolean = false,
     disabled: Boolean = false,
+    onAnalytics: ((event: String, data: Map<String, Any>?) -> Unit)? = null,
 ) {
     val isDark = isSystemInDarkTheme()
 
@@ -70,7 +73,11 @@ fun CivCheckboxGroup(
     val errorColor = if (isDark) CivTokens.DarkColors.Error.default_ else CivTokens.Colors.Error.default_
 
     Column(
-        modifier = modifier.padding(bottom = CivTokens.Spacing._4),
+        modifier = modifier
+            .padding(bottom = CivTokens.Spacing._4)
+            .then(
+                if (error != null) Modifier.semantics { error(error) } else Modifier
+            ),
     ) {
         // 1. Legend
         CivLabel(
@@ -99,6 +106,7 @@ fun CivCheckboxGroup(
                             values - option.value
                         }
                         onValuesChange(newValues)
+                        onAnalytics?.invoke("change", mapOf("field" to legend, "values" to newValues))
                     },
                     value = option.value,
                     description = option.description,

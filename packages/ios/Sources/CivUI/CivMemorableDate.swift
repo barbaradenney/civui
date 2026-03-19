@@ -47,8 +47,11 @@ public struct CivMemorableDate: View {
     /// Custom label for the year field.
     public var yearLabel: String
 
-    /// Called when the date changes.
-    public var onChange: ((String) -> Void)?
+    /// Called when the date changes. Parameters: (value, month, day, year).
+    public var onChange: ((String, String, String, String) -> Void)?
+
+    /// Called for analytics tracking (parallels `civ-analytics` event).
+    public var onAnalytics: ((String, [String: Any]?) -> Void)?
 
     // MARK: - Internal State
 
@@ -69,7 +72,8 @@ public struct CivMemorableDate: View {
         monthLabel: String = "Month",
         dayLabel: String = "Day",
         yearLabel: String = "Year",
-        onChange: ((String) -> Void)? = nil
+        onChange: ((String, String, String, String) -> Void)? = nil,
+        onAnalytics: ((String, [String: Any]?) -> Void)? = nil
     ) {
         self.legend = legend
         self._value = value
@@ -81,6 +85,7 @@ public struct CivMemorableDate: View {
         self.dayLabel = dayLabel
         self.yearLabel = yearLabel
         self.onChange = onChange
+        self.onAnalytics = onAnalytics
     }
 
     // MARK: - Month Options
@@ -121,7 +126,6 @@ public struct CivMemorableDate: View {
                         dark: CivTokens.DarkColors.Error.default_
                     ))
                     .accessibilityIdentifier("civ-error")
-                    .accessibilityAddTraits(.updatesFrequently)
             }
 
             // 4. Date fields
@@ -222,6 +226,11 @@ public struct CivMemorableDate: View {
         .opacity(isDisabled ? 0.5 : 1.0)
         .onAppear { parseValue() }
         .onChange(of: value) { _ in parseValue() }
+        .onChange(of: error) { newError in
+            if let newError, !newError.isEmpty {
+                UIAccessibility.post(notification: .announcement, argument: newError)
+            }
+        }
         .accessibilityElement(children: .contain)
     }
 
@@ -285,27 +294,38 @@ public struct CivMemorableDate: View {
     }
 
     private func assembleDate() {
+        let paddedMonth = month.padding(toLength: 2, withPad: "0", startingAt: 0)
+        let paddedDay = day.padding(toLength: 2, withPad: "0", startingAt: 0)
+
         guard !month.isEmpty, !day.isEmpty, year.count == 4 else {
             if !value.isEmpty {
                 value = ""
-                onChange?("")
+                onChange?("", month, day, year)
             }
             return
         }
-        let assembled = "\(year.padding(toLength: 4, withPad: "0", startingAt: 0))-\(month.padding(toLength: 2, withPad: "0", startingAt: 0))-\(day.padding(toLength: 2, withPad: "0", startingAt: 0))"
+        let assembled = "\(year.padding(toLength: 4, withPad: "0", startingAt: 0))-\(paddedMonth)-\(paddedDay)"
 
         // Validate the date is real
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
         formatter.locale = Locale(identifier: "en_US_POSIX")
-        guard formatter.date(from: assembled) != nil else {
+        guard let date = formatter.date(from: assembled) else {
             value = ""
-            onChange?("")
+            onChange?("", month, day, year)
             return
         }
 
         value = assembled
-        onChange?(assembled)
+        onChange?(assembled, paddedMonth, paddedDay, year)
+        onAnalytics?("change", ["value": assembled, "month": paddedMonth, "day": paddedDay, "year": year])
+
+        // Announce the assembled date for VoiceOver
+        let displayFormatter = DateFormatter()
+        displayFormatter.dateStyle = .long
+        displayFormatter.locale = Locale(identifier: "en_US")
+        let displayDate = displayFormatter.string(from: date)
+        UIAccessibility.post(notification: .announcement, argument: "Date entered: \(displayDate)")
     }
 
     // MARK: - Color Helper

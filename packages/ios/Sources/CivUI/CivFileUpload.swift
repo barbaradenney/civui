@@ -71,11 +71,16 @@ public struct CivFileUpload: View {
     /// Called when files change.
     public var onChange: (([CivUploadedFile]) -> Void)?
 
+    /// Called for analytics tracking (parallels `civ-analytics` event).
+    public var onAnalytics: ((String, [String: Any]?) -> Void)?
+
     // MARK: - Internal State
 
     @State private var isImporterPresented = false
     @State private var internalError: String?
     @Environment(\.colorScheme) private var colorScheme
+    @FocusState private var focusedFileId: UUID?
+    @FocusState private var isUploadButtonFocused: Bool
 
     // MARK: - Initializer
 
@@ -90,7 +95,8 @@ public struct CivFileUpload: View {
         error: String? = nil,
         isDisabled: Bool = false,
         isRequired: Bool = false,
-        onChange: (([CivUploadedFile]) -> Void)? = nil
+        onChange: (([CivUploadedFile]) -> Void)? = nil,
+        onAnalytics: ((String, [String: Any]?) -> Void)? = nil
     ) {
         self.label = label
         self._files = files
@@ -103,6 +109,7 @@ public struct CivFileUpload: View {
         self.isDisabled = isDisabled
         self.isRequired = isRequired
         self.onChange = onChange
+        self.onAnalytics = onAnalytics
     }
 
     // MARK: - Body
@@ -133,7 +140,6 @@ public struct CivFileUpload: View {
                         dark: CivTokens.DarkColors.Error.default_
                     ))
                     .accessibilityIdentifier("civ-error")
-                    .accessibilityAddTraits(.updatesFrequently)
             }
 
             // 4. Upload button
@@ -167,6 +173,7 @@ public struct CivFileUpload: View {
             .buttonStyle(.plain)
             .disabled(isDisabled)
             .opacity(isDisabled ? 0.5 : 1.0)
+            .focused($isUploadButtonFocused)
             .accessibilityLabel(label)
             .accessibilityHint(accessibilityHintText)
             .fileImporter(
@@ -211,6 +218,7 @@ public struct CivFileUpload: View {
                             }
                             .buttonStyle(.plain)
                             .disabled(isDisabled)
+                            .focused($focusedFileId, equals: file.id)
                             .accessibilityLabel("Remove \(file.name)")
                         }
                         .padding(CivTokens.Spacing._2)
@@ -225,6 +233,11 @@ public struct CivFileUpload: View {
         }
         .padding(.bottom, CivTokens.Spacing._4)
         .accessibilityElement(children: .contain)
+        .onChange(of: error) { newError in
+            if let newError, !newError.isEmpty {
+                UIAccessibility.post(notification: .announcement, argument: newError)
+            }
+        }
     }
 
     // MARK: - File Handling
@@ -269,7 +282,13 @@ public struct CivFileUpload: View {
                 files = [first]
             }
 
+            // Announce added files for VoiceOver
+            for file in newFiles {
+                UIAccessibility.post(notification: .announcement, argument: "File added: \(file.name)")
+            }
+
             onChange?(files)
+            onAnalytics?("change", ["files": newFiles.map { $0.name }])
 
         case .failure(let error):
             internalError = error.localizedDescription
@@ -277,9 +296,25 @@ public struct CivFileUpload: View {
     }
 
     private func removeFile(_ file: CivUploadedFile) {
-        files.removeAll { $0.id == file.id }
+        guard let index = files.firstIndex(where: { $0.id == file.id }) else { return }
+        files.remove(at: index)
         if files.isEmpty { internalError = nil }
+
+        // Announce removal for VoiceOver
+        let remaining = files.count
+        let announcement = "File removed: \(file.name), \(remaining) file\(remaining == 1 ? "" : "s") remaining"
+        UIAccessibility.post(notification: .announcement, argument: announcement)
+
+        // Move focus: to next remove button or upload button if no files remain
+        if files.isEmpty {
+            isUploadButtonFocused = true
+        } else {
+            let nextIndex = Swift.min(index, files.count - 1)
+            focusedFileId = files[nextIndex].id
+        }
+
         onChange?(files)
+        onAnalytics?("change", ["files": files.map { $0.name }])
     }
 
     // MARK: - Helpers

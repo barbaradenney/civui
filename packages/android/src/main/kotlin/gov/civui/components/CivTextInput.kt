@@ -163,6 +163,7 @@ fun CivTextInput(
     inputType: CivInputType = CivInputType.Text,
     width: CivInputWidth = CivInputWidth.Full,
     mask: CivInputMask? = null,
+    maxLength: Int? = null,
     maskPattern: String = "",
     onInput: ((String) -> Unit)? = null,
     onChange: ((String) -> Unit)? = null,
@@ -304,8 +305,9 @@ fun CivTextInput(
                         digits.take(maxRawLen)
                     }
                 }
-                onValueChange(filtered)
-                onInput?.invoke(filtered)
+                val limited = if (maxLength != null) filtered.take(maxLength) else filtered
+                onValueChange(limited)
+                onInput?.invoke(limited)
             }
         } else if (maskPattern.isNotEmpty()) {
             { newValue: String ->
@@ -341,13 +343,15 @@ fun CivTextInput(
                         }
                     }
                 }
-                onValueChange(filtered)
-                onInput?.invoke(filtered)
+                val limited = if (maxLength != null) filtered.take(maxLength) else filtered
+                onValueChange(limited)
+                onInput?.invoke(limited)
             }
         } else {
             { newValue: String ->
-                onValueChange(newValue)
-                onInput?.invoke(newValue)
+                val limited = if (maxLength != null) newValue.take(maxLength) else newValue
+                onValueChange(limited)
+                onInput?.invoke(limited)
             }
         }
 

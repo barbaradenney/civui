@@ -41,6 +41,9 @@ public struct CivDatePicker: View {
     /// Maximum date (YYYY-MM-DD).
     public var max: String?
 
+    /// Placeholder text shown when no date is selected.
+    public var placeholder: String
+
     /// Whether a date is required.
     public var isRequired: Bool
 
@@ -81,6 +84,7 @@ public struct CivDatePicker: View {
         error: String? = nil,
         min: String? = nil,
         max: String? = nil,
+        placeholder: String = "",
         isRequired: Bool = false,
         isDisabled: Bool = false,
         onChange: ((String) -> Void)? = nil,
@@ -97,6 +101,7 @@ public struct CivDatePicker: View {
         self.error = error
         self.min = min
         self.max = max
+        self.placeholder = placeholder
         self.isRequired = isRequired
         self.isDisabled = isDisabled
         self.onChange = onChange
@@ -178,34 +183,66 @@ public struct CivDatePicker: View {
                     .accessibilityIdentifier("civ-error")
             }
 
-            // 4. DatePicker
-            Group {
-                if let range = dateRange {
-                    DatePicker(
-                        "",
-                        selection: dateBinding,
-                        in: range,
-                        displayedComponents: .date
+            // 4. DatePicker or Placeholder
+            if value.isEmpty && !placeholder.isEmpty {
+                Text(placeholder)
+                    .font(.system(size: CivTokens.Typography.FontSize.base))
+                    .foregroundColor(adaptiveColor(
+                        light: CivTokens.Colors.Base.dark,
+                        dark: CivTokens.DarkColors.Base.dark
+                    ))
+                    .padding(.horizontal, CivTokens.Spacing._2)
+                    .padding(.vertical, CivTokens.Spacing._1_5)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(adaptiveColor(
+                        light: CivTokens.Colors.White.default_,
+                        dark: CivTokens.DarkColors.White.default_
+                    ))
+                    .cornerRadius(CivTokens.Border.Radius.default_)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: CivTokens.Border.Radius.default_)
+                            .stroke(adaptiveColor(
+                                light: CivTokens.Colors.Base.light,
+                                dark: CivTokens.DarkColors.Base.light
+                            ), lineWidth: CivTokens.Border.Width.default_)
                     )
-                    .labelsHidden()
-                } else {
-                    DatePicker(
-                        "",
-                        selection: dateBinding,
-                        displayedComponents: .date
-                    )
-                    .labelsHidden()
+                    .accessibilityLabel(accessibilityLabelText)
+                    .accessibilityHint(accessibilityHintText)
+                    .onTapGesture {
+                        // Set to today to trigger the date picker
+                        let today = Self.isoFormatter.string(from: Date())
+                        value = today
+                        onChange?(today)
+                    }
+            } else {
+                Group {
+                    if let range = dateRange {
+                        DatePicker(
+                            "",
+                            selection: dateBinding,
+                            in: range,
+                            displayedComponents: .date
+                        )
+                        .labelsHidden()
+                    } else {
+                        DatePicker(
+                            "",
+                            selection: dateBinding,
+                            displayedComponents: .date
+                        )
+                        .labelsHidden()
+                    }
                 }
+                .datePickerStyle(.compact)
+                .tint(adaptiveColor(
+                    light: CivTokens.Colors.Primary.default_,
+                    dark: CivTokens.DarkColors.Primary.default_
+                ))
+                .disabled(isDisabled)
+                .opacity(isDisabled ? 0.5 : 1.0)
+                .accessibilityLabel(accessibilityLabelText)
+                .accessibilityHint(accessibilityHintText)
             }
-            .datePickerStyle(.compact)
-            .tint(adaptiveColor(
-                light: CivTokens.Colors.Primary.default_,
-                dark: CivTokens.DarkColors.Primary.default_
-            ))
-            .disabled(isDisabled)
-            .opacity(isDisabled ? 0.5 : 1.0)
-            .accessibilityLabel(accessibilityLabelText)
-            .accessibilityHint(accessibilityHintText)
         }
         .padding(.bottom, CivTokens.Spacing._4)
         .accessibilityElement(children: .contain)

@@ -36,6 +36,28 @@ interface ComponentAPI {
   file: string;
 }
 
+// ── Web base class props (inherited from CivFormElement) ─────
+
+const WEB_BASE_PROPS: PropDef[] = [
+  { name: 'label', type: 'String', required: false, default: "''" },
+  { name: 'name', type: 'String', required: false, default: "''" },
+  { name: 'value', type: 'String', required: false, default: "''" },
+  { name: 'hint', type: 'String', required: false, default: "''" },
+  { name: 'error', type: 'String', required: false, default: "''" },
+  { name: 'required', type: 'Boolean', required: false, default: 'false' },
+  { name: 'disabled', type: 'Boolean', required: false, default: 'false' },
+  { name: 'readonly', type: 'Boolean', required: false, default: 'false' },
+];
+
+// Boolean form elements (checkbox, toggle) also have:
+const WEB_BOOLEAN_PROPS: PropDef[] = [
+  { name: 'checked', type: 'Boolean', required: false, default: 'false' },
+  { name: 'description', type: 'String', required: false, default: "''" },
+];
+
+// Events all form components dispatch:
+const WEB_BASE_EVENTS = ['civ-input', 'civ-change', 'civ-analytics'];
+
 // ── Web (TypeScript/Lit) parser ──────────────────────────────
 
 function parseWebComponent(filePath: string): ComponentAPI | null {
@@ -63,6 +85,30 @@ function parseWebComponent(filePath: string): ComponentAPI | null {
     });
   }
 
+  // Merge in inherited base class props
+  const declaredNames = new Set(props.map(p => p.name));
+
+  const extendsBooleanForm = /extends\s+CivBooleanFormElement/.test(src);
+  const extendsForm = /extends\s+(?:LightDomContainerMixin\()?CivFormElement/.test(src);
+
+  if (extendsBooleanForm || extendsForm) {
+    for (const baseProp of WEB_BASE_PROPS) {
+      if (!declaredNames.has(baseProp.name)) {
+        props.push({ ...baseProp });
+        declaredNames.add(baseProp.name);
+      }
+    }
+  }
+
+  if (extendsBooleanForm) {
+    for (const boolProp of WEB_BOOLEAN_PROPS) {
+      if (!declaredNames.has(boolProp.name)) {
+        props.push({ ...boolProp });
+        declaredNames.add(boolProp.name);
+      }
+    }
+  }
+
   // Extract @state declarations
   const stateRegex = /@state\(\)\s+(?:private\s+)?(\w+)(?:\s*[:=]\s*(.+?))?[;\n]/g;
   while ((m = stateRegex.exec(src)) !== null) {
@@ -86,6 +132,16 @@ function parseWebComponent(filePath: string): ComponentAPI | null {
     if (!seenEvents.has(m[1])) {
       seenEvents.add(m[1]);
       events.push({ name: m[1], detail: m[2]?.trim() });
+    }
+  }
+
+  // Merge in base events for form components
+  if (extendsBooleanForm || extendsForm) {
+    for (const evtName of WEB_BASE_EVENTS) {
+      if (!seenEvents.has(evtName)) {
+        seenEvents.add(evtName);
+        events.push({ name: evtName });
+      }
     }
   }
 
@@ -379,6 +435,7 @@ function generateReport(): string {
       'nextMonthLabel', 'dialogOpenedMessage', 'dateSelectedMessage', 'todayLabel',
       'invalidFormatMessage', 'dateRangeMessage', 'minDateMessage', 'maxDateMessage',
       'monthEmptyLabel', 'dayPlaceholder', 'yearPlaceholder', 'dateSetMessage', 'invalidDateMessage',
+      'monthLabel', 'dayLabel', 'yearLabel',
       'dragText', 'browseText', 'acceptedLabel', 'maxSizeLabel', 'removeText', 'removeAriaLabel',
       'filesListLabel', 'fileAddedMessage', 'fileRemovedMessage', 'fileSizeError', 'fileTypeError',
       'maxFilesError', 'requiredMessage', 'noResultsText',
@@ -386,10 +443,25 @@ function generateReport(): string {
       'formValidate', 'pii', 'parts',
     ]);
 
+    // Props that are native-only and should not count as "missing on web"
+    const nativeOnlyProps = new Set([
+      'body', 'parts', 'content', 'id', 'data', 'keyboardType', 'points',
+      'selected', 'newFiles', 'errors', 'fieldName', 'message', 'url', 'size',
+      'formValidate', 'modifier',
+    ]);
+
     // Web-only events
     const webOnlyEvents = new Set([
       'civ-reset', // native handles reset differently
     ]);
+
+    // Remove native-only props so they don't show as gaps
+    for (const name of Array.from(allProps.keys())) {
+      const v = allProps.get(name)!;
+      if (!v.web && nativeOnlyProps.has(name)) {
+        allProps.delete(name);
+      }
+    }
 
     // Calculate parity: what % of web props/events exist on at least one native platform
     let webItems = 0;

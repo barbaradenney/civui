@@ -66,6 +66,9 @@ public struct CivCheckboxGroup: View {
     /// Whether to render in tile (card) style.
     public var isTile: Bool
 
+    /// Layout orientation for options: "vertical" (default) or "horizontal".
+    public var orientation: String
+
     /// Called when the set of checked values changes.
     public var onChange: (([String]) -> Void)?
 
@@ -87,6 +90,7 @@ public struct CivCheckboxGroup: View {
         isRequired: Bool = false,
         isDisabled: Bool = false,
         isTile: Bool = false,
+        orientation: String = "vertical",
         onChange: (([String]) -> Void)? = nil,
         onAnalytics: ((String, [String: Any]?) -> Void)? = nil
     ) {
@@ -98,6 +102,7 @@ public struct CivCheckboxGroup: View {
         self.isRequired = isRequired
         self.isDisabled = isDisabled
         self.isTile = isTile
+        self.orientation = orientation
         self.onChange = onChange
         self.onAnalytics = onAnalytics
     }
@@ -133,29 +138,7 @@ public struct CivCheckboxGroup: View {
             }
 
             // 4. Checkbox options
-            VStack(alignment: .leading, spacing: CivTokens.Spacing._2) {
-                ForEach(options) { option in
-                    CivCheckbox(
-                        label: option.label,
-                        checked: checkedBinding(for: option.value),
-                        value: option.value,
-                        description: option.description,
-                        isDisabled: isDisabled || option.isDisabled,
-                        isTile: isTile,
-                        onChange: { checked, val in
-                            if checked {
-                                if !values.contains(val) {
-                                    values.append(val)
-                                }
-                            } else {
-                                values.removeAll { $0 == val }
-                            }
-                            onChange?(values)
-                            onAnalytics?("change", ["values": values])
-                        }
-                    )
-                }
-            }
+            optionsLayout
         }
         .padding(.bottom, CivTokens.Spacing._4)
         .accessibilityElement(children: .contain)
@@ -163,6 +146,46 @@ public struct CivCheckboxGroup: View {
             if let newError, !newError.isEmpty {
                 UIAccessibility.post(notification: .announcement, argument: newError)
             }
+        }
+    }
+
+    // MARK: - Options Layout
+
+    @ViewBuilder
+    private var optionsLayout: some View {
+        if orientation == "horizontal" {
+            HStack(alignment: .top, spacing: CivTokens.Spacing._2) {
+                optionsContent
+            }
+        } else {
+            VStack(alignment: .leading, spacing: CivTokens.Spacing._2) {
+                optionsContent
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var optionsContent: some View {
+        ForEach(options) { option in
+            CivCheckbox(
+                label: option.label,
+                checked: checkedBinding(for: option.value),
+                value: option.value,
+                description: option.description,
+                isDisabled: isDisabled || option.isDisabled,
+                isTile: isTile,
+                onChange: { checked, val in
+                    if checked {
+                        if !values.contains(val) {
+                            values.append(val)
+                        }
+                    } else {
+                        values.removeAll { $0 == val }
+                    }
+                    onChange?(values)
+                    onAnalytics?("change", ["values": values])
+                }
+            )
         }
     }
 

@@ -51,6 +51,10 @@ public struct CivCheckbox: View {
     /// Whether the field is disabled.
     public var isDisabled: Bool
 
+    /// Whether the checkbox is in an indeterminate (mixed) state.
+    /// When true, displays a dash instead of a checkmark.
+    public var isIndeterminate: Bool
+
     /// Whether to render in tile (card) style.
     public var isTile: Bool
 
@@ -76,6 +80,7 @@ public struct CivCheckbox: View {
         error: String? = nil,
         isRequired: Bool = false,
         isDisabled: Bool = false,
+        isIndeterminate: Bool = false,
         isTile: Bool = false,
         onChange: ((Bool, String) -> Void)? = nil,
         onAnalytics: ((String, [String: Any]?) -> Void)? = nil
@@ -88,6 +93,7 @@ public struct CivCheckbox: View {
         self.error = error
         self.isRequired = isRequired
         self.isDisabled = isDisabled
+        self.isIndeterminate = isIndeterminate
         self.isTile = isTile
         self.onChange = onChange
         self.onAnalytics = onAnalytics
@@ -182,7 +188,7 @@ public struct CivCheckbox: View {
         .disabled(isDisabled)
         .opacity(isDisabled ? 0.5 : 1.0)
         .accessibilityLabel(accessibilityLabelText)
-        .accessibilityValue(checked ? "checked" : "unchecked")
+        .accessibilityValue(isIndeterminate ? "mixed" : (checked ? "checked" : "unchecked"))
         .accessibilityAddTraits(.isButton)
         .accessibilityHint(accessibilityHintText)
     }
@@ -190,13 +196,24 @@ public struct CivCheckbox: View {
     private var checkboxIndicator: some View {
         ZStack {
             RoundedRectangle(cornerRadius: CivTokens.Border.Radius.sm)
-                .stroke(checked
+                .stroke((checked || isIndeterminate)
                     ? adaptiveColor(light: CivTokens.Colors.Primary.default_, dark: CivTokens.DarkColors.Primary.default_)
                     : adaptiveColor(light: CivTokens.Colors.Base.light, dark: CivTokens.DarkColors.Base.light),
                     lineWidth: CivTokens.Border.Width._2)
                 .frame(width: 20, height: 20)
 
-            if checked {
+            if isIndeterminate {
+                RoundedRectangle(cornerRadius: CivTokens.Border.Radius.sm)
+                    .fill(adaptiveColor(
+                        light: CivTokens.Colors.Primary.default_,
+                        dark: CivTokens.DarkColors.Primary.default_
+                    ))
+                    .frame(width: 20, height: 20)
+
+                Image(systemName: "minus")
+                    .font(.system(size: 12, weight: .bold))
+                    .foregroundColor(.white)
+            } else if checked {
                 RoundedRectangle(cornerRadius: CivTokens.Border.Radius.sm)
                     .fill(adaptiveColor(
                         light: CivTokens.Colors.Primary.default_,

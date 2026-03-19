@@ -140,6 +140,9 @@ public struct CivTextInput: View {
     /// Input mask preset.
     public var mask: CivInputMask
 
+    /// Maximum number of characters allowed. When set, truncates input to this length.
+    public var maxLength: Int?
+
     /// Called on every value change (parallels `civ-input` event).
     public var onInput: ((String) -> Void)?
 
@@ -184,6 +187,7 @@ public struct CivTextInput: View {
         isDisabled: Bool = false,
         isReadonly: Bool = false,
         placeholder: String? = nil,
+        maxLength: Int? = nil,
         inputType: CivInputType = .text,
         width: CivInputWidth = .full,
         mask: CivInputMask = .none,
@@ -205,6 +209,7 @@ public struct CivTextInput: View {
         self.isDisabled = isDisabled
         self.isReadonly = isReadonly
         self.placeholder = placeholder
+        self.maxLength = maxLength
         self.inputType = inputType
         self.width = width
         self.mask = mask
@@ -265,6 +270,11 @@ public struct CivTextInput: View {
         }
         .onAppear { registerWithFormState() }
         .onDisappear { unregisterFromFormState() }
+        .onChange(of: value) { newValue in
+            if let maxLength, newValue.count > maxLength {
+                value = String(newValue.prefix(maxLength))
+            }
+        }
     }
 
     // MARK: - Form State Registration

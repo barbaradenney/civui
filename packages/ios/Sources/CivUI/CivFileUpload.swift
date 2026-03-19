@@ -89,6 +89,11 @@ public struct CivFileUpload: View {
     /// Field name for form state registration.
     public var formName: String?
 
+    /// Comma-separated file names, matching the web component's form value pattern.
+    public var value: String {
+        files.map(\.name).joined(separator: ",")
+    }
+
     // MARK: - Internal State
 
     @State private var isImporterPresented = false

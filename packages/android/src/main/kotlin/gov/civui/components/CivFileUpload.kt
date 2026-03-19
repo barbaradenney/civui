@@ -107,6 +107,9 @@ fun CivFileUpload(
     formState: CivFormState? = null,
     onAnalytics: ((event: String, data: Map<String, Any>?) -> Unit)? = null,
 ) {
+    // Comma-separated file names, matching the web component's form value pattern.
+    val value = files.joinToString(",") { it.name }
+
     val isDark = isSystemInDarkTheme()
     val context = LocalContext.current
 

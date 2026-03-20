@@ -42,6 +42,12 @@ export interface CivLocaleStrings {
   fileUploadFileSizeError: string; // "{name} exceeds..."
   fileUploadFileTypeError: string;
   fileUploadMaxFilesError: string;
+  fileUploadEmptyFile: string; // "{name} appears to be empty (0 bytes)"
+  fileUploadCancelled: string;
+  fileUploadUploading: string; // "Uploading {name}, {progress} percent complete"
+  fileUploadSuccess: string; // "{name} uploaded successfully"
+  fileUploadError: string; // "Upload failed for {name}: {error}"
+  fileUploadCancelledAnnounce: string; // "Upload cancelled for {name}"
 
   // Date picker
   datePickerPlaceholder: string;
@@ -147,9 +153,15 @@ const defaultStrings: CivLocaleStrings = {
   fileUploadFilesListLabel: 'Selected files',
   fileUploadFileAddedMessage: '{count} file(s) added. {total} file(s) selected.',
   fileUploadFileRemovedMessage: 'File removed. {total} file(s) selected.',
-  fileUploadFileSizeError: '{name} exceeds maximum size of {size}',
+  fileUploadFileSizeError: '{name} exceeds the maximum size of {size}',
   fileUploadFileTypeError: '{name} is not an accepted file type',
-  fileUploadMaxFilesError: 'Maximum of {max} files allowed',
+  fileUploadMaxFilesError: 'Maximum of {max} files allowed. {name} was not added',
+  fileUploadEmptyFile: '{name} appears to be empty (0 bytes)',
+  fileUploadCancelled: 'Upload cancelled',
+  fileUploadUploading: 'Uploading {name}, {progress} percent complete',
+  fileUploadSuccess: '{name} uploaded successfully',
+  fileUploadError: 'Upload failed for {name}: {error}',
+  fileUploadCancelledAnnounce: 'Upload cancelled for {name}',
 
   datePickerPlaceholder: 'mm/dd/yyyy',
   datePickerChooseDateLabel: 'Choose date',

@@ -14,11 +14,17 @@ const previewStyles = html`
   </style>
 `;
 
+type FileStatus = 'pending' | 'uploading' | 'success' | 'error';
+
 interface UploadedFile {
   name: string;
   size: number;
   type: string;
   file: File;
+  status: FileStatus;
+  progress: number;
+  error?: string;
+  abortController?: AbortController;
 }
 
 function formatFileSize(bytes: number): string {
@@ -49,6 +55,8 @@ function formatFileSize(bytes: number): string {
  *
  * @fires civ-input - When files change, detail: { files: File[] }
  * @fires civ-change - When files are added or removed, detail: { files: File[] }
+ * @fires civ-upload-cancel - When a file upload is cancelled, detail: { index, name }
+ * @fires civ-upload-retry - When a file upload is retried, detail: { index, name, file }
  * @fires civ-analytics - Analytics tracking event on file add/remove
  *
  * Note: Event detail uses `{ files }` instead of the standard `{ value }`
@@ -88,6 +96,7 @@ export class CivFileUpload extends CivFormElement {
   @state() private _dragging = false;
 
   private _previewUrls = new Map<File, string>();
+  private _progressAnnounceTimer?: ReturnType<typeof setTimeout>;
 
   private _boundDragOver = this._onDragOver.bind(this);
   private _boundDragLeave = this._onDragLeave.bind(this);
@@ -95,6 +104,36 @@ export class CivFileUpload extends CivFormElement {
 
   get files(): File[] {
     return this._files.map((f) => f.file);
+  }
+
+  /** Update a file's upload status. Call from your upload handler. */
+  setFileStatus(index: number, status: FileStatus, opts?: { progress?: number; error?: string }): void {
+    const file = this._files[index];
+    if (!file) return;
+    const prevStatus = file.status;
+    file.status = status;
+    if (opts?.progress !== undefined) file.progress = opts.progress;
+    if (opts?.error) file.error = opts.error;
+    this.requestUpdate();
+
+    // Screen reader announcements
+    if (status === 'uploading') {
+      this._announceProgress(file.name, file.progress);
+    } else if (status === 'success') {
+      this.announce(interpolate(t('fileUploadSuccess'), { name: file.name }));
+    } else if (status === 'error' && prevStatus !== 'error') {
+      this.announce(interpolate(t('fileUploadError'), { name: file.name, error: file.error || 'Unknown error' }));
+    }
+  }
+
+  /** Get an AbortController for a file to enable cancellation. */
+  getAbortController(index: number): AbortController | undefined {
+    const file = this._files[index];
+    if (!file) return undefined;
+    if (!file.abortController) {
+      file.abortController = new AbortController();
+    }
+    return file.abortController;
   }
 
   override render() {
@@ -169,23 +208,63 @@ export class CivFileUpload extends CivFormElement {
               <ul class="civ-list-none civ-p-0 civ-mt-2 civ-space-y-1" aria-label="${this.filesListLabel || t('fileUploadFilesListLabel')}">
                 ${this._files.map(
                   (file, index) => html`
-                    <li class="civ-file-item">
-                      <span class="civ-flex civ-items-center civ-gap-2">
-                        ${this.showPreview && file.type?.startsWith('image/')
-                          ? html`<img class="civ-file-preview" src="${this._getPreviewUrl(file.file)}" alt="" />`
-                          : nothing}
-                        <span class="civ-font-semibold">${file.name}</span>
-                        <span class="civ-ms-2">(${formatFileSize(file.size)})</span>
+                    <li class="civ-file-item ${file.status === 'success' ? 'civ-file-item--success' : ''} ${file.status === 'error' ? 'civ-file-item--error' : ''}">
+                      <div class="civ-flex-1">
+                        <span class="civ-flex civ-items-center civ-gap-2">
+                          ${this.showPreview && file.type?.startsWith('image/')
+                            ? html`<img class="civ-file-preview" src="${this._getPreviewUrl(file.file)}" alt="" />`
+                            : nothing}
+                          ${file.status === 'success'
+                            ? html`<span class="civ-icon civ-icon--check" style="color: var(--civ-color-success-DEFAULT)" aria-hidden="true"></span>`
+                            : nothing}
+                          ${file.status === 'error'
+                            ? html`<span class="civ-icon civ-icon--error" style="color: var(--civ-color-error-DEFAULT)" aria-hidden="true"></span>`
+                            : nothing}
+                          <span class="civ-font-semibold">${file.name}</span>
+                          <span class="civ-ms-2">(${formatFileSize(file.size)})</span>
+                        </span>
+                        ${file.status === 'uploading' ? html`
+                          <div class="civ-file-progress">
+                            <div class="civ-file-progress-bar" style="width: ${file.progress}%" role="progressbar" aria-valuenow="${file.progress}" aria-valuemin="0" aria-valuemax="100" aria-label="Upload progress for ${file.name}"></div>
+                          </div>
+                        ` : nothing}
+                        ${file.status === 'error' && file.error ? html`
+                          <span class="civ-file-error-text">${file.error}</span>
+                        ` : nothing}
+                      </div>
+                      <span class="civ-flex civ-items-center civ-gap-1">
+                        ${file.status === 'uploading' ? html`
+                          <button
+                            type="button"
+                            class="civ-file-cancel-btn focus-visible:civ-focus-ring"
+                            @click="${() => this._cancelUpload(index)}"
+                            aria-label="Cancel upload for ${file.name}"
+                          >
+                            Cancel
+                          </button>
+                        ` : nothing}
+                        ${file.status === 'error' ? html`
+                          <button
+                            type="button"
+                            class="civ-file-retry-btn focus-visible:civ-focus-ring"
+                            @click="${() => this._retryUpload(index)}"
+                            aria-label="Retry upload for ${file.name}"
+                          >
+                            Retry
+                          </button>
+                        ` : nothing}
+                        ${file.status !== 'uploading' ? html`
+                          <button
+                            type="button"
+                            class="civ-file-remove-btn focus-visible:civ-focus-ring"
+                            @click="${() => this._removeFile(index)}"
+                            aria-label="${interpolate(this.removeAriaLabel || t('fileUploadRemoveAriaLabel'), { name: file.name })}"
+                            ?disabled="${this.disabled}"
+                          >
+                            ${this.removeText || t('fileUploadRemoveText')}
+                          </button>
+                        ` : nothing}
                       </span>
-                      <button
-                        type="button"
-                        class="civ-file-remove-btn focus-visible:civ-focus-ring"
-                        @click="${() => this._removeFile(index)}"
-                        aria-label="${interpolate(this.removeAriaLabel || t('fileUploadRemoveAriaLabel'), { name: file.name })}"
-                        ?disabled="${this.disabled}"
-                      >
-                        ${this.removeText || t('fileUploadRemoveText')}
-                      </button>
                     </li>
                   `,
                 )}
@@ -199,6 +278,18 @@ export class CivFileUpload extends CivFormElement {
   override disconnectedCallback(): void {
     super.disconnectedCallback();
     this._revokeAllPreviewUrls();
+    if (this._progressAnnounceTimer) {
+      clearTimeout(this._progressAnnounceTimer);
+    }
+  }
+
+  private _announceProgress(name: string, progress: number): void {
+    if (this._progressAnnounceTimer) {
+      clearTimeout(this._progressAnnounceTimer);
+    }
+    this._progressAnnounceTimer = setTimeout(() => {
+      this.announce(interpolate(t('fileUploadUploading'), { name, progress: String(progress) }));
+    }, 500);
   }
 
   private _getPreviewUrl(file: File): string {
@@ -286,11 +377,40 @@ export class CivFileUpload extends CivFormElement {
     });
   }
 
+  private _cancelUpload(index: number): void {
+    const file = this._files[index];
+    if (!file) return;
+    if (file.abortController) {
+      file.abortController.abort();
+    }
+    file.status = 'error';
+    file.error = t('fileUploadCancelled');
+    file.progress = 0;
+    this.requestUpdate();
+    dispatch(this, 'civ-upload-cancel', { index, name: file.name });
+    this.announce(interpolate(t('fileUploadCancelledAnnounce'), { name: file.name }));
+  }
+
+  private _retryUpload(index: number): void {
+    const file = this._files[index];
+    if (!file) return;
+    file.status = 'pending';
+    file.error = undefined;
+    file.progress = 0;
+    file.abortController = undefined;
+    this.requestUpdate();
+    dispatch(this, 'civ-upload-retry', { index, name: file.name, file: file.file });
+  }
+
   private _addFiles(newFiles: File[]): void {
     const validated: UploadedFile[] = [];
     const errors: string[] = [];
 
     for (const file of newFiles) {
+      if (file.size === 0) {
+        errors.push(interpolate(t('fileUploadEmptyFile'), { name: file.name }));
+        continue;
+      }
       if (this.accept && !this._isFileTypeAccepted(file)) {
         errors.push(interpolate(this.fileTypeError || t('fileUploadFileTypeError'), { name: file.name }));
         continue;
@@ -299,15 +419,17 @@ export class CivFileUpload extends CivFormElement {
         errors.push(interpolate(this.fileSizeError || t('fileUploadFileSizeError'), { name: file.name, size: formatFileSize(this.maxSize) }));
         continue;
       }
-      validated.push({ name: file.name, size: file.size, type: file.type, file });
+      validated.push({ name: file.name, size: file.size, type: file.type, file, status: 'pending', progress: 0 });
     }
 
     // Accept files up to the maxFiles limit
     if (this.maxFiles > 0 && this.multiple) {
       const available = this.maxFiles - this._files.length;
       if (validated.length > available) {
-        validated.splice(available);
-        errors.push(interpolate(this.maxFilesError || t('fileUploadMaxFilesError'), { max: this.maxFiles }));
+        const rejected = validated.splice(available);
+        for (const r of rejected) {
+          errors.push(interpolate(this.maxFilesError || t('fileUploadMaxFilesError'), { max: this.maxFiles, name: r.name }));
+        }
       }
     }
 
@@ -335,7 +457,13 @@ export class CivFileUpload extends CivFormElement {
 
   private _removeFile(index: number): void {
     const removed = this._files[index];
-    if (removed) this._revokePreviewUrl(removed.file);
+    if (removed) {
+      this._revokePreviewUrl(removed.file);
+      // Abort any in-progress upload
+      if (removed.abortController) {
+        removed.abortController.abort();
+      }
+    }
     this._files = this._files.filter((_, i) => i !== index);
     if (this._files.length === 0) this.error = '';
     this._updateFormData();

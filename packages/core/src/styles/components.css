@@ -961,6 +961,47 @@
            civ-border-0 civ-cursor-pointer civ-py-1 civ-px-2;
   }
 
+  .civ-file-item--success {
+    border-left: 3px solid var(--civ-color-success-DEFAULT);
+  }
+
+  .civ-file-item--error {
+    border-left: 3px solid var(--civ-color-error-DEFAULT);
+  }
+
+  .civ-file-progress {
+    @apply civ-w-full civ-rounded-full civ-overflow-hidden civ-mt-1;
+    height: 4px;
+    background-color: var(--civ-color-base-lighter);
+  }
+
+  .civ-file-progress-bar {
+    height: 100%;
+    border-radius: inherit;
+    background-color: var(--civ-color-primary-DEFAULT);
+    transition: width 0.2s ease;
+  }
+
+  .civ-file-error-text {
+    @apply civ-text-sm civ-text-error civ-mt-0.5;
+  }
+
+  .civ-file-cancel-btn,
+  .civ-file-retry-btn {
+    @apply civ-text-sm civ-bg-transparent civ-border-0 civ-cursor-pointer civ-py-1 civ-px-2;
+  }
+
+  .civ-file-cancel-btn {
+    color: var(--civ-color-base-dark);
+  }
+  .civ-file-cancel-btn:hover {
+    color: var(--civ-color-base-darkest);
+  }
+
+  .civ-file-retry-btn {
+    @apply civ-text-primary civ-underline;
+  }
+
   /* ── Combobox ───────────────────────────────────────────────── */
 
   .civ-combobox-listbox {

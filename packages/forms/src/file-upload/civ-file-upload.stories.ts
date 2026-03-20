@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import './civ-file-upload.js';
+import type { CivFileUpload } from './civ-file-upload.js';
 
 const meta: Meta = {
   title: 'Forms/File Upload',
@@ -177,4 +178,131 @@ export const AllVariants: Story = {
       </div>
     </div>
   `,
+};
+
+export const WithProgress: Story = {
+  render: () => {
+    const setupFiles = (el: CivFileUpload) => {
+      // Create mock files with different statuses
+      const pending = new File(['pending content'], 'application-form.pdf', { type: 'application/pdf' });
+      const uploading = new File(['uploading content'], 'id-scan.jpg', { type: 'image/jpeg' });
+      const success = new File(['success content'], 'tax-return.pdf', { type: 'application/pdf' });
+      const errored = new File(['error content'], 'bank-statement.pdf', { type: 'application/pdf' });
+
+      // Simulate adding files via the internal input
+      const dt = new DataTransfer();
+      dt.items.add(pending);
+      dt.items.add(uploading);
+      dt.items.add(success);
+      dt.items.add(errored);
+
+      // Wait for element to be ready, then programmatically add and set statuses
+      el.updateComplete.then(() => {
+        const input = el.querySelector('input[type="file"]') as HTMLInputElement;
+        if (input) {
+          input.files = dt.files;
+          input.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+
+        // Set statuses after files are added
+        requestAnimationFrame(() => {
+          el.setFileStatus(1, 'uploading', { progress: 45 });
+          el.setFileStatus(2, 'success');
+          el.setFileStatus(3, 'error', { error: 'Network timeout. Please check your connection and try again.' });
+        });
+      });
+    };
+
+    return html`
+      <civ-file-upload
+        label="Document upload with status indicators"
+        name="status-demo"
+        multiple
+        max-files="10"
+        hint="This demo shows files in all four states: pending, uploading, success, and error."
+        ${/* @ts-expect-error Lit ref workaround */ ''}
+        @civ-change="${(e: Event) => {
+          // Only run setup once
+          const el = (e.target as HTMLElement).closest('civ-file-upload') as CivFileUpload;
+          if (el && !el.hasAttribute('data-setup')) {
+            el.setAttribute('data-setup', '');
+          }
+        }}"
+        .updateComplete="${Promise.resolve().then(() => {
+          setTimeout(() => {
+            const el = document.querySelector('civ-file-upload[name="status-demo"]') as CivFileUpload;
+            if (el && !el.hasAttribute('data-setup')) {
+              el.setAttribute('data-setup', '');
+              setupFiles(el);
+            }
+          }, 100);
+        })}"
+      ></civ-file-upload>
+    `;
+  },
+};
+
+export const UploadSimulation: Story = {
+  render: () => {
+    const simulate = (e: Event) => {
+      const el = (e.target as HTMLElement).closest('civ-file-upload') as CivFileUpload;
+      if (!el) return;
+      const detail = (e as CustomEvent).detail;
+      if (!detail?.files?.length) return;
+
+      // Simulate upload for each newly added file
+      const startIndex = detail.files.length - 1;
+      for (let i = 0; i <= startIndex; i++) {
+        const fileIndex = i;
+        el.setFileStatus(fileIndex, 'uploading', { progress: 0 });
+        el.getAbortController(fileIndex);
+
+        let progress = 0;
+        const interval = setInterval(() => {
+          progress += Math.floor(Math.random() * 15) + 5;
+          if (progress >= 100) {
+            progress = 100;
+            clearInterval(interval);
+            // 80% chance of success, 20% chance of error for demo
+            if (Math.random() > 0.2) {
+              el.setFileStatus(fileIndex, 'success');
+            } else {
+              el.setFileStatus(fileIndex, 'error', { error: 'Server returned 503 Service Unavailable' });
+            }
+          } else {
+            el.setFileStatus(fileIndex, 'uploading', { progress });
+          }
+        }, 300);
+      }
+    };
+
+    return html`
+      <civ-file-upload
+        label="Upload documents (simulated)"
+        name="simulation"
+        multiple
+        max-files="5"
+        hint="Add files to see simulated upload progress. Some uploads will randomly fail to demonstrate error handling and retry."
+        @civ-change="${simulate}"
+        @civ-upload-retry="${(e: Event) => {
+          const el = (e.target as HTMLElement).closest('civ-file-upload') as CivFileUpload;
+          const detail = (e as CustomEvent).detail;
+          if (!el || detail?.index === undefined) return;
+          const fileIndex = detail.index;
+          el.setFileStatus(fileIndex, 'uploading', { progress: 0 });
+          let progress = 0;
+          const interval = setInterval(() => {
+            progress += Math.floor(Math.random() * 20) + 10;
+            if (progress >= 100) {
+              progress = 100;
+              clearInterval(interval);
+              el.setFileStatus(fileIndex, 'success');
+            } else {
+              el.setFileStatus(fileIndex, 'uploading', { progress });
+            }
+          }, 250);
+        }}"
+      ></civ-file-upload>
+    `;
+  },
 };

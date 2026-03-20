@@ -91,6 +91,27 @@ export interface CivLocaleStrings {
   // Alert dismiss
   alertDismissLabel: string;
   alertDismissedMessage: string;
+
+  // Validation
+  validateRequired: string; // "{label} is required"
+  validateEmail: string;
+  validatePhone: string;
+  validatePhoneIntl: string;
+  validateSsn: string;
+  validateEin: string;
+  validateZip: string;
+  validateZip4: string;
+  validateUsState: string;
+  validateIsoDate: string;
+  validateUrl: string;
+  validateCurrency: string;
+  validateRangeMin: string; // "Must be at least {min}"
+  validateRangeMax: string; // "Must be no more than {max}"
+  validateRangeBetween: string; // "Must be between {min} and {max}"
+  validateLengthMin: string; // "Must be at least {min} characters"
+  validateLengthMax: string; // "Must be no more than {max} characters"
+  validateLengthBetween: string; // "Must be between {min} and {max} characters"
+  validateAlphanumeric: string;
 }
 
 const defaultStrings: CivLocaleStrings = {
@@ -167,6 +188,26 @@ const defaultStrings: CivLocaleStrings = {
 
   alertDismissLabel: 'Dismiss alert',
   alertDismissedMessage: 'Alert dismissed',
+
+  validateRequired: '{label} is required',
+  validateEmail: 'Enter a valid email address',
+  validatePhone: 'Enter a 10-digit phone number',
+  validatePhoneIntl: 'Enter a valid phone number with country code (e.g., +1 555 123 4567)',
+  validateSsn: 'Enter a valid 9-digit Social Security number',
+  validateEin: 'Enter a valid 9-digit Employer Identification Number',
+  validateZip: 'Enter a 5-digit ZIP code',
+  validateZip4: 'Enter a valid ZIP+4 code (e.g., 12345-6789)',
+  validateUsState: 'Enter a valid 2-letter state abbreviation',
+  validateIsoDate: 'Enter a valid date (YYYY-MM-DD)',
+  validateUrl: 'Enter a valid URL starting with http:// or https://',
+  validateCurrency: 'Enter a valid dollar amount',
+  validateRangeMin: 'Must be at least {min}',
+  validateRangeMax: 'Must be no more than {max}',
+  validateRangeBetween: 'Must be between {min} and {max}',
+  validateLengthMin: 'Must be at least {min} characters',
+  validateLengthMax: 'Must be no more than {max} characters',
+  validateLengthBetween: 'Must be between {min} and {max} characters',
+  validateAlphanumeric: 'Only letters and numbers are allowed',
 };
 
 let currentStrings: CivLocaleStrings = { ...defaultStrings };

@@ -82,6 +82,10 @@ export {
 } from './mask/index.js';
 export type { MaskChar, MaskDefinition } from './mask/index.js';
 
+// Validation
+export { validate } from './validation/index.js';
+export type { ValidationResult } from './validation/index.js';
+
 // Analytics
 export { ANALYTICS_EVENT_NAME } from './analytics/index.js';
 export type { AnalyticsEventDetail, AnalyticsAction } from './analytics/index.js';

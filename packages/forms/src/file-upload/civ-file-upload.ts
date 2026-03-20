@@ -60,6 +60,7 @@ export class CivFileUpload extends CivFormElement {
   @property({ type: String }) accept = '';
   @property({ type: Boolean }) multiple = false;
   @property({ type: Boolean, attribute: 'show-preview' }) showPreview = false;
+  @property({ type: Boolean }) compact = false;
   @property({ type: Number, attribute: 'max-size' }) maxSize = 0;
   @property({ type: Number, attribute: 'max-files' }) maxFiles = 0;
 
@@ -98,7 +99,7 @@ export class CivFileUpload extends CivFormElement {
         ${renderError(this._errorId, this.error)}
 
         <div
-          class="civ-dropzone focus-visible:civ-focus-ring"
+          class="civ-dropzone ${this.compact ? 'civ-dropzone--compact' : ''} focus-visible:civ-focus-ring"
           @dragover="${this._boundDragOver}"
           @dragleave="${this._boundDragLeave}"
           @drop="${this._boundDrop}"
@@ -113,6 +114,7 @@ export class CivFileUpload extends CivFormElement {
           @keydown="${this._onDropzoneKeydown}"
           data-dragging="${this._dragging ? '' : nothing}"
         >
+          <span class="civ-icon civ-icon--upload civ-block civ-mb-2" style="font-size: 1.5em; color: var(--civ-color-base-light)" aria-hidden="true"></span>
           <span class="civ-block civ-text-body" style="color: var(--civ-color-base-dark)">
             ${this.dragText || t('fileUploadDragText')}
             <span class="civ-text-primary civ-underline">${this.browseText || t('fileUploadBrowseText')}</span>

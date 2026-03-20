@@ -138,10 +138,10 @@ export class CivFileUpload extends CivFormElement {
               data-dragging="${this._dragging ? '' : nothing}"
             >
               <span class="civ-icon civ-icon--upload civ-block civ-mb-2" style="font-size: ${this.variant === 'full' ? '2.5em' : '1.5em'}; color: var(--civ-color-base-light)" aria-hidden="true"></span>
-              <span class="civ-block civ-text-body" style="color: var(--civ-color-base-dark)">
+              <span class="civ-block civ-text-body civ-mb-3" style="color: var(--civ-color-base-dark)">
                 ${this.dragText || t('fileUploadDragText')}
-                <span class="civ-text-primary civ-underline">${this.browseText || t('fileUploadBrowseText')}</span>
               </span>
+              <span class="civ-btn civ-btn--outline civ-text-sm">${this.browseText || t('fileUploadBrowseText')}</span>
               ${this.accept
                 ? html`<span class="civ-block civ-text-sm civ-text-muted civ-mt-1">${this.acceptedLabel || t('fileUploadAcceptedLabel')}${this.accept}</span>`
                 : nothing}

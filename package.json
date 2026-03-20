@@ -26,6 +26,7 @@
     "generate:validate": "pnpm --filter @civui/codegen validate",
     "generate:diff": "pnpm --filter @civui/codegen diff",
     "parity": "node --experimental-strip-types tools/parity-report.ts && open tools/parity-report.html",
+    "consistency": "node --experimental-strip-types tools/consistency-check.ts",
     "build:cdn": "node scripts/build-cdn.js",
     "validate": "pnpm lint && pnpm typecheck && pnpm test"
   },

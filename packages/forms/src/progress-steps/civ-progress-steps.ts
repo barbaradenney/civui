@@ -1,22 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBaseElement, dispatch } from '@civui/core';
-
-const clickableStyles = html`
-  <style>
-    .civ-step-circle--clickable {
-      cursor: pointer;
-      background: inherit;
-      border: inherit;
-      font: inherit;
-      color: inherit;
-      padding: 0;
-    }
-    .civ-step-circle--clickable:hover {
-      opacity: 0.8;
-    }
-  </style>
-`;
+import { CivBaseElement, dispatch, t, interpolate } from '@civui/core';
 
 /**
  * CivUI Progress Steps
@@ -24,12 +8,20 @@ const clickableStyles = html`
  * A step indicator for multi-step forms. Displays current progress
  * with completed, current, and upcoming step states.
  *
+ * Responsive: horizontal on desktop, auto-switches to vertical on
+ * narrow screens via CSS. Labels truncate with ellipsis when space
+ * is tight.
+ *
  * @element civ-progress-steps
  *
- * @prop {string} steps - JSON string of step labels, e.g., '["Personal Info","Address","Review"]'
+ * @prop {string} steps - JSON string of step objects or labels
+ *   Simple: '["Personal Info","Address","Review"]'
+ *   Rich:   '[{"label":"Info","description":"Basic details"},{"label":"Address"}]'
  * @prop {number} current - Current step index (0-based)
  * @prop {string} orientation - Layout direction ('horizontal' | 'vertical', default 'horizontal')
  * @prop {boolean} clickable - When true, completed steps become clickable buttons
+ * @prop {boolean} showCounter - Show "Step X of Y" text below the steps
+ * @prop {number[]} errorSteps - Array of step indices with validation errors
  *
  * @fires civ-step-click - When a completed step is clicked, detail: { step: number }
  */
@@ -39,86 +31,202 @@ export class CivProgressSteps extends CivBaseElement {
   @property({ type: Number }) current = 0;
   @property({ type: String, reflect: true }) orientation: 'horizontal' | 'vertical' = 'horizontal';
   @property({ type: Boolean }) clickable = false;
+  @property({ type: Boolean, attribute: 'show-counter' }) showCounter = false;
+  @property({ type: String, attribute: 'error-steps' }) errorSteps = '[]';
 
-  private _getStepLabels(): string[] {
+  private _getStepData(): Array<{ label: string; description?: string }> {
     try {
       const parsed = JSON.parse(this.steps);
-      return Array.isArray(parsed) ? parsed : [];
+      if (!Array.isArray(parsed)) return [];
+      return parsed.map((item: string | { label: string; description?: string }) =>
+        typeof item === 'string' ? { label: item } : item
+      );
     } catch {
       return [];
     }
   }
 
+  private _getErrorSet(): Set<number> {
+    try {
+      const parsed = JSON.parse(this.errorSteps);
+      return new Set(Array.isArray(parsed) ? parsed : []);
+    } catch {
+      return new Set();
+    }
+  }
+
   override render() {
-    const labels = this._getStepLabels();
-    if (labels.length === 0) return nothing;
+    const stepData = this._getStepData();
+    if (stepData.length === 0) return nothing;
 
     const isVertical = this.orientation === 'vertical';
-    const listClass = isVertical
-      ? 'civ-flex civ-flex-col civ-gap-0'
-      : 'civ-flex civ-flex-row civ-items-center civ-gap-0';
+    const errorSet = this._getErrorSet();
 
     return html`
-      ${this.clickable ? clickableStyles : nothing}
-      <ol
-        class="${listClass} civ-list-none civ-p-0 civ-m-0"
-        role="list"
-        aria-label="Progress"
-      >
-        ${labels.map((label, i) => this._renderStep(label, i, labels.length, isVertical))}
-      </ol>
+      <style>
+        .civ-steps-horizontal {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          gap: 0;
+        }
+        .civ-steps-vertical {
+          display: flex;
+          flex-direction: column;
+          gap: 0;
+        }
+        .civ-step-label {
+          font-size: var(--civ-typography-fontSize-sm, 14px);
+          max-width: 120px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+        .civ-step-label--vertical {
+          max-width: none;
+          white-space: normal;
+        }
+        .civ-step-desc {
+          font-size: var(--civ-typography-fontSize-xs, 12px);
+          color: var(--civ-color-base-DEFAULT);
+          max-width: 120px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+        .civ-step-desc--vertical {
+          max-width: none;
+          white-space: normal;
+        }
+        .civ-step-circle--clickable {
+          cursor: pointer;
+          background: inherit;
+          border: inherit;
+          font: inherit;
+          color: inherit;
+          padding: 0;
+        }
+        .civ-step-circle--clickable:hover {
+          opacity: 0.8;
+        }
+        .civ-step-counter {
+          font-size: var(--civ-typography-fontSize-sm, 14px);
+          color: var(--civ-color-base-dark);
+          text-align: center;
+          margin-top: var(--civ-spacing-2, 8px);
+        }
+        /* Responsive: auto-switch to vertical on narrow screens */
+        @media (max-width: 480px) {
+          .civ-steps-horizontal {
+            flex-direction: column;
+            align-items: flex-start;
+          }
+          .civ-steps-horizontal .civ-step-connector--horizontal {
+            display: none;
+          }
+          .civ-steps-horizontal .civ-step-connector--vertical-auto {
+            display: block;
+          }
+          .civ-step-label {
+            max-width: none;
+          }
+          .civ-step-desc {
+            max-width: none;
+          }
+        }
+      </style>
+      <nav aria-label="${t('progressStepsLabel')}">
+        <ol
+          class="${isVertical ? 'civ-steps-vertical' : 'civ-steps-horizontal'} civ-list-none civ-p-0 civ-m-0"
+          role="list"
+        >
+          ${stepData.map((step, i) => this._renderStep(step, i, stepData.length, isVertical, errorSet))}
+        </ol>
+        ${this.showCounter ? html`
+          <div class="civ-step-counter" aria-live="polite">
+            ${interpolate(t('progressStepsCounter'), { current: this.current + 1, total: stepData.length })}
+          </div>
+        ` : nothing}
+      </nav>
     `;
   }
 
-  private _renderStep(label: string, index: number, total: number, isVertical: boolean) {
+  private _renderStep(
+    step: { label: string; description?: string },
+    index: number,
+    total: number,
+    isVertical: boolean,
+    errorSet: Set<number>,
+  ) {
     const isCompleted = index < this.current;
     const isCurrent = index === this.current;
     const isLast = index === total - 1;
+    const hasError = errorSet.has(index);
 
     const stepClass = [
       'civ-step',
-      isCompleted ? 'civ-step--completed' : '',
+      isCompleted && !hasError ? 'civ-step--completed' : '',
       isCurrent ? 'civ-step--current' : '',
       !isCompleted && !isCurrent ? 'civ-step--upcoming' : '',
+      hasError ? 'civ-step--error' : '',
     ].filter(Boolean).join(' ');
 
-    const containerClass = isVertical
-      ? 'civ-flex civ-items-start civ-gap-3'
-      : 'civ-flex civ-items-center';
+    const connectorCompleted = isCompleted && index + 1 < this.current
+      ? 'civ-step-connector--completed' : '';
 
-    const stepAriaLabel = `Step ${index + 1} of ${total}: ${label}`;
+    const stepAriaLabel = interpolate(t('progressStepLabel'), {
+      step: index + 1,
+      total,
+      label: step.label,
+    });
+
+    const circle = this.clickable && isCompleted && !hasError
+      ? html`<button type="button"
+          class="civ-step-circle civ-step-circle--clickable civ-flex civ-items-center civ-justify-center civ-rounded-full civ-w-8 civ-h-8 civ-text-sm civ-font-bold civ-shrink-0 focus-visible:civ-focus-ring"
+          @click="${() => this._onStepClick(index)}"
+          aria-label="${interpolate(t('progressStepGoTo'), { step: index + 1, label: step.label })}"
+        ><span class="civ-icon civ-icon--check" aria-hidden="true"></span></button>`
+      : html`<div class="civ-step-circle civ-flex civ-items-center civ-justify-center civ-rounded-full civ-w-8 civ-h-8 civ-text-sm civ-font-bold civ-shrink-0">
+          ${hasError
+            ? html`<span class="civ-icon civ-icon--error" aria-hidden="true" style="font-size: 0.7em"></span>`
+            : isCompleted
+              ? html`<span class="civ-icon civ-icon--check" aria-hidden="true"></span>`
+              : html`${index + 1}`}
+        </div>`;
+
+    if (isVertical) {
+      return html`
+        <li class="${stepClass}" aria-label="${stepAriaLabel}" aria-current="${isCurrent ? 'step' : nothing}">
+          <div class="civ-flex civ-items-start civ-gap-3">
+            <div class="civ-flex civ-items-center civ-flex-col">
+              ${circle}
+              ${!isLast ? html`<div class="civ-step-connector ${connectorCompleted} civ-w-0.5 civ-h-8 civ-my-1"></div>` : nothing}
+            </div>
+            <div class="civ-h-8 civ-flex civ-flex-col civ-justify-center">
+              <span class="civ-step-label civ-step-label--vertical ${isCurrent ? 'civ-font-bold' : ''}" style="color: var(--civ-color-base-darkest)">${step.label}</span>
+              ${step.description ? html`<span class="civ-step-desc civ-step-desc--vertical">${step.description}</span>` : nothing}
+            </div>
+          </div>
+        </li>
+      `;
+    }
 
     return html`
-      <li
-        class="${stepClass}"
-        aria-label="${stepAriaLabel}"
-        aria-current="${isCurrent ? 'step' : nothing}"
-      >
-        <div class="${containerClass}">
-          <div class="civ-flex civ-items-center ${isVertical ? 'civ-flex-col' : ''}">
-            ${this.clickable && isCompleted
-              ? html`<button type="button"
-                  class="civ-step-circle civ-step-circle--clickable civ-flex civ-items-center civ-justify-center civ-rounded-full civ-w-8 civ-h-8 civ-text-sm civ-font-bold civ-shrink-0 focus-visible:civ-focus-ring"
-                  @click="${() => this._onStepClick(index)}"
-                  aria-label="Go to step ${index + 1}: ${label}"
-                ><span class="civ-icon civ-icon--check" aria-hidden="true"></span></button>`
-              : html`<div class="civ-step-circle civ-flex civ-items-center civ-justify-center civ-rounded-full civ-w-8 civ-h-8 civ-text-sm civ-font-bold civ-shrink-0">
-                ${isCompleted
-                  ? html`<span class="civ-icon civ-icon--check" aria-hidden="true"></span>`
-                  : html`${index + 1}`}
-              </div>`}
-            ${!isLast && isVertical
-              ? html`<div class="civ-step-connector ${isCompleted && index + 1 < this.current ? 'civ-step-connector--completed' : ''} civ-w-0.5 civ-h-8 civ-my-1"></div>`
-              : nothing}
+      <li class="${stepClass}" aria-label="${stepAriaLabel}" aria-current="${isCurrent ? 'step' : nothing}">
+        <div class="civ-flex civ-items-center">
+          ${circle}
+          <div class="civ-ms-2">
+            <span class="civ-step-label ${isCurrent ? 'civ-font-bold' : ''}" style="color: var(--civ-color-base-darkest)">${step.label}</span>
+            ${step.description ? html`<span class="civ-step-desc civ-block">${step.description}</span>` : nothing}
           </div>
-          <span class="civ-text-sm ${isCurrent ? 'civ-font-bold' : ''} ${isVertical ? 'civ-h-8 civ-flex civ-items-center' : 'civ-ms-2'}">${label}</span>
         </div>
-        ${!isLast && !isVertical
-          ? html`<div class="civ-step-connector ${isCompleted && index + 1 < this.current ? 'civ-step-connector--completed' : ''} civ-h-0.5 civ-flex-1 civ-mx-2 civ-min-w-4"></div>`
-          : nothing}
+        <!-- Vertical connector for responsive auto-switch -->
+        ${!isLast ? html`<div class="civ-step-connector--vertical-auto civ-step-connector ${connectorCompleted} civ-w-0.5 civ-h-6 civ-ms-4 civ-my-1" style="display:none;"></div>` : nothing}
+        ${!isLast ? html`<div class="civ-step-connector--horizontal civ-step-connector ${connectorCompleted} civ-h-0.5 civ-flex-1 civ-mx-2 civ-min-w-4"></div>` : nothing}
       </li>
     `;
   }
+
   private _onStepClick(step: number): void {
     dispatch(this, 'civ-step-click', { step });
   }

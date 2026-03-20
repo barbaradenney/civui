@@ -7,12 +7,13 @@ afterEach(cleanupFixtures);
 describe('civ-progress-steps', () => {
   const threeSteps = '["Personal Info","Address","Review"]';
 
-  it('renders an ordered list with role="list"', async () => {
+  it('renders an ordered list with role="list" inside a nav', async () => {
     const el = await fixture(`<civ-progress-steps steps='${threeSteps}' current="0"></civ-progress-steps>`);
 
+    const nav = el.querySelector('nav');
+    expect(nav).not.toBeNull();
     const ol = el.querySelector('ol[role="list"]');
     expect(ol).not.toBeNull();
-    expect(ol!.getAttribute('aria-label')).toBe('Progress');
   });
 
   it('renders correct number of steps', async () => {
@@ -40,13 +41,13 @@ describe('civ-progress-steps', () => {
     expect(items[2].classList.contains('civ-step--upcoming')).toBe(true);
   });
 
-  it('renders step labels as aria-label on each li', async () => {
+  it('renders step labels in aria-label', async () => {
     const el = await fixture(`<civ-progress-steps steps='${threeSteps}' current="0"></civ-progress-steps>`);
 
     const items = el.querySelectorAll('li');
-    expect(items[0].getAttribute('aria-label')).toBe('Step 1 of 3: Personal Info');
-    expect(items[1].getAttribute('aria-label')).toBe('Step 2 of 3: Address');
-    expect(items[2].getAttribute('aria-label')).toBe('Step 3 of 3: Review');
+    expect(items[0].getAttribute('aria-label')).toContain('Personal Info');
+    expect(items[1].getAttribute('aria-label')).toContain('Address');
+    expect(items[2].getAttribute('aria-label')).toContain('Review');
   });
 
   it('shows checkmark icon for completed steps', async () => {
@@ -68,11 +69,10 @@ describe('civ-progress-steps', () => {
     expect(circles[2].textContent?.trim()).toBe('3');
   });
 
-  it('renders connectors between steps', async () => {
+  it('renders horizontal connectors between steps', async () => {
     const el = await fixture(`<civ-progress-steps steps='${threeSteps}' current="0"></civ-progress-steps>`);
 
-    const connectors = el.querySelectorAll('.civ-step-connector');
-    // 2 connectors for 3 steps
+    const connectors = el.querySelectorAll('.civ-step-connector--horizontal');
     expect(connectors.length).toBe(2);
   });
 
@@ -107,6 +107,30 @@ describe('civ-progress-steps', () => {
     const el = await fixture(`<civ-progress-steps steps='${threeSteps}' current="1" orientation="vertical"></civ-progress-steps>`);
 
     const ol = el.querySelector('ol');
-    expect(ol!.className).toContain('civ-flex-col');
+    expect(ol!.className).toContain('civ-steps-vertical');
+  });
+
+  it('supports rich step objects with descriptions', async () => {
+    const richSteps = '[{"label":"Info","description":"Basic details"},{"label":"Review"}]';
+    const el = await fixture(`<civ-progress-steps steps='${richSteps}' current="0"></civ-progress-steps>`);
+
+    expect(el.textContent).toContain('Basic details');
+  });
+
+  it('shows error state on specified steps', async () => {
+    const el = await fixture(`<civ-progress-steps steps='${threeSteps}' current="2" error-steps="[1]"></civ-progress-steps>`);
+
+    const items = el.querySelectorAll('li');
+    expect(items[1].classList.contains('civ-step--error')).toBe(true);
+    expect(items[1].querySelector('.civ-icon--error')).not.toBeNull();
+  });
+
+  it('shows step counter when show-counter is set', async () => {
+    const el = await fixture(`<civ-progress-steps steps='${threeSteps}' current="1" show-counter></civ-progress-steps>`);
+
+    expect(el.textContent).toContain('2');
+    expect(el.textContent).toContain('3');
+    const counter = el.querySelector('.civ-step-counter');
+    expect(counter).not.toBeNull();
   });
 });

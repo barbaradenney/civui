@@ -70,6 +70,49 @@ export const ManySteps: Story = {
   `,
 };
 
+export const WithDescriptions: Story = {
+  render: () => html`
+    <civ-progress-steps
+      steps='[{"label":"Eligibility","description":"Verify requirements"},{"label":"Personal Info","description":"Name, DOB, SSN"},{"label":"Documents","description":"Upload files"},{"label":"Review","description":"Confirm details"}]'
+      current="1"
+      orientation="vertical"
+    ></civ-progress-steps>
+  `,
+};
+
+export const WithErrorStep: Story = {
+  render: () => html`
+    <civ-progress-steps
+      steps='["Personal Info","Address","Employment","Review"]'
+      current="3"
+      error-steps="[1]"
+    ></civ-progress-steps>
+    <p class="civ-text-sm civ-text-error civ-mt-2">Step 2 (Address) has validation errors. Please go back and correct them.</p>
+  `,
+};
+
+export const WithCounter: Story = {
+  render: () => html`
+    <civ-progress-steps
+      steps='["Personal Info","Address","Employment","Review"]'
+      current="2"
+      show-counter
+    ></civ-progress-steps>
+  `,
+};
+
+export const ClickableWithDescriptions: Story = {
+  render: () => html`
+    <civ-progress-steps
+      steps='[{"label":"Eligibility","description":"Complete"},{"label":"Personal Info","description":"Complete"},{"label":"Documents","description":"In progress"},{"label":"Review","description":"Not started"}]'
+      current="2"
+      clickable
+      show-counter
+      @civ-step-click="${(e: CustomEvent) => alert('Navigate to step ' + (e.detail.step + 1))}"
+    ></civ-progress-steps>
+  `,
+};
+
 // ── Progress Bar ──────────────────────────────────────────────
 
 export const ProgressBar: Story = {

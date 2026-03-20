@@ -1310,6 +1310,11 @@
     @apply civ-bg-base-light;
   }
 
+  .civ-step--error .civ-step-circle {
+    @apply civ-bg-error-lighter civ-text-error civ-border-error;
+    border: 2px solid;
+  }
+
   .civ-step-connector--completed {
     @apply civ-bg-success;
   }

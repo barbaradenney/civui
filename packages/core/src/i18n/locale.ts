@@ -105,6 +105,12 @@ export interface CivLocaleStrings {
   maxSelectionsHint: string; // "Select up to {max}"
   clearButton: string;
 
+  // Progress steps
+  progressStepsLabel: string;
+  progressStepLabel: string; // "Step {step} of {total}: {label}"
+  progressStepGoTo: string; // "Go to step {step}: {label}"
+  progressStepsCounter: string; // "Step {current} of {total}"
+
   // Validation
   validateRequired: string; // "{label} is required"
   validateEmail: string;
@@ -208,6 +214,11 @@ const defaultStrings: CivLocaleStrings = {
 
   alertDismissLabel: 'Dismiss alert',
   alertDismissedMessage: 'Alert dismissed',
+
+  progressStepsLabel: 'Progress',
+  progressStepLabel: 'Step {step} of {total}: {label}',
+  progressStepGoTo: 'Go to step {step}: {label}',
+  progressStepsCounter: 'Step {current} of {total}',
 
   selectAll: 'Select all',
   deselectAll: 'Deselect all',

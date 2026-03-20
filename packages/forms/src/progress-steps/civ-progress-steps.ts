@@ -77,6 +77,7 @@ export class CivProgressSteps extends CivBaseElement {
         }
         .civ-step-label {
           font-size: var(--civ-typography-fontSize-sm, 14px);
+          color: var(--civ-color-base-darkest);
           max-width: 120px;
           overflow: hidden;
           text-overflow: ellipsis;
@@ -85,6 +86,12 @@ export class CivProgressSteps extends CivBaseElement {
         .civ-step-label--vertical {
           max-width: none;
           white-space: normal;
+        }
+        .civ-step-label--current {
+          font-weight: bold;
+        }
+        .civ-step-label--error {
+          color: var(--civ-color-error-DEFAULT);
         }
         .civ-step-desc {
           font-size: var(--civ-typography-fontSize-xs, 12px);
@@ -98,16 +105,16 @@ export class CivProgressSteps extends CivBaseElement {
           max-width: none;
           white-space: normal;
         }
-        .civ-step-circle--clickable {
-          cursor: pointer;
-          background: inherit;
-          border: inherit;
-          font: inherit;
-          color: inherit;
+        /* Clickable button: reset browser defaults but keep colors from parent state class */
+        button.civ-step-circle {
+          appearance: none;
+          -webkit-appearance: none;
           padding: 0;
+          margin: 0;
+          cursor: pointer;
         }
-        .civ-step-circle--clickable:hover {
-          opacity: 0.8;
+        button.civ-step-circle:hover {
+          filter: brightness(0.9);
         }
         .civ-step-counter {
           font-size: var(--civ-typography-fontSize-sm, 14px);
@@ -180,19 +187,32 @@ export class CivProgressSteps extends CivBaseElement {
       label: step.label,
     });
 
+    const circleClasses = 'civ-step-circle civ-flex civ-items-center civ-justify-center civ-rounded-full civ-w-8 civ-h-8 civ-text-sm civ-font-bold civ-shrink-0';
+    const circleContent = hasError
+      ? html`<span class="civ-icon civ-icon--close" aria-hidden="true" style="font-size: 0.6em"></span>`
+      : isCompleted
+        ? html`<span class="civ-icon civ-icon--check" aria-hidden="true"></span>`
+        : html`${index + 1}`;
+
     const circle = this.clickable && isCompleted && !hasError
       ? html`<button type="button"
-          class="civ-step-circle civ-step-circle--clickable civ-flex civ-items-center civ-justify-center civ-rounded-full civ-w-8 civ-h-8 civ-text-sm civ-font-bold civ-shrink-0 focus-visible:civ-focus-ring"
+          class="${circleClasses} focus-visible:civ-focus-ring"
           @click="${() => this._onStepClick(index)}"
           aria-label="${interpolate(t('progressStepGoTo'), { step: index + 1, label: step.label })}"
-        ><span class="civ-icon civ-icon--check" aria-hidden="true"></span></button>`
-      : html`<div class="civ-step-circle civ-flex civ-items-center civ-justify-center civ-rounded-full civ-w-8 civ-h-8 civ-text-sm civ-font-bold civ-shrink-0">
-          ${hasError
-            ? html`<span class="civ-icon civ-icon--error" aria-hidden="true" style="font-size: 0.7em"></span>`
-            : isCompleted
-              ? html`<span class="civ-icon civ-icon--check" aria-hidden="true"></span>`
-              : html`${index + 1}`}
-        </div>`;
+        >${circleContent}</button>`
+      : html`<div class="${circleClasses}">${circleContent}</div>`;
+
+    const labelClasses = [
+      'civ-step-label',
+      isVertical ? 'civ-step-label--vertical' : '',
+      isCurrent ? 'civ-step-label--current' : '',
+      hasError ? 'civ-step-label--error' : '',
+    ].filter(Boolean).join(' ');
+
+    const descClasses = [
+      'civ-step-desc',
+      isVertical ? 'civ-step-desc--vertical' : 'civ-block',
+    ].filter(Boolean).join(' ');
 
     if (isVertical) {
       return html`
@@ -203,8 +223,8 @@ export class CivProgressSteps extends CivBaseElement {
               ${!isLast ? html`<div class="civ-step-connector ${connectorCompleted} civ-w-0.5 civ-h-8 civ-my-1"></div>` : nothing}
             </div>
             <div class="civ-h-8 civ-flex civ-flex-col civ-justify-center">
-              <span class="civ-step-label civ-step-label--vertical ${isCurrent ? 'civ-font-bold' : ''}" style="color: var(--civ-color-base-darkest)">${step.label}</span>
-              ${step.description ? html`<span class="civ-step-desc civ-step-desc--vertical">${step.description}</span>` : nothing}
+              <span class="${labelClasses}">${step.label}</span>
+              ${step.description ? html`<span class="${descClasses}">${step.description}</span>` : nothing}
             </div>
           </div>
         </li>
@@ -216,8 +236,8 @@ export class CivProgressSteps extends CivBaseElement {
         <div class="civ-flex civ-items-center">
           ${circle}
           <div class="civ-ms-2">
-            <span class="civ-step-label ${isCurrent ? 'civ-font-bold' : ''}" style="color: var(--civ-color-base-darkest)">${step.label}</span>
-            ${step.description ? html`<span class="civ-step-desc civ-block">${step.description}</span>` : nothing}
+            <span class="${labelClasses}">${step.label}</span>
+            ${step.description ? html`<span class="${descClasses}">${step.description}</span>` : nothing}
           </div>
         </div>
         <!-- Vertical connector for responsive auto-switch -->

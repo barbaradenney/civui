@@ -122,7 +122,7 @@ describe('civ-progress-steps', () => {
 
     const items = el.querySelectorAll('li');
     expect(items[1].classList.contains('civ-step--error')).toBe(true);
-    expect(items[1].querySelector('.civ-icon--error')).not.toBeNull();
+    expect(items[1].querySelector('.civ-icon--close')).not.toBeNull();
   });
 
   it('shows step counter when show-counter is set', async () => {

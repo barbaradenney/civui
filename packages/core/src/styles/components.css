@@ -1292,18 +1292,21 @@
   }
 
   .civ-step--completed .civ-step-circle {
-    @apply civ-bg-success civ-text-white civ-border-success;
-    border: 2px solid;
+    background-color: var(--civ-color-success-DEFAULT);
+    color: var(--civ-color-white-DEFAULT);
+    border: 2px solid var(--civ-color-success-DEFAULT);
   }
 
   .civ-step--current .civ-step-circle {
-    @apply civ-bg-primary civ-text-white civ-border-primary;
-    border: 2px solid;
+    background-color: var(--civ-color-primary-DEFAULT);
+    color: var(--civ-color-white-DEFAULT);
+    border: 2px solid var(--civ-color-primary-DEFAULT);
   }
 
   .civ-step--upcoming .civ-step-circle {
-    @apply civ-bg-base-lighter civ-text-base-dark civ-border-base-light;
-    border: 2px solid;
+    background-color: var(--civ-color-base-lighter);
+    color: var(--civ-color-base-dark);
+    border: 2px solid var(--civ-color-base-light);
   }
 
   .civ-step-connector {
@@ -1311,8 +1314,9 @@
   }
 
   .civ-step--error .civ-step-circle {
-    @apply civ-bg-error-lighter civ-text-error civ-border-error;
-    border: 2px solid;
+    background-color: var(--civ-color-error-lighter);
+    color: var(--civ-color-error-DEFAULT);
+    border: 2px solid var(--civ-color-error-DEFAULT);
   }
 
   .civ-step-connector--completed {

@@ -395,6 +395,9 @@ export class CivTextInput extends CivFormElement {
    * 4. Reformat and reposition cursor
    */
   private _onMaskInput(e: InputEvent): void {
+    // Skip reformatting during IME composition
+    if (e.isComposing) return;
+
     const input = e.target as HTMLInputElement;
     const pattern = this._activePattern;
     if (!pattern) return;
@@ -526,6 +529,9 @@ export class CivTextInput extends CivFormElement {
    * but do NOT format. Let the user type naturally.
    */
   private _onBlurMaskInput(e: Event): void {
+    // Skip reformatting during IME composition
+    if (e instanceof InputEvent && e.isComposing) return;
+
     const input = e.target as HTMLInputElement;
     const pattern = this._activePattern;
 

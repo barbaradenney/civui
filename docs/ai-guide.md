@@ -26,6 +26,9 @@ For architecture and internals, see `CLAUDE.md` in the repo root.
 | `<civ-memorable-date>` | Date | `legend`, `monthLabel`, `dayLabel`, `yearLabel`, `locale` | `{ value, month, day, year }` |
 | `<civ-date-input>` | Date | `min`, `max` | `{ value }` — **DEPRECATED** |
 | `<civ-file-upload>` | File | `accept`, `multiple`, `maxSize`, `maxFiles` | `{ files: File[] }` |
+| `<civ-yes-no>` | Choice | `legend`, `yesLabel`, `noLabel` | `{ value }` |
+| `<civ-conditional>` | Layout | `when`, `eq`, `neq` | — |
+| `<civ-progress-steps>` | Navigation | `steps`, `current`, `legend` | — |
 | `<civ-fieldset>` | Layout | `legend`, `hint`, `error`, `required`, `disabled` | — |
 | `<civ-form>` | Layout | `action`, `method` | `civ-submit: { formData }`, `civ-invalid: { errors }` |
 
@@ -417,6 +420,141 @@ Form validation coordinator. Renders error summary, handles submit/reset.
 ```
 
 On validation failure, `civ-form` renders an error summary with anchor links to each invalid field.
+
+---
+
+### civ-yes-no
+
+Binary yes/no radio group — common in government eligibility forms.
+
+**Props (beyond standard):**
+- `legend` — group label
+- `yesLabel` / `noLabel` — customize option labels (defaults: `'Yes'` / `'No'`)
+
+**Event detail:** `{ value: string }` — `'yes'` or `'no'`
+
+**Example:**
+```html
+<civ-yes-no
+  legend="Are you a United States citizen?"
+  name="citizen"
+  required
+></civ-yes-no>
+```
+
+---
+
+### civ-conditional
+
+Conditionally shows its children based on another field's value. Not form-participating.
+
+**Props:**
+- `when` — `name` of the controlling field to watch
+- `eq` — show children when value equals this string
+- `neq` — show children when value does NOT equal this string
+
+**Example:**
+```html
+<civ-yes-no legend="Are you a veteran?" name="veteran" required></civ-yes-no>
+<civ-conditional when="veteran" eq="yes">
+  <civ-text-input label="Service branch" name="branch" required></civ-text-input>
+</civ-conditional>
+```
+
+---
+
+### civ-progress-steps
+
+Multi-step form progress indicator.
+
+**Props:**
+- `steps` — `Array<{ label: string, status?: 'complete' | 'current' | 'upcoming' }>`
+- `current` — zero-based index of the current step
+- `legend` — accessible label for the step list
+
+**Example:**
+```html
+<civ-progress-steps
+  legend="Application progress"
+  .steps="${[
+    { label: 'Personal info', status: 'complete' },
+    { label: 'Employment', status: 'current' },
+    { label: 'Review', status: 'upcoming' }
+  ]}"
+  current="1"
+></civ-progress-steps>
+```
+
+---
+
+## Validation System
+
+CivUI provides 15 built-in validators via `validate` from `@civui/core`. Each returns `{ valid: boolean, error?: string }`.
+
+**Available validators:** `required`, `email`, `phone`, `phoneIntl`, `ssn`, `ein`, `zip`, `zip4`, `usState`, `isoDate`, `url`, `currency`, `range`, `length`, `alphanumeric`
+
+**Declarative usage:** Set the `validate` attribute on form components to auto-validate on submit:
+
+```html
+<civ-text-input label="Email" name="email" validate="email" required></civ-text-input>
+<civ-text-input label="SSN" name="ssn" validate="ssn" required></civ-text-input>
+```
+
+**Programmatic usage:**
+```javascript
+import { validate } from '@civui/core';
+
+const result = validate.email('user@example.com');
+// { valid: true }
+
+const bad = validate.ssn('000-12-3456');
+// { valid: false, error: 'Enter a valid Social Security number' }
+```
+
+---
+
+## Mask System
+
+Input masking for formatted fields. Uses blur-mode by default (mask applied on blur, raw input on focus).
+
+**Presets:** `ssn`, `phone-us`, `zip`, `zip4`, `ein`, `currency`
+
+**Pattern syntax:** `#` = digit, `A` = letter, `*` = any character. All other characters are literal separators.
+
+**PII protection:** Presets marked `pii: true` (SSN, EIN) trigger blur-mode masking automatically.
+
+**Example:**
+```html
+<civ-text-input label="Phone number" name="phone" mask="phone-us"></civ-text-input>
+<civ-text-input label="SSN" name="ssn" mask="ssn"></civ-text-input>
+<civ-text-input label="Custom" name="code" mask="AA-####"></civ-text-input>
+```
+
+---
+
+## Icon System
+
+45 pure CSS icons rendered via `::before`/`::after` pseudo-elements. No font files, no SVG, no Unicode — just CSS.
+
+**Usage:**
+```html
+<civ-icon name="check-circle" label="Success"></civ-icon>
+```
+
+Icons inherit `color` and scale with `font-size`. Each icon maps to platform-native equivalents (SF Symbols for iOS, Material Symbols for Android).
+
+**Categories:** Navigation (chevrons, arrows, external-link), Actions (close, plus, minus, menu, search, edit), Status (check, error, warning), and more.
+
+---
+
+## Native Platform Support
+
+CivUI provides iOS (SwiftUI) and Android (Jetpack Compose) implementations with 100% API parity validated in CI.
+
+- **iOS:** `packages/ios/Sources/CivUI/` — Swift files with SwiftUI views
+- **Android:** `packages/android/src/main/kotlin/gov/civui/components/` — Kotlin files with Compose composables
+- **Parity CI:** The `parity.yml` workflow enforces 95%+ feature parity across platforms
+- **Native CI:** The `native.yml` workflow verifies Swift and Kotlin files compile
 
 ---
 

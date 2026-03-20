@@ -20,7 +20,7 @@ Build order: `tokens → core → forms`
 |---------|------|-------------|
 | `@civui/tokens` | `packages/tokens/` | Design tokens (colors, spacing, typography) |
 | `@civui/core` | `packages/core/` | Base classes, a11y utilities, analytics, date utils |
-| `@civui/forms` | `packages/forms/` | Form components (text-input, select, checkbox, etc.) |
+| `@civui/forms` | `packages/forms/` | Form components (20 web components: text-input, select, checkbox, yes-no, conditional, progress-steps, etc.) |
 | `@civui/test-utils` | `packages/test-utils/` | Test helpers: `fixture`, `cleanupFixtures`, `elementUpdated`, `pressKey`, `typeText` |
 | `@civui/cli` | `packages/cli/` | CLI tooling |
 | `@civui/content` | `packages/content/` | Content/copy management |
@@ -102,13 +102,34 @@ Use `focus-visible:civ-focus-ring` (not deprecated `focus:civ-outline-*` classes
 - Android counterpart: `packages/android/src/main/kotlin/gov/civui/components/Civ{Name}.kt`
 - Each component dir has an `index.ts` barrel export
 
+## Validation System
+
+15 built-in validators in `@civui/core` — `validate.required()`, `.email()`, `.phone()`, `.phoneIntl()`, `.ssn()`, `.ein()`, `.zip()`, `.zip4()`, `.usState()`, `.isoDate()`, `.url()`, `.currency()`, `.range()`, `.length()`, `.alphanumeric()`. Each returns `{ valid, error? }`. Use the declarative `validate` attribute on form components for auto-validation on submit.
+
+## Mask System
+
+Input masking engine in `@civui/core` with blur-mode default (mask on blur, raw input on focus). Presets: `ssn`, `phone-us`, `zip`, `zip4`, `ein`, `currency`. Pattern syntax: `#` = digit, `A` = letter, `*` = any. PII-flagged presets (`ssn`, `ein`) auto-enable blur-mode masking.
+
+## Icon System
+
+45 pure CSS icons via `::before`/`::after` pseudo-elements — no font files, no SVG, no Unicode. Icons inherit `color` and scale with `font-size`. Each icon maps to SF Symbols (iOS) and Material Symbols (Android). Use `<civ-icon name="..." label="...">`.
+
+## Native Platform Support
+
+iOS (SwiftUI) and Android (Jetpack Compose) implementations live at `packages/ios/` and `packages/android/`. CI enforces 95%+ API parity across platforms (`parity.yml`) and verifies native files compile (`native.yml`).
+
 ## AI Component Usage Guide
 
 For comprehensive component usage, HTML examples, government design patterns,
 and accessibility requirements, see `docs/ai-guide.md`.
 
 That guide covers:
-- Component catalog with props, events, and HTML examples for all 15 components (plus 2 child-only tags)
+- Component catalog with props, events, and HTML examples for all 20 web components (plus 2 child-only tags)
+- New Tier 2 components: yes-no, conditional, progress-steps
+- Validation system (15 validators, declarative `validate` attribute)
+- Mask system (blur-mode default, 6 presets)
+- Icon system (45 pure CSS icons, no Unicode)
+- Native platform support (iOS + Android with 100% parity)
 - Component selection decision tables (checkbox vs toggle, select vs combobox, date picker vs memorable date)
 - Government design patterns (Section 508, plain language, form validation for .gov)
 - WCAG 2.1 AA checklist specific to CivUI

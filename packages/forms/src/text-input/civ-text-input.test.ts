@@ -527,3 +527,102 @@ describe('text-input readonly', () => {
     expect(input.disabled).toBe(false);
   });
 });
+
+describe('text-input mask IME handling', () => {
+  afterEach(cleanupFixtures);
+
+  it('does not reformat during IME composition in live mode', async () => {
+    const el = await fixture<CivTextInput>(
+      '<civ-text-input label="Code" mask="ssn" mask-mode="live"></civ-text-input>',
+    );
+    const input = el.querySelector('input')!;
+
+    // Set an initial value so we can verify it doesn't change during composition
+    el.value = '';
+    await elementUpdated(el);
+
+    // Simulate composition start
+    input.dispatchEvent(new CompositionEvent('compositionstart'));
+
+    // Simulate input during composition (isComposing: true)
+    input.value = '123';
+    const inputEvent = new InputEvent('input', {
+      inputType: 'insertCompositionText',
+      isComposing: true,
+      data: '123',
+    });
+    input.dispatchEvent(inputEvent);
+
+    // Value should NOT be reformatted during composition — remains empty
+    // because _onMaskInput returns early when isComposing is true
+    expect(el.value).toBe('');
+  });
+
+  it('reformats after IME composition ends in live mode', async () => {
+    const el = await fixture<CivTextInput>(
+      '<civ-text-input label="Code" mask="ssn" mask-mode="live"></civ-text-input>',
+    );
+    const input = el.querySelector('input')!;
+
+    // Simulate composition start
+    input.dispatchEvent(new CompositionEvent('compositionstart'));
+
+    // Simulate composing input (should be skipped)
+    input.value = '123';
+    input.dispatchEvent(
+      new InputEvent('input', {
+        inputType: 'insertCompositionText',
+        isComposing: true,
+        data: '123',
+      }),
+    );
+    expect(el.value).toBe('');
+
+    // Simulate composition end
+    input.dispatchEvent(new CompositionEvent('compositionend'));
+
+    // Now simulate normal input after composition (isComposing: false)
+    input.value = '123456789';
+    input.dispatchEvent(
+      new InputEvent('input', {
+        inputType: 'insertText',
+        isComposing: false,
+        data: '9',
+      }),
+    );
+
+    expect(el.value).toBe('123456789');
+  });
+
+  it('does not reformat during IME composition in blur mode', async () => {
+    const el = await fixture<CivTextInput>(
+      '<civ-text-input label="Code" mask="ssn"></civ-text-input>',
+    );
+    const input = el.querySelector('input')!;
+
+    // Simulate input during composition
+    input.value = '123';
+    const inputEvent = new InputEvent('input', {
+      inputType: 'insertCompositionText',
+      isComposing: true,
+      data: '123',
+    });
+    input.dispatchEvent(inputEvent);
+
+    // Value should NOT be processed during composition
+    expect(el.value).toBe('');
+  });
+
+  it('blur mode accepts normal input after IME composition', async () => {
+    const el = await fixture<CivTextInput>(
+      '<civ-text-input label="Code" mask="ssn"></civ-text-input>',
+    );
+    const input = el.querySelector('input')!;
+
+    // In blur mode, normal (non-composing) input should work
+    input.value = '123456789';
+    input.dispatchEvent(new InputEvent('input', { inputType: 'insertText' }));
+
+    expect(el.value).toBe('123456789');
+  });
+});

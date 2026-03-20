@@ -1262,8 +1262,7 @@
     @apply civ-bg-base-light;
   }
 
-  .civ-step--completed + .civ-step .civ-step-connector,
-  .civ-step--completed .civ-step-connector {
+  .civ-step-connector--completed {
     @apply civ-bg-success;
   }
 

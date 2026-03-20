@@ -254,7 +254,7 @@ export class CivFileUpload extends CivFormElement {
               @keydown="${this._onDropzoneKeydown}"
               data-dragging="${this._dragging ? '' : nothing}"
             >
-              <span class="civ-icon civ-icon--upload civ-block civ-mb-2" style="font-size: ${this.variant === 'full' ? '2.5em' : '1.5em'}; color: var(--civ-color-base-light)" aria-hidden="true"></span>
+              <civ-icon name="upload" size="${this.variant === 'full' ? '2.5em' : '1.5em'}" class="civ-block civ-mb-2" style="color: var(--civ-color-base-light)"></civ-icon>
               <span class="civ-block civ-text-body civ-mb-3" style="color: var(--civ-color-base-dark)">
                 ${this.dragText || t('fileUploadDragText')}
               </span>

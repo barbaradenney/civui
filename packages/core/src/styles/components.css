@@ -376,19 +376,20 @@
   .civ-icon--upload::before {
     content: '';
     width: 2px;
-    height: 0.45em;
+    height: 0.4em;
     background: currentColor;
-    transform: translateY(-0.08em);
+    transform: translateY(-0.05em);
+    box-shadow:
+      -0.15em -0.15em 0 -0.5px currentColor,
+      0.15em -0.15em 0 -0.5px currentColor;
   }
   .civ-icon--upload::after {
     content: '';
-    width: 0.25em;
-    height: 0.25em;
-    border-left: 2px solid currentColor;
-    border-top: 2px solid currentColor;
-    transform: rotate(45deg);
     position: absolute;
-    top: 0.12em;
+    width: 0.6em;
+    height: 2px;
+    background: currentColor;
+    bottom: 0.1em;
   }
 
   /* Download (↓ + base line) */

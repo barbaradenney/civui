@@ -251,6 +251,34 @@
       </div>
     </div>
 
+    <h2>Built for Government Forms</h2>
+    <div class="features">
+      <div class="feature">
+        <h3>Declarative Validation</h3>
+        <p>Add <code>validate="email"</code> to any text input and it validates on blur &mdash; no JavaScript needed. Ships with 15 validators for government patterns: SSN, EIN, phone (US and international), ZIP, US state, email, URL, currency, date, and more. Error messages are localizable via the i18n system.</p>
+      </div>
+      <div class="feature">
+        <h3>Accessible Input Masking</h3>
+        <p>Masks format on blur by default &mdash; users type freely, then see formatted output like <code>123-45-6789</code> when they tab away. No cursor jumping, no unexpected characters for screen readers. Live formatting available as an opt-in for teams that need it (<code>mask-mode="live"</code>).</p>
+      </div>
+      <div class="feature">
+        <h3>Form Persistence</h3>
+        <p>Add <code>persist="enrollment"</code> to a form and user progress auto-saves to session storage. Long government forms are safe from accidental navigation, browser crashes, and session timeouts. PII fields are automatically excluded from storage.</p>
+      </div>
+      <div class="feature">
+        <h3>Cross-Platform Parity</h3>
+        <p>Every component ships on web (Lit), iOS (SwiftUI), and Android (Jetpack Compose) with matching APIs, accessibility, and design tokens. Icons map to SF Symbols and Material Symbols automatically. An automated parity report (<code>pnpm parity</code>) catches drift.</p>
+      </div>
+      <div class="feature">
+        <h3>Read-Only Review Mode</h3>
+        <p>Add <code>readonly</code> to any form component and it renders as plain text &mdash; perfect for review-before-submit pages. The value is still included in form submission, unlike <code>disabled</code> which excludes it.</p>
+      </div>
+      <div class="feature">
+        <h3>Localization Ready</h3>
+        <p>Every user-facing string &mdash; error messages, hints, labels, screen reader announcements &mdash; flows through a centralized i18n system. Override any string with <code>setLocaleStrings()</code> on web, <code>CivLocale.setStrings()</code> on native. Supports all three platforms.</p>
+      </div>
+    </div>
+
     <h2>Packages</h2>
     <h3>Web Components</h3>
     <div class="packages">

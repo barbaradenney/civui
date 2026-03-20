@@ -11,7 +11,7 @@ describe('civ-conditional', () => {
 
     const container = el.querySelector('[data-civ-conditional-content]') as HTMLElement;
     expect(container).not.toBeNull();
-    expect(container.style.display).toBe('none');
+    expect(container.classList.contains('civ-conditional--hidden')).toBe(true);
   });
 
   it('shows content when matching civ-input event is dispatched', async () => {
@@ -26,7 +26,7 @@ describe('civ-conditional', () => {
     await elementUpdated(el);
 
     const container = el.querySelector('[data-civ-conditional-content]') as HTMLElement;
-    expect(container.style.display).toBe('');
+    expect(container.classList.contains('civ-conditional--visible')).toBe(true);
 
     fakeField.remove();
   });
@@ -42,12 +42,12 @@ describe('civ-conditional', () => {
     // Show it
     fakeField.dispatchEvent(new CustomEvent('civ-input', { detail: { value: 'red' }, bubbles: true }));
     await elementUpdated(el);
-    expect((el.querySelector('[data-civ-conditional-content]') as HTMLElement).style.display).toBe('');
+    expect((el.querySelector('[data-civ-conditional-content]') as HTMLElement).classList.contains('civ-conditional--visible')).toBe(true);
 
     // Hide it
     fakeField.dispatchEvent(new CustomEvent('civ-input', { detail: { value: 'blue' }, bubbles: true }));
     await elementUpdated(el);
-    expect((el.querySelector('[data-civ-conditional-content]') as HTMLElement).style.display).toBe('none');
+    expect((el.querySelector('[data-civ-conditional-content]') as HTMLElement).classList.contains('civ-conditional--hidden')).toBe(true);
 
     fakeField.remove();
   });
@@ -63,12 +63,12 @@ describe('civ-conditional', () => {
     // Should show when value is NOT "inactive"
     fakeField.dispatchEvent(new CustomEvent('civ-input', { detail: { value: 'active' }, bubbles: true }));
     await elementUpdated(el);
-    expect((el.querySelector('[data-civ-conditional-content]') as HTMLElement).style.display).toBe('');
+    expect((el.querySelector('[data-civ-conditional-content]') as HTMLElement).classList.contains('civ-conditional--visible')).toBe(true);
 
     // Should hide when value IS "inactive"
     fakeField.dispatchEvent(new CustomEvent('civ-input', { detail: { value: 'inactive' }, bubbles: true }));
     await elementUpdated(el);
-    expect((el.querySelector('[data-civ-conditional-content]') as HTMLElement).style.display).toBe('none');
+    expect((el.querySelector('[data-civ-conditional-content]') as HTMLElement).classList.contains('civ-conditional--hidden')).toBe(true);
 
     fakeField.remove();
   });
@@ -85,7 +85,7 @@ describe('civ-conditional', () => {
     await elementUpdated(el);
 
     const container = el.querySelector('[data-civ-conditional-content]') as HTMLElement;
-    expect(container.style.display).toBe('none');
+    expect(container.classList.contains('civ-conditional--hidden')).toBe(true);
 
     fakeField.remove();
   });
@@ -101,7 +101,7 @@ describe('civ-conditional', () => {
     await elementUpdated(el);
 
     const container = el.querySelector('[data-civ-conditional-content]') as HTMLElement;
-    expect(container.style.display).toBe('');
+    expect(container.classList.contains('civ-conditional--visible')).toBe(true);
 
     field.remove();
   });
@@ -124,7 +124,7 @@ describe('civ-conditional', () => {
     await elementUpdated(el);
 
     const container = el.querySelector('[data-civ-conditional-content]') as HTMLElement;
-    expect(container.style.display).toBe('');
+    expect(container.classList.contains('civ-conditional--visible')).toBe(true);
 
     fakeField.remove();
   });
@@ -156,7 +156,7 @@ describe('civ-conditional', () => {
     await elementUpdated(el);
 
     const container = el.querySelector('[data-civ-conditional-content]') as HTMLElement;
-    expect(container.style.display).toBe('none');
+    expect(container.classList.contains('civ-conditional--hidden')).toBe(true);
 
     fakeField.remove();
   });

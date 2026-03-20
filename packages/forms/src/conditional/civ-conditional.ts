@@ -2,6 +2,23 @@ import { html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { CivBaseElement, LightDomContainerMixin } from '@civui/core';
 
+const conditionalStyles = html`
+  <style>
+    .civ-conditional--visible {
+      opacity: 1;
+      max-height: 2000px;
+      overflow: visible;
+      transition: opacity 0.2s ease, max-height 0.3s ease;
+    }
+    .civ-conditional--hidden {
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: opacity 0.2s ease, max-height 0.2s ease;
+    }
+  </style>
+`;
+
 /**
  * CivUI Conditional
  *
@@ -56,10 +73,14 @@ export class CivConditional extends LightDomContainerMixin(CivBaseElement) {
   }
 
   override render() {
-    const displayStyle = this._visible ? '' : 'display: none;';
+    const visibilityClass = this._visible ? 'civ-conditional--visible' : 'civ-conditional--hidden';
 
     return html`
-      <div data-civ-conditional-content style="${displayStyle}"></div>
+      ${conditionalStyles}
+      <div data-civ-conditional-content
+        class="${visibilityClass}"
+        aria-live="polite"
+      ></div>
     `;
   }
 

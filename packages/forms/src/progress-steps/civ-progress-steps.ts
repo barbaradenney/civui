@@ -1,6 +1,22 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBaseElement } from '@civui/core';
+import { CivBaseElement, dispatch } from '@civui/core';
+
+const clickableStyles = html`
+  <style>
+    .civ-step-circle--clickable {
+      cursor: pointer;
+      background: inherit;
+      border: inherit;
+      font: inherit;
+      color: inherit;
+      padding: 0;
+    }
+    .civ-step-circle--clickable:hover {
+      opacity: 0.8;
+    }
+  </style>
+`;
 
 /**
  * CivUI Progress Steps
@@ -13,12 +29,16 @@ import { CivBaseElement } from '@civui/core';
  * @prop {string} steps - JSON string of step labels, e.g., '["Personal Info","Address","Review"]'
  * @prop {number} current - Current step index (0-based)
  * @prop {string} orientation - Layout direction ('horizontal' | 'vertical', default 'horizontal')
+ * @prop {boolean} clickable - When true, completed steps become clickable buttons
+ *
+ * @fires civ-step-click - When a completed step is clicked, detail: { step: number }
  */
 @customElement('civ-progress-steps')
 export class CivProgressSteps extends CivBaseElement {
   @property({ type: String }) steps = '[]';
   @property({ type: Number }) current = 0;
   @property({ type: String, reflect: true }) orientation: 'horizontal' | 'vertical' = 'horizontal';
+  @property({ type: Boolean }) clickable = false;
 
   private _getStepLabels(): string[] {
     try {
@@ -39,6 +59,7 @@ export class CivProgressSteps extends CivBaseElement {
       : 'civ-flex civ-flex-row civ-items-center civ-gap-0';
 
     return html`
+      ${this.clickable ? clickableStyles : nothing}
       <ol
         class="${listClass} civ-list-none civ-p-0 civ-m-0"
         role="list"
@@ -75,11 +96,17 @@ export class CivProgressSteps extends CivBaseElement {
       >
         <div class="${containerClass}">
           <div class="civ-flex civ-items-center ${isVertical ? 'civ-flex-col' : ''}">
-            <div class="civ-step-circle civ-flex civ-items-center civ-justify-center civ-rounded-full civ-w-8 civ-h-8 civ-text-sm civ-font-bold civ-shrink-0">
-              ${isCompleted
-                ? html`<span class="civ-icon civ-icon--check" aria-hidden="true"></span>`
-                : html`${index + 1}`}
-            </div>
+            ${this.clickable && isCompleted
+              ? html`<button type="button"
+                  class="civ-step-circle civ-step-circle--clickable civ-flex civ-items-center civ-justify-center civ-rounded-full civ-w-8 civ-h-8 civ-text-sm civ-font-bold civ-shrink-0 focus-visible:civ-focus-ring"
+                  @click="${() => this._onStepClick(index)}"
+                  aria-label="Go to step ${index + 1}: ${label}"
+                ><span class="civ-icon civ-icon--check" aria-hidden="true"></span></button>`
+              : html`<div class="civ-step-circle civ-flex civ-items-center civ-justify-center civ-rounded-full civ-w-8 civ-h-8 civ-text-sm civ-font-bold civ-shrink-0">
+                ${isCompleted
+                  ? html`<span class="civ-icon civ-icon--check" aria-hidden="true"></span>`
+                  : html`${index + 1}`}
+              </div>`}
             ${!isLast && isVertical
               ? html`<div class="civ-step-connector civ-w-0.5 civ-h-8 civ-my-1"></div>`
               : nothing}
@@ -91,6 +118,9 @@ export class CivProgressSteps extends CivBaseElement {
           : nothing}
       </li>
     `;
+  }
+  private _onStepClick(step: number): void {
+    dispatch(this, 'civ-step-click', { step });
   }
 }
 

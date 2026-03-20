@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivFormElement, LightDomContainerMixin, dispatch, renderLegend, renderHint, renderError, syncGroupDisabled, stopChildEvent, syncLegendToLabel } from '@civui/core';
+import { CivFormElement, LightDomContainerMixin, dispatch, renderLegend, renderHint, renderError, syncGroupDisabled, stopChildEvent, syncLegendToLabel, t, interpolate } from '@civui/core';
 import type { CivCheckbox } from './civ-checkbox.js';
 
 /**
@@ -32,6 +32,8 @@ export class CivCheckboxGroup extends LightDomContainerMixin(CivFormElement) {
   @property({ type: String }) legend = '';
   @property({ type: Boolean, reflect: true }) tile = false;
   @property({ type: String, reflect: true }) orientation: 'vertical' | 'horizontal' = 'vertical';
+  @property({ type: Boolean, attribute: 'show-select-all' }) showSelectAll = false;
+  @property({ type: Number, attribute: 'max-selections' }) maxSelections?: number;
 
   protected override _defaultValue = '';
   private _boundOnChildChange = this._onChildChange.bind(this);
@@ -107,6 +109,11 @@ export class CivCheckboxGroup extends LightDomContainerMixin(CivFormElement) {
         ? 'civ-group-layout--horizontal'
         : 'civ-group-layout--vertical';
 
+    const maxHint = this.maxSelections
+      ? interpolate(t('maxSelectionsHint'), { max: this.maxSelections })
+      : '';
+    const combinedHint = [this.hint, maxHint].filter(Boolean).join('. ');
+
     return html`
       <fieldset
         class="civ-fieldset"
@@ -116,8 +123,14 @@ export class CivCheckboxGroup extends LightDomContainerMixin(CivFormElement) {
         ?disabled="${this.disabled}"
       >
         ${renderLegend({ legend: this.legend, required: this.required })}
-        ${renderHint(this._hintId, this.hint, true)}
+        ${renderHint(this._hintId, combinedHint, true)}
         ${renderError(this._errorId, this.error, true)}
+        ${this.showSelectAll ? html`
+          <button type="button" class="civ-select-all-btn civ-text-sm civ-text-primary civ-mb-2 civ-underline hover:civ-no-underline focus-visible:civ-focus-ring"
+            @click="${this._onToggleAll}"
+            ?disabled="${this.disabled}">
+            ${this._allChecked ? t('deselectAll') : t('selectAll')}
+          </button>` : nothing}
         <div class="${layoutClass}"></div>
       </fieldset>
     `;
@@ -128,6 +141,40 @@ export class CivCheckboxGroup extends LightDomContainerMixin(CivFormElement) {
    */
   getCheckedValues(): string[] {
     return this._parseValue(this.value);
+  }
+
+  private get _allChecked(): boolean {
+    const checkboxes = this._getCheckboxes();
+    return checkboxes.length > 0 && checkboxes.every((cb) => cb.checked);
+  }
+
+  private _onToggleAll(): void {
+    const checkboxes = this._getCheckboxes();
+    const allChecked = this._allChecked;
+
+    if (allChecked) {
+      // Deselect all
+      checkboxes.forEach((cb) => { cb.checked = false; });
+    } else {
+      // Select all (respect maxSelections)
+      if (this.maxSelections) {
+        let count = 0;
+        checkboxes.forEach((cb) => {
+          if (count < this.maxSelections!) {
+            cb.checked = true;
+            count++;
+          }
+        });
+      } else {
+        checkboxes.forEach((cb) => { cb.checked = true; });
+      }
+    }
+
+    this._readCheckedFromChildren(checkboxes);
+    const values = this.getCheckedValues();
+    dispatch(this, 'civ-input', { values });
+    dispatch(this, 'civ-change', { values });
+    this.sendAnalytics('change');
   }
 
   // Called by multiple sync methods per update cycle. querySelectorAll is
@@ -209,6 +256,13 @@ export class CivCheckboxGroup extends LightDomContainerMixin(CivFormElement) {
     this._getCheckboxes().forEach((cb) => {
       if (cb.checked) checkedValues.push(cb.value);
     });
+
+    // Enforce max selections
+    if (this.maxSelections && checkedValues.length > this.maxSelections) {
+      const checkbox = e.target as CivCheckbox;
+      checkbox.checked = false;
+      return;
+    }
 
     this.value = this._serializeValue(checkedValues);
     this._updateGroupFormValue();

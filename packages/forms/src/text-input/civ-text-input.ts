@@ -57,6 +57,9 @@ export class CivTextInput extends CivFormElement {
   @property({ type: String }) autocomplete: string = '';
   @property({ type: String }) inputmode: string = '';
   @property({ type: String }) mask: TextInputMask = '';
+  @property({ type: String }) prefix = '';
+  @property({ type: String }) suffix = '';
+  @property({ type: Boolean }) clearable = false;
 
   /**
    * Custom mask pattern string. Slot syntax:
@@ -175,12 +178,23 @@ export class CivTextInput extends CivFormElement {
   override render() {
     const widthClass = WIDTH_CLASSES[this.width] || WIDTH_CLASSES['default'];
     const isCurrency = this._isCurrency;
+    const hasPrefix = !!(this.prefix || isCurrency);
+    const hasSuffix = !!this.suffix;
+
+    const roundingClasses = hasPrefix && hasSuffix
+      ? ['civ-rounded-none']
+      : hasPrefix
+        ? ['civ-rounded-s-none']
+        : hasSuffix
+          ? ['civ-rounded-e-none']
+          : [];
 
     const classes = inputClasses({
       extra: [
         widthClass,
         'civ-max-w-full',
-        ...(isCurrency ? ['civ-rounded-s-none', 'civ-text-end'] : []),
+        ...roundingClasses,
+        ...(isCurrency ? ['civ-text-end'] : []),
       ],
     });
 
@@ -280,17 +294,44 @@ export class CivTextInput extends CivFormElement {
       />
     `;
 
+    const needsWrapper = hasPrefix || hasSuffix || (this.clearable && this.value);
+    const wrappedInput = needsWrapper
+      ? html`<div class="civ-flex ${widthClass} civ-max-w-full"
+        >${hasPrefix
+          ? html`<span class="civ-input-prefix" aria-hidden="true">${isCurrency ? '$' : this.prefix}</span>`
+          : nothing}${inputEl}${this.clearable && this.value
+          ? html`<button type="button" class="civ-input-clear" aria-label="Clear" @click="${this._onClear}">
+              <civ-icon name="close" size="sm"></civ-icon>
+            </button>`
+          : nothing}${hasSuffix
+          ? html`<span class="civ-input-suffix" aria-hidden="true">${this.suffix}</span>`
+          : nothing}</div>`
+      : inputEl;
+
     return html`
       <div class="civ-mb-4">
         ${renderLabel({ label: this.label, inputId: this._inputId, required: this.required })}
         ${renderHint(this._hintId, effectiveHint)}
         ${renderError(this._errorId, this.error)}
-        ${isCurrency
-          ? html`<div class="civ-flex ${widthClass} civ-max-w-full"
-            ><span class="civ-input-prefix" aria-hidden="true">$</span>${inputEl}</div>`
-          : inputEl}
+        ${wrappedInput}
       </div>
     `;
+  }
+
+  /**
+   * Handle clear button click.
+   * Clears the value and dispatches civ-input and civ-change events.
+   */
+  private _onClear(): void {
+    this.value = '';
+    this.updateFormValue('');
+    const input = this.querySelector('input') as HTMLInputElement | null;
+    if (input) {
+      input.value = '';
+      input.focus();
+    }
+    dispatch(this, 'civ-input', { value: '' });
+    dispatch(this, 'civ-change', { value: '' });
   }
 
   /**

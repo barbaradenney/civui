@@ -66,6 +66,9 @@ export class CivDatePicker extends CivFormElement {
   @property({ type: String }) locale = 'en-US';
   @property({ type: Number, attribute: 'week-starts-on' }) weekStartsOn = 0;
 
+  @property({ type: String, attribute: 'disabled-dates' }) disabledDates = '';
+  @property({ type: String, attribute: 'clear-label' }) clearLabel = '';
+
   @property({ type: String, attribute: 'choose-date-label' }) chooseDateLabel = '';
   @property({ type: String, attribute: 'selected-date-label' }) selectedDateLabel = '';
   @property({ type: String, attribute: 'dialog-label' }) dialogLabel = '';
@@ -112,8 +115,22 @@ export class CivDatePicker extends CivFormElement {
     return this._cachedDayHeaders;
   }
 
+  private get _disabledDateSet(): Set<string> {
+    if (!this.disabledDates) return new Set();
+    try {
+      const dates = JSON.parse(this.disabledDates) as string[];
+      return new Set(dates);
+    } catch { return new Set(); }
+  }
+
   private get _constraints(): DateConstraints {
     return { min: this.min || undefined, max: this.max || undefined };
+  }
+
+  private _isDateDisabled(date: Date): boolean {
+    if (isDateDisabled(date, this._constraints)) return true;
+    const iso = toISODateString(date);
+    return this._disabledDateSet.has(iso);
   }
 
   private _dialogKeyHandler = createKeyboardHandler([
@@ -177,7 +194,7 @@ export class CivDatePicker extends CivFormElement {
     {
       key: 'Enter',
       handler: () => {
-        if (!isDateDisabled(this._focusedDate, this._constraints)) {
+        if (!this._isDateDisabled(this._focusedDate)) {
           this._selectDate(this._focusedDate);
         }
       },
@@ -185,7 +202,7 @@ export class CivDatePicker extends CivFormElement {
     {
       key: ' ',
       handler: () => {
-        if (!isDateDisabled(this._focusedDate, this._constraints)) {
+        if (!this._isDateDisabled(this._focusedDate)) {
           this._selectDate(this._focusedDate);
         }
       },
@@ -255,6 +272,19 @@ export class CivDatePicker extends CivFormElement {
             @input="${this._onTextInput}"
             @change="${this._onTextChange}"
           />
+          ${this.value ? html`
+            <button
+              type="button"
+              class="civ-datepicker-clear-btn hover:civ-bg-base-lighter focus-visible:civ-focus-ring"
+              aria-label="${this.clearLabel || 'Clear date'}"
+              ?disabled="${this.disabled}"
+              @click="${this._onClear}"
+            >
+              <svg aria-hidden="true" class="civ-w-4 civ-h-4 civ-text-base-dark" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+            </button>
+          ` : nothing}
           <button
             id="${this._buttonId}"
             type="button"
@@ -356,7 +386,7 @@ export class CivDatePicker extends CivFormElement {
   }
 
   private _renderDayCell(day: CalendarDay, selectedDate: Date | null) {
-    const disabled = !day.inCurrentMonth || isDateDisabled(day.date, this._constraints);
+    const disabled = !day.inCurrentMonth || this._isDateDisabled(day.date);
     const selected = selectedDate ? isSameDay(day.date, selectedDate) : false;
     const focused = isSameDay(day.date, this._focusedDate);
     const tabIdx = focused && day.inCurrentMonth ? 0 : -1;
@@ -433,6 +463,14 @@ export class CivDatePicker extends CivFormElement {
     this.sendAnalytics('change');
     this.announce(interpolate(this.dateSelectedMessage || t('datePickerDateSelectedMessage'), { date: formatDateLong(date, this.locale) }));
     this._closeDialog();
+  }
+
+  private _onClear(): void {
+    this.value = '';
+    this._inputValue = '';
+    this.updateFormValue('');
+    dispatch(this, 'civ-input', { value: '' });
+    dispatch(this, 'civ-change', { value: '' });
   }
 
   private _onTextInput(e: Event): void {
@@ -535,7 +573,7 @@ export class CivDatePicker extends CivFormElement {
     let candidate = addDays(this._focusedDate, days);
     const maxAttempts = 31;
     for (let i = 0; i < maxAttempts; i++) {
-      if (!isDateDisabled(candidate, this._constraints)) {
+      if (!this._isDateDisabled(candidate)) {
         this._moveFocus(candidate);
         return;
       }
@@ -544,7 +582,7 @@ export class CivDatePicker extends CivFormElement {
     // If no valid date found within range, clamp to boundary
     if (this._constraints.min || this._constraints.max) {
       const clamped = clampDate(this._focusedDate, this._constraints);
-      if (!isDateDisabled(clamped, this._constraints)) {
+      if (!this._isDateDisabled(clamped)) {
         this._moveFocus(clamped);
       }
     }

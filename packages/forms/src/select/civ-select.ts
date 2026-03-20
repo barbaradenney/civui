@@ -8,6 +8,7 @@ export interface SelectOption {
   value: string;
   label: string;
   disabled?: boolean;
+  group?: string;
 }
 
 /**
@@ -56,19 +57,43 @@ export class CivSelect extends CivFormElement {
           @change="${this._onSelectChange}"
         >
           <option value="">${this.emptyLabel || t('selectEmpty')}</option>
-          ${this.options.map(
-            (opt) => html`
-              <option
-                value="${opt.value}"
-                ?selected="${opt.value === this.value}"
-                ?disabled="${opt.disabled ?? false}"
-              >
-                ${opt.label}
-              </option>
-            `,
-          )}
+          ${this._renderGroupedOptions()}
         </select>
       </div>
+    `;
+  }
+
+  private _renderOption(opt: SelectOption) {
+    return html`
+      <option
+        value="${opt.value}"
+        ?selected="${opt.value === this.value}"
+        ?disabled="${opt.disabled ?? false}"
+      >
+        ${opt.label}
+      </option>
+    `;
+  }
+
+  private _renderGroupedOptions() {
+    const grouped = new Map<string, SelectOption[]>();
+    const ungrouped: SelectOption[] = [];
+    for (const opt of this.options) {
+      if (opt.group) {
+        if (!grouped.has(opt.group)) grouped.set(opt.group, []);
+        grouped.get(opt.group)!.push(opt);
+      } else {
+        ungrouped.push(opt);
+      }
+    }
+
+    return html`
+      ${ungrouped.map((opt) => this._renderOption(opt))}
+      ${[...grouped.entries()].map(([group, opts]) => html`
+        <optgroup label="${group}">
+          ${opts.map((opt) => this._renderOption(opt))}
+        </optgroup>
+      `)}
     `;
   }
 

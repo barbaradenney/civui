@@ -20,6 +20,8 @@ import { CivFormElement, debounce, dispatch, renderLabel, renderHint, renderErro
  * @prop {string} placeholder - Placeholder text
  * @prop {boolean} required - Whether the field is required
  * @prop {boolean} disabled - Whether the field is disabled
+ * @prop {boolean} autogrow - Whether the textarea auto-grows to fit content
+ * @prop {string} maxHeight - Maximum height for autogrow (CSS value, e.g. '300px')
  *
  * @fires civ-input - When value changes (on input), detail: { value }
  * @fires civ-change - When value changes (on change/blur), detail: { value }
@@ -32,6 +34,8 @@ export class CivTextarea extends CivFormElement {
   @property({ type: Number }) maxlength?: number;
   @property({ type: Number }) maxwords?: number;
   @property({ type: String }) placeholder = '';
+  @property({ type: Boolean }) autogrow = false;
+  @property({ type: String, attribute: 'max-height' }) maxHeight = '';
 
   @state() private _charCount = 0;
   @state() private _announcedCharCount = 0;
@@ -53,6 +57,18 @@ export class CivTextarea extends CivFormElement {
   private _debouncedAnnounceWordCount = debounce(() => {
     this._announcedWordCount = this._wordCount;
   }, 1000);
+
+  override firstUpdated(): void {
+    super.firstUpdated();
+    this._autoGrow();
+  }
+
+  override updated(changed: Map<string, unknown>): void {
+    super.updated(changed);
+    if (changed.has('value')) {
+      this._autoGrow();
+    }
+  }
 
   override connectedCallback(): void {
     super.connectedCallback();
@@ -87,7 +103,7 @@ export class CivTextarea extends CivFormElement {
 
   override render() {
     const classes = inputClasses({
-      extra: ['civ-resize-y'],
+      extra: [this.autogrow ? 'civ-resize-none civ-overflow-hidden' : 'civ-resize-y'],
     });
 
     const showCharCount = this.maxlength != null && this.maxlength > 0;
@@ -159,11 +175,24 @@ export class CivTextarea extends CivFormElement {
     this._debouncedAnnounceWordCount.cancel();
   }
 
+  private _autoGrow(): void {
+    if (!this.autogrow) return;
+    const textarea = this.querySelector('textarea') as HTMLTextAreaElement;
+    if (!textarea) return;
+    textarea.style.height = 'auto';
+    textarea.style.height = textarea.scrollHeight + 'px';
+    if (this.maxHeight) {
+      textarea.style.maxHeight = this.maxHeight;
+      textarea.style.overflowY = 'auto';
+    }
+  }
+
   private _onInput(e: Event): void {
     const target = e.target as HTMLTextAreaElement;
     this.value = target.value;
     this._charCount = target.value.length;
     this._debouncedAnnounceCount();
+    this._autoGrow();
     if (this._showWordCount) {
       this._wordCount = this._countWords(target.value);
       this._debouncedAnnounceWordCount();

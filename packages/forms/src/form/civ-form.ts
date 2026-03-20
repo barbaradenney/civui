@@ -51,8 +51,11 @@ export interface CivFormFieldLike extends HTMLElement {
  * @prop {string} action - Form action URL (for reference)
  * @prop {string} method - Form method (for reference)
  *
+ * @prop {boolean} trackDirty - Track whether any field has been modified
+ *
  * @fires civ-submit - When validation passes
  * @fires civ-invalid - When validation fails, detail contains errors
+ * @fires civ-dirty - When dirty state changes, detail: { dirty: boolean }
  * @fires civ-analytics - Analytics tracking event on submit
  */
 @customElement('civ-form')
@@ -75,14 +78,19 @@ export class CivForm extends LightDomContainerMixin(CivBaseElement) {
    */
   @property({ type: String }) persist = '';
   @property({ type: Boolean }) prefill = false;
+  @property({ type: Boolean, attribute: 'track-dirty' }) trackDirty = false;
 
   @state() private _errors: FormFieldError[] = [];
+  @state() private _dirty = false;
+  private _initialValues = new Map<string, string>();
 
   private _summaryId = this.generateId('summary');
   private _summaryHeadingId = this.generateId('summary-heading');
   private _boundOnClick = this._onButtonClick.bind(this);
   private _boundOnKeydown = this._onKeydown.bind(this);
   private _boundOnCivInput = this._persistFormData.bind(this);
+  private _boundOnCivInputDirty = this._checkDirty.bind(this);
+  private _boundBeforeUnload = this._onBeforeUnload.bind(this);
   private _persistTimer: ReturnType<typeof setTimeout> | undefined;
   override connectedCallback(): void {
     super.connectedCallback();
@@ -92,6 +100,10 @@ export class CivForm extends LightDomContainerMixin(CivBaseElement) {
     this.addEventListener('keydown', this._boundOnKeydown);
     if (this.persist) {
       this.addEventListener('civ-input', this._boundOnCivInput);
+    }
+    if (this.trackDirty) {
+      this.addEventListener('civ-input', this._boundOnCivInputDirty);
+      window.addEventListener('beforeunload', this._boundBeforeUnload);
     }
   }
 
@@ -103,12 +115,20 @@ export class CivForm extends LightDomContainerMixin(CivBaseElement) {
       this.removeEventListener('civ-input', this._boundOnCivInput);
       clearTimeout(this._persistTimer);
     }
+    if (this.trackDirty) {
+      this.removeEventListener('civ-input', this._boundOnCivInputDirty);
+      window.removeEventListener('beforeunload', this._boundBeforeUnload);
+    }
   }
 
   override firstUpdated(): void {
     this._relocateChildren('[data-civ-form-content]');
     if (this.persist) this._restorePersistedData();
     this._prefillFromUrl();
+    if (this.trackDirty) {
+      // Capture initial values after restoration/prefill completes
+      requestAnimationFrame(() => this._captureInitialValues());
+    }
   }
 
   override updated(changed: Map<string, unknown>): void {
@@ -215,6 +235,11 @@ export class CivForm extends LightDomContainerMixin(CivBaseElement) {
     }
     this._errors = [];
     this._clearPersistedData();
+    if (this.trackDirty) {
+      this._dirty = false;
+      dispatch(this, 'civ-dirty', { dirty: false });
+      requestAnimationFrame(() => this._captureInitialValues());
+    }
   }
 
   /**
@@ -286,6 +311,38 @@ export class CivForm extends LightDomContainerMixin(CivBaseElement) {
     }
 
     return fd;
+  }
+
+  get dirty(): boolean {
+    return this._dirty;
+  }
+
+  private _captureInitialValues(): void {
+    this._initialValues.clear();
+    const fields = this.querySelectorAll('[data-civ-form-field]') as NodeListOf<CivFormFieldLike>;
+    fields.forEach((f) => {
+      if (f.name) this._initialValues.set(f.name, f.value ?? '');
+    });
+  }
+
+  private _checkDirty(): void {
+    if (!this.trackDirty) return;
+    const fields = this.querySelectorAll('[data-civ-form-field]') as NodeListOf<CivFormFieldLike>;
+    let dirty = false;
+    fields.forEach((f) => {
+      if (f.name && this._initialValues.get(f.name) !== (f.value ?? '')) dirty = true;
+    });
+    if (dirty !== this._dirty) {
+      this._dirty = dirty;
+      dispatch(this, 'civ-dirty', { dirty });
+    }
+  }
+
+  private _onBeforeUnload(e: BeforeUnloadEvent): void {
+    if (this._dirty) {
+      e.preventDefault();
+      e.returnValue = 'You have unsaved changes';
+    }
   }
 
   private _restorePersistedData(): void {
@@ -394,6 +451,11 @@ export class CivForm extends LightDomContainerMixin(CivBaseElement) {
     }
 
     this._clearPersistedData();
+    if (this.trackDirty) {
+      this._dirty = false;
+      dispatch(this, 'civ-dirty', { dirty: false });
+      requestAnimationFrame(() => this._captureInitialValues());
+    }
     dispatch(this, 'civ-submit', { formData: this.toFormData() });
     this.sendAnalytics('submit');
   }

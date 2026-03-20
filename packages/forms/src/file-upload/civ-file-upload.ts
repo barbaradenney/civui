@@ -2,6 +2,18 @@ import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { CivFormElement, dispatch, interpolate, renderLabel, renderHint, renderError, t } from '@civui/core';
 
+const previewStyles = html`
+  <style>
+    .civ-file-preview {
+      width: 2em;
+      height: 2em;
+      object-fit: cover;
+      border-radius: var(--civ-border-radius-DEFAULT);
+      border: 1px solid var(--civ-color-base-lighter);
+    }
+  </style>
+`;
+
 interface UploadedFile {
   name: string;
   size: number;
@@ -33,6 +45,7 @@ function formatFileSize(bytes: number): string {
  * @prop {number} maxFiles - Maximum number of files allowed (0 = unlimited)
  * @prop {boolean} required - Whether a file is required
  * @prop {boolean} disabled - Whether the upload is disabled
+ * @prop {boolean} showPreview - Show image thumbnail previews in the file list
  *
  * @fires civ-input - When files change, detail: { files: File[] }
  * @fires civ-change - When files are added or removed, detail: { files: File[] }
@@ -46,6 +59,7 @@ function formatFileSize(bytes: number): string {
 export class CivFileUpload extends CivFormElement {
   @property({ type: String }) accept = '';
   @property({ type: Boolean }) multiple = false;
+  @property({ type: Boolean, attribute: 'show-preview' }) showPreview = false;
   @property({ type: Number, attribute: 'max-size' }) maxSize = 0;
   @property({ type: Number, attribute: 'max-files' }) maxFiles = 0;
 
@@ -65,6 +79,8 @@ export class CivFileUpload extends CivFormElement {
   @state() private _files: UploadedFile[] = [];
   @state() private _dragging = false;
 
+  private _previewUrls = new Map<File, string>();
+
   private _boundDragOver = this._onDragOver.bind(this);
   private _boundDragLeave = this._onDragLeave.bind(this);
   private _boundDrop = this._onDrop.bind(this);
@@ -75,6 +91,7 @@ export class CivFileUpload extends CivFormElement {
 
   override render() {
     return html`
+      ${this.showPreview ? previewStyles : nothing}
       <div class="civ-mb-4">
         ${renderLabel({ label: this.label, inputId: this._inputId, required: this.required })}
         ${renderHint(this._hintId, this.hint)}
@@ -128,7 +145,10 @@ export class CivFileUpload extends CivFormElement {
                 ${this._files.map(
                   (file, index) => html`
                     <li class="civ-file-item">
-                      <span>
+                      <span class="civ-flex civ-items-center civ-gap-2">
+                        ${this.showPreview && file.type?.startsWith('image/')
+                          ? html`<img class="civ-file-preview" src="${this._getPreviewUrl(file.file)}" alt="" />`
+                          : nothing}
                         <span class="civ-font-semibold">${file.name}</span>
                         <span class="civ-ms-2">(${formatFileSize(file.size)})</span>
                       </span>
@@ -149,6 +169,35 @@ export class CivFileUpload extends CivFormElement {
           : nothing}
       </div>
     `;
+  }
+
+  override disconnectedCallback(): void {
+    super.disconnectedCallback();
+    this._revokeAllPreviewUrls();
+  }
+
+  private _getPreviewUrl(file: File): string {
+    let url = this._previewUrls.get(file);
+    if (!url) {
+      url = URL.createObjectURL(file);
+      this._previewUrls.set(file, url);
+    }
+    return url;
+  }
+
+  private _revokeAllPreviewUrls(): void {
+    for (const url of this._previewUrls.values()) {
+      URL.revokeObjectURL(url);
+    }
+    this._previewUrls.clear();
+  }
+
+  private _revokePreviewUrl(file: File): void {
+    const url = this._previewUrls.get(file);
+    if (url) {
+      URL.revokeObjectURL(url);
+      this._previewUrls.delete(file);
+    }
   }
 
   protected override _syncFormValue(): void {
@@ -260,6 +309,8 @@ export class CivFileUpload extends CivFormElement {
   }
 
   private _removeFile(index: number): void {
+    const removed = this._files[index];
+    if (removed) this._revokePreviewUrl(removed.file);
     this._files = this._files.filter((_, i) => i !== index);
     if (this._files.length === 0) this.error = '';
     this._updateFormData();
@@ -301,6 +352,7 @@ export class CivFileUpload extends CivFormElement {
   }
 
   override formResetCallback(): void {
+    this._revokeAllPreviewUrls();
     this._files = [];
     this.value = '';
     this.error = '';

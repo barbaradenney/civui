@@ -67,6 +67,18 @@
     color: var(--civ-color-base-dark);
   }
 
+  .civ-input-suffix {
+    @apply civ-flex civ-items-center civ-px-2 civ-border civ-border-s-0 civ-rounded-e civ-border-base-light civ-bg-base-lightest;
+    font-size: var(--civ-typography-fontSize-base);
+    color: var(--civ-color-base-dark);
+  }
+
+  .civ-input-clear {
+    @apply civ-flex civ-items-center civ-justify-center civ-bg-transparent civ-border-0 civ-cursor-pointer civ-px-1;
+    color: var(--civ-color-base-dark);
+  }
+  .civ-input-clear:hover { color: var(--civ-color-base-darkest); }
+
   .civ-select-field {
     appearance: none;
     -webkit-appearance: none;
@@ -955,6 +967,19 @@
   .civ-combobox-option {
     @apply civ-px-3 civ-py-2 civ-cursor-pointer;
     font-size: var(--civ-typography-fontSize-base);
+  }
+
+  .civ-combobox-highlight {
+    background: transparent;
+    color: currentColor;
+    font-weight: bold;
+    text-decoration: underline;
+  }
+
+  .civ-combobox-group-header {
+    @apply civ-px-3 civ-py-1 civ-text-xs civ-font-bold civ-text-base-dark;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
   }
 
   /* ── Date Picker ────────────────────────────────────────────── */

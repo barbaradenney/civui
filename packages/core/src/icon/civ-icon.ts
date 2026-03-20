@@ -44,6 +44,18 @@ export class CivIcon extends CivBaseElement {
   @property({ reflect: true })
   size = '';
 
+  /**
+   * Rotation in degrees. Common values: 90, 180, 270.
+   */
+  @property({ type: Number })
+  rotate?: number;
+
+  /**
+   * Flip direction: 'horizontal', 'vertical', or 'both'.
+   */
+  @property({ type: String })
+  flip?: string;
+
   private static _sizeMap: Record<string, string> = {
     sm: '0.75em',
     md: '1em',
@@ -66,10 +78,21 @@ export class CivIcon extends CivBaseElement {
       ? CivIcon._sizeMap[this.size] ?? this.size
       : undefined;
 
+    const transforms: string[] = [];
+    if (this.rotate) transforms.push(`rotate(${this.rotate}deg)`);
+    if (this.flip === 'horizontal') transforms.push('scaleX(-1)');
+    else if (this.flip === 'vertical') transforms.push('scaleY(-1)');
+    else if (this.flip === 'both') transforms.push('scale(-1)');
+
+    const styleParts: string[] = [];
+    if (fontSize) styleParts.push(`font-size:${fontSize}`);
+    if (transforms.length) styleParts.push(`display:inline-block`, `transform:${transforms.join(' ')}`);
+    const styleStr = styleParts.join(';');
+
     return html`
       <span
         class="civ-icon civ-icon--${this.name}"
-        style=${fontSize ? `font-size:${fontSize}` : nothing}
+        style=${styleStr || nothing}
         role=${isDecorative ? 'presentation' : 'img'}
         aria-hidden=${isDecorative ? 'true' : 'false'}
         aria-label=${isDecorative ? nothing : accessibleLabel}

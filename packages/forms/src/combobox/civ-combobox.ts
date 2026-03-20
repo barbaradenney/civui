@@ -1,10 +1,11 @@
-import { html, nothing } from 'lit';
+import { html, nothing, type TemplateResult } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { CivFormElement, dispatch, renderLabel, renderHint, renderError, inputClasses, clickOutside, t, interpolate } from '@civui/core';
 
 export interface ComboboxOption {
   value: string;
   label: string;
+  group?: string;
 }
 
 /**
@@ -110,25 +111,7 @@ export class CivCombobox extends CivFormElement {
                   class="civ-combobox-listbox"
                   aria-labelledby="${this.label ? this._labelId : nothing}"
                 >
-                  ${filtered.map(
-                    (option, i) => html`
-                      <li
-                        id="${this._listboxId}-option-${i}"
-                        role="option"
-                        class="civ-combobox-option
-                          ${i !== this._activeIndex ? 'hover:civ-bg-base-lightest' : ''}
-                          ${option.value === this.value && i !== this._activeIndex
-                            ? 'civ-font-bold'
-                            : ''}"
-                        aria-selected="${option.value === this.value}"
-                        data-active="${i === this._activeIndex ? '' : nothing}"
-                        @click="${() => this._selectOption(option)}"
-                        @mouseenter="${() => { this._activeIndex = i; }}"
-                      >
-                        ${option.label}
-                      </li>
-                    `,
-                  )}
+                  ${this._renderGroupedOptions(filtered)}
                 </ul>
               `
             : nothing}
@@ -146,6 +129,67 @@ export class CivCombobox extends CivFormElement {
             : nothing}
         </div>
       </div>
+    `;
+  }
+
+  private _highlightMatch(label: string, filter: string): TemplateResult {
+    if (!filter) return html`${label}`;
+    const lowerLabel = label.toLowerCase();
+    const lowerFilter = filter.toLowerCase();
+    const idx = lowerLabel.indexOf(lowerFilter);
+    if (idx === -1) return html`${label}`;
+    const before = label.substring(0, idx);
+    const match = label.substring(idx, idx + filter.length);
+    const after = label.substring(idx + filter.length);
+    return html`${before}<mark class="civ-combobox-highlight">${match}</mark>${after}`;
+  }
+
+  private _renderOption(option: ComboboxOption, i: number): TemplateResult {
+    return html`
+      <li
+        id="${this._listboxId}-option-${i}"
+        role="option"
+        class="civ-combobox-option
+          ${i !== this._activeIndex ? 'hover:civ-bg-base-lightest' : ''}
+          ${option.value === this.value && i !== this._activeIndex
+            ? 'civ-font-bold'
+            : ''}"
+        aria-selected="${option.value === this.value}"
+        data-active="${i === this._activeIndex ? '' : nothing}"
+        @click="${() => this._selectOption(option)}"
+        @mouseenter="${() => { this._activeIndex = i; }}"
+      >
+        ${this._highlightMatch(option.label, this._filter)}
+      </li>
+    `;
+  }
+
+  private _renderGroupedOptions(filtered: ComboboxOption[]): TemplateResult {
+    // Check if any options have groups
+    const hasGroups = filtered.some((o) => o.group);
+    if (!hasGroups) {
+      return html`${filtered.map((option, i) => this._renderOption(option, i))}`;
+    }
+
+    // Group options preserving filtered order
+    const grouped = new Map<string, { option: ComboboxOption; index: number }[]>();
+    const ungrouped: { option: ComboboxOption; index: number }[] = [];
+    for (let i = 0; i < filtered.length; i++) {
+      const option = filtered[i];
+      if (option.group) {
+        if (!grouped.has(option.group)) grouped.set(option.group, []);
+        grouped.get(option.group)!.push({ option, index: i });
+      } else {
+        ungrouped.push({ option, index: i });
+      }
+    }
+
+    return html`
+      ${ungrouped.map(({ option, index }) => this._renderOption(option, index))}
+      ${[...grouped.entries()].map(([groupName, items]) => html`
+        <div class="civ-combobox-group-header" role="presentation">${groupName}</div>
+        ${items.map(({ option, index }) => this._renderOption(option, index))}
+      `)}
     `;
   }
 

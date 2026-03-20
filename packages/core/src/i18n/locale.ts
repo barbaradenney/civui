@@ -92,6 +92,11 @@ export interface CivLocaleStrings {
   alertDismissLabel: string;
   alertDismissedMessage: string;
 
+  // Checkbox group
+  selectAll: string;
+  deselectAll: string;
+  maxSelectionsHint: string; // "Select up to {max}"
+
   // Validation
   validateRequired: string; // "{label} is required"
   validateEmail: string;
@@ -188,6 +193,10 @@ const defaultStrings: CivLocaleStrings = {
 
   alertDismissLabel: 'Dismiss alert',
   alertDismissedMessage: 'Alert dismissed',
+
+  selectAll: 'Select all',
+  deselectAll: 'Deselect all',
+  maxSelectionsHint: 'Select up to {max}',
 
   validateRequired: '{label} is required',
   validateEmail: 'Enter a valid email address',

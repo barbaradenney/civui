@@ -30,6 +30,7 @@ export interface CivLocaleStrings {
 
   // File upload
   fileUploadDragText: string;
+  fileUploadNoFileChosen: string;
   fileUploadBrowseText: string;
   fileUploadAcceptedLabel: string;
   fileUploadMaxSizeLabel: string;
@@ -137,6 +138,7 @@ const defaultStrings: CivLocaleStrings = {
   formErrorAnnouncement: '{count} {count, plural, one {error} other {errors}} found. Review the error summary.',
 
   fileUploadDragText: 'Drag files here or',
+  fileUploadNoFileChosen: 'No file chosen',
   fileUploadBrowseText: 'choose from folder',
   fileUploadAcceptedLabel: 'Accepted: ',
   fileUploadMaxSizeLabel: 'Max size: ',

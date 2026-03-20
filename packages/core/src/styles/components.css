@@ -946,8 +946,9 @@
            civ-py-12 civ-px-6 civ-text-center civ-transition-all civ-border-base-light civ-cursor-pointer;
   }
 
-  .civ-dropzone--compact {
-    @apply civ-py-6;
+  .civ-dropzone--full {
+    @apply civ-py-20;
+    min-height: 250px;
   }
 
   .civ-file-item {

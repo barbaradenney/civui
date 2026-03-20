@@ -132,3 +132,49 @@ export const MaxFiles: Story = {
     ></civ-file-upload>
   `,
 };
+
+export const CompactVariant: Story = {
+  render: () => html`
+    <civ-file-upload
+      label="Resume"
+      name="resume"
+      variant="compact"
+      accept=".pdf,.doc,.docx"
+      hint="PDF or Word document, max 5 MB"
+    ></civ-file-upload>
+  `,
+};
+
+export const FullVariant: Story = {
+  render: () => html`
+    <civ-file-upload
+      label="Upload case documents"
+      name="case-docs"
+      variant="full"
+      multiple
+      accept=".pdf,.jpg,.png,.tiff"
+      max-files="10"
+      show-preview
+      hint="Drag all related documents here. Accepted: PDF, JPEG, PNG, TIFF. Maximum 10 files."
+    ></civ-file-upload>
+  `,
+};
+
+export const AllVariants: Story = {
+  render: () => html`
+    <div style="display: flex; flex-direction: column; gap: 32px;">
+      <div>
+        <h3 class="civ-text-sm civ-font-bold civ-mb-2" style="color: var(--civ-color-base-dark)">Compact — inline in dense forms</h3>
+        <civ-file-upload label="Attachment" name="attachment" variant="compact" accept=".pdf"></civ-file-upload>
+      </div>
+      <div>
+        <h3 class="civ-text-sm civ-font-bold civ-mb-2" style="color: var(--civ-color-base-dark)">Default — standard forms</h3>
+        <civ-file-upload label="Supporting document" name="doc" accept=".pdf,.jpg"></civ-file-upload>
+      </div>
+      <div>
+        <h3 class="civ-text-sm civ-font-bold civ-mb-2" style="color: var(--civ-color-base-dark)">Full — document-heavy workflows</h3>
+        <civ-file-upload label="Case file upload" name="case-files" variant="full" multiple show-preview accept=".pdf,.jpg,.png"></civ-file-upload>
+      </div>
+    </div>
+  `,
+};

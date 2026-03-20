@@ -60,7 +60,14 @@ export class CivFileUpload extends CivFormElement {
   @property({ type: String }) accept = '';
   @property({ type: Boolean }) multiple = false;
   @property({ type: Boolean, attribute: 'show-preview' }) showPreview = false;
-  @property({ type: Boolean }) compact = false;
+
+  /**
+   * Upload zone variant:
+   * - `default` — medium dropzone with icon and text
+   * - `compact` — inline text field with browse button (no drag zone)
+   * - `full` — large dropzone filling available space
+   */
+  @property({ type: String }) variant: 'default' | 'compact' | 'full' = 'default';
   @property({ type: Number, attribute: 'max-size' }) maxSize = 0;
   @property({ type: Number, attribute: 'max-files' }) maxFiles = 0;
 
@@ -98,34 +105,50 @@ export class CivFileUpload extends CivFormElement {
         ${renderHint(this._hintId, this.hint)}
         ${renderError(this._errorId, this.error)}
 
-        <div
-          class="civ-dropzone ${this.compact ? 'civ-dropzone--compact' : ''} focus-visible:civ-focus-ring"
-          @dragover="${this._boundDragOver}"
-          @dragleave="${this._boundDragLeave}"
-          @drop="${this._boundDrop}"
-          @click="${this._onDropzoneClick}"
-          role="button"
-          tabindex="${this.disabled ? '-1' : '0'}"
-          aria-label="${this.label}"
-          aria-required="${this.required || nothing}"
-          aria-invalid="${this.error ? 'true' : nothing}"
-          aria-disabled="${this.disabled || nothing}"
-          aria-describedby="${this._ariaDescribedBy || nothing}"
-          @keydown="${this._onDropzoneKeydown}"
-          data-dragging="${this._dragging ? '' : nothing}"
-        >
-          <span class="civ-icon civ-icon--upload civ-block civ-mb-2" style="font-size: 1.5em; color: var(--civ-color-base-light)" aria-hidden="true"></span>
-          <span class="civ-block civ-text-body" style="color: var(--civ-color-base-dark)">
-            ${this.dragText || t('fileUploadDragText')}
-            <span class="civ-text-primary civ-underline">${this.browseText || t('fileUploadBrowseText')}</span>
-          </span>
-          ${this.accept
-            ? html`<span class="civ-block civ-text-sm civ-text-muted civ-mt-1">${this.acceptedLabel || t('fileUploadAcceptedLabel')}${this.accept}</span>`
-            : nothing}
-          ${this.maxSize > 0
-            ? html`<span class="civ-block civ-text-sm civ-text-muted civ-mt-0.5">${this.maxSizeLabel || t('fileUploadMaxSizeLabel')}${formatFileSize(this.maxSize)}</span>`
-            : nothing}
-        </div>
+        ${this.variant === 'compact'
+          ? html`
+            <div class="civ-flex civ-gap-2 civ-items-center">
+              <span class="civ-input civ-flex-1 civ-truncate" style="color: var(--civ-color-base-dark)">
+                ${this._files.length > 0
+                  ? this._files.map(f => f.name).join(', ')
+                  : (this.dragText || t('fileUploadNoFileChosen'))}
+              </span>
+              <button
+                type="button"
+                class="civ-btn civ-btn--secondary civ-shrink-0"
+                @click="${this._onDropzoneClick}"
+                ?disabled="${this.disabled}"
+              >${this.browseText || t('fileUploadBrowseText')}</button>
+            </div>`
+          : html`
+            <div
+              class="civ-dropzone ${this.variant === 'full' ? 'civ-dropzone--full' : ''} focus-visible:civ-focus-ring"
+              @dragover="${this._boundDragOver}"
+              @dragleave="${this._boundDragLeave}"
+              @drop="${this._boundDrop}"
+              @click="${this._onDropzoneClick}"
+              role="button"
+              tabindex="${this.disabled ? '-1' : '0'}"
+              aria-label="${this.label}"
+              aria-required="${this.required || nothing}"
+              aria-invalid="${this.error ? 'true' : nothing}"
+              aria-disabled="${this.disabled || nothing}"
+              aria-describedby="${this._ariaDescribedBy || nothing}"
+              @keydown="${this._onDropzoneKeydown}"
+              data-dragging="${this._dragging ? '' : nothing}"
+            >
+              <span class="civ-icon civ-icon--upload civ-block civ-mb-2" style="font-size: ${this.variant === 'full' ? '2.5em' : '1.5em'}; color: var(--civ-color-base-light)" aria-hidden="true"></span>
+              <span class="civ-block civ-text-body" style="color: var(--civ-color-base-dark)">
+                ${this.dragText || t('fileUploadDragText')}
+                <span class="civ-text-primary civ-underline">${this.browseText || t('fileUploadBrowseText')}</span>
+              </span>
+              ${this.accept
+                ? html`<span class="civ-block civ-text-sm civ-text-muted civ-mt-1">${this.acceptedLabel || t('fileUploadAcceptedLabel')}${this.accept}</span>`
+                : nothing}
+              ${this.maxSize > 0
+                ? html`<span class="civ-block civ-text-sm civ-text-muted civ-mt-0.5">${this.maxSizeLabel || t('fileUploadMaxSizeLabel')}${formatFileSize(this.maxSize)}</span>`
+                : nothing}
+            </div>`}
 
         <input
           id="${this._inputId}"

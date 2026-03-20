@@ -7,7 +7,8 @@ import { CivBaseElement, LightDomContainerMixin } from '@civui/core';
  *
  * A declarative show/hide wrapper that shows its content only when a
  * named field has a specified value. Listens for `civ-input` events
- * bubbled from form fields.
+ * on the nearest form ancestor (or document as fallback) to avoid
+ * performance issues with many conditionals on one page.
  *
  * @element civ-conditional
  *
@@ -24,19 +25,30 @@ export class CivConditional extends LightDomContainerMixin(CivBaseElement) {
   @state() private _visible = false;
 
   private _boundOnInput = this._onInput.bind(this);
+  private _listenTarget: HTMLElement | Document | null = null;
 
   override connectedCallback(): void {
     super.connectedCallback();
-    document.addEventListener('civ-input', this._boundOnInput as EventListener);
-    document.addEventListener('civ-change', this._boundOnInput as EventListener);
-    // Check initial state by querying the document for the watched field
+    // Scope listener to nearest form/fieldset ancestor for performance.
+    // Falls back to document if not inside a form.
+    this._listenTarget =
+      this.closest('civ-form') ??
+      this.closest('form') ??
+      this.closest('civ-fieldset') ??
+      this.closest('fieldset') ??
+      document;
+    this._listenTarget.addEventListener('civ-input', this._boundOnInput as EventListener);
+    this._listenTarget.addEventListener('civ-change', this._boundOnInput as EventListener);
     this._checkInitialState();
   }
 
   override disconnectedCallback(): void {
     super.disconnectedCallback();
-    document.removeEventListener('civ-input', this._boundOnInput as EventListener);
-    document.removeEventListener('civ-change', this._boundOnInput as EventListener);
+    if (this._listenTarget) {
+      this._listenTarget.removeEventListener('civ-input', this._boundOnInput as EventListener);
+      this._listenTarget.removeEventListener('civ-change', this._boundOnInput as EventListener);
+      this._listenTarget = null;
+    }
   }
 
   override firstUpdated(): void {

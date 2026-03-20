@@ -61,6 +61,18 @@ export class CivForm extends LightDomContainerMixin(CivBaseElement) {
   @property({ type: String }) method: 'get' | 'post' = 'post';
   @property({ type: String, attribute: 'form-label' }) formLabel = '';
   @property({ type: Number, attribute: 'error-heading-level' }) errorHeadingLevel: 3 | 4 | 5 | 6 = 3;
+  /**
+   * Auto-save form data to sessionStorage under this key.
+   * Data is restored on page reload and cleared on submit.
+   *
+   * **Security notes:**
+   * - Fields with `data-civ-pii` attribute (SSN, EIN masks) are automatically excluded
+   * - Data is stored as plain JSON in sessionStorage — it is NOT encrypted
+   * - sessionStorage is scoped to the browser tab and cleared when the tab closes
+   * - Do not use `persist` for forms containing classified or highly sensitive data
+   *   beyond what PII exclusion covers
+   * - For additional security, implement server-side draft saving instead
+   */
   @property({ type: String }) persist = '';
   @property({ type: Boolean }) prefill = false;
 
@@ -300,7 +312,10 @@ export class CivForm extends LightDomContainerMixin(CivBaseElement) {
         const data: Record<string, string> = {};
         const fields = this.querySelectorAll('[data-civ-form-field]') as NodeListOf<CivFormFieldLike>;
         fields.forEach((field) => {
+          // Skip PII-flagged fields (SSN, EIN masks)
           if (field.hasAttribute('data-civ-pii')) return;
+          // Skip fields manually excluded via data-persist-exclude
+          if (field.hasAttribute('data-persist-exclude')) return;
           if (field.name && !field.disabled) {
             data[field.name] = field.value ?? '';
           }

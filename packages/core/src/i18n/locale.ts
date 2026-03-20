@@ -154,7 +154,7 @@ const defaultStrings: CivLocaleStrings = {
   fileUploadFileAddedMessage: '{count} file(s) added. {total} file(s) selected.',
   fileUploadFileRemovedMessage: 'File removed. {total} file(s) selected.',
   fileUploadFileSizeError: '{name} exceeds the maximum size of {size}',
-  fileUploadFileTypeError: '{name} is not an accepted file type',
+  fileUploadFileTypeError: '{name} is not an accepted file type. Accepted: {accepted}',
   fileUploadMaxFilesError: 'Maximum of {max} files allowed. {name} was not added',
   fileUploadEmptyFile: '{name} appears to be empty (0 bytes)',
   fileUploadCancelled: 'Upload cancelled',

@@ -33,7 +33,7 @@ describe('civ-file-upload', () => {
     const el = await fixture('<civ-file-upload label="Upload" accept=".pdf,.jpg"></civ-file-upload>');
 
     const text = el.textContent;
-    expect(text).toContain('.pdf,.jpg');
+    expect(text).toContain('PDF and JPEG');
   });
 
   it('shows max file size', async () => {

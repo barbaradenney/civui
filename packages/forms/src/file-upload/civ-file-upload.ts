@@ -33,6 +33,84 @@ function formatFileSize(bytes: number): string {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
+/** Map MIME types and extensions to plain language labels. */
+const FILE_TYPE_LABELS: Record<string, string> = {
+  // Documents
+  '.pdf': 'PDF',
+  'application/pdf': 'PDF',
+  '.doc': 'Word',
+  '.docx': 'Word',
+  'application/msword': 'Word',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document': 'Word',
+  '.xls': 'Excel',
+  '.xlsx': 'Excel',
+  'application/vnd.ms-excel': 'Excel',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': 'Excel',
+  '.ppt': 'PowerPoint',
+  '.pptx': 'PowerPoint',
+  '.csv': 'CSV',
+  'text/csv': 'CSV',
+  '.txt': 'plain text',
+  'text/plain': 'plain text',
+  '.rtf': 'RTF',
+  // Images
+  '.jpg': 'JPEG',
+  '.jpeg': 'JPEG',
+  'image/jpeg': 'JPEG',
+  '.png': 'PNG',
+  'image/png': 'PNG',
+  '.gif': 'GIF',
+  'image/gif': 'GIF',
+  '.svg': 'SVG',
+  'image/svg+xml': 'SVG',
+  '.webp': 'WebP',
+  'image/webp': 'WebP',
+  '.tiff': 'TIFF',
+  '.tif': 'TIFF',
+  'image/tiff': 'TIFF',
+  '.bmp': 'BMP',
+  'image/bmp': 'BMP',
+  '.heic': 'HEIC',
+  // Wildcards
+  'image/*': 'images',
+  'audio/*': 'audio files',
+  'video/*': 'video files',
+  'text/*': 'text files',
+  // Archives
+  '.zip': 'ZIP',
+  'application/zip': 'ZIP',
+  '.gz': 'GZIP',
+  '.tar': 'TAR',
+};
+
+/**
+ * Convert an accept string like ".pdf,.jpg,image/*" to
+ * plain language like "PDF, JPEG, images".
+ */
+function formatAcceptedTypes(accept: string): string {
+  if (!accept) return '';
+  const types = accept.split(',').map(t => t.trim());
+  const labels: string[] = [];
+  const seen = new Set<string>();
+
+  for (const type of types) {
+    const label = FILE_TYPE_LABELS[type.toLowerCase()];
+    if (label && !seen.has(label)) {
+      seen.add(label);
+      labels.push(label);
+    } else if (!label && !seen.has(type)) {
+      // Unknown type — show as-is but cleaned up
+      seen.add(type);
+      labels.push(type.replace(/^\./, '').toUpperCase());
+    }
+  }
+
+  if (labels.length === 0) return accept;
+  if (labels.length === 1) return labels[0];
+  if (labels.length === 2) return `${labels[0]} and ${labels[1]}`;
+  return labels.slice(0, -1).join(', ') + ', and ' + labels[labels.length - 1];
+}
+
 /**
  * CivUI File Upload
  *
@@ -182,7 +260,7 @@ export class CivFileUpload extends CivFormElement {
               </span>
               <span class="civ-btn civ-btn--outline civ-text-sm">${this.browseText || t('fileUploadBrowseText')}</span>
               ${this.accept
-                ? html`<span class="civ-block civ-text-sm civ-text-muted civ-mt-1">${this.acceptedLabel || t('fileUploadAcceptedLabel')}${this.accept}</span>`
+                ? html`<span class="civ-block civ-text-sm civ-text-muted civ-mt-1">${this.acceptedLabel || t('fileUploadAcceptedLabel')}${formatAcceptedTypes(this.accept)}</span>`
                 : nothing}
               ${this.maxSize > 0
                 ? html`<span class="civ-block civ-text-sm civ-text-muted civ-mt-0.5">${this.maxSizeLabel || t('fileUploadMaxSizeLabel')}${formatFileSize(this.maxSize)}</span>`
@@ -412,7 +490,7 @@ export class CivFileUpload extends CivFormElement {
         continue;
       }
       if (this.accept && !this._isFileTypeAccepted(file)) {
-        errors.push(interpolate(this.fileTypeError || t('fileUploadFileTypeError'), { name: file.name }));
+        errors.push(interpolate(this.fileTypeError || t('fileUploadFileTypeError'), { name: file.name, accepted: formatAcceptedTypes(this.accept) }));
         continue;
       }
       if (this.maxSize > 0 && file.size > this.maxSize) {

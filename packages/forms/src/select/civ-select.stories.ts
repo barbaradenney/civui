@@ -120,6 +120,27 @@ export const WithDisabledOptions: Story = {
   },
 };
 
+export const OptionGroups: Story = {
+  render: () => {
+    const el = document.createElement('civ-select') as any;
+    el.label = 'Department';
+    el.name = 'department';
+    el.hint = 'Select your department';
+    el.options = [
+      { value: 'hr', label: 'Human Resources', group: 'Administration' },
+      { value: 'finance', label: 'Finance', group: 'Administration' },
+      { value: 'legal', label: 'Legal', group: 'Administration' },
+      { value: 'eng', label: 'Engineering', group: 'Technology' },
+      { value: 'design', label: 'Design', group: 'Technology' },
+      { value: 'security', label: 'Cybersecurity', group: 'Technology' },
+      { value: 'policy', label: 'Policy', group: 'Operations' },
+      { value: 'outreach', label: 'Public Outreach', group: 'Operations' },
+      { value: 'compliance', label: 'Compliance', group: 'Operations' },
+    ];
+    return el;
+  },
+};
+
 export const InNativeForm: Story = {
   render: () => html`
     <form

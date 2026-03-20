@@ -5,16 +5,13 @@ import { CivBaseElement, LightDomContainerMixin } from '@civui/core';
 const conditionalStyles = html`
   <style>
     .civ-conditional--visible {
+      display: block;
       opacity: 1;
-      max-height: 2000px;
-      overflow: visible;
-      transition: opacity 0.2s ease, max-height 0.3s ease;
+      transition: opacity 0.15s ease;
     }
     .civ-conditional--hidden {
+      display: none;
       opacity: 0;
-      max-height: 0;
-      overflow: hidden;
-      transition: opacity 0.2s ease, max-height 0.2s ease;
     }
   </style>
 `;

@@ -111,3 +111,24 @@ export const Disabled: Story = {
     return el;
   },
 };
+
+export const OptionGroups: Story = {
+  render: () => {
+    const el = document.createElement('civ-combobox') as any;
+    el.label = 'Office location';
+    el.name = 'office';
+    el.placeholder = 'Search offices...';
+    el.options = [
+      { value: 'dc-hq', label: 'DC Headquarters', group: 'East Coast' },
+      { value: 'dc-annex', label: 'DC Annex Building', group: 'East Coast' },
+      { value: 'ny-field', label: 'New York Field Office', group: 'East Coast' },
+      { value: 'boston', label: 'Boston Regional', group: 'East Coast' },
+      { value: 'sf-field', label: 'San Francisco Field Office', group: 'West Coast' },
+      { value: 'la-field', label: 'Los Angeles Field Office', group: 'West Coast' },
+      { value: 'seattle', label: 'Seattle Regional', group: 'West Coast' },
+      { value: 'chicago', label: 'Chicago Regional', group: 'Midwest' },
+      { value: 'denver', label: 'Denver Field Office', group: 'Midwest' },
+    ];
+    return el;
+  },
+};

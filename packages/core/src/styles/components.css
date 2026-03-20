@@ -1212,6 +1212,36 @@
     min-height: 44px;
   }
 
+  /* ── Progress Steps ────────────────────────────────────────── */
+
+  .civ-step {
+    @apply civ-flex civ-items-center;
+  }
+
+  .civ-step--completed .civ-step-circle {
+    @apply civ-bg-success civ-text-white civ-border-success;
+    border: 2px solid;
+  }
+
+  .civ-step--current .civ-step-circle {
+    @apply civ-bg-primary civ-text-white civ-border-primary;
+    border: 2px solid;
+  }
+
+  .civ-step--upcoming .civ-step-circle {
+    @apply civ-bg-base-lighter civ-text-base-dark civ-border-base-light;
+    border: 2px solid;
+  }
+
+  .civ-step-connector {
+    @apply civ-bg-base-light;
+  }
+
+  .civ-step--completed + .civ-step .civ-step-connector,
+  .civ-step--completed .civ-step-connector {
+    @apply civ-bg-success;
+  }
+
   /* ── Skip Link ─────────────────────────────────────────────── */
 
   .civ-skip-link {

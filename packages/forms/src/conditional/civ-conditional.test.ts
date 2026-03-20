@@ -1,0 +1,163 @@
+import { describe, it, expect, afterEach } from 'vitest';
+import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
+import './civ-conditional.js';
+
+afterEach(cleanupFixtures);
+
+describe('civ-conditional', () => {
+  it('renders hidden by default', async () => {
+    const el = await fixture('<civ-conditional when="color" equals="red"><p>Red content</p></civ-conditional>');
+    await elementUpdated(el);
+
+    const container = el.querySelector('[data-civ-conditional-content]') as HTMLElement;
+    expect(container).not.toBeNull();
+    expect(container.style.display).toBe('none');
+  });
+
+  it('shows content when matching civ-input event is dispatched', async () => {
+    const el = await fixture('<civ-conditional when="color" equals="red"><p>Red content</p></civ-conditional>');
+    await elementUpdated(el);
+
+    // Simulate a civ-input event from a field named "color" with value "red"
+    const fakeField = document.createElement('div');
+    (fakeField as any).name = 'color';
+    document.body.appendChild(fakeField);
+    fakeField.dispatchEvent(new CustomEvent('civ-input', { detail: { value: 'red' }, bubbles: true }));
+    await elementUpdated(el);
+
+    const container = el.querySelector('[data-civ-conditional-content]') as HTMLElement;
+    expect(container.style.display).toBe('');
+
+    fakeField.remove();
+  });
+
+  it('hides content when value no longer matches', async () => {
+    const el = await fixture('<civ-conditional when="color" equals="red"><p>Red content</p></civ-conditional>') as any;
+    await elementUpdated(el);
+
+    const fakeField = document.createElement('div');
+    (fakeField as any).name = 'color';
+    document.body.appendChild(fakeField);
+
+    // Show it
+    fakeField.dispatchEvent(new CustomEvent('civ-input', { detail: { value: 'red' }, bubbles: true }));
+    await elementUpdated(el);
+    expect((el.querySelector('[data-civ-conditional-content]') as HTMLElement).style.display).toBe('');
+
+    // Hide it
+    fakeField.dispatchEvent(new CustomEvent('civ-input', { detail: { value: 'blue' }, bubbles: true }));
+    await elementUpdated(el);
+    expect((el.querySelector('[data-civ-conditional-content]') as HTMLElement).style.display).toBe('none');
+
+    fakeField.remove();
+  });
+
+  it('supports not-equals mode', async () => {
+    const el = await fixture('<civ-conditional when="status" not-equals="inactive"><p>Active content</p></civ-conditional>');
+    await elementUpdated(el);
+
+    const fakeField = document.createElement('div');
+    (fakeField as any).name = 'status';
+    document.body.appendChild(fakeField);
+
+    // Should show when value is NOT "inactive"
+    fakeField.dispatchEvent(new CustomEvent('civ-input', { detail: { value: 'active' }, bubbles: true }));
+    await elementUpdated(el);
+    expect((el.querySelector('[data-civ-conditional-content]') as HTMLElement).style.display).toBe('');
+
+    // Should hide when value IS "inactive"
+    fakeField.dispatchEvent(new CustomEvent('civ-input', { detail: { value: 'inactive' }, bubbles: true }));
+    await elementUpdated(el);
+    expect((el.querySelector('[data-civ-conditional-content]') as HTMLElement).style.display).toBe('none');
+
+    fakeField.remove();
+  });
+
+  it('ignores events from non-matching field names', async () => {
+    const el = await fixture('<civ-conditional when="color" equals="red"><p>Red</p></civ-conditional>');
+    await elementUpdated(el);
+
+    const fakeField = document.createElement('div');
+    (fakeField as any).name = 'size';
+    document.body.appendChild(fakeField);
+
+    fakeField.dispatchEvent(new CustomEvent('civ-input', { detail: { value: 'red' }, bubbles: true }));
+    await elementUpdated(el);
+
+    const container = el.querySelector('[data-civ-conditional-content]') as HTMLElement;
+    expect(container.style.display).toBe('none');
+
+    fakeField.remove();
+  });
+
+  it('checks initial state from existing field in DOM', async () => {
+    // Create a field first
+    const field = document.createElement('input');
+    field.name = 'flavor';
+    (field as any).value = 'chocolate';
+    document.body.appendChild(field);
+
+    const el = await fixture('<civ-conditional when="flavor" equals="chocolate"><p>Chocolate!</p></civ-conditional>');
+    await elementUpdated(el);
+
+    const container = el.querySelector('[data-civ-conditional-content]') as HTMLElement;
+    expect(container.style.display).toBe('');
+
+    field.remove();
+  });
+
+  it('uses Light DOM (no shadowRoot)', async () => {
+    const el = await fixture('<civ-conditional when="x" equals="y"><p>Content</p></civ-conditional>');
+
+    expect(el.shadowRoot).toBeNull();
+  });
+
+  it('responds to civ-change events as well', async () => {
+    const el = await fixture('<civ-conditional when="color" equals="red"><p>Red</p></civ-conditional>');
+    await elementUpdated(el);
+
+    const fakeField = document.createElement('div');
+    (fakeField as any).name = 'color';
+    document.body.appendChild(fakeField);
+
+    fakeField.dispatchEvent(new CustomEvent('civ-change', { detail: { value: 'red' }, bubbles: true }));
+    await elementUpdated(el);
+
+    const container = el.querySelector('[data-civ-conditional-content]') as HTMLElement;
+    expect(container.style.display).toBe('');
+
+    fakeField.remove();
+  });
+
+  it('cleans up event listeners on disconnect', async () => {
+    const el = await fixture('<civ-conditional when="color" equals="red"><p>Red</p></civ-conditional>') as any;
+    await elementUpdated(el);
+
+    el.remove();
+
+    // After removal, dispatching an event should not cause errors
+    const fakeField = document.createElement('div');
+    (fakeField as any).name = 'color';
+    document.body.appendChild(fakeField);
+    fakeField.dispatchEvent(new CustomEvent('civ-input', { detail: { value: 'red' }, bubbles: true }));
+    // Should not throw
+    fakeField.remove();
+  });
+
+  it('stays hidden when neither equals nor not-equals is set', async () => {
+    const el = await fixture('<civ-conditional when="color"><p>Content</p></civ-conditional>');
+    await elementUpdated(el);
+
+    const fakeField = document.createElement('div');
+    (fakeField as any).name = 'color';
+    document.body.appendChild(fakeField);
+
+    fakeField.dispatchEvent(new CustomEvent('civ-input', { detail: { value: 'red' }, bubbles: true }));
+    await elementUpdated(el);
+
+    const container = el.querySelector('[data-civ-conditional-content]') as HTMLElement;
+    expect(container.style.display).toBe('none');
+
+    fakeField.remove();
+  });
+});

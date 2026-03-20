@@ -1,6 +1,6 @@
 // Text Input
 export { CivTextInput } from './text-input/index.js';
-export type { TextInputType, TextInputWidth, TextInputMask } from './text-input/index.js';
+export type { TextInputType, TextInputWidth, TextInputMask, TextInputValidate } from './text-input/index.js';
 
 // Textarea
 export { CivTextarea } from './textarea/index.js';

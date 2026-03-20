@@ -16,6 +16,7 @@ import {
   processRawInput,
   interpolate,
   t,
+  validate,
 } from '@civui/core';
 import type { MaskDefinition } from '@civui/core';
 import { dispatch } from '@civui/core';
@@ -23,6 +24,7 @@ import { dispatch } from '@civui/core';
 export type TextInputType = 'text' | 'email' | 'number' | 'password' | 'search' | 'tel' | 'url';
 export type TextInputWidth = 'default' | '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 export type TextInputMask = 'ssn' | 'phone-us' | 'zip' | 'zip4' | 'ein' | 'phone-intl' | 'currency' | '';
+export type TextInputValidate = 'email' | 'phone' | 'phoneIntl' | 'ssn' | 'ein' | 'zip' | 'zip4' | 'usState' | 'url' | 'currency' | 'alphanumeric' | '';
 
 const WIDTH_CLASSES: Record<TextInputWidth, string> = {
   'default': 'civ-w-full',
@@ -79,8 +81,21 @@ export class CivTextInput extends CivFormElement {
    */
   @property({ type: String, attribute: 'mask-mode' }) maskMode: 'blur' | 'live' = 'blur';
 
-  /** Tracks whether the current error was set by the mask system. */
+  /**
+   * Declarative validation — auto-validates on blur using the built-in
+   * validator. No JavaScript needed.
+   *
+   * @example
+   * ```html
+   * <civ-text-input label="Email" validate="email"></civ-text-input>
+   * <civ-text-input label="Phone" validate="phoneIntl" type="tel"></civ-text-input>
+   * ```
+   */
+  @property({ type: String, attribute: 'validate' }) validateType: TextInputValidate = '';
+
+  /** Tracks whether the current error was set by the mask or validate system. */
   private _maskError = false;
+  private _validateError = false;
 
   /** Returns true when the currency mask is active. */
   private get _isCurrency(): boolean {
@@ -233,6 +248,9 @@ export class CivTextInput extends CivFormElement {
     } else {
       inputHandler = this._handleInput;
       changeHandler = this._handleChange;
+      if (this.validateType) {
+        blurHandler = this._onValidateBlur;
+      }
     }
 
     const inputEl = html`
@@ -564,6 +582,34 @@ export class CivTextInput extends CivFormElement {
   private _onBlurMaskChange(): void {
     dispatch(this, 'civ-change', { value: this.value });
     this.sendAnalytics('change', this._maskDef?.pii ? { piiMasked: true } : undefined);
+  }
+
+  // ── Declarative validation on blur ──────────────────────────
+
+  /**
+   * Runs the validator specified by the `validate` attribute on blur.
+   * Sets/clears error automatically.
+   */
+  private _onValidateBlur(): void {
+    if (!this.validateType || !this.value) {
+      if (this._validateError) {
+        this.error = '';
+        this._validateError = false;
+      }
+      return;
+    }
+
+    const validatorFn = (validate as Record<string, Function>)[this.validateType];
+    if (!validatorFn) return;
+
+    const result = validatorFn(this.value);
+    if (!result.valid) {
+      this.error = result.error || '';
+      this._validateError = true;
+    } else if (this._validateError) {
+      this.error = '';
+      this._validateError = false;
+    }
   }
 
   /**

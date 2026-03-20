@@ -321,3 +321,119 @@ export const MaskWithError: Story = {
     ></civ-text-input>
   `,
 };
+
+// ── Declarative Validation ──────────────────────────────────
+
+export const ValidateEmail: Story = {
+  render: () => html`
+    <civ-text-input
+      label="Email address"
+      name="email"
+      type="email"
+      validate="email"
+      hint="For example: name@agency.gov"
+      required
+    ></civ-text-input>
+  `,
+};
+
+export const ValidatePhoneIntl: Story = {
+  render: () => html`
+    <civ-text-input
+      label="Phone number"
+      name="phone"
+      type="tel"
+      validate="phoneIntl"
+      hint="Include country code, for example +1 555 123 4567"
+    ></civ-text-input>
+  `,
+};
+
+export const ValidateURL: Story = {
+  render: () => html`
+    <civ-text-input
+      label="Website"
+      name="website"
+      type="url"
+      validate="url"
+      hint="For example: https://agency.gov"
+    ></civ-text-input>
+  `,
+};
+
+export const ValidateZIP: Story = {
+  render: () => html`
+    <civ-text-input
+      label="ZIP code"
+      name="zip"
+      validate="zip"
+      inputmode="numeric"
+      width="xs"
+      hint="5-digit ZIP code"
+    ></civ-text-input>
+  `,
+};
+
+export const ValidateUSState: Story = {
+  render: () => html`
+    <civ-text-input
+      label="State"
+      name="state"
+      validate="usState"
+      width="2xs"
+      maxlength="2"
+      hint="2-letter abbreviation"
+    ></civ-text-input>
+  `,
+};
+
+export const MixedValidationForm: Story = {
+  render: () => html`
+    <civ-form>
+      <h3 class="civ-text-lg civ-font-bold civ-mb-4">Contact Information</h3>
+      <civ-text-input
+        label="Full name"
+        name="name"
+        required
+      ></civ-text-input>
+      <civ-text-input
+        label="Email address"
+        name="email"
+        type="email"
+        validate="email"
+        required
+        hint="For example: name@agency.gov"
+      ></civ-text-input>
+      <civ-text-input
+        label="Phone number"
+        name="phone"
+        type="tel"
+        validate="phoneIntl"
+        hint="Include country code, for example +1 555 123 4567"
+      ></civ-text-input>
+      <div class="civ-flex civ-gap-4">
+        <civ-text-input
+          label="ZIP code"
+          name="zip"
+          validate="zip"
+          inputmode="numeric"
+          width="xs"
+        ></civ-text-input>
+        <civ-text-input
+          label="State"
+          name="state"
+          validate="usState"
+          width="2xs"
+          maxlength="2"
+        ></civ-text-input>
+      </div>
+      <civ-text-input
+        label="Social Security number"
+        name="ssn"
+        mask="ssn"
+        required
+      ></civ-text-input>
+      <button type="submit" class="civ-btn civ-btn--primary civ-mt-4">Submit</button>
+    </civ-form>
+  `,
+};

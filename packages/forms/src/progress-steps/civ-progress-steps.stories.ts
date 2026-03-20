@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import './civ-progress-steps.js';
+import './civ-progress-bar.js';
 
 const meta: Meta = {
   title: 'Forms/Progress Steps',
@@ -66,5 +67,36 @@ export const ManySteps: Story = {
       steps='["Eligibility","Personal Info","Contact Details","Employment","Income","Documents","Review","Submit"]'
       current="3"
     ></civ-progress-steps>
+  `,
+};
+
+// ── Progress Bar ──────────────────────────────────────────────
+
+export const ProgressBar: Story = {
+  render: () => html`
+    <civ-progress-bar
+      value="40"
+      label="Form completion"
+      status="3 of 8 sections complete"
+    ></civ-progress-bar>
+  `,
+};
+
+export const ProgressBarComplete: Story = {
+  render: () => html`
+    <civ-progress-bar
+      value="100"
+      label="Form completion"
+      status="All sections complete"
+    ></civ-progress-bar>
+  `,
+};
+
+export const ProgressBarNoStatus: Story = {
+  render: () => html`
+    <civ-progress-bar
+      value="65"
+      label="Upload progress"
+    ></civ-progress-bar>
   `,
 };

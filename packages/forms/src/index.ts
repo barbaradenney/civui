@@ -51,4 +51,4 @@ export { CivYesNo } from './yes-no/index.js';
 export { CivConditional } from './conditional/index.js';
 
 // Progress Steps
-export { CivProgressSteps } from './progress-steps/index.js';
+export { CivProgressSteps, CivProgressBar } from './progress-steps/index.js';

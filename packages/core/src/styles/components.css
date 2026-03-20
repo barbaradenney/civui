@@ -1267,6 +1267,25 @@
     @apply civ-bg-success;
   }
 
+  /* ── Progress Bar ─────────────────────────────────────────── */
+
+  .civ-progress-track {
+    @apply civ-w-full civ-rounded-full civ-overflow-hidden;
+    height: 0.5em;
+    background-color: var(--civ-color-base-lighter);
+  }
+
+  .civ-progress-fill {
+    height: 100%;
+    border-radius: inherit;
+    background-color: var(--civ-color-primary-DEFAULT);
+    transition: width 0.3s ease;
+  }
+
+  .civ-progress-fill--complete {
+    background-color: var(--civ-color-success-DEFAULT);
+  }
+
   /* ── Skip Link ─────────────────────────────────────────────── */
 
   .civ-skip-link {

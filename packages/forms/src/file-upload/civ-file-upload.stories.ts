@@ -107,3 +107,28 @@ export const Disabled: Story = {
     ></civ-file-upload>
   `,
 };
+
+export const ImagePreview: Story = {
+  render: () => html`
+    <civ-file-upload
+      label="Upload identification photo"
+      name="id-photo"
+      accept="image/jpeg,image/png"
+      show-preview
+      hint="Upload a clear photo of your government-issued ID. JPEG or PNG only."
+    ></civ-file-upload>
+  `,
+};
+
+export const MaxFiles: Story = {
+  render: () => html`
+    <civ-file-upload
+      label="Supporting documents"
+      name="supporting-docs"
+      multiple
+      max-files="3"
+      accept=".pdf,.jpg,.png"
+      hint="Upload up to 3 files. Accepted formats: PDF, JPEG, PNG."
+    ></civ-file-upload>
+  `,
+};

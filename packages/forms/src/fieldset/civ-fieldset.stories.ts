@@ -50,3 +50,39 @@ export const WithHintAndError: Story = {
     </civ-fieldset>
   `,
 };
+
+export const Disabled: Story = {
+  render: () => html`
+    <civ-fieldset legend="Spouse information" disabled>
+      <civ-text-input label="First name" name="spouse-first"></civ-text-input>
+      <civ-text-input label="Last name" name="spouse-last"></civ-text-input>
+      <civ-text-input label="Date of birth" name="spouse-dob" hint="For example: 01/15/1990"></civ-text-input>
+    </civ-fieldset>
+  `,
+};
+
+export const Required: Story = {
+  render: () => html`
+    <civ-fieldset legend="Emergency contact" required>
+      <civ-text-input label="Contact name" name="emergency-name"></civ-text-input>
+      <civ-text-input label="Phone number" name="emergency-phone" hint="For example: (555) 123-4567"></civ-text-input>
+      <civ-text-input label="Relationship" name="emergency-relationship"></civ-text-input>
+    </civ-fieldset>
+  `,
+};
+
+export const Nested: Story = {
+  render: () => html`
+    <civ-fieldset legend="Household members">
+      <civ-fieldset legend="Primary applicant" required>
+        <civ-text-input label="First name" name="primary-first"></civ-text-input>
+        <civ-text-input label="Last name" name="primary-last"></civ-text-input>
+      </civ-fieldset>
+
+      <civ-fieldset legend="Secondary applicant">
+        <civ-text-input label="First name" name="secondary-first"></civ-text-input>
+        <civ-text-input label="Last name" name="secondary-last"></civ-text-input>
+      </civ-fieldset>
+    </civ-fieldset>
+  `,
+};

@@ -112,6 +112,17 @@ export const Disabled: Story = {
   },
 };
 
+export const Preselected: Story = {
+  render: () => {
+    const el = document.createElement('civ-combobox') as any;
+    el.label = 'State of residence';
+    el.name = 'state';
+    el.value = 'CA';
+    el.options = STATES;
+    return el;
+  },
+};
+
 export const OptionGroups: Story = {
   render: () => {
     const el = document.createElement('civ-combobox') as any;

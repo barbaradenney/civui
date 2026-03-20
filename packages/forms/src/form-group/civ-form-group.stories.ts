@@ -46,3 +46,19 @@ export const WithError: Story = {
     </civ-form-group>
   `,
 };
+
+export const Required: Story = {
+  render: () => html`
+    <civ-form-group label="Social Security number" input-id="ssn" hint="For example: 123-45-6789" required>
+      <input type="text" id="ssn" inputmode="numeric" pattern="[0-9]{3}-[0-9]{2}-[0-9]{4}" style="width: 100%; padding: 6px 8px; border: 1px solid #a9aeb1; border-radius: 4px;" />
+    </civ-form-group>
+  `,
+};
+
+export const WithHintAndError: Story = {
+  render: () => html`
+    <civ-form-group label="Case number" input-id="case-number" hint="Found on the top-right of your notice letter" error="Enter a valid case number in the format A-123-456-789" required>
+      <input type="text" id="case-number" value="XYZ" style="width: 100%; padding: 6px 8px; border: 1px solid #b50909; border-left: 4px solid #b50909; border-radius: 4px;" />
+    </civ-form-group>
+  `,
+};

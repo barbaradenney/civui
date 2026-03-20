@@ -145,7 +145,7 @@ const defaultStrings: CivLocaleStrings = {
 
   fileUploadDragText: 'Drag files here or',
   fileUploadNoFileChosen: 'No file chosen',
-  fileUploadBrowseText: 'choose from folder',
+  fileUploadBrowseText: 'Choose from folder',
   fileUploadAcceptedLabel: 'Accepted: ',
   fileUploadMaxSizeLabel: 'Max size: ',
   fileUploadRemoveText: 'Remove',

@@ -72,14 +72,6 @@ export const MASK_PRESETS: Record<string, MaskDefinition> = {
     inputmode: 'decimal',
     pii: false,
   },
-  // North American format (+1)
-  'phone-intl': {
-    pattern: '+# (###) ###-####',
-    hintKey: 'maskPhoneIntlHint',
-    errorKey: 'maskPhoneIntlError',
-    inputmode: 'tel',
-    pii: false,
-  },
 };
 
 /**

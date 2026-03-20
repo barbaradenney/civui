@@ -14,9 +14,7 @@ import type { IconDef } from './icon-library.js';
  * Icons inherit `color` and scale with `font-size`, so they automatically
  * match surrounding text.
  *
- * Icons marked `svg: true` in the library need SVG paths (Phase 2) and
- * currently render as empty placeholders on web. They work on native
- * platforms via SF Symbols (iOS) and Material Symbols (Android).
+ * All icons are implemented in pure CSS — no SVG needed.
  *
  * @example
  * ```html

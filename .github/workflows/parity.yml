@@ -1,0 +1,46 @@
+name: Platform Parity Check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  parity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Generate parity report
+        run: node --experimental-strip-types tools/parity-report.ts
+      - name: Check parity threshold
+        run: |
+          node --experimental-strip-types -e "
+            import { readFileSync } from 'fs';
+            const html = readFileSync('tools/parity-report.html', 'utf-8');
+            const matches = [...html.matchAll(/class=\"component-header\"[^>]*>\s*(\w+)[\s\S]*?(\d+)%/g)];
+            let failed = false;
+            for (const m of matches) {
+              const pct = parseInt(m[2]);
+              if (pct < 95) {
+                console.error('FAIL: ' + m[1] + ' at ' + pct + '% (minimum 95%)');
+                failed = true;
+              }
+            }
+            if (failed) process.exit(1);
+            console.log('All components at 95%+ parity');
+          "
+      - name: Upload parity report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: parity-report
+          path: tools/parity-report.html

@@ -23,7 +23,7 @@ import { dispatch } from '@civui/core';
 
 export type TextInputType = 'text' | 'email' | 'number' | 'password' | 'search' | 'tel' | 'url';
 export type TextInputWidth = 'default' | '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
-export type TextInputMask = 'ssn' | 'phone-us' | 'zip' | 'zip4' | 'ein' | 'phone-intl' | 'currency' | '';
+export type TextInputMask = 'ssn' | 'phone-us' | 'zip' | 'zip4' | 'ein' | 'currency' | '';
 export type TextInputValidate = 'email' | 'phone' | 'phoneIntl' | 'ssn' | 'ein' | 'zip' | 'zip4' | 'usState' | 'url' | 'currency' | 'alphanumeric' | '';
 
 const WIDTH_CLASSES: Record<TextInputWidth, string> = {

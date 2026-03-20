@@ -20,7 +20,6 @@ describe('mask-engine', () => {
         'zip4',
         'ein',
         'currency',
-        'phone-intl',
       ]);
     });
 
@@ -33,7 +32,6 @@ describe('mask-engine', () => {
       expect(MASK_PRESETS['phone-us'].pii).toBe(false);
       expect(MASK_PRESETS.zip.pii).toBe(false);
       expect(MASK_PRESETS.zip4.pii).toBe(false);
-      expect(MASK_PRESETS['phone-intl'].pii).toBe(false);
     });
   });
 
@@ -56,10 +54,6 @@ describe('mask-engine', () => {
 
     it('returns 9 for EIN pattern', () => {
       expect(getMaxRawLength('##-#######')).toBe(9);
-    });
-
-    it('returns 11 for intl phone pattern', () => {
-      expect(getMaxRawLength('+# (###) ###-####')).toBe(11);
     });
 
     it('counts mixed slot types', () => {
@@ -86,10 +80,6 @@ describe('mask-engine', () => {
 
     it('formats a full EIN', () => {
       expect(applyMask('123456789', '##-#######')).toBe('12-3456789');
-    });
-
-    it('formats a full intl phone', () => {
-      expect(applyMask('15551234567', '+# (###) ###-####')).toBe('+1 (555) 123-4567');
     });
 
     it('handles partial input for SSN', () => {
@@ -134,10 +124,6 @@ describe('mask-engine', () => {
       expect(stripMask('12-3456789', '##-#######')).toBe('123456789');
     });
 
-    it('strips intl phone formatting', () => {
-      expect(stripMask('+1 (555) 123-4567', '+# (###) ###-####')).toBe('15551234567');
-    });
-
     it('round-trips with applyMask', () => {
       const patterns = [
         '###-##-####',
@@ -145,7 +131,6 @@ describe('mask-engine', () => {
         '#####',
         '#####-####',
         '##-#######',
-        '+# (###) ###-####',
       ];
       const raws = [
         '123456789',
@@ -153,7 +138,6 @@ describe('mask-engine', () => {
         '12345',
         '123456789',
         '987654321',
-        '15551234567',
       ];
 
       for (let i = 0; i < patterns.length; i++) {
@@ -181,9 +165,6 @@ describe('mask-engine', () => {
       expect(isComplete('', '#####')).toBe(false);
     });
 
-    it('returns true for full intl phone', () => {
-      expect(isComplete('15551234567', '+# (###) ###-####')).toBe(true);
-    });
   });
 
   describe('computeCursorPosition', () => {
@@ -211,13 +192,6 @@ describe('mask-engine', () => {
       expect(computeCursorPosition(3, '(###) ###-####')).toBe(6);
     });
 
-    it('maps rawIndex 0 to position 1 for intl phone (after "+")', () => {
-      expect(computeCursorPosition(0, '+# (###) ###-####')).toBe(1);
-    });
-
-    it('maps rawIndex 1 to position 4 for intl phone (after " (")', () => {
-      expect(computeCursorPosition(1, '+# (###) ###-####')).toBe(4);
-    });
   });
 
   describe('filterInput', () => {

@@ -2,15 +2,21 @@
  * CivUI validation utilities — pure functions for common government form
  * field validation. Every validator returns `{ valid, error? }`.
  * Error messages are sourced from the i18n system via `t()`.
+ *
+ * Empty strings always return `{ valid: false }` — use `validate.required()`
+ * separately if you need to distinguish "empty" from "invalid format."
  */
 import { t } from '../i18n/locale.js';
+import { interpolate } from '../utils/interpolate.js';
 
 export interface ValidationResult {
   valid: boolean;
   error?: string;
 }
 
-const VALID: ValidationResult = { valid: true };
+function valid(): ValidationResult {
+  return { valid: true };
+}
 
 const US_STATES = new Set([
   'AL','AK','AZ','AR','CA','CO','CT','DE','FL','GA','HI','ID','IL','IN','IA',
@@ -40,18 +46,17 @@ export const validate = {
   /** Non-empty after trim. */
   required(value: string, fieldLabel?: string): ValidationResult {
     if (value.trim().length === 0) {
-      const msg = t('validateRequired').replace('{label}', fieldLabel ?? t('fieldFallbackLabel'));
-      return { valid: false, error: msg };
+      return { valid: false, error: interpolate(t('validateRequired'), { label: fieldLabel ?? t('fieldFallbackLabel') }) };
     }
-    return VALID;
+    return valid();
   },
 
-  /** RFC 5322 simplified email. */
+  /** RFC 5322 simplified email. Rejects missing domain labels (e.g., `user@.com`). */
   email(value: string): ValidationResult {
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value)) {
       return fail('validateEmail');
     }
-    return VALID;
+    return valid();
   },
 
   /** US phone: 10 digits, area code not 0xx or 1xx. */
@@ -60,7 +65,7 @@ export const validate = {
     if (digits.length !== 10 || /^[01]/.test(digits)) {
       return fail('validatePhone');
     }
-    return VALID;
+    return valid();
   },
 
   /** International phone: E.164, 7–15 digits with + prefix. */
@@ -69,7 +74,7 @@ export const validate = {
     if (!/^\+\d{7,15}$/.test(stripped)) {
       return fail('validatePhoneIntl');
     }
-    return VALID;
+    return valid();
   },
 
   /** SSN: 9 digits, area not 000/666/9xx. */
@@ -80,7 +85,7 @@ export const validate = {
     if (area === '000' || area === '666' || area[0] === '9') {
       return fail('validateSsn');
     }
-    return VALID;
+    return valid();
   },
 
   /** EIN: 9 digits, valid IRS campus prefix. */
@@ -91,19 +96,19 @@ export const validate = {
     if (!VALID_EIN_PREFIXES.has(prefix)) {
       return fail('validateEin');
     }
-    return VALID;
+    return valid();
   },
 
   /** ZIP: exactly 5 digits. */
   zip(value: string): ValidationResult {
     if (!/^\d{5}$/.test(value)) return fail('validateZip');
-    return VALID;
+    return valid();
   },
 
   /** ZIP+4: 5 digits, optional dash, 4 digits. */
   zip4(value: string): ValidationResult {
     if (!/^\d{5}-?\d{4}$/.test(value)) return fail('validateZip4');
-    return VALID;
+    return valid();
   },
 
   /** US state: valid 2-letter abbreviation. */
@@ -111,7 +116,7 @@ export const validate = {
     if (!US_STATES.has(value.toUpperCase().trim())) {
       return fail('validateUsState');
     }
-    return VALID;
+    return valid();
   },
 
   /** ISO date: YYYY-MM-DD with valid calendar date. */
@@ -130,7 +135,7 @@ export const validate = {
     ) {
       return fail('validateIsoDate');
     }
-    return VALID;
+    return valid();
   },
 
   /** URL: must have http/https protocol and valid domain. */
@@ -143,15 +148,15 @@ export const validate = {
     } catch {
       return fail('validateUrl');
     }
-    return VALID;
+    return valid();
   },
 
-  /** Currency: positive number, max 2 decimal places. */
+  /** Currency: positive number, max 2 decimal places, no leading zeros. */
   currency(value: string): ValidationResult {
-    if (!/^\d+(\.\d{1,2})?$/.test(value) || parseFloat(value) < 0) {
+    if (!/^(0|[1-9]\d*)(\.\d{1,2})?$/.test(value)) {
       return fail('validateCurrency');
     }
-    return VALID;
+    return valid();
   },
 
   /** Numeric range: value between min and max. */
@@ -159,19 +164,14 @@ export const validate = {
     const { min, max } = opts;
     if (min != null && max != null) {
       if (value < min || value > max) {
-        const msg = t('validateRangeBetween')
-          .replace('{min}', String(min))
-          .replace('{max}', String(max));
-        return { valid: false, error: msg };
+        return { valid: false, error: interpolate(t('validateRangeBetween'), { min, max }) };
       }
     } else if (min != null && value < min) {
-      const msg = t('validateRangeMin').replace('{min}', String(min));
-      return { valid: false, error: msg };
+      return { valid: false, error: interpolate(t('validateRangeMin'), { min }) };
     } else if (max != null && value > max) {
-      const msg = t('validateRangeMax').replace('{max}', String(max));
-      return { valid: false, error: msg };
+      return { valid: false, error: interpolate(t('validateRangeMax'), { max }) };
     }
-    return VALID;
+    return valid();
   },
 
   /** String length: between min and max characters. */
@@ -180,19 +180,14 @@ export const validate = {
     const { min, max } = opts;
     if (min != null && max != null) {
       if (len < min || len > max) {
-        const msg = t('validateLengthBetween')
-          .replace('{min}', String(min))
-          .replace('{max}', String(max));
-        return { valid: false, error: msg };
+        return { valid: false, error: interpolate(t('validateLengthBetween'), { min, max }) };
       }
     } else if (min != null && len < min) {
-      const msg = t('validateLengthMin').replace('{min}', String(min));
-      return { valid: false, error: msg };
+      return { valid: false, error: interpolate(t('validateLengthMin'), { min }) };
     } else if (max != null && len > max) {
-      const msg = t('validateLengthMax').replace('{max}', String(max));
-      return { valid: false, error: msg };
+      return { valid: false, error: interpolate(t('validateLengthMax'), { max }) };
     }
-    return VALID;
+    return valid();
   },
 
   /** Alphanumeric: only letters and digits, configurable length. */
@@ -204,6 +199,6 @@ export const validate = {
       const lenResult = validate.length(value, opts);
       if (!lenResult.valid) return lenResult;
     }
-    return VALID;
+    return valid();
   },
 };

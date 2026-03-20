@@ -335,6 +335,18 @@ describe('validate.currency', () => {
   it('rejects empty string', () => {
     expect(validate.currency('').valid).toBe(false);
   });
+
+  it('rejects leading zeros', () => {
+    expect(validate.currency('0123.45').valid).toBe(false);
+  });
+
+  it('allows zero', () => {
+    expect(validate.currency('0').valid).toBe(true);
+  });
+
+  it('allows zero with decimals', () => {
+    expect(validate.currency('0.50').valid).toBe(true);
+  });
 });
 
 describe('validate.range', () => {

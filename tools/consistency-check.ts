@@ -269,6 +269,123 @@ function checkNativeCounterparts(comp: ComponentFile) {
   }
 }
 
+// ── A11y checks ──────────────────────────────────────────────
+
+function checkA11yErrorAnnouncement(comp: ComponentFile) {
+  const isFormParticipating = /extends\s+(CivFormElement|CivBooleanFormElement|LightDomContainerMixin\(CivFormElement\))/.test(comp.src);
+  if (!isFormParticipating) return;
+  if (comp.name === 'civ-conditional' || comp.name === 'civ-progress-steps' || comp.name === 'civ-progress-bar' || comp.name === 'civ-form-group') return;
+
+  // Errors should use role="alert" (handled by renderError) or announce()
+  if (!comp.src.includes('renderError') && !comp.src.includes('role="alert"') && !comp.src.includes('announce(')) {
+    addIssue(comp.path, 'a11y-error-announce', 'warning', `${comp.name} does not use renderError() or role="alert" for error announcements`);
+  }
+}
+
+function checkA11yLabelAssociation(comp: ComponentFile) {
+  const isFormParticipating = /extends\s+(CivFormElement|CivBooleanFormElement|LightDomContainerMixin\(CivFormElement\))/.test(comp.src);
+  if (!isFormParticipating) return;
+  if (CHILD_COMPONENTS.has(comp.name)) return;
+  if (comp.name === 'civ-conditional' || comp.name === 'civ-progress-steps' || comp.name === 'civ-progress-bar') return;
+
+  // Every form control needs a label/legend associated via for/id or inline <label>
+  const hasLabelAssociation = comp.src.includes('renderLabel(') || comp.src.includes('renderLegend(') || comp.src.includes('aria-label') || comp.src.includes('<label');
+  if (!hasLabelAssociation) {
+    addIssue(comp.path, 'a11y-label', 'error', `${comp.name} has no label association (renderLabel, renderLegend, or aria-label)`);
+  }
+}
+
+function checkA11yColorNotSoleIndicator(comp: ComponentFile) {
+  if (comp.name === 'civ-icon') return; // Icons don't display errors
+  // Error states should use more than just color (border, text, icon)
+  if (comp.src.includes('civ-text-error') || comp.src.includes('civ-border-error')) {
+    const hasTextIndicator = comp.src.includes('renderError') || comp.src.includes('role="alert"');
+    if (!hasTextIndicator && !CHILD_COMPONENTS.has(comp.name)) {
+      addIssue(comp.path, 'a11y-color-only', 'warning', `${comp.name} may use color as sole error indicator — verify text/icon accompanies color change`);
+    }
+  }
+}
+
+function checkA11yTouchTarget(comp: ComponentFile) {
+  // Interactive elements should have adequate touch targets
+  // Check for small sizing classes without adequate padding
+  for (let i = 0; i < comp.lines.length; i++) {
+    const line = comp.lines[i];
+    if (line.includes('civ-w-4') && line.includes('civ-h-4') && !line.includes('civ-p-')) {
+      addIssue(comp.path, 'a11y-touch-target', 'warning', `Potentially small touch target (16px). WCAG 2.2 requires 24x24px minimum.`, i + 1);
+    }
+  }
+}
+
+function checkA11yKeyboardHandler(comp: ComponentFile) {
+  // Components with click handlers should also handle keyboard
+  const hasClick = comp.src.includes('@click=');
+  const hasKeydown = comp.src.includes('@keydown=') || comp.src.includes('keydown');
+  const hasNativeInteractive = comp.src.includes('<button') || comp.src.includes('role="button"') || comp.src.includes('<input') || comp.src.includes('<select') || comp.src.includes('<textarea');
+
+  if (hasClick && !hasKeydown && !hasNativeInteractive) {
+    addIssue(comp.path, 'a11y-keyboard', 'warning', `${comp.name} has click handlers but may be missing keyboard handlers for non-button elements`);
+  }
+}
+
+// ── i18n checks ──────────────────────────────────────────────
+
+function checkI18nHardcodedStrings(comp: ComponentFile) {
+  // Check for hardcoded English strings that should use t()
+  const hardcodedPatterns = [
+    // Common hardcoded strings in HTML templates
+    { pattern: />\s*Required\s*</i, label: '"Required"' },
+    { pattern: />\s*Error\s*</i, label: '"Error"' },
+    { pattern: />\s*Select\s*</i, label: '"Select"' },
+    { pattern: />\s*Cancel\s*</i, label: '"Cancel"' },
+    { pattern: />\s*Remove\s*</i, label: '"Remove"' },
+    { pattern: />\s*characters? remaining\s*</i, label: '"characters remaining"' },
+    { pattern: />\s*words? remaining\s*</i, label: '"words remaining"' },
+  ];
+
+  for (let i = 0; i < comp.lines.length; i++) {
+    const line = comp.lines[i];
+    // Skip comments and imports
+    if (line.trim().startsWith('//') || line.trim().startsWith('*') || line.trim().startsWith('import')) continue;
+
+    for (const { pattern, label } of hardcodedPatterns) {
+      if (pattern.test(line) && !line.includes('t(') && !line.includes('interpolate(')) {
+        addIssue(comp.path, 'i18n-hardcoded', 'warning', `Possible hardcoded string ${label} — should use t() for i18n`, i + 1);
+      }
+    }
+  }
+}
+
+function checkI18nAriaLabels(comp: ComponentFile) {
+  // Check for hardcoded aria-label strings (should be localizable)
+  for (let i = 0; i < comp.lines.length; i++) {
+    const line = comp.lines[i];
+    if (line.trim().startsWith('//') || line.trim().startsWith('*')) continue;
+
+    const match = line.match(/aria-label="([^"$]+)"/);
+    if (match && !match[1].includes('${') && match[1].length > 1) {
+      // It's a static aria-label string — should it be localizable?
+      const value = match[1];
+      // Skip if it's a short dynamic expression
+      if (!/^(Step|Go to|Cancel|Clear|Remove|Retry|Upload|Choose|Previous|Next)/.test(value)) continue;
+      addIssue(comp.path, 'i18n-aria-label', 'info', `Static aria-label "${value}" — consider using t() for localization`, i + 1);
+    }
+  }
+}
+
+function checkI18nPlaceholders(comp: ComponentFile) {
+  // Check for hardcoded placeholder text
+  for (let i = 0; i < comp.lines.length; i++) {
+    const line = comp.lines[i];
+    if (line.trim().startsWith('//') || line.trim().startsWith('*')) continue;
+
+    const match = line.match(/placeholder="([^"$]+)"/);
+    if (match && !match[1].includes('${') && match[1].length > 3) {
+      addIssue(comp.path, 'i18n-placeholder', 'info', `Static placeholder "${match[1]}" — consider using t() for localization`, i + 1);
+    }
+  }
+}
+
 // ── Run all checks ───────────────────────────────────────────
 
 const components = discoverComponents();
@@ -288,6 +405,16 @@ for (const comp of components) {
   checkStoryFile(comp);
   checkJSDoc(comp);
   checkNativeCounterparts(comp);
+  // A11y checks
+  checkA11yErrorAnnouncement(comp);
+  checkA11yLabelAssociation(comp);
+  checkA11yColorNotSoleIndicator(comp);
+  checkA11yTouchTarget(comp);
+  checkA11yKeyboardHandler(comp);
+  // i18n checks
+  checkI18nHardcodedStrings(comp);
+  checkI18nAriaLabels(comp);
+  checkI18nPlaceholders(comp);
 }
 
 // ── Output ───────────────────────────────────────────────────

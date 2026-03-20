@@ -71,6 +71,14 @@ export class CivTextInput extends CivFormElement {
    */
   @property({ type: String, attribute: 'mask-pattern' }) maskPattern: string = '';
 
+  /**
+   * Mask formatting mode:
+   * - `blur` (default) — user types freely, formatting applied on blur. Accessible.
+   * - `live` — formats as user types with auto-inserted literals. Has accessibility
+   *   tradeoffs (cursor jumping, unexpected characters for screen readers).
+   */
+  @property({ type: String, attribute: 'mask-mode' }) maskMode: 'blur' | 'live' = 'blur';
+
   /** Tracks whether the current error was set by the mask system. */
   private _maskError = false;
 
@@ -163,6 +171,7 @@ export class CivTextInput extends CivFormElement {
 
     const maskDef = this._maskDef;
     const pattern = this._activePattern;
+    const isLiveMode = this.maskMode === 'live';
 
     // Determine effective inputmode: preset inputmode > explicit inputmode > nothing
     const effectiveInputmode = (maskDef?.inputmode && this.type === 'text')
@@ -173,34 +182,58 @@ export class CivTextInput extends CivFormElement {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const effectiveHint = this.hint || (maskDef?.hintKey ? t(maskDef.hintKey as any) : '');
 
-    // Determine maxlength: mask pattern length takes precedence when mask is active
-    // Currency has no maxlength (variable length)
+    // Determine maxlength:
+    // - Currency: no maxlength (variable length)
+    // - Live mask: formatted pattern length (includes literals)
+    // - Blur mask: raw digit count only (user types without literals)
+    // - No mask: explicit maxlength prop
     const effectiveMaxlength = isCurrency
       ? undefined
       : pattern
-        ? pattern.length
+        ? (isLiveMode ? pattern.length : pattern.replace(/[^#A*]/g, '').length)
         : (this.maxlength && this.maxlength > 0 ? this.maxlength : undefined);
 
-    // Display value: formatted when mask is active, raw otherwise
-    // Currency display is handled by focus/blur, so show raw value by default
-    const displayValue = isCurrency
-      ? this.value
-      : pattern ? this.formattedValue : this.value;
+    // Display value:
+    // - Currency: raw (blur handler formats imperatively)
+    // - Live mask: formatted always
+    // - Blur mask: raw (blur handler formats imperatively)
+    // - No mask: raw
+    const displayValue = (pattern && isLiveMode)
+      ? this.formattedValue
+      : this.value;
 
     // Auto-set autocomplete="off" for PII masks unless user explicitly set autocomplete
     const effectiveAutocomplete = (maskDef?.pii && !this.autocomplete)
       ? 'off'
       : this.autocomplete;
 
-    // Determine event handlers
-    const inputHandler = isCurrency
-      ? this._onCurrencyInput
-      : pattern ? this._onMaskInput : this._handleInput;
-    const changeHandler = isCurrency
-      ? this._onCurrencyChange
-      : pattern ? this._onMaskChange : this._handleChange;
-    const blurHandler = isCurrency ? this._onCurrencyBlur : nothing;
-    const focusHandler = isCurrency ? this._onCurrencyFocus : nothing;
+    // Determine event handlers based on mask mode
+    let inputHandler;
+    let changeHandler;
+    let blurHandler = nothing as any;
+    let focusHandler = nothing as any;
+    let pasteHandler = nothing as any;
+
+    if (isCurrency) {
+      inputHandler = this._onCurrencyInput;
+      changeHandler = this._onCurrencyChange;
+      blurHandler = this._onCurrencyBlur;
+      focusHandler = this._onCurrencyFocus;
+    } else if (pattern && isLiveMode) {
+      // Live mode: format as you type (accessibility tradeoffs)
+      inputHandler = this._onMaskInput;
+      changeHandler = this._onMaskChange;
+      pasteHandler = this._onMaskPaste;
+    } else if (pattern) {
+      // Blur mode (default): free-form input, format on blur
+      inputHandler = this._onBlurMaskInput;
+      changeHandler = this._onBlurMaskChange;
+      blurHandler = this._onBlurMaskBlur;
+      focusHandler = this._onBlurMaskFocus;
+    } else {
+      inputHandler = this._handleInput;
+      changeHandler = this._handleChange;
+    }
 
     const inputEl = html`
       <input
@@ -223,7 +256,7 @@ export class CivTextInput extends CivFormElement {
         aria-invalid="${this.error ? 'true' : nothing}"
         @input="${inputHandler}"
         @change="${changeHandler}"
-        @paste="${pattern && !isCurrency ? this._onMaskPaste : nothing}"
+        @paste="${pasteHandler}"
         @blur="${blurHandler}"
         @focus="${focusHandler}"
       />
@@ -466,6 +499,71 @@ export class CivTextInput extends CivFormElement {
     }
 
     dispatch(this, 'civ-input', { value: this.value });
+  }
+
+  // ── Blur-mode mask handlers (default, accessible) ──────────
+
+  /**
+   * Blur-mode input: accept free-form input, filter to valid chars,
+   * but do NOT format. Let the user type naturally.
+   */
+  private _onBlurMaskInput(e: Event): void {
+    const input = e.target as HTMLInputElement;
+    const pattern = this._activePattern;
+
+    // Filter to valid characters only, truncate to max raw length
+    const raw = processRawInput(input.value.replace(/[^a-zA-Z0-9]/g, ''), pattern);
+
+    this.value = raw;
+    input.value = raw; // Show unformatted digits/chars while typing
+    dispatch(this, 'civ-input', { value: this.value });
+  }
+
+  /**
+   * Blur-mode blur: format the raw value for display and validate.
+   */
+  private _onBlurMaskBlur(): void {
+    const input = this.querySelector('input') as HTMLInputElement;
+    const pattern = this._activePattern;
+    const maskDef = this._maskDef;
+    if (!input || !pattern) return;
+
+    // Format for display
+    if (this.value) {
+      input.value = applyMask(this.value, pattern);
+    }
+
+    // Validate completeness
+    if (this.value && !isComplete(this.value, pattern)) {
+      if (maskDef?.errorKey) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        this.error = t(maskDef.errorKey as any);
+      } else {
+        this.error = interpolate(t('maskPatternError'), { label: this.label || t('fieldFallbackLabel') });
+      }
+      this._maskError = true;
+    } else if (this._maskError) {
+      this.error = '';
+      this._maskError = false;
+    }
+  }
+
+  /**
+   * Blur-mode focus: show raw value for editing.
+   */
+  private _onBlurMaskFocus(): void {
+    const input = this.querySelector('input') as HTMLInputElement;
+    if (input && this.value) {
+      input.value = this.value;
+    }
+  }
+
+  /**
+   * Blur-mode change: dispatch civ-change with raw value.
+   */
+  private _onBlurMaskChange(): void {
+    dispatch(this, 'civ-change', { value: this.value });
+    this.sendAnalytics('change', this._maskDef?.pii ? { piiMasked: true } : undefined);
   }
 
   /**

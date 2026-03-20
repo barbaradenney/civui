@@ -111,7 +111,7 @@ export class CivProgressSteps extends CivBaseElement {
               ? html`<div class="civ-step-connector civ-w-0.5 civ-h-8 civ-my-1"></div>`
               : nothing}
           </div>
-          <span class="civ-text-sm ${isCurrent ? 'civ-font-bold' : ''} ${isVertical ? '' : 'civ-ms-2'}">${label}</span>
+          <span class="civ-text-sm ${isCurrent ? 'civ-font-bold' : ''} ${isVertical ? 'civ-h-8 civ-flex civ-items-center' : 'civ-ms-2'}">${label}</span>
         </div>
         ${!isLast && !isVertical
           ? html`<div class="civ-step-connector civ-h-0.5 civ-flex-1 civ-mx-2 civ-min-w-4"></div>`

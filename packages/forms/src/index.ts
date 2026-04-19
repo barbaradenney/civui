@@ -63,3 +63,15 @@ export { CivRepeater } from './repeater/index.js';
 // Summary
 export { CivSummary } from './summary/index.js';
 export type { SummarySection, SummaryItem } from './summary/index.js';
+
+// Name
+export { CivName } from './name/index.js';
+export type { NameValue } from './name/index.js';
+
+// Direct Deposit
+export { CivDirectDeposit } from './direct-deposit/index.js';
+export type { DirectDepositValue } from './direct-deposit/index.js';
+
+// Signature
+export { CivSignature } from './signature/index.js';
+export type { SignatureValue } from './signature/index.js';

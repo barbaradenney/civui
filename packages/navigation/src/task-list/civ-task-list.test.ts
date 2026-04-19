@@ -3,6 +3,7 @@ import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
 import './civ-task-list.js';
 import './civ-task-group.js';
 import './civ-task.js';
+import '@civui/ui/tag';
 
 afterEach(cleanupFixtures);
 
@@ -107,23 +108,25 @@ describe('civ-task', () => {
   it('renders not-started status with blue tag', async () => {
     const el = await fixture('<civ-task label="Task" status="not-started"></civ-task>');
 
-    const tag = el.querySelector('.civ-tag--blue');
+    const tag = el.querySelector('civ-tag');
     expect(tag).not.toBeNull();
-    expect(tag!.textContent).toBe('Not started');
+    expect(tag!.getAttribute('variant')).toBe('blue');
+    expect(tag!.getAttribute('label')).toBe('Not started');
   });
 
   it('renders in-progress status with teal tag', async () => {
     const el = await fixture('<civ-task label="Task" status="in-progress"></civ-task>');
 
-    const tag = el.querySelector('.civ-tag--teal');
+    const tag = el.querySelector('civ-tag');
     expect(tag).not.toBeNull();
-    expect(tag!.textContent).toBe('In progress');
+    expect(tag!.getAttribute('variant')).toBe('teal');
+    expect(tag!.getAttribute('label')).toBe('In progress');
   });
 
   it('renders complete status as plain text', async () => {
     const el = await fixture('<civ-task label="Task" href="#" status="complete"></civ-task>');
 
-    const tag = el.querySelector('.civ-tag');
+    const tag = el.querySelector('civ-tag');
     expect(tag).toBeNull();
     const status = el.querySelector('.civ-task__status--complete');
     expect(status).not.toBeNull();
@@ -141,9 +144,10 @@ describe('civ-task', () => {
   it('renders error status with red tag', async () => {
     const el = await fixture('<civ-task label="Task" href="#" status="error"></civ-task>');
 
-    const tag = el.querySelector('.civ-tag--red');
+    const tag = el.querySelector('civ-tag');
     expect(tag).not.toBeNull();
-    expect(tag!.textContent).toBe('There is a problem');
+    expect(tag!.getAttribute('variant')).toBe('red');
+    expect(tag!.getAttribute('label')).toBe('There is a problem');
   });
 
   it('renders hint text', async () => {
@@ -161,7 +165,7 @@ describe('civ-task', () => {
     expect(hint).toBeNull();
   });
 
-  it('links have aria-describedby pointing to status', async () => {
+  it('links have aria-describedby pointing to status container', async () => {
     const el = await fixture('<civ-task label="Task" href="#" status="in-progress"></civ-task>');
 
     const link = el.querySelector('a')!;
@@ -169,7 +173,10 @@ describe('civ-task', () => {
     expect(statusId).toBeTruthy();
     const statusEl = el.querySelector(`#${statusId}`);
     expect(statusEl).not.toBeNull();
-    expect(statusEl!.textContent).toContain('In progress');
+    // Status container holds the civ-tag element
+    const tag = statusEl!.querySelector('civ-tag');
+    expect(tag).not.toBeNull();
+    expect(tag!.getAttribute('label')).toBe('In progress');
   });
 
   it('applies muted class to cannot-start label', async () => {

@@ -590,6 +590,8 @@ function generateReport(): string {
       'type',
       // Task 'href' is web-only — native uses onTap/onClick callbacks
       'href',
+      // Address international/military mode flags — native address is US-only for now
+      'showCountry', 'showMilitary', 'showStreet3',
       // i18n override props (native uses CivLocale instead)
       'chooseDateLabel', 'selectedDateLabel', 'dialogLabel', 'previousMonthLabel',
       'nextMonthLabel', 'dialogOpenedMessage', 'dateSelectedMessage', 'todayLabel',

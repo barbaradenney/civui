@@ -13,12 +13,10 @@ const STATUS_I18N_KEYS: Record<TaskStatus, keyof CivLocaleStrings> = {
   'error': 'taskStatusError',
 };
 
-const STATUS_TAG_CLASS: Record<TaskStatus, string> = {
-  'not-started': 'civ-tag civ-tag--blue',
-  'in-progress': 'civ-tag civ-tag--teal',
-  'complete': 'civ-task__status--complete',
-  'cannot-start': 'civ-task__status--cannot-start',
-  'error': 'civ-tag civ-tag--red',
+const STATUS_TAG_VARIANT: Partial<Record<TaskStatus, string>> = {
+  'not-started': 'blue',
+  'in-progress': 'teal',
+  'error': 'red',
 };
 
 /**
@@ -64,7 +62,7 @@ export class CivTask extends CivBaseElement {
     const isNavigable = this.href && this.status !== 'cannot-start';
     const i18nKey = STATUS_I18N_KEYS[this.status];
     const statusLabel = i18nKey ? t(i18nKey) : this.status;
-    const tagClass = STATUS_TAG_CLASS[this.status] || '';
+    const tagVariant = STATUS_TAG_VARIANT[this.status];
 
     return html`
       <li class="civ-task" role="listitem">
@@ -81,7 +79,9 @@ export class CivTask extends CivBaseElement {
             : nothing}
         </div>
         <div class="civ-task__status" id="${this._statusId}">
-          <span class="${tagClass}">${statusLabel}</span>
+          ${tagVariant
+            ? html`<civ-tag label="${statusLabel}" variant="${tagVariant}"></civ-tag>`
+            : html`<span class="${this.status === 'cannot-start' ? 'civ-task__status--cannot-start' : 'civ-task__status--complete'}">${statusLabel}</span>`}
         </div>
       </li>
     `;

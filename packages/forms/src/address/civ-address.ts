@@ -3,11 +3,14 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { CivFormElement, dispatch, renderLegend, renderHint, renderError, inputClasses, buildDescribedBy, t } from '@civui/core';
 
 export interface AddressValue {
+  country: string;
   street1: string;
   street2: string;
+  street3: string;
   city: string;
   state: string;
   zip: string;
+  military: boolean;
 }
 
 const US_STATES: Array<{ value: string; label: string }> = [
@@ -42,7 +45,13 @@ const US_STATES: Array<{ value: string; label: string }> = [
   { value: 'PR', label: 'Puerto Rico' }, { value: 'VI', label: 'U.S. Virgin Islands' },
 ];
 
-const EMPTY_ADDRESS: AddressValue = { street1: '', street2: '', city: '', state: '', zip: '' };
+const MILITARY_STATES = [
+  { value: 'AA', label: 'Armed Forces Americas (AA)' },
+  { value: 'AE', label: 'Armed Forces Europe (AE)' },
+  { value: 'AP', label: 'Armed Forces Pacific (AP)' },
+];
+
+const EMPTY_ADDRESS: AddressValue = { country: 'US', street1: '', street2: '', street3: '', city: '', state: '', zip: '', military: false };
 
 /**
  * CivUI Address
@@ -69,6 +78,15 @@ export class CivAddress extends CivFormElement {
   /** Whether to show the Street address line 2 field. */
   @property({ type: Boolean, attribute: 'show-street2' }) showStreet2 = true;
 
+  /** Whether to show the country selector (enables international addresses). */
+  @property({ type: Boolean, attribute: 'show-country' }) showCountry = false;
+
+  /** Whether to show the military address checkbox. */
+  @property({ type: Boolean, attribute: 'show-military' }) showMilitary = false;
+
+  /** Whether to show a third street address line. */
+  @property({ type: Boolean, attribute: 'show-street3' }) showStreet3 = false;
+
   /** Error message for the street1 field. */
   @property({ type: String, attribute: 'street-error' }) streetError = '';
 
@@ -83,8 +101,11 @@ export class CivAddress extends CivFormElement {
 
   @state() private _address: AddressValue = { ...EMPTY_ADDRESS };
 
+  private _countryId = this.generateId('country');
+  private _militaryId = this.generateId('military');
   private _street1Id = this.generateId('street1');
   private _street2Id = this.generateId('street2');
+  private _street3Id = this.generateId('street3');
   private _cityId = this.generateId('city');
   private _stateId = this.generateId('state');
   private _zipId = this.generateId('zip');
@@ -131,6 +152,45 @@ export class CivAddress extends CivFormElement {
         ${renderHint(this._hintId, this.hint, true)}
         ${renderError(this._errorId, this.error, true)}
 
+        ${this.showMilitary ? html`
+          <div class="civ-mb-3">
+            <label class="civ-flex civ-items-center civ-gap-2 civ-cursor-pointer">
+              <input
+                type="checkbox"
+                id="${this._militaryId}"
+                .checked="${this._address.military}"
+                ?disabled="${this.disabled}"
+                class="focus-visible:civ-focus-ring"
+                @change="${this._onMilitaryChange}"
+              />
+              <span>${t('addressMilitary')}</span>
+            </label>
+            ${this._address.military ? html`
+              <span class="civ-hint civ-block civ-mt-1">${t('addressMilitaryHint')}</span>
+            ` : nothing}
+          </div>
+        ` : nothing}
+
+        ${this.showCountry && !this._address.military ? html`
+          <div class="civ-mb-3">
+            <label class="civ-label" for="${this._countryId}">${t('addressCountry')}</label>
+            <select
+              class="${selectClasses}"
+              id="${this._countryId}"
+              name="${this.name ? `${this.name}.country` : nothing}"
+              .value="${this._address.country}"
+              autocomplete="country"
+              ?disabled="${this.disabled || this.readonly}"
+              @change="${(e: Event) => { this._onFieldInput('country', e); this._onFieldChange('country', e); }}"
+            >
+              <option value="">${t('selectEmpty')}</option>
+              <option value="US" ?selected="${this._address.country === 'US'}">United States</option>
+              <option value="CA" ?selected="${this._address.country === 'CA'}">Canada</option>
+              <option value="MX" ?selected="${this._address.country === 'MX'}">Mexico</option>
+            </select>
+          </div>
+        ` : nothing}
+
         <div class="civ-mb-3">
           <label class="civ-label" for="${this._street1Id}">
             ${t('addressStreet1')}
@@ -173,6 +233,24 @@ export class CivAddress extends CivFormElement {
           </div>
         ` : nothing}
 
+        ${this.showStreet3 ? html`
+          <div class="civ-mb-3">
+            <label class="civ-label" for="${this._street3Id}">${t('addressStreet3')}</label>
+            <input
+              type="text"
+              class="${classes}"
+              id="${this._street3Id}"
+              name="${this.name ? `${this.name}.street3` : nothing}"
+              .value="${this._address.street3}"
+              autocomplete="address-line3"
+              ?disabled="${this.disabled}"
+              ?readonly="${this.readonly}"
+              @input="${(e: Event) => this._onFieldInput('street3', e)}"
+              @change="${(e: Event) => this._onFieldChange('street3', e)}"
+            />
+          </div>
+        ` : nothing}
+
         <div class="civ-flex civ-flex-wrap civ-gap-3">
           <div class="civ-flex-1 civ-min-w-0" style="flex-basis:12rem">
             <label class="civ-label" for="${this._cityId}">
@@ -200,33 +278,50 @@ export class CivAddress extends CivFormElement {
 
           <div style="flex-basis:10rem">
             <label class="civ-label" for="${this._stateId}">
-              ${t('addressState')}
+              ${this._useSelectForState ? t('addressState') : t('addressStateProvince')}
               ${this.required ? html`<span class="civ-sr-only">${t('required')}</span>` : nothing}
             </label>
             ${renderError(this._stateErrorId, this.stateError)}
-            <select
-              class="${selectClasses}"
-              id="${this._stateId}"
-              name="${this.name ? `${this.name}.state` : nothing}"
-              .value="${this._address.state}"
-              autocomplete="address-level1"
-              ?required="${this.required}"
-              ?disabled="${this.disabled || this.readonly}"
-              aria-required="${this.required || nothing}"
-              aria-invalid="${this.stateError ? 'true' : nothing}"
-              aria-describedby="${this.stateError ? this._stateErrorId : nothing}"
-              @change="${(e: Event) => { this._onFieldInput('state', e); this._onFieldChange('state', e); }}"
-            >
-              <option value="">${t('selectEmpty')}</option>
-              ${US_STATES.map(s => html`
-                <option value="${s.value}" ?selected="${s.value === this._address.state}">${s.label}</option>
-              `)}
-            </select>
+            ${this._useSelectForState ? html`
+              <select
+                class="${selectClasses}"
+                id="${this._stateId}"
+                name="${this.name ? `${this.name}.state` : nothing}"
+                .value="${this._address.state}"
+                autocomplete="address-level1"
+                ?required="${this.required}"
+                ?disabled="${this.disabled || this.readonly}"
+                aria-required="${this.required || nothing}"
+                aria-invalid="${this.stateError ? 'true' : nothing}"
+                aria-describedby="${this.stateError ? this._stateErrorId : nothing}"
+                @change="${(e: Event) => { this._onFieldInput('state', e); this._onFieldChange('state', e); }}"
+              >
+                <option value="">${t('selectEmpty')}</option>
+                ${this._stateOptions.map(s => html`
+                  <option value="${s.value}" ?selected="${s.value === this._address.state}">${s.label}</option>
+                `)}
+              </select>
+            ` : html`
+              <input
+                type="text"
+                class="${classes}"
+                id="${this._stateId}"
+                name="${this.name ? `${this.name}.state` : nothing}"
+                .value="${this._address.state}"
+                autocomplete="address-level1"
+                ?disabled="${this.disabled}"
+                ?readonly="${this.readonly}"
+                aria-invalid="${this.stateError ? 'true' : nothing}"
+                aria-describedby="${this.stateError ? this._stateErrorId : nothing}"
+                @input="${(e: Event) => this._onFieldInput('state', e)}"
+                @change="${(e: Event) => this._onFieldChange('state', e)}"
+              />
+            `}
           </div>
 
           <div style="flex-basis:7rem">
             <label class="civ-label" for="${this._zipId}">
-              ${t('addressZip')}
+              ${this._address.country === 'US' || !this.showCountry ? t('addressZip') : t('addressPostalCode')}
               ${this.required ? html`<span class="civ-sr-only">${t('required')}</span>` : nothing}
             </label>
             ${renderError(this._zipErrorId, this.zipError)}
@@ -254,6 +349,32 @@ export class CivAddress extends CivFormElement {
     `;
   }
 
+  /** Whether to render a select dropdown for the state field. */
+  private get _useSelectForState(): boolean {
+    if (this._address.military) return true;
+    const country = this._address.country;
+    return !this.showCountry || country === 'US' || country === 'CA' || country === 'MX';
+  }
+
+  /** State/province options for the current country. */
+  private get _stateOptions(): Array<{ value: string; label: string }> {
+    if (this._address.military) return MILITARY_STATES;
+    return US_STATES; // For CA/MX, you'd add province arrays here
+  }
+
+  private _onMilitaryChange(e: Event): void {
+    const target = e.target as HTMLInputElement;
+    this._address = {
+      ...this._address,
+      military: target.checked,
+      country: target.checked ? 'US' : this._address.country,
+      state: '', // Reset state when toggling military
+    };
+    this.value = JSON.stringify(this._address);
+    dispatch(this, 'civ-input', { value: { ...this._address } });
+    dispatch(this, 'civ-change', { value: { ...this._address } });
+  }
+
   private _onFieldInput(field: keyof AddressValue, e: Event): void {
     const target = e.target as HTMLInputElement | HTMLSelectElement;
     this._address = { ...this._address, [field]: target.value };
@@ -272,11 +393,14 @@ export class CivAddress extends CivFormElement {
   protected override _syncFormValue(): void {
     const fd = new FormData();
     const prefix = this.name || 'address';
+    fd.append(`${prefix}.country`, this._address.country);
     fd.append(`${prefix}.street1`, this._address.street1);
     fd.append(`${prefix}.street2`, this._address.street2);
+    fd.append(`${prefix}.street3`, this._address.street3);
     fd.append(`${prefix}.city`, this._address.city);
     fd.append(`${prefix}.state`, this._address.state);
     fd.append(`${prefix}.zip`, this._address.zip);
+    fd.append(`${prefix}.military`, this._address.military ? 'true' : 'false');
     this.updateFormValue(fd);
   }
 

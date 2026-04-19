@@ -1445,4 +1445,29 @@
     background-color: var(--civ-color-error-lighter);
     color: var(--civ-color-error-dark);
   }
+
+  .civ-tag--green {
+    background-color: var(--civ-color-success-lighter);
+    color: var(--civ-color-success-dark);
+  }
+
+  .civ-tag--yellow {
+    background-color: var(--civ-color-warning-lighter);
+    color: var(--civ-color-warning-dark);
+  }
+
+  .civ-tag--orange {
+    background-color: var(--civ-color-accent-warm-lightest);
+    color: var(--civ-color-accent-warm-dark);
+  }
+
+  .civ-tag--purple {
+    background-color: #ede3f3;
+    color: #54278f;
+  }
+
+  .civ-tag--gray {
+    background-color: var(--civ-color-base-lightest);
+    color: var(--civ-color-base-darker);
+  }
 }

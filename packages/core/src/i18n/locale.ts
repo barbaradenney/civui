@@ -111,12 +111,39 @@ export interface CivLocaleStrings {
   progressStepGoTo: string; // "Go to step {step}: {label}"
   progressStepsCounter: string; // "Step {current} of {total}"
 
+  // Name
+  nameFirst: string;
+  nameMiddle: string;
+  nameLast: string;
+  nameSuffix: string;
+  nameInvalidChars: string; // "You entered a character we can't accept. Try removing '{chars}'"
+
   // Address
   addressStreet1: string;
   addressStreet2: string;
+  addressStreet3: string;
   addressCity: string;
   addressState: string;
   addressZip: string;
+  addressCountry: string;
+  addressMilitary: string;
+  addressMilitaryHint: string;
+  addressStateProvince: string;
+  addressPostalCode: string;
+
+  // Direct deposit
+  directDepositAccountType: string;
+  directDepositChecking: string;
+  directDepositSavings: string;
+  directDepositRouting: string;
+  directDepositRoutingHint: string;
+  directDepositAccount: string;
+  directDepositAccountHint: string;
+
+  // Signature
+  signatureName: string;
+  signatureNameHint: string;
+  signatureCertify: string;
 
   // Repeater
   repeaterAddButton: string; // "Add another {item}"
@@ -256,11 +283,35 @@ const defaultStrings: CivLocaleStrings = {
   maxSelectionsHint: 'Select up to {max}',
   clearButton: 'Clear',
 
+  nameFirst: 'First name',
+  nameMiddle: 'Middle name',
+  nameLast: 'Last name',
+  nameSuffix: 'Suffix',
+  nameInvalidChars: "You entered a character we can't accept. Try removing '{chars}'",
+
   addressStreet1: 'Street address',
   addressStreet2: 'Street address line 2',
+  addressStreet3: 'Street address line 3',
   addressCity: 'City',
   addressState: 'State',
   addressZip: 'ZIP code',
+  addressCountry: 'Country',
+  addressMilitary: 'I receive mail outside of the United States on a military base',
+  addressMilitaryHint: 'The United States is automatically chosen as your country if you have a military address',
+  addressStateProvince: 'State, province, or region',
+  addressPostalCode: 'Postal code',
+
+  directDepositAccountType: 'Account type',
+  directDepositChecking: 'Checking',
+  directDepositSavings: 'Savings',
+  directDepositRouting: 'Bank routing number',
+  directDepositRoutingHint: 'The 9-digit number on the bottom left of a check',
+  directDepositAccount: 'Bank account number',
+  directDepositAccountHint: 'The account number on the bottom of a check',
+
+  signatureName: 'Your full name',
+  signatureNameHint: 'Please type your first and last name',
+  signatureCertify: 'I certify the information above is correct and true to the best of my knowledge and belief',
 
   repeaterAddButton: 'Add another {item}',
   repeaterRemoveButton: 'Remove',

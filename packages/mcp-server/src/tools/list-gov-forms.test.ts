@@ -4,8 +4,8 @@ import { listGovForms } from './list-gov-forms.js';
 describe('listGovForms', () => {
   it('returns all registered forms', () => {
     const result = listGovForms();
-    expect(result.totalCount).toBe(4);
-    expect(result.forms.length).toBe(4);
+    expect(result.totalCount).toBe(5);
+    expect(result.forms.length).toBe(5);
   });
 
   it('includes form numbers', () => {

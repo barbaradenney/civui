@@ -27,21 +27,21 @@ export interface AssembleResult {
 /**
  * Assemble a complete form application from a form number.
  */
-export function assembleGovForm(formNumber: string, options?: {
+export async function assembleGovForm(formNumber: string, options?: {
   /** Output format: 'html' (single HTML file) or 'react' (TSX components). */
   format?: 'html' | 'react';
   /** Base URL for CivUI assets. Defaults to unpkg CDN. */
   cdnBase?: string;
   /** API endpoint for form submission. */
   submitAction?: string;
-}): AssembleResult {
+}): Promise<AssembleResult> {
   const format = options?.format || 'html';
 
   if (format === 'react') {
     return assembleReactForm(formNumber, options);
   }
 
-  const result = generateGovForm(formNumber);
+  const result = await generateGovForm(formNumber);
   const cdnBase = options?.cdnBase || 'https://unpkg.com/@civui';
   const submitAction = options?.submitAction || '/api/submit';
 
@@ -323,11 +323,11 @@ ${chapterHeadings}
  * Assemble a React (TSX) multi-page form application.
  * Returns an array of files that make up the complete app.
  */
-function assembleReactForm(formNumber: string, options?: {
+async function assembleReactForm(formNumber: string, options?: {
   cdnBase?: string;
   submitAction?: string;
-}): AssembleResult {
-  const result = generateGovForm(formNumber);
+}): Promise<AssembleResult> {
+  const result = await generateGovForm(formNumber);
   const submitAction = options?.submitAction || '/api/submit';
 
   const chapterImports = result.pages.chapters

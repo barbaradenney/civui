@@ -9,7 +9,7 @@ import { escapeHtml, slugify } from './html-utils.js';
 import { getFormDefinition, getFormNumbers } from '../resources/gov-form-registry.js';
 import { getChapter, type GovChapterMeta } from '../resources/gov-chapters.js';
 import { generateIntroPage } from './generate-intro-page.js';
-import type { FormField } from '../schema/index.js';
+import type { FormField, FormSchema } from '../schema/index.js';
 
 export interface GovFormPage {
   id: string;
@@ -31,12 +31,28 @@ export interface GovFormResult {
   features: string[];
   fieldCount: number;
   chapterCount: number;
+
+  /** Complex form extras (populated when form has workflow/delegation/feedback config). */
+  complex?: {
+    /** Workflow status banner + transition buttons HTML. */
+    workflowUi?: { html: string; javascript: string };
+    /** Delegation/representative section HTML. */
+    delegationHtml?: string;
+    /** Feedback panel HTML (reviewer mode). */
+    feedbackHtml?: { html: string; javascript: string };
+    /** Role-based permission matrix. */
+    lockMatrix?: { summary: string };
+    /** Dynamic chapter rules. */
+    dynamicChapters?: Array<{ chapterId: string; showWhen: { field: string; operator: string; value: string } }>;
+    /** Actor definitions. */
+    actors?: Array<{ id: string; label: string }>;
+  };
 }
 
 /**
  * Generate a complete government form by form number.
  */
-export function generateGovForm(formNumber: string): GovFormResult {
+export async function generateGovForm(formNumber: string): Promise<GovFormResult> {
   const form = getFormDefinition(formNumber);
   if (!form) {
     const available = getFormNumbers().join(', ');
@@ -80,6 +96,51 @@ export function generateGovForm(formNumber: string): GovFormResult {
   ];
   if (form.eligibility) features.push('eligibility-screener');
 
+  // ── Complex form features ──────────────────────────────
+  let complex: GovFormResult['complex'];
+
+  if (form.workflow || form.delegation || form.feedback) {
+    complex = {};
+
+    // Build a FormSchema for the existing tools
+    const schema = buildFormSchema(form, resolvedChapters);
+
+    if (form.workflow) {
+      features.push('workflow', 'multi-actor');
+      const { generateWorkflowUi } = await importWorkflowUi();
+      const workflowResult = generateWorkflowUi(schema);
+      complex.workflowUi = { html: workflowResult.html, javascript: workflowResult.javascript };
+    }
+
+    if (form.delegation) {
+      features.push('delegation', 'representative');
+      const { generateDelegationSections } = await importDelegation();
+      const delegationResult = generateDelegationSections(schema);
+      complex.delegationHtml = delegationResult.attestationHtml;
+    }
+
+    if (form.feedback || form.workflow?.states.some(s => s.allowsFeedback)) {
+      features.push('feedback', 'reviewer-comments');
+      const { generateFeedbackUi } = await importFeedback();
+      const feedbackResult = generateFeedbackUi(schema, { mode: 'reviewer' });
+      complex.feedbackHtml = { html: feedbackResult.html, javascript: feedbackResult.javascript };
+    }
+
+    if (form.workflow && form.actors) {
+      const { generateLockMatrix } = await importLockMatrix();
+      const lockResult = generateLockMatrix(schema);
+      complex.lockMatrix = { summary: lockResult.summary };
+    }
+
+    if (form.dynamicChapters) {
+      complex.dynamicChapters = form.dynamicChapters;
+    }
+
+    if (form.actors) {
+      complex.actors = form.actors;
+    }
+  }
+
   return {
     formNumber: form.formNumber,
     title: form.title,
@@ -93,6 +154,7 @@ export function generateGovForm(formNumber: string): GovFormResult {
     features,
     fieldCount,
     chapterCount: chapterPages.length,
+    complex,
   };
 }
 
@@ -436,4 +498,44 @@ ${chapterTasks}
 </div>`;
 
   return { html };
+}
+
+/** Build a FormSchema from a GovFormDefinition for use with existing tools. */
+function buildFormSchema(form: ReturnType<typeof getFormDefinition> & {}, chapters: Array<GovChapterMeta>): FormSchema {
+  const schema: FormSchema = {
+    title: form.title,
+    description: form.description,
+    action: '/api/submit',
+    method: 'POST',
+    sections: chapters.map(ch => ch.section),
+  };
+
+  if (form.workflow) {
+    (schema as any).workflow = form.workflow;
+  }
+  if (form.actors) {
+    (schema as any).actors = form.actors;
+  }
+  if (form.delegation) {
+    (schema as any).delegation = form.delegation;
+  }
+  if (form.feedback) {
+    (schema as any).feedback = form.feedback;
+  }
+
+  return schema;
+}
+
+// Dynamic imports for complex form tools (avoids circular deps)
+async function importWorkflowUi() {
+  return import('./generate-workflow-ui.js');
+}
+async function importDelegation() {
+  return import('./generate-delegation-sections.js');
+}
+async function importFeedback() {
+  return import('./generate-feedback-ui.js');
+}
+async function importLockMatrix() {
+  return import('./generate-lock-matrix.js');
 }

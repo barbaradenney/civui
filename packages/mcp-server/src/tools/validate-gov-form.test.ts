@@ -3,8 +3,8 @@ import { validateGovForm } from './validate-gov-form.js';
 import { generateGovForm } from './generate-gov-form.js';
 
 describe('validateGovForm', () => {
-  it('passes for a well-formed VA form', () => {
-    const form = generateGovForm('21-526EZ');
+  it('passes for a well-formed VA form', async () => {
+    const form = await generateGovForm('21-526EZ');
     const allHtml = [
       form.pages.intro.html,
       form.taskListHub.html,

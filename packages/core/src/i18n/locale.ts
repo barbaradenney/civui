@@ -145,6 +145,20 @@ export interface CivLocaleStrings {
   signatureNameHint: string;
   signatureCertify: string;
 
+  // Form step wizard
+  formStepBack: string;
+  formStepContinue: string;
+  formStepSave: string;
+  formStepOf: string; // "Step {current} of {total}"
+
+  // Prefill notice
+  prefillNoticeHeading: string;
+  prefillNoticeBody: string;
+  prefillNoticeLink: string;
+
+  // Read-only field
+  readOnlyLabel: string; // fallback if no label
+
   // Repeater
   repeaterAddButton: string; // "Add another {item}"
   repeaterRemoveButton: string;
@@ -312,6 +326,17 @@ const defaultStrings: CivLocaleStrings = {
   signatureName: 'Your full name',
   signatureNameHint: 'Please type your first and last name',
   signatureCertify: 'I certify the information above is correct and true to the best of my knowledge and belief',
+
+  formStepBack: 'Back',
+  formStepContinue: 'Continue',
+  formStepSave: 'Save and continue',
+  formStepOf: 'Step {current} of {total}',
+
+  prefillNoticeHeading: 'We\u2019ve prefilled some of your information',
+  prefillNoticeBody: 'We pulled this information from your account. If any of this is wrong, you can correct it here.',
+  prefillNoticeLink: 'Update your profile',
+
+  readOnlyLabel: 'Information',
 
   repeaterAddButton: 'Add another {item}',
   repeaterRemoveButton: 'Remove',

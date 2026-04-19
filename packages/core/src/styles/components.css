@@ -1470,4 +1470,25 @@
     background-color: var(--civ-color-base-lightest);
     color: var(--civ-color-base-darker);
   }
+
+  /* ── Read-Only Field ─────────────────────────────────────── */
+
+  .civ-read-only-field {
+    @apply civ-py-2;
+    border-bottom: 1px solid var(--civ-color-base-lighter);
+  }
+
+  .civ-read-only-field dt {
+    font-size: var(--civ-typography-fontSize-sm);
+  }
+
+  .civ-read-only-field dd {
+    font-size: var(--civ-typography-fontSize-base);
+  }
+
+  /* ── Prefill Notice ──────────────────────────────────────── */
+
+  .civ-prefill-notice {
+    @apply civ-mb-6;
+  }
 }

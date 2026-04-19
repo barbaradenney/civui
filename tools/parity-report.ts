@@ -592,6 +592,8 @@ function generateReport(): string {
       'href',
       // Address international/military mode flags — native address is US-only for now
       'showCountry', 'showMilitary', 'showStreet3',
+      // FormStep: navDisabled is web-only (native handles button disabled natively)
+      'navDisabled',
       // i18n override props (native uses CivLocale instead)
       'chooseDateLabel', 'selectedDateLabel', 'dialogLabel', 'previousMonthLabel',
       'nextMonthLabel', 'dialogOpenedMessage', 'dateSelectedMessage', 'todayLabel',
@@ -611,6 +613,7 @@ function generateReport(): string {
     // Props that are native-only and should not count as "missing on web"
     const nativeOnlyProps = new Set([
       'body', 'parts', 'content', 'id', 'data', 'keyboardType', 'points', 'rowCount',
+      'current', 'total', // FormStep: native params, web uses internal state + getters
       'selected', 'newFiles', 'errors', 'fieldName', 'message', 'url', 'size',
       'formValidate', 'modifier',
       'formState', 'requiredMessage', 'pii', 'formName',
@@ -625,6 +628,8 @@ function generateReport(): string {
       'civ-input', // native onChange/onValueChange fires on every change (same as civ-input)
       'civ-invalid', // native form validation uses formState pattern instead
       'civ-analytics', // native uses onAnalytics closure; excluded only for components where no native has it
+      'civ-step-back', // FormStep: web-only navigation event, native handles internally
+      'civ-step-continue', // FormStep: web-only navigation event, native handles internally
     ]);
 
     // Native-only events/callbacks (not real events, excluded from parity)
@@ -811,6 +816,10 @@ function mapEventName(name: string): string {
     onEdit: 'civ-summary-edit',
     onClick: 'civ-analytics', // native click callback maps to analytics tracking
     onTap: 'civ-analytics', // iOS tap callback
+    onStepChange: 'civ-step-change',
+    onComplete: 'civ-step-complete',
+    onLinkTap: 'civ-analytics', // prefill notice link tap
+    onLinkClick: 'civ-analytics', // prefill notice link click
   };
   return map[name] || name;
 }

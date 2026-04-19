@@ -124,6 +124,18 @@ export interface CivLocaleStrings {
   repeaterRemoveAriaLabel: string; // "Remove {item} {index}"
   repeaterItemAdded: string; // "{item} {index} added"
   repeaterItemRemoved: string; // "{item} {index} removed"
+  repeaterEditButton: string;
+  repeaterEditAriaLabel: string; // "Edit {item} {index}"
+  repeaterSaveButton: string;
+  repeaterCancelButton: string;
+  repeaterItemSaved: string; // "{item} {index} saved"
+
+  // Task list
+  taskStatusNotStarted: string;
+  taskStatusInProgress: string;
+  taskStatusComplete: string;
+  taskStatusCannotStart: string;
+  taskStatusError: string;
 
   // Summary
   summaryEditLink: string;
@@ -255,6 +267,17 @@ const defaultStrings: CivLocaleStrings = {
   repeaterRemoveAriaLabel: 'Remove {item} {index}',
   repeaterItemAdded: '{item} {index} added',
   repeaterItemRemoved: '{item} {index} removed',
+  repeaterEditButton: 'Edit',
+  repeaterEditAriaLabel: 'Edit {item} {index}',
+  repeaterSaveButton: 'Save {item}',
+  repeaterCancelButton: 'Cancel',
+  repeaterItemSaved: '{item} {index} saved',
+
+  taskStatusNotStarted: 'Not started',
+  taskStatusInProgress: 'In progress',
+  taskStatusComplete: 'Complete',
+  taskStatusCannotStart: 'Cannot start yet',
+  taskStatusError: 'There is a problem',
 
   summaryEditLink: 'Edit',
   summaryEditAriaLabel: 'Edit {section}',

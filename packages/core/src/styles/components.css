@@ -1380,4 +1380,69 @@
     overflow: visible;
     white-space: nowrap;
   }
+
+  /* ── Task List ─────────────────────────────────────────────── */
+
+  .civ-task-list {
+    @apply civ-mb-4;
+  }
+
+  .civ-task-group__list {
+    list-style: none;
+    @apply civ-p-0 civ-m-0;
+  }
+
+  .civ-task {
+    @apply civ-flex civ-justify-between civ-items-start civ-py-3 civ-px-0;
+    border-bottom: 1px solid var(--civ-color-base-lighter);
+  }
+
+  .civ-task:first-child {
+    border-top: 1px solid var(--civ-color-base-lighter);
+  }
+
+  .civ-task__name-and-hint {
+    @apply civ-flex-1 civ-min-w-0;
+  }
+
+  .civ-task__link {
+    text-decoration: none;
+  }
+
+  .civ-task__link:hover {
+    text-decoration: underline;
+  }
+
+  .civ-task__status {
+    @apply civ-ms-3 civ-flex-shrink-0;
+  }
+
+  .civ-task__status--complete {
+    color: var(--civ-color-base-darkest);
+  }
+
+  .civ-task__status--cannot-start {
+    color: var(--civ-color-base-DEFAULT);
+  }
+
+  /* ── Status tags ───────────────────────────────────────────── */
+
+  .civ-tag {
+    @apply civ-inline-block civ-px-2 civ-py-0.5 civ-text-xs civ-font-bold civ-rounded;
+  }
+
+  .civ-tag--blue {
+    background-color: var(--civ-color-primary-lightest);
+    color: var(--civ-color-primary-dark);
+  }
+
+  .civ-tag--teal {
+    background-color: var(--civ-color-info-lighter);
+    color: var(--civ-color-info-dark);
+  }
+
+  .civ-tag--red {
+    background-color: var(--civ-color-error-lighter);
+    color: var(--civ-color-error-dark);
+  }
 }

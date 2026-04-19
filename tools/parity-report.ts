@@ -17,6 +17,7 @@ const WEB_DIRS = [
   join(ROOT, 'packages/forms/src'),
   join(ROOT, 'packages/feedback/src'),
   join(ROOT, 'packages/ui/src'),
+  join(ROOT, 'packages/navigation/src'),
 ];
 const IOS_DIR = join(ROOT, 'packages/ios/Sources/CivUI');
 const ANDROID_DIR = join(ROOT, 'packages/android/src/main/kotlin/gov/civui/components');
@@ -414,6 +415,8 @@ function discoverComponents(): ComponentMapping[] {
   // Native files that contain multiple components (e.g., CivRadio.swift has both CivRadio and CivRadioGroup)
   const nativeMultiFiles: Record<string, string> = {
     'RadioGroup': 'Radio', // CivRadioGroup is inside CivRadio.swift/CivRadio.kt
+    'TaskGroup': 'TaskList', // CivTaskGroup is inside CivTaskList.swift/CivTaskList.kt
+    'Task': 'TaskList', // CivTask is inside CivTaskList.swift/CivTaskList.kt
   };
 
   // Match iOS files
@@ -585,6 +588,8 @@ function generateReport(): string {
       'errorHeadingLevel', 'maskPattern', 'headingLevel',
       // Button 'type' (button vs submit) is a web HTML form concept
       'type',
+      // Task 'href' is web-only — native uses onTap/onClick callbacks
+      'href',
       // i18n override props (native uses CivLocale instead)
       'chooseDateLabel', 'selectedDateLabel', 'dialogLabel', 'previousMonthLabel',
       'nextMonthLabel', 'dialogOpenedMessage', 'dateSelectedMessage', 'todayLabel',
@@ -803,6 +808,7 @@ function mapEventName(name: string): string {
     onRemove: 'civ-repeater-remove',
     onEdit: 'civ-summary-edit',
     onClick: 'civ-analytics', // native click callback maps to analytics tracking
+    onTap: 'civ-analytics', // iOS tap callback
   };
   return map[name] || name;
 }

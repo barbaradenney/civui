@@ -12,11 +12,18 @@ import { CivBaseElement, dispatch, renderLegend, renderHint, renderError, buildD
  * is a clone of that template. Form field names within rows are
  * automatically indexed (e.g., `dependents[0].name`, `dependents[1].name`).
  *
+ * Two modes are supported:
+ * - `mode="inline"` (default) — all rows and their fields are visible on the page.
+ *   Best for simple items with 1-3 fields.
+ * - `mode="detail"` — rows display as summary cards. Clicking "Add" or "Edit"
+ *   expands a row to show its fields. Only one row is expanded at a time.
+ *   Best for complex items with 4+ fields.
+ *
  * @element civ-repeater
  *
  * @example
  * ```html
- * <civ-repeater legend="Dependents" name="dependents" item-label="dependent" min="1" max="10">
+ * <civ-repeater legend="Dependents" name="dependents" item-label="dependent" mode="detail" min="1" max="10">
  *   <civ-text-input label="First name" name="firstName"></civ-text-input>
  *   <civ-text-input label="Last name" name="lastName"></civ-text-input>
  * </civ-repeater>
@@ -35,6 +42,13 @@ export class CivRepeater extends CivBaseElement {
 
   /** Human-readable label for each item (used in button text and announcements). */
   @property({ type: String, attribute: 'item-label' }) itemLabel = 'item';
+
+  /**
+   * Display mode:
+   * - `inline` (default) — all row fields visible on the page.
+   * - `detail` — rows show as summary cards; fields expand on edit/add.
+   */
+  @property({ type: String }) mode: 'inline' | 'detail' = 'inline';
 
   /** Hint text displayed below the legend. */
   @property({ type: String }) hint = '';
@@ -56,6 +70,8 @@ export class CivRepeater extends CivBaseElement {
 
   @state() private _rowCount = 0;
 
+  private _editingIdx = -1;
+
   private _template: Node[] = [];
   private _hintId = this.generateId('hint');
   private _errorId = this.generateId('error');
@@ -64,6 +80,11 @@ export class CivRepeater extends CivBaseElement {
   /** Current number of rows. */
   get rowCount(): number {
     return this._rowCount;
+  }
+
+  /** In detail mode, the index of the row currently being edited (-1 = none). */
+  get editingIndex(): number {
+    return this._editingIdx;
   }
 
   override connectedCallback(): void {
@@ -78,11 +99,15 @@ export class CivRepeater extends CivBaseElement {
 
   override firstUpdated(): void {
     // Build initial rows up to min count
-    const initial = Math.max(this.min, 1);
+    const initial = this.mode === 'detail' ? this.min : Math.max(this.min, 1);
     for (let i = 0; i < initial; i++) {
       this._appendRow(i);
     }
     this._rowCount = initial;
+    // In detail mode, collapse all rows initially
+    if (this.mode === 'detail') {
+      this._collapseAllRows();
+    }
   }
 
   override render() {
@@ -143,6 +168,13 @@ export class CivRepeater extends CivBaseElement {
     this._rowCount++;
     dispatch(this, 'civ-repeater-add', { index });
     announce(interpolate(t('repeaterItemAdded'), { item: this.itemLabel, index: String(index + 1) }));
+
+    // In detail mode, expand the new row for editing
+    if (this.mode === 'detail') {
+      this._collapseAllRows();
+      this._expandRow(index);
+      this._editingIdx = index;
+    }
   }
 
   private _appendRow(index: number): void {
@@ -156,26 +188,112 @@ export class CivRepeater extends CivBaseElement {
       interpolate('{item} {index}', { item: this.itemLabel, index: String(index + 1) }));
     row.classList.add('civ-repeater-row', 'civ-mb-4', 'civ-p-4', 'civ-border', 'civ-border-base');
 
-    // Clone template nodes into row
-    for (const node of this._template) {
-      row.appendChild(node.cloneNode(true));
-    }
+    if (this.mode === 'detail') {
+      // Summary bar — visible when row is collapsed
+      const summary = document.createElement('div');
+      summary.setAttribute('data-civ-repeater-summary', '');
+      summary.classList.add('civ-flex', 'civ-justify-between', 'civ-items-center');
 
-    // Index field names
-    this._indexRowFields(row, index);
+      const summaryText = document.createElement('span');
+      summaryText.classList.add('civ-font-medium');
+      summaryText.textContent = `${this.itemLabel} ${index + 1}`;
+      summary.appendChild(summaryText);
 
-    // Add remove button if allowed
-    if (this._rowCount >= this.min || index >= this.min) {
-      const removeBtn = document.createElement('button');
-      removeBtn.type = 'button';
-      removeBtn.className = 'civ-btn civ-btn--danger-text civ-mt-2';
-      removeBtn.textContent = t('repeaterRemoveButton');
-      removeBtn.setAttribute('aria-label',
-        interpolate(t('repeaterRemoveAriaLabel'), { item: this.itemLabel, index: String(index + 1) }));
-      removeBtn.addEventListener('click', () => {
-        this.removeRow(this._getRowIndex(row));
+      const summaryActions = document.createElement('span');
+      summaryActions.classList.add('civ-flex', 'civ-gap-2');
+
+      const editBtn = document.createElement('button');
+      editBtn.type = 'button';
+      editBtn.className = 'civ-btn civ-btn--tertiary focus-visible:civ-focus-ring';
+      editBtn.textContent = t('repeaterEditButton');
+      editBtn.setAttribute('aria-label',
+        interpolate(t('repeaterEditAriaLabel'), { item: this.itemLabel, index: String(index + 1) }));
+      editBtn.addEventListener('click', () => {
+        this._collapseAllRows();
+        const idx = this._getRowIndex(row);
+        this._expandRow(idx);
+        this._editingIdx = idx;
+        announce(interpolate('Editing {item} {index}', { item: this.itemLabel, index: String(idx + 1) }));
       });
-      row.appendChild(removeBtn);
+      summaryActions.appendChild(editBtn);
+
+      if (this._rowCount >= this.min || index >= this.min) {
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.className = 'civ-btn civ-btn--danger-text';
+        removeBtn.textContent = t('repeaterRemoveButton');
+        removeBtn.setAttribute('aria-label',
+          interpolate(t('repeaterRemoveAriaLabel'), { item: this.itemLabel, index: String(index + 1) }));
+        removeBtn.addEventListener('click', () => {
+          this.removeRow(this._getRowIndex(row));
+        });
+        summaryActions.appendChild(removeBtn);
+      }
+
+      summary.appendChild(summaryActions);
+      row.appendChild(summary);
+
+      // Detail fields container — visible when row is expanded
+      const detail = document.createElement('div');
+      detail.setAttribute('data-civ-repeater-detail', '');
+
+      for (const node of this._template) {
+        detail.appendChild(node.cloneNode(true));
+      }
+
+      // Save and cancel buttons
+      const detailActions = document.createElement('div');
+      detailActions.classList.add('civ-flex', 'civ-gap-2', 'civ-mt-3');
+
+      const saveBtn = document.createElement('button');
+      saveBtn.type = 'button';
+      saveBtn.className = 'civ-btn civ-btn--primary focus-visible:civ-focus-ring';
+      saveBtn.textContent = interpolate(t('repeaterSaveButton'), { item: this.itemLabel });
+      saveBtn.addEventListener('click', () => {
+        this._collapseAllRows();
+        this._updateSummaryText(row, this._getRowIndex(row));
+        this._editingIdx = -1;
+        announce(interpolate(t('repeaterItemSaved'), { item: this.itemLabel, index: String(this._getRowIndex(row) + 1) }));
+      });
+      detailActions.appendChild(saveBtn);
+
+      const cancelBtn = document.createElement('button');
+      cancelBtn.type = 'button';
+      cancelBtn.className = 'civ-btn civ-btn--secondary focus-visible:civ-focus-ring';
+      cancelBtn.textContent = t('repeaterCancelButton');
+      cancelBtn.addEventListener('click', () => {
+        this._collapseAllRows();
+        this._editingIdx = -1;
+      });
+      detailActions.appendChild(cancelBtn);
+
+      detail.appendChild(detailActions);
+      row.appendChild(detail);
+
+      // Index field names in the detail container
+      this._indexRowFields(detail, index);
+    } else {
+      // Inline mode — clone template directly into row
+      for (const node of this._template) {
+        row.appendChild(node.cloneNode(true));
+      }
+
+      // Index field names
+      this._indexRowFields(row, index);
+
+      // Add remove button if allowed
+      if (this._rowCount >= this.min || index >= this.min) {
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.className = 'civ-btn civ-btn--danger-text civ-mt-2';
+        removeBtn.textContent = t('repeaterRemoveButton');
+        removeBtn.setAttribute('aria-label',
+          interpolate(t('repeaterRemoveAriaLabel'), { item: this.itemLabel, index: String(index + 1) }));
+        removeBtn.addEventListener('click', () => {
+          this.removeRow(this._getRowIndex(row));
+        });
+        row.appendChild(removeBtn);
+      }
     }
 
     container.appendChild(row);
@@ -199,6 +317,54 @@ export class CivRepeater extends CivBaseElement {
     }
   }
 
+  /** Collapse all rows to summary view (detail mode). */
+  private _collapseAllRows(): void {
+    const container = this.querySelector('[data-civ-repeater-rows]');
+    if (!container) return;
+    const rows = container.querySelectorAll(':scope > [data-civ-repeater-row]');
+    rows.forEach(row => {
+      const summary = row.querySelector('[data-civ-repeater-summary]') as HTMLElement | null;
+      const detail = row.querySelector('[data-civ-repeater-detail]') as HTMLElement | null;
+      if (summary) summary.style.display = '';
+      if (detail) detail.style.display = 'none';
+    });
+  }
+
+  /** Expand a specific row to show its fields (detail mode). */
+  private _expandRow(index: number): void {
+    const container = this.querySelector('[data-civ-repeater-rows]');
+    if (!container) return;
+    const row = container.querySelectorAll(':scope > [data-civ-repeater-row]')[index];
+    if (!row) return;
+    const summary = row.querySelector('[data-civ-repeater-summary]') as HTMLElement | null;
+    const detail = row.querySelector('[data-civ-repeater-detail]') as HTMLElement | null;
+    if (summary) summary.style.display = 'none';
+    if (detail) detail.style.display = '';
+  }
+
+  /** Update the summary text for a row based on its field values. */
+  private _updateSummaryText(row: Element, index: number): void {
+    const summaryText = row.querySelector('[data-civ-repeater-summary] > span') as HTMLElement | null;
+    if (!summaryText) return;
+
+    // Build summary from field values in the detail container
+    const detail = row.querySelector('[data-civ-repeater-detail]');
+    if (!detail) return;
+
+    const values: string[] = [];
+    const fields = detail.querySelectorAll('[data-civ-form-field]');
+    for (const field of fields) {
+      const val = (field as HTMLElement & { value?: string }).value;
+      if (val && typeof val === 'string' && val.trim()) {
+        values.push(val.trim());
+      }
+    }
+
+    summaryText.textContent = values.length > 0
+      ? values.slice(0, 3).join(', ')
+      : `${this.itemLabel} ${index + 1}`;
+  }
+
   private _reindexRows(): void {
     const container = this.querySelector('[data-civ-repeater-rows]');
     if (!container) return;
@@ -207,14 +373,37 @@ export class CivRepeater extends CivBaseElement {
       row.setAttribute('data-civ-repeater-row', String(i));
       row.setAttribute('aria-label',
         interpolate('{item} {index}', { item: this.itemLabel, index: String(i + 1) }));
-      // Only reindex direct children with [name]
-      for (const child of row.children) {
-        const current = child.getAttribute('name');
-        if (!current) continue;
-        const newName = current.replace(/\[\d+\]/, `[${i}]`);
-        child.setAttribute('name', newName);
+
+      if (this.mode === 'detail') {
+        // Reindex fields inside the detail container
+        const detail = row.querySelector('[data-civ-repeater-detail]');
+        if (detail) {
+          for (const child of detail.children) {
+            const current = child.getAttribute('name');
+            if (!current) continue;
+            const newName = current.replace(/\[\d+\]/, `[${i}]`);
+            child.setAttribute('name', newName);
+          }
+        }
+        // Update edit button aria-label
+        const editBtn = row.querySelector('.civ-btn--tertiary');
+        if (editBtn) {
+          editBtn.setAttribute('aria-label',
+            interpolate(t('repeaterEditAriaLabel'), { item: this.itemLabel, index: String(i + 1) }));
+        }
+        // Update summary text
+        this._updateSummaryText(row, i);
+      } else {
+        // Inline mode — reindex direct children
+        for (const child of row.children) {
+          const current = child.getAttribute('name');
+          if (!current) continue;
+          const newName = current.replace(/\[\d+\]/, `[${i}]`);
+          child.setAttribute('name', newName);
+        }
       }
-      // Update remove button aria-label
+
+      // Update remove button aria-label (both modes)
       const removeBtn = row.querySelector('.civ-btn--danger-text');
       if (removeBtn) {
         removeBtn.setAttribute('aria-label',

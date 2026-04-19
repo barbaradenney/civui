@@ -798,6 +798,13 @@ Always provide a hint showing the expected format. For memorable-date: "For exam
 4. **Custom required messages** — use `required-message` to provide field-specific instructions instead of generic "This field is required".
 5. **Progressive disclosure** — group related fields with `civ-fieldset` and break long forms into logical sections.
 
+### VA.gov form patterns
+
+For VA-specific form patterns (name, address, SSN, service history, direct deposit, review pages,
+eligibility screeners, and more), see **`docs/va-patterns.md`**. That guide maps every
+[VA.gov Design System pattern](https://design.va.gov/patterns/) to CivUI components with
+copy-paste HTML and MCP tool references.
+
 ### Bilingual/i18n support
 
 Most components support label customization for i18n:

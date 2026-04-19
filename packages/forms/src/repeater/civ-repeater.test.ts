@@ -288,3 +288,106 @@ describe('civ-repeater', () => {
     expect(el.rowCount).toBe(2);
   });
 });
+
+describe('civ-repeater detail mode', () => {
+  it('renders summary and detail containers per row', async () => {
+    const el = await fixture<CivRepeater>(`
+      <civ-repeater legend="Items" name="items" item-label="item" mode="detail" min="1">
+        <input type="text" name="val" />
+      </civ-repeater>
+    `);
+
+    const summary = el.querySelector('[data-civ-repeater-summary]');
+    const detail = el.querySelector('[data-civ-repeater-detail]');
+    expect(summary).not.toBeNull();
+    expect(detail).not.toBeNull();
+  });
+
+  it('collapses rows initially in detail mode', async () => {
+    const el = await fixture<CivRepeater>(`
+      <civ-repeater legend="Items" name="items" item-label="item" mode="detail" min="1">
+        <input type="text" name="val" />
+      </civ-repeater>
+    `);
+
+    const detail = el.querySelector('[data-civ-repeater-detail]') as HTMLElement;
+    expect(detail.style.display).toBe('none');
+  });
+
+  it('expands row when edit button is clicked', async () => {
+    const el = await fixture<CivRepeater>(`
+      <civ-repeater legend="Items" name="items" item-label="item" mode="detail" min="1">
+        <input type="text" name="val" />
+      </civ-repeater>
+    `);
+
+    const editBtn = el.querySelector('.civ-btn--tertiary') as HTMLButtonElement;
+    editBtn.click();
+    await elementUpdated(el);
+
+    const summary = el.querySelector('[data-civ-repeater-summary]') as HTMLElement;
+    const detail = el.querySelector('[data-civ-repeater-detail]') as HTMLElement;
+    expect(summary.style.display).toBe('none');
+    expect(detail.style.display).toBe('');
+  });
+
+  it('collapses row when save button is clicked', async () => {
+    const el = await fixture<CivRepeater>(`
+      <civ-repeater legend="Items" name="items" item-label="item" mode="detail" min="1">
+        <input type="text" name="val" />
+      </civ-repeater>
+    `);
+
+    // Expand
+    const editBtn = el.querySelector('.civ-btn--tertiary') as HTMLButtonElement;
+    editBtn.click();
+    await elementUpdated(el);
+
+    // Save
+    const saveBtn = el.querySelector('.civ-btn--primary') as HTMLButtonElement;
+    saveBtn.click();
+    await elementUpdated(el);
+
+    const detail = el.querySelector('[data-civ-repeater-detail]') as HTMLElement;
+    expect(detail.style.display).toBe('none');
+  });
+
+  it('auto-expands new row on add in detail mode', async () => {
+    const el = await fixture<CivRepeater>(`
+      <civ-repeater legend="Items" name="items" item-label="item" mode="detail" min="0">
+        <input type="text" name="val" />
+      </civ-repeater>
+    `) as CivRepeater;
+
+    el.addRow();
+    await elementUpdated(el);
+
+    const rows = el.querySelectorAll('[data-civ-repeater-row]');
+    const lastDetail = rows[rows.length - 1].querySelector('[data-civ-repeater-detail]') as HTMLElement;
+    expect(lastDetail.style.display).toBe('');
+  });
+
+  it('has edit button with aria-label', async () => {
+    const el = await fixture<CivRepeater>(`
+      <civ-repeater legend="Items" name="items" item-label="item" mode="detail" min="1">
+        <input type="text" name="val" />
+      </civ-repeater>
+    `);
+
+    const editBtn = el.querySelector('.civ-btn--tertiary');
+    expect(editBtn).not.toBeNull();
+    expect(editBtn!.getAttribute('aria-label')).toBe('Edit item 1');
+  });
+
+  it('indexes field names inside detail container', async () => {
+    const el = await fixture<CivRepeater>(`
+      <civ-repeater legend="Items" name="items" item-label="item" mode="detail" min="1">
+        <input type="text" name="val" />
+      </civ-repeater>
+    `);
+
+    const input = el.querySelector('[data-civ-repeater-detail] input');
+    expect(input).not.toBeNull();
+    expect(input!.getAttribute('name')).toBe('items[0].val');
+  });
+});

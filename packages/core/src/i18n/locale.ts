@@ -111,6 +111,25 @@ export interface CivLocaleStrings {
   progressStepGoTo: string; // "Go to step {step}: {label}"
   progressStepsCounter: string; // "Step {current} of {total}"
 
+  // Address
+  addressStreet1: string;
+  addressStreet2: string;
+  addressCity: string;
+  addressState: string;
+  addressZip: string;
+
+  // Repeater
+  repeaterAddButton: string; // "Add another {item}"
+  repeaterRemoveButton: string;
+  repeaterRemoveAriaLabel: string; // "Remove {item} {index}"
+  repeaterItemAdded: string; // "{item} {index} added"
+  repeaterItemRemoved: string; // "{item} {index} removed"
+
+  // Summary
+  summaryEditLink: string;
+  summaryEditAriaLabel: string; // "Edit {section}"
+  summaryNotProvided: string;
+
   // Validation
   validateRequired: string; // "{label} is required"
   validateEmail: string;
@@ -224,6 +243,22 @@ const defaultStrings: CivLocaleStrings = {
   deselectAll: 'Deselect all',
   maxSelectionsHint: 'Select up to {max}',
   clearButton: 'Clear',
+
+  addressStreet1: 'Street address',
+  addressStreet2: 'Street address line 2',
+  addressCity: 'City',
+  addressState: 'State',
+  addressZip: 'ZIP code',
+
+  repeaterAddButton: 'Add another {item}',
+  repeaterRemoveButton: 'Remove',
+  repeaterRemoveAriaLabel: 'Remove {item} {index}',
+  repeaterItemAdded: '{item} {index} added',
+  repeaterItemRemoved: '{item} {index} removed',
+
+  summaryEditLink: 'Edit',
+  summaryEditAriaLabel: 'Edit {section}',
+  summaryNotProvided: 'Not provided',
 
   validateRequired: '{label} is required',
   validateEmail: 'Enter a valid email address',

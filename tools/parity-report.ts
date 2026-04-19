@@ -590,7 +590,7 @@ function generateReport(): string {
 
     // Props that are native-only and should not count as "missing on web"
     const nativeOnlyProps = new Set([
-      'body', 'parts', 'content', 'id', 'data', 'keyboardType', 'points',
+      'body', 'parts', 'content', 'id', 'data', 'keyboardType', 'points', 'rowCount',
       'selected', 'newFiles', 'errors', 'fieldName', 'message', 'url', 'size',
       'formValidate', 'modifier',
       'formState', 'requiredMessage', 'pii', 'formName',
@@ -786,6 +786,9 @@ function mapEventName(name: string): string {
     onFilesChange: 'civ-change',
     onDismiss: 'civ-dismiss',
     onSelect: 'civ-change',
+    onAdd: 'civ-repeater-add',
+    onRemove: 'civ-repeater-remove',
+    onEdit: 'civ-summary-edit',
   };
   return map[name] || name;
 }

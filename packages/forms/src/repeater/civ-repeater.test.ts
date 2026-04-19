@@ -1,0 +1,290 @@
+import { describe, it, expect, afterEach, vi } from 'vitest';
+import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
+import './civ-repeater.js';
+import type { CivRepeater } from './civ-repeater.js';
+
+afterEach(cleanupFixtures);
+
+describe('civ-repeater', () => {
+  it('renders a fieldset with legend', async () => {
+    const el = await fixture<CivRepeater>(`
+      <civ-repeater legend="Dependents" name="deps" item-label="dependent">
+        <input type="text" name="firstName" />
+      </civ-repeater>
+    `);
+
+    const fieldset = el.querySelector('fieldset');
+    expect(fieldset).not.toBeNull();
+    const legend = el.querySelector('legend');
+    expect(legend!.textContent).toContain('Dependents');
+  });
+
+  it('renders initial row from template', async () => {
+    const el = await fixture<CivRepeater>(`
+      <civ-repeater legend="Dependents" name="deps" item-label="dependent">
+        <input type="text" name="firstName" />
+      </civ-repeater>
+    `);
+
+    const rows = el.querySelectorAll('[data-civ-repeater-row]');
+    expect(rows.length).toBe(1);
+  });
+
+  it('renders min rows on init', async () => {
+    const el = await fixture<CivRepeater>(`
+      <civ-repeater legend="Items" name="items" item-label="item" min="3">
+        <input type="text" name="val" />
+      </civ-repeater>
+    `);
+
+    const rows = el.querySelectorAll('[data-civ-repeater-row]');
+    expect(rows.length).toBe(3);
+  });
+
+  it('indexes field names with prefix[index].fieldName', async () => {
+    const el = await fixture<CivRepeater>(`
+      <civ-repeater legend="Items" name="items" item-label="item">
+        <input type="text" name="val" />
+      </civ-repeater>
+    `);
+
+    const input = el.querySelector('[data-civ-repeater-row] input')!;
+    expect(input.getAttribute('name')).toBe('items[0].val');
+  });
+
+  it('adds a row when add button is clicked', async () => {
+    const el = await fixture<CivRepeater>(`
+      <civ-repeater legend="Items" name="items" item-label="item">
+        <input type="text" name="val" />
+      </civ-repeater>
+    `);
+
+    const addBtn = el.querySelector('.civ-btn--secondary')! as HTMLButtonElement;
+    addBtn.click();
+    await elementUpdated(el);
+
+    const rows = el.querySelectorAll('[data-civ-repeater-row]');
+    expect(rows.length).toBe(2);
+  });
+
+  it('indexes new row fields correctly', async () => {
+    const el = await fixture<CivRepeater>(`
+      <civ-repeater legend="Items" name="items" item-label="item">
+        <input type="text" name="val" />
+      </civ-repeater>
+    `);
+
+    const addBtn = el.querySelector('.civ-btn--secondary')! as HTMLButtonElement;
+    addBtn.click();
+    await elementUpdated(el);
+
+    const rows = el.querySelectorAll('[data-civ-repeater-row]');
+    const secondInput = rows[1].querySelector('input')!;
+    expect(secondInput.getAttribute('name')).toBe('items[1].val');
+  });
+
+  it('fires civ-repeater-add event on add', async () => {
+    const el = await fixture<CivRepeater>(`
+      <civ-repeater legend="Items" name="items" item-label="item">
+        <input type="text" name="val" />
+      </civ-repeater>
+    `);
+
+    let eventDetail: any = null;
+    el.addEventListener('civ-repeater-add', ((e: CustomEvent) => {
+      eventDetail = e.detail;
+    }) as EventListener);
+
+    const addBtn = el.querySelector('.civ-btn--secondary')! as HTMLButtonElement;
+    addBtn.click();
+
+    expect(eventDetail).not.toBeNull();
+    expect(eventDetail.index).toBe(1);
+  });
+
+  it('removes a row and fires civ-repeater-remove', async () => {
+    const el = await fixture<CivRepeater>(`
+      <civ-repeater legend="Items" name="items" item-label="item" min="1">
+        <input type="text" name="val" />
+      </civ-repeater>
+    `) as CivRepeater;
+
+    // Add a second row
+    el.addRow();
+    await elementUpdated(el);
+    expect(el.querySelectorAll('[data-civ-repeater-row]').length).toBe(2);
+
+    let eventDetail: any = null;
+    el.addEventListener('civ-repeater-remove', ((e: CustomEvent) => {
+      eventDetail = e.detail;
+    }) as EventListener);
+
+    el.removeRow(1);
+    await elementUpdated(el);
+
+    expect(el.querySelectorAll('[data-civ-repeater-row]').length).toBe(1);
+    expect(eventDetail).not.toBeNull();
+    expect(eventDetail.index).toBe(1);
+  });
+
+  it('does not remove below min rows', async () => {
+    const el = await fixture<CivRepeater>(`
+      <civ-repeater legend="Items" name="items" item-label="item" min="2">
+        <input type="text" name="val" />
+      </civ-repeater>
+    `) as CivRepeater;
+
+    expect(el.querySelectorAll('[data-civ-repeater-row]').length).toBe(2);
+
+    el.removeRow(0);
+    await elementUpdated(el);
+
+    // Should still have 2 rows
+    expect(el.querySelectorAll('[data-civ-repeater-row]').length).toBe(2);
+  });
+
+  it('does not add above max rows', async () => {
+    const el = await fixture<CivRepeater>(`
+      <civ-repeater legend="Items" name="items" item-label="item" max="2">
+        <input type="text" name="val" />
+      </civ-repeater>
+    `) as CivRepeater;
+
+    el.addRow();
+    await elementUpdated(el);
+    expect(el.querySelectorAll('[data-civ-repeater-row]').length).toBe(2);
+
+    el.addRow();
+    await elementUpdated(el);
+    // Should still be 2 — max enforced
+    expect(el.querySelectorAll('[data-civ-repeater-row]').length).toBe(2);
+  });
+
+  it('hides add button when max is reached', async () => {
+    const el = await fixture<CivRepeater>(`
+      <civ-repeater legend="Items" name="items" item-label="item" max="1">
+        <input type="text" name="val" />
+      </civ-repeater>
+    `);
+
+    const addBtn = el.querySelector('.civ-btn--secondary');
+    expect(addBtn).toBeNull(); // Already at max (1 row, max 1)
+  });
+
+  it('reindexes rows after removal', async () => {
+    const el = await fixture<CivRepeater>(`
+      <civ-repeater legend="Items" name="items" item-label="item" min="1">
+        <input type="text" name="val" />
+      </civ-repeater>
+    `) as CivRepeater;
+
+    el.addRow();
+    el.addRow();
+    await elementUpdated(el);
+
+    el.removeRow(0);
+    await elementUpdated(el);
+
+    const rows = el.querySelectorAll('[data-civ-repeater-row]');
+    expect(rows.length).toBe(2);
+    expect(rows[0].querySelector('input')!.getAttribute('name')).toBe('items[0].val');
+    expect(rows[1].querySelector('input')!.getAttribute('name')).toBe('items[1].val');
+  });
+
+  it('renders add button with item label', async () => {
+    const el = await fixture<CivRepeater>(`
+      <civ-repeater legend="Deps" name="deps" item-label="dependent">
+        <input type="text" name="name" />
+      </civ-repeater>
+    `);
+
+    const addBtn = el.querySelector('.civ-btn--secondary')!;
+    expect(addBtn.textContent).toContain('dependent');
+  });
+
+  it('renders hint and error', async () => {
+    const el = await fixture<CivRepeater>(`
+      <civ-repeater legend="Items" name="items" item-label="item" hint="Add at least one" error="At least one required">
+        <input type="text" name="val" />
+      </civ-repeater>
+    `);
+
+    const hint = el.querySelector('.civ-hint--group');
+    expect(hint).not.toBeNull();
+    expect(hint!.textContent).toBe('Add at least one');
+
+    const error = el.querySelector('[role="alert"]');
+    expect(error).not.toBeNull();
+    expect(error!.textContent).toBe('At least one required');
+  });
+
+  it('disables all fields when disabled', async () => {
+    const el = await fixture<CivRepeater>(`
+      <civ-repeater legend="Items" name="items" item-label="item" disabled>
+        <input type="text" name="val" />
+      </civ-repeater>
+    `);
+
+    const fieldset = el.querySelector('fieldset')!;
+    expect(fieldset.disabled).toBe(true);
+  });
+
+  it('uses Light DOM (no shadow root)', async () => {
+    const el = await fixture<CivRepeater>(`
+      <civ-repeater legend="Items" name="items" item-label="item">
+        <input type="text" name="val" />
+      </civ-repeater>
+    `);
+
+    expect(el.shadowRoot).toBeNull();
+    expect(el.querySelector('fieldset')).not.toBeNull();
+  });
+
+  it('rows have role="group" and aria-label', async () => {
+    const el = await fixture<CivRepeater>(`
+      <civ-repeater legend="Dependents" name="deps" item-label="dependent">
+        <input type="text" name="firstName" />
+      </civ-repeater>
+    `) as CivRepeater;
+
+    el.addRow();
+    await elementUpdated(el);
+
+    const rows = el.querySelectorAll('[data-civ-repeater-row]');
+    expect(rows[0].getAttribute('role')).toBe('group');
+    expect(rows[0].getAttribute('aria-label')).toBe('dependent 1');
+    expect(rows[1].getAttribute('aria-label')).toBe('dependent 2');
+  });
+
+  it('updates row aria-labels after removal', async () => {
+    const el = await fixture<CivRepeater>(`
+      <civ-repeater legend="Items" name="items" item-label="item" min="1">
+        <input type="text" name="val" />
+      </civ-repeater>
+    `) as CivRepeater;
+
+    el.addRow();
+    el.addRow();
+    await elementUpdated(el);
+
+    el.removeRow(0);
+    await elementUpdated(el);
+
+    const rows = el.querySelectorAll('[data-civ-repeater-row]');
+    expect(rows[0].getAttribute('aria-label')).toBe('item 1');
+    expect(rows[1].getAttribute('aria-label')).toBe('item 2');
+  });
+
+  it('exposes rowCount', async () => {
+    const el = await fixture<CivRepeater>(`
+      <civ-repeater legend="Items" name="items" item-label="item">
+        <input type="text" name="val" />
+      </civ-repeater>
+    `) as CivRepeater;
+
+    expect(el.rowCount).toBe(1);
+
+    el.addRow();
+    expect(el.rowCount).toBe(2);
+  });
+});

@@ -52,3 +52,14 @@ export { CivConditional } from './conditional/index.js';
 
 // Progress Steps
 export { CivProgressSteps, CivProgressBar } from './progress-steps/index.js';
+
+// Address
+export { CivAddress } from './address/index.js';
+export type { AddressValue } from './address/index.js';
+
+// Repeater
+export { CivRepeater } from './repeater/index.js';
+
+// Summary
+export { CivSummary } from './summary/index.js';
+export type { SummarySection, SummaryItem } from './summary/index.js';

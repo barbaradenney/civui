@@ -105,10 +105,12 @@ export type CivFileDetail = { files: File[] };
 export type CivComboboxDetail = { value: string; label: string };
 /** Detail shape for memorable-date. */
 export type CivMemorableDateDetail = { value: string; month: string; day: string; year: string };
+/** Detail shape for address. */
+export type CivAddressDetail = { value: { street1: string; street2: string; city: string; state: string; zip: string } };
 
 export interface CivEventMap {
-  'civ-input': CustomEvent<CivInputDetail | CivBooleanDetail | CivMultiDetail | CivFileDetail | CivMemorableDateDetail>;
-  'civ-change': CustomEvent<CivInputDetail | CivBooleanDetail | CivMultiDetail | CivFileDetail | CivComboboxDetail | CivMemorableDateDetail>;
+  'civ-input': CustomEvent<CivInputDetail | CivBooleanDetail | CivMultiDetail | CivFileDetail | CivMemorableDateDetail | CivAddressDetail>;
+  'civ-change': CustomEvent<CivInputDetail | CivBooleanDetail | CivMultiDetail | CivFileDetail | CivComboboxDetail | CivMemorableDateDetail | CivAddressDetail>;
   'civ-reset': CustomEvent<void>;
   'civ-dismiss': CustomEvent<void>;
   'civ-submit': CustomEvent<{ formData: FormData }>;

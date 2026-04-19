@@ -3400,7 +3400,7 @@ export function createServer(): McpServer {
     async ({ formNumber }) => {
       try {
         const { generateGovForm: genVA } = await import('./tools/generate-gov-form.js');
-        const result = genVA(formNumber);
+        const result = await genVA(formNumber);
         return { content: [{ type: 'text' as const, text: JSON.stringify(result, null, 2) }] };
       } catch (err) {
         return { content: [{ type: 'text' as const, text: `Error: ${err instanceof Error ? err.message : String(err)}` }], isError: true };
@@ -3450,7 +3450,7 @@ export function createServer(): McpServer {
     async ({ formNumber, format, cdnBase, submitAction }) => {
       try {
         const { assembleGovForm } = await import('./tools/assemble-gov-form.js');
-        const result = assembleGovForm(formNumber, { format, cdnBase, submitAction });
+        const result = await assembleGovForm(formNumber, { format, cdnBase, submitAction });
         return { content: [{ type: 'text' as const, text: JSON.stringify(result, null, 2) }] };
       } catch (err) {
         return { content: [{ type: 'text' as const, text: `Error: ${err instanceof Error ? err.message : String(err)}` }], isError: true };

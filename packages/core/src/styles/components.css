@@ -969,6 +969,10 @@
            civ-py-12 civ-px-6 civ-text-center civ-transition-all civ-border-base-light civ-cursor-pointer;
   }
 
+  .civ-dropzone__icon {
+    color: var(--civ-color-base-light);
+  }
+
   .civ-dropzone--full {
     @apply civ-py-20;
     min-height: 250px;
@@ -1227,6 +1231,13 @@
   }
   .civ-btn--tertiary:active:not(:disabled):not([aria-disabled="true"]) {
     @apply civ-bg-primary-dark civ-text-white civ-border-primary-dark;
+  }
+
+  .civ-btn--yesno {
+    @apply civ-bg-white civ-border-base-light;
+  }
+  .civ-btn--yesno[aria-checked="true"] {
+    @apply civ-bg-primary civ-text-white civ-border-primary;
   }
 
   .civ-btn--danger {
@@ -1510,6 +1521,35 @@
 
   .civ-card--sm {
     @apply civ-p-3;
+  }
+
+  .civ-card__header {
+    @apply civ-mb-3;
+  }
+
+  .civ-card__eyebrow {
+    @apply civ-mb-1;
+  }
+
+  .civ-card__title-row {
+    @apply civ-flex civ-justify-between civ-items-start;
+  }
+
+  .civ-card__title {
+    @apply civ-mt-0;
+  }
+
+  .civ-card__actions {
+    @apply civ-flex civ-gap-2 civ-flex-shrink-0 civ-ms-3;
+  }
+
+  .civ-card__body {
+    color: var(--civ-color-base-darkest);
+  }
+
+  .civ-card__footer {
+    @apply civ-mt-3 civ-pt-3;
+    border-top: 1px solid var(--civ-color-base-lighter);
   }
 
   /* ── Divider ──────────────────────────────────────────────── */

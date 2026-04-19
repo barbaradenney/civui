@@ -204,13 +204,15 @@ describe('civ-yes-no', () => {
     expect(handler).not.toHaveBeenCalled();
   });
 
-  it('applies selected styling to the chosen button', async () => {
+  it('applies civ-btn--yesno class to both buttons', async () => {
     const el = await fixture('<civ-yes-no legend="Question" value="yes"></civ-yes-no>');
     await elementUpdated(el);
 
     const buttons = el.querySelectorAll('button[role="radio"]');
-    expect(buttons[0].className).toContain('civ-bg-primary');
-    expect(buttons[0].className).toContain('civ-text-white');
-    expect(buttons[1].className).toContain('civ-bg-white');
+    expect(buttons[0].className).toContain('civ-btn--yesno');
+    expect(buttons[1].className).toContain('civ-btn--yesno');
+    // Selected state is handled by CSS via aria-checked
+    expect(buttons[0].getAttribute('aria-checked')).toBe('true');
+    expect(buttons[1].getAttribute('aria-checked')).toBe('false');
   });
 });

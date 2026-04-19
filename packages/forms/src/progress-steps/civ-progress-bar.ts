@@ -31,10 +31,10 @@ export class CivProgressBar extends CivBaseElement {
       <div class="civ-mb-4">
         <div class="civ-flex civ-justify-between civ-items-center civ-mb-1">
           ${this.status
-            ? html`<span class="civ-text-sm" style="color: var(--civ-color-base-dark)">${this.status}</span>`
+            ? html`<span class="civ-text-sm civ-text-muted">${this.status}</span>`
             : html`<span></span>`}
           ${this.showPercent
-            ? html`<span class="civ-text-sm civ-font-bold" style="color: var(--civ-color-base-darkest)">${Math.round(clamped)}%</span>`
+            ? html`<span class="civ-text-sm civ-font-bold civ-text-body">${Math.round(clamped)}%</span>`
             : nothing}
         </div>
         <div

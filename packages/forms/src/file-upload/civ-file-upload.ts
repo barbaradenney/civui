@@ -225,7 +225,7 @@ export class CivFileUpload extends CivFormElement {
         ${this.variant === 'compact'
           ? html`
             <div class="civ-flex civ-gap-2 civ-items-center">
-              <span class="civ-input civ-flex-1 civ-truncate" style="color: var(--civ-color-base-dark)">
+              <span class="civ-input civ-flex-1 civ-truncate civ-text-muted">
                 ${this._files.length > 0
                   ? this._files.map(f => f.name).join(', ')
                   : (this.dragText || t('fileUploadNoFileChosen'))}
@@ -254,11 +254,11 @@ export class CivFileUpload extends CivFormElement {
               @keydown="${this._onDropzoneKeydown}"
               data-dragging="${this._dragging ? '' : nothing}"
             >
-              <civ-icon name="upload" size="${this.variant === 'full' ? '2.5em' : '1.5em'}" class="civ-block civ-mb-2" style="color: var(--civ-color-base-light)"></civ-icon>
-              <span class="civ-block civ-text-body civ-mb-3" style="color: var(--civ-color-base-dark)">
+              <civ-icon name="upload" size="${this.variant === 'full' ? '2.5em' : '1.5em'}" class="civ-block civ-mb-2 civ-dropzone__icon"></civ-icon>
+              <span class="civ-block civ-text-body civ-mb-3 civ-text-muted">
                 ${this.dragText || t('fileUploadDragText')}
               </span>
-              <span class="civ-btn civ-btn--outline civ-text-sm">${this.browseText || t('fileUploadBrowseText')}</span>
+              <span class="civ-btn civ-btn--tertiary civ-text-sm">${this.browseText || t('fileUploadBrowseText')}</span>
               ${this.accept
                 ? html`<span class="civ-block civ-text-sm civ-text-muted civ-mt-1">${this.acceptedLabel || t('fileUploadAcceptedLabel')}${formatAcceptedTypes(this.accept)}</span>`
                 : nothing}
@@ -293,10 +293,10 @@ export class CivFileUpload extends CivFormElement {
                             ? html`<img class="civ-file-preview" src="${this._getPreviewUrl(file.file)}" alt="" />`
                             : nothing}
                           ${file.status === 'success'
-                            ? html`<span class="civ-icon civ-icon--check" style="color: var(--civ-color-success-DEFAULT)" aria-hidden="true"></span>`
+                            ? html`<span class="civ-icon civ-icon--check civ-text-success" aria-hidden="true"></span>`
                             : nothing}
                           ${file.status === 'error'
-                            ? html`<span class="civ-icon civ-icon--error" style="color: var(--civ-color-error-DEFAULT)" aria-hidden="true"></span>`
+                            ? html`<span class="civ-icon civ-icon--error civ-text-error" aria-hidden="true"></span>`
                             : nothing}
                           <span class="civ-font-semibold">${file.name}</span>
                           <span class="civ-ms-2">(${formatFileSize(file.size)})</span>

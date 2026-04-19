@@ -53,23 +53,7 @@ export class CivYesNo extends CivFormElement {
   override render() {
     const describedBy = buildDescribedBy(this._hintId, this.hint, this._errorId, this.error);
 
-    const yesSelected = this.value === 'yes';
-    const noSelected = this.value === 'no';
-
-    const yesClasses = [
-      'civ-btn',
-      yesSelected ? 'civ-bg-primary civ-text-white civ-border-primary' : 'civ-bg-white civ-border-base-light',
-      'focus-visible:civ-focus-ring',
-    ].join(' ');
-
-    const noClasses = [
-      'civ-btn',
-      noSelected ? 'civ-bg-primary civ-text-white civ-border-primary' : 'civ-bg-white civ-border-base-light',
-      'focus-visible:civ-focus-ring',
-    ].join(' ');
-
-    const yesTabindex = this.value === '' || this.value === 'yes' ? 0 : -1;
-    const noTabindex = this.value === 'no' ? 0 : -1;
+    const btnClasses = 'civ-btn civ-btn--yesno focus-visible:civ-focus-ring';
 
     return html`
       <fieldset
@@ -87,9 +71,9 @@ export class CivYesNo extends CivFormElement {
           <button
             type="button"
             role="radio"
-            aria-checked="${yesSelected ? 'true' : 'false'}"
-            tabindex="${yesTabindex}"
-            class="${yesClasses}"
+            aria-checked="${this.value === 'yes' ? 'true' : 'false'}"
+            tabindex="${this.value === '' || this.value === 'yes' ? 0 : -1}"
+            class="${btnClasses}"
             ?disabled="${this.disabled}"
             ?aria-readonly="${this.readonly}"
             @click="${() => this._select('yes')}"
@@ -97,9 +81,9 @@ export class CivYesNo extends CivFormElement {
           <button
             type="button"
             role="radio"
-            aria-checked="${noSelected ? 'true' : 'false'}"
-            tabindex="${noTabindex}"
-            class="${noClasses}"
+            aria-checked="${this.value === 'no' ? 'true' : 'false'}"
+            tabindex="${this.value === 'no' ? 0 : -1}"
+            class="${btnClasses}"
             ?disabled="${this.disabled}"
             ?aria-readonly="${this.readonly}"
             @click="${() => this._select('no')}"

@@ -22,7 +22,6 @@ import {
   diffForms,
   formToSchema,
   exportSchema,
-  validateForms,
   checkContrast,
   estimateBurden,
   generateTests,
@@ -30,7 +29,6 @@ import {
   extractStrings,
   composeForms,
   generateCompanionJs,
-  validateCrossField,
   analyzeRelationships,
   generateWizard,
   generatePrefillJs,
@@ -69,12 +67,10 @@ import {
   generateTimeoutWarning,
   generateConditionalReveal,
   generateHelpPanel,
-  validateReadingLevel,
   generatePdfNotice,
   generateFieldDependenciesGraph,
   generateMockData,
   generateApiHandler,
-  validateSchema,
   generateE2eTests,
   generateEmailTemplate,
   generateCrossFieldRules,
@@ -89,7 +85,7 @@ import {
   syncContentRegistry,
   generateI18nFiles,
 } from './tools/index.js';
-import { validateForm } from './validators/index.js';
+// validateForm moved to tool-defs/validation.ts
 import {
   CONVERT_LEGACY_FORM_NAME,
   CONVERT_LEGACY_FORM_DESCRIPTION,
@@ -261,6 +257,27 @@ export async function createServer(): Promise<McpServer> {
     if (tierMode === 'essential') return info.tier === 'essential';
     if (tierMode === 'standard') return info.tier !== 'internal';
     return true; // 'all' mode
+  }
+
+  // --- Definition-based tool registration ---
+  // Tools extracted into tool-defs/ are registered via this loop.
+  // The loop handles try-catch, JSON serialization, tier filtering, and next-step suggestions.
+  const { ALL_TOOL_DEFS } = await import('./tool-defs/index.js');
+
+  for (const def of ALL_TOOL_DEFS) {
+    if (!shouldRegister(def.name)) continue;
+    server.tool(def.name, def.description, def.params, async (args: any) => {
+      try {
+        const result = await def.handler(args);
+        const text = withNextSteps(def.name, JSON.stringify(result, null, 2));
+        return { content: [{ type: 'text' as const, text }] };
+      } catch (err) {
+        return {
+          content: [{ type: 'text' as const, text: `Error: ${err instanceof Error ? err.message : String(err)}` }],
+          isError: true,
+        };
+      }
+    });
   }
 
   // --- discover_tools (always registered) ---
@@ -466,62 +483,7 @@ export async function createServer(): Promise<McpServer> {
     },
   );
 
-  if (shouldRegister('validate_form'))
-
-
-  server.tool(
-
-
-    'validate_form',
-    'Validate CivUI HTML markup against Section 508 rules and best practices. ' +
-      'Checks for missing labels/legends, deprecated components, placeholder-as-label, ' +
-      'orphaned children, missing required-messages, abbreviations, autocomplete, and more. ' +
-      'Returns { valid, errors, warnings, summary }.',
-    {
-      html: z
-        .string()
-        .max(MAX_HTML_LENGTH, 'HTML exceeds 10 MB size limit')
-        .describe('CivUI HTML markup string to validate'),
-      config: z
-        .object({
-          promoteWarnings: z
-            .array(z.string())
-            .optional()
-            .describe('Rule IDs whose severity should be promoted from warning to error'),
-          suppressRules: z
-            .array(z.string())
-            .optional()
-            .describe('Rule IDs to skip entirely'),
-        })
-        .optional()
-        .describe('Optional validation config'),
-    },
-    async ({ html, config }) => {
-      try {
-        const result = validateForm(html, config);
-        return {
-          content: [
-            {
-              type: 'text' as const,
-              text: JSON.stringify(result, null, 2),
-            },
-          ],
-        };
-      } catch (err) {
-        return {
-          content: [
-            {
-              type: 'text' as const,
-              text: `Error validating form: ${err instanceof Error ? err.message : String(err)}`,
-            },
-          ],
-          isError: true,
-        };
-      }
-    },
-  );
-
-  if (shouldRegister('suggest_fix'))
+if (shouldRegister('suggest_fix'))
 
 
   server.tool(
@@ -692,58 +654,7 @@ export async function createServer(): Promise<McpServer> {
     },
   );
 
-  if (shouldRegister('validate_forms'))
-
-
-  server.tool(
-
-
-    'validate_forms',
-    'Batch validate multiple CivUI form markups at once. ' +
-      'Returns individual results plus an overall summary like "3/5 forms valid".',
-    {
-      forms: z
-        .array(
-          z.object({
-            id: z.string().describe('Identifier for this form'),
-            html: z.string().describe('CivUI HTML markup to validate'),
-          }),
-        )
-        .describe('Array of { id, html } objects to validate'),
-      config: z
-        .object({
-          promoteWarnings: z.array(z.string()).optional(),
-          suppressRules: z.array(z.string()).optional(),
-        })
-        .optional()
-        .describe('Optional validation config applied to all forms'),
-    },
-    async ({ forms, config }) => {
-      try {
-        const result = validateForms(forms, config);
-        return {
-          content: [
-            {
-              type: 'text' as const,
-              text: JSON.stringify(result, null, 2),
-            },
-          ],
-        };
-      } catch (err) {
-        return {
-          content: [
-            {
-              type: 'text' as const,
-              text: `Error validating forms: ${err instanceof Error ? err.message : String(err)}`,
-            },
-          ],
-          isError: true,
-        };
-      }
-    },
-  );
-
-  if (shouldRegister('check_contrast'))
+if (shouldRegister('check_contrast'))
 
 
   server.tool(
@@ -1044,48 +955,7 @@ export async function createServer(): Promise<McpServer> {
     },
   );
 
-  if (shouldRegister('validate_cross_field'))
-
-
-  server.tool(
-
-
-    'validate_cross_field',
-    'Evaluate cross-field rules and conditional requirements against field values. ' +
-      'Checks crossFieldRules and per-field requiredWhen/visibleWhen conditions. ' +
-      'Returns fired rules, conditionally required/visible/hidden fields, and errors.',
-    {
-      schema: FormSchema.describe('Form schema with cross-field rules'),
-      values: z
-        .record(z.string(), z.union([z.string(), z.array(z.string())]))
-        .describe('Field values to evaluate against (name → value)'),
-    },
-    async ({ schema, values }) => {
-      try {
-        const result = validateCrossField(schema, values);
-        return {
-          content: [
-            {
-              type: 'text' as const,
-              text: JSON.stringify(result, null, 2),
-            },
-          ],
-        };
-      } catch (err) {
-        return {
-          content: [
-            {
-              type: 'text' as const,
-              text: `Error validating cross-field rules: ${err instanceof Error ? err.message : String(err)}`,
-            },
-          ],
-          isError: true,
-        };
-      }
-    },
-  );
-
-  if (shouldRegister('analyze_relationships'))
+if (shouldRegister('analyze_relationships'))
 
 
   server.tool(
@@ -2833,48 +2703,7 @@ export async function createServer(): Promise<McpServer> {
     },
   );
 
-  if (shouldRegister('validate_reading_level'))
-
-
-  server.tool(
-
-
-    'validate_reading_level',
-    'Analyze text readability using Flesch-Kincaid scoring. Returns grade level, ' +
-      'reading ease score, and plain-language suggestions for government content.',
-    {
-      text: z.string().describe('Text content to analyze for readability'),
-      targetGradeLevel: z
-        .number()
-        .optional()
-        .describe('Target grade level (default: 8 for government content)'),
-    },
-    async ({ text, targetGradeLevel }) => {
-      try {
-        const result = validateReadingLevel(text, { targetGradeLevel });
-        return {
-          content: [
-            {
-              type: 'text' as const,
-              text: JSON.stringify(result, null, 2),
-            },
-          ],
-        };
-      } catch (err) {
-        return {
-          content: [
-            {
-              type: 'text' as const,
-              text: `Error validating reading level: ${err instanceof Error ? err.message : String(err)}`,
-            },
-          ],
-          isError: true,
-        };
-      }
-    },
-  );
-
-  if (shouldRegister('generate_pdf_notice'))
+if (shouldRegister('generate_pdf_notice'))
 
 
   server.tool(
@@ -3063,44 +2892,7 @@ export async function createServer(): Promise<McpServer> {
     },
   );
 
-  if (shouldRegister('validate_schema'))
-
-
-  server.tool(
-
-
-    'validate_schema',
-    'Validate a FormSchema for internal consistency — detects duplicate field names, ' +
-      'missing options, dangling condition references, invalid ranges, and more.',
-    {
-      schema: FormSchema.describe('Form schema to validate'),
-    },
-    async ({ schema }) => {
-      try {
-        const result = validateSchema(schema);
-        return {
-          content: [
-            {
-              type: 'text' as const,
-              text: JSON.stringify(result, null, 2),
-            },
-          ],
-        };
-      } catch (err) {
-        return {
-          content: [
-            {
-              type: 'text' as const,
-              text: `Error validating schema: ${err instanceof Error ? err.message : String(err)}`,
-            },
-          ],
-          isError: true,
-        };
-      }
-    },
-  );
-
-  server.tool(
+server.tool(
     'generate_e2e_tests',
     'Generate Playwright end-to-end tests from a FormSchema covering validation, ' +
       'submission, wizard flow, conditional fields, repeatable sections, and save/resume.',

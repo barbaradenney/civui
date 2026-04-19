@@ -20,6 +20,8 @@ export interface AssembleResult {
   html?: string;
   /** React TSX files (when format is 'react'). */
   files?: Array<{ path: string; content: string }>;
+  /** File path where the HTML was saved for preview (html format only). */
+  previewPath?: string;
   pageCount: number;
   features: string[];
 }
@@ -34,6 +36,8 @@ export async function assembleGovForm(formNumber: string, options?: {
   cdnBase?: string;
   /** API endpoint for form submission. */
   submitAction?: string;
+  /** Write HTML to a temp file and return the path for browser preview. */
+  preview?: boolean;
 }): Promise<AssembleResult> {
   const format = options?.format || 'html';
 
@@ -312,8 +316,20 @@ ${chapterHeadings}
 </body>
 </html>`;
 
+  let previewPath: string | undefined;
+
+  if (options?.preview) {
+    const { writeFileSync } = await import('fs');
+    const { tmpdir } = await import('os');
+    const { join } = await import('path');
+    const filename = `civui-${result.formNumber.toLowerCase().replace(/[^a-z0-9]/g, '-')}.html`;
+    previewPath = join(tmpdir(), filename);
+    writeFileSync(previewPath, html, 'utf-8');
+  }
+
   return {
     html,
+    previewPath,
     pageCount,
     features: [...result.features, 'single-page-app', 'hash-routing', 'auto-persist'],
   };

@@ -240,8 +240,19 @@ export async function createServer(): Promise<McpServer> {
 
   const tierMode = process.env.CIV_MCP_TIER || 'all';
 
-  // Import registry for tier checks
+  // Import registry and workflow helpers
   const { getToolInfo } = await import('./tool-registry.js');
+  const { getNextSteps } = await import('./tool-workflow.js');
+
+  /** Append next-step suggestions to a tool result. */
+  function withNextSteps(toolName: string, resultText: string, context?: { hasErrors?: boolean; format?: string }): string {
+    const steps = getNextSteps(toolName, context);
+    if (steps.length === 0) return resultText;
+
+    const parsed = JSON.parse(resultText);
+    parsed._nextSteps = steps;
+    return JSON.stringify(parsed, null, 2);
+  }
 
   /** Only register a tool if it passes the tier filter. */
   function shouldRegister(toolName: string): boolean {
@@ -3794,7 +3805,7 @@ export async function createServer(): Promise<McpServer> {
       try {
         const { generateGovForm: genVA } = await import('./tools/generate-gov-form.js');
         const result = await genVA(formNumber);
-        return { content: [{ type: 'text' as const, text: JSON.stringify(result, null, 2) }] };
+        return { content: [{ type: 'text' as const, text: withNextSteps('generate_gov_form', JSON.stringify(result, null, 2)) }] };
       } catch (err) {
         return { content: [{ type: 'text' as const, text: `Error: ${err instanceof Error ? err.message : String(err)}` }], isError: true };
       }
@@ -3808,17 +3819,42 @@ export async function createServer(): Promise<McpServer> {
 
 
     'validate_gov_form',
-    'Validate government form HTML for consistency with CivUI patterns. Checks for proper component usage, required pages, heading classes, and design token compliance.',
+    'Validate government form for consistency with CivUI patterns. Pass either a form number (generates and validates automatically) or raw HTML to validate.',
     {
+      formNumber: z
+        .string()
+        .optional()
+        .describe('Form number to generate and validate (e.g. "21-526EZ"). If provided, generates the form first.'),
       html: z
         .string()
-        .describe('The HTML of the generated VA form to validate'),
+        .optional()
+        .describe('Raw HTML to validate. Used when formNumber is not provided.'),
     },
-    async ({ html: formHtml }) => {
+    async ({ formNumber, html: formHtml }) => {
       try {
+        let htmlToValidate = formHtml || '';
+
+        // If form number is provided, generate the form and concatenate all pages
+        if (formNumber) {
+          const { generateGovForm } = await import('./tools/generate-gov-form.js');
+          const form = await generateGovForm(formNumber);
+          htmlToValidate = [
+            form.pages.intro.html,
+            form.taskListHub.html,
+            ...form.pages.chapters.map((c: any) => c.html),
+            form.pages.review.html,
+            form.pages.confirmation.html,
+          ].join('\n');
+        }
+
+        if (!htmlToValidate) {
+          throw new Error('Provide either formNumber or html to validate');
+        }
+
         const { validateGovForm: validate } = await import('./tools/validate-gov-form.js');
-        const result = validate(formHtml);
-        return { content: [{ type: 'text' as const, text: JSON.stringify(result, null, 2) }] };
+        const result = validate(htmlToValidate);
+        const hasErrors = result.violations.some((v: any) => v.severity === 'error');
+        return { content: [{ type: 'text' as const, text: withNextSteps('validate_gov_form', JSON.stringify(result, null, 2), { hasErrors }) }] };
       } catch (err) {
         return { content: [{ type: 'text' as const, text: `Error: ${err instanceof Error ? err.message : String(err)}` }], isError: true };
       }
@@ -3849,12 +3885,16 @@ export async function createServer(): Promise<McpServer> {
         .string()
         .optional()
         .describe('API endpoint for form submission. Defaults to /api/submit.'),
+      preview: z
+        .boolean()
+        .optional()
+        .describe('Write HTML to a temp file and return the file path for browser preview (html format only).'),
     },
-    async ({ formNumber, format, cdnBase, submitAction }) => {
+    async ({ formNumber, format, cdnBase, submitAction, preview }) => {
       try {
         const { assembleGovForm } = await import('./tools/assemble-gov-form.js');
-        const result = await assembleGovForm(formNumber, { format, cdnBase, submitAction });
-        return { content: [{ type: 'text' as const, text: JSON.stringify(result, null, 2) }] };
+        const result = await assembleGovForm(formNumber, { format, cdnBase, submitAction, preview });
+        return { content: [{ type: 'text' as const, text: withNextSteps('assemble_gov_form', JSON.stringify(result, null, 2), { format }) }] };
       } catch (err) {
         return { content: [{ type: 'text' as const, text: `Error: ${err instanceof Error ? err.message : String(err)}` }], isError: true };
       }
@@ -3874,7 +3914,7 @@ export async function createServer(): Promise<McpServer> {
       try {
         const { listGovForms } = await import('./tools/list-gov-forms.js');
         const result = listGovForms();
-        return { content: [{ type: 'text' as const, text: JSON.stringify(result, null, 2) }] };
+        return { content: [{ type: 'text' as const, text: withNextSteps('list_gov_forms', JSON.stringify(result, null, 2)) }] };
       } catch (err) {
         return { content: [{ type: 'text' as const, text: `Error: ${err instanceof Error ? err.message : String(err)}` }], isError: true };
       }

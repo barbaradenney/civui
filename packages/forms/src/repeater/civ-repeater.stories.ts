@@ -2,6 +2,8 @@ import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import './civ-repeater.js';
 import '../text-input/civ-text-input.js';
+import '../date-input/civ-memorable-date.js';
+import '../select/civ-select.js';
 
 const meta: Meta = {
   title: 'Forms/Repeater',
@@ -117,6 +119,51 @@ export const MultipleFields: Story = {
     >
       <civ-text-input label="First name" name="firstName"></civ-text-input>
       <civ-text-input label="Last name" name="lastName"></civ-text-input>
+    </civ-repeater>
+  `,
+};
+
+export const ServicePeriods: Story = {
+  name: 'Service Periods (Detail Mode)',
+  render: () => html`
+    <civ-repeater
+      legend="Service periods"
+      name="servicePeriods"
+      item-label="service period"
+      mode="detail"
+      min="1"
+      max="10"
+      hint="Add each period of service separately"
+    >
+      <civ-text-input label="Branch of service" name="branch" required></civ-text-input>
+      <civ-memorable-date legend="Service start date" name="startDate" required hint="Enter your best estimate if unsure"></civ-memorable-date>
+      <civ-memorable-date legend="Service end date" name="endDate" required></civ-memorable-date>
+      <civ-select label="Character of service" name="discharge" required></civ-select>
+    </civ-repeater>
+  `,
+  play: async ({ canvasElement }) => {
+    const selects = canvasElement.querySelectorAll('civ-select') as NodeListOf<any>;
+    const options = [
+      { value: 'honorable', label: 'Honorable' },
+      { value: 'general', label: 'General (under honorable conditions)' },
+      { value: 'other', label: 'Other than honorable' },
+    ];
+    selects.forEach(s => { s.options = options; });
+  },
+};
+
+export const PhoneNumbers: Story = {
+  name: 'Additional Phone Numbers (Inline)',
+  render: () => html`
+    <civ-repeater
+      legend="Additional phone numbers"
+      name="phones"
+      item-label="phone number"
+      min="0"
+      max="5"
+    >
+      <civ-text-input label="Phone number" name="phone" type="tel" mask="phone-us" validate="phone"></civ-text-input>
+      <civ-text-input label="Label" name="phoneLabel" hint="For example: Work, Partner"></civ-text-input>
     </civ-repeater>
   `,
 };

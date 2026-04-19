@@ -9,7 +9,9 @@
   "exports": {
     ".": "./dist/index.js",
     "./button": "./dist/button/index.js",
-    "./tag": "./dist/tag/index.js"
+    "./tag": "./dist/tag/index.js",
+    "./divider": "./dist/divider/index.js",
+    "./card": "./dist/card/index.js"
   },
   "files": ["dist"],
   "publishConfig": {

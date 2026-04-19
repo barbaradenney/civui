@@ -33,7 +33,7 @@ export class CivTaskGroup extends LightDomContainerMixin(CivBaseElement) {
     return html`
       <div class="civ-task-group civ-mb-6" role="listitem">
         ${this.heading ? html`
-          <h3 class="civ-text-lg civ-font-semibold civ-mb-3">${this.heading}</h3>
+          <h3 class="civ-heading-md">${this.heading}</h3>
         ` : nothing}
         <ul class="civ-task-group__list" role="list" data-civ-task-group-content></ul>
       </div>

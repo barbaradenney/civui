@@ -179,11 +179,12 @@ describe('civ-task', () => {
     expect(tag!.getAttribute('label')).toBe('In progress');
   });
 
-  it('applies muted class to cannot-start label', async () => {
+  it('renders cannot-start label without muted styling', async () => {
     const el = await fixture('<civ-task label="Task" status="cannot-start"></civ-task>');
 
     const label = el.querySelector('.civ-task__label');
-    expect(label!.className).toContain('civ-text-muted');
+    expect(label).not.toBeNull();
+    expect(label!.className).not.toContain('civ-text-muted');
   });
 
   it('renders as list item', async () => {

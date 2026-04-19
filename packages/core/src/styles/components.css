@@ -35,6 +35,28 @@
     color: var(--civ-color-base-DEFAULT);
   }
 
+  /* ── Heading styles ──────────────────────────────────────── */
+
+  .civ-heading-xl {
+    @apply civ-text-2xl civ-font-bold civ-mb-6;
+    color: var(--civ-color-base-darkest);
+  }
+
+  .civ-heading-lg {
+    @apply civ-text-xl civ-font-bold civ-mb-4;
+    color: var(--civ-color-base-darkest);
+  }
+
+  .civ-heading-md {
+    @apply civ-text-lg civ-font-bold civ-mb-3;
+    color: var(--civ-color-base-darkest);
+  }
+
+  .civ-heading-sm {
+    @apply civ-text-base civ-font-bold civ-mb-2;
+    color: var(--civ-color-base-darkest);
+  }
+
   .civ-required-mark {
     @apply civ-text-error civ-font-normal civ-ms-0;
   }
@@ -1402,6 +1424,10 @@
     border-top: 1px solid var(--civ-color-base-lighter);
   }
 
+  .civ-task-group .civ-task:first-child {
+    border-top: none;
+  }
+
   .civ-task__name-and-hint {
     @apply civ-flex-1 civ-min-w-0;
   }
@@ -1423,13 +1449,13 @@
   }
 
   .civ-task__status--cannot-start {
-    color: var(--civ-color-base-DEFAULT);
+    color: var(--civ-color-base-darkest);
   }
 
   /* ── Status tags ───────────────────────────────────────────── */
 
   .civ-tag {
-    @apply civ-inline-block civ-px-2 civ-py-0.5 civ-text-base civ-font-normal civ-rounded;
+    @apply civ-inline-block civ-px-2 civ-py-0.5 civ-text-base civ-font-normal;
   }
 
   .civ-tag--sm {
@@ -1476,11 +1502,36 @@
     color: var(--civ-color-base-darker);
   }
 
+  /* ── Card ─────────────────────────────────────────────────── */
+
+  .civ-card {
+    @apply civ-p-4 civ-mb-4 civ-border civ-border-base-lighter;
+  }
+
+  .civ-card--sm {
+    @apply civ-p-3;
+  }
+
+  /* ── Divider ──────────────────────────────────────────────── */
+
+  .civ-divider {
+    @apply civ-border-0 civ-my-4;
+    border-top: 1px solid var(--civ-color-base-lighter);
+  }
+
+  .civ-divider--sm {
+    @apply civ-my-2;
+  }
+
   /* ── Read-Only Field ─────────────────────────────────────── */
 
   .civ-read-only-field {
-    @apply civ-py-2;
+    @apply civ-py-3;
     border-bottom: 1px solid var(--civ-color-base-lighter);
+  }
+
+  .civ-read-only-field:first-child {
+    border-top: 1px solid var(--civ-color-base-lighter);
   }
 
   .civ-read-only-field dt {

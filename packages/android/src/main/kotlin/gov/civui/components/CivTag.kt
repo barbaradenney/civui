@@ -59,7 +59,7 @@ fun CivTag(
         fontWeight = FontWeight.Normal,
         color = fg,
         modifier = modifier
-            .background(bg, RoundedCornerShape(CivTokens.Border.Radius.default_))
+            .background(bg)
             .padding(horizontal = CivTokens.Spacing._2, vertical = CivTokens.Spacing._0_5)
             .semantics { contentDescription = label },
     )

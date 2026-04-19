@@ -94,7 +94,7 @@ export class CivSignature extends CivFormElement {
         ${renderError(this._errorId, this.error, true)}
 
         ${this.statement ? html`
-          <p class="civ-text-base civ-text-secondary civ-mb-4">${this.statement}</p>
+          <p class="civ-text-base civ-text-muted civ-mb-4">${this.statement}</p>
         ` : nothing}
 
         <div class="civ-mb-3">

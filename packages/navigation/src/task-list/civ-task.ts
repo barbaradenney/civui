@@ -73,9 +73,9 @@ export class CivTask extends CivBaseElement {
                 href="${this.href}"
                 aria-describedby="${this._statusId}"
               >${this.label}</a>`
-            : html`<span class="civ-task__label civ-font-medium ${this.status === 'cannot-start' ? 'civ-text-muted' : ''}">${this.label}</span>`}
+            : html`<span class="civ-task__label civ-font-medium">${this.label}</span>`}
           ${this.hint
-            ? html`<span class="civ-task__hint civ-text-sm civ-text-secondary civ-block">${this.hint}</span>`
+            ? html`<span class="civ-task__hint civ-hint civ-block">${this.hint}</span>`
             : nothing}
         </div>
         <div class="civ-task__status" id="${this._statusId}">

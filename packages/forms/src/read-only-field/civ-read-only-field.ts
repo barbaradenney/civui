@@ -34,12 +34,12 @@ export class CivReadOnlyField extends CivBaseElement {
 
     return html`
       <div class="civ-read-only-field civ-mb-4">
-        <dt class="civ-label civ-text-secondary">${displayLabel}</dt>
+        <dt class="civ-label civ-text-muted">${displayLabel}</dt>
         <dd class="civ-text-base civ-font-medium civ-mt-0.5 civ-ms-0">
           ${this.value || html`<span class="civ-text-muted civ-italic">Not provided</span>`}
         </dd>
         ${this.hint ? html`
-          <span class="civ-hint civ-text-sm civ-text-secondary civ-block civ-mt-0.5">${this.hint}</span>
+          <span class="civ-hint civ-text-sm civ-text-muted civ-block civ-mt-0.5">${this.hint}</span>
         ` : nothing}
       </div>
     `;

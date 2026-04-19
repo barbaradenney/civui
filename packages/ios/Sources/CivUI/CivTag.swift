@@ -45,7 +45,6 @@ public struct CivTag: View {
             .padding(.horizontal, CivTokens.Spacing._2)
             .padding(.vertical, CivTokens.Spacing._0_5)
             .background(backgroundColor)
-            .cornerRadius(CivTokens.Border.Radius.default_)
             .accessibilityLabel(label)
     }
 

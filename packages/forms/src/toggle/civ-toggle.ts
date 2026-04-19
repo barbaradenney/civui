@@ -20,7 +20,7 @@ export class CivToggle extends CivBooleanFormElement {
     const thumbStyle = `inset-inline-start: ${this.checked ? '1.125em' : '0.125em'};`;
 
     return html`
-      <div class="civ-mb-2">
+      <div class="civ-mb-4">
         <div class="civ-flex civ-items-center civ-gap-3">
           <button
             type="button"

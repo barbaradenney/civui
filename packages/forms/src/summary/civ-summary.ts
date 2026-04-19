@@ -60,7 +60,7 @@ export class CivSummary extends CivBaseElement {
   override render() {
     return html`
       <div class="civ-summary" role="region" aria-label="${this.heading || 'Summary'}">
-        ${this.heading ? html`<h2 class="civ-text-2xl civ-font-bold civ-mb-6">${this.heading}</h2>` : nothing}
+        ${this.heading ? html`<h2 class="civ-heading-xl">${this.heading}</h2>` : nothing}
         ${this.sections.map(section => this._renderSection(section))}
       </div>
     `;
@@ -76,9 +76,9 @@ export class CivSummary extends CivBaseElement {
       : undefined;
 
     return html`
-      <div class="civ-summary-section civ-mb-6 civ-border-b civ-border-base civ-pb-4">
+      <div class="civ-summary-section civ-mb-6 civ-border-b civ-border-base-lighter civ-pb-4">
         <div class="civ-flex civ-justify-between civ-items-center civ-mb-3">
-          <h3 class="civ-text-lg civ-font-semibold">${section.heading}</h3>
+          <h3 class="civ-heading-md">${section.heading}</h3>
           ${safeHref ? html`
             <a
               href="${safeHref}"
@@ -102,7 +102,7 @@ export class CivSummary extends CivBaseElement {
 
     return html`
       <div class="civ-summary-item civ-flex civ-flex-wrap civ-py-2">
-        <dt class="civ-font-medium civ-text-secondary" style="flex-basis:12rem;flex-shrink:0">${item.label}</dt>
+        <dt class="civ-font-medium civ-text-muted" style="flex-basis:12rem;flex-shrink:0">${item.label}</dt>
         <dd class="civ-flex-1 civ-min-w-0">
           ${hasValue
             ? Array.isArray(item.value)

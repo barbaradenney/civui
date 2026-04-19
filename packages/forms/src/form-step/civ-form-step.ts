@@ -94,7 +94,7 @@ export class CivFormStep extends LightDomContainerMixin(CivBaseElement) {
     return html`
       <div class="civ-form-step">
         ${this.showProgress && this._steps.length > 1 ? html`
-          <div class="civ-text-sm civ-text-secondary civ-mb-3" aria-live="polite">
+          <div class="civ-text-sm civ-text-muted civ-mb-3" aria-live="polite">
             ${stepLabel}
           </div>
         ` : nothing}

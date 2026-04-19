@@ -186,7 +186,7 @@ export class CivRepeater extends CivBaseElement {
     row.setAttribute('role', 'group');
     row.setAttribute('aria-label',
       interpolate('{item} {index}', { item: this.itemLabel, index: String(index + 1) }));
-    row.classList.add('civ-repeater-row', 'civ-mb-4', 'civ-p-4', 'civ-border', 'civ-border-base');
+    row.classList.add('civ-repeater-row', 'civ-card');
 
     if (this.mode === 'detail') {
       // Summary bar — visible when row is collapsed

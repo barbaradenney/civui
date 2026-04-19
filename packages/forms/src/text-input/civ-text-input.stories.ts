@@ -390,7 +390,7 @@ export const ValidateUSState: Story = {
 export const MixedValidationForm: Story = {
   render: () => html`
     <civ-form>
-      <h3 class="civ-text-lg civ-font-bold civ-mb-4">Contact Information</h3>
+      <h3 class="civ-heading-md">Contact Information</h3>
       <civ-text-input
         label="Full name"
         name="name"

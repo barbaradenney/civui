@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import './civ-name.js';
+import '../date-input/civ-memorable-date.js';
 
 const meta: Meta = {
   title: 'Forms/Name',
@@ -56,5 +57,29 @@ export const Prefilled: Story = {
   play: async ({ canvasElement }) => {
     const el = canvasElement.querySelector('civ-name') as any;
     el.nameValue = { first: 'Jane', middle: 'A', last: 'Doe', suffix: 'Jr.' };
+  },
+};
+
+export const WithDateOfBirth: Story = {
+  name: 'Paired with Date of Birth',
+  render: () => html`
+    <civ-name legend="Veteran's name" name="veteranName" required></civ-name>
+    <civ-memorable-date
+      legend="Date of birth"
+      name="dateOfBirth"
+      required
+      hint="For example: January 15 1990"
+    ></civ-memorable-date>
+  `,
+};
+
+export const SpouseName: Story = {
+  name: 'Spouse Name (no suffix)',
+  render: () => html`
+    <civ-name legend="Spouse's name" name="spouseName" required></civ-name>
+  `,
+  play: async ({ canvasElement }) => {
+    const el = canvasElement.querySelector('civ-name') as any;
+    el.showSuffix = false;
   },
 };

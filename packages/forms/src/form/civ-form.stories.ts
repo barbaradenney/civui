@@ -101,7 +101,7 @@ export const ErrorSummary: Story = {
 export const PersistDraft: Story = {
   render: () => html`
     <civ-form persist="demo-form" form-label="Draft application">
-      <p class="civ-text-sm civ-text-secondary civ-mb-4">This form auto-saves your progress to session storage. Refresh the page to see your data restored.</p>
+      <p class="civ-text-sm civ-text-muted civ-mb-4">This form auto-saves your progress to session storage. Refresh the page to see your data restored.</p>
       <civ-text-input label="Full name" name="fullName"></civ-text-input>
       <civ-text-input label="Email address" name="email" type="email"></civ-text-input>
       <civ-textarea label="Additional comments" name="comments"></civ-textarea>
@@ -126,7 +126,7 @@ export const PersistDraft: Story = {
 export const DirtyTracking: Story = {
   render: () => html`
     <civ-form track-dirty form-label="Profile update">
-      <p class="civ-text-sm civ-text-secondary civ-mb-4">Modify any field to see the dirty state indicator appear on the form.</p>
+      <p class="civ-text-sm civ-text-muted civ-mb-4">Modify any field to see the dirty state indicator appear on the form.</p>
       <civ-text-input label="First name" name="firstName" value="Jane"></civ-text-input>
       <civ-text-input label="Last name" name="lastName" value="Doe"></civ-text-input>
       <civ-text-input label="Email address" name="email" type="email" value="jane.doe@agency.gov"></civ-text-input>
@@ -143,7 +143,7 @@ export const DirtyTracking: Story = {
 export const Prefill: Story = {
   render: () => html`
     <civ-form prefill form-label="Prefilled inquiry">
-      <p class="civ-text-sm civ-text-secondary civ-mb-4">
+      <p class="civ-text-sm civ-text-muted civ-mb-4">
         This form reads URL query parameters to prefill fields. Add <code>?topic=benefits&amp;name=Jane</code> to the URL to see it in action.
       </p>
       <civ-text-input label="Full name" name="name"></civ-text-input>

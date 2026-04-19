@@ -127,7 +127,7 @@ const MAX_PDF_BASE64_LENGTH = 50 * 1024 * 1024;
 /** 10 MB HTML — large enough for any real form page, prevents memory issues. */
 const MAX_HTML_LENGTH = 10 * 1024 * 1024;
 
-export function createServer(): McpServer {
+export async function createServer(): Promise<McpServer> {
   const server = new McpServer({
     name: 'civui-form-converter',
     version: '0.1.0',
@@ -235,8 +235,46 @@ export function createServer(): McpServer {
     ],
   }));
 
+  // --- Tool Tier Filtering ---
+  // Set CIV_MCP_TIER=essential (12 tools) or standard (~35) or all (default, ~80)
+
+  const tierMode = process.env.CIV_MCP_TIER || 'all';
+
+  // Import registry for tier checks
+  const { getToolInfo } = await import('./tool-registry.js');
+
+  /** Only register a tool if it passes the tier filter. */
+  function shouldRegister(toolName: string): boolean {
+    const info = getToolInfo(toolName);
+    if (!info) return true; // Unknown tools always register
+    if (tierMode === 'essential') return info.tier === 'essential';
+    if (tierMode === 'standard') return info.tier !== 'internal';
+    return true; // 'all' mode
+  }
+
+  // --- discover_tools (always registered) ---
+
+  server.tool(
+    'discover_tools',
+    'List all available CivUI MCP tools with their tier (essential/advanced/internal), category, and description. Use this to find specific tools for your task.',
+    {
+      tier: z.enum(['essential', 'advanced', 'internal']).optional().describe('Filter by tier'),
+      category: z.string().optional().describe('Filter by category (gov-forms, form-generation, validation, etc.)'),
+    },
+    async ({ tier, category }) => {
+      try {
+        const { discoverTools } = await import('./tools/discover-tools.js');
+        const result = discoverTools({ tier, category });
+        return { content: [{ type: 'text' as const, text: JSON.stringify(result, null, 2) }] };
+      } catch (err) {
+        return { content: [{ type: 'text' as const, text: `Error: ${err instanceof Error ? err.message : String(err)}` }], isError: true };
+      }
+    },
+  );
+
   // --- Tools ---
 
+  if (shouldRegister('parse_html_form'))
   server.tool(
     'parse_html_form',
     'Parse an HTML form and extract its field structure as a FormSchema. ' +
@@ -274,7 +312,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('parse_pdf_form'))
+
+
   server.tool(
+
+
     'parse_pdf_form',
     'Parse a PDF form and extract AcroForm fields as a FormSchema. ' +
       'Maps PDF field types (Tx→text, Ch→select, Btn→checkbox/radio). ' +
@@ -312,7 +355,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('generate_civui_form'))
+
+
   server.tool(
+
+
     'generate_civui_form',
     'Generate accessible CivUI web component markup from a FormSchema. ' +
       'Maps field types to CivUI tags (text→civ-text-input, radio→civ-radio-group, etc.). ' +
@@ -352,7 +400,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('style_civui_element'))
+
+
   server.tool(
+
+
     'style_civui_element',
     'Look up the correct CSS classes, state selectors, and focus ring for a CivUI element. ' +
       'Returns semantic component classes from components.css, state-triggered classes ' +
@@ -402,7 +455,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('validate_form'))
+
+
   server.tool(
+
+
     'validate_form',
     'Validate CivUI HTML markup against Section 508 rules and best practices. ' +
       'Checks for missing labels/legends, deprecated components, placeholder-as-label, ' +
@@ -452,7 +510,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('suggest_fix'))
+
+
   server.tool(
+
+
     'suggest_fix',
     'Auto-correct CivUI validation violations. Parses HTML, applies DOM fixes for ' +
       'known rule violations (missing labels, deprecated tags, abbreviations, etc.), ' +
@@ -492,7 +555,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('diff_forms'))
+
+
   server.tool(
+
+
     'diff_forms',
     'Compute a structured diff between two CivUI form markups. ' +
       'Matches components by name then position, returns added/removed/changed/unchanged ' +
@@ -532,7 +600,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('form_to_schema'))
+
+
   server.tool(
+
+
     'form_to_schema',
     'Convert CivUI HTML markup back to a FormSchema object (reverse of generate_civui_form). ' +
       'Extracts form-level attrs, sections from fieldsets, and fields with all attributes.',
@@ -567,7 +640,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('export_schema'))
+
+
   server.tool(
+
+
     'export_schema',
     'Export a FormSchema as JSON Schema (Draft-07) or TypeScript interface. ' +
       'JSON Schema includes types, constraints, enums, and required fields. ' +
@@ -603,7 +681,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('validate_forms'))
+
+
   server.tool(
+
+
     'validate_forms',
     'Batch validate multiple CivUI form markups at once. ' +
       'Returns individual results plus an overall summary like "3/5 forms valid".',
@@ -649,7 +732,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('check_contrast'))
+
+
   server.tool(
+
+
     'check_contrast',
     'Check WCAG 2.1 contrast ratio between two colors. ' +
       'Accepts hex colors (#005ea2) or CivUI token names (primary, text-primary, civ-bg-error-light). ' +
@@ -687,7 +775,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('estimate_burden'))
+
+
   server.tool(
+
+
     'estimate_burden',
     'Estimate PRA burden for a government form schema. ' +
       'Calculates total/required/optional fields, estimated completion time, ' +
@@ -720,7 +813,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('generate_tests'))
+
+
   server.tool(
+
+
     'generate_tests',
     'Generate a Vitest test file from CivUI HTML markup. ' +
       'Creates rendering tests, label/legend tests, required field tests, ' +
@@ -760,7 +858,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('generate_story'))
+
+
   server.tool(
+
+
     'generate_story',
     'Generate a Storybook CSF3 story file from CivUI HTML or FormSchema. ' +
       'Creates Default, WithErrors, and Filled story variants with argTypes.',
@@ -803,7 +906,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('extract_strings'))
+
+
   server.tool(
+
+
     'extract_strings',
     'Extract translatable strings from CivUI HTML markup for i18n. ' +
       'Finds all text attributes (label, legend, hint, error, required-message, placeholder) ' +
@@ -839,7 +947,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('compose_forms'))
+
+
   server.tool(
+
+
     'compose_forms',
     'Merge multiple FormSchemas into one unified schema. ' +
       'Resolves ref sections from subForms dictionary, applies namespace prefixes, ' +
@@ -882,7 +995,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('generate_companion_js'))
+
+
   server.tool(
+
+
     'generate_companion_js',
     'Generate client-side JavaScript for repeatable sections and conditional visibility. ' +
       'Produces a self-contained IIFE handling add/remove/re-index for repeatable sections, ' +
@@ -915,7 +1033,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('validate_cross_field'))
+
+
   server.tool(
+
+
     'validate_cross_field',
     'Evaluate cross-field rules and conditional requirements against field values. ' +
       'Checks crossFieldRules and per-field requiredWhen/visibleWhen conditions. ' +
@@ -951,7 +1074,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('analyze_relationships'))
+
+
   server.tool(
+
+
     'analyze_relationships',
     'Analyze a FormSchema and produce an entity-relationship summary. ' +
       'Identifies entities from sections, detects one-to-many from repeatable sections, ' +
@@ -985,7 +1113,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('generate_wizard'))
+
+
   server.tool(
+
+
     'generate_wizard',
     'Generate a multi-step wizard form from a FormSchema with steps defined. ' +
       'Produces HTML with step containers, progress indicator, and navigation buttons, ' +
@@ -1018,7 +1151,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('generate_prefill_js'))
+
+
   server.tool(
+
+
     'generate_prefill_js',
     'Generate client-side JavaScript to prefill a CivUI form from saved values. ' +
       'Handles text inputs, radios, checkboxes, selects, and toggles. ' +
@@ -1054,7 +1192,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('generate_summary'))
+
+
   server.tool(
+
+
     'generate_summary',
     'Generate a read-only HTML summary of form values for review pages. ' +
       'Groups by section with <dl> elements, handles repeatable sections, ' +
@@ -1090,7 +1233,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('visualize_form_flow'))
+
+
   server.tool(
+
+
     'visualize_form_flow',
     'Generate a Mermaid flowchart visualizing a form\'s conditional logic, ' +
       'wizard steps, cascading options, and cross-field rules. ' +
@@ -1123,7 +1271,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('generate_print_css'))
+
+
   server.tool(
+
+
     'generate_print_css',
     'Generate a @media print stylesheet for a CivUI form schema. ' +
       'Includes base print styles plus feature-specific rules for wizards, ' +
@@ -1156,7 +1309,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('migrate_saved_data'))
+
+
   server.tool(
+
+
     'migrate_saved_data',
     'Migrate saved form values from an old schema to a new schema. ' +
       'Handles direct matches, explicit renames via fieldMappings, ' +
@@ -1197,7 +1355,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('generate_error_messages'))
+
+
   server.tool(
+
+
     'generate_error_messages',
     'Generate a complete error message library for every field and constraint in a FormSchema. ' +
       'Produces field-specific messages for required, pattern, length, range, and file constraints. ' +
@@ -1230,7 +1393,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('generate_analytics_plan'))
+
+
   server.tool(
+
+
     'generate_analytics_plan',
     'Generate an analytics instrumentation plan for a form schema. ' +
       'Produces per-field events, funnel steps with expected completion rates, ' +
@@ -1263,7 +1431,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('lint_form_language'))
+
+
   server.tool(
+
+
     'lint_form_language',
     'Lint a form schema for plain language issues. ' +
       'Checks for jargon, abbreviations, passive voice, high reading level, ' +
@@ -1296,7 +1469,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('generate_payload_schema'))
+
+
   server.tool(
+
+
     'generate_payload_schema',
     'Generate the expected JSON submission payload shape for a form schema. ' +
       'Respects structural hierarchy: repeatable sections become arrays, ' +
@@ -1329,7 +1507,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('compare_schemas'))
+
+
   server.tool(
+
+
     'compare_schemas',
     'Compare two FormSchema versions and produce a structured diff. ' +
       'Detects added, removed, changed, and moved fields/sections/steps/rules. ' +
@@ -1363,7 +1546,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('generate_validation_schema'))
+
+
   server.tool(
+
+
     'generate_validation_schema',
     'Generate runtime server-side validation code from a FormSchema. ' +
       'Supports Zod (with superRefine for cross-field rules) and JSON Schema ' +
@@ -1439,7 +1627,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('generate_prefill_mapping'))
+
+
   server.tool(
+
+
     'generate_prefill_mapping',
     'Generate intelligent API-to-form field mappings. ' +
       'Matches fields using exact, normalized, label, and type strategies. ' +
@@ -1483,7 +1676,12 @@ export function createServer(): McpServer {
 
   // --- Workflow & Case Tools ---
 
+  if (shouldRegister('generate_workflow_ui'))
+
+
   server.tool(
+
+
     'generate_workflow_ui',
     'Generate workflow status banner, transition buttons, and companion JavaScript ' +
       'for multi-actor form workflows. Shows current state, available actions, and ' +
@@ -1524,7 +1722,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('generate_lock_matrix'))
+
+
   server.tool(
+
+
     'generate_lock_matrix',
     'Generate a state × actor permission matrix showing which sections are editable, ' +
       'readonly, or hidden for each workflow state and actor combination. ' +
@@ -1557,7 +1760,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('generate_delegation_sections'))
+
+
   server.tool(
+
+
     'generate_delegation_sections',
     'Generate representative information, attestation, and consent sections for ' +
       'delegation/representative forms. Produces FormSection objects ready to merge, ' +
@@ -1594,7 +1802,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('generate_feedback_ui'))
+
+
   server.tool(
+
+
     'generate_feedback_ui',
     'Generate inline comment/feedback panels for reviewer and applicant modes. ' +
       'Supports section-level or field-level granularity, existing comments, ' +
@@ -1644,7 +1857,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('generate_audit_trail'))
+
+
   server.tool(
+
+
     'generate_audit_trail',
     'Generate a timeline/history component for case-style forms. ' +
       'Renders chronologically sorted entries with timestamps, actor badges, ' +
@@ -1689,7 +1907,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('generate_section_progress'))
+
+
   server.tool(
+
+
     'generate_section_progress',
     'Generate a section completion checklist with progress tracking. ' +
       'Shows complete/incomplete/not-started status per section, ' +
@@ -1726,7 +1949,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('generate_case_dashboard'))
+
+
   server.tool(
+
+
     'generate_case_dashboard',
     'Generate a composed case-style dashboard combining workflow status, ' +
       'section progress, and audit trail into a responsive two-column layout. ' +
@@ -1791,7 +2019,12 @@ export function createServer(): McpServer {
 
   // --- Form Lifecycle Tools ---
 
+  if (shouldRegister('generate_eligibility_screener'))
+
+
   server.tool(
+
+
     'generate_eligibility_screener',
     'Generate an eligibility screening questionnaire with disqualification logic. ' +
       'Produces yes-no radios, selects, and number inputs with configurable pass/fail conditions.',
@@ -1823,7 +2056,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('generate_confirmation_page'))
+
+
   server.tool(
+
+
     'generate_confirmation_page',
     'Generate a post-submission confirmation page with receipt number, submission summary, ' +
       'next steps, and print/copy controls.',
@@ -1874,7 +2112,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('generate_document_checklist'))
+
+
   server.tool(
+
+
     'generate_document_checklist',
     'Generate an evidence/document upload checklist with per-requirement file inputs, ' +
       'format and size validation, status tracking, and civ-document-status events.',
@@ -1906,7 +2149,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('generate_address_block'))
+
+
   server.tool(
+
+
     'generate_address_block',
     'Generate a standalone US address fieldset with autocomplete attributes, ' +
       'ZIP validation, optional territories and military addresses. Returns HTML, JS, and a FormSection.',
@@ -1949,7 +2197,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('generate_save_resume_ui'))
+
+
   server.tool(
+
+
     'generate_save_resume_ui',
     'Generate save-and-resume UI with auto-save, manual save, draft persistence via localStorage, ' +
       'resume detection, and session timeout dialog with countdown.',
@@ -2007,7 +2260,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('generate_amendment_flow'))
+
+
   server.tool(
+
+
     'generate_amendment_flow',
     'Generate a post-submission amendment request UI with a diff table showing ' +
       'original vs amended values, optional reason textarea, and approval notice.',
@@ -2056,7 +2314,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('generate_form_chain'))
+
+
   server.tool(
+
+
     'generate_form_chain',
     'Generate a multi-form chain UI with step navigation, dependency-based locking, ' +
       'data carry-over between forms, and back/next/submit-all buttons.',
@@ -2096,7 +2359,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('generate_decision_notice'))
+
+
   server.tool(
+
+
     'generate_decision_notice',
     'Generate a formal approval/denial letter with merge-field substitution, ' +
       'legal citations, appeal information, and print support.',
@@ -2134,7 +2402,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('generate_bilingual_form'))
+
+
   server.tool(
+
+
     'generate_bilingual_form',
     'Generate a bilingual form with language toggle, side-by-side, or inline rendering modes. ' +
       'Supports RTL languages and localStorage-based language preference persistence.',
@@ -2173,7 +2446,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('generate_data_table'))
+
+
   server.tool(
+
+
     'generate_data_table',
     'Generate an accessible financial/itemized data entry table with add/remove rows, ' +
       'column sorting, totals, and ARIA announcements.',
@@ -2209,7 +2487,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('generate_signature_block'))
+
+
   server.tool(
+
+
     'generate_signature_block',
     'Generate an e-signature block with typed, drawn (canvas), or checkbox modes. ' +
       'Includes legal attestation text, optional witness, print name, title, and date fields.',
@@ -2274,7 +2557,12 @@ export function createServer(): McpServer {
 
   // --- Phase 7: Utility & Integration Tools ---
 
+  if (shouldRegister('generate_repeatable_section'))
+
+
   server.tool(
+
+
     'generate_repeatable_section',
     'Generate an add-another repeatable section pattern with reindexing, ' +
       'min/max enforcement, and ARIA live announcements.',
@@ -2318,7 +2606,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('generate_progress_bar'))
+
+
   server.tool(
+
+
     'generate_progress_bar',
     'Generate a step progress indicator with completed/current/upcoming states, ' +
       'optional clickable navigation, and aria-current step marking.',
@@ -2357,7 +2650,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('generate_timeout_warning'))
+
+
   server.tool(
+
+
     'generate_timeout_warning',
     'Generate a WCAG 2.2.1-compliant session timeout warning dialog with ' +
       'countdown timer, session extension, and optional redirect.',
@@ -2424,7 +2722,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('generate_conditional_reveal'))
+
+
   server.tool(
+
+
     'generate_conditional_reveal',
     'Generate a conditional reveal pattern that shows or hides field groups ' +
       'based on a trigger field value, with aria-expanded and aria-controls.',
@@ -2469,7 +2772,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('generate_help_panel'))
+
+
   server.tool(
+
+
     'generate_help_panel',
     'Generate a contextual help panel in sidebar, inline, or tooltip mode ' +
       'with collapsible sections, keyboard navigation, and ARIA attributes.',
@@ -2514,7 +2822,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('validate_reading_level'))
+
+
   server.tool(
+
+
     'validate_reading_level',
     'Analyze text readability using Flesch-Kincaid scoring. Returns grade level, ' +
       'reading ease score, and plain-language suggestions for government content.',
@@ -2550,7 +2863,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('generate_pdf_notice'))
+
+
   server.tool(
+
+
     'generate_pdf_notice',
     'Generate a print-optimized decision notice with @media print CSS, ' +
       'page break rules, and running headers for PDF generation.',
@@ -2604,7 +2922,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('generate_field_dependencies_graph'))
+
+
   server.tool(
+
+
     'generate_field_dependencies_graph',
     'Generate a Mermaid dependency graph of field relationships from conditions, ' +
       'visibility rules, cascading options, and cross-field rules.',
@@ -2636,7 +2959,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('generate_mock_data'))
+
+
   server.tool(
+
+
     'generate_mock_data',
     'Generate deterministic mock form data from a schema using a seeded PRNG. ' +
       'Respects field types, options, ranges, and required/optional fill rates.',
@@ -2671,7 +2999,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('generate_api_handler'))
+
+
   server.tool(
+
+
     'generate_api_handler',
     'Generate a server-side API route handler with Zod validation, typed request bodies, ' +
       'and per-field error responses. Supports Express, Hono, and Fastify.',
@@ -2719,7 +3052,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('validate_schema'))
+
+
   server.tool(
+
+
     'validate_schema',
     'Validate a FormSchema for internal consistency — detects duplicate field names, ' +
       'missing options, dangling condition references, invalid ranges, and more.',
@@ -2785,7 +3123,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('generate_email_template'))
+
+
   server.tool(
+
+
     'generate_email_template',
     'Generate an HTML email (confirmation or decision) with inline CSS, ' +
       'table layout, and plain text fallback. Email-client compatible.',
@@ -2831,7 +3174,12 @@ export function createServer(): McpServer {
 
   // --- Phase 9 Tools ---
 
+  if (shouldRegister('generate_cross_field_rules'))
+
+
   server.tool(
+
+
     'generate_cross_field_rules',
     'Parse natural-language descriptions into CrossFieldRule[] for cross-field validation. ' +
       'Supports require/show/hide/setError actions with eq/neq/in/exists operators and compound and/or conditions.',
@@ -2866,7 +3214,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('inline_sub_forms'))
+
+
   server.tool(
+
+
     'inline_sub_forms',
     'Flatten subForm refs into a single merged schema with no subForms or ref sections. ' +
       'Applies namespace prefixes to field names, conditions, and cross-field rules.',
@@ -2898,7 +3251,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('scaffold_from_template'))
+
+
   server.tool(
+
+
     'scaffold_from_template',
     'Return a pre-built FormSchema from a template library. ' +
       'Includes 8 government form templates: Contact, Benefits, Change of Address, ' +
@@ -2935,7 +3293,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('generate_content_registry'))
+
+
   server.tool(
+
+
     'generate_content_registry',
     'Generate a FormContent JSON from a FormSchema for use with registerContent() from @civui/content. ' +
       'Produces field labels, hints, placeholders, and optionally error messages. ' +
@@ -2976,7 +3339,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('query_tokens'))
+
+
   server.tool(
+
+
     'query_tokens',
     'Look up CivUI design token values by category, name pattern, or type. ' +
       'Returns token names, values, CSS custom property names, and Tailwind class equivalents. ' +
@@ -3056,7 +3424,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('generate_openapi_spec'))
+
+
   server.tool(
+
+
     'generate_openapi_spec',
     'Generate an OpenAPI 3.0.3 specification from a FormSchema. ' +
       'Produces request/response schemas with validation constraints, example payloads, ' +
@@ -3105,7 +3478,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('generate_react_form'))
+
+
   server.tool(
+
+
     'generate_react_form',
     'Generate a React web component (TSX) from a FormSchema using CivUI custom elements in JSX. ' +
       'Supports useState or react-hook-form state management, TypeScript types, ' +
@@ -3150,7 +3528,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('sync_content_registry'))
+
+
   server.tool(
+
+
     'sync_content_registry',
     'Compare a FormContent registry against a FormSchema to find missing, stale, and mismatched content entries. ' +
       'Returns a patch object with corrected values and a markdown report.',
@@ -3364,7 +3747,12 @@ export function createServer(): McpServer {
 
   // ── VA Form Tools ───────────────────────────────────────────
 
+  if (shouldRegister('generate_intro_page'))
+
+
   server.tool(
+
+
     'generate_intro_page',
     'Generate a government form introduction page with process list, preparation checklist, sign-in alert, and OMB info. Input: VA form number.',
     {
@@ -3389,7 +3777,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('generate_gov_form'))
+
+
   server.tool(
+
+
     'generate_gov_form',
     'Generate a complete VA form with intro, task list hub, chapter pages, review page, and confirmation page. Returns structured pages for assembly. Input: VA form number.',
     {
@@ -3408,7 +3801,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('validate_gov_form'))
+
+
   server.tool(
+
+
     'validate_gov_form',
     'Validate government form HTML for consistency with CivUI patterns. Checks for proper component usage, required pages, heading classes, and design token compliance.',
     {
@@ -3427,7 +3825,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('assemble_gov_form'))
+
+
   server.tool(
+
+
     'assemble_gov_form',
     'Assemble a complete form application from a government form number. Supports "html" (single self-contained HTML file) or "react" (multi-file React TSX app with routing and typed components). Default: html.',
     {
@@ -3458,7 +3861,12 @@ export function createServer(): McpServer {
     },
   );
 
+  if (shouldRegister('list_gov_forms'))
+
+
   server.tool(
+
+
     'list_gov_forms',
     'List all available government form definitions with form numbers, titles, descriptions, and chapter counts. Use this to discover which forms can be generated.',
     {},

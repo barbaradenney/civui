@@ -3362,5 +3362,70 @@ export function createServer(): McpServer {
     async ({ description }) => buildWorkflowFormPrompt(description),
   );
 
+  // ── VA Form Tools ───────────────────────────────────────────
+
+  server.tool(
+    'generate_intro_page',
+    'Generate a VA form introduction page with process list, preparation checklist, sign-in alert, and OMB info. Input: VA form number.',
+    {
+      formNumber: z
+        .string()
+        .describe('VA form number, e.g. "21-526EZ", "10-10EZ", "22-1990"'),
+    },
+    async ({ formNumber }) => {
+      try {
+        const { getFormDefinition: getForm } = await import('./resources/va-form-registry.js');
+        const { generateIntroPage: genIntro } = await import('./tools/generate-intro-page.js');
+        const form = getForm(formNumber);
+        if (!form) {
+          const { getFormNumbers } = await import('./resources/va-form-registry.js');
+          throw new Error(`Unknown form: ${formNumber}. Available: ${getFormNumbers().join(', ')}`);
+        }
+        const result = genIntro(form);
+        return { content: [{ type: 'text' as const, text: JSON.stringify(result, null, 2) }] };
+      } catch (err) {
+        return { content: [{ type: 'text' as const, text: `Error: ${err instanceof Error ? err.message : String(err)}` }], isError: true };
+      }
+    },
+  );
+
+  server.tool(
+    'generate_va_form',
+    'Generate a complete VA form with intro, task list hub, chapter pages, review page, and confirmation page. Returns structured pages for assembly. Input: VA form number.',
+    {
+      formNumber: z
+        .string()
+        .describe('VA form number, e.g. "21-526EZ", "10-10EZ", "22-1990", "21P-527EZ"'),
+    },
+    async ({ formNumber }) => {
+      try {
+        const { generateVAForm: genVA } = await import('./tools/generate-va-form.js');
+        const result = genVA(formNumber);
+        return { content: [{ type: 'text' as const, text: JSON.stringify(result, null, 2) }] };
+      } catch (err) {
+        return { content: [{ type: 'text' as const, text: `Error: ${err instanceof Error ? err.message : String(err)}` }], isError: true };
+      }
+    },
+  );
+
+  server.tool(
+    'validate_va_form',
+    'Validate VA form HTML for consistency with CivUI patterns. Checks for proper component usage, required pages, heading classes, and design token compliance.',
+    {
+      html: z
+        .string()
+        .describe('The HTML of the generated VA form to validate'),
+    },
+    async ({ html: formHtml }) => {
+      try {
+        const { validateVAForm: validate } = await import('./tools/validate-va-form.js');
+        const result = validate(formHtml);
+        return { content: [{ type: 'text' as const, text: JSON.stringify(result, null, 2) }] };
+      } catch (err) {
+        return { content: [{ type: 'text' as const, text: `Error: ${err instanceof Error ? err.message : String(err)}` }], isError: true };
+      }
+    },
+  );
+
   return server;
 }

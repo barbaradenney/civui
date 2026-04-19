@@ -171,7 +171,7 @@ export class CivName extends CivFormElement {
         </div>
 
         ${this.showSuffix ? html`
-          <div class="civ-mb-3" style="max-width:10rem">
+          <div class="civ-mb-3 civ-field-width-sm">
             <label class="civ-label" for="${this._suffixId}">${t('nameSuffix')}</label>
             <select
               class="${selectClasses}"

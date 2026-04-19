@@ -35,6 +35,24 @@
     color: var(--civ-color-base-DEFAULT);
   }
 
+  /* ── Field width constraints ──────────────────────────────── */
+
+  .civ-field-width-xs {
+    max-width: 7rem;
+  }
+
+  .civ-field-width-sm {
+    max-width: 10rem;
+  }
+
+  .civ-field-width-md {
+    max-width: 12rem;
+  }
+
+  .civ-field-width-lg {
+    max-width: 20rem;
+  }
+
   /* ── Heading styles ──────────────────────────────────────── */
 
   .civ-heading-xl {
@@ -1580,6 +1598,13 @@
 
   .civ-read-only-field dd {
     font-size: var(--civ-typography-fontSize-base);
+  }
+
+  /* ── Summary label column ─────────────────────────────────── */
+
+  .civ-summary-label {
+    flex-basis: 12rem;
+    flex-shrink: 0;
   }
 
   /* ── Prefill Notice ──────────────────────────────────────── */

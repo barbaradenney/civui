@@ -102,7 +102,7 @@ export class CivSummary extends CivBaseElement {
 
     return html`
       <div class="civ-summary-item civ-flex civ-flex-wrap civ-py-2">
-        <dt class="civ-font-medium civ-text-muted" style="flex-basis:12rem;flex-shrink:0">${item.label}</dt>
+        <dt class="civ-font-medium civ-text-muted civ-summary-label">${item.label}</dt>
         <dd class="civ-flex-1 civ-min-w-0">
           ${hasValue
             ? Array.isArray(item.value)

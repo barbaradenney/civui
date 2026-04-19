@@ -123,7 +123,7 @@ export class CivDirectDeposit extends CivFormElement {
             aria-describedby="${[this._routingHintId, this.routingError ? this._routingErrId : ''].filter(Boolean).join(' ') || nothing}"
             @input="${(e: Event) => this._onFieldInput('routingNumber', e)}"
             @change="${(e: Event) => this._onFieldChange('routingNumber', e)}"
-            style="max-width:12rem"
+            class="civ-field-width-md"
           />
         </div>
 

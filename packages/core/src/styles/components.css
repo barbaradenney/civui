@@ -1225,7 +1225,7 @@
   /* ── Alert ─────────────────────────────────────────────────── */
 
   .civ-alert {
-    @apply civ-mb-4 civ-border civ-border-base-light;
+    @apply civ-mb-4 civ-border-2;
   }
 
   .civ-alert--slim .civ-alert__content {
@@ -1235,11 +1235,11 @@
   /* ── Alert: Header bar (filled top band with heading) ────────── */
 
   .civ-alert__header {
-    @apply civ-flex civ-justify-between civ-items-center civ-px-4 civ-py-3;
+    @apply civ-flex civ-justify-between civ-items-center civ-px-4 civ-py-1.5;
   }
 
   .civ-alert__heading {
-    @apply civ-font-bold civ-text-base civ-mt-0 civ-mb-0;
+    @apply civ-font-bold civ-text-base civ-mt-0 civ-mb-0 civ-uppercase;
     color: var(--civ-color-white-DEFAULT);
   }
 
@@ -1254,11 +1254,18 @@
     color: var(--civ-color-base-darkest);
   }
 
-  /* ── Alert: Header bar colors per variant ───────────────────── */
+  /* ── Alert: Header bar + border colors per variant ──────────── */
 
+  .civ-alert--info { border-color: var(--civ-color-info-dark); }
   .civ-alert--info .civ-alert__header { background-color: var(--civ-color-info-dark); }
+
+  .civ-alert--warning { border-color: var(--civ-color-warning-dark); }
   .civ-alert--warning .civ-alert__header { background-color: var(--civ-color-warning-dark); }
+
+  .civ-alert--error { border-color: var(--civ-color-error-DEFAULT); }
   .civ-alert--error .civ-alert__header { background-color: var(--civ-color-error-DEFAULT); }
+
+  .civ-alert--success { border-color: var(--civ-color-success-dark); }
   .civ-alert--success .civ-alert__header { background-color: var(--civ-color-success-dark); }
 
   /* ── Alert: Secondary (default — light tinted content bg) ───── */

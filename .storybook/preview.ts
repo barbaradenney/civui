@@ -1,6 +1,14 @@
 import type { Preview } from '@storybook/web-components';
 import '../packages/core/src/styles/civ.css';
 
+/** Detect system color scheme preference. */
+function getSystemTheme(): 'light' | 'dark' {
+  if (typeof window !== 'undefined' && window.matchMedia?.('(prefers-color-scheme: dark)').matches) {
+    return 'dark';
+  }
+  return 'light';
+}
+
 const preview: Preview = {
   globalTypes: {
     theme: {
@@ -9,6 +17,7 @@ const preview: Preview = {
         title: 'Theme',
         icon: 'mirror',
         items: [
+          { value: 'system', title: 'System', icon: 'mirror' },
           { value: 'light', title: 'Light', icon: 'sun' },
           { value: 'dark', title: 'Dark', icon: 'moon' },
         ],
@@ -17,12 +26,13 @@ const preview: Preview = {
     },
   },
   initialGlobals: {
-    theme: 'light',
+    theme: 'system',
   },
   decorators: [
     (story, context) => {
-      const theme = context.globals.theme || 'light';
-      const isDark = theme === 'dark';
+      const themeSetting = context.globals.theme || 'system';
+      const resolvedTheme = themeSetting === 'system' ? getSystemTheme() : themeSetting;
+      const isDark = resolvedTheme === 'dark';
 
       // Apply theme to both the current document AND any parent document
       // (handles both canvas mode and iframe-based docs mode)
@@ -30,7 +40,7 @@ const preview: Preview = {
       try { if (window.parent?.document) docs.push(window.parent.document); } catch {}
 
       for (const doc of docs) {
-        doc.documentElement.setAttribute('data-civ-theme', theme);
+        doc.documentElement.setAttribute('data-civ-theme', resolvedTheme);
         doc.body.style.backgroundColor = isDark ? '#1b1b1b' : '#ffffff';
         doc.body.style.color = isDark ? '#f0f0f0' : '#1b1b1b';
       }

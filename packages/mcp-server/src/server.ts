@@ -3429,24 +3429,28 @@ export function createServer(): McpServer {
 
   server.tool(
     'assemble_gov_form',
-    'Assemble a complete, working single-page HTML application from a government form number. Returns one self-contained HTML file with routing, navigation, task list status tracking, review page population, and form submission. Ready to open in a browser.',
+    'Assemble a complete form application from a government form number. Supports "html" (single self-contained HTML file) or "react" (multi-file React TSX app with routing and typed components). Default: html.',
     {
       formNumber: z
         .string()
         .describe('Government form number, e.g. "21-526EZ"'),
+      format: z
+        .enum(['html', 'react'])
+        .optional()
+        .describe('Output format: "html" (single file) or "react" (TSX components). Default: html.'),
       cdnBase: z
         .string()
         .optional()
-        .describe('Base URL for CivUI assets. Defaults to unpkg CDN.'),
+        .describe('Base URL for CivUI assets (html format). Defaults to unpkg CDN.'),
       submitAction: z
         .string()
         .optional()
         .describe('API endpoint for form submission. Defaults to /api/submit.'),
     },
-    async ({ formNumber, cdnBase, submitAction }) => {
+    async ({ formNumber, format, cdnBase, submitAction }) => {
       try {
         const { assembleGovForm } = await import('./tools/assemble-gov-form.js');
-        const result = assembleGovForm(formNumber, { cdnBase, submitAction });
+        const result = assembleGovForm(formNumber, { format, cdnBase, submitAction });
         return { content: [{ type: 'text' as const, text: JSON.stringify(result, null, 2) }] };
       } catch (err) {
         return { content: [{ type: 'text' as const, text: `Error: ${err instanceof Error ? err.message : String(err)}` }], isError: true };

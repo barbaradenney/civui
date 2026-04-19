@@ -80,3 +80,65 @@ describe('assembleGovForm', () => {
     }
   });
 });
+
+describe('assembleGovForm (react format)', () => {
+  it('returns files array for react format', () => {
+    const result = assembleGovForm('21-526EZ', { format: 'react' });
+    expect(result.files).toBeDefined();
+    expect(result.files!.length).toBeGreaterThan(3);
+  });
+
+  it('includes main app component', () => {
+    const result = assembleGovForm('21-526EZ', { format: 'react' });
+    const app = result.files!.find(f => f.path.includes('App.tsx'));
+    expect(app).toBeDefined();
+    expect(app!.content).toContain('useState');
+    expect(app!.content).toContain('export default');
+  });
+
+  it('includes intro page component', () => {
+    const result = assembleGovForm('21-526EZ', { format: 'react' });
+    const intro = result.files!.find(f => f.path.includes('IntroPage'));
+    expect(intro).toBeDefined();
+  });
+
+  it('includes chapter components', () => {
+    const result = assembleGovForm('21-526EZ', { format: 'react' });
+    const chapters = result.files!.filter(f => f.path.includes('chapters/'));
+    expect(chapters.length).toBeGreaterThan(3);
+  });
+
+  it('includes review and confirmation pages', () => {
+    const result = assembleGovForm('21-526EZ', { format: 'react' });
+    expect(result.files!.some(f => f.path.includes('ReviewPage'))).toBe(true);
+    expect(result.files!.some(f => f.path.includes('ConfirmationPage'))).toBe(true);
+  });
+
+  it('app component imports CivUI packages', () => {
+    const result = assembleGovForm('21-526EZ', { format: 'react' });
+    const app = result.files!.find(f => f.path.includes('App.tsx'))!;
+    expect(app.content).toContain("@civui/core");
+    expect(app.content).toContain("@civui/forms");
+  });
+
+  it('app component has navigation state', () => {
+    const result = assembleGovForm('21-526EZ', { format: 'react' });
+    const app = result.files!.find(f => f.path.includes('App.tsx'))!;
+    expect(app.content).toContain('currentPage');
+    expect(app.content).toContain('navigate');
+    expect(app.content).toContain('completeChapter');
+  });
+
+  it('returns react features', () => {
+    const result = assembleGovForm('21-526EZ', { format: 'react' });
+    expect(result.features).toContain('react');
+    expect(result.features).toContain('typescript');
+  });
+
+  it('works for all registered forms in react format', () => {
+    for (const formNum of ['21-526EZ', '10-10EZ', '22-1990', '21P-527EZ']) {
+      const result = assembleGovForm(formNum, { format: 'react' });
+      expect(result.files!.length).toBeGreaterThan(3);
+    }
+  });
+});

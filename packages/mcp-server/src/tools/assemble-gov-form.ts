@@ -16,20 +16,31 @@ import { escapeHtml } from './html-utils.js';
 import { generateGovForm } from './generate-gov-form.js';
 
 export interface AssembleResult {
-  html: string;
+  /** HTML output (when format is 'html'). */
+  html?: string;
+  /** React TSX files (when format is 'react'). */
+  files?: Array<{ path: string; content: string }>;
   pageCount: number;
   features: string[];
 }
 
 /**
- * Assemble a complete single-page form application from a form number.
+ * Assemble a complete form application from a form number.
  */
 export function assembleGovForm(formNumber: string, options?: {
+  /** Output format: 'html' (single HTML file) or 'react' (TSX components). */
+  format?: 'html' | 'react';
   /** Base URL for CivUI assets. Defaults to unpkg CDN. */
   cdnBase?: string;
   /** API endpoint for form submission. */
   submitAction?: string;
 }): AssembleResult {
+  const format = options?.format || 'html';
+
+  if (format === 'react') {
+    return assembleReactForm(formNumber, options);
+  }
+
   const result = generateGovForm(formNumber);
   const cdnBase = options?.cdnBase || 'https://unpkg.com/@civui';
   const submitAction = options?.submitAction || '/api/submit';
@@ -306,4 +317,223 @@ ${chapterHeadings}
     pageCount,
     features: [...result.features, 'single-page-app', 'hash-routing', 'auto-persist'],
   };
+}
+
+/**
+ * Assemble a React (TSX) multi-page form application.
+ * Returns an array of files that make up the complete app.
+ */
+function assembleReactForm(formNumber: string, options?: {
+  cdnBase?: string;
+  submitAction?: string;
+}): AssembleResult {
+  const result = generateGovForm(formNumber);
+  const submitAction = options?.submitAction || '/api/submit';
+
+  const chapterImports = result.pages.chapters
+    .map(ch => `import ${toPascal(ch.id)}Chapter from './chapters/${toPascal(ch.id)}';`)
+    .join('\n');
+
+  const chapterRoutes = result.pages.chapters
+    .map(ch => `        {currentPage === '${ch.id}' && <${toPascal(ch.id)}Chapter onBack={() => navigate('hub')} onContinue={() => completeChapter('${ch.id}')} />}`)
+    .join('\n');
+
+  const chapterTasks = result.pages.chapters
+    .map(ch => `          <civ-task label="${escapeHtml(ch.heading)}" href="#/${ch.id}" status={chapterStatus('${ch.id}')} onClick={() => navigate('${ch.id}')} />`)
+    .join('\n');
+
+  // Main App component
+  const appTsx = `import React, { useState, useCallback } from 'react';
+${chapterImports}
+import IntroPage from './pages/IntroPage';
+import ReviewPage from './pages/ReviewPage';
+import ConfirmationPage from './pages/ConfirmationPage';
+
+// CivUI web components work in React via custom elements
+// Import the component registrations
+import '@civui/core';
+import '@civui/forms';
+import '@civui/ui';
+import '@civui/navigation';
+import '@civui/feedback';
+import '@civui/core/styles/civ.css';
+
+type PageId = 'intro' | 'hub' | ${result.pages.chapters.map(ch => `'${ch.id}'`).join(' | ')} | 'review' | 'confirmation';
+
+export default function ${toPascal(formNumber)}App() {
+  const [currentPage, setCurrentPage] = useState<PageId>('intro');
+  const [completed, setCompleted] = useState<Set<string>>(new Set());
+  const [formData, setFormData] = useState<Record<string, any>>({});
+
+  const navigate = useCallback((page: PageId) => {
+    setCurrentPage(page);
+    window.scrollTo(0, 0);
+  }, []);
+
+  const completeChapter = useCallback((id: string) => {
+    setCompleted(prev => new Set(prev).add(id));
+    // Navigate to next chapter or back to hub
+    const chapters = [${result.pages.chapters.map(ch => `'${ch.id}'`).join(', ')}];
+    const idx = chapters.indexOf(id);
+    if (idx < chapters.length - 1) {
+      navigate(chapters[idx + 1] as PageId);
+    } else {
+      navigate('hub');
+    }
+  }, [navigate]);
+
+  const chapterStatus = useCallback((id: string) => {
+    if (completed.has(id)) return 'complete';
+    if (currentPage === id) return 'in-progress';
+    return 'not-started';
+  }, [completed, currentPage]);
+
+  const allComplete = completed.size >= ${result.pages.chapters.length};
+  const progress = Math.round((completed.size / ${result.pages.chapters.length}) * 100);
+
+  const handleSubmit = useCallback(async () => {
+    try {
+      await fetch('${submitAction}', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+    } catch { /* demo mode */ }
+    navigate('confirmation');
+  }, [formData, navigate]);
+
+  return (
+    <main style={{ maxWidth: 720, margin: '0 auto', padding: 24 }}>
+      {currentPage === 'intro' && (
+        <IntroPage onStart={() => navigate('hub')} />
+      )}
+
+      {currentPage === 'hub' && (
+        <div>
+          <h1 className="civ-heading-xl">${escapeHtml(result.title)}</h1>
+          <p className="civ-text-muted civ-mb-4">VA Form ${escapeHtml(result.formNumber)}</p>
+          <civ-progress-bar value={progress} label="Application progress" status={\`\${completed.size} of ${result.pages.chapters.length} sections complete\`} />
+          <civ-task-list>
+            <civ-task-group heading="Fill out your application">
+${chapterTasks}
+            </civ-task-group>
+            <civ-task-group heading="Review and submit">
+              <civ-task
+                label="Review your application"
+                status={allComplete ? 'not-started' : 'cannot-start'}
+                hint={allComplete ? '' : 'Complete all sections before reviewing'}
+                onClick={() => allComplete && navigate('review')}
+              />
+            </civ-task-group>
+          </civ-task-list>
+        </div>
+      )}
+
+${chapterRoutes}
+
+      {currentPage === 'review' && (
+        <ReviewPage
+          formData={formData}
+          onBack={() => navigate('hub')}
+          onSubmit={handleSubmit}
+        />
+      )}
+
+      {currentPage === 'confirmation' && (
+        <ConfirmationPage />
+      )}
+    </main>
+  );
+}
+`;
+
+  // Intro page component
+  const introTsx = `import React from 'react';
+
+interface IntroPageProps {
+  onStart: () => void;
+}
+
+export default function IntroPage({ onStart }: IntroPageProps) {
+  return (
+    <>
+${result.pages.intro.html.split('\n').map(line => `      ${line}`).join('\n')}
+    </>
+  );
+}
+`;
+
+  // Chapter components
+  const chapterFiles = result.pages.chapters.map(ch => ({
+    path: `src/chapters/${toPascal(ch.id)}.tsx`,
+    content: `import React from 'react';
+
+interface ${toPascal(ch.id)}Props {
+  onBack: () => void;
+  onContinue: () => void;
+}
+
+export default function ${toPascal(ch.id)}Chapter({ onBack, onContinue }: ${toPascal(ch.id)}Props) {
+  return (
+    <>
+${ch.html.split('\n').map(line => `      ${line}`).join('\n')}
+    </>
+  );
+}
+`,
+  }));
+
+  // Review page
+  const reviewTsx = `import React from 'react';
+
+interface ReviewPageProps {
+  formData: Record<string, any>;
+  onBack: () => void;
+  onSubmit: () => void;
+}
+
+export default function ReviewPage({ formData, onBack, onSubmit }: ReviewPageProps) {
+  return (
+    <>
+${result.pages.review.html.split('\n').map(line => `      ${line}`).join('\n')}
+    </>
+  );
+}
+`;
+
+  // Confirmation page
+  const confirmationTsx = `import React from 'react';
+
+export default function ConfirmationPage() {
+  return (
+    <>
+${result.pages.confirmation.html.split('\n').map(line => `      ${line}`).join('\n')}
+    </>
+  );
+}
+`;
+
+  const files = [
+    { path: `src/${toPascal(formNumber)}App.tsx`, content: appTsx },
+    { path: 'src/pages/IntroPage.tsx', content: introTsx },
+    ...chapterFiles,
+    { path: 'src/pages/ReviewPage.tsx', content: reviewTsx },
+    { path: 'src/pages/ConfirmationPage.tsx', content: confirmationTsx },
+  ];
+
+  return {
+    files,
+    pageCount: files.length,
+    features: [...result.features, 'react', 'typescript', 'multi-file'],
+  };
+}
+
+/** Convert kebab-case or form number to PascalCase. */
+function toPascal(str: string): string {
+  return str
+    .replace(/[^a-zA-Z0-9]+/g, ' ')
+    .split(' ')
+    .filter(Boolean)
+    .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+    .join('');
 }

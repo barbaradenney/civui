@@ -3366,7 +3366,7 @@ export function createServer(): McpServer {
 
   server.tool(
     'generate_intro_page',
-    'Generate a VA form introduction page with process list, preparation checklist, sign-in alert, and OMB info. Input: VA form number.',
+    'Generate a government form introduction page with process list, preparation checklist, sign-in alert, and OMB info. Input: VA form number.',
     {
       formNumber: z
         .string()
@@ -3374,11 +3374,11 @@ export function createServer(): McpServer {
     },
     async ({ formNumber }) => {
       try {
-        const { getFormDefinition: getForm } = await import('./resources/va-form-registry.js');
+        const { getFormDefinition: getForm } = await import('./resources/gov-form-registry.js');
         const { generateIntroPage: genIntro } = await import('./tools/generate-intro-page.js');
         const form = getForm(formNumber);
         if (!form) {
-          const { getFormNumbers } = await import('./resources/va-form-registry.js');
+          const { getFormNumbers } = await import('./resources/gov-form-registry.js');
           throw new Error(`Unknown form: ${formNumber}. Available: ${getFormNumbers().join(', ')}`);
         }
         const result = genIntro(form);
@@ -3390,7 +3390,7 @@ export function createServer(): McpServer {
   );
 
   server.tool(
-    'generate_va_form',
+    'generate_gov_form',
     'Generate a complete VA form with intro, task list hub, chapter pages, review page, and confirmation page. Returns structured pages for assembly. Input: VA form number.',
     {
       formNumber: z
@@ -3399,7 +3399,7 @@ export function createServer(): McpServer {
     },
     async ({ formNumber }) => {
       try {
-        const { generateVAForm: genVA } = await import('./tools/generate-va-form.js');
+        const { generateGovForm: genVA } = await import('./tools/generate-gov-form.js');
         const result = genVA(formNumber);
         return { content: [{ type: 'text' as const, text: JSON.stringify(result, null, 2) }] };
       } catch (err) {
@@ -3409,8 +3409,8 @@ export function createServer(): McpServer {
   );
 
   server.tool(
-    'validate_va_form',
-    'Validate VA form HTML for consistency with CivUI patterns. Checks for proper component usage, required pages, heading classes, and design token compliance.',
+    'validate_gov_form',
+    'Validate government form HTML for consistency with CivUI patterns. Checks for proper component usage, required pages, heading classes, and design token compliance.',
     {
       html: z
         .string()
@@ -3418,7 +3418,7 @@ export function createServer(): McpServer {
     },
     async ({ html: formHtml }) => {
       try {
-        const { validateVAForm: validate } = await import('./tools/validate-va-form.js');
+        const { validateGovForm: validate } = await import('./tools/validate-gov-form.js');
         const result = validate(formHtml);
         return { content: [{ type: 'text' as const, text: JSON.stringify(result, null, 2) }] };
       } catch (err) {

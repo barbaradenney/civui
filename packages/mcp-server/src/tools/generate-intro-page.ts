@@ -1,5 +1,5 @@
 /**
- * generate_intro_page tool — generates the VA form introduction page.
+ * generate_intro_page tool — generates the government form introduction page.
  *
  * Every VA form starts with an intro page that explains:
  * - What the form is for
@@ -10,7 +10,7 @@
  */
 
 import { escapeHtml } from './html-utils.js';
-import type { VAFormDefinition } from '../resources/va-form-registry.js';
+import type { GovFormDefinition } from '../resources/gov-form-registry.js';
 
 export interface IntroPageResult {
   html: string;
@@ -18,7 +18,7 @@ export interface IntroPageResult {
   features: string[];
 }
 
-export function generateIntroPage(form: VAFormDefinition): IntroPageResult {
+export function generateIntroPage(form: GovFormDefinition): IntroPageResult {
   const features = ['intro-page', 'process-list'];
 
   const prepItems = form.preparationItems

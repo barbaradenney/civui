@@ -1,27 +1,27 @@
 /**
- * validate_va_form tool — checks generated VA form HTML for consistency.
+ * validate_gov_form tool — checks generated government form HTML for consistency.
  *
  * Verifies the output uses CivUI components correctly and follows
  * the standard VA form flow.
  */
 
-export interface VAFormViolation {
+export interface GovFormViolation {
   rule: string;
   severity: 'error' | 'warning';
   message: string;
 }
 
-export interface ValidateVAFormResult {
+export interface ValidateGovFormResult {
   valid: boolean;
-  violations: VAFormViolation[];
+  violations: GovFormViolation[];
   summary: string;
 }
 
 /**
- * Validate VA form HTML for consistency with CivUI patterns.
+ * Validate government form HTML for consistency with CivUI patterns.
  */
-export function validateVAForm(html: string): ValidateVAFormResult {
-  const violations: VAFormViolation[] = [];
+export function validateGovForm(html: string): ValidateGovFormResult {
+  const violations: GovFormViolation[] = [];
 
   // Check for raw HTML inputs (should use CivUI components)
   const rawInputs = html.match(/<input\s/g);

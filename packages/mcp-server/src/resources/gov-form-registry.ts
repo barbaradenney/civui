@@ -7,9 +7,9 @@
  */
 
 import type { FormSection } from '../schema/index.js';
-import type { VAChapterId } from './va-chapters.js';
+import type { GovChapterId } from './gov-chapters.js';
 
-export interface VAFormDefinition {
+export interface GovFormDefinition {
   /** VA form number (e.g., "21-526EZ"). */
   formNumber: string;
 
@@ -25,8 +25,8 @@ export interface VAFormDefinition {
   /** Estimated time to complete (e.g., "25 minutes"). */
   respondentBurden: string;
 
-  /** Ordered list of shared chapter IDs from va-chapters.ts. */
-  chapters: VAChapterId[];
+  /** Ordered list of shared chapter IDs from gov-chapters.ts. */
+  chapters: GovChapterId[];
 
   /** Form-specific chapters not in the shared set. */
   customChapters?: Array<{
@@ -60,9 +60,9 @@ export interface VAFormDefinition {
 /**
  * Look up a VA form definition by form number.
  */
-export function getFormDefinition(formNumber: string): VAFormDefinition | undefined {
+export function getFormDefinition(formNumber: string): GovFormDefinition | undefined {
   const normalized = formNumber.toUpperCase().replace(/^VA\s*/i, '');
-  return VA_FORMS.find(f =>
+  return GOV_FORMS.find(f =>
     f.formNumber === normalized ||
     f.formNumber.replace(/-/g, '') === normalized.replace(/-/g, '')
   );
@@ -72,10 +72,10 @@ export function getFormDefinition(formNumber: string): VAFormDefinition | undefi
  * Get all registered form numbers.
  */
 export function getFormNumbers(): string[] {
-  return VA_FORMS.map(f => f.formNumber);
+  return GOV_FORMS.map(f => f.formNumber);
 }
 
-export const VA_FORMS: VAFormDefinition[] = [
+export const GOV_FORMS: GovFormDefinition[] = [
   // ── 21-526EZ: Disability Compensation ────────────────────────
   {
     formNumber: '21-526EZ',

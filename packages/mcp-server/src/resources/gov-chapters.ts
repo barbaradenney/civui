@@ -9,7 +9,7 @@
 import type { FormSection } from '../schema/index.js';
 
 /** All available VA chapter template IDs. */
-export type VAChapterId =
+export type GovChapterId =
   | 'personal-info'
   | 'contact-info'
   | 'service-history'
@@ -18,8 +18,8 @@ export type VAChapterId =
   | 'review-submit';
 
 /** Chapter metadata for task list display. */
-export interface VAChapterMeta {
-  id: VAChapterId;
+export interface GovChapterMeta {
+  id: GovChapterId;
   heading: string;
   hint: string;
   section: FormSection;
@@ -55,8 +55,8 @@ const CONTACT_METHOD_OPTIONS = [
 /**
  * Get a chapter template by ID.
  */
-export function getChapter(id: VAChapterId): VAChapterMeta {
-  const chapter = VA_CHAPTERS[id];
+export function getChapter(id: GovChapterId): GovChapterMeta {
+  const chapter = GOV_CHAPTERS[id];
   if (!chapter) throw new Error(`Unknown VA chapter: ${id}`);
   return chapter;
 }
@@ -64,12 +64,12 @@ export function getChapter(id: VAChapterId): VAChapterMeta {
 /**
  * Get multiple chapter templates by ID.
  */
-export function getChapters(ids: VAChapterId[]): VAChapterMeta[] {
+export function getChapters(ids: GovChapterId[]): GovChapterMeta[] {
   return ids.map(getChapter);
 }
 
 /** All VA chapter templates. */
-export const VA_CHAPTERS: Record<VAChapterId, VAChapterMeta> = {
+export const GOV_CHAPTERS: Record<GovChapterId, GovChapterMeta> = {
   'personal-info': {
     id: 'personal-info',
     heading: 'Personal information',

@@ -1,29 +1,29 @@
 /**
- * generate_va_form tool — generates a complete VA form from a form number.
+ * generate_gov_form tool — generates a complete government form from a form number.
  *
  * Composes: intro page → task list hub → chapter pages → review page → confirmation page.
- * Uses shared chapter templates from va-chapters.ts and form definitions from va-form-registry.ts.
+ * Uses shared chapter templates from gov-chapters.ts and form definitions from gov-form-registry.ts.
  */
 
 import { escapeHtml, slugify } from './html-utils.js';
-import { getFormDefinition, getFormNumbers } from '../resources/va-form-registry.js';
-import { getChapter, type VAChapterMeta } from '../resources/va-chapters.js';
+import { getFormDefinition, getFormNumbers } from '../resources/gov-form-registry.js';
+import { getChapter, type GovChapterMeta } from '../resources/gov-chapters.js';
 import { generateIntroPage } from './generate-intro-page.js';
 import type { FormField } from '../schema/index.js';
 
-export interface VAFormPage {
+export interface GovFormPage {
   id: string;
   heading: string;
   html: string;
   javascript: string;
 }
 
-export interface VAFormResult {
+export interface GovFormResult {
   formNumber: string;
   title: string;
   pages: {
     intro: { html: string; javascript: string };
-    chapters: VAFormPage[];
+    chapters: GovFormPage[];
     review: { html: string; javascript: string };
     confirmation: { html: string; javascript: string };
   };
@@ -34,13 +34,13 @@ export interface VAFormResult {
 }
 
 /**
- * Generate a complete VA form by form number.
+ * Generate a complete government form by form number.
  */
-export function generateVAForm(formNumber: string): VAFormResult {
+export function generateGovForm(formNumber: string): GovFormResult {
   const form = getFormDefinition(formNumber);
   if (!form) {
     const available = getFormNumbers().join(', ');
-    throw new Error(`Unknown VA form: ${formNumber}. Available forms: ${available}`);
+    throw new Error(`Unknown form: ${formNumber}. Available forms: ${available}`);
   }
 
   // Resolve chapters: shared + custom, in order
@@ -70,7 +70,7 @@ export function generateVAForm(formNumber: string): VAFormResult {
   }
 
   const features = [
-    'va-form',
+    'gov-form',
     'intro-page',
     'task-list-hub',
     'form-steps',
@@ -97,9 +97,9 @@ export function generateVAForm(formNumber: string): VAFormResult {
 }
 
 /** Resolve shared + custom chapters in correct order. */
-function resolveChapters(form: ReturnType<typeof getFormDefinition> & {}): Array<VAChapterMeta & { id: string }> {
+function resolveChapters(form: ReturnType<typeof getFormDefinition> & {}): Array<GovChapterMeta & { id: string }> {
   // Start with shared chapters
-  const chapters: Array<VAChapterMeta & { id: string }> = form.chapters.map(id => getChapter(id));
+  const chapters: Array<GovChapterMeta & { id: string }> = form.chapters.map(id => getChapter(id));
 
   if (!form.customChapters) return chapters;
 
@@ -144,7 +144,7 @@ function resolveChapters(form: ReturnType<typeof getFormDefinition> & {}): Array
 }
 
 /** Generate HTML for a single chapter page. */
-function generateChapterPage(chapter: VAChapterMeta, form: ReturnType<typeof getFormDefinition> & {}): VAFormPage {
+function generateChapterPage(chapter: GovChapterMeta, form: ReturnType<typeof getFormDefinition> & {}): GovFormPage {
   const fields = chapter.section.fields.map(f => renderField(f)).join('\n');
   const isRepeatable = chapter.section.repeatable;
 
@@ -322,7 +322,7 @@ ${checkOptions}
 }
 
 /** Generate the review page with summary + signature. */
-function generateReviewPage(_form: ReturnType<typeof getFormDefinition> & {}, chapters: Array<VAChapterMeta>): { html: string; javascript: string } {
+function generateReviewPage(_form: ReturnType<typeof getFormDefinition> & {}, chapters: Array<GovChapterMeta>): { html: string; javascript: string } {
   const chapterIds = chapters
     .filter(ch => ch.id !== 'review-submit')
     .map(ch => `    { heading: '${escapeHtml(ch.heading)}', editHref: '#/${slugify(ch.id)}', items: [] }`)
@@ -398,7 +398,7 @@ ${nextStepsHtml}
 }
 
 /** Generate the task list hub page. */
-function generateTaskListHub(form: ReturnType<typeof getFormDefinition> & {}, chapters: Array<VAChapterMeta>): { html: string } {
+function generateTaskListHub(form: ReturnType<typeof getFormDefinition> & {}, chapters: Array<GovChapterMeta>): { html: string } {
   const chapterTasks = chapters
     .filter(ch => ch.id !== 'review-submit')
     .map(ch => `      <civ-task

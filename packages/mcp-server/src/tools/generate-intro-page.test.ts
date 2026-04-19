@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { generateIntroPage } from './generate-intro-page.js';
-import { getFormDefinition } from '../resources/va-form-registry.js';
+import { getFormDefinition } from '../resources/gov-form-registry.js';
 
 describe('generateIntroPage', () => {
   const form = getFormDefinition('21-526EZ')!;

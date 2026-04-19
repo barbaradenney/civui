@@ -40,7 +40,7 @@ public struct CivTag: View {
     public var body: some View {
         Text(label)
             .font(.system(size: fontSize,
-                          weight: CivTokens.Typography.FontWeight.bold))
+                          weight: CivTokens.Typography.FontWeight.regular))
             .foregroundColor(foregroundColor)
             .padding(.horizontal, CivTokens.Spacing._2)
             .padding(.vertical, CivTokens.Spacing._0_5)

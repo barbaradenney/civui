@@ -56,7 +56,7 @@ fun CivTag(
     Text(
         text = label,
         fontSize = textSize,
-        fontWeight = FontWeight.Bold,
+        fontWeight = FontWeight.Normal,
         color = fg,
         modifier = modifier
             .background(bg, RoundedCornerShape(CivTokens.Border.Radius.default_))

@@ -251,99 +251,97 @@ export class CivAddress extends CivFormElement {
           </div>
         ` : nothing}
 
-        <div class="civ-flex civ-flex-wrap civ-gap-3">
-          <div class="civ-flex-1 civ-min-w-0" style="flex-basis:12rem">
-            <label class="civ-label" for="${this._cityId}">
-              ${t('addressCity')}
-              ${this.required ? html`<span class="civ-sr-only">${t('required')}</span>` : nothing}
-            </label>
-            ${renderError(this._cityErrorId, this.cityError)}
+        <div class="civ-mb-3">
+          <label class="civ-label" for="${this._cityId}">
+            ${t('addressCity')}
+            ${this.required ? html`<span class="civ-sr-only">${t('required')}</span>` : nothing}
+          </label>
+          ${renderError(this._cityErrorId, this.cityError)}
+          <input
+            type="text"
+            class="${classes}"
+            id="${this._cityId}"
+            name="${this.name ? `${this.name}.city` : nothing}"
+            .value="${this._address.city}"
+            autocomplete="address-level2"
+            ?required="${this.required}"
+            ?disabled="${this.disabled}"
+            ?readonly="${this.readonly}"
+            aria-required="${this.required || nothing}"
+            aria-invalid="${this.cityError ? 'true' : nothing}"
+            aria-describedby="${this.cityError ? this._cityErrorId : nothing}"
+            @input="${(e: Event) => this._onFieldInput('city', e)}"
+            @change="${(e: Event) => this._onFieldChange('city', e)}"
+          />
+        </div>
+
+        <div class="civ-mb-3">
+          <label class="civ-label" for="${this._stateId}">
+            ${this._useSelectForState ? t('addressState') : t('addressStateProvince')}
+            ${this.required ? html`<span class="civ-sr-only">${t('required')}</span>` : nothing}
+          </label>
+          ${renderError(this._stateErrorId, this.stateError)}
+          ${this._useSelectForState ? html`
+            <select
+              class="${selectClasses}"
+              id="${this._stateId}"
+              name="${this.name ? `${this.name}.state` : nothing}"
+              .value="${this._address.state}"
+              autocomplete="address-level1"
+              ?required="${this.required}"
+              ?disabled="${this.disabled || this.readonly}"
+              aria-required="${this.required || nothing}"
+              aria-invalid="${this.stateError ? 'true' : nothing}"
+              aria-describedby="${this.stateError ? this._stateErrorId : nothing}"
+              @change="${(e: Event) => { this._onFieldInput('state', e); this._onFieldChange('state', e); }}"
+            >
+              <option value="">${t('selectEmpty')}</option>
+              ${this._stateOptions.map(s => html`
+                <option value="${s.value}" ?selected="${s.value === this._address.state}">${s.label}</option>
+              `)}
+            </select>
+          ` : html`
             <input
               type="text"
               class="${classes}"
-              id="${this._cityId}"
-              name="${this.name ? `${this.name}.city` : nothing}"
-              .value="${this._address.city}"
-              autocomplete="address-level2"
-              ?required="${this.required}"
+              id="${this._stateId}"
+              name="${this.name ? `${this.name}.state` : nothing}"
+              .value="${this._address.state}"
+              autocomplete="address-level1"
               ?disabled="${this.disabled}"
               ?readonly="${this.readonly}"
-              aria-required="${this.required || nothing}"
-              aria-invalid="${this.cityError ? 'true' : nothing}"
-              aria-describedby="${this.cityError ? this._cityErrorId : nothing}"
-              @input="${(e: Event) => this._onFieldInput('city', e)}"
-              @change="${(e: Event) => this._onFieldChange('city', e)}"
+              aria-invalid="${this.stateError ? 'true' : nothing}"
+              aria-describedby="${this.stateError ? this._stateErrorId : nothing}"
+              @input="${(e: Event) => this._onFieldInput('state', e)}"
+              @change="${(e: Event) => this._onFieldChange('state', e)}"
             />
-          </div>
+          `}
+        </div>
 
-          <div style="flex-basis:10rem">
-            <label class="civ-label" for="${this._stateId}">
-              ${this._useSelectForState ? t('addressState') : t('addressStateProvince')}
-              ${this.required ? html`<span class="civ-sr-only">${t('required')}</span>` : nothing}
-            </label>
-            ${renderError(this._stateErrorId, this.stateError)}
-            ${this._useSelectForState ? html`
-              <select
-                class="${selectClasses}"
-                id="${this._stateId}"
-                name="${this.name ? `${this.name}.state` : nothing}"
-                .value="${this._address.state}"
-                autocomplete="address-level1"
-                ?required="${this.required}"
-                ?disabled="${this.disabled || this.readonly}"
-                aria-required="${this.required || nothing}"
-                aria-invalid="${this.stateError ? 'true' : nothing}"
-                aria-describedby="${this.stateError ? this._stateErrorId : nothing}"
-                @change="${(e: Event) => { this._onFieldInput('state', e); this._onFieldChange('state', e); }}"
-              >
-                <option value="">${t('selectEmpty')}</option>
-                ${this._stateOptions.map(s => html`
-                  <option value="${s.value}" ?selected="${s.value === this._address.state}">${s.label}</option>
-                `)}
-              </select>
-            ` : html`
-              <input
-                type="text"
-                class="${classes}"
-                id="${this._stateId}"
-                name="${this.name ? `${this.name}.state` : nothing}"
-                .value="${this._address.state}"
-                autocomplete="address-level1"
-                ?disabled="${this.disabled}"
-                ?readonly="${this.readonly}"
-                aria-invalid="${this.stateError ? 'true' : nothing}"
-                aria-describedby="${this.stateError ? this._stateErrorId : nothing}"
-                @input="${(e: Event) => this._onFieldInput('state', e)}"
-                @change="${(e: Event) => this._onFieldChange('state', e)}"
-              />
-            `}
-          </div>
-
-          <div style="flex-basis:7rem">
-            <label class="civ-label" for="${this._zipId}">
-              ${this._address.country === 'US' || !this.showCountry ? t('addressZip') : t('addressPostalCode')}
-              ${this.required ? html`<span class="civ-sr-only">${t('required')}</span>` : nothing}
-            </label>
-            ${renderError(this._zipErrorId, this.zipError)}
-            <input
-              type="text"
-              class="${classes}"
-              id="${this._zipId}"
-              name="${this.name ? `${this.name}.zip` : nothing}"
-              .value="${this._address.zip}"
-              inputmode="numeric"
-              autocomplete="postal-code"
-              maxlength="10"
-              ?required="${this.required}"
-              ?disabled="${this.disabled}"
-              ?readonly="${this.readonly}"
-              aria-required="${this.required || nothing}"
-              aria-invalid="${this.zipError ? 'true' : nothing}"
-              aria-describedby="${this.zipError ? this._zipErrorId : nothing}"
-              @input="${(e: Event) => this._onFieldInput('zip', e)}"
-              @change="${(e: Event) => this._onFieldChange('zip', e)}"
-            />
-          </div>
+        <div class="civ-mb-3">
+          <label class="civ-label" for="${this._zipId}">
+            ${this._address.country === 'US' || !this.showCountry ? t('addressZip') : t('addressPostalCode')}
+            ${this.required ? html`<span class="civ-sr-only">${t('required')}</span>` : nothing}
+          </label>
+          ${renderError(this._zipErrorId, this.zipError)}
+          <input
+            type="text"
+            class="${classes}"
+            id="${this._zipId}"
+            name="${this.name ? `${this.name}.zip` : nothing}"
+            .value="${this._address.zip}"
+            inputmode="numeric"
+            autocomplete="postal-code"
+            maxlength="10"
+            ?required="${this.required}"
+            ?disabled="${this.disabled}"
+            ?readonly="${this.readonly}"
+            aria-required="${this.required || nothing}"
+            aria-invalid="${this.zipError ? 'true' : nothing}"
+            aria-describedby="${this.zipError ? this._zipErrorId : nothing}"
+            @input="${(e: Event) => this._onFieldInput('zip', e)}"
+            @change="${(e: Event) => this._onFieldChange('zip', e)}"
+          />
         </div>
       </fieldset>
     `;

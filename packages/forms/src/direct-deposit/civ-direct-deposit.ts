@@ -1,6 +1,8 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { CivFormElement, dispatch, renderLegend, renderHint, renderError, inputClasses, buildDescribedBy, t } from '@civui/core';
+import '../radio/civ-radio-group.js';
+import '../radio/civ-radio.js';
 
 export interface DirectDepositValue {
   accountType: 'checking' | 'savings' | '';
@@ -45,7 +47,6 @@ export class CivDirectDeposit extends CivFormElement {
 
   private _routingId = this.generateId('routing');
   private _accountId = this.generateId('account');
-  private _typeErrId = this.generateId('type-err');
   private _routingErrId = this.generateId('routing-err');
   private _accountErrId = this.generateId('account-err');
   private _routingHintId = this.generateId('routing-hint');
@@ -86,40 +87,18 @@ export class CivDirectDeposit extends CivFormElement {
         ${renderHint(this._hintId, this.hint, true)}
         ${renderError(this._errorId, this.error, true)}
 
-        <div class="civ-mb-3">
-          <fieldset class="civ-fieldset" role="radiogroup" aria-required="${this.required || nothing}">
-            <legend class="civ-label">${t('directDepositAccountType')}
-              ${this.required ? html`<span class="civ-sr-only">${t('required')}</span>` : nothing}
-            </legend>
-            ${renderError(this._typeErrId, this.typeError)}
-            <div class="civ-flex civ-gap-4">
-              <label class="civ-flex civ-items-center civ-gap-1.5 civ-cursor-pointer">
-                <input
-                  type="radio"
-                  name="${this.name ? `${this.name}.accountType` : 'accountType'}"
-                  value="checking"
-                  .checked="${this._deposit.accountType === 'checking'}"
-                  ?disabled="${this.disabled}"
-                  class="focus-visible:civ-focus-ring"
-                  @change="${() => this._onTypeChange('checking')}"
-                />
-                ${t('directDepositChecking')}
-              </label>
-              <label class="civ-flex civ-items-center civ-gap-1.5 civ-cursor-pointer">
-                <input
-                  type="radio"
-                  name="${this.name ? `${this.name}.accountType` : 'accountType'}"
-                  value="savings"
-                  .checked="${this._deposit.accountType === 'savings'}"
-                  ?disabled="${this.disabled}"
-                  class="focus-visible:civ-focus-ring"
-                  @change="${() => this._onTypeChange('savings')}"
-                />
-                ${t('directDepositSavings')}
-              </label>
-            </div>
-          </fieldset>
-        </div>
+        <civ-radio-group
+          legend="${t('directDepositAccountType')}"
+          name="${this.name ? `${this.name}.accountType` : 'accountType'}"
+          value="${this._deposit.accountType}"
+          ?required="${this.required}"
+          ?disabled="${this.disabled}"
+          error="${this.typeError}"
+          @civ-change="${this._onRadioChange}"
+        >
+          <civ-radio label="${t('directDepositChecking')}" value="checking"></civ-radio>
+          <civ-radio label="${t('directDepositSavings')}" value="savings"></civ-radio>
+        </civ-radio-group>
 
         <div class="civ-mb-3">
           <label class="civ-label" for="${this._routingId}">
@@ -176,7 +155,9 @@ export class CivDirectDeposit extends CivFormElement {
     `;
   }
 
-  private _onTypeChange(type: 'checking' | 'savings'): void {
+  private _onRadioChange(e: CustomEvent<{ value: string }>): void {
+    e.stopPropagation(); // Prevent the radio group's event from bubbling past this component
+    const type = e.detail.value as 'checking' | 'savings';
     this._deposit = { ...this._deposit, accountType: type };
     this.value = JSON.stringify(this._deposit);
     dispatch(this, 'civ-input', { value: { ...this._deposit } });

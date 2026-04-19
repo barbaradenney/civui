@@ -1429,7 +1429,7 @@
   /* ── Status tags ───────────────────────────────────────────── */
 
   .civ-tag {
-    @apply civ-inline-block civ-px-2 civ-py-0.5 civ-text-base civ-font-bold civ-rounded;
+    @apply civ-inline-block civ-px-2 civ-py-0.5 civ-text-base civ-font-normal civ-rounded;
   }
 
   .civ-tag--sm {

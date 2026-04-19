@@ -12,9 +12,11 @@ describe('civ-direct-deposit', () => {
     expect(el.querySelector('legend')!.textContent).toContain('Direct deposit');
   });
 
-  it('renders account type radio buttons', async () => {
+  it('renders account type radio group with civ-radio components', async () => {
     const el = await fixture<CivDirectDeposit>('<civ-direct-deposit legend="Deposit" name="bank"></civ-direct-deposit>');
-    const radios = el.querySelectorAll('input[type="radio"]');
+    const radioGroup = el.querySelector('civ-radio-group');
+    expect(radioGroup).not.toBeNull();
+    const radios = el.querySelectorAll('civ-radio');
     expect(radios.length).toBe(2);
   });
 
@@ -34,9 +36,9 @@ describe('civ-direct-deposit', () => {
     const el = await fixture<CivDirectDeposit>('<civ-direct-deposit legend="Deposit" name="bank"></civ-direct-deposit>');
     let detail: any = null;
     el.addEventListener('civ-change', ((e: CustomEvent) => { detail = e.detail; }) as EventListener);
-    const radio = el.querySelector('input[value="checking"]') as HTMLInputElement;
-    radio.checked = true;
-    radio.dispatchEvent(new Event('change', { bubbles: true }));
+    const radioGroup = el.querySelector('civ-radio-group') as any;
+    // Simulate the radio group dispatching a civ-change event
+    radioGroup.dispatchEvent(new CustomEvent('civ-change', { detail: { value: 'checking' }, bubbles: true }));
     expect(detail).not.toBeNull();
     expect(detail.value.accountType).toBe('checking');
   });

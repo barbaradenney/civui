@@ -3,7 +3,7 @@ import { html } from 'lit';
 import './civ-task-list.js';
 import './civ-task-group.js';
 import './civ-task.js';
-import '../../../forms/src/progress-steps/civ-progress-bar.js';
+import '@civui/forms';
 
 const meta: Meta = {
   title: 'Navigation/Task List',

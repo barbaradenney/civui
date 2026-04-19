@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import './civ-summary.js';
 import '../signature/civ-signature.js';
-import '../../feedback/src/alert/civ-alert.js';
+import '@civui/feedback';
 
 const meta: Meta = {
   title: 'Forms/Summary',

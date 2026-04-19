@@ -1485,6 +1485,7 @@
 
   .civ-tag {
     @apply civ-inline-block civ-px-2 civ-py-0.5 civ-text-base civ-font-normal;
+    border-radius: 0;
   }
 
   .civ-tag--sm {

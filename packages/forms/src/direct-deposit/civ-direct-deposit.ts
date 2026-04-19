@@ -1,8 +1,9 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivFormElement, dispatch, renderLegend, renderHint, renderError, inputClasses, buildDescribedBy, t } from '@civui/core';
+import { CivFormElement, dispatch, renderLegend, renderHint, renderError, buildDescribedBy, t } from '@civui/core';
 import '../radio/civ-radio-group.js';
 import '../radio/civ-radio.js';
+import '../text-input/civ-text-input.js';
 
 export interface DirectDepositValue {
   accountType: 'checking' | 'savings' | '';
@@ -45,12 +46,6 @@ export class CivDirectDeposit extends CivFormElement {
 
   @state() private _deposit: DirectDepositValue = { ...EMPTY_DEPOSIT };
 
-  private _routingId = this.generateId('routing');
-  private _accountId = this.generateId('account');
-  private _routingErrId = this.generateId('routing-err');
-  private _accountErrId = this.generateId('account-err');
-  private _routingHintId = this.generateId('routing-hint');
-  private _accountHintId = this.generateId('account-hint');
 
   /** Get the current deposit value. */
   get depositValue(): DirectDepositValue {
@@ -73,7 +68,6 @@ export class CivDirectDeposit extends CivFormElement {
   }
 
   override render() {
-    const classes = inputClasses();
     const describedBy = buildDescribedBy(this._hintId, this.hint, this._errorId, this.error);
 
     return html`
@@ -100,57 +94,36 @@ export class CivDirectDeposit extends CivFormElement {
           <civ-radio label="${t('directDepositSavings')}" value="savings"></civ-radio>
         </civ-radio-group>
 
-        <div class="civ-mb-3">
-          <label class="civ-label" for="${this._routingId}">
-            ${t('directDepositRouting')}
-            ${this.required ? html`<span class="civ-sr-only">${t('required')}</span>` : nothing}
-          </label>
-          <span class="civ-hint" id="${this._routingHintId}">${t('directDepositRoutingHint')}</span>
-          ${renderError(this._routingErrId, this.routingError)}
-          <input
-            type="text"
-            class="${classes}"
-            id="${this._routingId}"
-            name="${this.name ? `${this.name}.routingNumber` : nothing}"
-            .value="${this._deposit.routingNumber}"
+        <div class="civ-field-width-md">
+          <civ-text-input
+            label="${t('directDepositRouting')}"
+            name="${this.name ? `${this.name}.routingNumber` : ''}"
+            value="${this._deposit.routingNumber}"
+            hint="${t('directDepositRoutingHint')}"
+            error="${this.routingError}"
             inputmode="numeric"
             maxlength="9"
             ?required="${this.required}"
             ?disabled="${this.disabled}"
             ?readonly="${this.readonly}"
-            aria-required="${this.required || nothing}"
-            aria-invalid="${this.routingError ? 'true' : nothing}"
-            aria-describedby="${[this._routingHintId, this.routingError ? this._routingErrId : ''].filter(Boolean).join(' ') || nothing}"
-            @input="${(e: Event) => this._onFieldInput('routingNumber', e)}"
-            @change="${(e: Event) => this._onFieldChange('routingNumber', e)}"
-            class="civ-field-width-md"
-          />
+            @civ-input="${(e: CustomEvent) => this._onSubInput('routingNumber', e)}"
+            @civ-change="${(e: CustomEvent) => this._onSubChange('routingNumber', e)}"
+          ></civ-text-input>
         </div>
 
-        <div class="civ-mb-3">
-          <label class="civ-label" for="${this._accountId}">
-            ${t('directDepositAccount')}
-            ${this.required ? html`<span class="civ-sr-only">${t('required')}</span>` : nothing}
-          </label>
-          <span class="civ-hint" id="${this._accountHintId}">${t('directDepositAccountHint')}</span>
-          ${renderError(this._accountErrId, this.accountError)}
-          <input
-            type="text"
-            class="${classes}"
-            id="${this._accountId}"
-            name="${this.name ? `${this.name}.accountNumber` : nothing}"
-            .value="${this._deposit.accountNumber}"
-            inputmode="numeric"
-            ?required="${this.required}"
-            ?disabled="${this.disabled}"
-            ?readonly="${this.readonly}"
-            aria-required="${this.required || nothing}"
-            aria-invalid="${this.accountError ? 'true' : nothing}"
-            aria-describedby="${[this._accountHintId, this.accountError ? this._accountErrId : ''].filter(Boolean).join(' ') || nothing}"
-            @input="${(e: Event) => this._onFieldInput('accountNumber', e)}"
-            @change="${(e: Event) => this._onFieldChange('accountNumber', e)}"
-          />
-        </div>
+        <civ-text-input
+          label="${t('directDepositAccount')}"
+          name="${this.name ? `${this.name}.accountNumber` : ''}"
+          value="${this._deposit.accountNumber}"
+          hint="${t('directDepositAccountHint')}"
+          error="${this.accountError}"
+          inputmode="numeric"
+          ?required="${this.required}"
+          ?disabled="${this.disabled}"
+          ?readonly="${this.readonly}"
+          @civ-input="${(e: CustomEvent) => this._onSubInput('accountNumber', e)}"
+          @civ-change="${(e: CustomEvent) => this._onSubChange('accountNumber', e)}"
+        ></civ-text-input>
       </fieldset>
     `;
   }
@@ -165,19 +138,18 @@ export class CivDirectDeposit extends CivFormElement {
     this.sendAnalytics('change');
   }
 
-  private _onFieldInput(field: keyof DirectDepositValue, e: Event): void {
-    const target = e.target as HTMLInputElement;
-    this._deposit = { ...this._deposit, [field]: target.value };
+  private _onSubInput(field: keyof DirectDepositValue, e: CustomEvent<{ value: string }>): void {
+    e.stopPropagation();
+    this._deposit = { ...this._deposit, [field]: e.detail.value };
     this.value = JSON.stringify(this._deposit);
     dispatch(this, 'civ-input', { value: { ...this._deposit } });
   }
 
-  private _onFieldChange(field: keyof DirectDepositValue, e: Event): void {
-    const target = e.target as HTMLInputElement;
-    this._deposit = { ...this._deposit, [field]: target.value };
+  private _onSubChange(field: keyof DirectDepositValue, e: CustomEvent<{ value: string }>): void {
+    e.stopPropagation();
+    this._deposit = { ...this._deposit, [field]: e.detail.value };
     this.value = JSON.stringify(this._deposit);
     dispatch(this, 'civ-change', { value: { ...this._deposit } });
-    this.sendAnalytics('change');
   }
 
   protected override _syncFormValue(): void {

@@ -1,6 +1,9 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivFormElement, dispatch, renderLegend, renderHint, renderError, inputClasses, buildDescribedBy, t } from '@civui/core';
+import { CivFormElement, dispatch, renderLegend, renderHint, renderError, buildDescribedBy, t } from '@civui/core';
+import '../text-input/civ-text-input.js';
+import '../select/civ-select.js';
+import '../checkbox/civ-checkbox.js';
 
 export interface AddressValue {
   country: string;
@@ -51,14 +54,19 @@ const MILITARY_STATES = [
   { value: 'AP', label: 'Armed Forces Pacific (AP)' },
 ];
 
+const COUNTRY_OPTIONS = [
+  { value: 'US', label: 'United States' },
+  { value: 'CA', label: 'Canada' },
+  { value: 'MX', label: 'Mexico' },
+];
+
 const EMPTY_ADDRESS: AddressValue = { country: 'US', street1: '', street2: '', street3: '', city: '', state: '', zip: '', military: false };
 
 /**
  * CivUI Address
  *
  * Structured address input with street, city, state, and ZIP fields.
- * Renders as a fieldset with individual labeled inputs for each field.
- * Submits structured form data with `{name}.street1`, `{name}.city`, etc.
+ * Renders as a fieldset using CivUI sub-components.
  *
  * @element civ-address
  *
@@ -101,19 +109,6 @@ export class CivAddress extends CivFormElement {
 
   @state() private _address: AddressValue = { ...EMPTY_ADDRESS };
 
-  private _countryId = this.generateId('country');
-  private _militaryId = this.generateId('military');
-  private _street1Id = this.generateId('street1');
-  private _street2Id = this.generateId('street2');
-  private _street3Id = this.generateId('street3');
-  private _cityId = this.generateId('city');
-  private _stateId = this.generateId('state');
-  private _zipId = this.generateId('zip');
-  private _streetErrorId = this.generateId('street-err');
-  private _cityErrorId = this.generateId('city-err');
-  private _stateErrorId = this.generateId('state-err');
-  private _zipErrorId = this.generateId('zip-err');
-
   /** Get the current address value as a structured object. */
   get addressValue(): AddressValue {
     return { ...this._address };
@@ -130,15 +125,20 @@ export class CivAddress extends CivFormElement {
     if (this.value) {
       try {
         this._address = { ...EMPTY_ADDRESS, ...JSON.parse(this.value) };
-      } catch {
-        // If value isn't valid JSON, leave address empty
-      }
+      } catch { /* leave empty */ }
+    }
+    this._syncSelectOptions();
+  }
+
+  override updated(changed: Map<string, unknown>): void {
+    super.updated(changed);
+    // Re-sync select options when military or country changes
+    if (changed.has('_address')) {
+      this._syncSelectOptions();
     }
   }
 
   override render() {
-    const classes = inputClasses();
-    const selectClasses = inputClasses({ extra: ['civ-select-field'] });
     const describedBy = buildDescribedBy(this._hintId, this.hint, this._errorId, this.error);
 
     return html`
@@ -153,196 +153,121 @@ export class CivAddress extends CivFormElement {
         ${renderError(this._errorId, this.error, true)}
 
         ${this.showMilitary ? html`
-          <div class="civ-mb-3">
-            <label class="civ-flex civ-items-center civ-gap-2 civ-cursor-pointer">
-              <input
-                type="checkbox"
-                id="${this._militaryId}"
-                .checked="${this._address.military}"
-                ?disabled="${this.disabled}"
-                class="focus-visible:civ-focus-ring"
-                @change="${this._onMilitaryChange}"
-              />
-              <span>${t('addressMilitary')}</span>
-            </label>
-            ${this._address.military ? html`
-              <span class="civ-hint civ-block civ-mt-1">${t('addressMilitaryHint')}</span>
-            ` : nothing}
-          </div>
+          <civ-checkbox
+            label="${t('addressMilitary')}"
+            name="${this.name ? `${this.name}.military` : ''}"
+            value="true"
+            ?checked="${this._address.military}"
+            ?disabled="${this.disabled}"
+            hint="${this._address.military ? t('addressMilitaryHint') : ''}"
+            @civ-change="${this._onMilitaryChange}"
+          ></civ-checkbox>
         ` : nothing}
 
         ${this.showCountry && !this._address.military ? html`
-          <div class="civ-mb-3">
-            <label class="civ-label" for="${this._countryId}">${t('addressCountry')}</label>
-            <select
-              class="${selectClasses}"
-              id="${this._countryId}"
-              name="${this.name ? `${this.name}.country` : nothing}"
-              .value="${this._address.country}"
-              autocomplete="country"
-              ?disabled="${this.disabled || this.readonly}"
-              @change="${(e: Event) => { this._onFieldInput('country', e); this._onFieldChange('country', e); }}"
-            >
-              <option value="">${t('selectEmpty')}</option>
-              <option value="US" ?selected="${this._address.country === 'US'}">United States</option>
-              <option value="CA" ?selected="${this._address.country === 'CA'}">Canada</option>
-              <option value="MX" ?selected="${this._address.country === 'MX'}">Mexico</option>
-            </select>
-          </div>
+          <civ-select
+            label="${t('addressCountry')}"
+            name="${this.name ? `${this.name}.country` : ''}"
+            value="${this._address.country}"
+            autocomplete="country"
+            ?disabled="${this.disabled}"
+            data-address-country
+            @civ-change="${(e: CustomEvent) => { this._onSubInput('country', e); this._onSubChange('country', e); }}"
+          ></civ-select>
         ` : nothing}
 
-        <div class="civ-mb-3">
-          <label class="civ-label" for="${this._street1Id}">
-            ${t('addressStreet1')}
-            ${this.required ? html`<span class="civ-sr-only">${t('required')}</span>` : nothing}
-          </label>
-          ${renderError(this._streetErrorId, this.streetError)}
-          <input
-            type="text"
-            class="${classes}"
-            id="${this._street1Id}"
-            name="${this.name ? `${this.name}.street1` : nothing}"
-            .value="${this._address.street1}"
-            autocomplete="address-line1"
-            ?required="${this.required}"
-            ?disabled="${this.disabled}"
-            ?readonly="${this.readonly}"
-            aria-required="${this.required || nothing}"
-            aria-invalid="${this.streetError ? 'true' : nothing}"
-            aria-describedby="${this.streetError ? this._streetErrorId : nothing}"
-            @input="${(e: Event) => this._onFieldInput('street1', e)}"
-            @change="${(e: Event) => this._onFieldChange('street1', e)}"
-          />
-        </div>
+        <civ-text-input
+          label="${t('addressStreet1')}"
+          name="${this.name ? `${this.name}.street1` : ''}"
+          value="${this._address.street1}"
+          error="${this.streetError}"
+          autocomplete="address-line1"
+          ?required="${this.required}"
+          ?disabled="${this.disabled}"
+          ?readonly="${this.readonly}"
+          @civ-input="${(e: CustomEvent) => this._onSubInput('street1', e)}"
+          @civ-change="${(e: CustomEvent) => this._onSubChange('street1', e)}"
+        ></civ-text-input>
 
         ${this.showStreet2 ? html`
-          <div class="civ-mb-3">
-            <label class="civ-label" for="${this._street2Id}">${t('addressStreet2')}</label>
-            <input
-              type="text"
-              class="${classes}"
-              id="${this._street2Id}"
-              name="${this.name ? `${this.name}.street2` : nothing}"
-              .value="${this._address.street2}"
-              autocomplete="address-line2"
-              ?disabled="${this.disabled}"
-              ?readonly="${this.readonly}"
-              @input="${(e: Event) => this._onFieldInput('street2', e)}"
-              @change="${(e: Event) => this._onFieldChange('street2', e)}"
-            />
-          </div>
+          <civ-text-input
+            label="${t('addressStreet2')}"
+            name="${this.name ? `${this.name}.street2` : ''}"
+            value="${this._address.street2}"
+            autocomplete="address-line2"
+            ?disabled="${this.disabled}"
+            ?readonly="${this.readonly}"
+            @civ-input="${(e: CustomEvent) => this._onSubInput('street2', e)}"
+            @civ-change="${(e: CustomEvent) => this._onSubChange('street2', e)}"
+          ></civ-text-input>
         ` : nothing}
 
         ${this.showStreet3 ? html`
-          <div class="civ-mb-3">
-            <label class="civ-label" for="${this._street3Id}">${t('addressStreet3')}</label>
-            <input
-              type="text"
-              class="${classes}"
-              id="${this._street3Id}"
-              name="${this.name ? `${this.name}.street3` : nothing}"
-              .value="${this._address.street3}"
-              autocomplete="address-line3"
-              ?disabled="${this.disabled}"
-              ?readonly="${this.readonly}"
-              @input="${(e: Event) => this._onFieldInput('street3', e)}"
-              @change="${(e: Event) => this._onFieldChange('street3', e)}"
-            />
-          </div>
+          <civ-text-input
+            label="${t('addressStreet3')}"
+            name="${this.name ? `${this.name}.street3` : ''}"
+            value="${this._address.street3}"
+            autocomplete="address-line3"
+            ?disabled="${this.disabled}"
+            ?readonly="${this.readonly}"
+            @civ-input="${(e: CustomEvent) => this._onSubInput('street3', e)}"
+            @civ-change="${(e: CustomEvent) => this._onSubChange('street3', e)}"
+          ></civ-text-input>
         ` : nothing}
 
-        <div class="civ-mb-3">
-          <label class="civ-label" for="${this._cityId}">
-            ${t('addressCity')}
-            ${this.required ? html`<span class="civ-sr-only">${t('required')}</span>` : nothing}
-          </label>
-          ${renderError(this._cityErrorId, this.cityError)}
-          <input
-            type="text"
-            class="${classes}"
-            id="${this._cityId}"
-            name="${this.name ? `${this.name}.city` : nothing}"
-            .value="${this._address.city}"
-            autocomplete="address-level2"
+        <civ-text-input
+          label="${t('addressCity')}"
+          name="${this.name ? `${this.name}.city` : ''}"
+          value="${this._address.city}"
+          error="${this.cityError}"
+          autocomplete="address-level2"
+          ?required="${this.required}"
+          ?disabled="${this.disabled}"
+          ?readonly="${this.readonly}"
+          @civ-input="${(e: CustomEvent) => this._onSubInput('city', e)}"
+          @civ-change="${(e: CustomEvent) => this._onSubChange('city', e)}"
+        ></civ-text-input>
+
+        ${this._useSelectForState ? html`
+          <civ-select
+            label="${t('addressState')}"
+            name="${this.name ? `${this.name}.state` : ''}"
+            value="${this._address.state}"
+            error="${this.stateError}"
+            autocomplete="address-level1"
             ?required="${this.required}"
             ?disabled="${this.disabled}"
-            ?readonly="${this.readonly}"
-            aria-required="${this.required || nothing}"
-            aria-invalid="${this.cityError ? 'true' : nothing}"
-            aria-describedby="${this.cityError ? this._cityErrorId : nothing}"
-            @input="${(e: Event) => this._onFieldInput('city', e)}"
-            @change="${(e: Event) => this._onFieldChange('city', e)}"
-          />
-        </div>
-
-        <div class="civ-mb-3">
-          <label class="civ-label" for="${this._stateId}">
-            ${this._useSelectForState ? t('addressState') : t('addressStateProvince')}
-            ${this.required ? html`<span class="civ-sr-only">${t('required')}</span>` : nothing}
-          </label>
-          ${renderError(this._stateErrorId, this.stateError)}
-          ${this._useSelectForState ? html`
-            <select
-              class="${selectClasses}"
-              id="${this._stateId}"
-              name="${this.name ? `${this.name}.state` : nothing}"
-              .value="${this._address.state}"
-              autocomplete="address-level1"
-              ?required="${this.required}"
-              ?disabled="${this.disabled || this.readonly}"
-              aria-required="${this.required || nothing}"
-              aria-invalid="${this.stateError ? 'true' : nothing}"
-              aria-describedby="${this.stateError ? this._stateErrorId : nothing}"
-              @change="${(e: Event) => { this._onFieldInput('state', e); this._onFieldChange('state', e); }}"
-            >
-              <option value="">${t('selectEmpty')}</option>
-              ${this._stateOptions.map(s => html`
-                <option value="${s.value}" ?selected="${s.value === this._address.state}">${s.label}</option>
-              `)}
-            </select>
-          ` : html`
-            <input
-              type="text"
-              class="${classes}"
-              id="${this._stateId}"
-              name="${this.name ? `${this.name}.state` : nothing}"
-              .value="${this._address.state}"
-              autocomplete="address-level1"
-              ?disabled="${this.disabled}"
-              ?readonly="${this.readonly}"
-              aria-invalid="${this.stateError ? 'true' : nothing}"
-              aria-describedby="${this.stateError ? this._stateErrorId : nothing}"
-              @input="${(e: Event) => this._onFieldInput('state', e)}"
-              @change="${(e: Event) => this._onFieldChange('state', e)}"
-            />
-          `}
-        </div>
-
-        <div class="civ-mb-3">
-          <label class="civ-label" for="${this._zipId}">
-            ${this._address.country === 'US' || !this.showCountry ? t('addressZip') : t('addressPostalCode')}
-            ${this.required ? html`<span class="civ-sr-only">${t('required')}</span>` : nothing}
-          </label>
-          ${renderError(this._zipErrorId, this.zipError)}
-          <input
-            type="text"
-            class="${classes}"
-            id="${this._zipId}"
-            name="${this.name ? `${this.name}.zip` : nothing}"
-            .value="${this._address.zip}"
-            inputmode="numeric"
-            autocomplete="postal-code"
-            maxlength="10"
-            ?required="${this.required}"
+            data-address-state
+            @civ-change="${(e: CustomEvent) => { this._onSubInput('state', e); this._onSubChange('state', e); }}"
+          ></civ-select>
+        ` : html`
+          <civ-text-input
+            label="${t('addressStateProvince')}"
+            name="${this.name ? `${this.name}.state` : ''}"
+            value="${this._address.state}"
+            error="${this.stateError}"
+            autocomplete="address-level1"
             ?disabled="${this.disabled}"
             ?readonly="${this.readonly}"
-            aria-required="${this.required || nothing}"
-            aria-invalid="${this.zipError ? 'true' : nothing}"
-            aria-describedby="${this.zipError ? this._zipErrorId : nothing}"
-            @input="${(e: Event) => this._onFieldInput('zip', e)}"
-            @change="${(e: Event) => this._onFieldChange('zip', e)}"
-          />
-        </div>
+            @civ-input="${(e: CustomEvent) => this._onSubInput('state', e)}"
+            @civ-change="${(e: CustomEvent) => this._onSubChange('state', e)}"
+          ></civ-text-input>
+        `}
+
+        <civ-text-input
+          label="${this._address.country === 'US' || !this.showCountry ? t('addressZip') : t('addressPostalCode')}"
+          name="${this.name ? `${this.name}.zip` : ''}"
+          value="${this._address.zip}"
+          error="${this.zipError}"
+          inputmode="numeric"
+          autocomplete="postal-code"
+          maxlength="10"
+          ?required="${this.required}"
+          ?disabled="${this.disabled}"
+          ?readonly="${this.readonly}"
+          @civ-input="${(e: CustomEvent) => this._onSubInput('zip', e)}"
+          @civ-change="${(e: CustomEvent) => this._onSubChange('zip', e)}"
+        ></civ-text-input>
       </fieldset>
     `;
   }
@@ -357,35 +282,44 @@ export class CivAddress extends CivFormElement {
   /** State/province options for the current country. */
   private get _stateOptions(): Array<{ value: string; label: string }> {
     if (this._address.military) return MILITARY_STATES;
-    return US_STATES; // For CA/MX, you'd add province arrays here
+    return US_STATES;
   }
 
-  private _onMilitaryChange(e: Event): void {
-    const target = e.target as HTMLInputElement;
+  /** Set options on the select sub-components after render. */
+  private _syncSelectOptions(): void {
+    const stateSelect = this.querySelector('[data-address-state]') as any;
+    if (stateSelect) stateSelect.options = this._stateOptions;
+
+    const countrySelect = this.querySelector('[data-address-country]') as any;
+    if (countrySelect) countrySelect.options = COUNTRY_OPTIONS;
+  }
+
+  private _onMilitaryChange(e: CustomEvent<{ checked: boolean }>): void {
+    e.stopPropagation();
     this._address = {
       ...this._address,
-      military: target.checked,
-      country: target.checked ? 'US' : this._address.country,
-      state: '', // Reset state when toggling military
+      military: e.detail.checked,
+      country: e.detail.checked ? 'US' : this._address.country,
+      state: '',
     };
     this.value = JSON.stringify(this._address);
     dispatch(this, 'civ-input', { value: { ...this._address } });
     dispatch(this, 'civ-change', { value: { ...this._address } });
   }
 
-  private _onFieldInput(field: keyof AddressValue, e: Event): void {
-    const target = e.target as HTMLInputElement | HTMLSelectElement;
-    this._address = { ...this._address, [field]: target.value };
+  private _onSubInput(field: keyof AddressValue, e: CustomEvent<{ value: string }>): void {
+    e.stopPropagation();
+    this._address = { ...this._address, [field]: e.detail.value };
     this.value = JSON.stringify(this._address);
     dispatch(this, 'civ-input', { value: { ...this._address } });
   }
 
-  private _onFieldChange(field: keyof AddressValue, e: Event): void {
-    const target = e.target as HTMLInputElement | HTMLSelectElement;
-    this._address = { ...this._address, [field]: target.value };
+  private _onSubChange(field: keyof AddressValue, e: CustomEvent<{ value: string }>): void {
+    e.stopPropagation();
+    this._address = { ...this._address, [field]: e.detail.value };
     this.value = JSON.stringify(this._address);
     dispatch(this, 'civ-change', { value: { ...this._address } });
-    this.sendAnalytics('change');
+    // Sub-component already fires civ-analytics; don't duplicate
   }
 
   protected override _syncFormValue(): void {

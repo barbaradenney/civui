@@ -117,17 +117,18 @@ describe('civ-address', () => {
     expect(eventDetail.value.street1).toBe('456 Oak Ave');
   });
 
-  it('sets autocomplete attributes', async () => {
+  it('sets autocomplete attributes on sub-components', async () => {
     const el = await fixture<CivAddress>('<civ-address legend="Address" name="addr"></civ-address>');
 
-    const inputs = el.querySelectorAll('input');
-    const select = el.querySelector('select')!;
+    const textInputs = el.querySelectorAll('civ-text-input');
+    const stateSelect = el.querySelector('civ-select');
 
-    expect(inputs[0].getAttribute('autocomplete')).toBe('address-line1');
-    expect(inputs[1].getAttribute('autocomplete')).toBe('address-line2');
-    expect(inputs[2].getAttribute('autocomplete')).toBe('address-level2');
-    expect(select.getAttribute('autocomplete')).toBe('address-level1');
-    expect(inputs[3].getAttribute('autocomplete')).toBe('postal-code');
+    // street1, street2, city, zip = 4 text inputs; state = 1 select
+    expect(textInputs[0].getAttribute('autocomplete')).toBe('address-line1');
+    expect(textInputs[1].getAttribute('autocomplete')).toBe('address-line2');
+    expect(textInputs[2].getAttribute('autocomplete')).toBe('address-level2');
+    expect(stateSelect!.getAttribute('autocomplete')).toBe('address-level1');
+    expect(textInputs[3].getAttribute('autocomplete')).toBe('postal-code');
   });
 
   it('renders required indicator in legend', async () => {
@@ -259,10 +260,13 @@ describe('civ-address', () => {
       const handler = vi.fn();
       el.addEventListener('civ-analytics', handler as EventListener);
 
-      const street = el.querySelector('input')!;
-      street.value = '123 Main St';
-      street.dispatchEvent(new Event('change', { bubbles: true }));
+      // Trigger change via the sub-component's inner input
+      const streetInput = el.querySelector('civ-text-input');
+      const innerInput = streetInput!.querySelector('input')!;
+      innerInput.value = '123 Main St';
+      innerInput.dispatchEvent(new Event('change', { bubbles: true }));
 
+      // Sub-component fires civ-analytics (bubbles up)
       expect(handler).toHaveBeenCalledOnce();
     });
   });

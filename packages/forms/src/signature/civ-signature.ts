@@ -1,6 +1,8 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivFormElement, dispatch, renderLegend, renderHint, renderError, inputClasses, buildDescribedBy, t } from '@civui/core';
+import { CivFormElement, dispatch, renderLegend, renderHint, renderError, buildDescribedBy, t } from '@civui/core';
+import '../text-input/civ-text-input.js';
+import '../checkbox/civ-checkbox.js';
 
 export interface SignatureValue {
   name: string;
@@ -47,12 +49,6 @@ export class CivSignature extends CivFormElement {
 
   @state() private _signature: SignatureValue = { ...EMPTY_SIGNATURE };
 
-  private _nameInputId = this.generateId('sig-name');
-  private _nameHintId = this.generateId('name-hint');
-  private _certifyId = this.generateId('certify');
-  private _nameErrId = this.generateId('name-err');
-  private _certifyErrId = this.generateId('certify-err');
-
   /** Get the current signature value. */
   get signatureValue(): SignatureValue {
     return { ...this._signature };
@@ -79,7 +75,6 @@ export class CivSignature extends CivFormElement {
   }
 
   override render() {
-    const classes = inputClasses();
     const describedBy = buildDescribedBy(this._hintId, this.hint, this._errorId, this.error);
 
     return html`
@@ -97,75 +92,54 @@ export class CivSignature extends CivFormElement {
           <p class="civ-text-base civ-text-muted civ-mb-4">${this.statement}</p>
         ` : nothing}
 
-        <div class="civ-mb-3">
-          <label class="civ-label" for="${this._nameInputId}">
-            ${t('signatureName')}
-            ${this.required ? html`<span class="civ-sr-only">${t('required')}</span>` : nothing}
-          </label>
-          <span class="civ-hint" id="${this._nameHintId}">${t('signatureNameHint')}</span>
-          ${renderError(this._nameErrId, this.nameError)}
-          <input
-            type="text"
-            class="${classes}"
-            id="${this._nameInputId}"
-            name="${this.name ? `${this.name}.name` : nothing}"
-            .value="${this._signature.name}"
-            autocomplete="name"
-            ?required="${this.required}"
-            ?disabled="${this.disabled}"
-            ?readonly="${this.readonly}"
-            aria-required="${this.required || nothing}"
-            aria-invalid="${this.nameError ? 'true' : nothing}"
-            aria-describedby="${[this._nameHintId, this.nameError ? this._nameErrId : ''].filter(Boolean).join(' ') || nothing}"
-            @input="${this._onNameInput}"
-            @change="${this._onNameChange}"
-          />
-        </div>
+        <civ-text-input
+          label="${t('signatureName')}"
+          name="${this.name ? `${this.name}.name` : ''}"
+          value="${this._signature.name}"
+          hint="${t('signatureNameHint')}"
+          error="${this.nameError}"
+          autocomplete="name"
+          ?required="${this.required}"
+          ?disabled="${this.disabled}"
+          ?readonly="${this.readonly}"
+          @civ-input="${this._onNameInput}"
+          @civ-change="${this._onNameChange}"
+        ></civ-text-input>
 
-        <div class="civ-mb-3">
-          ${renderError(this._certifyErrId, this.certifyError)}
-          <label class="civ-flex civ-items-start civ-gap-2 civ-cursor-pointer">
-            <input
-              type="checkbox"
-              id="${this._certifyId}"
-              name="${this.name ? `${this.name}.certified` : nothing}"
-              .checked="${this._signature.certified}"
-              ?required="${this.required}"
-              ?disabled="${this.disabled}"
-              class="civ-mt-0.5 focus-visible:civ-focus-ring"
-              aria-invalid="${this.certifyError ? 'true' : nothing}"
-              aria-describedby="${this.certifyError ? this._certifyErrId : nothing}"
-              @change="${this._onCertifyChange}"
-            />
-            <span>${t('signatureCertify')}</span>
-          </label>
-        </div>
+        <civ-checkbox
+          label="${t('signatureCertify')}"
+          name="${this.name ? `${this.name}.certified` : ''}"
+          value="true"
+          ?checked="${this._signature.certified}"
+          ?required="${this.required}"
+          ?disabled="${this.disabled}"
+          error="${this.certifyError}"
+          @civ-change="${this._onCertifyChange}"
+        ></civ-checkbox>
       </fieldset>
     `;
   }
 
-  private _onNameInput(e: Event): void {
-    const target = e.target as HTMLInputElement;
-    this._signature = { ...this._signature, name: target.value };
+  private _onNameInput(e: CustomEvent<{ value: string }>): void {
+    e.stopPropagation();
+    this._signature = { ...this._signature, name: e.detail.value };
     this.value = JSON.stringify(this._signature);
     dispatch(this, 'civ-input', { value: { ...this._signature } });
   }
 
-  private _onNameChange(e: Event): void {
-    const target = e.target as HTMLInputElement;
-    this._signature = { ...this._signature, name: target.value };
+  private _onNameChange(e: CustomEvent<{ value: string }>): void {
+    e.stopPropagation();
+    this._signature = { ...this._signature, name: e.detail.value };
     this.value = JSON.stringify(this._signature);
     dispatch(this, 'civ-change', { value: { ...this._signature } });
-    this.sendAnalytics('change');
   }
 
-  private _onCertifyChange(e: Event): void {
-    const target = e.target as HTMLInputElement;
-    this._signature = { ...this._signature, certified: target.checked };
+  private _onCertifyChange(e: CustomEvent<{ checked: boolean }>): void {
+    e.stopPropagation();
+    this._signature = { ...this._signature, certified: e.detail.checked };
     this.value = JSON.stringify(this._signature);
     dispatch(this, 'civ-input', { value: { ...this._signature } });
     dispatch(this, 'civ-change', { value: { ...this._signature } });
-    this.sendAnalytics('change');
   }
 
   protected override _syncFormValue(): void {

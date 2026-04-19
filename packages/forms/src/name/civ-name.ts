@@ -1,6 +1,8 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivFormElement, dispatch, renderLegend, renderHint, renderError, inputClasses, buildDescribedBy, t } from '@civui/core';
+import { CivFormElement, dispatch, renderLegend, renderHint, renderError, buildDescribedBy, t } from '@civui/core';
+import '../text-input/civ-text-input.js';
+import '../select/civ-select.js';
 
 export interface NameValue {
   first: string;
@@ -57,14 +59,6 @@ export class CivName extends CivFormElement {
 
   @state() private _name: NameValue = { ...EMPTY_NAME };
 
-  private _firstId = this.generateId('first');
-  private _middleId = this.generateId('middle');
-  private _lastId = this.generateId('last');
-  private _suffixId = this.generateId('suffix');
-  private _firstErrId = this.generateId('first-err');
-  private _middleErrId = this.generateId('middle-err');
-  private _lastErrId = this.generateId('last-err');
-
   /** Get the current name as a structured object. */
   get nameValue(): NameValue {
     return { ...this._name };
@@ -83,11 +77,12 @@ export class CivName extends CivFormElement {
         this._name = { ...EMPTY_NAME, ...JSON.parse(this.value) };
       } catch { /* leave empty */ }
     }
+    // Set suffix options on the select component
+    const suffixSelect = this.querySelector('civ-select') as any;
+    if (suffixSelect) suffixSelect.options = SUFFIX_OPTIONS;
   }
 
   override render() {
-    const classes = inputClasses();
-    const selectClasses = inputClasses({ extra: ['civ-select-field'] });
     const describedBy = buildDescribedBy(this._hintId, this.hint, this._errorId, this.error);
 
     return html`
@@ -101,111 +96,73 @@ export class CivName extends CivFormElement {
         ${renderHint(this._hintId, this.hint, true)}
         ${renderError(this._errorId, this.error, true)}
 
-        <div class="civ-mb-3">
-          <label class="civ-label" for="${this._firstId}">
-            ${t('nameFirst')}
-            ${this.required ? html`<span class="civ-sr-only">${t('required')}</span>` : nothing}
-          </label>
-          ${renderError(this._firstErrId, this.firstError)}
-          <input
-            type="text"
-            class="${classes}"
-            id="${this._firstId}"
-            name="${this.name ? `${this.name}.first` : nothing}"
-            .value="${this._name.first}"
-            autocomplete="given-name"
-            ?required="${this.required}"
-            ?disabled="${this.disabled}"
-            ?readonly="${this.readonly}"
-            aria-required="${this.required || nothing}"
-            aria-invalid="${this.firstError ? 'true' : nothing}"
-            aria-describedby="${this.firstError ? this._firstErrId : nothing}"
-            @input="${(e: Event) => this._onFieldInput('first', e)}"
-            @change="${(e: Event) => this._onFieldChange('first', e)}"
-          />
-        </div>
+        <civ-text-input
+          label="${t('nameFirst')}"
+          name="${this.name ? `${this.name}.first` : ''}"
+          value="${this._name.first}"
+          error="${this.firstError}"
+          autocomplete="given-name"
+          ?required="${this.required}"
+          ?disabled="${this.disabled}"
+          ?readonly="${this.readonly}"
+          @civ-input="${(e: CustomEvent) => this._onSubInput('first', e)}"
+          @civ-change="${(e: CustomEvent) => this._onSubChange('first', e)}"
+        ></civ-text-input>
 
         ${this.showMiddle ? html`
-          <div class="civ-mb-3">
-            <label class="civ-label" for="${this._middleId}">${t('nameMiddle')}</label>
-            ${renderError(this._middleErrId, this.middleError)}
-            <input
-              type="text"
-              class="${classes}"
-              id="${this._middleId}"
-              name="${this.name ? `${this.name}.middle` : nothing}"
-              .value="${this._name.middle}"
-              autocomplete="additional-name"
-              ?disabled="${this.disabled}"
-              ?readonly="${this.readonly}"
-              aria-invalid="${this.middleError ? 'true' : nothing}"
-              aria-describedby="${this.middleError ? this._middleErrId : nothing}"
-              @input="${(e: Event) => this._onFieldInput('middle', e)}"
-              @change="${(e: Event) => this._onFieldChange('middle', e)}"
-            />
-          </div>
-        ` : nothing}
-
-        <div class="civ-mb-3">
-          <label class="civ-label" for="${this._lastId}">
-            ${t('nameLast')}
-            ${this.required ? html`<span class="civ-sr-only">${t('required')}</span>` : nothing}
-          </label>
-          ${renderError(this._lastErrId, this.lastError)}
-          <input
-            type="text"
-            class="${classes}"
-            id="${this._lastId}"
-            name="${this.name ? `${this.name}.last` : nothing}"
-            .value="${this._name.last}"
-            autocomplete="family-name"
-            ?required="${this.required}"
+          <civ-text-input
+            label="${t('nameMiddle')}"
+            name="${this.name ? `${this.name}.middle` : ''}"
+            value="${this._name.middle}"
+            error="${this.middleError}"
+            autocomplete="additional-name"
             ?disabled="${this.disabled}"
             ?readonly="${this.readonly}"
-            aria-required="${this.required || nothing}"
-            aria-invalid="${this.lastError ? 'true' : nothing}"
-            aria-describedby="${this.lastError ? this._lastErrId : nothing}"
-            @input="${(e: Event) => this._onFieldInput('last', e)}"
-            @change="${(e: Event) => this._onFieldChange('last', e)}"
-          />
-        </div>
+            @civ-input="${(e: CustomEvent) => this._onSubInput('middle', e)}"
+            @civ-change="${(e: CustomEvent) => this._onSubChange('middle', e)}"
+          ></civ-text-input>
+        ` : nothing}
+
+        <civ-text-input
+          label="${t('nameLast')}"
+          name="${this.name ? `${this.name}.last` : ''}"
+          value="${this._name.last}"
+          error="${this.lastError}"
+          autocomplete="family-name"
+          ?required="${this.required}"
+          ?disabled="${this.disabled}"
+          ?readonly="${this.readonly}"
+          @civ-input="${(e: CustomEvent) => this._onSubInput('last', e)}"
+          @civ-change="${(e: CustomEvent) => this._onSubChange('last', e)}"
+        ></civ-text-input>
 
         ${this.showSuffix ? html`
-          <div class="civ-mb-3 civ-field-width-sm">
-            <label class="civ-label" for="${this._suffixId}">${t('nameSuffix')}</label>
-            <select
-              class="${selectClasses}"
-              id="${this._suffixId}"
-              name="${this.name ? `${this.name}.suffix` : nothing}"
-              .value="${this._name.suffix}"
-              autocomplete="honorific-suffix"
-              ?disabled="${this.disabled || this.readonly}"
-              @change="${(e: Event) => { this._onFieldInput('suffix', e); this._onFieldChange('suffix', e); }}"
-            >
-              <option value="">${t('selectEmpty')}</option>
-              ${SUFFIX_OPTIONS.map(s => html`
-                <option value="${s.value}" ?selected="${s.value === this._name.suffix}">${s.label}</option>
-              `)}
-            </select>
+          <div class="civ-field-width-sm">
+            <civ-select
+              label="${t('nameSuffix')}"
+              name="${this.name ? `${this.name}.suffix` : ''}"
+              value="${this._name.suffix}"
+              ?disabled="${this.disabled}"
+              @civ-change="${(e: CustomEvent) => { this._onSubInput('suffix', e); this._onSubChange('suffix', e); }}"
+            ></civ-select>
           </div>
         ` : nothing}
       </fieldset>
     `;
   }
 
-  private _onFieldInput(field: keyof NameValue, e: Event): void {
-    const target = e.target as HTMLInputElement | HTMLSelectElement;
-    this._name = { ...this._name, [field]: target.value };
+  private _onSubInput(field: keyof NameValue, e: CustomEvent<{ value: string }>): void {
+    e.stopPropagation();
+    this._name = { ...this._name, [field]: e.detail.value };
     this.value = JSON.stringify(this._name);
     dispatch(this, 'civ-input', { value: { ...this._name } });
   }
 
-  private _onFieldChange(field: keyof NameValue, e: Event): void {
-    const target = e.target as HTMLInputElement | HTMLSelectElement;
-    this._name = { ...this._name, [field]: target.value };
+  private _onSubChange(field: keyof NameValue, e: CustomEvent<{ value: string }>): void {
+    e.stopPropagation();
+    this._name = { ...this._name, [field]: e.detail.value };
     this.value = JSON.stringify(this._name);
     dispatch(this, 'civ-change', { value: { ...this._name } });
-    this.sendAnalytics('change');
   }
 
   protected override _syncFormValue(): void {

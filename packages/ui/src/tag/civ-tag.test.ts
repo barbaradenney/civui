@@ -30,6 +30,18 @@ describe('civ-tag', () => {
     }
   });
 
+  it('applies sm size class', async () => {
+    const el = await fixture('<civ-tag label="Small" size="sm"></civ-tag>');
+    const span = el.querySelector('.civ-tag--sm');
+    expect(span).not.toBeNull();
+  });
+
+  it('does not apply sm class at default size', async () => {
+    const el = await fixture('<civ-tag label="Default"></civ-tag>');
+    const span = el.querySelector('.civ-tag--sm');
+    expect(span).toBeNull();
+  });
+
   it('uses Light DOM', async () => {
     const el = await fixture('<civ-tag label="Test"></civ-tag>');
     expect(el.shadowRoot).toBeNull();

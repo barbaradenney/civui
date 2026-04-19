@@ -25,9 +25,11 @@ import gov.civui.tokens.CivTokens
 fun CivTag(
     label: String,
     variant: String = "gray",
+    size: String = "default",
     modifier: Modifier = Modifier,
 ) {
     val isDark = isSystemInDarkTheme()
+    val textSize = if (size == "sm") CivTokens.Typography.FontSize.sm else CivTokens.Typography.FontSize.base
 
     val fg = when (variant) {
         "blue" -> if (isDark) CivTokens.DarkColors.Primary.dark else CivTokens.Colors.Primary.dark
@@ -53,7 +55,7 @@ fun CivTag(
 
     Text(
         text = label,
-        fontSize = CivTokens.Typography.FontSize.xs,
+        fontSize = textSize,
         fontWeight = FontWeight.Bold,
         color = fg,
         modifier = modifier

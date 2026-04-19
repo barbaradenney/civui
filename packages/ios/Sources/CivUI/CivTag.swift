@@ -9,6 +9,11 @@ public enum CivTagVariant: String {
     case blue, teal, red, green, yellow, orange, purple, gray
 }
 
+/// Tag size matching the web `TagSize` type.
+public enum CivTagSize: String {
+    case `default`, sm
+}
+
 /// Accessible colored status pill for government applications.
 ///
 /// Usage:
@@ -18,17 +23,23 @@ public enum CivTagVariant: String {
 public struct CivTag: View {
     public let label: String
     public var variant: CivTagVariant
+    public var size: CivTagSize
 
     @Environment(\.colorScheme) private var colorScheme
 
-    public init(label: String, variant: CivTagVariant = .gray) {
+    public init(label: String, variant: CivTagVariant = .gray, size: CivTagSize = .default) {
         self.label = label
         self.variant = variant
+        self.size = size
+    }
+
+    private var fontSize: CGFloat {
+        size == .sm ? CivTokens.Typography.FontSize.sm : CivTokens.Typography.FontSize.base
     }
 
     public var body: some View {
         Text(label)
-            .font(.system(size: CivTokens.Typography.FontSize.xs,
+            .font(.system(size: fontSize,
                           weight: CivTokens.Typography.FontWeight.bold))
             .foregroundColor(foregroundColor)
             .padding(.horizontal, CivTokens.Spacing._2)

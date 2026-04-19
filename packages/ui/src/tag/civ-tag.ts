@@ -12,6 +12,8 @@ export type TagVariant =
   | 'purple'
   | 'gray';
 
+export type TagSize = 'default' | 'sm';
+
 /**
  * CivUI Tag
  *
@@ -22,6 +24,7 @@ export type TagVariant =
  *
  * @prop {string} label - Tag text content
  * @prop {TagVariant} variant - Color variant
+ * @prop {TagSize} size - Size variant (default or sm)
  *
  * @example
  * ```html
@@ -39,9 +42,18 @@ export class CivTag extends CivBaseElement {
   /** Color variant. */
   @property({ type: String }) variant: TagVariant = 'gray';
 
+  /** Size: 'default' (base text) or 'sm' (smaller). */
+  @property({ type: String }) size: TagSize = 'default';
+
   override render() {
+    const classes = [
+      'civ-tag',
+      `civ-tag--${this.variant}`,
+      this.size === 'sm' ? 'civ-tag--sm' : '',
+    ].filter(Boolean).join(' ');
+
     return html`
-      <span class="civ-tag civ-tag--${this.variant}">${this.label}</span>
+      <span class="${classes}">${this.label}</span>
     `;
   }
 }

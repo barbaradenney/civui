@@ -1197,7 +1197,8 @@
   }
 
   .civ-btn--tertiary {
-    @apply civ-bg-transparent civ-text-primary civ-border-primary;
+    @apply civ-bg-transparent civ-text-primary civ-border-primary civ-px-3 civ-py-1.5;
+    font-size: var(--civ-typography-fontSize-base);
   }
   .civ-btn--tertiary:hover:not(:disabled):not([aria-disabled="true"]) {
     @apply civ-bg-primary civ-text-white;
@@ -1428,7 +1429,11 @@
   /* ── Status tags ───────────────────────────────────────────── */
 
   .civ-tag {
-    @apply civ-inline-block civ-px-2 civ-py-0.5 civ-text-xs civ-font-bold civ-rounded;
+    @apply civ-inline-block civ-px-2 civ-py-0.5 civ-text-base civ-font-bold civ-rounded;
+  }
+
+  .civ-tag--sm {
+    @apply civ-text-sm;
   }
 
   .civ-tag--blue {

@@ -48,10 +48,10 @@
 <p class="subtitle">Auto-generated 4/18/2026 — extracted from source code</p>
 
 <div class="summary">
-  <div class="summary-card"><div class="num">24</div><div class="label">Components</div></div>
-  <div class="summary-card"><div class="num">23</div><div class="label">Web (Lit)</div></div>
-  <div class="summary-card"><div class="num">23</div><div class="label">iOS (SwiftUI)</div></div>
-  <div class="summary-card"><div class="num">23</div><div class="label">Android (Compose)</div></div>
+  <div class="summary-card"><div class="num">26</div><div class="label">Components</div></div>
+  <div class="summary-card"><div class="num">25</div><div class="label">Web (Lit)</div></div>
+  <div class="summary-card"><div class="num">26</div><div class="label">iOS (SwiftUI)</div></div>
+  <div class="summary-card"><div class="num">26</div><div class="label">Android (Compose)</div></div>
 </div>
 
 <div class="component">
@@ -158,6 +158,135 @@
           <td><span class="check">✓</span></td>
           <td><span class="check">✓</span></td>
         </tr><tr class="">
+          <td><strong>civ-analytics</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+        </tr>
+    </table>
+  </div>
+</div>
+<div class="component">
+  <div class="component-header" onclick="this.nextElementSibling.classList.toggle('open')">
+    Alert
+    <span class="badge yes">Web</span>
+    <span class="badge yes">iOS</span>
+    <span class="badge yes">Android</span>
+    <span class="parity-meter"><span class="parity-fill high" style="width:100%"></span></span>
+    <span style="font-size:12px;color:#71767a;">100%</span>
+  </div>
+  <div class="component-body">
+    <div class="file-path" style="padding:8px 12px;">
+      Web: packages/feedback/src/alert/civ-alert.ts
+      <br>iOS: packages/ios/Sources/CivUI/CivAlert.swift
+      <br>Android: packages/android/src/main/kotlin/gov/civui/components/CivAlert.kt
+    </div>
+    <div class="section-label">Properties <button class="toggle-excluded" onclick="document.body.classList.toggle('show-excluded')">Toggle web-only / native-only props</button></div>
+    <table>
+      <tr><th>Property</th><th>Web</th><th>iOS</th><th>Android</th></tr>
+      <tr class="">
+          <td><strong>variant</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">AlertVariant</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="">
+          <td><strong>alertStyle</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">AlertStyle</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="">
+          <td><strong>heading</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="excluded-row">
+          <td><strong>headingLevel</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Number</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="">
+          <td><strong>label</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="">
+          <td><strong>dismissible</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+        </tr><tr class="">
+          <td><strong>slim</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+        </tr>
+    </table>
+    <div class="section-label">Events / Callbacks</div>
+    <table>
+      <tr><th>Event</th><th>Web</th><th>iOS</th><th>Android</th></tr>
+      <tr class="">
+          <td><strong>civ-dismiss</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+        </tr><tr class="">
+          <td><strong>civ-analytics</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+        </tr>
+    </table>
+  </div>
+</div>
+<div class="component">
+  <div class="component-header" onclick="this.nextElementSibling.classList.toggle('open')">
+    Button
+    <span class="badge yes">Web</span>
+    <span class="badge yes">iOS</span>
+    <span class="badge yes">Android</span>
+    <span class="parity-meter"><span class="parity-fill high" style="width:100%"></span></span>
+    <span style="font-size:12px;color:#71767a;">100%</span>
+  </div>
+  <div class="component-body">
+    <div class="file-path" style="padding:8px 12px;">
+      Web: packages/ui/src/button/civ-button.ts
+      <br>iOS: packages/ios/Sources/CivUI/CivButton.swift
+      <br>Android: packages/android/src/main/kotlin/gov/civui/components/CivButton.kt
+    </div>
+    <div class="section-label">Properties <button class="toggle-excluded" onclick="document.body.classList.toggle('show-excluded')">Toggle web-only / native-only props</button></div>
+    <table>
+      <tr><th>Property</th><th>Web</th><th>iOS</th><th>Android</th></tr>
+      <tr class="">
+          <td><strong>label</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="">
+          <td><strong>variant</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">ButtonVariant</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="">
+          <td><strong>disabled</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+        </tr><tr class="excluded-row">
+          <td><strong>type</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="">
+          <td><strong>href</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr>
+    </table>
+    <div class="section-label">Events / Callbacks</div>
+    <table>
+      <tr><th>Event</th><th>Web</th><th>iOS</th><th>Android</th></tr>
+      <tr class="">
           <td><strong>civ-analytics</strong></td>
           <td><span class="check">✓</span></td>
           <td><span class="check">✓</span></td>
@@ -1247,40 +1376,40 @@
   <div class="component-header" onclick="this.nextElementSibling.classList.toggle('open')">
     ProgressBar
     <span class="badge yes">Web</span>
-    <span class="badge no">No iOS</span>
-    <span class="badge no">No Android</span>
-    <span class="parity-meter"><span class="parity-fill low" style="width:0%"></span></span>
-    <span style="font-size:12px;color:#71767a;">0%</span>
+    <span class="badge yes">iOS</span>
+    <span class="badge yes">Android</span>
+    <span class="parity-meter"><span class="parity-fill high" style="width:100%"></span></span>
+    <span style="font-size:12px;color:#71767a;">100%</span>
   </div>
   <div class="component-body">
     <div class="file-path" style="padding:8px 12px;">
       Web: packages/forms/src/progress-steps/civ-progress-bar.ts
-      
-      
+      <br>iOS: packages/ios/Sources/CivUI/CivProgressBar.swift
+      <br>Android: packages/android/src/main/kotlin/gov/civui/components/CivProgressBar.kt
     </div>
     <div class="section-label">Properties <button class="toggle-excluded" onclick="document.body.classList.toggle('show-excluded')">Toggle web-only / native-only props</button></div>
     <table>
       <tr><th>Property</th><th>Web</th><th>iOS</th><th>Android</th></tr>
-      <tr class="gap-row">
+      <tr class="">
           <td><strong>value</strong></td>
           <td><span class="check">✓</span> <span class="prop-type">Number</span></td>
-          <td><span class="cross">✗</span></td>
-          <td><span class="cross">✗</span></td>
-        </tr><tr class="gap-row">
+          <td><span class="check">✓</span> <span class="prop-type">Double</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Float</span></td>
+        </tr><tr class="">
           <td><strong>label</strong></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
-          <td><span class="cross">✗</span></td>
-          <td><span class="cross">✗</span></td>
-        </tr><tr class="gap-row">
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="">
           <td><strong>status</strong></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
-          <td><span class="cross">✗</span></td>
-          <td><span class="cross">✗</span></td>
-        </tr><tr class="gap-row">
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+        </tr><tr class="">
           <td><strong>showPercent</strong></td>
           <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
-          <td><span class="cross">✗</span></td>
-          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
         </tr>
     </table>
     <div class="section-label">Events / Callbacks</div>
@@ -1987,8 +2116,8 @@
     <span class="badge yes">Web</span>
     <span class="badge yes">iOS</span>
     <span class="badge yes">Android</span>
-    <span class="parity-meter"><span class="parity-fill mid" style="width:77%"></span></span>
-    <span style="font-size:12px;color:#71767a;">77%</span>
+    <span class="parity-meter"><span class="parity-fill mid" style="width:76%"></span></span>
+    <span style="font-size:12px;color:#71767a;">76%</span>
   </div>
   <div class="component-body">
     <div class="file-path" style="padding:8px 12px;">

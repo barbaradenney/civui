@@ -39,11 +39,11 @@ describe('civ-button', () => {
     expect(btn.className).toContain('civ-btn--secondary');
   });
 
-  it('applies outline variant class', async () => {
-    const el = await fixture('<civ-button variant="outline">Click</civ-button>');
+  it('applies tertiary variant class', async () => {
+    const el = await fixture('<civ-button variant="tertiary">Click</civ-button>');
 
     const btn = el.querySelector('button')!;
-    expect(btn.className).toContain('civ-btn--outline');
+    expect(btn.className).toContain('civ-btn--tertiary');
   });
 
   it('applies danger variant class', async () => {

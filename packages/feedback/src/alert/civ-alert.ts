@@ -3,7 +3,7 @@ import { customElement, property } from 'lit/decorators.js';
 import { CivBaseElement, LightDomTextMixin, dispatch, t } from '@civui/core';
 
 export type AlertVariant = 'info' | 'warning' | 'error' | 'success';
-export type AlertStyle = 'primary' | 'secondary' | 'outline';
+export type AlertStyle = 'primary' | 'secondary' | 'tertiary';
 export type AlertHeadingLevel = 2 | 3 | 4 | 5 | 6;
 
 // Inline SVG close icon (16x16) — avoids external icon dependency
@@ -22,7 +22,7 @@ const closeIcon = html`<svg xmlns="http://www.w3.org/2000/svg" width="16" height
  * @element civ-alert
  *
  * @prop {AlertVariant} variant - Alert type (sets colors + ARIA role)
- * @prop {AlertStyle} alertStyle - Visual treatment (primary, secondary, outline)
+ * @prop {AlertStyle} alertStyle - Visual treatment (primary, secondary, tertiary)
  * @prop {string} heading - Optional heading text
  * @prop {AlertHeadingLevel} headingLevel - Heading element level (2-6)
  * @prop {string} label - Body text (preferred over child text)
@@ -48,19 +48,6 @@ export class CivAlert extends LightDomTextMixin(CivBaseElement) {
     return this.label || this._initialText;
   }
 
-  private _renderHeading() {
-    if (this.slim || !this.heading) return nothing;
-
-    const level = Math.max(2, Math.min(6, this.headingLevel)) as AlertHeadingLevel;
-    // Use role="heading" + aria-level for dynamic heading level
-    // without needing a switch over h2-h6 tag names
-    return html`
-      <p id="${this._headingId}" class="civ-alert__heading"
-         role="heading" aria-level="${level}"
-      >${this.heading}</p>
-    `;
-  }
-
   override render() {
     const classes = [
       'civ-alert',
@@ -73,6 +60,7 @@ export class CivAlert extends LightDomTextMixin(CivBaseElement) {
 
     const role = this.variant === 'error' ? 'alert' : 'status';
     const hasHeading = !this.slim && this.heading;
+    const level = Math.max(2, Math.min(6, this.headingLevel)) as AlertHeadingLevel;
 
     return html`
       <div
@@ -81,21 +69,37 @@ export class CivAlert extends LightDomTextMixin(CivBaseElement) {
         aria-labelledby="${hasHeading ? this._headingId : nothing}"
         aria-label="${hasHeading ? nothing : `${this.variant} alert`}"
       >
-        <div class="civ-flex civ-justify-between civ-items-start">
-          <div>
-            ${this._renderHeading()}
-            <div class="civ-alert__body">${this._bodyText}</div>
+        ${hasHeading ? html`
+          <div class="civ-alert__header">
+            <p id="${this._headingId}" class="civ-alert__heading"
+               role="heading" aria-level="${level}"
+            >${this.heading}</p>
+            ${this.dismissible
+              ? html`
+                  <button
+                    type="button"
+                    class="civ-alert__dismiss focus-visible:civ-focus-ring"
+                    aria-label="${t('alertDismissLabel')}"
+                    @click="${this._onDismiss}"
+                  >${closeIcon}</button>
+                `
+              : nothing}
           </div>
-          ${this.dismissible
+        ` : nothing}
+        <div class="civ-alert__content">
+          ${!hasHeading && this.dismissible
             ? html`
-                <button
-                  type="button"
-                  class="civ-alert__dismiss focus-visible:civ-focus-ring"
-                  aria-label="${t('alertDismissLabel')}"
-                  @click="${this._onDismiss}"
-                >${closeIcon}</button>
+                <div class="civ-flex civ-justify-between civ-items-start">
+                  <div class="civ-alert__body">${this._bodyText}</div>
+                  <button
+                    type="button"
+                    class="civ-alert__dismiss focus-visible:civ-focus-ring"
+                    aria-label="${t('alertDismissLabel')}"
+                    @click="${this._onDismiss}"
+                  >${closeIcon}</button>
+                </div>
               `
-            : nothing}
+            : html`<div class="civ-alert__body">${this._bodyText}</div>`}
         </div>
       </div>
     `;

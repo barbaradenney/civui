@@ -10,7 +10,7 @@ const meta: Meta = {
     label: { control: 'text' },
     variant: {
       control: 'select',
-      options: ['primary', 'secondary', 'outline', 'danger'],
+      options: ['primary', 'secondary', 'tertiary', 'danger'],
     },
     type: {
       control: 'select',
@@ -48,7 +48,7 @@ export const Variants: Story = {
     <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
       <civ-button variant="primary">Primary</civ-button>
       <civ-button variant="secondary">Secondary</civ-button>
-      <civ-button variant="outline">Outline</civ-button>
+      <civ-button variant="tertiary">Tertiary</civ-button>
       <civ-button variant="danger">Danger</civ-button>
     </div>
   `,
@@ -68,7 +68,7 @@ export const AsLink: Story = {
   render: () => html`
     <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
       <civ-button href="/dashboard">Go to dashboard</civ-button>
-      <civ-button href="/login" variant="outline">Sign in</civ-button>
+      <civ-button href="/login" variant="tertiary">Sign in</civ-button>
     </div>
   `,
 };

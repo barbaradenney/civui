@@ -1196,13 +1196,13 @@
     @apply civ-bg-base-light;
   }
 
-  .civ-btn--outline {
+  .civ-btn--tertiary {
     @apply civ-bg-transparent civ-text-primary civ-border-primary;
   }
-  .civ-btn--outline:hover:not(:disabled):not([aria-disabled="true"]) {
+  .civ-btn--tertiary:hover:not(:disabled):not([aria-disabled="true"]) {
     @apply civ-bg-primary civ-text-white;
   }
-  .civ-btn--outline:active:not(:disabled):not([aria-disabled="true"]) {
+  .civ-btn--tertiary:active:not(:disabled):not([aria-disabled="true"]) {
     @apply civ-bg-primary-dark civ-text-white civ-border-primary-dark;
   }
 
@@ -1225,15 +1225,28 @@
   /* ── Alert ─────────────────────────────────────────────────── */
 
   .civ-alert {
-    @apply civ-p-4 civ-mb-4 civ-border-s-4;
+    @apply civ-mb-4 civ-border civ-border-base-light;
   }
 
-  .civ-alert--slim {
-    @apply civ-py-2;
+  .civ-alert--slim .civ-alert__content {
+    @apply civ-py-2 civ-px-4;
+  }
+
+  /* ── Alert: Header bar (filled top band with heading) ────────── */
+
+  .civ-alert__header {
+    @apply civ-flex civ-justify-between civ-items-center civ-px-4 civ-py-3;
   }
 
   .civ-alert__heading {
-    @apply civ-font-bold civ-text-lg civ-mt-0 civ-mb-0;
+    @apply civ-font-bold civ-text-base civ-mt-0 civ-mb-0;
+    color: var(--civ-color-white-DEFAULT);
+  }
+
+  /* ── Alert: Content area ────────────────────────────────────── */
+
+  .civ-alert__content {
+    @apply civ-p-4;
   }
 
   .civ-alert__body {
@@ -1241,48 +1254,46 @@
     color: var(--civ-color-base-darkest);
   }
 
-  /* ── Alert: variant colors (left border) ─────────────────────── */
+  /* ── Alert: Header bar colors per variant ───────────────────── */
 
-  .civ-alert--info { @apply civ-border-info; }
-  .civ-alert--warning { @apply civ-border-warning; }
-  .civ-alert--error { @apply civ-border-error; }
-  .civ-alert--success { @apply civ-border-success; }
+  .civ-alert--info .civ-alert__header { background-color: var(--civ-color-info-dark); }
+  .civ-alert--warning .civ-alert__header { background-color: var(--civ-color-warning-dark); }
+  .civ-alert--error .civ-alert__header { background-color: var(--civ-color-error-DEFAULT); }
+  .civ-alert--success .civ-alert__header { background-color: var(--civ-color-success-dark); }
 
-  /* ── Alert: Secondary (default — light tinted bg) ────────────── */
+  /* ── Alert: Secondary (default — light tinted content bg) ───── */
 
-  .civ-alert--style-secondary.civ-alert--info { @apply civ-bg-info-lighter; }
-  .civ-alert--style-secondary.civ-alert--warning { @apply civ-bg-warning-lighter; }
-  .civ-alert--style-secondary.civ-alert--error { @apply civ-bg-error-lighter; }
-  .civ-alert--style-secondary.civ-alert--success { @apply civ-bg-success-lighter; }
+  .civ-alert--style-secondary.civ-alert--info .civ-alert__content { @apply civ-bg-info-lighter; }
+  .civ-alert--style-secondary.civ-alert--warning .civ-alert__content { @apply civ-bg-warning-lighter; }
+  .civ-alert--style-secondary.civ-alert--error .civ-alert__content { @apply civ-bg-error-lighter; }
+  .civ-alert--style-secondary.civ-alert--success .civ-alert__content { @apply civ-bg-success-lighter; }
 
-  /* ── Alert: Primary (dark/saturated bg, white text) ──────────── */
+  /* ── Alert: Primary (saturated content bg, white text) ──────── */
 
-  .civ-alert--style-primary .civ-alert__heading,
   .civ-alert--style-primary .civ-alert__body {
     color: var(--civ-color-white-DEFAULT);
   }
 
-  .civ-alert--style-primary.civ-alert--info { background-color: var(--civ-color-info-dark); }
-  .civ-alert--style-primary.civ-alert--warning { background-color: var(--civ-color-warning-dark); }
-  .civ-alert--style-primary.civ-alert--error { background-color: var(--civ-color-error-DEFAULT); }
-  .civ-alert--style-primary.civ-alert--success { background-color: var(--civ-color-success-dark); }
+  .civ-alert--style-primary.civ-alert--info .civ-alert__content { background-color: var(--civ-color-info-dark); }
+  .civ-alert--style-primary.civ-alert--warning .civ-alert__content { background-color: var(--civ-color-warning-dark); }
+  .civ-alert--style-primary.civ-alert--error .civ-alert__content { background-color: var(--civ-color-error-DEFAULT); }
+  .civ-alert--style-primary.civ-alert--success .civ-alert__content { background-color: var(--civ-color-success-dark); }
 
-  /* ── Alert: Outline (white bg, colored border all around) ────── */
+  /* ── Alert: Tertiary (white content bg) ─────────────────────── */
 
-  .civ-alert--style-outline {
-    @apply civ-bg-white civ-border;
+  .civ-alert--style-tertiary .civ-alert__content {
+    @apply civ-bg-white;
   }
-
-  .civ-alert--style-outline.civ-alert--info { @apply civ-border-info; }
-  .civ-alert--style-outline.civ-alert--warning { @apply civ-border-warning; }
-  .civ-alert--style-outline.civ-alert--error { @apply civ-border-error; }
-  .civ-alert--style-outline.civ-alert--success { @apply civ-border-success; }
 
   .civ-alert__dismiss {
     @apply civ-inline-flex civ-items-center civ-justify-center
            civ-bg-transparent civ-border-0 civ-p-2 civ-cursor-pointer civ-rounded;
     min-width: 44px;
     min-height: 44px;
+  }
+
+  .civ-alert__header .civ-alert__dismiss {
+    color: var(--civ-color-white-DEFAULT);
   }
 
   /* ── Progress Steps ────────────────────────────────────────── */

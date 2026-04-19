@@ -13,7 +13,7 @@ const meta: Meta = {
     },
     alertStyle: {
       control: 'select',
-      options: ['primary', 'secondary', 'outline'],
+      options: ['primary', 'secondary', 'tertiary'],
       name: 'alert-style',
     },
     label: { control: 'text' },
@@ -87,19 +87,19 @@ export const Secondary: Story = {
   `,
 };
 
-export const Outline: Story = {
+export const Tertiary: Story = {
   render: () => html`
     <div style="display: flex; flex-direction: column; gap: 16px;">
-      <civ-alert variant="info" alert-style="outline" heading="Information">
+      <civ-alert variant="info" alert-style="tertiary" heading="Information">
         Routine maintenance is scheduled for this weekend.
       </civ-alert>
-      <civ-alert variant="warning" alert-style="outline" heading="Warning">
+      <civ-alert variant="warning" alert-style="tertiary" heading="Warning">
         Your password will expire in 7 days.
       </civ-alert>
-      <civ-alert variant="error" alert-style="outline" heading="Error">
+      <civ-alert variant="error" alert-style="tertiary" heading="Error">
         Unable to save changes. Check your connection.
       </civ-alert>
-      <civ-alert variant="success" alert-style="outline" heading="Success">
+      <civ-alert variant="success" alert-style="tertiary" heading="Success">
         Your form has been submitted.
       </civ-alert>
     </div>

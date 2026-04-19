@@ -13,7 +13,11 @@ import { readFileSync, writeFileSync, readdirSync, existsSync } from 'fs';
 import { join, basename } from 'path';
 
 const ROOT = join(import.meta.dirname, '..');
-const WEB_DIR = join(ROOT, 'packages/forms/src');
+const WEB_DIRS = [
+  join(ROOT, 'packages/forms/src'),
+  join(ROOT, 'packages/feedback/src'),
+  join(ROOT, 'packages/ui/src'),
+];
 const IOS_DIR = join(ROOT, 'packages/ios/Sources/CivUI');
 const ANDROID_DIR = join(ROOT, 'packages/android/src/main/kotlin/gov/civui/components');
 
@@ -377,26 +381,33 @@ interface ComponentMapping {
 function discoverComponents(): ComponentMapping[] {
   const mappings: ComponentMapping[] = [];
 
-  // Scan web components
-  const webDirs = readdirSync(WEB_DIR, { withFileTypes: true })
-    .filter(d => d.isDirectory())
-    .map(d => d.name);
-
+  // Scan web components from all package directories
   const nameMap: Record<string, ComponentMapping> = {};
 
   // Web child components that are part of their parent on native (no separate file needed)
   const childComponents = new Set(['Segment']);
 
-  for (const dir of webDirs) {
-    const files = readdirSync(join(WEB_DIR, dir)).filter(f => f.startsWith('civ-') && f.endsWith('.ts') && !f.includes('.test.') && !f.includes('.stories.'));
-    for (const file of files) {
-      const componentName = file.replace('civ-', '').replace('.ts', '');
-      const displayName = componentName.split('-').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join('');
-      if (childComponents.has(displayName)) continue; // Skip child components
-      nameMap[displayName] = {
-        displayName,
-        web: join(WEB_DIR, dir, file),
-      };
+  // Web-only components that have no native equivalent by design
+  const webOnlyComponents = new Set(['SkipLink']);
+
+  for (const webDir of WEB_DIRS) {
+    if (!existsSync(webDir)) continue;
+    const webDirs = readdirSync(webDir, { withFileTypes: true })
+      .filter(d => d.isDirectory())
+      .map(d => d.name);
+
+    for (const dir of webDirs) {
+      const files = readdirSync(join(webDir, dir)).filter(f => f.startsWith('civ-') && f.endsWith('.ts') && !f.includes('.test.') && !f.includes('.stories.'));
+      for (const file of files) {
+        const componentName = file.replace('civ-', '').replace('.ts', '');
+        const displayName = componentName.split('-').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join('');
+        if (childComponents.has(displayName)) continue;
+        if (webOnlyComponents.has(displayName)) continue;
+        nameMap[displayName] = {
+          displayName,
+          web: join(webDir, dir, file),
+        };
+      }
     }
   }
 
@@ -571,7 +582,9 @@ function generateReport(): string {
     const webOnlyProps = new Set([
       // Web platform specifics
       'action', 'method', 'inputmode', 'autocomplete', 'pattern', 'persist', 'prefill',
-      'errorHeadingLevel', 'maskPattern',
+      'errorHeadingLevel', 'maskPattern', 'headingLevel',
+      // Button 'type' (button vs submit) is a web HTML form concept
+      'type',
       // i18n override props (native uses CivLocale instead)
       'chooseDateLabel', 'selectedDateLabel', 'dialogLabel', 'previousMonthLabel',
       'nextMonthLabel', 'dialogOpenedMessage', 'dateSelectedMessage', 'todayLabel',
@@ -789,6 +802,7 @@ function mapEventName(name: string): string {
     onAdd: 'civ-repeater-add',
     onRemove: 'civ-repeater-remove',
     onEdit: 'civ-summary-edit',
+    onClick: 'civ-analytics', // native click callback maps to analytics tracking
   };
   return map[name] || name;
 }

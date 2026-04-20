@@ -288,18 +288,14 @@ export class CivDatePicker extends CivFormElement {
           <button
             id="${this._buttonId}"
             type="button"
-            class="civ-datepicker-cal-btn hover:civ-bg-base-lighter focus-visible:civ-focus-ring"
+            class="civ-btn civ-btn--tertiary focus-visible:civ-focus-ring"
             aria-label="${buttonLabel}"
             aria-haspopup="dialog"
             aria-expanded="${this._open}"
             aria-controls="${this._open ? this._gridId : nothing}"
             ?disabled="${this.disabled}"
             @click="${this._toggleDialog}"
-          >
-            <svg aria-hidden="true" class="civ-w-5 civ-h-5 civ-text-base-dark" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
-            </svg>
-          </button>
+          >Choose date</button>
         </div>
         ${this._open ? this._renderDialog(selectedDate) : nothing}
       </div>

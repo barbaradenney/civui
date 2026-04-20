@@ -20,25 +20,21 @@ describe('civ-form-step', () => {
     expect(el.total).toBe(3);
   });
 
-  it('shows step counter', async () => {
+  it('renders progress steps component', async () => {
     const el = await fixture<CivFormStep>(threeSteps);
-    const counter = el.querySelector('.civ-wizard-nav__counter');
-    expect(counter).not.toBeNull();
-    expect(counter!.textContent).toContain('Step 1 of 3');
+    const progress = el.querySelector('civ-progress-steps');
+    expect(progress).not.toBeNull();
+    expect(progress!.getAttribute('show-counter')).not.toBeNull();
+    expect(progress!.getAttribute('show-back')).not.toBeNull();
   });
 
-  it('hides go-back link on first step', async () => {
-    const el = await fixture<CivFormStep>(threeSteps);
-    const backLink = el.querySelector('civ-link[variant="back"]');
-    expect(backLink).toBeNull();
-  });
-
-  it('shows go-back link on second step', async () => {
-    const el = await fixture<CivFormStep>(threeSteps) as CivFormStep;
-    el.goToStep(1);
-    await elementUpdated(el);
-    const backLink = el.querySelector('civ-link[variant="back"]');
-    expect(backLink).not.toBeNull();
+  it('hides progress steps for single step', async () => {
+    const el = await fixture(`
+      <civ-form-step>
+        <div data-step-label="Only"><p>Only step</p></div>
+      </civ-form-step>
+    `);
+    expect(el.querySelector('civ-progress-steps')).toBeNull();
   });
 
   it('fires civ-step-continue on continue click', async () => {
@@ -82,15 +78,6 @@ describe('civ-form-step', () => {
     expect(el.currentLabel).toBe('Step 1');
     el.goToStep(1);
     expect(el.currentLabel).toBe('Step 2');
-  });
-
-  it('hides nav bar for single step', async () => {
-    const el = await fixture(`
-      <civ-form-step>
-        <div data-step-label="Only"><p>Only step</p></div>
-      </civ-form-step>
-    `);
-    expect(el.querySelector('.civ-wizard-nav')).toBeNull();
   });
 
   it('blocks advancement when required field is empty', async () => {

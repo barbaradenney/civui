@@ -33,6 +33,10 @@ export class CivProgressSteps extends CivBaseElement {
   @property({ type: Boolean }) clickable = false;
   @property({ type: Boolean, attribute: 'show-counter' }) showCounter = false;
   @property({ type: String, attribute: 'error-steps' }) errorSteps = '[]';
+  /** Show a "Go back" link before the step counter. Only visible when current > 0. */
+  @property({ type: Boolean, attribute: 'show-back' }) showBack = false;
+  /** Label for the back link. */
+  @property({ type: String, attribute: 'back-label' }) backLabel = 'Go back';
 
   private _getStepData(): Array<{ label: string; description?: string }> {
     try {
@@ -150,13 +154,29 @@ export class CivProgressSteps extends CivBaseElement {
         >
           ${stepData.map((step, i) => this._renderStep(step, i, stepData.length, isVertical, errorSet))}
         </ol>
-        ${this.showCounter ? html`
-          <div class="civ-step-counter" aria-live="polite">
-            ${interpolate(t('progressStepsCounter'), { current: this.current + 1, total: stepData.length })}
+        ${this.showCounter || (this.showBack && this.current > 0) ? html`
+          <div class="civ-wizard-nav">
+            ${this.showBack && this.current > 0 ? html`
+              <civ-link
+                variant="back"
+                label="${this.backLabel}"
+                @click="${this._onBack}"
+              ></civ-link>
+              <span class="civ-wizard-nav__divider"></span>
+            ` : nothing}
+            ${this.showCounter ? html`
+              <span class="civ-wizard-nav__counter" aria-live="polite">
+                ${interpolate(t('progressStepsCounter'), { current: this.current + 1, total: stepData.length })}
+              </span>
+            ` : nothing}
           </div>
         ` : nothing}
       </nav>
     `;
+  }
+
+  private _onBack(): void {
+    dispatch(this, 'civ-step-back', { from: this.current, to: this.current - 1 });
   }
 
   private _renderStep(

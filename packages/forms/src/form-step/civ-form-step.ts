@@ -89,29 +89,20 @@ export class CivFormStep extends LightDomContainerMixin(CivBaseElement) {
   }
 
   private _renderContent() {
-    const isFirst = this._current === 0;
     const isLast = this._current >= this._steps.length - 1;
     const total = this._steps.length;
 
     return html`
       <div class="civ-form-step">
         ${total > 1 ? html`
-          <div class="civ-wizard-nav">
-            ${!isFirst ? html`
-              <civ-link
-                variant="back"
-                label="${t('formStepBack')}"
-                @click="${this._onBack}"
-              ></civ-link>
-              <span class="civ-wizard-nav__divider"></span>
-            ` : nothing}
-            <span class="civ-wizard-nav__counter" aria-live="polite">
-              ${interpolate(t('formStepOf'), {
-                current: String(this._current + 1),
-                total: String(total),
-              })}
-            </span>
-          </div>
+          <civ-progress-steps
+            steps='${JSON.stringify(this._steps.map((s, i) => (s as Element).getAttribute('data-step-label') || `Step ${i + 1}`))}'
+            current="${this._current}"
+            show-counter
+            show-back
+            @civ-step-back="${this._onBack}"
+            class="civ-mb-4 civ-block"
+          ></civ-progress-steps>
         ` : nothing}
 
         <div data-civ-form-step-content></div>

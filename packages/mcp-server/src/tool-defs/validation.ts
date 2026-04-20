@@ -12,8 +12,7 @@ import {
   validateSchema,
 } from '../tools/index.js';
 import type { ToolDefinition } from './types.js';
-
-const MAX_HTML_LENGTH = 10 * 1024 * 1024;
+import { MAX_HTML_LENGTH } from './constants.js';
 
 export const VALIDATION_TOOLS: ToolDefinition[] = [
   {

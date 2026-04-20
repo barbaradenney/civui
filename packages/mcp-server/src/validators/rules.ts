@@ -16,7 +16,7 @@ export interface Rule {
   id: string;
   severity: 'error' | 'warning';
   description: string;
-  check: ($: CheerioAPI, violations: Violation[]) => void;
+  check: ($: CheerioAPI, violations: Violation[], rawHtml?: string) => void;
 }
 
 /** Components that require a `label` attribute. */
@@ -1094,6 +1094,149 @@ const tableLayoutNotRepeatable: Rule = {
   },
 };
 
+// --- Section 508 additional rules ---
+
+const imgMissingAlt: Rule = {
+  id: 'img-missing-alt',
+  severity: 'error',
+  description: 'Image element missing alt attribute',
+  check($, violations) {
+    $('img').each((_, el) => {
+      const alt = $(el).attr('alt');
+      if (alt === undefined) {
+        violations.push({
+          rule: 'img-missing-alt',
+          severity: 'error',
+          message: '<img> is missing alt attribute (use alt="" for decorative images)',
+          element: 'img',
+          fix: 'Add alt="description" for informative images or alt="" for decorative images',
+        });
+      }
+    });
+  },
+};
+
+const headingHierarchy: Rule = {
+  id: 'heading-hierarchy',
+  severity: 'warning',
+  description: 'Heading levels skip a level (e.g., h1 to h3)',
+  check($, violations) {
+    const headings: number[] = [];
+    $('h1, h2, h3, h4, h5, h6').each((_, el) => {
+      const tag = (el as unknown as { tagName: string }).tagName?.toLowerCase() ?? '';
+      const level = parseInt(tag.replace('h', ''), 10);
+      if (!isNaN(level)) headings.push(level);
+    });
+
+    for (let i = 1; i < headings.length; i++) {
+      if (headings[i] > headings[i - 1] + 1) {
+        violations.push({
+          rule: 'heading-hierarchy',
+          severity: 'warning',
+          message: `Heading hierarchy skips from h${headings[i - 1]} to h${headings[i]}`,
+          element: `h${headings[i]}`,
+          fix: `Use sequential heading levels (h${headings[i - 1]} → h${headings[i - 1] + 1})`,
+        });
+        return; // Report once
+      }
+    }
+  },
+};
+
+/** Link text patterns that provide no context. */
+const VAGUE_LINK_TEXT = /^(click here|here|read more|learn more|more|link|this)$/i;
+
+const vagueLinkText: Rule = {
+  id: 'vague-link-text',
+  severity: 'warning',
+  description: 'Link text is vague and not descriptive',
+  check($, violations) {
+    $('a').each((_, el) => {
+      const text = $(el).text().trim();
+      if (VAGUE_LINK_TEXT.test(text)) {
+        violations.push({
+          rule: 'vague-link-text',
+          severity: 'warning',
+          message: `Link text "${text}" is not descriptive`,
+          element: 'a',
+          fix: 'Use descriptive link text that makes sense out of context, e.g., "View your claim status" instead of "Click here"',
+        });
+      }
+    });
+  },
+};
+
+const positiveTabindex: Rule = {
+  id: 'positive-tabindex',
+  severity: 'error',
+  description: 'Element has positive tabindex which disrupts natural tab order',
+  check($, violations) {
+    $('[tabindex]').each((_, el) => {
+      const val = $(el).attr('tabindex');
+      if (val !== undefined) {
+        const num = parseInt(val, 10);
+        if (!isNaN(num) && num > 0) {
+          const tag = (el as unknown as { tagName: string }).tagName ?? 'unknown';
+          violations.push({
+            rule: 'positive-tabindex',
+            severity: 'error',
+            message: `<${tag}> has tabindex="${num}" which disrupts natural tab order`,
+            element: tag,
+            fix: 'Use tabindex="0" for focusable elements or tabindex="-1" for programmatic focus. Never use positive tabindex values.',
+          });
+        }
+      }
+    });
+  },
+};
+
+const missingLangAttribute: Rule = {
+  id: 'missing-lang',
+  severity: 'warning',
+  description: 'HTML element missing lang attribute',
+  check($, violations, rawHtml) {
+    // Only flag if the raw source contains an explicit <html> tag.
+    // Cheerio wraps all fragments in <html>, so we check the original input.
+    if (!rawHtml || !/<html[\s>]/i.test(rawHtml)) return;
+    const html = $('html');
+    if (html.length > 0 && !html.attr('lang')) {
+      violations.push({
+        rule: 'missing-lang',
+        severity: 'warning',
+        message: '<html> is missing lang attribute',
+        element: 'html',
+        fix: 'Add lang="en" (or appropriate language) to the <html> element',
+      });
+    }
+  },
+};
+
+const missingRoleAlert: Rule = {
+  id: 'missing-role-alert',
+  severity: 'warning',
+  description: 'Error message container missing role="alert"',
+  check($, violations) {
+    // Check for elements that look like error containers but lack role="alert"
+    $('[class*="error"], [class*="Error"]').each((_, el) => {
+      const $el = $(el);
+      const tag = (el as unknown as { tagName: string }).tagName ?? 'unknown';
+      // Only flag non-CivUI elements (CivUI components handle role="alert" internally)
+      if (tag.startsWith('civ-')) return;
+      const role = $el.attr('role');
+      const ariaLive = $el.attr('aria-live');
+      if (!role && !ariaLive && $el.text().trim()) {
+        violations.push({
+          rule: 'missing-role-alert',
+          severity: 'warning',
+          message: `Error container <${tag}> is missing role="alert" or aria-live`,
+          element: tag,
+          fix: 'Add role="alert" to error message containers for screen reader announcement',
+        });
+      }
+    });
+  },
+};
+
 /** All validation rules. */
 export const RULES: Rule[] = [
   // Errors
@@ -1114,6 +1257,8 @@ export const RULES: Rule[] = [
   conditionalTargetMissing,
   wizardMissingProgress,
   cascadingSourceMissing,
+  imgMissingAlt,
+  positiveTabindex,
   // Warnings
   genericRequiredMessage,
   missingHintDate,
@@ -1138,4 +1283,8 @@ export const RULES: Rule[] = [
   wizardStepNoFields,
   cascadingEmptyMap,
   tableLayoutNotRepeatable,
+  headingHierarchy,
+  vagueLinkText,
+  missingLangAttribute,
+  missingRoleAlert,
 ];

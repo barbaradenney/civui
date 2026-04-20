@@ -78,14 +78,41 @@ export function getNextSteps(toolName: string, context?: {
     case 'parse_html_form':
       steps.push(
         { tool: 'generate_civui_form', description: 'Convert the parsed schema to CivUI components', recommended: true },
+        { tool: 'generate_react_form', description: 'Convert the parsed schema to a React TSX component', recommended: false },
         { tool: 'validate_schema', description: 'Validate the parsed schema structure', recommended: false },
+      );
+      break;
+
+    case 'parse_pdf_form':
+      steps.push(
+        { tool: 'generate_civui_form', description: 'Convert the parsed schema to CivUI web component HTML', recommended: true },
+        { tool: 'generate_react_form', description: 'Convert the parsed schema to a React TSX component', recommended: true },
+        { tool: 'validate_schema', description: 'Check the parsed schema for issues before generating', recommended: false },
+        { tool: 'export_schema', description: 'Export as JSON Schema, TypeScript, or Zod for your codebase', recommended: false },
+      );
+      break;
+
+    case 'form_to_schema':
+      steps.push(
+        { tool: 'generate_react_form', description: 'Convert the schema to a React component', recommended: true },
+        { tool: 'compare_schemas', description: 'Compare this schema against another version', recommended: false },
+        { tool: 'validate_schema', description: 'Validate the extracted schema', recommended: false },
       );
       break;
 
     case 'scaffold_from_template':
       steps.push(
         { tool: 'generate_civui_form', description: 'Generate CivUI HTML from the template schema', recommended: true },
+        { tool: 'generate_react_form', description: 'Generate a React component from the template', recommended: false },
         { tool: 'assemble_gov_form', description: 'Assemble into a complete form app', recommended: false },
+      );
+      break;
+
+    case 'generate_react_form':
+      steps.push(
+        { tool: 'validate_form', description: 'Validate the underlying HTML for accessibility', recommended: true },
+        { tool: 'generate_tests', description: 'Generate tests for the form', recommended: false },
+        { tool: 'generate_validation_schema', description: 'Generate Zod validation for the form data', recommended: false },
       );
       break;
 
@@ -102,9 +129,24 @@ export function getNextSteps(toolName: string, context?: {
       }
       break;
 
+    case 'suggest_fix':
+      steps.push(
+        { tool: 'validate_form', description: 'Re-validate to confirm fixes resolved the issues', recommended: true },
+        { tool: 'generate_508_report', description: 'Generate a full 508 compliance report', recommended: false },
+      );
+      break;
+
     case 'generate_tests':
       steps.push(
         { tool: 'generate_story', description: 'Generate a Storybook story for visual testing', recommended: false },
+        { tool: 'generate_e2e_tests', description: 'Generate Playwright E2E tests', recommended: false },
+      );
+      break;
+
+    case 'export_schema':
+      steps.push(
+        { tool: 'generate_validation_schema', description: 'Generate validation rules from the schema', recommended: false },
+        { tool: 'generate_api_handler', description: 'Generate a server-side API handler', recommended: false },
       );
       break;
 

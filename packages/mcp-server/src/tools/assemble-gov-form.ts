@@ -49,10 +49,13 @@ export async function assembleGovForm(formNumber: string, options?: {
   const cdnBase = options?.cdnBase || 'https://unpkg.com/@civui';
   const submitAction = options?.submitAction || '/api/submit';
 
+  // Build complex features HTML if present
+  const complexHtml = buildComplexFeaturesHtml(result.complex);
+
   const allPages = [
     { id: 'intro', html: result.pages.intro.html },
-    { id: 'hub', html: result.taskListHub.html },
-    ...result.pages.chapters.map(ch => ({ id: ch.id, html: ch.html })),
+    { id: 'hub', html: result.taskListHub.html + complexHtml.hubInsert },
+    ...result.pages.chapters.map(ch => ({ id: ch.id, html: complexHtml.chapterWrap(ch.id, ch.html) })),
     { id: 'review', html: result.pages.review.html },
     { id: 'confirmation', html: result.pages.confirmation.html },
   ];
@@ -284,6 +287,8 @@ ${chapterHeadings}
       observer.observe(reviewSection, { attributes: true, attributeFilter: ['hidden'] });
     }
 
+    ${complexHtml.script}
+
     // ── Form Submission ──────────────────────────────────────────
 
     async function handleSubmit() {
@@ -357,6 +362,9 @@ async function assembleReactForm(formNumber: string, options?: {
   const chapterTasks = result.pages.chapters
     .map(ch => `          <civ-task label="${escapeHtml(ch.heading)}" href="#/${ch.id}" status={chapterStatus('${ch.id}')} onClick={() => navigate('${ch.id}')} />`)
     .join('\n');
+
+  // Build complex features for React
+  const complexReact = buildComplexFeaturesHtml(result.complex);
 
   // Main App component
   const appTsx = `import React, { useState, useCallback } from 'react';
@@ -441,7 +449,7 @@ ${chapterTasks}
                 onClick={() => allComplete && navigate('review')}
               />
             </civ-task-group>
-          </civ-task-list>
+          </civ-task-list>${complexReact.hubInsert ? `\n          <div dangerouslySetInnerHTML={{ __html: ${JSON.stringify(complexReact.hubInsert)} }} />` : ''}
         </div>
       )}
 
@@ -463,44 +471,82 @@ ${chapterRoutes}
 }
 `;
 
-  // Intro page component
-  const introTsx = `import React from 'react';
+  // Intro page component — uses ref + dangerouslySetInnerHTML + event wiring
+  const introTsx = `import React, { useRef, useEffect } from 'react';
 
 interface IntroPageProps {
   onStart: () => void;
 }
 
+const INTRO_HTML = ${JSON.stringify(result.pages.intro.html)};
+
 export default function IntroPage({ onStart }: IntroPageProps) {
-  return (
-    <>
-${result.pages.intro.html.split('\n').map(line => `      ${line}`).join('\n')}
-    </>
-  );
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!ref.current) return;
+    // Wire "Start your application" button
+    const startBtn = ref.current.querySelector('civ-button');
+    const handler = () => onStart();
+    startBtn?.addEventListener('click', handler);
+    return () => startBtn?.removeEventListener('click', handler);
+  }, [onStart]);
+
+  return <div ref={ref} dangerouslySetInnerHTML={{ __html: INTRO_HTML }} />;
 }
 `;
 
-  // Chapter components
+  // Chapter components — use ref + dangerouslySetInnerHTML + event wiring
   const chapterFiles = result.pages.chapters.map(ch => ({
     path: `src/chapters/${toPascal(ch.id)}.tsx`,
-    content: `import React from 'react';
+    content: `import React, { useRef, useEffect } from 'react';
 
 interface ${toPascal(ch.id)}Props {
   onBack: () => void;
   onContinue: () => void;
 }
 
+const CHAPTER_HTML = ${JSON.stringify(ch.html)};
+
 export default function ${toPascal(ch.id)}Chapter({ onBack, onContinue }: ${toPascal(ch.id)}Props) {
-  return (
-    <>
-${ch.html.split('\n').map(line => `      ${line}`).join('\n')}
-    </>
-  );
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!ref.current) return;
+    const cleanups: Array<() => void> = [];
+
+    // Wire Back and Continue buttons
+    ref.current.querySelectorAll('civ-button').forEach((btn: Element) => {
+      const label = btn.getAttribute('label') || '';
+      if (label === 'Back') {
+        const handler = () => onBack();
+        btn.addEventListener('click', handler);
+        cleanups.push(() => btn.removeEventListener('click', handler));
+      }
+      if (label === 'Save and continue') {
+        const handler = () => onContinue();
+        btn.addEventListener('click', handler);
+        cleanups.push(() => btn.removeEventListener('click', handler));
+      }
+    });
+
+    // Wire "Back to task list" links
+    ref.current.querySelectorAll('a[href="#/hub"]').forEach((link: Element) => {
+      const handler = (e: Event) => { e.preventDefault(); onBack(); };
+      link.addEventListener('click', handler);
+      cleanups.push(() => link.removeEventListener('click', handler));
+    });
+
+    return () => cleanups.forEach(fn => fn());
+  }, [onBack, onContinue]);
+
+  return <div ref={ref} dangerouslySetInnerHTML={{ __html: CHAPTER_HTML }} />;
 }
 `,
   }));
 
-  // Review page
-  const reviewTsx = `import React from 'react';
+  // Review page — uses ref + dangerouslySetInnerHTML + event wiring
+  const reviewTsx = `import React, { useRef, useEffect } from 'react';
 
 interface ReviewPageProps {
   formData: Record<string, any>;
@@ -508,24 +554,52 @@ interface ReviewPageProps {
   onSubmit: () => void;
 }
 
+const REVIEW_HTML = ${JSON.stringify(result.pages.review.html)};
+
 export default function ReviewPage({ formData, onBack, onSubmit }: ReviewPageProps) {
-  return (
-    <>
-${result.pages.review.html.split('\n').map(line => `      ${line}`).join('\n')}
-    </>
-  );
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!ref.current) return;
+    const cleanups: Array<() => void> = [];
+
+    ref.current.querySelectorAll('civ-button').forEach((btn: Element) => {
+      const label = btn.getAttribute('label') || '';
+      if (label === 'Back') {
+        const handler = () => onBack();
+        btn.addEventListener('click', handler);
+        cleanups.push(() => btn.removeEventListener('click', handler));
+      }
+      if (label === 'Submit application') {
+        const handler = () => onSubmit();
+        btn.addEventListener('click', handler);
+        cleanups.push(() => btn.removeEventListener('click', handler));
+      }
+    });
+
+    // Populate summary sections from formData
+    const summary = ref.current.querySelector('[data-va-review]');
+    if (summary && formData) {
+      (summary as any).sections = Object.entries(formData).map(([key, value]) => ({
+        heading: key,
+        items: [{ label: key, value: String(value) }],
+      }));
+    }
+
+    return () => cleanups.forEach(fn => fn());
+  }, [formData, onBack, onSubmit]);
+
+  return <div ref={ref} dangerouslySetInnerHTML={{ __html: REVIEW_HTML }} />;
 }
 `;
 
-  // Confirmation page
+  // Confirmation page — static content via dangerouslySetInnerHTML
   const confirmationTsx = `import React from 'react';
 
+const CONFIRMATION_HTML = ${JSON.stringify(result.pages.confirmation.html)};
+
 export default function ConfirmationPage() {
-  return (
-    <>
-${result.pages.confirmation.html.split('\n').map(line => `      ${line}`).join('\n')}
-    </>
-  );
+  return <div dangerouslySetInnerHTML={{ __html: CONFIRMATION_HTML }} />;
 }
 `;
 
@@ -541,6 +615,92 @@ ${result.pages.confirmation.html.split('\n').map(line => `      ${line}`).join('
     files,
     pageCount: files.length,
     features: [...result.features, 'react', 'typescript', 'multi-file'],
+  };
+}
+
+/**
+ * Build HTML fragments from complex form features (workflow, delegation, feedback, lock matrix).
+ */
+function buildComplexFeaturesHtml(complex?: import('./generate-gov-form.js').GovFormResult['complex']): {
+  hubInsert: string;
+  chapterWrap: (chapterId: string, html: string) => string;
+  script: string;
+} {
+  if (!complex) {
+    return {
+      hubInsert: '',
+      chapterWrap: (_id, html) => html,
+      script: '',
+    };
+  }
+
+  const hubParts: string[] = [];
+  const scriptParts: string[] = [];
+
+  // Workflow status banner goes above the task list in the hub
+  if (complex.workflowUi) {
+    hubParts.push(`\n  <!-- Workflow Status -->\n  ${complex.workflowUi.html}`);
+    scriptParts.push(complex.workflowUi.javascript);
+  }
+
+  // Delegation section goes after the task list
+  if (complex.delegationHtml) {
+    hubParts.push(`\n  <!-- Delegation / Representative -->\n  ${complex.delegationHtml}`);
+  }
+
+  // Feedback panel is shown on chapters when in reviewer mode
+  let feedbackHtml = '';
+  let feedbackJs = '';
+  if (complex.feedbackHtml) {
+    feedbackHtml = complex.feedbackHtml.html;
+    feedbackJs = complex.feedbackHtml.javascript;
+    scriptParts.push(feedbackJs);
+  }
+
+  // Lock matrix — generate data attributes for role-based visibility
+  if (complex.lockMatrix) {
+    scriptParts.push(`// Lock matrix summary:\n// ${complex.lockMatrix.summary.replace(/\n/g, '\n// ')}`);
+  }
+
+  // Dynamic chapter visibility rules
+  if (complex.dynamicChapters && complex.dynamicChapters.length > 0) {
+    const rules = complex.dynamicChapters.map(dc =>
+      `  { chapterId: '${dc.chapterId}', field: '${dc.showWhen.field}', op: '${dc.showWhen.operator}', value: '${dc.showWhen.value}' }`
+    ).join(',\n');
+    scriptParts.push(`
+    // Dynamic chapter visibility
+    const DYNAMIC_CHAPTER_RULES = [
+${rules}
+    ];
+    function applyDynamicChapters() {
+      for (const rule of DYNAMIC_CHAPTER_RULES) {
+        const field = document.querySelector('[name="' + rule.field + '"]');
+        const val = field?.value ?? '';
+        let show = false;
+        if (rule.op === 'eq') show = val === rule.value;
+        else if (rule.op === 'neq') show = val !== rule.value;
+        else if (rule.op === 'includes') show = val.includes(rule.value);
+        const chapter = document.querySelector('[data-chapter="' + rule.chapterId + '"]');
+        if (chapter) chapter.closest('[data-page]').hidden = !show;
+        // Also update task list item
+        const task = document.querySelector('civ-task[href="#/' + rule.chapterId + '"]');
+        if (task) task.hidden = !show;
+      }
+    }
+    document.addEventListener('civ-change', applyDynamicChapters);
+    applyDynamicChapters();`);
+  }
+
+  return {
+    hubInsert: hubParts.join('\n'),
+    chapterWrap: (_id: string, html: string) => {
+      // Add feedback panel to each chapter if available
+      if (feedbackHtml) {
+        return html + `\n  <!-- Feedback Panel -->\n  ${feedbackHtml}`;
+      }
+      return html;
+    },
+    script: scriptParts.length > 0 ? `\n    // ── Complex Form Features ──────────────────────────────\n    ${scriptParts.join('\n\n    ')}` : '',
   };
 }
 

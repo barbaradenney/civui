@@ -49,6 +49,9 @@ export const TOOL_REGISTRY: ToolInfo[] = [
   { name: 'scaffold_from_template', tier: 'essential', category: 'form-generation', description: 'Generate a FormSchema from a pre-built template' },
   { name: 'validate_form', tier: 'essential', category: 'validation', description: 'Validate form HTML for accessibility, compliance, and CivUI patterns' },
 
+  // Parsing
+  { name: 'parse_pdf_form', tier: 'essential', category: 'form-generation', description: 'Parse a fillable PDF form into a FormSchema (base64 input, max ~37.5 MB decoded)' },
+
   // Utility
   { name: 'style_civui_element', tier: 'essential', category: 'utility', description: 'Look up CSS classes, states, and design tokens for CivUI elements' },
   { name: 'generate_tests', tier: 'essential', category: 'testing', description: 'Generate test suite (unit, e2e, or a11y) for form HTML' },
@@ -60,7 +63,7 @@ export const TOOL_REGISTRY: ToolInfo[] = [
   // ── Advanced (Tier 2) — registered in standard + all modes ──
 
   // Form generation variants
-  { name: 'generate_react_form', tier: 'advanced', category: 'form-generation', description: 'Generate a React TSX component from FormSchema' },
+  { name: 'generate_react_form', tier: 'advanced', category: 'form-generation', description: 'Generate a React TSX component from FormSchema using CivUI web components as custom elements' },
   { name: 'generate_intro_page', tier: 'advanced', category: 'gov-forms', description: 'Generate government form introduction page' },
   { name: 'generate_wizard', tier: 'advanced', category: 'form-generation', description: 'Generate multi-step wizard navigation' },
 
@@ -104,8 +107,7 @@ export const TOOL_REGISTRY: ToolInfo[] = [
   // ── Internal (Tier 3) — composed by other tools, hidden ─────
 
   // Parsing
-  { name: 'parse_pdf_form', tier: 'internal', category: 'form-generation', description: 'Parse PDF form into FormSchema' },
-  { name: 'form_to_schema', tier: 'internal', category: 'form-generation', description: 'Convert CivUI HTML back to FormSchema' },
+  { name: 'form_to_schema', tier: 'internal', category: 'form-generation', description: 'Convert CivUI HTML back to FormSchema (reverse of generate_civui_form)' },
 
   // Feature generators (composed by gov form tools)
   { name: 'generate_repeatable_section', tier: 'internal', category: 'form-generation', description: 'Generate add-another repeatable section' },

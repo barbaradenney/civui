@@ -5,12 +5,12 @@ import { RULES } from './rules.js';
 describe('validateForm', () => {
   // ---- Meta ----
 
-  it('has 40 rules total (17 errors + 23 warnings)', () => {
+  it('has 46 rules total (19 errors + 27 warnings)', () => {
     const errors = RULES.filter((r) => r.severity === 'error');
     const warnings = RULES.filter((r) => r.severity === 'warning');
-    expect(errors).toHaveLength(17);
-    expect(warnings).toHaveLength(23);
-    expect(RULES).toHaveLength(40);
+    expect(errors).toHaveLength(19);
+    expect(warnings).toHaveLength(27);
+    expect(RULES).toHaveLength(46);
   });
 
   it('returns valid:true and empty arrays for valid markup', () => {
@@ -815,6 +815,110 @@ describe('validateForm', () => {
       `;
       const result = validateForm(html);
       expect(result.warnings.some((w) => w.rule === 'table-layout-not-repeatable')).toBe(false);
+    });
+  });
+
+  // ---- New Section 508 rules ----
+
+  describe('img-missing-alt', () => {
+    it('flags img without alt attribute', () => {
+      const result = validateForm('<img src="photo.jpg">');
+      expect(result.errors.some((e) => e.rule === 'img-missing-alt')).toBe(true);
+    });
+
+    it('passes img with alt text', () => {
+      const result = validateForm('<img src="photo.jpg" alt="Veteran signing form">');
+      expect(result.errors.some((e) => e.rule === 'img-missing-alt')).toBe(false);
+    });
+
+    it('passes img with empty alt (decorative)', () => {
+      const result = validateForm('<img src="divider.png" alt="">');
+      expect(result.errors.some((e) => e.rule === 'img-missing-alt')).toBe(false);
+    });
+  });
+
+  describe('heading-hierarchy', () => {
+    it('flags skipped heading levels (h1 to h3)', () => {
+      const result = validateForm('<h1>Title</h1><h3>Section</h3>');
+      expect(result.warnings.some((w) => w.rule === 'heading-hierarchy')).toBe(true);
+    });
+
+    it('passes sequential heading levels', () => {
+      const result = validateForm('<h1>Title</h1><h2>Section</h2><h3>Sub</h3>');
+      expect(result.warnings.some((w) => w.rule === 'heading-hierarchy')).toBe(false);
+    });
+
+    it('passes single heading', () => {
+      const result = validateForm('<h2>Only heading</h2>');
+      expect(result.warnings.some((w) => w.rule === 'heading-hierarchy')).toBe(false);
+    });
+  });
+
+  describe('vague-link-text', () => {
+    it('flags "click here" link text', () => {
+      const result = validateForm('<a href="/info">click here</a>');
+      expect(result.warnings.some((w) => w.rule === 'vague-link-text')).toBe(true);
+    });
+
+    it('flags "read more" link text', () => {
+      const result = validateForm('<a href="/info">Read More</a>');
+      expect(result.warnings.some((w) => w.rule === 'vague-link-text')).toBe(true);
+    });
+
+    it('passes descriptive link text', () => {
+      const result = validateForm('<a href="/status">View your claim status</a>');
+      expect(result.warnings.some((w) => w.rule === 'vague-link-text')).toBe(false);
+    });
+  });
+
+  describe('positive-tabindex', () => {
+    it('flags positive tabindex', () => {
+      const result = validateForm('<div tabindex="5">Focusable</div>');
+      expect(result.errors.some((e) => e.rule === 'positive-tabindex')).toBe(true);
+    });
+
+    it('passes tabindex="0"', () => {
+      const result = validateForm('<div tabindex="0">Focusable</div>');
+      expect(result.errors.some((e) => e.rule === 'positive-tabindex')).toBe(false);
+    });
+
+    it('passes tabindex="-1"', () => {
+      const result = validateForm('<div tabindex="-1">Programmatic</div>');
+      expect(result.errors.some((e) => e.rule === 'positive-tabindex')).toBe(false);
+    });
+  });
+
+  describe('missing-lang', () => {
+    it('flags html element without lang', () => {
+      const result = validateForm('<html><body><p>Text</p></body></html>');
+      expect(result.warnings.some((w) => w.rule === 'missing-lang')).toBe(true);
+    });
+
+    it('passes html element with lang', () => {
+      const result = validateForm('<html lang="en"><body><p>Text</p></body></html>');
+      expect(result.warnings.some((w) => w.rule === 'missing-lang')).toBe(false);
+    });
+
+    it('does not flag fragments without html element', () => {
+      const result = validateForm('<div><p>Fragment</p></div>');
+      expect(result.warnings.some((w) => w.rule === 'missing-lang')).toBe(false);
+    });
+  });
+
+  describe('missing-role-alert', () => {
+    it('flags error container without role="alert"', () => {
+      const result = validateForm('<div class="error-message">Something went wrong</div>');
+      expect(result.warnings.some((w) => w.rule === 'missing-role-alert')).toBe(true);
+    });
+
+    it('passes error container with role="alert"', () => {
+      const result = validateForm('<div class="error-message" role="alert">Something went wrong</div>');
+      expect(result.warnings.some((w) => w.rule === 'missing-role-alert')).toBe(false);
+    });
+
+    it('skips CivUI components (they handle role internally)', () => {
+      const result = validateForm('<civ-alert class="error-banner">Error</civ-alert>');
+      expect(result.warnings.some((w) => w.rule === 'missing-role-alert')).toBe(false);
     });
   });
 });

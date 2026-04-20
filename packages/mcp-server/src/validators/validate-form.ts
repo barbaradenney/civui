@@ -41,7 +41,7 @@ export function validateForm(
     : RULES;
 
   for (const rule of activeRules) {
-    rule.check($, violations);
+    rule.check($, violations, html);
   }
 
   // Promote warnings to errors if configured

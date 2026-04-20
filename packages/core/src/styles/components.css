@@ -1528,35 +1528,36 @@
     color: var(--civ-color-base-darker);
   }
 
-  /* Primary style — dark background, light text (high emphasis) */
+  /* Primary style — fixed colors for consistent contrast in light and dark mode.
+     Uses the light-mode "dark" token values directly so they don't swap. */
 
   .civ-tag--blue-primary {
-    background-color: var(--civ-color-primary-dark);
+    background-color: #1a4480;
     color: #ffffff;
   }
 
   .civ-tag--teal-primary {
-    background-color: var(--civ-color-info-dark);
+    background-color: #2e6276;
     color: #ffffff;
   }
 
   .civ-tag--red-primary {
-    background-color: var(--civ-color-error-dark);
+    background-color: #8b0a03;
     color: #ffffff;
   }
 
   .civ-tag--green-primary {
-    background-color: var(--civ-color-success-dark);
+    background-color: #2e7d32;
     color: #ffffff;
   }
 
   .civ-tag--yellow-primary {
-    background-color: var(--civ-color-warning-dark);
+    background-color: #936f38;
     color: #ffffff;
   }
 
   .civ-tag--orange-primary {
-    background-color: var(--civ-color-accent-warm-dark);
+    background-color: #c05600;
     color: #ffffff;
   }
 
@@ -1566,7 +1567,7 @@
   }
 
   .civ-tag--gray-primary {
-    background-color: var(--civ-color-base-dark);
+    background-color: #565c65;
     color: #ffffff;
   }
 
@@ -1581,19 +1582,19 @@
   }
 
   .civ-card__header {
-    @apply civ-mb-3;
-  }
-
-  .civ-card__eyebrow {
-    @apply civ-mb-1;
+    @apply civ-mb-2;
   }
 
   .civ-card__title-row {
-    @apply civ-flex civ-justify-between civ-items-start;
+    @apply civ-flex civ-justify-between civ-items-center;
   }
 
   .civ-card__title {
-    @apply civ-mt-0;
+    @apply civ-mt-0 civ-mb-0;
+  }
+
+  a.civ-card__title {
+    @apply civ-underline;
   }
 
   .civ-card__actions {

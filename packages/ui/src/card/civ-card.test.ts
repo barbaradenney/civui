@@ -1,7 +1,6 @@
 import { describe, it, expect, afterEach } from 'vitest';
 import { fixture, cleanupFixtures } from '@civui/test-utils';
 import './civ-card.js';
-import '../tag/civ-tag.js';
 
 afterEach(cleanupFixtures);
 
@@ -47,15 +46,7 @@ describe('civ-card', () => {
     expect(link).toBeNull();
   });
 
-  it('renders eyebrow as tag', async () => {
-    const el = await fixture('<civ-card heading="Title" eyebrow="In progress" eyebrow-variant="teal"><p>Body</p></civ-card>');
-    const tag = el.querySelector('civ-tag');
-    expect(tag).not.toBeNull();
-    expect(tag!.getAttribute('label')).toBe('In progress');
-    expect(tag!.getAttribute('variant')).toBe('teal');
-  });
-
-  it('omits header when no heading or eyebrow', async () => {
+  it('omits header when no heading', async () => {
     const el = await fixture('<civ-card><p>Body only</p></civ-card>');
     const header = el.querySelector('.civ-card__header');
     expect(header).toBeNull();

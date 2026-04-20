@@ -10,11 +10,6 @@ const meta: Meta = {
   tags: ['autodocs'],
   argTypes: {
     heading: { control: 'text' },
-    eyebrow: { control: 'text' },
-    eyebrowVariant: {
-      control: 'select',
-      options: ['blue', 'teal', 'red', 'green', 'yellow', 'orange', 'purple', 'gray'],
-    },
     href: { control: 'text' },
     spacing: {
       control: 'select',
@@ -34,20 +29,10 @@ export const Default: Story = {
   `,
 };
 
-export const WithEyebrow: Story = {
-  name: 'With Eyebrow Status',
-  render: () => html`
-    <civ-card heading="Disability compensation claim" eyebrow="In progress" eyebrow-variant="teal">
-      <p>Filed: March 10, 2026</p>
-      <p>Step 3 of 5: Evidence gathering</p>
-    </civ-card>
-  `,
-};
-
 export const WithFooterLink: Story = {
   name: 'With Footer Action Link',
   render: () => html`
-    <civ-card heading="Disability compensation" eyebrow="In progress" eyebrow-variant="teal">
+    <civ-card heading="Disability compensation">
       <p>Filed: March 10, 2026</p>
       <p>Step 3 of 5: Evidence gathering</p>
       <div data-card-footer>
@@ -60,7 +45,7 @@ export const WithFooterLink: Story = {
 export const WithFooterButton: Story = {
   name: 'With Footer Button',
   render: () => html`
-    <civ-card heading="Primary care appointment" eyebrow="Upcoming" eyebrow-variant="blue">
+    <civ-card heading="Primary care appointment">
       <p>Dr. Sarah Smith</p>
       <p>January 15, 2026 at 2:30 PM</p>
       <p>VA Medical Center, Building 2, Room 105</p>
@@ -91,7 +76,7 @@ export const WithExpandableFooter: Story = {
 export const ClickableHeading: Story = {
   name: 'Clickable Heading Link',
   render: () => html`
-    <civ-card heading="Education benefits" href="#/education" eyebrow="Active" eyebrow-variant="green">
+    <civ-card heading="Education benefits" href="#/education">
       <p>Post-9/11 GI Bill</p>
       <p>Remaining entitlement: 24 months</p>
     </civ-card>
@@ -105,9 +90,26 @@ export const WithHeaderActions: Story = {
       <p>Relationship: Spouse</p>
       <p>Date of birth: January 15, 1992</p>
       <span data-card-actions>
-        <a href="#" class="civ-link">Edit</a>
-        <a href="#" class="civ-link civ-text-error">Remove</a>
+        <civ-button label="Edit" variant="tertiary"></civ-button>
+        <civ-button label="Remove" variant="tertiary"></civ-button>
       </span>
+    </civ-card>
+  `,
+};
+
+export const WithTagAndActions: Story = {
+  name: 'With Tag and Actions',
+  render: () => html`
+    <civ-card heading="Disability compensation">
+      <civ-tag label="In progress" variant="teal"></civ-tag>
+      <p class="civ-mt-2">Filed: March 10, 2026</p>
+      <p>Step 3 of 5: Evidence gathering</p>
+      <span data-card-actions>
+        <civ-button label="Edit" variant="tertiary"></civ-button>
+      </span>
+      <div data-card-footer>
+        <a href="#" class="civ-link">View claim details</a>
+      </div>
     </civ-card>
   `,
 };
@@ -115,24 +117,27 @@ export const WithHeaderActions: Story = {
 export const AppointmentCards: Story = {
   name: 'Appointment Card Collection',
   render: () => html`
-    <civ-card heading="Primary care" eyebrow="In person" eyebrow-variant="blue">
-      <p>Dr. Smith — January 15, 2026 at 2:30 PM</p>
+    <civ-card heading="Primary care">
+      <civ-tag label="In person" variant="blue"></civ-tag>
+      <p class="civ-mt-2">Dr. Smith — January 15, 2026 at 2:30 PM</p>
       <p>VA Medical Center, Building 2</p>
       <div data-card-footer>
         <civ-button label="Check in now"></civ-button>
       </div>
     </civ-card>
 
-    <civ-card heading="Mental health" eyebrow="Video" eyebrow-variant="teal">
-      <p>Dr. Johnson — January 18, 2026 at 10:00 AM</p>
+    <civ-card heading="Mental health">
+      <civ-tag label="Video" variant="teal"></civ-tag>
+      <p class="civ-mt-2">Dr. Johnson — January 18, 2026 at 10:00 AM</p>
       <p>VA Video Connect</p>
       <div data-card-footer>
         <a href="#" class="civ-link">Join video session</a>
       </div>
     </civ-card>
 
-    <civ-card heading="Lab work" eyebrow="Completed" eyebrow-variant="green">
-      <p>January 10, 2026</p>
+    <civ-card heading="Lab work">
+      <civ-tag label="Completed" variant="green" tag-style="primary"></civ-tag>
+      <p class="civ-mt-2">January 10, 2026</p>
       <p>VA Medical Center, Lab</p>
       <div data-card-footer>
         <a href="#" class="civ-link">View results</a>
@@ -144,18 +149,21 @@ export const AppointmentCards: Story = {
 export const ClaimStatusCards: Story = {
   name: 'Claim Status Cards',
   render: () => html`
-    <civ-card heading="Disability compensation" href="#/claims/123" eyebrow="In progress" eyebrow-variant="teal">
-      <p>Filed: March 10, 2026</p>
+    <civ-card heading="Disability compensation" href="#/claims/123">
+      <civ-tag label="In progress" variant="teal"></civ-tag>
+      <p class="civ-mt-2">Filed: March 10, 2026</p>
       <p>Step 3 of 5: Evidence gathering</p>
     </civ-card>
 
-    <civ-card heading="Travel reimbursement" href="#/claims/456" eyebrow="Decision made" eyebrow-variant="green">
-      <p>Filed: February 28, 2026</p>
+    <civ-card heading="Travel reimbursement" href="#/claims/456">
+      <civ-tag label="Decision made" variant="green" tag-style="primary"></civ-tag>
+      <p class="civ-mt-2">Filed: February 28, 2026</p>
       <p>Amount approved: $45.00</p>
     </civ-card>
 
-    <civ-card heading="Education benefits" href="#/claims/789" eyebrow="Action needed" eyebrow-variant="red">
-      <p>Filed: January 5, 2026</p>
+    <civ-card heading="Education benefits" href="#/claims/789">
+      <civ-tag label="Action needed" variant="red"></civ-tag>
+      <p class="civ-mt-2">Filed: January 5, 2026</p>
       <p>Additional documents required</p>
     </civ-card>
   `,
@@ -165,7 +173,7 @@ export const Plain: Story = {
   name: 'Plain (No Header)',
   render: () => html`
     <civ-card>
-      <p>A simple card with no heading, eyebrow, or footer. Just body content.</p>
+      <p>A simple card with no heading or footer. Just body content.</p>
     </civ-card>
   `,
 };

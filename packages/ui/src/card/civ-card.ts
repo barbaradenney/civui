@@ -1,20 +1,17 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { CivBaseElement } from '@civui/core';
-import type { TagVariant } from '../tag/civ-tag.js';
 
 /**
  * CivUI Card
  *
- * A structured container with optional header (heading + eyebrow + actions),
+ * A structured container with optional header (heading + actions),
  * body (slotted content), and footer. The footer supports any content —
  * action links, buttons, or native `<details>` for expandable sections.
  *
  * @element civ-card
  *
  * @prop {string} heading - Card title
- * @prop {string} eyebrow - Small label above the heading (status, category)
- * @prop {string} eyebrowVariant - Tag color for the eyebrow
  * @prop {string} href - Makes the heading a link
  * @prop {string} spacing - Padding size: 'default' or 'sm'
  *
@@ -25,9 +22,9 @@ import type { TagVariant } from '../tag/civ-tag.js';
  * </civ-card>
  * ```
  *
- * @example Card with eyebrow status and footer action
+ * @example Card with footer action
  * ```html
- * <civ-card heading="Disability compensation" eyebrow="In progress" eyebrow-variant="teal">
+ * <civ-card heading="Disability compensation">
  *   <p>Filed: March 10, 2026</p>
  *   <div data-card-footer>
  *     <a href="/claims/123" class="civ-link">View details</a>
@@ -50,12 +47,6 @@ import type { TagVariant } from '../tag/civ-tag.js';
 export class CivCard extends CivBaseElement {
   /** Card title. */
   @property({ type: String }) heading = '';
-
-  /** Small label above the heading (e.g., status, category). */
-  @property({ type: String }) eyebrow = '';
-
-  /** Tag color variant for the eyebrow. */
-  @property({ type: String, attribute: 'eyebrow-variant' }) eyebrowVariant: TagVariant = 'gray';
 
   /** Makes the heading a link. */
   @property({ type: String }) href = '';
@@ -113,7 +104,7 @@ export class CivCard extends CivBaseElement {
       this.spacing === 'sm' ? 'civ-card--sm' : '',
     ].filter(Boolean).join(' ');
 
-    const hasHeader = this.heading || this.eyebrow;
+    const hasHeader = !!this.heading;
     const hasFooter = this._footerChildren.length > 0;
     const hasActions = this._actionChildren.length > 0;
 
@@ -121,19 +112,12 @@ export class CivCard extends CivBaseElement {
       <div class="${classes}">
         ${hasHeader ? html`
           <div class="civ-card__header">
-            ${this.eyebrow ? html`
-              <div class="civ-card__eyebrow">
-                <civ-tag label="${this.eyebrow}" variant="${this.eyebrowVariant}"></civ-tag>
-              </div>
-            ` : nothing}
-            ${this.heading ? html`
-              <div class="civ-card__title-row">
-                ${this.href
-                  ? html`<a href="${this.href}" class="civ-heading-md civ-link civ-card__title">${this.heading}</a>`
-                  : html`<span class="civ-heading-md civ-card__title">${this.heading}</span>`}
-                ${hasActions ? html`<span data-civ-card-actions class="civ-card__actions"></span>` : nothing}
-              </div>
-            ` : nothing}
+            <div class="civ-card__title-row">
+              ${this.href
+                ? html`<a href="${this.href}" class="civ-heading-md civ-link civ-card__title">${this.heading}</a>`
+                : html`<span class="civ-heading-md civ-card__title">${this.heading}</span>`}
+              ${hasActions ? html`<span data-civ-card-actions class="civ-card__actions"></span>` : nothing}
+            </div>
           </div>
         ` : nothing}
 

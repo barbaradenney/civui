@@ -3,6 +3,7 @@ import { html } from 'lit';
 import './civ-card.js';
 import '../tag/civ-tag.js';
 import '../button/civ-button.js';
+import '../link/civ-link.js';
 
 const meta: Meta = {
   title: 'UI/Card',
@@ -36,7 +37,7 @@ export const WithFooterLink: Story = {
       <p>Filed: March 10, 2026</p>
       <p>Step 3 of 5: Evidence gathering</p>
       <div data-card-footer>
-        <a href="#" class="civ-link">View claim details</a>
+        <civ-link href="#" variant="secondary">View claim details</civ-link>
       </div>
     </civ-card>
   `,
@@ -63,7 +64,7 @@ export const WithExpandableFooter: Story = {
       <p>Amount: $1,234.56</p>
       <p>Deposited: April 1, 2026</p>
       <details data-card-footer>
-        <summary class="civ-link civ-cursor-pointer">View payment breakdown</summary>
+        <summary class="civ-link--tertiary civ-cursor-pointer">View payment breakdown</summary>
         <div class="civ-mt-2">
           <p>Disability compensation: $987.00</p>
           <p>Special monthly compensation: $247.56</p>
@@ -91,7 +92,7 @@ export const WithHeaderActions: Story = {
       <p>Date of birth: January 15, 1992</p>
       <span data-card-actions>
         <civ-button label="Edit" variant="tertiary"></civ-button>
-        <civ-button label="Remove" variant="tertiary"></civ-button>
+        <civ-button label="Remove" variant="tertiary" danger></civ-button>
       </span>
     </civ-card>
   `,
@@ -108,7 +109,7 @@ export const WithTagAndActions: Story = {
         <civ-button label="Edit" variant="tertiary"></civ-button>
       </span>
       <div data-card-footer>
-        <a href="#" class="civ-link">View claim details</a>
+        <civ-link href="#" variant="secondary">View claim details</civ-link>
       </div>
     </civ-card>
   `,
@@ -131,7 +132,7 @@ export const AppointmentCards: Story = {
       <p class="civ-mt-2">Dr. Johnson — January 18, 2026 at 10:00 AM</p>
       <p>VA Video Connect</p>
       <div data-card-footer>
-        <a href="#" class="civ-link">Join video session</a>
+        <civ-link href="#" variant="secondary">Join video session</civ-link>
       </div>
     </civ-card>
 
@@ -140,7 +141,7 @@ export const AppointmentCards: Story = {
       <p class="civ-mt-2">January 10, 2026</p>
       <p>VA Medical Center, Lab</p>
       <div data-card-footer>
-        <a href="#" class="civ-link">View results</a>
+        <civ-link href="#" variant="secondary">View results</civ-link>
       </div>
     </civ-card>
   `,

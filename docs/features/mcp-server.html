@@ -15,6 +15,8 @@
       --color-white: #ffffff;
       --color-error: #b50909;
       --color-success: #00a91c;
+      --color-warning: #e5a000;
+      --color-info: #00bde3;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -47,7 +49,7 @@
     }
 
     .hero h1 { font-size: 3rem; margin-bottom: 1rem; }
-    .hero p { font-size: 1.25rem; max-width: 700px; margin: 0 auto; opacity: 0.9; }
+    .hero p { font-size: 1.25rem; max-width: 750px; margin: 0 auto; opacity: 0.9; }
 
     .hero-badges {
       display: flex;
@@ -64,12 +66,60 @@
       font-size: 0.875rem;
     }
 
+    .hero-links {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+    }
+
+    .hero-link {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      border-radius: 4px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: background 0.15s;
+    }
+
+    .hero-link--primary {
+      background: var(--color-white);
+      color: var(--color-primary-dark);
+    }
+
+    .hero-link--primary:hover { background: #e6e6e6; }
+
+    .hero-link--secondary {
+      background: rgba(255,255,255,0.15);
+      color: var(--color-white);
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+
+    .hero-link--secondary:hover { background: rgba(255,255,255,0.25); }
+
     .content { max-width: 960px; margin: 0 auto; padding: 3rem 2rem; }
 
-    h2 { font-size: 1.75rem; margin: 2rem 0 1rem; color: var(--color-primary-dark); }
+    h2 {
+      font-size: 1.75rem;
+      margin: 3rem 0 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--color-base-lightest);
+      color: var(--color-primary-dark);
+    }
+
+    h2:first-of-type { margin-top: 0; }
+
     h3 { font-size: 1.25rem; margin: 1.5rem 0 0.75rem; }
+    h4 { font-size: 1.05rem; margin: 1.25rem 0 0.5rem; color: var(--color-base-dark); }
 
     p { margin: 0.5rem 0; }
+
+    ul, ol { margin: 0.5rem 0 1rem 1.5rem; }
+    li { margin: 0.25rem 0; }
+
+    a { color: var(--color-primary); }
 
     pre {
       background: var(--color-base-lightest);
@@ -91,6 +141,23 @@
       font-size: 0.85em;
       font-family: 'SF Mono', 'Fira Code', monospace;
     }
+
+    /* Table of contents */
+    .toc {
+      background: var(--color-base-lightest);
+      padding: 1.5rem 2rem;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+    }
+
+    .toc h3 { margin-top: 0; font-size: 1.1rem; }
+
+    .toc ol { margin: 0.75rem 0 0 1.5rem; }
+
+    .toc li { margin: 0.3rem 0; font-size: 0.95rem; }
+
+    .toc a { text-decoration: none; }
+    .toc a:hover { text-decoration: underline; }
 
     /* Workflow diagram */
     .workflow {
@@ -131,7 +198,7 @@
     /* Stats */
     .stats {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 1.5rem;
       margin: 1.5rem 0;
     }
@@ -156,7 +223,131 @@
       margin-top: 0.5rem;
     }
 
-    /* Tool categories */
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 0.6rem 0.75rem;
+      border-bottom: 1px solid var(--color-base-light);
+      font-size: 0.9rem;
+    }
+
+    th {
+      background: var(--color-base-lightest);
+      font-size: 0.85rem;
+      color: var(--color-base-dark);
+      font-weight: 600;
+    }
+
+    td code {
+      background: var(--color-base-lightest);
+      padding: 0.15rem 0.4rem;
+      border-radius: 3px;
+      font-size: 0.85em;
+    }
+
+    /* Tier badges */
+    .tier {
+      display: inline-block;
+      padding: 0.15rem 0.5rem;
+      border-radius: 3px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .tier--essential { background: #d4edda; color: #155724; }
+    .tier--advanced { background: #cce5ff; color: #004085; }
+    .tier--internal { background: #f0f0f0; color: #565c65; }
+
+    /* Callout boxes */
+    .callout {
+      border-left: 4px solid var(--color-primary);
+      background: #e8f0fa;
+      padding: 1rem 1.25rem;
+      margin: 1.5rem 0;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .callout p:last-child { margin-bottom: 0; }
+
+    .callout--warning {
+      border-left-color: var(--color-warning);
+      background: #fef3cd;
+    }
+
+    .callout--success {
+      border-left-color: var(--color-success);
+      background: #d4edda;
+    }
+
+    /* Workflow cards */
+    .workflow-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin: 1.5rem 0;
+    }
+
+    .workflow-card {
+      border: 1px solid var(--color-base-light);
+      border-radius: 8px;
+      padding: 1.5rem;
+    }
+
+    .workflow-card h4 {
+      margin-top: 0;
+      color: var(--color-primary);
+      font-size: 1.05rem;
+    }
+
+    .workflow-card ol {
+      margin: 0.75rem 0 0 1.25rem;
+    }
+
+    .workflow-card li {
+      padding: 0.25rem 0;
+      font-size: 0.9rem;
+    }
+
+    .workflow-card .step-tools {
+      color: var(--color-base-dark);
+      font-size: 0.8rem;
+      font-style: italic;
+    }
+
+    /* Setup box */
+    .setup-box {
+      background: var(--color-base-lightest);
+      border: 1px solid var(--color-base-light);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+    }
+
+    .setup-box h3 { margin-top: 0; }
+
+    /* Diagram */
+    .diagram {
+      background: var(--color-base-lightest);
+      border: 1px solid var(--color-base-light);
+      border-radius: 6px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.85rem;
+      line-height: 1.8;
+      white-space: pre;
+      overflow-x: auto;
+    }
+
+    /* Category cards */
     .tool-categories {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -176,100 +367,11 @@
       font-size: 1.1rem;
     }
 
-    .tool-list {
-      list-style: none;
-      margin: 0.75rem 0 0;
-    }
-
-    .tool-list li {
-      padding: 0.35rem 0;
-      font-size: 0.875rem;
+    .tool-category .count {
+      font-size: 0.8rem;
       color: var(--color-base-dark);
-      border-bottom: 1px solid var(--color-base-lightest);
+      font-weight: normal;
     }
-
-    .tool-list li:last-child { border-bottom: none; }
-
-    .tool-list code {
-      background: var(--color-base-lightest);
-      padding: 0.15rem 0.4rem;
-      border-radius: 3px;
-      font-size: 0.8em;
-      color: var(--color-base-darkest);
-    }
-
-    /* Resources table */
-    .resources-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 1rem 0;
-    }
-
-    .resources-table th,
-    .resources-table td {
-      text-align: left;
-      padding: 0.75rem 1rem;
-      border-bottom: 1px solid var(--color-base-light);
-    }
-
-    .resources-table th {
-      background: var(--color-base-lightest);
-      font-size: 0.875rem;
-      color: var(--color-base-dark);
-      font-weight: 600;
-    }
-
-    .resources-table td { font-size: 0.9rem; }
-
-    .resources-table code {
-      background: var(--color-base-lightest);
-      padding: 0.15rem 0.4rem;
-      border-radius: 3px;
-      font-size: 0.85em;
-    }
-
-    .setup-box {
-      background: var(--color-base-lightest);
-      border: 1px solid var(--color-base-light);
-      border-radius: 8px;
-      padding: 1.5rem;
-      margin: 1.5rem 0;
-    }
-
-    .setup-box h3 { margin-top: 0; }
-
-    .hero-links {
-      display: flex;
-      gap: 1rem;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin-top: 2rem;
-    }
-
-    .hero-link {
-      display: inline-block;
-      padding: 0.75rem 1.5rem;
-      border-radius: 4px;
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 1rem;
-      transition: background 0.15s;
-    }
-
-    .hero-link--primary {
-      background: var(--color-white);
-      color: var(--color-primary-dark);
-    }
-
-    .hero-link--primary:hover { background: #e6e6e6; }
-
-    .hero-link--secondary {
-      background: rgba(255,255,255,0.15);
-      color: var(--color-white);
-      border: 1px solid rgba(255,255,255,0.3);
-    }
-
-    .hero-link--secondary:hover { background: rgba(255,255,255,0.25); }
 
     footer {
       border-top: 1px solid var(--color-base-light);
@@ -280,8 +382,10 @@
     }
 
     @media (max-width: 640px) {
-      .stats { grid-template-columns: 1fr; }
+      .stats { grid-template-columns: repeat(2, 1fr); }
       .hero h1 { font-size: 2rem; }
+      .workflow-cards { grid-template-columns: 1fr; }
+      .tool-categories { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -292,20 +396,68 @@
 
   <div class="hero">
     <h1>MCP Server</h1>
-    <p>AI-powered form modernization. Convert legacy PDF and HTML government forms into accessible, Section 508 compliant CivUI web components.</p>
+    <p>AI-powered government form generation. Convert legacy PDF and HTML forms into accessible, Section 508 compliant CivUI applications &mdash; or generate complete VA forms from a registry of 20 templates.</p>
     <div class="hero-badges">
       <span class="badge">83 Tools</span>
       <span class="badge">10 Resources</span>
-      <span class="badge">8 Guided Prompts</span>
+      <span class="badge">9 Guided Prompts</span>
+      <span class="badge">20 VA Forms</span>
       <span class="badge">Section 508</span>
+    </div>
+    <div class="hero-links">
+      <a href="#quick-start" class="hero-link hero-link--primary">Quick Start</a>
+      <a href="#tools" class="hero-link hero-link--secondary">All 83 Tools</a>
+      <a href="#form-architecture" class="hero-link hero-link--secondary">Form Architecture</a>
     </div>
   </div>
 
   <div class="content">
-    <h2>What It Does</h2>
-    <p>The CivUI MCP Server connects to AI assistants like Claude Desktop, providing tools that parse legacy government forms (PDF, HTML), convert them into structured FormSchema definitions, and generate accessible CivUI web components. Every generated form is automatically validated against Section 508 accessibility standards.</p>
 
-    <h2>Workflow</h2>
+    <!-- TABLE OF CONTENTS -->
+    <div class="toc">
+      <h3>Contents</h3>
+      <ol>
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#setup">Setup</a></li>
+        <li><a href="#tier-system">The 3-Tier System</a></li>
+        <li><a href="#quick-start">Quick Start Workflows</a></li>
+        <li><a href="#tools">Tool Categories (all 83 tools)</a></li>
+        <li><a href="#va-forms">VA Form Registry</a></li>
+        <li><a href="#resources">Resources (10 MCP resources)</a></li>
+        <li><a href="#prompts">Guided Prompts (9 prompts)</a></li>
+        <li><a href="#form-architecture">Form Architecture</a></li>
+        <li><a href="#form-schema">FormSchema Reference</a></li>
+        <li><a href="#tool-chaining">Tool Chaining Reference</a></li>
+      </ol>
+    </div>
+
+    <!-- ─── 1. OVERVIEW ──────────────────────────────────── -->
+    <h2 id="overview">1. Overview</h2>
+
+    <p>The CivUI MCP Server is a <a href="https://modelcontextprotocol.io">Model Context Protocol</a> server that connects AI coding assistants (Claude Desktop, Claude Code, Cursor, Windsurf, and other MCP-compatible tools) to the full CivUI design system. It provides structured tools for parsing, generating, validating, and testing government forms.</p>
+
+    <p>Instead of the AI assistant needing to learn CivUI component APIs from documentation, the MCP server gives it purpose-built tools that produce correct, accessible output every time. The server handles Section 508 compliance, WCAG 2.1 AA conformance, plain language requirements, and CivUI component patterns automatically.</p>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-number">83</div>
+        <div class="stat-label">Tools</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">10</div>
+        <div class="stat-label">Resources</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">9</div>
+        <div class="stat-label">Guided Prompts</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">20</div>
+        <div class="stat-label">VA Forms</div>
+      </div>
+    </div>
+
+    <h3>Core Workflow</h3>
     <div class="workflow">
       <div class="workflow-step">Legacy Form</div>
       <span class="workflow-arrow">&rarr;</span>
@@ -322,69 +474,14 @@
       <div class="workflow-step">508 Report</div>
     </div>
 
-    <h2>Key Capabilities</h2>
-    <div class="stats">
-      <div class="stat">
-        <div class="stat-number">83</div>
-        <div class="stat-label">Tools</div>
-      </div>
-      <div class="stat">
-        <div class="stat-number">10</div>
-        <div class="stat-label">Resources</div>
-      </div>
-      <div class="stat">
-        <div class="stat-number">8</div>
-        <div class="stat-label">Guided Prompts</div>
-      </div>
-    </div>
+    <p>Every tool pipeline flows through <strong>FormSchema</strong> &mdash; a universal intermediate JSON format that describes form structure, field types, validation rules, conditional logic, and cross-field dependencies. FormSchema is the bridge between input (PDF, HTML, templates, VA registry) and output (CivUI HTML, React TSX, tests, schemas).</p>
 
-    <h2>Tool Categories</h2>
-    <div class="tool-categories">
-      <div class="tool-category">
-        <h3>Parsing</h3>
-        <ul class="tool-list">
-          <li><code>parse_html_form</code> &mdash; Extract fields from HTML forms</li>
-          <li><code>parse_pdf_form</code> &mdash; Extract fields from PDF forms</li>
-        </ul>
-      </div>
-      <div class="tool-category">
-        <h3>Generation</h3>
-        <ul class="tool-list">
-          <li><code>generate_civui_form</code> &mdash; Generate accessible CivUI markup</li>
-          <li><code>generate_wizard</code> &mdash; Multi-step form wizard</li>
-          <li><code>generate_tests</code> &mdash; Vitest test suite for forms</li>
-        </ul>
-      </div>
-      <div class="tool-category">
-        <h3>Validation</h3>
-        <ul class="tool-list">
-          <li><code>validate_form</code> &mdash; Validate form schema structure</li>
-          <li><code>generate_508_report</code> &mdash; Section 508 compliance audit</li>
-          <li><code>check_contrast</code> &mdash; Color contrast ratio checking</li>
-        </ul>
-      </div>
-      <div class="tool-category">
-        <h3>Government</h3>
-        <ul class="tool-list">
-          <li><code>generate_address_block</code> &mdash; Standard US address form</li>
-          <li><code>generate_eligibility_screener</code> &mdash; Benefits eligibility flow</li>
-          <li><code>generate_save_resume_ui</code> &mdash; Save and resume long forms</li>
-        </ul>
-      </div>
-      <div class="tool-category">
-        <h3>Export</h3>
-        <ul class="tool-list">
-          <li><code>generate_validation_schema</code> &mdash; Zod/Yup validation schema</li>
-          <li><code>generate_api_handler</code> &mdash; Server-side form handler</li>
-          <li><code>export_schema</code> &mdash; Export FormSchema as JSON</li>
-        </ul>
-      </div>
-    </div>
+    <!-- ─── 2. SETUP ─────────────────────────────────────── -->
+    <h2 id="setup">2. Setup</h2>
 
-    <h2>Setup</h2>
     <div class="setup-box">
-      <h3>Claude Desktop Configuration</h3>
-      <p>Add this to your Claude Desktop <span class="inline-code">claude_desktop_config.json</span>:</p>
+      <h3>Claude Desktop</h3>
+      <p>Add this to your <span class="inline-code">claude_desktop_config.json</span>:</p>
       <pre><code>{
   "mcpServers": {
     "civui": {
@@ -393,63 +490,795 @@
     }
   }
 }</code></pre>
-      <p>Once configured, Claude Desktop will have access to all 83 tools, 10 resources, and 8 guided prompts for converting legacy forms into accessible CivUI components.</p>
     </div>
 
-    <h2>Resources</h2>
-    <table class="resources-table">
+    <div class="setup-box">
+      <h3>Claude Code</h3>
+      <p>Add the server in your project settings or run:</p>
+      <pre><code>claude mcp add civui npx @civui/mcp-server</code></pre>
+    </div>
+
+    <div class="setup-box">
+      <h3>Tier Selection</h3>
+      <p>Control which tools are registered with the <span class="inline-code">CIV_MCP_TIER</span> environment variable:</p>
+      <pre><code>{
+  "mcpServers": {
+    "civui": {
+      "command": "npx",
+      "args": ["@civui/mcp-server"],
+      "env": {
+        "CIV_MCP_TIER": "standard"
+      }
+    }
+  }
+}</code></pre>
+      <p>Values: <span class="inline-code">essential</span> (13 tools), <span class="inline-code">standard</span> (~35 tools), <span class="inline-code">all</span> (83 tools, default).</p>
+    </div>
+
+    <!-- ─── 3. TIER SYSTEM ───────────────────────────────── -->
+    <h2 id="tier-system">3. The 3-Tier System</h2>
+
+    <p>Tools are organized into three tiers to manage context window usage and keep AI assistants focused on the most relevant capabilities.</p>
+
+    <table>
       <thead>
         <tr>
-          <th>URI</th>
+          <th>Tier</th>
+          <th>Count</th>
+          <th>When Registered</th>
           <th>Description</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td><code>civui://components</code></td>
-          <td>Full component catalog with props, events, and examples</td>
+          <td><span class="tier tier--essential">Essential</span></td>
+          <td>13</td>
+          <td>Always</td>
+          <td>Core tools an LLM primarily needs: parse, generate, validate, gov forms, tests, style lookup. Covers 90% of use cases.</td>
         </tr>
         <tr>
-          <td><code>civui://tokens</code></td>
-          <td>Design token reference (colors, spacing, typography)</td>
+          <td><span class="tier tier--advanced">Advanced</span></td>
+          <td>~22</td>
+          <td>Standard + All modes</td>
+          <td>Feature generators (signature, eligibility, save/resume), workflow tools, content tools, extra validation. Requested on demand.</td>
         </tr>
         <tr>
-          <td><code>civui://patterns</code></td>
-          <td>Government form patterns and best practices</td>
-        </tr>
-        <tr>
-          <td><code>civui://accessibility</code></td>
-          <td>WCAG 2.1 AA and Section 508 requirements</td>
-        </tr>
-        <tr>
-          <td><code>civui://schema</code></td>
-          <td>FormSchema JSON Schema reference</td>
-        </tr>
-        <tr>
-          <td><code>civui://examples</code></td>
-          <td>Example forms (contact, application, registration)</td>
-        </tr>
-        <tr>
-          <td><code>civui://validation</code></td>
-          <td>Validation rules and error message guidelines</td>
-        </tr>
-        <tr>
-          <td><code>civui://i18n</code></td>
-          <td>Internationalization and localization guide</td>
-        </tr>
-        <tr>
-          <td><code>civui://testing</code></td>
-          <td>Testing patterns and utilities reference</td>
-        </tr>
-        <tr>
-          <td><code>civui://ai-guide</code></td>
-          <td>AI-optimized component usage guide</td>
+          <td><span class="tier tier--internal">Internal</span></td>
+          <td>~48</td>
+          <td>All mode only</td>
+          <td>Composed by other tools. Repeatable sections, progress bars, print CSS, API handlers, bilingual forms, audit trails, etc. Usually called internally, not directly.</td>
         </tr>
       </tbody>
     </table>
 
-    <div class="hero-links" style="justify-content: flex-start; margin-top: 2rem;">
-      <a href="https://github.com/barbaradenney/civui" class="hero-link" style="background: var(--color-primary); color: var(--color-white);">View on GitHub</a>
+    <div class="callout">
+      <p><strong>Recommendation:</strong> Start with <span class="inline-code">standard</span> tier for most projects. Use <span class="inline-code">essential</span> if context window is tight. Use <span class="inline-code">all</span> for full control over every generation step.</p>
+    </div>
+
+    <!-- ─── 4. QUICK START ───────────────────────────────── -->
+    <h2 id="quick-start">4. Quick Start Workflows</h2>
+
+    <div class="workflow-cards">
+      <div class="workflow-card">
+        <h4>VA Form Generation</h4>
+        <p>Know the form number? Two steps to a complete app.</p>
+        <ol>
+          <li>
+            <code>list_gov_forms</code>
+            <div class="step-tools">See all 20 available forms with numbers, titles, and chapter counts</div>
+          </li>
+          <li>
+            <code>assemble_gov_form(formNumber, format)</code>
+            <div class="step-tools">Generate a complete working HTML or React app with routing, navigation, persistence, task list, and submission handling</div>
+          </li>
+        </ol>
+        <p style="margin-top: 0.75rem; font-size: 0.85rem; color: var(--color-base-dark);">Optional: <code>validate_gov_form(formNumber)</code> to check for issues.</p>
+      </div>
+
+      <div class="workflow-card">
+        <h4>PDF Form &rarr; Working App</h4>
+        <p>Convert a legacy government PDF into accessible CivUI.</p>
+        <ol>
+          <li>
+            <code>parse_pdf_form(pdfBase64)</code>
+            <div class="step-tools">Extract fields, types, labels, options, required flags &rarr; FormSchema</div>
+          </li>
+          <li>
+            <code>generate_civui_form(schema)</code>
+            <div class="step-tools">Convert FormSchema to CivUI web component HTML</div>
+          </li>
+          <li>
+            <code>validate_form(html)</code>
+            <div class="step-tools">Check for 508 violations (46 rules)</div>
+          </li>
+          <li>
+            <code>generate_tests(html)</code>
+            <div class="step-tools">Generate Vitest test suite for the form</div>
+          </li>
+        </ol>
+      </div>
+
+      <div class="workflow-card">
+        <h4>HTML Form &rarr; CivUI</h4>
+        <p>Modernize an existing HTML form.</p>
+        <ol>
+          <li>
+            <code>parse_html_form(html)</code>
+            <div class="step-tools">Parse existing HTML into FormSchema</div>
+          </li>
+          <li>
+            <code>generate_civui_form(schema)</code>
+            <div class="step-tools">Generate accessible CivUI markup</div>
+          </li>
+          <li>
+            <code>validate_form(html)</code>
+            <div class="step-tools">Validate accessibility and compliance</div>
+          </li>
+        </ol>
+        <p style="margin-top: 0.75rem; font-size: 0.85rem; color: var(--color-base-dark);">Alt: <code>generate_react_form(schema)</code> for React TSX output.</p>
+      </div>
+
+      <div class="workflow-card">
+        <h4>Build from Scratch</h4>
+        <p>Start from a template or your own schema.</p>
+        <ol>
+          <li>
+            <code>scaffold_from_template(name)</code>
+            <div class="step-tools">Templates: Contact Form, Benefits Application, Change of Address, Authorization</div>
+          </li>
+          <li>
+            <code>generate_civui_form(schema)</code>
+            <div class="step-tools">Build from the template or your own FormSchema</div>
+          </li>
+          <li>
+            <code>validate_form(html) + generate_tests(html)</code>
+            <div class="step-tools">Check compliance and generate tests</div>
+          </li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- ─── 5. TOOL CATEGORIES ───────────────────────────── -->
+    <h2 id="tools">5. Tool Categories</h2>
+
+    <p>All 83 tools organized by category. Each tool shows its tier: <span class="tier tier--essential">Essential</span> <span class="tier tier--advanced">Advanced</span> <span class="tier tier--internal">Internal</span></p>
+
+    <!-- Gov Forms -->
+    <h3 id="tools-gov">Government Forms (5 tools)</h3>
+    <table>
+      <thead>
+        <tr><th>Tool</th><th>Tier</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>list_gov_forms</code></td><td><span class="tier tier--essential">Essential</span></td><td>List all available government form templates with numbers, titles, and chapter counts</td></tr>
+        <tr><td><code>assemble_gov_form</code></td><td><span class="tier tier--essential">Essential</span></td><td>Generate a complete working form app (HTML or React) from a form number</td></tr>
+        <tr><td><code>generate_gov_form</code></td><td><span class="tier tier--essential">Essential</span></td><td>Generate structured form pages from a form number (intro, chapters, review, confirmation)</td></tr>
+        <tr><td><code>validate_gov_form</code></td><td><span class="tier tier--essential">Essential</span></td><td>Validate generated form HTML for CivUI component usage and consistency</td></tr>
+        <tr><td><code>generate_intro_page</code></td><td><span class="tier tier--advanced">Advanced</span></td><td>Generate government form introduction page with eligibility and preparation info</td></tr>
+      </tbody>
+    </table>
+
+    <!-- Form Generation -->
+    <h3 id="tools-generation">Form Generation (25 tools)</h3>
+    <table>
+      <thead>
+        <tr><th>Tool</th><th>Tier</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>generate_civui_form</code></td><td><span class="tier tier--essential">Essential</span></td><td>Convert a FormSchema to CivUI web component HTML</td></tr>
+        <tr><td><code>parse_html_form</code></td><td><span class="tier tier--essential">Essential</span></td><td>Parse existing HTML form into a FormSchema</td></tr>
+        <tr><td><code>parse_pdf_form</code></td><td><span class="tier tier--essential">Essential</span></td><td>Parse a fillable PDF form into a FormSchema (base64 input, max ~37.5 MB decoded)</td></tr>
+        <tr><td><code>scaffold_from_template</code></td><td><span class="tier tier--essential">Essential</span></td><td>Generate a FormSchema from a pre-built template</td></tr>
+        <tr><td><code>export_schema</code></td><td><span class="tier tier--advanced">Advanced</span></td><td>Export FormSchema as JSON Schema, TypeScript, or Zod</td></tr>
+        <tr><td><code>generate_react_form</code></td><td><span class="tier tier--advanced">Advanced</span></td><td>Generate a React TSX component from FormSchema using CivUI web components as custom elements</td></tr>
+        <tr><td><code>generate_wizard</code></td><td><span class="tier tier--advanced">Advanced</span></td><td>Generate multi-step wizard navigation</td></tr>
+        <tr><td><code>generate_signature_block</code></td><td><span class="tier tier--advanced">Advanced</span></td><td>Generate e-signature block (typed, drawn, or checkbox)</td></tr>
+        <tr><td><code>generate_eligibility_screener</code></td><td><span class="tier tier--advanced">Advanced</span></td><td>Generate eligibility questionnaire with pass/fail logic</td></tr>
+        <tr><td><code>generate_confirmation_page</code></td><td><span class="tier tier--advanced">Advanced</span></td><td>Generate post-submission confirmation page</td></tr>
+        <tr><td><code>generate_save_resume_ui</code></td><td><span class="tier tier--advanced">Advanced</span></td><td>Generate save-and-resume flow with session persistence</td></tr>
+        <tr><td><code>generate_document_checklist</code></td><td><span class="tier tier--advanced">Advanced</span></td><td>Generate file upload checklist</td></tr>
+        <tr><td><code>generate_address_block</code></td><td><span class="tier tier--advanced">Advanced</span></td><td>Generate US address fieldset (with territories, military options)</td></tr>
+        <tr><td><code>generate_error_messages</code></td><td><span class="tier tier--advanced">Advanced</span></td><td>Generate error message library from schema</td></tr>
+        <tr><td><code>generate_conditional_reveal</code></td><td><span class="tier tier--advanced">Advanced</span></td><td>Generate conditional show/hide logic</td></tr>
+        <tr><td><code>form_to_schema</code></td><td><span class="tier tier--internal">Internal</span></td><td>Convert CivUI HTML back to FormSchema (reverse of generate_civui_form)</td></tr>
+        <tr><td><code>generate_repeatable_section</code></td><td><span class="tier tier--internal">Internal</span></td><td>Generate add-another repeatable section</td></tr>
+        <tr><td><code>generate_progress_bar</code></td><td><span class="tier tier--internal">Internal</span></td><td>Generate progress indicator</td></tr>
+        <tr><td><code>generate_timeout_warning</code></td><td><span class="tier tier--internal">Internal</span></td><td>Generate session timeout dialog</td></tr>
+        <tr><td><code>generate_help_panel</code></td><td><span class="tier tier--internal">Internal</span></td><td>Generate contextual help panel</td></tr>
+        <tr><td><code>generate_data_table</code></td><td><span class="tier tier--internal">Internal</span></td><td>Generate tabular data display</td></tr>
+        <tr><td><code>generate_form_chain</code></td><td><span class="tier tier--internal">Internal</span></td><td>Generate multi-form sequence</td></tr>
+        <tr><td><code>generate_bilingual_form</code></td><td><span class="tier tier--internal">Internal</span></td><td>Generate bilingual form support</td></tr>
+        <tr><td><code>generate_print_css</code></td><td><span class="tier tier--internal">Internal</span></td><td>Generate print stylesheet</td></tr>
+        <tr><td><code>generate_summary</code></td><td><span class="tier tier--internal">Internal</span></td><td>Generate read-only summary page</td></tr>
+      </tbody>
+    </table>
+
+    <!-- Validation -->
+    <h3 id="tools-validation">Validation (5 tools)</h3>
+    <table>
+      <thead>
+        <tr><th>Tool</th><th>Tier</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>validate_form</code></td><td><span class="tier tier--essential">Essential</span></td><td>Validate form HTML for accessibility, compliance, and CivUI patterns (46 rules)</td></tr>
+        <tr><td><code>validate_schema</code></td><td><span class="tier tier--advanced">Advanced</span></td><td>Validate FormSchema structure</td></tr>
+        <tr><td><code>validate_reading_level</code></td><td><span class="tier tier--advanced">Advanced</span></td><td>Check form text reading level for plain language compliance</td></tr>
+        <tr><td><code>validate_forms</code></td><td><span class="tier tier--internal">Internal</span></td><td>Batch validate multiple forms</td></tr>
+        <tr><td><code>validate_cross_field</code></td><td><span class="tier tier--internal">Internal</span></td><td>Validate cross-field rules</td></tr>
+      </tbody>
+    </table>
+
+    <!-- Testing -->
+    <h3 id="tools-testing">Testing (6 tools)</h3>
+    <table>
+      <thead>
+        <tr><th>Tool</th><th>Tier</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>generate_tests</code></td><td><span class="tier tier--essential">Essential</span></td><td>Generate test suite (unit, e2e, or a11y) for form HTML</td></tr>
+        <tr><td><code>generate_story</code></td><td><span class="tier tier--advanced">Advanced</span></td><td>Generate Storybook story from form HTML</td></tr>
+        <tr><td><code>generate_508_report</code></td><td><span class="tier tier--advanced">Advanced</span></td><td>Generate Section 508 accessibility audit report with WCAG mapping and remediation plan</td></tr>
+        <tr><td><code>generate_e2e_tests</code></td><td><span class="tier tier--internal">Internal</span></td><td>Generate E2E test file</td></tr>
+        <tr><td><code>generate_a11y_tests</code></td><td><span class="tier tier--internal">Internal</span></td><td>Generate accessibility test suite</td></tr>
+        <tr><td><code>generate_mock_data</code></td><td><span class="tier tier--internal">Internal</span></td><td>Generate mock test data</td></tr>
+      </tbody>
+    </table>
+
+    <!-- Content -->
+    <h3 id="tools-content">Content (5 tools)</h3>
+    <table>
+      <thead>
+        <tr><th>Tool</th><th>Tier</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>extract_strings</code></td><td><span class="tier tier--advanced">Advanced</span></td><td>Extract translatable strings from form HTML</td></tr>
+        <tr><td><code>lint_form_language</code></td><td><span class="tier tier--advanced">Advanced</span></td><td>Check form text for plain language compliance</td></tr>
+        <tr><td><code>generate_i18n_files</code></td><td><span class="tier tier--internal">Internal</span></td><td>Generate locale bundles</td></tr>
+        <tr><td><code>generate_content_registry</code></td><td><span class="tier tier--internal">Internal</span></td><td>Generate content registry</td></tr>
+        <tr><td><code>sync_content_registry</code></td><td><span class="tier tier--internal">Internal</span></td><td>Sync with content system</td></tr>
+      </tbody>
+    </table>
+
+    <!-- Workflow -->
+    <h3 id="tools-workflow">Workflow (12 tools)</h3>
+    <table>
+      <thead>
+        <tr><th>Tool</th><th>Tier</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>generate_workflow_ui</code></td><td><span class="tier tier--advanced">Advanced</span></td><td>Generate workflow status banner and transition buttons</td></tr>
+        <tr><td><code>generate_delegation_sections</code></td><td><span class="tier tier--advanced">Advanced</span></td><td>Generate representative/POA delegation sections</td></tr>
+        <tr><td><code>generate_feedback_ui</code></td><td><span class="tier tier--advanced">Advanced</span></td><td>Generate inline reviewer comment/feedback panels</td></tr>
+        <tr><td><code>generate_case_dashboard</code></td><td><span class="tier tier--advanced">Advanced</span></td><td>Generate combined case dashboard with workflow + progress + history</td></tr>
+        <tr><td><code>generate_audit_trail</code></td><td><span class="tier tier--advanced">Advanced</span></td><td>Generate change history timeline</td></tr>
+        <tr><td><code>generate_amendment_flow</code></td><td><span class="tier tier--internal">Internal</span></td><td>Generate post-submission amendment UI</td></tr>
+        <tr><td><code>generate_decision_notice</code></td><td><span class="tier tier--internal">Internal</span></td><td>Generate decision notification page</td></tr>
+        <tr><td><code>generate_email_template</code></td><td><span class="tier tier--internal">Internal</span></td><td>Generate email notification template</td></tr>
+        <tr><td><code>generate_pdf_notice</code></td><td><span class="tier tier--internal">Internal</span></td><td>Generate PDF notice document</td></tr>
+        <tr><td><code>generate_lock_matrix</code></td><td><span class="tier tier--internal">Internal</span></td><td>Generate role-based field permission matrix</td></tr>
+        <tr><td><code>generate_section_progress</code></td><td><span class="tier tier--internal">Internal</span></td><td>Generate section completion checklist</td></tr>
+        <tr><td><code>generate_api_handler</code></td><td><span class="tier tier--internal">Internal</span></td><td>Generate API endpoint handler</td></tr>
+      </tbody>
+    </table>
+
+    <!-- Utility -->
+    <h3 id="tools-utility">Utility (14 tools)</h3>
+    <table>
+      <thead>
+        <tr><th>Tool</th><th>Tier</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>style_civui_element</code></td><td><span class="tier tier--essential">Essential</span></td><td>Look up CSS classes, states, and design tokens for CivUI elements</td></tr>
+        <tr><td><code>estimate_burden</code></td><td><span class="tier tier--essential">Essential</span></td><td>Estimate Paperwork Reduction Act respondent burden</td></tr>
+        <tr><td><code>check_contrast</code></td><td><span class="tier tier--advanced">Advanced</span></td><td>WCAG color contrast validation</td></tr>
+        <tr><td><code>query_tokens</code></td><td><span class="tier tier--advanced">Advanced</span></td><td>Query design token values</td></tr>
+        <tr><td><code>suggest_fix</code></td><td><span class="tier tier--advanced">Advanced</span></td><td>Auto-fix validation violations in form HTML</td></tr>
+        <tr><td><code>diff_forms</code></td><td><span class="tier tier--advanced">Advanced</span></td><td>Diff two form HTML documents</td></tr>
+        <tr><td><code>compare_schemas</code></td><td><span class="tier tier--advanced">Advanced</span></td><td>Compare two FormSchemas</td></tr>
+        <tr><td><code>generate_analytics_plan</code></td><td><span class="tier tier--internal">Internal</span></td><td>Generate analytics instrumentation plan</td></tr>
+        <tr><td><code>generate_prefill_js</code></td><td><span class="tier tier--internal">Internal</span></td><td>Generate prefill JavaScript</td></tr>
+        <tr><td><code>generate_prefill_mapping</code></td><td><span class="tier tier--internal">Internal</span></td><td>Generate API-to-form field mapping</td></tr>
+        <tr><td><code>generate_field_dependencies_graph</code></td><td><span class="tier tier--internal">Internal</span></td><td>Generate field dependency visualization</td></tr>
+        <tr><td><code>migrate_saved_data</code></td><td><span class="tier tier--internal">Internal</span></td><td>Migrate saved form data between schema versions</td></tr>
+        <tr><td><code>analyze_relationships</code></td><td><span class="tier tier--internal">Internal</span></td><td>Analyze field relationships in schema</td></tr>
+        <tr><td><code>visualize_form_flow</code></td><td><span class="tier tier--internal">Internal</span></td><td>Generate Mermaid flowchart of form flow</td></tr>
+      </tbody>
+    </table>
+
+    <!-- Schema Generation (internal) -->
+    <h3 id="tools-schema">Schema Generation (6 internal tools)</h3>
+    <table>
+      <thead>
+        <tr><th>Tool</th><th>Tier</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>generate_validation_schema</code></td><td><span class="tier tier--internal">Internal</span></td><td>Generate validation rules from schema</td></tr>
+        <tr><td><code>generate_payload_schema</code></td><td><span class="tier tier--internal">Internal</span></td><td>Generate API payload schema</td></tr>
+        <tr><td><code>generate_openapi_spec</code></td><td><span class="tier tier--internal">Internal</span></td><td>Generate OpenAPI specification</td></tr>
+        <tr><td><code>generate_cross_field_rules</code></td><td><span class="tier tier--internal">Internal</span></td><td>Generate cross-field validation rules from plain English</td></tr>
+        <tr><td><code>compose_forms</code></td><td><span class="tier tier--internal">Internal</span></td><td>Merge multiple FormSchemas</td></tr>
+        <tr><td><code>inline_sub_forms</code></td><td><span class="tier tier--internal">Internal</span></td><td>Embed sub-forms into parent</td></tr>
+      </tbody>
+    </table>
+
+    <!-- Companion/internal generation -->
+    <h3 id="tools-companion">Companion Generation (4 internal tools)</h3>
+    <table>
+      <thead>
+        <tr><th>Tool</th><th>Tier</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>generate_companion_js</code></td><td><span class="tier tier--internal">Internal</span></td><td>Generate companion JavaScript for repeatable/conditional behavior</td></tr>
+        <tr><td><code>generate_validation_schema</code></td><td><span class="tier tier--internal">Internal</span></td><td>Generate validation rules from schema</td></tr>
+        <tr><td><code>generate_payload_schema</code></td><td><span class="tier tier--internal">Internal</span></td><td>Generate API payload schema</td></tr>
+        <tr><td><code>generate_openapi_spec</code></td><td><span class="tier tier--internal">Internal</span></td><td>Generate OpenAPI specification</td></tr>
+      </tbody>
+    </table>
+
+    <!-- Meta -->
+    <h3 id="tools-meta">Meta (1 tool)</h3>
+    <table>
+      <thead>
+        <tr><th>Tool</th><th>Tier</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>discover_tools</code></td><td><span class="tier tier--essential">Essential</span></td><td>List all available tools with categories and descriptions</td></tr>
+      </tbody>
+    </table>
+
+    <!-- ─── 6. VA FORMS ──────────────────────────────────── -->
+    <h2 id="va-forms">6. VA Form Registry</h2>
+
+    <p>The MCP server includes a registry of 20 VA forms. Each form definition contains chapters, fields, conditional logic, preparation items, and next steps. The <code>assemble_gov_form</code> tool produces a complete working application from any of these.</p>
+
+    <table>
+      <thead>
+        <tr><th>Form Number</th><th>Title</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>21-526EZ</code></td><td>Application for Disability Compensation</td></tr>
+        <tr><td><code>10-10EZ</code></td><td>Application for Health Care Benefits</td></tr>
+        <tr><td><code>22-1990</code></td><td>Application for VA Education Benefits</td></tr>
+        <tr><td><code>21P-527EZ</code></td><td>Application for Veterans Pension</td></tr>
+        <tr><td><code>21-22</code></td><td>Appointment of Veterans Service Organization as Representative (POA)</td></tr>
+        <tr><td><code>10-10CG</code></td><td>Application for Caregiver Benefits</td></tr>
+        <tr><td><code>21-686C</code></td><td>Declaration of Status of Dependents</td></tr>
+        <tr><td><code>21-0966</code></td><td>Intent to File a Claim</td></tr>
+        <tr><td><code>21-4142</code></td><td>Authorization to Disclose Medical Records</td></tr>
+        <tr><td><code>22-5490</code></td><td>Dependents Application for VA Education Benefits</td></tr>
+        <tr><td><code>22-1995</code></td><td>Request for Change of Program or Place of Training</td></tr>
+        <tr><td><code>26-1880</code></td><td>Request for Certificate of Eligibility (Home Loan)</td></tr>
+        <tr><td><code>28-1900</code></td><td>Application for Vocational Rehabilitation</td></tr>
+        <tr><td><code>20-0995</code></td><td>Decision Review: Supplemental Claim</td></tr>
+        <tr><td><code>20-0996</code></td><td>Decision Review: Higher-Level Review</td></tr>
+        <tr><td><code>10182</code></td><td>Decision Review: Board Appeal</td></tr>
+        <tr><td><code>21P-530</code></td><td>Application for Burial Benefits</td></tr>
+        <tr><td><code>21-0845</code></td><td>Authorization to Disclose Personal Information</td></tr>
+        <tr><td><code>40-10007</code></td><td>Application for Pre-Need Determination of Eligibility for Burial</td></tr>
+        <tr><td><code>10-10D</code></td><td>Application for CHAMPVA Benefits</td></tr>
+      </tbody>
+    </table>
+
+    <h3>How Form Definitions Work</h3>
+    <p>Each form in the registry is a structured definition containing:</p>
+    <ul>
+      <li><strong>Chapters</strong> &mdash; logical sections of the form (personal info, contact, service history, etc.)</li>
+      <li><strong>Fields</strong> &mdash; individual form fields with types, labels, validation rules, and conditional logic</li>
+      <li><strong>Preparation items</strong> &mdash; list of documents and information the applicant needs before starting</li>
+      <li><strong>Next steps</strong> &mdash; what happens after submission (processing time, follow-up actions)</li>
+      <li><strong>Dynamic chapters</strong> &mdash; chapters that appear/disappear based on form answers</li>
+      <li><strong>Cross-field rules</strong> &mdash; validation dependencies between fields</li>
+    </ul>
+
+    <div class="callout">
+      <p><strong>Generated output:</strong> The <code>assemble_gov_form</code> tool produces a single working HTML file with hash-based routing, task list navigation, chapter/page flow, form persistence (localStorage), progress tracking, error summary, review page with signature, and confirmation page. Use <code>format: "react"</code> for a multi-file React application.</p>
+    </div>
+
+    <!-- ─── 7. RESOURCES ─────────────────────────────────── -->
+    <h2 id="resources">7. Resources</h2>
+
+    <p>MCP resources are read-only reference documents the AI assistant can fetch on demand for deeper context.</p>
+
+    <table>
+      <thead>
+        <tr><th>URI</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>civui://catalog</code></td><td>Full component catalog with props, events, and HTML examples for all 20+ components</td></tr>
+        <tr><td><code>civui://gov-patterns</code></td><td>Government design patterns: Section 508, plain language, form validation for .gov</td></tr>
+        <tr><td><code>civui://tailwind</code></td><td>CivUI Tailwind CSS classes with <code>civ-</code> prefix, semantic colors, density system</td></tr>
+        <tr><td><code>civui://templates</code></td><td>Pre-built form templates (Contact Form, Benefits Application, Change of Address, Authorization)</td></tr>
+        <tr><td><code>civui://schema-reference</code></td><td>Complete FormSchema specification with field types, conditions, and cross-field rules</td></tr>
+        <tr><td><code>civui://decision-tree</code></td><td>Component selection guide: checkbox vs toggle, select vs combobox, date picker vs memorable date</td></tr>
+        <tr><td><code>civui://quick-start</code></td><td>Quick start guide with workflows, tool chaining, and common patterns</td></tr>
+        <tr><td><code>civui://accessibility</code></td><td>WCAG 2.1 AA and Section 508 requirements specific to CivUI</td></tr>
+        <tr><td><code>civui://validation</code></td><td>Validation rules, error message guidelines, and the 15 built-in validators</td></tr>
+        <tr><td><code>civui://testing</code></td><td>Testing patterns and utilities reference (Vitest + jsdom)</td></tr>
+      </tbody>
+    </table>
+
+    <!-- ─── 8. PROMPTS ───────────────────────────────────── -->
+    <h2 id="prompts">8. Guided Prompts</h2>
+
+    <p>Guided prompts are pre-built conversation starters that walk the AI assistant through complex multi-step tasks. They define the context, tools, and sequence to use.</p>
+
+    <table>
+      <thead>
+        <tr><th>Prompt</th><th>Description</th><th>Tools Used</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>convert-legacy-form</code></td>
+          <td>Convert a PDF or HTML government form to accessible CivUI</td>
+          <td><code>parse_pdf_form</code> / <code>parse_html_form</code> &rarr; <code>generate_civui_form</code> &rarr; <code>validate_form</code></td>
+        </tr>
+        <tr>
+          <td><code>build-government-form</code></td>
+          <td>Build a new government form from requirements</td>
+          <td><code>scaffold_from_template</code> &rarr; <code>generate_civui_form</code> &rarr; <code>validate_form</code></td>
+        </tr>
+        <tr>
+          <td><code>build-va-form</code></td>
+          <td>Generate a complete VA.gov form application</td>
+          <td><code>list_gov_forms</code> &rarr; <code>assemble_gov_form</code> &rarr; <code>validate_gov_form</code></td>
+        </tr>
+        <tr>
+          <td><code>audit-508</code></td>
+          <td>Run a comprehensive Section 508 accessibility audit</td>
+          <td><code>validate_form</code> &rarr; <code>generate_508_report</code> &rarr; <code>suggest_fix</code></td>
+        </tr>
+        <tr>
+          <td><code>generate-tests</code></td>
+          <td>Generate a full test suite for an existing form</td>
+          <td><code>generate_tests</code> &rarr; <code>generate_e2e_tests</code> &rarr; <code>generate_a11y_tests</code></td>
+        </tr>
+        <tr>
+          <td><code>modernize-form</code></td>
+          <td>Modernize a legacy form with save/resume, eligibility, and confirmation</td>
+          <td><code>parse_html_form</code> &rarr; <code>generate_civui_form</code> &rarr; <code>generate_save_resume_ui</code> &rarr; <code>generate_eligibility_screener</code></td>
+        </tr>
+        <tr>
+          <td><code>internationalize</code></td>
+          <td>Add i18n support to an existing form</td>
+          <td><code>extract_strings</code> &rarr; <code>generate_i18n_files</code> &rarr; <code>lint_form_language</code></td>
+        </tr>
+        <tr>
+          <td><code>generate-react-app</code></td>
+          <td>Generate a multi-file React application from a form</td>
+          <td><code>generate_react_form</code> &rarr; <code>generate_validation_schema</code> &rarr; <code>generate_tests</code></td>
+        </tr>
+        <tr>
+          <td><code>build-workflow</code></td>
+          <td>Build a multi-actor workflow with delegation, review, and decision tracking</td>
+          <td><code>generate_workflow_ui</code> &rarr; <code>generate_delegation_sections</code> &rarr; <code>generate_feedback_ui</code> &rarr; <code>generate_audit_trail</code></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- ─── 9. FORM ARCHITECTURE ─────────────────────────── -->
+    <h2 id="form-architecture">9. Form Architecture</h2>
+
+    <p>Every form generated by the MCP server follows a four-level hierarchy. This structure scales from a simple 3-field intent-to-file form to a complex 30-field disability compensation application.</p>
+
+    <h3>The Form Hierarchy</h3>
+
+    <div class="diagram">Form Application
+&#9500;&#9472;&#9472; Introduction Page
+&#9474;   &#9492;&#9472;&#9472; Purpose, eligibility, preparation checklist
+&#9474;
+&#9500;&#9472;&#9472; Task List Hub (central navigation)
+&#9474;   &#9500;&#9472;&#9472; Progress bar (overall completion)
+&#9474;   &#9492;&#9472;&#9472; Chapter groups with status tags
+&#9474;
+&#9500;&#9472;&#9472; Chapters (logical sections)
+&#9474;   &#9500;&#9472;&#9472; Chapter 1: Personal Information
+&#9474;   &#9474;   &#9500;&#9472;&#9472; Page 1: Your name
+&#9474;   &#9474;   &#9500;&#9472;&#9472; Page 2: Date of birth
+&#9474;   &#9474;   &#9492;&#9472;&#9472; Page 3: Social Security number
+&#9474;   &#9474;
+&#9474;   &#9500;&#9472;&#9472; Chapter 2: Contact Information
+&#9474;   &#9474;   &#9500;&#9472;&#9472; Page 1: Mailing address
+&#9474;   &#9474;   &#9500;&#9472;&#9472; Page 2: Phone number
+&#9474;   &#9474;   &#9492;&#9472;&#9472; Page 3: Email address
+&#9474;   &#9474;
+&#9474;   &#9500;&#9472;&#9472; Chapter 3: Service History
+&#9474;   &#9474;   &#9492;&#9472;&#9472; Page 1: Branch, dates, discharge (repeatable)
+&#9474;   &#9474;
+&#9474;   &#9492;&#9472;&#9472; Chapter 4: Supporting Documents
+&#9474;       &#9492;&#9472;&#9472; Page 1: File upload
+&#9474;
+&#9500;&#9472;&#9472; Review Page
+&#9474;   &#9492;&#9472;&#9472; Summary of all answers + signature
+&#9474;
+&#9492;&#9472;&#9472; Confirmation Page
+    &#9492;&#9472;&#9472; Receipt, next steps, print</div>
+
+    <p><strong>Chapters</strong> group related information (personal, contact, service). Users complete them in any order via the task list hub. <strong>Pages</strong> break chapters into focused steps. Each page asks one question or a small related group. <strong>The hub</strong> is always accessible &mdash; users can leave a chapter, come back later, and see their progress at a glance.</p>
+
+    <h3>One Thing Per Page</h3>
+
+    <p>CivUI follows the <strong>"one thing per page"</strong> pattern used by the UK Government Digital Service (GDS) and VA.gov. Each page asks one question or a small group of tightly related fields.</p>
+
+    <ul>
+      <li><strong>Reduces cognitive load</strong> &mdash; users focus on one decision at a time</li>
+      <li><strong>Improves completion rates</strong> &mdash; 3 simple pages feels easier than 1 page with 15 fields</li>
+      <li><strong>Better error handling</strong> &mdash; errors are caught immediately, not after scrolling</li>
+      <li><strong>Mobile-friendly</strong> &mdash; no horizontal scrolling, no tiny touch targets</li>
+      <li><strong>Screen reader friendly</strong> &mdash; clear focus management, one context at a time</li>
+    </ul>
+
+    <p>What counts as "one thing": a single field ("What is your date of birth?"), a tightly related group (first/middle/last/suffix), an address block, or a yes/no question that may reveal follow-up fields.</p>
+
+    <h3>Page Anatomy</h3>
+
+    <div class="diagram">&#9484;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;
+&#9474;  &lsaquo; Back to task list          (back link)   &#9474;
+&#9474;                                             &#9474;
+&#9474;  APPLY FOR DISABILITY COMPENSATION          &#9474;
+&#9474;  Personal information         (page header) &#9474;
+&#9474;  VA Form 21-526EZ                           &#9474;
+&#9474;                                             &#9474;
+&#9474;  &#9679; 1 &#9472;&#9472;&#9472; &#9675; 2 &#9472;&#9472;&#9472; &#9675; 3     (progress steps)  &#9474;
+&#9474;  Step 1 of 3                                &#9474;
+&#9474;                                             &#9474;
+&#9474;  &#9484;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;    &#9474;
+&#9474;  &#9474;  First name (required)              &#9474;    &#9474;
+&#9474;  &#9474;  &#9484;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;    &#9474;    &#9474;
+&#9474;  &#9474;  &#9474;                             &#9474;    &#9474;    &#9474;
+&#9474;  &#9474;  &#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;    &#9474;    &#9474;
+&#9474;  &#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;    &#9474;
+&#9474;                                             &#9474;
+&#9474;  [ Continue ]                  (action btn) &#9474;
+&#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;</div>
+
+    <p>Components used per page:</p>
+    <ol>
+      <li><strong><code>&lt;civ-link variant="back"&gt;</code></strong> &mdash; Always at the top. Returns to the task list hub.</li>
+      <li><strong><code>&lt;civ-page-header&gt;</code></strong> &mdash; Eyebrow (form title), heading (chapter name), subheading (form number).</li>
+      <li><strong><code>&lt;civ-progress-steps&gt;</code></strong> &mdash; Shows each field in the chapter as a numbered step. Current step highlighted.</li>
+      <li><strong>Form field</strong> &mdash; One CivUI form component per page.</li>
+      <li><strong><code>&lt;civ-button&gt;</code></strong> &mdash; "Continue" advances; "Save and continue" completes the chapter.</li>
+    </ol>
+
+    <h3>Navigation and Progress</h3>
+
+    <h4>Task List Hub</h4>
+    <p>The hub is the central navigation point. It shows all chapters as a task list with status tags:</p>
+    <ul>
+      <li><strong>Not started</strong> (blue) &mdash; Chapter has not been opened</li>
+      <li><strong>In progress</strong> (teal) &mdash; Some fields completed</li>
+      <li><strong>Complete</strong> (green) &mdash; All fields answered</li>
+      <li><strong>Cannot start yet</strong> (gray) &mdash; Blocked (e.g., review requires all chapters complete)</li>
+    </ul>
+    <p>A <strong>progress bar</strong> at the top shows overall completion: "2 of 5 sections complete" with a percentage.</p>
+
+    <h4>Within a Chapter</h4>
+    <p>Each chapter uses <strong>progress steps</strong> to show which field the user is on. Steps show as numbered circles &mdash; completed steps are filled, the current step is highlighted, upcoming steps are gray. Navigation: "Continue" advances, "Back" returns to previous step (from step 2 onward), "Back to task list" is always available at the top.</p>
+
+    <h3>Dynamic and Conditional Forms</h3>
+
+    <h4>Conditional Fields</h4>
+    <p>A field appears only when a previous answer triggers it. Uses the <code>visibleWhen</code> property in the FormSchema:</p>
+    <pre><code>{
+  "name": "insuranceProvider",
+  "label": "Insurance provider name",
+  "type": "text",
+  "visibleWhen": {
+    "field": "hasInsurance",
+    "operator": "eq",
+    "value": "yes"
+  }
+}</code></pre>
+    <p>When a conditional field is hidden, it is removed from the step count. Progress steps update dynamically &mdash; if answering "No" hides 2 follow-up fields, the steps collapse from 5 to 3.</p>
+
+    <h4>Dynamic Chapters</h4>
+    <p>Entire chapters can appear or disappear based on form answers. The task list hub updates in real time &mdash; hidden chapters don't appear, and the progress bar adjusts its total.</p>
+
+    <h4>Cross-Field Validation</h4>
+    <p>Validations that depend on multiple fields ("Phone is required if contact method is call", "End date must be after start date"). Defined as cross-field rules in the schema or generated from plain English via <code>generate_cross_field_rules</code>.</p>
+
+    <h3>Repeatable Sections</h3>
+
+    <p>Some chapters collect the same set of fields multiple times &mdash; dependents, medical providers, service periods. CivUI handles this with the repeater pattern:</p>
+
+    <div class="diagram">Chapter: Dependents
+&#9484;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;
+&#9474;  Dependent 1                                &#9474;
+&#9474;  &#9484;&#9472; Name: Jane Doe &#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;    &#9474;
+&#9474;  &#9474;  Relationship: Spouse               &#9474;    &#9474;
+&#9474;  &#9474;  DOB: 01/15/1992                    &#9474;    &#9474;
+&#9474;  &#9474;  [Edit] [Remove]                    &#9474;    &#9474;
+&#9474;  &#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;    &#9474;
+&#9474;                                             &#9474;
+&#9474;  Dependent 2                                &#9474;
+&#9474;  &#9484;&#9472; Name: John Doe Jr. &#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;    &#9474;
+&#9474;  &#9474;  Relationship: Child               &#9474;    &#9474;
+&#9474;  &#9474;  DOB: 06/22/2018                   &#9474;    &#9474;
+&#9474;  &#9474;  [Edit] [Remove]                    &#9474;    &#9474;
+&#9474;  &#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;    &#9474;
+&#9474;                                             &#9474;
+&#9474;  [ + Add another dependent ]                &#9474;
+&#9474;                                             &#9474;
+&#9474;  [ Save and continue ]                      &#9474;
+&#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;</div>
+
+    <p>Key behaviors: completed items show as summary cards with edit/remove actions, "Add another" button respects max limits, field names auto-re-index on removal, and screen readers announce additions and removals.</p>
+
+    <h3>Review and Submit</h3>
+
+    <p>The review page shows a read-only summary of all answers, grouped by chapter. Each chapter has an "Edit" link that returns to that chapter. Sensitive fields (SSN, bank account) are masked in the summary.</p>
+
+    <div class="diagram">Review your application
+&#9500;&#9472;&#9472; Personal information [Edit]
+&#9474;   Name: John Smith
+&#9474;   Date of birth: January 15, 1985
+&#9474;   SSN: ***-**-1234
+&#9474;
+&#9500;&#9472;&#9472; Contact information [Edit]
+&#9474;   Address: 123 Main St, Washington, DC 20001
+&#9474;   Phone: (555) 123-4567
+&#9474;   Email: john@example.com
+&#9474;
+&#9492;&#9472;&#9472; Statement of truth
+    &#9746; I certify that the information I have
+      provided is true and correct...
+    Signature: John Smith
+    Date: April 19, 2026
+
+    [ Submit application ]</div>
+
+    <p>After submission, the confirmation page shows: success alert with receipt, summary of what was submitted, next steps with expected timeline, print button, and help contact information.</p>
+
+    <h3>Complex Workflows</h3>
+
+    <p>Some forms involve multiple actors, approval processes, and post-submission amendments.</p>
+
+    <h4>Multi-Actor Forms</h4>
+    <p>Forms like the 21-22 (Power of Attorney) involve three roles: Veteran, Representative, and VA Reviewer. The workflow defines states (draft, submitted, under review, needs changes, approved, denied), transitions (who can move between states), and permissions (which sections each actor can edit in each state).</p>
+
+    <div class="diagram">Workflow: Form 21-22 (Power of Attorney)
+
+  &#9484;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;     &#9484;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;     &#9484;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;
+  &#9474;  Draft   &#9474;&#9472;&#9472;&#9472;&#9472;&#9654;&#9474; Submitted &#9474;&#9472;&#9472;&#9472;&#9472;&#9654;&#9474; Under Review &#9474;
+  &#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;     &#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;     &#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9516;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;
+   Veteran/Rep      Veteran/Rep            &#9474; Reviewer
+                                    &#9484;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9524;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;
+                              &#9484;&#9472;&#9472;&#9472;&#9472;&#9472;&#9660;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;  &#9484;&#9472;&#9472;&#9472;&#9472;&#9472;&#9660;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;
+                              &#9474;  Needs     &#9474;  &#9474; Approved  &#9474;
+                              &#9474;  Changes   &#9474;  &#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;
+                              &#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9516;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;  &#9484;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;
+                                    &#9474;        &#9474;  Denied   &#9474;
+                                    &#9660;        &#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;
+                              Resubmit &#8594; Submitted</div>
+
+    <h4>Delegation</h4>
+    <p>When a representative files on behalf of a Veteran: representative information section, legal attestation and authorization, consent signature from both parties. Generated by <code>generate_delegation_sections</code>.</p>
+
+    <h4>Feedback and Review Cycles</h4>
+    <p>Reviewers can leave inline comments on specific sections. Applicants see comments and can make changes before resubmitting. Comments track resolution status. Generated by <code>generate_feedback_ui</code>.</p>
+
+    <h4>Post-Submission</h4>
+    <ul>
+      <li><strong>Amendment flow</strong> &mdash; request changes after submission with diff (<code>generate_amendment_flow</code>)</li>
+      <li><strong>Decision notices</strong> &mdash; formal approval/denial letters (<code>generate_decision_notice</code>)</li>
+      <li><strong>Audit trail</strong> &mdash; timeline of all actions, state transitions, and comments (<code>generate_audit_trail</code>)</li>
+      <li><strong>Case dashboard</strong> &mdash; combined workflow + progress + history view (<code>generate_case_dashboard</code>)</li>
+    </ul>
+
+    <!-- ─── 10. FORM SCHEMA ──────────────────────────────── -->
+    <h2 id="form-schema">10. FormSchema Reference</h2>
+
+    <p>FormSchema is the universal intermediate format that connects all tools. Every parse tool outputs a FormSchema, and every generation tool accepts one as input.</p>
+
+    <h3>Minimal Example</h3>
+    <pre><code>{
+  "title": "Change of Address",
+  "action": "/api/submit",
+  "method": "POST",
+  "sections": [
+    {
+      "heading": "New Address",
+      "fields": [
+        { "name": "street", "label": "Street address", "type": "text", "required": true },
+        { "name": "city", "label": "City", "type": "text", "required": true },
+        { "name": "state", "label": "State", "type": "select", "required": true,
+          "options": [
+            { "label": "California", "value": "CA" },
+            { "label": "Texas", "value": "TX" }
+          ]
+        },
+        { "name": "zip", "label": "ZIP code", "type": "zip", "required": true }
+      ]
+    }
+  ]
+}</code></pre>
+
+    <h3>Field Type Mapping</h3>
+    <table>
+      <thead>
+        <tr><th>FormSchema Type</th><th>CivUI Component</th><th>Notes</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>text</code>, <code>email</code>, <code>tel</code>, <code>url</code>, <code>number</code>, <code>password</code></td><td><code>&lt;civ-text-input&gt;</code></td><td>Set <code>type</code> accordingly</td></tr>
+        <tr><td><code>ssn</code></td><td><code>&lt;civ-text-input mask="ssn"&gt;</code></td><td>Auto-masked, PII-flagged</td></tr>
+        <tr><td><code>zip</code></td><td><code>&lt;civ-text-input mask="zip"&gt;</code></td><td>Auto-masked</td></tr>
+        <tr><td><code>textarea</code></td><td><code>&lt;civ-textarea&gt;</code></td><td>Multi-line text</td></tr>
+        <tr><td><code>select</code></td><td><code>&lt;civ-select&gt;</code></td><td>Requires <code>options</code></td></tr>
+        <tr><td><code>combobox</code></td><td><code>&lt;civ-combobox&gt;</code></td><td>Typeahead search</td></tr>
+        <tr><td><code>radio</code></td><td><code>&lt;civ-radio-group&gt;</code></td><td>Requires <code>options</code></td></tr>
+        <tr><td><code>checkbox</code></td><td><code>&lt;civ-checkbox&gt;</code></td><td>Single boolean</td></tr>
+        <tr><td><code>checkbox-group</code></td><td><code>&lt;civ-checkbox-group&gt;</code></td><td>Multiple selections</td></tr>
+        <tr><td><code>memorable-date</code></td><td><code>&lt;civ-memorable-date&gt;</code></td><td>For known dates (birthday, DOB)</td></tr>
+        <tr><td><code>date</code></td><td><code>&lt;civ-date-picker&gt;</code></td><td>For scheduling dates</td></tr>
+        <tr><td><code>file</code></td><td><code>&lt;civ-file-upload&gt;</code></td><td>Document upload</td></tr>
+        <tr><td><code>toggle</code></td><td><code>&lt;civ-toggle&gt;</code></td><td>On/off switch</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Conditional Fields</h3>
+    <pre><code>{
+  "name": "otherReason",
+  "label": "Please describe",
+  "type": "textarea",
+  "visibleWhen": { "field": "reason", "operator": "eq", "value": "other" }
+}</code></pre>
+
+    <h3>Cross-Field Validation</h3>
+    <pre><code>{
+  "crossFieldRules": [
+    {
+      "id": "phone-required-if-call",
+      "description": "Phone is required when contact method is call",
+      "condition": { "field": "contactMethod", "operator": "eq", "value": "call" },
+      "requiredFields": ["phone"]
+    }
+  ]
+}</code></pre>
+
+    <p>Or use <code>generate_cross_field_rules</code> with plain English: "Phone is required if contact method is call", "End date must be after start date", "Confirm email must match email address".</p>
+
+    <!-- ─── 11. TOOL CHAINING ────────────────────────────── -->
+    <h2 id="tool-chaining">11. Tool Chaining Reference</h2>
+
+    <p>After completing one tool, here is the recommended next step:</p>
+
+    <table>
+      <thead>
+        <tr><th>After this tool...</th><th>Do this next</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>parse_pdf_form</code> / <code>parse_html_form</code></td><td><code>generate_civui_form</code> or <code>generate_react_form</code></td></tr>
+        <tr><td><code>generate_civui_form</code></td><td><code>validate_form</code> &rarr; <code>generate_tests</code></td></tr>
+        <tr><td><code>generate_react_form</code></td><td><code>validate_form</code> &rarr; <code>generate_tests</code></td></tr>
+        <tr><td><code>validate_form</code> (has errors)</td><td><code>suggest_fix</code> &rarr; <code>validate_form</code> again</td></tr>
+        <tr><td><code>validate_form</code> (clean)</td><td><code>generate_tests</code> or <code>generate_508_report</code></td></tr>
+        <tr><td><code>list_gov_forms</code></td><td><code>assemble_gov_form</code></td></tr>
+        <tr><td><code>assemble_gov_form</code></td><td><code>validate_gov_form</code></td></tr>
+        <tr><td><code>scaffold_from_template</code></td><td><code>generate_civui_form</code> or <code>generate_react_form</code></td></tr>
+      </tbody>
+    </table>
+
+    <h3>Common Patterns</h3>
+
+    <table>
+      <thead>
+        <tr><th>Pattern</th><th>Tool / Code</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Add an address block</td><td><code>generate_address_block({ includeTerritories: true, includeMilitary: true })</code></td></tr>
+        <tr><td>Add save-and-resume</td><td><code>generate_save_resume_ui(schema, { autoSaveIntervalMs: 30000 })</code></td></tr>
+        <tr><td>Add a signature</td><td><code>generate_signature_block(schema, { type: "typed", legalText: "I certify..." })</code></td></tr>
+        <tr><td>Add eligibility screening</td><td><code>generate_eligibility_screener(schema)</code></td></tr>
+        <tr><td>Quick accessibility check</td><td><code>validate_form(html)</code> &mdash; 46 rules</td></tr>
+        <tr><td>Full 508 audit</td><td><code>generate_508_report(html)</code> &mdash; WCAG mapping + remediation plan</td></tr>
+        <tr><td>Estimate PRA burden</td><td><code>estimate_burden(schema)</code></td></tr>
+        <tr><td>Check reading level</td><td><code>validate_reading_level(html)</code></td></tr>
+      </tbody>
+    </table>
+
+    <div class="hero-links" style="justify-content: flex-start; margin-top: 3rem;">
+      <a href="https://github.com/barbaradenney/civui/tree/main/packages/mcp-server" class="hero-link" style="background: var(--color-primary); color: var(--color-white);">View Source on GitHub</a>
+      <a href="https://www.npmjs.com/package/@civui/mcp-server" class="hero-link" style="background: var(--color-base-lightest); color: var(--color-base-darkest);">npm Package</a>
     </div>
   </div>
 

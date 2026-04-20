@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CivUI - Component Reference</title>
+  <style>
+    :root {
+      --color-primary: #005ea2;
+      --color-primary-dark: #1a4480;
+      --color-base-darkest: #1b1b1b;
+      --color-base-dark: #565c65;
+      --color-base-light: #a9aeb1;
+      --color-base-lightest: #f0f0f0;
+      --color-white: #ffffff;
+      --color-error: #b50909;
+      --color-success: #00a91c;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: var(--color-base-darkest);
+      line-height: 1.6;
+    }
+
+    .hero {
+      background: var(--color-primary-dark);
+      color: var(--color-white);
+      padding: 3rem 2rem;
+    }
+
+    .hero-inner {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .hero h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+    .hero p { font-size: 1.125rem; opacity: 0.9; }
+
+    .back-link {
+      display: inline-block;
+      color: rgba(255,255,255,0.85);
+      text-decoration: none;
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+    }
+    .back-link:hover { color: var(--color-white); text-decoration: underline; }
+
+    .content { max-width: 960px; margin: 0 auto; padding: 2rem 2rem 4rem; }
+
+    /* Table of contents */
+    .toc {
+      background: var(--color-base-lightest);
+      padding: 1.5rem;
+      border-radius: 4px;
+      margin-bottom: 2rem;
+    }
+    .toc h2 { font-size: 1.125rem; margin: 0 0 0.75rem; color: var(--color-base-darkest); }
+    .toc ul { list-style: none; padding: 0; columns: 2; }
+    .toc li { margin-bottom: 0.35rem; }
+    .toc a { color: var(--color-primary); text-decoration: none; font-size: 0.9rem; }
+    .toc a:hover { text-decoration: underline; }
+
+    @media (max-width: 600px) {
+      .toc ul { columns: 1; }
+    }
+
+    /* Category sections */
+    .category {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 3px solid var(--color-primary);
+    }
+
+    .category > h2 {
+      font-size: 1.75rem;
+      margin: 0 0 0.5rem;
+      color: var(--color-primary-dark);
+    }
+
+    .category > p {
+      color: var(--color-base-dark);
+      margin-bottom: 1.5rem;
+    }
+
+    /* Component blocks */
+    .component {
+      border: 1px solid var(--color-base-light);
+      border-radius: 4px;
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+    }
+
+    .component-header {
+      background: var(--color-base-lightest);
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--color-base-light);
+    }
+
+    .component-header h3 {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 1.1rem;
+      color: var(--color-primary);
+      margin: 0;
+    }
+
+    .component-header p {
+      color: var(--color-base-dark);
+      font-size: 0.9rem;
+      margin: 0.25rem 0 0;
+    }
+
+    .component-body { padding: 1.25rem 1.5rem; }
+
+    .component-body h4 {
+      font-size: 0.95rem;
+      margin: 1.25rem 0 0.5rem;
+      color: var(--color-base-darkest);
+    }
+
+    .component-body h4:first-child { margin-top: 0; }
+
+    /* Props tables */
+    .props-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      margin: 0.5rem 0 1rem;
+    }
+
+    .props-table th {
+      text-align: left;
+      background: var(--color-base-lightest);
+      padding: 0.5rem 0.75rem;
+      border: 1px solid var(--color-base-light);
+      font-weight: 600;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: var(--color-base-dark);
+    }
+
+    .props-table td {
+      padding: 0.5rem 0.75rem;
+      border: 1px solid var(--color-base-light);
+      vertical-align: top;
+    }
+
+    .props-table code {
+      background: var(--color-base-lightest);
+      padding: 0.1rem 0.35rem;
+      border-radius: 3px;
+      font-size: 0.8rem;
+      white-space: nowrap;
+    }
+
+    /* Code blocks */
+    pre {
+      background: var(--color-base-lightest);
+      padding: 1rem 1.25rem;
+      border-radius: 4px;
+      overflow-x: auto;
+      font-size: 0.825rem;
+      margin: 0.5rem 0 1rem;
+      border: 1px solid #e0e0e0;
+    }
+
+    code {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+    }
+
+    /* Notes */
+    .note {
+      background: #e7f2fa;
+      border-left: 4px solid var(--color-primary);
+      padding: 0.75rem 1rem;
+      font-size: 0.875rem;
+      margin: 0.75rem 0;
+      color: var(--color-base-darkest);
+    }
+
+    .note strong { color: var(--color-primary-dark); }
+
+    .deprecated {
+      background: #fef0f0;
+      border-left: 4px solid var(--color-error);
+    }
+
+    .deprecated strong { color: var(--color-error); }
+
+    /* Slots indicator */
+    .slot-tag {
+      display: inline-block;
+      background: #e8f0fe;
+      color: var(--color-primary-dark);
+      padding: 0.15rem 0.5rem;
+      border-radius: 3px;
+      font-size: 0.75rem;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      margin-right: 0.25rem;
+      margin-bottom: 0.25rem;
+    }
+
+    /* Events */
+    .event-list {
+      list-style: none;
+      padding: 0;
+      margin: 0.5rem 0;
+      font-size: 0.875rem;
+    }
+
+    .event-list li {
+      padding: 0.25rem 0;
+    }
+
+    .event-list code {
+      background: var(--color-base-lightest);
+      padding: 0.1rem 0.35rem;
+      border-radius: 3px;
+      font-size: 0.8rem;
+    }
+
+    /* Form components list */
+    .form-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 0.75rem;
+      margin: 1rem 0;
+    }
+
+    .form-list-item {
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--color-base-light);
+      border-radius: 4px;
+      font-size: 0.875rem;
+    }
+
+    .form-list-item code {
+      color: var(--color-primary);
+      font-weight: 600;
+    }
+
+    .form-list-item span {
+      color: var(--color-base-dark);
+      display: block;
+      font-size: 0.8rem;
+      margin-top: 0.15rem;
+    }
+
+    /* Variant chips */
+    .variant-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 0.5rem 0;
+    }
+
+    .variant-chip {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    .variant-chip--blue { background: #d9e8f6; color: #1a4480; }
+    .variant-chip--teal { background: #ccecf2; color: #0b5b6e; }
+    .variant-chip--red { background: #f8d7d7; color: #8b0000; }
+    .variant-chip--green { background: #d4edda; color: #0a5c15; }
+    .variant-chip--yellow { background: #fef3cd; color: #6b5900; }
+    .variant-chip--orange { background: #fde5cc; color: #8b4000; }
+    .variant-chip--purple { background: #e8d5f5; color: #4c1d7a; }
+    .variant-chip--gray { background: #e8e8e8; color: #565c65; }
+
+    footer {
+      border-top: 1px solid var(--color-base-light);
+      padding: 2rem;
+      text-align: center;
+      color: var(--color-base-dark);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="hero">
+    <div class="hero-inner">
+      <a href="./index.html" class="back-link">&larr; Back to CivUI Home</a>
+      <h1>Component Reference</h1>
+      <p>Complete documentation for all CivUI web components, organized by category.</p>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- TABLE OF CONTENTS -->
+    <div class="toc">
+      <h2>On this page</h2>
+      <ul>
+        <li><a href="#layout">Layout Components</a></li>
+        <li><a href="#navigation">Navigation Components</a></li>
+        <li><a href="#action">Action Components</a></li>
+        <li><a href="#feedback">Feedback Components</a></li>
+        <li><a href="#form">Form Components</a></li>
+      </ul>
+    </div>
+
+
+    <!-- ============================================================ -->
+    <!-- LAYOUT COMPONENTS -->
+    <!-- ============================================================ -->
+    <div class="category" id="layout">
+      <h2>Layout Components</h2>
+      <p>Structural components for organizing page content.</p>
+
+      <!-- civ-page-header -->
+      <div class="component">
+        <div class="component-header">
+          <h3>&lt;civ-page-header&gt;</h3>
+          <p>A structured page heading with optional eyebrow, tag, and subheading. Uses slot attributes to assign children to each area.</p>
+        </div>
+        <div class="component-body">
+          <h4>Slots</h4>
+          <p>
+            <span class="slot-tag">data-tag</span>
+            <span class="slot-tag">data-eyebrow</span>
+            <span class="slot-tag">data-heading</span>
+            <span class="slot-tag">data-subheading</span>
+          </p>
+          <table class="props-table">
+            <thead><tr><th>Slot Attribute</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><code>data-tag</code></td><td>Tag element displayed above the eyebrow (e.g., a <code>&lt;civ-tag&gt;</code> for status)</td></tr>
+              <tr><td><code>data-eyebrow</code></td><td>Small text above the heading (e.g., category or section name)</td></tr>
+              <tr><td><code>data-heading</code></td><td>Main heading (typically an <code>&lt;h1&gt;</code>). Supports inline content like tags next to the title. Default slot for unattributed children.</td></tr>
+              <tr><td><code>data-subheading</code></td><td>Text below the heading (e.g., form number, subtitle)</td></tr>
+            </tbody>
+          </table>
+
+          <h4>Example: Full header</h4>
+<pre><code>&lt;civ-page-header&gt;
+  &lt;civ-tag data-tag label="Active" variant="green" tag-style="primary"&gt;&lt;/civ-tag&gt;
+  &lt;span data-eyebrow&gt;Benefits&lt;/span&gt;
+  &lt;h1 data-heading&gt;
+    Apply for disability compensation
+    &lt;civ-tag label="In progress" variant="teal"&gt;&lt;/civ-tag&gt;
+  &lt;/h1&gt;
+  &lt;span data-subheading&gt;VA Form 21-526EZ&lt;/span&gt;
+&lt;/civ-page-header&gt;</code></pre>
+
+          <h4>Example: Minimal header</h4>
+<pre><code>&lt;civ-page-header&gt;
+  &lt;h1 data-heading&gt;Dashboard&lt;/h1&gt;
+&lt;/civ-page-header&gt;</code></pre>
+
+          <h4>Example: Eyebrow and heading only</h4>
+<pre><code>&lt;civ-page-header&gt;
+  &lt;span data-eyebrow&gt;Claims&lt;/span&gt;
+  &lt;h1 data-heading&gt;Check your claim status&lt;/h1&gt;
+&lt;/civ-page-header&gt;</code></pre>
+
+          <div class="note">
+            <strong>Note:</strong> Children without a <code>data-*</code> attribute are placed in the heading slot by default.
+          </div>
+        </div>
+      </div>
+
+      <!-- civ-card -->
+      <div class="component">
+        <div class="component-header">
+          <h3>&lt;civ-card&gt;</h3>
+          <p>A structured container with optional header and footer sections. Uses slot attributes for content placement.</p>
+        </div>
+        <div class="component-body">
+          <h4>Slots</h4>
+          <p>
+            <span class="slot-tag">data-card-header</span>
+            <span class="slot-tag">(default body)</span>
+            <span class="slot-tag">data-card-footer</span>
+          </p>
+
+          <h4>Props</h4>
+          <table class="props-table">
+            <thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><code>spacing</code></td><td><code>'default' | 'sm'</code></td><td><code>'default'</code></td><td>Padding size inside the card</td></tr>
+            </tbody>
+          </table>
+
+          <h4>Example: Basic card</h4>
+<pre><code>&lt;civ-card&gt;
+  &lt;p&gt;Card content goes here.&lt;/p&gt;
+&lt;/civ-card&gt;</code></pre>
+
+          <h4>Example: Card with header and footer</h4>
+<pre><code>&lt;civ-card&gt;
+  &lt;div data-card-header&gt;
+    &lt;civ-tag label="In progress" variant="teal"&gt;&lt;/civ-tag&gt;
+    &lt;h3 class="civ-heading-md"&gt;Disability compensation&lt;/h3&gt;
+  &lt;/div&gt;
+  &lt;p&gt;Filed: March 10, 2026&lt;/p&gt;
+  &lt;div data-card-footer&gt;
+    &lt;civ-link href="/claims/123" variant="secondary"&gt;View details&lt;/civ-link&gt;
+  &lt;/div&gt;
+&lt;/civ-card&gt;</code></pre>
+
+          <h4>Example: Compact card</h4>
+<pre><code>&lt;civ-card spacing="sm"&gt;
+  &lt;p&gt;Compact content with smaller padding.&lt;/p&gt;
+&lt;/civ-card&gt;</code></pre>
+
+          <div class="note">
+            <strong>Note:</strong> Children without a <code>data-card-header</code> or <code>data-card-footer</code> attribute are placed in the body section.
+          </div>
+        </div>
+      </div>
+
+      <!-- civ-divider -->
+      <div class="component">
+        <div class="component-header">
+          <h3>&lt;civ-divider&gt;</h3>
+          <p>A horizontal rule for visually separating content sections. Renders as a styled <code>&lt;hr&gt;</code>.</p>
+        </div>
+        <div class="component-body">
+          <h4>Props</h4>
+          <table class="props-table">
+            <thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><code>spacing</code></td><td><code>'default' | 'sm'</code></td><td><code>'default'</code></td><td>Vertical spacing around the divider</td></tr>
+            </tbody>
+          </table>
+
+          <h4>Example</h4>
+<pre><code>&lt;!-- Default spacing --&gt;
+&lt;civ-divider&gt;&lt;/civ-divider&gt;
+
+&lt;!-- Small spacing --&gt;
+&lt;civ-divider spacing="sm"&gt;&lt;/civ-divider&gt;</code></pre>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ============================================================ -->
+    <!-- NAVIGATION COMPONENTS -->
+    <!-- ============================================================ -->
+    <div class="category" id="navigation">
+      <h2>Navigation Components</h2>
+      <p>Components for links, navigation cards, and task list patterns.</p>
+
+      <!-- civ-link -->
+      <div class="component">
+        <div class="component-header">
+          <h3>&lt;civ-link&gt;</h3>
+          <p>An accessible link component. Always renders an <code>&lt;a&gt;</code> element. For buttons, use <code>&lt;civ-button&gt;</code> instead.</p>
+        </div>
+        <div class="component-body">
+          <h4>Props</h4>
+          <table class="props-table">
+            <thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><code>label</code></td><td><code>string</code></td><td><code>''</code></td><td>Link text (preferred over child text)</td></tr>
+              <tr><td><code>href</code></td><td><code>string</code></td><td><code>''</code></td><td>Link destination (required)</td></tr>
+              <tr><td><code>variant</code></td><td><code>'primary' | 'secondary' | 'tertiary' | 'back'</code></td><td><code>'tertiary'</code></td><td>Visual variant</td></tr>
+              <tr><td><code>danger</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Destructive action styling (red color)</td></tr>
+              <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Disabled state (sets <code>aria-disabled</code>, removes <code>href</code>)</td></tr>
+            </tbody>
+          </table>
+
+          <h4>Variants</h4>
+          <table class="props-table">
+            <thead><tr><th>Variant</th><th>Appearance</th></tr></thead>
+            <tbody>
+              <tr><td><code>primary</code></td><td>Button-styled link (filled blue, underlined)</td></tr>
+              <tr><td><code>secondary</code></td><td>Underlined text with trailing caret icon</td></tr>
+              <tr><td><code>tertiary</code></td><td>Plain underlined link</td></tr>
+              <tr><td><code>back</code></td><td>Back navigation link with leading left chevron</td></tr>
+            </tbody>
+          </table>
+
+          <h4>Events</h4>
+          <ul class="event-list">
+            <li><code>civ-analytics</code> &mdash; Analytics tracking event on click</li>
+          </ul>
+
+          <h4>Example: All variants</h4>
+<pre><code>&lt;!-- Primary (button-styled) --&gt;
+&lt;civ-link href="/apply" label="Start your application" variant="primary"&gt;&lt;/civ-link&gt;
+
+&lt;!-- Secondary (with trailing caret) --&gt;
+&lt;civ-link href="/details" label="View details" variant="secondary"&gt;&lt;/civ-link&gt;
+
+&lt;!-- Tertiary (plain underlined) --&gt;
+&lt;civ-link href="/help" label="Get help" variant="tertiary"&gt;&lt;/civ-link&gt;
+
+&lt;!-- Back navigation --&gt;
+&lt;civ-link href="/previous" label="Back to previous page" variant="back"&gt;&lt;/civ-link&gt;
+
+&lt;!-- Danger modifier --&gt;
+&lt;civ-link href="/delete" label="Delete account" variant="tertiary" danger&gt;&lt;/civ-link&gt;</code></pre>
+
+          <div class="note">
+            <strong>Note:</strong> All variants are underlined for accessibility. The <code>danger</code> modifier can be combined with any variant.
+          </div>
+        </div>
+      </div>
+
+      <!-- civ-link-card -->
+      <div class="component">
+        <div class="component-header">
+          <h3>&lt;civ-link-card&gt;</h3>
+          <p>A clickable card that navigates to a destination. The entire card is the click target. Renders as an <code>&lt;a&gt;</code> element.</p>
+        </div>
+        <div class="component-body">
+          <h4>Props</h4>
+          <table class="props-table">
+            <thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><code>href</code></td><td><code>string</code></td><td><code>''</code></td><td>Navigation destination (required)</td></tr>
+              <tr><td><code>heading</code></td><td><code>string</code></td><td><code>''</code></td><td>Card heading text</td></tr>
+              <tr><td><code>description</code></td><td><code>string</code></td><td><code>''</code></td><td>Descriptive text below the heading</td></tr>
+              <tr><td><code>variant</code></td><td><code>'primary' | 'secondary' | 'tertiary' | 'critical'</code></td><td><code>'primary'</code></td><td>Visual variant</td></tr>
+            </tbody>
+          </table>
+
+          <h4>Variants</h4>
+          <table class="props-table">
+            <thead><tr><th>Variant</th><th>Appearance</th></tr></thead>
+            <tbody>
+              <tr><td><code>primary</code></td><td>Blue filled card with white text</td></tr>
+              <tr><td><code>secondary</code></td><td>White card with blue border and blue heading</td></tr>
+              <tr><td><code>tertiary</code></td><td>White card with gray border and blue heading</td></tr>
+              <tr><td><code>critical</code></td><td>Yellow/gold background with black text for urgent actions</td></tr>
+            </tbody>
+          </table>
+
+          <h4>Events</h4>
+          <ul class="event-list">
+            <li><code>civ-analytics</code> &mdash; Analytics tracking event on click</li>
+          </ul>
+
+          <h4>Example</h4>
+<pre><code>&lt;!-- Primary (filled blue) --&gt;
+&lt;civ-link-card
+  href="/benefits/disability"
+  heading="Disability compensation"
+  description="File a claim for a service-connected disability."
+&gt;&lt;/civ-link-card&gt;
+
+&lt;!-- Secondary (blue border) --&gt;
+&lt;civ-link-card
+  href="/benefits/education"
+  heading="Education benefits"
+  description="Apply for GI Bill and other education benefits."
+  variant="secondary"
+&gt;&lt;/civ-link-card&gt;
+
+&lt;!-- Critical (gold/yellow, urgent) --&gt;
+&lt;civ-link-card
+  href="/action-required"
+  heading="Action required"
+  description="Your application needs additional documentation."
+  variant="critical"
+&gt;&lt;/civ-link-card&gt;</code></pre>
+        </div>
+      </div>
+
+      <!-- civ-task-list / civ-task-group / civ-task -->
+      <div class="component">
+        <div class="component-header">
+          <h3>&lt;civ-task-list&gt; / &lt;civ-task-group&gt; / &lt;civ-task&gt;</h3>
+          <p>Task list navigation for multi-chapter form hubs. Based on the GDS Task List pattern adapted for government benefit applications.</p>
+        </div>
+        <div class="component-body">
+          <h4>&lt;civ-task-list&gt;</h4>
+          <p>Container element. Renders a semantic list of task groups. No props &mdash; just wrap <code>&lt;civ-task-group&gt;</code> children inside it.</p>
+
+          <h4>&lt;civ-task-group&gt;</h4>
+          <p>Groups tasks under a heading. Uses the <code>data-task-group-heading</code> slot attribute for the group heading.</p>
+          <table class="props-table">
+            <thead><tr><th>Slot Attribute</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><code>data-task-group-heading</code></td><td>Group heading element (e.g., an <code>&lt;h3&gt;</code>)</td></tr>
+            </tbody>
+          </table>
+
+          <h4>&lt;civ-task&gt; Props</h4>
+          <table class="props-table">
+            <thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><code>label</code></td><td><code>string</code></td><td><code>''</code></td><td>Task name</td></tr>
+              <tr><td><code>hint</code></td><td><code>string</code></td><td><code>''</code></td><td>Optional hint text below the label</td></tr>
+              <tr><td><code>href</code></td><td><code>string</code></td><td><code>''</code></td><td>Navigation target (omit for locked tasks)</td></tr>
+              <tr><td><code>status</code></td><td><code>'not-started' | 'in-progress' | 'complete' | 'cannot-start' | 'error'</code></td><td><code>'not-started'</code></td><td>Current task status (renders as a colored tag)</td></tr>
+            </tbody>
+          </table>
+
+          <h4>Status Tags</h4>
+          <table class="props-table">
+            <thead><tr><th>Status</th><th>Tag Label</th><th>Color</th></tr></thead>
+            <tbody>
+              <tr><td><code>not-started</code></td><td>Not started</td><td>Blue (secondary)</td></tr>
+              <tr><td><code>in-progress</code></td><td>In progress</td><td>Teal (secondary)</td></tr>
+              <tr><td><code>complete</code></td><td>Complete</td><td>Green (primary)</td></tr>
+              <tr><td><code>cannot-start</code></td><td>Cannot start yet</td><td>Gray (secondary)</td></tr>
+              <tr><td><code>error</code></td><td>Error</td><td>Red (secondary)</td></tr>
+            </tbody>
+          </table>
+
+          <h4>Example</h4>
+<pre><code>&lt;civ-task-list&gt;
+  &lt;civ-task-group&gt;
+    &lt;h3 data-task-group-heading class="civ-heading-md"&gt;
+      Fill out your application
+    &lt;/h3&gt;
+    &lt;civ-task
+      label="Your name"
+      href="/name"
+      status="complete"
+    &gt;&lt;/civ-task&gt;
+    &lt;civ-task
+      label="Contact information"
+      hint="Phone number and email"
+      href="/contact"
+      status="in-progress"
+    &gt;&lt;/civ-task&gt;
+    &lt;civ-task
+      label="Your address"
+      href="/address"
+      status="not-started"
+    &gt;&lt;/civ-task&gt;
+  &lt;/civ-task-group&gt;
+
+  &lt;civ-task-group&gt;
+    &lt;h3 data-task-group-heading class="civ-heading-md"&gt;
+      Submit
+    &lt;/h3&gt;
+    &lt;civ-task
+      label="Review and submit"
+      status="cannot-start"
+    &gt;&lt;/civ-task&gt;
+  &lt;/civ-task-group&gt;
+&lt;/civ-task-list&gt;</code></pre>
+
+          <div class="note">
+            <strong>Note:</strong> When <code>status</code> is <code>"cannot-start"</code>, the task label is rendered as plain text (not a link), even if <code>href</code> is set. When <code>status</code> is <code>"error"</code>, the link renders with danger styling.
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ============================================================ -->
+    <!-- ACTION COMPONENTS -->
+    <!-- ============================================================ -->
+    <div class="category" id="action">
+      <h2>Action Components</h2>
+      <p>Interactive elements for triggering actions and displaying status.</p>
+
+      <!-- civ-button -->
+      <div class="component">
+        <div class="component-header">
+          <h3>&lt;civ-button&gt;</h3>
+          <p>An accessible button component. Always renders a <code>&lt;button&gt;</code> element. For links, use <code>&lt;civ-link&gt;</code> instead.</p>
+        </div>
+        <div class="component-body">
+          <h4>Props</h4>
+          <table class="props-table">
+            <thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><code>label</code></td><td><code>string</code></td><td><code>''</code></td><td>Button text (preferred over child text)</td></tr>
+              <tr><td><code>variant</code></td><td><code>'primary' | 'secondary' | 'tertiary'</code></td><td><code>'primary'</code></td><td>Visual variant</td></tr>
+              <tr><td><code>danger</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Destructive action styling</td></tr>
+              <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Disabled state</td></tr>
+              <tr><td><code>type</code></td><td><code>'button' | 'submit' | 'reset'</code></td><td><code>'button'</code></td><td>Button type attribute</td></tr>
+            </tbody>
+          </table>
+
+          <h4>Variants</h4>
+          <table class="props-table">
+            <thead><tr><th>Variant</th><th>Appearance</th></tr></thead>
+            <tbody>
+              <tr><td><code>primary</code></td><td>Filled blue button</td></tr>
+              <tr><td><code>secondary</code></td><td>Outlined border button</td></tr>
+              <tr><td><code>tertiary</code></td><td>Gray filled button (same height as form inputs)</td></tr>
+            </tbody>
+          </table>
+
+          <h4>Events</h4>
+          <ul class="event-list">
+            <li><code>civ-analytics</code> &mdash; Analytics tracking event on click</li>
+          </ul>
+
+          <h4>Example</h4>
+<pre><code>&lt;!-- Primary --&gt;
+&lt;civ-button label="Submit application" type="submit"&gt;&lt;/civ-button&gt;
+
+&lt;!-- Secondary --&gt;
+&lt;civ-button label="Save draft" variant="secondary"&gt;&lt;/civ-button&gt;
+
+&lt;!-- Tertiary --&gt;
+&lt;civ-button label="Cancel" variant="tertiary"&gt;&lt;/civ-button&gt;
+
+&lt;!-- Danger --&gt;
+&lt;civ-button label="Delete claim" variant="secondary" danger&gt;&lt;/civ-button&gt;
+
+&lt;!-- Disabled --&gt;
+&lt;civ-button label="Submit" disabled&gt;&lt;/civ-button&gt;
+
+&lt;!-- Form reset --&gt;
+&lt;civ-button label="Clear form" variant="tertiary" type="reset"&gt;&lt;/civ-button&gt;</code></pre>
+
+          <div class="note">
+            <strong>Note:</strong> Buttons do not get underlined text. Only links (<code>&lt;civ-link&gt;</code>) use underlines, preserving the distinction between navigation and action.
+          </div>
+        </div>
+      </div>
+
+      <!-- civ-tag -->
+      <div class="component">
+        <div class="component-header">
+          <h3>&lt;civ-tag&gt;</h3>
+          <p>A small status label rendered as a colored pill. Used for status indicators, categories, or metadata.</p>
+        </div>
+        <div class="component-body">
+          <h4>Props</h4>
+          <table class="props-table">
+            <thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><code>label</code></td><td><code>string</code></td><td><code>''</code></td><td>Tag text content</td></tr>
+              <tr><td><code>variant</code></td><td><code>'blue' | 'teal' | 'red' | 'green' | 'yellow' | 'orange' | 'purple' | 'gray'</code></td><td><code>'gray'</code></td><td>Color variant</td></tr>
+              <tr><td><code>tag-style</code></td><td><code>'primary' | 'secondary'</code></td><td><code>'secondary'</code></td><td>Emphasis level: primary (dark bg, light text) or secondary (light bg, dark text)</td></tr>
+            </tbody>
+          </table>
+
+          <h4>Color Variants</h4>
+          <div class="variant-list">
+            <span class="variant-chip variant-chip--blue">blue</span>
+            <span class="variant-chip variant-chip--teal">teal</span>
+            <span class="variant-chip variant-chip--red">red</span>
+            <span class="variant-chip variant-chip--green">green</span>
+            <span class="variant-chip variant-chip--yellow">yellow</span>
+            <span class="variant-chip variant-chip--orange">orange</span>
+            <span class="variant-chip variant-chip--purple">purple</span>
+            <span class="variant-chip variant-chip--gray">gray</span>
+          </div>
+
+          <h4>Example</h4>
+<pre><code>&lt;!-- Secondary style (light bg, default) --&gt;
+&lt;civ-tag label="Not started" variant="blue"&gt;&lt;/civ-tag&gt;
+&lt;civ-tag label="In progress" variant="teal"&gt;&lt;/civ-tag&gt;
+&lt;civ-tag label="Pending review" variant="yellow"&gt;&lt;/civ-tag&gt;
+
+&lt;!-- Primary style (dark bg) --&gt;
+&lt;civ-tag label="Approved" variant="green" tag-style="primary"&gt;&lt;/civ-tag&gt;
+&lt;civ-tag label="Denied" variant="red" tag-style="primary"&gt;&lt;/civ-tag&gt;
+&lt;civ-tag label="Complete" variant="green" tag-style="primary"&gt;&lt;/civ-tag&gt;</code></pre>
+
+          <div class="note">
+            <strong>Note:</strong> Tag size scales with the density system. Wrap in a parent with <code>data-civ-scale="dense"</code> or <code>data-civ-scale="spacious"</code> to adjust.
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ============================================================ -->
+    <!-- FEEDBACK COMPONENTS -->
+    <!-- ============================================================ -->
+    <div class="category" id="feedback">
+      <h2>Feedback Components</h2>
+      <p>Components for progress indication, alerts, and user feedback.</p>
+
+      <!-- civ-progress-bar -->
+      <div class="component">
+        <div class="component-header">
+          <h3>&lt;civ-progress-bar&gt;</h3>
+          <p>A percentage-based progress indicator for dynamic forms where the number of steps is not fixed.</p>
+        </div>
+        <div class="component-body">
+          <h4>Props</h4>
+          <table class="props-table">
+            <thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><code>value</code></td><td><code>number</code></td><td><code>0</code></td><td>Current progress percentage (0-100)</td></tr>
+              <tr><td><code>label</code></td><td><code>string</code></td><td><code>'Progress'</code></td><td>Accessible label for the progress bar (<code>aria-label</code>)</td></tr>
+              <tr><td><code>status</code></td><td><code>string</code></td><td><code>''</code></td><td>Optional status text (e.g., "3 of 8 sections complete")</td></tr>
+              <tr><td><code>show-percent</code></td><td><code>boolean</code></td><td><code>true</code></td><td>Show percentage text</td></tr>
+            </tbody>
+          </table>
+
+          <h4>Example</h4>
+<pre><code>&lt;civ-progress-bar
+  value="37"
+  label="Application progress"
+  status="3 of 8 sections complete"
+&gt;&lt;/civ-progress-bar&gt;
+
+&lt;!-- Complete state --&gt;
+&lt;civ-progress-bar
+  value="100"
+  label="Upload progress"
+  status="All files uploaded"
+&gt;&lt;/civ-progress-bar&gt;
+
+&lt;!-- Without percentage text --&gt;
+&lt;civ-progress-bar value="60" label="Loading" show-percent="false"&gt;&lt;/civ-progress-bar&gt;</code></pre>
+        </div>
+      </div>
+
+      <!-- civ-progress-steps -->
+      <div class="component">
+        <div class="component-header">
+          <h3>&lt;civ-progress-steps&gt;</h3>
+          <p>A step indicator for multi-step forms. Responsive: horizontal on desktop, auto-switches to vertical on narrow screens.</p>
+        </div>
+        <div class="component-body">
+          <h4>Props</h4>
+          <table class="props-table">
+            <thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><code>steps</code></td><td><code>string (JSON)</code></td><td><code>'[]'</code></td><td>JSON array of step labels or objects: <code>["Step 1","Step 2"]</code> or <code>[{"label":"Step 1","description":"Details"}]</code></td></tr>
+              <tr><td><code>current</code></td><td><code>number</code></td><td><code>0</code></td><td>Current step index (0-based)</td></tr>
+              <tr><td><code>orientation</code></td><td><code>'horizontal' | 'vertical'</code></td><td><code>'horizontal'</code></td><td>Layout direction</td></tr>
+              <tr><td><code>clickable</code></td><td><code>boolean</code></td><td><code>false</code></td><td>When true, completed steps become clickable buttons</td></tr>
+              <tr><td><code>show-counter</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Show "Step X of Y" text below the steps</td></tr>
+              <tr><td><code>error-steps</code></td><td><code>string (JSON)</code></td><td><code>'[]'</code></td><td>JSON array of step indices with validation errors</td></tr>
+            </tbody>
+          </table>
+
+          <h4>Events</h4>
+          <ul class="event-list">
+            <li><code>civ-step-click</code> &mdash; When a completed step is clicked (requires <code>clickable</code>). Detail: <code>{ step: number }</code></li>
+          </ul>
+
+          <h4>Example: Simple steps</h4>
+<pre><code>&lt;civ-progress-steps
+  steps='["Personal info","Employment","Review","Submit"]'
+  current="1"
+  show-counter
+&gt;&lt;/civ-progress-steps&gt;</code></pre>
+
+          <h4>Example: Rich steps with descriptions</h4>
+<pre><code>&lt;civ-progress-steps
+  steps='[
+    {"label":"Personal info","description":"Name and contact details"},
+    {"label":"Employment","description":"Current employer"},
+    {"label":"Review","description":"Check your answers"}
+  ]'
+  current="1"
+  clickable
+&gt;&lt;/civ-progress-steps&gt;</code></pre>
+
+          <h4>Example: Vertical with errors</h4>
+<pre><code>&lt;civ-progress-steps
+  steps='["Step 1","Step 2","Step 3","Step 4"]'
+  current="2"
+  orientation="vertical"
+  error-steps="[0]"
+&gt;&lt;/civ-progress-steps&gt;</code></pre>
+        </div>
+      </div>
+
+      <!-- civ-alert -->
+      <div class="component">
+        <div class="component-header">
+          <h3>&lt;civ-alert&gt;</h3>
+          <p>An accessible alert component for informational, warning, error, or success messages.</p>
+        </div>
+        <div class="component-body">
+          <h4>Props</h4>
+          <table class="props-table">
+            <thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><code>variant</code></td><td><code>'info' | 'warning' | 'error' | 'success'</code></td><td><code>'info'</code></td><td>Alert type (sets colors and ARIA role)</td></tr>
+              <tr><td><code>alert-style</code></td><td><code>'primary' | 'secondary' | 'tertiary'</code></td><td><code>'secondary'</code></td><td>Visual treatment</td></tr>
+              <tr><td><code>heading</code></td><td><code>string</code></td><td><code>''</code></td><td>Optional heading text</td></tr>
+              <tr><td><code>heading-level</code></td><td><code>2 | 3 | 4 | 5 | 6</code></td><td><code>4</code></td><td>Heading element level for semantics</td></tr>
+              <tr><td><code>label</code></td><td><code>string</code></td><td><code>''</code></td><td>Body text (preferred over child text)</td></tr>
+              <tr><td><code>dismissible</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Shows close button</td></tr>
+              <tr><td><code>slim</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Compact single-line variant (no heading)</td></tr>
+            </tbody>
+          </table>
+
+          <h4>Events</h4>
+          <ul class="event-list">
+            <li><code>civ-dismiss</code> &mdash; When close button is clicked (cancelable)</li>
+            <li><code>civ-analytics</code> &mdash; Analytics tracking event on dismiss</li>
+          </ul>
+
+          <h4>Example: All variants</h4>
+<pre><code>&lt;!-- Info --&gt;
+&lt;civ-alert
+  variant="info"
+  heading="Application received"
+  label="We received your application on April 19, 2026. You will receive a confirmation email within 24 hours."
+&gt;&lt;/civ-alert&gt;
+
+&lt;!-- Warning --&gt;
+&lt;civ-alert
+  variant="warning"
+  heading="Session expiring soon"
+  label="Your session will expire in 5 minutes. Save your progress to avoid losing data."
+  dismissible
+&gt;&lt;/civ-alert&gt;
+
+&lt;!-- Error --&gt;
+&lt;civ-alert
+  variant="error"
+  heading="Submission failed"
+  label="We could not process your application. Please try again or call 1-800-555-0199."
+&gt;&lt;/civ-alert&gt;
+
+&lt;!-- Success --&gt;
+&lt;civ-alert
+  variant="success"
+  heading="Changes saved"
+  label="Your contact information has been updated."
+  dismissible
+&gt;&lt;/civ-alert&gt;
+
+&lt;!-- Slim (compact, no heading) --&gt;
+&lt;civ-alert variant="info" label="Processing may take up to 3 business days." slim&gt;&lt;/civ-alert&gt;</code></pre>
+
+          <div class="note">
+            <strong>Note:</strong> The <code>error</code> variant uses <code>role="alert"</code> for immediate screen reader announcement. All other variants use <code>role="status"</code>.
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ============================================================ -->
+    <!-- FORM COMPONENTS -->
+    <!-- ============================================================ -->
+    <div class="category" id="form">
+      <h2>Form Components</h2>
+      <p>
+        Form-participating components for building accessible government forms. All form components extend <code>CivFormElement</code>
+        and share a standard API: <code>label</code>, <code>name</code>, <code>value</code>, <code>hint</code>, <code>error</code>,
+        <code>required</code>, <code>disabled</code>. Group components use <code>legend</code> instead of <code>label</code>.
+      </p>
+      <p>
+        For interactive examples and full configuration options, see the
+        <a href="./storybook/" style="color: var(--color-primary);">Storybook</a>.
+      </p>
+
+      <h4 style="margin-top: 1.5rem;">Input Components</h4>
+      <div class="form-list">
+        <div class="form-list-item">
+          <code>&lt;civ-text-input&gt;</code>
+          <span>Standard text input. Supports types: text, email, number, password, search, tel, url. Props: <code>type</code>, <code>width</code>, <code>placeholder</code>, <code>maxlength</code>, <code>minlength</code>, <code>pattern</code>, <code>autocomplete</code>, <code>inputmode</code>, <code>mask</code>, <code>validate</code>.</span>
+        </div>
+        <div class="form-list-item">
+          <code>&lt;civ-textarea&gt;</code>
+          <span>Multi-line text input. Shows character count when <code>maxlength</code> is set. Props: <code>rows</code>, <code>maxlength</code>, <code>placeholder</code>.</span>
+        </div>
+        <div class="form-list-item">
+          <code>&lt;civ-select&gt;</code>
+          <span>Dropdown select. Populate via <code>options</code> property or slotted <code>&lt;option&gt;</code> elements. Props: <code>options</code>, <code>emptyLabel</code>.</span>
+        </div>
+        <div class="form-list-item">
+          <code>&lt;civ-combobox&gt;</code>
+          <span>Searchable dropdown with type-ahead filtering. Props: <code>options</code>, <code>placeholder</code>, <code>noResultsText</code>. Events: <code>civ-change</code> includes <code>{ value, label }</code>.</span>
+        </div>
+      </div>
+
+      <h4>Choice Components</h4>
+      <div class="form-list">
+        <div class="form-list-item">
+          <code>&lt;civ-checkbox&gt;</code>
+          <span>Single checkbox. Props: <code>checked</code>, <code>indeterminate</code>, <code>description</code>, <code>tile</code>. Event detail: <code>{ checked, value }</code>.</span>
+        </div>
+        <div class="form-list-item">
+          <code>&lt;civ-checkbox-group&gt;</code>
+          <span>Multiple checkboxes grouped under a legend. Props: <code>legend</code>, <code>tile</code>, <code>orientation</code>. Event detail: <code>{ values: string[] }</code>.</span>
+        </div>
+        <div class="form-list-item">
+          <code>&lt;civ-radio-group&gt;</code>
+          <span>Mutually exclusive choice group. Contains <code>&lt;civ-radio&gt;</code> children. Props: <code>legend</code>, <code>tile</code>, <code>orientation</code>. Arrow keys navigate.</span>
+        </div>
+        <div class="form-list-item">
+          <code>&lt;civ-radio&gt;</code>
+          <span>Individual radio option (child of <code>&lt;civ-radio-group&gt;</code> only). Props: <code>label</code>, <code>value</code>, <code>checked</code>, <code>description</code>, <code>tile</code>.</span>
+        </div>
+        <div class="form-list-item">
+          <code>&lt;civ-toggle&gt;</code>
+          <span>On/off switch with immediate-effect semantics. Uses <code>role="switch"</code>. Props: <code>checked</code>, <code>description</code>. Event detail: <code>{ checked, value }</code>.</span>
+        </div>
+        <div class="form-list-item">
+          <code>&lt;civ-segmented-control&gt;</code>
+          <span>Button-style radio group for UI mode switching. Contains <code>&lt;civ-segment&gt;</code> children. Props: <code>legend</code>.</span>
+        </div>
+        <div class="form-list-item">
+          <code>&lt;civ-segment&gt;</code>
+          <span>Individual segment button (child of <code>&lt;civ-segmented-control&gt;</code> only). Props: <code>label</code>, <code>value</code>, <code>selected</code>.</span>
+        </div>
+        <div class="form-list-item">
+          <code>&lt;civ-yes-no&gt;</code>
+          <span>Binary yes/no radio group for eligibility questions. Props: <code>legend</code>, <code>yesLabel</code>, <code>noLabel</code>. Event detail: <code>{ value }</code> ("yes" or "no").</span>
+        </div>
+      </div>
+
+      <h4>Date Components</h4>
+      <div class="form-list">
+        <div class="form-list-item">
+          <code>&lt;civ-date-picker&gt;</code>
+          <span>Calendar dialog with text input. For scheduling and appointment dates. Props: <code>min</code>, <code>max</code>, <code>placeholder</code>, <code>locale</code>, <code>weekStartsOn</code>. Form value: YYYY-MM-DD.</span>
+        </div>
+        <div class="form-list-item">
+          <code>&lt;civ-memorable-date&gt;</code>
+          <span>Three-field date entry (Month/Day/Year). For known past dates like birthdays. Props: <code>legend</code>, <code>monthLabel</code>, <code>dayLabel</code>, <code>yearLabel</code>, <code>locale</code>.</span>
+        </div>
+      </div>
+
+      <div class="note deprecated">
+        <strong>Deprecated:</strong> <code>&lt;civ-date-input&gt;</code> has known accessibility issues with Dragon NaturallySpeaking, VoiceOver, and TalkBack. Use <code>&lt;civ-date-picker&gt;</code> or <code>&lt;civ-memorable-date&gt;</code> instead.
+      </div>
+
+      <h4>File &amp; Upload</h4>
+      <div class="form-list">
+        <div class="form-list-item">
+          <code>&lt;civ-file-upload&gt;</code>
+          <span>Drag-and-drop file upload with validation. Props: <code>accept</code>, <code>multiple</code>, <code>maxSize</code>, <code>maxFiles</code>. Event detail: <code>{ files: File[] }</code>.</span>
+        </div>
+      </div>
+
+      <h4>Layout &amp; Structure</h4>
+      <div class="form-list">
+        <div class="form-list-item">
+          <code>&lt;civ-form&gt;</code>
+          <span>Form validation coordinator. Renders error summary with anchor links on submit. Props: <code>action</code>, <code>method</code>. Events: <code>civ-submit</code>, <code>civ-invalid</code>.</span>
+        </div>
+        <div class="form-list-item">
+          <code>&lt;civ-fieldset&gt;</code>
+          <span>Structural grouping wrapper with legend, hint, and error support. Not form-participating. Props: <code>legend</code>, <code>hint</code>, <code>error</code>, <code>required</code>, <code>disabled</code>.</span>
+        </div>
+        <div class="form-list-item">
+          <code>&lt;civ-conditional&gt;</code>
+          <span>Conditionally shows children based on another field's value. Props: <code>when</code>, <code>eq</code>, <code>neq</code>. Not form-participating.</span>
+        </div>
+        <div class="form-list-item">
+          <code>&lt;civ-form-group&gt;</code>
+          <span>Groups related form fields visually. Used for layout within forms.</span>
+        </div>
+        <div class="form-list-item">
+          <code>&lt;civ-form-step&gt;</code>
+          <span>Container for a single step in a multi-step form flow.</span>
+        </div>
+      </div>
+
+      <h4>Composite Components</h4>
+      <div class="form-list">
+        <div class="form-list-item">
+          <code>&lt;civ-name&gt;</code>
+          <span>Full name input with first, middle, last, and suffix fields. Common government form pattern.</span>
+        </div>
+        <div class="form-list-item">
+          <code>&lt;civ-address&gt;</code>
+          <span>Complete address input with street, city, state, and ZIP fields.</span>
+        </div>
+        <div class="form-list-item">
+          <code>&lt;civ-direct-deposit&gt;</code>
+          <span>Bank account entry with routing number, account number, and account type fields.</span>
+        </div>
+        <div class="form-list-item">
+          <code>&lt;civ-signature&gt;</code>
+          <span>Electronic signature component for form certification.</span>
+        </div>
+        <div class="form-list-item">
+          <code>&lt;civ-summary&gt;</code>
+          <span>Review/summary display for form data before submission.</span>
+        </div>
+        <div class="form-list-item">
+          <code>&lt;civ-repeater&gt;</code>
+          <span>Repeatable field group for dynamic lists (e.g., multiple addresses, employment history).</span>
+        </div>
+        <div class="form-list-item">
+          <code>&lt;civ-prefill-notice&gt;</code>
+          <span>Notice banner for pre-filled form data from authenticated sources.</span>
+        </div>
+        <div class="form-list-item">
+          <code>&lt;civ-read-only-field&gt;</code>
+          <span>Displays a label/value pair in read-only mode for review pages.</span>
+        </div>
+      </div>
+
+      <h4 style="margin-top: 1.5rem;">Common Form Example</h4>
+<pre><code>&lt;civ-form&gt;
+  &lt;civ-fieldset legend="Personal information"&gt;
+    &lt;civ-text-input
+      label="Full name"
+      name="name"
+      required
+      required-message="Enter your full name"
+      autocomplete="name"
+    &gt;&lt;/civ-text-input&gt;
+
+    &lt;civ-text-input
+      label="Email address"
+      name="email"
+      type="email"
+      required
+      hint="For example: name@agency.gov"
+      autocomplete="email"
+    &gt;&lt;/civ-text-input&gt;
+
+    &lt;civ-memorable-date
+      legend="Date of birth"
+      name="dob"
+      hint="For example: January 15 1990"
+      required
+    &gt;&lt;/civ-memorable-date&gt;
+  &lt;/civ-fieldset&gt;
+
+  &lt;civ-yes-no
+    legend="Are you a veteran?"
+    name="veteran"
+    required
+  &gt;&lt;/civ-yes-no&gt;
+
+  &lt;civ-conditional when="veteran" eq="yes"&gt;
+    &lt;civ-text-input
+      label="Service branch"
+      name="branch"
+      required
+    &gt;&lt;/civ-text-input&gt;
+  &lt;/civ-conditional&gt;
+
+  &lt;civ-checkbox
+    label="I certify the information above is accurate"
+    name="certify"
+    required
+  &gt;&lt;/civ-checkbox&gt;
+
+  &lt;civ-button label="Submit application" type="submit"&gt;&lt;/civ-button&gt;
+  &lt;civ-button label="Save draft" variant="secondary"&gt;&lt;/civ-button&gt;
+&lt;/civ-form&gt;</code></pre>
+
+      <h4>Event Reference</h4>
+      <table class="props-table">
+        <thead><tr><th>Event</th><th>Detail Shape</th><th>When</th></tr></thead>
+        <tbody>
+          <tr><td><code>civ-input</code></td><td><code>{ value: string }</code></td><td>Every value change (like native <code>input</code>)</td></tr>
+          <tr><td><code>civ-change</code></td><td><code>{ value: string }</code></td><td>Committed value change (like native <code>change</code>)</td></tr>
+          <tr><td><code>civ-change</code> (checkbox-group)</td><td><code>{ values: string[] }</code></td><td>When checked values change</td></tr>
+          <tr><td><code>civ-change</code> (checkbox, toggle)</td><td><code>{ checked: boolean, value: string }</code></td><td>When toggle/check state changes</td></tr>
+          <tr><td><code>civ-change</code> (file-upload)</td><td><code>{ files: File[] }</code></td><td>When files are added or removed</td></tr>
+          <tr><td><code>civ-change</code> (combobox)</td><td><code>{ value: string, label: string }</code></td><td>When an option is selected</td></tr>
+          <tr><td><code>civ-change</code> (memorable-date)</td><td><code>{ value, month, day, year }</code></td><td>When all date fields are filled</td></tr>
+          <tr><td><code>civ-submit</code></td><td><code>{ formData: Record&lt;string, string&gt; }</code></td><td>Valid form submission</td></tr>
+          <tr><td><code>civ-invalid</code></td><td><code>{ errors: FormFieldError[] }</code></td><td>Form validation failure</td></tr>
+          <tr><td><code>civ-analytics</code></td><td>Varies</td><td>Analytics tracking on interactions</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <footer>
+    <p>CivUI &mdash; Civic Design System. Component Reference. MIT License.</p>
+  </footer>
+</body>
+</html>

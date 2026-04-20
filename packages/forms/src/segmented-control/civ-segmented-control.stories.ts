@@ -4,7 +4,7 @@ import './civ-segment.js';
 import './civ-segmented-control.js';
 
 const meta: Meta = {
-  title: 'Forms/Segmented Control',
+  title: 'Forms/Inputs/Segmented Control',
   component: 'civ-segmented-control',
   tags: ['autodocs'],
   argTypes: {

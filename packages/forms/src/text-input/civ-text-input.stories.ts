@@ -3,7 +3,7 @@ import { html } from 'lit';
 import './civ-text-input.js';
 
 const meta: Meta = {
-  title: 'Forms/Text Input',
+  title: 'Forms/Inputs/Text Input',
   component: 'civ-text-input',
   tags: ['autodocs'],
   argTypes: {

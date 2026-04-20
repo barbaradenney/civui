@@ -4,7 +4,7 @@ import './civ-checkbox.js';
 import './civ-checkbox-group.js';
 
 const meta: Meta = {
-  title: 'Forms/Checkbox',
+  title: 'Forms/Inputs/Checkbox',
   component: 'civ-checkbox',
   tags: ['autodocs'],
   argTypes: {

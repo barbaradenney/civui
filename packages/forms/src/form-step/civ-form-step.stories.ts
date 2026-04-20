@@ -8,7 +8,7 @@ import '../address/civ-address.js';
 import '../signature/civ-signature.js';
 
 const meta: Meta = {
-  title: 'Forms/Form Step',
+  title: 'Forms/Patterns/Form Step',
   component: 'civ-form-step',
   tags: ['autodocs'],
   argTypes: {

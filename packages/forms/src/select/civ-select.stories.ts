@@ -15,7 +15,7 @@ const STATES = [
 ];
 
 const meta: Meta = {
-  title: 'Forms/Select',
+  title: 'Forms/Inputs/Select',
   component: 'civ-select',
   tags: ['autodocs'],
   argTypes: {

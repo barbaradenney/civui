@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/web-components';
 import './civ-date-picker.js';
 
 const meta: Meta = {
-  title: 'Forms/DatePicker',
+  title: 'Forms/Inputs/Date Picker',
   component: 'civ-date-picker',
   tags: ['autodocs'],
   argTypes: {

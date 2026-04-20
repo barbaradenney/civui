@@ -3,7 +3,7 @@ import { html } from 'lit';
 import './civ-address.js';
 
 const meta: Meta = {
-  title: 'Forms/Address',
+  title: 'Forms/Compound/Address',
   component: 'civ-address',
   tags: ['autodocs'],
   argTypes: {

@@ -3,7 +3,7 @@ import { html } from 'lit';
 import './civ-textarea.js';
 
 const meta: Meta = {
-  title: 'Forms/Textarea',
+  title: 'Forms/Inputs/Textarea',
   component: 'civ-textarea',
   tags: ['autodocs'],
   argTypes: {

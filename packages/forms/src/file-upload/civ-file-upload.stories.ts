@@ -4,7 +4,7 @@ import './civ-file-upload.js';
 import type { CivFileUpload } from './civ-file-upload.js';
 
 const meta: Meta = {
-  title: 'Forms/File Upload',
+  title: 'Forms/Inputs/File Upload',
   component: 'civ-file-upload',
   tags: ['autodocs'],
   argTypes: {

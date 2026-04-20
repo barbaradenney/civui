@@ -3,7 +3,7 @@ import { html } from 'lit';
 import './civ-yes-no.js';
 
 const meta: Meta = {
-  title: 'Forms/Yes No',
+  title: 'Forms/Inputs/Yes No',
   component: 'civ-yes-no',
   tags: ['autodocs'],
   argTypes: {

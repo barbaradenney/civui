@@ -6,7 +6,7 @@ import '../date-input/civ-memorable-date.js';
 import '../select/civ-select.js';
 
 const meta: Meta = {
-  title: 'Forms/Repeater',
+  title: 'Forms/Patterns/Repeater',
   component: 'civ-repeater',
   tags: ['autodocs'],
   argTypes: {

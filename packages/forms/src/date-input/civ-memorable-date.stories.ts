@@ -3,7 +3,7 @@ import { html } from 'lit';
 import './civ-memorable-date.js';
 
 const meta: Meta = {
-  title: 'Forms/Memorable Date',
+  title: 'Forms/Inputs/Memorable Date',
   component: 'civ-memorable-date',
   tags: ['autodocs'],
   argTypes: {

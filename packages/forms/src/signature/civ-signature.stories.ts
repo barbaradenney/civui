@@ -3,7 +3,7 @@ import { html } from 'lit';
 import './civ-signature.js';
 
 const meta: Meta = {
-  title: 'Forms/Signature',
+  title: 'Forms/Patterns/Signature',
   component: 'civ-signature',
   tags: ['autodocs'],
   argTypes: {

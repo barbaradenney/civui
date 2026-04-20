@@ -4,7 +4,7 @@ import './civ-fieldset.js';
 import '../text-input/civ-text-input.js';
 
 const meta: Meta = {
-  title: 'Forms/Fieldset',
+  title: 'Forms/Layout/Fieldset',
   component: 'civ-fieldset',
   tags: ['autodocs'],
   argTypes: {

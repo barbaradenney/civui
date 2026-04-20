@@ -3,7 +3,7 @@ import { html } from 'lit';
 import './civ-form-group.js';
 
 const meta: Meta = {
-  title: 'Forms/Form Group',
+  title: 'Forms/Layout/Form Group',
   component: 'civ-form-group',
   tags: ['autodocs'],
   argTypes: {

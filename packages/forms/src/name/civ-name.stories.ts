@@ -4,7 +4,7 @@ import './civ-name.js';
 import '../date-input/civ-memorable-date.js';
 
 const meta: Meta = {
-  title: 'Forms/Name',
+  title: 'Forms/Compound/Name',
   component: 'civ-name',
   tags: ['autodocs'],
   argTypes: {

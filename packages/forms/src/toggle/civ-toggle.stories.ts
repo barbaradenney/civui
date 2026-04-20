@@ -3,7 +3,7 @@ import { html } from 'lit';
 import './civ-toggle.js';
 
 const meta: Meta = {
-  title: 'Forms/Toggle',
+  title: 'Forms/Inputs/Toggle',
   component: 'civ-toggle',
   tags: ['autodocs'],
   argTypes: {

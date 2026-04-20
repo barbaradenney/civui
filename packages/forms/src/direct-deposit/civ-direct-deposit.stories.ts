@@ -3,7 +3,7 @@ import { html } from 'lit';
 import './civ-direct-deposit.js';
 
 const meta: Meta = {
-  title: 'Forms/Direct Deposit',
+  title: 'Forms/Compound/Direct Deposit',
   component: 'civ-direct-deposit',
   tags: ['autodocs'],
   argTypes: {

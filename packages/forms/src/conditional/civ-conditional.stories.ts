@@ -9,7 +9,7 @@ import '../checkbox/civ-checkbox.js';
 import '../form/civ-form.js';
 
 const meta: Meta = {
-  title: 'Forms/Conditional',
+  title: 'Forms/Layout/Conditional',
   component: 'civ-conditional',
   tags: ['autodocs'],
   argTypes: {

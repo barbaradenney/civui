@@ -7,7 +7,7 @@ import '../select/civ-select.js';
 import '../checkbox/civ-checkbox.js';
 
 const meta: Meta = {
-  title: 'Forms/Form',
+  title: 'Forms/Layout/Form',
   component: 'civ-form',
   tags: ['autodocs'],
   argTypes: {

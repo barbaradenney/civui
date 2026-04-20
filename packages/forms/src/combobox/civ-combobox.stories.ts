@@ -19,7 +19,7 @@ const STATES = [
 ];
 
 const meta: Meta = {
-  title: 'Forms/Combobox',
+  title: 'Forms/Inputs/Combobox',
   component: 'civ-combobox',
   tags: ['autodocs'],
   argTypes: {

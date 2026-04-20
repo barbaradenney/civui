@@ -5,7 +5,7 @@ import '../signature/civ-signature.js';
 import '@civui/feedback';
 
 const meta: Meta = {
-  title: 'Forms/Summary',
+  title: 'Forms/Patterns/Summary',
   component: 'civ-summary',
   tags: ['autodocs'],
   argTypes: {

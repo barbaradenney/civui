@@ -6,7 +6,7 @@ import '../text-input/civ-text-input.js';
 import '../read-only-field/civ-read-only-field.js';
 
 const meta: Meta = {
-  title: 'Forms/Prefill Notice',
+  title: 'Forms/Patterns/Prefill Notice',
   component: 'civ-prefill-notice',
   tags: ['autodocs'],
   argTypes: {

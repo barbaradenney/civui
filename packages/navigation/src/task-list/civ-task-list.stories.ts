@@ -5,6 +5,7 @@ import './civ-task-group.js';
 import './civ-task.js';
 import '@civui/ui/tag';
 import '@civui/ui/link';
+import '@civui/ui/page-header';
 import '@civui/forms';
 
 const meta: Meta = {
@@ -21,62 +22,21 @@ export const Default: Story = {
     <civ-task-list>
       <civ-task-group>
         <h3 data-task-group-heading class="civ-heading-md">Prepare</h3>
-        <civ-task>
-          <civ-link href="#/eligibility">Check your eligibility</civ-link>
-          <div data-task-status>
-            <civ-tag label="Complete" variant="green" tag-style="primary"></civ-tag>
-          </div>
-        </civ-task>
+        <civ-task label="Check your eligibility" href="#/eligibility" status="complete"></civ-task>
       </civ-task-group>
 
       <civ-task-group>
         <h3 data-task-group-heading class="civ-heading-md">Fill out your application</h3>
-        <civ-task>
-          <civ-link href="#/personal">Personal information</civ-link>
-          <div data-task-status>
-            <civ-tag label="Complete" variant="green" tag-style="primary"></civ-tag>
-          </div>
-        </civ-task>
-        <civ-task>
-          <div>
-            <civ-link href="#/contact">Contact information</civ-link>
-            <span class="civ-hint civ-block">Phone number needed</span>
-          </div>
-          <div data-task-status>
-            <civ-tag label="In progress" variant="teal"></civ-tag>
-          </div>
-        </civ-task>
-        <civ-task>
-          <civ-link href="#/service">Service history</civ-link>
-          <div data-task-status>
-            <civ-tag label="Not started" variant="blue"></civ-tag>
-          </div>
-        </civ-task>
-        <civ-task>
-          <civ-link href="#/disabilities">Disabilities and conditions</civ-link>
-          <div data-task-status>
-            <civ-tag label="Not started" variant="blue"></civ-tag>
-          </div>
-        </civ-task>
-        <civ-task>
-          <civ-link href="#/documents">Supporting documents</civ-link>
-          <div data-task-status>
-            <civ-tag label="Not started" variant="blue"></civ-tag>
-          </div>
-        </civ-task>
+        <civ-task label="Personal information" href="#/personal" status="complete"></civ-task>
+        <civ-task label="Contact information" hint="Phone number needed" href="#/contact" status="in-progress"></civ-task>
+        <civ-task label="Service history" hint="Branch, dates, and character of service" status="not-started"></civ-task>
+        <civ-task label="Disabilities and conditions" status="cannot-start"></civ-task>
+        <civ-task label="Supporting documents" status="cannot-start"></civ-task>
       </civ-task-group>
 
       <civ-task-group>
         <h3 data-task-group-heading class="civ-heading-md">Review and submit</h3>
-        <civ-task>
-          <div>
-            <span class="civ-font-medium">Review your application</span>
-            <span class="civ-hint civ-block">Complete all sections first</span>
-          </div>
-          <div data-task-status>
-            <civ-tag label="Cannot start yet" variant="gray"></civ-tag>
-          </div>
-        </civ-task>
+        <civ-task label="Review your application" hint="Complete all sections first" status="cannot-start"></civ-task>
       </civ-task-group>
     </civ-task-list>
   `,
@@ -87,45 +47,11 @@ export const AllStatuses: Story = {
     <civ-task-list>
       <civ-task-group>
         <h3 data-task-group-heading class="civ-heading-md">Status examples</h3>
-        <civ-task>
-          <civ-link href="#">Not started task</civ-link>
-          <div data-task-status>
-            <civ-tag label="Not started" variant="blue"></civ-tag>
-          </div>
-        </civ-task>
-        <civ-task>
-          <div>
-            <civ-link href="#">In progress task</civ-link>
-            <span class="civ-hint civ-block">2 of 5 fields complete</span>
-          </div>
-          <div data-task-status>
-            <civ-tag label="In progress" variant="teal"></civ-tag>
-          </div>
-        </civ-task>
-        <civ-task>
-          <civ-link href="#">Complete task</civ-link>
-          <div data-task-status>
-            <civ-tag label="Complete" variant="green" tag-style="primary"></civ-tag>
-          </div>
-        </civ-task>
-        <civ-task>
-          <div>
-            <span class="civ-font-medium">Cannot start yet</span>
-            <span class="civ-hint civ-block">Complete previous sections first</span>
-          </div>
-          <div data-task-status>
-            <civ-tag label="Cannot start yet" variant="gray"></civ-tag>
-          </div>
-        </civ-task>
-        <civ-task>
-          <div>
-            <civ-link href="#">Task with error</civ-link>
-            <span class="civ-hint civ-block">Fix validation errors</span>
-          </div>
-          <div data-task-status>
-            <civ-tag label="Error" variant="red"></civ-tag>
-          </div>
-        </civ-task>
+        <civ-task label="Active task" href="#" status="not-started"></civ-task>
+        <civ-task label="In progress task" hint="2 of 5 fields complete" href="#" status="in-progress"></civ-task>
+        <civ-task label="Complete task" href="#" status="complete"></civ-task>
+        <civ-task label="Locked task" hint="Complete previous sections first" status="cannot-start"></civ-task>
+        <civ-task label="Task with error" hint="Fix validation errors" href="#" status="error"></civ-task>
       </civ-task-group>
     </civ-task-list>
   `,
@@ -136,42 +62,21 @@ export const MultipleGroups: Story = {
     <civ-task-list>
       <civ-task-group>
         <h3 data-task-group-heading class="civ-heading-md">About you</h3>
-        <civ-task>
-          <civ-link href="#">Your name</civ-link>
-          <div data-task-status><civ-tag label="Complete" variant="green" tag-style="primary"></civ-tag></div>
-        </civ-task>
-        <civ-task>
-          <civ-link href="#">Your date of birth</civ-link>
-          <div data-task-status><civ-tag label="Complete" variant="green" tag-style="primary"></civ-tag></div>
-        </civ-task>
-        <civ-task>
-          <civ-link href="#">Your address</civ-link>
-          <div data-task-status><civ-tag label="Complete" variant="green" tag-style="primary"></civ-tag></div>
-        </civ-task>
+        <civ-task label="Your name" href="#" status="complete"></civ-task>
+        <civ-task label="Your date of birth" href="#" status="complete"></civ-task>
+        <civ-task label="Your address" href="#" status="complete"></civ-task>
       </civ-task-group>
 
       <civ-task-group>
         <h3 data-task-group-heading class="civ-heading-md">About your service</h3>
-        <civ-task>
-          <civ-link href="#">Service periods</civ-link>
-          <div data-task-status><civ-tag label="In progress" variant="teal"></civ-tag></div>
-        </civ-task>
-        <civ-task>
-          <civ-link href="#">Discharge details</civ-link>
-          <div data-task-status><civ-tag label="Not started" variant="blue"></civ-tag></div>
-        </civ-task>
+        <civ-task label="Service periods" href="#" status="in-progress"></civ-task>
+        <civ-task label="Discharge details" status="cannot-start"></civ-task>
       </civ-task-group>
 
       <civ-task-group>
         <h3 data-task-group-heading class="civ-heading-md">Evidence</h3>
-        <civ-task>
-          <civ-link href="#">Upload DD214</civ-link>
-          <div data-task-status><civ-tag label="Not started" variant="blue"></civ-tag></div>
-        </civ-task>
-        <civ-task>
-          <civ-link href="#">Medical records</civ-link>
-          <div data-task-status><civ-tag label="Not started" variant="blue"></civ-tag></div>
-        </civ-task>
+        <civ-task label="Upload DD214" status="cannot-start"></civ-task>
+        <civ-task label="Medical records" status="cannot-start"></civ-task>
       </civ-task-group>
     </civ-task-list>
   `,
@@ -180,8 +85,10 @@ export const MultipleGroups: Story = {
 export const DisabilityCompensation: Story = {
   name: 'VA Form 21-526EZ Hub',
   render: () => html`
-    <h1 class="civ-heading-xl">Apply for disability compensation</h1>
-    <p class="civ-text-muted civ-mb-4">VA Form 21-526EZ</p>
+    <civ-page-header>
+      <h1 data-heading class="civ-heading-xl">Apply for disability compensation</h1>
+      <span data-subheading>VA Form 21-526EZ</span>
+    </civ-page-header>
 
     <civ-progress-bar
       value="40"
@@ -192,74 +99,21 @@ export const DisabilityCompensation: Story = {
     <civ-task-list>
       <civ-task-group>
         <h3 data-task-group-heading class="civ-heading-md">Prepare</h3>
-        <civ-task>
-          <civ-link href="#/eligibility">Check your eligibility</civ-link>
-          <div data-task-status>
-            <civ-tag label="Complete" variant="green" tag-style="primary"></civ-tag>
-          </div>
-        </civ-task>
+        <civ-task label="Check your eligibility" href="#/eligibility" status="complete"></civ-task>
       </civ-task-group>
 
       <civ-task-group>
         <h3 data-task-group-heading class="civ-heading-md">Fill out your application</h3>
-        <civ-task>
-          <div>
-            <civ-link href="#/personal">Personal information</civ-link>
-            <span class="civ-hint civ-block">Name, date of birth, Social Security number</span>
-          </div>
-          <div data-task-status>
-            <civ-tag label="Complete" variant="green" tag-style="primary"></civ-tag>
-          </div>
-        </civ-task>
-        <civ-task>
-          <div>
-            <civ-link href="#/contact">Contact information</civ-link>
-            <span class="civ-hint civ-block">Address and phone number needed</span>
-          </div>
-          <div data-task-status>
-            <civ-tag label="In progress" variant="teal"></civ-tag>
-          </div>
-        </civ-task>
-        <civ-task>
-          <div>
-            <civ-link href="#/service">Service history</civ-link>
-            <span class="civ-hint civ-block">Branch, dates, and character of service</span>
-          </div>
-          <div data-task-status>
-            <civ-tag label="Not started" variant="blue"></civ-tag>
-          </div>
-        </civ-task>
-        <civ-task>
-          <div>
-            <civ-link href="#/disabilities">Disabilities and conditions</civ-link>
-            <span class="civ-hint civ-block">List each condition you're claiming</span>
-          </div>
-          <div data-task-status>
-            <civ-tag label="Not started" variant="blue"></civ-tag>
-          </div>
-        </civ-task>
-        <civ-task>
-          <div>
-            <civ-link href="#/documents">Supporting documents</civ-link>
-            <span class="civ-hint civ-block">Upload DD214 and medical records</span>
-          </div>
-          <div data-task-status>
-            <civ-tag label="Not started" variant="blue"></civ-tag>
-          </div>
-        </civ-task>
+        <civ-task label="Personal information" hint="Name, date of birth, Social Security number" href="#/personal" status="complete"></civ-task>
+        <civ-task label="Contact information" hint="Address and phone number needed" href="#/contact" status="in-progress"></civ-task>
+        <civ-task label="Service history" hint="Branch, dates, and character of service" status="cannot-start"></civ-task>
+        <civ-task label="Disabilities and conditions" hint="List each condition you're claiming" status="cannot-start"></civ-task>
+        <civ-task label="Supporting documents" hint="Upload DD214 and medical records" status="cannot-start"></civ-task>
       </civ-task-group>
 
       <civ-task-group>
         <h3 data-task-group-heading class="civ-heading-md">Review and submit</h3>
-        <civ-task>
-          <div>
-            <span class="civ-font-medium">Review your application</span>
-            <span class="civ-hint civ-block">Complete all sections before reviewing</span>
-          </div>
-          <div data-task-status>
-            <civ-tag label="Cannot start yet" variant="gray"></civ-tag>
-          </div>
-        </civ-task>
+        <civ-task label="Review your application" hint="Complete all sections before reviewing" status="cannot-start"></civ-task>
       </civ-task-group>
     </civ-task-list>
   `,
@@ -268,33 +122,24 @@ export const DisabilityCompensation: Story = {
 export const AllComplete: Story = {
   name: 'All Sections Complete',
   render: () => html`
-    <h1 class="civ-heading-xl">Apply for education benefits</h1>
+    <civ-page-header>
+      <h1 data-heading class="civ-heading-xl">Apply for education benefits</h1>
+      <span data-subheading>VA Form 22-1990</span>
+    </civ-page-header>
 
     <civ-progress-bar value="100" status="All sections complete"></civ-progress-bar>
 
     <civ-task-list>
       <civ-task-group>
         <h3 data-task-group-heading class="civ-heading-md">Application</h3>
-        <civ-task>
-          <civ-link href="#/personal">Personal information</civ-link>
-          <div data-task-status><civ-tag label="Complete" variant="green" tag-style="primary"></civ-tag></div>
-        </civ-task>
-        <civ-task>
-          <civ-link href="#/education">Education history</civ-link>
-          <div data-task-status><civ-tag label="Complete" variant="green" tag-style="primary"></civ-tag></div>
-        </civ-task>
-        <civ-task>
-          <civ-link href="#/employment">Employment history</civ-link>
-          <div data-task-status><civ-tag label="Complete" variant="green" tag-style="primary"></civ-tag></div>
-        </civ-task>
+        <civ-task label="Personal information" href="#/personal" status="complete"></civ-task>
+        <civ-task label="Education history" href="#/education" status="complete"></civ-task>
+        <civ-task label="Employment history" href="#/employment" status="complete"></civ-task>
       </civ-task-group>
 
       <civ-task-group>
         <h3 data-task-group-heading class="civ-heading-md">Submit</h3>
-        <civ-task>
-          <civ-link href="#/review">Review and submit</civ-link>
-          <div data-task-status><civ-tag label="Not started" variant="blue"></civ-tag></div>
-        </civ-task>
+        <civ-task label="Review and submit" href="#/review" status="not-started"></civ-task>
       </civ-task-group>
     </civ-task-list>
   `,

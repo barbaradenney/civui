@@ -119,7 +119,6 @@ export class CivProgressSteps extends CivBaseElement {
         .civ-step-counter {
           font-size: var(--civ-typography-fontSize-sm, 14px);
           color: var(--civ-color-base-dark);
-          text-align: center;
           margin-top: var(--civ-spacing-2, 8px);
         }
         /* Responsive: auto-switch to vertical on narrow screens */

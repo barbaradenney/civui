@@ -12,7 +12,9 @@
     "./link": "./dist/link/index.js",
     "./tag": "./dist/tag/index.js",
     "./divider": "./dist/divider/index.js",
-    "./card": "./dist/card/index.js"
+    "./card": "./dist/card/index.js",
+    "./page-header": "./dist/page-header/index.js",
+    "./link-card": "./dist/link-card/index.js"
   },
   "files": ["dist"],
   "publishConfig": {

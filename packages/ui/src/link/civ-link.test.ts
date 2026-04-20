@@ -41,18 +41,6 @@ describe('civ-link', () => {
     }
   });
 
-  it('applies danger class', async () => {
-    const el = await fixture('<civ-link href="/delete" danger>Delete</civ-link>');
-    const link = el.querySelector('a')!;
-    expect(link.className).toContain('civ-link--tertiary-danger');
-  });
-
-  it('applies danger class with variant', async () => {
-    const el = await fixture('<civ-link href="/delete" variant="primary" danger>Delete</civ-link>');
-    const link = el.querySelector('a')!;
-    expect(link.className).toContain('civ-link--primary-danger');
-  });
-
   it('disabled link has aria-disabled, no href, tabindex=-1', async () => {
     const el = await fixture('<civ-link href="/next" disabled>Go</civ-link>');
     const link = el.querySelector('a')!;
@@ -87,6 +75,15 @@ describe('civ-link', () => {
     link.click();
 
     expect(handler).not.toHaveBeenCalled();
+  });
+
+  it('applies back variant with leading arrow icon', async () => {
+    const el = await fixture('<civ-link href="/prev" variant="back" label="Back to task list"></civ-link>');
+    const link = el.querySelector('a')!;
+    expect(link.className).toContain('civ-link--back');
+    const icon = el.querySelector('civ-icon');
+    expect(icon).not.toBeNull();
+    expect(icon!.getAttribute('name')).toBe('chevron-left');
   });
 
   it('uses Light DOM', async () => {

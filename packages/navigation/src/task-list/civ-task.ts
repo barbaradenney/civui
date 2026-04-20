@@ -1,74 +1,80 @@
 import { html, nothing } from 'lit';
-import { customElement } from 'lit/decorators.js';
+import { customElement, property } from 'lit/decorators.js';
 import { CivBaseElement } from '@civui/core';
+
+export type TaskStatus = 'not-started' | 'in-progress' | 'complete' | 'cannot-start' | 'error';
+
+const STATUS_TAG: Record<TaskStatus, { label: string; variant: string; style?: string }> = {
+  'not-started': { label: 'Not started', variant: 'blue' },
+  'in-progress': { label: 'In progress', variant: 'teal' },
+  'complete': { label: 'Complete', variant: 'green', style: 'primary' },
+  'cannot-start': { label: 'Cannot start yet', variant: 'gray' },
+  'error': { label: 'Error', variant: 'red' },
+};
 
 /**
  * CivUI Task
  *
- * An individual task row within a task group. Provides a two-column
- * layout: content on the left, status on the right. Use `data-task-content`
- * and `data-task-status` to assign children to each area.
- * Everything else goes into the content area.
+ * An individual task row within a task group. Renders a label as a
+ * heading, optional hint, and status tag. When `href` is set, the
+ * label becomes a clickable secondary link.
  *
  * @element civ-task
  *
+ * @prop {string} label - Task name
+ * @prop {string} hint - Optional hint text below the label
+ * @prop {string} href - Navigation target (omit for locked tasks)
+ * @prop {TaskStatus} status - Current task status
+ *
  * @example
  * ```html
- * <civ-task>
- *   <div data-task-content>
- *     <civ-link href="#/contact">Contact information</civ-link>
- *     <span class="civ-hint civ-block">Phone number needed</span>
- *   </div>
- *   <div data-task-status>
- *     <civ-tag label="In progress" variant="teal"></civ-tag>
- *   </div>
- * </civ-task>
+ * <civ-task
+ *   label="Contact information"
+ *   hint="Phone number needed"
+ *   href="#/contact"
+ *   status="in-progress"
+ * ></civ-task>
  * ```
  */
 @customElement('civ-task')
 export class CivTask extends CivBaseElement {
-  private _contentChildren: Node[] = [];
-  private _statusChildren: Node[] = [];
-  private _childrenSorted = false;
+  @property({ type: String }) label = '';
+  @property({ type: String }) hint = '';
+  @property({ type: String }) href = '';
+  @property({ type: String }) status: TaskStatus = 'not-started';
 
-  override connectedCallback(): void {
-    if (!this._childrenSorted) {
-      for (const child of Array.from(this.childNodes)) {
-        if (child instanceof Element) {
-          if (child.hasAttribute('data-task-status')) {
-            this._statusChildren.push(child);
-          } else {
-            this._contentChildren.push(child);
-          }
-        } else {
-          this._contentChildren.push(child);
-        }
-      }
-      this._childrenSorted = true;
-    }
-    super.connectedCallback();
-  }
-
-  override firstUpdated(): void {
-    const content = this.querySelector('[data-civ-task-content]');
-    if (content) {
-      for (const child of this._contentChildren) content.appendChild(child);
-    }
-    const status = this.querySelector('[data-civ-task-status]');
-    if (status) {
-      for (const child of this._statusChildren) status.appendChild(child);
-    }
-  }
+  private _statusId = this.generateId('status');
 
   override render() {
-    const hasStatus = this._statusChildren.length > 0;
+    const isNavigable = this.href && this.status !== 'cannot-start';
+    const tag = STATUS_TAG[this.status] || STATUS_TAG['not-started'];
+    const isError = this.status === 'error';
 
     return html`
       <li class="civ-task" role="listitem">
-        <div class="civ-task__content" data-civ-task-content></div>
-        ${hasStatus ? html`
-          <div class="civ-task__status" data-civ-task-status></div>
-        ` : nothing}
+        <div class="civ-task__content">
+          <h4 class="civ-task__label">
+            ${isNavigable
+              ? html`<civ-link
+                  href="${this.href}"
+                  variant="secondary"
+                  ?danger="${isError}"
+                  label="${this.label}"
+                  aria-describedby="${this._statusId}"
+                ></civ-link>`
+              : html`${this.label}`}
+          </h4>
+          ${this.hint
+            ? html`<p class="civ-task__hint">${this.hint}</p>`
+            : nothing}
+        </div>
+        <div class="civ-task__status" id="${this._statusId}">
+          <civ-tag
+            label="${tag.label}"
+            variant="${tag.variant}"
+            tag-style="${tag.style || 'secondary'}"
+          ></civ-tag>
+        </div>
       </li>
     `;
   }

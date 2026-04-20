@@ -11,7 +11,7 @@ const meta: Meta = {
     href: { control: 'text' },
     variant: {
       control: 'select',
-      options: ['primary', 'secondary', 'tertiary'],
+      options: ['primary', 'secondary', 'tertiary', 'back'],
     },
     danger: { control: 'boolean' },
     disabled: { control: 'boolean' },
@@ -26,7 +26,6 @@ export const Default: Story = {
     label: 'Learn more',
     href: '#',
     variant: 'tertiary',
-    danger: false,
     disabled: false,
   },
   render: (args) => html`
@@ -34,7 +33,6 @@ export const Default: Story = {
       label="${args.label}"
       href="${args.href}"
       variant="${args.variant}"
-      ?danger="${args.danger}"
       ?disabled="${args.disabled}"
     ></civ-link>
   `,
@@ -47,6 +45,7 @@ export const Variants: Story = {
       <civ-link href="#" variant="primary">Primary link</civ-link>
       <civ-link href="#" variant="secondary">Secondary link</civ-link>
       <civ-link href="#" variant="tertiary">Tertiary link</civ-link>
+      <civ-link href="#" variant="back" label="Back to task list"></civ-link>
     </div>
   `,
 };
@@ -62,27 +61,10 @@ export const DangerVariants: Story = {
   `,
 };
 
-export const AllVariants: Story = {
-  name: 'All Variants',
+export const BackLink: Story = {
+  name: 'Back Link',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 16px;">
-      <div>
-        <p style="margin: 0 0 8px; font-weight: 600;">Default</p>
-        <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
-          <civ-link href="#" variant="primary">Primary</civ-link>
-          <civ-link href="#" variant="secondary">Secondary</civ-link>
-          <civ-link href="#" variant="tertiary">Tertiary</civ-link>
-        </div>
-      </div>
-      <div>
-        <p style="margin: 0 0 8px; font-weight: 600;">Danger</p>
-        <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
-          <civ-link href="#" variant="primary" danger>Primary</civ-link>
-          <civ-link href="#" variant="secondary" danger>Secondary</civ-link>
-          <civ-link href="#" variant="tertiary" danger>Tertiary</civ-link>
-        </div>
-      </div>
-    </div>
+    <civ-link href="#/hub" variant="back" label="Back to task list"></civ-link>
   `,
 };
 

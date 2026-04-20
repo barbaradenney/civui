@@ -15,3 +15,9 @@ export { CivDivider } from './divider/index.js';
 
 // Card
 export { CivCard } from './card/index.js';
+
+// Page Header
+export { CivPageHeader } from './page-header/index.js';
+
+// Link Card
+export { CivLinkCard } from './link-card/index.js';

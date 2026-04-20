@@ -205,47 +205,124 @@ function resolveChapters(form: ReturnType<typeof getFormDefinition> & {}): Array
   return chapters;
 }
 
-/** Generate HTML for a single chapter page. */
+/** Generate HTML for a single chapter page with one field per step. */
 function generateChapterPage(chapter: GovChapterMeta, form: ReturnType<typeof getFormDefinition> & {}): GovFormPage {
-  const fields = chapter.section.fields.map(f => renderField(f)).join('\n');
   const isRepeatable = chapter.section.repeatable;
+  const chapterSlug = slugify(chapter.id);
+  const formSlug = slugify(form.formNumber);
 
-  let body: string;
+  // Repeatable sections stay as one page — splitting doesn't make sense
   if (isRepeatable) {
-    body = `    <civ-repeater
+    const repAllRequired = chapter.section.fields.filter(f => !f.label.startsWith('component:')).every(f => f.required);
+    const fields = chapter.section.fields.map(f => renderField(f, repAllRequired)).join('\n');
+    const html = `<!-- Chapter: ${escapeHtml(chapter.heading)} -->
+<div data-chapter="${escapeHtml(chapter.id)}">
+  <civ-link href="#/hub" variant="back" label="Back to task list" class="civ-mb-4 civ-block"></civ-link>
+
+  <civ-page-header>
+    <span data-eyebrow>${escapeHtml(form.title)}</span>
+    <h2 data-heading class="civ-heading-lg">${escapeHtml(chapter.heading)}</h2>
+    <span data-subheading>VA Form ${escapeHtml(form.formNumber)}</span>
+  </civ-page-header>
+
+  <civ-form persist="${formSlug}-${chapterSlug}">
+    <civ-repeater
       legend="${escapeHtml(chapter.heading)}"
-      name="${slugify(chapter.id)}"
-      item-label="${slugify(chapter.id).replace(/-/g, ' ')}"
+      name="${chapterSlug}"
+      item-label="${chapterSlug.replace(/-/g, ' ')}"
       mode="detail"
       min="${chapter.section.repeatableMin ?? 1}"
       max="${chapter.section.repeatableMax ?? 20}"
     >
 ${fields}
-    </civ-repeater>`;
-  } else {
-    body = `    <h2 class="civ-heading-lg">${escapeHtml(chapter.heading)}</h2>
-${fields}`;
-  }
+    </civ-repeater>
 
-  const html = `<!-- Chapter: ${escapeHtml(chapter.heading)} -->
-<div data-chapter="${escapeHtml(chapter.id)}">
-  <a href="#/hub" class="civ-link civ-mb-4 civ-block">
-    <civ-icon name="arrow-left" size="sm"></civ-icon>
-    Back to task list
-  </a>
-
-  <civ-form persist="${slugify(form.formNumber)}-${slugify(chapter.id)}">
-${body}
-
-    <div class="civ-flex civ-justify-between civ-mt-6">
-      <civ-button variant="secondary" label="Back"></civ-button>
+    <div class="civ-mt-6">
       <civ-button label="Save and continue"></civ-button>
     </div>
   </civ-form>
 </div>`;
+    return { id: chapter.id, heading: chapter.heading, html, javascript: '' };
+  }
 
-  const javascript = `// Chapter: ${chapter.heading}
-// Form persistence is handled by civ-form persist attribute`;
+  // One field per step — each field gets its own visible step
+  const totalSteps = chapter.section.fields.length;
+  const stepLabels = chapter.section.fields.map(f =>
+    f.label.startsWith('component:') ? f.label.replace('component:', '').replace('civ-', '') : f.label
+  );
+  const stepsJson = escapeHtml(JSON.stringify(stepLabels));
+
+  // If all fields are required, suppress individual required indicators
+  const allRequired = chapter.section.fields
+    .filter(f => !f.label.startsWith('component:'))
+    .every(f => f.required);
+
+  const fieldSteps = chapter.section.fields.map((f, i) => {
+    const fieldHtml = renderField(f, allRequired);
+    return `    <div data-field-step="${i}" ${i > 0 ? 'hidden' : ''}>
+      <civ-progress-steps
+        steps='${stepsJson}'
+        current="${i}"
+        show-counter
+        class="civ-mb-6 civ-block"
+      ></civ-progress-steps>
+
+${fieldHtml}
+      <div class="civ-mt-6">
+        ${i < totalSteps - 1
+          ? `<civ-button label="Continue" data-field-next></civ-button>`
+          : `<civ-button label="Save and continue" data-field-next></civ-button>`}
+        ${i > 0
+          ? `<civ-button variant="secondary" label="Back" data-field-back class="civ-ms-3"></civ-button>`
+          : ''}
+      </div>
+    </div>`;
+  }).join('\n');
+
+  const requiredLabel = allRequired ? ' <span class="civ-text-error civ-font-normal civ-text-base">(all fields required)</span>' : '';
+
+  const html = `<!-- Chapter: ${escapeHtml(chapter.heading)} -->
+<div data-chapter="${escapeHtml(chapter.id)}">
+  <civ-link href="#/hub" variant="back" label="Back to task list" class="civ-mb-4 civ-block"></civ-link>
+
+  <civ-page-header>
+    <span data-eyebrow>${escapeHtml(form.title)}</span>
+    <h2 data-heading class="civ-heading-lg">${escapeHtml(chapter.heading)}${requiredLabel}</h2>
+    <span data-subheading>VA Form ${escapeHtml(form.formNumber)}</span>
+  </civ-page-header>
+
+  <civ-form persist="${formSlug}-${chapterSlug}">
+${fieldSteps}
+  </civ-form>
+</div>`;
+
+  const javascript = `// Chapter field stepping: ${chapter.heading}
+(function() {
+  const chapter = document.querySelector('[data-chapter="${escapeHtml(chapter.id)}"]');
+  if (!chapter) return;
+  const steps = chapter.querySelectorAll('[data-field-step]');
+  if (steps.length <= 1) return;
+  let current = 0;
+
+  function showStep(idx) {
+    steps.forEach((s, i) => s.hidden = i !== idx);
+    current = idx;
+  }
+
+  chapter.querySelectorAll('[data-field-back]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (current > 0) showStep(current - 1);
+    });
+  });
+
+  chapter.querySelectorAll('[data-field-next]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (current < steps.length - 1) showStep(current + 1);
+    });
+  });
+})();`;
 
   return {
     id: chapter.id,
@@ -255,8 +332,12 @@ ${body}
   };
 }
 
-/** Render a single form field as CivUI component HTML. */
-function renderField(field: FormField): string {
+/**
+ * Render a single form field as CivUI component HTML.
+ * @param suppressRequired - When true, don't render required on individual fields
+ *   (used when the group heading already shows required)
+ */
+function renderField(field: FormField, suppressRequired = false): string {
   // Handle compound component markers
   if (field.label.startsWith('component:')) {
     const componentTag = field.label.replace('component:', '');
@@ -264,10 +345,12 @@ function renderField(field: FormField): string {
     return `      <${componentTag} name="${escapeHtml(field.name)}" ${props}></${componentTag}>`;
   }
 
+  const showRequired = field.required && !suppressRequired;
+
   const common = [
     `label="${escapeHtml(field.label)}"`,
     `name="${escapeHtml(field.name)}"`,
-    field.required ? 'required' : '',
+    showRequired ? 'required' : '',
     field.hint ? `hint="${escapeHtml(field.hint)}"` : '',
     field.autocomplete ? `autocomplete="${escapeHtml(field.autocomplete)}"` : '',
     field.inputmode ? `inputmode="${escapeHtml(field.inputmode)}"` : '',
@@ -327,7 +410,7 @@ function renderField(field: FormField): string {
       return `      <civ-radio-group
         legend="${escapeHtml(field.label)}"
         name="${escapeHtml(field.name)}"
-        ${field.required ? 'required' : ''}
+        ${showRequired ? 'required' : ''}
       >
 ${radioOptions}
       </civ-radio-group>`;
@@ -344,7 +427,7 @@ ${radioOptions}
       return `      <civ-checkbox-group
         legend="${escapeHtml(field.label)}"
         name="${escapeHtml(field.name)}"
-        ${field.required ? 'required' : ''}
+        ${showRequired ? 'required' : ''}
       >
 ${checkOptions}
       </civ-checkbox-group>`;
@@ -353,7 +436,7 @@ ${checkOptions}
       return `      <civ-memorable-date
         legend="${escapeHtml(field.label)}"
         name="${escapeHtml(field.name)}"
-        ${field.required ? 'required' : ''}
+        ${showRequired ? 'required' : ''}
         ${field.hint ? `hint="${escapeHtml(field.hint)}"` : ''}
       ></civ-memorable-date>`;
 
@@ -384,7 +467,7 @@ ${checkOptions}
 }
 
 /** Generate the review page with summary + signature. */
-function generateReviewPage(_form: ReturnType<typeof getFormDefinition> & {}, chapters: Array<GovChapterMeta>): { html: string; javascript: string } {
+function generateReviewPage(form: ReturnType<typeof getFormDefinition> & {}, chapters: Array<GovChapterMeta>): { html: string; javascript: string } {
   const chapterIds = chapters
     .filter(ch => ch.id !== 'review-submit')
     .map(ch => `    { heading: '${escapeHtml(ch.heading)}', editHref: '#/${slugify(ch.id)}', items: [] }`)
@@ -392,12 +475,13 @@ function generateReviewPage(_form: ReturnType<typeof getFormDefinition> & {}, ch
 
   const html = `<!-- Review Page -->
 <div data-chapter="review-submit">
-  <a href="#/hub" class="civ-link civ-mb-4 civ-block">
-    <civ-icon name="arrow-left" size="sm"></civ-icon>
-    Back to task list
-  </a>
+  <civ-link href="#/hub" variant="back" label="Back to task list" class="civ-mb-4 civ-block"></civ-link>
 
-  <h2 class="civ-heading-xl">Review your application</h2>
+  <civ-page-header>
+    <span data-eyebrow>${escapeHtml(form.title)}</span>
+    <h2 data-heading class="civ-heading-xl">Review your application</h2>
+    <span data-subheading>VA Form ${escapeHtml(form.formNumber)}</span>
+  </civ-page-header>
 
   <civ-summary heading="" data-va-review></civ-summary>
 
@@ -408,8 +492,7 @@ function generateReviewPage(_form: ReturnType<typeof getFormDefinition> & {}, ch
     required
   ></civ-signature>
 
-  <div class="civ-flex civ-justify-between civ-mt-6">
-    <civ-button variant="secondary" label="Back"></civ-button>
+  <div class="civ-mt-6">
     <civ-button label="Submit application"></civ-button>
   </div>
 </div>`;
@@ -427,54 +510,47 @@ ${chapterIds}
 
 /** Generate the confirmation page. */
 function generateConfirmationPage(form: ReturnType<typeof getFormDefinition> & {}): { html: string; javascript: string } {
-  const nextStepsHtml = form.nextSteps
-    .map(step => `    <li>${escapeHtml(step)}</li>`)
-    .join('\n');
-
   const html = `<!-- Confirmation Page -->
 <div data-page="confirmation">
+  <civ-page-header>
+    <h1 data-heading class="civ-heading-xl">${escapeHtml(form.title)}</h1>
+    <span data-subheading>VA Form ${escapeHtml(form.formNumber)}</span>
+  </civ-page-header>
+
   <civ-alert variant="success" heading="We've received your application">
-    You submitted your ${escapeHtml(form.title.toLowerCase())} application.
-    Your confirmation number will be sent to your email address.
+    Confirmation text goes here.
   </civ-alert>
 
-  <civ-summary heading="What you submitted" data-va-confirmation></civ-summary>
-
-  <h3 class="civ-heading-md">What happens next</h3>
-  <ul class="civ-mb-6">
-${nextStepsHtml}
-  </ul>
-
-  <civ-button label="Print this page" variant="secondary" onclick="window.print()"></civ-button>
-
-  <civ-divider></civ-divider>
-
-  <h3 class="civ-heading-md">Need help?</h3>
-  <p>Call us at <a href="tel:18008271000" class="civ-link">800-827-1000</a>
-  (TTY: 711). We're here Monday through Friday, 8:00 a.m. to 9:00 p.m. ET.</p>
+  <p class="civ-text-muted civ-mt-6">Confirmation details go here.</p>
 </div>`;
 
-  const javascript = `// Confirmation page — populate from submission data`;
+  const javascript = '';
 
   return { html, javascript };
 }
 
 /** Generate the task list hub page. */
 function generateTaskListHub(form: ReturnType<typeof getFormDefinition> & {}, chapters: Array<GovChapterMeta>): { html: string } {
-  const chapterTasks = chapters
-    .filter(ch => ch.id !== 'review-submit')
-    .map(ch => `      <civ-task
+  const filteredChapters = chapters.filter(ch => ch.id !== 'review-submit');
+  const chapterTasks = filteredChapters
+    .map((ch, i) => {
+      // Only the first chapter starts as navigable; rest are locked until unlocked
+      const href = i === 0 ? ` href="#/${slugify(ch.id)}"` : '';
+      const status = i === 0 ? 'not-started' : 'cannot-start';
+      return `      <civ-task
         label="${escapeHtml(ch.heading)}"
-        href="#/${slugify(ch.id)}"
-        status="not-started"
-        hint="${escapeHtml(ch.hint)}"
-      ></civ-task>`)
+        hint="${escapeHtml(ch.hint)}"${href}
+        status="${status}"
+      ></civ-task>`;
+    })
     .join('\n');
 
   const html = `<!-- Task List Hub -->
 <div data-page="hub">
-  <h1 class="civ-heading-xl">${escapeHtml(form.title)}</h1>
-  <p class="civ-text-muted civ-mb-4">VA Form ${escapeHtml(form.formNumber)}</p>
+  <civ-page-header>
+    <h1 data-heading class="civ-heading-xl">${escapeHtml(form.title)}</h1>
+    <span data-subheading>VA Form ${escapeHtml(form.formNumber)}</span>
+  </civ-page-header>
 
   <civ-progress-bar
     value="0"
@@ -483,15 +559,17 @@ function generateTaskListHub(form: ReturnType<typeof getFormDefinition> & {}, ch
   ></civ-progress-bar>
 
   <civ-task-list>
-    <civ-task-group heading="Fill out your application">
+    <civ-task-group>
+      <h3 data-task-group-heading class="civ-heading-md">Fill out your application</h3>
 ${chapterTasks}
     </civ-task-group>
 
-    <civ-task-group heading="Review and submit">
+    <civ-task-group>
+      <h3 data-task-group-heading class="civ-heading-md">Review and submit</h3>
       <civ-task
         label="Review your application"
-        status="cannot-start"
         hint="Complete all sections before reviewing"
+        status="cannot-start"
       ></civ-task>
     </civ-task-group>
   </civ-task-list>

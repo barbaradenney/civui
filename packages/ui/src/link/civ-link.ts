@@ -2,7 +2,7 @@ import { html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { CivBaseElement, LightDomTextMixin } from '@civui/core';
 
-export type LinkVariant = 'primary' | 'secondary' | 'tertiary';
+export type LinkVariant = 'primary' | 'secondary' | 'tertiary' | 'back';
 
 /**
  * CivUI Link
@@ -14,6 +14,7 @@ export type LinkVariant = 'primary' | 'secondary' | 'tertiary';
  * - `primary` — button-styled link (filled blue, underlined)
  * - `secondary` — underlined text with trailing caret icon
  * - `tertiary` — plain underlined link
+ * - `back` — back navigation link with leading left chevron
  *
  * Add `danger` attribute to any variant for destructive action styling.
  * All variants are underlined for accessibility.
@@ -23,7 +24,6 @@ export type LinkVariant = 'primary' | 'secondary' | 'tertiary';
  * @prop {string} label - Link text (preferred over child text)
  * @prop {string} href - Link destination (required)
  * @prop {LinkVariant} variant - Visual variant
- * @prop {boolean} danger - Destructive action styling
  * @prop {boolean} disabled - Disabled state
  *
  * @fires civ-analytics - Analytics tracking event on click
@@ -54,8 +54,14 @@ export class CivLink extends LightDomTextMixin(CivBaseElement) {
       .join(' ');
   }
 
-  private get _showCaret(): boolean {
-    return this.variant === 'secondary';
+  private get _trailingIcon() {
+    if (this.variant === 'secondary') return html`<civ-icon name="chevron-right" size="sm"></civ-icon>`;
+    return '';
+  }
+
+  private get _leadingIcon() {
+    if (this.variant === 'back') return html`<civ-icon name="chevron-left" size="sm"></civ-icon>`;
+    return '';
   }
 
   override render() {
@@ -65,7 +71,7 @@ export class CivLink extends LightDomTextMixin(CivBaseElement) {
           class="${this._classes}"
           aria-disabled="true"
           tabindex="-1"
-        >${this._text}${this._showCaret ? html`<civ-icon name="chevron-right" size="sm"></civ-icon>` : ''}</a>
+        >${this._leadingIcon}${this._text}${this._trailingIcon}</a>
       `;
     }
 
@@ -74,7 +80,7 @@ export class CivLink extends LightDomTextMixin(CivBaseElement) {
         href="${this.href}"
         class="${this._classes}"
         @click="${this._onClick}"
-      >${this._text}${this._showCaret ? html`<civ-icon name="chevron-right" size="sm"></civ-icon>` : ''}</a>
+      >${this._leadingIcon}${this._text}${this._trailingIcon}</a>
     `;
   }
 

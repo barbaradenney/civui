@@ -1,0 +1,98 @@
+import type { Meta, StoryObj } from '@storybook/web-components';
+import { html } from 'lit';
+import './civ-link-card.js';
+
+const meta: Meta = {
+  title: 'UI/Link Card',
+  component: 'civ-link-card',
+  tags: ['autodocs'],
+  argTypes: {
+    href: { control: 'text' },
+    heading: { control: 'text' },
+    description: { control: 'text' },
+  },
+};
+
+export default meta;
+type Story = StoryObj;
+
+export const Default: Story = {
+  args: {
+    href: '#',
+    heading: 'Disability compensation',
+    description: 'File a claim for a service-connected disability.',
+  },
+  render: (args) => html`
+    <civ-link-card
+      href="${args.href}"
+      heading="${args.heading}"
+      description="${args.description}"
+    ></civ-link-card>
+  `,
+};
+
+export const WithoutDescription: Story = {
+  name: 'Without Description',
+  render: () => html`
+    <civ-link-card
+      href="#"
+      heading="View your claims"
+    ></civ-link-card>
+  `,
+};
+
+export const CardCollection: Story = {
+  name: 'Card Collection',
+  render: () => html`
+    <div style="display: flex; flex-direction: column; gap: 12px; max-width: 600px;">
+      <civ-link-card
+        href="#/disability"
+        heading="Disability compensation"
+        description="File a claim for a new or worsening service-connected condition."
+      ></civ-link-card>
+      <civ-link-card
+        href="#/healthcare"
+        heading="Health care"
+        description="Apply for VA health care benefits and manage your appointments."
+      ></civ-link-card>
+      <civ-link-card
+        href="#/education"
+        heading="Education benefits"
+        description="Apply for GI Bill and other education and training programs."
+      ></civ-link-card>
+      <civ-link-card
+        href="#/housing"
+        heading="Housing assistance"
+        description="Get a VA-backed home loan or find housing support."
+      ></civ-link-card>
+    </div>
+  `,
+};
+
+export const GridLayout: Story = {
+  name: 'Grid Layout',
+  render: () => html`
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px;">
+      <civ-link-card
+        href="#/claims"
+        heading="Check claim status"
+        description="Track the progress of your open claims and appeals."
+      ></civ-link-card>
+      <civ-link-card
+        href="#/appointments"
+        heading="Appointments"
+        description="Schedule and manage your VA health appointments."
+      ></civ-link-card>
+      <civ-link-card
+        href="#/payments"
+        heading="Payment history"
+        description="View your VA benefit payment history and details."
+      ></civ-link-card>
+      <civ-link-card
+        href="#/letters"
+        heading="Download letters"
+        description="Get copies of your VA benefit letters and documents."
+      ></civ-link-card>
+    </div>
+  `,
+};

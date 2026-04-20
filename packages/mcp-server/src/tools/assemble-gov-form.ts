@@ -62,6 +62,12 @@ export async function assembleGovForm(formNumber: string, options?: {
 
   const pageCount = allPages.length;
 
+  // Collect chapter-level JavaScript (field stepping, etc.)
+  const chapterJs = result.pages.chapters
+    .filter(ch => ch.javascript)
+    .map(ch => ch.javascript)
+    .join('\n\n');
+
   const pagesHtml = allPages
     .map(p => `    <section data-page="${escapeHtml(p.id)}" ${p.id !== 'intro' ? 'hidden' : ''}>\n${p.html}\n    </section>`)
     .join('\n\n');
@@ -143,7 +149,7 @@ ${chapterHeadings}
       });
     });
 
-    // Task list task clicks
+    // Task list — navigate when clicking task links
     document.querySelectorAll('civ-task').forEach(task => {
       task.addEventListener('click', (e) => {
         const href = task.getAttribute('href');
@@ -154,40 +160,50 @@ ${chapterHeadings}
       });
     });
 
-    // Chapter back/continue buttons
+    // Chapter navigation — first step "Back to task list" goes to hub,
+    // last step "Save and continue" completes the chapter
     document.querySelectorAll('[data-chapter]').forEach(chapter => {
       const chapterId = chapter.dataset.chapter;
-      const buttons = chapter.querySelectorAll('civ-button');
+      const steps = chapter.querySelectorAll('[data-field-step]');
+      const firstStep = steps[0];
+      const lastStep = steps[steps.length - 1];
 
-      buttons.forEach(btn => {
-        const label = btn.getAttribute('label') || '';
-
-        if (label === 'Back') {
-          btn.addEventListener('click', () => {
-            const idx = CHAPTERS.indexOf(chapterId);
-            if (idx > 0) {
-              showPage(CHAPTERS[idx - 1]);
-            } else {
-              showPage('hub');
-            }
-          });
+      // First step's back button → hub
+      if (firstStep) {
+        const backBtn = firstStep.querySelector('[data-field-back]');
+        if (backBtn) {
+          backBtn.addEventListener('click', () => showPage('hub'));
         }
+      }
 
-        if (label === 'Save and continue') {
-          btn.addEventListener('click', () => {
-            // Mark chapter as complete
+      // Last step's next button → complete chapter
+      if (lastStep) {
+        const nextBtn = lastStep.querySelector('[data-field-next]');
+        if (nextBtn) {
+          nextBtn.addEventListener('click', () => {
             completedChapters.add(chapterId);
             updateTaskList();
-
-            const idx = CHAPTERS.indexOf(chapterId);
-            if (idx < CHAPTERS.length - 1) {
-              showPage(CHAPTERS[idx + 1]);
-            } else {
-              showPage('hub');
-            }
+            showPage('hub');
           });
         }
-      });
+      }
+
+      // If no field steps (e.g., repeatable sections), use label-based buttons
+      if (steps.length === 0) {
+        chapter.querySelectorAll('civ-button').forEach(btn => {
+          const label = btn.getAttribute('label') || '';
+          if (label === 'Back') {
+            btn.addEventListener('click', () => showPage('hub'));
+          }
+          if (label === 'Save and continue') {
+            btn.addEventListener('click', () => {
+              completedChapters.add(chapterId);
+              updateTaskList();
+              showPage('hub');
+            });
+          }
+        });
+      }
     });
 
     // Review page buttons
@@ -211,23 +227,35 @@ ${chapterHeadings}
       const tasks = document.querySelectorAll('civ-task');
       const totalChapters = CHAPTERS.length;
       let doneCount = 0;
+      let nextUnlocked = false;
 
       tasks.forEach(task => {
         const href = task.getAttribute('href');
-        if (!href) return;
-        const id = href.replace('#/', '');
+        // Skip the review task (no href initially and not in CHAPTERS)
+        const chapterId = href ? href.replace('#/', '') : '';
+        const isChapter = CHAPTERS.includes(chapterId) || (!href && !task.getAttribute('status')?.includes('cannot'));
 
-        if (completedChapters.has(id)) {
+        if (chapterId && completedChapters.has(chapterId)) {
           task.setAttribute('status', 'complete');
+          task.setAttribute('href', '#/' + chapterId);
           doneCount++;
-        } else if (id === currentPage) {
-          task.setAttribute('status', 'in-progress');
+        } else if (chapterId && !nextUnlocked) {
+          task.setAttribute('status', 'not-started');
+          task.setAttribute('href', '#/' + chapterId);
+          nextUnlocked = true;
+        } else if (CHAPTERS.includes(chapterId) || (!href && !completedChapters.has(chapterId))) {
+          // Lock remaining chapters
+          if (!completedChapters.has(chapterId) && chapterId) {
+            task.setAttribute('status', 'cannot-start');
+            task.removeAttribute('href');
+          }
         }
       });
 
-      // Update review task
-      const reviewTask = document.querySelector('civ-task[label="Review your application"]');
-      if (reviewTask) {
+      // Update review task — last task without an href in CHAPTERS
+      const allTasks = Array.from(document.querySelectorAll('civ-task'));
+      const reviewTask = allTasks[allTasks.length - 1];
+      if (reviewTask && !CHAPTERS.includes((reviewTask.getAttribute('href') || '').replace('#/', ''))) {
         if (doneCount >= totalChapters) {
           reviewTask.setAttribute('status', 'not-started');
           reviewTask.setAttribute('href', '#/review');
@@ -317,6 +345,9 @@ ${chapterHeadings}
         showPage('confirmation');
       }
     }
+
+    // ── Chapter Field Stepping ──────────────────────────────────
+    ${chapterJs}
   </script>
 </body>
 </html>`;

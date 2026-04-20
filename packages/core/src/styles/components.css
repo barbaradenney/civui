@@ -1325,6 +1325,17 @@
     @apply civ-text-primary-dark;
   }
 
+  /* Back link — leading arrow, used for navigation */
+  .civ-link--back {
+    @apply civ-inline-flex civ-items-center civ-gap-1
+           civ-font-sans civ-cursor-pointer
+           civ-text-primary civ-underline;
+    font-size: var(--civ-typography-fontSize-base);
+  }
+  .civ-link--back:hover:not([aria-disabled="true"]) {
+    @apply civ-text-primary-dark;
+  }
+
   /* ── Danger link variants ──────────────────────────────────── */
 
   .civ-link--primary-danger {
@@ -1532,12 +1543,22 @@
 
   .civ-task-group__list {
     list-style: none;
-    @apply civ-p-0 civ-m-0;
+    padding: 0 !important;
+    margin: 0;
   }
 
   .civ-task {
     @apply civ-flex civ-justify-between civ-items-start civ-py-3 civ-px-0;
     border-bottom: 1px solid var(--civ-color-base-lighter);
+  }
+
+  @media (max-width: 480px) {
+    .civ-task {
+      @apply civ-flex-col-reverse civ-items-start civ-gap-1;
+    }
+    .civ-task__status {
+      margin-inline-start: 0 !important;
+    }
   }
 
   .civ-task:first-child {
@@ -1548,19 +1569,102 @@
     border-top: none;
   }
 
+  .civ-task:only-child {
+    border-bottom: none;
+  }
+
   .civ-task__content {
     @apply civ-flex-1 civ-min-w-0;
+  }
+
+  .civ-task__label {
+    @apply civ-font-bold civ-m-0;
+    font-size: var(--civ-typography-fontSize-base);
+    color: var(--civ-color-base-darkest);
+  }
+
+  .civ-task__hint {
+    @apply civ-m-0 civ-mt-0;
+    font-size: var(--civ-typography-fontSize-sm);
+    color: var(--civ-color-base-dark);
   }
 
   .civ-task__status {
     @apply civ-ms-3 civ-flex-shrink-0;
   }
 
+  /* ── Link Card ────────────────────────────────────────────── */
+
+  .civ-link-card {
+    @apply civ-block civ-p-4 civ-border civ-rounded-md
+           civ-cursor-pointer civ-transition-colors;
+    border-color: var(--civ-color-base-lighter);
+    background-color: var(--civ-color-white-DEFAULT);
+    text-decoration: none;
+    color: inherit;
+  }
+  .civ-link-card:hover {
+    border-color: var(--civ-color-primary-DEFAULT);
+    background-color: var(--civ-color-primary-lightest);
+    box-shadow: var(--civ-shadow-sm);
+  }
+  .civ-link-card:active {
+    background-color: var(--civ-color-primary-lighter);
+  }
+
+  .civ-link-card__heading {
+    @apply civ-block civ-font-bold civ-text-primary civ-underline;
+    font-size: var(--civ-typography-fontSize-lg);
+  }
+
+  .civ-link-card__description {
+    @apply civ-block civ-mt-1;
+    color: var(--civ-color-base-dark);
+    font-size: var(--civ-typography-fontSize-base);
+  }
+
+  /* ── Page Header ──────────────────────────────────────────── */
+
+  .civ-page-header {
+    @apply civ-mb-6;
+  }
+
+  .civ-page-header__tag {
+    @apply civ-mb-1;
+  }
+
+  .civ-page-header__eyebrow {
+    @apply civ-text-sm civ-font-bold;
+    color: var(--civ-color-base-dark);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .civ-page-header__heading {
+    @apply civ-flex civ-items-baseline civ-gap-2 civ-flex-wrap;
+  }
+
+  .civ-page-header__heading > * {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+  }
+
+  .civ-page-header__subheading {
+    @apply civ-mt-1;
+    color: var(--civ-color-base-dark);
+  }
+
   /* ── Status tags ───────────────────────────────────────────── */
+
+  civ-tag {
+    display: inline;
+    vertical-align: text-bottom;
+  }
 
   .civ-tag {
     @apply civ-inline-block civ-px-2 civ-py-0.5 civ-text-base civ-font-normal;
     border-radius: 0;
+    vertical-align: text-bottom;
   }
 
   .civ-tag--blue {

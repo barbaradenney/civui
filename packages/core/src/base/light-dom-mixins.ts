@@ -43,12 +43,17 @@ export function LightDomContainerMixin<T extends Constructor<LitElement>>(superC
 export function LightDomTextMixin<T extends Constructor<LitElement>>(superClass: T) {
   class LightDomText extends superClass {
     protected _initialText = '';
+    private _textCaptured = false;
 
     override connectedCallback(): void {
-      if (!this._initialText) {
+      // Only capture and clear on the first connection.
+      // Reconnections (e.g., from appendChild relocation) must not
+      // wipe the rendered template.
+      if (!this._textCaptured) {
         this._initialText = this.textContent?.trim() || '';
+        this.textContent = '';
+        this._textCaptured = true;
       }
-      this.textContent = '';
       super.connectedCallback();
     }
   }

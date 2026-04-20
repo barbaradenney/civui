@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach } from 'vitest';
-import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
+import { fixture, cleanupFixtures } from '@civui/test-utils';
 import './civ-task-list.js';
 import './civ-task-group.js';
 import './civ-task.js';
@@ -11,12 +11,10 @@ afterEach(cleanupFixtures);
 describe('civ-task-list', () => {
   it('renders a container with role="list"', async () => {
     const el = await fixture('<civ-task-list></civ-task-list>');
-
-    const list = el.querySelector('[role="list"]');
-    expect(list).not.toBeNull();
+    expect(el.querySelector('[role="list"]')).not.toBeNull();
   });
 
-  it('uses Light DOM (no shadow root)', async () => {
+  it('uses Light DOM', async () => {
     const el = await fixture('<civ-task-list></civ-task-list>');
     expect(el.shadowRoot).toBeNull();
   });
@@ -24,172 +22,135 @@ describe('civ-task-list', () => {
   it('relocates children into content container', async () => {
     const el = await fixture(`
       <civ-task-list>
-        <civ-task-group heading="Section 1">
-          <civ-task label="Task 1" status="not-started"></civ-task>
+        <civ-task-group>
+          <h3 data-task-group-heading class="civ-heading-md">Section 1</h3>
+          <civ-task>
+            <span>Task 1</span>
+          </civ-task>
         </civ-task-group>
       </civ-task-list>
     `);
-
     const content = el.querySelector('[data-civ-task-list-content]');
     expect(content).not.toBeNull();
-    const group = content!.querySelector('civ-task-group');
-    expect(group).not.toBeNull();
+    expect(content!.querySelector('civ-task-group')).not.toBeNull();
   });
 });
 
 describe('civ-task-group', () => {
-  it('renders heading', async () => {
+  it('renders heading from data-task-group-heading slot', async () => {
     const el = await fixture(`
-      <civ-task-group heading="Personal details">
-        <civ-task label="Name" status="complete"></civ-task>
+      <civ-task-group>
+        <h3 data-task-group-heading class="civ-heading-md">Personal details</h3>
+        <civ-task><span>Name</span></civ-task>
       </civ-task-group>
     `);
-
-    const h3 = el.querySelector('h3');
-    expect(h3).not.toBeNull();
-    expect(h3!.textContent).toBe('Personal details');
+    const heading = el.querySelector('[data-civ-task-group-heading] h3');
+    expect(heading).not.toBeNull();
+    expect(heading!.textContent).toBe('Personal details');
   });
 
   it('renders a list for tasks', async () => {
     const el = await fixture(`
-      <civ-task-group heading="Section">
-        <civ-task label="Task 1" status="not-started"></civ-task>
+      <civ-task-group>
+        <h3 data-task-group-heading>Section</h3>
+        <civ-task><span>Task 1</span></civ-task>
       </civ-task-group>
     `);
-
-    const list = el.querySelector('ul[role="list"]');
-    expect(list).not.toBeNull();
+    expect(el.querySelector('ul[role="list"]')).not.toBeNull();
   });
 
   it('relocates task children into list', async () => {
     const el = await fixture(`
-      <civ-task-group heading="Section">
-        <civ-task label="Task 1" status="not-started"></civ-task>
-        <civ-task label="Task 2" status="complete"></civ-task>
+      <civ-task-group>
+        <h3 data-task-group-heading>Section</h3>
+        <civ-task><span>Task 1</span></civ-task>
+        <civ-task><span>Task 2</span></civ-task>
       </civ-task-group>
     `);
-
     const tasks = el.querySelectorAll('[data-civ-task-group-content] civ-task');
     expect(tasks.length).toBe(2);
   });
 
+  it('omits heading container when no heading child', async () => {
+    const el = await fixture(`
+      <civ-task-group>
+        <civ-task><span>Task</span></civ-task>
+      </civ-task-group>
+    `);
+    expect(el.querySelector('[data-civ-task-group-heading]')).toBeNull();
+  });
+
   it('uses Light DOM', async () => {
-    const el = await fixture('<civ-task-group heading="Test"></civ-task-group>');
+    const el = await fixture('<civ-task-group></civ-task-group>');
     expect(el.shadowRoot).toBeNull();
   });
 });
 
 describe('civ-task', () => {
-  it('renders label as civ-link when href is provided', async () => {
-    const el = await fixture('<civ-task label="Contact info" href="#/contact" status="not-started"></civ-task>');
-
-    const link = el.querySelector('civ-link');
-    expect(link).not.toBeNull();
-    expect(link!.getAttribute('label')).toBe('Contact info');
-    expect(link!.getAttribute('href')).toBe('#/contact');
+  it('renders as a list item', async () => {
+    const el = await fixture(`
+      <civ-task>
+        <span>Task name</span>
+      </civ-task>
+    `);
+    expect(el.querySelector('li')).not.toBeNull();
   });
 
-  it('renders label as plain text when no href', async () => {
-    const el = await fixture('<civ-task label="Review" status="cannot-start"></civ-task>');
-
-    const link = el.querySelector('civ-link');
-    expect(link).toBeNull();
-    const span = el.querySelector('.civ-task__label');
-    expect(span).not.toBeNull();
-    expect(span!.textContent).toBe('Review');
+  it('relocates content children', async () => {
+    const el = await fixture(`
+      <civ-task>
+        <civ-link href="#/contact">Contact info</civ-link>
+      </civ-task>
+    `);
+    const content = el.querySelector('[data-civ-task-content]');
+    expect(content).not.toBeNull();
+    expect(content!.querySelector('civ-link')).not.toBeNull();
   });
 
-  it('renders label as plain text when status is cannot-start even with href', async () => {
-    const el = await fixture('<civ-task label="Review" href="#/review" status="cannot-start"></civ-task>');
-
-    const link = el.querySelector('civ-link');
-    expect(link).toBeNull();
-  });
-
-  it('renders not-started status with blue tag', async () => {
-    const el = await fixture('<civ-task label="Task" status="not-started"></civ-task>');
-
-    const tag = el.querySelector('civ-tag');
-    expect(tag).not.toBeNull();
-    expect(tag!.getAttribute('variant')).toBe('blue');
-    expect(tag!.getAttribute('label')).toBe('Not started');
-  });
-
-  it('renders in-progress status with teal tag', async () => {
-    const el = await fixture('<civ-task label="Task" status="in-progress"></civ-task>');
-
-    const tag = el.querySelector('civ-tag');
+  it('relocates status children', async () => {
+    const el = await fixture(`
+      <civ-task>
+        <span>Task name</span>
+        <div data-task-status>
+          <civ-tag label="In progress" variant="teal"></civ-tag>
+        </div>
+      </civ-task>
+    `);
+    const status = el.querySelector('[data-civ-task-status]');
+    expect(status).not.toBeNull();
+    const tag = status!.querySelector('civ-tag');
     expect(tag).not.toBeNull();
     expect(tag!.getAttribute('variant')).toBe('teal');
-    expect(tag!.getAttribute('label')).toBe('In progress');
   });
 
-  it('renders complete status with green primary tag', async () => {
-    const el = await fixture('<civ-task label="Task" href="#" status="complete"></civ-task>');
-
-    const tag = el.querySelector('civ-tag');
-    expect(tag).not.toBeNull();
-    expect(tag!.getAttribute('variant')).toBe('green');
-    expect(tag!.getAttribute('tag-style')).toBe('primary');
-    expect(tag!.getAttribute('label')).toBe('Complete');
+  it('omits status container when no status children', async () => {
+    const el = await fixture(`
+      <civ-task>
+        <span>Task with no status</span>
+      </civ-task>
+    `);
+    expect(el.querySelector('[data-civ-task-status]')).toBeNull();
   });
 
-  it('renders cannot-start status with gray tag', async () => {
-    const el = await fixture('<civ-task label="Task" status="cannot-start"></civ-task>');
-
-    const tag = el.querySelector('civ-tag');
-    expect(tag).not.toBeNull();
-    expect(tag!.getAttribute('variant')).toBe('gray');
-    expect(tag!.getAttribute('label')).toBe('Cannot start yet');
-  });
-
-  it('renders error status with red tag', async () => {
-    const el = await fixture('<civ-task label="Task" href="#" status="error"></civ-task>');
-
-    const tag = el.querySelector('civ-tag');
-    expect(tag).not.toBeNull();
-    expect(tag!.getAttribute('variant')).toBe('red');
-    expect(tag!.getAttribute('label')).toBe('There is a problem');
-  });
-
-  it('renders hint text', async () => {
-    const el = await fixture('<civ-task label="Task" status="in-progress" hint="Missing phone number"></civ-task>');
-
-    const hint = el.querySelector('.civ-task__hint');
-    expect(hint).not.toBeNull();
-    expect(hint!.textContent).toBe('Missing phone number');
-  });
-
-  it('omits hint when empty', async () => {
-    const el = await fixture('<civ-task label="Task" status="not-started"></civ-task>');
-
-    const hint = el.querySelector('.civ-task__hint');
-    expect(hint).toBeNull();
-  });
-
-  it('links have aria-describedby pointing to status container', async () => {
-    const el = await fixture('<civ-task label="Task" href="#" status="in-progress"></civ-task>');
-
-    const link = el.querySelector('civ-link')!;
-    const statusId = link.getAttribute('aria-describedby');
-    expect(statusId).toBeTruthy();
-    const statusEl = el.querySelector(`#${statusId}`);
-    expect(statusEl).not.toBeNull();
-    const tag = statusEl!.querySelector('civ-tag');
-    expect(tag).not.toBeNull();
-    expect(tag!.getAttribute('label')).toBe('In progress');
-  });
-
-
-  it('renders as list item', async () => {
-    const el = await fixture('<civ-task label="Task" status="not-started"></civ-task>');
-
-    const li = el.querySelector('li');
-    expect(li).not.toBeNull();
+  it('renders content and status side by side', async () => {
+    const el = await fixture(`
+      <civ-task>
+        <civ-link href="#">Personal info</civ-link>
+        <div data-task-status>
+          <civ-tag label="Complete" variant="green" tag-style="primary"></civ-tag>
+        </div>
+      </civ-task>
+    `);
+    const content = el.querySelector('[data-civ-task-content]');
+    const status = el.querySelector('[data-civ-task-status]');
+    expect(content).not.toBeNull();
+    expect(status).not.toBeNull();
+    expect(content!.querySelector('civ-link')).not.toBeNull();
+    expect(status!.querySelector('civ-tag')).not.toBeNull();
   });
 
   it('uses Light DOM', async () => {
-    const el = await fixture('<civ-task label="Task" status="not-started"></civ-task>');
+    const el = await fixture('<civ-task><span>Test</span></civ-task>');
     expect(el.shadowRoot).toBeNull();
   });
 });

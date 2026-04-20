@@ -186,3 +186,52 @@ export const Small: Story = {
     </civ-card>
   `,
 };
+
+export const DensityScale: Story = {
+  name: 'Density Scale',
+  render: () => html`
+    <div style="display: flex; flex-direction: column; gap: 24px;">
+      <div data-civ-scale="dense">
+        <p style="margin: 0 0 8px; font-weight: 600;">Dense</p>
+        <civ-card heading="Disability compensation" href="#/claims/123">
+          <civ-tag label="In progress" variant="teal"></civ-tag>
+          <p class="civ-mt-2">Filed: March 10, 2026</p>
+          <span data-card-actions>
+            <civ-button label="Edit" variant="tertiary"></civ-button>
+          </span>
+          <div data-card-footer>
+            <civ-link href="#" variant="secondary">View details</civ-link>
+          </div>
+        </civ-card>
+      </div>
+
+      <div>
+        <p style="margin: 0 0 8px; font-weight: 600;">Default</p>
+        <civ-card heading="Disability compensation" href="#/claims/123">
+          <civ-tag label="In progress" variant="teal"></civ-tag>
+          <p class="civ-mt-2">Filed: March 10, 2026</p>
+          <span data-card-actions>
+            <civ-button label="Edit" variant="tertiary"></civ-button>
+          </span>
+          <div data-card-footer>
+            <civ-link href="#" variant="secondary">View details</civ-link>
+          </div>
+        </civ-card>
+      </div>
+
+      <div data-civ-scale="spacious">
+        <p style="margin: 0 0 8px; font-weight: 600;">Spacious</p>
+        <civ-card heading="Disability compensation" href="#/claims/123">
+          <civ-tag label="In progress" variant="teal"></civ-tag>
+          <p class="civ-mt-2">Filed: March 10, 2026</p>
+          <span data-card-actions>
+            <civ-button label="Edit" variant="tertiary"></civ-button>
+          </span>
+          <div data-card-footer>
+            <civ-link href="#" variant="secondary">View details</civ-link>
+          </div>
+        </civ-card>
+      </div>
+    </div>
+  `,
+};

@@ -141,60 +141,47 @@ ${chapterHeadings}
       showPage('hub');
     });
 
-    // "Back to task list" links in chapters
-    document.querySelectorAll('a[href="#/hub"]').forEach(link => {
-      link.addEventListener('click', (e) => {
-        e.preventDefault();
-        showPage('hub');
-      });
+    // "Back to task list" links — inside wizards and standalone
+    document.querySelectorAll('civ-link[variant="back"]').forEach(link => {
+      const href = link.getAttribute('href') || '';
+      if (href.includes('hub')) {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          showPage('hub');
+        });
+      }
     });
 
-    // Task list — navigate when clicking task links
+    // Task list — navigate when clicking a task
     document.querySelectorAll('civ-task').forEach(task => {
       task.addEventListener('click', (e) => {
-        const href = task.getAttribute('href');
-        if (href && task.getAttribute('status') !== 'cannot-start') {
+        const chapterId = task.getAttribute('data-chapter-id');
+        const status = task.getAttribute('status');
+        if (chapterId && status !== 'cannot-start') {
           e.preventDefault();
-          showPage(href.replace('#/', ''));
+          showPage(chapterId);
         }
       });
     });
 
-    // Chapter navigation — first step "Back to task list" goes to hub,
-    // last step "Save and continue" completes the chapter
+    // Chapter completion — listen for civ-form-step complete events
     document.querySelectorAll('[data-chapter]').forEach(chapter => {
       const chapterId = chapter.dataset.chapter;
-      const steps = chapter.querySelectorAll('[data-field-step]');
-      const firstStep = steps[0];
-      const lastStep = steps[steps.length - 1];
 
-      // First step's back button → hub
-      if (firstStep) {
-        const backBtn = firstStep.querySelector('[data-field-back]');
-        if (backBtn) {
-          backBtn.addEventListener('click', () => showPage('hub'));
-        }
+      // civ-form-step fires civ-step-complete when all steps pass validation
+      const wizard = chapter.querySelector('civ-form-step');
+      if (wizard) {
+        wizard.addEventListener('civ-step-complete', () => {
+          completedChapters.add(chapterId);
+          updateTaskList();
+          showPage('hub');
+        });
       }
 
-      // Last step's next button → complete chapter
-      if (lastStep) {
-        const nextBtn = lastStep.querySelector('[data-field-next]');
-        if (nextBtn) {
-          nextBtn.addEventListener('click', () => {
-            completedChapters.add(chapterId);
-            updateTaskList();
-            showPage('hub');
-          });
-        }
-      }
-
-      // If no field steps (e.g., repeatable sections), use label-based buttons
-      if (steps.length === 0) {
+      // Repeatable sections (no wizard) — use Save and continue button
+      if (!wizard) {
         chapter.querySelectorAll('civ-button').forEach(btn => {
           const label = btn.getAttribute('label') || '';
-          if (label === 'Back') {
-            btn.addEventListener('click', () => showPage('hub'));
-          }
           if (label === 'Save and continue') {
             btn.addEventListener('click', () => {
               completedChapters.add(chapterId);
@@ -224,38 +211,32 @@ ${chapterHeadings}
     // ── Task List Status Tracking ────────────────────────────────
 
     function updateTaskList() {
-      const tasks = document.querySelectorAll('civ-task');
       const totalChapters = CHAPTERS.length;
       let doneCount = 0;
       let nextUnlocked = false;
 
-      tasks.forEach(task => {
-        const href = task.getAttribute('href');
-        // Skip the review task (no href initially and not in CHAPTERS)
-        const chapterId = href ? href.replace('#/', '') : '';
-        const isChapter = CHAPTERS.includes(chapterId) || (!href && !task.getAttribute('status')?.includes('cannot'));
+      // Update each chapter task by data-chapter-id
+      CHAPTERS.forEach(chapterId => {
+        const task = document.querySelector('civ-task[data-chapter-id="' + chapterId + '"]');
+        if (!task) return;
 
-        if (chapterId && completedChapters.has(chapterId)) {
+        if (completedChapters.has(chapterId)) {
           task.setAttribute('status', 'complete');
           task.setAttribute('href', '#/' + chapterId);
           doneCount++;
-        } else if (chapterId && !nextUnlocked) {
+        } else if (!nextUnlocked) {
           task.setAttribute('status', 'not-started');
           task.setAttribute('href', '#/' + chapterId);
           nextUnlocked = true;
-        } else if (CHAPTERS.includes(chapterId) || (!href && !completedChapters.has(chapterId))) {
-          // Lock remaining chapters
-          if (!completedChapters.has(chapterId) && chapterId) {
-            task.setAttribute('status', 'cannot-start');
-            task.removeAttribute('href');
-          }
+        } else {
+          task.setAttribute('status', 'cannot-start');
+          task.removeAttribute('href');
         }
       });
 
-      // Update review task — last task without an href in CHAPTERS
-      const allTasks = Array.from(document.querySelectorAll('civ-task'));
-      const reviewTask = allTasks[allTasks.length - 1];
-      if (reviewTask && !CHAPTERS.includes((reviewTask.getAttribute('href') || '').replace('#/', ''))) {
+      // Update review task (last task, no data-chapter-id)
+      const reviewTask = document.querySelector('civ-task:not([data-chapter-id])');
+      if (reviewTask) {
         if (doneCount >= totalChapters) {
           reviewTask.setAttribute('status', 'not-started');
           reviewTask.setAttribute('href', '#/review');
@@ -373,7 +354,11 @@ ${chapterHeadings}
 
 /**
  * Assemble a React (TSX) multi-page form application.
- * Returns an array of files that make up the complete app.
+ *
+ * Uses the same generated HTML as the HTML format, rendered via
+ * dangerouslySetInnerHTML. CivUI web components work as custom elements
+ * in React — the wizard, validation, and progress are all handled by
+ * the components themselves. React manages page routing and task state.
  */
 async function assembleReactForm(formNumber: string, options?: {
   cdnBase?: string;
@@ -381,31 +366,24 @@ async function assembleReactForm(formNumber: string, options?: {
 }): Promise<AssembleResult> {
   const result = await generateGovForm(formNumber);
   const submitAction = options?.submitAction || '/api/submit';
+  const chapters = result.pages.chapters;
+  const chapterIds = chapters.map(ch => `'${ch.id}'`).join(', ');
 
-  const chapterImports = result.pages.chapters
+  const chapterImports = chapters
     .map(ch => `import ${toPascal(ch.id)}Chapter from './chapters/${toPascal(ch.id)}';`)
     .join('\n');
 
-  const chapterRoutes = result.pages.chapters
-    .map(ch => `        {currentPage === '${ch.id}' && <${toPascal(ch.id)}Chapter onBack={() => navigate('hub')} onContinue={() => completeChapter('${ch.id}')} />}`)
+  const chapterRoutes = chapters
+    .map(ch => `        {currentPage === '${ch.id}' && <${toPascal(ch.id)}Chapter onBack={() => navigate('hub')} onComplete={() => completeChapter('${ch.id}')} />}`)
     .join('\n');
-
-  const chapterTasks = result.pages.chapters
-    .map(ch => `          <civ-task label="${escapeHtml(ch.heading)}" href="#/${ch.id}" status={chapterStatus('${ch.id}')} onClick={() => navigate('${ch.id}')} />`)
-    .join('\n');
-
-  // Build complex features for React
-  const complexReact = buildComplexFeaturesHtml(result.complex);
 
   // Main App component
-  const appTsx = `import React, { useState, useCallback } from 'react';
+  const appTsx = `import React, { useState, useCallback, useMemo } from 'react';
 ${chapterImports}
 import IntroPage from './pages/IntroPage';
 import ReviewPage from './pages/ReviewPage';
 import ConfirmationPage from './pages/ConfirmationPage';
 
-// CivUI web components work in React via custom elements
-// Import the component registrations
 import '@civui/core';
 import '@civui/forms';
 import '@civui/ui';
@@ -413,12 +391,13 @@ import '@civui/navigation';
 import '@civui/feedback';
 import '@civui/core/styles/civ.css';
 
-type PageId = 'intro' | 'hub' | ${result.pages.chapters.map(ch => `'${ch.id}'`).join(' | ')} | 'review' | 'confirmation';
+const CHAPTERS = [${chapterIds}] as const;
+type ChapterId = typeof CHAPTERS[number];
+type PageId = 'intro' | 'hub' | ChapterId | 'review' | 'confirmation';
 
 export default function ${toPascal(formNumber)}App() {
   const [currentPage, setCurrentPage] = useState<PageId>('intro');
   const [completed, setCompleted] = useState<Set<string>>(new Set());
-  const [formData, setFormData] = useState<Record<string, any>>({});
 
   const navigate = useCallback((page: PageId) => {
     setCurrentPage(page);
@@ -427,27 +406,33 @@ export default function ${toPascal(formNumber)}App() {
 
   const completeChapter = useCallback((id: string) => {
     setCompleted(prev => new Set(prev).add(id));
-    // Navigate to next chapter or back to hub
-    const chapters = [${result.pages.chapters.map(ch => `'${ch.id}'`).join(', ')}];
-    const idx = chapters.indexOf(id);
-    if (idx < chapters.length - 1) {
-      navigate(chapters[idx + 1] as PageId);
-    } else {
-      navigate('hub');
-    }
+    navigate('hub');
   }, [navigate]);
 
-  const chapterStatus = useCallback((id: string) => {
+  // Sequential unlocking: first incomplete chapter is active, rest locked
+  const chapterStatus = useCallback((id: string, index: number): string => {
     if (completed.has(id)) return 'complete';
-    if (currentPage === id) return 'in-progress';
-    return 'not-started';
-  }, [completed, currentPage]);
+    // First incomplete chapter
+    const firstIncomplete = CHAPTERS.findIndex(c => !completed.has(c));
+    if (index === firstIncomplete) return 'not-started';
+    return 'cannot-start';
+  }, [completed]);
 
-  const allComplete = completed.size >= ${result.pages.chapters.length};
-  const progress = Math.round((completed.size / ${result.pages.chapters.length}) * 100);
+  const canNavigate = useCallback((id: string): boolean => {
+    if (completed.has(id)) return true;
+    const firstIncomplete = CHAPTERS.findIndex(c => !completed.has(c));
+    return CHAPTERS[firstIncomplete] === id;
+  }, [completed]);
+
+  const allComplete = completed.size >= CHAPTERS.length;
+  const progress = Math.round((completed.size / CHAPTERS.length) * 100);
 
   const handleSubmit = useCallback(async () => {
     try {
+      const formData: Record<string, any> = {};
+      document.querySelectorAll('[data-civ-form-field]').forEach((field: any) => {
+        if (field.name && field.value) formData[field.name] = field.value;
+      });
       await fetch('${submitAction}', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -455,7 +440,7 @@ export default function ${toPascal(formNumber)}App() {
       });
     } catch { /* demo mode */ }
     navigate('confirmation');
-  }, [formData, navigate]);
+  }, [navigate]);
 
   return (
     <main style={{ maxWidth: 720, margin: '0 auto', padding: 24 }}>
@@ -465,33 +450,46 @@ export default function ${toPascal(formNumber)}App() {
 
       {currentPage === 'hub' && (
         <div>
-          <h1 className="civ-heading-xl">${escapeHtml(result.title)}</h1>
-          <p className="civ-text-muted civ-mb-4">VA Form ${escapeHtml(result.formNumber)}</p>
-          <civ-progress-bar value={progress} label="Application progress" status={\`\${completed.size} of ${result.pages.chapters.length} sections complete\`} />
+          <civ-page-header>
+            <h1 data-heading className="civ-heading-xl">${escapeHtml(result.title)}</h1>
+            <span data-subheading>VA Form ${escapeHtml(result.formNumber)}</span>
+          </civ-page-header>
+
+          <civ-progress-bar
+            value={progress}
+            label="Application progress"
+            status={\`\${completed.size} of ${chapters.length} sections complete\`}
+          />
+
           <civ-task-list>
-            <civ-task-group heading="Fill out your application">
-${chapterTasks}
+            <civ-task-group>
+              <h3 data-task-group-heading className="civ-heading-md">Fill out your application</h3>
+${chapters.map((ch, i) => `              <civ-task
+                label="${escapeHtml(ch.heading)}"
+                hint="${escapeHtml((ch as any).hint || '')}"
+                href={canNavigate('${ch.id}') ? '#/${ch.id}' : undefined}
+                status={chapterStatus('${ch.id}', ${i})}
+                onClick={() => canNavigate('${ch.id}') && navigate('${ch.id}')}
+              />`).join('\n')}
             </civ-task-group>
-            <civ-task-group heading="Review and submit">
+            <civ-task-group>
+              <h3 data-task-group-heading className="civ-heading-md">Review and submit</h3>
               <civ-task
                 label="Review your application"
-                status={allComplete ? 'not-started' : 'cannot-start'}
                 hint={allComplete ? '' : 'Complete all sections before reviewing'}
+                status={allComplete ? 'not-started' : 'cannot-start'}
+                href={allComplete ? '#/review' : undefined}
                 onClick={() => allComplete && navigate('review')}
               />
             </civ-task-group>
-          </civ-task-list>${complexReact.hubInsert ? `\n          <div dangerouslySetInnerHTML={{ __html: ${JSON.stringify(complexReact.hubInsert)} }} />` : ''}
+          </civ-task-list>
         </div>
       )}
 
 ${chapterRoutes}
 
       {currentPage === 'review' && (
-        <ReviewPage
-          formData={formData}
-          onBack={() => navigate('hub')}
-          onSubmit={handleSubmit}
-        />
+        <ReviewPage onBack={() => navigate('hub')} onSubmit={handleSubmit} />
       )}
 
       {currentPage === 'confirmation' && (
@@ -502,105 +500,71 @@ ${chapterRoutes}
 }
 `;
 
-  // Intro page component — uses ref + dangerouslySetInnerHTML + event wiring
+  // Page components — render generated HTML, wire events via ref+useEffect
   const introTsx = `import React, { useRef, useEffect } from 'react';
 
-interface IntroPageProps {
-  onStart: () => void;
-}
+const HTML = ${JSON.stringify(result.pages.intro.html)};
 
-const INTRO_HTML = ${JSON.stringify(result.pages.intro.html)};
-
-export default function IntroPage({ onStart }: IntroPageProps) {
+export default function IntroPage({ onStart }: { onStart: () => void }) {
   const ref = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
-    if (!ref.current) return;
-    // Wire "Start your application" button
-    const startBtn = ref.current.querySelector('civ-button');
+    const btn = ref.current?.querySelector('civ-button');
+    if (!btn) return;
     const handler = () => onStart();
-    startBtn?.addEventListener('click', handler);
-    return () => startBtn?.removeEventListener('click', handler);
+    btn.addEventListener('click', handler);
+    return () => btn.removeEventListener('click', handler);
   }, [onStart]);
-
-  return <div ref={ref} dangerouslySetInnerHTML={{ __html: INTRO_HTML }} />;
+  return <div ref={ref} dangerouslySetInnerHTML={{ __html: HTML }} />;
 }
 `;
 
-  // Chapter components — use ref + dangerouslySetInnerHTML + event wiring
-  const chapterFiles = result.pages.chapters.map(ch => ({
+  // Chapters — civ-form-step handles stepping/validation, we just listen for complete
+  const chapterFiles = chapters.map(ch => ({
     path: `src/chapters/${toPascal(ch.id)}.tsx`,
     content: `import React, { useRef, useEffect } from 'react';
 
-interface ${toPascal(ch.id)}Props {
-  onBack: () => void;
-  onContinue: () => void;
-}
+const HTML = ${JSON.stringify(ch.html)};
 
-const CHAPTER_HTML = ${JSON.stringify(ch.html)};
-
-export default function ${toPascal(ch.id)}Chapter({ onBack, onContinue }: ${toPascal(ch.id)}Props) {
+export default function ${toPascal(ch.id)}Chapter({ onBack, onComplete }: { onBack: () => void; onComplete: () => void }) {
   const ref = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
     if (!ref.current) return;
     const cleanups: Array<() => void> = [];
 
-    // Wire Back and Continue buttons
-    ref.current.querySelectorAll('civ-button').forEach((btn: Element) => {
-      const label = btn.getAttribute('label') || '';
-      if (label === 'Back') {
-        const handler = () => onBack();
-        btn.addEventListener('click', handler);
-        cleanups.push(() => btn.removeEventListener('click', handler));
-      }
-      if (label === 'Save and continue') {
-        const handler = () => onContinue();
-        btn.addEventListener('click', handler);
-        cleanups.push(() => btn.removeEventListener('click', handler));
-      }
-    });
+    // civ-form-step fires civ-step-complete when all steps validated
+    const wizard = ref.current.querySelector('civ-form-step');
+    if (wizard) {
+      const handler = () => onComplete();
+      wizard.addEventListener('civ-step-complete', handler);
+      cleanups.push(() => wizard.removeEventListener('civ-step-complete', handler));
+    }
 
-    // Wire "Back to task list" links
-    ref.current.querySelectorAll('a[href="#/hub"]').forEach((link: Element) => {
+    // Back link
+    ref.current.querySelectorAll('civ-link[variant="back"]').forEach((link: Element) => {
       const handler = (e: Event) => { e.preventDefault(); onBack(); };
       link.addEventListener('click', handler);
       cleanups.push(() => link.removeEventListener('click', handler));
     });
 
     return () => cleanups.forEach(fn => fn());
-  }, [onBack, onContinue]);
-
-  return <div ref={ref} dangerouslySetInnerHTML={{ __html: CHAPTER_HTML }} />;
+  }, [onBack, onComplete]);
+  return <div ref={ref} dangerouslySetInnerHTML={{ __html: HTML }} />;
 }
 `,
   }));
 
-  // Review page — uses ref + dangerouslySetInnerHTML + event wiring
   const reviewTsx = `import React, { useRef, useEffect } from 'react';
 
-interface ReviewPageProps {
-  formData: Record<string, any>;
-  onBack: () => void;
-  onSubmit: () => void;
-}
+const HTML = ${JSON.stringify(result.pages.review.html)};
 
-const REVIEW_HTML = ${JSON.stringify(result.pages.review.html)};
-
-export default function ReviewPage({ formData, onBack, onSubmit }: ReviewPageProps) {
+export default function ReviewPage({ onBack, onSubmit }: { onBack: () => void; onSubmit: () => void }) {
   const ref = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
     if (!ref.current) return;
     const cleanups: Array<() => void> = [];
 
     ref.current.querySelectorAll('civ-button').forEach((btn: Element) => {
       const label = btn.getAttribute('label') || '';
-      if (label === 'Back') {
-        const handler = () => onBack();
-        btn.addEventListener('click', handler);
-        cleanups.push(() => btn.removeEventListener('click', handler));
-      }
       if (label === 'Submit application') {
         const handler = () => onSubmit();
         btn.addEventListener('click', handler);
@@ -608,29 +572,24 @@ export default function ReviewPage({ formData, onBack, onSubmit }: ReviewPagePro
       }
     });
 
-    // Populate summary sections from formData
-    const summary = ref.current.querySelector('[data-va-review]');
-    if (summary && formData) {
-      (summary as any).sections = Object.entries(formData).map(([key, value]) => ({
-        heading: key,
-        items: [{ label: key, value: String(value) }],
-      }));
-    }
+    ref.current.querySelectorAll('civ-link[variant="back"]').forEach((link: Element) => {
+      const handler = (e: Event) => { e.preventDefault(); onBack(); };
+      link.addEventListener('click', handler);
+      cleanups.push(() => link.removeEventListener('click', handler));
+    });
 
     return () => cleanups.forEach(fn => fn());
-  }, [formData, onBack, onSubmit]);
-
-  return <div ref={ref} dangerouslySetInnerHTML={{ __html: REVIEW_HTML }} />;
+  }, [onBack, onSubmit]);
+  return <div ref={ref} dangerouslySetInnerHTML={{ __html: HTML }} />;
 }
 `;
 
-  // Confirmation page — static content via dangerouslySetInnerHTML
   const confirmationTsx = `import React from 'react';
 
-const CONFIRMATION_HTML = ${JSON.stringify(result.pages.confirmation.html)};
+const HTML = ${JSON.stringify(result.pages.confirmation.html)};
 
 export default function ConfirmationPage() {
-  return <div dangerouslySetInnerHTML={{ __html: CONFIRMATION_HTML }} />;
+  return <div dangerouslySetInnerHTML={{ __html: HTML }} />;
 }
 `;
 

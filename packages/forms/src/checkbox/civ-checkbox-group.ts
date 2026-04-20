@@ -126,11 +126,13 @@ export class CivCheckboxGroup extends LightDomContainerMixin(CivFormElement) {
         ${renderHint(this._hintId, combinedHint, true)}
         ${renderError(this._errorId, this.error, true)}
         ${this.showSelectAll ? html`
-          <button type="button" class="civ-select-all-btn civ-text-sm civ-text-primary civ-mb-2 civ-underline hover:civ-no-underline focus-visible:civ-focus-ring"
+          <civ-button
+            variant="tertiary"
+            label="${this._allChecked ? t('deselectAll') : t('selectAll')}"
+            ?disabled="${this.disabled}"
             @click="${this._onToggleAll}"
-            ?disabled="${this.disabled}">
-            ${this._allChecked ? t('deselectAll') : t('selectAll')}
-          </button>` : nothing}
+            class="civ-mb-2"
+          ></civ-button>` : nothing}
         <div class="${layoutClass}"></div>
       </fieldset>
     `;

@@ -17,14 +17,14 @@ describe('civ-prefill-notice', () => {
 
   it('renders profile link when href is provided', async () => {
     const el = await fixture('<civ-prefill-notice profile-href="/profile"></civ-prefill-notice>');
-    const link = el.querySelector('a.civ-link');
+    const link = el.querySelector('civ-link');
     expect(link).not.toBeNull();
     expect(link!.getAttribute('href')).toBe('/profile');
   });
 
   it('omits link when no href', async () => {
     const el = await fixture('<civ-prefill-notice></civ-prefill-notice>');
-    const link = el.querySelector('a');
+    const link = el.querySelector('civ-link');
     expect(link).toBeNull();
   });
 

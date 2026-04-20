@@ -216,7 +216,9 @@ function generateChapterPage(chapter: GovChapterMeta, form: ReturnType<typeof ge
     const fields = chapter.section.fields.map(f => renderField(f)).join('\n');
     const html = `<!-- Chapter: ${escapeHtml(chapter.heading)} -->
 <div data-chapter="${escapeHtml(chapter.id)}">
-  <civ-link href="#/hub" variant="back" label="Back to task list" class="civ-mb-4 civ-block"></civ-link>
+  <nav class="civ-mb-4">
+    <civ-link href="#/hub" variant="back" label="Back to task list" class="civ-block"></civ-link>
+  </nav>
 
   <civ-page-header>
     <span data-eyebrow>${escapeHtml(form.title)}</span>
@@ -244,37 +246,17 @@ ${fields}
     return { id: chapter.id, heading: chapter.heading, html, javascript: '' };
   }
 
-  // One field per step — each field gets its own visible step
-  const totalSteps = chapter.section.fields.length;
-  const stepLabels = chapter.section.fields.map(f => {
-    if (f.label.startsWith('component:')) {
-      // Extract legend from component-props hint, e.g. 'component-props:legend="Your name" required'
-      const legendMatch = f.hint?.match(/legend="([^"]+)"/);
-      return legendMatch ? legendMatch[1] : f.name;
-    }
-    return f.label;
-  });
-  const stepsJson = escapeHtml(JSON.stringify(stepLabels));
-
-  const fieldSteps = chapter.section.fields.map((f, i) => {
+  // One field per step — each field gets its own data-step wrapper
+  const fieldSteps = chapter.section.fields.map(f => {
     const fieldHtml = renderField(f);
-    return `    <div data-field-step="${i}" ${i > 0 ? 'hidden' : ''}>
-      <civ-progress-steps
-        steps='${stepsJson}'
-        current="${i}"
-        show-counter
-        class="civ-mb-6 civ-block"
-      ></civ-progress-steps>
-
+    // Extract label for step indicator
+    let stepLabel = f.label;
+    if (f.label.startsWith('component:')) {
+      const legendMatch = f.hint?.match(/legend="([^"]+)"/);
+      stepLabel = legendMatch ? legendMatch[1] : f.name;
+    }
+    return `    <div data-step data-step-label="${escapeHtml(stepLabel)}">
 ${fieldHtml}
-      <div class="civ-mt-6">
-        ${i < totalSteps - 1
-          ? `<civ-button label="Continue" data-field-next></civ-button>`
-          : `<civ-button label="Save and continue" data-field-next></civ-button>`}
-        ${i > 0
-          ? `<civ-button variant="secondary" label="Back" data-field-back class="civ-ms-3"></civ-button>`
-          : ''}
-      </div>
     </div>`;
   }).join('\n');
 
@@ -288,38 +270,12 @@ ${fieldHtml}
     <span data-subheading>VA Form ${escapeHtml(form.formNumber)}</span>
   </civ-page-header>
 
-  <civ-form persist="${formSlug}-${chapterSlug}">
+  <civ-form-step persist="${formSlug}-${chapterSlug}" complete-label="Save and continue">
 ${fieldSteps}
-  </civ-form>
+  </civ-form-step>
 </div>`;
 
-  const javascript = `// Chapter field stepping: ${chapter.heading}
-(function() {
-  const chapter = document.querySelector('[data-chapter="${escapeHtml(chapter.id)}"]');
-  if (!chapter) return;
-  const steps = chapter.querySelectorAll('[data-field-step]');
-  if (steps.length <= 1) return;
-  let current = 0;
-
-  function showStep(idx) {
-    steps.forEach((s, i) => s.hidden = i !== idx);
-    current = idx;
-  }
-
-  chapter.querySelectorAll('[data-field-back]').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      if (current > 0) showStep(current - 1);
-    });
-  });
-
-  chapter.querySelectorAll('[data-field-next]').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      if (current < steps.length - 1) showStep(current + 1);
-    });
-  });
-})();`;
+  const javascript = ''; // No custom JS needed — civ-form-step handles everything
 
   return {
     id: chapter.id,
@@ -529,6 +485,7 @@ function generateTaskListHub(form: ReturnType<typeof getFormDefinition> & {}, ch
       const href = i === 0 ? ` href="#/${slugify(ch.id)}"` : '';
       const status = i === 0 ? 'not-started' : 'cannot-start';
       return `      <civ-task
+        data-chapter-id="${slugify(ch.id)}"
         label="${escapeHtml(ch.heading)}"
         hint="${escapeHtml(ch.hint)}"${href}
         status="${status}"

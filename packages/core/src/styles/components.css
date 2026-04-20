@@ -1548,7 +1548,7 @@
   }
 
   .civ-task {
-    @apply civ-flex civ-justify-between civ-items-start civ-py-3 civ-px-0;
+    @apply civ-flex civ-justify-between civ-items-start civ-py-5 civ-px-0;
     border-bottom: 1px solid var(--civ-color-base-lighter);
   }
 
@@ -1569,7 +1569,7 @@
     border-top: none;
   }
 
-  .civ-task:only-child {
+  civ-task:only-child .civ-task {
     border-bottom: none;
   }
 
@@ -1719,6 +1719,23 @@
 
   .civ-page-header__subheading {
     @apply civ-mt-1;
+    color: var(--civ-color-base-dark);
+  }
+
+  /* ── Form Wizard ──────────────────────────────────────────── */
+
+  .civ-wizard-nav {
+    @apply civ-flex civ-items-center civ-gap-3 civ-py-2 civ-mb-4;
+  }
+
+  .civ-wizard-nav__divider {
+    width: 1px;
+    height: 1em;
+    background-color: var(--civ-color-base-lighter);
+  }
+
+  .civ-wizard-nav__counter {
+    @apply civ-text-sm civ-font-bold;
     color: var(--civ-color-base-dark);
   }
 

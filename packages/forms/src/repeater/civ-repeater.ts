@@ -128,14 +128,13 @@ export class CivRepeater extends CivBaseElement {
         <div data-civ-repeater-rows></div>
 
         ${canAdd ? html`
-          <button
-            type="button"
-            class="civ-btn civ-btn--secondary civ-mt-3"
+          <civ-button
+            variant="secondary"
+            label="${interpolate(t('repeaterAddButton'), { item: this.itemLabel })}"
             ?disabled="${this.disabled}"
             @click="${this._addRow}"
-          >
-            ${interpolate(t('repeaterAddButton'), { item: this.itemLabel })}
-          </button>
+            class="civ-mt-3"
+          ></civ-button>
         ` : nothing}
       </fieldset>
     `;

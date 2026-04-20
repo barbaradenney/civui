@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
 import './civ-form-step.js';
 import type { CivFormStep } from './civ-form-step.js';
@@ -20,27 +20,25 @@ describe('civ-form-step', () => {
     expect(el.total).toBe(3);
   });
 
-  it('shows progress indicator', async () => {
+  it('shows step counter', async () => {
     const el = await fixture<CivFormStep>(threeSteps);
-    const progress = el.querySelector('[aria-live="polite"]');
-    expect(progress).not.toBeNull();
-    expect(progress!.textContent).toContain('Step 1 of 3');
+    const counter = el.querySelector('.civ-wizard-nav__counter');
+    expect(counter).not.toBeNull();
+    expect(counter!.textContent).toContain('Step 1 of 3');
   });
 
-  it('hides back button on first step', async () => {
+  it('hides go-back link on first step', async () => {
     const el = await fixture<CivFormStep>(threeSteps);
-    const buttons = el.querySelectorAll('button');
-    // Only continue button should be visible (back is a span placeholder)
-    const backBtn = Array.from(buttons).find(b => b.textContent?.trim() === 'Back');
-    expect(backBtn).toBeUndefined();
+    const backLink = el.querySelector('civ-link[variant="back"]');
+    expect(backLink).toBeNull();
   });
 
-  it('shows back button on second step', async () => {
+  it('shows go-back link on second step', async () => {
     const el = await fixture<CivFormStep>(threeSteps) as CivFormStep;
     el.goToStep(1);
     await elementUpdated(el);
-    const backBtn = Array.from(el.querySelectorAll('button')).find(b => b.textContent?.trim() === 'Back');
-    expect(backBtn).not.toBeUndefined();
+    const backLink = el.querySelector('civ-link[variant="back"]');
+    expect(backLink).not.toBeNull();
   });
 
   it('fires civ-step-continue on continue click', async () => {
@@ -48,14 +46,14 @@ describe('civ-form-step', () => {
     let detail: any = null;
     el.addEventListener('civ-step-continue', ((e: CustomEvent) => { detail = e.detail; }) as EventListener);
 
-    const continueBtn = Array.from(el.querySelectorAll('button')).find(b => b.textContent?.trim() === 'Continue')!;
-    continueBtn.click();
+    const btn = el.querySelector('civ-button') as HTMLElement;
+    btn.click();
     expect(detail).not.toBeNull();
     expect(detail.from).toBe(0);
     expect(detail.to).toBe(1);
   });
 
-  it('fires civ-step-complete on last step continue', async () => {
+  it('fires civ-step-complete on last step', async () => {
     const el = await fixture<CivFormStep>(threeSteps) as CivFormStep;
     el.goToStep(2);
     await elementUpdated(el);
@@ -63,25 +61,10 @@ describe('civ-form-step', () => {
     let detail: any = null;
     el.addEventListener('civ-step-complete', ((e: CustomEvent) => { detail = e.detail; }) as EventListener);
 
-    const saveBtn = Array.from(el.querySelectorAll('button')).find(b => b.textContent?.includes('Save'))!;
-    saveBtn.click();
+    const btn = el.querySelector('civ-button') as HTMLElement;
+    btn.click();
     expect(detail).not.toBeNull();
     expect(detail.total).toBe(3);
-  });
-
-  it('fires civ-step-back on back click', async () => {
-    const el = await fixture<CivFormStep>(threeSteps) as CivFormStep;
-    el.goToStep(1);
-    await elementUpdated(el);
-
-    let detail: any = null;
-    el.addEventListener('civ-step-back', ((e: CustomEvent) => { detail = e.detail; }) as EventListener);
-
-    const backBtn = Array.from(el.querySelectorAll('button')).find(b => b.textContent?.trim() === 'Back')!;
-    backBtn.click();
-    expect(detail).not.toBeNull();
-    expect(detail.from).toBe(1);
-    expect(detail.to).toBe(0);
   });
 
   it('goToStep navigates and fires civ-step-change', async () => {
@@ -101,15 +84,34 @@ describe('civ-form-step', () => {
     expect(el.currentLabel).toBe('Step 2');
   });
 
-  it('disables buttons when navDisabled is true', async () => {
-    const el = await fixture<CivFormStep>(threeSteps) as CivFormStep;
-    el.goToStep(1);
-    (el as any).navDisabled = true;
+  it('hides nav bar for single step', async () => {
+    const el = await fixture(`
+      <civ-form-step>
+        <div data-step-label="Only"><p>Only step</p></div>
+      </civ-form-step>
+    `);
+    expect(el.querySelector('.civ-wizard-nav')).toBeNull();
+  });
+
+  it('blocks advancement when required field is empty', async () => {
+    const el = await fixture(`
+      <civ-form-step>
+        <div data-step-label="Name">
+          <civ-text-input label="Full name" name="name" required></civ-text-input>
+        </div>
+        <div data-step-label="Email">
+          <civ-text-input label="Email" name="email"></civ-text-input>
+        </div>
+      </civ-form-step>
+    `);
+
+    // Click Continue without filling in
+    const btn = el.querySelector('civ-button') as HTMLElement;
+    btn.click();
     await elementUpdated(el);
-    const buttons = el.querySelectorAll('button');
-    for (const btn of buttons) {
-      expect(btn.disabled).toBe(true);
-    }
+
+    // Should still be on step 1
+    expect((el as CivFormStep).current).toBe(0);
   });
 
   it('uses Light DOM', async () => {

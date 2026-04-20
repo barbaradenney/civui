@@ -44,7 +44,7 @@ export class CivPrefillNotice extends CivBaseElement {
           <div class="civ-alert__body">
             ${bodyText}
             ${this.profileHref ? html`
-              <a href="${this.profileHref}" class="civ-link civ-ms-1">${linkLabel}</a>
+              <civ-link href="${this.profileHref}" label="${linkLabel}" class="civ-ms-1"></civ-link>
             ` : nothing}
           </div>
         </div>

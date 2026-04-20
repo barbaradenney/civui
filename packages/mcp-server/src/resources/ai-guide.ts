@@ -44,6 +44,7 @@ For architecture and internals, see \`CLAUDE.md\` in the repo root.
 | \`<civ-task>\` | Navigation | \`label\`, \`hint\`, \`href\`, \`status\` (not-started/in-progress/complete/cannot-start/error) | — |
 | \`<civ-progress-bar>\` | Feedback | \`value\`, \`label\`, \`status\` | — |
 | \`<civ-progress-steps>\` | Feedback | \`steps\` (JSON), \`current\`, \`show-counter\`, \`clickable\`, \`orientation\` | \`civ-step-click\` |
+| \`<civ-form-step>\` | Form | \`persist\`, \`show-progress\`, \`show-counter\`, \`continue-label\`, \`back-label\`, \`complete-label\` | \`civ-step-complete\`, \`civ-wizard-step\` |
 
 **All form-participating components** also have: \`label\`, \`name\`, \`value\`, \`hint\`, \`error\`, \`required\`, \`disabled\`, \`requiredMessage\`, \`hide-required-indicator\`.
 
@@ -538,6 +539,28 @@ Task list navigation for multi-chapter forms. Tasks show a label, optional hint,
   </civ-task-group>
 </civ-task-list>
 \`\`\`
+
+### civ-form-step
+
+Multi-step form with built-in validation, progress steps, and navigation.
+Children with \`data-step\` define each step. Validates required fields before advancing.
+
+**Props:** \`persist\`, \`show-progress\`, \`show-counter\`, \`continue-label\`, \`back-label\`, \`complete-label\`
+**Events:** \`civ-step-complete\` (all steps done), \`civ-wizard-step\` { step, total }
+
+\`\`\`html
+<civ-form-step persist="form-personal" complete-label="Save and continue">
+  <div data-step data-step-label="Your name">
+    <civ-name legend="Your name" name="fullName" required></civ-name>
+  </div>
+  <div data-step data-step-label="Date of birth">
+    <civ-memorable-date legend="Date of birth" name="dob" required></civ-memorable-date>
+  </div>
+</civ-form-step>
+\`\`\`
+
+The wizard automatically renders progress steps, Continue/Back buttons, and validates
+required fields before advancing. No custom JavaScript needed.
 
 ### civ-progress-steps
 

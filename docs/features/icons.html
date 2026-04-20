@@ -232,7 +232,7 @@
 
   <div class="hero">
     <h1>Zero-Dependency Icons</h1>
-    <p>Icons built from layered Unicode characters. No icon fonts, no SVG sprites, no external dependencies.</p>
+    <p>44 pure-CSS icons drawn with <code>::before</code> and <code>::after</code> pseudo-elements. No icon fonts, no SVG sprites, no external dependencies.</p>
     <div class="hero-badges">
       <span class="badge">No Network Requests</span>
       <span class="badge">Inherits Color</span>
@@ -244,7 +244,7 @@
   <div class="content">
     <h2>The Approach</h2>
     <div class="approach">
-      <p>CivUI icons are composed from layered Unicode characters, rendered entirely with the browser's native text engine. There are no icon font files to load, no SVG sprite sheets to manage, and no external CDN dependencies. Each icon is a <span class="inline-code">&lt;civ-icon&gt;</span> custom element that inherits color from its parent, scales with <span class="inline-code">font-size</span>, and works in any context where text renders &mdash; including email, print, and high-contrast modes.</p>
+      <p>CivUI icons are drawn with pure CSS &mdash; each icon is a class (<span class="inline-code">civ-icon--name</span>) that paints a shape using <span class="inline-code">::before</span> and <span class="inline-code">::after</span> pseudo-elements with borders, <span class="inline-code">clip-path</span>, and transforms. No font files, no SVG sprites, no CDN. Each icon is a <span class="inline-code">&lt;civ-icon&gt;</span> custom element that inherits <span class="inline-code">currentColor</span> from its parent, scales with <span class="inline-code">font-size</span>, and has a platform mapping to SF Symbols on iOS and Material Symbols on Android.</p>
     </div>
 
     <h2>Benefits</h2>
@@ -302,6 +302,14 @@
         <span class="icon-name">arrow-down</span>
       </div>
       <div class="icon-cell">
+        <span class="icon-char">&#x21A9;</span>
+        <span class="icon-name">arrow-back</span>
+      </div>
+      <div class="icon-cell">
+        <span class="icon-char">&#x2197;</span>
+        <span class="icon-name">external-link</span>
+      </div>
+      <div class="icon-cell">
         <span class="icon-char">&#x2715;</span>
         <span class="icon-name">close</span>
       </div>
@@ -318,6 +326,14 @@
         <span class="icon-name">menu</span>
       </div>
       <div class="icon-cell">
+        <span class="icon-char">&middot;&middot;&middot;</span>
+        <span class="icon-name">more-horizontal</span>
+      </div>
+      <div class="icon-cell">
+        <span class="icon-char" style="writing-mode: vertical-rl;">&middot;&middot;&middot;</span>
+        <span class="icon-name">more-vertical</span>
+      </div>
+      <div class="icon-cell">
         <span class="icon-char">&#x2315;</span>
         <span class="icon-name">search</span>
       </div>
@@ -328,6 +344,10 @@
       <div class="icon-cell">
         <span class="icon-char">&#x2713;</span>
         <span class="icon-name">check</span>
+      </div>
+      <div class="icon-cell">
+        <span class="icon-char">&#x2705;</span>
+        <span class="icon-name">check-circle</span>
       </div>
       <div class="icon-cell">
         <span class="icon-char">&#x25CB;!</span>
@@ -417,7 +437,16 @@
         <span class="icon-char">&#x25BC;</span>
         <span class="icon-name">sort-desc</span>
       </div>
+      <div class="icon-cell">
+        <span class="icon-char">&#x2B83;</span>
+        <span class="icon-name">sort-none</span>
+      </div>
+      <div class="icon-cell">
+        <span class="icon-char">&lowast;</span>
+        <span class="icon-name">required-indicator</span>
+      </div>
     </div>
+    <p style="margin-top: 1.5rem; color: var(--color-base-dark); font-size: 0.9rem;">The glyphs above are Unicode previews only &mdash; the live <code>&lt;civ-icon&gt;</code> component paints each shape with pure CSS (no Unicode at runtime) and maps to <a href="https://developer.apple.com/sf-symbols/">SF Symbols</a> on iOS and <a href="https://fonts.google.com/icons">Material Symbols</a> on Android.</p>
 
     <h2>Usage</h2>
     <pre><code>&lt;!-- Basic usage --&gt;

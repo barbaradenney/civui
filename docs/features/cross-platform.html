@@ -205,7 +205,7 @@
 
   <div class="hero">
     <h1>Cross-Platform Components</h1>
-    <p>Define once, generate for Web, iOS, Android, and React Native. Consistent behavior and design across every platform.</p>
+    <p>Define once, generate for Web, iOS, and Android. Consistent behavior and design across every platform.</p>
   </div>
 
   <div class="content">
@@ -214,12 +214,12 @@
       CivUI uses a platform-neutral schema as the single source of truth for every component. Each schema captures the component's properties, events, accessibility requirements, and validation rules. The codegen pipeline then generates idiomatic implementations for each target platform, ensuring consistent APIs and behavior without manual synchronization.
     </p>
     <p>
-      This means a component defined in one schema file produces a Lit web component, a SwiftUI view, a Jetpack Compose composable, and a React Native component, all with matching props, events, and accessibility semantics. When the schema changes, every platform updates in lockstep.
+      This means a component defined in one schema file produces a Lit web component, a SwiftUI view, and a Jetpack Compose composable, all with matching props, events, and accessibility semantics. When the schema changes, every platform updates in lockstep.
     </p>
 
-    <h2>One Component, Four Platforms</h2>
+    <h2>One Component, Three Platforms</h2>
     <p class="section-intro">
-      The same text input, written idiomatically for each platform. All four are generated from a single <code>text-input.schema.json</code> definition.
+      The same text input, written idiomatically for each platform. All three are generated from a single <code>text-input.schema.json</code> definition.
     </p>
 
     <div class="code-grid">
@@ -249,15 +249,6 @@
     required = true
 )</code></pre>
       </div>
-
-      <div class="code-card">
-        <div class="code-card-header">REACT NATIVE</div>
-        <pre><code>&lt;CivTextInput
-  label="Email"
-  type="email"
-  required
-/&gt;</code></pre>
-      </div>
     </div>
 
     <h2>Architecture</h2>
@@ -275,21 +266,22 @@
                     |      @civui/codegen  |
                     +----------+----------+
                                |
-          +--------------------+--------------------+
-          |            |              |              |
-  +-------+------+  +-+----------+  ++-----------+  +--------+------+
-  |     Lit      |  |  SwiftUI   |  |  Compose   |  | React Native  |
-  | Web Component|  | iOS 16+    |  | Android 8+ |  |   Component   |
-  +--------------+  +------------+  +------------+  +---------------+
+                    +----------+----------+
+                    |          |          |
+              +-----+----+ +---+----+ +---+------+
+              |   Lit    | | SwiftUI| | Compose  |
+              | Web Cpt. | | iOS 16+| |Android 8+|
+              +----------+ +--------+ +----------+
 
                     +---------------------+
                     |    Design Tokens     |
                     |   (W3C DTCG JSON)   |
                     +----------+----------+
                                |
-          +--------------------+--------------------+
-          |            |              |              |
-    CSS Variables  SwiftUI Assets  Compose Theme   RN StyleSheet</code></pre>
+                    +----------+----------+
+                    |          |          |
+              CSS Variables SwiftUI  Compose
+                            Assets   Theme</code></pre>
     </div>
 
     <h2>Shared Design Tokens</h2>
@@ -348,7 +340,7 @@
       </div>
       <div class="package-card">
         <h3>@civui/codegen</h3>
-        <p>Code generator that reads schemas and produces idiomatic Lit, SwiftUI, Compose, and React Native components.</p>
+        <p>Code generator that reads schemas and produces idiomatic Lit, SwiftUI, and Jetpack Compose components.</p>
       </div>
       <div class="package-card">
         <h3>@civui/tokens</h3>
@@ -365,10 +357,6 @@
       <div class="package-card">
         <h3>CivUI for Android</h3>
         <p>Jetpack Compose components for Android 8+. Material 3 foundation with CivUI design tokens and accessibility semantics.</p>
-      </div>
-      <div class="package-card">
-        <h3>@civui/react-native</h3>
-        <p>React Native companion components sharing the same prop APIs and design tokens as the web components.</p>
       </div>
     </div>
 

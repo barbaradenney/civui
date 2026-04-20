@@ -1552,24 +1552,8 @@
     @apply civ-flex-1 civ-min-w-0;
   }
 
-  .civ-task__link {
-    text-decoration: none;
-  }
-
-  .civ-task__link:hover {
-    text-decoration: underline;
-  }
-
   .civ-task__status {
     @apply civ-ms-3 civ-flex-shrink-0;
-  }
-
-  .civ-task__status--complete {
-    color: var(--civ-color-base-darkest);
-  }
-
-  .civ-task__status--cannot-start {
-    color: var(--civ-color-base-darkest);
   }
 
   /* ── Status tags ───────────────────────────────────────────── */

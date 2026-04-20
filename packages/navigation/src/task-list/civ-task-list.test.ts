@@ -4,6 +4,7 @@ import './civ-task-list.js';
 import './civ-task-group.js';
 import './civ-task.js';
 import '@civui/ui/tag';
+import '@civui/ui/link';
 
 afterEach(cleanupFixtures);
 
@@ -79,19 +80,19 @@ describe('civ-task-group', () => {
 });
 
 describe('civ-task', () => {
-  it('renders label as link when href is provided', async () => {
+  it('renders label as civ-link when href is provided', async () => {
     const el = await fixture('<civ-task label="Contact info" href="#/contact" status="not-started"></civ-task>');
 
-    const link = el.querySelector('a.civ-link');
+    const link = el.querySelector('civ-link');
     expect(link).not.toBeNull();
-    expect(link!.textContent).toBe('Contact info');
+    expect(link!.getAttribute('label')).toBe('Contact info');
     expect(link!.getAttribute('href')).toBe('#/contact');
   });
 
   it('renders label as plain text when no href', async () => {
     const el = await fixture('<civ-task label="Review" status="cannot-start"></civ-task>');
 
-    const link = el.querySelector('a');
+    const link = el.querySelector('civ-link');
     expect(link).toBeNull();
     const span = el.querySelector('.civ-task__label');
     expect(span).not.toBeNull();
@@ -101,7 +102,7 @@ describe('civ-task', () => {
   it('renders label as plain text when status is cannot-start even with href', async () => {
     const el = await fixture('<civ-task label="Review" href="#/review" status="cannot-start"></civ-task>');
 
-    const link = el.querySelector('a');
+    const link = el.querySelector('civ-link');
     expect(link).toBeNull();
   });
 
@@ -169,12 +170,11 @@ describe('civ-task', () => {
   it('links have aria-describedby pointing to status container', async () => {
     const el = await fixture('<civ-task label="Task" href="#" status="in-progress"></civ-task>');
 
-    const link = el.querySelector('a')!;
+    const link = el.querySelector('civ-link')!;
     const statusId = link.getAttribute('aria-describedby');
     expect(statusId).toBeTruthy();
     const statusEl = el.querySelector(`#${statusId}`);
     expect(statusEl).not.toBeNull();
-    // Status container holds the civ-tag element
     const tag = statusEl!.querySelector('civ-tag');
     expect(tag).not.toBeNull();
     expect(tag!.getAttribute('label')).toBe('In progress');

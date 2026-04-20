@@ -70,11 +70,11 @@ export class CivTask extends CivBaseElement {
       <li class="civ-task" role="listitem">
         <div class="civ-task__name-and-hint">
           ${isNavigable
-            ? html`<a
-                class="civ-link civ-task__link civ-font-medium"
+            ? html`<civ-link
                 href="${this.href}"
+                label="${this.label}"
                 aria-describedby="${this._statusId}"
-              >${this.label}</a>`
+              ></civ-link>`
             : html`<span class="civ-task__label civ-font-medium">${this.label}</span>`}
           ${this.hint
             ? html`<span class="civ-task__hint civ-hint civ-block">${this.hint}</span>`

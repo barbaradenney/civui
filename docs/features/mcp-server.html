@@ -1035,9 +1035,8 @@
     <ol>
       <li><strong><code>&lt;civ-link variant="back"&gt;</code></strong> &mdash; Always at the top. Returns to the task list hub.</li>
       <li><strong><code>&lt;civ-page-header&gt;</code></strong> &mdash; Eyebrow (form title), heading (chapter name), subheading (form number).</li>
-      <li><strong><code>&lt;civ-progress-steps&gt;</code></strong> &mdash; Shows each field in the chapter as a numbered step. Current step highlighted.</li>
-      <li><strong>Form field</strong> &mdash; One CivUI form component per page.</li>
-      <li><strong><code>&lt;civ-button&gt;</code></strong> &mdash; "Continue" advances; "Save and continue" completes the chapter.</li>
+      <li><strong><code>&lt;civ-form-step&gt;</code></strong> &mdash; Multi-step wizard wrapping all fields. Handles validation, "Go back" navigation, step counter, and "Continue" button. Composes <code>&lt;civ-progress-steps&gt;</code> internally for the visual step indicator.</li>
+      <li><strong>Form fields</strong> &mdash; One CivUI form component per step (data-step-label defines each step).</li>
     </ol>
 
     <h3>Navigation and Progress</h3>

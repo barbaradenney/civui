@@ -826,12 +826,15 @@
               <tr><td><code>clickable</code></td><td><code>boolean</code></td><td><code>false</code></td><td>When true, completed steps become clickable buttons</td></tr>
               <tr><td><code>show-counter</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Show "Step X of Y" text below the steps</td></tr>
               <tr><td><code>error-steps</code></td><td><code>string (JSON)</code></td><td><code>'[]'</code></td><td>JSON array of step indices with validation errors</td></tr>
+              <tr><td><code>show-back</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Show a "Go back" link before the step counter (visible when current &gt; 0)</td></tr>
+              <tr><td><code>back-label</code></td><td><code>string</code></td><td><code>'Go back'</code></td><td>Label for the back link</td></tr>
             </tbody>
           </table>
 
           <h4>Events</h4>
           <ul class="event-list">
             <li><code>civ-step-click</code> &mdash; When a completed step is clicked (requires <code>clickable</code>). Detail: <code>{ step: number }</code></li>
+            <li><code>civ-step-back</code> &mdash; When the "Go back" link is clicked (requires <code>show-back</code>). Detail: <code>{ from, to }</code></li>
           </ul>
 
           <h4>Example: Simple steps</h4>
@@ -859,6 +862,63 @@
   orientation="vertical"
   error-steps="[0]"
 &gt;&lt;/civ-progress-steps&gt;</code></pre>
+        </div>
+      </div>
+
+      <!-- civ-form-step -->
+      <div class="component">
+        <div class="component-header">
+          <h3>&lt;civ-form-step&gt;</h3>
+          <p>Multi-step form wizard. Shows one step at a time, validates required fields before advancing, and composes <code>&lt;civ-progress-steps&gt;</code> for visual progress tracking.</p>
+        </div>
+        <div class="component-body">
+          <h4>Props</h4>
+          <table class="props-table">
+            <thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><code>persist</code></td><td><code>string</code></td><td><code>''</code></td><td>Storage key for civ-form session persistence</td></tr>
+              <tr><td><code>continue-label</code></td><td><code>string</code></td><td><code>'Continue'</code></td><td>Label for the continue button</td></tr>
+              <tr><td><code>complete-label</code></td><td><code>string</code></td><td><code>'Save and continue'</code></td><td>Label for the final step's button</td></tr>
+              <tr><td><code>validate</code></td><td><code>boolean</code></td><td><code>true</code></td><td>Enable built-in required field validation before advancing</td></tr>
+              <tr><td><code>nav-disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Disable navigation buttons (e.g., during async validation)</td></tr>
+            </tbody>
+          </table>
+
+          <h4>Events</h4>
+          <ul class="event-list">
+            <li><code>civ-step-complete</code> &mdash; All steps completed and validated. Detail: <code>{ total }</code></li>
+            <li><code>civ-step-continue</code> &mdash; Advancing to next step. Detail: <code>{ from, to }</code></li>
+            <li><code>civ-step-back</code> &mdash; Going back to previous step. Detail: <code>{ from, to }</code></li>
+            <li><code>civ-step-change</code> &mdash; Step changed (any direction). Detail: <code>{ current, total, label }</code></li>
+          </ul>
+
+          <h4>How it works</h4>
+          <ul>
+            <li>Each child element with <code>data-step-label</code> defines a step</li>
+            <li>Renders <code>&lt;civ-progress-steps&gt;</code> automatically with step labels, counter, and "Go back" link</li>
+            <li>Validates required fields before advancing (uses component <code>reportValidity()</code> for SSN, email, etc.)</li>
+            <li>Wraps content in <code>&lt;civ-form persist="..."&gt;</code> when <code>persist</code> is set</li>
+            <li>Manages focus &mdash; moves to first focusable field on step change</li>
+            <li>Screen reader announcements via <code>announce()</code> on step change</li>
+          </ul>
+
+          <h4>Example</h4>
+<pre><code>&lt;civ-form-step persist="form-21-526ez-personal" complete-label="Save and continue"&gt;
+  &lt;div data-step-label="Your name"&gt;
+    &lt;civ-name legend="Your name" name="fullName" required&gt;&lt;/civ-name&gt;
+  &lt;/div&gt;
+  &lt;div data-step-label="Date of birth"&gt;
+    &lt;civ-memorable-date legend="Date of birth" name="dob" required
+      hint="For example: January 15 1990"&gt;&lt;/civ-memorable-date&gt;
+  &lt;/div&gt;
+  &lt;div data-step-label="Social Security number"&gt;
+    &lt;civ-text-input label="Social Security number" name="ssn" required
+      type="tel" mask="ssn"&gt;&lt;/civ-text-input&gt;
+  &lt;/div&gt;
+&lt;/civ-form-step&gt;</code></pre>
+
+          <h4>Component composition</h4>
+          <p><code>&lt;civ-form-step&gt;</code> composes <code>&lt;civ-progress-steps&gt;</code> internally, passing the step labels, current index, <code>show-counter</code>, and <code>show-back</code>. <code>&lt;civ-progress-steps&gt;</code> is a standalone component that can also be used independently outside of forms.</p>
         </div>
       </div>
 
@@ -1046,7 +1106,7 @@
         </div>
         <div class="form-list-item">
           <code>&lt;civ-form-step&gt;</code>
-          <span>Container for a single step in a multi-step form flow.</span>
+          <span>Multi-step form wizard. One step at a time with validation, back navigation, progress tracking via <code>civ-progress-steps</code>, and form persistence.</span>
         </div>
       </div>
 

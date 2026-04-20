@@ -9,6 +9,8 @@
 
 import type { FormSection } from '../schema/index.js';
 import type { GovChapterId } from './gov-chapters.js';
+import { GOV_FORMS_BATCH2 } from './gov-forms-batch2.js';
+import { GOV_FORMS_BATCH3 } from './gov-forms-batch3.js';
 
 export interface GovFormDefinition {
   /** VA form number (e.g., "21-526EZ"). */
@@ -543,4 +545,452 @@ export const GOV_FORMS: GovFormDefinition[] = [
       },
     ],
   },
+
+  // ── 10-10CG: Caregiver Support ─────────────────────────────
+  {
+    formNumber: '10-10CG',
+    title: 'Apply for the Program of Comprehensive Assistance for Family Caregivers',
+    description: 'Use this form to apply for the Program of Comprehensive Assistance for Family Caregivers.',
+    ombNumber: '2900-0768',
+    respondentBurden: '30 minutes',
+    chapters: [
+      'personal-info',
+      'contact-info',
+      'review-submit',
+    ],
+    customChapters: [
+      {
+        id: 'veteran-info',
+        heading: 'Veteran being cared for',
+        hint: 'Information about the Veteran you provide care for',
+        afterChapter: 'contact-info',
+        section: {
+          heading: 'Veteran being cared for',
+          fields: [
+            {
+              type: 'text',
+              name: 'veteranName',
+              label: 'Veteran name',
+              required: true,
+            },
+            {
+              type: 'text',
+              name: 'veteranSsn',
+              label: 'Veteran Social Security number',
+              hint: 'For example: 123 45 6789',
+              inputmode: 'numeric',
+            },
+            {
+              type: 'select',
+              name: 'relationshipToVeteran',
+              label: 'Relationship to Veteran',
+              required: true,
+              options: [
+                { value: 'spouse', label: 'Spouse' },
+                { value: 'parent', label: 'Parent' },
+                { value: 'child', label: 'Child' },
+                { value: 'other', label: 'Other' },
+              ],
+            },
+          ],
+        },
+      },
+      {
+        id: 'caregiver-info',
+        heading: 'Primary caregiver',
+        hint: 'Information about the primary caregiver',
+        afterChapter: 'veteran-info',
+        section: {
+          heading: 'Primary caregiver',
+          fields: [
+            {
+              type: 'checkbox',
+              name: 'certifyPersonalCare',
+              label: 'I certify I provide personal care services to the Veteran',
+              required: true,
+            },
+            {
+              type: 'memorable-date',
+              name: 'caregivingStartDate',
+              label: 'Date started caregiving',
+            },
+            {
+              type: 'text',
+              name: 'hoursPerWeek',
+              label: 'Hours per week',
+              inputmode: 'numeric',
+            },
+          ],
+        },
+      },
+    ],
+    preparationItems: [
+      'Veteran\'s Social Security number',
+      'Veteran\'s VA enrollment status',
+      'Caregiver\'s personal information',
+      'Health insurance information',
+    ],
+    nextSteps: [
+      'VA reviews within 90 days.',
+      'A home visit may be scheduled.',
+      'Training will be provided.',
+      'Monthly stipend begins after approval.',
+    ],
+  },
+
+  // ── 21-686C: Dependents ─────────────────────────────────────
+  {
+    formNumber: '21-686C',
+    title: 'Add or remove dependents from your VA benefits',
+    description: 'Use this form to add or remove dependents from your VA benefits.',
+    ombNumber: '2900-0043',
+    respondentBurden: '30 minutes',
+    chapters: [
+      'personal-info',
+      'contact-info',
+      'document-upload',
+      'review-submit',
+    ],
+    customChapters: [
+      {
+        id: 'dependent-info',
+        heading: 'Dependent information',
+        hint: 'Add information for each dependent',
+        afterChapter: 'contact-info',
+        section: {
+          heading: 'Dependent information',
+          repeatable: true,
+          repeatableMin: 1,
+          repeatableMax: 10,
+          fields: [
+            {
+              type: 'text',
+              name: 'dependentFullName',
+              label: 'Dependent full name',
+              required: true,
+            },
+            {
+              type: 'text',
+              name: 'dependentSsn',
+              label: 'Dependent Social Security number',
+              hint: 'For example: 123 45 6789',
+              inputmode: 'numeric',
+            },
+            {
+              type: 'memorable-date',
+              name: 'dependentDob',
+              label: 'Date of birth',
+              required: true,
+            },
+            {
+              type: 'select',
+              name: 'dependentRelationship',
+              label: 'Relationship',
+              required: true,
+              options: [
+                { value: 'spouse', label: 'Spouse' },
+                { value: 'child', label: 'Child' },
+                { value: 'parent', label: 'Parent' },
+                { value: 'stepchild', label: 'Stepchild' },
+              ],
+            },
+            {
+              type: 'radio',
+              name: 'dependentLivingWithYou',
+              label: 'Does this dependent live with you?',
+              options: [
+                { value: 'yes', label: 'Yes' },
+                { value: 'no', label: 'No' },
+              ],
+            },
+          ],
+        },
+      },
+    ],
+    preparationItems: [
+      'Your Social Security number',
+      'Dependent Social Security numbers',
+      'Marriage certificate if adding spouse',
+      'Birth certificates for children',
+      'Divorce decree if reporting divorce',
+    ],
+    nextSteps: [
+      'We\'ll review and update your benefits.',
+      'Changes to payments within 30 days.',
+      'You\'ll receive a decision letter.',
+    ],
+  },
+
+  // ── 21-0966: Intent to File ─────────────────────────────────
+  {
+    formNumber: '21-0966',
+    title: 'Submit an intent to file',
+    description: 'Use this form to submit an intent to file a claim for VA benefits.',
+    ombNumber: '2900-0858',
+    respondentBurden: '5 minutes',
+    chapters: [
+      'personal-info',
+      'contact-info',
+      'review-submit',
+    ],
+    customChapters: [
+      {
+        id: 'intent-details',
+        heading: 'Intent to file details',
+        hint: 'Select the benefit type you intend to file for',
+        afterChapter: 'contact-info',
+        section: {
+          heading: 'Intent to file details',
+          fields: [
+            {
+              type: 'select',
+              name: 'benefitType',
+              label: 'Benefit type',
+              required: true,
+              options: [
+                { value: 'compensation', label: 'Compensation' },
+                { value: 'pension', label: 'Pension' },
+                { value: 'survivors', label: 'Survivors' },
+              ],
+            },
+            {
+              type: 'textarea',
+              name: 'additionalComments',
+              label: 'Any additional comments',
+            },
+          ],
+        },
+      },
+    ],
+    preparationItems: [
+      'Your Social Security number',
+      'The benefit type you intend to apply for',
+    ],
+    nextSteps: [
+      'Your intent to file is recorded.',
+      'You have 1 year to submit your full claim.',
+      'Your effective date will be the date of this intent to file.',
+    ],
+  },
+
+  // ── 21-4142: Medical Records Release ────────────────────────
+  {
+    formNumber: '21-4142',
+    title: 'Authorize VA to release your medical records',
+    description: 'Use this form to authorize VA to request your medical records from non-VA providers.',
+    ombNumber: '2900-0075',
+    respondentBurden: '15 minutes',
+    chapters: [
+      'personal-info',
+      'contact-info',
+      'review-submit',
+    ],
+    customChapters: [
+      {
+        id: 'provider-info',
+        heading: 'Medical provider information',
+        hint: 'Add information for each provider or facility',
+        afterChapter: 'contact-info',
+        section: {
+          heading: 'Medical provider information',
+          repeatable: true,
+          repeatableMin: 1,
+          repeatableMax: 5,
+          fields: [
+            {
+              type: 'text',
+              name: 'providerName',
+              label: 'Provider or facility name',
+              required: true,
+            },
+            {
+              type: 'text',
+              name: 'providerAddress',
+              label: 'Provider address',
+              required: true,
+            },
+            {
+              type: 'tel',
+              name: 'providerPhone',
+              label: 'Provider phone number',
+            },
+            {
+              type: 'memorable-date',
+              name: 'treatmentDateFrom',
+              label: 'Treatment dates from',
+            },
+            {
+              type: 'memorable-date',
+              name: 'treatmentDateTo',
+              label: 'Treatment dates to',
+            },
+            {
+              type: 'textarea',
+              name: 'conditionsTreated',
+              label: 'Conditions treated',
+              hint: 'List the conditions relevant to your claim',
+            },
+          ],
+        },
+      },
+      {
+        id: 'authorization-scope',
+        heading: 'Authorization scope',
+        hint: 'Select which records to release and the date range',
+        afterChapter: 'provider-info',
+        section: {
+          heading: 'Authorization scope',
+          fields: [
+            {
+              type: 'checkbox-group',
+              name: 'recordsToRelease',
+              label: 'Records to release',
+              options: [
+                { value: 'treatment-records', label: 'Treatment records' },
+                { value: 'lab-results', label: 'Lab results' },
+                { value: 'imaging', label: 'Imaging' },
+                { value: 'mental-health-records', label: 'Mental health records' },
+                { value: 'all-records', label: 'All records' },
+              ],
+            },
+            {
+              type: 'memorable-date',
+              name: 'dateRangeStart',
+              label: 'Date range start',
+            },
+            {
+              type: 'memorable-date',
+              name: 'dateRangeEnd',
+              label: 'Date range end',
+            },
+          ],
+        },
+      },
+    ],
+    preparationItems: [
+      'Names and addresses of medical providers',
+      'Dates of treatment',
+      'Types of records to release',
+    ],
+    nextSteps: [
+      'We\'ll request your records from the listed providers.',
+      'This usually takes 30-60 days.',
+      'We\'ll notify you if providers don\'t respond.',
+    ],
+  },
+
+  // ── 22-5490: Dependent Education (DEA) ──────────────────────
+  {
+    formNumber: '22-5490',
+    title: 'Apply for dependent education benefits',
+    description: 'Use this form to apply for Survivors\' and Dependents\' Educational Assistance (DEA) benefits.',
+    ombNumber: '2900-0098',
+    respondentBurden: '20 minutes',
+    chapters: [
+      'personal-info',
+      'contact-info',
+      'direct-deposit',
+      'review-submit',
+    ],
+    customChapters: [
+      {
+        id: 'sponsor-info',
+        heading: 'Sponsor information',
+        hint: 'Information about the Veteran or sponsor',
+        afterChapter: 'contact-info',
+        section: {
+          heading: 'Sponsor information',
+          fields: [
+            {
+              type: 'text',
+              name: 'sponsorName',
+              label: 'Veteran or sponsor name',
+              required: true,
+            },
+            {
+              type: 'text',
+              name: 'sponsorSsn',
+              label: 'Veteran or sponsor Social Security number',
+              hint: 'For example: 123 45 6789',
+              inputmode: 'numeric',
+            },
+            {
+              type: 'memorable-date',
+              name: 'sponsorDob',
+              label: 'Veteran or sponsor date of birth',
+            },
+            {
+              type: 'select',
+              name: 'relationshipToSponsor',
+              label: 'Relationship to sponsor',
+              required: true,
+              options: [
+                { value: 'spouse', label: 'Spouse' },
+                { value: 'child', label: 'Child' },
+                { value: 'stepchild', label: 'Stepchild' },
+              ],
+            },
+          ],
+        },
+      },
+      {
+        id: 'education-details',
+        heading: 'Education details',
+        hint: 'School and program information',
+        afterChapter: 'sponsor-info',
+        section: {
+          heading: 'Education details',
+          fields: [
+            {
+              type: 'text',
+              name: 'schoolName',
+              label: 'School name',
+              required: true,
+            },
+            {
+              type: 'text',
+              name: 'schoolAddress',
+              label: 'School address',
+            },
+            {
+              type: 'select',
+              name: 'programType',
+              label: 'Program type',
+              required: true,
+              options: [
+                { value: 'college', label: 'College' },
+                { value: 'vocational', label: 'Vocational' },
+                { value: 'on-the-job', label: 'On-the-job training' },
+                { value: 'apprenticeship', label: 'Apprenticeship' },
+                { value: 'flight', label: 'Flight training' },
+              ],
+            },
+            {
+              type: 'memorable-date',
+              name: 'expectedStartDate',
+              label: 'Expected start date',
+              required: true,
+            },
+          ],
+        },
+      },
+    ],
+    preparationItems: [
+      'Sponsor Veteran\'s Social Security number and service information',
+      'School name and address',
+      'Program details',
+      'Bank account information for direct deposit',
+    ],
+    nextSteps: [
+      'We\'ll verify your eligibility through the sponsor\'s records.',
+      'Certificate of Eligibility sent within 30 days.',
+      'Share your COE with your school.',
+    ],
+  },
+
+  // Batch 2: education change, home loan, vocational rehab, appeals
+  ...GOV_FORMS_BATCH2 as GovFormDefinition[],
+
+  // Batch 3: board appeal, burial, disclosure, pre-need, CHAMPVA
+  ...GOV_FORMS_BATCH3 as GovFormDefinition[],
 ];

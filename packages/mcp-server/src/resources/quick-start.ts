@@ -21,7 +21,7 @@ assemble_gov_form(formNumber, format)  → complete HTML or React app
 validate_gov_form(formNumber)          → check for issues
 \`\`\`
 
-Available forms: 21-526EZ (disability), 10-10EZ (health care), 22-1990 (education), 21P-527EZ (pension), 21-22 (POA).
+Available forms (20): 21-526EZ (disability), 10-10EZ (health care), 22-1990 (education), 21P-527EZ (pension), 21-22 (POA), 10-10CG (caregiver), 21-686C (dependents), 21-0966 (intent to file), 21-4142 (medical records), 22-5490 (dependent education), 22-1995 (change of school), 26-1880 (home loan COE), 28-1900 (vocational rehab), 20-0995 (supplemental claim), 20-0996 (higher-level review), 10182 (board appeal), 21P-530 (burial), 21-0845 (disclosure auth), 40-10007 (pre-need burial), 10-10D (CHAMPVA).
 
 The \`assemble_gov_form\` tool produces a **single working file** with routing, navigation, form persistence, task list tracking, and submission handling. Use \`format: "react"\` for a multi-file React app.
 

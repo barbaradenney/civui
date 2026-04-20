@@ -1236,7 +1236,8 @@
   }
 
   .civ-btn--tertiary {
-    @apply civ-bg-base-lightest civ-text-base-darkest civ-border-base-light civ-px-2 civ-py-1.5;
+    @apply civ-bg-base-lightest civ-text-base-darkest civ-border-base-light;
+    padding: var(--civ-spacing-1_5) var(--civ-spacing-2);
   }
   .civ-btn--tertiary:hover:not(:disabled):not([aria-disabled="true"]) {
     @apply civ-bg-base-lighter;
@@ -1276,7 +1277,8 @@
   }
 
   .civ-btn--tertiary-danger {
-    @apply civ-bg-base-lightest civ-text-error civ-border-base-light civ-px-2 civ-py-1.5;
+    @apply civ-bg-base-lightest civ-text-error civ-border-base-light;
+    padding: var(--civ-spacing-1_5) var(--civ-spacing-2);
   }
   .civ-btn--tertiary-danger:hover:not(:disabled):not([aria-disabled="true"]) {
     @apply civ-bg-base-lighter;

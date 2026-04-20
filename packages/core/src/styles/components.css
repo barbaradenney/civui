@@ -1598,29 +1598,97 @@
   .civ-link-card {
     @apply civ-block civ-p-4 civ-border civ-rounded-md
            civ-cursor-pointer civ-transition-colors;
-    border-color: var(--civ-color-base-lighter);
-    background-color: var(--civ-color-white-DEFAULT);
     text-decoration: none;
     color: inherit;
   }
-  .civ-link-card:hover {
-    border-color: var(--civ-color-primary-DEFAULT);
-    background-color: var(--civ-color-primary-lightest);
-    box-shadow: var(--civ-shadow-sm);
-  }
-  .civ-link-card:active {
-    background-color: var(--civ-color-primary-lighter);
-  }
 
   .civ-link-card__heading {
-    @apply civ-block civ-font-bold civ-text-primary civ-underline;
+    @apply civ-block civ-font-bold civ-underline;
     font-size: var(--civ-typography-fontSize-lg);
   }
 
   .civ-link-card__description {
     @apply civ-block civ-mt-1;
-    color: var(--civ-color-base-dark);
     font-size: var(--civ-typography-fontSize-base);
+  }
+
+  /* Primary — blue filled card, white text */
+  .civ-link-card--primary {
+    border-color: var(--civ-color-primary-DEFAULT);
+    background-color: var(--civ-color-primary-DEFAULT);
+  }
+  .civ-link-card--primary .civ-link-card__heading {
+    color: #ffffff;
+  }
+  .civ-link-card--primary .civ-link-card__description {
+    color: rgba(255, 255, 255, 0.85);
+  }
+  .civ-link-card--primary:hover {
+    background-color: var(--civ-color-primary-dark);
+    border-color: var(--civ-color-primary-dark);
+    box-shadow: var(--civ-shadow-sm);
+  }
+  .civ-link-card--primary:active {
+    background-color: var(--civ-color-primary-darker);
+    border-color: var(--civ-color-primary-darker);
+  }
+
+  /* Secondary — white card, blue border and heading */
+  .civ-link-card--secondary {
+    border-color: var(--civ-color-primary-DEFAULT);
+    background-color: var(--civ-color-white-DEFAULT);
+  }
+  .civ-link-card--secondary .civ-link-card__heading {
+    color: var(--civ-color-primary-DEFAULT);
+  }
+  .civ-link-card--secondary .civ-link-card__description {
+    color: var(--civ-color-base-dark);
+  }
+  .civ-link-card--secondary:hover {
+    background-color: var(--civ-color-primary-lightest);
+    box-shadow: var(--civ-shadow-sm);
+  }
+  .civ-link-card--secondary:active {
+    background-color: var(--civ-color-primary-lighter);
+  }
+
+  /* Tertiary — white card, gray border, blue heading */
+  .civ-link-card--tertiary {
+    border-color: var(--civ-color-base-lighter);
+    background-color: var(--civ-color-white-DEFAULT);
+  }
+  .civ-link-card--tertiary .civ-link-card__heading {
+    color: var(--civ-color-primary-DEFAULT);
+  }
+  .civ-link-card--tertiary .civ-link-card__description {
+    color: var(--civ-color-base-dark);
+  }
+  .civ-link-card--tertiary:hover {
+    border-color: var(--civ-color-base-light);
+    background-color: var(--civ-color-base-lightest);
+    box-shadow: var(--civ-shadow-sm);
+  }
+  .civ-link-card--tertiary:active {
+    background-color: var(--civ-color-base-lighter);
+  }
+
+  /* Critical — yellow/gold background, black text */
+  .civ-link-card--critical {
+    border-color: #face00;
+    background-color: #face00;
+  }
+  .civ-link-card--critical .civ-link-card__heading {
+    color: var(--civ-color-base-darkest);
+  }
+  .civ-link-card--critical .civ-link-card__description {
+    color: var(--civ-color-base-darker);
+  }
+  .civ-link-card--critical:hover {
+    filter: brightness(0.95);
+    box-shadow: var(--civ-shadow-sm);
+  }
+  .civ-link-card--critical:active {
+    filter: brightness(0.9);
   }
 
   /* ── Page Header ──────────────────────────────────────────── */

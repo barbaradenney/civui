@@ -48,6 +48,30 @@ describe('civ-link-card', () => {
     expect(handler).toHaveBeenCalledOnce();
   });
 
+  it('defaults to primary variant', async () => {
+    const el = await fixture('<civ-link-card href="/test" heading="Title"></civ-link-card>');
+    const link = el.querySelector('a')!;
+    expect(link.className).toContain('civ-link-card--primary');
+  });
+
+  it('applies secondary variant', async () => {
+    const el = await fixture('<civ-link-card href="/test" heading="Details" variant="secondary"></civ-link-card>');
+    const link = el.querySelector('a')!;
+    expect(link.className).toContain('civ-link-card--secondary');
+  });
+
+  it('applies tertiary variant', async () => {
+    const el = await fixture('<civ-link-card href="/test" heading="History" variant="tertiary"></civ-link-card>');
+    const link = el.querySelector('a')!;
+    expect(link.className).toContain('civ-link-card--tertiary');
+  });
+
+  it('applies critical variant', async () => {
+    const el = await fixture('<civ-link-card href="/test" heading="Action" variant="critical"></civ-link-card>');
+    const link = el.querySelector('a')!;
+    expect(link.className).toContain('civ-link-card--critical');
+  });
+
   it('renders with empty heading', async () => {
     const el = await fixture('<civ-link-card href="/test"></civ-link-card>');
     const heading = el.querySelector('.civ-link-card__heading');

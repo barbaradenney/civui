@@ -2,17 +2,26 @@ import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { CivBaseElement } from '@civui/core';
 
+export type LinkCardVariant = 'primary' | 'secondary' | 'tertiary' | 'critical';
+
 /**
  * CivUI Link Card
  *
  * A clickable card that navigates to a destination. The entire card
  * is the click target. Renders as an `<a>` element wrapping the content.
  *
+ * **Variants:**
+ * - `primary` (default) — blue filled card with white text
+ * - `secondary` — white card with blue border and blue heading
+ * - `tertiary` — white card with gray border and blue heading
+ * - `critical` — yellow/gold background with black text for urgent actions
+ *
  * @element civ-link-card
  *
  * @prop {string} href - Navigation destination (required)
  * @prop {string} heading - Card heading text
  * @prop {string} description - Descriptive text below the heading
+ * @prop {LinkCardVariant} variant - Visual variant
  *
  * @fires civ-analytics - Analytics tracking event on click
  *
@@ -36,11 +45,16 @@ export class CivLinkCard extends CivBaseElement {
   /** Descriptive text below the heading. */
   @property({ type: String }) description = '';
 
+  /** Visual variant. */
+  @property({ type: String }) variant: LinkCardVariant = 'primary';
+
   override render() {
+    const classes = `civ-link-card civ-link-card--${this.variant} focus-visible:civ-focus-ring`;
+
     return html`
       <a
         href="${this.href}"
-        class="civ-link-card focus-visible:civ-focus-ring"
+        class="${classes}"
         @click="${this._onClick}"
       >
         <span class="civ-link-card__heading">${this.heading}</span>

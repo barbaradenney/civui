@@ -21,6 +21,8 @@ const config: Config = {
     { pattern: /^civ-alert--/ },
     // Group layout
     { pattern: /^civ-group-layout--/ },
+    // Link card variants
+    { pattern: /^civ-link-card--/ },
     // Card and divider sizes
     'civ-card--sm',
     'civ-divider--sm',

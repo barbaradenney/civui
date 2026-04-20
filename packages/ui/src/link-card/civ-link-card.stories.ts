@@ -10,6 +10,10 @@ const meta: Meta = {
     href: { control: 'text' },
     heading: { control: 'text' },
     description: { control: 'text' },
+    variant: {
+      control: 'select',
+      options: ['primary', 'secondary', 'tertiary', 'critical'],
+    },
   },
 };
 
@@ -64,6 +68,61 @@ export const CardCollection: Story = {
         href="#/housing"
         heading="Housing assistance"
         description="Get a VA-backed home loan or find housing support."
+      ></civ-link-card>
+    </div>
+  `,
+};
+
+export const Secondary: Story = {
+  name: 'Secondary Variant',
+  render: () => html`
+    <civ-link-card
+      href="#/benefits"
+      heading="Apply for benefits"
+      description="Start a new application for VA benefits."
+      variant="secondary"
+    ></civ-link-card>
+  `,
+};
+
+export const Critical: Story = {
+  name: 'Critical Variant',
+  render: () => html`
+    <civ-link-card
+      href="#/action-needed"
+      heading="Action needed"
+      description="Your claim requires additional documents before it can be processed."
+      variant="critical"
+    ></civ-link-card>
+  `,
+};
+
+export const AllVariants: Story = {
+  name: 'All Variants',
+  render: () => html`
+    <div style="display: flex; flex-direction: column; gap: 16px; max-width: 600px;">
+      <civ-link-card
+        href="#/benefits"
+        heading="Apply for benefits"
+        description="Start a new application for VA benefits."
+      ></civ-link-card>
+      <civ-link-card
+        href="#/details"
+        heading="View your claim details"
+        description="Check the status of your open claims and appeals."
+        variant="secondary"
+      ></civ-link-card>
+      <civ-link-card
+        href="#/history"
+        heading="Payment history"
+        description="View your past benefit payments and details."
+        variant="tertiary"
+      ></civ-link-card>
+      <civ-link-card
+        href="#/action"
+        heading="Action needed on your claim"
+        description="Upload required documents to continue processing your claim."
+        variant="critical"
       ></civ-link-card>
     </div>
   `,

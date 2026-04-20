@@ -1215,11 +1215,6 @@
     font-size: var(--civ-typography-fontSize-base);
   }
 
-  /* When a button renders as a link (<a>), underline to signal navigation */
-  a.civ-btn {
-    @apply civ-underline;
-  }
-
   .civ-btn--primary {
     @apply civ-bg-primary civ-text-white civ-border-primary;
   }
@@ -1231,24 +1226,23 @@
   }
 
   .civ-btn--secondary {
-    @apply civ-bg-base-lightest civ-text-base-darkest civ-border-base-light;
+    @apply civ-bg-transparent civ-text-primary civ-border-primary;
   }
   .civ-btn--secondary:hover:not(:disabled):not([aria-disabled="true"]) {
-    @apply civ-bg-base-lighter;
+    @apply civ-bg-primary civ-text-white;
   }
   .civ-btn--secondary:active:not(:disabled):not([aria-disabled="true"]) {
-    @apply civ-bg-base-light;
+    @apply civ-bg-primary-dark civ-text-white civ-border-primary-dark;
   }
 
   .civ-btn--tertiary {
-    @apply civ-bg-transparent civ-text-primary civ-border-primary civ-px-3 civ-py-1.5;
-    font-size: var(--civ-typography-fontSize-base);
+    @apply civ-bg-base-lightest civ-text-base-darkest civ-border-base-light;
   }
   .civ-btn--tertiary:hover:not(:disabled):not([aria-disabled="true"]) {
-    @apply civ-bg-primary civ-text-white;
+    @apply civ-bg-base-lighter;
   }
   .civ-btn--tertiary:active:not(:disabled):not([aria-disabled="true"]) {
-    @apply civ-bg-primary-dark civ-text-white civ-border-primary-dark;
+    @apply civ-bg-base-light;
   }
 
   .civ-btn--yesno {
@@ -1267,6 +1261,44 @@
   .civ-btn--danger:active:not(:disabled):not([aria-disabled="true"]) {
     @apply civ-bg-error-dark civ-border-error-dark;
     filter: brightness(0.85);
+  }
+
+  /* ── Link variants (rendered when href is set) ─────────────── */
+
+  /* Primary link — looks like a primary button, underlined */
+  .civ-link--primary {
+    @apply civ-inline-flex civ-items-center civ-justify-center civ-gap-2
+           civ-font-sans civ-font-bold civ-rounded
+           civ-px-5 civ-py-3 civ-border civ-cursor-pointer
+           civ-transition-colors civ-underline
+           civ-bg-primary civ-text-white civ-border-primary;
+    font-size: var(--civ-typography-fontSize-base);
+    text-decoration-color: currentColor;
+  }
+  .civ-link--primary:hover:not([aria-disabled="true"]) {
+    @apply civ-bg-primary-dark civ-border-primary-dark;
+  }
+
+  /* Secondary link — underlined text with trailing caret */
+  .civ-link--secondary {
+    @apply civ-inline-flex civ-items-center civ-gap-1
+           civ-font-sans civ-font-bold civ-cursor-pointer
+           civ-text-primary civ-underline;
+    font-size: var(--civ-typography-fontSize-base);
+  }
+  .civ-link--secondary:hover:not([aria-disabled="true"]) {
+    @apply civ-text-primary-dark;
+  }
+
+  /* Tertiary link — plain underlined link */
+  .civ-link--tertiary {
+    @apply civ-inline-flex civ-items-center
+           civ-font-sans civ-cursor-pointer
+           civ-text-primary civ-underline;
+    font-size: var(--civ-typography-fontSize-base);
+  }
+  .civ-link--tertiary:hover:not([aria-disabled="true"]) {
+    @apply civ-text-primary-dark;
   }
 
   .civ-btn:disabled,
@@ -1528,47 +1560,46 @@
     color: var(--civ-color-base-darker);
   }
 
-  /* Primary style — fixed colors for consistent contrast in light and dark mode.
-     Uses the light-mode "dark" token values directly so they don't swap. */
+  /* Primary style — uses tag-specific tokens that swap appropriately per mode */
 
   .civ-tag--blue-primary {
-    background-color: #1a4480;
-    color: #ffffff;
+    background-color: var(--civ-color-tag-blue-bg);
+    color: var(--civ-color-tag-blue-text);
   }
 
   .civ-tag--teal-primary {
-    background-color: #2e6276;
-    color: #ffffff;
+    background-color: var(--civ-color-tag-teal-bg);
+    color: var(--civ-color-tag-teal-text);
   }
 
   .civ-tag--red-primary {
-    background-color: #8b0a03;
-    color: #ffffff;
+    background-color: var(--civ-color-tag-red-bg);
+    color: var(--civ-color-tag-red-text);
   }
 
   .civ-tag--green-primary {
-    background-color: #2e7d32;
-    color: #ffffff;
+    background-color: var(--civ-color-tag-green-bg);
+    color: var(--civ-color-tag-green-text);
   }
 
   .civ-tag--yellow-primary {
-    background-color: #936f38;
-    color: #ffffff;
+    background-color: var(--civ-color-tag-yellow-bg);
+    color: var(--civ-color-tag-yellow-text);
   }
 
   .civ-tag--orange-primary {
-    background-color: #c05600;
-    color: #ffffff;
+    background-color: var(--civ-color-tag-orange-bg);
+    color: var(--civ-color-tag-orange-text);
   }
 
   .civ-tag--purple-primary {
-    background-color: #54278f;
-    color: #ffffff;
+    background-color: var(--civ-color-tag-purple-bg);
+    color: var(--civ-color-tag-purple-text);
   }
 
   .civ-tag--gray-primary {
-    background-color: #565c65;
-    color: #ffffff;
+    background-color: var(--civ-color-tag-gray-bg);
+    color: var(--civ-color-tag-gray-text);
   }
 
   /* ── Card ─────────────────────────────────────────────────── */

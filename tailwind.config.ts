@@ -14,8 +14,9 @@ const config: Config = {
     { pattern: /^civ-tag--/ },
     // Icon names
     { pattern: /^civ-icon--/ },
-    // Button variants
+    // Button and link variants
     { pattern: /^civ-btn--/ },
+    { pattern: /^civ-link--/ },
     // Alert variants and styles
     { pattern: /^civ-alert--/ },
     // Group layout

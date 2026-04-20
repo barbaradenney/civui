@@ -24,6 +24,32 @@ describe('civ-button', () => {
     expect(el.querySelector('button')).toBeNull();
   });
 
+  it('applies link variant class when href is set', async () => {
+    const el = await fixture('<civ-button href="/next">Go</civ-button>');
+
+    const link = el.querySelector('a')!;
+    expect(link.className).toContain('civ-link--primary');
+  });
+
+  it('applies secondary link class with caret', async () => {
+    const el = await fixture('<civ-button href="/next" variant="secondary">Details</civ-button>');
+
+    const link = el.querySelector('a')!;
+    expect(link.className).toContain('civ-link--secondary');
+    const icon = el.querySelector('civ-icon');
+    expect(icon).not.toBeNull();
+    expect(icon!.getAttribute('name')).toBe('chevron-right');
+  });
+
+  it('applies tertiary link class without caret', async () => {
+    const el = await fixture('<civ-button href="/next" variant="tertiary">Learn more</civ-button>');
+
+    const link = el.querySelector('a')!;
+    expect(link.className).toContain('civ-link--tertiary');
+    const icon = el.querySelector('civ-icon');
+    expect(icon).toBeNull();
+  });
+
   it('applies primary variant class by default', async () => {
     const el = await fixture('<civ-button>Click</civ-button>');
 

@@ -43,7 +43,8 @@ export const Default: Story = {
   `,
 };
 
-export const Variants: Story = {
+export const Buttons: Story = {
+  name: 'Button Variants',
   render: () => html`
     <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
       <civ-button variant="primary">Primary</civ-button>
@@ -54,21 +55,35 @@ export const Variants: Story = {
   `,
 };
 
+export const Links: Story = {
+  name: 'Link Variants',
+  render: () => html`
+    <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
+      <civ-button href="#" variant="primary">Primary link</civ-button>
+      <civ-button href="#" variant="secondary">Secondary link</civ-button>
+      <civ-button href="#" variant="tertiary">Tertiary link</civ-button>
+    </div>
+  `,
+};
+
 export const Disabled: Story = {
   render: () => html`
     <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
       <civ-button disabled>Disabled primary</civ-button>
       <civ-button variant="secondary" disabled>Disabled secondary</civ-button>
+      <civ-button variant="tertiary" disabled>Disabled tertiary</civ-button>
       <civ-button variant="danger" disabled>Disabled danger</civ-button>
     </div>
   `,
 };
 
-export const AsLink: Story = {
+export const DisabledLinks: Story = {
+  name: 'Disabled Links',
   render: () => html`
-    <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
-      <civ-button href="/dashboard">Go to dashboard</civ-button>
-      <civ-button href="/login" variant="tertiary">Sign in</civ-button>
+    <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
+      <civ-button href="#" disabled>Disabled primary</civ-button>
+      <civ-button href="#" variant="secondary" disabled>Disabled secondary</civ-button>
+      <civ-button href="#" variant="tertiary" disabled>Disabled tertiary</civ-button>
     </div>
   `,
 };
@@ -84,7 +99,7 @@ export const InForm: Story = {
       <p style="margin-bottom: 16px;">Click Submit to trigger form submission.</p>
       <div style="display: flex; gap: 12px;">
         <civ-button type="submit">Submit</civ-button>
-        <civ-button variant="secondary">Cancel</civ-button>
+        <civ-button variant="tertiary">Cancel</civ-button>
       </div>
     </form>
   `,

@@ -30,16 +30,23 @@ describe('civ-tag', () => {
     }
   });
 
-  it('applies sm size class', async () => {
-    const el = await fixture('<civ-tag label="Small" size="sm"></civ-tag>');
-    const span = el.querySelector('.civ-tag--sm');
-    expect(span).not.toBeNull();
+  it('defaults to secondary style', async () => {
+    const el = await fixture('<civ-tag label="Status" variant="blue"></civ-tag>');
+    expect(el.querySelector('.civ-tag--blue')).not.toBeNull();
+    expect(el.querySelector('.civ-tag--blue-primary')).toBeNull();
   });
 
-  it('does not apply sm class at default size', async () => {
-    const el = await fixture('<civ-tag label="Default"></civ-tag>');
-    const span = el.querySelector('.civ-tag--sm');
-    expect(span).toBeNull();
+  it('applies primary style class', async () => {
+    const el = await fixture('<civ-tag label="Denied" variant="red" tag-style="primary"></civ-tag>');
+    expect(el.querySelector('.civ-tag--red-primary')).not.toBeNull();
+  });
+
+  it('renders all variants in primary style', async () => {
+    const variants = ['blue', 'teal', 'red', 'green', 'yellow', 'orange', 'purple', 'gray'];
+    for (const v of variants) {
+      const el = await fixture(`<civ-tag label="${v}" variant="${v}" tag-style="primary"></civ-tag>`);
+      expect(el.querySelector(`.civ-tag--${v}-primary`)).not.toBeNull();
+    }
   });
 
   it('uses Light DOM', async () => {

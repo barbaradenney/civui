@@ -12,7 +12,7 @@ export type TagVariant =
   | 'purple'
   | 'gray';
 
-export type TagSize = 'default' | 'sm';
+export type TagStyle = 'primary' | 'secondary';
 
 /**
  * CivUI Tag
@@ -20,18 +20,24 @@ export type TagSize = 'default' | 'sm';
  * A small status label rendered as a colored pill. Used to indicate
  * status (not started, in progress, error), categories, or metadata.
  *
+ * Two emphasis levels:
+ * - **primary** — bold/dark background with light text for high-emphasis status
+ * - **secondary** (default) — light background with dark text for low-emphasis status
+ *
+ * Tag size is controlled by the density system — wrap in a parent with
+ * `data-civ-scale="dense"` or `data-civ-scale="spacious"` to adjust.
+ *
  * @element civ-tag
  *
  * @prop {string} label - Tag text content
  * @prop {TagVariant} variant - Color variant
- * @prop {TagSize} size - Size variant (default or sm)
+ * @prop {TagStyle} tagStyle - Emphasis level: 'primary' (dark bg) or 'secondary' (light bg, default)
  *
  * @example
  * ```html
+ * <civ-tag label="Denied" variant="red" tag-style="primary"></civ-tag>
  * <civ-tag label="Not started" variant="blue"></civ-tag>
- * <civ-tag label="In progress" variant="teal"></civ-tag>
- * <civ-tag label="Complete" variant="green"></civ-tag>
- * <civ-tag label="Error" variant="red"></civ-tag>
+ * <civ-tag label="Complete" variant="green" tag-style="primary"></civ-tag>
  * ```
  */
 @customElement('civ-tag')
@@ -42,15 +48,15 @@ export class CivTag extends CivBaseElement {
   /** Color variant. */
   @property({ type: String }) variant: TagVariant = 'gray';
 
-  /** Size: 'default' (base text) or 'sm' (smaller). */
-  @property({ type: String }) size: TagSize = 'default';
+  /** Emphasis: 'primary' (dark bg, light text) or 'secondary' (light bg, dark text). */
+  @property({ type: String, attribute: 'tag-style' }) tagStyle: TagStyle = 'secondary';
 
   override render() {
-    const classes = [
-      'civ-tag',
-      `civ-tag--${this.variant}`,
-      this.size === 'sm' ? 'civ-tag--sm' : '',
-    ].filter(Boolean).join(' ');
+    const styleClass = this.tagStyle === 'primary'
+      ? `civ-tag--${this.variant}-primary`
+      : `civ-tag--${this.variant}`;
+
+    const classes = ['civ-tag', styleClass].join(' ');
 
     return html`
       <span class="${classes}">${this.label}</span>

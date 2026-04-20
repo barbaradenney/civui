@@ -5,6 +5,25 @@ const config: Config = {
   prefix: 'civ-',
   darkMode: 'media',
   content: ['./packages/*/src/**/*.ts'],
+
+  // Protect dynamically-constructed class names from JIT purging.
+  // Template literals like `civ-tag--${this.variant}` are invisible to
+  // Tailwind's content scanner, so we safelist them explicitly.
+  safelist: [
+    // Tag variants (secondary and primary styles)
+    { pattern: /^civ-tag--/ },
+    // Icon names
+    { pattern: /^civ-icon--/ },
+    // Button variants
+    { pattern: /^civ-btn--/ },
+    // Alert variants and styles
+    { pattern: /^civ-alert--/ },
+    // Group layout
+    { pattern: /^civ-group-layout--/ },
+    // Card and divider sizes
+    'civ-card--sm',
+    'civ-divider--sm',
+  ],
   theme: {
     extend: {
       colors: {

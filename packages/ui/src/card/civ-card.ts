@@ -123,7 +123,7 @@ export class CivCard extends CivBaseElement {
           <div class="civ-card__header">
             ${this.eyebrow ? html`
               <div class="civ-card__eyebrow">
-                <civ-tag label="${this.eyebrow}" variant="${this.eyebrowVariant}" size="sm"></civ-tag>
+                <civ-tag label="${this.eyebrow}" variant="${this.eyebrowVariant}"></civ-tag>
               </div>
             ` : nothing}
             ${this.heading ? html`

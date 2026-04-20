@@ -74,6 +74,36 @@ Structural grouping wrapper. Props: \`legend\`, \`hint\`, \`error\`, \`required\
 ### civ-form
 Form validation coordinator. Props: \`action\`, \`method\`. Events: \`civ-submit\` { formData }, \`civ-invalid\` { errors }.
 
+### civ-button
+Action button. Variants: \`primary\` (filled blue), \`secondary\` (outlined), \`tertiary\` (gray, input-height). Add \`danger\` for destructive.
+
+### civ-link
+Navigation link. Variants: \`primary\` (button-styled), \`secondary\` (underlined + caret), \`tertiary\` (plain underlined), \`back\` (left chevron). Add \`danger\` for destructive.
+
+### civ-tag
+Status label. 8 color variants. \`tag-style="primary"\` for bold/dark background, \`"secondary"\` (default) for light.
+
+### civ-page-header
+Page heading. Slots: \`data-tag\` (top), \`data-eyebrow\`, \`data-heading\` (supports inline tags), \`data-subheading\`.
+
+### civ-link-card
+Clickable card. Props: \`href\`, \`heading\`, \`description\`, \`variant\` (primary/secondary/tertiary/critical).
+
+### civ-card
+Container with slots: \`data-card-header\`, \`data-card-footer\`. Prop: \`spacing\` (default/sm).
+
+### civ-divider
+Horizontal rule. Prop: \`spacing\` (default/sm).
+
+### civ-task-list / civ-task-group / civ-task
+Task list navigation. civ-task props: \`label\`, \`hint\`, \`href\`, \`status\` (not-started/in-progress/complete/cannot-start/error).
+
+### civ-progress-bar
+Overall progress. Props: \`value\`, \`label\`, \`status\`.
+
+### civ-progress-steps
+Step indicator. Props: \`steps\` (JSON), \`current\`, \`show-counter\`, \`clickable\`.
+
 ---
 
 ## Component Selection Guide

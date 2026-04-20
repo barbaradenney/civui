@@ -169,6 +169,37 @@ generate_save_resume_ui(schema, { autoSaveIntervalMs: 30000 })
 generate_signature_block(schema, { type: "typed", legalText: "I certify..." })
 \`\`\`
 
+### Add a page header
+\`\`\`html
+<civ-page-header>
+  <span data-eyebrow>Benefits</span>
+  <h1 data-heading class="civ-heading-xl">Apply for benefits</h1>
+  <span data-subheading>VA Form 21-526EZ</span>
+</civ-page-header>
+\`\`\`
+
+### Add a back link
+\`\`\`html
+<civ-link href="/hub" variant="back" label="Back to task list"></civ-link>
+\`\`\`
+
+### Add a link card
+\`\`\`html
+<civ-link-card href="/apply" heading="Apply now" description="Start your application." variant="primary"></civ-link-card>
+\`\`\`
+
+### Add a task list
+\`\`\`html
+<civ-task-list>
+  <civ-task-group>
+    <h3 data-task-group-heading class="civ-heading-md">Section</h3>
+    <civ-task label="Step 1" href="#/step1" status="complete"></civ-task>
+    <civ-task label="Step 2" href="#/step2" status="in-progress"></civ-task>
+    <civ-task label="Step 3" status="cannot-start"></civ-task>
+  </civ-task-group>
+</civ-task-list>
+\`\`\`
+
 ### Validate accessibility
 \`\`\`
 validate_form(html)           → quick check (46 rules)

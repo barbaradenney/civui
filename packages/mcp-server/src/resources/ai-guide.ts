@@ -32,8 +32,20 @@ For architecture and internals, see \`CLAUDE.md\` in the repo root.
 | \`<civ-file-upload>\` | File | \`accept\`, \`multiple\`, \`maxSize\`, \`maxFiles\` | \`{ files: File[] }\` |
 | \`<civ-fieldset>\` | Layout | \`legend\`, \`hint\`, \`error\`, \`required\`, \`disabled\` | — |
 | \`<civ-form>\` | Layout | \`action\`, \`method\` | \`civ-submit: { formData }\`, \`civ-invalid: { errors }\` |
+| \`<civ-button>\` | Action | \`variant\` (primary/secondary/tertiary), \`danger\`, \`type\`, \`disabled\` | \`civ-analytics\` |
+| \`<civ-link>\` | Navigation | \`href\`, \`variant\` (primary/secondary/tertiary/back/danger), \`danger\`, \`disabled\` | \`civ-analytics\` |
+| \`<civ-tag>\` | Status | \`label\`, \`variant\` (blue/teal/red/green/yellow/orange/purple/gray), \`tag-style\` (primary/secondary) | — |
+| \`<civ-card>\` | Layout | \`spacing\` (default/sm). Slots: \`data-card-header\`, \`data-card-footer\` | — |
+| \`<civ-page-header>\` | Layout | Slots: \`data-tag\`, \`data-eyebrow\`, \`data-heading\`, \`data-subheading\` | — |
+| \`<civ-link-card>\` | Navigation | \`href\`, \`heading\`, \`description\`, \`variant\` (primary/secondary/tertiary/critical) | \`civ-analytics\` |
+| \`<civ-divider>\` | Layout | \`spacing\` (default/sm) | — |
+| \`<civ-task-list>\` | Navigation | Container for \`<civ-task-group>\` elements | — |
+| \`<civ-task-group>\` | Navigation | Slot: \`data-task-group-heading\` for group heading | — |
+| \`<civ-task>\` | Navigation | \`label\`, \`hint\`, \`href\`, \`status\` (not-started/in-progress/complete/cannot-start/error) | — |
+| \`<civ-progress-bar>\` | Feedback | \`value\`, \`label\`, \`status\` | — |
+| \`<civ-progress-steps>\` | Feedback | \`steps\` (JSON), \`current\`, \`show-counter\`, \`clickable\`, \`orientation\` | \`civ-step-click\` |
 
-**All form-participating components** also have: \`label\`, \`name\`, \`value\`, \`hint\`, \`error\`, \`required\`, \`disabled\`, \`requiredMessage\`.
+**All form-participating components** also have: \`label\`, \`name\`, \`value\`, \`hint\`, \`error\`, \`required\`, \`disabled\`, \`requiredMessage\`, \`hide-required-indicator\`.
 
 **Group components** (\`checkbox-group\`, \`radio-group\`, \`memorable-date\`, \`segmented-control\`) use \`legend\` instead of \`label\`.
 
@@ -421,6 +433,125 @@ Form validation coordinator. Renders error summary, handles submit/reset.
 \`\`\`
 
 On validation failure, \`civ-form\` renders an error summary with anchor links to each invalid field.
+
+### civ-button
+
+Action button. Always renders a \`<button>\` element. For links, use \`<civ-link>\`.
+
+**Variants:** \`primary\` (filled blue), \`secondary\` (outlined border), \`tertiary\` (gray, input-height)
+**Props:** \`label\`, \`variant\`, \`danger\` (boolean), \`type\` (button/submit/reset), \`disabled\`
+
+\`\`\`html
+<civ-button label="Submit" type="submit"></civ-button>
+<civ-button label="Cancel" variant="tertiary"></civ-button>
+<civ-button label="Delete" variant="secondary" danger></civ-button>
+\`\`\`
+
+### civ-link
+
+Navigation link. Always renders an \`<a>\` element. For actions, use \`<civ-button>\`.
+
+**Variants:** \`primary\` (button-styled), \`secondary\` (underlined + trailing caret), \`tertiary\` (plain underlined, default), \`back\` (leading chevron-left)
+**Props:** \`label\`, \`href\`, \`variant\`, \`danger\` (boolean), \`disabled\`
+
+\`\`\`html
+<civ-link href="/details" variant="secondary">View details</civ-link>
+<civ-link href="/hub" variant="back" label="Back to task list"></civ-link>
+<civ-link href="/remove" variant="tertiary" danger>Remove item</civ-link>
+\`\`\`
+
+### civ-tag
+
+Status label. Two emphasis levels: secondary (light bg, dark text) and primary (dark bg, light text).
+
+**Props:** \`label\`, \`variant\` (blue/teal/red/green/yellow/orange/purple/gray), \`tag-style\` (primary/secondary)
+
+\`\`\`html
+<civ-tag label="Not started" variant="blue"></civ-tag>
+<civ-tag label="Complete" variant="green" tag-style="primary"></civ-tag>
+\`\`\`
+
+### civ-page-header
+
+Structured page heading with four slot areas: tag, eyebrow, heading, subheading.
+
+**Slots:** \`data-tag\` (above eyebrow), \`data-eyebrow\`, \`data-heading\`, \`data-subheading\`
+
+\`\`\`html
+<civ-page-header>
+  <civ-tag data-tag label="Active" variant="green" tag-style="primary"></civ-tag>
+  <span data-eyebrow>Benefits</span>
+  <h1 data-heading class="civ-heading-xl">
+    Apply for disability compensation
+    <civ-tag label="In progress" variant="teal"></civ-tag>
+  </h1>
+  <span data-subheading>VA Form 21-526EZ</span>
+</civ-page-header>
+\`\`\`
+
+### civ-link-card
+
+Clickable card that navigates to a destination. The entire card is the click target.
+
+**Variants:** \`primary\` (blue filled), \`secondary\` (blue border), \`tertiary\` (gray border), \`critical\` (#face00 gold)
+**Props:** \`href\`, \`heading\`, \`description\`, \`variant\`
+
+\`\`\`html
+<civ-link-card href="/apply" heading="Apply for benefits" description="Start your application."></civ-link-card>
+<civ-link-card href="/action" heading="Action needed" description="Upload documents." variant="critical"></civ-link-card>
+\`\`\`
+
+### civ-card
+
+Structured container with header, body, and footer slots.
+
+**Props:** \`spacing\` (default/sm)
+**Slots:** \`data-card-header\`, \`data-card-footer\`. Everything else goes in the body.
+
+\`\`\`html
+<civ-card>
+  <div data-card-header>
+    <civ-tag label="In progress" variant="teal"></civ-tag>
+    <h3 class="civ-heading-md">Disability compensation</h3>
+  </div>
+  <p>Filed: March 10, 2026</p>
+  <div data-card-footer>
+    <civ-link href="#" variant="secondary">View details</civ-link>
+  </div>
+</civ-card>
+\`\`\`
+
+### civ-task-list / civ-task-group / civ-task
+
+Task list navigation for multi-chapter forms. Tasks show a label, optional hint, and status tag.
+
+**civ-task props:** \`label\`, \`hint\`, \`href\`, \`status\` (not-started/in-progress/complete/cannot-start/error)
+**civ-task-group slot:** \`data-task-group-heading\` for the group heading
+
+\`\`\`html
+<civ-task-list>
+  <civ-task-group>
+    <h3 data-task-group-heading class="civ-heading-md">Fill out your application</h3>
+    <civ-task label="Personal info" href="#/personal" status="complete"></civ-task>
+    <civ-task label="Contact info" hint="Phone needed" href="#/contact" status="in-progress"></civ-task>
+    <civ-task label="Service history" status="cannot-start"></civ-task>
+  </civ-task-group>
+</civ-task-list>
+\`\`\`
+
+### civ-progress-steps
+
+Step indicator for multi-step forms. Shows numbered circles with labels.
+
+**Props:** \`steps\` (JSON array of labels or objects), \`current\` (0-based index), \`show-counter\`, \`clickable\`, \`orientation\`
+
+\`\`\`html
+<civ-progress-steps
+  steps='["Your name","Date of birth","SSN"]'
+  current="1"
+  show-counter
+></civ-progress-steps>
+\`\`\`
 
 ---
 

@@ -14,41 +14,6 @@ describe('civ-button', () => {
     expect(btn!.textContent).toContain('Submit');
   });
 
-  it('renders an <a> when href is set', async () => {
-    const el = await fixture('<civ-button href="/next">Continue</civ-button>');
-
-    const link = el.querySelector('a');
-    expect(link).not.toBeNull();
-    expect(link!.getAttribute('href')).toBe('/next');
-    expect(link!.textContent).toContain('Continue');
-    expect(el.querySelector('button')).toBeNull();
-  });
-
-  it('applies link variant class when href is set', async () => {
-    const el = await fixture('<civ-button href="/next">Go</civ-button>');
-
-    const link = el.querySelector('a')!;
-    expect(link.className).toContain('civ-link--primary');
-  });
-
-  it('applies secondary link class with caret', async () => {
-    const el = await fixture('<civ-button href="/next" variant="secondary">Details</civ-button>');
-
-    const link = el.querySelector('a')!;
-    expect(link.className).toContain('civ-link--secondary');
-    const icon = el.querySelector('civ-icon');
-    expect(icon).not.toBeNull();
-    expect(icon!.getAttribute('name')).toBe('chevron-right');
-  });
-
-  it('applies tertiary link class without caret', async () => {
-    const el = await fixture('<civ-button href="/next" variant="tertiary">Learn more</civ-button>');
-
-    const link = el.querySelector('a')!;
-    expect(link.className).toContain('civ-link--tertiary');
-    const icon = el.querySelector('civ-icon');
-    expect(icon).toBeNull();
-  });
 
   it('applies primary variant class by default', async () => {
     const el = await fixture('<civ-button>Click</civ-button>');
@@ -100,14 +65,6 @@ describe('civ-button', () => {
     expect(btn.disabled).toBe(true);
   });
 
-  it('disabled link has aria-disabled, no href, and tabindex=-1', async () => {
-    const el = await fixture('<civ-button href="/next" disabled>Click</civ-button>');
-
-    const link = el.querySelector('a')!;
-    expect(link.getAttribute('aria-disabled')).toBe('true');
-    expect(link.hasAttribute('href')).toBe(false);
-    expect(link.getAttribute('tabindex')).toBe('-1');
-  });
 
   it('sets type="button" by default', async () => {
     const el = await fixture('<civ-button>Click</civ-button>');
@@ -209,15 +166,4 @@ describe('civ-button', () => {
     expect(handler).not.toHaveBeenCalled();
   });
 
-  it('fires analytics on link click', async () => {
-    const el = await fixture('<civ-button href="/next">Go</civ-button>');
-
-    const handler = vi.fn();
-    el.addEventListener('civ-analytics', handler as EventListener);
-
-    const link = el.querySelector('a') as HTMLAnchorElement;
-    link.click();
-
-    expect(handler).toHaveBeenCalledOnce();
-  });
 });

@@ -18,7 +18,6 @@ const meta: Meta = {
       options: ['button', 'submit'],
     },
     disabled: { control: 'boolean' },
-    href: { control: 'text' },
   },
 };
 
@@ -32,21 +31,19 @@ export const Default: Story = {
     type: 'button',
     disabled: false,
     danger: false,
-    href: '',
   },
   render: (args) => html`
     <civ-button
       label="${args.label}"
       variant="${args.variant}"
       type="${args.type}"
-      href="${args.href || ''}"
       ?disabled="${args.disabled}"
       ?danger="${args.danger}"
     ></civ-button>
   `,
 };
 
-export const Buttons: Story = {
+export const Variants: Story = {
   name: 'Button Variants',
   render: () => html`
     <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
@@ -57,7 +54,7 @@ export const Buttons: Story = {
   `,
 };
 
-export const DangerButtons: Story = {
+export const DangerVariants: Story = {
   name: 'Danger Variants',
   render: () => html`
     <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
@@ -88,28 +85,6 @@ export const AllVariants: Story = {
           <civ-button variant="tertiary" danger>Tertiary</civ-button>
         </div>
       </div>
-    </div>
-  `,
-};
-
-export const Links: Story = {
-  name: 'Link Variants',
-  render: () => html`
-    <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
-      <civ-button href="#" variant="primary">Primary link</civ-button>
-      <civ-button href="#" variant="secondary">Secondary link</civ-button>
-      <civ-button href="#" variant="tertiary">Tertiary link</civ-button>
-    </div>
-  `,
-};
-
-export const DangerLinks: Story = {
-  name: 'Danger Link Variants',
-  render: () => html`
-    <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
-      <civ-button href="#" variant="primary" danger>Delete</civ-button>
-      <civ-button href="#" variant="secondary" danger>Remove</civ-button>
-      <civ-button href="#" variant="tertiary" danger>Cancel</civ-button>
     </div>
   `,
 };

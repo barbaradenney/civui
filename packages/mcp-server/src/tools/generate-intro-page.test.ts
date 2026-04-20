@@ -15,39 +15,9 @@ describe('generateIntroPage', () => {
     expect(result.html).toContain('21-526EZ');
   });
 
-  it('includes process list with 4 steps', () => {
+  it('includes page header component', () => {
     const result = generateIntroPage(form);
-    expect(result.html).toContain('Check your eligibility');
-    expect(result.html).toContain('Gather your information');
-    expect(result.html).toContain('Start your application');
-    expect(result.html).toContain('Submit your application');
-  });
-
-  it('includes preparation items', () => {
-    const result = generateIntroPage(form);
-    expect(result.html).toContain('Social Security number');
-    expect(result.html).toContain('DD214');
-  });
-
-  it('includes respondent burden', () => {
-    const result = generateIntroPage(form);
-    expect(result.html).toContain('25 minutes');
-  });
-
-  it('includes OMB number', () => {
-    const result = generateIntroPage(form);
-    expect(result.html).toContain('2900-0747');
-  });
-
-  it('includes sign-in alert', () => {
-    const result = generateIntroPage(form);
-    expect(result.html).toContain('Sign in');
-  });
-
-  it('includes need help section', () => {
-    const result = generateIntroPage(form);
-    expect(result.html).toContain('Need help');
-    expect(result.html).toContain('800-827-1000');
+    expect(result.html).toContain('civ-page-header');
   });
 
   it('includes start button', () => {
@@ -56,9 +26,13 @@ describe('generateIntroPage', () => {
     expect(result.html).toContain('Start your application');
   });
 
+  it('includes placeholder text', () => {
+    const result = generateIntroPage(form);
+    expect(result.html).toContain('Intro text goes here');
+  });
+
   it('returns features array', () => {
     const result = generateIntroPage(form);
     expect(result.features).toContain('intro-page');
-    expect(result.features).toContain('process-list');
   });
 });

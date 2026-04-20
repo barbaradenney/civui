@@ -6,18 +6,27 @@ import { t } from '../i18n/locale.js';
  * Used by text-input, textarea, select, combobox, date-input, date-picker, file-upload.
  * Checkbox and toggle have inline labels — they don't use this.
  */
+/**
+ * @param showRequired - Override required indicator visibility. When false,
+ *   the "(required)" text is hidden even if required is true. Used by compound
+ *   components (memorable-date, address) whose parent legend already shows
+ *   the required indicator. Defaults to the value of `required`.
+ */
 export function renderLabel({
   label,
   inputId,
   required,
+  showRequired,
   labelId,
 }: {
   label: string;
   inputId: string;
   required: boolean;
+  showRequired?: boolean;
   labelId?: string;
 }) {
   if (!label) return nothing;
+  const indicatorVisible = showRequired ?? required;
   return html`
     <label
       class="civ-label"
@@ -25,7 +34,7 @@ export function renderLabel({
       id="${labelId ?? nothing}"
     >
       ${label}
-      ${required
+      ${indicatorVisible
         ? html`<span class="civ-required-mark">${t('required')}</span>`
         : nothing}
     </label>

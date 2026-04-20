@@ -310,7 +310,7 @@ export class CivTextInput extends CivFormElement {
 
     return html`
       <div class="civ-mb-4">
-        ${renderLabel({ label: this.label, inputId: this._inputId, required: this.required })}
+        ${renderLabel({ label: this.label, inputId: this._inputId, required: this.required, showRequired: this.required && !this.hideRequiredIndicator })}
         ${renderHint(this._hintId, effectiveHint)}
         ${renderError(this._errorId, this.error)}
         ${wrappedInput}

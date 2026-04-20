@@ -213,8 +213,7 @@ function generateChapterPage(chapter: GovChapterMeta, form: ReturnType<typeof ge
 
   // Repeatable sections stay as one page — splitting doesn't make sense
   if (isRepeatable) {
-    const repAllRequired = chapter.section.fields.filter(f => !f.label.startsWith('component:')).every(f => f.required);
-    const fields = chapter.section.fields.map(f => renderField(f, repAllRequired)).join('\n');
+    const fields = chapter.section.fields.map(f => renderField(f)).join('\n');
     const html = `<!-- Chapter: ${escapeHtml(chapter.heading)} -->
 <div data-chapter="${escapeHtml(chapter.id)}">
   <civ-link href="#/hub" variant="back" label="Back to task list" class="civ-mb-4 civ-block"></civ-link>
@@ -247,18 +246,18 @@ ${fields}
 
   // One field per step — each field gets its own visible step
   const totalSteps = chapter.section.fields.length;
-  const stepLabels = chapter.section.fields.map(f =>
-    f.label.startsWith('component:') ? f.label.replace('component:', '').replace('civ-', '') : f.label
-  );
+  const stepLabels = chapter.section.fields.map(f => {
+    if (f.label.startsWith('component:')) {
+      // Extract legend from component-props hint, e.g. 'component-props:legend="Your name" required'
+      const legendMatch = f.hint?.match(/legend="([^"]+)"/);
+      return legendMatch ? legendMatch[1] : f.name;
+    }
+    return f.label;
+  });
   const stepsJson = escapeHtml(JSON.stringify(stepLabels));
 
-  // If all fields are required, suppress individual required indicators
-  const allRequired = chapter.section.fields
-    .filter(f => !f.label.startsWith('component:'))
-    .every(f => f.required);
-
   const fieldSteps = chapter.section.fields.map((f, i) => {
-    const fieldHtml = renderField(f, allRequired);
+    const fieldHtml = renderField(f);
     return `    <div data-field-step="${i}" ${i > 0 ? 'hidden' : ''}>
       <civ-progress-steps
         steps='${stepsJson}'
@@ -279,15 +278,13 @@ ${fieldHtml}
     </div>`;
   }).join('\n');
 
-  const requiredLabel = allRequired ? ' <span class="civ-text-error civ-font-normal civ-text-base">(all fields required)</span>' : '';
-
   const html = `<!-- Chapter: ${escapeHtml(chapter.heading)} -->
 <div data-chapter="${escapeHtml(chapter.id)}">
   <civ-link href="#/hub" variant="back" label="Back to task list" class="civ-mb-4 civ-block"></civ-link>
 
   <civ-page-header>
     <span data-eyebrow>${escapeHtml(form.title)}</span>
-    <h2 data-heading class="civ-heading-lg">${escapeHtml(chapter.heading)}${requiredLabel}</h2>
+    <h2 data-heading class="civ-heading-lg">${escapeHtml(chapter.heading)}</h2>
     <span data-subheading>VA Form ${escapeHtml(form.formNumber)}</span>
   </civ-page-header>
 
@@ -332,12 +329,8 @@ ${fieldSteps}
   };
 }
 
-/**
- * Render a single form field as CivUI component HTML.
- * @param suppressRequired - When true, don't render required on individual fields
- *   (used when the group heading already shows required)
- */
-function renderField(field: FormField, suppressRequired = false): string {
+/** Render a single form field as CivUI component HTML. */
+function renderField(field: FormField): string {
   // Handle compound component markers
   if (field.label.startsWith('component:')) {
     const componentTag = field.label.replace('component:', '');
@@ -345,12 +338,10 @@ function renderField(field: FormField, suppressRequired = false): string {
     return `      <${componentTag} name="${escapeHtml(field.name)}" ${props}></${componentTag}>`;
   }
 
-  const showRequired = field.required && !suppressRequired;
-
   const common = [
     `label="${escapeHtml(field.label)}"`,
     `name="${escapeHtml(field.name)}"`,
-    showRequired ? 'required' : '',
+    field.required ? 'required' : '',
     field.hint ? `hint="${escapeHtml(field.hint)}"` : '',
     field.autocomplete ? `autocomplete="${escapeHtml(field.autocomplete)}"` : '',
     field.inputmode ? `inputmode="${escapeHtml(field.inputmode)}"` : '',
@@ -410,7 +401,7 @@ function renderField(field: FormField, suppressRequired = false): string {
       return `      <civ-radio-group
         legend="${escapeHtml(field.label)}"
         name="${escapeHtml(field.name)}"
-        ${showRequired ? 'required' : ''}
+        ${field.required ? 'required' : ''}
       >
 ${radioOptions}
       </civ-radio-group>`;
@@ -427,7 +418,7 @@ ${radioOptions}
       return `      <civ-checkbox-group
         legend="${escapeHtml(field.label)}"
         name="${escapeHtml(field.name)}"
-        ${showRequired ? 'required' : ''}
+        ${field.required ? 'required' : ''}
       >
 ${checkOptions}
       </civ-checkbox-group>`;
@@ -436,7 +427,7 @@ ${checkOptions}
       return `      <civ-memorable-date
         legend="${escapeHtml(field.label)}"
         name="${escapeHtml(field.name)}"
-        ${showRequired ? 'required' : ''}
+        ${field.required ? 'required' : ''}
         ${field.hint ? `hint="${escapeHtml(field.hint)}"` : ''}
       ></civ-memorable-date>`;
 

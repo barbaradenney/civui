@@ -181,6 +181,7 @@ export class CivMemorableDate extends CivFormElement {
               empty-label="${this.monthEmptyLabel || t('memorableDateMonthEmptyLabel')}"
               ?required="${this.required}"
               ?disabled="${this.disabled}"
+              ?hide-required-indicator="${this.required}"
               disable-analytics
             ></civ-select>
           </div>
@@ -196,6 +197,7 @@ export class CivMemorableDate extends CivFormElement {
               maxlength="2"
               ?required="${this.required}"
               ?disabled="${this.disabled}"
+              ?hide-required-indicator="${this.required}"
               disable-analytics
             ></civ-text-input>
           </div>
@@ -211,6 +213,7 @@ export class CivMemorableDate extends CivFormElement {
               maxlength="4"
               ?required="${this.required}"
               ?disabled="${this.disabled}"
+              ?hide-required-indicator="${this.required}"
               disable-analytics
             ></civ-text-input>
           </div>

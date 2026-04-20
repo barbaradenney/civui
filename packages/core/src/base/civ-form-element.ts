@@ -34,6 +34,8 @@ export class CivFormElement extends CivBaseElement {
   @property({ type: String }) hint = '';
   @property({ type: String }) label = '';
   @property({ type: String, attribute: 'required-message' }) requiredMessage = '';
+  /** Hides the "(required)" text while keeping validation active. Used by compound components. */
+  @property({ type: Boolean, attribute: 'hide-required-indicator' }) hideRequiredIndicator = false;
 
   constructor() {
     super();

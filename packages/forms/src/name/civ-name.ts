@@ -92,7 +92,7 @@ export class CivName extends CivFormElement {
         aria-invalid="${this.error ? 'true' : nothing}"
         ?disabled="${this.disabled}"
       >
-        ${renderLegend({ legend: this.legend || this.label, required: this.required, textSizeClass: 'civ-text-lg' })}
+        ${renderLegend({ legend: this.legend || this.label, required: false, textSizeClass: 'civ-text-lg' })}
         ${renderHint(this._hintId, this.hint, true)}
         ${renderError(this._errorId, this.error, true)}
 

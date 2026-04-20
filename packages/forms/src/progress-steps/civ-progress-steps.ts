@@ -69,6 +69,8 @@ export class CivProgressSteps extends CivBaseElement {
           flex-direction: row;
           align-items: center;
           gap: 0;
+          padding: 0 !important;
+          margin: 0;
         }
         .civ-steps-vertical {
           display: flex;

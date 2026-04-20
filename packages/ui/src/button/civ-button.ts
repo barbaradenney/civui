@@ -2,25 +2,28 @@ import { html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { CivBaseElement, LightDomTextMixin } from '@civui/core';
 
-export type ButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'danger';
-export type LinkVariant = 'primary' | 'secondary' | 'tertiary';
+export type ButtonVariant = 'primary' | 'secondary' | 'tertiary';
 export type ButtonType = 'button' | 'submit';
 
 /**
  * CivUI Button
  *
- * An accessible button/link component with variant options.
+ * An accessible button/link component with variant and danger options.
  *
  * **Button variants** (no href):
  * - `primary` — filled blue button
  * - `secondary` — outlined border button
  * - `tertiary` — gray filled button
- * - `danger` — filled red button
  *
  * **Link variants** (with href):
  * - `primary` — looks like a primary button (filled blue, underlined)
  * - `secondary` — underlined link with trailing caret icon
  * - `tertiary` — plain underlined link
+ *
+ * Add `danger` attribute to any variant for a destructive action style:
+ * - `primary danger` — filled red button
+ * - `secondary danger` — outlined red border button
+ * - `tertiary danger` — gray button with red text
  *
  * All links are underlined for accessibility.
  *
@@ -28,6 +31,7 @@ export type ButtonType = 'button' | 'submit';
  *
  * @prop {string} label - Button text (preferred over child text)
  * @prop {ButtonVariant} variant - Visual variant
+ * @prop {boolean} danger - Destructive action styling
  * @prop {boolean} disabled - Disabled state
  * @prop {ButtonType} type - Button type attribute
  * @prop {string} href - When set, renders as <a> link instead of <button>
@@ -38,6 +42,7 @@ export type ButtonType = 'button' | 'submit';
 export class CivButton extends LightDomTextMixin(CivBaseElement) {
   @property({ type: String }) label = '';
   @property({ type: String }) variant: ButtonVariant = 'primary';
+  @property({ type: Boolean, reflect: true }) danger = false;
   @property({ type: Boolean, reflect: true }) disabled = false;
   @property({ type: String }) type: ButtonType = 'button';
   @property({ type: String }) href = '';
@@ -47,9 +52,13 @@ export class CivButton extends LightDomTextMixin(CivBaseElement) {
   }
 
   private get _buttonClasses(): string {
+    const variantClass = this.danger
+      ? `civ-btn--${this.variant}-danger`
+      : `civ-btn--${this.variant}`;
+
     return [
       'civ-btn',
-      `civ-btn--${this.variant}`,
+      variantClass,
       this.disabled ? 'civ-opacity-50 civ-cursor-not-allowed' : '',
       'focus-visible:civ-focus-ring',
     ]
@@ -58,8 +67,12 @@ export class CivButton extends LightDomTextMixin(CivBaseElement) {
   }
 
   private get _linkClasses(): string {
+    const variantClass = this.danger
+      ? `civ-link--${this.variant}-danger`
+      : `civ-link--${this.variant}`;
+
     return [
-      `civ-link--${this.variant}`,
+      variantClass,
       this.disabled ? 'civ-opacity-50 civ-cursor-not-allowed' : '',
       'focus-visible:civ-focus-ring',
     ]

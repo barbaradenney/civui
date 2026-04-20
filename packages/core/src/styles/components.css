@@ -1252,15 +1252,37 @@
     @apply civ-bg-primary civ-text-white civ-border-primary;
   }
 
-  .civ-btn--danger {
+  /* ── Danger variants ───────────────────────────────────────── */
+
+  .civ-btn--primary-danger {
     @apply civ-bg-error civ-text-white civ-border-error;
   }
-  .civ-btn--danger:hover:not(:disabled):not([aria-disabled="true"]) {
+  .civ-btn--primary-danger:hover:not(:disabled):not([aria-disabled="true"]) {
     @apply civ-bg-error-dark civ-border-error-dark;
   }
-  .civ-btn--danger:active:not(:disabled):not([aria-disabled="true"]) {
+  .civ-btn--primary-danger:active:not(:disabled):not([aria-disabled="true"]) {
     @apply civ-bg-error-dark civ-border-error-dark;
     filter: brightness(0.85);
+  }
+
+  .civ-btn--secondary-danger {
+    @apply civ-bg-transparent civ-text-error civ-border-error;
+  }
+  .civ-btn--secondary-danger:hover:not(:disabled):not([aria-disabled="true"]) {
+    @apply civ-bg-error civ-text-white;
+  }
+  .civ-btn--secondary-danger:active:not(:disabled):not([aria-disabled="true"]) {
+    @apply civ-bg-error-dark civ-text-white civ-border-error-dark;
+  }
+
+  .civ-btn--tertiary-danger {
+    @apply civ-bg-base-lightest civ-text-error civ-border-base-light;
+  }
+  .civ-btn--tertiary-danger:hover:not(:disabled):not([aria-disabled="true"]) {
+    @apply civ-bg-base-lighter;
+  }
+  .civ-btn--tertiary-danger:active:not(:disabled):not([aria-disabled="true"]) {
+    @apply civ-bg-base-light;
   }
 
   /* ── Link variants (rendered when href is set) ─────────────── */
@@ -1299,6 +1321,41 @@
   }
   .civ-link--tertiary:hover:not([aria-disabled="true"]) {
     @apply civ-text-primary-dark;
+  }
+
+  /* ── Danger link variants ──────────────────────────────────── */
+
+  .civ-link--primary-danger {
+    @apply civ-inline-flex civ-items-center civ-justify-center civ-gap-2
+           civ-font-sans civ-font-bold civ-rounded
+           civ-px-5 civ-py-3 civ-border civ-cursor-pointer
+           civ-transition-colors civ-underline
+           civ-bg-error civ-text-white civ-border-error;
+    font-size: var(--civ-typography-fontSize-base);
+    text-decoration-color: currentColor;
+  }
+  .civ-link--primary-danger:hover:not([aria-disabled="true"]) {
+    @apply civ-bg-error-dark civ-border-error-dark;
+  }
+
+  .civ-link--secondary-danger {
+    @apply civ-inline-flex civ-items-center civ-gap-1
+           civ-font-sans civ-font-bold civ-cursor-pointer
+           civ-text-error civ-underline;
+    font-size: var(--civ-typography-fontSize-base);
+  }
+  .civ-link--secondary-danger:hover:not([aria-disabled="true"]) {
+    @apply civ-text-error-dark;
+  }
+
+  .civ-link--tertiary-danger {
+    @apply civ-inline-flex civ-items-center
+           civ-font-sans civ-cursor-pointer
+           civ-text-error civ-underline;
+    font-size: var(--civ-typography-fontSize-base);
+  }
+  .civ-link--tertiary-danger:hover:not([aria-disabled="true"]) {
+    @apply civ-text-error-dark;
   }
 
   .civ-btn:disabled,

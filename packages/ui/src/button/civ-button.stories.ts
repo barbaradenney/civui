@@ -10,8 +10,9 @@ const meta: Meta = {
     label: { control: 'text' },
     variant: {
       control: 'select',
-      options: ['primary', 'secondary', 'tertiary', 'danger'],
+      options: ['primary', 'secondary', 'tertiary'],
     },
+    danger: { control: 'boolean' },
     type: {
       control: 'select',
       options: ['button', 'submit'],
@@ -30,6 +31,7 @@ export const Default: Story = {
     variant: 'primary',
     type: 'button',
     disabled: false,
+    danger: false,
     href: '',
   },
   render: (args) => html`
@@ -39,6 +41,7 @@ export const Default: Story = {
       type="${args.type}"
       href="${args.href || ''}"
       ?disabled="${args.disabled}"
+      ?danger="${args.danger}"
     ></civ-button>
   `,
 };
@@ -50,7 +53,41 @@ export const Buttons: Story = {
       <civ-button variant="primary">Primary</civ-button>
       <civ-button variant="secondary">Secondary</civ-button>
       <civ-button variant="tertiary">Tertiary</civ-button>
-      <civ-button variant="danger">Danger</civ-button>
+    </div>
+  `,
+};
+
+export const DangerButtons: Story = {
+  name: 'Danger Variants',
+  render: () => html`
+    <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+      <civ-button variant="primary" danger>Delete account</civ-button>
+      <civ-button variant="secondary" danger>Remove</civ-button>
+      <civ-button variant="tertiary" danger>Cancel</civ-button>
+    </div>
+  `,
+};
+
+export const AllVariants: Story = {
+  name: 'All Variants',
+  render: () => html`
+    <div style="display: flex; flex-direction: column; gap: 16px;">
+      <div>
+        <p style="margin: 0 0 8px; font-weight: 600;">Default</p>
+        <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+          <civ-button variant="primary">Primary</civ-button>
+          <civ-button variant="secondary">Secondary</civ-button>
+          <civ-button variant="tertiary">Tertiary</civ-button>
+        </div>
+      </div>
+      <div>
+        <p style="margin: 0 0 8px; font-weight: 600;">Danger</p>
+        <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+          <civ-button variant="primary" danger>Primary</civ-button>
+          <civ-button variant="secondary" danger>Secondary</civ-button>
+          <civ-button variant="tertiary" danger>Tertiary</civ-button>
+        </div>
+      </div>
     </div>
   `,
 };
@@ -66,24 +103,24 @@ export const Links: Story = {
   `,
 };
 
+export const DangerLinks: Story = {
+  name: 'Danger Link Variants',
+  render: () => html`
+    <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
+      <civ-button href="#" variant="primary" danger>Delete</civ-button>
+      <civ-button href="#" variant="secondary" danger>Remove</civ-button>
+      <civ-button href="#" variant="tertiary" danger>Cancel</civ-button>
+    </div>
+  `,
+};
+
 export const Disabled: Story = {
   render: () => html`
     <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
       <civ-button disabled>Disabled primary</civ-button>
       <civ-button variant="secondary" disabled>Disabled secondary</civ-button>
       <civ-button variant="tertiary" disabled>Disabled tertiary</civ-button>
-      <civ-button variant="danger" disabled>Disabled danger</civ-button>
-    </div>
-  `,
-};
-
-export const DisabledLinks: Story = {
-  name: 'Disabled Links',
-  render: () => html`
-    <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
-      <civ-button href="#" disabled>Disabled primary</civ-button>
-      <civ-button href="#" variant="secondary" disabled>Disabled secondary</civ-button>
-      <civ-button href="#" variant="tertiary" disabled>Disabled tertiary</civ-button>
+      <civ-button variant="primary" danger disabled>Disabled danger</civ-button>
     </div>
   `,
 };

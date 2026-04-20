@@ -72,11 +72,25 @@ describe('civ-button', () => {
     expect(btn.className).toContain('civ-btn--tertiary');
   });
 
-  it('applies danger variant class', async () => {
-    const el = await fixture('<civ-button variant="danger">Click</civ-button>');
+  it('applies danger class to primary variant', async () => {
+    const el = await fixture('<civ-button danger>Delete</civ-button>');
 
     const btn = el.querySelector('button')!;
-    expect(btn.className).toContain('civ-btn--danger');
+    expect(btn.className).toContain('civ-btn--primary-danger');
+  });
+
+  it('applies danger class to secondary variant', async () => {
+    const el = await fixture('<civ-button variant="secondary" danger>Remove</civ-button>');
+
+    const btn = el.querySelector('button')!;
+    expect(btn.className).toContain('civ-btn--secondary-danger');
+  });
+
+  it('applies danger class to tertiary variant', async () => {
+    const el = await fixture('<civ-button variant="tertiary" danger>Cancel</civ-button>');
+
+    const btn = el.querySelector('button')!;
+    expect(btn.className).toContain('civ-btn--tertiary-danger');
   });
 
   it('sets disabled attribute on button', async () => {

@@ -123,22 +123,23 @@ describe('civ-task', () => {
     expect(tag!.getAttribute('label')).toBe('In progress');
   });
 
-  it('renders complete status as plain text', async () => {
+  it('renders complete status with green primary tag', async () => {
     const el = await fixture('<civ-task label="Task" href="#" status="complete"></civ-task>');
 
     const tag = el.querySelector('civ-tag');
-    expect(tag).toBeNull();
-    const status = el.querySelector('.civ-task__status--complete');
-    expect(status).not.toBeNull();
-    expect(status!.textContent).toBe('Complete');
+    expect(tag).not.toBeNull();
+    expect(tag!.getAttribute('variant')).toBe('green');
+    expect(tag!.getAttribute('tag-style')).toBe('primary');
+    expect(tag!.getAttribute('label')).toBe('Complete');
   });
 
-  it('renders cannot-start status with muted text', async () => {
+  it('renders cannot-start status with gray tag', async () => {
     const el = await fixture('<civ-task label="Task" status="cannot-start"></civ-task>');
 
-    const status = el.querySelector('.civ-task__status--cannot-start');
-    expect(status).not.toBeNull();
-    expect(status!.textContent).toBe('Cannot start yet');
+    const tag = el.querySelector('civ-tag');
+    expect(tag).not.toBeNull();
+    expect(tag!.getAttribute('variant')).toBe('gray');
+    expect(tag!.getAttribute('label')).toBe('Cannot start yet');
   });
 
   it('renders error status with red tag', async () => {
@@ -179,13 +180,6 @@ describe('civ-task', () => {
     expect(tag!.getAttribute('label')).toBe('In progress');
   });
 
-  it('renders cannot-start label without muted styling', async () => {
-    const el = await fixture('<civ-task label="Task" status="cannot-start"></civ-task>');
-
-    const label = el.querySelector('.civ-task__label');
-    expect(label).not.toBeNull();
-    expect(label!.className).not.toContain('civ-text-muted');
-  });
 
   it('renders as list item', async () => {
     const el = await fixture('<civ-task label="Task" status="not-started"></civ-task>');

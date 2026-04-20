@@ -5,36 +5,44 @@ import { CivBaseElement } from '@civui/core';
 /**
  * CivUI Card
  *
- * A structured container with optional header (heading + actions),
- * body (slotted content), and footer. The footer supports any content —
- * action links, buttons, or native `<details>` for expandable sections.
+ * A structured container with three slot areas: header, body, and footer.
+ * Use `data-card-header` and `data-card-footer` attributes to assign
+ * children to those sections. Everything else goes into the body.
+ *
+ * The card provides the border, padding, and section styling — you
+ * control all the content inside each slot.
  *
  * @element civ-card
  *
- * @prop {string} heading - Card title
- * @prop {string} href - Makes the heading a link
  * @prop {string} spacing - Padding size: 'default' or 'sm'
  *
  * @example Basic card
  * ```html
- * <civ-card heading="Section title">
+ * <civ-card>
  *   <p>Card content goes here.</p>
  * </civ-card>
  * ```
  *
- * @example Card with footer action
+ * @example Card with header and footer
  * ```html
- * <civ-card heading="Disability compensation">
+ * <civ-card>
+ *   <div data-card-header>
+ *     <civ-tag label="In progress" variant="teal"></civ-tag>
+ *     <h3 class="civ-heading-md">Disability compensation</h3>
+ *   </div>
  *   <p>Filed: March 10, 2026</p>
  *   <div data-card-footer>
- *     <a href="/claims/123" class="civ-link">View details</a>
+ *     <civ-link href="/claims/123" variant="secondary">View details</civ-link>
  *   </div>
  * </civ-card>
  * ```
  *
  * @example Card with expandable footer
  * ```html
- * <civ-card heading="Payment history">
+ * <civ-card>
+ *   <div data-card-header>
+ *     <h3 class="civ-heading-md">Payment history</h3>
+ *   </div>
  *   <p>Last payment: $1,234.56</p>
  *   <details data-card-footer>
  *     <summary>View breakdown</summary>
@@ -45,29 +53,22 @@ import { CivBaseElement } from '@civui/core';
  */
 @customElement('civ-card')
 export class CivCard extends CivBaseElement {
-  /** Card title. */
-  @property({ type: String }) heading = '';
-
-  /** Makes the heading a link. */
-  @property({ type: String }) href = '';
-
   /** Padding size. */
   @property({ type: String }) spacing: 'default' | 'sm' = 'default';
 
+  private _headerChildren: Node[] = [];
   private _footerChildren: Node[] = [];
-  private _actionChildren: Node[] = [];
   private _bodyChildren: Node[] = [];
   private _childrenSorted = false;
 
   override connectedCallback(): void {
-    // Sort children into body, footer, and actions before super captures them
     if (!this._childrenSorted) {
       for (const child of Array.from(this.childNodes)) {
         if (child instanceof Element) {
-          if (child.hasAttribute('data-card-footer')) {
+          if (child.hasAttribute('data-card-header')) {
+            this._headerChildren.push(child);
+          } else if (child.hasAttribute('data-card-footer')) {
             this._footerChildren.push(child);
-          } else if (child.hasAttribute('data-card-actions')) {
-            this._actionChildren.push(child);
           } else {
             this._bodyChildren.push(child);
           }
@@ -81,20 +82,17 @@ export class CivCard extends CivBaseElement {
   }
 
   override firstUpdated(): void {
-    // Relocate body children
+    const header = this.querySelector('[data-civ-card-header]');
+    if (header) {
+      for (const child of this._headerChildren) header.appendChild(child);
+    }
     const body = this.querySelector('[data-civ-card-body]');
     if (body) {
       for (const child of this._bodyChildren) body.appendChild(child);
     }
-    // Relocate footer children
     const footer = this.querySelector('[data-civ-card-footer]');
     if (footer) {
       for (const child of this._footerChildren) footer.appendChild(child);
-    }
-    // Relocate action children
-    const actions = this.querySelector('[data-civ-card-actions]');
-    if (actions) {
-      for (const child of this._actionChildren) actions.appendChild(child);
     }
   }
 
@@ -104,21 +102,13 @@ export class CivCard extends CivBaseElement {
       this.spacing === 'sm' ? 'civ-card--sm' : '',
     ].filter(Boolean).join(' ');
 
-    const hasHeader = !!this.heading;
+    const hasHeader = this._headerChildren.length > 0;
     const hasFooter = this._footerChildren.length > 0;
-    const hasActions = this._actionChildren.length > 0;
 
     return html`
       <div class="${classes}">
         ${hasHeader ? html`
-          <div class="civ-card__header">
-            <div class="civ-card__title-row">
-              ${this.href
-                ? html`<a href="${this.href}" class="civ-heading-md civ-link civ-card__title">${this.heading}</a>`
-                : html`<span class="civ-heading-md civ-card__title">${this.heading}</span>`}
-              ${hasActions ? html`<span data-civ-card-actions class="civ-card__actions"></span>` : nothing}
-            </div>
-          </div>
+          <div class="civ-card__header" data-civ-card-header></div>
         ` : nothing}
 
         <div class="civ-card__body" data-civ-card-body></div>

@@ -7,8 +7,7 @@ afterEach(cleanupFixtures);
 describe('civ-card', () => {
   it('renders a bordered container', async () => {
     const el = await fixture('<civ-card><p>Content</p></civ-card>');
-    const card = el.querySelector('.civ-card');
-    expect(card).not.toBeNull();
+    expect(el.querySelector('.civ-card')).not.toBeNull();
   });
 
   it('relocates body children into card body', async () => {
@@ -20,73 +19,59 @@ describe('civ-card', () => {
 
   it('applies sm spacing class', async () => {
     const el = await fixture('<civ-card spacing="sm"><p>Compact</p></civ-card>');
-    const card = el.querySelector('.civ-card--sm');
-    expect(card).not.toBeNull();
+    expect(el.querySelector('.civ-card--sm')).not.toBeNull();
   });
 
-  it('renders heading', async () => {
-    const el = await fixture('<civ-card heading="Card title"><p>Body</p></civ-card>');
-    const title = el.querySelector('.civ-card__title');
-    expect(title).not.toBeNull();
-    expect(title!.textContent).toBe('Card title');
+  it('relocates header children into card header', async () => {
+    const el = await fixture(`
+      <civ-card>
+        <div data-card-header><h3>Title</h3></div>
+        <p>Body</p>
+      </civ-card>
+    `);
+    const header = el.querySelector('[data-civ-card-header]');
+    expect(header).not.toBeNull();
+    expect(header!.querySelector('h3')!.textContent).toBe('Title');
   });
 
-  it('renders heading as link when href is set', async () => {
-    const el = await fixture('<civ-card heading="Details" href="/details"><p>Body</p></civ-card>');
-    const link = el.querySelector('a.civ-card__title');
-    expect(link).not.toBeNull();
-    expect(link!.getAttribute('href')).toBe('/details');
-  });
-
-  it('renders heading as plain text when no href', async () => {
-    const el = await fixture('<civ-card heading="Title"><p>Body</p></civ-card>');
-    const span = el.querySelector('span.civ-card__title');
-    expect(span).not.toBeNull();
-    const link = el.querySelector('a.civ-card__title');
-    expect(link).toBeNull();
-  });
-
-  it('omits header when no heading', async () => {
+  it('omits header when no data-card-header children', async () => {
     const el = await fixture('<civ-card><p>Body only</p></civ-card>');
-    const header = el.querySelector('.civ-card__header');
-    expect(header).toBeNull();
+    expect(el.querySelector('.civ-card__header')).toBeNull();
   });
 
   it('relocates footer children into card footer', async () => {
     const el = await fixture(`
-      <civ-card heading="Title">
+      <civ-card>
         <p>Body</p>
         <div data-card-footer><a href="/details">View details</a></div>
       </civ-card>
     `);
     const footer = el.querySelector('[data-civ-card-footer]');
     expect(footer).not.toBeNull();
-    const link = footer!.querySelector('a');
-    expect(link).not.toBeNull();
-    expect(link!.textContent).toBe('View details');
+    expect(footer!.querySelector('a')!.textContent).toBe('View details');
   });
 
   it('omits footer when no data-card-footer children', async () => {
-    const el = await fixture('<civ-card heading="Title"><p>Body</p></civ-card>');
-    const footer = el.querySelector('.civ-card__footer');
-    expect(footer).toBeNull();
+    const el = await fixture('<civ-card><p>Body</p></civ-card>');
+    expect(el.querySelector('.civ-card__footer')).toBeNull();
   });
 
-  it('relocates action children into header actions', async () => {
+  it('renders all three sections together', async () => {
     const el = await fixture(`
-      <civ-card heading="Title">
-        <p>Body</p>
-        <span data-card-actions><a href="/edit">Edit</a></span>
+      <civ-card>
+        <div data-card-header><h3>Heading</h3></div>
+        <p>Body content</p>
+        <div data-card-footer><span>Footer</span></div>
       </civ-card>
     `);
-    const actions = el.querySelector('[data-civ-card-actions]');
-    expect(actions).not.toBeNull();
-    expect(actions!.querySelector('a')!.textContent).toBe('Edit');
+    expect(el.querySelector('.civ-card__header')).not.toBeNull();
+    expect(el.querySelector('.civ-card__body')).not.toBeNull();
+    expect(el.querySelector('.civ-card__footer')).not.toBeNull();
   });
 
   it('renders expandable footer with details element', async () => {
     const el = await fixture(`
-      <civ-card heading="Payment">
+      <civ-card>
         <p>Last payment: $100</p>
         <details data-card-footer>
           <summary>View breakdown</summary>

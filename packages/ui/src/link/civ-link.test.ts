@@ -78,6 +78,17 @@ describe('civ-link', () => {
     expect(handler).toHaveBeenCalledOnce();
   });
 
+  it('does not fire analytics when disabled', async () => {
+    const el = await fixture('<civ-link href="/next" disabled>Go</civ-link>');
+    const handler = vi.fn();
+    el.addEventListener('civ-analytics', handler as EventListener);
+
+    const link = el.querySelector('a') as HTMLAnchorElement;
+    link.click();
+
+    expect(handler).not.toHaveBeenCalled();
+  });
+
   it('uses Light DOM', async () => {
     const el = await fixture('<civ-link href="/next">Go</civ-link>');
     expect(el.shadowRoot).toBeNull();

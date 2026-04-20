@@ -121,7 +121,7 @@ export const LinkHeading: Story = {
   render: () => html`
     <civ-card>
       <div data-card-header>
-        <a href="#/education" class="civ-heading-md civ-link civ-underline">Education benefits</a>
+        <civ-link href="#/education" class="civ-heading-md">Education benefits</civ-link>
       </div>
       <p>Post-9/11 GI Bill</p>
       <p>Remaining entitlement: 24 months</p>
@@ -198,7 +198,7 @@ export const ClaimStatusCards: Story = {
       <civ-card>
         <div data-card-header>
           <civ-tag label="In progress" variant="teal"></civ-tag>
-          <a href="#/claims/123" class="civ-heading-md civ-link civ-underline">Disability compensation</a>
+          <civ-link href="#/claims/123" class="civ-heading-md">Disability compensation</civ-link>
         </div>
         <p>Filed: March 10, 2026</p>
         <p>Step 3 of 5: Evidence gathering</p>
@@ -207,7 +207,7 @@ export const ClaimStatusCards: Story = {
       <civ-card>
         <div data-card-header>
           <civ-tag label="Decision made" variant="green" tag-style="primary"></civ-tag>
-          <a href="#/claims/456" class="civ-heading-md civ-link civ-underline">Travel reimbursement</a>
+          <civ-link href="#/claims/456" class="civ-heading-md">Travel reimbursement</civ-link>
         </div>
         <p>Filed: February 28, 2026</p>
         <p>Amount approved: $45.00</p>
@@ -216,7 +216,7 @@ export const ClaimStatusCards: Story = {
       <civ-card>
         <div data-card-header>
           <civ-tag label="Action needed" variant="red"></civ-tag>
-          <a href="#/claims/789" class="civ-heading-md civ-link civ-underline">Education benefits</a>
+          <civ-link href="#/claims/789" class="civ-heading-md">Education benefits</civ-link>
         </div>
         <p>Filed: January 5, 2026</p>
         <p>Additional documents required</p>
@@ -255,7 +255,7 @@ export const DensityScale: Story = {
           <div data-card-header>
             <civ-tag label="In progress" variant="teal"></civ-tag>
             <div class="civ-flex civ-justify-between civ-items-center">
-              <a href="#" class="civ-heading-md civ-link civ-underline">Disability compensation</a>
+              <civ-link href="#" class="civ-heading-md">Disability compensation</civ-link>
               <civ-button label="Edit" variant="tertiary"></civ-button>
             </div>
           </div>
@@ -272,7 +272,7 @@ export const DensityScale: Story = {
           <div data-card-header>
             <civ-tag label="In progress" variant="teal"></civ-tag>
             <div class="civ-flex civ-justify-between civ-items-center">
-              <a href="#" class="civ-heading-md civ-link civ-underline">Disability compensation</a>
+              <civ-link href="#" class="civ-heading-md">Disability compensation</civ-link>
               <civ-button label="Edit" variant="tertiary"></civ-button>
             </div>
           </div>
@@ -289,7 +289,7 @@ export const DensityScale: Story = {
           <div data-card-header>
             <civ-tag label="In progress" variant="teal"></civ-tag>
             <div class="civ-flex civ-justify-between civ-items-center">
-              <a href="#" class="civ-heading-md civ-link civ-underline">Disability compensation</a>
+              <civ-link href="#" class="civ-heading-md">Disability compensation</civ-link>
               <civ-button label="Edit" variant="tertiary"></civ-button>
             </div>
           </div>

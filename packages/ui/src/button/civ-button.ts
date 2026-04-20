@@ -3,7 +3,7 @@ import { customElement, property } from 'lit/decorators.js';
 import { CivBaseElement, LightDomTextMixin } from '@civui/core';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'tertiary';
-export type ButtonType = 'button' | 'submit';
+export type ButtonType = 'button' | 'submit' | 'reset';
 
 /**
  * CivUI Button

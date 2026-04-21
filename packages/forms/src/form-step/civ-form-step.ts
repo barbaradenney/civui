@@ -185,7 +185,7 @@ export class CivFormStep extends CivBaseElement {
     }
   }
 
-  /** Validate required fields in the current step. */
+  /** Validate required fields in the current step using CivUI component errors. */
   private _validateCurrentStep(): boolean {
     if (!this.validate) return true;
 
@@ -194,7 +194,7 @@ export class CivFormStep extends CivBaseElement {
 
     let valid = true;
 
-    // Check all form fields (CivUI components and native)
+    // Find all CivUI form components and native required elements
     const formFields = step.querySelectorAll('[data-civ-form-field], [required]');
     const checked = new Set<Element>();
 
@@ -202,29 +202,37 @@ export class CivFormStep extends CivBaseElement {
       if (checked.has(field)) return;
       checked.add(field);
 
-      const el = field as HTMLElement & {
-        value?: string;
-        required?: boolean;
-        reportValidity?: () => boolean;
-      };
+      const el = field as HTMLElement & { value?: string };
 
-      // Use component's built-in validation (triggers validate="ssn", etc.)
-      if (typeof el.reportValidity === 'function') {
-        if (!el.reportValidity()) {
-          valid = false;
-          return;
-        }
+      // Skip native elements inside CivUI components (they're managed by the parent)
+      if (!el.hasAttribute('data-civ-form-field') && el.closest('[data-civ-form-field]')) {
+        return;
       }
 
-      // Fallback: check required fields with empty values
+      // Check required fields for empty values
       if (el.hasAttribute('required')) {
         const value = el.value || el.getAttribute('value') || '';
         if (!value.trim()) {
           const label = el.getAttribute('label') || el.getAttribute('legend') || 'This field';
           el.setAttribute('error', `${label} is required`);
           valid = false;
-        } else if (!el.getAttribute('error')) {
-          el.removeAttribute('error');
+        } else {
+          // Clear error only if we set it (don't clear custom errors)
+          const currentError = el.getAttribute('error') || '';
+          if (currentError.endsWith('is required')) {
+            el.removeAttribute('error');
+          }
+        }
+      }
+
+      // Check CivUI validate attribute (ssn, email, phone, etc.)
+      const validateAttr = el.getAttribute('validate');
+      if (validateAttr && el.value) {
+        // Trigger the component's built-in validator by checking
+        // if an error was set by the component's own validation
+        const currentError = el.getAttribute('error');
+        if (currentError && !currentError.endsWith('is required')) {
+          valid = false;
         }
       }
     });

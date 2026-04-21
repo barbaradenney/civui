@@ -1,0 +1,147 @@
+---
+title: Name
+sidebar_position: 1
+sidebar_label: Name
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
+# civ-name
+
+Compound name input with first, middle (optional), last, and suffix fields. Follows the VA.gov name pattern with plain language labels. The `required` indicator is NOT placed on the legend since middle name and suffix are always optional; instead `required` is set on the first and last name sub-fields individually.
+
+## Shared Props
+
+All form components share these props: `name`, `value`, `hint`, `error`, `required`, `disabled`.
+
+## Component-Specific Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `legend` | `string` | `''` | Fieldset legend text |
+| `show-middle` | `boolean` | `true` | Whether to show the middle name field |
+| `show-suffix` | `boolean` | `true` | Whether to show the suffix select |
+| `first-error` | `string` | `''` | Error message for the first name field |
+| `middle-error` | `string` | `''` | Error message for the middle name field |
+| `last-error` | `string` | `''` | Error message for the last name field |
+
+## Value Structure
+
+The component stores its value as a JSON string:
+
+```typescript
+interface NameValue {
+  first: string;
+  middle: string;
+  last: string;
+  suffix: string;  // 'Jr.', 'Sr.', 'II', 'III', 'IV'
+}
+```
+
+## Form Data
+
+The component submits as separate fields:
+- `{name}.first`
+- `{name}.middle`
+- `{name}.last`
+- `{name}.suffix`
+
+## Required Logic
+
+When `required` is set:
+- First name and last name fields are marked required
+- Middle name and suffix are always optional
+- The legend does NOT show the required indicator (since not all fields are required)
+
+## Sub-field Autocomplete
+
+Fields automatically set appropriate `autocomplete` values:
+- First name: `given-name`
+- Middle name: `additional-name`
+- Last name: `family-name`
+
+## Programmatic API
+
+```js
+const name = document.querySelector('civ-name');
+name.nameValue; // { first: 'Jane', middle: 'A', last: 'Doe', suffix: '' }
+```
+
+## Events
+
+| Event | Detail | Description |
+|-------|--------|-------------|
+| `civ-input` | `{ value: NameValue }` | Fires on every field change |
+| `civ-change` | `{ value: NameValue }` | Fires on committed field change |
+
+## Examples
+
+```html
+<!-- Full name with all fields -->
+<civ-name
+  legend="Your name"
+  name="veteranName"
+  required
+></civ-name>
+
+<!-- Without middle name and suffix -->
+<civ-name
+  legend="Spouse name"
+  name="spouseName"
+  show-middle="false"
+  show-suffix="false"
+  required
+></civ-name>
+
+<!-- With per-field errors (server validation) -->
+<civ-name
+  legend="Legal name"
+  name="legalName"
+  first-error="First name must contain only letters"
+  required
+></civ-name>
+```
+
+## Live Examples
+
+### applicantName
+
+<StoryEmbed id="forms-compound-name--default" />
+
+### With Prefilled Value
+
+<StoryEmbed id="forms-compound-name--with-hint" />
+
+### With Error
+
+<StoryEmbed id="forms-compound-name--with-error" />
+
+### Required
+
+<StoryEmbed id="forms-compound-name--required" />
+
+### Disabled
+
+<StoryEmbed id="forms-compound-name--disabled" />
+
+### All States
+
+<StoryEmbed id="forms-compound-name--all-states" />
+
+### Density Scale
+
+<StoryEmbed id="forms-compound-name--density-scale" />
+
+### Without Middle Name
+
+<StoryEmbed id="forms-compound-name--without-middle" />
+
+### Without Suffix
+
+<StoryEmbed id="forms-compound-name--without-suffix" />
+
+### Usage: Identity Section
+
+<StoryEmbed id="forms-compound-name--government-identity-section" />
+
+[Open in Storybook →](/civui/storybook/?path=/story/forms-compound-name--default)

@@ -1,0 +1,75 @@
+---
+title: Fieldset
+sidebar_position: 7
+sidebar_label: Fieldset
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
+# civ-fieldset
+
+Native fieldset wrapper with legend, hint, and error support. Uses native `<fieldset>` for automatic disabled cascade to all child form elements. Useful for grouping related fields without the specific semantics of a radio group or checkbox group.
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `legend` | `string` | `''` | Legend text for the fieldset |
+| `hint` | `string` | `''` | Hint text displayed below the legend |
+| `error` | `string` | `''` | Error message for the group |
+| `required` | `boolean` | `false` | Whether the fieldset is required |
+| `disabled` | `boolean` | `false` | Disable all child form elements via native cascade |
+
+## Disabled Cascade
+
+Setting `disabled` on `civ-fieldset` uses the native `<fieldset disabled>` behavior, which automatically disables all form controls within it without needing to set `disabled` on each child individually.
+
+## Examples
+
+```html
+<!-- Group related fields -->
+<civ-fieldset legend="Emergency contact">
+  <civ-text-input label="Contact name" name="emergencyName" required></civ-text-input>
+  <civ-text-input label="Relationship" name="emergencyRelation" required></civ-text-input>
+  <civ-text-input label="Phone number" name="emergencyPhone" type="tel" mask="phone-us" required></civ-text-input>
+</civ-fieldset>
+
+<!-- With hint -->
+<civ-fieldset
+  legend="Previous employment"
+  hint="List your most recent employer first."
+>
+  <civ-text-input label="Employer name" name="employer"></civ-text-input>
+  <civ-text-input label="Job title" name="jobTitle"></civ-text-input>
+</civ-fieldset>
+
+<!-- Disabled section -->
+<civ-fieldset legend="Spouse information" disabled>
+  <civ-text-input label="Spouse name" name="spouseName"></civ-text-input>
+  <civ-memorable-date legend="Spouse date of birth" name="spouseDob"></civ-memorable-date>
+</civ-fieldset>
+```
+
+## Live Examples
+
+### Default
+
+<StoryEmbed id="forms-layout-fieldset--default" />
+
+### With Hint And Error
+
+<StoryEmbed id="forms-layout-fieldset--with-hint-and-error" />
+
+### Disabled
+
+<StoryEmbed id="forms-layout-fieldset--disabled" />
+
+### Required
+
+<StoryEmbed id="forms-layout-fieldset--required" />
+
+### Nested
+
+<StoryEmbed id="forms-layout-fieldset--nested" />
+
+[Open in Storybook →](/civui/storybook/?path=/story/forms-layout-fieldset--default)

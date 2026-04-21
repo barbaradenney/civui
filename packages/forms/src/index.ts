@@ -85,3 +85,17 @@ export { CivPrefillNotice } from './prefill-notice/index.js';
 // Read-Only Field
 export { CivReadOnlyField } from './read-only-field/index.js';
 
+// Prefill
+export type { PrefillField, PrefillOption, PrefillData, PrefillMeta } from './prefill/index.js';
+
+// Profile Card
+export { CivProfileCard } from './profile-card/index.js';
+
+// Contact Card
+export { CivContactCard } from './contact-card/index.js';
+export type { ContactFieldType } from './contact-card/index.js';
+
+// Prefill Choice
+export { CivPrefillChoice } from './prefill-choice/index.js';
+export type { PrefillChoiceOption } from './prefill-choice/index.js';
+

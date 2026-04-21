@@ -182,6 +182,24 @@ export interface CivLocaleStrings {
   summaryEditLink: string;
   summaryEditAriaLabel: string; // "Edit {section}"
   summaryNotProvided: string;
+  summarySourceProfile: string;
+
+  // Profile card
+  profileCardHeading: string;
+  profileCardLink: string;
+
+  // Contact card
+  contactCardEdit: string;
+  contactCardUpdate: string;
+  contactCardCancel: string;
+  contactCardProfileWarning: string; // "Any changes here will also update your {service} profile"
+
+  // Prefill choice
+  prefillChoiceNewOption: string; // "Enter a different {fieldType}"
+  prefillChoiceHint: string; // "We found these {fieldType}s in your profile"
+
+  // Task prefill
+  taskPrefillHint: string;
 
   // Validation
   validateRequired: string; // "{label} is required"
@@ -358,6 +376,20 @@ const defaultStrings: CivLocaleStrings = {
   summaryEditLink: 'Edit',
   summaryEditAriaLabel: 'Edit {section}',
   summaryNotProvided: 'Not provided',
+  summarySourceProfile: 'From your profile',
+
+  profileCardHeading: 'This is the personal information we have on file for you',
+  profileCardLink: 'To update your personal information, go to your profile',
+
+  contactCardEdit: 'Edit',
+  contactCardUpdate: 'Update',
+  contactCardCancel: 'Cancel',
+  contactCardProfileWarning: 'Any changes you make here will also update your {service} profile',
+
+  prefillChoiceNewOption: 'Enter a different {fieldType}',
+  prefillChoiceHint: 'We found these {fieldType}s in your profile',
+
+  taskPrefillHint: 'We prefilled some information \u2014 please review',
 
   validateRequired: '{label} is required',
   validateEmail: 'Enter a valid email address',

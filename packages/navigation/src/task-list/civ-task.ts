@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBaseElement } from '@civui/core';
+import { CivBaseElement, t } from '@civui/core';
 
 export type TaskStatus = 'not-started' | 'in-progress' | 'complete' | 'cannot-start' | 'error';
 
@@ -43,6 +43,9 @@ export class CivTask extends CivBaseElement {
   @property({ type: String }) href = '';
   @property({ type: String }) status: TaskStatus = 'not-started';
 
+  /** When true, shows a default prefill hint if no custom hint is set. */
+  @property({ type: Boolean }) prefilled = false;
+
   private _statusId = this.generateId('status');
 
   override render() {
@@ -64,8 +67,8 @@ export class CivTask extends CivBaseElement {
                 ></civ-link>`
               : html`${this.label}`}
           </h4>
-          ${this.hint
-            ? html`<p class="civ-task__hint">${this.hint}</p>`
+          ${this.hint || this.prefilled
+            ? html`<p class="civ-task__hint">${this.hint || t('taskPrefillHint')}</p>`
             : nothing}
         </div>
         <div class="civ-task__status" id="${this._statusId}">

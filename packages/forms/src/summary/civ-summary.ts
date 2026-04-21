@@ -16,6 +16,8 @@ export interface SummaryItem {
   label: string;
   /** Value to display. Falsy values render as "Not provided". */
   value?: string | string[];
+  /** Where the data came from. Shows an annotation tag when set to 'profile'. */
+  source?: 'profile' | 'user' | 'api';
 }
 
 /**
@@ -109,6 +111,9 @@ export class CivSummary extends CivBaseElement {
               ? item.value.map(v => html`<span class="civ-block">${v}</span>`)
               : item.value
             : html`<span class="civ-text-muted civ-italic">${t('summaryNotProvided')}</span>`}
+          ${item.source === 'profile'
+            ? html`<civ-tag label="${t('summarySourceProfile')}" variant="gray" tag-style="secondary" class="civ-ms-1"></civ-tag>`
+            : nothing}
         </dd>
       </div>
     `;

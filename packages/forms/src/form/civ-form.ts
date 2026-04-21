@@ -5,6 +5,7 @@ import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { CivBaseElement, LightDomSlotMixin, dispatch, generateId, t, interpolate } from '@civui/core';
 import type { SlotConfig } from '@civui/core';
+import type { PrefillData, PrefillMeta } from '../prefill/types.js';
 
 export interface FormFieldError {
   name: string;
@@ -85,6 +86,18 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
   @property({ type: Boolean }) prefill = false;
   @property({ type: Boolean, attribute: 'track-dirty' }) trackDirty = false;
 
+  /**
+   * Prefill data from a user profile or API. Set via JS property.
+   * Keys are field names, values describe the prefill value and metadata.
+   */
+  @property({ type: Object, attribute: false }) prefillData: PrefillData = {};
+
+  /**
+   * URL to fetch prefill data from. Response must be JSON matching PrefillData shape.
+   * Fetched once in connectedCallback. Use `prefillData` property for non-URL sources.
+   */
+  @property({ type: String, attribute: 'prefill-src' }) prefillSrc = '';
+
   @state() private _errors: FormFieldError[] = [];
   @state() private _dirty = false;
   private _initialValues = new Map<string, string>();
@@ -103,6 +116,7 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
     if (this.formLabel) this.setAttribute('aria-label', this.formLabel);
     this.addEventListener('click', this._boundOnClick);
     this.addEventListener('keydown', this._boundOnKeydown);
+    if (this.prefillSrc) this._fetchPrefillData();
     if (this.persist) {
       this.addEventListener('civ-input', this._boundOnCivInput);
     }
@@ -130,6 +144,7 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
     this._relocateSlots();
     if (this.persist) this._restorePersistedData();
     this._prefillFromUrl();
+    this._applyPrefillData();
     if (this.trackDirty) {
       // Capture initial values after restoration/prefill completes
       requestAnimationFrame(() => this._captureInitialValues());
@@ -143,6 +158,9 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
       } else {
         this.removeAttribute('aria-label');
       }
+    }
+    if (changed.has('prefillData') && Object.keys(this.prefillData).length > 0) {
+      this._applyPrefillData();
     }
   }
 
@@ -407,6 +425,82 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
         }
       });
     });
+  }
+
+  /** Fetch prefill data from a URL and apply it. */
+  private async _fetchPrefillData(): Promise<void> {
+    if (!this.prefillSrc) return;
+    try {
+      const res = await fetch(this.prefillSrc);
+      if (res.ok) {
+        this.prefillData = await res.json();
+      }
+    } catch { /* network errors handled gracefully — form works without prefill */ }
+  }
+
+  /**
+   * Apply prefill data to form fields. Sets values and data attributes
+   * for prefill source, locked state, and conflict availability.
+   * Persisted user edits take priority over prefill data.
+   */
+  private _applyPrefillData(): void {
+    if (!this.prefillData || Object.keys(this.prefillData).length === 0) return;
+
+    requestAnimationFrame(() => {
+      const fields = this.querySelectorAll('[data-civ-form-field]') as NodeListOf<CivFormFieldLike>;
+      const appliedFields: string[] = [];
+
+      fields.forEach((field) => {
+        if (!field.name) return;
+        const prefill = this.prefillData[field.name];
+        if (!prefill) return;
+
+        // Don't overwrite persisted user edits
+        if (this.persist && field.value && field.value !== '') return;
+
+        field.value = prefill.value;
+        field.setAttribute('data-civ-prefill-source', prefill.source);
+
+        if (prefill.locked) {
+          field.setAttribute('data-civ-prefill-locked', '');
+        }
+        if (prefill.options && prefill.options.length > 1) {
+          field.setAttribute('data-civ-prefill-has-options', '');
+        }
+
+        appliedFields.push(field.name);
+      });
+
+      if (appliedFields.length > 0) {
+        dispatch(this, 'civ-prefill-applied', { fields: appliedFields });
+      }
+    });
+  }
+
+  /**
+   * Get metadata about which fields are prefilled, locked, or in conflict.
+   * Used by application code to set task list statuses.
+   */
+  getPrefillMeta(): PrefillMeta {
+    const prefilled: string[] = [];
+    const locked: string[] = [];
+    const conflicts: string[] = [];
+    const needsReview: string[] = [];
+
+    for (const [name, field] of Object.entries(this.prefillData)) {
+      prefilled.push(name);
+      if (field.locked) {
+        locked.push(name);
+      }
+      if (field.options && field.options.length > 1) {
+        conflicts.push(name);
+        needsReview.push(name);
+      } else if (!field.locked) {
+        needsReview.push(name);
+      }
+    }
+
+    return { prefilled, locked, conflicts, needsReview };
   }
 
   private _onButtonClick(e: Event): void {

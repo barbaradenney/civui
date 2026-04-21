@@ -100,6 +100,15 @@ ${pagesHtml}
   </main>
 
   <script>
+    // Wait for custom elements to be defined before wiring events
+    function onReady(fn) {
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => setTimeout(fn, 100));
+      } else {
+        setTimeout(fn, 100);
+      }
+    }
+    onReady(function() {
     // ── Page Router ──────────────────────────────────────────────
     const CHAPTERS = [${chapterIds}];
     const CHAPTER_HEADINGS = {
@@ -329,6 +338,7 @@ ${chapterHeadings}
 
     // ── Chapter Field Stepping ──────────────────────────────────
     ${chapterJs}
+    }); // end onReady
   </script>
 </body>
 </html>`;

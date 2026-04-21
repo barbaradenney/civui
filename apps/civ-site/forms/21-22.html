@@ -391,6 +391,15 @@
   </main>
 
   <script>
+    // Wait for custom elements to be defined before wiring events
+    function onReady(fn) {
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => setTimeout(fn, 100));
+      } else {
+        setTimeout(fn, 100);
+      }
+    }
+    onReady(function() {
     // ── Page Router ──────────────────────────────────────────────
     const CHAPTERS = ['personal-info', 'contact-info', 'representative-info'];
     const CHAPTER_HEADINGS = {
@@ -730,6 +739,7 @@
 
     // ── Chapter Field Stepping ──────────────────────────────────
     
+    }); // end onReady
   </script>
 </body>
 </html>

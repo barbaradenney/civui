@@ -29,13 +29,34 @@ A horizontal rule for visually separating content sections. Renders as an `<hr>`
 ```
 
 
-## Live Example
+
+## Live Examples
+
+### Default
 
 <iframe
   src="/civui/storybook/iframe.html?id=ui-divider--default&viewMode=story"
   width="100%"
   height="300"
-  style={{border: '1px solid #dfe1e2', borderRadius: '6px'}}
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Small
+
+<iframe
+  src="/civui/storybook/iframe.html?id=ui-divider--small&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### In Context
+
+<iframe
+  src="/civui/storybook/iframe.html?id=ui-divider--in-context&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
 [Open in Storybook →](/civui/storybook/?path=/story/ui-divider--default)

@@ -67,13 +67,70 @@ interface SummaryItem {
 </script>
 ```
 
-## Live Example
+
+## Live Examples
+
+### Default
 
 <iframe
   src="/civui/storybook/iframe.html?id=forms-patterns-summary--default&viewMode=story"
   width="100%"
   height="300"
-  style={{border: '1px solid #dfe1e2', borderRadius: '6px'}}
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### With Missing Values
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-patterns-summary--with-missing-values&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### With Array Values
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-patterns-summary--with-array-values&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Without Edit Links
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-patterns-summary--without-edit-links&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Empty
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-patterns-summary--empty&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Full Application Review Page
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-patterns-summary--full-application-review&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Post-Submission Confirmation
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-patterns-summary--confirmation-page&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
 [Open in Storybook →](/civui/storybook/?path=/story/forms-patterns-summary--default)

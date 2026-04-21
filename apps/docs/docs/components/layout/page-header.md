@@ -54,13 +54,79 @@ Children without a data attribute are placed in the heading area by default.
 ```
 
 
-## Live Example
+
+## Live Examples
+
+### Default
 
 <iframe
   src="/civui/storybook/iframe.html?id=ui-page-header--default&viewMode=story"
   width="100%"
   height="300"
-  style={{border: '1px solid #dfe1e2', borderRadius: '6px'}}
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### With Eyebrow
+
+<iframe
+  src="/civui/storybook/iframe.html?id=ui-page-header--with-eyebrow&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### With Subheading
+
+<iframe
+  src="/civui/storybook/iframe.html?id=ui-page-header--with-subheading&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Full Header (Eyebrow + Tag + Subheading)
+
+<iframe
+  src="/civui/storybook/iframe.html?id=ui-page-header--full-header&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### With Status Tag
+
+<iframe
+  src="/civui/storybook/iframe.html?id=ui-page-header--with-status-tag&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### With Stacked Tag
+
+<iframe
+  src="/civui/storybook/iframe.html?id=ui-page-header--with-stacked-tag&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Stacked Tag + Inline Tag
+
+<iframe
+  src="/civui/storybook/iframe.html?id=ui-page-header--stacked-and-inline-tag&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Form Page Example
+
+<iframe
+  src="/civui/storybook/iframe.html?id=ui-page-header--form-page-header&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
 [Open in Storybook →](/civui/storybook/?path=/story/ui-page-header--default)

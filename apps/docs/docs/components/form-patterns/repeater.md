@@ -96,13 +96,88 @@ repeater.removeRow(1);    // Remove row at index 1
 ```
 
 
-## Live Example
+
+## Live Examples
+
+### dependents
 
 <iframe
   src="/civui/storybook/iframe.html?id=forms-patterns-repeater--default&viewMode=story"
   width="100%"
   height="300"
-  style={{border: '1px solid #dfe1e2', borderRadius: '6px'}}
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Min Rows
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-patterns-repeater--min-rows&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Max Rows
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-patterns-repeater--max-rows&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### With Hint
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-patterns-repeater--with-hint&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### With Error
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-patterns-repeater--with-error&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Disabled
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-patterns-repeater--disabled&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Multiple Fields
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-patterns-repeater--multiple-fields&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Service Periods (Detail Mode)
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-patterns-repeater--service-periods&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Additional Phone Numbers (Inline)
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-patterns-repeater--phone-numbers&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
 [Open in Storybook →](/civui/storybook/?path=/story/forms-patterns-repeater--default)

@@ -71,13 +71,124 @@ A structured container with header, body, and footer slot areas. The card provid
 ```
 
 
-## Live Example
+
+## Live Examples
+
+### Default
 
 <iframe
   src="/civui/storybook/iframe.html?id=ui-card--default&viewMode=story"
   width="100%"
   height="300"
-  style={{border: '1px solid #dfe1e2', borderRadius: '6px'}}
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### With Header
+
+<iframe
+  src="/civui/storybook/iframe.html?id=ui-card--with-header&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### With Header and Footer
+
+<iframe
+  src="/civui/storybook/iframe.html?id=ui-card--with-header-and-footer&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### With Tag and Actions
+
+<iframe
+  src="/civui/storybook/iframe.html?id=ui-card--with-tag-and-actions&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### With Footer Button
+
+<iframe
+  src="/civui/storybook/iframe.html?id=ui-card--with-footer-button&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### With Expandable Footer
+
+<iframe
+  src="/civui/storybook/iframe.html?id=ui-card--with-expandable-footer&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Link Heading
+
+<iframe
+  src="/civui/storybook/iframe.html?id=ui-card--link-heading&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Dependent Card
+
+<iframe
+  src="/civui/storybook/iframe.html?id=ui-card--dependent-card&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Appointment Card Collection
+
+<iframe
+  src="/civui/storybook/iframe.html?id=ui-card--appointment-cards&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Claim Status Cards
+
+<iframe
+  src="/civui/storybook/iframe.html?id=ui-card--claim-status-cards&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Plain (No Header)
+
+<iframe
+  src="/civui/storybook/iframe.html?id=ui-card--plain&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Small
+
+<iframe
+  src="/civui/storybook/iframe.html?id=ui-card--small&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Density Scale
+
+<iframe
+  src="/civui/storybook/iframe.html?id=ui-card--density-scale&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
 [Open in Storybook →](/civui/storybook/?path=/story/ui-card--default)

@@ -72,13 +72,61 @@ Add `danger` to any variant for destructive action styling.
 ```
 
 
-## Live Example
+
+## Live Examples
+
+### Default
 
 <iframe
   src="/civui/storybook/iframe.html?id=ui-button--default&viewMode=story"
   width="100%"
   height="300"
-  style={{border: '1px solid #dfe1e2', borderRadius: '6px'}}
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Button Variants
+
+<iframe
+  src="/civui/storybook/iframe.html?id=ui-button--variants&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Danger Variants
+
+<iframe
+  src="/civui/storybook/iframe.html?id=ui-button--danger-variants&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### All Variants
+
+<iframe
+  src="/civui/storybook/iframe.html?id=ui-button--all-variants&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Disabled
+
+<iframe
+  src="/civui/storybook/iframe.html?id=ui-button--disabled&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### In Form
+
+<iframe
+  src="/civui/storybook/iframe.html?id=ui-button--in-form&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
 [Open in Storybook →](/civui/storybook/?path=/story/ui-button--default)

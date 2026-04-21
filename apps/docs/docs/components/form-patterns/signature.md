@@ -75,13 +75,52 @@ sig.isComplete;      // true if name is filled and checkbox is checked
 ```
 
 
-## Live Example
+
+## Live Examples
+
+### sig
 
 <iframe
   src="/civui/storybook/iframe.html?id=forms-patterns-signature--default&viewMode=story"
   width="100%"
   height="300"
-  style={{border: '1px solid #dfe1e2', borderRadius: '6px'}}
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Required
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-patterns-signature--required&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### With Statement
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-patterns-signature--with-statement&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### With Errors
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-patterns-signature--with-errors&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Disabled
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-patterns-signature--disabled&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
 [Open in Storybook →](/civui/storybook/?path=/story/forms-patterns-signature--default)

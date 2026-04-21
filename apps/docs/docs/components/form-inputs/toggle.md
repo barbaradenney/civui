@@ -59,13 +59,70 @@ All form components share these props: `label`, `name`, `value`, `hint`, `error`
 ```
 
 
-## Live Example
+
+## Live Examples
+
+### darkmode
 
 <iframe
   src="/civui/storybook/iframe.html?id=forms-inputs-toggle--default&viewMode=story"
   width="100%"
   height="300"
-  style={{border: '1px solid #dfe1e2', borderRadius: '6px'}}
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Checked
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-toggle--checked&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### With Description
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-toggle--with-description&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### With Hint
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-toggle--with-hint&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### With Error
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-toggle--with-error&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Disabled
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-toggle--disabled&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### In Form
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-toggle--in-form&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
 [Open in Storybook →](/civui/storybook/?path=/story/forms-inputs-toggle--default)

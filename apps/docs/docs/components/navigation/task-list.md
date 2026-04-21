@@ -88,13 +88,52 @@ Tasks with `status="cannot-start"` render without a link and display a gray "Can
 ```
 
 
-## Live Example
+
+## Live Examples
+
+### Default
 
 <iframe
   src="/civui/storybook/iframe.html?id=navigation-task-list--default&viewMode=story"
   width="100%"
   height="300"
-  style={{border: '1px solid #dfe1e2', borderRadius: '6px'}}
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### All Statuses
+
+<iframe
+  src="/civui/storybook/iframe.html?id=navigation-task-list--all-statuses&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Multiple Groups
+
+<iframe
+  src="/civui/storybook/iframe.html?id=navigation-task-list--multiple-groups&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### VA Form 21-526EZ Hub
+
+<iframe
+  src="/civui/storybook/iframe.html?id=navigation-task-list--disability-compensation&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### All Sections Complete
+
+<iframe
+  src="/civui/storybook/iframe.html?id=navigation-task-list--all-complete&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
 [Open in Storybook →](/civui/storybook/?path=/story/navigation-task-list--default)

@@ -72,13 +72,79 @@ Selection follows focus. RTL direction is automatically handled.
 ```
 
 
-## Live Example
+
+## Live Examples
+
+### view
 
 <iframe
   src="/civui/storybook/iframe.html?id=forms-inputs-segmented-control--default&viewMode=story"
   width="100%"
   height="300"
-  style={{border: '1px solid #dfe1e2', borderRadius: '6px'}}
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### With Preselection
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-segmented-control--with-preselection&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Three Options
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-segmented-control--three-options&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Five Options
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-segmented-control--five-options&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### With Hint
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-segmented-control--with-hint&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### With Error
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-segmented-control--with-error&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Disabled
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-segmented-control--disabled&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### In Form
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-segmented-control--in-form&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
 [Open in Storybook →](/civui/storybook/?path=/story/forms-inputs-segmented-control--default)

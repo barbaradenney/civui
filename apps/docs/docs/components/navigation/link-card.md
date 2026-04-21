@@ -77,13 +77,70 @@ Yellow/gold background with black text for urgent actions.
 ```
 
 
-## Live Example
+
+## Live Examples
+
+### Default
 
 <iframe
   src="/civui/storybook/iframe.html?id=ui-link-card--default&viewMode=story"
   width="100%"
   height="300"
-  style={{border: '1px solid #dfe1e2', borderRadius: '6px'}}
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Without Description
+
+<iframe
+  src="/civui/storybook/iframe.html?id=ui-link-card--without-description&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Card Collection
+
+<iframe
+  src="/civui/storybook/iframe.html?id=ui-link-card--card-collection&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Secondary Variant
+
+<iframe
+  src="/civui/storybook/iframe.html?id=ui-link-card--secondary&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Critical Variant
+
+<iframe
+  src="/civui/storybook/iframe.html?id=ui-link-card--critical&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### All Variants
+
+<iframe
+  src="/civui/storybook/iframe.html?id=ui-link-card--all-variants&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Grid Layout
+
+<iframe
+  src="/civui/storybook/iframe.html?id=ui-link-card--grid-layout&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
 [Open in Storybook →](/civui/storybook/?path=/story/ui-link-card--default)

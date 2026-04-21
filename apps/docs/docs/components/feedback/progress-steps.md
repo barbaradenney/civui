@@ -82,13 +82,115 @@ A step indicator for multi-step forms. Displays current progress with completed,
 ```
 
 
-## Live Example
+
+## Live Examples
+
+### Default
 
 <iframe
   src="/civui/storybook/iframe.html?id=forms-patterns-progress-steps--default&viewMode=story"
   width="100%"
   height="300"
-  style={{border: '1px solid #dfe1e2', borderRadius: '6px'}}
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Middle Step
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-patterns-progress-steps--middle-step&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Last Step
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-patterns-progress-steps--last-step&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Vertical
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-patterns-progress-steps--vertical&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Many Steps
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-patterns-progress-steps--many-steps&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### With Descriptions
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-patterns-progress-steps--with-descriptions&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### With Error Step
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-patterns-progress-steps--with-error-step&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### With Counter
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-patterns-progress-steps--with-counter&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Clickable With Descriptions
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-patterns-progress-steps--clickable-with-descriptions&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Progress Bar
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-patterns-progress-steps--progress-bar&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Progress Bar Complete
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-patterns-progress-steps--progress-bar-complete&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Progress Bar No Status
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-patterns-progress-steps--progress-bar-no-status&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
 [Open in Storybook →](/civui/storybook/?path=/story/forms-patterns-progress-steps--default)

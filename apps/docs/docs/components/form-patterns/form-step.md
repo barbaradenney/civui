@@ -106,13 +106,52 @@ stepper.goToStep(2);  // Navigate to step 3
 ```
 
 
-## Live Example
+
+## Live Examples
+
+### Default
 
 <iframe
   src="/civui/storybook/iframe.html?id=forms-patterns-form-step--default&viewMode=story"
   width="100%"
   height="300"
-  style={{border: '1px solid #dfe1e2', borderRadius: '6px'}}
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Two Steps
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-patterns-form-step--two-steps&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### With Progress
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-patterns-form-step--with-progress&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Custom Labels
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-patterns-form-step--custom-labels&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Benefit Application Flow
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-patterns-form-step--benefit-application&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
 [Open in Storybook →](/civui/storybook/?path=/story/forms-patterns-form-step--default)

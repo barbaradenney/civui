@@ -81,13 +81,70 @@ As the user types, options are filtered by substring match (case-insensitive). M
 ```
 
 
-## Live Example
+
+## Live Examples
+
+### state
 
 <iframe
   src="/civui/storybook/iframe.html?id=forms-inputs-combobox--default&viewMode=story"
   width="100%"
   height="300"
-  style={{border: '1px solid #dfe1e2', borderRadius: '6px'}}
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### With Hint
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-combobox--with-hint&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### With Error
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-combobox--with-error&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Required
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-combobox--required&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Disabled
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-combobox--disabled&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Preselected
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-combobox--preselected&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Option Groups
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-combobox--option-groups&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
 [Open in Storybook →](/civui/storybook/?path=/story/forms-inputs-combobox--default)

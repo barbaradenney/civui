@@ -108,13 +108,151 @@ Groups multiple `civ-checkbox` elements with a shared legend, hint, and error. U
 ```
 
 
-## Live Example
+
+## Live Examples
+
+### agree
 
 <iframe
   src="/civui/storybook/iframe.html?id=forms-inputs-checkbox--default&viewMode=story"
   width="100%"
   height="300"
-  style={{border: '1px solid #dfe1e2', borderRadius: '6px'}}
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Checked
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-checkbox--checked&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### With Description
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-checkbox--with-description&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### With Error
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-checkbox--with-error&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Disabled
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-checkbox--disabled&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Tile Variant
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-checkbox--tile-variant&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Tile Checked
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-checkbox--tile-checked&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Group
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-checkbox--group&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Group With Error
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-checkbox--group-with-error&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Group Tile Variant
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-checkbox--group-tile-variant&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Indeterminate
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-checkbox--indeterminate&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### With Hint
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-checkbox--with-hint&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Group With Name
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-checkbox--group-with-name&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Group Horizontal
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-checkbox--group-horizontal&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Group Disabled
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-checkbox--group-disabled&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Group In Form
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-checkbox--group-in-form&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
 [Open in Storybook →](/civui/storybook/?path=/story/forms-inputs-checkbox--default)

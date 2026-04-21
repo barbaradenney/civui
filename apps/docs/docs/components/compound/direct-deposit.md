@@ -83,13 +83,52 @@ deposit.depositValue; // { accountType: 'checking', routingNumber: '123456789', 
 ```
 
 
-## Live Example
+
+## Live Examples
+
+### bank
 
 <iframe
   src="/civui/storybook/iframe.html?id=forms-compound-direct-deposit--default&viewMode=story"
   width="100%"
   height="300"
-  style={{border: '1px solid #dfe1e2', borderRadius: '6px'}}
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Required
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-compound-direct-deposit--required&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### With Errors
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-compound-direct-deposit--with-errors&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Disabled
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-compound-direct-deposit--disabled&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Prefilled
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-compound-direct-deposit--prefilled&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
 [Open in Storybook →](/civui/storybook/?path=/story/forms-compound-direct-deposit--default)

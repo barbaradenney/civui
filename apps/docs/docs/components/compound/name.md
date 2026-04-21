@@ -101,13 +101,88 @@ name.nameValue; // { first: 'Jane', middle: 'A', last: 'Doe', suffix: '' }
 ```
 
 
-## Live Example
+
+## Live Examples
+
+### veteranName
 
 <iframe
   src="/civui/storybook/iframe.html?id=forms-compound-name--default&viewMode=story"
   width="100%"
   height="300"
-  style={{border: '1px solid #dfe1e2', borderRadius: '6px'}}
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Required
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-compound-name--required&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### With Errors
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-compound-name--with-errors&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Without Middle
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-compound-name--without-middle&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Without Suffix
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-compound-name--without-suffix&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Disabled
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-compound-name--disabled&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Prefilled
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-compound-name--prefilled&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Paired with Date of Birth
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-compound-name--with-date-of-birth&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Spouse Name (no suffix)
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-compound-name--spouse-name&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
 [Open in Storybook →](/civui/storybook/?path=/story/forms-compound-name--default)

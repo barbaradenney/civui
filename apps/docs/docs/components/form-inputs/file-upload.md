@@ -100,13 +100,124 @@ const controller = upload.getAbortController(0);
 ```
 
 
-## Live Example
+
+## Live Examples
+
+### document
 
 <iframe
   src="/civui/storybook/iframe.html?id=forms-inputs-file-upload--default&viewMode=story"
   width="100%"
   height="300"
-  style={{border: '1px solid #dfe1e2', borderRadius: '6px'}}
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### With Hint
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-file-upload--with-hint&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### With Max Size
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-file-upload--with-max-size&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Multiple Files
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-file-upload--multiple-files&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### With Error
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-file-upload--with-error&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Disabled
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-file-upload--disabled&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Image Preview
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-file-upload--image-preview&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Max Files
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-file-upload--max-files&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Compact Variant
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-file-upload--compact-variant&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Full Variant
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-file-upload--full-variant&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### All Variants
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-file-upload--all-variants&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### With Progress
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-file-upload--with-progress&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Upload Simulation
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-file-upload--upload-simulation&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
 [Open in Storybook →](/civui/storybook/?path=/story/forms-inputs-file-upload--default)

@@ -10,6 +10,7 @@ import '@civui/navigation';
 import '@civui/ui/link';
 import '@civui/ui/button';
 import '@civui/ui/tag';
+import '@civui/ui/divider';
 import type { CivSummary } from '../summary/civ-summary.js';
 
 const meta: Meta = {

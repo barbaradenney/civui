@@ -5,22 +5,21 @@ import { CivBaseElement, t } from '@civui/core';
 /**
  * CivUI Read-Only Field
  *
- * Displays a label and value in read-only mode. The reusable data row
- * used across the design system: in summary sections, task previews,
- * and standalone read-only displays.
+ * Displays a label and value as a single row — label on the left,
+ * value on the right. The reusable data row used across the design
+ * system: in summary sections, task previews, and standalone displays.
  *
  * @element civ-read-only-field
  *
- * @prop {string} label - Field label
- * @prop {string} value - Display value (or set values for multi-line)
- * @prop {string} hint - Optional hint below the value
+ * @prop {string} label - Field label (left side)
+ * @prop {string} value - Display value (right side)
+ * @prop {string} hint - Optional hint below the row
  * @prop {string} actionLabel - Inline action link text
  * @prop {string} actionHref - Inline action link destination
  *
  * @example
  * ```html
  * <civ-read-only-field label="Name" value="Jane M. Doe"></civ-read-only-field>
- * <civ-read-only-field label="SSN" value="●●●-●●-6789"></civ-read-only-field>
  * ```
  */
 @customElement('civ-read-only-field')
@@ -34,7 +33,7 @@ export class CivReadOnlyField extends CivBaseElement {
   /** Multiple values (renders each on its own line). Set via JS. */
   @property({ type: Array, attribute: false }) values: string[] = [];
 
-  /** Optional hint below the value. */
+  /** Optional hint below the row. */
   @property({ type: String }) hint = '';
 
   /** Inline action link label (e.g., "Choose one"). */
@@ -48,9 +47,9 @@ export class CivReadOnlyField extends CivBaseElement {
     const hasValue = this.values.length > 0 || Boolean(this.value);
 
     return html`
-      <div class="civ-read-only-field civ-py-1">
-        <dt class="civ-label">${displayLabel}</dt>
-        <dd class="civ-text-base civ-mt-0.5 civ-ms-0">
+      <div class="civ-read-only-field civ-flex civ-justify-between civ-items-baseline civ-py-2">
+        <dt class="civ-read-only-field__label">${displayLabel}</dt>
+        <dd class="civ-read-only-field__value civ-ms-4 civ-text-end">
           ${hasValue
             ? this.values.length > 0
               ? this.values.map(v => html`<span class="civ-block">${v}</span>`)
@@ -60,10 +59,10 @@ export class CivReadOnlyField extends CivBaseElement {
             ? html`<civ-link href="${this.actionHref}" label="${this.actionLabel}" variant="tertiary" class="civ-ms-2"></civ-link>`
             : nothing}
         </dd>
-        ${this.hint ? html`
-          <span class="civ-hint civ-text-sm civ-text-muted civ-block civ-mt-0.5">${this.hint}</span>
-        ` : nothing}
       </div>
+      ${this.hint ? html`
+        <span class="civ-hint civ-text-sm civ-text-muted civ-block">${this.hint}</span>
+      ` : nothing}
     `;
   }
 }

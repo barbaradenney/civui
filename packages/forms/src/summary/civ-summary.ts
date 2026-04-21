@@ -82,8 +82,10 @@ export class CivSummary extends CivBaseElement {
 
     const statusTag = section.status ? STATUS_TAG[section.status] : undefined;
 
+    const showDividers = section.items.length > 1;
+
     return html`
-      <div class="civ-summary-section civ-py-4 civ-border-b civ-border-base-lighter">
+      <div class="civ-summary-section civ-py-4">
         <div class="civ-flex civ-justify-between civ-items-center civ-mb-2">
           <h3 class="civ-heading-md">${section.heading}</h3>
           <div class="civ-flex civ-items-center civ-gap-3">
@@ -106,7 +108,7 @@ export class CivSummary extends CivBaseElement {
           </div>
         </div>
         <dl class="civ-summary-list civ-m-0">
-          ${section.items.map(item => html`
+          ${section.items.map((item, i) => html`
             <civ-read-only-field
               label="${item.label}"
               value="${Array.isArray(item.value) ? '' : (item.value || '')}"
@@ -114,6 +116,9 @@ export class CivSummary extends CivBaseElement {
               action-label="${item.action?.label || ''}"
               action-href="${item.action?.href || ''}"
             ></civ-read-only-field>
+            ${showDividers && i < section.items.length - 1
+              ? html`<civ-divider spacing="sm"></civ-divider>`
+              : nothing}
           `)}
         </dl>
       </div>

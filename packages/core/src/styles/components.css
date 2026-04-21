@@ -1871,20 +1871,18 @@
   /* ── Read-Only Field ─────────────────────────────────────── */
 
   .civ-read-only-field {
-    @apply civ-py-3;
-    border-bottom: 1px solid var(--civ-color-base-lighter);
+    @apply civ-m-0;
   }
 
-  .civ-read-only-field:first-child {
-    border-top: 1px solid var(--civ-color-base-lighter);
-  }
-
-  .civ-read-only-field dt {
-    font-size: var(--civ-typography-fontSize-sm);
-  }
-
-  .civ-read-only-field dd {
+  .civ-read-only-field__label {
     font-size: var(--civ-typography-fontSize-base);
+    color: var(--civ-color-base-darkest);
+  }
+
+  .civ-read-only-field__value {
+    @apply civ-m-0;
+    font-size: var(--civ-typography-fontSize-base);
+    color: var(--civ-color-base-darkest);
   }
 
   /* ── Summary label column ─────────────────────────────────── */

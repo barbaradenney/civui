@@ -1,6 +1,8 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { CivBaseElement, t } from '@civui/core';
+import '@civui/ui/tag';
+import '@civui/ui/link';
 
 export type TaskStatus = 'not-started' | 'in-progress' | 'complete' | 'cannot-start' | 'error';
 

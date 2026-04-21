@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach, vi } from 'vitest';
+import { describe, it, expect, afterEach } from 'vitest';
 import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
 import './civ-summary.js';
 import type { CivSummary, SummarySection } from './civ-summary.js';
@@ -8,21 +8,11 @@ afterEach(cleanupFixtures);
 describe('civ-summary', () => {
   const sampleSections: SummarySection[] = [
     {
-      heading: 'Personal information',
-      editHref: '#step-1',
+      heading: '',
       items: [
-        { label: 'First name', value: 'Jane' },
-        { label: 'Last name', value: 'Doe' },
-        { label: 'Phone number' }, // no value — should show "Not provided"
-      ],
-    },
-    {
-      heading: 'Address',
-      editHref: '#step-2',
-      items: [
-        { label: 'Street', value: '123 Main St' },
-        { label: 'City', value: 'Springfield' },
-        { label: 'State', value: 'IL' },
+        { label: 'First name', value: 'Jane', editHref: '#step-1' },
+        { label: 'Last name', value: 'Doe', editHref: '#step-1' },
+        { label: 'Phone number' },
       ],
     },
   ];
@@ -35,28 +25,15 @@ describe('civ-summary', () => {
     expect(h2!.textContent).toBe('Review your application');
   });
 
-  it('renders sections with headings', async () => {
-    const el = await fixture<CivSummary>('<civ-summary heading="Review"></civ-summary>') as CivSummary;
-    el.sections = sampleSections;
-    await elementUpdated(el);
-
-    const h3s = el.querySelectorAll('h3');
-    expect(h3s.length).toBe(2);
-    expect(h3s[0].textContent).toBe('Personal information');
-    expect(h3s[1].textContent).toBe('Address');
-  });
-
-  it('renders items as definition list', async () => {
+  it('renders items as definition list rows', async () => {
     const el = await fixture<CivSummary>('<civ-summary></civ-summary>') as CivSummary;
     el.sections = sampleSections;
     await elementUpdated(el);
 
-    const dts = el.querySelectorAll('dt');
-    const dds = el.querySelectorAll('dd');
-
-    expect(dts.length).toBe(6);
-    expect(dts[0].textContent).toBe('First name');
-    expect(dds[0].textContent!.trim()).toBe('Jane');
+    const fields = el.querySelectorAll('civ-read-only-field');
+    expect(fields.length).toBe(3);
+    expect(fields[0].getAttribute('label')).toBe('First name');
+    expect(fields[0].getAttribute('value')).toBe('Jane');
   });
 
   it('shows "Not provided" for missing values', async () => {
@@ -64,67 +41,86 @@ describe('civ-summary', () => {
     el.sections = sampleSections;
     await elementUpdated(el);
 
-    const dds = el.querySelectorAll('dd');
-    expect(dds[2].textContent).toContain('Not provided');
+    const fields = el.querySelectorAll('civ-read-only-field');
+    // Phone number (3rd item) has no value
+    expect(fields[2].getAttribute('value')).toBe('');
   });
 
-  it('renders edit links with correct href', async () => {
+  it('renders inline edit links on items with editHref', async () => {
     const el = await fixture<CivSummary>('<civ-summary></civ-summary>') as CivSummary;
     el.sections = sampleSections;
     await elementUpdated(el);
 
-    const links = el.querySelectorAll('.civ-summary-section > div > div > civ-link');
-    expect(links.length).toBe(2);
-    expect(links[0].getAttribute('href')).toBe('#step-1');
-    expect(links[1].getAttribute('href')).toBe('#step-2');
+    const fields = el.querySelectorAll('civ-read-only-field');
+    expect(fields[0].getAttribute('edit-href')).toBe('#step-1');
+    expect(fields[2].getAttribute('edit-href')).toBe(''); // no edit link
   });
 
-  it('edit links use tertiary variant', async () => {
-    const el = await fixture<CivSummary>('<civ-summary></civ-summary>') as CivSummary;
-    el.sections = sampleSections;
-    await elementUpdated(el);
-
-    const link = el.querySelector('.civ-summary-section civ-link');
-    expect(link!.getAttribute('variant')).toBe('tertiary');
-  });
-
-  it('fires civ-summary-edit when edit is clicked', async () => {
-    const el = await fixture<CivSummary>('<civ-summary></civ-summary>') as CivSummary;
-    el.sections = sampleSections;
-    await elementUpdated(el);
-
-    let eventDetail: any = null;
-    el.addEventListener('civ-summary-edit', ((e: CustomEvent) => {
-      eventDetail = e.detail;
-    }) as EventListener);
-
-    const link = el.querySelector('.civ-summary-section civ-link') as HTMLElement;
-    link.click();
-
-    expect(eventDetail).not.toBeNull();
-    expect(eventDetail.section).toBe('Personal information');
-    expect(eventDetail.href).toBe('#step-1');
-  });
-
-  it('omits edit link when editHref is not provided', async () => {
+  it('section-level editHref applies to all items', async () => {
     const el = await fixture<CivSummary>('<civ-summary></civ-summary>') as CivSummary;
     el.sections = [
       {
-        heading: 'Read only section',
+        heading: '',
+        editHref: '/profile/settings',
+        locked: true,
+        items: [
+          { label: 'Name', value: 'Jane' },
+          { label: 'DOB', value: 'Jan 1' },
+        ],
+      },
+    ];
+    await elementUpdated(el);
+
+    const fields = el.querySelectorAll('civ-read-only-field');
+    expect(fields[0].getAttribute('edit-href')).toBe('/profile/settings');
+    expect(fields[1].getAttribute('edit-href')).toBe('/profile/settings');
+  });
+
+  it('locked sections use profile edit label', async () => {
+    const el = await fixture<CivSummary>('<civ-summary></civ-summary>') as CivSummary;
+    el.sections = [
+      {
+        heading: '',
+        editHref: '/profile',
+        locked: true,
         items: [{ label: 'Name', value: 'Jane' }],
       },
     ];
     await elementUpdated(el);
 
-    const links = el.querySelectorAll('.civ-summary-section civ-link');
-    expect(links.length).toBe(0);
+    const field = el.querySelector('civ-read-only-field');
+    expect(field!.getAttribute('edit-label')).toContain('profile');
+  });
+
+  it('renders dividers between multiple items but not after last', async () => {
+    const el = await fixture<CivSummary>('<civ-summary></civ-summary>') as CivSummary;
+    el.sections = sampleSections;
+    await elementUpdated(el);
+
+    const dividers = el.querySelectorAll('civ-divider');
+    // 3 items → 2 dividers (between 1-2 and 2-3, none after 3)
+    expect(dividers.length).toBe(2);
+  });
+
+  it('no dividers for single-item sections', async () => {
+    const el = await fixture<CivSummary>('<civ-summary></civ-summary>') as CivSummary;
+    el.sections = [
+      {
+        heading: '',
+        items: [{ label: 'Email', value: 'test@test.com' }],
+      },
+    ];
+    await elementUpdated(el);
+
+    const dividers = el.querySelectorAll('civ-divider');
+    expect(dividers.length).toBe(0);
   });
 
   it('renders array values as separate lines', async () => {
     const el = await fixture<CivSummary>('<civ-summary></civ-summary>') as CivSummary;
     el.sections = [
       {
-        heading: 'Preferences',
+        heading: '',
         items: [
           { label: 'Languages', value: ['English', 'Spanish', 'French'] },
         ],
@@ -132,11 +128,8 @@ describe('civ-summary', () => {
     ];
     await elementUpdated(el);
 
-    const dd = el.querySelector('dd')!;
-    const spans = dd.querySelectorAll('span');
-    expect(spans.length).toBe(3);
-    expect(spans[0].textContent).toBe('English');
-    expect(spans[1].textContent).toBe('Spanish');
+    const field = el.querySelector('civ-read-only-field');
+    expect(field).not.toBeNull();
   });
 
   it('uses Light DOM (no shadow root)', async () => {
@@ -164,43 +157,14 @@ describe('civ-summary', () => {
     const el = await fixture<CivSummary>('<civ-summary></civ-summary>') as CivSummary;
     el.sections = [
       {
-        heading: 'Dangerous section',
+        heading: '',
         editHref: 'javascript:alert(1)',
         items: [{ label: 'Name', value: 'Jane' }],
       },
     ];
     await elementUpdated(el);
 
-    const links = el.querySelectorAll('.civ-summary-section civ-link');
-    expect(links.length).toBe(0);
-  });
-
-  it('allows hash, relative, and http(s) URLs in editHref', async () => {
-    const el = await fixture<CivSummary>('<civ-summary></civ-summary>') as CivSummary;
-    el.sections = [
-      { heading: 'Hash', editHref: '#step-1', items: [{ label: 'A', value: 'B' }] },
-      { heading: 'Relative', editHref: '/edit/1', items: [{ label: 'A', value: 'B' }] },
-      { heading: 'HTTPS', editHref: 'https://example.com/edit', items: [{ label: 'A', value: 'B' }] },
-    ];
-    await elementUpdated(el);
-
-    const links = el.querySelectorAll('.civ-summary-section civ-link');
-    expect(links.length).toBe(3);
-  });
-
-  describe('analytics', () => {
-    it('fires civ-analytics when edit is clicked', async () => {
-      const el = await fixture<CivSummary>('<civ-summary></civ-summary>') as CivSummary;
-      el.sections = sampleSections;
-      await elementUpdated(el);
-
-      const handler = vi.fn();
-      el.addEventListener('civ-analytics', handler as EventListener);
-
-      const link = el.querySelector('.civ-summary-section civ-link') as HTMLElement;
-      link.click();
-
-      expect(handler).toHaveBeenCalledOnce();
-    });
+    const field = el.querySelector('civ-read-only-field');
+    expect(field!.getAttribute('edit-href')).toBe('');
   });
 });

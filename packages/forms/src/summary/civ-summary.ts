@@ -1,17 +1,7 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBaseElement, dispatch, interpolate, t } from '@civui/core';
+import { CivBaseElement, t } from '@civui/core';
 import '../read-only-field/civ-read-only-field.js';
-
-export type SummarySectionStatus = 'not-started' | 'in-progress' | 'complete' | 'cannot-start' | 'error';
-
-const STATUS_TAG: Record<SummarySectionStatus, { label: string; variant: string; style?: string }> = {
-  'not-started': { label: 'Not started', variant: 'blue' },
-  'in-progress': { label: 'In progress', variant: 'teal' },
-  'complete': { label: 'Complete', variant: 'green', style: 'primary' },
-  'cannot-start': { label: 'Cannot start yet', variant: 'gray' },
-  'error': { label: 'Error', variant: 'red' },
-};
 
 export interface SummarySection {
   /** Section heading (e.g., "Personal information"). */
@@ -20,9 +10,7 @@ export interface SummarySection {
   editHref?: string;
   /** Key-value pairs to display. */
   items: SummaryItem[];
-  /** Optional status indicator for hub-page usage. */
-  status?: SummarySectionStatus;
-  /** When true, section shows profile data — edit link goes to profile, not form step. */
+  /** When true, section shows profile data — edit link text changes. */
   locked?: boolean;
 }
 
@@ -31,6 +19,10 @@ export interface SummaryItem {
   label: string;
   /** Value to display. Falsy values render as "Not provided". */
   value?: string | string[];
+  /** Inline edit link for this specific item. */
+  editHref?: string;
+  /** Custom edit link text (default: "Edit"). */
+  editLabel?: string;
   /** Optional inline action link (e.g., for conflict resolution). */
   action?: { label: string; href: string };
 }
@@ -68,70 +60,43 @@ export class CivSummary extends CivBaseElement {
   }
 
   private _renderSection(section: SummarySection) {
-    const safeHref = section.editHref && this._isSafeHref(section.editHref)
+    // Section-level editHref applies to all items that don't have their own
+    const sectionEditHref = section.editHref && this._isSafeHref(section.editHref)
       ? section.editHref
       : undefined;
 
-    const editLabel = section.locked
+    const sectionEditLabel = section.locked
       ? t('summaryEditProfile')
-      : t('summaryEditLink');
-
-    const editAriaLabel = section.locked
-      ? `${t('summaryEditProfile')} — ${section.heading}`
-      : interpolate(t('summaryEditAriaLabel'), { section: section.heading });
-
-    const statusTag = section.status ? STATUS_TAG[section.status] : undefined;
+      : undefined;
 
     const showDividers = section.items.length > 1;
 
     return html`
-      <div class="civ-summary-section civ-py-4">
-        <div class="civ-flex civ-justify-between civ-items-center civ-mb-2">
-          <h3 class="civ-heading-md">${section.heading}</h3>
-          <div class="civ-flex civ-items-center civ-gap-3">
-            ${statusTag ? html`
-              <civ-tag
-                label="${statusTag.label}"
-                variant="${statusTag.variant}"
-                tag-style="${statusTag.style || 'secondary'}"
-              ></civ-tag>
-            ` : nothing}
-          ${safeHref ? html`
-            <civ-link
-              href="${safeHref}"
-              variant="tertiary"
-              label="${editLabel}"
-              aria-label="${editAriaLabel}"
-              @click="${(e: Event) => this._onEdit(e, section)}"
-            ></civ-link>
-          ` : nothing}
-          </div>
-        </div>
+      <div class="civ-summary-section">
         <dl class="civ-summary-list civ-m-0">
-          ${section.items.map((item, i) => html`
-            <civ-read-only-field
-              label="${item.label}"
-              value="${Array.isArray(item.value) ? '' : (item.value || '')}"
-              .values="${Array.isArray(item.value) ? item.value : []}"
-              action-label="${item.action?.label || ''}"
-              action-href="${item.action?.href || ''}"
-            ></civ-read-only-field>
-            ${showDividers && i < section.items.length - 1
-              ? html`<civ-divider spacing="sm"></civ-divider>`
-              : nothing}
-          `)}
+          ${section.items.map((item, i) => {
+            const itemEditHref = item.editHref || sectionEditHref || '';
+            const itemEditLabel = item.editLabel || sectionEditLabel || '';
+            return html`
+              <civ-read-only-field
+                label="${item.label}"
+                value="${Array.isArray(item.value) ? '' : (item.value || '')}"
+                .values="${Array.isArray(item.value) ? item.value : []}"
+                edit-href="${itemEditHref}"
+                edit-label="${itemEditLabel}"
+                action-label="${item.action?.label || ''}"
+                action-href="${item.action?.href || ''}"
+              ></civ-read-only-field>
+              ${showDividers && i < section.items.length - 1
+                ? html`<civ-divider spacing="sm"></civ-divider>`
+                : nothing}
+            `;
+          })}
         </dl>
       </div>
     `;
   }
 
-  private _onEdit(_e: Event, section: SummarySection): void {
-    dispatch(this, 'civ-summary-edit', {
-      section: section.heading,
-      href: section.editHref || '',
-    });
-    this.sendAnalytics('click', { section: section.heading });
-  }
 }
 
 declare global {

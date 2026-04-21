@@ -114,7 +114,7 @@ export const Step2a_LockedChapter: Story = {
     if (summary) {
       summary.sections = [
         {
-          heading: 'Verified identity',
+          heading: '',
           editHref: '/profile/settings',
           locked: true,
           items: [
@@ -157,24 +157,11 @@ export const Step2b_PrefillWithMoreSteps: Story = {
     if (summary) {
       summary.sections = [
         {
-          heading: 'Phone number',
-          editHref: '#/contact/phone',
+          heading: '',
           items: [
-            { label: 'Mobile phone', value: '(555) 123-4567' },
-          ],
-        },
-        {
-          heading: 'Email address',
-          editHref: '#/contact/email',
-          items: [
-            { label: 'Email', value: 'jane.doe@example.com' },
-          ],
-        },
-        {
-          heading: 'Mailing address',
-          editHref: '#/contact/address',
-          items: [
-            { label: 'Street', value: '123 Main St' },
+            { label: 'Mobile phone', value: '(555) 123-4567', editHref: '#/contact/phone' },
+            { label: 'Email', value: 'jane.doe@example.com', editHref: '#/contact/email' },
+            { label: 'Street', value: '123 Main St', editHref: '#/contact/address' },
             { label: 'City, state, zip', value: 'Springfield, IL 62701' },
           ],
         },
@@ -213,18 +200,10 @@ export const Step2c_ConflictChapter: Story = {
     if (summary) {
       summary.sections = [
         {
-          heading: 'Phone number',
-          editHref: '#/contact/phone',
-          status: 'in-progress' as const,
+          heading: '',
           items: [
             { label: 'Phone numbers on file', value: '3 found', action: { label: 'Choose one', href: '#/contact/phone' } },
-          ],
-        },
-        {
-          heading: 'Email address',
-          status: 'complete' as const,
-          items: [
-            { label: 'Email', value: 'jane.doe@example.com' },
+            { label: 'Email', value: 'jane.doe@example.com', editHref: '#/contact/email' },
           ],
         },
       ];
@@ -296,27 +275,11 @@ export const Step4_ChapterComplete: Story = {
     if (summary) {
       summary.sections = [
         {
-          heading: 'Phone number',
-          editHref: '#/contact/phone',
-          status: 'complete' as const,
+          heading: '',
           items: [
-            { label: 'Mobile phone', value: '(555) 987-6543' },
-          ],
-        },
-        {
-          heading: 'Email address',
-          editHref: '#/contact/email',
-          status: 'complete' as const,
-          items: [
-            { label: 'Email', value: 'jane.doe@example.com' },
-          ],
-        },
-        {
-          heading: 'Mailing address',
-          editHref: '#/contact/address',
-          status: 'complete' as const,
-          items: [
-            { label: 'Street', value: '123 Main St' },
+            { label: 'Mobile phone', value: '(555) 987-6543', editHref: '#/contact/phone' },
+            { label: 'Email', value: 'jane.doe@example.com', editHref: '#/contact/email' },
+            { label: 'Street', value: '123 Main St', editHref: '#/contact/address' },
             { label: 'City, state, zip', value: 'Springfield, IL 62701' },
           ],
         },

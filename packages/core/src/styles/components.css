@@ -1871,18 +1871,37 @@
   /* ── Read-Only Field ─────────────────────────────────────── */
 
   .civ-read-only-field {
-    @apply civ-m-0;
+    @apply civ-m-0 civ-flex civ-items-baseline civ-gap-4;
   }
 
   .civ-read-only-field__label {
+    @apply civ-flex-shrink-0;
     font-size: var(--civ-typography-fontSize-base);
     color: var(--civ-color-base-darkest);
+    min-width: 0;
   }
 
   .civ-read-only-field__value {
-    @apply civ-m-0;
+    @apply civ-m-0 civ-flex civ-items-baseline civ-gap-3 civ-flex-1 civ-justify-end;
+  }
+
+  .civ-read-only-field__data {
     font-size: var(--civ-typography-fontSize-base);
+    font-weight: var(--civ-typography-fontWeight-bold);
     color: var(--civ-color-base-darkest);
+  }
+
+  .civ-read-only-field__edit {
+    @apply civ-flex-shrink-0;
+  }
+
+  @media (max-width: 480px) {
+    .civ-read-only-field {
+      @apply civ-flex-col civ-items-start civ-gap-0;
+    }
+    .civ-read-only-field__value {
+      @apply civ-justify-start civ-mt-0_5;
+    }
   }
 
   /* ── Summary label column ─────────────────────────────────── */

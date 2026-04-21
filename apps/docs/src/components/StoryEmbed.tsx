@@ -8,7 +8,7 @@ interface StoryEmbedProps {
 
 /**
  * Auto-resizing Storybook iframe embed.
- * Polls the iframe's content height and resizes to fit.
+ * Measures content height after load and stops once stable.
  */
 export default function StoryEmbed({ id, title, minHeight = 100 }: StoryEmbedProps) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
@@ -18,49 +18,50 @@ export default function StoryEmbed({ id, title, minHeight = 100 }: StoryEmbedPro
     const iframe = iframeRef.current;
     if (!iframe) return;
 
-    let interval: ReturnType<typeof setInterval>;
+    let lastHeight = 0;
+    let stableCount = 0;
+    let attempts = 0;
+    let timer: ReturnType<typeof setTimeout>;
 
-    const handleLoad = () => {
-      // Poll the iframe content height since cross-origin postMessage
-      // isn't reliable with Storybook's iframe setup
-      const resize = () => {
-        try {
-          const doc = iframe.contentDocument || iframe.contentWindow?.document;
-          if (doc) {
-            const body = doc.body;
-            const html = doc.documentElement;
-            if (body && html) {
-              const contentHeight = Math.max(
-                body.scrollHeight,
-                body.offsetHeight,
-                html.scrollHeight,
-                html.offsetHeight
-              );
-              if (contentHeight > minHeight) {
-                setHeight(contentHeight + 16); // 16px padding
-              }
+    const measure = () => {
+      attempts++;
+      try {
+        const doc = iframe.contentDocument || iframe.contentWindow?.document;
+        if (doc?.body) {
+          const contentHeight = Math.max(
+            doc.body.scrollHeight,
+            doc.documentElement.scrollHeight
+          );
+          if (contentHeight > minHeight) {
+            if (contentHeight === lastHeight) {
+              stableCount++;
+            } else {
+              stableCount = 0;
+              lastHeight = contentHeight;
+              setHeight(contentHeight + 16);
             }
           }
-        } catch {
-          // Cross-origin — fall back to a reasonable height
-          // We can't read the content, so use MutationObserver via postMessage
         }
-      };
+      } catch {
+        // Cross-origin — can't measure, keep minHeight
+      }
 
-      // Initial resize after render
-      setTimeout(resize, 500);
-      setTimeout(resize, 1500);
-      setTimeout(resize, 3000);
+      // Stop once height is stable for 3 checks or after 10 attempts
+      if (stableCount < 3 && attempts < 10) {
+        timer = setTimeout(measure, 500);
+      }
+    };
 
-      // Keep checking for dynamic content changes
-      interval = setInterval(resize, 2000);
+    const handleLoad = () => {
+      // Start measuring after a short delay for rendering
+      timer = setTimeout(measure, 300);
     };
 
     iframe.addEventListener('load', handleLoad);
 
     return () => {
       iframe.removeEventListener('load', handleLoad);
-      if (interval) clearInterval(interval);
+      clearTimeout(timer);
     };
   }, [id, minHeight]);
 
@@ -75,7 +76,6 @@ export default function StoryEmbed({ id, title, minHeight = 100 }: StoryEmbedPro
         border: '1px solid #dfe1e2',
         borderRadius: '6px',
         overflow: 'hidden',
-        transition: 'height 0.2s ease',
       }}
     />
   );

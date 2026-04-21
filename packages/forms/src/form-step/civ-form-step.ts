@@ -1,6 +1,7 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivBaseElement, dispatch, announce, interpolate, t } from '@civui/core';
+import { CivBaseElement, LightDomSlotMixin, dispatch, announce, interpolate, t } from '@civui/core';
+import type { SlotConfig } from '@civui/core';
 
 /**
  * CivUI Form Step
@@ -37,7 +38,7 @@ import { CivBaseElement, dispatch, announce, interpolate, t } from '@civui/core'
  * ```
  */
 @customElement('civ-form-step')
-export class CivFormStep extends CivBaseElement {
+export class CivFormStep extends LightDomSlotMixin(CivBaseElement) {
   /** Storage key for civ-form persistence. */
   @property({ type: String }) persist = '';
 
@@ -55,8 +56,16 @@ export class CivFormStep extends CivBaseElement {
 
   @state() private _current = 0;
 
-  private _steps: Element[] = [];
-  private _captured = false;
+  override _getSlotConfig(): SlotConfig {
+    return { default: '[data-civ-form-step-content]' };
+  }
+
+  /** Captured step elements (filtered from default slot children). */
+  private get _steps(): Element[] {
+    return this._getSlottedChildren('default').filter(
+      n => n instanceof Element
+    ) as Element[];
+  }
 
   /** Current step index (0-based). */
   get current(): number {
@@ -73,32 +82,9 @@ export class CivFormStep extends CivBaseElement {
     return this._steps[this._current]?.getAttribute('data-step-label') || '';
   }
 
-  override connectedCallback(): void {
-    if (!this._captured) {
-      this._steps = Array.from(this.children).filter(
-        el => el.nodeType === Node.ELEMENT_NODE
-      );
-      // Remove children from DOM before Lit renders its template,
-      // otherwise Lit's render will destroy these DOM nodes
-      for (const step of this._steps) {
-        step.remove();
-      }
-      this._captured = true;
-    }
-    super.connectedCallback();
-  }
-
   override firstUpdated(): void {
-    // Use requestAnimationFrame to ensure the rendered template is in the DOM
-    requestAnimationFrame(() => {
-      const container = this.querySelector('[data-civ-form-step-content]');
-      if (container) {
-        for (const step of this._steps) {
-          container.appendChild(step);
-        }
-      }
-      this._showStep(0);
-    });
+    this._relocateSlots();
+    this._showStep(0);
   }
 
   private _renderContent() {

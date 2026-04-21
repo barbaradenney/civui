@@ -65,11 +65,10 @@ describe('generateGovForm', async () => {
     expect(serviceHistory.html).toContain('mode="detail"');
   });
 
-  it('chapters wrap in civ-form with persist', async () => {
+  it('chapters use civ-form-step', async () => {
     const result = await generateGovForm('21-526EZ');
     const chapter = result.pages.chapters[0];
-    expect(chapter.html).toContain('civ-form');
-    expect(chapter.html).toContain('persist=');
+    expect(chapter.html).toContain('civ-form-step');
   });
 
   it('includes back-to-hub link', async () => {

@@ -1,3 +1,5 @@
+/* ── Light Mode ──────────────────────────────────────────── */
+
 :root {
   --ifm-color-primary: #005ea2;
   --ifm-color-primary-dark: #1a4480;
@@ -7,8 +9,12 @@
   --ifm-color-primary-lighter: #73b3e7;
   --ifm-color-primary-lightest: #d9e8f6;
   --ifm-code-font-size: 95%;
+  --ifm-font-family-base: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --ifm-heading-font-weight: 700;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
 }
+
+/* ── Dark Mode ──────────────────────────────────────────── */
 
 [data-theme='dark'] {
   --ifm-color-primary: #73b3e7;
@@ -18,5 +24,61 @@
   --ifm-color-primary-light: #a4cef4;
   --ifm-color-primary-lighter: #d0e4f8;
   --ifm-color-primary-lightest: #d9e8f6;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+  --ifm-background-color: #1b1b1b;
+  --ifm-background-surface-color: #2d2d2d;
+  --ifm-font-color-base: #e0e0e0;
+  --ifm-heading-color: #f0f0f0;
+  --ifm-link-color: #73b3e7;
+  --docusaurus-highlighted-code-line-bg: rgba(255, 255, 255, 0.1);
+}
+
+/* ── Tables ─────────────────────────────────────────────── */
+
+[data-theme='dark'] table {
+  --ifm-table-stripe-background: rgba(255, 255, 255, 0.03);
+  --ifm-table-border-color: #3d3d3d;
+}
+
+[data-theme='dark'] th {
+  background-color: #2d2d2d;
+}
+
+/* ── Code blocks ────────────────────────────────────────── */
+
+[data-theme='dark'] code {
+  background-color: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* ── Storybook embeds ───────────────────────────────────── */
+
+[data-theme='dark'] iframe {
+  border-color: #3d3d3d !important;
+}
+
+/* ── Admonitions/Callouts ───────────────────────────────── */
+
+[data-theme='dark'] .alert {
+  --ifm-alert-background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* ── Sidebar ────────────────────────────────────────────── */
+
+[data-theme='dark'] .menu__link {
+  color: #c4c4c4;
+}
+
+[data-theme='dark'] .menu__link--active {
+  color: #73b3e7;
+}
+
+/* ── Props tables in component docs ─────────────────────── */
+
+article table code {
+  font-size: 0.85em;
+  padding: 2px 5px;
+}
+
+[data-theme='dark'] article table code {
+  background-color: rgba(255, 255, 255, 0.1);
 }

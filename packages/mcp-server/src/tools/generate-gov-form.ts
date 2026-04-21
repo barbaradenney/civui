@@ -270,7 +270,7 @@ ${fieldHtml}
     <span data-subheading>VA Form ${escapeHtml(form.formNumber)}</span>
   </civ-page-header>
 
-  <civ-form-step persist="${formSlug}-${chapterSlug}" complete-label="Save and continue">
+  <civ-form-step complete-label="Save and continue">
 ${fieldSteps}
   </civ-form-step>
 </div>`;

@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivBaseElement, LightDomContainerMixin, dispatch, announce, interpolate, t } from '@civui/core';
+import { CivBaseElement, dispatch, announce, interpolate, t } from '@civui/core';
 
 /**
  * CivUI Form Step
@@ -37,7 +37,7 @@ import { CivBaseElement, LightDomContainerMixin, dispatch, announce, interpolate
  * ```
  */
 @customElement('civ-form-step')
-export class CivFormStep extends LightDomContainerMixin(CivBaseElement) {
+export class CivFormStep extends CivBaseElement {
   /** Storage key for civ-form persistence. */
   @property({ type: String }) persist = '';
 
@@ -84,7 +84,12 @@ export class CivFormStep extends LightDomContainerMixin(CivBaseElement) {
   }
 
   override firstUpdated(): void {
-    this._relocateChildren('[data-civ-form-step-content]');
+    const container = this.querySelector('[data-civ-form-step-content]');
+    if (container) {
+      for (const step of this._steps) {
+        container.appendChild(step);
+      }
+    }
     this._showStep(0);
   }
 
@@ -131,13 +136,6 @@ export class CivFormStep extends LightDomContainerMixin(CivBaseElement) {
   }
 
   override render() {
-    if (this.persist) {
-      return html`
-        <civ-form persist="${this.persist}">
-          ${this._renderContent()}
-        </civ-form>
-      `;
-    }
     return this._renderContent();
   }
 

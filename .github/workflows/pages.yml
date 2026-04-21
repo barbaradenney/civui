@@ -42,10 +42,16 @@ jobs:
         env:
           STORYBOOK_BASE: /civui/storybook/
 
-      # Assemble site: Docusaurus + /storybook/
+      # Build VA Forms demo
+      - run: cd apps/civ-site && pnpm build
+        env:
+          VITE_BASE: /civui/forms/
+
+      # Assemble site: Docusaurus + /storybook/ + /forms/
       - run: |
           mv apps/docs/build _site
           mv storybook-static _site/storybook
+          mv apps/civ-site/dist _site/forms
 
       - uses: actions/configure-pages@v5
 

@@ -69,8 +69,10 @@ const config: Config = {
           ],
         },
         {
-          title: 'More',
+          title: 'Tools',
           items: [
+            { label: 'Storybook', href: '/civui/storybook/' },
+            { label: 'VA Forms Demo', href: '/civui/forms/' },
             { label: 'GitHub', href: 'https://github.com/barbaradenney/civui' },
           ],
         },

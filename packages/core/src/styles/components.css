@@ -1569,7 +1569,7 @@
     border-top: none;
   }
 
-  civ-task:only-child .civ-task {
+  civ-task:last-child .civ-task {
     border-bottom: none;
   }
 

@@ -20,15 +20,15 @@ describe('civ-form-step', () => {
     expect(el.total).toBe(3);
   });
 
-  it('renders progress steps component', async () => {
+  it('shows step counter', async () => {
     const el = await fixture<CivFormStep>(threeSteps);
-    const progress = el.querySelector('civ-progress-steps');
-    expect(progress).not.toBeNull();
-    expect(progress!.getAttribute('show-counter')).not.toBeNull();
-    expect(progress!.getAttribute('show-back')).not.toBeNull();
+    const counter = el.querySelector('.civ-wizard-nav__counter');
+    expect(counter).not.toBeNull();
+    expect(counter!.textContent).toContain('1');
+    expect(counter!.textContent).toContain('3');
   });
 
-  it('hides progress steps for single step', async () => {
+  it('hides nav bar for single step', async () => {
     const el = await fixture(`
       <civ-form-step>
         <div data-step-label="Only"><p>Only step</p></div>

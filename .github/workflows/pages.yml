@@ -15,10 +15,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -35,16 +32,19 @@ jobs:
       # Build all packages (tokens → core → forms)
       - run: pnpm build
 
-      # Build web components Storybook (base path matches deploy subdir)
+      # Build Docusaurus docs
+      - run: cd apps/docs && pnpm build
+        env:
+          NODE_OPTIONS: '--max-old-space-size=4096'
+
+      # Build Storybook
       - run: pnpm storybook:build -o storybook-static
         env:
           STORYBOOK_BASE: /civui/storybook/
 
-      # Assemble site: docs + /storybook/
+      # Assemble site: Docusaurus + /storybook/
       - run: |
-          mkdir -p _site/features
-          cp docs/index.html _site/
-          cp docs/features/*.html _site/features/
+          mv apps/docs/build _site
           mv storybook-static _site/storybook
 
       - uses: actions/configure-pages@v5
@@ -53,5 +53,12 @@ jobs:
         with:
           path: _site
 
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
       - id: deployment
         uses: actions/deploy-pages@v4

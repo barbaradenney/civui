@@ -1900,7 +1900,8 @@
       @apply civ-flex-col civ-items-start civ-gap-0;
     }
     .civ-read-only-field__value {
-      @apply civ-justify-start civ-mt-0_5;
+      @apply civ-justify-start;
+      margin-top: var(--civ-spacing-0_5);
     }
   }
 

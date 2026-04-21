@@ -213,3 +213,95 @@ export const GovernmentDisabilityApplication: Story = {
     </civ-task-list>
   `,
 };
+
+// ── Prefill Scenarios ────────────────────────────────────────
+
+export const PrefillHub: Story = {
+  name: 'Prefill: Hub with Preview Data',
+  render: () => html`
+    <div style="max-width: 640px;">
+      <p class="civ-text-muted civ-mb-4">We\u2019ve prefilled some of your information from your profile.</p>
+      <civ-task-list>
+        <civ-task-group>
+          <h3 data-task-group-heading class="civ-heading-md">Your information</h3>
+          <civ-task
+            id="task-personal"
+            label="Personal information"
+            href="/profile/settings"
+            status="complete"
+            locked
+          ></civ-task>
+          <civ-task
+            id="task-contact"
+            label="Contact information"
+            href="#/contact"
+            status="in-progress"
+            prefilled
+          ></civ-task>
+        </civ-task-group>
+
+        <civ-task-group>
+          <h3 data-task-group-heading class="civ-heading-md">Your claim</h3>
+          <civ-task label="Service history" href="#/service" status="not-started"></civ-task>
+          <civ-task label="Disabilities" status="cannot-start"></civ-task>
+        </civ-task-group>
+      </civ-task-list>
+    </div>
+  `,
+  play: async ({ canvasElement }) => {
+    const personal = canvasElement.querySelector('#task-personal') as any;
+    if (personal) {
+      personal.preview = [
+        { label: 'Name', value: 'Jane M. Doe' },
+        { label: 'Date of birth', value: 'March 15, 1985' },
+        { label: 'SSN', value: '\u25CF\u25CF\u25CF-\u25CF\u25CF-6789' },
+      ];
+    }
+    const contact = canvasElement.querySelector('#task-contact') as any;
+    if (contact) {
+      contact.preview = [
+        { label: 'Phone', value: '(555) 123-4567' },
+        { label: 'Email', value: 'jane@example.com' },
+      ];
+    }
+  },
+};
+
+export const PrefillConflict: Story = {
+  name: 'Prefill: Conflict in Preview',
+  render: () => html`
+    <div style="max-width: 640px;">
+      <civ-task-list>
+        <civ-task-group>
+          <h3 data-task-group-heading class="civ-heading-md">Contact information</h3>
+          <civ-task
+            id="task-phone"
+            label="Phone number"
+            href="#/contact/phone"
+            status="in-progress"
+          ></civ-task>
+          <civ-task
+            id="task-email"
+            label="Email address"
+            href="#/contact/email"
+            status="complete"
+          ></civ-task>
+        </civ-task-group>
+      </civ-task-list>
+    </div>
+  `,
+  play: async ({ canvasElement }) => {
+    const phone = canvasElement.querySelector('#task-phone') as any;
+    if (phone) {
+      phone.preview = [
+        { label: 'Phone numbers on file', value: '3 found', action: { label: 'Choose one', href: '#/contact/phone' } },
+      ];
+    }
+    const email = canvasElement.querySelector('#task-email') as any;
+    if (email) {
+      email.preview = [
+        { label: 'Email', value: 'jane@example.com', source: 'profile' },
+      ];
+    }
+  },
+};

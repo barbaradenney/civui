@@ -193,6 +193,123 @@ export const DensityScale: Story = {
   },
 };
 
+// ── Prefill Scenarios ────────────────────────────────────────
+
+export const PrefillHubPage: Story = {
+  name: 'Prefill: Hub Page with Status',
+  render: () => html`
+    <civ-summary heading="Your application"></civ-summary>
+  `,
+  play: async ({ canvasElement }) => {
+    const el = canvasElement.querySelector('civ-summary') as any;
+    if (el) {
+      el.sections = [
+        {
+          heading: 'Personal information',
+          editHref: '/profile/settings',
+          status: 'complete',
+          locked: true,
+          items: [
+            { label: 'Name', value: 'Jane M. Doe', source: 'profile' },
+            { label: 'Date of birth', value: 'March 15, 1985', source: 'profile' },
+            { label: 'SSN', value: '\u25CF\u25CF\u25CF-\u25CF\u25CF-6789', source: 'profile' },
+          ],
+        },
+        {
+          heading: 'Contact information',
+          editHref: '#/contact',
+          status: 'in-progress',
+          items: [
+            { label: 'Phone', value: '(555) 123-4567', source: 'profile' },
+            { label: 'Email', value: 'jane@example.com', source: 'profile' },
+          ],
+        },
+        {
+          heading: 'Service history',
+          editHref: '#/service',
+          status: 'not-started',
+          items: [],
+        },
+        {
+          heading: 'Disabilities',
+          status: 'cannot-start',
+          items: [],
+        },
+      ];
+    }
+  },
+};
+
+export const PrefillConflict: Story = {
+  name: 'Prefill: Conflict Resolution',
+  render: () => html`
+    <civ-summary heading="Contact information"></civ-summary>
+  `,
+  play: async ({ canvasElement }) => {
+    const el = canvasElement.querySelector('civ-summary') as any;
+    if (el) {
+      el.sections = [
+        {
+          heading: 'Phone number',
+          editHref: '#/contact/phone',
+          status: 'in-progress',
+          items: [
+            { label: 'Phone numbers on file', value: '3 found', action: { label: 'Choose one', href: '#/contact/phone' } },
+          ],
+        },
+        {
+          heading: 'Email address',
+          editHref: '#/contact/email',
+          status: 'complete',
+          items: [
+            { label: 'Email', value: 'jane@example.com', source: 'profile' },
+          ],
+        },
+      ];
+    }
+  },
+};
+
+export const PrefillReviewPage: Story = {
+  name: 'Prefill: Review Page with Source Tags',
+  render: () => html`
+    <civ-summary heading="Review your application"></civ-summary>
+  `,
+  play: async ({ canvasElement }) => {
+    const el = canvasElement.querySelector('civ-summary') as any;
+    if (el) {
+      el.sections = [
+        {
+          heading: 'Personal information',
+          editHref: '/profile/settings',
+          locked: true,
+          items: [
+            { label: 'Name', value: 'Jane M. Doe', source: 'profile' },
+            { label: 'Date of birth', value: 'March 15, 1985', source: 'profile' },
+            { label: 'SSN', value: '\u25CF\u25CF\u25CF-\u25CF\u25CF-6789', source: 'profile' },
+          ],
+        },
+        {
+          heading: 'Contact information',
+          editHref: '#/contact',
+          items: [
+            { label: 'Phone', value: '(555) 987-6543', source: 'profile' },
+            { label: 'Email', value: 'updated@example.com', source: 'user' },
+          ],
+        },
+        {
+          heading: 'Service history',
+          editHref: '#/service',
+          items: [
+            { label: 'Branch', value: 'Army' },
+            { label: 'Dates', value: ['Jan 2005 \u2013 Dec 2010', 'Mar 2012 \u2013 Jun 2015'] },
+          ],
+        },
+      ];
+    }
+  },
+};
+
 // ── Usage Example ─────────────────────────────────────────────
 
 export const GovernmentApplicationReview: Story = {

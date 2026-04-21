@@ -1,2 +1,3 @@
 export { CivSummary } from './civ-summary.js';
-export type { SummarySection, SummaryItem } from './civ-summary.js';
+export type { SummarySection, SummaryItem, SummarySectionStatus } from './civ-summary.js';
+export { renderSummaryItem } from './render-summary-item.js';

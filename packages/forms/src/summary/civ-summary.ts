@@ -1,6 +1,17 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { CivBaseElement, dispatch, interpolate, t } from '@civui/core';
+import { renderSummaryItem } from './render-summary-item.js';
+
+export type SummarySectionStatus = 'not-started' | 'in-progress' | 'complete' | 'cannot-start' | 'error';
+
+const STATUS_TAG: Record<SummarySectionStatus, { label: string; variant: string; style?: string }> = {
+  'not-started': { label: 'Not started', variant: 'blue' },
+  'in-progress': { label: 'In progress', variant: 'teal' },
+  'complete': { label: 'Complete', variant: 'green', style: 'primary' },
+  'cannot-start': { label: 'Cannot start yet', variant: 'gray' },
+  'error': { label: 'Error', variant: 'red' },
+};
 
 export interface SummarySection {
   /** Section heading (e.g., "Personal information"). */
@@ -9,6 +20,10 @@ export interface SummarySection {
   editHref?: string;
   /** Key-value pairs to display. */
   items: SummaryItem[];
+  /** Optional status indicator for hub-page usage. */
+  status?: SummarySectionStatus;
+  /** When true, section shows profile data — edit link goes to profile, not form step. */
+  locked?: boolean;
 }
 
 export interface SummaryItem {
@@ -18,38 +33,20 @@ export interface SummaryItem {
   value?: string | string[];
   /** Where the data came from. Shows an annotation tag when set to 'profile'. */
   source?: 'profile' | 'user' | 'api';
+  /** Optional inline action link (e.g., for conflict resolution). */
+  action?: { label: string; href: string };
 }
 
 /**
  * CivUI Summary
  *
- * Read-only review page that displays form data before final submission.
- * Renders a structured list of sections, each with a heading, edit link,
- * and key-value pairs.
+ * Displays form data as structured sections with label/value pairs.
+ * Works for both review pages (end of form) and hub pages (mid-form)
+ * when combined with status indicators.
  *
  * @element civ-summary
  *
- * @example
- * ```html
- * <civ-summary heading="Review your information">
- * </civ-summary>
- * ```
- *
- * Then set sections via JS:
- * ```js
- * summary.sections = [
- *   {
- *     heading: 'Personal information',
- *     editHref: '#step-1',
- *     items: [
- *       { label: 'First name', value: 'Jane' },
- *       { label: 'Last name', value: 'Doe' },
- *     ],
- *   },
- * ];
- * ```
- *
- * @fires civ-summary-edit - When an edit link is clicked, detail: { section: string, href: string }
+ * @fires civ-summary-edit - When an edit link is clicked, detail: { section, href }
  */
 @customElement('civ-summary')
 export class CivSummary extends CivBaseElement {
@@ -77,44 +74,46 @@ export class CivSummary extends CivBaseElement {
       ? section.editHref
       : undefined;
 
+    const editLabel = section.locked
+      ? t('summaryEditProfile')
+      : t('summaryEditLink');
+
+    const editAriaLabel = section.locked
+      ? `${t('summaryEditProfile')} — ${section.heading}`
+      : interpolate(t('summaryEditAriaLabel'), { section: section.heading });
+
+    const statusTag = section.status ? STATUS_TAG[section.status] : undefined;
+
     return html`
       <div class="civ-summary-section civ-mb-6 civ-border-b civ-border-base-lighter civ-pb-4">
         <div class="civ-flex civ-justify-between civ-items-center civ-mb-3">
-          <h3 class="civ-heading-md">${section.heading}</h3>
-          ${safeHref ? html`
-            <a
-              href="${safeHref}"
-              class="civ-link"
-              aria-label="${interpolate(t('summaryEditAriaLabel'), { section: section.heading })}"
-              @click="${(e: Event) => this._onEdit(e, section)}"
-            >${t('summaryEditLink')}</a>
-          ` : nothing}
+          <div class="civ-flex civ-items-center civ-gap-2">
+            <h3 class="civ-heading-md">${section.heading}</h3>
+            ${section.locked
+              ? html`<civ-tag label="${t('summaryLockedLabel')}" variant="gray" tag-style="secondary"></civ-tag>`
+              : nothing}
+          </div>
+          <div class="civ-flex civ-items-center civ-gap-3">
+            ${statusTag ? html`
+              <civ-tag
+                label="${statusTag.label}"
+                variant="${statusTag.variant}"
+                tag-style="${statusTag.style || 'secondary'}"
+              ></civ-tag>
+            ` : nothing}
+            ${safeHref ? html`
+              <a
+                href="${safeHref}"
+                class="civ-link"
+                aria-label="${editAriaLabel}"
+                @click="${(e: Event) => this._onEdit(e, section)}"
+              >${editLabel}</a>
+            ` : nothing}
+          </div>
         </div>
         <dl class="civ-summary-list">
-          ${section.items.map(item => this._renderItem(item))}
+          ${section.items.map(item => renderSummaryItem(item))}
         </dl>
-      </div>
-    `;
-  }
-
-  private _renderItem(item: SummaryItem) {
-    const hasValue = Array.isArray(item.value)
-      ? item.value.length > 0
-      : Boolean(item.value);
-
-    return html`
-      <div class="civ-summary-item civ-flex civ-flex-wrap civ-py-2">
-        <dt class="civ-font-medium civ-text-muted civ-summary-label">${item.label}</dt>
-        <dd class="civ-flex-1 civ-min-w-0">
-          ${hasValue
-            ? Array.isArray(item.value)
-              ? item.value.map(v => html`<span class="civ-block">${v}</span>`)
-              : item.value
-            : html`<span class="civ-text-muted civ-italic">${t('summaryNotProvided')}</span>`}
-          ${item.source === 'profile'
-            ? html`<civ-tag label="${t('summarySourceProfile')}" variant="gray" tag-style="secondary" class="civ-ms-1"></civ-tag>`
-            : nothing}
-        </dd>
       </div>
     `;
   }

@@ -21,6 +21,9 @@ export default defineConfig({
         main: resolve(__dirname, 'index.html'),
         ...formInputs,
       },
+      // Disable tree-shaking — all CivUI components register custom elements
+      // via @customElement decorators which are side effects
+      treeshake: false,
     },
   },
   resolve: {

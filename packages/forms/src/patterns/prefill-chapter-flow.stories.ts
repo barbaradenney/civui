@@ -6,6 +6,10 @@ import '../text-input/civ-text-input.js';
 import '../name/civ-name.js';
 import '../form-step/civ-form-step.js';
 import '../prefill-notice/civ-prefill-notice.js';
+import '@civui/navigation';
+import '@civui/ui/link';
+import '@civui/ui/button';
+import '@civui/ui/tag';
 import type { CivSummary } from '../summary/civ-summary.js';
 
 const meta: Meta = {

@@ -190,7 +190,6 @@ export interface CivLocaleStrings {
 
   // Task prefill
   taskPrefillHint: string;
-  taskLockedHint: string;
 
   // Validation
   validateRequired: string; // "{label} is required"
@@ -373,7 +372,6 @@ const defaultStrings: CivLocaleStrings = {
   summaryLockedLabel: 'From your profile',
 
   taskPrefillHint: 'We prefilled some information \u2014 please review',
-  taskLockedHint: 'This information comes from your profile',
 
   validateRequired: '{label} is required',
   validateEmail: 'Enter a valid email address',

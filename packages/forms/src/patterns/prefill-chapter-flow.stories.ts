@@ -15,27 +15,22 @@ const meta: Meta = {
     docs: {
       description: {
         component: `
-## Prefill Chapter Flow Pattern
+## Prefill Chapter Flow
 
-When a signed-in user enters a form chapter, they see a **review page first** showing all current data for that section. From there they can:
+When a signed-in user clicks into a form chapter that has prefilled data,
+the **first page** is a review of that chapter's current data. From there:
 
-1. **Review** what's already prefilled
-2. **Edit** individual fields via edit links (opens form step)
-3. **Save and complete** to return to the task list hub
+1. **Review** — see what's prefilled, edit if needed
+2. **Continue** — if the chapter has more steps, go to them
+3. **Save and complete** — if all data is done, return to the hub
 
-This pattern keeps the task list as the high-level hub and puts the detail inside each chapter.
+The task list hub stays simple — just labels, hints, and status tags.
+The prefilled data lives inside the chapter, not on the hub.
 
 ### Flow
 \`\`\`
-Task List Hub → Chapter Review Page → Edit Step → Back to Review → Save & Complete → Hub
+Task List Hub → Chapter Prefill Review → (Edit Steps if needed) → Save & Complete → Hub
 \`\`\`
-
-### Components Used
-- \`civ-task-list\` / \`civ-task\` — hub page with status + preview
-- \`civ-summary\` — chapter review page showing all section data
-- \`civ-form-step\` — individual edit steps within a chapter
-- \`civ-read-only-field\` — reusable data rows in all views
-- \`civ-prefill-notice\` — banner on intro/hub page
         `,
       },
     },
@@ -46,12 +41,12 @@ type Story = StoryObj;
 
 // ── Step 1: Task List Hub ────────────────────────────────────
 
-export const Step1_TaskListHub: Story = {
+export const Step1_Hub: Story = {
   name: '1. Task List Hub',
   parameters: {
     docs: {
       description: {
-        story: 'The hub page shows all chapters with status tags and preview data for prefilled sections. Users click a chapter to enter it.',
+        story: 'The hub shows chapters with status. Prefilled chapters show a hint. No data preview on the hub — that lives inside the chapter.',
       },
     },
   },
@@ -65,20 +60,8 @@ export const Step1_TaskListHub: Story = {
       <civ-task-list>
         <civ-task-group>
           <h3 data-task-group-heading class="civ-heading-md">Your information</h3>
-          <civ-task
-            id="hub-personal"
-            label="Personal information"
-            href="/profile/settings"
-            status="complete"
-            locked
-          ></civ-task>
-          <civ-task
-            id="hub-contact"
-            label="Contact information"
-            href="#/contact"
-            status="in-progress"
-            prefilled
-          ></civ-task>
+          <civ-task label="Personal information" href="#/personal" status="complete" prefilled></civ-task>
+          <civ-task label="Contact information" href="#/contact" status="in-progress" prefilled></civ-task>
         </civ-task-group>
 
         <civ-task-group>
@@ -95,44 +78,26 @@ export const Step1_TaskListHub: Story = {
       </civ-task-list>
     </div>
   `,
-  play: async ({ canvasElement }) => {
-    const personal = canvasElement.querySelector('#hub-personal') as any;
-    if (personal) {
-      personal.preview = [
-        { label: 'Name', value: 'Jane M. Doe' },
-        { label: 'Date of birth', value: 'March 15, 1985' },
-        { label: 'SSN', value: '\u25CF\u25CF\u25CF-\u25CF\u25CF-6789' },
-      ];
-    }
-    const contact = canvasElement.querySelector('#hub-contact') as any;
-    if (contact) {
-      contact.preview = [
-        { label: 'Phone', value: '(555) 123-4567' },
-        { label: 'Email', value: 'jane.doe@example.com' },
-        { label: 'Address', value: '123 Main St, Springfield, IL 62701' },
-      ];
-    }
-  },
 };
 
-// ── Step 2: Chapter Review Page ──────────────────────────────
+// ── Step 2a: Locked chapter (all data from profile, nothing to edit) ─
 
-export const Step2_ChapterReview: Story = {
-  name: '2. Chapter Review Page',
+export const Step2a_LockedChapter: Story = {
+  name: '2a. Chapter: Locked Profile Data',
   parameters: {
     docs: {
       description: {
-        story: 'When the user clicks into "Contact information," they see this review page first. It shows all current data with edit links. The "Save and complete" button marks this chapter done and returns to the hub.',
+        story: 'Clicking "Personal information" enters the chapter. The first page shows prefilled identity data with "From your profile" tags. Since this data is locked, the edit link goes to profile settings. The button says "Save and complete" because there are no more steps.',
       },
     },
   },
   render: () => html`
     <div style="max-width: 640px;">
-      <civ-link variant="back" label="Back to task list" href="#/hub"></civ-link>
+      <civ-link variant="back" label="Back to task list" href="#"></civ-link>
 
-      <h2 class="civ-heading-xl civ-mt-3 civ-mb-4">Contact information</h2>
+      <h2 class="civ-heading-xl civ-mt-3 civ-mb-4">Personal information</h2>
 
-      <civ-summary id="chapter-review"></civ-summary>
+      <civ-summary id="locked-chapter"></civ-summary>
 
       <div class="civ-mt-6">
         <civ-button label="Save and complete"></civ-button>
@@ -140,7 +105,50 @@ export const Step2_ChapterReview: Story = {
     </div>
   `,
   play: async ({ canvasElement }) => {
-    const summary = canvasElement.querySelector('#chapter-review') as CivSummary;
+    const summary = canvasElement.querySelector('#locked-chapter') as CivSummary;
+    if (summary) {
+      summary.sections = [
+        {
+          heading: 'Verified identity',
+          editHref: '/profile/settings',
+          locked: true,
+          items: [
+            { label: 'Name', value: 'Jane M. Doe', source: 'profile' as const },
+            { label: 'Date of birth', value: 'March 15, 1985', source: 'profile' as const },
+            { label: 'Social Security number', value: '\u25CF\u25CF\u25CF-\u25CF\u25CF-6789', source: 'profile' as const },
+          ],
+        },
+      ];
+    }
+  },
+};
+
+// ── Step 2b: Prefilled chapter with more steps to complete ───
+
+export const Step2b_PrefillWithMoreSteps: Story = {
+  name: '2b. Chapter: Prefilled Data + More Steps',
+  parameters: {
+    docs: {
+      description: {
+        story: 'Clicking "Contact information" shows prefilled contact data. The button says "Continue" because there are additional fields in this chapter that still need to be filled out (e.g., preferred contact method).',
+      },
+    },
+  },
+  render: () => html`
+    <div style="max-width: 640px;">
+      <civ-link variant="back" label="Back to task list" href="#"></civ-link>
+
+      <h2 class="civ-heading-xl civ-mt-3 civ-mb-4">Contact information</h2>
+
+      <civ-summary id="prefill-chapter"></civ-summary>
+
+      <div class="civ-mt-6">
+        <civ-button label="Continue"></civ-button>
+      </div>
+    </div>
+  `,
+  play: async ({ canvasElement }) => {
+    const summary = canvasElement.querySelector('#prefill-chapter') as CivSummary;
     if (summary) {
       summary.sections = [
         {
@@ -162,9 +170,7 @@ export const Step2_ChapterReview: Story = {
           editHref: '#/contact/address',
           items: [
             { label: 'Street', value: '123 Main St' },
-            { label: 'City', value: 'Springfield' },
-            { label: 'State', value: 'Illinois' },
-            { label: 'Zip code', value: '62701' },
+            { label: 'City, state, zip', value: 'Springfield, IL 62701' },
           ],
         },
       ];
@@ -172,76 +178,33 @@ export const Step2_ChapterReview: Story = {
   },
 };
 
-// ── Step 2b: Chapter Review with Locked Data ─────────────────
+// ── Step 2c: Prefilled chapter with conflict ─────────────────
 
-export const Step2b_LockedChapterReview: Story = {
-  name: '2b. Locked Chapter Review',
+export const Step2c_ConflictChapter: Story = {
+  name: '2c. Chapter: Conflict Resolution',
   parameters: {
     docs: {
       description: {
-        story: 'For chapters with locked identity data (name, DOB, SSN), the review shows "From your profile" tags and the edit link goes to the profile settings page instead of a form step.',
+        story: 'When the profile has multiple values for a field (3 phone numbers), the review shows an action link to resolve it. The "Continue" button may be disabled until the conflict is resolved.',
       },
     },
   },
   render: () => html`
     <div style="max-width: 640px;">
-      <civ-link variant="back" label="Back to task list" href="#/hub"></civ-link>
-
-      <h2 class="civ-heading-xl civ-mt-3 civ-mb-4">Personal information</h2>
-
-      <civ-summary id="locked-review"></civ-summary>
-
-      <div class="civ-mt-6">
-        <civ-button label="Save and complete"></civ-button>
-      </div>
-    </div>
-  `,
-  play: async ({ canvasElement }) => {
-    const summary = canvasElement.querySelector('#locked-review') as CivSummary;
-    if (summary) {
-      summary.sections = [
-        {
-          heading: 'Verified identity',
-          editHref: '/profile/settings',
-          locked: true,
-          items: [
-            { label: 'Name', value: 'Jane M. Doe', source: 'profile' as const },
-            { label: 'Date of birth', value: 'March 15, 1985', source: 'profile' as const },
-            { label: 'Social Security number', value: '\u25CF\u25CF\u25CF-\u25CF\u25CF-6789', source: 'profile' as const },
-          ],
-        },
-      ];
-    }
-  },
-};
-
-// ── Step 2c: Chapter Review with Conflict ────────────────────
-
-export const Step2c_ConflictReview: Story = {
-  name: '2c. Conflict in Chapter Review',
-  parameters: {
-    docs: {
-      description: {
-        story: 'When the profile has multiple values for a field (e.g., 3 phone numbers), the review page shows an action link to resolve the conflict.',
-      },
-    },
-  },
-  render: () => html`
-    <div style="max-width: 640px;">
-      <civ-link variant="back" label="Back to task list" href="#/hub"></civ-link>
+      <civ-link variant="back" label="Back to task list" href="#"></civ-link>
 
       <h2 class="civ-heading-xl civ-mt-3 civ-mb-4">Contact information</h2>
 
-      <civ-summary id="conflict-review"></civ-summary>
+      <civ-summary id="conflict-chapter"></civ-summary>
 
       <div class="civ-mt-6">
-        <civ-button label="Save and complete" disabled></civ-button>
-        <p class="civ-text-muted civ-text-sm civ-mt-2">Resolve all items before saving.</p>
+        <civ-button label="Continue" disabled></civ-button>
+        <p class="civ-text-muted civ-text-sm civ-mt-2">Please resolve all items before continuing.</p>
       </div>
     </div>
   `,
   play: async ({ canvasElement }) => {
-    const summary = canvasElement.querySelector('#conflict-review') as CivSummary;
+    const summary = canvasElement.querySelector('#conflict-chapter') as CivSummary;
     if (summary) {
       summary.sections = [
         {
@@ -259,27 +222,19 @@ export const Step2c_ConflictReview: Story = {
             { label: 'Email', value: 'jane.doe@example.com', source: 'profile' as const },
           ],
         },
-        {
-          heading: 'Mailing address',
-          editHref: '#/contact/address',
-          status: 'complete' as const,
-          items: [
-            { label: 'Address', value: '123 Main St, Springfield, IL 62701', source: 'profile' as const },
-          ],
-        },
       ];
     }
   },
 };
 
-// ── Step 3: Edit Step ────────────────────────────────────────
+// ── Step 3: Edit step within chapter ─────────────────────────
 
 export const Step3_EditStep: Story = {
-  name: '3. Edit Step (Form Fields)',
+  name: '3. Edit Step (Within Chapter)',
   parameters: {
     docs: {
       description: {
-        story: 'When the user clicks "Edit" on a section, they enter a form step to update that data. The form step\'s "Save and continue" returns them to the chapter review page.',
+        story: 'Clicking "Edit" on a section opens the form fields for that data. "Save and continue" returns to the chapter review page with updated values.',
       },
     },
   },
@@ -307,14 +262,72 @@ export const Step3_EditStep: Story = {
   `,
 };
 
-// ── Step 4: Completed Chapter ────────────────────────────────
+// ── Step 4: Chapter complete ─────────────────────────────────
 
-export const Step4_CompletedHub: Story = {
-  name: '4. Hub After Chapter Complete',
+export const Step4_ChapterComplete: Story = {
+  name: '4. Chapter Complete (All Data Reviewed)',
   parameters: {
     docs: {
       description: {
-        story: 'After saving and completing a chapter, the user returns to the hub. The completed chapter shows a green "Complete" tag and the next chapter unlocks.',
+        story: 'After reviewing all prefilled data and completing any remaining steps, the chapter review shows all sections as complete. "Save and complete" returns to the hub.',
+      },
+    },
+  },
+  render: () => html`
+    <div style="max-width: 640px;">
+      <civ-link variant="back" label="Back to task list" href="#"></civ-link>
+
+      <h2 class="civ-heading-xl civ-mt-3 civ-mb-4">Contact information</h2>
+
+      <civ-summary id="complete-chapter"></civ-summary>
+
+      <div class="civ-mt-6">
+        <civ-button label="Save and complete"></civ-button>
+      </div>
+    </div>
+  `,
+  play: async ({ canvasElement }) => {
+    const summary = canvasElement.querySelector('#complete-chapter') as CivSummary;
+    if (summary) {
+      summary.sections = [
+        {
+          heading: 'Phone number',
+          editHref: '#/contact/phone',
+          status: 'complete' as const,
+          items: [
+            { label: 'Mobile phone', value: '(555) 987-6543', source: 'profile' as const },
+          ],
+        },
+        {
+          heading: 'Email address',
+          editHref: '#/contact/email',
+          status: 'complete' as const,
+          items: [
+            { label: 'Email', value: 'jane.doe@example.com', source: 'profile' as const },
+          ],
+        },
+        {
+          heading: 'Mailing address',
+          editHref: '#/contact/address',
+          status: 'complete' as const,
+          items: [
+            { label: 'Street', value: '123 Main St' },
+            { label: 'City, state, zip', value: 'Springfield, IL 62701' },
+          ],
+        },
+      ];
+    }
+  },
+};
+
+// ── Step 5: Back on hub ──────────────────────────────────────
+
+export const Step5_HubAfterComplete: Story = {
+  name: '5. Hub After Chapter Complete',
+  parameters: {
+    docs: {
+      description: {
+        story: 'After saving and completing the contact info chapter, the hub shows it as "Complete" and the next chapter unlocks.',
       },
     },
   },
@@ -326,19 +339,8 @@ export const Step4_CompletedHub: Story = {
       <civ-task-list>
         <civ-task-group>
           <h3 data-task-group-heading class="civ-heading-md">Your information</h3>
-          <civ-task
-            id="done-personal"
-            label="Personal information"
-            href="/profile/settings"
-            status="complete"
-            locked
-          ></civ-task>
-          <civ-task
-            id="done-contact"
-            label="Contact information"
-            href="#/contact"
-            status="complete"
-          ></civ-task>
+          <civ-task label="Personal information" href="#/personal" status="complete"></civ-task>
+          <civ-task label="Contact information" href="#/contact" status="complete"></civ-task>
         </civ-task-group>
 
         <civ-task-group>
@@ -355,22 +357,4 @@ export const Step4_CompletedHub: Story = {
       </civ-task-list>
     </div>
   `,
-  play: async ({ canvasElement }) => {
-    const personal = canvasElement.querySelector('#done-personal') as any;
-    if (personal) {
-      personal.preview = [
-        { label: 'Name', value: 'Jane M. Doe' },
-        { label: 'Date of birth', value: 'March 15, 1985' },
-        { label: 'SSN', value: '\u25CF\u25CF\u25CF-\u25CF\u25CF-6789' },
-      ];
-    }
-    const contact = canvasElement.querySelector('#done-contact') as any;
-    if (contact) {
-      contact.preview = [
-        { label: 'Phone', value: '(555) 987-6543' },
-        { label: 'Email', value: 'jane.doe@example.com' },
-        { label: 'Address', value: '123 Main St, Springfield, IL 62701' },
-      ];
-    }
-  },
 };

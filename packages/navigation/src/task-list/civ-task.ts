@@ -4,14 +4,6 @@ import { CivBaseElement, t } from '@civui/core';
 
 export type TaskStatus = 'not-started' | 'in-progress' | 'complete' | 'cannot-start' | 'error';
 
-/** Preview item for showing prefilled data beneath a task. */
-export interface TaskPreviewItem {
-  label: string;
-  value?: string;
-  source?: 'profile' | 'user' | 'api';
-  action?: { label: string; href: string };
-}
-
 const STATUS_TAG: Record<TaskStatus, { label: string; variant: string; style?: string }> = {
   'not-started': { label: 'Not started', variant: 'blue' },
   'in-progress': { label: 'In progress', variant: 'teal' },
@@ -33,6 +25,7 @@ const STATUS_TAG: Record<TaskStatus, { label: string; variant: string; style?: s
  * @prop {string} hint - Optional hint text below the label
  * @prop {string} href - Navigation target (omit for locked tasks)
  * @prop {TaskStatus} status - Current task status
+ * @prop {boolean} prefilled - Shows default prefill hint if no custom hint
  *
  * @example
  * ```html
@@ -54,26 +47,13 @@ export class CivTask extends CivBaseElement {
   /** When true, shows a default prefill hint if no custom hint is set. */
   @property({ type: Boolean }) prefilled = false;
 
-  /** When true, data comes from profile — hint auto-populates. */
-  @property({ type: Boolean }) locked = false;
-
-  /** Preview items to show beneath the task (e.g., prefilled data). Set via JS. */
-  @property({ type: Array, attribute: false }) preview: TaskPreviewItem[] = [];
-
   private _statusId = this.generateId('status');
-
-  private get _hintText(): string {
-    if (this.hint) return this.hint;
-    if (this.locked) return t('taskLockedHint');
-    if (this.prefilled) return t('taskPrefillHint');
-    return '';
-  }
 
   override render() {
     const isNavigable = this.href && this.status !== 'cannot-start';
     const tag = STATUS_TAG[this.status] || STATUS_TAG['not-started'];
     const isError = this.status === 'error';
-    const hintText = this._hintText;
+    const hintText = this.hint || (this.prefilled ? t('taskPrefillHint') : '');
 
     return html`
       <li class="civ-task" role="listitem">
@@ -92,20 +72,6 @@ export class CivTask extends CivBaseElement {
           ${hintText
             ? html`<p class="civ-task__hint">${hintText}</p>`
             : nothing}
-          ${this.preview.length > 0
-            ? html`
-              <dl class="civ-task__preview civ-mt-2 civ-text-sm">
-                ${this.preview.map(item => html`
-                  <civ-read-only-field
-                    label="${item.label}"
-                    value="${item.value || ''}"
-                    source="${item.source || ''}"
-                    action-label="${item.action?.label || ''}"
-                    action-href="${item.action?.href || ''}"
-                  ></civ-read-only-field>
-                `)}
-              </dl>
-            ` : nothing}
         </div>
         <div class="civ-task__status" id="${this._statusId}">
           <civ-tag

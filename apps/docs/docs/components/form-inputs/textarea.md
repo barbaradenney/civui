@@ -1,0 +1,75 @@
+---
+title: Textarea
+sidebar_position: 2
+sidebar_label: Textarea
+---
+
+# civ-textarea
+
+Multi-line text input with optional character count and word count display. Uses ElementInternals for native form participation.
+
+## Shared Props
+
+All form components share these props: `label`, `name`, `value`, `hint`, `error`, `required`, `disabled`.
+
+## Component-Specific Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `rows` | `number` | `5` | Number of visible text rows |
+| `maxlength` | `number` | — | Maximum character length (enables character count display) |
+| `maxwords` | `number` | — | Maximum word count (enables word count display, mutually exclusive with maxlength counter) |
+| `placeholder` | `string` | `''` | Placeholder text |
+| `autogrow` | `boolean` | `false` | Whether the textarea auto-grows to fit content |
+| `max-height` | `string` | `''` | Maximum height for autogrow (CSS value, e.g., `'300px'`) |
+
+## Character Count
+
+When `maxlength` is set, a character count indicator appears below the textarea showing remaining characters. The count updates visually on every keystroke, but screen reader announcements are debounced (1 second) to avoid spamming.
+
+## Word Count
+
+When `maxwords` is set (and `maxlength` is not), a word count indicator appears. If the user exceeds the limit, an error state is shown automatically.
+
+## Events
+
+| Event | Detail | Description |
+|-------|--------|-------------|
+| `civ-input` | `{ value: string }` | Fires on every value change |
+| `civ-change` | `{ value: string }` | Fires on committed value change (blur) |
+
+## Examples
+
+```html
+<!-- Basic textarea -->
+<civ-textarea
+  label="Describe your symptoms"
+  name="symptoms"
+  hint="Include when they started and how often they occur."
+  required
+></civ-textarea>
+
+<!-- With character count -->
+<civ-textarea
+  label="Additional comments"
+  name="comments"
+  maxlength="500"
+  hint="You have 500 characters available."
+></civ-textarea>
+
+<!-- With word count -->
+<civ-textarea
+  label="Personal statement"
+  name="statement"
+  maxwords="250"
+></civ-textarea>
+
+<!-- Auto-growing textarea -->
+<civ-textarea
+  label="Notes"
+  name="notes"
+  rows="3"
+  autogrow
+  max-height="400px"
+></civ-textarea>
+```

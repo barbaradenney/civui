@@ -1,0 +1,81 @@
+---
+title: Combobox
+sidebar_position: 4
+sidebar_label: Combobox
+---
+
+# civ-combobox
+
+Accessible combobox (autocomplete) with text input and filterable dropdown listbox. Implements the ARIA combobox pattern with full keyboard navigation (Arrow keys, Enter, Escape, Home, End).
+
+Use combobox when the option list is long (more than 15 items) or when users benefit from type-ahead filtering. For shorter lists, use `civ-select`.
+
+## Shared Props
+
+All form components share these props: `label`, `name`, `value`, `hint`, `error`, `required`, `disabled`.
+
+## Component-Specific Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `options` | `Array<{ value: string, label: string, group?: string }>` | `[]` | Available options |
+| `placeholder` | `string` | `''` | Placeholder text for the input |
+| `no-results-text` | `string` | `'No results found'` | Message shown when filter matches nothing |
+
+## Typeahead Filtering
+
+As the user types, options are filtered by substring match (case-insensitive). Matching text is highlighted in the dropdown with a `<mark>` element.
+
+## Keyboard Navigation
+
+| Key | Action |
+|-----|--------|
+| Arrow Down | Open dropdown / move to next option |
+| Arrow Up | Open dropdown / move to previous option |
+| Home | Move to first option |
+| End | Move to last option |
+| Enter | Select highlighted option |
+| Escape | Close dropdown, restore previous selection |
+| Tab | Close dropdown |
+
+## Events
+
+| Event | Detail | Description |
+|-------|--------|-------------|
+| `civ-input` | `{ value: string }` | Fires when filter text changes |
+| `civ-change` | `{ value: string, label: string }` | Fires when an option is selected |
+
+## Examples
+
+```html
+<!-- Basic combobox -->
+<civ-combobox
+  label="State or territory"
+  name="state"
+  placeholder="Start typing a state name"
+  required
+></civ-combobox>
+
+<script>
+  document.querySelector('civ-combobox').options = [
+    { value: 'AL', label: 'Alabama' },
+    { value: 'AK', label: 'Alaska' },
+    // ... all 50 states + territories
+  ];
+</script>
+
+<!-- With grouped options -->
+<civ-combobox
+  label="Medical facility"
+  name="facility"
+  placeholder="Search by name or city"
+></civ-combobox>
+
+<script>
+  document.querySelector('[name="facility"]').options = [
+    { value: 'va-dc', label: 'Washington DC VAMC', group: 'District of Columbia' },
+    { value: 'va-baltimore', label: 'Baltimore VAMC', group: 'Maryland' },
+    { value: 'va-richmond', label: 'Richmond VAMC', group: 'Virginia' },
+  ];
+</script>
+```

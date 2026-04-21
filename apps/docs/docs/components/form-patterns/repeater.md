@@ -1,0 +1,96 @@
+---
+title: Repeater
+sidebar_position: 3
+sidebar_label: Repeater
+---
+
+# civ-repeater
+
+"Add another" pattern for repeating form sections. Wraps a template of form fields and lets users add/remove instances dynamically. Field names are automatically indexed (e.g., `dependents[0].firstName`, `dependents[1].firstName`).
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `legend` | `string` | `''` | Fieldset legend |
+| `name` | `string` | `''` | Base name for indexed form fields |
+| `item-label` | `string` | `'item'` | Human-readable label for each item |
+| `mode` | `'inline' \| 'detail'` | `'inline'` | Display mode |
+| `hint` | `string` | `''` | Hint text below the legend |
+| `error` | `string` | `''` | Error text |
+| `required` | `boolean` | `false` | Whether at least one row is required |
+| `disabled` | `boolean` | `false` | Disable the component |
+| `min` | `number` | `1` | Minimum number of rows |
+| `max` | `number` | `0` | Maximum number of rows (0 = unlimited) |
+
+## Modes
+
+### Inline Mode (default)
+
+All rows and their fields are visible on the page simultaneously. Best for simple items with 1-3 fields.
+
+### Detail Mode
+
+Rows display as summary cards. Clicking "Add" or "Edit" expands a row to show its fields. Only one row is expanded at a time. Best for complex items with 4+ fields. Includes Save and Cancel buttons per row.
+
+## Template Definition
+
+The component captures its initial children as a clonable template. Each row is a clone with indexed names:
+
+```html
+<civ-repeater legend="Dependents" name="dependents" item-label="dependent" min="1" max="10">
+  <civ-text-input label="First name" name="firstName"></civ-text-input>
+  <civ-text-input label="Last name" name="lastName"></civ-text-input>
+</civ-repeater>
+```
+
+This produces fields named `dependents[0].firstName`, `dependents[0].lastName`, etc.
+
+## Programmatic API
+
+```js
+const repeater = document.querySelector('civ-repeater');
+
+repeater.rowCount;        // Current number of rows
+repeater.editingIndex;    // Index of row being edited in detail mode (-1 = none)
+repeater.addRow();        // Add a new row
+repeater.removeRow(1);    // Remove row at index 1
+```
+
+## Events
+
+| Event | Detail | Description |
+|-------|--------|-------------|
+| `civ-repeater-add` | `{ index: number }` | When a row is added |
+| `civ-repeater-remove` | `{ index: number }` | When a row is removed |
+
+## Examples
+
+```html
+<!-- Inline mode (simple items) -->
+<civ-repeater
+  legend="Previous addresses"
+  name="addresses"
+  item-label="address"
+  min="1"
+  max="5"
+>
+  <civ-text-input label="Street address" name="street" required></civ-text-input>
+  <civ-text-input label="City" name="city" required></civ-text-input>
+</civ-repeater>
+
+<!-- Detail mode (complex items) -->
+<civ-repeater
+  legend="Dependents"
+  name="dependents"
+  item-label="dependent"
+  mode="detail"
+  min="0"
+  max="10"
+>
+  <civ-text-input label="First name" name="firstName" required></civ-text-input>
+  <civ-text-input label="Last name" name="lastName" required></civ-text-input>
+  <civ-memorable-date legend="Date of birth" name="dob" required></civ-memorable-date>
+  <civ-text-input label="Social Security number" name="ssn" mask="ssn"></civ-text-input>
+</civ-repeater>
+```

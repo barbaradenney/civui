@@ -72,6 +72,12 @@
   color: #73b3e7;
 }
 
+/* ── Hide category card emojis ──────────────────────────── */
+
+.card h2 span[class*="emoji"] {
+  display: none !important;
+}
+
 /* ── Props tables in component docs ─────────────────────── */
 
 article table code {

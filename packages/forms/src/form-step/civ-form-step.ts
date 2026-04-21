@@ -84,13 +84,16 @@ export class CivFormStep extends CivBaseElement {
   }
 
   override firstUpdated(): void {
-    const container = this.querySelector('[data-civ-form-step-content]');
-    if (container) {
-      for (const step of this._steps) {
-        container.appendChild(step);
+    // Use requestAnimationFrame to ensure the rendered template is in the DOM
+    requestAnimationFrame(() => {
+      const container = this.querySelector('[data-civ-form-step-content]');
+      if (container) {
+        for (const step of this._steps) {
+          container.appendChild(step);
+        }
       }
-    }
-    this._showStep(0);
+      this._showStep(0);
+    });
   }
 
   private _renderContent() {

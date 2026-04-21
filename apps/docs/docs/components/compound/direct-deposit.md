@@ -82,14 +82,30 @@ deposit.depositValue; // { accountType: 'checking', routingNumber: '123456789', 
 ></civ-direct-deposit>
 ```
 
-
-
 ## Live Examples
 
 ### bank
 
 <iframe
   src="/civui/storybook/iframe.html?id=forms-compound-direct-deposit--default&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Prefilled
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-compound-direct-deposit--with-hint&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### With Error
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-compound-direct-deposit--with-error&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
@@ -104,15 +120,6 @@ deposit.depositValue; // { accountType: 'checking', routingNumber: '123456789', 
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### With Errors
-
-<iframe
-  src="/civui/storybook/iframe.html?id=forms-compound-direct-deposit--with-errors&viewMode=story"
-  width="100%"
-  height="300"
-  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
-></iframe>
-
 ### Disabled
 
 <iframe
@@ -122,10 +129,28 @@ deposit.depositValue; // { accountType: 'checking', routingNumber: '123456789', 
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### Prefilled
+### All States
 
 <iframe
-  src="/civui/storybook/iframe.html?id=forms-compound-direct-deposit--prefilled&viewMode=story"
+  src="/civui/storybook/iframe.html?id=forms-compound-direct-deposit--all-states&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Density Scale
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-compound-direct-deposit--density-scale&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Usage: Benefit Payment Setup
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-compound-direct-deposit--government-payment-setup&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}

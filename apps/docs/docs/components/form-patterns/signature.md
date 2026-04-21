@@ -74,14 +74,30 @@ sig.isComplete;      // true if name is filled and checkbox is checked
 ></civ-signature>
 ```
 
-
-
 ## Live Examples
 
-### sig
+### signature
 
 <iframe
   src="/civui/storybook/iframe.html?id=forms-patterns-signature--default&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### With Statement
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-patterns-signature--with-hint&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### With Error
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-patterns-signature--with-error&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
@@ -96,28 +112,37 @@ sig.isComplete;      // true if name is filled and checkbox is checked
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### With Statement
-
-<iframe
-  src="/civui/storybook/iframe.html?id=forms-patterns-signature--with-statement&viewMode=story"
-  width="100%"
-  height="300"
-  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
-></iframe>
-
-### With Errors
-
-<iframe
-  src="/civui/storybook/iframe.html?id=forms-patterns-signature--with-errors&viewMode=story"
-  width="100%"
-  height="300"
-  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
-></iframe>
-
 ### Disabled
 
 <iframe
   src="/civui/storybook/iframe.html?id=forms-patterns-signature--disabled&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### All States
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-patterns-signature--all-states&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Density Scale
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-patterns-signature--density-scale&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Usage: Application Certification
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-patterns-signature--government-certification&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}

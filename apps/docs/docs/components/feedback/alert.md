@@ -104,8 +104,6 @@ An accessible alert component for informational, warning, error, or success mess
 ></civ-alert>
 ```
 
-
-
 ## Live Examples
 
 ### Default
@@ -117,37 +115,64 @@ An accessible alert component for informational, warning, error, or success mess
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### Primary
+### Info
 
 <iframe
-  src="/civui/storybook/iframe.html?id=feedback-alert--primary&viewMode=story"
+  src="/civui/storybook/iframe.html?id=feedback-alert--info&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### Secondary
+### Warning
 
 <iframe
-  src="/civui/storybook/iframe.html?id=feedback-alert--secondary&viewMode=story"
+  src="/civui/storybook/iframe.html?id=feedback-alert--warning&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### Tertiary
+### Error
 
 <iframe
-  src="/civui/storybook/iframe.html?id=feedback-alert--tertiary&viewMode=story"
+  src="/civui/storybook/iframe.html?id=feedback-alert--error&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### Dismissible
+### Success
 
 <iframe
-  src="/civui/storybook/iframe.html?id=feedback-alert--dismissible&viewMode=story"
+  src="/civui/storybook/iframe.html?id=feedback-alert--success&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### All Variants
+
+<iframe
+  src="/civui/storybook/iframe.html?id=feedback-alert--all-variants&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Primary Style
+
+<iframe
+  src="/civui/storybook/iframe.html?id=feedback-alert--primary-style&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Tertiary Style
+
+<iframe
+  src="/civui/storybook/iframe.html?id=feedback-alert--tertiary-style&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
@@ -162,10 +187,28 @@ An accessible alert component for informational, warning, error, or success mess
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### Slim Primary
+### Dismissible
 
 <iframe
-  src="/civui/storybook/iframe.html?id=feedback-alert--slim-primary&viewMode=story"
+  src="/civui/storybook/iframe.html?id=feedback-alert--dismissible&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Density Scale
+
+<iframe
+  src="/civui/storybook/iframe.html?id=feedback-alert--density-scale&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Usage: Form Validation Feedback
+
+<iframe
+  src="/civui/storybook/iframe.html?id=feedback-alert--government-form-validation&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}

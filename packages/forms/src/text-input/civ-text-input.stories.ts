@@ -29,10 +29,12 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
+// ── Default ───────────────────────────────────────────────────
+
 export const Default: Story = {
   args: {
-    label: 'Text input',
-    name: 'text-input',
+    label: 'Full name',
+    name: 'full-name',
     hint: '',
     error: '',
     placeholder: '',
@@ -56,71 +58,89 @@ export const Default: Story = {
   `,
 };
 
+// ── Individual States ─────────────────────────────────────────
+
 export const WithHint: Story = {
-  args: {
-    label: 'Email address',
-    name: 'email',
-    hint: 'Enter your work email address',
-    type: 'email',
-  },
-  render: (args) => html`
+  render: () => html`
     <civ-text-input
-      label="${args.label}"
-      name="${args.name}"
-      hint="${args.hint}"
-      type="${args.type}"
+      label="Email address"
+      name="email"
+      hint="Enter your work or personal email address"
+      type="email"
     ></civ-text-input>
   `,
 };
 
 export const WithError: Story = {
-  args: {
-    label: 'Email address',
-    name: 'email',
-    error: 'Enter a valid email address',
-    type: 'email',
-  },
-  render: (args) => html`
+  render: () => html`
     <civ-text-input
-      label="${args.label}"
-      name="${args.name}"
-      error="${args.error}"
-      type="${args.type}"
+      label="Email address"
+      name="email"
+      error="Enter a valid email address"
+      type="email"
     ></civ-text-input>
   `,
 };
 
 export const Required: Story = {
-  args: {
-    label: 'Full name',
-    name: 'full-name',
-    required: true,
-  },
-  render: (args) => html`
+  render: () => html`
     <civ-text-input
-      label="${args.label}"
-      name="${args.name}"
-      ?required="${args.required}"
+      label="Full name"
+      name="full-name"
+      required
     ></civ-text-input>
   `,
 };
 
 export const Disabled: Story = {
-  args: {
-    label: 'Disabled input',
-    name: 'disabled',
-    value: 'Cannot edit',
-    disabled: true,
-  },
-  render: (args) => html`
+  render: () => html`
     <civ-text-input
-      label="${args.label}"
-      name="${args.name}"
-      value="${args.value}"
-      ?disabled="${args.disabled}"
+      label="Full name"
+      name="full-name"
+      value="Jane Doe"
+      disabled
     ></civ-text-input>
   `,
 };
+
+// ── All States ────────────────────────────────────────────────
+
+export const AllStates: Story = {
+  name: 'All States',
+  render: () => html`
+    <div style="display: flex; flex-direction: column; gap: 24px;">
+      <civ-text-input label="Normal" name="normal"></civ-text-input>
+      <civ-text-input label="With hint" name="hint" hint="Provide your legal first and last name"></civ-text-input>
+      <civ-text-input label="With error" name="error" error="Enter your full name"></civ-text-input>
+      <civ-text-input label="Required" name="required" required></civ-text-input>
+      <civ-text-input label="Disabled" name="disabled" value="Cannot edit" disabled></civ-text-input>
+    </div>
+  `,
+};
+
+// ── Density Scale ─────────────────────────────────────────────
+
+export const DensityScale: Story = {
+  name: 'Density Scale',
+  render: () => html`
+    <div style="display: flex; flex-direction: column; gap: 24px;">
+      <div data-civ-scale="dense">
+        <p style="margin: 0 0 8px; font-weight: 600;">Dense</p>
+        <civ-text-input label="Full name" name="dense-name" hint="Legal first and last name"></civ-text-input>
+      </div>
+      <div>
+        <p style="margin: 0 0 8px; font-weight: 600;">Default</p>
+        <civ-text-input label="Full name" name="default-name" hint="Legal first and last name"></civ-text-input>
+      </div>
+      <div data-civ-scale="spacious">
+        <p style="margin: 0 0 8px; font-weight: 600;">Spacious</p>
+        <civ-text-input label="Full name" name="spacious-name" hint="Legal first and last name"></civ-text-input>
+      </div>
+    </div>
+  `,
+};
+
+// ── Width Variants ────────────────────────────────────────────
 
 export const WidthVariants: Story = {
   render: () => html`
@@ -137,192 +157,95 @@ export const WidthVariants: Story = {
   `,
 };
 
+// ── Input Types ───────────────────────────────────────────────
+
 export const InputTypes: Story = {
   render: () => html`
     <div style="display: flex; flex-direction: column; gap: 16px;">
       <civ-text-input label="Text" name="text" type="text"></civ-text-input>
-      <civ-text-input label="Email" name="email" type="email" placeholder="you@example.com"></civ-text-input>
+      <civ-text-input label="Email address" name="email" type="email" hint="For example: name@agency.gov"></civ-text-input>
       <civ-text-input label="Password" name="password" type="password"></civ-text-input>
-      <civ-text-input label="Phone" name="phone" type="tel" placeholder="(555) 555-5555"></civ-text-input>
-      <civ-text-input label="URL" name="url" type="url" placeholder="https://example.com"></civ-text-input>
+      <civ-text-input label="Phone number" name="phone" type="tel" hint="For example: (555) 555-5555"></civ-text-input>
+      <civ-text-input label="Website URL" name="url" type="url" hint="For example: https://agency.gov"></civ-text-input>
       <civ-text-input label="Number" name="number" type="number"></civ-text-input>
     </div>
   `,
 };
 
-export const InNativeForm: Story = {
-  render: () => html`
-    <form
-      @submit="${(e: Event) => {
-        e.preventDefault();
-        const form = e.target as HTMLFormElement;
-        const data = new FormData(form);
-        alert(JSON.stringify(Object.fromEntries(data)));
-      }}"
-    >
-      <civ-text-input label="First name" name="first-name" required></civ-text-input>
-      <civ-text-input label="Last name" name="last-name" required></civ-text-input>
-      <civ-text-input label="Email" name="email" type="email" required hint="We'll never share your email"></civ-text-input>
-      <button type="submit" style="margin-top: 16px; padding: 8px 24px; background: #005ea2; color: white; border: none; border-radius: 4px; cursor: pointer;">
-        Submit
-      </button>
-    </form>
-  `,
-};
-
-export const ExternalLabel: Story = {
-  render: () => html`
-    <p style="margin-bottom: 8px; color: #565c65; font-size: 14px;">
-      Because CivUI uses Light DOM, external labels work naturally with <code>for</code>/<code>id</code>:
-    </p>
-    <label for="external-email" style="font-weight: bold;">External label for email</label>
-    <civ-text-input id="external-email" name="email" type="email"></civ-text-input>
-  `,
-};
+// ── Mask Presets ──────────────────────────────────────────────
 
 export const MaskSSN: Story = {
-  args: {
-    label: 'Social Security number',
-    name: 'ssn',
-    mask: 'ssn',
-    required: true,
-  },
-  render: (args) => html`
+  name: 'Mask: Social Security number',
+  render: () => html`
     <civ-text-input
-      label="${args.label}"
-      name="${args.name}"
-      mask="${args.mask}"
-      ?required="${args.required}"
+      label="Social Security number"
+      name="ssn"
+      mask="ssn"
+      hint="We need this to verify your identity"
+      required
     ></civ-text-input>
   `,
 };
 
 export const MaskPhoneUS: Story = {
-  args: {
-    label: 'Phone number',
-    name: 'phone',
-    mask: 'phone-us',
-  },
-  render: (args) => html`
+  name: 'Mask: Phone number',
+  render: () => html`
     <civ-text-input
-      label="${args.label}"
-      name="${args.name}"
-      mask="${args.mask}"
+      label="Phone number"
+      name="phone"
+      mask="phone-us"
+      hint="For example: (555) 123-4567"
     ></civ-text-input>
   `,
 };
 
 export const MaskZip: Story = {
-  args: {
-    label: 'ZIP code',
-    name: 'zip',
-    mask: 'zip',
-  },
-  render: (args) => html`
+  name: 'Mask: ZIP code',
+  render: () => html`
     <civ-text-input
-      label="${args.label}"
-      name="${args.name}"
-      mask="${args.mask}"
+      label="ZIP code"
+      name="zip"
+      mask="zip"
       width="sm"
     ></civ-text-input>
   `,
 };
 
 export const MaskEIN: Story = {
-  args: {
-    label: 'Employer Identification Number',
-    name: 'ein',
-    mask: 'ein',
-  },
-  render: (args) => html`
+  name: 'Mask: Employer Identification Number',
+  render: () => html`
     <civ-text-input
-      label="${args.label}"
-      name="${args.name}"
-      mask="${args.mask}"
+      label="Employer Identification Number"
+      name="ein"
+      mask="ein"
     ></civ-text-input>
   `,
 };
 
 export const MaskCurrency: Story = {
-  args: {
-    label: 'Annual salary',
-    name: 'salary',
-    mask: 'currency',
-  },
-  render: (args) => html`
+  name: 'Mask: Currency',
+  render: () => html`
     <civ-text-input
-      label="${args.label}"
-      name="${args.name}"
-      mask="${args.mask}"
+      label="Annual salary"
+      name="salary"
+      mask="currency"
     ></civ-text-input>
   `,
 };
 
 export const MaskCustom: Story = {
-  args: {
-    label: 'Reference code',
-    name: 'ref-code',
-    maskPattern: 'AAA-####',
-    hint: 'For example: ABC-1234',
-  },
-  render: (args) => html`
-    <civ-text-input
-      label="${args.label}"
-      name="${args.name}"
-      mask-pattern="${args.maskPattern}"
-      hint="${args.hint}"
-    ></civ-text-input>
-  `,
-};
-
-export const MaskInForm: Story = {
+  name: 'Mask: Custom pattern',
   render: () => html`
-    <form
-      @submit="${(e: Event) => {
-        e.preventDefault();
-        const form = e.target as HTMLFormElement;
-        const data = new FormData(form);
-        const output = form.querySelector('#mask-form-output');
-        if (output) {
-          output.textContent = JSON.stringify(Object.fromEntries(data), null, 2);
-        }
-      }}"
-    >
-      <civ-text-input
-        label="Social Security number"
-        name="ssn"
-        mask="ssn"
-        required
-      ></civ-text-input>
-      <button
-        type="submit"
-        style="margin-top: 16px; padding: 8px 24px; background: #005ea2; color: white; border: none; border-radius: 4px; cursor: pointer;"
-      >
-        Submit
-      </button>
-      <pre id="mask-form-output" style="margin-top: 16px; padding: 12px; background: #f0f0f0; border-radius: 4px; min-height: 40px;"></pre>
-    </form>
-  `,
-};
-
-export const MaskWithError: Story = {
-  args: {
-    label: 'Social Security number',
-    name: 'ssn',
-    mask: 'ssn',
-    error: 'Enter a 9-digit Social Security number',
-  },
-  render: (args) => html`
     <civ-text-input
-      label="${args.label}"
-      name="${args.name}"
-      mask="${args.mask}"
-      error="${args.error}"
+      label="Reference code"
+      name="ref-code"
+      mask-pattern="AAA-####"
+      hint="For example: ABC-1234"
     ></civ-text-input>
   `,
 };
 
-// ── Declarative Validation ──────────────────────────────────
+// ── Declarative Validation ────────────────────────────────────
 
 export const ValidateEmail: Story = {
   render: () => html`
@@ -333,30 +256,6 @@ export const ValidateEmail: Story = {
       validate="email"
       hint="For example: name@agency.gov"
       required
-    ></civ-text-input>
-  `,
-};
-
-export const ValidatePhoneIntl: Story = {
-  render: () => html`
-    <civ-text-input
-      label="Phone number"
-      name="phone"
-      type="tel"
-      validate="phoneIntl"
-      hint="Include country code, for example +1 555 123 4567"
-    ></civ-text-input>
-  `,
-};
-
-export const ValidateURL: Story = {
-  render: () => html`
-    <civ-text-input
-      label="Website"
-      name="website"
-      type="url"
-      validate="url"
-      hint="For example: https://agency.gov"
     ></civ-text-input>
   `,
 };
@@ -374,66 +273,26 @@ export const ValidateZIP: Story = {
   `,
 };
 
-export const ValidateUSState: Story = {
-  render: () => html`
-    <civ-text-input
-      label="State"
-      name="state"
-      validate="usState"
-      width="2xs"
-      maxlength="2"
-      hint="2-letter abbreviation"
-    ></civ-text-input>
-  `,
-};
+// ── Usage Example ─────────────────────────────────────────────
 
-export const MixedValidationForm: Story = {
+export const GovernmentContactForm: Story = {
+  name: 'Usage: Government Contact Form',
   render: () => html`
-    <civ-form>
-      <h3 class="civ-heading-md">Contact Information</h3>
-      <civ-text-input
-        label="Full name"
-        name="name"
-        required
-      ></civ-text-input>
-      <civ-text-input
-        label="Email address"
-        name="email"
-        type="email"
-        validate="email"
-        required
-        hint="For example: name@agency.gov"
-      ></civ-text-input>
-      <civ-text-input
-        label="Phone number"
-        name="phone"
-        type="tel"
-        validate="phoneIntl"
-        hint="Include country code, for example +1 555 123 4567"
-      ></civ-text-input>
-      <div class="civ-flex civ-gap-4">
-        <civ-text-input
-          label="ZIP code"
-          name="zip"
-          validate="zip"
-          inputmode="numeric"
-          width="xs"
-        ></civ-text-input>
-        <civ-text-input
-          label="State"
-          name="state"
-          validate="usState"
-          width="2xs"
-          maxlength="2"
-        ></civ-text-input>
-      </div>
-      <civ-text-input
-        label="Social Security number"
-        name="ssn"
-        mask="ssn"
-        required
-      ></civ-text-input>
-      <button type="submit" class="civ-btn civ-btn--primary civ-mt-4">Submit</button>
-    </civ-form>
+    <form
+      @submit="${(e: Event) => {
+        e.preventDefault();
+        const form = e.target as HTMLFormElement;
+        const data = new FormData(form);
+        alert(JSON.stringify(Object.fromEntries(data)));
+      }}"
+    >
+      <civ-text-input label="Full name" name="full-name" required></civ-text-input>
+      <civ-text-input label="Email address" name="email" type="email" required hint="For example: name@agency.gov" validate="email"></civ-text-input>
+      <civ-text-input label="Phone number" name="phone" type="tel" mask="phone-us" hint="For example: (555) 123-4567"></civ-text-input>
+      <civ-text-input label="Social Security number" name="ssn" mask="ssn" required hint="We need this to verify your identity"></civ-text-input>
+      <button type="submit" style="margin-top: 16px; padding: 8px 24px; background: #005ea2; color: white; border: none; border-radius: 4px; cursor: pointer;">
+        Submit
+      </button>
+    </form>
   `,
 };

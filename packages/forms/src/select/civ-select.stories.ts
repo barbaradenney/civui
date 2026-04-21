@@ -33,9 +33,11 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
+// ── Default ───────────────────────────────────────────────────
+
 export const Default: Story = {
   args: {
-    label: 'State',
+    label: 'State of residence',
     name: 'state',
     value: '',
     hint: '',
@@ -59,12 +61,14 @@ export const Default: Story = {
   },
 };
 
+// ── Individual States ─────────────────────────────────────────
+
 export const WithHint: Story = {
   render: () => {
     const el = document.createElement('civ-select') as any;
-    el.label = 'State';
+    el.label = 'State of residence';
     el.name = 'state';
-    el.hint = 'Select your state of residence';
+    el.hint = 'Select the state where you currently live';
     el.options = STATES;
     return el;
   },
@@ -73,9 +77,9 @@ export const WithHint: Story = {
 export const WithError: Story = {
   render: () => {
     const el = document.createElement('civ-select') as any;
-    el.label = 'State';
+    el.label = 'State of residence';
     el.name = 'state';
-    el.error = 'Please select a state';
+    el.error = 'Select a state to continue';
     el.required = true;
     el.options = STATES;
     return el;
@@ -85,7 +89,7 @@ export const WithError: Story = {
 export const Required: Story = {
   render: () => {
     const el = document.createElement('civ-select') as any;
-    el.label = 'State';
+    el.label = 'State of residence';
     el.name = 'state';
     el.required = true;
     el.options = STATES;
@@ -96,7 +100,7 @@ export const Required: Story = {
 export const Disabled: Story = {
   render: () => {
     const el = document.createElement('civ-select') as any;
-    el.label = 'State';
+    el.label = 'State of residence';
     el.name = 'state';
     el.disabled = true;
     el.value = 'CA';
@@ -105,20 +109,80 @@ export const Disabled: Story = {
   },
 };
 
-export const WithDisabledOptions: Story = {
+// ── All States ────────────────────────────────────────────────
+
+export const AllStates: Story = {
+  name: 'All States',
   render: () => {
-    const el = document.createElement('civ-select') as any;
-    el.label = 'Priority';
-    el.name = 'priority';
-    el.options = [
-      { value: 'low', label: 'Low' },
-      { value: 'medium', label: 'Medium' },
-      { value: 'high', label: 'High' },
-      { value: 'critical', label: 'Critical (admin only)', disabled: true },
+    const container = document.createElement('div');
+    container.style.display = 'flex';
+    container.style.flexDirection = 'column';
+    container.style.gap = '24px';
+
+    const configs = [
+      { label: 'Normal', name: 'normal' },
+      { label: 'With hint', name: 'hint', hint: 'Select where you currently reside' },
+      { label: 'With error', name: 'error', error: 'Select a state', required: true },
+      { label: 'Required', name: 'required', required: true },
+      { label: 'Disabled', name: 'disabled', disabled: true, value: 'NY' },
     ];
-    return el;
+
+    configs.forEach((cfg) => {
+      const el = document.createElement('civ-select') as any;
+      el.label = cfg.label;
+      el.name = cfg.name;
+      el.options = STATES;
+      if (cfg.hint) el.hint = cfg.hint;
+      if (cfg.error) el.error = cfg.error;
+      if (cfg.required) el.required = true;
+      if (cfg.disabled) el.disabled = true;
+      if (cfg.value) el.value = cfg.value;
+      container.appendChild(el);
+    });
+
+    return container;
   },
 };
+
+// ── Density Scale ─────────────────────────────────────────────
+
+export const DensityScale: Story = {
+  name: 'Density Scale',
+  render: () => {
+    const wrapper = document.createElement('div');
+    wrapper.style.display = 'flex';
+    wrapper.style.flexDirection = 'column';
+    wrapper.style.gap = '24px';
+
+    const scales = [
+      { attr: 'dense', label: 'Dense' },
+      { attr: '', label: 'Default' },
+      { attr: 'spacious', label: 'Spacious' },
+    ];
+
+    scales.forEach(({ attr, label }) => {
+      const section = document.createElement('div');
+      if (attr) section.setAttribute('data-civ-scale', attr);
+      const p = document.createElement('p');
+      p.style.margin = '0 0 8px';
+      p.style.fontWeight = '600';
+      p.textContent = label;
+      section.appendChild(p);
+
+      const el = document.createElement('civ-select') as any;
+      el.label = 'State of residence';
+      el.name = `${attr || 'default'}-state`;
+      el.hint = 'Select where you currently reside';
+      el.options = STATES;
+      section.appendChild(el);
+      wrapper.appendChild(section);
+    });
+
+    return wrapper;
+  },
+};
+
+// ── Variants ──────────────────────────────────────────────────
 
 export const OptionGroups: Story = {
   render: () => {
@@ -135,13 +199,15 @@ export const OptionGroups: Story = {
       { value: 'security', label: 'Cybersecurity', group: 'Technology' },
       { value: 'policy', label: 'Policy', group: 'Operations' },
       { value: 'outreach', label: 'Public Outreach', group: 'Operations' },
-      { value: 'compliance', label: 'Compliance', group: 'Operations' },
     ];
     return el;
   },
 };
 
-export const InNativeForm: Story = {
+// ── Usage Example ─────────────────────────────────────────────
+
+export const GovernmentBenefitsForm: Story = {
+  name: 'Usage: Benefits Application',
   render: () => html`
     <form
       @submit="${(e: Event) => {
@@ -150,19 +216,25 @@ export const InNativeForm: Story = {
         alert(JSON.stringify(Object.fromEntries(data)));
       }}"
     >
-      <civ-select label="State" name="state" required></civ-select>
+      <civ-select label="State of residence" name="state" required></civ-select>
+      <civ-select label="Benefit type" name="benefit" required hint="Select the type of benefit you are applying for"></civ-select>
       <button
         type="submit"
         style="margin-top: 16px; padding: 8px 24px; background: #005ea2; color: white; border: none; border-radius: 4px; cursor: pointer;"
       >
-        Submit
+        Continue
       </button>
     </form>
     <script>
-      // Set options after render
       requestAnimationFrame(() => {
-        const select = document.querySelector('civ-select');
-        if (select) select.options = ${JSON.stringify(STATES)};
+        const selects = document.querySelectorAll('civ-select');
+        if (selects[0]) selects[0].options = ${JSON.stringify(STATES)};
+        if (selects[1]) selects[1].options = [
+          { value: 'health', label: 'Health care' },
+          { value: 'education', label: 'Education' },
+          { value: 'disability', label: 'Disability compensation' },
+          { value: 'housing', label: 'Housing assistance' },
+        ];
       });
     </script>
   `,

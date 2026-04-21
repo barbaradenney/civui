@@ -53,8 +53,6 @@ Children without a data attribute are placed in the heading area by default.
 </civ-page-header>
 ```
 
-
-
 ## Live Examples
 
 ### Default
@@ -84,15 +82,6 @@ Children without a data attribute are placed in the heading area by default.
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### Full Header (Eyebrow + Tag + Subheading)
-
-<iframe
-  src="/civui/storybook/iframe.html?id=ui-page-header--full-header&viewMode=story"
-  width="100%"
-  height="300"
-  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
-></iframe>
-
 ### With Status Tag
 
 <iframe
@@ -102,28 +91,37 @@ Children without a data attribute are placed in the heading area by default.
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### With Stacked Tag
+### All Slot Combinations
 
 <iframe
-  src="/civui/storybook/iframe.html?id=ui-page-header--with-stacked-tag&viewMode=story"
+  src="/civui/storybook/iframe.html?id=ui-page-header--all-slot-combinations&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### Stacked Tag + Inline Tag
+### Density Scale
 
 <iframe
-  src="/civui/storybook/iframe.html?id=ui-page-header--stacked-and-inline-tag&viewMode=story"
+  src="/civui/storybook/iframe.html?id=ui-page-header--density-scale&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### Form Page Example
+### Form Page
 
 <iframe
   src="/civui/storybook/iframe.html?id=ui-page-header--form-page-header&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Claim Detail
+
+<iframe
+  src="/civui/storybook/iframe.html?id=ui-page-header--claim-detail-header&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}

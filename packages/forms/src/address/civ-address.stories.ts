@@ -23,27 +23,48 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
+// ── Default ───────────────────────────────────────────────────
+
 export const Default: Story = {
   args: {
     legend: 'Mailing address',
     name: 'mailing',
+    hint: '',
+    error: '',
+    required: false,
+    disabled: false,
   },
   render: (args) => html`
     <civ-address
       legend="${args.legend}"
       name="${args.name}"
+      hint="${args.hint}"
+      error="${args.error}"
       ?required="${args.required}"
       ?disabled="${args.disabled}"
     ></civ-address>
   `,
 };
 
+// ── Individual States ─────────────────────────────────────────
+
 export const WithHint: Story = {
   render: () => html`
     <civ-address
       legend="Mailing address"
       name="mailing"
-      hint="US addresses only"
+      hint="US addresses only. Include apartment or unit number if applicable."
+    ></civ-address>
+  `,
+};
+
+export const WithError: Story = {
+  render: () => html`
+    <civ-address
+      legend="Mailing address"
+      name="mailing"
+      error="Enter a complete mailing address"
+      required
     ></civ-address>
   `,
 };
@@ -58,18 +79,18 @@ export const Required: Story = {
   `,
 };
 
-export const WithError: Story = {
+export const Disabled: Story = {
   render: () => html`
     <civ-address
       legend="Mailing address"
       name="mailing"
-      error="Please enter a complete address"
-      required
+      disabled
     ></civ-address>
   `,
 };
 
 export const FieldErrors: Story = {
+  name: 'Individual Field Errors',
   render: () => html`
     <civ-address
       legend="Mailing address"
@@ -83,37 +104,48 @@ export const FieldErrors: Story = {
   `,
 };
 
-export const WithoutStreet2: Story = {
+// ── All States ────────────────────────────────────────────────
+
+export const AllStates: Story = {
+  name: 'All States',
   render: () => html`
-    <civ-address
-      legend="Mailing address"
-      name="mailing"
-    ></civ-address>
+    <div style="display: flex; flex-direction: column; gap: 32px;">
+      <civ-address legend="Normal" name="normal"></civ-address>
+      <civ-address legend="With hint" name="hint" hint="US addresses only"></civ-address>
+      <civ-address legend="With error" name="error" error="Enter a complete address" required></civ-address>
+      <civ-address legend="Required" name="required" required></civ-address>
+      <civ-address legend="Disabled" name="disabled" disabled></civ-address>
+    </div>
   `,
-  play: async ({ canvasElement }) => {
-    const el = canvasElement.querySelector('civ-address');
-    if (el) {
-      (el as any).showStreet2 = false;
-    }
-  },
 };
 
-export const Disabled: Story = {
+// ── Density Scale ─────────────────────────────────────────────
+
+export const DensityScale: Story = {
+  name: 'Density Scale',
   render: () => html`
-    <civ-address
-      legend="Mailing address"
-      name="mailing"
-      disabled
-    ></civ-address>
+    <div style="display: flex; flex-direction: column; gap: 24px;">
+      <div data-civ-scale="dense">
+        <p style="margin: 0 0 8px; font-weight: 600;">Dense</p>
+        <civ-address legend="Mailing address" name="dense-addr"></civ-address>
+      </div>
+      <div>
+        <p style="margin: 0 0 8px; font-weight: 600;">Default</p>
+        <civ-address legend="Mailing address" name="default-addr"></civ-address>
+      </div>
+      <div data-civ-scale="spacious">
+        <p style="margin: 0 0 8px; font-weight: 600;">Spacious</p>
+        <civ-address legend="Mailing address" name="spacious-addr"></civ-address>
+      </div>
+    </div>
   `,
 };
+
+// ── Variants ──────────────────────────────────────────────────
 
 export const Prefilled: Story = {
   render: () => html`
-    <civ-address
-      legend="Mailing address"
-      name="mailing"
-    ></civ-address>
+    <civ-address legend="Mailing address" name="mailing"></civ-address>
   `,
   play: async ({ canvasElement }) => {
     const el = canvasElement.querySelector('civ-address');
@@ -154,17 +186,6 @@ export const MilitaryAddress: Story = {
   `,
 };
 
-export const WithStreet3: Story = {
-  name: 'With Street Line 3',
-  render: () => html`
-    <civ-address
-      legend="Mailing address"
-      name="mailing"
-      show-street3
-    ></civ-address>
-  `,
-};
-
 export const FullOptions: Story = {
   name: 'All Options Enabled',
   render: () => html`
@@ -176,6 +197,22 @@ export const FullOptions: Story = {
       show-street3
       required
       hint="Enter your full mailing address including country"
+    ></civ-address>
+  `,
+};
+
+// ── Usage Example ─────────────────────────────────────────────
+
+export const GovernmentMailingForm: Story = {
+  name: 'Usage: Correspondence Address',
+  render: () => html`
+    <h3 style="margin: 0 0 16px; font-size: 1.25rem;">Where should we send correspondence?</h3>
+    <p style="margin: 0 0 16px; color: #565c65;">We will mail important documents about your application to this address.</p>
+    <civ-address
+      legend="Mailing address"
+      name="correspondence"
+      required
+      hint="Include apartment, suite, or unit number"
     ></civ-address>
   `,
 };

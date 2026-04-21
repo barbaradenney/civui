@@ -107,8 +107,6 @@ Groups multiple `civ-checkbox` elements with a shared legend, hint, and error. U
 </civ-checkbox-group>
 ```
 
-
-
 ## Live Examples
 
 ### agree
@@ -120,19 +118,10 @@ Groups multiple `civ-checkbox` elements with a shared legend, hint, and error. U
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### Checked
+### With Hint
 
 <iframe
-  src="/civui/storybook/iframe.html?id=forms-inputs-checkbox--checked&viewMode=story"
-  width="100%"
-  height="300"
-  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
-></iframe>
-
-### With Description
-
-<iframe
-  src="/civui/storybook/iframe.html?id=forms-inputs-checkbox--with-description&viewMode=story"
+  src="/civui/storybook/iframe.html?id=forms-inputs-checkbox--with-hint&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
@@ -147,6 +136,15 @@ Groups multiple `civ-checkbox` elements with a shared legend, hint, and error. U
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
+### Required
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-checkbox--required&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
 ### Disabled
 
 <iframe
@@ -156,19 +154,28 @@ Groups multiple `civ-checkbox` elements with a shared legend, hint, and error. U
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### Tile Variant
+### With Description
 
 <iframe
-  src="/civui/storybook/iframe.html?id=forms-inputs-checkbox--tile-variant&viewMode=story"
+  src="/civui/storybook/iframe.html?id=forms-inputs-checkbox--with-description&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### Tile Checked
+### All States
 
 <iframe
-  src="/civui/storybook/iframe.html?id=forms-inputs-checkbox--tile-checked&viewMode=story"
+  src="/civui/storybook/iframe.html?id=forms-inputs-checkbox--all-states&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Density Scale
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-checkbox--density-scale&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
@@ -201,33 +208,6 @@ Groups multiple `civ-checkbox` elements with a shared legend, hint, and error. U
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### Indeterminate
-
-<iframe
-  src="/civui/storybook/iframe.html?id=forms-inputs-checkbox--indeterminate&viewMode=story"
-  width="100%"
-  height="300"
-  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
-></iframe>
-
-### With Hint
-
-<iframe
-  src="/civui/storybook/iframe.html?id=forms-inputs-checkbox--with-hint&viewMode=story"
-  width="100%"
-  height="300"
-  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
-></iframe>
-
-### Group With Name
-
-<iframe
-  src="/civui/storybook/iframe.html?id=forms-inputs-checkbox--group-with-name&viewMode=story"
-  width="100%"
-  height="300"
-  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
-></iframe>
-
 ### Group Horizontal
 
 <iframe
@@ -237,19 +217,10 @@ Groups multiple `civ-checkbox` elements with a shared legend, hint, and error. U
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### Group Disabled
+### Usage: Certification Checkboxes
 
 <iframe
-  src="/civui/storybook/iframe.html?id=forms-inputs-checkbox--group-disabled&viewMode=story"
-  width="100%"
-  height="300"
-  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
-></iframe>
-
-### Group In Form
-
-<iframe
-  src="/civui/storybook/iframe.html?id=forms-inputs-checkbox--group-in-form&viewMode=story"
+  src="/civui/storybook/iframe.html?id=forms-inputs-checkbox--government-certification-form&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}

@@ -22,25 +22,36 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
+// ── Default ───────────────────────────────────────────────────
+
 export const Default: Story = {
   args: {
     legend: 'Are you a U.S. citizen?',
     name: 'citizen',
+    value: '',
+    hint: '',
+    error: '',
+    required: false,
+    disabled: false,
   },
   render: (args) => html`
     <civ-yes-no
       legend="${args.legend}"
       name="${args.name}"
+      hint="${args.hint}"
+      error="${args.error}"
       ?required="${args.required}"
       ?disabled="${args.disabled}"
     ></civ-yes-no>
   `,
 };
 
+// ── Individual States ─────────────────────────────────────────
+
 export const WithHint: Story = {
   render: () => html`
     <civ-yes-no
-      legend="Have you filed taxes this year?"
+      legend="Have you filed federal income taxes this year?"
       name="taxes"
       hint="This refers to federal income taxes for the current calendar year"
     ></civ-yes-no>
@@ -52,7 +63,7 @@ export const WithError: Story = {
     <civ-yes-no
       legend="Are you a U.S. citizen?"
       name="citizen"
-      error="Please select an answer to continue"
+      error="Select an answer to continue"
       required
     ></civ-yes-no>
   `,
@@ -100,7 +111,47 @@ export const CustomLabels: Story = {
   `,
 };
 
-export const InForm: Story = {
+// ── All States ────────────────────────────────────────────────
+
+export const AllStates: Story = {
+  name: 'All States',
+  render: () => html`
+    <div style="display: flex; flex-direction: column; gap: 32px;">
+      <civ-yes-no legend="Normal (no selection)" name="normal"></civ-yes-no>
+      <civ-yes-no legend="With hint" name="hint" hint="Additional context for this question"></civ-yes-no>
+      <civ-yes-no legend="With error" name="error" error="Select an answer" required></civ-yes-no>
+      <civ-yes-no legend="Required" name="required" required></civ-yes-no>
+      <civ-yes-no legend="Disabled" name="disabled" value="yes" disabled></civ-yes-no>
+    </div>
+  `,
+};
+
+// ── Density Scale ─────────────────────────────────────────────
+
+export const DensityScale: Story = {
+  name: 'Density Scale',
+  render: () => html`
+    <div style="display: flex; flex-direction: column; gap: 24px;">
+      <div data-civ-scale="dense">
+        <p style="margin: 0 0 8px; font-weight: 600;">Dense</p>
+        <civ-yes-no legend="Are you a U.S. citizen?" name="dense-citizen"></civ-yes-no>
+      </div>
+      <div>
+        <p style="margin: 0 0 8px; font-weight: 600;">Default</p>
+        <civ-yes-no legend="Are you a U.S. citizen?" name="default-citizen"></civ-yes-no>
+      </div>
+      <div data-civ-scale="spacious">
+        <p style="margin: 0 0 8px; font-weight: 600;">Spacious</p>
+        <civ-yes-no legend="Are you a U.S. citizen?" name="spacious-citizen"></civ-yes-no>
+      </div>
+    </div>
+  `,
+};
+
+// ── Usage Example ─────────────────────────────────────────────
+
+export const GovernmentEligibilityScreening: Story = {
+  name: 'Usage: Eligibility Screening',
   render: () => html`
     <form
       @submit=${(e: Event) => {
@@ -112,19 +163,25 @@ export const InForm: Story = {
         alert('Submitted: ' + values);
       }}
     >
+      <h3 style="margin: 0 0 16px; font-size: 1.25rem;">Eligibility questions</h3>
       <civ-yes-no
-        legend="Are you a U.S. citizen?"
+        legend="Are you a U.S. citizen or permanent resident?"
         name="citizen"
         required
         hint="Select yes if you are a citizen by birth or naturalization"
       ></civ-yes-no>
       <civ-yes-no
-        legend="Have you filed taxes this year?"
+        legend="Have you filed federal income taxes this year?"
         name="taxes"
+        required
+      ></civ-yes-no>
+      <civ-yes-no
+        legend="Do you currently receive any government benefits?"
+        name="benefits"
+        hint="Including Social Security, Medicare, or disability compensation"
       ></civ-yes-no>
       <div class="civ-flex civ-gap-2 civ-mt-4">
-        <button type="submit" class="civ-btn civ-btn--primary">Submit</button>
-        <button type="reset" class="civ-btn civ-btn--secondary">Reset</button>
+        <button type="submit" class="civ-btn civ-btn--primary">Check eligibility</button>
       </div>
     </form>
   `,

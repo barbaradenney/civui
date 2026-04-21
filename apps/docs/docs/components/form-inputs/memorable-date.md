@@ -69,8 +69,6 @@ Child fields are named `{name}-month`, `{name}-day`, `{name}-year` for individua
 ></civ-memorable-date>
 ```
 
-
-
 ## Live Examples
 
 ### dob
@@ -100,15 +98,6 @@ Child fields are named `{name}-month`, `{name}-day`, `{name}-year` for individua
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### Prefilled
-
-<iframe
-  src="/civui/storybook/iframe.html?id=forms-inputs-memorable-date--prefilled&viewMode=story"
-  width="100%"
-  height="300"
-  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
-></iframe>
-
 ### Required
 
 <iframe
@@ -127,6 +116,33 @@ Child fields are named `{name}-month`, `{name}-day`, `{name}-year` for individua
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
+### Prefilled
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-memorable-date--prefilled&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### All States
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-memorable-date--all-states&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Density Scale
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-memorable-date--density-scale&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
 ### Custom Labels
 
 <iframe
@@ -136,10 +152,10 @@ Child fields are named `{name}-month`, `{name}-day`, `{name}-year` for individua
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### In Form
+### Usage: Identity Verification
 
 <iframe
-  src="/civui/storybook/iframe.html?id=forms-inputs-memorable-date--in-form&viewMode=story"
+  src="/civui/storybook/iframe.html?id=forms-inputs-memorable-date--government-identity-verification&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}

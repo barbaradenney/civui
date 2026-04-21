@@ -35,58 +35,39 @@ export const Default: Story = {
   `,
 };
 
-export const WithoutDescription: Story = {
-  name: 'Without Description',
-  render: () => html`
-    <civ-link-card
-      href="#"
-      heading="View your claims"
-    ></civ-link-card>
-  `,
-};
-
-export const CardCollection: Story = {
-  name: 'Card Collection',
-  render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 12px; max-width: 600px;">
-      <civ-link-card
-        href="#/disability"
-        heading="Disability compensation"
-        description="File a claim for a new or worsening service-connected condition."
-      ></civ-link-card>
-      <civ-link-card
-        href="#/healthcare"
-        heading="Health care"
-        description="Apply for VA health care benefits and manage your appointments."
-      ></civ-link-card>
-      <civ-link-card
-        href="#/education"
-        heading="Education benefits"
-        description="Apply for GI Bill and other education and training programs."
-      ></civ-link-card>
-      <civ-link-card
-        href="#/housing"
-        heading="Housing assistance"
-        description="Get a VA-backed home loan or find housing support."
-      ></civ-link-card>
-    </div>
-  `,
-};
-
-export const Secondary: Story = {
-  name: 'Secondary Variant',
+export const Primary: Story = {
   render: () => html`
     <civ-link-card
       href="#/benefits"
       heading="Apply for benefits"
       description="Start a new application for VA benefits."
+    ></civ-link-card>
+  `,
+};
+
+export const Secondary: Story = {
+  render: () => html`
+    <civ-link-card
+      href="#/details"
+      heading="View your claim details"
+      description="Check the status of your open claims and appeals."
       variant="secondary"
     ></civ-link-card>
   `,
 };
 
+export const Tertiary: Story = {
+  render: () => html`
+    <civ-link-card
+      href="#/history"
+      heading="Payment history"
+      description="View your past benefit payments and details."
+      variant="tertiary"
+    ></civ-link-card>
+  `,
+};
+
 export const Critical: Story = {
-  name: 'Critical Variant',
   render: () => html`
     <civ-link-card
       href="#/action-needed"
@@ -128,8 +109,92 @@ export const AllVariants: Story = {
   `,
 };
 
-export const GridLayout: Story = {
-  name: 'Grid Layout',
+export const DensityScale: Story = {
+  name: 'Density Scale',
+  render: () => html`
+    <div style="display: flex; flex-direction: column; gap: 24px;">
+      <div data-civ-scale="dense">
+        <p style="margin: 0 0 8px; font-weight: 600;">Dense</p>
+        <div style="display: flex; flex-direction: column; gap: 12px; max-width: 600px;">
+          <civ-link-card
+            href="#/disability"
+            heading="Disability compensation"
+            description="File a claim for a service-connected condition."
+          ></civ-link-card>
+          <civ-link-card
+            href="#/healthcare"
+            heading="Health care"
+            description="Apply for VA health care benefits."
+            variant="secondary"
+          ></civ-link-card>
+        </div>
+      </div>
+      <div>
+        <p style="margin: 0 0 8px; font-weight: 600;">Default</p>
+        <div style="display: flex; flex-direction: column; gap: 12px; max-width: 600px;">
+          <civ-link-card
+            href="#/disability"
+            heading="Disability compensation"
+            description="File a claim for a service-connected condition."
+          ></civ-link-card>
+          <civ-link-card
+            href="#/healthcare"
+            heading="Health care"
+            description="Apply for VA health care benefits."
+            variant="secondary"
+          ></civ-link-card>
+        </div>
+      </div>
+      <div data-civ-scale="spacious">
+        <p style="margin: 0 0 8px; font-weight: 600;">Spacious</p>
+        <div style="display: flex; flex-direction: column; gap: 12px; max-width: 600px;">
+          <civ-link-card
+            href="#/disability"
+            heading="Disability compensation"
+            description="File a claim for a service-connected condition."
+          ></civ-link-card>
+          <civ-link-card
+            href="#/healthcare"
+            heading="Health care"
+            description="Apply for VA health care benefits."
+            variant="secondary"
+          ></civ-link-card>
+        </div>
+      </div>
+    </div>
+  `,
+};
+
+export const BenefitsHub: Story = {
+  name: 'Benefits Hub',
+  render: () => html`
+    <div style="display: flex; flex-direction: column; gap: 12px; max-width: 600px;">
+      <civ-link-card
+        href="#/disability"
+        heading="Disability compensation"
+        description="File a claim for a new or worsening service-connected condition."
+      ></civ-link-card>
+      <civ-link-card
+        href="#/healthcare"
+        heading="Health care"
+        description="Apply for VA health care benefits and manage your appointments."
+      ></civ-link-card>
+      <civ-link-card
+        href="#/education"
+        heading="Education benefits"
+        description="Apply for GI Bill and other education and training programs."
+      ></civ-link-card>
+      <civ-link-card
+        href="#/housing"
+        heading="Housing assistance"
+        description="Get a VA-backed home loan or find housing support."
+      ></civ-link-card>
+    </div>
+  `,
+};
+
+export const DashboardGrid: Story = {
+  name: 'Dashboard Grid',
   render: () => html`
     <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px;">
       <civ-link-card

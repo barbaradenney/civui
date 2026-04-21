@@ -23,6 +23,8 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
+// ── Default ───────────────────────────────────────────────────
+
 export const Default: Story = {
   args: {
     label: 'Appointment date',
@@ -50,21 +52,13 @@ export const Default: Story = {
   `,
 };
 
-export const WithValue: Story = {
-  render: () => html`
-    <civ-date-picker
-      label="Start date"
-      name="start"
-      value="2026-03-15"
-    ></civ-date-picker>
-  `,
-};
+// ── Individual States ─────────────────────────────────────────
 
 export const WithHint: Story = {
   render: () => html`
     <civ-date-picker
-      label="Event date"
-      name="event"
+      label="Preferred appointment date"
+      name="appointment"
       hint="Use the calendar button or type a date like 03/15/2026"
     ></civ-date-picker>
   `,
@@ -73,9 +67,9 @@ export const WithHint: Story = {
 export const WithError: Story = {
   render: () => html`
     <civ-date-picker
-      label="Due date"
-      name="due"
-      error="Please select a valid date"
+      label="Appointment date"
+      name="appointment"
+      error="Select a valid appointment date"
       required
     ></civ-date-picker>
   `,
@@ -84,8 +78,8 @@ export const WithError: Story = {
 export const Required: Story = {
   render: () => html`
     <civ-date-picker
-      label="Delivery date"
-      name="delivery"
+      label="Appointment date"
+      name="appointment"
       required
     ></civ-date-picker>
   `,
@@ -94,39 +88,84 @@ export const Required: Story = {
 export const Disabled: Story = {
   render: () => html`
     <civ-date-picker
-      label="Locked date"
-      name="locked"
+      label="Appointment date"
+      name="appointment"
       value="2026-03-15"
       disabled
     ></civ-date-picker>
   `,
 };
 
-export const MinMaxRange: Story = {
+export const WithMinMax: Story = {
+  name: 'With Date Range',
   render: () => html`
     <civ-date-picker
-      label="Booking date"
-      name="booking"
-      min="2026-03-01"
-      max="2026-03-31"
-      hint="Available dates: March 1-31, 2026"
+      label="Appointment date"
+      name="appointment"
+      min="2026-04-01"
+      max="2026-04-30"
+      hint="Available dates: April 1-30, 2026"
     ></civ-date-picker>
   `,
 };
 
-export const InNativeForm: Story = {
+// ── All States ────────────────────────────────────────────────
+
+export const AllStates: Story = {
+  name: 'All States',
+  render: () => html`
+    <div style="display: flex; flex-direction: column; gap: 24px;">
+      <civ-date-picker label="Normal" name="normal"></civ-date-picker>
+      <civ-date-picker label="With hint" name="hint" hint="Use the calendar or type a date"></civ-date-picker>
+      <civ-date-picker label="With error" name="error" error="Select a date" required></civ-date-picker>
+      <civ-date-picker label="Required" name="required" required></civ-date-picker>
+      <civ-date-picker label="Disabled" name="disabled" value="2026-03-15" disabled></civ-date-picker>
+    </div>
+  `,
+};
+
+// ── Density Scale ─────────────────────────────────────────────
+
+export const DensityScale: Story = {
+  name: 'Density Scale',
+  render: () => html`
+    <div style="display: flex; flex-direction: column; gap: 24px;">
+      <div data-civ-scale="dense">
+        <p style="margin: 0 0 8px; font-weight: 600;">Dense</p>
+        <civ-date-picker label="Appointment date" name="dense-date" hint="Select an available date"></civ-date-picker>
+      </div>
+      <div>
+        <p style="margin: 0 0 8px; font-weight: 600;">Default</p>
+        <civ-date-picker label="Appointment date" name="default-date" hint="Select an available date"></civ-date-picker>
+      </div>
+      <div data-civ-scale="spacious">
+        <p style="margin: 0 0 8px; font-weight: 600;">Spacious</p>
+        <civ-date-picker label="Appointment date" name="spacious-date" hint="Select an available date"></civ-date-picker>
+      </div>
+    </div>
+  `,
+};
+
+// ── Usage Example ─────────────────────────────────────────────
+
+export const GovernmentAppointmentScheduler: Story = {
+  name: 'Usage: Schedule an Appointment',
   render: () => html`
     <form @submit=${(e: Event) => {
       e.preventDefault();
       const fd = new FormData(e.target as HTMLFormElement);
-      alert('Selected date: ' + fd.get('date'));
+      alert('Appointment scheduled: ' + fd.get('date'));
     }}>
+      <h3 style="margin: 0 0 16px; font-size: 1.25rem;">Schedule your in-person appointment</h3>
       <civ-date-picker
-        label="Choose a date"
+        label="Preferred date"
         name="date"
         required
+        min="2026-04-21"
+        max="2026-06-30"
+        hint="Appointments are available Monday through Friday, April 21 to June 30, 2026"
       ></civ-date-picker>
-      <button type="submit" class="civ-mt-2 civ-px-4 civ-py-2 civ-bg-primary civ-text-white civ-rounded focus-visible:civ-focus-ring-inverse">Submit</button>
+      <button type="submit" class="civ-mt-2 civ-px-4 civ-py-2 civ-bg-primary civ-text-white civ-rounded focus-visible:civ-focus-ring-inverse">Schedule appointment</button>
     </form>
   `,
 };

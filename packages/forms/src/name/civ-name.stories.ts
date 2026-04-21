@@ -10,6 +10,8 @@ const meta: Meta = {
   argTypes: {
     legend: { control: 'text' },
     name: { control: 'text' },
+    hint: { control: 'text' },
+    error: { control: 'text' },
     required: { control: 'boolean' },
     disabled: { control: 'boolean' },
     showMiddle: { control: 'boolean' },
@@ -19,21 +21,104 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
+// ── Default ───────────────────────────────────────────────────
+
 export const Default: Story = {
-  args: { legend: 'Your name', name: 'veteranName' },
-  render: (args) => html`<civ-name legend="${args.legend}" name="${args.name}" ?required="${args.required}" ?disabled="${args.disabled}"></civ-name>`,
+  args: {
+    legend: 'Your name',
+    name: 'applicantName',
+    required: false,
+    disabled: false,
+  },
+  render: (args) => html`
+    <civ-name
+      legend="${args.legend}"
+      name="${args.name}"
+      ?required="${args.required}"
+      ?disabled="${args.disabled}"
+    ></civ-name>
+  `,
+};
+
+// ── Individual States ─────────────────────────────────────────
+
+export const WithHint: Story = {
+  name: 'With Prefilled Value',
+  render: () => html`
+    <civ-name legend="Your name" name="applicant"></civ-name>
+  `,
+  play: async ({ canvasElement }) => {
+    const el = canvasElement.querySelector('civ-name') as any;
+    el.nameValue = { first: 'Jane', middle: 'A', last: 'Doe', suffix: '' };
+  },
+};
+
+export const WithError: Story = {
+  render: () => html`
+    <civ-name
+      legend="Your name"
+      name="applicant"
+      first-error="Enter a first name"
+      last-error="Enter a last name"
+    ></civ-name>
+  `,
 };
 
 export const Required: Story = {
-  render: () => html`<civ-name legend="Veteran's name" name="vet" required></civ-name>`,
+  render: () => html`
+    <civ-name legend="Veteran's name" name="veteran" required></civ-name>
+  `,
 };
 
-export const WithErrors: Story = {
-  render: () => html`<civ-name legend="Your name" first-error="Enter a first name" last-error="Enter a last name"></civ-name>`,
+export const Disabled: Story = {
+  render: () => html`
+    <civ-name legend="Your name" name="applicant" disabled></civ-name>
+  `,
 };
+
+// ── All States ────────────────────────────────────────────────
+
+export const AllStates: Story = {
+  name: 'All States',
+  render: () => html`
+    <div style="display: flex; flex-direction: column; gap: 32px;">
+      <civ-name legend="Normal" name="normal"></civ-name>
+      <civ-name legend="With errors" name="errors" first-error="Enter a first name" last-error="Enter a last name"></civ-name>
+      <civ-name legend="Required" name="required" required></civ-name>
+      <civ-name legend="Disabled" name="disabled" disabled></civ-name>
+    </div>
+  `,
+};
+
+// ── Density Scale ─────────────────────────────────────────────
+
+export const DensityScale: Story = {
+  name: 'Density Scale',
+  render: () => html`
+    <div style="display: flex; flex-direction: column; gap: 24px;">
+      <div data-civ-scale="dense">
+        <p style="margin: 0 0 8px; font-weight: 600;">Dense</p>
+        <civ-name legend="Your name" name="dense-name"></civ-name>
+      </div>
+      <div>
+        <p style="margin: 0 0 8px; font-weight: 600;">Default</p>
+        <civ-name legend="Your name" name="default-name"></civ-name>
+      </div>
+      <div data-civ-scale="spacious">
+        <p style="margin: 0 0 8px; font-weight: 600;">Spacious</p>
+        <civ-name legend="Your name" name="spacious-name"></civ-name>
+      </div>
+    </div>
+  `,
+};
+
+// ── Variants ──────────────────────────────────────────────────
 
 export const WithoutMiddle: Story = {
-  render: () => html`<civ-name legend="Your name" name="n"></civ-name>`,
+  name: 'Without Middle Name',
+  render: () => html`
+    <civ-name legend="Spouse's name" name="spouse"></civ-name>
+  `,
   play: async ({ canvasElement }) => {
     const el = canvasElement.querySelector('civ-name') as any;
     el.showMiddle = false;
@@ -41,28 +126,22 @@ export const WithoutMiddle: Story = {
 };
 
 export const WithoutSuffix: Story = {
-  render: () => html`<civ-name legend="Your name" name="n"></civ-name>`,
+  name: 'Without Suffix',
+  render: () => html`
+    <civ-name legend="Your name" name="n"></civ-name>
+  `,
   play: async ({ canvasElement }) => {
     const el = canvasElement.querySelector('civ-name') as any;
     el.showSuffix = false;
   },
 };
 
-export const Disabled: Story = {
-  render: () => html`<civ-name legend="Your name" disabled></civ-name>`,
-};
+// ── Usage Example ─────────────────────────────────────────────
 
-export const Prefilled: Story = {
-  render: () => html`<civ-name legend="Your name" name="n"></civ-name>`,
-  play: async ({ canvasElement }) => {
-    const el = canvasElement.querySelector('civ-name') as any;
-    el.nameValue = { first: 'Jane', middle: 'A', last: 'Doe', suffix: 'Jr.' };
-  },
-};
-
-export const WithDateOfBirth: Story = {
-  name: 'Paired with Date of Birth',
+export const GovernmentIdentitySection: Story = {
+  name: 'Usage: Identity Section',
   render: () => html`
+    <h3 style="margin: 0 0 16px; font-size: 1.25rem;">Personal information</h3>
     <civ-name legend="Veteran's name" name="veteranName" required></civ-name>
     <civ-memorable-date
       legend="Date of birth"
@@ -71,15 +150,4 @@ export const WithDateOfBirth: Story = {
       hint="For example: January 15 1990"
     ></civ-memorable-date>
   `,
-};
-
-export const SpouseName: Story = {
-  name: 'Spouse Name (no suffix)',
-  render: () => html`
-    <civ-name legend="Spouse's name" name="spouseName" required></civ-name>
-  `,
-  play: async ({ canvasElement }) => {
-    const el = canvasElement.querySelector('civ-name') as any;
-    el.showSuffix = false;
-  },
 };

@@ -73,23 +73,12 @@ Tag size is controlled by the density system. Wrap in a parent with `data-civ-sc
 <civ-tag label="Needs attention" variant="yellow"></civ-tag>
 ```
 
-
-
 ## Live Examples
 
 ### Default
 
 <iframe
   src="/civui/storybook/iframe.html?id=ui-tag--default&viewMode=story"
-  width="100%"
-  height="300"
-  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
-></iframe>
-
-### Secondary (Default)
-
-<iframe
-  src="/civui/storybook/iframe.html?id=ui-tag--secondary&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
@@ -104,10 +93,19 @@ Tag size is controlled by the density system. Wrap in a parent with `data-civ-sc
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### Primary vs Secondary
+### Secondary
 
 <iframe
-  src="/civui/storybook/iframe.html?id=ui-tag--style-comparison&viewMode=story"
+  src="/civui/storybook/iframe.html?id=ui-tag--secondary&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### All Variants
+
+<iframe
+  src="/civui/storybook/iframe.html?id=ui-tag--all-variants&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
@@ -117,6 +115,15 @@ Tag size is controlled by the density system. Wrap in a parent with `data-civ-sc
 
 <iframe
   src="/civui/storybook/iframe.html?id=ui-tag--density-scale&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Claim Statuses
+
+<iframe
+  src="/civui/storybook/iframe.html?id=ui-tag--claim-statuses&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}

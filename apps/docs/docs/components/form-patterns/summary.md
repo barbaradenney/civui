@@ -67,7 +67,6 @@ interface SummaryItem {
 </script>
 ```
 
-
 ## Live Examples
 
 ### Default
@@ -82,16 +81,7 @@ interface SummaryItem {
 ### With Missing Values
 
 <iframe
-  src="/civui/storybook/iframe.html?id=forms-patterns-summary--with-missing-values&viewMode=story"
-  width="100%"
-  height="300"
-  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
-></iframe>
-
-### With Array Values
-
-<iframe
-  src="/civui/storybook/iframe.html?id=forms-patterns-summary--with-array-values&viewMode=story"
+  src="/civui/storybook/iframe.html?id=forms-patterns-summary--with-hint&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
@@ -100,34 +90,52 @@ interface SummaryItem {
 ### Without Edit Links
 
 <iframe
-  src="/civui/storybook/iframe.html?id=forms-patterns-summary--without-edit-links&viewMode=story"
+  src="/civui/storybook/iframe.html?id=forms-patterns-summary--with-error&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### Empty
+### With Array Values
 
 <iframe
-  src="/civui/storybook/iframe.html?id=forms-patterns-summary--empty&viewMode=story"
+  src="/civui/storybook/iframe.html?id=forms-patterns-summary--required&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### Full Application Review Page
+### Empty State
 
 <iframe
-  src="/civui/storybook/iframe.html?id=forms-patterns-summary--full-application-review&viewMode=story"
+  src="/civui/storybook/iframe.html?id=forms-patterns-summary--disabled&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### Post-Submission Confirmation
+### All States
 
 <iframe
-  src="/civui/storybook/iframe.html?id=forms-patterns-summary--confirmation-page&viewMode=story"
+  src="/civui/storybook/iframe.html?id=forms-patterns-summary--all-states&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Density Scale
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-patterns-summary--density-scale&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Usage: Full Application Review
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-patterns-summary--government-application-review&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}

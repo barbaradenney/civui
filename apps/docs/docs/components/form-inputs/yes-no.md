@@ -67,8 +67,6 @@ Uses `legend` instead of `label` because it renders as a fieldset with radio sem
 ></civ-yes-no>
 ```
 
-
-
 ## Live Examples
 
 ### citizen
@@ -134,10 +132,28 @@ Uses `legend` instead of `label` because it renders as a fieldset with radio sem
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### In Form
+### All States
 
 <iframe
-  src="/civui/storybook/iframe.html?id=forms-inputs-yes-no--in-form&viewMode=story"
+  src="/civui/storybook/iframe.html?id=forms-inputs-yes-no--all-states&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Density Scale
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-yes-no--density-scale&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Usage: Eligibility Screening
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-yes-no--government-eligibility-screening&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}

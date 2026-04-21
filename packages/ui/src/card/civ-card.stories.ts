@@ -79,77 +79,78 @@ export const WithTagAndActions: Story = {
   `,
 };
 
-export const WithFooterButton: Story = {
-  name: 'With Footer Button',
+export const Small: Story = {
+  name: 'Small Spacing',
   render: () => html`
-    <civ-card>
+    <civ-card spacing="sm">
       <div data-card-header>
-        <h3 class="civ-heading-md">Primary care appointment</h3>
+        <h3 class="civ-heading-md">Compact card</h3>
       </div>
-      <p>Dr. Sarah Smith</p>
-      <p>January 15, 2026 at 2:30 PM</p>
-      <p>VA Medical Center, Building 2, Room 105</p>
-      <div data-card-footer>
-        <civ-button label="Check in now"></civ-button>
-      </div>
+      <p>Smaller padding for dense layouts.</p>
     </civ-card>
   `,
 };
 
-export const WithExpandableFooter: Story = {
-  name: 'With Expandable Footer',
+export const DensityScale: Story = {
+  name: 'Density Scale',
   render: () => html`
-    <civ-card>
-      <div data-card-header>
-        <h3 class="civ-heading-md">Monthly payment</h3>
-      </div>
-      <p>Amount: $1,234.56</p>
-      <p>Deposited: April 1, 2026</p>
-      <details data-card-footer>
-        <summary class="civ-link--tertiary civ-cursor-pointer">View payment breakdown</summary>
-        <div class="civ-mt-2">
-          <p>Disability compensation: $987.00</p>
-          <p>Special monthly compensation: $247.56</p>
-        </div>
-      </details>
-    </civ-card>
-  `,
-};
-
-export const LinkHeading: Story = {
-  name: 'Link Heading',
-  render: () => html`
-    <civ-card>
-      <div data-card-header>
-        <civ-link href="#/education" class="civ-heading-md">Education benefits</civ-link>
-      </div>
-      <p>Post-9/11 GI Bill</p>
-      <p>Remaining entitlement: 24 months</p>
-    </civ-card>
-  `,
-};
-
-export const DependentCard: Story = {
-  name: 'Dependent Card',
-  render: () => html`
-    <civ-card>
-      <div data-card-header>
-        <div class="civ-flex civ-justify-between civ-items-center">
-          <h3 class="civ-heading-md">Dependent: Jane Doe</h3>
-          <div class="civ-flex civ-gap-2">
-            <civ-button label="Edit" variant="tertiary"></civ-button>
-            <civ-button label="Remove" variant="tertiary" danger></civ-button>
+    <div style="display: flex; flex-direction: column; gap: 24px;">
+      <div data-civ-scale="dense">
+        <p style="margin: 0 0 8px; font-weight: 600;">Dense</p>
+        <civ-card>
+          <div data-card-header>
+            <civ-tag label="In progress" variant="teal"></civ-tag>
+            <div class="civ-flex civ-justify-between civ-items-center">
+              <civ-link href="#" class="civ-heading-md">Disability compensation</civ-link>
+              <civ-button label="Edit" variant="tertiary"></civ-button>
+            </div>
           </div>
-        </div>
+          <p>Filed: March 10, 2026</p>
+          <div data-card-footer>
+            <civ-link href="#" variant="secondary">View details</civ-link>
+          </div>
+        </civ-card>
       </div>
-      <p>Relationship: Spouse</p>
-      <p>Date of birth: January 15, 1992</p>
-    </civ-card>
+
+      <div>
+        <p style="margin: 0 0 8px; font-weight: 600;">Default</p>
+        <civ-card>
+          <div data-card-header>
+            <civ-tag label="In progress" variant="teal"></civ-tag>
+            <div class="civ-flex civ-justify-between civ-items-center">
+              <civ-link href="#" class="civ-heading-md">Disability compensation</civ-link>
+              <civ-button label="Edit" variant="tertiary"></civ-button>
+            </div>
+          </div>
+          <p>Filed: March 10, 2026</p>
+          <div data-card-footer>
+            <civ-link href="#" variant="secondary">View details</civ-link>
+          </div>
+        </civ-card>
+      </div>
+
+      <div data-civ-scale="spacious">
+        <p style="margin: 0 0 8px; font-weight: 600;">Spacious</p>
+        <civ-card>
+          <div data-card-header>
+            <civ-tag label="In progress" variant="teal"></civ-tag>
+            <div class="civ-flex civ-justify-between civ-items-center">
+              <civ-link href="#" class="civ-heading-md">Disability compensation</civ-link>
+              <civ-button label="Edit" variant="tertiary"></civ-button>
+            </div>
+          </div>
+          <p>Filed: March 10, 2026</p>
+          <div data-card-footer>
+            <civ-link href="#" variant="secondary">View details</civ-link>
+          </div>
+        </civ-card>
+      </div>
+    </div>
   `,
 };
 
 export const AppointmentCards: Story = {
-  name: 'Appointment Card Collection',
+  name: 'Appointment Cards',
   render: () => html`
     <div style="display: flex; flex-direction: column; gap: 16px;">
       <civ-card>
@@ -225,80 +226,21 @@ export const ClaimStatusCards: Story = {
   `,
 };
 
-export const Plain: Story = {
-  name: 'Plain (No Header)',
+export const DependentCard: Story = {
+  name: 'Dependent Card',
   render: () => html`
     <civ-card>
-      <p>A simple card with no header or footer. Just body content.</p>
-    </civ-card>
-  `,
-};
-
-export const Small: Story = {
-  render: () => html`
-    <civ-card spacing="sm">
       <div data-card-header>
-        <h3 class="civ-heading-md">Compact card</h3>
+        <div class="civ-flex civ-justify-between civ-items-center">
+          <h3 class="civ-heading-md">Dependent: Jane Doe</h3>
+          <div class="civ-flex civ-gap-2">
+            <civ-button label="Edit" variant="tertiary"></civ-button>
+            <civ-button label="Remove" variant="tertiary" danger></civ-button>
+          </div>
+        </div>
       </div>
-      <p>Smaller padding for dense layouts.</p>
+      <p>Relationship: Spouse</p>
+      <p>Date of birth: January 15, 1992</p>
     </civ-card>
-  `,
-};
-
-export const DensityScale: Story = {
-  name: 'Density Scale',
-  render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 24px;">
-      <div data-civ-scale="dense">
-        <p style="margin: 0 0 8px; font-weight: 600;">Dense</p>
-        <civ-card>
-          <div data-card-header>
-            <civ-tag label="In progress" variant="teal"></civ-tag>
-            <div class="civ-flex civ-justify-between civ-items-center">
-              <civ-link href="#" class="civ-heading-md">Disability compensation</civ-link>
-              <civ-button label="Edit" variant="tertiary"></civ-button>
-            </div>
-          </div>
-          <p>Filed: March 10, 2026</p>
-          <div data-card-footer>
-            <civ-link href="#" variant="secondary">View details</civ-link>
-          </div>
-        </civ-card>
-      </div>
-
-      <div>
-        <p style="margin: 0 0 8px; font-weight: 600;">Default</p>
-        <civ-card>
-          <div data-card-header>
-            <civ-tag label="In progress" variant="teal"></civ-tag>
-            <div class="civ-flex civ-justify-between civ-items-center">
-              <civ-link href="#" class="civ-heading-md">Disability compensation</civ-link>
-              <civ-button label="Edit" variant="tertiary"></civ-button>
-            </div>
-          </div>
-          <p>Filed: March 10, 2026</p>
-          <div data-card-footer>
-            <civ-link href="#" variant="secondary">View details</civ-link>
-          </div>
-        </civ-card>
-      </div>
-
-      <div data-civ-scale="spacious">
-        <p style="margin: 0 0 8px; font-weight: 600;">Spacious</p>
-        <civ-card>
-          <div data-card-header>
-            <civ-tag label="In progress" variant="teal"></civ-tag>
-            <div class="civ-flex civ-justify-between civ-items-center">
-              <civ-link href="#" class="civ-heading-md">Disability compensation</civ-link>
-              <civ-button label="Edit" variant="tertiary"></civ-button>
-            </div>
-          </div>
-          <p>Filed: March 10, 2026</p>
-          <div data-card-footer>
-            <civ-link href="#" variant="secondary">View details</civ-link>
-          </div>
-        </civ-card>
-      </div>
-    </div>
   `,
 };

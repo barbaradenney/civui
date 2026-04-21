@@ -105,8 +105,6 @@ stepper.goToStep(2);  // Navigate to step 3
 </civ-form-step>
 ```
 
-
-
 ## Live Examples
 
 ### Default
@@ -118,37 +116,64 @@ stepper.goToStep(2);  // Navigate to step 3
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
+### With Progress Bar
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-patterns-form-step--with-hint&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Custom Button Labels
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-patterns-form-step--with-error&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
 ### Two Steps
 
 <iframe
-  src="/civui/storybook/iframe.html?id=forms-patterns-form-step--two-steps&viewMode=story"
+  src="/civui/storybook/iframe.html?id=forms-patterns-form-step--required&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### With Progress
+### Navigation Disabled
 
 <iframe
-  src="/civui/storybook/iframe.html?id=forms-patterns-form-step--with-progress&viewMode=story"
+  src="/civui/storybook/iframe.html?id=forms-patterns-form-step--disabled&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### Custom Labels
+### All States
 
 <iframe
-  src="/civui/storybook/iframe.html?id=forms-patterns-form-step--custom-labels&viewMode=story"
+  src="/civui/storybook/iframe.html?id=forms-patterns-form-step--all-states&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### Benefit Application Flow
+### Density Scale
 
 <iframe
-  src="/civui/storybook/iframe.html?id=forms-patterns-form-step--benefit-application&viewMode=story"
+  src="/civui/storybook/iframe.html?id=forms-patterns-form-step--density-scale&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Usage: Benefit Application Flow
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-patterns-form-step--government-benefit-application&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}

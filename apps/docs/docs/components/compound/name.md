@@ -100,14 +100,30 @@ name.nameValue; // { first: 'Jane', middle: 'A', last: 'Doe', suffix: '' }
 ></civ-name>
 ```
 
-
-
 ## Live Examples
 
-### veteranName
+### applicantName
 
 <iframe
   src="/civui/storybook/iframe.html?id=forms-compound-name--default&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### With Prefilled Value
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-compound-name--with-hint&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### With Error
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-compound-name--with-error&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
@@ -122,16 +138,34 @@ name.nameValue; // { first: 'Jane', middle: 'A', last: 'Doe', suffix: '' }
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### With Errors
+### Disabled
 
 <iframe
-  src="/civui/storybook/iframe.html?id=forms-compound-name--with-errors&viewMode=story"
+  src="/civui/storybook/iframe.html?id=forms-compound-name--disabled&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### Without Middle
+### All States
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-compound-name--all-states&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Density Scale
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-compound-name--density-scale&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Without Middle Name
 
 <iframe
   src="/civui/storybook/iframe.html?id=forms-compound-name--without-middle&viewMode=story"
@@ -149,37 +183,10 @@ name.nameValue; // { first: 'Jane', middle: 'A', last: 'Doe', suffix: '' }
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### Disabled
+### Usage: Identity Section
 
 <iframe
-  src="/civui/storybook/iframe.html?id=forms-compound-name--disabled&viewMode=story"
-  width="100%"
-  height="300"
-  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
-></iframe>
-
-### Prefilled
-
-<iframe
-  src="/civui/storybook/iframe.html?id=forms-compound-name--prefilled&viewMode=story"
-  width="100%"
-  height="300"
-  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
-></iframe>
-
-### Paired with Date of Birth
-
-<iframe
-  src="/civui/storybook/iframe.html?id=forms-compound-name--with-date-of-birth&viewMode=story"
-  width="100%"
-  height="300"
-  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
-></iframe>
-
-### Spouse Name (no suffix)
-
-<iframe
-  src="/civui/storybook/iframe.html?id=forms-compound-name--spouse-name&viewMode=story"
+  src="/civui/storybook/iframe.html?id=forms-compound-name--government-identity-section&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}

@@ -71,8 +71,6 @@ Add `danger` to any variant for destructive action styling.
 <civ-button disabled label="Processing..."></civ-button>
 ```
 
-
-
 ## Live Examples
 
 ### Default
@@ -84,19 +82,28 @@ Add `danger` to any variant for destructive action styling.
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### Button Variants
+### Primary
 
 <iframe
-  src="/civui/storybook/iframe.html?id=ui-button--variants&viewMode=story"
+  src="/civui/storybook/iframe.html?id=ui-button--primary&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### Danger Variants
+### Secondary
 
 <iframe
-  src="/civui/storybook/iframe.html?id=ui-button--danger-variants&viewMode=story"
+  src="/civui/storybook/iframe.html?id=ui-button--secondary&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### All Variants
+
+<iframe
+  src="/civui/storybook/iframe.html?id=ui-button--tertiary&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
@@ -111,6 +118,15 @@ Add `danger` to any variant for destructive action styling.
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
+### Danger
+
+<iframe
+  src="/civui/storybook/iframe.html?id=ui-button--danger&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
 ### Disabled
 
 <iframe
@@ -120,10 +136,28 @@ Add `danger` to any variant for destructive action styling.
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### In Form
+### Density Scale
 
 <iframe
-  src="/civui/storybook/iframe.html?id=ui-button--in-form&viewMode=story"
+  src="/civui/storybook/iframe.html?id=ui-button--density-scale&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Form Actions
+
+<iframe
+  src="/civui/storybook/iframe.html?id=ui-button--form-actions&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Claim Actions
+
+<iframe
+  src="/civui/storybook/iframe.html?id=ui-button--claim-actions&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}

@@ -80,8 +80,6 @@ As the user types, options are filtered by substring match (case-insensitive). M
 </script>
 ```
 
-
-
 ## Live Examples
 
 ### state
@@ -129,10 +127,19 @@ As the user types, options are filtered by substring match (case-insensitive). M
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### Preselected
+### All States
 
 <iframe
-  src="/civui/storybook/iframe.html?id=forms-inputs-combobox--preselected&viewMode=story"
+  src="/civui/storybook/iframe.html?id=forms-inputs-combobox--all-states&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Density Scale
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-combobox--density-scale&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
@@ -142,6 +149,15 @@ As the user types, options are filtered by substring match (case-insensitive). M
 
 <iframe
   src="/civui/storybook/iframe.html?id=forms-inputs-combobox--option-groups&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Usage: Office Location Search
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-combobox--government-office-search&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}

@@ -71,41 +71,12 @@ Selection follows focus. RTL direction is automatically handled.
 </civ-segmented-control>
 ```
 
-
-
 ## Live Examples
 
 ### view
 
 <iframe
   src="/civui/storybook/iframe.html?id=forms-inputs-segmented-control--default&viewMode=story"
-  width="100%"
-  height="300"
-  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
-></iframe>
-
-### With Preselection
-
-<iframe
-  src="/civui/storybook/iframe.html?id=forms-inputs-segmented-control--with-preselection&viewMode=story"
-  width="100%"
-  height="300"
-  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
-></iframe>
-
-### Three Options
-
-<iframe
-  src="/civui/storybook/iframe.html?id=forms-inputs-segmented-control--three-options&viewMode=story"
-  width="100%"
-  height="300"
-  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
-></iframe>
-
-### Five Options
-
-<iframe
-  src="/civui/storybook/iframe.html?id=forms-inputs-segmented-control--five-options&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
@@ -129,6 +100,15 @@ Selection follows focus. RTL direction is automatically handled.
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
+### Required
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-segmented-control--required&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
 ### Disabled
 
 <iframe
@@ -138,10 +118,37 @@ Selection follows focus. RTL direction is automatically handled.
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### In Form
+### All States
 
 <iframe
-  src="/civui/storybook/iframe.html?id=forms-inputs-segmented-control--in-form&viewMode=story"
+  src="/civui/storybook/iframe.html?id=forms-inputs-segmented-control--all-states&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Density Scale
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-segmented-control--density-scale&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Five Options
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-segmented-control--five-options&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Usage: Report Time Range
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-segmented-control--government-report-filter&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}

@@ -99,8 +99,6 @@ const controller = upload.getAbortController(0);
 ></civ-file-upload>
 ```
 
-
-
 ## Live Examples
 
 ### document
@@ -121,28 +119,19 @@ const controller = upload.getAbortController(0);
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### With Max Size
-
-<iframe
-  src="/civui/storybook/iframe.html?id=forms-inputs-file-upload--with-max-size&viewMode=story"
-  width="100%"
-  height="300"
-  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
-></iframe>
-
-### Multiple Files
-
-<iframe
-  src="/civui/storybook/iframe.html?id=forms-inputs-file-upload--multiple-files&viewMode=story"
-  width="100%"
-  height="300"
-  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
-></iframe>
-
 ### With Error
 
 <iframe
   src="/civui/storybook/iframe.html?id=forms-inputs-file-upload--with-error&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Required
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-file-upload--required&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
@@ -157,19 +146,37 @@ const controller = upload.getAbortController(0);
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### Image Preview
+### All States
 
 <iframe
-  src="/civui/storybook/iframe.html?id=forms-inputs-file-upload--image-preview&viewMode=story"
+  src="/civui/storybook/iframe.html?id=forms-inputs-file-upload--all-states&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### Max Files
+### Density Scale
 
 <iframe
-  src="/civui/storybook/iframe.html?id=forms-inputs-file-upload--max-files&viewMode=story"
+  src="/civui/storybook/iframe.html?id=forms-inputs-file-upload--density-scale&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Multiple Files
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-file-upload--multiple-files&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Image Preview
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-file-upload--image-preview&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
@@ -202,19 +209,19 @@ const controller = upload.getAbortController(0);
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### With Progress
+### Upload Simulation
 
 <iframe
-  src="/civui/storybook/iframe.html?id=forms-inputs-file-upload--with-progress&viewMode=story"
+  src="/civui/storybook/iframe.html?id=forms-inputs-file-upload--upload-simulation&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### Upload Simulation
+### Usage: Document Submission
 
 <iframe
-  src="/civui/storybook/iframe.html?id=forms-inputs-file-upload--upload-simulation&viewMode=story"
+  src="/civui/storybook/iframe.html?id=forms-inputs-file-upload--government-document-submission&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}

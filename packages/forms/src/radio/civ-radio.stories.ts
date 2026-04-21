@@ -26,10 +26,12 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
+// ── Default ───────────────────────────────────────────────────
+
 export const Default: Story = {
   args: {
-    legend: 'Color preference',
-    name: 'color',
+    legend: 'Contact preference',
+    name: 'contact',
     value: '',
     hint: '',
     error: '',
@@ -50,58 +52,6 @@ export const Default: Story = {
       ?disabled="${args.disabled}"
       orientation="${args.orientation}"
     >
-      <civ-radio label="Red" value="red"></civ-radio>
-      <civ-radio label="Blue" value="blue"></civ-radio>
-      <civ-radio label="Green" value="green"></civ-radio>
-    </civ-radio-group>
-  `,
-};
-
-export const WithPreselection: Story = {
-  render: () => html`
-    <civ-radio-group legend="Size" name="size" value="medium">
-      <civ-radio label="Small" value="small"></civ-radio>
-      <civ-radio label="Medium" value="medium"></civ-radio>
-      <civ-radio label="Large" value="large"></civ-radio>
-    </civ-radio-group>
-  `,
-};
-
-export const WithDescriptions: Story = {
-  render: () => html`
-    <civ-radio-group legend="Shipping method" name="shipping">
-      <civ-radio
-        label="Standard"
-        value="standard"
-        description="5-7 business days, free"
-      ></civ-radio>
-      <civ-radio
-        label="Express"
-        value="express"
-        description="2-3 business days, $9.99"
-      ></civ-radio>
-      <civ-radio
-        label="Overnight"
-        value="overnight"
-        description="Next business day, $24.99"
-      ></civ-radio>
-    </civ-radio-group>
-  `,
-};
-
-export const WithError: Story = {
-  render: () => html`
-    <civ-radio-group legend="Payment method" name="payment" error="Please select a payment method" required>
-      <civ-radio label="Credit card" value="credit"></civ-radio>
-      <civ-radio label="Debit card" value="debit"></civ-radio>
-      <civ-radio label="Bank transfer" value="bank"></civ-radio>
-    </civ-radio-group>
-  `,
-};
-
-export const WithHint: Story = {
-  render: () => html`
-    <civ-radio-group legend="Contact preference" name="contact" hint="How should we reach you?">
       <civ-radio label="Email" value="email"></civ-radio>
       <civ-radio label="Phone" value="phone"></civ-radio>
       <civ-radio label="Mail" value="mail"></civ-radio>
@@ -109,23 +59,122 @@ export const WithHint: Story = {
   `,
 };
 
+// ── Individual States ─────────────────────────────────────────
+
+export const WithHint: Story = {
+  render: () => html`
+    <civ-radio-group legend="Preferred contact method" name="contact" hint="How should we reach you about your application?">
+      <civ-radio label="Email" value="email"></civ-radio>
+      <civ-radio label="Phone" value="phone"></civ-radio>
+      <civ-radio label="U.S. Mail" value="mail"></civ-radio>
+    </civ-radio-group>
+  `,
+};
+
+export const WithError: Story = {
+  render: () => html`
+    <civ-radio-group legend="Preferred contact method" name="contact" error="Select a contact method to continue" required>
+      <civ-radio label="Email" value="email"></civ-radio>
+      <civ-radio label="Phone" value="phone"></civ-radio>
+      <civ-radio label="U.S. Mail" value="mail"></civ-radio>
+    </civ-radio-group>
+  `,
+};
+
+export const Required: Story = {
+  render: () => html`
+    <civ-radio-group legend="Preferred contact method" name="contact" required>
+      <civ-radio label="Email" value="email"></civ-radio>
+      <civ-radio label="Phone" value="phone"></civ-radio>
+      <civ-radio label="U.S. Mail" value="mail"></civ-radio>
+    </civ-radio-group>
+  `,
+};
+
+export const Disabled: Story = {
+  render: () => html`
+    <civ-radio-group legend="Preferred contact method" name="contact" value="email" disabled>
+      <civ-radio label="Email" value="email"></civ-radio>
+      <civ-radio label="Phone" value="phone"></civ-radio>
+      <civ-radio label="U.S. Mail" value="mail"></civ-radio>
+    </civ-radio-group>
+  `,
+};
+
+// ── All States ────────────────────────────────────────────────
+
+export const AllStates: Story = {
+  name: 'All States',
+  render: () => html`
+    <div style="display: flex; flex-direction: column; gap: 32px;">
+      <civ-radio-group legend="Normal" name="normal">
+        <civ-radio label="Option A" value="a"></civ-radio>
+        <civ-radio label="Option B" value="b"></civ-radio>
+      </civ-radio-group>
+      <civ-radio-group legend="With hint" name="hint" hint="Select one option">
+        <civ-radio label="Option A" value="a"></civ-radio>
+        <civ-radio label="Option B" value="b"></civ-radio>
+      </civ-radio-group>
+      <civ-radio-group legend="With error" name="error" error="Select an option" required>
+        <civ-radio label="Option A" value="a"></civ-radio>
+        <civ-radio label="Option B" value="b"></civ-radio>
+      </civ-radio-group>
+      <civ-radio-group legend="Disabled" name="disabled" value="a" disabled>
+        <civ-radio label="Option A" value="a"></civ-radio>
+        <civ-radio label="Option B" value="b"></civ-radio>
+      </civ-radio-group>
+    </div>
+  `,
+};
+
+// ── Density Scale ─────────────────────────────────────────────
+
+export const DensityScale: Story = {
+  name: 'Density Scale',
+  render: () => html`
+    <div style="display: flex; flex-direction: column; gap: 24px;">
+      <div data-civ-scale="dense">
+        <p style="margin: 0 0 8px; font-weight: 600;">Dense</p>
+        <civ-radio-group legend="Contact preference" name="dense-contact">
+          <civ-radio label="Email" value="email"></civ-radio>
+          <civ-radio label="Phone" value="phone"></civ-radio>
+          <civ-radio label="Mail" value="mail"></civ-radio>
+        </civ-radio-group>
+      </div>
+      <div>
+        <p style="margin: 0 0 8px; font-weight: 600;">Default</p>
+        <civ-radio-group legend="Contact preference" name="default-contact">
+          <civ-radio label="Email" value="email"></civ-radio>
+          <civ-radio label="Phone" value="phone"></civ-radio>
+          <civ-radio label="Mail" value="mail"></civ-radio>
+        </civ-radio-group>
+      </div>
+      <div data-civ-scale="spacious">
+        <p style="margin: 0 0 8px; font-weight: 600;">Spacious</p>
+        <civ-radio-group legend="Contact preference" name="spacious-contact">
+          <civ-radio label="Email" value="email"></civ-radio>
+          <civ-radio label="Phone" value="phone"></civ-radio>
+          <civ-radio label="Mail" value="mail"></civ-radio>
+        </civ-radio-group>
+      </div>
+    </div>
+  `,
+};
+
+// ── Variants ──────────────────────────────────────────────────
+
 export const TileVariant: Story = {
   render: () => html`
-    <civ-radio-group legend="Plan" name="plan" tile>
+    <civ-radio-group legend="Account type" name="account-type" tile>
       <civ-radio
-        label="Free"
-        value="free"
-        description="Basic features, community support"
+        label="Checking"
+        value="checking"
+        description="For everyday transactions and direct deposit"
       ></civ-radio>
       <civ-radio
-        label="Pro"
-        value="pro"
-        description="All features, priority support, API access"
-      ></civ-radio>
-      <civ-radio
-        label="Enterprise"
-        value="enterprise"
-        description="Custom solutions, dedicated account manager"
+        label="Savings"
+        value="savings"
+        description="For long-term savings with interest"
       ></civ-radio>
     </civ-radio-group>
   `,
@@ -133,25 +182,40 @@ export const TileVariant: Story = {
 
 export const Horizontal: Story = {
   render: () => html`
-    <civ-radio-group legend="Contact preference" name="contact" orientation="horizontal">
-      <civ-radio label="Email" value="email"></civ-radio>
-      <civ-radio label="Phone" value="phone"></civ-radio>
-      <civ-radio label="Mail" value="mail"></civ-radio>
+    <civ-radio-group legend="Preferred language" name="language" orientation="horizontal">
+      <civ-radio label="English" value="en"></civ-radio>
+      <civ-radio label="Spanish" value="es"></civ-radio>
+      <civ-radio label="Chinese" value="zh"></civ-radio>
     </civ-radio-group>
   `,
 };
 
-export const DisabledOption: Story = {
+export const WithDescriptions: Story = {
   render: () => html`
-    <civ-radio-group legend="Availability" name="time">
-      <civ-radio label="Morning" value="morning"></civ-radio>
-      <civ-radio label="Afternoon" value="afternoon"></civ-radio>
-      <civ-radio label="Evening (unavailable)" value="evening" disabled></civ-radio>
+    <civ-radio-group legend="Appointment type" name="appointment">
+      <civ-radio
+        label="In person"
+        value="in-person"
+        description="Visit your local office for a face-to-face meeting"
+      ></civ-radio>
+      <civ-radio
+        label="Phone call"
+        value="phone"
+        description="We will call you at your listed phone number"
+      ></civ-radio>
+      <civ-radio
+        label="Video conference"
+        value="video"
+        description="Join a secure video call from any device"
+      ></civ-radio>
     </civ-radio-group>
   `,
 };
 
-export const InNativeForm: Story = {
+// ── Usage Example ─────────────────────────────────────────────
+
+export const GovernmentEligibilityForm: Story = {
+  name: 'Usage: Eligibility Questions',
   render: () => html`
     <form
       @submit="${(e: Event) => {
@@ -160,16 +224,17 @@ export const InNativeForm: Story = {
         alert(JSON.stringify(Object.fromEntries(data)));
       }}"
     >
-      <civ-radio-group legend="Favorite fruit" name="fruit" required>
-        <civ-radio label="Apple" value="apple"></civ-radio>
-        <civ-radio label="Banana" value="banana"></civ-radio>
-        <civ-radio label="Cherry" value="cherry"></civ-radio>
+      <civ-radio-group legend="What is your relationship to the Veteran?" name="relationship" required>
+        <civ-radio label="I am the Veteran" value="self"></civ-radio>
+        <civ-radio label="Spouse" value="spouse"></civ-radio>
+        <civ-radio label="Dependent child" value="child"></civ-radio>
+        <civ-radio label="Caregiver" value="caregiver"></civ-radio>
       </civ-radio-group>
       <button
         type="submit"
         style="margin-top: 16px; padding: 8px 24px; background: #005ea2; color: white; border: none; border-radius: 4px; cursor: pointer;"
       >
-        Submit
+        Continue
       </button>
     </form>
   `,

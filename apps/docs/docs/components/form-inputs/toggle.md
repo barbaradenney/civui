@@ -58,32 +58,12 @@ All form components share these props: `label`, `name`, `value`, `hint`, `error`
 ></civ-toggle>
 ```
 
-
-
 ## Live Examples
 
-### darkmode
+### email-notifications
 
 <iframe
   src="/civui/storybook/iframe.html?id=forms-inputs-toggle--default&viewMode=story"
-  width="100%"
-  height="300"
-  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
-></iframe>
-
-### Checked
-
-<iframe
-  src="/civui/storybook/iframe.html?id=forms-inputs-toggle--checked&viewMode=story"
-  width="100%"
-  height="300"
-  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
-></iframe>
-
-### With Description
-
-<iframe
-  src="/civui/storybook/iframe.html?id=forms-inputs-toggle--with-description&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
@@ -107,6 +87,15 @@ All form components share these props: `label`, `name`, `value`, `hint`, `error`
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
+### Required
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-toggle--required&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
 ### Disabled
 
 <iframe
@@ -116,10 +105,37 @@ All form components share these props: `label`, `name`, `value`, `hint`, `error`
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### In Form
+### With Description
 
 <iframe
-  src="/civui/storybook/iframe.html?id=forms-inputs-toggle--in-form&viewMode=story"
+  src="/civui/storybook/iframe.html?id=forms-inputs-toggle--with-description&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### All States
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-toggle--all-states&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Density Scale
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-toggle--density-scale&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Usage: Notification Preferences
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-toggle--government-notification-settings&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}

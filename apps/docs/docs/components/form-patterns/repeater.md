@@ -95,32 +95,12 @@ repeater.removeRow(1);    // Remove row at index 1
 </civ-repeater>
 ```
 
-
-
 ## Live Examples
 
 ### dependents
 
 <iframe
   src="/civui/storybook/iframe.html?id=forms-patterns-repeater--default&viewMode=story"
-  width="100%"
-  height="300"
-  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
-></iframe>
-
-### Min Rows
-
-<iframe
-  src="/civui/storybook/iframe.html?id=forms-patterns-repeater--min-rows&viewMode=story"
-  width="100%"
-  height="300"
-  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
-></iframe>
-
-### Max Rows
-
-<iframe
-  src="/civui/storybook/iframe.html?id=forms-patterns-repeater--max-rows&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
@@ -144,10 +124,46 @@ repeater.removeRow(1);    // Remove row at index 1
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
+### Required
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-patterns-repeater--required&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
 ### Disabled
 
 <iframe
   src="/civui/storybook/iframe.html?id=forms-patterns-repeater--disabled&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### All States
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-patterns-repeater--all-states&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Density Scale
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-patterns-repeater--density-scale&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Min/Max Rows
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-patterns-repeater--min-max&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
@@ -162,19 +178,10 @@ repeater.removeRow(1);    // Remove row at index 1
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### Service Periods (Detail Mode)
+### Usage: Service Periods
 
 <iframe
-  src="/civui/storybook/iframe.html?id=forms-patterns-repeater--service-periods&viewMode=story"
-  width="100%"
-  height="300"
-  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
-></iframe>
-
-### Additional Phone Numbers (Inline)
-
-<iframe
-  src="/civui/storybook/iframe.html?id=forms-patterns-repeater--phone-numbers&viewMode=story"
+  src="/civui/storybook/iframe.html?id=forms-patterns-repeater--government-service-periods&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}

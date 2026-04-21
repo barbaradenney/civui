@@ -76,8 +76,6 @@ Yellow/gold background with black text for urgent actions.
 ></civ-link-card>
 ```
 
-
-
 ## Live Examples
 
 ### Default
@@ -89,25 +87,16 @@ Yellow/gold background with black text for urgent actions.
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### Without Description
+### Primary
 
 <iframe
-  src="/civui/storybook/iframe.html?id=ui-link-card--without-description&viewMode=story"
+  src="/civui/storybook/iframe.html?id=ui-link-card--primary&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### Card Collection
-
-<iframe
-  src="/civui/storybook/iframe.html?id=ui-link-card--card-collection&viewMode=story"
-  width="100%"
-  height="300"
-  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
-></iframe>
-
-### Secondary Variant
+### Secondary
 
 <iframe
   src="/civui/storybook/iframe.html?id=ui-link-card--secondary&viewMode=story"
@@ -116,7 +105,16 @@ Yellow/gold background with black text for urgent actions.
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### Critical Variant
+### Tertiary
+
+<iframe
+  src="/civui/storybook/iframe.html?id=ui-link-card--tertiary&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Critical
 
 <iframe
   src="/civui/storybook/iframe.html?id=ui-link-card--critical&viewMode=story"
@@ -134,10 +132,28 @@ Yellow/gold background with black text for urgent actions.
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### Grid Layout
+### Density Scale
 
 <iframe
-  src="/civui/storybook/iframe.html?id=ui-link-card--grid-layout&viewMode=story"
+  src="/civui/storybook/iframe.html?id=ui-link-card--density-scale&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Benefits Hub
+
+<iframe
+  src="/civui/storybook/iframe.html?id=ui-link-card--benefits-hub&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Dashboard Grid
+
+<iframe
+  src="/civui/storybook/iframe.html?id=ui-link-card--dashboard-grid&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}

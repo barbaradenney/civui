@@ -70,8 +70,6 @@ A structured container with header, body, and footer slot areas. The card provid
 </civ-card>
 ```
 
-
-
 ## Live Examples
 
 ### Default
@@ -110,43 +108,25 @@ A structured container with header, body, and footer slot areas. The card provid
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### With Footer Button
+### Small Spacing
 
 <iframe
-  src="/civui/storybook/iframe.html?id=ui-card--with-footer-button&viewMode=story"
+  src="/civui/storybook/iframe.html?id=ui-card--small&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### With Expandable Footer
+### Density Scale
 
 <iframe
-  src="/civui/storybook/iframe.html?id=ui-card--with-expandable-footer&viewMode=story"
+  src="/civui/storybook/iframe.html?id=ui-card--density-scale&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### Link Heading
-
-<iframe
-  src="/civui/storybook/iframe.html?id=ui-card--link-heading&viewMode=story"
-  width="100%"
-  height="300"
-  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
-></iframe>
-
-### Dependent Card
-
-<iframe
-  src="/civui/storybook/iframe.html?id=ui-card--dependent-card&viewMode=story"
-  width="100%"
-  height="300"
-  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
-></iframe>
-
-### Appointment Card Collection
+### Appointment Cards
 
 <iframe
   src="/civui/storybook/iframe.html?id=ui-card--appointment-cards&viewMode=story"
@@ -164,28 +144,10 @@ A structured container with header, body, and footer slot areas. The card provid
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### Plain (No Header)
+### Dependent Card
 
 <iframe
-  src="/civui/storybook/iframe.html?id=ui-card--plain&viewMode=story"
-  width="100%"
-  height="300"
-  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
-></iframe>
-
-### Small
-
-<iframe
-  src="/civui/storybook/iframe.html?id=ui-card--small&viewMode=story"
-  width="100%"
-  height="300"
-  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
-></iframe>
-
-### Density Scale
-
-<iframe
-  src="/civui/storybook/iframe.html?id=ui-card--density-scale&viewMode=story"
+  src="/civui/storybook/iframe.html?id=ui-card--dependent-card&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}

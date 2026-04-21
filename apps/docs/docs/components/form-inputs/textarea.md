@@ -74,11 +74,9 @@ When `maxwords` is set (and `maxlength` is not), a word count indicator appears.
 ></civ-textarea>
 ```
 
-
-
 ## Live Examples
 
-### message
+### comments
 
 <iframe
   src="/civui/storybook/iframe.html?id=forms-inputs-textarea--default&viewMode=story"
@@ -105,19 +103,10 @@ When `maxwords` is set (and `maxlength` is not), a word count indicator appears.
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### With Character Count
+### Required
 
 <iframe
-  src="/civui/storybook/iframe.html?id=forms-inputs-textarea--with-character-count&viewMode=story"
-  width="100%"
-  height="300"
-  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
-></iframe>
-
-### Custom Rows
-
-<iframe
-  src="/civui/storybook/iframe.html?id=forms-inputs-textarea--custom-rows&viewMode=story"
+  src="/civui/storybook/iframe.html?id=forms-inputs-textarea--required&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
@@ -132,10 +121,46 @@ When `maxwords` is set (and `maxlength` is not), a word count indicator appears.
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### Word Count
+### With Character Count
 
 <iframe
-  src="/civui/storybook/iframe.html?id=forms-inputs-textarea--word-count&viewMode=story"
+  src="/civui/storybook/iframe.html?id=forms-inputs-textarea--with-character-count&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### With Word Count
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-textarea--with-word-count&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### All States
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-textarea--all-states&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Density Scale
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-textarea--density-scale&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Usage: Appeal Justification
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-textarea--government-appeal-form&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}

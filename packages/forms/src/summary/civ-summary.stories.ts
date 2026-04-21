@@ -2,7 +2,6 @@ import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import './civ-summary.js';
 import '../signature/civ-signature.js';
-import '@civui/feedback';
 
 const meta: Meta = {
   title: 'Forms/Patterns/Summary',
@@ -15,6 +14,8 @@ const meta: Meta = {
 
 export default meta;
 type Story = StoryObj;
+
+// ── Default ───────────────────────────────────────────────────
 
 export const Default: Story = {
   args: {
@@ -44,22 +45,15 @@ export const Default: Story = {
             { label: 'Phone number', value: '(555) 123-4567' },
           ],
         },
-        {
-          heading: 'Mailing address',
-          editHref: '#step-3',
-          items: [
-            { label: 'Street address', value: '1600 Pennsylvania Avenue NW' },
-            { label: 'City', value: 'Washington' },
-            { label: 'State', value: 'DC' },
-            { label: 'ZIP code', value: '20500' },
-          ],
-        },
       ];
     }
   },
 };
 
-export const WithMissingValues: Story = {
+// ── Individual States ─────────────────────────────────────────
+
+export const WithHint: Story = {
+  name: 'With Missing Values',
   render: () => html`
     <civ-summary heading="Review your information"></civ-summary>
   `,
@@ -82,7 +76,30 @@ export const WithMissingValues: Story = {
   },
 };
 
-export const WithArrayValues: Story = {
+export const WithError: Story = {
+  name: 'Without Edit Links',
+  render: () => html`
+    <civ-summary heading="Submission summary"></civ-summary>
+  `,
+  play: async ({ canvasElement }) => {
+    const el = canvasElement.querySelector('civ-summary');
+    if (el) {
+      (el as any).sections = [
+        {
+          heading: 'Application details',
+          items: [
+            { label: 'Application number', value: 'APP-2026-04-19-001' },
+            { label: 'Submitted on', value: 'April 19, 2026' },
+            { label: 'Status', value: 'Pending review' },
+          ],
+        },
+      ];
+    }
+  },
+};
+
+export const Required: Story = {
+  name: 'With Array Values',
   render: () => html`
     <civ-summary heading="Review your selections"></civ-summary>
   `,
@@ -103,42 +120,83 @@ export const WithArrayValues: Story = {
   },
 };
 
-export const WithoutEditLinks: Story = {
-  render: () => html`
-    <civ-summary heading="Submission summary"></civ-summary>
-  `,
-  play: async ({ canvasElement }) => {
-    const el = canvasElement.querySelector('civ-summary');
-    if (el) {
-      (el as any).sections = [
-        {
-          heading: 'Application details',
-          items: [
-            { label: 'Application number', value: 'APP-2026-04-18-001' },
-            { label: 'Submitted on', value: 'April 18, 2026' },
-            { label: 'Status', value: 'Pending review' },
-          ],
-        },
-        {
-          heading: 'Applicant',
-          items: [
-            { label: 'Name', value: 'Jane Doe' },
-            { label: 'Email', value: 'jane.doe@example.gov' },
-          ],
-        },
-      ];
-    }
-  },
-};
-
-export const Empty: Story = {
+export const Disabled: Story = {
+  name: 'Empty State',
   render: () => html`
     <civ-summary heading="Review your information"></civ-summary>
   `,
 };
 
-export const FullApplicationReview: Story = {
-  name: 'Full Application Review Page',
+// ── All States ────────────────────────────────────────────────
+
+export const AllStates: Story = {
+  name: 'All States',
+  render: () => html`
+    <div style="display: flex; flex-direction: column; gap: 48px;">
+      <div>
+        <h3 style="margin: 0 0 8px; font-weight: 600;">With edit links</h3>
+        <civ-summary heading="Editable summary" id="summary-editable"></civ-summary>
+      </div>
+      <div>
+        <h3 style="margin: 0 0 8px; font-weight: 600;">Read-only (no edit links)</h3>
+        <civ-summary heading="Confirmation summary" id="summary-readonly"></civ-summary>
+      </div>
+      <div>
+        <h3 style="margin: 0 0 8px; font-weight: 600;">Empty</h3>
+        <civ-summary heading="No data yet"></civ-summary>
+      </div>
+    </div>
+  `,
+  play: async ({ canvasElement }) => {
+    const editable = canvasElement.querySelector('#summary-editable') as any;
+    if (editable) {
+      editable.sections = [
+        { heading: 'Personal info', editHref: '#', items: [{ label: 'Name', value: 'Jane Doe' }] },
+      ];
+    }
+    const readonly = canvasElement.querySelector('#summary-readonly') as any;
+    if (readonly) {
+      readonly.sections = [
+        { heading: 'Submission', items: [{ label: 'Reference', value: 'APP-001' }, { label: 'Date', value: 'April 19, 2026' }] },
+      ];
+    }
+  },
+};
+
+// ── Density Scale ─────────────────────────────────────────────
+
+export const DensityScale: Story = {
+  name: 'Density Scale',
+  render: () => html`
+    <div style="display: flex; flex-direction: column; gap: 24px;">
+      <div data-civ-scale="dense">
+        <p style="margin: 0 0 8px; font-weight: 600;">Dense</p>
+        <civ-summary heading="Summary" id="dense-summary"></civ-summary>
+      </div>
+      <div>
+        <p style="margin: 0 0 8px; font-weight: 600;">Default</p>
+        <civ-summary heading="Summary" id="default-summary"></civ-summary>
+      </div>
+      <div data-civ-scale="spacious">
+        <p style="margin: 0 0 8px; font-weight: 600;">Spacious</p>
+        <civ-summary heading="Summary" id="spacious-summary"></civ-summary>
+      </div>
+    </div>
+  `,
+  play: async ({ canvasElement }) => {
+    const sections = [
+      { heading: 'Applicant', editHref: '#', items: [{ label: 'Name', value: 'Jane Doe' }, { label: 'Email', value: 'jane@example.gov' }] },
+    ];
+    canvasElement.querySelectorAll('civ-summary').forEach((el: any) => {
+      el.sections = sections;
+    });
+  },
+};
+
+// ── Usage Example ─────────────────────────────────────────────
+
+export const GovernmentApplicationReview: Story = {
+  name: 'Usage: Full Application Review',
   render: () => html`
     <civ-summary heading="Review your application"></civ-summary>
     <civ-signature
@@ -158,7 +216,7 @@ export const FullApplicationReview: Story = {
           items: [
             { label: 'Name', value: 'Jane A. Doe' },
             { label: 'Date of birth', value: 'January 15, 1990' },
-            { label: 'Social Security number', value: '●●●-●●-6789' },
+            { label: 'Social Security number', value: '\u25CF\u25CF\u25CF-\u25CF\u25CF-6789' },
           ],
         },
         {
@@ -168,16 +226,6 @@ export const FullApplicationReview: Story = {
             { label: 'Mailing address', value: ['123 Main St', 'Springfield, IL 62701'] },
             { label: 'Home phone', value: '(555) 123-4567' },
             { label: 'Email', value: 'jane.doe@email.com' },
-            { label: 'Preferred contact method', value: 'Email' },
-          ],
-        },
-        {
-          heading: 'Service history',
-          editHref: '#/service',
-          items: [
-            { label: 'Branch', value: 'Army' },
-            { label: 'Service dates', value: 'March 2010 \u2013 September 2018' },
-            { label: 'Character of service', value: 'Honorable' },
           ],
         },
         {
@@ -185,45 +233,8 @@ export const FullApplicationReview: Story = {
           editHref: '#/deposit',
           items: [
             { label: 'Account type', value: 'Checking' },
-            { label: 'Routing number', value: '●●●●●6789' },
-            { label: 'Account number', value: '●●●●●●4321' },
-          ],
-        },
-        {
-          heading: 'Supporting documents',
-          editHref: '#/documents',
-          items: [
-            { label: 'Files uploaded', value: ['DD214.pdf', 'medical-records.pdf'] },
-          ],
-        },
-      ];
-    }
-  },
-};
-
-export const ConfirmationPage: Story = {
-  name: 'Post-Submission Confirmation',
-  render: () => html`
-    <civ-alert variant="success" heading="We've received your application">
-      Your application was submitted on April 19, 2026. Your confirmation number is APP-2026-04-19-0042.
-    </civ-alert>
-
-    <civ-summary heading="What you submitted"></civ-summary>
-
-    <h3 class="civ-heading-md">What happens next</h3>
-    <p class="civ-mb-2">We'll review your application and send you a decision within 30 days.</p>
-    <p>If we need more information, we'll contact you at jane.doe@email.com.</p>
-  `,
-  play: async ({ canvasElement }) => {
-    const el = canvasElement.querySelector('civ-summary');
-    if (el) {
-      (el as any).sections = [
-        {
-          heading: 'Applicant',
-          items: [
-            { label: 'Name', value: 'Jane A. Doe' },
-            { label: 'Confirmation number', value: 'APP-2026-04-19-0042' },
-            { label: 'Date submitted', value: 'April 19, 2026' },
+            { label: 'Routing number', value: '\u25CF\u25CF\u25CF\u25CF\u25CF6789' },
+            { label: 'Account number', value: '\u25CF\u25CF\u25CF\u25CF\u25CF\u25CF4321' },
           ],
         },
       ];

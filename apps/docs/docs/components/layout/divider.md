@@ -28,8 +28,6 @@ A horizontal rule for visually separating content sections. Renders as an `<hr>`
 <civ-divider spacing="sm"></civ-divider>
 ```
 
-
-
 ## Live Examples
 
 ### Default
@@ -41,7 +39,7 @@ A horizontal rule for visually separating content sections. Renders as an `<hr>`
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### Small
+### Small Spacing
 
 <iframe
   src="/civui/storybook/iframe.html?id=ui-divider--small&viewMode=story"
@@ -50,10 +48,37 @@ A horizontal rule for visually separating content sections. Renders as an `<hr>`
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### In Context
+### All Variants
 
 <iframe
-  src="/civui/storybook/iframe.html?id=ui-divider--in-context&viewMode=story"
+  src="/civui/storybook/iframe.html?id=ui-divider--all-variants&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Density Scale
+
+<iframe
+  src="/civui/storybook/iframe.html?id=ui-divider--density-scale&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Benefits Summary
+
+<iframe
+  src="/civui/storybook/iframe.html?id=ui-divider--benefits-summary&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Form Sections
+
+<iframe
+  src="/civui/storybook/iframe.html?id=ui-divider--form-sections&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}

@@ -38,9 +38,11 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
+// ── Default ───────────────────────────────────────────────────
+
 export const Default: Story = {
   args: {
-    label: 'State',
+    label: 'State of residence',
     name: 'state',
     placeholder: 'Start typing to filter...',
     hint: '',
@@ -66,12 +68,14 @@ export const Default: Story = {
   },
 };
 
+// ── Individual States ─────────────────────────────────────────
+
 export const WithHint: Story = {
   render: () => {
     const el = document.createElement('civ-combobox') as any;
-    el.label = 'State';
+    el.label = 'State of residence';
     el.name = 'state';
-    el.hint = 'Type to search or use arrow keys';
+    el.hint = 'Type to search or use arrow keys to browse';
     el.options = STATES;
     return el;
   },
@@ -80,9 +84,9 @@ export const WithHint: Story = {
 export const WithError: Story = {
   render: () => {
     const el = document.createElement('civ-combobox') as any;
-    el.label = 'State';
+    el.label = 'State of residence';
     el.name = 'state';
-    el.error = 'Please select a state';
+    el.error = 'Select a valid state';
     el.required = true;
     el.options = STATES;
     return el;
@@ -92,7 +96,7 @@ export const WithError: Story = {
 export const Required: Story = {
   render: () => {
     const el = document.createElement('civ-combobox') as any;
-    el.label = 'State';
+    el.label = 'State of residence';
     el.name = 'state';
     el.required = true;
     el.options = STATES;
@@ -103,7 +107,7 @@ export const Required: Story = {
 export const Disabled: Story = {
   render: () => {
     const el = document.createElement('civ-combobox') as any;
-    el.label = 'State';
+    el.label = 'State of residence';
     el.name = 'state';
     el.disabled = true;
     el.value = 'CA';
@@ -112,16 +116,80 @@ export const Disabled: Story = {
   },
 };
 
-export const Preselected: Story = {
+// ── All States ────────────────────────────────────────────────
+
+export const AllStates: Story = {
+  name: 'All States',
   render: () => {
-    const el = document.createElement('civ-combobox') as any;
-    el.label = 'State of residence';
-    el.name = 'state';
-    el.value = 'CA';
-    el.options = STATES;
-    return el;
+    const container = document.createElement('div');
+    container.style.display = 'flex';
+    container.style.flexDirection = 'column';
+    container.style.gap = '24px';
+
+    const configs = [
+      { label: 'Normal', name: 'normal' },
+      { label: 'With hint', name: 'hint', hint: 'Type to search' },
+      { label: 'With error', name: 'error', error: 'Select a state', required: true },
+      { label: 'Required', name: 'required', required: true },
+      { label: 'Disabled', name: 'disabled', disabled: true, value: 'TX' },
+    ];
+
+    configs.forEach((cfg) => {
+      const el = document.createElement('civ-combobox') as any;
+      el.label = cfg.label;
+      el.name = cfg.name;
+      el.options = STATES;
+      if (cfg.hint) el.hint = cfg.hint;
+      if (cfg.error) el.error = cfg.error;
+      if (cfg.required) el.required = true;
+      if (cfg.disabled) el.disabled = true;
+      if (cfg.value) el.value = cfg.value;
+      container.appendChild(el);
+    });
+
+    return container;
   },
 };
+
+// ── Density Scale ─────────────────────────────────────────────
+
+export const DensityScale: Story = {
+  name: 'Density Scale',
+  render: () => {
+    const wrapper = document.createElement('div');
+    wrapper.style.display = 'flex';
+    wrapper.style.flexDirection = 'column';
+    wrapper.style.gap = '24px';
+
+    const scales = [
+      { attr: 'dense', label: 'Dense' },
+      { attr: '', label: 'Default' },
+      { attr: 'spacious', label: 'Spacious' },
+    ];
+
+    scales.forEach(({ attr, label }) => {
+      const section = document.createElement('div');
+      if (attr) section.setAttribute('data-civ-scale', attr);
+      const p = document.createElement('p');
+      p.style.margin = '0 0 8px';
+      p.style.fontWeight = '600';
+      p.textContent = label;
+      section.appendChild(p);
+
+      const el = document.createElement('civ-combobox') as any;
+      el.label = 'State of residence';
+      el.name = `${attr || 'default'}-state`;
+      el.hint = 'Type to search states';
+      el.options = STATES;
+      section.appendChild(el);
+      wrapper.appendChild(section);
+    });
+
+    return wrapper;
+  },
+};
+
+// ── Variants ──────────────────────────────────────────────────
 
 export const OptionGroups: Story = {
   render: () => {
@@ -139,6 +207,30 @@ export const OptionGroups: Story = {
       { value: 'seattle', label: 'Seattle Regional', group: 'West Coast' },
       { value: 'chicago', label: 'Chicago Regional', group: 'Midwest' },
       { value: 'denver', label: 'Denver Field Office', group: 'Midwest' },
+    ];
+    return el;
+  },
+};
+
+// ── Usage Example ─────────────────────────────────────────────
+
+export const GovernmentOfficeSearch: Story = {
+  name: 'Usage: Office Location Search',
+  render: () => {
+    const el = document.createElement('civ-combobox') as any;
+    el.label = 'Nearest field office';
+    el.name = 'office';
+    el.hint = 'Search by city or office name to find appointments';
+    el.placeholder = 'Type a city or office name...';
+    el.required = true;
+    el.options = [
+      { value: 'dc-hq', label: 'Washington DC - Headquarters', group: 'East Coast' },
+      { value: 'ny-field', label: 'New York - Federal Plaza', group: 'East Coast' },
+      { value: 'boston', label: 'Boston - JFK Federal Building', group: 'East Coast' },
+      { value: 'sf-field', label: 'San Francisco - Federal Building', group: 'West Coast' },
+      { value: 'la-field', label: 'Los Angeles - Federal Building', group: 'West Coast' },
+      { value: 'chicago', label: 'Chicago - Dirksen Building', group: 'Midwest' },
+      { value: 'denver', label: 'Denver - Byron Rogers Building', group: 'Mountain' },
     ];
     return el;
   },

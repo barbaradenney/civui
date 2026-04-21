@@ -68,8 +68,6 @@ Options with a `group` property are rendered inside `<optgroup>` elements. Ungro
 </script>
 ```
 
-
-
 ## Live Examples
 
 ### state
@@ -117,10 +115,19 @@ Options with a `group` property are rendered inside `<optgroup>` elements. Ungro
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### With Disabled Options
+### All States
 
 <iframe
-  src="/civui/storybook/iframe.html?id=forms-inputs-select--with-disabled-options&viewMode=story"
+  src="/civui/storybook/iframe.html?id=forms-inputs-select--all-states&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Density Scale
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-select--density-scale&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
@@ -135,10 +142,10 @@ Options with a `group` property are rendered inside `<optgroup>` elements. Ungro
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### In Native Form
+### Usage: Benefits Application
 
 <iframe
-  src="/civui/storybook/iframe.html?id=forms-inputs-select--in-native-form&viewMode=story"
+  src="/civui/storybook/iframe.html?id=forms-inputs-select--government-benefits-form&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}

@@ -127,8 +127,6 @@ addr.isEmpty();     // true if no fields are filled
 ></civ-address>
 ```
 
-
-
 ## Live Examples
 
 ### mailing
@@ -149,15 +147,6 @@ addr.isEmpty();     // true if no fields are filled
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### Required
-
-<iframe
-  src="/civui/storybook/iframe.html?id=forms-compound-address--required&viewMode=story"
-  width="100%"
-  height="300"
-  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
-></iframe>
-
 ### With Error
 
 <iframe
@@ -167,19 +156,10 @@ addr.isEmpty();     // true if no fields are filled
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### Field Errors
+### Required
 
 <iframe
-  src="/civui/storybook/iframe.html?id=forms-compound-address--field-errors&viewMode=story"
-  width="100%"
-  height="300"
-  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
-></iframe>
-
-### Without Street2
-
-<iframe
-  src="/civui/storybook/iframe.html?id=forms-compound-address--without-street2&viewMode=story"
+  src="/civui/storybook/iframe.html?id=forms-compound-address--required&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
@@ -189,6 +169,33 @@ addr.isEmpty();     // true if no fields are filled
 
 <iframe
   src="/civui/storybook/iframe.html?id=forms-compound-address--disabled&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Individual Field Errors
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-compound-address--field-errors&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### All States
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-compound-address--all-states&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Density Scale
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-compound-address--density-scale&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
@@ -221,19 +228,19 @@ addr.isEmpty();     // true if no fields are filled
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### With Street Line 3
+### All Options Enabled
 
 <iframe
-  src="/civui/storybook/iframe.html?id=forms-compound-address--with-street3&viewMode=story"
+  src="/civui/storybook/iframe.html?id=forms-compound-address--full-options&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### All Options Enabled
+### Usage: Correspondence Address
 
 <iframe
-  src="/civui/storybook/iframe.html?id=forms-compound-address--full-options&viewMode=story"
+  src="/civui/storybook/iframe.html?id=forms-compound-address--government-mailing-form&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}

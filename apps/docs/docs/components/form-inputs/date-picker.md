@@ -85,23 +85,12 @@ The `value` is always in ISO `YYYY-MM-DD` format regardless of the display local
 ></civ-date-picker>
 ```
 
-
-
 ## Live Examples
 
 ### appointment
 
 <iframe
   src="/civui/storybook/iframe.html?id=forms-inputs-date-picker--default&viewMode=story"
-  width="100%"
-  height="300"
-  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
-></iframe>
-
-### With Value
-
-<iframe
-  src="/civui/storybook/iframe.html?id=forms-inputs-date-picker--with-value&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
@@ -143,19 +132,37 @@ The `value` is always in ISO `YYYY-MM-DD` format regardless of the display local
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### Min Max Range
+### With Date Range
 
 <iframe
-  src="/civui/storybook/iframe.html?id=forms-inputs-date-picker--min-max-range&viewMode=story"
+  src="/civui/storybook/iframe.html?id=forms-inputs-date-picker--with-min-max&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### In Native Form
+### All States
 
 <iframe
-  src="/civui/storybook/iframe.html?id=forms-inputs-date-picker--in-native-form&viewMode=story"
+  src="/civui/storybook/iframe.html?id=forms-inputs-date-picker--all-states&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Density Scale
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-date-picker--density-scale&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Usage: Schedule an Appointment
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-date-picker--government-appointment-scheduler&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}

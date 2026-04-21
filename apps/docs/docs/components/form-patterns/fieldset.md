@@ -48,8 +48,6 @@ Setting `disabled` on `civ-fieldset` uses the native `<fieldset disabled>` behav
 </civ-fieldset>
 ```
 
-
-
 ## Live Examples
 
 ### Default

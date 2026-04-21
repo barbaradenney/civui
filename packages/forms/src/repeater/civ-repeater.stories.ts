@@ -25,17 +25,25 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
+// ── Default ───────────────────────────────────────────────────
+
 export const Default: Story = {
   args: {
     legend: 'Dependents',
     name: 'dependents',
     itemLabel: 'dependent',
+    hint: '',
+    error: '',
+    required: false,
+    disabled: false,
   },
   render: (args) => html`
     <civ-repeater
       legend="${args.legend}"
       name="${args.name}"
       item-label="${args.itemLabel}"
+      hint="${args.hint}"
+      error="${args.error}"
       ?required="${args.required}"
       ?disabled="${args.disabled}"
     >
@@ -44,31 +52,7 @@ export const Default: Story = {
   `,
 };
 
-export const MinRows: Story = {
-  render: () => html`
-    <civ-repeater
-      legend="Dependents"
-      name="dependents"
-      item-label="dependent"
-      min="3"
-    >
-      <civ-text-input label="Full name" name="fullName"></civ-text-input>
-    </civ-repeater>
-  `,
-};
-
-export const MaxRows: Story = {
-  render: () => html`
-    <civ-repeater
-      legend="Dependents"
-      name="dependents"
-      item-label="dependent"
-      max="3"
-    >
-      <civ-text-input label="Full name" name="fullName"></civ-text-input>
-    </civ-repeater>
-  `,
-};
+// ── Individual States ─────────────────────────────────────────
 
 export const WithHint: Story = {
   render: () => html`
@@ -97,6 +81,20 @@ export const WithError: Story = {
   `,
 };
 
+export const Required: Story = {
+  render: () => html`
+    <civ-repeater
+      legend="Dependents"
+      name="dependents"
+      item-label="dependent"
+      required
+      min="1"
+    >
+      <civ-text-input label="Full name" name="fullName"></civ-text-input>
+    </civ-repeater>
+  `,
+};
+
 export const Disabled: Story = {
   render: () => html`
     <civ-repeater
@@ -104,6 +102,74 @@ export const Disabled: Story = {
       name="dependents"
       item-label="dependent"
       disabled
+    >
+      <civ-text-input label="Full name" name="fullName"></civ-text-input>
+    </civ-repeater>
+  `,
+};
+
+// ── All States ────────────────────────────────────────────────
+
+export const AllStates: Story = {
+  name: 'All States',
+  render: () => html`
+    <div style="display: flex; flex-direction: column; gap: 32px;">
+      <civ-repeater legend="Normal" name="normal" item-label="item">
+        <civ-text-input label="Name" name="name"></civ-text-input>
+      </civ-repeater>
+      <civ-repeater legend="With hint" name="hint" item-label="item" hint="Add items as needed">
+        <civ-text-input label="Name" name="name"></civ-text-input>
+      </civ-repeater>
+      <civ-repeater legend="With error" name="error" item-label="item" error="Add at least one item" required>
+        <civ-text-input label="Name" name="name"></civ-text-input>
+      </civ-repeater>
+      <civ-repeater legend="Disabled" name="disabled" item-label="item" disabled>
+        <civ-text-input label="Name" name="name"></civ-text-input>
+      </civ-repeater>
+    </div>
+  `,
+};
+
+// ── Density Scale ─────────────────────────────────────────────
+
+export const DensityScale: Story = {
+  name: 'Density Scale',
+  render: () => html`
+    <div style="display: flex; flex-direction: column; gap: 24px;">
+      <div data-civ-scale="dense">
+        <p style="margin: 0 0 8px; font-weight: 600;">Dense</p>
+        <civ-repeater legend="Dependents" name="dense-deps" item-label="dependent">
+          <civ-text-input label="Full name" name="fullName"></civ-text-input>
+        </civ-repeater>
+      </div>
+      <div>
+        <p style="margin: 0 0 8px; font-weight: 600;">Default</p>
+        <civ-repeater legend="Dependents" name="default-deps" item-label="dependent">
+          <civ-text-input label="Full name" name="fullName"></civ-text-input>
+        </civ-repeater>
+      </div>
+      <div data-civ-scale="spacious">
+        <p style="margin: 0 0 8px; font-weight: 600;">Spacious</p>
+        <civ-repeater legend="Dependents" name="spacious-deps" item-label="dependent">
+          <civ-text-input label="Full name" name="fullName"></civ-text-input>
+        </civ-repeater>
+      </div>
+    </div>
+  `,
+};
+
+// ── Variants ──────────────────────────────────────────────────
+
+export const MinMax: Story = {
+  name: 'Min/Max Rows',
+  render: () => html`
+    <civ-repeater
+      legend="Dependents"
+      name="dependents"
+      item-label="dependent"
+      min="1"
+      max="5"
+      hint="You must list at least 1 and no more than 5 dependents"
     >
       <civ-text-input label="Full name" name="fullName"></civ-text-input>
     </civ-repeater>
@@ -123,8 +189,10 @@ export const MultipleFields: Story = {
   `,
 };
 
-export const ServicePeriods: Story = {
-  name: 'Service Periods (Detail Mode)',
+// ── Usage Example ─────────────────────────────────────────────
+
+export const GovernmentServicePeriods: Story = {
+  name: 'Usage: Service Periods',
   render: () => html`
     <civ-repeater
       legend="Service periods"
@@ -133,7 +201,7 @@ export const ServicePeriods: Story = {
       mode="detail"
       min="1"
       max="10"
-      hint="Add each period of service separately"
+      hint="Add each period of military service separately"
     >
       <civ-text-input label="Branch of service" name="branch" required></civ-text-input>
       <civ-memorable-date legend="Service start date" name="startDate" required hint="Enter your best estimate if unsure"></civ-memorable-date>
@@ -150,20 +218,4 @@ export const ServicePeriods: Story = {
     ];
     selects.forEach(s => { s.options = options; });
   },
-};
-
-export const PhoneNumbers: Story = {
-  name: 'Additional Phone Numbers (Inline)',
-  render: () => html`
-    <civ-repeater
-      legend="Additional phone numbers"
-      name="phones"
-      item-label="phone number"
-      min="0"
-      max="5"
-    >
-      <civ-text-input label="Phone number" name="phone" type="tel" mask="phone-us" validate="phone"></civ-text-input>
-      <civ-text-input label="Label" name="phoneLabel" hint="For example: Work, Partner"></civ-text-input>
-    </civ-repeater>
-  `,
 };

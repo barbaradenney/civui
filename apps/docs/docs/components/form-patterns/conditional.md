@@ -82,8 +82,6 @@ For performance, event listeners are scoped to the nearest ancestor:
 </civ-conditional>
 ```
 
-
-
 ## Live Examples
 
 ### Default

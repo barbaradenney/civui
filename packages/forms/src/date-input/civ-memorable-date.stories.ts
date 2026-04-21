@@ -23,6 +23,8 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
+// ── Default ───────────────────────────────────────────────────
+
 export const Default: Story = {
   args: {
     legend: 'Date of birth',
@@ -46,6 +48,8 @@ export const Default: Story = {
   `,
 };
 
+// ── Individual States ─────────────────────────────────────────
+
 export const WithHint: Story = {
   render: () => html`
     <civ-memorable-date
@@ -63,16 +67,6 @@ export const WithError: Story = {
       name="dob"
       error="Enter a valid date of birth"
       hint="For example: January 15 1990"
-    ></civ-memorable-date>
-  `,
-};
-
-export const Prefilled: Story = {
-  render: () => html`
-    <civ-memorable-date
-      legend="Date of birth"
-      name="dob"
-      value="1990-07-04"
     ></civ-memorable-date>
   `,
 };
@@ -99,20 +93,72 @@ export const Disabled: Story = {
   `,
 };
 
+export const Prefilled: Story = {
+  render: () => html`
+    <civ-memorable-date
+      legend="Date of birth"
+      name="dob"
+      value="1990-07-04"
+    ></civ-memorable-date>
+  `,
+};
+
+// ── All States ────────────────────────────────────────────────
+
+export const AllStates: Story = {
+  name: 'All States',
+  render: () => html`
+    <div style="display: flex; flex-direction: column; gap: 24px;">
+      <civ-memorable-date legend="Normal" name="normal"></civ-memorable-date>
+      <civ-memorable-date legend="With hint" name="hint" hint="For example: January 15 1990"></civ-memorable-date>
+      <civ-memorable-date legend="With error" name="error" error="Enter a valid date" hint="For example: January 15 1990"></civ-memorable-date>
+      <civ-memorable-date legend="Required" name="required" required></civ-memorable-date>
+      <civ-memorable-date legend="Disabled" name="disabled" value="1990-07-04" disabled></civ-memorable-date>
+    </div>
+  `,
+};
+
+// ── Density Scale ─────────────────────────────────────────────
+
+export const DensityScale: Story = {
+  name: 'Density Scale',
+  render: () => html`
+    <div style="display: flex; flex-direction: column; gap: 24px;">
+      <div data-civ-scale="dense">
+        <p style="margin: 0 0 8px; font-weight: 600;">Dense</p>
+        <civ-memorable-date legend="Date of birth" name="dense-dob" hint="For example: January 15 1990"></civ-memorable-date>
+      </div>
+      <div>
+        <p style="margin: 0 0 8px; font-weight: 600;">Default</p>
+        <civ-memorable-date legend="Date of birth" name="default-dob" hint="For example: January 15 1990"></civ-memorable-date>
+      </div>
+      <div data-civ-scale="spacious">
+        <p style="margin: 0 0 8px; font-weight: 600;">Spacious</p>
+        <civ-memorable-date legend="Date of birth" name="spacious-dob" hint="For example: January 15 1990"></civ-memorable-date>
+      </div>
+    </div>
+  `,
+};
+
+// ── Variants ──────────────────────────────────────────────────
+
 export const CustomLabels: Story = {
   render: () => html`
     <civ-memorable-date
       legend="Fecha de nacimiento"
       name="dob"
       month-label="Mes"
-      day-label="Día"
-      year-label="Año"
+      day-label="Dia"
+      year-label="Ano"
       hint="Por ejemplo: enero 15 1990"
     ></civ-memorable-date>
   `,
 };
 
-export const InForm: Story = {
+// ── Usage Example ─────────────────────────────────────────────
+
+export const GovernmentIdentityVerification: Story = {
+  name: 'Usage: Identity Verification',
   render: () => html`
     <form
       @submit="${(e: Event) => {
@@ -121,17 +167,23 @@ export const InForm: Story = {
         alert(JSON.stringify(Object.fromEntries(data)));
       }}"
     >
+      <h3 style="margin: 0 0 16px; font-size: 1.25rem;">Verify your identity</h3>
       <civ-memorable-date
         legend="Date of birth"
         name="dob"
         hint="For example: January 15 1990"
         required
       ></civ-memorable-date>
+      <civ-memorable-date
+        legend="Date of marriage (if applicable)"
+        name="marriage-date"
+        hint="For example: June 10 2015"
+      ></civ-memorable-date>
       <button
         type="submit"
         style="margin-top: 16px; padding: 8px 24px; background: #005ea2; color: white; border: none; border-radius: 4px; cursor: pointer;"
       >
-        Submit
+        Verify
       </button>
     </form>
   `,

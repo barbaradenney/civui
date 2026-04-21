@@ -72,8 +72,6 @@ Add `danger` to any variant for destructive action styling.
 <civ-link href="/locked" variant="secondary" disabled label="Locked section"></civ-link>
 ```
 
-
-
 ## Live Examples
 
 ### Default
@@ -85,28 +83,55 @@ Add `danger` to any variant for destructive action styling.
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### Link Variants
+### Primary
 
 <iframe
-  src="/civui/storybook/iframe.html?id=ui-link--variants&viewMode=story"
+  src="/civui/storybook/iframe.html?id=ui-link--primary&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### Danger Variants
+### Secondary
 
 <iframe
-  src="/civui/storybook/iframe.html?id=ui-link--danger-variants&viewMode=story"
+  src="/civui/storybook/iframe.html?id=ui-link--secondary&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### Back Link
+### Tertiary
 
 <iframe
-  src="/civui/storybook/iframe.html?id=ui-link--back-link&viewMode=story"
+  src="/civui/storybook/iframe.html?id=ui-link--tertiary&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### All Variants
+
+<iframe
+  src="/civui/storybook/iframe.html?id=ui-link--back&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### All Variants
+
+<iframe
+  src="/civui/storybook/iframe.html?id=ui-link--all-variants&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Danger
+
+<iframe
+  src="/civui/storybook/iframe.html?id=ui-link--danger&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
@@ -121,10 +146,28 @@ Add `danger` to any variant for destructive action styling.
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
+### Density Scale
+
+<iframe
+  src="/civui/storybook/iframe.html?id=ui-link--density-scale&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
 ### In Context
 
 <iframe
   src="/civui/storybook/iframe.html?id=ui-link--in-context&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Benefits Navigation
+
+<iframe
+  src="/civui/storybook/iframe.html?id=ui-link--benefits-navigation&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}

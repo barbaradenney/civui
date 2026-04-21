@@ -122,11 +122,9 @@ When the `validate` attribute is set, validation runs automatically on blur and 
 ></civ-text-input>
 ```
 
-
-
 ## Live Examples
 
-### text-input
+### full-name
 
 <iframe
   src="/civui/storybook/iframe.html?id=forms-inputs-text-input--default&viewMode=story"
@@ -135,7 +133,7 @@ When the `validate` attribute is set, validation runs automatically on blur and 
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### email
+### With Hint
 
 <iframe
   src="/civui/storybook/iframe.html?id=forms-inputs-text-input--with-hint&viewMode=story"
@@ -144,7 +142,7 @@ When the `validate` attribute is set, validation runs automatically on blur and 
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### email
+### With Error
 
 <iframe
   src="/civui/storybook/iframe.html?id=forms-inputs-text-input--with-error&viewMode=story"
@@ -153,7 +151,7 @@ When the `validate` attribute is set, validation runs automatically on blur and 
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### full-name
+### Required
 
 <iframe
   src="/civui/storybook/iframe.html?id=forms-inputs-text-input--required&viewMode=story"
@@ -162,10 +160,28 @@ When the `validate` attribute is set, validation runs automatically on blur and 
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### disabled
+### Disabled
 
 <iframe
   src="/civui/storybook/iframe.html?id=forms-inputs-text-input--disabled&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### All States
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-text-input--all-states&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
+></iframe>
+
+### Density Scale
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-text-input--density-scale&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
@@ -189,25 +205,7 @@ When the `validate` attribute is set, validation runs automatically on blur and 
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### In Native Form
-
-<iframe
-  src="/civui/storybook/iframe.html?id=forms-inputs-text-input--in-native-form&viewMode=story"
-  width="100%"
-  height="300"
-  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
-></iframe>
-
-### External Label
-
-<iframe
-  src="/civui/storybook/iframe.html?id=forms-inputs-text-input--external-label&viewMode=story"
-  width="100%"
-  height="300"
-  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
-></iframe>
-
-### ssn
+### Mask: Social Security number
 
 <iframe
   src="/civui/storybook/iframe.html?id=forms-inputs-text-input--mask-ssn&viewMode=story"
@@ -216,7 +214,7 @@ When the `validate` attribute is set, validation runs automatically on blur and 
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### phone
+### Mask: Phone number
 
 <iframe
   src="/civui/storybook/iframe.html?id=forms-inputs-text-input--mask-phone-us&viewMode=story"
@@ -225,7 +223,7 @@ When the `validate` attribute is set, validation runs automatically on blur and 
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### zip
+### Mask: ZIP code
 
 <iframe
   src="/civui/storybook/iframe.html?id=forms-inputs-text-input--mask-zip&viewMode=story"
@@ -234,7 +232,7 @@ When the `validate` attribute is set, validation runs automatically on blur and 
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### ein
+### Mask: Employer Identification Number
 
 <iframe
   src="/civui/storybook/iframe.html?id=forms-inputs-text-input--mask-ein&viewMode=story"
@@ -243,7 +241,7 @@ When the `validate` attribute is set, validation runs automatically on blur and 
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### salary
+### Mask: Currency
 
 <iframe
   src="/civui/storybook/iframe.html?id=forms-inputs-text-input--mask-currency&viewMode=story"
@@ -252,28 +250,10 @@ When the `validate` attribute is set, validation runs automatically on blur and 
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### ref-code
+### Mask: Custom pattern
 
 <iframe
   src="/civui/storybook/iframe.html?id=forms-inputs-text-input--mask-custom&viewMode=story"
-  width="100%"
-  height="300"
-  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
-></iframe>
-
-### Mask In Form
-
-<iframe
-  src="/civui/storybook/iframe.html?id=forms-inputs-text-input--mask-in-form&viewMode=story"
-  width="100%"
-  height="300"
-  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
-></iframe>
-
-### ssn
-
-<iframe
-  src="/civui/storybook/iframe.html?id=forms-inputs-text-input--mask-with-error&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
@@ -288,24 +268,6 @@ When the `validate` attribute is set, validation runs automatically on blur and 
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### Validate Phone Intl
-
-<iframe
-  src="/civui/storybook/iframe.html?id=forms-inputs-text-input--validate-phone-intl&viewMode=story"
-  width="100%"
-  height="300"
-  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
-></iframe>
-
-### Validate URL
-
-<iframe
-  src="/civui/storybook/iframe.html?id=forms-inputs-text-input--validate-url&viewMode=story"
-  width="100%"
-  height="300"
-  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
-></iframe>
-
 ### Validate ZIP
 
 <iframe
@@ -315,19 +277,10 @@ When the `validate` attribute is set, validation runs automatically on blur and 
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
 ></iframe>
 
-### Validate USState
+### Usage: Government Contact Form
 
 <iframe
-  src="/civui/storybook/iframe.html?id=forms-inputs-text-input--validate-usstate&viewMode=story"
-  width="100%"
-  height="300"
-  style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}
-></iframe>
-
-### Mixed Validation Form
-
-<iframe
-  src="/civui/storybook/iframe.html?id=forms-inputs-text-input--mixed-validation-form&viewMode=story"
+  src="/civui/storybook/iframe.html?id=forms-inputs-text-input--government-contact-form&viewMode=story"
   width="100%"
   height="300"
   style={{border: "1px solid #dfe1e2", borderRadius: "6px"}}

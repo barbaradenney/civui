@@ -78,6 +78,11 @@ export class CivFormStep extends CivBaseElement {
       this._steps = Array.from(this.children).filter(
         el => el.nodeType === Node.ELEMENT_NODE
       );
+      // Remove children from DOM before Lit renders its template,
+      // otherwise Lit's render will destroy these DOM nodes
+      for (const step of this._steps) {
+        step.remove();
+      }
       this._captured = true;
     }
     super.connectedCallback();

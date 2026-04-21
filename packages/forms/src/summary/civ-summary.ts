@@ -31,8 +31,6 @@ export interface SummaryItem {
   label: string;
   /** Value to display. Falsy values render as "Not provided". */
   value?: string | string[];
-  /** Where the data came from. Shows an annotation tag when set to 'profile'. */
-  source?: 'profile' | 'user' | 'api';
   /** Optional inline action link (e.g., for conflict resolution). */
   action?: { label: string; href: string };
 }
@@ -85,14 +83,9 @@ export class CivSummary extends CivBaseElement {
     const statusTag = section.status ? STATUS_TAG[section.status] : undefined;
 
     return html`
-      <div class="civ-summary-section civ-mb-6 civ-border-b civ-border-base-lighter civ-pb-4">
-        <div class="civ-flex civ-justify-between civ-items-center civ-mb-3">
-          <div class="civ-flex civ-items-center civ-gap-2">
-            <h3 class="civ-heading-md">${section.heading}</h3>
-            ${section.locked
-              ? html`<civ-tag label="${t('summaryLockedLabel')}" variant="gray" tag-style="secondary"></civ-tag>`
-              : nothing}
-          </div>
+      <div class="civ-summary-section civ-py-4 civ-border-b civ-border-base-lighter">
+        <div class="civ-flex civ-justify-between civ-items-center civ-mb-2">
+          <h3 class="civ-heading-md">${section.heading}</h3>
           <div class="civ-flex civ-items-center civ-gap-3">
             ${statusTag ? html`
               <civ-tag
@@ -101,23 +94,23 @@ export class CivSummary extends CivBaseElement {
                 tag-style="${statusTag.style || 'secondary'}"
               ></civ-tag>
             ` : nothing}
-            ${safeHref ? html`
-              <a
-                href="${safeHref}"
-                class="civ-link"
-                aria-label="${editAriaLabel}"
-                @click="${(e: Event) => this._onEdit(e, section)}"
-              >${editLabel}</a>
-            ` : nothing}
+          ${safeHref ? html`
+            <civ-link
+              href="${safeHref}"
+              variant="tertiary"
+              label="${editLabel}"
+              aria-label="${editAriaLabel}"
+              @click="${(e: Event) => this._onEdit(e, section)}"
+            ></civ-link>
+          ` : nothing}
           </div>
         </div>
-        <dl class="civ-summary-list">
+        <dl class="civ-summary-list civ-m-0">
           ${section.items.map(item => html`
             <civ-read-only-field
               label="${item.label}"
               value="${Array.isArray(item.value) ? '' : (item.value || '')}"
               .values="${Array.isArray(item.value) ? item.value : []}"
-              source="${item.source || ''}"
               action-label="${item.action?.label || ''}"
               action-href="${item.action?.href || ''}"
             ></civ-read-only-field>

@@ -117,9 +117,9 @@ export const Step2a_LockedChapter: Story = {
           editHref: '/profile/settings',
           locked: true,
           items: [
-            { label: 'Name', value: 'Jane M. Doe', source: 'profile' as const },
-            { label: 'Date of birth', value: 'March 15, 1985', source: 'profile' as const },
-            { label: 'Social Security number', value: '\u25CF\u25CF\u25CF-\u25CF\u25CF-6789', source: 'profile' as const },
+            { label: 'Name', value: 'Jane M. Doe' },
+            { label: 'Date of birth', value: 'March 15, 1985' },
+            { label: 'Social Security number', value: '\u25CF\u25CF\u25CF-\u25CF\u25CF-6789' },
           ],
         },
       ];
@@ -159,14 +159,14 @@ export const Step2b_PrefillWithMoreSteps: Story = {
           heading: 'Phone number',
           editHref: '#/contact/phone',
           items: [
-            { label: 'Mobile phone', value: '(555) 123-4567', source: 'profile' as const },
+            { label: 'Mobile phone', value: '(555) 123-4567' },
           ],
         },
         {
           heading: 'Email address',
           editHref: '#/contact/email',
           items: [
-            { label: 'Email', value: 'jane.doe@example.com', source: 'profile' as const },
+            { label: 'Email', value: 'jane.doe@example.com' },
           ],
         },
         {
@@ -223,7 +223,7 @@ export const Step2c_ConflictChapter: Story = {
           heading: 'Email address',
           status: 'complete' as const,
           items: [
-            { label: 'Email', value: 'jane.doe@example.com', source: 'profile' as const },
+            { label: 'Email', value: 'jane.doe@example.com' },
           ],
         },
       ];
@@ -299,7 +299,7 @@ export const Step4_ChapterComplete: Story = {
           editHref: '#/contact/phone',
           status: 'complete' as const,
           items: [
-            { label: 'Mobile phone', value: '(555) 987-6543', source: 'profile' as const },
+            { label: 'Mobile phone', value: '(555) 987-6543' },
           ],
         },
         {
@@ -307,7 +307,7 @@ export const Step4_ChapterComplete: Story = {
           editHref: '#/contact/email',
           status: 'complete' as const,
           items: [
-            { label: 'Email', value: 'jane.doe@example.com', source: 'profile' as const },
+            { label: 'Email', value: 'jane.doe@example.com' },
           ],
         },
         {

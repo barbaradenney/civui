@@ -65,7 +65,6 @@ describe('civ-summary', () => {
     await elementUpdated(el);
 
     const dds = el.querySelectorAll('dd');
-    // Phone number (3rd item in first section) has no value
     expect(dds[2].textContent).toContain('Not provided');
   });
 
@@ -74,19 +73,19 @@ describe('civ-summary', () => {
     el.sections = sampleSections;
     await elementUpdated(el);
 
-    const links = el.querySelectorAll('a.civ-link');
+    const links = el.querySelectorAll('.civ-summary-section > div > div > civ-link');
     expect(links.length).toBe(2);
     expect(links[0].getAttribute('href')).toBe('#step-1');
     expect(links[1].getAttribute('href')).toBe('#step-2');
   });
 
-  it('edit links have accessible aria-label', async () => {
+  it('edit links use tertiary variant', async () => {
     const el = await fixture<CivSummary>('<civ-summary></civ-summary>') as CivSummary;
     el.sections = sampleSections;
     await elementUpdated(el);
 
-    const links = el.querySelectorAll('a.civ-link');
-    expect(links[0].getAttribute('aria-label')).toBe('Edit Personal information');
+    const link = el.querySelector('.civ-summary-section civ-link');
+    expect(link!.getAttribute('variant')).toBe('tertiary');
   });
 
   it('fires civ-summary-edit when edit is clicked', async () => {
@@ -99,7 +98,7 @@ describe('civ-summary', () => {
       eventDetail = e.detail;
     }) as EventListener);
 
-    const link = el.querySelector('a.civ-link')! as HTMLAnchorElement;
+    const link = el.querySelector('.civ-summary-section civ-link') as HTMLElement;
     link.click();
 
     expect(eventDetail).not.toBeNull();
@@ -117,7 +116,7 @@ describe('civ-summary', () => {
     ];
     await elementUpdated(el);
 
-    const links = el.querySelectorAll('a.civ-link');
+    const links = el.querySelectorAll('.civ-summary-section civ-link');
     expect(links.length).toBe(0);
   });
 
@@ -172,8 +171,8 @@ describe('civ-summary', () => {
     ];
     await elementUpdated(el);
 
-    const links = el.querySelectorAll('a.civ-link');
-    expect(links.length).toBe(0); // link should not render
+    const links = el.querySelectorAll('.civ-summary-section civ-link');
+    expect(links.length).toBe(0);
   });
 
   it('allows hash, relative, and http(s) URLs in editHref', async () => {
@@ -185,7 +184,7 @@ describe('civ-summary', () => {
     ];
     await elementUpdated(el);
 
-    const links = el.querySelectorAll('a.civ-link');
+    const links = el.querySelectorAll('.civ-summary-section civ-link');
     expect(links.length).toBe(3);
   });
 
@@ -198,7 +197,7 @@ describe('civ-summary', () => {
       const handler = vi.fn();
       el.addEventListener('civ-analytics', handler as EventListener);
 
-      const link = el.querySelector('a.civ-link')! as HTMLAnchorElement;
+      const link = el.querySelector('.civ-summary-section civ-link') as HTMLElement;
       link.click();
 
       expect(handler).toHaveBeenCalledOnce();

@@ -210,9 +210,9 @@ export const PrefillHubPage: Story = {
           status: 'complete',
           locked: true,
           items: [
-            { label: 'Name', value: 'Jane M. Doe', source: 'profile' },
-            { label: 'Date of birth', value: 'March 15, 1985', source: 'profile' },
-            { label: 'SSN', value: '\u25CF\u25CF\u25CF-\u25CF\u25CF-6789', source: 'profile' },
+            { label: 'Name', value: 'Jane M. Doe' },
+            { label: 'Date of birth', value: 'March 15, 1985' },
+            { label: 'SSN', value: '\u25CF\u25CF\u25CF-\u25CF\u25CF-6789' },
           ],
         },
         {
@@ -220,8 +220,8 @@ export const PrefillHubPage: Story = {
           editHref: '#/contact',
           status: 'in-progress',
           items: [
-            { label: 'Phone', value: '(555) 123-4567', source: 'profile' },
-            { label: 'Email', value: 'jane@example.com', source: 'profile' },
+            { label: 'Phone', value: '(555) 123-4567' },
+            { label: 'Email', value: 'jane@example.com' },
           ],
         },
         {
@@ -262,7 +262,7 @@ export const PrefillConflict: Story = {
           editHref: '#/contact/email',
           status: 'complete',
           items: [
-            { label: 'Email', value: 'jane@example.com', source: 'profile' },
+            { label: 'Email', value: 'jane@example.com' },
           ],
         },
       ];
@@ -284,17 +284,17 @@ export const PrefillReviewPage: Story = {
           editHref: '/profile/settings',
           locked: true,
           items: [
-            { label: 'Name', value: 'Jane M. Doe', source: 'profile' },
-            { label: 'Date of birth', value: 'March 15, 1985', source: 'profile' },
-            { label: 'SSN', value: '\u25CF\u25CF\u25CF-\u25CF\u25CF-6789', source: 'profile' },
+            { label: 'Name', value: 'Jane M. Doe' },
+            { label: 'Date of birth', value: 'March 15, 1985' },
+            { label: 'SSN', value: '\u25CF\u25CF\u25CF-\u25CF\u25CF-6789' },
           ],
         },
         {
           heading: 'Contact information',
           editHref: '#/contact',
           items: [
-            { label: 'Phone', value: '(555) 987-6543', source: 'profile' },
-            { label: 'Email', value: 'updated@example.com', source: 'user' },
+            { label: 'Phone', value: '(555) 987-6543' },
+            { label: 'Email', value: 'updated@example.com' },
           ],
         },
         {

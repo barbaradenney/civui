@@ -182,11 +182,8 @@ export interface CivLocaleStrings {
   summaryEditLink: string;
   summaryEditAriaLabel: string; // "Edit {section}"
   summaryNotProvided: string;
-  summarySourceProfile: string;
-
   // Summary prefill
   summaryEditProfile: string;
-  summaryLockedLabel: string;
 
   // Task prefill
   taskPrefillHint: string;
@@ -366,10 +363,7 @@ const defaultStrings: CivLocaleStrings = {
   summaryEditLink: 'Edit',
   summaryEditAriaLabel: 'Edit {section}',
   summaryNotProvided: 'Not provided',
-  summarySourceProfile: 'From your profile',
-
   summaryEditProfile: 'Update on your profile',
-  summaryLockedLabel: 'From your profile',
 
   taskPrefillHint: 'We prefilled some information \u2014 please review',
 

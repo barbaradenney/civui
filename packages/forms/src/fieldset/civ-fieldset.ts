@@ -2,7 +2,8 @@
 
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBaseElement, LightDomContainerMixin, renderLegend, renderHint, renderError, buildDescribedBy } from '@civui/core';
+import { CivBaseElement, LightDomSlotMixin, renderLegend, renderHint, renderError, buildDescribedBy } from '@civui/core';
+import type { SlotConfig } from '@civui/core';
 
 /**
  * CivUI Fieldset
@@ -17,7 +18,11 @@ import { CivBaseElement, LightDomContainerMixin, renderLegend, renderHint, rende
  * @element civ-fieldset
  */
 @customElement('civ-fieldset')
-export class CivFieldset extends LightDomContainerMixin(CivBaseElement) {
+export class CivFieldset extends LightDomSlotMixin(CivBaseElement) {
+  override _getSlotConfig(): SlotConfig {
+    return { default: '[data-civ-fieldset-content]' };
+  }
+
   @property({ type: String }) legend = '';
   @property({ type: String }) hint = '';
   @property({ type: String }) error = '';
@@ -27,7 +32,7 @@ export class CivFieldset extends LightDomContainerMixin(CivBaseElement) {
   private _hintId = this.generateId('hint');
   private _errorId = this.generateId('error');
   override firstUpdated(): void {
-    this._relocateChildren('[data-civ-fieldset-content]');
+    this._relocateSlots();
   }
 
   override render() {

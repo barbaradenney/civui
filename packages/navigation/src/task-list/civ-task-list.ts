@@ -1,6 +1,7 @@
 import { html } from 'lit';
 import { customElement } from 'lit/decorators.js';
-import { CivBaseElement, LightDomContainerMixin } from '@civui/core';
+import { CivBaseElement, LightDomSlotMixin } from '@civui/core';
+import type { SlotConfig } from '@civui/core';
 
 /**
  * CivUI Task List
@@ -25,9 +26,13 @@ import { CivBaseElement, LightDomContainerMixin } from '@civui/core';
  * ```
  */
 @customElement('civ-task-list')
-export class CivTaskList extends LightDomContainerMixin(CivBaseElement) {
+export class CivTaskList extends LightDomSlotMixin(CivBaseElement) {
+  override _getSlotConfig(): SlotConfig {
+    return { default: '[data-civ-task-list-content]' };
+  }
+
   override firstUpdated(): void {
-    this._relocateChildren('[data-civ-task-list-content]');
+    this._relocateSlots();
   }
 
   override render() {

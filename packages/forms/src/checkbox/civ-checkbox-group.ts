@@ -1,6 +1,7 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivFormElement, LightDomContainerMixin, dispatch, renderLegend, renderHint, renderError, syncGroupDisabled, stopChildEvent, syncLegendToLabel, t, interpolate } from '@civui/core';
+import { CivFormElement, LightDomSlotMixin, dispatch, renderLegend, renderHint, renderError, syncGroupDisabled, stopChildEvent, syncLegendToLabel, t, interpolate } from '@civui/core';
+import type { SlotConfig } from '@civui/core';
 import type { CivCheckbox } from './civ-checkbox.js';
 
 /**
@@ -28,7 +29,11 @@ import type { CivCheckbox } from './civ-checkbox.js';
  * @fires civ-analytics - Analytics tracking event on change
  */
 @customElement('civ-checkbox-group')
-export class CivCheckboxGroup extends LightDomContainerMixin(CivFormElement) {
+export class CivCheckboxGroup extends LightDomSlotMixin(CivFormElement) {
+  override _getSlotConfig(): SlotConfig {
+    return { default: '.civ-group-layout--vertical, .civ-group-layout--horizontal' };
+  }
+
   @property({ type: String }) legend = '';
   @property({ type: Boolean, reflect: true }) tile = false;
   @property({ type: String, reflect: true }) orientation: 'vertical' | 'horizontal' = 'vertical';
@@ -52,7 +57,7 @@ export class CivCheckboxGroup extends LightDomContainerMixin(CivFormElement) {
   }
 
   override firstUpdated(): void {
-    this._relocateChildren('.civ-group-layout--vertical, .civ-group-layout--horizontal');
+    this._relocateSlots();
 
     const checkboxes = this._getCheckboxes();
     this._syncCheckboxNames(checkboxes);

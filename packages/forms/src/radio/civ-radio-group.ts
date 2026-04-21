@@ -1,6 +1,7 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivFormElement, LightDomContainerMixin, dispatch, renderLegend, renderHint, renderError, resolveGroupNavIndex, isRtl, syncGroupDisabled, stopChildEvent, syncLegendToLabel } from '@civui/core';
+import { CivFormElement, LightDomSlotMixin, dispatch, renderLegend, renderHint, renderError, resolveGroupNavIndex, isRtl, syncGroupDisabled, stopChildEvent, syncLegendToLabel } from '@civui/core';
+import type { SlotConfig } from '@civui/core';
 import type { CivRadio } from './civ-radio.js';
 
 /**
@@ -28,7 +29,11 @@ import type { CivRadio } from './civ-radio.js';
  * @fires civ-analytics - Analytics tracking event on change
  */
 @customElement('civ-radio-group')
-export class CivRadioGroup extends LightDomContainerMixin(CivFormElement) {
+export class CivRadioGroup extends LightDomSlotMixin(CivFormElement) {
+  override _getSlotConfig(): SlotConfig {
+    return { default: '.civ-group-layout--vertical, .civ-group-layout--horizontal' };
+  }
+
   @property({ type: String }) legend = '';
   @property({ type: Boolean, reflect: true }) tile = false;
   @property({ type: String, reflect: true }) orientation: 'vertical' | 'horizontal' = 'vertical';
@@ -58,7 +63,7 @@ export class CivRadioGroup extends LightDomContainerMixin(CivFormElement) {
   }
 
   override firstUpdated(): void {
-    this._relocateChildren('.civ-group-layout--vertical, .civ-group-layout--horizontal');
+    this._relocateSlots();
 
     const radios = this._getRadios();
     this._syncRadioNames(radios);

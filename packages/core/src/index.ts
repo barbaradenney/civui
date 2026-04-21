@@ -2,7 +2,7 @@
 export { CivBaseElement } from './base/civ-base-element.js';
 export { CivFormElement } from './base/civ-form-element.js';
 export { CivBooleanFormElement } from './base/civ-boolean-form-element.js';
-export { LightDomSlotMixin, LightDomContainerMixin, LightDomTextMixin } from './base/light-dom-mixins.js';
+export { LightDomSlotMixin, LightDomTextMixin } from './base/light-dom-mixins.js';
 export type { SlotConfig } from './base/light-dom-mixins.js';
 
 // A11y utilities

@@ -2,7 +2,8 @@
 
 import { html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBaseElement, LightDomContainerMixin, renderLabel, renderHint, renderError, buildDescribedBy } from '@civui/core';
+import { CivBaseElement, LightDomSlotMixin, renderLabel, renderHint, renderError, buildDescribedBy } from '@civui/core';
+import type { SlotConfig } from '@civui/core';
 
 const FORM_INPUT_SELECTOR = 'input, select, textarea';
 
@@ -16,7 +17,11 @@ const FORM_INPUT_SELECTOR = 'input, select, textarea';
  * @element civ-form-group
  */
 @customElement('civ-form-group')
-export class CivFormGroup extends LightDomContainerMixin(CivBaseElement) {
+export class CivFormGroup extends LightDomSlotMixin(CivBaseElement) {
+  override _getSlotConfig(): SlotConfig {
+    return { default: '[data-civ-form-group-content]' };
+  }
+
   @property({ type: String }) label = '';
   @property({ type: String }) hint = '';
   @property({ type: String }) error = '';
@@ -26,7 +31,7 @@ export class CivFormGroup extends LightDomContainerMixin(CivBaseElement) {
   private _hintId = this.generateId('hint');
   private _errorId = this.generateId('error');
   override firstUpdated(): void {
-    this._relocateChildren('[data-civ-form-group-content]');
+    this._relocateSlots();
     this._wireAriaDescribedBy();
   }
 

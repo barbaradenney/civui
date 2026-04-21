@@ -1,6 +1,7 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivFormElement, LightDomContainerMixin, dispatch, renderLegend, renderHint, renderError, resolveGroupNavIndex, isRtl, syncGroupDisabled, stopChildEvent, syncLegendToLabel } from '@civui/core';
+import { CivFormElement, LightDomSlotMixin, dispatch, renderLegend, renderHint, renderError, resolveGroupNavIndex, isRtl, syncGroupDisabled, stopChildEvent, syncLegendToLabel } from '@civui/core';
+import type { SlotConfig } from '@civui/core';
 import type { CivSegment } from './civ-segment.js';
 
 /**
@@ -26,7 +27,11 @@ import type { CivSegment } from './civ-segment.js';
  * @fires civ-analytics - Analytics tracking event on change
  */
 @customElement('civ-segmented-control')
-export class CivSegmentedControl extends LightDomContainerMixin(CivFormElement) {
+export class CivSegmentedControl extends LightDomSlotMixin(CivFormElement) {
+  override _getSlotConfig(): SlotConfig {
+    return { default: '[data-civ-segment-content]' };
+  }
+
   @property({ type: String }) legend = '';
 
   protected override _defaultValue = '';
@@ -54,7 +59,7 @@ export class CivSegmentedControl extends LightDomContainerMixin(CivFormElement) 
   }
 
   override firstUpdated(): void {
-    this._relocateChildren('[data-civ-segment-content]');
+    this._relocateSlots();
 
     const segments = this._getSegments();
     this._syncSegmentSelected(segments);

@@ -71,8 +71,8 @@ function discoverComponents(): ComponentFile[] {
 // ── Rules ────────────────────────────────────────────────────
 
 function checkBaseClass(comp: ComponentFile) {
-  const isFormComponent = /extends\s+(CivFormElement|CivBooleanFormElement|LightDomContainerMixin\(CivFormElement\))/.test(comp.src);
-  const isBaseComponent = /extends\s+(CivBaseElement|LightDomContainerMixin\(CivBaseElement\))/.test(comp.src);
+  const isFormComponent = /extends\s+(CivFormElement|CivBooleanFormElement|LightDomSlotMixin\(CivFormElement\))/.test(comp.src);
+  const isBaseComponent = /extends\s+(CivBaseElement|LightDomSlotMixin\(CivBaseElement\))/.test(comp.src);
 
   if (!isFormComponent && !isBaseComponent) {
     addIssue(comp.path, 'base-class', 'error', `${comp.name} does not extend CivBaseElement or CivFormElement`);
@@ -86,7 +86,7 @@ function checkCustomElement(comp: ComponentFile) {
 }
 
 function checkRenderOrder(comp: ComponentFile) {
-  const isFormParticipating = /extends\s+(CivFormElement|CivBooleanFormElement|LightDomContainerMixin\(CivFormElement\))/.test(comp.src);
+  const isFormParticipating = /extends\s+(CivFormElement|CivBooleanFormElement|LightDomSlotMixin\(CivFormElement\))/.test(comp.src);
   if (!isFormParticipating) return;
 
   // Check that render uses renderLabel/renderLegend, renderHint, renderError in order
@@ -122,7 +122,7 @@ function checkRenderOrder(comp: ComponentFile) {
 }
 
 function checkAriaAttributes(comp: ComponentFile) {
-  const isFormParticipating = /extends\s+(CivFormElement|CivBooleanFormElement|LightDomContainerMixin\(CivFormElement\))/.test(comp.src);
+  const isFormParticipating = /extends\s+(CivFormElement|CivBooleanFormElement|LightDomSlotMixin\(CivFormElement\))/.test(comp.src);
   if (!isFormParticipating) return;
 
   // Check for aria-invalid
@@ -142,7 +142,7 @@ function checkAriaAttributes(comp: ComponentFile) {
 }
 
 function checkEvents(comp: ComponentFile) {
-  const isFormParticipating = /extends\s+(CivFormElement|CivBooleanFormElement|LightDomContainerMixin\(CivFormElement\))/.test(comp.src);
+  const isFormParticipating = /extends\s+(CivFormElement|CivBooleanFormElement|LightDomSlotMixin\(CivFormElement\))/.test(comp.src);
   if (!isFormParticipating) return;
   if (comp.name === 'civ-conditional' || comp.name === 'civ-progress-steps' || comp.name === 'civ-progress-bar') return;
 
@@ -202,7 +202,7 @@ function checkTailwindPrefix(comp: ComponentFile) {
 }
 
 function checkFormReset(comp: ComponentFile) {
-  const isFormParticipating = /extends\s+(CivFormElement|CivBooleanFormElement|LightDomContainerMixin\(CivFormElement\))/.test(comp.src);
+  const isFormParticipating = /extends\s+(CivFormElement|CivBooleanFormElement|LightDomSlotMixin\(CivFormElement\))/.test(comp.src);
   if (!isFormParticipating) return;
   if (comp.name === 'civ-conditional' || comp.name === 'civ-progress-steps' || comp.name === 'civ-progress-bar' || comp.name === 'civ-form-group') return;
 
@@ -212,7 +212,7 @@ function checkFormReset(comp: ComponentFile) {
 }
 
 function checkDisabledState(comp: ComponentFile) {
-  const isFormParticipating = /extends\s+(CivFormElement|CivBooleanFormElement|LightDomContainerMixin\(CivFormElement\))/.test(comp.src);
+  const isFormParticipating = /extends\s+(CivFormElement|CivBooleanFormElement|LightDomSlotMixin\(CivFormElement\))/.test(comp.src);
   if (!isFormParticipating) return;
   if (comp.name === 'civ-conditional' || comp.name === 'civ-progress-steps' || comp.name === 'civ-progress-bar') return;
 
@@ -272,7 +272,7 @@ function checkNativeCounterparts(comp: ComponentFile) {
 // ── A11y checks ──────────────────────────────────────────────
 
 function checkA11yErrorAnnouncement(comp: ComponentFile) {
-  const isFormParticipating = /extends\s+(CivFormElement|CivBooleanFormElement|LightDomContainerMixin\(CivFormElement\))/.test(comp.src);
+  const isFormParticipating = /extends\s+(CivFormElement|CivBooleanFormElement|LightDomSlotMixin\(CivFormElement\))/.test(comp.src);
   if (!isFormParticipating) return;
   if (comp.name === 'civ-conditional' || comp.name === 'civ-progress-steps' || comp.name === 'civ-progress-bar' || comp.name === 'civ-form-group') return;
 
@@ -283,7 +283,7 @@ function checkA11yErrorAnnouncement(comp: ComponentFile) {
 }
 
 function checkA11yLabelAssociation(comp: ComponentFile) {
-  const isFormParticipating = /extends\s+(CivFormElement|CivBooleanFormElement|LightDomContainerMixin\(CivFormElement\))/.test(comp.src);
+  const isFormParticipating = /extends\s+(CivFormElement|CivBooleanFormElement|LightDomSlotMixin\(CivFormElement\))/.test(comp.src);
   if (!isFormParticipating) return;
   if (CHILD_COMPONENTS.has(comp.name)) return;
   if (comp.name === 'civ-conditional' || comp.name === 'civ-progress-steps' || comp.name === 'civ-progress-bar') return;

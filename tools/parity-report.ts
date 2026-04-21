@@ -94,7 +94,7 @@ function parseWebComponent(filePath: string): ComponentAPI | null {
   const declaredNames = new Set(props.map(p => p.name));
 
   const extendsBooleanForm = /extends\s+CivBooleanFormElement/.test(src);
-  const extendsForm = /extends\s+(?:LightDomContainerMixin\()?CivFormElement/.test(src);
+  const extendsForm = /extends\s+(?:LightDomSlotMixin\()?CivFormElement/.test(src);
 
   if (extendsBooleanForm || extendsForm) {
     for (const baseProp of WEB_BASE_PROPS) {

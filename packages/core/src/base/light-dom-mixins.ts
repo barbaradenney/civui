@@ -149,32 +149,6 @@ export function LightDomSlotMixin<T extends Constructor<LitElement>>(superClass:
 }
 
 /**
- * Backwards-compatible mixin — wraps LightDomSlotMixin with the old
- * _relocateChildren(selector) API for components not yet migrated.
- */
-export function LightDomContainerMixin<T extends Constructor<LitElement>>(superClass: T) {
-  class LightDomContainer extends LightDomSlotMixin(superClass) {
-    /** Old API — relocate all children into a single container. */
-    protected _relocateChildren(containerSelector: string): void {
-      const container = this.querySelector(containerSelector);
-      if (container) {
-        for (const child of this._getSlottedChildren('default')) {
-          container.appendChild(child);
-        }
-      }
-    }
-  }
-  return LightDomContainer as unknown as Constructor<{
-    _relocateChildren(selector: string): void;
-    _slottedChildren: Map<string, Node[]>;
-    _getSlotConfig(): SlotConfig;
-    _relocateSlots(): void;
-    _getSlottedChildren(key?: string): Node[];
-    _hasSlottedChildren(key: string): boolean;
-  }> & T;
-}
-
-/**
  * Mixin for Light DOM leaf components that use child text content
  * as a label fallback. Captures textContent before Lit renders
  * and clears children to prevent duplication.

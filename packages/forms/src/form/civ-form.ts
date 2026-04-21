@@ -3,7 +3,8 @@
 
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivBaseElement, LightDomContainerMixin, dispatch, generateId, t, interpolate } from '@civui/core';
+import { CivBaseElement, LightDomSlotMixin, dispatch, generateId, t, interpolate } from '@civui/core';
+import type { SlotConfig } from '@civui/core';
 
 export interface FormFieldError {
   name: string;
@@ -59,7 +60,11 @@ export interface CivFormFieldLike extends HTMLElement {
  * @fires civ-analytics - Analytics tracking event on submit
  */
 @customElement('civ-form')
-export class CivForm extends LightDomContainerMixin(CivBaseElement) {
+export class CivForm extends LightDomSlotMixin(CivBaseElement) {
+  override _getSlotConfig(): SlotConfig {
+    return { default: '[data-civ-form-content]' };
+  }
+
   @property({ type: String }) action = '';
   @property({ type: String }) method: 'get' | 'post' = 'post';
   @property({ type: String, attribute: 'form-label' }) formLabel = '';
@@ -122,7 +127,7 @@ export class CivForm extends LightDomContainerMixin(CivBaseElement) {
   }
 
   override firstUpdated(): void {
-    this._relocateChildren('[data-civ-form-content]');
+    this._relocateSlots();
     if (this.persist) this._restorePersistedData();
     this._prefillFromUrl();
     if (this.trackDirty) {

@@ -1,6 +1,7 @@
 import { html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivBaseElement, LightDomContainerMixin } from '@civui/core';
+import { CivBaseElement, LightDomSlotMixin } from '@civui/core';
+import type { SlotConfig } from '@civui/core';
 
 const conditionalStyles = html`
   <style>
@@ -31,7 +32,11 @@ const conditionalStyles = html`
  * @prop {string} not-equals - Show when the field value does NOT match this
  */
 @customElement('civ-conditional')
-export class CivConditional extends LightDomContainerMixin(CivBaseElement) {
+export class CivConditional extends LightDomSlotMixin(CivBaseElement) {
+  override _getSlotConfig(): SlotConfig {
+    return { default: '[data-civ-conditional-content]' };
+  }
+
   @property({ type: String }) when = '';
   @property({ type: String }) equals = '';
   @property({ type: String, attribute: 'not-equals' }) notEquals = '';
@@ -66,7 +71,7 @@ export class CivConditional extends LightDomContainerMixin(CivBaseElement) {
   }
 
   override firstUpdated(): void {
-    this._relocateChildren('[data-civ-conditional-content]');
+    this._relocateSlots();
   }
 
   override render() {

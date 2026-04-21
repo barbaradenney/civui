@@ -60,23 +60,37 @@ export class CivSummary extends CivBaseElement {
   }
 
   private _renderSection(section: SummarySection) {
-    // Section-level editHref applies to all items that don't have their own
     const sectionEditHref = section.editHref && this._isSafeHref(section.editHref)
       ? section.editHref
       : undefined;
 
     const sectionEditLabel = section.locked
       ? t('summaryEditProfile')
-      : undefined;
+      : t('summaryEditLink');
 
+    // If section has a heading, show the edit link in the header (not per-row)
+    const showHeaderEdit = section.heading && sectionEditHref;
     const showDividers = section.items.length > 1;
 
     return html`
       <div class="civ-summary-section">
+        ${section.heading ? html`
+          <div class="civ-flex civ-justify-between civ-items-center civ-mb-2">
+            <h3 class="civ-heading-md">${section.heading}</h3>
+            ${showHeaderEdit ? html`
+              <civ-link
+                href="${sectionEditHref}"
+                variant="tertiary"
+                label="${sectionEditLabel}"
+              ></civ-link>
+            ` : nothing}
+          </div>
+        ` : nothing}
         <dl class="civ-summary-list civ-m-0">
           ${section.items.map((item, i) => {
-            const itemEditHref = item.editHref || sectionEditHref || '';
-            const itemEditLabel = item.editLabel || sectionEditLabel || '';
+            // Per-row edit: use item's own editHref, or section's if no heading (flat mode)
+            const itemEditHref = item.editHref || (!section.heading ? (sectionEditHref || '') : '');
+            const itemEditLabel = item.editLabel || (!section.heading ? (section.locked ? t('summaryEditProfile') : '') : '');
             return html`
               <civ-read-only-field
                 label="${item.label}"

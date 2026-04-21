@@ -114,7 +114,7 @@ export const Step2a_LockedChapter: Story = {
     if (summary) {
       summary.sections = [
         {
-          heading: '',
+          heading: 'Verified identity',
           editHref: '/profile/settings',
           locked: true,
           items: [

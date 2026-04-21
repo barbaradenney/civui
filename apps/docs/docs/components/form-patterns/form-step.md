@@ -104,3 +104,15 @@ stepper.goToStep(2);  // Navigate to step 3
   <div data-step-label="Step two">...</div>
 </civ-form-step>
 ```
+
+
+## Live Example
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-patterns-form-step--default&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: '1px solid #dfe1e2', borderRadius: '6px'}}
+></iframe>
+
+[Open in Storybook →](/civui/storybook/?path=/story/forms-patterns-form-step--default)

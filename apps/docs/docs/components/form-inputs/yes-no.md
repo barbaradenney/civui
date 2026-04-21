@@ -66,3 +66,15 @@ Uses `legend` instead of `label` because it renders as a fieldset with radio sem
   no-label="No, continue"
 ></civ-yes-no>
 ```
+
+
+## Live Example
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-yes-no--default&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: '1px solid #dfe1e2', borderRadius: '6px'}}
+></iframe>
+
+[Open in Storybook →](/civui/storybook/?path=/story/forms-inputs-yes-no--default)

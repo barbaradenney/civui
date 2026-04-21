@@ -52,3 +52,15 @@ Children without a data attribute are placed in the heading area by default.
   <span data-subheading>VA Form 21-526EZ</span>
 </civ-page-header>
 ```
+
+
+## Live Example
+
+<iframe
+  src="/civui/storybook/iframe.html?id=ui-page-header--default&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: '1px solid #dfe1e2', borderRadius: '6px'}}
+></iframe>
+
+[Open in Storybook →](/civui/storybook/?path=/story/ui-page-header--default)

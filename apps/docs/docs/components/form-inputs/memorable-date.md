@@ -68,3 +68,15 @@ Child fields are named `{name}-month`, `{name}-day`, `{name}-year` for individua
   required
 ></civ-memorable-date>
 ```
+
+
+## Live Example
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-memorable-date--default&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: '1px solid #dfe1e2', borderRadius: '6px'}}
+></iframe>
+
+[Open in Storybook →](/civui/storybook/?path=/story/forms-inputs-memorable-date--default)

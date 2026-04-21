@@ -73,3 +73,15 @@ When `maxwords` is set (and `maxlength` is not), a word count indicator appears.
   max-height="400px"
 ></civ-textarea>
 ```
+
+
+## Live Example
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-textarea--default&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: '1px solid #dfe1e2', borderRadius: '6px'}}
+></iframe>
+
+[Open in Storybook →](/civui/storybook/?path=/story/forms-inputs-textarea--default)

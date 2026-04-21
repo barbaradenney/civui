@@ -106,3 +106,15 @@ Groups multiple `civ-checkbox` elements with a shared legend, hint, and error. U
   <civ-checkbox label="Payments" value="payments"></civ-checkbox>
 </civ-checkbox-group>
 ```
+
+
+## Live Example
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-checkbox--default&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: '1px solid #dfe1e2', borderRadius: '6px'}}
+></iframe>
+
+[Open in Storybook →](/civui/storybook/?path=/story/forms-inputs-checkbox--default)

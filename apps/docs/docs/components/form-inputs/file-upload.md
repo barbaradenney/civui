@@ -98,3 +98,15 @@ const controller = upload.getAbortController(0);
   max-size="5242880"
 ></civ-file-upload>
 ```
+
+
+## Live Example
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-inputs-file-upload--default&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: '1px solid #dfe1e2', borderRadius: '6px'}}
+></iframe>
+
+[Open in Storybook →](/civui/storybook/?path=/story/forms-inputs-file-upload--default)

@@ -73,3 +73,15 @@ sig.isComplete;      // true if name is filled and checkbox is checked
   required
 ></civ-signature>
 ```
+
+
+## Live Example
+
+<iframe
+  src="/civui/storybook/iframe.html?id=forms-patterns-signature--default&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: '1px solid #dfe1e2', borderRadius: '6px'}}
+></iframe>
+
+[Open in Storybook →](/civui/storybook/?path=/story/forms-patterns-signature--default)

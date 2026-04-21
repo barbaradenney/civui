@@ -86,3 +86,15 @@ Tasks with `status="cannot-start"` render without a link and display a gray "Can
   status="error"
 ></civ-task>
 ```
+
+
+## Live Example
+
+<iframe
+  src="/civui/storybook/iframe.html?id=navigation-task-list--default&viewMode=story"
+  width="100%"
+  height="300"
+  style={{border: '1px solid #dfe1e2', borderRadius: '6px'}}
+></iframe>
+
+[Open in Storybook →](/civui/storybook/?path=/story/navigation-task-list--default)

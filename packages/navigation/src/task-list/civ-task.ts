@@ -96,15 +96,13 @@ export class CivTask extends CivBaseElement {
             ? html`
               <dl class="civ-task__preview civ-mt-2 civ-text-sm">
                 ${this.preview.map(item => html`
-                  <div class="civ-flex civ-gap-2 civ-py-0_5">
-                    <dt class="civ-text-muted">${item.label}</dt>
-                    <dd class="civ-m-0">
-                      ${item.value || html`<span class="civ-text-muted civ-italic">Not provided</span>`}
-                      ${item.action
-                        ? html`<a href="${item.action.href}" class="civ-link civ-text-sm civ-ms-1">${item.action.label}</a>`
-                        : nothing}
-                    </dd>
-                  </div>
+                  <civ-read-only-field
+                    label="${item.label}"
+                    value="${item.value || ''}"
+                    source="${item.source || ''}"
+                    action-label="${item.action?.label || ''}"
+                    action-href="${item.action?.href || ''}"
+                  ></civ-read-only-field>
                 `)}
               </dl>
             ` : nothing}

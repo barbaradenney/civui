@@ -1,7 +1,7 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { CivBaseElement, dispatch, interpolate, t } from '@civui/core';
-import { renderSummaryItem } from './render-summary-item.js';
+import '../read-only-field/civ-read-only-field.js';
 
 export type SummarySectionStatus = 'not-started' | 'in-progress' | 'complete' | 'cannot-start' | 'error';
 
@@ -112,7 +112,16 @@ export class CivSummary extends CivBaseElement {
           </div>
         </div>
         <dl class="civ-summary-list">
-          ${section.items.map(item => renderSummaryItem(item))}
+          ${section.items.map(item => html`
+            <civ-read-only-field
+              label="${item.label}"
+              value="${Array.isArray(item.value) ? '' : (item.value || '')}"
+              .values="${Array.isArray(item.value) ? item.value : []}"
+              source="${item.source || ''}"
+              action-label="${item.action?.label || ''}"
+              action-href="${item.action?.href || ''}"
+            ></civ-read-only-field>
+          `)}
         </dl>
       </div>
     `;

@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Appoint a Veterans Service Organization as your representative | VA Form 21-22</title>
+
+  <!-- CivUI Design System -->
+  <script type="module" src="/src/civui.ts"></script>
+</head>
+<body>
+  <main id="main-content" class="civ-p-6" style="max-width: 720px; margin: 0 auto;">
+
+    <section data-page="intro" >
+<!-- VA Form 21-22 — Introduction Page -->
+<div class="civ-form-intro">
+  <civ-page-header>
+    <h1 data-heading class="civ-heading-xl">Appoint a Veterans Service Organization as your representative</h1>
+    <span data-subheading>VA Form 21-22</span>
+  </civ-page-header>
+
+  <p class="civ-text-muted civ-mb-6">Intro text goes here.</p>
+
+  <civ-button label="Start your application" variant="primary"></civ-button>
+</div>
+    </section>
+
+    <section data-page="hub" hidden>
+<!-- Task List Hub -->
+<div data-page="hub">
+  <civ-page-header>
+    <h1 data-heading class="civ-heading-xl">Appoint a Veterans Service Organization as your representative</h1>
+    <span data-subheading>VA Form 21-22</span>
+  </civ-page-header>
+
+  <civ-progress-bar
+    value="0"
+    label="Application progress"
+    status="0 of 3 sections complete"
+  ></civ-progress-bar>
+
+  <civ-task-list>
+    <civ-task-group>
+      <h3 data-task-group-heading class="civ-heading-md">Fill out your application</h3>
+      <civ-task
+        data-chapter-id="personal-info"
+        label="Personal information"
+        hint="Name, date of birth, Social Security number" href="#/personal-info"
+        status="not-started"
+      ></civ-task>
+      <civ-task
+        data-chapter-id="contact-info"
+        label="Contact information"
+        hint="Address, phone, email"
+        status="cannot-start"
+      ></civ-task>
+      <civ-task
+        data-chapter-id="representative-info"
+        label="Representative information"
+        hint="Organization and representative details"
+        status="cannot-start"
+      ></civ-task>
+    </civ-task-group>
+
+    <civ-task-group>
+      <h3 data-task-group-heading class="civ-heading-md">Review and submit</h3>
+      <civ-task
+        label="Review your application"
+        hint="Complete all sections before reviewing"
+        status="cannot-start"
+      ></civ-task>
+    </civ-task-group>
+  </civ-task-list>
+</div>
+  <!-- Workflow Status -->
+  <div data-civ-workflow-status class="civ-p-4 civ-border civ-rounded">
+  <p class="civ-text-sm civ-text-base-dark">Current status</p>
+  <p class="civ-text-lg civ-font-bold" data-civ-workflow-state="draft">Draft</p>
+  <div data-civ-workflow-actions class="civ-mt-4 civ-flex civ-gap-2">
+    <button type="button" data-civ-workflow-action="submitted" class="civ-px-4 civ-py-2 civ-rounded civ-bg-primary civ-text-white">Submit for review</button>
+  </div>
+</div>
+
+  <!-- Delegation / Representative -->
+  <section class="civ-mt-6 civ-p-4 civ-border civ-rounded">
+  <h2 class="civ-text-lg civ-font-bold civ-mb-2">Attestation</h2>
+  <p class="civ-mb-4">I authorize the above-named organization/individual to act on my behalf in the preparation, presentation, and prosecution of my claim.</p>
+</section>
+    </section>
+
+    <section data-page="personal-info" hidden>
+<!-- Chapter: Personal information -->
+<div data-chapter="personal-info">
+  <civ-link href="#/hub" variant="back" label="Back to task list" class="civ-mb-4 civ-block"></civ-link>
+
+  <civ-page-header>
+    <span data-eyebrow>Appoint a Veterans Service Organization as your representative</span>
+    <h2 data-heading class="civ-heading-lg">Personal information</h2>
+    <span data-subheading>VA Form 21-22</span>
+  </civ-page-header>
+
+  <civ-form-step persist="21-22-personal-info" complete-label="Save and continue">
+    <div data-step data-step-label="Your name">
+      <civ-name name="fullName" legend="Your name" required></civ-name>
+    </div>
+    <div data-step data-step-label="Date of birth">
+      <civ-memorable-date
+        legend="Date of birth"
+        name="dateOfBirth"
+        required
+        hint="For example: January 15 1990"
+      ></civ-memorable-date>
+    </div>
+    <div data-step data-step-label="Social Security number">
+      <civ-text-input
+        label="Social Security number"
+        name="ssn"
+        required
+        hint="We need this to verify your identity"
+        autocomplete="off"
+        inputmode="numeric"
+        type="tel"
+        mask="ssn"
+        validate="ssn"
+      ></civ-text-input>
+    </div>
+  </civ-form-step>
+</div>
+  <!-- Feedback Panel -->
+  <button type="button" data-civ-feedback-trigger="Personal information" aria-expanded="false" aria-controls="feedback-personal-information" class="civ-text-sm civ-text-primary civ-underline">Add comment</button>
+<div id="feedback-personal-information" data-civ-feedback-panel="Personal information" role="complementary" aria-label="Feedback for Personal information" class="civ-p-4 civ-border civ-rounded civ-mt-2" hidden>
+  <p class="civ-text-sm civ-text-base-dark">No comments</p>
+  <div class="civ-mt-2">
+    <label for="comment-personal-information" class="civ-text-sm civ-font-bold">Add comment</label>
+    <textarea id="comment-personal-information" class="civ-input civ-mt-1" rows="3"></textarea>
+    <button type="button" data-civ-feedback-submit="Personal information" class="civ-mt-2 civ-px-4 civ-py-2 civ-rounded civ-bg-primary civ-text-white">Submit comment</button>
+  </div>
+</div>
+<button type="button" data-civ-feedback-trigger="Contact information" aria-expanded="false" aria-controls="feedback-contact-information" class="civ-text-sm civ-text-primary civ-underline">Add comment</button>
+<div id="feedback-contact-information" data-civ-feedback-panel="Contact information" role="complementary" aria-label="Feedback for Contact information" class="civ-p-4 civ-border civ-rounded civ-mt-2" hidden>
+  <p class="civ-text-sm civ-text-base-dark">No comments</p>
+  <div class="civ-mt-2">
+    <label for="comment-contact-information" class="civ-text-sm civ-font-bold">Add comment</label>
+    <textarea id="comment-contact-information" class="civ-input civ-mt-1" rows="3"></textarea>
+    <button type="button" data-civ-feedback-submit="Contact information" class="civ-mt-2 civ-px-4 civ-py-2 civ-rounded civ-bg-primary civ-text-white">Submit comment</button>
+  </div>
+</div>
+<button type="button" data-civ-feedback-trigger="Representative information" aria-expanded="false" aria-controls="feedback-representative-information" class="civ-text-sm civ-text-primary civ-underline">Add comment</button>
+<div id="feedback-representative-information" data-civ-feedback-panel="Representative information" role="complementary" aria-label="Feedback for Representative information" class="civ-p-4 civ-border civ-rounded civ-mt-2" hidden>
+  <p class="civ-text-sm civ-text-base-dark">No comments</p>
+  <div class="civ-mt-2">
+    <label for="comment-representative-information" class="civ-text-sm civ-font-bold">Add comment</label>
+    <textarea id="comment-representative-information" class="civ-input civ-mt-1" rows="3"></textarea>
+    <button type="button" data-civ-feedback-submit="Representative information" class="civ-mt-2 civ-px-4 civ-py-2 civ-rounded civ-bg-primary civ-text-white">Submit comment</button>
+  </div>
+</div>
+<button type="button" data-civ-feedback-trigger="Review your application" aria-expanded="false" aria-controls="feedback-review-your-application" class="civ-text-sm civ-text-primary civ-underline">Add comment</button>
+<div id="feedback-review-your-application" data-civ-feedback-panel="Review your application" role="complementary" aria-label="Feedback for Review your application" class="civ-p-4 civ-border civ-rounded civ-mt-2" hidden>
+  <p class="civ-text-sm civ-text-base-dark">No comments</p>
+  <div class="civ-mt-2">
+    <label for="comment-review-your-application" class="civ-text-sm civ-font-bold">Add comment</label>
+    <textarea id="comment-review-your-application" class="civ-input civ-mt-1" rows="3"></textarea>
+    <button type="button" data-civ-feedback-submit="Review your application" class="civ-mt-2 civ-px-4 civ-py-2 civ-rounded civ-bg-primary civ-text-white">Submit comment</button>
+  </div>
+</div>
+    </section>
+
+    <section data-page="contact-info" hidden>
+<!-- Chapter: Contact information -->
+<div data-chapter="contact-info">
+  <civ-link href="#/hub" variant="back" label="Back to task list" class="civ-mb-4 civ-block"></civ-link>
+
+  <civ-page-header>
+    <span data-eyebrow>Appoint a Veterans Service Organization as your representative</span>
+    <h2 data-heading class="civ-heading-lg">Contact information</h2>
+    <span data-subheading>VA Form 21-22</span>
+  </civ-page-header>
+
+  <civ-form-step persist="21-22-contact-info" complete-label="Save and continue">
+    <div data-step data-step-label="Mailing address">
+      <civ-address name="mailingAddress" legend="Mailing address" required></civ-address>
+    </div>
+    <div data-step data-step-label="Home phone number">
+      <civ-text-input
+        label="Home phone number"
+        name="homePhone"
+        hint="Enter a 10-digit phone number"
+        autocomplete="tel"
+        inputmode="numeric"
+        type="tel"
+      ></civ-text-input>
+    </div>
+    <div data-step data-step-label="Mobile phone number">
+      <civ-text-input
+        label="Mobile phone number"
+        name="mobilePhone"
+        autocomplete="tel"
+        inputmode="numeric"
+        type="tel"
+      ></civ-text-input>
+    </div>
+    <div data-step data-step-label="Email address">
+      <civ-text-input
+        label="Email address"
+        name="email"
+        required
+        autocomplete="email"
+        type="email"
+      ></civ-text-input>
+    </div>
+    <div data-step data-step-label="How should we contact you if we have questions?">
+      <civ-radio-group
+        legend="How should we contact you if we have questions?"
+        name="contactMethod"
+        required
+      >
+        <civ-radio label="Email" value="email"></civ-radio>
+        <civ-radio label="Home phone" value="homePhone"></civ-radio>
+        <civ-radio label="Mobile phone" value="mobilePhone"></civ-radio>
+        <civ-radio label="U.S. mail" value="mail"></civ-radio>
+      </civ-radio-group>
+    </div>
+  </civ-form-step>
+</div>
+  <!-- Feedback Panel -->
+  <button type="button" data-civ-feedback-trigger="Personal information" aria-expanded="false" aria-controls="feedback-personal-information" class="civ-text-sm civ-text-primary civ-underline">Add comment</button>
+<div id="feedback-personal-information" data-civ-feedback-panel="Personal information" role="complementary" aria-label="Feedback for Personal information" class="civ-p-4 civ-border civ-rounded civ-mt-2" hidden>
+  <p class="civ-text-sm civ-text-base-dark">No comments</p>
+  <div class="civ-mt-2">
+    <label for="comment-personal-information" class="civ-text-sm civ-font-bold">Add comment</label>
+    <textarea id="comment-personal-information" class="civ-input civ-mt-1" rows="3"></textarea>
+    <button type="button" data-civ-feedback-submit="Personal information" class="civ-mt-2 civ-px-4 civ-py-2 civ-rounded civ-bg-primary civ-text-white">Submit comment</button>
+  </div>
+</div>
+<button type="button" data-civ-feedback-trigger="Contact information" aria-expanded="false" aria-controls="feedback-contact-information" class="civ-text-sm civ-text-primary civ-underline">Add comment</button>
+<div id="feedback-contact-information" data-civ-feedback-panel="Contact information" role="complementary" aria-label="Feedback for Contact information" class="civ-p-4 civ-border civ-rounded civ-mt-2" hidden>
+  <p class="civ-text-sm civ-text-base-dark">No comments</p>
+  <div class="civ-mt-2">
+    <label for="comment-contact-information" class="civ-text-sm civ-font-bold">Add comment</label>
+    <textarea id="comment-contact-information" class="civ-input civ-mt-1" rows="3"></textarea>
+    <button type="button" data-civ-feedback-submit="Contact information" class="civ-mt-2 civ-px-4 civ-py-2 civ-rounded civ-bg-primary civ-text-white">Submit comment</button>
+  </div>
+</div>
+<button type="button" data-civ-feedback-trigger="Representative information" aria-expanded="false" aria-controls="feedback-representative-information" class="civ-text-sm civ-text-primary civ-underline">Add comment</button>
+<div id="feedback-representative-information" data-civ-feedback-panel="Representative information" role="complementary" aria-label="Feedback for Representative information" class="civ-p-4 civ-border civ-rounded civ-mt-2" hidden>
+  <p class="civ-text-sm civ-text-base-dark">No comments</p>
+  <div class="civ-mt-2">
+    <label for="comment-representative-information" class="civ-text-sm civ-font-bold">Add comment</label>
+    <textarea id="comment-representative-information" class="civ-input civ-mt-1" rows="3"></textarea>
+    <button type="button" data-civ-feedback-submit="Representative information" class="civ-mt-2 civ-px-4 civ-py-2 civ-rounded civ-bg-primary civ-text-white">Submit comment</button>
+  </div>
+</div>
+<button type="button" data-civ-feedback-trigger="Review your application" aria-expanded="false" aria-controls="feedback-review-your-application" class="civ-text-sm civ-text-primary civ-underline">Add comment</button>
+<div id="feedback-review-your-application" data-civ-feedback-panel="Review your application" role="complementary" aria-label="Feedback for Review your application" class="civ-p-4 civ-border civ-rounded civ-mt-2" hidden>
+  <p class="civ-text-sm civ-text-base-dark">No comments</p>
+  <div class="civ-mt-2">
+    <label for="comment-review-your-application" class="civ-text-sm civ-font-bold">Add comment</label>
+    <textarea id="comment-review-your-application" class="civ-input civ-mt-1" rows="3"></textarea>
+    <button type="button" data-civ-feedback-submit="Review your application" class="civ-mt-2 civ-px-4 civ-py-2 civ-rounded civ-bg-primary civ-text-white">Submit comment</button>
+  </div>
+</div>
+    </section>
+
+    <section data-page="representative-info" hidden>
+<!-- Chapter: Representative information -->
+<div data-chapter="representative-info">
+  <civ-link href="#/hub" variant="back" label="Back to task list" class="civ-mb-4 civ-block"></civ-link>
+
+  <civ-page-header>
+    <span data-eyebrow>Appoint a Veterans Service Organization as your representative</span>
+    <h2 data-heading class="civ-heading-lg">Representative information</h2>
+    <span data-subheading>VA Form 21-22</span>
+  </civ-page-header>
+
+  <civ-form-step persist="21-22-representative-info" complete-label="Save and continue">
+    <div data-step data-step-label="Veterans Service Organization name">
+      <civ-text-input
+        label="Veterans Service Organization name"
+        name="organizationName"
+        required
+        hint="For example: Disabled American Veterans, American Legion"
+        type="text"
+      ></civ-text-input>
+    </div>
+    <div data-step data-step-label="Representative name">
+      <civ-text-input
+        label="Representative name"
+        name="representativeName"
+        required
+        type="text"
+      ></civ-text-input>
+    </div>
+    <div data-step data-step-label="Representative email">
+      <civ-text-input
+        label="Representative email"
+        name="representativeEmail"
+        required
+        type="email"
+      ></civ-text-input>
+    </div>
+    <div data-step data-step-label="Representative phone number">
+      <civ-text-input
+        label="Representative phone number"
+        name="representativePhone"
+        type="tel"
+      ></civ-text-input>
+    </div>
+  </civ-form-step>
+</div>
+  <!-- Feedback Panel -->
+  <button type="button" data-civ-feedback-trigger="Personal information" aria-expanded="false" aria-controls="feedback-personal-information" class="civ-text-sm civ-text-primary civ-underline">Add comment</button>
+<div id="feedback-personal-information" data-civ-feedback-panel="Personal information" role="complementary" aria-label="Feedback for Personal information" class="civ-p-4 civ-border civ-rounded civ-mt-2" hidden>
+  <p class="civ-text-sm civ-text-base-dark">No comments</p>
+  <div class="civ-mt-2">
+    <label for="comment-personal-information" class="civ-text-sm civ-font-bold">Add comment</label>
+    <textarea id="comment-personal-information" class="civ-input civ-mt-1" rows="3"></textarea>
+    <button type="button" data-civ-feedback-submit="Personal information" class="civ-mt-2 civ-px-4 civ-py-2 civ-rounded civ-bg-primary civ-text-white">Submit comment</button>
+  </div>
+</div>
+<button type="button" data-civ-feedback-trigger="Contact information" aria-expanded="false" aria-controls="feedback-contact-information" class="civ-text-sm civ-text-primary civ-underline">Add comment</button>
+<div id="feedback-contact-information" data-civ-feedback-panel="Contact information" role="complementary" aria-label="Feedback for Contact information" class="civ-p-4 civ-border civ-rounded civ-mt-2" hidden>
+  <p class="civ-text-sm civ-text-base-dark">No comments</p>
+  <div class="civ-mt-2">
+    <label for="comment-contact-information" class="civ-text-sm civ-font-bold">Add comment</label>
+    <textarea id="comment-contact-information" class="civ-input civ-mt-1" rows="3"></textarea>
+    <button type="button" data-civ-feedback-submit="Contact information" class="civ-mt-2 civ-px-4 civ-py-2 civ-rounded civ-bg-primary civ-text-white">Submit comment</button>
+  </div>
+</div>
+<button type="button" data-civ-feedback-trigger="Representative information" aria-expanded="false" aria-controls="feedback-representative-information" class="civ-text-sm civ-text-primary civ-underline">Add comment</button>
+<div id="feedback-representative-information" data-civ-feedback-panel="Representative information" role="complementary" aria-label="Feedback for Representative information" class="civ-p-4 civ-border civ-rounded civ-mt-2" hidden>
+  <p class="civ-text-sm civ-text-base-dark">No comments</p>
+  <div class="civ-mt-2">
+    <label for="comment-representative-information" class="civ-text-sm civ-font-bold">Add comment</label>
+    <textarea id="comment-representative-information" class="civ-input civ-mt-1" rows="3"></textarea>
+    <button type="button" data-civ-feedback-submit="Representative information" class="civ-mt-2 civ-px-4 civ-py-2 civ-rounded civ-bg-primary civ-text-white">Submit comment</button>
+  </div>
+</div>
+<button type="button" data-civ-feedback-trigger="Review your application" aria-expanded="false" aria-controls="feedback-review-your-application" class="civ-text-sm civ-text-primary civ-underline">Add comment</button>
+<div id="feedback-review-your-application" data-civ-feedback-panel="Review your application" role="complementary" aria-label="Feedback for Review your application" class="civ-p-4 civ-border civ-rounded civ-mt-2" hidden>
+  <p class="civ-text-sm civ-text-base-dark">No comments</p>
+  <div class="civ-mt-2">
+    <label for="comment-review-your-application" class="civ-text-sm civ-font-bold">Add comment</label>
+    <textarea id="comment-review-your-application" class="civ-input civ-mt-1" rows="3"></textarea>
+    <button type="button" data-civ-feedback-submit="Review your application" class="civ-mt-2 civ-px-4 civ-py-2 civ-rounded civ-bg-primary civ-text-white">Submit comment</button>
+  </div>
+</div>
+    </section>
+
+    <section data-page="review" hidden>
+<!-- Review Page -->
+<div data-chapter="review-submit">
+  <civ-link href="#/hub" variant="back" label="Back to task list" class="civ-mb-4 civ-block"></civ-link>
+
+  <civ-page-header>
+    <span data-eyebrow>Appoint a Veterans Service Organization as your representative</span>
+    <h2 data-heading class="civ-heading-xl">Review your application</h2>
+    <span data-subheading>VA Form 21-22</span>
+  </civ-page-header>
+
+  <civ-summary heading="" data-va-review></civ-summary>
+
+  <civ-signature
+    legend="Statement of truth"
+    name="signature"
+    statement="I certify that the information I have provided is true and correct to the best of my knowledge and belief."
+    required
+  ></civ-signature>
+
+  <div class="civ-mt-6">
+    <civ-button label="Submit application"></civ-button>
+  </div>
+</div>
+    </section>
+
+    <section data-page="confirmation" hidden>
+<!-- Confirmation Page -->
+<div data-page="confirmation">
+  <civ-page-header>
+    <h1 data-heading class="civ-heading-xl">Appoint a Veterans Service Organization as your representative</h1>
+    <span data-subheading>VA Form 21-22</span>
+  </civ-page-header>
+
+  <civ-alert variant="success" heading="We've received your application">
+    Confirmation text goes here.
+  </civ-alert>
+
+  <p class="civ-text-muted civ-mt-6">Confirmation details go here.</p>
+</div>
+    </section>
+
+  </main>
+
+  <script>
+    // ── Page Router ──────────────────────────────────────────────
+    const CHAPTERS = ['personal-info', 'contact-info', 'representative-info'];
+    const CHAPTER_HEADINGS = {
+    'personal-info': 'Personal information',
+    'contact-info': 'Contact information',
+    'representative-info': 'Representative information'
+    };
+
+    const completedChapters = new Set();
+    let currentPage = 'intro';
+
+    function showPage(pageId) {
+      document.querySelectorAll('[data-page]').forEach(el => {
+        el.hidden = el.dataset.page !== pageId;
+      });
+      currentPage = pageId;
+      window.scrollTo(0, 0);
+
+      // Update URL hash
+      if (pageId !== 'intro') {
+        history.replaceState(null, '', '#/' + pageId);
+      } else {
+        history.replaceState(null, '', location.pathname);
+      }
+    }
+
+    // Handle hash navigation
+    function handleHash() {
+      const hash = location.hash.replace('#/', '');
+      if (hash && document.querySelector('[data-page="' + hash + '"]')) {
+        showPage(hash);
+      }
+    }
+    window.addEventListener('hashchange', handleHash);
+    if (location.hash) handleHash();
+
+    // ── Navigation Button Wiring ─────────────────────────────────
+
+    // "Start your application" button on intro page
+    document.querySelector('[data-page="intro"] civ-button')?.addEventListener('click', () => {
+      showPage('hub');
+    });
+
+    // "Back to task list" links — inside wizards and standalone
+    document.querySelectorAll('civ-link[variant="back"]').forEach(link => {
+      const href = link.getAttribute('href') || '';
+      if (href.includes('hub')) {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          showPage('hub');
+        });
+      }
+    });
+
+    // Task list — navigate when clicking a task
+    document.querySelectorAll('civ-task').forEach(task => {
+      task.addEventListener('click', (e) => {
+        const chapterId = task.getAttribute('data-chapter-id');
+        const status = task.getAttribute('status');
+        if (chapterId && status !== 'cannot-start') {
+          e.preventDefault();
+          showPage(chapterId);
+        }
+      });
+    });
+
+    // Chapter completion — listen for civ-form-step complete events
+    document.querySelectorAll('[data-chapter]').forEach(chapter => {
+      const chapterId = chapter.dataset.chapter;
+
+      // civ-form-step fires civ-step-complete when all steps pass validation
+      const wizard = chapter.querySelector('civ-form-step');
+      if (wizard) {
+        wizard.addEventListener('civ-step-complete', () => {
+          completedChapters.add(chapterId);
+          updateTaskList();
+          showPage('hub');
+        });
+      }
+
+      // Repeatable sections (no wizard) — use Save and continue button
+      if (!wizard) {
+        chapter.querySelectorAll('civ-button').forEach(btn => {
+          const label = btn.getAttribute('label') || '';
+          if (label === 'Save and continue') {
+            btn.addEventListener('click', () => {
+              completedChapters.add(chapterId);
+              updateTaskList();
+              showPage('hub');
+            });
+          }
+        });
+      }
+    });
+
+    // Review page buttons
+    const reviewPage = document.querySelector('[data-chapter="review-submit"]');
+    if (reviewPage) {
+      const reviewBtns = reviewPage.querySelectorAll('civ-button');
+      reviewBtns.forEach(btn => {
+        const label = btn.getAttribute('label') || '';
+        if (label === 'Back') {
+          btn.addEventListener('click', () => showPage('hub'));
+        }
+        if (label === 'Submit application') {
+          btn.addEventListener('click', () => handleSubmit());
+        }
+      });
+    }
+
+    // ── Task List Status Tracking ────────────────────────────────
+
+    function updateTaskList() {
+      const totalChapters = CHAPTERS.length;
+      let doneCount = 0;
+      let nextUnlocked = false;
+
+      // Update each chapter task by data-chapter-id
+      CHAPTERS.forEach(chapterId => {
+        const task = document.querySelector('civ-task[data-chapter-id="' + chapterId + '"]');
+        if (!task) return;
+
+        if (completedChapters.has(chapterId)) {
+          task.setAttribute('status', 'complete');
+          task.setAttribute('href', '#/' + chapterId);
+          doneCount++;
+        } else if (!nextUnlocked) {
+          task.setAttribute('status', 'not-started');
+          task.setAttribute('href', '#/' + chapterId);
+          nextUnlocked = true;
+        } else {
+          task.setAttribute('status', 'cannot-start');
+          task.removeAttribute('href');
+        }
+      });
+
+      // Update review task (last task, no data-chapter-id)
+      const reviewTask = document.querySelector('civ-task:not([data-chapter-id])');
+      if (reviewTask) {
+        if (doneCount >= totalChapters) {
+          reviewTask.setAttribute('status', 'not-started');
+          reviewTask.setAttribute('href', '#/review');
+        } else {
+          reviewTask.setAttribute('status', 'cannot-start');
+          reviewTask.removeAttribute('href');
+        }
+      }
+
+      // Update progress bar
+      const progressBar = document.querySelector('civ-progress-bar');
+      if (progressBar) {
+        const pct = Math.round((doneCount / totalChapters) * 100);
+        progressBar.setAttribute('value', String(pct));
+        progressBar.setAttribute('status', doneCount + ' of ' + totalChapters + ' sections complete');
+      }
+    }
+
+    // ── Review Page Population ────────────────────────────────────
+
+    function populateReview() {
+      const summary = document.querySelector('[data-va-review]');
+      if (!summary) return;
+
+      const sections = CHAPTERS.map(id => {
+        const chapter = document.querySelector('[data-chapter="' + id + '"]');
+        if (!chapter) return null;
+
+        const items = [];
+        const fields = chapter.querySelectorAll('[data-civ-form-field]');
+        fields.forEach(field => {
+          const label = field.getAttribute('label') || field.getAttribute('legend') || '';
+          const value = field.value || '';
+          if (label && value) {
+            items.push({ label, value: String(value) });
+          }
+        });
+
+        return {
+          heading: CHAPTER_HEADINGS[id] || id,
+          editHref: '#/' + id,
+          items: items.length > 0 ? items : [{ label: 'Status', value: completedChapters.has(id) ? 'Complete' : 'Not started' }]
+        };
+      }).filter(Boolean);
+
+      summary.sections = sections;
+    }
+
+    // Populate review when navigating to it
+    const observer = new MutationObserver(() => {
+      if (!document.querySelector('[data-chapter="review-submit"]')?.parentElement?.hidden) {
+        populateReview();
+      }
+    });
+    const reviewSection = document.querySelector('[data-page="review"]');
+    if (reviewSection) {
+      observer.observe(reviewSection, { attributes: true, attributeFilter: ['hidden'] });
+    }
+
+    
+    // ── Complex Form Features ──────────────────────────────
+    (function() {
+  const statusEl = document.querySelector("[data-civ-workflow-status]");
+  if (!statusEl) return;
+
+  statusEl.querySelectorAll("[data-civ-workflow-action]").forEach(function(btn) {
+    btn.addEventListener("click", function() {
+      var toState = btn.getAttribute("data-civ-workflow-action");
+      statusEl.dispatchEvent(new CustomEvent("civ-workflow-transition", {
+        bubbles: true,
+        detail: { from: "draft", to: toState, actor: "veteran" }
+      }));
+
+      // Update status display
+      var stateEl = statusEl.querySelector("[data-civ-workflow-state]");
+      if (stateEl) {
+        stateEl.setAttribute("data-civ-workflow-state", toState);
+        stateEl.textContent = toState;
+      }
+
+      // ARIA live announcement
+      var announcement = document.createElement("div");
+      announcement.setAttribute("role", "status");
+      announcement.setAttribute("aria-live", "polite");
+      announcement.className = "civ-sr-only";
+      announcement.textContent = "Status changed to " + toState;
+      document.body.appendChild(announcement);
+      setTimeout(function() { announcement.remove(); }, 1000);
+    });
+  });
+})();
+
+    (function() {
+  // Toggle feedback panels
+  document.querySelectorAll("[data-civ-feedback-trigger]").forEach(function(btn) {
+    btn.addEventListener("click", function() {
+      var target = btn.getAttribute("data-civ-feedback-trigger");
+      var panel = document.querySelector('[data-civ-feedback-panel="' + target + '"]');
+      if (panel) {
+        var isHidden = panel.hasAttribute("hidden");
+        if (isHidden) { panel.removeAttribute("hidden"); } else { panel.setAttribute("hidden", ""); }
+        btn.setAttribute("aria-expanded", isHidden ? "true" : "false");
+      }
+    });
+  });
+
+  // Submit feedback
+  document.querySelectorAll("[data-civ-feedback-submit]").forEach(function(btn) {
+    btn.addEventListener("click", function() {
+      var target = btn.getAttribute("data-civ-feedback-submit");
+      var panel = btn.closest("[data-civ-feedback-panel]");
+      var textarea = panel ? panel.querySelector("textarea") : null;
+      if (textarea && textarea.value.trim()) {
+        btn.dispatchEvent(new CustomEvent("civ-feedback-submit", {
+          bubbles: true,
+          detail: { target: target, text: textarea.value.trim() }
+        }));
+        textarea.value = "";
+      }
+    });
+  });
+})();
+
+    // Lock matrix summary:
+// | State | Actor | Personal information | Contact information | Representative information | Review your application |
+// |-------|-------|------|------|------|------|
+// | Draft | Veteran | E | E | E | E |
+// | Draft | VSO Representative | E | E | E | E |
+// | Draft | VA Reviewer | R | R | R | R |
+// | Submitted | Veteran | R | R | R | R |
+// | Submitted | VSO Representative | R | R | R | R |
+// | Submitted | VA Reviewer | R | R | R | R |
+// | Under review | Veteran | R | R | R | R |
+// | Under review | VSO Representative | R | R | R | R |
+// | Under review | VA Reviewer | E | E | E | E |
+// | Changes requested | Veteran | E | E | E | E |
+// | Changes requested | VSO Representative | E | E | E | E |
+// | Changes requested | VA Reviewer | R | R | R | R |
+// | Approved | Veteran | E | E | E | E |
+// | Approved | VSO Representative | E | E | E | E |
+// | Approved | VA Reviewer | E | E | E | E |
+// | Denied | Veteran | E | E | E | E |
+// | Denied | VSO Representative | E | E | E | E |
+// | Denied | VA Reviewer | E | E | E | E |
+// 
+
+    
+    // Dynamic chapter visibility
+    const DYNAMIC_CHAPTER_RULES = [
+  { chapterId: 'representative-info', field: 'fillingFor', op: 'eq', value: 'representative' }
+    ];
+    function applyDynamicChapters() {
+      for (const rule of DYNAMIC_CHAPTER_RULES) {
+        const field = document.querySelector('[name="' + rule.field + '"]');
+        const val = field?.value ?? '';
+        let show = false;
+        if (rule.op === 'eq') show = val === rule.value;
+        else if (rule.op === 'neq') show = val !== rule.value;
+        else if (rule.op === 'includes') show = val.includes(rule.value);
+        const chapter = document.querySelector('[data-chapter="' + rule.chapterId + '"]');
+        if (chapter) chapter.closest('[data-page]').hidden = !show;
+        // Also update task list item
+        const task = document.querySelector('civ-task[href="#/' + rule.chapterId + '"]');
+        if (task) task.hidden = !show;
+      }
+    }
+    document.addEventListener('civ-change', applyDynamicChapters);
+    applyDynamicChapters();
+
+    // ── Form Submission ──────────────────────────────────────────
+
+    async function handleSubmit() {
+      // Collect all form data
+      const formData = {};
+      document.querySelectorAll('[data-civ-form-field]').forEach(field => {
+        const name = field.getAttribute('name');
+        const value = field.value;
+        if (name && value) formData[name] = value;
+      });
+
+      try {
+        const response = await fetch('/api/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData),
+        });
+
+        if (response.ok) {
+          showPage('confirmation');
+        } else {
+          alert('Submission failed. Please try again.');
+        }
+      } catch (err) {
+        // For demo/development: show confirmation anyway
+        showPage('confirmation');
+      }
+    }
+
+    // ── Chapter Field Stepping ──────────────────────────────────
+    
+  </script>
+</body>
+</html>

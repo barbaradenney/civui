@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Request a Certificate of Eligibility for a VA home loan | VA Form 26-1880</title>
+
+  <!-- CivUI Design System -->
+  <script type="module" src="/src/civui.ts"></script>
+</head>
+<body>
+  <main id="main-content" class="civ-p-6" style="max-width: 720px; margin: 0 auto;">
+
+    <section data-page="intro" >
+<!-- VA Form 26-1880 — Introduction Page -->
+<div class="civ-form-intro">
+  <civ-page-header>
+    <h1 data-heading class="civ-heading-xl">Request a Certificate of Eligibility for a VA home loan</h1>
+    <span data-subheading>VA Form 26-1880</span>
+  </civ-page-header>
+
+  <p class="civ-text-muted civ-mb-6">Intro text goes here.</p>
+
+  <civ-button label="Start your application" variant="primary"></civ-button>
+</div>
+    </section>
+
+    <section data-page="hub" hidden>
+<!-- Task List Hub -->
+<div data-page="hub">
+  <civ-page-header>
+    <h1 data-heading class="civ-heading-xl">Request a Certificate of Eligibility for a VA home loan</h1>
+    <span data-subheading>VA Form 26-1880</span>
+  </civ-page-header>
+
+  <civ-progress-bar
+    value="0"
+    label="Application progress"
+    status="0 of 5 sections complete"
+  ></civ-progress-bar>
+
+  <civ-task-list>
+    <civ-task-group>
+      <h3 data-task-group-heading class="civ-heading-md">Fill out your application</h3>
+      <civ-task
+        data-chapter-id="personal-info"
+        label="Personal information"
+        hint="Name, date of birth, Social Security number" href="#/personal-info"
+        status="not-started"
+      ></civ-task>
+      <civ-task
+        data-chapter-id="contact-info"
+        label="Contact information"
+        hint="Address, phone, email"
+        status="cannot-start"
+      ></civ-task>
+      <civ-task
+        data-chapter-id="service-history"
+        label="Service history"
+        hint="Branch, dates, and character of service"
+        status="cannot-start"
+      ></civ-task>
+      <civ-task
+        data-chapter-id="loan-info"
+        label="Loan information"
+        hint="Previous VA loan history and loan type"
+        status="cannot-start"
+      ></civ-task>
+      <civ-task
+        data-chapter-id="document-upload"
+        label="Supporting documents"
+        hint="Upload DD214 and supporting evidence"
+        status="cannot-start"
+      ></civ-task>
+    </civ-task-group>
+
+    <civ-task-group>
+      <h3 data-task-group-heading class="civ-heading-md">Review and submit</h3>
+      <civ-task
+        label="Review your application"
+        hint="Complete all sections before reviewing"
+        status="cannot-start"
+      ></civ-task>
+    </civ-task-group>
+  </civ-task-list>
+</div>
+    </section>
+
+    <section data-page="personal-info" hidden>
+<!-- Chapter: Personal information -->
+<div data-chapter="personal-info">
+  <civ-link href="#/hub" variant="back" label="Back to task list" class="civ-mb-4 civ-block"></civ-link>
+
+  <civ-page-header>
+    <span data-eyebrow>Request a Certificate of Eligibility for a VA home loan</span>
+    <h2 data-heading class="civ-heading-lg">Personal information</h2>
+    <span data-subheading>VA Form 26-1880</span>
+  </civ-page-header>
+
+  <civ-form-step persist="26-1880-personal-info" complete-label="Save and continue">
+    <div data-step data-step-label="Your name">
+      <civ-name name="fullName" legend="Your name" required></civ-name>
+    </div>
+    <div data-step data-step-label="Date of birth">
+      <civ-memorable-date
+        legend="Date of birth"
+        name="dateOfBirth"
+        required
+        hint="For example: January 15 1990"
+      ></civ-memorable-date>
+    </div>
+    <div data-step data-step-label="Social Security number">
+      <civ-text-input
+        label="Social Security number"
+        name="ssn"
+        required
+        hint="We need this to verify your identity"
+        autocomplete="off"
+        inputmode="numeric"
+        type="tel"
+        mask="ssn"
+        validate="ssn"
+      ></civ-text-input>
+    </div>
+  </civ-form-step>
+</div>
+    </section>
+
+    <section data-page="contact-info" hidden>
+<!-- Chapter: Contact information -->
+<div data-chapter="contact-info">
+  <civ-link href="#/hub" variant="back" label="Back to task list" class="civ-mb-4 civ-block"></civ-link>
+
+  <civ-page-header>
+    <span data-eyebrow>Request a Certificate of Eligibility for a VA home loan</span>
+    <h2 data-heading class="civ-heading-lg">Contact information</h2>
+    <span data-subheading>VA Form 26-1880</span>
+  </civ-page-header>
+
+  <civ-form-step persist="26-1880-contact-info" complete-label="Save and continue">
+    <div data-step data-step-label="Mailing address">
+      <civ-address name="mailingAddress" legend="Mailing address" required></civ-address>
+    </div>
+    <div data-step data-step-label="Home phone number">
+      <civ-text-input
+        label="Home phone number"
+        name="homePhone"
+        hint="Enter a 10-digit phone number"
+        autocomplete="tel"
+        inputmode="numeric"
+        type="tel"
+      ></civ-text-input>
+    </div>
+    <div data-step data-step-label="Mobile phone number">
+      <civ-text-input
+        label="Mobile phone number"
+        name="mobilePhone"
+        autocomplete="tel"
+        inputmode="numeric"
+        type="tel"
+      ></civ-text-input>
+    </div>
+    <div data-step data-step-label="Email address">
+      <civ-text-input
+        label="Email address"
+        name="email"
+        required
+        autocomplete="email"
+        type="email"
+      ></civ-text-input>
+    </div>
+    <div data-step data-step-label="How should we contact you if we have questions?">
+      <civ-radio-group
+        legend="How should we contact you if we have questions?"
+        name="contactMethod"
+        required
+      >
+        <civ-radio label="Email" value="email"></civ-radio>
+        <civ-radio label="Home phone" value="homePhone"></civ-radio>
+        <civ-radio label="Mobile phone" value="mobilePhone"></civ-radio>
+        <civ-radio label="U.S. mail" value="mail"></civ-radio>
+      </civ-radio-group>
+    </div>
+  </civ-form-step>
+</div>
+    </section>
+
+    <section data-page="service-history" hidden>
+<!-- Chapter: Service history -->
+<div data-chapter="service-history">
+  <nav class="civ-mb-4">
+    <civ-link href="#/hub" variant="back" label="Back to task list" class="civ-block"></civ-link>
+  </nav>
+
+  <civ-page-header>
+    <span data-eyebrow>Request a Certificate of Eligibility for a VA home loan</span>
+    <h2 data-heading class="civ-heading-lg">Service history</h2>
+    <span data-subheading>VA Form 26-1880</span>
+  </civ-page-header>
+
+  <civ-form persist="26-1880-service-history">
+    <civ-repeater
+      legend="Service history"
+      name="service-history"
+      item-label="service history"
+      mode="detail"
+      min="1"
+      max="20"
+    >
+      <civ-combobox
+        label="Branch of service"
+        name="branch"
+        required
+      ></civ-combobox>
+      <civ-memorable-date
+        legend="Service start date"
+        name="serviceStartDate"
+        required
+        hint="If you don&#39;t know the exact date, enter your best estimate"
+      ></civ-memorable-date>
+      <civ-memorable-date
+        legend="Service end date"
+        name="serviceEndDate"
+        required
+        hint="If you don&#39;t know the exact date, enter your best estimate"
+      ></civ-memorable-date>
+      <civ-select
+        label="Character of service"
+        name="dischargeType"
+        required
+      ></civ-select>
+    </civ-repeater>
+
+    <div class="civ-mt-6">
+      <civ-button label="Save and continue"></civ-button>
+    </div>
+  </civ-form>
+</div>
+    </section>
+
+    <section data-page="loan-info" hidden>
+<!-- Chapter: Loan information -->
+<div data-chapter="loan-info">
+  <civ-link href="#/hub" variant="back" label="Back to task list" class="civ-mb-4 civ-block"></civ-link>
+
+  <civ-page-header>
+    <span data-eyebrow>Request a Certificate of Eligibility for a VA home loan</span>
+    <h2 data-heading class="civ-heading-lg">Loan information</h2>
+    <span data-subheading>VA Form 26-1880</span>
+  </civ-page-header>
+
+  <civ-form-step persist="26-1880-loan-info" complete-label="Save and continue">
+    <div data-step data-step-label="Have you used VA home loan benefit before?">
+      <civ-radio-group
+        legend="Have you used VA home loan benefit before?"
+        name="previousLoan"
+        required
+      >
+        <civ-radio label="Yes" value="yes"></civ-radio>
+        <civ-radio label="No" value="no"></civ-radio>
+      </civ-radio-group>
+    </div>
+    <div data-step data-step-label="Property address of previous VA loan">
+      <civ-text-input
+        label="Property address of previous VA loan"
+        name="previousLoanAddress"
+        type="text"
+      ></civ-text-input>
+    </div>
+    <div data-step data-step-label="Loan type requested">
+      <civ-select
+        label="Loan type requested"
+        name="loanTypeRequested"
+      ></civ-select>
+    </div>
+    <div data-step data-step-label="Are you a surviving spouse?">
+      <civ-radio-group
+        legend="Are you a surviving spouse?"
+        name="survivingSpouse"
+        
+      >
+        <civ-radio label="Yes" value="yes"></civ-radio>
+        <civ-radio label="No" value="no"></civ-radio>
+      </civ-radio-group>
+    </div>
+  </civ-form-step>
+</div>
+    </section>
+
+    <section data-page="document-upload" hidden>
+<!-- Chapter: Supporting documents -->
+<div data-chapter="document-upload">
+  <civ-link href="#/hub" variant="back" label="Back to task list" class="civ-mb-4 civ-block"></civ-link>
+
+  <civ-page-header>
+    <span data-eyebrow>Request a Certificate of Eligibility for a VA home loan</span>
+    <h2 data-heading class="civ-heading-lg">Supporting documents</h2>
+    <span data-subheading>VA Form 26-1880</span>
+  </civ-page-header>
+
+  <civ-form-step persist="26-1880-document-upload" complete-label="Save and continue">
+    <div data-step data-step-label="Upload supporting documents">
+      <civ-file-upload
+        label="Upload supporting documents"
+        name="documents"
+        hint="Upload PDF, JPG, or PNG files. Maximum file size: 20MB"
+        accept=".pdf,.jpg,.jpeg,.png"
+        multiple
+        max-size="20000000"
+        max-files="10"
+      ></civ-file-upload>
+    </div>
+  </civ-form-step>
+</div>
+    </section>
+
+    <section data-page="review" hidden>
+<!-- Review Page -->
+<div data-chapter="review-submit">
+  <civ-link href="#/hub" variant="back" label="Back to task list" class="civ-mb-4 civ-block"></civ-link>
+
+  <civ-page-header>
+    <span data-eyebrow>Request a Certificate of Eligibility for a VA home loan</span>
+    <h2 data-heading class="civ-heading-xl">Review your application</h2>
+    <span data-subheading>VA Form 26-1880</span>
+  </civ-page-header>
+
+  <civ-summary heading="" data-va-review></civ-summary>
+
+  <civ-signature
+    legend="Statement of truth"
+    name="signature"
+    statement="I certify that the information I have provided is true and correct to the best of my knowledge and belief."
+    required
+  ></civ-signature>
+
+  <div class="civ-mt-6">
+    <civ-button label="Submit application"></civ-button>
+  </div>
+</div>
+    </section>
+
+    <section data-page="confirmation" hidden>
+<!-- Confirmation Page -->
+<div data-page="confirmation">
+  <civ-page-header>
+    <h1 data-heading class="civ-heading-xl">Request a Certificate of Eligibility for a VA home loan</h1>
+    <span data-subheading>VA Form 26-1880</span>
+  </civ-page-header>
+
+  <civ-alert variant="success" heading="We've received your application">
+    Confirmation text goes here.
+  </civ-alert>
+
+  <p class="civ-text-muted civ-mt-6">Confirmation details go here.</p>
+</div>
+    </section>
+
+  </main>
+
+  <script>
+    // ── Page Router ──────────────────────────────────────────────
+    const CHAPTERS = ['personal-info', 'contact-info', 'service-history', 'loan-info', 'document-upload'];
+    const CHAPTER_HEADINGS = {
+    'personal-info': 'Personal information',
+    'contact-info': 'Contact information',
+    'service-history': 'Service history',
+    'loan-info': 'Loan information',
+    'document-upload': 'Supporting documents'
+    };
+
+    const completedChapters = new Set();
+    let currentPage = 'intro';
+
+    function showPage(pageId) {
+      document.querySelectorAll('[data-page]').forEach(el => {
+        el.hidden = el.dataset.page !== pageId;
+      });
+      currentPage = pageId;
+      window.scrollTo(0, 0);
+
+      // Update URL hash
+      if (pageId !== 'intro') {
+        history.replaceState(null, '', '#/' + pageId);
+      } else {
+        history.replaceState(null, '', location.pathname);
+      }
+    }
+
+    // Handle hash navigation
+    function handleHash() {
+      const hash = location.hash.replace('#/', '');
+      if (hash && document.querySelector('[data-page="' + hash + '"]')) {
+        showPage(hash);
+      }
+    }
+    window.addEventListener('hashchange', handleHash);
+    if (location.hash) handleHash();
+
+    // ── Navigation Button Wiring ─────────────────────────────────
+
+    // "Start your application" button on intro page
+    document.querySelector('[data-page="intro"] civ-button')?.addEventListener('click', () => {
+      showPage('hub');
+    });
+
+    // "Back to task list" links — inside wizards and standalone
+    document.querySelectorAll('civ-link[variant="back"]').forEach(link => {
+      const href = link.getAttribute('href') || '';
+      if (href.includes('hub')) {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          showPage('hub');
+        });
+      }
+    });
+
+    // Task list — navigate when clicking a task
+    document.querySelectorAll('civ-task').forEach(task => {
+      task.addEventListener('click', (e) => {
+        const chapterId = task.getAttribute('data-chapter-id');
+        const status = task.getAttribute('status');
+        if (chapterId && status !== 'cannot-start') {
+          e.preventDefault();
+          showPage(chapterId);
+        }
+      });
+    });
+
+    // Chapter completion — listen for civ-form-step complete events
+    document.querySelectorAll('[data-chapter]').forEach(chapter => {
+      const chapterId = chapter.dataset.chapter;
+
+      // civ-form-step fires civ-step-complete when all steps pass validation
+      const wizard = chapter.querySelector('civ-form-step');
+      if (wizard) {
+        wizard.addEventListener('civ-step-complete', () => {
+          completedChapters.add(chapterId);
+          updateTaskList();
+          showPage('hub');
+        });
+      }
+
+      // Repeatable sections (no wizard) — use Save and continue button
+      if (!wizard) {
+        chapter.querySelectorAll('civ-button').forEach(btn => {
+          const label = btn.getAttribute('label') || '';
+          if (label === 'Save and continue') {
+            btn.addEventListener('click', () => {
+              completedChapters.add(chapterId);
+              updateTaskList();
+              showPage('hub');
+            });
+          }
+        });
+      }
+    });
+
+    // Review page buttons
+    const reviewPage = document.querySelector('[data-chapter="review-submit"]');
+    if (reviewPage) {
+      const reviewBtns = reviewPage.querySelectorAll('civ-button');
+      reviewBtns.forEach(btn => {
+        const label = btn.getAttribute('label') || '';
+        if (label === 'Back') {
+          btn.addEventListener('click', () => showPage('hub'));
+        }
+        if (label === 'Submit application') {
+          btn.addEventListener('click', () => handleSubmit());
+        }
+      });
+    }
+
+    // ── Task List Status Tracking ────────────────────────────────
+
+    function updateTaskList() {
+      const totalChapters = CHAPTERS.length;
+      let doneCount = 0;
+      let nextUnlocked = false;
+
+      // Update each chapter task by data-chapter-id
+      CHAPTERS.forEach(chapterId => {
+        const task = document.querySelector('civ-task[data-chapter-id="' + chapterId + '"]');
+        if (!task) return;
+
+        if (completedChapters.has(chapterId)) {
+          task.setAttribute('status', 'complete');
+          task.setAttribute('href', '#/' + chapterId);
+          doneCount++;
+        } else if (!nextUnlocked) {
+          task.setAttribute('status', 'not-started');
+          task.setAttribute('href', '#/' + chapterId);
+          nextUnlocked = true;
+        } else {
+          task.setAttribute('status', 'cannot-start');
+          task.removeAttribute('href');
+        }
+      });
+
+      // Update review task (last task, no data-chapter-id)
+      const reviewTask = document.querySelector('civ-task:not([data-chapter-id])');
+      if (reviewTask) {
+        if (doneCount >= totalChapters) {
+          reviewTask.setAttribute('status', 'not-started');
+          reviewTask.setAttribute('href', '#/review');
+        } else {
+          reviewTask.setAttribute('status', 'cannot-start');
+          reviewTask.removeAttribute('href');
+        }
+      }
+
+      // Update progress bar
+      const progressBar = document.querySelector('civ-progress-bar');
+      if (progressBar) {
+        const pct = Math.round((doneCount / totalChapters) * 100);
+        progressBar.setAttribute('value', String(pct));
+        progressBar.setAttribute('status', doneCount + ' of ' + totalChapters + ' sections complete');
+      }
+    }
+
+    // ── Review Page Population ────────────────────────────────────
+
+    function populateReview() {
+      const summary = document.querySelector('[data-va-review]');
+      if (!summary) return;
+
+      const sections = CHAPTERS.map(id => {
+        const chapter = document.querySelector('[data-chapter="' + id + '"]');
+        if (!chapter) return null;
+
+        const items = [];
+        const fields = chapter.querySelectorAll('[data-civ-form-field]');
+        fields.forEach(field => {
+          const label = field.getAttribute('label') || field.getAttribute('legend') || '';
+          const value = field.value || '';
+          if (label && value) {
+            items.push({ label, value: String(value) });
+          }
+        });
+
+        return {
+          heading: CHAPTER_HEADINGS[id] || id,
+          editHref: '#/' + id,
+          items: items.length > 0 ? items : [{ label: 'Status', value: completedChapters.has(id) ? 'Complete' : 'Not started' }]
+        };
+      }).filter(Boolean);
+
+      summary.sections = sections;
+    }
+
+    // Populate review when navigating to it
+    const observer = new MutationObserver(() => {
+      if (!document.querySelector('[data-chapter="review-submit"]')?.parentElement?.hidden) {
+        populateReview();
+      }
+    });
+    const reviewSection = document.querySelector('[data-page="review"]');
+    if (reviewSection) {
+      observer.observe(reviewSection, { attributes: true, attributeFilter: ['hidden'] });
+    }
+
+    
+
+    // ── Form Submission ──────────────────────────────────────────
+
+    async function handleSubmit() {
+      // Collect all form data
+      const formData = {};
+      document.querySelectorAll('[data-civ-form-field]').forEach(field => {
+        const name = field.getAttribute('name');
+        const value = field.value;
+        if (name && value) formData[name] = value;
+      });
+
+      try {
+        const response = await fetch('/api/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData),
+        });
+
+        if (response.ok) {
+          showPage('confirmation');
+        } else {
+          alert('Submission failed. Please try again.');
+        }
+      } catch (err) {
+        // For demo/development: show confirmation anyway
+        showPage('confirmation');
+      }
+    }
+
+    // ── Chapter Field Stepping ──────────────────────────────────
+    
+  </script>
+</body>
+</html>

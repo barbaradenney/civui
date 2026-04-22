@@ -30,6 +30,13 @@ export default defineConfig({
     alias: {
       '@civui/core': resolve(packages, 'core/src/index.ts'),
       '@civui/forms': resolve(packages, 'forms/src/index.ts'),
+      '@civui/ui/tag': resolve(packages, 'ui/src/tag/index.ts'),
+      '@civui/ui/link': resolve(packages, 'ui/src/link/index.ts'),
+      '@civui/ui/button': resolve(packages, 'ui/src/button/index.ts'),
+      '@civui/ui/card': resolve(packages, 'ui/src/card/index.ts'),
+      '@civui/ui/divider': resolve(packages, 'ui/src/divider/index.ts'),
+      '@civui/ui/page-header': resolve(packages, 'ui/src/page-header/index.ts'),
+      '@civui/ui/link-card': resolve(packages, 'ui/src/link-card/index.ts'),
       '@civui/ui': resolve(packages, 'ui/src/index.ts'),
       '@civui/navigation': resolve(packages, 'navigation/src/index.ts'),
       '@civui/feedback': resolve(packages, 'feedback/src/index.ts'),

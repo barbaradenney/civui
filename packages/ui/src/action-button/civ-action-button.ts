@@ -23,6 +23,7 @@ export type ActionButtonVariant = 'primary' | 'secondary' | 'tertiary';
  *
  * @prop {string} label - Button text
  * @prop {ActionButtonVariant} variant - Visual variant
+ * @prop {boolean} danger - Destructive action styling
  * @prop {boolean} disabled - Disabled state
  * @prop {boolean} pressed - Toggle pressed state (for toolbar toggles)
  *
@@ -38,14 +39,19 @@ export type ActionButtonVariant = 'primary' | 'secondary' | 'tertiary';
 export class CivActionButton extends CivBaseElement {
   @property({ type: String }) label = '';
   @property({ type: String }) variant: ActionButtonVariant = 'tertiary';
+  @property({ type: Boolean, reflect: true }) danger = false;
   @property({ type: Boolean, reflect: true }) disabled = false;
   @property({ type: Boolean, reflect: true }) pressed = false;
   @property({ type: String }) type: 'button' | 'submit' | 'reset' = 'button';
 
   private get _classes(): string {
+    const variantClass = this.danger
+      ? `civ-action-btn--${this.variant}-danger`
+      : `civ-action-btn--${this.variant}`;
+
     return [
       'civ-action-btn',
-      `civ-action-btn--${this.variant}`,
+      variantClass,
       this.disabled ? 'civ-opacity-50 civ-cursor-not-allowed' : '',
       'focus-visible:civ-focus-ring',
     ]

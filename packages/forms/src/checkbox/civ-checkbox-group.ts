@@ -131,13 +131,13 @@ export class CivCheckboxGroup extends LightDomSlotMixin(CivFormElement) {
         ${renderHint(this._hintId, combinedHint, true)}
         ${renderError(this._errorId, this.error, true)}
         ${this.showSelectAll ? html`
-          <civ-button
+          <civ-action-button
             variant="tertiary"
             label="${this._allChecked ? t('deselectAll') : t('selectAll')}"
             ?disabled="${this.disabled}"
             @click="${this._onToggleAll}"
             class="civ-mb-2"
-          ></civ-button>` : nothing}
+          ></civ-action-button>` : nothing}
         <div class="${layoutClass}"></div>
       </fieldset>
     `;

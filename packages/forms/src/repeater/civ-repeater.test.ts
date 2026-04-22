@@ -59,7 +59,7 @@ describe('civ-repeater', () => {
       </civ-repeater>
     `);
 
-    const addBtn = el.querySelector('civ-button[variant="secondary"]')! as HTMLButtonElement;
+    const addBtn = el.querySelector('civ-action-button[variant="tertiary"]')! as HTMLButtonElement;
     addBtn.click();
     await elementUpdated(el);
 
@@ -74,7 +74,7 @@ describe('civ-repeater', () => {
       </civ-repeater>
     `);
 
-    const addBtn = el.querySelector('civ-button[variant="secondary"]')! as HTMLButtonElement;
+    const addBtn = el.querySelector('civ-action-button[variant="tertiary"]')! as HTMLButtonElement;
     addBtn.click();
     await elementUpdated(el);
 
@@ -95,7 +95,7 @@ describe('civ-repeater', () => {
       eventDetail = e.detail;
     }) as EventListener);
 
-    const addBtn = el.querySelector('civ-button[variant="secondary"]')! as HTMLButtonElement;
+    const addBtn = el.querySelector('civ-action-button[variant="tertiary"]')! as HTMLButtonElement;
     addBtn.click();
 
     expect(eventDetail).not.toBeNull();
@@ -167,7 +167,7 @@ describe('civ-repeater', () => {
       </civ-repeater>
     `);
 
-    const addBtn = el.querySelector('civ-button[variant="secondary"]');
+    const addBtn = el.querySelector('civ-action-button[variant="tertiary"]');
     expect(addBtn).toBeNull(); // Already at max (1 row, max 1)
   });
 
@@ -198,7 +198,7 @@ describe('civ-repeater', () => {
       </civ-repeater>
     `);
 
-    const addBtn = el.querySelector('civ-button[variant="secondary"]')!;
+    const addBtn = el.querySelector('civ-action-button[variant="tertiary"]')!;
     expect(addBtn.getAttribute('label')).toContain('dependent');
   });
 

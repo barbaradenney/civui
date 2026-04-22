@@ -1327,6 +1327,30 @@
     @apply civ-bg-primary civ-text-white civ-border-primary;
   }
 
+  /* Action button danger variants */
+  .civ-action-btn--primary-danger {
+    @apply civ-bg-error civ-text-white civ-border-error;
+  }
+  .civ-action-btn--primary-danger:hover:not(:disabled) {
+    @apply civ-bg-error-dark civ-border-error-dark;
+  }
+
+  .civ-action-btn--secondary-danger {
+    background-color: var(--civ-color-error-lightest);
+    color: var(--civ-color-error-dark);
+    border-color: transparent;
+  }
+  .civ-action-btn--secondary-danger:hover:not(:disabled) {
+    background-color: var(--civ-color-error-lighter);
+  }
+
+  .civ-action-btn--tertiary-danger {
+    @apply civ-bg-transparent civ-text-error civ-border-error;
+  }
+  .civ-action-btn--tertiary-danger:hover:not(:disabled) {
+    @apply civ-bg-error civ-text-white;
+  }
+
   /* ── Button Group ──────────────────────────────────────────── */
 
   .civ-button-group {

@@ -16,6 +16,7 @@ const config: Config = {
     { pattern: /^civ-icon--/ },
     // Button and link variants
     { pattern: /^civ-btn--/ },
+    { pattern: /^civ-action-btn--/ },
     { pattern: /^civ-link--/ },
     // Alert variants and styles
     { pattern: /^civ-alert--/ },

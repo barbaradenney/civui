@@ -1,18 +1,19 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { CivBaseElement, t } from '@civui/core';
+import type { CivLocaleStrings } from '@civui/core';
 import '@civui/ui/tag';
 import '@civui/ui/link';
 
 export type TaskStatus = 'not-started' | 'in-progress' | 'complete' | 'cannot-start' | 'error' | 'review';
 
-const STATUS_TAG: Record<TaskStatus, { label: string; variant: string; style?: string }> = {
-  'not-started': { label: 'Not started', variant: 'blue' },
-  'in-progress': { label: 'In progress', variant: 'teal' },
-  'complete': { label: 'Complete', variant: 'green', style: 'primary' },
-  'cannot-start': { label: 'Cannot start yet', variant: 'gray' },
-  'error': { label: 'Error', variant: 'red' },
-  'review': { label: 'Review', variant: 'yellow', style: 'primary' },
+const STATUS_TAG: Record<TaskStatus, { labelKey: keyof CivLocaleStrings; variant: string; style?: string }> = {
+  'not-started': { labelKey: 'taskStatusNotStarted', variant: 'blue' },
+  'in-progress': { labelKey: 'taskStatusInProgress', variant: 'teal' },
+  'complete': { labelKey: 'taskStatusComplete', variant: 'green', style: 'primary' },
+  'cannot-start': { labelKey: 'taskStatusCannotStart', variant: 'gray' },
+  'error': { labelKey: 'taskStatusError', variant: 'red' },
+  'review': { labelKey: 'taskStatusReview', variant: 'yellow', style: 'primary' },
 };
 
 /**
@@ -54,12 +55,12 @@ export class CivTask extends CivBaseElement {
 
   override render() {
     const isNavigable = this.href && this.status !== 'cannot-start';
-    const tag = STATUS_TAG[this.status] || STATUS_TAG['not-started'];
+    const tagDef = STATUS_TAG[this.status] || STATUS_TAG['not-started'];
     const isError = this.status === 'error';
     const prefillHint = this.prefilled ? t('taskPrefillHint') : '';
 
     return html`
-      <li class="civ-task" role="listitem">
+      <li class="civ-task">
         <div class="civ-task__content">
           <h4 class="civ-task__label">
             ${isNavigable
@@ -72,18 +73,17 @@ export class CivTask extends CivBaseElement {
                 ></civ-link>`
               : html`${this.label}`}
           </h4>
-          ${this.hint
-            ? html`<p class="civ-task__hint">${this.hint}</p>`
-            : nothing}
-          ${prefillHint
-            ? html`<p class="civ-task__hint">${prefillHint}</p>`
-            : nothing}
+          ${this.hint || prefillHint ? html`
+            <p class="civ-task__hint">
+              ${this.hint}${this.hint && prefillHint ? html`<br>` : nothing}${prefillHint}
+            </p>
+          ` : nothing}
         </div>
         <div class="civ-task__status" id="${this._statusId}">
           <civ-tag
-            label="${tag.label}"
-            variant="${tag.variant}"
-            tag-style="${tag.style || 'secondary'}"
+            label="${t(tagDef.labelKey)}"
+            variant="${tagDef.variant}"
+            tag-style="${tagDef.style || 'secondary'}"
           ></civ-tag>
         </div>
       </li>

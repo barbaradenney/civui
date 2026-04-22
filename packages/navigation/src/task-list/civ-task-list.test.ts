@@ -88,7 +88,7 @@ describe('civ-task', () => {
     const el = await fixture('<civ-task label="Task" hint="Some details" status="not-started"></civ-task>');
     const hint = el.querySelector('p.civ-task__hint');
     expect(hint).not.toBeNull();
-    expect(hint!.textContent).toBe('Some details');
+    expect(hint!.textContent).toContain('Some details');
   });
 
   it('omits hint when empty', async () => {
@@ -138,6 +138,34 @@ describe('civ-task', () => {
     const statusEl = el.querySelector(`#${statusId}`);
     expect(statusEl).not.toBeNull();
     expect(statusEl!.querySelector('civ-tag')).not.toBeNull();
+  });
+
+  it('renders review status with yellow tag', async () => {
+    const el = await fixture('<civ-task label="Task" href="#" status="review"></civ-task>');
+    const tag = el.querySelector('civ-tag');
+    expect(tag!.getAttribute('variant')).toBe('yellow');
+    expect(tag!.getAttribute('tag-style')).toBe('primary');
+  });
+
+  it('shows prefill hint when prefilled is set', async () => {
+    const el = await fixture('<civ-task label="Task" status="review" prefilled></civ-task>');
+    const hint = el.querySelector('.civ-task__hint');
+    expect(hint).not.toBeNull();
+    expect(hint!.textContent).toContain('prefilled');
+  });
+
+  it('combines hint and prefill hint in one element', async () => {
+    const el = await fixture('<civ-task label="Task" hint="Phone and email" status="review" prefilled></civ-task>');
+    const hints = el.querySelectorAll('.civ-task__hint');
+    expect(hints.length).toBe(1);
+    expect(hints[0].textContent).toContain('Phone and email');
+    expect(hints[0].textContent).toContain('prefilled');
+  });
+
+  it('li does not have redundant role="listitem"', async () => {
+    const el = await fixture('<civ-task label="Task" status="not-started"></civ-task>');
+    const li = el.querySelector('li');
+    expect(li!.hasAttribute('role')).toBe(false);
   });
 
   it('uses Light DOM', async () => {

@@ -176,7 +176,9 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
         : nothing}
       ${this._prefillError
         ? html`<div class="civ-mb-4 civ-text-error" role="alert">
-            <p>${t('prefillError')} <civ-link label="${t('prefillRetry')}" @click="${this._fetchPrefillData}"></civ-link></p>
+            <p>${t('prefillError')}
+              <button type="button" class="civ-link civ-underline" @click="${this._fetchPrefillData}">${t('prefillRetry')}</button>
+            </p>
           </div>`
         : nothing}
       ${this._errors.length > 0
@@ -381,6 +383,9 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
     }
   }
 
+  /** Field names that were restored from sessionStorage (not URL prefill). */
+  private _persistedFieldNames = new Set<string>();
+
   private _restorePersistedData(): void {
     try {
       const saved = sessionStorage.getItem(`civ-form:${this.persist}`);
@@ -391,6 +396,7 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
         fields.forEach((field) => {
           if (field.name && data[field.name] !== undefined) {
             field.value = data[field.name];
+            this._persistedFieldNames.add(field.name);
           }
         });
       });
@@ -426,6 +432,11 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
     }
   }
 
+  /** Strip HTML tags and script content from a string. */
+  private _sanitize(value: string): string {
+    return value.replace(/<[^>]*>/g, '').replace(/javascript:/gi, '');
+  }
+
   private _prefillFromUrl(): void {
     if (!this.prefill) return;
     if (typeof window === 'undefined' || !window.location) return;
@@ -434,28 +445,41 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
       const fields = this.querySelectorAll('[data-civ-form-field]') as NodeListOf<CivFormFieldLike>;
       fields.forEach((field) => {
         if (field.name && params.has(field.name)) {
-          field.value = params.get(field.name)!;
+          field.value = this._sanitize(params.get(field.name)!);
         }
       });
     });
   }
 
-  /** Fetch prefill data from a URL and apply it. */
+  /** Fetch prefill data from a URL and apply it. Aborts after 15s. */
+  private _prefillAbort?: AbortController;
+
   private async _fetchPrefillData(): Promise<void> {
     if (!this.prefillSrc) return;
+    this._prefillAbort?.abort();
+    this._prefillAbort = new AbortController();
+    const timeoutId = setTimeout(() => this._prefillAbort?.abort(), 15000);
     this._prefillLoading = true;
     this._prefillError = '';
     try {
       const headers = Object.keys(this.prefillHeaders).length > 0
         ? this.prefillHeaders
         : undefined;
-      const res = await fetch(this.prefillSrc, { headers });
+      const res = await fetch(this.prefillSrc, {
+        headers,
+        signal: this._prefillAbort.signal,
+      });
       if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
       this.prefillData = await res.json();
     } catch (err) {
-      this._prefillError = err instanceof Error ? err.message : 'Failed to load';
+      if ((err as Error).name === 'AbortError') {
+        this._prefillError = 'Request timed out';
+      } else {
+        this._prefillError = err instanceof Error ? err.message : 'Failed to load';
+      }
       dispatch(this, 'civ-prefill-error', { error: this._prefillError });
     } finally {
+      clearTimeout(timeoutId);
       this._prefillLoading = false;
     }
   }
@@ -477,8 +501,8 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
         const prefill = this.prefillData[field.name];
         if (!prefill) return;
 
-        // Don't overwrite persisted user edits
-        if (this.persist && field.value && field.value !== '') return;
+        // Don't overwrite user edits restored from sessionStorage
+        if (this._persistedFieldNames.has(field.name)) return;
 
         field.value = prefill.value;
         field.setAttribute('data-civ-prefill-source', prefill.source);

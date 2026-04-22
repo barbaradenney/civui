@@ -9,6 +9,9 @@ import { CivBaseElement, t } from '@civui/core';
  * bold value on the right, with an optional inline edit link.
  * Stacks vertically on mobile (label on top, value below).
  *
+ * Renders a self-contained `<dl>` so it can be used standalone
+ * or composed inside `civ-summary` sections.
+ *
  * @element civ-read-only-field
  *
  * @prop {string} label - Field label (left side)
@@ -40,7 +43,7 @@ export class CivReadOnlyField extends CivBaseElement {
     const editText = this.editLabel || t('summaryEditLink');
 
     return html`
-      <div class="civ-read-only-field civ-py-2">
+      <dl class="civ-read-only-field civ-py-2">
         <dt class="civ-read-only-field__label">${displayLabel}</dt>
         <dd class="civ-read-only-field__value">
           <span class="civ-read-only-field__data">
@@ -51,10 +54,16 @@ export class CivReadOnlyField extends CivBaseElement {
               : html`<span class="civ-text-muted civ-italic civ-font-normal">${t('summaryNotProvided')}</span>`}
           </span>
           ${this.editHref
-            ? html`<civ-link href="${this.editHref}" label="${editText}" variant="tertiary" class="civ-read-only-field__edit"></civ-link>`
+            ? html`<civ-link
+                href="${this.editHref}"
+                label="${editText}"
+                aria-label="${editText} ${displayLabel}"
+                variant="tertiary"
+                class="civ-read-only-field__edit"
+              ></civ-link>`
             : nothing}
         </dd>
-      </div>
+      </dl>
       ${this.hint ? html`
         <span class="civ-hint civ-text-sm civ-text-muted civ-block">${this.hint}</span>
       ` : nothing}

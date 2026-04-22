@@ -179,7 +179,21 @@ describe('civ-summary', () => {
     expect(sections.length).toBe(0);
   });
 
-  it('rejects javascript: URLs in editHref', async () => {
+  it('rejects javascript: URLs in item-level editHref', async () => {
+    const el = await fixture<CivSummary>('<civ-summary></civ-summary>') as CivSummary;
+    el.sections = [
+      {
+        heading: '',
+        items: [{ label: 'Name', value: 'Jane', editHref: 'javascript:alert(1)' }],
+      },
+    ];
+    await elementUpdated(el);
+
+    const field = el.querySelector('civ-read-only-field');
+    expect(field!.getAttribute('edit-href')).toBe('');
+  });
+
+  it('rejects javascript: URLs in section editHref', async () => {
     const el = await fixture<CivSummary>('<civ-summary></civ-summary>') as CivSummary;
     el.sections = [
       {

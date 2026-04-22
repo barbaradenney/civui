@@ -30,21 +30,28 @@ export class CivPrefillNotice extends CivBaseElement {
   /** Custom link text. Uses i18n default if empty. */
   @property({ type: String, attribute: 'link-text' }) linkText = '';
 
+  private _isSafeHref(href: string): boolean {
+    return /^(#|\/|https?:\/\/)/.test(href);
+  }
+
   override render() {
     const headingText = this.heading || t('prefillNoticeHeading');
     const bodyText = this.body || t('prefillNoticeBody');
     const linkLabel = this.linkText || t('prefillNoticeLink');
+    const safeHref = this.profileHref && this._isSafeHref(this.profileHref)
+      ? this.profileHref
+      : '';
 
     return html`
       <div class="civ-prefill-notice civ-alert civ-alert--info civ-alert--style-secondary" role="status">
         <div class="civ-alert__header">
-          <p class="civ-alert__heading" role="heading" aria-level="3">${headingText}</p>
+          <h3 class="civ-alert__heading">${headingText}</h3>
         </div>
         <div class="civ-alert__content">
           <div class="civ-alert__body">
             ${bodyText}
-            ${this.profileHref ? html`
-              <civ-link href="${this.profileHref}" label="${linkLabel}" class="civ-ms-1"></civ-link>
+            ${safeHref ? html`
+              <civ-link href="${safeHref}" label="${linkLabel}" class="civ-ms-1"></civ-link>
             ` : nothing}
           </div>
         </div>

@@ -1878,7 +1878,9 @@
     @apply civ-flex-shrink-0;
     font-size: var(--civ-typography-fontSize-base);
     color: var(--civ-color-base-darkest);
-    min-width: 0;
+    max-width: 50%;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .civ-read-only-field__value {

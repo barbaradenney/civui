@@ -42,7 +42,7 @@ export class CivSummary extends CivBaseElement {
   @property({ type: String }) heading = '';
 
   /** Sections to display. Set via JS property. */
-  @property({ type: Array }) sections: SummarySection[] = [];
+  @property({ type: Array, attribute: false }) sections: SummarySection[] = [];
 
   override render() {
     return html`
@@ -84,10 +84,11 @@ export class CivSummary extends CivBaseElement {
             ` : nothing}
           </div>
         ` : nothing}
-        <dl class="civ-summary-list civ-m-0">
+        <div class="civ-summary-list">
           ${section.items.map((item, i) => {
             // Per-row edit: use item's own editHref, or section's if no heading (flat mode)
-            const itemEditHref = item.editHref || (!section.heading ? (sectionEditHref || '') : '');
+            const rawHref = item.editHref || (!section.heading ? (sectionEditHref || '') : '');
+            const itemEditHref = rawHref && this._isSafeHref(rawHref) ? rawHref : '';
             const itemEditLabel = item.editLabel || (!section.heading ? (section.locked ? t('summaryEditProfile') : '') : '');
             return html`
               <civ-read-only-field
@@ -102,7 +103,7 @@ export class CivSummary extends CivBaseElement {
                 : nothing}
             `;
           })}
-        </dl>
+        </div>
       </div>
     `;
   }

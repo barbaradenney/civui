@@ -76,6 +76,17 @@ describe('civ-read-only-field', () => {
     expect(data!.textContent).toContain('Jane');
   });
 
+  it('edit link has accessible name with field label', async () => {
+    const el = await fixture('<civ-read-only-field label="Phone number" value="555" edit-href="#/phone"></civ-read-only-field>');
+    const link = el.querySelector('civ-link');
+    expect(link!.getAttribute('aria-label')).toContain('Phone number');
+  });
+
+  it('wraps in dl element for valid semantics', async () => {
+    const el = await fixture('<civ-read-only-field label="Name" value="Jane"></civ-read-only-field>');
+    expect(el.querySelector('dl')).not.toBeNull();
+  });
+
   it('uses definition list markup', async () => {
     const el = await fixture('<civ-read-only-field label="Field" value="Value"></civ-read-only-field>');
     expect(el.querySelector('dt')).not.toBeNull();

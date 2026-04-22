@@ -177,6 +177,7 @@ export interface CivLocaleStrings {
   taskStatusComplete: string;
   taskStatusCannotStart: string;
   taskStatusError: string;
+  taskStatusReview: string;
 
   // Summary
   summaryEditLink: string;
@@ -364,6 +365,7 @@ const defaultStrings: CivLocaleStrings = {
   taskStatusComplete: 'Complete',
   taskStatusCannotStart: 'Cannot start yet',
   taskStatusError: 'There is a problem',
+  taskStatusReview: 'Review',
 
   summaryEditLink: 'Edit',
   summaryEditAriaLabel: 'Edit {section}',

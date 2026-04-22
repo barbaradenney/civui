@@ -1709,84 +1709,78 @@
     font-size: var(--civ-typography-fontSize-base);
   }
 
-  /* Primary — blue filled card, white text */
+  /* Primary — filled primary, white text */
   .civ-link-card--primary {
-    border-color: var(--civ-color-primary-DEFAULT);
     background-color: var(--civ-color-primary-DEFAULT);
-  }
-  .civ-link-card--primary .civ-link-card__heading {
-    color: #ffffff;
-  }
-  .civ-link-card--primary .civ-link-card__description {
-    color: rgba(255, 255, 255, 0.85);
+    border-color: var(--civ-color-primary-DEFAULT);
+    color: var(--civ-color-white-DEFAULT);
   }
   .civ-link-card--primary:hover {
     background-color: var(--civ-color-primary-dark);
     border-color: var(--civ-color-primary-dark);
-    box-shadow: var(--civ-shadow-sm);
   }
   .civ-link-card--primary:active {
     background-color: var(--civ-color-primary-darker);
     border-color: var(--civ-color-primary-darker);
   }
 
-  /* Secondary — white card, blue border and heading */
+  /* Secondary — light tint background */
   .civ-link-card--secondary {
-    border-color: var(--civ-color-primary-DEFAULT);
-    background-color: var(--civ-color-white-DEFAULT);
-  }
-  .civ-link-card--secondary .civ-link-card__heading {
-    color: var(--civ-color-primary-DEFAULT);
-  }
-  .civ-link-card--secondary .civ-link-card__description {
-    color: var(--civ-color-base-dark);
+    background-color: var(--civ-color-primary-lightest);
+    border-color: transparent;
+    color: var(--civ-color-primary-dark);
   }
   .civ-link-card--secondary:hover {
-    background-color: var(--civ-color-primary-lightest);
-    box-shadow: var(--civ-shadow-sm);
+    background-color: var(--civ-color-primary-lighter);
   }
   .civ-link-card--secondary:active {
+    background-color: var(--civ-color-primary-light);
+  }
+
+  /* Tertiary — outlined border */
+  .civ-link-card--tertiary {
+    background-color: var(--civ-color-white-DEFAULT);
+    border-color: var(--civ-color-primary-DEFAULT);
+    color: var(--civ-color-primary-dark);
+  }
+  .civ-link-card--tertiary:hover {
+    background-color: var(--civ-color-primary-lightest);
+  }
+  .civ-link-card--tertiary:active {
     background-color: var(--civ-color-primary-lighter);
   }
 
-  /* Tertiary — white card, gray border, blue heading */
-  .civ-link-card--tertiary {
-    border-color: var(--civ-color-base-lighter);
-    background-color: var(--civ-color-white-DEFAULT);
-  }
-  .civ-link-card--tertiary .civ-link-card__heading {
-    color: var(--civ-color-primary-DEFAULT);
-  }
-  .civ-link-card--tertiary .civ-link-card__description {
-    color: var(--civ-color-base-dark);
-  }
-  .civ-link-card--tertiary:hover {
-    border-color: var(--civ-color-base-light);
-    background-color: var(--civ-color-base-lightest);
-    box-shadow: var(--civ-shadow-sm);
-  }
-  .civ-link-card--tertiary:active {
-    background-color: var(--civ-color-base-lighter);
-  }
-
-  /* Critical — yellow/gold background, black text */
+  /* Critical — warning yellow/gold */
   .civ-link-card--critical {
-    border-color: #face00;
-    background-color: #face00;
-  }
-  .civ-link-card--critical .civ-link-card__heading {
+    background-color: var(--civ-color-warning-light);
+    border-color: var(--civ-color-warning-DEFAULT);
     color: var(--civ-color-base-darkest);
-  }
-  .civ-link-card--critical .civ-link-card__description {
-    color: var(--civ-color-base-darker);
   }
   .civ-link-card--critical:hover {
     filter: brightness(0.95);
-    box-shadow: var(--civ-shadow-sm);
   }
   .civ-link-card--critical:active {
     filter: brightness(0.9);
   }
+
+  /* Danger — filled error, white text */
+  .civ-link-card--danger {
+    background-color: var(--civ-color-error-DEFAULT);
+    border-color: var(--civ-color-error-DEFAULT);
+    color: var(--civ-color-white-DEFAULT);
+  }
+  .civ-link-card--danger:hover {
+    background-color: var(--civ-color-error-dark);
+    border-color: var(--civ-color-error-dark);
+  }
+  .civ-link-card--danger:active {
+    background-color: var(--civ-color-error-dark);
+    filter: brightness(0.85);
+  }
+
+  /* Link card text — inherit color from variant */
+  .civ-link-card__heading { color: inherit; }
+  .civ-link-card__description { color: inherit; opacity: 0.85; }
 
   /* ── Page Header ──────────────────────────────────────────── */
 

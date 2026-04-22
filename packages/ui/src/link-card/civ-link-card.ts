@@ -2,7 +2,7 @@ import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { CivBaseElement } from '@civui/core';
 
-export type LinkCardVariant = 'primary' | 'secondary' | 'tertiary' | 'critical';
+export type LinkCardVariant = 'primary' | 'secondary' | 'tertiary' | 'critical' | 'danger';
 
 /**
  * CivUI Link Card
@@ -11,10 +11,11 @@ export type LinkCardVariant = 'primary' | 'secondary' | 'tertiary' | 'critical';
  * is the click target. Renders as an `<a>` element wrapping the content.
  *
  * **Variants:**
- * - `primary` (default) — blue filled card with white text
- * - `secondary` — white card with blue border and blue heading
- * - `tertiary` — white card with gray border and blue heading
- * - `critical` — yellow/gold background with black text for urgent actions
+ * - `primary` (default) — filled primary color, white text
+ * - `secondary` — light primary tint background
+ * - `tertiary` — white with border outline
+ * - `critical` — yellow/gold background for urgent actions
+ * - `danger` — filled error color, white text for destructive actions
  *
  * @element civ-link-card
  *

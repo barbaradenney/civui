@@ -12,7 +12,7 @@ const meta: Meta = {
     description: { control: 'text' },
     variant: {
       control: 'select',
-      options: ['primary', 'secondary', 'tertiary', 'critical'],
+      options: ['primary', 'secondary', 'tertiary', 'critical', 'danger'],
     },
   },
 };
@@ -104,6 +104,12 @@ export const AllVariants: Story = {
         heading="Action needed on your claim"
         description="Upload required documents to continue processing your claim."
         variant="critical"
+      ></civ-link-card>
+      <civ-link-card
+        href="#/cancel"
+        heading="Cancel your application"
+        description="This action cannot be undone."
+        variant="danger"
       ></civ-link-card>
     </div>
   `,

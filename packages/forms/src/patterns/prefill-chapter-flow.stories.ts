@@ -163,8 +163,7 @@ export const Step2b_PrefillWithMoreSteps: Story = {
           items: [
             { label: 'Mobile phone', value: '(555) 123-4567', editHref: '#/contact/phone' },
             { label: 'Email', value: 'jane.doe@example.com', editHref: '#/contact/email' },
-            { label: 'Street', value: '123 Main St', editHref: '#/contact/address' },
-            { label: 'City, state, zip', value: 'Springfield, IL 62701' },
+            { label: 'Mailing address', value: ['123 Main St', 'Springfield, IL 62701'], editHref: '#/contact/address' },
             { label: 'Preferred contact method', editHref: '#/contact/preference' },
           ],
         },
@@ -282,8 +281,8 @@ export const Step4_ChapterComplete: Story = {
           items: [
             { label: 'Mobile phone', value: '(555) 987-6543', editHref: '#/contact/phone' },
             { label: 'Email', value: 'jane.doe@example.com', editHref: '#/contact/email' },
-            { label: 'Street', value: '123 Main St', editHref: '#/contact/address' },
-            { label: 'City, state, zip', value: 'Springfield, IL 62701' },
+            { label: 'Mailing address', value: ['123 Main St', 'Springfield, IL 62701'], editHref: '#/contact/address' },
+            { label: 'Preferred contact method', value: 'Email', editHref: '#/contact/preference' },
           ],
         },
       ];

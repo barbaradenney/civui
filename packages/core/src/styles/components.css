@@ -1928,6 +1928,26 @@
     color: var(--civ-color-base-darkest);
   }
 
+  /* Card color variants — secondary (light tint) */
+  .civ-card--blue { background-color: var(--civ-color-primary-lightest); color: var(--civ-color-primary-dark); border-color: transparent; }
+  .civ-card--teal { background-color: var(--civ-color-info-lighter); color: var(--civ-color-info-dark); border-color: transparent; }
+  .civ-card--red { background-color: var(--civ-color-error-lighter); color: var(--civ-color-error-dark); border-color: transparent; }
+  .civ-card--green { background-color: var(--civ-color-success-lighter); color: var(--civ-color-success-dark); border-color: transparent; }
+  .civ-card--yellow { background-color: var(--civ-color-warning-lighter); color: var(--civ-color-warning-dark); border-color: transparent; }
+  .civ-card--orange { background-color: var(--civ-color-accent-warm-lightest); color: var(--civ-color-accent-warm-dark); border-color: transparent; }
+  .civ-card--purple { background-color: #ede3f3; color: #54278f; border-color: transparent; }
+  .civ-card--gray { background-color: var(--civ-color-base-lightest); color: var(--civ-color-base-darker); border-color: transparent; }
+
+  /* Card color variants — primary (dark fill) */
+  .civ-card--blue-primary { background-color: var(--civ-color-tag-blue-bg); color: var(--civ-color-tag-blue-text); border-color: transparent; }
+  .civ-card--teal-primary { background-color: var(--civ-color-tag-teal-bg); color: var(--civ-color-tag-teal-text); border-color: transparent; }
+  .civ-card--red-primary { background-color: var(--civ-color-tag-red-bg); color: var(--civ-color-tag-red-text); border-color: transparent; }
+  .civ-card--green-primary { background-color: var(--civ-color-tag-green-bg); color: var(--civ-color-tag-green-text); border-color: transparent; }
+  .civ-card--yellow-primary { background-color: var(--civ-color-tag-yellow-bg); color: var(--civ-color-tag-yellow-text); border-color: transparent; }
+  .civ-card--orange-primary { background-color: var(--civ-color-tag-orange-bg); color: var(--civ-color-tag-orange-text); border-color: transparent; }
+  .civ-card--purple-primary { background-color: #54278f; color: #fff; border-color: transparent; }
+  .civ-card--gray-primary { background-color: var(--civ-color-base-darker); color: #fff; border-color: transparent; }
+
   .civ-card--sm {
     @apply civ-p-3;
   }

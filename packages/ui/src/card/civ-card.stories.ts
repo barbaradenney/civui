@@ -10,7 +10,11 @@ const meta: Meta = {
   component: 'civ-card',
   tags: ['autodocs'],
   argTypes: {
-    variant: {
+    color: {
+      control: 'select',
+      options: ['', 'blue', 'teal', 'red', 'green', 'yellow', 'orange', 'purple', 'gray'],
+    },
+    cardStyle: {
       control: 'select',
       options: ['primary', 'secondary', 'tertiary'],
     },
@@ -33,40 +37,54 @@ export const Default: Story = {
   `,
 };
 
-export const Primary: Story = {
-  name: 'Primary',
-  render: () => html`
-    <civ-card variant="primary">
-      <p>Primary card with filled blue background and white text.</p>
-    </civ-card>
-  `,
-};
-
-export const Secondary: Story = {
-  name: 'Secondary',
-  render: () => html`
-    <civ-card variant="secondary">
-      <p>Secondary card with light tint background.</p>
-    </civ-card>
-  `,
-};
-
-export const AllVariants: Story = {
-  name: 'All Variants',
+export const AllStyles: Story = {
+  name: 'All Styles',
   render: () => html`
     <div style="display: flex; flex-direction: column; gap: 16px;">
-      <civ-card variant="primary">
+      <civ-card card-style="primary">
         <div data-card-header><h3 class="civ-heading-md">Primary</h3></div>
         <p>Filled primary color background with white text.</p>
       </civ-card>
-      <civ-card variant="secondary">
+      <civ-card card-style="secondary">
         <div data-card-header><h3 class="civ-heading-md">Secondary</h3></div>
-        <p>Light tint background matching the secondary tag pattern.</p>
+        <p>Light tint background.</p>
       </civ-card>
-      <civ-card variant="tertiary">
+      <civ-card card-style="tertiary">
         <div data-card-header><h3 class="civ-heading-md">Tertiary (Default)</h3></div>
-        <p>White background with border outline. This is the default.</p>
+        <p>White background with border outline.</p>
       </civ-card>
+    </div>
+  `,
+};
+
+export const ColorPaletteSecondary: Story = {
+  name: 'Color Palette (Secondary)',
+  render: () => html`
+    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
+      <civ-card color="blue"><p>Blue</p></civ-card>
+      <civ-card color="teal"><p>Teal</p></civ-card>
+      <civ-card color="green"><p>Green</p></civ-card>
+      <civ-card color="red"><p>Red</p></civ-card>
+      <civ-card color="yellow"><p>Yellow</p></civ-card>
+      <civ-card color="orange"><p>Orange</p></civ-card>
+      <civ-card color="purple"><p>Purple</p></civ-card>
+      <civ-card color="gray"><p>Gray</p></civ-card>
+    </div>
+  `,
+};
+
+export const ColorPalettePrimary: Story = {
+  name: 'Color Palette (Primary)',
+  render: () => html`
+    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
+      <civ-card color="blue" card-style="primary"><p>Blue</p></civ-card>
+      <civ-card color="teal" card-style="primary"><p>Teal</p></civ-card>
+      <civ-card color="green" card-style="primary"><p>Green</p></civ-card>
+      <civ-card color="red" card-style="primary"><p>Red</p></civ-card>
+      <civ-card color="yellow" card-style="primary"><p>Yellow</p></civ-card>
+      <civ-card color="orange" card-style="primary"><p>Orange</p></civ-card>
+      <civ-card color="purple" card-style="primary"><p>Purple</p></civ-card>
+      <civ-card color="gray" card-style="primary"><p>Gray</p></civ-card>
     </div>
   `,
 };

@@ -3,7 +3,8 @@ import { customElement, property } from 'lit/decorators.js';
 import { CivBaseElement, LightDomSlotMixin } from '@civui/core';
 import type { SlotConfig } from '@civui/core';
 
-export type CardVariant = 'primary' | 'secondary' | 'tertiary';
+export type CardColor = 'blue' | 'teal' | 'red' | 'green' | 'yellow' | 'orange' | 'purple' | 'gray';
+export type CardStyle = 'primary' | 'secondary' | 'tertiary';
 
 /**
  * CivUI Card
@@ -12,18 +13,23 @@ export type CardVariant = 'primary' | 'secondary' | 'tertiary';
  * Use `data-card-header` and `data-card-footer` attributes to assign
  * children to those sections. Everything else goes into the body.
  *
- * **Variants:**
- * - `primary` — filled primary color background, white text
- * - `secondary` — light primary tint background
+ * **Colors:** blue, teal, red, green, yellow, orange, purple, gray
+ * (same palette as civ-tag)
+ *
+ * **Styles:**
+ * - `primary` — filled dark background, white text
+ * - `secondary` — light tint background
  * - `tertiary` (default) — white background with border outline
  *
  * @element civ-card
- * @prop {CardVariant} variant - Visual variant
+ * @prop {CardColor} color - Color variant (default: none/neutral)
+ * @prop {CardStyle} cardStyle - Emphasis style
  * @prop {string} spacing - Padding size: 'default' or 'sm'
  */
 @customElement('civ-card')
 export class CivCard extends LightDomSlotMixin(CivBaseElement) {
-  @property({ type: String }) variant: CardVariant = 'tertiary';
+  @property({ type: String }) color: CardColor | '' = '';
+  @property({ type: String, attribute: 'card-style' }) cardStyle: CardStyle = 'tertiary';
   @property({ type: String }) spacing: 'default' | 'sm' = 'default';
 
   override _getSlotConfig(): SlotConfig {
@@ -39,9 +45,13 @@ export class CivCard extends LightDomSlotMixin(CivBaseElement) {
   }
 
   override render() {
+    const colorStyle = this.color
+      ? (this.cardStyle === 'primary' ? `civ-card--${this.color}-primary` : `civ-card--${this.color}`)
+      : `civ-card--${this.cardStyle}`;
+
     const classes = [
       'civ-card',
-      `civ-card--${this.variant}`,
+      colorStyle,
       this.spacing === 'sm' ? 'civ-card--sm' : '',
     ].filter(Boolean).join(' ');
 

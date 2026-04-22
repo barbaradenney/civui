@@ -1972,6 +1972,13 @@
 
   .civ-card__header {
     @apply civ-flex civ-flex-col civ-gap-1;
+    color: inherit;
+  }
+  .civ-card__header h1,
+  .civ-card__header h2,
+  .civ-card__header h3,
+  .civ-card__header h4 {
+    color: inherit;
   }
 
   .civ-card__body {

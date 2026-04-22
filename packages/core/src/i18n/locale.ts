@@ -188,6 +188,11 @@ export interface CivLocaleStrings {
   // Task prefill
   taskPrefillHint: string;
 
+  // Prefill states
+  prefillLoading: string;
+  prefillError: string;
+  prefillRetry: string;
+
   // Validation
   validateRequired: string; // "{label} is required"
   validateEmail: string;
@@ -366,6 +371,10 @@ const defaultStrings: CivLocaleStrings = {
   summaryEditProfile: 'Update on your profile',
 
   taskPrefillHint: 'We prefilled some information \u2014 please review',
+
+  prefillLoading: 'Loading your information\u2026',
+  prefillError: 'We couldn\u2019t load your information.',
+  prefillRetry: 'Try again',
 
   validateRequired: '{label} is required',
   validateEmail: 'Enter a valid email address',

@@ -308,83 +308,69 @@ ${chapterHeadings}
     // ── Prefill Support ────────────────────────────────────────────
 
     /**
-     * Apply prefill data to the form. Call this with profile/API data
-     * to populate chapters and show prefill review pages.
+     * Apply prefill data to the form. Sets prefillData on civ-form
+     * elements (which handle field values and locked state), then
+     * populates chapter summaries and updates task statuses.
      *
-     * @param {Record<string, {value: string, locked?: boolean}>} prefillData
+     * @param {Record<string, {value: string, source: string, locked?: boolean}>} prefillData
      */
     window.civApplyPrefill = function(prefillData) {
       if (!prefillData || Object.keys(prefillData).length === 0) return;
 
-      // For each chapter, check if any of its fields have prefill data
-      document.querySelectorAll('[data-prefill-review]').forEach(review => {
-        const chapterFieldNames = (review.getAttribute('data-chapter-fields') || '').split(',').filter(Boolean);
-        const prefillItems = [];
+      // Delegate field value setting to civ-form components
+      document.querySelectorAll('civ-form').forEach(function(form) {
+        form.prefillData = prefillData;
+      });
 
-        chapterFieldNames.forEach(name => {
-          const pf = prefillData[name];
+      // Populate chapter prefill review summaries
+      document.querySelectorAll('[data-prefill-review]').forEach(function(review) {
+        var chapterFieldNames = (review.getAttribute('data-chapter-fields') || '').split(',').filter(Boolean);
+        var prefillItems = [];
+
+        chapterFieldNames.forEach(function(name) {
+          var pf = prefillData[name];
           if (!pf || !pf.value) return;
-
-          // Set the value on the actual form field
-          const chapter = review.closest('[data-chapter]');
-          if (chapter) {
-            const field = chapter.querySelector('[name="' + name + '"]') ||
-                          chapter.querySelector('[data-civ-form-field][name="' + name + '"]');
-            if (field) {
-              field.value = pf.value;
-            }
-          }
-
-          // Build summary item — use field label if available
-          const formField = chapter?.querySelector('[name="' + name + '"], [data-civ-form-field][name="' + name + '"]');
-          const label = formField?.getAttribute('label') || formField?.getAttribute('legend') || name;
-          const editHref = pf.locked ? '' : '#/' + review.closest('[data-chapter]')?.getAttribute('data-chapter');
-          prefillItems.push({ label, value: String(pf.value), editHref });
+          var chapter = review.closest('[data-chapter]');
+          var formField = chapter && (chapter.querySelector('[data-civ-form-field][name="' + name + '"]'));
+          var label = formField ? (formField.getAttribute('label') || formField.getAttribute('legend') || name) : name;
+          var chapterId = chapter ? chapter.getAttribute('data-chapter') : '';
+          prefillItems.push({ label: label, value: String(pf.value), editHref: pf.locked ? '' : '#/' + chapterId });
         });
 
         if (prefillItems.length === 0) return;
 
-        // Populate the summary component
-        const summary = review.querySelector('[data-prefill-summary]');
+        var summary = review.querySelector('[data-prefill-summary]');
         if (summary) {
-          const allLocked = chapterFieldNames.every(n => prefillData[n]?.locked);
-          summary.sections = [{
-            heading: '',
-            editHref: allLocked ? '/profile/settings' : undefined,
-            locked: allLocked,
-            items: prefillItems
-          }];
+          var allLocked = chapterFieldNames.every(function(n) { return prefillData[n] && prefillData[n].locked; });
+          summary.sections = [{ heading: '', editHref: allLocked ? '/profile/settings' : undefined, locked: allLocked, items: prefillItems }];
         }
 
-        // Show the prefill review, hide the form steps initially
+        // Show prefill review, hide form steps
         review.hidden = false;
-        const steps = review.parentElement?.querySelector('[data-chapter-steps]');
+        var steps = review.parentElement && review.parentElement.querySelector('[data-chapter-steps]');
         if (steps) steps.hidden = true;
 
-        // Continue button — show the form steps
-        const continueBtn = review.querySelector('[data-prefill-continue]');
+        // Continue button toggles back to form steps
+        var continueBtn = review.querySelector('[data-prefill-continue]');
         if (continueBtn) {
-          continueBtn.addEventListener('click', () => {
+          continueBtn.addEventListener('click', function() {
             review.hidden = true;
             if (steps) steps.hidden = false;
           });
         }
 
-        // Update task status to "review"
-        const chapterId = review.closest('[data-chapter]')?.getAttribute('data-chapter');
-        if (chapterId) {
-          const task = document.querySelector('civ-task[data-chapter-id="' + chapterId + '"]');
-          if (task) {
-            task.setAttribute('prefilled', '');
-          }
-        }
+        // Mark task as prefilled
+        var chapterId = review.closest('[data-chapter]');
+        chapterId = chapterId ? chapterId.getAttribute('data-chapter') : '';
+        var task = document.querySelector('civ-task[data-chapter-id="' + chapterId + '"]');
+        if (task) task.setAttribute('prefilled', '');
       });
 
-      // Update task statuses: prefilled chapters that are first get "review"
+      // Update task statuses — prefilled unlocked chapters get "review"
       updateTaskList();
-      CHAPTERS.forEach(chapterId => {
-        const review = document.querySelector('[data-chapter="' + chapterId + '"] [data-prefill-review]:not([hidden])');
-        const task = document.querySelector('civ-task[data-chapter-id="' + chapterId + '"]');
+      CHAPTERS.forEach(function(chapterId) {
+        var review = document.querySelector('[data-chapter="' + chapterId + '"] [data-prefill-review]:not([hidden])');
+        var task = document.querySelector('civ-task[data-chapter-id="' + chapterId + '"]');
         if (review && task && task.getAttribute('status') !== 'complete') {
           task.setAttribute('status', 'review');
         }

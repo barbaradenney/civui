@@ -98,8 +98,13 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
    */
   @property({ type: String, attribute: 'prefill-src' }) prefillSrc = '';
 
+  /** Custom headers for prefill-src fetch (e.g., auth tokens). Set via JS. */
+  @property({ type: Object, attribute: false }) prefillHeaders: Record<string, string> = {};
+
   @state() private _errors: FormFieldError[] = [];
   @state() private _dirty = false;
+  @state() private _prefillLoading = false;
+  @state() private _prefillError = '';
   private _initialValues = new Map<string, string>();
 
   private _summaryId = this.generateId('summary');
@@ -166,6 +171,14 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
 
   override render() {
     return html`
+      ${this._prefillLoading
+        ? html`<div class="civ-mb-4" role="status"><p>${t('prefillLoading')}</p></div>`
+        : nothing}
+      ${this._prefillError
+        ? html`<div class="civ-mb-4 civ-text-error" role="alert">
+            <p>${t('prefillError')} <civ-link label="${t('prefillRetry')}" @click="${this._fetchPrefillData}"></civ-link></p>
+          </div>`
+        : nothing}
       ${this._errors.length > 0
         ? html`
             <div
@@ -430,12 +443,21 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
   /** Fetch prefill data from a URL and apply it. */
   private async _fetchPrefillData(): Promise<void> {
     if (!this.prefillSrc) return;
+    this._prefillLoading = true;
+    this._prefillError = '';
     try {
-      const res = await fetch(this.prefillSrc);
-      if (res.ok) {
-        this.prefillData = await res.json();
-      }
-    } catch { /* network errors handled gracefully — form works without prefill */ }
+      const headers = Object.keys(this.prefillHeaders).length > 0
+        ? this.prefillHeaders
+        : undefined;
+      const res = await fetch(this.prefillSrc, { headers });
+      if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+      this.prefillData = await res.json();
+    } catch (err) {
+      this._prefillError = err instanceof Error ? err.message : 'Failed to load';
+      dispatch(this, 'civ-prefill-error', { error: this._prefillError });
+    } finally {
+      this._prefillLoading = false;
+    }
   }
 
   /**
@@ -463,12 +485,16 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
 
         if (prefill.locked) {
           field.setAttribute('data-civ-prefill-locked', '');
+          field.disabled = true;
         }
         appliedFields.push(field.name);
       });
 
       if (appliedFields.length > 0) {
-        dispatch(this, 'civ-prefill-applied', { fields: appliedFields });
+        dispatch(this, 'civ-prefill-applied', {
+          fields: appliedFields,
+          meta: this.getPrefillMeta(),
+        });
       }
     });
   }

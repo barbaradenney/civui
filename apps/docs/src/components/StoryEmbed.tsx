@@ -7,8 +7,10 @@ interface StoryEmbedProps {
 }
 
 /**
- * Auto-resizing Storybook iframe embed.
- * Measures content height after load and stops once stable.
+ * Storybook iframe embed.
+ *
+ * Measures content height once after the iframe loads and sets the
+ * height. No polling — single measurement after a render delay.
  */
 export default function StoryEmbed({ id, title, minHeight = 100 }: StoryEmbedProps) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
@@ -18,13 +20,9 @@ export default function StoryEmbed({ id, title, minHeight = 100 }: StoryEmbedPro
     const iframe = iframeRef.current;
     if (!iframe) return;
 
-    let lastHeight = 0;
-    let stableCount = 0;
-    let attempts = 0;
     let timer: ReturnType<typeof setTimeout>;
 
     const measure = () => {
-      attempts++;
       try {
         const doc = iframe.contentDocument || iframe.contentWindow?.document;
         if (doc?.body) {
@@ -33,28 +31,17 @@ export default function StoryEmbed({ id, title, minHeight = 100 }: StoryEmbedPro
             doc.documentElement.scrollHeight
           );
           if (contentHeight > minHeight) {
-            if (contentHeight === lastHeight) {
-              stableCount++;
-            } else {
-              stableCount = 0;
-              lastHeight = contentHeight;
-              setHeight(contentHeight + 16);
-            }
+            setHeight(contentHeight + 16);
           }
         }
       } catch {
-        // Cross-origin — can't measure, keep minHeight
-      }
-
-      // Stop once height is stable for 3 checks or after 10 attempts
-      if (stableCount < 3 && attempts < 10) {
-        timer = setTimeout(measure, 500);
+        // Cross-origin — keep minHeight
       }
     };
 
     const handleLoad = () => {
-      // Start measuring after a short delay for rendering
-      timer = setTimeout(measure, 300);
+      // Single measurement after Storybook renders
+      timer = setTimeout(measure, 600);
     };
 
     iframe.addEventListener('load', handleLoad);

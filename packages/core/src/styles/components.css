@@ -1910,7 +1910,7 @@
   /* ── Card ─────────────────────────────────────────────────── */
 
   .civ-card {
-    @apply civ-p-4 civ-mb-4 civ-border civ-rounded;
+    @apply civ-p-4 civ-mb-4 civ-border;
   }
 
   .civ-card--primary {

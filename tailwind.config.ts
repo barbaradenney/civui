@@ -23,8 +23,8 @@ const config: Config = {
     { pattern: /^civ-group-layout--/ },
     // Link card variants
     { pattern: /^civ-link-card--/ },
-    // Card and divider sizes
-    'civ-card--sm',
+    // Card variants and sizes
+    { pattern: /^civ-card--/ },
     'civ-divider--sm',
   ],
   theme: {

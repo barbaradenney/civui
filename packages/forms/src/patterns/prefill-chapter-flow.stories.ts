@@ -71,9 +71,9 @@ export const Step1_Hub: Story = {
 
         <civ-task-group>
           <h3 data-task-group-heading class="civ-heading-md">Your claim</h3>
-          <civ-task label="Service history" href="#/service" status="not-started"></civ-task>
-          <civ-task label="Disabilities" status="cannot-start"></civ-task>
-          <civ-task label="Supporting documents" status="cannot-start"></civ-task>
+          <civ-task label="Service history" hint="Branch, dates, and character of service" status="cannot-start"></civ-task>
+          <civ-task label="Disabilities" hint="Conditions you are claiming" status="cannot-start"></civ-task>
+          <civ-task label="Supporting documents" hint="DD214 and medical records" status="cannot-start"></civ-task>
         </civ-task-group>
 
         <civ-task-group>
@@ -307,15 +307,15 @@ export const Step5_HubAfterComplete: Story = {
       <civ-task-list>
         <civ-task-group>
           <h3 data-task-group-heading class="civ-heading-md">Your information</h3>
-          <civ-task label="Personal information" href="#/personal" status="complete"></civ-task>
-          <civ-task label="Contact information" href="#/contact" status="complete"></civ-task>
+          <civ-task label="Personal information" hint="Name, date of birth, Social Security number" href="#/personal" status="complete"></civ-task>
+          <civ-task label="Contact information" hint="Phone, email, and mailing address" href="#/contact" status="complete"></civ-task>
         </civ-task-group>
 
         <civ-task-group>
           <h3 data-task-group-heading class="civ-heading-md">Your claim</h3>
-          <civ-task label="Service history" href="#/service" status="not-started"></civ-task>
-          <civ-task label="Disabilities" status="cannot-start"></civ-task>
-          <civ-task label="Supporting documents" status="cannot-start"></civ-task>
+          <civ-task label="Service history" hint="Branch, dates, and character of service" href="#/service" status="not-started"></civ-task>
+          <civ-task label="Disabilities" hint="Conditions you are claiming" status="cannot-start"></civ-task>
+          <civ-task label="Supporting documents" hint="DD214 and medical records" status="cannot-start"></civ-task>
         </civ-task-group>
 
         <civ-task-group>

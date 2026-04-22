@@ -260,6 +260,12 @@ ${fieldHtml}
     </div>`;
   }).join('\n');
 
+  // Build the list of field names for this chapter (used by prefill JS)
+  const fieldNames = chapter.section.fields.map(f => {
+    if (f.label.startsWith('component:')) return f.name;
+    return f.name;
+  });
+
   const html = `<!-- Chapter: ${escapeHtml(chapter.heading)} -->
 <div data-chapter="${escapeHtml(chapter.id)}">
   <civ-link href="#/hub" variant="back" label="Back to task list" class="civ-mb-4 civ-block"></civ-link>
@@ -270,9 +276,21 @@ ${fieldHtml}
     <span data-subheading>VA Form ${escapeHtml(form.formNumber)}</span>
   </civ-page-header>
 
-  <civ-form-step complete-label="Save and continue">
+  <!-- Prefill review (hidden by default, shown by runtime JS when prefill data exists) -->
+  <div data-prefill-review hidden data-chapter-fields="${fieldNames.join(',')}">
+    <civ-prefill-notice></civ-prefill-notice>
+    <civ-summary data-prefill-summary></civ-summary>
+    <p class="civ-mt-4">If this information is accurate, press continue to fill out the rest of the form.</p>
+    <div class="civ-mt-4">
+      <civ-button label="Continue" data-prefill-continue></civ-button>
+    </div>
+  </div>
+
+  <div data-chapter-steps>
+    <civ-form-step complete-label="Save and continue">
 ${fieldSteps}
-  </civ-form-step>
+    </civ-form-step>
+  </div>
 </div>`;
 
   const javascript = ''; // No custom JS needed — civ-form-step handles everything

@@ -165,6 +165,7 @@ export const Step2b_PrefillWithMoreSteps: Story = {
             { label: 'Email', value: 'jane.doe@example.com', editHref: '#/contact/email' },
             { label: 'Street', value: '123 Main St', editHref: '#/contact/address' },
             { label: 'City, state, zip', value: 'Springfield, IL 62701' },
+            { label: 'Preferred contact method', editHref: '#/contact/preference' },
           ],
         },
       ];

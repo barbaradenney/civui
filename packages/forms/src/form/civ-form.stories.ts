@@ -203,6 +203,84 @@ export const DensityScale: Story = {
 
 // ── Usage Example ─────────────────────────────────────────────
 
+// ── Prefill ──────────────────────────────────────────────────
+
+export const PrefillSrc: Story = {
+  name: 'Prefill: Remote Data Source',
+  render: () => html`
+    <!--
+      When prefill-src is set, civ-form fetches JSON from that URL on connect.
+      While loading, a "Loading your information..." status message is shown.
+      If the fetch fails, an error message with a retry link appears.
+
+      The JSON response must match PrefillData shape:
+      {
+        "name": { "value": "Jane Doe", "source": "profile" },
+        "email": { "value": "jane@agency.gov", "source": "profile", "locked": true }
+      }
+
+      Events:
+      - civ-prefill-applied: fired after fields are populated
+      - civ-prefill-error: fired if the fetch fails
+
+      In this demo, the URL won't resolve, so the error state is shown.
+    -->
+    <civ-form
+      form-label="Prefill from API"
+      prefill-src="data:application/json,{}"
+      @civ-prefill-applied="${(e: CustomEvent) => {
+        console.log('Prefill applied:', e.detail);
+      }}"
+      @civ-prefill-error="${(e: CustomEvent) => {
+        console.log('Prefill error:', e.detail);
+      }}"
+    >
+      <civ-text-input label="Full name" name="name" required></civ-text-input>
+      <civ-text-input label="Email address" name="email" type="email" required></civ-text-input>
+      <civ-text-input label="Phone number" name="phone" type="tel" hint="For example: (555) 123-4567"></civ-text-input>
+      <button
+        type="submit"
+        class="civ-inline-block civ-px-5 civ-py-2.5 civ-bg-primary civ-text-white civ-font-bold civ-border-0 civ-rounded civ-cursor-pointer hover:civ-bg-primary-dark focus-visible:civ-focus-ring-inverse"
+      >
+        Submit
+      </button>
+    </civ-form>
+  `,
+};
+
+export const PrefillApplied: Story = {
+  name: 'Prefill: Applied Data',
+  render: () => html`
+    <civ-form
+      id="prefill-demo"
+      form-label="Prefilled application"
+      @civ-prefill-applied="${(e: CustomEvent) => {
+        console.log('Prefill applied:', e.detail);
+      }}"
+    >
+      <civ-text-input label="Full name" name="name" required></civ-text-input>
+      <civ-text-input label="Email address" name="email" type="email" required></civ-text-input>
+      <civ-text-input label="Phone number" name="phone" type="tel"></civ-text-input>
+      <button
+        type="submit"
+        class="civ-inline-block civ-px-5 civ-py-2.5 civ-bg-primary civ-text-white civ-font-bold civ-border-0 civ-rounded civ-cursor-pointer hover:civ-bg-primary-dark focus-visible:civ-focus-ring-inverse"
+      >
+        Submit
+      </button>
+    </civ-form>
+  `,
+  play: async ({ canvasElement }) => {
+    const form = canvasElement.querySelector('#prefill-demo') as any;
+    if (form) {
+      form.prefillData = {
+        name: { value: 'Jane M. Doe', source: 'profile' },
+        email: { value: 'jane.doe@agency.gov', source: 'profile', locked: true },
+        phone: { value: '(555) 123-4567', source: 'api' },
+      };
+    }
+  },
+};
+
 export const GovernmentInquiryForm: Story = {
   name: 'Usage: Government Inquiry Form',
   render: () => html`

@@ -423,6 +423,172 @@ On validation failure, `civ-form` renders an error summary with anchor links to 
 
 ---
 
+### Prefill System
+
+CivUI provides a prefill engine for populating form fields from user profiles, APIs, or saved state. This is essential for government forms where signed-in users already have verified data on file.
+
+#### civ-form prefill properties
+
+| Property / Attribute | Type | Description |
+|---|---|---|
+| `prefillData` | `PrefillData` (JS property) | Data to populate fields. Keys are field `name` values. |
+| `prefill-src` | `string` (attribute) | URL to fetch prefill JSON from. Fetched on connect. |
+| `prefillHeaders` | `Record<string, string>` (JS property) | Custom headers for `prefill-src` fetch (e.g., auth tokens). |
+
+**PrefillData shape:**
+```typescript
+type PrefillData = Record<string, PrefillField>;
+
+interface PrefillField {
+  value: string;
+  source: 'profile' | 'api' | 'saved';
+  locked?: boolean; // When true, field is disabled — user must edit in profile settings
+}
+```
+
+**Prefill events:**
+- `civ-prefill-applied` -- `{ fields: string[], meta: PrefillMeta }` -- fired after fields are populated
+- `civ-prefill-error` -- `{ error: string }` -- fired if `prefill-src` fetch fails
+
+**`getPrefillMeta()` method:** Returns `{ prefilled: string[], locked: string[], needsReview: string[] }` for task list integration.
+
+**Example:**
+```javascript
+const form = document.querySelector('civ-form');
+form.prefillData = {
+  name: { value: 'Jane Doe', source: 'profile' },
+  email: { value: 'jane@agency.gov', source: 'profile', locked: true },
+  phone: { value: '(555) 123-4567', source: 'api' },
+};
+```
+
+#### civ-read-only-field
+
+Displays a label and value as a flat row with optional inline edit link. Used inside `civ-summary` and on review pages.
+
+**Props:**
+- `label` -- Field label (left side)
+- `value` -- Display value (right side, bold)
+- `values` -- `string[]` (JS property) -- multiple values, each on its own line
+- `edit-href` -- Edit link destination (renders inline "Edit" link)
+- `edit-label` -- Custom edit link text (default: "Edit")
+- `hint` -- Optional hint text below the row
+
+**Example:**
+```html
+<civ-read-only-field
+  label="Phone number"
+  value="(555) 123-4567"
+  edit-href="#/contact/phone"
+></civ-read-only-field>
+
+<!-- Multi-value (address) -->
+<civ-read-only-field
+  label="Mailing address"
+  .values="${['123 Main St', 'Springfield, IL 62701']}"
+  edit-href="#/contact/address"
+></civ-read-only-field>
+```
+
+#### civ-summary
+
+Read-only review page that displays structured sections with headings, edit links, and key-value pairs using `civ-read-only-field` internally.
+
+**Props:**
+- `heading` -- Main heading for the summary page
+- `sections` -- `SummarySection[]` (JS property) -- sections to display
+
+**Section types:**
+```typescript
+interface SummarySection {
+  heading: string;
+  editHref?: string;
+  locked?: boolean;    // When true, edit link text changes to "Update your profile"
+  items: SummaryItem[];
+}
+
+interface SummaryItem {
+  label: string;
+  value?: string | string[];
+  editHref?: string;   // Per-row edit link (used when section has no heading)
+  editLabel?: string;  // Custom edit link text
+}
+```
+
+**Layout modes:**
+- **Header edit:** When a section has a `heading`, the edit link appears in the section header (not per-row).
+- **Flat row edit:** When a section has no heading (empty string), each item gets its own edit link from `item.editHref`.
+- **Locked sections:** When `locked: true`, edit link text shows "Update your profile" instead of "Edit".
+
+**Example:**
+```html
+<civ-summary heading="Review your information"></civ-summary>
+<script>
+  document.querySelector('civ-summary').sections = [
+    {
+      heading: 'Personal information',
+      editHref: '#step-1',
+      items: [
+        { label: 'Name', value: 'Jane Doe' },
+        { label: 'Date of birth', value: 'January 15, 1985' },
+      ],
+    },
+  ];
+</script>
+```
+
+#### civ-prefill-notice
+
+Informational banner for chapter review pages explaining that data was prefilled from a profile.
+
+**Props:**
+- `heading` -- Custom heading text (uses i18n default if empty)
+- `body` -- Custom body text (uses i18n default if empty)
+- `profile-href` -- URL for the "update profile" link (omit to hide link)
+- `link-text` -- Custom link text
+
+**Example:**
+```html
+<civ-prefill-notice profile-href="/profile"></civ-prefill-notice>
+```
+
+#### civ-task (in @civui/navigation)
+
+Individual task row within a task list. Renders label, hint, status tag, and optional link.
+
+**Props:**
+- `label` -- Task name
+- `hint` -- Optional hint text below the label
+- `href` -- Navigation target (omit for locked tasks)
+- `status` -- `'not-started'` | `'in-progress'` | `'complete'` | `'cannot-start'` | `'error'` | `'review'`
+- `prefilled` -- Boolean; shows a default prefill hint when no custom hint is set
+
+**Example:**
+```html
+<civ-task
+  label="Contact information"
+  hint="Phone, email, and mailing address"
+  href="#/contact"
+  status="review"
+  prefilled
+></civ-task>
+```
+
+#### Prefill chapter flow pattern
+
+The recommended flow for multi-chapter government forms with prefilled data:
+
+```
+Task List Hub → Chapter Prefill Review → (Edit Steps if needed) → Save & Complete → Hub
+```
+
+1. **Hub** -- `civ-task-list` with `civ-task` items. Prefilled chapters show `status="review"` and `prefilled` attribute.
+2. **Chapter review** -- `civ-prefill-notice` banner + `civ-summary` showing prefilled data with edit links. Locked sections link to profile settings.
+3. **Edit step** -- Standard form fields for editing a specific piece of data. "Update and continue" returns to chapter review.
+4. **Complete** -- "Save and complete" marks the chapter done and returns to the hub.
+
+---
+
 ### civ-yes-no
 
 Binary yes/no radio group — common in government eligibility forms.

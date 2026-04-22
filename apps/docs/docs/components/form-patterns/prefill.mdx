@@ -1,0 +1,185 @@
+---
+title: Prefill
+sidebar_position: 8
+sidebar_label: Prefill
+---
+
+# Prefill
+
+CivUI provides a prefill system that populates form fields from user profiles, APIs, or saved state. This is common in government applications where agencies already have data about the user (e.g., from a VA.gov profile or login.gov identity).
+
+## When to use prefill
+
+- The user is signed in and the agency has verified profile data
+- A previous form submission provides data for a new form
+- An API (e.g., identity verification) returns data that should populate fields
+
+## The prefill chapter flow
+
+When a signed-in user opens a multi-chapter form with prefilled data, the flow is:
+
+```
+Task List Hub → Chapter Review → (Edit Steps if needed) → Save & Complete → Hub
+```
+
+1. **Hub** -- The task list shows chapters with status tags. Prefilled chapters show a hint and a "Review" status tag.
+2. **Chapter review** -- Clicking into a prefilled chapter shows a summary of prefilled data with edit links. A `<civ-prefill-notice>` banner explains where the data came from.
+3. **Edit** -- Clicking "Edit" on a row opens the form fields for that data.
+4. **Complete** -- After reviewing, "Save and complete" marks the chapter done and returns to the hub.
+
+## Using `prefillData` property
+
+Set `prefillData` on a `<civ-form>` to populate fields. Keys are field `name` attributes. Each value describes the prefill value and metadata.
+
+```html
+<civ-form id="my-form" form-label="Benefits application">
+  <civ-text-input label="Full name" name="name" required></civ-text-input>
+  <civ-text-input label="Email" name="email" type="email" required></civ-text-input>
+  <civ-text-input label="Phone" name="phone" type="tel"></civ-text-input>
+  <button type="submit">Submit</button>
+</civ-form>
+
+<script>
+  const form = document.querySelector('#my-form');
+  form.prefillData = {
+    name: { value: 'Jane M. Doe', source: 'profile' },
+    email: { value: 'jane.doe@agency.gov', source: 'profile', locked: true },
+    phone: { value: '(555) 123-4567', source: 'api' },
+  };
+</script>
+```
+
+### PrefillData shape
+
+```typescript
+type PrefillData = Record<string, PrefillField>;
+
+interface PrefillField {
+  value: string;                        // The value to fill
+  source: 'profile' | 'api' | 'saved'; // Where the value came from
+  locked?: boolean;                     // If true, field is disabled (edit via profile settings)
+}
+```
+
+## Using `prefill-src` attribute
+
+Fetch prefill data from a URL. The response must be JSON matching the `PrefillData` shape.
+
+```html
+<civ-form
+  form-label="Benefits application"
+  prefill-src="/api/prefill/user-profile"
+>
+  <!-- fields -->
+</civ-form>
+```
+
+While the fetch is in progress, a loading status message is displayed. If it fails, an error message with a retry link appears.
+
+## Using `prefillHeaders` for auth
+
+Pass custom headers (such as auth tokens) for the prefill fetch:
+
+```javascript
+const form = document.querySelector('civ-form');
+form.prefillHeaders = {
+  'Authorization': 'Bearer ' + token,
+  'X-Request-ID': requestId,
+};
+```
+
+## Events
+
+| Event | Detail | Description |
+|-------|--------|-------------|
+| `civ-prefill-applied` | `{ fields: string[], meta: PrefillMeta }` | Fired after prefill data is applied to fields |
+| `civ-prefill-error` | `{ error: string }` | Fired if `prefill-src` fetch fails |
+
+## `getPrefillMeta()` for task list integration
+
+After prefill is applied, call `getPrefillMeta()` to determine chapter statuses for a task list:
+
+```javascript
+const form = document.querySelector('civ-form');
+form.addEventListener('civ-prefill-applied', (e) => {
+  const meta = e.detail.meta;
+  // meta.prefilled: string[]   — all field names that received data
+  // meta.locked: string[]      — fields locked to profile (read-only)
+  // meta.needsReview: string[] — editable prefilled fields needing review
+
+  // Set task status based on meta
+  if (meta.needsReview.length > 0) {
+    task.status = 'review';
+  } else if (meta.locked.length > 0) {
+    task.status = 'complete'; // all data is locked, nothing to review
+  }
+});
+```
+
+## Locked fields
+
+When `locked: true` is set on a prefill field:
+- The field is set to `disabled` and gets a `data-civ-prefill-locked` attribute
+- The user cannot edit it in the form
+- The edit link on the summary page points to profile settings instead
+- The `<civ-summary>` section renders "Update your profile" instead of "Edit"
+
+## `civ-prefill-notice`
+
+Display an informational banner on chapter review pages to explain where the data came from:
+
+```html
+<civ-prefill-notice profile-href="/profile"></civ-prefill-notice>
+```
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `heading` | `string` | i18n default | Custom heading text |
+| `body` | `string` | i18n default | Custom body text |
+| `profile-href` | `string` | `''` | URL for the "update profile" link |
+| `link-text` | `string` | i18n default | Custom link text |
+
+## Full integration example
+
+```html
+<!-- Task list hub -->
+<civ-task-list>
+  <civ-task-group>
+    <h3 data-task-group-heading>Your information</h3>
+    <civ-task
+      label="Personal information"
+      hint="Name, date of birth, Social Security number"
+      href="#/personal"
+      status="review"
+      prefilled
+    ></civ-task>
+  </civ-task-group>
+</civ-task-list>
+
+<!-- Chapter review page -->
+<civ-prefill-notice profile-href="/profile"></civ-prefill-notice>
+
+<civ-summary id="chapter-summary" heading="Personal information"></civ-summary>
+
+<script>
+  const summary = document.querySelector('#chapter-summary');
+  summary.sections = [
+    {
+      heading: 'Verified identity',
+      editHref: '/profile/settings',
+      locked: true,
+      items: [
+        { label: 'Name', value: 'Jane M. Doe' },
+        { label: 'Date of birth', value: 'March 15, 1985' },
+        { label: 'Social Security number', value: '●●●-●●-6789' },
+      ],
+    },
+  ];
+</script>
+
+<button>Save and complete</button>
+```
+
+## Storybook examples
+
+See the [Prefill Chapter Flow](/civui/storybook/?path=/story/forms-patterns-prefill-chapter-flow--step-1-hub) stories for a complete interactive walkthrough of the hub, review, edit, and complete flow.

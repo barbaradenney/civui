@@ -10,6 +10,10 @@ const meta: Meta = {
   component: 'civ-card',
   tags: ['autodocs'],
   argTypes: {
+    variant: {
+      control: 'select',
+      options: ['primary', 'secondary', 'tertiary'],
+    },
     spacing: {
       control: 'select',
       options: ['default', 'sm'],
@@ -21,10 +25,49 @@ export default meta;
 type Story = StoryObj;
 
 export const Default: Story = {
+  name: 'Tertiary (Default)',
   render: () => html`
     <civ-card>
-      <p>Card content with default padding and border.</p>
+      <p>Default card with white background and border outline.</p>
     </civ-card>
+  `,
+};
+
+export const Primary: Story = {
+  name: 'Primary',
+  render: () => html`
+    <civ-card variant="primary">
+      <p>Primary card with filled blue background and white text.</p>
+    </civ-card>
+  `,
+};
+
+export const Secondary: Story = {
+  name: 'Secondary',
+  render: () => html`
+    <civ-card variant="secondary">
+      <p>Secondary card with light tint background.</p>
+    </civ-card>
+  `,
+};
+
+export const AllVariants: Story = {
+  name: 'All Variants',
+  render: () => html`
+    <div style="display: flex; flex-direction: column; gap: 16px;">
+      <civ-card variant="primary">
+        <div data-card-header><h3 class="civ-heading-md">Primary</h3></div>
+        <p>Filled primary color background with white text.</p>
+      </civ-card>
+      <civ-card variant="secondary">
+        <div data-card-header><h3 class="civ-heading-md">Secondary</h3></div>
+        <p>Light tint background matching the secondary tag pattern.</p>
+      </civ-card>
+      <civ-card variant="tertiary">
+        <div data-card-header><h3 class="civ-heading-md">Tertiary (Default)</h3></div>
+        <p>White background with border outline. This is the default.</p>
+      </civ-card>
+    </div>
   `,
 };
 

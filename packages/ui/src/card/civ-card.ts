@@ -3,6 +3,8 @@ import { customElement, property } from 'lit/decorators.js';
 import { CivBaseElement, LightDomSlotMixin } from '@civui/core';
 import type { SlotConfig } from '@civui/core';
 
+export type CardVariant = 'primary' | 'secondary' | 'tertiary';
+
 /**
  * CivUI Card
  *
@@ -10,11 +12,18 @@ import type { SlotConfig } from '@civui/core';
  * Use `data-card-header` and `data-card-footer` attributes to assign
  * children to those sections. Everything else goes into the body.
  *
+ * **Variants:**
+ * - `primary` — filled primary color background, white text
+ * - `secondary` — light primary tint background
+ * - `tertiary` (default) — white background with border outline
+ *
  * @element civ-card
+ * @prop {CardVariant} variant - Visual variant
  * @prop {string} spacing - Padding size: 'default' or 'sm'
  */
 @customElement('civ-card')
 export class CivCard extends LightDomSlotMixin(CivBaseElement) {
+  @property({ type: String }) variant: CardVariant = 'tertiary';
   @property({ type: String }) spacing: 'default' | 'sm' = 'default';
 
   override _getSlotConfig(): SlotConfig {
@@ -32,6 +41,7 @@ export class CivCard extends LightDomSlotMixin(CivBaseElement) {
   override render() {
     const classes = [
       'civ-card',
+      `civ-card--${this.variant}`,
       this.spacing === 'sm' ? 'civ-card--sm' : '',
     ].filter(Boolean).join(' ');
 

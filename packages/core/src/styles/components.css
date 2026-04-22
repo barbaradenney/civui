@@ -1910,7 +1910,22 @@
   /* ── Card ─────────────────────────────────────────────────── */
 
   .civ-card {
-    @apply civ-p-4 civ-mb-4 civ-border civ-border-base-lighter;
+    @apply civ-p-4 civ-mb-4 civ-border civ-rounded;
+  }
+
+  .civ-card--primary {
+    @apply civ-bg-primary civ-text-white civ-border-primary;
+  }
+
+  .civ-card--secondary {
+    background-color: var(--civ-color-primary-lightest);
+    color: var(--civ-color-primary-dark);
+    border-color: transparent;
+  }
+
+  .civ-card--tertiary {
+    @apply civ-bg-white civ-border-base-lighter;
+    color: var(--civ-color-base-darkest);
   }
 
   .civ-card--sm {

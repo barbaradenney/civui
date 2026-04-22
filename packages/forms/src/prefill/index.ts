@@ -1,1 +1,1 @@
-export type { PrefillField, PrefillOption, PrefillData, PrefillMeta } from './types.js';
+export type { PrefillField, PrefillData, PrefillMeta } from './types.js';

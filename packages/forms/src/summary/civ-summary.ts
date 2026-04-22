@@ -23,8 +23,6 @@ export interface SummaryItem {
   editHref?: string;
   /** Custom edit link text (default: "Edit"). */
   editLabel?: string;
-  /** Optional inline action link (e.g., for conflict resolution). */
-  action?: { label: string; href: string };
 }
 
 /**
@@ -98,8 +96,6 @@ export class CivSummary extends CivBaseElement {
                 .values="${Array.isArray(item.value) ? item.value : []}"
                 edit-href="${itemEditHref}"
                 edit-label="${itemEditLabel}"
-                action-label="${item.action?.label || ''}"
-                action-href="${item.action?.href || ''}"
               ></civ-read-only-field>
               ${showDividers && i < section.items.length - 1
                 ? html`<civ-divider spacing="sm"></civ-divider>`

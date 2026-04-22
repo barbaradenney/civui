@@ -15,8 +15,6 @@ import { CivBaseElement, t } from '@civui/core';
  * @prop {string} value - Display value (right side, bold)
  * @prop {string} editHref - Edit link destination (renders inline edit link)
  * @prop {string} editLabel - Edit link text (default: "Edit")
- * @prop {string} actionLabel - Action link text (e.g., "Choose one")
- * @prop {string} actionHref - Action link destination
  *
  * @example
  * ```html
@@ -36,12 +34,6 @@ export class CivReadOnlyField extends CivBaseElement {
   /** Edit link text. */
   @property({ type: String, attribute: 'edit-label' }) editLabel = '';
 
-  /** Action link label (e.g., "Choose one"). */
-  @property({ type: String, attribute: 'action-label' }) actionLabel = '';
-
-  /** Action link destination. */
-  @property({ type: String, attribute: 'action-href' }) actionHref = '';
-
   override render() {
     const displayLabel = this.label || t('readOnlyLabel');
     const hasValue = this.values.length > 0 || Boolean(this.value);
@@ -60,9 +52,6 @@ export class CivReadOnlyField extends CivBaseElement {
           </span>
           ${this.editHref
             ? html`<civ-link href="${this.editHref}" label="${editText}" variant="tertiary" class="civ-read-only-field__edit"></civ-link>`
-            : nothing}
-          ${this.actionLabel && this.actionHref
-            ? html`<civ-link href="${this.actionHref}" label="${this.actionLabel}" variant="tertiary" class="civ-read-only-field__edit"></civ-link>`
             : nothing}
         </dd>
       </div>

@@ -464,10 +464,6 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
         if (prefill.locked) {
           field.setAttribute('data-civ-prefill-locked', '');
         }
-        if (prefill.options && prefill.options.length > 1) {
-          field.setAttribute('data-civ-prefill-has-options', '');
-        }
-
         appliedFields.push(field.name);
       });
 
@@ -478,29 +474,24 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
   }
 
   /**
-   * Get metadata about which fields are prefilled, locked, or in conflict.
+   * Get metadata about which fields are prefilled or locked.
    * Used by application code to set task list statuses.
    */
   getPrefillMeta(): PrefillMeta {
     const prefilled: string[] = [];
     const locked: string[] = [];
-    const conflicts: string[] = [];
     const needsReview: string[] = [];
 
     for (const [name, field] of Object.entries(this.prefillData)) {
       prefilled.push(name);
       if (field.locked) {
         locked.push(name);
-      }
-      if (field.options && field.options.length > 1) {
-        conflicts.push(name);
-        needsReview.push(name);
-      } else if (!field.locked) {
+      } else {
         needsReview.push(name);
       }
     }
 
-    return { prefilled, locked, conflicts, needsReview };
+    return { prefilled, locked, needsReview };
   }
 
   private _onButtonClick(e: Event): void {

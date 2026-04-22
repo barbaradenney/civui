@@ -173,47 +173,6 @@ export const Step2b_PrefillWithMoreSteps: Story = {
   },
 };
 
-// ── Step 2c: Prefilled chapter with conflict ─────────────────
-
-export const Step2c_ConflictChapter: Story = {
-  name: '2c. Chapter: Conflict Resolution',
-  parameters: {
-    docs: {
-      description: {
-        story: 'When the profile has multiple values for a field (3 phone numbers), the review shows an action link to resolve it. The "Continue" button may be disabled until the conflict is resolved.',
-      },
-    },
-  },
-  render: () => html`
-    <div style="max-width: 640px;">
-      <civ-link variant="back" label="Back to task list" href="#"></civ-link>
-
-      <h2 class="civ-heading-xl civ-mt-3 civ-mb-4">Contact information</h2>
-
-      <civ-summary id="conflict-chapter"></civ-summary>
-
-      <div class="civ-mt-6">
-        <civ-button label="Continue" disabled></civ-button>
-        <p class="civ-text-muted civ-text-sm civ-mt-2">Please resolve all items before continuing.</p>
-      </div>
-    </div>
-  `,
-  play: async ({ canvasElement }) => {
-    const summary = canvasElement.querySelector('#conflict-chapter') as CivSummary;
-    if (summary) {
-      summary.sections = [
-        {
-          heading: '',
-          items: [
-            { label: 'Phone numbers on file', value: '3 found', action: { label: 'Choose one', href: '#/contact/phone' } },
-            { label: 'Email', value: 'jane.doe@example.com', editHref: '#/contact/email' },
-          ],
-        },
-      ];
-    }
-  },
-};
-
 // ── Step 3: Edit step within chapter ─────────────────────────
 
 export const Step3_EditStep: Story = {

@@ -86,6 +86,6 @@ export { CivPrefillNotice } from './prefill-notice/index.js';
 export { CivReadOnlyField } from './read-only-field/index.js';
 
 // Prefill
-export type { PrefillField, PrefillOption, PrefillData, PrefillMeta } from './prefill/index.js';
+export type { PrefillField, PrefillData, PrefillMeta } from './prefill/index.js';
 
 

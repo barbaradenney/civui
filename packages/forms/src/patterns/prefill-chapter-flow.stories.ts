@@ -60,8 +60,6 @@ export const Step1_Hub: Story = {
       <h1 class="civ-heading-xl civ-mb-2">Apply for disability compensation</h1>
       <p class="civ-text-muted civ-mb-4">VA Form 21-526EZ</p>
 
-      <civ-prefill-notice profile-href="/profile"></civ-prefill-notice>
-
       <civ-task-list>
         <civ-task-group>
           <h3 data-task-group-heading class="civ-heading-md">Your information</h3>
@@ -101,6 +99,8 @@ export const Step2a_LockedChapter: Story = {
       <civ-link variant="back" label="Back to task list" href="#"></civ-link>
 
       <h2 class="civ-heading-xl civ-mt-3 civ-mb-4">Personal information</h2>
+
+      <civ-prefill-notice profile-href="/profile"></civ-prefill-notice>
 
       <civ-summary id="locked-chapter"></civ-summary>
 
@@ -144,6 +144,8 @@ export const Step2b_PrefillWithMoreSteps: Story = {
       <civ-link variant="back" label="Back to task list" href="#"></civ-link>
 
       <h2 class="civ-heading-xl civ-mt-3 civ-mb-4">Contact information</h2>
+
+      <civ-prefill-notice profile-href="/profile"></civ-prefill-notice>
 
       <civ-summary id="prefill-chapter"></civ-summary>
 

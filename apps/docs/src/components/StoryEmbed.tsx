@@ -9,8 +9,9 @@ interface StoryEmbedProps {
 /**
  * Storybook iframe embed.
  *
- * Measures content height once after the iframe loads and sets the
- * height. No polling — single measurement after a render delay.
+ * Measures content height twice after iframe load — once early for
+ * fast-rendering stories, once later for slower ones. Two measurements
+ * max, no continuous polling.
  */
 export default function StoryEmbed({ id, title, minHeight = 100 }: StoryEmbedProps) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
@@ -20,7 +21,8 @@ export default function StoryEmbed({ id, title, minHeight = 100 }: StoryEmbedPro
     const iframe = iframeRef.current;
     if (!iframe) return;
 
-    let timer: ReturnType<typeof setTimeout>;
+    let timer1: ReturnType<typeof setTimeout>;
+    let timer2: ReturnType<typeof setTimeout>;
 
     const measure = () => {
       try {
@@ -40,15 +42,18 @@ export default function StoryEmbed({ id, title, minHeight = 100 }: StoryEmbedPro
     };
 
     const handleLoad = () => {
-      // Single measurement after Storybook renders
-      timer = setTimeout(measure, 600);
+      // First measurement — catches fast-rendering stories
+      timer1 = setTimeout(measure, 300);
+      // Second measurement — catches stories that need more render time
+      timer2 = setTimeout(measure, 1500);
     };
 
     iframe.addEventListener('load', handleLoad);
 
     return () => {
       iframe.removeEventListener('load', handleLoad);
-      clearTimeout(timer);
+      clearTimeout(timer1);
+      clearTimeout(timer2);
     };
   }, [id, minHeight]);
 

@@ -76,6 +76,32 @@ describe('civ-summary', () => {
     expect(fields[1].getAttribute('edit-href')).toBe('/profile/settings');
   });
 
+  it('section with heading shows edit link in header', async () => {
+    const el = await fixture<CivSummary>('<civ-summary></civ-summary>') as CivSummary;
+    el.sections = [
+      {
+        heading: 'Verified identity',
+        editHref: '/profile/settings',
+        locked: true,
+        items: [
+          { label: 'Name', value: 'Jane' },
+          { label: 'DOB', value: 'Jan 1' },
+        ],
+      },
+    ];
+    await elementUpdated(el);
+
+    // Header has the edit link
+    const headerLink = el.querySelector('.civ-summary-section > div > civ-link');
+    expect(headerLink).not.toBeNull();
+    expect(headerLink!.getAttribute('href')).toBe('/profile/settings');
+
+    // Items do NOT have per-row edit links
+    const fields = el.querySelectorAll('civ-read-only-field');
+    expect(fields[0].getAttribute('edit-href')).toBe('');
+    expect(fields[1].getAttribute('edit-href')).toBe('');
+  });
+
   it('locked sections use profile edit label', async () => {
     const el = await fixture<CivSummary>('<civ-summary></civ-summary>') as CivSummary;
     el.sections = [

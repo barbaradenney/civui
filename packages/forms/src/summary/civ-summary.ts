@@ -34,7 +34,7 @@ export interface SummaryItem {
  *
  * @element civ-summary
  *
- * @fires civ-summary-edit - When an edit link is clicked, detail: { section, href }
+ * Edit links are rendered as `<civ-link>` elements that navigate directly.
  */
 @customElement('civ-summary')
 export class CivSummary extends CivBaseElement {

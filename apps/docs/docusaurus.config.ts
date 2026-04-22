@@ -71,8 +71,8 @@ const config: Config = {
         {
           title: 'Tools',
           items: [
-            { label: 'Storybook', href: '/civui/storybook/' },
-            { label: 'VA Forms Demo', href: '/civui/forms/' },
+            { label: 'Storybook', href: 'pathname:///civui/storybook/' },
+            { label: 'VA Forms Demo', href: 'pathname:///civui/forms/' },
             { label: 'GitHub', href: 'https://github.com/barbaradenney/civui' },
           ],
         },

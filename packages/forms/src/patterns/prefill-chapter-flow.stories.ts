@@ -200,9 +200,8 @@ export const Step3_EditStep: Story = {
         required
       ></civ-text-input>
 
-      <div class="civ-mt-6 civ-flex civ-gap-2">
+      <div class="civ-mt-6">
         <civ-button label="Save and continue"></civ-button>
-        <civ-button variant="tertiary" label="Cancel"></civ-button>
       </div>
     </div>
   `,

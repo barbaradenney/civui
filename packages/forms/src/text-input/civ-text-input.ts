@@ -163,6 +163,13 @@ export class CivTextInput extends CivFormElement {
     super.firstUpdated();
     if (this._activePattern && this.value) {
       this.value = processRawInput(stripMask(this.value, this._activePattern), this._activePattern);
+      // Apply mask formatting to the visible input for pre-populated values
+      requestAnimationFrame(() => {
+        const input = this.querySelector('input') as HTMLInputElement;
+        if (input && this.maskMode === 'blur') {
+          input.value = applyMask(this.value, this._activePattern!);
+        }
+      });
     }
   }
 

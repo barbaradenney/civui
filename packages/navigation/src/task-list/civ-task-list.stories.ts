@@ -49,6 +49,7 @@ export const AllStatuses: Story = {
         <civ-task label="Complete" href="#" status="complete"></civ-task>
         <civ-task label="Cannot start yet" hint="Complete previous sections first" status="cannot-start"></civ-task>
         <civ-task label="Has errors" hint="Fix validation errors to continue" href="#" status="error"></civ-task>
+        <civ-task label="Needs review" hint="Phone, email, and mailing address" href="#" status="review" prefilled></civ-task>
       </civ-task-group>
     </civ-task-list>
   `,
@@ -225,8 +226,8 @@ export const PrefillHub: Story = {
       <civ-task-list>
         <civ-task-group>
           <h3 data-task-group-heading class="civ-heading-md">Your information</h3>
-          <civ-task label="Personal information" href="#/personal" status="complete" prefilled></civ-task>
-          <civ-task label="Contact information" href="#/contact" status="in-progress" prefilled></civ-task>
+          <civ-task label="Personal information" hint="Name, date of birth, Social Security number" href="#/personal" status="review" prefilled></civ-task>
+          <civ-task label="Contact information" hint="Phone, email, and mailing address" href="#/contact" status="review" prefilled></civ-task>
         </civ-task-group>
 
         <civ-task-group>

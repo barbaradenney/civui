@@ -4,7 +4,7 @@ import { CivBaseElement, t } from '@civui/core';
 import '@civui/ui/tag';
 import '@civui/ui/link';
 
-export type TaskStatus = 'not-started' | 'in-progress' | 'complete' | 'cannot-start' | 'error';
+export type TaskStatus = 'not-started' | 'in-progress' | 'complete' | 'cannot-start' | 'error' | 'review';
 
 const STATUS_TAG: Record<TaskStatus, { label: string; variant: string; style?: string }> = {
   'not-started': { label: 'Not started', variant: 'blue' },
@@ -12,6 +12,7 @@ const STATUS_TAG: Record<TaskStatus, { label: string; variant: string; style?: s
   'complete': { label: 'Complete', variant: 'green', style: 'primary' },
   'cannot-start': { label: 'Cannot start yet', variant: 'gray' },
   'error': { label: 'Error', variant: 'red' },
+  'review': { label: 'Review', variant: 'gold' },
 };
 
 /**
@@ -55,7 +56,7 @@ export class CivTask extends CivBaseElement {
     const isNavigable = this.href && this.status !== 'cannot-start';
     const tag = STATUS_TAG[this.status] || STATUS_TAG['not-started'];
     const isError = this.status === 'error';
-    const hintText = this.hint || (this.prefilled ? t('taskPrefillHint') : '');
+    const prefillHint = this.prefilled ? t('taskPrefillHint') : '';
 
     return html`
       <li class="civ-task" role="listitem">
@@ -71,8 +72,11 @@ export class CivTask extends CivBaseElement {
                 ></civ-link>`
               : html`${this.label}`}
           </h4>
-          ${hintText
-            ? html`<p class="civ-task__hint">${hintText}</p>`
+          ${this.hint
+            ? html`<p class="civ-task__hint">${this.hint}</p>`
+            : nothing}
+          ${prefillHint
+            ? html`<p class="civ-task__hint">${prefillHint}</p>`
             : nothing}
         </div>
         <div class="civ-task__status" id="${this._statusId}">

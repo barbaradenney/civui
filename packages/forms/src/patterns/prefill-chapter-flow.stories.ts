@@ -66,7 +66,7 @@ export const Step1_Hub: Story = {
         <civ-task-group>
           <h3 data-task-group-heading class="civ-heading-md">Your information</h3>
           <civ-task label="Personal information" hint="Name, date of birth, Social Security number" href="#/personal" status="review" prefilled></civ-task>
-          <civ-task label="Contact information" hint="Phone, email, and mailing address" href="#/contact" status="review" prefilled></civ-task>
+          <civ-task label="Contact information" hint="Phone, email, and mailing address" status="cannot-start" prefilled></civ-task>
         </civ-task-group>
 
         <civ-task-group>

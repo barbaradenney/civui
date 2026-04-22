@@ -12,7 +12,7 @@ const STATUS_TAG: Record<TaskStatus, { label: string; variant: string; style?: s
   'complete': { label: 'Complete', variant: 'green', style: 'primary' },
   'cannot-start': { label: 'Cannot start yet', variant: 'gray' },
   'error': { label: 'Error', variant: 'red' },
-  'review': { label: 'Review', variant: 'gold' },
+  'review': { label: 'Review', variant: 'yellow', style: 'primary' },
 };
 
 /**

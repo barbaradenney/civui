@@ -149,7 +149,9 @@ export const Step2b_PrefillWithMoreSteps: Story = {
 
       <civ-summary id="prefill-chapter"></civ-summary>
 
-      <div class="civ-mt-6">
+      <p class="civ-mt-4">If this information is accurate, press continue to fill out the rest of the form.</p>
+
+      <div class="civ-mt-4">
         <civ-button label="Continue"></civ-button>
       </div>
     </div>

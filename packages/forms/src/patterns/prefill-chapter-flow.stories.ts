@@ -166,7 +166,6 @@ export const Step2b_PrefillWithMoreSteps: Story = {
             { label: 'Mobile phone', value: '(555) 123-4567', editHref: '#/contact/phone' },
             { label: 'Email', value: 'jane.doe@example.com', editHref: '#/contact/email' },
             { label: 'Mailing address', value: ['123 Main St', 'Springfield, IL 62701'], editHref: '#/contact/address' },
-            { label: 'Preferred contact method', editHref: '#/contact/preference' },
           ],
         },
       ];

@@ -1953,7 +1953,7 @@
   }
 
   .civ-card__header {
-    @apply civ-mb-2 civ-flex civ-flex-col civ-gap-1;
+    @apply civ-flex civ-flex-col civ-gap-1;
   }
 
   .civ-card__body {

@@ -50,12 +50,26 @@ A structured container with header, body, and footer slot areas. The card provid
 
 <StoryEmbed id="ui-card--dependent-card" />
 
+### All Styles
+
+<StoryEmbed id="ui-card--all-styles" />
+
+### Color Palette Secondary
+
+<StoryEmbed id="ui-card--color-palette-secondary" />
+
+### Color Palette Primary
+
+<StoryEmbed id="ui-card--color-palette-primary" />
+
 [Open in Storybook →](pathname:///civui/storybook/?path=/story/ui-card--default)
 
 ## Props
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
+| `color` | `'blue' \| 'teal' \| 'red' \| 'green' \| 'yellow' \| 'orange' \| 'purple' \| 'gray' \| ''` | `''` | Color variant (same palette as civ-tag) |
+| `card-style` | `'primary' \| 'secondary' \| 'tertiary'` | `'tertiary'` | Emphasis style: primary (dark fill), secondary (light tint), tertiary (white + border) |
 | `spacing` | `'default' \| 'sm'` | `'default'` | Padding size inside the card |
 
 ## Slots
@@ -88,6 +102,39 @@ A structured container with header, body, and footer slot areas. The card provid
   <div data-card-footer>
     <civ-link href="/claims/123" variant="secondary">View details</civ-link>
   </div>
+</civ-card>
+```
+
+### Card styles
+
+```html
+<!-- Primary — filled blue, white text -->
+<civ-card card-style="primary">
+  <p>Important content.</p>
+</civ-card>
+
+<!-- Secondary — light tint background -->
+<civ-card card-style="secondary">
+  <p>Supporting content.</p>
+</civ-card>
+
+<!-- Tertiary (default) — white with border -->
+<civ-card>
+  <p>Standard content.</p>
+</civ-card>
+```
+
+### Card colors
+
+```html
+<!-- Color with secondary style (light tint, default) -->
+<civ-card color="green">
+  <p>Success message.</p>
+</civ-card>
+
+<!-- Color with primary style (dark fill) -->
+<civ-card color="red" card-style="primary">
+  <p>Error alert.</p>
 </civ-card>
 ```
 

@@ -1971,7 +1971,7 @@
   }
 
   .civ-card__header {
-    @apply civ-flex civ-flex-col civ-gap-1;
+    @apply civ-flex civ-flex-col;
   }
 
   .civ-card__body {

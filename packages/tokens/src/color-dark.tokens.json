@@ -39,6 +39,14 @@
       "DEFAULT": { "$value": "#4dd0e1" },
       "dark": { "$value": "#80deea" }
     },
+    "purple": {
+      "$type": "color",
+      "lightest": { "$value": "#2a1a3a" },
+      "lighter": { "$value": "#3d2454" },
+      "light": { "$value": "#b68adb" },
+      "DEFAULT": { "$value": "#ce93d8" },
+      "dark": { "$value": "#e1bee7" }
+    },
     "base": {
       "$type": "color",
       "lightest": { "$value": "#2d2d2d" },

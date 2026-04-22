@@ -100,7 +100,7 @@ export const Step2a_LockedChapter: Story = {
 
       <h2 class="civ-heading-xl civ-mt-3 civ-mb-4">Personal information</h2>
 
-      <civ-prefill-notice profile-href="/profile"></civ-prefill-notice>
+      <civ-prefill-notice></civ-prefill-notice>
 
       <civ-summary id="locked-chapter"></civ-summary>
 
@@ -145,7 +145,7 @@ export const Step2b_PrefillWithMoreSteps: Story = {
 
       <h2 class="civ-heading-xl civ-mt-3 civ-mb-4">Contact information</h2>
 
-      <civ-prefill-notice profile-href="/profile"></civ-prefill-notice>
+      <civ-prefill-notice></civ-prefill-notice>
 
       <civ-summary id="prefill-chapter"></civ-summary>
 

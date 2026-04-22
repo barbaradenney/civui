@@ -201,7 +201,7 @@ export const Step3_EditStep: Story = {
       ></civ-text-input>
 
       <div class="civ-mt-6">
-        <civ-button label="Save and continue"></civ-button>
+        <civ-button label="Update and continue"></civ-button>
       </div>
     </div>
   `,

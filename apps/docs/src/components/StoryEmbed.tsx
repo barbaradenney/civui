@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
 
 interface StoryEmbedProps {
   id: string;
@@ -7,55 +7,50 @@ interface StoryEmbedProps {
 }
 
 /**
- * Storybook iframe embed.
+ * Storybook iframe embed with automatic height sizing.
  *
- * Measures content height twice after iframe load — once early for
- * fast-rendering stories, once later for slower ones. Two measurements
- * max, no continuous polling.
+ * Uses ResizeObserver on the iframe's contentDocument body (same-origin)
+ * to reactively match the iframe height to its content. No polling,
+ * no timeouts — catches async web component renders, dynamic content
+ * changes, and font loading layout shifts.
  */
 export default function StoryEmbed({ id, title, minHeight = 100 }: StoryEmbedProps) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
+  const observerRef = useRef<ResizeObserver | null>(null);
   const [height, setHeight] = useState(minHeight);
 
-  useEffect(() => {
+  const handleLoad = useCallback(() => {
     const iframe = iframeRef.current;
     if (!iframe) return;
 
-    let timer1: ReturnType<typeof setTimeout>;
-    let timer2: ReturnType<typeof setTimeout>;
+    try {
+      const doc = iframe.contentDocument || iframe.contentWindow?.document;
+      if (!doc?.body) return;
 
-    const measure = () => {
-      try {
-        const doc = iframe.contentDocument || iframe.contentWindow?.document;
-        if (doc?.body) {
-          const contentHeight = Math.max(
-            doc.body.scrollHeight,
-            doc.documentElement.scrollHeight
-          );
-          if (contentHeight > minHeight) {
-            setHeight(contentHeight + 16);
-          }
+      // Clean up previous observer
+      observerRef.current?.disconnect();
+
+      const ro = new ResizeObserver(() => {
+        const contentHeight = Math.max(
+          doc.body.scrollHeight,
+          doc.documentElement.scrollHeight
+        );
+        if (contentHeight > minHeight) {
+          setHeight(contentHeight + 2);
         }
-      } catch {
-        // Cross-origin — keep minHeight
-      }
-    };
+      });
 
-    const handleLoad = () => {
-      // First measurement — catches fast-rendering stories
-      timer1 = setTimeout(measure, 300);
-      // Second measurement — catches stories that need more render time
-      timer2 = setTimeout(measure, 1500);
-    };
+      ro.observe(doc.body);
+      ro.observe(doc.documentElement);
+      observerRef.current = ro;
+    } catch {
+      // Cross-origin fallback — keep minHeight
+    }
+  }, [minHeight]);
 
-    iframe.addEventListener('load', handleLoad);
-
-    return () => {
-      iframe.removeEventListener('load', handleLoad);
-      clearTimeout(timer1);
-      clearTimeout(timer2);
-    };
-  }, [id, minHeight]);
+  useEffect(() => {
+    return () => observerRef.current?.disconnect();
+  }, []);
 
   return (
     <iframe
@@ -64,6 +59,8 @@ export default function StoryEmbed({ id, title, minHeight = 100 }: StoryEmbedPro
       title={title || id}
       width="100%"
       height={height}
+      scrolling="no"
+      onLoad={handleLoad}
       style={{
         border: '1px solid #dfe1e2',
         borderRadius: '6px',

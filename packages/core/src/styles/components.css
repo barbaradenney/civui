@@ -1957,7 +1957,7 @@
   }
 
   .civ-card__body {
-    color: var(--civ-color-base-darkest);
+    color: inherit;
   }
 
   .civ-card__footer {

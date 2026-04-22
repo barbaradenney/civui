@@ -37,6 +37,8 @@ const config: StorybookConfig = {
       '@civui/ui/divider': resolve(root, 'packages/ui/src/divider/index.ts'),
       '@civui/ui/page-header': resolve(root, 'packages/ui/src/page-header/index.ts'),
       '@civui/ui/link-card': resolve(root, 'packages/ui/src/link-card/index.ts'),
+      '@civui/ui/action-button': resolve(root, 'packages/ui/src/action-button/index.ts'),
+      '@civui/ui/button-group': resolve(root, 'packages/ui/src/button-group/index.ts'),
       '@civui/ui': resolve(root, 'packages/ui/src/index.ts'),
       '@civui/navigation': resolve(root, 'packages/navigation/src/index.ts'),
       '@civui/tokens/css': resolve(root, 'packages/tokens/dist/css/tokens.css'),

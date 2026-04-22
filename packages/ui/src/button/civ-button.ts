@@ -13,8 +13,8 @@ export type ButtonType = 'button' | 'submit' | 'reset';
  *
  * **Variants:**
  * - `primary` — filled blue button
- * - `secondary` — outlined border button
- * - `tertiary` — gray filled button (same height as form inputs)
+ * - `secondary` — light tint background (matches secondary tag pattern)
+ * - `tertiary` — outlined border button
  *
  * Add `danger` attribute to any variant for destructive action styling.
  *

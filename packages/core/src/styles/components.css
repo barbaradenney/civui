@@ -1226,24 +1226,25 @@
   }
 
   .civ-btn--secondary {
-    @apply civ-bg-transparent civ-text-primary civ-border-primary;
+    background-color: var(--civ-color-primary-lightest);
+    color: var(--civ-color-primary-dark);
+    border-color: transparent;
   }
   .civ-btn--secondary:hover:not(:disabled):not([aria-disabled="true"]) {
-    @apply civ-bg-primary civ-text-white;
+    background-color: var(--civ-color-primary-lighter);
   }
   .civ-btn--secondary:active:not(:disabled):not([aria-disabled="true"]) {
-    @apply civ-bg-primary-dark civ-text-white civ-border-primary-dark;
+    background-color: var(--civ-color-primary-light);
   }
 
   .civ-btn--tertiary {
-    @apply civ-bg-base-lightest civ-text-base-darkest civ-border-base-light civ-font-normal;
-    padding: var(--civ-spacing-1_5) var(--civ-spacing-2);
+    @apply civ-bg-transparent civ-text-primary civ-border-primary;
   }
   .civ-btn--tertiary:hover:not(:disabled):not([aria-disabled="true"]) {
-    @apply civ-bg-base-lighter;
+    @apply civ-bg-primary civ-text-white;
   }
   .civ-btn--tertiary:active:not(:disabled):not([aria-disabled="true"]) {
-    @apply civ-bg-base-light;
+    @apply civ-bg-primary-dark civ-text-white civ-border-primary-dark;
   }
 
   .civ-btn--yesno {
@@ -1267,24 +1268,96 @@
   }
 
   .civ-btn--secondary-danger {
-    @apply civ-bg-transparent civ-text-error civ-border-error;
+    background-color: var(--civ-color-error-lightest);
+    color: var(--civ-color-error-dark);
+    border-color: transparent;
   }
   .civ-btn--secondary-danger:hover:not(:disabled):not([aria-disabled="true"]) {
-    @apply civ-bg-error civ-text-white;
+    background-color: var(--civ-color-error-lighter);
   }
   .civ-btn--secondary-danger:active:not(:disabled):not([aria-disabled="true"]) {
-    @apply civ-bg-error-dark civ-text-white civ-border-error-dark;
+    background-color: var(--civ-color-error-light);
   }
 
   .civ-btn--tertiary-danger {
-    @apply civ-bg-base-lightest civ-text-error civ-border-base-light civ-font-normal;
-    padding: var(--civ-spacing-1_5) var(--civ-spacing-2);
+    @apply civ-bg-transparent civ-text-error civ-border-error;
   }
   .civ-btn--tertiary-danger:hover:not(:disabled):not([aria-disabled="true"]) {
-    @apply civ-bg-base-lighter;
+    @apply civ-bg-error civ-text-white;
   }
   .civ-btn--tertiary-danger:active:not(:disabled):not([aria-disabled="true"]) {
-    @apply civ-bg-base-light;
+    @apply civ-bg-error-dark civ-text-white civ-border-error-dark;
+  }
+
+  /* ── Action Button (compact) ──────────────────────────────── */
+
+  .civ-action-btn {
+    @apply civ-inline-flex civ-items-center civ-justify-center
+           civ-font-sans civ-rounded
+           civ-border civ-cursor-pointer
+           civ-transition-colors;
+    font-size: var(--civ-typography-fontSize-sm);
+    padding: var(--civ-spacing-1) var(--civ-spacing-2);
+  }
+
+  .civ-action-btn--primary {
+    @apply civ-bg-primary civ-text-white civ-border-primary;
+  }
+  .civ-action-btn--primary:hover:not(:disabled) {
+    @apply civ-bg-primary-dark civ-border-primary-dark;
+  }
+
+  .civ-action-btn--secondary {
+    background-color: var(--civ-color-primary-lightest);
+    color: var(--civ-color-primary-dark);
+    border-color: transparent;
+  }
+  .civ-action-btn--secondary:hover:not(:disabled) {
+    background-color: var(--civ-color-primary-lighter);
+  }
+
+  .civ-action-btn--tertiary {
+    @apply civ-bg-transparent civ-text-primary civ-border-primary;
+  }
+  .civ-action-btn--tertiary:hover:not(:disabled) {
+    @apply civ-bg-primary civ-text-white;
+  }
+
+  .civ-action-btn[aria-pressed="true"] {
+    @apply civ-bg-primary civ-text-white civ-border-primary;
+  }
+
+  /* ── Button Group ──────────────────────────────────────────── */
+
+  .civ-button-group {
+    @apply civ-inline-flex;
+  }
+
+  .civ-button-group > civ-action-button:not(:first-child) button {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-left-width: 0;
+  }
+
+  .civ-button-group > civ-action-button:not(:last-child) button {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  .civ-button-group--vertical {
+    @apply civ-inline-flex civ-flex-col;
+  }
+
+  .civ-button-group--vertical > civ-action-button:not(:first-child) button {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-top-width: 0;
+    border-left-width: 1px;
+  }
+
+  .civ-button-group--vertical > civ-action-button:not(:last-child) button {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
   }
 
   /* ── Link variants (rendered when href is set) ─────────────── */

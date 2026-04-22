@@ -14,7 +14,9 @@
     "./divider": "./dist/divider/index.js",
     "./card": "./dist/card/index.js",
     "./page-header": "./dist/page-header/index.js",
-    "./link-card": "./dist/link-card/index.js"
+    "./link-card": "./dist/link-card/index.js",
+    "./action-button": "./dist/action-button/index.js",
+    "./button-group": "./dist/button-group/index.js"
   },
   "files": ["dist"],
   "publishConfig": {

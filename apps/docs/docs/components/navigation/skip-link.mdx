@@ -1,0 +1,58 @@
+---
+title: Skip Link
+sidebar_position: 4
+sidebar_label: Skip Link
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
+# Skip Link
+
+`<civ-skip-link>`
+
+A visually hidden link that becomes visible on focus, allowing keyboard users to skip past navigation and jump directly to main content. Required for Section 508 compliance.
+
+## Examples
+
+### Default
+
+<StoryEmbed id="navigation-skip-link--default" />
+
+### Custom Target
+
+<StoryEmbed id="navigation-skip-link--custom-target" />
+
+### Custom Label
+
+<StoryEmbed id="navigation-skip-link--custom-label" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/navigation-skip-link--default)
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `label` | `string` | `'Skip to main content'` | Link text shown when focused |
+| `href` | `string` | `'#main-content'` | Target element ID to skip to |
+
+## Usage
+
+```html
+<!-- Place as the first element inside <body> -->
+<civ-skip-link></civ-skip-link>
+
+<!-- Custom target -->
+<civ-skip-link href="#content-area" label="Skip to content"></civ-skip-link>
+
+<!-- Ensure the target has an id and is focusable -->
+<main id="main-content" tabindex="-1">
+  <!-- Page content -->
+</main>
+```
+
+## Accessibility
+
+- The link is visually hidden until it receives keyboard focus (via Tab).
+- When focused, it appears at the top of the viewport with high contrast.
+- After activation, focus moves to the target element.
+- Every government website must include a skip link per Section 508 / WCAG 2.4.1.

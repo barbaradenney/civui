@@ -1,0 +1,69 @@
+---
+title: Read-Only Field
+sidebar_position: 9
+sidebar_label: Read-Only Field
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
+# Read-Only Field
+
+`<civ-read-only-field>`
+
+Displays a label and value as a flat row with an optional inline edit link. Used inside `<civ-summary>` and on review pages to show submitted or prefilled data.
+
+## Examples
+
+### Default
+
+<StoryEmbed id="forms-patterns-read-only-field--default" />
+
+### With Hint
+
+<StoryEmbed id="forms-patterns-read-only-field--with-hint" />
+
+### Empty Value
+
+<StoryEmbed id="forms-patterns-read-only-field--empty-value" />
+
+### Multiple Fields
+
+<StoryEmbed id="forms-patterns-read-only-field--multiple-fields" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-patterns-read-only-field--default)
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `label` | `string` | `''` | Field label (left side) |
+| `value` | `string` | `''` | Display value (right side, bold) |
+| `values` | `string[]` | `[]` | Multiple values, each on its own line (JS property) |
+| `edit-href` | `string` | `''` | Edit link destination (renders inline "Edit" link) |
+| `edit-label` | `string` | `'Edit'` | Custom edit link text |
+| `hint` | `string` | `''` | Optional hint text below the row |
+
+## Usage
+
+```html
+<!-- Single value with edit link -->
+<civ-read-only-field
+  label="Phone number"
+  value="(555) 123-4567"
+  edit-href="#/contact/phone"
+></civ-read-only-field>
+
+<!-- Multi-value (address) -->
+<civ-read-only-field
+  label="Mailing address"
+  .values="${['123 Main St', 'Springfield, IL 62701']}"
+  edit-href="#/contact/address"
+></civ-read-only-field>
+
+<!-- With hint -->
+<civ-read-only-field
+  label="Email"
+  value="jane@agency.gov"
+  hint="From your login.gov account"
+></civ-read-only-field>
+```

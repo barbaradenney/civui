@@ -1,0 +1,67 @@
+---
+title: Input Masks
+sidebar_position: 2
+sidebar_label: Input Masks
+---
+
+# Input Masks
+
+Input masking for formatted fields. CivUI uses blur-mode by default -- the mask is applied on blur and raw input is shown on focus. This provides the best accessibility experience.
+
+## Presets
+
+| Preset | Pattern | Example Output | PII |
+|--------|---------|----------------|-----|
+| `ssn` | `###-##-####` | 123-45-6789 | Yes |
+| `phone-us` | `(###) ###-####` | (555) 123-4567 | No |
+| `zip` | `#####` | 20500 | No |
+| `zip4` | `#####-####` | 20500-1234 | No |
+| `ein` | `##-#######` | 12-3456789 | Yes |
+| `currency` | (variable) | $1,234.56 | No |
+
+## Usage
+
+```html
+<civ-text-input label="Phone number" name="phone" mask="phone-us"></civ-text-input>
+<civ-text-input label="Social Security number" name="ssn" mask="ssn"></civ-text-input>
+<civ-text-input label="ZIP code" name="zip" mask="zip"></civ-text-input>
+<civ-text-input label="EIN" name="ein" mask="ein"></civ-text-input>
+<civ-text-input label="Annual income" name="income" mask="currency"></civ-text-input>
+```
+
+## Custom Patterns
+
+Use `mask-pattern` for custom mask patterns:
+
+| Character | Meaning |
+|-----------|---------|
+| `#` | Digit (0-9) |
+| `A` | Letter (a-z, A-Z) |
+| `*` | Any character |
+| Other | Literal separator |
+
+```html
+<civ-text-input label="Case number" name="case" mask-pattern="AA-####"></civ-text-input>
+<civ-text-input label="License plate" name="plate" mask-pattern="AAA-####"></civ-text-input>
+```
+
+## Mask Modes
+
+- **`blur`** (default): User types freely without formatting. Mask is applied on blur for display. This is the most accessible and predictable mode.
+- **`live`**: Formats as user types with auto-inserted literals. Has accessibility tradeoffs (cursor jumping).
+
+```html
+<!-- Default blur mode -->
+<civ-text-input label="Phone" name="phone" mask="phone-us"></civ-text-input>
+
+<!-- Live mode (use sparingly) -->
+<civ-text-input label="Phone" name="phone" mask="phone-us" mask-mode="live"></civ-text-input>
+```
+
+## PII Protection
+
+Presets flagged as PII (`ssn`, `ein`) automatically:
+
+- Set `autocomplete="off"` on the input
+- Add `data-civ-pii` attribute for persistence exclusion
+- Enable blur-mode masking to avoid exposing sensitive data while typing

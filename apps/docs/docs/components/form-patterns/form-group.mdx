@@ -1,0 +1,61 @@
+---
+title: Form Group
+sidebar_position: 11
+sidebar_label: Form Group
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
+# Form Group
+
+`<civ-form-group>`
+
+A layout wrapper that associates a label, hint, and error message with a form control. Use when you need to add hint or error text to a control that does not have built-in support, or when composing custom form patterns.
+
+## Examples
+
+### Default
+
+<StoryEmbed id="forms-layout-form-group--default" />
+
+### With Error
+
+<StoryEmbed id="forms-layout-form-group--with-error" />
+
+### Required
+
+<StoryEmbed id="forms-layout-form-group--required" />
+
+### With Hint and Error
+
+<StoryEmbed id="forms-layout-form-group--with-hint-and-error" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-layout-form-group--default)
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `label` | `string` | `''` | Label text for the group |
+| `hint` | `string` | `''` | Hint text displayed below the label |
+| `error` | `string` | `''` | Error message displayed with `role="alert"` |
+| `input-id` | `string` | `''` | ID of the form control this group labels |
+| `required` | `boolean` | `false` | Shows required asterisk indicator |
+
+## Usage
+
+```html
+<!-- Basic form group -->
+<civ-form-group label="Upload format" hint="Choose the file format for your export">
+  <!-- Custom control goes here -->
+</civ-form-group>
+
+<!-- With error -->
+<civ-form-group
+  label="Verification code"
+  error="Enter the 6-digit code sent to your phone"
+  required
+>
+  <!-- Custom control goes here -->
+</civ-form-group>
+```

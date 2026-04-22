@@ -12,6 +12,20 @@ import StoryEmbed from "@site/src/components/StoryEmbed";
 
 Native fieldset wrapper with legend, hint, and error support. Uses native `<fieldset>` for automatic disabled cascade to all child form elements. Useful for grouping related fields without the specific semantics of a radio group or checkbox group.
 
+## Examples
+
+<StoryEmbed id="forms-layout-fieldset--default" />
+
+<StoryEmbed id="forms-layout-fieldset--with-hint-and-error" />
+
+<StoryEmbed id="forms-layout-fieldset--disabled" />
+
+<StoryEmbed id="forms-layout-fieldset--required" />
+
+<StoryEmbed id="forms-layout-fieldset--nested" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-layout-fieldset--default)
+
 ## Props
 
 | Prop | Type | Default | Description |
@@ -26,7 +40,7 @@ Native fieldset wrapper with legend, hint, and error support. Uses native `<fiel
 
 Setting `disabled` on `civ-fieldset` uses the native `<fieldset disabled>` behavior, which automatically disables all form controls within it without needing to set `disabled` on each child individually.
 
-## Examples
+## Usage
 
 ```html
 <!-- Group related fields -->
@@ -51,27 +65,3 @@ Setting `disabled` on `civ-fieldset` uses the native `<fieldset disabled>` behav
   <civ-memorable-date legend="Spouse date of birth" name="spouseDob"></civ-memorable-date>
 </civ-fieldset>
 ```
-
-## Live Examples
-
-### Default
-
-<StoryEmbed id="forms-layout-fieldset--default" />
-
-### With Hint And Error
-
-<StoryEmbed id="forms-layout-fieldset--with-hint-and-error" />
-
-### Disabled
-
-<StoryEmbed id="forms-layout-fieldset--disabled" />
-
-### Required
-
-<StoryEmbed id="forms-layout-fieldset--required" />
-
-### Nested
-
-<StoryEmbed id="forms-layout-fieldset--nested" />
-
-[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-layout-fieldset--default)

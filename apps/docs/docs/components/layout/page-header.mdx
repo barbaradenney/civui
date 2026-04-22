@@ -12,6 +12,26 @@ import StoryEmbed from "@site/src/components/StoryEmbed";
 
 A structured page heading with slot areas for tag, eyebrow, heading, and subheading content. Use data attributes to assign children to each area.
 
+## Examples
+
+<StoryEmbed id="ui-page-header--default" />
+
+<StoryEmbed id="ui-page-header--with-eyebrow" />
+
+<StoryEmbed id="ui-page-header--with-subheading" />
+
+<StoryEmbed id="ui-page-header--with-status-tag" />
+
+<StoryEmbed id="ui-page-header--all-slot-combinations" />
+
+<StoryEmbed id="ui-page-header--density-scale" />
+
+<StoryEmbed id="ui-page-header--form-page-header" />
+
+<StoryEmbed id="ui-page-header--claim-detail-header" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/ui-page-header--default)
+
 ## Slots
 
 | Slot Attribute | Description |
@@ -23,7 +43,7 @@ A structured page heading with slot areas for tag, eyebrow, heading, and subhead
 
 Children without a data attribute are placed in the heading area by default.
 
-## Examples
+## Usage
 
 ### Minimal header
 
@@ -56,39 +76,3 @@ Children without a data attribute are placed in the heading area by default.
   <span data-subheading>VA Form 21-526EZ</span>
 </civ-page-header>
 ```
-
-## Live Examples
-
-### Default
-
-<StoryEmbed id="ui-page-header--default" />
-
-### With Eyebrow
-
-<StoryEmbed id="ui-page-header--with-eyebrow" />
-
-### With Subheading
-
-<StoryEmbed id="ui-page-header--with-subheading" />
-
-### With Status Tag
-
-<StoryEmbed id="ui-page-header--with-status-tag" />
-
-### All Slot Combinations
-
-<StoryEmbed id="ui-page-header--all-slot-combinations" />
-
-### Density Scale
-
-<StoryEmbed id="ui-page-header--density-scale" />
-
-### Form Page
-
-<StoryEmbed id="ui-page-header--form-page-header" />
-
-### Claim Detail
-
-<StoryEmbed id="ui-page-header--claim-detail-header" />
-
-[Open in Storybook →](pathname:///civui/storybook/?path=/story/ui-page-header--default)

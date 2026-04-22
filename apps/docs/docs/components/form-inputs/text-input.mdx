@@ -12,6 +12,46 @@ import StoryEmbed from "@site/src/components/StoryEmbed";
 
 Accessible text input with label, hint, error, and width variants. Supports input masking and declarative validation. Uses ElementInternals for native form participation.
 
+## Examples
+
+<StoryEmbed id="forms-inputs-text-input--default" />
+
+<StoryEmbed id="forms-inputs-text-input--with-hint" />
+
+<StoryEmbed id="forms-inputs-text-input--with-error" />
+
+<StoryEmbed id="forms-inputs-text-input--required" />
+
+<StoryEmbed id="forms-inputs-text-input--disabled" />
+
+<StoryEmbed id="forms-inputs-text-input--all-states" />
+
+<StoryEmbed id="forms-inputs-text-input--density-scale" />
+
+<StoryEmbed id="forms-inputs-text-input--width-variants" />
+
+<StoryEmbed id="forms-inputs-text-input--input-types" />
+
+<StoryEmbed id="forms-inputs-text-input--mask-ssn" />
+
+<StoryEmbed id="forms-inputs-text-input--mask-phone-us" />
+
+<StoryEmbed id="forms-inputs-text-input--mask-zip" />
+
+<StoryEmbed id="forms-inputs-text-input--mask-ein" />
+
+<StoryEmbed id="forms-inputs-text-input--mask-currency" />
+
+<StoryEmbed id="forms-inputs-text-input--mask-custom" />
+
+<StoryEmbed id="forms-inputs-text-input--validate-email" />
+
+<StoryEmbed id="forms-inputs-text-input--validate-zip" />
+
+<StoryEmbed id="forms-inputs-text-input--government-contact-form" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-inputs-text-input--default)
+
 ## Shared Props
 
 All form components share these props: `label`, `name`, `value`, `hint`, `error`, `required`, `disabled`.
@@ -65,7 +105,7 @@ When the `validate` attribute is set, validation runs automatically on blur and 
 | `civ-input` | `{ value: string }` | Fires on every value change |
 | `civ-change` | `{ value: string }` | Fires on committed value change |
 
-## Examples
+## Usage
 
 ```html
 <!-- Basic text input -->
@@ -125,79 +165,3 @@ When the `validate` attribute is set, validation runs automatically on blur and 
   width="xs"
 ></civ-text-input>
 ```
-
-## Live Examples
-
-### full-name
-
-<StoryEmbed id="forms-inputs-text-input--default" />
-
-### With Hint
-
-<StoryEmbed id="forms-inputs-text-input--with-hint" />
-
-### With Error
-
-<StoryEmbed id="forms-inputs-text-input--with-error" />
-
-### Required
-
-<StoryEmbed id="forms-inputs-text-input--required" />
-
-### Disabled
-
-<StoryEmbed id="forms-inputs-text-input--disabled" />
-
-### All States
-
-<StoryEmbed id="forms-inputs-text-input--all-states" />
-
-### Density Scale
-
-<StoryEmbed id="forms-inputs-text-input--density-scale" />
-
-### Width Variants
-
-<StoryEmbed id="forms-inputs-text-input--width-variants" />
-
-### Input Types
-
-<StoryEmbed id="forms-inputs-text-input--input-types" />
-
-### Mask: Social Security number
-
-<StoryEmbed id="forms-inputs-text-input--mask-ssn" />
-
-### Mask: Phone number
-
-<StoryEmbed id="forms-inputs-text-input--mask-phone-us" />
-
-### Mask: ZIP code
-
-<StoryEmbed id="forms-inputs-text-input--mask-zip" />
-
-### Mask: Employer Identification Number
-
-<StoryEmbed id="forms-inputs-text-input--mask-ein" />
-
-### Mask: Currency
-
-<StoryEmbed id="forms-inputs-text-input--mask-currency" />
-
-### Mask: Custom pattern
-
-<StoryEmbed id="forms-inputs-text-input--mask-custom" />
-
-### Validate Email
-
-<StoryEmbed id="forms-inputs-text-input--validate-email" />
-
-### Validate ZIP
-
-<StoryEmbed id="forms-inputs-text-input--validate-zip" />
-
-### Usage: Government Contact Form
-
-<StoryEmbed id="forms-inputs-text-input--government-contact-form" />
-
-[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-inputs-text-input--default)

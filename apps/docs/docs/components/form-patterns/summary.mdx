@@ -12,6 +12,26 @@ import StoryEmbed from "@site/src/components/StoryEmbed";
 
 Read-only review page component that displays form data before final submission. Renders structured sections with headings, edit links, and key-value pairs.
 
+## Examples
+
+<StoryEmbed id="forms-patterns-summary--default" />
+
+<StoryEmbed id="forms-patterns-summary--with-hint" />
+
+<StoryEmbed id="forms-patterns-summary--with-error" />
+
+<StoryEmbed id="forms-patterns-summary--required" />
+
+<StoryEmbed id="forms-patterns-summary--disabled" />
+
+<StoryEmbed id="forms-patterns-summary--all-states" />
+
+<StoryEmbed id="forms-patterns-summary--density-scale" />
+
+<StoryEmbed id="forms-patterns-summary--government-application-review" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-patterns-summary--default)
+
 ## Props
 
 | Prop | Type | Default | Description |
@@ -40,7 +60,7 @@ interface SummaryItem {
 |-------|--------|-------------|
 | `civ-summary-edit` | `{ section: string, href: string }` | When an edit link is clicked |
 
-## Examples
+## Usage
 
 ```html
 <civ-summary heading="Review your information"></civ-summary>
@@ -70,39 +90,3 @@ interface SummaryItem {
   ];
 </script>
 ```
-
-## Live Examples
-
-### Default
-
-<StoryEmbed id="forms-patterns-summary--default" />
-
-### With Missing Values
-
-<StoryEmbed id="forms-patterns-summary--with-hint" />
-
-### Without Edit Links
-
-<StoryEmbed id="forms-patterns-summary--with-error" />
-
-### With Array Values
-
-<StoryEmbed id="forms-patterns-summary--required" />
-
-### Empty State
-
-<StoryEmbed id="forms-patterns-summary--disabled" />
-
-### All States
-
-<StoryEmbed id="forms-patterns-summary--all-states" />
-
-### Density Scale
-
-<StoryEmbed id="forms-patterns-summary--density-scale" />
-
-### Usage: Full Application Review
-
-<StoryEmbed id="forms-patterns-summary--government-application-review" />
-
-[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-patterns-summary--default)

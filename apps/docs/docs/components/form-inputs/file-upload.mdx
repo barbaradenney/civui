@@ -12,6 +12,38 @@ import StoryEmbed from "@site/src/components/StoryEmbed";
 
 File input with drag-and-drop, file list preview, size and type validation, upload progress tracking, and remove capability. Uses ElementInternals for form participation.
 
+## Examples
+
+<StoryEmbed id="forms-inputs-file-upload--default" />
+
+<StoryEmbed id="forms-inputs-file-upload--with-hint" />
+
+<StoryEmbed id="forms-inputs-file-upload--with-error" />
+
+<StoryEmbed id="forms-inputs-file-upload--required" />
+
+<StoryEmbed id="forms-inputs-file-upload--disabled" />
+
+<StoryEmbed id="forms-inputs-file-upload--all-states" />
+
+<StoryEmbed id="forms-inputs-file-upload--density-scale" />
+
+<StoryEmbed id="forms-inputs-file-upload--multiple-files" />
+
+<StoryEmbed id="forms-inputs-file-upload--image-preview" />
+
+<StoryEmbed id="forms-inputs-file-upload--compact-variant" />
+
+<StoryEmbed id="forms-inputs-file-upload--full-variant" />
+
+<StoryEmbed id="forms-inputs-file-upload--all-variants" />
+
+<StoryEmbed id="forms-inputs-file-upload--upload-simulation" />
+
+<StoryEmbed id="forms-inputs-file-upload--government-document-submission" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-inputs-file-upload--default)
+
 ## Shared Props
 
 All form components share these props: `label`, `name`, `value`, `hint`, `error`, `required`, `disabled`.
@@ -69,7 +101,7 @@ const controller = upload.getAbortController(0);
 | `civ-upload-cancel` | `{ index: number, name: string }` | Fires when upload is cancelled |
 | `civ-upload-retry` | `{ index: number, name: string, file: File }` | Fires when upload is retried |
 
-## Examples
+## Usage
 
 ```html
 <!-- Single file upload -->
@@ -102,63 +134,3 @@ const controller = upload.getAbortController(0);
   max-size="5242880"
 ></civ-file-upload>
 ```
-
-## Live Examples
-
-### document
-
-<StoryEmbed id="forms-inputs-file-upload--default" />
-
-### With Hint
-
-<StoryEmbed id="forms-inputs-file-upload--with-hint" />
-
-### With Error
-
-<StoryEmbed id="forms-inputs-file-upload--with-error" />
-
-### Required
-
-<StoryEmbed id="forms-inputs-file-upload--required" />
-
-### Disabled
-
-<StoryEmbed id="forms-inputs-file-upload--disabled" />
-
-### All States
-
-<StoryEmbed id="forms-inputs-file-upload--all-states" />
-
-### Density Scale
-
-<StoryEmbed id="forms-inputs-file-upload--density-scale" />
-
-### Multiple Files
-
-<StoryEmbed id="forms-inputs-file-upload--multiple-files" />
-
-### Image Preview
-
-<StoryEmbed id="forms-inputs-file-upload--image-preview" />
-
-### Compact Variant
-
-<StoryEmbed id="forms-inputs-file-upload--compact-variant" />
-
-### Full Variant
-
-<StoryEmbed id="forms-inputs-file-upload--full-variant" />
-
-### All Variants
-
-<StoryEmbed id="forms-inputs-file-upload--all-variants" />
-
-### Upload Simulation
-
-<StoryEmbed id="forms-inputs-file-upload--upload-simulation" />
-
-### Usage: Document Submission
-
-<StoryEmbed id="forms-inputs-file-upload--government-document-submission" />
-
-[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-inputs-file-upload--default)

@@ -14,6 +14,30 @@ Three-field date input (month select + day text input + year text input) wrapped
 
 This component uses `legend` instead of `label` because it renders a `<fieldset>` containing multiple inputs. When `required` is set, the required indicator appears on the legend, and `hide-required-indicator` is applied to individual child fields to avoid duplication.
 
+## Examples
+
+<StoryEmbed id="forms-inputs-memorable-date--default" />
+
+<StoryEmbed id="forms-inputs-memorable-date--with-hint" />
+
+<StoryEmbed id="forms-inputs-memorable-date--with-error" />
+
+<StoryEmbed id="forms-inputs-memorable-date--required" />
+
+<StoryEmbed id="forms-inputs-memorable-date--disabled" />
+
+<StoryEmbed id="forms-inputs-memorable-date--prefilled" />
+
+<StoryEmbed id="forms-inputs-memorable-date--all-states" />
+
+<StoryEmbed id="forms-inputs-memorable-date--density-scale" />
+
+<StoryEmbed id="forms-inputs-memorable-date--custom-labels" />
+
+<StoryEmbed id="forms-inputs-memorable-date--government-identity-verification" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-inputs-memorable-date--default)
+
 ## Shared Props (Group Component)
 
 Group components share: `name`, `value`, `hint`, `error`, `required`, `disabled`. Uses `legend` instead of `label`.
@@ -46,7 +70,7 @@ Child fields are named `{name}-month`, `{name}-day`, `{name}-year` for individua
 | `civ-input` | `{ value: string, month: string, day: string, year: string }` | Fires on any field change |
 | `civ-change` | `{ value: string, month: string, day: string, year: string }` | Fires on committed field change |
 
-## Examples
+## Usage
 
 ```html
 <!-- Date of birth -->
@@ -72,47 +96,3 @@ Child fields are named `{name}-month`, `{name}-day`, `{name}-year` for individua
   required
 ></civ-memorable-date>
 ```
-
-## Live Examples
-
-### dob
-
-<StoryEmbed id="forms-inputs-memorable-date--default" />
-
-### With Hint
-
-<StoryEmbed id="forms-inputs-memorable-date--with-hint" />
-
-### With Error
-
-<StoryEmbed id="forms-inputs-memorable-date--with-error" />
-
-### Required
-
-<StoryEmbed id="forms-inputs-memorable-date--required" />
-
-### Disabled
-
-<StoryEmbed id="forms-inputs-memorable-date--disabled" />
-
-### Prefilled
-
-<StoryEmbed id="forms-inputs-memorable-date--prefilled" />
-
-### All States
-
-<StoryEmbed id="forms-inputs-memorable-date--all-states" />
-
-### Density Scale
-
-<StoryEmbed id="forms-inputs-memorable-date--density-scale" />
-
-### Custom Labels
-
-<StoryEmbed id="forms-inputs-memorable-date--custom-labels" />
-
-### Usage: Identity Verification
-
-<StoryEmbed id="forms-inputs-memorable-date--government-identity-verification" />
-
-[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-inputs-memorable-date--default)

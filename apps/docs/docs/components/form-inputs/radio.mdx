@@ -12,6 +12,32 @@ import StoryEmbed from "@site/src/components/StoryEmbed";
 
 Accessible radio button group implementing the WAI-ARIA Radio Group pattern with roving tabindex. Individual radio buttons support tile variants and descriptions.
 
+## Examples
+
+<StoryEmbed id="forms-inputs-radio--default" />
+
+<StoryEmbed id="forms-inputs-radio--with-hint" />
+
+<StoryEmbed id="forms-inputs-radio--with-error" />
+
+<StoryEmbed id="forms-inputs-radio--required" />
+
+<StoryEmbed id="forms-inputs-radio--disabled" />
+
+<StoryEmbed id="forms-inputs-radio--all-states" />
+
+<StoryEmbed id="forms-inputs-radio--density-scale" />
+
+<StoryEmbed id="forms-inputs-radio--tile-variant" />
+
+<StoryEmbed id="forms-inputs-radio--horizontal" />
+
+<StoryEmbed id="forms-inputs-radio--with-descriptions" />
+
+<StoryEmbed id="forms-inputs-radio--government-eligibility-form" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-inputs-radio--default)
+
 ## civ-radio
 
 Child element used within `civ-radio-group`. Not usable standalone.
@@ -65,7 +91,7 @@ Selection follows focus (WAI-ARIA pattern). RTL direction is automatically detec
 | `civ-input` | `{ value: string }` | Fires when selection changes |
 | `civ-change` | `{ value: string }` | Fires when selection changes |
 
-## Examples
+## Usage
 
 ```html
 <!-- Basic radio group -->
@@ -101,51 +127,3 @@ Selection follows focus (WAI-ARIA pattern). RTL direction is automatically detec
   <civ-radio label="Spanish" value="es"></civ-radio>
 </civ-radio-group>
 ```
-
-## Live Examples
-
-### contact
-
-<StoryEmbed id="forms-inputs-radio--default" />
-
-### With Hint
-
-<StoryEmbed id="forms-inputs-radio--with-hint" />
-
-### With Error
-
-<StoryEmbed id="forms-inputs-radio--with-error" />
-
-### Required
-
-<StoryEmbed id="forms-inputs-radio--required" />
-
-### Disabled
-
-<StoryEmbed id="forms-inputs-radio--disabled" />
-
-### All States
-
-<StoryEmbed id="forms-inputs-radio--all-states" />
-
-### Density Scale
-
-<StoryEmbed id="forms-inputs-radio--density-scale" />
-
-### Tile Variant
-
-<StoryEmbed id="forms-inputs-radio--tile-variant" />
-
-### Horizontal
-
-<StoryEmbed id="forms-inputs-radio--horizontal" />
-
-### With Descriptions
-
-<StoryEmbed id="forms-inputs-radio--with-descriptions" />
-
-### Usage: Eligibility Questions
-
-<StoryEmbed id="forms-inputs-radio--government-eligibility-form" />
-
-[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-inputs-radio--default)

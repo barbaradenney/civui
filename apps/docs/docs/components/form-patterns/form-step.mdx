@@ -14,6 +14,26 @@ Multi-step wizard for navigating within a form chapter. Shows one step at a time
 
 Each direct child element with a `data-step-label` attribute is treated as a step. Only the current step is visible.
 
+## Examples
+
+<StoryEmbed id="forms-patterns-form-step--default" />
+
+<StoryEmbed id="forms-patterns-form-step--with-hint" />
+
+<StoryEmbed id="forms-patterns-form-step--with-error" />
+
+<StoryEmbed id="forms-patterns-form-step--required" />
+
+<StoryEmbed id="forms-patterns-form-step--disabled" />
+
+<StoryEmbed id="forms-patterns-form-step--all-states" />
+
+<StoryEmbed id="forms-patterns-form-step--density-scale" />
+
+<StoryEmbed id="forms-patterns-form-step--government-benefit-application" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-patterns-form-step--default)
+
 ## Props
 
 | Prop | Type | Default | Description |
@@ -82,7 +102,7 @@ stepper.goToStep(2);  // Navigate to step 3
 | `civ-step-continue` | `{ from: number, to: number }` | When continue is clicked and validation passes |
 | `civ-step-complete` | `{ total: number }` | When the last step is completed |
 
-## Examples
+## Usage
 
 ```html
 <!-- Basic multi-step form -->
@@ -108,39 +128,3 @@ stepper.goToStep(2);  // Navigate to step 3
   <div data-step-label="Step two">...</div>
 </civ-form-step>
 ```
-
-## Live Examples
-
-### Default
-
-<StoryEmbed id="forms-patterns-form-step--default" />
-
-### With Progress Bar
-
-<StoryEmbed id="forms-patterns-form-step--with-hint" />
-
-### Custom Button Labels
-
-<StoryEmbed id="forms-patterns-form-step--with-error" />
-
-### Two Steps
-
-<StoryEmbed id="forms-patterns-form-step--required" />
-
-### Navigation Disabled
-
-<StoryEmbed id="forms-patterns-form-step--disabled" />
-
-### All States
-
-<StoryEmbed id="forms-patterns-form-step--all-states" />
-
-### Density Scale
-
-<StoryEmbed id="forms-patterns-form-step--density-scale" />
-
-### Usage: Benefit Application Flow
-
-<StoryEmbed id="forms-patterns-form-step--government-benefit-application" />
-
-[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-patterns-form-step--default)

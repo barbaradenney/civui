@@ -12,6 +12,28 @@ import StoryEmbed from "@site/src/components/StoryEmbed";
 
 Accessible dropdown select using a native `<select>` element for maximum accessibility and mobile compatibility. Supports grouped options via `optgroup`.
 
+## Examples
+
+<StoryEmbed id="forms-inputs-select--default" />
+
+<StoryEmbed id="forms-inputs-select--with-hint" />
+
+<StoryEmbed id="forms-inputs-select--with-error" />
+
+<StoryEmbed id="forms-inputs-select--required" />
+
+<StoryEmbed id="forms-inputs-select--disabled" />
+
+<StoryEmbed id="forms-inputs-select--all-states" />
+
+<StoryEmbed id="forms-inputs-select--density-scale" />
+
+<StoryEmbed id="forms-inputs-select--option-groups" />
+
+<StoryEmbed id="forms-inputs-select--government-benefits-form" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-inputs-select--default)
+
 ## Shared Props
 
 All form components share these props: `label`, `name`, `value`, `hint`, `error`, `required`, `disabled`.
@@ -34,7 +56,7 @@ Options with a `group` property are rendered inside `<optgroup>` elements. Ungro
 | `civ-input` | `{ value: string }` | Fires when selection changes |
 | `civ-change` | `{ value: string }` | Fires when selection changes |
 
-## Examples
+## Usage
 
 ```html
 <!-- Basic select -->
@@ -71,43 +93,3 @@ Options with a `group` property are rendered inside `<optgroup>` elements. Ungro
   ];
 </script>
 ```
-
-## Live Examples
-
-### state
-
-<StoryEmbed id="forms-inputs-select--default" />
-
-### With Hint
-
-<StoryEmbed id="forms-inputs-select--with-hint" />
-
-### With Error
-
-<StoryEmbed id="forms-inputs-select--with-error" />
-
-### Required
-
-<StoryEmbed id="forms-inputs-select--required" />
-
-### Disabled
-
-<StoryEmbed id="forms-inputs-select--disabled" />
-
-### All States
-
-<StoryEmbed id="forms-inputs-select--all-states" />
-
-### Density Scale
-
-<StoryEmbed id="forms-inputs-select--density-scale" />
-
-### Option Groups
-
-<StoryEmbed id="forms-inputs-select--option-groups" />
-
-### Usage: Benefits Application
-
-<StoryEmbed id="forms-inputs-select--government-benefits-form" />
-
-[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-inputs-select--default)

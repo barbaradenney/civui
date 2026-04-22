@@ -12,6 +12,34 @@ import StoryEmbed from "@site/src/components/StoryEmbed";
 
 A step indicator for multi-step forms. Displays current progress with completed, current, and upcoming step states. Responsive: horizontal on desktop, auto-switches to vertical on narrow screens.
 
+## Examples
+
+<StoryEmbed id="forms-patterns-progress-steps--default" />
+
+<StoryEmbed id="forms-patterns-progress-steps--with-hint" />
+
+<StoryEmbed id="forms-patterns-progress-steps--with-error" />
+
+<StoryEmbed id="forms-patterns-progress-steps--required" />
+
+<StoryEmbed id="forms-patterns-progress-steps--disabled" />
+
+<StoryEmbed id="forms-patterns-progress-steps--with-descriptions" />
+
+<StoryEmbed id="forms-patterns-progress-steps--clickable" />
+
+<StoryEmbed id="forms-patterns-progress-steps--all-states" />
+
+<StoryEmbed id="forms-patterns-progress-steps--density-scale" />
+
+<StoryEmbed id="forms-patterns-progress-steps--progress-bar" />
+
+<StoryEmbed id="forms-patterns-progress-steps--progress-bar-complete" />
+
+<StoryEmbed id="forms-patterns-progress-steps--government-application-progress" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-patterns-progress-steps--default)
+
 ## Props
 
 | Prop | Type | Default | Description |
@@ -32,7 +60,7 @@ A step indicator for multi-step forms. Displays current progress with completed,
 | `civ-step-click` | `{ step: number }` | Fired when a completed step is clicked (requires `clickable`) |
 | `civ-step-back` | `{ from: number, to: number }` | Fired when the back link is clicked |
 
-## Examples
+## Usage
 
 ### Simple steps
 
@@ -84,55 +112,3 @@ A step indicator for multi-step forms. Displays current progress with completed,
   error-steps="[1]"
 ></civ-progress-steps>
 ```
-
-## Live Examples
-
-### Default
-
-<StoryEmbed id="forms-patterns-progress-steps--default" />
-
-### Middle Step
-
-<StoryEmbed id="forms-patterns-progress-steps--with-hint" />
-
-### With Error Step
-
-<StoryEmbed id="forms-patterns-progress-steps--with-error" />
-
-### With Counter
-
-<StoryEmbed id="forms-patterns-progress-steps--required" />
-
-### Vertical Orientation
-
-<StoryEmbed id="forms-patterns-progress-steps--disabled" />
-
-### With Descriptions
-
-<StoryEmbed id="forms-patterns-progress-steps--with-descriptions" />
-
-### Clickable
-
-<StoryEmbed id="forms-patterns-progress-steps--clickable" />
-
-### All States
-
-<StoryEmbed id="forms-patterns-progress-steps--all-states" />
-
-### Density Scale
-
-<StoryEmbed id="forms-patterns-progress-steps--density-scale" />
-
-### Progress Bar
-
-<StoryEmbed id="forms-patterns-progress-steps--progress-bar" />
-
-### Progress Bar Complete
-
-<StoryEmbed id="forms-patterns-progress-steps--progress-bar-complete" />
-
-### Usage: Multi-Step Application
-
-<StoryEmbed id="forms-patterns-progress-steps--government-application-progress" />
-
-[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-patterns-progress-steps--default)

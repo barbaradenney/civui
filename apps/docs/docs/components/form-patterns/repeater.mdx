@@ -12,6 +12,30 @@ import StoryEmbed from "@site/src/components/StoryEmbed";
 
 "Add another" pattern for repeating form sections. Wraps a template of form fields and lets users add/remove instances dynamically. Field names are automatically indexed (e.g., `dependents[0].firstName`, `dependents[1].firstName`).
 
+## Examples
+
+<StoryEmbed id="forms-patterns-repeater--default" />
+
+<StoryEmbed id="forms-patterns-repeater--with-hint" />
+
+<StoryEmbed id="forms-patterns-repeater--with-error" />
+
+<StoryEmbed id="forms-patterns-repeater--required" />
+
+<StoryEmbed id="forms-patterns-repeater--disabled" />
+
+<StoryEmbed id="forms-patterns-repeater--all-states" />
+
+<StoryEmbed id="forms-patterns-repeater--density-scale" />
+
+<StoryEmbed id="forms-patterns-repeater--min-max" />
+
+<StoryEmbed id="forms-patterns-repeater--multiple-fields" />
+
+<StoryEmbed id="forms-patterns-repeater--government-service-periods" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-patterns-repeater--default)
+
 ## Props
 
 | Prop | Type | Default | Description |
@@ -68,7 +92,7 @@ repeater.removeRow(1);    // Remove row at index 1
 | `civ-repeater-add` | `{ index: number }` | When a row is added |
 | `civ-repeater-remove` | `{ index: number }` | When a row is removed |
 
-## Examples
+## Usage
 
 ```html
 <!-- Inline mode (simple items) -->
@@ -98,47 +122,3 @@ repeater.removeRow(1);    // Remove row at index 1
   <civ-text-input label="Social Security number" name="ssn" mask="ssn"></civ-text-input>
 </civ-repeater>
 ```
-
-## Live Examples
-
-### dependents
-
-<StoryEmbed id="forms-patterns-repeater--default" />
-
-### With Hint
-
-<StoryEmbed id="forms-patterns-repeater--with-hint" />
-
-### With Error
-
-<StoryEmbed id="forms-patterns-repeater--with-error" />
-
-### Required
-
-<StoryEmbed id="forms-patterns-repeater--required" />
-
-### Disabled
-
-<StoryEmbed id="forms-patterns-repeater--disabled" />
-
-### All States
-
-<StoryEmbed id="forms-patterns-repeater--all-states" />
-
-### Density Scale
-
-<StoryEmbed id="forms-patterns-repeater--density-scale" />
-
-### Min/Max Rows
-
-<StoryEmbed id="forms-patterns-repeater--min-max" />
-
-### Multiple Fields
-
-<StoryEmbed id="forms-patterns-repeater--multiple-fields" />
-
-### Usage: Service Periods
-
-<StoryEmbed id="forms-patterns-repeater--government-service-periods" />
-
-[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-patterns-repeater--default)

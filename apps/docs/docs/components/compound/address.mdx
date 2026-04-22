@@ -12,6 +12,36 @@ import StoryEmbed from "@site/src/components/StoryEmbed";
 
 Structured address input with street, city, state, and ZIP fields. Supports US domestic addresses, military addresses (AA/AE/AP), and international addresses with country selection.
 
+## Examples
+
+<StoryEmbed id="forms-compound-address--default" />
+
+<StoryEmbed id="forms-compound-address--with-hint" />
+
+<StoryEmbed id="forms-compound-address--with-error" />
+
+<StoryEmbed id="forms-compound-address--required" />
+
+<StoryEmbed id="forms-compound-address--disabled" />
+
+<StoryEmbed id="forms-compound-address--field-errors" />
+
+<StoryEmbed id="forms-compound-address--all-states" />
+
+<StoryEmbed id="forms-compound-address--density-scale" />
+
+<StoryEmbed id="forms-compound-address--prefilled" />
+
+<StoryEmbed id="forms-compound-address--international" />
+
+<StoryEmbed id="forms-compound-address--military-address" />
+
+<StoryEmbed id="forms-compound-address--full-options" />
+
+<StoryEmbed id="forms-compound-address--government-mailing-form" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-compound-address--default)
+
 ## Shared Props
 
 All form components share these props: `name`, `value`, `hint`, `error`, `required`, `disabled`.
@@ -96,7 +126,7 @@ addr.isEmpty();     // true if no fields are filled
 | `civ-input` | `{ value: AddressValue }` | Fires on every field change |
 | `civ-change` | `{ value: AddressValue }` | Fires on committed field change |
 
-## Examples
+## Usage
 
 ```html
 <!-- Basic US address -->
@@ -130,59 +160,3 @@ addr.isEmpty();     // true if no fields are filled
   required
 ></civ-address>
 ```
-
-## Live Examples
-
-### mailing
-
-<StoryEmbed id="forms-compound-address--default" />
-
-### With Hint
-
-<StoryEmbed id="forms-compound-address--with-hint" />
-
-### With Error
-
-<StoryEmbed id="forms-compound-address--with-error" />
-
-### Required
-
-<StoryEmbed id="forms-compound-address--required" />
-
-### Disabled
-
-<StoryEmbed id="forms-compound-address--disabled" />
-
-### Individual Field Errors
-
-<StoryEmbed id="forms-compound-address--field-errors" />
-
-### All States
-
-<StoryEmbed id="forms-compound-address--all-states" />
-
-### Density Scale
-
-<StoryEmbed id="forms-compound-address--density-scale" />
-
-### Prefilled
-
-<StoryEmbed id="forms-compound-address--prefilled" />
-
-### International (With Country)
-
-<StoryEmbed id="forms-compound-address--international" />
-
-### Military Address
-
-<StoryEmbed id="forms-compound-address--military-address" />
-
-### All Options Enabled
-
-<StoryEmbed id="forms-compound-address--full-options" />
-
-### Usage: Correspondence Address
-
-<StoryEmbed id="forms-compound-address--government-mailing-form" />
-
-[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-compound-address--default)

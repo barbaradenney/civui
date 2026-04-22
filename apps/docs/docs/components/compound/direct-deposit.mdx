@@ -12,6 +12,26 @@ import StoryEmbed from "@site/src/components/StoryEmbed";
 
 Compound financial input for collecting bank account information. Includes account type (checking/savings radio group), routing number, and account number fields. Follows the VA.gov direct deposit pattern.
 
+## Examples
+
+<StoryEmbed id="forms-compound-direct-deposit--default" />
+
+<StoryEmbed id="forms-compound-direct-deposit--with-hint" />
+
+<StoryEmbed id="forms-compound-direct-deposit--with-error" />
+
+<StoryEmbed id="forms-compound-direct-deposit--required" />
+
+<StoryEmbed id="forms-compound-direct-deposit--disabled" />
+
+<StoryEmbed id="forms-compound-direct-deposit--all-states" />
+
+<StoryEmbed id="forms-compound-direct-deposit--density-scale" />
+
+<StoryEmbed id="forms-compound-direct-deposit--government-payment-setup" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-compound-direct-deposit--default)
+
 ## Shared Props
 
 All form components share these props: `name`, `value`, `hint`, `error`, `required`, `disabled`.
@@ -66,7 +86,7 @@ deposit.depositValue; // { accountType: 'checking', routingNumber: '123456789', 
 | `civ-input` | `{ value: DirectDepositValue }` | Fires on every field change |
 | `civ-change` | `{ value: DirectDepositValue }` | Fires on committed field change |
 
-## Examples
+## Usage
 
 ```html
 <!-- Basic direct deposit -->
@@ -85,39 +105,3 @@ deposit.depositValue; // { accountType: 'checking', routingNumber: '123456789', 
   required
 ></civ-direct-deposit>
 ```
-
-## Live Examples
-
-### bank
-
-<StoryEmbed id="forms-compound-direct-deposit--default" />
-
-### Prefilled
-
-<StoryEmbed id="forms-compound-direct-deposit--with-hint" />
-
-### With Error
-
-<StoryEmbed id="forms-compound-direct-deposit--with-error" />
-
-### Required
-
-<StoryEmbed id="forms-compound-direct-deposit--required" />
-
-### Disabled
-
-<StoryEmbed id="forms-compound-direct-deposit--disabled" />
-
-### All States
-
-<StoryEmbed id="forms-compound-direct-deposit--all-states" />
-
-### Density Scale
-
-<StoryEmbed id="forms-compound-direct-deposit--density-scale" />
-
-### Usage: Benefit Payment Setup
-
-<StoryEmbed id="forms-compound-direct-deposit--government-payment-setup" />
-
-[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-compound-direct-deposit--default)

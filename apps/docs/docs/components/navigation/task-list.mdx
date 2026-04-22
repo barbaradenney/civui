@@ -12,6 +12,24 @@ import StoryEmbed from "@site/src/components/StoryEmbed";
 
 A multi-chapter form hub pattern based on the GDS Task List, adapted for government benefit applications. Composed of three components: `civ-task-list`, `civ-task-group`, and `civ-task`.
 
+## Examples
+
+<StoryEmbed id="navigation-task-list--default" />
+
+<StoryEmbed id="navigation-task-list--all-statuses" />
+
+<StoryEmbed id="navigation-task-list--sequential-unlocking" />
+
+<StoryEmbed id="navigation-task-list--all-complete" />
+
+<StoryEmbed id="navigation-task-list--all-states" />
+
+<StoryEmbed id="navigation-task-list--density-scale" />
+
+<StoryEmbed id="navigation-task-list--government-disability-application" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/navigation-task-list--default)
+
 ## Components
 
 ### civ-task-list
@@ -49,7 +67,7 @@ An individual task row with label, optional hint, status tag, and optional navig
 
 Tasks with `status="cannot-start"` render without a link and display a gray "Cannot start yet" tag. Update the status to `not-started` when prerequisite tasks are complete to unlock navigation.
 
-## Examples
+## Usage
 
 ### Basic task list
 
@@ -90,35 +108,3 @@ Tasks with `status="cannot-start"` render without a link and display a gray "Can
   status="error"
 ></civ-task>
 ```
-
-## Live Examples
-
-### Default
-
-<StoryEmbed id="navigation-task-list--default" />
-
-### All Statuses
-
-<StoryEmbed id="navigation-task-list--all-statuses" />
-
-### Sequential Unlocking
-
-<StoryEmbed id="navigation-task-list--sequential-unlocking" />
-
-### All Sections Complete
-
-<StoryEmbed id="navigation-task-list--all-complete" />
-
-### All States
-
-<StoryEmbed id="navigation-task-list--all-states" />
-
-### Density Scale
-
-<StoryEmbed id="navigation-task-list--density-scale" />
-
-### Usage: VA Disability Application Hub
-
-<StoryEmbed id="navigation-task-list--government-disability-application" />
-
-[Open in Storybook →](pathname:///civui/storybook/?path=/story/navigation-task-list--default)

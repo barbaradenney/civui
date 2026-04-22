@@ -12,6 +12,28 @@ import StoryEmbed from "@site/src/components/StoryEmbed";
 
 Accessible date picker implementing the W3C APG Dialog + Grid pattern. Combines a text input for manual date entry with a calendar dialog for browsing. Use for scheduling and appointment dates. For known dates (birthday, document dates), use `civ-memorable-date` instead.
 
+## Examples
+
+<StoryEmbed id="forms-inputs-date-picker--default" />
+
+<StoryEmbed id="forms-inputs-date-picker--with-hint" />
+
+<StoryEmbed id="forms-inputs-date-picker--with-error" />
+
+<StoryEmbed id="forms-inputs-date-picker--required" />
+
+<StoryEmbed id="forms-inputs-date-picker--disabled" />
+
+<StoryEmbed id="forms-inputs-date-picker--with-min-max" />
+
+<StoryEmbed id="forms-inputs-date-picker--all-states" />
+
+<StoryEmbed id="forms-inputs-date-picker--density-scale" />
+
+<StoryEmbed id="forms-inputs-date-picker--government-appointment-scheduler" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-inputs-date-picker--default)
+
 ## Shared Props
 
 All form components share these props: `label`, `name`, `value`, `hint`, `error`, `required`, `disabled`.
@@ -61,7 +83,7 @@ The `value` is always in ISO `YYYY-MM-DD` format regardless of the display local
 | `civ-input` | `{ value: string }` | Fires when text input changes |
 | `civ-change` | `{ value: string }` | Fires when a date is selected or typed |
 
-## Examples
+## Usage
 
 ```html
 <!-- Basic date picker -->
@@ -88,43 +110,3 @@ The `value` is always in ISO `YYYY-MM-DD` format regardless of the display local
   disabled-dates='["2026-04-25","2026-04-26"]'
 ></civ-date-picker>
 ```
-
-## Live Examples
-
-### appointment
-
-<StoryEmbed id="forms-inputs-date-picker--default" />
-
-### With Hint
-
-<StoryEmbed id="forms-inputs-date-picker--with-hint" />
-
-### With Error
-
-<StoryEmbed id="forms-inputs-date-picker--with-error" />
-
-### Required
-
-<StoryEmbed id="forms-inputs-date-picker--required" />
-
-### Disabled
-
-<StoryEmbed id="forms-inputs-date-picker--disabled" />
-
-### With Date Range
-
-<StoryEmbed id="forms-inputs-date-picker--with-min-max" />
-
-### All States
-
-<StoryEmbed id="forms-inputs-date-picker--all-states" />
-
-### Density Scale
-
-<StoryEmbed id="forms-inputs-date-picker--density-scale" />
-
-### Usage: Schedule an Appointment
-
-<StoryEmbed id="forms-inputs-date-picker--government-appointment-scheduler" />
-
-[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-inputs-date-picker--default)

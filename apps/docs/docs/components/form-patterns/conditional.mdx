@@ -12,6 +12,18 @@ import StoryEmbed from "@site/src/components/StoryEmbed";
 
 A declarative show/hide wrapper that reveals its content only when a named field has a specified value. Listens for `civ-input` and `civ-change` events scoped to the nearest form ancestor for performance.
 
+## Examples
+
+<StoryEmbed id="forms-layout-conditional--default" />
+
+<StoryEmbed id="forms-layout-conditional--not-equals" />
+
+<StoryEmbed id="forms-layout-conditional--multiple-conditions" />
+
+<StoryEmbed id="forms-layout-conditional--with-form" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-layout-conditional--default)
+
 ## Props
 
 | Prop | Type | Default | Description |
@@ -37,7 +49,7 @@ For performance, event listeners are scoped to the nearest ancestor:
 4. Native `<fieldset>`
 5. `document` (fallback)
 
-## Examples
+## Usage
 
 ```html
 <!-- Show follow-up question when "Yes" is selected -->
@@ -85,23 +97,3 @@ For performance, event listeners are scoped to the nearest ancestor:
   <civ-text-input label="Business name" name="businessName" required></civ-text-input>
 </civ-conditional>
 ```
-
-## Live Examples
-
-### Default
-
-<StoryEmbed id="forms-layout-conditional--default" />
-
-### Not Equals
-
-<StoryEmbed id="forms-layout-conditional--not-equals" />
-
-### Multiple Conditions
-
-<StoryEmbed id="forms-layout-conditional--multiple-conditions" />
-
-### With Form
-
-<StoryEmbed id="forms-layout-conditional--with-form" />
-
-[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-layout-conditional--default)

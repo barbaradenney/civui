@@ -12,6 +12,30 @@ import StoryEmbed from "@site/src/components/StoryEmbed";
 
 A simple boolean question component for yes/no questions in government forms. Renders as a fieldset with two styled buttons using `role="radio"` for accessibility. Implements roving tabindex and arrow key navigation.
 
+## Examples
+
+<StoryEmbed id="forms-inputs-yes-no--default" />
+
+<StoryEmbed id="forms-inputs-yes-no--with-hint" />
+
+<StoryEmbed id="forms-inputs-yes-no--with-error" />
+
+<StoryEmbed id="forms-inputs-yes-no--required" />
+
+<StoryEmbed id="forms-inputs-yes-no--disabled" />
+
+<StoryEmbed id="forms-inputs-yes-no--preselected" />
+
+<StoryEmbed id="forms-inputs-yes-no--custom-labels" />
+
+<StoryEmbed id="forms-inputs-yes-no--all-states" />
+
+<StoryEmbed id="forms-inputs-yes-no--density-scale" />
+
+<StoryEmbed id="forms-inputs-yes-no--government-eligibility-screening" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-inputs-yes-no--default)
+
 ## Props
 
 Uses `legend` instead of `label` because it renders as a fieldset with radio semantics.
@@ -44,7 +68,7 @@ Uses `legend` instead of `label` because it renders as a fieldset with radio sem
 | `civ-input` | `{ value: string }` | Fires when selection changes |
 | `civ-change` | `{ value: string }` | Fires when selection changes |
 
-## Examples
+## Usage
 
 ```html
 <!-- Basic yes/no question -->
@@ -70,47 +94,3 @@ Uses `legend` instead of `label` because it renders as a fieldset with radio sem
   no-label="No, continue"
 ></civ-yes-no>
 ```
-
-## Live Examples
-
-### citizen
-
-<StoryEmbed id="forms-inputs-yes-no--default" />
-
-### With Hint
-
-<StoryEmbed id="forms-inputs-yes-no--with-hint" />
-
-### With Error
-
-<StoryEmbed id="forms-inputs-yes-no--with-error" />
-
-### Required
-
-<StoryEmbed id="forms-inputs-yes-no--required" />
-
-### Disabled
-
-<StoryEmbed id="forms-inputs-yes-no--disabled" />
-
-### Preselected
-
-<StoryEmbed id="forms-inputs-yes-no--preselected" />
-
-### Custom Labels
-
-<StoryEmbed id="forms-inputs-yes-no--custom-labels" />
-
-### All States
-
-<StoryEmbed id="forms-inputs-yes-no--all-states" />
-
-### Density Scale
-
-<StoryEmbed id="forms-inputs-yes-no--density-scale" />
-
-### Usage: Eligibility Screening
-
-<StoryEmbed id="forms-inputs-yes-no--government-eligibility-screening" />
-
-[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-inputs-yes-no--default)

@@ -12,6 +12,26 @@ import StoryEmbed from "@site/src/components/StoryEmbed";
 
 Validation coordinator with accessible error summary. Validates child CivUI form elements on submit, renders an error summary with anchor links to each invalid field, and optionally persists form data to `sessionStorage`.
 
+## Examples
+
+<StoryEmbed id="forms-layout-form--default" />
+
+<StoryEmbed id="forms-layout-form--with-hint" />
+
+<StoryEmbed id="forms-layout-form--with-error" />
+
+<StoryEmbed id="forms-layout-form--required" />
+
+<StoryEmbed id="forms-layout-form--disabled" />
+
+<StoryEmbed id="forms-layout-form--all-states" />
+
+<StoryEmbed id="forms-layout-form--density-scale" />
+
+<StoryEmbed id="forms-layout-form--government-inquiry-form" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-layout-form--default)
+
 ## Props
 
 | Prop | Type | Default | Description |
@@ -77,7 +97,7 @@ Submit is triggered by:
 
 Native form submission is prevented. Handle the `civ-submit` event to process the data.
 
-## Examples
+## Usage
 
 ```html
 <!-- Basic form with validation -->
@@ -106,39 +126,3 @@ Native form submission is prevented. Handle the `civ-submit` event to process th
   <civ-text-input label="Last name" name="lastName"></civ-text-input>
 </civ-form>
 ```
-
-## Live Examples
-
-### Default
-
-<StoryEmbed id="forms-layout-form--default" />
-
-### With Validation
-
-<StoryEmbed id="forms-layout-form--with-hint" />
-
-### Error Summary
-
-<StoryEmbed id="forms-layout-form--with-error" />
-
-### Persist Draft
-
-<StoryEmbed id="forms-layout-form--required" />
-
-### Dirty Tracking
-
-<StoryEmbed id="forms-layout-form--disabled" />
-
-### All States
-
-<StoryEmbed id="forms-layout-form--all-states" />
-
-### Density Scale
-
-<StoryEmbed id="forms-layout-form--density-scale" />
-
-### Usage: Government Inquiry Form
-
-<StoryEmbed id="forms-layout-form--government-inquiry-form" />
-
-[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-layout-form--default)

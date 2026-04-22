@@ -12,6 +12,30 @@ import StoryEmbed from "@site/src/components/StoryEmbed";
 
 Multi-line text input with optional character count and word count display. Uses ElementInternals for native form participation.
 
+## Examples
+
+<StoryEmbed id="forms-inputs-textarea--default" />
+
+<StoryEmbed id="forms-inputs-textarea--with-hint" />
+
+<StoryEmbed id="forms-inputs-textarea--with-error" />
+
+<StoryEmbed id="forms-inputs-textarea--required" />
+
+<StoryEmbed id="forms-inputs-textarea--disabled" />
+
+<StoryEmbed id="forms-inputs-textarea--with-character-count" />
+
+<StoryEmbed id="forms-inputs-textarea--with-word-count" />
+
+<StoryEmbed id="forms-inputs-textarea--all-states" />
+
+<StoryEmbed id="forms-inputs-textarea--density-scale" />
+
+<StoryEmbed id="forms-inputs-textarea--government-appeal-form" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-inputs-textarea--default)
+
 ## Shared Props
 
 All form components share these props: `label`, `name`, `value`, `hint`, `error`, `required`, `disabled`.
@@ -42,7 +66,7 @@ When `maxwords` is set (and `maxlength` is not), a word count indicator appears.
 | `civ-input` | `{ value: string }` | Fires on every value change |
 | `civ-change` | `{ value: string }` | Fires on committed value change (blur) |
 
-## Examples
+## Usage
 
 ```html
 <!-- Basic textarea -->
@@ -77,47 +101,3 @@ When `maxwords` is set (and `maxlength` is not), a word count indicator appears.
   max-height="400px"
 ></civ-textarea>
 ```
-
-## Live Examples
-
-### comments
-
-<StoryEmbed id="forms-inputs-textarea--default" />
-
-### With Hint
-
-<StoryEmbed id="forms-inputs-textarea--with-hint" />
-
-### With Error
-
-<StoryEmbed id="forms-inputs-textarea--with-error" />
-
-### Required
-
-<StoryEmbed id="forms-inputs-textarea--required" />
-
-### Disabled
-
-<StoryEmbed id="forms-inputs-textarea--disabled" />
-
-### With Character Count
-
-<StoryEmbed id="forms-inputs-textarea--with-character-count" />
-
-### With Word Count
-
-<StoryEmbed id="forms-inputs-textarea--with-word-count" />
-
-### All States
-
-<StoryEmbed id="forms-inputs-textarea--all-states" />
-
-### Density Scale
-
-<StoryEmbed id="forms-inputs-textarea--density-scale" />
-
-### Usage: Appeal Justification
-
-<StoryEmbed id="forms-inputs-textarea--government-appeal-form" />
-
-[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-inputs-textarea--default)

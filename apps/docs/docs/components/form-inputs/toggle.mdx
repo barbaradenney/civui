@@ -12,6 +12,28 @@ import StoryEmbed from "@site/src/components/StoryEmbed";
 
 Accessible toggle switch using `role="switch"` with `aria-checked`. Renders as a button element for proper screen reader compatibility. Use for immediate on/off settings, not for form submissions where a checkbox is more appropriate.
 
+## Examples
+
+<StoryEmbed id="forms-inputs-toggle--default" />
+
+<StoryEmbed id="forms-inputs-toggle--with-hint" />
+
+<StoryEmbed id="forms-inputs-toggle--with-error" />
+
+<StoryEmbed id="forms-inputs-toggle--required" />
+
+<StoryEmbed id="forms-inputs-toggle--disabled" />
+
+<StoryEmbed id="forms-inputs-toggle--with-description" />
+
+<StoryEmbed id="forms-inputs-toggle--all-states" />
+
+<StoryEmbed id="forms-inputs-toggle--density-scale" />
+
+<StoryEmbed id="forms-inputs-toggle--government-notification-settings" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-inputs-toggle--default)
+
 ## Shared Props
 
 All form components share these props: `label`, `name`, `value`, `hint`, `error`, `required`, `disabled`.
@@ -35,7 +57,7 @@ All form components share these props: `label`, `name`, `value`, `hint`, `error`
 - **Toggle**: Immediate effect, like enabling/disabling a setting. "Enable notifications"
 - **Checkbox**: Collected on submit, like form fields. "I agree to terms"
 
-## Examples
+## Usage
 
 ```html
 <!-- Basic toggle -->
@@ -61,43 +83,3 @@ All form components share these props: `label`, `name`, `value`, `hint`, `error`
   required
 ></civ-toggle>
 ```
-
-## Live Examples
-
-### email-notifications
-
-<StoryEmbed id="forms-inputs-toggle--default" />
-
-### With Hint
-
-<StoryEmbed id="forms-inputs-toggle--with-hint" />
-
-### With Error
-
-<StoryEmbed id="forms-inputs-toggle--with-error" />
-
-### Required
-
-<StoryEmbed id="forms-inputs-toggle--required" />
-
-### Disabled
-
-<StoryEmbed id="forms-inputs-toggle--disabled" />
-
-### With Description
-
-<StoryEmbed id="forms-inputs-toggle--with-description" />
-
-### All States
-
-<StoryEmbed id="forms-inputs-toggle--all-states" />
-
-### Density Scale
-
-<StoryEmbed id="forms-inputs-toggle--density-scale" />
-
-### Usage: Notification Preferences
-
-<StoryEmbed id="forms-inputs-toggle--government-notification-settings" />
-
-[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-inputs-toggle--default)

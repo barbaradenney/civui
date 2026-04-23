@@ -37,7 +37,7 @@ describe('generateWorkflowUi', () => {
 
   it('generates a status banner', () => {
     const result = generateWorkflowUi(makeWorkflowSchema());
-    expect(result.html).toContain('data-civ-workflow-status');
+    expect(result.html).toContain('civ-card');
   });
 
   it('displays current state label', () => {
@@ -118,10 +118,10 @@ describe('generateWorkflowUi', () => {
 
   it('uses destructive styling for deny-to-terminal transitions', () => {
     const result = generateWorkflowUi(makeWorkflowSchema(), 'submitted', 'reviewer');
-    // 'Deny' transition has requiresComment + goes to terminal 'denied' state → civ-bg-error
-    expect(result.html).toContain('civ-bg-error');
-    // 'Approve' has confirmationMessage but no requiresComment → stays civ-bg-primary
-    expect(result.html).toContain('civ-bg-primary');
+    // 'Deny' transition has requiresComment + goes to terminal 'denied' state → danger button
+    expect(result.html).toContain('danger');
+    // 'Approve' uses civ-button (primary by default, no danger attr)
+    expect(result.html).toContain('civ-button');
   });
 
   it('throws for unknown currentState', () => {

@@ -183,10 +183,10 @@ export function generateDelegationSections(
     });
 
     attestationHtml =
-      `<section class="civ-mt-6 civ-p-4 civ-border civ-rounded">\n` +
+      `<civ-card class="civ-mt-6">\n` +
       `  <h2 class="civ-text-lg civ-font-bold civ-mb-2">Attestation</h2>\n` +
       `  <p class="civ-mb-4">${escapeHtml(attestation.text)}</p>\n` +
-      `</section>`;
+      `</civ-card>`;
   }
 
   // --- Consent Upload Section ---

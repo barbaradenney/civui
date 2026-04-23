@@ -76,19 +76,19 @@
   </civ-task-list>
 </div>
   <!-- Workflow Status -->
-  <div data-civ-workflow-status class="civ-p-4 civ-border civ-rounded">
+  <civ-card>
   <p class="civ-text-sm civ-text-base-dark">Current status</p>
   <p class="civ-text-lg civ-font-bold" data-civ-workflow-state="draft">Draft</p>
   <div data-civ-workflow-actions class="civ-mt-4 civ-flex civ-gap-2">
-    <button type="button" data-civ-workflow-action="submitted" class="civ-px-4 civ-py-2 civ-rounded civ-bg-primary civ-text-white">Submit for review</button>
+    <civ-button data-civ-workflow-action="submitted" label="Submit for review"></civ-button>
   </div>
-</div>
+</civ-card>
 
   <!-- Delegation / Representative -->
-  <section class="civ-mt-6 civ-p-4 civ-border civ-rounded">
+  <civ-card class="civ-mt-6">
   <h2 class="civ-text-lg civ-font-bold civ-mb-2">Attestation</h2>
   <p class="civ-mb-4">I authorize the above-named organization/individual to act on my behalf in the preparation, presentation, and prosecution of my claim.</p>
-</section>
+</civ-card>
     </section>
 
     <section data-page="personal-info" hidden>
@@ -479,13 +479,13 @@
 
     // Intro page — two start paths
     var samplePrefill = {
-      fullName: { value: '{"first":"Jane","middle":"M","last":"Doe","suffix":""}', source: 'profile', locked: true },
-      dateOfBirth: { value: '1985-03-15', source: 'profile', locked: true },
-      ssn: { value: '123456789', source: 'profile', locked: true },
-      homePhone: { value: '5551234567', source: 'profile' },
-      mobilePhone: { value: '5559876543', source: 'profile' },
+      fullName: { value: 'Jane M. Doe', source: 'profile', locked: true },
+      dateOfBirth: { value: 'March 15, 1985', source: 'profile', locked: true },
+      ssn: { value: '●●●-●●-6789', source: 'profile', locked: true },
+      homePhone: { value: '(555) 123-4567', source: 'profile' },
+      mobilePhone: { value: '(555) 987-6543', source: 'profile' },
       email: { value: 'jane.doe@example.com', source: 'profile' },
-      mailingAddress: { value: '{"street1":"123 Main St","street2":"","street3":"","city":"Springfield","state":"IL","zip":"62701","country":"US","military":false}', source: 'profile' },
+      mailingAddress: { value: '123 Main St, Springfield, IL 62701', source: 'profile' },
     };
 
     document.querySelector('[data-start-signed-in]')?.addEventListener('click', function() {
@@ -715,13 +715,22 @@
         if (task) task.setAttribute('prefilled', '');
       });
 
-      // Update task statuses — prefilled unlocked chapters get "review"
+      // Update task statuses — only the FIRST prefilled chapter gets "review"
+      // (sequential unlocking: complete one before starting the next)
       updateTaskList();
+      var firstReviewSet = false;
       CHAPTERS.forEach(function(chapterId) {
         var review = document.querySelector('[data-chapter="' + chapterId + '"] [data-prefill-review]:not([hidden])');
         var task = document.querySelector('civ-task[data-chapter-id="' + chapterId + '"]');
         if (review && task && task.getAttribute('status') !== 'complete') {
-          task.setAttribute('status', 'review');
+          if (!firstReviewSet) {
+            task.setAttribute('status', 'review');
+            task.setAttribute('href', '#/' + chapterId);
+            firstReviewSet = true;
+          } else {
+            task.setAttribute('status', 'cannot-start');
+            task.removeAttribute('href');
+          }
         }
       });
     };

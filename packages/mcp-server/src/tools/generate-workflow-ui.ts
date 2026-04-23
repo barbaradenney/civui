@@ -64,12 +64,9 @@ export function generateWorkflowUi(
     const buttons = availableTransitions
       .map((t) => {
         const isDestructive = t.requiresComment && terminalIds.has(t.to);
-        const btnClass = isDestructive
-          ? 'civ-px-4 civ-py-2 civ-rounded civ-bg-error civ-text-white'
-          : 'civ-px-4 civ-py-2 civ-rounded civ-bg-primary civ-text-white';
         return (
-          `    <button type="button" data-civ-workflow-action="${escapeHtml(t.to)}"` +
-          ` class="${btnClass}">${escapeHtml(t.label)}</button>`
+          `    <civ-button data-civ-workflow-action="${escapeHtml(t.to)}"` +
+          ` label="${escapeHtml(t.label)}"${isDestructive ? ' danger' : ''}></civ-button>`
         );
       })
       .join('\n');
@@ -81,11 +78,11 @@ export function generateWorkflowUi(
   }
 
   const html =
-    `<div data-civ-workflow-status class="civ-p-4 civ-border civ-rounded">\n` +
+    `<civ-card>\n` +
     `  <p class="civ-text-sm civ-text-base-dark">Current status</p>\n` +
     `  <p class="civ-text-lg civ-font-bold" data-civ-workflow-state="${escapeHtml(resolvedState)}">${escapeHtml(stateObj.label)}</p>` +
     buttonsHtml +
-    `\n</div>`;
+    `\n</civ-card>`;
 
   // Generate JavaScript
   const jsLines: string[] = [

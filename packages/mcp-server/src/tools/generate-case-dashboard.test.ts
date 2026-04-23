@@ -40,7 +40,7 @@ describe('generateCaseDashboard', () => {
 
   it('includes workflow status section', () => {
     const result = generateCaseDashboard(makeSchema());
-    expect(result.html).toContain('data-civ-workflow-status');
+    expect(result.html).toContain('civ-card');
     expect(result.html).toContain('Draft');
   });
 

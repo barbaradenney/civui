@@ -6,7 +6,7 @@ A reference for building a framework that lets CivUI's Lit web components run na
 
 CivUI maintains two parallel implementations:
 
-- **Web:** Lit 3 web components (`@civui/forms`) — 15+ components
+- **Web:** Lit 3 web components (`@civui/inputs`) — 15+ components
 - **React Native:** Hand-written RN equivalents (`@civui/react-native`) — 12 components
 
 These share API parity by convention but no rendering code. Every new component or bug fix must be implemented twice. A unified authoring model would eliminate this duplication.

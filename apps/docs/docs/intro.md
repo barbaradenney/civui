@@ -22,12 +22,15 @@ Accessibility-first web components for government applications. Built on Lit 3, 
 ## Quick Start
 
 ```bash
-npm install @civui/forms
+npm install @civui/inputs @civui/controls @civui/compound @civui/form-patterns
 ```
 
 ```html
 <script type="module">
-  import '@civui/forms';
+  import '@civui/inputs';
+import '@civui/controls';
+import '@civui/compound';
+import '@civui/form-patterns';
 </script>
 
 <civ-text-input
@@ -44,7 +47,10 @@ npm install @civui/forms
 |---------|-------------|
 | `@civui/tokens` | Design tokens (CSS, Tailwind, JS, Swift, Kotlin) |
 | `@civui/core` | Base classes, utilities, icons, analytics |
-| `@civui/forms` | Form components (text input, select, checkbox, date picker, etc.) |
+| `@civui/inputs` | Input components (text-input, select, combobox, date-picker, etc.) |
+| `@civui/controls` | Selection controls (checkbox, radio, segmented-control) |
+| `@civui/compound` | Compound fields (address, name, direct-deposit, signature) |
+| `@civui/form-patterns` | Form orchestration (form, form-step, repeater, summary, prefill) |
 | `@civui/ui` | UI components (button, link, tag, card, page header, link card) |
 | `@civui/feedback` | Alert, progress bar |
 | `@civui/navigation` | Skip link, task list |

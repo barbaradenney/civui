@@ -74,7 +74,7 @@ For a simple component like `civ-fieldset`:
 
 3. **Run existing tests (they should pass unchanged):**
    ```bash
-   pnpm --filter @civui/forms test -- --grep fieldset
+   pnpm --filter @civui/inputs test -- --grep fieldset
    ```
 
 4. **If tests pass, the migration is complete.** If not, check the diff

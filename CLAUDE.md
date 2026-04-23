@@ -14,13 +14,16 @@ Accessibility-first web components for government applications.
 
 ## Package Structure
 
-Build order: `tokens → core → forms`
+Build order: `tokens → core → ui → inputs → controls → compound → form-patterns`
 
 | Package | Path | Description |
 |---------|------|-------------|
 | `@civui/tokens` | `packages/tokens/` | Design tokens (colors, spacing, typography) |
 | `@civui/core` | `packages/core/` | Base classes, a11y utilities, analytics, date utils |
-| `@civui/forms` | `packages/forms/` | Form components (20 web components: text-input, select, checkbox, yes-no, conditional, progress-steps, etc.) |
+| `@civui/inputs` | `packages/inputs/` | Input components (text-input, textarea, select, combobox, date-picker, file-upload, toggle, yes-no) |
+| `@civui/controls` | `packages/controls/` | Selection controls (checkbox, radio, segmented-control) |
+| `@civui/compound` | `packages/compound/` | Compound fields (address, name, direct-deposit, signature) |
+| `@civui/form-patterns` | `packages/form-patterns/` | Form orchestration (form, form-step, repeater, summary, prefill, progress-steps) |
 | `@civui/test-utils` | `packages/test-utils/` | Test helpers: `fixture`, `cleanupFixtures`, `elementUpdated`, `pressKey`, `typeText` |
 | `@civui/cli` | `packages/cli/` | CLI tooling |
 | `@civui/content` | `packages/content/` | Content/copy management |

@@ -1,5 +1,6 @@
 import { html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 import { CivBaseElement } from '@civui/core';
 
 export type TagVariant =
@@ -32,6 +33,7 @@ export type TagStyle = 'primary' | 'secondary';
  * @prop {string} label - Tag text content
  * @prop {TagVariant} variant - Color variant
  * @prop {TagStyle} tagStyle - Emphasis level: 'primary' (dark bg) or 'secondary' (light bg, default)
+ * @prop {boolean} status - When true, adds role="status" for screen reader announcements
  *
  * @example
  * ```html
@@ -51,6 +53,9 @@ export class CivTag extends CivBaseElement {
   /** Emphasis: 'primary' (dark bg, light text) or 'secondary' (light bg, dark text). */
   @property({ type: String, attribute: 'tag-style' }) tagStyle: TagStyle = 'secondary';
 
+  /** When true, adds role="status" so screen readers announce the tag content. */
+  @property({ type: Boolean }) status = false;
+
   override render() {
     const styleClass = this.tagStyle === 'primary'
       ? `civ-tag--${this.variant}-primary`
@@ -59,7 +64,7 @@ export class CivTag extends CivBaseElement {
     const classes = ['civ-tag', styleClass].join(' ');
 
     return html`
-      <span class="${classes}">${this.label}</span>
+      <span class="${classes}" role="${ifDefined(this.status ? 'status' : undefined)}">${this.label}</span>
     `;
   }
 }

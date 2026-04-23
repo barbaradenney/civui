@@ -1,5 +1,6 @@
 import { html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 import { CivBaseElement } from '@civui/core';
 
 export type ActionButtonVariant = 'primary' | 'secondary' | 'tertiary';
@@ -41,7 +42,7 @@ export class CivActionButton extends CivBaseElement {
   @property({ type: String }) variant: ActionButtonVariant = 'tertiary';
   @property({ type: Boolean, reflect: true }) danger = false;
   @property({ type: Boolean, reflect: true }) disabled = false;
-  @property({ type: Boolean, reflect: true }) pressed = false;
+  @property({ type: Boolean, reflect: true }) pressed: boolean | undefined = undefined;
   @property({ type: String }) type: 'button' | 'submit' | 'reset' = 'button';
 
   private get _classes(): string {
@@ -60,12 +61,18 @@ export class CivActionButton extends CivBaseElement {
   }
 
   override render() {
+    // Only render aria-pressed when the component is used as a toggle
+    // (i.e., pressed attribute has been explicitly set).
+    const ariaPressed = this.pressed !== undefined
+      ? (this.pressed ? 'true' : 'false')
+      : undefined;
+
     return html`
       <button
         type="${this.type}"
         class="${this._classes}"
         ?disabled="${this.disabled}"
-        aria-pressed="${this.pressed ? 'true' : 'false'}"
+        aria-pressed="${ifDefined(ariaPressed)}"
         @click="${this._onClick}"
       >${this.label}</button>
     `;

@@ -36,10 +36,10 @@ describe('civ-action-button', () => {
     expect(btn!.getAttribute('aria-pressed')).toBe('true');
   });
 
-  it('sets aria-pressed false when not pressed', async () => {
+  it('omits aria-pressed when not used as a toggle', async () => {
     const el = await fixture('<civ-action-button label="Bold"></civ-action-button>');
     const btn = el.querySelector('button');
-    expect(btn!.getAttribute('aria-pressed')).toBe('false');
+    expect(btn!.hasAttribute('aria-pressed')).toBe(false);
   });
 
   it('disables the button', async () => {

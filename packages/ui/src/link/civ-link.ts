@@ -4,6 +4,9 @@ import { CivBaseElement, LightDomTextMixin } from '@civui/core';
 
 export type LinkVariant = 'primary' | 'secondary' | 'tertiary' | 'back';
 
+/** Protocols that are never allowed in link href values. */
+const UNSAFE_HREF_PATTERN = /^\s*javascript\s*:/i;
+
 /**
  * CivUI Link
  *
@@ -64,11 +67,18 @@ export class CivLink extends LightDomTextMixin(CivBaseElement) {
     return '';
   }
 
+  /** Return sanitized href, stripping dangerous protocols. */
+  private get _safeHref(): string {
+    if (UNSAFE_HREF_PATTERN.test(this.href)) return '';
+    return this.href;
+  }
+
   override render() {
     if (this.disabled) {
       return html`
         <a
           class="${this._classes}"
+          role="link"
           aria-disabled="true"
           tabindex="-1"
         >${this._leadingIcon}${this._text}${this._trailingIcon}</a>
@@ -77,7 +87,7 @@ export class CivLink extends LightDomTextMixin(CivBaseElement) {
 
     return html`
       <a
-        href="${this.href}"
+        href="${this._safeHref}"
         class="${this._classes}"
         @click="${this._onClick}"
       >${this._leadingIcon}${this._text}${this._trailingIcon}</a>

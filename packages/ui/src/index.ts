@@ -15,12 +15,14 @@ export { CivDivider } from './divider/index.js';
 
 // Card
 export { CivCard } from './card/index.js';
+export type { CardColor, CardStyle } from './card/index.js';
 
 // Page Header
 export { CivPageHeader } from './page-header/index.js';
 
 // Link Card
 export { CivLinkCard } from './link-card/index.js';
+export type { LinkCardVariant } from './link-card/index.js';
 
 // Action Button
 export { CivActionButton } from './action-button/index.js';

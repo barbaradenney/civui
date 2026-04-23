@@ -4,6 +4,9 @@ import { CivBaseElement } from '@civui/core';
 
 export type LinkCardVariant = 'primary' | 'secondary' | 'tertiary' | 'critical' | 'danger';
 
+/** Protocols that are never allowed in link href values. */
+const UNSAFE_HREF_PATTERN = /^\s*javascript\s*:/i;
+
 /**
  * CivUI Link Card
  *
@@ -49,12 +52,18 @@ export class CivLinkCard extends CivBaseElement {
   /** Visual variant. */
   @property({ type: String }) variant: LinkCardVariant = 'primary';
 
+  /** Return sanitized href, stripping dangerous protocols. */
+  private get _safeHref(): string {
+    if (UNSAFE_HREF_PATTERN.test(this.href)) return '';
+    return this.href;
+  }
+
   override render() {
     const classes = `civ-link-card civ-link-card--${this.variant} focus-visible:civ-focus-ring`;
 
     return html`
       <a
-        href="${this.href}"
+        href="${this._safeHref}"
         class="${classes}"
         @click="${this._onClick}"
       >

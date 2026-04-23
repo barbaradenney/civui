@@ -291,7 +291,7 @@ export class CivDatePicker extends CivFormElement {
           <button
             id="${this._buttonId}"
             type="button"
-            class="civ-btn civ-btn--tertiary focus-visible:civ-focus-ring"
+            class="civ-action-btn civ-action-btn--tertiary civ-datepicker-trigger focus-visible:civ-focus-ring"
             aria-label="${buttonLabel}"
             aria-haspopup="dialog"
             aria-expanded="${this._open}"

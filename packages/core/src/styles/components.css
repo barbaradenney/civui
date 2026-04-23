@@ -1101,6 +1101,18 @@
            civ-px-2 civ-py-1.5 civ-bg-base-lightest;
   }
 
+  /* Flush input + trigger button */
+  .civ-datepicker-trigger {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-left: 0;
+  }
+
+  civ-date-picker .civ-input {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
   /* ── Form error summary ─────────────────────────────────────── */
 
   .civ-form-error-summary {
@@ -1303,8 +1315,8 @@
     @apply civ-inline-flex civ-items-center civ-justify-center
            civ-font-sans civ-rounded
            civ-border civ-cursor-pointer
-           civ-transition-colors;
-    font-size: var(--civ-typography-fontSize-sm);
+           civ-transition-colors civ-whitespace-nowrap;
+    font-size: var(--civ-typography-fontSize-base);
     padding: var(--civ-spacing-1) var(--civ-spacing-2);
   }
 
@@ -1785,11 +1797,11 @@
     background-color: var(--civ-color-primary-lighter);
   }
 
-  /* Critical — bold gold (#face00) */
+  /* Critical — bold gold, always dark text regardless of color scheme */
   .civ-link-card--critical {
     background-color: #face00;
     border-color: #face00;
-    color: var(--civ-color-base-darkest);
+    color: #1b1b1b;
   }
   .civ-link-card--critical:hover {
     filter: brightness(0.95);

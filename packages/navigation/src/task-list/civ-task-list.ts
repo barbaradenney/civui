@@ -18,7 +18,8 @@ import type { SlotConfig } from '@civui/core';
  * @example
  * ```html
  * <civ-task-list>
- *   <civ-task-group heading="Personal details">
+ *   <civ-task-group>
+ *     <h3 data-task-group-heading class="civ-heading-md">Personal details</h3>
  *     <civ-task label="Your name" href="/name" status="complete"></civ-task>
  *     <civ-task label="Your address" href="/address" status="not-started"></civ-task>
  *   </civ-task-group>

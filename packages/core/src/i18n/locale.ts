@@ -191,6 +191,9 @@ export interface CivLocaleStrings {
   // Summary prefill
   summaryEditProfile: string;
 
+  // Skip link
+  skipLinkDefaultText: string;
+
   // Task prefill
   taskPrefillHint: string;
 
@@ -381,6 +384,8 @@ const defaultStrings: CivLocaleStrings = {
   summaryEditAriaLabel: 'Edit {section}',
   summaryNotProvided: 'Not provided',
   summaryEditProfile: 'Update on your profile',
+
+  skipLinkDefaultText: 'Skip to main content',
 
   taskPrefillHint: 'We prefilled some information \u2014 please review',
 

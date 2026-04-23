@@ -1652,7 +1652,7 @@
     @apply civ-sr-only;
   }
 
-  .civ-skip-link:focus {
+  .civ-skip-link:focus-visible {
     position: fixed;
     top: 0;
     inset-inline-start: 0;

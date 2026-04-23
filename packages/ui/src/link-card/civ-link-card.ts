@@ -26,6 +26,7 @@ const UNSAFE_HREF_PATTERN = /^\s*javascript\s*:/i;
  * @prop {string} heading - Card heading text
  * @prop {string} description - Descriptive text below the heading
  * @prop {LinkCardVariant} variant - Visual variant
+ * @prop {string} spacing - Padding size: 'default' or 'sm'
  *
  * @fires civ-analytics - Analytics tracking event on click
  *
@@ -52,6 +53,9 @@ export class CivLinkCard extends CivBaseElement {
   /** Visual variant. */
   @property({ type: String }) variant: LinkCardVariant = 'primary';
 
+  /** Padding size: 'default' or 'sm' for compact layouts. */
+  @property({ type: String }) spacing: 'default' | 'sm' = 'default';
+
   /** Return sanitized href, stripping dangerous protocols. */
   private get _safeHref(): string {
     if (UNSAFE_HREF_PATTERN.test(this.href)) return '';
@@ -59,7 +63,12 @@ export class CivLinkCard extends CivBaseElement {
   }
 
   override render() {
-    const classes = `civ-link-card civ-link-card--${this.variant} focus-visible:civ-focus-ring`;
+    const classes = [
+      'civ-link-card',
+      `civ-link-card--${this.variant}`,
+      this.spacing === 'sm' ? 'civ-link-card--sm' : '',
+      'focus-visible:civ-focus-ring',
+    ].filter(Boolean).join(' ');
 
     return html`
       <a

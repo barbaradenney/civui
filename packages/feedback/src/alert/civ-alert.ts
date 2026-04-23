@@ -28,6 +28,7 @@ const closeIcon = html`<svg xmlns="http://www.w3.org/2000/svg" width="16" height
  * @prop {string} label - Body text (preferred over child text)
  * @prop {boolean} dismissible - Shows close button
  * @prop {boolean} slim - Compact single-line variant (no heading)
+ * @prop {string} spacing - Padding size: 'default' or 'sm' (sm applies slim layout)
  *
  * @fires civ-dismiss - When close button is clicked
  * @fires civ-analytics - Analytics tracking event on dismiss
@@ -42,6 +43,9 @@ export class CivAlert extends LightDomTextMixin(CivBaseElement) {
   @property({ type: Boolean }) dismissible = false;
   @property({ type: Boolean }) slim = false;
 
+  /** Padding size: 'default' or 'sm' for compact layouts (applies slim styling). */
+  @property({ type: String }) spacing: 'default' | 'sm' = 'default';
+
   private readonly _headingId = this.generateId('heading');
 
   private get _bodyText(): string {
@@ -53,7 +57,7 @@ export class CivAlert extends LightDomTextMixin(CivBaseElement) {
       'civ-alert',
       `civ-alert--${this.variant}`,
       `civ-alert--style-${this.alertStyle}`,
-      this.slim ? 'civ-alert--slim' : '',
+      (this.slim || this.spacing === 'sm') ? 'civ-alert--slim' : '',
     ]
       .filter(Boolean)
       .join(' ');

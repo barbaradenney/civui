@@ -18,6 +18,7 @@ import { CivBaseElement, t } from '@civui/core';
  * @prop {string} value - Display value (right side, bold)
  * @prop {string} editHref - Edit link destination (renders inline edit link)
  * @prop {string} editLabel - Edit link text (default: "Edit")
+ * @prop {string} spacing - Vertical padding: 'default' or 'sm'
  *
  * @example
  * ```html
@@ -37,13 +38,19 @@ export class CivReadOnlyField extends CivBaseElement {
   /** Edit link text. */
   @property({ type: String, attribute: 'edit-label' }) editLabel = '';
 
+  /** Vertical padding: 'default' or 'sm' for compact layouts. */
+  @property({ type: String }) spacing: 'default' | 'sm' = 'default';
+
   override render() {
     const displayLabel = this.label || t('readOnlyLabel');
     const hasValue = this.values.length > 0 || Boolean(this.value);
     const editText = this.editLabel || t('summaryEditLink');
 
     return html`
-      <dl class="civ-read-only-field civ-py-2">
+      <dl class="${[
+          'civ-read-only-field',
+          this.spacing === 'sm' ? 'civ-read-only-field--sm civ-py-1' : 'civ-py-2',
+        ].filter(Boolean).join(' ')}">
         <dt class="civ-read-only-field__label">${displayLabel}</dt>
         <dd class="civ-read-only-field__value">
           <span class="civ-read-only-field__data">

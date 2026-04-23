@@ -1,5 +1,5 @@
 import { html, nothing } from 'lit';
-import { customElement } from 'lit/decorators.js';
+import { customElement, property } from 'lit/decorators.js';
 import { CivBaseElement, LightDomSlotMixin } from '@civui/core';
 import type { SlotConfig } from '@civui/core';
 
@@ -10,9 +10,13 @@ import type { SlotConfig } from '@civui/core';
  * heading, and subheading. Use data-* attributes to assign children.
  *
  * @element civ-page-header
+ * @prop {string} spacing - Bottom margin size: 'default' or 'sm'
  */
 @customElement('civ-page-header')
 export class CivPageHeader extends LightDomSlotMixin(CivBaseElement) {
+  /** Bottom margin size: 'default' or 'sm' for compact layouts. */
+  @property({ type: String }) spacing: 'default' | 'sm' = 'default';
+
   override _getSlotConfig(): SlotConfig {
     return {
       'data-tag': '[data-civ-page-header-tag]',
@@ -29,7 +33,10 @@ export class CivPageHeader extends LightDomSlotMixin(CivBaseElement) {
 
   override render() {
     return html`
-      <div class="civ-page-header">
+      <div class="${[
+        'civ-page-header',
+        this.spacing === 'sm' ? 'civ-page-header--sm' : '',
+      ].filter(Boolean).join(' ')}">
         ${this._hasSlottedChildren('data-tag') ? html`
           <div class="civ-page-header__tag" data-civ-page-header-tag></div>
         ` : nothing}

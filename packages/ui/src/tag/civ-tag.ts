@@ -34,6 +34,7 @@ export type TagStyle = 'primary' | 'secondary';
  * @prop {TagVariant} variant - Color variant
  * @prop {TagStyle} tagStyle - Emphasis level: 'primary' (dark bg) or 'secondary' (light bg, default)
  * @prop {boolean} status - When true, adds role="status" for screen reader announcements
+ * @prop {string} spacing - Padding size: 'default' or 'sm'
  *
  * @example
  * ```html
@@ -56,12 +57,19 @@ export class CivTag extends CivBaseElement {
   /** When true, adds role="status" so screen readers announce the tag content. */
   @property({ type: Boolean }) status = false;
 
+  /** Padding size: 'default' or 'sm' for compact layouts. */
+  @property({ type: String }) spacing: 'default' | 'sm' = 'default';
+
   override render() {
     const styleClass = this.tagStyle === 'primary'
       ? `civ-tag--${this.variant}-primary`
       : `civ-tag--${this.variant}`;
 
-    const classes = ['civ-tag', styleClass].join(' ');
+    const classes = [
+      'civ-tag',
+      styleClass,
+      this.spacing === 'sm' ? 'civ-tag--sm' : '',
+    ].filter(Boolean).join(' ');
 
     return html`
       <span class="${classes}" role="${ifDefined(this.status ? 'status' : undefined)}">${this.label}</span>

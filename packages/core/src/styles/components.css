@@ -1789,6 +1789,10 @@
     color: inherit;
   }
 
+  .civ-link-card--sm {
+    @apply civ-p-3;
+  }
+
   .civ-link-card__heading {
     @apply civ-block civ-font-bold civ-underline;
     font-size: var(--civ-typography-fontSize-lg);
@@ -1878,6 +1882,10 @@
     @apply civ-mb-6;
   }
 
+  .civ-page-header--sm {
+    @apply civ-mb-3;
+  }
+
   .civ-page-header__tag {
     @apply civ-mb-1;
   }
@@ -1931,6 +1939,10 @@
     @apply civ-inline-block civ-px-2 civ-py-0.5 civ-text-base civ-font-normal;
     border-radius: 0;
     vertical-align: text-bottom;
+  }
+
+  .civ-tag--sm {
+    @apply civ-px-1.5 civ-py-0 civ-text-sm;
   }
 
   .civ-tag--blue {
@@ -2095,6 +2107,10 @@
 
   .civ-read-only-field {
     @apply civ-m-0 civ-flex civ-items-baseline civ-gap-4;
+  }
+
+  .civ-read-only-field--sm {
+    @apply civ-py-1;
   }
 
   .civ-read-only-field__label {

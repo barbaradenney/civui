@@ -1750,10 +1750,10 @@
     background-color: var(--civ-color-primary-lighter);
   }
 
-  /* Critical — warning yellow/gold */
+  /* Critical — bold gold (#face00) */
   .civ-link-card--critical {
-    background-color: var(--civ-color-warning-light);
-    border-color: var(--civ-color-warning-DEFAULT);
+    background-color: #face00;
+    border-color: #face00;
     color: var(--civ-color-base-darkest);
   }
   .civ-link-card--critical:hover {

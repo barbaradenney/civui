@@ -148,8 +148,25 @@ ${chapterHeadings}
 
     // ── Navigation Button Wiring ─────────────────────────────────
 
-    // "Start your application" button on intro page
-    document.querySelector('[data-page="intro"] civ-button')?.addEventListener('click', () => {
+    // Intro page — two start paths
+    var samplePrefill = {
+      fullName: { value: '{"first":"Jane","middle":"M","last":"Doe","suffix":""}', source: 'profile', locked: true },
+      dateOfBirth: { value: '1985-03-15', source: 'profile', locked: true },
+      ssn: { value: '123456789', source: 'profile', locked: true },
+      homePhone: { value: '5551234567', source: 'profile' },
+      mobilePhone: { value: '5559876543', source: 'profile' },
+      email: { value: 'jane.doe@example.com', source: 'profile' },
+      mailingAddress: { value: '{"street1":"123 Main St","street2":"","street3":"","city":"Springfield","state":"IL","zip":"62701","country":"US","military":false}', source: 'profile' },
+    };
+
+    document.querySelector('[data-start-signed-in]')?.addEventListener('click', function() {
+      showPage('hub');
+      if (typeof window.civApplyPrefill === 'function') {
+        window.civApplyPrefill(samplePrefill);
+      }
+    });
+
+    document.querySelector('[data-start-guest]')?.addEventListener('click', function() {
       showPage('hub');
     });
 

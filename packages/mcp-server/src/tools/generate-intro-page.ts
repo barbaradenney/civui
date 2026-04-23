@@ -21,9 +21,12 @@ export function generateIntroPage(form: GovFormDefinition): IntroPageResult {
     <span data-subheading>VA Form ${escapeHtml(form.formNumber)}</span>
   </civ-page-header>
 
-  <p class="civ-text-muted civ-mb-6">Intro text goes here.</p>
+  <p class="civ-text-muted civ-mb-6">Use this form to apply for VA benefits. If you're signed in, we can prefill some of your information to save you time.</p>
 
-  <civ-button label="Start your application" variant="primary"></civ-button>
+  <div class="civ-flex civ-gap-3">
+    <civ-button label="Sign in and start" variant="primary" data-start-signed-in></civ-button>
+    <civ-button label="Start without signing in" variant="tertiary" data-start-guest></civ-button>
+  </div>
 </div>`;
 
   const javascript = '';

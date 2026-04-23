@@ -23,12 +23,13 @@ describe('generateIntroPage', () => {
   it('includes start button', () => {
     const result = generateIntroPage(form);
     expect(result.html).toContain('civ-button');
-    expect(result.html).toContain('Start your application');
+    expect(result.html).toContain('Sign in and start');
+    expect(result.html).toContain('Start without signing in');
   });
 
   it('includes placeholder text', () => {
     const result = generateIntroPage(form);
-    expect(result.html).toContain('Intro text goes here');
+    expect(result.html).toContain('prefill some of your information');
   });
 
   it('returns features array', () => {

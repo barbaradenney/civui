@@ -6,7 +6,15 @@
   <title>Apply for education benefits | VA Form 22-1990</title>
 
   <!-- CivUI Design System -->
-  <script type="module" src="/src/civui.ts"></script>
+  <link rel="stylesheet" href="https://unpkg.com/@civui/core/dist/styles/civ.css">
+  <script type="module" src="https://unpkg.com/@civui/core/dist/index.js"></script>
+  <script type="module" src="https://unpkg.com/@civui/inputs/dist/index.js"></script>
+  <script type="module" src="https://unpkg.com/@civui/controls/dist/index.js"></script>
+  <script type="module" src="https://unpkg.com/@civui/compound/dist/index.js"></script>
+  <script type="module" src="https://unpkg.com/@civui/form-patterns/dist/index.js"></script>
+  <script type="module" src="https://unpkg.com/@civui/ui/dist/index.js"></script>
+  <script type="module" src="https://unpkg.com/@civui/navigation/dist/index.js"></script>
+  <script type="module" src="https://unpkg.com/@civui/feedback/dist/index.js"></script>
 </head>
 <body>
   <main id="main-content" class="civ-p-6" style="max-width: 720px; margin: 0 auto;">
@@ -19,9 +27,12 @@
     <span data-subheading>VA Form 22-1990</span>
   </civ-page-header>
 
-  <p class="civ-text-muted civ-mb-6">Intro text goes here.</p>
+  <p class="civ-text-muted civ-mb-6">Use this form to apply for VA benefits. If you're signed in, we can prefill some of your information to save you time.</p>
 
-  <civ-button label="Start your application" variant="primary"></civ-button>
+  <div class="civ-flex civ-gap-3">
+    <civ-button label="Sign in and start" variant="primary" data-start-signed-in></civ-button>
+    <civ-button label="Start without signing in" variant="tertiary" data-start-guest></civ-button>
+  </div>
 </div>
     </section>
 
@@ -97,7 +108,18 @@
     <span data-subheading>VA Form 22-1990</span>
   </civ-page-header>
 
-  <civ-form-step complete-label="Save and continue">
+  <!-- Prefill review (hidden by default, shown by runtime JS when prefill data exists) -->
+  <div data-prefill-review hidden data-chapter-fields="fullName,dateOfBirth,ssn">
+    <civ-prefill-notice></civ-prefill-notice>
+    <civ-summary data-prefill-summary></civ-summary>
+    <p class="civ-mt-4">If this information is accurate, press continue to fill out the rest of the form.</p>
+    <div class="civ-mt-4">
+      <civ-button label="Continue" data-prefill-continue></civ-button>
+    </div>
+  </div>
+
+  <div data-chapter-steps>
+    <civ-form-step complete-label="Save and continue">
     <div data-step data-step-label="Your name">
       <civ-name name="fullName" legend="Your name" required></civ-name>
     </div>
@@ -122,7 +144,8 @@
         validate="ssn"
       ></civ-text-input>
     </div>
-  </civ-form-step>
+    </civ-form-step>
+  </div>
 </div>
     </section>
 
@@ -137,7 +160,18 @@
     <span data-subheading>VA Form 22-1990</span>
   </civ-page-header>
 
-  <civ-form-step complete-label="Save and continue">
+  <!-- Prefill review (hidden by default, shown by runtime JS when prefill data exists) -->
+  <div data-prefill-review hidden data-chapter-fields="mailingAddress,homePhone,mobilePhone,email,contactMethod">
+    <civ-prefill-notice></civ-prefill-notice>
+    <civ-summary data-prefill-summary></civ-summary>
+    <p class="civ-mt-4">If this information is accurate, press continue to fill out the rest of the form.</p>
+    <div class="civ-mt-4">
+      <civ-button label="Continue" data-prefill-continue></civ-button>
+    </div>
+  </div>
+
+  <div data-chapter-steps>
+    <civ-form-step complete-label="Save and continue">
     <div data-step data-step-label="Mailing address">
       <civ-address name="mailingAddress" legend="Mailing address" required></civ-address>
     </div>
@@ -181,7 +215,8 @@
         <civ-radio label="U.S. mail" value="mail"></civ-radio>
       </civ-radio-group>
     </div>
-  </civ-form-step>
+    </civ-form-step>
+  </div>
 </div>
     </section>
 
@@ -249,7 +284,18 @@
     <span data-subheading>VA Form 22-1990</span>
   </civ-page-header>
 
-  <civ-form-step complete-label="Save and continue">
+  <!-- Prefill review (hidden by default, shown by runtime JS when prefill data exists) -->
+  <div data-prefill-review hidden data-chapter-fields="benefitType,schoolName,schoolStartDate">
+    <civ-prefill-notice></civ-prefill-notice>
+    <civ-summary data-prefill-summary></civ-summary>
+    <p class="civ-mt-4">If this information is accurate, press continue to fill out the rest of the form.</p>
+    <div class="civ-mt-4">
+      <civ-button label="Continue" data-prefill-continue></civ-button>
+    </div>
+  </div>
+
+  <div data-chapter-steps>
+    <civ-form-step complete-label="Save and continue">
     <div data-step data-step-label="Which benefit are you applying for?">
       <civ-select
         label="Which benefit are you applying for?"
@@ -273,7 +319,8 @@
         
       ></civ-memorable-date>
     </div>
-  </civ-form-step>
+    </civ-form-step>
+  </div>
 </div>
     </section>
 
@@ -288,11 +335,23 @@
     <span data-subheading>VA Form 22-1990</span>
   </civ-page-header>
 
-  <civ-form-step complete-label="Save and continue">
+  <!-- Prefill review (hidden by default, shown by runtime JS when prefill data exists) -->
+  <div data-prefill-review hidden data-chapter-fields="directDeposit">
+    <civ-prefill-notice></civ-prefill-notice>
+    <civ-summary data-prefill-summary></civ-summary>
+    <p class="civ-mt-4">If this information is accurate, press continue to fill out the rest of the form.</p>
+    <div class="civ-mt-4">
+      <civ-button label="Continue" data-prefill-continue></civ-button>
+    </div>
+  </div>
+
+  <div data-chapter-steps>
+    <civ-form-step complete-label="Save and continue">
     <div data-step data-step-label="Direct deposit information">
       <civ-direct-deposit name="directDeposit" legend="Direct deposit information"></civ-direct-deposit>
     </div>
-  </civ-form-step>
+    </civ-form-step>
+  </div>
 </div>
     </section>
 
@@ -390,8 +449,25 @@
 
     // ── Navigation Button Wiring ─────────────────────────────────
 
-    // "Start your application" button on intro page
-    document.querySelector('[data-page="intro"] civ-button')?.addEventListener('click', () => {
+    // Intro page — two start paths
+    var samplePrefill = {
+      fullName: { value: '{"first":"Jane","middle":"M","last":"Doe","suffix":""}', source: 'profile', locked: true },
+      dateOfBirth: { value: '1985-03-15', source: 'profile', locked: true },
+      ssn: { value: '123456789', source: 'profile', locked: true },
+      homePhone: { value: '5551234567', source: 'profile' },
+      mobilePhone: { value: '5559876543', source: 'profile' },
+      email: { value: 'jane.doe@example.com', source: 'profile' },
+      mailingAddress: { value: '{"street1":"123 Main St","street2":"","street3":"","city":"Springfield","state":"IL","zip":"62701","country":"US","military":false}', source: 'profile' },
+    };
+
+    document.querySelector('[data-start-signed-in]')?.addEventListener('click', function() {
+      showPage('hub');
+      if (typeof window.civApplyPrefill === 'function') {
+        window.civApplyPrefill(samplePrefill);
+      }
+    });
+
+    document.querySelector('[data-start-guest]')?.addEventListener('click', function() {
       showPage('hub');
     });
 
@@ -549,6 +625,78 @@
     if (reviewSection) {
       observer.observe(reviewSection, { attributes: true, attributeFilter: ['hidden'] });
     }
+
+    // ── Prefill Support ────────────────────────────────────────────
+
+    /**
+     * Apply prefill data to the form. Sets prefillData on civ-form
+     * elements (which handle field values and locked state), then
+     * populates chapter summaries and updates task statuses.
+     *
+     * @param {Record<string, {value: string, source: string, locked?: boolean}>} prefillData
+     */
+    window.civApplyPrefill = function(prefillData) {
+      if (!prefillData || Object.keys(prefillData).length === 0) return;
+
+      // Delegate field value setting to civ-form components
+      document.querySelectorAll('civ-form').forEach(function(form) {
+        form.prefillData = prefillData;
+      });
+
+      // Populate chapter prefill review summaries
+      document.querySelectorAll('[data-prefill-review]').forEach(function(review) {
+        var chapterFieldNames = (review.getAttribute('data-chapter-fields') || '').split(',').filter(Boolean);
+        var prefillItems = [];
+
+        chapterFieldNames.forEach(function(name) {
+          var pf = prefillData[name];
+          if (!pf || !pf.value) return;
+          var chapter = review.closest('[data-chapter]');
+          var formField = chapter && (chapter.querySelector('[data-civ-form-field][name="' + name + '"]'));
+          var label = formField ? (formField.getAttribute('label') || formField.getAttribute('legend') || name) : name;
+          var chapterId = chapter ? chapter.getAttribute('data-chapter') : '';
+          prefillItems.push({ label: label, value: String(pf.value), editHref: pf.locked ? '' : '#/' + chapterId });
+        });
+
+        if (prefillItems.length === 0) return;
+
+        var summary = review.querySelector('[data-prefill-summary]');
+        if (summary) {
+          var allLocked = chapterFieldNames.every(function(n) { return prefillData[n] && prefillData[n].locked; });
+          summary.sections = [{ heading: '', editHref: allLocked ? '/profile/settings' : undefined, locked: allLocked, items: prefillItems }];
+        }
+
+        // Show prefill review, hide form steps
+        review.hidden = false;
+        var steps = review.parentElement && review.parentElement.querySelector('[data-chapter-steps]');
+        if (steps) steps.hidden = true;
+
+        // Continue button toggles back to form steps
+        var continueBtn = review.querySelector('[data-prefill-continue]');
+        if (continueBtn) {
+          continueBtn.addEventListener('click', function() {
+            review.hidden = true;
+            if (steps) steps.hidden = false;
+          });
+        }
+
+        // Mark task as prefilled
+        var chapterId = review.closest('[data-chapter]');
+        chapterId = chapterId ? chapterId.getAttribute('data-chapter') : '';
+        var task = document.querySelector('civ-task[data-chapter-id="' + chapterId + '"]');
+        if (task) task.setAttribute('prefilled', '');
+      });
+
+      // Update task statuses — prefilled unlocked chapters get "review"
+      updateTaskList();
+      CHAPTERS.forEach(function(chapterId) {
+        var review = document.querySelector('[data-chapter="' + chapterId + '"] [data-prefill-review]:not([hidden])');
+        var task = document.querySelector('civ-task[data-chapter-id="' + chapterId + '"]');
+        if (review && task && task.getAttribute('status') !== 'complete') {
+          task.setAttribute('status', 'review');
+        }
+      });
+    };
 
     
 

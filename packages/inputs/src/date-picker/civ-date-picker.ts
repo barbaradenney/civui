@@ -274,7 +274,7 @@ export class CivDatePicker extends CivFormElement {
             @input="${this._onTextInput}"
             @change="${this._onTextChange}"
           />
-          ${this.value ? html`
+          ${this.value && !this.disabled ? html`
             <button
               type="button"
               class="civ-datepicker-clear-btn hover:civ-bg-base-lighter focus-visible:civ-focus-ring"

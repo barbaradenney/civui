@@ -42,6 +42,7 @@ export default defineConfig({
       '@civui/ui/link-card': resolve(packages, 'ui/src/link-card/index.ts'),
       '@civui/ui/action-button': resolve(packages, 'ui/src/action-button/index.ts'),
       '@civui/ui/button-group': resolve(packages, 'ui/src/button-group/index.ts'),
+      '@civui/ui/input-group': resolve(packages, 'ui/src/input-group/index.ts'),
       '@civui/ui': resolve(packages, 'ui/src/index.ts'),
       '@civui/navigation': resolve(packages, 'navigation/src/index.ts'),
       '@civui/feedback': resolve(packages, 'feedback/src/index.ts'),

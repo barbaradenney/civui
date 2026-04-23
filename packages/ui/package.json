@@ -16,7 +16,8 @@
     "./page-header": "./dist/page-header/index.js",
     "./link-card": "./dist/link-card/index.js",
     "./action-button": "./dist/action-button/index.js",
-    "./button-group": "./dist/button-group/index.js"
+    "./button-group": "./dist/button-group/index.js",
+    "./input-group": "./dist/input-group/index.js"
   },
   "files": ["dist"],
   "publishConfig": {

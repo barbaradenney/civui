@@ -1101,17 +1101,7 @@
            civ-px-2 civ-py-1.5 civ-bg-base-lightest;
   }
 
-  /* Flush input + trigger button */
-  .civ-datepicker-trigger {
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-    border-left: 0;
-  }
-
-  civ-date-picker .civ-input {
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-  }
+  /* Date picker trigger inherits flush styling from civ-input-group */
 
   /* ── Form error summary ─────────────────────────────────────── */
 
@@ -1429,6 +1419,59 @@
   .civ-button-group--vertical civ-action-button:last-child button {
     border-bottom-left-radius: var(--civ-border-radius-DEFAULT);
     border-bottom-right-radius: var(--civ-border-radius-DEFAULT);
+  }
+
+  /* ── Input Group ────────────────────────────────────────────── */
+
+  .civ-input-group {
+    @apply civ-flex civ-items-stretch;
+  }
+
+  /* The input element inside the first child loses its right radius and border */
+  .civ-input-group > :first-child .civ-input,
+  .civ-input-group > :first-child input {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-right: 0;
+  }
+
+  /* The input element inside the last child loses its left radius */
+  .civ-input-group > :last-child .civ-input,
+  .civ-input-group > :last-child input {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+
+  /* Action buttons in input groups lose adjacent radius */
+  .civ-input-group > :first-child button,
+  .civ-input-group > :first-child .civ-action-btn {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-right: 0;
+  }
+
+  .civ-input-group > :last-child button,
+  .civ-input-group > :last-child .civ-action-btn {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+
+  /* Middle children lose all radius */
+  .civ-input-group > :not(:first-child):not(:last-child) .civ-input,
+  .civ-input-group > :not(:first-child):not(:last-child) input,
+  .civ-input-group > :not(:first-child):not(:last-child) button,
+  .civ-input-group > :not(:first-child):not(:last-child) .civ-action-btn {
+    border-radius: 0;
+    border-right: 0;
+  }
+
+  /* Ensure buttons match input height */
+  .civ-input-group > civ-action-button {
+    @apply civ-flex-shrink-0;
+  }
+
+  .civ-input-group > civ-action-button button {
+    height: 100%;
   }
 
   /* ── Link variants (rendered when href is set) ─────────────── */

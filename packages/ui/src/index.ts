@@ -30,3 +30,6 @@ export type { ActionButtonVariant } from './action-button/index.js';
 
 // Button Group
 export { CivButtonGroup } from './button-group/index.js';
+
+// Input Group
+export { CivInputGroup } from './input-group/index.js';

@@ -259,7 +259,7 @@ export class CivDatePicker extends CivFormElement {
         ${renderLabel({ label: this.label, inputId: this._inputId, required: this.required, showRequired: this.required && !this.hideRequiredIndicator })}
         ${renderHint(this._hintId, this.hint)}
         ${renderError(this._errorId, this.error)}
-        <div class="civ-flex civ-items-center">
+        <div class="civ-input-group">
           <input
             class="${classes}"
             id="${this._inputId}"
@@ -291,7 +291,7 @@ export class CivDatePicker extends CivFormElement {
           <button
             id="${this._buttonId}"
             type="button"
-            class="civ-action-btn civ-action-btn--tertiary civ-datepicker-trigger focus-visible:civ-focus-ring"
+            class="civ-action-btn civ-action-btn--tertiary focus-visible:civ-focus-ring"
             aria-label="${buttonLabel}"
             aria-haspopup="dialog"
             aria-expanded="${this._open}"

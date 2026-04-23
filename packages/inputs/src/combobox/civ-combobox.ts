@@ -75,7 +75,7 @@ export class CivCombobox extends CivFormElement {
 
     return html`
       <div class="civ-mb-4 civ-relative">
-        ${renderLabel({ label: this.label, inputId: this._inputId, required: this.required, labelId: this._labelId })}
+        ${renderLabel({ label: this.label, inputId: this._inputId, required: this.required, showRequired: this.required && !this.hideRequiredIndicator, labelId: this._labelId })}
         ${renderHint(this._hintId, this.hint)}
         ${renderError(this._errorId, this.error)}
 
@@ -240,7 +240,7 @@ export class CivCombobox extends CivFormElement {
         if (!this._open) {
           this._setOpen(true);
         } else {
-          this._activeIndex = Math.min(this._activeIndex + 1, filtered.length - 1);
+          this._activeIndex = (this._activeIndex + 1) % filtered.length;
         }
         break;
 
@@ -283,6 +283,7 @@ export class CivCombobox extends CivFormElement {
         this._filter = selected ? selected.label : '';
         this._setOpen(false);
         this._activeIndex = -1;
+        dispatch(this, 'civ-input', { value: this.value });
         break;
       }
 

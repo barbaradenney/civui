@@ -1047,6 +1047,14 @@
     @apply civ-text-primary civ-underline;
   }
 
+  .civ-file-preview {
+    width: 2em;
+    height: 2em;
+    object-fit: cover;
+    border-radius: var(--civ-border-radius-DEFAULT);
+    border: 1px solid var(--civ-color-base-lighter);
+  }
+
   /* ── Combobox ───────────────────────────────────────────────── */
 
   .civ-combobox-listbox {

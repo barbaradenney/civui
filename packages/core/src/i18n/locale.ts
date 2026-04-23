@@ -65,6 +65,7 @@ export interface CivLocaleStrings {
   datePickerDateRangeMessage: string; // "Date must be between {min} and {max}"
   datePickerMinDateMessage: string; // "Date must be on or after {min}"
   datePickerMaxDateMessage: string; // "Date must be on or before {max}"
+  datePickerClearLabel: string;
 
   // Memorable date
   memorableDateMonthLabel: string;
@@ -270,6 +271,7 @@ const defaultStrings: CivLocaleStrings = {
   datePickerDateRangeMessage: 'Date must be between {min} and {max}',
   datePickerMinDateMessage: 'Date must be on or after {min}',
   datePickerMaxDateMessage: 'Date must be on or before {max}',
+  datePickerClearLabel: 'Clear date',
 
   memorableDateMonthLabel: 'Month',
   memorableDateDayLabel: 'Day',

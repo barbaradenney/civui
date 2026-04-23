@@ -87,6 +87,7 @@ export class CivDatePicker extends CivFormElement {
   @state() private _displayMonth = this._focusedDate.getMonth();
   @state() private _displayYear = this._focusedDate.getFullYear();
   @state() private _inputValue = '';
+  @state() private _parsedDisabledDates: Set<string> = new Set();
 
   private _headingId = this.generateId('heading');
   private _gridId = this.generateId('grid');
@@ -115,12 +116,13 @@ export class CivDatePicker extends CivFormElement {
     return this._cachedDayHeaders;
   }
 
-  private get _disabledDateSet(): Set<string> {
-    if (!this.disabledDates) return new Set();
-    try {
-      const dates = JSON.parse(this.disabledDates) as string[];
-      return new Set(dates);
-    } catch { return new Set(); }
+  override willUpdate(changed: Map<string, unknown>): void {
+    super.willUpdate(changed);
+    if (changed.has('disabledDates') && this.disabledDates) {
+      try {
+        this._parsedDisabledDates = new Set(JSON.parse(this.disabledDates));
+      } catch { this._parsedDisabledDates = new Set(); }
+    }
   }
 
   private get _constraints(): DateConstraints {
@@ -130,7 +132,7 @@ export class CivDatePicker extends CivFormElement {
   private _isDateDisabled(date: Date): boolean {
     if (isDateDisabled(date, this._constraints)) return true;
     const iso = toISODateString(date);
-    return this._disabledDateSet.has(iso);
+    return this._parsedDisabledDates.has(iso);
   }
 
   private _dialogKeyHandler = createKeyboardHandler([
@@ -254,7 +256,7 @@ export class CivDatePicker extends CivFormElement {
 
     return html`
       <div class="civ-mb-4 civ-relative">
-        ${renderLabel({ label: this.label, inputId: this._inputId, required: this.required })}
+        ${renderLabel({ label: this.label, inputId: this._inputId, required: this.required, showRequired: this.required && !this.hideRequiredIndicator })}
         ${renderHint(this._hintId, this.hint)}
         ${renderError(this._errorId, this.error)}
         <div class="civ-flex civ-items-center">
@@ -277,7 +279,7 @@ export class CivDatePicker extends CivFormElement {
               type="button"
               class="civ-datepicker-clear-btn hover:civ-bg-base-lighter focus-visible:civ-focus-ring"
               style="min-width:24px;min-height:24px"
-              aria-label="${this.clearLabel || 'Clear date'}"
+              aria-label="${this.clearLabel || t('datePickerClearLabel')}"
               ?disabled="${this.disabled}"
               @click="${this._onClear}"
             >
@@ -296,7 +298,7 @@ export class CivDatePicker extends CivFormElement {
             aria-controls="${this._open ? this._gridId : nothing}"
             ?disabled="${this.disabled}"
             @click="${this._toggleDialog}"
-          >Choose date</button>
+          >${this.chooseDateLabel || t('datePickerChooseDateLabel')}</button>
         </div>
         ${this._open ? this._renderDialog(selectedDate) : nothing}
       </div>
@@ -514,8 +516,9 @@ export class CivDatePicker extends CivFormElement {
       this.announce(interpolate(this.dateSelectedMessage || t('datePickerDateSelectedMessage'), { date: formatDateLong(parsed, this.locale) }));
     } else {
       // Invalid text: keep it in the input so users can correct typos,
-      // but announce the error for screen readers.
-      this.announce(this.invalidFormatMessage || t('datePickerInvalidFormatMessage'), 'assertive');
+      // set the error visually and announce for screen readers.
+      this.error = this.invalidFormatMessage || t('datePickerInvalidFormatMessage');
+      this.announce(this.error, 'assertive');
     }
   }
 

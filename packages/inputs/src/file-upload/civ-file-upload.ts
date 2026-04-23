@@ -2,18 +2,6 @@ import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { CivFormElement, dispatch, interpolate, renderLabel, renderHint, renderError, t } from '@civui/core';
 
-const previewStyles = html`
-  <style>
-    .civ-file-preview {
-      width: 2em;
-      height: 2em;
-      object-fit: cover;
-      border-radius: var(--civ-border-radius-DEFAULT);
-      border: 1px solid var(--civ-color-base-lighter);
-    }
-  </style>
-`;
-
 type FileStatus = 'pending' | 'uploading' | 'success' | 'error';
 
 interface UploadedFile {
@@ -89,7 +77,7 @@ const FILE_TYPE_LABELS: Record<string, string> = {
  */
 function formatAcceptedTypes(accept: string): string {
   if (!accept) return '';
-  const types = accept.split(',').map(t => t.trim());
+  const types = accept.split(',').map(s => s.trim());
   const labels: string[] = [];
   const seen = new Set<string>();
 
@@ -216,9 +204,8 @@ export class CivFileUpload extends CivFormElement {
 
   override render() {
     return html`
-      ${this.showPreview ? previewStyles : nothing}
       <div class="civ-mb-4">
-        ${renderLabel({ label: this.label, inputId: this._inputId, required: this.required })}
+        ${renderLabel({ label: this.label, inputId: this._inputId, required: this.required, showRequired: this.required && !this.hideRequiredIndicator })}
         ${renderHint(this._hintId, this.hint)}
         ${renderError(this._errorId, this.error)}
 

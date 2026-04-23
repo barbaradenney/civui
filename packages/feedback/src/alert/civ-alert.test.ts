@@ -117,7 +117,7 @@ describe('civ-alert', () => {
     const el = await fixture('<civ-alert>Message.</civ-alert>');
 
     const alert = el.querySelector('.civ-alert')!;
-    expect(alert.getAttribute('aria-label')).toBe('info alert');
+    expect(alert.getAttribute('aria-label')).toBe('Informational alert');
     expect(alert.hasAttribute('aria-labelledby')).toBe(false);
   });
 
@@ -125,14 +125,14 @@ describe('civ-alert', () => {
     const el = await fixture('<civ-alert variant="error">Error.</civ-alert>');
 
     const alert = el.querySelector('.civ-alert')!;
-    expect(alert.getAttribute('aria-label')).toBe('error alert');
+    expect(alert.getAttribute('aria-label')).toBe('Error alert');
   });
 
   it('uses aria-label when slim hides heading', async () => {
     const el = await fixture('<civ-alert heading="Title" slim>Body.</civ-alert>');
 
     const alert = el.querySelector('.civ-alert')!;
-    expect(alert.getAttribute('aria-label')).toBe('info alert');
+    expect(alert.getAttribute('aria-label')).toBe('Informational alert');
     expect(alert.hasAttribute('aria-labelledby')).toBe(false);
   });
 

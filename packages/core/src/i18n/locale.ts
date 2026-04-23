@@ -98,9 +98,13 @@ export interface CivLocaleStrings {
   textareaWordsRemaining: string; // "{count} words remaining"
   textareaWordLimit: string; // "Word limit: {max}"
 
-  // Alert dismiss
+  // Alert
   alertDismissLabel: string;
   alertDismissedMessage: string;
+  alertLabelInfo: string;
+  alertLabelWarning: string;
+  alertLabelError: string;
+  alertLabelSuccess: string;
 
   // Checkbox group
   selectAll: string;
@@ -308,6 +312,10 @@ const defaultStrings: CivLocaleStrings = {
 
   alertDismissLabel: 'Dismiss alert',
   alertDismissedMessage: 'Alert dismissed',
+  alertLabelInfo: 'Informational alert',
+  alertLabelWarning: 'Warning alert',
+  alertLabelError: 'Error alert',
+  alertLabelSuccess: 'Success alert',
 
   progressStepsLabel: 'Progress',
   progressStepLabel: 'Step {step} of {total}: {label}',

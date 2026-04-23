@@ -42,7 +42,7 @@ export class CivAlert extends LightDomTextMixin(CivBaseElement) {
   @property({ type: Boolean }) dismissible = false;
   @property({ type: Boolean }) slim = false;
 
-  private _headingId = this.generateId('heading');
+  private readonly _headingId = this.generateId('heading');
 
   private get _bodyText(): string {
     return this.label || this._initialText;
@@ -61,13 +61,15 @@ export class CivAlert extends LightDomTextMixin(CivBaseElement) {
     const role = this.variant === 'error' ? 'alert' : 'status';
     const hasHeading = !this.slim && this.heading;
     const level = Math.max(2, Math.min(6, this.headingLevel)) as AlertHeadingLevel;
+    const variantLabelKey = `alertLabel${this.variant.charAt(0).toUpperCase()}${this.variant.slice(1)}` as
+      'alertLabelInfo' | 'alertLabelWarning' | 'alertLabelError' | 'alertLabelSuccess';
 
     return html`
       <div
         class="${classes}"
         role="${role}"
         aria-labelledby="${hasHeading ? this._headingId : nothing}"
-        aria-label="${hasHeading ? nothing : `${this.variant} alert`}"
+        aria-label="${hasHeading ? nothing : t(variantLabelKey)}"
       >
         ${hasHeading ? html`
           <div class="civ-alert__header">

@@ -70,7 +70,7 @@ export class CivRepeater extends CivBaseElement {
 
   @state() private _rowCount = 0;
 
-  private _editingIdx = -1;
+  @state() private _editingIdx = -1;
 
   private _template: Node[] = [];
   private _hintId = this.generateId('hint');
@@ -158,6 +158,22 @@ export class CivRepeater extends CivBaseElement {
     this._reindexRows();
     dispatch(this, 'civ-repeater-remove', { index });
     announce(interpolate(t('repeaterItemRemoved'), { item: this.itemLabel, index: String(index + 1) }));
+
+    // Move focus to the nearest remaining row, or the add button
+    requestAnimationFrame(() => {
+      const remaining = container.querySelectorAll(':scope > [data-civ-repeater-row]');
+      const focusIdx = Math.min(index, remaining.length - 1);
+      if (focusIdx >= 0 && remaining[focusIdx]) {
+        const focusTarget = remaining[focusIdx].querySelector<HTMLElement>(
+          'input, select, textarea, button, [tabindex]:not([tabindex="-1"])'
+        );
+        focusTarget?.focus();
+      } else {
+        // No rows left at min — focus the add button
+        const addBtn = this.querySelector<HTMLElement>('civ-action-button');
+        addBtn?.focus();
+      }
+    });
   }
 
   private _addRow(): void {
@@ -184,7 +200,7 @@ export class CivRepeater extends CivBaseElement {
     row.setAttribute('data-civ-repeater-row', String(index));
     row.setAttribute('role', 'group');
     row.setAttribute('aria-label',
-      interpolate('{item} {index}', { item: this.itemLabel, index: String(index + 1) }));
+      interpolate(t('repeaterItemLabel'), { item: this.itemLabel, index: String(index + 1) }));
     row.classList.add('civ-repeater-row', 'civ-card');
 
     if (this.mode === 'detail') {
@@ -212,7 +228,7 @@ export class CivRepeater extends CivBaseElement {
         const idx = this._getRowIndex(row);
         this._expandRow(idx);
         this._editingIdx = idx;
-        announce(interpolate('Editing {item} {index}', { item: this.itemLabel, index: String(idx + 1) }));
+        announce(interpolate(t('repeaterEditingAnnouncement'), { item: this.itemLabel, index: String(idx + 1) }));
       });
       summaryActions.appendChild(editBtn);
 
@@ -371,7 +387,7 @@ export class CivRepeater extends CivBaseElement {
     rows.forEach((row, i) => {
       row.setAttribute('data-civ-repeater-row', String(i));
       row.setAttribute('aria-label',
-        interpolate('{item} {index}', { item: this.itemLabel, index: String(i + 1) }));
+        interpolate(t('repeaterItemLabel'), { item: this.itemLabel, index: String(i + 1) }));
 
       if (this.mode === 'detail') {
         // Reindex fields inside the detail container

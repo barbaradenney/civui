@@ -31,7 +31,8 @@ export class CivPrefillNotice extends CivBaseElement {
   @property({ type: String, attribute: 'link-text' }) linkText = '';
 
   private _isSafeHref(href: string): boolean {
-    return /^(#|\/|https?:\/\/)/.test(href);
+    // Allow fragment, relative path (but not protocol-relative //), and http(s)
+    return /^(#|\/(?!\/)|https?:\/\/)/.test(href);
   }
 
   override render() {

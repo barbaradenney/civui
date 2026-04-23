@@ -173,6 +173,8 @@ export interface CivLocaleStrings {
   repeaterSaveButton: string;
   repeaterCancelButton: string;
   repeaterItemSaved: string; // "{item} {index} saved"
+  repeaterItemLabel: string; // "{item} {index}"
+  repeaterEditingAnnouncement: string; // "Editing {item} {index}"
 
   // Task list
   taskStatusNotStarted: string;
@@ -365,6 +367,8 @@ const defaultStrings: CivLocaleStrings = {
   repeaterSaveButton: 'Save {item}',
   repeaterCancelButton: 'Cancel',
   repeaterItemSaved: '{item} {index} saved',
+  repeaterItemLabel: '{item} {index}',
+  repeaterEditingAnnouncement: 'Editing {item} {index}',
 
   taskStatusNotStarted: 'Not started',
   taskStatusInProgress: 'In progress',

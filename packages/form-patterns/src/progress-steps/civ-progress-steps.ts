@@ -36,27 +36,41 @@ export class CivProgressSteps extends CivBaseElement {
   /** Show a "Go back" link before the step counter. Only visible when current > 0. */
   @property({ type: Boolean, attribute: 'show-back' }) showBack = false;
   /** Label for the back link. */
-  @property({ type: String, attribute: 'back-label' }) backLabel = 'Go back';
+  @property({ type: String, attribute: 'back-label' }) backLabel = '';
+
+  private _cachedSteps: string | null = null;
+  private _cachedStepData: Array<{ label: string; description?: string }> = [];
+  private _cachedErrorSteps: string | null = null;
+  private _cachedErrorSet: Set<number> = new Set();
 
   private _getStepData(): Array<{ label: string; description?: string }> {
+    if (this._cachedSteps === this.steps) return this._cachedStepData;
+    this._cachedSteps = this.steps;
     try {
       const parsed = JSON.parse(this.steps);
-      if (!Array.isArray(parsed)) return [];
-      return parsed.map((item: string | { label: string; description?: string }) =>
+      if (!Array.isArray(parsed)) {
+        this._cachedStepData = [];
+        return this._cachedStepData;
+      }
+      this._cachedStepData = parsed.map((item: string | { label: string; description?: string }) =>
         typeof item === 'string' ? { label: item } : item
       );
     } catch {
-      return [];
+      this._cachedStepData = [];
     }
+    return this._cachedStepData;
   }
 
   private _getErrorSet(): Set<number> {
+    if (this._cachedErrorSteps === this.errorSteps) return this._cachedErrorSet;
+    this._cachedErrorSteps = this.errorSteps;
     try {
       const parsed = JSON.parse(this.errorSteps);
-      return new Set(Array.isArray(parsed) ? parsed : []);
+      this._cachedErrorSet = new Set(Array.isArray(parsed) ? parsed : []);
     } catch {
-      return new Set();
+      this._cachedErrorSet = new Set();
     }
+    return this._cachedErrorSet;
   }
 
   override render() {
@@ -159,7 +173,7 @@ export class CivProgressSteps extends CivBaseElement {
             ${this.showBack && this.current > 0 ? html`
               <civ-link
                 variant="back"
-                label="${this.backLabel}"
+                label="${this.backLabel || t('formStepBack')}"
                 @click="${this._onBack}"
               ></civ-link>
               <span class="civ-wizard-nav__divider"></span>

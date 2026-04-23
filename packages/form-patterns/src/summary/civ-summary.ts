@@ -54,7 +54,8 @@ export class CivSummary extends CivBaseElement {
   }
 
   private _isSafeHref(href: string): boolean {
-    return /^(#|\/|https?:\/\/)/.test(href);
+    // Allow fragment, relative path (but not protocol-relative //), and http(s)
+    return /^(#|\/(?!\/)|https?:\/\/)/.test(href);
   }
 
   private _renderSection(section: SummarySection) {
@@ -80,6 +81,7 @@ export class CivSummary extends CivBaseElement {
                 href="${sectionEditHref}"
                 variant="tertiary"
                 label="${sectionEditLabel}"
+                aria-label="${sectionEditLabel} ${section.heading}"
               ></civ-link>
             ` : nothing}
           </div>

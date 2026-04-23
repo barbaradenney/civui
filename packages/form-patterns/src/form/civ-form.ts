@@ -143,6 +143,9 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
       this.removeEventListener('civ-input', this._boundOnCivInputDirty);
       window.removeEventListener('beforeunload', this._boundBeforeUnload);
     }
+    // Abort any in-flight prefill fetch
+    this._prefillAbort?.abort();
+    this._prefillAbort = undefined;
   }
 
   override firstUpdated(): void {
@@ -432,9 +435,15 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
     }
   }
 
-  /** Strip HTML tags and script content from a string. */
+  /** Strip HTML tags and dangerous URI schemes from a string. */
   private _sanitize(value: string): string {
-    return value.replace(/<[^>]*>/g, '').replace(/javascript:/gi, '');
+    // Remove HTML tags
+    let sanitized = value.replace(/<[^>]*>/g, '');
+    // Remove dangerous URI schemes (with possible whitespace obfuscation)
+    sanitized = sanitized.replace(/j\s*a\s*v\s*a\s*s\s*c\s*r\s*i\s*p\s*t\s*:/gi, '');
+    sanitized = sanitized.replace(/d\s*a\s*t\s*a\s*:/gi, '');
+    sanitized = sanitized.replace(/v\s*b\s*s\s*c\s*r\s*i\s*p\s*t\s*:/gi, '');
+    return sanitized;
   }
 
   private _prefillFromUrl(): void {
@@ -443,8 +452,11 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
     const params = new URLSearchParams(window.location.search);
     requestAnimationFrame(() => {
       const fields = this.querySelectorAll('[data-civ-form-field]') as NodeListOf<CivFormFieldLike>;
+      // Allowlist: only prefill fields that exist in the form, matching by name
       fields.forEach((field) => {
         if (field.name && params.has(field.name)) {
+          // Skip PII-flagged fields — URL prefill should never set SSN/EIN
+          if (field.hasAttribute('data-civ-pii')) return;
           field.value = this._sanitize(params.get(field.name)!);
         }
       });

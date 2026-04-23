@@ -3,8 +3,14 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { CivBaseElement, LightDomSlotMixin } from '@civui/core';
 import type { SlotConfig } from '@civui/core';
 
-const conditionalStyles = html`
-  <style>
+/** Shared styles injected once per document to avoid duplication across instances. */
+const CONDITIONAL_STYLE_ID = 'civ-conditional-styles';
+function ensureConditionalStyles(): void {
+  if (typeof document === 'undefined') return;
+  if (document.getElementById(CONDITIONAL_STYLE_ID)) return;
+  const style = document.createElement('style');
+  style.id = CONDITIONAL_STYLE_ID;
+  style.textContent = `
     .civ-conditional--visible {
       display: block;
       opacity: 1;
@@ -14,8 +20,9 @@ const conditionalStyles = html`
       display: none;
       opacity: 0;
     }
-  </style>
-`;
+  `;
+  document.head.appendChild(style);
+}
 
 /**
  * CivUI Conditional
@@ -48,6 +55,7 @@ export class CivConditional extends LightDomSlotMixin(CivBaseElement) {
 
   override connectedCallback(): void {
     super.connectedCallback();
+    ensureConditionalStyles();
     // Scope listener to nearest form/fieldset ancestor for performance.
     // Falls back to document if not inside a form.
     this._listenTarget =
@@ -78,9 +86,9 @@ export class CivConditional extends LightDomSlotMixin(CivBaseElement) {
     const visibilityClass = this._visible ? 'civ-conditional--visible' : 'civ-conditional--hidden';
 
     return html`
-      ${conditionalStyles}
       <div data-civ-conditional-content
         class="${visibilityClass}"
+        aria-hidden="${this._visible ? 'false' : 'true'}"
         aria-live="polite"
       ></div>
     `;
@@ -88,17 +96,21 @@ export class CivConditional extends LightDomSlotMixin(CivBaseElement) {
 
   private _checkInitialState(): void {
     if (!this.when) return;
-    const field = document.querySelector(`[name="${this.when}"]`) as HTMLElement | null;
+    // Query within the scoped listen target rather than the whole document
+    const root = this._listenTarget instanceof HTMLElement ? this._listenTarget : document;
+    const escapedName = typeof CSS !== 'undefined' && CSS.escape
+      ? CSS.escape(this.when)
+      : this.when.replace(/["\\]/g, '\\$&');
+    const field = root.querySelector(`[name="${escapedName}"]`) as HTMLElement & { value?: string } | null;
     if (field) {
-      const value = (field as any).value ?? '';
+      const value = field.value ?? '';
       this._evaluateVisibility(value);
     }
   }
 
   private _onInput(e: Event): void {
-    const target = e.target as HTMLElement;
-    const name = (target as any).name;
-    if (name !== this.when) return;
+    const target = e.target as HTMLElement & { name?: string };
+    if (target.name !== this.when) return;
 
     const detail = (e as CustomEvent).detail;
     const value = detail?.value ?? '';

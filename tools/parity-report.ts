@@ -14,10 +14,13 @@ import { join, basename } from 'path';
 
 const ROOT = join(import.meta.dirname, '..');
 const WEB_DIRS = [
-  join(ROOT, 'packages/forms/src'),
-  join(ROOT, 'packages/feedback/src'),
+  join(ROOT, 'packages/inputs/src'),
+  join(ROOT, 'packages/controls/src'),
+  join(ROOT, 'packages/compound/src'),
+  join(ROOT, 'packages/form-patterns/src'),
   join(ROOT, 'packages/ui/src'),
   join(ROOT, 'packages/navigation/src'),
+  join(ROOT, 'packages/feedback/src'),
 ];
 const IOS_DIR = join(ROOT, 'packages/ios/Sources/CivUI');
 const ANDROID_DIR = join(ROOT, 'packages/android/src/main/kotlin/gov/civui/components');
@@ -417,6 +420,7 @@ function discoverComponents(): ComponentMapping[] {
     'RadioGroup': 'Radio', // CivRadioGroup is inside CivRadio.swift/CivRadio.kt
     'TaskGroup': 'TaskList', // CivTaskGroup is inside CivTaskList.swift/CivTaskList.kt
     'Task': 'TaskList', // CivTask is inside CivTaskList.swift/CivTaskList.kt
+    'ButtonGroup': 'ActionButton', // CivButtonGroup is inside CivActionButton.swift/CivActionButton.kt
   };
 
   // Match iOS files

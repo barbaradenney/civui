@@ -89,6 +89,7 @@ export class CivName extends CivFormElement {
         class="civ-fieldset"
         aria-describedby="${describedBy || nothing}"
         aria-invalid="${this.error ? 'true' : nothing}"
+        aria-required="${this.required || nothing}"
         ?disabled="${this.disabled}"
       >
         ${renderLegend({ legend: this.legend || this.label, required: false, textSizeClass: 'civ-text-lg' })}

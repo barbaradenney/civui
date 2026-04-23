@@ -16,6 +16,8 @@ import type { IconDef } from './icon-library.js';
  *
  * All icons are implemented in pure CSS — no SVG needed.
  *
+ * @element civ-icon
+ *
  * @example
  * ```html
  * <civ-icon name="check"></civ-icon>

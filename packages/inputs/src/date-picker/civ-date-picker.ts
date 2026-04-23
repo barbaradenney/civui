@@ -276,6 +276,7 @@ export class CivDatePicker extends CivFormElement {
             <button
               type="button"
               class="civ-datepicker-clear-btn hover:civ-bg-base-lighter focus-visible:civ-focus-ring"
+              style="min-width:24px;min-height:24px"
               aria-label="${this.clearLabel || 'Clear date'}"
               ?disabled="${this.disabled}"
               @click="${this._onClear}"

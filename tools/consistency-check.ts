@@ -14,7 +14,15 @@ import { readFileSync, readdirSync, existsSync } from 'fs';
 import { join, basename } from 'path';
 
 const ROOT = join(import.meta.dirname, '..');
-const FORMS_DIR = join(ROOT, 'packages/forms/src');
+const COMPONENT_DIRS = [
+  join(ROOT, 'packages/inputs/src'),
+  join(ROOT, 'packages/controls/src'),
+  join(ROOT, 'packages/compound/src'),
+  join(ROOT, 'packages/form-patterns/src'),
+  join(ROOT, 'packages/ui/src'),
+  join(ROOT, 'packages/navigation/src'),
+  join(ROOT, 'packages/feedback/src'),
+];
 const CORE_ICON = join(ROOT, 'packages/core/src/icon/civ-icon.ts');
 
 interface Issue {
@@ -42,20 +50,25 @@ interface ComponentFile {
 
 function discoverComponents(): ComponentFile[] {
   const components: ComponentFile[] = [];
-  const dirs = readdirSync(FORMS_DIR, { withFileTypes: true }).filter(d => d.isDirectory());
 
-  for (const dir of dirs) {
-    const files = readdirSync(join(FORMS_DIR, dir.name))
-      .filter(f => f.startsWith('civ-') && f.endsWith('.ts') && !f.includes('.test.') && !f.includes('.stories.'));
-    for (const file of files) {
-      const path = join(FORMS_DIR, dir.name, file);
-      const src = readFileSync(path, 'utf-8');
-      components.push({
-        name: file.replace('.ts', ''),
-        path,
-        src,
-        lines: src.split('\n'),
-      });
+  for (const baseDir of COMPONENT_DIRS) {
+    if (!existsSync(baseDir)) continue;
+    const dirs = readdirSync(baseDir, { withFileTypes: true }).filter(d => d.isDirectory());
+
+    for (const dir of dirs) {
+      const dirPath = join(baseDir, dir.name);
+      const files = readdirSync(dirPath)
+        .filter(f => f.startsWith('civ-') && f.endsWith('.ts') && !f.includes('.test.') && !f.includes('.stories.'));
+      for (const file of files) {
+        const path = join(dirPath, file);
+        const src = readFileSync(path, 'utf-8');
+        components.push({
+          name: file.replace('.ts', ''),
+          path,
+          src,
+          lines: src.split('\n'),
+        });
+      }
     }
   }
 
@@ -70,9 +83,12 @@ function discoverComponents(): ComponentFile[] {
 
 // ── Rules ────────────────────────────────────────────────────
 
+const FORM_CLASS_RE = /extends\s+(CivFormElement|CivBooleanFormElement|LightDomSlotMixin\(CivFormElement\)|LightDomTextMixin\(CivFormElement\))/;
+const BASE_CLASS_RE = /extends\s+(CivBaseElement|LightDomSlotMixin\(CivBaseElement\)|LightDomTextMixin\(CivBaseElement\))/;
+
 function checkBaseClass(comp: ComponentFile) {
-  const isFormComponent = /extends\s+(CivFormElement|CivBooleanFormElement|LightDomSlotMixin\(CivFormElement\))/.test(comp.src);
-  const isBaseComponent = /extends\s+(CivBaseElement|LightDomSlotMixin\(CivBaseElement\))/.test(comp.src);
+  const isFormComponent = FORM_CLASS_RE.test(comp.src);
+  const isBaseComponent = BASE_CLASS_RE.test(comp.src);
 
   if (!isFormComponent && !isBaseComponent) {
     addIssue(comp.path, 'base-class', 'error', `${comp.name} does not extend CivBaseElement or CivFormElement`);
@@ -86,7 +102,7 @@ function checkCustomElement(comp: ComponentFile) {
 }
 
 function checkRenderOrder(comp: ComponentFile) {
-  const isFormParticipating = /extends\s+(CivFormElement|CivBooleanFormElement|LightDomSlotMixin\(CivFormElement\))/.test(comp.src);
+  const isFormParticipating = FORM_CLASS_RE.test(comp.src);
   if (!isFormParticipating) return;
 
   // Check that render uses renderLabel/renderLegend, renderHint, renderError in order
@@ -122,7 +138,7 @@ function checkRenderOrder(comp: ComponentFile) {
 }
 
 function checkAriaAttributes(comp: ComponentFile) {
-  const isFormParticipating = /extends\s+(CivFormElement|CivBooleanFormElement|LightDomSlotMixin\(CivFormElement\))/.test(comp.src);
+  const isFormParticipating = FORM_CLASS_RE.test(comp.src);
   if (!isFormParticipating) return;
 
   // Check for aria-invalid
@@ -142,7 +158,7 @@ function checkAriaAttributes(comp: ComponentFile) {
 }
 
 function checkEvents(comp: ComponentFile) {
-  const isFormParticipating = /extends\s+(CivFormElement|CivBooleanFormElement|LightDomSlotMixin\(CivFormElement\))/.test(comp.src);
+  const isFormParticipating = FORM_CLASS_RE.test(comp.src);
   if (!isFormParticipating) return;
   if (comp.name === 'civ-conditional' || comp.name === 'civ-progress-steps' || comp.name === 'civ-progress-bar') return;
 
@@ -202,7 +218,7 @@ function checkTailwindPrefix(comp: ComponentFile) {
 }
 
 function checkFormReset(comp: ComponentFile) {
-  const isFormParticipating = /extends\s+(CivFormElement|CivBooleanFormElement|LightDomSlotMixin\(CivFormElement\))/.test(comp.src);
+  const isFormParticipating = FORM_CLASS_RE.test(comp.src);
   if (!isFormParticipating) return;
   if (comp.name === 'civ-conditional' || comp.name === 'civ-progress-steps' || comp.name === 'civ-progress-bar' || comp.name === 'civ-form-group') return;
 
@@ -212,7 +228,7 @@ function checkFormReset(comp: ComponentFile) {
 }
 
 function checkDisabledState(comp: ComponentFile) {
-  const isFormParticipating = /extends\s+(CivFormElement|CivBooleanFormElement|LightDomSlotMixin\(CivFormElement\))/.test(comp.src);
+  const isFormParticipating = FORM_CLASS_RE.test(comp.src);
   if (!isFormParticipating) return;
   if (comp.name === 'civ-conditional' || comp.name === 'civ-progress-steps' || comp.name === 'civ-progress-bar') return;
 
@@ -248,9 +264,26 @@ function checkJSDoc(comp: ComponentFile) {
 }
 
 // Child components that are part of their parent on native (no separate file needed)
-const CHILD_COMPONENTS = new Set(['civ-segment', 'civ-radio-group']);
-// Structural/utility components that don't need analytics
-const NO_ANALYTICS = new Set(['civ-fieldset', 'civ-form-group', 'civ-segment']);
+// Components bundled inside another native file (no separate .swift/.kt needed)
+const CHILD_COMPONENTS = new Set([
+  'civ-segment',       // Inside CivSegmentedControl
+  'civ-radio-group',   // Inside CivRadio
+  'civ-button-group',  // Inside CivActionButton
+  'civ-task-group',    // Inside CivTaskList
+  'civ-task',          // Inside CivTaskList
+]);
+// Structural/display/utility components that don't need analytics
+const NO_ANALYTICS = new Set([
+  'civ-fieldset', 'civ-form-group', 'civ-segment',
+  'civ-card', 'civ-divider', 'civ-tag', 'civ-page-header',
+  'civ-button-group', 'civ-task-list', 'civ-task-group',
+  'civ-skip-link', 'civ-prefill-notice', 'civ-read-only-field',
+  'civ-summary', 'civ-icon', 'civ-task',
+  // Compound components delegate analytics to child form fields
+  'civ-address', 'civ-name', 'civ-signature',
+  // Orchestration components delegate to child fields/buttons
+  'civ-form-step', 'civ-repeater',
+]);
 
 function checkNativeCounterparts(comp: ComponentFile) {
   if (comp.name === 'civ-icon') return;
@@ -272,7 +305,7 @@ function checkNativeCounterparts(comp: ComponentFile) {
 // ── A11y checks ──────────────────────────────────────────────
 
 function checkA11yErrorAnnouncement(comp: ComponentFile) {
-  const isFormParticipating = /extends\s+(CivFormElement|CivBooleanFormElement|LightDomSlotMixin\(CivFormElement\))/.test(comp.src);
+  const isFormParticipating = FORM_CLASS_RE.test(comp.src);
   if (!isFormParticipating) return;
   if (comp.name === 'civ-conditional' || comp.name === 'civ-progress-steps' || comp.name === 'civ-progress-bar' || comp.name === 'civ-form-group') return;
 
@@ -283,7 +316,7 @@ function checkA11yErrorAnnouncement(comp: ComponentFile) {
 }
 
 function checkA11yLabelAssociation(comp: ComponentFile) {
-  const isFormParticipating = /extends\s+(CivFormElement|CivBooleanFormElement|LightDomSlotMixin\(CivFormElement\))/.test(comp.src);
+  const isFormParticipating = FORM_CLASS_RE.test(comp.src);
   if (!isFormParticipating) return;
   if (CHILD_COMPONENTS.has(comp.name)) return;
   if (comp.name === 'civ-conditional' || comp.name === 'civ-progress-steps' || comp.name === 'civ-progress-bar') return;
@@ -321,7 +354,7 @@ function checkA11yKeyboardHandler(comp: ComponentFile) {
   // Components with click handlers should also handle keyboard
   const hasClick = comp.src.includes('@click=');
   const hasKeydown = comp.src.includes('@keydown=') || comp.src.includes('keydown');
-  const hasNativeInteractive = comp.src.includes('<button') || comp.src.includes('role="button"') || comp.src.includes('<input') || comp.src.includes('<select') || comp.src.includes('<textarea');
+  const hasNativeInteractive = comp.src.includes('<button') || comp.src.includes('<a ') || comp.src.includes('<a\n') || comp.src.includes('role="button"') || comp.src.includes('<input') || comp.src.includes('<select') || comp.src.includes('<textarea') || comp.src.includes('<civ-button') || comp.src.includes('<civ-action-button') || comp.src.includes('<civ-link');
 
   if (hasClick && !hasKeydown && !hasNativeInteractive) {
     addIssue(comp.path, 'a11y-keyboard', 'warning', `${comp.name} has click handlers but may be missing keyboard handlers for non-button elements`);

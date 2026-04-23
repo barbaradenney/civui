@@ -76,8 +76,19 @@ export class CivName extends CivFormElement {
         this._name = { ...EMPTY_NAME, ...JSON.parse(this.value) };
       } catch { /* leave empty */ }
     }
-    // Set suffix options on the select component
-    const suffixSelect = this.querySelector('civ-select') as any;
+    this._syncSuffixOptions();
+  }
+
+  override updated(changed: Map<string, unknown>): void {
+    super.updated(changed);
+    if (changed.has('_name') || changed.has('showSuffix')) {
+      this._syncSuffixOptions();
+    }
+  }
+
+  /** Set suffix options on the select sub-component after render. */
+  private _syncSuffixOptions(): void {
+    const suffixSelect = this.querySelector('[data-name-suffix]') as any;
     if (suffixSelect) suffixSelect.options = SUFFIX_OPTIONS;
   }
 
@@ -92,7 +103,7 @@ export class CivName extends CivFormElement {
         aria-required="${this.required || nothing}"
         ?disabled="${this.disabled}"
       >
-        ${renderLegend({ legend: this.legend || this.label, required: false, textSizeClass: 'civ-text-lg' })}
+        ${renderLegend({ legend: this.legend || this.label, required: this.required, textSizeClass: 'civ-text-lg' })}
         ${renderHint(this._hintId, this.hint, true)}
         ${renderError(this._errorId, this.error, true)}
 
@@ -143,7 +154,8 @@ export class CivName extends CivFormElement {
               name="${this.name ? `${this.name}.suffix` : ''}"
               value="${this._name.suffix}"
               ?disabled="${this.disabled}"
-              @civ-change="${(e: CustomEvent) => { this._onSubInput('suffix', e); this._onSubChange('suffix', e); }}"
+              data-name-suffix
+              @civ-change="${(e: CustomEvent) => this._onSubSelectChange('suffix', e)}"
             ></civ-select>
           </div>
         ` : nothing}
@@ -162,6 +174,15 @@ export class CivName extends CivFormElement {
     e.stopPropagation();
     this._name = { ...this._name, [field]: e.detail.value };
     this.value = JSON.stringify(this._name);
+    dispatch(this, 'civ-change', { value: { ...this._name } });
+  }
+
+  /** Combined handler for select sub-fields (fires both civ-input and civ-change in one update). */
+  private _onSubSelectChange(field: keyof NameValue, e: CustomEvent<{ value: string }>): void {
+    e.stopPropagation();
+    this._name = { ...this._name, [field]: e.detail.value };
+    this.value = JSON.stringify(this._name);
+    dispatch(this, 'civ-input', { value: { ...this._name } });
     dispatch(this, 'civ-change', { value: { ...this._name } });
   }
 

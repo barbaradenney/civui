@@ -44,7 +44,6 @@ export class CivDirectDeposit extends CivFormElement {
 
   @state() private _deposit: DirectDepositValue = { ...EMPTY_DEPOSIT };
 
-
   /** Get the current deposit value. */
   get depositValue(): DirectDepositValue {
     return { ...this._deposit };
@@ -87,6 +86,7 @@ export class CivDirectDeposit extends CivFormElement {
           ?required="${this.required}"
           ?disabled="${this.disabled}"
           error="${this.typeError}"
+          @civ-input="${(e: CustomEvent) => e.stopPropagation()}"
           @civ-change="${this._onRadioChange}"
         >
           <civ-radio label="${t('directDepositChecking')}" value="checking"></civ-radio>
@@ -134,7 +134,6 @@ export class CivDirectDeposit extends CivFormElement {
     this.value = JSON.stringify(this._deposit);
     dispatch(this, 'civ-input', { value: { ...this._deposit } });
     dispatch(this, 'civ-change', { value: { ...this._deposit } });
-    this.sendAnalytics('change');
   }
 
   private _onSubInput(field: keyof DirectDepositValue, e: CustomEvent<{ value: string }>): void {

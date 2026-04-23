@@ -171,7 +171,7 @@ export class CivAddress extends CivFormElement {
             autocomplete="country"
             ?disabled="${this.disabled}"
             data-address-country
-            @civ-change="${(e: CustomEvent) => { this._onSubInput('country', e); this._onSubChange('country', e); }}"
+            @civ-change="${(e: CustomEvent) => this._onSubSelectChange('country', e)}"
           ></civ-select>
         ` : nothing}
 
@@ -237,7 +237,7 @@ export class CivAddress extends CivFormElement {
             ?required="${this.required}"
             ?disabled="${this.disabled}"
             data-address-state
-            @civ-change="${(e: CustomEvent) => { this._onSubInput('state', e); this._onSubChange('state', e); }}"
+            @civ-change="${(e: CustomEvent) => this._onSubSelectChange('state', e)}"
           ></civ-select>
         ` : html`
           <civ-text-input
@@ -319,6 +319,15 @@ export class CivAddress extends CivFormElement {
     this.value = JSON.stringify(this._address);
     dispatch(this, 'civ-change', { value: { ...this._address } });
     // Sub-component already fires civ-analytics; don't duplicate
+  }
+
+  /** Combined handler for select sub-fields (fires both civ-input and civ-change in one update). */
+  private _onSubSelectChange(field: keyof AddressValue, e: CustomEvent<{ value: string }>): void {
+    e.stopPropagation();
+    this._address = { ...this._address, [field]: e.detail.value };
+    this.value = JSON.stringify(this._address);
+    dispatch(this, 'civ-input', { value: { ...this._address } });
+    dispatch(this, 'civ-change', { value: { ...this._address } });
   }
 
   protected override _syncFormValue(): void {

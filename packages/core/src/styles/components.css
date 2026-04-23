@@ -1357,13 +1357,13 @@
     @apply civ-inline-flex;
   }
 
-  .civ-button-group > civ-action-button:not(:first-child) button {
+  .civ-button-group civ-action-button:not(:first-child) button {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
     border-left-width: 0;
   }
 
-  .civ-button-group > civ-action-button:not(:last-child) button {
+  .civ-button-group civ-action-button:not(:last-child) button {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
   }
@@ -1372,16 +1372,43 @@
     @apply civ-inline-flex civ-flex-col;
   }
 
-  .civ-button-group--vertical > civ-action-button:not(:first-child) button {
+  .civ-button-group--vertical civ-action-button {
+    @apply civ-w-full;
+  }
+
+  .civ-button-group--vertical civ-action-button button {
+    @apply civ-w-full;
+  }
+
+  .civ-button-group--vertical civ-action-button:not(:first-child) button {
     border-top-left-radius: 0;
     border-top-right-radius: 0;
     border-top-width: 0;
     border-left-width: 1px;
   }
 
-  .civ-button-group--vertical > civ-action-button:not(:last-child) button {
+  .civ-button-group--vertical civ-action-button:not(:last-child) button {
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
+  }
+
+  /* Reset horizontal rules for vertical layout */
+  .civ-button-group--vertical civ-action-button:not(:first-child) button {
+    border-left-width: 1px;
+  }
+  .civ-button-group--vertical civ-action-button button {
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+  .civ-button-group--vertical civ-action-button:first-child button {
+    border-top-left-radius: var(--civ-border-radius-DEFAULT);
+    border-top-right-radius: var(--civ-border-radius-DEFAULT);
+  }
+  .civ-button-group--vertical civ-action-button:last-child button {
+    border-bottom-left-radius: var(--civ-border-radius-DEFAULT);
+    border-bottom-right-radius: var(--civ-border-radius-DEFAULT);
   }
 
   /* ── Link variants (rendered when href is set) ─────────────── */

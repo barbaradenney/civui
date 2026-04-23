@@ -76,10 +76,45 @@ export const ButtonGroupWithPressed: Story = {
 export const ButtonGroupVertical: Story = {
   name: 'Vertical Button Group',
   render: () => html`
-    <civ-button-group orientation="vertical">
-      <civ-action-button label="Option 1"></civ-action-button>
-      <civ-action-button label="Option 2" pressed></civ-action-button>
-      <civ-action-button label="Option 3"></civ-action-button>
+    <div style="display: flex; gap: 24px; align-items: start;">
+      <civ-button-group orientation="vertical">
+        <civ-action-button label="Option 1" variant="primary"></civ-action-button>
+        <civ-action-button label="Option 2" variant="primary" pressed></civ-action-button>
+        <civ-action-button label="Option 3" variant="primary"></civ-action-button>
+      </civ-button-group>
+
+      <civ-button-group orientation="vertical">
+        <civ-action-button label="Option 1" variant="secondary"></civ-action-button>
+        <civ-action-button label="Option 2" variant="secondary" pressed></civ-action-button>
+        <civ-action-button label="Option 3" variant="secondary"></civ-action-button>
+      </civ-button-group>
+
+      <civ-button-group orientation="vertical">
+        <civ-action-button label="Option 1" variant="tertiary"></civ-action-button>
+        <civ-action-button label="Option 2" variant="tertiary" pressed></civ-action-button>
+        <civ-action-button label="Option 3" variant="tertiary"></civ-action-button>
+      </civ-button-group>
+    </div>
+  `,
+};
+
+export const DangerVariants: Story = {
+  name: 'Danger Variants',
+  render: () => html`
+    <div style="display: flex; gap: 8px; align-items: center;">
+      <civ-action-button label="Delete" variant="primary" danger></civ-action-button>
+      <civ-action-button label="Remove" variant="secondary" danger></civ-action-button>
+      <civ-action-button label="Cancel" variant="tertiary" danger></civ-action-button>
+    </div>
+  `,
+};
+
+export const DangerButtonGroup: Story = {
+  name: 'Danger Button Group',
+  render: () => html`
+    <civ-button-group>
+      <civ-action-button label="Keep" variant="tertiary"></civ-action-button>
+      <civ-action-button label="Remove" variant="tertiary" danger></civ-action-button>
     </civ-button-group>
   `,
 };

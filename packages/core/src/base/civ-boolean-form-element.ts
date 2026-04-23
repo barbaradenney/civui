@@ -1,5 +1,6 @@
 import { property } from 'lit/decorators.js';
 import { CivFormElement } from './civ-form-element.js';
+import { dispatch } from '../utils/events.js';
 import { interpolate } from '../utils/interpolate.js';
 import { t } from '../i18n/locale.js';
 
@@ -13,8 +14,6 @@ export class CivBooleanFormElement extends CivFormElement {
 
   protected _defaultChecked = false;
   protected _descriptionId = this.generateId('desc');
-  private _cachedBooleanAnchor?: HTMLElement | null;
-
   /** Override in subclass to specify the anchor element selector */
   protected get _anchorSelector(): string { return 'input'; }
 
@@ -34,8 +33,6 @@ export class CivBooleanFormElement extends CivFormElement {
 
   override updated(changed: Map<string, unknown>): void {
     super.updated(changed);
-    // Light DOM re-renders replace DOM nodes, so clear cached anchor reference.
-    this._cachedBooleanAnchor = undefined;
     if (changed.has('checked')) {
       this._syncFormValue();
     }
@@ -47,10 +44,7 @@ export class CivBooleanFormElement extends CivFormElement {
 
   protected override _updateValidity(): void {
     if (typeof this._internals?.setValidity !== 'function') return;
-    if (this._cachedBooleanAnchor === undefined) {
-      this._cachedBooleanAnchor = this.querySelector(this._anchorSelector) as HTMLElement | null;
-    }
-    const anchor = this._cachedBooleanAnchor;
+    const anchor = this.querySelector(this._anchorSelector) as HTMLElement | null;
     if (this.required && !this.checked) {
       this._internals.setValidity(
         { valueMissing: true },
@@ -66,6 +60,6 @@ export class CivBooleanFormElement extends CivFormElement {
     this.checked = this._defaultChecked;
     this.error = '';
     this.updateFormValue(this._defaultChecked ? this.value : null);
-    // Subclasses dispatch civ-reset
+    dispatch(this, 'civ-reset');
   }
 }

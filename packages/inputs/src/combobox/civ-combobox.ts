@@ -220,7 +220,7 @@ export class CivCombobox extends CivFormElement {
       this.announce(
         count === 0
           ? (this.noResultsText || t('comboboxNoResults'))
-          : interpolate(t('comboboxResultsAvailable'), { count }),
+          : interpolate(t(count === 1 ? 'comboboxResultAvailable' : 'comboboxResultsAvailable'), { count }),
       );
     }, 300);
   }

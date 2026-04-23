@@ -15,7 +15,8 @@ export interface CivLocaleStrings {
 
   // Combobox
   comboboxNoResults: string;
-  comboboxResultsAvailable: string; // "{count} results available"
+  comboboxResultAvailable: string; // "{count} result available" (singular)
+  comboboxResultsAvailable: string; // "{count} results available" (plural)
   comboboxSelected: string; // "{label}, selected"
 
   // Form error summary
@@ -26,7 +27,8 @@ export interface CivLocaleStrings {
   fieldRequired: string; // "{label} is required"
   fieldInvalid: string; // "{label} is invalid"
   fieldFallbackLabel: string; // "This field" — fallback when no label provided
-  formErrorAnnouncement: string; // "{count} errors found. Review the error summary."
+  formErrorAnnouncementSingular: string; // "1 error found. Review the error summary."
+  formErrorAnnouncementPlural: string; // "{count} errors found. Review the error summary."
 
   // File upload
   fileUploadDragText: string;
@@ -222,7 +224,8 @@ const defaultStrings: CivLocaleStrings = {
   selectEmpty: '- Select -',
 
   comboboxNoResults: 'No results found',
-  comboboxResultsAvailable: '{count} {count, plural, one {result} other {results}} available',
+  comboboxResultAvailable: '{count} result available',
+  comboboxResultsAvailable: '{count} results available',
   comboboxSelected: '{label}, selected',
 
   formErrorSingular: 'There is 1 error in this form',
@@ -231,7 +234,8 @@ const defaultStrings: CivLocaleStrings = {
   fieldRequired: '{label} is required',
   fieldInvalid: '{label} is invalid',
   fieldFallbackLabel: 'This field',
-  formErrorAnnouncement: '{count} {count, plural, one {error} other {errors}} found. Review the error summary.',
+  formErrorAnnouncementSingular: '1 error found. Review the error summary.',
+  formErrorAnnouncementPlural: '{count} errors found. Review the error summary.',
 
   fileUploadDragText: 'Drag files here or',
   fileUploadNoFileChosen: 'No file chosen',

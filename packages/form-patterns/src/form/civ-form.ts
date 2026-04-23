@@ -582,7 +582,7 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
         if (summary) {
           summary.focus();
           this.announce(
-            interpolate(t('formErrorAnnouncement'), { count: errors.length }),
+            interpolate(t(errors.length === 1 ? 'formErrorAnnouncementSingular' : 'formErrorAnnouncementPlural'), { count: errors.length }),
             'assertive',
           );
         }

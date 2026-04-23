@@ -19,7 +19,6 @@ export class CivFormElement extends CivBaseElement {
   static formAssociated = true;
 
   protected _internals: ElementInternals;
-  private _cachedAnchor: HTMLElement | null | undefined;
   protected _inputId: string;
   protected _hintId: string;
   protected _errorId: string;
@@ -130,11 +129,7 @@ export class CivFormElement extends CivBaseElement {
   protected _updateValidity(): void {
     if (typeof this._internals.setValidity !== 'function') return;
 
-    // Cache the anchor element to avoid DOM query on every value change
-    if (this._cachedAnchor === undefined) {
-      this._cachedAnchor = this.querySelector('input, select, textarea') as HTMLElement | null;
-    }
-    const anchor = this._cachedAnchor;
+    const anchor = this.querySelector('input, select, textarea') as HTMLElement | null;
 
     if (this.required && !this.value) {
       this._internals.setValidity(
@@ -166,9 +161,6 @@ export class CivFormElement extends CivBaseElement {
 
   override updated(changed: Map<string, unknown>): void {
     super.updated(changed);
-    // Light DOM re-renders replace DOM nodes, so clear cached anchor references
-    // to avoid stale element references for validation anchoring.
-    this._cachedAnchor = undefined;
     // Error announcement is handled by renderError()'s role="alert" attribute.
     // No manual announce() needed — role="alert" triggers immediate SR announcement.
     if (changed.has('value')) {

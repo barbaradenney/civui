@@ -96,6 +96,7 @@ function processQueue(priority: 'polite' | 'assertive'): void {
 }
 
 export function announce(message: string, priority: 'polite' | 'assertive' = 'polite'): void {
+  if (!message || !message.trim()) return;
   if (priority === 'assertive') {
     if (assertiveQueue.length >= MAX_QUEUE_SIZE) assertiveQueue.shift();
     assertiveQueue.push(message);

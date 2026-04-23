@@ -7,7 +7,6 @@ export {
   computeCursorPosition,
   filterInput,
   processRawInput,
-  isSlotPosition,
   type MaskChar,
   type MaskDefinition,
 } from './mask-engine.js';

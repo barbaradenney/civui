@@ -95,7 +95,7 @@ export class CivIcon extends CivBaseElement {
       <span
         class="civ-icon civ-icon--${this.name}"
         style=${styleStr || nothing}
-        role=${isDecorative ? 'presentation' : 'img'}
+        role=${isDecorative ? 'none' : 'img'}
         aria-hidden=${isDecorative ? 'true' : 'false'}
         aria-label=${isDecorative ? nothing : accessibleLabel}
       ></span>

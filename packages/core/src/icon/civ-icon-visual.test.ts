@@ -79,7 +79,7 @@ describe('civ-icon visual regression', () => {
     for (const [name] of Object.entries(icons)) {
       const el = await create(`<civ-icon name="${name}"></civ-icon>`);
       const container = el.querySelector('.civ-icon')!;
-      expect(container.getAttribute('role')).toBe('presentation');
+      expect(container.getAttribute('role')).toBe('none');
       expect(container.getAttribute('aria-hidden')).toBe('true');
       el.remove();
     }

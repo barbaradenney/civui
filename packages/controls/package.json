@@ -1,26 +1,15 @@
 {
-  "name": "@civui/forms",
+  "name": "@civui/controls",
   "version": "0.1.0",
-  "description": "CivUI form components — Accessible form controls with ElementInternals",
+  "description": "CivUI selection controls — Checkbox, radio, segmented control",
   "license": "MIT",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
     ".": "./dist/index.js",
-    "./text-input": "./dist/text-input/index.js",
-    "./select": "./dist/select/index.js",
-    "./textarea": "./dist/textarea/index.js",
     "./checkbox": "./dist/checkbox/index.js",
     "./radio": "./dist/radio/index.js",
-    "./memorable-date": "./dist/date-input/index.js",
-    "./file-upload": "./dist/file-upload/index.js",
-    "./form-group": "./dist/form-group/index.js",
-    "./fieldset": "./dist/fieldset/index.js",
-    "./form": "./dist/form/index.js",
-    "./combobox": "./dist/combobox/index.js",
-    "./date-picker": "./dist/date-picker/index.js",
-    "./toggle": "./dist/toggle/index.js",
     "./segmented-control": "./dist/segmented-control/index.js"
   },
   "sideEffects": [
@@ -40,6 +29,7 @@
   },
   "dependencies": {
     "@civui/core": "workspace:*",
+    "@civui/ui": "workspace:*",
     "lit": "^3.2.0"
   },
   "devDependencies": {

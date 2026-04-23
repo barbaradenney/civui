@@ -1,0 +1,105 @@
+import { describe, it, expect, afterEach, vi } from 'vitest';
+import "@civui/inputs";
+import "@civui/controls";
+import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
+import './civ-name.js';
+import type { CivName } from './civ-name.js';
+
+afterEach(cleanupFixtures);
+
+describe('civ-name', () => {
+  it('renders a fieldset with legend', async () => {
+    const el = await fixture<CivName>('<civ-name legend="Your name"></civ-name>');
+    expect(el.querySelector('fieldset')).not.toBeNull();
+    expect(el.querySelector('legend')!.textContent).toContain('Your name');
+  });
+
+  it('renders first, middle, last, and suffix fields by default', async () => {
+    const el = await fixture<CivName>('<civ-name legend="Name" name="n"></civ-name>');
+    const inputs = el.querySelectorAll('input');
+    expect(inputs.length).toBe(3); // first, middle, last
+    expect(el.querySelectorAll('select').length).toBe(1); // suffix
+  });
+
+  it('hides middle name when showMiddle is false', async () => {
+    const el = await fixture<CivName>('<civ-name legend="Name"></civ-name>') as CivName;
+    (el as any).showMiddle = false;
+    await elementUpdated(el);
+    expect(el.querySelectorAll('input').length).toBe(2); // first, last only
+  });
+
+  it('hides suffix when showSuffix is false', async () => {
+    const el = await fixture<CivName>('<civ-name legend="Name"></civ-name>') as CivName;
+    (el as any).showSuffix = false;
+    await elementUpdated(el);
+    expect(el.querySelectorAll('select').length).toBe(0);
+  });
+
+  it('fires civ-input on field change', async () => {
+    const el = await fixture<CivName>('<civ-name legend="Name" name="n"></civ-name>');
+    let detail: any = null;
+    el.addEventListener('civ-input', ((e: CustomEvent) => { detail = e.detail; }) as EventListener);
+    const input = el.querySelector('input')!;
+    input.value = 'Jane';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    expect(detail).not.toBeNull();
+    expect(detail.value.first).toBe('Jane');
+  });
+
+  it('fires civ-change on committed change', async () => {
+    const el = await fixture<CivName>('<civ-name legend="Name" name="n"></civ-name>');
+    let detail: any = null;
+    el.addEventListener('civ-change', ((e: CustomEvent) => { detail = e.detail; }) as EventListener);
+    const input = el.querySelector('input')!;
+    input.value = 'Doe';
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+    expect(detail.value.first).toBe('Doe');
+  });
+
+  it('sets autocomplete attributes', async () => {
+    const el = await fixture<CivName>('<civ-name legend="Name" name="n"></civ-name>');
+    const inputs = el.querySelectorAll('input');
+    expect(inputs[0].getAttribute('autocomplete')).toBe('given-name');
+    expect(inputs[1].getAttribute('autocomplete')).toBe('additional-name');
+    expect(inputs[2].getAttribute('autocomplete')).toBe('family-name');
+  });
+
+  it('renders required indicator', async () => {
+    const el = await fixture<CivName>('<civ-name legend="Name" required></civ-name>');
+    expect(el.querySelector('.civ-required-mark')).not.toBeNull();
+  });
+
+  it('renders field-level errors', async () => {
+    const el = await fixture<CivName>('<civ-name legend="Name" first-error="Enter a first name"></civ-name>');
+    const alert = el.querySelector('[role="alert"]');
+    expect(alert).not.toBeNull();
+    expect(alert!.textContent).toBe('Enter a first name');
+  });
+
+  it('has static formAssociated = true', () => {
+    const Ctor = customElements.get('civ-name') as any;
+    expect(Ctor.formAssociated).toBe(true);
+  });
+
+  it('uses Light DOM', async () => {
+    const el = await fixture('<civ-name legend="Name"></civ-name>');
+    expect(el.shadowRoot).toBeNull();
+  });
+
+  it('gets and sets nameValue', async () => {
+    const el = await fixture<CivName>('<civ-name legend="Name"></civ-name>') as CivName;
+    el.nameValue = { first: 'Jane', middle: 'A', last: 'Doe', suffix: 'Jr.' };
+    await elementUpdated(el);
+    expect(el.nameValue.first).toBe('Jane');
+    expect(el.nameValue.last).toBe('Doe');
+  });
+
+  it('resets on formResetCallback', async () => {
+    const el = await fixture<CivName>('<civ-name legend="Name"></civ-name>') as CivName;
+    el.nameValue = { first: 'Jane', middle: '', last: 'Doe', suffix: '' };
+    await elementUpdated(el);
+    el.formResetCallback();
+    await elementUpdated(el);
+    expect(el.nameValue.first).toBe('');
+  });
+});

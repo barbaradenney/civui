@@ -467,7 +467,10 @@ import ReviewPage from './pages/ReviewPage';
 import ConfirmationPage from './pages/ConfirmationPage';
 
 import '@civui/core';
-import '@civui/forms';
+import '@civui/inputs';
+import '@civui/controls';
+import '@civui/compound';
+import '@civui/form-patterns';
 import '@civui/ui';
 import '@civui/navigation';
 import '@civui/feedback';

@@ -1,0 +1,46 @@
+{
+  "name": "@civui/inputs",
+  "version": "0.1.0",
+  "description": "CivUI input components — Text input, textarea, select, combobox, date picker, file upload, toggle, yes/no",
+  "license": "MIT",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js",
+    "./text-input": "./dist/text-input/index.js",
+    "./textarea": "./dist/textarea/index.js",
+    "./select": "./dist/select/index.js",
+    "./combobox": "./dist/combobox/index.js",
+    "./date-picker": "./dist/date-picker/index.js",
+    "./memorable-date": "./dist/date-input/index.js",
+    "./file-upload": "./dist/file-upload/index.js",
+    "./toggle": "./dist/toggle/index.js",
+    "./yes-no": "./dist/yes-no/index.js"
+  },
+  "sideEffects": [
+    "**/*.css",
+    "src/*/civ-*.ts",
+    "dist/*/civ-*.js"
+  ],
+  "files": ["dist"],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "dev": "tsc -b --watch",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@civui/core": "workspace:*",
+    "lit": "^3.2.0"
+  },
+  "devDependencies": {
+    "@civui/test-utils": "workspace:*",
+    "@civui/tokens": "workspace:*",
+    "typescript": "^5.6.0",
+    "vitest": "^2.0.0"
+  }
+}

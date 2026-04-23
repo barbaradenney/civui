@@ -28,7 +28,10 @@ const config: StorybookConfig = {
     config.resolve.alias = {
       ...(config.resolve.alias as Record<string, string> | undefined),
       '@civui/core': resolve(root, 'packages/core/src/index.ts'),
-      '@civui/forms': resolve(root, 'packages/forms/src/index.ts'),
+      '@civui/inputs': resolve(root, 'packages/inputs/src/index.ts'),
+      '@civui/controls': resolve(root, 'packages/controls/src/index.ts'),
+      '@civui/compound': resolve(root, 'packages/compound/src/index.ts'),
+      '@civui/form-patterns': resolve(root, 'packages/form-patterns/src/index.ts'),
       '@civui/feedback': resolve(root, 'packages/feedback/src/index.ts'),
       '@civui/ui/tag': resolve(root, 'packages/ui/src/tag/index.ts'),
       '@civui/ui/link': resolve(root, 'packages/ui/src/link/index.ts'),

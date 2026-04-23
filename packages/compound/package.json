@@ -1,0 +1,43 @@
+{
+  "name": "@civui/compound",
+  "version": "0.1.0",
+  "description": "CivUI compound form components — Address, name, direct deposit, signature",
+  "license": "MIT",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js",
+    "./address": "./dist/address/index.js",
+    "./name": "./dist/name/index.js",
+    "./direct-deposit": "./dist/direct-deposit/index.js",
+    "./signature": "./dist/signature/index.js"
+  },
+  "sideEffects": [
+    "**/*.css",
+    "src/*/civ-*.ts",
+    "dist/*/civ-*.js"
+  ],
+  "files": ["dist"],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "dev": "tsc -b --watch",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@civui/core": "workspace:*",
+    "@civui/inputs": "workspace:*",
+    "@civui/controls": "workspace:*",
+    "lit": "^3.2.0"
+  },
+  "devDependencies": {
+    "@civui/test-utils": "workspace:*",
+    "@civui/tokens": "workspace:*",
+    "typescript": "^5.6.0",
+    "vitest": "^2.0.0"
+  }
+}

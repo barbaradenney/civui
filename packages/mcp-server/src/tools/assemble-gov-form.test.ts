@@ -118,7 +118,7 @@ describe('assembleGovForm (react format)', async () => {
     const result = await assembleGovForm('21-526EZ', { format: 'react' });
     const app = result.files!.find(f => f.path.includes('App.tsx'))!;
     expect(app.content).toContain("@civui/core");
-    expect(app.content).toContain("@civui/forms");
+    expect(app.content).toContain("@civui/inputs");
   });
 
   it('app component has navigation state', async () => {

@@ -1,7 +1,7 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
 import './civ-form.js';
-import '../text-input/civ-text-input.js';
+import '@civui/inputs';
 
 async function waitForChildren(el: HTMLElement): Promise<void> {
   await elementUpdated(el);

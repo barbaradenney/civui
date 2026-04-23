@@ -153,6 +153,34 @@ importers:
         specifier: ^2.0.0
         version: 2.1.9(@types/node@25.5.0)(jsdom@28.1.0)(lightningcss@1.32.0)(terser@5.46.0)
 
+  packages/compound:
+    dependencies:
+      '@civui/controls':
+        specifier: workspace:*
+        version: link:../controls
+      '@civui/core':
+        specifier: workspace:*
+        version: link:../core
+      '@civui/inputs':
+        specifier: workspace:*
+        version: link:../inputs
+      lit:
+        specifier: ^3.2.0
+        version: 3.3.2
+    devDependencies:
+      '@civui/test-utils':
+        specifier: workspace:*
+        version: link:../test-utils
+      '@civui/tokens':
+        specifier: workspace:*
+        version: link:../tokens
+      typescript:
+        specifier: ^5.6.0
+        version: 5.9.3
+      vitest:
+        specifier: ^2.0.0
+        version: 2.1.9(@types/node@25.5.0)(jsdom@28.1.0)(lightningcss@1.32.0)(terser@5.46.0)
+
   packages/content:
     devDependencies:
       '@testing-library/react':
@@ -170,6 +198,31 @@ importers:
       tsx:
         specifier: ^4.0.0
         version: 4.21.0
+      typescript:
+        specifier: ^5.6.0
+        version: 5.9.3
+      vitest:
+        specifier: ^2.0.0
+        version: 2.1.9(@types/node@25.5.0)(jsdom@28.1.0)(lightningcss@1.32.0)(terser@5.46.0)
+
+  packages/controls:
+    dependencies:
+      '@civui/core':
+        specifier: workspace:*
+        version: link:../core
+      '@civui/ui':
+        specifier: workspace:*
+        version: link:../ui
+      lit:
+        specifier: ^3.2.0
+        version: 3.3.2
+    devDependencies:
+      '@civui/test-utils':
+        specifier: workspace:*
+        version: link:../test-utils
+      '@civui/tokens':
+        specifier: workspace:*
+        version: link:../tokens
       typescript:
         specifier: ^5.6.0
         version: 5.9.3
@@ -215,7 +268,32 @@ importers:
         specifier: ^2.0.0
         version: 2.1.9(@types/node@25.5.0)(jsdom@28.1.0)(lightningcss@1.32.0)(terser@5.46.0)
 
-  packages/forms:
+  packages/form-patterns:
+    dependencies:
+      '@civui/core':
+        specifier: workspace:*
+        version: link:../core
+      '@civui/ui':
+        specifier: workspace:*
+        version: link:../ui
+      lit:
+        specifier: ^3.2.0
+        version: 3.3.2
+    devDependencies:
+      '@civui/test-utils':
+        specifier: workspace:*
+        version: link:../test-utils
+      '@civui/tokens':
+        specifier: workspace:*
+        version: link:../tokens
+      typescript:
+        specifier: ^5.6.0
+        version: 5.9.3
+      vitest:
+        specifier: ^2.0.0
+        version: 2.1.9(@types/node@25.5.0)(jsdom@28.1.0)(lightningcss@1.32.0)(terser@5.46.0)
+
+  packages/inputs:
     dependencies:
       '@civui/core':
         specifier: workspace:*
@@ -3496,12 +3574,6 @@ packages:
     resolution: {integrity: sha512-5cvg6CtKwfgdmVqY1WIiXKc3Q1bkRqGLi+2W/6ao+6Y7gu/RCwRuAhGEzh5B4KlszSuTLgZYuqFqo5bImjNKng==}
     engines: {node: '>= 0.6'}
 
-  acorn-import-phases@1.0.4:
-    resolution: {integrity: sha512-wKmbr/DDiIXzEOiWrTTUcDm24kQ2vGfZQvM2fwg2vXqR5uW6aapr7ObPtj1th32b9u90/Pf4AItvdTh42fBmVQ==}
-    engines: {node: '>=10.13.0'}
-    peerDependencies:
-      acorn: ^8.14.0
-
   acorn-jsx@5.3.2:
     resolution: {integrity: sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ==}
     peerDependencies:
@@ -4448,9 +4520,6 @@ packages:
 
   es-module-lexer@1.7.0:
     resolution: {integrity: sha512-jEQoCwk8hyb2AZziIOLhDqpm5+2ww5uIE6lkO/6jcOCusfk6LhMHpXXfBLXTZ7Ydyt0j4VoUQv6uGNYbdW+kBA==}
-
-  es-module-lexer@2.0.0:
-    resolution: {integrity: sha512-5POEcUuZybH7IdmGsD8wlf0AI55wMecM9rVBTI/qEAy2c1kTOm3DjFYjrBdI2K3BaJjJYfYFeRtM0t9ssnRuxw==}
 
   es-object-atoms@1.1.1:
     resolution: {integrity: sha512-FGgH2h8zKNim9ljj7dankFPcICIK9Cp5bm+c2gQSYePhpaG5+esrLODihIorn+Pe6FGJzWhXQotPv73jTaldXA==}
@@ -7817,16 +7886,6 @@ packages:
   webpack-virtual-modules@0.6.2:
     resolution: {integrity: sha512-66/V2i5hQanC51vBQKPH4aI8NMAcBW59FVBs+rC7eGHupMyfn34q7rZIE+ETlJ+XTevqfUhVVBgSUNSW2flEUQ==}
 
-  webpack@5.106.2:
-    resolution: {integrity: sha512-wGN3qcrBQIFmQ/c0AiOAQBvrZ5lmY8vbbMv4Mxfgzqd/B6+9pXtLo73WuS1dSGXM5QYY3hZnIbvx+K1xxe6FyA==}
-    engines: {node: '>=10.13.0'}
-    hasBin: true
-    peerDependencies:
-      webpack-cli: '*'
-    peerDependenciesMeta:
-      webpack-cli:
-        optional: true
-
   webpack@5.96.1:
     resolution: {integrity: sha512-l2LlBSvVZGhL4ZrPwyr8+37AunkcYj5qh8o6u2/2rzoPc8gxFJkLj1WxNgooi9pnoc06jh0BjuXnamM4qlujZA==}
     engines: {node: '>=10.13.0'}
@@ -9420,9 +9479,9 @@ snapshots:
       browserslist: 4.28.1
       lightningcss: 1.32.0
       semver: 7.7.4
-      swc-loader: 0.2.7(@swc/core@1.15.30)(webpack@5.106.2(@swc/core@1.15.30)(esbuild@0.27.4))
+      swc-loader: 0.2.7(@swc/core@1.15.30)(webpack@5.96.1(@swc/core@1.15.30)(esbuild@0.27.4))
       tslib: 2.8.1
-      webpack: 5.106.2(@swc/core@1.15.30)(esbuild@0.27.4)
+      webpack: 5.96.1(@swc/core@1.15.30)(esbuild@0.27.4)
     transitivePeerDependencies:
       - '@swc/helpers'
       - esbuild
@@ -11896,11 +11955,6 @@ snapshots:
       mime-types: 3.0.2
       negotiator: 1.0.0
 
-  acorn-import-phases@1.0.4(acorn@8.16.0):
-    dependencies:
-      acorn: 8.16.0
-    optional: true
-
   acorn-jsx@5.3.2(acorn@8.16.0):
     dependencies:
       acorn: 8.16.0
@@ -12874,9 +12928,6 @@ snapshots:
   es-errors@1.3.0: {}
 
   es-module-lexer@1.7.0: {}
-
-  es-module-lexer@2.0.0:
-    optional: true
 
   es-object-atoms@1.1.1:
     dependencies:
@@ -16460,11 +16511,11 @@ snapshots:
       picocolors: 1.1.1
       sax: 1.6.0
 
-  swc-loader@0.2.7(@swc/core@1.15.30)(webpack@5.106.2(@swc/core@1.15.30)(esbuild@0.27.4)):
+  swc-loader@0.2.7(@swc/core@1.15.30)(webpack@5.96.1(@swc/core@1.15.30)(esbuild@0.27.4)):
     dependencies:
       '@swc/core': 1.15.30
       '@swc/counter': 0.1.3
-      webpack: 5.106.2(@swc/core@1.15.30)(esbuild@0.27.4)
+      webpack: 5.96.1(@swc/core@1.15.30)(esbuild@0.27.4)
     optional: true
 
   symbol-tree@3.2.4: {}
@@ -16498,18 +16549,6 @@ snapshots:
       - yaml
 
   tapable@2.3.2: {}
-
-  terser-webpack-plugin@5.4.0(@swc/core@1.15.30)(esbuild@0.27.4)(webpack@5.106.2(@swc/core@1.15.30)(esbuild@0.27.4)):
-    dependencies:
-      '@jridgewell/trace-mapping': 0.3.31
-      jest-worker: 27.5.1
-      schema-utils: 4.3.3
-      terser: 5.46.0
-      webpack: 5.106.2(@swc/core@1.15.30)(esbuild@0.27.4)
-    optionalDependencies:
-      '@swc/core': 1.15.30
-      esbuild: 0.27.4
-    optional: true
 
   terser-webpack-plugin@5.4.0(@swc/core@1.15.30)(esbuild@0.27.4)(webpack@5.96.1(@swc/core@1.15.30)(esbuild@0.27.4)):
     dependencies:
@@ -17078,38 +17117,6 @@ snapshots:
   webpack-sources@3.3.4: {}
 
   webpack-virtual-modules@0.6.2: {}
-
-  webpack@5.106.2(@swc/core@1.15.30)(esbuild@0.27.4):
-    dependencies:
-      '@types/eslint-scope': 3.7.7
-      '@types/estree': 1.0.8
-      '@types/json-schema': 7.0.15
-      '@webassemblyjs/ast': 1.14.1
-      '@webassemblyjs/wasm-edit': 1.14.1
-      '@webassemblyjs/wasm-parser': 1.14.1
-      acorn: 8.16.0
-      acorn-import-phases: 1.0.4(acorn@8.16.0)
-      browserslist: 4.28.1
-      chrome-trace-event: 1.0.4
-      enhanced-resolve: 5.20.1
-      es-module-lexer: 2.0.0
-      eslint-scope: 5.1.1
-      events: 3.3.0
-      glob-to-regexp: 0.4.1
-      graceful-fs: 4.2.11
-      loader-runner: 4.3.1
-      mime-db: 1.54.0
-      neo-async: 2.6.2
-      schema-utils: 4.3.3
-      tapable: 2.3.2
-      terser-webpack-plugin: 5.4.0(@swc/core@1.15.30)(esbuild@0.27.4)(webpack@5.106.2(@swc/core@1.15.30)(esbuild@0.27.4))
-      watchpack: 2.5.1
-      webpack-sources: 3.3.4
-    transitivePeerDependencies:
-      - '@swc/core'
-      - esbuild
-      - uglify-js
-    optional: true
 
   webpack@5.96.1(@swc/core@1.15.30)(esbuild@0.27.4):
     dependencies:

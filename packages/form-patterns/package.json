@@ -1,0 +1,49 @@
+{
+  "name": "@civui/form-patterns",
+  "version": "0.1.0",
+  "description": "CivUI form patterns — Form, form step, fieldset, conditional, repeater, summary, progress steps",
+  "license": "MIT",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js",
+    "./form": "./dist/form/index.js",
+    "./form-step": "./dist/form-step/index.js",
+    "./form-group": "./dist/form-group/index.js",
+    "./fieldset": "./dist/fieldset/index.js",
+    "./conditional": "./dist/conditional/index.js",
+    "./repeater": "./dist/repeater/index.js",
+    "./summary": "./dist/summary/index.js",
+    "./read-only-field": "./dist/read-only-field/index.js",
+    "./prefill-notice": "./dist/prefill-notice/index.js",
+    "./progress-steps": "./dist/progress-steps/index.js",
+    "./prefill": "./dist/prefill/index.js"
+  },
+  "sideEffects": [
+    "**/*.css",
+    "src/*/civ-*.ts",
+    "dist/*/civ-*.js"
+  ],
+  "files": ["dist"],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "dev": "tsc -b --watch",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@civui/core": "workspace:*",
+    "@civui/ui": "workspace:*",
+    "lit": "^3.2.0"
+  },
+  "devDependencies": {
+    "@civui/test-utils": "workspace:*",
+    "@civui/tokens": "workspace:*",
+    "typescript": "^5.6.0",
+    "vitest": "^2.0.0"
+  }
+}

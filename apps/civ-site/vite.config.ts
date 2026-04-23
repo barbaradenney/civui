@@ -29,7 +29,10 @@ export default defineConfig({
   resolve: {
     alias: {
       '@civui/core': resolve(packages, 'core/src/index.ts'),
-      '@civui/forms': resolve(packages, 'forms/src/index.ts'),
+      '@civui/inputs': resolve(packages, 'inputs/src/index.ts'),
+      '@civui/controls': resolve(packages, 'controls/src/index.ts'),
+      '@civui/compound': resolve(packages, 'compound/src/index.ts'),
+      '@civui/form-patterns': resolve(packages, 'form-patterns/src/index.ts'),
       '@civui/ui/tag': resolve(packages, 'ui/src/tag/index.ts'),
       '@civui/ui/link': resolve(packages, 'ui/src/link/index.ts'),
       '@civui/ui/button': resolve(packages, 'ui/src/button/index.ts'),

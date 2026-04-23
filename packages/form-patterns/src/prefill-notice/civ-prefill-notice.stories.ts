@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import './civ-prefill-notice.js';
-import '../name/civ-name.js';
-import '../text-input/civ-text-input.js';
+import '@civui/compound';
+import '@civui/inputs';
 import '../read-only-field/civ-read-only-field.js';
 
 const meta: Meta = {

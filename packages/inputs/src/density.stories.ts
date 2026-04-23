@@ -3,7 +3,7 @@ import { html } from 'lit';
 import './text-input/civ-text-input.js';
 import './select/civ-select.js';
 import './textarea/civ-textarea.js';
-import './checkbox/civ-checkbox.js';
+import '@civui/controls';
 
 const meta: Meta = {
   title: 'Foundations/Density',

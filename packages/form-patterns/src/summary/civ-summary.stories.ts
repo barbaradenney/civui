@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import './civ-summary.js';
-import '../signature/civ-signature.js';
+import '@civui/compound';
 import '@civui/ui/link';
 import '@civui/ui/divider';
 

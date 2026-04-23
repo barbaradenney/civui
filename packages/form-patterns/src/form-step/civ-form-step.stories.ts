@@ -1,11 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import './civ-form-step.js';
-import '../name/civ-name.js';
-import '../date-input/civ-memorable-date.js';
-import '../text-input/civ-text-input.js';
-import '../address/civ-address.js';
-import '../signature/civ-signature.js';
+import '@civui/compound';
+import '@civui/inputs';
 
 const meta: Meta = {
   title: 'Forms/Patterns/Form Step',

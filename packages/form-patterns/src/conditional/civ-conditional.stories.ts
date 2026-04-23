@@ -1,11 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import './civ-conditional.js';
-import '../select/civ-select.js';
-import '../text-input/civ-text-input.js';
-import '../textarea/civ-textarea.js';
-import '../yes-no/civ-yes-no.js';
-import '../checkbox/civ-checkbox.js';
+import '@civui/inputs';
+import '@civui/controls';
 import '../form/civ-form.js';
 
 const meta: Meta = {

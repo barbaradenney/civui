@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import './civ-fieldset.js';
-import '../text-input/civ-text-input.js';
+import '@civui/inputs';
 
 const meta: Meta = {
   title: 'Forms/Layout/Fieldset',

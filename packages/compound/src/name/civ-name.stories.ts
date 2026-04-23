@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import './civ-name.js';
-import '../date-input/civ-memorable-date.js';
+import '@civui/inputs';
 
 const meta: Meta = {
   title: 'Forms/Compound/Name',

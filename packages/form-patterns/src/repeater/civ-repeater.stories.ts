@@ -1,9 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import './civ-repeater.js';
-import '../text-input/civ-text-input.js';
-import '../date-input/civ-memorable-date.js';
-import '../select/civ-select.js';
+import '@civui/inputs';
 
 const meta: Meta = {
   title: 'Forms/Patterns/Repeater',

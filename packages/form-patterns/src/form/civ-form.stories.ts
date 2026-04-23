@@ -1,10 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import './civ-form.js';
-import '../text-input/civ-text-input.js';
-import '../textarea/civ-textarea.js';
-import '../select/civ-select.js';
-import '../checkbox/civ-checkbox.js';
+import '@civui/inputs';
+import '@civui/controls';
 
 const meta: Meta = {
   title: 'Forms/Layout/Form',

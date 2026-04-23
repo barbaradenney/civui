@@ -85,7 +85,9 @@ export async function assembleGovForm(formNumber: string, options?: {
   <title>${escapeHtml(result.title)} | VA Form ${escapeHtml(result.formNumber)}</title>
 
   <!-- CivUI Design System -->
-  <link rel="stylesheet" href="${cdnBase}/core/dist/styles/civ.css">
+  ${cdnBase === 'local'
+    ? `<script type="module" src="../src/civui.ts"></script>`
+    : `<link rel="stylesheet" href="${cdnBase}/core/dist/styles/civ.css">
   <script type="module" src="${cdnBase}/core/dist/index.js"></script>
   <script type="module" src="${cdnBase}/inputs/dist/index.js"></script>
   <script type="module" src="${cdnBase}/controls/dist/index.js"></script>
@@ -93,7 +95,7 @@ export async function assembleGovForm(formNumber: string, options?: {
   <script type="module" src="${cdnBase}/form-patterns/dist/index.js"></script>
   <script type="module" src="${cdnBase}/ui/dist/index.js"></script>
   <script type="module" src="${cdnBase}/navigation/dist/index.js"></script>
-  <script type="module" src="${cdnBase}/feedback/dist/index.js"></script>
+  <script type="module" src="${cdnBase}/feedback/dist/index.js"></script>`}
 </head>
 <body>
   <main id="main-content" class="civ-p-6" style="max-width: 720px; margin: 0 auto;">

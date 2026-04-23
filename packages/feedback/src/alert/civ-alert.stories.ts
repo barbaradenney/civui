@@ -222,3 +222,25 @@ export const GovernmentFormValidation: Story = {
     </div>
   `,
 };
+
+// ── Compact ──────────────────────────────────────────────────
+
+export const Compact: Story = {
+  name: 'Compact',
+  render: () => html`
+    <div style="display: flex; flex-direction: column; gap: 24px;">
+      <div>
+        <p style="font-weight: 600; margin-bottom: 8px;">Default</p>
+        <civ-alert variant="info" heading="Information">
+          Your application is being reviewed.
+        </civ-alert>
+      </div>
+      <div>
+        <p style="font-weight: 600; margin-bottom: 8px;">Compact (sm)</p>
+        <civ-alert variant="info" heading="Information" spacing="sm">
+          Your application is being reviewed.
+        </civ-alert>
+      </div>
+    </div>
+  `,
+};

@@ -147,3 +147,27 @@ export const ClaimStatuses: Story = {
     </div>
   `,
 };
+
+export const Compact: Story = {
+  name: 'Compact',
+  render: () => html`
+    <div style="display: flex; flex-direction: column; gap: 24px;">
+      <div>
+        <p style="font-weight: 600; margin-bottom: 8px;">Default</p>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <civ-tag label="Active" variant="blue" tag-style="primary"></civ-tag>
+          <civ-tag label="In progress" variant="teal"></civ-tag>
+          <civ-tag label="Complete" variant="green" tag-style="primary"></civ-tag>
+        </div>
+      </div>
+      <div>
+        <p style="font-weight: 600; margin-bottom: 8px;">Compact (sm)</p>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <civ-tag label="Active" variant="blue" tag-style="primary" spacing="sm"></civ-tag>
+          <civ-tag label="In progress" variant="teal" spacing="sm"></civ-tag>
+          <civ-tag label="Complete" variant="green" tag-style="primary" spacing="sm"></civ-tag>
+        </div>
+      </div>
+    </div>
+  `,
+};

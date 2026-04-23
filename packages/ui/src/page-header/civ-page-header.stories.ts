@@ -167,3 +167,27 @@ export const ClaimDetailHeader: Story = {
     </civ-page-header>
   `,
 };
+
+export const Compact: Story = {
+  name: 'Compact',
+  render: () => html`
+    <div style="display: flex; flex-direction: column; gap: 24px;">
+      <div>
+        <p style="font-weight: 600; margin-bottom: 8px;">Default</p>
+        <civ-page-header>
+          <span data-eyebrow>Benefits</span>
+          <h1 data-heading class="civ-heading-xl">Apply for disability compensation</h1>
+          <span data-subheading>VA Form 21-526EZ</span>
+        </civ-page-header>
+      </div>
+      <div>
+        <p style="font-weight: 600; margin-bottom: 8px;">Compact (sm)</p>
+        <civ-page-header spacing="sm">
+          <span data-eyebrow>Benefits</span>
+          <h1 data-heading class="civ-heading-xl">Apply for disability compensation</h1>
+          <span data-subheading>VA Form 21-526EZ</span>
+        </civ-page-header>
+      </div>
+    </div>
+  `,
+};

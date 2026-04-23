@@ -42,3 +42,21 @@ export const MultipleFields: Story = {
     <civ-read-only-field label="Email" value="jane.doe@email.com"></civ-read-only-field>
   `,
 };
+
+export const Compact: Story = {
+  name: 'Compact',
+  render: () => html`
+    <div style="display: flex; flex-direction: column; gap: 24px;">
+      <div>
+        <p style="font-weight: 600; margin-bottom: 8px;">Default</p>
+        <civ-read-only-field label="Full name" value="Jane A. Doe"></civ-read-only-field>
+        <civ-read-only-field label="Date of birth" value="January 15, 1990"></civ-read-only-field>
+      </div>
+      <div>
+        <p style="font-weight: 600; margin-bottom: 8px;">Compact (sm)</p>
+        <civ-read-only-field label="Full name" value="Jane A. Doe" spacing="sm"></civ-read-only-field>
+        <civ-read-only-field label="Date of birth" value="January 15, 1990" spacing="sm"></civ-read-only-field>
+      </div>
+    </div>
+  `,
+};

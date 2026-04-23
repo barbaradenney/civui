@@ -226,3 +226,28 @@ export const DashboardGrid: Story = {
     </div>
   `,
 };
+
+export const Compact: Story = {
+  name: 'Compact',
+  render: () => html`
+    <div style="display: flex; flex-direction: column; gap: 24px; max-width: 600px;">
+      <div>
+        <p style="font-weight: 600; margin-bottom: 8px;">Default</p>
+        <civ-link-card
+          href="#/benefits"
+          heading="Apply for benefits"
+          description="Start a new application for VA benefits."
+        ></civ-link-card>
+      </div>
+      <div>
+        <p style="font-weight: 600; margin-bottom: 8px;">Compact (sm)</p>
+        <civ-link-card
+          href="#/benefits"
+          heading="Apply for benefits"
+          description="Start a new application for VA benefits."
+          spacing="sm"
+        ></civ-link-card>
+      </div>
+    </div>
+  `,
+};

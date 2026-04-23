@@ -38,6 +38,7 @@ export class CivSegmentedControl extends LightDomSlotMixin(CivFormElement) {
   private _boundOnChildChange = this._onChildChange.bind(this);
   private _boundStopChildInput = stopChildEvent(this);
   private _boundOnKeydown = this._onKeydown.bind(this);
+  private _tabindexRafId?: number;
 
   override connectedCallback(): void {
     super.connectedCallback();
@@ -51,6 +52,7 @@ export class CivSegmentedControl extends LightDomSlotMixin(CivFormElement) {
     this.removeEventListener('civ-change', this._boundOnChildChange as EventListener);
     this.removeEventListener('civ-input', this._boundStopChildInput as EventListener);
     this.removeEventListener('keydown', this._boundOnKeydown as EventListener);
+    if (this._tabindexRafId) cancelAnimationFrame(this._tabindexRafId);
   }
 
   override willUpdate(changed: Map<string, unknown>): void {
@@ -127,7 +129,7 @@ export class CivSegmentedControl extends LightDomSlotMixin(CivFormElement) {
       const enabledSegments = this._getEnabledSegments(segs);
       if (enabledSegments.length > 0) {
         // Wait for segment render, then fix tabindex on the button
-        requestAnimationFrame(() => {
+        this._tabindexRafId = requestAnimationFrame(() => {
           const firstBtn = enabledSegments[0].querySelector('button');
           if (firstBtn) firstBtn.setAttribute('tabindex', '0');
         });
@@ -170,7 +172,6 @@ export class CivSegmentedControl extends LightDomSlotMixin(CivFormElement) {
 
     this.value = detail.value;
     this.updateFormValue(this.value);
-    this._syncSegmentSelected();
 
     // Stop the child event and re-dispatch from the group
     e.stopPropagation();

@@ -122,6 +122,7 @@ export class CivCheckboxGroup extends LightDomSlotMixin(CivFormElement) {
     return html`
       <fieldset
         class="civ-fieldset"
+        aria-orientation="${this.orientation}"
         aria-describedby="${this._ariaDescribedBy || nothing}"
         aria-invalid="${this.error ? 'true' : nothing}"
         aria-required="${this.required || nothing}"

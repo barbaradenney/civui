@@ -187,15 +187,15 @@ export class CivRadioGroup extends LightDomSlotMixin(CivFormElement) {
 
   private _syncTabindex(radios?: CivRadio[]): void {
     const r = radios ?? this._getRadios();
-    const checkedRadio = r.find((r) => r.checked);
-    const enabledRadios = r.filter((r) => !r.disabled);
+    const checkedRadio = r.find((radio) => radio.checked);
+    const enabledRadios = r.filter((radio) => !radio.disabled);
     const focusTarget =
       checkedRadio && !checkedRadio.disabled
         ? checkedRadio
         : enabledRadios[0];
 
-    r.forEach((radio) => {
-      radio.managedTabIndex = radio === focusTarget ? 0 : -1;
+    r.forEach((item) => {
+      item.managedTabIndex = item === focusTarget ? 0 : -1;
     });
   }
 
@@ -242,7 +242,7 @@ export class CivRadioGroup extends LightDomSlotMixin(CivFormElement) {
   }
 
   protected override _syncFormValue(): void {
-    this.updateFormValue(this.value || '');
+    this.updateFormValue(this.value || null);
   }
 
   override formResetCallback(): void {

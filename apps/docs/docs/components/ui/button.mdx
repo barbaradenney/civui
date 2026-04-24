@@ -69,6 +69,8 @@ An accessible button component that always renders a `<button>` element. For lin
 | `danger` | `boolean` | `false` | Destructive action styling |
 | `disabled` | `boolean` | `false` | Disabled state |
 | `type` | `'button' \| 'submit' \| 'reset'` | `'button'` | HTML button type attribute |
+| `icon-start` | `string` | `''` | Icon name to render before the label |
+| `icon-end` | `string` | `''` | Icon name to render after the label |
 
 ## Events
 
@@ -115,6 +117,16 @@ Add `danger` to any variant for destructive action styling.
 
 ```html
 <civ-button type="submit" label="Submit form"></civ-button>
+```
+
+## Icons
+
+Add a leading or trailing icon to any button variant.
+
+```html
+<civ-button label="Download" icon-start="download"></civ-button>
+<civ-button label="Next" icon-end="chevron-right"></civ-button>
+<civ-button variant="secondary" label="Edit" icon-start="edit"></civ-button>
 ```
 
 ## Disabled state

@@ -1341,10 +1341,11 @@
   }
 
   .civ-action-btn--tertiary {
-    @apply civ-bg-transparent civ-text-primary civ-border-primary;
+    @apply civ-text-primary civ-border-base-light;
+    background-color: var(--civ-color-base-lightest);
   }
   .civ-action-btn--tertiary:hover:not(:disabled) {
-    @apply civ-bg-primary civ-text-white;
+    background-color: var(--civ-color-base-lighter);
   }
 
   .civ-action-btn[aria-pressed="true"] {

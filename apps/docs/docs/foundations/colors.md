@@ -4,9 +4,23 @@ sidebar_position: 6
 sidebar_label: Colors
 ---
 
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
 # Colors
 
 CivUI uses semantic color tokens inspired by USWDS. All colors meet WCAG AA contrast requirements and support dark mode via `prefers-color-scheme`.
+
+## Color Swatches
+
+### All Colors
+
+<StoryEmbed id="foundations-colors--all-colors" />
+
+### Semantic Usage
+
+<StoryEmbed id="foundations-colors--semantic-usage" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/foundations-colors--all-colors)
 
 ## Semantic palette
 

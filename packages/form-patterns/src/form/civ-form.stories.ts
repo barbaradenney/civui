@@ -240,6 +240,28 @@ export const PrefillApplied: Story = {
   },
 };
 
+// ── Trauma-informed / sensitive flows ─────────────────────────
+
+export const WithSupportResources: Story = {
+  name: 'With Support Resources (crisis footer)',
+  render: () => html`
+    <civ-form
+      form-label="Mental health screening"
+      .supportResources="${[
+        { label: '988 Suicide & Crisis Lifeline', href: 'tel:988', description: 'Free, confidential, 24/7' },
+        { label: 'Veterans Crisis Line', href: 'tel:988', description: 'Press 1 after calling 988' },
+        { label: 'Crisis Text Line', href: 'sms:741741', description: 'Text HOME to 741741' },
+      ]}"
+    >
+      <h3 class="civ-heading-md">How have you been feeling this week?</h3>
+      <civ-textarea label="Describe any concerns you'd like to share" name="concerns"></civ-textarea>
+      <div class="civ-mt-4">
+        <civ-button type="submit">Continue</civ-button>
+      </div>
+    </civ-form>
+  `,
+};
+
 export const GovernmentInquiryForm: Story = {
   name: 'Usage: Government Inquiry Form',
   render: () => html`

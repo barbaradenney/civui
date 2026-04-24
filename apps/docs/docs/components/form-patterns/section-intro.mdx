@@ -1,0 +1,96 @@
+---
+title: Section Intro
+sidebar_position: 12
+sidebar_label: Section Intro
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
+# Section Intro
+
+`<civ-section-intro>`
+
+Pre-section context panel displayed before a sensitive or complex form section. Sets expectations — *"the next questions ask about..."* — so users are not ambushed by difficult content.
+
+Use this at the top of a form step (or any section) that asks personal, clinical, or emotionally heavy questions. It's a presentational primitive: no form state, no validation, no events.
+
+## When to use it
+
+- Before a section asking about trauma, health conditions, bereavement, or service-connected events.
+- Before sections with unusual or bureaucratic phrasing that needs plain-language framing.
+- Before optional sections, to clarify *"you can skip this"* up front.
+
+Pair it with `civ-form-step` marked `sensitive` and with a `support-resources` footer on `civ-form` for a complete trauma-informed flow.
+
+## Examples
+
+### Default
+
+<StoryEmbed id="forms-patterns-section-intro--default" />
+
+### Sensitive (trauma-informed)
+
+<StoryEmbed id="forms-patterns-section-intro--sensitive" />
+
+### With list
+
+<StoryEmbed id="forms-patterns-section-intro--with-list" />
+
+### Neutral — body-only
+
+<StoryEmbed id="forms-patterns-section-intro--neutral-no-heading" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-patterns-section-intro--default)
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `heading` | `string` | `''` | Section heading text. Used as the accessible name via `aria-labelledby`. |
+| `heading-level` | `2` &#124; `3` &#124; `4` &#124; `5` &#124; `6` | `3` | Semantic heading level. |
+| `tone` | `'info'` &#124; `'sensitive'` &#124; `'neutral'` | `'info'` | Visual treatment. `sensitive` uses a softer palette suitable for trauma-informed sections. |
+
+## Accessibility
+
+- Renders a `role="region"` landmark.
+- When `heading` is set, the region is labelled via `aria-labelledby` pointing at the heading's generated ID.
+- When `heading` is empty, the region falls back to `aria-label="Section introduction"` (overridable via locale).
+- Body content is rendered in Light DOM so links, lists, and paragraphs are announced normally.
+
+## Usage
+
+```html
+<!-- Basic context panel -->
+<civ-section-intro heading="Before we continue">
+  <p>The next few questions ask about your service history.</p>
+</civ-section-intro>
+
+<!-- Trauma-informed section opener -->
+<civ-section-intro
+  heading="About your service-connected trauma"
+  tone="sensitive"
+>
+  <p>The next questions ask about events that may be difficult to remember.</p>
+  <p>You can skip any question, and your answers are saved as you go.</p>
+</civ-section-intro>
+
+<!-- Explaining what to have on hand -->
+<civ-section-intro heading="What you'll need" tone="info">
+  <p>To finish this section, have the following handy:</p>
+  <ul>
+    <li>The deceased person's Social Security number</li>
+    <li>Their date of birth and date of death</li>
+  </ul>
+</civ-section-intro>
+
+<!-- Body-only (no heading) for a short inline note -->
+<civ-section-intro tone="neutral">
+  <p>This section is optional. You can skip it and come back later.</p>
+</civ-section-intro>
+```
+
+## Related
+
+- `civ-form-step` — set `sensitive` to soften step entry and enable pause/resume.
+- `civ-form` — `support-resources` renders a persistent crisis/helpline footer.
+- `civ-yes-no`, `civ-radio-group` — `skip-label` adds a "Prefer not to answer" affordance.

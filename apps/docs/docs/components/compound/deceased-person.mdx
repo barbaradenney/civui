@@ -1,0 +1,178 @@
+---
+title: Deceased Person
+sidebar_position: 6
+sidebar_label: Deceased Person
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
+# Deceased Person
+
+`<civ-deceased-person>`
+
+Compound field for collecting information about a person who has died. Used on VA burial benefit (21P-530), SSA survivor benefit, probate, and similar forms.
+
+Labels use plain, non-clinical language — *"the person who died"* and *"date of death"* — rather than bureaucratic phrasing (*"decedent"*, *"DOD"*). Built to be used inside a `civ-form-step sensitive` with a `civ-section-intro` and `civ-form` `support-resources` footer.
+
+Composes `civ-name`, two `civ-memorable-date` fields, and a relationship `civ-select`.
+
+## Examples
+
+### Default
+
+<StoryEmbed id="forms-compound-deceased-person--default" />
+
+### For VA burial benefit (21P-530)
+
+<StoryEmbed id="forms-compound-deceased-person--for-va-burial-benefit" />
+
+### Prefilled
+
+<StoryEmbed id="forms-compound-deceased-person--prefilled" />
+
+### Without relationship
+
+<StoryEmbed id="forms-compound-deceased-person--without-relationship" />
+
+### With field errors
+
+<StoryEmbed id="forms-compound-deceased-person--with-field-errors" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-compound-deceased-person--default)
+
+## Shared Props
+
+All form components share these props: `name`, `value`, `hint`, `error`, `required`, `disabled`, `readonly`.
+
+## Component-Specific Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `legend` | `string` | `'About the person who died'` (localized) | Fieldset legend. |
+| `hide-relationship` | `boolean` | `false` | Hide the relationship select (useful when relationship is captured elsewhere). |
+| `name-error` | `string` | `''` | Error message for the name fields. |
+| `date-of-birth-error` | `string` | `''` | Error message for the date of birth field. |
+| `date-of-death-error` | `string` | `''` | Error message for the date of death field. |
+| `relationship-error` | `string` | `''` | Error message for the relationship select. |
+
+## Value Structure
+
+The component stores its value as a JSON string matching this shape:
+
+```typescript
+interface DeceasedPersonValue {
+  first: string;
+  middle: string;
+  last: string;
+  suffix: string;      // 'Jr.', 'Sr.', 'II', 'III', 'IV'
+  dateOfBirth: string; // ISO date (YYYY-MM-DD)
+  dateOfDeath: string; // ISO date (YYYY-MM-DD)
+  relationship: string; // 'spouse' | 'parent' | 'child' | 'sibling' | 'other'
+}
+```
+
+## Form Data
+
+The component submits as separate fields using the configured `name` as a prefix:
+
+- `{name}.first`, `{name}.middle`, `{name}.last`, `{name}.suffix`
+- `{name}.dateOfBirth`
+- `{name}.dateOfDeath`
+- `{name}.relationship`
+
+## Required Logic
+
+When `required` is set:
+
+- Name fields (first, last) are marked required.
+- Date of death is marked required.
+- Date of birth is **not** required by default — bereavement records often lack it.
+- Relationship is marked required (unless `hide-relationship` is set).
+
+## Programmatic API
+
+```js
+const el = document.querySelector('civ-deceased-person');
+
+// Read the structured value
+el.personValue;
+// { first: 'Jane', middle: '', last: 'Doe', suffix: '',
+//   dateOfBirth: '1950-06-15', dateOfDeath: '2024-03-08', relationship: 'spouse' }
+
+// Set the structured value (also updates the underlying `value` string)
+el.personValue = {
+  first: 'Jane', middle: '', last: 'Doe', suffix: '',
+  dateOfBirth: '1950-06-15', dateOfDeath: '2024-03-08',
+  relationship: 'spouse',
+};
+```
+
+## Events
+
+| Event | Detail | Description |
+|-------|--------|-------------|
+| `civ-input` | `{ value: DeceasedPersonValue }` | Fires on every field change. |
+| `civ-change` | `{ value: DeceasedPersonValue }` | Fires on committed field change. |
+
+## Usage
+
+```html
+<!-- VA burial benefit, required -->
+<civ-deceased-person
+  legend="About the Veteran who died"
+  name="veteran"
+  hint="We'll use this information to confirm their eligibility for burial benefits."
+  required
+></civ-deceased-person>
+
+<!-- Survivor claim where relationship is captured upstream -->
+<civ-deceased-person
+  legend="About your spouse"
+  name="spouse"
+  hide-relationship
+  required
+></civ-deceased-person>
+
+<!-- Field-level errors from server-side validation -->
+<civ-deceased-person
+  legend="About the person who died"
+  name="deceased"
+  name-error="Enter a first and last name"
+  date-of-death-error="Enter the date of death"
+  required
+></civ-deceased-person>
+```
+
+## Trauma-informed patterns
+
+This component is intentionally bundled with other sensitive-flow primitives. A typical bereavement section looks like:
+
+```html
+<civ-form
+  .supportResources="${[
+    { label: 'VA Bereavement Counseling', href: 'tel:202-461-6530', description: 'Mon–Fri, 8am–8pm ET' },
+  ]}"
+>
+  <civ-form-step sensitive show-pause>
+    <div data-step-label="About the person who died">
+      <civ-section-intro heading="About the Veteran who died" tone="sensitive">
+        <p>These questions ask about the person you're applying on behalf of.</p>
+        <p>You can pause and come back any time.</p>
+      </civ-section-intro>
+
+      <civ-deceased-person
+        legend="Their information"
+        name="veteran"
+        required
+      ></civ-deceased-person>
+    </div>
+  </civ-form-step>
+</civ-form>
+```
+
+## Related
+
+- `civ-name` — sub-component used for the name fields.
+- `civ-memorable-date` — sub-component used for dates of birth and death.
+- `civ-section-intro` — context panel for trauma-informed sections.
+- `civ-form-step` — `sensitive` attribute softens entry and enables pause/resume.

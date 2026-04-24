@@ -26,11 +26,14 @@ For architecture and internals, see `CLAUDE.md` in the repo root.
 | `<civ-memorable-date>` | Date | `legend`, `monthLabel`, `dayLabel`, `yearLabel`, `locale` | `{ value, month, day, year }` |
 | `<civ-date-input>` | Date | `min`, `max` | `{ value }` — **DEPRECATED** |
 | `<civ-file-upload>` | File | `accept`, `multiple`, `maxSize`, `maxFiles` | `{ files: File[] }` |
-| `<civ-yes-no>` | Choice | `legend`, `yesLabel`, `noLabel`, `unsureLabel`, `unsureValue` | `{ value }` |
+| `<civ-yes-no>` | Choice | `legend`, `yesLabel`, `noLabel`, `unsureLabel`, `unsureValue`, `skipLabel`, `skipValue` | `{ value }` |
 | `<civ-conditional>` | Layout | `when`, `eq`, `neq` | — |
 | `<civ-progress-steps>` | Navigation | `steps`, `current`, `legend` | — |
 | `<civ-fieldset>` | Layout | `legend`, `hint`, `error`, `required`, `disabled` | — |
-| `<civ-form>` | Layout | `action`, `method` | `civ-submit: { formData }`, `civ-invalid: { errors }` |
+| `<civ-form>` | Layout | `action`, `method`, `supportResources` | `civ-submit: { formData }`, `civ-invalid: { errors }` |
+| `<civ-form-step>` | Layout | `persist`, `sensitive`, `showPause` | `civ-step-change`, `civ-step-pause`, `civ-step-complete` |
+| `<civ-section-intro>` | Layout | `heading`, `headingLevel`, `tone` | — |
+| `<civ-deceased-person>` | Compound | `legend`, `hideRelationship` | `{ value: DeceasedPersonValue }` |
 
 **All form-participating components** also have: `label`, `name`, `value`, `hint`, `error`, `required`, `disabled`, `requiredMessage`.
 
@@ -215,8 +218,10 @@ Mutually exclusive choice group. `civ-radio` is always used inside `civ-radio-gr
 - `legend` — group label
 - `tile` — apply tile variant to all children
 - `orientation` — `'vertical'` (default) | `'horizontal'`
+- `skipLabel` — when non-empty, renders a "Prefer not to answer" button below the group. See [Trauma-informed patterns](#trauma-informed-patterns).
+- `skipValue` — form value when the skip affordance is selected (default: `'skip'`).
 
-**Event detail:** `{ value: string }` — the selected radio's value.
+**Event detail:** `{ value: string }` — the selected radio's value, or `skipValue` if the skip affordance was used.
 
 **Keyboard:** Arrow keys navigate (RTL-aware), Home/End jump to first/last. Roving tabindex.
 
@@ -400,13 +405,15 @@ Structural grouping wrapper. Not a form-participating element.
 
 Form validation coordinator. Renders error summary, handles submit/reset.
 
-**Props:** `action`, `method` (`'get'` | `'post'`)
+**Props:** `action`, `method` (`'get'` | `'post'`), `persist`, `prefill`, `prefillSrc`, `trackDirty`, `supportResources`, `supportResourcesHeading`
 
 **Events:**
 - `civ-submit` — `{ formData: Record<string, string> }` (valid submission)
 - `civ-invalid` — `{ errors: FormFieldError[] }` (validation failed; each error has `name`, `message`, `element`)
 
 **Methods:** `validate()`, `clearErrors()`, `getFormData()`
+
+**`supportResources`** — Array of `{ label, href, description? }` for a persistent non-modal footer region (crisis lines, helplines). URL scheme allowlist: `http`, `https`, `tel`, `mailto`, `sms`, same-origin paths and hashes. See [Trauma-informed patterns](#trauma-informed-patterns).
 
 **Example:**
 ```html
@@ -596,10 +603,12 @@ Yes/no radio group — common in government eligibility forms. Supports an optio
 **Props (beyond standard):**
 - `legend` — group label
 - `yesLabel` / `noLabel` — customize option labels (defaults: `'Yes'` / `'No'`)
-- `unsureLabel` — when non-empty, renders a third button with this label
+- `unsureLabel` — when non-empty, renders a third button with this label (semantic: *uncertainty* — "I don't know")
 - `unsureValue` — form value for the third option (default: `'unsure'`)
+- `skipLabel` — when non-empty, renders a "Prefer not to answer" link-button below the yes/no row (semantic: *opting out*, distinct from uncertainty)
+- `skipValue` — form value when skip is selected (default: `'skip'`)
 
-**Event detail:** `{ value: string }` — `'yes'`, `'no'`, or the `unsureValue`
+**Event detail:** `{ value: string }` — `'yes'`, `'no'`, `unsureValue`, or `skipValue`
 
 **Examples:**
 ```html
@@ -644,6 +653,58 @@ Conditionally shows its children based on another field's value. Not form-partic
 <civ-conditional when="veteran" eq="yes">
   <civ-text-input label="Service branch" name="branch" required></civ-text-input>
 </civ-conditional>
+```
+
+---
+
+### civ-section-intro
+
+Pre-section context panel. Sets expectations before a sensitive or complex form section. Presentational only — no form state, no validation. See [Trauma-informed patterns](#trauma-informed-patterns).
+
+**Props:**
+- `heading` — section heading (required for accessible labelling)
+- `headingLevel` — `2` | `3` | `4` | `5` | `6` (default `3`)
+- `tone` — `'info'` | `'sensitive'` | `'neutral'` (default `'info'`)
+
+**Example:**
+```html
+<civ-section-intro heading="About your service-connected trauma" tone="sensitive">
+  <p>The next questions ask about events that may be difficult to remember.</p>
+  <p>You can skip any question, and your answers are saved as you go.</p>
+</civ-section-intro>
+```
+
+---
+
+### civ-deceased-person
+
+Compound field for information about a person who has died. Plain-language labels ("the person who died", not "decedent"). Used on VA burial (21P-530), SSA survivor benefits, probate. Composes `civ-name`, two `civ-memorable-date`, and a relationship `civ-select`.
+
+**Props (beyond standard):**
+- `legend` — default: `'About the person who died'` (localized)
+- `hideRelationship` — hide the relationship select when captured elsewhere
+- `nameError`, `dateOfBirthError`, `dateOfDeathError`, `relationshipError` — per-field errors
+
+**Value type:**
+```typescript
+interface DeceasedPersonValue {
+  first: string; middle: string; last: string; suffix: string;
+  dateOfBirth: string; // ISO date
+  dateOfDeath: string; // ISO date
+  relationship: string; // 'spouse' | 'parent' | 'child' | 'sibling' | 'other'
+}
+```
+
+**Event detail:** `{ value: DeceasedPersonValue }` on `civ-input` and `civ-change`.
+
+**Example:**
+```html
+<civ-deceased-person
+  legend="About the Veteran who died"
+  name="veteran"
+  hint="We'll use this information to confirm their eligibility for burial benefits."
+  required
+></civ-deceased-person>
 ```
 
 ---
@@ -1006,6 +1067,87 @@ Most components support label customization for i18n:
   next-month-label="Mes siguiente"
 ></civ-date-picker>
 ```
+
+---
+
+## Trauma-informed patterns
+
+Government forms routinely ask emotionally difficult questions — bereavement dates, service-connected trauma, substance use, health history. CivUI provides opt-in primitives so teams can build trauma-informed flows without reinventing them per form.
+
+**Core idea:** pair a context panel with a sensitive step wrapper, give users a way to opt out of individual questions, and keep support resources visible across the flow.
+
+### When to reach for which primitive
+
+| Pattern | Primitive | Use when |
+|---------|-----------|----------|
+| Set expectations before a hard section | `civ-section-intro tone="sensitive"` | Opening a section that asks personal/clinical/bereavement questions |
+| Soften step entry + enable pause | `civ-form-step` with `sensitive` attribute | A whole step covers emotionally heavy material |
+| Let users save progress mid-flow | `civ-form-step` with `show-pause` (or `sensitive` auto-enables it) | Users may need to walk away and come back |
+| Let users opt out of a single question | `civ-radio-group` / `civ-yes-no` with `skip-label` | The question is answerable but personally invasive (demographics, crisis screening) |
+| Keep crisis resources visible | `civ-form` with `supportResources` | Form touches mental health, self-harm risk, domestic situations |
+| Compound field for bereavement | `civ-deceased-person` | VA burial, SSA survivor benefits, probate |
+
+### civ-form-step: `sensitive` + `show-pause`
+
+- `sensitive` — marks the step as emotionally sensitive. Reflects `data-sensitive` on the host. Emits a polite screen-reader notice on entry ("This section asks personal questions. Your answers are saved as you go."). Auto-enables the pause action.
+- `show-pause` — renders a "Save and come back later" link next to the continue button. Fires `civ-step-pause` with `{ current, label }`. Pair with `persist` on `civ-form` or `civ-form-step` so sessionStorage keeps state across the pause.
+- `pause-label` — override the action label (default from locale).
+
+### civ-form: `supportResources`
+
+Renders a persistent non-modal `<aside>` footer that stays visible across steps. Each resource is `{ label, href, description? }`. Unsafe URL schemes (`javascript:`, `data:`, `vbscript:`) and protocol-relative URLs (`//evil.com`) are filtered out automatically.
+
+### "Prefer not to answer" — `skip-label` on radio-group / yes-no
+
+Rendered as a link-style button *outside* the radiogroup role so screen readers don't confuse it with a normal choice. Semantically distinct from `civ-yes-no`'s `unsureLabel`:
+- `unsureLabel` — "I don't know" (uncertainty about a valid answer).
+- `skipLabel` — "Prefer not to answer" (opting out of answering).
+
+Both can coexist on the same `civ-yes-no`.
+
+### Example: a complete sensitive step
+
+```html
+<civ-form
+  form-label="Survivor benefits application"
+  persist="ssa-survivor-benefits"
+  .supportResources="${[
+    { label: 'VA Bereavement Counseling', href: 'tel:202-461-6530', description: 'Mon–Fri, 8am–8pm ET' },
+    { label: '988 Suicide & Crisis Lifeline', href: 'tel:988', description: '24/7' },
+  ]}"
+>
+  <civ-form-step sensitive>
+    <div data-step-label="About the person who died">
+      <civ-section-intro heading="About your spouse" tone="sensitive">
+        <p>These questions help us determine the benefits you're eligible for.</p>
+        <p>You can skip any question and come back later.</p>
+      </civ-section-intro>
+
+      <civ-deceased-person
+        legend="Their information"
+        name="spouse"
+        required
+      ></civ-deceased-person>
+    </div>
+
+    <div data-step-label="Your relationship">
+      <civ-yes-no
+        legend="Were you legally married at the time of their death?"
+        name="married"
+        skip-label="Prefer not to answer"
+        required
+      ></civ-yes-no>
+    </div>
+  </civ-form-step>
+</civ-form>
+```
+
+### What not to do
+
+- Don't auto-submit a sensitive step on selection — users may want to revisit answers.
+- Don't make every section `sensitive` — it dilutes the signal and the pause affordance becomes noise.
+- Don't use `skip-label` to substitute for a proper "Not applicable" option when N/A is a *valid* domain answer; skip is specifically for *opting out of answering*.
+- Don't persist PII fields across sessions — `civ-form`'s persist auto-excludes `data-civ-pii` fields. If the sensitive section collects PII, verify the form doesn't leak it into sessionStorage via `persist`.
 
 ---
 

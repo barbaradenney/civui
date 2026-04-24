@@ -213,6 +213,24 @@ export const WithDescriptions: Story = {
   `,
 };
 
+// ── Trauma-informed: prefer-not-to-answer affordance ─────────
+
+export const WithPreferNotToAnswer: Story = {
+  name: 'With "Prefer not to answer" affordance',
+  render: () => html`
+    <civ-radio-group
+      legend="Do you identify as Hispanic or Latino?"
+      name="ethnicity"
+      skip-label="Prefer not to answer"
+      skip-value="prefer_not_to_say"
+      hint="This information is optional and used only for program reporting."
+    >
+      <civ-radio label="Yes" value="yes"></civ-radio>
+      <civ-radio label="No" value="no"></civ-radio>
+    </civ-radio-group>
+  `,
+};
+
 // ── Usage Example ─────────────────────────────────────────────
 
 export const GovernmentEligibilityForm: Story = {

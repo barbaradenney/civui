@@ -178,6 +178,19 @@ export const DensityScale: Story = {
 
 // ── Usage Example ─────────────────────────────────────────────
 
+export const WithPreferNotToAnswer: Story = {
+  name: 'With "Prefer not to answer" affordance',
+  render: () => html`
+    <civ-yes-no
+      legend="Are you currently experiencing thoughts of self-harm?"
+      name="selfHarm"
+      skip-label="Prefer not to answer"
+      skip-value="prefer_not_to_say"
+      hint="Your answer is confidential and used only to route you to appropriate support."
+    ></civ-yes-no>
+  `,
+};
+
 export const GovernmentEligibilityScreening: Story = {
   name: 'Usage: Eligibility Screening',
   render: () => html`

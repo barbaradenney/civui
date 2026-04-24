@@ -26,7 +26,7 @@ For architecture and internals, see `CLAUDE.md` in the repo root.
 | `<civ-memorable-date>` | Date | `legend`, `monthLabel`, `dayLabel`, `yearLabel`, `locale` | `{ value, month, day, year }` |
 | `<civ-date-input>` | Date | `min`, `max` | `{ value }` — **DEPRECATED** |
 | `<civ-file-upload>` | File | `accept`, `multiple`, `maxSize`, `maxFiles` | `{ files: File[] }` |
-| `<civ-yes-no>` | Choice | `legend`, `yesLabel`, `noLabel` | `{ value }` |
+| `<civ-yes-no>` | Choice | `legend`, `yesLabel`, `noLabel`, `unsureLabel`, `unsureValue` | `{ value }` |
 | `<civ-conditional>` | Layout | `when`, `eq`, `neq` | — |
 | `<civ-progress-steps>` | Navigation | `steps`, `current`, `legend` | — |
 | `<civ-fieldset>` | Layout | `legend`, `hint`, `error`, `required`, `disabled` | — |
@@ -591,20 +591,39 @@ Task List Hub → Chapter Prefill Review → (Edit Steps if needed) → Save & C
 
 ### civ-yes-no
 
-Binary yes/no radio group — common in government eligibility forms.
+Yes/no radio group — common in government eligibility forms. Supports an optional third option for "unsure" or "not applicable" answers.
 
 **Props (beyond standard):**
 - `legend` — group label
 - `yesLabel` / `noLabel` — customize option labels (defaults: `'Yes'` / `'No'`)
+- `unsureLabel` — when non-empty, renders a third button with this label
+- `unsureValue` — form value for the third option (default: `'unsure'`)
 
-**Event detail:** `{ value: string }` — `'yes'` or `'no'`
+**Event detail:** `{ value: string }` — `'yes'`, `'no'`, or the `unsureValue`
 
-**Example:**
+**Examples:**
 ```html
+<!-- Standard yes/no -->
 <civ-yes-no
   legend="Are you a United States citizen?"
   name="citizen"
   required
+></civ-yes-no>
+
+<!-- With third option -->
+<civ-yes-no
+  legend="Do you have a service-connected disability?"
+  name="disability"
+  unsure-label="I'm not sure"
+  required
+></civ-yes-no>
+
+<!-- Custom third option value -->
+<civ-yes-no
+  legend="Does this apply to your household?"
+  name="applies"
+  unsure-label="Does not apply"
+  unsure-value="n/a"
 ></civ-yes-no>
 ```
 

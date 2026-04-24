@@ -215,4 +215,85 @@ describe('civ-yes-no', () => {
     expect(buttons[0].getAttribute('aria-checked')).toBe('true');
     expect(buttons[1].getAttribute('aria-checked')).toBe('false');
   });
+
+  // ── Third option (unsure) ────────────────────────────────────
+
+  it('renders only 2 buttons by default (no unsure-label)', async () => {
+    const el = await fixture('<civ-yes-no legend="Question"></civ-yes-no>');
+
+    const buttons = el.querySelectorAll('button[role="radio"]');
+    expect(buttons.length).toBe(2);
+  });
+
+  it('renders 3 buttons when unsure-label is set', async () => {
+    const el = await fixture('<civ-yes-no legend="Question" unsure-label="I\'m not sure"></civ-yes-no>');
+
+    const buttons = el.querySelectorAll('button[role="radio"]');
+    expect(buttons.length).toBe(3);
+    expect(buttons[2].textContent).toBe("I'm not sure");
+  });
+
+  it('selects unsure value on third button click', async () => {
+    const el = await fixture('<civ-yes-no legend="Question" unsure-label="Unsure"></civ-yes-no>') as any;
+
+    const buttons = el.querySelectorAll('button[role="radio"]');
+    (buttons[2] as HTMLButtonElement).click();
+    await elementUpdated(el);
+
+    expect(el.value).toBe('unsure');
+    expect(buttons[2].getAttribute('aria-checked')).toBe('true');
+    expect(buttons[0].getAttribute('aria-checked')).toBe('false');
+    expect(buttons[1].getAttribute('aria-checked')).toBe('false');
+  });
+
+  it('uses custom unsure-value when set', async () => {
+    const el = await fixture('<civ-yes-no legend="Question" unsure-label="N/A" unsure-value="n/a"></civ-yes-no>') as any;
+
+    const buttons = el.querySelectorAll('button[role="radio"]');
+    (buttons[2] as HTMLButtonElement).click();
+    await elementUpdated(el);
+
+    expect(el.value).toBe('n/a');
+  });
+
+  it('fires civ-change with unsure value', async () => {
+    const el = await fixture('<civ-yes-no legend="Question" unsure-label="Unsure"></civ-yes-no>');
+
+    const handler = vi.fn();
+    el.addEventListener('civ-change', handler as EventListener);
+
+    const buttons = el.querySelectorAll('button[role="radio"]');
+    (buttons[2] as HTMLButtonElement).click();
+
+    expect(handler).toHaveBeenCalledOnce();
+    expect(handler.mock.calls[0][0].detail).toEqual({ value: 'unsure' });
+  });
+
+  it('navigates through 3 options with arrow keys', async () => {
+    const el = await fixture('<civ-yes-no legend="Question" value="yes" unsure-label="Unsure"></civ-yes-no>') as any;
+    await elementUpdated(el);
+
+    const buttons = el.querySelectorAll('button[role="radio"]') as NodeListOf<HTMLButtonElement>;
+    buttons[0].focus();
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
+    await elementUpdated(el);
+    expect(el.value).toBe('no');
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
+    await elementUpdated(el);
+    expect(el.value).toBe('unsure');
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true }));
+    await elementUpdated(el);
+    expect(el.value).toBe('no');
+  });
+
+  it('applies civ-btn--yesno class to third button', async () => {
+    const el = await fixture('<civ-yes-no legend="Question" unsure-label="Unsure"></civ-yes-no>');
+
+    const buttons = el.querySelectorAll('button[role="radio"]');
+    expect(buttons[2].className).toContain('civ-btn--yesno');
+    expect(buttons[2].className).toContain('focus-visible:civ-focus-ring');
+  });
 });

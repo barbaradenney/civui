@@ -50,6 +50,12 @@ public struct CivYesNo: View {
     /// Custom label for the "No" button.
     public var noLabel: String
 
+    /// Optional label for a third button. When non-empty, a third option is rendered.
+    public var unsureLabel: String
+
+    /// Form value for the third option (default: "unsure").
+    public var unsureValue: String
+
     /// Called on value change (parallels `civ-change` event).
     public var onChange: ((String) -> Void)?
 
@@ -87,6 +93,8 @@ public struct CivYesNo: View {
         isReadonly: Bool = false,
         yesLabel: String = "Yes",
         noLabel: String = "No",
+        unsureLabel: String = "",
+        unsureValue: String = "unsure",
         onChange: ((String) -> Void)? = nil,
         onAnalytics: ((String, [String: Any]?) -> Void)? = nil,
         formState: CivFormState? = nil,
@@ -104,6 +112,8 @@ public struct CivYesNo: View {
         self.isReadonly = isReadonly
         self.yesLabel = yesLabel
         self.noLabel = noLabel
+        self.unsureLabel = unsureLabel
+        self.unsureValue = unsureValue
         self.onChange = onChange
         self.onAnalytics = onAnalytics
         self.formState = formState
@@ -147,6 +157,9 @@ public struct CivYesNo: View {
             HStack(spacing: CivTokens.Spacing._3) {
                 choiceButton(label: yesLabel, choiceValue: "yes")
                 choiceButton(label: noLabel, choiceValue: "no")
+                if !unsureLabel.isEmpty {
+                    choiceButton(label: unsureLabel, choiceValue: unsureValue)
+                }
             }
         }
         .padding(.bottom, CivTokens.Spacing._4)
@@ -276,6 +289,12 @@ struct CivYesNo_Previews: PreviewProvider {
                     CivYesNo(
                         legend: "Are you a veteran?",
                         value: $veteran
+                    )
+
+                    CivYesNo(
+                        legend: "Do you have a service-connected disability?",
+                        value: $citizen,
+                        unsureLabel: "I'm not sure"
                     )
 
                     CivYesNo(

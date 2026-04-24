@@ -66,6 +66,8 @@ fun CivYesNo(
     readonly: Boolean = false,
     yesLabel: String = "Yes",
     noLabel: String = "No",
+    unsureLabel: String = "",
+    unsureValue: String = "unsure",
     onChange: ((String) -> Unit)? = null,
     onAnalytics: ((event: String, data: Map<String, Any>?) -> Unit)? = null,
     name: String = "",
@@ -158,6 +160,22 @@ fun CivYesNo(
                     onAnalytics?.invoke("change", mapOf("value" to "no"))
                 },
             )
+
+            // Optional unsure button
+            if (unsureLabel.isNotEmpty()) {
+                ChoiceButton(
+                    label = unsureLabel,
+                    isSelected = value == unsureValue,
+                    primaryColor = primaryColor,
+                    whiteColor = whiteColor,
+                    enabled = !disabled && !readonly,
+                    onClick = {
+                        onValueChange(unsureValue)
+                        onChange?.invoke(unsureValue)
+                        onAnalytics?.invoke("change", mapOf("value" to unsureValue))
+                    },
+                )
+            }
         }
     }
 }
@@ -236,6 +254,14 @@ private fun CivYesNoPreview() {
             legend = "Are you a veteran?",
             value = veteran,
             onValueChange = { veteran = it },
+        )
+
+        var disability by remember { mutableStateOf("") }
+        CivYesNo(
+            legend = "Do you have a service-connected disability?",
+            value = disability,
+            onValueChange = { disability = it },
+            unsureLabel = "I'm not sure",
         )
 
         CivYesNo(

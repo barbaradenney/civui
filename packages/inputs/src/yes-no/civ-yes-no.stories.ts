@@ -10,11 +10,13 @@ const meta: Meta = {
   argTypes: {
     legend: { control: 'text' },
     name: { control: 'text' },
-    value: { control: 'select', options: ['', 'yes', 'no'] },
+    value: { control: 'select', options: ['', 'yes', 'no', 'unsure'] },
     hint: { control: 'text' },
     error: { control: 'text' },
     yesLabel: { control: 'text' },
     noLabel: { control: 'text' },
+    unsureLabel: { control: 'text' },
+    unsureValue: { control: 'text' },
     required: { control: 'boolean' },
     disabled: { control: 'boolean' },
   },
@@ -112,6 +114,30 @@ export const CustomLabels: Story = {
   `,
 };
 
+export const WithUnsureOption: Story = {
+  name: 'With Unsure Option',
+  render: () => html`
+    <civ-yes-no
+      legend="Do you have a service-connected disability?"
+      name="disability"
+      unsure-label="I'm not sure"
+      hint="This includes any injury or illness incurred during military service"
+    ></civ-yes-no>
+  `,
+};
+
+export const CustomThirdOption: Story = {
+  name: 'Custom Third Option',
+  render: () => html`
+    <civ-yes-no
+      legend="Does this condition apply to your household?"
+      name="condition"
+      unsure-label="Does not apply"
+      unsure-value="n/a"
+    ></civ-yes-no>
+  `,
+};
+
 // ── All States ────────────────────────────────────────────────
 
 export const AllStates: Story = {
@@ -123,6 +149,7 @@ export const AllStates: Story = {
       <civ-yes-no legend="With error" name="error" error="Select an answer" required></civ-yes-no>
       <civ-yes-no legend="Required" name="required" required></civ-yes-no>
       <civ-yes-no legend="Disabled" name="disabled" value="yes" disabled></civ-yes-no>
+      <civ-yes-no legend="With unsure option" name="unsure" unsure-label="I'm not sure"></civ-yes-no>
     </div>
   `,
 };

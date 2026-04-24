@@ -17,9 +17,11 @@ import { CivFormElement, dispatch, renderLegend, renderHint, renderError, buildD
  * @prop {boolean} required - Whether a selection is required
  * @prop {boolean} disabled - Disables both buttons
  * @prop {boolean} readonly - Makes the control read-only
- * @prop {string} value - Currently selected value ('yes' | 'no' | '')
+ * @prop {string} value - Currently selected value ('yes' | 'no' | unsureValue | '')
  * @prop {string} yesLabel - Label for the Yes button (default: 'Yes')
  * @prop {string} noLabel - Label for the No button (default: 'No')
+ * @prop {string} unsureLabel - Label for an optional third button. When non-empty, a third option is rendered.
+ * @prop {string} unsureValue - Form value for the third option (default: 'unsure')
  *
  * @fires civ-input - When the selected value changes, detail: { value }
  * @fires civ-change - When the selected value changes, detail: { value }
@@ -31,9 +33,18 @@ export class CivYesNo extends CivFormElement {
   @property({ type: String }) legend = '';
   @property({ type: String, attribute: 'yes-label' }) yesLabel = 'Yes';
   @property({ type: String, attribute: 'no-label' }) noLabel = 'No';
+  @property({ type: String, attribute: 'unsure-label' }) unsureLabel = '';
+  @property({ type: String, attribute: 'unsure-value' }) unsureValue = 'unsure';
 
   protected override _defaultValue = '';
   private _boundOnKeydown = this._onKeydown.bind(this);
+
+  /** Ordered list of option values, dynamically includes the third option. */
+  private get _options(): string[] {
+    const opts = ['yes', 'no'];
+    if (this.unsureLabel) opts.push(this.unsureValue);
+    return opts;
+  }
 
   override connectedCallback(): void {
     super.connectedCallback();
@@ -88,12 +99,24 @@ export class CivYesNo extends CivFormElement {
             ?aria-readonly="${this.readonly}"
             @click="${() => this._select('no')}"
           >${this.noLabel}</button>
+          ${this.unsureLabel ? html`
+            <button
+              type="button"
+              role="radio"
+              aria-checked="${this.value === this.unsureValue ? 'true' : 'false'}"
+              tabindex="${this.value === this.unsureValue ? 0 : -1}"
+              class="${btnClasses}"
+              ?disabled="${this.disabled}"
+              ?aria-readonly="${this.readonly}"
+              @click="${() => this._select(this.unsureValue)}"
+            >${this.unsureLabel}</button>
+          ` : nothing}
         </div>
       </fieldset>
     `;
   }
 
-  private _select(val: 'yes' | 'no'): void {
+  private _select(val: string): void {
     if (this.disabled || this.readonly) return;
     if (this.value === val) return;
 
@@ -107,18 +130,17 @@ export class CivYesNo extends CivFormElement {
   private _onKeydown(e: KeyboardEvent): void {
     if (this.disabled || this.readonly) return;
 
-    const options: ('yes' | 'no')[] = ['yes', 'no'];
-    const currentIndex = this.value ? options.indexOf(this.value as 'yes' | 'no') : 0;
+    const options = this._options;
+    const currentIndex = this.value ? options.indexOf(this.value) : 0;
 
     if (e.key === ' ' || e.key === 'Enter') {
       e.preventDefault();
       const target = e.target as HTMLElement;
       if (target.getAttribute('role') === 'radio') {
-        const val = target.getAttribute('aria-checked') !== 'true'
-          ? (options[target === this._getButtons()[0] ? 0 : 1])
-          : undefined;
-        if (val !== undefined) {
-          this._select(val);
+        const buttons = this._getButtons();
+        const btnIndex = buttons.indexOf(target as HTMLButtonElement);
+        if (btnIndex >= 0 && target.getAttribute('aria-checked') !== 'true') {
+          this._select(options[btnIndex]);
         }
       }
       return;
@@ -132,7 +154,8 @@ export class CivYesNo extends CivFormElement {
       this._select(val);
       const buttons = this._getButtons();
       buttons[nextIndex]?.focus();
-      this.announce(nextIndex === 0 ? this.yesLabel : this.noLabel);
+      const labels = [this.yesLabel, this.noLabel, ...(this.unsureLabel ? [this.unsureLabel] : [])];
+      this.announce(labels[nextIndex]);
     }
   }
 

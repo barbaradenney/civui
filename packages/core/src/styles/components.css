@@ -1385,6 +1385,17 @@
     @apply civ-bg-error-dark civ-text-white civ-border-error-dark;
   }
 
+  /* Full-width buttons on mobile. Action buttons (toolbar/inline) are
+     intentionally excluded. */
+  @media (max-width: 480px) {
+    civ-button {
+      display: block;
+    }
+    .civ-btn {
+      width: 100%;
+    }
+  }
+
   /* ── Action Button (compact) ──────────────────────────────── */
 
   .civ-action-btn {
@@ -1413,8 +1424,9 @@
   }
 
   .civ-action-btn--tertiary {
-    @apply civ-text-primary civ-border-base-light;
+    @apply civ-border-base-light;
     background-color: var(--civ-color-base-lightest);
+    color: var(--civ-color-base-DEFAULT);
   }
   .civ-action-btn--tertiary:hover:not(:disabled) {
     background-color: var(--civ-color-base-lighter);

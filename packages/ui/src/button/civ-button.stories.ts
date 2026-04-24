@@ -161,6 +161,29 @@ export const DensityScale: Story = {
   `,
 };
 
+export const MobileFullWidth: Story = {
+  name: 'Mobile (Full Width)',
+  parameters: {
+    viewport: { defaultViewport: 'mobile1' },
+    docs: {
+      description: {
+        story:
+          'Below 480px, civ-button stretches to the full width of its container so primary form actions are easy to tap. Action buttons (civ-action-button) are intentionally excluded — toolbars and inline controls stay compact.',
+      },
+    },
+  },
+  render: () => html`
+    <form @submit="${(e: Event) => e.preventDefault()}">
+      <p class="civ-mb-4">Complete your application and submit for review.</p>
+      <div class="civ-flex civ-flex-col civ-gap-3">
+        <civ-button type="submit">Submit application</civ-button>
+        <civ-button variant="secondary">Save and continue later</civ-button>
+        <civ-button variant="tertiary">Cancel</civ-button>
+      </div>
+    </form>
+  `,
+};
+
 export const FormActions: Story = {
   name: 'Form Actions',
   render: () => html`

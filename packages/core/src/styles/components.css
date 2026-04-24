@@ -75,6 +75,28 @@
     color: var(--civ-color-base-darkest);
   }
 
+  /* Secondary headings — regular weight for supporting context */
+
+  .civ-heading-xl-secondary {
+    @apply civ-text-2xl civ-font-regular civ-mb-6;
+    color: var(--civ-color-base-darkest);
+  }
+
+  .civ-heading-lg-secondary {
+    @apply civ-text-xl civ-font-regular civ-mb-4;
+    color: var(--civ-color-base-darkest);
+  }
+
+  .civ-heading-md-secondary {
+    @apply civ-text-lg civ-font-regular civ-mb-3;
+    color: var(--civ-color-base-darkest);
+  }
+
+  .civ-heading-sm-secondary {
+    @apply civ-text-base civ-font-regular civ-mb-2;
+    color: var(--civ-color-base-darkest);
+  }
+
   .civ-required-mark {
     @apply civ-text-error civ-font-normal civ-ms-0;
   }

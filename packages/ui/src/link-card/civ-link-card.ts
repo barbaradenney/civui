@@ -27,6 +27,8 @@ const UNSAFE_HREF_PATTERN = /^\s*javascript\s*:/i;
  * @prop {string} description - Descriptive text below the heading
  * @prop {LinkCardVariant} variant - Visual variant
  * @prop {string} spacing - Padding size: 'default' or 'sm'
+ * @prop {string} iconStart - Icon name to render before the heading
+ * @prop {string} iconEnd - Icon name to render after the heading
  *
  * @fires civ-analytics - Analytics tracking event on click
  *
@@ -56,6 +58,12 @@ export class CivLinkCard extends CivBaseElement {
   /** Padding size: 'default' or 'sm' for compact layouts. */
   @property({ type: String }) spacing: 'default' | 'sm' = 'default';
 
+  /** Icon name to render before the heading. */
+  @property({ type: String, attribute: 'icon-start' }) iconStart = '';
+
+  /** Icon name to render after the heading. */
+  @property({ type: String, attribute: 'icon-end' }) iconEnd = '';
+
   /** Return sanitized href, stripping dangerous protocols. */
   private get _safeHref(): string {
     if (UNSAFE_HREF_PATTERN.test(this.href)) return '';
@@ -76,7 +84,11 @@ export class CivLinkCard extends CivBaseElement {
         class="${classes}"
         @click="${this._onClick}"
       >
-        <span class="civ-link-card__heading">${this.heading}</span>
+        <span class="civ-link-card__heading">
+          ${this.iconStart ? html`<civ-icon name="${this.iconStart}" aria-hidden="true"></civ-icon>` : nothing}
+          ${this.heading}
+          ${this.iconEnd ? html`<civ-icon name="${this.iconEnd}" aria-hidden="true"></civ-icon>` : nothing}
+        </span>
         ${this.description
           ? html`<span class="civ-link-card__description">${this.description}</span>`
           : nothing}

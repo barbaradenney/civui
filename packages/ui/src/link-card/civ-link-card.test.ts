@@ -16,7 +16,7 @@ describe('civ-link-card', () => {
     const el = await fixture('<civ-link-card href="/test" heading="Benefits"></civ-link-card>');
     const heading = el.querySelector('.civ-link-card__heading');
     expect(heading).not.toBeNull();
-    expect(heading!.textContent).toBe('Benefits');
+    expect(heading!.textContent!.trim()).toBe('Benefits');
   });
 
   it('renders description when provided', async () => {
@@ -76,7 +76,7 @@ describe('civ-link-card', () => {
     const el = await fixture('<civ-link-card href="/test"></civ-link-card>');
     const heading = el.querySelector('.civ-link-card__heading');
     expect(heading).not.toBeNull();
-    expect(heading!.textContent).toBe('');
+    expect(heading!.textContent!.trim()).toBe('');
   });
 
   it('uses Light DOM', async () => {
@@ -100,5 +100,25 @@ describe('civ-link-card', () => {
     const el = await fixture('<civ-link-card href="javascript:alert(1)" heading="XSS"></civ-link-card>');
     const link = el.querySelector('a')!;
     expect(link.getAttribute('href')).not.toContain('javascript:');
+  });
+
+  it('renders icon-start before heading text', async () => {
+    const el = await fixture('<civ-link-card href="/test" heading="Benefits" icon-start="check-circle"></civ-link-card>');
+    const icon = el.querySelector('civ-icon');
+    expect(icon).not.toBeNull();
+    expect(icon!.getAttribute('name')).toBe('check-circle');
+    expect(icon!.getAttribute('aria-hidden')).toBe('true');
+  });
+
+  it('renders icon-end after heading text', async () => {
+    const el = await fixture('<civ-link-card href="/test" heading="Details" icon-end="chevron-right"></civ-link-card>');
+    const icon = el.querySelector('civ-icon');
+    expect(icon).not.toBeNull();
+    expect(icon!.getAttribute('name')).toBe('chevron-right');
+  });
+
+  it('does not render icons when not set', async () => {
+    const el = await fixture('<civ-link-card href="/test" heading="Title"></civ-link-card>');
+    expect(el.querySelector('civ-icon')).toBeNull();
   });
 });

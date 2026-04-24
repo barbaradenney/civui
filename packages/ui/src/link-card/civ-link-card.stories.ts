@@ -227,6 +227,41 @@ export const DashboardGrid: Story = {
   `,
 };
 
+export const WithIcons: Story = {
+  name: 'With Icons',
+  render: () => html`
+    <div class="civ-flex civ-flex-col civ-gap-4 civ-max-w-lg">
+      <civ-link-card
+        href="#/benefits"
+        heading="Disability compensation"
+        description="File a claim for a service-connected disability."
+        icon-start="check-circle"
+      ></civ-link-card>
+      <civ-link-card
+        href="#/education"
+        heading="Education benefits"
+        description="Apply for GI Bill and other education programs."
+        icon-start="document"
+      ></civ-link-card>
+      <civ-link-card
+        href="#/details"
+        heading="View full details"
+        description="See your complete application history."
+        icon-end="chevron-right"
+        variant="secondary"
+      ></civ-link-card>
+      <civ-link-card
+        href="#/download"
+        heading="Download documents"
+        description="Get copies of your VA letters."
+        icon-start="download"
+        icon-end="chevron-right"
+        variant="tertiary"
+      ></civ-link-card>
+    </div>
+  `,
+};
+
 export const Compact: Story = {
   name: 'Compact',
   render: () => html`

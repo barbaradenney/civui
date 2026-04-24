@@ -1,6 +1,7 @@
 node_modules/
 dist/
 .turbo/
+.build/
 *.tsbuildinfo
 
 # Root config build artifacts (Tailwind reads .ts natively)

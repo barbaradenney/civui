@@ -5,7 +5,7 @@ import '../read-only-field/civ-read-only-field.js';
 import '@civui/inputs';
 import '@civui/compound';
 import '../form-step/civ-form-step.js';
-import '../prefill-notice/civ-prefill-notice.js';
+import '@civui/feedback';
 import '@civui/navigation';
 import '@civui/ui/link';
 import '@civui/ui/button';
@@ -100,7 +100,7 @@ export const Step2a_LockedChapter: Story = {
 
       <h2 class="civ-heading-xl civ-mt-3 civ-mb-4">Personal information</h2>
 
-      <civ-prefill-notice></civ-prefill-notice>
+      <civ-alert variant="info" alert-style="secondary" heading="We've prefilled some of your information" label="We pulled this information from your account. If any of this is wrong, you can correct it here."></civ-alert>
 
       <civ-summary id="locked-chapter"></civ-summary>
 
@@ -145,7 +145,7 @@ export const Step2b_PrefillWithMoreSteps: Story = {
 
       <h2 class="civ-heading-xl civ-mt-3 civ-mb-4">Contact information</h2>
 
-      <civ-prefill-notice></civ-prefill-notice>
+      <civ-alert variant="info" alert-style="secondary" heading="We've prefilled some of your information" label="We pulled this information from your account. If any of this is wrong, you can correct it here."></civ-alert>
 
       <civ-summary id="prefill-chapter"></civ-summary>
 

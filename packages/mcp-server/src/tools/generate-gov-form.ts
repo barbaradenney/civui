@@ -278,7 +278,7 @@ ${fieldHtml}
 
   <!-- Prefill review (hidden by default, shown by runtime JS when prefill data exists) -->
   <div data-prefill-review hidden data-chapter-fields="${fieldNames.join(',')}">
-    <civ-prefill-notice></civ-prefill-notice>
+    <civ-alert variant="info" alert-style="secondary" heading="We've prefilled some of your information" label="We pulled this information from your account. If any of this is wrong, you can correct it here."></civ-alert>
     <civ-summary data-prefill-summary></civ-summary>
     <p class="civ-mt-4">If this information is accurate, press continue to fill out the rest of the form.</p>
     <div class="civ-mt-4">

@@ -23,7 +23,7 @@ Task List Hub → Chapter Review → (Edit Steps if needed) → Save & Complete 
 ```
 
 1. **Hub** -- The task list shows chapters with status tags. Prefilled chapters show a hint and a "Review" status tag.
-2. **Chapter review** -- Clicking into a prefilled chapter shows a summary of prefilled data with edit links. A `<civ-prefill-notice>` banner explains where the data came from.
+2. **Chapter review** -- Clicking into a prefilled chapter shows a summary of prefilled data with edit links. A `<civ-alert>` banner explains where the data came from.
 3. **Edit** -- Clicking "Edit" on a row opens the form fields for that data.
 4. **Complete** -- After reviewing, "Save and complete" marks the chapter done and returns to the hub.
 
@@ -122,22 +122,20 @@ When `locked: true` is set on a prefill field:
 - The field is set to `disabled` and gets a `data-civ-prefill-locked` attribute
 - The user cannot edit it in the form
 - The edit link on the summary page points to profile settings instead
-- The `<civ-summary>` section renders "Update your profile" instead of "Edit"
+- The `<civ-summary>` section renders "Edit" for locked fields
 
-## `civ-prefill-notice`
+## Prefill banner
 
-Display an informational banner on chapter review pages to explain where the data came from:
+Use a standard `<civ-alert>` to explain where prefilled data came from:
 
 ```html
-<civ-prefill-notice profile-href="/profile"></civ-prefill-notice>
+<civ-alert
+  variant="info"
+  alert-style="secondary"
+  heading="We've prefilled some of your information"
+  label="We pulled this information from your account. If any of this is wrong, you can correct it here."
+></civ-alert>
 ```
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `heading` | `string` | i18n default | Custom heading text |
-| `body` | `string` | i18n default | Custom body text |
-| `profile-href` | `string` | `''` | URL for the "update profile" link |
-| `link-text` | `string` | i18n default | Custom link text |
 
 ## Full integration example
 
@@ -157,7 +155,7 @@ Display an informational banner on chapter review pages to explain where the dat
 </civ-task-list>
 
 <!-- Chapter review page -->
-<civ-prefill-notice profile-href="/profile"></civ-prefill-notice>
+<civ-alert variant="info" alert-style="secondary" heading="We've prefilled some of your information" label="We pulled this information from your account. If any of this is wrong, you can correct it here."></civ-alert>
 
 <civ-summary id="chapter-summary" heading="Personal information"></civ-summary>
 

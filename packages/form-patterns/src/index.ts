@@ -24,9 +24,6 @@ export type { SummarySection, SummaryItem } from './summary/index.js';
 // Read-Only Field
 export { CivReadOnlyField } from './read-only-field/index.js';
 
-// Prefill Notice
-export { CivPrefillNotice } from './prefill-notice/index.js';
-
 // Progress Steps
 export { CivProgressSteps, CivProgressBar } from './progress-steps/index.js';
 

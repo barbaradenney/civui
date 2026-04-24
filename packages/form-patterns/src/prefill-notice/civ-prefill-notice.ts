@@ -45,10 +45,8 @@ export class CivPrefillNotice extends CivBaseElement {
 
     return html`
       <div class="civ-prefill-notice civ-alert civ-alert--info civ-alert--style-secondary" role="status">
-        <div class="civ-alert__header">
-          <h3 class="civ-alert__heading">${headingText}</h3>
-        </div>
         <div class="civ-alert__content">
+          <p class="civ-alert__heading">${headingText}</p>
           <div class="civ-alert__body">
             ${bodyText}
             ${safeHref ? html`

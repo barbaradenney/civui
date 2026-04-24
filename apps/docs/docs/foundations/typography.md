@@ -58,14 +58,18 @@ Regular weight for supporting context, sub-sections, or form step descriptions.
 
 ## Body text
 
-| Class | Description |
-|-------|-------------|
-| `.civ-text-body` | Default body text (16px, dark color) |
-| `.civ-text-muted` | Secondary text (16px, lighter color) |
+| Class | Size | Color | Use for |
+|-------|------|-------|---------|
+| `.civ-text-body` | 16px | `base-darkest` | Default paragraph text |
+| `.civ-text-muted` | 16px | `base` | Secondary or de-emphasized text |
+| `.civ-text-caption` | 14px | `base-dark` | Field hints, footnotes, supplementary context |
+| `.civ-text-small` | 12px | `base-dark` | Legal disclaimers, fine print, timestamps |
 
 ```html
 <p class="civ-text-body">Your application has been submitted.</p>
 <p class="civ-text-muted">You will receive a confirmation email within 24 hours.</p>
+<p class="civ-text-caption">Last updated: April 24, 2026</p>
+<p class="civ-text-small">OMB Control No. 2900-0747 | Estimated burden: 25 minutes</p>
 ```
 
 ## Font sizes

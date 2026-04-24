@@ -35,6 +35,16 @@
     color: var(--civ-color-base-DEFAULT);
   }
 
+  .civ-text-caption {
+    font-size: var(--civ-typography-fontSize-sm);
+    color: var(--civ-color-base-dark);
+  }
+
+  .civ-text-small {
+    font-size: var(--civ-typography-fontSize-xs);
+    color: var(--civ-color-base-dark);
+  }
+
   /* ── Field width constraints ──────────────────────────────── */
 
   .civ-field-width-xs {

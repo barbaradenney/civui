@@ -94,22 +94,20 @@ export class CivDirectDeposit extends CivFormElement {
           <civ-radio label="${t('directDepositSavings')}" value="savings"></civ-radio>
         </civ-radio-group>
 
-        <div class="civ-field-width-md">
-          <civ-text-input
-            label="${t('directDepositRouting')}"
-            name="${this.name ? `${this.name}.routingNumber` : ''}"
-            value="${this._deposit.routingNumber}"
-            hint="${t('directDepositRoutingHint')}"
-            error="${this.routingError}"
-            inputmode="numeric"
-            maxlength="9"
-            ?required="${this.required}"
-            ?disabled="${this.disabled}"
-            ?readonly="${this.readonly}"
-            @civ-input="${(e: CustomEvent) => this._onSubInput('routingNumber', e)}"
-            @civ-change="${(e: CustomEvent) => this._onSubChange('routingNumber', e)}"
-          ></civ-text-input>
-        </div>
+        <civ-text-input
+          label="${t('directDepositRouting')}"
+          name="${this.name ? `${this.name}.routingNumber` : ''}"
+          value="${this._deposit.routingNumber}"
+          hint="${t('directDepositRoutingHint')}"
+          error="${this.routingError}"
+          inputmode="numeric"
+          maxlength="9"
+          ?required="${this.required}"
+          ?disabled="${this.disabled}"
+          ?readonly="${this.readonly}"
+          @civ-input="${(e: CustomEvent) => this._onSubInput('routingNumber', e)}"
+          @civ-change="${(e: CustomEvent) => this._onSubChange('routingNumber', e)}"
+        ></civ-text-input>
 
         <civ-text-input
           label="${t('directDepositAccount')}"

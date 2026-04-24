@@ -36,6 +36,24 @@ export class CivYesNo extends CivFormElement {
   @property({ type: String, attribute: 'unsure-label' }) unsureLabel = '';
   @property({ type: String, attribute: 'unsure-value' }) unsureValue = 'unsure';
 
+  /**
+   * When non-empty, renders a "Prefer not to answer" affordance below the
+   * main Yes/No row. Distinct from `unsureLabel` which expresses uncertainty
+   * — `skipLabel` expresses opting out. Sets `value` to `skipValue` and fires
+   * civ-input / civ-change. Kept outside the radiogroup so it isn't confused
+   * with a normal choice.
+   */
+  @property({ type: String, attribute: 'skip-label' }) skipLabel = '';
+
+  /** Form value used when the skip affordance is selected. */
+  @property({ type: String, attribute: 'skip-value' }) skipValue = 'skip';
+
+  /**
+   * Legend ID — used only when `skipLabel` is set, to labelled-by the inner
+   * radiogroup div (the fieldset-legend pairing doesn't cross that role move).
+   */
+  private _legendId = this.generateId('yes-no-legend');
+
   protected override _defaultValue = '';
   private _boundOnKeydown = this._onKeydown.bind(this);
 
@@ -69,16 +87,27 @@ export class CivYesNo extends CivFormElement {
     return html`
       <fieldset
         class="civ-fieldset"
-        role="radiogroup"
-        aria-describedby="${describedBy || nothing}"
-        aria-invalid="${this.error ? 'true' : nothing}"
-        aria-required="${this.required || nothing}"
+        role="${this.skipLabel ? nothing : 'radiogroup'}"
+        aria-describedby="${this.skipLabel ? nothing : (describedBy || nothing)}"
+        aria-invalid="${this.skipLabel ? nothing : (this.error ? 'true' : nothing)}"
+        aria-required="${this.skipLabel ? nothing : (this.required || nothing)}"
         ?disabled="${this.disabled}"
       >
-        ${renderLegend({ legend: this.legend, required: this.required })}
+        ${renderLegend({
+          legend: this.legend,
+          required: this.required,
+          legendId: this.skipLabel ? this._legendId : undefined,
+        })}
         ${renderHint(this._hintId, this.hint, true)}
         ${renderError(this._errorId, this.error, true)}
-        <div class="civ-flex civ-gap-2" role="presentation">
+        <div
+          class="civ-flex civ-gap-2"
+          role="${this.skipLabel ? 'radiogroup' : 'presentation'}"
+          aria-labelledby="${this.skipLabel && this.legend ? this._legendId : nothing}"
+          aria-describedby="${this.skipLabel ? (describedBy || nothing) : nothing}"
+          aria-invalid="${this.skipLabel && this.error ? 'true' : nothing}"
+          aria-required="${this.skipLabel && this.required ? 'true' : nothing}"
+        >
           <button
             type="button"
             role="radio"
@@ -112,8 +141,30 @@ export class CivYesNo extends CivFormElement {
             >${this.unsureLabel}</button>
           ` : nothing}
         </div>
+        ${this.skipLabel
+          ? html`
+              <button
+                type="button"
+                class="civ-yes-no__skip civ-btn--link focus-visible:civ-focus-ring"
+                aria-pressed="${this.value === this.skipValue ? 'true' : 'false'}"
+                data-civ-skip
+                ?disabled="${this.disabled}"
+                @click="${() => this._selectSkip()}"
+              >${this.skipLabel}</button>
+            `
+          : nothing}
       </fieldset>
     `;
+  }
+
+  private _selectSkip(): void {
+    if (this.disabled || this.readonly) return;
+    if (this.value === this.skipValue) return;
+    this.value = this.skipValue;
+    this.updateFormValue(this.value);
+    dispatch(this, 'civ-input', { value: this.value });
+    dispatch(this, 'civ-change', { value: this.value });
+    this.sendAnalytics('change', { skipped: true });
   }
 
   private _select(val: string): void {
@@ -130,18 +181,21 @@ export class CivYesNo extends CivFormElement {
   private _onKeydown(e: KeyboardEvent): void {
     if (this.disabled || this.readonly) return;
 
+    const target = e.target as HTMLElement;
+    const isRadioTarget = target.getAttribute('role') === 'radio';
+
     const options = this._options;
     const currentIndex = this.value ? options.indexOf(this.value) : 0;
 
     if (e.key === ' ' || e.key === 'Enter') {
+      // Only preempt native button activation when the target is a radio —
+      // lets the skip affordance keep its default space/enter click behavior.
+      if (!isRadioTarget) return;
       e.preventDefault();
-      const target = e.target as HTMLElement;
-      if (target.getAttribute('role') === 'radio') {
-        const buttons = this._getButtons();
-        const btnIndex = buttons.indexOf(target as HTMLButtonElement);
-        if (btnIndex >= 0 && target.getAttribute('aria-checked') !== 'true') {
-          this._select(options[btnIndex]);
-        }
+      const buttons = this._getButtons();
+      const btnIndex = buttons.indexOf(target as HTMLButtonElement);
+      if (btnIndex >= 0 && target.getAttribute('aria-checked') !== 'true') {
+        this._select(options[btnIndex]);
       }
       return;
     }

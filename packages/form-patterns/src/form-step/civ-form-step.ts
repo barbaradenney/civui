@@ -19,11 +19,16 @@ import type { SlotConfig } from '@civui/core';
  * @prop {string} continueLabel - Label for continue button
  * @prop {string} completeLabel - Label for final step button
  * @prop {boolean} validate - Enable built-in required field validation (default: true)
+ * @prop {boolean} sensitive - Marks the step as emotionally sensitive. Softens screen reader
+ *   announcements and makes pause/resume available by default.
+ * @prop {boolean} showPause - Renders a "Save and come back later" secondary action
+ * @prop {string} pauseLabel - Override the pause action label
  *
  * @fires civ-step-change - When the step changes, detail: { current, total, label }
  * @fires civ-step-back - When back is clicked, detail: { from, to }
  * @fires civ-step-continue - When continue is clicked, detail: { from, to }
  * @fires civ-step-complete - When the last step is completed and validated, detail: { total }
+ * @fires civ-step-pause - When the user chooses to save and resume later, detail: { current, label }
  *
  * @example
  * ```html
@@ -54,7 +59,22 @@ export class CivFormStep extends LightDomSlotMixin(CivBaseElement) {
   /** Enable built-in required field validation before advancing. */
   @property({ type: Boolean }) validate = true;
 
+  /**
+   * Marks the step as emotionally sensitive. Softens screen-reader
+   * announcements on entry and enables pause/resume by default.
+   * Also sets `data-sensitive` on the host so consumers can style accordingly.
+   */
+  @property({ type: Boolean, reflect: true }) sensitive = false;
+
+  /** Render a "Save and come back later" secondary action. */
+  @property({ type: Boolean, attribute: 'show-pause' }) showPause = false;
+
+  /** Override the pause action label. */
+  @property({ type: String, attribute: 'pause-label' }) pauseLabel = '';
+
   @state() private _current = 0;
+  /** Tracks whether a sensitive-notice announcement has already been made. */
+  private _sensitiveNoticeAnnounced = false;
 
   override _getSlotConfig(): SlotConfig {
     return { default: '[data-civ-form-step-content]' };
@@ -85,6 +105,18 @@ export class CivFormStep extends LightDomSlotMixin(CivBaseElement) {
   override firstUpdated(): void {
     this._relocateSlots();
     this._showStep(0);
+    this._maybeAnnounceSensitiveNotice();
+  }
+
+  /**
+   * Announce the sensitive-step notice at a polite priority the first time
+   * a user enters the step. Designed not to interrupt — it queues behind
+   * the default step-change announcement.
+   */
+  private _maybeAnnounceSensitiveNotice(): void {
+    if (!this.sensitive || this._sensitiveNoticeAnnounced) return;
+    this._sensitiveNoticeAnnounced = true;
+    announce(t('formStepSensitiveNotice'), 'polite');
   }
 
   private _renderContent() {
@@ -116,7 +148,7 @@ export class CivFormStep extends LightDomSlotMixin(CivBaseElement) {
 
         <div data-civ-form-step-content></div>
 
-        <div class="civ-mt-6">
+        <div class="civ-mt-6 civ-flex civ-flex-wrap civ-items-center civ-gap-4">
           <civ-button
             label="${isLast
               ? (this.completeLabel || t('formStepSave'))
@@ -124,9 +156,24 @@ export class CivFormStep extends LightDomSlotMixin(CivBaseElement) {
             ?disabled="${this.navDisabled}"
             @click="${this._onContinue}"
           ></civ-button>
+          ${this._shouldShowPause
+            ? html`
+                <civ-link
+                  variant="tertiary"
+                  label="${this.pauseLabel || t('formStepPauseLabel')}"
+                  data-civ-step-pause
+                  @click="${this._onPause}"
+                ></civ-link>
+              `
+            : nothing}
         </div>
       </div>
     `;
+  }
+
+  /** Pause action shows when explicitly requested or on sensitive steps. */
+  private get _shouldShowPause(): boolean {
+    return this.showPause || this.sensitive;
   }
 
   override render() {
@@ -231,6 +278,14 @@ export class CivFormStep extends LightDomSlotMixin(CivBaseElement) {
     const to = this._current - 1;
     dispatch(this, 'civ-step-back', { from: this._current, to });
     this.goToStep(to);
+  }
+
+  private _onPause(e: Event): void {
+    e.preventDefault();
+    dispatch(this, 'civ-step-pause', {
+      current: this._current,
+      label: this.currentLabel,
+    });
   }
 
   private _onContinue(): void {

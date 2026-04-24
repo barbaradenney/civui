@@ -38,6 +38,25 @@ export class CivRadioGroup extends LightDomSlotMixin(CivFormElement) {
   @property({ type: Boolean, reflect: true }) tile = false;
   @property({ type: String, reflect: true }) orientation: 'vertical' | 'horizontal' = 'vertical';
 
+  /**
+   * When non-empty, renders a "Prefer not to answer" affordance below the
+   * radio group. Selecting it sets `value` to `skipValue` (default: `'skip'`)
+   * and fires the same civ-input / civ-change events as a radio selection.
+   * Kept outside the roving tabindex so it isn't confused with a normal choice.
+   */
+  @property({ type: String, attribute: 'skip-label' }) skipLabel = '';
+
+  /** Form value used when the skip affordance is selected. */
+  @property({ type: String, attribute: 'skip-value' }) skipValue = 'skip';
+
+  /**
+   * Legend ID — used only when `skipLabel` is set, to labelled-by the inner
+   * radiogroup div. With a fieldset-native radiogroup the legend provides
+   * the accessible name implicitly; once the role moves to a descendant,
+   * we need an explicit ARIA link.
+   */
+  private _legendId = this.generateId('radio-group-legend');
+
   protected override _defaultValue = '';
   private _boundOnChildChange = this._onChildChange.bind(this);
   private _boundStopChildInput = stopChildEvent(this);
@@ -123,19 +142,61 @@ export class CivRadioGroup extends LightDomSlotMixin(CivFormElement) {
     return html`
       <fieldset
         class="civ-fieldset"
-        role="radiogroup"
-        aria-orientation="${this.orientation}"
-        aria-describedby="${this._ariaDescribedBy || nothing}"
-        aria-invalid="${this.error ? 'true' : nothing}"
-        aria-required="${this.required || nothing}"
+        role="${this.skipLabel ? nothing : 'radiogroup'}"
+        aria-orientation="${this.skipLabel ? nothing : this.orientation}"
+        aria-describedby="${this.skipLabel ? nothing : (this._ariaDescribedBy || nothing)}"
+        aria-invalid="${this.skipLabel ? nothing : (this.error ? 'true' : nothing)}"
+        aria-required="${this.skipLabel ? nothing : (this.required || nothing)}"
         ?disabled="${this.disabled}"
       >
-        ${renderLegend({ legend: this.legend, required: this.required })}
+        ${renderLegend({
+          legend: this.legend,
+          required: this.required,
+          legendId: this.skipLabel ? this._legendId : undefined,
+        })}
         ${renderHint(this._hintId, this.hint, true)}
         ${renderError(this._errorId, this.error, true)}
-        <div class="${layoutClass}"></div>
+        <div
+          class="${layoutClass}"
+          role="${this.skipLabel ? 'radiogroup' : nothing}"
+          aria-labelledby="${this.skipLabel && this.legend ? this._legendId : nothing}"
+          aria-orientation="${this.skipLabel ? this.orientation : nothing}"
+          aria-describedby="${this.skipLabel ? (this._ariaDescribedBy || nothing) : nothing}"
+          aria-invalid="${this.skipLabel && this.error ? 'true' : nothing}"
+          aria-required="${this.skipLabel && this.required ? 'true' : nothing}"
+        ></div>
+        ${this.skipLabel
+          ? html`
+              <button
+                type="button"
+                class="civ-radio-group__skip civ-btn--link focus-visible:civ-focus-ring"
+                aria-pressed="${this.value === this.skipValue ? 'true' : 'false'}"
+                data-civ-skip
+                ?disabled="${this.disabled}"
+                @click="${this._onSkipClick}"
+              >${this.skipLabel}</button>
+            `
+          : nothing}
       </fieldset>
     `;
+  }
+
+  private _onSkipClick(): void {
+    if (this.disabled) return;
+    if (this.value === this.skipValue) return;
+
+    // Uncheck any currently checked radio
+    const radios = this._getRadios();
+    radios.forEach((r) => {
+      r.checked = false;
+    });
+    this._syncTabindex(radios);
+
+    this.value = this.skipValue;
+    this.updateFormValue(this.value);
+    dispatch(this, 'civ-input', { value: this.value });
+    dispatch(this, 'civ-change', { value: this.value });
+    this.sendAnalytics('change', { skipped: true });
   }
 
   private _getRadios(): CivRadio[] {

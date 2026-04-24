@@ -14,6 +14,19 @@ export interface FormFieldError {
 }
 
 /**
+ * A persistent support resource displayed in the form footer for
+ * trauma-informed / sensitive flows (crisis lines, caregiver support,
+ * benefit help desks, etc.). Rendered as a non-modal region that
+ * stays visible across form steps.
+ */
+export interface SupportResource {
+  label: string;
+  href: string;
+  /** Short descriptor shown after the link (e.g., "24/7"). */
+  description?: string;
+}
+
+/**
  * Duck-typed interface for CivUI form fields discovered via
  * `[data-civ-form-field]`. Avoids importing concrete component
  * classes while providing type safety for form operations.
@@ -100,6 +113,34 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
 
   /** Custom headers for prefill-src fetch (e.g., auth tokens). Set via JS. */
   @property({ type: Object, attribute: false }) prefillHeaders: Record<string, string> = {};
+
+  /**
+   * Persistent support resources rendered as a non-modal footer region.
+   * Used for trauma-informed flows where crisis lines, caregiver support,
+   * or benefit help desks should remain visible across every step.
+   *
+   * Can be supplied as either:
+   * - a JSON-string attribute: `support-resources='[{"label":"988 Suicide & Crisis Lifeline","href":"tel:988"}]'`
+   * - a JS property containing a `SupportResource[]`
+   */
+  @property({
+    attribute: 'support-resources',
+    converter: {
+      fromAttribute: (val: string | null): SupportResource[] => {
+        if (!val) return [];
+        try {
+          const parsed = JSON.parse(val);
+          return Array.isArray(parsed) ? parsed : [];
+        } catch {
+          return [];
+        }
+      },
+    },
+  })
+  supportResources: SupportResource[] = [];
+
+  /** Override the support resources heading. Defaults to `t('supportResourcesHeading')`. */
+  @property({ type: String, attribute: 'support-resources-heading' }) supportResourcesHeading = '';
 
   @state() private _errors: FormFieldError[] = [];
   @state() private _dirty = false;
@@ -217,7 +258,52 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
           `
         : nothing}
       <div data-civ-form-content></div>
+      ${this.supportResources.length > 0
+        ? html`
+            <aside
+              class="civ-form-support-resources"
+              aria-label="${this.supportResourcesHeading || t('supportResourcesHeading')}"
+              data-civ-support-resources
+            >
+              <p class="civ-form-support-resources__heading">
+                ${this.supportResourcesHeading || t('supportResourcesHeading')}
+              </p>
+              <ul class="civ-list-none civ-p-0 civ-m-0">
+                ${this.supportResources
+                  .filter((r) => r && r.label && this._isSafeHref(r.href))
+                  .map(
+                    (r) => html`
+                      <li class="civ-mb-1">
+                        <a href="${r.href}" class="civ-link civ-underline">${r.label}</a>
+                        ${r.description
+                          ? html`<span class="civ-text-muted civ-ms-2">${r.description}</span>`
+                          : nothing}
+                      </li>
+                    `,
+                  )}
+              </ul>
+            </aside>
+          `
+        : nothing}
     `;
+  }
+
+  /** Only allow safe URL schemes for support-resource links. */
+  private _isSafeHref(href: string): boolean {
+    if (!href) return false;
+    const trimmed = href.trim().toLowerCase();
+    // Reject protocol-relative URLs (//evil.com) — they resolve to external origins
+    // despite starting with a forward slash.
+    if (trimmed.startsWith('//')) return false;
+    return (
+      trimmed.startsWith('http:') ||
+      trimmed.startsWith('https:') ||
+      trimmed.startsWith('tel:') ||
+      trimmed.startsWith('mailto:') ||
+      trimmed.startsWith('sms:') ||
+      trimmed.startsWith('/') ||
+      trimmed.startsWith('#')
+    );
   }
 
   /**

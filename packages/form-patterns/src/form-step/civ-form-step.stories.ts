@@ -164,6 +164,40 @@ export const DensityScale: Story = {
   `,
 };
 
+// ── Trauma-informed: sensitive step + pause/resume ────────────
+
+export const Sensitive: Story = {
+  name: 'Sensitive step (trauma-informed)',
+  render: () => html`
+    <civ-form-step sensitive>
+      <div data-step-label="Your service history">
+        <h3 class="civ-heading-md">About your service-connected trauma</h3>
+        <p>These questions may be hard to answer. Your answers are saved as you go — you can pause and come back any time.</p>
+        <civ-textarea label="Briefly describe the event" name="event" hint="You can come back and add detail later"></civ-textarea>
+      </div>
+    </civ-form-step>
+  `,
+};
+
+export const WithPauseAndResume: Story = {
+  name: 'With pause / save-for-later',
+  render: () => html`
+    <civ-form-step
+      show-pause
+      @civ-step-pause="${(e: CustomEvent) => alert('Paused at step: ' + e.detail.label)}"
+    >
+      <div data-step-label="Medical history">
+        <h3 class="civ-heading-md">Medical history</h3>
+        <civ-textarea label="Any conditions we should know about?" name="conditions"></civ-textarea>
+      </div>
+      <div data-step-label="Current medications">
+        <h3 class="civ-heading-md">Current medications</h3>
+        <civ-textarea label="List any medications you take" name="meds"></civ-textarea>
+      </div>
+    </civ-form-step>
+  `,
+};
+
 // ── Usage Example ─────────────────────────────────────────────
 
 export const GovernmentBenefitApplication: Story = {

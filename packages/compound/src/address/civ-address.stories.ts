@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import './civ-address.js';
+import '@civui/inputs';
+import '@civui/controls';
 
 const meta: Meta = {
   title: 'Forms/Compound/Address',

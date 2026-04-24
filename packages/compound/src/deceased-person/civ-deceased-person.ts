@@ -136,8 +136,8 @@ export class CivDeceasedPerson extends CivFormElement {
           ?required="${this.required}"
           ?disabled="${this.disabled}"
           ?readonly="${this.readonly}"
-          @civ-input="${this._onNameInput}"
-          @civ-change="${this._onNameChange}"
+          @civ-input="${(e: CustomEvent) => this._onNameInput(e)}"
+          @civ-change="${(e: CustomEvent) => this._onNameChange(e)}"
         ></civ-name>
 
         <civ-memorable-date
@@ -170,28 +170,28 @@ export class CivDeceasedPerson extends CivFormElement {
             ?required="${this.required}"
             ?disabled="${this.disabled}"
             data-deceased-relationship
-            @civ-change="${this._onRelationshipChange}"
+            @civ-change="${(e: CustomEvent) => this._onRelationshipChange(e)}"
           ></civ-select>
         `}
       </fieldset>
     `;
   }
 
-  private _onNameInput = (e: CustomEvent<{ value: { first: string; middle: string; last: string; suffix: string } }>): void => {
+  private _onNameInput(e: CustomEvent<{ value: { first: string; middle: string; last: string; suffix: string } }>): void {
     e.stopPropagation();
     const v = e.detail.value;
     this._person = { ...this._person, first: v.first, middle: v.middle, last: v.last, suffix: v.suffix };
     this.value = JSON.stringify(this._person);
     dispatch(this, 'civ-input', { value: { ...this._person } });
-  };
+  }
 
-  private _onNameChange = (e: CustomEvent<{ value: { first: string; middle: string; last: string; suffix: string } }>): void => {
+  private _onNameChange(e: CustomEvent<{ value: { first: string; middle: string; last: string; suffix: string } }>): void {
     e.stopPropagation();
     const v = e.detail.value;
     this._person = { ...this._person, first: v.first, middle: v.middle, last: v.last, suffix: v.suffix };
     this.value = JSON.stringify(this._person);
     dispatch(this, 'civ-change', { value: { ...this._person } });
-  };
+  }
 
   private _onDateInput(field: 'dateOfBirth' | 'dateOfDeath', e: CustomEvent<{ value: string }>): void {
     e.stopPropagation();
@@ -207,13 +207,13 @@ export class CivDeceasedPerson extends CivFormElement {
     dispatch(this, 'civ-change', { value: { ...this._person } });
   }
 
-  private _onRelationshipChange = (e: CustomEvent<{ value: string }>): void => {
+  private _onRelationshipChange(e: CustomEvent<{ value: string }>): void {
     e.stopPropagation();
     this._person = { ...this._person, relationship: e.detail.value };
     this.value = JSON.stringify(this._person);
     dispatch(this, 'civ-input', { value: { ...this._person } });
     dispatch(this, 'civ-change', { value: { ...this._person } });
-  };
+  }
 
   protected override _syncFormValue(): void {
     const fd = new FormData();

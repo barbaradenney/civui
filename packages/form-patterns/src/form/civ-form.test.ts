@@ -454,6 +454,36 @@ describe('civ-form support resources', () => {
     expect(links[0].textContent).toBe('OK');
   });
 
+  it('drops protocol-relative URLs (//evil.com)', async () => {
+    const el = await fixture(`
+      <civ-form support-resources='[{"label":"Phish","href":"//evil.com/pwn"},{"label":"Root","href":"/help"}]'>
+      </civ-form>
+    `) as any;
+    el.supportResources = [
+      { label: 'Phish', href: '//evil.com/pwn' },
+      { label: 'Whitespace phish', href: '   //evil.com/pwn' },
+      { label: 'Root', href: '/help' },
+    ];
+    await elementUpdated(el);
+
+    const links = el.querySelectorAll('[data-civ-support-resources] a');
+    expect(links.length).toBe(1);
+    expect(links[0].getAttribute('href')).toBe('/help');
+  });
+
+  it('drops data: and vbscript: hrefs', async () => {
+    const el = await fixture('<civ-form></civ-form>') as any;
+    el.supportResources = [
+      { label: 'Data', href: 'data:text/html,<script>alert(1)</script>' },
+      { label: 'VBS', href: 'vbscript:msgbox(1)' },
+      { label: 'OK', href: 'tel:988' },
+    ];
+    await elementUpdated(el);
+    const links = el.querySelectorAll('[data-civ-support-resources] a');
+    expect(links.length).toBe(1);
+    expect(links[0].getAttribute('href')).toBe('tel:988');
+  });
+
   it('does not render the footer when no resources are provided', async () => {
     const el = await fixture('<civ-form></civ-form>');
     await elementUpdated(el);

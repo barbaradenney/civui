@@ -348,5 +348,31 @@ describe('civ-yes-no', () => {
       await elementUpdated(el);
       expect(el.value).toBe('no');
     });
+
+    it('moves aria-describedby / aria-invalid / aria-required onto the inner radiogroup', async () => {
+      const el = await fixture(
+        '<civ-yes-no legend="Q" hint="Pick" error="err" required skip-label="Skip"></civ-yes-no>',
+      );
+      const fieldset = el.querySelector('fieldset')!;
+      expect(fieldset.getAttribute('aria-describedby')).toBeNull();
+      expect(fieldset.getAttribute('aria-invalid')).toBeNull();
+      expect(fieldset.getAttribute('aria-required')).toBeNull();
+
+      const inner = el.querySelector('[role="radiogroup"]')!;
+      expect(inner.getAttribute('aria-describedby')).toBeTruthy();
+      expect(inner.getAttribute('aria-invalid')).toBe('true');
+      expect(inner.getAttribute('aria-required')).toBe('true');
+    });
+
+    it('labels the inner radiogroup via aria-labelledby (not a redundant aria-label)', async () => {
+      const el = await fixture(
+        '<civ-yes-no legend="Did you serve?" skip-label="Skip"></civ-yes-no>',
+      );
+      const legend = el.querySelector('legend')!;
+      expect(legend.id).toBeTruthy();
+      const inner = el.querySelector('[role="radiogroup"]')!;
+      expect(inner.getAttribute('aria-labelledby')).toBe(legend.id);
+      expect(inner.getAttribute('aria-label')).toBeNull();
+    });
   });
 });

@@ -634,4 +634,45 @@ describe('civ-radio-group prefer-not-to-answer affordance', () => {
     expect(innerGroup).not.toBeNull();
     expect(innerGroup!.tagName.toLowerCase()).toBe('div');
   });
+
+  it('moves aria-describedby / aria-orientation / aria-invalid / aria-required with the role', async () => {
+    const el = await fixture(`
+      <civ-radio-group
+        legend="X"
+        name="x"
+        hint="Pick one"
+        error="Required"
+        orientation="horizontal"
+        required
+        skip-label="Prefer not to answer"
+      >
+        <civ-radio label="A" value="a"></civ-radio>
+      </civ-radio-group>
+    `);
+    const fieldset = el.querySelector('fieldset')!;
+    expect(fieldset.getAttribute('aria-describedby')).toBeNull();
+    expect(fieldset.getAttribute('aria-orientation')).toBeNull();
+    expect(fieldset.getAttribute('aria-invalid')).toBeNull();
+    expect(fieldset.getAttribute('aria-required')).toBeNull();
+
+    const innerGroup = el.querySelector('[role="radiogroup"]')!;
+    expect(innerGroup.getAttribute('aria-describedby')).toBeTruthy();
+    expect(innerGroup.getAttribute('aria-orientation')).toBe('horizontal');
+    expect(innerGroup.getAttribute('aria-invalid')).toBe('true');
+    expect(innerGroup.getAttribute('aria-required')).toBe('true');
+  });
+
+  it('labels the inner radiogroup via aria-labelledby pointing to the legend id', async () => {
+    const el = await fixture(`
+      <civ-radio-group legend="Color" name="x" skip-label="Prefer not to answer">
+        <civ-radio label="A" value="a"></civ-radio>
+      </civ-radio-group>
+    `);
+    const legend = el.querySelector('legend')!;
+    expect(legend.id).toBeTruthy();
+    const innerGroup = el.querySelector('[role="radiogroup"]')!;
+    expect(innerGroup.getAttribute('aria-labelledby')).toBe(legend.id);
+    // Redundant aria-label must NOT be present — legend already labels the group
+    expect(innerGroup.getAttribute('aria-label')).toBeNull();
+  });
 });

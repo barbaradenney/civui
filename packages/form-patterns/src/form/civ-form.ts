@@ -292,6 +292,9 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
   private _isSafeHref(href: string): boolean {
     if (!href) return false;
     const trimmed = href.trim().toLowerCase();
+    // Reject protocol-relative URLs (//evil.com) — they resolve to external origins
+    // despite starting with a forward slash.
+    if (trimmed.startsWith('//')) return false;
     return (
       trimmed.startsWith('http:') ||
       trimmed.startsWith('https:') ||

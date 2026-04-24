@@ -159,4 +159,19 @@ describe('civ-form-step', () => {
     `);
     expect(el.hasAttribute('sensitive')).toBe(true);
   });
+
+  it('fires civ-step-pause from sensitive step even without explicit show-pause', async () => {
+    const el = await fixture<CivFormStep>(`
+      <civ-form-step sensitive>
+        <div data-step-label="Trauma history"><p>c</p></div>
+      </civ-form-step>
+    `);
+    await elementUpdated(el);
+
+    let fired = false;
+    el.addEventListener('civ-step-pause', (() => { fired = true; }) as EventListener);
+    const pause = el.querySelector('[data-civ-step-pause]') as HTMLElement;
+    pause.click();
+    expect(fired).toBe(true);
+  });
 });

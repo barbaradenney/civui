@@ -49,6 +49,14 @@ export class CivRadioGroup extends LightDomSlotMixin(CivFormElement) {
   /** Form value used when the skip affordance is selected. */
   @property({ type: String, attribute: 'skip-value' }) skipValue = 'skip';
 
+  /**
+   * Legend ID — used only when `skipLabel` is set, to labelled-by the inner
+   * radiogroup div. With a fieldset-native radiogroup the legend provides
+   * the accessible name implicitly; once the role moves to a descendant,
+   * we need an explicit ARIA link.
+   */
+  private _legendId = this.generateId('radio-group-legend');
+
   protected override _defaultValue = '';
   private _boundOnChildChange = this._onChildChange.bind(this);
   private _boundStopChildInput = stopChildEvent(this);
@@ -135,19 +143,27 @@ export class CivRadioGroup extends LightDomSlotMixin(CivFormElement) {
       <fieldset
         class="civ-fieldset"
         role="${this.skipLabel ? nothing : 'radiogroup'}"
-        aria-orientation="${this.orientation}"
-        aria-describedby="${this._ariaDescribedBy || nothing}"
-        aria-invalid="${this.error ? 'true' : nothing}"
-        aria-required="${this.required || nothing}"
+        aria-orientation="${this.skipLabel ? nothing : this.orientation}"
+        aria-describedby="${this.skipLabel ? nothing : (this._ariaDescribedBy || nothing)}"
+        aria-invalid="${this.skipLabel ? nothing : (this.error ? 'true' : nothing)}"
+        aria-required="${this.skipLabel ? nothing : (this.required || nothing)}"
         ?disabled="${this.disabled}"
       >
-        ${renderLegend({ legend: this.legend, required: this.required })}
+        ${renderLegend({
+          legend: this.legend,
+          required: this.required,
+          legendId: this.skipLabel ? this._legendId : undefined,
+        })}
         ${renderHint(this._hintId, this.hint, true)}
         ${renderError(this._errorId, this.error, true)}
         <div
           class="${layoutClass}"
           role="${this.skipLabel ? 'radiogroup' : nothing}"
-          aria-label="${this.skipLabel && this.legend ? this.legend : nothing}"
+          aria-labelledby="${this.skipLabel && this.legend ? this._legendId : nothing}"
+          aria-orientation="${this.skipLabel ? this.orientation : nothing}"
+          aria-describedby="${this.skipLabel ? (this._ariaDescribedBy || nothing) : nothing}"
+          aria-invalid="${this.skipLabel && this.error ? 'true' : nothing}"
+          aria-required="${this.skipLabel && this.required ? 'true' : nothing}"
         ></div>
         ${this.skipLabel
           ? html`

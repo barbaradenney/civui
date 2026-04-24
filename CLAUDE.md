@@ -44,6 +44,20 @@ pnpm storybook     # Dev server on port 6006
 ### Light DOM Components
 All components render to Light DOM (no Shadow DOM). `createRenderRoot()` returns `this`. This means Tailwind classes work directly and there are no style encapsulation boundaries.
 
+### Cross-Package Component Imports
+When a component renders child components from another `@civui/*` package (e.g., `civ-address` renders `<civ-text-input>`), use **bare side-effect imports** to ensure custom elements are registered:
+
+```typescript
+// CORRECT — bare import, always preserved by bundlers
+import '@civui/inputs';
+import '@civui/controls';
+
+// WRONG — named imports can be tree-shaken, breaking child rendering
+import { CivTextInput } from '@civui/inputs';  // may get dropped!
+```
+
+An ESLint rule (`no-restricted-imports`) enforces this in component source files. Tests and stories are exempt.
+
 ### Form Components
 Form-participating components extend `CivFormElement` (which extends `CivBaseElement`):
 - `static formAssociated = true` enables ElementInternals

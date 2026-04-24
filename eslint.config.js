@@ -26,6 +26,23 @@ export default [
         { prefer: 'type-imports', fixStyle: 'inline-type-imports' },
       ],
 
+      // Prevent named imports from sibling @civui/* packages in component source.
+      // Web component registration is a side effect — named imports can be
+      // tree-shaken, silently breaking child component rendering.
+      // Use bare imports instead: `import '@civui/inputs'` (not `import { CivTextInput } from '@civui/inputs'`)
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['@civui/inputs', '@civui/controls', '@civui/compound', '@civui/ui', '@civui/ui/*', '@civui/feedback', '@civui/navigation', '@civui/form-patterns'],
+              importNamePattern: '^Civ',
+              message: 'Use bare side-effect imports for component registration: `import \'@civui/inputs\'` — named imports get tree-shaken.',
+            },
+          ],
+        },
+      ],
+
       // General quality rules
       'no-console': ['warn', { allow: ['warn', 'error'] }],
       eqeqeq: ['error', 'always', { null: 'ignore' }],
@@ -44,6 +61,7 @@ export default [
       ],
       '@typescript-eslint/consistent-type-imports': 'off',
       'no-console': 'off',
+      'no-restricted-imports': 'off',
     },
   },
   {
@@ -62,6 +80,14 @@ export default [
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
       'no-console': 'off',
+      'no-restricted-imports': 'off',
+    },
+  },
+  {
+    // MCP server and CLI tools use named imports for code generation
+    files: ['packages/mcp-server/src/**/*.ts', 'packages/codegen/src/**/*.ts'],
+    rules: {
+      'no-restricted-imports': 'off',
     },
   },
   {

@@ -1,7 +1,8 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { CivFormElement, dispatch, renderLegend, renderHint, renderError, buildDescribedBy, t } from '@civui/core';
-// text-input, select, checkbox registered at app level via @civui/inputs and @civui/controls
+import '@civui/inputs';
+import '@civui/controls';
 
 export interface AddressValue {
   country: string;

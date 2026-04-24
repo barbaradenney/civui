@@ -320,7 +320,7 @@ function renderContainer(el: RenderElement, schema: ComponentSchema, indent: str
 
   if (hasCheckbox) {
     return [
-      `${indent}<div class="civ-flex civ-items-start">`,
+      `${indent}<div class="civ-flex civ-items-center">`,
       ...childLines,
       `${indent}  <div>`,
       `${indent}    <label class="civ-check-label" for="\${this._inputId}">`,

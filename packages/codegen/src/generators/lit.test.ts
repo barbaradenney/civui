@@ -210,7 +210,7 @@ describe('Lit generator', () => {
 
     it('renders inline label (not renderLabel)', () => {
       expect(output).toContain('civ-check-label');
-      expect(output).toContain('civ-flex civ-items-start');
+      expect(output).toContain('civ-flex civ-items-center');
     });
 
     it('generates _ariaDescribedBy override for description', () => {

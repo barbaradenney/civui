@@ -56,7 +56,6 @@ public struct CivSectionIntro<Content: View>: View {
                         weight: CivTokens.Typography.FontWeight.semibold
                     ))
                     .accessibilityAddTraits(.isHeader)
-                    .accessibilityHeading(headingAccessibility)
             }
             content()
         }
@@ -65,17 +64,6 @@ public struct CivSectionIntro<Content: View>: View {
         .cornerRadius(CivTokens.Border.Radius.default_)
         .accessibilityElement(children: .contain)
         .accessibilityLabel(heading.isEmpty ? "Section introduction" : heading)
-    }
-
-    private var headingAccessibility: AccessibilityHeadingLevel {
-        switch headingLevel {
-        case 2: return .h2
-        case 3: return .h3
-        case 4: return .h4
-        case 5: return .h5
-        case 6: return .h6
-        default: return .h3
-        }
     }
 }
 

@@ -38,15 +38,6 @@ public struct DeceasedPersonValue: Equatable {
     }
 }
 
-private let RELATIONSHIP_OPTIONS: [(value: String, label: String)] = [
-    ("", "- Select -"),
-    ("spouse", "Spouse"),
-    ("parent", "Parent"),
-    ("child", "Child"),
-    ("sibling", "Sibling"),
-    ("other", "Other"),
-]
-
 public struct CivDeceasedPerson: View {
     @Binding public var value: DeceasedPersonValue
 
@@ -63,8 +54,6 @@ public struct CivDeceasedPerson: View {
     public var disabled: Bool
     public var readonly: Bool
 
-    public var onChange: ((DeceasedPersonValue) -> Void)?
-
     @Environment(\.colorScheme) private var colorScheme
 
     public init(
@@ -80,8 +69,7 @@ public struct CivDeceasedPerson: View {
         hideRelationship: Bool = false,
         required: Bool = false,
         disabled: Bool = false,
-        readonly: Bool = false,
-        onChange: ((DeceasedPersonValue) -> Void)? = nil
+        readonly: Bool = false
     ) {
         self._value = value
         self.legend = legend
@@ -96,13 +84,24 @@ public struct CivDeceasedPerson: View {
         self.required = required
         self.disabled = disabled
         self.readonly = readonly
-        self.onChange = onChange
+    }
+
+    private var errorColor: Color {
+        colorScheme == .dark
+            ? CivTokens.DarkColors.Error.default_
+            : CivTokens.Colors.Error.default_
+    }
+
+    private var hintColor: Color {
+        colorScheme == .dark
+            ? CivTokens.DarkColors.Base.dark
+            : CivTokens.Colors.Base.dark
     }
 
     public var body: some View {
         VStack(alignment: .leading, spacing: CivTokens.Spacing._4) {
             if !legend.isEmpty {
-                Text(legend + (required ? " (required)" : ""))
+                Text(required ? "\(legend) (required)" : legend)
                     .font(.system(
                         size: CivTokens.Typography.FontSize.lg,
                         weight: CivTokens.Typography.FontWeight.semibold
@@ -112,21 +111,12 @@ public struct CivDeceasedPerson: View {
             if !hint.isEmpty {
                 Text(hint)
                     .font(.system(size: CivTokens.Typography.FontSize.sm))
-                    .foregroundColor(
-                        colorScheme == .dark
-                            ? CivTokens.DarkColors.Base.dark
-                            : CivTokens.Colors.Base.dark
-                    )
+                    .foregroundColor(hintColor)
             }
             if !error.isEmpty {
                 Text(error)
                     .font(.system(size: CivTokens.Typography.FontSize.sm))
-                    .foregroundColor(
-                        colorScheme == .dark
-                            ? CivTokens.DarkColors.Error.default_
-                            : CivTokens.Colors.Error.default_
-                    )
-                    .accessibilityAddTraits(.isStaticText)
+                    .foregroundColor(errorColor)
             }
 
             VStack(alignment: .leading, spacing: CivTokens.Spacing._3) {
@@ -144,11 +134,7 @@ public struct CivDeceasedPerson: View {
                 if !nameError.isEmpty {
                     Text(nameError)
                         .font(.system(size: CivTokens.Typography.FontSize.sm))
-                        .foregroundColor(
-                            colorScheme == .dark
-                                ? CivTokens.DarkColors.Error.default_
-                                : CivTokens.Colors.Error.default_
-                        )
+                        .foregroundColor(errorColor)
                 }
             }
 
@@ -159,26 +145,18 @@ public struct CivDeceasedPerson: View {
                 if !dateOfBirthError.isEmpty {
                     Text(dateOfBirthError)
                         .font(.system(size: CivTokens.Typography.FontSize.sm))
-                        .foregroundColor(
-                            colorScheme == .dark
-                                ? CivTokens.DarkColors.Error.default_
-                                : CivTokens.Colors.Error.default_
-                        )
+                        .foregroundColor(errorColor)
                 }
             }
 
             VStack(alignment: .leading, spacing: CivTokens.Spacing._2) {
-                Text("Date of death" + (required ? " (required)" : ""))
+                Text(required ? "Date of death (required)" : "Date of death")
                 TextField("YYYY-MM-DD", text: $value.dateOfDeath)
                     .disabled(disabled)
                 if !dateOfDeathError.isEmpty {
                     Text(dateOfDeathError)
                         .font(.system(size: CivTokens.Typography.FontSize.sm))
-                        .foregroundColor(
-                            colorScheme == .dark
-                                ? CivTokens.DarkColors.Error.default_
-                                : CivTokens.Colors.Error.default_
-                        )
+                        .foregroundColor(errorColor)
                 }
             }
 
@@ -186,26 +164,22 @@ public struct CivDeceasedPerson: View {
                 VStack(alignment: .leading, spacing: CivTokens.Spacing._2) {
                     Text("Their relationship to you")
                     Picker("Relationship", selection: $value.relationship) {
-                        ForEach(RELATIONSHIP_OPTIONS, id: \.value) { option in
-                            Text(option.label).tag(option.value)
-                        }
+                        Text("- Select -").tag("")
+                        Text("Spouse").tag("spouse")
+                        Text("Parent").tag("parent")
+                        Text("Child").tag("child")
+                        Text("Sibling").tag("sibling")
+                        Text("Other").tag("other")
                     }
                     .pickerStyle(.menu)
                     .disabled(disabled)
                     if !relationshipError.isEmpty {
                         Text(relationshipError)
                             .font(.system(size: CivTokens.Typography.FontSize.sm))
-                            .foregroundColor(
-                                colorScheme == .dark
-                                    ? CivTokens.DarkColors.Error.default_
-                                    : CivTokens.Colors.Error.default_
-                            )
+                            .foregroundColor(errorColor)
                     }
                 }
             }
-        }
-        .onChange(of: value) { newValue in
-            onChange?(newValue)
         }
     }
 }

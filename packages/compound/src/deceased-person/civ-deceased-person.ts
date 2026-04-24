@@ -2,9 +2,7 @@ import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { CivFormElement, dispatch, renderLegend, renderHint, renderError, buildDescribedBy, t } from '@civui/core';
 import '../name/civ-name.js';
-// Side-effect imports: ensure primitives are registered when composing.
-import { CivMemorableDate as _MD, CivSelect as _S } from '@civui/inputs';
-void _MD; void _S;
+import '@civui/inputs';
 
 export interface DeceasedPersonValue {
   first: string;

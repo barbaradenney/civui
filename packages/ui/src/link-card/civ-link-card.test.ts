@@ -121,4 +121,24 @@ describe('civ-link-card', () => {
     const el = await fixture('<civ-link-card href="/test" heading="Title"></civ-link-card>');
     expect(el.querySelector('civ-icon')).toBeNull();
   });
+
+  it('applies color tint class (secondary style)', async () => {
+    const el = await fixture('<civ-link-card href="/test" heading="Title" color="blue" variant="secondary"></civ-link-card>');
+    const link = el.querySelector('a')!;
+    expect(link.className).toContain('civ-card--blue');
+    expect(link.className).not.toContain('civ-card--blue-primary');
+  });
+
+  it('applies color primary class when variant is primary', async () => {
+    const el = await fixture('<civ-link-card href="/test" heading="Title" color="green" variant="primary"></civ-link-card>');
+    const link = el.querySelector('a')!;
+    expect(link.className).toContain('civ-card--green-primary');
+  });
+
+  it('falls back to variant class when no color is set', async () => {
+    const el = await fixture('<civ-link-card href="/test" heading="Title" variant="tertiary"></civ-link-card>');
+    const link = el.querySelector('a')!;
+    expect(link.className).toContain('civ-link-card--tertiary');
+    expect(link.className).not.toContain('civ-card--');
+  });
 });

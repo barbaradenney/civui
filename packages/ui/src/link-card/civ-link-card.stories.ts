@@ -262,6 +262,38 @@ export const WithIcons: Story = {
   `,
 };
 
+export const ColorsPrimary: Story = {
+  name: 'Colors (Primary)',
+  render: () => html`
+    <div class="civ-grid civ-gap-4" style="grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));">
+      <civ-link-card href="#" heading="Blue" color="blue" variant="primary"></civ-link-card>
+      <civ-link-card href="#" heading="Teal" color="teal" variant="primary"></civ-link-card>
+      <civ-link-card href="#" heading="Green" color="green" variant="primary"></civ-link-card>
+      <civ-link-card href="#" heading="Red" color="red" variant="primary"></civ-link-card>
+      <civ-link-card href="#" heading="Yellow" color="yellow" variant="primary"></civ-link-card>
+      <civ-link-card href="#" heading="Orange" color="orange" variant="primary"></civ-link-card>
+      <civ-link-card href="#" heading="Purple" color="purple" variant="primary"></civ-link-card>
+      <civ-link-card href="#" heading="Gray" color="gray" variant="primary"></civ-link-card>
+    </div>
+  `,
+};
+
+export const ColorsTint: Story = {
+  name: 'Colors (Tint)',
+  render: () => html`
+    <div class="civ-grid civ-gap-4" style="grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));">
+      <civ-link-card href="#" heading="Blue" description="Light tint" color="blue" variant="secondary"></civ-link-card>
+      <civ-link-card href="#" heading="Teal" description="Light tint" color="teal" variant="secondary"></civ-link-card>
+      <civ-link-card href="#" heading="Green" description="Light tint" color="green" variant="secondary"></civ-link-card>
+      <civ-link-card href="#" heading="Red" description="Light tint" color="red" variant="secondary"></civ-link-card>
+      <civ-link-card href="#" heading="Yellow" description="Light tint" color="yellow" variant="secondary"></civ-link-card>
+      <civ-link-card href="#" heading="Orange" description="Light tint" color="orange" variant="secondary"></civ-link-card>
+      <civ-link-card href="#" heading="Purple" description="Light tint" color="purple" variant="secondary"></civ-link-card>
+      <civ-link-card href="#" heading="Gray" description="Light tint" color="gray" variant="secondary"></civ-link-card>
+    </div>
+  `,
+};
+
 export const Compact: Story = {
   name: 'Compact',
   render: () => html`

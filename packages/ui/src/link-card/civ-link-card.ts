@@ -3,6 +3,7 @@ import { customElement, property } from 'lit/decorators.js';
 import { CivBaseElement } from '@civui/core';
 
 export type LinkCardVariant = 'primary' | 'secondary' | 'tertiary' | 'critical' | 'danger';
+export type LinkCardColor = 'blue' | 'teal' | 'red' | 'green' | 'yellow' | 'orange' | 'purple' | 'gray';
 
 /** Protocols that are never allowed in link href values. */
 const UNSAFE_HREF_PATTERN = /^\s*javascript\s*:/i;
@@ -26,6 +27,7 @@ const UNSAFE_HREF_PATTERN = /^\s*javascript\s*:/i;
  * @prop {string} heading - Card heading text
  * @prop {string} description - Descriptive text below the heading
  * @prop {LinkCardVariant} variant - Visual variant
+ * @prop {LinkCardColor} color - Color variant (same palette as civ-card and civ-tag)
  * @prop {string} spacing - Padding size: 'default' or 'sm'
  * @prop {string} iconStart - Icon name to render before the heading
  * @prop {string} iconEnd - Icon name to render after the heading
@@ -55,6 +57,9 @@ export class CivLinkCard extends CivBaseElement {
   /** Visual variant. */
   @property({ type: String }) variant: LinkCardVariant = 'primary';
 
+  /** Color variant — same palette as civ-card and civ-tag. */
+  @property({ type: String }) color: LinkCardColor | '' = '';
+
   /** Padding size: 'default' or 'sm' for compact layouts. */
   @property({ type: String }) spacing: 'default' | 'sm' = 'default';
 
@@ -71,9 +76,13 @@ export class CivLinkCard extends CivBaseElement {
   }
 
   override render() {
+    const colorClass = this.color
+      ? (this.variant === 'primary' ? `civ-card--${this.color}-primary` : `civ-card--${this.color}`)
+      : `civ-link-card--${this.variant}`;
+
     const classes = [
       'civ-link-card',
-      `civ-link-card--${this.variant}`,
+      colorClass,
       this.spacing === 'sm' ? 'civ-link-card--sm' : '',
       'focus-visible:civ-focus-ring',
     ].filter(Boolean).join(' ');

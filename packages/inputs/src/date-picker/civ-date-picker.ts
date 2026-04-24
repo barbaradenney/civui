@@ -260,34 +260,34 @@ export class CivDatePicker extends CivFormElement {
         ${renderHint(this._hintId, this.hint)}
         ${renderError(this._errorId, this.error)}
         <div class="civ-input-group">
-          <input
-            class="${classes}"
-            id="${this._inputId}"
-            type="text"
-            .value="${this._inputValue}"
-            placeholder="${this.placeholder || t('datePickerPlaceholder')}"
-            ?disabled="${this.disabled}"
-            ?required="${this.required}"
-            aria-required="${this.required || nothing}"
-            aria-describedby="${this._ariaDescribedBy || nothing}"
-            aria-invalid="${this.error ? 'true' : nothing}"
-            @input="${this._onTextInput}"
-            @change="${this._onTextChange}"
-          />
-          ${this.value && !this.disabled ? html`
-            <button
-              type="button"
-              class="civ-datepicker-clear-btn hover:civ-bg-base-lighter focus-visible:civ-focus-ring"
-              style="min-width:24px;min-height:24px"
-              aria-label="${this.clearLabel || t('datePickerClearLabel')}"
+          <div class="civ-relative civ-flex-1">
+            <input
+              class="${classes}"
+              id="${this._inputId}"
+              type="text"
+              .value="${this._inputValue}"
+              placeholder="${this.placeholder || t('datePickerPlaceholder')}"
               ?disabled="${this.disabled}"
-              @click="${this._onClear}"
-            >
-              <svg aria-hidden="true" class="civ-w-4 civ-h-4 civ-text-base-dark" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
-              </svg>
-            </button>
-          ` : nothing}
+              ?required="${this.required}"
+              aria-required="${this.required || nothing}"
+              aria-describedby="${this._ariaDescribedBy || nothing}"
+              aria-invalid="${this.error ? 'true' : nothing}"
+              @input="${this._onTextInput}"
+              @change="${this._onTextChange}"
+            />
+            ${this.value && !this.disabled ? html`
+              <button
+                type="button"
+                class="civ-clear-btn hover:civ-bg-base-lighter focus-visible:civ-focus-ring"
+                aria-label="${this.clearLabel || t('datePickerClearLabel')}"
+                @click="${this._onClear}"
+              >
+                <svg aria-hidden="true" class="civ-w-4 civ-h-4 civ-text-base-dark" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                </svg>
+              </button>
+            ` : nothing}
+          </div>
           <button
             id="${this._buttonId}"
             type="button"

@@ -102,6 +102,18 @@ export class CivCombobox extends CivFormElement {
             @focus="${this._onFocus}"
             @keydown="${this._onKeydown}"
           />
+          ${this.value && !this.disabled ? html`
+            <button
+              type="button"
+              class="civ-clear-btn hover:civ-bg-base-lighter focus-visible:civ-focus-ring"
+              aria-label="${t('comboboxClearLabel')}"
+              @click="${this._onClear}"
+            >
+              <svg aria-hidden="true" class="civ-w-4 civ-h-4 civ-text-base-dark" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+            </button>
+          ` : nothing}
 
           ${this._open && filtered.length > 0
             ? html`
@@ -200,6 +212,18 @@ export class CivCombobox extends CivFormElement {
     } else {
       this._clickOutside.remove();
     }
+  }
+
+  private _onClear(): void {
+    this.value = '';
+    this._filter = '';
+    this.updateFormValue('');
+    dispatch(this, 'civ-input', { value: '' });
+    dispatch(this, 'civ-change', { value: '', label: '' });
+    this._setOpen(false);
+    // Return focus to the input
+    const input = this.querySelector(`#${this._inputId}`) as HTMLInputElement | null;
+    input?.focus();
   }
 
   private _onFilterInput(e: Event): void {

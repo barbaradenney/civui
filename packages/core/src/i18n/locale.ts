@@ -18,6 +18,7 @@ export interface CivLocaleStrings {
   comboboxResultAvailable: string; // "{count} result available" (singular)
   comboboxResultsAvailable: string; // "{count} results available" (plural)
   comboboxSelected: string; // "{label}, selected"
+  comboboxClearLabel: string;
 
   // Form error summary
   formErrorSingular: string; // "There is 1 error in this form"
@@ -237,6 +238,7 @@ const defaultStrings: CivLocaleStrings = {
   comboboxResultAvailable: '{count} result available',
   comboboxResultsAvailable: '{count} results available',
   comboboxSelected: '{label}, selected',
+  comboboxClearLabel: 'Clear selection',
 
   formErrorSingular: 'There is 1 error in this form',
   formErrorPlural: 'There are {count} errors in this form',

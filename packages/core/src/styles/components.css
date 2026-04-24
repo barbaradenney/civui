@@ -19,7 +19,7 @@
   }
 
   .civ-legend {
-    @apply civ-block civ-mb-1 civ-font-bold;
+    @apply civ-block civ-mb-0 civ-font-bold;
     font-size: var(--civ-typography-fontSize-base);
     color: var(--civ-color-base-darkest);
     text-box-trim: both;
@@ -1101,7 +1101,21 @@
            civ-px-2 civ-py-1.5 civ-bg-base-lightest;
   }
 
-  /* Date picker trigger inherits flush styling from civ-input-group */
+  /* ── Clear button (inside input fields) ──────────────────────── */
+
+  .civ-clear-btn {
+    @apply civ-absolute civ-flex civ-items-center civ-justify-center
+           civ-border-0 civ-bg-transparent civ-cursor-pointer civ-rounded-full
+           civ-p-1;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  /* Add padding so input text doesn't overlap the clear button */
+  :has(> .civ-clear-btn) > input {
+    padding-right: 2rem;
+  }
 
   /* ── Form error summary ─────────────────────────────────────── */
 

@@ -923,7 +923,9 @@
   /* ── Checkbox / Radio ───────────────────────────────────────── */
 
   .civ-check-input {
-    @apply civ-w-6 civ-h-6 civ-me-2 civ-align-middle civ-accent-primary civ-cursor-pointer civ-rounded;
+    @apply civ-me-2 civ-align-middle civ-accent-primary civ-cursor-pointer civ-rounded;
+    width: var(--civ-spacing-8);
+    height: var(--civ-spacing-8);
   }
 
   .civ-check-label {

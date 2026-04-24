@@ -1,8 +1,9 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { CivFormElement, dispatch, renderLegend, renderHint, renderError, buildDescribedBy, t } from '@civui/core';
-import '@civui/inputs';
-import '@civui/controls';
+import { CivTextInput as _T } from '@civui/inputs';
+import { CivRadio as _R, CivRadioGroup as _RG } from '@civui/controls';
+void _T; void _R; void _RG;
 
 export interface DirectDepositValue {
   accountType: 'checking' | 'savings' | '';

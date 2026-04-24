@@ -1,7 +1,8 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { CivFormElement, dispatch, renderLegend, renderHint, renderError, buildDescribedBy, t } from '@civui/core';
-import '@civui/inputs';
+import { CivTextInput as _T, CivSelect as _S } from '@civui/inputs';
+void _T; void _S;
 
 export interface NameValue {
   first: string;

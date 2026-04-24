@@ -1,8 +1,10 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { CivFormElement, dispatch, renderLegend, renderHint, renderError, buildDescribedBy, t } from '@civui/core';
-import '@civui/inputs';
-import '@civui/controls';
+// Named imports ensure custom elements are registered (bare imports get tree-shaken by Vite)
+import { CivTextInput as _T } from '@civui/inputs';
+import { CivCheckbox as _C } from '@civui/controls';
+void _T; void _C;
 
 export interface SignatureValue {
   name: string;

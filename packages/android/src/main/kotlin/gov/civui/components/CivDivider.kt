@@ -18,13 +18,20 @@ import gov.civui.tokens.CivTokens
 fun CivDivider(
     modifier: Modifier = Modifier,
     spacing: String = "default",
+    variant: String = "default",
 ) {
     val isDark = isSystemInDarkTheme()
-    val color = if (isDark) CivTokens.DarkColors.Base.lighter else CivTokens.Colors.Base.lighter
+    val color = if (variant == "primary") {
+        if (isDark) CivTokens.DarkColors.Base.light else CivTokens.Colors.Base.light
+    } else {
+        if (isDark) CivTokens.DarkColors.Base.lighter else CivTokens.Colors.Base.lighter
+    }
+    val thickness = if (variant == "primary") 2.dp else 1.dp
     val pad = if (spacing == "sm") CivTokens.Spacing._2 else CivTokens.Spacing._4
 
     Divider(
         color = color,
+        thickness = thickness,
         modifier = modifier.padding(vertical = pad),
     )
 }
@@ -36,6 +43,8 @@ private fun CivDividerPreview() {
         Text("Above")
         CivDivider()
         Text("Below")
+        CivDivider(variant = "primary")
+        Text("Primary")
         CivDivider(spacing = "sm")
         Text("Tight")
     }

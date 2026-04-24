@@ -11,6 +11,10 @@ const meta: Meta = {
       control: 'select',
       options: ['default', 'sm'],
     },
+    variant: {
+      control: 'select',
+      options: ['default', 'primary'],
+    },
   },
 };
 
@@ -34,20 +38,41 @@ export const Small: Story = {
   `,
 };
 
+export const Primary: Story = {
+  name: 'Primary',
+  render: () => html`
+    <p>Content above</p>
+    <civ-divider variant="primary"></civ-divider>
+    <p>Content below</p>
+  `,
+};
+
 export const AllVariants: Story = {
   name: 'All Variants',
   render: () => html`
     <div style="display: flex; flex-direction: column; gap: 16px;">
       <div>
-        <p style="margin: 0 0 8px; font-weight: 600;">Default spacing</p>
+        <p style="margin: 0 0 8px; font-weight: 600;">Default</p>
         <p>Content above</p>
         <civ-divider></civ-divider>
+        <p>Content below</p>
+      </div>
+      <div>
+        <p style="margin: 0 0 8px; font-weight: 600;">Primary</p>
+        <p>Content above</p>
+        <civ-divider variant="primary"></civ-divider>
         <p>Content below</p>
       </div>
       <div>
         <p style="margin: 0 0 8px; font-weight: 600;">Small spacing</p>
         <p>Content above</p>
         <civ-divider spacing="sm"></civ-divider>
+        <p>Content below</p>
+      </div>
+      <div>
+        <p style="margin: 0 0 8px; font-weight: 600;">Primary + Small spacing</p>
+        <p>Content above</p>
+        <civ-divider variant="primary" spacing="sm"></civ-divider>
         <p>Content below</p>
       </div>
     </div>

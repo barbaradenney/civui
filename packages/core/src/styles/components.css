@@ -2106,6 +2106,10 @@
     @apply civ-my-2;
   }
 
+  .civ-divider--primary {
+    border-top: 2px solid var(--civ-color-base-light);
+  }
+
   /* ── Read-Only Field ─────────────────────────────────────── */
 
   .civ-read-only-field {

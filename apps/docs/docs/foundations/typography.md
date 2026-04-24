@@ -4,9 +4,43 @@ sidebar_position: 5
 sidebar_label: Typography
 ---
 
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
 # Typography
 
 CivUI provides heading and body text classes built on design tokens. All classes use the `civ-` prefix and pair with semantic HTML elements.
+
+## Examples
+
+### Primary Headings
+
+<StoryEmbed id="foundations-typography--primary-headings" />
+
+### Secondary Headings
+
+<StoryEmbed id="foundations-typography--secondary-headings" />
+
+### Primary + Secondary Paired
+
+<StoryEmbed id="foundations-typography--primary-and-secondary-paired" />
+
+### Body Text
+
+<StoryEmbed id="foundations-typography--body-text" />
+
+### All Styles
+
+<StoryEmbed id="foundations-typography--all-styles" />
+
+### Government Form Example
+
+<StoryEmbed id="foundations-typography--gov-form-example" />
+
+### Density Scale
+
+<StoryEmbed id="foundations-typography--density-scale" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/foundations-typography--all-styles)
 
 ## Headings
 

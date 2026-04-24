@@ -1,0 +1,91 @@
+---
+title: Input Group
+sidebar_position: 4
+sidebar_label: Input Group
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
+# Input Group
+
+`<civ-input-group>`
+
+Joins a form input and action button(s) flush together into a single visual control. The container removes inner border-radius so children render seamlessly connected.
+
+Works with any CivUI input (`civ-text-input`, `civ-select`, `civ-combobox`) and action buttons on either side.
+
+## Examples
+
+### Search (Input + Button)
+
+<StoryEmbed id="ui-input-group--default" />
+
+### Button on Left
+
+<StoryEmbed id="ui-input-group--button-on-left" />
+
+### Buttons on Both Sides
+
+<StoryEmbed id="ui-input-group--buttons-both-sides" />
+
+### With Select
+
+<StoryEmbed id="ui-input-group--with-select" />
+
+### Button Variants
+
+<StoryEmbed id="ui-input-group--all-variants" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/ui-input-group--default)
+
+## Props
+
+Input group is a layout-only container with no props. It applies CSS to remove inner border-radius between its children.
+
+## Usage
+
+### Search field
+
+The most common pattern — a text input with an adjacent search button.
+
+```html
+<civ-input-group>
+  <civ-text-input label="Search" name="search"></civ-text-input>
+  <civ-action-button label="Search" variant="primary"></civ-action-button>
+</civ-input-group>
+```
+
+### Currency prefix
+
+Use a tertiary button on the left as a visual prefix.
+
+```html
+<civ-input-group>
+  <civ-action-button label="$" variant="tertiary"></civ-action-button>
+  <civ-text-input label="Amount" name="amount"></civ-text-input>
+</civ-input-group>
+```
+
+### Quantity stepper
+
+Buttons on both sides for increment/decrement controls.
+
+```html
+<civ-input-group>
+  <civ-action-button label="-" variant="tertiary"></civ-action-button>
+  <civ-text-input label="Quantity" name="qty" value="1" width="xs"></civ-text-input>
+  <civ-action-button label="+" variant="tertiary"></civ-action-button>
+</civ-input-group>
+```
+
+## When to use
+
+- **Search bars** — input paired with a search or filter button
+- **Prefix/suffix indicators** — currency symbols, units, or lookup actions
+- **Stepper controls** — increment/decrement buttons flanking a numeric input
+
+## When NOT to use
+
+- **Standalone inputs** — if the input doesn't need an attached button, don't wrap it
+- **Multiple inputs** — input group is for one input with button(s), not for grouping multiple inputs together
+- **Decorative icons** — use the `icon-start` or `icon-end` props on the input itself instead

@@ -35,6 +35,8 @@ export class CivButton extends LightDomTextMixin(CivBaseElement) {
   @property({ type: Boolean, reflect: true }) danger = false;
   @property({ type: Boolean, reflect: true }) disabled = false;
   @property({ type: String }) type: ButtonType = 'button';
+  @property({ type: String, attribute: 'icon-start' }) iconStart = '';
+  @property({ type: String, attribute: 'icon-end' }) iconEnd = '';
 
   private get _text(): string {
     return this.label || this._initialText;
@@ -62,7 +64,7 @@ export class CivButton extends LightDomTextMixin(CivBaseElement) {
         class="${this._classes}"
         ?disabled="${this.disabled}"
         @click="${this._onClick}"
-      >${this._text}</button>
+      >${this.iconStart ? html`<civ-icon name="${this.iconStart}" size="sm"></civ-icon>` : ''}${this._text}${this.iconEnd ? html`<civ-icon name="${this.iconEnd}" size="sm"></civ-icon>` : ''}</button>
     `;
   }
 

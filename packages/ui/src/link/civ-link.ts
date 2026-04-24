@@ -38,6 +38,8 @@ export class CivLink extends LightDomTextMixin(CivBaseElement) {
   @property({ type: String }) variant: LinkVariant = 'tertiary';
   @property({ type: Boolean, reflect: true }) danger = false;
   @property({ type: Boolean, reflect: true }) disabled = false;
+  @property({ type: String, attribute: 'icon-start' }) iconStart = '';
+  @property({ type: String, attribute: 'icon-end' }) iconEnd = '';
 
   private get _text(): string {
     return this.label || this._initialText;
@@ -58,13 +60,13 @@ export class CivLink extends LightDomTextMixin(CivBaseElement) {
   }
 
   private get _trailingIcon() {
-    if (this.variant === 'secondary') return html`<civ-icon name="chevron-right" size="sm"></civ-icon>`;
-    return '';
+    const name = this.iconEnd || (this.variant === 'secondary' ? 'chevron-right' : '');
+    return name ? html`<civ-icon name="${name}" size="sm"></civ-icon>` : '';
   }
 
   private get _leadingIcon() {
-    if (this.variant === 'back') return html`<civ-icon name="chevron-left" size="sm"></civ-icon>`;
-    return '';
+    const name = this.iconStart || (this.variant === 'back' ? 'chevron-left' : '');
+    return name ? html`<civ-icon name="${name}" size="sm"></civ-icon>` : '';
   }
 
   /** Return sanitized href, stripping dangerous protocols. */

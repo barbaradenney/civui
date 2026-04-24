@@ -55,6 +55,8 @@ fun CivLink(
     variant: String = "tertiary",
     danger: Boolean = false,
     disabled: Boolean = false,
+    iconStart: String = "",
+    iconEnd: String = "",
     onTap: (() -> Unit)? = null,
     onAnalytics: ((event: String, data: Map<String, Any>?) -> Unit)? = null,
 ) {

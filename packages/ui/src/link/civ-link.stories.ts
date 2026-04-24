@@ -15,6 +15,8 @@ const meta: Meta = {
     },
     danger: { control: 'boolean' },
     disabled: { control: 'boolean' },
+    iconStart: { control: 'text' },
+    iconEnd: { control: 'text' },
   },
 };
 
@@ -111,6 +113,19 @@ export const Disabled: Story = {
       <civ-link href="#" variant="primary" disabled>Disabled primary</civ-link>
       <civ-link href="#" variant="secondary" disabled>Disabled secondary</civ-link>
       <civ-link href="#" variant="tertiary" disabled>Disabled tertiary</civ-link>
+    </div>
+  `,
+};
+
+export const WithCustomIcons: Story = {
+  name: 'With Custom Icons',
+  render: () => html`
+    <div style="display: flex; flex-direction: column; gap: 12px;">
+      <civ-link href="#" icon-start="download">Download your form</civ-link>
+      <civ-link href="#" icon-end="external-link">Visit VA.gov</civ-link>
+      <civ-link href="#" icon-start="print" icon-end="external-link">Print and mail</civ-link>
+      <civ-link href="#" variant="secondary" icon-end="arrow-right">Continue to next step</civ-link>
+      <civ-link href="#" variant="back" icon-start="home">Back to homepage</civ-link>
     </div>
   `,
 };

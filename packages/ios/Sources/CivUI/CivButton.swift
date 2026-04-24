@@ -35,6 +35,12 @@ public struct CivButton: View {
     /// Whether the button is disabled.
     public var isDisabled: Bool
 
+    /// Icon name rendered before the label text.
+    public var iconStart: String
+
+    /// Icon name rendered after the label text.
+    public var iconEnd: String
+
     /// When set, the button functions as a link action opening this URL.
     public var href: String?
 
@@ -54,6 +60,8 @@ public struct CivButton: View {
         label: String,
         variant: ButtonVariant = .primary,
         isDisabled: Bool = false,
+        iconStart: String = "",
+        iconEnd: String = "",
         href: String? = nil,
         onClick: (() -> Void)? = nil,
         onAnalytics: ((String, [String: Any]?) -> Void)? = nil
@@ -61,6 +69,8 @@ public struct CivButton: View {
         self.label = label
         self.variant = variant
         self.isDisabled = isDisabled
+        self.iconStart = iconStart
+        self.iconEnd = iconEnd
         self.href = href
         self.onClick = onClick
         self.onAnalytics = onAnalytics
@@ -70,7 +80,15 @@ public struct CivButton: View {
 
     public var body: some View {
         Button(action: handleTap) {
-            Text(label)
+            HStack(spacing: CivTokens.Spacing._1) {
+                if !iconStart.isEmpty {
+                    CivIcon(name: iconStart, size: "sm")
+                }
+                Text(label)
+                if !iconEnd.isEmpty {
+                    CivIcon(name: iconEnd, size: "sm")
+                }
+            }
                 .font(.system(size: CivTokens.Typography.FontSize.base,
                               weight: CivTokens.Typography.FontWeight.semibold))
                 .padding(.horizontal, CivTokens.Spacing._6)

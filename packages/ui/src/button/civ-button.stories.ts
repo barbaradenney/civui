@@ -18,6 +18,8 @@ const meta: Meta = {
       options: ['button', 'submit'],
     },
     disabled: { control: 'boolean' },
+    iconStart: { control: 'text' },
+    iconEnd: { control: 'text' },
   },
 };
 
@@ -110,6 +112,19 @@ export const Disabled: Story = {
       <civ-button variant="secondary" disabled>Disabled secondary</civ-button>
       <civ-button variant="tertiary" disabled>Disabled tertiary</civ-button>
       <civ-button variant="primary" danger disabled>Disabled danger</civ-button>
+    </div>
+  `,
+};
+
+export const WithIcons: Story = {
+  name: 'With Icons',
+  render: () => html`
+    <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center;">
+      <civ-button icon-start="download">Download</civ-button>
+      <civ-button icon-end="arrow-right" variant="primary">Continue</civ-button>
+      <civ-button icon-start="edit" variant="secondary">Edit</civ-button>
+      <civ-button icon-start="print" icon-end="external-link" variant="tertiary">Print form</civ-button>
+      <civ-button icon-start="trash" variant="primary" danger>Delete</civ-button>
     </div>
   `,
 };

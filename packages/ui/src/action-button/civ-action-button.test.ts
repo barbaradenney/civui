@@ -58,4 +58,18 @@ describe('civ-action-button', () => {
     const el = await fixture('<civ-action-button label="Test"></civ-action-button>');
     expect(el.shadowRoot).toBeNull();
   });
+
+  it('renders icon-start when set', async () => {
+    const el = await fixture('<civ-action-button label="Edit" icon-start="edit"></civ-action-button>');
+    const icon = el.querySelector('civ-icon');
+    expect(icon).not.toBeNull();
+    expect(icon!.getAttribute('name')).toBe('edit');
+  });
+
+  it('renders icon-end when set', async () => {
+    const el = await fixture('<civ-action-button label="More" icon-end="chevron-down"></civ-action-button>');
+    const icon = el.querySelector('civ-icon');
+    expect(icon).not.toBeNull();
+    expect(icon!.getAttribute('name')).toBe('chevron-down');
+  });
 });

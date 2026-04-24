@@ -44,6 +44,8 @@ export class CivActionButton extends CivBaseElement {
   @property({ type: Boolean, reflect: true }) disabled = false;
   @property({ type: Boolean, reflect: true }) pressed: boolean | undefined = undefined;
   @property({ type: String }) type: 'button' | 'submit' | 'reset' = 'button';
+  @property({ type: String, attribute: 'icon-start' }) iconStart = '';
+  @property({ type: String, attribute: 'icon-end' }) iconEnd = '';
 
   private get _classes(): string {
     const variantClass = this.danger
@@ -74,7 +76,7 @@ export class CivActionButton extends CivBaseElement {
         ?disabled="${this.disabled}"
         aria-pressed="${ifDefined(ariaPressed)}"
         @click="${this._onClick}"
-      >${this.label}</button>
+      >${this.iconStart ? html`<civ-icon name="${this.iconStart}" size="sm"></civ-icon>` : ''}${this.label}${this.iconEnd ? html`<civ-icon name="${this.iconEnd}" size="sm"></civ-icon>` : ''}</button>
     `;
   }
 

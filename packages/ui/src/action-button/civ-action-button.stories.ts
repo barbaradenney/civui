@@ -12,6 +12,8 @@ const meta: Meta = {
     variant: { control: 'select', options: ['primary', 'secondary', 'tertiary'] },
     pressed: { control: 'boolean' },
     disabled: { control: 'boolean' },
+    iconStart: { control: 'text' },
+    iconEnd: { control: 'text' },
   },
 };
 export default meta;

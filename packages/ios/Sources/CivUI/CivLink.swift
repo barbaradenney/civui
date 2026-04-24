@@ -39,6 +39,12 @@ public struct CivLink: View {
     /// Whether the link is disabled.
     public var isDisabled: Bool
 
+    /// Icon name rendered before the label text.
+    public var iconStart: String
+
+    /// Icon name rendered after the label text.
+    public var iconEnd: String
+
     /// Called on tap (for programmatic navigation instead of href).
     public var onTap: (() -> Void)?
 
@@ -57,6 +63,8 @@ public struct CivLink: View {
         variant: LinkVariant = .tertiary,
         isDanger: Bool = false,
         isDisabled: Bool = false,
+        iconStart: String = "",
+        iconEnd: String = "",
         onTap: (() -> Void)? = nil,
         onAnalytics: ((String, [String: Any]?) -> Void)? = nil
     ) {
@@ -65,8 +73,22 @@ public struct CivLink: View {
         self.variant = variant
         self.isDanger = isDanger
         self.isDisabled = isDisabled
+        self.iconStart = iconStart
+        self.iconEnd = iconEnd
         self.onTap = onTap
         self.onAnalytics = onAnalytics
+    }
+
+    private var leadingIconName: String {
+        if !iconStart.isEmpty { return iconStart }
+        if variant == .back { return "chevron-left" }
+        return ""
+    }
+
+    private var trailingIconName: String {
+        if !iconEnd.isEmpty { return iconEnd }
+        if variant == .secondary { return "chevron-right" }
+        return ""
     }
 
     // MARK: - Body
@@ -74,18 +96,16 @@ public struct CivLink: View {
     public var body: some View {
         Button(action: handleTap) {
             HStack(spacing: CivTokens.Spacing._0_5) {
-                if variant == .back {
-                    Image(systemName: "chevron.left")
-                        .font(.system(size: CivTokens.Typography.FontSize.sm))
+                if !leadingIconName.isEmpty {
+                    CivIcon(name: leadingIconName, size: "sm")
                 }
 
                 Text(label)
                     .font(.system(size: fontSize, weight: fontWeight))
                     .underline()
 
-                if variant == .secondary {
-                    Image(systemName: "chevron.right")
-                        .font(.system(size: CivTokens.Typography.FontSize.sm))
+                if !trailingIconName.isEmpty {
+                    CivIcon(name: trailingIconName, size: "sm")
                 }
             }
             .foregroundColor(foregroundColor)

@@ -90,4 +90,30 @@ describe('civ-link', () => {
     const el = await fixture('<civ-link href="/next">Go</civ-link>');
     expect(el.shadowRoot).toBeNull();
   });
+
+  it('renders custom icon-start', async () => {
+    const el = await fixture('<civ-link href="/download" icon-start="download">Download</civ-link>');
+    const icon = el.querySelector('civ-icon');
+    expect(icon).not.toBeNull();
+    expect(icon!.getAttribute('name')).toBe('download');
+  });
+
+  it('renders custom icon-end', async () => {
+    const el = await fixture('<civ-link href="/ext" icon-end="external-link">External</civ-link>');
+    const icon = el.querySelector('civ-icon');
+    expect(icon).not.toBeNull();
+    expect(icon!.getAttribute('name')).toBe('external-link');
+  });
+
+  it('icon-end overrides secondary default chevron', async () => {
+    const el = await fixture('<civ-link href="/next" variant="secondary" icon-end="arrow-right">Next</civ-link>');
+    const icon = el.querySelector('civ-icon');
+    expect(icon!.getAttribute('name')).toBe('arrow-right');
+  });
+
+  it('icon-start overrides back default chevron', async () => {
+    const el = await fixture('<civ-link href="/" variant="back" icon-start="home">Home</civ-link>');
+    const icon = el.querySelector('civ-icon');
+    expect(icon!.getAttribute('name')).toBe('home');
+  });
 });

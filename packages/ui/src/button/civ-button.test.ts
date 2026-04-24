@@ -166,4 +166,31 @@ describe('civ-button', () => {
     expect(handler).not.toHaveBeenCalled();
   });
 
+  it('renders icon-start when set', async () => {
+    const el = await fixture('<civ-button icon-start="download">Download</civ-button>');
+    const icon = el.querySelector('civ-icon');
+    expect(icon).not.toBeNull();
+    expect(icon!.getAttribute('name')).toBe('download');
+  });
+
+  it('renders icon-end when set', async () => {
+    const el = await fixture('<civ-button icon-end="arrow-right">Next</civ-button>');
+    const icon = el.querySelector('civ-icon');
+    expect(icon).not.toBeNull();
+    expect(icon!.getAttribute('name')).toBe('arrow-right');
+  });
+
+  it('renders both icons when both set', async () => {
+    const el = await fixture('<civ-button icon-start="edit" icon-end="chevron-right">Edit</civ-button>');
+    const icons = el.querySelectorAll('civ-icon');
+    expect(icons.length).toBe(2);
+    expect(icons[0].getAttribute('name')).toBe('edit');
+    expect(icons[1].getAttribute('name')).toBe('chevron-right');
+  });
+
+  it('renders no icons by default', async () => {
+    const el = await fixture('<civ-button>Plain</civ-button>');
+    const icon = el.querySelector('civ-icon');
+    expect(icon).toBeNull();
+  });
 });

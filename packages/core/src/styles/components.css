@@ -88,22 +88,26 @@
   /* Secondary headings — regular weight for supporting context */
 
   .civ-heading-xl-secondary {
-    @apply civ-text-2xl civ-font-regular civ-mb-6;
+    @apply civ-text-2xl civ-mb-6;
+    font-weight: var(--civ-typography-fontWeight-regular);
     color: var(--civ-color-base-darkest);
   }
 
   .civ-heading-lg-secondary {
-    @apply civ-text-xl civ-font-regular civ-mb-4;
+    @apply civ-text-xl civ-mb-4;
+    font-weight: var(--civ-typography-fontWeight-regular);
     color: var(--civ-color-base-darkest);
   }
 
   .civ-heading-md-secondary {
-    @apply civ-text-lg civ-font-regular civ-mb-3;
+    @apply civ-text-lg civ-mb-3;
+    font-weight: var(--civ-typography-fontWeight-regular);
     color: var(--civ-color-base-darkest);
   }
 
   .civ-heading-sm-secondary {
-    @apply civ-text-base civ-font-regular civ-mb-2;
+    @apply civ-text-base civ-mb-2;
+    font-weight: var(--civ-typography-fontWeight-regular);
     color: var(--civ-color-base-darkest);
   }
 

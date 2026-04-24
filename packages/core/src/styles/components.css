@@ -1586,7 +1586,7 @@
   /* ── Alert ─────────────────────────────────────────────────── */
 
   .civ-alert {
-    @apply civ-mb-4 civ-border;
+    @apply civ-mb-4 civ-border-2;
   }
 
   .civ-alert--slim .civ-alert__content {

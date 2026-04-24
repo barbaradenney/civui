@@ -18,13 +18,6 @@
     "./toggle": "./dist/toggle/index.js",
     "./yes-no": "./dist/yes-no/index.js"
   },
-  "sideEffects": [
-    "**/*.css",
-    "src/index.ts",
-    "src/*/civ-*.ts",
-    "dist/index.js",
-    "dist/*/civ-*.js"
-  ],
   "files": ["dist"],
   "publishConfig": {
     "access": "public"

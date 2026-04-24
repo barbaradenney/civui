@@ -21,6 +21,8 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - name: Run consistency check
         run: node --experimental-strip-types tools/consistency-check.ts
+      - name: Check component registration
+        run: node --experimental-strip-types tools/registration-check.ts
 
   parity:
     runs-on: ubuntu-latest

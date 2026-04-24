@@ -20,13 +20,6 @@
     "./progress-steps": "./dist/progress-steps/index.js",
     "./prefill": "./dist/prefill/index.js"
   },
-  "sideEffects": [
-    "**/*.css",
-    "src/index.ts",
-    "src/*/civ-*.ts",
-    "dist/index.js",
-    "dist/*/civ-*.js"
-  ],
   "files": ["dist"],
   "publishConfig": {
     "access": "public"

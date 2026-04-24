@@ -1,6 +1,8 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { CivBaseElement, dispatch, renderLegend, renderHint, renderError, buildDescribedBy, announce, interpolate, t } from '@civui/core';
+import '@civui/inputs';
+import '@civui/ui';
 
 /**
  * CivUI Repeater

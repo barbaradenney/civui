@@ -1,6 +1,7 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { CivBaseElement, t } from '@civui/core';
+import '@civui/ui';
 
 /**
  * CivUI Read-Only Field

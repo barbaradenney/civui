@@ -58,7 +58,7 @@ import { CivTextInput } from '@civui/inputs';  // may get dropped!
 
 An ESLint rule (`no-restricted-imports`) enforces this in component source files. Tests and stories are exempt.
 
-**Important:** Each package's `package.json` must include barrel files (`src/index.ts`, `dist/index.js`) in the `sideEffects` array. Without this, bundlers will tree-shake barrel re-exports even when imported for side effects.
+Packages do **not** declare `sideEffects` in `package.json` — every file in a web component library has side effects (`@customElement` registers globally). Consumers who want tree-shaking can use sub-path imports (e.g., `@civui/inputs/text-input`).
 
 ### Form Components
 Form-participating components extend `CivFormElement` (which extends `CivBaseElement`):

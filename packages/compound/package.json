@@ -14,13 +14,6 @@
     "./signature": "./dist/signature/index.js",
     "./deceased-person": "./dist/deceased-person/index.js"
   },
-  "sideEffects": [
-    "**/*.css",
-    "src/index.ts",
-    "src/*/civ-*.ts",
-    "dist/index.js",
-    "dist/*/civ-*.js"
-  ],
   "files": ["dist"],
   "publishConfig": {
     "access": "public"

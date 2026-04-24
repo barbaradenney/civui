@@ -75,11 +75,16 @@ export class CivAlert extends LightDomTextMixin(CivBaseElement) {
         aria-labelledby="${hasHeading ? this._headingId : nothing}"
         aria-label="${hasHeading ? nothing : t(variantLabelKey)}"
       >
-        ${hasHeading ? html`
-          <div class="civ-alert__header">
-            <p id="${this._headingId}" class="civ-alert__heading"
-               role="heading" aria-level="${level}"
-            >${this.heading}</p>
+        <div class="civ-alert__content">
+          <div class="civ-flex civ-justify-between civ-items-start">
+            <div>
+              ${hasHeading ? html`
+                <p id="${this._headingId}" class="civ-alert__heading"
+                   role="heading" aria-level="${level}"
+                >${this.heading}</p>
+              ` : nothing}
+              <div class="civ-alert__body">${this._bodyText}</div>
+            </div>
             ${this.dismissible
               ? html`
                   <button
@@ -91,21 +96,6 @@ export class CivAlert extends LightDomTextMixin(CivBaseElement) {
                 `
               : nothing}
           </div>
-        ` : nothing}
-        <div class="civ-alert__content">
-          ${!hasHeading && this.dismissible
-            ? html`
-                <div class="civ-flex civ-justify-between civ-items-start">
-                  <div class="civ-alert__body">${this._bodyText}</div>
-                  <button
-                    type="button"
-                    class="civ-alert__dismiss focus-visible:civ-focus-ring"
-                    aria-label="${t('alertDismissLabel')}"
-                    @click="${this._onDismiss}"
-                  >${closeIcon}</button>
-                </div>
-              `
-            : html`<div class="civ-alert__body">${this._bodyText}</div>`}
         </div>
       </div>
     `;

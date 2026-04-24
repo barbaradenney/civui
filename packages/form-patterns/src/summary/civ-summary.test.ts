@@ -115,7 +115,7 @@ describe('civ-summary', () => {
     await elementUpdated(el);
 
     const field = el.querySelector('civ-read-only-field');
-    expect(field!.getAttribute('edit-label')).toContain('profile');
+    expect(field!.getAttribute('edit-label')).toBe('Edit');
   });
 
   it('renders dividers between multiple items but not after last', async () => {

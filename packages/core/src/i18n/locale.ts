@@ -393,7 +393,7 @@ const defaultStrings: CivLocaleStrings = {
   summaryEditLink: 'Edit',
   summaryEditAriaLabel: 'Edit {section}',
   summaryNotProvided: 'Not provided',
-  summaryEditProfile: 'Update on your profile',
+  summaryEditProfile: 'Edit',
 
   skipLinkDefaultText: 'Skip to main content',
 

@@ -204,162 +204,205 @@
     transform: rotate(45deg) translate(10%, -10%);
   }
 
-  /* Arrows (line + chevron) */
+  /* Arrows (shaft + chevron arrowhead) — ported from cssicon */
   .civ-icon--arrow-right::before {
     content: '';
-    width: 0.6em;
+    position: absolute;
+    width: 0.76em;
     height: 2px;
     background: currentColor;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
   .civ-icon--arrow-right::after {
     content: '';
-    width: 0.3em;
-    height: 0.3em;
-    border-right: 2px solid currentColor;
-    border-bottom: 2px solid currentColor;
-    transform: rotate(-45deg);
     position: absolute;
-    right: 0.15em;
+    width: 0.38em;
+    height: 0.38em;
+    border-top: 2px solid currentColor;
+    border-right: 2px solid currentColor;
+    top: 50%;
+    right: 0.08em;
+    transform: translateY(-50%) rotate(45deg);
   }
 
   .civ-icon--arrow-left::before {
     content: '';
-    width: 0.6em;
+    position: absolute;
+    width: 0.76em;
     height: 2px;
     background: currentColor;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
   .civ-icon--arrow-left::after {
     content: '';
-    width: 0.3em;
-    height: 0.3em;
-    border-left: 2px solid currentColor;
-    border-top: 2px solid currentColor;
-    transform: rotate(-45deg);
     position: absolute;
-    left: 0.15em;
+    width: 0.38em;
+    height: 0.38em;
+    border-top: 2px solid currentColor;
+    border-left: 2px solid currentColor;
+    top: 50%;
+    left: 0.08em;
+    transform: translateY(-50%) rotate(-45deg);
   }
 
   .civ-icon--arrow-up::before {
     content: '';
+    position: absolute;
     width: 2px;
-    height: 0.6em;
+    height: 0.76em;
     background: currentColor;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
   .civ-icon--arrow-up::after {
     content: '';
-    width: 0.3em;
-    height: 0.3em;
-    border-left: 2px solid currentColor;
-    border-top: 2px solid currentColor;
-    transform: rotate(45deg);
     position: absolute;
-    top: 0.15em;
+    width: 0.38em;
+    height: 0.38em;
+    border-top: 2px solid currentColor;
+    border-left: 2px solid currentColor;
+    top: 0.08em;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
   }
 
   .civ-icon--arrow-down::before {
     content: '';
+    position: absolute;
     width: 2px;
-    height: 0.6em;
+    height: 0.76em;
     background: currentColor;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
   .civ-icon--arrow-down::after {
     content: '';
-    width: 0.3em;
-    height: 0.3em;
+    position: absolute;
+    width: 0.38em;
+    height: 0.38em;
     border-right: 2px solid currentColor;
     border-bottom: 2px solid currentColor;
-    transform: rotate(45deg);
-    position: absolute;
-    bottom: 0.15em;
+    bottom: 0.08em;
+    left: 50%;
+    transform: translateX(-50%) rotate(-45deg);
   }
 
-  /* Close (X — two rotated bars) */
+  /* Close (X — two crossed bars, ported from cssicon) */
   .civ-icon--close::before,
   .civ-icon--close::after {
     content: '';
     position: absolute;
-    width: 0.7em;
+    width: 0.9em;
     height: 2px;
     background: currentColor;
+    top: 50%;
+    left: 50%;
   }
-  .civ-icon--close::before { transform: rotate(45deg); }
-  .civ-icon--close::after { transform: rotate(-45deg); }
+  .civ-icon--close::before { transform: translate(-50%, -50%) rotate(45deg); }
+  .civ-icon--close::after  { transform: translate(-50%, -50%) rotate(-45deg); }
 
-  /* Plus (+) */
+  /* Plus (+) — ported from cssicon */
   .civ-icon--plus::before,
   .civ-icon--plus::after {
     content: '';
     position: absolute;
     background: currentColor;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
-  .civ-icon--plus::before { width: 0.7em; height: 2px; }
-  .civ-icon--plus::after { width: 2px; height: 0.7em; }
+  .civ-icon--plus::before { width: 0.72em; height: 2px; }
+  .civ-icon--plus::after  { width: 2px; height: 0.72em; }
 
-  /* Minus (−) */
+  /* Minus (−) — ported from cssicon */
   .civ-icon--minus::before {
     content: '';
-    width: 0.7em;
+    width: 0.72em;
     height: 2px;
     background: currentColor;
   }
 
-  /* Check (✓) */
+  /* Check (✓) — L-shape rotated, ported from cssicon */
   .civ-icon--check::before {
     content: '';
-    width: 0.55em;
-    height: 0.3em;
+    position: absolute;
+    width: 0.62em;
+    height: 0.34em;
     border-left: 2px solid currentColor;
     border-bottom: 2px solid currentColor;
-    transform: rotate(-45deg) translate(5%, -10%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -65%) rotate(-45deg);
   }
 
-  /* Menu (☰ — three horizontal lines) */
+  /* Menu (☰ — three horizontal lines, ported from cssicon) */
   .civ-icon--menu::before {
     content: '';
-    width: 0.7em;
+    position: absolute;
+    width: 0.8em;
     height: 2px;
     background: currentColor;
-    box-shadow: 0 0.22em 0 currentColor, 0 -0.22em 0 currentColor;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 -0.24em 0 currentColor, 0 0.24em 0 currentColor;
   }
 
-  /* More-vertical (⋮ — three dots) */
+  /* More-vertical (⋮ — three dots, ported from cssicon) */
   .civ-icon--more-vertical::before {
     content: '';
-    width: 3px;
-    height: 3px;
+    position: absolute;
+    width: 0.16em;
+    height: 0.16em;
     background: currentColor;
     border-radius: 50%;
-    box-shadow: 0 0.28em 0 currentColor, 0 -0.28em 0 currentColor;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 -0.3em 0 currentColor, 0 0.3em 0 currentColor;
   }
 
   /* More-horizontal (⋯ — three dots) */
   .civ-icon--more-horizontal::before {
     content: '';
-    width: 3px;
-    height: 3px;
+    position: absolute;
+    width: 0.16em;
+    height: 0.16em;
     background: currentColor;
     border-radius: 50%;
-    box-shadow: 0.28em 0 0 currentColor, -0.28em 0 0 currentColor;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: -0.3em 0 0 currentColor, 0.3em 0 0 currentColor;
   }
 
-  /* Search (circle + line) */
+  /* Search (circle + angled handle, ported from cssicon) */
   .civ-icon--search::before {
     content: '';
-    width: 0.45em;
-    height: 0.45em;
+    position: absolute;
+    width: 0.52em;
+    height: 0.52em;
     border: 2px solid currentColor;
     border-radius: 50%;
-    transform: translate(-10%, -10%);
+    top: 0.08em;
+    left: 0.08em;
   }
   .civ-icon--search::after {
     content: '';
+    position: absolute;
     width: 0.3em;
     height: 2px;
     background: currentColor;
-    position: absolute;
+    bottom: 0.12em;
+    right: 0.06em;
     transform: rotate(45deg);
-    bottom: 0.18em;
-    right: 0.12em;
+    transform-origin: right center;
   }
 
   /* Sort ascending (▲) */
@@ -412,43 +455,50 @@
     border-top: 0.45em solid currentColor;
   }
 
-  /* Upload (↑ + base line) */
+  /* Upload (arrow up + tray base, ported from cssicon) */
   .civ-icon--upload::before {
     content: '';
-    width: 2px;
-    height: 0.4em;
+    position: absolute;
+    width: 0.5em;
+    height: 0.55em;
     background: currentColor;
-    transform: translateY(-0.05em);
-    box-shadow:
-      -0.15em -0.15em 0 -0.5px currentColor,
-      0.15em -0.15em 0 -0.5px currentColor;
+    clip-path: polygon(50% 0, 100% 40%, 70% 40%, 70% 100%, 30% 100%, 30% 40%, 0 40%);
+    top: 0.08em;
+    left: 50%;
+    transform: translateX(-50%);
   }
   .civ-icon--upload::after {
     content: '';
     position: absolute;
-    width: 0.6em;
+    width: 0.7em;
     height: 2px;
     background: currentColor;
-    bottom: 0.1em;
+    bottom: 0.12em;
+    left: 50%;
+    transform: translateX(-50%);
   }
 
-  /* Download (↓ + base line) */
+  /* Download (arrow down + tray base, ported from cssicon) */
   .civ-icon--download::before {
     content: '';
-    width: 2px;
-    height: 0.45em;
+    position: absolute;
+    width: 0.5em;
+    height: 0.55em;
     background: currentColor;
-    transform: translateY(0.08em);
+    clip-path: polygon(30% 0, 70% 0, 70% 60%, 100% 60%, 50% 100%, 0 60%, 30% 60%);
+    top: 0.08em;
+    left: 50%;
+    transform: translateX(-50%);
   }
   .civ-icon--download::after {
     content: '';
-    width: 0.25em;
-    height: 0.25em;
-    border-right: 2px solid currentColor;
-    border-bottom: 2px solid currentColor;
-    transform: rotate(45deg);
     position: absolute;
+    width: 0.7em;
+    height: 2px;
+    background: currentColor;
     bottom: 0.12em;
+    left: 50%;
+    transform: translateX(-50%);
   }
 
   /* Grip (⠿ — 6 dots) */
@@ -523,29 +573,29 @@
       0.12em 0em 0 -0.5px currentColor;
   }
 
-  /* Edit (pencil) */
+  /* Edit (pencil — angled body + triangular tip, ported from cssicon) */
   .civ-icon--edit::before {
     content: '';
     position: absolute;
-    width: 0.25em;
-    height: 0.5em;
+    width: 0.6em;
+    height: 0.18em;
     border: 2px solid currentColor;
     border-radius: 1px;
-    transform: rotate(-45deg);
-    top: 0.08em;
-    right: 0.18em;
+    top: 50%;
+    left: 50%;
+    transform: translate(-40%, -50%) rotate(-45deg);
   }
   .civ-icon--edit::after {
     content: '';
     position: absolute;
     width: 0;
     height: 0;
-    border-left: 0.1em solid transparent;
-    border-right: 0.1em solid transparent;
-    border-top: 0.15em solid currentColor;
-    transform: rotate(-45deg);
-    bottom: 0.12em;
-    left: 0.15em;
+    border-top: 0.12em solid transparent;
+    border-bottom: 0.12em solid transparent;
+    border-right: 0.16em solid currentColor;
+    top: 50%;
+    left: 0.08em;
+    transform: translateY(-50%) rotate(-45deg);
   }
 
   /* Check-circle (circle with checkmark) */
@@ -692,7 +742,7 @@
     left: 0.12em;
   }
 
-  /* Trash (can with lid) */
+  /* Trash (can + rim, ported from cssicon) */
   .civ-icon--trash::before {
     content: '';
     position: absolute;
@@ -700,17 +750,20 @@
     height: 0.5em;
     border: 2px solid currentColor;
     border-top: 0;
-    border-radius: 0 0 2px 2px;
+    border-radius: 0 0 1px 1px;
     bottom: 0.08em;
+    left: 50%;
+    transform: translateX(-50%);
   }
   .civ-icon--trash::after {
     content: '';
     position: absolute;
-    width: 0.65em;
+    width: 0.75em;
     height: 2px;
     background: currentColor;
-    top: 0.2em;
-    box-shadow: 0.08em -0.12em 0 -0.5px currentColor, -0.08em -0.12em 0 -0.5px currentColor;
+    top: 0.22em;
+    left: 50%;
+    transform: translateX(-50%);
   }
 
   /* Loading (partial circle, animated) */
@@ -729,25 +782,29 @@
     to { transform: rotate(360deg); }
   }
 
-  /* Lock (padlock) */
+  /* Lock (body + shackle, ported from cssicon) */
   .civ-icon--lock::before {
     content: '';
     position: absolute;
-    width: 0.55em;
-    height: 0.35em;
+    width: 0.6em;
+    height: 0.42em;
     border: 2px solid currentColor;
-    border-radius: 2px;
+    border-radius: 1px;
     bottom: 0.1em;
+    left: 50%;
+    transform: translateX(-50%);
   }
   .civ-icon--lock::after {
     content: '';
     position: absolute;
-    width: 0.3em;
-    height: 0.25em;
+    width: 0.38em;
+    height: 0.32em;
     border: 2px solid currentColor;
     border-bottom: 0;
-    border-radius: 0.2em 0.2em 0 0;
-    top: 0.12em;
+    border-radius: 0.22em 0.22em 0 0;
+    top: 0.1em;
+    left: 50%;
+    transform: translateX(-50%);
   }
 
   /* Home (house) */
@@ -859,65 +916,78 @@
     background: currentColor;
   }
 
-  /* Print (printer) */
+  /* Print (printer body + output paper, ported from cssicon) */
   .civ-icon--print::before {
     content: '';
     position: absolute;
-    width: 0.7em;
-    height: 0.35em;
+    width: 0.72em;
+    height: 0.32em;
     border: 2px solid currentColor;
-    border-radius: 2px 2px 0 0;
+    border-radius: 1px 1px 0 0;
+    top: 0.2em;
+    left: 50%;
+    transform: translateX(-50%);
   }
   .civ-icon--print::after {
     content: '';
     position: absolute;
-    width: 0.45em;
-    height: 0.2em;
+    width: 0.5em;
+    height: 0.28em;
     border: 2px solid currentColor;
     border-top: 0;
-    bottom: 0.08em;
-    box-shadow: 0 -0.52em 0 -0.5px currentColor;
+    bottom: 0.12em;
+    left: 50%;
+    transform: translateX(-50%);
   }
 
-  /* User (person silhouette) */
+  /* User (head + shoulders, ported from cssicon profile) */
   .civ-icon--user::before {
     content: '';
     position: absolute;
-    width: 0.3em;
-    height: 0.3em;
+    width: 0.38em;
+    height: 0.38em;
     border: 2px solid currentColor;
     border-radius: 50%;
     top: 0.08em;
+    left: 50%;
+    transform: translateX(-50%);
   }
   .civ-icon--user::after {
     content: '';
     position: absolute;
-    width: 0.6em;
-    height: 0.3em;
+    width: 0.7em;
+    height: 0.34em;
     border: 2px solid currentColor;
     border-bottom: 0;
-    border-radius: 0.3em 0.3em 0 0;
-    bottom: 0.08em;
+    border-radius: 0.32em 0.32em 0 0;
+    bottom: 0.05em;
+    left: 50%;
+    transform: translateX(-50%);
   }
 
-  /* Mail (envelope) */
+  /* Mail (envelope body + flap, ported from cssicon) */
   .civ-icon--mail::before {
     content: '';
     position: absolute;
-    width: 0.75em;
-    height: 0.55em;
+    width: 0.78em;
+    height: 0.56em;
     border: 2px solid currentColor;
     border-radius: 1px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
   .civ-icon--mail::after {
     content: '';
     position: absolute;
-    width: 0.4em;
-    height: 0.4em;
-    border-top: 2px solid currentColor;
-    border-right: 2px solid currentColor;
-    transform: rotate(-55deg) skewX(-10deg);
-    top: 0.08em;
+    width: 0;
+    height: 0;
+    border-left: 0.37em solid transparent;
+    border-right: 0.37em solid transparent;
+    border-top: 0.24em solid currentColor;
+    top: 0.24em;
+    left: 50%;
+    transform: translateX(-50%);
   }
 
   /* ── Checkbox / Radio ───────────────────────────────────────── */

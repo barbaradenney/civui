@@ -13,3 +13,7 @@ export type { DirectDepositValue } from './direct-deposit/index.js';
 // Signature
 export { CivSignature } from './signature/index.js';
 export type { SignatureValue } from './signature/index.js';
+
+// Deceased Person (VA burial, SSA survivor benefits, probate)
+export { CivDeceasedPerson } from './deceased-person/index.js';
+export type { DeceasedPersonValue } from './deceased-person/index.js';

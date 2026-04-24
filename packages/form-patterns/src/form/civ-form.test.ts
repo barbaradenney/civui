@@ -425,6 +425,51 @@ describe('civ-form URL prefill', () => {
   });
 });
 
+describe('civ-form support resources', () => {
+  it('renders a support-resources footer when provided as JSON attribute', async () => {
+    const el = await fixture(`
+      <civ-form support-resources='[{"label":"988 Lifeline","href":"tel:988","description":"24/7"}]'>
+        <civ-text-input label="Name" name="name"></civ-text-input>
+      </civ-form>
+    `);
+    await elementUpdated(el);
+
+    const aside = el.querySelector('[data-civ-support-resources]');
+    expect(aside).not.toBeNull();
+    const link = aside!.querySelector('a');
+    expect(link!.getAttribute('href')).toBe('tel:988');
+    expect(link!.textContent).toBe('988 Lifeline');
+    expect(aside!.textContent).toContain('24/7');
+  });
+
+  it('drops entries with unsafe href schemes', async () => {
+    const el = await fixture(`
+      <civ-form support-resources='[{"label":"Bad","href":"javascript:alert(1)"},{"label":"OK","href":"https://va.gov"}]'>
+      </civ-form>
+    `);
+    await elementUpdated(el);
+
+    const links = el.querySelectorAll('[data-civ-support-resources] a');
+    expect(links.length).toBe(1);
+    expect(links[0].textContent).toBe('OK');
+  });
+
+  it('does not render the footer when no resources are provided', async () => {
+    const el = await fixture('<civ-form></civ-form>');
+    await elementUpdated(el);
+    expect(el.querySelector('[data-civ-support-resources]')).toBeNull();
+  });
+
+  it('accepts resources via JS property assignment', async () => {
+    const el = await fixture('<civ-form></civ-form>') as any;
+    el.supportResources = [{ label: 'Crisis text', href: 'sms:741741' }];
+    await elementUpdated(el);
+    const link = el.querySelector('[data-civ-support-resources] a');
+    expect(link).not.toBeNull();
+    expect(link.getAttribute('href')).toBe('sms:741741');
+  });
+});
+
 describe('form reset', () => {
   it('uses [data-civ-form-field] selector to discover form elements', async () => {
     const el = await fixture(`

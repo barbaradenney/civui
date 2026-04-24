@@ -296,4 +296,57 @@ describe('civ-yes-no', () => {
     expect(buttons[2].className).toContain('civ-btn--yesno');
     expect(buttons[2].className).toContain('focus-visible:civ-focus-ring');
   });
+
+  describe('prefer-not-to-answer affordance', () => {
+    it('renders a skip button only when skip-label is set', async () => {
+      const without = await fixture('<civ-yes-no legend="Q"></civ-yes-no>');
+      expect(without.querySelector('[data-civ-skip]')).toBeNull();
+
+      const withSkip = await fixture(
+        '<civ-yes-no legend="Q" skip-label="Prefer not to answer"></civ-yes-no>',
+      );
+      expect(withSkip.querySelector('[data-civ-skip]')).not.toBeNull();
+    });
+
+    it('skip button is not part of the radio group', async () => {
+      const el = await fixture(
+        '<civ-yes-no legend="Q" skip-label="Prefer not to answer"></civ-yes-no>',
+      );
+      const skip = el.querySelector('[data-civ-skip]')!;
+      expect(skip.getAttribute('role')).not.toBe('radio');
+      const fieldset = el.querySelector('fieldset')!;
+      expect(fieldset.getAttribute('role')).toBeNull();
+      const radiogroup = el.querySelector('[role="radiogroup"]')!;
+      expect(radiogroup.tagName.toLowerCase()).toBe('div');
+      expect(radiogroup.contains(skip)).toBe(false);
+    });
+
+    it('sets value to skip-value on click and fires civ-change', async () => {
+      const el = await fixture(
+        '<civ-yes-no legend="Q" skip-label="Prefer not to answer" skip-value="opt_out"></civ-yes-no>',
+      ) as any;
+
+      let changeValue: string | null = null;
+      el.addEventListener('civ-change', ((e: CustomEvent) => { changeValue = e.detail.value; }) as EventListener);
+
+      const skip = el.querySelector('[data-civ-skip]') as HTMLButtonElement;
+      skip.click();
+      await elementUpdated(el);
+
+      expect(el.value).toBe('opt_out');
+      expect(changeValue).toBe('opt_out');
+      expect(skip.getAttribute('aria-pressed')).toBe('true');
+    });
+
+    it('does not interfere with arrow-key navigation on the radios', async () => {
+      const el = await fixture(
+        '<civ-yes-no legend="Q" skip-label="Prefer not to answer"></civ-yes-no>',
+      ) as any;
+      const yesBtn = el.querySelectorAll('button[role="radio"]')[0] as HTMLButtonElement;
+      yesBtn.focus();
+      yesBtn.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
+      await elementUpdated(el);
+      expect(el.value).toBe('no');
+    });
+  });
 });

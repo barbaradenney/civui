@@ -158,6 +158,25 @@ export interface CivLocaleStrings {
   formStepContinue: string;
   formStepSave: string;
   formStepOf: string; // "Step {current} of {total}"
+  formStepPauseLabel: string; // "Save and come back later"
+  formStepSensitiveNotice: string; // soft announcement when entering a sensitive step
+
+  // Sensitive form patterns
+  sectionIntroRegionLabel: string; // fallback aria-label for section-intro
+  preferNotToAnswer: string; // "Prefer not to answer"
+  supportResourcesHeading: string; // "If you need support"
+
+  // Deceased person (bereavement / survivor benefit forms)
+  deceasedPersonLegend: string; // "About the person who died"
+  deceasedPersonNameLegend: string; // "Their name"
+  deceasedPersonDateOfBirth: string; // "Date of birth"
+  deceasedPersonDateOfDeath: string; // "Date of death"
+  deceasedPersonRelationship: string; // "Their relationship to you"
+  deceasedPersonRelationshipSpouse: string;
+  deceasedPersonRelationshipParent: string;
+  deceasedPersonRelationshipChild: string;
+  deceasedPersonRelationshipSibling: string;
+  deceasedPersonRelationshipOther: string;
 
   // Prefill notice
   prefillNoticeHeading: string;
@@ -363,6 +382,23 @@ const defaultStrings: CivLocaleStrings = {
   formStepContinue: 'Continue',
   formStepSave: 'Save and continue',
   formStepOf: 'Step {current} of {total}',
+  formStepPauseLabel: 'Save and come back later',
+  formStepSensitiveNotice: 'This section asks personal questions. Your answers are saved as you go.',
+
+  sectionIntroRegionLabel: 'Section introduction',
+  preferNotToAnswer: 'Prefer not to answer',
+  supportResourcesHeading: 'If you need support',
+
+  deceasedPersonLegend: 'About the person who died',
+  deceasedPersonNameLegend: 'Their name',
+  deceasedPersonDateOfBirth: 'Date of birth',
+  deceasedPersonDateOfDeath: 'Date of death',
+  deceasedPersonRelationship: 'Their relationship to you',
+  deceasedPersonRelationshipSpouse: 'Spouse',
+  deceasedPersonRelationshipParent: 'Parent',
+  deceasedPersonRelationshipChild: 'Child',
+  deceasedPersonRelationshipSibling: 'Sibling',
+  deceasedPersonRelationshipOther: 'Other',
 
   prefillNoticeHeading: 'We\u2019ve prefilled some of your information',
   prefillNoticeBody: 'We pulled this information from your account. If any of this is wrong, you can correct it here.',

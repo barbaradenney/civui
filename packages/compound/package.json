@@ -11,7 +11,8 @@
     "./address": "./dist/address/index.js",
     "./name": "./dist/name/index.js",
     "./direct-deposit": "./dist/direct-deposit/index.js",
-    "./signature": "./dist/signature/index.js"
+    "./signature": "./dist/signature/index.js",
+    "./deceased-person": "./dist/deceased-person/index.js"
   },
   "sideEffects": [
     "**/*.css",

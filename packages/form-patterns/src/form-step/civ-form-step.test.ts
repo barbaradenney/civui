@@ -105,4 +105,58 @@ describe('civ-form-step', () => {
     const el = await fixture<CivFormStep>(threeSteps);
     expect(el.shadowRoot).toBeNull();
   });
+
+  it('renders pause link when show-pause is set', async () => {
+    const el = await fixture<CivFormStep>(`
+      <civ-form-step show-pause>
+        <div data-step-label="One"><p>Content</p></div>
+        <div data-step-label="Two"><p>Content</p></div>
+      </civ-form-step>
+    `);
+    await elementUpdated(el);
+    expect(el.querySelector('[data-civ-step-pause]')).not.toBeNull();
+  });
+
+  it('renders pause link when step is marked sensitive', async () => {
+    const el = await fixture<CivFormStep>(`
+      <civ-form-step sensitive>
+        <div data-step-label="Trauma"><p>Content</p></div>
+      </civ-form-step>
+    `);
+    await elementUpdated(el);
+    expect(el.querySelector('[data-civ-step-pause]')).not.toBeNull();
+  });
+
+  it('does not render pause link by default', async () => {
+    const el = await fixture<CivFormStep>(threeSteps);
+    expect(el.querySelector('[data-civ-step-pause]')).toBeNull();
+  });
+
+  it('fires civ-step-pause with current index and label', async () => {
+    const el = await fixture<CivFormStep>(`
+      <civ-form-step show-pause>
+        <div data-step-label="Your trauma history"><p>Content</p></div>
+      </civ-form-step>
+    `);
+    await elementUpdated(el);
+
+    let detail: any = null;
+    el.addEventListener('civ-step-pause', ((e: CustomEvent) => { detail = e.detail; }) as EventListener);
+
+    const pause = el.querySelector('[data-civ-step-pause]') as HTMLElement;
+    pause.click();
+
+    expect(detail).not.toBeNull();
+    expect(detail.current).toBe(0);
+    expect(detail.label).toBe('Your trauma history');
+  });
+
+  it('reflects sensitive attribute on host', async () => {
+    const el = await fixture<CivFormStep>(`
+      <civ-form-step sensitive>
+        <div data-step-label="X"><p>c</p></div>
+      </civ-form-step>
+    `);
+    expect(el.hasAttribute('sensitive')).toBe(true);
+  });
 });

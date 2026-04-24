@@ -565,3 +565,73 @@ describe('civ-radio-group analytics', () => {
     }
   });
 });
+
+describe('civ-radio-group prefer-not-to-answer affordance', () => {
+  it('renders a skip button only when skip-label is set', async () => {
+    const without = await fixture(`
+      <civ-radio-group legend="X" name="x">
+        <civ-radio label="A" value="a"></civ-radio>
+      </civ-radio-group>
+    `);
+    expect(without.querySelector('[data-civ-skip]')).toBeNull();
+
+    const withSkip = await fixture(`
+      <civ-radio-group legend="X" name="x" skip-label="Prefer not to answer">
+        <civ-radio label="A" value="a"></civ-radio>
+      </civ-radio-group>
+    `);
+    expect(withSkip.querySelector('[data-civ-skip]')).not.toBeNull();
+  });
+
+  it('sets value to skip-value when the skip button is clicked', async () => {
+    const el = await fixture(`
+      <civ-radio-group legend="X" name="x" skip-label="Prefer not to answer" skip-value="opt_out">
+        <civ-radio label="A" value="a"></civ-radio>
+        <civ-radio label="B" value="b"></civ-radio>
+      </civ-radio-group>
+    `) as any;
+    await elementUpdated(el);
+
+    let changeValue: string | null = null;
+    el.addEventListener('civ-change', ((e: CustomEvent) => { changeValue = e.detail.value; }) as EventListener);
+
+    const skip = el.querySelector('[data-civ-skip]') as HTMLButtonElement;
+    skip.click();
+    await elementUpdated(el);
+
+    expect(el.value).toBe('opt_out');
+    expect(changeValue).toBe('opt_out');
+    expect(skip.getAttribute('aria-pressed')).toBe('true');
+  });
+
+  it('clicking the skip button unchecks any selected radio', async () => {
+    const el = await fixture(`
+      <civ-radio-group legend="X" name="x" skip-label="Prefer not to answer" value="a">
+        <civ-radio label="A" value="a"></civ-radio>
+        <civ-radio label="B" value="b"></civ-radio>
+      </civ-radio-group>
+    `) as any;
+    await elementUpdated(el);
+
+    const skip = el.querySelector('[data-civ-skip]') as HTMLButtonElement;
+    skip.click();
+    await elementUpdated(el);
+
+    const radios = el.querySelectorAll('civ-radio') as NodeListOf<any>;
+    expect(radios[0].checked).toBe(false);
+    expect(radios[1].checked).toBe(false);
+  });
+
+  it('moves role=radiogroup off the fieldset when skip is present', async () => {
+    const el = await fixture(`
+      <civ-radio-group legend="X" name="x" skip-label="Prefer not to answer">
+        <civ-radio label="A" value="a"></civ-radio>
+      </civ-radio-group>
+    `);
+    const fieldset = el.querySelector('fieldset')!;
+    expect(fieldset.getAttribute('role')).toBeNull();
+    const innerGroup = el.querySelector('[role="radiogroup"]');
+    expect(innerGroup).not.toBeNull();
+    expect(innerGroup!.tagName.toLowerCase()).toBe('div');
+  });
+});

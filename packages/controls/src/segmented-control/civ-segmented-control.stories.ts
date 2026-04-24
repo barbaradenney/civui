@@ -96,7 +96,7 @@ export const Disabled: Story = {
 export const AllStates: Story = {
   name: 'All States',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 32px;">
+    <div class="civ-flex civ-flex-col civ-gap-8">
       <civ-segmented-control legend="Normal" name="normal" value="a">
         <civ-segment label="Option A" value="a"></civ-segment>
         <civ-segment label="Option B" value="b"></civ-segment>
@@ -122,9 +122,9 @@ export const AllStates: Story = {
 export const DensityScale: Story = {
   name: 'Density Scale',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 24px;">
+    <div class="civ-flex civ-flex-col civ-gap-6">
       <div data-civ-scale="dense">
-        <p style="margin: 0 0 8px; font-weight: 600;">Dense</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Dense</p>
         <civ-segmented-control legend="View mode" name="dense-view" value="list">
           <civ-segment label="List" value="list"></civ-segment>
           <civ-segment label="Grid" value="grid"></civ-segment>
@@ -132,7 +132,7 @@ export const DensityScale: Story = {
         </civ-segmented-control>
       </div>
       <div>
-        <p style="margin: 0 0 8px; font-weight: 600;">Default</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Default</p>
         <civ-segmented-control legend="View mode" name="default-view" value="list">
           <civ-segment label="List" value="list"></civ-segment>
           <civ-segment label="Grid" value="grid"></civ-segment>
@@ -140,7 +140,7 @@ export const DensityScale: Story = {
         </civ-segmented-control>
       </div>
       <div data-civ-scale="spacious">
-        <p style="margin: 0 0 8px; font-weight: 600;">Spacious</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Spacious</p>
         <civ-segmented-control legend="View mode" name="spacious-view" value="list">
           <civ-segment label="List" value="list"></civ-segment>
           <civ-segment label="Grid" value="grid"></civ-segment>

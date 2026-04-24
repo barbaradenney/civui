@@ -56,29 +56,29 @@ export const WithStatusTag: Story = {
 export const AllSlotCombinations: Story = {
   name: 'All Slot Combinations',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 32px;">
+    <div class="civ-flex civ-flex-col civ-gap-8">
       <div>
-        <p style="margin: 0 0 8px; font-weight: 600;">Heading only</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Heading only</p>
         <civ-page-header>
           <h1 data-heading class="civ-heading-xl">Personal information</h1>
         </civ-page-header>
       </div>
       <div>
-        <p style="margin: 0 0 8px; font-weight: 600;">Eyebrow + Heading</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Eyebrow + Heading</p>
         <civ-page-header>
           <span data-eyebrow>Benefits</span>
           <h1 data-heading class="civ-heading-xl">Apply for disability compensation</h1>
         </civ-page-header>
       </div>
       <div>
-        <p style="margin: 0 0 8px; font-weight: 600;">Heading + Subheading</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Heading + Subheading</p>
         <civ-page-header>
           <h1 data-heading class="civ-heading-xl">Apply for disability compensation</h1>
           <span data-subheading>VA Form 21-526EZ</span>
         </civ-page-header>
       </div>
       <div>
-        <p style="margin: 0 0 8px; font-weight: 600;">Eyebrow + Heading + Subheading</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Eyebrow + Heading + Subheading</p>
         <civ-page-header>
           <span data-eyebrow>Benefits</span>
           <h1 data-heading class="civ-heading-xl">Apply for disability compensation</h1>
@@ -86,7 +86,7 @@ export const AllSlotCombinations: Story = {
         </civ-page-header>
       </div>
       <div>
-        <p style="margin: 0 0 8px; font-weight: 600;">Stacked Tag + Eyebrow + Heading + Inline Tag + Subheading</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Stacked Tag + Eyebrow + Heading + Inline Tag + Subheading</p>
         <civ-page-header>
           <civ-tag data-tag label="Claim #12345678" variant="gray"></civ-tag>
           <span data-eyebrow>Benefits</span>
@@ -104,9 +104,9 @@ export const AllSlotCombinations: Story = {
 export const DensityScale: Story = {
   name: 'Density Scale',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 24px;">
+    <div class="civ-flex civ-flex-col civ-gap-6">
       <div data-civ-scale="dense">
-        <p style="margin: 0 0 8px; font-weight: 600;">Dense</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Dense</p>
         <civ-page-header>
           <span data-eyebrow>Benefits</span>
           <h1 data-heading class="civ-heading-xl">
@@ -117,7 +117,7 @@ export const DensityScale: Story = {
         </civ-page-header>
       </div>
       <div>
-        <p style="margin: 0 0 8px; font-weight: 600;">Default</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Default</p>
         <civ-page-header>
           <span data-eyebrow>Benefits</span>
           <h1 data-heading class="civ-heading-xl">
@@ -128,7 +128,7 @@ export const DensityScale: Story = {
         </civ-page-header>
       </div>
       <div data-civ-scale="spacious">
-        <p style="margin: 0 0 8px; font-weight: 600;">Spacious</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Spacious</p>
         <civ-page-header>
           <span data-eyebrow>Benefits</span>
           <h1 data-heading class="civ-heading-xl">
@@ -171,9 +171,9 @@ export const ClaimDetailHeader: Story = {
 export const Compact: Story = {
   name: 'Compact',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 24px;">
+    <div class="civ-flex civ-flex-col civ-gap-6">
       <div>
-        <p style="font-weight: 600; margin-bottom: 8px;">Default</p>
+        <p class="civ-font-semibold civ-mb-2">Default</p>
         <civ-page-header>
           <span data-eyebrow>Benefits</span>
           <h1 data-heading class="civ-heading-xl">Apply for disability compensation</h1>
@@ -181,7 +181,7 @@ export const Compact: Story = {
         </civ-page-header>
       </div>
       <div>
-        <p style="font-weight: 600; margin-bottom: 8px;">Compact (sm)</p>
+        <p class="civ-font-semibold civ-mb-2">Compact (sm)</p>
         <civ-page-header spacing="sm">
           <span data-eyebrow>Benefits</span>
           <h1 data-heading class="civ-heading-xl">Apply for disability compensation</h1>

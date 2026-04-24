@@ -41,7 +41,7 @@ export const Default: Story = {
 export const AllStyles: Story = {
   name: 'All Styles',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 16px;">
+    <div class="civ-flex civ-flex-col civ-gap-4">
       <civ-card card-style="primary">
         <div data-card-header><h3 class="civ-heading-md">Primary</h3></div>
         <p>Filled primary color background with white text.</p>
@@ -61,7 +61,7 @@ export const AllStyles: Story = {
 export const ColorPaletteSecondary: Story = {
   name: 'Color Palette (Secondary)',
   render: () => html`
-    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
+    <div class="civ-grid civ-grid-cols-2 civ-gap-4">
       <civ-card color="blue"><p>Blue</p></civ-card>
       <civ-card color="teal"><p>Teal</p></civ-card>
       <civ-card color="green"><p>Green</p></civ-card>
@@ -77,7 +77,7 @@ export const ColorPaletteSecondary: Story = {
 export const ColorPalettePrimary: Story = {
   name: 'Color Palette (Primary)',
   render: () => html`
-    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
+    <div class="civ-grid civ-grid-cols-2 civ-gap-4">
       <civ-card color="blue" card-style="primary"><p>Blue</p></civ-card>
       <civ-card color="teal" card-style="primary"><p>Teal</p></civ-card>
       <civ-card color="green" card-style="primary"><p>Green</p></civ-card>
@@ -156,9 +156,9 @@ export const Small: Story = {
 export const DensityScale: Story = {
   name: 'Density Scale',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 24px;">
+    <div class="civ-flex civ-flex-col civ-gap-6">
       <div data-civ-scale="dense">
-        <p style="margin: 0 0 8px; font-weight: 600;">Dense</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Dense</p>
         <civ-card>
           <div data-card-header>
             <civ-tag label="In progress" variant="teal"></civ-tag>
@@ -175,7 +175,7 @@ export const DensityScale: Story = {
       </div>
 
       <div>
-        <p style="margin: 0 0 8px; font-weight: 600;">Default</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Default</p>
         <civ-card>
           <div data-card-header>
             <civ-tag label="In progress" variant="teal"></civ-tag>
@@ -192,7 +192,7 @@ export const DensityScale: Story = {
       </div>
 
       <div data-civ-scale="spacious">
-        <p style="margin: 0 0 8px; font-weight: 600;">Spacious</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Spacious</p>
         <civ-card>
           <div data-card-header>
             <civ-tag label="In progress" variant="teal"></civ-tag>
@@ -214,7 +214,7 @@ export const DensityScale: Story = {
 export const AppointmentCards: Story = {
   name: 'Appointment Cards',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 16px;">
+    <div class="civ-flex civ-flex-col civ-gap-4">
       <civ-card>
         <div data-card-header>
           <civ-tag label="In person" variant="blue"></civ-tag>
@@ -257,7 +257,7 @@ export const AppointmentCards: Story = {
 export const ClaimStatusCards: Story = {
   name: 'Claim Status Cards',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 16px;">
+    <div class="civ-flex civ-flex-col civ-gap-4">
       <civ-card>
         <div data-card-header>
           <div class="civ-flex civ-justify-between civ-items-center">

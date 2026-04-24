@@ -53,4 +53,22 @@ describe('civ-tag', () => {
     const el = await fixture('<civ-tag label="Test"></civ-tag>');
     expect(el.shadowRoot).toBeNull();
   });
+
+  it('adds role="status" when status prop is set', async () => {
+    const el = await fixture('<civ-tag label="Processing" status></civ-tag>');
+    const span = el.querySelector('[role="status"]');
+    expect(span).not.toBeNull();
+  });
+
+  it('omits role="status" when status prop is not set', async () => {
+    const el = await fixture('<civ-tag label="Active"></civ-tag>');
+    const span = el.querySelector('[role="status"]');
+    expect(span).toBeNull();
+  });
+
+  it('applies sm spacing class', async () => {
+    const el = await fixture('<civ-tag label="Small" spacing="sm"></civ-tag>');
+    const span = el.querySelector('.civ-tag--sm');
+    expect(span).not.toBeNull();
+  });
 });

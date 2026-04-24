@@ -111,7 +111,7 @@ export const FieldErrors: Story = {
 export const AllStates: Story = {
   name: 'All States',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 32px;">
+    <div class="civ-flex civ-flex-col civ-gap-8">
       <civ-address legend="Normal" name="normal"></civ-address>
       <civ-address legend="With hint" name="hint" hint="US addresses only"></civ-address>
       <civ-address legend="With error" name="error" error="Enter a complete address" required></civ-address>
@@ -126,17 +126,17 @@ export const AllStates: Story = {
 export const DensityScale: Story = {
   name: 'Density Scale',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 24px;">
+    <div class="civ-flex civ-flex-col civ-gap-6">
       <div data-civ-scale="dense">
-        <p style="margin: 0 0 8px; font-weight: 600;">Dense</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Dense</p>
         <civ-address legend="Mailing address" name="dense-addr"></civ-address>
       </div>
       <div>
-        <p style="margin: 0 0 8px; font-weight: 600;">Default</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Default</p>
         <civ-address legend="Mailing address" name="default-addr"></civ-address>
       </div>
       <div data-civ-scale="spacious">
-        <p style="margin: 0 0 8px; font-weight: 600;">Spacious</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Spacious</p>
         <civ-address legend="Mailing address" name="spacious-addr"></civ-address>
       </div>
     </div>
@@ -208,8 +208,8 @@ export const FullOptions: Story = {
 export const GovernmentMailingForm: Story = {
   name: 'Usage: Correspondence Address',
   render: () => html`
-    <h3 style="margin: 0 0 16px; font-size: 1.25rem;">Where should we send correspondence?</h3>
-    <p style="margin: 0 0 16px; color: #565c65;">We will mail important documents about your application to this address.</p>
+    <h3 class="civ-m-0 civ-mb-4 civ-text-xl">Where should we send correspondence?</h3>
+    <p class="civ-m-0 civ-mb-4 civ-text-muted">We will mail important documents about your application to this address.</p>
     <civ-address
       legend="Mailing address"
       name="correspondence"

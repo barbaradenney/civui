@@ -88,4 +88,34 @@ describe('civ-page-header', () => {
     const el = await fixture('<civ-page-header><h1 data-heading>T</h1></civ-page-header>');
     expect(el.shadowRoot).toBeNull();
   });
+
+  it('applies sm spacing class', async () => {
+    const el = await fixture(`
+      <civ-page-header spacing="sm">
+        <h1 data-heading>Title</h1>
+      </civ-page-header>
+    `);
+    const header = el.querySelector('.civ-page-header');
+    expect(header!.className).toContain('civ-page-header--sm');
+  });
+
+  it('renders all slots in correct order (tag → eyebrow → heading → subheading)', async () => {
+    const el = await fixture(`
+      <civ-page-header>
+        <civ-tag data-tag label="Active" variant="green"></civ-tag>
+        <span data-eyebrow>Category</span>
+        <h1 data-heading>Title</h1>
+        <span data-subheading>Subtitle</span>
+      </civ-page-header>
+    `);
+    const header = el.querySelector('.civ-page-header')!;
+    const children = Array.from(header.children);
+    const tagIdx = children.findIndex(c => c.hasAttribute('data-civ-page-header-tag'));
+    const eyebrowIdx = children.findIndex(c => c.hasAttribute('data-civ-page-header-eyebrow'));
+    const headingIdx = children.findIndex(c => c.hasAttribute('data-civ-page-header-heading'));
+    const subIdx = children.findIndex(c => c.hasAttribute('data-civ-page-header-subheading'));
+    expect(tagIdx).toBeLessThan(eyebrowIdx);
+    expect(eyebrowIdx).toBeLessThan(headingIdx);
+    expect(headingIdx).toBeLessThan(subIdx);
+  });
 });

@@ -50,27 +50,27 @@ export const Primary: Story = {
 export const AllVariants: Story = {
   name: 'All Variants',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 16px;">
+    <div class="civ-flex civ-flex-col civ-gap-4">
       <div>
-        <p style="margin: 0 0 8px; font-weight: 600;">Default</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Default</p>
         <p>Content above</p>
         <civ-divider></civ-divider>
         <p>Content below</p>
       </div>
       <div>
-        <p style="margin: 0 0 8px; font-weight: 600;">Primary</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Primary</p>
         <p>Content above</p>
         <civ-divider variant="primary"></civ-divider>
         <p>Content below</p>
       </div>
       <div>
-        <p style="margin: 0 0 8px; font-weight: 600;">Small spacing</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Small spacing</p>
         <p>Content above</p>
         <civ-divider spacing="sm"></civ-divider>
         <p>Content below</p>
       </div>
       <div>
-        <p style="margin: 0 0 8px; font-weight: 600;">Primary + Small spacing</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Primary + Small spacing</p>
         <p>Content above</p>
         <civ-divider variant="primary" spacing="sm"></civ-divider>
         <p>Content below</p>
@@ -82,9 +82,9 @@ export const AllVariants: Story = {
 export const DensityScale: Story = {
   name: 'Density Scale',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 24px;">
+    <div class="civ-flex civ-flex-col civ-gap-6">
       <div data-civ-scale="dense">
-        <p style="margin: 0 0 8px; font-weight: 600;">Dense</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Dense</p>
         <p>Section one content</p>
         <civ-divider></civ-divider>
         <p>Section two content</p>
@@ -92,7 +92,7 @@ export const DensityScale: Story = {
         <p>Section three content</p>
       </div>
       <div>
-        <p style="margin: 0 0 8px; font-weight: 600;">Default</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Default</p>
         <p>Section one content</p>
         <civ-divider></civ-divider>
         <p>Section two content</p>
@@ -100,7 +100,7 @@ export const DensityScale: Story = {
         <p>Section three content</p>
       </div>
       <div data-civ-scale="spacious">
-        <p style="margin: 0 0 8px; font-weight: 600;">Spacious</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Spacious</p>
         <p>Section one content</p>
         <civ-divider></civ-divider>
         <p>Section two content</p>
@@ -114,7 +114,7 @@ export const DensityScale: Story = {
 export const BenefitsSummary: Story = {
   name: 'Benefits Summary',
   render: () => html`
-    <div style="max-width: 600px;">
+    <div class="civ-max-w-lg">
       <h3>Disability compensation</h3>
       <p>Monthly amount: $1,234.56</p>
       <p>Combined rating: 70%</p>
@@ -133,7 +133,7 @@ export const BenefitsSummary: Story = {
 export const FormSections: Story = {
   name: 'Form Sections',
   render: () => html`
-    <div style="max-width: 600px;">
+    <div class="civ-max-w-lg">
       <h3>Personal information</h3>
       <p>Name: John Doe</p>
       <p>Date of birth: January 1, 1985</p>

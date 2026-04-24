@@ -123,7 +123,7 @@ export const WithWordCount: Story = {
 export const AllStates: Story = {
   name: 'All States',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 24px;">
+    <div class="civ-flex civ-flex-col civ-gap-6">
       <civ-textarea label="Normal" name="normal"></civ-textarea>
       <civ-textarea label="With hint" name="hint" hint="Provide additional details about your situation"></civ-textarea>
       <civ-textarea label="With error" name="error" error="This field is required" required></civ-textarea>
@@ -138,17 +138,17 @@ export const AllStates: Story = {
 export const DensityScale: Story = {
   name: 'Density Scale',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 24px;">
+    <div class="civ-flex civ-flex-col civ-gap-6">
       <div data-civ-scale="dense">
-        <p style="margin: 0 0 8px; font-weight: 600;">Dense</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Dense</p>
         <civ-textarea label="Additional comments" name="dense-comments" hint="Provide any relevant details"></civ-textarea>
       </div>
       <div>
-        <p style="margin: 0 0 8px; font-weight: 600;">Default</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Default</p>
         <civ-textarea label="Additional comments" name="default-comments" hint="Provide any relevant details"></civ-textarea>
       </div>
       <div data-civ-scale="spacious">
-        <p style="margin: 0 0 8px; font-weight: 600;">Spacious</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Spacious</p>
         <civ-textarea label="Additional comments" name="spacious-comments" hint="Provide any relevant details"></civ-textarea>
       </div>
     </div>

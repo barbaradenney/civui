@@ -115,9 +115,9 @@ export const Disabled: Story = {
 export const AllStates: Story = {
   name: 'All States',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 48px;">
+    <div class="civ-flex civ-flex-col civ-gap-12">
       <div>
-        <h3 style="margin: 0 0 8px; font-weight: 600;">Standard form</h3>
+        <h3 class="civ-m-0 civ-mb-2 civ-font-semibold">Standard form</h3>
         <civ-form form-label="Standard form">
           <civ-text-input label="Full name" name="name" required></civ-text-input>
           <civ-text-input label="Email address" name="email" type="email"></civ-text-input>
@@ -125,7 +125,7 @@ export const AllStates: Story = {
         </civ-form>
       </div>
       <div>
-        <h3 style="margin: 0 0 8px; font-weight: 600;">With errors displayed</h3>
+        <h3 class="civ-m-0 civ-mb-2 civ-font-semibold">With errors displayed</h3>
         <civ-form form-label="Form with errors">
           <civ-text-input label="Full name" name="name" required error="Enter your full name"></civ-text-input>
           <civ-text-input label="Email address" name="email" type="email" required error="Enter a valid email"></civ-text-input>
@@ -141,9 +141,9 @@ export const AllStates: Story = {
 export const DensityScale: Story = {
   name: 'Density Scale',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 24px;">
+    <div class="civ-flex civ-flex-col civ-gap-6">
       <div data-civ-scale="dense">
-        <p style="margin: 0 0 8px; font-weight: 600;">Dense</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Dense</p>
         <civ-form form-label="Dense form">
           <civ-text-input label="Full name" name="name" required></civ-text-input>
           <civ-text-input label="Email address" name="email" type="email"></civ-text-input>
@@ -151,7 +151,7 @@ export const DensityScale: Story = {
         </civ-form>
       </div>
       <div>
-        <p style="margin: 0 0 8px; font-weight: 600;">Default</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Default</p>
         <civ-form form-label="Default form">
           <civ-text-input label="Full name" name="name" required></civ-text-input>
           <civ-text-input label="Email address" name="email" type="email"></civ-text-input>
@@ -159,7 +159,7 @@ export const DensityScale: Story = {
         </civ-form>
       </div>
       <div data-civ-scale="spacious">
-        <p style="margin: 0 0 8px; font-weight: 600;">Spacious</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Spacious</p>
         <civ-form form-label="Spacious form">
           <civ-text-input label="Full name" name="name" required></civ-text-input>
           <civ-text-input label="Email address" name="email" type="email"></civ-text-input>

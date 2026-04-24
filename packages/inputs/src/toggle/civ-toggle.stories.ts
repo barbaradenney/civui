@@ -98,7 +98,7 @@ export const WithDescription: Story = {
 export const AllStates: Story = {
   name: 'All States',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 16px;">
+    <div class="civ-flex civ-flex-col civ-gap-4">
       <civ-toggle label="Normal (off)" name="normal"></civ-toggle>
       <civ-toggle label="Checked (on)" name="checked" checked></civ-toggle>
       <civ-toggle label="With hint" name="hint" hint="Additional context about this setting"></civ-toggle>
@@ -114,17 +114,17 @@ export const AllStates: Story = {
 export const DensityScale: Story = {
   name: 'Density Scale',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 24px;">
+    <div class="civ-flex civ-flex-col civ-gap-6">
       <div data-civ-scale="dense">
-        <p style="margin: 0 0 8px; font-weight: 600;">Dense</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Dense</p>
         <civ-toggle label="Email notifications" name="dense-notif" description="Receive weekly digest emails"></civ-toggle>
       </div>
       <div>
-        <p style="margin: 0 0 8px; font-weight: 600;">Default</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Default</p>
         <civ-toggle label="Email notifications" name="default-notif" description="Receive weekly digest emails"></civ-toggle>
       </div>
       <div data-civ-scale="spacious">
-        <p style="margin: 0 0 8px; font-weight: 600;">Spacious</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Spacious</p>
         <civ-toggle label="Email notifications" name="spacious-notif" description="Receive weekly digest emails"></civ-toggle>
       </div>
     </div>
@@ -146,7 +146,7 @@ export const GovernmentNotificationSettings: Story = {
         alert('Saved: ' + values);
       }}
     >
-      <h3 style="margin: 0 0 16px; font-size: 1.25rem;">Communication preferences</h3>
+      <h3 class="civ-m-0 civ-mb-4 civ-text-xl">Communication preferences</h3>
       <civ-toggle
         label="Application status updates"
         name="status-updates"

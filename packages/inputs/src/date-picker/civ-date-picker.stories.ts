@@ -115,7 +115,7 @@ export const WithMinMax: Story = {
 export const AllStates: Story = {
   name: 'All States',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 24px;">
+    <div class="civ-flex civ-flex-col civ-gap-6">
       <civ-date-picker label="Normal" name="normal"></civ-date-picker>
       <civ-date-picker label="With hint" name="hint" hint="Use the calendar or type a date"></civ-date-picker>
       <civ-date-picker label="With error" name="error" error="Select a date" required></civ-date-picker>
@@ -130,17 +130,17 @@ export const AllStates: Story = {
 export const DensityScale: Story = {
   name: 'Density Scale',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 24px;">
+    <div class="civ-flex civ-flex-col civ-gap-6">
       <div data-civ-scale="dense">
-        <p style="margin: 0 0 8px; font-weight: 600;">Dense</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Dense</p>
         <civ-date-picker label="Appointment date" name="dense-date" hint="Select an available date"></civ-date-picker>
       </div>
       <div>
-        <p style="margin: 0 0 8px; font-weight: 600;">Default</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Default</p>
         <civ-date-picker label="Appointment date" name="default-date" hint="Select an available date"></civ-date-picker>
       </div>
       <div data-civ-scale="spacious">
-        <p style="margin: 0 0 8px; font-weight: 600;">Spacious</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Spacious</p>
         <civ-date-picker label="Appointment date" name="spacious-date" hint="Select an available date"></civ-date-picker>
       </div>
     </div>
@@ -157,7 +157,7 @@ export const GovernmentAppointmentScheduler: Story = {
       const fd = new FormData(e.target as HTMLFormElement);
       alert('Appointment scheduled: ' + fd.get('date'));
     }}>
-      <h3 style="margin: 0 0 16px; font-size: 1.25rem;">Schedule your in-person appointment</h3>
+      <h3 class="civ-m-0 civ-mb-4 civ-text-xl">Schedule your in-person appointment</h3>
       <civ-date-picker
         label="Preferred date"
         name="date"

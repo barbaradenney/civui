@@ -116,4 +116,22 @@ describe('civ-link', () => {
     const icon = el.querySelector('civ-icon');
     expect(icon!.getAttribute('name')).toBe('home');
   });
+
+  it('applies danger class', async () => {
+    const el = await fixture('<civ-link href="/delete" danger>Delete</civ-link>');
+    const link = el.querySelector('a')!;
+    expect(link.className).toContain('danger');
+  });
+
+  it('sanitizes javascript: href', async () => {
+    const el = await fixture('<civ-link href="javascript:alert(1)">XSS</civ-link>');
+    const link = el.querySelector('a')!;
+    expect(link.getAttribute('href') ?? '').not.toContain('javascript:');
+  });
+
+  it('has focus-visible:civ-focus-ring class', async () => {
+    const el = await fixture('<civ-link href="/next">Go</civ-link>');
+    const link = el.querySelector('a')!;
+    expect(link.className).toContain('focus-visible:civ-focus-ring');
+  });
 });

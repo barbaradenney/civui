@@ -143,7 +143,7 @@ export const CustomThirdOption: Story = {
 export const AllStates: Story = {
   name: 'All States',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 32px;">
+    <div class="civ-flex civ-flex-col civ-gap-8">
       <civ-yes-no legend="Normal (no selection)" name="normal"></civ-yes-no>
       <civ-yes-no legend="With hint" name="hint" hint="Additional context for this question"></civ-yes-no>
       <civ-yes-no legend="With error" name="error" error="Select an answer" required></civ-yes-no>
@@ -159,17 +159,17 @@ export const AllStates: Story = {
 export const DensityScale: Story = {
   name: 'Density Scale',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 24px;">
+    <div class="civ-flex civ-flex-col civ-gap-6">
       <div data-civ-scale="dense">
-        <p style="margin: 0 0 8px; font-weight: 600;">Dense</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Dense</p>
         <civ-yes-no legend="Are you a U.S. citizen?" name="dense-citizen"></civ-yes-no>
       </div>
       <div>
-        <p style="margin: 0 0 8px; font-weight: 600;">Default</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Default</p>
         <civ-yes-no legend="Are you a U.S. citizen?" name="default-citizen"></civ-yes-no>
       </div>
       <div data-civ-scale="spacious">
-        <p style="margin: 0 0 8px; font-weight: 600;">Spacious</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Spacious</p>
         <civ-yes-no legend="Are you a U.S. citizen?" name="spacious-citizen"></civ-yes-no>
       </div>
     </div>
@@ -204,7 +204,7 @@ export const GovernmentEligibilityScreening: Story = {
         alert('Submitted: ' + values);
       }}
     >
-      <h3 style="margin: 0 0 16px; font-size: 1.25rem;">Eligibility questions</h3>
+      <h3 class="civ-m-0 civ-mb-4 civ-text-xl">Eligibility questions</h3>
       <civ-yes-no
         legend="Are you a U.S. citizen or permanent resident?"
         name="citizen"

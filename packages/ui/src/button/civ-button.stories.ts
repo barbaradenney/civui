@@ -66,26 +66,26 @@ export const Tertiary: Story = {
 export const AllVariants: Story = {
   name: 'All Variants',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 16px;">
+    <div class="civ-flex civ-flex-col civ-gap-4">
       <div>
-        <p style="margin: 0 0 8px; font-weight: 600;">Standard</p>
-        <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Standard</p>
+        <div class="civ-flex civ-gap-3 civ-flex-wrap civ-items-center">
           <civ-button variant="primary">Primary</civ-button>
           <civ-button variant="secondary">Secondary</civ-button>
           <civ-button variant="tertiary">Tertiary</civ-button>
         </div>
       </div>
       <div>
-        <p style="margin: 0 0 8px; font-weight: 600;">Danger</p>
-        <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Danger</p>
+        <div class="civ-flex civ-gap-3 civ-flex-wrap civ-items-center">
           <civ-button variant="primary" danger>Primary</civ-button>
           <civ-button variant="secondary" danger>Secondary</civ-button>
           <civ-button variant="tertiary" danger>Tertiary</civ-button>
         </div>
       </div>
       <div>
-        <p style="margin: 0 0 8px; font-weight: 600;">Disabled</p>
-        <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Disabled</p>
+        <div class="civ-flex civ-gap-3 civ-flex-wrap civ-items-center">
           <civ-button variant="primary" disabled>Primary</civ-button>
           <civ-button variant="secondary" disabled>Secondary</civ-button>
           <civ-button variant="tertiary" disabled>Tertiary</civ-button>
@@ -97,7 +97,7 @@ export const AllVariants: Story = {
 
 export const Danger: Story = {
   render: () => html`
-    <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+    <div class="civ-flex civ-gap-3 civ-flex-wrap civ-items-center">
       <civ-button variant="primary" danger>Delete account</civ-button>
       <civ-button variant="secondary" danger>Remove dependent</civ-button>
       <civ-button variant="tertiary" danger>Cancel claim</civ-button>
@@ -107,7 +107,7 @@ export const Danger: Story = {
 
 export const Disabled: Story = {
   render: () => html`
-    <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+    <div class="civ-flex civ-gap-3 civ-flex-wrap civ-items-center">
       <civ-button disabled>Disabled primary</civ-button>
       <civ-button variant="secondary" disabled>Disabled secondary</civ-button>
       <civ-button variant="tertiary" disabled>Disabled tertiary</civ-button>
@@ -119,7 +119,7 @@ export const Disabled: Story = {
 export const WithIcons: Story = {
   name: 'With Icons',
   render: () => html`
-    <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center;">
+    <div class="civ-flex civ-flex-wrap civ-gap-3 civ-items-center">
       <civ-button icon-start="download">Download</civ-button>
       <civ-button icon-end="arrow-right" variant="primary">Continue</civ-button>
       <civ-button icon-start="edit" variant="secondary">Edit</civ-button>
@@ -132,26 +132,26 @@ export const WithIcons: Story = {
 export const DensityScale: Story = {
   name: 'Density Scale',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 24px;">
+    <div class="civ-flex civ-flex-col civ-gap-6">
       <div data-civ-scale="dense">
-        <p style="margin: 0 0 8px; font-weight: 600;">Dense</p>
-        <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Dense</p>
+        <div class="civ-flex civ-gap-3 civ-flex-wrap civ-items-center">
           <civ-button variant="primary">Submit</civ-button>
           <civ-button variant="secondary">Save</civ-button>
           <civ-button variant="tertiary">Cancel</civ-button>
         </div>
       </div>
       <div>
-        <p style="margin: 0 0 8px; font-weight: 600;">Default</p>
-        <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Default</p>
+        <div class="civ-flex civ-gap-3 civ-flex-wrap civ-items-center">
           <civ-button variant="primary">Submit</civ-button>
           <civ-button variant="secondary">Save</civ-button>
           <civ-button variant="tertiary">Cancel</civ-button>
         </div>
       </div>
       <div data-civ-scale="spacious">
-        <p style="margin: 0 0 8px; font-weight: 600;">Spacious</p>
-        <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Spacious</p>
+        <div class="civ-flex civ-gap-3 civ-flex-wrap civ-items-center">
           <civ-button variant="primary">Submit</civ-button>
           <civ-button variant="secondary">Save</civ-button>
           <civ-button variant="tertiary">Cancel</civ-button>
@@ -170,8 +170,8 @@ export const FormActions: Story = {
         alert('Form submitted!');
       }}"
     >
-      <p style="margin-bottom: 16px;">Complete your VA benefits application and submit for review.</p>
-      <div style="display: flex; gap: 12px;">
+      <p class="civ-mb-4">Complete your VA benefits application and submit for review.</p>
+      <div class="civ-flex civ-gap-3">
         <civ-button type="submit">Submit application</civ-button>
         <civ-button variant="secondary">Save and continue later</civ-button>
         <civ-button variant="tertiary">Cancel</civ-button>
@@ -183,17 +183,17 @@ export const FormActions: Story = {
 export const ClaimActions: Story = {
   name: 'Claim Actions',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 16px;">
+    <div class="civ-flex civ-flex-col civ-gap-4">
       <div>
-        <p style="margin: 0 0 8px; font-weight: 600;">Upload evidence</p>
-        <div style="display: flex; gap: 12px;">
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Upload evidence</p>
+        <div class="civ-flex civ-gap-3">
           <civ-button variant="primary">Upload documents</civ-button>
           <civ-button variant="tertiary">Skip for now</civ-button>
         </div>
       </div>
       <div>
-        <p style="margin: 0 0 8px; font-weight: 600;">Manage dependents</p>
-        <div style="display: flex; gap: 12px;">
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Manage dependents</p>
+        <div class="civ-flex civ-gap-3">
           <civ-button variant="secondary">Add dependent</civ-button>
           <civ-button variant="tertiary" danger>Remove dependent</civ-button>
         </div>

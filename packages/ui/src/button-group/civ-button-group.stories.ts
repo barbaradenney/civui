@@ -49,7 +49,7 @@ export const WithPressed: Story = {
 export const AllVariants: Story = {
   name: 'All Variants',
   render: () => html`
-    <div style="display: flex; gap: 24px; align-items: start;">
+    <div class="civ-flex civ-gap-6 civ-items-start">
       <civ-button-group>
         <civ-action-button label="One" variant="primary"></civ-action-button>
         <civ-action-button label="Two" variant="primary"></civ-action-button>

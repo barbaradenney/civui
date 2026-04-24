@@ -81,7 +81,7 @@ export const Critical: Story = {
 export const AllVariants: Story = {
   name: 'All Variants',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 16px; max-width: 600px;">
+    <div class="civ-flex civ-flex-col civ-gap-4 civ-max-w-lg">
       <civ-link-card
         href="#/benefits"
         heading="Apply for benefits"
@@ -118,10 +118,10 @@ export const AllVariants: Story = {
 export const DensityScale: Story = {
   name: 'Density Scale',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 24px;">
+    <div class="civ-flex civ-flex-col civ-gap-6">
       <div data-civ-scale="dense">
-        <p style="margin: 0 0 8px; font-weight: 600;">Dense</p>
-        <div style="display: flex; flex-direction: column; gap: 12px; max-width: 600px;">
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Dense</p>
+        <div class="civ-flex civ-flex-col civ-gap-3 civ-max-w-lg">
           <civ-link-card
             href="#/disability"
             heading="Disability compensation"
@@ -136,8 +136,8 @@ export const DensityScale: Story = {
         </div>
       </div>
       <div>
-        <p style="margin: 0 0 8px; font-weight: 600;">Default</p>
-        <div style="display: flex; flex-direction: column; gap: 12px; max-width: 600px;">
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Default</p>
+        <div class="civ-flex civ-flex-col civ-gap-3 civ-max-w-lg">
           <civ-link-card
             href="#/disability"
             heading="Disability compensation"
@@ -152,8 +152,8 @@ export const DensityScale: Story = {
         </div>
       </div>
       <div data-civ-scale="spacious">
-        <p style="margin: 0 0 8px; font-weight: 600;">Spacious</p>
-        <div style="display: flex; flex-direction: column; gap: 12px; max-width: 600px;">
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Spacious</p>
+        <div class="civ-flex civ-flex-col civ-gap-3 civ-max-w-lg">
           <civ-link-card
             href="#/disability"
             heading="Disability compensation"
@@ -174,7 +174,7 @@ export const DensityScale: Story = {
 export const BenefitsHub: Story = {
   name: 'Benefits Hub',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 12px; max-width: 600px;">
+    <div class="civ-flex civ-flex-col civ-gap-3 civ-max-w-lg">
       <civ-link-card
         href="#/disability"
         heading="Disability compensation"
@@ -202,7 +202,7 @@ export const BenefitsHub: Story = {
 export const DashboardGrid: Story = {
   name: 'Dashboard Grid',
   render: () => html`
-    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px;">
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));" class="civ-gap-4">
       <civ-link-card
         href="#/claims"
         heading="Check claim status"
@@ -230,9 +230,9 @@ export const DashboardGrid: Story = {
 export const Compact: Story = {
   name: 'Compact',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 24px; max-width: 600px;">
+    <div class="civ-flex civ-flex-col civ-gap-6 civ-max-w-lg">
       <div>
-        <p style="font-weight: 600; margin-bottom: 8px;">Default</p>
+        <p class="civ-font-semibold civ-mb-2">Default</p>
         <civ-link-card
           href="#/benefits"
           heading="Apply for benefits"
@@ -240,7 +240,7 @@ export const Compact: Story = {
         ></civ-link-card>
       </div>
       <div>
-        <p style="font-weight: 600; margin-bottom: 8px;">Compact (sm)</p>
+        <p class="civ-font-semibold civ-mb-2">Compact (sm)</p>
         <civ-link-card
           href="#/benefits"
           heading="Apply for benefits"

@@ -67,10 +67,10 @@ export const Back: Story = {
 export const AllVariants: Story = {
   name: 'All Variants',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 16px;">
+    <div class="civ-flex civ-flex-col civ-gap-4">
       <div>
-        <p style="margin: 0 0 8px; font-weight: 600;">Standard</p>
-        <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Standard</p>
+        <div class="civ-flex civ-gap-4 civ-flex-wrap civ-items-center">
           <civ-link href="#" variant="primary">Primary link</civ-link>
           <civ-link href="#" variant="secondary">Secondary link</civ-link>
           <civ-link href="#" variant="tertiary">Tertiary link</civ-link>
@@ -78,16 +78,16 @@ export const AllVariants: Story = {
         </div>
       </div>
       <div>
-        <p style="margin: 0 0 8px; font-weight: 600;">Danger</p>
-        <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Danger</p>
+        <div class="civ-flex civ-gap-4 civ-flex-wrap civ-items-center">
           <civ-link href="#" variant="primary" danger>Primary danger</civ-link>
           <civ-link href="#" variant="secondary" danger>Secondary danger</civ-link>
           <civ-link href="#" variant="tertiary" danger>Tertiary danger</civ-link>
         </div>
       </div>
       <div>
-        <p style="margin: 0 0 8px; font-weight: 600;">Disabled</p>
-        <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Disabled</p>
+        <div class="civ-flex civ-gap-4 civ-flex-wrap civ-items-center">
           <civ-link href="#" variant="primary" disabled>Primary disabled</civ-link>
           <civ-link href="#" variant="secondary" disabled>Secondary disabled</civ-link>
           <civ-link href="#" variant="tertiary" disabled>Tertiary disabled</civ-link>
@@ -99,7 +99,7 @@ export const AllVariants: Story = {
 
 export const Danger: Story = {
   render: () => html`
-    <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
+    <div class="civ-flex civ-gap-4 civ-flex-wrap civ-items-center">
       <civ-link href="#" variant="primary" danger>Delete account</civ-link>
       <civ-link href="#" variant="secondary" danger>Remove item</civ-link>
       <civ-link href="#" variant="tertiary" danger>Cancel request</civ-link>
@@ -109,7 +109,7 @@ export const Danger: Story = {
 
 export const Disabled: Story = {
   render: () => html`
-    <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
+    <div class="civ-flex civ-gap-4 civ-flex-wrap civ-items-center">
       <civ-link href="#" variant="primary" disabled>Disabled primary</civ-link>
       <civ-link href="#" variant="secondary" disabled>Disabled secondary</civ-link>
       <civ-link href="#" variant="tertiary" disabled>Disabled tertiary</civ-link>
@@ -120,7 +120,7 @@ export const Disabled: Story = {
 export const WithCustomIcons: Story = {
   name: 'With Custom Icons',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 12px;">
+    <div class="civ-flex civ-flex-col civ-gap-3">
       <civ-link href="#" icon-start="download">Download your form</civ-link>
       <civ-link href="#" icon-end="external-link">Visit VA.gov</civ-link>
       <civ-link href="#" icon-start="print" icon-end="external-link">Print and mail</civ-link>
@@ -133,26 +133,26 @@ export const WithCustomIcons: Story = {
 export const DensityScale: Story = {
   name: 'Density Scale',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 24px;">
+    <div class="civ-flex civ-flex-col civ-gap-6">
       <div data-civ-scale="dense">
-        <p style="margin: 0 0 8px; font-weight: 600;">Dense</p>
-        <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Dense</p>
+        <div class="civ-flex civ-gap-4 civ-flex-wrap civ-items-center">
           <civ-link href="#" variant="primary">View claim</civ-link>
           <civ-link href="#" variant="secondary">Download letter</civ-link>
           <civ-link href="#" variant="tertiary">Learn more</civ-link>
         </div>
       </div>
       <div>
-        <p style="margin: 0 0 8px; font-weight: 600;">Default</p>
-        <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Default</p>
+        <div class="civ-flex civ-gap-4 civ-flex-wrap civ-items-center">
           <civ-link href="#" variant="primary">View claim</civ-link>
           <civ-link href="#" variant="secondary">Download letter</civ-link>
           <civ-link href="#" variant="tertiary">Learn more</civ-link>
         </div>
       </div>
       <div data-civ-scale="spacious">
-        <p style="margin: 0 0 8px; font-weight: 600;">Spacious</p>
-        <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Spacious</p>
+        <div class="civ-flex civ-gap-4 civ-flex-wrap civ-items-center">
           <civ-link href="#" variant="primary">View claim</civ-link>
           <civ-link href="#" variant="secondary">Download letter</civ-link>
           <civ-link href="#" variant="tertiary">Learn more</civ-link>
@@ -175,11 +175,11 @@ export const InContext: Story = {
 export const BenefitsNavigation: Story = {
   name: 'Benefits Navigation',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 12px;">
+    <div class="civ-flex civ-flex-col civ-gap-3">
       <civ-link href="#/hub" variant="back" label="Back to VA benefits hub"></civ-link>
-      <div style="margin-top: 16px;">
-        <p style="margin: 0 0 8px;">Related links:</p>
-        <div style="display: flex; flex-direction: column; gap: 8px;">
+      <div class="civ-mt-4">
+        <p class="civ-m-0 civ-mb-2">Related links:</p>
+        <div class="civ-flex civ-flex-col civ-gap-2">
           <civ-link href="#/disability" variant="primary">Disability compensation</civ-link>
           <civ-link href="#/healthcare" variant="primary">Health care benefits</civ-link>
           <civ-link href="#/education" variant="primary">Education benefits</civ-link>

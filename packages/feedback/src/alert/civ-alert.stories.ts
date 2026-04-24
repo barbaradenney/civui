@@ -90,7 +90,7 @@ export const Success: Story = {
 export const AllVariants: Story = {
   name: 'All Variants',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 16px;">
+    <div class="civ-flex civ-flex-col civ-gap-4">
       <civ-alert variant="info" heading="Information">
         Routine maintenance is scheduled for this weekend.
       </civ-alert>
@@ -112,7 +112,7 @@ export const AllVariants: Story = {
 export const PrimaryStyle: Story = {
   name: 'Primary Style',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 16px;">
+    <div class="civ-flex civ-flex-col civ-gap-4">
       <civ-alert variant="info" alert-style="primary" heading="Information">
         Routine maintenance is scheduled for this weekend.
       </civ-alert>
@@ -132,7 +132,7 @@ export const PrimaryStyle: Story = {
 export const TertiaryStyle: Story = {
   name: 'Tertiary Style',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 16px;">
+    <div class="civ-flex civ-flex-col civ-gap-4">
       <civ-alert variant="info" alert-style="tertiary" heading="Information">
         Routine maintenance is scheduled for this weekend.
       </civ-alert>
@@ -151,7 +151,7 @@ export const TertiaryStyle: Story = {
 
 export const Slim: Story = {
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 8px;">
+    <div class="civ-flex civ-flex-col civ-gap-2">
       <civ-alert slim>Informational: Your profile was updated.</civ-alert>
       <civ-alert variant="warning" slim>Warning: Some fields are incomplete.</civ-alert>
       <civ-alert variant="error" slim>Error: File upload failed.</civ-alert>
@@ -173,21 +173,21 @@ export const Dismissible: Story = {
 export const DensityScale: Story = {
   name: 'Density Scale',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 24px;">
+    <div class="civ-flex civ-flex-col civ-gap-6">
       <div data-civ-scale="dense">
-        <p style="margin: 0 0 8px; font-weight: 600;">Dense</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Dense</p>
         <civ-alert variant="info" heading="Information">
           Your application is being reviewed.
         </civ-alert>
       </div>
       <div>
-        <p style="margin: 0 0 8px; font-weight: 600;">Default</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Default</p>
         <civ-alert variant="info" heading="Information">
           Your application is being reviewed.
         </civ-alert>
       </div>
       <div data-civ-scale="spacious">
-        <p style="margin: 0 0 8px; font-weight: 600;">Spacious</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Spacious</p>
         <civ-alert variant="info" heading="Information">
           Your application is being reviewed.
         </civ-alert>
@@ -201,9 +201,9 @@ export const DensityScale: Story = {
 export const GovernmentFormValidation: Story = {
   name: 'Usage: Form Validation Feedback',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 24px;">
+    <div class="civ-flex civ-flex-col civ-gap-6">
       <civ-alert variant="error" heading="There is a problem with your application">
-        <ul style="margin: 8px 0 0; padding-left: 20px;">
+        <ul class="civ-mt-2 civ-mb-0 civ-ps-5">
           <li><a href="#name" style="color: inherit;">Enter your full name</a></li>
           <li><a href="#email" style="color: inherit;">Enter a valid email address</a></li>
           <li><a href="#ssn" style="color: inherit;">Enter a valid Social Security number</a></li>
@@ -228,15 +228,15 @@ export const GovernmentFormValidation: Story = {
 export const Compact: Story = {
   name: 'Compact',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 24px;">
+    <div class="civ-flex civ-flex-col civ-gap-6">
       <div>
-        <p style="font-weight: 600; margin-bottom: 8px;">Default</p>
+        <p class="civ-font-semibold civ-mb-2">Default</p>
         <civ-alert variant="info" heading="Information">
           Your application is being reviewed.
         </civ-alert>
       </div>
       <div>
-        <p style="font-weight: 600; margin-bottom: 8px;">Compact (sm)</p>
+        <p class="civ-font-semibold civ-mb-2">Compact (sm)</p>
         <civ-alert variant="info" heading="Information" spacing="sm">
           Your application is being reviewed.
         </civ-alert>

@@ -93,21 +93,21 @@ export const Disabled: Story = {
 export const AllStates: Story = {
   name: 'All States',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 32px;">
+    <div class="civ-flex civ-flex-col civ-gap-8">
       <div>
-        <h3 style="margin: 0 0 8px; font-weight: 600;">Normal</h3>
+        <h3 class="civ-m-0 civ-mb-2 civ-font-semibold">Normal</h3>
         <civ-signature legend="Statement of truth" name="sig-normal"></civ-signature>
       </div>
       <div>
-        <h3 style="margin: 0 0 8px; font-weight: 600;">With statement text</h3>
+        <h3 class="civ-m-0 civ-mb-2 civ-font-semibold">With statement text</h3>
         <civ-signature legend="Statement of truth" name="sig-statement" statement="I certify this information is true."></civ-signature>
       </div>
       <div>
-        <h3 style="margin: 0 0 8px; font-weight: 600;">With errors</h3>
+        <h3 class="civ-m-0 civ-mb-2 civ-font-semibold">With errors</h3>
         <civ-signature legend="Statement of truth" name="sig-error" name-error="Enter your name" certify-error="You must certify" required></civ-signature>
       </div>
       <div>
-        <h3 style="margin: 0 0 8px; font-weight: 600;">Disabled</h3>
+        <h3 class="civ-m-0 civ-mb-2 civ-font-semibold">Disabled</h3>
         <civ-signature legend="Statement of truth" name="sig-disabled" disabled></civ-signature>
       </div>
     </div>
@@ -119,17 +119,17 @@ export const AllStates: Story = {
 export const DensityScale: Story = {
   name: 'Density Scale',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 24px;">
+    <div class="civ-flex civ-flex-col civ-gap-6">
       <div data-civ-scale="dense">
-        <p style="margin: 0 0 8px; font-weight: 600;">Dense</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Dense</p>
         <civ-signature legend="Statement of truth" name="dense-sig" statement="I certify this is true." required></civ-signature>
       </div>
       <div>
-        <p style="margin: 0 0 8px; font-weight: 600;">Default</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Default</p>
         <civ-signature legend="Statement of truth" name="default-sig" statement="I certify this is true." required></civ-signature>
       </div>
       <div data-civ-scale="spacious">
-        <p style="margin: 0 0 8px; font-weight: 600;">Spacious</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Spacious</p>
         <civ-signature legend="Statement of truth" name="spacious-sig" statement="I certify this is true." required></civ-signature>
       </div>
     </div>
@@ -141,8 +141,8 @@ export const DensityScale: Story = {
 export const GovernmentCertification: Story = {
   name: 'Usage: Application Certification',
   render: () => html`
-    <h3 style="margin: 0 0 16px; font-size: 1.25rem;">Certification and signature</h3>
-    <p style="margin: 0 0 16px; color: #565c65;">By signing below, you are certifying that the statements in this application are true and complete.</p>
+    <h3 class="civ-m-0 civ-mb-4 civ-text-xl">Certification and signature</h3>
+    <p class="civ-m-0 civ-mb-4 civ-text-muted">By signing below, you are certifying that the statements in this application are true and complete.</p>
     <civ-signature
       legend="Applicant certification"
       name="applicant-sig"

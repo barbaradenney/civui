@@ -28,7 +28,7 @@ export const Default: Story = {
 export const AllVariants: Story = {
   name: 'All Variants',
   render: () => html`
-    <div style="display: flex; gap: 8px; align-items: center;">
+    <div class="civ-flex civ-gap-2 civ-items-center">
       <civ-action-button label="Primary" variant="primary"></civ-action-button>
       <civ-action-button label="Secondary" variant="secondary"></civ-action-button>
       <civ-action-button label="Tertiary" variant="tertiary"></civ-action-button>
@@ -39,7 +39,7 @@ export const AllVariants: Story = {
 export const Pressed: Story = {
   name: 'Toggle (Pressed)',
   render: () => html`
-    <div style="display: flex; gap: 8px; align-items: center;">
+    <div class="civ-flex civ-gap-2 civ-items-center">
       <civ-action-button label="Bold" pressed></civ-action-button>
       <civ-action-button label="Italic"></civ-action-button>
       <civ-action-button label="Underline"></civ-action-button>
@@ -78,7 +78,7 @@ export const ButtonGroupWithPressed: Story = {
 export const ButtonGroupVertical: Story = {
   name: 'Vertical Button Group',
   render: () => html`
-    <div style="display: flex; gap: 24px; align-items: start;">
+    <div class="civ-flex civ-gap-6 civ-items-start">
       <civ-button-group orientation="vertical">
         <civ-action-button label="Option 1" variant="primary"></civ-action-button>
         <civ-action-button label="Option 2" variant="primary" pressed></civ-action-button>
@@ -103,7 +103,7 @@ export const ButtonGroupVertical: Story = {
 export const DangerVariants: Story = {
   name: 'Danger Variants',
   render: () => html`
-    <div style="display: flex; gap: 8px; align-items: center;">
+    <div class="civ-flex civ-gap-2 civ-items-center">
       <civ-action-button label="Delete" variant="primary" danger></civ-action-button>
       <civ-action-button label="Remove" variant="secondary" danger></civ-action-button>
       <civ-action-button label="Cancel" variant="tertiary" danger></civ-action-button>

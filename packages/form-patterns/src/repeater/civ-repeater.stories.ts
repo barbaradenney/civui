@@ -111,7 +111,7 @@ export const Disabled: Story = {
 export const AllStates: Story = {
   name: 'All States',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 32px;">
+    <div class="civ-flex civ-flex-col civ-gap-8">
       <civ-repeater legend="Normal" name="normal" item-label="item">
         <civ-text-input label="Name" name="name"></civ-text-input>
       </civ-repeater>
@@ -133,21 +133,21 @@ export const AllStates: Story = {
 export const DensityScale: Story = {
   name: 'Density Scale',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 24px;">
+    <div class="civ-flex civ-flex-col civ-gap-6">
       <div data-civ-scale="dense">
-        <p style="margin: 0 0 8px; font-weight: 600;">Dense</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Dense</p>
         <civ-repeater legend="Dependents" name="dense-deps" item-label="dependent">
           <civ-text-input label="Full name" name="fullName"></civ-text-input>
         </civ-repeater>
       </div>
       <div>
-        <p style="margin: 0 0 8px; font-weight: 600;">Default</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Default</p>
         <civ-repeater legend="Dependents" name="default-deps" item-label="dependent">
           <civ-text-input label="Full name" name="fullName"></civ-text-input>
         </civ-repeater>
       </div>
       <div data-civ-scale="spacious">
-        <p style="margin: 0 0 8px; font-weight: 600;">Spacious</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Spacious</p>
         <civ-repeater legend="Dependents" name="spacious-deps" item-label="dependent">
           <civ-text-input label="Full name" name="fullName"></civ-text-input>
         </civ-repeater>

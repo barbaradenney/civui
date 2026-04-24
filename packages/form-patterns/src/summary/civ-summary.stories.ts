@@ -134,17 +134,17 @@ export const Disabled: Story = {
 export const AllStates: Story = {
   name: 'All States',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 48px;">
+    <div class="civ-flex civ-flex-col civ-gap-12">
       <div>
-        <h3 style="margin: 0 0 8px; font-weight: 600;">With edit links</h3>
+        <h3 class="civ-m-0 civ-mb-2 civ-font-semibold">With edit links</h3>
         <civ-summary heading="Editable summary" id="summary-editable"></civ-summary>
       </div>
       <div>
-        <h3 style="margin: 0 0 8px; font-weight: 600;">Read-only (no edit links)</h3>
+        <h3 class="civ-m-0 civ-mb-2 civ-font-semibold">Read-only (no edit links)</h3>
         <civ-summary heading="Confirmation summary" id="summary-readonly"></civ-summary>
       </div>
       <div>
-        <h3 style="margin: 0 0 8px; font-weight: 600;">Empty</h3>
+        <h3 class="civ-m-0 civ-mb-2 civ-font-semibold">Empty</h3>
         <civ-summary heading="No data yet"></civ-summary>
       </div>
     </div>
@@ -170,17 +170,17 @@ export const AllStates: Story = {
 export const DensityScale: Story = {
   name: 'Density Scale',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 24px;">
+    <div class="civ-flex civ-flex-col civ-gap-6">
       <div data-civ-scale="dense">
-        <p style="margin: 0 0 8px; font-weight: 600;">Dense</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Dense</p>
         <civ-summary heading="Summary" id="dense-summary"></civ-summary>
       </div>
       <div>
-        <p style="margin: 0 0 8px; font-weight: 600;">Default</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Default</p>
         <civ-summary heading="Summary" id="default-summary"></civ-summary>
       </div>
       <div data-civ-scale="spacious">
-        <p style="margin: 0 0 8px; font-weight: 600;">Spacious</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Spacious</p>
         <civ-summary heading="Summary" id="spacious-summary"></civ-summary>
       </div>
     </div>

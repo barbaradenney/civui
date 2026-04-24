@@ -107,7 +107,7 @@ export const Disabled: Story = {
 export const AllStates: Story = {
   name: 'All States',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 32px;">
+    <div class="civ-flex civ-flex-col civ-gap-8">
       <civ-radio-group legend="Normal" name="normal">
         <civ-radio label="Option A" value="a"></civ-radio>
         <civ-radio label="Option B" value="b"></civ-radio>
@@ -133,9 +133,9 @@ export const AllStates: Story = {
 export const DensityScale: Story = {
   name: 'Density Scale',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 24px;">
+    <div class="civ-flex civ-flex-col civ-gap-6">
       <div data-civ-scale="dense">
-        <p style="margin: 0 0 8px; font-weight: 600;">Dense</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Dense</p>
         <civ-radio-group legend="Contact preference" name="dense-contact">
           <civ-radio label="Email" value="email"></civ-radio>
           <civ-radio label="Phone" value="phone"></civ-radio>
@@ -143,7 +143,7 @@ export const DensityScale: Story = {
         </civ-radio-group>
       </div>
       <div>
-        <p style="margin: 0 0 8px; font-weight: 600;">Default</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Default</p>
         <civ-radio-group legend="Contact preference" name="default-contact">
           <civ-radio label="Email" value="email"></civ-radio>
           <civ-radio label="Phone" value="phone"></civ-radio>
@@ -151,7 +151,7 @@ export const DensityScale: Story = {
         </civ-radio-group>
       </div>
       <div data-civ-scale="spacious">
-        <p style="margin: 0 0 8px; font-weight: 600;">Spacious</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Spacious</p>
         <civ-radio-group legend="Contact preference" name="spacious-contact">
           <civ-radio label="Email" value="email"></civ-radio>
           <civ-radio label="Phone" value="phone"></civ-radio>

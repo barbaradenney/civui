@@ -89,21 +89,21 @@ export const Disabled: Story = {
 export const AllStates: Story = {
   name: 'All States',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 32px;">
+    <div class="civ-flex civ-flex-col civ-gap-8">
       <div>
-        <h3 style="margin: 0 0 8px; font-weight: 600;">Normal</h3>
+        <h3 class="civ-m-0 civ-mb-2 civ-font-semibold">Normal</h3>
         <civ-direct-deposit legend="Direct deposit" name="normal"></civ-direct-deposit>
       </div>
       <div>
-        <h3 style="margin: 0 0 8px; font-weight: 600;">With errors</h3>
+        <h3 class="civ-m-0 civ-mb-2 civ-font-semibold">With errors</h3>
         <civ-direct-deposit legend="Direct deposit" name="errors" type-error="Select account type" routing-error="Enter routing number" account-error="Enter account number"></civ-direct-deposit>
       </div>
       <div>
-        <h3 style="margin: 0 0 8px; font-weight: 600;">Required</h3>
+        <h3 class="civ-m-0 civ-mb-2 civ-font-semibold">Required</h3>
         <civ-direct-deposit legend="Direct deposit" name="required" required></civ-direct-deposit>
       </div>
       <div>
-        <h3 style="margin: 0 0 8px; font-weight: 600;">Disabled</h3>
+        <h3 class="civ-m-0 civ-mb-2 civ-font-semibold">Disabled</h3>
         <civ-direct-deposit legend="Direct deposit" name="disabled" disabled></civ-direct-deposit>
       </div>
     </div>
@@ -115,17 +115,17 @@ export const AllStates: Story = {
 export const DensityScale: Story = {
   name: 'Density Scale',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 24px;">
+    <div class="civ-flex civ-flex-col civ-gap-6">
       <div data-civ-scale="dense">
-        <p style="margin: 0 0 8px; font-weight: 600;">Dense</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Dense</p>
         <civ-direct-deposit legend="Direct deposit" name="dense-bank"></civ-direct-deposit>
       </div>
       <div>
-        <p style="margin: 0 0 8px; font-weight: 600;">Default</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Default</p>
         <civ-direct-deposit legend="Direct deposit" name="default-bank"></civ-direct-deposit>
       </div>
       <div data-civ-scale="spacious">
-        <p style="margin: 0 0 8px; font-weight: 600;">Spacious</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Spacious</p>
         <civ-direct-deposit legend="Direct deposit" name="spacious-bank"></civ-direct-deposit>
       </div>
     </div>
@@ -137,8 +137,8 @@ export const DensityScale: Story = {
 export const GovernmentPaymentSetup: Story = {
   name: 'Usage: Benefit Payment Setup',
   render: () => html`
-    <h3 style="margin: 0 0 16px; font-size: 1.25rem;">Set up direct deposit for benefit payments</h3>
-    <p style="margin: 0 0 16px; color: #565c65;">
+    <h3 class="civ-m-0 civ-mb-4 civ-text-xl">Set up direct deposit for benefit payments</h3>
+    <p class="civ-m-0 civ-mb-4 civ-text-muted">
       Provide your bank account information so we can deposit your benefit payments directly.
       You can find your routing and account numbers on a check or by contacting your bank.
     </p>

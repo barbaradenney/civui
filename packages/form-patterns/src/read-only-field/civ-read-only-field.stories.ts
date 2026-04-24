@@ -46,14 +46,14 @@ export const MultipleFields: Story = {
 export const Compact: Story = {
   name: 'Compact',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 24px;">
+    <div class="civ-flex civ-flex-col civ-gap-6">
       <div>
-        <p style="font-weight: 600; margin-bottom: 8px;">Default</p>
+        <p class="civ-font-semibold civ-mb-2">Default</p>
         <civ-read-only-field label="Full name" value="Jane A. Doe"></civ-read-only-field>
         <civ-read-only-field label="Date of birth" value="January 15, 1990"></civ-read-only-field>
       </div>
       <div>
-        <p style="font-weight: 600; margin-bottom: 8px;">Compact (sm)</p>
+        <p class="civ-font-semibold civ-mb-2">Compact (sm)</p>
         <civ-read-only-field label="Full name" value="Jane A. Doe" spacing="sm"></civ-read-only-field>
         <civ-read-only-field label="Date of birth" value="January 15, 1990" spacing="sm"></civ-read-only-field>
       </div>

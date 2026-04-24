@@ -56,7 +56,7 @@ export const Step1_Hub: Story = {
     },
   },
   render: () => html`
-    <div style="max-width: 640px;">
+    <div class="civ-max-w-2xl">
       <h1 class="civ-heading-xl civ-mb-2">Apply for disability compensation</h1>
       <p class="civ-text-muted civ-mb-4">VA Form 21-526EZ</p>
 
@@ -95,7 +95,7 @@ export const Step2a_LockedChapter: Story = {
     },
   },
   render: () => html`
-    <div style="max-width: 640px;">
+    <div class="civ-max-w-2xl">
       <civ-link variant="back" label="Back to task list" href="#"></civ-link>
 
       <h2 class="civ-heading-xl civ-mt-3 civ-mb-4">Personal information</h2>
@@ -140,7 +140,7 @@ export const Step2b_PrefillWithMoreSteps: Story = {
     },
   },
   render: () => html`
-    <div style="max-width: 640px;">
+    <div class="civ-max-w-2xl">
       <civ-link variant="back" label="Back to task list" href="#"></civ-link>
 
       <h2 class="civ-heading-xl civ-mt-3 civ-mb-4">Contact information</h2>
@@ -185,7 +185,7 @@ export const Step3_EditStep: Story = {
     },
   },
   render: () => html`
-    <div style="max-width: 640px;">
+    <div class="civ-max-w-2xl">
       <civ-link variant="back" label="Back to contact information" href="#/contact"></civ-link>
 
       <h2 class="civ-heading-xl civ-mt-3 civ-mb-4">Edit phone number</h2>
@@ -219,7 +219,7 @@ export const Step4_ChapterComplete: Story = {
     },
   },
   render: () => html`
-    <div style="max-width: 640px;">
+    <div class="civ-max-w-2xl">
       <civ-link variant="back" label="Back to task list" href="#"></civ-link>
 
       <h2 class="civ-heading-xl civ-mt-3 civ-mb-4">Contact information</h2>
@@ -261,7 +261,7 @@ export const Step5_HubAfterComplete: Story = {
     },
   },
   render: () => html`
-    <div style="max-width: 640px;">
+    <div class="civ-max-w-2xl">
       <h1 class="civ-heading-xl civ-mb-2">Apply for disability compensation</h1>
       <p class="civ-text-muted civ-mb-4">VA Form 21-526EZ</p>
 

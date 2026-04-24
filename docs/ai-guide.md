@@ -14,7 +14,7 @@ For architecture and internals, see `CLAUDE.md` in the repo root.
 | `<civ-text-input>` | Input | `type`, `width`, `placeholder`, `maxlength`, `pattern`, `autocomplete`, `inputmode` | `{ value }` |
 | `<civ-textarea>` | Input | `rows`, `maxlength`, `placeholder` | `{ value }` |
 | `<civ-select>` | Input | `options`, `emptyLabel` | `{ value }` |
-| `<civ-combobox>` | Input | `options`, `placeholder`, `noResultsText` | `civ-input: { value }`, `civ-change: { value, label }` |
+| `<civ-combobox>` | Input | `options`, `placeholder`, `noResultsText` | `{ value }` |
 | `<civ-checkbox>` | Choice | `checked`, `indeterminate`, `description`, `tile` | `{ checked, value }` |
 | `<civ-checkbox-group>` | Group | `legend`, `tile`, `orientation` | `{ values: string[] }` |
 | `<civ-radio>` | Choice | `label`, `value`, `checked`, `description`, `tile` | (bubbles to group) |
@@ -32,8 +32,30 @@ For architecture and internals, see `CLAUDE.md` in the repo root.
 | `<civ-fieldset>` | Layout | `legend`, `hint`, `error`, `required`, `disabled` | — |
 | `<civ-form>` | Layout | `action`, `method`, `supportResources` | `civ-submit: { formData }`, `civ-invalid: { errors }` |
 | `<civ-form-step>` | Layout | `persist`, `sensitive`, `showPause` | `civ-step-change`, `civ-step-pause`, `civ-step-complete` |
+| `<civ-form-group>` | Layout | `legend`, `hint`, `error` | — |
+| `<civ-repeater>` | Layout | `legend`, `name`, `min`, `max`, `addLabel`, `removeLabel` | `civ-change: { value }` |
 | `<civ-section-intro>` | Layout | `heading`, `headingLevel`, `tone` | — |
+| `<civ-summary>` | Display | `data`, `editLabel` | `civ-edit: { section }` |
+| `<civ-read-only-field>` | Display | `label`, `value` | — |
+| `<civ-button>` | UI | `label`, `variant`, `danger`, `disabled`, `type` | `civ-analytics` |
+| `<civ-action-button>` | UI | `label`, `variant`, `danger`, `disabled`, `pressed`, `type` | `civ-analytics` |
+| `<civ-link>` | UI | `label`, `href`, `variant`, `danger`, `disabled` | `civ-analytics` |
+| `<civ-link-card>` | UI | `href`, `heading`, `description`, `variant`, `spacing` | `civ-analytics` |
+| `<civ-card>` | UI | `heading`, `spacing` | — |
+| `<civ-tag>` | UI | `label`, `variant`, `tagStyle`, `status`, `spacing` | — |
+| `<civ-divider>` | UI | `spacing`, `variant` | — |
+| `<civ-page-header>` | UI | `spacing` | — (uses slots: `data-tag`, `data-eyebrow`, `data-heading`, `data-subheading`) |
+| `<civ-icon>` | UI | `name`, `label` | — |
+| `<civ-alert>` | Feedback | `variant`, `heading`, `dismissible` | `civ-dismiss` |
+| `<civ-button-group>` | UI | `orientation`, `label` | — (`role="toolbar"`) |
+| `<civ-input-group>` | UI | — (layout container) | — |
+| `<civ-address>` | Compound | `legend`, `value` | `civ-change: { value }` |
+| `<civ-name>` | Compound | `legend`, `value` | `civ-change: { value }` |
+| `<civ-direct-deposit>` | Compound | `legend`, `value` | `civ-change: { value }` |
+| `<civ-signature>` | Compound | `legend`, `value`, `certificationText` | `civ-change: { value }` |
 | `<civ-deceased-person>` | Compound | `legend`, `hideRelationship` | `{ value: DeceasedPersonValue }` |
+| `<civ-task-list>` | Navigation | — | — (uses `<civ-task-group>` and `<civ-task>` children) |
+| `<civ-skip-link>` | Navigation | `label`, `target` | — |
 
 **All form-participating components** also have: `label`, `name`, `value`, `hint`, `error`, `required`, `disabled`, `requiredMessage`.
 

@@ -27,7 +27,7 @@ export interface ComboboxOption {
  * @prop {boolean} required - Whether a selection is required
  * @prop {boolean} disabled - Whether the combobox is disabled
  *
- * @fires civ-change - When a selection is made, detail: { value, label }
+ * @fires civ-change - When a selection is made, detail: { value }
  * @fires civ-input - When the filter text changes, detail: { value }
  * @fires civ-analytics - Analytics tracking event on change
  */
@@ -219,7 +219,7 @@ export class CivCombobox extends CivFormElement {
     this._filter = '';
     this.updateFormValue('');
     dispatch(this, 'civ-input', { value: '' });
-    dispatch(this, 'civ-change', { value: '', label: '' });
+    dispatch(this, 'civ-change', { value: '' });
     this._setOpen(false);
     // Return focus to the input
     const input = this.querySelector(`#${this._inputId}`) as HTMLInputElement | null;
@@ -323,7 +323,7 @@ export class CivCombobox extends CivFormElement {
     this._setOpen(false);
     this._activeIndex = -1;
     this.updateFormValue(this.value);
-    dispatch(this, 'civ-change', { value: this.value, label: option.label });
+    dispatch(this, 'civ-change', { value: this.value });
     this.sendAnalytics('select');
     this.announce(interpolate(t('comboboxSelected'), { label: option.label }));
   }

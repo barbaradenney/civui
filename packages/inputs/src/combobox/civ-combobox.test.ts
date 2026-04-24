@@ -111,7 +111,7 @@ describe('civ-combobox', () => {
     firstOption.click();
     await elementUpdated(el);
 
-    expect(eventDetail).toEqual({ value: 'CA', label: 'California' });
+    expect(eventDetail).toEqual({ value: 'CA' });
     expect(el.value).toBe('CA');
   });
 

@@ -102,7 +102,7 @@ export const WithDescription: Story = {
 export const AllStates: Story = {
   name: 'All States',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 16px;">
+    <div class="civ-flex civ-flex-col civ-gap-4">
       <civ-checkbox label="Normal (unchecked)" name="normal"></civ-checkbox>
       <civ-checkbox label="Checked" name="checked" checked></civ-checkbox>
       <civ-checkbox label="With hint" name="hint" hint="Additional context for this option"></civ-checkbox>
@@ -119,17 +119,17 @@ export const AllStates: Story = {
 export const DensityScale: Story = {
   name: 'Density Scale',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 24px;">
+    <div class="civ-flex civ-flex-col civ-gap-6">
       <div data-civ-scale="dense">
-        <p style="margin: 0 0 8px; font-weight: 600;">Dense</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Dense</p>
         <civ-checkbox label="I agree to the terms and conditions" name="dense-agree"></civ-checkbox>
       </div>
       <div>
-        <p style="margin: 0 0 8px; font-weight: 600;">Default</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Default</p>
         <civ-checkbox label="I agree to the terms and conditions" name="default-agree"></civ-checkbox>
       </div>
       <div data-civ-scale="spacious">
-        <p style="margin: 0 0 8px; font-weight: 600;">Spacious</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Spacious</p>
         <civ-checkbox label="I agree to the terms and conditions" name="spacious-agree"></civ-checkbox>
       </div>
     </div>

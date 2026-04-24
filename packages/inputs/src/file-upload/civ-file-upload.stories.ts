@@ -105,7 +105,7 @@ export const Disabled: Story = {
 export const AllStates: Story = {
   name: 'All States',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 24px;">
+    <div class="civ-flex civ-flex-col civ-gap-6">
       <civ-file-upload label="Normal" name="normal"></civ-file-upload>
       <civ-file-upload label="With hint" name="hint" hint="PDF files only, max 5 MB" accept=".pdf"></civ-file-upload>
       <civ-file-upload label="With error" name="error" error="Upload a document" required></civ-file-upload>
@@ -120,17 +120,17 @@ export const AllStates: Story = {
 export const DensityScale: Story = {
   name: 'Density Scale',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 24px;">
+    <div class="civ-flex civ-flex-col civ-gap-6">
       <div data-civ-scale="dense">
-        <p style="margin: 0 0 8px; font-weight: 600;">Dense</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Dense</p>
         <civ-file-upload label="Upload document" name="dense-doc" hint="PDF only" accept=".pdf"></civ-file-upload>
       </div>
       <div>
-        <p style="margin: 0 0 8px; font-weight: 600;">Default</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Default</p>
         <civ-file-upload label="Upload document" name="default-doc" hint="PDF only" accept=".pdf"></civ-file-upload>
       </div>
       <div data-civ-scale="spacious">
-        <p style="margin: 0 0 8px; font-weight: 600;">Spacious</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Spacious</p>
         <civ-file-upload label="Upload document" name="spacious-doc" hint="PDF only" accept=".pdf"></civ-file-upload>
       </div>
     </div>
@@ -193,17 +193,17 @@ export const FullVariant: Story = {
 
 export const AllVariants: Story = {
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 32px;">
+    <div class="civ-flex civ-flex-col civ-gap-8">
       <div>
-        <h3 style="font-size: 14px; font-weight: bold; margin: 0 0 8px;">Compact -- inline in dense forms</h3>
+        <h3 class="civ-text-sm civ-font-bold civ-m-0 civ-mb-2">Compact -- inline in dense forms</h3>
         <civ-file-upload label="Attachment" name="attachment" variant="compact" accept=".pdf"></civ-file-upload>
       </div>
       <div>
-        <h3 style="font-size: 14px; font-weight: bold; margin: 0 0 8px;">Default -- standard forms</h3>
+        <h3 class="civ-text-sm civ-font-bold civ-m-0 civ-mb-2">Default -- standard forms</h3>
         <civ-file-upload label="Supporting document" name="doc" accept=".pdf,.jpg"></civ-file-upload>
       </div>
       <div>
-        <h3 style="font-size: 14px; font-weight: bold; margin: 0 0 8px;">Full -- document-heavy workflows</h3>
+        <h3 class="civ-text-sm civ-font-bold civ-m-0 civ-mb-2">Full -- document-heavy workflows</h3>
         <civ-file-upload label="Case file upload" name="case-files" variant="full" multiple show-preview accept=".pdf,.jpg,.png"></civ-file-upload>
       </div>
     </div>
@@ -280,8 +280,8 @@ export const UploadSimulation: Story = {
 export const GovernmentDocumentSubmission: Story = {
   name: 'Usage: Document Submission',
   render: () => html`
-    <h3 style="margin: 0 0 16px; font-size: 1.25rem;">Upload required documents</h3>
-    <p style="margin: 0 0 16px; color: #565c65;">Upload clear copies of the following documents to support your application.</p>
+    <h3 class="civ-m-0 civ-mb-4 civ-text-xl">Upload required documents</h3>
+    <p class="civ-m-0 civ-mb-4" style="color: #565c65;">Upload clear copies of the following documents to support your application.</p>
     <civ-file-upload
       label="Government-issued identification"
       name="id-doc"

@@ -105,9 +105,9 @@ export const AllComplete: Story = {
 export const AllStates: Story = {
   name: 'All States',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 48px;">
+    <div class="civ-flex civ-flex-col civ-gap-12">
       <div>
-        <h3 style="margin: 0 0 8px; font-weight: 600;">In progress (mixed statuses)</h3>
+        <h3 class="civ-m-0 civ-mb-2 civ-font-semibold">In progress (mixed statuses)</h3>
         <civ-task-list>
           <civ-task-group>
             <h3 data-task-group-heading class="civ-heading-md">Tasks</h3>
@@ -118,7 +118,7 @@ export const AllStates: Story = {
         </civ-task-list>
       </div>
       <div>
-        <h3 style="margin: 0 0 8px; font-weight: 600;">With errors</h3>
+        <h3 class="civ-m-0 civ-mb-2 civ-font-semibold">With errors</h3>
         <civ-task-list>
           <civ-task-group>
             <h3 data-task-group-heading class="civ-heading-md">Tasks</h3>
@@ -129,7 +129,7 @@ export const AllStates: Story = {
         </civ-task-list>
       </div>
       <div>
-        <h3 style="margin: 0 0 8px; font-weight: 600;">All complete</h3>
+        <h3 class="civ-m-0 civ-mb-2 civ-font-semibold">All complete</h3>
         <civ-task-list>
           <civ-task-group>
             <h3 data-task-group-heading class="civ-heading-md">Tasks</h3>
@@ -148,9 +148,9 @@ export const AllStates: Story = {
 export const DensityScale: Story = {
   name: 'Density Scale',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 24px;">
+    <div class="civ-flex civ-flex-col civ-gap-6">
       <div data-civ-scale="dense">
-        <p style="margin: 0 0 8px; font-weight: 600;">Dense</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Dense</p>
         <civ-task-list>
           <civ-task-group>
             <h3 data-task-group-heading class="civ-heading-md">Application</h3>
@@ -161,7 +161,7 @@ export const DensityScale: Story = {
         </civ-task-list>
       </div>
       <div>
-        <p style="margin: 0 0 8px; font-weight: 600;">Default</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Default</p>
         <civ-task-list>
           <civ-task-group>
             <h3 data-task-group-heading class="civ-heading-md">Application</h3>
@@ -172,7 +172,7 @@ export const DensityScale: Story = {
         </civ-task-list>
       </div>
       <div data-civ-scale="spacious">
-        <p style="margin: 0 0 8px; font-weight: 600;">Spacious</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Spacious</p>
         <civ-task-list>
           <civ-task-group>
             <h3 data-task-group-heading class="civ-heading-md">Application</h3>
@@ -191,8 +191,8 @@ export const DensityScale: Story = {
 export const GovernmentDisabilityApplication: Story = {
   name: 'Usage: VA Disability Application Hub',
   render: () => html`
-    <h1 style="margin: 0 0 8px; font-size: 1.75rem; font-weight: bold;">Apply for disability compensation</h1>
-    <p style="margin: 0 0 24px; color: #565c65;">VA Form 21-526EZ</p>
+    <h1 class="civ-m-0 civ-mb-2 civ-text-2xl civ-font-bold">Apply for disability compensation</h1>
+    <p class="civ-m-0 civ-mb-6 civ-text-muted">VA Form 21-526EZ</p>
 
     <civ-task-list>
       <civ-task-group>
@@ -222,7 +222,7 @@ export const GovernmentDisabilityApplication: Story = {
 export const PrefillHub: Story = {
   name: 'Prefill: Hub with Prefilled Chapters',
   render: () => html`
-    <div style="max-width: 640px;">
+    <div class="civ-max-w-2xl">
       <civ-task-list>
         <civ-task-group>
           <h3 data-task-group-heading class="civ-heading-md">Your information</h3>

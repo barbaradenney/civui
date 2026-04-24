@@ -108,25 +108,25 @@ export const Clickable: Story = {
 export const AllStates: Story = {
   name: 'All States',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 32px;">
+    <div class="civ-flex civ-flex-col civ-gap-8">
       <div>
-        <h3 style="margin: 0 0 8px; font-weight: 600;">First step (horizontal)</h3>
+        <h3 class="civ-m-0 civ-mb-2 civ-font-semibold">First step (horizontal)</h3>
         <civ-progress-steps steps='${defaultSteps}' current="0"></civ-progress-steps>
       </div>
       <div>
-        <h3 style="margin: 0 0 8px; font-weight: 600;">Middle step</h3>
+        <h3 class="civ-m-0 civ-mb-2 civ-font-semibold">Middle step</h3>
         <civ-progress-steps steps='${defaultSteps}' current="1"></civ-progress-steps>
       </div>
       <div>
-        <h3 style="margin: 0 0 8px; font-weight: 600;">Last step</h3>
+        <h3 class="civ-m-0 civ-mb-2 civ-font-semibold">Last step</h3>
         <civ-progress-steps steps='${defaultSteps}' current="2"></civ-progress-steps>
       </div>
       <div>
-        <h3 style="margin: 0 0 8px; font-weight: 600;">With error step</h3>
+        <h3 class="civ-m-0 civ-mb-2 civ-font-semibold">With error step</h3>
         <civ-progress-steps steps='["Step 1","Step 2","Step 3","Step 4"]' current="3" error-steps="[1]"></civ-progress-steps>
       </div>
       <div>
-        <h3 style="margin: 0 0 8px; font-weight: 600;">Vertical with descriptions</h3>
+        <h3 class="civ-m-0 civ-mb-2 civ-font-semibold">Vertical with descriptions</h3>
         <civ-progress-steps steps='[{"label":"Step 1","description":"Complete"},{"label":"Step 2","description":"In progress"},{"label":"Step 3","description":"Not started"}]' current="1" orientation="vertical"></civ-progress-steps>
       </div>
     </div>
@@ -138,17 +138,17 @@ export const AllStates: Story = {
 export const DensityScale: Story = {
   name: 'Density Scale',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 24px;">
+    <div class="civ-flex civ-flex-col civ-gap-6">
       <div data-civ-scale="dense">
-        <p style="margin: 0 0 8px; font-weight: 600;">Dense</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Dense</p>
         <civ-progress-steps steps='${defaultSteps}' current="1"></civ-progress-steps>
       </div>
       <div>
-        <p style="margin: 0 0 8px; font-weight: 600;">Default</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Default</p>
         <civ-progress-steps steps='${defaultSteps}' current="1"></civ-progress-steps>
       </div>
       <div data-civ-scale="spacious">
-        <p style="margin: 0 0 8px; font-weight: 600;">Spacious</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Spacious</p>
         <civ-progress-steps steps='${defaultSteps}' current="1"></civ-progress-steps>
       </div>
     </div>
@@ -192,7 +192,7 @@ export const GovernmentApplicationProgress: Story = {
       value="37"
       label="Application progress"
       status="3 of 8 sections complete"
-      style="margin-top: 16px;"
+      class="civ-mt-4"
     ></civ-progress-bar>
   `,
 };

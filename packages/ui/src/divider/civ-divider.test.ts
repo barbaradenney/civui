@@ -46,4 +46,12 @@ describe('civ-divider', () => {
     expect(hr.className).toContain('civ-divider--primary');
     expect(hr.className).toContain('civ-divider--sm');
   });
+
+  it('hr is a presentational separator (implicit role)', async () => {
+    const el = await fixture('<civ-divider></civ-divider>');
+    const hr = el.querySelector('hr');
+    // hr element has implicit role="separator" — no explicit role needed
+    expect(hr).not.toBeNull();
+    expect(hr!.tagName).toBe('HR');
+  });
 });

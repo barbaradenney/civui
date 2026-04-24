@@ -81,7 +81,7 @@ export const Disabled: Story = {
 export const AllStates: Story = {
   name: 'All States',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 32px;">
+    <div class="civ-flex civ-flex-col civ-gap-8">
       <civ-name legend="Normal" name="normal"></civ-name>
       <civ-name legend="With errors" name="errors" first-error="Enter a first name" last-error="Enter a last name"></civ-name>
       <civ-name legend="Required" name="required" required></civ-name>
@@ -95,17 +95,17 @@ export const AllStates: Story = {
 export const DensityScale: Story = {
   name: 'Density Scale',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 24px;">
+    <div class="civ-flex civ-flex-col civ-gap-6">
       <div data-civ-scale="dense">
-        <p style="margin: 0 0 8px; font-weight: 600;">Dense</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Dense</p>
         <civ-name legend="Your name" name="dense-name"></civ-name>
       </div>
       <div>
-        <p style="margin: 0 0 8px; font-weight: 600;">Default</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Default</p>
         <civ-name legend="Your name" name="default-name"></civ-name>
       </div>
       <div data-civ-scale="spacious">
-        <p style="margin: 0 0 8px; font-weight: 600;">Spacious</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Spacious</p>
         <civ-name legend="Your name" name="spacious-name"></civ-name>
       </div>
     </div>
@@ -141,7 +141,7 @@ export const WithoutSuffix: Story = {
 export const GovernmentIdentitySection: Story = {
   name: 'Usage: Identity Section',
   render: () => html`
-    <h3 style="margin: 0 0 16px; font-size: 1.25rem;">Personal information</h3>
+    <h3 class="civ-m-0 civ-mb-4 civ-text-xl">Personal information</h3>
     <civ-name legend="Veteran's name" name="veteranName" required></civ-name>
     <civ-memorable-date
       legend="Date of birth"

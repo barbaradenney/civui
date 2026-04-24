@@ -109,7 +109,7 @@ export const Disabled: Story = {
 export const AllStates: Story = {
   name: 'All States',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 24px;">
+    <div class="civ-flex civ-flex-col civ-gap-6">
       <civ-text-input label="Normal" name="normal"></civ-text-input>
       <civ-text-input label="With hint" name="hint" hint="Provide your legal first and last name"></civ-text-input>
       <civ-text-input label="With error" name="error" error="Enter your full name"></civ-text-input>
@@ -124,17 +124,17 @@ export const AllStates: Story = {
 export const DensityScale: Story = {
   name: 'Density Scale',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 24px;">
+    <div class="civ-flex civ-flex-col civ-gap-6">
       <div data-civ-scale="dense">
-        <p style="margin: 0 0 8px; font-weight: 600;">Dense</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Dense</p>
         <civ-text-input label="Full name" name="dense-name" hint="Legal first and last name"></civ-text-input>
       </div>
       <div>
-        <p style="margin: 0 0 8px; font-weight: 600;">Default</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Default</p>
         <civ-text-input label="Full name" name="default-name" hint="Legal first and last name"></civ-text-input>
       </div>
       <div data-civ-scale="spacious">
-        <p style="margin: 0 0 8px; font-weight: 600;">Spacious</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Spacious</p>
         <civ-text-input label="Full name" name="spacious-name" hint="Legal first and last name"></civ-text-input>
       </div>
     </div>
@@ -145,7 +145,7 @@ export const DensityScale: Story = {
 
 export const WidthVariants: Story = {
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 16px;">
+    <div class="civ-flex civ-flex-col civ-gap-4">
       <civ-text-input label="2xs width" name="w-2xs" width="2xs"></civ-text-input>
       <civ-text-input label="xs width" name="w-xs" width="xs"></civ-text-input>
       <civ-text-input label="sm width (ZIP code)" name="w-sm" width="sm"></civ-text-input>
@@ -162,7 +162,7 @@ export const WidthVariants: Story = {
 
 export const InputTypes: Story = {
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 16px;">
+    <div class="civ-flex civ-flex-col civ-gap-4">
       <civ-text-input label="Text" name="text" type="text"></civ-text-input>
       <civ-text-input label="Email address" name="email" type="email" hint="For example: name@agency.gov"></civ-text-input>
       <civ-text-input label="Password" name="password" type="password"></civ-text-input>

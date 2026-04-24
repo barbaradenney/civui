@@ -109,7 +109,7 @@ export const Prefilled: Story = {
 export const AllStates: Story = {
   name: 'All States',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 24px;">
+    <div class="civ-flex civ-flex-col civ-gap-6">
       <civ-memorable-date legend="Normal" name="normal"></civ-memorable-date>
       <civ-memorable-date legend="With hint" name="hint" hint="For example: January 15 1990"></civ-memorable-date>
       <civ-memorable-date legend="With error" name="error" error="Enter a valid date" hint="For example: January 15 1990"></civ-memorable-date>
@@ -124,17 +124,17 @@ export const AllStates: Story = {
 export const DensityScale: Story = {
   name: 'Density Scale',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 24px;">
+    <div class="civ-flex civ-flex-col civ-gap-6">
       <div data-civ-scale="dense">
-        <p style="margin: 0 0 8px; font-weight: 600;">Dense</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Dense</p>
         <civ-memorable-date legend="Date of birth" name="dense-dob" hint="For example: January 15 1990"></civ-memorable-date>
       </div>
       <div>
-        <p style="margin: 0 0 8px; font-weight: 600;">Default</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Default</p>
         <civ-memorable-date legend="Date of birth" name="default-dob" hint="For example: January 15 1990"></civ-memorable-date>
       </div>
       <div data-civ-scale="spacious">
-        <p style="margin: 0 0 8px; font-weight: 600;">Spacious</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Spacious</p>
         <civ-memorable-date legend="Date of birth" name="spacious-dob" hint="For example: January 15 1990"></civ-memorable-date>
       </div>
     </div>
@@ -168,7 +168,7 @@ export const GovernmentIdentityVerification: Story = {
         alert(JSON.stringify(Object.fromEntries(data)));
       }}"
     >
-      <h3 style="margin: 0 0 16px; font-size: 1.25rem;">Verify your identity</h3>
+      <h3 class="civ-m-0 civ-mb-4 civ-text-xl">Verify your identity</h3>
       <civ-memorable-date
         legend="Date of birth"
         name="dob"

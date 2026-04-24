@@ -1768,6 +1768,93 @@
     @apply civ-bg-success;
   }
 
+  .civ-steps-horizontal {
+    @apply civ-flex civ-flex-row civ-items-center civ-p-0 civ-m-0;
+    gap: 0;
+  }
+
+  .civ-steps-vertical {
+    @apply civ-flex civ-flex-col;
+    gap: 0;
+  }
+
+  .civ-step-label {
+    font-size: var(--civ-typography-fontSize-sm, 14px);
+    color: var(--civ-color-base-darkest);
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .civ-step-label--vertical {
+    max-width: none;
+    white-space: normal;
+  }
+
+  .civ-step-label--current {
+    font-weight: bold;
+  }
+
+  .civ-step-label--error {
+    color: var(--civ-color-error-DEFAULT);
+  }
+
+  .civ-step-desc {
+    font-size: var(--civ-typography-fontSize-xs, 12px);
+    color: var(--civ-color-base-DEFAULT);
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .civ-step-desc--vertical {
+    max-width: none;
+    white-space: normal;
+  }
+
+  button.civ-step-circle {
+    appearance: none;
+    -webkit-appearance: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+  }
+
+  button.civ-step-circle:hover {
+    filter: brightness(0.9);
+  }
+
+  .civ-step-counter {
+    font-size: var(--civ-typography-fontSize-sm, 14px);
+    color: var(--civ-color-base-dark);
+    margin-top: var(--civ-spacing-2, 8px);
+  }
+
+  @media (max-width: 480px) {
+    .civ-steps-horizontal {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .civ-steps-horizontal .civ-step-connector--horizontal {
+      display: none;
+    }
+
+    .civ-steps-horizontal .civ-step-connector--vertical-auto {
+      display: block;
+    }
+
+    .civ-step-label {
+      max-width: none;
+    }
+
+    .civ-step-desc {
+      max-width: none;
+    }
+  }
+
   /* ── Progress Bar ─────────────────────────────────────────── */
 
   .civ-progress-track {

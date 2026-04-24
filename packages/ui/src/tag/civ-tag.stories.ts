@@ -29,7 +29,7 @@ export const Default: Story = {
 
 export const Primary: Story = {
   render: () => html`
-    <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+    <div class="civ-flex civ-gap-2 civ-flex-wrap civ-items-center">
       <civ-tag label="Not started" variant="blue" tag-style="primary"></civ-tag>
       <civ-tag label="In progress" variant="teal" tag-style="primary"></civ-tag>
       <civ-tag label="Complete" variant="green" tag-style="primary"></civ-tag>
@@ -45,7 +45,7 @@ export const Primary: Story = {
 export const Secondary: Story = {
   name: 'Secondary',
   render: () => html`
-    <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+    <div class="civ-flex civ-gap-2 civ-flex-wrap civ-items-center">
       <civ-tag label="Not started" variant="blue"></civ-tag>
       <civ-tag label="In progress" variant="teal"></civ-tag>
       <civ-tag label="Complete" variant="green"></civ-tag>
@@ -61,10 +61,10 @@ export const Secondary: Story = {
 export const AllVariants: Story = {
   name: 'All Variants',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 16px;">
+    <div class="civ-flex civ-flex-col civ-gap-4">
       <div>
-        <p style="margin: 0 0 8px; font-weight: 600;">Primary (high emphasis)</p>
-        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Primary (high emphasis)</p>
+        <div class="civ-flex civ-gap-2 civ-flex-wrap">
           <civ-tag label="Approved" variant="green" tag-style="primary"></civ-tag>
           <civ-tag label="Denied" variant="red" tag-style="primary"></civ-tag>
           <civ-tag label="Active" variant="blue" tag-style="primary"></civ-tag>
@@ -76,8 +76,8 @@ export const AllVariants: Story = {
         </div>
       </div>
       <div>
-        <p style="margin: 0 0 8px; font-weight: 600;">Secondary (low emphasis)</p>
-        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Secondary (low emphasis)</p>
+        <div class="civ-flex civ-gap-2 civ-flex-wrap">
           <civ-tag label="Submitted" variant="green"></civ-tag>
           <civ-tag label="Needs review" variant="red"></civ-tag>
           <civ-tag label="Not started" variant="blue"></civ-tag>
@@ -95,26 +95,26 @@ export const AllVariants: Story = {
 export const DensityScale: Story = {
   name: 'Density Scale',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 24px;">
+    <div class="civ-flex civ-flex-col civ-gap-6">
       <div data-civ-scale="dense">
-        <p style="margin: 0 0 8px; font-weight: 600;">Dense</p>
-        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Dense</p>
+        <div class="civ-flex civ-gap-2 civ-flex-wrap">
           <civ-tag label="Active" variant="blue" tag-style="primary"></civ-tag>
           <civ-tag label="Not started" variant="blue"></civ-tag>
           <civ-tag label="Complete" variant="green" tag-style="primary"></civ-tag>
         </div>
       </div>
       <div>
-        <p style="margin: 0 0 8px; font-weight: 600;">Default</p>
-        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Default</p>
+        <div class="civ-flex civ-gap-2 civ-flex-wrap">
           <civ-tag label="Active" variant="blue" tag-style="primary"></civ-tag>
           <civ-tag label="Not started" variant="blue"></civ-tag>
           <civ-tag label="Complete" variant="green" tag-style="primary"></civ-tag>
         </div>
       </div>
       <div data-civ-scale="spacious">
-        <p style="margin: 0 0 8px; font-weight: 600;">Spacious</p>
-        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Spacious</p>
+        <div class="civ-flex civ-gap-2 civ-flex-wrap">
           <civ-tag label="Active" variant="blue" tag-style="primary"></civ-tag>
           <civ-tag label="Not started" variant="blue"></civ-tag>
           <civ-tag label="Complete" variant="green" tag-style="primary"></civ-tag>
@@ -127,20 +127,20 @@ export const DensityScale: Story = {
 export const ClaimStatuses: Story = {
   name: 'Claim Statuses',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 12px;">
-      <div style="display: flex; align-items: center; gap: 12px;">
+    <div class="civ-flex civ-flex-col civ-gap-3">
+      <div class="civ-flex civ-items-center civ-gap-3">
         <civ-tag label="Decision made" variant="green" tag-style="primary"></civ-tag>
         <span>Disability compensation — approved</span>
       </div>
-      <div style="display: flex; align-items: center; gap: 12px;">
+      <div class="civ-flex civ-items-center civ-gap-3">
         <civ-tag label="In progress" variant="teal"></civ-tag>
         <span>Travel reimbursement — evidence gathering</span>
       </div>
-      <div style="display: flex; align-items: center; gap: 12px;">
+      <div class="civ-flex civ-items-center civ-gap-3">
         <civ-tag label="Action needed" variant="red"></civ-tag>
         <span>Education benefits — missing documents</span>
       </div>
-      <div style="display: flex; align-items: center; gap: 12px;">
+      <div class="civ-flex civ-items-center civ-gap-3">
         <civ-tag label="Not started" variant="gray"></civ-tag>
         <span>Housing assistance — draft saved</span>
       </div>
@@ -151,18 +151,18 @@ export const ClaimStatuses: Story = {
 export const Compact: Story = {
   name: 'Compact',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 24px;">
+    <div class="civ-flex civ-flex-col civ-gap-6">
       <div>
-        <p style="font-weight: 600; margin-bottom: 8px;">Default</p>
-        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <p class="civ-font-semibold civ-mb-2">Default</p>
+        <div class="civ-flex civ-gap-2 civ-flex-wrap">
           <civ-tag label="Active" variant="blue" tag-style="primary"></civ-tag>
           <civ-tag label="In progress" variant="teal"></civ-tag>
           <civ-tag label="Complete" variant="green" tag-style="primary"></civ-tag>
         </div>
       </div>
       <div>
-        <p style="font-weight: 600; margin-bottom: 8px;">Compact (sm)</p>
-        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <p class="civ-font-semibold civ-mb-2">Compact (sm)</p>
+        <div class="civ-flex civ-gap-2 civ-flex-wrap">
           <civ-tag label="Active" variant="blue" tag-style="primary" spacing="sm"></civ-tag>
           <civ-tag label="In progress" variant="teal" spacing="sm"></civ-tag>
           <civ-tag label="Complete" variant="green" tag-style="primary" spacing="sm"></civ-tag>

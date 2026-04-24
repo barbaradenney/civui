@@ -17,7 +17,7 @@ type Story = StoryObj;
 export const Default: Story = {
   render: () => html`
     <div>
-      <p style="margin-bottom: 8px; font-style: italic; color: #565c65;">
+      <p class="civ-mb-2 civ-italic civ-text-muted">
         Press Tab to focus the skip link — it appears when focused.
       </p>
       <civ-skip-link></civ-skip-link>
@@ -34,7 +34,7 @@ export const Default: Story = {
 export const CustomTarget: Story = {
   render: () => html`
     <div>
-      <p style="margin-bottom: 8px; font-style: italic; color: #565c65;">
+      <p class="civ-mb-2 civ-italic civ-text-muted">
         Press Tab to focus the skip link.
       </p>
       <civ-skip-link href="#form-section">Skip to form</civ-skip-link>
@@ -51,7 +51,7 @@ export const CustomTarget: Story = {
 export const CustomLabel: Story = {
   render: () => html`
     <div>
-      <p style="margin-bottom: 8px; font-style: italic; color: #565c65;">
+      <p class="civ-mb-2 civ-italic civ-text-muted">
         Press Tab to focus — this skip link has custom label text.
       </p>
       <civ-skip-link href="#main-content">Skip navigation</civ-skip-link>

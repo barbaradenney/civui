@@ -113,16 +113,16 @@ export const Disabled: Story = {
 export const AllStates: Story = {
   name: 'All States',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 48px;">
+    <div class="civ-flex civ-flex-col civ-gap-12">
       <div>
-        <h3 style="margin: 0 0 8px; font-weight: 600;">Without progress bar</h3>
+        <h3 class="civ-m-0 civ-mb-2 civ-font-semibold">Without progress bar</h3>
         <civ-form-step>
           <div data-step-label="Step 1"><p>Content for step 1.</p></div>
           <div data-step-label="Step 2"><p>Content for step 2.</p></div>
         </civ-form-step>
       </div>
       <div>
-        <h3 style="margin: 0 0 8px; font-weight: 600;">With progress bar</h3>
+        <h3 class="civ-m-0 civ-mb-2 civ-font-semibold">With progress bar</h3>
         <civ-form-step show-progress>
           <div data-step-label="Step 1"><p>Content for step 1.</p></div>
           <div data-step-label="Step 2"><p>Content for step 2.</p></div>
@@ -138,23 +138,23 @@ export const AllStates: Story = {
 export const DensityScale: Story = {
   name: 'Density Scale',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 24px;">
+    <div class="civ-flex civ-flex-col civ-gap-6">
       <div data-civ-scale="dense">
-        <p style="margin: 0 0 8px; font-weight: 600;">Dense</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Dense</p>
         <civ-form-step>
           <div data-step-label="Personal info"><p>Dense layout content.</p></div>
           <div data-step-label="Review"><p>Dense review.</p></div>
         </civ-form-step>
       </div>
       <div>
-        <p style="margin: 0 0 8px; font-weight: 600;">Default</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Default</p>
         <civ-form-step>
           <div data-step-label="Personal info"><p>Default layout content.</p></div>
           <div data-step-label="Review"><p>Default review.</p></div>
         </civ-form-step>
       </div>
       <div data-civ-scale="spacious">
-        <p style="margin: 0 0 8px; font-weight: 600;">Spacious</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Spacious</p>
         <civ-form-step>
           <div data-step-label="Personal info"><p>Spacious layout content.</p></div>
           <div data-step-label="Review"><p>Spacious review.</p></div>

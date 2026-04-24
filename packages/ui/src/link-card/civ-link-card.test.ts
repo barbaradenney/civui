@@ -83,4 +83,22 @@ describe('civ-link-card', () => {
     const el = await fixture('<civ-link-card href="/test" heading="Title"></civ-link-card>');
     expect(el.shadowRoot).toBeNull();
   });
+
+  it('applies danger variant', async () => {
+    const el = await fixture('<civ-link-card href="/test" heading="Delete" variant="danger"></civ-link-card>');
+    const link = el.querySelector('a')!;
+    expect(link.className).toContain('civ-link-card--danger');
+  });
+
+  it('applies sm spacing class', async () => {
+    const el = await fixture('<civ-link-card href="/test" heading="Title" spacing="sm"></civ-link-card>');
+    const link = el.querySelector('a')!;
+    expect(link.className).toContain('civ-link-card--sm');
+  });
+
+  it('sanitizes javascript: href', async () => {
+    const el = await fixture('<civ-link-card href="javascript:alert(1)" heading="XSS"></civ-link-card>');
+    const link = el.querySelector('a')!;
+    expect(link.getAttribute('href')).not.toContain('javascript:');
+  });
 });

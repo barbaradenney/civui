@@ -1,5 +1,5 @@
-import { describe, it, expect, afterEach } from 'vitest';
-import { fixture, cleanupFixtures } from '@civui/test-utils';
+import { describe, it, expect, afterEach, vi } from 'vitest';
+import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
 import './civ-action-button.js';
 
 afterEach(cleanupFixtures);
@@ -71,5 +71,55 @@ describe('civ-action-button', () => {
     const icon = el.querySelector('civ-icon');
     expect(icon).not.toBeNull();
     expect(icon!.getAttribute('name')).toBe('chevron-down');
+  });
+
+  it('applies danger class', async () => {
+    const el = await fixture('<civ-action-button label="Delete" danger></civ-action-button>');
+    const btn = el.querySelector('button');
+    expect(btn!.className).toContain('danger');
+  });
+
+  it('sets type attribute on button', async () => {
+    const el = await fixture('<civ-action-button label="Submit" type="submit"></civ-action-button>');
+    const btn = el.querySelector('button');
+    expect(btn!.getAttribute('type')).toBe('submit');
+  });
+
+  it('defaults button type to "button"', async () => {
+    const el = await fixture('<civ-action-button label="Test"></civ-action-button>');
+    const btn = el.querySelector('button');
+    expect(btn!.getAttribute('type')).toBe('button');
+  });
+
+  it('fires civ-analytics event on click', async () => {
+    const el = await fixture('<civ-action-button label="Bold"></civ-action-button>');
+    const handler = vi.fn();
+    el.addEventListener('civ-analytics', handler as EventListener);
+
+    const btn = el.querySelector('button')!;
+    btn.click();
+
+    expect(handler).toHaveBeenCalledOnce();
+  });
+
+  it('does not fire civ-analytics when disabled', async () => {
+    const el = await fixture('<civ-action-button label="Bold" disabled></civ-action-button>');
+    const handler = vi.fn();
+    el.addEventListener('civ-analytics', handler as EventListener);
+
+    const btn = el.querySelector('button')!;
+    btn.click();
+
+    expect(handler).not.toHaveBeenCalled();
+  });
+
+  it('updates aria-pressed when pressed changes dynamically', async () => {
+    const el = await fixture('<civ-action-button label="Bold"></civ-action-button>') as any;
+    const btn = el.querySelector('button')!;
+    expect(btn.hasAttribute('aria-pressed')).toBe(false);
+
+    el.pressed = true;
+    await elementUpdated(el);
+    expect(btn.getAttribute('aria-pressed')).toBe('true');
   });
 });

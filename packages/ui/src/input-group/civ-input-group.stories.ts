@@ -15,7 +15,7 @@ type Story = StoryObj;
 export const Default: Story = {
   name: 'Search (Input + Button)',
   render: () => html`
-    <div style="max-width: 400px;">
+    <div class="civ-max-w-sm">
       <civ-input-group>
         <civ-text-input label="Search" name="search"></civ-text-input>
         <civ-action-button label="Search" variant="primary"></civ-action-button>
@@ -27,7 +27,7 @@ export const Default: Story = {
 export const ButtonOnLeft: Story = {
   name: 'Button on Left',
   render: () => html`
-    <div style="max-width: 400px;">
+    <div class="civ-max-w-sm">
       <civ-input-group>
         <civ-action-button label="$" variant="tertiary"></civ-action-button>
         <civ-text-input label="Amount" name="amount"></civ-text-input>
@@ -39,7 +39,7 @@ export const ButtonOnLeft: Story = {
 export const ButtonsBothSides: Story = {
   name: 'Buttons on Both Sides',
   render: () => html`
-    <div style="max-width: 400px;">
+    <div class="civ-max-w-sm">
       <civ-input-group>
         <civ-action-button label="-" variant="tertiary"></civ-action-button>
         <civ-text-input label="Quantity" name="qty" value="1" width="xs"></civ-text-input>
@@ -52,7 +52,7 @@ export const ButtonsBothSides: Story = {
 export const WithSelect: Story = {
   name: 'With Select',
   render: () => html`
-    <div style="max-width: 400px;">
+    <div class="civ-max-w-sm">
       <civ-input-group>
         <civ-select label="State" name="state"></civ-select>
         <civ-action-button label="Lookup" variant="secondary"></civ-action-button>
@@ -64,7 +64,7 @@ export const WithSelect: Story = {
 export const AllVariants: Story = {
   name: 'Button Variants',
   render: () => html`
-    <div style="display: flex; flex-direction: column; gap: 16px; max-width: 400px;">
+    <div class="civ-flex civ-flex-col civ-gap-4 civ-max-w-sm">
       <civ-input-group>
         <civ-text-input label="Primary" name="a"></civ-text-input>
         <civ-action-button label="Go" variant="primary"></civ-action-button>

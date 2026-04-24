@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import './civ-checkbox.js';
 import './civ-checkbox-group.js';
+import '@civui/ui';
 
 const meta: Meta = {
   title: 'Forms/Inputs/Checkbox',
@@ -220,7 +221,7 @@ export const GovernmentCertificationForm: Story = {
         <civ-checkbox label="I understand that false statements may result in penalties" value="penalties"></civ-checkbox>
         <civ-checkbox label="I agree to notify the agency of any changes to my information" value="notify"></civ-checkbox>
       </civ-checkbox-group>
-      <button type="submit" class="civ-bg-primary civ-text-white civ-px-4 civ-py-2 civ-rounded civ-mt-4">Submit</button>
+      <civ-button type="submit" class="civ-mt-4">Submit</civ-button>
     </form>
   `,
 };

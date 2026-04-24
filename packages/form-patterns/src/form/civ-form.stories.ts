@@ -3,6 +3,7 @@ import { html } from 'lit';
 import './civ-form.js';
 import '@civui/inputs';
 import '@civui/controls';
+import '@civui/ui';
 
 const meta: Meta = {
   title: 'Forms/Layout/Form',
@@ -38,12 +39,7 @@ export const Default: Story = {
       <civ-text-input label="Full name" name="name" required></civ-text-input>
       <civ-text-input label="Email address" name="email" type="email" required></civ-text-input>
       <civ-textarea label="Message" name="message"></civ-textarea>
-      <button
-        type="submit"
-        class="civ-inline-block civ-px-5 civ-py-2.5 civ-bg-primary civ-text-white civ-font-bold civ-border-0 civ-rounded civ-cursor-pointer hover:civ-bg-primary-dark focus-visible:civ-focus-ring-inverse"
-      >
-        Submit
-      </button>
+      <civ-button type="submit">Submit</civ-button>
     </civ-form>
   `,
 };
@@ -67,12 +63,7 @@ export const WithHint: Story = {
       <civ-text-input label="Email address" name="email" type="email" required validate="email"></civ-text-input>
       <civ-text-input label="Phone number" name="phone" type="tel" hint="For example: (555) 123-4567"></civ-text-input>
       <div class="civ-mt-4 civ-flex civ-gap-2">
-        <button
-          type="submit"
-          class="civ-inline-block civ-px-5 civ-py-2.5 civ-bg-primary civ-text-white civ-font-bold civ-border-0 civ-rounded civ-cursor-pointer hover:civ-bg-primary-dark focus-visible:civ-focus-ring-inverse"
-        >
-          Submit
-        </button>
+        <civ-button type="submit">Submit</civ-button>
       </div>
     </civ-form>
   `,
@@ -85,12 +76,7 @@ export const WithError: Story = {
       <civ-text-input label="Full name" name="fullName" required error="Enter your full name"></civ-text-input>
       <civ-text-input label="Email address" name="email" type="email" required error="Enter a valid email address"></civ-text-input>
       <civ-text-input label="Phone number" name="phone" hint="For example: (555) 123-4567"></civ-text-input>
-      <button
-        type="submit"
-        class="civ-inline-block civ-px-5 civ-py-2.5 civ-bg-primary civ-text-white civ-font-bold civ-border-0 civ-rounded civ-cursor-pointer hover:civ-bg-primary-dark focus-visible:civ-focus-ring-inverse"
-      >
-        Submit application
-      </button>
+      <civ-button type="submit">Submit application</civ-button>
     </civ-form>
   `,
 };
@@ -104,18 +90,8 @@ export const Required: Story = {
       <civ-text-input label="Email address" name="email" type="email"></civ-text-input>
       <civ-textarea label="Additional comments" name="comments"></civ-textarea>
       <div class="civ-mt-4 civ-flex civ-gap-2">
-        <button
-          type="submit"
-          class="civ-inline-block civ-px-5 civ-py-2.5 civ-bg-primary civ-text-white civ-font-bold civ-border-0 civ-rounded civ-cursor-pointer hover:civ-bg-primary-dark focus-visible:civ-focus-ring-inverse"
-        >
-          Submit
-        </button>
-        <button
-          type="reset"
-          class="civ-inline-block civ-px-5 civ-py-2.5 civ-bg-white civ-text-primary civ-font-bold civ-border civ-border-primary civ-rounded civ-cursor-pointer hover:civ-bg-primary-lighter focus-visible:civ-focus-ring"
-        >
-          Clear saved draft
-        </button>
+        <civ-button type="submit">Submit</civ-button>
+        <civ-button type="reset" variant="secondary">Clear saved draft</civ-button>
       </div>
     </civ-form>
   `,
@@ -129,12 +105,7 @@ export const Disabled: Story = {
       <civ-text-input label="First name" name="firstName" value="Jane"></civ-text-input>
       <civ-text-input label="Last name" name="lastName" value="Doe"></civ-text-input>
       <civ-text-input label="Email address" name="email" type="email" value="jane.doe@agency.gov"></civ-text-input>
-      <button
-        type="submit"
-        class="civ-inline-block civ-px-5 civ-py-2.5 civ-bg-primary civ-text-white civ-font-bold civ-border-0 civ-rounded civ-cursor-pointer hover:civ-bg-primary-dark focus-visible:civ-focus-ring-inverse"
-      >
-        Save changes
-      </button>
+      <civ-button type="submit">Save changes</civ-button>
     </civ-form>
   `,
 };
@@ -150,7 +121,7 @@ export const AllStates: Story = {
         <civ-form form-label="Standard form">
           <civ-text-input label="Full name" name="name" required></civ-text-input>
           <civ-text-input label="Email address" name="email" type="email"></civ-text-input>
-          <button type="submit" class="civ-bg-primary civ-text-white civ-px-4 civ-py-2 civ-rounded">Submit</button>
+          <civ-button type="submit">Submit</civ-button>
         </civ-form>
       </div>
       <div>
@@ -158,7 +129,7 @@ export const AllStates: Story = {
         <civ-form form-label="Form with errors">
           <civ-text-input label="Full name" name="name" required error="Enter your full name"></civ-text-input>
           <civ-text-input label="Email address" name="email" type="email" required error="Enter a valid email"></civ-text-input>
-          <button type="submit" class="civ-bg-primary civ-text-white civ-px-4 civ-py-2 civ-rounded">Submit</button>
+          <civ-button type="submit">Submit</civ-button>
         </civ-form>
       </div>
     </div>
@@ -176,7 +147,7 @@ export const DensityScale: Story = {
         <civ-form form-label="Dense form">
           <civ-text-input label="Full name" name="name" required></civ-text-input>
           <civ-text-input label="Email address" name="email" type="email"></civ-text-input>
-          <button type="submit" class="civ-bg-primary civ-text-white civ-px-4 civ-py-2 civ-rounded">Submit</button>
+          <civ-button type="submit">Submit</civ-button>
         </civ-form>
       </div>
       <div>
@@ -184,7 +155,7 @@ export const DensityScale: Story = {
         <civ-form form-label="Default form">
           <civ-text-input label="Full name" name="name" required></civ-text-input>
           <civ-text-input label="Email address" name="email" type="email"></civ-text-input>
-          <button type="submit" class="civ-bg-primary civ-text-white civ-px-4 civ-py-2 civ-rounded">Submit</button>
+          <civ-button type="submit">Submit</civ-button>
         </civ-form>
       </div>
       <div data-civ-scale="spacious">
@@ -192,7 +163,7 @@ export const DensityScale: Story = {
         <civ-form form-label="Spacious form">
           <civ-text-input label="Full name" name="name" required></civ-text-input>
           <civ-text-input label="Email address" name="email" type="email"></civ-text-input>
-          <button type="submit" class="civ-bg-primary civ-text-white civ-px-4 civ-py-2 civ-rounded">Submit</button>
+          <civ-button type="submit">Submit</civ-button>
         </civ-form>
       </div>
     </div>
@@ -236,12 +207,7 @@ export const PrefillSrc: Story = {
       <civ-text-input label="Full name" name="name" required></civ-text-input>
       <civ-text-input label="Email address" name="email" type="email" required></civ-text-input>
       <civ-text-input label="Phone number" name="phone" type="tel" hint="For example: (555) 123-4567"></civ-text-input>
-      <button
-        type="submit"
-        class="civ-inline-block civ-px-5 civ-py-2.5 civ-bg-primary civ-text-white civ-font-bold civ-border-0 civ-rounded civ-cursor-pointer hover:civ-bg-primary-dark focus-visible:civ-focus-ring-inverse"
-      >
-        Submit
-      </button>
+      <civ-button type="submit">Submit</civ-button>
     </civ-form>
   `,
 };
@@ -259,12 +225,7 @@ export const PrefillApplied: Story = {
       <civ-text-input label="Full name" name="name" required></civ-text-input>
       <civ-text-input label="Email address" name="email" type="email" required></civ-text-input>
       <civ-text-input label="Phone number" name="phone" type="tel"></civ-text-input>
-      <button
-        type="submit"
-        class="civ-inline-block civ-px-5 civ-py-2.5 civ-bg-primary civ-text-white civ-font-bold civ-border-0 civ-rounded civ-cursor-pointer hover:civ-bg-primary-dark focus-visible:civ-focus-ring-inverse"
-      >
-        Submit
-      </button>
+      <civ-button type="submit">Submit</civ-button>
     </civ-form>
   `,
   play: async ({ canvasElement }) => {
@@ -295,12 +256,7 @@ export const GovernmentInquiryForm: Story = {
       <civ-textarea label="Describe your question or concern" name="message" required hint="Provide as much detail as possible" maxlength="2000"></civ-textarea>
       <civ-checkbox label="I would like a response by email" name="email-response" checked></civ-checkbox>
       <div class="civ-mt-4">
-        <button
-          type="submit"
-          class="civ-inline-block civ-px-5 civ-py-2.5 civ-bg-primary civ-text-white civ-font-bold civ-border-0 civ-rounded civ-cursor-pointer hover:civ-bg-primary-dark focus-visible:civ-focus-ring-inverse"
-        >
-          Submit inquiry
-        </button>
+        <civ-button type="submit">Submit inquiry</civ-button>
       </div>
     </civ-form>
   `,

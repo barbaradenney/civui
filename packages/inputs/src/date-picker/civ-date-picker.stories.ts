@@ -1,6 +1,7 @@
 import { html } from 'lit';
 import type { Meta, StoryObj } from '@storybook/web-components';
 import './civ-date-picker.js';
+import '@civui/ui';
 
 const meta: Meta = {
   title: 'Forms/Inputs/Date Picker',
@@ -165,7 +166,7 @@ export const GovernmentAppointmentScheduler: Story = {
         max="2026-06-30"
         hint="Appointments are available Monday through Friday, April 21 to June 30, 2026"
       ></civ-date-picker>
-      <button type="submit" class="civ-mt-2 civ-px-4 civ-py-2 civ-bg-primary civ-text-white civ-rounded focus-visible:civ-focus-ring-inverse">Schedule appointment</button>
+      <civ-button type="submit" class="civ-mt-2">Schedule appointment</civ-button>
     </form>
   `,
 };

@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import './civ-radio.js';
 import './civ-radio-group.js';
+import '@civui/ui';
 
 const meta: Meta = {
   title: 'Forms/Inputs/Radio',
@@ -230,12 +231,7 @@ export const GovernmentEligibilityForm: Story = {
         <civ-radio label="Dependent child" value="child"></civ-radio>
         <civ-radio label="Caregiver" value="caregiver"></civ-radio>
       </civ-radio-group>
-      <button
-        type="submit"
-        style="margin-top: 16px; padding: 8px 24px; background: #005ea2; color: white; border: none; border-radius: 4px; cursor: pointer;"
-      >
-        Continue
-      </button>
+      <civ-button type="submit" class="civ-mt-4">Continue</civ-button>
     </form>
   `,
 };

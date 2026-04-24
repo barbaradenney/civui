@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import './civ-yes-no.js';
+import '@civui/ui';
 
 const meta: Meta = {
   title: 'Forms/Inputs/Yes No',
@@ -181,7 +182,7 @@ export const GovernmentEligibilityScreening: Story = {
         hint="Including Social Security, Medicare, or disability compensation"
       ></civ-yes-no>
       <div class="civ-flex civ-gap-2 civ-mt-4">
-        <button type="submit" class="civ-btn civ-btn--primary">Check eligibility</button>
+        <civ-button type="submit">Check eligibility</civ-button>
       </div>
     </form>
   `,

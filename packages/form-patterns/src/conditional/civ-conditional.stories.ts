@@ -3,6 +3,7 @@ import { html } from 'lit';
 import './civ-conditional.js';
 import '@civui/inputs';
 import '@civui/controls';
+import '@civui/ui';
 import '../form/civ-form.js';
 
 const meta: Meta = {
@@ -165,12 +166,7 @@ export const WithForm: Story = {
         </civ-conditional>
       </civ-conditional>
 
-      <button
-        type="submit"
-        class="civ-inline-block civ-mt-4 civ-px-5 civ-py-2.5 civ-bg-primary civ-text-white civ-font-bold civ-border-0 civ-rounded civ-cursor-pointer hover:civ-bg-primary-dark focus-visible:civ-focus-ring-inverse"
-      >
-        Submit application
-      </button>
+      <civ-button type="submit" class="civ-mt-4">Submit application</civ-button>
     </civ-form>
   `,
 };

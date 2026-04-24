@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import './civ-segment.js';
 import './civ-segmented-control.js';
+import '@civui/ui';
 
 const meta: Meta = {
   title: 'Forms/Inputs/Segmented Control',
@@ -183,7 +184,7 @@ export const GovernmentReportFilter: Story = {
         <civ-segment label="All time" value="all"></civ-segment>
       </civ-segmented-control>
       <div class="civ-flex civ-gap-2 civ-mt-4">
-        <button type="submit" class="civ-bg-primary civ-text-white civ-px-4 civ-py-2 civ-rounded">Generate report</button>
+        <civ-button type="submit">Generate report</civ-button>
       </div>
     </form>
   `,

@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import './civ-text-input.js';
+import '@civui/ui';
 
 const meta: Meta = {
   title: 'Forms/Inputs/Text Input',
@@ -290,9 +291,7 @@ export const GovernmentContactForm: Story = {
       <civ-text-input label="Email address" name="email" type="email" required hint="For example: name@agency.gov" validate="email"></civ-text-input>
       <civ-text-input label="Phone number" name="phone" type="tel" mask="phone-us" hint="For example: (555) 123-4567"></civ-text-input>
       <civ-text-input label="Social Security number" name="ssn" mask="ssn" required hint="We need this to verify your identity"></civ-text-input>
-      <button type="submit" style="margin-top: 16px; padding: 8px 24px; background: #005ea2; color: white; border: none; border-radius: 4px; cursor: pointer;">
-        Submit
-      </button>
+      <civ-button type="submit" class="civ-mt-4">Submit</civ-button>
     </form>
   `,
 };

@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import './civ-toggle.js';
+import '@civui/ui';
 
 const meta: Meta = {
   title: 'Forms/Inputs/Toggle',
@@ -164,7 +165,7 @@ export const GovernmentNotificationSettings: Story = {
         description="Be notified when policies affecting your benefits change"
       ></civ-toggle>
       <div class="civ-flex civ-gap-2 civ-mt-4">
-        <button type="submit" class="civ-bg-primary civ-text-white civ-px-4 civ-py-2 civ-rounded">Save preferences</button>
+        <civ-button type="submit">Save preferences</civ-button>
       </div>
     </form>
   `,

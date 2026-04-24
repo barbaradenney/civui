@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import './civ-select.js';
+import '@civui/ui';
 
 const STATES = [
   { value: 'AL', label: 'Alabama' },
@@ -218,12 +219,7 @@ export const GovernmentBenefitsForm: Story = {
     >
       <civ-select label="State of residence" name="state" required></civ-select>
       <civ-select label="Benefit type" name="benefit" required hint="Select the type of benefit you are applying for"></civ-select>
-      <button
-        type="submit"
-        style="margin-top: 16px; padding: 8px 24px; background: #005ea2; color: white; border: none; border-radius: 4px; cursor: pointer;"
-      >
-        Continue
-      </button>
+      <civ-button type="submit" class="civ-mt-4">Continue</civ-button>
     </form>
     <script>
       requestAnimationFrame(() => {

@@ -78,6 +78,7 @@ export class CivRepeater extends CivBaseElement {
   @state() private _wizardActive = false;
   @state() private _wizardEditIndex = -1;
   private _rowData: Map<number, Record<string, string>> = new Map();
+  private _wizardAbort: AbortController | null = null;
 
   private _template: Node[] = [];
   private _hintId = this.generateId('hint');
@@ -178,6 +179,16 @@ export class CivRepeater extends CivBaseElement {
 
   /** Programmatically remove a row by index. */
   removeRow(index: number): void {
+    // Close wizard if editing the row being removed
+    if (this._wizardActive && this._wizardEditIndex === index) {
+      this._wizardAbort?.abort();
+      this._wizardAbort = null;
+      this._wizardActive = false;
+      this._wizardEditIndex = -1;
+    } else if (this._wizardActive && this._wizardEditIndex > index) {
+      // Adjust edit index if a row before it was removed
+      this._wizardEditIndex--;
+    }
     const container = this.querySelector('[data-civ-repeater-rows]');
     if (!container) return;
     const rows = container.querySelectorAll(':scope > [data-civ-repeater-row]');
@@ -211,7 +222,7 @@ export class CivRepeater extends CivBaseElement {
         focusTarget?.focus();
       } else {
         // No rows left at min — focus the add button
-        const addBtn = this.querySelector<HTMLElement>('civ-button');
+        const addBtn = this.querySelector<HTMLElement>(':scope > fieldset > civ-button');
         addBtn?.focus();
       }
     });
@@ -442,6 +453,10 @@ export class CivRepeater extends CivBaseElement {
   private _buildWizard(index: number): void {
     const container = this.querySelector('[data-civ-repeater-wizard]');
     if (!container) return;
+
+    // Clean up previous wizard listeners
+    this._wizardAbort?.abort();
+    this._wizardAbort = new AbortController();
     container.innerHTML = '';
 
     const formStep = document.createElement('civ-form-step');
@@ -458,7 +473,7 @@ export class CivRepeater extends CivBaseElement {
 
     formStep.addEventListener('civ-step-complete', () => {
       this._saveWizard(index);
-    });
+    }, { signal: this._wizardAbort.signal });
 
     container.appendChild(formStep);
   }
@@ -515,7 +530,13 @@ export class CivRepeater extends CivBaseElement {
     }
 
     const isNew = this._wizardEditIndex < 0;
+
+    // Re-check max in case rows were added externally
+    if (isNew && this.max > 0 && this._rowCount >= this.max) return;
+
     this._rowData.set(index, data);
+    this._wizardAbort?.abort();
+    this._wizardAbort = null;
 
     if (isNew) {
       this._addWizardSummaryCard(index, data);
@@ -533,7 +554,7 @@ export class CivRepeater extends CivBaseElement {
 
     this.updateComplete.then(() => {
       if (isNew) {
-        this.querySelector<HTMLElement>('civ-button')?.focus();
+        this.querySelector<HTMLElement>(':scope > fieldset > civ-button')?.focus();
       } else {
         const rows = this.querySelectorAll('[data-civ-repeater-row]');
         rows[index]?.querySelector<HTMLElement>('civ-action-button')?.focus();
@@ -543,12 +564,14 @@ export class CivRepeater extends CivBaseElement {
 
   private _cancelWizard(): void {
     const index = this._wizardEditIndex >= 0 ? this._wizardEditIndex : this._rowCount;
+    this._wizardAbort?.abort();
+    this._wizardAbort = null;
     dispatch(this, 'civ-repeater-wizard-close', { index, action: 'cancel' });
     this._wizardActive = false;
     this._wizardEditIndex = -1;
 
     this.updateComplete.then(() => {
-      this.querySelector<HTMLElement>('civ-button')?.focus();
+      this.querySelector<HTMLElement>(':scope > fieldset > civ-button')?.focus();
     });
   }
 

@@ -227,6 +227,7 @@ export class CivRelationship extends CivFormElement {
             name="${prefix}.deceased"
             value="${this._data.deceased}"
             ?disabled="${this.disabled}"
+            .readonly="${this.readonly}"
             @civ-input="${(e: CustomEvent) => e.stopPropagation()}"
             @civ-change="${this._onDeceasedChange}"
           ></civ-yes-no>
@@ -290,14 +291,19 @@ export class CivRelationship extends CivFormElement {
     this._data = { ...this._data, relationship: e.detail.value };
     const newCategory = this._category;
 
-    // Clear fields that no longer apply when category changes
+    // Clear fields and errors that no longer apply when category changes
     if (oldCategory !== newCategory) {
       if (oldCategory === 'spousal') {
         this._data = { ...this._data, marriageDate: '', divorceDate: '' };
+        this.marriageDateError = '';
+        this.divorceDateError = '';
       } else if (oldCategory === 'child') {
         this._data = { ...this._data, dateOfBirth: '', adoptionDate: '' };
+        this.dateOfBirthError = '';
+        this.adoptionDateError = '';
       } else if (oldCategory === 'other') {
         this._data = { ...this._data, otherDescription: '' };
+        this.otherDescriptionError = '';
       }
     }
 
@@ -374,7 +380,7 @@ export class CivRelationship extends CivFormElement {
     this.adoptionDateError = '';
     this.dateOfDeathError = '';
     this.otherDescriptionError = '';
-    this._syncFormValue();
+    this.updateFormValue(null);
     dispatch(this, 'civ-reset');
   }
 }

@@ -233,3 +233,57 @@ describe('civ-relationship form reset', () => {
     expect(el.relationshipError).toBe('');
   });
 });
+
+describe('civ-relationship category change error clearing', () => {
+  it('clears spousal errors when switching to child category', async () => {
+    const el = await fixture('<civ-relationship name="rel" marriage-date-error="Required"></civ-relationship>') as any;
+
+    el.relationshipValue = { ...el.relationshipValue, relationship: 'spouse' };
+    await elementUpdated(el);
+    expect(el.marriageDateError).toBe('Required');
+
+    // Switch to child category
+    const select = el.querySelector('[data-relationship-type]') as any;
+    select.dispatchEvent(new CustomEvent('civ-change', { detail: { value: 'child' }, bubbles: true }));
+    await elementUpdated(el);
+
+    expect(el.marriageDateError).toBe('');
+  });
+
+  it('clears child errors when switching to spousal category', async () => {
+    const el = await fixture('<civ-relationship name="rel" date-of-birth-error="Required"></civ-relationship>') as any;
+
+    el.relationshipValue = { ...el.relationshipValue, relationship: 'child' };
+    await elementUpdated(el);
+
+    const select = el.querySelector('[data-relationship-type]') as any;
+    select.dispatchEvent(new CustomEvent('civ-change', { detail: { value: 'spouse' }, bubbles: true }));
+    await elementUpdated(el);
+
+    expect(el.dateOfBirthError).toBe('');
+  });
+});
+
+describe('civ-relationship readonly', () => {
+  it('passes readonly to yes-no', async () => {
+    const el = await fixture('<civ-relationship name="rel" show-deceased></civ-relationship>') as any;
+    el.readonly = true;
+    await elementUpdated(el);
+
+    const yesNo = el.querySelector('civ-yes-no') as any;
+    expect(yesNo).not.toBeNull();
+    await elementUpdated(yesNo);
+    expect(yesNo.readonly).toBe(true);
+  });
+
+  it('passes readonly to text inputs', async () => {
+    const el = await fixture('<civ-relationship name="rel"></civ-relationship>') as any;
+    el.readonly = true;
+    el.relationshipValue = { ...el.relationshipValue, relationship: 'other' };
+    await elementUpdated(el);
+
+    const textInput = el.querySelector('civ-text-input[name="rel.otherDescription"]');
+    expect(textInput).not.toBeNull();
+    expect((textInput as any).readonly).toBe(true);
+  });
+});

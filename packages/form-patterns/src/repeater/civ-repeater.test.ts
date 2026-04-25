@@ -59,7 +59,7 @@ describe('civ-repeater', () => {
       </civ-repeater>
     `);
 
-    const addBtn = el.querySelector('civ-action-button[variant="tertiary"]')! as HTMLButtonElement;
+    const addBtn = el.querySelector('civ-button[variant="secondary"]')! as HTMLButtonElement;
     addBtn.click();
     await elementUpdated(el);
 
@@ -74,7 +74,7 @@ describe('civ-repeater', () => {
       </civ-repeater>
     `);
 
-    const addBtn = el.querySelector('civ-action-button[variant="tertiary"]')! as HTMLButtonElement;
+    const addBtn = el.querySelector('civ-button[variant="secondary"]')! as HTMLButtonElement;
     addBtn.click();
     await elementUpdated(el);
 
@@ -95,7 +95,7 @@ describe('civ-repeater', () => {
       eventDetail = e.detail;
     }) as EventListener);
 
-    const addBtn = el.querySelector('civ-action-button[variant="tertiary"]')! as HTMLButtonElement;
+    const addBtn = el.querySelector('civ-button[variant="secondary"]')! as HTMLButtonElement;
     addBtn.click();
 
     expect(eventDetail).not.toBeNull();
@@ -167,7 +167,7 @@ describe('civ-repeater', () => {
       </civ-repeater>
     `);
 
-    const addBtn = el.querySelector('civ-action-button[variant="tertiary"]');
+    const addBtn = el.querySelector('civ-button[variant="secondary"]');
     expect(addBtn).toBeNull(); // Already at max (1 row, max 1)
   });
 
@@ -198,7 +198,7 @@ describe('civ-repeater', () => {
       </civ-repeater>
     `);
 
-    const addBtn = el.querySelector('civ-action-button[variant="tertiary"]')!;
+    const addBtn = el.querySelector('civ-button[variant="secondary"]')!;
     expect(addBtn.getAttribute('label')).toContain('dependent');
   });
 
@@ -321,7 +321,7 @@ describe('civ-repeater detail mode', () => {
       </civ-repeater>
     `);
 
-    const editBtn = el.querySelector('.civ-btn--tertiary') as HTMLButtonElement;
+    const editBtn = el.querySelector('civ-action-button') as HTMLButtonElement;
     editBtn.click();
     await elementUpdated(el);
 
@@ -339,12 +339,12 @@ describe('civ-repeater detail mode', () => {
     `);
 
     // Expand
-    const editBtn = el.querySelector('.civ-btn--tertiary') as HTMLButtonElement;
+    const editBtn = el.querySelector('civ-action-button') as HTMLButtonElement;
     editBtn.click();
     await elementUpdated(el);
 
     // Save
-    const saveBtn = el.querySelector('.civ-btn--primary') as HTMLButtonElement;
+    const saveBtn = el.querySelector('civ-action-button[variant="primary"]') as HTMLButtonElement;
     saveBtn.click();
     await elementUpdated(el);
 
@@ -374,7 +374,7 @@ describe('civ-repeater detail mode', () => {
       </civ-repeater>
     `);
 
-    const editBtn = el.querySelector('.civ-btn--tertiary');
+    const editBtn = el.querySelector('civ-action-button');
     expect(editBtn).not.toBeNull();
     expect(editBtn!.getAttribute('aria-label')).toBe('Edit item 1');
   });
@@ -411,7 +411,7 @@ describe('civ-repeater wizard mode', () => {
     expect(el.rowCount).toBe(0);
     const rows = el.querySelectorAll('[data-civ-repeater-row]');
     expect(rows.length).toBe(0);
-    const addBtn = el.querySelector('civ-action-button');
+    const addBtn = el.querySelector('civ-button');
     expect(addBtn).not.toBeNull();
   });
 
@@ -422,7 +422,7 @@ describe('civ-repeater wizard mode', () => {
     const handler = vi.fn();
     el.addEventListener('civ-repeater-wizard-open', handler as EventListener);
 
-    const addBtn = el.querySelector('civ-action-button') as HTMLElement;
+    const addBtn = el.querySelector('civ-button') as HTMLElement;
     addBtn.click();
     await elementUpdated(el);
 
@@ -434,7 +434,7 @@ describe('civ-repeater wizard mode', () => {
     const el = await fixture<CivRepeater>(wizardTemplate);
     await elementUpdated(el);
 
-    const addBtn = el.querySelector('civ-action-button') as HTMLElement;
+    const addBtn = el.querySelector('civ-button') as HTMLElement;
     addBtn.click();
     await elementUpdated(el);
 
@@ -448,7 +448,7 @@ describe('civ-repeater wizard mode', () => {
     const el = await fixture<CivRepeater>(wizardTemplate);
     await elementUpdated(el);
 
-    const addBtn = el.querySelector('civ-action-button') as HTMLElement;
+    const addBtn = el.querySelector('civ-button') as HTMLElement;
     addBtn.click();
     await elementUpdated(el);
 
@@ -460,7 +460,7 @@ describe('civ-repeater wizard mode', () => {
     const el = await fixture<CivRepeater>(wizardTemplate);
     await elementUpdated(el);
 
-    const addBtn = el.querySelector('civ-action-button') as HTMLElement;
+    const addBtn = el.querySelector('civ-button') as HTMLElement;
     addBtn.click();
     await elementUpdated(el);
 
@@ -472,14 +472,14 @@ describe('civ-repeater wizard mode', () => {
     const el = await fixture<CivRepeater>(wizardTemplate);
     await elementUpdated(el);
 
-    const addBtn = el.querySelector('civ-action-button') as HTMLElement;
+    const addBtn = el.querySelector('civ-button') as HTMLElement;
     addBtn.click();
     await elementUpdated(el);
 
     const handler = vi.fn();
     el.addEventListener('civ-repeater-wizard-close', handler as EventListener);
 
-    const cancelBtn = el.querySelector('.civ-btn--secondary') as HTMLElement;
+    const cancelBtn = el.querySelector('civ-button[variant="secondary"]') as HTMLElement;
     cancelBtn.click();
     await elementUpdated(el);
 
@@ -500,7 +500,7 @@ describe('civ-repeater wizard mode', () => {
     await elementUpdated(el);
 
     // max=0 means unlimited, add should work
-    const addBtn = el.querySelector('civ-action-button') as HTMLElement;
+    const addBtn = el.querySelector('civ-button') as HTMLElement;
     expect(addBtn).not.toBeNull();
   });
 
@@ -513,7 +513,7 @@ describe('civ-repeater wizard mode', () => {
     const el = await fixture<CivRepeater>(wizardTemplate);
     await elementUpdated(el);
 
-    const addBtn = el.querySelector('civ-action-button') as HTMLElement;
+    const addBtn = el.querySelector('civ-button') as HTMLElement;
     addBtn.click();
     await elementUpdated(el);
 

@@ -149,20 +149,22 @@ export class CivRepeater extends CivBaseElement {
         ${this._wizardActive ? html`
           <div data-civ-repeater-wizard></div>
           <div class="civ-mt-4">
-            <button type="button" class="civ-btn civ-btn--secondary focus-visible:civ-focus-ring" @click="${this._cancelWizard}">
-              ${t('repeaterCancelButton')}
-            </button>
+            <civ-button
+              variant="secondary"
+              label="${t('repeaterCancelButton')}"
+              @click="${this._cancelWizard}"
+            ></civ-button>
           </div>
         ` : nothing}
 
         ${showList && canAdd ? html`
-          <civ-action-button
-            variant="tertiary"
+          <civ-button
+            variant="secondary"
             label="${interpolate(t('repeaterAddButton'), { item: this.itemLabel })}"
             ?disabled="${this.disabled}"
             @click="${this.mode === 'wizard' ? this._openWizardForAdd : this._addRow}"
             class="civ-mt-3"
-          ></civ-action-button>
+          ></civ-button>
         ` : nothing}
       </fieldset>
     `;
@@ -209,7 +211,7 @@ export class CivRepeater extends CivBaseElement {
         focusTarget?.focus();
       } else {
         // No rows left at min — focus the add button
-        const addBtn = this.querySelector<HTMLElement>('civ-action-button');
+        const addBtn = this.querySelector<HTMLElement>('civ-button');
         addBtn?.focus();
       }
     });
@@ -256,10 +258,9 @@ export class CivRepeater extends CivBaseElement {
       const summaryActions = document.createElement('span');
       summaryActions.classList.add('civ-flex', 'civ-gap-2');
 
-      const editBtn = document.createElement('button');
-      editBtn.type = 'button';
-      editBtn.className = 'civ-btn civ-btn--tertiary focus-visible:civ-focus-ring';
-      editBtn.textContent = t('repeaterEditButton');
+      const editBtn = document.createElement('civ-action-button');
+      editBtn.setAttribute('variant', 'tertiary');
+      editBtn.setAttribute('label', t('repeaterEditButton'));
       editBtn.setAttribute('aria-label',
         interpolate(t('repeaterEditAriaLabel'), { item: this.itemLabel, index: String(index + 1) }));
       editBtn.addEventListener('click', () => {
@@ -272,10 +273,10 @@ export class CivRepeater extends CivBaseElement {
       summaryActions.appendChild(editBtn);
 
       if (this._rowCount >= this.min || index >= this.min) {
-        const removeBtn = document.createElement('button');
-        removeBtn.type = 'button';
-        removeBtn.className = 'civ-btn civ-btn--danger-text';
-        removeBtn.textContent = t('repeaterRemoveButton');
+        const removeBtn = document.createElement('civ-action-button');
+        removeBtn.setAttribute('variant', 'tertiary');
+        removeBtn.setAttribute('danger', '');
+        removeBtn.setAttribute('label', t('repeaterRemoveButton'));
         removeBtn.setAttribute('aria-label',
           interpolate(t('repeaterRemoveAriaLabel'), { item: this.itemLabel, index: String(index + 1) }));
         removeBtn.addEventListener('click', () => {
@@ -299,10 +300,9 @@ export class CivRepeater extends CivBaseElement {
       const detailActions = document.createElement('div');
       detailActions.classList.add('civ-flex', 'civ-gap-2', 'civ-mt-3');
 
-      const saveBtn = document.createElement('button');
-      saveBtn.type = 'button';
-      saveBtn.className = 'civ-btn civ-btn--primary focus-visible:civ-focus-ring';
-      saveBtn.textContent = interpolate(t('repeaterSaveButton'), { item: this.itemLabel });
+      const saveBtn = document.createElement('civ-action-button');
+      saveBtn.setAttribute('variant', 'primary');
+      saveBtn.setAttribute('label', interpolate(t('repeaterSaveButton'), { item: this.itemLabel }));
       saveBtn.addEventListener('click', () => {
         this._collapseAllRows();
         this._updateSummaryText(row, this._getRowIndex(row));
@@ -311,10 +311,9 @@ export class CivRepeater extends CivBaseElement {
       });
       detailActions.appendChild(saveBtn);
 
-      const cancelBtn = document.createElement('button');
-      cancelBtn.type = 'button';
-      cancelBtn.className = 'civ-btn civ-btn--secondary focus-visible:civ-focus-ring';
-      cancelBtn.textContent = t('repeaterCancelButton');
+      const cancelBtn = document.createElement('civ-action-button');
+      cancelBtn.setAttribute('variant', 'tertiary');
+      cancelBtn.setAttribute('label', t('repeaterCancelButton'));
       cancelBtn.addEventListener('click', () => {
         this._collapseAllRows();
         this._editingIdx = -1;
@@ -337,10 +336,11 @@ export class CivRepeater extends CivBaseElement {
 
       // Add remove button if allowed
       if (this._rowCount >= this.min || index >= this.min) {
-        const removeBtn = document.createElement('button');
-        removeBtn.type = 'button';
-        removeBtn.className = 'civ-btn civ-btn--danger-text civ-mt-2';
-        removeBtn.textContent = t('repeaterRemoveButton');
+        const removeBtn = document.createElement('civ-action-button');
+        removeBtn.setAttribute('variant', 'tertiary');
+        removeBtn.setAttribute('danger', '');
+        removeBtn.setAttribute('label', t('repeaterRemoveButton'));
+        removeBtn.classList.add('civ-mt-2');
         removeBtn.setAttribute('aria-label',
           interpolate(t('repeaterRemoveAriaLabel'), { item: this.itemLabel, index: String(index + 1) }));
         removeBtn.addEventListener('click', () => {
@@ -533,10 +533,10 @@ export class CivRepeater extends CivBaseElement {
 
     this.updateComplete.then(() => {
       if (isNew) {
-        this.querySelector<HTMLElement>('civ-action-button')?.focus();
+        this.querySelector<HTMLElement>('civ-button')?.focus();
       } else {
         const rows = this.querySelectorAll('[data-civ-repeater-row]');
-        rows[index]?.querySelector<HTMLElement>('.civ-btn--tertiary')?.focus();
+        rows[index]?.querySelector<HTMLElement>('civ-action-button')?.focus();
       }
     });
   }
@@ -548,7 +548,7 @@ export class CivRepeater extends CivBaseElement {
     this._wizardEditIndex = -1;
 
     this.updateComplete.then(() => {
-      this.querySelector<HTMLElement>('civ-action-button')?.focus();
+      this.querySelector<HTMLElement>('civ-button')?.focus();
     });
   }
 
@@ -575,10 +575,9 @@ export class CivRepeater extends CivBaseElement {
     const actions = document.createElement('span');
     actions.classList.add('civ-flex', 'civ-gap-2');
 
-    const editBtn = document.createElement('button');
-    editBtn.type = 'button';
-    editBtn.className = 'civ-btn civ-btn--tertiary focus-visible:civ-focus-ring';
-    editBtn.textContent = t('repeaterEditButton');
+    const editBtn = document.createElement('civ-action-button');
+    editBtn.setAttribute('variant', 'tertiary');
+    editBtn.setAttribute('label', t('repeaterEditButton'));
     editBtn.setAttribute('aria-label',
       interpolate(t('repeaterEditAriaLabel'), { item: this.itemLabel, index: String(index + 1) }));
     editBtn.addEventListener('click', () => {
@@ -586,10 +585,10 @@ export class CivRepeater extends CivBaseElement {
     });
     actions.appendChild(editBtn);
 
-    const removeBtn = document.createElement('button');
-    removeBtn.type = 'button';
-    removeBtn.className = 'civ-btn civ-btn--danger-text';
-    removeBtn.textContent = t('repeaterRemoveButton');
+    const removeBtn = document.createElement('civ-action-button');
+    removeBtn.setAttribute('variant', 'tertiary');
+    removeBtn.setAttribute('danger', '');
+    removeBtn.setAttribute('label', t('repeaterRemoveButton'));
     removeBtn.setAttribute('aria-label',
       interpolate(t('repeaterRemoveAriaLabel'), { item: this.itemLabel, index: String(index + 1) }));
     removeBtn.addEventListener('click', () => {
@@ -645,7 +644,7 @@ export class CivRepeater extends CivBaseElement {
           }
         }
         // Update edit button aria-label
-        const editBtn = row.querySelector('.civ-btn--tertiary');
+        const editBtn = row.querySelector('civ-action-button');
         if (editBtn) {
           editBtn.setAttribute('aria-label',
             interpolate(t('repeaterEditAriaLabel'), { item: this.itemLabel, index: String(i + 1) }));
@@ -663,7 +662,7 @@ export class CivRepeater extends CivBaseElement {
       }
 
       // Update remove button aria-label (both modes)
-      const removeBtn = row.querySelector('.civ-btn--danger-text');
+      const removeBtn = row.querySelector('civ-action-button[danger]');
       if (removeBtn) {
         removeBtn.setAttribute('aria-label',
           interpolate(t('repeaterRemoveAriaLabel'), { item: this.itemLabel, index: String(i + 1) }));

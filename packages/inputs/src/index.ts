@@ -1,3 +1,15 @@
+// Side-effect imports ensure custom elements are registered.
+// Named re-exports alone can be tree-shaken by bundlers.
+import './text-input/civ-text-input.js';
+import './textarea/civ-textarea.js';
+import './select/civ-select.js';
+import './combobox/civ-combobox.js';
+import './date-picker/civ-date-picker.js';
+import './date-input/civ-memorable-date.js';
+import './file-upload/civ-file-upload.js';
+import './toggle/civ-toggle.js';
+import './yes-no/civ-yes-no.js';
+
 // Text Input
 export { CivTextInput } from './text-input/index.js';
 export type { TextInputType, TextInputWidth, TextInputMask, TextInputValidate } from './text-input/index.js';

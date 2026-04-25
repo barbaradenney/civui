@@ -22,10 +22,8 @@ const config: StorybookConfig = {
       config.base = process.env.STORYBOOK_BASE;
     }
 
-    // Disable tree-shaking — all CivUI components register custom elements
-    // via @customElement decorators which are side effects. Without this,
-    // compound components render empty shells because their child element
-    // imports get dropped.
+    // Disable tree-shaking in production build — all CivUI components
+    // register custom elements via @customElement which are side effects.
     config.build = config.build || {};
     config.build.rollupOptions = config.build.rollupOptions || {};
     (config.build.rollupOptions as any).treeshake = false;

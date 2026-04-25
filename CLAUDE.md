@@ -48,17 +48,21 @@ All components render to Light DOM (no Shadow DOM). `createRenderRoot()` returns
 When a component renders child components from another `@civui/*` package (e.g., `civ-address` renders `<civ-text-input>`), use **bare side-effect imports** to ensure custom elements are registered:
 
 ```typescript
-// CORRECT — bare import, always preserved by bundlers
-import '@civui/inputs';
-import '@civui/controls';
+// CORRECT — direct sub-path imports, always preserved by bundlers
+import '@civui/inputs/text-input';
+import '@civui/inputs/select';
+import '@civui/controls/radio';
 
-// WRONG — named imports can be tree-shaken, breaking child rendering
-import { CivTextInput } from '@civui/inputs';  // may get dropped!
+// AVOID — barrel imports can be tree-shaken by Vite/esbuild
+import '@civui/inputs';  // may get dropped!
+
+// WRONG — named imports are always tree-shaken
+import { CivTextInput } from '@civui/inputs';  // will get dropped!
 ```
 
-An ESLint rule (`no-restricted-imports`) enforces this in component source files. Tests and stories are exempt.
+Sub-path imports resolve to individual component index files, guaranteeing the `@customElement` decorator runs. Barrel imports go through a re-export chain that bundlers can optimize away, especially when resolved to source via Vite aliases.
 
-Packages do **not** declare `sideEffects` in `package.json` — every file in a web component library has side effects (`@customElement` registers globally). Consumers who want tree-shaking can use sub-path imports (e.g., `@civui/inputs/text-input`).
+An ESLint rule (`no-restricted-imports`) enforces this in component source files. Tests and stories are exempt.
 
 ### Form Components
 Form-participating components extend `CivFormElement` (which extends `CivBaseElement`):

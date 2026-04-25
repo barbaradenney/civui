@@ -121,3 +121,34 @@ export function inputClasses({
     .filter(Boolean)
     .join(' ');
 }
+
+/**
+ * Width variants shared across single-line form inputs (text-input, select,
+ * combobox, etc.). Sized for typical fixed-width fields:
+ *   - 2xs: a few characters (PIN, single digit)
+ *   - xs:  ZIP / state code
+ *   - sm:  ZIP+4 / phone
+ *   - md:  short text (name, email-short)
+ *   - lg:  most fields
+ *   - xl:  longer fields (address line)
+ *   - 2xl: very long fields
+ *   - default: full width (`civ-w-full`)
+ */
+export type InputWidth = 'default' | '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+
+/** Tailwind class names for each `InputWidth` variant. */
+export const INPUT_WIDTH_CLASSES: Record<InputWidth, string> = {
+  'default': 'civ-w-full',
+  '2xs': 'civ-w-12',
+  'xs': 'civ-w-16',
+  'sm': 'civ-w-24',
+  'md': 'civ-w-40',
+  'lg': 'civ-w-60',
+  'xl': 'civ-w-72',
+  '2xl': 'civ-w-96',
+};
+
+/** Resolve the Tailwind class for a given `InputWidth`, defaulting to `default`. */
+export function inputWidthClass(width: InputWidth | undefined): string {
+  return INPUT_WIDTH_CLASSES[width ?? 'default'] ?? INPUT_WIDTH_CLASSES['default'];
+}

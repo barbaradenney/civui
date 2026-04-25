@@ -8,6 +8,7 @@ import {
   renderHint,
   renderError,
   inputClasses,
+  inputWidthClass,
   MASK_PRESETS,
   applyMask,
   stripMask,
@@ -18,24 +19,14 @@ import {
   t,
   validate,
 } from '@civui/core';
-import type { MaskDefinition } from '@civui/core';
+import type { InputWidth, MaskDefinition } from '@civui/core';
 import { dispatch } from '@civui/core';
 
 export type TextInputType = 'text' | 'email' | 'number' | 'password' | 'search' | 'tel' | 'url';
-export type TextInputWidth = 'default' | '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+/** @deprecated Use `InputWidth` from `@civui/core`. Re-exported for backwards compatibility. */
+export type TextInputWidth = InputWidth;
 export type TextInputMask = 'ssn' | 'phone-us' | 'zip' | 'zip4' | 'ein' | 'currency' | '';
 export type TextInputValidate = 'email' | 'phone' | 'phoneIntl' | 'ssn' | 'ein' | 'zip' | 'zip4' | 'usState' | 'url' | 'currency' | 'alphanumeric' | '';
-
-const WIDTH_CLASSES: Record<TextInputWidth, string> = {
-  'default': 'civ-w-full',
-  '2xs': 'civ-w-12',
-  'xs': 'civ-w-16',
-  'sm': 'civ-w-24',
-  'md': 'civ-w-40',
-  'lg': 'civ-w-60',
-  'xl': 'civ-w-72',
-  '2xl': 'civ-w-96',
-};
 
 /**
  * CivUI TextInput
@@ -49,7 +40,7 @@ const WIDTH_CLASSES: Record<TextInputWidth, string> = {
 @customElement('civ-text-input')
 export class CivTextInput extends CivFormElement {
   @property({ type: String }) type: TextInputType = 'text';
-  @property({ type: String }) width: TextInputWidth = 'default';
+  @property({ type: String }) width: InputWidth = 'default';
   @property({ type: String }) placeholder: string = '';
   @property({ type: String }) pattern: string = '';
   @property({ type: Number }) maxlength?: number;
@@ -185,7 +176,7 @@ export class CivTextInput extends CivFormElement {
   }
 
   override render() {
-    const widthClass = WIDTH_CLASSES[this.width] || WIDTH_CLASSES['default'];
+    const widthClass = inputWidthClass(this.width);
     const isCurrency = this._isCurrency;
     const hasPrefix = !!(this.prefix || isCurrency);
     const hasSuffix = !!this.suffix;

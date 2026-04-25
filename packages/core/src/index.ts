@@ -59,7 +59,10 @@ export {
   renderError,
   inputClasses,
   buildDescribedBy,
+  INPUT_WIDTH_CLASSES,
+  inputWidthClass,
 } from './templates/form-templates.js';
+export type { InputWidth } from './templates/form-templates.js';
 
 // Icon
 export { CivIcon } from './icon/civ-icon.js';

@@ -2,7 +2,8 @@
 
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivFormElement, dispatch, renderLabel, renderHint, renderError, inputClasses, t } from '@civui/core';
+import { CivFormElement, dispatch, renderLabel, renderHint, renderError, inputClasses, inputWidthClass, t } from '@civui/core';
+import type { InputWidth } from '@civui/core';
 
 export interface SelectOption {
   value: string;
@@ -23,6 +24,7 @@ export interface SelectOption {
 export class CivSelect extends CivFormElement {
   @property({ type: Array }) options: SelectOption[] = [];
   @property({ type: String, attribute: 'empty-label' }) emptyLabel: string = '';
+  @property({ type: String }) width: InputWidth = 'default';
 
   override updated(changed: Map<string, unknown>): void {
     super.updated(changed);
@@ -35,8 +37,9 @@ export class CivSelect extends CivFormElement {
   }
 
   override render() {
+    const widthClass = inputWidthClass(this.width);
     const classes = inputClasses({
-      extra: ['civ-select-field'],
+      extra: ['civ-select-field', widthClass, 'civ-max-w-full'],
     });
 
     return html`

@@ -241,6 +241,7 @@ export interface CivLocaleStrings {
   marriageStatusWidowed: string;
   marriageStatusAnnulled: string;
   marriageEndDateLegend: string;
+  marriageEndDateWidowedLegend: string; // "Date of their passing"
 
   // Service history
   serviceLegend: string;
@@ -511,6 +512,7 @@ const defaultStrings: CivLocaleStrings = {
   marriageStatusWidowed: 'Widowed',
   marriageStatusAnnulled: 'Annulled',
   marriageEndDateLegend: 'Date marriage ended',
+  marriageEndDateWidowedLegend: 'Date of their passing',
 
   serviceLegend: 'About this service period',
   serviceBranchLabel: 'Branch of service',

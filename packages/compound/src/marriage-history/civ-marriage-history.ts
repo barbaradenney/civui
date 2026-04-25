@@ -38,6 +38,8 @@ const EMPTY_MARRIAGE: MarriageValue = {
 @customElement('civ-marriage-history')
 export class CivMarriageHistory extends CivFormElement {
   @property({ type: String }) legend = '';
+  /** Skip the status question and assume this value. Use 'widowed' when the spouse's death is already established. */
+  @property({ type: String, attribute: 'status-assumed' }) statusAssumed = '';
 
   @property({ type: String, attribute: 'spouse-error' }) spouseError = '';
   @property({ type: String, attribute: 'marriage-date-error' }) marriageDateError = '';
@@ -64,11 +66,19 @@ export class CivMarriageHistory extends CivFormElement {
         this._marriage = { ...EMPTY_MARRIAGE, ...JSON.parse(this.value) };
       } catch { /* leave empty */ }
     }
+    if (this.statusAssumed) {
+      this._marriage = { ...this._marriage, status: this.statusAssumed };
+      this.value = JSON.stringify(this._marriage);
+    }
     this._syncStatusOptions();
   }
 
   override updated(changed: Map<string, unknown>): void {
     super.updated(changed);
+    if (changed.has('statusAssumed') && this.statusAssumed && this._marriage.status !== this.statusAssumed) {
+      this._marriage = { ...this._marriage, status: this.statusAssumed };
+      this.value = JSON.stringify(this._marriage);
+    }
     if (changed.has('_marriage')) {
       this._syncStatusOptions();
     }
@@ -140,25 +150,27 @@ export class CivMarriageHistory extends CivFormElement {
           @civ-change="${(e: CustomEvent) => this._onFieldChange('marriageState', e)}"
         ></civ-text-input>
 
-        <civ-radio-group
-          legend="${t('marriageStatusLegend')}"
-          name="${prefix}.status"
-          value="${this._marriage.status}"
-          error="${this.statusError}"
-          ?disabled="${this.disabled}"
-          data-marriage-status
-          @civ-input="${(e: CustomEvent) => e.stopPropagation()}"
-          @civ-change="${this._onStatusChange}"
-        >
-          <civ-radio label="${t('marriageStatusCurrent')}" value="current"></civ-radio>
-          <civ-radio label="${t('marriageStatusDivorced')}" value="divorced"></civ-radio>
-          <civ-radio label="${t('marriageStatusWidowed')}" value="widowed"></civ-radio>
-          <civ-radio label="${t('marriageStatusAnnulled')}" value="annulled"></civ-radio>
-        </civ-radio-group>
+        ${this.statusAssumed ? nothing : html`
+          <civ-radio-group
+            legend="${t('marriageStatusLegend')}"
+            name="${prefix}.status"
+            value="${this._marriage.status}"
+            error="${this.statusError}"
+            ?disabled="${this.disabled}"
+            data-marriage-status
+            @civ-input="${(e: CustomEvent) => e.stopPropagation()}"
+            @civ-change="${this._onStatusChange}"
+          >
+            <civ-radio label="${t('marriageStatusCurrent')}" value="current"></civ-radio>
+            <civ-radio label="${t('marriageStatusDivorced')}" value="divorced"></civ-radio>
+            <civ-radio label="${t('marriageStatusWidowed')}" value="widowed"></civ-radio>
+            <civ-radio label="${t('marriageStatusAnnulled')}" value="annulled"></civ-radio>
+          </civ-radio-group>
+        `}
 
         ${this._marriage.status && this._marriage.status !== 'current' ? html`
           <civ-memorable-date
-            legend="${t('marriageEndDateLegend')}"
+            legend="${this._marriage.status === 'widowed' ? t('marriageEndDateWidowedLegend') : t('marriageEndDateLegend')}"
             name="${prefix}.endDate"
             value="${this._marriage.endDate}"
             error="${this.endDateError}"

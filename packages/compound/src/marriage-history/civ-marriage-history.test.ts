@@ -52,14 +52,14 @@ describe('civ-marriage-history', () => {
     expect(legends).toContain('Date marriage ended');
   });
 
-  it('shows end date when status is widowed', async () => {
+  it('shows end date with sensitive label when status is widowed', async () => {
     const el = await fixture('<civ-marriage-history name="m"></civ-marriage-history>') as any;
     el.marriageValue = { ...el.marriageValue, status: 'widowed' };
     await elementUpdated(el);
 
     const dates = el.querySelectorAll('civ-memorable-date');
     const legends = Array.from(dates).map((d: any) => d.getAttribute('legend'));
-    expect(legends).toContain('Date marriage ended');
+    expect(legends).toContain('Date of their passing');
   });
 
   it('clears end date when switching to current', async () => {
@@ -115,5 +115,40 @@ describe('civ-marriage-history', () => {
   it('has static formAssociated = true', () => {
     const Ctor = customElements.get('civ-marriage-history') as any;
     expect(Ctor.formAssociated).toBe(true);
+  });
+});
+
+describe('civ-marriage-history status-assumed', () => {
+  it('skips the status radio group when status-assumed is set', async () => {
+    const el = await fixture('<civ-marriage-history name="m" status-assumed="widowed"></civ-marriage-history>');
+    await elementUpdated(el);
+
+    expect(el.querySelector('civ-radio-group')).toBeNull();
+  });
+
+  it('auto-sets status in the value', async () => {
+    const el = await fixture('<civ-marriage-history name="m" status-assumed="widowed"></civ-marriage-history>') as any;
+    await elementUpdated(el);
+
+    expect(el.marriageValue.status).toBe('widowed');
+  });
+
+  it('shows date field with sensitive label for widowed', async () => {
+    const el = await fixture('<civ-marriage-history name="m" status-assumed="widowed"></civ-marriage-history>') as any;
+    await elementUpdated(el);
+
+    const dates = el.querySelectorAll('civ-memorable-date');
+    const legends = Array.from(dates).map((d: any) => d.getAttribute('legend'));
+    expect(legends).toContain('Date of their passing');
+    expect(legends).not.toContain('Date marriage ended');
+  });
+
+  it('uses standard label for non-widowed assumed status', async () => {
+    const el = await fixture('<civ-marriage-history name="m" status-assumed="divorced"></civ-marriage-history>') as any;
+    await elementUpdated(el);
+
+    const dates = el.querySelectorAll('civ-memorable-date');
+    const legends = Array.from(dates).map((d: any) => d.getAttribute('legend'));
+    expect(legends).toContain('Date marriage ended');
   });
 });

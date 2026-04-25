@@ -287,3 +287,31 @@ describe('civ-relationship readonly', () => {
     expect((textInput as any).readonly).toBe(true);
   });
 });
+
+describe('civ-relationship deceased-assumed', () => {
+  it('shows date of death directly without yes/no question', async () => {
+    const el = await fixture('<civ-relationship name="rel" deceased-assumed></civ-relationship>');
+    await elementUpdated(el);
+
+    expect(el.querySelector('civ-yes-no')).toBeNull();
+    const dateField = el.querySelector('civ-memorable-date');
+    expect(dateField).not.toBeNull();
+    expect(dateField!.getAttribute('legend')).toBe('Date of death');
+  });
+
+  it('auto-sets deceased to yes in the value', async () => {
+    const el = await fixture('<civ-relationship name="rel" deceased-assumed></civ-relationship>') as any;
+    await elementUpdated(el);
+
+    expect(el.relationshipValue.deceased).toBe('yes');
+  });
+
+  it('does not show yes/no even when show-deceased is also set', async () => {
+    const el = await fixture('<civ-relationship name="rel" deceased-assumed show-deceased></civ-relationship>');
+    await elementUpdated(el);
+
+    // deceased-assumed takes priority
+    expect(el.querySelector('civ-yes-no')).toBeNull();
+    expect(el.querySelector('civ-memorable-date')).not.toBeNull();
+  });
+});

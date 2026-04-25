@@ -61,6 +61,8 @@ export class CivRelationship extends CivFormElement {
   @property({ type: Array }) options?: RelationshipTypeConfig[];
   @property({ type: Boolean, attribute: 'show-name' }) showName = true;
   @property({ type: Boolean, attribute: 'show-deceased' }) showDeceased = false;
+  /** Skip the "Is this person deceased?" question — assume yes and show date of death directly. */
+  @property({ type: Boolean, attribute: 'deceased-assumed' }) deceasedAssumed = false;
   @property({ type: Boolean, attribute: 'show-divorce-date' }) showDivorceDate = false;
   @property({ type: Boolean, attribute: 'show-adoption-date' }) showAdoptionDate = false;
 
@@ -102,11 +104,19 @@ export class CivRelationship extends CivFormElement {
         this._data = { ...EMPTY_RELATIONSHIP, ...JSON.parse(this.value) };
       } catch { /* leave empty */ }
     }
+    if (this.deceasedAssumed) {
+      this._data = { ...this._data, deceased: 'yes' };
+      this.value = JSON.stringify(this._data);
+    }
     this._syncSelectOptions();
   }
 
   override updated(changed: Map<string, unknown>): void {
     super.updated(changed);
+    if (changed.has('deceasedAssumed') && this.deceasedAssumed && this._data.deceased !== 'yes') {
+      this._data = { ...this._data, deceased: 'yes' };
+      this.value = JSON.stringify(this._data);
+    }
     if (changed.has('preset') || changed.has('options')) {
       this._syncSelectOptions();
     }
@@ -221,7 +231,17 @@ export class CivRelationship extends CivFormElement {
           ></civ-text-input>
         ` : nothing}
 
-        ${this.showDeceased ? html`
+        ${this.deceasedAssumed ? html`
+          <civ-memorable-date
+            legend="${t('relationshipDateOfDeathLegend')}"
+            name="${prefix}.dateOfDeath"
+            value="${this._data.dateOfDeath}"
+            error="${this.dateOfDeathError}"
+            ?disabled="${this.disabled}"
+            @civ-input="${(e: CustomEvent) => this._onDateInput('dateOfDeath', e)}"
+            @civ-change="${(e: CustomEvent) => this._onDateChange('dateOfDeath', e)}"
+          ></civ-memorable-date>
+        ` : this.showDeceased ? html`
           <civ-yes-no
             legend="${t('relationshipDeceasedLegend')}"
             name="${prefix}.deceased"

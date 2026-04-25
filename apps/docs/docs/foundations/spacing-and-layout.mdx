@@ -1,0 +1,183 @@
+---
+title: Spacing & Layout
+sidebar_position: 3
+sidebar_label: Spacing & Layout
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
+# Spacing & Layout
+
+CivUI uses a consistent spacing scale and flexbox-based layout system. All utilities use the `civ-` prefix and respond to the density system.
+
+## Spacing scale
+
+| Token | Default | Class example |
+|-------|---------|---------------|
+| `0` | 0px | `civ-p-0`, `civ-m-0` |
+| `px` | 1px | `civ-p-px` |
+| `0.5` | 3px | `civ-p-0_5`, `civ-gap-0_5` |
+| `1` | 5px | `civ-p-1`, `civ-m-1` |
+| `1.5` | 8px | `civ-p-1_5`, `civ-gap-1_5` |
+| `2` | 10px | `civ-p-2`, `civ-m-2` |
+| `2.5` | 13px | `civ-p-2_5` |
+| `3` | 15px | `civ-p-3`, `civ-gap-3` |
+| `4` | 20px | `civ-p-4`, `civ-m-4` |
+| `5` | 25px | `civ-p-5` |
+| `6` | 30px | `civ-p-6`, `civ-gap-6` |
+| `8` | 40px | `civ-p-8`, `civ-gap-8` |
+| `10` | 50px | `civ-p-10` |
+| `12` | 60px | `civ-p-12`, `civ-gap-12` |
+| `16` | 80px | `civ-p-16` |
+| `20` | 100px | `civ-p-20` |
+
+Decimal tokens use underscores in Tailwind class names: `0.5` becomes `0_5`, `1.5` becomes `1_5`, `2.5` becomes `2_5`.
+
+## Spacing utilities
+
+### Padding
+
+| Pattern | Description |
+|---------|-------------|
+| `civ-p-{size}` | All sides |
+| `civ-px-{size}` | Horizontal (left + right) |
+| `civ-py-{size}` | Vertical (top + bottom) |
+| `civ-pt-{size}` / `civ-pb-{size}` | Top / Bottom |
+| `civ-ps-{size}` / `civ-pe-{size}` | Inline-start / Inline-end (RTL-safe) |
+
+### Margin
+
+| Pattern | Description |
+|---------|-------------|
+| `civ-m-{size}` | All sides |
+| `civ-mx-{size}` / `civ-my-{size}` | Horizontal / Vertical |
+| `civ-mt-{size}` / `civ-mb-{size}` | Top / Bottom |
+| `civ-ms-{size}` / `civ-me-{size}` | Inline-start / Inline-end (RTL-safe) |
+
+### Gap
+
+| Pattern | Description |
+|---------|-------------|
+| `civ-gap-{size}` | Row and column gap |
+| `civ-gap-x-{size}` / `civ-gap-y-{size}` | Column / Row gap only |
+
+### RTL-safe spacing
+
+Use logical properties (`ps`, `pe`, `ms`, `me`) instead of physical (`pl`, `pr`, `ml`, `mr`) for RTL support.
+
+## Flexbox
+
+### Display & direction
+
+```html
+<div class="civ-flex">Flex container</div>
+<div class="civ-flex civ-flex-col">Vertical stack</div>
+<div class="civ-inline-flex">Inline flex</div>
+```
+
+### Alignment & justification
+
+| Class | CSS |
+|-------|-----|
+| `civ-items-start` / `civ-items-center` / `civ-items-baseline` | `align-items` |
+| `civ-justify-start` / `civ-justify-center` / `civ-justify-between` / `civ-justify-end` | `justify-content` |
+
+### Wrapping and sizing
+
+```html
+<div class="civ-flex civ-flex-wrap civ-gap-4">Wrap items</div>
+<div class="civ-flex-1">Fill remaining space</div>
+<div class="civ-flex-shrink-0">Don't shrink</div>
+```
+
+## Grid
+
+```html
+<div class="civ-grid civ-grid-cols-2 civ-gap-4">Two columns</div>
+<div class="civ-grid civ-grid-cols-3 civ-gap-6">Three columns</div>
+```
+
+For responsive grids, use inline styles for the template:
+
+```html
+<div class="civ-grid civ-gap-4" style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));">
+  ...
+</div>
+```
+
+## Width
+
+| Class | CSS |
+|-------|-----|
+| `civ-w-full` | `width: 100%` |
+| `civ-max-w-sm` | `max-width: 24rem` (384px) |
+| `civ-max-w-md` / `civ-max-w-lg` / `civ-max-w-xl` / `civ-max-w-2xl` | 28rem / 32rem / 36rem / 42rem |
+
+## Common patterns
+
+### Vertical form stack
+
+<StoryEmbed id="foundations-layout-examples--form-stack" />
+
+```html
+<div class="civ-flex civ-flex-col civ-gap-4">
+  <civ-text-input label="First name" name="first"></civ-text-input>
+  <civ-text-input label="Last name" name="last"></civ-text-input>
+</div>
+```
+
+### Icon + text
+
+<StoryEmbed id="foundations-layout-examples--icon-text" />
+
+```html
+<div class="civ-flex civ-items-center civ-gap-2">
+  <civ-icon name="check-circle"></civ-icon>
+  <span>Application submitted</span>
+</div>
+```
+
+### Card grid
+
+<StoryEmbed id="foundations-layout-examples--card-grid" />
+
+### Action bar
+
+<StoryEmbed id="foundations-layout-examples--action-bar" />
+
+```html
+<div class="civ-flex civ-justify-end civ-gap-4">
+  <civ-button variant="secondary" label="Save draft"></civ-button>
+  <civ-button label="Continue"></civ-button>
+</div>
+```
+
+## Density scaling
+
+<StoryEmbed id="foundations-density-examples--side-by-side" />
+
+Spacing tokens respond to the density system. The same class produces different pixel values depending on the active scale:
+
+| Scale | Attribute | Spacing | Best for |
+|-------|-----------|---------|----------|
+| Spacious | `data-civ-scale="spacious"` | 1.5x | Homepages, kiosks |
+| Default | _(none)_ | 1x | Forms, applications |
+| Dense | `data-civ-scale="dense"` | 0.75x | Dashboards, admin |
+
+```html
+<div data-civ-scale="spacious">Large spacing</div>
+<div>Default spacing</div>
+<div data-civ-scale="dense">Compact spacing</div>
+```
+
+The `data-civ-scale` attribute cascades to all children, so you can mix scales within a page.
+
+## CSS custom properties
+
+All spacing tokens are available as CSS custom properties:
+
+```css
+padding: var(--civ-spacing-4);
+margin-bottom: var(--civ-spacing-8);
+gap: var(--civ-spacing-2);
+```

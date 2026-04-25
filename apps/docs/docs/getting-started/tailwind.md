@@ -1,6 +1,6 @@
 ---
 title: Tailwind CSS
-sidebar_position: 8
+sidebar_position: 3
 sidebar_label: Tailwind CSS
 ---
 

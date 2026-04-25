@@ -1,6 +1,6 @@
 ---
 title: Typography
-sidebar_position: 5
+sidebar_position: 1
 sidebar_label: Typography
 ---
 

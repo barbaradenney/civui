@@ -520,4 +520,42 @@ describe('civ-repeater wizard mode', () => {
     const legend = el.querySelector('legend');
     expect(legend!.textContent).toContain('Add dependent');
   });
+
+  it('passes wizard-sensitive to form-step', async () => {
+    const el = await fixture<CivRepeater>(`
+      <civ-repeater legend="People" name="people" item-label="person" mode="wizard" wizard-sensitive>
+        <div data-step-label="Info">
+          <civ-text-input label="Name" name="name"></civ-text-input>
+        </div>
+      </civ-repeater>
+    `);
+    await elementUpdated(el);
+
+    const addBtn = el.querySelector('civ-button') as HTMLElement;
+    addBtn.click();
+    await elementUpdated(el);
+
+    const formStep = el.querySelector('civ-form-step');
+    expect(formStep).not.toBeNull();
+    expect(formStep!.hasAttribute('sensitive')).toBe(true);
+  });
+
+  it('passes wizard-show-pause to form-step', async () => {
+    const el = await fixture<CivRepeater>(`
+      <civ-repeater legend="People" name="people" item-label="person" mode="wizard" wizard-show-pause>
+        <div data-step-label="Info">
+          <civ-text-input label="Name" name="name"></civ-text-input>
+        </div>
+      </civ-repeater>
+    `);
+    await elementUpdated(el);
+
+    const addBtn = el.querySelector('civ-button') as HTMLElement;
+    addBtn.click();
+    await elementUpdated(el);
+
+    const formStep = el.querySelector('civ-form-step');
+    expect(formStep).not.toBeNull();
+    expect(formStep!.hasAttribute('show-pause')).toBe(true);
+  });
 });

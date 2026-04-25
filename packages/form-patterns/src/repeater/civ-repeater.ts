@@ -65,6 +65,12 @@ export class CivRepeater extends CivBaseElement {
   /** Whether the component is disabled. */
   @property({ type: Boolean, reflect: true }) disabled = false;
 
+  /** Mark the wizard sub-flow as emotionally sensitive (wizard mode only). */
+  @property({ type: Boolean, attribute: 'wizard-sensitive' }) wizardSensitive = false;
+
+  /** Show "Save and come back later" in the wizard sub-flow (wizard mode only). */
+  @property({ type: Boolean, attribute: 'wizard-show-pause' }) wizardShowPause = false;
+
   /** Minimum number of rows. Defaults to 1. */
   @property({ type: Number }) min = 1;
 
@@ -462,6 +468,8 @@ export class CivRepeater extends CivBaseElement {
     const formStep = document.createElement('civ-form-step');
     formStep.setAttribute('complete-label',
       interpolate(t('repeaterSaveButton'), { item: this.itemLabel }));
+    if (this.wizardSensitive) formStep.setAttribute('sensitive', '');
+    if (this.wizardShowPause) formStep.setAttribute('show-pause', '');
 
     for (const node of this._template) {
       const clone = node.cloneNode(true);

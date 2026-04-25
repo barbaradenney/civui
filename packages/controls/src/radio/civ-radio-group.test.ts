@@ -70,7 +70,7 @@ describe('civ-radio-group rendering', () => {
 });
 
 describe('civ-radio-group accessibility', () => {
-  it('has role="radiogroup" on fieldset', async () => {
+  it('has role="radiogroup" on the inner group container', async () => {
     const el = await fixture(`
       <civ-radio-group legend="Color" name="color">
         <civ-radio label="Red" value="red"></civ-radio>
@@ -78,7 +78,10 @@ describe('civ-radio-group accessibility', () => {
     `);
 
     const fieldset = el.querySelector('fieldset');
-    expect(fieldset!.getAttribute('role')).toBe('radiogroup');
+    expect(fieldset!.getAttribute('role')).toBeNull();
+    const group = el.querySelector('[role="radiogroup"]');
+    expect(group).not.toBeNull();
+    expect(group!.tagName).toBe('DIV');
   });
 
   it('sets aria-orientation matching orientation property', async () => {
@@ -88,8 +91,8 @@ describe('civ-radio-group accessibility', () => {
       </civ-radio-group>
     `);
 
-    const fieldset = el.querySelector('fieldset');
-    expect(fieldset!.getAttribute('aria-orientation')).toBe('horizontal');
+    const group = el.querySelector('[role="radiogroup"]')!;
+    expect(group.getAttribute('aria-orientation')).toBe('horizontal');
   });
 
   it('defaults aria-orientation to vertical', async () => {
@@ -99,52 +102,52 @@ describe('civ-radio-group accessibility', () => {
       </civ-radio-group>
     `);
 
-    const fieldset = el.querySelector('fieldset');
-    expect(fieldset!.getAttribute('aria-orientation')).toBe('vertical');
+    const group = el.querySelector('[role="radiogroup"]')!;
+    expect(group.getAttribute('aria-orientation')).toBe('vertical');
   });
 
-  it('sets aria-invalid on fieldset when error is present', async () => {
+  it('sets aria-invalid on the radiogroup when error is present', async () => {
     const el = await fixture(`
       <civ-radio-group legend="Color" name="color" error="Required">
         <civ-radio label="Red" value="red"></civ-radio>
       </civ-radio-group>
     `);
 
-    const fieldset = el.querySelector('fieldset');
-    expect(fieldset!.getAttribute('aria-invalid')).toBe('true');
+    const group = el.querySelector('[role="radiogroup"]')!;
+    expect(group.getAttribute('aria-invalid')).toBe('true');
   });
 
-  it('omits aria-invalid on fieldset when no error', async () => {
+  it('omits aria-invalid on the radiogroup when no error', async () => {
     const el = await fixture(`
       <civ-radio-group legend="Color" name="color">
         <civ-radio label="Red" value="red"></civ-radio>
       </civ-radio-group>
     `);
 
-    const fieldset = el.querySelector('fieldset');
-    expect(fieldset!.getAttribute('aria-invalid')).toBeNull();
+    const group = el.querySelector('[role="radiogroup"]')!;
+    expect(group.getAttribute('aria-invalid')).toBeNull();
   });
 
-  it('sets aria-required on fieldset when required', async () => {
+  it('sets aria-required on the radiogroup when required', async () => {
     const el = await fixture(`
       <civ-radio-group legend="Color" name="color" required>
         <civ-radio label="Red" value="red"></civ-radio>
       </civ-radio-group>
     `);
 
-    const fieldset = el.querySelector('fieldset');
-    expect(fieldset!.getAttribute('aria-required')).toBe('true');
+    const group = el.querySelector('[role="radiogroup"]')!;
+    expect(group.getAttribute('aria-required')).toBe('true');
   });
 
-  it('omits aria-required on fieldset when not required', async () => {
+  it('omits aria-required on the radiogroup when not required', async () => {
     const el = await fixture(`
       <civ-radio-group legend="Color" name="color">
         <civ-radio label="Red" value="red"></civ-radio>
       </civ-radio-group>
     `);
 
-    const fieldset = el.querySelector('fieldset');
-    expect(fieldset!.hasAttribute('aria-required')).toBe(false);
+    const group = el.querySelector('[role="radiogroup"]')!;
+    expect(group.hasAttribute('aria-required')).toBe(false);
   });
 
   it('applies focus-visible:civ-focus-ring on child radio inputs', async () => {
@@ -243,7 +246,10 @@ describe('civ-radio-group child syncing', () => {
     }
   });
 
-  it('syncs error to child radios', async () => {
+  it('does not propagate group error to individual child radios', async () => {
+    // Per-radio aria-invalid would cause screen readers to announce
+    // "invalid" once per option as the user arrows through them.
+    // The error is rendered once at the group level instead.
     const el = await fixture(`
       <civ-radio-group legend="Color" name="color" error="Select a color">
         <civ-radio label="Red" value="red"></civ-radio>
@@ -253,7 +259,9 @@ describe('civ-radio-group child syncing', () => {
 
     const radios = el.querySelectorAll('civ-radio');
     for (const radio of radios) {
-      expect((radio as any).error).toBe('Select a color');
+      expect((radio as any).error ?? '').toBe('');
+      const input = radio.querySelector('input');
+      expect(input!.hasAttribute('aria-invalid')).toBe(false);
     }
   });
 });

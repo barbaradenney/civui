@@ -22,11 +22,18 @@ describe('civ-yes-no', () => {
     expect(buttons[1].textContent).toBe('No');
   });
 
-  it('uses a fieldset with role="radiogroup"', async () => {
+  it('renders a fieldset wrapping a div with role="radiogroup"', async () => {
     const el = await fixture('<civ-yes-no legend="Question"></civ-yes-no>');
 
-    const fieldset = el.querySelector('fieldset[role="radiogroup"]');
+    const fieldset = el.querySelector('fieldset')!;
     expect(fieldset).not.toBeNull();
+    // The radiogroup role lives on the inner div so the optional skip
+    // affordance can sit alongside the radios without becoming part of
+    // the mutually-exclusive group.
+    expect(fieldset.getAttribute('role')).toBeNull();
+    const group = fieldset.querySelector('[role="radiogroup"]');
+    expect(group).not.toBeNull();
+    expect(group!.tagName).toBe('DIV');
   });
 
   it('sets aria-checked on selected button', async () => {
@@ -93,18 +100,18 @@ describe('civ-yes-no', () => {
     expect(errorEl!.textContent).toBe('Please select an answer');
   });
 
-  it('sets aria-invalid when error is present', async () => {
+  it('sets aria-invalid on the radiogroup when error is present', async () => {
     const el = await fixture('<civ-yes-no legend="Question" error="Required"></civ-yes-no>');
 
-    const fieldset = el.querySelector('fieldset');
-    expect(fieldset!.getAttribute('aria-invalid')).toBe('true');
+    const group = el.querySelector('[role="radiogroup"]')!;
+    expect(group.getAttribute('aria-invalid')).toBe('true');
   });
 
-  it('sets aria-required when required', async () => {
+  it('sets aria-required on the radiogroup when required', async () => {
     const el = await fixture('<civ-yes-no legend="Question" required></civ-yes-no>');
 
-    const fieldset = el.querySelector('fieldset');
-    expect(fieldset!.getAttribute('aria-required')).toBe('true');
+    const group = el.querySelector('[role="radiogroup"]')!;
+    expect(group.getAttribute('aria-required')).toBe('true');
   });
 
   it('disabled state prevents selection', async () => {

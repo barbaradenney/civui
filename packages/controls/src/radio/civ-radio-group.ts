@@ -49,12 +49,7 @@ export class CivRadioGroup extends LightDomSlotMixin(CivFormElement) {
   /** Form value used when the skip affordance is selected. */
   @property({ type: String, attribute: 'skip-value' }) skipValue = 'skip';
 
-  /**
-   * Legend ID — used only when `skipLabel` is set, to labelled-by the inner
-   * radiogroup div. With a fieldset-native radiogroup the legend provides
-   * the accessible name implicitly; once the role moves to a descendant,
-   * we need an explicit ARIA link.
-   */
+  /** Legend ID — referenced by the inner radiogroup's `aria-labelledby`. */
   private _legendId = this.generateId('radio-group-legend');
 
   protected override _defaultValue = '';
@@ -103,7 +98,7 @@ export class CivRadioGroup extends LightDomSlotMixin(CivFormElement) {
   override updated(changed: Map<string, unknown>): void {
     super.updated(changed);
     const needsRadios =
-      changed.has('name') || changed.has('value') || changed.has('error') ||
+      changed.has('name') || changed.has('value') ||
       changed.has('disabled') || changed.has('required') || changed.has('tile');
     const radios = needsRadios ? this._getRadios() : undefined;
 
@@ -113,9 +108,6 @@ export class CivRadioGroup extends LightDomSlotMixin(CivFormElement) {
     if (changed.has('value')) {
       this._syncRadioChecked(radios);
       this._syncTabindex(radios);
-    }
-    if (changed.has('error')) {
-      this._syncRadioError(radios);
     }
     if (changed.has('disabled')) {
       this._syncRadioDisabled(radios);
@@ -139,31 +131,30 @@ export class CivRadioGroup extends LightDomSlotMixin(CivFormElement) {
         ? 'civ-group-layout--horizontal'
         : 'civ-group-layout--vertical';
 
+    // The radiogroup role lives on the inner div so the optional skip
+    // affordance (a toggle-button, not a radio) can sit alongside the radio
+    // choices inside the fieldset without joining the mutually-exclusive
+    // group.
     return html`
       <fieldset
         class="civ-fieldset"
-        role="${this.skipLabel ? nothing : 'radiogroup'}"
-        aria-orientation="${this.skipLabel ? nothing : this.orientation}"
-        aria-describedby="${this.skipLabel ? nothing : (this._ariaDescribedBy || nothing)}"
-        aria-invalid="${this.skipLabel ? nothing : (this.error ? 'true' : nothing)}"
-        aria-required="${this.skipLabel ? nothing : (this.required || nothing)}"
         ?disabled="${this.disabled}"
       >
         ${renderLegend({
           legend: this.legend,
           required: this.required,
-          legendId: this.skipLabel ? this._legendId : undefined,
+          legendId: this._legendId,
         })}
         ${renderHint(this._hintId, this.hint, true)}
         ${renderError(this._errorId, this.error, true)}
         <div
           class="${layoutClass}"
-          role="${this.skipLabel ? 'radiogroup' : nothing}"
-          aria-labelledby="${this.skipLabel && this.legend ? this._legendId : nothing}"
-          aria-orientation="${this.skipLabel ? this.orientation : nothing}"
-          aria-describedby="${this.skipLabel ? (this._ariaDescribedBy || nothing) : nothing}"
-          aria-invalid="${this.skipLabel && this.error ? 'true' : nothing}"
-          aria-required="${this.skipLabel && this.required ? 'true' : nothing}"
+          role="radiogroup"
+          aria-labelledby="${this.legend ? this._legendId : nothing}"
+          aria-orientation="${this.orientation}"
+          aria-describedby="${this._ariaDescribedBy || nothing}"
+          aria-invalid="${this.error ? 'true' : nothing}"
+          aria-required="${this.required || nothing}"
         ></div>
         ${this.skipLabel
           ? html`
@@ -218,13 +209,6 @@ export class CivRadioGroup extends LightDomSlotMixin(CivFormElement) {
   private _syncRadioChecked(radios?: CivRadio[]): void {
     (radios ?? this._getRadios()).forEach((radio) => {
       radio.checked = radio.value === this.value;
-    });
-  }
-
-  private _syncRadioError(radios?: CivRadio[]): void {
-    const hasError = !!this.error;
-    (radios ?? this._getRadios()).forEach((radio) => {
-      radio.error = hasError ? this.error : '';
     });
   }
 

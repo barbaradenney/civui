@@ -218,18 +218,17 @@ describe('civ-address', () => {
     expect(el.error).toBe('');
   });
 
-  it('sets aria-required on sub-fields when required', async () => {
+  it('sets aria-required on fieldset only, not sub-fields', async () => {
     const el = await fixture<CivAddress>('<civ-address legend="Address" name="addr" required></civ-address>');
 
-    const inputs = el.querySelectorAll('input');
-    const select = el.querySelector('select')!;
+    const fieldset = el.querySelector('fieldset')!;
+    expect(fieldset.getAttribute('aria-required')).toBe('true');
 
-    // street1, city, zip inputs
-    expect(inputs[0].getAttribute('aria-required')).toBe('true');
-    expect(inputs[2].getAttribute('aria-required')).toBe('true');
-    expect(inputs[3].getAttribute('aria-required')).toBe('true');
-    // state select
-    expect(select.getAttribute('aria-required')).toBe('true');
+    // Sub-fields should not have required — it is shown on the legend only
+    const inputs = el.querySelectorAll('input');
+    for (const input of inputs) {
+      expect(input.getAttribute('aria-required')).toBeNull();
+    }
   });
 
   it('omits aria-required when not required', async () => {

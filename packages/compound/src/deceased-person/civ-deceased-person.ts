@@ -131,7 +131,6 @@ export class CivDeceasedPerson extends CivFormElement {
           name="${prefix}.name"
           value="${nameJson}"
           error="${this.nameError}"
-          ?required="${this.required}"
           ?disabled="${this.disabled}"
           ?readonly="${this.readonly}"
           @civ-input="${(e: CustomEvent) => this._onNameInput(e)}"
@@ -153,7 +152,6 @@ export class CivDeceasedPerson extends CivFormElement {
           name="${prefix}.dateOfDeath"
           value="${this._person.dateOfDeath}"
           error="${this.dateOfDeathError}"
-          ?required="${this.required}"
           ?disabled="${this.disabled}"
           @civ-input="${(e: CustomEvent) => this._onDateInput('dateOfDeath', e)}"
           @civ-change="${(e: CustomEvent) => this._onDateChange('dateOfDeath', e)}"
@@ -165,7 +163,6 @@ export class CivDeceasedPerson extends CivFormElement {
             name="${prefix}.relationship"
             value="${this._person.relationship}"
             error="${this.relationshipError}"
-            ?required="${this.required}"
             ?disabled="${this.disabled}"
             data-deceased-relationship
             @civ-change="${(e: CustomEvent) => this._onRelationshipChange(e)}"

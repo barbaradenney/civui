@@ -75,6 +75,31 @@ describe('civ-relationship', () => {
     const Ctor = customElements.get('civ-relationship') as any;
     expect(Ctor.formAssociated).toBe(true);
   });
+
+  it('accepts custom options with plain label strings', async () => {
+    const el = await fixture('<civ-relationship name="rel"></civ-relationship>') as any;
+    el.options = [
+      { value: 'neighbor', label: 'Neighbor', category: 'none' },
+      { value: 'coworker', label: 'Coworker', category: 'none' },
+      { value: 'other', label: 'Other', category: 'other' },
+    ];
+    await elementUpdated(el);
+
+    const select = el.querySelector('[data-relationship-type]') as any;
+    const labels = select.options.map((o: any) => o.label);
+    expect(labels).toEqual(['Neighbor', 'Coworker', 'Other']);
+  });
+
+  it('prefers label over labelKey when both are set', async () => {
+    const el = await fixture('<civ-relationship name="rel"></civ-relationship>') as any;
+    el.options = [
+      { value: 'custom', label: 'My Custom Label', labelKey: 'relationshipOther', category: 'none' },
+    ];
+    await elementUpdated(el);
+
+    const select = el.querySelector('[data-relationship-type]') as any;
+    expect(select.options[0].label).toBe('My Custom Label');
+  });
 });
 
 describe('civ-relationship conditional fields', () => {

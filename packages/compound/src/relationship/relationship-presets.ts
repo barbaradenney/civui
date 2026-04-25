@@ -13,7 +13,10 @@ export type RelationshipCategory = 'spousal' | 'child' | 'other' | 'none';
 
 export interface RelationshipTypeConfig {
   value: string;
-  labelKey: keyof CivLocaleStrings;
+  /** i18n key for the label — used by presets. */
+  labelKey?: keyof CivLocaleStrings;
+  /** Plain text label — used for custom one-off options. Takes priority over labelKey. */
+  label?: string;
   category: RelationshipCategory;
 }
 

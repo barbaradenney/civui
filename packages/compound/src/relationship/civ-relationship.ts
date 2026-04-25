@@ -273,7 +273,7 @@ export class CivRelationship extends CivFormElement {
     if (!select) return;
     select.options = this._activeOptions.map(o => ({
       value: o.value,
-      label: t(o.labelKey),
+      label: o.label ?? (o.labelKey ? t(o.labelKey) : o.value),
     }));
   }
 

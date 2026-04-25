@@ -24,6 +24,14 @@ export class CivFormElement extends CivBaseElement {
   protected _errorId: string;
   protected _defaultValue = '';
 
+  /**
+   * Local mirror of the validity flags last passed to `setValidity()`.
+   * Used to back `checkValidity()` / `validity` / `validationMessage` in
+   * environments that don't fully implement ElementInternals (notably jsdom).
+   */
+  protected _validityFlags: ValidityStateFlags = {};
+  protected _validityMessage = '';
+
   @property({ type: String }) name = '';
   @property({ type: String }) value = '';
   @property({ type: Boolean, reflect: true }) disabled = false;
@@ -55,6 +63,11 @@ export class CivFormElement extends CivBaseElement {
     if (!this._defaultValue) {
       this._defaultValue = this.value;
     }
+    // Establish the initial validity state. Without this, components that
+    // mount with `required` set but no user interaction yet (especially
+    // compound components with structured values) report valid until the
+    // first value change.
+    this._updateValidity();
   }
 
   /**
@@ -65,38 +78,63 @@ export class CivFormElement extends CivBaseElement {
   }
 
   /**
-   * Validity state of this form element.
+   * Validity state of this form element. Falls back to a synthesized
+   * ValidityState when ElementInternals isn't available (jsdom).
    */
   get validity(): ValidityState {
-    return this._internals.validity;
+    return this._internals.validity ?? (this._syntheticValidity() as ValidityState);
   }
 
   /**
    * The validation message.
    */
   get validationMessage(): string {
-    return this._internals.validationMessage;
+    return this._internals.validationMessage ?? this._validityMessage;
   }
 
   /**
    * Whether the element will be included in form submission.
    */
   get willValidate(): boolean {
-    return this._internals.willValidate;
+    return this._internals.willValidate ?? !this.disabled;
   }
 
   /**
    * Check validity without showing UI.
    */
   checkValidity(): boolean {
-    return this._internals.checkValidity();
+    if (typeof this._internals.checkValidity === 'function') {
+      return this._internals.checkValidity();
+    }
+    return Object.keys(this._validityFlags).length === 0;
   }
 
   /**
    * Check validity and show browser validation UI.
    */
   reportValidity(): boolean {
-    return this._internals.reportValidity();
+    if (typeof this._internals.reportValidity === 'function') {
+      return this._internals.reportValidity();
+    }
+    return this.checkValidity();
+  }
+
+  /** Build a ValidityState-shaped object from `_validityFlags` for jsdom. */
+  private _syntheticValidity(): ValidityState {
+    const f = this._validityFlags;
+    return {
+      badInput: !!f.badInput,
+      customError: !!f.customError,
+      patternMismatch: !!f.patternMismatch,
+      rangeOverflow: !!f.rangeOverflow,
+      rangeUnderflow: !!f.rangeUnderflow,
+      stepMismatch: !!f.stepMismatch,
+      tooLong: !!f.tooLong,
+      tooShort: !!f.tooShort,
+      typeMismatch: !!f.typeMismatch,
+      valid: Object.keys(f).length === 0,
+      valueMissing: !!f.valueMissing,
+    };
   }
 
   /**
@@ -125,20 +163,40 @@ export class CivFormElement extends CivBaseElement {
 
   /**
    * Update validity state. Override in subclasses for custom validation.
+   *
+   * Subclass overrides should call `_setValidity(...)` so the local mirror
+   * (used by `checkValidity()` in jsdom) stays in sync with ElementInternals.
    */
   protected _updateValidity(): void {
-    if (typeof this._internals.setValidity !== 'function') return;
-
     const anchor = this.querySelector('input, select, textarea') as HTMLElement | null;
 
     if (this.required && !this.value) {
-      this._internals.setValidity(
+      this._setValidity(
         { valueMissing: true },
         this.error || interpolate(this.requiredMessage || t('fieldRequired'), { label: this.label || t('fieldFallbackLabel') }),
         anchor ?? undefined,
       );
     } else {
-      this._internals.setValidity({});
+      this._setValidity({});
+    }
+  }
+
+  /**
+   * Wrapper around `_internals.setValidity()` that also stores the flags
+   * and message locally so `checkValidity()` works without a full
+   * ElementInternals implementation.
+   */
+  protected _setValidity(
+    flags: ValidityStateFlags,
+    message?: string,
+    anchor?: HTMLElement,
+  ): void {
+    this._validityFlags = { ...flags };
+    this._validityMessage = message ?? '';
+    if (typeof this._internals.setValidity === 'function') {
+      // setValidity throws when flags are non-empty without a message; pass
+      // empty string when caller didn't supply one.
+      this._internals.setValidity(flags, message ?? '', anchor);
     }
   }
 
@@ -165,6 +223,10 @@ export class CivFormElement extends CivBaseElement {
     // No manual announce() needed — role="alert" triggers immediate SR announcement.
     if (changed.has('value')) {
       this._syncFormValue();
+    } else if (changed.has('required') || changed.has('error')) {
+      // Required toggling and external error changes affect the validity
+      // message even when the value didn't move.
+      this._updateValidity();
     }
   }
 

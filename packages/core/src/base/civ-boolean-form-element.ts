@@ -43,16 +43,15 @@ export class CivBooleanFormElement extends CivFormElement {
   }
 
   protected override _updateValidity(): void {
-    if (typeof this._internals?.setValidity !== 'function') return;
     const anchor = this.querySelector(this._anchorSelector) as HTMLElement | null;
     if (this.required && !this.checked) {
-      this._internals.setValidity(
+      this._setValidity(
         { valueMissing: true },
         this.error || interpolate(this.requiredMessage || t('fieldRequired'), { label: this.label || t('fieldFallbackLabel') }),
         anchor ?? undefined,
       );
     } else {
-      this._internals.setValidity({});
+      this._setValidity({});
     }
   }
 

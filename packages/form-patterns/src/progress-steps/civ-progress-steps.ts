@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBaseElement, dispatch, t, interpolate } from '@civui/core';
+import { CivBaseElement, announce, dispatch, t, interpolate } from '@civui/core';
 import '@civui/ui';
 
 /**
@@ -74,6 +74,29 @@ export class CivProgressSteps extends CivBaseElement {
     return this._cachedErrorSet;
   }
 
+  /** Clamp `current` to a valid step index for downstream use. */
+  private get _safeCurrent(): number {
+    const total = this._getStepData().length;
+    if (total === 0) return 0;
+    return Math.max(0, Math.min(this.current, total - 1));
+  }
+
+  override updated(changed: Map<string, unknown>): void {
+    super.updated(changed);
+    if (changed.has('current')) {
+      const stepData = this._getStepData();
+      const idx = this._safeCurrent;
+      const step = stepData[idx];
+      if (step) {
+        announce(interpolate(t('progressStepLabel'), {
+          step: idx + 1,
+          total: stepData.length,
+          label: step.label,
+        }));
+      }
+    }
+  }
+
   override render() {
     const stepData = this._getStepData();
     if (stepData.length === 0) return nothing;
@@ -89,9 +112,9 @@ export class CivProgressSteps extends CivBaseElement {
         >
           ${stepData.map((step, i) => this._renderStep(step, i, stepData.length, isVertical, errorSet))}
         </ol>
-        ${this.showCounter || (this.showBack && this.current > 0) ? html`
+        ${this.showCounter || (this.showBack && this._safeCurrent > 0) ? html`
           <div class="civ-wizard-nav">
-            ${this.showBack && this.current > 0 ? html`
+            ${this.showBack && this._safeCurrent > 0 ? html`
               <civ-link
                 variant="back"
                 label="${this.backLabel || t('formStepBack')}"
@@ -101,7 +124,7 @@ export class CivProgressSteps extends CivBaseElement {
             ` : nothing}
             ${this.showCounter ? html`
               <span class="civ-wizard-nav__counter" aria-live="polite">
-                ${interpolate(t('progressStepsCounter'), { current: this.current + 1, total: stepData.length })}
+                ${interpolate(t('progressStepsCounter'), { current: this._safeCurrent + 1, total: stepData.length })}
               </span>
             ` : nothing}
           </div>
@@ -111,7 +134,8 @@ export class CivProgressSteps extends CivBaseElement {
   }
 
   private _onBack(): void {
-    dispatch(this, 'civ-step-back', { from: this.current, to: this.current - 1 });
+    const from = this._safeCurrent;
+    dispatch(this, 'civ-step-back', { from, to: from - 1 });
   }
 
   private _renderStep(
@@ -121,8 +145,9 @@ export class CivProgressSteps extends CivBaseElement {
     isVertical: boolean,
     errorSet: Set<number>,
   ) {
-    const isCompleted = index < this.current;
-    const isCurrent = index === this.current;
+    const current = this._safeCurrent;
+    const isCompleted = index < current;
+    const isCurrent = index === current;
     const isLast = index === total - 1;
     const hasError = errorSet.has(index);
 
@@ -134,7 +159,7 @@ export class CivProgressSteps extends CivBaseElement {
       hasError ? 'civ-step--error' : '',
     ].filter(Boolean).join(' ');
 
-    const connectorCompleted = isCompleted && index + 1 < this.current
+    const connectorCompleted = isCompleted && index + 1 < current
       ? 'civ-step-connector--completed' : '';
 
     const stepAriaLabel = interpolate(t('progressStepLabel'), {
@@ -150,7 +175,9 @@ export class CivProgressSteps extends CivBaseElement {
         ? html`<span class="civ-icon civ-icon--check" aria-hidden="true"></span>`
         : html`${index + 1}`;
 
-    const circle = this.clickable && isCompleted && !hasError
+    // Errored completed steps stay clickable — users need to be able to
+    // jump back to fix them.
+    const circle = this.clickable && isCompleted
       ? html`<button type="button"
           class="${circleClasses} focus-visible:civ-focus-ring"
           @click="${() => this._onStepClick(index)}"

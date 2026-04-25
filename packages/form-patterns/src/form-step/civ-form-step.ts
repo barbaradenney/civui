@@ -198,9 +198,12 @@ export class CivFormStep extends LightDomSlotMixin(CivBaseElement) {
       total: String(this._steps.length),
     }));
 
-    // Scroll into view and focus first field
+    // Scroll into view and focus first field. Respect reduced-motion preferences.
     if (typeof this.scrollIntoView === 'function') {
-      this.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const reduceMotion =
+        typeof window !== 'undefined' &&
+        window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+      this.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
     }
     requestAnimationFrame(() => {
       const step = this._steps[index];
@@ -219,6 +222,13 @@ export class CivFormStep extends LightDomSlotMixin(CivBaseElement) {
       step.setAttribute('aria-hidden', i === index ? 'false' : 'true');
     }
   }
+
+  /**
+   * Tracks fields whose `error` attribute was set by this component's own
+   * required-field validation, so we can reliably clear it on the next pass
+   * without disturbing externally-set errors.
+   */
+  private _ownedRequiredErrors = new WeakSet<Element>();
 
   /** Validate required fields in the current step using CivUI component errors. */
   private _validateCurrentStep(): boolean {
@@ -248,25 +258,28 @@ export class CivFormStep extends LightDomSlotMixin(CivBaseElement) {
       if (el.hasAttribute('required')) {
         const value = el.value || el.getAttribute('value') || '';
         if (!value.trim()) {
-          const label = el.getAttribute('label') || el.getAttribute('legend') || 'This field';
-          el.setAttribute('error', `${label} is required`);
+          const label =
+            el.getAttribute('label') ||
+            el.getAttribute('legend') ||
+            t('fieldFallbackLabel');
+          const requiredMsg = el.getAttribute('required-message');
+          const message = interpolate(requiredMsg || t('fieldRequired'), { label });
+          el.setAttribute('error', message);
+          this._ownedRequiredErrors.add(el);
           valid = false;
-        } else {
-          // Clear error only if we set it (don't clear custom errors)
-          const currentError = el.getAttribute('error') || '';
-          if (currentError.endsWith('is required')) {
-            el.removeAttribute('error');
-          }
+        } else if (this._ownedRequiredErrors.has(el)) {
+          // Clear only errors we set ourselves; leave externally-set errors alone.
+          el.removeAttribute('error');
+          this._ownedRequiredErrors.delete(el);
         }
       }
 
       // Check CivUI validate attribute (ssn, email, phone, etc.)
+      // Sub-component blur validators set the error; if anything other than
+      // our own required-error is showing, the step is invalid.
       const validateAttr = el.getAttribute('validate');
       if (validateAttr && el.value) {
-        // Trigger the component's built-in validator by checking
-        // if an error was set by the component's own validation
-        const currentError = el.getAttribute('error');
-        if (currentError && !currentError.endsWith('is required')) {
+        if (el.getAttribute('error') && !this._ownedRequiredErrors.has(el)) {
           valid = false;
         }
       }

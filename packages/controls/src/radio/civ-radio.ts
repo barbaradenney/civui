@@ -17,13 +17,16 @@ import { CivBaseElement, dispatch, forwardTileClick } from '@civui/core';
  * @prop {boolean} tile - Tile variant (bordered card style)
  * @prop {boolean} disabled - Whether the radio is disabled
  * @prop {string} name - Form field name (set by parent civ-radio-group)
- * @prop {string} error - Error state (set by parent civ-radio-group, used for aria-invalid)
  * @prop {boolean} required - Required state (set by parent civ-radio-group)
  * @prop {number} managedTabIndex - Tabindex for roving tabindex (set by parent civ-radio-group)
  *
  * @fires civ-change - When selection changes (bubbles to radio-group), detail: { value }
  * @fires civ-input - When selection changes (input event), detail: { value }
  * @fires civ-analytics - Analytics tracking event on change
+ *
+ * Note: error state is rendered at the group level (civ-radio-group) to
+ * avoid each radio individually announcing "invalid" as a screen-reader
+ * user arrows through the choices.
  */
 @customElement('civ-radio')
 export class CivRadio extends CivBaseElement {
@@ -34,7 +37,6 @@ export class CivRadio extends CivBaseElement {
   @property({ type: Boolean, reflect: true }) tile = false;
   @property({ type: Boolean, reflect: true }) disabled = false;
   @property({ type: String }) name = '';
-  @property({ type: String }) error = '';
   @property({ type: Boolean, reflect: true }) required = false;
   @property({ type: Number, attribute: false }) managedTabIndex?: number;
 
@@ -60,7 +62,6 @@ export class CivRadio extends CivBaseElement {
             ?required="${this.required}"
             tabindex="${this.managedTabIndex ?? nothing}"
             aria-required="${this.required || nothing}"
-            aria-invalid="${this.error ? 'true' : nothing}"
             aria-describedby="${this._ariaDescribedBy || nothing}"
             @change="${this._onRadioChange}"
           />

@@ -431,3 +431,31 @@ describe('civ-combobox', () => {
     });
   });
 });
+
+describe('civ-combobox width variants', () => {
+  afterEach(cleanupFixtures);
+
+  it('defaults to civ-w-full on the input and wrapper', async () => {
+    const el = await fixture('<civ-combobox label="State"></civ-combobox>');
+    const input = el.querySelector('input')!;
+    const wrapper = el.querySelector('[data-civ-combobox]')!;
+    expect(input.className).toContain('civ-w-full');
+    expect(wrapper.className).toContain('civ-w-full');
+  });
+
+  it('applies sm width to input and wrapper so the listbox follows', async () => {
+    const el = await fixture('<civ-combobox label="State" width="sm"></civ-combobox>');
+    const input = el.querySelector('input')!;
+    const wrapper = el.querySelector('[data-civ-combobox]')!;
+    expect(input.className).toContain('civ-w-24');
+    // Wrapper carries the same width so the listbox (civ-w-full inside)
+    // doesn't overflow the visible field.
+    expect(wrapper.className).toContain('civ-w-24');
+  });
+
+  it('always includes civ-max-w-full', async () => {
+    const el = await fixture('<civ-combobox label="State" width="lg"></civ-combobox>');
+    const wrapper = el.querySelector('[data-civ-combobox]')!;
+    expect(wrapper.className).toContain('civ-max-w-full');
+  });
+});

@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivFormElement, dispatch, renderLegend, renderHint, renderError, buildDescribedBy, t } from '@civui/core';
+import { CivFormElement, dispatch, renderLegend, renderHint, renderError, buildDescribedBy, interpolate, t } from '@civui/core';
 import '@civui/inputs';
 import '@civui/controls';
 
@@ -153,6 +153,30 @@ export class CivDirectDeposit extends CivFormElement {
     fd.append(`${prefix}.routingNumber`, this._deposit.routingNumber);
     fd.append(`${prefix}.accountNumber`, this._deposit.accountNumber);
     this.updateFormValue(fd);
+  }
+
+  /**
+   * A direct deposit entry is complete when account type, routing number,
+   * and account number are all provided. Routing-number checksum and
+   * account-number length validation belong to dedicated validators.
+   */
+  private _isComplete(): boolean {
+    const d = this._deposit;
+    return !!(d.accountType && d.routingNumber.trim() && d.accountNumber.trim());
+  }
+
+  protected override _updateValidity(): void {
+    if (this.required && !this._isComplete()) {
+      const label = this.legend || this.label || t('fieldFallbackLabel');
+      const anchor = this.querySelector('input, select, textarea') as HTMLElement | null;
+      this._setValidity(
+        { valueMissing: true },
+        this.error || interpolate(this.requiredMessage || t('fieldRequired'), { label }),
+        anchor ?? undefined,
+      );
+    } else {
+      this._setValidity({});
+    }
   }
 
   override formResetCallback(): void {

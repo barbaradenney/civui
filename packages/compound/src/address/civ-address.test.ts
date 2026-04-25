@@ -271,4 +271,39 @@ describe('civ-address', () => {
       expect(handler).toHaveBeenCalledOnce();
     });
   });
+
+  describe('required validation', () => {
+    it('reports invalid when required and empty', async () => {
+      const el = await fixture<any>('<civ-address legend="Mailing address" required></civ-address>');
+      await elementUpdated(el);
+      expect(el.checkValidity()).toBe(false);
+      expect(el.validity.valueMissing).toBe(true);
+    });
+
+    it('reports invalid when required and only street1 is set', async () => {
+      const el = await fixture<any>('<civ-address legend="Mailing address" required></civ-address>');
+      el.addressValue = {
+        country: 'US', street1: '123 Main St', street2: '', street3: '',
+        city: '', state: '', zip: '', military: false,
+      };
+      await elementUpdated(el);
+      expect(el.checkValidity()).toBe(false);
+    });
+
+    it('reports valid when required and street1, city, state, zip are all filled', async () => {
+      const el = await fixture<any>('<civ-address legend="Mailing address" required></civ-address>');
+      el.addressValue = {
+        country: 'US', street1: '123 Main St', street2: '', street3: '',
+        city: 'Austin', state: 'TX', zip: '78701', military: false,
+      };
+      await elementUpdated(el);
+      expect(el.checkValidity()).toBe(true);
+    });
+
+    it('reports valid when not required even if empty', async () => {
+      const el = await fixture<any>('<civ-address legend="Mailing address"></civ-address>');
+      await elementUpdated(el);
+      expect(el.checkValidity()).toBe(true);
+    });
+  });
 });

@@ -1,6 +1,7 @@
 import { html, nothing, type TemplateResult } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivFormElement, dispatch, renderLabel, renderHint, renderError, inputClasses, clickOutside, t, interpolate } from '@civui/core';
+import { CivFormElement, dispatch, renderLabel, renderHint, renderError, inputClasses, inputWidthClass, clickOutside, t, interpolate } from '@civui/core';
+import type { InputWidth } from '@civui/core';
 
 export interface ComboboxOption {
   value: string;
@@ -36,6 +37,7 @@ export class CivCombobox extends CivFormElement {
   @property({ type: Array }) options: ComboboxOption[] = [];
   @property({ type: String }) placeholder = '';
   @property({ type: String, attribute: 'no-results-text' }) noResultsText = '';
+  @property({ type: String }) width: InputWidth = 'default';
 
   @state() private _open = false;
   @state() private _filter = '';
@@ -71,7 +73,8 @@ export class CivCombobox extends CivFormElement {
         ? `${this._listboxId}-option-${this._activeIndex}`
         : '';
 
-    const classes = inputClasses();
+    const widthClass = inputWidthClass(this.width);
+    const classes = inputClasses({ extra: [widthClass, 'civ-max-w-full'] });
 
     return html`
       <div class="civ-mb-4 civ-relative">
@@ -79,7 +82,7 @@ export class CivCombobox extends CivFormElement {
         ${renderHint(this._hintId, this.hint)}
         ${renderError(this._errorId, this.error)}
 
-        <div class="civ-relative" data-civ-combobox>
+        <div class="civ-relative ${widthClass} civ-max-w-full" data-civ-combobox>
           <input
             class="${classes}"
             id="${this._inputId}"

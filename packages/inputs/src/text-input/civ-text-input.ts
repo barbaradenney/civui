@@ -8,6 +8,7 @@ import {
   renderHint,
   renderError,
   inputClasses,
+  inputWidthClass,
   MASK_PRESETS,
   applyMask,
   stripMask,
@@ -18,24 +19,14 @@ import {
   t,
   validate,
 } from '@civui/core';
-import type { MaskDefinition } from '@civui/core';
+import type { InputWidth, MaskDefinition } from '@civui/core';
 import { dispatch } from '@civui/core';
 
 export type TextInputType = 'text' | 'email' | 'number' | 'password' | 'search' | 'tel' | 'url';
-export type TextInputWidth = 'default' | '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+/** @deprecated Use `InputWidth` from `@civui/core`. Re-exported for backwards compatibility. */
+export type TextInputWidth = InputWidth;
 export type TextInputMask = 'ssn' | 'phone-us' | 'zip' | 'zip4' | 'ein' | 'currency' | '';
 export type TextInputValidate = 'email' | 'phone' | 'phoneIntl' | 'ssn' | 'ein' | 'zip' | 'zip4' | 'usState' | 'url' | 'currency' | 'alphanumeric' | '';
-
-const WIDTH_CLASSES: Record<TextInputWidth, string> = {
-  'default': 'civ-w-full',
-  '2xs': 'civ-w-12',
-  'xs': 'civ-w-16',
-  'sm': 'civ-w-24',
-  'md': 'civ-w-40',
-  'lg': 'civ-w-60',
-  'xl': 'civ-w-72',
-  '2xl': 'civ-w-96',
-};
 
 /**
  * CivUI TextInput
@@ -49,7 +40,7 @@ const WIDTH_CLASSES: Record<TextInputWidth, string> = {
 @customElement('civ-text-input')
 export class CivTextInput extends CivFormElement {
   @property({ type: String }) type: TextInputType = 'text';
-  @property({ type: String }) width: TextInputWidth = 'default';
+  @property({ type: String }) width: InputWidth = 'default';
   @property({ type: String }) placeholder: string = '';
   @property({ type: String }) pattern: string = '';
   @property({ type: Number }) maxlength?: number;
@@ -158,11 +149,13 @@ export class CivTextInput extends CivFormElement {
   /**
    * Strip any formatted initial value through the mask engine on first render.
    * For example, `value="123-45-6789"` with `mask="ssn"` becomes raw `"123456789"`.
+   * Re-captures `_defaultValue` after stripping so form reset restores raw, not formatted.
    */
   override firstUpdated(): void {
     super.firstUpdated();
     if (this._activePattern && this.value) {
       this.value = processRawInput(stripMask(this.value, this._activePattern), this._activePattern);
+      this._defaultValue = this.value;
       // Apply mask formatting to the visible input for pre-populated values
       requestAnimationFrame(() => {
         const input = this.querySelector('input') as HTMLInputElement;
@@ -183,7 +176,7 @@ export class CivTextInput extends CivFormElement {
   }
 
   override render() {
-    const widthClass = WIDTH_CLASSES[this.width] || WIDTH_CLASSES['default'];
+    const widthClass = inputWidthClass(this.width);
     const isCurrency = this._isCurrency;
     const hasPrefix = !!(this.prefix || isCurrency);
     const hasSuffix = !!this.suffix;
@@ -279,7 +272,7 @@ export class CivTextInput extends CivFormElement {
         class="${classes}"
         id="${this._inputId}"
         type="${this.type}"
-        name="${this.name}"
+        name="${this.name || nothing}"
         .value="${displayValue}"
         placeholder="${this.placeholder || nothing}"
         ?disabled="${this.disabled}"
@@ -307,7 +300,7 @@ export class CivTextInput extends CivFormElement {
         >${hasPrefix
           ? html`<span class="civ-input-prefix" aria-hidden="true">${isCurrency ? '$' : this.prefix}</span>`
           : nothing}${inputEl}${this.clearable && this.value
-          ? html`<button type="button" class="civ-input-clear" aria-label="${t('clearButton')}" @click="${this._onClear}">
+          ? html`<button type="button" class="civ-input-clear focus-visible:civ-focus-ring" aria-label="${t('clearButton')}" @click="${this._onClear}">
               <civ-icon name="close" size="sm"></civ-icon>
             </button>`
           : nothing}${hasSuffix
@@ -327,11 +320,15 @@ export class CivTextInput extends CivFormElement {
 
   /**
    * Handle clear button click.
-   * Clears the value and dispatches civ-input and civ-change events.
+   * Clears the value, any component-set errors, and dispatches events.
    */
   private _onClear(): void {
     this.value = '';
-    this.updateFormValue('');
+    if (this._maskError || this._validateError) {
+      this.error = '';
+      this._maskError = false;
+      this._validateError = false;
+    }
     const input = this.querySelector('input') as HTMLInputElement | null;
     if (input) {
       input.value = '';

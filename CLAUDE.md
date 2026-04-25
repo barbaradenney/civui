@@ -164,6 +164,18 @@ Input masking engine in `@civui/core` with blur-mode default (mask on blur, raw 
 
 iOS (SwiftUI) and Android (Jetpack Compose) implementations live at `packages/ios/` and `packages/android/`. CI enforces 95%+ API parity across platforms (`parity.yml`) and verifies native files compile (`native.yml`).
 
+The parity check (`tools/parity-report.ts`) parses real source files on each platform — it does **not** consult `@civui/schema`.
+
+## Schemas (`@civui/schema`) — currently dormant
+
+`packages/schema/src/components/*.schema.ts` files describe component APIs in a platform-neutral form, intended as input to `@civui/codegen` (Lit / SwiftUI / Compose generators). **Today these are out of date and not consumed by CI:**
+
+- Schemas don't exist for several recent components (`civ-yes-no`, `civ-address`, `civ-name`, `civ-direct-deposit`, `civ-signature`, `civ-form-step`, `civ-repeater`, `civ-progress-steps`, etc.).
+- Existing schemas drift from the components — many props (e.g. `mask`, `validate`, `clearable`, `prefix`, `suffix`, `width`, `autogrow`, `maxwords`) aren't reflected.
+- Codegen output writes to `packages/codegen/dist/` — never into the real platform packages — and isn't run by CI.
+
+**If you're modifying a component, do not feel obligated to keep its schema in sync.** Treat the schema as design-time aspirational documentation. Before reviving codegen as a real source of truth, the schemas need a full sync pass + a decision on whether codegen output should replace hand-maintained native files.
+
 ## AI Component Usage Guide
 
 For comprehensive component usage, HTML examples, government design patterns,

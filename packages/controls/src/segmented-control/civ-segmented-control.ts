@@ -38,7 +38,6 @@ export class CivSegmentedControl extends LightDomSlotMixin(CivFormElement) {
   private _boundOnChildChange = this._onChildChange.bind(this);
   private _boundStopChildInput = stopChildEvent(this);
   private _boundOnKeydown = this._onKeydown.bind(this);
-  private _tabindexRafId?: number;
 
   override connectedCallback(): void {
     super.connectedCallback();
@@ -52,7 +51,6 @@ export class CivSegmentedControl extends LightDomSlotMixin(CivFormElement) {
     this.removeEventListener('civ-change', this._boundOnChildChange as EventListener);
     this.removeEventListener('civ-input', this._boundStopChildInput as EventListener);
     this.removeEventListener('keydown', this._boundOnKeydown as EventListener);
-    if (this._tabindexRafId) cancelAnimationFrame(this._tabindexRafId);
   }
 
   override willUpdate(changed: Map<string, unknown>): void {
@@ -121,20 +119,15 @@ export class CivSegmentedControl extends LightDomSlotMixin(CivFormElement) {
       segment.selected = segment.value === this.value;
     });
 
-    // Roving tabindex fallback: when no segment is selected,
-    // set the first enabled segment to tabindex="0" so the control
-    // remains reachable via Tab.
-    const hasSelection = segs.some((s) => s.selected);
-    if (!hasSelection) {
-      const enabledSegments = this._getEnabledSegments(segs);
-      if (enabledSegments.length > 0) {
-        // Wait for segment render, then fix tabindex on the button
-        this._tabindexRafId = requestAnimationFrame(() => {
-          const firstBtn = enabledSegments[0].querySelector('button');
-          if (firstBtn) firstBtn.setAttribute('tabindex', '0');
-        });
-      }
-    }
+    // Roving tabindex: focus target is the selected segment, or the first
+    // enabled segment when none is selected. Drives the segment's
+    // managedTabIndex property so the value survives subsequent renders.
+    const checked = segs.find((s) => s.selected && !s.disabled);
+    const enabled = segs.filter((s) => !s.disabled);
+    const focusTarget = checked ?? enabled[0];
+    segs.forEach((segment) => {
+      segment.managedTabIndex = segment === focusTarget ? 0 : -1;
+    });
   }
 
   private _groupDisabledSet = new WeakSet<Element>();

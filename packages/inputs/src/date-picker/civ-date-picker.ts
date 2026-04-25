@@ -94,25 +94,26 @@ export class CivDatePicker extends CivFormElement {
   private _buttonId = this.generateId('btn');
   private _cleanupTrap: (() => void) | null = null;
   private _clickOutside = clickOutside(this, () => this._closeDialog());
-  private _cachedLocale = '';
+  private _cachedLocaleKey = '';
   private _cachedMonthNames: string[] = [];
   private _cachedDayHeaders: { short: string; long: string }[] = [];
 
-  private get _monthNames(): string[] {
-    if (this._cachedLocale !== this.locale) {
-      this._cachedLocale = this.locale;
+  private _refreshLocaleCache(): void {
+    const key = `${this.locale}|${this.weekStartsOn}`;
+    if (this._cachedLocaleKey !== key) {
+      this._cachedLocaleKey = key;
       this._cachedMonthNames = getMonthNames(this.locale);
       this._cachedDayHeaders = getDayOfWeekHeaders(this.locale, this.weekStartsOn);
     }
+  }
+
+  private get _monthNames(): string[] {
+    this._refreshLocaleCache();
     return this._cachedMonthNames;
   }
 
   private get _dayHeaders(): { short: string; long: string }[] {
-    if (this._cachedLocale !== this.locale) {
-      this._cachedLocale = this.locale;
-      this._cachedMonthNames = getMonthNames(this.locale);
-      this._cachedDayHeaders = getDayOfWeekHeaders(this.locale, this.weekStartsOn);
-    }
+    this._refreshLocaleCache();
     return this._cachedDayHeaders;
   }
 
@@ -457,7 +458,9 @@ export class CivDatePicker extends CivFormElement {
     const iso = toISODateString(date);
     this.value = iso;
     this._inputValue = formatDate(date, this.locale);
+    this.error = '';
     this.updateFormValue(iso);
+    dispatch(this, 'civ-input', { value: iso });
     dispatch(this, 'civ-change', { value: iso });
     this.sendAnalytics('change');
     this.announce(interpolate(this.dateSelectedMessage || t('datePickerDateSelectedMessage'), { date: formatDateLong(date, this.locale) }));
@@ -467,6 +470,7 @@ export class CivDatePicker extends CivFormElement {
   private _onClear(): void {
     this.value = '';
     this._inputValue = '';
+    this.error = '';
     this.updateFormValue('');
     dispatch(this, 'civ-input', { value: '' });
     dispatch(this, 'civ-change', { value: '' });
@@ -485,6 +489,7 @@ export class CivDatePicker extends CivFormElement {
     if (!text) {
       this.value = '';
       this._inputValue = '';
+      this.error = '';
       this.updateFormValue('');
       dispatch(this, 'civ-change', { value: '' });
       this.sendAnalytics('change');
@@ -510,6 +515,7 @@ export class CivDatePicker extends CivFormElement {
       this._displayMonth = parsed.getMonth();
       this._displayYear = parsed.getFullYear();
       this._focusedDate = parsed;
+      this.error = '';
       this.updateFormValue(iso);
       dispatch(this, 'civ-change', { value: iso });
       this.sendAnalytics('change');

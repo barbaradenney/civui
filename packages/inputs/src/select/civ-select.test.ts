@@ -315,4 +315,30 @@ describe('civ-select civ-input event', () => {
     await elementUpdated(el);
     expect(el.value).toBe('');
   });
+
+  describe('width variants', () => {
+    it('defaults to civ-w-full', async () => {
+      const el = await fixture('<civ-select label="State"></civ-select>');
+      const select = el.querySelector('select')!;
+      expect(select.className).toContain('civ-w-full');
+    });
+
+    it('applies sm width class', async () => {
+      const el = await fixture('<civ-select label="State" width="sm"></civ-select>');
+      const select = el.querySelector('select')!;
+      expect(select.className).toContain('civ-w-24');
+    });
+
+    it('applies xs width class', async () => {
+      const el = await fixture('<civ-select label="State" width="xs"></civ-select>');
+      const select = el.querySelector('select')!;
+      expect(select.className).toContain('civ-w-16');
+    });
+
+    it('always includes civ-max-w-full so width does not break narrow viewports', async () => {
+      const el = await fixture('<civ-select label="State" width="lg"></civ-select>');
+      const select = el.querySelector('select')!;
+      expect(select.className).toContain('civ-max-w-full');
+    });
+  });
 });

@@ -26,6 +26,7 @@ import { CivBaseElement, dispatch } from '@civui/core';
  * @prop {string} value - Value when this segment is selected
  * @prop {boolean} selected - Whether this segment is currently selected (managed by parent)
  * @prop {boolean} disabled - Whether this segment is disabled
+ * @prop {number} managedTabIndex - Tabindex assigned by the parent for roving tabindex (overrides selected-derived value)
  *
  * @fires civ-change - When this segment is selected (bubbles to parent group), detail: { value }
  */
@@ -35,15 +36,17 @@ export class CivSegment extends CivBaseElement {
   @property({ type: String }) value = '';
   @property({ type: Boolean, reflect: true }) selected = false;
   @property({ type: Boolean, reflect: true }) disabled = false;
+  @property({ type: Number, attribute: false }) managedTabIndex?: number;
 
   override render() {
+    const tabIdx = this.managedTabIndex ?? (this.selected ? 0 : -1);
     return html`
       <button
         type="button"
         role="radio"
         aria-checked="${this.selected ? 'true' : 'false'}"
         ?disabled="${this.disabled}"
-        tabindex="${this.selected ? 0 : -1}"
+        tabindex="${tabIdx}"
         @click="${this._onSelect}"
         class="civ-segment-btn focus-visible:civ-focus-ring"
       >

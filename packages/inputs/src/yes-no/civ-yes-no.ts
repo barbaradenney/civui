@@ -48,10 +48,7 @@ export class CivYesNo extends CivFormElement {
   /** Form value used when the skip affordance is selected. */
   @property({ type: String, attribute: 'skip-value' }) skipValue = 'skip';
 
-  /**
-   * Legend ID — used only when `skipLabel` is set, to labelled-by the inner
-   * radiogroup div (the fieldset-legend pairing doesn't cross that role move).
-   */
+  /** Legend ID — referenced by the inner radiogroup's `aria-labelledby`. */
   private _legendId = this.generateId('yes-no-legend');
 
   protected override _defaultValue = '';
@@ -84,29 +81,29 @@ export class CivYesNo extends CivFormElement {
 
     const btnClasses = 'civ-btn civ-btn--yesno focus-visible:civ-focus-ring';
 
+    // The radiogroup role lives on the inner div so the optional skip
+    // affordance (which is a toggle-button, not a radio) can sit alongside
+    // the radio choices inside the fieldset without becoming part of the
+    // mutually-exclusive group.
     return html`
       <fieldset
         class="civ-fieldset"
-        role="${this.skipLabel ? nothing : 'radiogroup'}"
-        aria-describedby="${this.skipLabel ? nothing : (describedBy || nothing)}"
-        aria-invalid="${this.skipLabel ? nothing : (this.error ? 'true' : nothing)}"
-        aria-required="${this.skipLabel ? nothing : (this.required || nothing)}"
         ?disabled="${this.disabled}"
       >
         ${renderLegend({
           legend: this.legend,
           required: this.required,
-          legendId: this.skipLabel ? this._legendId : undefined,
+          legendId: this._legendId,
         })}
         ${renderHint(this._hintId, this.hint, true)}
         ${renderError(this._errorId, this.error, true)}
         <div
           class="civ-flex civ-gap-2"
-          role="${this.skipLabel ? 'radiogroup' : 'presentation'}"
-          aria-labelledby="${this.skipLabel && this.legend ? this._legendId : nothing}"
-          aria-describedby="${this.skipLabel ? (describedBy || nothing) : nothing}"
-          aria-invalid="${this.skipLabel && this.error ? 'true' : nothing}"
-          aria-required="${this.skipLabel && this.required ? 'true' : nothing}"
+          role="radiogroup"
+          aria-labelledby="${this.legend ? this._legendId : nothing}"
+          aria-describedby="${describedBy || nothing}"
+          aria-invalid="${this.error ? 'true' : nothing}"
+          aria-required="${this.required || nothing}"
         >
           <button
             type="button"

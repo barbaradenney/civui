@@ -1,0 +1,118 @@
+---
+title: Form Composition Patterns
+sidebar_position: 12
+sidebar_label: Form Composition
+---
+
+# Form Composition Patterns
+
+Common government form sections built by composing CivUI components. These patterns don't need dedicated components — the repeater, form fields, and compound components handle them directly.
+
+## Job / Employment History
+
+Employment history varies significantly across agencies. Compose what you need from standard fields.
+
+### Basic (VA pension, HUD housing)
+
+```html
+<civ-repeater legend="Employment history" name="jobs" item-label="employer" mode="detail" min="0">
+  <civ-text-input label="Employer name" name="employer" required></civ-text-input>
+  <civ-text-input label="Job title" name="title"></civ-text-input>
+  <civ-memorable-date legend="Start date" name="startDate" required></civ-memorable-date>
+  <civ-memorable-date legend="End date" name="endDate"></civ-memorable-date>
+  <civ-text-input label="Annual income" name="income" inputmode="numeric" mask="currency"></civ-text-input>
+</civ-repeater>
+```
+
+### Detailed (SSA disability)
+
+```html
+<civ-repeater legend="Work history" name="jobs" item-label="job" mode="wizard">
+  <div data-step-label="Employer">
+    <civ-text-input label="Employer name" name="employer" required></civ-text-input>
+    <civ-address legend="Employer address" name="address"></civ-address>
+  </div>
+  <div data-step-label="Job details">
+    <civ-text-input label="Job title" name="title" required></civ-text-input>
+    <civ-textarea label="Main duties" name="duties" required hint="Describe your day-to-day responsibilities"></civ-textarea>
+    <civ-text-input label="Hours worked per day" name="hoursPerDay" inputmode="numeric" width="xs"></civ-text-input>
+    <civ-text-input label="Days worked per week" name="daysPerWeek" inputmode="numeric" width="xs"></civ-text-input>
+  </div>
+  <div data-step-label="Dates and pay">
+    <civ-memorable-date legend="Start date" name="startDate" required></civ-memorable-date>
+    <civ-memorable-date legend="End date" name="endDate"></civ-memorable-date>
+    <civ-text-input label="Pay per month" name="monthlyPay" inputmode="numeric" mask="currency"></civ-text-input>
+  </div>
+</civ-repeater>
+```
+
+### Immigration (I-485)
+
+```html
+<civ-repeater legend="Employment history (last 5 years)" name="employment" item-label="employer" mode="detail" min="0">
+  <civ-text-input label="Employer or company name" name="employer" required></civ-text-input>
+  <civ-text-input label="Your occupation or job title" name="occupation" required></civ-text-input>
+  <civ-address legend="Employer address" name="address"></civ-address>
+  <civ-memorable-date legend="Date started" name="startDate" required></civ-memorable-date>
+  <civ-memorable-date legend="Date ended" name="endDate" hint="Leave blank if this is your current job"></civ-memorable-date>
+</civ-repeater>
+```
+
+## Education History
+
+Education history also varies by agency and purpose.
+
+### Basic (VA education benefits)
+
+```html
+<civ-repeater legend="Education history" name="education" item-label="school" mode="detail" min="0">
+  <civ-text-input label="School name" name="school" required></civ-text-input>
+  <civ-text-input label="City and state" name="location"></civ-text-input>
+  <civ-memorable-date legend="Date started" name="startDate" required></civ-memorable-date>
+  <civ-memorable-date legend="Date ended" name="endDate"></civ-memorable-date>
+  <civ-select label="Degree or certificate" name="degree"></civ-select>
+  <civ-text-input label="Major or field of study" name="major"></civ-text-input>
+</civ-repeater>
+```
+
+### Federal employment (SF-171)
+
+```html
+<civ-repeater legend="Education" name="education" item-label="school" mode="wizard">
+  <div data-step-label="School">
+    <civ-text-input label="School name" name="school" required></civ-text-input>
+    <civ-address legend="School address" name="address"></civ-address>
+  </div>
+  <div data-step-label="Degree">
+    <civ-memorable-date legend="Date started" name="startDate" required></civ-memorable-date>
+    <civ-memorable-date legend="Date completed or expected" name="endDate"></civ-memorable-date>
+    <civ-select label="Degree type" name="degreeType"></civ-select>
+    <civ-text-input label="Major" name="major"></civ-text-input>
+    <civ-text-input label="GPA" name="gpa" width="xs" inputmode="decimal"></civ-text-input>
+    <civ-text-input label="Total credit hours" name="creditHours" width="xs" inputmode="numeric"></civ-text-input>
+  </div>
+</civ-repeater>
+```
+
+### Immigration (I-485)
+
+```html
+<civ-repeater legend="Schools attended (last 5 years)" name="schools" item-label="school" mode="detail" min="0">
+  <civ-text-input label="School name" name="school" required></civ-text-input>
+  <civ-address legend="School address" name="address"></civ-address>
+  <civ-text-input label="Course of study" name="course"></civ-text-input>
+  <civ-memorable-date legend="Date started" name="startDate" required></civ-memorable-date>
+  <civ-memorable-date legend="Date ended" name="endDate"></civ-memorable-date>
+</civ-repeater>
+```
+
+## When to use a compound component vs. composition
+
+| Criteria | Use compound component | Use composition |
+|----------|----------------------|-----------------|
+| Fields are standardized across agencies | Yes (service history, marriage history) | — |
+| Fields vary significantly by context | — | Yes (job history, education) |
+| Conditional field logic (show/hide based on selection) | Yes (relationship categories) | — |
+| Simple field list with no conditional logic | — | Yes |
+| Used in 5+ forms with identical fields | Yes | — |
+| Used in 2-3 forms with different fields | — | Yes |

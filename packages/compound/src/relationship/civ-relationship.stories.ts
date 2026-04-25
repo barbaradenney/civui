@@ -51,7 +51,7 @@ export const VASurvivor: Story = {
       legend="About the person who died"
       name="deceased"
       preset="va-survivor"
-      show-deceased
+      deceased-assumed
     ></civ-relationship>
   `,
 };
@@ -63,7 +63,7 @@ export const SSASurvivor: Story = {
       legend="About the deceased worker"
       name="deceased"
       preset="ssa-survivor"
-      show-deceased
+      deceased-assumed
       show-divorce-date
     ></civ-relationship>
   `,

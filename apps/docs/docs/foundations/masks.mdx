@@ -4,6 +4,8 @@ sidebar_position: 2
 sidebar_label: Input Masks
 ---
 
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
 # Input Masks
 
 Input masking for formatted fields. CivUI uses blur-mode by default -- the mask is applied on blur and raw input is shown on focus. This provides the best accessibility experience.
@@ -20,6 +22,8 @@ Input masking for formatted fields. CivUI uses blur-mode by default -- the mask 
 | `currency` | (variable) | $1,234.56 | No |
 
 ## Usage
+
+<StoryEmbed id="foundations-input-masks--all-presets" />
 
 ```html
 <civ-text-input label="Phone number" name="phone" mask="phone-us"></civ-text-input>
@@ -40,6 +44,8 @@ Use `mask-pattern` for custom mask patterns:
 | `*` | Any character |
 | Other | Literal separator |
 
+<StoryEmbed id="foundations-input-masks--custom-patterns" />
+
 ```html
 <civ-text-input label="Case number" name="case" mask-pattern="AA-####"></civ-text-input>
 <civ-text-input label="License plate" name="plate" mask-pattern="AAA-####"></civ-text-input>
@@ -49,6 +55,8 @@ Use `mask-pattern` for custom mask patterns:
 
 - **`blur`** (default): User types freely without formatting. Mask is applied on blur for display. This is the most accessible and predictable mode.
 - **`live`**: Formats as user types with auto-inserted literals. Has accessibility tradeoffs (cursor jumping).
+
+<StoryEmbed id="foundations-input-masks--mask-modes" />
 
 ```html
 <!-- Default blur mode -->

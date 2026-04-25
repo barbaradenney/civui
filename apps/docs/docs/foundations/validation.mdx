@@ -4,6 +4,8 @@ sidebar_position: 1
 sidebar_label: Validation
 ---
 
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
 # Validation
 
 CivUI provides 15 built-in validators via `validate` from `@civui/core`. Each returns `{ valid: boolean, error?: string }`.
@@ -31,6 +33,8 @@ CivUI provides 15 built-in validators via `validate` from `@civui/core`. Each re
 ## Declarative Usage
 
 Set the `validate` attribute on form components to auto-validate on submit:
+
+<StoryEmbed id="foundations-validation--declarative-validation" />
 
 ```html
 <civ-text-input label="Email" name="email" validate="email" required></civ-text-input>
@@ -60,6 +64,8 @@ const bad = validate.ssn('000-12-3456');
 2. **Error summary at top** -- `civ-form` renders an error summary automatically on validation failure with anchor links to each invalid field.
 3. **Field-level errors** -- set the `error` prop on individual fields after server validation.
 4. **Custom required messages** -- use `required-message` to provide field-specific instructions instead of generic "This field is required".
+
+<StoryEmbed id="foundations-validation--form-validation" />
 
 ```html
 <civ-form @civ-submit="${handleSubmit}" @civ-invalid="${handleErrors}">

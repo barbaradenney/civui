@@ -133,7 +133,6 @@
   .civ-input {
     @apply civ-block civ-w-full civ-border civ-rounded civ-px-2 civ-py-1.5
            civ-font-sans civ-bg-white civ-border-base-light;
-    max-width: 30rem;
     font-size: var(--civ-typography-fontSize-base);
     color: var(--civ-color-base-darkest);
   }

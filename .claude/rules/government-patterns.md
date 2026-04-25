@@ -51,3 +51,9 @@ globs:
 - `civ-form` renders error summary with anchor links automatically.
 - Set `error` prop on fields for server-side validation errors.
 - Use `clearErrors()` before re-validation.
+
+## Mobile design
+- All popups, dropdowns, and dialogs MUST use bottom sheets on mobile (≤480px).
+- No absolute-positioned dropdowns on small screens — they overflow and are hard to tap.
+- Bottom sheets: `position: fixed; bottom: 0; left: 0; right: 0;` with rounded top corners.
+- Max height 50-70vh with `overflow-y: auto` for scrollable content.

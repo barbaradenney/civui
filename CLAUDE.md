@@ -92,6 +92,29 @@ Group components use `legend` instead of `label`.
 ### Rendering Order
 Label → hint → error → control → supplementary info (character count, file list).
 
+### Mobile Popups — Bottom Sheet Rule
+All popups, dropdowns, and dialogs **must** render as bottom sheets on mobile (≤480px). No absolute-positioned dropdowns on small screens — they overflow and are hard to tap.
+
+```css
+@media (max-width: 480px) {
+  .my-popup {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: auto;
+    width: 100%;
+    margin: 0;
+    border-radius: var(--civ-border-radius-lg) var(--civ-border-radius-lg) 0 0;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+    max-height: 50vh;
+    overflow-y: auto;
+  }
+}
+```
+
+Components already following this: `civ-datepicker-dialog`, `civ-combobox-listbox`. Native `<select>` gets OS-level bottom sheet automatically.
+
 ### Focus Styles
 Use `focus-visible:civ-focus-ring` (not deprecated `focus:civ-outline-*` classes).
 

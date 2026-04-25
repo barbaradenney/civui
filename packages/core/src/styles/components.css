@@ -45,6 +45,30 @@
     color: var(--civ-color-base-dark);
   }
 
+  /* ── Memorable Date ───────────────────────────────────────── */
+
+  .civ-memorable-date-fields {
+    @apply civ-flex civ-flex-wrap civ-gap-4 civ-items-end;
+  }
+
+  .civ-memorable-date-month {
+    width: 10rem;
+  }
+
+  .civ-memorable-date-day {
+    width: 5rem;
+  }
+
+  .civ-memorable-date-year {
+    width: 6rem;
+  }
+
+  @media (max-width: 480px) {
+    .civ-memorable-date-month {
+      width: 100%;
+    }
+  }
+
   /* ── Field width constraints ──────────────────────────────── */
 
   .civ-field-width-xs {
@@ -1479,7 +1503,7 @@
   .civ-action-btn--tertiary {
     @apply civ-border-base-light;
     background-color: var(--civ-color-base-lightest);
-    color: var(--civ-color-base-DEFAULT);
+    color: var(--civ-color-base-darker);
   }
   .civ-action-btn--tertiary:hover:not(:disabled) {
     background-color: var(--civ-color-base-lighter);

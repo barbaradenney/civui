@@ -72,12 +72,12 @@ describe('civ-memorable-date rendering', () => {
     expect(legend!.textContent).toContain('Date of birth');
   });
 
-  it('lays out fields horizontally in a flex container', async () => {
+  it('lays out fields in a responsive container', async () => {
     const el = await fixture('<civ-memorable-date legend="Date of birth" name="dob"></civ-memorable-date>');
 
-    const flexContainer = el.querySelector('[data-civ-memorable-date]');
-    expect(flexContainer).not.toBeNull();
-    expect(flexContainer!.classList.contains('civ-flex')).toBe(true);
+    const container = el.querySelector('[data-civ-memorable-date]');
+    expect(container).not.toBeNull();
+    expect(container!.classList.contains('civ-memorable-date-fields')).toBe(true);
   });
 });
 

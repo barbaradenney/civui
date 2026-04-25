@@ -171,8 +171,8 @@ export class CivMemorableDate extends CivFormElement {
         ${renderLegend({ legend: this.legend, required: this.required, legendId: this._legendId })}
         ${renderHint(this._hintId, this.hint, true)}
         ${renderError(this._errorId, this.error, true)}
-        <div class="civ-flex civ-gap-4 civ-items-end" data-civ-memorable-date>
-          <div class="civ-w-40">
+        <div class="civ-memorable-date-fields" data-civ-memorable-date>
+          <div class="civ-memorable-date-month">
             <civ-select
               label="${this.monthLabel || t('memorableDateMonthLabel')}"
               name="${this.name ? `${this.name}-month` : 'month'}"
@@ -185,7 +185,7 @@ export class CivMemorableDate extends CivFormElement {
               disable-analytics
             ></civ-select>
           </div>
-          <div class="civ-w-20">
+          <div class="civ-memorable-date-day">
             <civ-text-input
               label="${this.dayLabel || t('memorableDateDayLabel')}"
               name="${this.name ? `${this.name}-day` : 'day'}"
@@ -201,7 +201,7 @@ export class CivMemorableDate extends CivFormElement {
               disable-analytics
             ></civ-text-input>
           </div>
-          <div class="civ-w-24">
+          <div class="civ-memorable-date-year">
             <civ-text-input
               label="${this.yearLabel || t('memorableDateYearLabel')}"
               name="${this.name ? `${this.name}-year` : 'year'}"

@@ -27,6 +27,8 @@ export class CivPageHeader extends LightDomSlotMixin(CivBaseElement) {
       'data-eyebrow': '[data-civ-page-header-eyebrow]',
       'data-heading': '[data-civ-page-header-heading]',
       'data-subheading': '[data-civ-page-header-subheading]',
+      'data-header-start': '[data-civ-page-header-start]',
+      'data-header-end': '[data-civ-page-header-end]',
       default: '[data-civ-page-header-heading]',
     };
   }
@@ -36,7 +38,9 @@ export class CivPageHeader extends LightDomSlotMixin(CivBaseElement) {
   }
 
   override render() {
-    const hasIcons = this.iconStart || this.iconEnd;
+    const hasStart = this.iconStart || this._hasSlottedChildren('data-header-start');
+    const hasEnd = this.iconEnd || this._hasSlottedChildren('data-header-end');
+    const hasFlank = hasStart || hasEnd;
 
     return html`
       <div class="${[
@@ -49,11 +53,23 @@ export class CivPageHeader extends LightDomSlotMixin(CivBaseElement) {
         ${this._hasSlottedChildren('data-eyebrow') ? html`
           <div class="civ-page-header__eyebrow" data-civ-page-header-eyebrow></div>
         ` : nothing}
-        ${hasIcons ? html`
+        ${hasFlank ? html`
           <div class="civ-page-header__heading-layout">
-            ${this.iconStart ? html`<civ-icon class="civ-page-header__icon" name="${this.iconStart}" aria-hidden="true"></civ-icon>` : nothing}
+            ${hasStart ? html`
+              <div class="civ-page-header__start" data-civ-page-header-start>
+                ${this.iconStart && !this._hasSlottedChildren('data-header-start')
+                  ? html`<civ-icon class="civ-page-header__icon" name="${this.iconStart}" aria-hidden="true"></civ-icon>`
+                  : nothing}
+              </div>
+            ` : nothing}
             <div class="civ-page-header__heading" data-civ-page-header-heading></div>
-            ${this.iconEnd ? html`<civ-icon class="civ-page-header__icon" name="${this.iconEnd}" aria-hidden="true"></civ-icon>` : nothing}
+            ${hasEnd ? html`
+              <div class="civ-page-header__end" data-civ-page-header-end>
+                ${this.iconEnd && !this._hasSlottedChildren('data-header-end')
+                  ? html`<civ-icon class="civ-page-header__icon" name="${this.iconEnd}" aria-hidden="true"></civ-icon>`
+                  : nothing}
+              </div>
+            ` : nothing}
           </div>
         ` : html`
           <div class="civ-page-header__heading" data-civ-page-header-heading></div>

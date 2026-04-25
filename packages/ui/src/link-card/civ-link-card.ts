@@ -87,7 +87,7 @@ export class CivLinkCard extends CivBaseElement {
       'focus-visible:civ-focus-ring',
     ].filter(Boolean).join(' ');
 
-    const hasIcons = this.iconStart || this.iconEnd;
+    const hasFlank = this.iconStart || this.iconEnd;
 
     return html`
       <a
@@ -95,16 +95,16 @@ export class CivLinkCard extends CivBaseElement {
         class="${classes}"
         @click="${this._onClick}"
       >
-        ${hasIcons ? html`
+        ${hasFlank ? html`
           <span class="civ-link-card__layout">
-            ${this.iconStart ? html`<civ-icon class="civ-link-card__icon" name="${this.iconStart}" aria-hidden="true"></civ-icon>` : nothing}
+            ${this.iconStart ? html`<span class="civ-link-card__start"><civ-icon class="civ-link-card__icon" name="${this.iconStart}" aria-hidden="true"></civ-icon></span>` : nothing}
             <span class="civ-link-card__content">
               <span class="civ-link-card__heading">${this.heading}</span>
               ${this.description
                 ? html`<span class="civ-link-card__description">${this.description}</span>`
                 : nothing}
             </span>
-            ${this.iconEnd ? html`<civ-icon class="civ-link-card__icon" name="${this.iconEnd}" aria-hidden="true"></civ-icon>` : nothing}
+            ${this.iconEnd ? html`<span class="civ-link-card__end"><civ-icon class="civ-link-card__icon" name="${this.iconEnd}" aria-hidden="true"></civ-icon></span>` : nothing}
           </span>
         ` : html`
           <span class="civ-link-card__heading">${this.heading}</span>

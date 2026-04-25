@@ -2040,6 +2040,11 @@
     font-size: 1.25em;
   }
 
+  .civ-link-card__start,
+  .civ-link-card__end {
+    @apply civ-flex-shrink-0 civ-flex civ-items-center civ-justify-center;
+  }
+
   .civ-link-card__content {
     @apply civ-flex-1;
     min-width: 0;
@@ -2161,6 +2166,11 @@
   .civ-page-header__icon {
     @apply civ-flex-shrink-0;
     font-size: 1.5em;
+  }
+
+  .civ-page-header__start,
+  .civ-page-header__end {
+    @apply civ-flex-shrink-0 civ-flex civ-items-center civ-justify-center;
   }
 
   .civ-page-header__heading > * {
@@ -2358,6 +2368,11 @@
   .civ-card__icon {
     @apply civ-flex-shrink-0;
     font-size: 1.5em;
+  }
+
+  .civ-card__start,
+  .civ-card__end {
+    @apply civ-flex-shrink-0 civ-flex civ-items-center civ-justify-center;
   }
 
   .civ-card__footer {

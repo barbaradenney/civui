@@ -144,6 +144,78 @@ describe('civ-conditional', () => {
     fakeField.remove();
   });
 
+  it('shows content when value is in includes list', async () => {
+    const el = await fixture('<civ-conditional when="role" includes="admin, editor"><p>Privileged</p></civ-conditional>');
+    await elementUpdated(el);
+
+    const fakeField = document.createElement('div');
+    (fakeField as any).name = 'role';
+    document.body.appendChild(fakeField);
+
+    fakeField.dispatchEvent(new CustomEvent('civ-input', { detail: { value: 'editor' }, bubbles: true }));
+    await elementUpdated(el);
+    expect((el.querySelector('[data-civ-conditional-content]') as HTMLElement).classList.contains('civ-conditional--visible')).toBe(true);
+
+    fakeField.dispatchEvent(new CustomEvent('civ-input', { detail: { value: 'viewer' }, bubbles: true }));
+    await elementUpdated(el);
+    expect((el.querySelector('[data-civ-conditional-content]') as HTMLElement).classList.contains('civ-conditional--hidden')).toBe(true);
+
+    fakeField.remove();
+  });
+
+  it('shows content when field has any value (has-value)', async () => {
+    const el = await fixture('<civ-conditional when="email" has-value><p>Email provided</p></civ-conditional>');
+    await elementUpdated(el);
+
+    const fakeField = document.createElement('div');
+    (fakeField as any).name = 'email';
+    document.body.appendChild(fakeField);
+
+    fakeField.dispatchEvent(new CustomEvent('civ-input', { detail: { value: 'test@example.com' }, bubbles: true }));
+    await elementUpdated(el);
+    expect((el.querySelector('[data-civ-conditional-content]') as HTMLElement).classList.contains('civ-conditional--visible')).toBe(true);
+
+    fakeField.dispatchEvent(new CustomEvent('civ-input', { detail: { value: '' }, bubbles: true }));
+    await elementUpdated(el);
+    expect((el.querySelector('[data-civ-conditional-content]') as HTMLElement).classList.contains('civ-conditional--hidden')).toBe(true);
+
+    fakeField.remove();
+  });
+
+  it('shows content when value matches regex pattern', async () => {
+    const el = await fixture('<civ-conditional when="zip" matches="^\\d{5}$"><p>Valid ZIP</p></civ-conditional>');
+    await elementUpdated(el);
+
+    const fakeField = document.createElement('div');
+    (fakeField as any).name = 'zip';
+    document.body.appendChild(fakeField);
+
+    fakeField.dispatchEvent(new CustomEvent('civ-input', { detail: { value: '90210' }, bubbles: true }));
+    await elementUpdated(el);
+    expect((el.querySelector('[data-civ-conditional-content]') as HTMLElement).classList.contains('civ-conditional--visible')).toBe(true);
+
+    fakeField.dispatchEvent(new CustomEvent('civ-input', { detail: { value: 'abc' }, bubbles: true }));
+    await elementUpdated(el);
+    expect((el.querySelector('[data-civ-conditional-content]') as HTMLElement).classList.contains('civ-conditional--hidden')).toBe(true);
+
+    fakeField.remove();
+  });
+
+  it('handles invalid regex gracefully', async () => {
+    const el = await fixture('<civ-conditional when="x" matches="[invalid"><p>Content</p></civ-conditional>');
+    await elementUpdated(el);
+
+    const fakeField = document.createElement('div');
+    (fakeField as any).name = 'x';
+    document.body.appendChild(fakeField);
+
+    fakeField.dispatchEvent(new CustomEvent('civ-input', { detail: { value: 'test' }, bubbles: true }));
+    await elementUpdated(el);
+    expect((el.querySelector('[data-civ-conditional-content]') as HTMLElement).classList.contains('civ-conditional--hidden')).toBe(true);
+
+    fakeField.remove();
+  });
+
   it('stays hidden when neither equals nor not-equals is set', async () => {
     const el = await fixture('<civ-conditional when="color"><p>Content</p></civ-conditional>');
     await elementUpdated(el);

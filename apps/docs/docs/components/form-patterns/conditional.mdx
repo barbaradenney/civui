@@ -37,8 +37,11 @@ A declarative show/hide wrapper that reveals its content only when a named field
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `when` | `string` | `''` | The `name` of the field to watch |
-| `equals` | `string` | `''` | Show content when the field value matches this |
-| `not-equals` | `string` | `''` | Show content when the field value does NOT match this |
+| `equals` | `string` | `''` | Show when the field value matches exactly |
+| `not-equals` | `string` | `''` | Show when the field value does NOT match |
+| `includes` | `string` | `''` | Show when the field value is in this comma-separated list |
+| `has-value` | `boolean` | `false` | Show when the field has any non-empty value |
+| `matches` | `string` | `''` | Show when the field value matches this regex pattern |
 
 ## Behavior
 
@@ -103,5 +106,20 @@ For performance, event listeners are scoped to the nearest ancestor:
 
 <civ-conditional when="employment" equals="self-employed">
   <civ-text-input label="Business name" name="businessName" required></civ-text-input>
+</civ-conditional>
+
+<!-- Show for multiple values (comma-separated list) -->
+<civ-conditional when="employment" includes="employed, self-employed">
+  <civ-text-input label="Annual income" name="income" required></civ-text-input>
+</civ-conditional>
+
+<!-- Show when any value is entered -->
+<civ-conditional when="email" has-value>
+  <civ-checkbox label="Send me email updates" name="emailUpdates"></civ-checkbox>
+</civ-conditional>
+
+<!-- Show when value matches a regex pattern -->
+<civ-conditional when="zip" matches="^\\d{5}$">
+  <p class="civ-text-caption">We found your local VA office.</p>
 </civ-conditional>
 ```

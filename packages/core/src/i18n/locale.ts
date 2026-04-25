@@ -228,6 +228,7 @@ export interface CivLocaleStrings {
   repeaterEditingAnnouncement: string; // "Editing {item} {index}"
   repeaterWizardAddTitle: string; // "Add {item}"
   repeaterWizardEditTitle: string; // "Edit {item} {index}"
+  repeaterMinReached: string; // "At least {min} {item} required"
 
   // Marriage history
   marriageLegend: string;
@@ -514,6 +515,7 @@ const defaultStrings: CivLocaleStrings = {
   repeaterEditingAnnouncement: 'Editing {item} {index}',
   repeaterWizardAddTitle: 'Add {item}',
   repeaterWizardEditTitle: 'Edit {item} {index}',
+  repeaterMinReached: 'At least {min} {item} required',
 
   marriageLegend: 'About this marriage',
   marriageSpouseLegend: 'Spouse\'s name',

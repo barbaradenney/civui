@@ -158,11 +158,13 @@ export class CivTextInput extends CivFormElement {
   /**
    * Strip any formatted initial value through the mask engine on first render.
    * For example, `value="123-45-6789"` with `mask="ssn"` becomes raw `"123456789"`.
+   * Re-captures `_defaultValue` after stripping so form reset restores raw, not formatted.
    */
   override firstUpdated(): void {
     super.firstUpdated();
     if (this._activePattern && this.value) {
       this.value = processRawInput(stripMask(this.value, this._activePattern), this._activePattern);
+      this._defaultValue = this.value;
       // Apply mask formatting to the visible input for pre-populated values
       requestAnimationFrame(() => {
         const input = this.querySelector('input') as HTMLInputElement;
@@ -279,7 +281,7 @@ export class CivTextInput extends CivFormElement {
         class="${classes}"
         id="${this._inputId}"
         type="${this.type}"
-        name="${this.name}"
+        name="${this.name || nothing}"
         .value="${displayValue}"
         placeholder="${this.placeholder || nothing}"
         ?disabled="${this.disabled}"
@@ -307,7 +309,7 @@ export class CivTextInput extends CivFormElement {
         >${hasPrefix
           ? html`<span class="civ-input-prefix" aria-hidden="true">${isCurrency ? '$' : this.prefix}</span>`
           : nothing}${inputEl}${this.clearable && this.value
-          ? html`<button type="button" class="civ-input-clear" aria-label="${t('clearButton')}" @click="${this._onClear}">
+          ? html`<button type="button" class="civ-input-clear focus-visible:civ-focus-ring" aria-label="${t('clearButton')}" @click="${this._onClear}">
               <civ-icon name="close" size="sm"></civ-icon>
             </button>`
           : nothing}${hasSuffix
@@ -327,11 +329,15 @@ export class CivTextInput extends CivFormElement {
 
   /**
    * Handle clear button click.
-   * Clears the value and dispatches civ-input and civ-change events.
+   * Clears the value, any component-set errors, and dispatches events.
    */
   private _onClear(): void {
     this.value = '';
-    this.updateFormValue('');
+    if (this._maskError || this._validateError) {
+      this.error = '';
+      this._maskError = false;
+      this._validateError = false;
+    }
     const input = this.querySelector('input') as HTMLInputElement | null;
     if (input) {
       input.value = '';

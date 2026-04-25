@@ -198,9 +198,12 @@ export class CivFormStep extends LightDomSlotMixin(CivBaseElement) {
       total: String(this._steps.length),
     }));
 
-    // Scroll into view and focus first field
+    // Scroll into view and focus first field. Respect reduced-motion preferences.
     if (typeof this.scrollIntoView === 'function') {
-      this.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const reduceMotion =
+        typeof window !== 'undefined' &&
+        window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+      this.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
     }
     requestAnimationFrame(() => {
       const step = this._steps[index];

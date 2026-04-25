@@ -647,8 +647,10 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
     const button = target.closest('button') as HTMLButtonElement | null;
     if (!button || !this.contains(button)) return;
 
-    const type = button.getAttribute('type');
-    if (type === 'submit' || type === null) {
+    // Require explicit type="submit". civ-form is a custom element, not a
+    // <form>, so HTML's "default button type is submit inside a form" rule
+    // doesn't apply — and a typeless <button> usually means "just a button".
+    if (button.getAttribute('type') === 'submit') {
       e.preventDefault();
       this._onSubmit();
     }
@@ -716,7 +718,13 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
       ?? element.querySelector('input:not([aria-hidden="true"]), select, textarea') as HTMLElement | null;
     if (focusTarget) {
       focusTarget.focus();
-      focusTarget.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      const reduceMotion =
+        typeof window !== 'undefined' &&
+        window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+      focusTarget.scrollIntoView({
+        behavior: reduceMotion ? 'auto' : 'smooth',
+        block: 'center',
+      });
     }
   }
 }

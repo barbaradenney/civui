@@ -65,11 +65,6 @@ export class CivToggle extends CivBooleanFormElement {
     dispatch(this, 'civ-change', { checked: this.checked, value: this.value });
     this.sendAnalytics('change', { checked: this.checked });
   }
-
-  override formResetCallback(): void {
-    super.formResetCallback();
-    dispatch(this, 'civ-reset');
-  }
 }
 
 declare global {

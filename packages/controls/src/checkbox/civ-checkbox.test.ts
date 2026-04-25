@@ -492,11 +492,14 @@ describe('civ-checkbox indeterminate', () => {
     expect(input.indeterminate).toBe(true);
   });
 
-  it('sets aria-checked to mixed when indeterminate', async () => {
+  it('exposes indeterminate state without redundant aria-checked', async () => {
     const el = await fixture('<civ-checkbox label="Select all" indeterminate></civ-checkbox>');
 
     const input = el.querySelector('input') as HTMLInputElement;
-    expect(input.getAttribute('aria-checked')).toBe('mixed');
+    // Native checkbox conveys mixed state via the indeterminate DOM property.
+    // aria-checked="mixed" on a native input is redundant and confuses some screen readers.
+    expect(input.indeterminate).toBe(true);
+    expect(input.hasAttribute('aria-checked')).toBe(false);
   });
 
   it('clears indeterminate on user interaction', async () => {
@@ -512,14 +515,15 @@ describe('civ-checkbox indeterminate', () => {
     expect(input.hasAttribute('aria-checked')).toBe(false);
   });
 
-  it('applies tile class and aria-checked mixed when indeterminate', async () => {
+  it('applies tile class and indeterminate state', async () => {
     const el = await fixture('<civ-checkbox label="Option" tile indeterminate></civ-checkbox>');
 
     const tile = el.querySelector('.civ-check-tile');
     expect(tile).not.toBeNull();
 
     const input = el.querySelector('input') as HTMLInputElement;
-    expect(input.getAttribute('aria-checked')).toBe('mixed');
+    expect(input.indeterminate).toBe(true);
+    expect(input.hasAttribute('aria-checked')).toBe(false);
   });
 });
 

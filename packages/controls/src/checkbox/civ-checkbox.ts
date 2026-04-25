@@ -31,7 +31,6 @@ export class CivCheckbox extends CivBooleanFormElement {
             ?disabled="${this.disabled}"
             ?required="${this.required}"
             aria-required="${this.required || nothing}"
-            aria-checked="${this.indeterminate ? 'mixed' : nothing}"
             aria-invalid="${this.error ? 'true' : nothing}"
             aria-describedby="${this._ariaDescribedBy || nothing}"
             @change="${this._onCheckboxChange}"
@@ -76,7 +75,6 @@ export class CivCheckbox extends CivBooleanFormElement {
   override formResetCallback(): void {
     super.formResetCallback();
     this.indeterminate = false;
-    dispatch(this, 'civ-reset');
   }
 }
 

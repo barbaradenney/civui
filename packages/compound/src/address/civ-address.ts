@@ -268,11 +268,12 @@ export class CivAddress extends CivFormElement {
     `;
   }
 
-  /** Whether to render a select dropdown for the state field. */
+  /** Whether to render a select dropdown for the state field.
+   * Only US (and military APO/FPO/DPO) ship with a state list today. Other
+   * countries fall back to free-text entry until province lists are added. */
   private get _useSelectForState(): boolean {
     if (this._address.military) return true;
-    const country = this._address.country;
-    return !this.showCountry || country === 'US' || country === 'CA' || country === 'MX';
+    return !this.showCountry || this._address.country === 'US';
   }
 
   /** State/province options for the current country. */

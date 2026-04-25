@@ -199,7 +199,13 @@ export class CivRepeater extends CivBaseElement {
     if (!container) return;
     const rows = container.querySelectorAll(':scope > [data-civ-repeater-row]');
     if (index < 0 || index >= rows.length) return;
-    if (this._rowCount <= this.min) return;
+    if (this._rowCount <= this.min) {
+      announce(
+        interpolate(t('repeaterMinReached'), { min: String(this.min), item: this.itemLabel }),
+        'assertive',
+      );
+      return;
+    }
     rows[index].remove();
     this._rowCount--;
     // Clean up stored data for wizard mode

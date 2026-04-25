@@ -1036,7 +1036,7 @@
     @apply civ-me-2 civ-align-middle civ-accent-primary civ-cursor-pointer;
     width: var(--civ-spacing-8);
     height: var(--civ-spacing-8);
-    border-radius: var(--civ-borderRadius-DEFAULT, 0.25rem);
+    border-radius: var(--civ-border-radius-DEFAULT, 6px);
   }
 
   .civ-check-input[type="radio"] {

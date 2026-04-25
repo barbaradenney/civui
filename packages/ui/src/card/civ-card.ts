@@ -31,6 +31,8 @@ export class CivCard extends LightDomSlotMixin(CivBaseElement) {
   @property({ type: String }) color: CardColor | '' = '';
   @property({ type: String, attribute: 'card-style' }) cardStyle: CardStyle = 'tertiary';
   @property({ type: String }) spacing: 'default' | 'sm' = 'default';
+  @property({ type: String, attribute: 'icon-start' }) iconStart = '';
+  @property({ type: String, attribute: 'icon-end' }) iconEnd = '';
 
   override _getSlotConfig(): SlotConfig {
     return {
@@ -55,13 +57,23 @@ export class CivCard extends LightDomSlotMixin(CivBaseElement) {
       this.spacing === 'sm' ? 'civ-card--sm' : '',
     ].filter(Boolean).join(' ');
 
+    const hasIcons = this.iconStart || this.iconEnd;
+
     return html`
       <div class="${classes}">
         ${this._hasSlottedChildren('data-card-header') ? html`
           <div class="civ-card__header" data-civ-card-header></div>
         ` : nothing}
 
-        <div class="civ-card__body" data-civ-card-body></div>
+        ${hasIcons ? html`
+          <div class="civ-card__body-layout">
+            ${this.iconStart ? html`<civ-icon class="civ-card__icon" name="${this.iconStart}" aria-hidden="true"></civ-icon>` : nothing}
+            <div class="civ-card__body" data-civ-card-body></div>
+            ${this.iconEnd ? html`<civ-icon class="civ-card__icon" name="${this.iconEnd}" aria-hidden="true"></civ-icon>` : nothing}
+          </div>
+        ` : html`
+          <div class="civ-card__body" data-civ-card-body></div>
+        `}
 
         ${this._hasSlottedChildren('data-card-footer') ? html`
           <div class="civ-card__footer" data-civ-card-footer></div>

@@ -2150,7 +2150,17 @@
   }
 
   .civ-page-header__heading {
-    @apply civ-flex civ-items-baseline civ-gap-2 civ-flex-wrap;
+    @apply civ-flex civ-items-baseline civ-gap-2 civ-flex-wrap civ-flex-1;
+    min-width: 0;
+  }
+
+  .civ-page-header__heading-layout {
+    @apply civ-flex civ-items-center civ-gap-4;
+  }
+
+  .civ-page-header__icon {
+    @apply civ-flex-shrink-0;
+    font-size: 1.5em;
   }
 
   .civ-page-header__heading > * {
@@ -2336,7 +2346,18 @@
   }
 
   .civ-card__body {
+    @apply civ-flex-1;
     color: inherit;
+    min-width: 0;
+  }
+
+  .civ-card__body-layout {
+    @apply civ-flex civ-items-center civ-gap-4;
+  }
+
+  .civ-card__icon {
+    @apply civ-flex-shrink-0;
+    font-size: 1.5em;
   }
 
   .civ-card__footer {

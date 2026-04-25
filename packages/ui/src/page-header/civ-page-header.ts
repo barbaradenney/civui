@@ -16,6 +16,10 @@ import type { SlotConfig } from '@civui/core';
 export class CivPageHeader extends LightDomSlotMixin(CivBaseElement) {
   /** Bottom margin size: 'default' or 'sm' for compact layouts. */
   @property({ type: String }) spacing: 'default' | 'sm' = 'default';
+  /** Icon name to render before the heading. */
+  @property({ type: String, attribute: 'icon-start' }) iconStart = '';
+  /** Icon name to render after the heading. */
+  @property({ type: String, attribute: 'icon-end' }) iconEnd = '';
 
   override _getSlotConfig(): SlotConfig {
     return {
@@ -32,6 +36,8 @@ export class CivPageHeader extends LightDomSlotMixin(CivBaseElement) {
   }
 
   override render() {
+    const hasIcons = this.iconStart || this.iconEnd;
+
     return html`
       <div class="${[
         'civ-page-header',
@@ -43,7 +49,15 @@ export class CivPageHeader extends LightDomSlotMixin(CivBaseElement) {
         ${this._hasSlottedChildren('data-eyebrow') ? html`
           <div class="civ-page-header__eyebrow" data-civ-page-header-eyebrow></div>
         ` : nothing}
-        <div class="civ-page-header__heading" data-civ-page-header-heading></div>
+        ${hasIcons ? html`
+          <div class="civ-page-header__heading-layout">
+            ${this.iconStart ? html`<civ-icon class="civ-page-header__icon" name="${this.iconStart}" aria-hidden="true"></civ-icon>` : nothing}
+            <div class="civ-page-header__heading" data-civ-page-header-heading></div>
+            ${this.iconEnd ? html`<civ-icon class="civ-page-header__icon" name="${this.iconEnd}" aria-hidden="true"></civ-icon>` : nothing}
+          </div>
+        ` : html`
+          <div class="civ-page-header__heading" data-civ-page-header-heading></div>
+        `}
         ${this._hasSlottedChildren('data-subheading') ? html`
           <div class="civ-page-header__subheading" data-civ-page-header-subheading></div>
         ` : nothing}

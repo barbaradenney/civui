@@ -1276,10 +1276,14 @@
       z-index: 100;
     }
 
+    .civ-datepicker-dialog table {
+      width: 100%;
+    }
+
     .civ-datepicker-day {
-      width: 2rem;
-      height: 2rem;
-      font-size: var(--civ-typography-fontSize-xs, 12px);
+      width: 100%;
+      height: 2.5rem;
+      font-size: var(--civ-typography-fontSize-sm, 14px);
     }
   }
 

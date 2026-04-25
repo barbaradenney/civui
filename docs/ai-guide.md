@@ -53,7 +53,7 @@ For architecture and internals, see `CLAUDE.md` in the repo root.
 | `<civ-name>` | Compound | `legend`, `value` | `civ-change: { value }` |
 | `<civ-direct-deposit>` | Compound | `legend`, `value` | `civ-change: { value }` |
 | `<civ-signature>` | Compound | `legend`, `value`, `certificationText` | `civ-change: { value }` |
-| `<civ-deceased-person>` | Compound | `legend`, `hideRelationship` | `{ value: DeceasedPersonValue }` |
+| `<civ-relationship>` | Compound | `legend`, `preset`, `showDeceased`, `showName` | `{ value: RelationshipValue }` |
 | `<civ-task-list>` | Navigation | — | — (uses `<civ-task-group>` and `<civ-task>` children) |
 | `<civ-skip-link>` | Navigation | `label`, `target` | — |
 
@@ -698,35 +698,34 @@ Pre-section context panel. Sets expectations before a sensitive or complex form 
 
 ---
 
-### civ-deceased-person
+### civ-relationship
 
-Compound field for information about a person who has died. Plain-language labels ("the person who died", not "decedent"). Used on VA burial (21P-530), SSA survivor benefits, probate. Composes `civ-name`, two `civ-memorable-date`, and a relationship `civ-select`.
+Compound component for capturing a person and their relationship to the applicant. Supports agency-specific presets with conditional follow-up fields based on relationship category.
 
 **Props (beyond standard):**
-- `legend` — default: `'About the person who died'` (localized)
-- `hideRelationship` — hide the relationship select when captured elsewhere
-- `nameError`, `dateOfBirthError`, `dateOfDeathError`, `relationshipError` — per-field errors
+- `legend` — fieldset legend (default: `'About this person'`)
+- `preset` — `'general'` | `'va-dependent'` | `'va-survivor'` | `'ssa-survivor'` | `'immigration'` | `'tax'`
+- `options` — custom `RelationshipTypeConfig[]` (overrides preset)
+- `show-name` — include name fields (default true)
+- `show-deceased` — include deceased yes/no + date of death (default false)
+- `show-divorce-date` — show divorce date for spousal types (default false)
+- `show-adoption-date` — show adoption date for child types (default false)
+- Per-field errors: `name-error`, `relationship-error`, `marriage-date-error`, `date-of-birth-error`, `date-of-death-error`, `other-description-error`
 
-**Value type:**
-```typescript
-interface DeceasedPersonValue {
-  first: string; middle: string; last: string; suffix: string;
-  dateOfBirth: string; // ISO date
-  dateOfDeath: string; // ISO date
-  relationship: string; // 'spouse' | 'parent' | 'child' | 'sibling' | 'other'
-}
-```
-
-**Event detail:** `{ value: DeceasedPersonValue }` on `civ-input` and `civ-change`.
+**Conditional fields by category:**
+- Spousal (spouse, ex-spouse) → marriage date, divorce date
+- Child (biological, adopted, step, foster) → date of birth, adoption date
+- Other → free text description
 
 **Example:**
 ```html
-<civ-deceased-person
-  legend="About the Veteran who died"
-  name="veteran"
-  hint="We'll use this information to confirm their eligibility for burial benefits."
+<civ-relationship
+  legend="About the dependent"
+  name="dependent"
+  preset="va-dependent"
+  show-adoption-date
   required
-></civ-deceased-person>
+></civ-relationship>
 ```
 
 ---
@@ -1107,7 +1106,7 @@ Government forms routinely ask emotionally difficult questions — bereavement d
 | Let users save progress mid-flow | `civ-form-step` with `show-pause` (or `sensitive` auto-enables it) | Users may need to walk away and come back |
 | Let users opt out of a single question | `civ-radio-group` / `civ-yes-no` with `skip-label` | The question is answerable but personally invasive (demographics, crisis screening) |
 | Keep crisis resources visible | `civ-form` with `supportResources` | Form touches mental health, self-harm risk, domestic situations |
-| Compound field for bereavement | `civ-deceased-person` | VA burial, SSA survivor benefits, probate |
+| Compound field for relationships | `civ-relationship` with `preset` and `show-deceased` | VA dependents, SSA survivor, immigration, tax |
 
 ### civ-form-step: `sensitive` + `show-pause`
 
@@ -1145,11 +1144,13 @@ Both can coexist on the same `civ-yes-no`.
         <p>You can skip any question and come back later.</p>
       </civ-section-intro>
 
-      <civ-deceased-person
-        legend="Their information"
-        name="spouse"
+      <civ-relationship
+        legend="About the person who died"
+        name="deceased"
+        preset="va-survivor"
+        show-deceased
         required
-      ></civ-deceased-person>
+      ></civ-relationship>
     </div>
 
     <div data-step-label="Your relationship">

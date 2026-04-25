@@ -315,7 +315,7 @@
     content: '';
     position: absolute;
     width: 2px;
-    height: 0.76em;
+    height: 0.7em;
     background: currentColor;
     top: 50%;
     left: 50%;
@@ -324,13 +324,13 @@
   .civ-icon--arrow-down::after {
     content: '';
     position: absolute;
-    width: 0.38em;
-    height: 0.38em;
+    width: 0.32em;
+    height: 0.32em;
     border-right: 2px solid currentColor;
     border-bottom: 2px solid currentColor;
-    bottom: 0.08em;
+    bottom: 0.1em;
     left: 50%;
-    transform: translateX(-50%) rotate(-45deg);
+    transform: translateX(-50%) rotate(45deg);
   }
 
   /* Close (X — two crossed bars, ported from cssicon) */
@@ -422,27 +422,27 @@
     box-shadow: -0.3em 0 0 currentColor, 0.3em 0 0 currentColor;
   }
 
-  /* Search (circle + angled handle, ported from cssicon) */
+  /* Search (circle + angled handle) */
   .civ-icon--search::before {
     content: '';
     position: absolute;
-    width: 0.52em;
-    height: 0.52em;
+    width: 0.5em;
+    height: 0.5em;
     border: 2px solid currentColor;
     border-radius: 50%;
-    top: 0.08em;
-    left: 0.08em;
+    top: 0.06em;
+    left: 0.06em;
   }
   .civ-icon--search::after {
     content: '';
     position: absolute;
-    width: 0.3em;
-    height: 2px;
+    width: 0.28em;
+    height: 2.5px;
     background: currentColor;
-    bottom: 0.12em;
-    right: 0.06em;
+    bottom: 0.14em;
+    right: 0.08em;
     transform: rotate(45deg);
-    transform-origin: right center;
+    border-radius: 1px;
   }
 
   /* Sort ascending (▲) */
@@ -564,106 +564,110 @@
     font-weight: bold;
   }
 
-  /* Arrow-back (curved return arrow) */
+  /* Arrow-back (curved undo arrow — arc curving right-to-left with arrowhead) */
   .civ-icon--arrow-back::before {
     content: '';
     position: absolute;
-    width: 0.5em;
-    height: 0.35em;
-    border-left: 2px solid currentColor;
-    border-bottom: 2px solid currentColor;
-    border-radius: 0 0 0 0.2em;
-    bottom: 0.2em;
-    left: 0.15em;
+    width: 0.55em;
+    height: 0.4em;
+    border: 2px solid currentColor;
+    border-bottom: 0;
+    border-radius: 0.4em 0.4em 0 0;
+    top: 0.15em;
+    left: 50%;
+    transform: translateX(-50%);
   }
   .civ-icon--arrow-back::after {
     content: '';
     position: absolute;
-    width: 0.2em;
-    height: 0.2em;
+    width: 0.22em;
+    height: 0.22em;
     border-left: 2px solid currentColor;
-    border-top: 2px solid currentColor;
-    transform: rotate(-45deg);
-    left: 0.08em;
-    top: 0.22em;
+    border-bottom: 2px solid currentColor;
+    transform: rotate(45deg);
+    left: 0.1em;
+    top: 0.28em;
   }
 
   /* External-link (box with arrow pointing out top-right) */
   .civ-icon--external-link::before {
     content: '';
     position: absolute;
-    width: 0.55em;
-    height: 0.55em;
-    border-left: 2px solid currentColor;
-    border-bottom: 2px solid currentColor;
-    bottom: 0.1em;
-    left: 0.1em;
+    width: 0.5em;
+    height: 0.5em;
+    border: 2px solid currentColor;
+    border-top: 0;
+    border-right: 0;
+    bottom: 0.08em;
+    left: 0.08em;
   }
   .civ-icon--external-link::after {
     content: '';
     position: absolute;
-    width: 0.4em;
+    width: 0.45em;
     height: 2px;
     background: currentColor;
     transform: rotate(-45deg);
-    top: 0.22em;
-    right: 0.15em;
+    top: 0.28em;
+    right: 0.12em;
+    /* Arrowhead via box-shadow: horizontal bar + vertical bar at tip */
     box-shadow:
-      0.12em -0.12em 0 -0.5px currentColor,
-      0.12em 0em 0 -0.5px currentColor;
+      0.1em -0.1em 0 -0.5px currentColor,
+      0.1em 0.02em 0 -0.5px currentColor;
   }
 
-  /* Edit (pencil — angled body + triangular tip, ported from cssicon) */
+  /* Edit (pencil — angled body with pointed tip) */
   .civ-icon--edit::before {
     content: '';
     position: absolute;
-    width: 0.6em;
-    height: 0.18em;
+    width: 0.55em;
+    height: 0.2em;
     border: 2px solid currentColor;
     border-radius: 1px;
     top: 50%;
     left: 50%;
-    transform: translate(-40%, -50%) rotate(-45deg);
+    transform: translate(-36%, -50%) rotate(-45deg);
   }
   .civ-icon--edit::after {
     content: '';
     position: absolute;
     width: 0;
     height: 0;
-    border-top: 0.12em solid transparent;
-    border-bottom: 0.12em solid transparent;
-    border-right: 0.16em solid currentColor;
-    top: 50%;
-    left: 0.08em;
-    transform: translateY(-50%) rotate(-45deg);
+    border-top: 0.14em solid transparent;
+    border-bottom: 0.14em solid transparent;
+    border-right: 0.18em solid currentColor;
+    bottom: 0.1em;
+    left: 0.06em;
+    transform: rotate(-45deg);
   }
 
-  /* Check-circle (circle with checkmark) */
+  /* Check-circle (circle with centered checkmark) */
   .civ-icon--check-circle::before {
     content: '';
     position: absolute;
-    width: 0.75em;
-    height: 0.75em;
+    width: 0.78em;
+    height: 0.78em;
     border: 2px solid currentColor;
     border-radius: 50%;
   }
   .civ-icon--check-circle::after {
     content: '';
     position: absolute;
-    width: 0.35em;
+    width: 0.36em;
     height: 0.2em;
     border-left: 2px solid currentColor;
     border-bottom: 2px solid currentColor;
     transform: rotate(-45deg);
-    top: 0.25em;
+    top: 0.24em;
+    left: 0.01em;
   }
 
-  /* Error (circle with exclamation) */
+  /* Error (circle with exclamation — line + dot) */
   .civ-icon--error::before {
     content: '';
     position: absolute;
-    width: 0.75em;
-    height: 0.75em;
+    width: 0.78em;
+    height: 0.78em;
     border: 2px solid currentColor;
     border-radius: 50%;
   }
@@ -671,32 +675,36 @@
     content: '';
     position: absolute;
     width: 2px;
-    height: 0.3em;
+    height: 0.26em;
     background: currentColor;
     top: 0.18em;
-    box-shadow: 0 0.38em 0 currentColor;
+    border-radius: 1px;
+    box-shadow: 0 0.34em 0 currentColor;
   }
 
-  /* Warning (triangle with exclamation) */
+  /* Warning (triangle outline with exclamation — no filled background, works on any bg) */
   .civ-icon--warning::before {
     content: '';
     position: absolute;
-    width: 0.8em;
-    height: 0.7em;
-    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-    border: 2px solid currentColor;
-    background: transparent;
-    /* clip-path removes border, so use outline trick — instead render filled and overlay */
+    width: 0.82em;
+    height: 0.72em;
+    clip-path: polygon(
+      50% 0%, 0% 100%, 100% 100%,
+      50% 8%, 6% 96%, 94% 96%
+    );
+    clip-rule: evenodd;
     background: currentColor;
+    bottom: 0.05em;
   }
   .civ-icon--warning::after {
     content: '';
     position: absolute;
     width: 2px;
-    height: 0.2em;
-    background: var(--civ-color-white-DEFAULT, #fff);
-    bottom: 0.18em;
-    box-shadow: 0 0.26em 0 var(--civ-color-white-DEFAULT, #fff);
+    height: 0.22em;
+    background: currentColor;
+    bottom: 0.22em;
+    border-radius: 1px;
+    box-shadow: 0 0.28em 0 currentColor;
   }
 
   /* Info (circle with "i") */

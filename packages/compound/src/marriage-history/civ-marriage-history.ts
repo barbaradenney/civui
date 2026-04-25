@@ -10,6 +10,8 @@ export interface MarriageValue {
   spouseMiddle: string;
   spouseLast: string;
   spouseSuffix: string;
+  marriageType: string;
+  marriageTypeDescription: string;
   marriageDate: string;
   marriageCity: string;
   marriageState: string;
@@ -19,6 +21,7 @@ export interface MarriageValue {
 
 const EMPTY_MARRIAGE: MarriageValue = {
   spouseFirst: '', spouseMiddle: '', spouseLast: '', spouseSuffix: '',
+  marriageType: '', marriageTypeDescription: '',
   marriageDate: '', marriageCity: '', marriageState: '',
   status: '', endDate: '',
 };
@@ -38,10 +41,13 @@ const EMPTY_MARRIAGE: MarriageValue = {
 @customElement('civ-marriage-history')
 export class CivMarriageHistory extends CivFormElement {
   @property({ type: String }) legend = '';
+  /** Show the marriage type selector (civil union, common law, etc.). */
+  @property({ type: Boolean, attribute: 'show-marriage-type' }) showMarriageType = false;
   /** Skip the status question and assume this value. Use 'widowed' when the spouse's death is already established. */
   @property({ type: String, attribute: 'status-assumed' }) statusAssumed = '';
 
   @property({ type: String, attribute: 'spouse-error' }) spouseError = '';
+  @property({ type: String, attribute: 'marriage-type-error' }) marriageTypeError = '';
   @property({ type: String, attribute: 'marriage-date-error' }) marriageDateError = '';
   @property({ type: String, attribute: 'city-error' }) cityError = '';
   @property({ type: String, attribute: 'state-error' }) stateError = '';
@@ -118,6 +124,31 @@ export class CivMarriageHistory extends CivFormElement {
           @civ-change="${this._onNameChange}"
         ></civ-name>
 
+        ${this.showMarriageType ? html`
+          <civ-select
+            label="${t('marriageTypeLabel')}"
+            name="${prefix}.marriageType"
+            value="${this._marriage.marriageType}"
+            error="${this.marriageTypeError}"
+            ?disabled="${this.disabled}"
+            data-marriage-type
+            @civ-change="${this._onMarriageTypeChange}"
+          ></civ-select>
+
+          ${this._marriage.marriageType === 'other' || this._marriage.marriageType === 'common-law' ? html`
+            <civ-text-input
+              label="${t('marriageTypeDescriptionLabel')}"
+              name="${prefix}.marriageTypeDescription"
+              value="${this._marriage.marriageTypeDescription}"
+              hint="${t('marriageTypeDescriptionHint')}"
+              ?disabled="${this.disabled}"
+              ?readonly="${this.readonly}"
+              @civ-input="${(e: CustomEvent) => this._onFieldInput('marriageTypeDescription', e)}"
+              @civ-change="${(e: CustomEvent) => this._onFieldChange('marriageTypeDescription', e)}"
+            ></civ-text-input>
+          ` : nothing}
+        ` : nothing}
+
         <civ-memorable-date
           legend="${t('marriageDateLegend')}"
           name="${prefix}.marriageDate"
@@ -184,7 +215,33 @@ export class CivMarriageHistory extends CivFormElement {
   }
 
   private _syncStatusOptions(): void {
-    // Radio group renders its own options via child elements, no sync needed
+    // Sync marriage type select options
+    const typeSelect = this.querySelector('[data-marriage-type]') as any;
+    if (typeSelect) {
+      typeSelect.options = [
+        { value: 'legal', label: t('marriageTypeLegal') },
+        { value: 'civil-union', label: t('marriageTypeCivilUnion') },
+        { value: 'domestic-partnership', label: t('marriageTypeDomesticPartnership') },
+        { value: 'common-law', label: t('marriageTypeCommonLaw') },
+        { value: 'tribal', label: t('marriageTypeTribal') },
+        { value: 'other', label: t('marriageTypeOther') },
+      ];
+    }
+  }
+
+  private _onMarriageTypeChange(e: CustomEvent): void {
+    e.stopPropagation();
+    const oldType = this._marriage.marriageType;
+    this._marriage = { ...this._marriage, marriageType: e.detail.value };
+    // Clear description when switching away from types that need it
+    if (oldType === 'other' || oldType === 'common-law') {
+      if (this._marriage.marriageType !== 'other' && this._marriage.marriageType !== 'common-law') {
+        this._marriage = { ...this._marriage, marriageTypeDescription: '' };
+      }
+    }
+    this.value = JSON.stringify(this._marriage);
+    dispatch(this, 'civ-input', { value: { ...this._marriage } });
+    dispatch(this, 'civ-change', { value: { ...this._marriage } });
   }
 
   private _onNameInput(e: CustomEvent): void {
@@ -248,6 +305,8 @@ export class CivMarriageHistory extends CivFormElement {
     fd.append(`${prefix}.spouseMiddle`, this._marriage.spouseMiddle);
     fd.append(`${prefix}.spouseLast`, this._marriage.spouseLast);
     fd.append(`${prefix}.spouseSuffix`, this._marriage.spouseSuffix);
+    fd.append(`${prefix}.marriageType`, this._marriage.marriageType);
+    fd.append(`${prefix}.marriageTypeDescription`, this._marriage.marriageTypeDescription);
     fd.append(`${prefix}.marriageDate`, this._marriage.marriageDate);
     fd.append(`${prefix}.marriageCity`, this._marriage.marriageCity);
     fd.append(`${prefix}.marriageState`, this._marriage.marriageState);
@@ -260,6 +319,7 @@ export class CivMarriageHistory extends CivFormElement {
     this._marriage = { ...EMPTY_MARRIAGE };
     this.value = '';
     this.spouseError = '';
+    this.marriageTypeError = '';
     this.marriageDateError = '';
     this.cityError = '';
     this.stateError = '';

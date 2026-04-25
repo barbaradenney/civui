@@ -242,6 +242,15 @@ export interface CivLocaleStrings {
   marriageStatusAnnulled: string;
   marriageEndDateLegend: string;
   marriageEndDateWidowedLegend: string; // "Date of their passing"
+  marriageTypeLabel: string; // "Type of marriage or union"
+  marriageTypeLegal: string;
+  marriageTypeCivilUnion: string;
+  marriageTypeDomesticPartnership: string;
+  marriageTypeCommonLaw: string;
+  marriageTypeTribal: string;
+  marriageTypeOther: string;
+  marriageTypeDescriptionLabel: string; // "Describe the type of union"
+  marriageTypeDescriptionHint: string;
 
   // Service history
   serviceLegend: string;
@@ -513,6 +522,15 @@ const defaultStrings: CivLocaleStrings = {
   marriageStatusAnnulled: 'Annulled',
   marriageEndDateLegend: 'Date marriage ended',
   marriageEndDateWidowedLegend: 'Date of their passing',
+  marriageTypeLabel: 'Type of marriage or union',
+  marriageTypeLegal: 'Legal marriage',
+  marriageTypeCivilUnion: 'Civil union',
+  marriageTypeDomesticPartnership: 'Domestic partnership',
+  marriageTypeCommonLaw: 'Common law marriage',
+  marriageTypeTribal: 'Tribal or customary marriage',
+  marriageTypeOther: 'Other',
+  marriageTypeDescriptionLabel: 'Describe the type of union',
+  marriageTypeDescriptionHint: 'For example: religious ceremony, foreign marriage',
 
   serviceLegend: 'About this service period',
   serviceBranchLabel: 'Branch of service',

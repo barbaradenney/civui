@@ -152,3 +152,57 @@ describe('civ-marriage-history status-assumed', () => {
     expect(legends).toContain('Date marriage ended');
   });
 });
+
+describe('civ-marriage-history marriage type', () => {
+  it('hides marriage type by default', async () => {
+    const el = await fixture('<civ-marriage-history name="m"></civ-marriage-history>');
+    expect(el.querySelector('[data-marriage-type]')).toBeNull();
+  });
+
+  it('shows marriage type select when show-marriage-type is set', async () => {
+    const el = await fixture('<civ-marriage-history name="m" show-marriage-type></civ-marriage-history>');
+    await elementUpdated(el);
+
+    const select = el.querySelector('[data-marriage-type]') as any;
+    expect(select).not.toBeNull();
+    expect(select.options.length).toBe(6);
+  });
+
+  it('shows description field for common-law', async () => {
+    const el = await fixture('<civ-marriage-history name="m" show-marriage-type></civ-marriage-history>') as any;
+    el.marriageValue = { ...el.marriageValue, marriageType: 'common-law' };
+    await elementUpdated(el);
+
+    const desc = el.querySelector('civ-text-input[name="m.marriageTypeDescription"]');
+    expect(desc).not.toBeNull();
+  });
+
+  it('shows description field for other type', async () => {
+    const el = await fixture('<civ-marriage-history name="m" show-marriage-type></civ-marriage-history>') as any;
+    el.marriageValue = { ...el.marriageValue, marriageType: 'other' };
+    await elementUpdated(el);
+
+    const desc = el.querySelector('civ-text-input[name="m.marriageTypeDescription"]');
+    expect(desc).not.toBeNull();
+  });
+
+  it('hides description field for legal marriage', async () => {
+    const el = await fixture('<civ-marriage-history name="m" show-marriage-type></civ-marriage-history>') as any;
+    el.marriageValue = { ...el.marriageValue, marriageType: 'legal' };
+    await elementUpdated(el);
+
+    expect(el.querySelector('civ-text-input[name="m.marriageTypeDescription"]')).toBeNull();
+  });
+
+  it('clears description when switching from other to legal', async () => {
+    const el = await fixture('<civ-marriage-history name="m" show-marriage-type></civ-marriage-history>') as any;
+    el.marriageValue = { ...el.marriageValue, marriageType: 'other', marriageTypeDescription: 'Foreign ceremony' };
+    await elementUpdated(el);
+
+    const select = el.querySelector('[data-marriage-type]') as any;
+    select.dispatchEvent(new CustomEvent('civ-change', { detail: { value: 'legal' }, bubbles: true }));
+    await elementUpdated(el);
+
+    expect(el.marriageValue.marriageTypeDescription).toBe('');
+  });
+});

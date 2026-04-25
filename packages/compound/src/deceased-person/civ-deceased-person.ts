@@ -27,6 +27,9 @@ const EMPTY_DECEASED: DeceasedPersonValue = {
 /**
  * CivUI Deceased Person
  *
+ * @deprecated Use `<civ-relationship preset="va-survivor" show-deceased>` instead.
+ * This component will be removed in a future version.
+ *
  * Compound field for collecting information about a person who has died —
  * used on VA burial benefit (21P-530), SSA survivor benefit, and probate
  * forms. Labels use plain, non-clinical language ("the person who died",

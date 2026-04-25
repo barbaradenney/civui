@@ -12,6 +12,7 @@
     "./name": "./dist/name/index.js",
     "./direct-deposit": "./dist/direct-deposit/index.js",
     "./signature": "./dist/signature/index.js",
+    "./relationship": "./dist/relationship/index.js",
     "./deceased-person": "./dist/deceased-person/index.js"
   },
   "files": ["dist"],

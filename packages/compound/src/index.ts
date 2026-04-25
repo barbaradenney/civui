@@ -14,6 +14,13 @@ export type { DirectDepositValue } from './direct-deposit/index.js';
 export { CivSignature } from './signature/index.js';
 export type { SignatureValue } from './signature/index.js';
 
+// Relationship (person + relationship type with agency presets)
+export { CivRelationship } from './relationship/index.js';
+export type { RelationshipValue } from './relationship/index.js';
+export { RELATIONSHIP_PRESETS } from './relationship/index.js';
+export type { RelationshipPreset, RelationshipTypeConfig, RelationshipCategory } from './relationship/index.js';
+
 // Deceased Person (VA burial, SSA survivor benefits, probate)
+// @deprecated Use <civ-relationship preset="va-survivor" show-deceased> instead
 export { CivDeceasedPerson } from './deceased-person/index.js';
 export type { DeceasedPersonValue } from './deceased-person/index.js';

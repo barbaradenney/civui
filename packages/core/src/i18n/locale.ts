@@ -178,6 +178,33 @@ export interface CivLocaleStrings {
   deceasedPersonRelationshipSibling: string;
   deceasedPersonRelationshipOther: string;
 
+  // Relationship (compound component for person + relationship type)
+  relationshipLegend: string; // "About this person"
+  relationshipTypeLabel: string; // "Relationship to you"
+  relationshipNameLegend: string; // "Their name"
+  relationshipMarriageDateLegend: string; // "Date of marriage"
+  relationshipDivorceDateLegend: string; // "Date of divorce or separation"
+  relationshipDateOfBirthLegend: string; // "Date of birth"
+  relationshipAdoptionDateLegend: string; // "Date of adoption"
+  relationshipDeceasedLegend: string; // "Is this person deceased?"
+  relationshipDateOfDeathLegend: string; // "Date of death"
+  relationshipOtherLabel: string; // "Describe the relationship"
+  relationshipOtherHint: string; // "For example: cousin, family friend"
+  relationshipSpouse: string;
+  relationshipExSpouse: string;
+  relationshipDomesticPartner: string;
+  relationshipBiologicalChild: string;
+  relationshipAdoptedChild: string;
+  relationshipStepchild: string;
+  relationshipFosterChild: string;
+  relationshipChild: string;
+  relationshipGrandchild: string;
+  relationshipParent: string;
+  relationshipSibling: string;
+  relationshipExecutor: string;
+  relationshipFuneralDirector: string;
+  relationshipOther: string;
+
   // Prefill notice
   prefillNoticeHeading: string;
   prefillNoticeBody: string;
@@ -399,6 +426,32 @@ const defaultStrings: CivLocaleStrings = {
   deceasedPersonRelationshipChild: 'Child',
   deceasedPersonRelationshipSibling: 'Sibling',
   deceasedPersonRelationshipOther: 'Other',
+
+  relationshipLegend: 'About this person',
+  relationshipTypeLabel: 'Relationship to you',
+  relationshipNameLegend: 'Their name',
+  relationshipMarriageDateLegend: 'Date of marriage',
+  relationshipDivorceDateLegend: 'Date of divorce or separation',
+  relationshipDateOfBirthLegend: 'Date of birth',
+  relationshipAdoptionDateLegend: 'Date of adoption',
+  relationshipDeceasedLegend: 'Is this person deceased?',
+  relationshipDateOfDeathLegend: 'Date of death',
+  relationshipOtherLabel: 'Describe the relationship',
+  relationshipOtherHint: 'For example: cousin, family friend',
+  relationshipSpouse: 'Spouse',
+  relationshipExSpouse: 'Former spouse',
+  relationshipDomesticPartner: 'Domestic partner',
+  relationshipBiologicalChild: 'Biological child',
+  relationshipAdoptedChild: 'Adopted child',
+  relationshipStepchild: 'Stepchild',
+  relationshipFosterChild: 'Foster child',
+  relationshipChild: 'Child',
+  relationshipGrandchild: 'Grandchild',
+  relationshipParent: 'Parent',
+  relationshipSibling: 'Sibling',
+  relationshipExecutor: 'Executor or personal representative',
+  relationshipFuneralDirector: 'Funeral director',
+  relationshipOther: 'Other',
 
   prefillNoticeHeading: 'We\u2019ve prefilled some of your information',
   prefillNoticeBody: 'We pulled this information from your account. If any of this is wrong, you can correct it here.',

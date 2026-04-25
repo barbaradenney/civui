@@ -1,0 +1,166 @@
+---
+title: Relationship
+sidebar_position: 1
+sidebar_label: Relationship
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
+# Relationship
+
+`<civ-relationship>`
+
+Compound component for capturing a person and their relationship to the applicant. Includes conditional follow-up fields based on the relationship category — spousal types show marriage date, child types show date of birth, etc.
+
+Use the `preset` prop for agency-specific option lists, or pass custom `options` to override.
+
+## Examples
+
+### Default (General)
+
+<StoryEmbed id="forms-compound-relationship--default" />
+
+### VA Dependent (21-686c)
+
+<StoryEmbed id="forms-compound-relationship--va-dependent" />
+
+### VA Survivor (21P-530)
+
+<StoryEmbed id="forms-compound-relationship--va-survivor" />
+
+### SSA Survivor Benefits
+
+<StoryEmbed id="forms-compound-relationship--ssa-survivor" />
+
+### Immigration (I-130)
+
+<StoryEmbed id="forms-compound-relationship--immigration" />
+
+### Tax Filing (1040)
+
+<StoryEmbed id="forms-compound-relationship--tax" />
+
+### Without Name Fields
+
+<StoryEmbed id="forms-compound-relationship--without-name" />
+
+### With Errors
+
+<StoryEmbed id="forms-compound-relationship--with-errors" />
+
+### All Presets
+
+<StoryEmbed id="forms-compound-relationship--all-presets" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-compound-relationship--default)
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `legend` | `string` | `'About this person'` | Fieldset legend text |
+| `name` | `string` | `''` | Form field name prefix |
+| `preset` | `'general' \| 'va-dependent' \| 'va-survivor' \| 'ssa-survivor' \| 'immigration' \| 'tax'` | `'general'` | Agency-specific relationship options |
+| `options` | `RelationshipTypeConfig[]` | — | Custom options (overrides preset) |
+| `show-name` | `boolean` | `true` | Include name fields |
+| `show-deceased` | `boolean` | `false` | Include deceased yes/no and date of death |
+| `show-divorce-date` | `boolean` | `false` | Show divorce date for spousal types |
+| `show-adoption-date` | `boolean` | `false` | Show adoption date for child types |
+| `value` | `string` | `''` | JSON-serialized RelationshipValue |
+| `required` | `boolean` | `false` | Shows required indicator on legend |
+| `disabled` | `boolean` | `false` | Disables all fields |
+| `hint` | `string` | `''` | Hint text below legend |
+| `error` | `string` | `''` | Group-level error message |
+| `name-error` | `string` | `''` | Error for name fields |
+| `relationship-error` | `string` | `''` | Error for relationship select |
+| `marriage-date-error` | `string` | `''` | Error for marriage date |
+| `divorce-date-error` | `string` | `''` | Error for divorce date |
+| `date-of-birth-error` | `string` | `''` | Error for date of birth |
+| `adoption-date-error` | `string` | `''` | Error for adoption date |
+| `date-of-death-error` | `string` | `''` | Error for date of death |
+| `other-description-error` | `string` | `''` | Error for other description |
+
+## Events
+
+| Event | Detail | Description |
+|-------|--------|-------------|
+| `civ-input` | `{ value: RelationshipValue }` | Fires on every field change |
+| `civ-change` | `{ value: RelationshipValue }` | Fires on committed field change |
+| `civ-reset` | — | Fires when the form is reset |
+
+## Presets
+
+Each preset provides a curated list of relationship types for a specific agency context:
+
+| Preset | Options | Use case |
+|--------|---------|----------|
+| `general` | Spouse, Child, Parent, Sibling, Other | Generic forms |
+| `va-dependent` | Spouse, Biological child, Adopted child, Stepchild, Parent | VA dependency claims (21-686c) |
+| `va-survivor` | Spouse, Child, Parent, Executor, Funeral director, Other | VA burial benefits (21P-530) |
+| `ssa-survivor` | Spouse, Former spouse, Child, Grandchild, Parent | SSA survivor benefits |
+| `immigration` | Spouse, Biological child, Adopted child, Stepchild, Parent, Sibling | Family-based petitions (I-130) |
+| `tax` | Spouse, Biological/Adopted/Step/Foster child, Sibling, Parent | Tax dependents (1040) |
+
+## Conditional fields
+
+Fields appear automatically based on the selected relationship category:
+
+| Category | Relationship types | Fields shown |
+|----------|-------------------|--------------|
+| Spousal | Spouse, Former spouse, Domestic partner | Marriage date, divorce date (if `show-divorce-date`) |
+| Child | Child, Biological/Adopted/Step/Foster child, Grandchild | Date of birth, adoption date (if `show-adoption-date`) |
+| Other | Other | Free-text description |
+| None | Parent, Sibling, Executor, Funeral director | No conditional fields |
+
+When the user switches relationship types and the category changes, stale conditional field values are automatically cleared.
+
+## Usage
+
+### Basic
+
+```html
+<civ-relationship
+  legend="About the dependent"
+  name="dependent"
+  preset="general"
+  required
+></civ-relationship>
+```
+
+### VA survivor with deceased fields
+
+```html
+<civ-relationship
+  legend="About the person who died"
+  name="deceased"
+  preset="va-survivor"
+  show-deceased
+  required
+></civ-relationship>
+```
+
+### Immigration with adoption date
+
+```html
+<civ-relationship
+  legend="About the person you are petitioning for"
+  name="beneficiary"
+  preset="immigration"
+  show-adoption-date
+  required
+></civ-relationship>
+```
+
+### Without name fields
+
+Use `show-name="false"` when the name is captured in a separate component:
+
+```html
+<civ-name legend="Spouse's name" name="spouseName" required></civ-name>
+<civ-relationship
+  legend="Relationship details"
+  name="spouse"
+  preset="general"
+  show-name="false"
+></civ-relationship>
+```

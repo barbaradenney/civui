@@ -1,0 +1,229 @@
+---
+title: Trauma-Informed Patterns
+sidebar_position: 13
+sidebar_label: Trauma-Informed
+---
+
+# Trauma-Informed Patterns
+
+Government forms often ask about difficult life events — death of a family member, military trauma, domestic violence, financial hardship. CivUI provides a set of patterns that help users navigate these sections with dignity, control, and clear expectations.
+
+These patterns don't change the data collected — they change how it's presented.
+
+## Principles
+
+1. **Set expectations** — tell users what's coming before they see it
+2. **Give control** — let users pause, skip, or opt out of specific questions
+3. **Don't assume** — avoid redundant or insensitive questions when context is clear
+4. **Keep help visible** — crisis resources should be accessible throughout
+
+## Available patterns
+
+### 1. Section intro — set expectations
+
+`<civ-section-intro>` places a context panel before a sensitive section, explaining what's coming and why.
+
+```html
+<civ-section-intro heading="About your service-connected trauma" tone="sensitive">
+  <p>The next questions ask about events that may be difficult to remember.</p>
+  <p>You can skip any question, and your answers are saved as you go.</p>
+</civ-section-intro>
+```
+
+**Tones:**
+- `info` (default) — neutral informational context
+- `sensitive` — visual and tonal softening for emotionally heavy sections
+- `neutral` — minimal styling, just the content
+
+**When to use:** Before any section that asks about death, trauma, abuse, financial hardship, or other sensitive topics.
+
+### 2. Form step sensitive — pause and resume
+
+Adding `sensitive` to `<civ-form-step>` enables two things:
+- A polite screen reader announcement: "This section asks personal questions. Your answers are saved as you go."
+- A "Save and come back later" link so users can pause mid-section
+
+```html
+<civ-form-step sensitive>
+  <div data-step-label="About your trauma">
+    <!-- sensitive fields -->
+  </div>
+</civ-form-step>
+```
+
+You can also use `show-pause` independently without `sensitive` if you want the pause affordance on any step:
+
+```html
+<civ-form-step show-pause>
+  <div data-step-label="Financial information">
+    <!-- long section users might want to pause -->
+  </div>
+</civ-form-step>
+```
+
+### 3. Skip affordance — prefer not to answer
+
+`skipLabel` on `<civ-yes-no>` and `<civ-radio-group>` renders a "Prefer not to answer" link-button below the options. This is distinct from "unsure" — it's about opting out, not uncertainty.
+
+```html
+<civ-yes-no
+  legend="Have you experienced military sexual trauma?"
+  name="mst"
+  skip-label="Prefer not to answer"
+  skip-value="skip"
+></civ-yes-no>
+
+<civ-radio-group
+  legend="What is your race?"
+  name="race"
+  skip-label="Prefer not to answer"
+>
+  <civ-radio label="American Indian or Alaska Native" value="aian"></civ-radio>
+  <civ-radio label="Asian" value="asian"></civ-radio>
+  <civ-radio label="Black or African American" value="black"></civ-radio>
+  <civ-radio label="Native Hawaiian or Pacific Islander" value="nhpi"></civ-radio>
+  <civ-radio label="White" value="white"></civ-radio>
+</civ-radio-group>
+```
+
+**When to use:** Demographics, trauma screening, questions about abuse or violence, anything where disclosure is voluntary.
+
+### 4. Deceased assumed — don't ask what's already known
+
+When a form is explicitly about someone who has died (burial benefits, survivor claims), don't ask "Is this person deceased?" Use `deceased-assumed` on `<civ-relationship>` to skip the yes/no and show the date of death directly.
+
+```html
+<!-- Good: assumes the person is deceased -->
+<civ-relationship
+  legend="About the person who died"
+  preset="va-survivor"
+  deceased-assumed
+></civ-relationship>
+
+<!-- Bad: asks a redundant, insensitive question -->
+<civ-relationship
+  legend="About the person who died"
+  preset="va-survivor"
+  show-deceased
+></civ-relationship>
+```
+
+Use `show-deceased` only when the form doesn't already establish that the person has died — for example, a dependency claim where some dependents may be living and others deceased.
+
+### 5. Support resources — keep help visible
+
+`supportResources` on `<civ-form>` renders a persistent, non-modal footer with crisis resource links. It stays visible across all form steps.
+
+```html
+<civ-form
+  support-resources='[
+    {"label": "Veterans Crisis Line", "href": "tel:988", "description": "Call or text 988, then press 1"},
+    {"label": "Crisis Text Line", "href": "sms:838255", "description": "Text HOME to 838255"},
+    {"label": "Safe Helpline", "href": "tel:18779955247", "description": "For survivors of sexual assault"}
+  ]'
+>
+  <!-- form content -->
+</civ-form>
+```
+
+URL schemes are restricted to `http`, `https`, `tel`, `mailto`, `sms`, same-origin paths, and hashes.
+
+**When to use:** Any form touching mental health, self-harm risk, domestic violence, sexual trauma, or bereavement.
+
+### 6. Repeater wizard sensitive — multi-item sensitive flows
+
+When using `<civ-repeater mode="wizard">` for sensitive content (e.g., adding multiple deceased dependents), pass `wizard-sensitive` and `wizard-show-pause` to enable trauma-informed affordances inside the wizard sub-flow.
+
+```html
+<civ-repeater
+  legend="People who died"
+  name="deceased"
+  item-label="person"
+  mode="wizard"
+  wizard-sensitive
+  wizard-show-pause
+>
+  <div data-step-label="Their name">
+    <civ-name legend="Their name" name="name" required></civ-name>
+  </div>
+  <div data-step-label="Relationship">
+    <civ-relationship preset="va-survivor" deceased-assumed
+      show-name="false" name="rel" required></civ-relationship>
+  </div>
+</civ-repeater>
+```
+
+Without these props, the wizard sub-flow has no pause affordance or sensitive announcements.
+
+## Complete example: VA survivor benefit form
+
+This example combines all trauma-informed patterns into a realistic VA burial benefit application:
+
+```html
+<civ-form
+  support-resources='[
+    {"label": "Veterans Crisis Line", "href": "tel:988"},
+    {"label": "Caregiver Support", "href": "tel:18552603274"}
+  ]'
+  @civ-submit="${handleSubmit}"
+>
+  <civ-form-step>
+    <!-- Step 1: Non-sensitive, no special handling needed -->
+    <div data-step-label="Your information">
+      <civ-name legend="Your name" name="claimant" required></civ-name>
+      <civ-text-input label="Phone number" name="phone" type="tel"></civ-text-input>
+    </div>
+
+    <!-- Step 2: Sensitive — about the deceased -->
+    <div data-step-label="About the person who died">
+      <civ-section-intro heading="About the person who died" tone="sensitive">
+        <p>We need some information about the Veteran who died to process your claim.</p>
+        <p>You can save your progress and come back later at any time.</p>
+      </civ-section-intro>
+
+      <civ-relationship
+        legend="About the Veteran"
+        name="veteran"
+        preset="va-survivor"
+        deceased-assumed
+        required
+      ></civ-relationship>
+    </div>
+
+    <!-- Step 3: Sensitive — relationship to the deceased -->
+    <div data-step-label="Your relationship">
+      <civ-yes-no
+        legend="Were you legally married at the time of their death?"
+        name="marriedAtDeath"
+        skip-label="Prefer not to answer"
+        required
+      ></civ-yes-no>
+
+      <civ-conditional when="marriedAtDeath" equals="yes">
+        <civ-marriage-history
+          legend="About your marriage"
+          name="marriage"
+        ></civ-marriage-history>
+      </civ-conditional>
+    </div>
+
+    <!-- Step 4: Review -->
+    <div data-step-label="Review">
+      <civ-summary></civ-summary>
+    </div>
+  </civ-form-step>
+
+  <civ-button type="submit" label="Submit application"></civ-button>
+</civ-form>
+```
+
+## When to apply these patterns
+
+| Situation | Patterns to use |
+|-----------|----------------|
+| Form asks about death or bereavement | `section-intro sensitive`, `deceased-assumed`, `supportResources` |
+| Form asks about trauma or abuse | `section-intro sensitive`, `form-step sensitive`, `skipLabel`, `supportResources` |
+| Form asks demographic questions | `skipLabel` on each question |
+| Form is long and emotionally draining | `form-step show-pause`, `supportResources` |
+| Repeater collects sensitive items | `wizard-sensitive`, `wizard-show-pause` |
+| Form context already establishes a fact | `deceased-assumed` (don't re-ask what's known) |

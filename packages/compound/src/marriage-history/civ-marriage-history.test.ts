@@ -168,41 +168,63 @@ describe('civ-marriage-history marriage type', () => {
     expect(select.options.length).toBe(6);
   });
 
-  it('shows description field for common-law', async () => {
-    const el = await fixture('<civ-marriage-history name="m" show-marriage-type></civ-marriage-history>') as any;
-    el.marriageValue = { ...el.marriageValue, marriageType: 'common-law' };
-    await elementUpdated(el);
-
-    const desc = el.querySelector('civ-text-input[name="m.marriageTypeDescription"]');
-    expect(desc).not.toBeNull();
-  });
-
-  it('shows description field for other type', async () => {
-    const el = await fixture('<civ-marriage-history name="m" show-marriage-type></civ-marriage-history>') as any;
-    el.marriageValue = { ...el.marriageValue, marriageType: 'other' };
-    await elementUpdated(el);
-
-    const desc = el.querySelector('civ-text-input[name="m.marriageTypeDescription"]');
-    expect(desc).not.toBeNull();
-  });
-
-  it('hides description field for legal marriage', async () => {
+  it('shows ceremony fields for legal marriage (date, city, state)', async () => {
     const el = await fixture('<civ-marriage-history name="m" show-marriage-type></civ-marriage-history>') as any;
     el.marriageValue = { ...el.marriageValue, marriageType: 'legal' };
     await elementUpdated(el);
 
-    expect(el.querySelector('civ-text-input[name="m.marriageTypeDescription"]')).toBeNull();
+    const dates = el.querySelectorAll('civ-memorable-date');
+    const legends = Array.from(dates).map((d: any) => d.getAttribute('legend'));
+    expect(legends).toContain('Date of marriage');
+    expect(el.querySelector('civ-text-input[name="m.marriageCity"]')).not.toBeNull();
   });
 
-  it('clears description when switching from other to legal', async () => {
+  it('shows registration fields for civil union (date, jurisdiction)', async () => {
     const el = await fixture('<civ-marriage-history name="m" show-marriage-type></civ-marriage-history>') as any;
-    el.marriageValue = { ...el.marriageValue, marriageType: 'other', marriageTypeDescription: 'Foreign ceremony' };
+    el.marriageValue = { ...el.marriageValue, marriageType: 'civil-union' };
+    await elementUpdated(el);
+
+    const dates = el.querySelectorAll('civ-memorable-date');
+    const legends = Array.from(dates).map((d: any) => d.getAttribute('legend'));
+    expect(legends).toContain('Date of registration');
+    expect(el.querySelector('civ-text-input[name="m.jurisdiction"]')).not.toBeNull();
+    // Should NOT show ceremony fields
+    expect(el.querySelector('civ-text-input[name="m.marriageCity"]')).toBeNull();
+  });
+
+  it('shows cohabitation fields for common law (start date, state, description)', async () => {
+    const el = await fixture('<civ-marriage-history name="m" show-marriage-type></civ-marriage-history>') as any;
+    el.marriageValue = { ...el.marriageValue, marriageType: 'common-law' };
+    await elementUpdated(el);
+
+    const dates = el.querySelectorAll('civ-memorable-date');
+    const legends = Array.from(dates).map((d: any) => d.getAttribute('legend'));
+    expect(legends).toContain('Date you began living together');
+    expect(el.querySelector('civ-text-input[name="m.cohabitationState"]')).not.toBeNull();
+    expect(el.querySelector('civ-text-input[name="m.marriageTypeDescription"]')).not.toBeNull();
+  });
+
+  it('shows approximate date and description for other type', async () => {
+    const el = await fixture('<civ-marriage-history name="m" show-marriage-type></civ-marriage-history>') as any;
+    el.marriageValue = { ...el.marriageValue, marriageType: 'other' };
+    await elementUpdated(el);
+
+    const dates = el.querySelectorAll('civ-memorable-date');
+    const legends = Array.from(dates).map((d: any) => d.getAttribute('legend'));
+    expect(legends).toContain('Approximate date union began');
+    expect(el.querySelector('civ-text-input[name="m.marriageTypeDescription"]')).not.toBeNull();
+  });
+
+  it('clears ceremony fields when switching to registration category', async () => {
+    const el = await fixture('<civ-marriage-history name="m" show-marriage-type></civ-marriage-history>') as any;
+    el.marriageValue = { ...el.marriageValue, marriageType: 'legal', marriageDate: '2020-06-15', marriageCity: 'Austin' };
     await elementUpdated(el);
 
     const select = el.querySelector('[data-marriage-type]') as any;
-    select.dispatchEvent(new CustomEvent('civ-change', { detail: { value: 'legal' }, bubbles: true }));
+    select.dispatchEvent(new CustomEvent('civ-change', { detail: { value: 'civil-union' }, bubbles: true }));
     await elementUpdated(el);
 
-    expect(el.marriageValue.marriageTypeDescription).toBe('');
+    expect(el.marriageValue.marriageDate).toBe('');
+    expect(el.marriageValue.marriageCity).toBe('');
   });
 });

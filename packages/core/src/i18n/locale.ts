@@ -251,6 +251,11 @@ export interface CivLocaleStrings {
   marriageTypeOther: string;
   marriageTypeDescriptionLabel: string; // "Describe the type of union"
   marriageTypeDescriptionHint: string;
+  marriageRegistrationDateLegend: string; // "Date of registration"
+  marriageJurisdictionLabel: string; // "Jurisdiction that issued the registration"
+  marriageCohabitationStartLegend: string; // "Date you began living together"
+  marriageCohabitationStateLabel: string; // "State where you live together"
+  marriageApproxDateLegend: string; // "Approximate date union began"
 
   // Service history
   serviceLegend: string;
@@ -531,6 +536,11 @@ const defaultStrings: CivLocaleStrings = {
   marriageTypeOther: 'Other',
   marriageTypeDescriptionLabel: 'Describe the type of union',
   marriageTypeDescriptionHint: 'For example: religious ceremony, foreign marriage',
+  marriageRegistrationDateLegend: 'Date of registration',
+  marriageJurisdictionLabel: 'Jurisdiction that issued the registration',
+  marriageCohabitationStartLegend: 'Date you began living together',
+  marriageCohabitationStateLabel: 'State where you live together',
+  marriageApproxDateLegend: 'Approximate date union began',
 
   serviceLegend: 'About this service period',
   serviceBranchLabel: 'Branch of service',

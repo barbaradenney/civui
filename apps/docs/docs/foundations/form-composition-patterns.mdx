@@ -4,6 +4,8 @@ sidebar_position: 12
 sidebar_label: Form Composition
 ---
 
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
 # Form Composition Patterns
 
 Common government form sections built by composing CivUI components. These patterns don't need dedicated components — the repeater, form fields, and compound components handle them directly.
@@ -13,6 +15,8 @@ Common government form sections built by composing CivUI components. These patte
 Employment history varies significantly across agencies. Compose what you need from standard fields.
 
 ### Basic (VA pension, HUD housing)
+
+<StoryEmbed id="forms-patterns-composition-examples--employment-basic" />
 
 ```html
 <civ-repeater legend="Employment history" name="jobs" item-label="employer" mode="detail" min="0">
@@ -25,6 +29,8 @@ Employment history varies significantly across agencies. Compose what you need f
 ```
 
 ### Detailed (SSA disability)
+
+<StoryEmbed id="forms-patterns-composition-examples--employment-detailed" />
 
 ```html
 <civ-repeater legend="Work history" name="jobs" item-label="job" mode="wizard">
@@ -48,6 +54,8 @@ Employment history varies significantly across agencies. Compose what you need f
 
 ### Immigration (I-485)
 
+<StoryEmbed id="forms-patterns-composition-examples--employment-immigration" />
+
 ```html
 <civ-repeater legend="Employment history (last 5 years)" name="employment" item-label="employer" mode="detail" min="0">
   <civ-text-input label="Employer or company name" name="employer" required></civ-text-input>
@@ -64,6 +72,8 @@ Education history also varies by agency and purpose.
 
 ### Basic (VA education benefits)
 
+<StoryEmbed id="forms-patterns-composition-examples--education-basic" />
+
 ```html
 <civ-repeater legend="Education history" name="education" item-label="school" mode="detail" min="0">
   <civ-text-input label="School name" name="school" required></civ-text-input>
@@ -76,6 +86,8 @@ Education history also varies by agency and purpose.
 ```
 
 ### Federal employment (SF-171)
+
+<StoryEmbed id="forms-patterns-composition-examples--education-federal" />
 
 ```html
 <civ-repeater legend="Education" name="education" item-label="school" mode="wizard">
@@ -95,6 +107,8 @@ Education history also varies by agency and purpose.
 ```
 
 ### Immigration (I-485)
+
+<StoryEmbed id="forms-patterns-composition-examples--education-immigration" />
 
 ```html
 <civ-repeater legend="Schools attended (last 5 years)" name="schools" item-label="school" mode="detail" min="0">

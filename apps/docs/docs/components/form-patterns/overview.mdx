@@ -4,6 +4,8 @@ sidebar_position: 0
 sidebar_label: Overview
 ---
 
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
 # Form Patterns Overview
 
 CivUI form patterns are components that orchestrate form structure, navigation, validation, and review. They compose together to handle everything from a single-page form to a multi-step wizard with repeating sections, conditional fields, and trauma-informed affordances.
@@ -81,6 +83,8 @@ Not every form needs every layer. A simple contact form might just use `civ-form
 
 ### Simple single-page form
 
+<StoryEmbed id="forms-patterns-overview-examples--simple-form" />
+
 ```html
 <civ-form @civ-submit="${handleSubmit}">
   <civ-fieldset legend="Contact information">
@@ -96,6 +100,8 @@ Not every form needs every layer. A simple contact form might just use `civ-form
 ```
 
 ### Multi-step form
+
+<StoryEmbed id="forms-patterns-overview-examples--multi-step-form" />
 
 ```html
 <civ-form @civ-submit="${handleSubmit}">
@@ -128,6 +134,8 @@ Not every form needs every layer. A simple contact form might just use `civ-form
 
 ### Form with conditional fields
 
+<StoryEmbed id="forms-patterns-overview-examples--conditional-fields" />
+
 ```html
 <civ-form>
   <civ-yes-no legend="Are you a veteran?" name="isVeteran" required></civ-yes-no>
@@ -152,6 +160,8 @@ Not every form needs every layer. A simple contact form might just use `civ-form
 ```
 
 ### Trauma-informed form
+
+<StoryEmbed id="forms-patterns-overview-examples--trauma-informed-form" />
 
 ```html
 <civ-form

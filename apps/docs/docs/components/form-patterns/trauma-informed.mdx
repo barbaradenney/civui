@@ -4,6 +4,8 @@ sidebar_position: 13
 sidebar_label: Trauma-Informed
 ---
 
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
 # Trauma-Informed Patterns
 
 Government forms often ask about difficult life events — death of a family member, military trauma, domestic violence, financial hardship. CivUI provides a set of patterns that help users navigate these sections with dignity, control, and clear expectations.
@@ -22,6 +24,8 @@ These patterns don't change the data collected — they change how it's presente
 ### 1. Section intro — set expectations
 
 `<civ-section-intro>` places a context panel before a sensitive section, explaining what's coming and why.
+
+<StoryEmbed id="forms-patterns-trauma-informed--section-intro" />
 
 ```html
 <civ-section-intro heading="About your service-connected trauma" tone="sensitive">
@@ -42,6 +46,8 @@ These patterns don't change the data collected — they change how it's presente
 Adding `sensitive` to `<civ-form-step>` enables two things:
 - A polite screen reader announcement: "This section asks personal questions. Your answers are saved as you go."
 - A "Save and come back later" link so users can pause mid-section
+
+<StoryEmbed id="forms-patterns-trauma-informed--form-step-sensitive" />
 
 ```html
 <civ-form-step sensitive>
@@ -64,6 +70,8 @@ You can also use `show-pause` independently without `sensitive` if you want the 
 ### 3. Skip affordance — prefer not to answer
 
 `skipLabel` on `<civ-yes-no>` and `<civ-radio-group>` renders a "Prefer not to answer" link-button below the options. This is distinct from "unsure" — it's about opting out, not uncertainty.
+
+<StoryEmbed id="forms-patterns-trauma-informed--skip-affordance-yes-no" />
 
 ```html
 <civ-yes-no
@@ -92,6 +100,8 @@ You can also use `show-pause` independently without `sensitive` if you want the 
 
 When a form is explicitly about someone who has died (burial benefits, survivor claims), don't ask "Is this person deceased?" Use `deceased-assumed` on `<civ-relationship>` to skip the yes/no and show the date of death directly.
 
+<StoryEmbed id="forms-patterns-trauma-informed--deceased-assumed" />
+
 ```html
 <!-- Good: assumes the person is deceased -->
 <civ-relationship
@@ -114,6 +124,8 @@ Use `show-deceased` only when the form doesn't already establish that the person
 
 `supportResources` on `<civ-form>` renders a persistent, non-modal footer with crisis resource links. It stays visible across all form steps.
 
+<StoryEmbed id="forms-patterns-trauma-informed--support-resources" />
+
 ```html
 <civ-form
   support-resources='[
@@ -133,6 +145,8 @@ URL schemes are restricted to `http`, `https`, `tel`, `mailto`, `sms`, same-orig
 ### 6. Repeater wizard sensitive — multi-item sensitive flows
 
 When using `<civ-repeater mode="wizard">` for sensitive content (e.g., adding multiple deceased dependents), pass `wizard-sensitive` and `wizard-show-pause` to enable trauma-informed affordances inside the wizard sub-flow.
+
+<StoryEmbed id="forms-patterns-trauma-informed--repeater-wizard-sensitive" />
 
 ```html
 <civ-repeater
@@ -158,6 +172,8 @@ Without these props, the wizard sub-flow has no pause affordance or sensitive an
 ## Complete example: VA survivor benefit form
 
 This example combines all trauma-informed patterns into a realistic VA burial benefit application:
+
+<StoryEmbed id="forms-patterns-trauma-informed--complete-survivor-form" />
 
 ```html
 <civ-form

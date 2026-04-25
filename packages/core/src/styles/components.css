@@ -1212,6 +1212,21 @@
            civ-overflow-y-auto civ-list-none civ-p-0 civ-m-0;
   }
 
+  @media (max-width: 480px) {
+    .civ-combobox-listbox {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      top: auto;
+      width: 100%;
+      margin: 0;
+      max-height: 50vh;
+      border-radius: var(--civ-border-radius-lg, 12px) var(--civ-border-radius-lg, 12px) 0 0;
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+    }
+  }
+
   .civ-combobox-option {
     @apply civ-px-3 civ-py-2 civ-cursor-pointer;
     font-size: var(--civ-typography-fontSize-base);

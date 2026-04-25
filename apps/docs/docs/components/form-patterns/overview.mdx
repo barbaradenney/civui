@@ -1,0 +1,213 @@
+---
+title: Overview
+sidebar_position: 0
+sidebar_label: Overview
+---
+
+# Form Patterns Overview
+
+CivUI form patterns are components that orchestrate form structure, navigation, validation, and review. They compose together to handle everything from a single-page form to a multi-step wizard with repeating sections, conditional fields, and trauma-informed affordances.
+
+## Form structure
+
+A typical government form composes these layers:
+
+```
+civ-form                         ← validates, error summary, submit handling
+├── civ-progress-steps           ← visual step indicator (optional)
+├── civ-form-step                ← multi-step navigation (optional)
+│   ├── civ-section-intro        ← context before sensitive sections
+│   ├── civ-fieldset             ← groups related fields with legend
+│   │   ├── [form fields]        ← civ-text-input, civ-select, etc.
+│   │   └── civ-conditional      ← show/hide based on field value
+│   └── civ-repeater             ← "add another" repeating sections
+│       └── [compound components] ← civ-relationship, civ-address, etc.
+├── civ-summary                  ← review page with edit links
+│   └── civ-read-only-field      ← label + value display
+└── submit/reset buttons
+```
+
+Not every form needs every layer. A simple contact form might just use `civ-form` with a few fields. A VA disability claim might use all of them.
+
+## Components at a glance
+
+### Form container
+
+| Component | Purpose |
+|-----------|---------|
+| `civ-form` | Wraps the entire form. Validates fields on submit, renders an accessible error summary with anchor links, fires `civ-submit` and `civ-invalid` events. Supports `supportResources` for persistent crisis resource links. |
+
+### Navigation
+
+| Component | Purpose |
+|-----------|---------|
+| `civ-form-step` | Multi-step wizard within a form. Shows one step at a time, validates before advancing. Each child with `data-step-label` is a step. Supports `sensitive` mode for trauma-informed flows and `showPause` for save-and-resume. |
+| `civ-progress-steps` | Visual step indicator. Shows completed, current, and upcoming steps. Responsive — horizontal on desktop, vertical on mobile. Optional `clickable` prop lets users jump to completed steps. |
+
+### Field organization
+
+| Component | Purpose |
+|-----------|---------|
+| `civ-fieldset` | Groups related fields with a `<fieldset>` and `<legend>`. Disabled state cascades to all children automatically. |
+| `civ-form-group` | Wraps a custom or third-party input with label, hint, and error rendering. Auto-wires ARIA attributes to the first child input. |
+| `civ-conditional` | Shows or hides content based on another field's value. Supports `equals`, `not-equals`, `includes`, `has-value`, and `matches` operators. |
+
+### Repeating sections
+
+| Component | Purpose |
+|-----------|---------|
+| `civ-repeater` | "Add another" pattern. Three modes: `inline` (all rows visible), `detail` (summary cards that expand), `wizard` (full-page multi-step sub-flow per item). Field names auto-index. |
+
+### Context & guidance
+
+| Component | Purpose |
+|-----------|---------|
+| `civ-section-intro` | Pre-section context panel. Sets expectations before sensitive or complex sections. Three tones: `info`, `sensitive`, `neutral`. |
+
+### Review
+
+| Component | Purpose |
+|-----------|---------|
+| `civ-summary` | Displays completed form data in read-only sections with edit links. |
+| `civ-read-only-field` | Single label + value row for review display. |
+
+### Data
+
+| Component | Purpose |
+|-----------|---------|
+| Prefill system | Types and utilities for pre-populating forms from user profiles, APIs, or saved state. |
+
+## Building a form
+
+### Simple single-page form
+
+```html
+<civ-form @civ-submit="${handleSubmit}">
+  <civ-fieldset legend="Contact information">
+    <civ-text-input label="Full name" name="name" required></civ-text-input>
+    <civ-text-input label="Email" name="email" type="email" required></civ-text-input>
+    <civ-text-input label="Phone" name="phone" type="tel"></civ-text-input>
+  </civ-fieldset>
+
+  <civ-textarea label="Message" name="message" required></civ-textarea>
+
+  <civ-button type="submit" label="Submit"></civ-button>
+</civ-form>
+```
+
+### Multi-step form
+
+```html
+<civ-form @civ-submit="${handleSubmit}">
+  <civ-progress-steps
+    steps='["Personal info","Service history","Review"]'
+    current="0"
+  ></civ-progress-steps>
+
+  <civ-form-step>
+    <div data-step-label="Personal info">
+      <civ-name legend="Your name" name="name" required></civ-name>
+      <civ-memorable-date legend="Date of birth" name="dob" required></civ-memorable-date>
+    </div>
+
+    <div data-step-label="Service history">
+      <civ-repeater legend="Service periods" name="service"
+        item-label="service period" mode="detail" min="1">
+        <civ-service-history name="period"></civ-service-history>
+      </civ-repeater>
+    </div>
+
+    <div data-step-label="Review">
+      <civ-summary></civ-summary>
+    </div>
+  </civ-form-step>
+
+  <civ-button type="submit" label="Submit application"></civ-button>
+</civ-form>
+```
+
+### Form with conditional fields
+
+```html
+<civ-form>
+  <civ-yes-no legend="Are you a veteran?" name="isVeteran" required></civ-yes-no>
+
+  <civ-conditional when="isVeteran" equals="yes">
+    <civ-fieldset legend="Service information">
+      <civ-service-history name="service"></civ-service-history>
+    </civ-fieldset>
+  </civ-conditional>
+
+  <civ-yes-no legend="Are you currently married?" name="isMarried" required></civ-yes-no>
+
+  <civ-conditional when="isMarried" equals="yes">
+    <civ-relationship
+      legend="About your spouse"
+      name="spouse"
+      preset="general"
+      show-name
+    ></civ-relationship>
+  </civ-conditional>
+</civ-form>
+```
+
+### Trauma-informed form
+
+```html
+<civ-form
+  support-resources='[
+    {"label":"Veterans Crisis Line","href":"tel:988"},
+    {"label":"Crisis Text Line","href":"sms:838255"}
+  ]'
+>
+  <civ-form-step>
+    <div data-step-label="About you">
+      <civ-name legend="Your name" name="name" required></civ-name>
+    </div>
+
+    <div data-step-label="About the person who died">
+      <civ-section-intro heading="About the person who died" tone="sensitive">
+        <p>The next questions ask about someone close to you.</p>
+        <p>You can save and come back later at any time.</p>
+      </civ-section-intro>
+
+      <civ-repeater legend="People who died" name="deceased"
+        item-label="person" mode="wizard"
+        wizard-sensitive wizard-show-pause>
+        <div data-step-label="Their name">
+          <civ-name legend="Their name" name="name" required></civ-name>
+        </div>
+        <div data-step-label="Relationship">
+          <civ-relationship preset="va-survivor" deceased-assumed
+            show-name="false" name="rel" required></civ-relationship>
+        </div>
+      </civ-repeater>
+    </div>
+  </civ-form-step>
+</civ-form>
+```
+
+## Validation flow
+
+1. User clicks submit (or last step's continue button)
+2. `civ-form` queries all `[data-civ-form-field]` elements
+3. Required fields with empty values get `error` set automatically
+4. If any field is invalid, `civ-invalid` fires with the error list
+5. Error summary renders at the top with anchor links to each field
+6. If all valid, `civ-submit` fires with `{ formData }`
+
+In multi-step mode, `civ-form-step` validates each step before advancing — users can't skip past invalid fields.
+
+## Event reference
+
+| Event | Fired by | Detail | When |
+|-------|----------|--------|------|
+| `civ-submit` | `civ-form` | `{ formData }` | Valid form submission |
+| `civ-invalid` | `civ-form` | `{ errors }` | Validation failure |
+| `civ-step-change` | `civ-form-step` | `{ current, total, label }` | Step changes |
+| `civ-step-complete` | `civ-form-step` | `{ total }` | Last step completed |
+| `civ-step-pause` | `civ-form-step` | `{ current, label }` | User pauses |
+| `civ-repeater-add` | `civ-repeater` | `{ index }` | Row added |
+| `civ-repeater-remove` | `civ-repeater` | `{ index }` | Row removed |
+| `civ-repeater-wizard-open` | `civ-repeater` | `{ index, isNew }` | Wizard opens |
+| `civ-repeater-wizard-close` | `civ-repeater` | `{ index, action }` | Wizard closes |

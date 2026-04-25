@@ -47,6 +47,11 @@ export interface CivLocaleStrings {
   fileUploadMaxFilesError: string;
   fileUploadEmptyFile: string; // "{name} appears to be empty (0 bytes)"
   fileUploadCancelled: string;
+  fileUploadCancelText: string; // "Cancel"
+  fileUploadCancelAriaLabel: string; // "Cancel upload for {name}"
+  fileUploadRetryText: string; // "Retry"
+  fileUploadRetryAriaLabel: string; // "Retry upload for {name}"
+  fileUploadProgressAriaLabel: string; // "Upload progress for {name}"
   fileUploadUploading: string; // "Uploading {name}, {progress} percent complete"
   fileUploadSuccess: string; // "{name} uploaded successfully"
   fileUploadError: string; // "Upload failed for {name}: {error}"
@@ -95,8 +100,10 @@ export interface CivLocaleStrings {
   maskCurrencyHint: string;
   maskCurrencyError: string;
 
-  // Textarea word count
+  // Textarea char/word count
+  textareaCharsRemaining: string; // "{count} characters remaining"
   textareaWordsRemaining: string; // "{count} words remaining"
+  textareaWordsOverLimit: string; // "{count} {count, plural, one {word} other {words}} over the limit"
   textareaWordLimit: string; // "Word limit: {max}"
 
   // Alert
@@ -278,6 +285,7 @@ export interface CivLocaleStrings {
   taskStatusReview: string;
 
   // Summary
+  summaryDefaultHeading: string; // fallback aria-label when no `heading` set
   summaryEditLink: string;
   summaryEditAriaLabel: string; // "Edit {section}"
   summaryNotProvided: string;
@@ -352,6 +360,11 @@ const defaultStrings: CivLocaleStrings = {
   fileUploadMaxFilesError: 'Maximum of {max} files allowed. {name} was not added',
   fileUploadEmptyFile: '{name} appears to be empty (0 bytes)',
   fileUploadCancelled: 'Upload cancelled',
+  fileUploadCancelText: 'Cancel',
+  fileUploadCancelAriaLabel: 'Cancel upload for {name}',
+  fileUploadRetryText: 'Retry',
+  fileUploadRetryAriaLabel: 'Retry upload for {name}',
+  fileUploadProgressAriaLabel: 'Upload progress for {name}',
   fileUploadUploading: 'Uploading {name}, {progress} percent complete',
   fileUploadSuccess: '{name} uploaded successfully',
   fileUploadError: 'Upload failed for {name}: {error}',
@@ -397,7 +410,9 @@ const defaultStrings: CivLocaleStrings = {
   maskCurrencyHint: 'For example: 1,234.56',
   maskCurrencyError: 'Enter a valid dollar amount',
 
+  textareaCharsRemaining: '{count} characters remaining',
   textareaWordsRemaining: '{count} words remaining',
+  textareaWordsOverLimit: '{count} too many words',
   textareaWordLimit: 'Word limit: {max}',
 
   alertDismissLabel: 'Dismiss alert',
@@ -561,6 +576,7 @@ const defaultStrings: CivLocaleStrings = {
   taskStatusError: 'There is a problem',
   taskStatusReview: 'Review',
 
+  summaryDefaultHeading: 'Summary',
   summaryEditLink: 'Edit',
   summaryEditAriaLabel: 'Edit {section}',
   summaryNotProvided: 'Not provided',

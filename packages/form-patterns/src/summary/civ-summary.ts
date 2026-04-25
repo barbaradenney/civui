@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBaseElement, t } from '@civui/core';
+import { CivBaseElement, interpolate, t } from '@civui/core';
 import '@civui/ui';
 import '../read-only-field/civ-read-only-field.js';
 
@@ -47,7 +47,7 @@ export class CivSummary extends CivBaseElement {
 
   override render() {
     return html`
-      <div class="civ-summary" role="region" aria-label="${this.heading || 'Summary'}">
+      <div class="civ-summary" role="region" aria-label="${this.heading || t('summaryDefaultHeading')}">
         ${this.heading ? html`<h2 class="civ-heading-xl">${this.heading}</h2>` : nothing}
         ${this.sections.map(section => this._renderSection(section))}
       </div>
@@ -82,7 +82,7 @@ export class CivSummary extends CivBaseElement {
                 href="${sectionEditHref}"
                 variant="tertiary"
                 label="${sectionEditLabel}"
-                aria-label="${sectionEditLabel} ${section.heading}"
+                aria-label="${interpolate(t('summaryEditAriaLabel'), { section: section.heading })}"
               ></civ-link>
             ` : nothing}
           </div>

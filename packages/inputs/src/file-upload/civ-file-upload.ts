@@ -290,7 +290,7 @@ export class CivFileUpload extends CivFormElement {
                         </span>
                         ${file.status === 'uploading' ? html`
                           <div class="civ-file-progress">
-                            <div class="civ-file-progress-bar" style="width: ${file.progress}%" role="progressbar" aria-valuenow="${file.progress}" aria-valuemin="0" aria-valuemax="100" aria-label="Upload progress for ${file.name}"></div>
+                            <div class="civ-file-progress-bar" style="width: ${file.progress}%" role="progressbar" aria-valuenow="${file.progress}" aria-valuemin="0" aria-valuemax="100" aria-label="${interpolate(t('fileUploadProgressAriaLabel'), { name: file.name })}"></div>
                           </div>
                         ` : nothing}
                         ${file.status === 'error' && file.error ? html`
@@ -303,9 +303,9 @@ export class CivFileUpload extends CivFormElement {
                             type="button"
                             class="civ-file-cancel-btn focus-visible:civ-focus-ring"
                             @click="${() => this._cancelUpload(index)}"
-                            aria-label="Cancel upload for ${file.name}"
+                            aria-label="${interpolate(t('fileUploadCancelAriaLabel'), { name: file.name })}"
                           >
-                            Cancel
+                            ${t('fileUploadCancelText')}
                           </button>
                         ` : nothing}
                         ${file.status === 'error' ? html`
@@ -313,9 +313,9 @@ export class CivFileUpload extends CivFormElement {
                             type="button"
                             class="civ-file-retry-btn focus-visible:civ-focus-ring"
                             @click="${() => this._retryUpload(index)}"
-                            aria-label="Retry upload for ${file.name}"
+                            aria-label="${interpolate(t('fileUploadRetryAriaLabel'), { name: file.name })}"
                           >
-                            Retry
+                            ${t('fileUploadRetryText')}
                           </button>
                         ` : nothing}
                         ${file.status !== 'uploading' ? html`

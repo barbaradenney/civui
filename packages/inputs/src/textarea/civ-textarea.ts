@@ -139,10 +139,10 @@ export class CivTextarea extends CivFormElement {
                   ? 'civ-text-error civ-font-bold'
                   : 'civ-text-muted'}"
               >
-                ${remaining} characters remaining
+                ${interpolate(t('textareaCharsRemaining'), { count: remaining })}
               </span>
               <span class="civ-sr-only" aria-live="polite">
-                ${this.maxlength! - this._announcedCharCount} characters remaining
+                ${interpolate(t('textareaCharsRemaining'), { count: this.maxlength! - this._announcedCharCount })}
               </span>
             `
           : nothing}
@@ -196,9 +196,13 @@ export class CivTextarea extends CivFormElement {
     if (this._showWordCount) {
       this._wordCount = this._countWords(target.value);
       this._debouncedAnnounceWordCount();
-      if (this.maxwords && this._wordCount > this.maxwords && !this.error) {
-        this.error = interpolate(t('textareaWordsRemaining'), { count: this.maxwords - this._wordCount });
-        this._wordCountError = true;
+      if (this.maxwords && this._wordCount > this.maxwords) {
+        // Only set the error if no external error is already showing,
+        // OR if we previously set the word-count error (so we can update the count).
+        if (!this.error || this._wordCountError) {
+          this.error = interpolate(t('textareaWordsOverLimit'), { count: this._wordCount - this.maxwords });
+          this._wordCountError = true;
+        }
       } else if (this.maxwords && this._wordCount <= this.maxwords && this._wordCountError) {
         this.error = '';
         this._wordCountError = false;

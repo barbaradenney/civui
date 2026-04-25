@@ -2031,6 +2031,20 @@
     @apply civ-p-3;
   }
 
+  .civ-link-card__layout {
+    @apply civ-flex civ-items-center civ-gap-4;
+  }
+
+  .civ-link-card__icon {
+    @apply civ-flex-shrink-0;
+    font-size: 1.25em;
+  }
+
+  .civ-link-card__content {
+    @apply civ-flex-1;
+    min-width: 0;
+  }
+
   .civ-link-card__heading {
     @apply civ-block civ-font-bold civ-underline;
     font-size: var(--civ-typography-fontSize-lg);

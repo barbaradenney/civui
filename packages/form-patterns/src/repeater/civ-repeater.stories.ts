@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import './civ-repeater.js';
 import '@civui/inputs';
+import '@civui/compound';
 
 const meta: Meta = {
   title: 'Forms/Patterns/Repeater',
@@ -216,4 +217,73 @@ export const GovernmentServicePeriods: Story = {
     ];
     selects.forEach(s => { s.options = options; });
   },
+};
+
+// ── Wizard Mode ──────────────────────────────────────────────
+
+export const WizardMode: Story = {
+  name: 'Wizard Mode',
+  render: () => html`
+    <civ-repeater
+      legend="Dependents"
+      name="dependents"
+      item-label="dependent"
+      mode="wizard"
+    >
+      <div data-step-label="Name">
+        <civ-text-input label="First name" name="firstName" required></civ-text-input>
+        <civ-text-input label="Last name" name="lastName" required></civ-text-input>
+      </div>
+      <div data-step-label="Contact">
+        <civ-text-input label="Email" name="email" type="email"></civ-text-input>
+        <civ-text-input label="Phone" name="phone" type="tel"></civ-text-input>
+      </div>
+    </civ-repeater>
+  `,
+};
+
+export const WizardWithRelationship: Story = {
+  name: 'Wizard: VA Dependents',
+  render: () => html`
+    <civ-repeater
+      legend="Your dependents"
+      name="dependents"
+      item-label="dependent"
+      mode="wizard"
+      max="10"
+    >
+      <div data-step-label="Name">
+        <civ-name legend="Dependent's name" name="name" required></civ-name>
+      </div>
+      <div data-step-label="Relationship">
+        <civ-relationship
+          legend="Relationship details"
+          name="rel"
+          preset="va-dependent"
+          show-name="false"
+          show-adoption-date
+          required
+        ></civ-relationship>
+      </div>
+    </civ-repeater>
+  `,
+};
+
+export const WizardWithMax: Story = {
+  name: 'Wizard: Max 3 Items',
+  render: () => html`
+    <civ-repeater
+      legend="Emergency contacts"
+      name="contacts"
+      item-label="contact"
+      mode="wizard"
+      max="3"
+    >
+      <div data-step-label="Contact info">
+        <civ-text-input label="Full name" name="fullName" required></civ-text-input>
+        <civ-text-input label="Phone number" name="phone" type="tel" required></civ-text-input>
+        <civ-text-input label="Relationship" name="relationship" required></civ-text-input>
+      </div>
+    </civ-repeater>
+  `,
 };

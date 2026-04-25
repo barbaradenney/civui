@@ -3,6 +3,7 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { CivBaseElement, dispatch, renderLegend, renderHint, renderError, buildDescribedBy, announce, interpolate, t } from '@civui/core';
 import '@civui/inputs';
 import '@civui/ui';
+import '../form-step/civ-form-step.js';
 
 /**
  * CivUI Repeater
@@ -50,7 +51,7 @@ export class CivRepeater extends CivBaseElement {
    * - `inline` (default) — all row fields visible on the page.
    * - `detail` — rows show as summary cards; fields expand on edit/add.
    */
-  @property({ type: String }) mode: 'inline' | 'detail' = 'inline';
+  @property({ type: String }) mode: 'inline' | 'detail' | 'wizard' = 'inline';
 
   /** Hint text displayed below the legend. */
   @property({ type: String }) hint = '';
@@ -73,6 +74,10 @@ export class CivRepeater extends CivBaseElement {
   @state() private _rowCount = 0;
 
   @state() private _editingIdx = -1;
+
+  @state() private _wizardActive = false;
+  @state() private _wizardEditIndex = -1;
+  private _rowData: Map<number, Record<string, string>> = new Map();
 
   private _template: Node[] = [];
   private _hintId = this.generateId('hint');
@@ -100,6 +105,11 @@ export class CivRepeater extends CivBaseElement {
   }
 
   override firstUpdated(): void {
+    if (this.mode === 'wizard') {
+      // Wizard mode starts with an empty list — rows are added via the wizard flow
+      this._rowCount = 0;
+      return;
+    }
     // Build initial rows up to min count
     const initial = this.mode === 'detail' ? this.min : Math.max(this.min, 1);
     for (let i = 0; i < initial; i++) {
@@ -115,26 +125,42 @@ export class CivRepeater extends CivBaseElement {
   override render() {
     const describedBy = buildDescribedBy(this._hintId, this.hint, this._errorId, this.error);
     const canAdd = this.max === 0 || this._rowCount < this.max;
+    const showList = !this._wizardActive;
+
+    const legendText = this._wizardActive
+      ? (this._wizardEditIndex >= 0
+          ? interpolate(t('repeaterWizardEditTitle'), { item: this.itemLabel, index: String(this._wizardEditIndex + 1) })
+          : interpolate(t('repeaterWizardAddTitle'), { item: this.itemLabel }))
+      : this.legend;
 
     return html`
       <fieldset
         class="civ-fieldset"
-        aria-describedby="${describedBy || nothing}"
+        aria-describedby="${showList ? describedBy || nothing : nothing}"
         aria-invalid="${this.error ? 'true' : nothing}"
         ?disabled="${this.disabled}"
       >
-        ${renderLegend({ legend: this.legend, required: this.required, textSizeClass: 'civ-text-lg' })}
-        ${renderHint(this._hintId, this.hint, true)}
-        ${renderError(this._errorId, this.error, true)}
+        ${renderLegend({ legend: legendText, required: showList ? this.required : false, textSizeClass: 'civ-text-lg' })}
+        ${showList ? renderHint(this._hintId, this.hint, true) : nothing}
+        ${showList ? renderError(this._errorId, this.error, true) : nothing}
 
-        <div data-civ-repeater-rows></div>
+        <div data-civ-repeater-rows style="${this._wizardActive ? 'display:none' : ''}"></div>
 
-        ${canAdd ? html`
+        ${this._wizardActive ? html`
+          <div data-civ-repeater-wizard></div>
+          <div class="civ-mt-4">
+            <button type="button" class="civ-btn civ-btn--secondary focus-visible:civ-focus-ring" @click="${this._cancelWizard}">
+              ${t('repeaterCancelButton')}
+            </button>
+          </div>
+        ` : nothing}
+
+        ${showList && canAdd ? html`
           <civ-action-button
             variant="tertiary"
             label="${interpolate(t('repeaterAddButton'), { item: this.itemLabel })}"
             ?disabled="${this.disabled}"
-            @click="${this._addRow}"
+            @click="${this.mode === 'wizard' ? this._openWizardForAdd : this._addRow}"
             class="civ-mt-3"
           ></civ-action-button>
         ` : nothing}
@@ -157,6 +183,17 @@ export class CivRepeater extends CivBaseElement {
     if (this._rowCount <= this.min) return;
     rows[index].remove();
     this._rowCount--;
+    // Clean up stored data for wizard mode
+    if (this.mode === 'wizard') {
+      this._rowData.delete(index);
+      const reindexed = new Map<number, Record<string, string>>();
+      let i = 0;
+      for (const [, value] of [...this._rowData.entries()].sort(([a], [b]) => a - b)) {
+        reindexed.set(i, value);
+        i++;
+      }
+      this._rowData = reindexed;
+    }
     this._reindexRows();
     dispatch(this, 'civ-repeater-remove', { index });
     announce(interpolate(t('repeaterItemRemoved'), { item: this.itemLabel, index: String(index + 1) }));
@@ -381,6 +418,211 @@ export class CivRepeater extends CivBaseElement {
       ? values.slice(0, 3).join(', ')
       : `${this.itemLabel} ${index + 1}`;
   }
+
+  // ── Wizard mode methods ──────────────────────────────────────
+
+  private _openWizardForAdd = (): void => {
+    if (this.max > 0 && this._rowCount >= this.max) return;
+    this._wizardEditIndex = -1;
+    this._wizardActive = true;
+    dispatch(this, 'civ-repeater-wizard-open', { index: this._rowCount, isNew: true });
+    this.updateComplete.then(() => this._buildWizard(this._rowCount));
+  };
+
+  private _openWizardForEdit(index: number): void {
+    this._wizardEditIndex = index;
+    this._wizardActive = true;
+    dispatch(this, 'civ-repeater-wizard-open', { index, isNew: false });
+    this.updateComplete.then(() => {
+      this._buildWizard(index);
+      this._populateWizardFromRowData(index);
+    });
+  }
+
+  private _buildWizard(index: number): void {
+    const container = this.querySelector('[data-civ-repeater-wizard]');
+    if (!container) return;
+    container.innerHTML = '';
+
+    const formStep = document.createElement('civ-form-step');
+    formStep.setAttribute('complete-label',
+      interpolate(t('repeaterSaveButton'), { item: this.itemLabel }));
+
+    for (const node of this._template) {
+      const clone = node.cloneNode(true);
+      if (clone instanceof Element) {
+        this._indexStepFields(clone, index);
+      }
+      formStep.appendChild(clone);
+    }
+
+    formStep.addEventListener('civ-step-complete', () => {
+      this._saveWizard(index);
+    });
+
+    container.appendChild(formStep);
+  }
+
+  private _indexStepFields(el: Element, index: number): void {
+    const prefix = this.name || 'items';
+    // The element may be a step div itself or a parent containing steps.
+    // Index all [name] children within step divs.
+    const stepDivs = el.hasAttribute('data-step-label')
+      ? [el]
+      : Array.from(el.querySelectorAll('[data-step-label]'));
+
+    for (const stepDiv of stepDivs) {
+      for (const child of stepDiv.children) {
+        const baseName = child.getAttribute('name');
+        if (!baseName || baseName.includes('[')) continue;
+        child.setAttribute('name', `${prefix}[${index}].${baseName}`);
+      }
+    }
+  }
+
+  private _populateWizardFromRowData(index: number): void {
+    const data = this._rowData.get(index);
+    if (!data) return;
+    const container = this.querySelector('[data-civ-repeater-wizard]');
+    if (!container) return;
+
+    requestAnimationFrame(() => {
+      for (const [fieldName, value] of Object.entries(data)) {
+        const escaped = fieldName.replace(/["\\]/g, '\\$&');
+        const field = container.querySelector(`[name="${escaped}"]`) as HTMLElement & { value?: string } | null;
+        if (field && 'value' in field) {
+          field.value = value;
+        }
+      }
+    });
+  }
+
+  private _saveWizard(index: number): void {
+    const container = this.querySelector('[data-civ-repeater-wizard]');
+    if (!container) return;
+
+    // Extract field values from wizard
+    const data: Record<string, string> = {};
+    const fields = container.querySelectorAll('[name]');
+    for (const field of fields) {
+      const name = field.getAttribute('name');
+      const val = (field as HTMLElement & { value?: string }).value;
+      // Only capture CivUI components (which have tagName starting with CIV-)
+      // or standard form elements, not their internal rendered inputs
+      if (name && val !== undefined && (field.tagName.startsWith('CIV-') || field.tagName === 'INPUT' || field.tagName === 'SELECT' || field.tagName === 'TEXTAREA')) {
+        data[name] = val;
+      }
+    }
+
+    const isNew = this._wizardEditIndex < 0;
+    this._rowData.set(index, data);
+
+    if (isNew) {
+      this._addWizardSummaryCard(index, data);
+      this._rowCount++;
+      dispatch(this, 'civ-repeater-add', { index });
+      announce(interpolate(t('repeaterItemAdded'), { item: this.itemLabel, index: String(index + 1) }));
+    } else {
+      this._updateWizardSummaryCard(index, data);
+      announce(interpolate(t('repeaterItemSaved'), { item: this.itemLabel, index: String(index + 1) }));
+    }
+
+    dispatch(this, 'civ-repeater-wizard-close', { index, action: 'save' });
+    this._wizardActive = false;
+    this._wizardEditIndex = -1;
+
+    this.updateComplete.then(() => {
+      if (isNew) {
+        this.querySelector<HTMLElement>('civ-action-button')?.focus();
+      } else {
+        const rows = this.querySelectorAll('[data-civ-repeater-row]');
+        rows[index]?.querySelector<HTMLElement>('.civ-btn--tertiary')?.focus();
+      }
+    });
+  }
+
+  private _cancelWizard(): void {
+    const index = this._wizardEditIndex >= 0 ? this._wizardEditIndex : this._rowCount;
+    dispatch(this, 'civ-repeater-wizard-close', { index, action: 'cancel' });
+    this._wizardActive = false;
+    this._wizardEditIndex = -1;
+
+    this.updateComplete.then(() => {
+      this.querySelector<HTMLElement>('civ-action-button')?.focus();
+    });
+  }
+
+  private _addWizardSummaryCard(index: number, data: Record<string, string>): void {
+    const container = this.querySelector('[data-civ-repeater-rows]');
+    if (!container) return;
+
+    const row = document.createElement('div');
+    row.setAttribute('data-civ-repeater-row', String(index));
+    row.setAttribute('role', 'group');
+    row.setAttribute('aria-label',
+      interpolate(t('repeaterItemLabel'), { item: this.itemLabel, index: String(index + 1) }));
+    row.classList.add('civ-repeater-row', 'civ-card');
+
+    const summary = document.createElement('div');
+    summary.setAttribute('data-civ-repeater-summary', '');
+    summary.classList.add('civ-flex', 'civ-justify-between', 'civ-items-center');
+
+    const summaryText = document.createElement('span');
+    summaryText.classList.add('civ-font-medium');
+    summaryText.textContent = this._buildWizardSummaryText(data, index);
+    summary.appendChild(summaryText);
+
+    const actions = document.createElement('span');
+    actions.classList.add('civ-flex', 'civ-gap-2');
+
+    const editBtn = document.createElement('button');
+    editBtn.type = 'button';
+    editBtn.className = 'civ-btn civ-btn--tertiary focus-visible:civ-focus-ring';
+    editBtn.textContent = t('repeaterEditButton');
+    editBtn.setAttribute('aria-label',
+      interpolate(t('repeaterEditAriaLabel'), { item: this.itemLabel, index: String(index + 1) }));
+    editBtn.addEventListener('click', () => {
+      this._openWizardForEdit(this._getRowIndex(row));
+    });
+    actions.appendChild(editBtn);
+
+    const removeBtn = document.createElement('button');
+    removeBtn.type = 'button';
+    removeBtn.className = 'civ-btn civ-btn--danger-text';
+    removeBtn.textContent = t('repeaterRemoveButton');
+    removeBtn.setAttribute('aria-label',
+      interpolate(t('repeaterRemoveAriaLabel'), { item: this.itemLabel, index: String(index + 1) }));
+    removeBtn.addEventListener('click', () => {
+      this.removeRow(this._getRowIndex(row));
+    });
+    actions.appendChild(removeBtn);
+
+    summary.appendChild(actions);
+    row.appendChild(summary);
+    container.appendChild(row);
+  }
+
+  private _updateWizardSummaryCard(index: number, data: Record<string, string>): void {
+    const container = this.querySelector('[data-civ-repeater-rows]');
+    if (!container) return;
+    const row = container.querySelectorAll(':scope > [data-civ-repeater-row]')[index];
+    if (!row) return;
+    const summaryText = row.querySelector('[data-civ-repeater-summary] > span') as HTMLElement | null;
+    if (summaryText) {
+      summaryText.textContent = this._buildWizardSummaryText(data, index);
+    }
+  }
+
+  private _buildWizardSummaryText(data: Record<string, string>, index: number): string {
+    const values = Object.values(data)
+      .filter(v => v && v.trim() && !v.startsWith('{'))  // Skip empty and JSON blobs
+      .slice(0, 3);
+    return values.length > 0
+      ? values.join(', ')
+      : `${this.itemLabel} ${index + 1}`;
+  }
+
+  // ── Row management ──────────────────────────────────────────
 
   private _reindexRows(): void {
     const container = this.querySelector('[data-civ-repeater-rows]');

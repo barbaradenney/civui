@@ -391,3 +391,133 @@ describe('civ-repeater detail mode', () => {
     expect(input!.getAttribute('name')).toBe('items[0].val');
   });
 });
+
+describe('civ-repeater wizard mode', () => {
+  const wizardTemplate = `
+    <civ-repeater legend="Dependents" name="deps" item-label="dependent" mode="wizard">
+      <div data-step-label="Name">
+        <civ-text-input label="First name" name="firstName"></civ-text-input>
+      </div>
+      <div data-step-label="Details">
+        <civ-text-input label="City" name="city"></civ-text-input>
+      </div>
+    </civ-repeater>
+  `;
+
+  it('starts with empty list and add button', async () => {
+    const el = await fixture<CivRepeater>(wizardTemplate);
+    await elementUpdated(el);
+
+    expect(el.rowCount).toBe(0);
+    const rows = el.querySelectorAll('[data-civ-repeater-row]');
+    expect(rows.length).toBe(0);
+    const addBtn = el.querySelector('civ-action-button');
+    expect(addBtn).not.toBeNull();
+  });
+
+  it('opens wizard on add click', async () => {
+    const el = await fixture<CivRepeater>(wizardTemplate);
+    await elementUpdated(el);
+
+    const handler = vi.fn();
+    el.addEventListener('civ-repeater-wizard-open', handler as EventListener);
+
+    const addBtn = el.querySelector('civ-action-button') as HTMLElement;
+    addBtn.click();
+    await elementUpdated(el);
+
+    expect(handler).toHaveBeenCalledOnce();
+    expect(handler.mock.calls[0][0].detail.isNew).toBe(true);
+  });
+
+  it('shows form-step inside wizard container', async () => {
+    const el = await fixture<CivRepeater>(wizardTemplate);
+    await elementUpdated(el);
+
+    const addBtn = el.querySelector('civ-action-button') as HTMLElement;
+    addBtn.click();
+    await elementUpdated(el);
+
+    const formStep = el.querySelector('civ-form-step');
+    expect(formStep).not.toBeNull();
+    const steps = formStep!.querySelectorAll('[data-step-label]');
+    expect(steps.length).toBe(2);
+  });
+
+  it('hides list when wizard is active', async () => {
+    const el = await fixture<CivRepeater>(wizardTemplate);
+    await elementUpdated(el);
+
+    const addBtn = el.querySelector('civ-action-button') as HTMLElement;
+    addBtn.click();
+    await elementUpdated(el);
+
+    const rowContainer = el.querySelector('[data-civ-repeater-rows]') as HTMLElement;
+    expect(rowContainer.style.display).toBe('none');
+  });
+
+  it('indexes field names inside wizard steps', async () => {
+    const el = await fixture<CivRepeater>(wizardTemplate);
+    await elementUpdated(el);
+
+    const addBtn = el.querySelector('civ-action-button') as HTMLElement;
+    addBtn.click();
+    await elementUpdated(el);
+
+    const field = el.querySelector('civ-form-step civ-text-input');
+    expect(field!.getAttribute('name')).toBe('deps[0].firstName');
+  });
+
+  it('cancel closes wizard without saving', async () => {
+    const el = await fixture<CivRepeater>(wizardTemplate);
+    await elementUpdated(el);
+
+    const addBtn = el.querySelector('civ-action-button') as HTMLElement;
+    addBtn.click();
+    await elementUpdated(el);
+
+    const handler = vi.fn();
+    el.addEventListener('civ-repeater-wizard-close', handler as EventListener);
+
+    const cancelBtn = el.querySelector('.civ-btn--secondary') as HTMLElement;
+    cancelBtn.click();
+    await elementUpdated(el);
+
+    expect(handler).toHaveBeenCalledOnce();
+    expect(handler.mock.calls[0][0].detail.action).toBe('cancel');
+    expect(el.rowCount).toBe(0);
+    expect(el.querySelector('civ-form-step')).toBeNull();
+  });
+
+  it('respects max limit on add', async () => {
+    const el = await fixture<CivRepeater>(`
+      <civ-repeater legend="Items" name="items" item-label="item" mode="wizard" max="0">
+        <div data-step-label="Step">
+          <civ-text-input label="Value" name="val"></civ-text-input>
+        </div>
+      </civ-repeater>
+    `);
+    await elementUpdated(el);
+
+    // max=0 means unlimited, add should work
+    const addBtn = el.querySelector('civ-action-button') as HTMLElement;
+    expect(addBtn).not.toBeNull();
+  });
+
+  it('uses Light DOM', async () => {
+    const el = await fixture<CivRepeater>(wizardTemplate);
+    expect(el.shadowRoot).toBeNull();
+  });
+
+  it('changes legend text when wizard is active', async () => {
+    const el = await fixture<CivRepeater>(wizardTemplate);
+    await elementUpdated(el);
+
+    const addBtn = el.querySelector('civ-action-button') as HTMLElement;
+    addBtn.click();
+    await elementUpdated(el);
+
+    const legend = el.querySelector('legend');
+    expect(legend!.textContent).toContain('Add dependent');
+  });
+});

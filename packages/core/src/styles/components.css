@@ -1212,6 +1212,7 @@
            civ-overflow-y-auto civ-list-none civ-p-0 civ-m-0;
   }
 
+  /* Combobox listbox uses the shared action sheet mobile pattern */
   @media (max-width: 480px) {
     .civ-combobox-listbox {
       position: fixed;
@@ -1221,9 +1222,10 @@
       top: auto;
       width: 100%;
       margin: 0;
-      max-height: 50vh;
+      max-height: var(--civ-action-sheet-max-height, 50vh);
       border-radius: var(--civ-border-radius-lg, 12px) var(--civ-border-radius-lg, 12px) 0 0;
       box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+      z-index: 100;
     }
   }
 
@@ -1247,6 +1249,7 @@
 
   /* ── Date Picker ────────────────────────────────────────────── */
 
+  /* Date picker dialog extends the shared action sheet mobile pattern */
   .civ-datepicker-dialog {
     @apply civ-absolute civ-z-50 civ-mt-1 civ-bg-white civ-border
            civ-border-base-light civ-rounded civ-shadow-lg civ-p-4;
@@ -1268,8 +1271,9 @@
       margin: 0;
       border-radius: var(--civ-border-radius-lg, 12px) var(--civ-border-radius-lg, 12px) 0 0;
       box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
-      max-height: 70vh;
+      max-height: var(--civ-action-sheet-max-height, 70vh);
       overflow-y: auto;
+      z-index: 100;
     }
 
     .civ-datepicker-day {
@@ -1508,6 +1512,47 @@
     }
     .civ-btn {
       width: 100%;
+    }
+  }
+
+  /* ── Action Sheet ─────────────────────────────────────────── */
+
+  .civ-action-sheet {
+    @apply civ-absolute civ-z-50 civ-mt-1 civ-bg-white civ-border
+           civ-border-base-light civ-rounded civ-shadow-lg;
+    display: none;
+  }
+
+  .civ-action-sheet--open {
+    display: block;
+  }
+
+  .civ-action-sheet-backdrop {
+    display: none;
+  }
+
+  @media (max-width: 480px) {
+    .civ-action-sheet--open {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      top: auto;
+      width: 100%;
+      margin: 0;
+      border-radius: var(--civ-border-radius-lg, 12px) var(--civ-border-radius-lg, 12px) 0 0;
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+      max-height: var(--civ-action-sheet-max-height, 50vh);
+      overflow-y: auto;
+      z-index: 100;
+    }
+
+    .civ-action-sheet-backdrop {
+      display: block;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.3);
+      z-index: 99;
     }
   }
 

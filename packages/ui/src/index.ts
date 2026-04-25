@@ -33,3 +33,6 @@ export { CivButtonGroup } from './button-group/index.js';
 
 // Input Group
 export { CivInputGroup } from './input-group/index.js';
+
+// Action Sheet
+export { CivActionSheet } from './action-sheet/index.js';

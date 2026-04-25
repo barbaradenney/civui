@@ -39,7 +39,7 @@ function ensureConditionalStyles(): void {
  * @prop {string} not-equals - Show when the field value does NOT match this
  * @prop {string} includes - Show when the field value is in this comma-separated list
  * @prop {boolean} hasValue - Show when the field has any non-empty value
- * @prop {string} matches - Show when the field value matches this regex pattern
+ * @prop {string} pattern - Show when the field value matches this regex pattern (attribute: `matches`)
  */
 @customElement('civ-conditional')
 export class CivConditional extends LightDomSlotMixin(CivBaseElement) {
@@ -52,7 +52,7 @@ export class CivConditional extends LightDomSlotMixin(CivBaseElement) {
   @property({ type: String, attribute: 'not-equals' }) notEquals = '';
   @property({ type: String }) includes = '';
   @property({ type: Boolean, attribute: 'has-value' }) hasValue = false;
-  @property({ type: String }) matches = '';
+  @property({ type: String, attribute: 'matches' }) pattern = '';
 
   @state() private _visible = false;
 
@@ -133,9 +133,9 @@ export class CivConditional extends LightDomSlotMixin(CivBaseElement) {
       this._visible = allowed.includes(value);
     } else if (this.hasValue) {
       this._visible = value.trim() !== '';
-    } else if (this.matches) {
+    } else if (this.pattern) {
       try {
-        this._visible = new RegExp(this.matches).test(value);
+        this._visible = new RegExp(this.pattern).test(value);
       } catch {
         this._visible = false;
       }

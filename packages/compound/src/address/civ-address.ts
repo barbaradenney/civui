@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivFormElement, dispatch, renderLegend, renderHint, renderError, buildDescribedBy, t } from '@civui/core';
+import { CivFormElement, dispatch, renderLegend, renderHint, renderError, buildDescribedBy, interpolate, t } from '@civui/core';
 import '@civui/inputs';
 import '@civui/controls';
 
@@ -357,6 +357,30 @@ export class CivAddress extends CivFormElement {
   /** Check if the address has any filled fields. */
   isEmpty(): boolean {
     return !this._address.street1 && !this._address.city && !this._address.state && !this._address.zip;
+  }
+
+  /**
+   * An address is considered complete when street1, city, state, and zip
+   * are all filled. street2/street3 and country/military are optional or
+   * have defaults.
+   */
+  private _isComplete(): boolean {
+    const a = this._address;
+    return !!(a.street1.trim() && a.city.trim() && a.state.trim() && a.zip.trim());
+  }
+
+  protected override _updateValidity(): void {
+    if (this.required && !this._isComplete()) {
+      const label = this.legend || this.label || t('fieldFallbackLabel');
+      const anchor = this.querySelector('input, select, textarea') as HTMLElement | null;
+      this._setValidity(
+        { valueMissing: true },
+        this.error || interpolate(this.requiredMessage || t('fieldRequired'), { label }),
+        anchor ?? undefined,
+      );
+    } else {
+      this._setValidity({});
+    }
   }
 }
 

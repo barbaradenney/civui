@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivFormElement, dispatch, renderLegend, renderHint, renderError, buildDescribedBy, t } from '@civui/core';
+import { CivFormElement, dispatch, renderLegend, renderHint, renderError, buildDescribedBy, interpolate, t } from '@civui/core';
 import '@civui/inputs';
 import '@civui/controls';
 
@@ -147,6 +147,22 @@ export class CivSignature extends CivFormElement {
     fd.append(`${prefix}.name`, this._signature.name);
     fd.append(`${prefix}.certified`, this._signature.certified ? 'true' : 'false');
     this.updateFormValue(fd);
+  }
+
+  protected override _updateValidity(): void {
+    // A signature is complete when both the name is filled and the
+    // certify checkbox is ticked (mirrors the public isComplete getter).
+    if (this.required && !this.isComplete) {
+      const label = this.legend || this.label || t('fieldFallbackLabel');
+      const anchor = this.querySelector('input, select, textarea') as HTMLElement | null;
+      this._setValidity(
+        { valueMissing: true },
+        this.error || interpolate(this.requiredMessage || t('fieldRequired'), { label }),
+        anchor ?? undefined,
+      );
+    } else {
+      this._setValidity({});
+    }
   }
 
   override formResetCallback(): void {

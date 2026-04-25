@@ -91,4 +91,40 @@ describe('civ-signature', () => {
     expect(el.signatureValue.name).toBe('');
     expect(el.signatureValue.certified).toBe(false);
   });
+
+  describe('required validation', () => {
+    it('reports invalid when required and empty', async () => {
+      const el = await fixture<CivSignature>('<civ-signature legend="Sign" required></civ-signature>') as CivSignature;
+      await elementUpdated(el);
+      expect(el.checkValidity()).toBe(false);
+      expect(el.validity.valueMissing).toBe(true);
+    });
+
+    it('reports invalid when required and only name is set', async () => {
+      const el = await fixture<CivSignature>('<civ-signature legend="Sign" required></civ-signature>') as CivSignature;
+      el.signatureValue = { name: 'Ada Lovelace', certified: false };
+      await elementUpdated(el);
+      expect(el.checkValidity()).toBe(false);
+    });
+
+    it('reports invalid when required and only certified is set', async () => {
+      const el = await fixture<CivSignature>('<civ-signature legend="Sign" required></civ-signature>') as CivSignature;
+      el.signatureValue = { name: '', certified: true };
+      await elementUpdated(el);
+      expect(el.checkValidity()).toBe(false);
+    });
+
+    it('reports valid when required and both name and certified are set', async () => {
+      const el = await fixture<CivSignature>('<civ-signature legend="Sign" required></civ-signature>') as CivSignature;
+      el.signatureValue = { name: 'Ada Lovelace', certified: true };
+      await elementUpdated(el);
+      expect(el.checkValidity()).toBe(true);
+    });
+
+    it('reports valid when not required even if empty', async () => {
+      const el = await fixture<CivSignature>('<civ-signature legend="Sign"></civ-signature>') as CivSignature;
+      await elementUpdated(el);
+      expect(el.checkValidity()).toBe(true);
+    });
+  });
 });

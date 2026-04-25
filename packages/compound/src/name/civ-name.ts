@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivFormElement, dispatch, renderLegend, renderHint, renderError, buildDescribedBy, t } from '@civui/core';
+import { CivFormElement, dispatch, renderLegend, renderHint, renderError, buildDescribedBy, interpolate, t } from '@civui/core';
 import '@civui/inputs';
 
 export interface NameValue {
@@ -192,6 +192,28 @@ export class CivName extends CivFormElement {
     fd.append(`${prefix}.last`, this._name.last);
     fd.append(`${prefix}.suffix`, this._name.suffix);
     this.updateFormValue(fd);
+  }
+
+  /**
+   * A name is considered complete when both the first and last fields
+   * are filled. Middle and suffix remain optional.
+   */
+  private _isComplete(): boolean {
+    return !!(this._name.first.trim() && this._name.last.trim());
+  }
+
+  protected override _updateValidity(): void {
+    if (this.required && !this._isComplete()) {
+      const label = this.legend || this.label || t('fieldFallbackLabel');
+      const anchor = this.querySelector('input, select, textarea') as HTMLElement | null;
+      this._setValidity(
+        { valueMissing: true },
+        this.error || interpolate(this.requiredMessage || t('fieldRequired'), { label }),
+        anchor ?? undefined,
+      );
+    } else {
+      this._setValidity({});
+    }
   }
 
   override formResetCallback(): void {

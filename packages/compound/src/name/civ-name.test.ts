@@ -102,4 +102,39 @@ describe('civ-name', () => {
     await elementUpdated(el);
     expect(el.nameValue.first).toBe('');
   });
+
+  describe('required validation', () => {
+    it('reports invalid when required and empty', async () => {
+      const el = await fixture<CivName>('<civ-name legend="Your name" required></civ-name>') as CivName;
+      await elementUpdated(el);
+      expect(el.checkValidity()).toBe(false);
+      expect(el.validity.valueMissing).toBe(true);
+    });
+
+    it('reports invalid when required and only first name is set', async () => {
+      const el = await fixture<CivName>('<civ-name legend="Your name" required></civ-name>') as CivName;
+      el.nameValue = { first: 'Ada', middle: '', last: '', suffix: '' };
+      await elementUpdated(el);
+      expect(el.checkValidity()).toBe(false);
+    });
+
+    it('reports valid when required and both first and last are set', async () => {
+      const el = await fixture<CivName>('<civ-name legend="Your name" required></civ-name>') as CivName;
+      el.nameValue = { first: 'Ada', middle: '', last: 'Lovelace', suffix: '' };
+      await elementUpdated(el);
+      expect(el.checkValidity()).toBe(true);
+    });
+
+    it('reports valid when not required even if empty', async () => {
+      const el = await fixture<CivName>('<civ-name legend="Your name"></civ-name>') as CivName;
+      await elementUpdated(el);
+      expect(el.checkValidity()).toBe(true);
+    });
+
+    it('uses requiredMessage when provided', async () => {
+      const el = await fixture<CivName>('<civ-name legend="Your name" required required-message="Please tell us your name"></civ-name>') as CivName;
+      await elementUpdated(el);
+      expect(el.validationMessage).toContain('Please tell us your name');
+    });
+  });
 });

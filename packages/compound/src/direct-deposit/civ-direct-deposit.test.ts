@@ -87,4 +87,33 @@ describe('civ-direct-deposit', () => {
     expect(el.depositValue.accountType).toBe('');
     expect(el.depositValue.routingNumber).toBe('');
   });
+
+  describe('required validation', () => {
+    it('reports invalid when required and empty', async () => {
+      const el = await fixture<CivDirectDeposit>('<civ-direct-deposit legend="Deposit" required></civ-direct-deposit>') as CivDirectDeposit;
+      await elementUpdated(el);
+      expect(el.checkValidity()).toBe(false);
+      expect(el.validity.valueMissing).toBe(true);
+    });
+
+    it('reports invalid when required and only routing number is set', async () => {
+      const el = await fixture<CivDirectDeposit>('<civ-direct-deposit legend="Deposit" required></civ-direct-deposit>') as CivDirectDeposit;
+      el.depositValue = { accountType: '', routingNumber: '123456789', accountNumber: '' };
+      await elementUpdated(el);
+      expect(el.checkValidity()).toBe(false);
+    });
+
+    it('reports valid when required and all three fields are set', async () => {
+      const el = await fixture<CivDirectDeposit>('<civ-direct-deposit legend="Deposit" required></civ-direct-deposit>') as CivDirectDeposit;
+      el.depositValue = { accountType: 'checking', routingNumber: '123456789', accountNumber: '987654' };
+      await elementUpdated(el);
+      expect(el.checkValidity()).toBe(true);
+    });
+
+    it('reports valid when not required even if empty', async () => {
+      const el = await fixture<CivDirectDeposit>('<civ-direct-deposit legend="Deposit"></civ-direct-deposit>') as CivDirectDeposit;
+      await elementUpdated(el);
+      expect(el.checkValidity()).toBe(true);
+    });
+  });
 });

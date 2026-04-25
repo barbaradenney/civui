@@ -1235,10 +1235,33 @@
   .civ-datepicker-dialog {
     @apply civ-absolute civ-z-50 civ-mt-1 civ-bg-white civ-border
            civ-border-base-light civ-rounded civ-shadow-lg civ-p-4;
+    width: max-content;
   }
 
   .civ-datepicker-day {
     @apply civ-w-10 civ-h-10 civ-text-center civ-text-sm civ-rounded civ-cursor-pointer;
+  }
+
+  @media (max-width: 480px) {
+    .civ-datepicker-dialog {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      top: auto;
+      width: 100%;
+      margin: 0;
+      border-radius: var(--civ-border-radius-lg, 12px) var(--civ-border-radius-lg, 12px) 0 0;
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+      max-height: 70vh;
+      overflow-y: auto;
+    }
+
+    .civ-datepicker-day {
+      width: 2rem;
+      height: 2rem;
+      font-size: var(--civ-typography-fontSize-xs, 12px);
+    }
   }
 
   .civ-datepicker-nav-btn {

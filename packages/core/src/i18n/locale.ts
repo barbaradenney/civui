@@ -229,6 +229,30 @@ export interface CivLocaleStrings {
   repeaterWizardAddTitle: string; // "Add {item}"
   repeaterWizardEditTitle: string; // "Edit {item} {index}"
 
+  // Marriage history
+  marriageLegend: string;
+  marriageSpouseLegend: string;
+  marriageDateLegend: string;
+  marriageCityLabel: string;
+  marriageStateLabel: string;
+  marriageStatusLegend: string;
+  marriageStatusCurrent: string;
+  marriageStatusDivorced: string;
+  marriageStatusWidowed: string;
+  marriageStatusAnnulled: string;
+  marriageEndDateLegend: string;
+
+  // Service history
+  serviceLegend: string;
+  serviceBranchLabel: string;
+  serviceStartDateLegend: string;
+  serviceStartDateHint: string;
+  serviceEndDateLegend: string;
+  serviceEndDateHint: string;
+  serviceDischargeLabel: string;
+  serviceNumberLabel: string;
+  serviceNumberHint: string;
+
   // Task list
   taskStatusNotStarted: string;
   taskStatusInProgress: string;
@@ -475,6 +499,28 @@ const defaultStrings: CivLocaleStrings = {
   repeaterEditingAnnouncement: 'Editing {item} {index}',
   repeaterWizardAddTitle: 'Add {item}',
   repeaterWizardEditTitle: 'Edit {item} {index}',
+
+  marriageLegend: 'About this marriage',
+  marriageSpouseLegend: 'Spouse\'s name',
+  marriageDateLegend: 'Date of marriage',
+  marriageCityLabel: 'City where you were married',
+  marriageStateLabel: 'State or country where you were married',
+  marriageStatusLegend: 'Marriage status',
+  marriageStatusCurrent: 'Currently married',
+  marriageStatusDivorced: 'Divorced',
+  marriageStatusWidowed: 'Widowed',
+  marriageStatusAnnulled: 'Annulled',
+  marriageEndDateLegend: 'Date marriage ended',
+
+  serviceLegend: 'About this service period',
+  serviceBranchLabel: 'Branch of service',
+  serviceStartDateLegend: 'Service start date',
+  serviceStartDateHint: 'If you don\'t know the exact date, enter your best estimate',
+  serviceEndDateLegend: 'Service end date',
+  serviceEndDateHint: 'If you don\'t know the exact date, enter your best estimate',
+  serviceDischargeLabel: 'Character of service',
+  serviceNumberLabel: 'Service number',
+  serviceNumberHint: 'If you served before 1974, enter your service number',
 
   taskStatusNotStarted: 'Not started',
   taskStatusInProgress: 'In progress',

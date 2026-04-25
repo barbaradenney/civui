@@ -1,0 +1,57 @@
+---
+title: Marriage History
+sidebar_position: 6
+sidebar_label: Marriage History
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
+# Marriage History
+
+`<civ-marriage-history>`
+
+Compound component for a single marriage entry — spouse name, marriage date and location, status, and conditional end date. Designed to be used inside a `civ-repeater` for multiple marriages.
+
+## Examples
+
+### Default
+
+<StoryEmbed id="forms-compound-marriage-history--default" />
+
+### With Errors
+
+<StoryEmbed id="forms-compound-marriage-history--with-errors" />
+
+### In Repeater
+
+<StoryEmbed id="forms-compound-marriage-history--in-repeater" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-compound-marriage-history--default)
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `legend` | `string` | `'About this marriage'` | Fieldset legend |
+| `name` | `string` | `''` | Form field name prefix |
+| `value` | `string` | `''` | JSON-serialized MarriageValue |
+| `required` | `boolean` | `false` | Shows required indicator on legend |
+| `disabled` | `boolean` | `false` | Disables all fields |
+| `spouse-error` | `string` | `''` | Error for spouse name fields |
+| `marriage-date-error` | `string` | `''` | Error for marriage date |
+| `city-error` | `string` | `''` | Error for marriage city |
+| `state-error` | `string` | `''` | Error for marriage state |
+| `status-error` | `string` | `''` | Error for marriage status |
+| `end-date-error` | `string` | `''` | Error for end date |
+
+## Conditional fields
+
+The "Date marriage ended" field only appears when the status is **not** "Currently married." Selecting "Currently married" clears any previously entered end date.
+
+## Usage
+
+```html
+<civ-repeater legend="Marriage history" name="marriages" item-label="marriage" mode="detail" min="0" max="10">
+  <civ-marriage-history name="entry"></civ-marriage-history>
+</civ-repeater>
+```

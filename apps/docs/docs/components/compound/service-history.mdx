@@ -1,0 +1,65 @@
+---
+title: Service History
+sidebar_position: 7
+sidebar_label: Service History
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
+# Service History
+
+`<civ-service-history>`
+
+Compound component for a single military service period — branch, dates, discharge type, and optional service number. Designed to be used inside a `civ-repeater` for multiple service periods.
+
+## Examples
+
+### Default
+
+<StoryEmbed id="forms-compound-service-history--default" />
+
+### With Service Number
+
+<StoryEmbed id="forms-compound-service-history--with-service-number" />
+
+### With Errors
+
+<StoryEmbed id="forms-compound-service-history--with-errors" />
+
+### In Repeater
+
+<StoryEmbed id="forms-compound-service-history--in-repeater" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-compound-service-history--default)
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `legend` | `string` | `'About this service period'` | Fieldset legend |
+| `name` | `string` | `''` | Form field name prefix |
+| `value` | `string` | `''` | JSON-serialized ServicePeriodValue |
+| `required` | `boolean` | `false` | Shows required indicator on legend |
+| `disabled` | `boolean` | `false` | Disables all fields |
+| `show-service-number` | `boolean` | `false` | Show service number field (pre-1974 era) |
+| `branch-error` | `string` | `''` | Error for branch of service |
+| `start-date-error` | `string` | `''` | Error for service start date |
+| `end-date-error` | `string` | `''` | Error for service end date |
+| `discharge-error` | `string` | `''` | Error for character of service |
+| `service-number-error` | `string` | `''` | Error for service number |
+
+## Branch options
+
+Army, Navy, Air Force, Marine Corps, Coast Guard, Space Force, NOAA, USPHS
+
+## Discharge type options
+
+Honorable, General (under honorable conditions), Other than honorable, Bad conduct, Dishonorable, Undesirable
+
+## Usage
+
+```html
+<civ-repeater legend="Service periods" name="service" item-label="service period" mode="detail" min="1" max="20">
+  <civ-service-history name="period"></civ-service-history>
+</civ-repeater>
+```

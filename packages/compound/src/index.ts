@@ -14,6 +14,14 @@ export type { DirectDepositValue } from './direct-deposit/index.js';
 export { CivSignature } from './signature/index.js';
 export type { SignatureValue } from './signature/index.js';
 
+// Marriage History
+export { CivMarriageHistory } from './marriage-history/index.js';
+export type { MarriageValue } from './marriage-history/index.js';
+
+// Service History
+export { CivServiceHistory } from './service-history/index.js';
+export type { ServicePeriodValue } from './service-history/index.js';
+
 // Relationship (person + relationship type with agency presets)
 export { CivRelationship } from './relationship/index.js';
 export type { RelationshipValue } from './relationship/index.js';

@@ -4,15 +4,46 @@ import { CivFormElement, dispatch, interpolate, renderLabel, renderHint, renderE
 
 type FileStatus = 'pending' | 'uploading' | 'success' | 'error';
 
+/**
+ * Represents a file that was uploaded in a previous session and is now
+ * persisted on the server. Used to hydrate `civ-file-upload` when restoring
+ * a saved draft so the user can see what's already attached, remove items,
+ * and continue.
+ */
+export interface InitialFile {
+  /** Original filename. */
+  name: string;
+  /** File size in bytes. Used for display and duplicate detection. */
+  size: number;
+  /** MIME type. Optional — used for the image-preview heuristic. */
+  type?: string;
+  /** Server-side identifier. Echoed back via `civ-file-removed` and `kept-initial-ids` form data so consumers can diff. */
+  id?: string;
+  /** Optional download/preview URL. When provided, the file name renders as an `<a target="_blank">`. */
+  url?: string;
+}
+
 interface UploadedFile {
   name: string;
   size: number;
   type: string;
+  /**
+   * Real File object for browser-side uploads. Initial files (server-resident
+   * restore-from-draft entries) carry a placeholder File so the existing
+   * code paths (`files` getter, FormData submission for new uploads) still
+   * work; check `isInitial` to distinguish.
+   */
   file: File;
   status: FileStatus;
   progress: number;
   error?: string;
   abortController?: AbortController;
+  /** True for entries hydrated from `initialFiles` (server-resident, no real upload). */
+  isInitial?: boolean;
+  /** Server identifier copied from `InitialFile.id`. */
+  id?: string;
+  /** Download URL copied from `InitialFile.url`. */
+  url?: string;
 }
 
 function formatFileSize(bytes: number): string {
@@ -123,6 +154,9 @@ function formatAcceptedTypes(accept: string): string {
  * @fires civ-change - When files are added or removed, detail: { files: File[] }
  * @fires civ-upload-cancel - When a file upload is cancelled, detail: { index, name }
  * @fires civ-upload-retry - When a file upload is retried, detail: { index, name, file }
+ * @fires civ-file-removed - When any file is removed, detail: { index, name, isInitial, id? }
+ *   For initial-files (isInitial=true), `id` echoes the server identifier so the
+ *   consumer can issue a DELETE; for browser-side files, isInitial=false and no id.
  * @fires civ-analytics - Analytics tracking event on file add/remove
  *
  * Note: Event detail uses `{ files }` instead of the standard `{ value }`
@@ -174,11 +208,32 @@ export class CivFileUpload extends CivFormElement {
   @property({ type: String, attribute: 'file-type-error' }) fileTypeError = '';
   @property({ type: String, attribute: 'max-files-error' }) maxFilesError = '';
 
+  /**
+   * Files that were uploaded in a previous session and are now persisted
+   * on the server. Use to restore a saved draft so the user sees what's
+   * already attached, can remove items, and continue. Set via JS property:
+   *
+   * ```js
+   * el.initialFiles = [
+   *   { id: 'srv-abc', name: 'tax-return.pdf', size: 1240000, url: '/files/srv-abc' },
+   * ];
+   * ```
+   *
+   * Hydrated once on first connect — subsequent property changes are
+   * ignored to avoid mid-flow surprises (use `_files`-driven imperative
+   * APIs if you need to manipulate the list at runtime).
+   */
+  @property({ type: Array, attribute: false }) initialFiles: InitialFile[] = [];
+
   @state() private _files: UploadedFile[] = [];
   @state() private _dragging = false;
 
+  /** IDs of initial files the user has removed since hydration. */
+  private _removedInitialIds = new Set<string>();
+
   private _previewUrls = new Map<File, string>();
   private _progressAnnounceTimer?: ReturnType<typeof setTimeout>;
+  private _hydratedFromInitial = false;
 
   private _boundDragOver = this._onDragOver.bind(this);
   private _boundDragLeave = this._onDragLeave.bind(this);
@@ -302,7 +357,9 @@ export class CivFileUpload extends CivFormElement {
                           ${file.status === 'error'
                             ? html`<span class="civ-icon civ-icon--error civ-text-error" aria-hidden="true"></span>`
                             : nothing}
-                          <span class="civ-font-semibold">${file.name}</span>
+                          ${file.isInitial && file.url
+                            ? html`<a class="civ-font-semibold" href="${file.url}" target="_blank" rel="noopener noreferrer">${file.name}</a>`
+                            : html`<span class="civ-font-semibold">${file.name}</span>`}
                           <span class="civ-ms-2">(${formatFileSize(file.size)})</span>
                         </span>
                         ${file.status === 'uploading' ? html`
@@ -355,6 +412,49 @@ export class CivFileUpload extends CivFormElement {
           : nothing}
       </div>
     `;
+  }
+
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this._maybeHydrateInitialFiles();
+  }
+
+  override updated(changed: Map<string, unknown>): void {
+    super.updated(changed);
+    // initialFiles can land async (e.g. fetched after mount) — hydrate when
+    // it first becomes non-empty. Subsequent reassignments after hydration
+    // are ignored intentionally to avoid mid-flow surprises.
+    if (changed.has('initialFiles')) {
+      this._maybeHydrateInitialFiles();
+    }
+  }
+
+  /**
+   * Populate `_files` from `initialFiles` exactly once. Each entry becomes
+   * a successful UploadedFile with `isInitial: true` so it's excluded from
+   * upload lifecycle and FormData. Idempotent — safe to call multiple times.
+   */
+  private _maybeHydrateInitialFiles(): void {
+    if (this._hydratedFromInitial) return;
+    if (!this.initialFiles || this.initialFiles.length === 0) return;
+
+    const hydrated: UploadedFile[] = this.initialFiles.map((f) => ({
+      name: f.name,
+      size: f.size,
+      type: f.type ?? '',
+      // Placeholder File so the existing rendering / `files` getter shape
+      // continues to work. Never sent in FormData (skipped by isInitial flag).
+      file: new File([], f.name, { type: f.type ?? '' }),
+      status: 'success' as FileStatus,
+      progress: 100,
+      isInitial: true,
+      ...(f.id ? { id: f.id } : {}),
+      ...(f.url ? { url: f.url } : {}),
+    }));
+
+    this._files = [...hydrated, ...this._files];
+    this._hydratedFromInitial = true;
+    this._updateFormData();
   }
 
   override disconnectedCallback(): void {
@@ -486,16 +586,19 @@ export class CivFileUpload extends CivFormElement {
 
   /**
    * Returns true if `file` is already in the current list. Matches by
-   * name + size + lastModified — close enough to "the same file" for
-   * UX purposes without requiring a content hash.
+   * name + size + lastModified for browser-side files (close enough to
+   * "the same file" for UX purposes). Initial files (server-resident)
+   * have no real `lastModified`, so they match on name + size only —
+   * accepted as a reasonable trade since re-uploading a previously-saved
+   * file is the expected reason a consumer would see a name+size match
+   * after draft restore.
    */
   private _isDuplicate(file: File): boolean {
-    return this._files.some(
-      (existing) =>
-        existing.name === file.name &&
-        existing.size === file.size &&
-        existing.file.lastModified === file.lastModified,
-    );
+    return this._files.some((existing) => {
+      if (existing.name !== file.name || existing.size !== file.size) return false;
+      if (existing.isInitial) return true;
+      return existing.file.lastModified === file.lastModified;
+    });
   }
 
   private _addFiles(newFiles: File[]): void {
@@ -563,11 +666,28 @@ export class CivFileUpload extends CivFormElement {
       if (removed.abortController) {
         removed.abortController.abort();
       }
+      if (removed.isInitial && removed.id) {
+        this._removedInitialIds.add(removed.id);
+      }
     }
     this._files = this._files.filter((_, i) => i !== index);
     if (this._files.length === 0) this.error = '';
     this._updateFormData();
     this._dispatchChange();
+    if (removed) {
+      const detail: {
+        index: number;
+        name: string;
+        isInitial: boolean;
+        id?: string;
+      } = {
+        index,
+        name: removed.name,
+        isInitial: !!removed.isInitial,
+      };
+      if (removed.id) detail.id = removed.id;
+      dispatch(this, 'civ-file-removed', detail);
+    }
     this.sendAnalytics('remove', { fileCount: this._files.length });
     this.announce(interpolate(this.fileRemovedMessage || t('fileUploadFileRemovedMessage'), { total: this._files.length }));
 
@@ -584,18 +704,49 @@ export class CivFileUpload extends CivFormElement {
     });
   }
 
+  /** IDs of initial files the user has removed since hydration. */
+  get removedInitialFileIds(): string[] {
+    return [...this._removedInitialIds];
+  }
+
+  /** IDs of initial files still present in the list. */
+  get keptInitialFileIds(): string[] {
+    return this._files.filter((f) => f.isInitial && f.id).map((f) => f.id!);
+  }
+
   private _updateFormData(): void {
+    const newFiles = this._files.filter((f) => !f.isInitial);
+    const keptIds = this._files.filter((f) => f.isInitial && f.id).map((f) => f.id!);
+
     if (this._files.length === 0) {
       this.value = '';
       this.updateFormValue(null);
-    } else {
-      this.value = this._files.map((f) => f.name).join(', ');
-      const formData = new FormData();
-      for (const f of this._files) {
-        formData.append(this.name || 'file', f.file);
-      }
-      this.updateFormValue(formData);
+      return;
     }
+
+    // Visible value reflects the full list (initial + new) so the standard
+    // value-as-comma-list contract still works for consumers that only read
+    // the value attribute. FormData carries a structural distinction:
+    //   - new files: appended as File objects under `${name}`
+    //   - kept initial files: appended as string ids under `${name}.kept-initial-ids`
+    // The server can diff: ids it issued, minus kept-initial-ids = removed.
+    this.value = this._files.map((f) => f.name).join(', ');
+
+    if (newFiles.length === 0 && keptIds.length === 0) {
+      // All-initial list with no IDs to track — submit nothing.
+      this.updateFormValue(null);
+      return;
+    }
+
+    const formData = new FormData();
+    for (const f of newFiles) {
+      formData.append(this.name || 'file', f.file);
+    }
+    const idKey = `${this.name || 'file'}.kept-initial-ids`;
+    for (const id of keptIds) {
+      formData.append(idKey, id);
+    }
+    this.updateFormValue(formData);
   }
 
   private _dispatchChange(): void {
@@ -607,9 +758,14 @@ export class CivFileUpload extends CivFormElement {
   override formResetCallback(): void {
     this._revokeAllPreviewUrls();
     this._files = [];
+    this._removedInitialIds.clear();
+    this._hydratedFromInitial = false;
     this.value = '';
     this.error = '';
-    this.updateFormValue(null);
+    // Restore initial files so a draft-edit form snaps back to its
+    // saved state on reset, matching native form-reset semantics.
+    this._maybeHydrateInitialFiles();
+    if (this._files.length === 0) this.updateFormValue(null);
     const input = this.querySelector(`#${this._inputId}`) as HTMLInputElement | null;
     if (input) input.value = '';
     dispatch(this, 'civ-reset');

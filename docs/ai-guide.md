@@ -427,15 +427,35 @@ Drag-and-drop file upload with validation.
 - `capture` — `'user'` | `'environment'` | `''` — mobile camera hint, passed through to the native `<input type="file">`. `'environment'` uses the back camera (document scan), `'user'` uses the front camera (selfie). Pair with `accept="image/*"`.
 - `variant` — `'default'` | `'compact'` | `'full'`
 - `show-preview` — render image thumbnails for image files
+- `initialFiles` — JS property (`InitialFile[]`). Restore previously-uploaded files for draft editing — see "Draft restore" below.
 
 **Built-in validation:**
 - Empty files (0 bytes) rejected with `fileUploadEmptyFile`.
-- **Duplicates** (same name + size + lastModified) rejected with `fileUploadDuplicateError`. Removing then re-adding works.
+- **Duplicates** (same name + size + lastModified for browser-side files; name + size only for initial files) rejected with `fileUploadDuplicateError`. Removing then re-adding works.
 - File type / size / count rejections surface through the existing error channel.
 
 **i18n props:** `dragText`, `browseText`, `acceptedLabel`, `maxSizeLabel`, `removeText`, `removeAriaLabel`, `filesListLabel`, `fileAddedMessage`, `fileRemovedMessage`, `fileSizeError`, `fileTypeError`, `maxFilesError`
 
-**Event detail:** `{ files: File[] }`
+**Events:**
+- `civ-input` / `civ-change` — `{ files: File[] }` (full list including initial)
+- `civ-file-removed` — `{ index, name, isInitial, id? }` — fired on every remove. For initial files, `isInitial: true` and `id` echoes the server identifier so consumers can issue `DELETE /api/files/{id}` immediately.
+
+**Draft restore (`initialFiles`)**
+
+Hydrate the file list from a previous session so the user sees what's already attached, can remove items, and continue. Set the JS property:
+
+```js
+el.initialFiles = [
+  { id: 'srv-001', name: 'tax-return.pdf', size: 1240000, type: 'application/pdf', url: '/files/srv-001' },
+];
+```
+
+Initial files render as already-successful entries. When `url` is provided the file name links to it (`target="_blank"`). The `id` round-trips via `civ-file-removed` and the form submission:
+
+- `${name}` — newly-uploaded `File` objects (existing behavior).
+- `${name}.kept-initial-ids` — string entries listing the IDs of initial files **still in the list**. Server diffs against the originally-issued IDs to compute removals.
+
+Public getters: `el.removedInitialFileIds` (IDs removed since hydration), `el.keptInitialFileIds` (IDs still present). `formResetCallback()` restores the initial list and clears removed-id tracking.
 
 **Example:**
 ```html

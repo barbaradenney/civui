@@ -518,3 +518,141 @@ describe('civ-file-upload capture prop', () => {
     expect(input.getAttribute('capture')).toBe('user');
   });
 });
+
+describe('civ-file-upload initialFiles (draft restore)', () => {
+  afterEach(cleanupFixtures);
+
+  it('hydrates the file list from initialFiles on first connect', async () => {
+    const el = await fixture('<civ-file-upload label="Docs" name="docs" multiple></civ-file-upload>') as any;
+    el.initialFiles = [
+      { id: 'srv-1', name: 'tax-return.pdf', size: 1024, type: 'application/pdf', url: '/files/srv-1' },
+      { id: 'srv-2', name: 'w2.pdf', size: 2048, type: 'application/pdf' },
+    ];
+    await elementUpdated(el);
+
+    expect(el.files.length).toBe(2);
+    expect(el.files[0].name).toBe('tax-return.pdf');
+    expect(el.querySelectorAll('.civ-file-item').length).toBe(2);
+  });
+
+  it('renders the file name as a download link when url is provided', async () => {
+    const el = await fixture('<civ-file-upload label="Docs" name="docs"></civ-file-upload>') as any;
+    el.initialFiles = [
+      { id: 'srv-1', name: 'report.pdf', size: 100, url: 'https://example.test/report.pdf' },
+    ];
+    await elementUpdated(el);
+
+    const link = el.querySelector('.civ-file-item a') as HTMLAnchorElement;
+    expect(link).not.toBeNull();
+    expect(link.href).toBe('https://example.test/report.pdf');
+    expect(link.target).toBe('_blank');
+    expect(link.rel).toBe('noopener noreferrer');
+    expect(link.textContent).toBe('report.pdf');
+  });
+
+  it('renders a plain span when no url is provided', async () => {
+    const el = await fixture('<civ-file-upload label="Docs" name="docs"></civ-file-upload>') as any;
+    el.initialFiles = [{ id: 'srv-1', name: 'report.pdf', size: 100 }];
+    await elementUpdated(el);
+
+    expect(el.querySelector('.civ-file-item a')).toBeNull();
+    expect(el.querySelector('.civ-file-item .civ-font-semibold')!.tagName).toBe('SPAN');
+  });
+
+  it('hydration is idempotent — assigning initialFiles twice does not duplicate', async () => {
+    const el = await fixture('<civ-file-upload label="Docs" name="docs" multiple></civ-file-upload>') as any;
+    el.initialFiles = [{ id: 'srv-1', name: 'a.pdf', size: 100 }];
+    await elementUpdated(el);
+    expect(el.files.length).toBe(1);
+
+    // Reassigning post-hydration is intentionally ignored to avoid mid-flow surprises.
+    el.initialFiles = [
+      { id: 'srv-1', name: 'a.pdf', size: 100 },
+      { id: 'srv-2', name: 'b.pdf', size: 200 },
+    ];
+    await elementUpdated(el);
+
+    expect(el.files.length).toBe(1);
+  });
+
+  it('rejects a re-uploaded file that matches an initial file by name + size', async () => {
+    const el = await fixture('<civ-file-upload label="Docs" name="docs" multiple></civ-file-upload>') as any;
+    el.initialFiles = [{ id: 'srv-1', name: 'report.pdf', size: 11, type: 'application/pdf' }];
+    await elementUpdated(el);
+
+    el._addFiles([new File(['hello world'], 'report.pdf', { type: 'application/pdf', lastModified: 1 })]);
+    await el.updateComplete;
+
+    expect(el.files.length).toBe(1);
+    expect(el.error).toContain('already in the list');
+  });
+
+  it('fires civ-file-removed with isInitial=true and the server id when an initial file is removed', async () => {
+    const el = await fixture('<civ-file-upload label="Docs" name="docs"></civ-file-upload>') as any;
+    el.initialFiles = [{ id: 'srv-1', name: 'report.pdf', size: 100 }];
+    await elementUpdated(el);
+
+    let captured: any = null;
+    el.addEventListener('civ-file-removed', ((e: CustomEvent) => { captured = e.detail; }) as EventListener);
+
+    el._removeFile(0);
+    await elementUpdated(el);
+
+    expect(captured).not.toBeNull();
+    expect(captured.isInitial).toBe(true);
+    expect(captured.id).toBe('srv-1');
+    expect(captured.name).toBe('report.pdf');
+    expect(el.files.length).toBe(0);
+    expect(el.removedInitialFileIds).toEqual(['srv-1']);
+  });
+
+  it('fires civ-file-removed with isInitial=false for browser-side files', async () => {
+    const el = await fixture('<civ-file-upload label="Docs" name="docs"></civ-file-upload>') as any;
+    el._addFiles([new File(['x'], 'new.pdf', { type: 'application/pdf', lastModified: 1 })]);
+    await elementUpdated(el);
+
+    let captured: any = null;
+    el.addEventListener('civ-file-removed', ((e: CustomEvent) => { captured = e.detail; }) as EventListener);
+
+    el._removeFile(0);
+    await elementUpdated(el);
+
+    expect(captured.isInitial).toBe(false);
+    expect(captured.id).toBeUndefined();
+  });
+
+  it('keptInitialFileIds reflects which initial files are still present', async () => {
+    const el = await fixture('<civ-file-upload label="Docs" name="docs" multiple></civ-file-upload>') as any;
+    el.initialFiles = [
+      { id: 'srv-1', name: 'a.pdf', size: 100 },
+      { id: 'srv-2', name: 'b.pdf', size: 200 },
+      { id: 'srv-3', name: 'c.pdf', size: 300 },
+    ];
+    await elementUpdated(el);
+
+    expect(el.keptInitialFileIds).toEqual(['srv-1', 'srv-2', 'srv-3']);
+
+    el._removeFile(1);
+    await elementUpdated(el);
+    expect(el.keptInitialFileIds).toEqual(['srv-1', 'srv-3']);
+    expect(el.removedInitialFileIds).toEqual(['srv-2']);
+  });
+
+  it('formResetCallback restores initial files and clears removed-id tracking', async () => {
+    const el = await fixture('<civ-file-upload label="Docs" name="docs"></civ-file-upload>') as any;
+    el.initialFiles = [{ id: 'srv-1', name: 'a.pdf', size: 100 }];
+    await elementUpdated(el);
+
+    el._removeFile(0);
+    await elementUpdated(el);
+    expect(el.files.length).toBe(0);
+    expect(el.removedInitialFileIds).toEqual(['srv-1']);
+
+    el.formResetCallback();
+    await elementUpdated(el);
+
+    expect(el.files.length).toBe(1);
+    expect(el.removedInitialFileIds).toEqual([]);
+    expect(el.keptInitialFileIds).toEqual(['srv-1']);
+  });
+});

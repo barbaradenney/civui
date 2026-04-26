@@ -146,14 +146,14 @@ describe('civ-alert', () => {
   it('shows dismiss button when dismissible is true', async () => {
     const el = await fixture('<civ-alert dismissible>Dismissible alert.</civ-alert>');
 
-    const btn = el.querySelector('.civ-alert__dismiss');
+    const btn = el.querySelector('.civ-close-btn');
     expect(btn).not.toBeNull();
   });
 
   it('hides dismiss button when dismissible is false', async () => {
     const el = await fixture('<civ-alert>Non-dismissible alert.</civ-alert>');
 
-    const btn = el.querySelector('.civ-alert__dismiss');
+    const btn = el.querySelector('.civ-close-btn');
     expect(btn).toBeNull();
   });
 
@@ -163,7 +163,7 @@ describe('civ-alert', () => {
     const handler = vi.fn();
     el.addEventListener('civ-dismiss', handler as EventListener);
 
-    const btn = el.querySelector('.civ-alert__dismiss') as HTMLButtonElement;
+    const btn = el.querySelector('.civ-close-btn') as HTMLButtonElement;
     btn.click();
 
     expect(handler).toHaveBeenCalledOnce();
@@ -175,7 +175,7 @@ describe('civ-alert', () => {
     const parent = el.parentElement!;
     expect(parent.contains(el)).toBe(true);
 
-    const btn = el.querySelector('.civ-alert__dismiss') as HTMLButtonElement;
+    const btn = el.querySelector('.civ-close-btn') as HTMLButtonElement;
     btn.click();
 
     // Removal is deferred via queueMicrotask for screen reader announcement
@@ -189,7 +189,7 @@ describe('civ-alert', () => {
 
     el.addEventListener('civ-dismiss', (e) => e.preventDefault());
 
-    const btn = el.querySelector('.civ-alert__dismiss') as HTMLButtonElement;
+    const btn = el.querySelector('.civ-close-btn') as HTMLButtonElement;
     btn.click();
 
     await new Promise((r) => queueMicrotask(r));
@@ -199,14 +199,14 @@ describe('civ-alert', () => {
   it('dismiss button has aria-label', async () => {
     const el = await fixture('<civ-alert dismissible>Alert.</civ-alert>');
 
-    const btn = el.querySelector('.civ-alert__dismiss')!;
+    const btn = el.querySelector('.civ-close-btn')!;
     expect(btn.getAttribute('aria-label')).toBe('Dismiss alert');
   });
 
   it('applies focus-visible:civ-focus-ring on dismiss button', async () => {
     const el = await fixture('<civ-alert dismissible>Alert.</civ-alert>');
 
-    const btn = el.querySelector('.civ-alert__dismiss')!;
+    const btn = el.querySelector('.civ-close-btn')!;
     expect(btn.className).toContain('focus-visible:civ-focus-ring');
   });
 
@@ -246,7 +246,7 @@ describe('civ-alert', () => {
     const handler = vi.fn();
     el.addEventListener('civ-analytics', handler as EventListener);
 
-    const btn = el.querySelector('.civ-alert__dismiss') as HTMLButtonElement;
+    const btn = el.querySelector('.civ-close-btn') as HTMLButtonElement;
     btn.click();
 
     expect(handler).toHaveBeenCalledOnce();
@@ -261,7 +261,7 @@ describe('civ-alert', () => {
     const handler = vi.fn();
     el.addEventListener('civ-analytics', handler as EventListener);
 
-    const btn = el.querySelector('.civ-alert__dismiss') as HTMLButtonElement;
+    const btn = el.querySelector('.civ-close-btn') as HTMLButtonElement;
     btn.click();
 
     expect(handler).not.toHaveBeenCalled();

@@ -79,13 +79,12 @@ export class CivModal extends LightDomSlotMixin(CivBaseElement) {
               <h2 id="civ-modal-heading" class="civ-heading-lg civ-m-0">${this.heading}</h2>
             ` : nothing}
             ${!this.noCloseButton ? html`
-              <civ-action-button
-                variant="tertiary"
-                label="Close"
-                icon-start="close"
+              <button
+                type="button"
+                class="civ-close-btn civ-modal__close focus-visible:civ-focus-ring"
+                aria-label="Close"
                 @click="${this._requestClose}"
-                class="civ-modal__close"
-              ></civ-action-button>
+              ><civ-icon name="close" aria-hidden="true"></civ-icon></button>
             ` : nothing}
           </div>
         ` : nothing}

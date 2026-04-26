@@ -2066,6 +2066,23 @@
     color: var(--civ-color-white-DEFAULT);
   }
 
+  /* ── Shared Close Button ─────────────────────────────────── */
+  /* Used by modal, alert, and any component with a dismiss/close action.
+     Renders as a minimal icon-only button with WCAG-compliant touch target. */
+
+  .civ-close-btn {
+    @apply civ-inline-flex civ-items-center civ-justify-center
+           civ-bg-transparent civ-border-0 civ-p-1 civ-cursor-pointer civ-rounded;
+    min-width: 44px;
+    min-height: 44px;
+    color: inherit;
+  }
+
+  .civ-close-btn:hover {
+    @apply civ-bg-base-lightest;
+  }
+
+  /* Legacy alias — alert still references this class */
   .civ-alert__dismiss {
     @apply civ-inline-flex civ-items-center civ-justify-center
            civ-bg-transparent civ-border-0 civ-p-2 civ-cursor-pointer civ-rounded;

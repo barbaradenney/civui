@@ -6,8 +6,6 @@ export type AlertVariant = 'info' | 'warning' | 'error' | 'success';
 export type AlertStyle = 'primary' | 'secondary' | 'tertiary';
 export type AlertHeadingLevel = 2 | 3 | 4 | 5 | 6;
 
-// Inline SVG close icon (16x16) — avoids external icon dependency
-const closeIcon = html`<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M12.354 4.354a.5.5 0 0 0-.708-.708L8 7.293 4.354 3.646a.5.5 0 1 0-.708.708L7.293 8l-3.647 3.646a.5.5 0 0 0 .708.708L8 8.707l3.646 3.647a.5.5 0 0 0 .708-.708L8.707 8l3.647-3.646z"/></svg>`;
 
 /**
  * CivUI Alert
@@ -89,10 +87,10 @@ export class CivAlert extends LightDomTextMixin(CivBaseElement) {
               ? html`
                   <button
                     type="button"
-                    class="civ-alert__dismiss focus-visible:civ-focus-ring"
+                    class="civ-close-btn focus-visible:civ-focus-ring"
                     aria-label="${t('alertDismissLabel')}"
                     @click="${this._onDismiss}"
-                  >${closeIcon}</button>
+                  ><civ-icon name="close" aria-hidden="true"></civ-icon></button>
                 `
               : nothing}
           </div>

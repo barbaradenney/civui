@@ -117,6 +117,21 @@ export class CivCombobox extends CivFormElement {
               </svg>
             </button>
           ` : nothing}
+          <button
+            type="button"
+            class="civ-combobox-chevron"
+            data-civ-combobox-chevron
+            data-expanded="${this._open ? '' : nothing}"
+            aria-hidden="true"
+            tabindex="-1"
+            ?disabled="${this.disabled}"
+            @mousedown="${this._onChevronMousedown}"
+            @click="${this._onChevronClick}"
+          >
+            <svg aria-hidden="true" class="civ-w-4 civ-h-4" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+            </svg>
+          </button>
 
           ${this._open && filtered.length > 0
             ? html`
@@ -225,6 +240,34 @@ export class CivCombobox extends CivFormElement {
     dispatch(this, 'civ-change', { value: '' });
     this._setOpen(false);
     // Return focus to the input
+    const input = this.querySelector(`#${this._inputId}`) as HTMLInputElement | null;
+    input?.focus();
+  }
+
+  /**
+   * Prevent the input from losing focus when the chevron is clicked. Without
+   * this, the click would fire `blur` first and the listbox close logic
+   * would race the toggle.
+   */
+  private _onChevronMousedown(e: MouseEvent): void {
+    e.preventDefault();
+  }
+
+  /**
+   * Toggle the listbox. Clicking the chevron always shows the full unfiltered
+   * list — clears any in-progress filter so users browsing all options see
+   * everything.
+   */
+  private _onChevronClick(e: Event): void {
+    if (this.disabled) return;
+    e.stopPropagation();
+    if (this._open) {
+      this._setOpen(false);
+    } else {
+      this._filter = '';
+      this._activeIndex = -1;
+      this._setOpen(true);
+    }
     const input = this.querySelector(`#${this._inputId}`) as HTMLInputElement | null;
     input?.focus();
   }

@@ -1247,6 +1247,43 @@
     letter-spacing: 0.05em;
   }
 
+  /* Chevron toggle on the trailing edge of the input. Decorative — keyboard
+     users already get the listbox via ArrowDown/ArrowUp. */
+  .civ-combobox-chevron {
+    @apply civ-absolute civ-flex civ-items-center civ-justify-center
+           civ-border-0 civ-bg-transparent civ-cursor-pointer civ-rounded
+           civ-p-1;
+    inset-inline-end: 0.25rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--civ-color-base-dark);
+  }
+  .civ-combobox-chevron:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+  .civ-combobox-chevron svg {
+    transition: transform 0.15s ease;
+  }
+  .civ-combobox-chevron[data-expanded] svg {
+    transform: rotate(180deg);
+  }
+
+  /* Reserve space for the chevron on the input. */
+  [data-civ-combobox] > input {
+    padding-inline-end: 2.25rem;
+  }
+
+  /* When the clear button is present too, shift it left of the chevron and
+     widen the input padding to accommodate both. */
+  [data-civ-combobox] > .civ-clear-btn {
+    inset-inline-end: 2.25rem;
+    right: auto;
+  }
+  [data-civ-combobox]:has(> .civ-clear-btn) > input {
+    padding-inline-end: 4.25rem;
+  }
+
   /* ── Date Picker ────────────────────────────────────────────── */
 
   /* Date picker dialog extends the shared action sheet mobile pattern */

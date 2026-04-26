@@ -116,12 +116,21 @@ export class CivCombobox extends CivFormElement {
     return typeof this.loadOptions === 'function';
   }
 
+  private _cachedFilter = '';
+  private _cachedFilteredOptions: ComboboxOption[] = [];
+
   private get _filteredOptions(): ComboboxOption[] {
     // Remote mode: server-supplied results are already filtered.
     if (this._isRemote) return this._remoteOptions;
     if (!this._filter) return this.options;
+    // Memoize: only re-filter when the filter text changes
+    if (this._filter === this._cachedFilter && this._cachedFilteredOptions.length > 0) {
+      return this._cachedFilteredOptions;
+    }
     const lower = this._filter.toLowerCase();
-    return this.options.filter((o) => o.label.toLowerCase().includes(lower));
+    this._cachedFilter = this._filter;
+    this._cachedFilteredOptions = this.options.filter((o) => o.label.toLowerCase().includes(lower));
+    return this._cachedFilteredOptions;
   }
 
   /** True when remote mode is active and the user must type more to trigger a fetch. */

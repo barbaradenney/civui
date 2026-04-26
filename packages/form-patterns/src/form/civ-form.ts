@@ -148,6 +148,11 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
   @state() private _prefillError = '';
   private _initialValues = new Map<string, string>();
 
+  /** Cached query for form field elements. Avoids repeated querySelectorAll. */
+  private _getFields(): NodeListOf<Element> {
+    return this.querySelectorAll('[data-civ-form-field]');
+  }
+
   private _summaryId = this.generateId('summary');
   private _summaryHeadingId = this.generateId('summary-heading');
   private _boundOnClick = this._onButtonClick.bind(this);
@@ -512,7 +517,7 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
 
   private _captureInitialValues(): void {
     this._initialValues.clear();
-    const fields = this.querySelectorAll('[data-civ-form-field]') as NodeListOf<CivFormFieldLike>;
+    const fields = this._getFields() as NodeListOf<CivFormFieldLike>;
     fields.forEach((f) => {
       if (f.name) this._initialValues.set(f.name, f.value ?? '');
     });
@@ -520,7 +525,7 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
 
   private _checkDirty(): void {
     if (!this.trackDirty) return;
-    const fields = this.querySelectorAll('[data-civ-form-field]') as NodeListOf<CivFormFieldLike>;
+    const fields = this._getFields() as NodeListOf<CivFormFieldLike>;
     let dirty = false;
     fields.forEach((f) => {
       if (f.name && this._initialValues.get(f.name) !== (f.value ?? '')) dirty = true;
@@ -547,7 +552,7 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
       if (!saved) return;
       const data = JSON.parse(saved) as Record<string, string>;
       requestAnimationFrame(() => {
-        const fields = this.querySelectorAll('[data-civ-form-field]') as NodeListOf<CivFormFieldLike>;
+        const fields = this._getFields() as NodeListOf<CivFormFieldLike>;
         fields.forEach((field) => {
           if (field.name && data[field.name] !== undefined) {
             field.value = data[field.name];
@@ -564,7 +569,7 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
     this._persistTimer = setTimeout(() => {
       try {
         const data: Record<string, string> = {};
-        const fields = this.querySelectorAll('[data-civ-form-field]') as NodeListOf<CivFormFieldLike>;
+        const fields = this._getFields() as NodeListOf<CivFormFieldLike>;
         fields.forEach((field) => {
           // Skip PII-flagged fields (SSN, EIN masks)
           if (field.hasAttribute('data-civ-pii')) return;
@@ -603,7 +608,7 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
     if (typeof window === 'undefined' || !window.location) return;
     const params = new URLSearchParams(window.location.search);
     requestAnimationFrame(() => {
-      const fields = this.querySelectorAll('[data-civ-form-field]') as NodeListOf<CivFormFieldLike>;
+      const fields = this._getFields() as NodeListOf<CivFormFieldLike>;
       // Allowlist: only prefill fields that exist in the form, matching by name
       fields.forEach((field) => {
         if (field.name && params.has(field.name)) {
@@ -657,7 +662,7 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
     if (!this.prefillData || Object.keys(this.prefillData).length === 0) return;
 
     requestAnimationFrame(() => {
-      const fields = this.querySelectorAll('[data-civ-form-field]') as NodeListOf<CivFormFieldLike>;
+      const fields = this._getFields() as NodeListOf<CivFormFieldLike>;
       const appliedFields: string[] = [];
 
       fields.forEach((field) => {

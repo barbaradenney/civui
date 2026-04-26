@@ -77,6 +77,10 @@ Each CSS icon maps to platform-native equivalents:
 
 CI enforces icon parity across all three platforms.
 
+## Authoring Icons
+
+To edit an existing icon or author a new one, run `pnpm storybook` and open **Core › Icon › Editor**. The editor gives you a live CSS textarea with a scoped preview, a snippet palette of common shape primitives (chevron, triangle, circle, diamond, etc.), a multi-size preview (16/24/32/64 px), color swatches, a pixel grid, and a dark-mode toggle. Edits never touch the real library — when you're happy, click **Copy CSS** and paste the rules into `packages/core/src/styles/components.css`, then add the icon's name and platform mappings to `packages/core/src/icon/icon-library.ts`.
+
 ## Component Reference
 
 See the [Icon component page](../components/core/icon) for the full props table and Storybook examples.

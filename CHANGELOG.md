@@ -25,6 +25,7 @@ across all 21 components.
 - **`civ-summary`** — Cancelable `civ-edit` event on edit-link clicks (detail: `{ section, item?, href }`). Calling `preventDefault()` suppresses default navigation for SPA routing.
 - **`CivBooleanFormElement`** — `extra-describedby` prop appends caller-supplied IDs to the control's `aria-describedby` chain.
 - **Shared `InputWidth` type** in `@civui/core` (replaces per-component duplicates).
+- **Icon editor (Storybook)** — New `Core › Icon › Editor` story with picker, live CSS textarea, scoped preview, snippet palette, multi-size + color swatches, pixel grid, and dark-mode toggle. Authoring path for new CSS icons no longer requires a build/reload cycle.
 
 ### Changed
 
@@ -55,7 +56,8 @@ across all 21 components.
 ### Documentation
 
 - New Storybook stories cover every new feature with a `parameters.docs.description.story` blurb.
-- `docs/ai-guide.md` updated for every new prop and event.
+- `docs/ai-guide.md` updated for every new prop and event, plus a pointer to the new icon editor.
+- `CLAUDE.md` Icon System section points at the editor as the authoring entry point.
 - Docusaurus `apps/docs` MDX pages embed the new stories alongside their existing examples.
 - New `docs/ai-guide.md` section flags `@civui/schema` as dormant — schemas are out of date and not consumed by CI; treat as design-time aspirational documentation.
 

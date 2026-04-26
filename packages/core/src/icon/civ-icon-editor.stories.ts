@@ -336,24 +336,22 @@ class CivIconEditor extends LitElement {
     );
     return html`
       <aside class="civ-icon-editor__picker">
-        <div class="civ-icon-editor__picker-controls">
-          <input
-            type="search"
-            placeholder="Filter icons…"
-            .value=${this._filter}
-            @input=${(e: Event) => {
-              this._filter = (e.target as HTMLInputElement).value;
-            }}
-            class="civ-icon-editor__filter"
-          />
-          <button
-            type="button"
-            class="civ-icon-editor__new-btn"
-            @click=${this._startNewIcon}
-          >
-            + New icon
-          </button>
-        </div>
+        <button
+          type="button"
+          class="civ-icon-editor__new-btn"
+          @click=${this._startNewIcon}
+        >
+          + Create blank icon
+        </button>
+        <input
+          type="search"
+          placeholder="Filter icons…"
+          .value=${this._filter}
+          @input=${(e: Event) => {
+            this._filter = (e.target as HTMLInputElement).value;
+          }}
+          class="civ-icon-editor__filter"
+        />
         <ul class="civ-icon-editor__list" role="listbox" aria-label="Icons">
           ${names.map(
             (name) => html`
@@ -547,26 +545,33 @@ class CivIconEditor extends LitElement {
           background: #fff;
         }
 
-        .civ-icon-editor__picker-controls {
-          display: flex;
-          gap: 0.5rem;
-          margin-bottom: 0.5rem;
-        }
         .civ-icon-editor__filter {
-          flex: 1;
-          padding: 0.35rem 0.5rem;
+          width: 100%;
+          padding: 0.4rem 0.6rem;
           border: 1px solid #d1d5db;
           border-radius: 6px;
           font: inherit;
+          margin-bottom: 0.5rem;
         }
         .civ-icon-editor__new-btn {
-          padding: 0.35rem 0.5rem;
+          width: 100%;
+          padding: 0.5rem 0.75rem;
           border: 1px solid #0050d8;
           background: #0050d8;
           color: #fff;
           border-radius: 6px;
           cursor: pointer;
           font: inherit;
+          font-weight: 600;
+          margin-bottom: 0.5rem;
+        }
+        .civ-icon-editor__new-btn:hover {
+          background: #003e9f;
+          border-color: #003e9f;
+        }
+        .civ-icon-editor__new-btn:focus-visible {
+          outline: 2px solid #0050d8;
+          outline-offset: 2px;
         }
         .civ-icon-editor__list {
           list-style: none;

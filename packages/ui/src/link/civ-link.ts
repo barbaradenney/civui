@@ -83,6 +83,7 @@ export class CivLink extends LightDomTextMixin(CivBaseElement) {
           role="link"
           aria-disabled="true"
           tabindex="-1"
+          title="This link is currently unavailable"
         >${this._leadingIcon}${this._text}${this._trailingIcon}</a>
       `;
     }

@@ -16,11 +16,11 @@ Accessible date picker implementing the W3C APG Dialog + Grid pattern. Combines 
 
 ### Default
 
-<StoryEmbed id="forms-inputs-date-picker--default" />
+<StoryEmbed id="forms-inputs-date-picker--default" minHeight={450} />
 
 ### With Hint
 
-<StoryEmbed id="forms-inputs-date-picker--with-hint" />
+<StoryEmbed id="forms-inputs-date-picker--with-hint" minHeight={450} />
 
 ### With Error
 
@@ -36,7 +36,7 @@ Accessible date picker implementing the W3C APG Dialog + Grid pattern. Combines 
 
 ### With Min Max
 
-<StoryEmbed id="forms-inputs-date-picker--with-min-max" />
+<StoryEmbed id="forms-inputs-date-picker--with-min-max" minHeight={450} />
 
 ### All States
 
@@ -48,13 +48,13 @@ Accessible date picker implementing the W3C APG Dialog + Grid pattern. Combines 
 
 ### Government Appointment Scheduler
 
-<StoryEmbed id="forms-inputs-date-picker--government-appointment-scheduler" />
+<StoryEmbed id="forms-inputs-date-picker--government-appointment-scheduler" minHeight={450} />
 
 ### Today Button
 
 A "Today" button in the dialog footer selects today and closes the picker. Press `T` (or `Shift+T`) inside the calendar to jump focus to today without selecting — Enter/Space still required to commit. Suppress with `hide-today-button` for date-of-birth pickers.
 
-<StoryEmbed id="forms-inputs-date-picker--today-button" />
+<StoryEmbed id="forms-inputs-date-picker--today-button" minHeight={450} />
 <StoryEmbed id="forms-inputs-date-picker--today-button-hidden" />
 <StoryEmbed id="forms-inputs-date-picker--today-button-disabled" />
 
@@ -62,7 +62,7 @@ A "Today" button in the dialog footer selects today and closes the picker. Press
 
 The dialog header has month and year `<select>` elements so users can jump anywhere in the calendar in a single click — critical for date-of-birth pickers. Year range honors `min`/`max` when set, otherwise defaults to today − 120 through today + 10. Months outside the boundary years are disabled. The focused day is clamped to the new month length on jump.
 
-<StoryEmbed id="forms-inputs-date-picker--year-jump" />
+<StoryEmbed id="forms-inputs-date-picker--year-jump" minHeight={450} />
 
 [Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-inputs-date-picker--default)
 

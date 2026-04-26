@@ -230,3 +230,26 @@ export const TodayButtonDisabled: Story = {
     ></civ-date-picker>
   `,
 };
+
+// ── Year jump (DOB pickers) ───────────────────────────────────
+
+export const YearJump: Story = {
+  name: 'Year jump (DOB picker)',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'The dialog header has month and year `<select>` elements that let users jump anywhere in the calendar in a single click — critical for date-of-birth pickers where the user might need to scroll back 50+ years. The year range honors `min`/`max` when set, otherwise defaults to today − 120 through today + 10. Months outside `min`/`max` for the boundary year are disabled.',
+      },
+    },
+  },
+  render: () => html`
+    <civ-date-picker
+      label="Date of birth"
+      name="dob"
+      hide-today-button
+      max="2026-04-26"
+      hint="Use the year dropdown to jump to your birth year."
+    ></civ-date-picker>
+  `,
+};

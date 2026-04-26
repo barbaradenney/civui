@@ -895,6 +895,147 @@ describe('civ-date-picker', () => {
       expect(btn.textContent?.trim()).toBe('Hoy');
     });
   });
+
+  describe('Month + year jump selects', () => {
+    afterEach(cleanupFixtures);
+
+    it('renders month and year <select>s in the dialog header', async () => {
+      const el = await fixture('<civ-date-picker label="When"></civ-date-picker>') as any;
+      el._open = true;
+      await elementUpdated(el);
+
+      const monthSel = el.querySelector('[data-civ-month-select]') as HTMLSelectElement | null;
+      const yearSel = el.querySelector('[data-civ-year-select]') as HTMLSelectElement | null;
+      expect(monthSel).not.toBeNull();
+      expect(yearSel).not.toBeNull();
+      expect(monthSel!.tagName).toBe('SELECT');
+      expect(yearSel!.tagName).toBe('SELECT');
+    });
+
+    it('default year range covers today − 120 through today + 10', async () => {
+      const el = await fixture('<civ-date-picker label="When"></civ-date-picker>') as any;
+      el._open = true;
+      await elementUpdated(el);
+
+      const yearSel = el.querySelector('[data-civ-year-select]') as HTMLSelectElement;
+      const years = Array.from(yearSel.options).map((o) => Number(o.value));
+      const today = new Date().getFullYear();
+      expect(years[0]).toBe(today - 120);
+      expect(years[years.length - 1]).toBe(today + 10);
+    });
+
+    it('clamps year range to min/max when set', async () => {
+      const el = await fixture('<civ-date-picker label="When" min="2020-01-01" max="2030-12-31"></civ-date-picker>') as any;
+      el._open = true;
+      await elementUpdated(el);
+
+      const yearSel = el.querySelector('[data-civ-year-select]') as HTMLSelectElement;
+      const years = Array.from(yearSel.options).map((o) => Number(o.value));
+      expect(years[0]).toBe(2020);
+      expect(years[years.length - 1]).toBe(2030);
+    });
+
+    it('disables months outside min/max in the boundary year', async () => {
+      // 2026-04-30 max — only Jan–Apr should be enabled in 2026
+      const el = await fixture('<civ-date-picker label="When" max="2026-04-30"></civ-date-picker>') as any;
+      el._displayYear = 2026;
+      el._displayMonth = 0;
+      el._focusedDate = new Date(2026, 0, 15);
+      el._open = true;
+      await elementUpdated(el);
+
+      const monthSel = el.querySelector('[data-civ-month-select]') as HTMLSelectElement;
+      const opts = Array.from(monthSel.options);
+      expect(opts[3].disabled).toBe(false); // April
+      expect(opts[4].disabled).toBe(true);  // May
+      expect(opts[11].disabled).toBe(true); // December
+    });
+
+    it('selecting a year jumps the calendar without changing the day-of-month', async () => {
+      const el = await fixture('<civ-date-picker label="When"></civ-date-picker>') as any;
+      el._displayYear = 2026;
+      el._displayMonth = 4; // May
+      el._focusedDate = new Date(2026, 4, 15);
+      el._open = true;
+      await elementUpdated(el);
+
+      const yearSel = el.querySelector('[data-civ-year-select]') as HTMLSelectElement;
+      yearSel.value = '1985';
+      yearSel.dispatchEvent(new Event('change', { bubbles: true }));
+      await elementUpdated(el);
+
+      expect(el._displayYear).toBe(1985);
+      expect(el._displayMonth).toBe(4);
+      expect(el._focusedDate.getDate()).toBe(15);
+    });
+
+    it('selecting a month jumps the calendar without changing the year', async () => {
+      const el = await fixture('<civ-date-picker label="When"></civ-date-picker>') as any;
+      el._displayYear = 2026;
+      el._displayMonth = 0;
+      el._focusedDate = new Date(2026, 0, 10);
+      el._open = true;
+      await elementUpdated(el);
+
+      const monthSel = el.querySelector('[data-civ-month-select]') as HTMLSelectElement;
+      monthSel.value = '6'; // July
+      monthSel.dispatchEvent(new Event('change', { bubbles: true }));
+      await elementUpdated(el);
+
+      expect(el._displayYear).toBe(2026);
+      expect(el._displayMonth).toBe(6);
+      expect(el._focusedDate.getDate()).toBe(10);
+    });
+
+    it('clamps the focused day to the new month length (Jan 31 → Feb 28/29)', async () => {
+      const el = await fixture('<civ-date-picker label="When"></civ-date-picker>') as any;
+      el._displayYear = 2026;
+      el._displayMonth = 0; // January
+      el._focusedDate = new Date(2026, 0, 31);
+      el._open = true;
+      await elementUpdated(el);
+
+      const monthSel = el.querySelector('[data-civ-month-select]') as HTMLSelectElement;
+      monthSel.value = '1'; // February
+      monthSel.dispatchEvent(new Event('change', { bubbles: true }));
+      await elementUpdated(el);
+
+      // 2026 is not a leap year — last day is Feb 28
+      expect(el._displayMonth).toBe(1);
+      expect(el._focusedDate.getDate()).toBe(28);
+    });
+
+    it('jumping to a year where the current month is invalid pulls the month back into range', async () => {
+      // max="2026-04-30" — switching to 2026 from a December view should
+      // move the displayed month to April so the user lands on a valid one.
+      const el = await fixture('<civ-date-picker label="When" max="2026-04-30"></civ-date-picker>') as any;
+      el._displayYear = 2025;
+      el._displayMonth = 11; // December
+      el._focusedDate = new Date(2025, 11, 5);
+      el._open = true;
+      await elementUpdated(el);
+
+      const yearSel = el.querySelector('[data-civ-year-select]') as HTMLSelectElement;
+      yearSel.value = '2026';
+      yearSel.dispatchEvent(new Event('change', { bubbles: true }));
+      await elementUpdated(el);
+
+      expect(el._displayYear).toBe(2026);
+      // December → April (last valid month for 2026)
+      expect(el._displayMonth).toBe(3);
+    });
+
+    it('selects expose locale-keyed accessible names', async () => {
+      const el = await fixture('<civ-date-picker label="When"></civ-date-picker>') as any;
+      el._open = true;
+      await elementUpdated(el);
+
+      const monthSel = el.querySelector('[data-civ-month-select]') as HTMLSelectElement;
+      const yearSel = el.querySelector('[data-civ-year-select]') as HTMLSelectElement;
+      expect(monthSel.getAttribute('aria-label')).toBe('Month');
+      expect(yearSel.getAttribute('aria-label')).toBe('Year');
+    });
+  });
 });
 
 // Helper for keyboard events on dialog

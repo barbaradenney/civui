@@ -69,6 +69,8 @@ export interface CivLocaleStrings {
   datePickerDateSelectedMessage: string;
   datePickerTodayLabel: string;
   datePickerTodayButton: string; // "Today" button in dialog footer
+  datePickerMonthLabel: string; // aria-label for the month-jump <select> in the dialog header
+  datePickerYearLabel: string;  // aria-label for the year-jump <select> in the dialog header
   datePickerInvalidFormatMessage: string;
   datePickerDateRangeMessage: string; // "Date must be between {min} and {max}"
   datePickerMinDateMessage: string; // "Date must be on or after {min}"
@@ -386,6 +388,8 @@ const defaultStrings: CivLocaleStrings = {
   datePickerDateSelectedMessage: 'Selected {date}',
   datePickerTodayLabel: 'today',
   datePickerTodayButton: 'Today',
+  datePickerMonthLabel: 'Month',
+  datePickerYearLabel: 'Year',
   datePickerInvalidFormatMessage: 'Invalid date format',
   datePickerDateRangeMessage: 'Date must be between {min} and {max}',
   datePickerMinDateMessage: 'Date must be on or after {min}',

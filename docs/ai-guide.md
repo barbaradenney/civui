@@ -363,6 +363,8 @@ Calendar dialog with text input. Preferred for appointment/scheduling dates.
 
 **Today button:** Appears in the dialog footer. Click selects today and closes the picker. Disabled when today is outside `min`/`max`. Suppress entirely with `hide-today-button` (recommended for DOB pickers).
 
+**Month + year jump selects:** The dialog header has `<select>` elements for month and year so users can jump anywhere in the calendar in a single click — critical for date-of-birth pickers where the year might be 50+ years back. The year range honors `min`/`max` when set, otherwise defaults to today − 120 through today + 10. Months outside `min`/`max` for the boundary year are disabled. The focused day is clamped to the new month length on jump (Jan 31 → Feb 28).
+
 **Example:**
 ```html
 <civ-date-picker

@@ -58,6 +58,12 @@ A "Today" button in the dialog footer selects today and closes the picker. Press
 <StoryEmbed id="forms-inputs-date-picker--today-button-hidden" />
 <StoryEmbed id="forms-inputs-date-picker--today-button-disabled" />
 
+### Year Jump (DOB pickers)
+
+The dialog header has month and year `<select>` elements so users can jump anywhere in the calendar in a single click — critical for date-of-birth pickers. Year range honors `min`/`max` when set, otherwise defaults to today − 120 through today + 10. Months outside the boundary years are disabled. The focused day is clamped to the new month length on jump.
+
+<StoryEmbed id="forms-inputs-date-picker--year-jump" />
+
 [Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-inputs-date-picker--default)
 
 ## Shared Props

@@ -328,7 +328,6 @@ export class CivDatePicker extends CivFormElement {
     });
     const headers = this._dayHeaders;
     const monthNames = this._monthNames;
-    const headingText = `${monthNames[this._displayMonth]} ${this._displayYear}`;
 
     const prevMonthDisabled = isMonthDisabled(
       this._displayMonth === 0 ? this._displayYear - 1 : this._displayYear,
@@ -340,6 +339,9 @@ export class CivDatePicker extends CivFormElement {
       this._displayMonth === 11 ? 0 : this._displayMonth + 1,
       this._constraints,
     );
+
+    const yearRange = this._yearRange();
+    const validMonths = this._validMonthsForYear(this._displayYear);
 
     return html`
       <div
@@ -362,8 +364,33 @@ export class CivDatePicker extends CivFormElement {
               <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
             </svg>
           </button>
-          <div id="${this._headingId}" class="civ-font-bold civ-text-body" aria-live="polite">
-            ${headingText}
+          <div id="${this._headingId}" class="civ-flex civ-items-center civ-gap-1" aria-live="polite">
+            <select
+              class="civ-datepicker-month-select focus-visible:civ-focus-ring"
+              aria-label="${t('datePickerMonthLabel')}"
+              data-civ-month-select
+              .value="${String(this._displayMonth)}"
+              @change="${this._onMonthSelectChange}"
+            >
+              ${monthNames.map((m, i) => html`
+                <option
+                  value="${i}"
+                  ?selected="${i === this._displayMonth}"
+                  ?disabled="${!validMonths.includes(i)}"
+                >${m}</option>
+              `)}
+            </select>
+            <select
+              class="civ-datepicker-year-select focus-visible:civ-focus-ring"
+              aria-label="${t('datePickerYearLabel')}"
+              data-civ-year-select
+              .value="${String(this._displayYear)}"
+              @change="${this._onYearSelectChange}"
+            >
+              ${yearRange.map((y) => html`
+                <option value="${y}" ?selected="${y === this._displayYear}">${y}</option>
+              `)}
+            </select>
           </div>
           <button
             type="button"
@@ -604,6 +631,90 @@ export class CivDatePicker extends CivFormElement {
 
   private _nextMonth(): void {
     this._navigateMonth(1);
+  }
+
+  /**
+   * Compute the year range for the dialog header's year-jump select.
+   * Honors `min` / `max` when set; otherwise defaults to today − 120 years
+   * through today + 10 years (covers DOB pickers up to 120 years old plus
+   * near-future scheduling). Always includes the currently-displayed year
+   * so the select can render its current value even if it falls outside
+   * the default span (e.g., a stored draft outside the typical range).
+   */
+  private _yearRange(): number[] {
+    const today = this._todayDate();
+    const minDate = this.min ? parseISODate(this.min) : null;
+    const maxDate = this.max ? parseISODate(this.max) : null;
+    const lo = minDate ? minDate.getFullYear() : today.getFullYear() - 120;
+    const hi = maxDate ? maxDate.getFullYear() : today.getFullYear() + 10;
+    const start = Math.min(lo, this._displayYear);
+    const end = Math.max(hi, this._displayYear);
+    const out: number[] = [];
+    for (let y = start; y <= end; y++) out.push(y);
+    return out;
+  }
+
+  /**
+   * Months selectable for `year`. When `year` equals the boundary year of
+   * `min` or `max`, restrict to months ≥ min.month / ≤ max.month so the
+   * select doesn't offer dates the constraints will reject.
+   */
+  private _validMonthsForYear(year: number): number[] {
+    const minDate = this.min ? parseISODate(this.min) : null;
+    const maxDate = this.max ? parseISODate(this.max) : null;
+    const lowerMonth = minDate && minDate.getFullYear() === year ? minDate.getMonth() : 0;
+    const upperMonth = maxDate && maxDate.getFullYear() === year ? maxDate.getMonth() : 11;
+    const months: number[] = [];
+    for (let m = lowerMonth; m <= upperMonth; m++) months.push(m);
+    return months;
+  }
+
+  private _onMonthSelectChange(e: Event): void {
+    const sel = e.target as HTMLSelectElement;
+    const newMonth = Number(sel.value);
+    if (!Number.isFinite(newMonth) || newMonth < 0 || newMonth > 11) return;
+    this._jumpToMonth(this._displayYear, newMonth);
+  }
+
+  private _onYearSelectChange(e: Event): void {
+    const sel = e.target as HTMLSelectElement;
+    const newYear = Number(sel.value);
+    if (!Number.isFinite(newYear)) return;
+    // If the current display month isn't valid for the new boundary year,
+    // clamp to the closest valid month (so jumping into a year capped at
+    // April from December lands on April, not January).
+    const validMonths = this._validMonthsForYear(newYear);
+    let month: number;
+    if (validMonths.includes(this._displayMonth)) {
+      month = this._displayMonth;
+    } else if (validMonths.length === 0) {
+      month = 0;
+    } else if (this._displayMonth < validMonths[0]) {
+      month = validMonths[0];
+    } else {
+      month = validMonths[validMonths.length - 1];
+    }
+    this._jumpToMonth(newYear, month);
+  }
+
+  /**
+   * Move the calendar to (year, month). Clamp the focused day to the
+   * length of the new month (Jan 31 → Feb 28). Announces the new
+   * heading and focuses the matching day cell after render.
+   */
+  private _jumpToMonth(year: number, month: number): void {
+    const lastDay = new Date(year, month + 1, 0).getDate();
+    const day = Math.min(this._focusedDate.getDate(), lastDay);
+    const newFocus = new Date(year, month, day);
+    this._displayMonth = month;
+    this._displayYear = year;
+    this._focusedDate = newFocus;
+    this.announce(`${this._monthNames[month]} ${year}`);
+    this.updateComplete.then(() => {
+      const iso = toISODateString(newFocus);
+      const btn = this.querySelector(`[data-date="${iso}"]`) as HTMLElement | null;
+      btn?.focus();
+    });
   }
 
   private _moveFocus(newDate: Date): void {

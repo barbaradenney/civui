@@ -2,9 +2,9 @@ import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import './civ-card.js';
 import '../tag/civ-tag.js';
-import '../button/civ-button.js';
-import '../link/civ-link.js';
-import '../action-button/civ-action-button.js';
+import '@civui/actions/button';
+import '@civui/actions/link';
+import '@civui/actions/action-button';
 
 const meta: Meta = {
   title: 'UI/Card',

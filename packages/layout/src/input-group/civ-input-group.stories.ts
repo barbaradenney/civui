@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import './civ-input-group.js';
-import '../action-button/civ-action-button.js';
+import '@civui/actions/action-button';
 import '@civui/inputs';
 
 const meta: Meta = {

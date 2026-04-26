@@ -366,3 +366,94 @@ describe('textarea word count', () => {
     expect(describedBy).toContain(wordCountEl!.id);
   });
 });
+
+describe('textarea declarative validate="length"', () => {
+  afterEach(cleanupFixtures);
+
+  it('passes when value is within min/max range', async () => {
+    const el = await fixture(
+      '<civ-textarea label="Bio" validate="length" minlength="3" maxlength="10"></civ-textarea>',
+    ) as any;
+    const textarea = el.querySelector('textarea')!;
+    textarea.value = 'hello';
+    textarea.dispatchEvent(new Event('input', { bubbles: true }));
+    textarea.dispatchEvent(new Event('blur', { bubbles: true }));
+    await elementUpdated(el);
+    expect(el.error).toBe('');
+  });
+
+  it('errors when value is shorter than minlength', async () => {
+    const el = await fixture(
+      '<civ-textarea label="Bio" validate="length" minlength="5"></civ-textarea>',
+    ) as any;
+    const textarea = el.querySelector('textarea')!;
+    textarea.value = 'hi';
+    textarea.dispatchEvent(new Event('input', { bubbles: true }));
+    textarea.dispatchEvent(new Event('blur', { bubbles: true }));
+    await elementUpdated(el);
+    expect(el.error).toContain('5');
+  });
+
+  it('errors when value is longer than maxlength (paste case)', async () => {
+    // The textarea's native maxlength caps typing, but pasting can exceed
+    // it briefly before the browser intervenes. The validator catches it.
+    const el = await fixture<any>(
+      '<civ-textarea label="Bio" validate="length"></civ-textarea>',
+    );
+    el.maxlength = 3;
+    el.value = 'too long';
+    await elementUpdated(el);
+    const textarea = el.querySelector('textarea')!;
+    textarea.dispatchEvent(new Event('blur', { bubbles: true }));
+    await elementUpdated(el);
+    expect(el.error).toContain('3');
+  });
+
+  it('clears its own error on next valid blur', async () => {
+    const el = await fixture(
+      '<civ-textarea label="Bio" validate="length" minlength="5"></civ-textarea>',
+    ) as any;
+    const textarea = el.querySelector('textarea')!;
+    textarea.value = 'hi';
+    textarea.dispatchEvent(new Event('input', { bubbles: true }));
+    textarea.dispatchEvent(new Event('blur', { bubbles: true }));
+    await elementUpdated(el);
+    expect(el.error).not.toBe('');
+
+    textarea.value = 'hello there';
+    textarea.dispatchEvent(new Event('input', { bubbles: true }));
+    textarea.dispatchEvent(new Event('blur', { bubbles: true }));
+    await elementUpdated(el);
+    expect(el.error).toBe('');
+  });
+
+  it('does not run on blur when validate is unset', async () => {
+    const el = await fixture(
+      '<civ-textarea label="Bio" minlength="5"></civ-textarea>',
+    ) as any;
+    const textarea = el.querySelector('textarea')!;
+    textarea.value = 'hi';
+    textarea.dispatchEvent(new Event('blur', { bubbles: true }));
+    await elementUpdated(el);
+    expect(el.error).toBe('');
+  });
+
+  it('skips validation for empty values (required-field is base class concern)', async () => {
+    const el = await fixture(
+      '<civ-textarea label="Bio" validate="length" minlength="5"></civ-textarea>',
+    ) as any;
+    const textarea = el.querySelector('textarea')!;
+    textarea.value = '';
+    textarea.dispatchEvent(new Event('blur', { bubbles: true }));
+    await elementUpdated(el);
+    expect(el.error).toBe('');
+  });
+
+  it('renders minlength attribute on the textarea when set', async () => {
+    const el = await fixture(
+      '<civ-textarea label="Bio" minlength="3"></civ-textarea>',
+    );
+    const textarea = el.querySelector('textarea')!;
+    expect(textarea.getAttribute('minlength')).toBe('3');
+  });
+});

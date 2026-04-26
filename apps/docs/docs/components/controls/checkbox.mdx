@@ -66,6 +66,16 @@ Accessible checkbox and checkbox group components. Individual checkboxes support
 
 <StoryEmbed id="forms-inputs-checkbox--government-certification-form" />
 
+### Minimum Selections
+
+`min-selections` (when > 0) implicitly marks the group as required and surfaces a `valueMissing` validity error until the count is met. The hint chain auto-appends "Select at least N." Validation runs on submit / `checkValidity()` — checkboxes can still be unchecked mid-flow.
+
+<StoryEmbed id="forms-inputs-checkbox--min-selections" />
+
+### Min and Max Together
+
+<StoryEmbed id="forms-inputs-checkbox--min-and-max-selections" />
+
 [Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-inputs-checkbox--default)
 
 ## civ-checkbox

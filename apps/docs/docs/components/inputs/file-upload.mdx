@@ -70,6 +70,19 @@ File input with drag-and-drop, file list preview, size and type validation, uplo
 
 <StoryEmbed id="forms-inputs-file-upload--government-document-submission" />
 
+### Camera Capture (mobile)
+
+`capture="environment"` opens the back camera so the user can photograph a document. `capture="user"` opens the front camera (selfies, liveness checks). Pair with `accept="image/*"`. Desktop browsers ignore the attribute and behave as a normal file picker.
+
+<StoryEmbed id="forms-inputs-file-upload--capture-environment" />
+<StoryEmbed id="forms-inputs-file-upload--capture-user" />
+
+### Duplicate Detection
+
+Files matching by name + size + lastModified are rejected on add with a "{name} is already in the list" error. Removing then re-adding works as expected.
+
+<StoryEmbed id="forms-inputs-file-upload--duplicate-detection" />
+
 [Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-inputs-file-upload--default)
 
 ## Shared Props

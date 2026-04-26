@@ -175,3 +175,180 @@ describe('civ-form-step', () => {
     expect(fired).toBe(true);
   });
 });
+
+describe('civ-form-step Enter handling', () => {
+  afterEach(cleanupFixtures);
+
+  it('Enter inside an input advances to the next step', async () => {
+    const el = await fixture<CivFormStep>(`
+      <civ-form-step>
+        <div data-step-label="Name">
+          <input id="name-input" type="text" />
+        </div>
+        <div data-step-label="Email">
+          <input id="email-input" type="email" />
+        </div>
+      </civ-form-step>
+    `) as CivFormStep;
+    await elementUpdated(el);
+    expect(el.current).toBe(0);
+
+    const input = el.querySelector('#name-input') as HTMLInputElement;
+    const event = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true });
+    input.dispatchEvent(event);
+    await elementUpdated(el);
+
+    expect(el.current).toBe(1);
+    expect(event.defaultPrevented).toBe(true);
+  });
+
+  it('Enter on the final step fires civ-step-complete', async () => {
+    const el = await fixture<CivFormStep>(`
+      <civ-form-step>
+        <div data-step-label="Name">
+          <input id="name-input" type="text" />
+        </div>
+      </civ-form-step>
+    `) as CivFormStep;
+    await elementUpdated(el);
+    expect(el.current).toBe(0);
+    expect(el.total).toBe(1);
+
+    let fired = false;
+    el.addEventListener('civ-step-complete', () => { fired = true; });
+
+    const input = el.querySelector('#name-input') as HTMLInputElement;
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }));
+    await elementUpdated(el);
+    expect(fired).toBe(true);
+  });
+
+  it('Enter stops propagation so a parent civ-form does not also see it', async () => {
+    const el = await fixture<CivFormStep>(`
+      <civ-form-step>
+        <div data-step-label="Name">
+          <input id="name-input" type="text" />
+        </div>
+        <div data-step-label="Email">
+          <input id="email-input" type="email" />
+        </div>
+      </civ-form-step>
+    `) as CivFormStep;
+    await elementUpdated(el);
+
+    let parentSawIt = false;
+    el.parentElement!.addEventListener('keydown', () => { parentSawIt = true; });
+
+    const input = el.querySelector('#name-input') as HTMLInputElement;
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }));
+
+    expect(parentSawIt).toBe(false);
+  });
+
+  it('does not advance when Enter happens inside a textarea', async () => {
+    const el = await fixture<CivFormStep>(`
+      <civ-form-step>
+        <div data-step-label="Notes">
+          <textarea id="notes"></textarea>
+        </div>
+        <div data-step-label="Done">
+          <input id="done" type="text" />
+        </div>
+      </civ-form-step>
+    `) as CivFormStep;
+    await elementUpdated(el);
+
+    const textarea = el.querySelector('#notes') as HTMLTextAreaElement;
+    const event = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true });
+    textarea.dispatchEvent(event);
+    await elementUpdated(el);
+
+    expect(el.current).toBe(0);
+    expect(event.defaultPrevented).toBe(false);
+  });
+
+  it('does not advance when Enter happens on a button', async () => {
+    const el = await fixture<CivFormStep>(`
+      <civ-form-step>
+        <div data-step-label="Action">
+          <button type="button" id="btn">Click me</button>
+        </div>
+        <div data-step-label="Done">
+          <input type="text" />
+        </div>
+      </civ-form-step>
+    `) as CivFormStep;
+    await elementUpdated(el);
+
+    const btn = el.querySelector('#btn') as HTMLButtonElement;
+    btn.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }));
+    await elementUpdated(el);
+
+    expect(el.current).toBe(0);
+  });
+
+  it('does not advance when defaultPrevented (e.g., dialog already handled it)', async () => {
+    const el = await fixture<CivFormStep>(`
+      <civ-form-step>
+        <div data-step-label="One">
+          <input id="i" type="text" />
+        </div>
+        <div data-step-label="Two">
+          <input type="text" />
+        </div>
+      </civ-form-step>
+    `) as CivFormStep;
+    await elementUpdated(el);
+
+    const input = el.querySelector('#i') as HTMLInputElement;
+    const event = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true });
+    event.preventDefault();
+    input.dispatchEvent(event);
+    await elementUpdated(el);
+
+    expect(el.current).toBe(0);
+  });
+
+  it('does not advance when Enter originates from inside a [role="dialog"]', async () => {
+    const el = await fixture<CivFormStep>(`
+      <civ-form-step>
+        <div data-step-label="Pick a date">
+          <div role="dialog" aria-label="Calendar">
+            <button id="day" data-civ-day>15</button>
+          </div>
+        </div>
+        <div data-step-label="Done">
+          <input type="text" />
+        </div>
+      </civ-form-step>
+    `) as CivFormStep;
+    await elementUpdated(el);
+
+    const day = el.querySelector('#day') as HTMLElement;
+    day.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }));
+    await elementUpdated(el);
+
+    expect(el.current).toBe(0);
+  });
+
+  it('only Enter advances — other keys do not', async () => {
+    const el = await fixture<CivFormStep>(`
+      <civ-form-step>
+        <div data-step-label="One">
+          <input id="i" type="text" />
+        </div>
+        <div data-step-label="Two">
+          <input type="text" />
+        </div>
+      </civ-form-step>
+    `) as CivFormStep;
+    await elementUpdated(el);
+
+    const input = el.querySelector('#i') as HTMLInputElement;
+    for (const key of ['Tab', 'a', 'Escape', ' ']) {
+      input.dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true }));
+    }
+    await elementUpdated(el);
+    expect(el.current).toBe(0);
+  });
+});

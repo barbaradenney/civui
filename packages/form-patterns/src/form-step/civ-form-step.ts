@@ -104,10 +104,46 @@ export class CivFormStep extends LightDomSlotMixin(CivBaseElement) {
     return this._steps[this._current]?.getAttribute('data-step-label') || '';
   }
 
+  private _boundOnKeydown = this._onKeydown.bind(this);
+
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this.addEventListener('keydown', this._boundOnKeydown);
+  }
+
+  override disconnectedCallback(): void {
+    super.disconnectedCallback();
+    this.removeEventListener('keydown', this._boundOnKeydown);
+  }
+
   override firstUpdated(): void {
     this._relocateSlots();
     this._showStep(0);
     this._maybeAnnounceSensitiveNotice();
+  }
+
+  /**
+   * Capture Enter on inputs inside the step so the wizard advances instead
+   * of letting the keystroke bubble to a parent `<civ-form>` and submit the
+   * whole form mid-flow. Skips controls that have their own native Enter
+   * behavior (button, textarea, anchor, select, option), respects
+   * `defaultPrevented` from inner handlers (date-picker dialog, etc.), and
+   * never traps Enter from elements inside a `[role="dialog"]`.
+   */
+  private _onKeydown(e: KeyboardEvent): void {
+    if (e.key !== 'Enter') return;
+    if (e.defaultPrevented) return;
+    const target = e.target as HTMLElement | null;
+    if (!target) return;
+    const skip = ['BUTTON', 'TEXTAREA', 'A', 'SELECT', 'OPTION'];
+    if (skip.includes(target.tagName)) return;
+    // If the focused element is inside a dialog (e.g., date-picker calendar),
+    // its own keyboard handler owns Enter — don't double-advance.
+    if (target.closest('[role="dialog"]')) return;
+
+    e.preventDefault();
+    e.stopPropagation();
+    this._onContinue();
   }
 
   /**

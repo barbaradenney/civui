@@ -1194,6 +1194,10 @@ Government forms routinely ask emotionally difficult questions — bereavement d
 - `show-pause` — renders a "Save and come back later" link next to the continue button. Fires `civ-step-pause` with `{ current, label }`. Pair with `persist` on `civ-form` or `civ-form-step` so sessionStorage keeps state across the pause.
 - `pause-label` — override the action label (default from locale).
 
+### civ-form-step: Enter handling inside a `civ-form` parent
+
+When a `civ-form-step` is nested in `<civ-form>`, pressing Enter on a field inside the current step **advances the step** (or fires `civ-step-complete` on the final step) — it does NOT submit the parent form. The step intercepts Enter at its host and calls `e.stopPropagation()` so the parent form's keydown handler never fires. Native Enter behavior is preserved on `<button>`, `<textarea>`, `<a>`, `<select>` / `<option>`; events with `defaultPrevented = true` (e.g., from a date-picker dialog) are also left alone.
+
 ### civ-form: `supportResources`
 
 Renders a persistent non-modal `<aside>` footer that stays visible across steps. Each resource is `{ label, href, description? }`. Unsafe URL schemes (`javascript:`, `data:`, `vbscript:`) and protocol-relative URLs (`//evil.com`) are filtered out automatically.

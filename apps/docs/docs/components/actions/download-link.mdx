@@ -1,0 +1,66 @@
+---
+title: Download Link
+sidebar_position: 9
+sidebar_label: Download Link
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
+# Download Link
+
+`<civ-download-link>`
+
+A link component for file downloads. Sets the `download` attribute on the underlying anchor element, shows a download icon, and optionally displays the file size. This signals to users and assistive technology that clicking the link will download a file rather than navigate to a new page.
+
+## Examples
+
+### Default
+
+<StoryEmbed id="actions-download-link--default" />
+
+### With File Size
+
+<StoryEmbed id="actions-download-link--with-file-size" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/actions-download-link--default)
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `href` | `string` | `''` | URL of the file to download (required) |
+| `label` | `string` | `''` | Link text describing the download |
+| `filename` | `string` | `''` | Suggested filename for the downloaded file (sets the `download` attribute value) |
+| `file-size` | `string` | `''` | Human-readable file size displayed after the label (e.g., "2.4 MB", "850 KB") |
+| `disabled` | `boolean` | `false` | Disabled state (sets `aria-disabled` and removes href) |
+
+## Why use this component
+
+Download links have different user expectations than navigation links. Users need to know they are about to download a file, what file type it is, and how large it is. This component provides a consistent download icon and optional file size display so users can make informed decisions before clicking, which is especially important on mobile devices or slow connections.
+
+## Usage
+
+```html
+<!-- Basic download link -->
+<civ-download-link
+  href="/forms/va-10-10ez.pdf"
+  label="Application for Health Benefits (VA 10-10EZ)"
+  filename="va-10-10ez.pdf"
+></civ-download-link>
+
+<!-- With file size displayed -->
+<civ-download-link
+  href="/forms/sf-180.pdf"
+  label="Request Pertaining to Military Records (SF-180)"
+  filename="sf-180.pdf"
+  file-size="1.2 MB"
+></civ-download-link>
+
+<!-- Disabled state -->
+<civ-download-link
+  href="/forms/pending.pdf"
+  label="Pending document"
+  filename="pending.pdf"
+  disabled
+></civ-download-link>
+```

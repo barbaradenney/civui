@@ -1,0 +1,77 @@
+---
+title: External Link
+sidebar_position: 7
+sidebar_label: External Link
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
+# External Link
+
+`<civ-external-link>`
+
+A purpose-built link for navigating to external websites. Automatically sets `target="_blank"`, `rel="noopener noreferrer"`, appends an external-link icon, and adds screen-reader-only "(opens in new tab)" text. This prevents common security and accessibility mistakes that occur when building external links manually.
+
+## Examples
+
+### Default
+
+<StoryEmbed id="actions-external-link--default" />
+
+### Disabled
+
+<StoryEmbed id="actions-external-link--disabled" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/actions-external-link--default)
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `label` | `string` | `''` | Link text |
+| `href` | `string` | `''` | External URL destination (required) |
+| `disabled` | `boolean` | `false` | Disabled state (sets `aria-disabled` and removes href) |
+
+## Why use this component
+
+Building external links by hand is error-prone. Forgetting `rel="noopener noreferrer"` creates a security vulnerability (reverse tabnapping). Forgetting to announce "opens in new tab" leaves screen reader users disoriented when focus moves to a new browser tab. This component handles both automatically.
+
+### Manual approach (avoid)
+
+```html
+<!-- Easy to forget rel, SR text, or the icon -->
+<civ-link
+  href="https://www.ssa.gov"
+  label="Social Security Administration"
+  target="_blank"
+  rel="noopener noreferrer"
+  icon-end="external-link"
+></civ-link>
+```
+
+### With civ-external-link (preferred)
+
+```html
+<!-- Security, icon, and SR text are all automatic -->
+<civ-external-link
+  href="https://www.ssa.gov"
+  label="Social Security Administration"
+></civ-external-link>
+```
+
+## Usage
+
+```html
+<!-- Basic external link -->
+<civ-external-link
+  href="https://www.usa.gov"
+  label="USA.gov"
+></civ-external-link>
+
+<!-- Disabled state -->
+<civ-external-link
+  href="https://www.irs.gov"
+  label="IRS website"
+  disabled
+></civ-external-link>
+```

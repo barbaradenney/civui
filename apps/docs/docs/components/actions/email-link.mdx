@@ -1,0 +1,68 @@
+---
+title: Email Link
+sidebar_position: 10
+sidebar_label: Email Link
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
+# Email Link
+
+`<civ-email-link>`
+
+A link component for email addresses. Generates a proper `mailto:` href with optional subject line, shows a mail icon, and defaults the display text to the email address when no label is provided. This ensures `mailto:` URLs are always correctly formatted, including proper encoding of subject line parameters.
+
+## Examples
+
+### Default
+
+<StoryEmbed id="actions-email-link--default" />
+
+### Custom Label
+
+<StoryEmbed id="actions-email-link--custom-label" />
+
+### With Subject
+
+<StoryEmbed id="actions-email-link--with-subject" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/actions-email-link--default)
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `address` | `string` | `''` | Email address (required) |
+| `label` | `string` | `''` | Display text. Defaults to the email address when omitted. |
+| `subject` | `string` | `''` | Pre-filled subject line appended to the `mailto:` href as a `?subject=` parameter (URL-encoded automatically) |
+| `disabled` | `boolean` | `false` | Disabled state (sets `aria-disabled` and removes href) |
+
+## Why use this component
+
+Manually constructing `mailto:` URLs with query parameters is easy to get wrong -- special characters in the subject line need URL encoding, and a missing `?` or `&` breaks the link silently. This component handles encoding automatically and provides a consistent mail icon so users recognize the link will open their email client.
+
+## Usage
+
+```html
+<!-- Basic email link (displays the address as link text) -->
+<civ-email-link address="help@va.gov"></civ-email-link>
+
+<!-- Custom label -->
+<civ-email-link
+  address="support@va.gov"
+  label="Contact VA support"
+></civ-email-link>
+
+<!-- With pre-filled subject line -->
+<civ-email-link
+  address="benefits@va.gov"
+  subject="Question about my claim"
+></civ-email-link>
+
+<!-- Disabled state -->
+<civ-email-link
+  address="closed@va.gov"
+  label="Office closed"
+  disabled
+></civ-email-link>
+```

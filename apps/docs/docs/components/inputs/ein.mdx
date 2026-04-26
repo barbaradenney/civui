@@ -1,0 +1,45 @@
+---
+title: EIN
+sidebar_position: 16
+sidebar_label: EIN
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
+# EIN
+
+`<civ-ein>`
+
+Pre-configured input for Employer Identification Numbers with automatic masking, validation, and PII-aware blur-mode masking.
+
+## Examples
+
+### Default
+
+<StoryEmbed id="inputs-ein--default" />
+
+### With Error
+
+<StoryEmbed id="inputs-ein--with-error" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/inputs-ein--default)
+
+## Shared Props
+
+All form components share these props: `label`, `name`, `value`, `hint`, `error`, `required`, `disabled`, `readonly`.
+
+The label defaults to "Employer Identification Number (EIN)" and can be overridden via the `label` prop.
+
+## Events
+
+| Event | Detail | Description |
+|-------|--------|-------------|
+| `civ-input` | `{ value: string }` | Fires on every value change |
+| `civ-change` | `{ value: string }` | Fires on committed value change |
+
+## Usage
+
+```html
+<!-- EIN input with built-in masking and validation -->
+<civ-ein name="ein" required></civ-ein>
+```

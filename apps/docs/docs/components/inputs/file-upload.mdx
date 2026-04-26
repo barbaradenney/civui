@@ -83,6 +83,12 @@ Files matching by name + size + lastModified are rejected on add with a `{name} 
 
 <StoryEmbed id="forms-inputs-file-upload--duplicate-detection" />
 
+### Draft Restore (initial files)
+
+Hydrate the list from a previous session by setting `el.initialFiles = [{ id, name, size, type?, url? }]`. Initial files render as already-uploaded; when `url` is set, the filename becomes a download link. Removing fires `civ-file-removed` with `{ isInitial: true, id }` so the consumer can issue server-side deletes. Form submission emits `${name}.kept-initial-ids` so the server can diff originally-issued IDs against what remains.
+
+<StoryEmbed id="forms-inputs-file-upload--initial-files" />
+
 [Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-inputs-file-upload--default)
 
 ## Shared Props

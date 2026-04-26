@@ -52,7 +52,7 @@ For architecture and internals, see `CLAUDE.md` in the repo root.
 | `<civ-address>` | Compound | `legend`, `value` | `civ-change: { value }` |
 | `<civ-name>` | Compound | `legend`, `value` | `civ-change: { value }` |
 | `<civ-direct-deposit>` | Compound | `legend`, `value` | `civ-change: { value }` |
-| `<civ-signature>` | Compound | `legend`, `value`, `certificationText` | `civ-change: { value }` |
+| `<civ-signature>` | Compound | `legend`, `statement`, slot `[name="statement"]` for HTML | `civ-change: { value: { name, certified, signedAt } }` |
 | `<civ-relationship>` | Compound | `legend`, `preset`, `showDeceased`, `showName` | `{ value: RelationshipValue }` |
 | `<civ-task-list>` | Navigation | — | — (uses `<civ-task-group>` and `<civ-task>` children) |
 | `<civ-skip-link>` | Navigation | `label`, `target` | — |
@@ -74,9 +74,11 @@ Standard text input supporting multiple HTML input types.
 - `width` — `'default'` | `'2xs'` | `'xs'` | `'sm'` | `'md'` | `'lg'` | `'xl'` | `'2xl'`
 - `placeholder` — placeholder text
 - `pattern` — validation regex
-- `maxlength` / `minlength` — character limits
+- `maxlength` / `minlength` — character limits. When `maxlength` is set, a "characters remaining" counter renders below the input (visual + `aria-live` polite, debounced 1s for SR). Suppressed when a mask is active.
 - `autocomplete` — browser autocomplete hint
 - `inputmode` — virtual keyboard hint
+- `mask` / `mask-pattern` / `mask-mode` — see Mask System
+- `validate` — `'email'` | `'phone'` | `'phoneIntl'` | `'ssn'` | `'ein'` | `'routing'` | `'zip'` | `'zip4'` | `'usState'` | `'url'` | `'currency'` | `'alphanumeric'` — see Validation System
 
 **Example:**
 ```html
@@ -88,6 +90,9 @@ Standard text input supporting multiple HTML input types.
   required
   autocomplete="email"
 ></civ-text-input>
+
+<!-- Character counter -->
+<civ-text-input label="Short bio" name="bio" maxlength="60"></civ-text-input>
 ```
 
 ---
@@ -98,8 +103,11 @@ Multi-line text input. Shows character count when `maxlength` is set.
 
 **Props (beyond standard):**
 - `rows` — visible text rows (default: 5)
-- `maxlength` — max characters; enables character count display
+- `maxlength` / `minlength` — character limits
+- `maxwords` — soft word limit (counter + over-limit error). Mutually exclusive with `maxlength`.
+- `autogrow` / `max-height` — grow with content up to a CSS max-height
 - `placeholder` — placeholder text
+- `validate` — `'length'` — runs on blur, errors with `validateLengthMin`/`Max`/`Between` against `minlength` / `maxlength`. Empty values skipped (required is the base class's job).
 
 **Example:**
 ```html
@@ -111,17 +119,27 @@ Multi-line text input. Shows character count when `maxlength` is set.
   maxlength="2000"
   required
 ></civ-textarea>
+
+<!-- Length validation on blur -->
+<civ-textarea
+  label="Why you're applying"
+  name="why"
+  validate="length"
+  minlength="20"
+  maxlength="500"
+></civ-textarea>
 ```
 
 ---
 
 ### civ-select
 
-Dropdown select. Populate via `options` property or slotted `<option>` elements.
+Dropdown select. Populate via `options` property OR slotted `<option>` / `<optgroup>` children (read once on connect).
 
 **Props (beyond standard):**
-- `options` — `Array<{ value: string, label: string, disabled?: boolean }>`
+- `options` — `Array<{ value: string, label: string, disabled?: boolean, group?: string }>`
 - `emptyLabel` — placeholder option text (default: `'- Select -'`)
+- `width` — same enum as `civ-text-input` (default | 2xs | xs | sm | md | lg | xl | 2xl)
 
 **Example (property-driven):**
 ```html
@@ -138,19 +156,30 @@ Dropdown select. Populate via `options` property or slotted `<option>` elements.
 ></civ-select>
 ```
 
-> Note: `.options="${...}"` uses Lit property binding syntax. In plain HTML (non-template),
-> set options via JavaScript: `el.options = [...]`.
+**Example (declarative HTML, no JS required):**
+```html
+<civ-select label="State" name="state">
+  <option value="CA">California</option>
+  <optgroup label="Pacific">
+    <option value="OR">Oregon</option>
+    <option value="WA" selected>Washington</option>
+  </optgroup>
+</civ-select>
+```
+
+Slotted children are read once in `connectedCallback`. The `options` property takes precedence when both are provided.
 
 ---
 
 ### civ-combobox
 
-Searchable dropdown with type-ahead filtering.
+Searchable dropdown with type-ahead filtering. Includes a decorative chevron toggle on the trailing edge that opens the full unfiltered list — same visual affordance as a native `<select>`. The chevron is `aria-hidden` and `tabindex="-1"` since keyboard users already have ArrowDown/ArrowUp.
 
 **Props (beyond standard):**
-- `options` — `Array<{ value: string, label: string }>`
+- `options` — `Array<{ value: string, label: string, group?: string }>`
 - `placeholder` — input placeholder
 - `noResultsText` — shown when filter matches nothing (default: `'No results found'`)
+- `width` — same enum as `civ-text-input`
 
 **Events:**
 - `civ-input` — `{ value }` (filter text changes as user types)
@@ -208,6 +237,9 @@ Groups multiple checkboxes. Uses `legend` (not `label`). Multi-value.
 - `legend` — group label (renders as `<legend>`)
 - `tile` — apply tile variant to all children
 - `orientation` — `'vertical'` (default) | `'horizontal'`
+- `min-selections` — minimum required count. A positive value implicitly marks the group as required (legend asterisk + `valueMissing` validity error). Auto-appends "Select at least N" to the hint chain.
+- `max-selections` — maximum allowed count. Blocks the over-pick interactively + auto-appends "Select up to N" hint.
+- `show-select-all` — render a "Select all" / "Deselect all" toggle button.
 
 **Event detail:** `{ values: string[] }` — array of checked values.
 
@@ -319,12 +351,17 @@ Calendar dialog with text input. Preferred for appointment/scheduling dates.
 - `placeholder` — input placeholder (default: `'mm/dd/yyyy'`)
 - `locale` — date formatting locale (default: `'en-US'`)
 - `weekStartsOn` — 0 = Sunday (default), 1 = Monday
+- `disabled-dates` — JSON array of YYYY-MM-DD strings to block individually
+- `hide-today-button` — hide the dialog footer "Today" button (use for date-of-birth pickers, etc.)
+- `today-button-label` — override the Today button label (default from `datePickerTodayButton` locale key)
 
-**i18n props:** `chooseDateLabel`, `selectedDateLabel`, `dialogLabel`, `previousMonthLabel`, `nextMonthLabel`, `dialogOpenedMessage`, `dateSelectedMessage`, `todayLabel`
+**i18n props:** `chooseDateLabel`, `selectedDateLabel`, `dialogLabel`, `previousMonthLabel`, `nextMonthLabel`, `dialogOpenedMessage`, `dateSelectedMessage`, `todayLabel`, `todayButtonLabel`
 
 **Form value:** YYYY-MM-DD string.
 
-**Keyboard (in calendar dialog):** Arrow keys navigate days, PageUp/Down navigate months, Shift+PageUp/Down navigate years, Enter/Space select, Escape closes.
+**Keyboard (in calendar dialog):** Arrow keys navigate days, PageUp/Down navigate months, Shift+PageUp/Down navigate years, Enter/Space select, Escape closes. **`T` (or Shift+T) jumps focus to today** without selecting — Enter/Space still required to commit.
+
+**Today button:** Appears in the dialog footer. Click selects today and closes the picker. Disabled when today is outside `min`/`max`. Suppress entirely with `hide-today-button` (recommended for DOB pickers).
 
 **Example:**
 ```html
@@ -336,6 +373,9 @@ Calendar dialog with text input. Preferred for appointment/scheduling dates.
   max="2026-12-31"
   required
 ></civ-date-picker>
+
+<!-- Date of birth: Today button hidden -->
+<civ-date-picker label="Date of birth" name="dob" hide-today-button max="2026-04-26"></civ-date-picker>
 ```
 
 ---
@@ -384,6 +424,14 @@ Drag-and-drop file upload with validation.
 - `multiple` — allow multiple files
 - `maxSize` — max file size in bytes (0 = unlimited)
 - `maxFiles` — max file count (0 = unlimited)
+- `capture` — `'user'` | `'environment'` | `''` — mobile camera hint, passed through to the native `<input type="file">`. `'environment'` uses the back camera (document scan), `'user'` uses the front camera (selfie). Pair with `accept="image/*"`.
+- `variant` — `'default'` | `'compact'` | `'full'`
+- `show-preview` — render image thumbnails for image files
+
+**Built-in validation:**
+- Empty files (0 bytes) rejected with `fileUploadEmptyFile`.
+- **Duplicates** (same name + size + lastModified) rejected with `fileUploadDuplicateError`. Removing then re-adding works.
+- File type / size / count rejections surface through the existing error channel.
 
 **i18n props:** `dragText`, `browseText`, `acceptedLabel`, `maxSizeLabel`, `removeText`, `removeAriaLabel`, `filesListLabel`, `fileAddedMessage`, `fileRemovedMessage`, `fileSizeError`, `fileTypeError`, `maxFilesError`
 
@@ -400,6 +448,14 @@ Drag-and-drop file upload with validation.
   max-size="5242880"
   max-files="5"
   required
+></civ-file-upload>
+
+<!-- Camera capture for ID document scan on mobile -->
+<civ-file-upload
+  label="Driver's license photo"
+  name="license"
+  accept="image/*"
+  capture="environment"
 ></civ-file-upload>
 ```
 
@@ -427,13 +483,21 @@ Structural grouping wrapper. Not a form-participating element.
 
 Form validation coordinator. Renders error summary, handles submit/reset.
 
-**Props:** `action`, `method` (`'get'` | `'post'`), `persist`, `prefill`, `prefillSrc`, `trackDirty`, `supportResources`, `supportResourcesHeading`
+**Props:** `action`, `method` (`'get'` | `'post'`), `persist`, `prefill`, `prefillSrc`, `trackDirty`, `supportResources`, `supportResourcesHeading`, `formLabel`, `errorHeadingLevel`
 
 **Events:**
-- `civ-submit` — `{ formData: Record<string, string> }` (valid submission)
-- `civ-invalid` — `{ errors: FormFieldError[] }` (validation failed; each error has `name`, `message`, `element`)
+- `civ-submit` — `{ formData: FormData }` (valid submission)
+- `civ-invalid` — `{ errors: FormFieldError[] }` (client validation failed; each error has `name`, `message`, `element`)
+- `civ-server-errors` — `{ errors: FormFieldError[] }` (fired by `setServerErrors()`)
 
-**Methods:** `validate()`, `clearErrors()`, `getFormData()`
+**Methods:**
+- `validate()` — runs client validation across all `[data-civ-form-field]` children
+- `clearErrors()` — clears the summary and all field errors
+- `getFormData()` — simple `Record<string, string>` snapshot
+- `toFormData()` — `FormData` instance preserving Files and multi-value (use for submission)
+- `setServerErrors(errors)` — inject server-side errors into the summary + per-field. Behaves like a client-validation failure (focuses summary, announces, anchor links). Pass `{}` (or call `clearErrors()`) to clear.
+
+**Submit-button rule:** Only `<button type="submit">` triggers form submission. Typeless `<button>` inside the form is treated as a regular button (intentional — civ-form is a custom element, not a `<form>`, so the HTML default-submit rule doesn't apply).
 
 **`supportResources`** — Array of `{ label, href, description? }` for a persistent non-modal footer region (crisis lines, helplines). URL scheme allowlist: `http`, `https`, `tel`, `mailto`, `sms`, same-origin paths and hashes. See [Trauma-informed patterns](#trauma-informed-patterns).
 
@@ -443,9 +507,20 @@ Form validation coordinator. Renders error summary, handles submit/reset.
   <civ-text-input label="Full name" name="name" required></civ-text-input>
   <civ-text-input label="Email" name="email" type="email" required></civ-text-input>
   <civ-textarea label="Message" name="message" required></civ-textarea>
-  <button type="submit">Submit</button>
-  <button type="reset">Clear</button>
+  <civ-button type="submit">Submit</civ-button>
+  <civ-button type="reset">Clear</civ-button>
 </civ-form>
+```
+
+**Server-error injection:**
+```js
+form.addEventListener('civ-submit', async (e) => {
+  const res = await fetch('/api/submit', { method: 'POST', body: e.detail.formData });
+  if (!res.ok) {
+    const { errors } = await res.json();
+    form.setServerErrors(errors); // { email: 'Already in use', phone: 'Invalid' }
+  }
+});
 ```
 
 On validation failure, `civ-form` renders an error summary with anchor links to each invalid field.
@@ -526,6 +601,9 @@ Read-only review page that displays structured sections with headings, edit link
 **Props:**
 - `heading` -- Main heading for the summary page
 - `sections` -- `SummarySection[]` (JS property) -- sections to display
+
+**Events:**
+- `civ-edit` (cancelable) -- fires on any edit-link click. Detail: `{ section, item?, href }`. Calling `preventDefault()` suppresses the default `<a>` navigation so SPAs can route on their own.
 
 **Section types:**
 ```typescript
@@ -756,9 +834,11 @@ Multi-step form progress indicator.
 
 ## Validation System
 
-CivUI provides 15 built-in validators via `validate` from `@civui/core`. Each returns `{ valid: boolean, error?: string }`.
+CivUI provides 16 built-in validators via `validate` from `@civui/core`. Each returns `{ valid: boolean, error?: string }`.
 
-**Available validators:** `required`, `email`, `phone`, `phoneIntl`, `ssn`, `ein`, `zip`, `zip4`, `usState`, `isoDate`, `url`, `currency`, `range`, `length`, `alphanumeric`
+**Available validators:** `required`, `email`, `phone`, `phoneIntl`, `ssn`, `ein`, `routing`, `zip`, `zip4`, `usState`, `isoDate`, `url`, `currency`, `range`, `length`, `alphanumeric`
+
+`routing` enforces the ABA mod-10 checksum on US bank routing numbers. Used internally by `civ-direct-deposit` on its routing-number sub-input.
 
 **Declarative usage:** Set the `validate` attribute on form components to auto-validate on submit:
 

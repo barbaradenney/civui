@@ -46,6 +46,12 @@ Validation coordinator with accessible error summary. Validates child CivUI form
 
 <StoryEmbed id="forms-layout-form--government-inquiry-form" />
 
+### Server Error Injection
+
+After an async submit fails, call `form.setServerErrors({ fieldName: 'message' })` to populate the error summary and per-field errors. Behaves like a client-validation failure (focuses the summary, announces, anchor links). Pass an empty object to clear.
+
+<StoryEmbed id="forms-layout-form--set-server-errors" />
+
 [Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-layout-form--default)
 
 ## Props

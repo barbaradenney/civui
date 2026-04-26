@@ -208,3 +208,103 @@ describe('civ-summary', () => {
     expect(field!.getAttribute('edit-href')).toBe('');
   });
 });
+
+describe('civ-summary civ-edit event', () => {
+  afterEach(cleanupFixtures);
+
+  it('fires civ-edit when a section-level edit link is clicked', async () => {
+    const el = await fixture<CivSummary>('<civ-summary></civ-summary>') as CivSummary;
+    const sections: SummarySection[] = [
+      {
+        heading: 'Personal information',
+        editHref: '#step-personal',
+        items: [{ label: 'First name', value: 'Ada' }],
+      },
+    ];
+    el.sections = sections;
+    await elementUpdated(el);
+
+    let captured: any = null;
+    el.addEventListener('civ-edit', ((e: CustomEvent) => { captured = e.detail; }) as EventListener);
+
+    // Find the section header's civ-link (carries the dataset directly).
+    const sectionLink = el.querySelector('[data-civ-summary-section-index]') as HTMLElement;
+    sectionLink.click();
+    await elementUpdated(el);
+
+    expect(captured).not.toBeNull();
+    expect(captured.section).toBe(sections[0]);
+    expect(captured.href).toBe('#step-personal');
+    expect(captured.item).toBeUndefined();
+  });
+
+  it('fires civ-edit with the item when a per-item edit link is clicked', async () => {
+    const el = await fixture<CivSummary>('<civ-summary></civ-summary>') as CivSummary;
+    const sections: SummarySection[] = [
+      {
+        heading: '',
+        items: [
+          { label: 'Email', value: 'a@b.test', editHref: '#step-email' },
+          { label: 'Phone', value: '555', editHref: '#step-phone' },
+        ],
+      },
+    ];
+    el.sections = sections;
+    await elementUpdated(el);
+
+    let captured: any = null;
+    el.addEventListener('civ-edit', ((e: CustomEvent) => { captured = e.detail; }) as EventListener);
+
+    const fields = el.querySelectorAll<HTMLElement>('[data-civ-summary-item-index]');
+    expect(fields.length).toBe(2);
+    // The actual rendered link lives inside civ-read-only-field as a
+    // civ-link descendant. Click that — the handler walks up to find
+    // the dataset on the field host.
+    const innerLink = fields[1].querySelector('civ-link') as HTMLElement;
+    expect(innerLink).not.toBeNull();
+    innerLink.click();
+    await elementUpdated(el);
+
+    expect(captured).not.toBeNull();
+    expect(captured.section).toBe(sections[0]);
+    expect(captured.item).toBe(sections[0].items[1]);
+  });
+
+  it('is cancelable — preventDefault on the event suppresses default click', async () => {
+    const el = await fixture<CivSummary>('<civ-summary></civ-summary>') as CivSummary;
+    el.sections = [
+      {
+        heading: 'Personal',
+        editHref: '#step-personal',
+        items: [{ label: 'Name', value: 'Ada' }],
+      },
+    ];
+    await elementUpdated(el);
+
+    el.addEventListener('civ-edit', ((e: Event) => e.preventDefault()) as EventListener);
+
+    const sectionLink = el.querySelector('[data-civ-summary-section-index]') as HTMLElement;
+    const clickEvent = new MouseEvent('click', { bubbles: true, cancelable: true });
+    sectionLink.dispatchEvent(clickEvent);
+    await elementUpdated(el);
+
+    expect(clickEvent.defaultPrevented).toBe(true);
+  });
+
+  it('does not fire for clicks outside any edit link', async () => {
+    const el = await fixture<CivSummary>('<civ-summary heading="Review"></civ-summary>') as CivSummary;
+    el.sections = [
+      { heading: 'Personal', items: [{ label: 'Name', value: 'Ada' }] },
+    ];
+    await elementUpdated(el);
+
+    let fired = false;
+    el.addEventListener('civ-edit', () => { fired = true; });
+
+    const heading = el.querySelector('h2') as HTMLElement;
+    heading.click();
+    await elementUpdated(el);
+
+    expect(fired).toBe(false);
+  });
+});

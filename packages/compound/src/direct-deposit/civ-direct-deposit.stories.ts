@@ -149,3 +149,23 @@ export const GovernmentPaymentSetup: Story = {
     ></civ-direct-deposit>
   `,
 };
+
+// ── Routing-number checksum (built-in) ────────────────────────
+
+export const RoutingNumberValidation: Story = {
+  name: 'Routing-number checksum',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'The routing-number sub-input has `validate="routing"` set internally, so checksum-failing numbers (typos) are caught on blur with a "Enter a valid 9-digit bank routing number" message. Try `121000247` (off by one) for an error, or `121000248` (Wells Fargo SF) for valid.',
+      },
+    },
+  },
+  render: () => html`
+    <civ-direct-deposit
+      legend="Direct deposit"
+      name="deposit"
+    ></civ-direct-deposit>
+  `,
+};

@@ -18,13 +18,90 @@ export interface SelectOption {
  * Accessible dropdown select with label, hint, error, and option list.
  * Uses native <select> on web for maximum accessibility.
  *
+ * Options can be supplied two ways:
+ *   1. The `options` JS property — best for dynamic lists.
+ *   2. Slotted `<option>` and `<optgroup>` children — best for static
+ *      declarative HTML and SSR. Read once on `connectedCallback` if
+ *      the `options` property hasn't been populated.
+ *
  * @element civ-select
+ *
+ * @example
+ * ```html
+ * <civ-select label="State" name="state">
+ *   <option value="CA">California</option>
+ *   <optgroup label="Pacific">
+ *     <option value="OR">Oregon</option>
+ *     <option value="WA" selected>Washington</option>
+ *   </optgroup>
+ * </civ-select>
+ * ```
  */
 @customElement('civ-select')
 export class CivSelect extends CivFormElement {
   @property({ type: Array }) options: SelectOption[] = [];
   @property({ type: String, attribute: 'empty-label' }) emptyLabel: string = '';
   @property({ type: String }) width: InputWidth = 'default';
+
+  override connectedCallback(): void {
+    super.connectedCallback();
+    // Light DOM: original <option>/<optgroup> children would remain in the
+    // host alongside the rendered template. Capture their data into
+    // `options` (only when the property hasn't been populated otherwise),
+    // then strip them so they don't double-render.
+    if (this.options.length === 0) {
+      const slotted = this._readSlottedOptions();
+      if (slotted.options.length > 0) {
+        this.options = slotted.options;
+        if (!this.value && slotted.selected) {
+          this.value = slotted.selected;
+        }
+      }
+    }
+    // Always strip any stray <option>/<optgroup> direct children so they
+    // don't ghost behind the rendered <select>. Safe to run even when
+    // the property took precedence — those children would never render.
+    for (const child of Array.from(this.children)) {
+      if (child.tagName === 'OPTION' || child.tagName === 'OPTGROUP') {
+        child.remove();
+      }
+    }
+  }
+
+  /**
+   * Read slotted `<option>` / `<optgroup>` children into a SelectOption[].
+   * Honors `selected` (returns the first one as `selected`), `disabled`,
+   * and the optgroup's `label` (mapped to the option's `group` field).
+   */
+  private _readSlottedOptions(): { options: SelectOption[]; selected: string } {
+    const opts: SelectOption[] = [];
+    let selected = '';
+    for (const child of Array.from(this.children)) {
+      if (child.tagName === 'OPTION') {
+        const o = child as HTMLOptionElement;
+        opts.push({
+          value: o.value,
+          label: (o.textContent ?? '').trim() || o.value,
+          ...(o.disabled ? { disabled: true } : {}),
+        });
+        if (!selected && o.hasAttribute('selected')) selected = o.value;
+      } else if (child.tagName === 'OPTGROUP') {
+        const groupLabel = (child as HTMLElement).getAttribute('label') ?? '';
+        for (const grandchild of Array.from(child.children)) {
+          if (grandchild.tagName !== 'OPTION') continue;
+          const o = grandchild as HTMLOptionElement;
+          opts.push({
+            value: o.value,
+            label: (o.textContent ?? '').trim() || o.value,
+            ...(o.disabled ? { disabled: true } : {}),
+            ...(groupLabel ? { group: groupLabel } : {}),
+          });
+          if (!selected && o.hasAttribute('selected')) selected = o.value;
+        }
+      }
+    }
+    return { options: opts, selected };
+  }
 
   override updated(changed: Map<string, unknown>): void {
     super.updated(changed);

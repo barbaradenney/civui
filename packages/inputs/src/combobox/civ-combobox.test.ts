@@ -459,3 +459,89 @@ describe('civ-combobox width variants', () => {
     expect(wrapper.className).toContain('civ-max-w-full');
   });
 });
+
+describe('civ-combobox chevron toggle', () => {
+  afterEach(cleanupFixtures);
+
+  it('renders an always-visible chevron button', async () => {
+    const el = await fixture('<civ-combobox label="State"></civ-combobox>');
+    const chevron = el.querySelector('[data-civ-combobox-chevron]');
+    expect(chevron).not.toBeNull();
+  });
+
+  it('chevron is decorative (aria-hidden, tabindex -1)', async () => {
+    const el = await fixture('<civ-combobox label="State"></civ-combobox>');
+    const chevron = el.querySelector('[data-civ-combobox-chevron]')!;
+    expect(chevron.getAttribute('aria-hidden')).toBe('true');
+    expect(chevron.getAttribute('tabindex')).toBe('-1');
+  });
+
+  it('opens the listbox on click and clears any active filter', async () => {
+    const el = await fixture('<civ-combobox label="State"></civ-combobox>') as any;
+    el.options = STATES;
+    el._filter = 'XYZ';
+    await elementUpdated(el);
+    expect(el._open).toBe(false);
+
+    const chevron = el.querySelector('[data-civ-combobox-chevron]') as HTMLButtonElement;
+    chevron.click();
+    await elementUpdated(el);
+
+    expect(el._open).toBe(true);
+    expect(el._filter).toBe('');
+    // Filter cleared → all options visible.
+    expect(el.querySelectorAll('[role="option"]').length).toBe(STATES.length);
+  });
+
+  it('closes the listbox on second click', async () => {
+    const el = await fixture('<civ-combobox label="State"></civ-combobox>') as any;
+    el.options = STATES;
+    await elementUpdated(el);
+
+    const chevron = el.querySelector('[data-civ-combobox-chevron]') as HTMLButtonElement;
+    chevron.click();
+    await elementUpdated(el);
+    expect(el._open).toBe(true);
+
+    chevron.click();
+    await elementUpdated(el);
+    expect(el._open).toBe(false);
+  });
+
+  it('reflects open state via data-expanded for the rotation hook', async () => {
+    const el = await fixture('<civ-combobox label="State"></civ-combobox>') as any;
+    el.options = STATES;
+    await elementUpdated(el);
+
+    const chevron = el.querySelector('[data-civ-combobox-chevron]') as HTMLButtonElement;
+    expect(chevron.hasAttribute('data-expanded')).toBe(false);
+
+    chevron.click();
+    await elementUpdated(el);
+    expect(chevron.hasAttribute('data-expanded')).toBe(true);
+  });
+
+  it('disabled combobox renders a disabled chevron and does not toggle', async () => {
+    const el = await fixture('<civ-combobox label="State" disabled></civ-combobox>') as any;
+    el.options = STATES;
+    await elementUpdated(el);
+
+    const chevron = el.querySelector('[data-civ-combobox-chevron]') as HTMLButtonElement;
+    expect(chevron.disabled).toBe(true);
+
+    chevron.click();
+    await elementUpdated(el);
+    expect(el._open).toBe(false);
+  });
+
+  it('coexists with the clear button when a value is selected', async () => {
+    const el = await fixture('<civ-combobox label="State"></civ-combobox>') as any;
+    el.options = STATES;
+    el.value = 'CA';
+    el._filter = 'California';
+    await elementUpdated(el);
+
+    expect(el.querySelector('[data-civ-combobox-chevron]')).not.toBeNull();
+    expect(el.querySelector('.civ-clear-btn')).not.toBeNull();
+  });
+});

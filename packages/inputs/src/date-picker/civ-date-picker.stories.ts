@@ -170,3 +170,63 @@ export const GovernmentAppointmentScheduler: Story = {
     </form>
   `,
 };
+
+// ── Today button ──────────────────────────────────────────────
+
+export const TodayButton: Story = {
+  name: 'Today button (default)',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'A "Today" button in the dialog footer selects today and closes the picker. Press `T` (or `Shift+T`) inside the calendar to jump focus to today without selecting — Enter/Space still required to commit.',
+      },
+    },
+  },
+  render: () => html`
+    <civ-date-picker
+      label="Date of report"
+      name="reportDate"
+    ></civ-date-picker>
+  `,
+};
+
+export const TodayButtonHidden: Story = {
+  name: 'Today button hidden (date of birth)',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'For pickers where "today" makes no semantic sense (date of birth, document issue date, etc.), set `hide-today-button` to suppress the footer button. The `T` shortcut also no-ops since today is unreachable in the constraint window.',
+      },
+    },
+  },
+  render: () => html`
+    <civ-date-picker
+      label="Date of birth"
+      name="dob"
+      hide-today-button
+      max="2026-04-26"
+    ></civ-date-picker>
+  `,
+};
+
+export const TodayButtonDisabled: Story = {
+  name: 'Today button disabled (today outside min/max)',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'When `min` or `max` excludes today, the Today button is automatically disabled — clicking does nothing.',
+      },
+    },
+  },
+  render: () => html`
+    <civ-date-picker
+      label="Future appointment"
+      name="appt"
+      min="2030-01-01"
+      hint="Available January 1, 2030 onward"
+    ></civ-date-picker>
+  `,
+};

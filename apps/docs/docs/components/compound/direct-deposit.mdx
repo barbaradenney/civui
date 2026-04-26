@@ -46,6 +46,12 @@ Compound financial input for collecting bank account information. Includes accou
 
 <StoryEmbed id="forms-compound-direct-deposit--government-payment-setup" />
 
+### Routing Number Checksum
+
+The routing-number sub-input uses `validate="routing"` internally, so checksum-failing numbers are caught on blur. Try `121000247` (off-by-one typo) for an error or `121000248` (Wells Fargo SF) for valid.
+
+<StoryEmbed id="forms-compound-direct-deposit--routing-number-validation" />
+
 [Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-compound-direct-deposit--default)
 
 ## Shared Props

@@ -180,3 +180,32 @@ export const GovernmentAppealForm: Story = {
     </form>
   `,
 };
+
+// ── Declarative length validation ─────────────────────────────
+
+export const ValidateLength: Story = {
+  name: 'Validate: length (min + max)',
+  render: () => html`
+    <civ-textarea
+      label="Why you're applying"
+      name="why"
+      validate="length"
+      minlength="20"
+      maxlength="500"
+      hint="Tell us in a few sentences. Minimum 20 characters, maximum 500."
+    ></civ-textarea>
+  `,
+};
+
+export const ValidateMinLength: Story = {
+  name: 'Validate: length (min only)',
+  render: () => html`
+    <civ-textarea
+      label="Describe what happened"
+      name="what-happened"
+      validate="length"
+      minlength="50"
+      hint="Please give us at least 50 characters of detail."
+    ></civ-textarea>
+  `,
+};

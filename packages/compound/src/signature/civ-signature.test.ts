@@ -16,9 +16,9 @@ describe('civ-signature', () => {
 
   it('renders statement text when provided', async () => {
     const el = await fixture<CivSignature>('<civ-signature legend="Sign" statement="I certify this is true."></civ-signature>');
-    const p = el.querySelector('p');
-    expect(p).not.toBeNull();
-    expect(p!.textContent).toBe('I certify this is true.');
+    const statement = el.querySelector('[id*="statement"]');
+    expect(statement).not.toBeNull();
+    expect(statement!.textContent?.trim()).toBe('I certify this is true.');
   });
 
   it('renders name input and checkbox', async () => {
@@ -125,6 +125,206 @@ describe('civ-signature', () => {
       const el = await fixture<CivSignature>('<civ-signature legend="Sign"></civ-signature>') as CivSignature;
       await elementUpdated(el);
       expect(el.checkValidity()).toBe(true);
+    });
+  });
+
+  describe('statement → checkbox a11y link', () => {
+    it('links the certify checkbox to the statement element via aria-describedby', async () => {
+      const el = await fixture<CivSignature>(
+        '<civ-signature legend="Sign" statement="I certify the information is true"></civ-signature>',
+      ) as CivSignature;
+      await elementUpdated(el);
+
+      // Stable id on the rendered statement.
+      const statement = el.querySelector('[id*="statement"]') as HTMLElement;
+      expect(statement).not.toBeNull();
+      expect(statement.textContent).toContain('I certify the information is true');
+
+      // The certify checkbox's inner native input includes that id in its
+      // aria-describedby chain.
+      const checkboxInput = el.querySelectorAll('input[type="checkbox"]')[0] as HTMLInputElement;
+      const describedBy = checkboxInput.getAttribute('aria-describedby') ?? '';
+      expect(describedBy.split(' ')).toContain(statement.id);
+    });
+
+    it('does not add aria-describedby link when no statement is provided', async () => {
+      const el = await fixture<CivSignature>('<civ-signature legend="Sign"></civ-signature>') as CivSignature;
+      await elementUpdated(el);
+
+      expect(el.querySelector('[id*="statement"]')).toBeNull();
+      // The checkbox may still have hint/error IDs in its describedby, but
+      // it shouldn't reference a non-existent statement element.
+    });
+  });
+
+  describe('statement slot (HTML support)', () => {
+    it('renders slotted statement HTML in place of the text prop', async () => {
+      const el = await fixture<CivSignature>(`
+        <civ-signature legend="Sign">
+          <span slot="statement">I certify under <a href="/penalty">penalty of perjury</a> that this is true.</span>
+        </civ-signature>
+      `) as CivSignature;
+      await elementUpdated(el);
+
+      const statement = el.querySelector('[id*="statement"]') as HTMLElement;
+      expect(statement).not.toBeNull();
+      // The <a> tag survives because we use unsafeHTML.
+      const link = statement.querySelector('a');
+      expect(link).not.toBeNull();
+      expect(link!.getAttribute('href')).toBe('/penalty');
+      expect(link!.textContent).toBe('penalty of perjury');
+    });
+
+    it('removes the slotted child from the host so it does not double-render', async () => {
+      const el = await fixture<CivSignature>(`
+        <civ-signature legend="Sign">
+          <span slot="statement">Slotted statement</span>
+        </civ-signature>
+      `) as CivSignature;
+      await elementUpdated(el);
+
+      // Original slot wrapper is gone; the consumer's content lives only
+      // inside the rendered statement container.
+      expect(el.querySelectorAll('[slot="statement"]').length).toBe(0);
+      const statement = el.querySelector('[id*="statement"]');
+      expect(statement).not.toBeNull();
+      expect(statement!.textContent).toContain('Slotted statement');
+    });
+
+    it('slot content takes precedence over the text prop', async () => {
+      const el = await fixture<CivSignature>(`
+        <civ-signature legend="Sign" statement="From prop">
+          <span slot="statement">From slot</span>
+        </civ-signature>
+      `) as CivSignature;
+      await elementUpdated(el);
+
+      const statement = el.querySelector('[id*="statement"]') as HTMLElement;
+      expect(statement.textContent).toContain('From slot');
+      expect(statement.textContent).not.toContain('From prop');
+    });
+
+    it('still links the slotted statement to the certify checkbox', async () => {
+      const el = await fixture<CivSignature>(`
+        <civ-signature legend="Sign">
+          <span slot="statement">Slotted statement with <a href="/x">link</a></span>
+        </civ-signature>
+      `) as CivSignature;
+      await elementUpdated(el);
+
+      const statement = el.querySelector('[id*="statement"]') as HTMLElement;
+      const checkboxInput = el.querySelectorAll('input[type="checkbox"]')[0] as HTMLInputElement;
+      expect(checkboxInput.getAttribute('aria-describedby')?.split(' ')).toContain(statement.id);
+    });
+  });
+
+  describe('signedAt timestamp', () => {
+    it('starts empty before the user certifies', async () => {
+      const el = await fixture<CivSignature>('<civ-signature legend="Sign"></civ-signature>') as CivSignature;
+      await elementUpdated(el);
+      expect(el.signedAt).toBe('');
+      expect(el.signatureValue.signedAt).toBe('');
+    });
+
+    it('stamps an ISO 8601 timestamp when the user checks certify', async () => {
+      const el = await fixture<CivSignature>('<civ-signature legend="Sign"></civ-signature>') as CivSignature;
+      await elementUpdated(el);
+
+      const checkbox = el.querySelectorAll('input[type="checkbox"]')[0] as HTMLInputElement;
+      const before = Date.now();
+      checkbox.checked = true;
+      checkbox.dispatchEvent(new Event('change', { bubbles: true }));
+      await elementUpdated(el);
+      const after = Date.now();
+
+      expect(el.signedAt).not.toBe('');
+      // ISO 8601 format check
+      expect(el.signedAt).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/);
+      const stamped = new Date(el.signedAt).getTime();
+      expect(stamped).toBeGreaterThanOrEqual(before);
+      expect(stamped).toBeLessThanOrEqual(after);
+    });
+
+    it('clears the timestamp when the user unchecks certify', async () => {
+      const el = await fixture<CivSignature>('<civ-signature legend="Sign"></civ-signature>') as CivSignature;
+      await elementUpdated(el);
+      const checkbox = el.querySelectorAll('input[type="checkbox"]')[0] as HTMLInputElement;
+
+      checkbox.checked = true;
+      checkbox.dispatchEvent(new Event('change', { bubbles: true }));
+      await elementUpdated(el);
+      expect(el.signedAt).not.toBe('');
+
+      checkbox.checked = false;
+      checkbox.dispatchEvent(new Event('change', { bubbles: true }));
+      await elementUpdated(el);
+      expect(el.signedAt).toBe('');
+    });
+
+    it('captures a fresh timestamp when re-checking after uncheck', async () => {
+      const el = await fixture<CivSignature>('<civ-signature legend="Sign"></civ-signature>') as CivSignature;
+      await elementUpdated(el);
+      const checkbox = el.querySelectorAll('input[type="checkbox"]')[0] as HTMLInputElement;
+
+      checkbox.checked = true;
+      checkbox.dispatchEvent(new Event('change', { bubbles: true }));
+      await elementUpdated(el);
+      const first = el.signedAt;
+
+      checkbox.checked = false;
+      checkbox.dispatchEvent(new Event('change', { bubbles: true }));
+      await elementUpdated(el);
+
+      // Wait at least 2ms so the next timestamp is guaranteed different.
+      await new Promise((r) => setTimeout(r, 2));
+
+      checkbox.checked = true;
+      checkbox.dispatchEvent(new Event('change', { bubbles: true }));
+      await elementUpdated(el);
+      const second = el.signedAt;
+
+      expect(second).not.toBe('');
+      expect(second).not.toBe(first);
+      expect(new Date(second).getTime()).toBeGreaterThan(new Date(first).getTime());
+    });
+
+    it('preserves a programmatically-supplied signedAt (draft restore)', async () => {
+      const el = await fixture<CivSignature>('<civ-signature legend="Sign"></civ-signature>') as CivSignature;
+      const restored = '2026-04-01T12:34:56.000Z';
+      el.signatureValue = { name: 'Ada', certified: true, signedAt: restored };
+      await elementUpdated(el);
+      expect(el.signedAt).toBe(restored);
+    });
+
+    it('treats a programmatic set without signedAt as unsigned-time', async () => {
+      const el = await fixture<CivSignature>('<civ-signature legend="Sign"></civ-signature>') as CivSignature;
+      el.signatureValue = { name: 'Ada', certified: true };
+      await elementUpdated(el);
+      // Programmatic set didn't supply signedAt — we don't fabricate one.
+      expect(el.signedAt).toBe('');
+    });
+
+    it('clears signedAt on form reset', async () => {
+      const el = await fixture<CivSignature>('<civ-signature legend="Sign"></civ-signature>') as CivSignature;
+      await elementUpdated(el);
+      const checkbox = el.querySelectorAll('input[type="checkbox"]')[0] as HTMLInputElement;
+      checkbox.checked = true;
+      checkbox.dispatchEvent(new Event('change', { bubbles: true }));
+      await elementUpdated(el);
+      expect(el.signedAt).not.toBe('');
+
+      el.formResetCallback();
+      await elementUpdated(el);
+      expect(el.signedAt).toBe('');
+    });
+
+    it('parses an initial value="" JSON string with signedAt restored', async () => {
+      const initial = JSON.stringify({ name: 'Ada', certified: true, signedAt: '2026-04-01T12:00:00.000Z' });
+      const el = await fixture<CivSignature>(
+        `<civ-signature legend="Sign" value='${initial}'></civ-signature>`,
+      ) as CivSignature;
+      await elementUpdated(el);
+      expect(el.signedAt).toBe('2026-04-01T12:00:00.000Z');
     });
   });
 });

@@ -12,7 +12,7 @@ CivUI provides built-in validators for common field types and input masks for fo
 
 ## Validators
 
-15 built-in validators via `validate` from `@civui/core`. Each returns `{ valid: boolean, error?: string }`.
+16 built-in validators via `validate` from `@civui/core`. Each returns `{ valid: boolean, error?: string }`.
 
 | Validator | Description |
 |-----------|-------------|
@@ -22,6 +22,7 @@ CivUI provides built-in validators for common field types and input masks for fo
 | `phoneIntl` | International phone number |
 | `ssn` | Social Security number |
 | `ein` | Employer Identification Number |
+| `routing` | US bank routing number (ABA mod-10 checksum) |
 | `zip` / `zip4` | 5-digit ZIP / ZIP+4 |
 | `usState` | US state abbreviation |
 | `isoDate` | ISO 8601 date (YYYY-MM-DD) |

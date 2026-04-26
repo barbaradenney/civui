@@ -431,3 +431,90 @@ describe('aria-required', () => {
     expect(el.files[0].name).toBe('b.pdf');
   });
 });
+
+describe('civ-file-upload duplicate detection', () => {
+  afterEach(cleanupFixtures);
+
+  it('rejects a duplicate by name + size + lastModified', async () => {
+    const el = await fixture('<civ-file-upload label="Docs" multiple></civ-file-upload>') as any;
+    const lastModified = Date.now();
+    const a = new File(['content'], 'report.pdf', { type: 'application/pdf', lastModified });
+    el._addFiles([a]);
+    await el.updateComplete;
+    expect(el.files.length).toBe(1);
+
+    // Same name + same size + same lastModified → duplicate
+    const dup = new File(['content'], 'report.pdf', { type: 'application/pdf', lastModified });
+    el._addFiles([dup]);
+    await el.updateComplete;
+
+    expect(el.files.length).toBe(1);
+    expect(el.error).toContain('already in the list');
+  });
+
+  it('does NOT reject a same-named file with a different size', async () => {
+    const el = await fixture('<civ-file-upload label="Docs" multiple></civ-file-upload>') as any;
+    el._addFiles([new File(['short'], 'a.pdf', { type: 'application/pdf', lastModified: 1 })]);
+    await el.updateComplete;
+
+    el._addFiles([new File(['much longer content here'], 'a.pdf', { type: 'application/pdf', lastModified: 2 })]);
+    await el.updateComplete;
+
+    expect(el.files.length).toBe(2);
+  });
+
+  it('allows re-adding a removed file', async () => {
+    const el = await fixture('<civ-file-upload label="Docs" multiple></civ-file-upload>') as any;
+    const lastModified = 1;
+    const file = new File(['content'], 'report.pdf', { type: 'application/pdf', lastModified });
+    el._addFiles([file]);
+    await el.updateComplete;
+    expect(el.files.length).toBe(1);
+
+    el._removeFile(0);
+    await el.updateComplete;
+    expect(el.files.length).toBe(0);
+
+    el._addFiles([new File(['content'], 'report.pdf', { type: 'application/pdf', lastModified })]);
+    await el.updateComplete;
+    expect(el.files.length).toBe(1);
+  });
+
+  it('reports duplicates alongside other validation errors', async () => {
+    const el = await fixture('<civ-file-upload label="Docs" multiple max-size="100"></civ-file-upload>') as any;
+    el._addFiles([new File(['x'], 'ok.pdf', { type: 'application/pdf', lastModified: 1 })]);
+    await el.updateComplete;
+
+    el._addFiles([
+      new File(['x'], 'ok.pdf', { type: 'application/pdf', lastModified: 1 }), // duplicate
+      new File(['x'.repeat(200)], 'big.pdf', { type: 'application/pdf', lastModified: 2 }), // too big
+    ]);
+    await el.updateComplete;
+
+    expect(el.files.length).toBe(1);
+    expect(el.error).toContain('already in the list');
+    expect(el.error).toContain('exceeds the maximum size');
+  });
+});
+
+describe('civ-file-upload capture prop', () => {
+  afterEach(cleanupFixtures);
+
+  it('omits the capture attribute by default', async () => {
+    const el = await fixture('<civ-file-upload label="Photo"></civ-file-upload>');
+    const input = el.querySelector('input[type="file"]')!;
+    expect(input.hasAttribute('capture')).toBe(false);
+  });
+
+  it('passes capture="environment" through to the file input', async () => {
+    const el = await fixture('<civ-file-upload label="Document scan" capture="environment"></civ-file-upload>');
+    const input = el.querySelector('input[type="file"]')!;
+    expect(input.getAttribute('capture')).toBe('environment');
+  });
+
+  it('passes capture="user" through to the file input', async () => {
+    const el = await fixture('<civ-file-upload label="Selfie" capture="user"></civ-file-upload>');
+    const input = el.querySelector('input[type="file"]')!;
+    expect(input.getAttribute('capture')).toBe('user');
+  });
+});

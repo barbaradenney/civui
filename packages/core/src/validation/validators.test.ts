@@ -445,3 +445,50 @@ describe('validate.alphanumeric', () => {
     expect(validate.alphanumeric('abc', { min: 2, max: 5 })).toEqual({ valid: true });
   });
 });
+
+describe('validate.routing', () => {
+  // Real, in-circulation routing numbers (publicly published examples).
+  // The checksum is a property of the digits — these all satisfy
+  // 3·d1 + 7·d2 + d3 + 3·d4 + 7·d5 + d6 + 3·d7 + 7·d8 + d9 ≡ 0 (mod 10).
+
+  it('accepts a valid routing number', () => {
+    // Wells Fargo (San Francisco): 121000248
+    expect(validate.routing('121000248')).toEqual({ valid: true });
+  });
+
+  it('accepts another valid routing number', () => {
+    // Chase NY: 021000021
+    expect(validate.routing('021000021')).toEqual({ valid: true });
+  });
+
+  it('accepts hyphenated input by stripping non-digits', () => {
+    expect(validate.routing('121-000-248')).toEqual({ valid: true });
+  });
+
+  it('rejects a number that fails the checksum', () => {
+    // 121000247 is one digit off from a real number — checksum no longer matches.
+    expect(validate.routing('121000247').valid).toBe(false);
+  });
+
+  it('rejects fewer than 9 digits', () => {
+    expect(validate.routing('12100024').valid).toBe(false);
+  });
+
+  it('rejects more than 9 digits', () => {
+    expect(validate.routing('1210002480').valid).toBe(false);
+  });
+
+  it('rejects all-zero routing number', () => {
+    expect(validate.routing('000000000').valid).toBe(false);
+  });
+
+  it('rejects empty string', () => {
+    expect(validate.routing('').valid).toBe(false);
+  });
+
+  it('returns the locale-keyed error message on failure', () => {
+    expect(validate.routing('121000247').error).toBe(
+      'Enter a valid 9-digit bank routing number',
+    );
+  });
+});

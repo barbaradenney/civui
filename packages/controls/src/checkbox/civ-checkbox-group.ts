@@ -39,6 +39,28 @@ export class CivCheckboxGroup extends LightDomSlotMixin(CivFormElement) {
   @property({ type: String, reflect: true }) orientation: 'vertical' | 'horizontal' = 'vertical';
   @property({ type: Boolean, attribute: 'show-select-all' }) showSelectAll = false;
   @property({ type: Number, attribute: 'max-selections' }) maxSelections?: number;
+  /**
+   * Minimum number of options that must be checked. When > 0, the group
+   * is treated as implicitly required (legend shows the required mark
+   * and `_updateValidity` reports `valueMissing` until the count is met).
+   * Surfaces only on submit / `checkValidity()` — does not block
+   * mid-flow unchecks.
+   */
+  @property({ type: Number, attribute: 'min-selections' }) minSelections?: number;
+
+  /** Whether `minSelections` should drive the implicit-required behavior. */
+  private get _minSelections(): number {
+    return this.minSelections != null && this.minSelections > 0 ? this.minSelections : 0;
+  }
+
+  /**
+   * Effective required state: explicit `required` OR a positive
+   * `minSelections`. Used to drive both the legend asterisk and the
+   * native validity check.
+   */
+  private get _isEffectivelyRequired(): boolean {
+    return this.required || this._minSelections > 0;
+  }
 
   protected override _defaultValue = '';
   private _boundOnChildChange = this._onChildChange.bind(this);
@@ -103,6 +125,28 @@ export class CivCheckboxGroup extends LightDomSlotMixin(CivFormElement) {
     this._updateGroupFormValue();
   }
 
+  protected override _updateValidity(): void {
+    const checkedCount = this._parseValue(this.value).length;
+    const min = this._minSelections;
+    const anchor = this.querySelector('input, civ-checkbox') as HTMLElement | null;
+
+    if (min > 0 && checkedCount < min) {
+      this._setValidity(
+        { valueMissing: true },
+        this.error || interpolate(t('minSelectionsError'), { min }),
+        anchor ?? undefined,
+      );
+    } else if (this.required && checkedCount === 0) {
+      this._setValidity(
+        { valueMissing: true },
+        this.error || interpolate(this.requiredMessage || t('fieldRequired'), { label: this.legend || this.label || t('fieldFallbackLabel') }),
+        anchor ?? undefined,
+      );
+    } else {
+      this._setValidity({});
+    }
+  }
+
   override formDisabledCallback(disabled: boolean): void {
     super.formDisabledCallback(disabled);
     this._syncCheckboxDisabled();
@@ -114,10 +158,14 @@ export class CivCheckboxGroup extends LightDomSlotMixin(CivFormElement) {
         ? 'civ-group-layout--horizontal'
         : 'civ-group-layout--vertical';
 
+    const minHint = this._minSelections > 0
+      ? interpolate(t('minSelectionsHint'), { min: this._minSelections })
+      : '';
     const maxHint = this.maxSelections
       ? interpolate(t('maxSelectionsHint'), { max: this.maxSelections })
       : '';
-    const combinedHint = [this.hint, maxHint].filter(Boolean).join('. ');
+    const combinedHint = [this.hint, minHint, maxHint].filter(Boolean).join('. ');
+    const effectivelyRequired = this._isEffectivelyRequired;
 
     return html`
       <fieldset
@@ -125,10 +173,10 @@ export class CivCheckboxGroup extends LightDomSlotMixin(CivFormElement) {
         aria-orientation="${this.orientation}"
         aria-describedby="${this._ariaDescribedBy || nothing}"
         aria-invalid="${this.error ? 'true' : nothing}"
-        aria-required="${this.required || nothing}"
+        aria-required="${effectivelyRequired || nothing}"
         ?disabled="${this.disabled}"
       >
-        ${renderLegend({ legend: this.legend, required: this.required })}
+        ${renderLegend({ legend: this.legend, required: effectivelyRequired })}
         ${renderHint(this._hintId, combinedHint, true)}
         ${renderError(this._errorId, this.error, true)}
         ${this.showSelectAll ? html`

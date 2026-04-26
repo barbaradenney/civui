@@ -305,3 +305,69 @@ export const GovernmentDocumentSubmission: Story = {
     ></civ-file-upload>
   `,
 };
+
+// ── Camera capture (mobile) ───────────────────────────────────
+
+export const CaptureEnvironment: Story = {
+  name: 'Capture: back camera (document scan)',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'On mobile, `capture="environment"` opens the back camera so the user can photograph a document directly. Pair with `accept="image/*"`. Desktop browsers ignore the attribute and behave as a normal file picker.',
+      },
+    },
+  },
+  render: () => html`
+    <civ-file-upload
+      label="Driver's license photo"
+      name="license"
+      accept="image/*"
+      capture="environment"
+      hint="Take a photo of your license, or upload one from your device"
+    ></civ-file-upload>
+  `,
+};
+
+export const CaptureUser: Story = {
+  name: 'Capture: front camera (selfie)',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          '`capture="user"` opens the front-facing camera — used for liveness checks or "selfie with ID" flows.',
+      },
+    },
+  },
+  render: () => html`
+    <civ-file-upload
+      label="Identity verification photo"
+      name="selfie"
+      accept="image/*"
+      capture="user"
+      hint="Take a photo of your face for identity verification"
+    ></civ-file-upload>
+  `,
+};
+
+// ── Duplicate detection ───────────────────────────────────────
+
+export const DuplicateDetection: Story = {
+  name: 'Duplicate detection',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Adding a file already in the list (matched by name + size + lastModified) is rejected with a "{name} is already in the list" error. Removing a file then re-adding it works as expected.',
+      },
+    },
+  },
+  render: () => html`
+    <civ-file-upload
+      label="Supporting documents"
+      name="docs"
+      multiple
+      hint="Try selecting the same file twice — the second add is rejected."
+    ></civ-file-upload>
+  `,
+};

@@ -1,5 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
+import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { CivFormElement, dispatch, renderLegend, renderHint, renderError, buildDescribedBy, interpolate, t } from '@civui/core';
 import '@civui/inputs';
 import '@civui/controls';
@@ -7,20 +8,39 @@ import '@civui/controls';
 export interface SignatureValue {
   name: string;
   certified: boolean;
+  /**
+   * Optional ISO 8601 timestamp captured the first time the user
+   * interactively certifies (checks the certify box). Empty string when
+   * the signature isn't yet certified, or when state was set
+   * programmatically without an explicit timestamp. Treat as a
+   * user-claimed signing time — server-recorded timestamps remain
+   * authoritative.
+   */
+  signedAt?: string;
 }
 
-const EMPTY_SIGNATURE: SignatureValue = { name: '', certified: false };
+interface InternalSignature {
+  name: string;
+  certified: boolean;
+  signedAt: string;
+}
+
+const EMPTY_SIGNATURE: InternalSignature = { name: '', certified: false, signedAt: '' };
 
 /**
  * CivUI Signature
  *
  * Statement of truth component for form submission. Renders a certification
- * statement, a full name text input, and a certification checkbox.
+ * statement, a full name text input, and a certification checkbox. The
+ * statement is wired into the certify checkbox via aria-describedby so a
+ * screen-reader user hears the full certification text when the checkbox
+ * receives focus.
+ *
  * Used at the end of a review page before final submission.
  *
  * @element civ-signature
  *
- * @example
+ * @example Plain text statement (default)
  * ```html
  * <civ-signature
  *   legend="Statement of truth"
@@ -28,6 +48,16 @@ const EMPTY_SIGNATURE: SignatureValue = { name: '', certified: false };
  *   statement="I certify that the information I have provided is true and correct."
  *   required
  * ></civ-signature>
+ * ```
+ *
+ * @example Rich statement with links (slot fallback)
+ * ```html
+ * <civ-signature legend="Statement of truth" name="signature" required>
+ *   <span slot="statement">
+ *     I certify under <a href="/penalty">penalty of perjury</a> that the
+ *     information is true and correct.
+ *   </span>
+ * </civ-signature>
  * ```
  *
  * @fires civ-input - On every field change, detail: { value: SignatureValue }
@@ -38,8 +68,14 @@ export class CivSignature extends CivFormElement {
   /** Fieldset legend. */
   @property({ type: String }) legend = '';
 
-  /** Certification statement text displayed above the fields. */
+  /** Certification statement text displayed above the fields. Ignored when a `slot="statement"` child is present. */
   @property({ type: String }) statement = '';
+
+  /** Stable id for the rendered statement element, referenced by the certify checkbox's aria-describedby. */
+  private _statementId = this.generateId('statement');
+
+  /** HTML captured from a `slot="statement"` child in connectedCallback (light DOM doesn't auto-project). */
+  private _slottedStatementHTML: string | null = null;
 
   /** Error for the name field. */
   @property({ type: String, attribute: 'name-error' }) nameError = '';
@@ -47,22 +83,39 @@ export class CivSignature extends CivFormElement {
   /** Error for the certification checkbox. */
   @property({ type: String, attribute: 'certify-error' }) certifyError = '';
 
-  @state() private _signature: SignatureValue = { ...EMPTY_SIGNATURE };
+  @state() private _signature: InternalSignature = { ...EMPTY_SIGNATURE };
 
   /** Get the current signature value. */
   get signatureValue(): SignatureValue {
     return { ...this._signature };
   }
 
-  /** Set the signature value. */
+  /** Set the signature value. Missing fields fall back to the empty defaults. */
   set signatureValue(val: SignatureValue) {
-    this._signature = { ...val };
+    this._signature = { ...EMPTY_SIGNATURE, ...val, signedAt: val.signedAt ?? '' };
     this.value = JSON.stringify(this._signature);
   }
 
   /** Whether the signature is complete (name entered and checkbox checked). */
   get isComplete(): boolean {
     return this._signature.name.trim().length > 0 && this._signature.certified;
+  }
+
+  override connectedCallback(): void {
+    super.connectedCallback();
+    // Light DOM: capture any `slot="statement"` children before Lit's first
+    // render destroys them. Multiple children get joined; their content is
+    // re-rendered via unsafeHTML so consumer-supplied <a> tags survive.
+    const slotted = Array.from(this.children).filter(
+      (child) => child.getAttribute('slot') === 'statement',
+    );
+    if (slotted.length > 0) {
+      // Use innerHTML so the wrapper element (with its slot attribute) is
+      // discarded — only the consumer's content survives into the rendered
+      // statement container.
+      this._slottedStatementHTML = slotted.map((c) => c.innerHTML).join('');
+      for (const child of slotted) child.remove();
+    }
   }
 
   override firstUpdated(): void {
@@ -72,6 +125,11 @@ export class CivSignature extends CivFormElement {
         this._signature = { ...EMPTY_SIGNATURE, ...JSON.parse(this.value) };
       } catch { /* leave empty */ }
     }
+  }
+
+  /** Whether any statement (slot or prop) is present. */
+  private get _hasStatement(): boolean {
+    return !!this._slottedStatementHTML || !!this.statement;
   }
 
   override render() {
@@ -89,8 +147,12 @@ export class CivSignature extends CivFormElement {
         ${renderHint(this._hintId, this.hint, true)}
         ${renderError(this._errorId, this.error, true)}
 
-        ${this.statement ? html`
-          <p class="civ-text-base civ-text-muted civ-mb-4">${this.statement}</p>
+        ${this._hasStatement ? html`
+          <div id="${this._statementId}" class="civ-text-base civ-text-muted civ-mb-4">
+            ${this._slottedStatementHTML
+              ? unsafeHTML(this._slottedStatementHTML)
+              : this.statement}
+          </div>
         ` : nothing}
 
         <civ-text-input
@@ -113,6 +175,7 @@ export class CivSignature extends CivFormElement {
           ?checked="${this._signature.certified}"
           ?disabled="${this.disabled}"
           error="${this.certifyError}"
+          extra-describedby="${this._hasStatement ? this._statementId : nothing}"
           @civ-change="${this._onCertifyChange}"
         ></civ-checkbox>
       </fieldset>
@@ -135,10 +198,28 @@ export class CivSignature extends CivFormElement {
 
   private _onCertifyChange(e: CustomEvent<{ checked: boolean }>): void {
     e.stopPropagation();
-    this._signature = { ...this._signature, certified: e.detail.checked };
+    // Stamp signedAt the moment the user certifies; clear it when they
+    // uncheck so we never report a stale time. Re-checking captures a
+    // fresh timestamp.
+    const signedAt = e.detail.checked ? new Date().toISOString() : '';
+    this._signature = {
+      ...this._signature,
+      certified: e.detail.checked,
+      signedAt,
+    };
     this.value = JSON.stringify(this._signature);
     dispatch(this, 'civ-input', { value: { ...this._signature } });
     dispatch(this, 'civ-change', { value: { ...this._signature } });
+  }
+
+  /**
+   * The captured signing time as an ISO 8601 string, or empty string when
+   * the signature isn't certified. Convenience accessor — the same value
+   * is in `signatureValue.signedAt` and the submitted FormData under
+   * `${name}.signedAt`.
+   */
+  get signedAt(): string {
+    return this._signature.signedAt;
   }
 
   protected override _syncFormValue(): void {
@@ -146,6 +227,9 @@ export class CivSignature extends CivFormElement {
     const prefix = this.name || 'signature';
     fd.append(`${prefix}.name`, this._signature.name);
     fd.append(`${prefix}.certified`, this._signature.certified ? 'true' : 'false');
+    if (this._signature.signedAt) {
+      fd.append(`${prefix}.signedAt`, this._signature.signedAt);
+    }
     this.updateFormValue(fd);
   }
 

@@ -360,3 +360,64 @@ export const GovernmentApplicationReview: Story = {
     }
   },
 };
+
+// ── SPA navigation interception (civ-edit event) ──────────────
+
+export const InterceptEditWithCivEditEvent: Story = {
+  name: 'Intercept edit clicks (civ-edit event)',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'SPAs that use a router can intercept edit-link clicks via the cancelable `civ-edit` event. The detail includes the section, the per-item (when applicable), and the href. Calling `preventDefault()` suppresses the default navigation so the consumer can route on their own.',
+      },
+    },
+  },
+  render: () => {
+    const el = document.createElement('civ-summary') as any;
+    el.heading = 'Review your application';
+    el.sections = [
+      {
+        heading: 'Personal information',
+        editHref: '#step-personal',
+        items: [
+          { label: 'Full name', value: 'Ada Lovelace' },
+          { label: 'Date of birth', value: 'December 10, 1815' },
+        ],
+      },
+      {
+        heading: 'Contact information',
+        editHref: '#step-contact',
+        items: [
+          { label: 'Email', value: 'ada@example.test' },
+          { label: 'Phone', value: '(555) 123-4567' },
+        ],
+      },
+    ];
+
+    const wrap = document.createElement('div');
+    const log = document.createElement('pre');
+    log.id = 'civ-edit-log';
+    log.className = 'civ-mt-4 civ-p-3 civ-bg-base-lightest civ-rounded civ-text-sm';
+    log.style.whiteSpace = 'pre-wrap';
+    log.textContent = 'Click any "Edit" link — navigation is suppressed; the event detail is logged here.';
+
+    el.addEventListener('civ-edit', (e: Event) => {
+      e.preventDefault();
+      const detail = (e as CustomEvent).detail;
+      log.textContent = JSON.stringify(
+        {
+          section: detail.section.heading,
+          item: detail.item?.label ?? null,
+          href: detail.href,
+        },
+        null,
+        2,
+      );
+    });
+
+    wrap.appendChild(el);
+    wrap.appendChild(log);
+    return wrap;
+  },
+};

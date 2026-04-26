@@ -101,6 +101,7 @@ export class CivDirectDeposit extends CivFormElement {
           error="${this.routingError}"
           inputmode="numeric"
           maxlength="9"
+          validate="routing"
           ?disabled="${this.disabled}"
           ?readonly="${this.readonly}"
           @civ-input="${(e: CustomEvent) => this._onSubInput('routingNumber', e)}"

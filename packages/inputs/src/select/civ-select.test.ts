@@ -341,4 +341,116 @@ describe('civ-select civ-input event', () => {
       expect(select.className).toContain('civ-max-w-full');
     });
   });
+
+  describe('slotted <option> fallback', () => {
+    it('reads <option> children into the options property', async () => {
+      const el = await fixture(`
+        <civ-select label="State">
+          <option value="CA">California</option>
+          <option value="NY">New York</option>
+        </civ-select>
+      `) as any;
+      await elementUpdated(el);
+
+      expect(el.options).toEqual([
+        { value: 'CA', label: 'California' },
+        { value: 'NY', label: 'New York' },
+      ]);
+
+      // Rendered options are present (1 empty + 2 real).
+      const opts = el.querySelectorAll('option');
+      expect(opts.length).toBe(3);
+      expect(opts[1].value).toBe('CA');
+      expect(opts[2].value).toBe('NY');
+    });
+
+    it('honors <option selected> to set initial value when none was given', async () => {
+      const el = await fixture(`
+        <civ-select label="State">
+          <option value="CA">California</option>
+          <option value="NY" selected>New York</option>
+        </civ-select>
+      `) as any;
+      await elementUpdated(el);
+
+      expect(el.value).toBe('NY');
+    });
+
+    it('does not override an explicitly-set value attribute', async () => {
+      const el = await fixture(`
+        <civ-select label="State" value="CA">
+          <option value="CA">California</option>
+          <option value="NY" selected>New York</option>
+        </civ-select>
+      `) as any;
+      await elementUpdated(el);
+
+      expect(el.value).toBe('CA');
+    });
+
+    it('honors <option disabled>', async () => {
+      const el = await fixture(`
+        <civ-select label="State">
+          <option value="CA">California</option>
+          <option value="XX" disabled>Unavailable</option>
+        </civ-select>
+      `) as any;
+      await elementUpdated(el);
+
+      expect(el.options[1]).toMatchObject({ value: 'XX', disabled: true });
+    });
+
+    it('falls back to text content when value attribute is missing', async () => {
+      const el = await fixture(`
+        <civ-select label="Pick">
+          <option>Yes</option>
+          <option>No</option>
+        </civ-select>
+      `) as any;
+      await elementUpdated(el);
+
+      expect(el.options[0]).toMatchObject({ value: 'Yes', label: 'Yes' });
+      expect(el.options[1]).toMatchObject({ value: 'No', label: 'No' });
+    });
+
+    it('reads <optgroup> children with the group label', async () => {
+      const el = await fixture(`
+        <civ-select label="State">
+          <option value="CA">California</option>
+          <optgroup label="Pacific">
+            <option value="OR">Oregon</option>
+            <option value="WA">Washington</option>
+          </optgroup>
+        </civ-select>
+      `) as any;
+      await elementUpdated(el);
+
+      expect(el.options).toEqual([
+        { value: 'CA', label: 'California' },
+        { value: 'OR', label: 'Oregon', group: 'Pacific' },
+        { value: 'WA', label: 'Washington', group: 'Pacific' },
+      ]);
+
+      // The rendered DOM also has an optgroup.
+      const optgroup = el.querySelector('optgroup');
+      expect(optgroup).not.toBeNull();
+      expect(optgroup!.getAttribute('label')).toBe('Pacific');
+    });
+
+    it('does not read slotted children when the options property is already set', async () => {
+      const el = await fixture('<civ-select label="State"></civ-select>') as any;
+      el.options = [{ value: 'CA', label: 'California' }];
+      // Append children after, to simulate a different mounting order.
+      const opt = document.createElement('option');
+      opt.value = 'NY';
+      opt.textContent = 'New York';
+      el.appendChild(opt);
+      await elementUpdated(el);
+
+      // Property-set options stay; appended option is ignored (it gets
+      // wiped on the next render).
+      expect(el.options.length).toBe(1);
+      expect(el.options[0].value).toBe('CA');
+    });
+  });
 });

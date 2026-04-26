@@ -46,6 +46,12 @@ Read-only review page component that displays form data before final submission.
 
 <StoryEmbed id="forms-patterns-summary--government-application-review" />
 
+### Intercept Edit Clicks (civ-edit event)
+
+For SPAs that handle routing internally, listen for the cancelable `civ-edit` event. The detail includes the section, the per-item (when applicable), and the href. Calling `preventDefault()` suppresses the default `<a>` navigation.
+
+<StoryEmbed id="forms-patterns-summary--intercept-edit-with-civ-edit-event" />
+
 [Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-patterns-summary--default)
 
 ## Props

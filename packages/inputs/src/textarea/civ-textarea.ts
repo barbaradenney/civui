@@ -1,6 +1,8 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivFormElement, debounce, dispatch, renderLabel, renderHint, renderError, inputClasses, t, interpolate } from '@civui/core';
+import { CivFormElement, debounce, dispatch, renderLabel, renderHint, renderError, inputClasses, t, interpolate, validate } from '@civui/core';
+
+export type TextareaValidate = 'length' | '';
 
 /**
  * CivUI Textarea
@@ -32,10 +34,29 @@ import { CivFormElement, debounce, dispatch, renderLabel, renderHint, renderErro
 export class CivTextarea extends CivFormElement {
   @property({ type: Number }) rows = 5;
   @property({ type: Number }) maxlength?: number;
+  @property({ type: Number }) minlength?: number;
   @property({ type: Number }) maxwords?: number;
   @property({ type: String }) placeholder = '';
   @property({ type: Boolean }) autogrow = false;
   @property({ type: String, attribute: 'max-height' }) maxHeight = '';
+
+  /**
+   * Declarative validation. When set, the validator runs on blur (and the
+   * inner state flag tracks the resulting error so it can be cleared on
+   * subsequent valid input without disturbing externally-set errors).
+   *
+   * Supported:
+   * - `length` — checks `value.length` against `minlength`/`maxlength` and
+   *   surfaces a "Must be at least/no more than/between X and Y characters"
+   *   message via the standard locale keys.
+   *
+   * Other text-input validators (email, ssn, phone, …) don't fit the
+   * multi-line use case and are intentionally not accepted here.
+   */
+  @property({ type: String, attribute: 'validate' }) validateType: TextareaValidate = '';
+
+  /** Tracks whether the current error was set by the validate system. */
+  private _validateError = false;
 
   @state() private _charCount = 0;
   @state() private _announcedCharCount = 0;
@@ -122,6 +143,7 @@ export class CivTextarea extends CivFormElement {
           .value="${this.value}"
           placeholder="${this.placeholder || nothing}"
           maxlength="${this.maxlength && this.maxlength > 0 ? this.maxlength : nothing}"
+          minlength="${this.minlength && this.minlength > 0 ? this.minlength : nothing}"
           ?disabled="${this.disabled}"
           ?readonly="${this.readonly}"
           ?required="${this.required}"
@@ -130,6 +152,7 @@ export class CivTextarea extends CivFormElement {
           aria-invalid="${this.error ? 'true' : nothing}"
           @input="${this._onInput}"
           @change="${this._handleChange}"
+          @blur="${this.validateType === 'length' ? this._onValidateBlur : nothing}"
         ></textarea>
         ${showCharCount
           ? html`
@@ -139,10 +162,10 @@ export class CivTextarea extends CivFormElement {
                   ? 'civ-text-error civ-font-bold'
                   : 'civ-text-muted'}"
               >
-                ${interpolate(t('textareaCharsRemaining'), { count: remaining })}
+                ${interpolate(t('inputCharsRemaining'), { count: remaining })}
               </span>
               <span class="civ-sr-only" aria-live="polite">
-                ${interpolate(t('textareaCharsRemaining'), { count: this.maxlength! - this._announcedCharCount })}
+                ${interpolate(t('inputCharsRemaining'), { count: this.maxlength! - this._announcedCharCount })}
               </span>
             `
           : nothing}
@@ -210,6 +233,35 @@ export class CivTextarea extends CivFormElement {
     }
     // Form value sync handled by _syncFormValue() in updated()
     dispatch(this, 'civ-input', { value: this.value });
+  }
+
+  /**
+   * Run the declarative validator on blur. Currently only `validate="length"`
+   * is supported; it checks `value.length` against `minlength` and
+   * `maxlength`. Empty values are skipped — required-field validation is
+   * the base class's job.
+   */
+  private _onValidateBlur(): void {
+    if (this.validateType !== 'length' || !this.value) {
+      if (this._validateError) {
+        this.error = '';
+        this._validateError = false;
+      }
+      return;
+    }
+
+    const min = this.minlength && this.minlength > 0 ? this.minlength : undefined;
+    const max = this.maxlength && this.maxlength > 0 ? this.maxlength : undefined;
+    if (min == null && max == null) return;
+
+    const result = validate.length(this.value, { min, max });
+    if (!result.valid) {
+      this.error = result.error || '';
+      this._validateError = true;
+    } else if (this._validateError) {
+      this.error = '';
+      this._validateError = false;
+    }
   }
 }
 

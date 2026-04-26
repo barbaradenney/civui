@@ -626,3 +626,76 @@ describe('text-input mask IME handling', () => {
     expect(el.value).toBe('123456789');
   });
 });
+
+describe('text-input character counter', () => {
+  afterEach(cleanupFixtures);
+
+  it('renders counter when maxlength is set', async () => {
+    const el = await fixture('<civ-text-input label="Name" maxlength="20"></civ-text-input>');
+    const counter = el.querySelector('[id*="charcount"]');
+    expect(counter).not.toBeNull();
+    expect(counter!.textContent).toContain('20 characters remaining');
+  });
+
+  it('does not render counter without maxlength', async () => {
+    const el = await fixture('<civ-text-input label="Name"></civ-text-input>');
+    const counter = el.querySelector('[id*="charcount"]');
+    expect(counter).toBeNull();
+  });
+
+  it('does not render counter for masked inputs (mask drives length)', async () => {
+    const el = await fixture('<civ-text-input label="SSN" mask="ssn" maxlength="20"></civ-text-input>');
+    const counter = el.querySelector('[id*="charcount"]');
+    expect(counter).toBeNull();
+  });
+
+  it('does not render counter for custom mask-pattern inputs', async () => {
+    const el = await fixture('<civ-text-input label="Code" mask-pattern="AAA-####" maxlength="20"></civ-text-input>');
+    const counter = el.querySelector('[id*="charcount"]');
+    expect(counter).toBeNull();
+  });
+
+  it('updates the visual counter as the user types', async () => {
+    const el = await fixture('<civ-text-input label="Name" maxlength="20"></civ-text-input>');
+    const input = el.querySelector('input')!;
+    const counter = el.querySelector('[id*="charcount"]')!;
+
+    input.value = 'Hello';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    await elementUpdated(el);
+
+    expect(counter.textContent).toContain('15 characters remaining');
+  });
+
+  it('shows error styling when over the limit', async () => {
+    const el = await fixture<any>('<civ-text-input label="Name" maxlength="3"></civ-text-input>');
+    el.value = 'too long';
+    await elementUpdated(el);
+
+    const counter = el.querySelector('[id*="charcount"]')!;
+    expect(counter.className).toContain('civ-text-error');
+    expect(counter.className).toContain('civ-font-bold');
+    expect(counter.textContent).toContain('-5 characters remaining');
+  });
+
+  it('includes the counter id in aria-describedby', async () => {
+    const el = await fixture('<civ-text-input label="Name" maxlength="20"></civ-text-input>');
+    const input = el.querySelector('input')!;
+    const counter = el.querySelector('[id*="charcount"]')!;
+    const describedBy = input.getAttribute('aria-describedby') ?? '';
+    expect(describedBy.split(' ')).toContain(counter.id);
+  });
+
+  it('exposes a polite live region for screen readers', async () => {
+    const el = await fixture('<civ-text-input label="Name" maxlength="20"></civ-text-input>');
+    const live = el.querySelector('[aria-live="polite"]');
+    expect(live).not.toBeNull();
+    expect(live!.textContent).toContain('20 characters remaining');
+  });
+
+  it('treats maxlength="0" as unset (no counter)', async () => {
+    const el = await fixture('<civ-text-input label="Name" maxlength="0"></civ-text-input>');
+    const counter = el.querySelector('[id*="charcount"]');
+    expect(counter).toBeNull();
+  });
+});

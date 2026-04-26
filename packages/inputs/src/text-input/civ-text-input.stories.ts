@@ -246,6 +246,32 @@ export const MaskCustom: Story = {
   `,
 };
 
+// ── Character Counter ────────────────────────────────────────
+
+export const CharacterCounter: Story = {
+  name: 'Character counter',
+  render: () => html`
+    <civ-text-input
+      label="Short bio"
+      name="bio"
+      maxlength="60"
+      hint="A one-line description for the directory"
+    ></civ-text-input>
+  `,
+};
+
+export const CharacterCounterShortLimit: Story = {
+  name: 'Character counter — over-limit styling',
+  render: () => html`
+    <civ-text-input
+      label="Headline"
+      name="headline"
+      maxlength="20"
+      value="This headline is way too long for the limit"
+    ></civ-text-input>
+  `,
+};
+
 // ── Declarative Validation ────────────────────────────────────
 
 export const ValidateEmail: Story = {

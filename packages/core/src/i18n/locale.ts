@@ -46,6 +46,7 @@ export interface CivLocaleStrings {
   fileUploadFileTypeError: string;
   fileUploadMaxFilesError: string;
   fileUploadEmptyFile: string; // "{name} appears to be empty (0 bytes)"
+  fileUploadDuplicateError: string; // "{name} is already in the list"
   fileUploadCancelled: string;
   fileUploadCancelText: string; // "Cancel"
   fileUploadCancelAriaLabel: string; // "Cancel upload for {name}"
@@ -67,6 +68,7 @@ export interface CivLocaleStrings {
   datePickerDialogOpenedMessage: string;
   datePickerDateSelectedMessage: string;
   datePickerTodayLabel: string;
+  datePickerTodayButton: string; // "Today" button in dialog footer
   datePickerInvalidFormatMessage: string;
   datePickerDateRangeMessage: string; // "Date must be between {min} and {max}"
   datePickerMinDateMessage: string; // "Date must be on or after {min}"
@@ -100,8 +102,8 @@ export interface CivLocaleStrings {
   maskCurrencyHint: string;
   maskCurrencyError: string;
 
-  // Textarea char/word count
-  textareaCharsRemaining: string; // "{count} characters remaining"
+  // Input char/word counts (shared by civ-text-input and civ-textarea)
+  inputCharsRemaining: string; // "{count} characters remaining"
   textareaWordsRemaining: string; // "{count} words remaining"
   textareaWordsOverLimit: string; // "{count} {count, plural, one {word} other {words}} over the limit"
   textareaWordLimit: string; // "Word limit: {max}"
@@ -118,6 +120,8 @@ export interface CivLocaleStrings {
   selectAll: string;
   deselectAll: string;
   maxSelectionsHint: string; // "Select up to {max}"
+  minSelectionsHint: string; // "Select at least {min}"
+  minSelectionsError: string; // "Please select at least {min} options"
   clearButton: string;
 
   // Progress steps
@@ -310,6 +314,7 @@ export interface CivLocaleStrings {
   validatePhoneIntl: string;
   validateSsn: string;
   validateEin: string;
+  validateRouting: string; // bank routing-number checksum failure
   validateZip: string;
   validateZip4: string;
   validateUsState: string;
@@ -359,6 +364,7 @@ const defaultStrings: CivLocaleStrings = {
   fileUploadFileTypeError: '{name} is not an accepted file type. Accepted: {accepted}',
   fileUploadMaxFilesError: 'Maximum of {max} files allowed. {name} was not added',
   fileUploadEmptyFile: '{name} appears to be empty (0 bytes)',
+  fileUploadDuplicateError: '{name} is already in the list',
   fileUploadCancelled: 'Upload cancelled',
   fileUploadCancelText: 'Cancel',
   fileUploadCancelAriaLabel: 'Cancel upload for {name}',
@@ -379,6 +385,7 @@ const defaultStrings: CivLocaleStrings = {
   datePickerDialogOpenedMessage: 'Calendar dialog opened',
   datePickerDateSelectedMessage: 'Selected {date}',
   datePickerTodayLabel: 'today',
+  datePickerTodayButton: 'Today',
   datePickerInvalidFormatMessage: 'Invalid date format',
   datePickerDateRangeMessage: 'Date must be between {min} and {max}',
   datePickerMinDateMessage: 'Date must be on or after {min}',
@@ -410,7 +417,7 @@ const defaultStrings: CivLocaleStrings = {
   maskCurrencyHint: 'For example: 1,234.56',
   maskCurrencyError: 'Enter a valid dollar amount',
 
-  textareaCharsRemaining: '{count} characters remaining',
+  inputCharsRemaining: '{count} characters remaining',
   textareaWordsRemaining: '{count} words remaining',
   textareaWordsOverLimit: '{count} too many words',
   textareaWordLimit: 'Word limit: {max}',
@@ -430,6 +437,8 @@ const defaultStrings: CivLocaleStrings = {
   selectAll: 'Select all',
   deselectAll: 'Deselect all',
   maxSelectionsHint: 'Select up to {max}',
+  minSelectionsHint: 'Select at least {min}',
+  minSelectionsError: 'Please select at least {min} options',
   clearButton: 'Clear',
 
   nameFirst: 'First name',
@@ -596,6 +605,7 @@ const defaultStrings: CivLocaleStrings = {
   validatePhoneIntl: 'Enter a valid phone number with country code (e.g., +1 555 123 4567)',
   validateSsn: 'Enter a valid 9-digit Social Security number',
   validateEin: 'Enter a valid 9-digit Employer Identification Number',
+  validateRouting: 'Enter a valid 9-digit bank routing number',
   validateZip: 'Enter a 5-digit ZIP code',
   validateZip4: 'Enter a valid ZIP+4 code (e.g., 12345-6789)',
   validateUsState: 'Enter a valid 2-letter state abbreviation',

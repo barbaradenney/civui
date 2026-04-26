@@ -49,6 +49,8 @@ const config: StorybookConfig = {
       '@civui/ui/action-button': resolve(root, 'packages/ui/src/action-button/index.ts'),
       '@civui/ui/button-group': resolve(root, 'packages/ui/src/button-group/index.ts'),
       '@civui/ui/input-group': resolve(root, 'packages/ui/src/input-group/index.ts'),
+      '@civui/ui/modal': resolve(root, 'packages/ui/src/modal/index.ts'),
+      '@civui/ui/action-sheet': resolve(root, 'packages/ui/src/action-sheet/index.ts'),
       '@civui/ui': resolve(root, 'packages/ui/src/index.ts'),
       '@civui/navigation': resolve(root, 'packages/navigation/src/index.ts'),
       '@civui/tokens/css': resolve(root, 'packages/tokens/dist/css/tokens.css'),

@@ -282,6 +282,14 @@ export interface CivLocaleStrings {
   marriageCohabitationStateLabel: string; // "State where you live together"
   marriageApproxDateLegend: string; // "Approximate date union began"
 
+  // Address validation
+  addressValidationHeading: string;
+  addressValidationOriginalLabel: string;
+  addressValidationSuggestedLabel: string;
+  addressValidationUseOriginal: string;
+  addressValidationUseSuggested: string;
+  addressValidationLoading: string;
+
   // Service history
   serviceLegend: string;
   serviceBranchLabel: string;
@@ -592,6 +600,13 @@ const defaultStrings: CivLocaleStrings = {
   marriageCohabitationStartLegend: 'Date you began living together',
   marriageCohabitationStateLabel: 'State where you live together',
   marriageApproxDateLegend: 'Approximate date union began',
+
+  addressValidationHeading: 'Verify your address',
+  addressValidationOriginalLabel: 'You entered',
+  addressValidationSuggestedLabel: 'Suggested address',
+  addressValidationUseOriginal: 'Keep my address',
+  addressValidationUseSuggested: 'Use suggested address',
+  addressValidationLoading: 'Verifying address…',
 
   serviceLegend: 'About this service period',
   serviceBranchLabel: 'Branch of service',

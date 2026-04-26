@@ -3,6 +3,17 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { CivFormElement, dispatch, renderLegend, renderHint, renderError, buildDescribedBy, interpolate, t } from '@civui/core';
 import '@civui/inputs';
 import '@civui/controls';
+import '@civui/ui/modal';
+
+export interface AddressSuggestion {
+  street1: string;
+  street2?: string;
+  city: string;
+  state: string;
+  zip: string;
+}
+
+export type ValidateAddressFn = (address: AddressValue) => Promise<AddressSuggestion | null>;
 
 export interface AddressValue {
   country: string;
@@ -106,7 +117,15 @@ export class CivAddress extends CivFormElement {
   /** Error message for the ZIP code field. */
   @property({ type: String, attribute: 'zip-error' }) zipError = '';
 
+  /** Async address validation function. When set, a "Verify address" modal
+   *  appears after the user completes the address, showing the original vs.
+   *  suggested address. Returns null if no suggestion is needed. */
+  @property({ attribute: false }) validateAddress: ValidateAddressFn | null = null;
+
   @state() private _address: AddressValue = { ...EMPTY_ADDRESS };
+  @state() private _showValidationModal = false;
+  @state() private _suggestion: AddressSuggestion | null = null;
+  @state() private _validating = false;
 
   /** Get the current address value as a structured object. */
   get addressValue(): AddressValue {
@@ -265,7 +284,109 @@ export class CivAddress extends CivFormElement {
           @civ-change="${(e: CustomEvent) => this._onSubChange('zip', e)}"
         ></civ-text-input>
       </fieldset>
+
+      ${this._showValidationModal ? html`
+        <civ-modal
+          ?open="${this._showValidationModal}"
+          heading="${t('addressValidationHeading')}"
+          no-backdrop-close
+          no-close-button
+          @civ-modal-close="${this._onValidationKeepOriginal}"
+        >
+          ${this._validating ? html`
+            <p class="civ-text-body">${t('addressValidationLoading')}</p>
+          ` : this._suggestion ? html`
+            <div class="civ-flex civ-flex-col civ-gap-6">
+              <div>
+                <p class="civ-font-semibold civ-mb-1">${t('addressValidationOriginalLabel')}</p>
+                <p class="civ-text-body civ-m-0">${this._address.street1}</p>
+                ${this._address.street2 ? html`<p class="civ-text-body civ-m-0">${this._address.street2}</p>` : nothing}
+                <p class="civ-text-body civ-m-0">${this._address.city}, ${this._address.state} ${this._address.zip}</p>
+              </div>
+              <div>
+                <p class="civ-font-semibold civ-mb-1">${t('addressValidationSuggestedLabel')}</p>
+                <p class="civ-text-body civ-m-0">${this._suggestion.street1}</p>
+                ${this._suggestion.street2 ? html`<p class="civ-text-body civ-m-0">${this._suggestion.street2}</p>` : nothing}
+                <p class="civ-text-body civ-m-0">${this._suggestion.city}, ${this._suggestion.state} ${this._suggestion.zip}</p>
+              </div>
+            </div>
+            <div data-modal-footer>
+              <civ-button
+                variant="secondary"
+                label="${t('addressValidationUseOriginal')}"
+                @click="${this._onValidationKeepOriginal}"
+              ></civ-button>
+              <civ-button
+                label="${t('addressValidationUseSuggested')}"
+                @click="${this._onValidationUseSuggested}"
+              ></civ-button>
+            </div>
+          ` : nothing}
+        </civ-modal>
+      ` : nothing}
     `;
+  }
+
+  /**
+   * Trigger address validation. Call this before form submission.
+   * Returns a promise that resolves when the user has made their choice
+   * (or immediately if no validateAddress function is set or no suggestion returned).
+   */
+  async runValidation(): Promise<void> {
+    if (!this.validateAddress || !this._isComplete()) return;
+
+    this._validating = true;
+    this._showValidationModal = true;
+
+    try {
+      const suggestion = await this.validateAddress(this._address);
+      this._validating = false;
+
+      if (!suggestion) {
+        // No suggestion — address is valid as-is
+        this._showValidationModal = false;
+        return;
+      }
+
+      this._suggestion = suggestion;
+      // Modal stays open — user must pick original or suggested
+      return new Promise<void>((resolve) => {
+        this._validationResolve = resolve;
+      });
+    } catch {
+      // Validation service failed — proceed with original address
+      this._validating = false;
+      this._showValidationModal = false;
+    }
+  }
+
+  private _validationResolve: (() => void) | null = null;
+
+  private _onValidationKeepOriginal(): void {
+    this._showValidationModal = false;
+    this._suggestion = null;
+    this._validationResolve?.();
+    this._validationResolve = null;
+  }
+
+  private _onValidationUseSuggested(): void {
+    if (this._suggestion) {
+      this._address = {
+        ...this._address,
+        street1: this._suggestion.street1,
+        street2: this._suggestion.street2 ?? '',
+        city: this._suggestion.city,
+        state: this._suggestion.state,
+        zip: this._suggestion.zip,
+      };
+      this.value = JSON.stringify(this._address);
+      this._syncFormValue();
+      dispatch(this, 'civ-change', { value: { ...this._address } });
+    }
+    this._showValidationModal = false;
+    this._suggestion = null;
+    this._validationResolve?.();
+    this._validationResolve = null;
   }
 
   /** Whether to render a select dropdown for the state field.

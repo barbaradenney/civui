@@ -1,0 +1,88 @@
+---
+title: Modal
+sidebar_position: 11
+sidebar_label: Modal
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
+# Modal
+
+`<civ-modal>`
+
+A general-purpose modal dialog. Centered overlay on desktop, bottom sheet on mobile (≤480px). Includes focus trap, escape-to-close, optional backdrop close, and scroll support for tall content.
+
+## Examples
+
+### Default
+
+<StoryEmbed id="ui-modal--default" />
+
+### Required Decision
+
+<StoryEmbed id="ui-modal--required-decision" />
+
+### Address Verification
+
+<StoryEmbed id="ui-modal--address-verification" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/ui-modal--default)
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `open` | `boolean` | `false` | Controls visibility |
+| `heading` | `string` | `''` | Modal heading (rendered as h2) |
+| `no-close-button` | `boolean` | `false` | Hide the X close button |
+| `no-backdrop-close` | `boolean` | `false` | Disable closing via backdrop click |
+
+## Slots
+
+| Slot | Description |
+|------|-------------|
+| default | Body content |
+| `data-modal-footer` | Footer area for action buttons |
+
+## Events
+
+| Event | Detail | Description |
+|-------|--------|-------------|
+| `civ-modal-close` | — | Fires when user tries to close (escape, X button, backdrop) |
+
+## Behavior
+
+- **Desktop:** Centered overlay, max-width 600px, max-height 80vh
+- **Mobile (≤480px):** Bottom sheet with rounded top corners, max-height 85vh
+- Focus is trapped inside the modal when open
+- Body scroll is locked when open
+- Focus returns to the trigger element on close
+- `aria-modal="true"` and `role="dialog"` for accessibility
+
+## Usage
+
+```html
+<!-- Standard modal with footer actions -->
+<civ-modal ?open="${this.showModal}" heading="Confirm"
+  @civ-modal-close="${() => this.showModal = false}">
+  <p>Are you sure you want to continue?</p>
+  <div data-modal-footer>
+    <civ-button variant="secondary" label="Cancel"
+      @click="${() => this.showModal = false}"></civ-button>
+    <civ-button label="Continue"
+      @click="${this.onConfirm}"></civ-button>
+  </div>
+</civ-modal>
+
+<!-- Required decision — no escape or backdrop close -->
+<civ-modal ?open="${this.showConfirm}" heading="Delete application"
+  no-close-button no-backdrop-close>
+  <p>This action cannot be undone.</p>
+  <div data-modal-footer>
+    <civ-button variant="secondary" label="Cancel"
+      @click="${() => this.showConfirm = false}"></civ-button>
+    <civ-button danger label="Delete"
+      @click="${this.onDelete}"></civ-button>
+  </div>
+</civ-modal>
+```

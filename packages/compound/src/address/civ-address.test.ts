@@ -307,3 +307,113 @@ describe('civ-address', () => {
     });
   });
 });
+
+describe('civ-address validation modal', () => {
+  it('does not show modal when validateAddress is not set', async () => {
+    const el = await fixture<any>('<civ-address legend="Address" name="addr"></civ-address>');
+    el.addressValue = {
+      country: 'US', street1: '123 Main St', street2: '', street3: '',
+      city: 'Austin', state: 'TX', zip: '78701', military: false,
+    };
+    await elementUpdated(el);
+
+    await el.runValidation();
+    await elementUpdated(el);
+    expect(el.querySelector('civ-modal')).toBeNull();
+  });
+
+  it('shows modal with suggestion when validateAddress returns one', async () => {
+    const el = await fixture<any>('<civ-address legend="Address" name="addr"></civ-address>');
+    el.addressValue = {
+      country: 'US', street1: '123 Main St', street2: '', street3: '',
+      city: 'Austin', state: 'TX', zip: '78701', military: false,
+    };
+    el.validateAddress = async () => ({
+      street1: '123 Main Street',
+      city: 'Austin',
+      state: 'TX',
+      zip: '78701-1234',
+    });
+    await elementUpdated(el);
+
+    // Don't await — it blocks until user picks
+    const validationPromise = el.runValidation();
+    await elementUpdated(el);
+    await elementUpdated(el);
+
+    const modal = el.querySelector('civ-modal');
+    expect(modal).not.toBeNull();
+    expect(modal!.getAttribute('heading')).toBe('Verify your address');
+
+    // Clean up by keeping original
+    el._onValidationKeepOriginal();
+    await validationPromise;
+  });
+
+  it('updates address when user picks suggested', async () => {
+    const el = await fixture<any>('<civ-address legend="Address" name="addr"></civ-address>');
+    el.addressValue = {
+      country: 'US', street1: '123 Main St', street2: '', street3: '',
+      city: 'Austin', state: 'TX', zip: '78701', military: false,
+    };
+    el.validateAddress = async () => ({
+      street1: '123 Main Street',
+      city: 'Austin',
+      state: 'TX',
+      zip: '78701-1234',
+    });
+    await elementUpdated(el);
+
+    const validationPromise = el.runValidation();
+    await elementUpdated(el);
+    await elementUpdated(el);
+
+    el._onValidationUseSuggested();
+    await validationPromise;
+    await elementUpdated(el);
+
+    expect(el.addressValue.street1).toBe('123 Main Street');
+    expect(el.addressValue.zip).toBe('78701-1234');
+  });
+
+  it('keeps original when user clicks keep', async () => {
+    const el = await fixture<any>('<civ-address legend="Address" name="addr"></civ-address>');
+    el.addressValue = {
+      country: 'US', street1: '123 Main St', street2: '', street3: '',
+      city: 'Austin', state: 'TX', zip: '78701', military: false,
+    };
+    el.validateAddress = async () => ({
+      street1: '123 Main Street',
+      city: 'Austin',
+      state: 'TX',
+      zip: '78701-1234',
+    });
+    await elementUpdated(el);
+
+    const validationPromise = el.runValidation();
+    await elementUpdated(el);
+    await elementUpdated(el);
+
+    el._onValidationKeepOriginal();
+    await validationPromise;
+    await elementUpdated(el);
+
+    expect(el.addressValue.street1).toBe('123 Main St');
+    expect(el.addressValue.zip).toBe('78701');
+  });
+
+  it('closes modal when validation returns null (address is valid)', async () => {
+    const el = await fixture<any>('<civ-address legend="Address" name="addr"></civ-address>');
+    el.addressValue = {
+      country: 'US', street1: '123 Main St', street2: '', street3: '',
+      city: 'Austin', state: 'TX', zip: '78701', military: false,
+    };
+    el.validateAddress = async () => null;
+    await elementUpdated(el);
+
+    await el.runValidation();
+    await elementUpdated(el);
+
+    expect(el.querySelector('civ-modal')).toBeNull();
+  });
+});

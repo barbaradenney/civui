@@ -36,3 +36,6 @@ export { CivInputGroup } from './input-group/index.js';
 
 // Action Sheet
 export { CivActionSheet } from './action-sheet/index.js';
+
+// Modal
+export { CivModal } from './modal/index.js';

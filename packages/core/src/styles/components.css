@@ -1618,6 +1618,58 @@
     }
   }
 
+  /* ── Modal ────────────────────────────────────────────────── */
+
+  .civ-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 200;
+  }
+
+  .civ-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 201;
+    width: 90vw;
+    max-width: 600px;
+    max-height: 80vh;
+    overflow-y: auto;
+    @apply civ-bg-white civ-rounded civ-shadow-lg civ-p-6;
+  }
+
+  .civ-modal__header {
+    @apply civ-flex civ-items-start civ-justify-between civ-mb-4;
+  }
+
+  .civ-modal__close {
+    @apply civ-ms-4 civ-flex-shrink-0;
+  }
+
+  .civ-modal__body {
+    @apply civ-mb-4;
+  }
+
+  .civ-modal__footer {
+    @apply civ-flex civ-gap-4 civ-justify-end;
+  }
+
+  @media (max-width: 480px) {
+    .civ-modal {
+      top: auto;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      transform: none;
+      width: 100%;
+      max-width: none;
+      max-height: 85vh;
+      border-radius: var(--civ-border-radius-lg, 12px) var(--civ-border-radius-lg, 12px) 0 0;
+    }
+  }
+
   /* ── Action Sheet ─────────────────────────────────────────── */
 
   .civ-action-sheet {

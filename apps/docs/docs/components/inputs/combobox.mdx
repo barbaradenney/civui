@@ -18,11 +18,11 @@ Use combobox when the option list is long (more than 15 items) or when users ben
 
 ### Default
 
-<StoryEmbed id="forms-inputs-combobox--default" />
+<StoryEmbed id="forms-inputs-combobox--default" minHeight={350} />
 
 ### With Hint
 
-<StoryEmbed id="forms-inputs-combobox--with-hint" />
+<StoryEmbed id="forms-inputs-combobox--with-hint" minHeight={350} />
 
 ### With Error
 
@@ -46,11 +46,11 @@ Use combobox when the option list is long (more than 15 items) or when users ben
 
 ### Option Groups
 
-<StoryEmbed id="forms-inputs-combobox--option-groups" />
+<StoryEmbed id="forms-inputs-combobox--option-groups" minHeight={350} />
 
 ### Government Office Search
 
-<StoryEmbed id="forms-inputs-combobox--government-office-search" />
+<StoryEmbed id="forms-inputs-combobox--government-office-search" minHeight={350} />
 
 ### Width Variants
 
@@ -60,17 +60,17 @@ Use combobox when the option list is long (more than 15 items) or when users ben
 
 A decorative chevron on the trailing edge opens the full unfiltered list — same affordance as a native `<select>`. Click clears any in-progress filter and shows every option. Keyboard users still use `ArrowDown` / `ArrowUp` to open (the chevron is `aria-hidden` and `tabindex="-1"`).
 
-<StoryEmbed id="forms-inputs-combobox--chevron-toggle" />
+<StoryEmbed id="forms-inputs-combobox--chevron-toggle" minHeight={350} />
 
 ### Async: remote loadOptions
 
 Set `loadOptions` to a `(query: string) => Promise<ComboboxOption[]>` and the combobox switches into remote mode. Calls are debounced (300ms by default), stale responses are discarded automatically, and the dropdown surfaces dedicated loading / error / below-min-query states.
 
-<StoryEmbed id="forms-inputs-combobox--async-loading" />
+<StoryEmbed id="forms-inputs-combobox--async-loading" minHeight={350} />
 
 ### Async: with min-query-length
 
-<StoryEmbed id="forms-inputs-combobox--async-with-min-query" />
+<StoryEmbed id="forms-inputs-combobox--async-with-min-query" minHeight={350} />
 
 ### Async: error state
 

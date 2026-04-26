@@ -356,9 +356,7 @@ export class CivDatePicker extends CivFormElement {
             ?disabled="${prevMonthDisabled}"
             @click="${this._prevMonth}"
           >
-            <svg aria-hidden="true" class="civ-w-5 civ-h-5" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
-            </svg>
+            <civ-icon name="chevron-left" aria-hidden="true"></civ-icon>
           </button>
           <div id="${this._headingId}" class="civ-flex civ-items-center civ-gap-1" aria-live="polite">
             <select
@@ -395,9 +393,7 @@ export class CivDatePicker extends CivFormElement {
             ?disabled="${nextMonthDisabled}"
             @click="${this._nextMonth}"
           >
-            <svg aria-hidden="true" class="civ-w-5 civ-h-5" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-            </svg>
+            <civ-icon name="chevron-right" aria-hidden="true"></civ-icon>
           </button>
         </div>
         <table role="grid" id="${this._gridId}" aria-labelledby="${this._headingId}">

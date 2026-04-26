@@ -1,4 +1,4 @@
-import { html } from 'lit';
+import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { CivBaseElement, LightDomTextMixin } from '@civui/core';
 
@@ -40,6 +40,9 @@ export class CivLink extends LightDomTextMixin(CivBaseElement) {
   @property({ type: Boolean, reflect: true }) disabled = false;
   @property({ type: String, attribute: 'icon-start' }) iconStart = '';
   @property({ type: String, attribute: 'icon-end' }) iconEnd = '';
+  @property({ type: String }) target = '';
+  @property({ type: String }) rel = '';
+  @property({ type: String }) download = '';
 
   private get _text(): string {
     return this.label || this._initialText;
@@ -92,6 +95,9 @@ export class CivLink extends LightDomTextMixin(CivBaseElement) {
       <a
         href="${this._safeHref}"
         class="${this._classes}"
+        target="${this.target || nothing}"
+        rel="${this.rel || nothing}"
+        download="${this.download || nothing}"
         @click="${this._onClick}"
       >${this._leadingIcon}${this._text}${this._trailingIcon}</a>
     `;

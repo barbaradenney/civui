@@ -99,6 +99,16 @@ export interface CivLocaleStrings {
   memorableDateInvalidDateMessage: string;
 
   // Mask
+  // Specialized input labels
+  ssnLabel: string;
+  ssnLast4Label: string;
+  ssnLast4Hint: string;
+  phoneLabel: string;
+  emailLabel: string;
+  zipLabel: string;
+  einLabel: string;
+  currencyLabel: string;
+
   maskSsnHint: string;
   maskPhoneUsHint: string;
   maskZipHint: string;
@@ -433,6 +443,15 @@ const defaultStrings: CivLocaleStrings = {
   memorableDateYearPlaceholder: 'YYYY',
   memorableDateDateSetMessage: 'Date set to {date}',
   memorableDateInvalidDateMessage: 'Enter a valid date',
+
+  ssnLabel: 'Social Security number',
+  ssnLast4Label: 'Last 4 digits of Social Security number',
+  ssnLast4Hint: 'For example: 6789',
+  phoneLabel: 'Phone number',
+  emailLabel: 'Email address',
+  zipLabel: 'ZIP code',
+  einLabel: 'Employer Identification Number',
+  currencyLabel: 'Amount',
 
   maskSsnHint: 'For example: 123-45-6789',
   maskPhoneUsHint: 'For example: (555) 123-4567',

@@ -12,7 +12,11 @@
     "./action-button": "./dist/action-button/index.js",
     "./link": "./dist/link/index.js",
     "./link-card": "./dist/link-card/index.js",
-    "./button-group": "./dist/button-group/index.js"
+    "./button-group": "./dist/button-group/index.js",
+    "./external-link": "./dist/external-link/index.js",
+    "./phone-link": "./dist/phone-link/index.js",
+    "./download-link": "./dist/download-link/index.js",
+    "./email-link": "./dist/email-link/index.js"
   },
   "files": ["dist"],
   "publishConfig": {

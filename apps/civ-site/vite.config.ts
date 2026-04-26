@@ -29,6 +29,16 @@ export default defineConfig({
   resolve: {
     alias: {
       '@civui/core': resolve(packages, 'core/src/index.ts'),
+      '@civui/inputs/ssn': resolve(packages, 'inputs/src/ssn/index.ts'),
+      '@civui/inputs/phone': resolve(packages, 'inputs/src/phone/index.ts'),
+      '@civui/inputs/email': resolve(packages, 'inputs/src/email/index.ts'),
+      '@civui/inputs/zip': resolve(packages, 'inputs/src/zip/index.ts'),
+      '@civui/inputs/ein': resolve(packages, 'inputs/src/ein/index.ts'),
+      '@civui/inputs/currency': resolve(packages, 'inputs/src/currency/index.ts'),
+      '@civui/inputs/routing-number': resolve(packages, 'inputs/src/routing-number/index.ts'),
+      '@civui/inputs/us-state': resolve(packages, 'inputs/src/us-state/index.ts'),
+      '@civui/inputs/country': resolve(packages, 'inputs/src/country/index.ts'),
+      '@civui/inputs/va-file-number': resolve(packages, 'inputs/src/va-file-number/index.ts'),
       '@civui/inputs': resolve(packages, 'inputs/src/index.ts'),
       '@civui/controls': resolve(packages, 'controls/src/index.ts'),
       '@civui/compound': resolve(packages, 'compound/src/index.ts'),
@@ -39,6 +49,10 @@ export default defineConfig({
       '@civui/actions/link': resolve(packages, 'actions/src/link/index.ts'),
       '@civui/actions/link-card': resolve(packages, 'actions/src/link-card/index.ts'),
       '@civui/actions/button-group': resolve(packages, 'actions/src/button-group/index.ts'),
+      '@civui/actions/external-link': resolve(packages, 'actions/src/external-link/index.ts'),
+      '@civui/actions/phone-link': resolve(packages, 'actions/src/phone-link/index.ts'),
+      '@civui/actions/download-link': resolve(packages, 'actions/src/download-link/index.ts'),
+      '@civui/actions/email-link': resolve(packages, 'actions/src/email-link/index.ts'),
       '@civui/actions': resolve(packages, 'actions/src/index.ts'),
       // Overlays
       '@civui/overlays/modal': resolve(packages, 'overlays/src/modal/index.ts'),

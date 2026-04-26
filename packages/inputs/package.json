@@ -17,7 +17,17 @@
     "./memorable-date": "./dist/date-input/index.js",
     "./file-upload": "./dist/file-upload/index.js",
     "./toggle": "./dist/toggle/index.js",
-    "./yes-no": "./dist/yes-no/index.js"
+    "./yes-no": "./dist/yes-no/index.js",
+    "./ssn": "./dist/ssn/index.js",
+    "./phone": "./dist/phone/index.js",
+    "./email": "./dist/email/index.js",
+    "./zip": "./dist/zip/index.js",
+    "./ein": "./dist/ein/index.js",
+    "./currency": "./dist/currency/index.js",
+    "./routing-number": "./dist/routing-number/index.js",
+    "./us-state": "./dist/us-state/index.js",
+    "./country": "./dist/country/index.js",
+    "./va-file-number": "./dist/va-file-number/index.js"
   },
   "files": ["dist"],
   "publishConfig": {

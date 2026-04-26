@@ -10,6 +10,16 @@ import './date-input/civ-memorable-date.js';
 import './file-upload/civ-file-upload.js';
 import './toggle/civ-toggle.js';
 import './yes-no/civ-yes-no.js';
+import './ssn/civ-ssn.js';
+import './phone/civ-phone.js';
+import './email/civ-email.js';
+import './zip/civ-zip.js';
+import './ein/civ-ein.js';
+import './currency/civ-currency.js';
+import './routing-number/civ-routing-number.js';
+import './us-state/civ-us-state.js';
+import './country/civ-country.js';
+import './va-file-number/civ-va-file-number.js';
 
 // Text Input
 export { CivTextInput } from './text-input/index.js';
@@ -44,3 +54,33 @@ export { CivToggle } from './toggle/index.js';
 
 // Yes/No
 export { CivYesNo } from './yes-no/index.js';
+
+// SSN
+export { CivSsn } from './ssn/index.js';
+
+// Phone
+export { CivPhone } from './phone/index.js';
+
+// Email
+export { CivEmail } from './email/index.js';
+
+// ZIP
+export { CivZip } from './zip/index.js';
+
+// EIN
+export { CivEin } from './ein/index.js';
+
+// Currency
+export { CivCurrency } from './currency/index.js';
+
+// Routing Number
+export { CivRoutingNumber } from './routing-number/index.js';
+
+// US State
+export { CivUsState } from './us-state/index.js';
+
+// Country
+export { CivCountry } from './country/index.js';
+
+// VA File Number
+export { CivVaFileNumber } from './va-file-number/index.js';

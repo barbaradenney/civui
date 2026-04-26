@@ -122,13 +122,13 @@ describe('civ-direct-deposit', () => {
       const el = await fixture<CivDirectDeposit>('<civ-direct-deposit legend="Deposit"></civ-direct-deposit>') as CivDirectDeposit;
       await elementUpdated(el);
 
-      // Find the routing-number civ-text-input (first text-input child)
-      // and simulate a user typing an invalid routing number followed by blur.
-      const routingField = el.querySelectorAll('civ-text-input')[0] as any;
+      // Light DOM: civ-routing-number renders civ-text-input inline
+      const routingField = el.querySelector('civ-routing-number civ-text-input') as any;
       const innerInput = routingField.querySelector('input') as HTMLInputElement;
       innerInput.value = '121000247';
       innerInput.dispatchEvent(new Event('input', { bubbles: true }));
       innerInput.dispatchEvent(new Event('blur', { bubbles: true }));
+      await elementUpdated(routingField);
       await elementUpdated(routingField);
 
       expect(routingField.error).toContain('routing number');
@@ -138,11 +138,12 @@ describe('civ-direct-deposit', () => {
       const el = await fixture<CivDirectDeposit>('<civ-direct-deposit legend="Deposit"></civ-direct-deposit>') as CivDirectDeposit;
       await elementUpdated(el);
 
-      const routingField = el.querySelectorAll('civ-text-input')[0] as any;
+      const routingField = el.querySelector('civ-routing-number civ-text-input') as any;
       const innerInput = routingField.querySelector('input') as HTMLInputElement;
       innerInput.value = '121000248';
       innerInput.dispatchEvent(new Event('input', { bubbles: true }));
       innerInput.dispatchEvent(new Event('blur', { bubbles: true }));
+      await elementUpdated(routingField);
       await elementUpdated(routingField);
 
       expect(routingField.error).toBe('');

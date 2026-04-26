@@ -16,10 +16,10 @@ describe('civ-routing-number', () => {
     expect(input.getAttribute('width')).toBe('sm');
   });
 
-  it('uses mask-pattern for 9 digits', async () => {
+  it('sets maxlength to 9 digits', async () => {
     const el = await fixture('<civ-routing-number name="routing"></civ-routing-number>') as CivRoutingNumber;
     const input = el.querySelector('civ-text-input') as any;
-    expect(input.getAttribute('mask-pattern')).toBe('#########');
+    expect(input.getAttribute('maxlength')).toBe('9');
   });
 
   it('dispatches civ-change event', async () => {

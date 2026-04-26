@@ -1,0 +1,114 @@
+---
+title: Date Range Picker
+sidebar_position: 10
+sidebar_label: Date Range Picker
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
+# Date Range Picker
+
+`<civ-date-range-picker>`
+
+A composed range picker built from two `civ-date-picker` instances. Cross-binds their `min` and `max` so the end picker can never go before the start (and vice versa), surfaces a single `civ-change` event with `{ start, end }`, and writes two FormData fields on submit: `${name}.start` and `${name}.end`.
+
+Use this for filing-window filters, leave requests, hospital stays, appointment ranges — anywhere a user needs to pick two dates that form a single interval.
+
+## Examples
+
+### Default
+
+<StoryEmbed id="forms-inputs-date-range-picker--default" />
+
+### Required
+
+<StoryEmbed id="forms-inputs-date-range-picker--required" />
+
+### With outer min / max
+
+<StoryEmbed id="forms-inputs-date-range-picker--with-outer-bounds" />
+
+### min-range-days
+
+<StoryEmbed id="forms-inputs-date-range-picker--min-range-days-eg-2-night-minimum" />
+
+### max-range-days
+
+<StoryEmbed id="forms-inputs-date-range-picker--max-range-days-eg-30-day-cap" />
+
+### Custom labels
+
+<StoryEmbed id="forms-inputs-date-range-picker--custom-labels" />
+
+### Disabled
+
+<StoryEmbed id="forms-inputs-date-range-picker--disabled" />
+
+### Government leave request
+
+<StoryEmbed id="forms-inputs-date-range-picker--government-leave-request" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-inputs-date-range-picker--default)
+
+## Shared Props
+
+All form components share these props: `name`, `value`, `hint`, `error`, `required`, `disabled`. Group components like this one use `legend` instead of `label`.
+
+## Component-Specific Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `legend` | `string` | `''` | Fieldset legend |
+| `min` | `string` (ISO) | `''` | Outer lower bound for the entire range |
+| `max` | `string` (ISO) | `''` | Outer upper bound for the entire range |
+| `min-range-days` | `number` | `0` | Inclusive minimum duration. `0` disables the check. |
+| `max-range-days` | `number` | `0` | Inclusive maximum duration. `0` disables the check. |
+| `start-label` | `string` | `'Start date'` | Override label on the start picker |
+| `end-label` | `string` | `'End date'` | Override label on the end picker |
+| `start-hint` / `end-hint` | `string` | `''` | Hint text under each picker |
+| `start-error` / `end-error` | `string` | `''` | Field-level errors for each picker |
+| `locale` | `string` | `'en-US'` | Forwarded to both pickers |
+| `week-starts-on` | `number` | `0` | Forwarded to both pickers |
+
+## Form Value Shape
+
+The component writes two FormData fields on form submit:
+
+```
+${name}.start = "2026-05-01"
+${name}.end   = "2026-05-08"
+```
+
+For SPA / JS access, `rangeValue` is a `{ start, end }` getter/setter, and `value` is its JSON string.
+
+## Cross-Field Validation
+
+When both endpoints are filled, the range is checked for:
+
+1. **End ≥ start** — error: "End date must be on or after start date"
+2. **Duration ≥ min-range-days** (if set) — error: "Range must be at least N days"
+3. **Duration ≤ max-range-days** (if set) — error: "Range must be at most N days"
+
+The error is set on the host (so the form error summary picks it up) and is cleared automatically once the range becomes valid.
+
+## Events
+
+| Event | Detail | Description |
+|-------|--------|-------------|
+| `civ-input` | `{ value: { start, end } }` | Fires on every change to either endpoint |
+| `civ-change` | `{ value: { start, end } }` | Fires on committed change to either endpoint |
+
+## Usage
+
+```html
+<civ-date-range-picker
+  legend="Leave dates"
+  name="leave"
+  min="2026-01-01"
+  max="2026-12-31"
+  min-range-days="1"
+  max-range-days="30"
+  hint="Provide the first and last day you'll be on leave"
+  required
+></civ-date-range-picker>
+```

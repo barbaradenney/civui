@@ -383,6 +383,72 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
   }
 
   /**
+   * Inject server-side errors into the form and re-render the error
+   * summary. Use this from your async submit handler when the server
+   * responds with field-level errors:
+   *
+   * ```ts
+   * form.addEventListener('civ-submit', async (e) => {
+   *   const res = await fetch('/api/submit', { method: 'POST', body: e.detail.formData });
+   *   if (!res.ok) {
+   *     const { errors } = await res.json();
+   *     form.setServerErrors(errors); // { email: "Already in use", phone: "Invalid" }
+   *   }
+   * });
+   * ```
+   *
+   * Behavior matches the client-side validation flow: each named field
+   * gets `error` set, the error summary re-renders with anchor links,
+   * the summary is focused, and a screen-reader announcement fires.
+   * Unknown field names are silently skipped.
+   *
+   * Pass an empty object (or call `clearErrors()`) to clear.
+   */
+  setServerErrors(errors: Record<string, string>): void {
+    if (!errors || Object.keys(errors).length === 0) {
+      this.clearErrors();
+      return;
+    }
+
+    const formElements = this.querySelectorAll<HTMLElement>(
+      '[data-civ-form-field]',
+    );
+    const collected: FormFieldError[] = [];
+
+    // Clear all field errors first so a re-call replaces, not appends.
+    for (const el of formElements) {
+      (el as unknown as CivFormFieldLike).error = '';
+    }
+
+    for (const el of formElements) {
+      const formEl = el as unknown as CivFormFieldLike;
+      const name = formEl.name;
+      if (!name) continue;
+      const message = errors[name];
+      if (!message) continue;
+      formEl.error = message;
+      collected.push({ name, message, element: el });
+    }
+
+    this._errors = collected;
+    dispatch(this, 'civ-server-errors', { errors: collected });
+
+    if (collected.length === 0) return;
+
+    // Focus the error summary and announce, mirroring the validation-fail flow.
+    this.updateComplete.then(() => {
+      const summary = this.querySelector(`[data-civ-error-summary]`) as HTMLElement | null;
+      if (summary) {
+        summary.focus();
+        this.announce(
+          interpolate(t(collected.length === 1 ? 'formErrorAnnouncementSingular' : 'formErrorAnnouncementPlural'), { count: collected.length }),
+          'assertive',
+        );
+      }
+    });
+  }
+
+  /**
    * Collect form data as a simple key-value record.
    * For file-upload fields, the value is a comma-joined string of file names.
    * For checkbox-group, the value is a comma-joined string of checked values.

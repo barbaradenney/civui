@@ -519,3 +519,129 @@ describe('form reset', () => {
     expect(errors[0].name).toBe('name');
   });
 });
+
+describe('civ-form setServerErrors', () => {
+  afterEach(cleanupFixtures);
+
+  it('sets error on each named field', async () => {
+    const el = await fixture(`
+      <civ-form>
+        <civ-text-input label="Email" name="email"></civ-text-input>
+        <civ-text-input label="Phone" name="phone"></civ-text-input>
+      </civ-form>
+    `) as any;
+    await elementUpdated(el);
+
+    el.setServerErrors({
+      email: 'Already in use',
+      phone: 'Invalid format',
+    });
+    await elementUpdated(el);
+
+    const fields = el.querySelectorAll('[data-civ-form-field]');
+    expect((fields[0] as any).error).toBe('Already in use');
+    expect((fields[1] as any).error).toBe('Invalid format');
+  });
+
+  it('renders the error summary with one entry per server error', async () => {
+    const el = await fixture(`
+      <civ-form>
+        <civ-text-input label="Email" name="email"></civ-text-input>
+        <civ-text-input label="Phone" name="phone"></civ-text-input>
+      </civ-form>
+    `) as any;
+    await elementUpdated(el);
+
+    el.setServerErrors({ email: 'Already in use', phone: 'Invalid' });
+    await elementUpdated(el);
+
+    const summary = el.querySelector('[data-civ-error-summary]');
+    expect(summary).not.toBeNull();
+    const items = summary!.querySelectorAll('a');
+    expect(items.length).toBe(2);
+    expect(items[0].textContent).toContain('Already in use');
+    expect(items[1].textContent).toContain('Invalid');
+  });
+
+  it('skips unknown field names silently', async () => {
+    const el = await fixture(`
+      <civ-form>
+        <civ-text-input label="Email" name="email"></civ-text-input>
+      </civ-form>
+    `) as any;
+    await elementUpdated(el);
+
+    el.setServerErrors({
+      email: 'Already in use',
+      'does-not-exist': 'Never seen',
+    });
+    await elementUpdated(el);
+
+    const summary = el.querySelector('[data-civ-error-summary]');
+    expect(summary).not.toBeNull();
+    expect(summary!.querySelectorAll('a').length).toBe(1);
+  });
+
+  it('replaces previous server errors on each call (does not append)', async () => {
+    const el = await fixture(`
+      <civ-form>
+        <civ-text-input label="Email" name="email"></civ-text-input>
+        <civ-text-input label="Phone" name="phone"></civ-text-input>
+      </civ-form>
+    `) as any;
+    await elementUpdated(el);
+
+    el.setServerErrors({ email: 'First error' });
+    await elementUpdated(el);
+    expect(el.querySelectorAll('[data-civ-error-summary] a').length).toBe(1);
+
+    el.setServerErrors({ phone: 'Second error' });
+    await elementUpdated(el);
+
+    const fields = el.querySelectorAll('[data-civ-form-field]');
+    // First field's error should be cleared on the second call.
+    expect((fields[0] as any).error).toBe('');
+    expect((fields[1] as any).error).toBe('Second error');
+    expect(el.querySelectorAll('[data-civ-error-summary] a').length).toBe(1);
+  });
+
+  it('clears the summary and field errors when called with an empty object', async () => {
+    const el = await fixture(`
+      <civ-form>
+        <civ-text-input label="Email" name="email"></civ-text-input>
+      </civ-form>
+    `) as any;
+    await elementUpdated(el);
+
+    el.setServerErrors({ email: 'Already in use' });
+    await elementUpdated(el);
+    expect(el.querySelector('[data-civ-error-summary]')).not.toBeNull();
+
+    el.setServerErrors({});
+    await elementUpdated(el);
+
+    expect(el.querySelector('[data-civ-error-summary]')).toBeNull();
+    const field = el.querySelector('[data-civ-form-field]') as any;
+    expect(field.error).toBe('');
+  });
+
+  it('fires civ-server-errors with the error list', async () => {
+    const el = await fixture(`
+      <civ-form>
+        <civ-text-input label="Email" name="email"></civ-text-input>
+      </civ-form>
+    `) as any;
+    await elementUpdated(el);
+
+    let captured: any = null;
+    el.addEventListener('civ-server-errors', ((e: CustomEvent) => { captured = e.detail; }) as EventListener);
+
+    el.setServerErrors({ email: 'Server says no' });
+    await elementUpdated(el);
+
+    expect(captured).not.toBeNull();
+    expect(captured.errors.length).toBe(1);
+    expect(captured.errors[0].name).toBe('email');
+    expect(captured.errors[0].message).toBe('Server says no');
+  });
+});

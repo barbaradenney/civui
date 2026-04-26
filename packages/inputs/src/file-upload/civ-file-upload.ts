@@ -129,11 +129,27 @@ function formatAcceptedTypes(accept: string): string {
  * because file data cannot be represented as a single string. Use the
  * `files` getter or `toFormData()` on the parent civ-form for submission.
  */
+/** Camera-capture hint — passes through to the native <input type="file" capture> attribute. */
+export type FileUploadCapture = 'user' | 'environment' | '';
+
 @customElement('civ-file-upload')
 export class CivFileUpload extends CivFormElement {
   @property({ type: String }) accept = '';
   @property({ type: Boolean }) multiple = false;
   @property({ type: Boolean, attribute: 'show-preview' }) showPreview = false;
+
+  /**
+   * Camera capture hint for mobile browsers (passes through to the native
+   * `<input type="file">` `capture` attribute):
+   * - `user` — front camera ("selfie" / liveness checks)
+   * - `environment` — back camera (document scanning, photo upload)
+   * - `''` (default) — no capture preference; user picks file or camera
+   *
+   * Only meaningful when `accept` matches a media type the camera can
+   * produce (e.g. `accept="image/*"` or `accept="video/*"`). Desktop
+   * browsers ignore this attribute.
+   */
+  @property({ type: String }) capture: FileUploadCapture = '';
 
   /**
    * Upload zone variant:
@@ -259,6 +275,7 @@ export class CivFileUpload extends CivFormElement {
           type="file"
           name="${this.name}"
           accept="${this.accept || nothing}"
+          capture="${this.capture || nothing}"
           ?multiple="${this.multiple}"
           ?disabled="${this.disabled}"
           ?required="${this.required && this._files.length === 0}"
@@ -467,6 +484,20 @@ export class CivFileUpload extends CivFormElement {
     dispatch(this, 'civ-upload-retry', { index, name: file.name, file: file.file });
   }
 
+  /**
+   * Returns true if `file` is already in the current list. Matches by
+   * name + size + lastModified — close enough to "the same file" for
+   * UX purposes without requiring a content hash.
+   */
+  private _isDuplicate(file: File): boolean {
+    return this._files.some(
+      (existing) =>
+        existing.name === file.name &&
+        existing.size === file.size &&
+        existing.file.lastModified === file.lastModified,
+    );
+  }
+
   private _addFiles(newFiles: File[]): void {
     const validated: UploadedFile[] = [];
     const errors: string[] = [];
@@ -474,6 +505,10 @@ export class CivFileUpload extends CivFormElement {
     for (const file of newFiles) {
       if (file.size === 0) {
         errors.push(interpolate(t('fileUploadEmptyFile'), { name: file.name }));
+        continue;
+      }
+      if (this._isDuplicate(file)) {
+        errors.push(interpolate(t('fileUploadDuplicateError'), { name: file.name }));
         continue;
       }
       if (this.accept && !this._isFileTypeAccepted(file)) {

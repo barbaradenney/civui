@@ -46,6 +46,7 @@ export interface CivLocaleStrings {
   fileUploadFileTypeError: string;
   fileUploadMaxFilesError: string;
   fileUploadEmptyFile: string; // "{name} appears to be empty (0 bytes)"
+  fileUploadDuplicateError: string; // "{name} is already in the list"
   fileUploadCancelled: string;
   fileUploadCancelText: string; // "Cancel"
   fileUploadCancelAriaLabel: string; // "Cancel upload for {name}"
@@ -360,6 +361,7 @@ const defaultStrings: CivLocaleStrings = {
   fileUploadFileTypeError: '{name} is not an accepted file type. Accepted: {accepted}',
   fileUploadMaxFilesError: 'Maximum of {max} files allowed. {name} was not added',
   fileUploadEmptyFile: '{name} appears to be empty (0 bytes)',
+  fileUploadDuplicateError: '{name} is already in the list',
   fileUploadCancelled: 'Upload cancelled',
   fileUploadCancelText: 'Cancel',
   fileUploadCancelAriaLabel: 'Cancel upload for {name}',

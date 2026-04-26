@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBaseElement, interpolate, t } from '@civui/core';
+import { CivBaseElement, dispatch, interpolate, t } from '@civui/core';
 import '@civui/ui';
 import '../read-only-field/civ-read-only-field.js';
 
@@ -35,7 +35,15 @@ export interface SummaryItem {
  *
  * @element civ-summary
  *
- * Edit links are rendered as `<civ-link>` elements that navigate directly.
+ * Edit links are rendered as `<civ-link>` elements that navigate
+ * directly. Consumers running in an SPA that needs to intercept
+ * navigation (e.g., to confirm before leaving the review) can listen
+ * for the cancelable `civ-edit` event and call `preventDefault()` to
+ * suppress the default navigation.
+ *
+ * @fires civ-edit - Cancelable. Fires when the user clicks any edit
+ *   link. Detail: `{ section, item?, href }`. Calling `preventDefault()`
+ *   on the event suppresses the default `<a>` navigation.
  */
 @customElement('civ-summary')
 export class CivSummary extends CivBaseElement {
@@ -47,11 +55,54 @@ export class CivSummary extends CivBaseElement {
 
   override render() {
     return html`
-      <div class="civ-summary" role="region" aria-label="${this.heading || t('summaryDefaultHeading')}">
+      <div
+        class="civ-summary"
+        role="region"
+        aria-label="${this.heading || t('summaryDefaultHeading')}"
+        @click="${this._onEditClick}"
+      >
         ${this.heading ? html`<h2 class="civ-heading-xl">${this.heading}</h2>` : nothing}
         ${this.sections.map(section => this._renderSection(section))}
       </div>
     `;
+  }
+
+  /**
+   * Capture clicks on rendered edit links and fire a cancelable
+   * `civ-edit` event so SPAs can intercept navigation. Resolves the
+   * section (and item, if applicable) from `data-civ-summary-*`
+   * attributes stamped during render. The section-edit civ-link
+   * carries them directly; per-item edits live inside
+   * <civ-read-only-field>, which is the element that carries the
+   * dataset, so we walk up to it.
+   */
+  private _onEditClick(e: MouseEvent): void {
+    const target = e.target as HTMLElement | null;
+    if (!target) return;
+    const owner = target.closest<HTMLElement>('[data-civ-summary-section-index]');
+    if (!owner) return;
+    // Only fire when the click came from an actual link descendant —
+    // skip stray clicks on the host's empty space.
+    const link = target.closest('a, civ-link');
+    if (!link) return;
+
+    const section = this.sections[Number(owner.dataset.civSummarySectionIndex)];
+    if (!section) return;
+    const itemIdx = owner.dataset.civSummaryItemIndex;
+    const item = itemIdx !== undefined ? section.items[Number(itemIdx)] : undefined;
+    const href = (link as HTMLElement).getAttribute('href') ?? '';
+
+    const detail: { section: SummarySection; item?: SummaryItem; href: string } = {
+      section,
+      href,
+    };
+    if (item) detail.item = item;
+
+    const allowed = dispatch(this, 'civ-edit', detail, /* cancelable */ true);
+    if (!allowed) {
+      // Listener called preventDefault — suppress the default navigation.
+      e.preventDefault();
+    }
   }
 
   private _isSafeHref(href: string): boolean {
@@ -60,6 +111,7 @@ export class CivSummary extends CivBaseElement {
   }
 
   private _renderSection(section: SummarySection) {
+    const sectionIndex = this.sections.indexOf(section);
     const sectionEditHref = section.editHref && this._isSafeHref(section.editHref)
       ? section.editHref
       : undefined;
@@ -83,6 +135,7 @@ export class CivSummary extends CivBaseElement {
                 variant="tertiary"
                 label="${sectionEditLabel}"
                 aria-label="${interpolate(t('summaryEditAriaLabel'), { section: section.heading })}"
+                data-civ-summary-section-index="${sectionIndex}"
               ></civ-link>
             ` : nothing}
           </div>
@@ -100,6 +153,8 @@ export class CivSummary extends CivBaseElement {
                 .values="${Array.isArray(item.value) ? item.value : []}"
                 edit-href="${itemEditHref}"
                 edit-label="${itemEditLabel}"
+                data-civ-summary-section-index="${sectionIndex}"
+                data-civ-summary-item-index="${i}"
               ></civ-read-only-field>
               ${showDividers && i < section.items.length - 1
                 ? html`<civ-divider spacing="sm"></civ-divider>`

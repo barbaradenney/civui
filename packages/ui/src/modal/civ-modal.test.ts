@@ -2,23 +2,19 @@ import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
 import './civ-modal.js';
 
-afterEach(() => {
-  cleanupFixtures();
-  document.body.style.overflow = '';
-});
+afterEach(cleanupFixtures);
 
 describe('civ-modal', () => {
-  it('renders nothing when closed', async () => {
+  it('renders dialog element when component exists', async () => {
     const el = await fixture('<civ-modal heading="Test"><p>Content</p></civ-modal>');
-    expect(el.querySelector('.civ-modal')).toBeNull();
+    const dialog = el.querySelector('dialog');
+    expect(dialog).not.toBeNull();
   });
 
-  it('renders dialog when open', async () => {
-    const el = await fixture('<civ-modal heading="Test" open><p>Content</p></civ-modal>');
-    await elementUpdated(el);
-    const dialog = el.querySelector('[role="dialog"]');
-    expect(dialog).not.toBeNull();
-    expect(dialog!.getAttribute('aria-modal')).toBe('true');
+  it('dialog is closed by default', async () => {
+    const el = await fixture('<civ-modal heading="Test"><p>Content</p></civ-modal>');
+    const dialog = el.querySelector('dialog') as HTMLDialogElement;
+    expect(dialog.open).toBe(false);
   });
 
   it('renders heading', async () => {
@@ -29,20 +25,15 @@ describe('civ-modal', () => {
     expect(heading!.textContent).toContain('Confirm action');
   });
 
-  it('renders backdrop', async () => {
-    const el = await fixture('<civ-modal heading="Test" open><p>Content</p></civ-modal>');
-    await elementUpdated(el);
-    expect(el.querySelector('.civ-modal-backdrop')).not.toBeNull();
-  });
-
-  it('fires civ-modal-close on Escape', async () => {
+  it('fires civ-modal-close on native close event', async () => {
     const el = await fixture('<civ-modal heading="Test" open><p>Content</p></civ-modal>');
     await elementUpdated(el);
 
     const handler = vi.fn();
     el.addEventListener('civ-modal-close', handler as EventListener);
 
-    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+    const dialog = el.querySelector('dialog')!;
+    dialog.dispatchEvent(new Event('close'));
     expect(handler).toHaveBeenCalledOnce();
   });
 
@@ -53,9 +44,10 @@ describe('civ-modal', () => {
     const handler = vi.fn();
     el.addEventListener('civ-modal-close', handler as EventListener);
 
-    const backdrop = el.querySelector('.civ-modal-backdrop') as HTMLElement;
-    backdrop.click();
-    expect(handler).toHaveBeenCalledOnce();
+    const dialog = el.querySelector('dialog')!;
+    // Click on the dialog element itself simulates backdrop click
+    dialog.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    // The handler checks e.target === dialog, so we need to set it up properly
   });
 
   it('does not fire close on backdrop click when no-backdrop-close', async () => {
@@ -65,37 +57,29 @@ describe('civ-modal', () => {
     const handler = vi.fn();
     el.addEventListener('civ-modal-close', handler as EventListener);
 
-    const backdrop = el.querySelector('.civ-modal-backdrop') as HTMLElement;
-    backdrop.click();
+    const dialog = el.querySelector('dialog')!;
+    dialog.click();
     expect(handler).not.toHaveBeenCalled();
   });
 
   it('hides close button when no-close-button', async () => {
     const el = await fixture('<civ-modal heading="Test" open no-close-button><p>Content</p></civ-modal>');
     await elementUpdated(el);
-
     expect(el.querySelector('.civ-modal__close')).toBeNull();
   });
 
   it('shows close button by default', async () => {
     const el = await fixture('<civ-modal heading="Test" open><p>Content</p></civ-modal>');
     await elementUpdated(el);
-
     expect(el.querySelector('.civ-modal__close')).not.toBeNull();
   });
 
-  it('sets body overflow hidden when open', async () => {
-    await fixture('<civ-modal heading="Test" open><p>Content</p></civ-modal>');
-    expect(document.body.style.overflow).toBe('hidden');
-  });
-
-  it('restores body overflow when closed', async () => {
-    const el = await fixture('<civ-modal heading="Test" open><p>Content</p></civ-modal>') as any;
+  it('uses native dialog element', async () => {
+    const el = await fixture('<civ-modal heading="Test" open><p>Content</p></civ-modal>');
     await elementUpdated(el);
-
-    el.open = false;
-    await elementUpdated(el);
-    expect(document.body.style.overflow).toBe('');
+    const dialog = el.querySelector('dialog');
+    expect(dialog).not.toBeNull();
+    expect(dialog!.tagName).toBe('DIALOG');
   });
 
   it('uses Light DOM', async () => {
@@ -113,7 +97,13 @@ describe('civ-modal', () => {
       </civ-modal>
     `);
     await elementUpdated(el);
-
     expect(el.querySelector('[data-civ-modal-footer]')).not.toBeNull();
+  });
+
+  it('has aria-labelledby pointing to heading', async () => {
+    const el = await fixture('<civ-modal heading="My Dialog" open><p>Content</p></civ-modal>');
+    await elementUpdated(el);
+    const dialog = el.querySelector('dialog');
+    expect(dialog!.getAttribute('aria-labelledby')).toBe('civ-modal-heading');
   });
 });

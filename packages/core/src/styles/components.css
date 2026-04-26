@@ -1618,26 +1618,19 @@
     }
   }
 
-  /* ── Modal ────────────────────────────────────────────────── */
+  /* ── Modal (native <dialog>) ─────────────────────────────── */
 
-  .civ-modal-backdrop {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 200;
-  }
-
-  .civ-modal {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 201;
+  dialog.civ-modal {
     width: 90vw;
     max-width: 600px;
     max-height: 80vh;
     overflow-y: auto;
+    border: none;
     @apply civ-bg-white civ-rounded civ-shadow-lg civ-p-6;
+  }
+
+  dialog.civ-modal::backdrop {
+    background: rgba(0, 0, 0, 0.5);
   }
 
   .civ-modal__header {
@@ -1657,12 +1650,9 @@
   }
 
   @media (max-width: 480px) {
-    .civ-modal {
-      top: auto;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      transform: none;
+    dialog.civ-modal {
+      margin: 0;
+      margin-top: auto;
       width: 100%;
       max-width: none;
       max-height: 85vh;

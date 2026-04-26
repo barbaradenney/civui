@@ -1,14 +1,19 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBaseElement, LightDomSlotMixin, dispatch, trapFocus } from '@civui/core';
+import { CivBaseElement, LightDomSlotMixin, dispatch } from '@civui/core';
 import type { SlotConfig } from '@civui/core';
 
 /**
  * CivUI Modal
  *
- * A general-purpose modal dialog. Centered overlay on desktop,
- * bottom sheet on mobile (≤480px). Includes focus trap, escape-to-close,
- * optional backdrop close, and return-focus-on-close.
+ * A general-purpose modal dialog built on the native HTML `<dialog>` element.
+ * Centered overlay on desktop, bottom sheet on mobile (≤480px).
+ *
+ * Uses the browser's built-in modal behavior:
+ * - Native focus trap (no JS focus management needed)
+ * - Native `::backdrop` pseudo-element
+ * - Native Escape-to-close
+ * - Automatic `inert` on background content
  *
  * The parent component controls the `open` state. The modal fires
  * `civ-modal-close` when the user tries to close it, and the parent
@@ -22,19 +27,6 @@ import type { SlotConfig } from '@civui/core';
  * @prop {boolean} noBackdropClose - Disable closing via backdrop click
  *
  * @fires civ-modal-close - When the user tries to close the modal
- *
- * @example
- * ```html
- * <civ-modal ?open="${this._open}" heading="Confirm action"
- *   @civ-modal-close="${() => this._open = false}">
- *   <p>Are you sure?</p>
- *   <div data-modal-footer>
- *     <civ-button label="Yes" @click="${this._confirm}"></civ-button>
- *     <civ-button variant="secondary" label="Cancel"
- *       @click="${() => this._open = false}"></civ-button>
- *   </div>
- * </civ-modal>
- * ```
  */
 @customElement('civ-modal')
 export class CivModal extends LightDomSlotMixin(CivBaseElement) {
@@ -42,10 +34,6 @@ export class CivModal extends LightDomSlotMixin(CivBaseElement) {
   @property({ type: String }) heading = '';
   @property({ type: Boolean, attribute: 'no-close-button' }) noCloseButton = false;
   @property({ type: Boolean, attribute: 'no-backdrop-close' }) noBackdropClose = false;
-
-  private _cleanupTrap: (() => void) | null = null;
-  private _boundOnKeydown = this._onKeydown.bind(this);
-  private _triggerElement: HTMLElement | null = null;
 
   override _getSlotConfig(): SlotConfig {
     return {
@@ -69,24 +57,13 @@ export class CivModal extends LightDomSlotMixin(CivBaseElement) {
     }
   }
 
-  override disconnectedCallback(): void {
-    super.disconnectedCallback();
-    this._teardown();
-  }
-
   override render() {
-    if (!this.open) return nothing;
-
     return html`
-      <div
-        class="civ-modal-backdrop"
-        @click="${this._onBackdropClick}"
-      ></div>
-      <div
+      <dialog
         class="civ-modal"
-        role="dialog"
-        aria-modal="true"
         aria-labelledby="${this.heading ? 'civ-modal-heading' : nothing}"
+        @close="${this._onNativeClose}"
+        @click="${this._onDialogClick}"
       >
         ${this.heading || !this.noCloseButton ? html`
           <div class="civ-modal__header">
@@ -108,51 +85,38 @@ export class CivModal extends LightDomSlotMixin(CivBaseElement) {
         ${this._hasSlottedChildren('data-modal-footer') ? html`
           <div class="civ-modal__footer" data-civ-modal-footer></div>
         ` : nothing}
-      </div>
+      </dialog>
     `;
   }
 
   private _onOpen(): void {
-    this._triggerElement = document.activeElement as HTMLElement | null;
-    document.addEventListener('keydown', this._boundOnKeydown);
-    document.body.style.overflow = 'hidden';
-
     this.updateComplete.then(() => {
-      const dialog = this.querySelector('[role="dialog"]');
-      if (dialog instanceof HTMLElement) {
-        this._cleanupTrap = trapFocus(dialog);
+      const dialog = this.querySelector('dialog') as HTMLDialogElement | null;
+      if (dialog && !dialog.open && typeof dialog.showModal === 'function') {
+        dialog.showModal();
       }
     });
   }
 
   private _onClose(): void {
-    this._teardown();
-    document.body.style.overflow = '';
-
-    // Return focus to the element that opened the modal
-    if (this._triggerElement) {
-      requestAnimationFrame(() => {
-        this._triggerElement?.focus();
-        this._triggerElement = null;
-      });
+    const dialog = this.querySelector('dialog') as HTMLDialogElement | null;
+    if (dialog?.open && typeof dialog.close === 'function') {
+      dialog.close();
     }
   }
 
-  private _teardown(): void {
-    this._cleanupTrap?.();
-    this._cleanupTrap = null;
-    document.removeEventListener('keydown', this._boundOnKeydown);
+  /** Native dialog fires 'close' on Escape — intercept and forward as our event */
+  private _onNativeClose(e: Event): void {
+    e.preventDefault();
+    this._requestClose();
   }
 
-  private _onKeydown(e: KeyboardEvent): void {
-    if (e.key === 'Escape' && this.open) {
-      e.preventDefault();
-      this._requestClose();
-    }
-  }
-
-  private _onBackdropClick(): void {
-    if (!this.noBackdropClose) {
+  /** Detect clicks on the backdrop (the dialog element itself, not its children) */
+  private _onDialogClick(e: MouseEvent): void {
+    const dialog = this.querySelector('dialog');
+    if (!dialog || this.noBackdropClose) return;
+    // Click on the dialog element itself (the backdrop area) vs. inside the content
+    if (e.target === dialog) {
       this._requestClose();
     }
   }

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import './civ-segment.js';
 import './civ-segmented-control.js';
-import '@civui/ui';
+import '@civui/actions';
 
 const meta: Meta = {
   title: 'Forms/Inputs/Segmented Control',

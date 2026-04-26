@@ -15,7 +15,9 @@ async function buildCDN() {
     entryPoints: {
       'civui': join(process.cwd(), 'packages/forms/src/index.ts'),
       'civui-core': join(process.cwd(), 'packages/core/src/index.ts'),
-      'civui-ui': join(process.cwd(), 'packages/ui/src/button/civ-button.ts'),
+      'civui-actions': join(process.cwd(), 'packages/actions/src/index.ts'),
+      'civui-overlays': join(process.cwd(), 'packages/overlays/src/index.ts'),
+      'civui-layout': join(process.cwd(), 'packages/layout/src/index.ts'),
       'civui-feedback': join(process.cwd(), 'packages/feedback/src/alert/civ-alert.ts'),
       'civui-navigation': join(process.cwd(), 'packages/navigation/src/skip-link/civ-skip-link.ts'),
     },

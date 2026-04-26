@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
-import '@civui/ui/divider';
+import '@civui/layout/divider';
 
 const meta: Meta = {
   title: 'Foundations/Typography',

@@ -2,8 +2,8 @@ import { describe, it, expect, afterEach } from 'vitest';
 import { fixture, cleanupFixtures } from '@civui/test-utils';
 import './civ-task-group.js';
 import './civ-task.js';
-import '@civui/ui/tag';
-import '@civui/ui/link';
+import '@civui/layout/tag';
+import '@civui/actions/link';
 
 afterEach(cleanupFixtures);
 

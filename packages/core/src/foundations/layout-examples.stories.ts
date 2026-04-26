@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import '@civui/inputs';
 import '@civui/controls';
-import '@civui/ui';
+import '@civui/actions';
 
 const meta: Meta = {
   title: 'Foundations/Layout Examples',
@@ -81,6 +81,50 @@ export const ActionBar: Story = {
       <civ-button variant="secondary" label="Save draft"></civ-button>
       <civ-button label="Continue"></civ-button>
     </div>
+  `,
+};
+
+export const ListItem: Story = {
+  name: 'List Item',
+  render: () => html`
+    <ul class="civ-list-none civ-p-0 civ-space-y-1" style="max-width: 480px;">
+      <li class="civ-list-item civ-list-item--success">
+        <div class="civ-list-item__content">
+          <span class="civ-flex civ-items-center civ-gap-2">
+            <civ-icon name="check-circle" class="civ-text-success"></civ-icon>
+            <span class="civ-font-semibold">tax-return.pdf</span>
+            <span class="civ-ms-2">(1.2 MB)</span>
+          </span>
+        </div>
+        <span class="civ-list-item__actions">
+          <civ-action-button variant="tertiary" danger label="Remove"></civ-action-button>
+        </span>
+      </li>
+      <li class="civ-list-item civ-list-item--error">
+        <div class="civ-list-item__content">
+          <span class="civ-flex civ-items-center civ-gap-2">
+            <civ-icon name="error" class="civ-text-error"></civ-icon>
+            <span class="civ-font-semibold">w2-2025.pdf</span>
+            <span class="civ-ms-2">(4.8 MB)</span>
+          </span>
+          <span class="civ-text-sm civ-text-error">File exceeds 3 MB limit</span>
+        </div>
+        <span class="civ-list-item__actions">
+          <civ-action-button variant="tertiary" label="Retry"></civ-action-button>
+          <civ-action-button variant="tertiary" danger label="Remove"></civ-action-button>
+        </span>
+      </li>
+      <li class="civ-list-item">
+        <div class="civ-list-item__content">
+          <span class="civ-font-semibold">dd214.pdf</span>
+          <span class="civ-ms-2">(800 KB)</span>
+        </div>
+        <span class="civ-list-item__actions">
+          <civ-action-button variant="tertiary" label="Edit"></civ-action-button>
+          <civ-action-button variant="tertiary" danger label="Remove"></civ-action-button>
+        </span>
+      </li>
+    </ul>
   `,
 };
 

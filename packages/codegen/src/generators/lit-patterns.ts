@@ -1399,14 +1399,15 @@ ${propDecls}
               <ul class="civ-list-none civ-p-0 civ-mt-2 civ-space-y-1" aria-label="\${this.filesListLabel}">
                 \${this._files.map(
                   (file, index) => html\`
-                    <li class="civ-file-item">
+                    <li class="civ-list-item">
                       <span>
                         <span class="civ-font-semibold">\${file.name}</span>
                         <span class="civ-ms-2">(\${formatFileSize(file.size)})</span>
                       </span>
                       <button
                         type="button"
-                        class="civ-file-remove-btn focus-visible:civ-focus-ring"
+                        class="focus-visible:civ-focus-ring"
+                        data-file-remove
                         @click="\${() => this._removeFile(index)}"
                         aria-label="\${interpolate(this.removeAriaLabel, { name: file.name })}"
                         ?disabled="\${this.disabled}"
@@ -1528,7 +1529,7 @@ ${propDecls}
     this.announce(interpolate(this.fileRemovedMessage, { total: this._files.length }));
 
     this.updateComplete.then(() => {
-      const buttons = this.querySelectorAll<HTMLButtonElement>('.civ-file-remove-btn');
+      const buttons = this.querySelectorAll<HTMLButtonElement>('[data-file-remove]');
       if (buttons.length > 0) {
         const next = buttons[Math.min(index, buttons.length - 1)];
         next.focus();

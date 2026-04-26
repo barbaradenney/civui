@@ -29,7 +29,9 @@
     { "path": "./packages/cli" },
     { "path": "./packages/content" },
     { "path": "./packages/mcp-server" },
-    { "path": "./packages/ui" },
+    { "path": "./packages/actions" },
+    { "path": "./packages/overlays" },
+    { "path": "./packages/layout" },
     { "path": "./packages/feedback" },
     { "path": "./packages/navigation" }
   ]

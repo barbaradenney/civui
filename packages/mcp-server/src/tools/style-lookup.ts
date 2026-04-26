@@ -176,8 +176,9 @@ const ELEMENT_STYLES: Record<ElementType, ElementStyleDef> = {
     focusRing: true,
     notes: [
       '.civ-dropzone for the drag-and-drop area',
-      '.civ-file-item for each uploaded file row',
-      '.civ-file-remove-btn for the remove button on each file',
+      '.civ-list-item for each uploaded file row (shared list item pattern)',
+      '.civ-list-item__content for the file info area',
+      '.civ-list-item__actions for action buttons',
     ],
   },
   combobox: {

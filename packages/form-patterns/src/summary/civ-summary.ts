@@ -1,7 +1,8 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { CivBaseElement, dispatch, interpolate, t } from '@civui/core';
-import '@civui/ui';
+import '@civui/actions/link';
+import '@civui/layout/divider';
 import '../read-only-field/civ-read-only-field.js';
 
 export interface SummarySection {

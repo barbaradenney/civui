@@ -3,8 +3,8 @@ import { html } from 'lit';
 import './civ-task-list.js';
 import './civ-task-group.js';
 import './civ-task.js';
-import '@civui/ui/tag';
-import '@civui/ui/link';
+import '@civui/layout/tag';
+import '@civui/actions/link';
 
 const meta: Meta = {
   title: 'Navigation/Task List',

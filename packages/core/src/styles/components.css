@@ -45,6 +45,29 @@
     color: var(--civ-color-base-dark);
   }
 
+  /* ── List Item (shared three-column layout) ────────────────── */
+
+  .civ-list-item {
+    @apply civ-flex civ-items-center civ-justify-between civ-p-2
+           civ-bg-base-lightest civ-rounded civ-text-sm;
+  }
+
+  .civ-list-item__content {
+    @apply civ-flex-1 civ-min-w-0;
+  }
+
+  .civ-list-item__actions {
+    @apply civ-flex civ-items-center civ-gap-1 civ-shrink-0;
+  }
+
+  .civ-list-item--success {
+    border-left: 3px solid var(--civ-color-success-DEFAULT);
+  }
+
+  .civ-list-item--error {
+    border-left: 3px solid var(--civ-color-error-DEFAULT);
+  }
+
   /* ── Memorable Date ───────────────────────────────────────── */
 
   .civ-memorable-date-fields {
@@ -1249,23 +1272,7 @@
     min-height: 250px;
   }
 
-  .civ-file-item {
-    @apply civ-flex civ-items-center civ-justify-between civ-p-2
-           civ-bg-base-lightest civ-rounded civ-text-sm;
-  }
-
-  .civ-file-remove-btn {
-    @apply civ-text-error civ-text-sm civ-underline civ-bg-transparent
-           civ-border-0 civ-cursor-pointer civ-py-1 civ-px-2;
-  }
-
-  .civ-file-item--success {
-    border-left: 3px solid var(--civ-color-success-DEFAULT);
-  }
-
-  .civ-file-item--error {
-    border-left: 3px solid var(--civ-color-error-DEFAULT);
-  }
+  /* File items use the shared .civ-list-item layout */
 
   /* File upload progress uses .civ-progress-track / .civ-progress-fill
      with inline height: 4px for compact display. */

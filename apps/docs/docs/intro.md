@@ -51,7 +51,9 @@ import '@civui/form-patterns';
 | `@civui/controls` | Selection controls (checkbox, radio, segmented-control) |
 | `@civui/compound` | Compound fields (address, name, direct-deposit, signature) |
 | `@civui/form-patterns` | Form orchestration (form, form-step, repeater, summary, prefill) |
-| `@civui/ui` | UI components (button, link, tag, card, page header, link card) |
+| `@civui/actions` | Action components (button, link, action-button, link-card, button-group) |
+| `@civui/overlays` | Overlay components (modal, action-sheet) |
+| `@civui/layout` | Layout components (card, divider, input-group, page-header, tag) |
 | `@civui/feedback` | Alert, progress bar |
 | `@civui/navigation` | Skip link, task list |
 | `@civui/mcp-server` | 80-tool MCP server for form generation |

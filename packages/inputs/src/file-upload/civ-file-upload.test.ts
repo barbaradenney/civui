@@ -112,7 +112,7 @@ describe('civ-file-upload', () => {
     el._addFiles([file]);
     await elementUpdated(el);
 
-    const removeBtn = el.querySelector('.civ-file-remove-btn');
+    const removeBtn = el.querySelector('[data-file-remove]');
     expect(removeBtn).not.toBeNull();
     expect(removeBtn!.tagName.toLowerCase()).toBe('civ-action-button');
     expect(removeBtn!.hasAttribute('danger')).toBe(true);
@@ -163,7 +163,7 @@ describe('civ-file-upload', () => {
       el._addFiles([file]);
       await elementUpdated(el);
 
-      const btn = el.querySelector('.civ-file-remove-btn') as any;
+      const btn = el.querySelector('[data-file-remove]') as any;
       expect(btn).not.toBeNull();
       expect(btn.getAttribute('label')).toBe('Eliminar');
       expect(btn.getAttribute('aria-label')).toBe('Eliminar test.pdf');
@@ -423,7 +423,7 @@ describe('aria-required', () => {
     el._addFiles([file1, file2]);
     await el.updateComplete;
 
-    const removeButtons = el.querySelectorAll('.civ-file-remove-btn');
+    const removeButtons = el.querySelectorAll('[data-file-remove]');
     expect(removeButtons.length).toBe(2);
 
     el._removeFile(0);
@@ -534,7 +534,7 @@ describe('civ-file-upload initialFiles (draft restore)', () => {
 
     expect(el.files.length).toBe(2);
     expect(el.files[0].name).toBe('tax-return.pdf');
-    expect(el.querySelectorAll('.civ-file-item').length).toBe(2);
+    expect(el.querySelectorAll('.civ-list-item').length).toBe(2);
   });
 
   it('renders the file name as a download link when url is provided', async () => {
@@ -544,7 +544,7 @@ describe('civ-file-upload initialFiles (draft restore)', () => {
     ];
     await elementUpdated(el);
 
-    const link = el.querySelector('.civ-file-item a') as HTMLAnchorElement;
+    const link = el.querySelector('.civ-list-item a') as HTMLAnchorElement;
     expect(link).not.toBeNull();
     expect(link.href).toBe('https://example.test/report.pdf');
     expect(link.target).toBe('_blank');
@@ -557,8 +557,8 @@ describe('civ-file-upload initialFiles (draft restore)', () => {
     el.initialFiles = [{ id: 'srv-1', name: 'report.pdf', size: 100 }];
     await elementUpdated(el);
 
-    expect(el.querySelector('.civ-file-item a')).toBeNull();
-    expect(el.querySelector('.civ-file-item .civ-font-semibold')!.tagName).toBe('SPAN');
+    expect(el.querySelector('.civ-list-item a')).toBeNull();
+    expect(el.querySelector('.civ-list-item .civ-font-semibold')!.tagName).toBe('SPAN');
   });
 
   it('hydration is idempotent — assigning initialFiles twice does not duplicate', async () => {

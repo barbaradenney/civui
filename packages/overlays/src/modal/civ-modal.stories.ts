@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import './civ-modal.js';
-import '@civui/ui';
+import '@civui/actions';
 
 const meta: Meta = {
   title: 'UI/Modal',

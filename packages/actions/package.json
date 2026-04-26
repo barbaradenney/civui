@@ -1,0 +1,37 @@
+{
+  "name": "@civui/actions",
+  "version": "0.1.0",
+  "description": "CivUI action components — Button, ActionButton, Link, LinkCard, ButtonGroup",
+  "license": "MIT",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js",
+    "./button": "./dist/button/index.js",
+    "./action-button": "./dist/action-button/index.js",
+    "./link": "./dist/link/index.js",
+    "./link-card": "./dist/link-card/index.js",
+    "./button-group": "./dist/button-group/index.js"
+  },
+  "files": ["dist"],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "dev": "tsc -b --watch",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@civui/core": "workspace:*",
+    "lit": "^3.2.0"
+  },
+  "devDependencies": {
+    "@civui/test-utils": "workspace:*",
+    "@civui/tokens": "workspace:*",
+    "typescript": "^5.6.0",
+    "vitest": "^2.0.0"
+  }
+}

@@ -255,8 +255,8 @@ describe('lookupStyle', () => {
 
     it('mentions file-item and file-remove-btn in notes', () => {
       const result = lookupStyle('file-upload');
-      expect(result.notes!.some(n => n.includes('.civ-file-item'))).toBe(true);
-      expect(result.notes!.some(n => n.includes('.civ-file-remove-btn'))).toBe(true);
+      expect(result.notes!.some(n => n.includes('.civ-list-item'))).toBe(true);
+      expect(result.notes!.some(n => n.includes('.civ-list-item__actions'))).toBe(true);
     });
   });
 

@@ -93,7 +93,9 @@ export async function assembleGovForm(formNumber: string, options?: {
   <script type="module" src="${cdnBase}/controls/dist/index.js"></script>
   <script type="module" src="${cdnBase}/compound/dist/index.js"></script>
   <script type="module" src="${cdnBase}/form-patterns/dist/index.js"></script>
-  <script type="module" src="${cdnBase}/ui/dist/index.js"></script>
+  <script type="module" src="${cdnBase}/actions/dist/index.js"></script>
+  <script type="module" src="${cdnBase}/overlays/dist/index.js"></script>
+  <script type="module" src="${cdnBase}/layout/dist/index.js"></script>
   <script type="module" src="${cdnBase}/navigation/dist/index.js"></script>
   <script type="module" src="${cdnBase}/feedback/dist/index.js"></script>`}
 </head>
@@ -502,7 +504,9 @@ import '@civui/inputs';
 import '@civui/controls';
 import '@civui/compound';
 import '@civui/form-patterns';
-import '@civui/ui';
+import '@civui/actions';
+import '@civui/overlays';
+import '@civui/layout';
 import '@civui/navigation';
 import '@civui/feedback';
 import '@civui/core/styles/civ.css';

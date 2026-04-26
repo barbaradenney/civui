@@ -1,7 +1,7 @@
 import { html } from 'lit';
 import type { Meta, StoryObj } from '@storybook/web-components';
 import './civ-date-picker.js';
-import '@civui/ui';
+import '@civui/actions';
 
 const meta: Meta = {
   title: 'Forms/Inputs/Date Picker',

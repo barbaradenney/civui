@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import './civ-select.js';
-import '@civui/ui';
+import '@civui/actions';
 
 const STATES = [
   { value: 'AL', label: 'Alabama' },

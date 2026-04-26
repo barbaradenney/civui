@@ -3,7 +3,7 @@ import { html } from 'lit';
 import './civ-form.js';
 import '@civui/inputs';
 import '@civui/controls';
-import '@civui/ui';
+import '@civui/actions';
 
 const meta: Meta = {
   title: 'Forms/Layout/Form',

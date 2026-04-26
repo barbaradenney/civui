@@ -14,12 +14,15 @@ Accessibility-first web components for government applications.
 
 ## Package Structure
 
-Build order: `tokens → core → ui → inputs → controls → compound → form-patterns`
+Build order: `tokens → core → actions, overlays, layout → inputs → controls → compound → form-patterns`
 
 | Package | Path | Description |
 |---------|------|-------------|
 | `@civui/tokens` | `packages/tokens/` | Design tokens (colors, spacing, typography) |
 | `@civui/core` | `packages/core/` | Base classes, a11y utilities, analytics, date utils |
+| `@civui/actions` | `packages/actions/` | Action components (button, link, action-button, link-card, button-group) |
+| `@civui/overlays` | `packages/overlays/` | Overlay components (modal, action-sheet) |
+| `@civui/layout` | `packages/layout/` | Layout components (card, divider, input-group, page-header, tag) |
 | `@civui/inputs` | `packages/inputs/` | Input components (text-input, textarea, select, combobox, date-picker, file-upload, toggle, yes-no) |
 | `@civui/controls` | `packages/controls/` | Selection controls (checkbox, radio, segmented-control) |
 | `@civui/compound` | `packages/compound/` | Compound fields (address, name, direct-deposit, signature) |

@@ -7,10 +7,10 @@ import '@civui/compound';
 import '../form-step/civ-form-step.js';
 import '@civui/feedback';
 import '@civui/navigation';
-import '@civui/ui/link';
-import '@civui/ui/button';
-import '@civui/ui/tag';
-import '@civui/ui/divider';
+import '@civui/actions/link';
+import '@civui/actions/button';
+import '@civui/layout/tag';
+import '@civui/layout/divider';
 import type { CivSummary } from '../summary/civ-summary.js';
 
 const meta: Meta = {

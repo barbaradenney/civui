@@ -2,8 +2,8 @@ import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import './civ-summary.js';
 import '@civui/compound';
-import '@civui/ui/link';
-import '@civui/ui/divider';
+import '@civui/actions/link';
+import '@civui/layout/divider';
 
 const meta: Meta = {
   title: 'Forms/Patterns/Summary',

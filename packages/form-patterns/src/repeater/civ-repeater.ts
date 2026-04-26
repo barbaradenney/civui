@@ -2,7 +2,8 @@ import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { CivBaseElement, dispatch, renderLegend, renderHint, renderError, buildDescribedBy, announce, interpolate, t } from '@civui/core';
 import '@civui/inputs';
-import '@civui/ui';
+import '@civui/actions/button';
+import '@civui/actions/action-button';
 import '../form-step/civ-form-step.js';
 
 /**
@@ -271,15 +272,15 @@ export class CivRepeater extends CivBaseElement {
       // Summary bar — visible when row is collapsed
       const summary = document.createElement('div');
       summary.setAttribute('data-civ-repeater-summary', '');
-      summary.classList.add('civ-flex', 'civ-justify-between', 'civ-items-center');
+      summary.classList.add('civ-list-item');
 
       const summaryText = document.createElement('span');
-      summaryText.classList.add('civ-font-medium');
+      summaryText.classList.add('civ-list-item__content', 'civ-font-medium');
       summaryText.textContent = `${this.itemLabel} ${index + 1}`;
       summary.appendChild(summaryText);
 
       const summaryActions = document.createElement('span');
-      summaryActions.classList.add('civ-flex', 'civ-gap-2');
+      summaryActions.classList.add('civ-list-item__actions');
 
       const editBtn = document.createElement('civ-action-button');
       editBtn.setAttribute('variant', 'tertiary');
@@ -606,15 +607,15 @@ export class CivRepeater extends CivBaseElement {
 
     const summary = document.createElement('div');
     summary.setAttribute('data-civ-repeater-summary', '');
-    summary.classList.add('civ-flex', 'civ-justify-between', 'civ-items-center');
+    summary.classList.add('civ-list-item');
 
     const summaryText = document.createElement('span');
-    summaryText.classList.add('civ-font-medium');
+    summaryText.classList.add('civ-list-item__content', 'civ-font-medium');
     summaryText.textContent = this._buildWizardSummaryText(data, index);
     summary.appendChild(summaryText);
 
     const actions = document.createElement('span');
-    actions.classList.add('civ-flex', 'civ-gap-2');
+    actions.classList.add('civ-list-item__actions');
 
     const editBtn = document.createElement('civ-action-button');
     editBtn.setAttribute('variant', 'tertiary');

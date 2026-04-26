@@ -152,6 +152,33 @@ For responsive grids, use inline styles for the template:
 </div>
 ```
 
+### List item
+
+<StoryEmbed id="foundations-layout-examples--list-item" height="250" />
+
+The `.civ-list-item` class provides a shared three-column layout for rows that show content with trailing actions — file lists, repeater summary cards, and similar patterns.
+
+| Class | Purpose |
+|-------|---------|
+| `.civ-list-item` | Base row: flex, centered, between, padding, bg, rounded |
+| `.civ-list-item__content` | Flexible content area (`flex-1`, `min-w-0` for truncation) |
+| `.civ-list-item__actions` | Non-shrinking action button container |
+| `.civ-list-item--success` | Green left border (success state) |
+| `.civ-list-item--error` | Red left border (error state) |
+
+```html
+<li class="civ-list-item civ-list-item--success">
+  <div class="civ-list-item__content">
+    <span class="civ-font-semibold">tax-return.pdf</span>
+  </div>
+  <span class="civ-list-item__actions">
+    <civ-action-button variant="tertiary" danger label="Remove"></civ-action-button>
+  </span>
+</li>
+```
+
+Used by `civ-file-upload` (file rows) and `civ-repeater` (summary cards in detail/wizard mode).
+
 ## Density scaling
 
 <StoryEmbed id="foundations-density-examples--side-by-side" />

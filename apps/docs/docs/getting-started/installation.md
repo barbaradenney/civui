@@ -14,8 +14,14 @@ npm install @civui/core
 # Form components
 npm install @civui/inputs @civui/controls @civui/compound @civui/form-patterns
 
-# UI components (button, link, tag, card, etc.)
-npm install @civui/ui
+# Action components (button, link, action-button, link-card, button-group)
+npm install @civui/actions
+
+# Overlay components (modal, action-sheet)
+npm install @civui/overlays
+
+# Layout components (card, divider, input-group, page-header, tag)
+npm install @civui/layout
 
 # Navigation components (task list, skip link)
 npm install @civui/navigation
@@ -33,7 +39,9 @@ npm install @civui/feedback
 import '@civui/controls';
 import '@civui/compound';
 import '@civui/form-patterns';
-  import '@civui/ui';
+  import '@civui/actions';
+  import '@civui/overlays';
+  import '@civui/layout';
 </script>
 
 <civ-text-input
@@ -54,7 +62,9 @@ import '@civui/inputs';
 import '@civui/controls';
 import '@civui/compound';
 import '@civui/form-patterns';
-import '@civui/ui';
+import '@civui/actions';
+import '@civui/overlays';
+import '@civui/layout';
 
 function MyForm() {
   return (
@@ -71,7 +81,7 @@ function MyForm() {
 Packages must be built in dependency order:
 
 ```
-tokens → core → forms, ui, feedback, navigation
+tokens → core → forms, actions, overlays, layout, feedback, navigation
 ```
 
 ```bash

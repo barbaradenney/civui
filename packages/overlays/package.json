@@ -1,23 +1,15 @@
 {
-  "name": "@civui/ui",
+  "name": "@civui/overlays",
   "version": "0.1.0",
-  "description": "CivUI general-purpose UI components — Button, Link, Badge, and more",
+  "description": "CivUI overlay components — Modal, ActionSheet",
   "license": "MIT",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
     ".": "./dist/index.js",
-    "./button": "./dist/button/index.js",
-    "./link": "./dist/link/index.js",
-    "./tag": "./dist/tag/index.js",
-    "./divider": "./dist/divider/index.js",
-    "./card": "./dist/card/index.js",
-    "./page-header": "./dist/page-header/index.js",
-    "./link-card": "./dist/link-card/index.js",
-    "./action-button": "./dist/action-button/index.js",
-    "./button-group": "./dist/button-group/index.js",
-    "./input-group": "./dist/input-group/index.js"
+    "./modal": "./dist/modal/index.js",
+    "./action-sheet": "./dist/action-sheet/index.js"
   },
   "files": ["dist"],
   "publishConfig": {

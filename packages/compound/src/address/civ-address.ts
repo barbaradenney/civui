@@ -3,7 +3,7 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { CivFormElement, dispatch, renderLegend, renderHint, renderError, buildDescribedBy, interpolate, t } from '@civui/core';
 import '@civui/inputs';
 import '@civui/controls';
-import '@civui/ui/modal';
+import '@civui/overlays/modal';
 
 export interface AddressSuggestion {
   street1: string;

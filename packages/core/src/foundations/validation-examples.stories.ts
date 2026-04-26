@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import '@civui/inputs';
-import '@civui/ui';
+import '@civui/actions';
 import '@civui/form-patterns';
 
 const meta: Meta = {

@@ -271,7 +271,7 @@ export class CivFormElement extends CivBaseElement {
    * Parse a JSON value string into a typed state object, merging with
    * an empty default. Returns the default if parsing fails.
    */
-  protected parseStructuredValue<T extends Record<string, unknown>>(val: string, empty: T): T {
+  protected parseStructuredValue<T extends object>(val: string, empty: T): T {
     if (!val) return { ...empty };
     try {
       return { ...empty, ...JSON.parse(val) };
@@ -285,7 +285,7 @@ export class CivFormElement extends CivBaseElement {
    * Handles the common compound component pattern of `prefix.fieldName`.
    */
   protected syncFormDataFromState(
-    state: Record<string, unknown>,
+    state: object,
     prefix: string,
   ): void {
     const fd = new FormData();

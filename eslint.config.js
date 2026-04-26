@@ -35,7 +35,7 @@ export default [
         {
           patterns: [
             {
-              group: ['@civui/inputs', '@civui/controls', '@civui/compound', '@civui/ui', '@civui/ui/*', '@civui/feedback', '@civui/navigation', '@civui/form-patterns'],
+              group: ['@civui/inputs', '@civui/controls', '@civui/compound', '@civui/actions', '@civui/actions/*', '@civui/overlays', '@civui/overlays/*', '@civui/layout', '@civui/layout/*', '@civui/feedback', '@civui/navigation', '@civui/form-patterns'],
               importNamePattern: '^Civ',
               message: 'Use bare side-effect imports for component registration: `import \'@civui/inputs\'` — named imports get tree-shaken.',
             },

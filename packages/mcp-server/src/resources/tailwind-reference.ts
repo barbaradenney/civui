@@ -217,8 +217,9 @@ Semantic classes from \`components.css\` — use these instead of composing raw 
 | Class | Purpose | Expands to |
 |-------|---------|------------|
 | \`.civ-dropzone\` | Drag-and-drop area | block, w-full, border-2, border-dashed, rounded, p-6, text-center, transition-colors, border-base-light, cursor-pointer |
-| \`.civ-file-item\` | Uploaded file row | flex, items-center, justify-between, p-2, bg-base-lightest, rounded, text-sm |
-| \`.civ-file-remove-btn\` | File remove button | text-error, text-sm, underline, bg-transparent, border-0, cursor-pointer, py-1, px-2 |
+| \`.civ-list-item\` | Shared list item row (files, repeater summary) | flex, items-center, justify-between, p-2, bg-base-lightest, rounded, text-sm |
+| \`.civ-list-item__content\` | List item content area | flex-1, min-w-0 |
+| \`.civ-list-item__actions\` | List item action buttons | flex, items-center, gap-1, shrink-0 |
 
 ### Combobox
 | Class | Purpose | Expands to |

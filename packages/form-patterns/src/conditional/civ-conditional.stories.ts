@@ -3,7 +3,7 @@ import { html } from 'lit';
 import './civ-conditional.js';
 import '@civui/inputs';
 import '@civui/controls';
-import '@civui/ui';
+import '@civui/actions';
 import '../form/civ-form.js';
 
 const meta: Meta = {

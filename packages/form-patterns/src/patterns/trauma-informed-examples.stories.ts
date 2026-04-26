@@ -3,7 +3,7 @@ import { html } from 'lit';
 import '@civui/inputs';
 import '@civui/controls';
 import '@civui/compound';
-import '@civui/ui';
+import '@civui/actions';
 import '@civui/feedback';
 import '../form/civ-form.js';
 import '../form-step/civ-form-step.js';

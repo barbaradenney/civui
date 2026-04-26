@@ -12,8 +12,8 @@ export default defineConfig({
       '@civui/inputs': resolve(__dirname, '../inputs/src/index.ts'),
       '@civui/controls': resolve(__dirname, '../controls/src/index.ts'),
       '@civui/core': resolve(__dirname, '../core/src/index.ts'),
-      '@civui/ui/modal': resolve(__dirname, '../ui/src/modal/index.ts'),
-      '@civui/ui': resolve(__dirname, '../ui/src/index.ts'),
+      '@civui/overlays/modal': resolve(__dirname, '../overlays/src/modal/index.ts'),
+      '@civui/overlays': resolve(__dirname, '../overlays/src/index.ts'),
     },
   },
 });

@@ -349,8 +349,8 @@ export class CivFileUpload extends CivFormElement {
               <ul class="civ-list-none civ-p-0 civ-mt-2 civ-space-y-1" aria-label="${this.filesListLabel || t('fileUploadFilesListLabel')}">
                 ${(this._showAllFiles ? this._files : this._files.slice(0, CivFileUpload._FILE_LIST_LIMIT)).map(
                   (file, index) => html`
-                    <li class="civ-file-item ${file.status === 'success' ? 'civ-file-item--success' : ''} ${file.status === 'error' ? 'civ-file-item--error' : ''}">
-                      <div class="civ-flex-1">
+                    <li class="civ-list-item ${file.status === 'success' ? 'civ-list-item--success' : ''} ${file.status === 'error' ? 'civ-list-item--error' : ''}">
+                      <div class="civ-list-item__content">
                         <span class="civ-flex civ-items-center civ-gap-2">
                           ${this.showPreview && file.type?.startsWith('image/')
                             ? html`<img class="civ-file-preview" src="${this._getPreviewUrl(file.file)}" alt="" />`
@@ -375,7 +375,7 @@ export class CivFileUpload extends CivFormElement {
                           <span class="civ-file-error-text">${file.error}</span>
                         ` : nothing}
                       </div>
-                      <span class="civ-flex civ-items-center civ-gap-1">
+                      <span class="civ-list-item__actions">
                         ${file.status === 'uploading' ? html`
                           <civ-action-button
                             variant="tertiary"
@@ -400,7 +400,7 @@ export class CivFileUpload extends CivFormElement {
                             aria-label="${interpolate(this.removeAriaLabel || t('fileUploadRemoveAriaLabel'), { name: file.name })}"
                             ?disabled="${this.disabled}"
                             @click="${() => this._removeFile(index)}"
-                            class="civ-file-remove-btn"
+                            data-file-remove
                           ></civ-action-button>
                         ` : nothing}
                       </span>
@@ -700,7 +700,7 @@ export class CivFileUpload extends CivFormElement {
 
     // Move focus to the next remove button, or the dropzone if no files remain
     this.updateComplete.then(() => {
-      const buttons = this.querySelectorAll<HTMLButtonElement>('.civ-file-remove-btn');
+      const buttons = this.querySelectorAll<HTMLButtonElement>('[data-file-remove]');
       if (buttons.length > 0) {
         const next = buttons[Math.min(index, buttons.length - 1)];
         next.focus();

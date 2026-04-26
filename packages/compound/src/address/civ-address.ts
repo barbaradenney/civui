@@ -281,45 +281,43 @@ export class CivAddress extends CivFormElement {
         ></civ-text-input>
       </fieldset>
 
-      ${this._showValidationModal ? html`
-        <civ-modal
-          ?open="${this._showValidationModal}"
-          heading="${t('addressValidationHeading')}"
-          no-backdrop-close
-          no-close-button
-          @civ-modal-close="${this._onValidationKeepOriginal}"
-        >
-          ${this._validating ? html`
-            <p class="civ-text-body">${t('addressValidationLoading')}</p>
-          ` : this._suggestion ? html`
-            <div class="civ-flex civ-flex-col civ-gap-6">
-              <div>
-                <p class="civ-font-semibold civ-mb-1">${t('addressValidationOriginalLabel')}</p>
-                <p class="civ-text-body civ-m-0">${this._address.street1}</p>
-                ${this._address.street2 ? html`<p class="civ-text-body civ-m-0">${this._address.street2}</p>` : nothing}
-                <p class="civ-text-body civ-m-0">${this._address.city}, ${this._address.state} ${this._address.zip}</p>
-              </div>
-              <div>
-                <p class="civ-font-semibold civ-mb-1">${t('addressValidationSuggestedLabel')}</p>
-                <p class="civ-text-body civ-m-0">${this._suggestion.street1}</p>
-                ${this._suggestion.street2 ? html`<p class="civ-text-body civ-m-0">${this._suggestion.street2}</p>` : nothing}
-                <p class="civ-text-body civ-m-0">${this._suggestion.city}, ${this._suggestion.state} ${this._suggestion.zip}</p>
-              </div>
+      ${this._renderValidationModal()}
+    `;
+  }
+
+  private _renderValidationModal() {
+    if (!this._showValidationModal) return nothing;
+    return html`
+      <civ-modal
+        ?open="${this._showValidationModal}"
+        heading="${t('addressValidationHeading')}"
+        no-backdrop-close
+        no-close-button
+        @civ-modal-close="${this._onValidationKeepOriginal}"
+      >
+        ${this._validating ? html`
+          <p class="civ-text-body">${t('addressValidationLoading')}</p>
+        ` : this._suggestion ? html`
+          <div class="civ-flex civ-flex-col civ-gap-6">
+            <div>
+              <p class="civ-font-semibold civ-mb-1">${t('addressValidationOriginalLabel')}</p>
+              <p class="civ-text-body civ-m-0">${this._address.street1}</p>
+              ${this._address.street2 ? html`<p class="civ-text-body civ-m-0">${this._address.street2}</p>` : nothing}
+              <p class="civ-text-body civ-m-0">${this._address.city}, ${this._address.state} ${this._address.zip}</p>
             </div>
-            <div data-modal-footer>
-              <civ-button
-                variant="secondary"
-                label="${t('addressValidationUseOriginal')}"
-                @click="${this._onValidationKeepOriginal}"
-              ></civ-button>
-              <civ-button
-                label="${t('addressValidationUseSuggested')}"
-                @click="${this._onValidationUseSuggested}"
-              ></civ-button>
+            <div>
+              <p class="civ-font-semibold civ-mb-1">${t('addressValidationSuggestedLabel')}</p>
+              <p class="civ-text-body civ-m-0">${this._suggestion.street1}</p>
+              ${this._suggestion.street2 ? html`<p class="civ-text-body civ-m-0">${this._suggestion.street2}</p>` : nothing}
+              <p class="civ-text-body civ-m-0">${this._suggestion.city}, ${this._suggestion.state} ${this._suggestion.zip}</p>
             </div>
-          ` : nothing}
-        </civ-modal>
-      ` : nothing}
+          </div>
+          <div data-modal-footer>
+            <civ-button variant="secondary" label="${t('addressValidationUseOriginal')}" @click="${this._onValidationKeepOriginal}"></civ-button>
+            <civ-button label="${t('addressValidationUseSuggested')}" @click="${this._onValidationUseSuggested}"></civ-button>
+          </div>
+        ` : nothing}
+      </civ-modal>
     `;
   }
 

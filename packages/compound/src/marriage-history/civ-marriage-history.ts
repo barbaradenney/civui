@@ -159,119 +159,7 @@ export class CivMarriageHistory extends CivFormElement {
           ></civ-select>
         ` : nothing}
 
-        ${this._typeCategory === 'ceremony' || !this.showMarriageType ? html`
-          <civ-memorable-date
-            legend="${t('marriageDateLegend')}"
-            name="${prefix}.marriageDate"
-            value="${this._marriage.marriageDate}"
-            error="${this.marriageDateError}"
-            ?disabled="${this.disabled}"
-            @civ-input="${(e: CustomEvent) => this._onFieldInput('marriageDate', e)}"
-            @civ-change="${(e: CustomEvent) => this._onFieldChange('marriageDate', e)}"
-          ></civ-memorable-date>
-
-          <civ-text-input
-            label="${t('marriageCityLabel')}"
-            name="${prefix}.marriageCity"
-            value="${this._marriage.marriageCity}"
-            error="${this.cityError}"
-            ?disabled="${this.disabled}"
-            ?readonly="${this.readonly}"
-            @civ-input="${(e: CustomEvent) => this._onFieldInput('marriageCity', e)}"
-            @civ-change="${(e: CustomEvent) => this._onFieldChange('marriageCity', e)}"
-          ></civ-text-input>
-
-          <civ-text-input
-            label="${t('marriageStateLabel')}"
-            name="${prefix}.marriageState"
-            value="${this._marriage.marriageState}"
-            error="${this.stateError}"
-            ?disabled="${this.disabled}"
-            ?readonly="${this.readonly}"
-            @civ-input="${(e: CustomEvent) => this._onFieldInput('marriageState', e)}"
-            @civ-change="${(e: CustomEvent) => this._onFieldChange('marriageState', e)}"
-          ></civ-text-input>
-        ` : nothing}
-
-        ${this._typeCategory === 'registration' ? html`
-          <civ-memorable-date
-            legend="${t('marriageRegistrationDateLegend')}"
-            name="${prefix}.marriageDate"
-            value="${this._marriage.marriageDate}"
-            error="${this.marriageDateError}"
-            ?disabled="${this.disabled}"
-            @civ-input="${(e: CustomEvent) => this._onFieldInput('marriageDate', e)}"
-            @civ-change="${(e: CustomEvent) => this._onFieldChange('marriageDate', e)}"
-          ></civ-memorable-date>
-
-          <civ-text-input
-            label="${t('marriageJurisdictionLabel')}"
-            name="${prefix}.jurisdiction"
-            value="${this._marriage.jurisdiction}"
-            error="${this.jurisdictionError}"
-            ?disabled="${this.disabled}"
-            ?readonly="${this.readonly}"
-            @civ-input="${(e: CustomEvent) => this._onFieldInput('jurisdiction', e)}"
-            @civ-change="${(e: CustomEvent) => this._onFieldChange('jurisdiction', e)}"
-          ></civ-text-input>
-        ` : nothing}
-
-        ${this._typeCategory === 'cohabitation' ? html`
-          <civ-memorable-date
-            legend="${t('marriageCohabitationStartLegend')}"
-            name="${prefix}.cohabitationStartDate"
-            value="${this._marriage.cohabitationStartDate}"
-            error="${this.cohabitationStartError}"
-            ?disabled="${this.disabled}"
-            @civ-input="${(e: CustomEvent) => this._onFieldInput('cohabitationStartDate', e)}"
-            @civ-change="${(e: CustomEvent) => this._onFieldChange('cohabitationStartDate', e)}"
-          ></civ-memorable-date>
-
-          <civ-text-input
-            label="${t('marriageCohabitationStateLabel')}"
-            name="${prefix}.cohabitationState"
-            value="${this._marriage.cohabitationState}"
-            error="${this.cohabitationStateError}"
-            ?disabled="${this.disabled}"
-            ?readonly="${this.readonly}"
-            @civ-input="${(e: CustomEvent) => this._onFieldInput('cohabitationState', e)}"
-            @civ-change="${(e: CustomEvent) => this._onFieldChange('cohabitationState', e)}"
-          ></civ-text-input>
-
-          <civ-text-input
-            label="${t('marriageTypeDescriptionLabel')}"
-            name="${prefix}.marriageTypeDescription"
-            value="${this._marriage.marriageTypeDescription}"
-            hint="${t('marriageTypeDescriptionHint')}"
-            ?disabled="${this.disabled}"
-            ?readonly="${this.readonly}"
-            @civ-input="${(e: CustomEvent) => this._onFieldInput('marriageTypeDescription', e)}"
-            @civ-change="${(e: CustomEvent) => this._onFieldChange('marriageTypeDescription', e)}"
-          ></civ-text-input>
-        ` : nothing}
-
-        ${this._typeCategory === 'other' ? html`
-          <civ-memorable-date
-            legend="${t('marriageApproxDateLegend')}"
-            name="${prefix}.marriageDate"
-            value="${this._marriage.marriageDate}"
-            error="${this.marriageDateError}"
-            ?disabled="${this.disabled}"
-            @civ-input="${(e: CustomEvent) => this._onFieldInput('marriageDate', e)}"
-            @civ-change="${(e: CustomEvent) => this._onFieldChange('marriageDate', e)}"
-          ></civ-memorable-date>
-
-          <civ-text-input
-            label="${t('marriageTypeDescriptionLabel')}"
-            name="${prefix}.marriageTypeDescription"
-            value="${this._marriage.marriageTypeDescription}"
-            hint="${t('marriageTypeDescriptionHint')}"
-            ?disabled="${this.disabled}"
-            ?readonly="${this.readonly}"
-            @civ-input="${(e: CustomEvent) => this._onFieldInput('marriageTypeDescription', e)}"
-            @civ-change="${(e: CustomEvent) => this._onFieldChange('marriageTypeDescription', e)}"
-          ></civ-text-input>
-        ` : nothing}
+        ${this._renderCategoryFields(prefix)}
 
         ${this.statusAssumed ? nothing : html`
           <civ-radio-group
@@ -303,6 +191,76 @@ export class CivMarriageHistory extends CivFormElement {
           ></civ-memorable-date>
         ` : nothing}
       </fieldset>
+    `;
+  }
+
+  private _renderCategoryFields(prefix: string) {
+    const cat = this._typeCategory;
+
+    if (cat === 'ceremony' || !this.showMarriageType) {
+      return html`
+        <civ-memorable-date legend="${t('marriageDateLegend')}" name="${prefix}.marriageDate"
+          value="${this._marriage.marriageDate}" error="${this.marriageDateError}" ?disabled="${this.disabled}"
+          @civ-input="${(e: CustomEvent) => this._onFieldInput('marriageDate', e)}"
+          @civ-change="${(e: CustomEvent) => this._onFieldChange('marriageDate', e)}"></civ-memorable-date>
+        <civ-text-input label="${t('marriageCityLabel')}" name="${prefix}.marriageCity"
+          value="${this._marriage.marriageCity}" error="${this.cityError}" ?disabled="${this.disabled}" ?readonly="${this.readonly}"
+          @civ-input="${(e: CustomEvent) => this._onFieldInput('marriageCity', e)}"
+          @civ-change="${(e: CustomEvent) => this._onFieldChange('marriageCity', e)}"></civ-text-input>
+        <civ-text-input label="${t('marriageStateLabel')}" name="${prefix}.marriageState"
+          value="${this._marriage.marriageState}" error="${this.stateError}" ?disabled="${this.disabled}" ?readonly="${this.readonly}"
+          @civ-input="${(e: CustomEvent) => this._onFieldInput('marriageState', e)}"
+          @civ-change="${(e: CustomEvent) => this._onFieldChange('marriageState', e)}"></civ-text-input>
+      `;
+    }
+
+    if (cat === 'registration') {
+      return html`
+        <civ-memorable-date legend="${t('marriageRegistrationDateLegend')}" name="${prefix}.marriageDate"
+          value="${this._marriage.marriageDate}" error="${this.marriageDateError}" ?disabled="${this.disabled}"
+          @civ-input="${(e: CustomEvent) => this._onFieldInput('marriageDate', e)}"
+          @civ-change="${(e: CustomEvent) => this._onFieldChange('marriageDate', e)}"></civ-memorable-date>
+        <civ-text-input label="${t('marriageJurisdictionLabel')}" name="${prefix}.jurisdiction"
+          value="${this._marriage.jurisdiction}" error="${this.jurisdictionError}" ?disabled="${this.disabled}" ?readonly="${this.readonly}"
+          @civ-input="${(e: CustomEvent) => this._onFieldInput('jurisdiction', e)}"
+          @civ-change="${(e: CustomEvent) => this._onFieldChange('jurisdiction', e)}"></civ-text-input>
+      `;
+    }
+
+    if (cat === 'cohabitation') {
+      return html`
+        <civ-memorable-date legend="${t('marriageCohabitationStartLegend')}" name="${prefix}.cohabitationStartDate"
+          value="${this._marriage.cohabitationStartDate}" error="${this.cohabitationStartError}" ?disabled="${this.disabled}"
+          @civ-input="${(e: CustomEvent) => this._onFieldInput('cohabitationStartDate', e)}"
+          @civ-change="${(e: CustomEvent) => this._onFieldChange('cohabitationStartDate', e)}"></civ-memorable-date>
+        <civ-text-input label="${t('marriageCohabitationStateLabel')}" name="${prefix}.cohabitationState"
+          value="${this._marriage.cohabitationState}" error="${this.cohabitationStateError}" ?disabled="${this.disabled}" ?readonly="${this.readonly}"
+          @civ-input="${(e: CustomEvent) => this._onFieldInput('cohabitationState', e)}"
+          @civ-change="${(e: CustomEvent) => this._onFieldChange('cohabitationState', e)}"></civ-text-input>
+        ${this._renderDescriptionField(prefix)}
+      `;
+    }
+
+    if (cat === 'other') {
+      return html`
+        <civ-memorable-date legend="${t('marriageApproxDateLegend')}" name="${prefix}.marriageDate"
+          value="${this._marriage.marriageDate}" error="${this.marriageDateError}" ?disabled="${this.disabled}"
+          @civ-input="${(e: CustomEvent) => this._onFieldInput('marriageDate', e)}"
+          @civ-change="${(e: CustomEvent) => this._onFieldChange('marriageDate', e)}"></civ-memorable-date>
+        ${this._renderDescriptionField(prefix)}
+      `;
+    }
+
+    return nothing;
+  }
+
+  private _renderDescriptionField(prefix: string) {
+    return html`
+      <civ-text-input label="${t('marriageTypeDescriptionLabel')}" name="${prefix}.marriageTypeDescription"
+        value="${this._marriage.marriageTypeDescription}" hint="${t('marriageTypeDescriptionHint')}"
+        ?disabled="${this.disabled}" ?readonly="${this.readonly}"
+        @civ-input="${(e: CustomEvent) => this._onFieldInput('marriageTypeDescription', e)}"
+        @civ-change="${(e: CustomEvent) => this._onFieldChange('marriageTypeDescription', e)}"></civ-text-input>
     `;
   }
 

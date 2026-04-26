@@ -106,8 +106,8 @@ export class CivSummary extends CivBaseElement {
   }
 
   private _isSafeHref(href: string): boolean {
-    // Allow fragment, relative path (but not protocol-relative //), and http(s)
-    return /^(#|\/(?!\/)|https?:\/\/)/.test(href);
+    // Allow fragment, relative path, http(s), tel, mailto, sms
+    return /^(#|\/(?!\/)|https?:\/\/|tel:|mailto:|sms:)/.test(href);
   }
 
   private _renderSection(section: SummarySection) {

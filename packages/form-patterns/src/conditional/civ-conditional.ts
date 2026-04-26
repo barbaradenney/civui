@@ -95,7 +95,6 @@ export class CivConditional extends LightDomSlotMixin(CivBaseElement) {
       <div data-civ-conditional-content
         class="${visibilityClass}"
         aria-hidden="${this._visible ? 'false' : 'true'}"
-        aria-live="polite"
       ></div>
     `;
   }

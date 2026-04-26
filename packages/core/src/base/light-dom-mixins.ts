@@ -62,9 +62,9 @@ export function LightDomSlotMixin<T extends Constructor<LitElement>>(superClass:
 
     override disconnectedCallback(): void {
       super.disconnectedCallback();
-      // Reset so re-attached components re-capture their children
-      this._captured = false;
-      this._slottedChildren.clear();
+      // Don't clear _captured or _slottedChildren — children have been
+      // relocated into the rendered template and will re-render correctly
+      // on reconnect using the already-captured references.
     }
 
     /**

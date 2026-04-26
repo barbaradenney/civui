@@ -62,6 +62,20 @@ A decorative chevron on the trailing edge opens the full unfiltered list — sam
 
 <StoryEmbed id="forms-inputs-combobox--chevron-toggle" />
 
+### Async: remote loadOptions
+
+Set `loadOptions` to a `(query: string) => Promise<ComboboxOption[]>` and the combobox switches into remote mode. Calls are debounced (300ms by default), stale responses are discarded automatically, and the dropdown surfaces dedicated loading / error / below-min-query states.
+
+<StoryEmbed id="forms-inputs-combobox--async-loading" />
+
+### Async: with min-query-length
+
+<StoryEmbed id="forms-inputs-combobox--async-with-min-query" />
+
+### Async: error state
+
+<StoryEmbed id="forms-inputs-combobox--async-error" />
+
 [Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-inputs-combobox--default)
 
 ## Shared Props
@@ -72,9 +86,14 @@ All form components share these props: `label`, `name`, `value`, `hint`, `error`
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `options` | `Array<{ value: string, label: string, group?: string }>` | `[]` | Available options |
+| `options` | `Array<{ value: string, label: string, group?: string }>` | `[]` | Available options. Ignored when `loadOptions` is set. |
 | `placeholder` | `string` | `''` | Placeholder text for the input |
 | `no-results-text` | `string` | `'No results found'` | Message shown when filter matches nothing |
+| `loadOptions` | `(query: string) => Promise<ComboboxOption[]>` | `null` | Async loader. When set, switches the combobox into remote mode. |
+| `load-debounce` | `number` | `300` | Debounce delay (ms) before `loadOptions` is called after the user types. |
+| `min-query-length` | `number` | `0` | Minimum query length before `loadOptions` runs. Below the threshold the dropdown shows a "type at least N characters" prompt. |
+| `loading-text` | `string` | `'Loading…'` | Override the in-flight message. |
+| `loading-error-text` | `string` | _(error.message or `'Could not load results. Try again.'`)_ | Override the error message shown when `loadOptions` rejects. |
 
 ## Typeahead Filtering
 

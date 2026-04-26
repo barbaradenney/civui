@@ -176,16 +176,20 @@ Slotted children are read once in `connectedCallback`. The `options` property ta
 Searchable dropdown with type-ahead filtering. Includes a decorative chevron toggle on the trailing edge that opens the full unfiltered list — same visual affordance as a native `<select>`. The chevron is `aria-hidden` and `tabindex="-1"` since keyboard users already have ArrowDown/ArrowUp.
 
 **Props (beyond standard):**
-- `options` — `Array<{ value: string, label: string, group?: string }>`
+- `options` — `Array<{ value: string, label: string, group?: string }>` (ignored in remote mode)
 - `placeholder` — input placeholder
 - `noResultsText` — shown when filter matches nothing (default: `'No results found'`)
 - `width` — same enum as `civ-text-input`
+- `loadOptions` — `(query: string) => Promise<ComboboxOption[]>`. When set, switches the combobox into remote mode: filtering is delegated to the server, calls are debounced, and the dropdown shows dedicated loading / error / below-min-query states.
+- `load-debounce` — debounce delay (ms) before `loadOptions` is called after the user types. Default `300`.
+- `min-query-length` — minimum query length before `loadOptions` runs. Below the threshold the dropdown shows a "type at least N characters" prompt. Default `0`.
+- `loading-text` / `loading-error-text` — override the loading and error messages.
 
 **Events:**
 - `civ-input` — `{ value }` (filter text changes as user types)
 - `civ-change` — `{ value, label }` (option selected)
 
-**Example:**
+**Example (static options):**
 ```html
 <civ-combobox
   label="Agency"
@@ -199,6 +203,18 @@ Searchable dropdown with type-ahead filtering. Includes a decorative chevron tog
   ]}"
 ></civ-combobox>
 ```
+
+**Example (async / server-side search):**
+```ts
+const cb = document.querySelector('civ-combobox')!;
+cb.loadOptions = async (query) => {
+  const res = await fetch(`/api/agencies?q=${encodeURIComponent(query)}`);
+  const items = await res.json();
+  return items.map(({ code, name }) => ({ value: code, label: name }));
+};
+```
+
+The component handles request races for you — only the most recent call's result lands in the listbox; older in-flight responses are discarded so a slow network response cannot overwrite newer results.
 
 **Keyboard:** ArrowDown/Up navigate, Enter selects, Escape closes.
 

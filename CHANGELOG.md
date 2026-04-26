@@ -16,6 +16,7 @@ across all 21 components.
 - **`civ-textarea`** — `minlength` prop (was missing) and declarative `validate="length"` that runs on blur against `minlength` / `maxlength`.
 - **`civ-select`** — Slot fallback for declarative `<option>` and `<optgroup>` children. New `width` prop (`default | 2xs | xs | sm | md | lg | xl | 2xl`).
 - **`civ-combobox`** — Always-visible decorative chevron toggle (matches native `<select>` affordance). New `width` prop matching select.
+- **`civ-combobox`** — Async option loading via the new `loadOptions` property (`(query) => Promise<ComboboxOption[]>`). Calls are debounced (`load-debounce`, default 300ms), stale responses are race-discarded by request id, and the dropdown surfaces dedicated loading / error / below-min-query states. New props: `load-debounce`, `min-query-length`, `loading-text`, `loading-error-text`. Locale keys: `comboboxLoading`, `comboboxLoadError`, `comboboxTypeToSearch`, `comboboxLoadingAnnouncement`.
 - **`civ-date-picker`** — Today button in the dialog footer (selects today + closes). `T` / `Shift+T` keyboard shortcut jumps focus to today without selecting. `hide-today-button` opt-out for date-of-birth pickers.
 - **`civ-file-upload`** — Duplicate detection on add (matches by name + size + lastModified). `capture` prop passes through to the native file input for mobile camera capture (`user` / `environment`).
 - **`civ-checkbox-group`** — `min-selections` prop with implicit-required behavior, dedicated error message, and combined min+max hint chain.

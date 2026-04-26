@@ -1,6 +1,6 @@
 import { html, nothing, type TemplateResult } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivFormElement, dispatch, renderLabel, renderHint, renderError, inputClasses, inputWidthClass, clickOutside, t, interpolate } from '@civui/core';
+import { CivFormElement, dispatch, renderLabel, renderHint, renderError, inputClasses, inputWidthClass, clickOutside, t, interpolate, debounce } from '@civui/core';
 import type { InputWidth } from '@civui/core';
 
 export interface ComboboxOption {
@@ -8,6 +8,9 @@ export interface ComboboxOption {
   label: string;
   group?: string;
 }
+
+/** Signature for async option loaders. Reject (or throw) to surface a load error. */
+export type LoadOptionsFn = (query: string) => Promise<ComboboxOption[]>;
 
 /**
  * CivUI Combobox
@@ -39,25 +42,91 @@ export class CivCombobox extends CivFormElement {
   @property({ type: String, attribute: 'no-results-text' }) noResultsText = '';
   @property({ type: String }) width: InputWidth = 'default';
 
+  /**
+   * Async option loader. When set, the component switches into remote mode:
+   * filtering no longer runs locally — the function is called (debounced)
+   * with the current query string and is expected to return matching options.
+   *
+   * `options` is ignored in remote mode; the component holds the most recent
+   * remote response in private state.
+   *
+   * @example
+   * ```ts
+   * combobox.loadOptions = async (q) => {
+   *   const res = await fetch(`/api/agencies?q=${encodeURIComponent(q)}`);
+   *   const items = await res.json();
+   *   return items.map(({ code, name }) => ({ value: code, label: name }));
+   * };
+   * ```
+   */
+  @property({ attribute: false }) loadOptions: LoadOptionsFn | null = null;
+
+  /** Debounce delay (ms) before calling `loadOptions` after the user types. Default 300. */
+  @property({ type: Number, attribute: 'load-debounce' }) loadDebounce = 300;
+
+  /**
+   * Minimum query length required before `loadOptions` is invoked. When the
+   * filter is shorter, the listbox shows a "type at least N characters" prompt
+   * instead. Default 0 (fetches with empty query on focus / chevron toggle).
+   */
+  @property({ type: Number, attribute: 'min-query-length' }) minQueryLength = 0;
+
+  /** Override the loading text shown in the dropdown while remote results load. */
+  @property({ type: String, attribute: 'loading-text' }) loadingText = '';
+
+  /** Override the error text shown when `loadOptions` rejects. */
+  @property({ type: String, attribute: 'loading-error-text' }) loadingErrorText = '';
+
   @state() private _open = false;
   @state() private _filter = '';
   @state() private _activeIndex = -1;
+  /** True while a remote `loadOptions` call is in flight. */
+  @state() private _loading = false;
+  /** Set when the most recent `loadOptions` call rejected. */
+  @state() private _loadError = '';
+  /** Most recent results returned by `loadOptions`. */
+  @state() private _remoteOptions: ComboboxOption[] = [];
 
   private _listboxId = this.generateId('listbox');
   private _labelId = this.generateId('label');
   private _clickOutside = clickOutside(this, () => this._setOpen(false));
   private _announceTimer?: ReturnType<typeof setTimeout>;
 
+  /** Incrementing request id — used to discard stale fetches when a newer query arrives. */
+  private _requestId = 0;
+  private _debouncedLoad = debounce((query: string) => this._runLoad(query), this.loadDebounce);
+
+  override updated(changed: Map<string, unknown>): void {
+    super.updated(changed);
+    if (changed.has('loadDebounce')) {
+      this._debouncedLoad.cancel();
+      this._debouncedLoad = debounce((query: string) => this._runLoad(query), this.loadDebounce);
+    }
+  }
+
   override disconnectedCallback(): void {
     super.disconnectedCallback();
     this._clickOutside.remove();
+    this._debouncedLoad.cancel();
     clearTimeout(this._announceTimer);
   }
 
+  /** True when an async loader is wired up. */
+  private get _isRemote(): boolean {
+    return typeof this.loadOptions === 'function';
+  }
+
   private get _filteredOptions(): ComboboxOption[] {
+    // Remote mode: server-supplied results are already filtered.
+    if (this._isRemote) return this._remoteOptions;
     if (!this._filter) return this.options;
     const lower = this._filter.toLowerCase();
     return this.options.filter((o) => o.label.toLowerCase().includes(lower));
+  }
+
+  /** True when remote mode is active and the user must type more to trigger a fetch. */
+  private get _belowMinQuery(): boolean {
+    return this._isRemote && this.minQueryLength > 0 && this._filter.length < this.minQueryLength;
   }
 
   private get _displayValue(): string {
@@ -140,23 +209,48 @@ export class CivCombobox extends CivFormElement {
                   role="listbox"
                   class="civ-combobox-listbox"
                   aria-labelledby="${this.label ? this._labelId : nothing}"
+                  aria-busy="${this._loading ? 'true' : nothing}"
                 >
                   ${this._renderGroupedOptions(filtered)}
                 </ul>
               `
             : nothing}
-          ${this._open && filtered.length === 0
-            ? html`
-                <div
-                  class="civ-absolute civ-z-10 civ-w-full civ-mt-0.5 civ-bg-white civ-border civ-border-base-light civ-rounded civ-shadow-md civ-p-3 civ-text-body civ-text-muted"
-                  role="status"
-                  aria-live="polite"
-                >
-                  ${this.noResultsText || t('comboboxNoResults')}
-                </div>
-              `
-            : nothing}
+          ${this._open && filtered.length === 0 ? this._renderEmptyState() : nothing}
         </div>
+      </div>
+    `;
+  }
+
+  /**
+   * Render the open-but-empty dropdown state. Loading / error / below-min-query
+   * each get their own message; otherwise we fall back to "no results".
+   */
+  private _renderEmptyState(): TemplateResult {
+    const baseClass = 'civ-absolute civ-z-10 civ-w-full civ-mt-0.5 civ-bg-white civ-border civ-border-base-light civ-rounded civ-shadow-md civ-p-3 civ-text-body';
+    if (this._loading) {
+      return html`
+        <div class="${baseClass} civ-text-muted" role="status" aria-live="polite">
+          ${this.loadingText || t('comboboxLoading')}
+        </div>
+      `;
+    }
+    if (this._loadError) {
+      return html`
+        <div class="${baseClass} civ-text-error" role="alert">
+          ${this.loadingErrorText || this._loadError || t('comboboxLoadError')}
+        </div>
+      `;
+    }
+    if (this._belowMinQuery) {
+      return html`
+        <div class="${baseClass} civ-text-muted" role="status">
+          ${interpolate(t('comboboxTypeToSearch'), { count: this.minQueryLength })}
+        </div>
+      `;
+    }
+    return html`
+      <div class="${baseClass} civ-text-muted" role="status" aria-live="polite">
+        ${this.noResultsText || t('comboboxNoResults')}
       </div>
     `;
   }
@@ -236,6 +330,12 @@ export class CivCombobox extends CivFormElement {
     this.value = '';
     this._filter = '';
     this.updateFormValue('');
+    if (this._isRemote) {
+      this._debouncedLoad.cancel();
+      this._loading = false;
+      this._loadError = '';
+      this._remoteOptions = [];
+    }
     dispatch(this, 'civ-input', { value: '' });
     dispatch(this, 'civ-change', { value: '' });
     this._setOpen(false);
@@ -267,6 +367,7 @@ export class CivCombobox extends CivFormElement {
       this._filter = '';
       this._activeIndex = -1;
       this._setOpen(true);
+      this._maybeLoad('', { immediate: true });
     }
     const input = this.querySelector(`#${this._inputId}`) as HTMLInputElement | null;
     input?.focus();
@@ -283,6 +384,11 @@ export class CivCombobox extends CivFormElement {
     this.updateFormValue('');
     dispatch(this, 'civ-input', { value: this._filter });
 
+    if (this._isRemote) {
+      this._maybeLoad(this._filter);
+      return;
+    }
+
     // Announce filtered results count for screen readers (debounced)
     clearTimeout(this._announceTimer);
     this._announceTimer = setTimeout(() => {
@@ -296,8 +402,69 @@ export class CivCombobox extends CivFormElement {
   }
 
   private _onFocus(): void {
-    if (!this.disabled) {
-      this._setOpen(true);
+    if (this.disabled) return;
+    this._setOpen(true);
+    // First focus in remote mode with no filter yet: kick off an initial fetch
+    // (so there's something to show immediately when minQueryLength is 0).
+    if (this._isRemote && this._remoteOptions.length === 0 && !this._loading && !this._loadError) {
+      this._maybeLoad(this._filter, { immediate: true });
+    }
+  }
+
+  /**
+   * Decide whether to fetch and dispatch through the debounced loader, or
+   * skip (when below `min-query-length`) by clearing remote state. The
+   * `immediate` flag bypasses debounce — used for chevron / focus triggers
+   * where a debounced delay would feel unresponsive.
+   */
+  private _maybeLoad(query: string, opts: { immediate?: boolean } = {}): void {
+    if (!this._isRemote) return;
+
+    if (this.minQueryLength > 0 && query.length < this.minQueryLength) {
+      // Reset remote state so the dropdown shows the prompt, not stale results.
+      this._debouncedLoad.cancel();
+      this._loading = false;
+      this._loadError = '';
+      this._remoteOptions = [];
+      return;
+    }
+
+    if (opts.immediate) {
+      this._debouncedLoad.cancel();
+      this._runLoad(query);
+    } else {
+      this._debouncedLoad(query);
+    }
+  }
+
+  /**
+   * Invoke the loader, ignore stale responses, and surface loading / error
+   * state. Each call increments `_requestId`; only the most recent call's
+   * resolution updates the listbox.
+   */
+  private async _runLoad(query: string): Promise<void> {
+    if (!this.loadOptions) return;
+    const id = ++this._requestId;
+    this._loading = true;
+    this._loadError = '';
+    this.announce(this.loadingText || t('comboboxLoadingAnnouncement'));
+    try {
+      const results = await this.loadOptions(query);
+      if (id !== this._requestId) return; // stale — newer request superseded us
+      this._remoteOptions = Array.isArray(results) ? results : [];
+      this._loading = false;
+      const count = this._remoteOptions.length;
+      this.announce(
+        count === 0
+          ? (this.noResultsText || t('comboboxNoResults'))
+          : interpolate(t(count === 1 ? 'comboboxResultAvailable' : 'comboboxResultsAvailable'), { count }),
+      );
+    } catch (err) {
+      if (id !== this._requestId) return;
+      this._loading = false;
+      this._remoteOptions = [];
+      this._loadError = (err as Error)?.message || t('comboboxLoadError');
+      this.announce(this.loadingErrorText || t('comboboxLoadError'), 'assertive');
     }
   }
 

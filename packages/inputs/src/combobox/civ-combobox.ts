@@ -172,6 +172,7 @@ export class CivCombobox extends CivFormElement {
             autocomplete="off"
             @input="${this._onFilterInput}"
             @focus="${this._onFocus}"
+            @blur="${this._onBlur}"
             @keydown="${this._onKeydown}"
           />
           ${this.value && !this.disabled ? html`
@@ -210,6 +211,7 @@ export class CivCombobox extends CivFormElement {
                   class="civ-combobox-listbox"
                   aria-labelledby="${this.label ? this._labelId : nothing}"
                   aria-busy="${this._loading ? 'true' : nothing}"
+                  @mousedown="${this._onListboxMousedown}"
                 >
                   ${this._renderGroupedOptions(filtered)}
                 </ul>
@@ -409,6 +411,27 @@ export class CivCombobox extends CivFormElement {
     if (this._isRemote && this._remoteOptions.length === 0 && !this._loading && !this._loadError) {
       this._maybeLoad(this._filter, { immediate: true });
     }
+  }
+
+  /** Close the listbox when focus leaves the input. */
+  private _onBlur(): void {
+    // Delay to let click events on options/chevron fire before closing.
+    // mousedown handlers on the listbox and chevron call preventDefault()
+    // to keep focus on the input, so this only fires for genuine blur
+    // (e.g., clicking outside, tabbing away).
+    requestAnimationFrame(() => {
+      const active = document.activeElement;
+      const wrapper = this.querySelector('[data-civ-combobox]');
+      // If focus moved outside the combobox wrapper, close
+      if (wrapper && !wrapper.contains(active)) {
+        this._setOpen(false);
+      }
+    });
+  }
+
+  /** Prevent blur when clicking inside the listbox (options, scrollbar). */
+  private _onListboxMousedown(e: MouseEvent): void {
+    e.preventDefault();
   }
 
   /**

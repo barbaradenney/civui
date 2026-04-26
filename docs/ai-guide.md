@@ -79,6 +79,12 @@ Standard text input supporting multiple HTML input types.
 - `inputmode` — virtual keyboard hint
 - `mask` / `mask-pattern` / `mask-mode` — see Mask System
 - `validate` — `'email'` | `'phone'` | `'phoneIntl'` | `'ssn'` | `'ein'` | `'routing'` | `'zip'` | `'zip4'` | `'usState'` | `'url'` | `'currency'` | `'alphanumeric'` — see Validation System
+- `prefix` / `suffix` — adjacent text boxes that share the input's border (e.g., `prefix="@"`, `suffix="USD"`)
+- `clearable` — renders a trailing clear button when the input has a value
+- `leading-icon` / `trailing-icon` — name from the civ-icon library, rendered as a decorative overlay inside the input. The input gets extra inline padding to make room.
+- `leading-icon-label` / `trailing-icon-label` — optional accessible label. When omitted, the icon is hidden from assistive tech (decorative). When set, the icon announces as an `img` with the given label.
+
+**Inline icon precedence:** prefix wins over leading-icon, suffix wins over trailing-icon, and the clear button (when value present) hides the trailing icon. Icons are pointer-events-none — they're decoration, not interactive controls.
 
 **Example:**
 ```html
@@ -93,6 +99,16 @@ Standard text input supporting multiple HTML input types.
 
 <!-- Character counter -->
 <civ-text-input label="Short bio" name="bio" maxlength="60"></civ-text-input>
+
+<!-- Inline leading icon (decorative search glyph) -->
+<civ-text-input label="Search" type="search" leading-icon="search"></civ-text-input>
+
+<!-- Trailing icon with accessible label -->
+<civ-text-input
+  label="Username"
+  trailing-icon="info"
+  trailing-icon-label="More info"
+></civ-text-input>
 ```
 
 ---

@@ -54,6 +54,33 @@ export class CivTextInput extends CivFormElement {
   @property({ type: Boolean }) clearable = false;
 
   /**
+   * Decorative icon rendered inside the input on the leading edge.
+   * Pass any name from the civ-icon library. The input gets extra
+   * inline-start padding to make room for the icon.
+   *
+   * Ignored when `prefix` (or the currency mask) is set — the prefix box
+   * occupies the leading edge.
+   */
+  @property({ type: String, attribute: 'leading-icon' }) leadingIcon = '';
+
+  /**
+   * Accessible label for the leading icon. When set, the icon announces
+   * to screen readers as an `img` with this label. When omitted (default),
+   * the icon is hidden from assistive tech (decorative).
+   */
+  @property({ type: String, attribute: 'leading-icon-label' }) leadingIconLabel = '';
+
+  /**
+   * Decorative icon rendered inside the input on the trailing edge.
+   * Ignored when `suffix` is set, or when `clearable` shows the clear
+   * button (i.e. there is a non-empty value).
+   */
+  @property({ type: String, attribute: 'trailing-icon' }) trailingIcon = '';
+
+  /** Accessible label for the trailing icon. See `leading-icon-label`. */
+  @property({ type: String, attribute: 'trailing-icon-label' }) trailingIconLabel = '';
+
+  /**
    * Custom mask pattern string. Slot syntax:
    * - `#` = digit (0-9)
    * - `A` = letter (a-z, A-Z)
@@ -224,6 +251,10 @@ export class CivTextInput extends CivFormElement {
     const isCurrency = this._isCurrency;
     const hasPrefix = !!(this.prefix || isCurrency);
     const hasSuffix = !!this.suffix;
+    const needsClearButton = this.clearable && !!this.value;
+    // Inline icons defer to prefix/suffix and the clear button on the same edge.
+    const showLeadingIcon = !!this.leadingIcon && !hasPrefix;
+    const showTrailingIcon = !!this.trailingIcon && !hasSuffix && !needsClearButton;
 
     const roundingClasses = hasPrefix && hasSuffix
       ? ['civ-rounded-none']
@@ -239,6 +270,8 @@ export class CivTextInput extends CivFormElement {
         'civ-max-w-full',
         ...roundingClasses,
         ...(isCurrency ? ['civ-text-end'] : []),
+        ...(showLeadingIcon ? ['civ-input-with-leading-icon'] : []),
+        ...(showTrailingIcon ? ['civ-input-with-trailing-icon'] : []),
       ],
     });
 
@@ -338,19 +371,35 @@ export class CivTextInput extends CivFormElement {
       />
     `;
 
-    const needsWrapper = hasPrefix || hasSuffix || (this.clearable && this.value);
-    const wrappedInput = needsWrapper
-      ? html`<div class="civ-flex ${widthClass} civ-max-w-full"
+    const needsAdjacentWrapper = hasPrefix || hasSuffix || needsClearButton;
+    const needsIconOverlay = !needsAdjacentWrapper && (showLeadingIcon || showTrailingIcon);
+
+    let wrappedInput;
+    if (needsAdjacentWrapper) {
+      wrappedInput = html`<div class="civ-flex ${widthClass} civ-max-w-full"
         >${hasPrefix
           ? html`<span class="civ-input-prefix" aria-hidden="true">${isCurrency ? '$' : this.prefix}</span>`
-          : nothing}${inputEl}${this.clearable && this.value
+          : nothing}${inputEl}${needsClearButton
           ? html`<button type="button" class="civ-input-clear focus-visible:civ-focus-ring" aria-label="${t('clearButton')}" @click="${this._onClear}">
               <civ-icon name="close" size="sm"></civ-icon>
             </button>`
           : nothing}${hasSuffix
           ? html`<span class="civ-input-suffix" aria-hidden="true">${this.suffix}</span>`
-          : nothing}</div>`
-      : inputEl;
+          : nothing}</div>`;
+    } else if (needsIconOverlay) {
+      wrappedInput = html`<div class="civ-input-icon-wrap ${widthClass} civ-max-w-full"
+        >${inputEl}${showLeadingIcon
+          ? html`<span class="civ-input-icon civ-input-icon--leading"
+              ><civ-icon name="${this.leadingIcon}" label="${this.leadingIconLabel || nothing}" size="sm"></civ-icon
+            ></span>`
+          : nothing}${showTrailingIcon
+          ? html`<span class="civ-input-icon civ-input-icon--trailing"
+              ><civ-icon name="${this.trailingIcon}" label="${this.trailingIconLabel || nothing}" size="sm"></civ-icon
+            ></span>`
+          : nothing}</div>`;
+    } else {
+      wrappedInput = inputEl;
+    }
 
     const showCharCount = this._showCharCount;
     const remaining = showCharCount ? this.maxlength! - (this.value?.length ?? 0) : 0;

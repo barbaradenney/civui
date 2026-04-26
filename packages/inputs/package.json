@@ -13,6 +13,7 @@
     "./select": "./dist/select/index.js",
     "./combobox": "./dist/combobox/index.js",
     "./date-picker": "./dist/date-picker/index.js",
+    "./date-range-picker": "./dist/date-range-picker/index.js",
     "./memorable-date": "./dist/date-input/index.js",
     "./file-upload": "./dist/file-upload/index.js",
     "./toggle": "./dist/toggle/index.js",

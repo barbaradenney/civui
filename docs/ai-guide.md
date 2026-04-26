@@ -23,6 +23,7 @@ For architecture and internals, see `CLAUDE.md` in the repo root.
 | `<civ-segmented-control>` | Group | `legend` | `{ value }` |
 | `<civ-segment>` | Choice | `label`, `value`, `selected` | (bubbles to parent) |
 | `<civ-date-picker>` | Date | `min`, `max`, `placeholder`, `locale`, `weekStartsOn` | `{ value }` |
+| `<civ-date-range-picker>` | Date | `legend`, `min`, `max`, `minRangeDays`, `maxRangeDays`, `startLabel`, `endLabel` | `{ value: { start, end } }` |
 | `<civ-memorable-date>` | Date | `legend`, `monthLabel`, `dayLabel`, `yearLabel`, `locale` | `{ value, month, day, year }` |
 | `<civ-date-input>` | Date | `min`, `max` | `{ value }` — **DEPRECATED** |
 | `<civ-file-upload>` | File | `accept`, `multiple`, `maxSize`, `maxFiles` | `{ files: File[] }` |
@@ -378,6 +379,46 @@ Calendar dialog with text input. Preferred for appointment/scheduling dates.
 
 <!-- Date of birth: Today button hidden -->
 <civ-date-picker label="Date of birth" name="dob" hide-today-button max="2026-04-26"></civ-date-picker>
+```
+
+---
+
+### civ-date-range-picker
+
+Composed range picker built from two `civ-date-picker` instances. Cross-binds `min`/`max` so end can never go before start (and vice versa). Surfaces a single `civ-change` event with `{ start, end }` and writes two FormData fields on submit: `${name}.start` and `${name}.end`.
+
+**Props (beyond standard):**
+- `legend` — fieldset legend (group component, no `label`)
+- `min` / `max` — outer bounds (ISO `yyyy-mm-dd`)
+- `min-range-days` / `max-range-days` — inclusive duration constraints. `0` disables.
+- `start-label` / `end-label` — override the per-picker labels (defaults: "Start date", "End date")
+- `start-hint` / `end-hint` — per-picker hint text
+- `start-error` / `end-error` — per-picker errors (in addition to host-level `error`)
+- `locale` / `week-starts-on` — forwarded to both pickers
+
+**Form value shape:**
+- `name="trip"` writes `trip.start = "2026-05-01"` and `trip.end = "2026-05-08"` to FormData
+- `rangeValue` getter/setter accepts `{ start: string, end: string }`; `value` is its JSON string
+
+**Cross-field validation** runs whenever both endpoints are filled:
+1. End ≥ start
+2. Duration ≥ `min-range-days` (when set)
+3. Duration ≤ `max-range-days` (when set)
+
+The error appears on the host (so the form error summary picks it up) and clears automatically once the range is valid again.
+
+**Example:**
+```html
+<civ-date-range-picker
+  legend="Leave dates"
+  name="leave"
+  min="2026-01-01"
+  max="2026-12-31"
+  min-range-days="1"
+  max-range-days="30"
+  hint="First and last day you'll be on leave"
+  required
+></civ-date-range-picker>
 ```
 
 ---

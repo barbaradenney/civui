@@ -77,6 +77,13 @@ export interface CivLocaleStrings {
   datePickerMaxDateMessage: string; // "Date must be on or before {max}"
   datePickerClearLabel: string;
 
+  // Date range picker
+  dateRangeStartLabel: string;
+  dateRangeEndLabel: string;
+  dateRangeEndBeforeStartError: string; // "End date must be on or after start date"
+  dateRangeMinRangeError: string; // "Range must be at least {count} days"
+  dateRangeMaxRangeError: string; // "Range must be at most {count} days"
+
   // Memorable date
   memorableDateMonthLabel: string;
   memorableDateDayLabel: string;
@@ -395,6 +402,12 @@ const defaultStrings: CivLocaleStrings = {
   datePickerMinDateMessage: 'Date must be on or after {min}',
   datePickerMaxDateMessage: 'Date must be on or before {max}',
   datePickerClearLabel: 'Clear date',
+
+  dateRangeStartLabel: 'Start date',
+  dateRangeEndLabel: 'End date',
+  dateRangeEndBeforeStartError: 'End date must be on or after start date',
+  dateRangeMinRangeError: 'Range must be at least {count} days',
+  dateRangeMaxRangeError: 'Range must be at most {count} days',
 
   memorableDateMonthLabel: 'Month',
   memorableDateDayLabel: 'Day',

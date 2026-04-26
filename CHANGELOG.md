@@ -17,6 +17,7 @@ across all 21 components.
 - **`civ-select`** — Slot fallback for declarative `<option>` and `<optgroup>` children. New `width` prop (`default | 2xs | xs | sm | md | lg | xl | 2xl`).
 - **`civ-combobox`** — Always-visible decorative chevron toggle (matches native `<select>` affordance). New `width` prop matching select.
 - **`civ-date-picker`** — Today button in the dialog footer (selects today + closes). `T` / `Shift+T` keyboard shortcut jumps focus to today without selecting. `hide-today-button` opt-out for date-of-birth pickers.
+- **New: `civ-date-range-picker`** — Composed range picker built from two `civ-date-picker` instances. Cross-binds `min`/`max` so end can never go before start (and vice versa). Surfaces a single `civ-change` event with `{ start, end }`, validates duration via `min-range-days` / `max-range-days`, and writes `${name}.start` / `${name}.end` to FormData. New locale keys: `dateRangeStartLabel`, `dateRangeEndLabel`, `dateRangeEndBeforeStartError`, `dateRangeMinRangeError`, `dateRangeMaxRangeError`.
 - **`civ-file-upload`** — Duplicate detection on add (matches by name + size + lastModified). `capture` prop passes through to the native file input for mobile camera capture (`user` / `environment`).
 - **`civ-checkbox-group`** — `min-selections` prop with implicit-required behavior, dedicated error message, and combined min+max hint chain.
 - **`@civui/core/validation`** — New `validate.routing(value)` ABA mod-10 checksum validator. `civ-direct-deposit` wires it onto its routing-number sub-input automatically.

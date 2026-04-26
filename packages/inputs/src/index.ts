@@ -5,6 +5,7 @@ import './textarea/civ-textarea.js';
 import './select/civ-select.js';
 import './combobox/civ-combobox.js';
 import './date-picker/civ-date-picker.js';
+import './date-range-picker/civ-date-range-picker.js';
 import './date-input/civ-memorable-date.js';
 import './file-upload/civ-file-upload.js';
 import './toggle/civ-toggle.js';
@@ -27,6 +28,10 @@ export type { ComboboxOption } from './combobox/index.js';
 
 // Date Picker
 export { CivDatePicker } from './date-picker/index.js';
+
+// Date Range Picker
+export { CivDateRangePicker } from './date-range-picker/index.js';
+export type { DateRangeValue } from './date-range-picker/index.js';
 
 // Memorable Date
 export { CivMemorableDate } from './date-input/index.js';

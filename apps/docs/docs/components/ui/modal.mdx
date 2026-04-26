@@ -34,8 +34,10 @@ A general-purpose modal dialog. Centered overlay on desktop, bottom sheet on mob
 |------|------|---------|-------------|
 | `open` | `boolean` | `false` | Controls visibility |
 | `heading` | `string` | `''` | Modal heading (rendered as h2) |
+| `label` | `string` | `''` | Accessible label when no heading is set |
 | `no-close-button` | `boolean` | `false` | Hide the X close button |
 | `no-backdrop-close` | `boolean` | `false` | Disable closing via backdrop click |
+| `no-escape-close` | `boolean` | `false` | Disable closing via Escape key |
 
 ## Slots
 
@@ -54,10 +56,13 @@ A general-purpose modal dialog. Centered overlay on desktop, bottom sheet on mob
 
 - **Desktop:** Centered overlay, max-width 600px, max-height 80vh
 - **Mobile (≤480px):** Bottom sheet with rounded top corners, max-height 85vh
-- Focus is trapped inside the modal when open
-- Body scroll is locked when open
+- Focus is trapped inside the modal (native `<dialog>` behavior)
+- Body scroll is locked when open, restored on close
 - Focus returns to the trigger element on close
-- `aria-modal="true"` and `role="dialog"` for accessibility
+- Native `<dialog>` provides implicit `role="dialog"` and modal semantics
+- Use `label` prop for accessible name when no heading is set
+- **Escape** closes by default — use `no-escape-close` to prevent
+- **Required decisions:** Combine `no-close-button`, `no-backdrop-close`, and `no-escape-close` to force the user to pick an action
 
 ## Usage
 

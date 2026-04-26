@@ -2,13 +2,17 @@ import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
 import './civ-modal.js';
 
-afterEach(cleanupFixtures);
+afterEach(() => {
+  cleanupFixtures();
+  document.body.style.overflow = '';
+});
 
 describe('civ-modal', () => {
-  it('renders dialog element when component exists', async () => {
+  it('renders a native dialog element', async () => {
     const el = await fixture('<civ-modal heading="Test"><p>Content</p></civ-modal>');
     const dialog = el.querySelector('dialog');
     expect(dialog).not.toBeNull();
+    expect(dialog!.tagName).toBe('DIALOG');
   });
 
   it('dialog is closed by default', async () => {
@@ -17,12 +21,62 @@ describe('civ-modal', () => {
     expect(dialog.open).toBe(false);
   });
 
-  it('renders heading', async () => {
+  it('renders heading with correct id', async () => {
     const el = await fixture('<civ-modal heading="Confirm action" open><p>Content</p></civ-modal>');
     await elementUpdated(el);
     const heading = el.querySelector('#civ-modal-heading');
     expect(heading).not.toBeNull();
     expect(heading!.textContent).toContain('Confirm action');
+  });
+
+  it('sets aria-labelledby when heading is present', async () => {
+    const el = await fixture('<civ-modal heading="My Dialog" open><p>Content</p></civ-modal>');
+    await elementUpdated(el);
+    const dialog = el.querySelector('dialog');
+    expect(dialog!.getAttribute('aria-labelledby')).toBe('civ-modal-heading');
+  });
+
+  it('does not set aria-labelledby when heading is empty', async () => {
+    const el = await fixture('<civ-modal open><p>Content</p></civ-modal>');
+    await elementUpdated(el);
+    const dialog = el.querySelector('dialog');
+    expect(dialog!.hasAttribute('aria-labelledby')).toBe(false);
+  });
+
+  it('uses aria-label as fallback when no heading', async () => {
+    const el = await fixture('<civ-modal label="Confirmation dialog" open><p>Content</p></civ-modal>');
+    await elementUpdated(el);
+    const dialog = el.querySelector('dialog');
+    expect(dialog!.getAttribute('aria-label')).toBe('Confirmation dialog');
+  });
+});
+
+describe('civ-modal close behavior', () => {
+  it('fires civ-modal-close on cancel event (Escape)', async () => {
+    const el = await fixture('<civ-modal heading="Test" open><p>Content</p></civ-modal>');
+    await elementUpdated(el);
+
+    const handler = vi.fn();
+    el.addEventListener('civ-modal-close', handler as EventListener);
+
+    const dialog = el.querySelector('dialog')!;
+    dialog.dispatchEvent(new Event('cancel', { cancelable: true }));
+    expect(handler).toHaveBeenCalledOnce();
+  });
+
+  it('prevents Escape close when no-escape-close is set', async () => {
+    const el = await fixture('<civ-modal heading="Test" open no-escape-close><p>Content</p></civ-modal>');
+    await elementUpdated(el);
+
+    const handler = vi.fn();
+    el.addEventListener('civ-modal-close', handler as EventListener);
+
+    const dialog = el.querySelector('dialog')!;
+    const cancelEvent = new Event('cancel', { cancelable: true });
+    dialog.dispatchEvent(cancelEvent);
+
+    expect(handler).not.toHaveBeenCalled();
+    expect(cancelEvent.defaultPrevented).toBe(true);
   });
 
   it('fires civ-modal-close on native close event', async () => {
@@ -37,19 +91,6 @@ describe('civ-modal', () => {
     expect(handler).toHaveBeenCalledOnce();
   });
 
-  it('fires civ-modal-close on backdrop click', async () => {
-    const el = await fixture('<civ-modal heading="Test" open><p>Content</p></civ-modal>');
-    await elementUpdated(el);
-
-    const handler = vi.fn();
-    el.addEventListener('civ-modal-close', handler as EventListener);
-
-    const dialog = el.querySelector('dialog')!;
-    // Click on the dialog element itself simulates backdrop click
-    dialog.dispatchEvent(new MouseEvent('click', { bubbles: true }));
-    // The handler checks e.target === dialog, so we need to set it up properly
-  });
-
   it('does not fire close on backdrop click when no-backdrop-close', async () => {
     const el = await fixture('<civ-modal heading="Test" open no-backdrop-close><p>Content</p></civ-modal>');
     await elementUpdated(el);
@@ -58,8 +99,20 @@ describe('civ-modal', () => {
     el.addEventListener('civ-modal-close', handler as EventListener);
 
     const dialog = el.querySelector('dialog')!;
-    dialog.click();
+    // Simulate click directly on dialog element (backdrop area)
+    const event = new MouseEvent('click', { bubbles: true });
+    Object.defineProperty(event, 'target', { value: dialog });
+    dialog.dispatchEvent(event);
+
     expect(handler).not.toHaveBeenCalled();
+  });
+});
+
+describe('civ-modal close button', () => {
+  it('shows close button by default', async () => {
+    const el = await fixture('<civ-modal heading="Test" open><p>Content</p></civ-modal>');
+    await elementUpdated(el);
+    expect(el.querySelector('.civ-modal__close')).not.toBeNull();
   });
 
   it('hides close button when no-close-button', async () => {
@@ -68,25 +121,36 @@ describe('civ-modal', () => {
     expect(el.querySelector('.civ-modal__close')).toBeNull();
   });
 
-  it('shows close button by default', async () => {
+  it('fires civ-modal-close when close button clicked', async () => {
     const el = await fixture('<civ-modal heading="Test" open><p>Content</p></civ-modal>');
     await elementUpdated(el);
-    expect(el.querySelector('.civ-modal__close')).not.toBeNull();
+
+    const handler = vi.fn();
+    el.addEventListener('civ-modal-close', handler as EventListener);
+
+    const closeBtn = el.querySelector('.civ-modal__close') as HTMLElement;
+    closeBtn.click();
+    expect(handler).toHaveBeenCalledOnce();
+  });
+});
+
+describe('civ-modal body scroll lock', () => {
+  it('locks body scroll when open', async () => {
+    await fixture('<civ-modal heading="Test" open><p>Content</p></civ-modal>');
+    expect(document.body.style.overflow).toBe('hidden');
   });
 
-  it('uses native dialog element', async () => {
-    const el = await fixture('<civ-modal heading="Test" open><p>Content</p></civ-modal>');
+  it('restores body scroll when closed', async () => {
+    const el = await fixture('<civ-modal heading="Test" open><p>Content</p></civ-modal>') as any;
     await elementUpdated(el);
-    const dialog = el.querySelector('dialog');
-    expect(dialog).not.toBeNull();
-    expect(dialog!.tagName).toBe('DIALOG');
-  });
 
-  it('uses Light DOM', async () => {
-    const el = await fixture('<civ-modal heading="Test"><p>Content</p></civ-modal>');
-    expect(el.shadowRoot).toBeNull();
+    el.open = false;
+    await elementUpdated(el);
+    expect(document.body.style.overflow).toBe('');
   });
+});
 
+describe('civ-modal slots', () => {
   it('renders footer slot when content is present', async () => {
     const el = await fixture(`
       <civ-modal heading="Test" open>
@@ -100,10 +164,32 @@ describe('civ-modal', () => {
     expect(el.querySelector('[data-civ-modal-footer]')).not.toBeNull();
   });
 
-  it('has aria-labelledby pointing to heading', async () => {
-    const el = await fixture('<civ-modal heading="My Dialog" open><p>Content</p></civ-modal>');
+  it('uses Light DOM', async () => {
+    const el = await fixture('<civ-modal heading="Test"><p>Content</p></civ-modal>');
+    expect(el.shadowRoot).toBeNull();
+  });
+});
+
+describe('civ-modal required decision', () => {
+  it('blocks all close methods when fully locked', async () => {
+    const el = await fixture(
+      '<civ-modal heading="Confirm" open no-close-button no-backdrop-close no-escape-close><p>Content</p></civ-modal>'
+    );
     await elementUpdated(el);
-    const dialog = el.querySelector('dialog');
-    expect(dialog!.getAttribute('aria-labelledby')).toBe('civ-modal-heading');
+
+    const handler = vi.fn();
+    el.addEventListener('civ-modal-close', handler as EventListener);
+
+    // No close button
+    expect(el.querySelector('.civ-modal__close')).toBeNull();
+
+    // Escape blocked
+    const dialog = el.querySelector('dialog')!;
+    const cancelEvent = new Event('cancel', { cancelable: true });
+    dialog.dispatchEvent(cancelEvent);
+    expect(cancelEvent.defaultPrevented).toBe(true);
+
+    // No close event fired
+    expect(handler).not.toHaveBeenCalled();
   });
 });

@@ -10,10 +10,10 @@ import type { SlotConfig } from '@civui/core';
  * Centered overlay on desktop, bottom sheet on mobile (≤480px).
  *
  * Uses the browser's built-in modal behavior:
- * - Native focus trap (no JS focus management needed)
+ * - Native focus trap via `showModal()`
  * - Native `::backdrop` pseudo-element
- * - Native Escape-to-close
- * - Automatic `inert` on background content
+ * - Escape-to-close via `cancel` event (preventable)
+ * - Automatic top-layer stacking
  *
  * The parent component controls the `open` state. The modal fires
  * `civ-modal-close` when the user tries to close it, and the parent
@@ -23,8 +23,10 @@ import type { SlotConfig } from '@civui/core';
  *
  * @prop {boolean} open - Controls visibility
  * @prop {string} heading - Modal heading text (rendered as h2)
+ * @prop {string} label - Accessible label when no heading is set
  * @prop {boolean} noCloseButton - Hide the X close button
  * @prop {boolean} noBackdropClose - Disable closing via backdrop click
+ * @prop {boolean} noEscapeClose - Disable closing via Escape key
  *
  * @fires civ-modal-close - When the user tries to close the modal
  */
@@ -32,8 +34,12 @@ import type { SlotConfig } from '@civui/core';
 export class CivModal extends LightDomSlotMixin(CivBaseElement) {
   @property({ type: Boolean, reflect: true }) open = false;
   @property({ type: String }) heading = '';
+  @property({ type: String }) label = '';
   @property({ type: Boolean, attribute: 'no-close-button' }) noCloseButton = false;
   @property({ type: Boolean, attribute: 'no-backdrop-close' }) noBackdropClose = false;
+  @property({ type: Boolean, attribute: 'no-escape-close' }) noEscapeClose = false;
+
+  private _previouslyFocused: Element | null = null;
 
   override _getSlotConfig(): SlotConfig {
     return {
@@ -62,6 +68,8 @@ export class CivModal extends LightDomSlotMixin(CivBaseElement) {
       <dialog
         class="civ-modal"
         aria-labelledby="${this.heading ? 'civ-modal-heading' : nothing}"
+        aria-label="${!this.heading && this.label ? this.label : nothing}"
+        @cancel="${this._onCancel}"
         @close="${this._onNativeClose}"
         @click="${this._onDialogClick}"
       >
@@ -90,6 +98,9 @@ export class CivModal extends LightDomSlotMixin(CivBaseElement) {
   }
 
   private _onOpen(): void {
+    this._previouslyFocused = document.activeElement;
+    document.body.style.overflow = 'hidden';
+
     this.updateComplete.then(() => {
       const dialog = this.querySelector('dialog') as HTMLDialogElement | null;
       if (dialog && !dialog.open && typeof dialog.showModal === 'function') {
@@ -103,19 +114,40 @@ export class CivModal extends LightDomSlotMixin(CivBaseElement) {
     if (dialog?.open && typeof dialog.close === 'function') {
       dialog.close();
     }
+
+    document.body.style.overflow = '';
+
+    // Return focus to the element that opened the modal
+    if (this._previouslyFocused instanceof HTMLElement) {
+      requestAnimationFrame(() => {
+        (this._previouslyFocused as HTMLElement)?.focus();
+        this._previouslyFocused = null;
+      });
+    }
   }
 
-  /** Native dialog fires 'close' on Escape — intercept and forward as our event */
-  private _onNativeClose(e: Event): void {
+  /** Native cancel event fires BEFORE dialog closes — can be prevented */
+  private _onCancel(e: Event): void {
+    if (this.noEscapeClose) {
+      e.preventDefault();
+      return;
+    }
     e.preventDefault();
     this._requestClose();
+  }
+
+  /** Native close event fires AFTER dialog has closed */
+  private _onNativeClose(): void {
+    // Dialog already closed natively — sync our state
+    if (this.open) {
+      this._requestClose();
+    }
   }
 
   /** Detect clicks on the backdrop (the dialog element itself, not its children) */
   private _onDialogClick(e: MouseEvent): void {
     const dialog = this.querySelector('dialog');
     if (!dialog || this.noBackdropClose) return;
-    // Click on the dialog element itself (the backdrop area) vs. inside the content
     if (e.target === dialog) {
       this._requestClose();
     }

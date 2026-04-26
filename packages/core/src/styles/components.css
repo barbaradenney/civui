@@ -1699,6 +1699,10 @@
     display: none;
   }
 
+  .civ-action-sheet__mobile-close {
+    display: none;
+  }
+
   /* Action sheet mobile: extends .civ-bottom-sheet */
   @media (max-width: 480px) {
     .civ-action-sheet--open {
@@ -1724,6 +1728,11 @@
       inset: 0;
       background: rgba(0, 0, 0, 0.3);
       z-index: 99;
+    }
+
+    .civ-action-sheet__mobile-close {
+      @apply civ-flex civ-justify-end civ-mb-2;
+      display: flex;
     }
   }
 

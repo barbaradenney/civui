@@ -102,6 +102,11 @@ transform: translate(-50%, -50%) rotate(45deg);`,
   },
 ];
 
+/** Strip CSS block comments so they don't interfere with brace-walking. */
+function stripCssComments(css: string): string {
+  return css.replace(/\/\*[\s\S]*?\*\//g, '');
+}
+
 /**
  * Walk a CSS source string and return every rule block whose selector
  * mentions `.civ-icon--{name}` (with proper word boundary). Handles
@@ -185,8 +190,9 @@ function validateCss(scopedCss: string): string | null {
 
 const ALL_RULES: Map<string, string> = (() => {
   const map = new Map<string, string>();
+  const cleaned = stripCssComments(iconCss);
   for (const name of getIconNames()) {
-    map.set(name, extractIconRules(iconCss, name));
+    map.set(name, extractIconRules(cleaned, name));
   }
   return map;
 })();
@@ -226,11 +232,20 @@ class CivIconEditor extends LitElement {
   }
 
   private _startNewIcon() {
+    // Pick a fresh name so repeated clicks don't trample previous drafts.
+    let candidate = 'my-icon';
+    let n = 2;
+    while (getIconNames().includes(candidate)) {
+      candidate = `my-icon-${n++}`;
+    }
     this._mode = 'create';
-    this._newIconName = 'my-icon';
-    this._selectedIcon = 'my-icon';
-    registerIcon('my-icon', { label: 'Custom icon' });
-    this._editorValue = `.civ-icon--my-icon::before {\n  content: '';\n  position: absolute;\n  width: 0.6em;\n  height: 0.6em;\n  border: 2px solid currentColor;\n  border-radius: 50%;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n}`;
+    this._newIconName = candidate;
+    this._selectedIcon = candidate;
+    registerIcon(candidate, { label: 'Custom icon' });
+    // Blank scaffold: empty ::before and ::after blocks ready to fill.
+    // Container is 1em × 1em with position: relative; both pseudo-elements
+    // are stacked centered. Open the Snippets panel below for shape primitives.
+    this._editorValue = `.civ-icon--${candidate}::before {\n  content: '';\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  /* width, height, background or border… */\n}\n\n.civ-icon--${candidate}::after {\n  /* optional second shape — delete if unused */\n}`;
     this._copied = false;
     this._scheduleUpdate();
   }

@@ -19,6 +19,10 @@ export interface CivLocaleStrings {
   comboboxResultsAvailable: string; // "{count} results available" (plural)
   comboboxSelected: string; // "{label}, selected"
   comboboxClearLabel: string;
+  comboboxLoading: string; // shown in dropdown while async loadOptions is in flight
+  comboboxLoadError: string; // shown when loadOptions rejects
+  comboboxTypeToSearch: string; // "Type at least {count} characters"
+  comboboxLoadingAnnouncement: string; // SR announcement when fetch starts
 
   // Form error summary
   formErrorSingular: string; // "There is 1 error in this form"
@@ -342,6 +346,10 @@ const defaultStrings: CivLocaleStrings = {
   comboboxResultsAvailable: '{count} results available',
   comboboxSelected: '{label}, selected',
   comboboxClearLabel: 'Clear selection',
+  comboboxLoading: 'Loading…',
+  comboboxLoadError: 'Could not load results. Try again.',
+  comboboxTypeToSearch: 'Type at least {count} characters to search',
+  comboboxLoadingAnnouncement: 'Loading results',
 
   formErrorSingular: 'There is 1 error in this form',
   formErrorPlural: 'There are {count} errors in this form',

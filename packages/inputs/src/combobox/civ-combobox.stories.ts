@@ -274,3 +274,90 @@ export const ChevronToggle: Story = {
     return el;
   },
 };
+
+// ── Async loadOptions ─────────────────────────────────────────
+
+const SAMPLE_AGENCIES = [
+  { value: 'va', label: 'Department of Veterans Affairs' },
+  { value: 'ssa', label: 'Social Security Administration' },
+  { value: 'irs', label: 'Internal Revenue Service' },
+  { value: 'usps', label: 'United States Postal Service' },
+  { value: 'sba', label: 'Small Business Administration' },
+  { value: 'epa', label: 'Environmental Protection Agency' },
+  { value: 'doe', label: 'Department of Energy' },
+  { value: 'dot', label: 'Department of Transportation' },
+  { value: 'usda', label: 'Department of Agriculture' },
+];
+
+export const AsyncLoading: Story = {
+  name: 'Async: remote loadOptions',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'When `loadOptions` is set the combobox switches into remote mode. The function is called (debounced, 300ms by default) with the typed query and is expected to return matching options. Loading, error, and below-min-query states each get their own dropdown message. Stale responses are discarded automatically so a slow network response never overwrites newer results.',
+      },
+    },
+  },
+  render: () => {
+    const el = document.createElement('civ-combobox') as any;
+    el.setAttribute('label', 'Federal agency');
+    el.setAttribute('name', 'agency');
+    el.setAttribute('hint', 'Type to search across federal agencies');
+    el.setAttribute('placeholder', 'Type an agency name...');
+    el.loadOptions = async (q: string) => {
+      // Simulated network latency
+      await new Promise((r) => setTimeout(r, 400));
+      const lower = q.toLowerCase();
+      return SAMPLE_AGENCIES.filter((a) => a.label.toLowerCase().includes(lower));
+    };
+    return el;
+  },
+};
+
+export const AsyncWithMinQuery: Story = {
+  name: 'Async: with min-query-length',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Set `min-query-length` so the loader is not called for vague short queries. The dropdown shows a "Type at least N characters" prompt until the threshold is met.',
+      },
+    },
+  },
+  render: () => {
+    const el = document.createElement('civ-combobox') as any;
+    el.setAttribute('label', 'Federal agency');
+    el.setAttribute('name', 'agency');
+    el.setAttribute('min-query-length', '3');
+    el.setAttribute('placeholder', 'Type at least 3 characters...');
+    el.loadOptions = async (q: string) => {
+      await new Promise((r) => setTimeout(r, 250));
+      const lower = q.toLowerCase();
+      return SAMPLE_AGENCIES.filter((a) => a.label.toLowerCase().includes(lower));
+    };
+    return el;
+  },
+};
+
+export const AsyncError: Story = {
+  name: 'Async: error state',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'When `loadOptions` rejects, the dropdown shows the error message in a `role="alert"` region. Customize via `loading-error-text`.',
+      },
+    },
+  },
+  render: () => {
+    const el = document.createElement('civ-combobox') as any;
+    el.setAttribute('label', 'Federal agency');
+    el.setAttribute('name', 'agency');
+    el.loadOptions = async () => {
+      await new Promise((r) => setTimeout(r, 400));
+      throw new Error('Network unavailable');
+    };
+    return el;
+  },
+};

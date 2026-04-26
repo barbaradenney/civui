@@ -94,11 +94,7 @@ export class CivMarriageHistory extends CivFormElement {
 
   override firstUpdated(): void {
     super.firstUpdated();
-    if (this.value) {
-      try {
-        this._marriage = { ...EMPTY_MARRIAGE, ...JSON.parse(this.value) };
-      } catch { /* leave empty */ }
-    }
+    this._marriage = this.parseStructuredValue(this.value, EMPTY_MARRIAGE);
     if (this.statusAssumed) {
       this._marriage = { ...this._marriage, status: this.statusAssumed };
       this.value = JSON.stringify(this._marriage);
@@ -412,23 +408,7 @@ export class CivMarriageHistory extends CivFormElement {
   }
 
   protected override _syncFormValue(): void {
-    const fd = new FormData();
-    const prefix = this.name || 'marriage';
-    fd.append(`${prefix}.spouseFirst`, this._marriage.spouseFirst);
-    fd.append(`${prefix}.spouseMiddle`, this._marriage.spouseMiddle);
-    fd.append(`${prefix}.spouseLast`, this._marriage.spouseLast);
-    fd.append(`${prefix}.spouseSuffix`, this._marriage.spouseSuffix);
-    fd.append(`${prefix}.marriageType`, this._marriage.marriageType);
-    fd.append(`${prefix}.marriageTypeDescription`, this._marriage.marriageTypeDescription);
-    fd.append(`${prefix}.marriageDate`, this._marriage.marriageDate);
-    fd.append(`${prefix}.marriageCity`, this._marriage.marriageCity);
-    fd.append(`${prefix}.marriageState`, this._marriage.marriageState);
-    fd.append(`${prefix}.jurisdiction`, this._marriage.jurisdiction);
-    fd.append(`${prefix}.cohabitationStartDate`, this._marriage.cohabitationStartDate);
-    fd.append(`${prefix}.cohabitationState`, this._marriage.cohabitationState);
-    fd.append(`${prefix}.status`, this._marriage.status);
-    fd.append(`${prefix}.endDate`, this._marriage.endDate);
-    this.updateFormValue(fd);
+    this.syncFormDataFromState(this._marriage, this.name || 'marriage');
   }
 
   override formResetCallback(): void {

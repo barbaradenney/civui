@@ -71,11 +71,7 @@ export class CivName extends CivFormElement {
 
   override firstUpdated(): void {
     super.firstUpdated();
-    if (this.value) {
-      try {
-        this._name = { ...EMPTY_NAME, ...JSON.parse(this.value) };
-      } catch { /* leave empty */ }
-    }
+    this._name = this.parseStructuredValue(this.value, EMPTY_NAME);
     this._syncSuffixOptions();
   }
 
@@ -185,13 +181,7 @@ export class CivName extends CivFormElement {
   }
 
   protected override _syncFormValue(): void {
-    const fd = new FormData();
-    const prefix = this.name || 'name';
-    fd.append(`${prefix}.first`, this._name.first);
-    fd.append(`${prefix}.middle`, this._name.middle);
-    fd.append(`${prefix}.last`, this._name.last);
-    fd.append(`${prefix}.suffix`, this._name.suffix);
-    this.updateFormValue(fd);
+    this.syncFormDataFromState(this._name, this.name || 'name');
   }
 
   /**

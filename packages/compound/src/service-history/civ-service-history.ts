@@ -71,11 +71,7 @@ export class CivServiceHistory extends CivFormElement {
 
   override firstUpdated(): void {
     super.firstUpdated();
-    if (this.value) {
-      try {
-        this._service = { ...EMPTY_SERVICE, ...JSON.parse(this.value) };
-      } catch { /* leave empty */ }
-    }
+    this._service = this.parseStructuredValue(this.value, EMPTY_SERVICE);
     this._syncSelectOptions();
   }
 
@@ -201,14 +197,7 @@ export class CivServiceHistory extends CivFormElement {
   }
 
   protected override _syncFormValue(): void {
-    const fd = new FormData();
-    const prefix = this.name || 'service';
-    fd.append(`${prefix}.branch`, this._service.branch);
-    fd.append(`${prefix}.startDate`, this._service.startDate);
-    fd.append(`${prefix}.endDate`, this._service.endDate);
-    fd.append(`${prefix}.dischargeType`, this._service.dischargeType);
-    fd.append(`${prefix}.serviceNumber`, this._service.serviceNumber);
-    this.updateFormValue(fd);
+    this.syncFormDataFromState(this._service, this.name || 'service');
   }
 
   override formResetCallback(): void {

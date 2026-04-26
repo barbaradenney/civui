@@ -262,4 +262,48 @@ export class CivFormElement extends CivBaseElement {
     dispatch(this, 'civ-change', { value: this.value });
     this.sendAnalytics('change');
   }
+
+  // ── Compound component helpers ──────────────────────────────
+  // Shared utilities for components that manage structured state
+  // (address, name, relationship, etc.)
+
+  /**
+   * Parse a JSON value string into a typed state object, merging with
+   * an empty default. Returns the default if parsing fails.
+   */
+  protected parseStructuredValue<T extends Record<string, unknown>>(val: string, empty: T): T {
+    if (!val) return { ...empty };
+    try {
+      return { ...empty, ...JSON.parse(val) };
+    } catch {
+      return { ...empty };
+    }
+  }
+
+  /**
+   * Build FormData from a state object with prefixed field names.
+   * Handles the common compound component pattern of `prefix.fieldName`.
+   */
+  protected syncFormDataFromState(
+    state: Record<string, unknown>,
+    prefix: string,
+  ): void {
+    const fd = new FormData();
+    for (const [key, value] of Object.entries(state)) {
+      fd.append(`${prefix}.${key}`, String(value ?? ''));
+    }
+    this.updateFormValue(fd);
+  }
+
+  /**
+   * Sync options to a child `<civ-select>` found by data-attribute selector.
+   * Avoids the repeated querySelector + .options pattern.
+   */
+  protected syncChildSelectOptions(
+    selector: string,
+    options: Array<{ value: string; label: string }>,
+  ): void {
+    const select = this.querySelector(selector) as HTMLElement & { options?: unknown } | null;
+    if (select) select.options = options;
+  }
 }

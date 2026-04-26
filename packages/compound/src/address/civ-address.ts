@@ -140,11 +140,7 @@ export class CivAddress extends CivFormElement {
 
   override firstUpdated(): void {
     super.firstUpdated();
-    if (this.value) {
-      try {
-        this._address = { ...EMPTY_ADDRESS, ...JSON.parse(this.value) };
-      } catch { /* leave empty */ }
-    }
+    this._address = this.parseStructuredValue(this.value, EMPTY_ADDRESS);
     this._syncSelectOptions();
   }
 
@@ -450,17 +446,7 @@ export class CivAddress extends CivFormElement {
   }
 
   protected override _syncFormValue(): void {
-    const fd = new FormData();
-    const prefix = this.name || 'address';
-    fd.append(`${prefix}.country`, this._address.country);
-    fd.append(`${prefix}.street1`, this._address.street1);
-    fd.append(`${prefix}.street2`, this._address.street2);
-    fd.append(`${prefix}.street3`, this._address.street3);
-    fd.append(`${prefix}.city`, this._address.city);
-    fd.append(`${prefix}.state`, this._address.state);
-    fd.append(`${prefix}.zip`, this._address.zip);
-    fd.append(`${prefix}.military`, this._address.military ? 'true' : 'false');
-    this.updateFormValue(fd);
+    this.syncFormDataFromState(this._address, this.name || 'address');
   }
 
   override formResetCallback(): void {

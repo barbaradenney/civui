@@ -58,11 +58,7 @@ export class CivDirectDeposit extends CivFormElement {
 
   override firstUpdated(): void {
     super.firstUpdated();
-    if (this.value) {
-      try {
-        this._deposit = { ...EMPTY_DEPOSIT, ...JSON.parse(this.value) };
-      } catch { /* leave empty */ }
-    }
+    this._deposit = this.parseStructuredValue(this.value, EMPTY_DEPOSIT);
   }
 
   override render() {
@@ -148,12 +144,7 @@ export class CivDirectDeposit extends CivFormElement {
   }
 
   protected override _syncFormValue(): void {
-    const fd = new FormData();
-    const prefix = this.name || 'deposit';
-    fd.append(`${prefix}.accountType`, this._deposit.accountType);
-    fd.append(`${prefix}.routingNumber`, this._deposit.routingNumber);
-    fd.append(`${prefix}.accountNumber`, this._deposit.accountNumber);
-    this.updateFormValue(fd);
+    this.syncFormDataFromState(this._deposit, this.name || 'deposit');
   }
 
   /**

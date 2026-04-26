@@ -99,11 +99,7 @@ export class CivRelationship extends CivFormElement {
 
   override firstUpdated(): void {
     super.firstUpdated();
-    if (this.value) {
-      try {
-        this._data = { ...EMPTY_RELATIONSHIP, ...JSON.parse(this.value) };
-      } catch { /* leave empty */ }
-    }
+    this._data = this.parseStructuredValue(this.value, EMPTY_RELATIONSHIP);
     if (this.deceasedAssumed) {
       this._data = { ...this._data, deceased: 'yes' };
       this.value = JSON.stringify(this._data);
@@ -372,21 +368,7 @@ export class CivRelationship extends CivFormElement {
   }
 
   protected override _syncFormValue(): void {
-    const fd = new FormData();
-    const prefix = this.name || 'relationship';
-    fd.append(`${prefix}.first`, this._data.first);
-    fd.append(`${prefix}.middle`, this._data.middle);
-    fd.append(`${prefix}.last`, this._data.last);
-    fd.append(`${prefix}.suffix`, this._data.suffix);
-    fd.append(`${prefix}.relationship`, this._data.relationship);
-    fd.append(`${prefix}.marriageDate`, this._data.marriageDate);
-    fd.append(`${prefix}.divorceDate`, this._data.divorceDate);
-    fd.append(`${prefix}.dateOfBirth`, this._data.dateOfBirth);
-    fd.append(`${prefix}.adoptionDate`, this._data.adoptionDate);
-    fd.append(`${prefix}.deceased`, this._data.deceased);
-    fd.append(`${prefix}.dateOfDeath`, this._data.dateOfDeath);
-    fd.append(`${prefix}.otherDescription`, this._data.otherDescription);
-    this.updateFormValue(fd);
+    this.syncFormDataFromState(this._data, this.name || 'relationship');
   }
 
   override formResetCallback(): void {

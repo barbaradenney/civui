@@ -120,11 +120,7 @@ export class CivSignature extends CivFormElement {
 
   override firstUpdated(): void {
     super.firstUpdated();
-    if (this.value) {
-      try {
-        this._signature = { ...EMPTY_SIGNATURE, ...JSON.parse(this.value) };
-      } catch { /* leave empty */ }
-    }
+    this._signature = this.parseStructuredValue(this.value, EMPTY_SIGNATURE);
   }
 
   /** Whether any statement (slot or prop) is present. */

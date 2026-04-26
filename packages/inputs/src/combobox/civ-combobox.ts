@@ -204,6 +204,7 @@ export class CivCombobox extends CivFormElement {
                   role="listbox"
                   class="civ-combobox-listbox"
                   aria-labelledby="${this.label ? this._labelId : nothing}"
+                  aria-describedby="${this._ariaDescribedBy || nothing}"
                   aria-busy="${this._loading ? 'true' : nothing}"
                   @mousedown="${this._onListboxMousedown}"
                 >

@@ -78,25 +78,20 @@ export class CivMemorableDate extends CivFormElement {
     }
   }
 
+  /**
+   * Propagate aria-describedby to inner native inputs so screen readers
+   * that don't inherit fieldset-level described-by still announce
+   * hint/error text. Deferred to ensure child components have rendered.
+   */
   private _propagateAriaToChildren(): void {
-    const describedBy = this._ariaDescribedBy;
-    // Propagate aria-describedby to all child form controls
-    const monthSelect = this.querySelector('civ-select');
-    const innerSelect = monthSelect?.querySelector('select');
-    if (innerSelect) {
-      if (describedBy) {
-        innerSelect.setAttribute('aria-describedby', describedBy);
-      } else {
-        innerSelect.removeAttribute('aria-describedby');
-      }
-    }
-    this.querySelectorAll('civ-text-input').forEach((textInput) => {
-      const innerInput = textInput.querySelector('input');
-      if (innerInput) {
+    requestAnimationFrame(() => {
+      const describedBy = this._ariaDescribedBy;
+      const inputs = this.querySelectorAll('input, select');
+      for (const el of inputs) {
         if (describedBy) {
-          innerInput.setAttribute('aria-describedby', describedBy);
+          el.setAttribute('aria-describedby', describedBy);
         } else {
-          innerInput.removeAttribute('aria-describedby');
+          el.removeAttribute('aria-describedby');
         }
       }
     });

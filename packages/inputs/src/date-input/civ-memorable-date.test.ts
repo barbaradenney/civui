@@ -132,6 +132,8 @@ describe('civ-memorable-date accessibility', () => {
     // Now set hint dynamically so updated() fires propagation
     el.hint = 'For example: January 19 2000';
     await elementUpdated(el);
+    // Wait for RAF-deferred aria propagation
+    await new Promise(r => requestAnimationFrame(r));
 
     const innerSelect = el.querySelector('civ-select select');
     expect(innerSelect).not.toBeNull();
@@ -152,6 +154,8 @@ describe('civ-memorable-date accessibility', () => {
     // Now set error dynamically so updated() fires propagation
     el.error = 'Enter a valid date';
     await elementUpdated(el);
+    // Wait for RAF-deferred aria propagation
+    await new Promise(r => requestAnimationFrame(r));
 
     const innerSelect = el.querySelector('civ-select select');
     const describedBy = innerSelect!.getAttribute('aria-describedby');

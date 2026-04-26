@@ -1618,6 +1618,28 @@
     }
   }
 
+  /* ── Shared: Mobile Bottom Sheet ─────────────────────────── */
+  /* Applied by modal, action-sheet, combobox, and datepicker on mobile.
+     Use this mixin class or copy these properties for any popup that
+     should render as a bottom sheet on small screens. */
+
+  @media (max-width: 480px) {
+    .civ-bottom-sheet {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      top: auto;
+      width: 100%;
+      margin: 0;
+      border-radius: var(--civ-border-radius-lg, 12px) var(--civ-border-radius-lg, 12px) 0 0;
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+      max-height: var(--civ-action-sheet-max-height, 50vh);
+      overflow-y: auto;
+      z-index: 100;
+    }
+  }
+
   /* ── Modal (native <dialog>) ─────────────────────────────── */
 
   dialog.civ-modal {
@@ -1649,6 +1671,7 @@
     @apply civ-flex civ-gap-4 civ-justify-end;
   }
 
+  /* Modal uses dialog's native positioning — margin-top: auto anchors to bottom */
   @media (max-width: 480px) {
     dialog.civ-modal {
       margin: 0;
@@ -1676,8 +1699,11 @@
     display: none;
   }
 
+  /* Action sheet mobile: extends .civ-bottom-sheet */
   @media (max-width: 480px) {
     .civ-action-sheet--open {
+      /* Uses shared .civ-bottom-sheet pattern — properties inherited if class applied,
+         or duplicated here for components that don't add the utility class */
       position: fixed;
       bottom: 0;
       left: 0;

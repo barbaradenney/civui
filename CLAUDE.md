@@ -93,27 +93,16 @@ Group components use `legend` instead of `label`.
 Label → hint → error → control → supplementary info (character count, file list).
 
 ### Mobile Popups — Bottom Sheet Rule
-All popups, dropdowns, and dialogs **must** render as bottom sheets on mobile (≤480px). No absolute-positioned dropdowns on small screens — they overflow and are hard to tap.
+All popups, dropdowns, and dialogs **must** render as bottom sheets on mobile (≤480px). Use the shared `.civ-bottom-sheet` utility class for new popup components:
 
-```css
-@media (max-width: 480px) {
-  .my-popup {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    top: auto;
-    width: 100%;
-    margin: 0;
-    border-radius: var(--civ-border-radius-lg) var(--civ-border-radius-lg) 0 0;
-    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
-    max-height: 50vh;
-    overflow-y: auto;
-  }
-}
+```html
+<!-- Add civ-bottom-sheet class to any popup element -->
+<div class="my-dropdown civ-bottom-sheet">...</div>
 ```
 
-Components already following this: `civ-datepicker-dialog`, `civ-combobox-listbox`. Native `<select>` gets OS-level bottom sheet automatically.
+The `.civ-bottom-sheet` class is defined in `components.css` and applies bottom-anchored fixed positioning with rounded top corners on mobile. For components that can't add the class (because they have their own CSS), copy the same pattern.
+
+Components using this: `civ-modal` (via native `<dialog>` + CSS), `civ-action-sheet`, `civ-datepicker-dialog`, `civ-combobox-listbox`. Native `<select>` gets OS-level bottom sheet automatically.
 
 ### Focus Styles
 Use `focus-visible:civ-focus-ring` (not deprecated `focus:civ-outline-*` classes).

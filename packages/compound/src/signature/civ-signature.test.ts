@@ -16,9 +16,9 @@ describe('civ-signature', () => {
 
   it('renders statement text when provided', async () => {
     const el = await fixture<CivSignature>('<civ-signature legend="Sign" statement="I certify this is true."></civ-signature>');
-    const p = el.querySelector('p');
-    expect(p).not.toBeNull();
-    expect(p!.textContent).toBe('I certify this is true.');
+    const statement = el.querySelector('[id*="statement"]');
+    expect(statement).not.toBeNull();
+    expect(statement!.textContent?.trim()).toBe('I certify this is true.');
   });
 
   it('renders name input and checkbox', async () => {
@@ -125,6 +125,96 @@ describe('civ-signature', () => {
       const el = await fixture<CivSignature>('<civ-signature legend="Sign"></civ-signature>') as CivSignature;
       await elementUpdated(el);
       expect(el.checkValidity()).toBe(true);
+    });
+  });
+
+  describe('statement → checkbox a11y link', () => {
+    it('links the certify checkbox to the statement element via aria-describedby', async () => {
+      const el = await fixture<CivSignature>(
+        '<civ-signature legend="Sign" statement="I certify the information is true"></civ-signature>',
+      ) as CivSignature;
+      await elementUpdated(el);
+
+      // Stable id on the rendered statement.
+      const statement = el.querySelector('[id*="statement"]') as HTMLElement;
+      expect(statement).not.toBeNull();
+      expect(statement.textContent).toContain('I certify the information is true');
+
+      // The certify checkbox's inner native input includes that id in its
+      // aria-describedby chain.
+      const checkboxInput = el.querySelectorAll('input[type="checkbox"]')[0] as HTMLInputElement;
+      const describedBy = checkboxInput.getAttribute('aria-describedby') ?? '';
+      expect(describedBy.split(' ')).toContain(statement.id);
+    });
+
+    it('does not add aria-describedby link when no statement is provided', async () => {
+      const el = await fixture<CivSignature>('<civ-signature legend="Sign"></civ-signature>') as CivSignature;
+      await elementUpdated(el);
+
+      expect(el.querySelector('[id*="statement"]')).toBeNull();
+      // The checkbox may still have hint/error IDs in its describedby, but
+      // it shouldn't reference a non-existent statement element.
+    });
+  });
+
+  describe('statement slot (HTML support)', () => {
+    it('renders slotted statement HTML in place of the text prop', async () => {
+      const el = await fixture<CivSignature>(`
+        <civ-signature legend="Sign">
+          <span slot="statement">I certify under <a href="/penalty">penalty of perjury</a> that this is true.</span>
+        </civ-signature>
+      `) as CivSignature;
+      await elementUpdated(el);
+
+      const statement = el.querySelector('[id*="statement"]') as HTMLElement;
+      expect(statement).not.toBeNull();
+      // The <a> tag survives because we use unsafeHTML.
+      const link = statement.querySelector('a');
+      expect(link).not.toBeNull();
+      expect(link!.getAttribute('href')).toBe('/penalty');
+      expect(link!.textContent).toBe('penalty of perjury');
+    });
+
+    it('removes the slotted child from the host so it does not double-render', async () => {
+      const el = await fixture<CivSignature>(`
+        <civ-signature legend="Sign">
+          <span slot="statement">Slotted statement</span>
+        </civ-signature>
+      `) as CivSignature;
+      await elementUpdated(el);
+
+      // Original slot wrapper is gone; the consumer's content lives only
+      // inside the rendered statement container.
+      expect(el.querySelectorAll('[slot="statement"]').length).toBe(0);
+      const statement = el.querySelector('[id*="statement"]');
+      expect(statement).not.toBeNull();
+      expect(statement!.textContent).toContain('Slotted statement');
+    });
+
+    it('slot content takes precedence over the text prop', async () => {
+      const el = await fixture<CivSignature>(`
+        <civ-signature legend="Sign" statement="From prop">
+          <span slot="statement">From slot</span>
+        </civ-signature>
+      `) as CivSignature;
+      await elementUpdated(el);
+
+      const statement = el.querySelector('[id*="statement"]') as HTMLElement;
+      expect(statement.textContent).toContain('From slot');
+      expect(statement.textContent).not.toContain('From prop');
+    });
+
+    it('still links the slotted statement to the certify checkbox', async () => {
+      const el = await fixture<CivSignature>(`
+        <civ-signature legend="Sign">
+          <span slot="statement">Slotted statement with <a href="/x">link</a></span>
+        </civ-signature>
+      `) as CivSignature;
+      await elementUpdated(el);
+
+      const statement = el.querySelector('[id*="statement"]') as HTMLElement;
+      const checkboxInput = el.querySelectorAll('input[type="checkbox"]')[0] as HTMLInputElement;
+      expect(checkboxInput.getAttribute('aria-describedby')?.split(' ')).toContain(statement.id);
     });
   });
 });

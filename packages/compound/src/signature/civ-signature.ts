@@ -1,5 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
+import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { CivFormElement, dispatch, renderLegend, renderHint, renderError, buildDescribedBy, interpolate, t } from '@civui/core';
 import '@civui/inputs';
 import '@civui/controls';
@@ -15,12 +16,16 @@ const EMPTY_SIGNATURE: SignatureValue = { name: '', certified: false };
  * CivUI Signature
  *
  * Statement of truth component for form submission. Renders a certification
- * statement, a full name text input, and a certification checkbox.
+ * statement, a full name text input, and a certification checkbox. The
+ * statement is wired into the certify checkbox via aria-describedby so a
+ * screen-reader user hears the full certification text when the checkbox
+ * receives focus.
+ *
  * Used at the end of a review page before final submission.
  *
  * @element civ-signature
  *
- * @example
+ * @example Plain text statement (default)
  * ```html
  * <civ-signature
  *   legend="Statement of truth"
@@ -28,6 +33,16 @@ const EMPTY_SIGNATURE: SignatureValue = { name: '', certified: false };
  *   statement="I certify that the information I have provided is true and correct."
  *   required
  * ></civ-signature>
+ * ```
+ *
+ * @example Rich statement with links (slot fallback)
+ * ```html
+ * <civ-signature legend="Statement of truth" name="signature" required>
+ *   <span slot="statement">
+ *     I certify under <a href="/penalty">penalty of perjury</a> that the
+ *     information is true and correct.
+ *   </span>
+ * </civ-signature>
  * ```
  *
  * @fires civ-input - On every field change, detail: { value: SignatureValue }
@@ -38,8 +53,14 @@ export class CivSignature extends CivFormElement {
   /** Fieldset legend. */
   @property({ type: String }) legend = '';
 
-  /** Certification statement text displayed above the fields. */
+  /** Certification statement text displayed above the fields. Ignored when a `slot="statement"` child is present. */
   @property({ type: String }) statement = '';
+
+  /** Stable id for the rendered statement element, referenced by the certify checkbox's aria-describedby. */
+  private _statementId = this.generateId('statement');
+
+  /** HTML captured from a `slot="statement"` child in connectedCallback (light DOM doesn't auto-project). */
+  private _slottedStatementHTML: string | null = null;
 
   /** Error for the name field. */
   @property({ type: String, attribute: 'name-error' }) nameError = '';
@@ -65,6 +86,23 @@ export class CivSignature extends CivFormElement {
     return this._signature.name.trim().length > 0 && this._signature.certified;
   }
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    // Light DOM: capture any `slot="statement"` children before Lit's first
+    // render destroys them. Multiple children get joined; their content is
+    // re-rendered via unsafeHTML so consumer-supplied <a> tags survive.
+    const slotted = Array.from(this.children).filter(
+      (child) => child.getAttribute('slot') === 'statement',
+    );
+    if (slotted.length > 0) {
+      // Use innerHTML so the wrapper element (with its slot attribute) is
+      // discarded — only the consumer's content survives into the rendered
+      // statement container.
+      this._slottedStatementHTML = slotted.map((c) => c.innerHTML).join('');
+      for (const child of slotted) child.remove();
+    }
+  }
+
   override firstUpdated(): void {
     super.firstUpdated();
     if (this.value) {
@@ -72,6 +110,11 @@ export class CivSignature extends CivFormElement {
         this._signature = { ...EMPTY_SIGNATURE, ...JSON.parse(this.value) };
       } catch { /* leave empty */ }
     }
+  }
+
+  /** Whether any statement (slot or prop) is present. */
+  private get _hasStatement(): boolean {
+    return !!this._slottedStatementHTML || !!this.statement;
   }
 
   override render() {
@@ -89,8 +132,12 @@ export class CivSignature extends CivFormElement {
         ${renderHint(this._hintId, this.hint, true)}
         ${renderError(this._errorId, this.error, true)}
 
-        ${this.statement ? html`
-          <p class="civ-text-base civ-text-muted civ-mb-4">${this.statement}</p>
+        ${this._hasStatement ? html`
+          <div id="${this._statementId}" class="civ-text-base civ-text-muted civ-mb-4">
+            ${this._slottedStatementHTML
+              ? unsafeHTML(this._slottedStatementHTML)
+              : this.statement}
+          </div>
         ` : nothing}
 
         <civ-text-input
@@ -113,6 +160,7 @@ export class CivSignature extends CivFormElement {
           ?checked="${this._signature.certified}"
           ?disabled="${this.disabled}"
           error="${this.certifyError}"
+          extra-describedby="${this._hasStatement ? this._statementId : nothing}"
           @civ-change="${this._onCertifyChange}"
         ></civ-checkbox>
       </fieldset>

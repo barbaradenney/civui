@@ -11,6 +11,14 @@ import { t } from '../i18n/locale.js';
 export class CivBooleanFormElement extends CivFormElement {
   @property({ type: Boolean, reflect: true }) checked = false;
   @property({ type: String }) description = '';
+  /**
+   * Space-separated list of element IDs to append to this control's
+   * `aria-describedby`. Useful when a sibling element (e.g., a separate
+   * statement-of-truth paragraph above the certification checkbox) already
+   * holds the descriptive text and shouldn't be duplicated into the
+   * component's own description slot.
+   */
+  @property({ type: String, attribute: 'extra-describedby' }) extraDescribedby = '';
 
   protected _defaultChecked = false;
   protected _descriptionId = this.generateId('desc');
@@ -22,6 +30,11 @@ export class CivBooleanFormElement extends CivFormElement {
     if (this.description) ids.push(this._descriptionId);
     if (this.hint) ids.push(this._hintId);
     if (this.error) ids.push(this._errorId);
+    if (this.extraDescribedby) {
+      for (const id of this.extraDescribedby.trim().split(/\s+/)) {
+        if (id) ids.push(id);
+      }
+    }
     return ids.join(' ') || '';
   }
 

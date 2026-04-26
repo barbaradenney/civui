@@ -617,12 +617,17 @@ describe('civ-combobox async loadOptions', () => {
     input.dispatchEvent(new Event('input', { bubbles: true }));
     await flushDebounce(0);
 
-    // Resolve the OLDER call last — its result must be discarded.
+    // Resolve the NEWER call first, then the stale one.
     resolveNew([{ value: 'alp', label: 'Alpha' }]);
     await pendingNew;
+    await elementUpdated(el);
+    await new Promise(r => setTimeout(r, 10));
+
+    // Now resolve the stale response — it should be discarded.
     resolveOld([{ value: 'al', label: 'Stale' }]);
     await pendingOld;
     await elementUpdated(el);
+    await new Promise(r => setTimeout(r, 10));
 
     const labels = Array.from(el.querySelectorAll('.civ-combobox-option')).map((o: any) => o.textContent.trim());
     expect(labels).toEqual(['Alpha']);

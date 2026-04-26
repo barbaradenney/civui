@@ -1,4 +1,5 @@
 import { html, nothing, type TemplateResult } from 'lit';
+import { repeat } from 'lit/directives/repeat.js';
 import { customElement, property, state } from 'lit/decorators.js';
 import { CivFormElement, dispatch, renderLabel, renderHint, renderError, inputClasses, inputWidthClass, clickOutside, t, interpolate, debounce } from '@civui/core';
 import type { InputWidth } from '@civui/core';
@@ -297,7 +298,7 @@ export class CivCombobox extends CivFormElement {
     // Check if any options have groups
     const hasGroups = filtered.some((o) => o.group);
     if (!hasGroups) {
-      return html`${filtered.map((option, i) => this._renderOption(option, i))}`;
+      return html`${repeat(filtered, (o) => o.value, (option, i) => this._renderOption(option, i))}`;
     }
 
     // Group options preserving filtered order

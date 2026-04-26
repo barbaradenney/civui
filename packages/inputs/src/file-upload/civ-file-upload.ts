@@ -227,6 +227,9 @@ export class CivFileUpload extends CivFormElement {
 
   @state() private _files: UploadedFile[] = [];
   @state() private _dragging = false;
+  @state() private _showAllFiles = false;
+
+  private static readonly _FILE_LIST_LIMIT = 20;
 
   /** IDs of initial files the user has removed since hydration. */
   private _removedInitialIds = new Set<string>();
@@ -343,7 +346,7 @@ export class CivFileUpload extends CivFormElement {
         ${this._files.length > 0
           ? html`
               <ul class="civ-list-none civ-p-0 civ-mt-2 civ-space-y-1" aria-label="${this.filesListLabel || t('fileUploadFilesListLabel')}">
-                ${this._files.map(
+                ${(this._showAllFiles ? this._files : this._files.slice(0, CivFileUpload._FILE_LIST_LIMIT)).map(
                   (file, index) => html`
                     <li class="civ-file-item ${file.status === 'success' ? 'civ-file-item--success' : ''} ${file.status === 'error' ? 'civ-file-item--error' : ''}">
                       <div class="civ-flex-1">
@@ -408,6 +411,13 @@ export class CivFileUpload extends CivFormElement {
                   `,
                 )}
               </ul>
+              ${!this._showAllFiles && this._files.length > CivFileUpload._FILE_LIST_LIMIT ? html`
+                <button
+                  type="button"
+                  class="civ-btn civ-btn--tertiary civ-mt-2"
+                  @click="${() => { this._showAllFiles = true; }}"
+                >Show all ${this._files.length} files</button>
+              ` : nothing}
             `
           : nothing}
       </div>

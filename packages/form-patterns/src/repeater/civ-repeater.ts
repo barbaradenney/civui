@@ -197,7 +197,7 @@ export class CivRepeater extends CivBaseElement {
     }
     const container = this.querySelector('[data-civ-repeater-rows]');
     if (!container) return;
-    const rows = container.querySelectorAll(':scope > [data-civ-repeater-row]');
+    const rows = this._getRows();
     if (index < 0 || index >= rows.length) return;
     if (this._rowCount <= this.min) {
       announce(
@@ -376,11 +376,15 @@ export class CivRepeater extends CivBaseElement {
     container.appendChild(row);
   }
 
-  private _getRowIndex(row: Element): number {
+  /** Get all row elements from the container. */
+  private _getRows(): NodeListOf<Element> {
     const container = this.querySelector('[data-civ-repeater-rows]');
-    if (!container) return -1;
-    const rows = Array.from(container.querySelectorAll(':scope > [data-civ-repeater-row]'));
-    return rows.indexOf(row);
+    if (!container) return document.querySelectorAll('.civ-never-match');
+    return container.querySelectorAll(':scope > [data-civ-repeater-row]');
+  }
+
+  private _getRowIndex(row: Element): number {
+    return Array.from(this._getRows()).indexOf(row);
   }
 
   private _indexRowFields(row: Element, index: number): void {

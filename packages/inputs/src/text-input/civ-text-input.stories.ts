@@ -300,6 +300,48 @@ export const ValidateZIP: Story = {
   `,
 };
 
+// ── Inline icons ──────────────────────────────────────────────
+
+export const LeadingIcon: Story = {
+  name: 'Inline: Leading icon',
+  render: () => html`
+    <civ-text-input
+      label="Search"
+      name="search"
+      type="search"
+      leading-icon="search"
+      placeholder="Find a benefit"
+    ></civ-text-input>
+  `,
+};
+
+export const TrailingIcon: Story = {
+  name: 'Inline: Trailing icon',
+  render: () => html`
+    <civ-text-input
+      label="Username"
+      name="username"
+      trailing-icon="info"
+      trailing-icon-label="More info"
+      hint="3-20 characters, letters and numbers only"
+    ></civ-text-input>
+  `,
+};
+
+export const LeadingAndTrailingIcons: Story = {
+  name: 'Inline: Leading + trailing icons',
+  render: () => html`
+    <civ-text-input
+      label="Search filings"
+      name="filing-search"
+      type="search"
+      leading-icon="search"
+      trailing-icon="info"
+      trailing-icon-label="Search tips"
+    ></civ-text-input>
+  `,
+};
+
 // ── Usage Example ─────────────────────────────────────────────
 
 export const GovernmentContactForm: Story = {

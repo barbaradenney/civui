@@ -699,3 +699,105 @@ describe('text-input character counter', () => {
     expect(counter).toBeNull();
   });
 });
+
+describe('text-input inline icons', () => {
+  afterEach(cleanupFixtures);
+
+  it('renders a leading icon overlay when leading-icon is set', async () => {
+    const el = await fixture('<civ-text-input label="Search" leading-icon="search"></civ-text-input>');
+    const wrap = el.querySelector('.civ-input-icon-wrap');
+    const leading = el.querySelector('.civ-input-icon--leading');
+    expect(wrap).not.toBeNull();
+    expect(leading).not.toBeNull();
+    expect(leading!.querySelector('civ-icon')!.getAttribute('name')).toBe('search');
+  });
+
+  it('renders a trailing icon overlay when trailing-icon is set', async () => {
+    const el = await fixture('<civ-text-input label="Lookup" trailing-icon="info"></civ-text-input>');
+    const trailing = el.querySelector('.civ-input-icon--trailing');
+    expect(trailing).not.toBeNull();
+    expect(trailing!.querySelector('civ-icon')!.getAttribute('name')).toBe('info');
+  });
+
+  it('adds padding-class to the input when a leading icon is shown', async () => {
+    const el = await fixture('<civ-text-input label="Search" leading-icon="search"></civ-text-input>');
+    const input = el.querySelector('input')!;
+    expect(input.className).toContain('civ-input-with-leading-icon');
+  });
+
+  it('adds padding-class to the input when a trailing icon is shown', async () => {
+    const el = await fixture('<civ-text-input label="Search" trailing-icon="info"></civ-text-input>');
+    const input = el.querySelector('input')!;
+    expect(input.className).toContain('civ-input-with-trailing-icon');
+  });
+
+  it('icons are decorative by default (aria-hidden via civ-icon)', async () => {
+    const el = await fixture('<civ-text-input label="Search" leading-icon="search"></civ-text-input>');
+    const icon = el.querySelector('.civ-input-icon--leading civ-icon')!;
+    // civ-icon renders aria-hidden="true" on its inner span when no label
+    const inner = icon.querySelector('[aria-hidden]');
+    expect(inner?.getAttribute('aria-hidden')).toBe('true');
+  });
+
+  it('labeled icons are exposed to assistive tech as role="img"', async () => {
+    const el = await fixture(
+      '<civ-text-input label="Search" leading-icon="search" leading-icon-label="Search"></civ-text-input>'
+    );
+    const icon = el.querySelector('.civ-input-icon--leading civ-icon')!;
+    const inner = icon.querySelector('[role="img"]');
+    expect(inner).not.toBeNull();
+    expect(inner!.getAttribute('aria-label')).toBe('Search');
+  });
+
+  it('drops the leading icon when prefix is set (prefix wins)', async () => {
+    const el = await fixture(
+      '<civ-text-input label="Handle" prefix="@" leading-icon="search"></civ-text-input>'
+    );
+    expect(el.querySelector('.civ-input-prefix')).not.toBeNull();
+    expect(el.querySelector('.civ-input-icon--leading')).toBeNull();
+    const input = el.querySelector('input')!;
+    expect(input.className).not.toContain('civ-input-with-leading-icon');
+  });
+
+  it('drops the trailing icon when suffix is set (suffix wins)', async () => {
+    const el = await fixture(
+      '<civ-text-input label="Amount" suffix="USD" trailing-icon="info"></civ-text-input>'
+    );
+    expect(el.querySelector('.civ-input-suffix')).not.toBeNull();
+    expect(el.querySelector('.civ-input-icon--trailing')).toBeNull();
+  });
+
+  it('hides the trailing icon when the clear button is showing', async () => {
+    const el = await fixture<CivTextInput>(
+      '<civ-text-input label="Search" clearable trailing-icon="info" value="hello"></civ-text-input>'
+    );
+    await elementUpdated(el);
+    expect(el.querySelector('.civ-input-clear')).not.toBeNull();
+    expect(el.querySelector('.civ-input-icon--trailing')).toBeNull();
+  });
+
+  it('shows the trailing icon when clearable is set but the value is empty', async () => {
+    const el = await fixture(
+      '<civ-text-input label="Search" clearable trailing-icon="info"></civ-text-input>'
+    );
+    expect(el.querySelector('.civ-input-clear')).toBeNull();
+    expect(el.querySelector('.civ-input-icon--trailing')).not.toBeNull();
+  });
+
+  it('renders neither wrapper when no icons or prefix/suffix/clear are set', async () => {
+    const el = await fixture('<civ-text-input label="Plain"></civ-text-input>');
+    expect(el.querySelector('.civ-input-icon-wrap')).toBeNull();
+    expect(el.querySelector('.civ-flex')).toBeNull();
+  });
+
+  it('supports both leading and trailing icons together', async () => {
+    const el = await fixture(
+      '<civ-text-input label="Search" leading-icon="search" trailing-icon="info"></civ-text-input>'
+    );
+    expect(el.querySelector('.civ-input-icon--leading')).not.toBeNull();
+    expect(el.querySelector('.civ-input-icon--trailing')).not.toBeNull();
+    const input = el.querySelector('input')!;
+    expect(input.className).toContain('civ-input-with-leading-icon');
+    expect(input.className).toContain('civ-input-with-trailing-icon');
+  });
+});

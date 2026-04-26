@@ -88,6 +88,22 @@ When `maxlength` is set, the input renders a "characters remaining" counter belo
 
 <StoryEmbed id="forms-inputs-text-input--character-counter" />
 
+### Inline: Leading icon
+
+A decorative icon overlays the input on the leading edge. The input gains inline-start padding to make room.
+
+<StoryEmbed id="forms-inputs-text-input--leading-icon" />
+
+### Inline: Trailing icon
+
+When `trailing-icon-label` is set, the icon is exposed to assistive tech as `role="img"`. Without a label, the icon is decorative and hidden from screen readers.
+
+<StoryEmbed id="forms-inputs-text-input--trailing-icon" />
+
+### Inline: Leading + trailing icons
+
+<StoryEmbed id="forms-inputs-text-input--leading-and-trailing-icons" />
+
 ### Government Contact Form
 
 <StoryEmbed id="forms-inputs-text-input--government-contact-form" />
@@ -117,6 +133,10 @@ All form components share these props: `label`, `name`, `value`, `hint`, `error`
 | `prefix` | `string` | `''` | Prefix text rendered before the input (e.g., `'$'`) |
 | `suffix` | `string` | `''` | Suffix text rendered after the input |
 | `clearable` | `boolean` | `false` | Show a clear button when the field has a value |
+| `leading-icon` | `string` | `''` | civ-icon name rendered as a decorative overlay on the leading edge. Ignored when `prefix` is set. |
+| `leading-icon-label` | `string` | `''` | Accessible label for the leading icon. Empty = decorative (`aria-hidden`). |
+| `trailing-icon` | `string` | `''` | civ-icon name rendered on the trailing edge. Ignored when `suffix` is set or the clear button is showing. |
+| `trailing-icon-label` | `string` | `''` | Accessible label for the trailing icon. Empty = decorative. |
 
 ## Mask Presets
 

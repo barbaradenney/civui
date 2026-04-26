@@ -13,6 +13,7 @@ across all 21 components.
 ### Added
 
 - **`civ-text-input`** — Character counter when `maxlength` is set (visual + 1s-debounced `aria-live` polite announcement). Suppressed when a mask is active.
+- **`civ-text-input`** — `leading-icon` / `trailing-icon` attributes (decorative civ-icon overlay inside the input). Optional `leading-icon-label` / `trailing-icon-label` exposes the icon as `role="img"` for assistive tech. Prefix/suffix and the clear button take precedence on the same edge.
 - **`civ-textarea`** — `minlength` prop (was missing) and declarative `validate="length"` that runs on blur against `minlength` / `maxlength`.
 - **`civ-select`** — Slot fallback for declarative `<option>` and `<optgroup>` children. New `width` prop (`default | 2xs | xs | sm | md | lg | xl | 2xl`).
 - **`civ-combobox`** — Always-visible decorative chevron toggle (matches native `<select>` affordance). New `width` prop matching select.

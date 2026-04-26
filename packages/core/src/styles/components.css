@@ -191,6 +191,22 @@
   }
   .civ-input-clear:hover { color: var(--civ-color-base-darkest); }
 
+  .civ-input-icon-wrap {
+    @apply civ-relative civ-flex civ-items-stretch;
+  }
+
+  .civ-input-icon {
+    @apply civ-absolute civ-flex civ-items-center civ-justify-center civ-pointer-events-none civ-px-2;
+    top: 0;
+    bottom: 0;
+    color: var(--civ-color-base-dark);
+  }
+  .civ-input-icon--leading { inset-inline-start: 0; }
+  .civ-input-icon--trailing { inset-inline-end: 0; }
+
+  .civ-input-with-leading-icon { padding-inline-start: 2.25rem; }
+  .civ-input-with-trailing-icon { padding-inline-end: 2.25rem; }
+
   .civ-select-field {
     appearance: none;
     -webkit-appearance: none;

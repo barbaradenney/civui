@@ -72,7 +72,12 @@ export class CivIcon extends CivBaseElement {
 
   override render() {
     const def = this._getIconDef();
-    if (!def) return nothing;
+    if (!def) {
+      if (this.name) {
+        console.warn(`[civ-icon] Unknown icon name: "${this.name}". Check icon-library.ts for available names.`);
+      }
+      return nothing;
+    }
 
     const isDecorative = !this.label;
     const accessibleLabel = this.label || def.label;

@@ -170,7 +170,7 @@ export class CivFormElement extends CivBaseElement {
   protected _updateValidity(): void {
     const anchor = this.querySelector('input, select, textarea') as HTMLElement | null;
 
-    if (this.required && !this.value) {
+    if (this.required && !this.value && !this.disabled && !this.readonly) {
       this._setValidity(
         { valueMissing: true },
         this.error || interpolate(this.requiredMessage || t('fieldRequired'), { label: this.label || t('fieldFallbackLabel') }),

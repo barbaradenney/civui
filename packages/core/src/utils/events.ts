@@ -25,5 +25,5 @@ export function dispatch<T>(element: HTMLElement, name: string, detail?: T, canc
 export function forwardTileClick(host: HTMLElement, e: Event): void {
   if (e.target !== e.currentTarget) return;
   const input = host.querySelector('input');
-  if (input && !input.disabled) input.click();
+  if (input && !input.disabled && !input.readOnly) input.click();
 }

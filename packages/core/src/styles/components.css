@@ -1649,10 +1649,17 @@
     overflow-y: auto;
     border: none;
     @apply civ-bg-white civ-rounded civ-shadow-lg civ-p-6;
+    color: var(--civ-color-base-darkest);
   }
 
   dialog.civ-modal::backdrop {
     background: rgba(0, 0, 0, 0.5);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    dialog.civ-modal::backdrop {
+      background: rgba(0, 0, 0, 0.7);
+    }
   }
 
   .civ-modal__header {
@@ -2071,7 +2078,7 @@
 
   /* ── Alert: Heading color inherits from variant in primary ─── */
 
-  .civ-alert--style-primary .civ-alert__dismiss {
+  .civ-alert--style-primary .civ-close-btn {
     color: var(--civ-color-white-DEFAULT);
   }
 
@@ -2084,11 +2091,12 @@
            civ-bg-transparent civ-border-0 civ-p-1 civ-cursor-pointer civ-rounded;
     min-width: 44px;
     min-height: 44px;
-    color: inherit;
+    color: var(--civ-color-base-dark);
   }
 
   .civ-close-btn:hover {
     @apply civ-bg-base-lightest;
+    color: var(--civ-color-base-darkest);
   }
 
   /* Legacy alias — alert still references this class */

@@ -5,6 +5,9 @@ const FOCUSABLE_SELECTOR = [
   'select:not([disabled])',
   'textarea:not([disabled])',
   '[tabindex]:not([tabindex="-1"])',
+  '[role="button"]:not([disabled])',
+  '[role="link"]',
+  '[role="menuitem"]',
 ].join(', ');
 
 /**

@@ -79,6 +79,10 @@ export const icons: Record<string, IconDef> = {
   print: { label: 'Print', ios: 'printer', android: 'print' },
   user: { label: 'User account', ios: 'person', android: 'person' },
   mail: { label: 'Email', ios: 'envelope', android: 'mail' },
+  eye: { label: 'Show', ios: 'eye', android: 'visibility' },
+  'eye-off': { label: 'Hide', ios: 'eye.slash', android: 'visibility_off' },
+  phone: { label: 'Phone', ios: 'phone', android: 'phone' },
+  location: { label: 'Location', ios: 'location', android: 'location_on' },
 };
 
 /**

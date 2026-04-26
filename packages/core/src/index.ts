@@ -6,7 +6,7 @@ export { LightDomSlotMixin, LightDomTextMixin } from './base/light-dom-mixins.js
 export type { SlotConfig } from './base/light-dom-mixins.js';
 
 // A11y utilities
-export { announce, cleanupLiveRegions } from './a11y/live-region.js';
+export { announce, cancelAnnouncements, cleanupLiveRegions } from './a11y/live-region.js';
 export { getFocusableElements, trapFocus, focusFirst } from './a11y/focus-manager.js';
 export { createKeyboardHandler, resolveGroupNavIndex, type KeyBinding } from './a11y/keyboard-handler.js';
 

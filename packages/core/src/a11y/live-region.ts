@@ -113,6 +113,25 @@ export function announce(message: string, priority: 'polite' | 'assertive' = 'po
 }
 
 /**
+ * Cancel all pending announcements. Useful when navigating away
+ * from a page or dismissing a component that queued announcements.
+ */
+export function cancelAnnouncements(priority?: 'polite' | 'assertive'): void {
+  if (!priority || priority === 'polite') {
+    politeQueue = [];
+    if (politeTimer) { clearTimeout(politeTimer); politeTimer = null; }
+    if (politeRafId != null) { cancelAnimationFrame(politeRafId); politeRafId = null; }
+    if (politeRegion) politeRegion.textContent = '';
+  }
+  if (!priority || priority === 'assertive') {
+    assertiveQueue = [];
+    if (assertiveTimer) { clearTimeout(assertiveTimer); assertiveTimer = null; }
+    if (assertiveRafId != null) { cancelAnimationFrame(assertiveRafId); assertiveRafId = null; }
+    if (assertiveRegion) assertiveRegion.textContent = '';
+  }
+}
+
+/**
  * Clean up live region state. Call this between tests to prevent
  * state leakage. Clears queues, timers, and removes DOM elements.
  */

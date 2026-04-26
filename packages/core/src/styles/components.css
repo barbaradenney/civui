@@ -1090,6 +1090,82 @@
     transform: translateX(-50%);
   }
 
+  /* Eye (visibility toggle — circle with arc) */
+  .civ-icon--eye::before {
+    content: '';
+    position: absolute;
+    width: 0.7em;
+    height: 0.4em;
+    border: 2px solid currentColor;
+    border-radius: 50%;
+  }
+  .civ-icon--eye::after {
+    content: '';
+    position: absolute;
+    width: 0.2em;
+    height: 0.2em;
+    background: currentColor;
+    border-radius: 50%;
+  }
+
+  /* Eye-off (visibility off — eye with diagonal slash) */
+  .civ-icon--eye-off::before {
+    content: '';
+    position: absolute;
+    width: 0.7em;
+    height: 0.4em;
+    border: 2px solid currentColor;
+    border-radius: 50%;
+    opacity: 0.5;
+  }
+  .civ-icon--eye-off::after {
+    content: '';
+    position: absolute;
+    width: 0.85em;
+    height: 2px;
+    background: currentColor;
+    transform: rotate(-45deg);
+  }
+
+  /* Phone (handset) */
+  .civ-icon--phone::before {
+    content: '';
+    position: absolute;
+    width: 0.35em;
+    height: 0.7em;
+    border: 2px solid currentColor;
+    border-radius: 0.15em;
+  }
+  .civ-icon--phone::after {
+    content: '';
+    position: absolute;
+    width: 0.15em;
+    height: 2px;
+    background: currentColor;
+    bottom: 0.12em;
+  }
+
+  /* Location (map pin — circle on top of triangle) */
+  .civ-icon--location::before {
+    content: '';
+    position: absolute;
+    width: 0.5em;
+    height: 0.5em;
+    border: 2px solid currentColor;
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    top: 0.05em;
+  }
+  .civ-icon--location::after {
+    content: '';
+    position: absolute;
+    width: 0.16em;
+    height: 0.16em;
+    background: currentColor;
+    border-radius: 50%;
+    top: 0.2em;
+  }
+
   /* ── Checkbox / Radio ───────────────────────────────────────── */
 
   .civ-check-input {

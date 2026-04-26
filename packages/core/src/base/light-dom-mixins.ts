@@ -60,6 +60,13 @@ export function LightDomSlotMixin<T extends Constructor<LitElement>>(superClass:
       super.connectedCallback();
     }
 
+    override disconnectedCallback(): void {
+      super.disconnectedCallback();
+      // Reset so re-attached components re-capture their children
+      this._captured = false;
+      this._slottedChildren.clear();
+    }
+
     /**
      * Capture and remove children from DOM before Lit renders.
      * Sorts children into slot buckets based on data-* attributes.

@@ -77,6 +77,10 @@ export class CivDatePicker extends CivFormElement {
   @property({ type: String, attribute: 'dialog-opened-message' }) dialogOpenedMessage = '';
   @property({ type: String, attribute: 'date-selected-message' }) dateSelectedMessage = '';
   @property({ type: String, attribute: 'today-label' }) todayLabel = '';
+  /** Override the dialog footer "Today" button label. */
+  @property({ type: String, attribute: 'today-button-label' }) todayButtonLabel = '';
+  /** Hide the dialog footer "Today" button (e.g., for date-of-birth pickers). */
+  @property({ type: Boolean, attribute: 'hide-today-button' }) hideTodayButton = false;
   @property({ type: String, attribute: 'invalid-format-message' }) invalidFormatMessage = '';
   @property({ type: String, attribute: 'date-range-message' }) dateRangeMessage = '';
   @property({ type: String, attribute: 'min-date-message' }) minDateMessage = '';
@@ -209,6 +213,18 @@ export class CivDatePicker extends CivFormElement {
           this._selectDate(this._focusedDate);
         }
       },
+    },
+    {
+      // 'T' jumps focus to today without selecting (matching APG examples).
+      // Selection still requires Enter/Space.
+      key: 't',
+      handler: () => this._jumpToToday(),
+    },
+    {
+      // Same shortcut when Shift is held (caps lock or intentional shift).
+      key: 'T',
+      shiftKey: true,
+      handler: () => this._jumpToToday(),
     },
   ]);
 
@@ -381,6 +397,16 @@ export class CivDatePicker extends CivFormElement {
             )}
           </tbody>
         </table>
+        ${this.hideTodayButton ? nothing : html`
+          <div class="civ-datepicker-footer">
+            <button
+              type="button"
+              class="civ-datepicker-today-btn focus-visible:civ-focus-ring"
+              ?disabled="${!this._isTodayAvailable()}"
+              @click="${this._onTodayClick}"
+            >${this.todayButtonLabel || t('datePickerTodayButton')}</button>
+          </div>
+        `}
       </div>
     `;
   }
@@ -474,6 +500,35 @@ export class CivDatePicker extends CivFormElement {
     this.updateFormValue('');
     dispatch(this, 'civ-input', { value: '' });
     dispatch(this, 'civ-change', { value: '' });
+  }
+
+  /** Today, with the time component zeroed for stable equality checks. */
+  private _todayDate(): Date {
+    const now = new Date();
+    return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  }
+
+  /** Whether today falls within the configured min/max range. */
+  private _isTodayAvailable(): boolean {
+    return !this._isDateDisabled(this._todayDate());
+  }
+
+  /**
+   * Move keyboard focus to today's cell without selecting it. Used by the
+   * 'T' shortcut. Selection still requires Enter/Space (matching APG).
+   */
+  private _jumpToToday(): void {
+    if (!this._isTodayAvailable()) return;
+    this._moveFocus(this._todayDate());
+  }
+
+  /**
+   * Select today and close the dialog. Bound to the footer "Today" button
+   * — click is treated like clicking today's cell directly.
+   */
+  private _onTodayClick(): void {
+    if (!this._isTodayAvailable()) return;
+    this._selectDate(this._todayDate());
   }
 
   private _onTextInput(e: Event): void {

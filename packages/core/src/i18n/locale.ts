@@ -67,6 +67,7 @@ export interface CivLocaleStrings {
   datePickerDialogOpenedMessage: string;
   datePickerDateSelectedMessage: string;
   datePickerTodayLabel: string;
+  datePickerTodayButton: string; // "Today" button in dialog footer
   datePickerInvalidFormatMessage: string;
   datePickerDateRangeMessage: string; // "Date must be between {min} and {max}"
   datePickerMinDateMessage: string; // "Date must be on or after {min}"
@@ -379,6 +380,7 @@ const defaultStrings: CivLocaleStrings = {
   datePickerDialogOpenedMessage: 'Calendar dialog opened',
   datePickerDateSelectedMessage: 'Selected {date}',
   datePickerTodayLabel: 'today',
+  datePickerTodayButton: 'Today',
   datePickerInvalidFormatMessage: 'Invalid date format',
   datePickerDateRangeMessage: 'Date must be between {min} and {max}',
   datePickerMinDateMessage: 'Date must be on or after {min}',

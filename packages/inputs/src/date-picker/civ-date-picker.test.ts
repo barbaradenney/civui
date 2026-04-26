@@ -793,6 +793,108 @@ describe('civ-date-picker', () => {
       expect(detail.action).toBe('change');
     });
   });
+
+  describe('Today button', () => {
+    afterEach(cleanupFixtures);
+
+    it('renders a Today button in the dialog footer when open', async () => {
+      const el = await fixture('<civ-date-picker label="When"></civ-date-picker>') as any;
+      el._open = true;
+      await elementUpdated(el);
+
+      const btn = el.querySelector('.civ-datepicker-today-btn') as HTMLButtonElement | null;
+      expect(btn).not.toBeNull();
+      expect(btn!.textContent?.trim()).toBe('Today');
+    });
+
+    it('hides the Today button when hide-today-button is set', async () => {
+      const el = await fixture('<civ-date-picker label="DOB" hide-today-button></civ-date-picker>') as any;
+      el._open = true;
+      await elementUpdated(el);
+
+      expect(el.querySelector('.civ-datepicker-today-btn')).toBeNull();
+    });
+
+    it('selects today and closes the dialog on click', async () => {
+      const el = await fixture('<civ-date-picker label="When"></civ-date-picker>') as any;
+      el._open = true;
+      await elementUpdated(el);
+
+      let civChange: any = null;
+      el.addEventListener('civ-change', ((e: CustomEvent) => { civChange = e.detail; }) as EventListener);
+
+      const btn = el.querySelector('.civ-datepicker-today-btn') as HTMLButtonElement;
+      btn.click();
+      await elementUpdated(el);
+
+      const today = new Date();
+      const expected = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+
+      expect(el.value).toBe(expected);
+      expect(civChange?.value).toBe(expected);
+      expect(el._open).toBe(false);
+    });
+
+    it('disables the Today button when today is outside min/max', async () => {
+      // min set to a future date so today is below the range
+      const future = new Date();
+      future.setFullYear(future.getFullYear() + 1);
+      const minIso = future.toISOString().slice(0, 10);
+      const el = await fixture(`<civ-date-picker label="When" min="${minIso}"></civ-date-picker>`) as any;
+      el._open = true;
+      await elementUpdated(el);
+
+      const btn = el.querySelector('.civ-datepicker-today-btn') as HTMLButtonElement;
+      expect(btn.disabled).toBe(true);
+
+      btn.click();
+      await elementUpdated(el);
+      expect(el.value).toBe('');
+      expect(el._open).toBe(true);
+    });
+
+    it('jumps focus to today on T key without selecting', async () => {
+      const el = await fixture('<civ-date-picker label="When"></civ-date-picker>') as any;
+      el._open = true;
+      // Start the calendar in a different month so jumping changes the view.
+      el._displayMonth = (new Date().getMonth() + 6) % 12;
+      el._focusedDate = new Date(el._displayYear, el._displayMonth, 1);
+      await elementUpdated(el);
+
+      sendKeyToDialog(el, 't');
+      await elementUpdated(el);
+
+      const today = new Date();
+      expect(el._focusedDate.getDate()).toBe(today.getDate());
+      expect(el._focusedDate.getMonth()).toBe(today.getMonth());
+      // T does NOT select — selection still requires Enter/Space.
+      expect(el.value).toBe('');
+      expect(el._open).toBe(true);
+    });
+
+    it('uppercase T also jumps to today', async () => {
+      const el = await fixture('<civ-date-picker label="When"></civ-date-picker>') as any;
+      el._open = true;
+      el._displayMonth = (new Date().getMonth() + 3) % 12;
+      el._focusedDate = new Date(el._displayYear, el._displayMonth, 1);
+      await elementUpdated(el);
+
+      sendKeyToDialog(el, 'T', { shiftKey: true });
+      await elementUpdated(el);
+
+      const today = new Date();
+      expect(el._focusedDate.getDate()).toBe(today.getDate());
+    });
+
+    it('honors a custom today-button-label', async () => {
+      const el = await fixture('<civ-date-picker label="When" today-button-label="Hoy"></civ-date-picker>') as any;
+      el._open = true;
+      await elementUpdated(el);
+
+      const btn = el.querySelector('.civ-datepicker-today-btn') as HTMLButtonElement;
+      expect(btn.textContent?.trim()).toBe('Hoy');
+    });
+  });
 });
 
 // Helper for keyboard events on dialog

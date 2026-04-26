@@ -8,9 +8,24 @@ import '@civui/controls';
 export interface SignatureValue {
   name: string;
   certified: boolean;
+  /**
+   * Optional ISO 8601 timestamp captured the first time the user
+   * interactively certifies (checks the certify box). Empty string when
+   * the signature isn't yet certified, or when state was set
+   * programmatically without an explicit timestamp. Treat as a
+   * user-claimed signing time — server-recorded timestamps remain
+   * authoritative.
+   */
+  signedAt?: string;
 }
 
-const EMPTY_SIGNATURE: SignatureValue = { name: '', certified: false };
+interface InternalSignature {
+  name: string;
+  certified: boolean;
+  signedAt: string;
+}
+
+const EMPTY_SIGNATURE: InternalSignature = { name: '', certified: false, signedAt: '' };
 
 /**
  * CivUI Signature
@@ -68,16 +83,16 @@ export class CivSignature extends CivFormElement {
   /** Error for the certification checkbox. */
   @property({ type: String, attribute: 'certify-error' }) certifyError = '';
 
-  @state() private _signature: SignatureValue = { ...EMPTY_SIGNATURE };
+  @state() private _signature: InternalSignature = { ...EMPTY_SIGNATURE };
 
   /** Get the current signature value. */
   get signatureValue(): SignatureValue {
     return { ...this._signature };
   }
 
-  /** Set the signature value. */
+  /** Set the signature value. Missing fields fall back to the empty defaults. */
   set signatureValue(val: SignatureValue) {
-    this._signature = { ...val };
+    this._signature = { ...EMPTY_SIGNATURE, ...val, signedAt: val.signedAt ?? '' };
     this.value = JSON.stringify(this._signature);
   }
 
@@ -183,10 +198,28 @@ export class CivSignature extends CivFormElement {
 
   private _onCertifyChange(e: CustomEvent<{ checked: boolean }>): void {
     e.stopPropagation();
-    this._signature = { ...this._signature, certified: e.detail.checked };
+    // Stamp signedAt the moment the user certifies; clear it when they
+    // uncheck so we never report a stale time. Re-checking captures a
+    // fresh timestamp.
+    const signedAt = e.detail.checked ? new Date().toISOString() : '';
+    this._signature = {
+      ...this._signature,
+      certified: e.detail.checked,
+      signedAt,
+    };
     this.value = JSON.stringify(this._signature);
     dispatch(this, 'civ-input', { value: { ...this._signature } });
     dispatch(this, 'civ-change', { value: { ...this._signature } });
+  }
+
+  /**
+   * The captured signing time as an ISO 8601 string, or empty string when
+   * the signature isn't certified. Convenience accessor — the same value
+   * is in `signatureValue.signedAt` and the submitted FormData under
+   * `${name}.signedAt`.
+   */
+  get signedAt(): string {
+    return this._signature.signedAt;
   }
 
   protected override _syncFormValue(): void {
@@ -194,6 +227,9 @@ export class CivSignature extends CivFormElement {
     const prefix = this.name || 'signature';
     fd.append(`${prefix}.name`, this._signature.name);
     fd.append(`${prefix}.certified`, this._signature.certified ? 'true' : 'false');
+    if (this._signature.signedAt) {
+      fd.append(`${prefix}.signedAt`, this._signature.signedAt);
+    }
     this.updateFormValue(fd);
   }
 

@@ -217,4 +217,114 @@ describe('civ-signature', () => {
       expect(checkboxInput.getAttribute('aria-describedby')?.split(' ')).toContain(statement.id);
     });
   });
+
+  describe('signedAt timestamp', () => {
+    it('starts empty before the user certifies', async () => {
+      const el = await fixture<CivSignature>('<civ-signature legend="Sign"></civ-signature>') as CivSignature;
+      await elementUpdated(el);
+      expect(el.signedAt).toBe('');
+      expect(el.signatureValue.signedAt).toBe('');
+    });
+
+    it('stamps an ISO 8601 timestamp when the user checks certify', async () => {
+      const el = await fixture<CivSignature>('<civ-signature legend="Sign"></civ-signature>') as CivSignature;
+      await elementUpdated(el);
+
+      const checkbox = el.querySelectorAll('input[type="checkbox"]')[0] as HTMLInputElement;
+      const before = Date.now();
+      checkbox.checked = true;
+      checkbox.dispatchEvent(new Event('change', { bubbles: true }));
+      await elementUpdated(el);
+      const after = Date.now();
+
+      expect(el.signedAt).not.toBe('');
+      // ISO 8601 format check
+      expect(el.signedAt).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/);
+      const stamped = new Date(el.signedAt).getTime();
+      expect(stamped).toBeGreaterThanOrEqual(before);
+      expect(stamped).toBeLessThanOrEqual(after);
+    });
+
+    it('clears the timestamp when the user unchecks certify', async () => {
+      const el = await fixture<CivSignature>('<civ-signature legend="Sign"></civ-signature>') as CivSignature;
+      await elementUpdated(el);
+      const checkbox = el.querySelectorAll('input[type="checkbox"]')[0] as HTMLInputElement;
+
+      checkbox.checked = true;
+      checkbox.dispatchEvent(new Event('change', { bubbles: true }));
+      await elementUpdated(el);
+      expect(el.signedAt).not.toBe('');
+
+      checkbox.checked = false;
+      checkbox.dispatchEvent(new Event('change', { bubbles: true }));
+      await elementUpdated(el);
+      expect(el.signedAt).toBe('');
+    });
+
+    it('captures a fresh timestamp when re-checking after uncheck', async () => {
+      const el = await fixture<CivSignature>('<civ-signature legend="Sign"></civ-signature>') as CivSignature;
+      await elementUpdated(el);
+      const checkbox = el.querySelectorAll('input[type="checkbox"]')[0] as HTMLInputElement;
+
+      checkbox.checked = true;
+      checkbox.dispatchEvent(new Event('change', { bubbles: true }));
+      await elementUpdated(el);
+      const first = el.signedAt;
+
+      checkbox.checked = false;
+      checkbox.dispatchEvent(new Event('change', { bubbles: true }));
+      await elementUpdated(el);
+
+      // Wait at least 2ms so the next timestamp is guaranteed different.
+      await new Promise((r) => setTimeout(r, 2));
+
+      checkbox.checked = true;
+      checkbox.dispatchEvent(new Event('change', { bubbles: true }));
+      await elementUpdated(el);
+      const second = el.signedAt;
+
+      expect(second).not.toBe('');
+      expect(second).not.toBe(first);
+      expect(new Date(second).getTime()).toBeGreaterThan(new Date(first).getTime());
+    });
+
+    it('preserves a programmatically-supplied signedAt (draft restore)', async () => {
+      const el = await fixture<CivSignature>('<civ-signature legend="Sign"></civ-signature>') as CivSignature;
+      const restored = '2026-04-01T12:34:56.000Z';
+      el.signatureValue = { name: 'Ada', certified: true, signedAt: restored };
+      await elementUpdated(el);
+      expect(el.signedAt).toBe(restored);
+    });
+
+    it('treats a programmatic set without signedAt as unsigned-time', async () => {
+      const el = await fixture<CivSignature>('<civ-signature legend="Sign"></civ-signature>') as CivSignature;
+      el.signatureValue = { name: 'Ada', certified: true };
+      await elementUpdated(el);
+      // Programmatic set didn't supply signedAt — we don't fabricate one.
+      expect(el.signedAt).toBe('');
+    });
+
+    it('clears signedAt on form reset', async () => {
+      const el = await fixture<CivSignature>('<civ-signature legend="Sign"></civ-signature>') as CivSignature;
+      await elementUpdated(el);
+      const checkbox = el.querySelectorAll('input[type="checkbox"]')[0] as HTMLInputElement;
+      checkbox.checked = true;
+      checkbox.dispatchEvent(new Event('change', { bubbles: true }));
+      await elementUpdated(el);
+      expect(el.signedAt).not.toBe('');
+
+      el.formResetCallback();
+      await elementUpdated(el);
+      expect(el.signedAt).toBe('');
+    });
+
+    it('parses an initial value="" JSON string with signedAt restored', async () => {
+      const initial = JSON.stringify({ name: 'Ada', certified: true, signedAt: '2026-04-01T12:00:00.000Z' });
+      const el = await fixture<CivSignature>(
+        `<civ-signature legend="Sign" value='${initial}'></civ-signature>`,
+      ) as CivSignature;
+      await elementUpdated(el);
+      expect(el.signedAt).toBe('2026-04-01T12:00:00.000Z');
+    });
+  });
 });

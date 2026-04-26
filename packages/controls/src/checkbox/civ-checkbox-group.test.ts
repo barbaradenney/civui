@@ -421,3 +421,94 @@ describe('civ-checkbox-group analytics', () => {
     expect(detail.details).toBeUndefined();
   });
 });
+
+describe('civ-checkbox-group minSelections', () => {
+  afterEach(cleanupFixtures);
+
+  it('appends "Select at least N" to the rendered hint', async () => {
+    const el = await fixture(`
+      <civ-checkbox-group legend="Toppings" name="t" min-selections="2">
+        <civ-checkbox label="A" value="a"></civ-checkbox>
+        <civ-checkbox label="B" value="b"></civ-checkbox>
+        <civ-checkbox label="C" value="c"></civ-checkbox>
+      </civ-checkbox-group>
+    `);
+    await elementUpdated(el);
+    const hint = el.querySelector('[id*="hint"]')!;
+    expect(hint.textContent).toContain('Select at least 2');
+  });
+
+  it('combines min and max hints in one sentence chain', async () => {
+    const el = await fixture(`
+      <civ-checkbox-group legend="Toppings" hint="Pick toppings" name="t" min-selections="1" max-selections="3">
+        <civ-checkbox label="A" value="a"></civ-checkbox>
+      </civ-checkbox-group>
+    `);
+    await elementUpdated(el);
+    const hint = el.querySelector('[id*="hint"]')!;
+    expect(hint.textContent).toContain('Pick toppings');
+    expect(hint.textContent).toContain('Select at least 1');
+    expect(hint.textContent).toContain('Select up to 3');
+  });
+
+  it('shows the required mark on the legend when min-selections > 0', async () => {
+    const el = await fixture(`
+      <civ-checkbox-group legend="Toppings" name="t" min-selections="1">
+        <civ-checkbox label="A" value="a"></civ-checkbox>
+      </civ-checkbox-group>
+    `);
+    await elementUpdated(el);
+    expect(el.querySelector('.civ-required-mark')).not.toBeNull();
+  });
+
+  it('reports invalid when checked count is below the minimum', async () => {
+    const el = await fixture(`
+      <civ-checkbox-group legend="Toppings" name="t" min-selections="2">
+        <civ-checkbox label="A" value="a"></civ-checkbox>
+        <civ-checkbox label="B" value="b"></civ-checkbox>
+        <civ-checkbox label="C" value="c"></civ-checkbox>
+      </civ-checkbox-group>
+    `) as any;
+    el.value = 'a';
+    await elementUpdated(el);
+
+    expect(el.checkValidity()).toBe(false);
+    expect(el.validity.valueMissing).toBe(true);
+    expect(el.validationMessage).toContain('at least 2');
+  });
+
+  it('reports valid once the minimum is met', async () => {
+    const el = await fixture(`
+      <civ-checkbox-group legend="Toppings" name="t" min-selections="2">
+        <civ-checkbox label="A" value="a"></civ-checkbox>
+        <civ-checkbox label="B" value="b"></civ-checkbox>
+      </civ-checkbox-group>
+    `) as any;
+    el.value = 'a,b';
+    await elementUpdated(el);
+
+    expect(el.checkValidity()).toBe(true);
+  });
+
+  it('treats min-selections="0" as unset (not required)', async () => {
+    const el = await fixture(`
+      <civ-checkbox-group legend="Toppings" name="t" min-selections="0">
+        <civ-checkbox label="A" value="a"></civ-checkbox>
+      </civ-checkbox-group>
+    `) as any;
+    await elementUpdated(el);
+
+    expect(el.checkValidity()).toBe(true);
+    expect(el.querySelector('.civ-required-mark')).toBeNull();
+  });
+
+  it('still errors when explicit required is set with no selections', async () => {
+    const el = await fixture(`
+      <civ-checkbox-group legend="Toppings" name="t" required>
+        <civ-checkbox label="A" value="a"></civ-checkbox>
+      </civ-checkbox-group>
+    `) as any;
+    await elementUpdated(el);
+    expect(el.checkValidity()).toBe(false);
+  });
+});

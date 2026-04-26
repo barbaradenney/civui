@@ -120,6 +120,8 @@ export interface CivLocaleStrings {
   selectAll: string;
   deselectAll: string;
   maxSelectionsHint: string; // "Select up to {max}"
+  minSelectionsHint: string; // "Select at least {min}"
+  minSelectionsError: string; // "Please select at least {min} options"
   clearButton: string;
 
   // Progress steps
@@ -434,6 +436,8 @@ const defaultStrings: CivLocaleStrings = {
   selectAll: 'Select all',
   deselectAll: 'Deselect all',
   maxSelectionsHint: 'Select up to {max}',
+  minSelectionsHint: 'Select at least {min}',
+  minSelectionsError: 'Please select at least {min} options',
   clearButton: 'Clear',
 
   nameFirst: 'First name',

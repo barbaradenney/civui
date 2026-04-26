@@ -283,3 +283,48 @@ export const GovernmentInquiryForm: Story = {
     </civ-form>
   `,
 };
+
+// ── Server-side error injection ───────────────────────────────
+
+export const SetServerErrors: Story = {
+  name: 'Inject server errors',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'After an async submit fails, call `form.setServerErrors({ fieldName: "message" })` to populate the error summary and per-field errors. Behaves exactly like a client-side validation failure (focuses the summary, announces, anchor links). Pass an empty object to clear.',
+      },
+    },
+  },
+  render: () => html`
+    <civ-form id="server-error-form">
+      <civ-text-input label="Email" name="email" type="email"></civ-text-input>
+      <civ-text-input label="Phone" name="phone" type="tel"></civ-text-input>
+      <civ-text-input label="ZIP" name="zip" inputmode="numeric"></civ-text-input>
+      <div class="civ-mt-4 civ-flex civ-gap-2">
+        <civ-button type="submit">Submit (will fail)</civ-button>
+        <civ-button
+          type="button"
+          variant="secondary"
+          @click="${() => {
+            const f = document.querySelector('#server-error-form') as any;
+            f?.clearErrors();
+          }}"
+        >Clear errors</civ-button>
+      </div>
+    </civ-form>
+    <script>
+      (function() {
+        const f = document.querySelector('#server-error-form');
+        if (!f) return;
+        f.addEventListener('civ-submit', () => {
+          // Pretend the server rejected the input.
+          f.setServerErrors({
+            email: 'This email is already registered.',
+            phone: 'Please enter a 10-digit number.',
+          });
+        });
+      })();
+    </script>
+  `,
+};

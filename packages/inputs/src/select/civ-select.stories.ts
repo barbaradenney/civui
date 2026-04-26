@@ -235,3 +235,67 @@ export const GovernmentBenefitsForm: Story = {
     </script>
   `,
 };
+
+// ── Declarative <option> slot fallback ────────────────────────
+
+export const SlottedOptions: Story = {
+  name: 'Declarative <option> slot',
+  render: () => html`
+    <civ-select label="State" name="state">
+      <option value="CA">California</option>
+      <option value="NY">New York</option>
+      <option value="TX" selected>Texas</option>
+    </civ-select>
+  `,
+};
+
+export const SlottedWithOptgroup: Story = {
+  name: 'Declarative <optgroup>',
+  render: () => html`
+    <civ-select label="State" name="state">
+      <option value="CA">California</option>
+      <optgroup label="Pacific">
+        <option value="OR">Oregon</option>
+        <option value="WA">Washington</option>
+      </optgroup>
+      <optgroup label="Mountain">
+        <option value="CO">Colorado</option>
+        <option value="UT">Utah</option>
+      </optgroup>
+    </civ-select>
+  `,
+};
+
+// ── Width variants ────────────────────────────────────────────
+
+export const WidthVariants: Story = {
+  name: 'Width variants',
+  render: () => html`
+    <div class="civ-flex civ-flex-col civ-gap-4">
+      <civ-select label="2xs" width="2xs">
+        <option value="1">1</option>
+        <option value="2">2</option>
+      </civ-select>
+      <civ-select label="xs" width="xs">
+        <option value="CA">CA</option>
+        <option value="NY">NY</option>
+      </civ-select>
+      <civ-select label="sm (state code)" width="sm">
+        <option value="CA">California</option>
+        <option value="NY">New York</option>
+      </civ-select>
+      <civ-select label="md" width="md">
+        <option value="active">Active</option>
+        <option value="inactive">Inactive</option>
+      </civ-select>
+      <civ-select label="lg" width="lg">
+        <option value="education">Education</option>
+        <option value="housing">Housing</option>
+      </civ-select>
+      <civ-select label="default (full width)">
+        <option value="active">Active</option>
+        <option value="inactive">Inactive</option>
+      </civ-select>
+    </div>
+  `,
+};

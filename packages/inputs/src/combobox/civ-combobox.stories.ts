@@ -235,3 +235,42 @@ export const GovernmentOfficeSearch: Story = {
     return el;
   },
 };
+
+// ── Width variants ────────────────────────────────────────────
+
+export const WidthVariants: Story = {
+  name: 'Width variants',
+  render: () => {
+    const wrap = document.createElement('div');
+    wrap.className = 'civ-flex civ-flex-col civ-gap-4';
+    for (const w of ['xs', 'sm', 'md', 'lg', 'default']) {
+      const el = document.createElement('civ-combobox') as any;
+      el.setAttribute('label', `Width: ${w}`);
+      if (w !== 'default') el.setAttribute('width', w);
+      el.options = STATES;
+      wrap.appendChild(el);
+    }
+    return wrap;
+  },
+};
+
+// ── Chevron toggle (decorative — present on every combobox) ───
+
+export const ChevronToggle: Story = {
+  name: 'Chevron toggle',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Click the trailing chevron to open the full unfiltered list — same affordance as a native <select>. The chevron is decorative (aria-hidden, tabindex=-1); keyboard users still use ArrowDown/ArrowUp to open. Coexists with the clear button when a value is selected.',
+      },
+    },
+  },
+  render: () => {
+    const el = document.createElement('civ-combobox') as any;
+    el.setAttribute('label', 'State');
+    el.setAttribute('name', 'state');
+    el.options = STATES;
+    return el;
+  },
+};

@@ -151,3 +151,53 @@ export const GovernmentCertification: Story = {
     ></civ-signature>
   `,
 };
+
+// ── Statement slot (HTML) ─────────────────────────────────────
+
+export const StatementSlot: Story = {
+  name: 'Statement slot (HTML with link)',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'When the statement needs links or other markup, pass it via a `slot="statement"` child instead of the plain-text `statement` prop. The slotted content is wired into the certify checkbox\'s `aria-describedby` so screen-reader users hear the full text on focus.',
+      },
+    },
+  },
+  render: () => html`
+    <civ-signature legend="Statement of truth" name="signature" required>
+      <span slot="statement">
+        I certify under <a href="/penalty">penalty of perjury</a> that the
+        information I have provided is true, correct, and complete. I have
+        read the <a href="/privacy">privacy notice</a>.
+      </span>
+    </civ-signature>
+  `,
+};
+
+// ── Captured signedAt timestamp ───────────────────────────────
+
+export const SignedAtTimestamp: Story = {
+  name: 'signedAt timestamp (logged on certify)',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'When the user checks the certify box, the component captures `el.signedAt` as an ISO 8601 string. Listen for `civ-change` to observe the captured time. Unchecking clears the timestamp; re-checking captures a fresh one.',
+      },
+    },
+  },
+  render: () => html`
+    <civ-signature
+      legend="Statement of truth"
+      name="signature"
+      statement="I certify the information I have provided is true and correct."
+      required
+      @civ-change="${(e: CustomEvent) => {
+        const out = document.querySelector('#signed-at-out');
+        if (out) out.textContent = JSON.stringify(e.detail.value, null, 2);
+      }}"
+    ></civ-signature>
+    <pre id="signed-at-out" class="civ-mt-4 civ-p-3 civ-bg-base-lightest civ-rounded civ-text-sm" style="white-space:pre-wrap;">Toggle the certify box to capture a timestamp…</pre>
+  `,
+};

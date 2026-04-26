@@ -225,3 +225,56 @@ export const GovernmentCertificationForm: Story = {
     </form>
   `,
 };
+
+// ── Selection bounds ──────────────────────────────────────────
+
+export const MinSelections: Story = {
+  name: 'Minimum selections required',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Setting `min-selections` (above 0) implicitly marks the group as required and surfaces a `valueMissing` validity error until the threshold is met. The hint chain auto-appends "Select at least N." Validation surfaces only on submit / `checkValidity()` — checkboxes can still be unchecked mid-flow.',
+      },
+    },
+  },
+  render: () => html`
+    <civ-checkbox-group
+      legend="Preferred contact methods"
+      name="contact"
+      hint="We'll use these to reach you about your application."
+      min-selections="2"
+    >
+      <civ-checkbox label="Email" value="email"></civ-checkbox>
+      <civ-checkbox label="Phone" value="phone"></civ-checkbox>
+      <civ-checkbox label="Postal mail" value="mail"></civ-checkbox>
+      <civ-checkbox label="Text message" value="sms"></civ-checkbox>
+    </civ-checkbox-group>
+  `,
+};
+
+export const MinAndMaxSelections: Story = {
+  name: 'Min and max selections',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          '`min-selections` and `max-selections` work together. `max-selections` blocks the over-pick interactively; `min-selections` blocks submit until met.',
+      },
+    },
+  },
+  render: () => html`
+    <civ-checkbox-group
+      legend="Languages spoken"
+      name="languages"
+      min-selections="1"
+      max-selections="3"
+    >
+      <civ-checkbox label="English" value="en"></civ-checkbox>
+      <civ-checkbox label="Spanish" value="es"></civ-checkbox>
+      <civ-checkbox label="Tagalog" value="tl"></civ-checkbox>
+      <civ-checkbox label="Vietnamese" value="vi"></civ-checkbox>
+      <civ-checkbox label="Chinese" value="zh"></civ-checkbox>
+    </civ-checkbox-group>
+  `,
+};

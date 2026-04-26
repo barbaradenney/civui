@@ -160,6 +160,8 @@ Input masking engine in `@civui/core` with blur-mode default (mask on blur, raw 
 
 45 pure CSS icons via `::before`/`::after` pseudo-elements — no font files, no SVG, no Unicode. Icons inherit `color` and scale with `font-size`. Each icon maps to SF Symbols (iOS) and Material Symbols (Android). Use `<civ-icon name="..." label="...">`.
 
+To edit existing icons or author new ones, run `pnpm storybook` and open **Core › Icon › Editor** — a live CSS editor with a snippet palette, multi-size preview, pixel grid, and dark-mode toggle. Copy the resulting CSS into `packages/core/src/styles/components.css` and register the name in `packages/core/src/icon/icon-library.ts`.
+
 ## Native Platform Support
 
 iOS (SwiftUI) and Android (Jetpack Compose) implementations live at `packages/ios/` and `packages/android/`. CI enforces 95%+ API parity across platforms (`parity.yml`) and verifies native files compile (`native.yml`).

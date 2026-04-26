@@ -914,6 +914,8 @@ Icons inherit `color` and scale with `font-size`. Each icon maps to platform-nat
 
 **Categories:** Navigation (chevrons, arrows, external-link), Actions (close, plus, minus, menu, search, edit), Status (check, error, warning), and more.
 
+**Authoring new icons:** Storybook ships a live CSS editor at **Core › Icon › Editor**. Pick any icon to edit its `::before`/`::after` rules with a side preview, or click **+ New icon** to author one from scratch using snippet primitives (chevron, triangle, circle, diamond). The editor only writes to a scoped `<style>` in the preview pane — when you're happy, click **Copy CSS** and paste into `packages/core/src/styles/components.css`, then add the icon's metadata to `packages/core/src/icon/icon-library.ts`.
+
 ---
 
 ## Native Platform Support

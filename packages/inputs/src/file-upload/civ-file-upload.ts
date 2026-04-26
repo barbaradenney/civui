@@ -291,12 +291,13 @@ export class CivFileUpload extends CivFormElement {
                   ? this._files.map(f => f.name).join(', ')
                   : (this.dragText || t('fileUploadNoFileChosen'))}
               </span>
-              <button
-                type="button"
-                class="civ-btn civ-btn--secondary civ-shrink-0"
+              <civ-action-button
+                variant="secondary"
+                label="${this.browseText || t('fileUploadBrowseText')}"
                 @click="${this._onDropzoneClick}"
                 ?disabled="${this.disabled}"
-              >${this.browseText || t('fileUploadBrowseText')}</button>
+                class="civ-shrink-0"
+              ></civ-action-button>
             </div>`
           : html`
             <div
@@ -376,35 +377,31 @@ export class CivFileUpload extends CivFormElement {
                       </div>
                       <span class="civ-flex civ-items-center civ-gap-1">
                         ${file.status === 'uploading' ? html`
-                          <button
-                            type="button"
-                            class="civ-file-cancel-btn focus-visible:civ-focus-ring"
-                            @click="${() => this._cancelUpload(index)}"
+                          <civ-action-button
+                            variant="tertiary"
+                            label="${t('fileUploadCancelText')}"
                             aria-label="${interpolate(t('fileUploadCancelAriaLabel'), { name: file.name })}"
-                          >
-                            ${t('fileUploadCancelText')}
-                          </button>
+                            @click="${() => this._cancelUpload(index)}"
+                          ></civ-action-button>
                         ` : nothing}
                         ${file.status === 'error' ? html`
-                          <button
-                            type="button"
-                            class="civ-file-retry-btn focus-visible:civ-focus-ring"
-                            @click="${() => this._retryUpload(index)}"
+                          <civ-action-button
+                            variant="tertiary"
+                            label="${t('fileUploadRetryText')}"
                             aria-label="${interpolate(t('fileUploadRetryAriaLabel'), { name: file.name })}"
-                          >
-                            ${t('fileUploadRetryText')}
-                          </button>
+                            @click="${() => this._retryUpload(index)}"
+                          ></civ-action-button>
                         ` : nothing}
                         ${file.status !== 'uploading' ? html`
-                          <button
-                            type="button"
-                            class="civ-file-remove-btn focus-visible:civ-focus-ring"
-                            @click="${() => this._removeFile(index)}"
+                          <civ-action-button
+                            variant="tertiary"
+                            danger
+                            label="${this.removeText || t('fileUploadRemoveText')}"
                             aria-label="${interpolate(this.removeAriaLabel || t('fileUploadRemoveAriaLabel'), { name: file.name })}"
                             ?disabled="${this.disabled}"
-                          >
-                            ${this.removeText || t('fileUploadRemoveText')}
-                          </button>
+                            @click="${() => this._removeFile(index)}"
+                            class="civ-file-remove-btn"
+                          ></civ-action-button>
                         ` : nothing}
                       </span>
                     </li>

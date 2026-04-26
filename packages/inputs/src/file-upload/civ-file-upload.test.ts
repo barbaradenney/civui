@@ -105,16 +105,17 @@ describe('civ-file-upload', () => {
     expect(dropzone!.className).toContain('focus-visible:civ-focus-ring');
   });
 
-  it('applies focus-visible ring class to Remove button', async () => {
+  it('renders Remove as civ-action-button with danger', async () => {
     const el = await fixture('<civ-file-upload label="Upload" name="doc"></civ-file-upload>') as any;
 
     const file = new File(['content'], 'test.pdf', { type: 'application/pdf' });
     el._addFiles([file]);
     await elementUpdated(el);
 
-    const removeBtn = el.querySelector('button[aria-label^="Remove"]');
+    const removeBtn = el.querySelector('.civ-file-remove-btn');
     expect(removeBtn).not.toBeNull();
-    expect(removeBtn!.className).toContain('focus-visible:civ-focus-ring');
+    expect(removeBtn!.tagName.toLowerCase()).toBe('civ-action-button');
+    expect(removeBtn!.hasAttribute('danger')).toBe(true);
   });
 
   it('does not use deprecated focus: outline classes on dropzone', async () => {
@@ -162,9 +163,10 @@ describe('civ-file-upload', () => {
       el._addFiles([file]);
       await elementUpdated(el);
 
-      const btn = Array.from(el.querySelectorAll('button')).find((b: any) => b.textContent.trim() === 'Eliminar') as HTMLElement;
+      const btn = el.querySelector('.civ-file-remove-btn') as any;
       expect(btn).not.toBeNull();
-      expect(btn!.getAttribute('aria-label')).toBe('Eliminar test.pdf');
+      expect(btn.getAttribute('label')).toBe('Eliminar');
+      expect(btn.getAttribute('aria-label')).toBe('Eliminar test.pdf');
     });
 
     it('uses custom file-size-error with interpolation', async () => {

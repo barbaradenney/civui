@@ -314,6 +314,7 @@ export interface CivLocaleStrings {
   validatePhoneIntl: string;
   validateSsn: string;
   validateEin: string;
+  validateRouting: string; // bank routing-number checksum failure
   validateZip: string;
   validateZip4: string;
   validateUsState: string;
@@ -604,6 +605,7 @@ const defaultStrings: CivLocaleStrings = {
   validatePhoneIntl: 'Enter a valid phone number with country code (e.g., +1 555 123 4567)',
   validateSsn: 'Enter a valid 9-digit Social Security number',
   validateEin: 'Enter a valid 9-digit Employer Identification Number',
+  validateRouting: 'Enter a valid 9-digit bank routing number',
   validateZip: 'Enter a 5-digit ZIP code',
   validateZip4: 'Enter a valid ZIP+4 code (e.g., 12345-6789)',
   validateUsState: 'Enter a valid 2-letter state abbreviation',

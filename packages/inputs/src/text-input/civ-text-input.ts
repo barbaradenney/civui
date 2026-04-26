@@ -27,7 +27,7 @@ export type TextInputType = 'text' | 'email' | 'number' | 'password' | 'search' 
 /** @deprecated Use `InputWidth` from `@civui/core`. Re-exported for backwards compatibility. */
 export type TextInputWidth = InputWidth;
 export type TextInputMask = 'ssn' | 'phone-us' | 'zip' | 'zip4' | 'ein' | 'currency' | '';
-export type TextInputValidate = 'email' | 'phone' | 'phoneIntl' | 'ssn' | 'ein' | 'zip' | 'zip4' | 'usState' | 'url' | 'currency' | 'alphanumeric' | '';
+export type TextInputValidate = 'email' | 'phone' | 'phoneIntl' | 'ssn' | 'ein' | 'routing' | 'zip' | 'zip4' | 'usState' | 'url' | 'currency' | 'alphanumeric' | '';
 
 /**
  * CivUI TextInput

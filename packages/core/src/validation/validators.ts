@@ -88,6 +88,24 @@ export const validate = {
     return valid();
   },
 
+  /**
+   * US bank routing number (ABA): 9 digits with a mod-10 checksum.
+   * Reference: https://en.wikipedia.org/wiki/ABA_routing_transit_number#Check_digit
+   * Sum = 3·d1 + 7·d2 + 1·d3 + 3·d4 + 7·d5 + 1·d6 + 3·d7 + 7·d8 + 1·d9
+   * Valid when Sum % 10 === 0 and not all digits are zero.
+   */
+  routing(value: string): ValidationResult {
+    const digits = value.replace(/\D/g, '');
+    if (digits.length !== 9) return fail('validateRouting');
+    if (/^0{9}$/.test(digits)) return fail('validateRouting');
+    const weights = [3, 7, 1, 3, 7, 1, 3, 7, 1];
+    let sum = 0;
+    for (let i = 0; i < 9; i++) {
+      sum += Number(digits[i]) * weights[i];
+    }
+    return sum % 10 === 0 ? valid() : fail('validateRouting');
+  },
+
   /** EIN: 9 digits, valid IRS campus prefix. */
   ein(value: string): ValidationResult {
     const digits = value.replace(/\D/g, '');

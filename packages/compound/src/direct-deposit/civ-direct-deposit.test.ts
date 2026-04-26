@@ -116,4 +116,36 @@ describe('civ-direct-deposit', () => {
       expect(el.checkValidity()).toBe(true);
     });
   });
+
+  describe('routing number checksum (validate="routing")', () => {
+    it('flags a checksum-failing routing number on the routing sub-input', async () => {
+      const el = await fixture<CivDirectDeposit>('<civ-direct-deposit legend="Deposit"></civ-direct-deposit>') as CivDirectDeposit;
+      await elementUpdated(el);
+
+      // Find the routing-number civ-text-input (first text-input child)
+      // and simulate a user typing an invalid routing number followed by blur.
+      const routingField = el.querySelectorAll('civ-text-input')[0] as any;
+      const innerInput = routingField.querySelector('input') as HTMLInputElement;
+      innerInput.value = '121000247';
+      innerInput.dispatchEvent(new Event('input', { bubbles: true }));
+      innerInput.dispatchEvent(new Event('blur', { bubbles: true }));
+      await elementUpdated(routingField);
+
+      expect(routingField.error).toContain('routing number');
+    });
+
+    it('accepts a checksum-valid routing number', async () => {
+      const el = await fixture<CivDirectDeposit>('<civ-direct-deposit legend="Deposit"></civ-direct-deposit>') as CivDirectDeposit;
+      await elementUpdated(el);
+
+      const routingField = el.querySelectorAll('civ-text-input')[0] as any;
+      const innerInput = routingField.querySelector('input') as HTMLInputElement;
+      innerInput.value = '121000248';
+      innerInput.dispatchEvent(new Event('input', { bubbles: true }));
+      innerInput.dispatchEvent(new Event('blur', { bubbles: true }));
+      await elementUpdated(routingField);
+
+      expect(routingField.error).toBe('');
+    });
+  });
 });

@@ -100,8 +100,8 @@ export interface CivLocaleStrings {
   maskCurrencyHint: string;
   maskCurrencyError: string;
 
-  // Textarea char/word count
-  textareaCharsRemaining: string; // "{count} characters remaining"
+  // Input char/word counts (shared by civ-text-input and civ-textarea)
+  inputCharsRemaining: string; // "{count} characters remaining"
   textareaWordsRemaining: string; // "{count} words remaining"
   textareaWordsOverLimit: string; // "{count} {count, plural, one {word} other {words}} over the limit"
   textareaWordLimit: string; // "Word limit: {max}"
@@ -410,7 +410,7 @@ const defaultStrings: CivLocaleStrings = {
   maskCurrencyHint: 'For example: 1,234.56',
   maskCurrencyError: 'Enter a valid dollar amount',
 
-  textareaCharsRemaining: '{count} characters remaining',
+  inputCharsRemaining: '{count} characters remaining',
   textareaWordsRemaining: '{count} words remaining',
   textareaWordsOverLimit: '{count} too many words',
   textareaWordLimit: 'Word limit: {max}',

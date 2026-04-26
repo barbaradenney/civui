@@ -1,7 +1,7 @@
 // Schema: packages/schema/src/components/civ-text-input.schema.ts
 
 import { html, nothing } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { customElement, property, state } from 'lit/decorators.js';
 import {
   CivFormElement,
   renderLabel,
@@ -18,6 +18,7 @@ import {
   interpolate,
   t,
   validate,
+  debounce,
 } from '@civui/core';
 import type { InputWidth, MaskDefinition } from '@civui/core';
 import { dispatch } from '@civui/core';
@@ -91,6 +92,27 @@ export class CivTextInput extends CivFormElement {
   private _maskError = false;
   private _validateError = false;
 
+  /**
+   * Latest character count announced to assistive tech via the `aria-live`
+   * region. Updates on a 1s debounce so keystrokes don't spam the screen
+   * reader. The visual counter updates immediately from `this.value`.
+   */
+  @state() private _announcedCharCount = 0;
+  private _charCountId = this.generateId('charcount');
+  private _debouncedAnnounceCharCount = debounce(() => {
+    this._announcedCharCount = this.value.length;
+  }, 1000);
+
+  /**
+   * Show a "characters remaining" counter when the consumer set an explicit
+   * `maxlength`. Suppressed when a mask is active — the mask's own length
+   * rules drive `effectiveMaxlength` and would confuse a literal char count.
+   */
+  private get _showCharCount(): boolean {
+    if (this._maskDef || this.maskPattern) return false;
+    return this.maxlength != null && this.maxlength > 0;
+  }
+
   /** Returns true when the currency mask is active. */
   private get _isCurrency(): boolean {
     return this.mask === 'currency';
@@ -151,6 +173,16 @@ export class CivTextInput extends CivFormElement {
    * For example, `value="123-45-6789"` with `mask="ssn"` becomes raw `"123456789"`.
    * Re-captures `_defaultValue` after stripping so form reset restores raw, not formatted.
    */
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this._announcedCharCount = (this.value ?? '').length;
+  }
+
+  override disconnectedCallback(): void {
+    super.disconnectedCallback();
+    this._debouncedAnnounceCharCount.cancel();
+  }
+
   override firstUpdated(): void {
     super.firstUpdated();
     if (this._activePattern && this.value) {
@@ -164,6 +196,7 @@ export class CivTextInput extends CivFormElement {
         }
       });
     }
+    this._announcedCharCount = (this.value ?? '').length;
   }
 
   override updated(changed: Map<string, unknown>): void {
@@ -173,6 +206,17 @@ export class CivTextInput extends CivFormElement {
     } else {
       this.removeAttribute('data-civ-pii');
     }
+    if (changed.has('value') && this._showCharCount) {
+      this._debouncedAnnounceCharCount();
+    }
+  }
+
+  protected override get _ariaDescribedBy(): string {
+    const ids: string[] = [];
+    if (this.hint) ids.push(this._hintId);
+    if (this.error) ids.push(this._errorId);
+    if (this._showCharCount) ids.push(this._charCountId);
+    return ids.join(' ') || '';
   }
 
   override render() {
@@ -308,12 +352,30 @@ export class CivTextInput extends CivFormElement {
           : nothing}</div>`
       : inputEl;
 
+    const showCharCount = this._showCharCount;
+    const remaining = showCharCount ? this.maxlength! - (this.value?.length ?? 0) : 0;
+
     return html`
       <div class="civ-mb-4">
         ${renderLabel({ label: this.label, inputId: this._inputId, required: this.required, showRequired: this.required && !this.hideRequiredIndicator })}
         ${renderHint(this._hintId, effectiveHint)}
         ${renderError(this._errorId, this.error)}
         ${wrappedInput}
+        ${showCharCount
+          ? html`
+              <span
+                id="${this._charCountId}"
+                class="civ-block civ-mt-0.5 civ-text-sm ${remaining < 0
+                  ? 'civ-text-error civ-font-bold'
+                  : 'civ-text-muted'}"
+              >
+                ${interpolate(t('inputCharsRemaining'), { count: remaining })}
+              </span>
+              <span class="civ-sr-only" aria-live="polite">
+                ${interpolate(t('inputCharsRemaining'), { count: this.maxlength! - this._announcedCharCount })}
+              </span>
+            `
+          : nothing}
       </div>
     `;
   }

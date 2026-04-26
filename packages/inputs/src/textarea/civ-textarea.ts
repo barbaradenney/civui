@@ -139,10 +139,10 @@ export class CivTextarea extends CivFormElement {
                   ? 'civ-text-error civ-font-bold'
                   : 'civ-text-muted'}"
               >
-                ${interpolate(t('textareaCharsRemaining'), { count: remaining })}
+                ${interpolate(t('inputCharsRemaining'), { count: remaining })}
               </span>
               <span class="civ-sr-only" aria-live="polite">
-                ${interpolate(t('textareaCharsRemaining'), { count: this.maxlength! - this._announcedCharCount })}
+                ${interpolate(t('inputCharsRemaining'), { count: this.maxlength! - this._announcedCharCount })}
               </span>
             `
           : nothing}

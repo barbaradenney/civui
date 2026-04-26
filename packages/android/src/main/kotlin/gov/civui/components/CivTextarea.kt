@@ -242,11 +242,11 @@ fun CivTextarea(
 
             LaunchedEffect(remaining) {
                 delay(1000)
-                debouncedCharAnnouncement = CivLocale.t("textareaCharsRemaining", "count" to remaining)
+                debouncedCharAnnouncement = CivLocale.t("inputCharsRemaining", "count" to remaining)
             }
 
             Text(
-                text = CivLocale.t("textareaCharsRemaining", "count" to remaining),
+                text = CivLocale.t("inputCharsRemaining", "count" to remaining),
                 style = TextStyle(
                     fontSize = CivTokens.Typography.FontSize.sm,
                     fontWeight = if (isOver) FontWeight.Bold else FontWeight.Normal,

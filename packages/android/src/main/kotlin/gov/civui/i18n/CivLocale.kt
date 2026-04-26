@@ -90,8 +90,8 @@ object CivLocale {
         "textareaWordsRemaining" to "{count} words remaining",
         "textareaWordLimit" to "Word limit: {max}",
 
-        // Textarea character count
-        "textareaCharsRemaining" to "{count} characters remaining",
+        // Input character count (shared by text-input and textarea)
+        "inputCharsRemaining" to "{count} characters remaining",
 
         // Alert dismiss
         "alertDismissLabel" to "Dismiss alert",

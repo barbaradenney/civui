@@ -190,6 +190,7 @@ export class CivMemorableDate extends CivFormElement {
               placeholder="${this.dayPlaceholder || t('memorableDateDayPlaceholder')}"
               pattern="[0-9]*"
               maxlength="2"
+              hide-char-count
               ?required="${this.required}"
               ?disabled="${this.disabled}"
               ?hide-required-indicator="${this.required}"
@@ -206,6 +207,7 @@ export class CivMemorableDate extends CivFormElement {
               placeholder="${this.yearPlaceholder || t('memorableDateYearPlaceholder')}"
               pattern="[0-9]*"
               maxlength="4"
+              hide-char-count
               ?required="${this.required}"
               ?disabled="${this.disabled}"
               ?hide-required-indicator="${this.required}"

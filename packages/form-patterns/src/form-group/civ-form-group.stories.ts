@@ -21,7 +21,7 @@ type Story = StoryObj;
 export const Default: Story = {
   args: {
     label: 'Custom input',
-    hint: 'Wraps any input with consistent styling',
+    hint: 'Wraps any native or third-party input with consistent label, hint, and error rendering',
     error: '',
     'input-id': 'custom',
     required: false,
@@ -34,7 +34,7 @@ export const Default: Story = {
       input-id="${args['input-id']}"
       ?required="${args.required}"
     >
-      <input type="text" id="custom" style="width: 100%; padding: 6px 8px; border: 1px solid #a9aeb1; border-radius: 4px;" />
+      <input type="text" id="custom" class="civ-input" />
     </civ-form-group>
   `,
 };
@@ -42,15 +42,15 @@ export const Default: Story = {
 export const WithError: Story = {
   render: () => html`
     <civ-form-group label="Username" input-id="username" error="Username is already taken" required>
-      <input type="text" id="username" value="admin" style="width: 100%; padding: 6px 8px; border: 1px solid #b50909; border-left: 4px solid #b50909; border-radius: 4px;" />
+      <input type="text" id="username" value="admin" class="civ-input" />
     </civ-form-group>
   `,
 };
 
 export const Required: Story = {
   render: () => html`
-    <civ-form-group label="Social Security number" input-id="ssn" hint="For example: 123-45-6789" required>
-      <input type="text" id="ssn" inputmode="numeric" pattern="[0-9]{3}-[0-9]{2}-[0-9]{4}" style="width: 100%; padding: 6px 8px; border: 1px solid #a9aeb1; border-radius: 4px;" />
+    <civ-form-group label="Case number" input-id="case-number" hint="Found on the top-right of your notice letter" required>
+      <input type="text" id="case-number" class="civ-input" />
     </civ-form-group>
   `,
 };
@@ -58,7 +58,21 @@ export const Required: Story = {
 export const WithHintAndError: Story = {
   render: () => html`
     <civ-form-group label="Case number" input-id="case-number" hint="Found on the top-right of your notice letter" error="Enter a valid case number in the format A-123-456-789" required>
-      <input type="text" id="case-number" value="XYZ" style="width: 100%; padding: 6px 8px; border: 1px solid #b50909; border-left: 4px solid #b50909; border-radius: 4px;" />
+      <input type="text" id="case-number" value="XYZ" class="civ-input" />
+    </civ-form-group>
+  `,
+};
+
+export const WithNativeSelect: Story = {
+  name: 'With Native Select',
+  render: () => html`
+    <civ-form-group label="Priority level" input-id="priority" hint="Select urgency for your request">
+      <select id="priority" class="civ-input civ-select-field">
+        <option value="">- Select -</option>
+        <option value="low">Low</option>
+        <option value="medium">Medium</option>
+        <option value="high">High</option>
+      </select>
     </civ-form-group>
   `,
 };

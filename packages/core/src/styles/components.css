@@ -190,7 +190,7 @@
   }
 
   .civ-input {
-    @apply civ-block civ-w-full civ-border civ-rounded civ-px-2 civ-py-1.5
+    @apply civ-block civ-w-full civ-border civ-rounded civ-px-2 civ-py-2
            civ-font-sans civ-bg-white civ-border-base-light;
     font-size: var(--civ-typography-fontSize-base);
     color: var(--civ-color-base-darkest);
@@ -1464,7 +1464,7 @@
 
   .civ-datepicker-cal-btn {
     @apply civ-border civ-border-s-0 civ-border-base-light civ-rounded-e
-           civ-px-2 civ-py-1.5 civ-bg-base-lightest;
+           civ-px-2 civ-py-2 civ-bg-base-lightest;
   }
 
   /* ── Clear button (inside input fields) ──────────────────────── */

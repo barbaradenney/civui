@@ -50,6 +50,12 @@ Compound name input with first, middle (optional), last, and suffix fields. Foll
 
 <StoryEmbed id="forms-compound-name--without-suffix" />
 
+### International Format
+
+Uses "Given name" and "Family name" labels instead of "First name" and "Last name" — appropriate for immigration, naturalization, and international forms.
+
+<StoryEmbed id="forms-compound-name--international-format" />
+
 ### Government Identity Section
 
 <StoryEmbed id="forms-compound-name--government-identity-section" />
@@ -65,6 +71,7 @@ All form components share these props: `name`, `value`, `hint`, `error`, `requir
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `legend` | `string` | `''` | Fieldset legend text |
+| `format` | `'domestic' \| 'international'` | `'domestic'` | Label format: domestic uses "First/Last name", international uses "Given/Family name" |
 | `show-middle` | `boolean` | `true` | Whether to show the middle name field |
 | `show-suffix` | `boolean` | `true` | Whether to show the suffix select |
 | `first-error` | `string` | `''` | Error message for the first name field |
@@ -105,6 +112,7 @@ Fields automatically set appropriate `autocomplete` values:
 - First name: `given-name`
 - Middle name: `additional-name`
 - Last name: `family-name`
+- Suffix: `honorific-suffix`
 
 ## Programmatic API
 
@@ -136,6 +144,14 @@ name.nameValue; // { first: 'Jane', middle: 'A', last: 'Doe', suffix: '' }
   name="spouseName"
   show-middle="false"
   show-suffix="false"
+  required
+></civ-name>
+
+<!-- International format (immigration, USCIS forms) -->
+<civ-name
+  legend="Applicant's name"
+  name="applicantName"
+  format="international"
   required
 ></civ-name>
 

@@ -41,6 +41,13 @@ export class CivName extends CivFormElement {
   /** Fieldset legend displayed above the name fields. */
   @property({ type: String }) legend = '';
 
+  /**
+   * Label format for name fields.
+   * - `domestic` (default): "First name" / "Middle name" / "Last name"
+   * - `international`: "Given name" / "Middle name" / "Family name"
+   */
+  @property({ type: String }) format: 'domestic' | 'international' = 'domestic';
+
   /** Whether to show the middle name field. */
   @property({ type: Boolean, attribute: 'show-middle' }) showMiddle = true;
 
@@ -90,6 +97,9 @@ export class CivName extends CivFormElement {
 
   override render() {
     const describedBy = buildDescribedBy(this._hintId, this.hint, this._errorId, this.error);
+    const intl = this.format === 'international';
+    const firstLabel = intl ? t('nameGiven') : t('nameFirst');
+    const lastLabel = intl ? t('nameFamily') : t('nameLast');
 
     return html`
       <fieldset
@@ -104,7 +114,7 @@ export class CivName extends CivFormElement {
         ${renderError(this._errorId, this.error, true)}
 
         <civ-text-input
-          label="${t('nameFirst')}"
+          label="${firstLabel}"
           name="${this.name ? `${this.name}.first` : ''}"
           value="${this._name.first}"
           error="${this.firstError}"
@@ -130,7 +140,7 @@ export class CivName extends CivFormElement {
         ` : nothing}
 
         <civ-text-input
-          label="${t('nameLast')}"
+          label="${lastLabel}"
           name="${this.name ? `${this.name}.last` : ''}"
           value="${this._name.last}"
           error="${this.lastError}"
@@ -147,6 +157,7 @@ export class CivName extends CivFormElement {
               label="${t('nameSuffix')}"
               name="${this.name ? `${this.name}.suffix` : ''}"
               value="${this._name.suffix}"
+              autocomplete="honorific-suffix"
               ?disabled="${this.disabled}"
               data-name-suffix
               @civ-change="${(e: CustomEvent) => this._onSubSelectChange('suffix', e)}"

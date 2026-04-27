@@ -137,4 +137,31 @@ describe('civ-name', () => {
       expect(el.validationMessage).toContain('Please tell us your name');
     });
   });
+
+  it('uses domestic labels by default', async () => {
+    const el = await fixture<CivName>('<civ-name legend="Name"></civ-name>') as CivName;
+    const labels = Array.from(el.querySelectorAll('civ-text-input')).map(
+      (input: any) => input.getAttribute('label'),
+    );
+    expect(labels).toContain('First name');
+    expect(labels).toContain('Last name');
+  });
+
+  it('uses international labels when format is international', async () => {
+    const el = await fixture<CivName>('<civ-name legend="Name"></civ-name>') as CivName;
+    el.format = 'international';
+    await elementUpdated(el);
+    const labels = Array.from(el.querySelectorAll('civ-text-input')).map(
+      (input: any) => input.getAttribute('label'),
+    );
+    expect(labels).toContain('Given name');
+    expect(labels).toContain('Family name');
+    expect(labels).toContain('Middle name'); // middle stays the same
+  });
+
+  it('sets autocomplete="honorific-suffix" on suffix select', async () => {
+    const el = await fixture<CivName>('<civ-name legend="Name"></civ-name>') as CivName;
+    const suffixSelect = el.querySelector('[data-name-suffix]') as any;
+    expect(suffixSelect.getAttribute('autocomplete')).toBe('honorific-suffix');
+  });
 });

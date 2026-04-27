@@ -197,13 +197,13 @@
   }
 
   .civ-input-prefix {
-    @apply civ-flex civ-items-center civ-px-2 civ-border civ-border-e-0 civ-rounded-s civ-border-base-light civ-bg-base-lightest;
+    @apply civ-flex civ-items-center civ-px-2 civ-border civ-border-e-0 civ-rounded-s civ-border-base-light civ-bg-white;
     font-size: var(--civ-typography-fontSize-base);
     color: var(--civ-color-base-dark);
   }
 
   .civ-input-suffix {
-    @apply civ-flex civ-items-center civ-px-2 civ-border civ-border-s-0 civ-rounded-e civ-border-base-light civ-bg-base-lightest;
+    @apply civ-flex civ-items-center civ-px-2 civ-border civ-border-s-0 civ-rounded-e civ-border-base-light civ-bg-white;
     font-size: var(--civ-typography-fontSize-base);
     color: var(--civ-color-base-dark);
   }

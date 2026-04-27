@@ -10,7 +10,11 @@ import StoryEmbed from "@site/src/components/StoryEmbed";
 
 `<civ-text-input>`
 
-Accessible text input with label, hint, error, and width variants. Supports input masking and declarative validation. Uses ElementInternals for native form participation.
+Accessible text input with label, hint, error, and width variants. Supports input masking, declarative validation, prefix/suffix text, and inline icons. Uses ElementInternals for native form participation.
+
+:::tip Use specialized components for common field types
+For SSN, phone, email, ZIP, EIN, currency, routing number, and VA file number, use the dedicated components (`<civ-ssn>`, `<civ-phone>`, etc.) instead of configuring `<civ-text-input>` manually. They pre-configure masking, validation, labels, hints, and HTML attributes automatically.
+:::
 
 ## Examples
 
@@ -50,37 +54,11 @@ Accessible text input with label, hint, error, and width variants. Supports inpu
 
 <StoryEmbed id="forms-inputs-text-input--input-types" />
 
-### Mask Ssn
+### Custom Mask Pattern
 
-<StoryEmbed id="forms-inputs-text-input--mask-ssn" />
-
-### Mask Phone Us
-
-<StoryEmbed id="forms-inputs-text-input--mask-phone-us" />
-
-### Mask Zip
-
-<StoryEmbed id="forms-inputs-text-input--mask-zip" />
-
-### Mask Ein
-
-<StoryEmbed id="forms-inputs-text-input--mask-ein" />
-
-### Mask Currency
-
-<StoryEmbed id="forms-inputs-text-input--mask-currency" />
-
-### Mask Custom
+For standard mask presets (SSN, phone, ZIP, EIN, currency), use the dedicated components. Use `mask-pattern` for custom formats not covered by a specialized component.
 
 <StoryEmbed id="forms-inputs-text-input--mask-custom" />
-
-### Validate Email
-
-<StoryEmbed id="forms-inputs-text-input--validate-email" />
-
-### Validate Zip
-
-<StoryEmbed id="forms-inputs-text-input--validate-zip" />
 
 ### Character Counter
 
@@ -88,25 +66,35 @@ When `maxlength` is set, the input renders a "characters remaining" counter belo
 
 <StoryEmbed id="forms-inputs-text-input--character-counter" />
 
-### Inline: Leading icon
+<StoryEmbed id="forms-inputs-text-input--character-counter-short-limit" />
+
+### Leading Icon
 
 A decorative icon overlays the input on the leading edge. The input gains inline-start padding to make room.
 
 <StoryEmbed id="forms-inputs-text-input--leading-icon" />
 
-### Inline: Trailing icon
+### Trailing Icon
 
 When `trailing-icon-label` is set, the icon is exposed to assistive tech as `role="img"`. Without a label, the icon is decorative and hidden from screen readers.
 
 <StoryEmbed id="forms-inputs-text-input--trailing-icon" />
 
-### Inline: Leading + trailing icons
+### Leading + Trailing Icons
 
 <StoryEmbed id="forms-inputs-text-input--leading-and-trailing-icons" />
 
-### Government Contact Form
+### Prefix
 
-<StoryEmbed id="forms-inputs-text-input--government-contact-form" />
+Text rendered inside the input border on the leading edge (e.g., "@", "$"). The prefix shares the input's border and background for a seamless look.
+
+<StoryEmbed id="forms-inputs-text-input--prefix" />
+
+### Suffix
+
+Text rendered inside the input border on the trailing edge (e.g., "lbs", "USD").
+
+<StoryEmbed id="forms-inputs-text-input--suffix" />
 
 [Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-inputs-text-input--default)
 
@@ -130,35 +118,30 @@ All form components share these props: `label`, `name`, `value`, `hint`, `error`
 | `mask-pattern` | `string` | `''` | Custom mask pattern (`#` = digit, `A` = letter, `*` = any) |
 | `mask-mode` | `'blur' \| 'live'` | `'blur'` | Mask formatting mode |
 | `validate` | `'email' \| 'phone' \| 'phoneIntl' \| 'ssn' \| 'ein' \| 'zip' \| 'zip4' \| 'usState' \| 'url' \| 'currency' \| 'alphanumeric' \| ''` | `''` | Declarative validation preset |
-| `prefix` | `string` | `''` | Prefix text rendered before the input (e.g., `'$'`) |
-| `suffix` | `string` | `''` | Suffix text rendered after the input |
+| `prefix` | `string` | `''` | Text rendered inside the input on the leading edge (e.g., `'$'`, `'@'`) |
+| `suffix` | `string` | `''` | Text rendered inside the input on the trailing edge (e.g., `'lbs'`, `'USD'`) |
 | `clearable` | `boolean` | `false` | Show a clear button when the field has a value |
 | `leading-icon` | `string` | `''` | civ-icon name rendered as a decorative overlay on the leading edge. Ignored when `prefix` is set. |
 | `leading-icon-label` | `string` | `''` | Accessible label for the leading icon. Empty = decorative (`aria-hidden`). |
 | `trailing-icon` | `string` | `''` | civ-icon name rendered on the trailing edge. Ignored when `suffix` is set or the clear button is showing. |
 | `trailing-icon-label` | `string` | `''` | Accessible label for the trailing icon. Empty = decorative. |
 
-## Mask Presets
+## Custom Mask Patterns
 
-| Preset | Pattern | Example Output | PII |
-|--------|---------|----------------|-----|
-| `ssn` | `###-##-####` | 123-45-6789 | Yes |
-| `phone-us` | `(###) ###-####` | (555) 123-4567 | No |
-| `zip` | `#####` | 20500 | No |
-| `zip4` | `#####-####` | 20500-1234 | No |
-| `ein` | `##-#######` | 12-3456789 | Yes |
-| `currency` | (variable) | $1,234.56 | No |
+For formats not covered by the specialized components, use `mask-pattern` with slot syntax:
 
-PII-flagged presets automatically set `autocomplete="off"` and add `data-civ-pii` for persistence exclusion.
+| Slot | Matches |
+|------|---------|
+| `#` | Digit (0-9) |
+| `A` | Letter (a-z, A-Z) |
+| `*` | Any printable character |
 
-## Mask Modes
+All other characters are inserted as literals.
 
-- **`blur`** (default): User types freely without formatting. Mask is applied on blur for display. Accessible and predictable.
-- **`live`**: Formats as user types with auto-inserted literals. Has accessibility tradeoffs (cursor jumping).
+### Mask Modes
 
-## Validation Presets
-
-When the `validate` attribute is set, validation runs automatically on blur and sets/clears the error message.
+- **`blur`** (default): User types freely. Mask applied on blur for display. Accessible and predictable.
+- **`live`**: Formats as user types. Has accessibility tradeoffs (cursor jumping).
 
 ## Events
 
@@ -172,36 +155,8 @@ When the `validate` attribute is set, validation runs automatically on blur and 
 ```html
 <!-- Basic text input -->
 <civ-text-input
-  label="First name"
-  name="firstName"
-  required
-  autocomplete="given-name"
-></civ-text-input>
-
-<!-- Email with validation -->
-<civ-text-input
-  label="Email address"
-  name="email"
-  type="email"
-  validate="email"
-  autocomplete="email"
-  required
-></civ-text-input>
-
-<!-- SSN with mask -->
-<civ-text-input
-  label="Social Security number"
-  name="ssn"
-  mask="ssn"
-  required
-></civ-text-input>
-
-<!-- Phone with mask -->
-<civ-text-input
-  label="Phone number"
-  name="phone"
-  type="tel"
-  mask="phone-us"
+  label="Full name"
+  name="fullName"
   required
 ></civ-text-input>
 
@@ -210,20 +165,30 @@ When the `validate` attribute is set, validation runs automatically on blur and 
   label="Case number"
   name="caseNumber"
   mask-pattern="AAA-####"
+  hint="For example: ABC-1234"
 ></civ-text-input>
 
-<!-- Currency with prefix -->
+<!-- With prefix -->
 <civ-text-input
-  label="Annual income"
-  name="income"
-  mask="currency"
+  label="Social handle"
+  name="handle"
+  prefix="@"
+  width="md"
 ></civ-text-input>
 
-<!-- Fixed width -->
+<!-- With suffix -->
 <civ-text-input
-  label="ZIP code"
-  name="zip"
-  mask="zip"
-  width="xs"
+  label="Weight"
+  name="weight"
+  suffix="lbs"
+  inputmode="decimal"
+  width="sm"
+></civ-text-input>
+
+<!-- With character counter -->
+<civ-text-input
+  label="Short bio"
+  name="bio"
+  maxlength="60"
 ></civ-text-input>
 ```

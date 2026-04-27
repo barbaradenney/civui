@@ -64,10 +64,9 @@ export const Default: Story = {
 export const WithHint: Story = {
   render: () => html`
     <civ-text-input
-      label="Email address"
-      name="email"
-      hint="Enter your work or personal email address"
-      type="email"
+      label="Full name"
+      name="full-name"
+      hint="Enter your legal first and last name"
     ></civ-text-input>
   `,
 };
@@ -75,10 +74,9 @@ export const WithHint: Story = {
 export const WithError: Story = {
   render: () => html`
     <civ-text-input
-      label="Email address"
-      name="email"
-      error="Enter a valid email address"
-      type="email"
+      label="Full name"
+      name="full-name"
+      error="Enter your full name"
     ></civ-text-input>
   `,
 };
@@ -148,7 +146,7 @@ export const WidthVariants: Story = {
     <div class="civ-flex civ-flex-col civ-gap-4">
       <civ-text-input label="2xs width" name="w-2xs" width="2xs"></civ-text-input>
       <civ-text-input label="xs width" name="w-xs" width="xs"></civ-text-input>
-      <civ-text-input label="sm width (ZIP code)" name="w-sm" width="sm"></civ-text-input>
+      <civ-text-input label="sm width" name="w-sm" width="sm"></civ-text-input>
       <civ-text-input label="md width" name="w-md" width="md"></civ-text-input>
       <civ-text-input label="lg width" name="w-lg" width="lg"></civ-text-input>
       <civ-text-input label="xl width" name="w-xl" width="xl"></civ-text-input>
@@ -164,75 +162,14 @@ export const InputTypes: Story = {
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-4">
       <civ-text-input label="Text" name="text" type="text"></civ-text-input>
-      <civ-text-input label="Email address" name="email" type="email" hint="For example: name@agency.gov"></civ-text-input>
       <civ-text-input label="Password" name="password" type="password"></civ-text-input>
-      <civ-text-input label="Phone number" name="phone" type="tel" hint="For example: (555) 555-5555"></civ-text-input>
-      <civ-text-input label="Website URL" name="url" type="url" hint="For example: https://agency.gov"></civ-text-input>
+      <civ-text-input label="Search" name="search" type="search" leading-icon="search"></civ-text-input>
       <civ-text-input label="Number" name="number" type="number"></civ-text-input>
     </div>
   `,
 };
 
-// ── Mask Presets ──────────────────────────────────────────────
-
-export const MaskSSN: Story = {
-  name: 'Mask: Social Security number',
-  render: () => html`
-    <civ-text-input
-      label="Social Security number"
-      name="ssn"
-      mask="ssn"
-      hint="We need this to verify your identity"
-      required
-    ></civ-text-input>
-  `,
-};
-
-export const MaskPhoneUS: Story = {
-  name: 'Mask: Phone number',
-  render: () => html`
-    <civ-text-input
-      label="Phone number"
-      name="phone"
-      mask="phone-us"
-      hint="For example: (555) 123-4567"
-    ></civ-text-input>
-  `,
-};
-
-export const MaskZip: Story = {
-  name: 'Mask: ZIP code',
-  render: () => html`
-    <civ-text-input
-      label="ZIP code"
-      name="zip"
-      mask="zip"
-      width="sm"
-    ></civ-text-input>
-  `,
-};
-
-export const MaskEIN: Story = {
-  name: 'Mask: Employer Identification Number',
-  render: () => html`
-    <civ-text-input
-      label="Employer Identification Number"
-      name="ein"
-      mask="ein"
-    ></civ-text-input>
-  `,
-};
-
-export const MaskCurrency: Story = {
-  name: 'Mask: Currency',
-  render: () => html`
-    <civ-text-input
-      label="Annual salary"
-      name="salary"
-      mask="currency"
-    ></civ-text-input>
-  `,
-};
+// ── Custom Mask Pattern ─────────────────────────────────────
 
 export const MaskCustom: Story = {
   name: 'Mask: Custom pattern',
@@ -268,34 +205,6 @@ export const CharacterCounterShortLimit: Story = {
       name="headline"
       maxlength="20"
       value="This headline is way too long for the limit"
-    ></civ-text-input>
-  `,
-};
-
-// ── Declarative Validation ────────────────────────────────────
-
-export const ValidateEmail: Story = {
-  render: () => html`
-    <civ-text-input
-      label="Email address"
-      name="email"
-      type="email"
-      validate="email"
-      hint="For example: name@agency.gov"
-      required
-    ></civ-text-input>
-  `,
-};
-
-export const ValidateZIP: Story = {
-  render: () => html`
-    <civ-text-input
-      label="ZIP code"
-      name="zip"
-      validate="zip"
-      inputmode="numeric"
-      width="xs"
-      hint="5-digit ZIP code"
     ></civ-text-input>
   `,
 };
@@ -342,24 +251,29 @@ export const LeadingAndTrailingIcons: Story = {
   `,
 };
 
-// ── Usage Example ─────────────────────────────────────────────
+// ── Prefix / Suffix ─────────────────────────────────────────
 
-export const GovernmentContactForm: Story = {
-  name: 'Usage: Government Contact Form',
+export const Prefix: Story = {
+  name: 'Prefix',
   render: () => html`
-    <form
-      @submit="${(e: Event) => {
-        e.preventDefault();
-        const form = e.target as HTMLFormElement;
-        const data = new FormData(form);
-        alert(JSON.stringify(Object.fromEntries(data)));
-      }}"
-    >
-      <civ-text-input label="Full name" name="full-name" required></civ-text-input>
-      <civ-text-input label="Email address" name="email" type="email" required hint="For example: name@agency.gov" validate="email"></civ-text-input>
-      <civ-text-input label="Phone number" name="phone" type="tel" mask="phone-us" hint="For example: (555) 123-4567"></civ-text-input>
-      <civ-text-input label="Social Security number" name="ssn" mask="ssn" required hint="We need this to verify your identity"></civ-text-input>
-      <civ-button type="submit" class="civ-mt-4">Submit</civ-button>
-    </form>
+    <civ-text-input
+      label="Social handle"
+      name="handle"
+      prefix="@"
+      width="md"
+    ></civ-text-input>
+  `,
+};
+
+export const Suffix: Story = {
+  name: 'Suffix',
+  render: () => html`
+    <civ-text-input
+      label="Weight"
+      name="weight"
+      suffix="lbs"
+      inputmode="decimal"
+      width="sm"
+    ></civ-text-input>
   `,
 };

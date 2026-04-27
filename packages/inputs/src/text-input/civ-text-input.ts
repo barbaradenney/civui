@@ -46,6 +46,7 @@ export class CivTextInput extends CivFormElement {
   @property({ type: String }) pattern: string = '';
   @property({ type: Number }) maxlength?: number;
   @property({ type: Number }) minlength?: number;
+  @property({ type: Boolean, attribute: 'hide-char-count' }) hideCharCount = false;
   @property({ type: String }) autocomplete: string = '';
   @property({ type: String }) inputmode: string = '';
   @property({ type: String }) mask: TextInputMask = '';
@@ -136,6 +137,7 @@ export class CivTextInput extends CivFormElement {
    * rules drive `effectiveMaxlength` and would confuse a literal char count.
    */
   private get _showCharCount(): boolean {
+    if (this.hideCharCount) return false;
     if (this._maskDef || this.maskPattern) return false;
     return this.maxlength != null && this.maxlength > 0;
   }

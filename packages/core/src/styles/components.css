@@ -1474,7 +1474,7 @@
            civ-border-0 civ-bg-transparent civ-cursor-pointer civ-rounded-full;
     width: 1.5rem;
     height: 1.5rem;
-    inset-inline-end: 0.5rem;
+    inset-inline-end: 0.625rem;
     top: 50%;
     transform: translateY(-50%);
     transition: background-color 0.15s;
@@ -1486,7 +1486,7 @@
 
   /* Add padding so input text doesn't overlap the clear button */
   :has(> .civ-clear-btn) > input {
-    padding-right: 2rem;
+    padding-inline-end: 2.25rem;
   }
 
   /* ── Form error summary ─────────────────────────────────────── */

@@ -1228,8 +1228,8 @@
     @apply civ-relative civ-inline-flex civ-items-center
            civ-rounded-full civ-border civ-transition-colors
            civ-bg-base-light civ-border-base civ-cursor-pointer;
-    width: 2.5em;
-    height: 1.5em;
+    width: 3em;
+    height: 1.75em;
   }
 
   .civ-toggle-thumb {
@@ -1237,8 +1237,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 1.125em;
-    height: 1.125em;
+    width: 1.375em;
+    height: 1.375em;
     top: 0.125em;
     transition: inset-inline-start 0.15s ease;
   }

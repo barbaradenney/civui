@@ -77,6 +77,39 @@ export function renderLegend({
 }
 
 /**
+ * Render a label for a `div[role="group"]` — a single conceptual field
+ * composed of multiple sub-inputs (e.g., memorable-date, yes-no).
+ *
+ * Unlike `renderLabel`, this omits the `for` attribute since it labels
+ * a group via `aria-labelledby`, not a single native input.
+ */
+export function renderGroupLabel({
+  label,
+  labelId,
+  required,
+  showRequired,
+}: {
+  label: string;
+  labelId: string;
+  required: boolean;
+  showRequired?: boolean;
+}) {
+  if (!label) return nothing;
+  const indicatorVisible = showRequired ?? required;
+  return html`
+    <label
+      class="civ-label"
+      id="${labelId}"
+    >
+      ${label}
+      ${indicatorVisible
+        ? html`<span class="civ-required-mark">${t('required')}</span>`
+        : nothing}
+    </label>
+  `;
+}
+
+/**
  * Render a hint span. Returns nothing if text is falsy.
  * @param groupSpacing - true for group components (civ-hint--group), false for individual inputs (civ-hint)
  */

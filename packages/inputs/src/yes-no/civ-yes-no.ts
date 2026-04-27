@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivFormElement, dispatch, renderLegend, renderHint, renderError, buildDescribedBy, resolveGroupNavIndex, isRtl } from '@civui/core';
+import { CivFormElement, dispatch, renderGroupLabel, renderHint, renderError, buildDescribedBy, resolveGroupNavIndex, isRtl } from '@civui/core';
 
 /**
  * CivUI Yes/No
@@ -49,7 +49,7 @@ export class CivYesNo extends CivFormElement {
   @property({ type: String, attribute: 'skip-value' }) skipValue = 'skip';
 
   /** Legend ID — referenced by the inner radiogroup's `aria-labelledby`. */
-  private _legendId = this.generateId('yes-no-legend');
+  private _labelId = this.generateId('yes-no-label');
 
   protected override _defaultValue = '';
   private _boundOnKeydown = this._onKeydown.bind(this);
@@ -86,21 +86,22 @@ export class CivYesNo extends CivFormElement {
     // the radio choices inside the fieldset without becoming part of the
     // mutually-exclusive group.
     return html`
-      <fieldset
+      <div
+        role="group"
         class="civ-fieldset"
-        ?disabled="${this.disabled}"
+        aria-labelledby="${this.legend ? this._labelId : nothing}"
       >
-        ${renderLegend({
-          legend: this.legend,
+        ${renderGroupLabel({
+          label: this.legend,
+          labelId: this._labelId,
           required: this.required,
-          legendId: this._legendId,
         })}
-        ${renderHint(this._hintId, this.hint, true)}
-        ${renderError(this._errorId, this.error, true)}
+        ${renderHint(this._hintId, this.hint)}
+        ${renderError(this._errorId, this.error)}
         <div
           class="civ-flex civ-gap-2"
           role="radiogroup"
-          aria-labelledby="${this.legend ? this._legendId : nothing}"
+          aria-labelledby="${this.legend ? this._labelId : nothing}"
           aria-describedby="${describedBy || nothing}"
           aria-invalid="${this.error ? 'true' : nothing}"
           aria-required="${this.required || nothing}"
@@ -150,7 +151,7 @@ export class CivYesNo extends CivFormElement {
               >${this.skipLabel}</button>
             `
           : nothing}
-      </fieldset>
+      </div>
     `;
   }
 

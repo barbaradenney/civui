@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivFormElement, dispatch, getMonthNames, interpolate, parseISODate, renderLegend, renderHint, renderError, syncLegendToLabel, t } from '@civui/core';
+import { CivFormElement, dispatch, getMonthNames, interpolate, parseISODate, renderGroupLabel, renderHint, renderError, syncLegendToLabel, t } from '@civui/core';
 
 // Import child components
 import '../select/civ-select.js';
@@ -44,7 +44,7 @@ export class CivMemorableDate extends CivFormElement {
   @state() private _day = '';
   @state() private _year = '';
 
-  private _legendId = this.generateId('legend');
+  private _labelId = this.generateId('label');
   private _boundFieldInput = this._onFieldInput.bind(this);
   private _boundFieldChange = this._onFieldCommit.bind(this);
   private _cachedLocale = '';
@@ -157,15 +157,17 @@ export class CivMemorableDate extends CivFormElement {
 
   override render() {
     return html`
-      <fieldset
+      <div
+        role="group"
         class="civ-fieldset"
+        aria-labelledby="${this._labelId}"
         aria-describedby="${this._ariaDescribedBy || nothing}"
         aria-invalid="${this.error ? 'true' : nothing}"
         aria-required="${this.required || nothing}"
       >
-        ${renderLegend({ legend: this.legend, required: this.required, legendId: this._legendId })}
-        ${renderHint(this._hintId, this.hint, true)}
-        ${renderError(this._errorId, this.error, true)}
+        ${renderGroupLabel({ label: this.legend, labelId: this._labelId, required: this.required })}
+        ${renderHint(this._hintId, this.hint)}
+        ${renderError(this._errorId, this.error)}
         <div class="civ-memorable-date-fields" data-civ-memorable-date>
           <div class="civ-memorable-date-month">
             <civ-select
@@ -215,7 +217,7 @@ export class CivMemorableDate extends CivFormElement {
             ></civ-text-input>
           </div>
         </div>
-      </fieldset>
+      </div>
     `;
   }
 

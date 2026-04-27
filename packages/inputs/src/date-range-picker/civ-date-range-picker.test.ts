@@ -6,10 +6,10 @@ import './civ-date-range-picker.js';
 afterEach(cleanupFixtures);
 
 describe('civ-date-range-picker', () => {
-  it('renders a fieldset with the given legend', async () => {
+  it('renders a group with the given label', async () => {
     const el = await fixture('<civ-date-range-picker legend="Stay dates"></civ-date-range-picker>');
-    const legend = el.querySelector('legend');
-    expect(legend?.textContent).toContain('Stay dates');
+    const label = el.querySelector('label.civ-label');
+    expect(label?.textContent).toContain('Stay dates');
   });
 
   it('renders two civ-date-picker children with default labels', async () => {
@@ -193,7 +193,7 @@ describe('civ-date-range-picker', () => {
   it('uses Light DOM (no shadow root)', async () => {
     const el = await fixture('<civ-date-range-picker legend="Stay"></civ-date-range-picker>');
     expect(el.shadowRoot).toBeNull();
-    expect(el.querySelector('fieldset')).not.toBeNull();
+    expect(el.querySelector('[role="group"]')).not.toBeNull();
   });
 
   it('has static formAssociated = true', () => {

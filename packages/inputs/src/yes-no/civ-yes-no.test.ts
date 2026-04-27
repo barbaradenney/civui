@@ -5,12 +5,12 @@ import './civ-yes-no.js';
 afterEach(cleanupFixtures);
 
 describe('civ-yes-no', () => {
-  it('renders with a legend', async () => {
+  it('renders with a label', async () => {
     const el = await fixture('<civ-yes-no legend="Are you a U.S. citizen?"></civ-yes-no>');
 
-    const legend = el.querySelector('legend');
-    expect(legend).not.toBeNull();
-    expect(legend!.textContent).toContain('Are you a U.S. citizen?');
+    const label = el.querySelector('label.civ-label');
+    expect(label).not.toBeNull();
+    expect(label!.textContent).toContain('Are you a U.S. citizen?');
   });
 
   it('renders Yes and No buttons with role="radio"', async () => {
@@ -22,16 +22,15 @@ describe('civ-yes-no', () => {
     expect(buttons[1].textContent).toBe('No');
   });
 
-  it('renders a fieldset wrapping a div with role="radiogroup"', async () => {
+  it('renders a group wrapping a div with role="radiogroup"', async () => {
     const el = await fixture('<civ-yes-no legend="Question"></civ-yes-no>');
 
-    const fieldset = el.querySelector('fieldset')!;
-    expect(fieldset).not.toBeNull();
+    const outerGroup = el.querySelector('[role="group"]')!;
+    expect(outerGroup).not.toBeNull();
     // The radiogroup role lives on the inner div so the optional skip
     // affordance can sit alongside the radios without becoming part of
     // the mutually-exclusive group.
-    expect(fieldset.getAttribute('role')).toBeNull();
-    const group = fieldset.querySelector('[role="radiogroup"]');
+    const group = outerGroup.querySelector('[role="radiogroup"]');
     expect(group).not.toBeNull();
     expect(group!.tagName).toBe('DIV');
   });
@@ -87,7 +86,7 @@ describe('civ-yes-no', () => {
   it('renders hint text', async () => {
     const el = await fixture('<civ-yes-no legend="Question" hint="Select one option"></civ-yes-no>');
 
-    const hint = el.querySelector('.civ-hint--group');
+    const hint = el.querySelector('.civ-hint');
     expect(hint).not.toBeNull();
     expect(hint!.textContent).toBe('Select one option');
   });
@@ -163,7 +162,7 @@ describe('civ-yes-no', () => {
     const el = await fixture('<civ-yes-no legend="Question"></civ-yes-no>');
 
     expect(el.shadowRoot).toBeNull();
-    expect(el.querySelector('fieldset')).not.toBeNull();
+    expect(el.querySelector('[role="group"]')).not.toBeNull();
   });
 
   it('applies focus-visible:civ-focus-ring to buttons', async () => {
@@ -321,8 +320,8 @@ describe('civ-yes-no', () => {
       );
       const skip = el.querySelector('[data-civ-skip]')!;
       expect(skip.getAttribute('role')).not.toBe('radio');
-      const fieldset = el.querySelector('fieldset')!;
-      expect(fieldset.getAttribute('role')).toBeNull();
+      const outerGroup = el.querySelector('[role="group"]')!;
+      expect(outerGroup).not.toBeNull();
       const radiogroup = el.querySelector('[role="radiogroup"]')!;
       expect(radiogroup.tagName.toLowerCase()).toBe('div');
       expect(radiogroup.contains(skip)).toBe(false);
@@ -360,10 +359,10 @@ describe('civ-yes-no', () => {
       const el = await fixture(
         '<civ-yes-no legend="Q" hint="Pick" error="err" required skip-label="Skip"></civ-yes-no>',
       );
-      const fieldset = el.querySelector('fieldset')!;
-      expect(fieldset.getAttribute('aria-describedby')).toBeNull();
-      expect(fieldset.getAttribute('aria-invalid')).toBeNull();
-      expect(fieldset.getAttribute('aria-required')).toBeNull();
+      const outerGroup = el.querySelector('[role="group"]')!;
+      expect(outerGroup.getAttribute('aria-describedby')).toBeNull();
+      expect(outerGroup.getAttribute('aria-invalid')).toBeNull();
+      expect(outerGroup.getAttribute('aria-required')).toBeNull();
 
       const inner = el.querySelector('[role="radiogroup"]')!;
       expect(inner.getAttribute('aria-describedby')).toBeTruthy();
@@ -375,10 +374,10 @@ describe('civ-yes-no', () => {
       const el = await fixture(
         '<civ-yes-no legend="Did you serve?" skip-label="Skip"></civ-yes-no>',
       );
-      const legend = el.querySelector('legend')!;
-      expect(legend.id).toBeTruthy();
+      const label = el.querySelector('label.civ-label')!;
+      expect(label.id).toBeTruthy();
       const inner = el.querySelector('[role="radiogroup"]')!;
-      expect(inner.getAttribute('aria-labelledby')).toBe(legend.id);
+      expect(inner.getAttribute('aria-labelledby')).toBe(label.id);
       expect(inner.getAttribute('aria-label')).toBeNull();
     });
   });

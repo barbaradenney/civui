@@ -55,6 +55,7 @@ export {
 export {
   renderLabel,
   renderLegend,
+  renderGroupLabel,
   renderHint,
   renderError,
   inputClasses,

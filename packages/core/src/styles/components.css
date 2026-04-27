@@ -97,10 +97,14 @@
     }
   }
 
-  /* Tighter spacing when legend/hint sits directly above a field group */
+  /* Tighter spacing when label/legend/hint sits directly above a field group */
   .civ-fieldset > .civ-legend + .civ-hint + .civ-memorable-date-fields,
   .civ-fieldset > .civ-legend + .civ-memorable-date-fields,
-  .civ-fieldset > .civ-hint--group + .civ-memorable-date-fields {
+  .civ-fieldset > .civ-hint--group + .civ-memorable-date-fields,
+  .civ-fieldset > .civ-label + .civ-hint + .civ-memorable-date-fields,
+  .civ-fieldset > .civ-label + .civ-memorable-date-fields,
+  .civ-fieldset > .civ-hint + .civ-memorable-date-fields,
+  .civ-fieldset > .civ-error-text + .civ-memorable-date-fields {
     margin-top: var(--civ-spacing-1, 4px);
   }
 

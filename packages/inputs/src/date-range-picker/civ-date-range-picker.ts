@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivFormElement, dispatch, renderLegend, renderHint, renderError, buildDescribedBy, interpolate, t } from '@civui/core';
+import { CivFormElement, dispatch, renderGroupLabel, renderHint, renderError, buildDescribedBy, interpolate, t } from '@civui/core';
 import '../date-picker/civ-date-picker.js';
 
 export interface DateRangeValue {
@@ -72,8 +72,10 @@ function daysBetween(startIso: string, endIso: string): number {
  */
 @customElement('civ-date-range-picker')
 export class CivDateRangePicker extends CivFormElement {
-  /** Fieldset legend. */
+  /** Group label text. */
   @property({ type: String }) legend = '';
+
+  private _labelId = this.generateId('label');
 
   /** Outer lower bound (ISO yyyy-mm-dd). */
   @property({ type: String }) min = '';
@@ -157,8 +159,8 @@ export class CivDateRangePicker extends CivFormElement {
     const endLabel = this.endLabel || t('dateRangeEndLabel');
 
     return html`
-      <fieldset class="civ-fieldset" aria-describedby="${describedBy || nothing}">
-        ${renderLegend({ legend: this.legend, required: this.required && !this.hideRequiredIndicator })}
+      <div role="group" class="civ-fieldset" aria-labelledby="${this._labelId}" aria-describedby="${describedBy || nothing}">
+        ${renderGroupLabel({ label: this.legend, labelId: this._labelId, required: this.required && !this.hideRequiredIndicator })}
         ${renderHint(this._hintId, this.hint)}
         ${renderError(this._errorId, this.error)}
 
@@ -196,7 +198,7 @@ export class CivDateRangePicker extends CivFormElement {
             @civ-change="${this._onEndChange}"
           ></civ-date-picker>
         </div>
-      </fieldset>
+      </div>
     `;
   }
 

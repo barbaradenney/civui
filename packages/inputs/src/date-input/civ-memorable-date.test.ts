@@ -5,14 +5,14 @@ import './civ-memorable-date.js';
 afterEach(cleanupFixtures);
 
 describe('civ-memorable-date rendering', () => {
-  it('renders a fieldset with legend', async () => {
+  it('renders a group with label', async () => {
     const el = await fixture('<civ-memorable-date legend="Date of birth" name="dob"></civ-memorable-date>');
 
-    const fieldset = el.querySelector('fieldset');
-    expect(fieldset).not.toBeNull();
-    const legend = el.querySelector('legend');
-    expect(legend).not.toBeNull();
-    expect(legend!.textContent).toContain('Date of birth');
+    const group = el.querySelector('[role="group"]');
+    expect(group).not.toBeNull();
+    const label = el.querySelector('label.civ-label');
+    expect(label).not.toBeNull();
+    expect(label!.textContent).toContain('Date of birth');
   });
 
   it('renders month select and day/year text inputs', async () => {
@@ -61,15 +61,15 @@ describe('civ-memorable-date rendering', () => {
     const el = await fixture('<civ-memorable-date legend="Date of birth"></civ-memorable-date>');
 
     expect(el.shadowRoot).toBeNull();
-    expect(el.querySelector('fieldset')).not.toBeNull();
+    expect(el.querySelector('[role="group"]')).not.toBeNull();
   });
 
-  it('renders legend (not label) for the group', async () => {
+  it('renders label for the group', async () => {
     const el = await fixture('<civ-memorable-date legend="Date of birth"></civ-memorable-date>');
 
-    const legend = el.querySelector('legend');
-    expect(legend).not.toBeNull();
-    expect(legend!.textContent).toContain('Date of birth');
+    const label = el.querySelector('label.civ-label');
+    expect(label).not.toBeNull();
+    expect(label!.textContent).toContain('Date of birth');
   });
 
   it('lays out fields in a responsive container', async () => {
@@ -82,25 +82,25 @@ describe('civ-memorable-date rendering', () => {
 });
 
 describe('civ-memorable-date accessibility', () => {
-  it('sets aria-invalid on fieldset when error is present', async () => {
+  it('sets aria-invalid on group when error is present', async () => {
     const el = await fixture('<civ-memorable-date legend="Date of birth" error="Invalid date"></civ-memorable-date>');
 
-    const fieldset = el.querySelector('fieldset');
-    expect(fieldset!.getAttribute('aria-invalid')).toBe('true');
+    const group = el.querySelector('[role="group"]');
+    expect(group!.getAttribute('aria-invalid')).toBe('true');
   });
 
-  it('omits aria-invalid on fieldset when no error', async () => {
+  it('omits aria-invalid on group when no error', async () => {
     const el = await fixture('<civ-memorable-date legend="Date of birth"></civ-memorable-date>');
 
-    const fieldset = el.querySelector('fieldset');
-    expect(fieldset!.getAttribute('aria-invalid')).toBeNull();
+    const group = el.querySelector('[role="group"]');
+    expect(group!.getAttribute('aria-invalid')).toBeNull();
   });
 
-  it('sets aria-required on fieldset when required', async () => {
+  it('sets aria-required on group when required', async () => {
     const el = await fixture('<civ-memorable-date legend="Date of birth" required></civ-memorable-date>');
 
-    const fieldset = el.querySelector('fieldset');
-    expect(fieldset!.getAttribute('aria-required')).toBe('true');
+    const group = el.querySelector('[role="group"]');
+    expect(group!.getAttribute('aria-required')).toBe('true');
   });
 
   it('day and year inputs use type="text" with inputmode="numeric"', async () => {

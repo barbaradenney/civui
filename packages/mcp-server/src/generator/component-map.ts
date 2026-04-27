@@ -94,7 +94,7 @@ const COMPONENT_MAP: Record<FieldType, ComponentMapping> = {
   },
   'memorable-date': {
     tag: 'civ-memorable-date',
-    labelProp: 'legend',
+    labelProp: 'label',
     isGroup: false,
     defaultHint: 'For example: January 15 1990',
   },

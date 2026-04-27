@@ -8,7 +8,7 @@ const meta: Meta = {
   component: 'civ-date-range-picker',
   tags: ['autodocs'],
   argTypes: {
-    legend: { control: 'text' },
+    label: { control: 'text' },
     name: { control: 'text' },
     min: { control: 'text' },
     max: { control: 'text' },
@@ -24,14 +24,14 @@ type Story = StoryObj;
 
 export const Default: Story = {
   args: {
-    legend: 'Stay dates',
+    label: 'Stay dates',
     name: 'stay',
     required: false,
     disabled: false,
   },
   render: (args) => html`
     <civ-date-range-picker
-      legend="${args.legend}"
+      label="${args.label}"
       name="${args.name}"
       ?required="${args.required}"
       ?disabled="${args.disabled}"
@@ -42,7 +42,7 @@ export const Default: Story = {
 export const Required: Story = {
   render: () => html`
     <civ-date-range-picker
-      legend="Trip dates"
+      label="Trip dates"
       name="trip"
       required
     ></civ-date-range-picker>
@@ -61,7 +61,7 @@ export const WithOuterBounds: Story = {
   },
   render: () => html`
     <civ-date-range-picker
-      legend="Filing date range"
+      label="Filing date range"
       name="filing"
       min="2026-01-01"
       max="2026-12-31"
@@ -73,7 +73,7 @@ export const MinRangeDays: Story = {
   name: 'min-range-days (e.g. 2-night minimum)',
   render: () => html`
     <civ-date-range-picker
-      legend="Stay dates"
+      label="Stay dates"
       name="stay"
       min-range-days="2"
       hint="Minimum 2-night stay"
@@ -85,7 +85,7 @@ export const MaxRangeDays: Story = {
   name: 'max-range-days (e.g. 30-day cap)',
   render: () => html`
     <civ-date-range-picker
-      legend="Leave dates"
+      label="Leave dates"
       name="leave"
       max-range-days="30"
       hint="Max 30 consecutive days"
@@ -96,7 +96,7 @@ export const MaxRangeDays: Story = {
 export const CustomLabels: Story = {
   render: () => html`
     <civ-date-range-picker
-      legend="Hospital stay"
+      label="Hospital stay"
       name="stay"
       start-label="Admission date"
       end-label="Discharge date"
@@ -109,7 +109,7 @@ export const CustomLabels: Story = {
 export const Disabled: Story = {
   render: () => html`
     <civ-date-range-picker
-      legend="Stay dates"
+      label="Stay dates"
       name="stay"
       value='{"start":"2026-05-01","end":"2026-05-08"}'
       disabled
@@ -129,7 +129,7 @@ export const GovernmentLeaveRequest: Story = {
       }}"
     >
       <civ-date-range-picker
-        legend="Leave dates"
+        label="Leave dates"
         name="leave"
         min-range-days="1"
         max-range-days="30"

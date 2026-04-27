@@ -26,6 +26,9 @@ const LABEL_COMPONENTS = [
   'civ-select',
   'civ-combobox',
   'civ-date-picker',
+  'civ-memorable-date',
+  'civ-date-range-picker',
+  'civ-yes-no',
   'civ-checkbox',
   'civ-toggle',
   'civ-file-upload',
@@ -35,7 +38,6 @@ const LABEL_COMPONENTS = [
 const LEGEND_COMPONENTS = [
   'civ-radio-group',
   'civ-checkbox-group',
-  'civ-memorable-date',
   'civ-segmented-control',
   'civ-fieldset',
 ] as const;

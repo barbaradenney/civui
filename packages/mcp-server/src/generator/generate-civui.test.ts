@@ -52,7 +52,7 @@ describe('generateCivUI', () => {
     expect(html).toContain('hint="For example: 123 45 6789"');
   });
 
-  it('generates memorable-date with legend and default hint', () => {
+  it('generates memorable-date with label and default hint', () => {
     const schema: FormSchema = {
       sections: [
         {
@@ -64,7 +64,7 @@ describe('generateCivUI', () => {
     };
     const html = generateCivUI(schema);
     expect(html).toContain('<civ-memorable-date');
-    expect(html).toContain('legend="Date of birth"');
+    expect(html).toContain('label="Date of birth"');
     expect(html).toContain('hint="For example: January 15 1990"');
   });
 

@@ -96,7 +96,7 @@ describe('formToSchema', () => {
   });
 
   it('maps memorable-date correctly', () => {
-    const html = '<civ-memorable-date legend="Date of birth" name="dob" hint="For example: January 15 1990"></civ-memorable-date>';
+    const html = '<civ-memorable-date label="Date of birth" name="dob" hint="For example: January 15 1990"></civ-memorable-date>';
     const schema = formToSchema(html);
     expect(schema.sections[0].fields[0].type).toBe('memorable-date');
   });

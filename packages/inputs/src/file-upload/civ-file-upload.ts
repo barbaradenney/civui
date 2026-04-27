@@ -233,6 +233,7 @@ export class CivFileUpload extends CivFormElement {
 
   /** IDs of initial files the user has removed since hydration. */
   private _removedInitialIds = new Set<string>();
+  private _filesListId = this.generateId('files');
 
   private _previewUrls = new Map<File, string>();
   private _progressAnnounceTimer?: ReturnType<typeof setTimeout>;
@@ -312,7 +313,7 @@ export class CivFileUpload extends CivFormElement {
               aria-required="${this.required || nothing}"
               aria-invalid="${this.error ? 'true' : nothing}"
               aria-disabled="${this.disabled || nothing}"
-              aria-describedby="${this._ariaDescribedBy || nothing}"
+              aria-describedby="${[this._ariaDescribedBy, this._files.length > 0 ? this._filesListId : ''].filter(Boolean).join(' ') || nothing}"
               @keydown="${this._onDropzoneKeydown}"
               data-dragging="${this._dragging ? '' : nothing}"
             >
@@ -346,7 +347,7 @@ export class CivFileUpload extends CivFormElement {
 
         ${this._files.length > 0
           ? html`
-              <ul class="civ-list-none civ-p-0 civ-mt-2 civ-space-y-1" aria-label="${this.filesListLabel || t('fileUploadFilesListLabel')}">
+              <ul id="${this._filesListId}" class="civ-list-none civ-p-0 civ-mt-2 civ-space-y-1" aria-label="${this.filesListLabel || t('fileUploadFilesListLabel')}">
                 ${(this._showAllFiles ? this._files : this._files.slice(0, CivFileUpload._FILE_LIST_LIMIT)).map(
                   (file, index) => html`
                     <li class="civ-list-item ${file.status === 'success' ? 'civ-list-item--success' : ''} ${file.status === 'error' ? 'civ-list-item--error' : ''}">

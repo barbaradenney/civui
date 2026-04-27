@@ -399,7 +399,7 @@ ${checkOptions}
 
     case 'memorable-date':
       return `      <civ-memorable-date
-        legend="${escapeHtml(field.label)}"
+        label="${escapeHtml(field.label)}"
         name="${escapeHtml(field.name)}"
         ${field.required ? 'required' : ''}
         ${field.hint ? `hint="${escapeHtml(field.hint)}"` : ''}

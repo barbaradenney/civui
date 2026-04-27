@@ -38,7 +38,7 @@ function daysBetween(startIso: string, endIso: string): number {
  *
  * @element civ-date-range-picker
  *
- * @prop {string} legend - Fieldset legend
+ * @prop {string} label - Group label text
  * @prop {string} name - Base form-data key. Submits as `${name}.start` and `${name}.end`
  * @prop {string} value - JSON `{ start, end }` for declarative initialization
  * @prop {string} min - Outer lower bound (ISO yyyy-mm-dd)
@@ -60,7 +60,7 @@ function daysBetween(startIso: string, endIso: string): number {
  * @example
  * ```html
  * <civ-date-range-picker
- *   legend="Stay dates"
+ *   label="Stay dates"
  *   name="trip"
  *   min="2026-01-01"
  *   max="2026-12-31"
@@ -72,8 +72,6 @@ function daysBetween(startIso: string, endIso: string): number {
  */
 @customElement('civ-date-range-picker')
 export class CivDateRangePicker extends CivFormElement {
-  /** Group label text. */
-  @property({ type: String }) legend = '';
 
   private _labelId = this.generateId('label');
 
@@ -160,7 +158,7 @@ export class CivDateRangePicker extends CivFormElement {
 
     return html`
       <div role="group" class="civ-fieldset" aria-labelledby="${this._labelId}" aria-describedby="${describedBy || nothing}">
-        ${renderGroupLabel({ label: this.legend, labelId: this._labelId, required: this.required && !this.hideRequiredIndicator })}
+        ${renderGroupLabel({ label: this.label, labelId: this._labelId, required: this.required && !this.hideRequiredIndicator })}
         ${renderHint(this._hintId, this.hint)}
         ${renderError(this._errorId, this.error)}
 
@@ -290,7 +288,7 @@ export class CivDateRangePicker extends CivFormElement {
 
   protected override _updateValidity(): void {
     if (this.required && !this._isComplete()) {
-      const label = this.legend || this.label || t('fieldFallbackLabel');
+      const label = this.label || t('fieldFallbackLabel');
       const anchor = this.querySelector('input') as HTMLElement | null;
       this._setValidity(
         { valueMissing: true },

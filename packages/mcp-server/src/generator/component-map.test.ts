@@ -72,10 +72,10 @@ describe('component-map', () => {
     expect(mapping.defaultHint).toBeTruthy();
   });
 
-  it('maps memorable-date to civ-memorable-date with legend', () => {
+  it('maps memorable-date to civ-memorable-date with label', () => {
     const mapping = getComponentMapping('memorable-date');
     expect(mapping.tag).toBe('civ-memorable-date');
-    expect(mapping.labelProp).toBe('legend');
+    expect(mapping.labelProp).toBe('label');
     expect(mapping.defaultHint).toBe('For example: January 15 1990');
   });
 

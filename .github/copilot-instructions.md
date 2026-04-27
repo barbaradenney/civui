@@ -162,7 +162,7 @@ Light DOM only. Tailwind CSS with `civ-` prefix. ElementInternals for form parti
 
 ```html
 <civ-memorable-date
-  legend="Date of birth"
+  label="Date of birth"
   name="dob"
   hint="For example: January 15 1990"
   required

@@ -74,7 +74,7 @@ describe('suggestFix', () => {
   });
 
   it('adds date format hints', () => {
-    const html = '<civ-memorable-date legend="Date of birth" name="dob"></civ-memorable-date>';
+    const html = '<civ-memorable-date label="Date of birth" name="dob"></civ-memorable-date>';
     const result = suggestFix(html, ['missing-hint-date']);
     expect(result.fixedHtml).toContain('hint="For example: January 15 1990"');
   });

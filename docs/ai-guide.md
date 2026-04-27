@@ -442,7 +442,7 @@ The error appears on the host (so the form error summary picks it up) and clears
 **Example:**
 ```html
 <civ-date-range-picker
-  legend="Leave dates"
+  label="Leave dates"
   name="leave"
   min="2026-01-01"
   max="2026-12-31"
@@ -460,7 +460,7 @@ The error appears on the host (so the form error summary picks it up) and clears
 Three-field date entry (Month select + Day input + Year input). Preferred for known dates like birthdays.
 
 **Props (beyond standard):**
-- `legend` — group label
+- `label` — group label
 - `monthLabel`, `dayLabel`, `yearLabel` — field labels (default: `'Month'`, `'Day'`, `'Year'`)
 - `monthEmptyLabel` — month select placeholder (default: `'- Month -'`)
 - `dayPlaceholder`, `yearPlaceholder` — input placeholders
@@ -475,7 +475,7 @@ Three-field date entry (Month select + Day input + Year input). Preferred for kn
 **Example:**
 ```html
 <civ-memorable-date
-  legend="Date of birth"
+  label="Date of birth"
   name="dob"
   hint="For example: January 15 1990"
   required
@@ -809,14 +809,14 @@ Yes/no radio group — common in government eligibility forms. Supports an optio
 ```html
 <!-- Standard yes/no -->
 <civ-yes-no
-  legend="Are you a United States citizen?"
+  label="Are you a United States citizen?"
   name="citizen"
   required
 ></civ-yes-no>
 
 <!-- With third option -->
 <civ-yes-no
-  legend="Do you have a service-connected disability?"
+  label="Do you have a service-connected disability?"
   name="disability"
   unsure-label="I'm not sure"
   required
@@ -824,7 +824,7 @@ Yes/no radio group — common in government eligibility forms. Supports an optio
 
 <!-- Custom third option value -->
 <civ-yes-no
-  legend="Does this apply to your household?"
+  label="Does this apply to your household?"
   name="applies"
   unsure-label="Does not apply"
   unsure-value="n/a"
@@ -844,7 +844,7 @@ Conditionally shows its children based on another field's value. Not form-partic
 
 **Example:**
 ```html
-<civ-yes-no legend="Are you a veteran?" name="veteran" required></civ-yes-no>
+<civ-yes-no label="Are you a veteran?" name="veteran" required></civ-yes-no>
 <civ-conditional when="veteran" eq="yes">
   <civ-text-input label="Service branch" name="branch" required></civ-text-input>
 </civ-conditional>
@@ -1065,7 +1065,7 @@ CivUI provides iOS (SwiftUI) and Android (Jetpack Compose) implementations with 
 
   <civ-fieldset legend="Application details">
     <civ-memorable-date
-      legend="Date of birth"
+      label="Date of birth"
       name="dob"
       hint="For example: January 15 1990"
       required
@@ -1336,7 +1336,7 @@ Both can coexist on the same `civ-yes-no`.
 
     <div data-step-label="Your relationship">
       <civ-yes-no
-        legend="Were you legally married at the time of their death?"
+        label="Were you legally married at the time of their death?"
         name="married"
         skip-label="Prefer not to answer"
         required

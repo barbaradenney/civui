@@ -203,8 +203,8 @@ export const GovernmentServicePeriods: Story = {
       hint="Add each period of military service separately"
     >
       <civ-text-input label="Branch of service" name="branch" required></civ-text-input>
-      <civ-memorable-date legend="Service start date" name="startDate" required hint="Enter your best estimate if unsure"></civ-memorable-date>
-      <civ-memorable-date legend="Service end date" name="endDate" required></civ-memorable-date>
+      <civ-memorable-date label="Service start date" name="startDate" required hint="Enter your best estimate if unsure"></civ-memorable-date>
+      <civ-memorable-date label="Service end date" name="endDate" required></civ-memorable-date>
       <civ-select label="Character of service" name="discharge" required></civ-select>
     </civ-repeater>
   `,

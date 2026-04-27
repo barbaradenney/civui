@@ -11,7 +11,7 @@ import { CivFormElement, dispatch, renderGroupLabel, renderHint, renderError, bu
  *
  * @element civ-yes-no
  *
- * @prop {string} legend - Question text
+ * @prop {string} label - Question text
  * @prop {string} hint - Hint text displayed below legend
  * @prop {string} error - Error message for the group
  * @prop {boolean} required - Whether a selection is required
@@ -30,7 +30,6 @@ import { CivFormElement, dispatch, renderGroupLabel, renderHint, renderError, bu
  */
 @customElement('civ-yes-no')
 export class CivYesNo extends CivFormElement {
-  @property({ type: String }) legend = '';
   @property({ type: String, attribute: 'yes-label' }) yesLabel = 'Yes';
   @property({ type: String, attribute: 'no-label' }) noLabel = 'No';
   @property({ type: String, attribute: 'unsure-label' }) unsureLabel = '';
@@ -89,10 +88,10 @@ export class CivYesNo extends CivFormElement {
       <div
         role="group"
         class="civ-fieldset"
-        aria-labelledby="${this.legend ? this._labelId : nothing}"
+        aria-labelledby="${this.label ? this._labelId : nothing}"
       >
         ${renderGroupLabel({
-          label: this.legend,
+          label: this.label,
           labelId: this._labelId,
           required: this.required,
         })}
@@ -101,7 +100,7 @@ export class CivYesNo extends CivFormElement {
         <div
           class="civ-flex civ-gap-2"
           role="radiogroup"
-          aria-labelledby="${this.legend ? this._labelId : nothing}"
+          aria-labelledby="${this.label ? this._labelId : nothing}"
           aria-describedby="${describedBy || nothing}"
           aria-invalid="${this.error ? 'true' : nothing}"
           aria-required="${this.required || nothing}"

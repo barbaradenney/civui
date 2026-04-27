@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivFormElement, dispatch, getMonthNames, interpolate, parseISODate, renderGroupLabel, renderHint, renderError, syncLegendToLabel, t } from '@civui/core';
+import { CivFormElement, dispatch, getMonthNames, interpolate, parseISODate, renderGroupLabel, renderHint, renderError, t } from '@civui/core';
 
 // Import child components
 import '../select/civ-select.js';
@@ -15,7 +15,7 @@ import '../text-input/civ-text-input.js';
  *
  * @element civ-memorable-date
  *
- * @prop {string} legend - Fieldset legend text
+ * @prop {string} label - Group label text
  * @prop {string} name - Base form field name (fields named {name}-month, {name}-day, {name}-year)
  * @prop {string} value - Date value in YYYY-MM-DD format
  * @prop {string} hint - Hint text
@@ -29,7 +29,6 @@ import '../text-input/civ-text-input.js';
  */
 @customElement('civ-memorable-date')
 export class CivMemorableDate extends CivFormElement {
-  @property({ type: String }) legend = '';
   @property({ type: String, attribute: 'month-label' }) monthLabel = '';
   @property({ type: String, attribute: 'day-label' }) dayLabel = '';
   @property({ type: String, attribute: 'year-label' }) yearLabel = '';
@@ -61,11 +60,6 @@ export class CivMemorableDate extends CivFormElement {
     super.disconnectedCallback();
     this.removeEventListener('civ-input', this._boundFieldInput as EventListener);
     this.removeEventListener('civ-change', this._boundFieldChange as EventListener);
-  }
-
-  protected override willUpdate(changed: Map<string, unknown>): void {
-    super.willUpdate(changed);
-    syncLegendToLabel(this, changed);
   }
 
   override updated(changed: Map<string, unknown>): void {
@@ -165,7 +159,7 @@ export class CivMemorableDate extends CivFormElement {
         aria-invalid="${this.error ? 'true' : nothing}"
         aria-required="${this.required || nothing}"
       >
-        ${renderGroupLabel({ label: this.legend, labelId: this._labelId, required: this.required })}
+        ${renderGroupLabel({ label: this.label, labelId: this._labelId, required: this.required })}
         ${renderHint(this._hintId, this.hint)}
         ${renderError(this._errorId, this.error)}
         <div class="civ-memorable-date-fields" data-civ-memorable-date>

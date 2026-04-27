@@ -207,7 +207,7 @@ export const GovernmentBenefitApplication: Story = {
       <div data-step-label="Personal information">
         <h3 class="civ-heading-md">Personal information</h3>
         <civ-name legend="Your name" name="name" required></civ-name>
-        <civ-memorable-date legend="Date of birth" name="dob" required hint="For example: January 15 1990"></civ-memorable-date>
+        <civ-memorable-date label="Date of birth" name="dob" required hint="For example: January 15 1990"></civ-memorable-date>
         <civ-text-input label="Social Security number" name="ssn" required mask="ssn" validate="ssn" type="tel" hint="We need this to verify your identity"></civ-text-input>
       </div>
       <div data-step-label="Contact information">

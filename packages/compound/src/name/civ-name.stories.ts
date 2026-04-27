@@ -151,7 +151,7 @@ export const GovernmentIdentitySection: Story = {
     <h3 class="civ-m-0 civ-mb-4 civ-text-xl">Personal information</h3>
     <civ-name legend="Veteran's name" name="veteranName" required></civ-name>
     <civ-memorable-date
-      legend="Date of birth"
+      label="Date of birth"
       name="dateOfBirth"
       required
       hint="For example: January 15 1990"

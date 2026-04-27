@@ -129,7 +129,7 @@ Fields and entire sections can show/hide based on answers:
 
 ```html
 <!-- Yes/No drives conditional reveal -->
-<civ-yes-no name="hasInsurance" legend="Do you have health insurance?">
+<civ-yes-no name="hasInsurance" label="Do you have health insurance?">
 </civ-yes-no>
 
 <civ-conditional watch="hasInsurance" show-when="yes">

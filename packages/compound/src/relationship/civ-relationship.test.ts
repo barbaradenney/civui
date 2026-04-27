@@ -110,7 +110,7 @@ describe('civ-relationship conditional fields', () => {
     await elementUpdated(el);
 
     const dates = el.querySelectorAll('civ-memorable-date');
-    const legends = Array.from(dates).map((d: any) => d.getAttribute('legend'));
+    const legends = Array.from(dates).map((d: any) => d.getAttribute('label'));
     expect(legends).toContain('Date of marriage');
   });
 
@@ -121,7 +121,7 @@ describe('civ-relationship conditional fields', () => {
     await elementUpdated(el);
 
     const dates = el.querySelectorAll('civ-memorable-date');
-    const legends = Array.from(dates).map((d: any) => d.getAttribute('legend'));
+    const legends = Array.from(dates).map((d: any) => d.getAttribute('label'));
     expect(legends).not.toContain('Date of marriage');
   });
 
@@ -132,7 +132,7 @@ describe('civ-relationship conditional fields', () => {
     await elementUpdated(el);
 
     const dates = el.querySelectorAll('civ-memorable-date');
-    const legends = Array.from(dates).map((d: any) => d.getAttribute('legend'));
+    const legends = Array.from(dates).map((d: any) => d.getAttribute('label'));
     expect(legends).toContain('Date of birth');
   });
 
@@ -166,7 +166,7 @@ describe('civ-relationship conditional fields', () => {
     await elementUpdated(el);
 
     const dates = el.querySelectorAll('civ-memorable-date');
-    const legends = Array.from(dates).map((d: any) => d.getAttribute('legend'));
+    const legends = Array.from(dates).map((d: any) => d.getAttribute('label'));
     expect(legends).toContain('Date of death');
   });
 });
@@ -321,7 +321,7 @@ describe('civ-relationship deceased-assumed', () => {
     expect(el.querySelector('civ-yes-no')).toBeNull();
     const dateField = el.querySelector('civ-memorable-date');
     expect(dateField).not.toBeNull();
-    expect(dateField!.getAttribute('legend')).toBe('Date of death');
+    expect(dateField!.getAttribute('label')).toBe('Date of death');
   });
 
   it('auto-sets deceased to yes in the value', async () => {

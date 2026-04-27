@@ -110,7 +110,7 @@ export class CivServiceHistory extends CivFormElement {
         ></civ-select>
 
         <civ-memorable-date
-          legend="${t('serviceStartDateLegend')}"
+          label="${t('serviceStartDateLegend')}"
           name="${prefix}.startDate"
           value="${this._service.startDate}"
           hint="${t('serviceStartDateHint')}"
@@ -121,7 +121,7 @@ export class CivServiceHistory extends CivFormElement {
         ></civ-memorable-date>
 
         <civ-memorable-date
-          legend="${t('serviceEndDateLegend')}"
+          label="${t('serviceEndDateLegend')}"
           name="${prefix}.endDate"
           value="${this._service.endDate}"
           hint="${t('serviceEndDateHint')}"

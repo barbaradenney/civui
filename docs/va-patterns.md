@@ -136,7 +136,7 @@ Use `civ-memorable-date` for dates users know (birth, marriage). Use `civ-date-p
 
 ```html
 <civ-memorable-date
-  legend="Date of birth"
+  label="Date of birth"
   name="dateOfBirth"
   required
   required-message="Enter a date of birth"
@@ -147,7 +147,7 @@ Use `civ-memorable-date` for dates users know (birth, marriage). Use `civ-date-p
 **For approximate dates** (service periods, employment):
 ```html
 <civ-memorable-date
-  legend="Approximate date of service start"
+  label="Approximate date of service start"
   name="serviceStartDate"
   hint="If you don't know the exact date, give us your best estimate"
 ></civ-memorable-date>
@@ -257,7 +257,7 @@ For US-only address collection, use `civ-address`:
 ></civ-address>
 
 <civ-yes-no
-  legend="Is your home address the same as your mailing address?"
+  label="Is your home address the same as your mailing address?"
   name="sameAddress"
   required
 ></civ-yes-no>
@@ -445,14 +445,14 @@ Use `civ-repeater` for multiple service periods:
   ></civ-combobox>
 
   <civ-memorable-date
-    legend="Service start date"
+    label="Service start date"
     name="startDate"
     required
     hint="If you don't know the exact date, enter your best estimate"
   ></civ-memorable-date>
 
   <civ-memorable-date
-    legend="Service end date"
+    label="Service end date"
     name="endDate"
     required
     hint="If you don't know the exact date, enter your best estimate"
@@ -575,7 +575,7 @@ VA pattern: [Ask users for A mutually exclusive answer](https://design.va.gov/pa
 **Use yes-no** for binary questions:
 ```html
 <civ-yes-no
-  legend="Are you currently homeless or at risk of becoming homeless?"
+  label="Are you currently homeless or at risk of becoming homeless?"
   name="homelessRisk"
   required
 ></civ-yes-no>
@@ -632,7 +632,7 @@ supports two modes depending on complexity:
 >
   <civ-text-input label="First name" name="firstName" required></civ-text-input>
   <civ-text-input label="Last name" name="lastName" required></civ-text-input>
-  <civ-memorable-date legend="Date of birth" name="dob" required></civ-memorable-date>
+  <civ-memorable-date label="Date of birth" name="dob" required></civ-memorable-date>
   <civ-text-input label="Social Security number" name="ssn" mask="ssn" validate="ssn" type="tel"></civ-text-input>
   <civ-radio-group legend="Relationship" name="relationship" required>
     <civ-radio label="Son or daughter" value="child"></civ-radio>
@@ -649,7 +649,7 @@ supports two modes depending on complexity:
 Use `civ-conditional` to show/hide sections based on user responses:
 
 ```html
-<civ-yes-no legend="Do you have a service-connected disability?" name="hasDisability"></civ-yes-no>
+<civ-yes-no label="Do you have a service-connected disability?" name="hasDisability"></civ-yes-no>
 
 <civ-conditional when="hasDisability" eq="yes">
   <civ-text-input
@@ -705,7 +705,7 @@ VA pattern: [Ask users for Marital information](https://design.va.gov/patterns/a
   <civ-fieldset legend="Spouse information">
     <civ-text-input label="Spouse's first name" name="spouseFirstName" required></civ-text-input>
     <civ-text-input label="Spouse's last name" name="spouseLastName" required></civ-text-input>
-    <civ-memorable-date legend="Date of marriage" name="marriageDate" required></civ-memorable-date>
+    <civ-memorable-date label="Date of marriage" name="marriageDate" required></civ-memorable-date>
     <civ-text-input
       label="Spouse's Social Security number"
       name="spouseSsn"
@@ -713,7 +713,7 @@ VA pattern: [Ask users for Marital information](https://design.va.gov/patterns/a
       validate="ssn"
       type="tel"
     ></civ-text-input>
-    <civ-yes-no legend="Is your spouse a Veteran?" name="spouseIsVeteran"></civ-yes-no>
+    <civ-yes-no label="Is your spouse a Veteran?" name="spouseIsVeteran"></civ-yes-no>
   </civ-fieldset>
 </civ-conditional>
 ```
@@ -899,7 +899,7 @@ persistence, so it's safe to use for screening flows.
 ```html
 <civ-form>
   <civ-yes-no
-    legend="Are you a Veteran or active-duty service member?"
+    label="Are you a Veteran or active-duty service member?"
     name="isVeteran"
     required
   ></civ-yes-no>
@@ -913,7 +913,7 @@ persistence, so it's safe to use for screening flows.
 
   <civ-conditional when="isVeteran" eq="yes">
     <civ-yes-no
-      legend="Were you honorably discharged?"
+      label="Were you honorably discharged?"
       name="honorableDischarge"
       required
     ></civ-yes-no>

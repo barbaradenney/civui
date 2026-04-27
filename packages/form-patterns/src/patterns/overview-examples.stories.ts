@@ -46,7 +46,7 @@ export const MultiStepForm: Story = {
       <civ-form-step>
         <div data-step-label="Personal info">
           <civ-name legend="Your name" name="name" required></civ-name>
-          <civ-memorable-date legend="Date of birth" name="dob" required hint="For example: January 15 1990"></civ-memorable-date>
+          <civ-memorable-date label="Date of birth" name="dob" required hint="For example: January 15 1990"></civ-memorable-date>
         </div>
 
         <div data-step-label="Service history">
@@ -70,7 +70,7 @@ export const ConditionalFields: Story = {
   name: 'Form with Conditional Fields',
   render: () => html`
     <civ-form>
-      <civ-yes-no legend="Are you a veteran?" name="isVeteran" required></civ-yes-no>
+      <civ-yes-no label="Are you a veteran?" name="isVeteran" required></civ-yes-no>
 
       <civ-conditional when="isVeteran" equals="yes">
         <civ-fieldset legend="Service information">
@@ -78,7 +78,7 @@ export const ConditionalFields: Story = {
         </civ-fieldset>
       </civ-conditional>
 
-      <civ-yes-no legend="Are you currently married?" name="isMarried" required></civ-yes-no>
+      <civ-yes-no label="Are you currently married?" name="isMarried" required></civ-yes-no>
 
       <civ-conditional when="isMarried" equals="yes">
         <civ-relationship

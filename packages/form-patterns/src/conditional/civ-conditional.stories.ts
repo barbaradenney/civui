@@ -71,7 +71,7 @@ export const MultipleConditions: Story = {
   render: () => html`
     <div>
       <civ-yes-no
-        legend="Are you a veteran?"
+        label="Are you a veteran?"
         name="veteran"
       ></civ-yes-no>
 
@@ -106,7 +106,7 @@ export const WithForm: Story = {
       <civ-text-input label="Email address" name="email" type="email" required></civ-text-input>
 
       <civ-yes-no
-        legend="Are you a veteran?"
+        label="Are you a veteran?"
         name="isVeteran"
       ></civ-yes-no>
 
@@ -126,7 +126,7 @@ export const WithForm: Story = {
         ></civ-text-input>
 
         <civ-yes-no
-          legend="Do you have a service-connected disability?"
+          label="Do you have a service-connected disability?"
           name="hasDisability"
         ></civ-yes-no>
 
@@ -147,7 +147,7 @@ export const WithForm: Story = {
 
       <civ-conditional when="isVeteran" equals="no">
         <civ-yes-no
-          legend="Are you a dependent of a veteran?"
+          label="Are you a dependent of a veteran?"
           name="isDependent"
         ></civ-yes-no>
 

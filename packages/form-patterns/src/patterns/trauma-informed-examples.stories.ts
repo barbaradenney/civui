@@ -39,7 +39,7 @@ export const FormStepSensitive: Story = {
           <p>You can save and come back to this section later.</p>
         </civ-section-intro>
         <civ-yes-no
-          legend="Have you experienced military sexual trauma?"
+          label="Have you experienced military sexual trauma?"
           name="mst"
           skip-label="Prefer not to answer"
         ></civ-yes-no>
@@ -59,7 +59,7 @@ export const SkipAffordanceYesNo: Story = {
   name: 'Skip Affordance (Yes/No)',
   render: () => html`
     <civ-yes-no
-      legend="Have you experienced military sexual trauma?"
+      label="Have you experienced military sexual trauma?"
       name="mst"
       skip-label="Prefer not to answer"
       skip-value="skip"
@@ -174,7 +174,7 @@ export const CompleteSurvivorForm: Story = {
 
         <div data-step-label="Your relationship">
           <civ-yes-no
-            legend="Were you legally married at the time of their death?"
+            label="Were you legally married at the time of their death?"
             name="marriedAtDeath"
             skip-label="Prefer not to answer"
             required

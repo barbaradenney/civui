@@ -40,7 +40,7 @@ import '@civui/actions/link';
  *     <civ-name legend="Your name" name="fullName" required></civ-name>
  *   </div>
  *   <div data-step-label="Date of birth">
- *     <civ-memorable-date legend="Date of birth" name="dob" required></civ-memorable-date>
+ *     <civ-memorable-date label="Date of birth" name="dob" required></civ-memorable-date>
  *   </div>
  * </civ-form-step>
  * ```

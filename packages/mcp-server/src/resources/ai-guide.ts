@@ -347,7 +347,7 @@ Three-field date entry (Month select + Day input + Year input). Preferred for kn
 **Example:**
 \`\`\`html
 <civ-memorable-date
-  legend="Date of birth"
+  label="Date of birth"
   name="dob"
   hint="For example: January 15 1990"
   required
@@ -554,7 +554,7 @@ Children with \`data-step\` define each step. Validates required fields before a
     <civ-name legend="Your name" name="fullName" required></civ-name>
   </div>
   <div data-step data-step-label="Date of birth">
-    <civ-memorable-date legend="Date of birth" name="dob" required></civ-memorable-date>
+    <civ-memorable-date label="Date of birth" name="dob" required></civ-memorable-date>
   </div>
 </civ-form-step>
 \`\`\`
@@ -641,7 +641,7 @@ Step indicator for multi-step forms. Shows numbered circles with labels.
 
   <civ-fieldset legend="Application details">
     <civ-memorable-date
-      legend="Date of birth"
+      label="Date of birth"
       name="dob"
       hint="For example: January 15 1990"
       required

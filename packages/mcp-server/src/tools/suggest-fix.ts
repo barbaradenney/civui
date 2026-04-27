@@ -24,6 +24,9 @@ const LABEL_COMPONENTS = new Set([
   'civ-select',
   'civ-combobox',
   'civ-date-picker',
+  'civ-memorable-date',
+  'civ-date-range-picker',
+  'civ-yes-no',
   'civ-checkbox',
   'civ-toggle',
   'civ-file-upload',
@@ -33,7 +36,6 @@ const LABEL_COMPONENTS = new Set([
 const LEGEND_COMPONENTS = new Set([
   'civ-radio-group',
   'civ-checkbox-group',
-  'civ-memorable-date',
   'civ-segmented-control',
   'civ-fieldset',
 ]);

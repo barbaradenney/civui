@@ -45,7 +45,7 @@ function renderFieldHtml(
     case 'date':
       return `<civ-date-picker label="${label}" name="${name}"${hint}${req}></civ-date-picker>`;
     case 'memorable-date':
-      return `<civ-memorable-date legend="${label}" name="${name}"${hint}${req}></civ-memorable-date>`;
+      return `<civ-memorable-date label="${label}" name="${name}"${hint}${req}></civ-memorable-date>`;
     case 'file':
       return `<civ-file-upload label="${label}" name="${name}"${req}></civ-file-upload>`;
     case 'toggle':
@@ -230,7 +230,7 @@ export function generateBilingualForm(
               htmlParts.push(`  <civ-checkbox-group legend="${inlineLabel}" name="${name}"${hint}${req}></civ-checkbox-group>`);
               break;
             case 'memorable-date':
-              htmlParts.push(`  <civ-memorable-date legend="${inlineLabel}" name="${name}"${hint}${req}></civ-memorable-date>`);
+              htmlParts.push(`  <civ-memorable-date label="${inlineLabel}" name="${name}"${hint}${req}></civ-memorable-date>`);
               break;
             default:
               htmlParts.push(`  ${renderFieldHtml({ ...field, label: `${field.label} (${translatedLabel})` })}`);

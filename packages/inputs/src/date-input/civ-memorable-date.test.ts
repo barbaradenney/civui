@@ -6,7 +6,7 @@ afterEach(cleanupFixtures);
 
 describe('civ-memorable-date rendering', () => {
   it('renders a group with label', async () => {
-    const el = await fixture('<civ-memorable-date legend="Date of birth" name="dob"></civ-memorable-date>');
+    const el = await fixture('<civ-memorable-date label="Date of birth" name="dob"></civ-memorable-date>');
 
     const group = el.querySelector('[role="group"]');
     expect(group).not.toBeNull();
@@ -16,7 +16,7 @@ describe('civ-memorable-date rendering', () => {
   });
 
   it('renders month select and day/year text inputs', async () => {
-    const el = await fixture('<civ-memorable-date legend="Date of birth" name="dob"></civ-memorable-date>');
+    const el = await fixture('<civ-memorable-date label="Date of birth" name="dob"></civ-memorable-date>');
 
     const select = el.querySelector('civ-select');
     const textInputs = el.querySelectorAll('civ-text-input');
@@ -25,7 +25,7 @@ describe('civ-memorable-date rendering', () => {
   });
 
   it('month select has 12 month options', async () => {
-    const el = await fixture('<civ-memorable-date legend="Date of birth" name="dob"></civ-memorable-date>');
+    const el = await fixture('<civ-memorable-date label="Date of birth" name="dob"></civ-memorable-date>');
 
     const select = el.querySelector('civ-select') as any;
     expect(select.options.length).toBe(12);
@@ -34,7 +34,7 @@ describe('civ-memorable-date rendering', () => {
   });
 
   it('renders hint text', async () => {
-    const el = await fixture('<civ-memorable-date legend="Date of birth" hint="For example: January 19 2000"></civ-memorable-date>');
+    const el = await fixture('<civ-memorable-date label="Date of birth" hint="For example: January 19 2000"></civ-memorable-date>');
 
     const spans = el.querySelectorAll('span');
     const hint = Array.from(spans).find((s) => s.textContent === 'For example: January 19 2000');
@@ -42,7 +42,7 @@ describe('civ-memorable-date rendering', () => {
   });
 
   it('renders error message with role="alert"', async () => {
-    const el = await fixture('<civ-memorable-date legend="Date of birth" error="Date is required"></civ-memorable-date>');
+    const el = await fixture('<civ-memorable-date label="Date of birth" error="Date is required"></civ-memorable-date>');
 
     const errorEl = el.querySelector('[role="alert"]');
     expect(errorEl).not.toBeNull();
@@ -50,7 +50,7 @@ describe('civ-memorable-date rendering', () => {
   });
 
   it('shows required indicator text', async () => {
-    const el = await fixture('<civ-memorable-date legend="Date of birth" required></civ-memorable-date>');
+    const el = await fixture('<civ-memorable-date label="Date of birth" required></civ-memorable-date>');
 
     const requiredMark = el.querySelector('.civ-required-mark');
     expect(requiredMark).not.toBeNull();
@@ -58,14 +58,14 @@ describe('civ-memorable-date rendering', () => {
   });
 
   it('uses Light DOM (no shadow root)', async () => {
-    const el = await fixture('<civ-memorable-date legend="Date of birth"></civ-memorable-date>');
+    const el = await fixture('<civ-memorable-date label="Date of birth"></civ-memorable-date>');
 
     expect(el.shadowRoot).toBeNull();
     expect(el.querySelector('[role="group"]')).not.toBeNull();
   });
 
   it('renders label for the group', async () => {
-    const el = await fixture('<civ-memorable-date legend="Date of birth"></civ-memorable-date>');
+    const el = await fixture('<civ-memorable-date label="Date of birth"></civ-memorable-date>');
 
     const label = el.querySelector('label.civ-label');
     expect(label).not.toBeNull();
@@ -73,7 +73,7 @@ describe('civ-memorable-date rendering', () => {
   });
 
   it('lays out fields in a responsive container', async () => {
-    const el = await fixture('<civ-memorable-date legend="Date of birth" name="dob"></civ-memorable-date>');
+    const el = await fixture('<civ-memorable-date label="Date of birth" name="dob"></civ-memorable-date>');
 
     const container = el.querySelector('[data-civ-memorable-date]');
     expect(container).not.toBeNull();
@@ -83,28 +83,28 @@ describe('civ-memorable-date rendering', () => {
 
 describe('civ-memorable-date accessibility', () => {
   it('sets aria-invalid on group when error is present', async () => {
-    const el = await fixture('<civ-memorable-date legend="Date of birth" error="Invalid date"></civ-memorable-date>');
+    const el = await fixture('<civ-memorable-date label="Date of birth" error="Invalid date"></civ-memorable-date>');
 
     const group = el.querySelector('[role="group"]');
     expect(group!.getAttribute('aria-invalid')).toBe('true');
   });
 
   it('omits aria-invalid on group when no error', async () => {
-    const el = await fixture('<civ-memorable-date legend="Date of birth"></civ-memorable-date>');
+    const el = await fixture('<civ-memorable-date label="Date of birth"></civ-memorable-date>');
 
     const group = el.querySelector('[role="group"]');
     expect(group!.getAttribute('aria-invalid')).toBeNull();
   });
 
   it('sets aria-required on group when required', async () => {
-    const el = await fixture('<civ-memorable-date legend="Date of birth" required></civ-memorable-date>');
+    const el = await fixture('<civ-memorable-date label="Date of birth" required></civ-memorable-date>');
 
     const group = el.querySelector('[role="group"]');
     expect(group!.getAttribute('aria-required')).toBe('true');
   });
 
   it('day and year inputs use type="text" with inputmode="numeric"', async () => {
-    const el = await fixture('<civ-memorable-date legend="Date of birth" name="dob"></civ-memorable-date>');
+    const el = await fixture('<civ-memorable-date label="Date of birth" name="dob"></civ-memorable-date>');
     await elementUpdated(el);
 
     const textInputs = el.querySelectorAll('civ-text-input');
@@ -120,7 +120,7 @@ describe('civ-memorable-date accessibility', () => {
   });
 
   it('propagates aria-describedby to child inputs when hint is set dynamically', async () => {
-    const el = await fixture('<civ-memorable-date legend="Date of birth" name="dob"></civ-memorable-date>') as any;
+    const el = await fixture('<civ-memorable-date label="Date of birth" name="dob"></civ-memorable-date>') as any;
     await elementUpdated(el);
 
     // Wait for child components to render their inner elements
@@ -142,7 +142,7 @@ describe('civ-memorable-date accessibility', () => {
   });
 
   it('propagates aria-describedby to child inputs when error is set dynamically', async () => {
-    const el = await fixture('<civ-memorable-date legend="Date of birth" name="dob"></civ-memorable-date>') as any;
+    const el = await fixture('<civ-memorable-date label="Date of birth" name="dob"></civ-memorable-date>') as any;
     await elementUpdated(el);
 
     // Wait for child components to render their inner elements
@@ -168,14 +168,14 @@ describe('civ-memorable-date accessibility', () => {
 
 describe('civ-memorable-date custom labels', () => {
   it('uses custom month-label on child select', async () => {
-    const el = await fixture('<civ-memorable-date legend="Date of birth" name="dob" month-label="Mes"></civ-memorable-date>');
+    const el = await fixture('<civ-memorable-date label="Date of birth" name="dob" month-label="Mes"></civ-memorable-date>');
 
     const select = el.querySelector('civ-select') as any;
     expect(select.label).toBe('Mes');
   });
 
   it('uses custom day-label and year-label', async () => {
-    const el = await fixture('<civ-memorable-date legend="Date of birth" name="dob" day-label="Dia" year-label="Ano"></civ-memorable-date>');
+    const el = await fixture('<civ-memorable-date label="Date of birth" name="dob" day-label="Dia" year-label="Ano"></civ-memorable-date>');
 
     const textInputs = el.querySelectorAll('civ-text-input');
     expect((textInputs[0] as any).label).toBe('Dia');
@@ -183,7 +183,7 @@ describe('civ-memorable-date custom labels', () => {
   });
 
   it('uses locale-aware month names with locale="es"', async () => {
-    const el = await fixture('<civ-memorable-date legend="Date of birth" name="dob" locale="es"></civ-memorable-date>');
+    const el = await fixture('<civ-memorable-date label="Date of birth" name="dob" locale="es"></civ-memorable-date>');
 
     const select = el.querySelector('civ-select') as any;
     expect(select.options[0].label).toBe('enero');
@@ -193,7 +193,7 @@ describe('civ-memorable-date custom labels', () => {
 
 describe('civ-memorable-date value and events', () => {
   it('parses initial YYYY-MM-DD value into child fields', async () => {
-    const el = await fixture('<civ-memorable-date legend="Date of birth" name="dob" value="2000-01-19"></civ-memorable-date>') as any;
+    const el = await fixture('<civ-memorable-date label="Date of birth" name="dob" value="2000-01-19"></civ-memorable-date>') as any;
     await elementUpdated(el);
 
     expect(el.value).toBe('2000-01-19');
@@ -201,7 +201,7 @@ describe('civ-memorable-date value and events', () => {
 
   it('fires civ-change with detail { value, month, day, year } on child commit', async () => {
     const wrapper = document.createElement('div');
-    wrapper.innerHTML = '<civ-memorable-date legend="Date of birth" name="dob"></civ-memorable-date>';
+    wrapper.innerHTML = '<civ-memorable-date label="Date of birth" name="dob"></civ-memorable-date>';
     document.body.appendChild(wrapper);
     const el = wrapper.querySelector('civ-memorable-date') as any;
     await elementUpdated(el);
@@ -239,7 +239,7 @@ describe('civ-memorable-date value and events', () => {
   });
 
   it('fires civ-input with detail { value, month, day, year } on field input', async () => {
-    const el = await fixture('<civ-memorable-date legend="Date of birth" name="dob"></civ-memorable-date>') as any;
+    const el = await fixture('<civ-memorable-date label="Date of birth" name="dob"></civ-memorable-date>') as any;
     await elementUpdated(el);
 
     const handler = vi.fn();
@@ -260,7 +260,7 @@ describe('civ-memorable-date value and events', () => {
 
 describe('civ-memorable-date validation', () => {
   it('produces empty value and shows error for invalid date like Feb 30', async () => {
-    const el = await fixture('<civ-memorable-date legend="Date of birth" name="dob"></civ-memorable-date>') as any;
+    const el = await fixture('<civ-memorable-date label="Date of birth" name="dob"></civ-memorable-date>') as any;
     await elementUpdated(el);
 
     const monthSelect = el.querySelector('civ-select') as any;
@@ -280,14 +280,15 @@ describe('civ-memorable-date validation', () => {
     expect(el.error).toBeTruthy();
   });
 
-  it('syncs legend to label via willUpdate', async () => {
-    const el = await fixture('<civ-memorable-date legend="Date of birth"></civ-memorable-date>') as any;
+  it('uses label property directly for group label', async () => {
+    const el = await fixture('<civ-memorable-date label="Date of birth"></civ-memorable-date>') as any;
     await elementUpdated(el);
     expect(el.label).toBe('Date of birth');
 
-    el.legend = 'Birthday';
+    el.label = 'Birthday';
     await elementUpdated(el);
-    expect(el.label).toBe('Birthday');
+    const labelEl = el.querySelector('label.civ-label');
+    expect(labelEl!.textContent).toContain('Birthday');
   });
 });
 
@@ -298,7 +299,7 @@ describe('civ-memorable-date form association', () => {
   });
 
   it('resets to default value on formResetCallback', async () => {
-    const el = await fixture('<civ-memorable-date legend="Date of birth" name="dob" value="2000-01-19"></civ-memorable-date>') as any;
+    const el = await fixture('<civ-memorable-date label="Date of birth" name="dob" value="2000-01-19"></civ-memorable-date>') as any;
     await elementUpdated(el);
 
     expect(el.value).toBe('2000-01-19');
@@ -312,7 +313,7 @@ describe('civ-memorable-date form association', () => {
   });
 
   it('cascades disabled to child components via formDisabledCallback', async () => {
-    const el = await fixture('<civ-memorable-date legend="Date of birth" name="dob"></civ-memorable-date>') as any;
+    const el = await fixture('<civ-memorable-date label="Date of birth" name="dob"></civ-memorable-date>') as any;
     await elementUpdated(el);
 
     el.formDisabledCallback(true);
@@ -327,7 +328,7 @@ describe('civ-memorable-date form association', () => {
   });
 
   it('re-enables child components after formDisabledCallback(false)', async () => {
-    const el = await fixture('<civ-memorable-date legend="Date of birth" name="dob"></civ-memorable-date>') as any;
+    const el = await fixture('<civ-memorable-date label="Date of birth" name="dob"></civ-memorable-date>') as any;
     await elementUpdated(el);
 
     el.formDisabledCallback(true);
@@ -348,7 +349,7 @@ describe('civ-memorable-date form association', () => {
 
 describe('civ-memorable-date analytics', () => {
   it('fires civ-analytics from group on committed date change', async () => {
-    const el = await fixture('<civ-memorable-date legend="Date of birth" name="dob"></civ-memorable-date>') as any;
+    const el = await fixture('<civ-memorable-date label="Date of birth" name="dob"></civ-memorable-date>') as any;
     await elementUpdated(el);
 
     const handler = vi.fn();

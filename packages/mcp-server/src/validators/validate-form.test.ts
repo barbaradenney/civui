@@ -101,9 +101,9 @@ describe('validateForm', () => {
       expect(result.errors.some((e) => e.rule === 'missing-legend' && e.element === 'civ-checkbox-group')).toBe(true);
     });
 
-    it('flags civ-memorable-date without legend', () => {
+    it('flags civ-memorable-date without label', () => {
       const result = validateForm('<civ-memorable-date name="x"></civ-memorable-date>');
-      expect(result.errors.some((e) => e.rule === 'missing-legend' && e.element === 'civ-memorable-date')).toBe(true);
+      expect(result.errors.some((e) => e.rule === 'missing-label' && e.element === 'civ-memorable-date')).toBe(true);
     });
 
     it('flags civ-segmented-control without legend', () => {
@@ -242,7 +242,7 @@ describe('validateForm', () => {
 
   describe('missing-hint-date', () => {
     it('flags civ-memorable-date without hint', () => {
-      const result = validateForm('<civ-memorable-date legend="Date of birth" name="dob"></civ-memorable-date>');
+      const result = validateForm('<civ-memorable-date label="Date of birth" name="dob"></civ-memorable-date>');
       expect(result.warnings.some((w) => w.rule === 'missing-hint-date')).toBe(true);
     });
 
@@ -252,7 +252,7 @@ describe('validateForm', () => {
     });
 
     it('does not flag date component with hint', () => {
-      const result = validateForm('<civ-memorable-date legend="Date of birth" name="dob" hint="For example: January 15 1990"></civ-memorable-date>');
+      const result = validateForm('<civ-memorable-date label="Date of birth" name="dob" hint="For example: January 15 1990"></civ-memorable-date>');
       expect(result.warnings.filter((w) => w.rule === 'missing-hint-date')).toHaveLength(0);
     });
   });

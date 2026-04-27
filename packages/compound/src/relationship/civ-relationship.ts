@@ -167,7 +167,7 @@ export class CivRelationship extends CivFormElement {
 
         ${category === 'spousal' ? html`
           <civ-memorable-date
-            legend="${t('relationshipMarriageDateLegend')}"
+            label="${t('relationshipMarriageDateLegend')}"
             name="${prefix}.marriageDate"
             value="${this._data.marriageDate}"
             error="${this.marriageDateError}"
@@ -178,7 +178,7 @@ export class CivRelationship extends CivFormElement {
 
           ${this.showDivorceDate ? html`
             <civ-memorable-date
-              legend="${t('relationshipDivorceDateLegend')}"
+              label="${t('relationshipDivorceDateLegend')}"
               name="${prefix}.divorceDate"
               value="${this._data.divorceDate}"
               error="${this.divorceDateError}"
@@ -191,7 +191,7 @@ export class CivRelationship extends CivFormElement {
 
         ${category === 'child' ? html`
           <civ-memorable-date
-            legend="${t('relationshipDateOfBirthLegend')}"
+            label="${t('relationshipDateOfBirthLegend')}"
             name="${prefix}.dateOfBirth"
             value="${this._data.dateOfBirth}"
             error="${this.dateOfBirthError}"
@@ -202,7 +202,7 @@ export class CivRelationship extends CivFormElement {
 
           ${this.showAdoptionDate ? html`
             <civ-memorable-date
-              legend="${t('relationshipAdoptionDateLegend')}"
+              label="${t('relationshipAdoptionDateLegend')}"
               name="${prefix}.adoptionDate"
               value="${this._data.adoptionDate}"
               error="${this.adoptionDateError}"
@@ -229,7 +229,7 @@ export class CivRelationship extends CivFormElement {
 
         ${this.deceasedAssumed ? html`
           <civ-memorable-date
-            legend="${t('relationshipDateOfDeathLegend')}"
+            label="${t('relationshipDateOfDeathLegend')}"
             name="${prefix}.dateOfDeath"
             value="${this._data.dateOfDeath}"
             error="${this.dateOfDeathError}"
@@ -239,7 +239,7 @@ export class CivRelationship extends CivFormElement {
           ></civ-memorable-date>
         ` : this.showDeceased ? html`
           <civ-yes-no
-            legend="${t('relationshipDeceasedLegend')}"
+            label="${t('relationshipDeceasedLegend')}"
             name="${prefix}.deceased"
             value="${this._data.deceased}"
             ?disabled="${this.disabled}"
@@ -250,7 +250,7 @@ export class CivRelationship extends CivFormElement {
 
           ${this._data.deceased === 'yes' ? html`
             <civ-memorable-date
-              legend="${t('relationshipDateOfDeathLegend')}"
+              label="${t('relationshipDateOfDeathLegend')}"
               name="${prefix}.dateOfDeath"
               value="${this._data.dateOfDeath}"
               error="${this.dateOfDeathError}"

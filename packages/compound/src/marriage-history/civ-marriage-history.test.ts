@@ -38,7 +38,7 @@ describe('civ-marriage-history', () => {
     await elementUpdated(el);
 
     const dates = el.querySelectorAll('civ-memorable-date');
-    const legends = Array.from(dates).map((d: any) => d.getAttribute('legend'));
+    const legends = Array.from(dates).map((d: any) => d.getAttribute('label'));
     expect(legends).not.toContain('Date marriage ended');
   });
 
@@ -48,7 +48,7 @@ describe('civ-marriage-history', () => {
     await elementUpdated(el);
 
     const dates = el.querySelectorAll('civ-memorable-date');
-    const legends = Array.from(dates).map((d: any) => d.getAttribute('legend'));
+    const legends = Array.from(dates).map((d: any) => d.getAttribute('label'));
     expect(legends).toContain('Date marriage ended');
   });
 
@@ -58,7 +58,7 @@ describe('civ-marriage-history', () => {
     await elementUpdated(el);
 
     const dates = el.querySelectorAll('civ-memorable-date');
-    const legends = Array.from(dates).map((d: any) => d.getAttribute('legend'));
+    const legends = Array.from(dates).map((d: any) => d.getAttribute('label'));
     expect(legends).toContain('Date of their passing');
   });
 
@@ -138,7 +138,7 @@ describe('civ-marriage-history status-assumed', () => {
     await elementUpdated(el);
 
     const dates = el.querySelectorAll('civ-memorable-date');
-    const legends = Array.from(dates).map((d: any) => d.getAttribute('legend'));
+    const legends = Array.from(dates).map((d: any) => d.getAttribute('label'));
     expect(legends).toContain('Date of their passing');
     expect(legends).not.toContain('Date marriage ended');
   });
@@ -148,7 +148,7 @@ describe('civ-marriage-history status-assumed', () => {
     await elementUpdated(el);
 
     const dates = el.querySelectorAll('civ-memorable-date');
-    const legends = Array.from(dates).map((d: any) => d.getAttribute('legend'));
+    const legends = Array.from(dates).map((d: any) => d.getAttribute('label'));
     expect(legends).toContain('Date marriage ended');
   });
 });
@@ -174,7 +174,7 @@ describe('civ-marriage-history marriage type', () => {
     await elementUpdated(el);
 
     const dates = el.querySelectorAll('civ-memorable-date');
-    const legends = Array.from(dates).map((d: any) => d.getAttribute('legend'));
+    const legends = Array.from(dates).map((d: any) => d.getAttribute('label'));
     expect(legends).toContain('Date of marriage');
     expect(el.querySelector('civ-text-input[name="m.marriageCity"]')).not.toBeNull();
   });
@@ -185,7 +185,7 @@ describe('civ-marriage-history marriage type', () => {
     await elementUpdated(el);
 
     const dates = el.querySelectorAll('civ-memorable-date');
-    const legends = Array.from(dates).map((d: any) => d.getAttribute('legend'));
+    const legends = Array.from(dates).map((d: any) => d.getAttribute('label'));
     expect(legends).toContain('Date of registration');
     expect(el.querySelector('civ-text-input[name="m.jurisdiction"]')).not.toBeNull();
     // Should NOT show ceremony fields
@@ -198,7 +198,7 @@ describe('civ-marriage-history marriage type', () => {
     await elementUpdated(el);
 
     const dates = el.querySelectorAll('civ-memorable-date');
-    const legends = Array.from(dates).map((d: any) => d.getAttribute('legend'));
+    const legends = Array.from(dates).map((d: any) => d.getAttribute('label'));
     expect(legends).toContain('Date you began living together');
     expect(el.querySelector('civ-text-input[name="m.cohabitationState"]')).not.toBeNull();
     expect(el.querySelector('civ-text-input[name="m.marriageTypeDescription"]')).not.toBeNull();
@@ -210,7 +210,7 @@ describe('civ-marriage-history marriage type', () => {
     await elementUpdated(el);
 
     const dates = el.querySelectorAll('civ-memorable-date');
-    const legends = Array.from(dates).map((d: any) => d.getAttribute('legend'));
+    const legends = Array.from(dates).map((d: any) => d.getAttribute('label'));
     expect(legends).toContain('Approximate date union began');
     expect(el.querySelector('civ-text-input[name="m.marriageTypeDescription"]')).not.toBeNull();
   });

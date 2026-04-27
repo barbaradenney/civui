@@ -60,7 +60,7 @@ describe('generate508Report', () => {
 
   // 6. Missing hint date -> warning with WCAG 3.3.2
   it('reports warning with WCAG 3.3.2 for missing hint on date component', () => {
-    const html = '<civ-form><civ-memorable-date name="dob" legend="Date of birth" required required-message="Enter DOB"></civ-memorable-date></civ-form>';
+    const html = '<civ-form><civ-memorable-date name="dob" label="Date of birth" required required-message="Enter DOB"></civ-memorable-date></civ-form>';
     const report = generate508Report(html);
     const hintViolation = report.violations.find((v) => v.rule === 'missing-hint-date');
     expect(hintViolation).toBeDefined();

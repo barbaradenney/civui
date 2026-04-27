@@ -295,7 +295,7 @@ export class CivDatePicker extends CivFormElement {
             ${this.value && !this.disabled ? html`
               <button
                 type="button"
-                class="civ-clear-btn hover:civ-bg-base-lighter focus-visible:civ-focus-ring"
+                class="civ-clear-btn focus-visible:civ-focus-ring"
                 aria-label="${this.clearLabel || t('datePickerClearLabel')}"
                 @click="${this._onClear}"
               ><civ-icon name="close" size="sm" aria-hidden="true"></civ-icon></button>

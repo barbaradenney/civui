@@ -1378,8 +1378,7 @@
   /* When the clear button is present too, shift it left of the chevron and
      widen the input padding to accommodate both. */
   [data-civ-combobox] > .civ-clear-btn {
-    inset-inline-end: 2.25rem;
-    right: auto;
+    inset-inline-end: 2rem;
   }
   [data-civ-combobox]:has(> .civ-clear-btn) > input {
     padding-inline-end: 4.25rem;
@@ -1472,11 +1471,17 @@
 
   .civ-clear-btn {
     @apply civ-absolute civ-flex civ-items-center civ-justify-center
-           civ-border-0 civ-bg-transparent civ-cursor-pointer civ-rounded-full
-           civ-p-1;
-    right: 0.5rem;
+           civ-border-0 civ-bg-transparent civ-cursor-pointer civ-rounded-full;
+    width: 1.5rem;
+    height: 1.5rem;
+    inset-inline-end: 0.5rem;
     top: 50%;
     transform: translateY(-50%);
+    transition: background-color 0.15s;
+  }
+
+  .civ-clear-btn:hover {
+    background-color: var(--civ-color-base-lighter);
   }
 
   /* Add padding so input text doesn't overlap the clear button */

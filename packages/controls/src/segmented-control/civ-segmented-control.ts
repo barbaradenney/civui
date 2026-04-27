@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivFormElement, LightDomSlotMixin, dispatch, renderLegend, renderHint, renderError, resolveGroupNavIndex, isRtl, syncGroupDisabled, stopChildEvent, syncLegendToLabel } from '@civui/core';
+import { CivFormElement, LightDomSlotMixin, dispatch, renderLegend, renderFormHeader, resolveGroupNavIndex, isRtl, syncGroupDisabled, stopChildEvent, syncLegendToLabel } from '@civui/core';
 import type { SlotConfig } from '@civui/core';
 import type { CivSegment } from './civ-segment.js';
 
@@ -97,9 +97,7 @@ export class CivSegmentedControl extends LightDomSlotMixin(CivFormElement) {
         aria-required="${this.required || nothing}"
         ?disabled="${this.disabled}"
       >
-        ${renderLegend({ legend: this.legend, required: this.required, srOnly: true })}
-        ${renderHint(this._hintId, this.hint, true)}
-        ${renderError(this._errorId, this.error, true)}
+        ${renderFormHeader({ label: renderLegend({ legend: this.legend, required: this.required, srOnly: true }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
         <div class="civ-inline-flex" data-civ-segment-content></div>
       </fieldset>
     `;

@@ -38,7 +38,6 @@ export class CivPhone extends CivFormElement {
         mask="${mask || nothing}"
         validate="${validate}"
         autocomplete="tel"
-        width="md"
         ?required="${this.required}"
         required-message="${this.requiredMessage || ''}"
         ?disabled="${this.disabled}"

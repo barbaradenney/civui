@@ -21,7 +21,6 @@ describe('civ-va-file-number', () => {
     expect(input.getAttribute('minlength')).toBe('8');
     expect(input.getAttribute('maxlength')).toBe('9');
     expect(input.getAttribute('pattern')).toBe('[0-9]{8,9}');
-    expect(input.getAttribute('width')).toBe('sm');
   });
 
   it('allows label override', async () => {

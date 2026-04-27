@@ -2,7 +2,7 @@
 
 import { html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBaseElement, LightDomSlotMixin, renderLabel, renderHint, renderError, buildDescribedBy } from '@civui/core';
+import { CivBaseElement, LightDomSlotMixin, renderLabel, renderFormHeader, buildDescribedBy } from '@civui/core';
 import type { SlotConfig } from '@civui/core';
 
 const FORM_INPUT_SELECTOR = 'input, select, textarea';
@@ -70,11 +70,7 @@ export class CivFormGroup extends LightDomSlotMixin(CivBaseElement) {
   override render() {
     return html`
       <div class="civ-mb-4">
-        <div class="civ-form-group-header">
-          ${renderLabel({ label: this.label, inputId: this.inputId, required: this.required })}
-          ${renderHint(this._hintId, this.hint)}
-          ${renderError(this._errorId, this.error)}
-        </div>
+        ${renderFormHeader({ label: renderLabel({ label: this.label, inputId: this.inputId, required: this.required }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error })}
         <div data-civ-form-group-content></div>
       </div>
     `;

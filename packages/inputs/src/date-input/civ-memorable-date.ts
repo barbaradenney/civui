@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivFormElement, dispatch, getMonthNames, interpolate, parseISODate, renderGroupLabel, renderHint, renderError, t } from '@civui/core';
+import { CivFormElement, dispatch, getMonthNames, interpolate, parseISODate, renderGroupLabel, renderFormHeader, t } from '@civui/core';
 
 // Import child components
 import '../select/civ-select.js';
@@ -159,9 +159,7 @@ export class CivMemorableDate extends CivFormElement {
         aria-invalid="${this.error ? 'true' : nothing}"
         aria-required="${this.required || nothing}"
       >
-        ${renderGroupLabel({ label: this.label, labelId: this._labelId, required: this.required })}
-        ${renderHint(this._hintId, this.hint)}
-        ${renderError(this._errorId, this.error)}
+        ${renderFormHeader({ label: renderGroupLabel({ label: this.label, labelId: this._labelId, required: this.required }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error })}
         <div class="civ-memorable-date-fields" data-civ-memorable-date>
           <div class="civ-memorable-date-month">
             <civ-select

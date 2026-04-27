@@ -31,7 +31,6 @@ export class CivEin extends CivFormElement {
         validate="ein"
         inputmode="numeric"
         autocomplete="off"
-        width="sm"
         ?required="${this.required}"
         required-message="${this.requiredMessage || ''}"
         ?disabled="${this.disabled}"

@@ -14,7 +14,6 @@ describe('civ-zip', () => {
     expect(input.getAttribute('validate')).toBe('zip');
     expect(input.getAttribute('inputmode')).toBe('numeric');
     expect(input.getAttribute('autocomplete')).toBe('postal-code');
-    expect(input.getAttribute('width')).toBe('xs');
   });
 
   it('renders extended ZIP+4 mode', async () => {

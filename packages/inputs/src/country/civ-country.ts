@@ -75,7 +75,6 @@ export class CivCountry extends CivFormElement {
         error="${this.error}"
         .options="${this._options}"
         autocomplete="country-name"
-        width="md"
         ?required="${this.required}"
         required-message="${this.requiredMessage || ''}"
         ?disabled="${this.disabled}"

@@ -30,7 +30,6 @@ export class CivEmail extends CivFormElement {
         type="email"
         validate="email"
         autocomplete="email"
-        width="lg"
         ?required="${this.required}"
         required-message="${this.requiredMessage || ''}"
         ?disabled="${this.disabled}"

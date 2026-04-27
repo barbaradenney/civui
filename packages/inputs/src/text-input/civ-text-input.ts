@@ -5,8 +5,7 @@ import { customElement, property, state } from 'lit/decorators.js';
 import {
   CivFormElement,
   renderLabel,
-  renderHint,
-  renderError,
+  renderFormHeader,
   inputClasses,
   inputWidthClass,
   MASK_PRESETS,
@@ -408,9 +407,7 @@ export class CivTextInput extends CivFormElement {
 
     return html`
       <div class="civ-mb-4">
-        ${renderLabel({ label: this.label, inputId: this._inputId, required: this.required, showRequired: this.required && !this.hideRequiredIndicator })}
-        ${renderHint(this._hintId, effectiveHint)}
-        ${renderError(this._errorId, this.error)}
+        ${renderFormHeader({ label: renderLabel({ label: this.label, inputId: this._inputId, required: this.required, showRequired: this.required && !this.hideRequiredIndicator }), hintId: this._hintId, hint: effectiveHint, errorId: this._errorId, error: this.error })}
         ${wrappedInput}
         ${showCharCount
           ? html`

@@ -31,7 +31,6 @@ export class CivRoutingNumber extends CivFormElement {
         inputmode="numeric"
         autocomplete="off"
         maxlength="9"
-        width="sm"
         ?required="${this.required}"
         required-message="${this.requiredMessage || ''}"
         ?disabled="${this.disabled}"

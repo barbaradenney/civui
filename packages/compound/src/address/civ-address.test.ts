@@ -166,7 +166,7 @@ describe('civ-address', () => {
   it('renders hint text', async () => {
     const el = await fixture<CivAddress>('<civ-address legend="Address" hint="US addresses only"></civ-address>');
 
-    const hint = el.querySelector('.civ-hint--group');
+    const hint = el.querySelector('.civ-hint');
     expect(hint).not.toBeNull();
     expect(hint!.textContent).toBe('US addresses only');
   });

@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivFormElement, dispatch, renderGroupLabel, renderHint, renderError, buildDescribedBy, interpolate, t } from '@civui/core';
+import { CivFormElement, dispatch, renderGroupLabel, renderFormHeader, buildDescribedBy, interpolate, t } from '@civui/core';
 import '../date-picker/civ-date-picker.js';
 
 export interface DateRangeValue {
@@ -158,9 +158,7 @@ export class CivDateRangePicker extends CivFormElement {
 
     return html`
       <div role="group" class="civ-fieldset" aria-labelledby="${this._labelId}" aria-describedby="${describedBy || nothing}">
-        ${renderGroupLabel({ label: this.label, labelId: this._labelId, required: this.required && !this.hideRequiredIndicator })}
-        ${renderHint(this._hintId, this.hint)}
-        ${renderError(this._errorId, this.error)}
+        ${renderFormHeader({ label: renderGroupLabel({ label: this.label, labelId: this._labelId, required: this.required && !this.hideRequiredIndicator }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error })}
 
         <div class="civ-flex civ-flex-col civ-gap-4 sm:civ-flex-row sm:civ-items-start">
           <civ-date-picker

@@ -129,6 +129,43 @@ export function renderError(id: string, text: string, groupSpacing = false) {
   return html`<span class="${cls}" id="${id}" role="alert">${text}</span>`;
 }
 
+/**
+ * Render the standard form header block: label (or legend) → hint → error.
+ *
+ * For non-fieldset components the three elements are wrapped in a
+ * `<div class="civ-form-header">` that consolidates bottom spacing.
+ *
+ * Fieldset components must keep `<legend>` as a direct child of `<fieldset>`
+ * for screen-reader association, so pass `fieldset: true` to skip the wrapper.
+ * Spacing inside `.civ-fieldset` is handled by CSS rules that mirror
+ * `.civ-form-header` for visual consistency.
+ */
+export function renderFormHeader({
+  label,
+  hintId,
+  hint,
+  errorId,
+  error,
+  fieldset = false,
+}: {
+  /** Pre-rendered label/legend template (from renderLabel, renderGroupLabel, or renderLegend). */
+  label: ReturnType<typeof renderLabel>;
+  hintId: string;
+  hint: string;
+  errorId: string;
+  error: string;
+  /** True for fieldset/legend components — skips wrapper div (CSS handles spacing). */
+  fieldset?: boolean;
+}) {
+  const hintEl = renderHint(hintId, hint);
+  const errorEl = renderError(errorId, error);
+
+  if (fieldset) {
+    return html`${label}${hintEl}${errorEl}`;
+  }
+  return html`<div class="civ-form-header">${label}${hintEl}${errorEl}</div>`;
+}
+
 /** Build an `aria-describedby` value from hint and error IDs, returning empty string when neither applies. */
 export function buildDescribedBy(hintId: string, hint: string, errorId: string, error: string): string {
   return [hint ? hintId : '', error ? errorId : ''].filter(Boolean).join(' ');

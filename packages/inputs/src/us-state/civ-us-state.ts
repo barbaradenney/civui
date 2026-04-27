@@ -106,7 +106,6 @@ export class CivUsState extends CivFormElement {
         error="${this.error}"
         hint="${this.hint}"
         autocomplete="address-level1"
-        width="md"
         validate="usState"
         ?required="${this.required}"
         required-message="${this.requiredMessage || ''}"

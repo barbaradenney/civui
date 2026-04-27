@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivFormElement, LightDomSlotMixin, dispatch, renderLegend, renderHint, renderError, syncGroupDisabled, stopChildEvent, syncLegendToLabel, t, interpolate } from '@civui/core';
+import { CivFormElement, LightDomSlotMixin, dispatch, renderLegend, renderFormHeader, syncGroupDisabled, stopChildEvent, syncLegendToLabel, t, interpolate } from '@civui/core';
 import type { SlotConfig } from '@civui/core';
 import type { CivCheckbox } from './civ-checkbox.js';
 
@@ -176,9 +176,7 @@ export class CivCheckboxGroup extends LightDomSlotMixin(CivFormElement) {
         aria-required="${effectivelyRequired || nothing}"
         ?disabled="${this.disabled}"
       >
-        ${renderLegend({ legend: this.legend, required: effectivelyRequired })}
-        ${renderHint(this._hintId, combinedHint, true)}
-        ${renderError(this._errorId, this.error, true)}
+        ${renderFormHeader({ label: renderLegend({ legend: this.legend, required: effectivelyRequired }), hintId: this._hintId, hint: combinedHint, errorId: this._errorId, error: this.error, fieldset: true })}
         ${this.showSelectAll ? html`
           <civ-action-button
             variant="tertiary"

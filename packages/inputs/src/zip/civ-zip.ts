@@ -38,7 +38,6 @@ export class CivZip extends CivFormElement {
         validate="${validate}"
         inputmode="numeric"
         autocomplete="postal-code"
-        width="xs"
         ?required="${this.required}"
         required-message="${this.requiredMessage || ''}"
         ?disabled="${this.disabled}"

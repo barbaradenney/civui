@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivFormElement, dispatch, renderGroupLabel, renderHint, renderError, buildDescribedBy, resolveGroupNavIndex, isRtl } from '@civui/core';
+import { CivFormElement, dispatch, renderGroupLabel, renderFormHeader, buildDescribedBy, resolveGroupNavIndex, isRtl } from '@civui/core';
 
 /**
  * CivUI Yes/No
@@ -90,13 +90,7 @@ export class CivYesNo extends CivFormElement {
         class="civ-fieldset"
         aria-labelledby="${this.label ? this._labelId : nothing}"
       >
-        ${renderGroupLabel({
-          label: this.label,
-          labelId: this._labelId,
-          required: this.required,
-        })}
-        ${renderHint(this._hintId, this.hint)}
-        ${renderError(this._errorId, this.error)}
+        ${renderFormHeader({ label: renderGroupLabel({ label: this.label, labelId: this._labelId, required: this.required }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error })}
         <div
           class="civ-flex civ-gap-2"
           role="radiogroup"

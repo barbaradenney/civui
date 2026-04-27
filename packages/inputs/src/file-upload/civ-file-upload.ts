@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivFormElement, dispatch, interpolate, renderLabel, renderHint, renderError, t } from '@civui/core';
+import { CivFormElement, dispatch, interpolate, renderLabel, renderFormHeader, t } from '@civui/core';
 
 type FileStatus = 'pending' | 'uploading' | 'success' | 'error';
 
@@ -280,9 +280,7 @@ export class CivFileUpload extends CivFormElement {
   override render() {
     return html`
       <div class="civ-mb-4">
-        ${renderLabel({ label: this.label, inputId: this._inputId, required: this.required, showRequired: this.required && !this.hideRequiredIndicator })}
-        ${renderHint(this._hintId, this.hint)}
-        ${renderError(this._errorId, this.error)}
+        ${renderFormHeader({ label: renderLabel({ label: this.label, inputId: this._inputId, required: this.required, showRequired: this.required && !this.hideRequiredIndicator }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error })}
 
         ${this.variant === 'compact'
           ? html`

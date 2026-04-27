@@ -21,7 +21,6 @@ describe('civ-ssn', () => {
     const el = await fixture('<civ-ssn name="ssn" mode="last4"></civ-ssn>') as CivSsn;
     const input = el.querySelector('civ-text-input') as any;
     expect(input.getAttribute('label')).toBe('Last 4 digits of Social Security number');
-    expect(input.getAttribute('width')).toBe('xs');
     expect(input.getAttribute('maxlength')).toBe('4');
     expect(input.hasAttribute('mask')).toBe(false);
   });

@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivFormElement, dispatch, renderLegend, renderHint, renderError, buildDescribedBy, t } from '@civui/core';
+import { CivFormElement, dispatch, renderLegend, renderFormHeader, buildDescribedBy, t } from '@civui/core';
 import '@civui/inputs';
 import '@civui/controls';
 import '../name/civ-name.js';
@@ -138,9 +138,7 @@ export class CivRelationship extends CivFormElement {
         aria-required="${this.required || nothing}"
         ?disabled="${this.disabled}"
       >
-        ${renderLegend({ legend, required: this.required, textSizeClass: 'civ-text-lg' })}
-        ${renderHint(this._hintId, this.hint, true)}
-        ${renderError(this._errorId, this.error, true)}
+        ${renderFormHeader({ label: renderLegend({ legend, required: this.required, textSizeClass: 'civ-text-lg' }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
 
         ${this.showName ? html`
           <civ-name

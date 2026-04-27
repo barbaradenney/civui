@@ -13,7 +13,6 @@ describe('civ-email', () => {
     expect(input.getAttribute('type')).toBe('email');
     expect(input.getAttribute('validate')).toBe('email');
     expect(input.getAttribute('autocomplete')).toBe('email');
-    expect(input.getAttribute('width')).toBe('lg');
   });
 
   it('allows label override', async () => {

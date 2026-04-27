@@ -19,7 +19,7 @@
   }
 
   .civ-legend {
-    @apply civ-block civ-mb-2 civ-font-bold;
+    @apply civ-block civ-mb-0 civ-font-bold;
     font-size: var(--civ-typography-fontSize-base);
     color: var(--civ-color-base-darkest);
     text-box-trim: both;
@@ -97,14 +97,18 @@
     }
   }
 
-  /* Tighter spacing when label/legend/hint sits directly above a field group */
-  .civ-fieldset > .civ-legend + .civ-hint + .civ-memorable-date-fields,
-  .civ-fieldset > .civ-legend + .civ-memorable-date-fields,
-  .civ-fieldset > .civ-hint--group + .civ-memorable-date-fields,
-  .civ-fieldset > .civ-label + .civ-hint + .civ-memorable-date-fields,
-  .civ-fieldset > .civ-label + .civ-memorable-date-fields,
-  .civ-fieldset > .civ-hint + .civ-memorable-date-fields,
-  .civ-fieldset > .civ-error-text + .civ-memorable-date-fields {
+  /* Fieldset header spacing — mirrors .civ-form-header for consistency */
+  .civ-fieldset > .civ-legend,
+  .civ-fieldset > .civ-label,
+  .civ-fieldset > .civ-hint,
+  .civ-fieldset > .civ-hint--group,
+  .civ-fieldset > .civ-error-text,
+  .civ-fieldset > .civ-error-text--group {
+    margin-bottom: 0;
+  }
+
+  /* 4px gap before the first control element after header elements */
+  .civ-fieldset > :is(.civ-legend, .civ-label, .civ-hint, .civ-hint--group, .civ-error-text, .civ-error-text--group) + :not(.civ-legend, .civ-label, .civ-hint, .civ-hint--group, .civ-error-text, .civ-error-text--group) {
     margin-top: var(--civ-spacing-1, 4px);
   }
 
@@ -1493,15 +1497,15 @@
     padding-inline-end: 2.25rem;
   }
 
-  /* ── Form Group header ────────────────────────────────────────── */
+  /* ── Form header (label + hint + error wrapper) ─────────────── */
 
-  .civ-form-group-header {
+  .civ-form-header {
     @apply civ-mb-1;
   }
 
-  .civ-form-group-header > .civ-label,
-  .civ-form-group-header > .civ-hint,
-  .civ-form-group-header > .civ-error-text {
+  .civ-form-header > .civ-label,
+  .civ-form-header > .civ-hint,
+  .civ-form-header > .civ-error-text {
     margin-bottom: 0;
   }
 

@@ -209,7 +209,7 @@ describe('civ-repeater', () => {
       </civ-repeater>
     `);
 
-    const hint = el.querySelector('.civ-hint--group');
+    const hint = el.querySelector('.civ-hint');
     expect(hint).not.toBeNull();
     expect(hint!.textContent).toBe('Add at least one');
 

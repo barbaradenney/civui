@@ -40,7 +40,6 @@ export class CivSsn extends CivFormElement {
         inputmode="numeric"
         autocomplete="off"
         maxlength="${maxlength ?? nothing}"
-        width="${this.mode === 'last4' ? 'xs' : 'md'}"
         ?required="${this.required}"
         required-message="${this.requiredMessage || ''}"
         ?disabled="${this.disabled}"

@@ -13,7 +13,6 @@ describe('civ-routing-number', () => {
     expect(input.getAttribute('validate')).toBe('routing');
     expect(input.getAttribute('inputmode')).toBe('numeric');
     expect(input.getAttribute('autocomplete')).toBe('off');
-    expect(input.getAttribute('width')).toBe('sm');
   });
 
   it('sets maxlength to 9 digits', async () => {

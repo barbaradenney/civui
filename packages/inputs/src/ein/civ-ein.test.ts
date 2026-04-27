@@ -14,7 +14,6 @@ describe('civ-ein', () => {
     expect(input.getAttribute('validate')).toBe('ein');
     expect(input.getAttribute('inputmode')).toBe('numeric');
     expect(input.getAttribute('autocomplete')).toBe('off');
-    expect(input.getAttribute('width')).toBe('sm');
   });
 
   it('allows label override', async () => {

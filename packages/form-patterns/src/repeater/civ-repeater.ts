@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivBaseElement, dispatch, renderLegend, renderHint, renderError, buildDescribedBy, announce, interpolate, t } from '@civui/core';
+import { CivBaseElement, dispatch, renderLegend, renderFormHeader, buildDescribedBy, announce, interpolate, t } from '@civui/core';
 import '@civui/inputs';
 import '@civui/actions/button';
 import '@civui/actions/action-button';
@@ -148,9 +148,7 @@ export class CivRepeater extends CivBaseElement {
         aria-invalid="${this.error ? 'true' : nothing}"
         ?disabled="${this.disabled}"
       >
-        ${renderLegend({ legend: legendText, required: showList ? this.required : false, textSizeClass: 'civ-text-lg' })}
-        ${showList ? renderHint(this._hintId, this.hint, true) : nothing}
-        ${showList ? renderError(this._errorId, this.error, true) : nothing}
+        ${renderFormHeader({ label: renderLegend({ legend: legendText, required: showList ? this.required : false, textSizeClass: 'civ-text-lg' }), hintId: this._hintId, hint: showList ? this.hint : '', errorId: this._errorId, error: showList ? this.error : '', fieldset: true })}
 
         <div data-civ-repeater-rows style="${this._wizardActive ? 'display:none' : ''}"></div>
 

@@ -2,7 +2,7 @@
 
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBaseElement, LightDomSlotMixin, renderLegend, renderHint, renderError, buildDescribedBy } from '@civui/core';
+import { CivBaseElement, LightDomSlotMixin, renderLegend, renderFormHeader, buildDescribedBy } from '@civui/core';
 import type { SlotConfig } from '@civui/core';
 
 /**
@@ -46,9 +46,7 @@ export class CivFieldset extends LightDomSlotMixin(CivBaseElement) {
         aria-invalid="${this.error ? 'true' : nothing}"
         ?disabled="${this.disabled}"
       >
-        ${renderLegend({ legend: this.legend, required: this.required, textSizeClass: 'civ-text-lg' })}
-        ${renderHint(this._hintId, this.hint, true)}
-        ${renderError(this._errorId, this.error, true)}
+        ${renderFormHeader({ label: renderLegend({ legend: this.legend, required: this.required, textSizeClass: 'civ-text-lg' }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
         <div data-civ-fieldset-content></div>
       </fieldset>
     `;

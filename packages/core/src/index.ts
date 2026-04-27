@@ -58,6 +58,7 @@ export {
   renderGroupLabel,
   renderHint,
   renderError,
+  renderFormHeader,
   inputClasses,
   buildDescribedBy,
   INPUT_WIDTH_CLASSES,

@@ -39,7 +39,6 @@ export class CivVaFileNumber extends CivFormElement {
         minlength="8"
         maxlength="9"
         pattern="[0-9]{8,9}"
-        width="sm"
         ?required="${this.required}"
         required-message="${this.requiredMessage || ''}"
         ?disabled="${this.disabled}"

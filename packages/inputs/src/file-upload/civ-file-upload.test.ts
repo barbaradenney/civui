@@ -24,7 +24,7 @@ describe('civ-file-upload', () => {
   it('renders a dropzone', async () => {
     const el = await fixture('<civ-file-upload label="Upload"></civ-file-upload>');
 
-    const dropzone = el.querySelector('[role="button"]');
+    const dropzone = el.querySelector('.civ-dropzone');
     expect(dropzone).not.toBeNull();
     expect(dropzone!.textContent).toContain('Drag files here');
   });
@@ -83,7 +83,7 @@ describe('civ-file-upload', () => {
   it('dropzone is keyboard accessible', async () => {
     const el = await fixture('<civ-file-upload label="Upload"></civ-file-upload>');
 
-    const dropzone = el.querySelector('[role="button"]') as HTMLElement;
+    const dropzone = el.querySelector('.civ-dropzone') as HTMLElement;
     expect(dropzone.tabIndex).toBe(0);
   });
 
@@ -101,7 +101,7 @@ describe('civ-file-upload', () => {
   it('applies focus-visible ring class to dropzone', async () => {
     const el = await fixture('<civ-file-upload label="Upload" name="doc"></civ-file-upload>');
 
-    const dropzone = el.querySelector('[role="button"]');
+    const dropzone = el.querySelector('.civ-dropzone');
     expect(dropzone!.className).toContain('focus-visible:civ-focus-ring');
   });
 
@@ -121,7 +121,7 @@ describe('civ-file-upload', () => {
   it('does not use deprecated focus: outline classes on dropzone', async () => {
     const el = await fixture('<civ-file-upload label="Upload" name="doc"></civ-file-upload>');
 
-    const dropzone = el.querySelector('[role="button"]');
+    const dropzone = el.querySelector('.civ-dropzone');
     expect(dropzone!.className).not.toContain('focus:civ-outline-2');
     expect(dropzone!.className).not.toContain('focus:civ-outline-primary');
     expect(dropzone!.className).not.toContain('focus:civ-outline-offset-0');
@@ -145,14 +145,14 @@ describe('civ-file-upload', () => {
     it('uses custom drag-text', async () => {
       const el = await fixture('<civ-file-upload label="Upload" drag-text="Arrastra archivos aquí o"></civ-file-upload>');
 
-      const dropzone = el.querySelector('[role="button"]');
+      const dropzone = el.querySelector('.civ-dropzone');
       expect(dropzone!.textContent).toContain('Arrastra archivos aquí o');
     });
 
     it('uses custom browse-text', async () => {
       const el = await fixture('<civ-file-upload label="Upload" browse-text="elegir de carpeta"></civ-file-upload>');
 
-      const dropzone = el.querySelector('[role="button"]');
+      const dropzone = el.querySelector('.civ-dropzone');
       expect(dropzone!.textContent).toContain('elegir de carpeta');
     });
 
@@ -327,21 +327,21 @@ describe('file type validation', () => {
   });
 });
 
-describe('aria-disabled', () => {
-  it('dropzone has aria-disabled="true" when disabled', async () => {
+describe('disabled', () => {
+  it('dropzone is disabled when disabled', async () => {
     const el = await fixture<HTMLElement>('<civ-file-upload label="Upload" disabled></civ-file-upload>');
 
-    const dropzone = el.querySelector('[role="button"]');
+    const dropzone = el.querySelector('.civ-dropzone') as HTMLButtonElement;
     expect(dropzone).not.toBeNull();
-    expect(dropzone!.getAttribute('aria-disabled')).toBe('true');
+    expect(dropzone.disabled).toBe(true);
   });
 
-  it('dropzone omits aria-disabled when not disabled', async () => {
+  it('dropzone is not disabled when not disabled', async () => {
     const el = await fixture<HTMLElement>('<civ-file-upload label="Upload"></civ-file-upload>');
 
-    const dropzone = el.querySelector('[role="button"]');
+    const dropzone = el.querySelector('.civ-dropzone') as HTMLButtonElement;
     expect(dropzone).not.toBeNull();
-    expect(dropzone!.hasAttribute('aria-disabled')).toBe(false);
+    expect(dropzone.disabled).toBe(false);
   });
 });
 
@@ -349,7 +349,7 @@ describe('aria-required', () => {
   it('dropzone has aria-required="true" when required', async () => {
     const el = await fixture<HTMLElement>('<civ-file-upload label="Upload" required></civ-file-upload>');
 
-    const dropzone = el.querySelector('[role="button"]');
+    const dropzone = el.querySelector('.civ-dropzone');
     expect(dropzone).not.toBeNull();
     expect(dropzone!.getAttribute('aria-required')).toBe('true');
   });
@@ -357,7 +357,7 @@ describe('aria-required', () => {
   it('dropzone omits aria-required when not required', async () => {
     const el = await fixture<HTMLElement>('<civ-file-upload label="Upload"></civ-file-upload>');
 
-    const dropzone = el.querySelector('[role="button"]');
+    const dropzone = el.querySelector('.civ-dropzone');
     expect(dropzone).not.toBeNull();
     expect(dropzone!.hasAttribute('aria-required')).toBe(false);
   });
@@ -405,7 +405,7 @@ describe('aria-required', () => {
     dropEvent.preventDefault = () => {};
     dropEvent.dataTransfer = { files: [file] };
 
-    const dropzone = el.querySelector('[role="button"]');
+    const dropzone = el.querySelector('.civ-dropzone');
     el._onDrop(dropEvent);
     await el.updateComplete;
 

@@ -299,20 +299,18 @@ export class CivFileUpload extends CivFormElement {
               ></civ-action-button>
             </div>`
           : html`
-            <div
+            <button
+              type="button"
               class="civ-dropzone ${this.variant === 'full' ? 'civ-dropzone--full' : ''} focus-visible:civ-focus-ring"
               @dragover="${this._boundDragOver}"
               @dragleave="${this._boundDragLeave}"
               @drop="${this._boundDrop}"
               @click="${this._onDropzoneClick}"
-              role="button"
-              tabindex="${this.disabled ? '-1' : '0'}"
               aria-label="${this.label}"
               aria-required="${this.required || nothing}"
               aria-invalid="${this.error ? 'true' : nothing}"
-              aria-disabled="${this.disabled || nothing}"
+              ?disabled="${this.disabled}"
               aria-describedby="${[this._ariaDescribedBy, this._files.length > 0 ? this._filesListId : ''].filter(Boolean).join(' ') || nothing}"
-              @keydown="${this._onDropzoneKeydown}"
               data-dragging="${this._dragging ? '' : nothing}"
             >
               <civ-icon name="upload" size="${this.variant === 'full' ? '2.5em' : '1.5em'}" class="civ-block civ-mb-2 civ-dropzone__icon"></civ-icon>
@@ -326,7 +324,7 @@ export class CivFileUpload extends CivFormElement {
               ${this.maxSize > 0
                 ? html`<span class="civ-block civ-text-sm civ-text-muted civ-mt-0.5">${this.maxSizeLabel || t('fileUploadMaxSizeLabel')}${formatFileSize(this.maxSize)}</span>`
                 : nothing}
-            </div>`}
+            </button>`}
 
         <input
           id="${this._inputId}"
@@ -512,13 +510,6 @@ export class CivFileUpload extends CivFormElement {
     if (this.disabled) return;
     const input = this.querySelector(`#${this._inputId}`) as HTMLInputElement;
     input?.click();
-  }
-
-  private _onDropzoneKeydown(e: KeyboardEvent): void {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      this._onDropzoneClick();
-    }
   }
 
   private _onDragOver(e: DragEvent): void {

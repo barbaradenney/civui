@@ -150,7 +150,7 @@ export class CivRepeater extends CivBaseElement {
       >
         ${renderFormHeader({ label: renderLegend({ legend: legendText, required: showList ? this.required : false, textSizeClass: 'civ-text-lg' }), hintId: this._hintId, hint: showList ? this.hint : '', errorId: this._errorId, error: showList ? this.error : '', fieldset: true })}
 
-        <div data-civ-repeater-rows style="${this._wizardActive ? 'display:none' : ''}"></div>
+        <div data-civ-repeater-rows class="${this._wizardActive ? 'civ-hidden' : ''}"></div>
 
         ${this._wizardActive ? html`
           <div data-civ-repeater-wizard></div>

@@ -453,7 +453,7 @@ describe('civ-repeater wizard mode', () => {
     await elementUpdated(el);
 
     const rowContainer = el.querySelector('[data-civ-repeater-rows]') as HTMLElement;
-    expect(rowContainer.style.display).toBe('none');
+    expect(rowContainer.classList.contains('civ-hidden')).toBe(true);
   });
 
   it('indexes field names inside wizard steps', async () => {

@@ -17,8 +17,6 @@ export class CivToggle extends CivBooleanFormElement {
   protected override get _anchorSelector(): string { return 'button'; }
 
   override render() {
-    const thumbStyle = `inset-inline-start: ${this.checked ? '1.375em' : '0.125em'};`;
-
     return html`
       <div class="civ-mb-4">
         <div class="civ-flex civ-items-center civ-gap-3">
@@ -34,7 +32,7 @@ export class CivToggle extends CivBooleanFormElement {
             @click="${this._onToggle}"
             class="civ-toggle-track focus-visible:civ-focus-ring"
           >
-            <span class="civ-toggle-thumb" style="${thumbStyle}">
+            <span class="civ-toggle-thumb ${this.checked ? 'civ-toggle-thumb--checked' : ''}">
               ${this.checked
                 ? html`<civ-icon name="check" class="civ-toggle-check" aria-hidden="true"></civ-icon>`
                 : nothing}

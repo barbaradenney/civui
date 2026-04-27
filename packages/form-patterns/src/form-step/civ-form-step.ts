@@ -255,7 +255,7 @@ export class CivFormStep extends LightDomSlotMixin(CivBaseElement) {
   private _showStep(index: number): void {
     for (let i = 0; i < this._steps.length; i++) {
       const step = this._steps[i] as HTMLElement;
-      step.style.display = i === index ? '' : 'none';
+      step.classList.toggle('civ-hidden', i !== index);
       step.setAttribute('aria-hidden', i === index ? 'false' : 'true');
     }
   }

@@ -1248,7 +1248,12 @@
     width: 1.375em;
     height: 1.375em;
     top: 0.125em;
+    inset-inline-start: 0.125em;
     transition: inset-inline-start 0.15s ease;
+  }
+
+  .civ-toggle-thumb--checked {
+    inset-inline-start: 1.375em;
   }
 
   .civ-toggle-check {
@@ -1282,8 +1287,9 @@
 
   /* File items use the shared .civ-list-item layout */
 
-  /* File upload progress uses .civ-progress-track / .civ-progress-fill
-     with inline height: 4px for compact display. */
+  .civ-progress-track--compact {
+    height: 4px;
+  }
 
   .civ-file-error-text {
     @apply civ-text-sm civ-text-error civ-mt-0.5;
@@ -2241,6 +2247,14 @@
 
   .civ-step-connector--completed {
     @apply civ-bg-success;
+  }
+
+  .civ-step-circle .civ-icon {
+    font-size: 0.6em;
+  }
+
+  .civ-step-connector--vertical-auto {
+    display: none;
   }
 
   .civ-steps-horizontal {

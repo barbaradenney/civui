@@ -366,7 +366,7 @@ export class CivFileUpload extends CivFormElement {
                           <span class="civ-ms-2">(${formatFileSize(file.size)})</span>
                         </span>
                         ${file.status === 'uploading' ? html`
-                          <div class="civ-progress-track" style="height: 4px;">
+                          <div class="civ-progress-track civ-progress-track--compact">
                             <div class="civ-progress-fill" style="width: ${file.progress}%" role="progressbar" aria-valuenow="${file.progress}" aria-valuemin="0" aria-valuemax="100" aria-label="${interpolate(t('fileUploadProgressAriaLabel'), { name: file.name })}"></div>
                           </div>
                         ` : nothing}

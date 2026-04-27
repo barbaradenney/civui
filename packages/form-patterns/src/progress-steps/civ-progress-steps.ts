@@ -170,7 +170,7 @@ export class CivProgressSteps extends CivBaseElement {
 
     const circleClasses = 'civ-step-circle civ-flex civ-items-center civ-justify-center civ-rounded-full civ-w-8 civ-h-8 civ-text-sm civ-font-bold civ-shrink-0';
     const circleContent = hasError
-      ? html`<span class="civ-icon civ-icon--close" aria-hidden="true" style="font-size: 0.6em"></span>`
+      ? html`<span class="civ-icon civ-icon--close" aria-hidden="true"></span>`
       : isCompleted
         ? html`<span class="civ-icon civ-icon--check" aria-hidden="true"></span>`
         : html`${index + 1}`;
@@ -224,7 +224,7 @@ export class CivProgressSteps extends CivBaseElement {
           </div>
         </div>
         <!-- Vertical connector for responsive auto-switch -->
-        ${!isLast ? html`<div class="civ-step-connector--vertical-auto civ-step-connector ${connectorCompleted} civ-w-0.5 civ-h-6 civ-ms-4 civ-my-1" style="display:none;"></div>` : nothing}
+        ${!isLast ? html`<div class="civ-step-connector--vertical-auto civ-step-connector ${connectorCompleted} civ-w-0.5 civ-h-6 civ-ms-4 civ-my-1"></div>` : nothing}
         ${!isLast ? html`<div class="civ-step-connector--horizontal civ-step-connector ${connectorCompleted} civ-h-0.5 civ-flex-1 civ-mx-2 civ-min-w-4"></div>` : nothing}
       </li>
     `;

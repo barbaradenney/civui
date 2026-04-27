@@ -11,7 +11,7 @@ export default meta;
 type Story = StoryObj;
 
 export const Default: Story = {
-  name: 'US First (Default)',
+  name: 'US First',
   render: () => html`<civ-country name="country" required></civ-country>`,
 };
 

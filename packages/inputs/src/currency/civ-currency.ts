@@ -31,7 +31,7 @@ export class CivCurrency extends CivFormElement {
         validate="currency"
         inputmode="decimal"
         prefix="$"
-        width="sm"
+        width="md"
         ?required="${this.required}"
         required-message="${this.requiredMessage || ''}"
         ?disabled="${this.disabled}"

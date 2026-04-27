@@ -14,7 +14,7 @@ describe('civ-currency', () => {
     expect(input.getAttribute('validate')).toBe('currency');
     expect(input.getAttribute('inputmode')).toBe('decimal');
     expect(input.getAttribute('prefix')).toBe('$');
-    expect(input.getAttribute('width')).toBe('sm');
+    expect(input.getAttribute('width')).toBe('md');
     expect(input.hasAttribute('autocomplete')).toBe(false);
   });
 

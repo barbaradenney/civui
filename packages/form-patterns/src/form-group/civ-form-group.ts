@@ -70,9 +70,11 @@ export class CivFormGroup extends LightDomSlotMixin(CivBaseElement) {
   override render() {
     return html`
       <div class="civ-mb-4">
-        ${renderLabel({ label: this.label, inputId: this.inputId, required: this.required })}
-        ${renderHint(this._hintId, this.hint)}
-        ${renderError(this._errorId, this.error)}
+        <div class="civ-form-group-header">
+          ${renderLabel({ label: this.label, inputId: this.inputId, required: this.required })}
+          ${renderHint(this._hintId, this.hint)}
+          ${renderError(this._errorId, this.error)}
+        </div>
         <div data-civ-form-group-content></div>
       </div>
     `;

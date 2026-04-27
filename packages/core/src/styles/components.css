@@ -1489,6 +1489,18 @@
     padding-inline-end: 2.25rem;
   }
 
+  /* ── Form Group header ────────────────────────────────────────── */
+
+  .civ-form-group-header {
+    @apply civ-mb-1;
+  }
+
+  .civ-form-group-header > .civ-label,
+  .civ-form-group-header > .civ-hint,
+  .civ-form-group-header > .civ-error-text {
+    margin-bottom: 0;
+  }
+
   /* ── Form error summary ─────────────────────────────────────── */
 
   .civ-form-error-summary {

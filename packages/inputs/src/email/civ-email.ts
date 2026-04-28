@@ -1,6 +1,7 @@
 import { html } from 'lit';
 import { customElement } from 'lit/decorators.js';
-import { CivFormElement, dispatch, t } from '@civui/core';
+import { t } from '@civui/core';
+import { PresetInputWrapper } from '../preset-input/preset-input-wrapper.js';
 import '../text-input/civ-text-input.js';
 
 /**
@@ -15,7 +16,7 @@ import '../text-input/civ-text-input.js';
  * @fires civ-change - On committed value change, detail: { value: string }
  */
 @customElement('civ-email')
-export class CivEmail extends CivFormElement {
+export class CivEmail extends PresetInputWrapper {
   override render() {
     const label = this.label || t('emailLabel');
     const hint = this.hint || t('emailHint');
@@ -40,24 +41,6 @@ export class CivEmail extends CivFormElement {
     `;
   }
 
-  private _onInput(e: CustomEvent): void {
-    e.stopPropagation();
-    this.value = e.detail.value;
-    dispatch(this, 'civ-input', { value: this.value });
-  }
-
-  private _onChange(e: CustomEvent): void {
-    e.stopPropagation();
-    this.value = e.detail.value;
-    dispatch(this, 'civ-change', { value: this.value });
-  }
-
-  override formResetCallback(): void {
-    this.value = '';
-    this.error = '';
-    this.updateFormValue(null);
-    dispatch(this, 'civ-reset');
-  }
 }
 
 declare global {

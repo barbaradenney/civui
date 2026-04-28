@@ -1,6 +1,6 @@
 import { html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivFormElement, dispatch } from '@civui/core';
+import { PresetInputWrapper } from '../preset-input/preset-input-wrapper.js';
 import '../select/civ-select.js';
 
 const US_STATES = [
@@ -79,7 +79,7 @@ const US_TERRITORIES = [
  * @fires civ-change - On committed change, detail: { value: string }
  */
 @customElement('civ-us-state')
-export class CivUsState extends CivFormElement {
+export class CivUsState extends PresetInputWrapper {
   /** Include US territories in the dropdown. */
   @property({ type: Boolean, attribute: 'include-territories' }) includeTerritories = false;
 
@@ -126,24 +126,6 @@ export class CivUsState extends CivFormElement {
     select.options = options;
   }
 
-  private _onInput(e: CustomEvent): void {
-    e.stopPropagation();
-    this.value = e.detail.value;
-    dispatch(this, 'civ-input', { value: this.value });
-  }
-
-  private _onChange(e: CustomEvent): void {
-    e.stopPropagation();
-    this.value = e.detail.value;
-    dispatch(this, 'civ-change', { value: this.value });
-  }
-
-  override formResetCallback(): void {
-    this.value = '';
-    this.error = '';
-    this.updateFormValue(null);
-    dispatch(this, 'civ-reset');
-  }
 }
 
 declare global {

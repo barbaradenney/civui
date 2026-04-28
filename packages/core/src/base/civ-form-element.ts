@@ -165,10 +165,7 @@ export class CivFormElement extends CivBaseElement {
    * omit the attribute entirely when empty.
    */
   protected get _ariaDescribedBy(): string {
-    const ids: string[] = [];
-    if (this.hint) ids.push(this._hintId);
-    if (this.error) ids.push(this._errorId);
-    return ids.join(' ') || '';
+    return [this.hint && this._hintId, this.error && this._errorId].filter(Boolean).join(' ');
   }
 
   /**

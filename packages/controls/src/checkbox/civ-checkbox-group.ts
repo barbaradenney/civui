@@ -50,7 +50,7 @@ export class CivCheckboxGroup extends LightDomSlotMixin(CivFormElement) {
 
   /** Whether `minSelections` should drive the implicit-required behavior. */
   private get _minSelections(): number {
-    return this.minSelections != null && this.minSelections > 0 ? this.minSelections : 0;
+    return Math.max(this.minSelections ?? 0, 0);
   }
 
   /**
@@ -181,25 +181,9 @@ export class CivCheckboxGroup extends LightDomSlotMixin(CivFormElement) {
 
   private _onToggleAll(): void {
     const checkboxes = this._getCheckboxes();
-    const allChecked = this._allChecked;
-
-    if (allChecked) {
-      // Deselect all
-      checkboxes.forEach((cb) => { cb.checked = false; });
-    } else {
-      // Select all (respect maxSelections)
-      if (this.maxSelections) {
-        let count = 0;
-        checkboxes.forEach((cb) => {
-          if (count < this.maxSelections!) {
-            cb.checked = true;
-            count++;
-          }
-        });
-      } else {
-        checkboxes.forEach((cb) => { cb.checked = true; });
-      }
-    }
+    const toCheck = !this._allChecked;
+    const limit = toCheck && this.maxSelections ? this.maxSelections : Infinity;
+    checkboxes.forEach((cb, i) => { cb.checked = toCheck && i < limit; });
 
     this._readCheckedFromChildren(checkboxes);
     const values = this.getCheckedValues();

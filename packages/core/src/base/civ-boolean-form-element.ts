@@ -26,16 +26,12 @@ export class CivBooleanFormElement extends CivFormElement {
   protected get _anchorSelector(): string { return 'input'; }
 
   protected override get _ariaDescribedBy(): string {
-    const ids: string[] = [];
-    if (this.description) ids.push(this._descriptionId);
-    if (this.hint) ids.push(this._hintId);
-    if (this.error) ids.push(this._errorId);
-    if (this.extraDescribedby) {
-      for (const id of this.extraDescribedby.trim().split(/\s+/)) {
-        if (id) ids.push(id);
-      }
-    }
-    return ids.join(' ') || '';
+    return [
+      this.description && this._descriptionId,
+      this.hint && this._hintId,
+      this.error && this._errorId,
+      ...(this.extraDescribedby ? this.extraDescribedby.trim().split(/\s+/).filter(Boolean) : []),
+    ].filter(Boolean).join(' ');
   }
 
   override connectedCallback(): void {

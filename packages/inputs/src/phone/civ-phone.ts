@@ -1,6 +1,7 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivFormElement, dispatch, t } from '@civui/core';
+import { t } from '@civui/core';
+import { PresetInputWrapper } from '../preset-input/preset-input-wrapper.js';
 import '../text-input/civ-text-input.js';
 
 /**
@@ -17,7 +18,7 @@ import '../text-input/civ-text-input.js';
  * @fires civ-change - On committed value change, detail: { value: string }
  */
 @customElement('civ-phone')
-export class CivPhone extends CivFormElement {
+export class CivPhone extends PresetInputWrapper {
   /** Use international phone format (E.164) instead of US domestic. */
   @property({ type: Boolean }) international = false;
 
@@ -48,24 +49,6 @@ export class CivPhone extends CivFormElement {
     `;
   }
 
-  private _onInput(e: CustomEvent): void {
-    e.stopPropagation();
-    this.value = e.detail.value;
-    dispatch(this, 'civ-input', { value: this.value });
-  }
-
-  private _onChange(e: CustomEvent): void {
-    e.stopPropagation();
-    this.value = e.detail.value;
-    dispatch(this, 'civ-change', { value: this.value });
-  }
-
-  override formResetCallback(): void {
-    this.value = '';
-    this.error = '';
-    this.updateFormValue(null);
-    dispatch(this, 'civ-reset');
-  }
 }
 
 declare global {

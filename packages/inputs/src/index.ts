@@ -21,6 +21,9 @@ import './us-state/civ-us-state.js';
 import './country/civ-country.js';
 import './va-file-number/civ-va-file-number.js';
 
+// Preset Input Base Class
+export { PresetInputWrapper } from './preset-input/index.js';
+
 // Text Input
 export { CivTextInput } from './text-input/index.js';
 export type { TextInputType, TextInputWidth, TextInputMask, TextInputValidate } from './text-input/index.js';

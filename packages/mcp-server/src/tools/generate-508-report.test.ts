@@ -35,18 +35,7 @@ describe('generate508Report', () => {
     expect(legendViolation!.wcag.criterion).toBe('1.3.1');
   });
 
-  // 4. Deprecated date input -> P1 error with WCAG 4.1.2
-  it('reports P1 error with WCAG 4.1.2 for deprecated date input', () => {
-    const html = '<civ-form-field label="Date"><civ-date-input name="d"></civ-date-input></civ-form-field>';
-    const report = generate508Report(html);
-    const dateViolation = report.violations.find((v) => v.rule === 'deprecated-date-input');
-    expect(dateViolation).toBeDefined();
-    expect(dateViolation!.severity).toBe('error');
-    expect(dateViolation!.priority).toBe('P1');
-    expect(dateViolation!.wcag.criterion).toBe('4.1.2');
-  });
-
-  // 5. Missing autocomplete -> P3 warning with WCAG 1.3.5 (AA)
+  // 4. Missing autocomplete -> P3 warning with WCAG 1.3.5 (AA)
   it('reports P3 warning with WCAG 1.3.5 for missing autocomplete on identity field', () => {
     const html = '<civ-form><civ-form-field label="Email" required><civ-text-input name="email" required required-message="Enter email"></civ-text-input></civ-form-field></civ-form>';
     const report = generate508Report(html);
@@ -201,12 +190,6 @@ describe('generate508Report', () => {
     expect(labelV).toBeDefined();
     expect(labelV!.effort).toBe('trivial');
 
-    // deprecated-date-input -> medium
-    const htmlDate = '<civ-form-field label="Date"><civ-date-input name="d"></civ-date-input></civ-form-field>';
-    const reportDate = generate508Report(htmlDate);
-    const dateV = reportDate.violations.find((v) => v.rule === 'deprecated-date-input');
-    expect(dateV).toBeDefined();
-    expect(dateV!.effort).toBe('medium');
   });
 
   // 13. byWcag grouping correctness

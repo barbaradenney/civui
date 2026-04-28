@@ -65,7 +65,6 @@ Call the \`validate_form\` tool with the generated HTML. Note all errors and war
 ## Step 4: Auto-fix violations
 Call the \`suggest_fix\` tool with the generated HTML. This will automatically correct violations like:
 - Missing labels, legends, required-messages
-- Deprecated components (civ-date-input → civ-memorable-date)
 - Missing autocomplete, hints, and name attributes
 - Abbreviations, physical CSS properties, deprecated focus classes
 

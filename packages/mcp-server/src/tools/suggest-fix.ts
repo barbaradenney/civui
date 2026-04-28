@@ -98,45 +98,6 @@ const FIXERS: Record<string, FixerFn> = {
     return fixes;
   },
 
-  'deprecated-date-input'($) {
-    const fixes: string[] = [];
-    $('civ-date-input').each((_, el) => {
-      const $el = $(el);
-      // Get all attributes, separating wrapper props from component props
-      const wrapperAttrs: Record<string, string> = {};
-      const componentAttrs: Record<string, string> = {};
-      const rawAttrs = el.type === 'tag' ? el.attribs : {};
-      const wrapperPropNames = new Set(['label', 'hint', 'error', 'required-message']);
-      for (const [k, v] of Object.entries(rawAttrs)) {
-        if (wrapperPropNames.has(k)) {
-          wrapperAttrs[k] = v;
-        } else {
-          componentAttrs[k] = v;
-        }
-      }
-      // Replace tag with civ-memorable-date
-      const newEl = $('<civ-memorable-date></civ-memorable-date>');
-      for (const [k, v] of Object.entries(componentAttrs)) {
-        newEl.attr(k, v);
-      }
-      newEl.html($el.html() ?? '');
-      // Wrap with civ-form-field if there are wrapper attributes
-      if (Object.keys(wrapperAttrs).length > 0) {
-        const wrapperAttrStr = Object.entries(wrapperAttrs)
-          .map(([k, v]) => `${k}="${v}"`)
-          .join(' ');
-        const required = componentAttrs['required'] !== undefined ? ' required' : '';
-        const wrapper = $(`<civ-form-field ${wrapperAttrStr}${required}></civ-form-field>`);
-        wrapper.append(newEl);
-        $el.replaceWith(wrapper);
-      } else {
-        $el.replaceWith(newEl);
-      }
-      fixes.push('Replaced <civ-date-input> with <civ-memorable-date> wrapped in <civ-form-field>');
-    });
-    return fixes;
-  },
-
   'placeholder-as-label'($) {
     const fixes: string[] = [];
     LABEL_COMPONENTS.forEach((tag) => {

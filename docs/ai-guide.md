@@ -25,7 +25,6 @@ For architecture and internals, see `CLAUDE.md` in the repo root.
 | `<civ-date-picker>` | Date | `min`, `max`, `placeholder`, `locale`, `weekStartsOn` | `{ value }` |
 | `<civ-date-range-picker>` | Date | `legend`, `min`, `max`, `minRangeDays`, `maxRangeDays`, `startLabel`, `endLabel` | `{ value: { start, end } }` |
 | `<civ-memorable-date>` | Date | `legend`, `monthLabel`, `dayLabel`, `yearLabel`, `locale` | `{ value, month, day, year }` |
-| `<civ-date-input>` | Date | `min`, `max` | `{ value }` — **DEPRECATED** |
 | `<civ-file-upload>` | File | `accept`, `multiple`, `maxSize`, `maxFiles` | `{ files: File[] }` |
 | `<civ-yes-no>` | Choice | `legend`, `yesLabel`, `noLabel`, `unsureLabel`, `unsureValue`, `skipLabel`, `skipValue` | `{ value }` |
 | `<civ-conditional>` | Layout | `when`, `eq`, `neq` | — |
@@ -485,12 +484,6 @@ Three-field date entry (Month select + Day input + Year input). Preferred for kn
   required
 ></civ-memorable-date>
 ```
-
----
-
-### civ-date-input — DEPRECATED
-
-Native date input. **Do not use in new code.** Known issues with Dragon NaturallySpeaking, VoiceOver on Safari, and TalkBack on Firefox. Use `civ-date-picker` or `civ-memorable-date` instead.
 
 ---
 
@@ -1026,7 +1019,6 @@ CivUI provides iOS (SwiftUI) and Android (Jetpack Compose) implementations with 
 |----------|-----------|-----|
 | Scheduling / appointment selection | `civ-date-picker` | Calendar browsing, min/max range |
 | Known past date (birthday, issue date) | `civ-memorable-date` | Three-field entry, no calendar needed |
-| **Never** | `civ-date-input` | Deprecated — accessibility issues |
 
 ### checkbox vs toggle
 
@@ -1405,29 +1397,27 @@ Avoid these common mistakes when using CivUI components:
 
 2. **Never use placeholder as a label.** Always set the `label` (or `legend` for groups) prop. Placeholder text disappears on focus and fails accessibility.
 
-3. **Never use `civ-date-input`.** It is deprecated. Use `civ-date-picker` for scheduling or `civ-memorable-date` for known dates.
+3. **Never use `civ-toggle` for choices that require form submission.** Toggles have immediate-effect semantics. Use `civ-checkbox` for choices that take effect on submit.
 
-4. **Never use `civ-toggle` for choices that require form submission.** Toggles have immediate-effect semantics. Use `civ-checkbox` for choices that take effect on submit.
+4. **Never put `civ-radio` outside a `civ-radio-group`.** Radios are not form-participating on their own. The group handles form integration, keyboard navigation, and ARIA.
 
-5. **Never put `civ-radio` outside a `civ-radio-group`.** Radios are not form-participating on their own. The group handles form integration, keyboard navigation, and ARIA.
+5. **Never put `civ-segment` outside a `civ-segmented-control`.** Same reason as radios.
 
-6. **Never put `civ-segment` outside a `civ-segmented-control`.** Same reason as radios.
+6. **Never omit `name` on form-participating components.** Without `name`, the value won't appear in form data.
 
-7. **Never omit `name` on form-participating components.** Without `name`, the value won't appear in form data.
+7. **Never use `focus:` prefix for focus styles.** Use `focus-visible:civ-focus-ring` for keyboard-only focus indication.
 
-8. **Never use `focus:` prefix for focus styles.** Use `focus-visible:civ-focus-ring` for keyboard-only focus indication.
+8. **Never use generic required messages.** Use `required-message` with field-specific text: "Enter your email address", not "This field is required".
 
-9. **Never use generic required messages.** Use `required-message` with field-specific text: "Enter your email address", not "This field is required".
+9. **Never put commas in checkbox values** when using `civ-checkbox-group`. Commas are used internally as the value delimiter.
 
-10. **Never put commas in checkbox values** when using `civ-checkbox-group`. Commas are used internally as the value delimiter.
+10. **Never skip `afterEach(cleanupFixtures)` in tests.** Test fixtures accumulate in the DOM and cause cross-test pollution.
 
-11. **Never skip `afterEach(cleanupFixtures)` in tests.** Test fixtures accumulate in the DOM and cause cross-test pollution.
+11. **Never assume ElementInternals works in tests.** jsdom doesn't fully support it. Use guards: `typeof this._internals?.setFormValue === 'function'`.
 
-12. **Never assume ElementInternals works in tests.** jsdom doesn't fully support it. Use guards: `typeof this._internals?.setFormValue === 'function'`.
+12. **Never use `civ-select` for fewer than 5 options** when all options can be displayed. Use `civ-radio-group` to show all choices at once.
 
-13. **Never use `civ-select` for fewer than 5 options** when all options can be displayed. Use `civ-radio-group` to show all choices at once.
-
-14. **Never dispatch native `input` or `change` events.** Always use `civ-input` and `civ-change` custom events.
+13. **Never dispatch native `input` or `change` events.** Always use `civ-input` and `civ-change` custom events.
 
 ---
 

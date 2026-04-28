@@ -133,24 +133,6 @@ const missingLegend: Rule = {
   },
 };
 
-const deprecatedDateInput: Rule = {
-  id: 'deprecated-date-input',
-  severity: 'error',
-  description: 'civ-date-input is deprecated',
-  check($, violations) {
-    $('civ-date-input').each(() => {
-      violations.push({
-        rule: 'deprecated-date-input',
-        severity: 'error',
-        message:
-          '<civ-date-input> is deprecated due to Dragon, VoiceOver, and TalkBack issues',
-        element: 'civ-date-input',
-        fix: 'Use <civ-date-picker> for scheduling dates or <civ-memorable-date> for known dates',
-      });
-    });
-  },
-};
-
 const placeholderAsLabel: Rule = {
   id: 'placeholder-as-label',
   severity: 'error',
@@ -1308,7 +1290,6 @@ export const RULES: Rule[] = [
   // Errors
   missingLabel,
   missingLegend,
-  deprecatedDateInput,
   placeholderAsLabel,
   missingRequiredMessage,
   orphanedRadio,

@@ -30,7 +30,6 @@ globs:
 ## Date input rules
 - Use `civ-memorable-date` for known dates (birthday, document dates).
 - Use `civ-date-picker` for scheduling and appointment dates.
-- Never use `civ-date-input` — it is deprecated (Dragon, VoiceOver, TalkBack issues).
 - Always provide a hint showing expected format.
 
 ## Event conventions

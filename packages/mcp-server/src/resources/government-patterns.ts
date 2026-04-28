@@ -25,7 +25,6 @@ export const GOVERNMENT_PATTERNS = `# Government Form Accessibility Patterns
 ## Date Input Rules
 - Use \`civ-memorable-date\` for known dates (birthday, document dates).
 - Use \`civ-date-picker\` for scheduling and appointment dates.
-- Never use \`civ-date-input\` — it is deprecated (Dragon, VoiceOver, TalkBack issues).
 - Always provide a hint showing expected format.
 
 ## Event Conventions

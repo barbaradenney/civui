@@ -58,8 +58,6 @@ CivUI supports plain language through:
 | Appointment scheduling | `civ-date-picker` | "Select your appointment date" |
 | Travel dates with range | `civ-date-picker` with `min`/`max` | "Choose a date within the filing period" |
 
-Never use `civ-date-input` -- it is deprecated due to issues with Dragon NaturallySpeaking, VoiceOver on Safari, and TalkBack on Firefox.
-
 Always provide a hint showing the expected format. For memorable-date: "For example: January 15 1990". For date-picker: default placeholder is "mm/dd/yyyy".
 
 ## Form Validation

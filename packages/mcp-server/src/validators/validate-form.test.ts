@@ -5,12 +5,12 @@ import { RULES } from './rules.js';
 describe('validateForm', () => {
   // ---- Meta ----
 
-  it('has 46 rules total (19 errors + 27 warnings)', () => {
+  it('has 45 rules total (18 errors + 27 warnings)', () => {
     const errors = RULES.filter((r) => r.severity === 'error');
     const warnings = RULES.filter((r) => r.severity === 'warning');
-    expect(errors).toHaveLength(19);
+    expect(errors).toHaveLength(18);
     expect(warnings).toHaveLength(27);
-    expect(RULES).toHaveLength(46);
+    expect(RULES).toHaveLength(45);
   });
 
   it('returns valid:true and empty arrays for valid markup', () => {
@@ -131,20 +131,6 @@ describe('validateForm', () => {
     it('does not flag when legend is directly on component', () => {
       const result = validateForm('<civ-radio-group legend="Choose one" name="x"></civ-radio-group>');
       expect(result.errors.filter((e) => e.rule === 'missing-legend')).toHaveLength(0);
-    });
-  });
-
-  describe('deprecated-date-input', () => {
-    it('flags civ-date-input', () => {
-      const result = validateForm('<civ-form-field label="Date"><civ-date-input name="x"></civ-date-input></civ-form-field>');
-      const v = result.errors.find((e) => e.rule === 'deprecated-date-input');
-      expect(v).toBeDefined();
-      expect(v!.element).toBe('civ-date-input');
-    });
-
-    it('does not flag civ-date-picker', () => {
-      const result = validateForm('<civ-form-field label="Date" hint="mm/dd/yyyy"><civ-date-picker name="x"></civ-date-picker></civ-form-field>');
-      expect(result.errors.filter((e) => e.rule === 'deprecated-date-input')).toHaveLength(0);
     });
   });
 
@@ -659,15 +645,15 @@ describe('validateForm', () => {
 
   describe('summary', () => {
     it('pluralizes correctly for 1 error', () => {
-      const result = validateForm('<civ-form-field label="Date"><civ-date-input name="x"></civ-date-input></civ-form-field>');
+      const result = validateForm('<civ-form><civ-form-field label="Name" required><civ-text-input name="x" required></civ-text-input></civ-form-field><civ-radio-group name="y" legend="Pick"></civ-radio-group></civ-form>');
       expect(result.summary).toContain('1 error');
       expect(result.summary).not.toContain('1 errors');
     });
 
     it('pluralizes correctly for multiple errors', () => {
       const result = validateForm(`
-        <civ-date-input></civ-date-input>
-        <civ-text-input name="x"></civ-text-input>
+        <civ-text-input name="a"></civ-text-input>
+        <civ-text-input name="b"></civ-text-input>
       `);
       expect(result.summary).toMatch(/\d+ errors/);
     });

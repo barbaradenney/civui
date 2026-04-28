@@ -28,7 +28,6 @@ For architecture and internals, see \`CLAUDE.md\` in the repo root.
 | \`<civ-segment>\` | Choice | \`label\`, \`value\`, \`selected\` | (bubbles to parent) |
 | \`<civ-date-picker>\` | Date | \`min\`, \`max\`, \`placeholder\`, \`locale\`, \`weekStartsOn\` | \`{ value }\` |
 | \`<civ-memorable-date>\` | Date | \`legend\`, \`monthLabel\`, \`dayLabel\`, \`yearLabel\`, \`locale\` | \`{ value, month, day, year }\` |
-| \`<civ-date-input>\` | Date | \`min\`, \`max\` | \`{ value }\` — **DEPRECATED** |
 | \`<civ-file-upload>\` | File | \`accept\`, \`multiple\`, \`maxSize\`, \`maxFiles\` | \`{ files: File[] }\` |
 | \`<civ-form-field>\` | Wrapper | \`label\`, \`hint\`, \`error\`, \`required\`, \`touched\` | — |
 | \`<civ-form-fieldset>\` | Wrapper | \`legend\`, \`hint\`, \`error\`, \`required\`, \`touched\` | — |
@@ -342,12 +341,6 @@ Three-field date entry (Month select + Day input + Year input). Preferred for kn
 
 ---
 
-### civ-date-input — DEPRECATED
-
-Native date input. **Do not use in new code.** Known issues with Dragon NaturallySpeaking, VoiceOver on Safari, and TalkBack on Firefox. Use \`civ-date-picker\` or \`civ-memorable-date\` instead.
-
----
-
 ### civ-file-upload
 
 Drag-and-drop file upload with validation.
@@ -630,7 +623,6 @@ Step indicator for multi-step forms. Shows numbered circles with labels.
 |----------|-----------|-----|
 | Scheduling / appointment selection | \`civ-date-picker\` | Calendar browsing, min/max range |
 | Known past date (birthday, issue date) | \`civ-memorable-date\` | Three-field entry, no calendar needed |
-| **Never** | \`civ-date-input\` | Deprecated — accessibility issues |
 
 ### checkbox vs toggle
 
@@ -888,35 +880,33 @@ Avoid these common mistakes when using CivUI components:
 
 2. **Never use placeholder as a label.** Always set the \`label\` (or \`legend\` for groups) prop. Placeholder text disappears on focus and fails accessibility.
 
-3. **Never use \`civ-date-input\`.** It is deprecated. Use \`civ-date-picker\` for scheduling or \`civ-memorable-date\` for known dates.
+3. **Never use \`civ-toggle\` for choices that require form submission.** Toggles have immediate-effect semantics. Use \`civ-checkbox\` for choices that take effect on submit.
 
-4. **Never use \`civ-toggle\` for choices that require form submission.** Toggles have immediate-effect semantics. Use \`civ-checkbox\` for choices that take effect on submit.
+4. **Never put label/hint/error directly on input components.** Use \`<civ-form-field>\` or \`<civ-form-fieldset>\` wrappers instead. Exception: self-contained components (\`civ-checkbox\`, \`civ-toggle\`, \`civ-address\`, \`civ-name\`, \`civ-signature\`) manage their own labels.
 
-5. **Never put label/hint/error directly on input components.** Use \`<civ-form-field>\` or \`<civ-form-fieldset>\` wrappers instead. Exception: self-contained components (\`civ-checkbox\`, \`civ-toggle\`, \`civ-address\`, \`civ-name\`, \`civ-signature\`) manage their own labels.
+5. **Never use \`civ-form-group\`.** It has been replaced by \`<civ-form-field>\` (single inputs) and \`<civ-form-fieldset>\` (groups).
 
-6. **Never use \`civ-form-group\`.** It has been replaced by \`<civ-form-field>\` (single inputs) and \`<civ-form-fieldset>\` (groups).
+6. **Never use \`civ-us-state\` or \`civ-service-branch\`.** Use \`<civ-select preset="us-state">\` or \`<civ-select preset="service-branch">\` instead.
 
-7. **Never use \`civ-us-state\` or \`civ-service-branch\`.** Use \`<civ-select preset="us-state">\` or \`<civ-select preset="service-branch">\` instead.
+7. **Never put \`civ-radio\` outside a \`civ-radio-group\`.** Radios are not form-participating on their own. The group handles form integration, keyboard navigation, and ARIA.
 
-8. **Never put \`civ-radio\` outside a \`civ-radio-group\`.** Radios are not form-participating on their own. The group handles form integration, keyboard navigation, and ARIA.
+8. **Never put \`civ-segment\` outside a \`civ-segmented-control\`.** Same reason as radios.
 
-9. **Never put \`civ-segment\` outside a \`civ-segmented-control\`.** Same reason as radios.
+9. **Never omit \`name\` on form-participating components.** Without \`name\`, the value won't appear in form data.
 
-10. **Never omit \`name\` on form-participating components.** Without \`name\`, the value won't appear in form data.
+10. **Never use \`focus:\` prefix for focus styles.** Use \`focus-visible:civ-focus-ring\` for keyboard-only focus indication.
 
-11. **Never use \`focus:\` prefix for focus styles.** Use \`focus-visible:civ-focus-ring\` for keyboard-only focus indication.
+11. **Never use generic required messages.** Use \`required-message\` with field-specific text: "Enter your email address", not "This field is required".
 
-12. **Never use generic required messages.** Use \`required-message\` with field-specific text: "Enter your email address", not "This field is required".
+12. **Never put commas in checkbox values** when using \`civ-checkbox-group\`. Commas are used internally as the value delimiter.
 
-13. **Never put commas in checkbox values** when using \`civ-checkbox-group\`. Commas are used internally as the value delimiter.
+13. **Never skip \`afterEach(cleanupFixtures)\` in tests.** Test fixtures accumulate in the DOM and cause cross-test pollution.
 
-14. **Never skip \`afterEach(cleanupFixtures)\` in tests.** Test fixtures accumulate in the DOM and cause cross-test pollution.
+14. **Never assume ElementInternals works in tests.** jsdom doesn't fully support it. Use guards: \`typeof this._internals?.setFormValue === 'function'\`.
 
-15. **Never assume ElementInternals works in tests.** jsdom doesn't fully support it. Use guards: \`typeof this._internals?.setFormValue === 'function'\`.
+15. **Never use \`civ-select\` for fewer than 5 options** when all options can be displayed. Use \`civ-radio-group\` to show all choices at once.
 
-16. **Never use \`civ-select\` for fewer than 5 options** when all options can be displayed. Use \`civ-radio-group\` to show all choices at once.
-
-17. **Never dispatch native \`input\` or \`change\` events.** Always use \`civ-input\` and \`civ-change\` custom events.
+16. **Never dispatch native \`input\` or \`change\` events.** Always use \`civ-input\` and \`civ-change\` custom events.
 
 ---
 

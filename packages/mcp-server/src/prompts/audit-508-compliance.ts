@@ -48,7 +48,6 @@ For each violation found:
 Map each rule to its WCAG criterion:
 - missing-label / missing-legend → WCAG 1.3.1, 3.3.2
 - placeholder-as-label → WCAG 1.3.1, 3.3.2
-- deprecated-date-input → WCAG 4.1.2
 - missing-required-message → WCAG 3.3.1, 3.3.3
 - orphaned-radio / orphaned-segment → WCAG 1.3.1
 - label-on-group / legend-on-single → WCAG 1.3.1

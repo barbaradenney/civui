@@ -23,14 +23,6 @@ describe('suggestFix', () => {
     expect(result.fixedHtml).toContain('legend=');
   });
 
-  it('replaces deprecated civ-date-input with civ-memorable-date in wrapper', () => {
-    const html = '<civ-form-field label="Birth date"><civ-date-input name="dob"></civ-date-input></civ-form-field>';
-    const result = suggestFix(html, ['deprecated-date-input']);
-    expect(result.appliedFixes.some((f) => f.includes('civ-memorable-date'))).toBe(true);
-    expect(result.fixedHtml).toContain('civ-memorable-date');
-    expect(result.fixedHtml).not.toContain('civ-date-input');
-  });
-
   it('wraps with civ-form-field using placeholder as label', () => {
     const html = '<civ-text-input placeholder="Enter name" name="name"></civ-text-input>';
     const result = suggestFix(html, ['placeholder-as-label']);

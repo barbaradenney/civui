@@ -13,7 +13,6 @@ Use this guide to select the correct CivUI component for each form field.
   - Yes → \`<civ-memorable-date>\` with \`hint="For example: January 15 1990"\`
   - No → **Is it a scheduling/appointment date?**
     - Yes → \`<civ-date-picker>\` with \`hint="For example: 01/15/2024"\`
-- **Never use \`<civ-date-input>\`** — it is deprecated (Dragon, VoiceOver, TalkBack issues)
 
 ## Is it a choice?
 
@@ -81,7 +80,6 @@ Use this guide to select the correct CivUI component for each form field.
 
 | Pattern | Problem | Fix |
 |---------|---------|-----|
-| \`<civ-date-input>\` | Deprecated — Dragon/VoiceOver/TalkBack issues | Use \`<civ-memorable-date>\` or \`<civ-date-picker>\` |
 | \`<civ-form-group>\` | Removed | Use \`<civ-form-field>\` or \`<civ-form-fieldset>\` |
 | \`<civ-us-state>\` / \`<civ-service-branch>\` | Removed | Use \`<civ-select preset="us-state|service-branch">\` |
 | Label on input component | Incorrect — wrapper owns the label | Move label/hint/error to \`<civ-form-field>\` or \`<civ-form-fieldset>\` |

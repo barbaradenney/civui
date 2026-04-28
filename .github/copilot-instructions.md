@@ -35,7 +35,6 @@ Light DOM only. Tailwind CSS with `civ-` prefix. ElementInternals for form parti
 | `<civ-segment>` | `label`, `value`, `selected` | (use in segmented-control) |
 | `<civ-date-picker>` | `min`, `max`, `placeholder`, `locale`, `weekStartsOn` | `{ value }` |
 | `<civ-memorable-date>` | `legend`, `monthLabel`, `dayLabel`, `yearLabel`, `locale` | `{ value, month, day, year }` |
-| `<civ-date-input>` | `min`, `max` | **DEPRECATED — do not use** |
 | `<civ-file-upload>` | `accept`, `multiple`, `maxSize`, `maxFiles` | `{ files: File[] }` |
 | `<civ-fieldset>` | `legend`, `hint`, `error`, `required`, `disabled` | — |
 | `<civ-form>` | `action`, `method` | `civ-submit: { formData }`, `civ-invalid: { errors }` |
@@ -225,7 +224,7 @@ Light DOM only. Tailwind CSS with `civ-` prefix. ElementInternals for form parti
 - **Hint text shows format**: "For example: January 15 1990" for dates, "Include area code" for phone.
 - **Validate on submit, not on blur** — users tab through forms to understand them first.
 - **Error summary at top** — `civ-form` renders this automatically with anchor links to invalid fields.
-- **Date components**: `civ-memorable-date` for known dates (birthday), `civ-date-picker` for scheduling. Never `civ-date-input`.
+- **Date components**: `civ-memorable-date` for known dates (birthday), `civ-date-picker` for scheduling.
 - **Section 508** is satisfied by WCAG 2.1 AA compliance, which CivUI components provide.
 - **Bilingual support**: components accept i18n label props (e.g., `choose-date-label`, `month-label`).
 
@@ -247,16 +246,15 @@ Light DOM only. Tailwind CSS with `civ-` prefix. ElementInternals for form parti
 
 1. **No Shadow DOM** — CivUI is Light DOM only. Tailwind breaks in Shadow DOM.
 2. **No placeholder-only labels** — always set `label` or `legend`.
-3. **No `civ-date-input`** — deprecated, use `civ-date-picker` or `civ-memorable-date`.
-4. **No toggle for submit-gated choices** — use checkbox. Toggle = immediate effect.
-5. **No `civ-radio` outside `civ-radio-group`** — radio has no form participation alone.
-6. **No `civ-segment` outside `civ-segmented-control`** — same reason.
-7. **No missing `name` attribute** — value won't appear in form data.
-8. **No `focus:` prefix** — use `focus-visible:civ-focus-ring`.
-9. **No generic "This field is required"** — use `required-message` with specific text.
-10. **No commas in checkbox values** — `civ-checkbox-group` uses commas as delimiter.
-11. **No native `input`/`change` events** — use `civ-input` and `civ-change`.
-12. **No `civ-select` for < 5 options** when space allows — show all options with `civ-radio-group`.
+3. **No toggle for submit-gated choices** — use checkbox. Toggle = immediate effect.
+4. **No `civ-radio` outside `civ-radio-group`** — radio has no form participation alone.
+5. **No `civ-segment` outside `civ-segmented-control`** — same reason.
+6. **No missing `name` attribute** — value won't appear in form data.
+7. **No `focus:` prefix** — use `focus-visible:civ-focus-ring`.
+8. **No generic "This field is required"** — use `required-message` with specific text.
+9. **No commas in checkbox values** — `civ-checkbox-group` uses commas as delimiter.
+10. **No native `input`/`change` events** — use `civ-input` and `civ-change`.
+11. **No `civ-select` for < 5 options** when space allows — show all options with `civ-radio-group`.
 
 ## Testing Patterns
 

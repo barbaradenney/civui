@@ -184,7 +184,7 @@ describe('generateCivUI', () => {
     expect(html).toContain('max-size="10485760"');
   });
 
-  it('generates date-picker (not deprecated date-input)', () => {
+  it('generates date-picker for date type', () => {
     const schema: FormSchema = {
       sections: [
         {
@@ -196,7 +196,6 @@ describe('generateCivUI', () => {
     };
     const html = generateCivUI(schema);
     expect(html).toContain('<civ-date-picker');
-    expect(html).not.toContain('civ-date-input');
   });
 
   it('wraps sections with headings in civ-fieldset', () => {

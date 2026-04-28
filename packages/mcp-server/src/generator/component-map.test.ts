@@ -65,10 +65,9 @@ describe('component-map', () => {
     expect(mapping.childTag).toBe('civ-checkbox');
   });
 
-  it('maps date to civ-date-picker (not deprecated civ-date-input)', () => {
+  it('maps date to civ-date-picker', () => {
     const mapping = getComponentMapping('date');
     expect(mapping.tag).toBe('civ-date-picker');
-    expect(mapping.tag).not.toBe('civ-date-input');
     expect(mapping.defaultHint).toBeTruthy();
   });
 

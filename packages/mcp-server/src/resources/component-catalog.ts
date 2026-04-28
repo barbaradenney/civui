@@ -128,6 +128,4 @@ Step indicator. Props: \`steps\` (JSON), \`current\`, \`show-counter\`, \`clicka
 | UI mode switch, 2–5 options | civ-segmented-control |
 | Scheduling / appointments | civ-date-picker |
 | Known past dates (birthday) | civ-memorable-date |
-
-**DEPRECATED:** Never use civ-date-input — use civ-date-picker or civ-memorable-date instead.
 `;

@@ -1,61 +1,84 @@
 ---
-title: Form Group
+title: Form Field
 sidebar_position: 11
-sidebar_label: Form Group
+sidebar_label: Form Field
 ---
 
 import StoryEmbed from "@site/src/components/StoryEmbed";
 
-# Form Group
+# Form Field
 
-`<civ-form-group>`
+`<civ-form-field>` and `<civ-form-fieldset>`
 
-A layout wrapper that associates a label, hint, and error message with a form control. Use when you need to add hint or error text to a control that does not have built-in support, or when composing custom form patterns.
+Wrappers that render label, hint, and error for form controls. Every form input must be wrapped in one of these.
+
+- **`<civ-form-field>`** — wraps a single control (text-input, textarea, select, combobox, date-picker, file-upload) with a `<label>`.
+- **`<civ-form-fieldset>`** — wraps a group control (radio-group, checkbox-group, segmented-control, yes-no, memorable-date, date-range-picker) with a `<fieldset>` + `<legend>`.
+
+Both cascade `required` and `disabled` to the child control and wire ARIA attributes automatically.
 
 ## Examples
 
-### Default
+### Text Input
 
-<StoryEmbed id="forms-layout-form-group--default" />
+<StoryEmbed id="core-form-field--basic-text-field" />
 
 ### With Error
 
-<StoryEmbed id="forms-layout-form-group--with-error" />
+<StoryEmbed id="core-form-field--with-error" />
 
-### Required
+### Radio Group (Fieldset)
 
-<StoryEmbed id="forms-layout-form-group--required" />
+<StoryEmbed id="core-form-field--radio-group" />
 
-### With Hint and Error
+### Complete Form
 
-<StoryEmbed id="forms-layout-form-group--with-hint-and-error" />
+<StoryEmbed id="core-form-field--complete-form" />
 
-[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-layout-form-group--default)
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/core-form-field--basic-text-field)
 
-## Props
+## Props — civ-form-field
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `label` | `string` | `''` | Label text for the group |
+| `label` | `string` | `''` | Label text for the field |
 | `hint` | `string` | `''` | Hint text displayed below the label |
 | `error` | `string` | `''` | Error message displayed with `role="alert"` |
-| `input-id` | `string` | `''` | ID of the form control this group labels |
-| `required` | `boolean` | `false` | Shows required asterisk indicator |
+| `required` | `boolean` | `false` | Shows "(required)" indicator, cascades to child |
+| `disabled` | `boolean` | `false` | Disables the field, cascades to child |
+| `required-message` | `string` | `''` | Custom validation message for required fields |
+
+## Props — civ-form-fieldset
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `legend` | `string` | `''` | Legend text for the fieldset |
+| `hint` | `string` | `''` | Hint text displayed below the legend |
+| `error` | `string` | `''` | Error message displayed with `role="alert"` |
+| `required` | `boolean` | `false` | Shows "(required)" indicator, cascades to child |
+| `disabled` | `boolean` | `false` | Disables the fieldset, cascades to child |
+| `required-message` | `string` | `''` | Custom validation message for required fields |
 
 ## Usage
 
 ```html
-<!-- Basic form group -->
-<civ-form-group label="Upload format" hint="Choose the file format for your export">
-  <!-- Custom control goes here -->
-</civ-form-group>
+<!-- Single input -->
+<civ-form-field label="Email address" hint="We'll never share this" required>
+  <civ-text-input type="email" name="email" required></civ-text-input>
+</civ-form-field>
 
-<!-- With error -->
-<civ-form-group
-  label="Verification code"
-  error="Enter the 6-digit code sent to your phone"
-  required
->
-  <!-- Custom control goes here -->
-</civ-form-group>
+<!-- Group control -->
+<civ-form-fieldset legend="Preferred contact method" required>
+  <civ-radio-group name="contact" required>
+    <civ-radio value="email" label="Email"></civ-radio>
+    <civ-radio value="phone" label="Phone"></civ-radio>
+  </civ-radio-group>
+</civ-form-fieldset>
 ```
+
+## Self-contained components
+
+These components render their own labels and do **not** need wrappers:
+
+- `<civ-checkbox>` and `<civ-toggle>` — inline labels
+- `<civ-address>`, `<civ-name>`, `<civ-direct-deposit>`, `<civ-signature>` — compound components with internal form-field wrappers

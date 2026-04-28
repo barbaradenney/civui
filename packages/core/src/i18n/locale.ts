@@ -318,6 +318,8 @@ export interface CivLocaleStrings {
   // Service history
   serviceLegend: string;
   serviceBranchLabel: string;
+  dischargeTypeLabel: string;
+  suffixLabel: string;
   serviceStartDateLegend: string;
   serviceStartDateHint: string;
   serviceEndDateLegend: string;
@@ -325,6 +327,12 @@ export interface CivLocaleStrings {
   serviceDischargeLabel: string;
   serviceNumberLabel: string;
   serviceNumberHint: string;
+
+  // Demographics
+  maritalStatusLabel: string;
+  ethnicityLabel: string;
+  genderLabel: string;
+  languageLabel: string;
 
   // Task list
   taskStatusNotStarted: string;
@@ -657,6 +665,8 @@ const defaultStrings: CivLocaleStrings = {
 
   serviceLegend: 'About this service period',
   serviceBranchLabel: 'Branch of service',
+  dischargeTypeLabel: 'Type of discharge',
+  suffixLabel: 'Suffix',
   serviceStartDateLegend: 'Service start date',
   serviceStartDateHint: 'If you don\'t know the exact date, enter your best estimate',
   serviceEndDateLegend: 'Service end date',
@@ -664,6 +674,11 @@ const defaultStrings: CivLocaleStrings = {
   serviceDischargeLabel: 'Character of service',
   serviceNumberLabel: 'Service number',
   serviceNumberHint: 'If you served before 1974, enter your service number',
+
+  maritalStatusLabel: 'Marital status',
+  ethnicityLabel: 'Ethnicity',
+  genderLabel: 'Gender',
+  languageLabel: 'Preferred language',
 
   taskStatusNotStarted: 'Not started',
   taskStatusInProgress: 'In progress',

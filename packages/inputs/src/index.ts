@@ -21,6 +21,13 @@ import './us-state/civ-us-state.js';
 import './country/civ-country.js';
 import './va-file-number/civ-va-file-number.js';
 import './service-branch/civ-service-branch.js';
+import './discharge-type/civ-discharge-type.js';
+import './suffix/civ-suffix.js';
+import './relationship-type/civ-relationship-type.js';
+import './marital-status/civ-marital-status.js';
+import './ethnicity/civ-ethnicity.js';
+import './gender/civ-gender.js';
+import './language/civ-language.js';
 
 // Preset Input Base Class
 export { PresetInputWrapper } from './preset-input/index.js';
@@ -91,3 +98,25 @@ export { CivVaFileNumber } from './va-file-number/index.js';
 
 // Service Branch
 export { CivServiceBranch } from './service-branch/index.js';
+
+// Discharge Type
+export { CivDischargeType } from './discharge-type/index.js';
+
+// Suffix
+export { CivSuffix } from './suffix/index.js';
+
+// Relationship Type
+export { CivRelationshipType } from './relationship-type/index.js';
+export type { RelationshipPreset } from './relationship-type/index.js';
+
+// Marital Status
+export { CivMaritalStatus } from './marital-status/index.js';
+
+// Ethnicity
+export { CivEthnicity } from './ethnicity/index.js';
+
+// Gender
+export { CivGender } from './gender/index.js';
+
+// Language
+export { CivLanguage } from './language/index.js';

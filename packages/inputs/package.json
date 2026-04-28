@@ -29,6 +29,13 @@
     "./country": "./dist/country/index.js",
     "./va-file-number": "./dist/va-file-number/index.js",
     "./service-branch": "./dist/service-branch/index.js",
+    "./discharge-type": "./dist/discharge-type/index.js",
+    "./suffix": "./dist/suffix/index.js",
+    "./relationship-type": "./dist/relationship-type/index.js",
+    "./marital-status": "./dist/marital-status/index.js",
+    "./ethnicity": "./dist/ethnicity/index.js",
+    "./gender": "./dist/gender/index.js",
+    "./language": "./dist/language/index.js",
     "./preset-input": "./dist/preset-input/index.js"
   },
   "files": ["dist"],

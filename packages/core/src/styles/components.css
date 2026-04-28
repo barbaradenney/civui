@@ -253,10 +253,7 @@
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23a0a0a0' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
     }
 
-    .civ-check-input {
-      background-color: var(--civ-color-base-darkest, #1a1a1a);
-      border-color: var(--civ-color-base-light);
-    }
+    /* Checkbox/radio dark mode handled by token-based border/bg variables */
   }
 
   .civ-fieldset {
@@ -1201,14 +1198,11 @@
   /* ── Checkbox / Radio ───────────────────────────────────────── */
 
   .civ-check-input {
-    @apply civ-me-2 civ-align-middle civ-cursor-pointer;
+    @apply civ-me-2 civ-align-middle civ-cursor-pointer civ-border civ-border-base-light civ-rounded civ-bg-white;
     appearance: none;
     -webkit-appearance: none;
     width: var(--civ-spacing-8);
     height: var(--civ-spacing-8);
-    border-radius: var(--civ-border-radius-DEFAULT, 6px);
-    border: 2px solid var(--civ-color-base-DEFAULT);
-    background-color: var(--civ-color-white-DEFAULT, #fff);
     flex-shrink: 0;
   }
 

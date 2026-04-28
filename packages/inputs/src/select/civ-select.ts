@@ -4,6 +4,8 @@ import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { CivFormElement, dispatch, inputClasses, inputWidthClass, t } from '@civui/core';
 import type { InputWidth } from '@civui/core';
+import { resolvePresetOptions } from './select-presets.js';
+import type { SelectPresetName } from './select-presets.js';
 
 export interface SelectOption {
   value: string;
@@ -44,6 +46,22 @@ export class CivSelect extends CivFormElement {
   @property({ type: String }) width: InputWidth = 'default';
   @property({ type: String }) autocomplete = '';
 
+  /**
+   * Pre-populate options from a built-in data set. Available presets:
+   * `us-state`, `service-branch`, `discharge-type`, `suffix`,
+   * `relationship-type`, `marital-status`, `ethnicity`, `gender`, `language`.
+   */
+  @property({ type: String }) preset?: SelectPresetName;
+
+  /**
+   * Variant for presets with multiple tiers:
+   * - service-branch: `"reserve"`, `"historical"`, `"all"`
+   * - relationship-type: `"va-dependent"`, `"va-survivor"`
+   * - gender: `"binary"`
+   * - us-state: `"territories"`
+   */
+  @property({ type: String, attribute: 'preset-variant' }) presetVariant?: string;
+
   override connectedCallback(): void {
     super.connectedCallback();
     // Light DOM: original <option>/<optgroup> children would remain in the
@@ -66,6 +84,10 @@ export class CivSelect extends CivFormElement {
       if (child.tagName === 'OPTION' || child.tagName === 'OPTGROUP') {
         child.remove();
       }
+    }
+    // Apply preset options (after slotted options, so explicit children win)
+    if (this.preset && this.options.length === 0) {
+      this.options = resolvePresetOptions(this.preset, this.presetVariant);
     }
   }
 
@@ -106,6 +128,9 @@ export class CivSelect extends CivFormElement {
 
   override updated(changed: Map<string, unknown>): void {
     super.updated(changed);
+    if ((changed.has('preset') || changed.has('presetVariant')) && this.preset) {
+      this.options = resolvePresetOptions(this.preset, this.presetVariant);
+    }
     if (changed.has('options') && this.value) {
       const select = this.querySelector('select') as HTMLSelectElement | null;
       if (select && select.value !== this.value) {

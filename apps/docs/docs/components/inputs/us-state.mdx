@@ -8,7 +8,7 @@ import StoryEmbed from "@site/src/components/StoryEmbed";
 
 # US State
 
-`<civ-us-state>`
+Use `<civ-select preset="us-state">` for a pre-populated US states select.
 
 Pre-configured select for US states and DC, with optional territory support. Renders a native `<select>` for maximum accessibility.
 
@@ -16,33 +16,38 @@ Pre-configured select for US states and DC, with optional territory support. Ren
 
 ### States + DC
 
-<StoryEmbed id="inputs-us-state--default" />
+<StoryEmbed id="forms-inputs-select--preset-us-state" />
 
 ### States + DC + Territories
 
-<StoryEmbed id="inputs-us-state--with-territories" />
+<StoryEmbed id="forms-inputs-select--preset-us-state-with-territories" />
 
-### Custom Label
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-inputs-select--preset-us-state)
 
-<StoryEmbed id="inputs-us-state--custom-label" />
+## Usage
 
-### With Error
+```html
+<!-- US states and DC -->
+<civ-form-field label="State" required>
+  <civ-select name="state" preset="us-state" required></civ-select>
+</civ-form-field>
 
-<StoryEmbed id="inputs-us-state--with-error" />
-
-[Open in Storybook →](pathname:///civui/storybook/?path=/story/inputs-us-state--default)
+<!-- Include territories -->
+<civ-form-field label="State" required>
+  <civ-select name="state" preset="us-state" preset-variant="territories" required></civ-select>
+</civ-form-field>
+```
 
 ## Shared Props
 
 All form components share these props: `label`, `name`, `value`, `hint`, `error`, `required`, `disabled`, `readonly`.
 
-The label defaults to "State" and can be overridden via the `label` prop.
-
-## Component-Specific Props
+## Preset Props
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `include-territories` | `boolean` | `false` | Include US territories (PR, GU, VI, AS, MP) in the options list |
+| `preset` | `string` | - | Set to `"us-state"` for US states |
+| `preset-variant` | `string` | - | Set to `"territories"` to include US territories (PR, GU, VI, AS, MP) |
 
 ## Events
 
@@ -50,13 +55,3 @@ The label defaults to "State" and can be overridden via the `label` prop.
 |-------|--------|-------------|
 | `civ-input` | `{ value: string }` | Fires on every value change |
 | `civ-change` | `{ value: string }` | Fires on committed value change |
-
-## Usage
-
-```html
-<!-- US states and DC -->
-<civ-us-state name="state" required></civ-us-state>
-
-<!-- Include territories -->
-<civ-us-state name="state" include-territories required></civ-us-state>
-```

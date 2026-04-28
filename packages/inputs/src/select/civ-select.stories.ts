@@ -280,6 +280,89 @@ export const GovernmentBenefitsForm: Story = {
   `,
 };
 
+// ── Preset Stories ───────────────────────────────────────────
+
+export const PresetServiceBranch: Story = {
+  name: 'Preset: Service Branch',
+  render: () => html`
+    <civ-form-field label="Branch of service" required>
+      <civ-select name="branch" preset="service-branch" required></civ-select>
+    </civ-form-field>
+  `,
+};
+
+export const PresetServiceBranchReserve: Story = {
+  name: 'Preset: Service Branch (Reserve)',
+  render: () => html`
+    <civ-form-field label="Branch of service" hint="Includes reserve components" required>
+      <civ-select name="branch" preset="service-branch" preset-variant="reserve" required></civ-select>
+    </civ-form-field>
+  `,
+};
+
+export const PresetUsState: Story = {
+  name: 'Preset: US State',
+  render: () => html`
+    <civ-form-field label="State" required>
+      <civ-select name="state" preset="us-state" required></civ-select>
+    </civ-form-field>
+  `,
+};
+
+export const PresetUsStateWithTerritories: Story = {
+  name: 'Preset: US State (Territories)',
+  render: () => html`
+    <civ-form-field label="State or territory" required>
+      <civ-select name="state" preset="us-state" preset-variant="territories" required></civ-select>
+    </civ-form-field>
+  `,
+};
+
+export const PresetGender: Story = {
+  name: 'Preset: Gender',
+  render: () => html`
+    <civ-form-field label="Gender" required>
+      <civ-select name="gender" preset="gender" required></civ-select>
+    </civ-form-field>
+  `,
+};
+
+export const PresetGenderBinary: Story = {
+  name: 'Preset: Gender (Binary)',
+  render: () => html`
+    <civ-form-field label="Sex" required>
+      <civ-select name="sex" preset="gender" preset-variant="binary" required></civ-select>
+    </civ-form-field>
+  `,
+};
+
+export const PresetSuffix: Story = {
+  name: 'Preset: Suffix',
+  render: () => html`
+    <civ-form-field label="Suffix">
+      <civ-select name="suffix" preset="suffix"></civ-select>
+    </civ-form-field>
+  `,
+};
+
+export const PresetDischargeType: Story = {
+  name: 'Preset: Discharge Type',
+  render: () => html`
+    <civ-form-field label="Discharge type" required>
+      <civ-select name="discharge" preset="discharge-type" required></civ-select>
+    </civ-form-field>
+  `,
+};
+
+export const PresetMaritalStatus: Story = {
+  name: 'Preset: Marital Status',
+  render: () => html`
+    <civ-form-field label="Marital status" required>
+      <civ-select name="maritalStatus" preset="marital-status" required></civ-select>
+    </civ-form-field>
+  `,
+};
+
 // ── Declarative <option> slot fallback ────────────────────────
 
 export const SlottedOptions: Story = {

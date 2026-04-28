@@ -55,7 +55,7 @@ export const WithEthnicity: Story = {
   render: () => html`
     <div style="max-width: 640px;">
       <civ-form-field label="Ethnicity" required>
-        <civ-ethnicity name="ethnicity" required></civ-ethnicity>
+        <civ-select name="ethnicity" preset="ethnicity" required></civ-select>
       </civ-form-field>
 
       <civ-form-fieldset legend="Race" hint="Select one or more" required>

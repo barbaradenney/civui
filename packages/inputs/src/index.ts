@@ -20,6 +20,7 @@ import './routing-number/civ-routing-number.js';
 import './us-state/civ-us-state.js';
 import './country/civ-country.js';
 import './va-file-number/civ-va-file-number.js';
+import './service-branch/civ-service-branch.js';
 
 // Preset Input Base Class
 export { PresetInputWrapper } from './preset-input/index.js';
@@ -87,3 +88,6 @@ export { CivCountry } from './country/index.js';
 
 // VA File Number
 export { CivVaFileNumber } from './va-file-number/index.js';
+
+// Service Branch
+export { CivServiceBranch } from './service-branch/index.js';

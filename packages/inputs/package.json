@@ -28,6 +28,7 @@
     "./us-state": "./dist/us-state/index.js",
     "./country": "./dist/country/index.js",
     "./va-file-number": "./dist/va-file-number/index.js",
+    "./service-branch": "./dist/service-branch/index.js",
     "./preset-input": "./dist/preset-input/index.js"
   },
   "files": ["dist"],

@@ -18,6 +18,7 @@ export class CivToggle extends CivBooleanFormElement {
 
   override render() {
     return html`
+      <div class="civ-mb-4">
         <div class="civ-flex civ-items-center civ-gap-3">
           <button
             type="button"
@@ -52,6 +53,7 @@ export class CivToggle extends CivBooleanFormElement {
             ${renderError(this._errorId, this.error)}
           </div>
         </div>
+      </div>
     `;
   }
 

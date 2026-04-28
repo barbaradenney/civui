@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
+import '@civui/core';
 import './civ-yes-no.js';
 import '@civui/actions';
 
@@ -38,14 +39,19 @@ export const Default: Story = {
     disabled: false,
   },
   render: (args) => html`
-    <civ-yes-no
-      label="${args.label}"
-      name="${args.name}"
+    <civ-form-fieldset
+      legend="${args.label}"
       hint="${args.hint}"
       error="${args.error}"
       ?required="${args.required}"
       ?disabled="${args.disabled}"
-    ></civ-yes-no>
+    >
+      <civ-yes-no
+        name="${args.name}"
+        ?required="${args.required}"
+        ?disabled="${args.disabled}"
+      ></civ-yes-no>
+    </civ-form-fieldset>
   `,
 };
 
@@ -53,88 +59,78 @@ export const Default: Story = {
 
 export const WithHint: Story = {
   render: () => html`
-    <civ-yes-no
-      label="Have you filed federal income taxes this year?"
-      name="taxes"
-      hint="This refers to federal income taxes for the current calendar year"
-    ></civ-yes-no>
+    <civ-form-fieldset legend="Have you filed federal income taxes this year?" hint="This refers to federal income taxes for the current calendar year">
+      <civ-yes-no name="taxes"></civ-yes-no>
+    </civ-form-fieldset>
   `,
 };
 
 export const WithError: Story = {
   render: () => html`
-    <civ-yes-no
-      label="Are you a U.S. citizen?"
-      name="citizen"
-      error="Select an answer to continue"
-      required
-    ></civ-yes-no>
+    <civ-form-fieldset legend="Are you a U.S. citizen?" error="Select an answer to continue" required>
+      <civ-yes-no name="citizen" required></civ-yes-no>
+    </civ-form-fieldset>
   `,
 };
 
 export const Required: Story = {
   render: () => html`
-    <civ-yes-no
-      label="Do you have a valid passport?"
-      name="passport"
-      required
-    ></civ-yes-no>
+    <civ-form-fieldset legend="Do you have a valid passport?" required>
+      <civ-yes-no name="passport" required></civ-yes-no>
+    </civ-form-fieldset>
   `,
 };
 
 export const Disabled: Story = {
   render: () => html`
-    <civ-yes-no
-      label="Are you a U.S. citizen?"
-      name="citizen"
-      value="yes"
-      disabled
-    ></civ-yes-no>
+    <civ-form-fieldset legend="Are you a U.S. citizen?" disabled>
+      <civ-yes-no name="citizen" value="yes" disabled></civ-yes-no>
+    </civ-form-fieldset>
   `,
 };
 
 export const Preselected: Story = {
   render: () => html`
-    <civ-yes-no
-      label="Have you served in the military?"
-      name="military"
-      value="no"
-    ></civ-yes-no>
+    <civ-form-fieldset legend="Have you served in the military?">
+      <civ-yes-no name="military" value="no"></civ-yes-no>
+    </civ-form-fieldset>
   `,
 };
 
 export const CustomLabels: Story = {
   render: () => html`
-    <civ-yes-no
-      label="Do you agree to the terms of service?"
-      name="terms"
-      yes-label="I agree"
-      no-label="I decline"
-    ></civ-yes-no>
+    <civ-form-fieldset legend="Do you agree to the terms of service?">
+      <civ-yes-no
+        name="terms"
+        yes-label="I agree"
+        no-label="I decline"
+      ></civ-yes-no>
+    </civ-form-fieldset>
   `,
 };
 
 export const WithUnsureOption: Story = {
   name: 'With Unsure Option',
   render: () => html`
-    <civ-yes-no
-      label="Do you have a service-connected disability?"
-      name="disability"
-      unsure-label="I'm not sure"
-      hint="This includes any injury or illness incurred during military service"
-    ></civ-yes-no>
+    <civ-form-fieldset legend="Do you have a service-connected disability?" hint="This includes any injury or illness incurred during military service">
+      <civ-yes-no
+        name="disability"
+        unsure-label="I'm not sure"
+      ></civ-yes-no>
+    </civ-form-fieldset>
   `,
 };
 
 export const CustomThirdOption: Story = {
   name: 'Custom Third Option',
   render: () => html`
-    <civ-yes-no
-      label="Does this condition apply to your household?"
-      name="condition"
-      unsure-label="Does not apply"
-      unsure-value="n/a"
-    ></civ-yes-no>
+    <civ-form-fieldset legend="Does this condition apply to your household?">
+      <civ-yes-no
+        name="condition"
+        unsure-label="Does not apply"
+        unsure-value="n/a"
+      ></civ-yes-no>
+    </civ-form-fieldset>
   `,
 };
 
@@ -144,12 +140,24 @@ export const AllStates: Story = {
   name: 'All States',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-8">
-      <civ-yes-no label="Normal (no selection)" name="normal"></civ-yes-no>
-      <civ-yes-no label="With hint" name="hint" hint="Additional context for this question"></civ-yes-no>
-      <civ-yes-no label="With error" name="error" error="Select an answer" required></civ-yes-no>
-      <civ-yes-no label="Required" name="required" required></civ-yes-no>
-      <civ-yes-no label="Disabled" name="disabled" value="yes" disabled></civ-yes-no>
-      <civ-yes-no label="With unsure option" name="unsure" unsure-label="I'm not sure"></civ-yes-no>
+      <civ-form-fieldset legend="Normal (no selection)">
+        <civ-yes-no name="normal"></civ-yes-no>
+      </civ-form-fieldset>
+      <civ-form-fieldset legend="With hint" hint="Additional context for this question">
+        <civ-yes-no name="hint"></civ-yes-no>
+      </civ-form-fieldset>
+      <civ-form-fieldset legend="With error" error="Select an answer" required>
+        <civ-yes-no name="error" required></civ-yes-no>
+      </civ-form-fieldset>
+      <civ-form-fieldset legend="Required" required>
+        <civ-yes-no name="required" required></civ-yes-no>
+      </civ-form-fieldset>
+      <civ-form-fieldset legend="Disabled" disabled>
+        <civ-yes-no name="disabled" value="yes" disabled></civ-yes-no>
+      </civ-form-fieldset>
+      <civ-form-fieldset legend="With unsure option">
+        <civ-yes-no name="unsure" unsure-label="I'm not sure"></civ-yes-no>
+      </civ-form-fieldset>
     </div>
   `,
 };
@@ -162,15 +170,21 @@ export const DensityScale: Story = {
     <div class="civ-flex civ-flex-col civ-gap-6">
       <div data-civ-scale="dense">
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Dense</p>
-        <civ-yes-no label="Are you a U.S. citizen?" name="dense-citizen"></civ-yes-no>
+        <civ-form-fieldset legend="Are you a U.S. citizen?">
+          <civ-yes-no name="dense-citizen"></civ-yes-no>
+        </civ-form-fieldset>
       </div>
       <div>
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Default</p>
-        <civ-yes-no label="Are you a U.S. citizen?" name="default-citizen"></civ-yes-no>
+        <civ-form-fieldset legend="Are you a U.S. citizen?">
+          <civ-yes-no name="default-citizen"></civ-yes-no>
+        </civ-form-fieldset>
       </div>
       <div data-civ-scale="spacious">
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Spacious</p>
-        <civ-yes-no label="Are you a U.S. citizen?" name="spacious-citizen"></civ-yes-no>
+        <civ-form-fieldset legend="Are you a U.S. citizen?">
+          <civ-yes-no name="spacious-citizen"></civ-yes-no>
+        </civ-form-fieldset>
       </div>
     </div>
   `,
@@ -181,13 +195,13 @@ export const DensityScale: Story = {
 export const WithPreferNotToAnswer: Story = {
   name: 'With "Prefer not to answer" affordance',
   render: () => html`
-    <civ-yes-no
-      label="Are you currently experiencing thoughts of self-harm?"
-      name="selfHarm"
-      skip-label="Prefer not to answer"
-      skip-value="prefer_not_to_say"
-      hint="Your answer is confidential and used only to route you to appropriate support."
-    ></civ-yes-no>
+    <civ-form-fieldset legend="Are you currently experiencing thoughts of self-harm?" hint="Your answer is confidential and used only to route you to appropriate support.">
+      <civ-yes-no
+        name="selfHarm"
+        skip-label="Prefer not to answer"
+        skip-value="prefer_not_to_say"
+      ></civ-yes-no>
+    </civ-form-fieldset>
   `,
 };
 
@@ -205,22 +219,15 @@ export const GovernmentEligibilityScreening: Story = {
       }}
     >
       <h3 class="civ-m-0 civ-mb-4 civ-text-xl">Eligibility questions</h3>
-      <civ-yes-no
-        label="Are you a U.S. citizen or permanent resident?"
-        name="citizen"
-        required
-        hint="Select yes if you are a citizen by birth or naturalization"
-      ></civ-yes-no>
-      <civ-yes-no
-        label="Have you filed federal income taxes this year?"
-        name="taxes"
-        required
-      ></civ-yes-no>
-      <civ-yes-no
-        label="Do you currently receive any government benefits?"
-        name="benefits"
-        hint="Including Social Security, Medicare, or disability compensation"
-      ></civ-yes-no>
+      <civ-form-fieldset legend="Are you a U.S. citizen or permanent resident?" hint="Select yes if you are a citizen by birth or naturalization" required>
+        <civ-yes-no name="citizen" required></civ-yes-no>
+      </civ-form-fieldset>
+      <civ-form-fieldset legend="Have you filed federal income taxes this year?" required>
+        <civ-yes-no name="taxes" required></civ-yes-no>
+      </civ-form-fieldset>
+      <civ-form-fieldset legend="Do you currently receive any government benefits?" hint="Including Social Security, Medicare, or disability compensation">
+        <civ-yes-no name="benefits"></civ-yes-no>
+      </civ-form-fieldset>
       <div class="civ-flex civ-gap-2 civ-mt-4">
         <civ-button type="submit">Check eligibility</civ-button>
       </div>

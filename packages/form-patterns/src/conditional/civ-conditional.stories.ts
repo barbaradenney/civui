@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
+import '@civui/core';
 import './civ-conditional.js';
 import '@civui/inputs';
 import '@civui/controls';
@@ -23,26 +24,23 @@ type Story = StoryObj;
 export const Default: Story = {
   render: () => html`
     <div>
-      <civ-select
-        label="What is your employment status?"
-        name="employment"
-        options='[{"label":"Select one","value":""},{"label":"Employed","value":"employed"},{"label":"Self-employed","value":"self-employed"},{"label":"Unemployed","value":"unemployed"}]'
-      ></civ-select>
+      <civ-form-field label="What is your employment status?">
+        <civ-select
+          name="employment"
+          options='[{"label":"Select one","value":""},{"label":"Employed","value":"employed"},{"label":"Self-employed","value":"self-employed"},{"label":"Unemployed","value":"unemployed"}]'
+        ></civ-select>
+      </civ-form-field>
 
       <civ-conditional when="employment" equals="employed">
-        <civ-text-input
-          label="Employer name"
-          name="employer"
-          hint="Enter the name of your current employer"
-        ></civ-text-input>
+        <civ-form-field label="Employer name" hint="Enter the name of your current employer">
+          <civ-text-input name="employer"></civ-text-input>
+        </civ-form-field>
       </civ-conditional>
 
       <civ-conditional when="employment" equals="self-employed">
-        <civ-text-input
-          label="Business name"
-          name="business"
-          hint="Enter the name of your business"
-        ></civ-text-input>
+        <civ-form-field label="Business name" hint="Enter the name of your business">
+          <civ-text-input name="business"></civ-text-input>
+        </civ-form-field>
       </civ-conditional>
     </div>
   `,
@@ -51,17 +49,17 @@ export const Default: Story = {
 export const NotEquals: Story = {
   render: () => html`
     <div>
-      <civ-select
-        label="Do you need assistance?"
-        name="assistance"
-        options='[{"label":"Select one","value":""},{"label":"Yes","value":"yes"},{"label":"No","value":"no"}]'
-      ></civ-select>
+      <civ-form-field label="Do you need assistance?">
+        <civ-select
+          name="assistance"
+          options='[{"label":"Select one","value":""},{"label":"Yes","value":"yes"},{"label":"No","value":"no"}]'
+        ></civ-select>
+      </civ-form-field>
 
       <civ-conditional when="assistance" not-equals="no">
-        <civ-text-input
-          label="Describe the assistance you need"
-          name="assistance-details"
-        ></civ-text-input>
+        <civ-form-field label="Describe the assistance you need">
+          <civ-text-input name="assistance-details"></civ-text-input>
+        </civ-form-field>
       </civ-conditional>
     </div>
   `,
@@ -70,29 +68,26 @@ export const NotEquals: Story = {
 export const MultipleConditions: Story = {
   render: () => html`
     <div>
-      <civ-yes-no
-        label="Are you a veteran?"
-        name="veteran"
-      ></civ-yes-no>
+      <civ-form-fieldset legend="Are you a veteran?">
+        <civ-yes-no name="veteran"></civ-yes-no>
+      </civ-form-fieldset>
 
       <civ-conditional when="veteran" equals="yes">
-        <civ-text-input
-          label="Branch of service"
-          name="branch"
-          hint="For example: Army, Navy, Air Force"
-        ></civ-text-input>
+        <civ-form-field label="Branch of service" hint="For example: Army, Navy, Air Force">
+          <civ-text-input name="branch"></civ-text-input>
+        </civ-form-field>
 
-        <civ-select
-          label="Discharge type"
-          name="discharge"
-          options='[{"label":"Select one","value":""},{"label":"Honorable","value":"honorable"},{"label":"General","value":"general"},{"label":"Other","value":"other"}]'
-        ></civ-select>
+        <civ-form-field label="Discharge type">
+          <civ-select
+            name="discharge"
+            options='[{"label":"Select one","value":""},{"label":"Honorable","value":"honorable"},{"label":"General","value":"general"},{"label":"Other","value":"other"}]'
+          ></civ-select>
+        </civ-form-field>
 
         <civ-conditional when="discharge" equals="other">
-          <civ-text-input
-            label="Please describe your discharge type"
-            name="discharge-other"
-          ></civ-text-input>
+          <civ-form-field label="Please describe your discharge type">
+            <civ-text-input name="discharge-other"></civ-text-input>
+          </civ-form-field>
         </civ-conditional>
       </civ-conditional>
     </div>
@@ -102,67 +97,60 @@ export const MultipleConditions: Story = {
 export const WithForm: Story = {
   render: () => html`
     <civ-form form-label="Veteran benefits application">
-      <civ-text-input label="Full name" name="fullName" required></civ-text-input>
-      <civ-text-input label="Email address" name="email" type="email" required></civ-text-input>
+      <civ-form-field label="Full name" required>
+        <civ-text-input name="fullName" required></civ-text-input>
+      </civ-form-field>
+      <civ-form-field label="Email address" required>
+        <civ-text-input name="email" type="email" required></civ-text-input>
+      </civ-form-field>
 
-      <civ-yes-no
-        label="Are you a veteran?"
-        name="isVeteran"
-      ></civ-yes-no>
+      <civ-form-fieldset legend="Are you a veteran?">
+        <civ-yes-no name="isVeteran"></civ-yes-no>
+      </civ-form-fieldset>
 
       <civ-conditional when="isVeteran" equals="yes">
-        <civ-text-input
-          label="Branch of service"
-          name="branch"
-          required
-          hint="For example: Army, Navy, Air Force, Marine Corps, Coast Guard"
-        ></civ-text-input>
+        <civ-form-field label="Branch of service" required hint="For example: Army, Navy, Air Force, Marine Corps, Coast Guard">
+          <civ-text-input name="branch" required></civ-text-input>
+        </civ-form-field>
 
-        <civ-text-input
-          label="Years of service"
-          name="yearsOfService"
-          hint="For example: 4"
-          width="sm"
-        ></civ-text-input>
+        <civ-form-field label="Years of service" hint="For example: 4">
+          <civ-text-input name="yearsOfService" width="sm"></civ-text-input>
+        </civ-form-field>
 
-        <civ-yes-no
-          label="Do you have a service-connected disability?"
-          name="hasDisability"
-        ></civ-yes-no>
+        <civ-form-fieldset legend="Do you have a service-connected disability?">
+          <civ-yes-no name="hasDisability"></civ-yes-no>
+        </civ-form-fieldset>
 
         <civ-conditional when="hasDisability" equals="yes">
-          <civ-select
-            label="Disability rating"
-            name="disabilityRating"
-            required
-            options='[{"label":"Select one","value":""},{"label":"10%","value":"10"},{"label":"20%","value":"20"},{"label":"30%","value":"30"},{"label":"40%","value":"40"},{"label":"50%","value":"50"},{"label":"60%","value":"60"},{"label":"70%","value":"70"},{"label":"80%","value":"80"},{"label":"90%","value":"90"},{"label":"100%","value":"100"}]'
-          ></civ-select>
-          <civ-textarea
-            label="Describe your service-connected condition"
-            name="disabilityDescription"
-            hint="Provide a brief description of your condition"
-          ></civ-textarea>
+          <civ-form-field label="Disability rating" required>
+            <civ-select
+              name="disabilityRating"
+              required
+              options='[{"label":"Select one","value":""},{"label":"10%","value":"10"},{"label":"20%","value":"20"},{"label":"30%","value":"30"},{"label":"40%","value":"40"},{"label":"50%","value":"50"},{"label":"60%","value":"60"},{"label":"70%","value":"70"},{"label":"80%","value":"80"},{"label":"90%","value":"90"},{"label":"100%","value":"100"}]'
+            ></civ-select>
+          </civ-form-field>
+          <civ-form-field label="Describe your service-connected condition" hint="Provide a brief description of your condition">
+            <civ-textarea name="disabilityDescription"></civ-textarea>
+          </civ-form-field>
         </civ-conditional>
       </civ-conditional>
 
       <civ-conditional when="isVeteran" equals="no">
-        <civ-yes-no
-          label="Are you a dependent of a veteran?"
-          name="isDependent"
-        ></civ-yes-no>
+        <civ-form-fieldset legend="Are you a dependent of a veteran?">
+          <civ-yes-no name="isDependent"></civ-yes-no>
+        </civ-form-fieldset>
 
         <civ-conditional when="isDependent" equals="yes">
-          <civ-text-input
-            label="Veteran's full name"
-            name="veteranName"
-            required
-          ></civ-text-input>
-          <civ-select
-            label="Your relationship to the veteran"
-            name="relationship"
-            required
-            options='[{"label":"Select one","value":""},{"label":"Spouse","value":"spouse"},{"label":"Child","value":"child"},{"label":"Parent","value":"parent"}]'
-          ></civ-select>
+          <civ-form-field label="Veteran's full name" required>
+            <civ-text-input name="veteranName" required></civ-text-input>
+          </civ-form-field>
+          <civ-form-field label="Your relationship to the veteran" required>
+            <civ-select
+              name="relationship"
+              required
+              options='[{"label":"Select one","value":""},{"label":"Spouse","value":"spouse"},{"label":"Child","value":"child"},{"label":"Parent","value":"parent"}]'
+            ></civ-select>
+          </civ-form-field>
         </civ-conditional>
       </civ-conditional>
 

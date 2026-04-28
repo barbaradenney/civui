@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
+import '@civui/core';
 import '@civui/inputs';
 import '@civui/controls';
 import '@civui/compound';
@@ -38,18 +39,17 @@ export const FormStepSensitive: Story = {
         <civ-section-intro heading="Service-connected trauma" tone="sensitive">
           <p>You can save and come back to this section later.</p>
         </civ-section-intro>
-        <civ-yes-no
-          label="Have you experienced military sexual trauma?"
-          name="mst"
-          skip-label="Prefer not to answer"
-        ></civ-yes-no>
+        <civ-form-fieldset legend="Have you experienced military sexual trauma?">
+          <civ-yes-no
+            name="mst"
+            skip-label="Prefer not to answer"
+          ></civ-yes-no>
+        </civ-form-fieldset>
       </div>
       <div data-step-label="Additional details">
-        <civ-textarea
-          label="Is there anything else you'd like us to know?"
-          name="additional"
-          hint="This is optional"
-        ></civ-textarea>
+        <civ-form-field label="Is there anything else you'd like us to know?" hint="This is optional">
+          <civ-textarea name="additional"></civ-textarea>
+        </civ-form-field>
       </div>
     </civ-form-step>
   `,
@@ -58,29 +58,31 @@ export const FormStepSensitive: Story = {
 export const SkipAffordanceYesNo: Story = {
   name: 'Skip Affordance (Yes/No)',
   render: () => html`
-    <civ-yes-no
-      label="Have you experienced military sexual trauma?"
-      name="mst"
-      skip-label="Prefer not to answer"
-      skip-value="skip"
-    ></civ-yes-no>
+    <civ-form-fieldset legend="Have you experienced military sexual trauma?">
+      <civ-yes-no
+        name="mst"
+        skip-label="Prefer not to answer"
+        skip-value="skip"
+      ></civ-yes-no>
+    </civ-form-fieldset>
   `,
 };
 
 export const SkipAffordanceRadio: Story = {
   name: 'Skip Affordance (Radio Group)',
   render: () => html`
-    <civ-radio-group
-      legend="What is your race?"
-      name="race"
-      skip-label="Prefer not to answer"
-    >
-      <civ-radio label="American Indian or Alaska Native" value="aian"></civ-radio>
-      <civ-radio label="Asian" value="asian"></civ-radio>
-      <civ-radio label="Black or African American" value="black"></civ-radio>
-      <civ-radio label="Native Hawaiian or Pacific Islander" value="nhpi"></civ-radio>
-      <civ-radio label="White" value="white"></civ-radio>
-    </civ-radio-group>
+    <civ-form-fieldset legend="What is your race?">
+      <civ-radio-group
+        name="race"
+        skip-label="Prefer not to answer"
+      >
+        <civ-radio label="American Indian or Alaska Native" value="aian"></civ-radio>
+        <civ-radio label="Asian" value="asian"></civ-radio>
+        <civ-radio label="Black or African American" value="black"></civ-radio>
+        <civ-radio label="Native Hawaiian or Pacific Islander" value="nhpi"></civ-radio>
+        <civ-radio label="White" value="white"></civ-radio>
+      </civ-radio-group>
+    </civ-form-fieldset>
   `,
 };
 
@@ -116,8 +118,12 @@ export const SupportResources: Story = {
     <civ-form
       support-resources='[{"label":"Veterans Crisis Line","href":"tel:988","description":"Call or text 988, then press 1"},{"label":"Crisis Text Line","href":"sms:838255","description":"Text HOME to 838255"},{"label":"Safe Helpline","href":"tel:18779955247","description":"For survivors of sexual assault"}]'
     >
-      <civ-text-input label="Your name" name="name" required></civ-text-input>
-      <civ-textarea label="Tell us about your situation" name="details"></civ-textarea>
+      <civ-form-field label="Your name" required>
+        <civ-text-input name="name" required></civ-text-input>
+      </civ-form-field>
+      <civ-form-field label="Tell us about your situation">
+        <civ-textarea name="details"></civ-textarea>
+      </civ-form-field>
     </civ-form>
   `,
 };
@@ -154,7 +160,9 @@ export const CompleteSurvivorForm: Story = {
       <civ-form-step>
         <div data-step-label="Your information">
           <civ-name legend="Your name" name="claimant" required></civ-name>
-          <civ-text-input label="Phone number" name="phone" type="tel"></civ-text-input>
+          <civ-form-field label="Phone number">
+            <civ-text-input name="phone" type="tel"></civ-text-input>
+          </civ-form-field>
         </div>
 
         <div data-step-label="About the person who died">
@@ -173,12 +181,13 @@ export const CompleteSurvivorForm: Story = {
         </div>
 
         <div data-step-label="Your relationship">
-          <civ-yes-no
-            label="Were you legally married at the time of their death?"
-            name="marriedAtDeath"
-            skip-label="Prefer not to answer"
-            required
-          ></civ-yes-no>
+          <civ-form-fieldset legend="Were you legally married at the time of their death?" required>
+            <civ-yes-no
+              name="marriedAtDeath"
+              skip-label="Prefer not to answer"
+              required
+            ></civ-yes-no>
+          </civ-form-fieldset>
 
           <civ-conditional when="marriedAtDeath" equals="yes">
             <civ-marriage-history

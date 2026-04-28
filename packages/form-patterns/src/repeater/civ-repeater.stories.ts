@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
+import '@civui/core';
 import './civ-repeater.js';
 import '@civui/inputs';
 import '@civui/compound';
@@ -46,7 +47,9 @@ export const Default: Story = {
       ?required="${args.required}"
       ?disabled="${args.disabled}"
     >
-      <civ-text-input label="Full name" name="fullName"></civ-text-input>
+      <civ-form-field label="Full name">
+        <civ-text-input name="fullName"></civ-text-input>
+      </civ-form-field>
     </civ-repeater>
   `,
 };
@@ -61,7 +64,9 @@ export const WithHint: Story = {
       item-label="dependent"
       hint="Add each dependent you are claiming on this application"
     >
-      <civ-text-input label="Full name" name="fullName"></civ-text-input>
+      <civ-form-field label="Full name">
+        <civ-text-input name="fullName"></civ-text-input>
+      </civ-form-field>
     </civ-repeater>
   `,
 };
@@ -75,7 +80,9 @@ export const WithError: Story = {
       error="At least one dependent must be listed"
       required
     >
-      <civ-text-input label="Full name" name="fullName"></civ-text-input>
+      <civ-form-field label="Full name">
+        <civ-text-input name="fullName"></civ-text-input>
+      </civ-form-field>
     </civ-repeater>
   `,
 };
@@ -89,7 +96,9 @@ export const Required: Story = {
       required
       min="1"
     >
-      <civ-text-input label="Full name" name="fullName"></civ-text-input>
+      <civ-form-field label="Full name">
+        <civ-text-input name="fullName"></civ-text-input>
+      </civ-form-field>
     </civ-repeater>
   `,
 };
@@ -102,7 +111,9 @@ export const Disabled: Story = {
       item-label="dependent"
       disabled
     >
-      <civ-text-input label="Full name" name="fullName"></civ-text-input>
+      <civ-form-field label="Full name">
+        <civ-text-input name="fullName"></civ-text-input>
+      </civ-form-field>
     </civ-repeater>
   `,
 };
@@ -114,16 +125,24 @@ export const AllStates: Story = {
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-8">
       <civ-repeater legend="Normal" name="normal" item-label="item">
-        <civ-text-input label="Name" name="name"></civ-text-input>
+        <civ-form-field label="Name">
+          <civ-text-input name="name"></civ-text-input>
+        </civ-form-field>
       </civ-repeater>
       <civ-repeater legend="With hint" name="hint" item-label="item" hint="Add items as needed">
-        <civ-text-input label="Name" name="name"></civ-text-input>
+        <civ-form-field label="Name">
+          <civ-text-input name="name"></civ-text-input>
+        </civ-form-field>
       </civ-repeater>
       <civ-repeater legend="With error" name="error" item-label="item" error="Add at least one item" required>
-        <civ-text-input label="Name" name="name"></civ-text-input>
+        <civ-form-field label="Name">
+          <civ-text-input name="name"></civ-text-input>
+        </civ-form-field>
       </civ-repeater>
       <civ-repeater legend="Disabled" name="disabled" item-label="item" disabled>
-        <civ-text-input label="Name" name="name"></civ-text-input>
+        <civ-form-field label="Name">
+          <civ-text-input name="name"></civ-text-input>
+        </civ-form-field>
       </civ-repeater>
     </div>
   `,
@@ -138,19 +157,25 @@ export const DensityScale: Story = {
       <div data-civ-scale="dense">
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Dense</p>
         <civ-repeater legend="Dependents" name="dense-deps" item-label="dependent">
-          <civ-text-input label="Full name" name="fullName"></civ-text-input>
+          <civ-form-field label="Full name">
+            <civ-text-input name="fullName"></civ-text-input>
+          </civ-form-field>
         </civ-repeater>
       </div>
       <div>
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Default</p>
         <civ-repeater legend="Dependents" name="default-deps" item-label="dependent">
-          <civ-text-input label="Full name" name="fullName"></civ-text-input>
+          <civ-form-field label="Full name">
+            <civ-text-input name="fullName"></civ-text-input>
+          </civ-form-field>
         </civ-repeater>
       </div>
       <div data-civ-scale="spacious">
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Spacious</p>
         <civ-repeater legend="Dependents" name="spacious-deps" item-label="dependent">
-          <civ-text-input label="Full name" name="fullName"></civ-text-input>
+          <civ-form-field label="Full name">
+            <civ-text-input name="fullName"></civ-text-input>
+          </civ-form-field>
         </civ-repeater>
       </div>
     </div>
@@ -170,7 +195,9 @@ export const MinMax: Story = {
       max="5"
       hint="You must list at least 1 and no more than 5 dependents"
     >
-      <civ-text-input label="Full name" name="fullName"></civ-text-input>
+      <civ-form-field label="Full name">
+        <civ-text-input name="fullName"></civ-text-input>
+      </civ-form-field>
     </civ-repeater>
   `,
 };
@@ -182,8 +209,12 @@ export const MultipleFields: Story = {
       name="dependents"
       item-label="dependent"
     >
-      <civ-text-input label="First name" name="firstName"></civ-text-input>
-      <civ-text-input label="Last name" name="lastName"></civ-text-input>
+      <civ-form-field label="First name">
+        <civ-text-input name="firstName"></civ-text-input>
+      </civ-form-field>
+      <civ-form-field label="Last name">
+        <civ-text-input name="lastName"></civ-text-input>
+      </civ-form-field>
     </civ-repeater>
   `,
 };
@@ -202,10 +233,18 @@ export const GovernmentServicePeriods: Story = {
       max="10"
       hint="Add each period of military service separately"
     >
-      <civ-text-input label="Branch of service" name="branch" required></civ-text-input>
-      <civ-memorable-date label="Service start date" name="startDate" required hint="Enter your best estimate if unsure"></civ-memorable-date>
-      <civ-memorable-date label="Service end date" name="endDate" required></civ-memorable-date>
-      <civ-select label="Character of service" name="discharge" required></civ-select>
+      <civ-form-field label="Branch of service" required>
+        <civ-text-input name="branch" required></civ-text-input>
+      </civ-form-field>
+      <civ-form-fieldset legend="Service start date" required hint="Enter your best estimate if unsure">
+        <civ-memorable-date name="startDate" required></civ-memorable-date>
+      </civ-form-fieldset>
+      <civ-form-fieldset legend="Service end date" required>
+        <civ-memorable-date name="endDate" required></civ-memorable-date>
+      </civ-form-fieldset>
+      <civ-form-field label="Character of service" required>
+        <civ-select name="discharge" required></civ-select>
+      </civ-form-field>
     </civ-repeater>
   `,
   play: async ({ canvasElement }) => {
@@ -231,12 +270,20 @@ export const WizardMode: Story = {
       mode="wizard"
     >
       <div data-step-label="Name">
-        <civ-text-input label="First name" name="firstName" required></civ-text-input>
-        <civ-text-input label="Last name" name="lastName" required></civ-text-input>
+        <civ-form-field label="First name" required>
+          <civ-text-input name="firstName" required></civ-text-input>
+        </civ-form-field>
+        <civ-form-field label="Last name" required>
+          <civ-text-input name="lastName" required></civ-text-input>
+        </civ-form-field>
       </div>
       <div data-step-label="Contact">
-        <civ-text-input label="Email" name="email" type="email"></civ-text-input>
-        <civ-text-input label="Phone" name="phone" type="tel"></civ-text-input>
+        <civ-form-field label="Email">
+          <civ-text-input name="email" type="email"></civ-text-input>
+        </civ-form-field>
+        <civ-form-field label="Phone">
+          <civ-text-input name="phone" type="tel"></civ-text-input>
+        </civ-form-field>
       </div>
     </civ-repeater>
   `,
@@ -280,9 +327,15 @@ export const WizardWithMax: Story = {
       max="3"
     >
       <div data-step-label="Contact info">
-        <civ-text-input label="Full name" name="fullName" required></civ-text-input>
-        <civ-text-input label="Phone number" name="phone" type="tel" required></civ-text-input>
-        <civ-text-input label="Relationship" name="relationship" required></civ-text-input>
+        <civ-form-field label="Full name" required>
+          <civ-text-input name="fullName" required></civ-text-input>
+        </civ-form-field>
+        <civ-form-field label="Phone number" required>
+          <civ-text-input name="phone" type="tel" required></civ-text-input>
+        </civ-form-field>
+        <civ-form-field label="Relationship" required>
+          <civ-text-input name="relationship" required></civ-text-input>
+        </civ-form-field>
       </div>
     </civ-repeater>
   `,

@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
+import '@civui/core';
 import '@civui/inputs';
 import '@civui/controls';
 import '@civui/compound';
@@ -27,12 +28,20 @@ export const SimpleForm: Story = {
   render: () => html`
     <civ-form @civ-submit="${(e: CustomEvent) => alert('Submitted: ' + JSON.stringify(e.detail.formData))}">
       <civ-fieldset legend="Contact information">
-        <civ-text-input label="Full name" name="name" required autocomplete="name"></civ-text-input>
-        <civ-text-input label="Email" name="email" type="email" required autocomplete="email"></civ-text-input>
-        <civ-text-input label="Phone" name="phone" type="tel" autocomplete="tel"></civ-text-input>
+        <civ-form-field label="Full name" required>
+          <civ-text-input name="name" required autocomplete="name"></civ-text-input>
+        </civ-form-field>
+        <civ-form-field label="Email" required>
+          <civ-text-input name="email" type="email" required autocomplete="email"></civ-text-input>
+        </civ-form-field>
+        <civ-form-field label="Phone">
+          <civ-text-input name="phone" type="tel" autocomplete="tel"></civ-text-input>
+        </civ-form-field>
       </civ-fieldset>
 
-      <civ-textarea label="Message" name="message" required></civ-textarea>
+      <civ-form-field label="Message" required>
+        <civ-textarea name="message" required></civ-textarea>
+      </civ-form-field>
 
       <civ-button type="submit" label="Submit" class="civ-mt-4"></civ-button>
     </civ-form>
@@ -46,7 +55,9 @@ export const MultiStepForm: Story = {
       <civ-form-step>
         <div data-step-label="Personal info">
           <civ-name legend="Your name" name="name" required></civ-name>
-          <civ-memorable-date label="Date of birth" name="dob" required hint="For example: January 15 1990"></civ-memorable-date>
+          <civ-form-fieldset legend="Date of birth" required hint="For example: January 15 1990">
+            <civ-memorable-date name="dob" required></civ-memorable-date>
+          </civ-form-fieldset>
         </div>
 
         <div data-step-label="Service history">
@@ -70,7 +81,9 @@ export const ConditionalFields: Story = {
   name: 'Form with Conditional Fields',
   render: () => html`
     <civ-form>
-      <civ-yes-no label="Are you a veteran?" name="isVeteran" required></civ-yes-no>
+      <civ-form-fieldset legend="Are you a veteran?" required>
+        <civ-yes-no name="isVeteran" required></civ-yes-no>
+      </civ-form-fieldset>
 
       <civ-conditional when="isVeteran" equals="yes">
         <civ-fieldset legend="Service information">
@@ -78,7 +91,9 @@ export const ConditionalFields: Story = {
         </civ-fieldset>
       </civ-conditional>
 
-      <civ-yes-no label="Are you currently married?" name="isMarried" required></civ-yes-no>
+      <civ-form-fieldset legend="Are you currently married?" required>
+        <civ-yes-no name="isMarried" required></civ-yes-no>
+      </civ-form-fieldset>
 
       <civ-conditional when="isMarried" equals="yes">
         <civ-relationship
@@ -102,7 +117,9 @@ export const TraumaInformedForm: Story = {
       <civ-form-step>
         <div data-step-label="Your information">
           <civ-name legend="Your name" name="claimant" required></civ-name>
-          <civ-text-input label="Phone number" name="phone" type="tel"></civ-text-input>
+          <civ-form-field label="Phone number">
+            <civ-text-input name="phone" type="tel"></civ-text-input>
+          </civ-form-field>
         </div>
 
         <div data-step-label="About the person who died">

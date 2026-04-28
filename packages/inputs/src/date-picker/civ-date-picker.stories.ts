@@ -1,5 +1,6 @@
 import { html } from 'lit';
 import type { Meta, StoryObj } from '@storybook/web-components';
+import '@civui/core';
 import './civ-date-picker.js';
 import '@civui/actions';
 
@@ -39,17 +40,22 @@ export const Default: Story = {
     disabled: false,
   },
   render: (args) => html`
-    <civ-date-picker
+    <civ-form-field
       label="${args.label}"
-      name="${args.name}"
       hint="${args.hint}"
       error="${args.error}"
-      min="${args.min}"
-      max="${args.max}"
-      placeholder="${args.placeholder}"
       ?required="${args.required}"
       ?disabled="${args.disabled}"
-    ></civ-date-picker>
+    >
+      <civ-date-picker
+        name="${args.name}"
+        min="${args.min}"
+        max="${args.max}"
+        placeholder="${args.placeholder}"
+        ?required="${args.required}"
+        ?disabled="${args.disabled}"
+      ></civ-date-picker>
+    </civ-form-field>
   `,
 };
 
@@ -57,56 +63,42 @@ export const Default: Story = {
 
 export const WithHint: Story = {
   render: () => html`
-    <civ-date-picker
-      label="Preferred appointment date"
-      name="appointment"
-      hint="Use the calendar button or type a date like 03/15/2026"
-    ></civ-date-picker>
+    <civ-form-field label="Preferred appointment date" hint="Use the calendar button or type a date like 03/15/2026">
+      <civ-date-picker name="appointment"></civ-date-picker>
+    </civ-form-field>
   `,
 };
 
 export const WithError: Story = {
   render: () => html`
-    <civ-date-picker
-      label="Appointment date"
-      name="appointment"
-      error="Select a valid appointment date"
-      required
-    ></civ-date-picker>
+    <civ-form-field label="Appointment date" error="Select a valid appointment date" required>
+      <civ-date-picker name="appointment" required></civ-date-picker>
+    </civ-form-field>
   `,
 };
 
 export const Required: Story = {
   render: () => html`
-    <civ-date-picker
-      label="Appointment date"
-      name="appointment"
-      required
-    ></civ-date-picker>
+    <civ-form-field label="Appointment date" required>
+      <civ-date-picker name="appointment" required></civ-date-picker>
+    </civ-form-field>
   `,
 };
 
 export const Disabled: Story = {
   render: () => html`
-    <civ-date-picker
-      label="Appointment date"
-      name="appointment"
-      value="2026-03-15"
-      disabled
-    ></civ-date-picker>
+    <civ-form-field label="Appointment date" disabled>
+      <civ-date-picker name="appointment" value="2026-03-15" disabled></civ-date-picker>
+    </civ-form-field>
   `,
 };
 
 export const WithMinMax: Story = {
   name: 'With Date Range',
   render: () => html`
-    <civ-date-picker
-      label="Appointment date"
-      name="appointment"
-      min="2026-04-01"
-      max="2026-04-30"
-      hint="Available dates: April 1-30, 2026"
-    ></civ-date-picker>
+    <civ-form-field label="Appointment date" hint="Available dates: April 1-30, 2026">
+      <civ-date-picker name="appointment" min="2026-04-01" max="2026-04-30"></civ-date-picker>
+    </civ-form-field>
   `,
 };
 
@@ -116,11 +108,21 @@ export const AllStates: Story = {
   name: 'All States',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-6">
-      <civ-date-picker label="Normal" name="normal"></civ-date-picker>
-      <civ-date-picker label="With hint" name="hint" hint="Use the calendar or type a date"></civ-date-picker>
-      <civ-date-picker label="With error" name="error" error="Select a date" required></civ-date-picker>
-      <civ-date-picker label="Required" name="required" required></civ-date-picker>
-      <civ-date-picker label="Disabled" name="disabled" value="2026-03-15" disabled></civ-date-picker>
+      <civ-form-field label="Normal">
+        <civ-date-picker name="normal"></civ-date-picker>
+      </civ-form-field>
+      <civ-form-field label="With hint" hint="Use the calendar or type a date">
+        <civ-date-picker name="hint"></civ-date-picker>
+      </civ-form-field>
+      <civ-form-field label="With error" error="Select a date" required>
+        <civ-date-picker name="error" required></civ-date-picker>
+      </civ-form-field>
+      <civ-form-field label="Required" required>
+        <civ-date-picker name="required" required></civ-date-picker>
+      </civ-form-field>
+      <civ-form-field label="Disabled" disabled>
+        <civ-date-picker name="disabled" value="2026-03-15" disabled></civ-date-picker>
+      </civ-form-field>
     </div>
   `,
 };
@@ -133,15 +135,21 @@ export const DensityScale: Story = {
     <div class="civ-flex civ-flex-col civ-gap-6">
       <div data-civ-scale="dense">
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Dense</p>
-        <civ-date-picker label="Appointment date" name="dense-date" hint="Select an available date"></civ-date-picker>
+        <civ-form-field label="Appointment date" hint="Select an available date">
+          <civ-date-picker name="dense-date"></civ-date-picker>
+        </civ-form-field>
       </div>
       <div>
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Default</p>
-        <civ-date-picker label="Appointment date" name="default-date" hint="Select an available date"></civ-date-picker>
+        <civ-form-field label="Appointment date" hint="Select an available date">
+          <civ-date-picker name="default-date"></civ-date-picker>
+        </civ-form-field>
       </div>
       <div data-civ-scale="spacious">
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Spacious</p>
-        <civ-date-picker label="Appointment date" name="spacious-date" hint="Select an available date"></civ-date-picker>
+        <civ-form-field label="Appointment date" hint="Select an available date">
+          <civ-date-picker name="spacious-date"></civ-date-picker>
+        </civ-form-field>
       </div>
     </div>
   `,
@@ -158,14 +166,18 @@ export const GovernmentAppointmentScheduler: Story = {
       alert('Appointment scheduled: ' + fd.get('date'));
     }}>
       <h3 class="civ-m-0 civ-mb-4 civ-text-xl">Schedule your in-person appointment</h3>
-      <civ-date-picker
+      <civ-form-field
         label="Preferred date"
-        name="date"
-        required
-        min="2026-04-21"
-        max="2026-06-30"
         hint="Appointments are available Monday through Friday, April 21 to June 30, 2026"
-      ></civ-date-picker>
+        required
+      >
+        <civ-date-picker
+          name="date"
+          required
+          min="2026-04-21"
+          max="2026-06-30"
+        ></civ-date-picker>
+      </civ-form-field>
       <civ-button type="submit" class="civ-mt-2">Schedule appointment</civ-button>
     </form>
   `,
@@ -184,10 +196,9 @@ export const TodayButton: Story = {
     },
   },
   render: () => html`
-    <civ-date-picker
-      label="Date of report"
-      name="reportDate"
-    ></civ-date-picker>
+    <civ-form-field label="Date of report">
+      <civ-date-picker name="reportDate"></civ-date-picker>
+    </civ-form-field>
   `,
 };
 
@@ -202,12 +213,9 @@ export const TodayButtonHidden: Story = {
     },
   },
   render: () => html`
-    <civ-date-picker
-      label="Date of birth"
-      name="dob"
-      hide-today-button
-      max="2026-04-26"
-    ></civ-date-picker>
+    <civ-form-field label="Date of birth">
+      <civ-date-picker name="dob" hide-today-button max="2026-04-26"></civ-date-picker>
+    </civ-form-field>
   `,
 };
 
@@ -222,12 +230,9 @@ export const TodayButtonDisabled: Story = {
     },
   },
   render: () => html`
-    <civ-date-picker
-      label="Future appointment"
-      name="appt"
-      min="2030-01-01"
-      hint="Available January 1, 2030 onward"
-    ></civ-date-picker>
+    <civ-form-field label="Future appointment" hint="Available January 1, 2030 onward">
+      <civ-date-picker name="appt" min="2030-01-01"></civ-date-picker>
+    </civ-form-field>
   `,
 };
 
@@ -244,12 +249,8 @@ export const YearJump: Story = {
     },
   },
   render: () => html`
-    <civ-date-picker
-      label="Date of birth"
-      name="dob"
-      hide-today-button
-      max="2026-04-26"
-      hint="Use the year dropdown to jump to your birth year."
-    ></civ-date-picker>
+    <civ-form-field label="Date of birth" hint="Use the year dropdown to jump to your birth year.">
+      <civ-date-picker name="dob" hide-today-button max="2026-04-26"></civ-date-picker>
+    </civ-form-field>
   `,
 };

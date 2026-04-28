@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
+import '@civui/core';
 import './civ-select.js';
 import '@civui/actions';
 
@@ -48,17 +49,23 @@ export const Default: Story = {
     disabled: false,
   },
   render: (args) => {
+    const wrapper = document.createElement('civ-form-field') as any;
+    wrapper.label = args.label;
+    wrapper.hint = args.hint;
+    wrapper.error = args.error;
+    wrapper.required = args.required;
+    wrapper.disabled = args.disabled;
+
     const el = document.createElement('civ-select') as any;
-    el.label = args.label;
     el.name = args.name;
     el.value = args.value;
-    el.hint = args.hint;
-    el.error = args.error;
     el.emptyLabel = args.emptyLabel;
     el.options = STATES;
     el.required = args.required;
     el.disabled = args.disabled;
-    return el;
+
+    wrapper.appendChild(el);
+    return wrapper;
   },
 };
 
@@ -66,47 +73,66 @@ export const Default: Story = {
 
 export const WithHint: Story = {
   render: () => {
+    const wrapper = document.createElement('civ-form-field') as any;
+    wrapper.label = 'State of residence';
+    wrapper.hint = 'Select the state where you currently live';
+
     const el = document.createElement('civ-select') as any;
-    el.label = 'State of residence';
     el.name = 'state';
-    el.hint = 'Select the state where you currently live';
     el.options = STATES;
-    return el;
+
+    wrapper.appendChild(el);
+    return wrapper;
   },
 };
 
 export const WithError: Story = {
   render: () => {
+    const wrapper = document.createElement('civ-form-field') as any;
+    wrapper.label = 'State of residence';
+    wrapper.error = 'Select a state to continue';
+    wrapper.required = true;
+
     const el = document.createElement('civ-select') as any;
-    el.label = 'State of residence';
     el.name = 'state';
-    el.error = 'Select a state to continue';
     el.required = true;
     el.options = STATES;
-    return el;
+
+    wrapper.appendChild(el);
+    return wrapper;
   },
 };
 
 export const Required: Story = {
   render: () => {
+    const wrapper = document.createElement('civ-form-field') as any;
+    wrapper.label = 'State of residence';
+    wrapper.required = true;
+
     const el = document.createElement('civ-select') as any;
-    el.label = 'State of residence';
     el.name = 'state';
     el.required = true;
     el.options = STATES;
-    return el;
+
+    wrapper.appendChild(el);
+    return wrapper;
   },
 };
 
 export const Disabled: Story = {
   render: () => {
+    const wrapper = document.createElement('civ-form-field') as any;
+    wrapper.label = 'State of residence';
+    wrapper.disabled = true;
+
     const el = document.createElement('civ-select') as any;
-    el.label = 'State of residence';
     el.name = 'state';
     el.disabled = true;
     el.value = 'CA';
     el.options = STATES;
-    return el;
+
+    wrapper.appendChild(el);
+    return wrapper;
   },
 };
 
@@ -129,16 +155,22 @@ export const AllStates: Story = {
     ];
 
     configs.forEach((cfg) => {
+      const wrapper = document.createElement('civ-form-field') as any;
+      wrapper.label = cfg.label;
+      if (cfg.hint) wrapper.hint = cfg.hint;
+      if (cfg.error) wrapper.error = cfg.error;
+      if (cfg.required) wrapper.required = true;
+      if (cfg.disabled) wrapper.disabled = true;
+
       const el = document.createElement('civ-select') as any;
-      el.label = cfg.label;
       el.name = cfg.name;
       el.options = STATES;
-      if (cfg.hint) el.hint = cfg.hint;
-      if (cfg.error) el.error = cfg.error;
       if (cfg.required) el.required = true;
       if (cfg.disabled) el.disabled = true;
       if (cfg.value) el.value = cfg.value;
-      container.appendChild(el);
+
+      wrapper.appendChild(el);
+      container.appendChild(wrapper);
     });
 
     return container;
@@ -170,12 +202,16 @@ export const DensityScale: Story = {
       p.textContent = label;
       section.appendChild(p);
 
+      const field = document.createElement('civ-form-field') as any;
+      field.label = 'State of residence';
+      field.hint = 'Select where you currently reside';
+
       const el = document.createElement('civ-select') as any;
-      el.label = 'State of residence';
       el.name = `${attr || 'default'}-state`;
-      el.hint = 'Select where you currently reside';
       el.options = STATES;
-      section.appendChild(el);
+
+      field.appendChild(el);
+      section.appendChild(field);
       wrapper.appendChild(section);
     });
 
@@ -187,10 +223,12 @@ export const DensityScale: Story = {
 
 export const OptionGroups: Story = {
   render: () => {
+    const wrapper = document.createElement('civ-form-field') as any;
+    wrapper.label = 'Department';
+    wrapper.hint = 'Select your department';
+
     const el = document.createElement('civ-select') as any;
-    el.label = 'Department';
     el.name = 'department';
-    el.hint = 'Select your department';
     el.options = [
       { value: 'hr', label: 'Human Resources', group: 'Administration' },
       { value: 'finance', label: 'Finance', group: 'Administration' },
@@ -201,7 +239,9 @@ export const OptionGroups: Story = {
       { value: 'policy', label: 'Policy', group: 'Operations' },
       { value: 'outreach', label: 'Public Outreach', group: 'Operations' },
     ];
-    return el;
+
+    wrapper.appendChild(el);
+    return wrapper;
   },
 };
 
@@ -217,8 +257,12 @@ export const GovernmentBenefitsForm: Story = {
         alert(JSON.stringify(Object.fromEntries(data)));
       }}"
     >
-      <civ-select label="State of residence" name="state" required></civ-select>
-      <civ-select label="Benefit type" name="benefit" required hint="Select the type of benefit you are applying for"></civ-select>
+      <civ-form-field label="State of residence" required>
+        <civ-select name="state" required></civ-select>
+      </civ-form-field>
+      <civ-form-field label="Benefit type" hint="Select the type of benefit you are applying for" required>
+        <civ-select name="benefit" required></civ-select>
+      </civ-form-field>
       <civ-button type="submit" class="civ-mt-4">Continue</civ-button>
     </form>
     <script>
@@ -241,28 +285,32 @@ export const GovernmentBenefitsForm: Story = {
 export const SlottedOptions: Story = {
   name: 'Declarative <option> slot',
   render: () => html`
-    <civ-select label="State" name="state">
-      <option value="CA">California</option>
-      <option value="NY">New York</option>
-      <option value="TX" selected>Texas</option>
-    </civ-select>
+    <civ-form-field label="State">
+      <civ-select name="state">
+        <option value="CA">California</option>
+        <option value="NY">New York</option>
+        <option value="TX" selected>Texas</option>
+      </civ-select>
+    </civ-form-field>
   `,
 };
 
 export const SlottedWithOptgroup: Story = {
   name: 'Declarative <optgroup>',
   render: () => html`
-    <civ-select label="State" name="state">
-      <option value="CA">California</option>
-      <optgroup label="Pacific">
-        <option value="OR">Oregon</option>
-        <option value="WA">Washington</option>
-      </optgroup>
-      <optgroup label="Mountain">
-        <option value="CO">Colorado</option>
-        <option value="UT">Utah</option>
-      </optgroup>
-    </civ-select>
+    <civ-form-field label="State">
+      <civ-select name="state">
+        <option value="CA">California</option>
+        <optgroup label="Pacific">
+          <option value="OR">Oregon</option>
+          <option value="WA">Washington</option>
+        </optgroup>
+        <optgroup label="Mountain">
+          <option value="CO">Colorado</option>
+          <option value="UT">Utah</option>
+        </optgroup>
+      </civ-select>
+    </civ-form-field>
   `,
 };
 
@@ -272,30 +320,42 @@ export const WidthVariants: Story = {
   name: 'Width variants',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-4">
-      <civ-select label="2xs" width="2xs">
-        <option value="1">1</option>
-        <option value="2">2</option>
-      </civ-select>
-      <civ-select label="xs" width="xs">
-        <option value="CA">CA</option>
-        <option value="NY">NY</option>
-      </civ-select>
-      <civ-select label="sm (state code)" width="sm">
-        <option value="CA">California</option>
-        <option value="NY">New York</option>
-      </civ-select>
-      <civ-select label="md" width="md">
-        <option value="active">Active</option>
-        <option value="inactive">Inactive</option>
-      </civ-select>
-      <civ-select label="lg" width="lg">
-        <option value="education">Education</option>
-        <option value="housing">Housing</option>
-      </civ-select>
-      <civ-select label="default (full width)">
-        <option value="active">Active</option>
-        <option value="inactive">Inactive</option>
-      </civ-select>
+      <civ-form-field label="2xs">
+        <civ-select width="2xs">
+          <option value="1">1</option>
+          <option value="2">2</option>
+        </civ-select>
+      </civ-form-field>
+      <civ-form-field label="xs">
+        <civ-select width="xs">
+          <option value="CA">CA</option>
+          <option value="NY">NY</option>
+        </civ-select>
+      </civ-form-field>
+      <civ-form-field label="sm (state code)">
+        <civ-select width="sm">
+          <option value="CA">California</option>
+          <option value="NY">New York</option>
+        </civ-select>
+      </civ-form-field>
+      <civ-form-field label="md">
+        <civ-select width="md">
+          <option value="active">Active</option>
+          <option value="inactive">Inactive</option>
+        </civ-select>
+      </civ-form-field>
+      <civ-form-field label="lg">
+        <civ-select width="lg">
+          <option value="education">Education</option>
+          <option value="housing">Housing</option>
+        </civ-select>
+      </civ-form-field>
+      <civ-form-field label="default (full width)">
+        <civ-select>
+          <option value="active">Active</option>
+          <option value="inactive">Inactive</option>
+        </civ-select>
+      </civ-form-field>
     </div>
   `,
 };

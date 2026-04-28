@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
+import '@civui/core';
 import './civ-form-step.js';
 import '@civui/compound';
 import '@civui/inputs';
@@ -173,7 +174,9 @@ export const Sensitive: Story = {
       <div data-step-label="Your service history">
         <h3 class="civ-heading-md">About your service-connected trauma</h3>
         <p>These questions may be hard to answer. Your answers are saved as you go — you can pause and come back any time.</p>
-        <civ-textarea label="Briefly describe the event" name="event" hint="You can come back and add detail later"></civ-textarea>
+        <civ-form-field label="Briefly describe the event" hint="You can come back and add detail later">
+          <civ-textarea name="event"></civ-textarea>
+        </civ-form-field>
       </div>
     </civ-form-step>
   `,
@@ -188,11 +191,15 @@ export const WithPauseAndResume: Story = {
     >
       <div data-step-label="Medical history">
         <h3 class="civ-heading-md">Medical history</h3>
-        <civ-textarea label="Any conditions we should know about?" name="conditions"></civ-textarea>
+        <civ-form-field label="Any conditions we should know about?">
+          <civ-textarea name="conditions"></civ-textarea>
+        </civ-form-field>
       </div>
       <div data-step-label="Current medications">
         <h3 class="civ-heading-md">Current medications</h3>
-        <civ-textarea label="List any medications you take" name="meds"></civ-textarea>
+        <civ-form-field label="List any medications you take">
+          <civ-textarea name="meds"></civ-textarea>
+        </civ-form-field>
       </div>
     </civ-form-step>
   `,
@@ -207,14 +214,22 @@ export const GovernmentBenefitApplication: Story = {
       <div data-step-label="Personal information">
         <h3 class="civ-heading-md">Personal information</h3>
         <civ-name legend="Your name" name="name" required></civ-name>
-        <civ-memorable-date label="Date of birth" name="dob" required hint="For example: January 15 1990"></civ-memorable-date>
-        <civ-text-input label="Social Security number" name="ssn" required mask="ssn" validate="ssn" type="tel" hint="We need this to verify your identity"></civ-text-input>
+        <civ-form-fieldset legend="Date of birth" required hint="For example: January 15 1990">
+          <civ-memorable-date name="dob" required></civ-memorable-date>
+        </civ-form-fieldset>
+        <civ-form-field label="Social Security number" required hint="We need this to verify your identity">
+          <civ-text-input name="ssn" required mask="ssn" validate="ssn" type="tel"></civ-text-input>
+        </civ-form-field>
       </div>
       <div data-step-label="Contact information">
         <h3 class="civ-heading-md">Contact information</h3>
         <civ-address legend="Mailing address" name="address" required></civ-address>
-        <civ-text-input label="Home phone number" name="homePhone" type="tel" mask="phone-us" validate="phone"></civ-text-input>
-        <civ-text-input label="Email address" name="email" type="email" required validate="email"></civ-text-input>
+        <civ-form-field label="Home phone number">
+          <civ-text-input name="homePhone" type="tel" mask="phone-us" validate="phone"></civ-text-input>
+        </civ-form-field>
+        <civ-form-field label="Email address" required>
+          <civ-text-input name="email" type="email" required validate="email"></civ-text-input>
+        </civ-form-field>
       </div>
       <div data-step-label="Certification">
         <h3 class="civ-heading-md">Certification</h3>

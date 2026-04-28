@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
+import '@civui/core';
 import '@civui/inputs';
 import '@civui/controls';
 import '@civui/actions';
@@ -16,9 +17,15 @@ export const FormStack: Story = {
   name: 'Vertical Form Stack',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-4">
-      <civ-text-input label="First name" name="first"></civ-text-input>
-      <civ-text-input label="Last name" name="last"></civ-text-input>
-      <civ-text-input label="Email" name="email" type="email"></civ-text-input>
+      <civ-form-field label="First name">
+        <civ-text-input name="first"></civ-text-input>
+      </civ-form-field>
+      <civ-form-field label="Last name">
+        <civ-text-input name="last"></civ-text-input>
+      </civ-form-field>
+      <civ-form-field label="Email">
+        <civ-text-input name="email" type="email"></civ-text-input>
+      </civ-form-field>
     </div>
   `,
 };
@@ -131,9 +138,11 @@ export const ListItem: Story = {
 export const HorizontalRadioGroup: Story = {
   name: 'Horizontal Radio Group',
   render: () => html`
-    <civ-radio-group legend="Preferred language" orientation="horizontal">
-      <civ-radio label="English" value="en"></civ-radio>
-      <civ-radio label="Spanish" value="es"></civ-radio>
-    </civ-radio-group>
+    <civ-form-fieldset legend="Preferred language">
+      <civ-radio-group orientation="horizontal">
+        <civ-radio label="English" value="en"></civ-radio>
+        <civ-radio label="Spanish" value="es"></civ-radio>
+      </civ-radio-group>
+    </civ-form-fieldset>
   `,
 };

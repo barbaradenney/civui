@@ -320,6 +320,9 @@ importers:
 
   packages/inputs:
     dependencies:
+      '@civui/controls':
+        specifier: workspace:*
+        version: link:../controls
       '@civui/core':
         specifier: workspace:*
         version: link:../core

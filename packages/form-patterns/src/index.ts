@@ -5,9 +5,6 @@ export type { FormFieldError, CivFormFieldLike } from './form/index.js';
 // Form Step
 export { CivFormStep } from './form-step/index.js';
 
-// Form Group
-export { CivFormGroup } from './form-group/index.js';
-
 // Fieldset
 export { CivFieldset } from './fieldset/index.js';
 

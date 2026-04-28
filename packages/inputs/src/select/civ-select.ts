@@ -2,7 +2,7 @@
 
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivFormElement, dispatch, renderLabel, renderFormHeader, inputClasses, inputWidthClass, t } from '@civui/core';
+import { CivFormElement, dispatch, inputClasses, inputWidthClass, t } from '@civui/core';
 import type { InputWidth } from '@civui/core';
 
 export interface SelectOption {
@@ -120,8 +120,6 @@ export class CivSelect extends CivFormElement {
     });
 
     return html`
-      <div class="civ-mb-4">
-        ${renderFormHeader({ label: renderLabel({ label: this.label, inputId: this._inputId, required: this.required, showRequired: this.required && !this.hideRequiredIndicator }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error })}
         <select
           class="${classes}"
           id="${this._inputId}"
@@ -137,7 +135,6 @@ export class CivSelect extends CivFormElement {
           <option value="">${this.emptyLabel || t('selectEmpty')}</option>
           ${this._renderGroupedOptions()}
         </select>
-      </div>
     `;
   }
 

@@ -2,7 +2,7 @@
 
 import { html, nothing } from 'lit';
 import { customElement } from 'lit/decorators.js';
-import { CivBooleanFormElement, dispatch, renderFormHeader, t } from '@civui/core';
+import { CivBooleanFormElement, dispatch, renderHint, renderError, t } from '@civui/core';
 
 /**
  * CivUI Toggle
@@ -18,7 +18,6 @@ export class CivToggle extends CivBooleanFormElement {
 
   override render() {
     return html`
-      <div class="civ-mb-4">
         <div class="civ-flex civ-items-center civ-gap-3">
           <button
             type="button"
@@ -48,10 +47,10 @@ export class CivToggle extends CivBooleanFormElement {
             ${this.description
               ? html`<span id="${this._descriptionId}" class="civ-check-description">${this.description}</span>`
               : nothing}
-            ${renderFormHeader({ label: nothing, hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error })}
+            ${renderHint(this._hintId, this.hint)}
+            ${renderError(this._errorId, this.error)}
           </div>
         </div>
-      </div>
     `;
   }
 

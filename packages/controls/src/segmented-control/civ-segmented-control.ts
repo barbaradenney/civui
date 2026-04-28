@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivFormElement, LightDomSlotMixin, dispatch, renderLegend, renderFormHeader, resolveGroupNavIndex, isRtl, syncGroupDisabled, stopChildEvent, syncLegendToLabel } from '@civui/core';
+import { CivFormElement, LightDomSlotMixin, dispatch, resolveGroupNavIndex, isRtl, syncGroupDisabled, stopChildEvent, syncLegendToLabel } from '@civui/core';
 import type { SlotConfig } from '@civui/core';
 import type { CivSegment } from './civ-segment.js';
 
@@ -88,18 +88,15 @@ export class CivSegmentedControl extends LightDomSlotMixin(CivFormElement) {
 
   override render() {
     return html`
-      <fieldset
-        class="civ-fieldset"
-        role="radiogroup"
-        aria-orientation="horizontal"
-        aria-describedby="${this._ariaDescribedBy || nothing}"
-        aria-invalid="${this.error ? 'true' : nothing}"
-        aria-required="${this.required || nothing}"
-        ?disabled="${this.disabled}"
-      >
-        ${renderFormHeader({ label: renderLegend({ legend: this.legend, required: this.required, srOnly: true }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
-        <div class="civ-inline-flex" data-civ-segment-content></div>
-      </fieldset>
+        <div
+          class="civ-inline-flex"
+          data-civ-segment-content
+          role="radiogroup"
+          aria-orientation="horizontal"
+          aria-describedby="${this._ariaDescribedBy || nothing}"
+          aria-invalid="${this.error ? 'true' : nothing}"
+          aria-required="${this.required || nothing}"
+        ></div>
     `;
   }
 

@@ -140,8 +140,8 @@ describe('civ-name', () => {
 
   it('uses domestic labels by default', async () => {
     const el = await fixture<CivName>('<civ-name legend="Name"></civ-name>') as CivName;
-    const labels = Array.from(el.querySelectorAll('civ-text-input')).map(
-      (input: any) => input.getAttribute('label'),
+    const labels = Array.from(el.querySelectorAll('civ-form-field')).map(
+      (field: any) => field.label,
     );
     expect(labels).toContain('First name');
     expect(labels).toContain('Last name');
@@ -151,8 +151,8 @@ describe('civ-name', () => {
     const el = await fixture<CivName>('<civ-name legend="Name"></civ-name>') as CivName;
     el.format = 'international';
     await elementUpdated(el);
-    const labels = Array.from(el.querySelectorAll('civ-text-input')).map(
-      (input: any) => input.getAttribute('label'),
+    const labels = Array.from(el.querySelectorAll('civ-form-field')).map(
+      (field: any) => field.label,
     );
     expect(labels).toContain('Given name');
     expect(labels).toContain('Family name');

@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivFormElement, LightDomSlotMixin, dispatch, renderLegend, renderFormHeader, resolveGroupNavIndex, isRtl, syncGroupDisabled, stopChildEvent, syncLegendToLabel } from '@civui/core';
+import { CivFormElement, LightDomSlotMixin, dispatch, resolveGroupNavIndex, isRtl, syncGroupDisabled, stopChildEvent, syncLegendToLabel } from '@civui/core';
 import type { SlotConfig } from '@civui/core';
 import type { CivRadio } from './civ-radio.js';
 
@@ -136,11 +136,6 @@ export class CivRadioGroup extends LightDomSlotMixin(CivFormElement) {
     // choices inside the fieldset without joining the mutually-exclusive
     // group.
     return html`
-      <fieldset
-        class="civ-fieldset"
-        ?disabled="${this.disabled}"
-      >
-        ${renderFormHeader({ label: renderLegend({ legend: this.legend, required: this.required, legendId: this._legendId }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
         <div
           class="${layoutClass}"
           role="radiogroup"
@@ -162,7 +157,6 @@ export class CivRadioGroup extends LightDomSlotMixin(CivFormElement) {
               >${this.skipLabel}</button>
             `
           : nothing}
-      </fieldset>
     `;
   }
 

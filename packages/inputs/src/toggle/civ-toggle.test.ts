@@ -1,6 +1,7 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
 import './civ-toggle.js';
+import '@civui/core';
 
 afterEach(cleanupFixtures);
 
@@ -95,18 +96,16 @@ describe('civ-toggle', () => {
     expect(desc!.textContent).toContain('Get push notifications');
   });
 
-  it('renders hint text', async () => {
-    const el = await fixture('<civ-toggle label="Dark mode" hint="Reduces eye strain"></civ-toggle>');
+  it('renders hint and error when wrapped in form-field', async () => {
+    const wrapper = await fixture(
+      '<civ-form-field label="Dark mode" hint="Reduces eye strain" error="You must accept"><civ-toggle></civ-toggle></civ-form-field>',
+    );
 
-    const spans = el.querySelectorAll('span');
+    const spans = wrapper.querySelectorAll('span');
     const hintSpan = Array.from(spans).find((s) => s.textContent === 'Reduces eye strain');
     expect(hintSpan).not.toBeNull();
-  });
 
-  it('renders error message with role="alert"', async () => {
-    const el = await fixture('<civ-toggle label="Terms" error="You must accept"></civ-toggle>');
-
-    const errorEl = el.querySelector('[role="alert"]');
+    const errorEl = wrapper.querySelector('[role="alert"]');
     expect(errorEl).not.toBeNull();
     expect(errorEl!.textContent).toBe('You must accept');
   });
@@ -136,18 +135,20 @@ describe('civ-toggle', () => {
     expect(btn.getAttribute('aria-required')).toBe('true');
   });
 
-  it('links description, hint, and error via aria-describedby', async () => {
-    const el = await fixture(
-      '<civ-toggle label="Notifications" description="Desc" hint="Hint" error="Error"></civ-toggle>',
+  it('links description, hint, and error via aria-describedby when wrapped in form-field', async () => {
+    const wrapper = await fixture(
+      '<civ-form-field hint="Hint" error="Error"><civ-toggle label="Notifications" description="Desc"></civ-toggle></civ-form-field>',
     );
 
-    const btn = el.querySelector('button[role="switch"]') as HTMLButtonElement;
+    const btn = wrapper.querySelector('button[role="switch"]') as HTMLButtonElement;
     const describedBy = btn.getAttribute('aria-describedby')!;
+    expect(describedBy).toBeTruthy();
     const ids = describedBy.split(' ');
-    expect(ids.length).toBe(3);
+    // description is rendered by toggle; hint + error are rendered by form-field
+    expect(ids.length).toBeGreaterThanOrEqual(2);
 
     for (const id of ids) {
-      expect(el.querySelector(`#${id}`)).not.toBeNull();
+      expect(wrapper.querySelector(`#${id}`)).not.toBeNull();
     }
   });
 

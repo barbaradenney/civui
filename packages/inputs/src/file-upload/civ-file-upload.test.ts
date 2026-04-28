@@ -1,14 +1,17 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
 import './civ-file-upload.js';
+import '@civui/core';
 
 afterEach(cleanupFixtures);
 
 describe('civ-file-upload', () => {
-  it('renders with a label', async () => {
-    const el = await fixture('<civ-file-upload label="Upload document"></civ-file-upload>');
+  it('renders label when wrapped in civ-form-field', async () => {
+    const wrapper = await fixture(
+      '<civ-form-field label="Upload document"><civ-file-upload></civ-file-upload></civ-form-field>',
+    );
 
-    const label = el.querySelector('label');
+    const label = wrapper.querySelector('label');
     expect(label).not.toBeNull();
     expect(label!.textContent).toContain('Upload document');
   });
@@ -57,25 +60,19 @@ describe('civ-file-upload', () => {
     expect(input.multiple).toBe(true);
   });
 
-  it('renders error with alert role', async () => {
-    const el = await fixture('<civ-file-upload label="Upload" error="File too large"></civ-file-upload>');
+  it('renders error, required, and hint when wrapped in form-field', async () => {
+    const wrapper = await fixture(
+      '<civ-form-field label="Upload" error="File too large" required hint="PDF or image files only"><civ-file-upload></civ-file-upload></civ-form-field>',
+    );
 
-    const errorEl = el.querySelector('[role="alert"]');
+    const errorEl = wrapper.querySelector('[role="alert"]');
     expect(errorEl).not.toBeNull();
     expect(errorEl!.textContent).toBe('File too large');
-  });
 
-  it('shows required indicator', async () => {
-    const el = await fixture('<civ-file-upload label="Upload" required></civ-file-upload>');
-
-    const requiredMark = el.querySelector('.civ-required-mark');
+    const requiredMark = wrapper.querySelector('.civ-required-mark');
     expect(requiredMark).not.toBeNull();
-  });
 
-  it('renders hint text', async () => {
-    const el = await fixture('<civ-file-upload label="Upload" hint="PDF or image files only"></civ-file-upload>');
-
-    const spans = el.querySelectorAll('span');
+    const spans = wrapper.querySelectorAll('span');
     const hint = Array.from(spans).find((s) => s.textContent === 'PDF or image files only');
     expect(hint).not.toBeNull();
   });

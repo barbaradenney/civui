@@ -16,6 +16,7 @@ describe('civ-service-history', () => {
 
   it('renders branch select with options', async () => {
     const el = await fixture('<civ-service-history name="s"></civ-service-history>');
+    await elementUpdated(el);
     const branchSelect = el.querySelector('[data-service-branch]') as any;
     expect(branchSelect).not.toBeNull();
     expect(branchSelect.options.length).toBe(8);
@@ -24,6 +25,7 @@ describe('civ-service-history', () => {
 
   it('renders discharge type select with options', async () => {
     const el = await fixture('<civ-service-history name="s"></civ-service-history>');
+    await elementUpdated(el);
     const dischargeSelect = el.querySelector('[data-service-discharge]') as any;
     expect(dischargeSelect).not.toBeNull();
     expect(dischargeSelect.options.length).toBe(6);

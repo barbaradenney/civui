@@ -2,16 +2,27 @@ import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
 import type { CivTextInput } from './civ-text-input.js';
 import './civ-text-input.js';
+import '@civui/core';
 
 afterEach(cleanupFixtures);
 
 describe('civ-text-input', () => {
-  it('renders with a label', async () => {
-    const el = await fixture('<civ-text-input label="Email"></civ-text-input>');
+  it('renders label, hint, and error when wrapped in civ-form-field', async () => {
+    const wrapper = await fixture(
+      '<civ-form-field label="Email" hint="Enter your work email" error="Email is required"><civ-text-input></civ-text-input></civ-form-field>',
+    );
 
-    const label = el.querySelector('label');
+    const label = wrapper.querySelector('label');
     expect(label).not.toBeNull();
     expect(label!.textContent).toContain('Email');
+
+    const hint = wrapper.querySelector('span');
+    expect(hint).not.toBeNull();
+    expect(hint!.textContent).toBe('Enter your work email');
+
+    const errorEl = wrapper.querySelector('[role="alert"]');
+    expect(errorEl).not.toBeNull();
+    expect(errorEl!.textContent).toBe('Email is required');
   });
 
   it('renders an input element', async () => {
@@ -23,49 +34,26 @@ describe('civ-text-input', () => {
     expect(input!.name).toBe('name');
   });
 
-  it('associates label with input via for/id', async () => {
-    const el = await fixture('<civ-text-input label="Email"></civ-text-input>');
+  it('associates form-field label with input via for/id', async () => {
+    const wrapper = await fixture(
+      '<civ-form-field label="Email"><civ-text-input></civ-text-input></civ-form-field>',
+    );
+    const child = wrapper.querySelector('civ-text-input')!;
+    await elementUpdated(child);
 
-    const label = el.querySelector('label');
-    const input = el.querySelector('input');
+    const label = wrapper.querySelector('label');
+    const input = wrapper.querySelector('input');
     expect(label!.getAttribute('for')).toBe(input!.id);
   });
 
-  it('shows required indicator when required', async () => {
-    const el = await fixture(
-      '<civ-text-input label="Email" required></civ-text-input>',
+  it('shows required indicator when wrapped in required form-field', async () => {
+    const wrapper = await fixture(
+      '<civ-form-field label="Email" required><civ-text-input></civ-text-input></civ-form-field>',
     );
 
-    const requiredMark = el.querySelector('.civ-required-mark');
+    const requiredMark = wrapper.querySelector('.civ-required-mark');
     expect(requiredMark).not.toBeNull();
     expect(requiredMark!.textContent).toContain('required');
-  });
-
-  it('does not show required indicator when not required', async () => {
-    const el = await fixture('<civ-text-input label="Email"></civ-text-input>');
-
-    const requiredMark = el.querySelector('.civ-required-mark');
-    expect(requiredMark).toBeNull();
-  });
-
-  it('renders hint text', async () => {
-    const el = await fixture(
-      '<civ-text-input label="Email" hint="Enter your work email"></civ-text-input>',
-    );
-
-    const hint = el.querySelector('span');
-    expect(hint).not.toBeNull();
-    expect(hint!.textContent).toBe('Enter your work email');
-  });
-
-  it('renders error message with alert role', async () => {
-    const el = await fixture(
-      '<civ-text-input label="Email" error="Email is required"></civ-text-input>',
-    );
-
-    const errorEl = el.querySelector('[role="alert"]');
-    expect(errorEl).not.toBeNull();
-    expect(errorEl!.textContent).toBe('Email is required');
   });
 
   it('sets aria-invalid when error is present', async () => {
@@ -84,12 +72,15 @@ describe('civ-text-input', () => {
     expect(input!.getAttribute('aria-invalid')).toBeNull();
   });
 
-  it('sets aria-describedby for hint and error', async () => {
-    const el = await fixture(
-      '<civ-text-input label="Email" hint="Hint text" error="Error text"></civ-text-input>',
+  it('form-field wires aria-describedby for hint and error', async () => {
+    const wrapper = await fixture(
+      '<civ-form-field label="Email" hint="Hint text" error="Error text"><civ-text-input></civ-text-input></civ-form-field>',
     );
+    const child = wrapper.querySelector('civ-text-input')!;
+    await elementUpdated(child);
+    await elementUpdated(wrapper);
 
-    const input = el.querySelector('input');
+    const input = wrapper.querySelector('input');
     const describedBy = input!.getAttribute('aria-describedby');
     expect(describedBy).toBeTruthy();
 
@@ -98,7 +89,7 @@ describe('civ-text-input', () => {
 
     // Both IDs should reference existing elements
     for (const id of ids) {
-      expect(el.querySelector(`#${id}`)).not.toBeNull();
+      expect(wrapper.querySelector(`#${id}`)).not.toBeNull();
     }
   });
 
@@ -387,7 +378,8 @@ describe('text-input mask', () => {
 
   it('auto-populates hint from SSN preset', async () => {
     const el = await fixture<CivTextInput>('<civ-text-input label="SSN" mask="ssn"></civ-text-input>');
-    expect(el.querySelector('.civ-hint')?.textContent).toContain('123-45-6789');
+    // Hint is now rendered by civ-form-field, but the component still sets the hint property
+    expect(el.hint).toContain('123-45-6789');
   });
 
   it('sets inputmode from preset', async () => {

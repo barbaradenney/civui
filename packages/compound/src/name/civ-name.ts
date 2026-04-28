@@ -111,55 +111,59 @@ export class CivName extends CivFormElement {
       >
         ${renderFormHeader({ label: renderLegend({ legend: this.legend || this.label, required: this.required, textSizeClass: 'civ-text-lg' }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
 
-        <civ-text-input
-          label="${firstLabel}"
-          name="${this.name ? `${this.name}.first` : ''}"
-          value="${this._name.first}"
-          error="${this.firstError}"
-          autocomplete="given-name"
-          ?disabled="${this.disabled}"
-          ?readonly="${this.readonly}"
-          @civ-input="${(e: CustomEvent) => this._onSubInput('first', e)}"
-          @civ-change="${(e: CustomEvent) => this._onSubChange('first', e)}"
-        ></civ-text-input>
-
-        ${this.showMiddle ? html`
+        <civ-form-field label="${firstLabel}" error="${this.firstError}">
           <civ-text-input
-            label="${t('nameMiddle')}"
-            name="${this.name ? `${this.name}.middle` : ''}"
-            value="${this._name.middle}"
-            error="${this.middleError}"
-            autocomplete="additional-name"
+            name="${this.name ? `${this.name}.first` : ''}"
+            value="${this._name.first}"
+            error="${this.firstError}"
+            autocomplete="given-name"
             ?disabled="${this.disabled}"
             ?readonly="${this.readonly}"
-            @civ-input="${(e: CustomEvent) => this._onSubInput('middle', e)}"
-            @civ-change="${(e: CustomEvent) => this._onSubChange('middle', e)}"
+            @civ-input="${(e: CustomEvent) => this._onSubInput('first', e)}"
+            @civ-change="${(e: CustomEvent) => this._onSubChange('first', e)}"
           ></civ-text-input>
+        </civ-form-field>
+
+        ${this.showMiddle ? html`
+          <civ-form-field label="${t('nameMiddle')}" error="${this.middleError}">
+            <civ-text-input
+              name="${this.name ? `${this.name}.middle` : ''}"
+              value="${this._name.middle}"
+              error="${this.middleError}"
+              autocomplete="additional-name"
+              ?disabled="${this.disabled}"
+              ?readonly="${this.readonly}"
+              @civ-input="${(e: CustomEvent) => this._onSubInput('middle', e)}"
+              @civ-change="${(e: CustomEvent) => this._onSubChange('middle', e)}"
+            ></civ-text-input>
+          </civ-form-field>
         ` : nothing}
 
-        <civ-text-input
-          label="${lastLabel}"
-          name="${this.name ? `${this.name}.last` : ''}"
-          value="${this._name.last}"
-          error="${this.lastError}"
-          autocomplete="family-name"
-          ?disabled="${this.disabled}"
-          ?readonly="${this.readonly}"
-          @civ-input="${(e: CustomEvent) => this._onSubInput('last', e)}"
-          @civ-change="${(e: CustomEvent) => this._onSubChange('last', e)}"
-        ></civ-text-input>
+        <civ-form-field label="${lastLabel}" error="${this.lastError}">
+          <civ-text-input
+            name="${this.name ? `${this.name}.last` : ''}"
+            value="${this._name.last}"
+            error="${this.lastError}"
+            autocomplete="family-name"
+            ?disabled="${this.disabled}"
+            ?readonly="${this.readonly}"
+            @civ-input="${(e: CustomEvent) => this._onSubInput('last', e)}"
+            @civ-change="${(e: CustomEvent) => this._onSubChange('last', e)}"
+          ></civ-text-input>
+        </civ-form-field>
 
         ${this.showSuffix ? html`
           <div class="civ-field-width-sm">
-            <civ-select
-              label="${t('nameSuffix')}"
-              name="${this.name ? `${this.name}.suffix` : ''}"
-              value="${this._name.suffix}"
-              autocomplete="honorific-suffix"
-              ?disabled="${this.disabled}"
-              data-name-suffix
-              @civ-change="${(e: CustomEvent) => this._onSubSelectChange('suffix', e)}"
-            ></civ-select>
+            <civ-form-field label="${t('nameSuffix')}">
+              <civ-select
+                name="${this.name ? `${this.name}.suffix` : ''}"
+                value="${this._name.suffix}"
+                autocomplete="honorific-suffix"
+                ?disabled="${this.disabled}"
+                data-name-suffix
+                @civ-change="${(e: CustomEvent) => this._onSubSelectChange('suffix', e)}"
+              ></civ-select>
+            </civ-form-field>
           </div>
         ` : nothing}
       </fieldset>

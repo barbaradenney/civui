@@ -91,12 +91,10 @@ describe('civ-checkbox', () => {
     expect(wrapper).toBeNull();
   });
 
-  it('renders error message', async () => {
-    const el = await fixture('<civ-checkbox label="Agree" error="You must agree"></civ-checkbox>');
+  it('stores error property without rendering it', async () => {
+    const el = await fixture('<civ-checkbox label="Agree" error="You must agree"></civ-checkbox>') as any;
 
-    const errorEl = el.querySelector('[role="alert"]');
-    expect(errorEl).not.toBeNull();
-    expect(errorEl!.textContent).toBe('You must agree');
+    expect(el.error).toBe('You must agree');
   });
 
   it('renders disabled state', async () => {
@@ -134,7 +132,7 @@ describe('civ-checkbox', () => {
 });
 
 describe('civ-checkbox-group', () => {
-  it('renders with a legend', async () => {
+  it('renders layout container', async () => {
     const el = await fixture(`
       <civ-checkbox-group legend="Toppings">
         <civ-checkbox label="Cheese" name="toppings" value="cheese"></civ-checkbox>
@@ -142,44 +140,8 @@ describe('civ-checkbox-group', () => {
       </civ-checkbox-group>
     `);
 
-    const legend = el.querySelector('legend');
-    expect(legend).not.toBeNull();
-    expect(legend!.textContent).toContain('Toppings');
-  });
-
-  it('wraps children in a fieldset', async () => {
-    const el = await fixture(`
-      <civ-checkbox-group legend="Toppings">
-        <civ-checkbox label="Cheese"></civ-checkbox>
-      </civ-checkbox-group>
-    `);
-
-    const fieldset = el.querySelector('fieldset');
-    expect(fieldset).not.toBeNull();
-  });
-
-  it('renders group error', async () => {
-    const el = await fixture(`
-      <civ-checkbox-group legend="Toppings" error="Select at least one">
-        <civ-checkbox label="Cheese"></civ-checkbox>
-      </civ-checkbox-group>
-    `);
-
-    const errorEl = el.querySelector('[role="alert"]');
-    expect(errorEl).not.toBeNull();
-    expect(errorEl!.textContent).toBe('Select at least one');
-  });
-
-  it('renders group hint', async () => {
-    const el = await fixture(`
-      <civ-checkbox-group legend="Toppings" hint="Choose your favorites">
-        <civ-checkbox label="Cheese"></civ-checkbox>
-      </civ-checkbox-group>
-    `);
-
-    const spans = el.querySelectorAll('span');
-    const hintSpan = Array.from(spans).find((s) => s.textContent === 'Choose your favorites');
-    expect(hintSpan).not.toBeNull();
+    const layout = el.querySelector('.civ-group-layout--vertical');
+    expect(layout).not.toBeNull();
   });
 
   it('uses Light DOM', async () => {
@@ -190,7 +152,6 @@ describe('civ-checkbox-group', () => {
     `);
 
     expect(el.shadowRoot).toBeNull();
-    expect(el.querySelector('fieldset')).not.toBeNull();
   });
 });
 
@@ -230,20 +191,6 @@ describe('civ-checkbox accessibility', () => {
     expect(describedBy).toContain(descSpan!.id);
   });
 
-  it('includes both description and error in aria-describedby', async () => {
-    const el = await fixture(
-      '<civ-checkbox label="Agree" description="Terms" error="Required"></civ-checkbox>',
-    );
-
-    const input = el.querySelector('input') as HTMLInputElement;
-    const describedBy = input.getAttribute('aria-describedby')!;
-    const ids = describedBy.split(' ');
-    expect(ids.length).toBe(2);
-
-    for (const id of ids) {
-      expect(el.querySelector(`#${id}`)).not.toBeNull();
-    }
-  });
 });
 
 describe('civ-checkbox-group form association', () => {
@@ -350,15 +297,17 @@ describe('civ-checkbox-group form association', () => {
     expect(detail.values).toContain('a');
   });
 
-  it('sets disabled on fieldset', async () => {
+  it('syncs disabled to children when disabled', async () => {
     const el = await fixture(`
       <civ-checkbox-group legend="Options" disabled>
         <civ-checkbox label="A" value="a"></civ-checkbox>
       </civ-checkbox-group>
     `);
 
-    const fieldset = el.querySelector('fieldset') as HTMLFieldSetElement;
-    expect(fieldset.disabled).toBe(true);
+    const checkboxes = el.querySelectorAll('civ-checkbox');
+    checkboxes.forEach((cb: any) => {
+      expect(cb.disabled).toBe(true);
+    });
   });
 
   it('restores default values on formResetCallback', async () => {
@@ -431,42 +380,9 @@ describe('civ-checkbox-group orientation', () => {
     const container = el.querySelector('.civ-group-layout--horizontal');
     expect(container).not.toBeNull();
   });
-
-  it('sets aria-required on fieldset when required', async () => {
-    const el = await fixture(`
-      <civ-checkbox-group legend="Options" required>
-        <civ-checkbox label="A" value="a"></civ-checkbox>
-      </civ-checkbox-group>
-    `);
-
-    const fieldset = el.querySelector('fieldset');
-    expect(fieldset!.getAttribute('aria-required')).toBe('true');
-  });
 });
 
 describe('civ-checkbox-group accessibility', () => {
-  it('sets aria-invalid on fieldset when error is present', async () => {
-    const el = await fixture(`
-      <civ-checkbox-group legend="Toppings" error="Required">
-        <civ-checkbox label="Cheese"></civ-checkbox>
-      </civ-checkbox-group>
-    `);
-
-    const fieldset = el.querySelector('fieldset');
-    expect(fieldset!.getAttribute('aria-invalid')).toBe('true');
-  });
-
-  it('omits aria-invalid on fieldset when no error', async () => {
-    const el = await fixture(`
-      <civ-checkbox-group legend="Toppings">
-        <civ-checkbox label="Cheese"></civ-checkbox>
-      </civ-checkbox-group>
-    `);
-
-    const fieldset = el.querySelector('fieldset');
-    expect(fieldset!.getAttribute('aria-invalid')).toBeNull();
-  });
-
   it('applies focus-visible ring class to checkbox input', async () => {
     const el = await fixture('<civ-checkbox label="Agree"></civ-checkbox>');
 
@@ -545,40 +461,19 @@ describe('civ-checkbox aria-checked', () => {
   });
 });
 
-describe('civ-checkbox hint', () => {
-  it('renders hint text visually', async () => {
-    const el = await fixture('<civ-checkbox label="Agree" hint="This is a helpful hint"></civ-checkbox>');
-
-    const spans = el.querySelectorAll('span');
-    const hintSpan = Array.from(spans).find((s) => s.textContent === 'This is a helpful hint');
-    expect(hintSpan).not.toBeNull();
-  });
-
-  it('includes hint in aria-describedby', async () => {
-    const el = await fixture('<civ-checkbox label="Agree" hint="Helpful hint"></civ-checkbox>');
+describe('civ-checkbox description', () => {
+  it('links description element via aria-describedby', async () => {
+    const el = await fixture(
+      '<civ-checkbox label="Agree" description="Desc text"></civ-checkbox>',
+    );
 
     const input = el.querySelector('input') as HTMLInputElement;
     const describedBy = input.getAttribute('aria-describedby')!;
     expect(describedBy).toBeTruthy();
 
-    const hintEl = el.querySelector(`#${describedBy}`);
-    expect(hintEl).not.toBeNull();
-    expect(hintEl!.textContent).toBe('Helpful hint');
-  });
-
-  it('includes description, hint, and error in aria-describedby', async () => {
-    const el = await fixture(
-      '<civ-checkbox label="Agree" description="Desc" hint="Hint" error="Error"></civ-checkbox>',
-    );
-
-    const input = el.querySelector('input') as HTMLInputElement;
-    const describedBy = input.getAttribute('aria-describedby')!;
-    const ids = describedBy.split(' ');
-    expect(ids.length).toBe(3);
-
-    for (const id of ids) {
-      expect(el.querySelector(`#${id}`)).not.toBeNull();
-    }
+    const descEl = el.querySelector(`#${describedBy}`);
+    expect(descEl).not.toBeNull();
+    expect(descEl!.textContent).toBe('Desc text');
   });
 });
 

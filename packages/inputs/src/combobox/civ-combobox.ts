@@ -1,7 +1,7 @@
 import { html, nothing, type TemplateResult } from 'lit';
 import { repeat } from 'lit/directives/repeat.js';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivFormElement, dispatch, renderLabel, renderFormHeader, inputClasses, inputWidthClass, clickOutside, t, interpolate, debounce } from '@civui/core';
+import { CivFormElement, dispatch, inputClasses, inputWidthClass, clickOutside, t, interpolate, debounce } from '@civui/core';
 import type { InputWidth } from '@civui/core';
 
 export interface ComboboxOption {
@@ -156,9 +156,7 @@ export class CivCombobox extends CivFormElement {
     const classes = inputClasses({ extra: [widthClass, 'civ-max-w-full'] });
 
     return html`
-      <div class="civ-mb-4 civ-relative">
-        ${renderFormHeader({ label: renderLabel({ label: this.label, inputId: this._inputId, required: this.required, showRequired: this.required && !this.hideRequiredIndicator, labelId: this._labelId }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error })}
-
+      <div class="civ-relative">
         <div class="civ-relative ${widthClass} civ-max-w-full" data-civ-combobox>
           <input
             class="${classes}"

@@ -2,7 +2,7 @@
 
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBooleanFormElement, dispatch, forwardTileClick, renderFormHeader, t } from '@civui/core';
+import { CivBooleanFormElement, dispatch, forwardTileClick, renderHint, renderError, t } from '@civui/core';
 
 /**
  * CivUI Checkbox
@@ -47,7 +47,8 @@ export class CivCheckbox extends CivBooleanFormElement {
               : nothing}
           </div>
         </label>
-        ${renderFormHeader({ label: nothing, hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error })}
+        ${renderHint(this._hintId, this.hint)}
+        ${renderError(this._errorId, this.error)}
       </div>
     `;
   }

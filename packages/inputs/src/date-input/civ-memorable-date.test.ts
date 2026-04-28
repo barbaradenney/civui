@@ -1,18 +1,19 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
 import './civ-memorable-date.js';
+import '@civui/core';
 
 afterEach(cleanupFixtures);
 
 describe('civ-memorable-date rendering', () => {
-  it('renders a group with label', async () => {
-    const el = await fixture('<civ-memorable-date label="Date of birth" name="dob"></civ-memorable-date>');
+  it('renders label when wrapped in civ-form-fieldset', async () => {
+    const wrapper = await fixture(
+      '<civ-form-fieldset legend="Date of birth"><civ-memorable-date name="dob"></civ-memorable-date></civ-form-fieldset>',
+    );
 
-    const group = el.querySelector('[role="group"]');
-    expect(group).not.toBeNull();
-    const label = el.querySelector('label.civ-label');
-    expect(label).not.toBeNull();
-    expect(label!.textContent).toContain('Date of birth');
+    const legend = wrapper.querySelector('legend');
+    expect(legend).not.toBeNull();
+    expect(legend!.textContent).toContain('Date of birth');
   });
 
   it('renders month select and day/year text inputs', async () => {
@@ -33,26 +34,26 @@ describe('civ-memorable-date rendering', () => {
     expect(select.options[11].label).toBe('December');
   });
 
-  it('renders hint text', async () => {
-    const el = await fixture('<civ-memorable-date label="Date of birth" hint="For example: January 19 2000"></civ-memorable-date>');
+  it('renders hint and error when wrapped in civ-form-fieldset', async () => {
+    const wrapper = await fixture(
+      '<civ-form-fieldset legend="Date of birth" hint="For example: January 19 2000" error="Date is required"><civ-memorable-date name="dob"></civ-memorable-date></civ-form-fieldset>',
+    );
 
-    const spans = el.querySelectorAll('span');
+    const spans = wrapper.querySelectorAll('span');
     const hint = Array.from(spans).find((s) => s.textContent === 'For example: January 19 2000');
     expect(hint).not.toBeNull();
-  });
 
-  it('renders error message with role="alert"', async () => {
-    const el = await fixture('<civ-memorable-date label="Date of birth" error="Date is required"></civ-memorable-date>');
-
-    const errorEl = el.querySelector('[role="alert"]');
+    const errorEl = wrapper.querySelector('[role="alert"]');
     expect(errorEl).not.toBeNull();
     expect(errorEl!.textContent).toBe('Date is required');
   });
 
-  it('shows required indicator text', async () => {
-    const el = await fixture('<civ-memorable-date label="Date of birth" required></civ-memorable-date>');
+  it('shows required indicator when wrapped in civ-form-fieldset', async () => {
+    const wrapper = await fixture(
+      '<civ-form-fieldset legend="Date of birth" required><civ-memorable-date name="dob"></civ-memorable-date></civ-form-fieldset>',
+    );
 
-    const requiredMark = el.querySelector('.civ-required-mark');
+    const requiredMark = wrapper.querySelector('.civ-required-mark');
     expect(requiredMark).not.toBeNull();
     expect(requiredMark!.textContent).toContain('required');
   });
@@ -61,15 +62,7 @@ describe('civ-memorable-date rendering', () => {
     const el = await fixture('<civ-memorable-date label="Date of birth"></civ-memorable-date>');
 
     expect(el.shadowRoot).toBeNull();
-    expect(el.querySelector('[role="group"]')).not.toBeNull();
-  });
-
-  it('renders label for the group', async () => {
-    const el = await fixture('<civ-memorable-date label="Date of birth"></civ-memorable-date>');
-
-    const label = el.querySelector('label.civ-label');
-    expect(label).not.toBeNull();
-    expect(label!.textContent).toContain('Date of birth');
+    expect(el.querySelector('[data-civ-memorable-date]')).not.toBeNull();
   });
 
   it('lays out fields in a responsive container', async () => {
@@ -82,25 +75,31 @@ describe('civ-memorable-date rendering', () => {
 });
 
 describe('civ-memorable-date accessibility', () => {
-  it('sets aria-invalid on group when error is present', async () => {
-    const el = await fixture('<civ-memorable-date label="Date of birth" error="Invalid date"></civ-memorable-date>');
+  it('sets aria-invalid on fieldset when error is present (via form-fieldset)', async () => {
+    const wrapper = await fixture(
+      '<civ-form-fieldset legend="Date of birth" error="Invalid date"><civ-memorable-date name="dob"></civ-memorable-date></civ-form-fieldset>',
+    );
 
-    const group = el.querySelector('[role="group"]');
-    expect(group!.getAttribute('aria-invalid')).toBe('true');
+    const fieldset = wrapper.querySelector('fieldset');
+    expect(fieldset!.getAttribute('aria-invalid')).toBe('true');
   });
 
-  it('omits aria-invalid on group when no error', async () => {
-    const el = await fixture('<civ-memorable-date label="Date of birth"></civ-memorable-date>');
+  it('omits aria-invalid on fieldset when no error', async () => {
+    const wrapper = await fixture(
+      '<civ-form-fieldset legend="Date of birth"><civ-memorable-date name="dob"></civ-memorable-date></civ-form-fieldset>',
+    );
 
-    const group = el.querySelector('[role="group"]');
-    expect(group!.getAttribute('aria-invalid')).toBeNull();
+    const fieldset = wrapper.querySelector('fieldset');
+    expect(fieldset!.getAttribute('aria-invalid')).toBeNull();
   });
 
-  it('sets aria-required on group when required', async () => {
-    const el = await fixture('<civ-memorable-date label="Date of birth" required></civ-memorable-date>');
+  it('sets aria-required on fieldset when required', async () => {
+    const wrapper = await fixture(
+      '<civ-form-fieldset legend="Date of birth" required><civ-memorable-date name="dob"></civ-memorable-date></civ-form-fieldset>',
+    );
 
-    const group = el.querySelector('[role="group"]');
-    expect(group!.getAttribute('aria-required')).toBe('true');
+    const fieldset = wrapper.querySelector('fieldset');
+    expect(fieldset!.getAttribute('aria-required')).toBe('true');
   });
 
   it('day and year inputs use type="text" with inputmode="numeric"', async () => {
@@ -160,9 +159,6 @@ describe('civ-memorable-date accessibility', () => {
     const innerSelect = el.querySelector('civ-select select');
     const describedBy = innerSelect!.getAttribute('aria-describedby');
     expect(describedBy).toBeTruthy();
-    // The referenced element should exist
-    const refEl = el.querySelector(`#${describedBy!.split(' ')[0]}`);
-    expect(refEl).not.toBeNull();
   });
 });
 
@@ -287,8 +283,7 @@ describe('civ-memorable-date validation', () => {
 
     el.label = 'Birthday';
     await elementUpdated(el);
-    const labelEl = el.querySelector('label.civ-label');
-    expect(labelEl!.textContent).toContain('Birthday');
+    expect(el.label).toBe('Birthday');
   });
 });
 

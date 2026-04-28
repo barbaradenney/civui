@@ -2,14 +2,17 @@ import { describe, it, expect, afterEach } from 'vitest';
 import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
 import type { CivDateRangePicker } from './civ-date-range-picker.js';
 import './civ-date-range-picker.js';
+import '@civui/core';
 
 afterEach(cleanupFixtures);
 
 describe('civ-date-range-picker', () => {
-  it('renders a group with the given label', async () => {
-    const el = await fixture('<civ-date-range-picker label="Stay dates"></civ-date-range-picker>');
-    const label = el.querySelector('label.civ-label');
-    expect(label?.textContent).toContain('Stay dates');
+  it('renders label when wrapped in civ-form-fieldset', async () => {
+    const wrapper = await fixture(
+      '<civ-form-fieldset legend="Stay dates"><civ-date-range-picker></civ-date-range-picker></civ-form-fieldset>',
+    );
+    const legend = wrapper.querySelector('legend');
+    expect(legend?.textContent).toContain('Stay dates');
   });
 
   it('renders two civ-date-picker children with default labels', async () => {
@@ -193,7 +196,7 @@ describe('civ-date-range-picker', () => {
   it('uses Light DOM (no shadow root)', async () => {
     const el = await fixture('<civ-date-range-picker label="Stay"></civ-date-range-picker>');
     expect(el.shadowRoot).toBeNull();
-    expect(el.querySelector('[role="group"]')).not.toBeNull();
+    expect(el.querySelector('[data-civ-range-start]')).not.toBeNull();
   });
 
   it('has static formAssociated = true', () => {

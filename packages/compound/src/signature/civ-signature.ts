@@ -149,18 +149,19 @@ export class CivSignature extends CivFormElement {
           </div>
         ` : nothing}
 
-        <civ-text-input
-          label="${t('signatureName')}"
-          name="${this.name ? `${this.name}.name` : ''}"
-          value="${this._signature.name}"
-          hint="${t('signatureNameHint')}"
-          error="${this.nameError}"
-          autocomplete="name"
-          ?disabled="${this.disabled}"
-          ?readonly="${this.readonly}"
-          @civ-input="${this._onNameInput}"
-          @civ-change="${this._onNameChange}"
-        ></civ-text-input>
+        <civ-form-field label="${t('signatureName')}" hint="${t('signatureNameHint')}" error="${this.nameError}">
+          <civ-text-input
+            name="${this.name ? `${this.name}.name` : ''}"
+            value="${this._signature.name}"
+            hint="${t('signatureNameHint')}"
+            error="${this.nameError}"
+            autocomplete="name"
+            ?disabled="${this.disabled}"
+            ?readonly="${this.readonly}"
+            @civ-input="${this._onNameInput}"
+            @civ-change="${this._onNameChange}"
+          ></civ-text-input>
+        </civ-form-field>
 
         <civ-checkbox
           label="${t('signatureCertify')}"

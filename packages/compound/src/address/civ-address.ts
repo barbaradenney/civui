@@ -141,14 +141,14 @@ export class CivAddress extends CivFormElement {
   override firstUpdated(): void {
     super.firstUpdated();
     this._address = this.parseStructuredValue(this.value, EMPTY_ADDRESS);
-    this._syncSelectOptions();
+    this.updateComplete.then(() => this._syncSelectOptions());
   }
 
   override updated(changed: Map<string, unknown>): void {
     super.updated(changed);
     // Re-sync select options when military or country changes
     if (changed.has('_address')) {
-      this._syncSelectOptions();
+      this.updateComplete.then(() => this._syncSelectOptions());
     }
   }
 
@@ -178,105 +178,113 @@ export class CivAddress extends CivFormElement {
         ` : nothing}
 
         ${this.showCountry && !this._address.military ? html`
-          <civ-select
-            label="${t('addressCountry')}"
-            name="${this.name ? `${this.name}.country` : ''}"
-            value="${this._address.country}"
-            autocomplete="country"
-            ?disabled="${this.disabled}"
-            data-address-country
-            @civ-change="${(e: CustomEvent) => this._onSubSelectChange('country', e)}"
-          ></civ-select>
+          <civ-form-field label="${t('addressCountry')}">
+            <civ-select
+              name="${this.name ? `${this.name}.country` : ''}"
+              value="${this._address.country}"
+              autocomplete="country"
+              ?disabled="${this.disabled}"
+              data-address-country
+              @civ-change="${(e: CustomEvent) => this._onSubSelectChange('country', e)}"
+            ></civ-select>
+          </civ-form-field>
         ` : nothing}
 
-        <civ-text-input
-          label="${t('addressStreet1')}"
-          name="${this.name ? `${this.name}.street1` : ''}"
-          value="${this._address.street1}"
-          error="${this.streetError}"
-          autocomplete="address-line1"
-          ?disabled="${this.disabled}"
-          ?readonly="${this.readonly}"
-          @civ-input="${(e: CustomEvent) => this._onSubInput('street1', e)}"
-          @civ-change="${(e: CustomEvent) => this._onSubChange('street1', e)}"
-        ></civ-text-input>
-
-        ${this.showStreet2 ? html`
+        <civ-form-field label="${t('addressStreet1')}" error="${this.streetError}">
           <civ-text-input
-            label="${t('addressStreet2')}"
-            name="${this.name ? `${this.name}.street2` : ''}"
-            value="${this._address.street2}"
-            autocomplete="address-line2"
+            name="${this.name ? `${this.name}.street1` : ''}"
+            value="${this._address.street1}"
+            error="${this.streetError}"
+            autocomplete="address-line1"
             ?disabled="${this.disabled}"
             ?readonly="${this.readonly}"
-            @civ-input="${(e: CustomEvent) => this._onSubInput('street2', e)}"
-            @civ-change="${(e: CustomEvent) => this._onSubChange('street2', e)}"
+            @civ-input="${(e: CustomEvent) => this._onSubInput('street1', e)}"
+            @civ-change="${(e: CustomEvent) => this._onSubChange('street1', e)}"
           ></civ-text-input>
+        </civ-form-field>
+
+        ${this.showStreet2 ? html`
+          <civ-form-field label="${t('addressStreet2')}">
+            <civ-text-input
+              name="${this.name ? `${this.name}.street2` : ''}"
+              value="${this._address.street2}"
+              autocomplete="address-line2"
+              ?disabled="${this.disabled}"
+              ?readonly="${this.readonly}"
+              @civ-input="${(e: CustomEvent) => this._onSubInput('street2', e)}"
+              @civ-change="${(e: CustomEvent) => this._onSubChange('street2', e)}"
+            ></civ-text-input>
+          </civ-form-field>
         ` : nothing}
 
         ${this.showStreet3 ? html`
-          <civ-text-input
-            label="${t('addressStreet3')}"
-            name="${this.name ? `${this.name}.street3` : ''}"
-            value="${this._address.street3}"
-            autocomplete="address-line3"
-            ?disabled="${this.disabled}"
-            ?readonly="${this.readonly}"
-            @civ-input="${(e: CustomEvent) => this._onSubInput('street3', e)}"
-            @civ-change="${(e: CustomEvent) => this._onSubChange('street3', e)}"
-          ></civ-text-input>
+          <civ-form-field label="${t('addressStreet3')}">
+            <civ-text-input
+              name="${this.name ? `${this.name}.street3` : ''}"
+              value="${this._address.street3}"
+              autocomplete="address-line3"
+              ?disabled="${this.disabled}"
+              ?readonly="${this.readonly}"
+              @civ-input="${(e: CustomEvent) => this._onSubInput('street3', e)}"
+              @civ-change="${(e: CustomEvent) => this._onSubChange('street3', e)}"
+            ></civ-text-input>
+          </civ-form-field>
         ` : nothing}
 
-        <civ-text-input
-          label="${t('addressCity')}"
-          name="${this.name ? `${this.name}.city` : ''}"
-          value="${this._address.city}"
-          error="${this.cityError}"
-          autocomplete="address-level2"
-          ?disabled="${this.disabled}"
-          ?readonly="${this.readonly}"
-          @civ-input="${(e: CustomEvent) => this._onSubInput('city', e)}"
-          @civ-change="${(e: CustomEvent) => this._onSubChange('city', e)}"
-        ></civ-text-input>
-
-        ${this._useSelectForState ? html`
-          <civ-select
-            label="${t('addressState')}"
-            name="${this.name ? `${this.name}.state` : ''}"
-            value="${this._address.state}"
-            error="${this.stateError}"
-            autocomplete="address-level1"
-            ?disabled="${this.disabled}"
-            data-address-state
-            @civ-change="${(e: CustomEvent) => this._onSubSelectChange('state', e)}"
-          ></civ-select>
-        ` : html`
+        <civ-form-field label="${t('addressCity')}" error="${this.cityError}">
           <civ-text-input
-            label="${t('addressStateProvince')}"
-            name="${this.name ? `${this.name}.state` : ''}"
-            value="${this._address.state}"
-            error="${this.stateError}"
-            autocomplete="address-level1"
+            name="${this.name ? `${this.name}.city` : ''}"
+            value="${this._address.city}"
+            error="${this.cityError}"
+            autocomplete="address-level2"
             ?disabled="${this.disabled}"
             ?readonly="${this.readonly}"
-            @civ-input="${(e: CustomEvent) => this._onSubInput('state', e)}"
-            @civ-change="${(e: CustomEvent) => this._onSubChange('state', e)}"
+            @civ-input="${(e: CustomEvent) => this._onSubInput('city', e)}"
+            @civ-change="${(e: CustomEvent) => this._onSubChange('city', e)}"
           ></civ-text-input>
+        </civ-form-field>
+
+        ${this._useSelectForState ? html`
+          <civ-form-field label="${t('addressState')}" error="${this.stateError}">
+            <civ-select
+              name="${this.name ? `${this.name}.state` : ''}"
+              value="${this._address.state}"
+              error="${this.stateError}"
+              autocomplete="address-level1"
+              ?disabled="${this.disabled}"
+              data-address-state
+              @civ-change="${(e: CustomEvent) => this._onSubSelectChange('state', e)}"
+            ></civ-select>
+          </civ-form-field>
+        ` : html`
+          <civ-form-field label="${t('addressStateProvince')}" error="${this.stateError}">
+            <civ-text-input
+              name="${this.name ? `${this.name}.state` : ''}"
+              value="${this._address.state}"
+              error="${this.stateError}"
+              autocomplete="address-level1"
+              ?disabled="${this.disabled}"
+              ?readonly="${this.readonly}"
+              @civ-input="${(e: CustomEvent) => this._onSubInput('state', e)}"
+              @civ-change="${(e: CustomEvent) => this._onSubChange('state', e)}"
+            ></civ-text-input>
+          </civ-form-field>
         `}
 
-        <civ-text-input
-          label="${this._address.country === 'US' || !this.showCountry ? t('addressZip') : t('addressPostalCode')}"
-          name="${this.name ? `${this.name}.zip` : ''}"
-          value="${this._address.zip}"
-          error="${this.zipError}"
-          inputmode="numeric"
-          autocomplete="postal-code"
-          maxlength="10"
-          ?disabled="${this.disabled}"
-          ?readonly="${this.readonly}"
-          @civ-input="${(e: CustomEvent) => this._onSubInput('zip', e)}"
-          @civ-change="${(e: CustomEvent) => this._onSubChange('zip', e)}"
-        ></civ-text-input>
+        <civ-form-field label="${this._address.country === 'US' || !this.showCountry ? t('addressZip') : t('addressPostalCode')}" error="${this.zipError}">
+          <civ-text-input
+            name="${this.name ? `${this.name}.zip` : ''}"
+            value="${this._address.zip}"
+            error="${this.zipError}"
+            inputmode="numeric"
+            autocomplete="postal-code"
+            maxlength="10"
+            ?disabled="${this.disabled}"
+            ?readonly="${this.readonly}"
+            @civ-input="${(e: CustomEvent) => this._onSubInput('zip', e)}"
+            @civ-change="${(e: CustomEvent) => this._onSubChange('zip', e)}"
+          ></civ-text-input>
+        </civ-form-field>
       </fieldset>
 
       ${this._renderValidationModal()}

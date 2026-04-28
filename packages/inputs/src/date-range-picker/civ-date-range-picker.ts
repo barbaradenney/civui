@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivFormElement, dispatch, renderGroupLabel, renderFormHeader, buildDescribedBy, interpolate, t } from '@civui/core';
+import { CivFormElement, dispatch, interpolate, t } from '@civui/core';
 import '../date-picker/civ-date-picker.js';
 
 export interface DateRangeValue {
@@ -73,7 +73,7 @@ function daysBetween(startIso: string, endIso: string): number {
 @customElement('civ-date-range-picker')
 export class CivDateRangePicker extends CivFormElement {
 
-  private _labelId = this.generateId('label');
+
 
   /** Outer lower bound (ISO yyyy-mm-dd). */
   @property({ type: String }) min = '';
@@ -152,14 +152,10 @@ export class CivDateRangePicker extends CivFormElement {
   }
 
   override render() {
-    const describedBy = buildDescribedBy(this._hintId, this.hint, this._errorId, this.error);
     const startLabel = this.startLabel || t('dateRangeStartLabel');
     const endLabel = this.endLabel || t('dateRangeEndLabel');
 
     return html`
-      <div role="group" class="civ-fieldset" aria-labelledby="${this._labelId}" aria-describedby="${describedBy || nothing}">
-        ${renderFormHeader({ label: renderGroupLabel({ label: this.label, labelId: this._labelId, required: this.required && !this.hideRequiredIndicator }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error })}
-
         <div class="civ-flex civ-flex-col civ-gap-4 sm:civ-flex-row sm:civ-items-start">
           <civ-date-picker
             data-civ-range-start
@@ -194,7 +190,6 @@ export class CivDateRangePicker extends CivFormElement {
             @civ-change="${this._onEndChange}"
           ></civ-date-picker>
         </div>
-      </div>
     `;
   }
 

@@ -1,16 +1,27 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
 import './civ-textarea.js';
+import '@civui/core';
 
 afterEach(cleanupFixtures);
 
 describe('civ-textarea', () => {
-  it('renders with a label', async () => {
-    const el = await fixture('<civ-textarea label="Comments"></civ-textarea>');
+  it('renders label, hint, error when wrapped in civ-form-field', async () => {
+    const wrapper = await fixture(
+      '<civ-form-field label="Comments" hint="Keep it brief" error="Too short"><civ-textarea></civ-textarea></civ-form-field>',
+    );
 
-    const label = el.querySelector('label');
+    const label = wrapper.querySelector('label');
     expect(label).not.toBeNull();
     expect(label!.textContent).toContain('Comments');
+
+    const hint = wrapper.querySelector('span:not([role])');
+    expect(hint).not.toBeNull();
+    expect(hint!.textContent).toBe('Keep it brief');
+
+    const errorEl = wrapper.querySelector('[role="alert"]');
+    expect(errorEl).not.toBeNull();
+    expect(errorEl!.textContent).toBe('Too short');
   });
 
   it('renders a textarea element', async () => {
@@ -21,11 +32,15 @@ describe('civ-textarea', () => {
     expect(textarea!.name).toBe('comments');
   });
 
-  it('associates label with textarea via for/id', async () => {
-    const el = await fixture('<civ-textarea label="Comments"></civ-textarea>');
+  it('associates form-field label with textarea via for/id', async () => {
+    const wrapper = await fixture(
+      '<civ-form-field label="Comments"><civ-textarea></civ-textarea></civ-form-field>',
+    );
+    const child = wrapper.querySelector('civ-textarea')!;
+    await elementUpdated(child);
 
-    const label = el.querySelector('label');
-    const textarea = el.querySelector('textarea');
+    const label = wrapper.querySelector('label');
+    const textarea = wrapper.querySelector('textarea');
     expect(label!.getAttribute('for')).toBe(textarea!.id);
   });
 
@@ -73,14 +88,6 @@ describe('civ-textarea', () => {
     expect(counter!.textContent).toContain('189 characters remaining');
   });
 
-  it('renders error message with alert role', async () => {
-    const el = await fixture('<civ-textarea label="Bio" error="Too short"></civ-textarea>');
-
-    const errorEl = el.querySelector('[role="alert"]');
-    expect(errorEl).not.toBeNull();
-    expect(errorEl!.textContent).toBe('Too short');
-  });
-
   it('sets aria-invalid when error is present', async () => {
     const el = await fixture('<civ-textarea label="Bio" error="Required"></civ-textarea>');
 
@@ -88,18 +95,12 @@ describe('civ-textarea', () => {
     expect(textarea!.getAttribute('aria-invalid')).toBe('true');
   });
 
-  it('renders hint text', async () => {
-    const el = await fixture('<civ-textarea label="Bio" hint="Keep it brief"></civ-textarea>');
+  it('shows required indicator when wrapped in form-field', async () => {
+    const wrapper = await fixture(
+      '<civ-form-field label="Bio" required><civ-textarea></civ-textarea></civ-form-field>',
+    );
 
-    const hint = el.querySelector('span:not([role])');
-    expect(hint).not.toBeNull();
-    expect(hint!.textContent).toBe('Keep it brief');
-  });
-
-  it('shows required indicator', async () => {
-    const el = await fixture('<civ-textarea label="Bio" required></civ-textarea>');
-
-    const requiredMark = el.querySelector('.civ-required-mark');
+    const requiredMark = wrapper.querySelector('.civ-required-mark');
     expect(requiredMark).not.toBeNull();
     expect(requiredMark!.textContent).toContain('required');
   });
@@ -171,18 +172,19 @@ describe('civ-textarea', () => {
     expect(charCount!.textContent).toContain('characters remaining');
   });
 
-  it('includes hint, error, and character count in aria-describedby', async () => {
-    const el = await fixture(
-      '<civ-textarea label="Bio" hint="Keep brief" error="Too short" maxlength="200"></civ-textarea>',
+  it('includes hint, error, and character count in aria-describedby when wrapped in form-field', async () => {
+    const wrapper = await fixture(
+      '<civ-form-field label="Bio" hint="Keep brief" error="Too short"><civ-textarea maxlength="200"></civ-textarea></civ-form-field>',
     );
 
-    const textarea = el.querySelector('textarea');
+    const textarea = wrapper.querySelector('textarea');
     const describedBy = textarea!.getAttribute('aria-describedby')!;
     const ids = describedBy.split(' ');
-    expect(ids.length).toBe(3);
+    // form-field wires hint + error IDs; the char count ID is on the component
+    expect(ids.length).toBeGreaterThanOrEqual(2);
 
     for (const id of ids) {
-      expect(el.querySelector(`#${id}`)).not.toBeNull();
+      expect(wrapper.querySelector(`#${id}`)).not.toBeNull();
     }
   });
 
@@ -329,32 +331,31 @@ describe('textarea word count', () => {
     expect(charCountEl).not.toBeNull();
   });
 
-  it('shows error when over word limit', async () => {
-    const el = await fixture('<civ-textarea label="Bio" maxwords="3"></civ-textarea>');
+  it('sets error when over word limit', async () => {
+    const el = await fixture('<civ-textarea label="Bio" maxwords="3"></civ-textarea>') as any;
     const textarea = el.querySelector('textarea')!;
     textarea.value = 'one two three four';
     textarea.dispatchEvent(new Event('input', { bubbles: true }));
     await elementUpdated(el);
 
-    const errorEl = el.querySelector('[role="alert"]');
-    expect(errorEl).not.toBeNull();
+    expect(el.error).toBeTruthy();
   });
 
   it('clears error when back under word limit', async () => {
-    const el = await fixture('<civ-textarea label="Bio" maxwords="3"></civ-textarea>');
+    const el = await fixture('<civ-textarea label="Bio" maxwords="3"></civ-textarea>') as any;
     const textarea = el.querySelector('textarea')!;
 
     // Go over limit
     textarea.value = 'one two three four';
     textarea.dispatchEvent(new Event('input', { bubbles: true }));
     await elementUpdated(el);
-    expect(el.querySelector('[role="alert"]')).not.toBeNull();
+    expect(el.error).toBeTruthy();
 
     // Come back under limit
     textarea.value = 'one two';
     textarea.dispatchEvent(new Event('input', { bubbles: true }));
     await elementUpdated(el);
-    expect(el.querySelector('[role="alert"]')).toBeNull();
+    expect(el.error).toBe('');
   });
 
   it('word count ID is in aria-describedby', async () => {

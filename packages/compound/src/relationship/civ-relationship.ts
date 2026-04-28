@@ -104,7 +104,9 @@ export class CivRelationship extends CivFormElement {
       this._data = { ...this._data, deceased: 'yes' };
       this.value = JSON.stringify(this._data);
     }
-    this._syncSelectOptions();
+    // Defer option sync — form-field wrappers need their slot relocation
+    // to complete before querySelector can find the select.
+    this.updateComplete.then(() => this._syncSelectOptions());
   }
 
   override updated(changed: Map<string, unknown>): void {
@@ -114,7 +116,7 @@ export class CivRelationship extends CivFormElement {
       this.value = JSON.stringify(this._data);
     }
     if (changed.has('preset') || changed.has('options')) {
-      this._syncSelectOptions();
+      this.updateComplete.then(() => this._syncSelectOptions());
     }
   }
 
@@ -153,15 +155,16 @@ export class CivRelationship extends CivFormElement {
           ></civ-name>
         ` : nothing}
 
-        <civ-select
-          label="${t('relationshipTypeLabel')}"
-          name="${prefix}.relationship"
-          value="${this._data.relationship}"
-          error="${this.relationshipError}"
-          ?disabled="${this.disabled}"
-          data-relationship-type
-          @civ-change="${this._onRelationshipChange}"
-        ></civ-select>
+        <civ-form-field label="${t('relationshipTypeLabel')}" error="${this.relationshipError}">
+          <civ-select
+            name="${prefix}.relationship"
+            value="${this._data.relationship}"
+            error="${this.relationshipError}"
+            ?disabled="${this.disabled}"
+            data-relationship-type
+            @civ-change="${this._onRelationshipChange}"
+          ></civ-select>
+        </civ-form-field>
 
         ${category === 'spousal' ? html`
           <civ-memorable-date
@@ -212,17 +215,18 @@ export class CivRelationship extends CivFormElement {
         ` : nothing}
 
         ${category === 'other' ? html`
-          <civ-text-input
-            label="${t('relationshipOtherLabel')}"
-            name="${prefix}.otherDescription"
-            value="${this._data.otherDescription}"
-            hint="${t('relationshipOtherHint')}"
-            error="${this.otherDescriptionError}"
-            ?disabled="${this.disabled}"
-            ?readonly="${this.readonly}"
-            @civ-input="${this._onOtherInput}"
-            @civ-change="${this._onOtherChange}"
-          ></civ-text-input>
+          <civ-form-field label="${t('relationshipOtherLabel')}" hint="${t('relationshipOtherHint')}" error="${this.otherDescriptionError}">
+            <civ-text-input
+              name="${prefix}.otherDescription"
+              value="${this._data.otherDescription}"
+              hint="${t('relationshipOtherHint')}"
+              error="${this.otherDescriptionError}"
+              ?disabled="${this.disabled}"
+              ?readonly="${this.readonly}"
+              @civ-input="${this._onOtherInput}"
+              @civ-change="${this._onOtherChange}"
+            ></civ-text-input>
+          </civ-form-field>
         ` : nothing}
 
         ${this.deceasedAssumed ? html`

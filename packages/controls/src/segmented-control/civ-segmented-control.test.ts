@@ -20,51 +20,15 @@ describe('civ-segmented-control rendering', () => {
     expect(buttons[1].textContent).toContain('Grid');
   });
 
-  it('renders a fieldset wrapping the segments', async () => {
+  it('renders a container with role="radiogroup"', async () => {
     const el = await fixture(`
       <civ-segmented-control legend="View" name="view" value="list">
         <civ-segment label="List" value="list"></civ-segment>
       </civ-segmented-control>
     `);
 
-    const fieldset = el.querySelector('fieldset');
-    expect(fieldset).not.toBeNull();
-  });
-
-  it('renders legend as screen-reader only (civ-sr-only)', async () => {
-    const el = await fixture(`
-      <civ-segmented-control legend="View" name="view" value="list">
-        <civ-segment label="List" value="list"></civ-segment>
-      </civ-segmented-control>
-    `);
-
-    const legend = el.querySelector('legend');
-    expect(legend).not.toBeNull();
-    expect(legend!.classList.contains('civ-sr-only')).toBe(true);
-  });
-
-  it('renders hint text', async () => {
-    const el = await fixture(`
-      <civ-segmented-control legend="View" name="view" hint="Choose a layout">
-        <civ-segment label="List" value="list"></civ-segment>
-      </civ-segmented-control>
-    `);
-
-    const spans = el.querySelectorAll('span');
-    const hintSpan = Array.from(spans).find((s) => s.textContent === 'Choose a layout');
-    expect(hintSpan).not.toBeNull();
-  });
-
-  it('renders error message with role="alert"', async () => {
-    const el = await fixture(`
-      <civ-segmented-control legend="View" name="view" error="Selection required">
-        <civ-segment label="List" value="list"></civ-segment>
-      </civ-segmented-control>
-    `);
-
-    const errorEl = el.querySelector('[role="alert"]');
-    expect(errorEl).not.toBeNull();
-    expect(errorEl!.textContent).toBe('Selection required');
+    const group = el.querySelector('[role="radiogroup"]');
+    expect(group).not.toBeNull();
   });
 
   it('uses Light DOM (no shadow root)', async () => {
@@ -75,31 +39,30 @@ describe('civ-segmented-control rendering', () => {
     `);
 
     expect(el.shadowRoot).toBeNull();
-    expect(el.querySelector('fieldset')).not.toBeNull();
   });
 });
 
 describe('civ-segmented-control accessibility', () => {
-  it('has role="radiogroup" on fieldset', async () => {
+  it('has role="radiogroup" on the container', async () => {
     const el = await fixture(`
       <civ-segmented-control legend="View" name="view" value="list">
         <civ-segment label="List" value="list"></civ-segment>
       </civ-segmented-control>
     `);
 
-    const fieldset = el.querySelector('fieldset');
-    expect(fieldset!.getAttribute('role')).toBe('radiogroup');
+    const group = el.querySelector('[role="radiogroup"]');
+    expect(group).not.toBeNull();
   });
 
-  it('has aria-orientation="horizontal" on fieldset', async () => {
+  it('has aria-orientation="horizontal" on the radiogroup', async () => {
     const el = await fixture(`
       <civ-segmented-control legend="View" name="view" value="list">
         <civ-segment label="List" value="list"></civ-segment>
       </civ-segmented-control>
     `);
 
-    const fieldset = el.querySelector('fieldset');
-    expect(fieldset!.getAttribute('aria-orientation')).toBe('horizontal');
+    const group = el.querySelector('[role="radiogroup"]');
+    expect(group!.getAttribute('aria-orientation')).toBe('horizontal');
   });
 
   it('has role="radio" on each segment button', async () => {
@@ -134,8 +97,8 @@ describe('civ-segmented-control accessibility', () => {
       </civ-segmented-control>
     `);
 
-    const fieldset = el.querySelector('fieldset');
-    expect(fieldset!.getAttribute('aria-invalid')).toBe('true');
+    const group = el.querySelector('[role="radiogroup"]');
+    expect(group!.getAttribute('aria-invalid')).toBe('true');
   });
 
   it('omits aria-invalid when no error', async () => {
@@ -145,19 +108,19 @@ describe('civ-segmented-control accessibility', () => {
       </civ-segmented-control>
     `);
 
-    const fieldset = el.querySelector('fieldset');
-    expect(fieldset!.getAttribute('aria-invalid')).toBeNull();
+    const group = el.querySelector('[role="radiogroup"]');
+    expect(group!.getAttribute('aria-invalid')).toBeNull();
   });
 
-  it('sets aria-required on fieldset when required', async () => {
+  it('sets aria-required on radiogroup when required', async () => {
     const el = await fixture(`
       <civ-segmented-control legend="View" name="view" required>
         <civ-segment label="List" value="list"></civ-segment>
       </civ-segmented-control>
     `);
 
-    const fieldset = el.querySelector('fieldset');
-    expect(fieldset!.getAttribute('aria-required')).toBe('true');
+    const group = el.querySelector('[role="radiogroup"]');
+    expect(group!.getAttribute('aria-required')).toBe('true');
   });
 
   it('only selected segment has tabindex="0"', async () => {
@@ -470,7 +433,7 @@ describe('civ-segmented-control form association', () => {
     expect(el.value).toBe('list');
   });
 
-  it('disables fieldset when disabled prop is set', async () => {
+  it('syncs disabled to children when disabled prop is set', async () => {
     const el = await fixture(`
       <civ-segmented-control legend="View" name="view" value="list" disabled>
         <civ-segment label="List" value="list"></civ-segment>
@@ -478,8 +441,10 @@ describe('civ-segmented-control form association', () => {
       </civ-segmented-control>
     `);
 
-    const fieldset = el.querySelector('fieldset') as HTMLFieldSetElement;
-    expect(fieldset.disabled).toBe(true);
+    const segments = el.querySelectorAll('civ-segment');
+    for (const segment of segments) {
+      expect((segment as any).disabled).toBe(true);
+    }
   });
 
   it('cascades disabled via formDisabledCallback', async () => {

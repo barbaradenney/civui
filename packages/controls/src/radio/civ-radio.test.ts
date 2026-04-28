@@ -123,7 +123,7 @@ describe('civ-radio', () => {
 });
 
 describe('civ-radio-group', () => {
-  it('renders with a legend', async () => {
+  it('renders a layout container with role="radiogroup"', async () => {
     const el = await fixture(`
       <civ-radio-group legend="Color" name="color">
         <civ-radio label="Red" value="red"></civ-radio>
@@ -131,20 +131,8 @@ describe('civ-radio-group', () => {
       </civ-radio-group>
     `);
 
-    const legend = el.querySelector('legend');
-    expect(legend).not.toBeNull();
-    expect(legend!.textContent).toContain('Color');
-  });
-
-  it('wraps children in a fieldset', async () => {
-    const el = await fixture(`
-      <civ-radio-group legend="Color" name="color">
-        <civ-radio label="Red" value="red"></civ-radio>
-      </civ-radio-group>
-    `);
-
-    const fieldset = el.querySelector('fieldset');
-    expect(fieldset).not.toBeNull();
+    const group = el.querySelector('[role="radiogroup"]');
+    expect(group).not.toBeNull();
   });
 
   it('syncs name to child radios', async () => {
@@ -161,42 +149,6 @@ describe('civ-radio-group', () => {
     }
   });
 
-  it('renders group error', async () => {
-    const el = await fixture(`
-      <civ-radio-group legend="Color" name="color" error="Please select a color">
-        <civ-radio label="Red" value="red"></civ-radio>
-      </civ-radio-group>
-    `);
-
-    const errorEl = el.querySelector('[role="alert"]');
-    expect(errorEl).not.toBeNull();
-    expect(errorEl!.textContent).toBe('Please select a color');
-  });
-
-  it('renders group hint', async () => {
-    const el = await fixture(`
-      <civ-radio-group legend="Color" name="color" hint="Pick your favorite">
-        <civ-radio label="Red" value="red"></civ-radio>
-      </civ-radio-group>
-    `);
-
-    const spans = el.querySelectorAll('span');
-    const hintSpan = Array.from(spans).find((s) => s.textContent === 'Pick your favorite');
-    expect(hintSpan).not.toBeNull();
-  });
-
-  it('shows required indicator', async () => {
-    const el = await fixture(`
-      <civ-radio-group legend="Color" name="color" required>
-        <civ-radio label="Red" value="red"></civ-radio>
-      </civ-radio-group>
-    `);
-
-    const requiredMark = el.querySelector('.civ-required-mark');
-    expect(requiredMark).not.toBeNull();
-    expect(requiredMark!.textContent).toContain('required');
-  });
-
   it('uses Light DOM', async () => {
     const el = await fixture(`
       <civ-radio-group legend="Color" name="color">
@@ -205,7 +157,6 @@ describe('civ-radio-group', () => {
     `);
 
     expect(el.shadowRoot).toBeNull();
-    expect(el.querySelector('fieldset')).not.toBeNull();
   });
 
   it('has static formAssociated = true', () => {
@@ -482,15 +433,13 @@ describe('civ-radio-group keyboard navigation', () => {
 });
 
 describe('civ-radio-group ARIA attributes', () => {
-  it('has role="radiogroup" on the inner group container, not the fieldset', async () => {
+  it('has role="radiogroup" on the inner group container', async () => {
     const el = await fixture(`
       <civ-radio-group legend="Color" name="color">
         <civ-radio label="Red" value="red"></civ-radio>
       </civ-radio-group>
     `);
 
-    const fieldset = el.querySelector('fieldset')!;
-    expect(fieldset.getAttribute('role')).toBeNull();
     const group = el.querySelector('[role="radiogroup"]')!;
     expect(group.tagName).toBe('DIV');
   });
@@ -545,8 +494,8 @@ describe('civ-radio-group orientation rendering', () => {
       </civ-radio-group>
     `);
 
-    const slotWrapper = el.querySelector('fieldset > div');
-    expect(slotWrapper!.className).toContain('civ-group-layout--horizontal');
+    const container = el.querySelector('.civ-group-layout--horizontal');
+    expect(container).not.toBeNull();
   });
 
   it('uses civ-group-layout--vertical for vertical orientation', async () => {
@@ -557,8 +506,8 @@ describe('civ-radio-group orientation rendering', () => {
       </civ-radio-group>
     `);
 
-    const slotWrapper = el.querySelector('fieldset > div');
-    expect(slotWrapper!.className).toContain('civ-group-layout--vertical');
+    const container = el.querySelector('.civ-group-layout--vertical');
+    expect(container).not.toBeNull();
   });
 });
 

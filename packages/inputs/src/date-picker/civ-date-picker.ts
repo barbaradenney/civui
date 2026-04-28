@@ -23,8 +23,6 @@ import {
   interpolate,
   isRtl,
   clickOutside,
-  renderLabel,
-  renderFormHeader,
   inputClasses,
   t,
   type CalendarDay,
@@ -271,8 +269,7 @@ export class CivDatePicker extends CivFormElement {
       : (this.chooseDateLabel || t('datePickerChooseDateLabel'));
 
     return html`
-      <div class="civ-mb-4 civ-relative">
-        ${renderFormHeader({ label: renderLabel({ label: this.label, inputId: this._inputId, required: this.required, showRequired: this.required && !this.hideRequiredIndicator }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error })}
+      <div class="civ-relative">
         <div class="civ-input-group">
           <div class="civ-relative civ-flex-1">
             <input

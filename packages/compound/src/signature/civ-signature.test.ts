@@ -68,6 +68,7 @@ describe('civ-signature', () => {
 
   it('renders field-level errors', async () => {
     const el = await fixture<CivSignature>('<civ-signature legend="Sign" name-error="Enter your name" certify-error="You must certify"></civ-signature>');
+    await elementUpdated(el);
     const alerts = el.querySelectorAll('[role="alert"]');
     expect(alerts.length).toBe(2);
   });

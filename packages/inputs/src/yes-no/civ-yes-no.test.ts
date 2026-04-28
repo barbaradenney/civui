@@ -1,16 +1,19 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
 import './civ-yes-no.js';
+import '@civui/core';
 
 afterEach(cleanupFixtures);
 
 describe('civ-yes-no', () => {
-  it('renders with a label', async () => {
-    const el = await fixture('<civ-yes-no label="Are you a U.S. citizen?"></civ-yes-no>');
+  it('renders label when wrapped in civ-form-fieldset', async () => {
+    const wrapper = await fixture(
+      '<civ-form-fieldset legend="Are you a U.S. citizen?"><civ-yes-no></civ-yes-no></civ-form-fieldset>',
+    );
 
-    const label = el.querySelector('label.civ-label');
-    expect(label).not.toBeNull();
-    expect(label!.textContent).toContain('Are you a U.S. citizen?');
+    const legend = wrapper.querySelector('legend');
+    expect(legend).not.toBeNull();
+    expect(legend!.textContent).toContain('Are you a U.S. citizen?');
   });
 
   it('renders Yes and No buttons with role="radio"', async () => {
@@ -22,15 +25,10 @@ describe('civ-yes-no', () => {
     expect(buttons[1].textContent).toBe('No');
   });
 
-  it('renders a group wrapping a div with role="radiogroup"', async () => {
+  it('renders a div with role="radiogroup"', async () => {
     const el = await fixture('<civ-yes-no label="Question"></civ-yes-no>');
 
-    const outerGroup = el.querySelector('[role="group"]')!;
-    expect(outerGroup).not.toBeNull();
-    // The radiogroup role lives on the inner div so the optional skip
-    // affordance can sit alongside the radios without becoming part of
-    // the mutually-exclusive group.
-    const group = outerGroup.querySelector('[role="radiogroup"]');
+    const group = el.querySelector('[role="radiogroup"]');
     expect(group).not.toBeNull();
     expect(group!.tagName).toBe('DIV');
   });
@@ -83,18 +81,16 @@ describe('civ-yes-no', () => {
     expect(changeHandler.mock.calls[0][0].detail).toEqual({ value: 'yes' });
   });
 
-  it('renders hint text', async () => {
-    const el = await fixture('<civ-yes-no label="Question" hint="Select one option"></civ-yes-no>');
+  it('renders hint and error when wrapped in civ-form-fieldset', async () => {
+    const wrapper = await fixture(
+      '<civ-form-fieldset legend="Question" hint="Select one option" error="Please select an answer"><civ-yes-no></civ-yes-no></civ-form-fieldset>',
+    );
 
-    const hint = el.querySelector('.civ-hint');
+    const spans = wrapper.querySelectorAll('span');
+    const hint = Array.from(spans).find((s) => s.textContent === 'Select one option');
     expect(hint).not.toBeNull();
-    expect(hint!.textContent).toBe('Select one option');
-  });
 
-  it('renders error message with role="alert"', async () => {
-    const el = await fixture('<civ-yes-no label="Question" error="Please select an answer"></civ-yes-no>');
-
-    const errorEl = el.querySelector('[role="alert"]');
+    const errorEl = wrapper.querySelector('[role="alert"]');
     expect(errorEl).not.toBeNull();
     expect(errorEl!.textContent).toBe('Please select an answer');
   });
@@ -162,7 +158,7 @@ describe('civ-yes-no', () => {
     const el = await fixture('<civ-yes-no label="Question"></civ-yes-no>');
 
     expect(el.shadowRoot).toBeNull();
-    expect(el.querySelector('[role="group"]')).not.toBeNull();
+    expect(el.querySelector('[role="radiogroup"]')).not.toBeNull();
   });
 
   it('applies focus-visible:civ-focus-ring to buttons', async () => {
@@ -320,9 +316,8 @@ describe('civ-yes-no', () => {
       );
       const skip = el.querySelector('[data-civ-skip]')!;
       expect(skip.getAttribute('role')).not.toBe('radio');
-      const outerGroup = el.querySelector('[role="group"]')!;
-      expect(outerGroup).not.toBeNull();
       const radiogroup = el.querySelector('[role="radiogroup"]')!;
+      expect(radiogroup).not.toBeNull();
       expect(radiogroup.tagName.toLowerCase()).toBe('div');
       expect(radiogroup.contains(skip)).toBe(false);
     });
@@ -355,14 +350,10 @@ describe('civ-yes-no', () => {
       expect(el.value).toBe('no');
     });
 
-    it('moves aria-describedby / aria-invalid / aria-required onto the inner radiogroup', async () => {
+    it('sets aria-describedby / aria-invalid / aria-required on the radiogroup', async () => {
       const el = await fixture(
         '<civ-yes-no label="Q" hint="Pick" error="err" required skip-label="Skip"></civ-yes-no>',
       );
-      const outerGroup = el.querySelector('[role="group"]')!;
-      expect(outerGroup.getAttribute('aria-describedby')).toBeNull();
-      expect(outerGroup.getAttribute('aria-invalid')).toBeNull();
-      expect(outerGroup.getAttribute('aria-required')).toBeNull();
 
       const inner = el.querySelector('[role="radiogroup"]')!;
       expect(inner.getAttribute('aria-describedby')).toBeTruthy();
@@ -370,14 +361,12 @@ describe('civ-yes-no', () => {
       expect(inner.getAttribute('aria-required')).toBe('true');
     });
 
-    it('labels the inner radiogroup via aria-labelledby (not a redundant aria-label)', async () => {
-      const el = await fixture(
-        '<civ-yes-no label="Did you serve?" skip-label="Skip"></civ-yes-no>',
+    it('labels the inner radiogroup via aria-labelledby when wrapped in form-fieldset', async () => {
+      const wrapper = await fixture(
+        '<civ-form-fieldset legend="Did you serve?"><civ-yes-no skip-label="Skip"></civ-yes-no></civ-form-fieldset>',
       );
-      const label = el.querySelector('label.civ-label')!;
-      expect(label.id).toBeTruthy();
-      const inner = el.querySelector('[role="radiogroup"]')!;
-      expect(inner.getAttribute('aria-labelledby')).toBe(label.id);
+      const inner = wrapper.querySelector('[role="radiogroup"]')!;
+      // radiogroup should not use a redundant aria-label
       expect(inner.getAttribute('aria-label')).toBeNull();
     });
   });

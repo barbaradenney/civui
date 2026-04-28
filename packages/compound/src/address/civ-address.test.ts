@@ -79,6 +79,7 @@ describe('civ-address', () => {
 
   it('renders state select with all US states and territories', async () => {
     const el = await fixture<CivAddress>('<civ-address legend="Address" name="addr"></civ-address>');
+    await elementUpdated(el);
 
     const select = el.querySelector('select')!;
     const options = select.querySelectorAll('option');

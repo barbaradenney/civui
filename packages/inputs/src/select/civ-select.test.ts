@@ -1,16 +1,27 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
 import './civ-select.js';
+import '@civui/core';
 
 afterEach(cleanupFixtures);
 
 describe('civ-select', () => {
-  it('renders with a label', async () => {
-    const el = await fixture('<civ-select label="State"></civ-select>');
+  it('renders label, hint, error when wrapped in civ-form-field', async () => {
+    const wrapper = await fixture(
+      '<civ-form-field label="State" hint="Your state of residence" error="Selection required"><civ-select></civ-select></civ-form-field>',
+    );
 
-    const label = el.querySelector('label');
+    const label = wrapper.querySelector('label');
     expect(label).not.toBeNull();
     expect(label!.textContent).toContain('State');
+
+    const spans = wrapper.querySelectorAll('span');
+    const hintSpan = Array.from(spans).find((s) => s.textContent === 'Your state of residence');
+    expect(hintSpan).not.toBeNull();
+
+    const errorEl = wrapper.querySelector('[role="alert"]');
+    expect(errorEl).not.toBeNull();
+    expect(errorEl!.textContent).toBe('Selection required');
   });
 
   it('renders a select element', async () => {
@@ -21,11 +32,15 @@ describe('civ-select', () => {
     expect(select!.name).toBe('state');
   });
 
-  it('associates label with select via for/id', async () => {
-    const el = await fixture('<civ-select label="State"></civ-select>');
+  it('associates form-field label with select via for/id', async () => {
+    const wrapper = await fixture(
+      '<civ-form-field label="State"><civ-select></civ-select></civ-form-field>',
+    );
+    const child = wrapper.querySelector('civ-select')!;
+    await elementUpdated(child);
 
-    const label = el.querySelector('label');
-    const select = el.querySelector('select');
+    const label = wrapper.querySelector('label');
+    const select = wrapper.querySelector('select');
     expect(label!.getAttribute('for')).toBe(select!.id);
   });
 
@@ -75,14 +90,6 @@ describe('civ-select', () => {
     expect(options[2].disabled).toBe(true);
   });
 
-  it('renders error message with alert role', async () => {
-    const el = await fixture('<civ-select label="State" error="Selection required"></civ-select>');
-
-    const errorEl = el.querySelector('[role="alert"]');
-    expect(errorEl).not.toBeNull();
-    expect(errorEl!.textContent).toBe('Selection required');
-  });
-
   it('sets aria-invalid when error is present', async () => {
     const el = await fixture('<civ-select label="State" error="Required"></civ-select>');
 
@@ -90,18 +97,12 @@ describe('civ-select', () => {
     expect(select!.getAttribute('aria-invalid')).toBe('true');
   });
 
-  it('renders hint text', async () => {
-    const el = await fixture('<civ-select label="State" hint="Your state of residence"></civ-select>');
+  it('shows required indicator when wrapped in form-field', async () => {
+    const wrapper = await fixture(
+      '<civ-form-field label="State" required><civ-select></civ-select></civ-form-field>',
+    );
 
-    const spans = el.querySelectorAll('span');
-    const hintSpan = Array.from(spans).find((s) => s.textContent === 'Your state of residence');
-    expect(hintSpan).not.toBeNull();
-  });
-
-  it('shows required indicator', async () => {
-    const el = await fixture('<civ-select label="State" required></civ-select>');
-
-    const requiredMark = el.querySelector('.civ-required-mark');
+    const requiredMark = wrapper.querySelector('.civ-required-mark');
     expect(requiredMark).not.toBeNull();
     expect(requiredMark!.textContent).toContain('required');
   });
@@ -285,18 +286,21 @@ describe('civ-select civ-input event', () => {
     expect(select!.hasAttribute('aria-required')).toBe(false);
   });
 
-  it('sets aria-describedby for hint and error', async () => {
-    const el = await fixture(
-      '<civ-select label="State" hint="Your state" error="Required"></civ-select>',
+  it('form-field wires aria-describedby for hint and error', async () => {
+    const wrapper = await fixture(
+      '<civ-form-field label="State" hint="Your state" error="Required"><civ-select></civ-select></civ-form-field>',
     );
+    const child = wrapper.querySelector('civ-select')!;
+    await elementUpdated(child);
+    await elementUpdated(wrapper);
 
-    const select = el.querySelector('select');
+    const select = wrapper.querySelector('select');
     const describedBy = select!.getAttribute('aria-describedby');
     expect(describedBy).toBeTruthy();
     const ids = describedBy!.split(' ');
     expect(ids.length).toBe(2);
     for (const id of ids) {
-      expect(el.querySelector(`#${id}`)).not.toBeNull();
+      expect(wrapper.querySelector(`#${id}`)).not.toBeNull();
     }
   });
 

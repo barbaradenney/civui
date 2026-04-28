@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivFormElement, debounce, dispatch, renderLabel, renderFormHeader, inputClasses, t, interpolate, validate } from '@civui/core';
+import { CivFormElement, debounce, dispatch, inputClasses, t, interpolate, validate } from '@civui/core';
 
 export type TextareaValidate = 'length' | '';
 
@@ -131,8 +131,6 @@ export class CivTextarea extends CivFormElement {
     const remaining = showCharCount ? this.maxlength! - this._charCount : 0;
 
     return html`
-      <div class="civ-mb-4">
-        ${renderFormHeader({ label: renderLabel({ label: this.label, inputId: this._inputId, required: this.required, showRequired: this.required && !this.hideRequiredIndicator }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error })}
         <textarea
           class="${classes}"
           id="${this._inputId}"
@@ -182,7 +180,6 @@ export class CivTextarea extends CivFormElement {
               </span>
             `
           : nothing}
-      </div>
     `;
   }
 

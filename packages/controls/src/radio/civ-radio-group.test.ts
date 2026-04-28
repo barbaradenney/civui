@@ -6,7 +6,7 @@ import './civ-radio-group.js';
 afterEach(cleanupFixtures);
 
 describe('civ-radio-group rendering', () => {
-  it('renders a fieldset with legend', async () => {
+  it('renders a layout container with role="radiogroup"', async () => {
     const el = await fixture(`
       <civ-radio-group legend="Favorite color" name="color">
         <civ-radio label="Red" value="red"></civ-radio>
@@ -14,47 +14,8 @@ describe('civ-radio-group rendering', () => {
       </civ-radio-group>
     `);
 
-    const fieldset = el.querySelector('fieldset');
-    expect(fieldset).not.toBeNull();
-    const legend = el.querySelector('legend');
-    expect(legend).not.toBeNull();
-    expect(legend!.textContent).toContain('Favorite color');
-  });
-
-  it('renders hint text', async () => {
-    const el = await fixture(`
-      <civ-radio-group legend="Color" name="color" hint="Pick your favorite">
-        <civ-radio label="Red" value="red"></civ-radio>
-      </civ-radio-group>
-    `);
-
-    const spans = el.querySelectorAll('span');
-    const hintSpan = Array.from(spans).find((s) => s.textContent === 'Pick your favorite');
-    expect(hintSpan).not.toBeNull();
-  });
-
-  it('renders error message with role="alert"', async () => {
-    const el = await fixture(`
-      <civ-radio-group legend="Color" name="color" error="Please select a color">
-        <civ-radio label="Red" value="red"></civ-radio>
-      </civ-radio-group>
-    `);
-
-    const errorEl = el.querySelector('[role="alert"]');
-    expect(errorEl).not.toBeNull();
-    expect(errorEl!.textContent).toBe('Please select a color');
-  });
-
-  it('shows required indicator text', async () => {
-    const el = await fixture(`
-      <civ-radio-group legend="Color" name="color" required>
-        <civ-radio label="Red" value="red"></civ-radio>
-      </civ-radio-group>
-    `);
-
-    const requiredMark = el.querySelector('.civ-required-mark');
-    expect(requiredMark).not.toBeNull();
-    expect(requiredMark!.textContent).toContain('required');
+    const group = el.querySelector('[role="radiogroup"]');
+    expect(group).not.toBeNull();
   });
 
   it('uses Light DOM (no shadow root)', async () => {
@@ -65,7 +26,6 @@ describe('civ-radio-group rendering', () => {
     `);
 
     expect(el.shadowRoot).toBeNull();
-    expect(el.querySelector('fieldset')).not.toBeNull();
   });
 });
 
@@ -77,8 +37,6 @@ describe('civ-radio-group accessibility', () => {
       </civ-radio-group>
     `);
 
-    const fieldset = el.querySelector('fieldset');
-    expect(fieldset!.getAttribute('role')).toBeNull();
     const group = el.querySelector('[role="radiogroup"]');
     expect(group).not.toBeNull();
     expect(group!.tagName).toBe('DIV');
@@ -517,15 +475,17 @@ describe('civ-radio-group form association', () => {
     }
   });
 
-  it('disables fieldset when disabled prop is set', async () => {
+  it('syncs disabled to children when disabled prop is set', async () => {
     const el = await fixture(`
       <civ-radio-group legend="Color" name="color" disabled>
         <civ-radio label="Red" value="red"></civ-radio>
       </civ-radio-group>
     `);
 
-    const fieldset = el.querySelector('fieldset') as HTMLFieldSetElement;
-    expect(fieldset.disabled).toBe(true);
+    const radios = el.querySelectorAll('civ-radio');
+    for (const radio of radios) {
+      expect((radio as any).disabled).toBe(true);
+    }
   });
 });
 
@@ -630,25 +590,22 @@ describe('civ-radio-group prefer-not-to-answer affordance', () => {
     expect(radios[1].checked).toBe(false);
   });
 
-  it('moves role=radiogroup off the fieldset when skip is present', async () => {
+  it('keeps role=radiogroup on the inner div when skip is present', async () => {
     const el = await fixture(`
       <civ-radio-group legend="X" name="x" skip-label="Prefer not to answer">
         <civ-radio label="A" value="a"></civ-radio>
       </civ-radio-group>
     `);
-    const fieldset = el.querySelector('fieldset')!;
-    expect(fieldset.getAttribute('role')).toBeNull();
     const innerGroup = el.querySelector('[role="radiogroup"]');
     expect(innerGroup).not.toBeNull();
     expect(innerGroup!.tagName.toLowerCase()).toBe('div');
   });
 
-  it('moves aria-describedby / aria-orientation / aria-invalid / aria-required with the role', async () => {
+  it('sets aria attributes on the radiogroup div when skip is present', async () => {
     const el = await fixture(`
       <civ-radio-group
         legend="X"
         name="x"
-        hint="Pick one"
         error="Required"
         orientation="horizontal"
         required
@@ -657,30 +614,10 @@ describe('civ-radio-group prefer-not-to-answer affordance', () => {
         <civ-radio label="A" value="a"></civ-radio>
       </civ-radio-group>
     `);
-    const fieldset = el.querySelector('fieldset')!;
-    expect(fieldset.getAttribute('aria-describedby')).toBeNull();
-    expect(fieldset.getAttribute('aria-orientation')).toBeNull();
-    expect(fieldset.getAttribute('aria-invalid')).toBeNull();
-    expect(fieldset.getAttribute('aria-required')).toBeNull();
 
     const innerGroup = el.querySelector('[role="radiogroup"]')!;
-    expect(innerGroup.getAttribute('aria-describedby')).toBeTruthy();
     expect(innerGroup.getAttribute('aria-orientation')).toBe('horizontal');
     expect(innerGroup.getAttribute('aria-invalid')).toBe('true');
     expect(innerGroup.getAttribute('aria-required')).toBe('true');
-  });
-
-  it('labels the inner radiogroup via aria-labelledby pointing to the legend id', async () => {
-    const el = await fixture(`
-      <civ-radio-group legend="Color" name="x" skip-label="Prefer not to answer">
-        <civ-radio label="A" value="a"></civ-radio>
-      </civ-radio-group>
-    `);
-    const legend = el.querySelector('legend')!;
-    expect(legend.id).toBeTruthy();
-    const innerGroup = el.querySelector('[role="radiogroup"]')!;
-    expect(innerGroup.getAttribute('aria-labelledby')).toBe(legend.id);
-    // Redundant aria-label must NOT be present — legend already labels the group
-    expect(innerGroup.getAttribute('aria-label')).toBeNull();
   });
 });

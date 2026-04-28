@@ -40,6 +40,7 @@ describe('civ-relationship', () => {
 
   it('uses general preset by default', async () => {
     const el = await fixture('<civ-relationship name="rel"></civ-relationship>');
+    await elementUpdated(el);
 
     const select = el.querySelector('[data-relationship-type]') as any;
     expect(select).not.toBeNull();
@@ -49,6 +50,7 @@ describe('civ-relationship', () => {
 
   it('switches to va-dependent preset', async () => {
     const el = await fixture('<civ-relationship name="rel" preset="va-dependent"></civ-relationship>');
+    await elementUpdated(el);
 
     const select = el.querySelector('[data-relationship-type]') as any;
     const values = select.options.map((o: any) => o.value);
@@ -59,6 +61,7 @@ describe('civ-relationship', () => {
 
   it('switches to va-survivor preset', async () => {
     const el = await fixture('<civ-relationship name="rel" preset="va-survivor"></civ-relationship>');
+    await elementUpdated(el);
 
     const select = el.querySelector('[data-relationship-type]') as any;
     const values = select.options.map((o: any) => o.value);
@@ -84,6 +87,7 @@ describe('civ-relationship', () => {
       { value: 'other', label: 'Other', category: 'other' },
     ];
     await elementUpdated(el);
+    await elementUpdated(el);
 
     const select = el.querySelector('[data-relationship-type]') as any;
     const labels = select.options.map((o: any) => o.label);
@@ -95,6 +99,7 @@ describe('civ-relationship', () => {
     el.options = [
       { value: 'custom', label: 'My Custom Label', labelKey: 'relationshipOther', category: 'none' },
     ];
+    await elementUpdated(el);
     await elementUpdated(el);
 
     const select = el.querySelector('[data-relationship-type]') as any;

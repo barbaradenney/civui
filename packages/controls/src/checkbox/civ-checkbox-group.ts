@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivFormElement, LightDomSlotMixin, dispatch, renderLegend, renderFormHeader, syncGroupDisabled, stopChildEvent, syncLegendToLabel, t, interpolate } from '@civui/core';
+import { CivFormElement, LightDomSlotMixin, dispatch, syncGroupDisabled, stopChildEvent, syncLegendToLabel, t, interpolate } from '@civui/core';
 import type { SlotConfig } from '@civui/core';
 import type { CivCheckbox } from './civ-checkbox.js';
 
@@ -58,10 +58,6 @@ export class CivCheckboxGroup extends LightDomSlotMixin(CivFormElement) {
    * `minSelections`. Used to drive both the legend asterisk and the
    * native validity check.
    */
-  private get _isEffectivelyRequired(): boolean {
-    return this.required || this._minSelections > 0;
-  }
-
   protected override _defaultValue = '';
   private _boundOnChildChange = this._onChildChange.bind(this);
   private _boundStopChildInput = stopChildEvent(this);
@@ -158,25 +154,7 @@ export class CivCheckboxGroup extends LightDomSlotMixin(CivFormElement) {
         ? 'civ-group-layout--horizontal'
         : 'civ-group-layout--vertical';
 
-    const minHint = this._minSelections > 0
-      ? interpolate(t('minSelectionsHint'), { min: this._minSelections })
-      : '';
-    const maxHint = this.maxSelections
-      ? interpolate(t('maxSelectionsHint'), { max: this.maxSelections })
-      : '';
-    const combinedHint = [this.hint, minHint, maxHint].filter(Boolean).join('. ');
-    const effectivelyRequired = this._isEffectivelyRequired;
-
     return html`
-      <fieldset
-        class="civ-fieldset"
-        aria-orientation="${this.orientation}"
-        aria-describedby="${this._ariaDescribedBy || nothing}"
-        aria-invalid="${this.error ? 'true' : nothing}"
-        aria-required="${effectivelyRequired || nothing}"
-        ?disabled="${this.disabled}"
-      >
-        ${renderFormHeader({ label: renderLegend({ legend: this.legend, required: effectivelyRequired }), hintId: this._hintId, hint: combinedHint, errorId: this._errorId, error: this.error, fieldset: true })}
         ${this.showSelectAll ? html`
           <civ-action-button
             variant="tertiary"
@@ -186,7 +164,6 @@ export class CivCheckboxGroup extends LightDomSlotMixin(CivFormElement) {
             class="civ-mb-2"
           ></civ-action-button>` : nothing}
         <div class="${layoutClass}"></div>
-      </fieldset>
     `;
   }
 

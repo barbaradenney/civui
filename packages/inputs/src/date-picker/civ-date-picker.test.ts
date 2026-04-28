@@ -1,15 +1,18 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
 import './civ-date-picker.js';
+import '@civui/core';
 
 afterEach(cleanupFixtures);
 
 describe('civ-date-picker', () => {
   describe('rendering', () => {
-    it('renders with a label', async () => {
-      const el = await fixture('<civ-date-picker label="Appointment date"></civ-date-picker>');
+    it('renders label when wrapped in civ-form-field', async () => {
+      const wrapper = await fixture(
+        '<civ-form-field label="Appointment date"><civ-date-picker></civ-date-picker></civ-form-field>',
+      );
 
-      const label = el.querySelector('label');
+      const label = wrapper.querySelector('label');
       expect(label).not.toBeNull();
       expect(label!.textContent).toContain('Appointment date');
     });
@@ -28,11 +31,15 @@ describe('civ-date-picker', () => {
       expect(button).not.toBeNull();
     });
 
-    it('associates label with input', async () => {
-      const el = await fixture('<civ-date-picker label="Date"></civ-date-picker>');
+    it('associates form-field label with input', async () => {
+      const wrapper = await fixture(
+        '<civ-form-field label="Date"><civ-date-picker></civ-date-picker></civ-form-field>',
+      );
+      const child = wrapper.querySelector('civ-date-picker')!;
+      await elementUpdated(child);
 
-      const label = el.querySelector('label');
-      const input = el.querySelector('input');
+      const label = wrapper.querySelector('label');
+      const input = wrapper.querySelector('input');
       expect(label!.getAttribute('for')).toBe(input!.id);
     });
 
@@ -49,25 +56,25 @@ describe('civ-date-picker', () => {
   });
 
   describe('states', () => {
-    it('shows required indicator', async () => {
-      const el = await fixture('<civ-date-picker label="Date" required></civ-date-picker>');
+    it('shows required indicator when wrapped in form-field', async () => {
+      const wrapper = await fixture(
+        '<civ-form-field label="Date" required><civ-date-picker></civ-date-picker></civ-form-field>',
+      );
 
-      const requiredMark = el.querySelector('.civ-required-mark');
+      const requiredMark = wrapper.querySelector('.civ-required-mark');
       expect(requiredMark).not.toBeNull();
     });
 
-    it('renders hint text', async () => {
-      const el = await fixture('<civ-date-picker label="Date" hint="Select a date"></civ-date-picker>');
+    it('renders hint and error when wrapped in form-field', async () => {
+      const wrapper = await fixture(
+        '<civ-form-field label="Date" hint="Select a date" error="Date is required"><civ-date-picker></civ-date-picker></civ-form-field>',
+      );
 
-      const hint = el.querySelector('span');
+      const hint = wrapper.querySelector('span');
       expect(hint).not.toBeNull();
       expect(hint!.textContent).toBe('Select a date');
-    });
 
-    it('renders error with alert role', async () => {
-      const el = await fixture('<civ-date-picker label="Date" error="Date is required"></civ-date-picker>');
-
-      const errorEl = el.querySelector('[role="alert"]');
+      const errorEl = wrapper.querySelector('[role="alert"]');
       expect(errorEl).not.toBeNull();
       expect(errorEl!.textContent).toBe('Date is required');
     });

@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivFormElement, dispatch, renderGroupLabel, renderFormHeader, buildDescribedBy, resolveGroupNavIndex, isRtl } from '@civui/core';
+import { CivFormElement, dispatch, buildDescribedBy, resolveGroupNavIndex, isRtl } from '@civui/core';
 
 /**
  * CivUI Yes/No
@@ -47,9 +47,6 @@ export class CivYesNo extends CivFormElement {
   /** Form value used when the skip affordance is selected. */
   @property({ type: String, attribute: 'skip-value' }) skipValue = 'skip';
 
-  /** Legend ID — referenced by the inner radiogroup's `aria-labelledby`. */
-  private _labelId = this.generateId('yes-no-label');
-
   protected override _defaultValue = '';
   private _boundOnKeydown = this._onKeydown.bind(this);
 
@@ -85,16 +82,9 @@ export class CivYesNo extends CivFormElement {
     // the radio choices inside the fieldset without becoming part of the
     // mutually-exclusive group.
     return html`
-      <div
-        role="group"
-        class="civ-fieldset"
-        aria-labelledby="${this.label ? this._labelId : nothing}"
-      >
-        ${renderFormHeader({ label: renderGroupLabel({ label: this.label, labelId: this._labelId, required: this.required }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error })}
         <div
           class="civ-flex civ-gap-2"
           role="radiogroup"
-          aria-labelledby="${this.label ? this._labelId : nothing}"
           aria-describedby="${describedBy || nothing}"
           aria-invalid="${this.error ? 'true' : nothing}"
           aria-required="${this.required || nothing}"
@@ -144,7 +134,6 @@ export class CivYesNo extends CivFormElement {
               >${this.skipLabel}</button>
             `
           : nothing}
-      </div>
     `;
   }
 

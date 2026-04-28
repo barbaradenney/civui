@@ -6,7 +6,7 @@ import './civ-checkbox-group.js';
 afterEach(cleanupFixtures);
 
 describe('civ-checkbox-group rendering', () => {
-  it('renders a fieldset with legend', async () => {
+  it('renders a layout container', async () => {
     const el = await fixture(`
       <civ-checkbox-group legend="Toppings" name="toppings">
         <civ-checkbox label="Cheese" value="cheese"></civ-checkbox>
@@ -14,47 +14,8 @@ describe('civ-checkbox-group rendering', () => {
       </civ-checkbox-group>
     `);
 
-    const fieldset = el.querySelector('fieldset');
-    expect(fieldset).not.toBeNull();
-    const legend = el.querySelector('legend');
-    expect(legend).not.toBeNull();
-    expect(legend!.textContent).toContain('Toppings');
-  });
-
-  it('renders hint text', async () => {
-    const el = await fixture(`
-      <civ-checkbox-group legend="Toppings" hint="Select all that apply">
-        <civ-checkbox label="Cheese" value="cheese"></civ-checkbox>
-      </civ-checkbox-group>
-    `);
-
-    const spans = el.querySelectorAll('span');
-    const hintSpan = Array.from(spans).find((s) => s.textContent === 'Select all that apply');
-    expect(hintSpan).not.toBeNull();
-  });
-
-  it('renders error message with role="alert"', async () => {
-    const el = await fixture(`
-      <civ-checkbox-group legend="Toppings" error="Select at least one topping">
-        <civ-checkbox label="Cheese" value="cheese"></civ-checkbox>
-      </civ-checkbox-group>
-    `);
-
-    const errorEl = el.querySelector('[role="alert"]');
-    expect(errorEl).not.toBeNull();
-    expect(errorEl!.textContent).toBe('Select at least one topping');
-  });
-
-  it('shows required indicator text', async () => {
-    const el = await fixture(`
-      <civ-checkbox-group legend="Toppings" required>
-        <civ-checkbox label="Cheese" value="cheese"></civ-checkbox>
-      </civ-checkbox-group>
-    `);
-
-    const requiredMark = el.querySelector('.civ-required-mark');
-    expect(requiredMark).not.toBeNull();
-    expect(requiredMark!.textContent).toContain('required');
+    const layout = el.querySelector('.civ-group-layout--vertical');
+    expect(layout).not.toBeNull();
   });
 
   it('uses Light DOM (no shadow root)', async () => {
@@ -65,71 +26,10 @@ describe('civ-checkbox-group rendering', () => {
     `);
 
     expect(el.shadowRoot).toBeNull();
-    expect(el.querySelector('fieldset')).not.toBeNull();
-  });
-
-  it('renders legend (not label) for the group', async () => {
-    const el = await fixture(`
-      <civ-checkbox-group legend="Toppings">
-        <civ-checkbox label="Cheese" value="cheese"></civ-checkbox>
-      </civ-checkbox-group>
-    `);
-
-    const legend = el.querySelector('legend');
-    expect(legend).not.toBeNull();
-    // Should not render a top-level label element for the group
-    const labels = Array.from(el.querySelectorAll('label'));
-    const groupLabel = labels.find((l) => l.textContent?.includes('Toppings'));
-    // Legend is the group label, not a <label> element
-    expect(legend!.textContent).toContain('Toppings');
   });
 });
 
 describe('civ-checkbox-group accessibility', () => {
-  it('sets aria-invalid on fieldset when error is present', async () => {
-    const el = await fixture(`
-      <civ-checkbox-group legend="Toppings" error="Required">
-        <civ-checkbox label="Cheese" value="cheese"></civ-checkbox>
-      </civ-checkbox-group>
-    `);
-
-    const fieldset = el.querySelector('fieldset');
-    expect(fieldset!.getAttribute('aria-invalid')).toBe('true');
-  });
-
-  it('omits aria-invalid on fieldset when no error', async () => {
-    const el = await fixture(`
-      <civ-checkbox-group legend="Toppings">
-        <civ-checkbox label="Cheese" value="cheese"></civ-checkbox>
-      </civ-checkbox-group>
-    `);
-
-    const fieldset = el.querySelector('fieldset');
-    expect(fieldset!.getAttribute('aria-invalid')).toBeNull();
-  });
-
-  it('sets aria-required on fieldset when required', async () => {
-    const el = await fixture(`
-      <civ-checkbox-group legend="Toppings" required>
-        <civ-checkbox label="Cheese" value="cheese"></civ-checkbox>
-      </civ-checkbox-group>
-    `);
-
-    const fieldset = el.querySelector('fieldset');
-    expect(fieldset!.getAttribute('aria-required')).toBe('true');
-  });
-
-  it('omits aria-required on fieldset when not required', async () => {
-    const el = await fixture(`
-      <civ-checkbox-group legend="Toppings">
-        <civ-checkbox label="Cheese" value="cheese"></civ-checkbox>
-      </civ-checkbox-group>
-    `);
-
-    const fieldset = el.querySelector('fieldset');
-    expect(fieldset!.hasAttribute('aria-required')).toBe(false);
-  });
-
   it('applies focus-visible:civ-focus-ring on child checkbox inputs', async () => {
     const el = await fixture(`
       <civ-checkbox-group legend="Toppings" name="toppings">
@@ -256,15 +156,17 @@ describe('civ-checkbox-group form association', () => {
     expect(Ctor.formAssociated).toBe(true);
   });
 
-  it('disables fieldset when disabled prop is set', async () => {
+  it('syncs disabled to children when disabled prop is set', async () => {
     const el = await fixture(`
       <civ-checkbox-group legend="Toppings" disabled>
         <civ-checkbox label="Cheese" value="cheese"></civ-checkbox>
       </civ-checkbox-group>
     `);
 
-    const fieldset = el.querySelector('fieldset') as HTMLFieldSetElement;
-    expect(fieldset.disabled).toBe(true);
+    const checkboxes = el.querySelectorAll('civ-checkbox');
+    checkboxes.forEach((cb: any) => {
+      expect(cb.disabled).toBe(true);
+    });
   });
 
   it('cascades disabled via formDisabledCallback', async () => {
@@ -424,42 +326,6 @@ describe('civ-checkbox-group analytics', () => {
 
 describe('civ-checkbox-group minSelections', () => {
   afterEach(cleanupFixtures);
-
-  it('appends "Select at least N" to the rendered hint', async () => {
-    const el = await fixture(`
-      <civ-checkbox-group legend="Toppings" name="t" min-selections="2">
-        <civ-checkbox label="A" value="a"></civ-checkbox>
-        <civ-checkbox label="B" value="b"></civ-checkbox>
-        <civ-checkbox label="C" value="c"></civ-checkbox>
-      </civ-checkbox-group>
-    `);
-    await elementUpdated(el);
-    const hint = el.querySelector('[id*="hint"]')!;
-    expect(hint.textContent).toContain('Select at least 2');
-  });
-
-  it('combines min and max hints in one sentence chain', async () => {
-    const el = await fixture(`
-      <civ-checkbox-group legend="Toppings" hint="Pick toppings" name="t" min-selections="1" max-selections="3">
-        <civ-checkbox label="A" value="a"></civ-checkbox>
-      </civ-checkbox-group>
-    `);
-    await elementUpdated(el);
-    const hint = el.querySelector('[id*="hint"]')!;
-    expect(hint.textContent).toContain('Pick toppings');
-    expect(hint.textContent).toContain('Select at least 1');
-    expect(hint.textContent).toContain('Select up to 3');
-  });
-
-  it('shows the required mark on the legend when min-selections > 0', async () => {
-    const el = await fixture(`
-      <civ-checkbox-group legend="Toppings" name="t" min-selections="1">
-        <civ-checkbox label="A" value="a"></civ-checkbox>
-      </civ-checkbox-group>
-    `);
-    await elementUpdated(el);
-    expect(el.querySelector('.civ-required-mark')).not.toBeNull();
-  });
 
   it('reports invalid when checked count is below the minimum', async () => {
     const el = await fixture(`

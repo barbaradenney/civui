@@ -4,8 +4,6 @@ import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import {
   CivFormElement,
-  renderLabel,
-  renderFormHeader,
   inputClasses,
   inputWidthClass,
   MASK_PRESETS,
@@ -213,6 +211,10 @@ export class CivTextInput extends CivFormElement {
 
   override firstUpdated(): void {
     super.firstUpdated();
+    // Auto-populate hint from mask preset when no explicit hint is set
+    const maskDef = this._maskDef;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if (!this.hint && maskDef?.hintKey) this.hint = t(maskDef.hintKey as any);
     if (this._activePattern && this.value) {
       this.value = processRawInput(stripMask(this.value, this._activePattern), this._activePattern);
       this._defaultValue = this.value;
@@ -284,10 +286,6 @@ export class CivTextInput extends CivFormElement {
     const effectiveInputmode = (maskDef?.inputmode && this.type === 'text')
       ? maskDef.inputmode
       : this.inputmode;
-
-    // Determine effective hint: explicit hint > preset hint > nothing
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const effectiveHint = this.hint || (maskDef?.hintKey ? t(maskDef.hintKey as any) : '');
 
     // Determine maxlength:
     // - Currency: no maxlength (variable length)
@@ -406,25 +404,22 @@ export class CivTextInput extends CivFormElement {
     const remaining = showCharCount ? this.maxlength! - (this.value?.length ?? 0) : 0;
 
     return html`
-      <div class="civ-mb-4">
-        ${renderFormHeader({ label: renderLabel({ label: this.label, inputId: this._inputId, required: this.required, showRequired: this.required && !this.hideRequiredIndicator }), hintId: this._hintId, hint: effectiveHint, errorId: this._errorId, error: this.error })}
-        ${wrappedInput}
-        ${showCharCount
-          ? html`
-              <span
-                id="${this._charCountId}"
-                class="civ-block civ-mt-0.5 civ-text-sm ${remaining < 0
-                  ? 'civ-text-error civ-font-bold'
-                  : 'civ-text-muted'}"
-              >
-                ${interpolate(t('inputCharsRemaining'), { count: remaining })}
-              </span>
-              <span class="civ-sr-only" aria-live="polite">
-                ${interpolate(t('inputCharsRemaining'), { count: this.maxlength! - this._announcedCharCount })}
-              </span>
-            `
-          : nothing}
-      </div>
+      ${wrappedInput}
+      ${showCharCount
+        ? html`
+            <span
+              id="${this._charCountId}"
+              class="civ-block civ-mt-0.5 civ-text-sm ${remaining < 0
+                ? 'civ-text-error civ-font-bold'
+                : 'civ-text-muted'}"
+            >
+              ${interpolate(t('inputCharsRemaining'), { count: remaining })}
+            </span>
+            <span class="civ-sr-only" aria-live="polite">
+              ${interpolate(t('inputCharsRemaining'), { count: this.maxlength! - this._announcedCharCount })}
+            </span>
+          `
+        : nothing}
     `;
   }
 

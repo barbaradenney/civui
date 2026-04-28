@@ -1,5 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/web-components';
+import { html } from 'lit';
+import '@civui/core';
 import './civ-combobox.js';
+import '../country/civ-country.js';
 
 const STATES = [
   { value: 'AL', label: 'Alabama' },
@@ -360,4 +363,24 @@ export const AsyncError: Story = {
     };
     return el;
   },
+};
+
+// ── Country Preset ──────────────────────────────────────────────
+
+export const Country: Story = {
+  name: 'Preset: Country',
+  render: () => html`
+    <civ-form-field label="Country" required>
+      <civ-country name="country" required></civ-country>
+    </civ-form-field>
+  `,
+};
+
+export const CountryOfBirth: Story = {
+  name: 'Preset: Country of Birth',
+  render: () => html`
+    <civ-form-field label="Country of birth" required>
+      <civ-country name="birthCountry" label="Country of birth" required></civ-country>
+    </civ-form-field>
+  `,
 };

@@ -2,6 +2,14 @@ import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import '@civui/core';
 import './civ-text-input.js';
+import '../ssn/civ-ssn.js';
+import '../ein/civ-ein.js';
+import '../zip/civ-zip.js';
+import '../phone/civ-phone.js';
+import '../email/civ-email.js';
+import '../currency/civ-currency.js';
+import '../routing-number/civ-routing-number.js';
+import '../va-file-number/civ-va-file-number.js';
 import '@civui/actions';
 
 const meta: Meta = {
@@ -302,5 +310,140 @@ export const Suffix: Story = {
     <civ-form-field label="Weight">
       <civ-text-input name="weight" suffix="lbs" inputmode="decimal" width="sm"></civ-text-input>
     </civ-form-field>
+  `,
+};
+
+// ── Specialized Presets ─────────────────────────────────────────
+// Pre-configured text inputs for common government form fields.
+// Each provides default label, hint, mask, validation, and inputmode.
+
+export const SSN: Story = {
+  name: 'Preset: Social Security Number',
+  render: () => html`
+    <civ-form-field label="Social Security number" required>
+      <civ-ssn name="ssn" required></civ-ssn>
+    </civ-form-field>
+  `,
+};
+
+export const SSNLast4: Story = {
+  name: 'Preset: SSN (Last 4)',
+  render: () => html`
+    <civ-form-field label="Last 4 digits of Social Security number" required>
+      <civ-ssn name="ssn" mode="last4" required></civ-ssn>
+    </civ-form-field>
+  `,
+};
+
+export const EIN: Story = {
+  name: 'Preset: Employer ID Number',
+  render: () => html`
+    <civ-form-field label="Employer Identification Number" required>
+      <civ-ein name="ein" required></civ-ein>
+    </civ-form-field>
+  `,
+};
+
+export const ZIPCode: Story = {
+  name: 'Preset: ZIP Code',
+  render: () => html`
+    <civ-form-field label="ZIP code" required>
+      <civ-zip name="zip" required></civ-zip>
+    </civ-form-field>
+  `,
+};
+
+export const ZIPPlus4: Story = {
+  name: 'Preset: ZIP+4',
+  render: () => html`
+    <civ-form-field label="ZIP+4 code">
+      <civ-zip name="zip" extended></civ-zip>
+    </civ-form-field>
+  `,
+};
+
+export const PhoneUS: Story = {
+  name: 'Preset: Phone (US)',
+  render: () => html`
+    <civ-form-field label="Phone number" required>
+      <civ-phone name="phone" required></civ-phone>
+    </civ-form-field>
+  `,
+};
+
+export const PhoneInternational: Story = {
+  name: 'Preset: Phone (International)',
+  render: () => html`
+    <civ-form-field label="Phone number">
+      <civ-phone name="phone" international></civ-phone>
+    </civ-form-field>
+  `,
+};
+
+export const Email: Story = {
+  name: 'Preset: Email',
+  render: () => html`
+    <civ-form-field label="Email address" required>
+      <civ-email name="email" required></civ-email>
+    </civ-form-field>
+  `,
+};
+
+export const Currency: Story = {
+  name: 'Preset: Currency',
+  render: () => html`
+    <civ-form-field label="Annual income">
+      <civ-currency name="income"></civ-currency>
+    </civ-form-field>
+  `,
+};
+
+export const RoutingNumber: Story = {
+  name: 'Preset: Routing Number',
+  render: () => html`
+    <civ-form-field label="Routing number" required>
+      <civ-routing-number name="routing" required></civ-routing-number>
+    </civ-form-field>
+  `,
+};
+
+export const VAFileNumber: Story = {
+  name: 'Preset: VA File Number',
+  render: () => html`
+    <civ-form-field label="VA file number">
+      <civ-va-file-number name="vaFileNumber"></civ-va-file-number>
+    </civ-form-field>
+  `,
+};
+
+export const AllPresets: Story = {
+  name: 'All Presets',
+  render: () => html`
+    <div class="civ-flex civ-flex-col civ-gap-2" style="max-width: 480px;">
+      <civ-form-field label="Social Security number">
+        <civ-ssn name="ssn"></civ-ssn>
+      </civ-form-field>
+      <civ-form-field label="Employer ID Number">
+        <civ-ein name="ein"></civ-ein>
+      </civ-form-field>
+      <civ-form-field label="ZIP code">
+        <civ-zip name="zip"></civ-zip>
+      </civ-form-field>
+      <civ-form-field label="Phone number">
+        <civ-phone name="phone"></civ-phone>
+      </civ-form-field>
+      <civ-form-field label="Email address">
+        <civ-email name="email"></civ-email>
+      </civ-form-field>
+      <civ-form-field label="Annual income">
+        <civ-currency name="income"></civ-currency>
+      </civ-form-field>
+      <civ-form-field label="Routing number">
+        <civ-routing-number name="routing"></civ-routing-number>
+      </civ-form-field>
+      <civ-form-field label="VA file number">
+        <civ-va-file-number name="vaFileNumber"></civ-va-file-number>
+      </civ-form-field>
+    </div>
   `,
 };

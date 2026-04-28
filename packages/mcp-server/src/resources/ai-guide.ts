@@ -17,7 +17,7 @@ For architecture and internals, see \`CLAUDE.md\` in the repo root.
 |-----|----------|-----------|--------------|
 | \`<civ-text-input>\` | Input | \`type\`, \`width\`, \`placeholder\`, \`maxlength\`, \`pattern\`, \`autocomplete\`, \`inputmode\` | \`{ value }\` |
 | \`<civ-textarea>\` | Input | \`rows\`, \`maxlength\`, \`placeholder\` | \`{ value }\` |
-| \`<civ-select>\` | Input | \`options\`, \`emptyLabel\` | \`{ value }\` |
+| \`<civ-select>\` | Input | \`options\`, \`emptyLabel\`, \`preset\` | \`{ value }\` |
 | \`<civ-combobox>\` | Input | \`options\`, \`placeholder\`, \`noResultsText\` | \`civ-input: { value }\`, \`civ-change: { value, label }\` |
 | \`<civ-checkbox>\` | Choice | \`checked\`, \`indeterminate\`, \`description\`, \`tile\` | \`{ checked, value }\` |
 | \`<civ-checkbox-group>\` | Group | \`legend\`, \`tile\`, \`orientation\` | \`{ values: string[] }\` |
@@ -30,6 +30,8 @@ For architecture and internals, see \`CLAUDE.md\` in the repo root.
 | \`<civ-memorable-date>\` | Date | \`legend\`, \`monthLabel\`, \`dayLabel\`, \`yearLabel\`, \`locale\` | \`{ value, month, day, year }\` |
 | \`<civ-date-input>\` | Date | \`min\`, \`max\` | \`{ value }\` — **DEPRECATED** |
 | \`<civ-file-upload>\` | File | \`accept\`, \`multiple\`, \`maxSize\`, \`maxFiles\` | \`{ files: File[] }\` |
+| \`<civ-form-field>\` | Wrapper | \`label\`, \`hint\`, \`error\`, \`required\`, \`touched\` | — |
+| \`<civ-form-fieldset>\` | Wrapper | \`legend\`, \`hint\`, \`error\`, \`required\`, \`touched\` | — |
 | \`<civ-fieldset>\` | Layout | \`legend\`, \`hint\`, \`error\`, \`required\`, \`disabled\` | — |
 | \`<civ-form>\` | Layout | \`action\`, \`method\` | \`civ-submit: { formData }\`, \`civ-invalid: { errors }\` |
 | \`<civ-button>\` | Action | \`variant\` (primary/secondary/tertiary), \`danger\`, \`type\`, \`disabled\` | \`civ-analytics\` |
@@ -46,9 +48,11 @@ For architecture and internals, see \`CLAUDE.md\` in the repo root.
 | \`<civ-progress-steps>\` | Feedback | \`steps\` (JSON), \`current\`, \`show-counter\`, \`clickable\`, \`orientation\` | \`civ-step-click\` |
 | \`<civ-form-step>\` | Form | \`persist\`, \`show-progress\`, \`show-counter\`, \`continue-label\`, \`back-label\`, \`complete-label\` | \`civ-step-complete\`, \`civ-wizard-step\` |
 
-**All form-participating components** also have: \`label\`, \`name\`, \`value\`, \`hint\`, \`error\`, \`required\`, \`disabled\`, \`requiredMessage\`, \`hide-required-indicator\`.
+**All form-participating components** also have: \`name\`, \`value\`, \`required\`, \`disabled\`.
 
-**Group components** (\`checkbox-group\`, \`radio-group\`, \`memorable-date\`, \`segmented-control\`) use \`legend\` instead of \`label\`.
+**Wrapper pattern:** Most input components should be wrapped in \`<civ-form-field>\` (single-value) or \`<civ-form-fieldset>\` (group) which provide \`label\`/\`legend\`, \`hint\`, \`error\`, \`required\`, \`requiredMessage\`, and \`touched\` tracking. Self-contained components (\`civ-address\`, \`civ-name\`, \`civ-signature\`, \`civ-checkbox\`, \`civ-toggle\`) render their own label and do not need wrapping.
+
+**Group components** (\`checkbox-group\`, \`radio-group\`, \`memorable-date\`, \`segmented-control\`) use \`<civ-form-fieldset legend="...">\` instead of \`<civ-form-field label="...">\`.
 
 ---
 
@@ -69,14 +73,9 @@ Standard text input supporting multiple HTML input types.
 
 **Example:**
 \`\`\`html
-<civ-text-input
-  label="Email address"
-  name="email"
-  type="email"
-  hint="We'll use this to send your confirmation"
-  required
-  autocomplete="email"
-></civ-text-input>
+<civ-form-field label="Email address" hint="We'll use this to send your confirmation" required>
+  <civ-text-input name="email" type="email" required autocomplete="email"></civ-text-input>
+</civ-form-field>
 \`\`\`
 
 ---
@@ -92,43 +91,45 @@ Multi-line text input. Shows character count when \`maxlength\` is set.
 
 **Example:**
 \`\`\`html
-<civ-textarea
-  label="Describe your issue"
-  name="description"
-  hint="Include any relevant details"
-  rows="8"
-  maxlength="2000"
-  required
-></civ-textarea>
+<civ-form-field label="Describe your issue" hint="Include any relevant details" required>
+  <civ-textarea name="description" rows="8" maxlength="2000" required></civ-textarea>
+</civ-form-field>
 \`\`\`
 
 ---
 
 ### civ-select
 
-Dropdown select. Populate via \`options\` property or slotted \`<option>\` elements.
+Dropdown select. Populate via \`options\` property, slotted \`<option>\` elements, or the \`preset\` attribute.
 
 **Props (beyond standard):**
 - \`options\` — \`Array<{ value: string, label: string, disabled?: boolean }>\`
 - \`emptyLabel\` — placeholder option text (default: \`'- Select -'\`)
+- \`preset\` — pre-built option list: \`'us-state'\`, \`'us-territory'\`, \`'country'\`, \`'service-branch'\`, \`'suffix'\`, \`'month'\`
 
 **Example (property-driven):**
 \`\`\`html
-<civ-select
-  label="State"
-  name="state"
-  hint="Select your state of residence"
-  required
-  .options="\${[
-    { value: 'CA', label: 'California' },
-    { value: 'NY', label: 'New York' },
-    { value: 'TX', label: 'Texas' }
-  ]}"
-></civ-select>
+<civ-form-field label="State" hint="Select your state of residence" required>
+  <civ-select name="state" required
+    .options="\${[
+      { value: 'CA', label: 'California' },
+      { value: 'NY', label: 'New York' },
+      { value: 'TX', label: 'Texas' }
+    ]}"
+  ></civ-select>
+</civ-form-field>
+\`\`\`
+
+**Example (preset):**
+\`\`\`html
+<civ-form-field label="State" required>
+  <civ-select name="state" preset="us-state" required></civ-select>
+</civ-form-field>
 \`\`\`
 
 > Note: \`.options="\${...}"\` uses Lit property binding syntax. In plain HTML (non-template),
-> set options via JavaScript: \`el.options = [...]\`.
+> set options via JavaScript: \`el.options = [...]\`. The \`preset\` attribute replaces the
+> former \`civ-us-state\`, \`civ-service-branch\`, and other data-list components.
 
 ---
 
@@ -147,17 +148,15 @@ Searchable dropdown with type-ahead filtering.
 
 **Example:**
 \`\`\`html
-<civ-combobox
-  label="Agency"
-  name="agency"
-  hint="Search by name or acronym"
-  placeholder="Start typing..."
-  .options="\${[
-    { value: 'doj', label: 'Department of Justice' },
-    { value: 'doe', label: 'Department of Energy' },
-    { value: 'dod', label: 'Department of Defense' }
-  ]}"
-></civ-combobox>
+<civ-form-field label="Agency" hint="Search by name or acronym">
+  <civ-combobox name="agency" placeholder="Start typing..."
+    .options="\${[
+      { value: 'doj', label: 'Department of Justice' },
+      { value: 'doe', label: 'Department of Energy' },
+      { value: 'dod', label: 'Department of Defense' }
+    ]}"
+  ></civ-combobox>
+</civ-form-field>
 \`\`\`
 
 **Keyboard:** ArrowDown/Up navigate, Enter selects, Escape closes.
@@ -204,15 +203,13 @@ Groups multiple checkboxes. Uses \`legend\` (not \`label\`). Multi-value.
 
 **Example:**
 \`\`\`html
-<civ-checkbox-group
-  legend="Select all that apply"
-  name="interests"
-  required
->
-  <civ-checkbox label="Education" value="education"></civ-checkbox>
-  <civ-checkbox label="Healthcare" value="healthcare"></civ-checkbox>
-  <civ-checkbox label="Transportation" value="transportation"></civ-checkbox>
-</civ-checkbox-group>
+<civ-form-fieldset legend="Select all that apply" required>
+  <civ-checkbox-group name="interests" required>
+    <civ-checkbox label="Education" value="education"></civ-checkbox>
+    <civ-checkbox label="Healthcare" value="healthcare"></civ-checkbox>
+    <civ-checkbox label="Transportation" value="transportation"></civ-checkbox>
+  </civ-checkbox-group>
+</civ-form-fieldset>
 \`\`\`
 
 > Note: Individual checkbox values must not contain commas (used internally as delimiter).
@@ -236,15 +233,13 @@ Mutually exclusive choice group. \`civ-radio\` is always used inside \`civ-radio
 
 **Example:**
 \`\`\`html
-<civ-radio-group
-  legend="Preferred contact method"
-  name="contact"
-  required
->
-  <civ-radio label="Email" value="email"></civ-radio>
-  <civ-radio label="Phone" value="phone"></civ-radio>
-  <civ-radio label="Mail" value="mail" description="Physical mail to your address on file"></civ-radio>
-</civ-radio-group>
+<civ-form-fieldset legend="Preferred contact method" required>
+  <civ-radio-group name="contact" required>
+    <civ-radio label="Email" value="email"></civ-radio>
+    <civ-radio label="Phone" value="phone"></civ-radio>
+    <civ-radio label="Mail" value="mail" description="Physical mail to your address on file"></civ-radio>
+  </civ-radio-group>
+</civ-form-fieldset>
 \`\`\`
 
 ---
@@ -285,14 +280,13 @@ Button-style radio group for mutually exclusive UI options.
 
 **Example:**
 \`\`\`html
-<civ-segmented-control
-  legend="View mode"
-  name="view"
->
-  <civ-segment label="List" value="list"></civ-segment>
-  <civ-segment label="Grid" value="grid"></civ-segment>
-  <civ-segment label="Map" value="map"></civ-segment>
-</civ-segmented-control>
+<civ-form-fieldset legend="View mode">
+  <civ-segmented-control name="view">
+    <civ-segment label="List" value="list"></civ-segment>
+    <civ-segment label="Grid" value="grid"></civ-segment>
+    <civ-segment label="Map" value="map"></civ-segment>
+  </civ-segmented-control>
+</civ-form-fieldset>
 \`\`\`
 
 ---
@@ -315,14 +309,9 @@ Calendar dialog with text input. Preferred for appointment/scheduling dates.
 
 **Example:**
 \`\`\`html
-<civ-date-picker
-  label="Appointment date"
-  name="appointment"
-  hint="Select an available date"
-  min="2026-01-01"
-  max="2026-12-31"
-  required
-></civ-date-picker>
+<civ-form-field label="Appointment date" hint="Select an available date" required>
+  <civ-date-picker name="appointment" min="2026-01-01" max="2026-12-31" required></civ-date-picker>
+</civ-form-field>
 \`\`\`
 
 ---
@@ -346,12 +335,9 @@ Three-field date entry (Month select + Day input + Year input). Preferred for kn
 
 **Example:**
 \`\`\`html
-<civ-memorable-date
-  label="Date of birth"
-  name="dob"
-  hint="For example: January 15 1990"
-  required
-></civ-memorable-date>
+<civ-form-fieldset legend="Date of birth" hint="For example: January 15 1990" required>
+  <civ-memorable-date name="dob" required></civ-memorable-date>
+</civ-form-fieldset>
 \`\`\`
 
 ---
@@ -378,16 +364,46 @@ Drag-and-drop file upload with validation.
 
 **Example:**
 \`\`\`html
-<civ-file-upload
-  label="Supporting documents"
-  name="documents"
-  hint="Upload PDF or image files"
-  accept=".pdf,.jpg,.png,image/*"
-  multiple
-  max-size="5242880"
-  max-files="5"
-  required
-></civ-file-upload>
+<civ-form-field label="Supporting documents" hint="Upload PDF or image files" required>
+  <civ-file-upload name="documents" accept=".pdf,.jpg,.png,image/*" multiple max-size="5242880" max-files="5" required></civ-file-upload>
+</civ-form-field>
+\`\`\`
+
+---
+
+### civ-form-field
+
+Wrapper for single-value form inputs. Renders label, hint, error, and required indicator around a slotted input component. Tracks per-field \`touched\` state (set to true after the first \`civ-change\` event from the child).
+
+**Props:** \`label\`, \`hint\`, \`error\`, \`required\`, \`requiredMessage\`, \`hide-required-indicator\`, \`touched\`
+
+**Example:**
+\`\`\`html
+<civ-form-field label="Email address" hint="We'll send confirmation here" required
+  required-message="Enter your email address">
+  <civ-text-input name="email" type="email" required autocomplete="email"></civ-text-input>
+</civ-form-field>
+\`\`\`
+
+**Self-contained components that do NOT need \`civ-form-field\`:** \`civ-address\`, \`civ-name\`, \`civ-signature\`, \`civ-checkbox\` (standalone), \`civ-toggle\`. These render their own label internally.
+
+---
+
+### civ-form-fieldset
+
+Wrapper for group components (radio groups, checkbox groups, memorable dates, segmented controls). Renders legend, hint, error, and required indicator. Tracks per-field \`touched\` state.
+
+**Props:** \`legend\`, \`hint\`, \`error\`, \`required\`, \`requiredMessage\`, \`hide-required-indicator\`, \`touched\`
+
+**Example:**
+\`\`\`html
+<civ-form-fieldset legend="Preferred contact method" required>
+  <civ-radio-group name="contact" required>
+    <civ-radio label="Email" value="email"></civ-radio>
+    <civ-radio label="Phone" value="phone"></civ-radio>
+    <civ-radio label="Mail" value="mail"></civ-radio>
+  </civ-radio-group>
+</civ-form-fieldset>
 \`\`\`
 
 ---
@@ -401,10 +417,18 @@ Structural grouping wrapper. Not a form-participating element.
 **Example:**
 \`\`\`html
 <civ-fieldset legend="Mailing address" hint="Enter your current mailing address">
-  <civ-text-input label="Street address" name="street" required></civ-text-input>
-  <civ-text-input label="City" name="city" required></civ-text-input>
-  <civ-select label="State" name="state" required .options="\${stateOptions}"></civ-select>
-  <civ-text-input label="ZIP code" name="zip" required pattern="[0-9]{5}(-[0-9]{4})?"></civ-text-input>
+  <civ-form-field label="Street address" required>
+    <civ-text-input name="street" required></civ-text-input>
+  </civ-form-field>
+  <civ-form-field label="City" required>
+    <civ-text-input name="city" required></civ-text-input>
+  </civ-form-field>
+  <civ-form-field label="State" required>
+    <civ-select name="state" preset="us-state" required></civ-select>
+  </civ-form-field>
+  <civ-form-field label="ZIP code" required>
+    <civ-text-input name="zip" required pattern="[0-9]{5}(-[0-9]{4})?"></civ-text-input>
+  </civ-form-field>
 </civ-fieldset>
 \`\`\`
 
@@ -425,9 +449,15 @@ Form validation coordinator. Renders error summary, handles submit/reset.
 **Example:**
 \`\`\`html
 <civ-form @civ-submit="\${handleSubmit}" @civ-invalid="\${handleErrors}">
-  <civ-text-input label="Full name" name="name" required></civ-text-input>
-  <civ-text-input label="Email" name="email" type="email" required></civ-text-input>
-  <civ-textarea label="Message" name="message" required></civ-textarea>
+  <civ-form-field label="Full name" required>
+    <civ-text-input name="name" required></civ-text-input>
+  </civ-form-field>
+  <civ-form-field label="Email" required>
+    <civ-text-input name="email" type="email" required></civ-text-input>
+  </civ-form-field>
+  <civ-form-field label="Message" required>
+    <civ-textarea name="message" required></civ-textarea>
+  </civ-form-field>
   <button type="submit">Submit</button>
   <button type="reset">Clear</button>
 </civ-form>
@@ -554,7 +584,9 @@ Children with \`data-step\` define each step. Validates required fields before a
     <civ-name legend="Your name" name="fullName" required></civ-name>
   </div>
   <div data-step data-step-label="Date of birth">
-    <civ-memorable-date label="Date of birth" name="dob" required></civ-memorable-date>
+    <civ-form-fieldset legend="Date of birth" hint="For example: January 15 1990" required>
+      <civ-memorable-date name="dob" required></civ-memorable-date>
+    </civ-form-fieldset>
   </div>
 </civ-form-step>
 \`\`\`
@@ -614,64 +646,42 @@ Step indicator for multi-step forms. Shows numbered circles with labels.
 \`\`\`html
 <civ-form @civ-submit="\${this._onSubmit}" @civ-invalid="\${this._onInvalid}">
   <civ-fieldset legend="Personal information">
-    <civ-text-input
-      label="Full name"
-      name="fullName"
-      required
-      autocomplete="name"
-    ></civ-text-input>
+    <civ-form-field label="Full name" required>
+      <civ-text-input name="fullName" required autocomplete="name"></civ-text-input>
+    </civ-form-field>
 
-    <civ-text-input
-      label="Email address"
-      name="email"
-      type="email"
-      required
-      autocomplete="email"
-    ></civ-text-input>
+    <civ-form-field label="Email address" required>
+      <civ-text-input name="email" type="email" required autocomplete="email"></civ-text-input>
+    </civ-form-field>
 
-    <civ-text-input
-      label="Phone number"
-      name="phone"
-      type="tel"
-      hint="Include area code"
-      autocomplete="tel"
-      inputmode="tel"
-    ></civ-text-input>
+    <civ-form-field label="Phone number" hint="Include area code">
+      <civ-text-input name="phone" type="tel" autocomplete="tel" inputmode="tel"></civ-text-input>
+    </civ-form-field>
   </civ-fieldset>
 
   <civ-fieldset legend="Application details">
-    <civ-memorable-date
-      label="Date of birth"
-      name="dob"
-      hint="For example: January 15 1990"
-      required
-    ></civ-memorable-date>
+    <civ-form-fieldset legend="Date of birth" hint="For example: January 15 1990" required>
+      <civ-memorable-date name="dob" required></civ-memorable-date>
+    </civ-form-fieldset>
 
-    <civ-select
-      label="Application type"
-      name="appType"
-      required
-      .options="\${[
-        { value: 'new', label: 'New application' },
-        { value: 'renewal', label: 'Renewal' },
-        { value: 'amendment', label: 'Amendment' }
-      ]}"
-    ></civ-select>
+    <civ-form-field label="Application type" required>
+      <civ-select name="appType" required
+        .options="\${[
+          { value: 'new', label: 'New application' },
+          { value: 'renewal', label: 'Renewal' },
+          { value: 'amendment', label: 'Amendment' }
+        ]}"
+      ></civ-select>
+    </civ-form-field>
 
-    <civ-textarea
-      label="Additional comments"
-      name="comments"
-      maxlength="1000"
-    ></civ-textarea>
+    <civ-form-field label="Additional comments">
+      <civ-textarea name="comments" maxlength="1000"></civ-textarea>
+    </civ-form-field>
   </civ-fieldset>
 
-  <civ-file-upload
-    label="Supporting documents"
-    name="docs"
-    accept=".pdf,.jpg,.png"
-    multiple
-    max-size="10485760"
-  ></civ-file-upload>
+  <civ-form-field label="Supporting documents">
+    <civ-file-upload name="docs" accept=".pdf,.jpg,.png" multiple max-size="10485760"></civ-file-upload>
+  </civ-form-field>
 
   <civ-checkbox
     label="I certify the information above is accurate"
@@ -787,16 +797,12 @@ Government forms must use clear, jargon-free labels. CivUI supports this through
 Always mark required fields with the \`required\` attribute:
 
 \`\`\`html
-<civ-text-input
-  label="Social Security number"
-  name="ssn"
-  required
+<civ-form-field label="Social Security number" required
   required-message="Enter your Social Security number"
-  hint="We need this to verify your identity"
-  type="tel"
-  inputmode="numeric"
-  pattern="[0-9]{3}-?[0-9]{2}-?[0-9]{4}"
-></civ-text-input>
+  hint="We need this to verify your identity">
+  <civ-text-input name="ssn" required type="tel" inputmode="numeric"
+    pattern="[0-9]{3}-?[0-9]{2}-?[0-9]{4}"></civ-text-input>
+</civ-form-field>
 \`\`\`
 
 ### Date input rules for government forms
@@ -824,15 +830,14 @@ Most components support label customization for i18n:
 
 \`\`\`html
 <!-- Spanish date picker -->
-<civ-date-picker
-  label="Fecha de cita"
-  name="appointment"
-  locale="es-US"
-  choose-date-label="Elegir fecha"
-  dialog-label="Elegir fecha"
-  previous-month-label="Mes anterior"
-  next-month-label="Mes siguiente"
-></civ-date-picker>
+<civ-form-field label="Fecha de cita">
+  <civ-date-picker name="appointment" locale="es-US"
+    choose-date-label="Elegir fecha"
+    dialog-label="Elegir fecha"
+    previous-month-label="Mes anterior"
+    next-month-label="Mes siguiente"
+  ></civ-date-picker>
+</civ-form-field>
 \`\`\`
 
 ---
@@ -887,25 +892,31 @@ Avoid these common mistakes when using CivUI components:
 
 4. **Never use \`civ-toggle\` for choices that require form submission.** Toggles have immediate-effect semantics. Use \`civ-checkbox\` for choices that take effect on submit.
 
-5. **Never put \`civ-radio\` outside a \`civ-radio-group\`.** Radios are not form-participating on their own. The group handles form integration, keyboard navigation, and ARIA.
+5. **Never put label/hint/error directly on input components.** Use \`<civ-form-field>\` or \`<civ-form-fieldset>\` wrappers instead. Exception: self-contained components (\`civ-checkbox\`, \`civ-toggle\`, \`civ-address\`, \`civ-name\`, \`civ-signature\`) manage their own labels.
 
-6. **Never put \`civ-segment\` outside a \`civ-segmented-control\`.** Same reason as radios.
+6. **Never use \`civ-form-group\`.** It has been replaced by \`<civ-form-field>\` (single inputs) and \`<civ-form-fieldset>\` (groups).
 
-7. **Never omit \`name\` on form-participating components.** Without \`name\`, the value won't appear in form data.
+7. **Never use \`civ-us-state\` or \`civ-service-branch\`.** Use \`<civ-select preset="us-state">\` or \`<civ-select preset="service-branch">\` instead.
 
-8. **Never use \`focus:\` prefix for focus styles.** Use \`focus-visible:civ-focus-ring\` for keyboard-only focus indication.
+8. **Never put \`civ-radio\` outside a \`civ-radio-group\`.** Radios are not form-participating on their own. The group handles form integration, keyboard navigation, and ARIA.
 
-9. **Never use generic required messages.** Use \`required-message\` with field-specific text: "Enter your email address", not "This field is required".
+9. **Never put \`civ-segment\` outside a \`civ-segmented-control\`.** Same reason as radios.
 
-10. **Never put commas in checkbox values** when using \`civ-checkbox-group\`. Commas are used internally as the value delimiter.
+10. **Never omit \`name\` on form-participating components.** Without \`name\`, the value won't appear in form data.
 
-11. **Never skip \`afterEach(cleanupFixtures)\` in tests.** Test fixtures accumulate in the DOM and cause cross-test pollution.
+11. **Never use \`focus:\` prefix for focus styles.** Use \`focus-visible:civ-focus-ring\` for keyboard-only focus indication.
 
-12. **Never assume ElementInternals works in tests.** jsdom doesn't fully support it. Use guards: \`typeof this._internals?.setFormValue === 'function'\`.
+12. **Never use generic required messages.** Use \`required-message\` with field-specific text: "Enter your email address", not "This field is required".
 
-13. **Never use \`civ-select\` for fewer than 5 options** when all options can be displayed. Use \`civ-radio-group\` to show all choices at once.
+13. **Never put commas in checkbox values** when using \`civ-checkbox-group\`. Commas are used internally as the value delimiter.
 
-14. **Never dispatch native \`input\` or \`change\` events.** Always use \`civ-input\` and \`civ-change\` custom events.
+14. **Never skip \`afterEach(cleanupFixtures)\` in tests.** Test fixtures accumulate in the DOM and cause cross-test pollution.
+
+15. **Never assume ElementInternals works in tests.** jsdom doesn't fully support it. Use guards: \`typeof this._internals?.setFormValue === 'function'\`.
+
+16. **Never use \`civ-select\` for fewer than 5 options** when all options can be displayed. Use \`civ-radio-group\` to show all choices at once.
+
+17. **Never dispatch native \`input\` or \`change\` events.** Always use \`civ-input\` and \`civ-change\` custom events.
 
 ---
 
@@ -1016,7 +1027,7 @@ import { fixture, cleanupFixtures, elementUpdated, pressKey, typeText } from '@c
 afterEach(cleanupFixtures);
 
 // Create component
-const el = await fixture('<civ-text-input label="Name" name="name"></civ-text-input>');
+const el = await fixture('<civ-form-field label="Name"><civ-text-input name="name"></civ-text-input></civ-form-field>');
 
 // Update and wait
 el.value = 'test';

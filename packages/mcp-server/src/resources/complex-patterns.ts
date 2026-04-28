@@ -43,8 +43,12 @@ dependents[1].last-name
 \`\`\`html
 <div data-civ-repeatable="dependents" data-civ-repeatable-min="0" data-civ-repeatable-max="10" aria-live="polite">
   <civ-fieldset legend="Dependent 1">
-    <civ-text-input label="First name" name="dependents[0].first-name"></civ-text-input>
-    <civ-text-input label="Last name" name="dependents[0].last-name"></civ-text-input>
+    <civ-form-field label="First name">
+      <civ-text-input name="dependents[0].first-name"></civ-text-input>
+    </civ-form-field>
+    <civ-form-field label="Last name">
+      <civ-text-input name="dependents[0].last-name"></civ-text-input>
+    </civ-form-field>
     <button type="button" data-civ-repeatable-remove>Remove this dependent</button>
   </civ-fieldset>
   <button type="button" data-civ-repeatable-add>Add another dependent</button>
@@ -314,7 +318,9 @@ Use \`optionsFrom\` on a FormField to create dependent option lists (e.g., State
 ### Generated HTML
 
 \`\`\`html
-<civ-select label="County" name="county" data-civ-options-from="state"></civ-select>
+<civ-form-field label="County">
+  <civ-select name="county" data-civ-options-from="state"></civ-select>
+</civ-form-field>
 <script type="application/json" data-civ-options-map="county">{"CA":[...],"TX":[...]}</script>
 \`\`\`
 
@@ -364,7 +370,7 @@ Use \`layout: 'table'\` on a repeatable FormSection to render fields as table co
     </thead>
     <tbody>
       <tr data-civ-repeatable-item>
-        <td><civ-text-input aria-label="Source" name="income[0].source"></civ-text-input></td>
+        <td><civ-text-input aria-label="Source" name="income[0].source"></civ-text-input></td><!-- no wrapper needed — th serves as visible label -->
         <td><civ-text-input aria-label="Amount" name="income[0].amount"></civ-text-input></td>
         <td><button type="button" data-civ-repeatable-remove>Remove row</button></td>
       </tr>

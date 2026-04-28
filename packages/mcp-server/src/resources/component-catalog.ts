@@ -10,7 +10,7 @@ export const COMPONENT_CATALOG = `# CivUI Component Catalog
 |-----|----------|-----------|--------------|
 | \`<civ-text-input>\` | Input | \`type\`, \`width\`, \`placeholder\`, \`maxlength\`, \`pattern\`, \`autocomplete\`, \`inputmode\` | \`{ value }\` |
 | \`<civ-textarea>\` | Input | \`rows\`, \`maxlength\`, \`placeholder\` | \`{ value }\` |
-| \`<civ-select>\` | Input | \`options\`, \`emptyLabel\` | \`{ value }\` |
+| \`<civ-select>\` | Input | \`options\`, \`emptyLabel\`, \`preset\` | \`{ value }\` |
 | \`<civ-combobox>\` | Input | \`options\`, \`placeholder\`, \`noResultsText\` | \`civ-input: { value }\`, \`civ-change: { value, label }\` |
 | \`<civ-checkbox>\` | Choice | \`checked\`, \`indeterminate\`, \`description\`, \`tile\` | \`{ checked, value }\` |
 | \`<civ-checkbox-group>\` | Group | \`legend\`, \`tile\`, \`orientation\` | \`{ values: string[] }\` |
@@ -22,11 +22,14 @@ export const COMPONENT_CATALOG = `# CivUI Component Catalog
 | \`<civ-date-picker>\` | Date | \`min\`, \`max\`, \`placeholder\`, \`locale\`, \`weekStartsOn\` | \`{ value }\` |
 | \`<civ-memorable-date>\` | Date | \`legend\`, \`monthLabel\`, \`dayLabel\`, \`yearLabel\`, \`locale\` | \`{ value, month, day, year }\` |
 | \`<civ-file-upload>\` | File | \`accept\`, \`multiple\`, \`maxSize\`, \`maxFiles\` | \`{ files: File[] }\` |
+| \`<civ-form-field>\` | Wrapper | \`label\`, \`hint\`, \`error\`, \`required\`, \`requiredMessage\`, \`touched\` | — |
+| \`<civ-form-fieldset>\` | Wrapper | \`legend\`, \`hint\`, \`error\`, \`required\`, \`requiredMessage\`, \`touched\` | — |
 | \`<civ-fieldset>\` | Layout | \`legend\`, \`hint\`, \`error\`, \`required\`, \`disabled\` | — |
 | \`<civ-form>\` | Layout | \`action\`, \`method\` | \`civ-submit: { formData }\`, \`civ-invalid: { errors }\` |
 
-**All form-participating components** also have: \`label\`, \`name\`, \`value\`, \`hint\`, \`error\`, \`required\`, \`disabled\`, \`requiredMessage\`.
-**Group components** (\`checkbox-group\`, \`radio-group\`, \`memorable-date\`, \`segmented-control\`) use \`legend\` instead of \`label\`.
+**Wrapper pattern:** Wrap single-value inputs in \`<civ-form-field>\` and group components in \`<civ-form-fieldset>\`. These wrappers provide label/legend, hint, error, required indicator, and per-field \`touched\` tracking. Self-contained components (\`civ-address\`, \`civ-name\`, \`civ-signature\`, \`civ-checkbox\`, \`civ-toggle\`) do not need wrapping.
+**All form-participating components** also have: \`name\`, \`value\`, \`required\`, \`disabled\`.
+**Group components** (\`checkbox-group\`, \`radio-group\`, \`memorable-date\`, \`segmented-control\`) use \`<civ-form-fieldset legend="...">\` instead of \`<civ-form-field label="...">\`.
 
 ---
 
@@ -39,7 +42,13 @@ Standard text input. Props: \`type\` (text|email|number|password|search|tel|url)
 Multi-line text input. Props: \`rows\` (default 5), \`maxlength\` (enables character count), \`placeholder\`.
 
 ### civ-select
-Dropdown select. Props: \`options\` (Array<{value, label, disabled?}>), \`emptyLabel\` (default "- Select -").
+Dropdown select. Props: \`options\` (Array<{value, label, disabled?}>), \`emptyLabel\` (default "- Select -"), \`preset\` (pre-built list: \`'us-state'\`, \`'us-territory'\`, \`'country'\`, \`'service-branch'\`, \`'suffix'\`, \`'month'\`). The \`preset\` attribute replaces the former \`civ-us-state\`, \`civ-service-branch\`, and other data-list components.
+
+### civ-form-field
+Wrapper for single-value inputs. Renders label, hint, error, required indicator. Props: \`label\`, \`hint\`, \`error\`, \`required\`, \`requiredMessage\`, \`hide-required-indicator\`, \`touched\`. Tracks per-field \`touched\` state (set after first \`civ-change\`).
+
+### civ-form-fieldset
+Wrapper for group components. Renders legend, hint, error, required indicator. Props: \`legend\`, \`hint\`, \`error\`, \`required\`, \`requiredMessage\`, \`hide-required-indicator\`, \`touched\`.
 
 ### civ-combobox
 Searchable dropdown with type-ahead. Props: \`options\`, \`placeholder\`, \`noResultsText\`.

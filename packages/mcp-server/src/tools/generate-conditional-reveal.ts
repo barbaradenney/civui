@@ -22,43 +22,48 @@ interface TriggerConfig {
 function renderFieldHtml(field: FormField): string {
   const name = escapeHtml(field.name);
   const label = escapeHtml(field.label);
-  const hint = field.hint ? `\n      <span class="civ-text-sm civ-text-base-dark">${escapeHtml(field.hint)}</span>` : '';
+  const hintAttr = field.hint ? ` hint="${escapeHtml(field.hint)}"` : '';
   const required = field.required ? ' required' : '';
 
   switch (field.type) {
     case 'textarea':
       return (
         `    <div class="civ-mb-4">\n` +
-        `      <label for="${name}">${label}</label>${hint}\n` +
-        `      <civ-textarea name="${name}" id="${name}"${required}></civ-textarea>\n` +
+        `      <civ-form-field label="${label}"${hintAttr}${required}>\n` +
+        `        <civ-textarea name="${name}" id="${name}"${required}></civ-textarea>\n` +
+        `      </civ-form-field>\n` +
         `    </div>`
       );
     case 'select':
       return (
         `    <div class="civ-mb-4">\n` +
-        `      <label for="${name}">${label}</label>${hint}\n` +
-        `      <civ-select name="${name}" id="${name}"${required}>\n` +
+        `      <civ-form-field label="${label}"${hintAttr}${required}>\n` +
+        `        <civ-select name="${name}" id="${name}"${required}>\n` +
         (field.options || [])
           .map(
             (o) =>
-              `        <option value="${escapeHtml(o.value)}">${escapeHtml(o.label)}</option>`,
+              `          <option value="${escapeHtml(o.value)}">${escapeHtml(o.label)}</option>`,
           )
           .join('\n') +
-        `\n      </civ-select>\n` +
+        `\n        </civ-select>\n` +
+        `      </civ-form-field>\n` +
         `    </div>`
       );
     case 'radio':
       return (
-        `    <civ-radio-group name="${name}" legend="${label}"${required}>\n` +
+        `    <civ-form-fieldset legend="${label}"${hintAttr}${required}>\n` +
+        `      <civ-radio-group name="${name}"${required}>\n` +
         (field.options || [])
           .map(
             (o) =>
-              `      <civ-radio value="${escapeHtml(o.value)}" label="${escapeHtml(o.label)}"></civ-radio>`,
+              `        <civ-radio value="${escapeHtml(o.value)}" label="${escapeHtml(o.label)}"></civ-radio>`,
           )
           .join('\n') +
-        `\n    </civ-radio-group>`
+        `\n      </civ-radio-group>\n` +
+        `    </civ-form-fieldset>`
       );
     case 'checkbox':
+      // Standalone checkbox — self-contained, no wrapping
       return (
         `    <div class="civ-mb-4">\n` +
         `      <civ-checkbox name="${name}" label="${label}"${required}></civ-checkbox>\n` +
@@ -67,8 +72,9 @@ function renderFieldHtml(field: FormField): string {
     default:
       return (
         `    <div class="civ-mb-4">\n` +
-        `      <label for="${name}">${label}</label>${hint}\n` +
-        `      <civ-text-input name="${name}" id="${name}" type="${escapeHtml(field.type)}"${required}></civ-text-input>\n` +
+        `      <civ-form-field label="${label}"${hintAttr}${required}>\n` +
+        `        <civ-text-input name="${name}" id="${name}" type="${escapeHtml(field.type)}"${required}></civ-text-input>\n` +
+        `      </civ-form-field>\n` +
         `    </div>`
       );
   }

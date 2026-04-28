@@ -33,25 +33,27 @@ function renderFieldHtml(
 
   switch (field.type) {
     case 'textarea':
-      return `<civ-textarea label="${label}" name="${name}"${hint}${req}></civ-textarea>`;
+      return `<civ-form-field label="${label}"${hint}${req}><civ-textarea name="${name}"${req}></civ-textarea></civ-form-field>`;
     case 'select':
-      return `<civ-select label="${label}" name="${name}"${hint}${req}></civ-select>`;
+      return `<civ-form-field label="${label}"${hint}${req}><civ-select name="${name}"${req}></civ-select></civ-form-field>`;
     case 'radio':
-      return `<civ-radio-group legend="${label}" name="${name}"${hint}${req}></civ-radio-group>`;
+      return `<civ-form-fieldset legend="${label}"${hint}${req}><civ-radio-group name="${name}"${req}></civ-radio-group></civ-form-fieldset>`;
     case 'checkbox':
+      // Standalone checkbox — self-contained, no wrapping
       return `<civ-checkbox label="${label}" name="${name}"${req}></civ-checkbox>`;
     case 'checkbox-group':
-      return `<civ-checkbox-group legend="${label}" name="${name}"${hint}${req}></civ-checkbox-group>`;
+      return `<civ-form-fieldset legend="${label}"${hint}${req}><civ-checkbox-group name="${name}"${req}></civ-checkbox-group></civ-form-fieldset>`;
     case 'date':
-      return `<civ-date-picker label="${label}" name="${name}"${hint}${req}></civ-date-picker>`;
+      return `<civ-form-field label="${label}"${hint}${req}><civ-date-picker name="${name}"${req}></civ-date-picker></civ-form-field>`;
     case 'memorable-date':
-      return `<civ-memorable-date label="${label}" name="${name}"${hint}${req}></civ-memorable-date>`;
+      return `<civ-form-fieldset legend="${label}"${hint}${req}><civ-memorable-date name="${name}"${req}></civ-memorable-date></civ-form-fieldset>`;
     case 'file':
-      return `<civ-file-upload label="${label}" name="${name}"${req}></civ-file-upload>`;
+      return `<civ-form-field label="${label}"${req}><civ-file-upload name="${name}"${req}></civ-file-upload></civ-form-field>`;
     case 'toggle':
+      // Self-contained — no wrapping
       return `<civ-toggle label="${label}" name="${name}"${req}></civ-toggle>`;
     default:
-      return `<civ-text-input label="${label}" name="${name}"${hint}${req}></civ-text-input>`;
+      return `<civ-form-field label="${label}"${hint}${req}><civ-text-input name="${name}"${req}></civ-text-input></civ-form-field>`;
   }
 }
 
@@ -221,16 +223,16 @@ export function generateBilingualForm(
           const hint = field.hint ? ` hint="${escapeHtml(field.hint)}"` : '';
           const req = field.required ? ' required' : '';
 
-          // Use label attribute with inline translation
+          // Use wrapper with inline translation label
           switch (field.type) {
             case 'radio':
-              htmlParts.push(`  <civ-radio-group legend="${inlineLabel}" name="${name}"${hint}${req}></civ-radio-group>`);
+              htmlParts.push(`  <civ-form-fieldset legend="${inlineLabel}"${hint}${req}><civ-radio-group name="${name}"${req}></civ-radio-group></civ-form-fieldset>`);
               break;
             case 'checkbox-group':
-              htmlParts.push(`  <civ-checkbox-group legend="${inlineLabel}" name="${name}"${hint}${req}></civ-checkbox-group>`);
+              htmlParts.push(`  <civ-form-fieldset legend="${inlineLabel}"${hint}${req}><civ-checkbox-group name="${name}"${req}></civ-checkbox-group></civ-form-fieldset>`);
               break;
             case 'memorable-date':
-              htmlParts.push(`  <civ-memorable-date label="${inlineLabel}" name="${name}"${hint}${req}></civ-memorable-date>`);
+              htmlParts.push(`  <civ-form-fieldset legend="${inlineLabel}"${hint}${req}><civ-memorable-date name="${name}"${req}></civ-memorable-date></civ-form-fieldset>`);
               break;
             default:
               htmlParts.push(`  ${renderFieldHtml({ ...field, label: `${field.label} (${translatedLabel})` })}`);

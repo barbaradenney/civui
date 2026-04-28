@@ -41,32 +41,36 @@ Generate a single CivUI component snippet for a **${fieldType}** field with labe
 ## Requirements
 
 1. Use the correct CivUI tag for the field type:
-   - text/email/tel/number/password/search/url/ssn/zip → \`<civ-text-input>\`
-   - textarea → \`<civ-textarea>\`
-   - select → \`<civ-select>\`
-   - combobox → \`<civ-combobox>\`
-   - radio → \`<civ-radio-group>\` with \`<civ-radio>\` children
-   - checkbox → \`<civ-checkbox>\`
-   - checkbox-group → \`<civ-checkbox-group>\` with \`<civ-checkbox>\` children
-   - date → \`<civ-date-picker>\`
-   - memorable-date → \`<civ-memorable-date>\`
-   - file → \`<civ-file-upload>\`
-   - toggle → \`<civ-toggle>\`
+   - text/email/tel/number/password/search/url/ssn/zip → \`<civ-form-field>\` wrapping \`<civ-text-input>\`
+   - textarea → \`<civ-form-field>\` wrapping \`<civ-textarea>\`
+   - select → \`<civ-form-field>\` wrapping \`<civ-select>\`
+   - combobox → \`<civ-form-field>\` wrapping \`<civ-combobox>\`
+   - radio → \`<civ-form-fieldset>\` wrapping \`<civ-radio-group>\` with \`<civ-radio>\` children
+   - checkbox → \`<civ-checkbox>\` (self-contained, no wrapper)
+   - checkbox-group → \`<civ-form-fieldset>\` wrapping \`<civ-checkbox-group>\` with \`<civ-checkbox>\` children
+   - date → \`<civ-form-field>\` wrapping \`<civ-date-picker>\`
+   - memorable-date → \`<civ-form-fieldset>\` wrapping \`<civ-memorable-date>\`
+   - file → \`<civ-form-field>\` wrapping \`<civ-file-upload>\`
+   - toggle → \`<civ-toggle>\` (self-contained, no wrapper)
 
-2. Include these attributes:
-   - \`label\` (or \`legend\` for group components: radio, checkbox-group, memorable-date)
-   - \`name\` (kebab-case from the label)
-   - \`required\` and \`required-message\` with field-specific text
+2. Wrap the component in the correct wrapper:
+   - Single-value inputs → \`<civ-form-field label="..." required>\`
+   - Group components (radio, checkbox-group, memorable-date) → \`<civ-form-fieldset legend="..." required>\`
+   - Self-contained (checkbox standalone, toggle) → no wrapper needed
+
+3. Include these attributes:
+   - On the **wrapper**: \`label\`/\`legend\`, \`hint\`, \`required\`, \`required-message\` with field-specific text
+   - On the **input**: \`name\` (kebab-case from the label), \`required\`, \`autocomplete\`, \`inputmode\`, \`type\`
    - \`hint\` for date and SSN fields with expected format
    - \`autocomplete\` for identity fields (email, tel, name, address, zip)
    - \`inputmode\` for numeric input (tel, ssn, zip)
    - \`type\` attribute for civ-text-input variants (email, tel, number, etc.)
 
-3. For group fields (radio, checkbox-group), include 3 placeholder option children.
+4. For group fields (radio, checkbox-group), include 3 placeholder option children.
 
-4. For select/combobox, include a placeholder \`options\` attribute.
+5. For select/combobox, include a placeholder \`options\` attribute. If a preset is appropriate (\`us-state\`, \`service-branch\`, \`country\`, \`suffix\`, \`month\`), use the \`preset\` attribute instead.
 
-5. Output only the HTML snippet — no explanation needed. Mark it as required by default.`,
+6. Output only the HTML snippet — no explanation needed. Mark it as required by default.`,
         },
       },
     ],

@@ -17,7 +17,7 @@ export interface SuggestFixResult {
 
 type FixerFn = ($: CheerioAPI, violations: Violation[]) => string[];
 
-/** Label components (single-value). */
+/** Label components (single-value) — wrapped with civ-form-field. */
 const LABEL_COMPONENTS = new Set([
   'civ-text-input',
   'civ-textarea',
@@ -27,12 +27,18 @@ const LABEL_COMPONENTS = new Set([
   'civ-memorable-date',
   'civ-date-range-picker',
   'civ-yes-no',
-  'civ-checkbox',
   'civ-toggle',
   'civ-file-upload',
 ]);
 
-/** Group components (use legend). */
+/** Self-contained components that manage their own label — no wrapping needed. */
+const SELF_CONTAINED_COMPONENTS = new Set([
+  'civ-address',
+  'civ-name',
+  'civ-signature',
+]);
+
+/** Group components (use civ-form-fieldset with legend). */
 const LEGEND_COMPONENTS = new Set([
   'civ-radio-group',
   'civ-checkbox-group',
@@ -54,13 +60,18 @@ const FIXERS: Record<string, FixerFn> = {
     for (const v of relevant) {
       $(v.element).each((_, el) => {
         const $el = $(el);
-        if ($el.attr('label')) return;
+        // Skip if already wrapped in civ-form-field or has label attr (self-contained)
+        if ($el.parents('civ-form-field').length > 0) return;
+        if ($el.attr('label') && SELF_CONTAINED_COMPONENTS.has(v.element)) return;
         const name = $el.attr('name') ?? '';
         const label = name
           ? name.replace(/[-_]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
           : v.element.replace('civ-', '').replace(/-/g, ' ');
-        $el.attr('label', label);
-        fixes.push(`Added label="${label}" to <${v.element}>`);
+        // Remove label from the component if present
+        $el.removeAttr('label');
+        const required = $el.attr('required') !== undefined ? ' required' : '';
+        $el.wrap(`<civ-form-field label="${label}"${required}></civ-form-field>`);
+        fixes.push(`Wrapped <${v.element}> in <civ-form-field label="${label}">`);
       });
     }
     return fixes;
@@ -72,13 +83,16 @@ const FIXERS: Record<string, FixerFn> = {
     for (const v of relevant) {
       $(v.element).each((_, el) => {
         const $el = $(el);
+        // Skip if already wrapped in civ-form-fieldset
+        if ($el.parents('civ-form-fieldset').length > 0) return;
         if ($el.attr('legend')) return;
         const name = $el.attr('name') ?? '';
         const legend = name
           ? name.replace(/[-_]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
           : v.element.replace('civ-', '').replace(/-/g, ' ');
-        $el.attr('legend', legend);
-        fixes.push(`Added legend="${legend}" to <${v.element}>`);
+        const required = $el.attr('required') !== undefined ? ' required' : '';
+        $el.wrap(`<civ-form-fieldset legend="${legend}"${required}></civ-form-fieldset>`);
+        fixes.push(`Wrapped <${v.element}> in <civ-form-fieldset legend="${legend}">`);
       });
     }
     return fixes;
@@ -88,24 +102,37 @@ const FIXERS: Record<string, FixerFn> = {
     const fixes: string[] = [];
     $('civ-date-input').each((_, el) => {
       const $el = $(el);
-      // Get all attributes
-      const attrs: Record<string, string> = {};
+      // Get all attributes, separating wrapper props from component props
+      const wrapperAttrs: Record<string, string> = {};
+      const componentAttrs: Record<string, string> = {};
       const rawAttrs = el.type === 'tag' ? el.attribs : {};
+      const wrapperPropNames = new Set(['label', 'hint', 'error', 'required-message']);
       for (const [k, v] of Object.entries(rawAttrs)) {
-        if (k === 'label') {
-          attrs['legend'] = v;
+        if (wrapperPropNames.has(k)) {
+          wrapperAttrs[k] = v;
         } else {
-          attrs[k] = v;
+          componentAttrs[k] = v;
         }
       }
-      // Replace tag
+      // Replace tag with civ-memorable-date
       const newEl = $('<civ-memorable-date></civ-memorable-date>');
-      for (const [k, v] of Object.entries(attrs)) {
+      for (const [k, v] of Object.entries(componentAttrs)) {
         newEl.attr(k, v);
       }
       newEl.html($el.html() ?? '');
-      $el.replaceWith(newEl);
-      fixes.push('Replaced <civ-date-input> with <civ-memorable-date>');
+      // Wrap with civ-form-field if there are wrapper attributes
+      if (Object.keys(wrapperAttrs).length > 0) {
+        const wrapperAttrStr = Object.entries(wrapperAttrs)
+          .map(([k, v]) => `${k}="${v}"`)
+          .join(' ');
+        const required = componentAttrs['required'] !== undefined ? ' required' : '';
+        const wrapper = $(`<civ-form-field ${wrapperAttrStr}${required}></civ-form-field>`);
+        wrapper.append(newEl);
+        $el.replaceWith(wrapper);
+      } else {
+        $el.replaceWith(newEl);
+      }
+      fixes.push('Replaced <civ-date-input> with <civ-memorable-date> wrapped in <civ-form-field>');
     });
     return fixes;
   },
@@ -118,8 +145,16 @@ const FIXERS: Record<string, FixerFn> = {
         const placeholder = $el.attr('placeholder');
         const label = $el.attr('label');
         if (placeholder && (!label || label.trim() === '')) {
-          $el.attr('label', placeholder);
-          fixes.push(`Copied placeholder to label on <${tag}>`);
+          // Remove label attr from component, wrap with civ-form-field if not already wrapped
+          $el.removeAttr('label');
+          if ($el.parents('civ-form-field').length === 0) {
+            const required = $el.attr('required') !== undefined ? ' required' : '';
+            $el.wrap(`<civ-form-field label="${placeholder}"${required}></civ-form-field>`);
+            fixes.push(`Wrapped <${tag}> in <civ-form-field label="${placeholder}"> (from placeholder)`);
+          } else {
+            $el.closest('civ-form-field').attr('label', placeholder);
+            fixes.push(`Set label="${placeholder}" on parent <civ-form-field> (from placeholder)`);
+          }
         }
       });
     });
@@ -133,10 +168,16 @@ const FIXERS: Record<string, FixerFn> = {
       if (tag === 'civ-fieldset') continue;
       $(tag).each((_, el) => {
         const $el = $(el);
-        if (
-          $el.attr('required') !== undefined &&
-          !$el.attr('required-message')
-        ) {
+        if ($el.attr('required') === undefined) return;
+        // Check wrapper for required-message first
+        const wrapper = $el.closest('civ-form-field, civ-form-fieldset');
+        if (wrapper.length > 0) {
+          if (!wrapper.attr('required-message')) {
+            const label = wrapper.attr('label') ?? wrapper.attr('legend') ?? tag;
+            wrapper.attr('required-message', `${label} is required`);
+            fixes.push(`Added required-message to wrapper of <${tag}>`);
+          }
+        } else if (!$el.attr('required-message')) {
           const label = $el.attr('label') ?? $el.attr('legend') ?? tag;
           $el.attr('required-message', `${label} is required`);
           fixes.push(`Added required-message to <${tag}>`);
@@ -155,12 +196,14 @@ const FIXERS: Record<string, FixerFn> = {
       }
     });
     if (orphans.length > 0) {
-      const wrapper = $('<civ-radio-group legend="Select an option" name="radio-group"></civ-radio-group>');
-      orphans[0].before(wrapper);
+      const fieldset = $('<civ-form-fieldset legend="Select an option" required></civ-form-fieldset>');
+      const group = $('<civ-radio-group name="radio-group" required></civ-radio-group>');
+      fieldset.append(group);
+      orphans[0].before(fieldset);
       for (const $orphan of orphans) {
-        wrapper.append($orphan);
+        group.append($orphan);
       }
-      fixes.push(`Wrapped ${orphans.length} orphaned <civ-radio> in <civ-radio-group>`);
+      fixes.push(`Wrapped ${orphans.length} orphaned <civ-radio> in <civ-form-fieldset>/<civ-radio-group>`);
     }
     return fixes;
   },
@@ -174,12 +217,14 @@ const FIXERS: Record<string, FixerFn> = {
       }
     });
     if (orphans.length > 0) {
-      const wrapper = $('<civ-segmented-control legend="Options" name="segmented"></civ-segmented-control>');
-      orphans[0].before(wrapper);
+      const fieldset = $('<civ-form-fieldset legend="Options"></civ-form-fieldset>');
+      const control = $('<civ-segmented-control name="segmented"></civ-segmented-control>');
+      fieldset.append(control);
+      orphans[0].before(fieldset);
       for (const $orphan of orphans) {
-        wrapper.append($orphan);
+        control.append($orphan);
       }
-      fixes.push(`Wrapped ${orphans.length} orphaned <civ-segment> in <civ-segmented-control>`);
+      fixes.push(`Wrapped ${orphans.length} orphaned <civ-segment> in <civ-form-fieldset>/<civ-segmented-control>`);
     }
     return fixes;
   },
@@ -192,10 +237,12 @@ const FIXERS: Record<string, FixerFn> = {
         const label = $el.attr('label');
         if (label !== undefined) {
           $el.removeAttr('label');
-          if (!$el.attr('legend')) {
-            $el.attr('legend', label);
+          // Wrap with civ-form-fieldset using the label as legend
+          if ($el.parents('civ-form-fieldset').length === 0) {
+            const required = $el.attr('required') !== undefined ? ' required' : '';
+            $el.wrap(`<civ-form-fieldset legend="${label}"${required}></civ-form-fieldset>`);
+            fixes.push(`Moved label to <civ-form-fieldset legend="${label}"> wrapper on <${tag}>`);
           }
-          fixes.push(`Swapped label→legend on <${tag}>`);
         }
       });
     });
@@ -210,10 +257,12 @@ const FIXERS: Record<string, FixerFn> = {
         const legend = $el.attr('legend');
         if (legend !== undefined) {
           $el.removeAttr('legend');
-          if (!$el.attr('label')) {
-            $el.attr('label', legend);
+          // Wrap with civ-form-field using the legend as label
+          if ($el.parents('civ-form-field').length === 0) {
+            const required = $el.attr('required') !== undefined ? ' required' : '';
+            $el.wrap(`<civ-form-field label="${legend}"${required}></civ-form-field>`);
+            fixes.push(`Moved legend to <civ-form-field label="${legend}"> wrapper on <${tag}>`);
           }
-          fixes.push(`Swapped legend→label on <${tag}>`);
         }
       });
     });
@@ -223,6 +272,17 @@ const FIXERS: Record<string, FixerFn> = {
   'generic-required-message'($) {
     const fixes: string[] = [];
     const GENERIC_RE = /^(this field is required|required|field is required)$/i;
+    // Check wrappers first
+    $('civ-form-field, civ-form-fieldset').each((_, el) => {
+      const $el = $(el);
+      const msg = $el.attr('required-message');
+      if (msg && GENERIC_RE.test(msg.trim())) {
+        const label = $el.attr('label') ?? $el.attr('legend') ?? 'This field';
+        $el.attr('required-message', `${label} is required`);
+        fixes.push(`Replaced generic required-message on <${el.tagName}>`);
+      }
+    });
+    // Check unwrapped components
     const allTags = [...LABEL_COMPONENTS, ...LEGEND_COMPONENTS];
     for (const tag of allTags) {
       if (tag === 'civ-fieldset') continue;
@@ -230,7 +290,10 @@ const FIXERS: Record<string, FixerFn> = {
         const $el = $(el);
         const msg = $el.attr('required-message');
         if (msg && GENERIC_RE.test(msg.trim())) {
-          const label = $el.attr('label') ?? $el.attr('legend') ?? tag;
+          const wrapper = $el.closest('civ-form-field, civ-form-fieldset');
+          const label = wrapper.length > 0
+            ? (wrapper.attr('label') ?? wrapper.attr('legend') ?? tag)
+            : ($el.attr('label') ?? $el.attr('legend') ?? tag);
           $el.attr('required-message', `${label} is required`);
           fixes.push(`Replaced generic required-message on <${tag}>`);
         }
@@ -246,9 +309,12 @@ const FIXERS: Record<string, FixerFn> = {
       ['civ-date-picker', 'For example: 01/15/2024'],
     ] as const) {
       $(tag).each((_, el) => {
-        if (!$(el).attr('hint')) {
-          $(el).attr('hint', hint);
-          fixes.push(`Added date format hint to <${tag}>`);
+        const $el = $(el);
+        const wrapper = $el.closest('civ-form-field');
+        const target = wrapper.length > 0 ? wrapper : $el;
+        if (!target.attr('hint')) {
+          target.attr('hint', hint);
+          fixes.push(`Added date format hint to ${wrapper.length > 0 ? '<civ-form-field>' : `<${tag}>`}`);
         }
       });
     }
@@ -258,10 +324,15 @@ const FIXERS: Record<string, FixerFn> = {
   'missing-hint-ssn'($) {
     const fixes: string[] = [];
     $('civ-text-input').each((_, el) => {
-      const name = $(el).attr('name') ?? '';
-      if (/ssn/i.test(name) && !$(el).attr('hint')) {
-        $(el).attr('hint', 'For example: 123 45 6789');
-        fixes.push('Added SSN format hint to <civ-text-input>');
+      const $el = $(el);
+      const name = $el.attr('name') ?? '';
+      if (/ssn/i.test(name)) {
+        const wrapper = $el.closest('civ-form-field');
+        const target = wrapper.length > 0 ? wrapper : $el;
+        if (!target.attr('hint')) {
+          target.attr('hint', 'For example: 123 45 6789');
+          fixes.push(`Added SSN format hint to ${wrapper.length > 0 ? '<civ-form-field>' : '<civ-text-input>'}`);
+        }
       }
     });
     return fixes;
@@ -287,6 +358,23 @@ const FIXERS: Record<string, FixerFn> = {
 
   'abbreviation-in-label'($) {
     const fixes: string[] = [];
+    // Check wrapper elements first
+    $('civ-form-field, civ-form-fieldset').each((_, el) => {
+      const $el = $(el);
+      for (const prop of ['label', 'legend'] as const) {
+        const text = $el.attr(prop);
+        if (!text) continue;
+        let fixed = text;
+        for (const [abbr, expansion] of Object.entries(ABBREVIATIONS)) {
+          fixed = fixed.replace(new RegExp(`\\b${abbr}\\b`, 'g'), expansion);
+        }
+        if (fixed !== text) {
+          $el.attr(prop, fixed);
+          fixes.push(`Expanded abbreviation in ${prop} on <${el.tagName}>`);
+        }
+      }
+    });
+    // Check unwrapped components (self-contained or legacy)
     const allTags = [...LABEL_COMPONENTS, ...LEGEND_COMPONENTS];
     for (const tag of allTags) {
       $(tag).each((_, el) => {

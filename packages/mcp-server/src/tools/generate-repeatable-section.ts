@@ -21,19 +21,20 @@ function renderFieldHtml(field: FormField, index: number): string {
 
   switch (field.type) {
     case 'textarea':
-      return `      <civ-textarea label="${label}" name="${name}"${hint}${req}></civ-textarea>`;
+      return `      <civ-form-field label="${label}"${hint}${req}>\n        <civ-textarea name="${name}"${req}></civ-textarea>\n      </civ-form-field>`;
     case 'select': {
       const opts = (field.options || [])
-        .map((o) => `        <option value="${escapeHtml(o.value)}">${escapeHtml(o.label)}</option>`)
+        .map((o) => `          <option value="${escapeHtml(o.value)}">${escapeHtml(o.label)}</option>`)
         .join('\n');
-      return `      <civ-select label="${label}" name="${name}"${hint}${req}>\n${opts}\n      </civ-select>`;
+      return `      <civ-form-field label="${label}"${hint}${req}>\n        <civ-select name="${name}"${req}>\n${opts}\n        </civ-select>\n      </civ-form-field>`;
     }
     case 'radio':
-      return `      <civ-radio-group legend="${label}" name="${name}"${hint}${req}></civ-radio-group>`;
+      return `      <civ-form-fieldset legend="${label}"${hint}${req}>\n        <civ-radio-group name="${name}"${req}></civ-radio-group>\n      </civ-form-fieldset>`;
     case 'checkbox':
+      // Standalone checkbox — self-contained, no wrapping
       return `      <civ-checkbox label="${label}" name="${name}"${req}></civ-checkbox>`;
     default:
-      return `      <civ-text-input label="${label}" name="${name}" type="${escapeHtml(field.type)}"${hint}${req}></civ-text-input>`;
+      return `      <civ-form-field label="${label}"${hint}${req}>\n        <civ-text-input name="${name}" type="${escapeHtml(field.type)}"${req}></civ-text-input>\n      </civ-form-field>`;
   }
 }
 

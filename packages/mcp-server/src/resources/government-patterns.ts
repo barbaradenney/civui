@@ -53,13 +53,11 @@ Always mark required fields with the \`required\` attribute. Use \`required-mess
 field-specific error text:
 
 \`\`\`html
-<civ-text-input
-  label="Social Security number"
-  name="ssn"
-  required
+<civ-form-field label="Social Security number" required
   required-message="Enter your Social Security number"
-  hint="We need this to verify your identity"
-></civ-text-input>
+  hint="We need this to verify your identity">
+  <civ-text-input name="ssn" required></civ-text-input>
+</civ-form-field>
 \`\`\`
 
 ## Date Component Selection

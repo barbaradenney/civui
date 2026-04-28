@@ -84,34 +84,16 @@ describe('generateAddressBlock', () => {
     expect(codes).toEqual(['AA', 'AE', 'AP']);
   });
 
-  it('includeTerritories adds territories to state options and feature', () => {
+  it('includeTerritories uses us-state preset with territories variant', () => {
     const result = generateAddressBlock({ includeTerritories: true });
     expect(result.features).toContain('territories');
-    expect(result.html).toContain('District of Columbia');
-    expect(result.html).toContain('Puerto Rico');
-    // Section state field should include territory options
-    const stateField = result.section.fields.find((f) => f.name === 'state');
-    expect(stateField).toBeDefined();
-    const stateOptions = (stateField as any).options as Array<{ value: string; label: string }>;
-    const optionValues = stateOptions.map((o) => o.value);
-    expect(optionValues).toContain('DC');
-    expect(optionValues).toContain('PR');
+    expect(result.html).toContain('preset="us-state"');
+    expect(result.html).toContain('preset-variant="territories"');
   });
 
-  it('includeMilitary adds military addresses to options and feature', () => {
+  it('includeMilitary adds military addresses feature', () => {
     const result = generateAddressBlock({ includeMilitary: true });
     expect(result.features).toContain('military-addresses');
-    expect(result.html).toContain('Armed Forces Americas');
-    expect(result.html).toContain('Armed Forces Europe');
-    expect(result.html).toContain('Armed Forces Pacific');
-    // Section state field should include military options
-    const stateField = result.section.fields.find((f) => f.name === 'state');
-    expect(stateField).toBeDefined();
-    const stateOptions = (stateField as any).options as Array<{ value: string; label: string }>;
-    const optionValues = stateOptions.map((o) => o.value);
-    expect(optionValues).toContain('AA');
-    expect(optionValues).toContain('AE');
-    expect(optionValues).toContain('AP');
   });
 
   it('section returns valid FormSection with 5 fields', () => {

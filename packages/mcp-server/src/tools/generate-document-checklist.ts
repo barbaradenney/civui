@@ -91,7 +91,6 @@ export function generateDocumentChecklist(schema: FormSchema): DocumentChecklist
     // Build file upload attributes
     const uploadAttrs: string[] = [
       `name="doc-${id}"`,
-      `label="Upload ${label}"`,
     ];
 
     if (req.acceptedFormats) {
@@ -103,10 +102,10 @@ export function generateDocumentChecklist(schema: FormSchema): DocumentChecklist
       uploadAttrs.push(`max-size="${req.maxSizeMb}"`);
     }
 
-    uploadAttrs.push(`class="civ-mt-2"`);
-
     htmlParts.push(
-      `      <civ-file-upload ${uploadAttrs.join(' ')}></civ-file-upload>`,
+      `      <civ-form-field label="Upload ${label}" class="civ-mt-2">`,
+      `        <civ-file-upload ${uploadAttrs.join(' ')}></civ-file-upload>`,
+      `      </civ-form-field>`,
     );
 
     htmlParts.push(`    </li>`);

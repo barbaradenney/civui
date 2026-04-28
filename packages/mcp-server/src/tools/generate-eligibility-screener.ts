@@ -48,24 +48,30 @@ export function generateEligibilityScreener(schema: FormSchema): EligibilityScre
 
     switch (q.type) {
       case 'yes-no':
-        htmlLines.push(`  <civ-radio-group name="${escapedId}" legend="${escapedText}" required${hintAttr}>`);
-        htmlLines.push(`    <civ-radio value="yes" label="Yes"></civ-radio>`);
-        htmlLines.push(`    <civ-radio value="no" label="No"></civ-radio>`);
-        htmlLines.push(`  </civ-radio-group>`);
+        htmlLines.push(`  <civ-form-fieldset legend="${escapedText}" required${hintAttr}>`);
+        htmlLines.push(`    <civ-radio-group name="${escapedId}" required>`);
+        htmlLines.push(`      <civ-radio value="yes" label="Yes"></civ-radio>`);
+        htmlLines.push(`      <civ-radio value="no" label="No"></civ-radio>`);
+        htmlLines.push(`    </civ-radio-group>`);
+        htmlLines.push(`  </civ-form-fieldset>`);
         break;
 
       case 'select':
-        htmlLines.push(`  <civ-select name="${escapedId}" label="${escapedText}" required${hintAttr}>`);
+        htmlLines.push(`  <civ-form-field label="${escapedText}" required${hintAttr}>`);
+        htmlLines.push(`    <civ-select name="${escapedId}" required>`);
         if (q.options) {
           for (const opt of q.options) {
-            htmlLines.push(`    <option value="${escapeHtml(opt.value)}">${escapeHtml(opt.label)}</option>`);
+            htmlLines.push(`      <option value="${escapeHtml(opt.value)}">${escapeHtml(opt.label)}</option>`);
           }
         }
-        htmlLines.push(`  </civ-select>`);
+        htmlLines.push(`    </civ-select>`);
+        htmlLines.push(`  </civ-form-field>`);
         break;
 
       case 'number':
-        htmlLines.push(`  <civ-text-input name="${escapedId}" label="${escapedText}" type="number" inputmode="numeric" required${hintAttr}></civ-text-input>`);
+        htmlLines.push(`  <civ-form-field label="${escapedText}" required${hintAttr}>`);
+        htmlLines.push(`    <civ-text-input name="${escapedId}" type="number" inputmode="numeric" required></civ-text-input>`);
+        htmlLines.push(`  </civ-form-field>`);
         break;
     }
   }

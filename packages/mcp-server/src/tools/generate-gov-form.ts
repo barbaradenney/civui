@@ -305,23 +305,28 @@ ${fieldSteps}
 
 /** Render a single form field as CivUI component HTML. */
 function renderField(field: FormField): string {
-  // Handle compound component markers
+  // Handle compound component markers (self-contained — no wrapping needed)
   if (field.label.startsWith('component:')) {
     const componentTag = field.label.replace('component:', '');
     const props = field.hint?.replace('component-props:', '') || '';
     return `      <${componentTag} name="${escapeHtml(field.name)}" ${props}></${componentTag}>`;
   }
 
-  const common = [
-    `label="${escapeHtml(field.label)}"`,
+  // Wrapper attributes: label, hint, required, disabled
+  const wrapperAttrs = [
+    field.hint ? `hint="${escapeHtml(field.hint)}"` : '',
+    field.required ? 'required' : '',
+  ].filter(Boolean).join(' ');
+
+  // Child attributes: name, autocomplete, inputmode, maxlength, placeholder (NOT label/hint)
+  const childAttrs = [
     `name="${escapeHtml(field.name)}"`,
     field.required ? 'required' : '',
-    field.hint ? `hint="${escapeHtml(field.hint)}"` : '',
     field.autocomplete ? `autocomplete="${escapeHtml(field.autocomplete)}"` : '',
     field.inputmode ? `inputmode="${escapeHtml(field.inputmode)}"` : '',
     field.maxlength ? `maxlength="${field.maxlength}"` : '',
     field.placeholder ? `placeholder="${escapeHtml(field.placeholder)}"` : '',
-  ].filter(Boolean).join('\n        ');
+  ].filter(Boolean).join('\n          ');
 
   switch (field.type) {
     case 'text':
@@ -331,103 +336,132 @@ function renderField(field: FormField): string {
     case 'password':
     case 'search':
     case 'url':
-      return `      <civ-text-input
-        ${common}
-        type="${field.type}"
-      ></civ-text-input>`;
+      return `      <civ-form-field label="${escapeHtml(field.label)}" ${wrapperAttrs}>
+        <civ-text-input
+          ${childAttrs}
+          type="${field.type}"
+        ></civ-text-input>
+      </civ-form-field>`;
 
     case 'ssn':
-      return `      <civ-text-input
-        ${common}
-        type="tel"
-        mask="ssn"
-        validate="ssn"
-      ></civ-text-input>`;
+      return `      <civ-form-field label="${escapeHtml(field.label)}" ${wrapperAttrs}>
+        <civ-text-input
+          ${childAttrs}
+          type="tel"
+          mask="ssn"
+          validate="ssn"
+        ></civ-text-input>
+      </civ-form-field>`;
 
     case 'zip':
-      return `      <civ-text-input
-        ${common}
-        type="tel"
-        mask="zip"
-        validate="zip"
-      ></civ-text-input>`;
+      return `      <civ-form-field label="${escapeHtml(field.label)}" ${wrapperAttrs}>
+        <civ-text-input
+          ${childAttrs}
+          type="tel"
+          mask="zip"
+          validate="zip"
+        ></civ-text-input>
+      </civ-form-field>`;
 
     case 'textarea':
-      return `      <civ-textarea
-        ${common}
-        ${field.rows ? `rows="${field.rows}"` : ''}
-      ></civ-textarea>`;
+      return `      <civ-form-field label="${escapeHtml(field.label)}" ${wrapperAttrs}>
+        <civ-textarea
+          ${childAttrs}
+          ${field.rows ? `rows="${field.rows}"` : ''}
+        ></civ-textarea>
+      </civ-form-field>`;
 
     case 'select':
-      return `      <civ-select
-        ${common}
-      ></civ-select>`;
+      return `      <civ-form-field label="${escapeHtml(field.label)}" ${wrapperAttrs}>
+        <civ-select
+          ${childAttrs}
+        ></civ-select>
+      </civ-form-field>`;
 
     case 'combobox':
-      return `      <civ-combobox
-        ${common}
-      ></civ-combobox>`;
+      return `      <civ-form-field label="${escapeHtml(field.label)}" ${wrapperAttrs}>
+        <civ-combobox
+          ${childAttrs}
+        ></civ-combobox>
+      </civ-form-field>`;
 
-    case 'radio':
+    case 'radio': {
       const radioOptions = (field.options || [])
-        .map(o => `        <civ-radio label="${escapeHtml(o.label)}" value="${escapeHtml(o.value)}"></civ-radio>`)
+        .map(o => `          <civ-radio label="${escapeHtml(o.label)}" value="${escapeHtml(o.value)}"></civ-radio>`)
         .join('\n');
-      return `      <civ-radio-group
-        legend="${escapeHtml(field.label)}"
-        name="${escapeHtml(field.name)}"
-        ${field.required ? 'required' : ''}
-      >
+      return `      <civ-form-fieldset legend="${escapeHtml(field.label)}" ${wrapperAttrs}>
+        <civ-radio-group
+          name="${escapeHtml(field.name)}"
+          ${field.required ? 'required' : ''}
+        >
 ${radioOptions}
-      </civ-radio-group>`;
+        </civ-radio-group>
+      </civ-form-fieldset>`;
+    }
 
     case 'checkbox':
+      // Standalone checkbox — self-contained, no wrapping needed
       return `      <civ-checkbox
-        ${common}
-      ></civ-checkbox>`;
-
-    case 'checkbox-group':
-      const checkOptions = (field.options || [])
-        .map(o => `        <civ-checkbox label="${escapeHtml(o.label)}" value="${escapeHtml(o.value)}"></civ-checkbox>`)
-        .join('\n');
-      return `      <civ-checkbox-group
-        legend="${escapeHtml(field.label)}"
+        label="${escapeHtml(field.label)}"
         name="${escapeHtml(field.name)}"
         ${field.required ? 'required' : ''}
-      >
+      ></civ-checkbox>`;
+
+    case 'checkbox-group': {
+      const checkOptions = (field.options || [])
+        .map(o => `          <civ-checkbox label="${escapeHtml(o.label)}" value="${escapeHtml(o.value)}"></civ-checkbox>`)
+        .join('\n');
+      return `      <civ-form-fieldset legend="${escapeHtml(field.label)}" ${wrapperAttrs}>
+        <civ-checkbox-group
+          name="${escapeHtml(field.name)}"
+          ${field.required ? 'required' : ''}
+        >
 ${checkOptions}
-      </civ-checkbox-group>`;
+        </civ-checkbox-group>
+      </civ-form-fieldset>`;
+    }
 
     case 'memorable-date':
-      return `      <civ-memorable-date
+      return `      <civ-form-fieldset legend="${escapeHtml(field.label)}" ${wrapperAttrs}>
+        <civ-memorable-date
+          name="${escapeHtml(field.name)}"
+          ${field.required ? 'required' : ''}
+        ></civ-memorable-date>
+      </civ-form-fieldset>`;
+
+    case 'date':
+      return `      <civ-form-field label="${escapeHtml(field.label)}" ${wrapperAttrs}>
+        <civ-date-picker
+          ${childAttrs}
+        ></civ-date-picker>
+      </civ-form-field>`;
+
+    case 'file':
+      return `      <civ-form-field label="${escapeHtml(field.label)}" ${wrapperAttrs}>
+        <civ-file-upload
+          ${childAttrs}
+          ${field.accept ? `accept="${escapeHtml(field.accept)}"` : ''}
+          ${field.multiple ? 'multiple' : ''}
+          ${field.maxSize ? `max-size="${field.maxSize}"` : ''}
+          ${field.maxFiles ? `max-files="${field.maxFiles}"` : ''}
+        ></civ-file-upload>
+      </civ-form-field>`;
+
+    case 'toggle':
+      // Self-contained — no wrapping needed
+      return `      <civ-toggle
         label="${escapeHtml(field.label)}"
         name="${escapeHtml(field.name)}"
         ${field.required ? 'required' : ''}
         ${field.hint ? `hint="${escapeHtml(field.hint)}"` : ''}
-      ></civ-memorable-date>`;
-
-    case 'date':
-      return `      <civ-date-picker
-        ${common}
-      ></civ-date-picker>`;
-
-    case 'file':
-      return `      <civ-file-upload
-        ${common}
-        ${field.accept ? `accept="${escapeHtml(field.accept)}"` : ''}
-        ${field.multiple ? 'multiple' : ''}
-        ${field.maxSize ? `max-size="${field.maxSize}"` : ''}
-        ${field.maxFiles ? `max-files="${field.maxFiles}"` : ''}
-      ></civ-file-upload>`;
-
-    case 'toggle':
-      return `      <civ-toggle
-        ${common}
       ></civ-toggle>`;
 
     default:
-      return `      <civ-text-input
-        ${common}
-      ></civ-text-input>`;
+      return `      <civ-form-field label="${escapeHtml(field.label)}" ${wrapperAttrs}>
+        <civ-text-input
+          ${childAttrs}
+        ></civ-text-input>
+      </civ-form-field>`;
   }
 }
 

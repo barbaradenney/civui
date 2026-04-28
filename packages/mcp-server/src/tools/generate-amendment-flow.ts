@@ -90,7 +90,9 @@ export function generateAmendmentFlow(
     features.push('requires-reason');
     htmlParts.push(
       `  <div class="civ-mt-4">`,
-      `    <civ-textarea name="amendment-reason" label="Reason for amendment" required rows="4"></civ-textarea>`,
+      `    <civ-form-field label="Reason for amendment" required>`,
+      `      <civ-textarea name="amendment-reason" required rows="4"></civ-textarea>`,
+      `    </civ-form-field>`,
       `  </div>`,
     );
   }

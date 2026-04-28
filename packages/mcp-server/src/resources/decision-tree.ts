@@ -44,8 +44,8 @@ Use this guide to select the correct CivUI component for each form field.
 
 - **Email** → \`<civ-text-input type="email" autocomplete="email">\`
 - **Phone** → \`<civ-text-input type="tel" autocomplete="tel" inputmode="tel">\`
-- **SSN** → \`<civ-text-input inputmode="numeric" hint="For example: 123 45 6789">\`
-- **ZIP code** → \`<civ-text-input inputmode="numeric" autocomplete="postal-code">\`
+- **SSN** → \`<civ-form-field hint="For example: 123 45 6789"><civ-text-input inputmode="numeric">\`
+- **ZIP code** → \`<civ-form-field><civ-text-input inputmode="numeric" autocomplete="postal-code">\`
 - **URL** → \`<civ-text-input type="url">\`
 - **Password** → \`<civ-text-input type="password" autocomplete="new-password">\`
 - **Search** → \`<civ-text-input type="search">\`
@@ -54,11 +54,21 @@ Use this guide to select the correct CivUI component for each form field.
 
 ## Structural decisions
 
+### Should I wrap the input?
+- **Single-value input** (text, textarea, select, combobox, date-picker, file-upload) → Wrap in \`<civ-form-field label="...">\`
+- **Group component** (radio-group, checkbox-group, memorable-date, segmented-control) → Wrap in \`<civ-form-fieldset legend="...">\`
+- **Self-contained component** (civ-address, civ-name, civ-signature, civ-checkbox, civ-toggle) → No wrapping needed, these manage their own labels
+
 ### Should I group fields?
 - **Yes, if fields are logically related** → Wrap in \`<civ-fieldset legend="...">\`
 - Keep fieldsets flat — avoid nesting fieldsets inside fieldsets
 - Each fieldset should have no more than 7 direct form fields
 - If the form has more than 20 fields without fieldsets, break it into sections
+
+### Should I use a preset select?
+- **US state list** → \`<civ-select preset="us-state">\` (replaces \`<civ-us-state>\`)
+- **Service branch list** → \`<civ-select preset="service-branch">\` (replaces \`<civ-service-branch>\`)
+- **Country, suffix, month** → \`<civ-select preset="country|suffix|month">\`
 
 ### Should I wrap in a form?
 - **Yes** → Use \`<civ-form>\` for:
@@ -72,6 +82,9 @@ Use this guide to select the correct CivUI component for each form field.
 | Pattern | Problem | Fix |
 |---------|---------|-----|
 | \`<civ-date-input>\` | Deprecated — Dragon/VoiceOver/TalkBack issues | Use \`<civ-memorable-date>\` or \`<civ-date-picker>\` |
+| \`<civ-form-group>\` | Removed | Use \`<civ-form-field>\` or \`<civ-form-fieldset>\` |
+| \`<civ-us-state>\` / \`<civ-service-branch>\` | Removed | Use \`<civ-select preset="us-state|service-branch">\` |
+| Label on input component | Incorrect — wrapper owns the label | Move label/hint/error to \`<civ-form-field>\` or \`<civ-form-fieldset>\` |
 | \`placeholder\` without \`label\` | Not accessible — placeholder is not a label | Always provide a \`label\` attribute |
 | Radio group with 1 option | Semantically incorrect | Use \`<civ-checkbox>\` instead |
 | Radio group with 8+ options | Too many options for radio | Use \`<civ-select>\` or \`<civ-combobox>\` |

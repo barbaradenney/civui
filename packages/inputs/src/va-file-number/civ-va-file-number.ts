@@ -1,6 +1,6 @@
 import { html } from 'lit';
 import { customElement } from 'lit/decorators.js';
-import { CivFormElement, dispatch } from '@civui/core';
+import { CivFormElement, dispatch, t } from '@civui/core';
 import '../text-input/civ-text-input.js';
 
 /**
@@ -24,8 +24,8 @@ import '../text-input/civ-text-input.js';
 @customElement('civ-va-file-number')
 export class CivVaFileNumber extends CivFormElement {
   override render() {
-    const label = this.label || 'VA file number';
-    const hint = this.hint || 'Your VA file number is 8 or 9 digits. It may be the same as your Social Security number.';
+    const label = this.label || t('vaFileNumberLabel');
+    const hint = this.hint || t('vaFileNumberHint');
 
     return html`
       <civ-text-input

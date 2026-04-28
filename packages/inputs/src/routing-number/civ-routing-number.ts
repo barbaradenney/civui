@@ -1,6 +1,6 @@
 import { html } from 'lit';
 import { customElement } from 'lit/decorators.js';
-import { CivFormElement, dispatch } from '@civui/core';
+import { CivFormElement, dispatch, t } from '@civui/core';
 import '../text-input/civ-text-input.js';
 
 /**
@@ -17,8 +17,8 @@ import '../text-input/civ-text-input.js';
 @customElement('civ-routing-number')
 export class CivRoutingNumber extends CivFormElement {
   override render() {
-    const label = this.label || 'Routing number';
-    const hint = this.hint || 'The 9-digit number on the bottom left of your check';
+    const label = this.label || t('routingNumberLabel');
+    const hint = this.hint || t('routingNumberHint');
 
     return html`
       <civ-text-input

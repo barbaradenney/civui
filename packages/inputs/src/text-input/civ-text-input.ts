@@ -768,6 +768,12 @@ export class CivTextInput extends CivFormElement {
     }
   }
 
+  override formResetCallback(): void {
+    super.formResetCallback();
+    this._maskError = false;
+    this._validateError = false;
+  }
+
   /**
    * Always sync the raw (unformatted) value to the form,
    * regardless of whether a mask is active.

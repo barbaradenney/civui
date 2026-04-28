@@ -141,7 +141,8 @@ export class CivCombobox extends CivFormElement {
 
   private get _displayValue(): string {
     if (this._open) return this._filter;
-    const selected = this.options.find((o) => o.value === this.value);
+    const selected = this.options.find((o) => o.value === this.value)
+      ?? this._remoteOptions.find((o) => o.value === this.value);
     return selected ? selected.label : this._filter;
   }
 
@@ -540,11 +541,16 @@ export class CivCombobox extends CivFormElement {
 
       case 'Escape': {
         // Restore display to the currently selected option's label
-        const selected = this.options.find((o) => o.value === this.value);
+        const selected = this.options.find((o) => o.value === this.value)
+          ?? this._remoteOptions.find((o) => o.value === this.value);
+        const previousFilter = this._filter;
         this._filter = selected ? selected.label : '';
         this._setOpen(false);
         this._activeIndex = -1;
-        dispatch(this, 'civ-input', { value: this.value });
+        // Only dispatch if the displayed value actually changed
+        if (this._filter !== previousFilter) {
+          dispatch(this, 'civ-input', { value: this.value });
+        }
         break;
       }
 
@@ -567,7 +573,8 @@ export class CivCombobox extends CivFormElement {
 
   override formResetCallback(): void {
     super.formResetCallback();
-    const selected = this.options.find((o) => o.value === this._defaultValue);
+    const selected = this.options.find((o) => o.value === this._defaultValue)
+      ?? this._remoteOptions.find((o) => o.value === this._defaultValue);
     this._filter = selected ? selected.label : '';
     this._setOpen(false);
     this._activeIndex = -1;

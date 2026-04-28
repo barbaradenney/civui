@@ -35,7 +35,15 @@ export interface CivLocaleStrings {
   formErrorAnnouncementSingular: string; // "1 error found. Review the error summary."
   formErrorAnnouncementPlural: string; // "{count} errors found. Review the error summary."
 
+  // Link
+  linkDisabledTitle: string;
+  externalLinkNewTab: string;
+
+  // Close button
+  closeLabel: string;
+
   // File upload
+  fileUploadShowAll: string; // "Show all {count} files"
   fileUploadDragText: string;
   fileUploadNoFileChosen: string;
   fileUploadBrowseText: string;
@@ -105,9 +113,14 @@ export interface CivLocaleStrings {
   ssnLast4Hint: string;
   phoneLabel: string;
   emailLabel: string;
+  emailHint: string;
   zipLabel: string;
   einLabel: string;
   currencyLabel: string;
+  routingNumberLabel: string;
+  routingNumberHint: string;
+  vaFileNumberLabel: string;
+  vaFileNumberHint: string;
 
   maskSsnHint: string;
   maskPhoneUsHint: string;
@@ -387,6 +400,12 @@ const defaultStrings: CivLocaleStrings = {
   formErrorAnnouncementSingular: '1 error found. Review the error summary.',
   formErrorAnnouncementPlural: '{count} errors found. Review the error summary.',
 
+  linkDisabledTitle: 'This link is currently unavailable',
+  externalLinkNewTab: '(opens in new tab)',
+
+  closeLabel: 'Close',
+
+  fileUploadShowAll: 'Show all {count} files',
   fileUploadDragText: 'Drag files here or',
   fileUploadNoFileChosen: 'No file chosen',
   fileUploadBrowseText: 'Choose from folder',
@@ -451,9 +470,14 @@ const defaultStrings: CivLocaleStrings = {
   ssnLast4Hint: 'For example: 6789',
   phoneLabel: 'Phone number',
   emailLabel: 'Email address',
+  emailHint: 'For example: name@example.com',
   zipLabel: 'ZIP code',
   einLabel: 'Employer Identification Number',
   currencyLabel: 'Amount',
+  routingNumberLabel: 'Routing number',
+  routingNumberHint: 'The 9-digit number on the bottom left of your check',
+  vaFileNumberLabel: 'VA file number',
+  vaFileNumberHint: 'Your VA file number is 8 or 9 digits. It may be the same as your Social Security number.',
 
   maskSsnHint: 'For example: 123-45-6789',
   maskPhoneUsHint: 'For example: (555) 123-4567',

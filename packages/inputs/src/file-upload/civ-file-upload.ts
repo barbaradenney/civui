@@ -279,7 +279,9 @@ export class CivFileUpload extends CivFormElement {
 
   override render() {
     return html`
-        ${this.variant === 'compact'
+        ${this.readonly
+          ? nothing
+          : this.variant === 'compact'
           ? html`
             <div class="civ-flex civ-gap-2 civ-items-center">
               <span class="civ-input civ-flex-1 civ-truncate civ-text-muted">
@@ -330,7 +332,7 @@ export class CivFileUpload extends CivFormElement {
           accept="${this.accept || nothing}"
           capture="${this.capture || nothing}"
           ?multiple="${this.multiple}"
-          ?disabled="${this.disabled}"
+          ?disabled="${this.disabled || this.readonly}"
           ?required="${this.required && this._files.length === 0}"
           class="civ-hidden"
           @change="${this._onFileSelect}"
@@ -369,7 +371,7 @@ export class CivFileUpload extends CivFormElement {
                           <span class="civ-file-error-text">${file.error}</span>
                         ` : nothing}
                       </div>
-                      <span class="civ-list-item__actions">
+                      ${this.readonly ? nothing : html`<span class="civ-list-item__actions">
                         ${file.status === 'uploading' ? html`
                           <civ-action-button
                             variant="tertiary"
@@ -397,7 +399,7 @@ export class CivFileUpload extends CivFormElement {
                             data-file-remove
                           ></civ-action-button>
                         ` : nothing}
-                      </span>
+                      </span>`}
                     </li>
                   `,
                 )}
@@ -407,7 +409,7 @@ export class CivFileUpload extends CivFormElement {
                   type="button"
                   class="civ-btn civ-btn--tertiary civ-mt-2"
                   @click="${() => { this._showAllFiles = true; }}"
-                >Show all ${this._files.length} files</button>
+                >${interpolate(t('fileUploadShowAll'), { count: this._files.length })}</button>
               ` : nothing}
             `
           : nothing}
@@ -503,14 +505,14 @@ export class CivFileUpload extends CivFormElement {
   }
 
   private _onDropzoneClick(): void {
-    if (this.disabled) return;
+    if (this.disabled || this.readonly) return;
     const input = this.querySelector(`#${this._inputId}`) as HTMLInputElement;
     input?.click();
   }
 
   private _onDragOver(e: DragEvent): void {
     e.preventDefault();
-    if (!this.disabled) this._dragging = true;
+    if (!this.disabled && !this.readonly) this._dragging = true;
   }
 
   private _onDragLeave(): void {
@@ -520,7 +522,7 @@ export class CivFileUpload extends CivFormElement {
   private _onDrop(e: DragEvent): void {
     e.preventDefault();
     this._dragging = false;
-    if (this.disabled || !e.dataTransfer) return;
+    if (this.disabled || this.readonly || !e.dataTransfer) return;
     this._addFiles(Array.from(e.dataTransfer.files));
   }
 

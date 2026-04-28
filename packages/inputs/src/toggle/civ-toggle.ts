@@ -26,6 +26,7 @@ export class CivToggle extends CivBooleanFormElement {
             aria-checked="${this.checked ? 'true' : 'false'}"
             aria-required="${this.required || nothing}"
             aria-invalid="${this.error ? 'true' : nothing}"
+            aria-readonly="${this.readonly || nothing}"
             aria-describedby="${this._ariaDescribedBy || nothing}"
             ?disabled="${this.disabled}"
             @click="${this._onToggle}"
@@ -55,7 +56,7 @@ export class CivToggle extends CivBooleanFormElement {
   }
 
   private _onToggle(): void {
-    if (this.disabled) return;
+    if (this.disabled || this.readonly) return;
     this.checked = !this.checked;
     dispatch(this, 'civ-input', { checked: this.checked, value: this.value });
     dispatch(this, 'civ-change', { checked: this.checked, value: this.value });

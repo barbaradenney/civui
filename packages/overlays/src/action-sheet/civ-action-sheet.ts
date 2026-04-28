@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBaseElement, LightDomSlotMixin, dispatch, trapFocus, clickOutside } from '@civui/core';
+import { CivBaseElement, LightDomSlotMixin, dispatch, trapFocus, clickOutside, t } from '@civui/core';
 import type { SlotConfig } from '@civui/core';
 
 /**
@@ -81,7 +81,7 @@ export class CivActionSheet extends LightDomSlotMixin(CivBaseElement) {
           <button
             type="button"
             class="civ-close-btn focus-visible:civ-focus-ring"
-            aria-label="Close"
+            aria-label="${t('closeLabel')}"
             @click="${this._requestClose}"
           ><civ-icon name="close" aria-hidden="true"></civ-icon></button>
         </div>

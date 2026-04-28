@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBaseElement, LightDomTextMixin } from '@civui/core';
+import { CivBaseElement, LightDomTextMixin, t } from '@civui/core';
 
 export type LinkVariant = 'primary' | 'secondary' | 'tertiary' | 'back';
 
@@ -85,7 +85,7 @@ export class CivLink extends LightDomTextMixin(CivBaseElement) {
           class="${this._classes}"
           aria-disabled="true"
           tabindex="-1"
-          title="This link is currently unavailable"
+          title="${t('linkDisabledTitle')}"
         >${this._leadingIcon}${this._text}${this._trailingIcon}</a>
       `;
     }

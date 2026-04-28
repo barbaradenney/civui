@@ -18,7 +18,7 @@ import '../text-input/civ-text-input.js';
 export class CivEmail extends CivFormElement {
   override render() {
     const label = this.label || t('emailLabel');
-    const hint = this.hint || 'For example: name@example.com';
+    const hint = this.hint || t('emailHint');
 
     return html`
       <civ-text-input

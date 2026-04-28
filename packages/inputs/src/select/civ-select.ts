@@ -42,6 +42,7 @@ export class CivSelect extends CivFormElement {
   @property({ type: Array }) options: SelectOption[] = [];
   @property({ type: String, attribute: 'empty-label' }) emptyLabel: string = '';
   @property({ type: String }) width: InputWidth = 'default';
+  @property({ type: String }) autocomplete = '';
 
   override connectedCallback(): void {
     super.connectedCallback();
@@ -128,6 +129,7 @@ export class CivSelect extends CivFormElement {
           ?disabled="${this.disabled || this.readonly}"
           ?required="${this.required}"
           aria-required="${this.required || nothing}"
+          autocomplete="${this.autocomplete || nothing}"
           aria-describedby="${this._ariaDescribedBy || nothing}"
           aria-invalid="${this.error ? 'true' : nothing}"
           @change="${this._onSelectChange}"

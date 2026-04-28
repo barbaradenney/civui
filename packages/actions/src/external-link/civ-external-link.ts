@@ -1,6 +1,6 @@
 import { html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBaseElement, LightDomTextMixin } from '@civui/core';
+import { CivBaseElement, LightDomTextMixin, t } from '@civui/core';
 import '../link/civ-link.js';
 
 /**
@@ -35,7 +35,7 @@ export class CivExternalLink extends LightDomTextMixin(CivBaseElement) {
         icon-end="external-link"
         ?disabled="${this.disabled}"
       ></civ-link>
-      <span class="civ-sr-only">(opens in new tab)</span>
+      <span class="civ-sr-only">${t('externalLinkNewTab')}</span>
     `;
   }
 }

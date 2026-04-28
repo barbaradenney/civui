@@ -28,6 +28,7 @@ import './marital-status/civ-marital-status.js';
 import './ethnicity/civ-ethnicity.js';
 import './gender/civ-gender.js';
 import './language/civ-language.js';
+import './race/civ-race.js';
 
 // Preset Input Base Class
 export { PresetInputWrapper } from './preset-input/index.js';
@@ -120,3 +121,6 @@ export { CivGender } from './gender/index.js';
 
 // Language
 export { CivLanguage } from './language/index.js';
+
+// Race
+export { CivRace } from './race/index.js';

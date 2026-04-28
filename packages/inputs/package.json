@@ -36,6 +36,7 @@
     "./ethnicity": "./dist/ethnicity/index.js",
     "./gender": "./dist/gender/index.js",
     "./language": "./dist/language/index.js",
+    "./race": "./dist/race/index.js",
     "./preset-input": "./dist/preset-input/index.js"
   },
   "files": ["dist"],
@@ -50,6 +51,7 @@
   },
   "dependencies": {
     "@civui/core": "workspace:*",
+    "@civui/controls": "workspace:*",
     "lit": "^3.2.0"
   },
   "devDependencies": {

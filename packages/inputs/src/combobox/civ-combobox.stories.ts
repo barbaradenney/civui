@@ -21,6 +21,30 @@ const STATES = [
   { value: 'WA', label: 'Washington' },
 ];
 
+const OFFICES = [
+  { value: 'dc-hq', label: 'DC Headquarters', group: 'East Coast' },
+  { value: 'dc-annex', label: 'DC Annex Building', group: 'East Coast' },
+  { value: 'ny-field', label: 'New York Field Office', group: 'East Coast' },
+  { value: 'boston', label: 'Boston Regional', group: 'East Coast' },
+  { value: 'sf-field', label: 'San Francisco Field Office', group: 'West Coast' },
+  { value: 'la-field', label: 'Los Angeles Field Office', group: 'West Coast' },
+  { value: 'seattle', label: 'Seattle Regional', group: 'West Coast' },
+  { value: 'chicago', label: 'Chicago Regional', group: 'Midwest' },
+  { value: 'denver', label: 'Denver Field Office', group: 'Midwest' },
+];
+
+const AGENCIES = [
+  { value: 'va', label: 'Department of Veterans Affairs' },
+  { value: 'ssa', label: 'Social Security Administration' },
+  { value: 'irs', label: 'Internal Revenue Service' },
+  { value: 'usps', label: 'United States Postal Service' },
+  { value: 'sba', label: 'Small Business Administration' },
+  { value: 'epa', label: 'Environmental Protection Agency' },
+  { value: 'doe', label: 'Department of Energy' },
+  { value: 'dot', label: 'Department of Transportation' },
+  { value: 'usda', label: 'Department of Agriculture' },
+];
+
 const meta: Meta = {
   title: 'Forms/Inputs/Combobox',
   component: 'civ-combobox',
@@ -32,7 +56,6 @@ const meta: Meta = {
     hint: { control: 'text' },
     error: { control: 'text' },
     placeholder: { control: 'text' },
-    noResultsText: { control: 'text' },
     required: { control: 'boolean' },
     disabled: { control: 'boolean' },
   },
@@ -51,317 +74,227 @@ export const Default: Story = {
     hint: '',
     error: '',
     value: '',
-    noResultsText: 'No results found',
     required: false,
     disabled: false,
   },
-  render: (args) => {
-    const el = document.createElement('civ-combobox') as any;
-    el.label = args.label;
-    el.name = args.name;
-    el.placeholder = args.placeholder;
-    el.hint = args.hint;
-    el.error = args.error;
-    el.value = args.value;
-    el.noResultsText = args.noResultsText;
-    el.options = STATES;
-    el.required = args.required;
-    el.disabled = args.disabled;
-    return el;
-  },
+  render: (args) => html`
+    <civ-form-field
+      label="${args.label}"
+      hint="${args.hint}"
+      error="${args.error}"
+      ?required="${args.required}"
+      ?disabled="${args.disabled}"
+    >
+      <civ-combobox
+        name="${args.name}"
+        placeholder="${args.placeholder}"
+        .options="${STATES}"
+        ?required="${args.required}"
+        ?disabled="${args.disabled}"
+      ></civ-combobox>
+    </civ-form-field>
+  `,
 };
 
 // ── Individual States ─────────────────────────────────────────
 
 export const WithHint: Story = {
-  render: () => {
-    const el = document.createElement('civ-combobox') as any;
-    el.label = 'State of residence';
-    el.name = 'state';
-    el.hint = 'Type to search or use arrow keys to browse';
-    el.options = STATES;
-    return el;
-  },
+  render: () => html`
+    <civ-form-field label="State of residence" hint="Type to search or use arrow keys to browse">
+      <civ-combobox name="state" .options="${STATES}"></civ-combobox>
+    </civ-form-field>
+  `,
 };
 
 export const WithError: Story = {
-  render: () => {
-    const el = document.createElement('civ-combobox') as any;
-    el.label = 'State of residence';
-    el.name = 'state';
-    el.error = 'Select a valid state';
-    el.required = true;
-    el.options = STATES;
-    return el;
-  },
+  render: () => html`
+    <civ-form-field label="State of residence" error="Select a valid state" required>
+      <civ-combobox name="state" .options="${STATES}" required></civ-combobox>
+    </civ-form-field>
+  `,
 };
 
 export const Required: Story = {
-  render: () => {
-    const el = document.createElement('civ-combobox') as any;
-    el.label = 'State of residence';
-    el.name = 'state';
-    el.required = true;
-    el.options = STATES;
-    return el;
-  },
+  render: () => html`
+    <civ-form-field label="State of residence" required>
+      <civ-combobox name="state" .options="${STATES}" required></civ-combobox>
+    </civ-form-field>
+  `,
 };
 
 export const Disabled: Story = {
-  render: () => {
-    const el = document.createElement('civ-combobox') as any;
-    el.label = 'State of residence';
-    el.name = 'state';
-    el.disabled = true;
-    el.value = 'CA';
-    el.options = STATES;
-    return el;
-  },
+  render: () => html`
+    <civ-form-field label="State of residence" disabled>
+      <civ-combobox name="state" value="CA" .options="${STATES}" disabled></civ-combobox>
+    </civ-form-field>
+  `,
 };
 
 // ── All States ────────────────────────────────────────────────
 
 export const AllStates: Story = {
   name: 'All States',
-  render: () => {
-    const container = document.createElement('div');
-    container.style.display = 'flex';
-    container.style.flexDirection = 'column';
-    container.style.gap = '24px';
-
-    const configs = [
-      { label: 'Normal', name: 'normal' },
-      { label: 'With hint', name: 'hint', hint: 'Type to search' },
-      { label: 'With error', name: 'error', error: 'Select a state', required: true },
-      { label: 'Required', name: 'required', required: true },
-      { label: 'Disabled', name: 'disabled', disabled: true, value: 'TX' },
-    ];
-
-    configs.forEach((cfg) => {
-      const el = document.createElement('civ-combobox') as any;
-      el.label = cfg.label;
-      el.name = cfg.name;
-      el.options = STATES;
-      if (cfg.hint) el.hint = cfg.hint;
-      if (cfg.error) el.error = cfg.error;
-      if (cfg.required) el.required = true;
-      if (cfg.disabled) el.disabled = true;
-      if (cfg.value) el.value = cfg.value;
-      container.appendChild(el);
-    });
-
-    return container;
-  },
+  render: () => html`
+    <div class="civ-flex civ-flex-col civ-gap-4">
+      <civ-form-field label="Normal">
+        <civ-combobox name="normal" .options="${STATES}"></civ-combobox>
+      </civ-form-field>
+      <civ-form-field label="With hint" hint="Type to search">
+        <civ-combobox name="hint" .options="${STATES}"></civ-combobox>
+      </civ-form-field>
+      <civ-form-field label="With error" error="Select a state" required>
+        <civ-combobox name="error" .options="${STATES}" required></civ-combobox>
+      </civ-form-field>
+      <civ-form-field label="Required" required>
+        <civ-combobox name="required" .options="${STATES}" required></civ-combobox>
+      </civ-form-field>
+      <civ-form-field label="Disabled" disabled>
+        <civ-combobox name="disabled" value="TX" .options="${STATES}" disabled></civ-combobox>
+      </civ-form-field>
+    </div>
+  `,
 };
 
 // ── Density Scale ─────────────────────────────────────────────
 
 export const DensityScale: Story = {
   name: 'Density Scale',
-  render: () => {
-    const wrapper = document.createElement('div');
-    wrapper.style.display = 'flex';
-    wrapper.style.flexDirection = 'column';
-    wrapper.style.gap = '24px';
-
-    const scales = [
-      { attr: 'dense', label: 'Dense' },
-      { attr: '', label: 'Default' },
-      { attr: 'spacious', label: 'Spacious' },
-    ];
-
-    scales.forEach(({ attr, label }) => {
-      const section = document.createElement('div');
-      if (attr) section.setAttribute('data-civ-scale', attr);
-      const p = document.createElement('p');
-      p.style.margin = '0 0 8px';
-      p.style.fontWeight = '600';
-      p.textContent = label;
-      section.appendChild(p);
-
-      const el = document.createElement('civ-combobox') as any;
-      el.label = 'State of residence';
-      el.name = `${attr || 'default'}-state`;
-      el.hint = 'Type to search states';
-      el.options = STATES;
-      section.appendChild(el);
-      wrapper.appendChild(section);
-    });
-
-    return wrapper;
-  },
+  render: () => html`
+    <div class="civ-flex civ-flex-col civ-gap-6">
+      <div data-civ-scale="dense">
+        <p class="civ-text-sm civ-font-semibold civ-mb-2">Dense</p>
+        <civ-form-field label="State" hint="Type to search">
+          <civ-combobox name="dense-state" .options="${STATES}"></civ-combobox>
+        </civ-form-field>
+      </div>
+      <div>
+        <p class="civ-text-sm civ-font-semibold civ-mb-2">Default</p>
+        <civ-form-field label="State" hint="Type to search">
+          <civ-combobox name="default-state" .options="${STATES}"></civ-combobox>
+        </civ-form-field>
+      </div>
+      <div data-civ-scale="spacious">
+        <p class="civ-text-sm civ-font-semibold civ-mb-2">Spacious</p>
+        <civ-form-field label="State" hint="Type to search">
+          <civ-combobox name="spacious-state" .options="${STATES}"></civ-combobox>
+        </civ-form-field>
+      </div>
+    </div>
+  `,
 };
 
 // ── Variants ──────────────────────────────────────────────────
 
 export const OptionGroups: Story = {
-  render: () => {
-    const el = document.createElement('civ-combobox') as any;
-    el.label = 'Office location';
-    el.name = 'office';
-    el.placeholder = 'Search offices...';
-    el.options = [
-      { value: 'dc-hq', label: 'DC Headquarters', group: 'East Coast' },
-      { value: 'dc-annex', label: 'DC Annex Building', group: 'East Coast' },
-      { value: 'ny-field', label: 'New York Field Office', group: 'East Coast' },
-      { value: 'boston', label: 'Boston Regional', group: 'East Coast' },
-      { value: 'sf-field', label: 'San Francisco Field Office', group: 'West Coast' },
-      { value: 'la-field', label: 'Los Angeles Field Office', group: 'West Coast' },
-      { value: 'seattle', label: 'Seattle Regional', group: 'West Coast' },
-      { value: 'chicago', label: 'Chicago Regional', group: 'Midwest' },
-      { value: 'denver', label: 'Denver Field Office', group: 'Midwest' },
-    ];
-    return el;
-  },
+  render: () => html`
+    <civ-form-field label="Office location" hint="Search offices...">
+      <civ-combobox name="office" placeholder="Search offices..." .options="${OFFICES}"></civ-combobox>
+    </civ-form-field>
+  `,
 };
-
-// ── Usage Example ─────────────────────────────────────────────
 
 export const GovernmentOfficeSearch: Story = {
   name: 'Usage: Office Location Search',
-  render: () => {
-    const el = document.createElement('civ-combobox') as any;
-    el.label = 'Nearest field office';
-    el.name = 'office';
-    el.hint = 'Search by city or office name to find appointments';
-    el.placeholder = 'Type a city or office name...';
-    el.required = true;
-    el.options = [
-      { value: 'dc-hq', label: 'Washington DC - Headquarters', group: 'East Coast' },
-      { value: 'ny-field', label: 'New York - Federal Plaza', group: 'East Coast' },
-      { value: 'boston', label: 'Boston - JFK Federal Building', group: 'East Coast' },
-      { value: 'sf-field', label: 'San Francisco - Federal Building', group: 'West Coast' },
-      { value: 'la-field', label: 'Los Angeles - Federal Building', group: 'West Coast' },
-      { value: 'chicago', label: 'Chicago - Dirksen Building', group: 'Midwest' },
-      { value: 'denver', label: 'Denver - Byron Rogers Building', group: 'Mountain' },
-    ];
-    return el;
-  },
+  render: () => html`
+    <civ-form-field label="Nearest field office" hint="Search by city or office name" required>
+      <civ-combobox name="office" placeholder="Type a city or office name..." .options="${OFFICES}" required></civ-combobox>
+    </civ-form-field>
+  `,
 };
-
-// ── Width variants ────────────────────────────────────────────
 
 export const WidthVariants: Story = {
   name: 'Width variants',
-  render: () => {
-    const wrap = document.createElement('div');
-    wrap.className = 'civ-flex civ-flex-col civ-gap-4';
-    for (const w of ['xs', 'sm', 'md', 'lg', 'default']) {
-      const el = document.createElement('civ-combobox') as any;
-      el.setAttribute('label', `Width: ${w}`);
-      if (w !== 'default') el.setAttribute('width', w);
-      el.options = STATES;
-      wrap.appendChild(el);
-    }
-    return wrap;
-  },
+  render: () => html`
+    <div class="civ-flex civ-flex-col civ-gap-4">
+      <civ-form-field label="xs width">
+        <civ-combobox width="xs" .options="${STATES}"></civ-combobox>
+      </civ-form-field>
+      <civ-form-field label="sm width">
+        <civ-combobox width="sm" .options="${STATES}"></civ-combobox>
+      </civ-form-field>
+      <civ-form-field label="md width">
+        <civ-combobox width="md" .options="${STATES}"></civ-combobox>
+      </civ-form-field>
+      <civ-form-field label="lg width">
+        <civ-combobox width="lg" .options="${STATES}"></civ-combobox>
+      </civ-form-field>
+      <civ-form-field label="default (full width)">
+        <civ-combobox .options="${STATES}"></civ-combobox>
+      </civ-form-field>
+    </div>
+  `,
 };
-
-// ── Chevron toggle (decorative — present on every combobox) ───
 
 export const ChevronToggle: Story = {
   name: 'Chevron toggle',
-  parameters: {
-    docs: {
-      description: {
-        story:
-          'Click the trailing chevron to open the full unfiltered list — same affordance as a native <select>. The chevron is decorative (aria-hidden, tabindex=-1); keyboard users still use ArrowDown/ArrowUp to open. Coexists with the clear button when a value is selected.',
-      },
-    },
-  },
-  render: () => {
-    const el = document.createElement('civ-combobox') as any;
-    el.setAttribute('label', 'State');
-    el.setAttribute('name', 'state');
-    el.options = STATES;
-    return el;
-  },
+  render: () => html`
+    <civ-form-field label="State">
+      <civ-combobox name="state" .options="${STATES}"></civ-combobox>
+    </civ-form-field>
+  `,
 };
 
 // ── Async loadOptions ─────────────────────────────────────────
-
-const SAMPLE_AGENCIES = [
-  { value: 'va', label: 'Department of Veterans Affairs' },
-  { value: 'ssa', label: 'Social Security Administration' },
-  { value: 'irs', label: 'Internal Revenue Service' },
-  { value: 'usps', label: 'United States Postal Service' },
-  { value: 'sba', label: 'Small Business Administration' },
-  { value: 'epa', label: 'Environmental Protection Agency' },
-  { value: 'doe', label: 'Department of Energy' },
-  { value: 'dot', label: 'Department of Transportation' },
-  { value: 'usda', label: 'Department of Agriculture' },
-];
+// These use imperative construction because loadOptions is a function property.
 
 export const AsyncLoading: Story = {
   name: 'Async: remote loadOptions',
-  parameters: {
-    docs: {
-      description: {
-        story:
-          'When `loadOptions` is set the combobox switches into remote mode. The function is called (debounced, 300ms by default) with the typed query and is expected to return matching options. Loading, error, and below-min-query states each get their own dropdown message. Stale responses are discarded automatically so a slow network response never overwrites newer results.',
-      },
-    },
-  },
   render: () => {
+    const wrapper = document.createElement('civ-form-field') as any;
+    wrapper.label = 'Federal agency';
+    wrapper.hint = 'Type to search across federal agencies';
+
     const el = document.createElement('civ-combobox') as any;
-    el.setAttribute('label', 'Federal agency');
-    el.setAttribute('name', 'agency');
-    el.setAttribute('hint', 'Type to search across federal agencies');
-    el.setAttribute('placeholder', 'Type an agency name...');
+    el.name = 'agency';
+    el.placeholder = 'Type an agency name...';
     el.loadOptions = async (q: string) => {
-      // Simulated network latency
       await new Promise((r) => setTimeout(r, 400));
-      const lower = q.toLowerCase();
-      return SAMPLE_AGENCIES.filter((a) => a.label.toLowerCase().includes(lower));
+      return AGENCIES.filter((a) => a.label.toLowerCase().includes(q.toLowerCase()));
     };
-    return el;
+
+    wrapper.innerHTML = '';
+    wrapper.appendChild(el);
+    return wrapper;
   },
 };
 
 export const AsyncWithMinQuery: Story = {
   name: 'Async: with min-query-length',
-  parameters: {
-    docs: {
-      description: {
-        story:
-          'Set `min-query-length` so the loader is not called for vague short queries. The dropdown shows a "Type at least N characters" prompt until the threshold is met.',
-      },
-    },
-  },
   render: () => {
+    const wrapper = document.createElement('civ-form-field') as any;
+    wrapper.label = 'Federal agency';
+
     const el = document.createElement('civ-combobox') as any;
-    el.setAttribute('label', 'Federal agency');
-    el.setAttribute('name', 'agency');
+    el.name = 'agency';
     el.setAttribute('min-query-length', '3');
-    el.setAttribute('placeholder', 'Type at least 3 characters...');
+    el.placeholder = 'Type at least 3 characters...';
     el.loadOptions = async (q: string) => {
       await new Promise((r) => setTimeout(r, 250));
-      const lower = q.toLowerCase();
-      return SAMPLE_AGENCIES.filter((a) => a.label.toLowerCase().includes(lower));
+      return AGENCIES.filter((a) => a.label.toLowerCase().includes(q.toLowerCase()));
     };
-    return el;
+
+    wrapper.innerHTML = '';
+    wrapper.appendChild(el);
+    return wrapper;
   },
 };
 
 export const AsyncError: Story = {
   name: 'Async: error state',
-  parameters: {
-    docs: {
-      description: {
-        story:
-          'When `loadOptions` rejects, the dropdown shows the error message in a `role="alert"` region. Customize via `loading-error-text`.',
-      },
-    },
-  },
   render: () => {
+    const wrapper = document.createElement('civ-form-field') as any;
+    wrapper.label = 'Federal agency';
+
     const el = document.createElement('civ-combobox') as any;
-    el.setAttribute('label', 'Federal agency');
-    el.setAttribute('name', 'agency');
+    el.name = 'agency';
     el.loadOptions = async () => {
       await new Promise((r) => setTimeout(r, 400));
       throw new Error('Network unavailable');
     };
-    return el;
+
+    wrapper.innerHTML = '';
+    wrapper.appendChild(el);
+    return wrapper;
   },
 };
 

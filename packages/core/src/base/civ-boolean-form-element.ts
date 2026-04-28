@@ -71,6 +71,7 @@ export class CivBooleanFormElement extends CivFormElement {
   override formResetCallback(): void {
     this.checked = this._defaultChecked;
     this.error = '';
+    this.touched = false;
     this.updateFormValue(this._defaultChecked ? this.value : null);
     dispatch(this, 'civ-reset');
   }

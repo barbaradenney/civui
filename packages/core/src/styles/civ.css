@@ -38,6 +38,89 @@
   --civ-focus-shadow-color: var(--civ-color-primary-darker);
 }
 
+/* Z-index scale — named layers for predictable stacking */
+:root {
+  --civ-z-overlay-backdrop: 99;
+  --civ-z-overlay: 100;
+  --civ-z-skip-link: 9999;
+}
+
+/* Reduced motion: disable all transitions and animations */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Print styles: clean form rendering for paper */
+@media print {
+  /* Hide interactive-only UI */
+  .civ-dropzone,
+  .civ-btn,
+  civ-action-button,
+  civ-button,
+  [data-civ-combobox] button,
+  .civ-combobox-chevron,
+  .civ-toggle-track,
+  .civ-clear-btn,
+  .civ-input-clear,
+  civ-action-sheet,
+  civ-modal,
+  .civ-skip-link,
+  .civ-progress-track {
+    display: none !important;
+  }
+
+  /* Remove decorative styling */
+  .civ-input,
+  .civ-select-field,
+  textarea {
+    border: 1px solid #000 !important;
+    box-shadow: none !important;
+    background: none !important;
+  }
+
+  /* Show values legibly */
+  .civ-label,
+  .civ-legend {
+    font-size: 10pt !important;
+  }
+
+  .civ-hint {
+    font-size: 9pt !important;
+    color: #333 !important;
+  }
+
+  /* Remove spacing that wastes paper */
+  .civ-mb-4 {
+    margin-bottom: 8pt !important;
+  }
+
+  /* Prevent page breaks inside form fields */
+  civ-form-field,
+  civ-form-fieldset,
+  .civ-fieldset {
+    break-inside: avoid;
+  }
+
+  /* Show checkbox/radio state as text */
+  .civ-check-input {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  /* Remove focus ring styles */
+  *:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+  }
+}
+
 /* Windows High Contrast Mode: transparent outline becomes system highlight color */
 @media (forced-colors: active) {
   .civ-focus-ring:focus-visible,

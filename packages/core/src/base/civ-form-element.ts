@@ -44,6 +44,14 @@ export class CivFormElement extends CivBaseElement {
   /** Hides the "(required)" text while keeping validation active. Used by compound components. */
   @property({ type: Boolean, attribute: 'hide-required-indicator' }) hideRequiredIndicator = false;
 
+  /** Whether the user has interacted with this field (focused then blurred). */
+  @property({ type: Boolean, reflect: true }) touched = false;
+
+  /** Inverse of `touched` — true until the user interacts with the field. */
+  get pristine(): boolean {
+    return !this.touched;
+  }
+
   constructor() {
     super();
     this._internals = this.attachInternals();
@@ -55,7 +63,20 @@ export class CivFormElement extends CivBaseElement {
   override connectedCallback(): void {
     super.connectedCallback();
     this.setAttribute('data-civ-form-field', '');
+    this.addEventListener('focusout', this._onFieldBlur);
   }
+
+  override disconnectedCallback(): void {
+    super.disconnectedCallback();
+    this.removeEventListener('focusout', this._onFieldBlur);
+  }
+
+  private _onFieldBlur = (): void => {
+    if (!this.touched) {
+      this.touched = true;
+      dispatch(this, 'civ-touched');
+    }
+  };
 
   override firstUpdated(): void {
     // Capture default value after first render so framework-bound
@@ -206,6 +227,7 @@ export class CivFormElement extends CivBaseElement {
   formResetCallback(): void {
     this.value = this._defaultValue;
     this.error = '';
+    this.touched = false;
     this.updateFormValue(this._defaultValue || '');
     dispatch(this, 'civ-reset');
   }

@@ -1,0 +1,248 @@
+import type { Meta, StoryObj } from '@storybook/web-components';
+import { html } from 'lit';
+import '@civui/core';
+import '@civui/inputs';
+import '@civui/controls';
+import '@civui/compound';
+
+const meta: Meta = {
+  title: 'Foundations/Print Preview',
+  tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: `
+Shows how form components render when printed. CivUI applies
+\`@media print\` rules that hide interactive UI (buttons, dropzones,
+toggles, progress bars), clean up borders, and tighten spacing for paper.
+
+**To test actual print output:** use your browser's Print Preview (Ctrl+P / Cmd+P).
+
+The stories below simulate print styles so you can preview the result
+directly in Storybook without printing.
+        `,
+      },
+    },
+  },
+  decorators: [
+    (story) => html`
+      <style>
+        /* Simulate print styles in Storybook preview */
+        .civ-print-preview .civ-dropzone,
+        .civ-print-preview .civ-btn,
+        .civ-print-preview civ-action-button,
+        .civ-print-preview civ-button,
+        .civ-print-preview [data-civ-combobox] button,
+        .civ-print-preview .civ-combobox-chevron,
+        .civ-print-preview .civ-toggle-track,
+        .civ-print-preview .civ-clear-btn,
+        .civ-print-preview .civ-input-clear,
+        .civ-print-preview .civ-skip-link,
+        .civ-print-preview .civ-progress-track {
+          display: none !important;
+        }
+
+        .civ-print-preview .civ-input,
+        .civ-print-preview .civ-select-field,
+        .civ-print-preview textarea {
+          border: 1px solid #000 !important;
+          box-shadow: none !important;
+          background: none !important;
+        }
+
+        .civ-print-preview .civ-label,
+        .civ-print-preview .civ-legend {
+          font-size: 10pt !important;
+        }
+
+        .civ-print-preview .civ-hint {
+          font-size: 9pt !important;
+          color: #333 !important;
+        }
+
+        .civ-print-preview .civ-mb-4 {
+          margin-bottom: 8pt !important;
+        }
+
+        .civ-print-preview *:focus-visible {
+          outline: none !important;
+          box-shadow: none !important;
+        }
+
+        .civ-print-preview .civ-check-input {
+          print-color-adjust: exact;
+          -webkit-print-color-adjust: exact;
+        }
+      </style>
+      <div class="civ-print-preview" style="max-width: 720px; font-family: serif;">
+        ${story()}
+      </div>
+    `,
+  ],
+};
+
+export default meta;
+type Story = StoryObj;
+
+export const TextInputs: Story = {
+  name: 'Text Inputs',
+  render: () => html`
+    <h2 class="civ-text-lg civ-font-bold civ-mb-4">Text Inputs — Print Preview</h2>
+
+    <civ-form-field label="Full legal name" hint="As it appears on your government-issued ID" required>
+      <civ-text-input name="name" value="Jane A. Smith" required></civ-text-input>
+    </civ-form-field>
+
+    <civ-form-field label="Email address">
+      <civ-text-input type="email" name="email" value="jane.smith@example.gov"></civ-text-input>
+    </civ-form-field>
+
+    <civ-form-field label="Social Security number" hint="For example: 123-45-6789">
+      <civ-text-input name="ssn" value="***-**-6789" mask="ssn"></civ-text-input>
+    </civ-form-field>
+
+    <civ-form-field label="Phone number">
+      <civ-text-input name="phone" value="(555) 123-4567" mask="phone-us"></civ-text-input>
+    </civ-form-field>
+  `,
+};
+
+export const TextareaAndSelect: Story = {
+  name: 'Textarea & Select',
+  render: () => html`
+    <h2 class="civ-text-lg civ-font-bold civ-mb-4">Textarea &amp; Select — Print Preview</h2>
+
+    <civ-form-field label="Describe your condition" hint="Include how it affects your daily activities">
+      <civ-textarea name="condition" rows="4" value="Lower back pain that limits my ability to stand for more than 20 minutes. Diagnosed in 2019 by Dr. Johnson at the VA Medical Center."></civ-textarea>
+    </civ-form-field>
+
+    <civ-form-field label="State of residence">
+      <civ-select name="state" value="CA">
+        <option value="">- Select -</option>
+        <option value="CA">California</option>
+        <option value="NY">New York</option>
+        <option value="TX">Texas</option>
+      </civ-select>
+    </civ-form-field>
+  `,
+};
+
+export const SelectionControls: Story = {
+  name: 'Checkboxes & Radios',
+  render: () => html`
+    <h2 class="civ-text-lg civ-font-bold civ-mb-4">Selection Controls — Print Preview</h2>
+
+    <civ-form-fieldset legend="Preferred contact method" required>
+      <civ-radio-group name="contact" value="email" required>
+        <civ-radio value="email" label="Email"></civ-radio>
+        <civ-radio value="phone" label="Phone"></civ-radio>
+        <civ-radio value="mail" label="US Mail"></civ-radio>
+      </civ-radio-group>
+    </civ-form-fieldset>
+
+    <civ-form-fieldset legend="Benefits you are applying for">
+      <civ-checkbox-group name="benefits" value="disability,education">
+        <civ-checkbox value="disability" label="Disability compensation"></civ-checkbox>
+        <civ-checkbox value="education" label="Education benefits"></civ-checkbox>
+        <civ-checkbox value="healthcare" label="VA healthcare"></civ-checkbox>
+        <civ-checkbox value="housing" label="Housing assistance"></civ-checkbox>
+      </civ-checkbox-group>
+    </civ-form-fieldset>
+
+    <civ-form-fieldset legend="Are you a US citizen?">
+      <civ-yes-no name="citizen" value="yes"></civ-yes-no>
+    </civ-form-fieldset>
+  `,
+};
+
+export const DateFields: Story = {
+  name: 'Date Fields',
+  render: () => html`
+    <h2 class="civ-text-lg civ-font-bold civ-mb-4">Date Fields — Print Preview</h2>
+
+    <civ-form-fieldset legend="Date of birth" hint="For example: January 15 1990" required>
+      <civ-memorable-date name="dob" value="1990-01-15" required></civ-memorable-date>
+    </civ-form-fieldset>
+
+    <civ-form-field label="Appointment date">
+      <civ-date-picker name="appointment" value="2026-05-15"></civ-date-picker>
+    </civ-form-field>
+  `,
+};
+
+export const CompoundFields: Story = {
+  name: 'Compound Fields (Address, Name)',
+  render: () => html`
+    <h2 class="civ-text-lg civ-font-bold civ-mb-4">Compound Fields — Print Preview</h2>
+
+    <civ-name
+      legend="Veteran's name"
+      value='{"first":"Jane","middle":"A","last":"Smith","suffix":""}'
+      show-middle
+    ></civ-name>
+
+    <civ-address
+      legend="Mailing address"
+      value='{"street1":"123 Main Street","street2":"Apt 4B","city":"Springfield","state":"VA","zip":"22150","country":"US"}'
+    ></civ-address>
+  `,
+};
+
+export const CompleteForm: Story = {
+  name: 'Complete Form (Paper Filing)',
+  render: () => html`
+    <h2 class="civ-text-lg civ-font-bold civ-mb-4">Benefits Application — Print Preview</h2>
+    <p class="civ-text-sm civ-text-muted civ-mb-4">This demonstrates how a complete form renders when printed. Interactive elements are hidden; only labels and values remain.</p>
+
+    <civ-name
+      legend="Applicant name"
+      value='{"first":"Jane","middle":"A","last":"Smith","suffix":""}'
+      show-middle
+    ></civ-name>
+
+    <civ-form-fieldset legend="Date of birth" required>
+      <civ-memorable-date name="dob" value="1990-01-15" required></civ-memorable-date>
+    </civ-form-fieldset>
+
+    <civ-form-field label="Social Security number" required>
+      <civ-text-input name="ssn" value="***-**-6789" mask="ssn" required></civ-text-input>
+    </civ-form-field>
+
+    <civ-form-field label="Email address">
+      <civ-text-input type="email" name="email" value="jane.smith@example.gov"></civ-text-input>
+    </civ-form-field>
+
+    <civ-form-field label="Phone number">
+      <civ-text-input name="phone" value="(555) 123-4567" mask="phone-us"></civ-text-input>
+    </civ-form-field>
+
+    <civ-address
+      legend="Mailing address"
+      value='{"street1":"123 Main Street","street2":"","city":"Springfield","state":"VA","zip":"22150","country":"US"}'
+    ></civ-address>
+
+    <civ-form-fieldset legend="Are you a US citizen?" required>
+      <civ-yes-no name="citizen" value="yes" required></civ-yes-no>
+    </civ-form-fieldset>
+
+    <civ-form-fieldset legend="Preferred contact method" required>
+      <civ-radio-group name="contact" value="email" required>
+        <civ-radio value="email" label="Email"></civ-radio>
+        <civ-radio value="phone" label="Phone"></civ-radio>
+        <civ-radio value="mail" label="US Mail"></civ-radio>
+      </civ-radio-group>
+    </civ-form-fieldset>
+
+    <civ-form-fieldset legend="Benefits you are applying for" required>
+      <civ-checkbox-group name="benefits" value="disability,education" required>
+        <civ-checkbox value="disability" label="Disability compensation"></civ-checkbox>
+        <civ-checkbox value="education" label="Education benefits"></civ-checkbox>
+        <civ-checkbox value="healthcare" label="VA healthcare"></civ-checkbox>
+      </civ-checkbox-group>
+    </civ-form-fieldset>
+
+    <civ-form-field label="Additional information" hint="Describe any supporting details for your application">
+      <civ-textarea name="notes" rows="4" value="I am filing this claim based on service-connected injuries sustained during deployment in 2018. Medical records are available through the VA Medical Center in Richmond, VA."></civ-textarea>
+    </civ-form-field>
+  `,
+};

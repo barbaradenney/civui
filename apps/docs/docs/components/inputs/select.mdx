@@ -10,7 +10,7 @@ import StoryEmbed from "@site/src/components/StoryEmbed";
 
 `<civ-select>`
 
-Accessible dropdown select using a native `<select>` element for maximum accessibility and mobile compatibility. Supports grouped options via `optgroup`.
+Accessible dropdown select using a native `<select>` element for maximum accessibility and mobile compatibility. Supports grouped options via `optgroup` and built-in presets for common government form fields.
 
 ## Examples
 
@@ -67,7 +67,7 @@ Populate options via slotted `<option>` and `<optgroup>` children — works with
 
 ## Shared Props
 
-All form components share these props: `label`, `name`, `value`, `hint`, `error`, `required`, `disabled`.
+Props like `label`, `hint`, `error`, `required`, and `disabled` go on the `<civ-form-field>` wrapper. The component itself receives `name`, `value`, and component-specific props.
 
 ## Component-Specific Props
 
@@ -75,6 +75,8 @@ All form components share these props: `label`, `name`, `value`, `hint`, `error`
 |------|------|---------|-------------|
 | `options` | `Array<{ value: string, label: string, disabled?: boolean, group?: string }>` | `[]` | Array of options to render |
 | `empty-label` | `string` | `'- Select -'` | Label for the empty/default option |
+| `preset` | `string` | — | Pre-populated option list. See [Presets](#presets) below. |
+| `preset-variant` | `string` | — | Variant of the preset (e.g., `"territories"`, `"all"`, `"binary"`). |
 
 ## Option Groups
 
@@ -87,40 +89,119 @@ Options with a `group` property are rendered inside `<optgroup>` elements. Ungro
 | `civ-input` | `{ value: string }` | Fires when selection changes |
 | `civ-change` | `{ value: string }` | Fires when selection changes |
 
+## Presets
+
+The `preset` prop pre-populates the select with a standard option list. Use `preset-variant` to choose a variant of that list.
+
+| Preset | Variants | Description |
+|--------|----------|-------------|
+| `us-state` | (default), `territories` | US states + DC. `territories` adds PR, GU, VI, AS, MP. |
+| `service-branch` | (default), `all` | Active-duty branches. `all` adds reserve, guard, and historical. |
+| `discharge-type` | — | Military discharge types |
+| `suffix` | — | Name suffixes (Jr., Sr., II, III, etc.) |
+| `relationship-type` | (default), `va-dependent` | Relationship to veteran |
+| `marital-status` | — | Marital status options |
+| `ethnicity` | — | OMB ethnicity categories |
+| `gender` | (default), `binary` | Gender identity. `binary` limits to Male/Female. |
+| `language` | — | Preferred language options |
+
+### US State
+
+<StoryEmbed id="forms-inputs-select--preset-us-state" />
+
+<StoryEmbed id="forms-inputs-select--preset-us-state-with-territories" />
+
+```html
+<!-- US states and DC -->
+<civ-form-field label="State" required>
+  <civ-select name="state" preset="us-state" required></civ-select>
+</civ-form-field>
+
+<!-- Include territories -->
+<civ-form-field label="State or territory" required>
+  <civ-select name="state" preset="us-state" preset-variant="territories" required></civ-select>
+</civ-form-field>
+```
+
+### Service Branch
+
+<StoryEmbed id="forms-inputs-select--preset-service-branch" />
+
+<StoryEmbed id="forms-inputs-select--preset-service-branch-all" />
+
+```html
+<civ-form-field label="Branch of service" required>
+  <civ-select name="branch" preset="service-branch" required></civ-select>
+</civ-form-field>
+
+<!-- All tiers including reserve, guard, and historical -->
+<civ-form-field label="Branch of service" hint="Includes reserve, guard, and historical branches" required>
+  <civ-select name="branch" preset="service-branch" preset-variant="all" required></civ-select>
+</civ-form-field>
+```
+
+### Gender
+
+<StoryEmbed id="forms-inputs-select--preset-gender" />
+
+<StoryEmbed id="forms-inputs-select--preset-gender-binary" />
+
+```html
+<civ-form-field label="Gender">
+  <civ-select name="gender" preset="gender"></civ-select>
+</civ-form-field>
+
+<!-- Binary variant -->
+<civ-form-field label="Sex">
+  <civ-select name="sex" preset="gender" preset-variant="binary"></civ-select>
+</civ-form-field>
+```
+
+### Marital Status
+
+<StoryEmbed id="forms-inputs-select--preset-marital-status" />
+
+```html
+<civ-form-field label="Marital status" required>
+  <civ-select name="maritalStatus" preset="marital-status" required></civ-select>
+</civ-form-field>
+```
+
+### All Presets
+
+<StoryEmbed id="forms-inputs-select--all-presets" />
+
 ## Usage
 
 ```html
-<!-- Basic select -->
-<civ-select
-  label="Branch of service"
-  name="branch"
-  required
-></civ-select>
-
-<script>
-  document.querySelector('civ-select').options = [
-    { value: 'army', label: 'Army' },
-    { value: 'navy', label: 'Navy' },
-    { value: 'airforce', label: 'Air Force' },
-    { value: 'marines', label: 'Marine Corps' },
-    { value: 'coastguard', label: 'Coast Guard' },
-    { value: 'spaceforce', label: 'Space Force' },
-  ];
-</script>
+<!-- Basic select with slotted options -->
+<civ-form-field label="Branch of service" required>
+  <civ-select name="branch" required>
+    <option value="army">Army</option>
+    <option value="navy">Navy</option>
+    <option value="airforce">Air Force</option>
+    <option value="marines">Marine Corps</option>
+    <option value="coastguard">Coast Guard</option>
+    <option value="spaceforce">Space Force</option>
+  </civ-select>
+</civ-form-field>
 
 <!-- With grouped options -->
-<civ-select
-  label="Document type"
-  name="docType"
-  empty-label="Choose a document type"
-></civ-select>
+<civ-form-field label="Document type" hint="Choose a document type">
+  <civ-select name="docType">
+    <optgroup label="Military">
+      <option value="dd214">DD214</option>
+      <option value="dd215">DD215</option>
+    </optgroup>
+    <optgroup label="Identity">
+      <option value="passport">Passport</option>
+      <option value="license">Driver's license</option>
+    </optgroup>
+  </civ-select>
+</civ-form-field>
 
-<script>
-  document.querySelector('[name="docType"]').options = [
-    { value: 'dd214', label: 'DD214', group: 'Military' },
-    { value: 'dd215', label: 'DD215', group: 'Military' },
-    { value: 'passport', label: 'Passport', group: 'Identity' },
-    { value: 'license', label: 'Driver\'s license', group: 'Identity' },
-  ];
-</script>
+<!-- Using a preset -->
+<civ-form-field label="State" required>
+  <civ-select name="state" preset="us-state" required></civ-select>
+</civ-form-field>
 ```

@@ -80,7 +80,7 @@ Set `loadOptions` to a `(query: string) => Promise<ComboboxOption[]>` and the co
 
 ## Shared Props
 
-All form components share these props: `label`, `name`, `value`, `hint`, `error`, `required`, `disabled`.
+Props like `label`, `hint`, `error`, `required`, and `disabled` go on the `<civ-form-field>` wrapper. The component itself receives `name`, `value`, and component-specific props.
 
 ## Component-Specific Props
 
@@ -118,16 +118,54 @@ As the user types, options are filtered by substring match (case-insensitive). M
 | `civ-input` | `{ value: string }` | Fires when filter text changes |
 | `civ-change` | `{ value: string }` | Fires when an option is selected |
 
+## Country Preset
+
+`<civ-country>`
+
+Pre-configured combobox for country selection with type-ahead filtering. Lists the United States first by default. Supports filtering by inclusion or exclusion lists.
+
+Default label: "Country"
+
+### Component-Specific Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `us-first` | `boolean` | `true` | List the United States first in the dropdown |
+| `include` | `string` | — | Comma-separated list of country codes to include (e.g., `"US,CA,MX"`) |
+| `exclude` | `string` | — | Comma-separated list of country codes to exclude |
+
+<StoryEmbed id="forms-inputs-combobox--country" minHeight={350} />
+
+<StoryEmbed id="forms-inputs-combobox--country-of-birth" minHeight={350} />
+
+```html
+<!-- Country select with US listed first -->
+<civ-form-field label="Country" required>
+  <civ-country name="country" required></civ-country>
+</civ-form-field>
+
+<!-- North America only -->
+<civ-form-field label="Country" required>
+  <civ-country name="country" include="US,CA,MX" required></civ-country>
+</civ-form-field>
+
+<!-- Country of birth with custom label -->
+<civ-form-field label="Country of birth" required>
+  <civ-country name="birthCountry" required></civ-country>
+</civ-form-field>
+```
+
 ## Usage
 
 ```html
 <!-- Basic combobox -->
-<civ-combobox
-  label="State or territory"
-  name="state"
-  placeholder="Start typing a state name"
-  required
-></civ-combobox>
+<civ-form-field label="State or territory" required>
+  <civ-combobox
+    name="state"
+    placeholder="Start typing a state name"
+    required
+  ></civ-combobox>
+</civ-form-field>
 
 <script>
   document.querySelector('civ-combobox').options = [
@@ -138,11 +176,12 @@ As the user types, options are filtered by substring match (case-insensitive). M
 </script>
 
 <!-- With grouped options -->
-<civ-combobox
-  label="Medical facility"
-  name="facility"
-  placeholder="Search by name or city"
-></civ-combobox>
+<civ-form-field label="Medical facility">
+  <civ-combobox
+    name="facility"
+    placeholder="Search by name or city"
+  ></civ-combobox>
+</civ-form-field>
 
 <script>
   document.querySelector('[name="facility"]').options = [

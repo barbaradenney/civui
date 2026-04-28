@@ -12,8 +12,8 @@ import StoryEmbed from "@site/src/components/StoryEmbed";
 
 Accessible text input with label, hint, error, and width variants. Supports input masking, declarative validation, prefix/suffix text, and inline icons. Uses ElementInternals for native form participation.
 
-:::tip Use specialized components for common field types
-For SSN, phone, email, ZIP, EIN, currency, routing number, and VA file number, use the dedicated components (`<civ-ssn>`, `<civ-phone>`, etc.) instead of configuring `<civ-text-input>` manually. They pre-configure masking, validation, labels, hints, and HTML attributes automatically.
+:::tip Specialized presets are documented below
+For SSN, phone, email, ZIP, EIN, currency, routing number, and VA file number, see the [Specialized Presets](#specialized-presets) section below. These dedicated components (`<civ-ssn>`, `<civ-phone>`, etc.) pre-configure masking, validation, labels, hints, and HTML attributes automatically.
 :::
 
 ## Examples
@@ -100,7 +100,7 @@ Text rendered inside the input border on the trailing edge (e.g., "lbs", "USD").
 
 ## Shared Props
 
-All form components share these props: `label`, `name`, `value`, `hint`, `error`, `required`, `disabled`.
+Props like `label`, `hint`, `error`, `required`, and `disabled` go on the `<civ-form-field>` wrapper. The component itself receives `name`, `value`, and component-specific props.
 
 ## Component-Specific Props
 
@@ -150,45 +150,182 @@ All other characters are inserted as literals.
 | `civ-input` | `{ value: string }` | Fires on every value change |
 | `civ-change` | `{ value: string }` | Fires on committed value change |
 
+## Specialized Presets
+
+These components extend `<civ-text-input>` with pre-configured masking, validation, labels, hints, and HTML attributes. All share the same events (`civ-input`, `civ-change` with `{ value: string }` detail).
+
+### SSN (`<civ-ssn>`)
+
+Pre-configured input for Social Security numbers with automatic masking, validation, and PII-aware blur-mode masking. Supports full 9-digit or last-4-only modes.
+
+Default label: "Social Security number"
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `mode` | `'full' \| 'last4'` | `'full'` | Whether to collect full 9-digit SSN or last 4 digits only |
+
+<StoryEmbed id="forms-inputs-text-input--ssn" />
+
+<StoryEmbed id="forms-inputs-text-input--ssn-last-4" />
+
+```html
+<civ-form-field label="Social Security number" required>
+  <civ-ssn name="ssn" required></civ-ssn>
+</civ-form-field>
+
+<!-- Last 4 digits only -->
+<civ-form-field label="Last 4 of Social Security number" required>
+  <civ-ssn name="ssn-last4" mode="last4" required></civ-ssn>
+</civ-form-field>
+```
+
+### EIN (`<civ-ein>`)
+
+Pre-configured input for Employer Identification Numbers with automatic masking, validation, and PII-aware blur-mode masking.
+
+Default label: "Employer Identification Number (EIN)"
+
+<StoryEmbed id="forms-inputs-text-input--ein" />
+
+```html
+<civ-form-field label="Employer Identification Number" required>
+  <civ-ein name="ein" required></civ-ein>
+</civ-form-field>
+```
+
+### ZIP Code (`<civ-zip>`)
+
+Pre-configured input for US ZIP codes with automatic masking and validation. Supports standard 5-digit and extended ZIP+4 formats.
+
+Default label: "ZIP code"
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `extended` | `boolean` | `false` | Enable ZIP+4 format (e.g., 12345-6789) |
+
+<StoryEmbed id="forms-inputs-text-input--zip-code" />
+
+<StoryEmbed id="forms-inputs-text-input--zip-plus-4" />
+
+```html
+<!-- Standard 5-digit ZIP code -->
+<civ-form-field label="ZIP code" required>
+  <civ-zip name="zip" required></civ-zip>
+</civ-form-field>
+
+<!-- ZIP+4 format -->
+<civ-form-field label="ZIP code" required>
+  <civ-zip name="zip" extended required></civ-zip>
+</civ-form-field>
+```
+
+### Phone (`<civ-phone>`)
+
+Pre-configured input for phone numbers with automatic formatting, masking, and validation. Supports US and international formats.
+
+Default label: "Phone number"
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `international` | `boolean` | `false` | Enable international phone number format |
+
+<StoryEmbed id="forms-inputs-text-input--phone-us" />
+
+<StoryEmbed id="forms-inputs-text-input--phone-international" />
+
+```html
+<!-- US phone number -->
+<civ-form-field label="Phone number" required>
+  <civ-phone name="phone" required></civ-phone>
+</civ-form-field>
+
+<!-- International phone number -->
+<civ-form-field label="Phone number" required>
+  <civ-phone name="phone" international required></civ-phone>
+</civ-form-field>
+```
+
+### Email (`<civ-email>`)
+
+Pre-configured input for email addresses with built-in validation and plain-language labeling.
+
+Default label: "Email address"
+
+<StoryEmbed id="forms-inputs-text-input--email" />
+
+```html
+<civ-form-field label="Email address" required>
+  <civ-email name="email" required></civ-email>
+</civ-form-field>
+```
+
+### Currency (`<civ-currency>`)
+
+Pre-configured input for US dollar amounts with automatic formatting, masking, and validation.
+
+Default label: "Amount"
+
+<StoryEmbed id="forms-inputs-text-input--currency" />
+
+```html
+<civ-form-field label="Monthly income" required>
+  <civ-currency name="amount" required></civ-currency>
+</civ-form-field>
+```
+
+### Routing Number (`<civ-routing-number>`)
+
+Pre-configured input for bank routing numbers with built-in 9-digit validation and plain-language labeling.
+
+Default label: "Routing number"
+
+<StoryEmbed id="forms-inputs-text-input--routing-number" />
+
+```html
+<civ-form-field label="Routing number" required>
+  <civ-routing-number name="routing" required></civ-routing-number>
+</civ-form-field>
+```
+
+### VA File Number (`<civ-va-file-number>`)
+
+Pre-configured input for VA file numbers with built-in 8-9 digit validation and plain-language labeling.
+
+Default label: "VA file number"
+
+<StoryEmbed id="forms-inputs-text-input--va-file-number" />
+
+```html
+<civ-form-field label="VA file number" required>
+  <civ-va-file-number name="vaFileNumber" required></civ-va-file-number>
+</civ-form-field>
+```
+
 ## Usage
 
 ```html
 <!-- Basic text input -->
-<civ-text-input
-  label="Full name"
-  name="fullName"
-  required
-></civ-text-input>
+<civ-form-field label="Full name" required>
+  <civ-text-input name="fullName" required></civ-text-input>
+</civ-form-field>
 
 <!-- Custom mask pattern -->
-<civ-text-input
-  label="Case number"
-  name="caseNumber"
-  mask-pattern="AAA-####"
-  hint="For example: ABC-1234"
-></civ-text-input>
+<civ-form-field label="Case number" hint="For example: ABC-1234">
+  <civ-text-input name="caseNumber" mask-pattern="AAA-####"></civ-text-input>
+</civ-form-field>
 
 <!-- With prefix -->
-<civ-text-input
-  label="Social handle"
-  name="handle"
-  prefix="@"
-  width="md"
-></civ-text-input>
+<civ-form-field label="Social handle">
+  <civ-text-input name="handle" prefix="@" width="md"></civ-text-input>
+</civ-form-field>
 
 <!-- With suffix -->
-<civ-text-input
-  label="Weight"
-  name="weight"
-  suffix="lbs"
-  inputmode="decimal"
-  width="sm"
-></civ-text-input>
+<civ-form-field label="Weight">
+  <civ-text-input name="weight" suffix="lbs" inputmode="decimal" width="sm"></civ-text-input>
+</civ-form-field>
 
 <!-- With character counter -->
-<civ-text-input
-  label="Short bio"
-  name="bio"
-  maxlength="60"
-></civ-text-input>
+<civ-form-field label="Short bio">
+  <civ-text-input name="bio" maxlength="60"></civ-text-input>
+</civ-form-field>
 ```

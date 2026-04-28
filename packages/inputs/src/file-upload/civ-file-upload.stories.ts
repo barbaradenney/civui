@@ -398,45 +398,16 @@ export const InitialFiles: Story = {
       },
     },
   },
-  render: () => {
-    const wrapper = document.createElement('civ-form-field') as any;
-    wrapper.label = 'Supporting documents';
-
-    const el = document.createElement('civ-file-upload') as CivFileUpload;
-    el.setAttribute('name', 'docs');
-    el.setAttribute('multiple', '');
-    (el as any).initialFiles = [
-      {
-        id: 'srv-001',
-        name: 'tax-return-2025.pdf',
-        size: 1240000,
-        type: 'application/pdf',
-        url: 'https://example.test/files/srv-001',
-      },
-      {
-        id: 'srv-002',
-        name: 'w2.pdf',
-        size: 380000,
-        type: 'application/pdf',
-        url: 'https://example.test/files/srv-002',
-      },
-    ];
-
-    wrapper.appendChild(el);
-
-    const wrap = document.createElement('div');
-    wrap.appendChild(wrapper);
-
-    const log = document.createElement('pre');
-    log.className = 'civ-mt-4 civ-p-3 civ-bg-base-lightest civ-rounded civ-text-sm';
-    log.style.whiteSpace = 'pre-wrap';
-    log.textContent = 'Click "Remove" on either file or upload another — events show here.';
-    wrap.appendChild(log);
-
-    el.addEventListener('civ-file-removed', (e: Event) => {
-      log.textContent = 'civ-file-removed: ' + JSON.stringify((e as CustomEvent).detail, null, 2);
-    });
-
-    return wrap;
-  },
+  render: () => html`
+    <civ-form-field label="Supporting documents">
+      <civ-file-upload
+        name="docs"
+        multiple
+        .initialFiles="${[
+          { id: 'srv-001', name: 'tax-return-2025.pdf', size: 1240000, type: 'application/pdf', url: 'https://example.test/files/srv-001' },
+          { id: 'srv-002', name: 'w2.pdf', size: 380000, type: 'application/pdf', url: 'https://example.test/files/srv-002' },
+        ]}"
+      ></civ-file-upload>
+    </civ-form-field>
+  `,
 };

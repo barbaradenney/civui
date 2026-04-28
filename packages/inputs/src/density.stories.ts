@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
+import '@civui/core';
 import './text-input/civ-text-input.js';
 import './select/civ-select.js';
 import './textarea/civ-textarea.js';
@@ -21,35 +22,25 @@ export default meta;
 type Story = StoryObj;
 
 const formTemplate = () => html`
-  <civ-text-input
-    label="Full name"
-    name="name"
-    hint="First and last name"
-    required
-  ></civ-text-input>
-  <civ-text-input
-    label="Email address"
-    name="email"
-    type="email"
-    hint="We'll use this to contact you"
-    required
-  ></civ-text-input>
-  <civ-select
-    label="State"
-    name="state"
-    .options="${[
-      { value: 'ca', label: 'California' },
-      { value: 'ny', label: 'New York' },
-      { value: 'tx', label: 'Texas' },
-    ]}"
-  ></civ-select>
-  <civ-textarea
-    label="Comments"
-    name="comments"
-    hint="Optional feedback"
-    rows="3"
-    maxlength="200"
-  ></civ-textarea>
+  <civ-form-field label="Full name" hint="First and last name" required>
+    <civ-text-input name="name" required></civ-text-input>
+  </civ-form-field>
+  <civ-form-field label="Email address" hint="We'll use this to contact you" required>
+    <civ-text-input name="email" type="email" required></civ-text-input>
+  </civ-form-field>
+  <civ-form-field label="State">
+    <civ-select
+      name="state"
+      .options="${[
+        { value: 'ca', label: 'California' },
+        { value: 'ny', label: 'New York' },
+        { value: 'tx', label: 'Texas' },
+      ]}"
+    ></civ-select>
+  </civ-form-field>
+  <civ-form-field label="Comments" hint="Optional feedback">
+    <civ-textarea name="comments" rows="3" maxlength="200"></civ-textarea>
+  </civ-form-field>
   <civ-checkbox
     label="I agree to the terms"
     name="terms"

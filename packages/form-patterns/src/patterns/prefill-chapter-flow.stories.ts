@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
+import '@civui/core';
 import '../summary/civ-summary.js';
 import '../read-only-field/civ-read-only-field.js';
 import '@civui/inputs';
@@ -192,13 +193,14 @@ export const Step3_EditStep: Story = {
 
       <p class="civ-text-muted civ-mb-4">Any changes you make here will also update your VA.gov profile.</p>
 
-      <civ-text-input
-        label="Mobile phone number"
-        name="phone"
-        value="(555) 123-4567"
-        mask="phone-us"
-        required
-      ></civ-text-input>
+      <civ-form-field label="Mobile phone number" required>
+        <civ-text-input
+          name="phone"
+          value="(555) 123-4567"
+          mask="phone-us"
+          required
+        ></civ-text-input>
+      </civ-form-field>
 
       <div class="civ-mt-6">
         <civ-button label="Update and continue"></civ-button>

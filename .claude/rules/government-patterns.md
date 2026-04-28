@@ -8,14 +8,15 @@ globs:
 # Government Form Component Rules
 
 ## Render order
-- Always render: label → hint → error → control → supplementary info.
-- Group components render legend instead of label.
-- Use `renderLabel()`, `renderHint()`, `renderError()` from `@civui/core` templates.
+- `civ-form-field` enforces: label → hint → error → control.
+- `civ-form-fieldset` enforces: legend → hint → error → controls.
+- Both use `renderFormHeader()` from `@civui/core` internally.
+- Input components are bare controls — they do NOT render their own label/hint/error.
 
 ## Section 508 non-negotiables
-- Every input MUST have a visible `label` (or `legend` for groups).
+- Every input MUST be wrapped in `<civ-form-field>` with a visible `label` (or `<civ-form-fieldset>` with `legend` for groups).
 - Never use `placeholder` as the sole label.
-- Set `required` attribute on mandatory fields — renders asterisk + `aria-required="true"`.
+- Set `required` on the `<civ-form-field>` or `<civ-form-fieldset>` wrapper — renders "(required)" text and cascades to the child control.
 - Error messages MUST use `role="alert"` (handled by `renderError()`).
 - Color must never be the sole error indicator — use text + border.
 - Focus ring: `focus-visible:civ-focus-ring` on all interactive elements.
@@ -51,9 +52,20 @@ globs:
 - `civ-form` renders error summary with anchor links automatically.
 - Set `error` prop on fields for server-side validation errors.
 - Use `clearErrors()` before re-validation.
+- Per-field `touched` tracking: fields have a `touched` property (set on first blur, reset on form reset).
+- Use `civ-text-input[touched]` CSS selector to style touched vs pristine fields.
 
 ## Mobile design
 - All popups, dropdowns, and dialogs MUST use bottom sheets on mobile (≤480px).
 - No absolute-positioned dropdowns on small screens — they overflow and are hard to tap.
 - Bottom sheets: `position: fixed; bottom: 0; left: 0; right: 0;` with rounded top corners.
 - Max height 50-70vh with `overflow-y: auto` for scrollable content.
+
+## Motion
+- All transitions use `var(--civ-motion-duration-*)` tokens — never hardcode durations.
+- `@media (prefers-reduced-motion: reduce)` is enforced globally — all motion is disabled.
+- No inline style transitions — use CSS classes with tokenized values.
+
+## Print
+- `@media print` rules hide interactive UI and clean up form rendering.
+- Use `break-inside: avoid` on form field containers to prevent page breaks mid-field.

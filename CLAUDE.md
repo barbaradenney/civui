@@ -19,7 +19,7 @@ Build order: `tokens → core → actions, overlays, layout → inputs → contr
 | Package | Path | Description |
 |---------|------|-------------|
 | `@civui/tokens` | `packages/tokens/` | Design tokens (colors, spacing, typography) |
-| `@civui/core` | `packages/core/` | Base classes, a11y utilities, analytics, date utils |
+| `@civui/core` | `packages/core/` | Base classes, a11y utilities, analytics, date utils, form-field wrappers |
 | `@civui/actions` | `packages/actions/` | Action components (button, link, action-button, link-card, button-group) |
 | `@civui/overlays` | `packages/overlays/` | Overlay components (modal, action-sheet) |
 | `@civui/layout` | `packages/layout/` | Layout components (card, divider, input-group, page-header, tag) |
@@ -34,7 +34,7 @@ Build order: `tokens → core → actions, overlays, layout → inputs → contr
 ## Commands
 
 ```bash
-pnpm test          # Run all tests (422+ tests across packages)
+pnpm test          # Run all tests (3400+ tests across packages)
 pnpm build         # Build all packages (respects dependency order)
 pnpm typecheck     # TypeScript type checking
 pnpm lint          # ESLint
@@ -74,11 +74,32 @@ Form-participating components extend `CivFormElement` (which extends `CivBaseEle
 - `_syncFormValue()` is called automatically when `value` changes — override in subclasses with custom form value logic
 - `formResetCallback()` restores initial value on form reset
 - `formDisabledCallback()` cascades disabled state
+- `touched` property tracks per-field interaction (set on first `focusout`, reset on form reset)
 - jsdom doesn't fully support ElementInternals, so guards like `typeof setFormValue === 'function'` are needed
 
-### Standard Form Component API
-Every form component has: `label`, `name`, `value`, `hint`, `error`, `required`, `disabled`.
-Group components use `legend` instead of `label`.
+### Form Field Wrappers
+Form input components (text-input, textarea, select, combobox, date-picker, file-upload) are **bare controls** — they render only the input element. Wrap them in `<civ-form-field>` for label/hint/error:
+
+```html
+<civ-form-field label="Email address" hint="Work email preferred" required>
+  <civ-text-input type="email" name="email"></civ-text-input>
+</civ-form-field>
+```
+
+Group components (radio-group, checkbox-group, segmented-control, yes-no, memorable-date, date-range-picker) use `<civ-form-fieldset>`:
+
+```html
+<civ-form-fieldset legend="Preferred contact method" required>
+  <civ-radio-group name="contact">
+    <civ-radio value="email" label="Email"></civ-radio>
+    <civ-radio value="phone" label="Phone"></civ-radio>
+  </civ-radio-group>
+</civ-form-fieldset>
+```
+
+`civ-form-field` and `civ-form-fieldset` cascade `required`/`disabled` to their child component and wire ARIA attributes automatically.
+
+**Self-contained components** (checkbox, toggle, and all compound components) render their own labels inline and do not need wrappers.
 
 ### Events
 - `civ-input` — fires on every value change (like native `input`)
@@ -93,7 +114,9 @@ Group components use `legend` instead of `label`.
   - `{ value: string, month: string, day: string, year: string }` — memorable-date
 
 ### Rendering Order
-Label → hint → error → control → supplementary info (character count, file list).
+`civ-form-field` enforces: label → hint → error → control → supplementary info.
+`civ-form-fieldset` enforces: legend → hint → error → controls.
+Both use `renderFormHeader()` from `@civui/core` internally.
 
 ### Mobile Popups — Bottom Sheet Rule
 All popups, dropdowns, and dialogs **must** render as bottom sheets on mobile (≤480px). Use the shared `.civ-bottom-sheet` utility class for new popup components:
@@ -123,6 +146,20 @@ Use `focus-visible:civ-focus-ring` (not deprecated `focus:civ-outline-*` classes
 - `scales.tokens.json` defines `dense`, `spacious`, and `fluid` scale variants
 - Applied via `[data-civ-scale="dense|spacious"]` on a parent element
 - Spacing and font size CSS variables adjust per scale
+
+### Motion & Reduced Motion
+- `motion.tokens.json` defines duration (`instant`, `fast`, `normal`, `slow`, `slower`) and easing tokens
+- All transitions use `var(--civ-motion-duration-*)` and `var(--civ-motion-easing-*)` — no hardcoded values
+- `@media (prefers-reduced-motion: reduce)` globally disables all animations and transitions (WCAG 2.1 AA)
+
+### Z-Index Scale
+Named z-index layers as CSS custom properties — no hardcoded values:
+- `--civ-z-overlay-backdrop: 99` — overlay backdrops
+- `--civ-z-overlay: 100` — modals, action sheets, bottom sheets, combobox dropdowns
+- `--civ-z-skip-link: 9999` — skip navigation link
+
+### Print Styles
+`@media print` rules hide interactive UI (buttons, dropzones, modals, progress bars), clean up form borders, prevent page breaks inside form fields, and preserve checkbox state rendering.
 
 ## Testing Patterns
 

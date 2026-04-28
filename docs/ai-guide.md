@@ -33,7 +33,8 @@ For architecture and internals, see `CLAUDE.md` in the repo root.
 | `<civ-fieldset>` | Layout | `legend`, `hint`, `error`, `required`, `disabled` | — |
 | `<civ-form>` | Layout | `action`, `method`, `supportResources` | `civ-submit: { formData }`, `civ-invalid: { errors }` |
 | `<civ-form-step>` | Layout | `persist`, `sensitive`, `showPause` | `civ-step-change`, `civ-step-pause`, `civ-step-complete` |
-| `<civ-form-group>` | Layout | `legend`, `hint`, `error` | — |
+| `<civ-form-field>` | Wrapper | `label`, `hint`, `error`, `required`, `disabled`, `requiredMessage` | — |
+| `<civ-form-fieldset>` | Wrapper | `legend`, `hint`, `error`, `required`, `disabled`, `requiredMessage` | — |
 | `<civ-repeater>` | Layout | `legend`, `name`, `min`, `max`, `addLabel`, `removeLabel` | `civ-change: { value }` |
 | `<civ-section-intro>` | Layout | `heading`, `headingLevel`, `tone` | — |
 | `<civ-summary>` | Display | `data`, `editLabel` | `civ-edit: { section }` |
@@ -58,9 +59,13 @@ For architecture and internals, see `CLAUDE.md` in the repo root.
 | `<civ-task-list>` | Navigation | — | — (uses `<civ-task-group>` and `<civ-task>` children) |
 | `<civ-skip-link>` | Navigation | `label`, `target` | — |
 
-**All form-participating components** also have: `label`, `name`, `value`, `hint`, `error`, `required`, `disabled`, `requiredMessage`.
+**Form input components** (text-input, textarea, select, combobox, date-picker, file-upload) are bare controls — wrap in `<civ-form-field>` for label/hint/error rendering. All have: `name`, `value`, `required`, `disabled`.
 
-**Group components** (`checkbox-group`, `radio-group`, `memorable-date`, `segmented-control`) use `legend` instead of `label`.
+**Group components** (radio-group, checkbox-group, segmented-control, yes-no, memorable-date, date-range-picker) are bare controls — wrap in `<civ-form-fieldset>` for legend/hint/error rendering.
+
+**Self-contained components** (checkbox, toggle, compound components) render their own labels and do not need wrappers.
+
+**Per-field state:** All form components have `touched` (set on first blur) and `pristine` (inverse of touched) for validation UX.
 
 ---
 
@@ -89,14 +94,13 @@ Standard text input supporting multiple HTML input types.
 
 **Example:**
 ```html
-<civ-text-input
-  label="Email address"
-  name="email"
-  type="email"
-  hint="We'll use this to send your confirmation"
-  required
-  autocomplete="email"
-></civ-text-input>
+<civ-form-field label="Full name" hint="As it appears on your ID" required>
+  <civ-text-input name="fullName"></civ-text-input>
+</civ-form-field>
+
+<civ-form-field label="Email address" hint="We'll use this to send your confirmation" required>
+  <civ-text-input name="email" type="email" autocomplete="email"></civ-text-input>
+</civ-form-field>
 
 <!-- Character counter -->
 <civ-text-input label="Short bio" name="bio" maxlength="60"></civ-text-input>

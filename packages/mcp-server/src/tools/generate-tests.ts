@@ -51,10 +51,23 @@ export function generateTests(html: string, suiteName?: string): GenerateTestsRe
       return;
     }
 
+    // Check for label/legend on the component itself, or on a civ-form-field/civ-form-fieldset wrapper
+    let label = $el.attr('label') ?? $el.attr('legend') ?? '';
+    if (!label) {
+      const formField = $el.closest('civ-form-field');
+      if (formField.length > 0) {
+        label = formField.attr('label') ?? '';
+      }
+      const formFieldset = $el.closest('civ-form-fieldset');
+      if (formFieldset.length > 0) {
+        label = formFieldset.attr('legend') ?? '';
+      }
+    }
+
     components.push({
       tag,
       name: $el.attr('name') ?? '',
-      label: $el.attr('label') ?? $el.attr('legend') ?? '',
+      label,
       required: $el.attr('required') !== undefined,
       type: $el.attr('type'),
     });

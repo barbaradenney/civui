@@ -111,12 +111,17 @@ function extractField($: ReturnType<typeof load>, el: any, insideRepeatable = fa
   const type = resolveFieldType(tag, inputType) as FormField['type'];
   const rawName = $el.attr('name') ?? '';
   const name = insideRepeatable ? stripArrayPrefix(rawName) : rawName;
-  const label = $el.attr('label') ?? $el.attr('legend') ?? $el.attr('aria-label') ?? '';
+  // Check for label/legend on the component itself, or on a civ-form-field/civ-form-fieldset wrapper
+  const $wrapper = $el.closest('civ-form-field, civ-form-fieldset');
+  let label = $el.attr('label') ?? $el.attr('legend') ?? $el.attr('aria-label') ?? '';
+  if (!label && $wrapper.length > 0) {
+    label = $wrapper.attr('label') ?? $wrapper.attr('legend') ?? '';
+  }
 
   const field: FormField = { type, name, label };
 
-  // Optional string attributes
-  const hint = $el.attr('hint');
+  // Optional string attributes — check element first, then wrapper
+  const hint = $el.attr('hint') ?? ($wrapper.length > 0 ? $wrapper.attr('hint') : undefined);
   if (hint) field.hint = hint;
 
   const placeholder = $el.attr('placeholder');

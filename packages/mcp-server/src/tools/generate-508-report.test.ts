@@ -4,7 +4,7 @@ import { generate508Report } from './generate-508-report.js';
 describe('generate508Report', () => {
   // 1. Clean HTML -> score 100, grade A, no violations
   it('returns score 100 and grade A for clean HTML with no violations', () => {
-    const html = '<civ-form><civ-text-input name="n" label="Name" required required-message="Enter your name"></civ-text-input></civ-form>';
+    const html = '<civ-form><civ-form-field label="Name" required><civ-text-input name="n" required required-message="Enter your name"></civ-text-input></civ-form-field></civ-form>';
     const report = generate508Report(html);
     expect(report.score).toBe(100);
     expect(report.grade).toBe('A');
@@ -37,7 +37,7 @@ describe('generate508Report', () => {
 
   // 4. Deprecated date input -> P1 error with WCAG 4.1.2
   it('reports P1 error with WCAG 4.1.2 for deprecated date input', () => {
-    const html = '<civ-date-input name="d" label="Date"></civ-date-input>';
+    const html = '<civ-form-field label="Date"><civ-date-input name="d"></civ-date-input></civ-form-field>';
     const report = generate508Report(html);
     const dateViolation = report.violations.find((v) => v.rule === 'deprecated-date-input');
     expect(dateViolation).toBeDefined();
@@ -48,7 +48,7 @@ describe('generate508Report', () => {
 
   // 5. Missing autocomplete -> P3 warning with WCAG 1.3.5 (AA)
   it('reports P3 warning with WCAG 1.3.5 for missing autocomplete on identity field', () => {
-    const html = '<civ-form><civ-text-input name="email" label="Email" required required-message="Enter email"></civ-text-input></civ-form>';
+    const html = '<civ-form><civ-form-field label="Email" required><civ-text-input name="email" required required-message="Enter email"></civ-text-input></civ-form-field></civ-form>';
     const report = generate508Report(html);
     const acViolation = report.violations.find((v) => v.rule === 'missing-autocomplete');
     expect(acViolation).toBeDefined();
@@ -60,7 +60,7 @@ describe('generate508Report', () => {
 
   // 6. Missing hint date -> warning with WCAG 3.3.2
   it('reports warning with WCAG 3.3.2 for missing hint on date component', () => {
-    const html = '<civ-form><civ-memorable-date name="dob" label="Date of birth" required required-message="Enter DOB"></civ-memorable-date></civ-form>';
+    const html = '<civ-form><civ-form-field label="Date of birth"><civ-memorable-date name="dob" required required-message="Enter DOB"></civ-memorable-date></civ-form-field></civ-form>';
     const report = generate508Report(html);
     const hintViolation = report.violations.find((v) => v.rule === 'missing-hint-date');
     expect(hintViolation).toBeDefined();
@@ -138,7 +138,7 @@ describe('generate508Report', () => {
     }
 
     // score 100 -> A (0 errors, 0 warnings)
-    const r100 = generate508Report('<civ-form><civ-text-input name="n" label="Name" required required-message="Enter name"></civ-text-input></civ-form>');
+    const r100 = generate508Report('<civ-form><civ-form-field label="Name" required><civ-text-input name="n" required required-message="Enter name"></civ-text-input></civ-form-field></civ-form>');
     expect(r100.grade).toBe('A');
     expect(r100.score).toBe(100);
 
@@ -202,7 +202,7 @@ describe('generate508Report', () => {
     expect(labelV!.effort).toBe('trivial');
 
     // deprecated-date-input -> medium
-    const htmlDate = '<civ-date-input name="d" label="Date"></civ-date-input>';
+    const htmlDate = '<civ-form-field label="Date"><civ-date-input name="d"></civ-date-input></civ-form-field>';
     const reportDate = generate508Report(htmlDate);
     const dateV = reportDate.violations.find((v) => v.rule === 'deprecated-date-input');
     expect(dateV).toBeDefined();

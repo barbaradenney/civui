@@ -101,7 +101,7 @@ describe('audit508CompliancePrompt', () => {
   });
 
   it('includes the markup in the text', () => {
-    const markup = '<civ-text-input label="Name" name="name"></civ-text-input>';
+    const markup = '<civ-form-field label="Name"><civ-text-input name="name"></civ-text-input></civ-form-field>';
     const result = audit508CompliancePrompt(markup);
     const text = (result.messages[1].content as { text: string }).text;
     expect(text).toContain(markup);

@@ -2,8 +2,8 @@ import { describe, it, expect } from 'vitest';
 import { formToSchema } from './form-to-schema.js';
 
 describe('formToSchema', () => {
-  it('extracts a simple text input', () => {
-    const html = '<civ-text-input label="Full name" name="full-name"></civ-text-input>';
+  it('extracts a simple text input with wrapper label', () => {
+    const html = '<civ-form-field label="Full name"><civ-text-input name="full-name"></civ-text-input></civ-form-field>';
     const schema = formToSchema(html);
     expect(schema.sections).toHaveLength(1);
     expect(schema.sections[0].fields[0].label).toBe('Full name');
@@ -12,14 +12,14 @@ describe('formToSchema', () => {
   });
 
   it('extracts form-level attributes from civ-form', () => {
-    const html = '<civ-form action="/submit" method="POST"><civ-text-input label="Name" name="name"></civ-text-input></civ-form>';
+    const html = '<civ-form action="/submit" method="POST"><civ-form-field label="Name"><civ-text-input name="name"></civ-text-input></civ-form-field></civ-form>';
     const schema = formToSchema(html);
     expect(schema.action).toBe('/submit');
     expect(schema.method).toBe('POST');
   });
 
   it('extracts title from first heading', () => {
-    const html = '<h2>Contact Us</h2><civ-text-input label="Name" name="name"></civ-text-input>';
+    const html = '<h2>Contact Us</h2><civ-form-field label="Name"><civ-text-input name="name"></civ-text-input></civ-form-field>';
     const schema = formToSchema(html);
     expect(schema.title).toBe('Contact Us');
   });
@@ -27,10 +27,10 @@ describe('formToSchema', () => {
   it('organizes fieldsets as sections with headings', () => {
     const html = `
       <civ-fieldset legend="Personal Info">
-        <civ-text-input label="Name" name="name"></civ-text-input>
+        <civ-form-field label="Name"><civ-text-input name="name"></civ-text-input></civ-form-field>
       </civ-fieldset>
       <civ-fieldset legend="Contact">
-        <civ-text-input label="Email" name="email"></civ-text-input>
+        <civ-form-field label="Email"><civ-text-input name="email"></civ-text-input></civ-form-field>
       </civ-fieldset>
     `;
     const schema = formToSchema(html);
@@ -41,10 +41,12 @@ describe('formToSchema', () => {
 
   it('extracts radio group with child options', () => {
     const html = `
-      <civ-radio-group legend="Preference" name="pref">
-        <civ-radio label="Option A" value="a"></civ-radio>
-        <civ-radio label="Option B" value="b"></civ-radio>
-      </civ-radio-group>
+      <civ-form-fieldset legend="Preference">
+        <civ-radio-group name="pref">
+          <civ-radio label="Option A" value="a"></civ-radio>
+          <civ-radio label="Option B" value="b"></civ-radio>
+        </civ-radio-group>
+      </civ-form-fieldset>
     `;
     const schema = formToSchema(html);
     const field = schema.sections[0].fields[0];
@@ -54,7 +56,7 @@ describe('formToSchema', () => {
   });
 
   it('extracts boolean and numeric attributes', () => {
-    const html = '<civ-text-input label="Bio" name="bio" required maxlength="500" minlength="10"></civ-text-input>';
+    const html = '<civ-form-field label="Bio" required><civ-text-input name="bio" required maxlength="500" minlength="10"></civ-text-input></civ-form-field>';
     const schema = formToSchema(html);
     const field = schema.sections[0].fields[0];
     expect(field.required).toBe(true);
@@ -62,8 +64,8 @@ describe('formToSchema', () => {
     expect(field.minlength).toBe(10);
   });
 
-  it('extracts hint and placeholder', () => {
-    const html = '<civ-text-input label="SSN" name="ssn" hint="For example: 123 45 6789" placeholder="000 00 0000"></civ-text-input>';
+  it('extracts hint from wrapper and placeholder from component', () => {
+    const html = '<civ-form-field label="SSN" hint="For example: 123 45 6789"><civ-text-input name="ssn" placeholder="000 00 0000"></civ-text-input></civ-form-field>';
     const schema = formToSchema(html);
     const field = schema.sections[0].fields[0];
     expect(field.hint).toBe('For example: 123 45 6789');
@@ -72,10 +74,12 @@ describe('formToSchema', () => {
 
   it('extracts select with option elements', () => {
     const html = `
-      <civ-select label="State" name="state">
-        <option value="CA">California</option>
-        <option value="NY">New York</option>
-      </civ-select>
+      <civ-form-field label="State">
+        <civ-select name="state">
+          <option value="CA">California</option>
+          <option value="NY">New York</option>
+        </civ-select>
+      </civ-form-field>
     `;
     const schema = formToSchema(html);
     const field = schema.sections[0].fields[0];
@@ -85,7 +89,7 @@ describe('formToSchema', () => {
   });
 
   it('extracts file upload attributes', () => {
-    const html = '<civ-file-upload label="Documents" name="docs" accept=".pdf" multiple max-files="5" max-size="10485760"></civ-file-upload>';
+    const html = '<civ-form-field label="Documents"><civ-file-upload name="docs" accept=".pdf" multiple max-files="5" max-size="10485760"></civ-file-upload></civ-form-field>';
     const schema = formToSchema(html);
     const field = schema.sections[0].fields[0];
     expect(field.type).toBe('file');
@@ -96,13 +100,13 @@ describe('formToSchema', () => {
   });
 
   it('maps memorable-date correctly', () => {
-    const html = '<civ-memorable-date label="Date of birth" name="dob" hint="For example: January 15 1990"></civ-memorable-date>';
+    const html = '<civ-form-field label="Date of birth" hint="For example: January 15 1990"><civ-memorable-date name="dob"></civ-memorable-date></civ-form-field>';
     const schema = formToSchema(html);
     expect(schema.sections[0].fields[0].type).toBe('memorable-date');
   });
 
   it('maps date-picker correctly', () => {
-    const html = '<civ-date-picker label="Appointment" name="appt" hint="mm/dd/yyyy"></civ-date-picker>';
+    const html = '<civ-form-field label="Appointment" hint="mm/dd/yyyy"><civ-date-picker name="appt"></civ-date-picker></civ-form-field>';
     const schema = formToSchema(html);
     expect(schema.sections[0].fields[0].type).toBe('date');
   });
@@ -122,8 +126,8 @@ describe('formToSchema', () => {
     const html = `
       <div data-civ-repeatable="dependents" data-civ-repeatable-min="1" data-civ-repeatable-max="5" aria-live="polite">
         <civ-fieldset legend="Dependent">
-          <civ-text-input label="Name" name="dependents[0].name"></civ-text-input>
-          <civ-text-input label="Relationship" name="dependents[0].relationship"></civ-text-input>
+          <civ-form-field label="Name"><civ-text-input name="dependents[0].name"></civ-text-input></civ-form-field>
+          <civ-form-field label="Relationship"><civ-text-input name="dependents[0].relationship"></civ-text-input></civ-form-field>
           <button type="button" data-civ-repeatable-remove>Remove</button>
         </civ-fieldset>
         <button type="button" data-civ-repeatable-add>Add another</button>
@@ -143,12 +147,14 @@ describe('formToSchema', () => {
 
   it('parses conditional visibility attributes', () => {
     const html = `
-      <civ-radio-group legend="Married?" name="married">
-        <civ-radio label="Yes" value="yes"></civ-radio>
-        <civ-radio label="No" value="no"></civ-radio>
-      </civ-radio-group>
-      <civ-text-input label="Spouse name" name="spouse-name" data-civ-show-when="married=yes"></civ-text-input>
-      <civ-text-input label="Service dates" name="service-dates" data-civ-require-when="is-veteran=yes"></civ-text-input>
+      <civ-form-fieldset legend="Married?">
+        <civ-radio-group name="married">
+          <civ-radio label="Yes" value="yes"></civ-radio>
+          <civ-radio label="No" value="no"></civ-radio>
+        </civ-radio-group>
+      </civ-form-fieldset>
+      <civ-form-field label="Spouse name"><civ-text-input name="spouse-name" data-civ-show-when="married=yes"></civ-text-input></civ-form-field>
+      <civ-form-field label="Service dates"><civ-text-input name="service-dates" data-civ-require-when="is-veteran=yes"></civ-text-input></civ-form-field>
     `;
     const schema = formToSchema(html);
     const spouseField = schema.sections[0].fields.find((f) => f.name === 'spouse-name');
@@ -161,9 +167,9 @@ describe('formToSchema', () => {
   it('handles mixed fieldset and non-fieldset components', () => {
     const html = `
       <civ-fieldset legend="Section A">
-        <civ-text-input label="In section" name="in-section"></civ-text-input>
+        <civ-form-field label="In section"><civ-text-input name="in-section"></civ-text-input></civ-form-field>
       </civ-fieldset>
-      <civ-text-input label="Outside" name="outside"></civ-text-input>
+      <civ-form-field label="Outside"><civ-text-input name="outside"></civ-text-input></civ-form-field>
     `;
     const schema = formToSchema(html);
     expect(schema.sections).toHaveLength(2);
@@ -180,7 +186,7 @@ describe('formToSchema', () => {
         { field: 'filing', operator: 'eq', value: 'joint' },
       ],
     });
-    const html = `<civ-text-input label="Spouse income" name="spouse-income" data-civ-show-when='${cond}'></civ-text-input>`;
+    const html = `<civ-form-field label="Spouse income"><civ-text-input name="spouse-income" data-civ-show-when='${cond}'></civ-text-input></civ-form-field>`;
     const schema = formToSchema(html);
     const field = schema.sections[0].fields[0];
     expect(field.visibleWhen).toHaveProperty('allOf');
@@ -197,7 +203,7 @@ describe('formToSchema', () => {
         { field: 'status', operator: 'eq', value: 'self-employed' },
       ],
     });
-    const html = `<civ-text-input label="Tax ID" name="tax-id" data-civ-show-when='${cond}'></civ-text-input>`;
+    const html = `<civ-form-field label="Tax ID"><civ-text-input name="tax-id" data-civ-show-when='${cond}'></civ-text-input></civ-form-field>`;
     const schema = formToSchema(html);
     const field = schema.sections[0].fields[0];
     expect(field.visibleWhen).toHaveProperty('anyOf');
@@ -208,7 +214,7 @@ describe('formToSchema', () => {
   it('extracts section visibleWhen from fieldset data-civ-show-when', () => {
     const html = `
       <civ-fieldset legend="Spouse" data-civ-show-when="married=yes">
-        <civ-text-input label="Spouse name" name="spouse-name"></civ-text-input>
+        <civ-form-field label="Spouse name"><civ-text-input name="spouse-name"></civ-text-input></civ-form-field>
       </civ-fieldset>
     `;
     const schema = formToSchema(html);
@@ -220,7 +226,7 @@ describe('formToSchema', () => {
   it('extracts section visibleWhen from div wrapper', () => {
     const html = `
       <div data-civ-show-when="has-deps=yes">
-        <civ-text-input label="Dep name" name="dep-name"></civ-text-input>
+        <civ-form-field label="Dep name"><civ-text-input name="dep-name"></civ-text-input></civ-form-field>
       </div>
     `;
     const schema = formToSchema(html);
@@ -243,10 +249,10 @@ describe('formToSchema', () => {
           </ol>
         </nav>
         <div data-civ-step="0">
-          <civ-text-input label="Name" name="name"></civ-text-input>
+          <civ-form-field label="Name"><civ-text-input name="name"></civ-text-input></civ-form-field>
         </div>
         <div data-civ-step="1">
-          <civ-text-input label="Email" name="email"></civ-text-input>
+          <civ-form-field label="Email"><civ-text-input name="email"></civ-text-input></civ-form-field>
         </div>
       </civ-form>
     `;
@@ -262,11 +268,11 @@ describe('formToSchema', () => {
         <nav data-civ-progress><ol><li data-civ-progress-step="0">S1</li><li data-civ-progress-step="1">S2</li></ol></nav>
         <div data-civ-step="0">
           <civ-fieldset legend="Info">
-            <civ-text-input label="Name" name="name"></civ-text-input>
+            <civ-form-field label="Name"><civ-text-input name="name"></civ-text-input></civ-form-field>
           </civ-fieldset>
         </div>
         <div data-civ-step="1">
-          <civ-text-input label="Email" name="email"></civ-text-input>
+          <civ-form-field label="Email"><civ-text-input name="email"></civ-text-input></civ-form-field>
         </div>
       </civ-form>
     `;
@@ -279,8 +285,8 @@ describe('formToSchema', () => {
 
   it('parses data-civ-options-from and script map', () => {
     const html = `
-      <civ-select label="State" name="state" options='[{"value":"CA","label":"CA"}]'></civ-select>
-      <civ-select label="County" name="county" data-civ-options-from="state"></civ-select>
+      <civ-form-field label="State"><civ-select name="state" options='[{"value":"CA","label":"CA"}]'></civ-select></civ-form-field>
+      <civ-form-field label="County"><civ-select name="county" data-civ-options-from="state"></civ-select></civ-form-field>
       <script type="application/json" data-civ-options-map="county">{"CA":[{"value":"la","label":"Los Angeles"}]}</script>
     `;
     const schema = formToSchema(html);
@@ -292,7 +298,7 @@ describe('formToSchema', () => {
 
   it('handles missing script gracefully for cascading options', () => {
     const html = `
-      <civ-select label="County" name="county" data-civ-options-from="state"></civ-select>
+      <civ-form-field label="County"><civ-select name="county" data-civ-options-from="state"></civ-select></civ-form-field>
     `;
     const schema = formToSchema(html);
     const county = schema.sections[0].fields.find((f) => f.name === 'county');

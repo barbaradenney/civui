@@ -416,7 +416,10 @@ const FIXERS: Record<string, FixerFn> = {
       $(tag).each((_, el) => {
         const $el = $(el);
         if (!$el.attr('name')) {
-          const label = $el.attr('label') ?? $el.attr('legend') ?? '';
+          // Check wrapper for label/legend first
+          const wrapper = $el.closest('civ-form-field, civ-form-fieldset');
+          const label = $el.attr('label') ?? $el.attr('legend')
+            ?? (wrapper.length > 0 ? (wrapper.attr('label') ?? wrapper.attr('legend') ?? '') : '');
           const name = label ? kebab(label) : tag.replace('civ-', '');
           $el.attr('name', name);
           fixes.push(`Added name="${name}" to <${tag}>`);

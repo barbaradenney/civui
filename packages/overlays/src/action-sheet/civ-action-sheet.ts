@@ -74,7 +74,7 @@ export class CivActionSheet extends LightDomSlotMixin(CivBaseElement) {
         @click="${this._requestClose}"
       ></div>
       <div
-        class="civ-action-sheet civ-action-sheet--open"
+        class="civ-action-sheet civ-action-sheet--open civ-bottom-sheet"
         style="--civ-action-sheet-max-height: ${this.maxHeight}"
       >
         <div class="civ-action-sheet__mobile-close">

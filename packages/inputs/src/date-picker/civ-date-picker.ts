@@ -339,7 +339,7 @@ export class CivDatePicker extends CivFormElement {
         role="dialog"
         aria-modal="true"
         aria-label="${this.dialogLabel || t('datePickerDialogLabel')}"
-        class="civ-datepicker-dialog"
+        class="civ-datepicker-dialog civ-bottom-sheet"
         @keydown="${this._onDialogKeydown}"
       >
         <div class="civ-flex civ-items-center civ-justify-between civ-mb-2">

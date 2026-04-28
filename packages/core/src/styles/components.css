@@ -10,14 +10,7 @@
 @layer components {
   /* ── Shared form primitives ─────────────────────────────────── */
 
-  .civ-label {
-    @apply civ-block civ-mb-0 civ-font-bold;
-    font-size: var(--civ-typography-fontSize-base);
-    color: var(--civ-color-base-darkest);
-    text-box-trim: both;
-    text-box-edge: cap alphabetic;
-  }
-
+  .civ-label,
   .civ-legend {
     @apply civ-block civ-mb-0 civ-font-bold;
     font-size: var(--civ-typography-fontSize-base);
@@ -1356,22 +1349,7 @@
            civ-overflow-y-auto civ-list-none civ-p-0 civ-m-0;
   }
 
-  /* Combobox listbox uses the shared action sheet mobile pattern */
-  @media (max-width: 480px) {
-    .civ-combobox-listbox {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      top: auto;
-      width: 100%;
-      margin: 0;
-      max-height: var(--civ-action-sheet-max-height, 50vh);
-      border-radius: var(--civ-border-radius-lg, 12px) var(--civ-border-radius-lg, 12px) 0 0;
-      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
-      z-index: var(--civ-z-overlay);
-    }
-  }
+  /* Combobox listbox uses the shared .civ-bottom-sheet pattern on mobile */
 
   .civ-combobox-option {
     @apply civ-px-3 civ-py-2 civ-cursor-pointer;
@@ -1440,20 +1418,10 @@
     @apply civ-w-10 civ-h-10 civ-text-center civ-text-sm civ-rounded civ-cursor-pointer;
   }
 
+  /* Date picker dialog uses .civ-bottom-sheet on mobile — only overrides listed here */
   @media (max-width: 480px) {
     .civ-datepicker-dialog {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      top: auto;
-      width: 100%;
-      margin: 0;
-      border-radius: var(--civ-border-radius-lg, 12px) var(--civ-border-radius-lg, 12px) 0 0;
-      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
       max-height: var(--civ-action-sheet-max-height, 70vh);
-      overflow-y: auto;
-      z-index: var(--civ-z-overlay);
     }
 
     .civ-datepicker-dialog table {
@@ -1766,7 +1734,7 @@
       width: 100%;
       margin: 0;
       border-radius: var(--civ-border-radius-lg, 12px) var(--civ-border-radius-lg, 12px) 0 0;
-      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+      box-shadow: var(--civ-shadow-overlay);
       max-height: var(--civ-action-sheet-max-height, 50vh);
       overflow-y: auto;
       z-index: var(--civ-z-overlay);
@@ -1786,13 +1754,7 @@
   }
 
   dialog.civ-modal::backdrop {
-    background: rgba(0, 0, 0, 0.5);
-  }
-
-  @media (prefers-color-scheme: dark) {
-    dialog.civ-modal::backdrop {
-      background: rgba(0, 0, 0, 0.7);
-    }
+    background: var(--civ-backdrop-color);
   }
 
   .civ-modal__header {
@@ -1843,30 +1805,14 @@
     display: none;
   }
 
-  /* Action sheet mobile: extends .civ-bottom-sheet */
+  /* Action sheet mobile: uses .civ-bottom-sheet — only overrides listed here */
   @media (max-width: 480px) {
-    .civ-action-sheet--open {
-      /* Uses shared .civ-bottom-sheet pattern — properties inherited if class applied,
-         or duplicated here for components that don't add the utility class */
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      top: auto;
-      width: 100%;
-      margin: 0;
-      border-radius: var(--civ-border-radius-lg, 12px) var(--civ-border-radius-lg, 12px) 0 0;
-      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
-      max-height: var(--civ-action-sheet-max-height, 50vh);
-      overflow-y: auto;
-      z-index: var(--civ-z-overlay);
-    }
 
     .civ-action-sheet-backdrop {
       display: block;
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.3);
+      background: var(--civ-backdrop-color);
       z-index: var(--civ-z-overlay-backdrop);
     }
 
@@ -1969,27 +1915,13 @@
     @apply civ-w-full;
   }
 
-  .civ-button-group--vertical civ-action-button:not(:first-child) button {
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
-    border-top-width: 0;
-    border-left-width: 1px;
-  }
-
-  .civ-button-group--vertical civ-action-button:not(:last-child) button {
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-  }
-
-  /* Reset horizontal rules for vertical layout */
-  .civ-button-group--vertical civ-action-button:not(:first-child) button {
-    border-left-width: 1px;
-  }
+  /* Reset all radii, then restore first/last child corners */
   .civ-button-group--vertical civ-action-button button {
-    border-top-right-radius: 0;
-    border-top-left-radius: 0;
-    border-bottom-right-radius: 0;
-    border-bottom-left-radius: 0;
+    border-radius: 0;
+    border-left-width: 1px;
+  }
+  .civ-button-group--vertical civ-action-button:not(:first-child) button {
+    border-top-width: 0;
   }
   .civ-button-group--vertical civ-action-button:first-child button {
     border-top-left-radius: var(--civ-border-radius-DEFAULT);
@@ -2232,14 +2164,6 @@
     color: var(--civ-color-base-darkest);
   }
 
-  /* Legacy alias — alert still references this class */
-  .civ-alert__dismiss {
-    @apply civ-inline-flex civ-items-center civ-justify-center
-           civ-bg-transparent civ-border-0 civ-p-2 civ-cursor-pointer civ-rounded;
-    min-width: 44px;
-    min-height: 44px;
-  }
-
   /* ── Progress Steps ────────────────────────────────────────── */
 
   .civ-step {
@@ -2420,9 +2344,7 @@
   }
 
   .civ-task-group__list {
-    list-style: none;
-    padding: 0 !important;
-    margin: 0;
+    @apply civ-list-none civ-p-0 civ-m-0;
   }
 
   .civ-task {
@@ -2556,9 +2478,9 @@
 
   /* Critical — bold gold, always dark text regardless of color scheme */
   .civ-link-card--critical {
-    background-color: #face00;
-    border-color: #face00;
-    color: #1b1b1b;
+    background-color: var(--civ-color-warning-light);
+    border-color: var(--civ-color-warning-light);
+    color: var(--civ-color-base-darkest);
   }
   .civ-link-card--critical:hover {
     filter: brightness(0.95);

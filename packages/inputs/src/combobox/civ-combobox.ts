@@ -208,7 +208,7 @@ export class CivCombobox extends CivFormElement {
                 <ul
                   id="${this._listboxId}"
                   role="listbox"
-                  class="civ-combobox-listbox"
+                  class="civ-combobox-listbox civ-bottom-sheet"
                   aria-labelledby="${this.label ? this._labelId : nothing}"
                   aria-describedby="${this._ariaDescribedBy || nothing}"
                   aria-busy="${this._loading ? 'true' : nothing}"

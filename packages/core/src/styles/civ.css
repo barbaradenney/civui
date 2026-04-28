@@ -43,6 +43,8 @@
   --civ-z-overlay-backdrop: 99;
   --civ-z-overlay: 100;
   --civ-z-skip-link: 9999;
+  --civ-shadow-overlay: 0 -4px 20px rgba(0, 0, 0, 0.15);
+  --civ-backdrop-color: rgba(0, 0, 0, 0.5);
 }
 
 /* Reduced motion: disable all transitions and animations */
@@ -149,7 +151,7 @@
   }
 
   /* File upload drag-over — bg-primary-lightest disappears */
-  [role="button"][data-dragging] {
+  .civ-dropzone[data-dragging] {
     border-style: solid;
     border-width: 3px;
   }

@@ -214,34 +214,109 @@ export const WidthVariants: Story = {
   name: 'Width variants',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-4">
-      <civ-form-field label="2xs">
+      <civ-form-field label="2xs width">
         <civ-select width="2xs">
           <option value="1">1</option>
           <option value="2">2</option>
         </civ-select>
       </civ-form-field>
-      <civ-form-field label="xs">
+      <civ-form-field label="xs width">
         <civ-select width="xs">
           <option value="CA">CA</option>
           <option value="NY">NY</option>
         </civ-select>
       </civ-form-field>
-      <civ-form-field label="sm">
+      <civ-form-field label="sm width">
         <civ-select width="sm">
           <option value="CA">California</option>
           <option value="NY">New York</option>
         </civ-select>
       </civ-form-field>
-      <civ-form-field label="md">
+      <civ-form-field label="md width">
         <civ-select width="md">
           <option value="active">Active</option>
           <option value="inactive">Inactive</option>
+        </civ-select>
+      </civ-form-field>
+      <civ-form-field label="lg width">
+        <civ-select width="lg">
+          <option value="education">Education benefits</option>
+          <option value="housing">Housing assistance</option>
+        </civ-select>
+      </civ-form-field>
+      <civ-form-field label="xl width">
+        <civ-select width="xl">
+          <option value="va-dc">Washington DC VA Medical Center</option>
+          <option value="va-richmond">Richmond VA Medical Center</option>
+        </civ-select>
+      </civ-form-field>
+      <civ-form-field label="2xl width">
+        <civ-select width="2xl">
+          <option value="long">This is a very long option for wide fields</option>
+          <option value="another">Another long option to demonstrate the width</option>
         </civ-select>
       </civ-form-field>
       <civ-form-field label="default (full width)">
         <civ-select>
           <option value="active">Active</option>
           <option value="inactive">Inactive</option>
+        </civ-select>
+      </civ-form-field>
+    </div>
+  `,
+};
+
+export const DensityScale: Story = {
+  name: 'Density Scale',
+  render: () => html`
+    <div class="civ-flex civ-flex-col civ-gap-6">
+      <div data-civ-scale="dense">
+        <p class="civ-text-sm civ-font-semibold civ-mb-2">Dense</p>
+        <civ-form-field label="State" hint="Select where you reside">
+          <civ-select name="dense-state">
+            <option value="CA">California</option>
+            <option value="NY">New York</option>
+            <option value="TX">Texas</option>
+          </civ-select>
+        </civ-form-field>
+      </div>
+      <div>
+        <p class="civ-text-sm civ-font-semibold civ-mb-2">Default</p>
+        <civ-form-field label="State" hint="Select where you reside">
+          <civ-select name="default-state">
+            <option value="CA">California</option>
+            <option value="NY">New York</option>
+            <option value="TX">Texas</option>
+          </civ-select>
+        </civ-form-field>
+      </div>
+      <div data-civ-scale="spacious">
+        <p class="civ-text-sm civ-font-semibold civ-mb-2">Spacious</p>
+        <civ-form-field label="State" hint="Select where you reside">
+          <civ-select name="spacious-state">
+            <option value="CA">California</option>
+            <option value="NY">New York</option>
+            <option value="TX">Texas</option>
+          </civ-select>
+        </civ-form-field>
+      </div>
+    </div>
+  `,
+};
+
+export const GovernmentBenefitsForm: Story = {
+  name: 'Usage: Benefits Application',
+  render: () => html`
+    <div style="max-width: 480px;">
+      <civ-form-field label="State of residence" required>
+        <civ-select name="state" preset="us-state" required></civ-select>
+      </civ-form-field>
+      <civ-form-field label="Benefit type" hint="Select the benefit you are applying for" required>
+        <civ-select name="benefit" required>
+          <option value="health">Health care</option>
+          <option value="education">Education</option>
+          <option value="disability">Disability compensation</option>
+          <option value="housing">Housing assistance</option>
         </civ-select>
       </civ-form-field>
     </div>

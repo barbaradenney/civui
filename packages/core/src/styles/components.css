@@ -1278,8 +1278,7 @@
   }
 
   .civ-toggle-check {
-    width: 0.7em;
-    height: 0.7em;
+    font-size: 0.7em;
     color: var(--civ-color-primary-DEFAULT);
   }
 

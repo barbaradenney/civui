@@ -27,7 +27,6 @@
     "./routing-number": "./dist/routing-number/index.js",
     "./country": "./dist/country/index.js",
     "./va-file-number": "./dist/va-file-number/index.js",
-    "./race": "./dist/race/index.js",
     "./preset-input": "./dist/preset-input/index.js"
   },
   "files": ["dist"],

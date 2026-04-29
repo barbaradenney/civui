@@ -28,3 +28,7 @@ export type { RelationshipValue } from './relationship/index.js';
 export { RELATIONSHIP_PRESETS } from './relationship/index.js';
 export type { RelationshipPreset, RelationshipTypeConfig, RelationshipCategory } from './relationship/index.js';
 
+// Race & Ethnicity
+export { CivRaceEthnicity } from './race-ethnicity/index.js';
+export type { RaceEthnicityValue } from './race-ethnicity/index.js';
+

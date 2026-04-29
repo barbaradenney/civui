@@ -19,7 +19,6 @@ import './currency/civ-currency.js';
 import './routing-number/civ-routing-number.js';
 import './country/civ-country.js';
 import './va-file-number/civ-va-file-number.js';
-import './race/civ-race.js';
 
 // Preset Input Base Class
 export { PresetInputWrapper } from './preset-input/index.js';
@@ -85,5 +84,3 @@ export { CivCountry } from './country/index.js';
 // VA File Number
 export { CivVaFileNumber } from './va-file-number/index.js';
 
-// Race
-export { CivRace } from './race/index.js';

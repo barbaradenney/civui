@@ -49,7 +49,8 @@ export class CivSelect extends CivFormElement {
   /**
    * Pre-populate options from a built-in data set. Available presets:
    * `us-state`, `service-branch`, `discharge-type`, `suffix`,
-   * `relationship-type`, `marital-status`, `ethnicity`, `gender`, `language`.
+   * `relationship-type`, `marital-status`, `ethnicity`, `gender`, `language`,
+   * `housing-status`, `education-level`, `employment-status`, `income-source`.
    */
   @property({ type: String }) preset?: SelectPresetName;
 

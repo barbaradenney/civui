@@ -168,6 +168,59 @@ const LANGUAGES: SelectOption[] = [
   { value: 'other', label: 'Other' },
 ];
 
+// ── Housing Status ─────────────────────────────────────────────
+
+const HOUSING_STATUSES: SelectOption[] = [
+  { value: 'own', label: 'Own' },
+  { value: 'rent', label: 'Rent' },
+  { value: 'living-with-family', label: 'Living with family or friends' },
+  { value: 'temporary-shelter', label: 'Temporary shelter' },
+  { value: 'transitional-housing', label: 'Transitional housing' },
+  { value: 'military-housing', label: 'Military housing' },
+  { value: 'homeless', label: 'Homeless or unsheltered' },
+  { value: 'other', label: 'Other' },
+];
+
+// ── Education Level ───────────────────────────────────────────
+
+const EDUCATION_LEVELS: SelectOption[] = [
+  { value: 'less-than-high-school', label: 'Less than high school' },
+  { value: 'high-school', label: 'High school diploma or GED' },
+  { value: 'some-college', label: 'Some college (no degree)' },
+  { value: 'associate', label: 'Associate\'s degree' },
+  { value: 'bachelor', label: 'Bachelor\'s degree' },
+  { value: 'master', label: 'Master\'s degree' },
+  { value: 'doctoral', label: 'Doctoral or professional degree' },
+];
+
+// ── Employment Status ─────────────────────────────────────────
+
+const EMPLOYMENT_STATUSES: SelectOption[] = [
+  { value: 'employed-full-time', label: 'Employed full-time' },
+  { value: 'employed-part-time', label: 'Employed part-time' },
+  { value: 'self-employed', label: 'Self-employed' },
+  { value: 'unemployed', label: 'Unemployed' },
+  { value: 'retired', label: 'Retired' },
+  { value: 'student', label: 'Student' },
+  { value: 'unable-to-work', label: 'Unable to work' },
+  { value: 'not-in-labor-force', label: 'Not in labor force' },
+];
+
+// ── Income Source ──────────────────────────────────────────────
+
+const INCOME_SOURCES: SelectOption[] = [
+  { value: 'employment', label: 'Employment or wages' },
+  { value: 'self-employment', label: 'Self-employment' },
+  { value: 'social-security', label: 'Social Security' },
+  { value: 'pension', label: 'Pension or retirement' },
+  { value: 'disability', label: 'Disability benefits' },
+  { value: 'unemployment', label: 'Unemployment benefits' },
+  { value: 'child-support', label: 'Child support or alimony' },
+  { value: 'investment', label: 'Investment income' },
+  { value: 'rental-income', label: 'Rental income' },
+  { value: 'other', label: 'Other' },
+];
+
 // ── US States ──────────────────────────────────────────────────
 // (imported from the existing us-state component data)
 
@@ -219,7 +272,11 @@ export type SelectPresetName =
   | 'marital-status'
   | 'ethnicity'
   | 'gender'
-  | 'language';
+  | 'language'
+  | 'housing-status'
+  | 'education-level'
+  | 'employment-status'
+  | 'income-source';
 
 /**
  * Resolve preset options based on preset name and variant.
@@ -269,6 +326,18 @@ export function resolvePresetOptions(
 
     case 'language':
       return [...LANGUAGES];
+
+    case 'housing-status':
+      return [...HOUSING_STATUSES];
+
+    case 'education-level':
+      return [...EDUCATION_LEVELS];
+
+    case 'employment-status':
+      return [...EMPLOYMENT_STATUSES];
+
+    case 'income-source':
+      return [...INCOME_SOURCES];
 
     default:
       return [];

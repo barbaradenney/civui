@@ -442,6 +442,42 @@ export const PresetLanguage: Story = {
   `,
 };
 
+export const PresetHousingStatus: Story = {
+  name: 'Preset: Housing Status',
+  render: () => html`
+    <civ-form-field label="Housing status" required>
+      <civ-select name="housing" preset="housing-status" required></civ-select>
+    </civ-form-field>
+  `,
+};
+
+export const PresetEducationLevel: Story = {
+  name: 'Preset: Education Level',
+  render: () => html`
+    <civ-form-field label="Highest education level" required>
+      <civ-select name="education" preset="education-level" required></civ-select>
+    </civ-form-field>
+  `,
+};
+
+export const PresetEmploymentStatus: Story = {
+  name: 'Preset: Employment Status',
+  render: () => html`
+    <civ-form-field label="Employment status" required>
+      <civ-select name="employment" preset="employment-status" required></civ-select>
+    </civ-form-field>
+  `,
+};
+
+export const PresetIncomeSource: Story = {
+  name: 'Preset: Income Source',
+  render: () => html`
+    <civ-form-field label="Primary source of income">
+      <civ-select name="incomeSource" preset="income-source"></civ-select>
+    </civ-form-field>
+  `,
+};
+
 // ── All Presets ──────────────────────────────────────────────
 
 export const AllPresets: Story = {
@@ -474,6 +510,18 @@ export const AllPresets: Story = {
       </civ-form-field>
       <civ-form-field label="Preferred language">
         <civ-select preset="language"></civ-select>
+      </civ-form-field>
+      <civ-form-field label="Housing status">
+        <civ-select preset="housing-status"></civ-select>
+      </civ-form-field>
+      <civ-form-field label="Education level">
+        <civ-select preset="education-level"></civ-select>
+      </civ-form-field>
+      <civ-form-field label="Employment status">
+        <civ-select preset="employment-status"></civ-select>
+      </civ-form-field>
+      <civ-form-field label="Income source">
+        <civ-select preset="income-source"></civ-select>
       </civ-form-field>
     </div>
   `,

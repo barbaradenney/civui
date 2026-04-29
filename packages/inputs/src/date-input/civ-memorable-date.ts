@@ -156,7 +156,7 @@ export class CivMemorableDate extends CivFormElement {
     return html`
         <div class="civ-memorable-date-fields" data-civ-memorable-date>
           <div class="civ-memorable-date-month">
-            <span class="civ-text-base civ-font-semibold civ-block civ-mb-1">${monthLabel}</span>
+            <span class="civ-text-base civ-font-semibold civ-text-base-darkest civ-block civ-mb-1">${monthLabel}</span>
             <civ-select
               label="${monthLabel}"
               name="${this.name ? `${this.name}-month` : 'month'}"
@@ -170,7 +170,7 @@ export class CivMemorableDate extends CivFormElement {
             ></civ-select>
           </div>
           <div class="civ-memorable-date-day">
-            <span class="civ-text-base civ-font-semibold civ-block civ-mb-1">${dayLabel}</span>
+            <span class="civ-text-base civ-font-semibold civ-text-base-darkest civ-block civ-mb-1">${dayLabel}</span>
             <civ-text-input
               label="${dayLabel}"
               name="${this.name ? `${this.name}-day` : 'day'}"
@@ -188,7 +188,7 @@ export class CivMemorableDate extends CivFormElement {
             ></civ-text-input>
           </div>
           <div class="civ-memorable-date-year">
-            <span class="civ-text-base civ-font-semibold civ-block civ-mb-1">${yearLabel}</span>
+            <span class="civ-text-base civ-font-semibold civ-text-base-darkest civ-block civ-mb-1">${yearLabel}</span>
             <civ-text-input
               label="${yearLabel}"
               name="${this.name ? `${this.name}-year` : 'year'}"

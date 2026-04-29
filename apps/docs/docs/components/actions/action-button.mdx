@@ -8,9 +8,9 @@ import StoryEmbed from "@site/src/components/StoryEmbed";
 
 # Action Button
 
-`<civ-action-button>` and `<civ-button-group>`
+`<civ-action-button>`
 
-A compact button for toolbars, inline form controls, and secondary actions. Same variant system as `<civ-button>` but with smaller padding and font size. Can be used standalone or grouped inside `<civ-button-group>` to form a connected toolbar.
+A compact button for toolbars, inline form controls, and secondary actions. Same variant system as `<civ-button>` but with smaller padding and font size. Supports a toggle pressed state for toolbar toggles.
 
 ## Examples
 
@@ -22,6 +22,10 @@ A compact button for toolbars, inline form controls, and secondary actions. Same
 
 <StoryEmbed id="ui-action-button--all-variants" />
 
+### Danger Variants
+
+<StoryEmbed id="ui-action-button--danger-variants" />
+
 ### Pressed
 
 <StoryEmbed id="ui-action-button--pressed" />
@@ -30,21 +34,9 @@ A compact button for toolbars, inline form controls, and secondary actions. Same
 
 <StoryEmbed id="ui-action-button--disabled" />
 
-### Button Group
-
-<StoryEmbed id="ui-action-button--button-group" />
-
-### Button Group With Pressed
-
-<StoryEmbed id="ui-action-button--button-group-with-pressed" />
-
-### Button Group Vertical
-
-<StoryEmbed id="ui-action-button--button-group-vertical" />
-
 [Open in Storybook →](pathname:///civui/storybook/?path=/story/ui-action-button--default)
 
-## civ-action-button Props
+## Props
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
@@ -62,6 +54,8 @@ A compact button for toolbars, inline form controls, and secondary actions. Same
 - **Primary** -- filled blue, for the main toolbar action
 - **Secondary** -- light tint background
 - **Tertiary** (default) -- outlined border, for most toolbar buttons
+
+Add `danger` to any variant for destructive action styling (red).
 
 ## Events
 
@@ -81,10 +75,8 @@ A compact button for toolbars, inline form controls, and secondary actions. Same
 <!-- Toggle button with pressed state -->
 <civ-action-button label="Bold" pressed></civ-action-button>
 
-<!-- Button group (connected toolbar) -->
-<civ-button-group>
-  <civ-action-button label="Bold"></civ-action-button>
-  <civ-action-button label="Italic"></civ-action-button>
-  <civ-action-button label="Underline"></civ-action-button>
-</civ-button-group>
+<!-- Danger variants -->
+<civ-action-button label="Delete" variant="primary" danger></civ-action-button>
+<civ-action-button label="Remove" variant="secondary" danger></civ-action-button>
+<civ-action-button label="Cancel" variant="tertiary" danger></civ-action-button>
 ```

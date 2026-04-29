@@ -1,0 +1,106 @@
+---
+title: Race & Ethnicity
+sidebar_position: 4
+sidebar_label: Race & Ethnicity
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
+# Race & Ethnicity
+
+`<civ-race-ethnicity>`
+
+Compound component implementing the OMB (Office of Management and Budget) standard for collecting race and ethnicity data on federal forms. Renders ethnicity as a radio group (single-select) and race as a checkbox group (multi-select).
+
+Ethnicity and race are collected separately because individuals may identify with multiple races but select one ethnicity category. This is the standard pattern required on federal forms.
+
+## Examples
+
+### Default
+
+<StoryEmbed id="forms-compound-race-ethnicity--default" />
+
+### Custom Section Legends
+
+<StoryEmbed id="forms-compound-race-ethnicity--custom-section-legends" />
+
+### Prefilled
+
+<StoryEmbed id="forms-compound-race-ethnicity--prefilled" />
+
+### Disabled
+
+<StoryEmbed id="forms-compound-race-ethnicity--disabled" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-compound-race-ethnicity--default)
+
+## Shared Props
+
+All form components share these props: `label`, `name`, `value`, `hint`, `error`, `required`, `disabled`.
+
+## Component-Specific Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `legend` | `string` | `''` | Outer fieldset legend |
+| `ethnicity-legend` | `string` | `'Ethnicity'` | Override the ethnicity sub-section legend |
+| `race-legend` | `string` | `'Race'` | Override the race sub-section legend |
+| `ethnicity-error` | `string` | `''` | Error message for the ethnicity field |
+| `race-error` | `string` | `''` | Error message for the race field |
+
+## Value Structure
+
+The component stores its value as a JSON string:
+
+```typescript
+interface RaceEthnicityValue {
+  ethnicity: string;   // Selected ethnicity option value
+  race: string[];      // Array of selected race option values
+}
+```
+
+## Ethnicity Options
+
+| Value | Label |
+|-------|-------|
+| `hispanic-latino` | Hispanic or Latino |
+| `not-hispanic-latino` | Not Hispanic or Latino |
+| `prefer-not-to-answer` | Prefer not to answer |
+
+## Race Options
+
+| Value | Label |
+|-------|-------|
+| `american-indian-alaska-native` | American Indian or Alaska Native |
+| `asian` | Asian |
+| `black-african-american` | Black or African American |
+| `native-hawaiian-pacific-islander` | Native Hawaiian or Other Pacific Islander |
+| `white` | White |
+| `prefer-not-to-answer` | Prefer not to answer |
+
+## Events
+
+| Event | Detail | Description |
+|-------|--------|-------------|
+| `civ-input` | `{ value: RaceEthnicityValue }` | Fires on every change (ethnicity or race) |
+| `civ-change` | `{ value: RaceEthnicityValue }` | Fires on committed change |
+
+## Usage
+
+```html
+<!-- Basic usage -->
+<civ-race-ethnicity
+  legend="What is your race, ethnicity, or origin?"
+  name="demographics"
+  required
+></civ-race-ethnicity>
+
+<!-- With custom sub-legends -->
+<civ-race-ethnicity
+  legend="Demographic information"
+  ethnicity-legend="What is your ethnicity?"
+  race-legend="What is your race?"
+  name="demographics"
+  required
+></civ-race-ethnicity>
+```

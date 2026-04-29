@@ -4,7 +4,7 @@ import '@civui/core';
 import './civ-race-ethnicity.js';
 
 const meta: Meta = {
-  title: 'Compound/Race & Ethnicity',
+  title: 'Forms/Compound/Race & Ethnicity',
   tags: ['autodocs'],
   parameters: {
     docs: {

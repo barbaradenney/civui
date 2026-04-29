@@ -17,12 +17,12 @@ For architecture and internals, see \`CLAUDE.md\` in the repo root.
 |-----|----------|-----------|--------------|
 | \`<civ-text-input>\` | Input | \`type\`, \`width\`, \`placeholder\`, \`maxlength\`, \`pattern\`, \`autocomplete\`, \`inputmode\` | \`{ value }\` |
 | \`<civ-textarea>\` | Input | \`rows\`, \`maxlength\`, \`placeholder\` | \`{ value }\` |
-| \`<civ-select>\` | Input | \`options\`, \`emptyLabel\`, \`preset\` | \`{ value }\` |
+| \`<civ-select>\` | Input | \`options\`, \`emptyLabel\`, \`preset\`, \`preset-variant\` | \`{ value }\` |
 | \`<civ-combobox>\` | Input | \`options\`, \`placeholder\`, \`noResultsText\` | \`civ-input: { value }\`, \`civ-change: { value, label }\` |
 | \`<civ-checkbox>\` | Choice | \`checked\`, \`indeterminate\`, \`description\`, \`tile\` | \`{ checked, value }\` |
-| \`<civ-checkbox-group>\` | Group | \`legend\`, \`tile\`, \`orientation\` | \`{ values: string[] }\` |
+| \`<civ-checkbox-group>\` | Group | \`legend\`, \`tile\`, \`orientation\`, \`preset\`, \`preset-variant\` | \`{ values: string[] }\` |
 | \`<civ-radio>\` | Choice | \`label\`, \`value\`, \`checked\`, \`description\`, \`tile\` | (bubbles to group) |
-| \`<civ-radio-group>\` | Group | \`legend\`, \`tile\`, \`orientation\` | \`{ value }\` |
+| \`<civ-radio-group>\` | Group | \`legend\`, \`tile\`, \`orientation\`, \`preset\`, \`preset-variant\` | \`{ value }\` |
 | \`<civ-toggle>\` | Choice | \`checked\`, \`description\` | \`{ checked, value }\` |
 | \`<civ-segmented-control>\` | Group | \`legend\` | \`{ value }\` |
 | \`<civ-segment>\` | Choice | \`label\`, \`value\`, \`selected\` | (bubbles to parent) |
@@ -104,7 +104,10 @@ Dropdown select. Populate via \`options\` property, slotted \`<option>\` element
 **Props (beyond standard):**
 - \`options\` — \`Array<{ value: string, label: string, disabled?: boolean }>\`
 - \`emptyLabel\` — placeholder option text (default: \`'- Select -'\`)
-- \`preset\` — pre-built option list: \`'us-state'\`, \`'us-territory'\`, \`'country'\`, \`'service-branch'\`, \`'suffix'\`, \`'month'\`
+- \`preset\` — pre-built option list: \`'us-state'\`, \`'service-branch'\`, \`'discharge-type'\`, \`'suffix'\`, \`'relationship-type'\`, \`'marital-status'\`, \`'ethnicity'\`, \`'gender'\`, \`'language'\`, \`'housing-status'\`, \`'education-level'\`, \`'employment-status'\`, \`'income-source'\`, \`'veteran-status'\`, \`'disability-type'\`, \`'citizenship-status'\`, \`'pay-frequency'\`, \`'contact-preference'\`
+- \`preset-variant\` — variant of the preset (e.g., \`'territories'\`, \`'all'\`, \`'binary'\`)
+
+> Presets also work on \`<civ-radio-group>\` and \`<civ-checkbox-group>\` with the same \`preset\` / \`preset-variant\` attributes. Use \`import { resolvePresetOptions } from '@civui/core'\` to customize preset data in JavaScript.
 
 **Example (property-driven):**
 \`\`\`html
@@ -195,6 +198,8 @@ Groups multiple checkboxes. Uses \`legend\` (not \`label\`). Multi-value.
 - \`legend\` — group label (renders as \`<legend>\`)
 - \`tile\` — apply tile variant to all children
 - \`orientation\` — \`'vertical'\` (default) | \`'horizontal'\`
+- \`preset\` — pre-built option list (same presets as \`civ-select\`). Renders \`<civ-checkbox>\` children automatically.
+- \`preset-variant\` — variant of the preset
 
 **Event detail:** \`{ values: string[] }\` — array of checked values.
 
@@ -208,6 +213,11 @@ Groups multiple checkboxes. Uses \`legend\` (not \`label\`). Multi-value.
     <civ-checkbox label="Healthcare" value="healthcare"></civ-checkbox>
     <civ-checkbox label="Transportation" value="transportation"></civ-checkbox>
   </civ-checkbox-group>
+</civ-form-fieldset>
+
+<!-- Using a preset -->
+<civ-form-fieldset legend="Disability categories" required>
+  <civ-checkbox-group name="disabilities" preset="disability-type" required></civ-checkbox-group>
 </civ-form-fieldset>
 \`\`\`
 
@@ -225,6 +235,8 @@ Mutually exclusive choice group. \`civ-radio\` is always used inside \`civ-radio
 - \`legend\` — group label
 - \`tile\` — apply tile variant to all children
 - \`orientation\` — \`'vertical'\` (default) | \`'horizontal'\`
+- \`preset\` — pre-built option list (same presets as \`civ-select\`). Renders \`<civ-radio>\` children automatically.
+- \`preset-variant\` — variant of the preset
 
 **Event detail:** \`{ value: string }\` — the selected radio's value.
 
@@ -238,6 +250,11 @@ Mutually exclusive choice group. \`civ-radio\` is always used inside \`civ-radio
     <civ-radio label="Phone" value="phone"></civ-radio>
     <civ-radio label="Mail" value="mail" description="Physical mail to your address on file"></civ-radio>
   </civ-radio-group>
+</civ-form-fieldset>
+
+<!-- Using a preset -->
+<civ-form-fieldset legend="Gender" required>
+  <civ-radio-group name="gender" preset="gender" required></civ-radio-group>
 </civ-form-fieldset>
 \`\`\`
 
@@ -886,7 +903,7 @@ Avoid these common mistakes when using CivUI components:
 
 5. **Never use \`civ-form-group\`.** It has been replaced by \`<civ-form-field>\` (single inputs) and \`<civ-form-fieldset>\` (groups).
 
-6. **Never use \`civ-us-state\` or \`civ-service-branch\`.** Use \`<civ-select preset="us-state">\` or \`<civ-select preset="service-branch">\` instead.
+6. **Never use \`civ-us-state\` or \`civ-service-branch\`.** Use \`preset="us-state"\` or \`preset="service-branch"\` on \`<civ-select>\`, \`<civ-radio-group>\`, or \`<civ-checkbox-group>\` instead.
 
 7. **Never put \`civ-radio\` outside a \`civ-radio-group\`.** Radios are not form-participating on their own. The group handles form integration, keyboard navigation, and ARIA.
 

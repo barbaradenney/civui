@@ -45,7 +45,10 @@ describe('civ-relationship', () => {
     const select = el.querySelector('[data-relationship-type]') as any;
     expect(select).not.toBeNull();
     const values = select.options.map((o: any) => o.value);
-    expect(values).toEqual(['spouse', 'child', 'parent', 'sibling', 'other']);
+    expect(values).toEqual([
+      'spouse', 'domestic-partner', 'child', 'stepchild', 'parent',
+      'sibling', 'grandchild', 'grandparent', 'legal-guardian', 'other',
+    ]);
   });
 
   it('switches to dependent preset', async () => {

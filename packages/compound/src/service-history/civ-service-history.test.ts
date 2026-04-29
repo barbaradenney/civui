@@ -19,7 +19,7 @@ describe('civ-service-history', () => {
     await elementUpdated(el);
     const branchSelect = el.querySelector('[data-service-branch]') as any;
     expect(branchSelect).not.toBeNull();
-    expect(branchSelect.options.length).toBe(8);
+    expect(branchSelect.options.length).toBe(18);
     expect(branchSelect.options[0].value).toBe('army');
   });
 

@@ -374,6 +374,195 @@ export interface CivLocaleStrings {
   prefillError: string;
   prefillRetry: string;
 
+  // Select presets — service branch
+  presetServiceBranchArmy: string;
+  presetServiceBranchNavy: string;
+  presetServiceBranchAirForce: string;
+  presetServiceBranchMarineCorps: string;
+  presetServiceBranchCoastGuard: string;
+  presetServiceBranchSpaceForce: string;
+  presetServiceBranchArmyReserve: string;
+  presetServiceBranchNavyReserve: string;
+  presetServiceBranchAirForceReserve: string;
+  presetServiceBranchMarineCorpsReserve: string;
+  presetServiceBranchCoastGuardReserve: string;
+  presetServiceBranchArmyNationalGuard: string;
+  presetServiceBranchAirNationalGuard: string;
+  presetServiceBranchArmyAirCorps: string;
+  presetServiceBranchArmyAirForces: string;
+  presetServiceBranchWomensArmyCorps: string;
+  presetServiceBranchNoaa: string;
+  presetServiceBranchUsphs: string;
+
+  // Select presets — discharge type
+  presetDischargeHonorable: string;
+  presetDischargeGeneral: string;
+  presetDischargeOtherThanHonorable: string;
+  presetDischargeBadConduct: string;
+  presetDischargeDishonorable: string;
+  presetDischargeUncharacterized: string;
+
+  // Select presets — suffix
+  presetSuffixJr: string;
+  presetSuffixSr: string;
+  presetSuffixII: string;
+  presetSuffixIII: string;
+  presetSuffixIV: string;
+  presetSuffixV: string;
+
+  // Select presets — relationship
+  presetRelationshipSpouse: string;
+  presetRelationshipDomesticPartner: string;
+  presetRelationshipChild: string;
+  presetRelationshipStepchild: string;
+  presetRelationshipParent: string;
+  presetRelationshipSibling: string;
+  presetRelationshipGrandchild: string;
+  presetRelationshipGrandparent: string;
+  presetRelationshipLegalGuardian: string;
+  presetRelationshipOther: string;
+  presetRelationshipFormerSpouse: string;
+  presetRelationshipBiologicalChild: string;
+  presetRelationshipAdoptedChild: string;
+  presetRelationshipFosterChild: string;
+  presetRelationshipStepparent: string;
+  presetRelationshipHalfSibling: string;
+  presetRelationshipWard: string;
+  presetRelationshipPowerOfAttorney: string;
+  presetRelationshipExecutor: string;
+  presetRelationshipTrustee: string;
+  presetRelationshipBeneficiary: string;
+  presetRelationshipCaretaker: string;
+  presetRelationshipDependent: string;
+  presetRelationshipFuneralDirector: string;
+  presetRelationshipSelf: string;
+  presetRelationshipOtherRelative: string;
+  presetRelationshipNonRelative: string;
+  presetRelationshipSurvivingSpouse: string;
+  presetRelationshipSurvivingChild: string;
+  presetRelationshipSurvivingParent: string;
+
+  // Select presets — marital status
+  presetMaritalNeverMarried: string;
+  presetMaritalMarried: string;
+  presetMaritalSeparated: string;
+  presetMaritalDivorced: string;
+  presetMaritalWidowed: string;
+
+  // Select presets — ethnicity
+  presetEthnicityHispanicLatino: string;
+  presetEthnicityNotHispanicLatino: string;
+  presetEthnicityPreferNotToAnswer: string;
+
+  // Select presets — gender
+  presetGenderMale: string;
+  presetGenderFemale: string;
+  presetGenderNonBinary: string;
+  presetGenderPreferNotToAnswer: string;
+  presetGenderOther: string;
+
+  // Select presets — language
+  presetLanguageEnglish: string;
+  presetLanguageSpanish: string;
+  presetLanguageChinese: string;
+  presetLanguageTagalog: string;
+  presetLanguageVietnamese: string;
+  presetLanguageArabic: string;
+  presetLanguageFrench: string;
+  presetLanguageKorean: string;
+  presetLanguageRussian: string;
+  presetLanguagePortuguese: string;
+  presetLanguageHaitianCreole: string;
+  presetLanguageGerman: string;
+  presetLanguageJapanese: string;
+  presetLanguageHindi: string;
+  presetLanguageOther: string;
+
+  // Select presets — housing status
+  presetHousingOwn: string;
+  presetHousingRent: string;
+  presetHousingLivingWithFamily: string;
+  presetHousingTemporaryShelter: string;
+  presetHousingTransitionalHousing: string;
+  presetHousingMilitaryHousing: string;
+  presetHousingHomeless: string;
+  presetHousingOther: string;
+
+  // Select presets — education level
+  presetEducationLessThanHighSchool: string;
+  presetEducationHighSchool: string;
+  presetEducationSomeCollege: string;
+  presetEducationAssociate: string;
+  presetEducationBachelor: string;
+  presetEducationMaster: string;
+  presetEducationDoctoral: string;
+
+  // Select presets — employment status
+  presetEmploymentFullTime: string;
+  presetEmploymentPartTime: string;
+  presetEmploymentSelfEmployed: string;
+  presetEmploymentUnemployed: string;
+  presetEmploymentRetired: string;
+  presetEmploymentStudent: string;
+  presetEmploymentUnableToWork: string;
+  presetEmploymentNotInLaborForce: string;
+
+  // Select presets — income source
+  presetIncomeEmployment: string;
+  presetIncomeSelfEmployment: string;
+  presetIncomeSocialSecurity: string;
+  presetIncomePension: string;
+  presetIncomeDisability: string;
+  presetIncomeUnemployment: string;
+  presetIncomeChildSupport: string;
+  presetIncomeInvestment: string;
+  presetIncomeRentalIncome: string;
+  presetIncomeOther: string;
+
+  // Select presets — veteran status
+  presetVeteranNonVeteran: string;
+  presetVeteranVeteran: string;
+  presetVeteranActiveDuty: string;
+  presetVeteranReserveGuard: string;
+  presetVeteranRetiredMilitary: string;
+  presetVeteranSpouse: string;
+  presetVeteranSurvivingSpouse: string;
+
+  // Select presets — disability type
+  presetDisabilityPhysical: string;
+  presetDisabilityCognitive: string;
+  presetDisabilityMentalHealth: string;
+  presetDisabilityVision: string;
+  presetDisabilityHearing: string;
+  presetDisabilitySpeech: string;
+  presetDisabilityChronicIllness: string;
+  presetDisabilityDevelopmental: string;
+  presetDisabilityMultiple: string;
+  presetDisabilityPreferNotToAnswer: string;
+
+  // Select presets — citizenship status
+  presetCitizenshipUsCitizenBirth: string;
+  presetCitizenshipUsCitizenNaturalized: string;
+  presetCitizenshipUsNational: string;
+  presetCitizenshipPermanentResident: string;
+  presetCitizenshipAuthorizedAlien: string;
+  presetCitizenshipPreferNotToAnswer: string;
+
+  // Select presets — pay frequency
+  presetPayWeekly: string;
+  presetPayBiWeekly: string;
+  presetPaySemiMonthly: string;
+  presetPayMonthly: string;
+  presetPayAnnually: string;
+  presetPayOneTime: string;
+
+  // Select presets — contact preference
+  presetContactEmail: string;
+  presetContactPhone: string;
+  presetContactText: string;
+  presetContactMail: string;
+  presetContactNoPreference: string;
+
   // Validation
   validateRequired: string; // "{label} is required"
   validateEmail: string;
@@ -726,6 +915,195 @@ const defaultStrings: CivLocaleStrings = {
   prefillLoading: 'Loading your information\u2026',
   prefillError: 'We couldn\u2019t load your information.',
   prefillRetry: 'Try again',
+
+  // Select presets — service branch
+  presetServiceBranchArmy: 'Army',
+  presetServiceBranchNavy: 'Navy',
+  presetServiceBranchAirForce: 'Air Force',
+  presetServiceBranchMarineCorps: 'Marine Corps',
+  presetServiceBranchCoastGuard: 'Coast Guard',
+  presetServiceBranchSpaceForce: 'Space Force',
+  presetServiceBranchArmyReserve: 'Army Reserve',
+  presetServiceBranchNavyReserve: 'Navy Reserve',
+  presetServiceBranchAirForceReserve: 'Air Force Reserve',
+  presetServiceBranchMarineCorpsReserve: 'Marine Corps Reserve',
+  presetServiceBranchCoastGuardReserve: 'Coast Guard Reserve',
+  presetServiceBranchArmyNationalGuard: 'Army National Guard',
+  presetServiceBranchAirNationalGuard: 'Air National Guard',
+  presetServiceBranchArmyAirCorps: 'Army Air Corps',
+  presetServiceBranchArmyAirForces: 'Army Air Forces',
+  presetServiceBranchWomensArmyCorps: "Women's Army Corps (WAC)",
+  presetServiceBranchNoaa: 'NOAA Corps',
+  presetServiceBranchUsphs: 'US Public Health Service',
+
+  // Select presets — discharge type
+  presetDischargeHonorable: 'Honorable',
+  presetDischargeGeneral: 'General (under honorable conditions)',
+  presetDischargeOtherThanHonorable: 'Other than honorable',
+  presetDischargeBadConduct: 'Bad conduct',
+  presetDischargeDishonorable: 'Dishonorable',
+  presetDischargeUncharacterized: 'Uncharacterized',
+
+  // Select presets — suffix
+  presetSuffixJr: 'Jr.',
+  presetSuffixSr: 'Sr.',
+  presetSuffixII: 'II',
+  presetSuffixIII: 'III',
+  presetSuffixIV: 'IV',
+  presetSuffixV: 'V',
+
+  // Select presets — relationship
+  presetRelationshipSpouse: 'Spouse',
+  presetRelationshipDomesticPartner: 'Domestic partner',
+  presetRelationshipChild: 'Child',
+  presetRelationshipStepchild: 'Stepchild',
+  presetRelationshipParent: 'Parent',
+  presetRelationshipSibling: 'Sibling',
+  presetRelationshipGrandchild: 'Grandchild',
+  presetRelationshipGrandparent: 'Grandparent',
+  presetRelationshipLegalGuardian: 'Legal guardian',
+  presetRelationshipOther: 'Other',
+  presetRelationshipFormerSpouse: 'Former spouse',
+  presetRelationshipBiologicalChild: 'Biological child',
+  presetRelationshipAdoptedChild: 'Adopted child',
+  presetRelationshipFosterChild: 'Foster child',
+  presetRelationshipStepparent: 'Stepparent',
+  presetRelationshipHalfSibling: 'Half-sibling',
+  presetRelationshipWard: 'Ward',
+  presetRelationshipPowerOfAttorney: 'Power of attorney',
+  presetRelationshipExecutor: 'Executor or personal representative',
+  presetRelationshipTrustee: 'Trustee',
+  presetRelationshipBeneficiary: 'Beneficiary',
+  presetRelationshipCaretaker: 'Caretaker or custodian',
+  presetRelationshipDependent: 'Dependent',
+  presetRelationshipFuneralDirector: 'Funeral director',
+  presetRelationshipSelf: 'Self',
+  presetRelationshipOtherRelative: 'Other relative',
+  presetRelationshipNonRelative: 'Non-relative',
+  presetRelationshipSurvivingSpouse: 'Surviving spouse',
+  presetRelationshipSurvivingChild: 'Surviving child',
+  presetRelationshipSurvivingParent: 'Surviving parent',
+
+  // Select presets — marital status
+  presetMaritalNeverMarried: 'Never married',
+  presetMaritalMarried: 'Married',
+  presetMaritalSeparated: 'Separated',
+  presetMaritalDivorced: 'Divorced',
+  presetMaritalWidowed: 'Widowed',
+
+  // Select presets — ethnicity
+  presetEthnicityHispanicLatino: 'Hispanic or Latino',
+  presetEthnicityNotHispanicLatino: 'Not Hispanic or Latino',
+  presetEthnicityPreferNotToAnswer: 'Prefer not to answer',
+
+  // Select presets — gender
+  presetGenderMale: 'Male',
+  presetGenderFemale: 'Female',
+  presetGenderNonBinary: 'Non-binary',
+  presetGenderPreferNotToAnswer: 'Prefer not to answer',
+  presetGenderOther: 'Other',
+
+  // Select presets — language
+  presetLanguageEnglish: 'English',
+  presetLanguageSpanish: 'Spanish',
+  presetLanguageChinese: 'Chinese',
+  presetLanguageTagalog: 'Tagalog',
+  presetLanguageVietnamese: 'Vietnamese',
+  presetLanguageArabic: 'Arabic',
+  presetLanguageFrench: 'French',
+  presetLanguageKorean: 'Korean',
+  presetLanguageRussian: 'Russian',
+  presetLanguagePortuguese: 'Portuguese',
+  presetLanguageHaitianCreole: 'Haitian Creole',
+  presetLanguageGerman: 'German',
+  presetLanguageJapanese: 'Japanese',
+  presetLanguageHindi: 'Hindi',
+  presetLanguageOther: 'Other',
+
+  // Select presets — housing status
+  presetHousingOwn: 'Own',
+  presetHousingRent: 'Rent',
+  presetHousingLivingWithFamily: 'Living with family or friends',
+  presetHousingTemporaryShelter: 'Temporary shelter',
+  presetHousingTransitionalHousing: 'Transitional housing',
+  presetHousingMilitaryHousing: 'Military housing',
+  presetHousingHomeless: 'Homeless or unsheltered',
+  presetHousingOther: 'Other',
+
+  // Select presets — education level
+  presetEducationLessThanHighSchool: 'Less than high school',
+  presetEducationHighSchool: 'High school diploma or GED',
+  presetEducationSomeCollege: 'Some college (no degree)',
+  presetEducationAssociate: "Associate's degree",
+  presetEducationBachelor: "Bachelor's degree",
+  presetEducationMaster: "Master's degree",
+  presetEducationDoctoral: 'Doctoral or professional degree',
+
+  // Select presets — employment status
+  presetEmploymentFullTime: 'Employed full-time',
+  presetEmploymentPartTime: 'Employed part-time',
+  presetEmploymentSelfEmployed: 'Self-employed',
+  presetEmploymentUnemployed: 'Unemployed',
+  presetEmploymentRetired: 'Retired',
+  presetEmploymentStudent: 'Student',
+  presetEmploymentUnableToWork: 'Unable to work',
+  presetEmploymentNotInLaborForce: 'Not in labor force',
+
+  // Select presets — income source
+  presetIncomeEmployment: 'Employment or wages',
+  presetIncomeSelfEmployment: 'Self-employment',
+  presetIncomeSocialSecurity: 'Social Security',
+  presetIncomePension: 'Pension or retirement',
+  presetIncomeDisability: 'Disability benefits',
+  presetIncomeUnemployment: 'Unemployment benefits',
+  presetIncomeChildSupport: 'Child support or alimony',
+  presetIncomeInvestment: 'Investment income',
+  presetIncomeRentalIncome: 'Rental income',
+  presetIncomeOther: 'Other',
+
+  // Select presets — veteran status
+  presetVeteranNonVeteran: 'Not a veteran',
+  presetVeteranVeteran: 'Veteran',
+  presetVeteranActiveDuty: 'Active duty service member',
+  presetVeteranReserveGuard: 'Reserve or National Guard',
+  presetVeteranRetiredMilitary: 'Retired military',
+  presetVeteranSpouse: 'Spouse of veteran',
+  presetVeteranSurvivingSpouse: 'Surviving spouse of veteran',
+
+  // Select presets — disability type
+  presetDisabilityPhysical: 'Physical (mobility, dexterity)',
+  presetDisabilityCognitive: 'Cognitive (memory, learning, intellectual)',
+  presetDisabilityMentalHealth: 'Mental health (anxiety, depression, PTSD)',
+  presetDisabilityVision: 'Vision (blindness, low vision)',
+  presetDisabilityHearing: 'Hearing (deafness, hard of hearing)',
+  presetDisabilitySpeech: 'Speech or communication',
+  presetDisabilityChronicIllness: 'Chronic illness (diabetes, epilepsy, cancer)',
+  presetDisabilityDevelopmental: 'Developmental (autism, cerebral palsy)',
+  presetDisabilityMultiple: 'Multiple disabilities',
+  presetDisabilityPreferNotToAnswer: 'Prefer not to answer',
+
+  // Select presets — citizenship status
+  presetCitizenshipUsCitizenBirth: 'US citizen (by birth)',
+  presetCitizenshipUsCitizenNaturalized: 'US citizen (naturalized)',
+  presetCitizenshipUsNational: 'US national',
+  presetCitizenshipPermanentResident: 'Lawful permanent resident',
+  presetCitizenshipAuthorizedAlien: 'Authorized to work (visa or other status)',
+  presetCitizenshipPreferNotToAnswer: 'Prefer not to answer',
+
+  // Select presets — pay frequency
+  presetPayWeekly: 'Weekly',
+  presetPayBiWeekly: 'Bi-weekly (every 2 weeks)',
+  presetPaySemiMonthly: 'Semi-monthly (twice a month)',
+  presetPayMonthly: 'Monthly',
+  presetPayAnnually: 'Annually',
+  presetPayOneTime: 'One-time payment',
+
+  // Select presets — contact preference
+  presetContactEmail: 'Email',
+  presetContactPhone: 'Phone call',
+  presetContactText: 'Text message (SMS)',
+  presetContactMail: 'US Mail',
+  presetContactNoPreference: 'No preference',
 
   validateRequired: '{label} is required',
   validateEmail: 'Enter a valid email address',

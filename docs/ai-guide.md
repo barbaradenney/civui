@@ -13,12 +13,12 @@ For architecture and internals, see `CLAUDE.md` in the repo root.
 |-----|----------|-----------|--------------|
 | `<civ-text-input>` | Input | `type`, `width`, `placeholder`, `maxlength`, `pattern`, `autocomplete`, `inputmode` | `{ value }` |
 | `<civ-textarea>` | Input | `rows`, `maxlength`, `placeholder` | `{ value }` |
-| `<civ-select>` | Input | `options`, `emptyLabel` | `{ value }` |
+| `<civ-select>` | Input | `options`, `emptyLabel`, `preset` | `{ value }` |
 | `<civ-combobox>` | Input | `options`, `placeholder`, `noResultsText` | `{ value }` |
 | `<civ-checkbox>` | Choice | `checked`, `indeterminate`, `description`, `tile` | `{ checked, value }` |
-| `<civ-checkbox-group>` | Group | `legend`, `tile`, `orientation` | `{ values: string[] }` |
+| `<civ-checkbox-group>` | Group | `legend`, `tile`, `orientation`, `preset` | `{ values: string[] }` |
 | `<civ-radio>` | Choice | `label`, `value`, `checked`, `description`, `tile` | (bubbles to group) |
-| `<civ-radio-group>` | Group | `legend`, `tile`, `orientation` | `{ value }` |
+| `<civ-radio-group>` | Group | `legend`, `tile`, `orientation`, `preset` | `{ value }` |
 | `<civ-toggle>` | Choice | `checked`, `description` | `{ checked, value }` |
 | `<civ-segmented-control>` | Group | `legend` | `{ value }` |
 | `<civ-segment>` | Choice | `label`, `value`, `selected` | (bubbles to parent) |
@@ -154,12 +154,14 @@ Multi-line text input. Shows character count when `maxlength` is set.
 
 ### civ-select
 
-Dropdown select. Populate via `options` property OR slotted `<option>` / `<optgroup>` children (read once on connect).
+Dropdown select. Populate via `options` property, slotted `<option>` / `<optgroup>` children (read once on connect), or the `preset` attribute.
 
 **Props (beyond standard):**
 - `options` — `Array<{ value: string, label: string, disabled?: boolean, group?: string }>`
 - `emptyLabel` — placeholder option text (default: `'- Select -'`)
 - `width` — same enum as `civ-text-input` (default | 2xs | xs | sm | md | lg | xl | 2xl)
+- `preset` — pre-built option list (e.g., `'us-state'`, `'service-branch'`, `'gender'`). See [Presets](#presets).
+- `preset-variant` — variant of the preset (e.g., `'territories'`, `'all'`, `'binary'`)
 
 **Example (property-driven):**
 ```html
@@ -273,6 +275,8 @@ Groups multiple checkboxes. Uses `legend` (not `label`). Multi-value.
 - `legend` — group label (renders as `<legend>`)
 - `tile` — apply tile variant to all children
 - `orientation` — `'vertical'` (default) | `'horizontal'`
+- `preset` — pre-built option list (same presets as `civ-select`). Renders `<civ-checkbox>` children automatically.
+- `preset-variant` — variant of the preset (e.g., `'territories'`, `'all'`, `'binary'`)
 - `min-selections` — minimum required count. A positive value implicitly marks the group as required (legend asterisk + `valueMissing` validity error). Auto-appends "Select at least N" to the hint chain.
 - `max-selections` — maximum allowed count. Blocks the over-pick interactively + auto-appends "Select up to N" hint.
 - `show-select-all` — render a "Select all" / "Deselect all" toggle button.
@@ -308,6 +312,8 @@ Mutually exclusive choice group. `civ-radio` is always used inside `civ-radio-gr
 - `legend` — group label
 - `tile` — apply tile variant to all children
 - `orientation` — `'vertical'` (default) | `'horizontal'`
+- `preset` — pre-built option list (same presets as `civ-select`). Renders `<civ-radio>` children automatically.
+- `preset-variant` — variant of the preset (e.g., `'territories'`, `'all'`, `'binary'`)
 - `skipLabel` — when non-empty, renders a "Prefer not to answer" button below the group. See [Trauma-informed patterns](#trauma-informed-patterns).
 - `skipValue` — form value when the skip affordance is selected (default: `'skip'`).
 

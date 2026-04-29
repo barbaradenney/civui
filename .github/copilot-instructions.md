@@ -24,12 +24,12 @@ Light DOM only. Tailwind CSS with `civ-` prefix. ElementInternals for form parti
 |-----|-----------|--------------|
 | `<civ-text-input>` | `type`, `width`, `placeholder`, `maxlength`, `pattern`, `autocomplete`, `inputmode` | `{ value }` |
 | `<civ-textarea>` | `rows`, `maxlength`, `placeholder` | `{ value }` |
-| `<civ-select>` | `options`, `emptyLabel` | `{ value }` |
+| `<civ-select>` | `options`, `emptyLabel`, `preset`, `preset-variant` | `{ value }` |
 | `<civ-combobox>` | `options`, `placeholder`, `noResultsText` | `civ-change: { value, label }` |
 | `<civ-checkbox>` | `checked`, `indeterminate`, `description`, `tile` | `{ checked, value }` |
-| `<civ-checkbox-group>` | `legend`, `tile`, `orientation` | `{ values: string[] }` |
+| `<civ-checkbox-group>` | `legend`, `tile`, `orientation`, `preset`, `preset-variant` | `{ values: string[] }` |
 | `<civ-radio>` | `label`, `value`, `checked`, `description`, `tile` | (use in radio-group) |
-| `<civ-radio-group>` | `legend`, `tile`, `orientation` | `{ value }` |
+| `<civ-radio-group>` | `legend`, `tile`, `orientation`, `preset`, `preset-variant` | `{ value }` |
 | `<civ-toggle>` | `checked`, `description` | `{ checked, value }` |
 | `<civ-segmented-control>` | `legend` | `{ value }` |
 | `<civ-segment>` | `label`, `value`, `selected` | (use in segmented-control) |

@@ -198,7 +198,7 @@ Presets are a starting point — you can modify them or provide your own options
 **Start from a preset and modify in JavaScript:**
 
 ```js
-import { resolvePresetOptions } from '@civui/inputs';
+import { resolvePresetOptions } from '@civui/core';
 
 // Get the base preset options
 const options = resolvePresetOptions('education-level');
@@ -213,7 +213,9 @@ const filtered = options.filter(o => o.value !== 'doctoral');
 document.querySelector('civ-select').options = filtered;
 ```
 
-The `resolvePresetOptions(preset, variant?)` function is exported from `@civui/inputs` and returns a plain array of `{ value, label }` objects that you can modify freely.
+The `resolvePresetOptions(preset, variant?)` function is exported from `@civui/core` and returns a plain array of `{ value, label }` objects that you can modify freely.
+
+> **Tip:** Presets also work on `<civ-radio-group>` and `<civ-checkbox-group>` — use the same `preset` and `preset-variant` attributes. This is useful when you want to present a shorter preset list as radio buttons or checkboxes instead of a dropdown.
 
 ### Data Sources
 

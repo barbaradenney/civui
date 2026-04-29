@@ -10,12 +10,12 @@ export const COMPONENT_CATALOG = `# CivUI Component Catalog
 |-----|----------|-----------|--------------|
 | \`<civ-text-input>\` | Input | \`type\`, \`width\`, \`placeholder\`, \`maxlength\`, \`pattern\`, \`autocomplete\`, \`inputmode\` | \`{ value }\` |
 | \`<civ-textarea>\` | Input | \`rows\`, \`maxlength\`, \`placeholder\` | \`{ value }\` |
-| \`<civ-select>\` | Input | \`options\`, \`emptyLabel\`, \`preset\` | \`{ value }\` |
+| \`<civ-select>\` | Input | \`options\`, \`emptyLabel\`, \`preset\`, \`preset-variant\` | \`{ value }\` |
 | \`<civ-combobox>\` | Input | \`options\`, \`placeholder\`, \`noResultsText\` | \`civ-input: { value }\`, \`civ-change: { value, label }\` |
 | \`<civ-checkbox>\` | Choice | \`checked\`, \`indeterminate\`, \`description\`, \`tile\` | \`{ checked, value }\` |
-| \`<civ-checkbox-group>\` | Group | \`legend\`, \`tile\`, \`orientation\` | \`{ values: string[] }\` |
+| \`<civ-checkbox-group>\` | Group | \`legend\`, \`tile\`, \`orientation\`, \`preset\`, \`preset-variant\` | \`{ values: string[] }\` |
 | \`<civ-radio>\` | Choice | \`label\`, \`value\`, \`checked\`, \`description\`, \`tile\` | (bubbles to group) |
-| \`<civ-radio-group>\` | Group | \`legend\`, \`tile\`, \`orientation\` | \`{ value }\` |
+| \`<civ-radio-group>\` | Group | \`legend\`, \`tile\`, \`orientation\`, \`preset\`, \`preset-variant\` | \`{ value }\` |
 | \`<civ-toggle>\` | Choice | \`checked\`, \`description\` | \`{ checked, value }\` |
 | \`<civ-segmented-control>\` | Group | \`legend\` | \`{ value }\` |
 | \`<civ-segment>\` | Choice | \`label\`, \`value\`, \`selected\` | (bubbles to parent) |
@@ -42,7 +42,7 @@ Standard text input. Props: \`type\` (text|email|number|password|search|tel|url)
 Multi-line text input. Props: \`rows\` (default 5), \`maxlength\` (enables character count), \`placeholder\`.
 
 ### civ-select
-Dropdown select. Props: \`options\` (Array<{value, label, disabled?}>), \`emptyLabel\` (default "- Select -"), \`preset\` (pre-built list: \`'us-state'\`, \`'us-territory'\`, \`'country'\`, \`'service-branch'\`, \`'suffix'\`, \`'month'\`). The \`preset\` attribute replaces the former \`civ-us-state\`, \`civ-service-branch\`, and other data-list components.
+Dropdown select. Props: \`options\` (Array<{value, label, disabled?}>), \`emptyLabel\` (default "- Select -"), \`preset\` (pre-built list: \`'us-state'\`, \`'service-branch'\`, \`'discharge-type'\`, \`'suffix'\`, \`'gender'\`, \`'marital-status'\`, etc.), \`preset-variant\` (e.g., \`'territories'\`, \`'all'\`, \`'binary'\`). Presets also work on \`civ-radio-group\` and \`civ-checkbox-group\`. Use \`import { resolvePresetOptions } from '@civui/core'\` for programmatic access.
 
 ### civ-form-field
 Wrapper for single-value inputs. Renders label, hint, error, required indicator. Props: \`label\`, \`hint\`, \`error\`, \`required\`, \`requiredMessage\`, \`hide-required-indicator\`, \`touched\`. Tracks per-field \`touched\` state (set after first \`civ-change\`).
@@ -57,10 +57,10 @@ Searchable dropdown with type-ahead. Props: \`options\`, \`placeholder\`, \`noRe
 Single checkbox. Props: \`checked\`, \`indeterminate\`, \`description\`, \`tile\`. Event: { checked, value }.
 
 ### civ-checkbox-group
-Multi-checkbox group. Props: \`legend\`, \`tile\`, \`orientation\`. Event: { values: string[] }.
+Multi-checkbox group. Props: \`legend\`, \`tile\`, \`orientation\`, \`preset\`, \`preset-variant\`. Event: { values: string[] }. Presets auto-render \`<civ-checkbox>\` children.
 
 ### civ-radio-group > civ-radio
-Mutually exclusive choices. Group props: \`legend\`, \`tile\`, \`orientation\`. Radio props: \`label\`, \`value\`, \`description\`, \`tile\`.
+Mutually exclusive choices. Group props: \`legend\`, \`tile\`, \`orientation\`, \`preset\`, \`preset-variant\`. Radio props: \`label\`, \`value\`, \`description\`, \`tile\`. Presets auto-render \`<civ-radio>\` children.
 
 ### civ-toggle
 On/off switch (immediate effect). Props: \`checked\`, \`description\`. Uses role="switch".

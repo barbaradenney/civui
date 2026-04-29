@@ -123,8 +123,8 @@ Show/hide fields based on other field values:
     {
       "id": "phone-required-if-call",
       "description": "Phone is required when contact method is call",
-      "condition": { "field": "contactMethod", "operator": "eq", "value": "call" },
-      "requiredFields": ["phone"]
+      "when": { "field": "contactMethod", "operator": "eq", "value": "call" },
+      "then": { "action": "require", "targets": ["phone"] }
     }
   ]
 }

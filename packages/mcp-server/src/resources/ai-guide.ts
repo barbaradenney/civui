@@ -45,7 +45,35 @@ For architecture and internals, see \`CLAUDE.md\` in the repo root.
 | \`<civ-task>\` | Navigation | \`label\`, \`hint\`, \`href\`, \`status\` (not-started/in-progress/complete/cannot-start/error) | — |
 | \`<civ-progress-bar>\` | Feedback | \`value\`, \`label\`, \`status\` | — |
 | \`<civ-progress-steps>\` | Feedback | \`steps\` (JSON), \`current\`, \`show-counter\`, \`clickable\`, \`orientation\` | \`civ-step-click\` |
-| \`<civ-form-step>\` | Form | \`persist\`, \`show-progress\`, \`show-counter\`, \`continue-label\`, \`back-label\`, \`complete-label\` | \`civ-step-complete\`, \`civ-wizard-step\` |
+| \`<civ-form-step>\` | Form | \`persist\`, \`sensitive\`, \`show-pause\`, \`continue-label\`, \`complete-label\`, \`pause-label\`, \`nav-disabled\`, \`validate\` | \`civ-step-complete\`, \`civ-step-pause\` |
+| \`<civ-yes-no>\` | Choice | \`legend\`, \`yes-label\`, \`no-label\`, \`unsure-label\`, \`skip-label\` | \`{ value }\` |
+| \`<civ-conditional>\` | Layout | \`when\`, \`equals\`, \`not-equals\`, \`includes\`, \`has-value\`, \`matches\` | — |
+| \`<civ-alert>\` | Feedback | \`variant\` (info/warning/error/success), \`heading\`, \`dismissible\`, \`slim\`, \`alert-style\` | \`civ-dismiss\` |
+| \`<civ-modal>\` | Overlay | \`open\`, \`heading\`, \`label\`, \`no-close-button\`, \`no-backdrop-close\`, \`no-escape-close\` | \`civ-modal-close\` |
+| \`<civ-action-sheet>\` | Overlay | \`open\`, \`max-height\`, \`trap-focus\`, \`no-click-outside\` | \`civ-action-sheet-close\` |
+| \`<civ-address>\` | Compound | \`legend\`, \`show-street2\`, \`show-country\`, \`show-military\` | \`{ value: AddressValue }\` |
+| \`<civ-name>\` | Compound | \`legend\`, \`format\`, \`show-middle\`, \`show-suffix\` | \`{ value: NameValue }\` |
+| \`<civ-direct-deposit>\` | Compound | \`legend\` | \`{ value: DirectDepositValue }\` |
+| \`<civ-signature>\` | Compound | \`legend\`, \`statement\` | \`{ value: { name, certified, signedAt } }\` |
+| \`<civ-relationship>\` | Compound | \`legend\`, \`preset\`, \`show-deceased\`, \`show-name\` | \`{ value: RelationshipValue }\` |
+| \`<civ-race-ethnicity>\` | Compound | \`legend\`, \`ethnicity-legend\`, \`race-legend\` | \`{ value: RaceEthnicityValue }\` |
+| \`<civ-marriage-history>\` | Compound | \`legend\`, \`show-marriage-type\`, \`status-assumed\` | \`{ value: MarriageValue }\` |
+| \`<civ-service-history>\` | Compound | \`legend\`, \`show-service-number\` | \`{ value: ServicePeriodValue }\` |
+| \`<civ-ssn>\` | Preset | \`mode\` (full/last4) | \`{ value }\` |
+| \`<civ-ein>\` | Preset | — | \`{ value }\` |
+| \`<civ-phone>\` | Preset | \`international\` | \`{ value }\` |
+| \`<civ-email>\` | Preset | — | \`{ value }\` |
+| \`<civ-zip>\` | Preset | \`extended\` | \`{ value }\` |
+| \`<civ-currency>\` | Preset | — | \`{ value }\` |
+| \`<civ-routing-number>\` | Preset | — | \`{ value }\` |
+| \`<civ-va-file-number>\` | Preset | — | \`{ value }\` |
+| \`<civ-country>\` | Preset | \`us-first\`, \`include\`, \`exclude\` | \`{ value }\` |
+| \`<civ-download-link>\` | Action | \`label\`, \`href\`, \`filename\`, \`file-size\` | — |
+| \`<civ-email-link>\` | Action | \`address\`, \`label\`, \`subject\` | — |
+| \`<civ-external-link>\` | Action | \`label\`, \`href\` | — |
+| \`<civ-phone-link>\` | Action | \`number\`, \`label\` | — |
+| \`<civ-skip-link>\` | Navigation | \`label\`, \`href\` | — |
+| \`<civ-icon>\` | UI | \`name\`, \`label\` | — |
 
 **All form-participating components** also have: \`name\`, \`value\`, \`required\`, \`disabled\`.
 
@@ -617,6 +645,221 @@ Step indicator for multi-step forms. Shows numbered circles with labels.
   show-counter
 ></civ-progress-steps>
 \`\`\`
+
+---
+
+### civ-progress-bar
+
+Percentage-based progress indicator for dynamic forms.
+
+**Props:** \`value\` (0-100), \`label\` (aria-label), \`status\` (e.g., "3 of 8 sections"), \`show-percent\`
+
+\`\`\`html
+<civ-progress-bar value="37" label="Application progress" status="3 of 8 sections complete"></civ-progress-bar>
+\`\`\`
+
+---
+
+### civ-divider
+
+Visual separator between content sections.
+
+**Props:** \`spacing\` (\`'default'\` | \`'sm'\`), \`variant\` (\`'default'\` | \`'light'\`)
+
+\`\`\`html
+<civ-divider></civ-divider>
+<civ-divider spacing="sm"></civ-divider>
+\`\`\`
+
+---
+
+### civ-yes-no
+
+Yes/No binary question rendered as a radio group. Self-contained (renders its own legend).
+
+**Props:** \`legend\`, \`yes-label\`, \`no-label\`, \`unsure-label\`, \`unsure-value\`, \`skip-label\`, \`skip-value\`
+
+\`\`\`html
+<civ-yes-no label="Are you a veteran?" name="veteran" required></civ-yes-no>
+\`\`\`
+
+---
+
+### civ-conditional
+
+Conditionally shows children based on another field's value. Not form-participating.
+
+**Props:** \`when\` (field name), \`equals\`, \`not-equals\`, \`includes\` (comma-separated list), \`has-value\` (boolean), \`matches\` (regex)
+
+\`\`\`html
+<civ-conditional when="veteran" equals="yes">
+  <civ-text-input label="Branch" name="branch" required></civ-text-input>
+</civ-conditional>
+\`\`\`
+
+---
+
+### civ-alert
+
+Accessible alert for informational, warning, error, or success messages.
+
+**Props:** \`variant\` (info/warning/error/success), \`heading\`, \`label\` (body text), \`dismissible\`, \`slim\`, \`alert-style\` (primary/secondary/tertiary), \`heading-level\` (2-6)
+
+\`\`\`html
+<civ-alert variant="warning" heading="Action needed" label="Your session will expire in 5 minutes."></civ-alert>
+<civ-alert variant="info" label="Processing takes up to 3 business days." slim></civ-alert>
+\`\`\`
+
+---
+
+### civ-modal
+
+Modal dialog built on native \`<dialog>\`. Centered on desktop, bottom sheet on mobile.
+
+**Props:** \`open\`, \`heading\`, \`label\`, \`no-close-button\`, \`no-backdrop-close\`, \`no-escape-close\`
+
+**Events:** \`civ-modal-close\`
+
+\`\`\`html
+<civ-modal heading="Confirm submission" open>
+  <p>Are you sure?</p>
+  <civ-button label="Submit" type="submit"></civ-button>
+  <civ-button label="Cancel" variant="secondary"></civ-button>
+</civ-modal>
+\`\`\`
+
+---
+
+### civ-action-sheet
+
+Popup overlay: absolute dropdown on desktop, bottom sheet on mobile.
+
+**Props:** \`open\`, \`max-height\`, \`trap-focus\`, \`no-click-outside\`
+
+**Events:** \`civ-action-sheet-close\`
+
+---
+
+### civ-address
+
+Compound address component with street, city, state, ZIP.
+
+**Props:** \`legend\`, \`show-street2\` (default true), \`show-street3\`, \`show-country\`, \`show-military\`, \`validate-address\` (JS only). Per-field errors: \`street-error\`, \`city-error\`, \`state-error\`, \`zip-error\`.
+
+\`\`\`html
+<civ-address legend="Mailing address" name="mailingAddress" required></civ-address>
+\`\`\`
+
+---
+
+### civ-name
+
+Compound name component with first, middle, last, suffix fields.
+
+**Props:** \`legend\`, \`format\` (domestic/international), \`show-middle\` (default true), \`show-suffix\` (default true). Per-field errors: \`first-error\`, \`middle-error\`, \`last-error\`.
+
+\`\`\`html
+<civ-name legend="Your full legal name" name="fullName" required></civ-name>
+\`\`\`
+
+---
+
+### civ-direct-deposit
+
+Compound bank account entry: routing number, account number, account type.
+
+**Props:** \`legend\`. Per-field errors: \`routing-error\`, \`account-error\`, \`type-error\`.
+
+\`\`\`html
+<civ-direct-deposit legend="Direct deposit information" name="bankInfo" required></civ-direct-deposit>
+\`\`\`
+
+---
+
+### civ-signature
+
+Electronic signature with certification statement, name input, and confirm checkbox.
+
+**Props:** \`legend\`, \`statement\` (or slot \`[name="statement"]\`). Per-field errors: \`name-error\`, \`certify-error\`.
+
+\`\`\`html
+<civ-signature legend="Certification" name="signature" statement="I certify this is true." required></civ-signature>
+\`\`\`
+
+---
+
+### civ-relationship
+
+Compound component for a person and their relationship to the applicant.
+
+**Props:** \`legend\`, \`preset\` (general/dependent/survivor/benefits-survivor/immigration/tax), \`show-name\`, \`show-deceased\`, \`show-divorce-date\`, \`show-adoption-date\`, \`deceased-assumed\`. Per-field errors: \`name-error\`, \`relationship-error\`, \`marriage-date-error\`, etc.
+
+\`\`\`html
+<civ-relationship legend="About the dependent" name="dependent" preset="dependent" required></civ-relationship>
+\`\`\`
+
+---
+
+### civ-race-ethnicity
+
+OMB-standard race and ethnicity with ethnicity radio group and race multi-select checkboxes.
+
+**Props:** \`legend\`, \`ethnicity-legend\`, \`race-legend\`, \`ethnicity-error\`, \`race-error\`
+
+\`\`\`html
+<civ-race-ethnicity legend="Race and ethnicity" name="demographics" required></civ-race-ethnicity>
+\`\`\`
+
+---
+
+### civ-marriage-history
+
+Single marriage entry. Use inside \`civ-repeater\` for multiple marriages.
+
+**Props:** \`legend\`, \`show-marriage-type\`, \`status-assumed\`. Per-field errors: \`spouse-error\`, \`marriage-date-error\`, \`status-error\`, \`end-date-error\`, etc.
+
+---
+
+### civ-service-history
+
+Single military service period. Use inside \`civ-repeater\` for multiple periods.
+
+**Props:** \`legend\`, \`show-service-number\`. Per-field errors: \`branch-error\`, \`start-date-error\`, \`end-date-error\`, \`discharge-error\`, \`service-number-error\`.
+
+---
+
+### Preset Input Components
+
+Pre-configured wrappers with built-in masking, validation, and labeling. Wrap in \`<civ-form-field>\`.
+
+| Component | Unique props |
+|-----------|-------------|
+| \`<civ-ssn>\` | \`mode\` (full/last4) |
+| \`<civ-ein>\` | — |
+| \`<civ-phone>\` | \`international\` |
+| \`<civ-email>\` | — |
+| \`<civ-zip>\` | \`extended\` |
+| \`<civ-currency>\` | — |
+| \`<civ-routing-number>\` | — |
+| \`<civ-va-file-number>\` | — |
+| \`<civ-country>\` | \`us-first\`, \`include\`, \`exclude\` |
+
+\`\`\`html
+<civ-form-field label="Social Security number" required>
+  <civ-ssn name="ssn"></civ-ssn>
+</civ-form-field>
+\`\`\`
+
+---
+
+### Specialized Link Components
+
+| Component | Key props | Description |
+|-----------|-----------|-------------|
+| \`<civ-download-link>\` | \`label\`, \`href\`, \`filename\`, \`file-size\` | File download with icon |
+| \`<civ-email-link>\` | \`address\`, \`label\`, \`subject\` | mailto: link with icon |
+| \`<civ-external-link>\` | \`label\`, \`href\` | Opens in new tab with SR text |
+| \`<civ-phone-link>\` | \`number\`, \`label\` | tel: link with icon |
 
 ---
 

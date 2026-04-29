@@ -301,6 +301,7 @@
         <li><a href="#layout">Layout Components</a></li>
         <li><a href="#navigation">Navigation Components</a></li>
         <li><a href="#action">Action Components</a></li>
+        <li><a href="#overlay">Overlay Components</a></li>
         <li><a href="#feedback">Feedback Components</a></li>
         <li><a href="#form">Form Components</a></li>
       </ul>
@@ -762,6 +763,94 @@
           </div>
         </div>
       </div>
+
+      <h4 style="margin-top: 1.5rem;">Specialized Link Components</h4>
+      <div class="form-list">
+        <div class="form-list-item">
+          <code>&lt;civ-download-link&gt;</code>
+          <span>File download link with download icon and optional file size display. Props: <code>label</code>, <code>href</code>, <code>filename</code>, <code>file-size</code>.</span>
+        </div>
+        <div class="form-list-item">
+          <code>&lt;civ-email-link&gt;</code>
+          <span>Clickable email address with <code>mailto:</code> protocol and mail icon. Props: <code>address</code>, <code>label</code>, <code>subject</code>.</span>
+        </div>
+        <div class="form-list-item">
+          <code>&lt;civ-external-link&gt;</code>
+          <span>Link that opens in a new tab with security attributes and "opens in new tab" screen reader text. Props: <code>label</code>, <code>href</code>.</span>
+        </div>
+        <div class="form-list-item">
+          <code>&lt;civ-phone-link&gt;</code>
+          <span>Clickable phone number with <code>tel:</code> protocol, phone icon, and automatic US formatting. Props: <code>number</code>, <code>label</code>.</span>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ============================================================ -->
+    <!-- OVERLAY COMPONENTS -->
+    <!-- ============================================================ -->
+    <div class="category" id="overlay">
+      <h2>Overlay Components</h2>
+      <p>Modals, action sheets, and bottom sheets. All render as bottom sheets on mobile (&le;480px).</p>
+
+      <!-- civ-modal -->
+      <div class="component">
+        <div class="component-header">
+          <h3>&lt;civ-modal&gt;</h3>
+          <p>A general-purpose modal dialog built on the native <code>&lt;dialog&gt;</code> element. Centered on desktop, bottom sheet on mobile. Native focus trap via <code>showModal()</code> and Escape-to-close.</p>
+        </div>
+        <div class="component-body">
+          <h4>Props</h4>
+          <table class="props-table">
+            <thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><code>open</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Controls visibility</td></tr>
+              <tr><td><code>heading</code></td><td><code>string</code></td><td><code>''</code></td><td>Modal heading (rendered as h2)</td></tr>
+              <tr><td><code>label</code></td><td><code>string</code></td><td><code>''</code></td><td>Accessible label when no heading is set</td></tr>
+              <tr><td><code>no-close-button</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Hide the X close button</td></tr>
+              <tr><td><code>no-backdrop-close</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Disable closing via backdrop click</td></tr>
+              <tr><td><code>no-escape-close</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Disable closing via Escape key</td></tr>
+            </tbody>
+          </table>
+
+          <h4>Events</h4>
+          <ul class="event-list">
+            <li><code>civ-modal-close</code> &mdash; When the user tries to close the modal</li>
+          </ul>
+
+          <h4>Example</h4>
+<pre><code>&lt;civ-modal heading="Confirm submission" open&gt;
+  &lt;p&gt;Are you sure you want to submit this application?&lt;/p&gt;
+  &lt;civ-button label="Submit" type="submit"&gt;&lt;/civ-button&gt;
+  &lt;civ-button label="Cancel" variant="secondary"&gt;&lt;/civ-button&gt;
+&lt;/civ-modal&gt;</code></pre>
+        </div>
+      </div>
+
+      <!-- civ-action-sheet -->
+      <div class="component">
+        <div class="component-header">
+          <h3>&lt;civ-action-sheet&gt;</h3>
+          <p>A popup/overlay that renders as an absolute dropdown on desktop and a fixed bottom sheet on mobile.</p>
+        </div>
+        <div class="component-body">
+          <h4>Props</h4>
+          <table class="props-table">
+            <thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><code>open</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Controls visibility</td></tr>
+              <tr><td><code>max-height</code></td><td><code>string</code></td><td><code>'50vh'</code></td><td>Max height on mobile</td></tr>
+              <tr><td><code>trap-focus</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Enable focus trapping</td></tr>
+              <tr><td><code>no-click-outside</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Disable click-outside close</td></tr>
+            </tbody>
+          </table>
+
+          <h4>Events</h4>
+          <ul class="event-list">
+            <li><code>civ-action-sheet-close</code> &mdash; When the sheet wants to close (escape, click outside, backdrop tap)</li>
+          </ul>
+        </div>
+      </div>
     </div>
 
 
@@ -1026,6 +1115,47 @@
         </div>
       </div>
 
+      <h4>Preset Input Components</h4>
+      <p style="margin-bottom: 0.75rem; color: var(--color-base-dark); font-size: 0.9rem;">Pre-configured wrappers around <code>civ-text-input</code> and <code>civ-combobox</code> with built-in masking, validation, and labeling for common government form fields.</p>
+      <div class="form-list">
+        <div class="form-list-item">
+          <code>&lt;civ-ssn&gt;</code>
+          <span>Social Security number with masking, validation, and PII protection. Props: <code>mode</code> (<code>'full'</code> | <code>'last4'</code>).</span>
+        </div>
+        <div class="form-list-item">
+          <code>&lt;civ-ein&gt;</code>
+          <span>Employer Identification Number with masking, validation, and PII protection.</span>
+        </div>
+        <div class="form-list-item">
+          <code>&lt;civ-phone&gt;</code>
+          <span>Phone number with US domestic masking or E.164 international format. Props: <code>international</code>.</span>
+        </div>
+        <div class="form-list-item">
+          <code>&lt;civ-email&gt;</code>
+          <span>Email address with built-in validation and autocomplete.</span>
+        </div>
+        <div class="form-list-item">
+          <code>&lt;civ-zip&gt;</code>
+          <span>US ZIP code (5-digit or ZIP+4). Props: <code>extended</code>.</span>
+        </div>
+        <div class="form-list-item">
+          <code>&lt;civ-currency&gt;</code>
+          <span>Dollar amount with currency masking and validation.</span>
+        </div>
+        <div class="form-list-item">
+          <code>&lt;civ-routing-number&gt;</code>
+          <span>Bank routing number with 9-digit masking and mod-10 checksum validation.</span>
+        </div>
+        <div class="form-list-item">
+          <code>&lt;civ-va-file-number&gt;</code>
+          <span>VA file number (8-9 digits) with labeling to reduce SSN confusion.</span>
+        </div>
+        <div class="form-list-item">
+          <code>&lt;civ-country&gt;</code>
+          <span>Country combobox with full ISO 3166-1 list. Props: <code>us-first</code>, <code>include</code>, <code>exclude</code>.</span>
+        </div>
+      </div>
+
       <h4>Choice Components</h4>
       <div class="form-list">
         <div class="form-list-item">
@@ -1094,11 +1224,7 @@
         </div>
         <div class="form-list-item">
           <code>&lt;civ-conditional&gt;</code>
-          <span>Conditionally shows children based on another field's value. Props: <code>when</code>, <code>eq</code>, <code>neq</code>. Not form-participating.</span>
-        </div>
-        <div class="form-list-item">
-          <code>&lt;civ-form-group&gt;</code>
-          <span>Groups related form fields visually. Used for layout within forms.</span>
+          <span>Conditionally shows children based on another field's value. Props: <code>when</code>, <code>equals</code>, <code>not-equals</code>, <code>includes</code>, <code>has-value</code>, <code>matches</code>. Not form-participating.</span>
         </div>
         <div class="form-list-item">
           <code>&lt;civ-form-step&gt;</code>
@@ -1125,16 +1251,28 @@
           <span>Electronic signature component for form certification.</span>
         </div>
         <div class="form-list-item">
+          <code>&lt;civ-race-ethnicity&gt;</code>
+          <span>OMB-standard race and ethnicity collection with ethnicity radio group and race multi-select checkboxes.</span>
+        </div>
+        <div class="form-list-item">
+          <code>&lt;civ-marriage-history&gt;</code>
+          <span>Single marriage entry with spouse name, marriage date/location, status, and conditional end date. Use inside <code>civ-repeater</code> for multiple marriages.</span>
+        </div>
+        <div class="form-list-item">
+          <code>&lt;civ-service-history&gt;</code>
+          <span>Single military service period with branch, dates, discharge type, and optional service number. Use inside <code>civ-repeater</code> for multiple periods.</span>
+        </div>
+        <div class="form-list-item">
+          <code>&lt;civ-relationship&gt;</code>
+          <span>Person and relationship to applicant with presets for dependent, survivor, immigration, and tax scenarios.</span>
+        </div>
+        <div class="form-list-item">
           <code>&lt;civ-summary&gt;</code>
           <span>Review/summary display for form data before submission.</span>
         </div>
         <div class="form-list-item">
           <code>&lt;civ-repeater&gt;</code>
           <span>Repeatable field group for dynamic lists (e.g., multiple addresses, employment history).</span>
-        </div>
-        <div class="form-list-item">
-          <code>&lt;civ-prefill-notice&gt;</code>
-          <span>Notice banner for pre-filled form data from authenticated sources.</span>
         </div>
         <div class="form-list-item">
           <code>&lt;civ-read-only-field&gt;</code>
@@ -1176,7 +1314,7 @@
     required
   &gt;&lt;/civ-yes-no&gt;
 
-  &lt;civ-conditional when="veteran" eq="yes"&gt;
+  &lt;civ-conditional when="veteran" equals="yes"&gt;
     &lt;civ-text-input
       label="Service branch"
       name="branch"

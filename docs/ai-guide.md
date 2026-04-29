@@ -31,7 +31,7 @@ For architecture and internals, see `CLAUDE.md` in the repo root.
 | `<civ-progress-steps>` | Navigation | `steps`, `current`, `legend` | — |
 | `<civ-fieldset>` | Layout | `legend`, `hint`, `error`, `required`, `disabled` | — |
 | `<civ-form>` | Layout | `action`, `method`, `supportResources` | `civ-submit: { formData }`, `civ-invalid: { errors }` |
-| `<civ-form-step>` | Layout | `persist`, `sensitive`, `showPause` | `civ-step-change`, `civ-step-pause`, `civ-step-complete` |
+| `<civ-form-step>` | Layout | `persist`, `sensitive`, `show-pause`, `continue-label`, `complete-label`, `pause-label`, `nav-disabled`, `validate` | `civ-step-change`, `civ-step-pause`, `civ-step-complete` |
 | `<civ-form-field>` | Wrapper | `label`, `hint`, `error`, `required`, `disabled`, `requiredMessage` | — |
 | `<civ-form-fieldset>` | Wrapper | `legend`, `hint`, `error`, `required`, `disabled`, `requiredMessage` | — |
 | `<civ-repeater>` | Layout | `legend`, `name`, `min`, `max`, `addLabel`, `removeLabel` | `civ-change: { value }` |
@@ -47,16 +47,35 @@ For architecture and internals, see `CLAUDE.md` in the repo root.
 | `<civ-divider>` | UI | `spacing`, `variant` | — |
 | `<civ-page-header>` | UI | `spacing` | — (uses slots: `data-tag`, `data-eyebrow`, `data-heading`, `data-subheading`) |
 | `<civ-icon>` | UI | `name`, `label` | — |
-| `<civ-alert>` | Feedback | `variant`, `heading`, `dismissible` | `civ-dismiss` |
+| `<civ-alert>` | Feedback | `variant`, `heading`, `dismissible`, `slim`, `alert-style`, `heading-level` | `civ-dismiss` |
+| `<civ-modal>` | Overlay | `open`, `heading`, `label`, `no-close-button`, `no-backdrop-close`, `no-escape-close` | `civ-modal-close` |
+| `<civ-action-sheet>` | Overlay | `open`, `max-height`, `trap-focus`, `no-click-outside` | `civ-action-sheet-close` |
 | `<civ-button-group>` | UI | `orientation`, `label` | — (`role="toolbar"`) |
 | `<civ-input-group>` | UI | — (layout container) | — |
-| `<civ-address>` | Compound | `legend`, `value` | `civ-change: { value }` |
-| `<civ-name>` | Compound | `legend`, `value` | `civ-change: { value }` |
-| `<civ-direct-deposit>` | Compound | `legend`, `value` | `civ-change: { value }` |
+| `<civ-download-link>` | UI | `label`, `href`, `filename`, `file-size` | `civ-analytics` |
+| `<civ-email-link>` | UI | `address`, `label`, `subject` | `civ-analytics` |
+| `<civ-external-link>` | UI | `label`, `href` | `civ-analytics` |
+| `<civ-phone-link>` | UI | `number`, `label` | `civ-analytics` |
+| `<civ-ssn>` | Preset | `mode` (`'full'` \| `'last4'`) | `civ-input`, `civ-change` |
+| `<civ-ein>` | Preset | — (inherits standard) | `civ-input`, `civ-change` |
+| `<civ-phone>` | Preset | `international` | `civ-input`, `civ-change` |
+| `<civ-email>` | Preset | — (inherits standard) | `civ-input`, `civ-change` |
+| `<civ-zip>` | Preset | `extended` | `civ-input`, `civ-change` |
+| `<civ-currency>` | Preset | — (inherits standard) | `civ-input`, `civ-change` |
+| `<civ-routing-number>` | Preset | — (inherits standard) | `civ-input`, `civ-change` |
+| `<civ-va-file-number>` | Preset | — (inherits standard) | `civ-input`, `civ-change` |
+| `<civ-country>` | Preset | `us-first`, `include`, `exclude` | `civ-input`, `civ-change` |
+| `<civ-address>` | Compound | `legend`, `show-street2`, `show-country`, `show-military`, `show-street3` | `civ-change: { value: AddressValue }` |
+| `<civ-name>` | Compound | `legend`, `format`, `show-middle`, `show-suffix` | `civ-change: { value: NameValue }` |
+| `<civ-direct-deposit>` | Compound | `legend` | `civ-change: { value: DirectDepositValue }` |
 | `<civ-signature>` | Compound | `legend`, `statement`, slot `[name="statement"]` for HTML | `civ-change: { value: { name, certified, signedAt } }` |
-| `<civ-relationship>` | Compound | `legend`, `preset`, `showDeceased`, `showName` | `{ value: RelationshipValue }` |
+| `<civ-relationship>` | Compound | `legend`, `preset`, `show-deceased`, `show-name`, `show-divorce-date`, `show-adoption-date` | `{ value: RelationshipValue }` |
+| `<civ-race-ethnicity>` | Compound | `legend`, `ethnicity-legend`, `race-legend`, `ethnicity-error`, `race-error` | `{ value: RaceEthnicityValue }` |
+| `<civ-marriage-history>` | Compound | `legend`, `show-marriage-type`, `status-assumed` | `{ value: MarriageValue }` |
+| `<civ-service-history>` | Compound | `legend`, `show-service-number` | `{ value: ServicePeriodValue }` |
 | `<civ-task-list>` | Navigation | — | — (uses `<civ-task-group>` and `<civ-task>` children) |
-| `<civ-skip-link>` | Navigation | `label`, `target` | — |
+| `<civ-task>` | Navigation | `label`, `hint`, `href`, `status`, `prefilled` | — |
+| `<civ-skip-link>` | Navigation | `label`, `href` | — |
 
 **Form input components** (text-input, textarea, select, combobox, date-picker, file-upload) are bare controls — wrap in `<civ-form-field>` for label/hint/error rendering. All have: `name`, `value`, `required`, `disabled`.
 
@@ -80,6 +99,7 @@ Standard text input supporting multiple HTML input types.
 - `placeholder` — placeholder text
 - `pattern` — validation regex
 - `maxlength` / `minlength` — character limits. When `maxlength` is set, a "characters remaining" counter renders below the input (visual + `aria-live` polite, debounced 1s for SR). Suppressed when a mask is active.
+- `hide-char-count` — suppress the character counter even when `maxlength` is set
 - `autocomplete` — browser autocomplete hint
 - `inputmode` — virtual keyboard hint
 - `mask` / `mask-pattern` / `mask-mode` — see Mask System
@@ -396,6 +416,7 @@ Calendar dialog with text input. Preferred for appointment/scheduling dates.
 - `disabled-dates` — JSON array of YYYY-MM-DD strings to block individually
 - `hide-today-button` — hide the dialog footer "Today" button (use for date-of-birth pickers, etc.)
 - `today-button-label` — override the Today button label (default from `datePickerTodayButton` locale key)
+- `clear-label` — label for the clear button
 
 **i18n props:** `chooseDateLabel`, `selectedDateLabel`, `dialogLabel`, `previousMonthLabel`, `nextMonthLabel`, `dialogOpenedMessage`, `dateSelectedMessage`, `todayLabel`, `todayButtonLabel`
 
@@ -842,13 +863,16 @@ Conditionally shows its children based on another field's value. Not form-partic
 
 **Props:**
 - `when` — `name` of the controlling field to watch
-- `eq` — show children when value equals this string
-- `neq` — show children when value does NOT equal this string
+- `equals` — show children when value equals this string
+- `not-equals` — show children when value does NOT equal this string
+- `includes` — show children when value is in a comma-separated list
+- `has-value` — (boolean) show children when field has any non-empty value
+- `matches` — show children when value matches a regex pattern
 
 **Example:**
 ```html
 <civ-yes-no label="Are you a veteran?" name="veteran" required></civ-yes-no>
-<civ-conditional when="veteran" eq="yes">
+<civ-conditional when="veteran" equals="yes">
   <civ-text-input label="Service branch" name="branch" required></civ-text-input>
 </civ-conditional>
 ```
@@ -886,7 +910,8 @@ Compound component for capturing a person and their relationship to the applican
 - `show-deceased` — include deceased yes/no + date of death (default false)
 - `show-divorce-date` — show divorce date for spousal types (default false)
 - `show-adoption-date` — show adoption date for child types (default false)
-- Per-field errors: `name-error`, `relationship-error`, `marriage-date-error`, `date-of-birth-error`, `date-of-death-error`, `other-description-error`
+- `deceased-assumed` — pre-set deceased status for survivor presets
+- Per-field errors: `name-error`, `relationship-error`, `marriage-date-error`, `divorce-date-error`, `date-of-birth-error`, `adoption-date-error`, `date-of-death-error`, `other-description-error`
 
 **Conditional fields by category:**
 - Spousal (spouse, ex-spouse) → marriage date, divorce date
@@ -902,6 +927,264 @@ Compound component for capturing a person and their relationship to the applican
   show-adoption-date
   required
 ></civ-relationship>
+```
+
+---
+
+### civ-race-ethnicity
+
+Compound component implementing the OMB (Office of Management and Budget) standard for collecting race and ethnicity data on federal forms. Renders ethnicity as a radio group and race as a multi-select checkbox group.
+
+**Props (beyond standard):**
+- `legend` — outer fieldset legend (default: none)
+- `ethnicity-legend` — override ethnicity sub-legend (default: `'Ethnicity'`)
+- `race-legend` — override race sub-legend (default: `'Race'`)
+- `ethnicity-error` — error message for ethnicity field
+- `race-error` — error message for race field
+
+**Value shape:** `RaceEthnicityValue` — `{ ethnicity: string, race: string[] }`
+
+**Ethnicity options:** Hispanic or Latino, Not Hispanic or Latino, Prefer not to answer
+
+**Race options:** American Indian or Alaska Native, Asian, Black or African American, Native Hawaiian or Other Pacific Islander, White, Prefer not to answer
+
+**Example:**
+```html
+<civ-race-ethnicity
+  legend="What is your race, ethnicity, or origin?"
+  name="demographics"
+  required
+></civ-race-ethnicity>
+```
+
+---
+
+### civ-address
+
+Compound component for US mailing/home addresses. Renders street, city, state (select), and ZIP fields. Optionally includes a second/third street line, country, and military address fields.
+
+**Props (beyond standard):**
+- `legend` — fieldset legend
+- `show-street2` — show second address line (default: true)
+- `show-street3` — show third address line (default: false)
+- `show-country` — show country selector (default: false)
+- `show-military` — show military address option (APO/FPO/DPO) (default: false)
+- `validate-address` — async validation function (JS property only, not an attribute)
+- Per-field errors: `street-error`, `city-error`, `state-error`, `zip-error`
+
+**Value shape:** `AddressValue` — `{ street, street2?, street3?, city, state, zip, country? }`
+
+**Example:**
+```html
+<civ-address
+  legend="Mailing address"
+  name="mailingAddress"
+  required
+></civ-address>
+```
+
+---
+
+### civ-name
+
+Compound component for full name entry. Renders first, middle (optional), last, and suffix (optional) fields.
+
+**Props (beyond standard):**
+- `legend` — fieldset legend
+- `format` — `'domestic'` | `'international'` (default: `'domestic'`)
+- `show-middle` — show middle name field (default: true)
+- `show-suffix` — show suffix field (default: true)
+- Per-field errors: `first-error`, `middle-error`, `last-error`
+
+**Value shape:** `NameValue` — `{ first, middle?, last, suffix? }`
+
+**Example:**
+```html
+<civ-name
+  legend="Your full legal name"
+  name="fullName"
+  required
+></civ-name>
+```
+
+---
+
+### civ-direct-deposit
+
+Compound component for bank account entry. Renders routing number, account number, and account type (checking/savings) fields.
+
+**Props (beyond standard):**
+- `legend` — fieldset legend
+- Per-field errors: `routing-error`, `account-error`, `type-error`
+
+**Value shape:** `DirectDepositValue` — `{ routingNumber, accountNumber, accountType }`
+
+**Example:**
+```html
+<civ-direct-deposit
+  legend="Direct deposit information"
+  name="bankInfo"
+  required
+></civ-direct-deposit>
+```
+
+---
+
+### civ-signature
+
+Electronic signature component for form certification. Renders a certification statement, name input, and checkbox to confirm.
+
+**Props (beyond standard):**
+- `legend` — fieldset legend
+- `statement` — certification text (or use slot `[name="statement"]` for HTML content)
+- Per-field errors: `name-error`, `certify-error`
+
+**Value shape:** `{ name: string, certified: boolean, signedAt: string }`
+
+**Example:**
+```html
+<civ-signature
+  legend="Certification"
+  name="signature"
+  statement="I certify that the information provided is true and correct to the best of my knowledge."
+  required
+></civ-signature>
+```
+
+---
+
+### civ-marriage-history
+
+Compound component for a single marriage entry. Captures spouse name, marriage date and location, marital status, and conditional end date. Use inside `civ-repeater` for multiple marriages.
+
+**Props (beyond standard):**
+- `legend` — fieldset legend
+- `show-marriage-type` — show marriage type selector (default: false)
+- `status-assumed` — pre-set the marital status value
+- Per-field errors: `spouse-error`, `marriage-type-error`, `marriage-date-error`, `city-error`, `state-error`, `jurisdiction-error`, `cohabitation-start-error`, `cohabitation-state-error`, `status-error`, `end-date-error`
+
+**Value shape:** `MarriageValue`
+
+**Example:**
+```html
+<civ-repeater legend="Marriage history" name="marriages" min="1">
+  <template>
+    <civ-marriage-history legend="Marriage"></civ-marriage-history>
+  </template>
+</civ-repeater>
+```
+
+---
+
+### civ-service-history
+
+Compound component for a single military service period. Captures branch, dates, discharge type, and optional service number. Use inside `civ-repeater` for multiple service periods.
+
+**Props (beyond standard):**
+- `legend` — fieldset legend
+- `show-service-number` — show service number field (default: false)
+- Per-field errors: `branch-error`, `start-date-error`, `end-date-error`, `discharge-error`, `service-number-error`
+
+**Value shape:** `ServicePeriodValue`
+
+**Example:**
+```html
+<civ-repeater legend="Service periods" name="servicePeriods" min="1">
+  <template>
+    <civ-service-history legend="Service period" show-service-number></civ-service-history>
+  </template>
+</civ-repeater>
+```
+
+---
+
+### civ-modal
+
+General-purpose modal dialog built on the native `<dialog>` element. Centered on desktop, bottom sheet on mobile. Native focus trap via `showModal()`.
+
+**Props:**
+- `open` — controls visibility (reflected)
+- `heading` — modal heading (rendered as h2)
+- `label` — accessible label when no heading is set
+- `no-close-button` — hide the X close button
+- `no-backdrop-close` — disable closing via backdrop click
+- `no-escape-close` — disable closing via Escape key
+
+**Events:** `civ-modal-close` — when the user tries to close the modal. Parent controls the `open` state.
+
+**Example:**
+```html
+<civ-modal heading="Confirm submission" open>
+  <p>Are you sure you want to submit this application?</p>
+  <civ-button label="Submit" type="submit"></civ-button>
+  <civ-button label="Cancel" variant="secondary"></civ-button>
+</civ-modal>
+```
+
+---
+
+### civ-action-sheet
+
+Popup/overlay that renders as an absolute dropdown on desktop and a fixed bottom sheet on mobile.
+
+**Props:**
+- `open` — controls visibility (reflected)
+- `max-height` — max height on mobile (default: `'50vh'`)
+- `trap-focus` — enable focus trapping (default: false)
+- `no-click-outside` — disable click-outside close (default: false)
+
+**Events:** `civ-action-sheet-close` — when the sheet wants to close (escape, click outside, backdrop tap).
+
+---
+
+### Preset Input Components
+
+Pre-configured wrappers around `civ-text-input` and `civ-combobox` with built-in masking, validation, and labeling. All inherit standard form element props (`name`, `value`, `required`, `disabled`, `error`, `hint`). Wrap in `<civ-form-field>` for label/hint/error rendering.
+
+| Component | Description | Unique props |
+|---|---|---|
+| `<civ-ssn>` | Social Security number with masking and PII protection | `mode` (`'full'` \| `'last4'`) |
+| `<civ-ein>` | Employer Identification Number with masking and PII protection | — |
+| `<civ-phone>` | Phone number (US domestic or E.164 international) | `international` |
+| `<civ-email>` | Email address with validation and autocomplete | — |
+| `<civ-zip>` | US ZIP code (5-digit or ZIP+4) | `extended` |
+| `<civ-currency>` | Dollar amount with currency masking | — |
+| `<civ-routing-number>` | Bank routing number with mod-10 checksum | — |
+| `<civ-va-file-number>` | VA file number (8-9 digits) | — |
+| `<civ-country>` | Country combobox with ISO 3166-1 list | `us-first`, `include`, `exclude` |
+
+**Example:**
+```html
+<civ-form-field label="Social Security number" hint="We need this to verify your identity" required>
+  <civ-ssn name="ssn"></civ-ssn>
+</civ-form-field>
+
+<civ-form-field label="Phone number" required>
+  <civ-phone name="phone"></civ-phone>
+</civ-form-field>
+
+<civ-form-field label="Country of birth">
+  <civ-country name="birthCountry" us-first></civ-country>
+</civ-form-field>
+```
+
+---
+
+### Specialized Link Components
+
+| Component | Description | Key props |
+|---|---|---|
+| `<civ-download-link>` | File download with icon and file size display | `label`, `href`, `filename`, `file-size` |
+| `<civ-email-link>` | Clickable email with `mailto:` and mail icon | `address`, `label`, `subject` |
+| `<civ-external-link>` | Opens in new tab with SR "opens in new tab" text | `label`, `href` |
+| `<civ-phone-link>` | Clickable phone with `tel:` and phone icon | `number`, `label` |
+
+**Example:**
+```html
+<civ-phone-link number="1-800-827-1000" label="VA benefits hotline"></civ-phone-link>
+<civ-email-link address="help@va.gov"></civ-email-link>
+<civ-external-link href="https://va.gov/find-forms" label="Find VA forms"></civ-external-link>
+<civ-download-link href="/forms/21-526EZ.pdf" label="VA Form 21-526EZ" file-size="2.4 MB"></civ-download-link>
 ```
 
 ---
@@ -1286,12 +1569,17 @@ Government forms routinely ask emotionally difficult questions — bereavement d
 | Let users opt out of a single question | `civ-radio-group` / `civ-yes-no` with `skip-label` | The question is answerable but personally invasive (demographics, crisis screening) |
 | Keep crisis resources visible | `civ-form` with `supportResources` | Form touches mental health, self-harm risk, domestic situations |
 | Compound field for relationships | `civ-relationship` with `preset` and `show-deceased` | VA dependents, SSA survivor, immigration, tax |
+| Compound field for race and ethnicity | `civ-race-ethnicity` | OMB-standard demographics — federal forms, VA, census |
 
-### civ-form-step: `sensitive` + `show-pause`
+### civ-form-step: props
 
 - `sensitive` — marks the step as emotionally sensitive. Reflects `data-sensitive` on the host. Emits a polite screen-reader notice on entry ("This section asks personal questions. Your answers are saved as you go."). Auto-enables the pause action.
 - `show-pause` — renders a "Save and come back later" link next to the continue button. Fires `civ-step-pause` with `{ current, label }`. Pair with `persist` on `civ-form` or `civ-form-step` so sessionStorage keeps state across the pause.
-- `pause-label` — override the action label (default from locale).
+- `pause-label` — override the pause action label (default from locale).
+- `continue-label` — override the continue button label.
+- `complete-label` — override the final step's complete button label.
+- `nav-disabled` — disable navigation buttons (use during async operations).
+- `validate` — enable/disable per-step validation (default: true).
 
 ### civ-form-step: Enter handling inside a `civ-form` parent
 

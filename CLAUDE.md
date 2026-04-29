@@ -23,18 +23,23 @@ Build order: `tokens → core → actions, overlays, layout → inputs → contr
 | `@civui/actions` | `packages/actions/` | Action components (button, link, action-button, link-card, button-group) |
 | `@civui/overlays` | `packages/overlays/` | Overlay components (modal, action-sheet) |
 | `@civui/layout` | `packages/layout/` | Layout components (card, divider, input-group, page-header, tag) |
-| `@civui/inputs` | `packages/inputs/` | Input components (text-input, textarea, select, combobox, date-picker, file-upload, toggle, yes-no) |
+| `@civui/inputs` | `packages/inputs/` | Input components (text-input, textarea, select, combobox, date-picker, file-upload, toggle, yes-no) + preset wrappers (ssn, ein, phone, email, zip, currency, routing-number, va-file-number, country) |
 | `@civui/controls` | `packages/controls/` | Selection controls (checkbox, radio, segmented-control) |
-| `@civui/compound` | `packages/compound/` | Compound fields (address, name, direct-deposit, signature) |
-| `@civui/form-patterns` | `packages/form-patterns/` | Form orchestration (form, form-step, repeater, summary, prefill, progress-steps) |
+| `@civui/compound` | `packages/compound/` | Compound fields (address, name, direct-deposit, signature, race-ethnicity, relationship, marriage-history, service-history) |
+| `@civui/form-patterns` | `packages/form-patterns/` | Form orchestration (form, form-step, repeater, summary, prefill, progress-steps, conditional) |
+| `@civui/feedback` | `packages/feedback/` | Feedback components (alert) |
+| `@civui/navigation` | `packages/navigation/` | Navigation components (skip-link, task-list) |
 | `@civui/test-utils` | `packages/test-utils/` | Test helpers: `fixture`, `cleanupFixtures`, `elementUpdated`, `pressKey`, `typeText` |
 | `@civui/cli` | `packages/cli/` | CLI tooling |
 | `@civui/content` | `packages/content/` | Content/copy management |
+| `@civui/mcp-server` | `packages/mcp-server/` | MCP server for AI-assisted form conversion |
+| `@civui/schema` | `packages/schema/` | Platform-neutral component schemas (dormant — see below) |
+| `@civui/codegen` | `packages/codegen/` | Cross-platform code generator (dormant — see below) |
 
 ## Commands
 
 ```bash
-pnpm test          # Run all tests (3400+ tests across packages)
+pnpm test          # Run all tests (3600+ tests across packages)
 pnpm build         # Build all packages (respects dependency order)
 pnpm typecheck     # TypeScript type checking
 pnpm lint          # ESLint
@@ -179,7 +184,7 @@ Named z-index layers as CSS custom properties — no hardcoded values:
 
 ## Validation System
 
-15 built-in validators in `@civui/core` — `validate.required()`, `.email()`, `.phone()`, `.phoneIntl()`, `.ssn()`, `.ein()`, `.zip()`, `.zip4()`, `.usState()`, `.isoDate()`, `.url()`, `.currency()`, `.range()`, `.length()`, `.alphanumeric()`. Each returns `{ valid, error? }`. Use the declarative `validate` attribute on form components for auto-validation on submit.
+16 built-in validators in `@civui/core` — `validate.required()`, `.email()`, `.phone()`, `.phoneIntl()`, `.ssn()`, `.ein()`, `.zip()`, `.zip4()`, `.usState()`, `.isoDate()`, `.url()`, `.currency()`, `.range()`, `.length()`, `.alphanumeric()`, `.routing()`. Each returns `{ valid, error? }`. Use the declarative `validate` attribute on form components for auto-validation on submit.
 
 ## Mask System
 
@@ -187,7 +192,7 @@ Input masking engine in `@civui/core` with blur-mode default (mask on blur, raw 
 
 ## Icon System
 
-45 pure CSS icons via `::before`/`::after` pseudo-elements — no font files, no SVG, no Unicode. Icons inherit `color` and scale with `font-size`. Each icon maps to SF Symbols (iOS) and Material Symbols (Android). Use `<civ-icon name="..." label="...">`.
+48 pure CSS icons via `::before`/`::after` pseudo-elements — no font files, no SVG, no Unicode. Icons inherit `color` and scale with `font-size`. Each icon maps to SF Symbols (iOS) and Material Symbols (Android). Use `<civ-icon name="..." label="...">`.
 
 To edit existing icons or author new ones, run `pnpm storybook` and open **Core › Icon › Editor** — a live CSS editor with a snippet palette, multi-size preview, pixel grid, and dark-mode toggle. Copy the resulting CSS into `packages/core/src/styles/components.css` and register the name in `packages/core/src/icon/icon-library.ts`.
 
@@ -213,11 +218,11 @@ For comprehensive component usage, HTML examples, government design patterns,
 and accessibility requirements, see `docs/ai-guide.md`.
 
 That guide covers:
-- Component catalog with props, events, and HTML examples for all 20 web components (plus 2 child-only tags)
-- New Tier 2 components: yes-no, conditional, progress-steps
-- Validation system (15 validators, declarative `validate` attribute)
+- Component catalog with props, events, and HTML examples for 40+ web components
+- Preset inputs, compound fields, overlays, link variants, and form patterns
+- Validation system (16 validators, declarative `validate` attribute)
 - Mask system (blur-mode default, 6 presets)
-- Icon system (45 pure CSS icons, no Unicode)
+- Icon system (48 pure CSS icons, no Unicode)
 - Native platform support (iOS + Android with 100% parity)
 - Component selection decision tables (checkbox vs toggle, select vs combobox, date picker vs memorable date)
 - Government design patterns (Section 508, plain language, form validation for .gov)

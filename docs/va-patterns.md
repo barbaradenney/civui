@@ -210,22 +210,14 @@ VA pattern: [Ask users for SSN](https://design.va.gov/patterns/ask-users-for/soc
 
 VA pattern: [Ask users for Race and ethnicity](https://design.va.gov/patterns/ask-users-for/race-and-ethnicity)
 
-Use checkbox groups for "select all that apply" demographics:
+Use `civ-race-ethnicity` — the OMB-standard compound component with ethnicity (radio) and race (multi-select checkboxes):
 
 ```html
-<civ-checkbox-group
+<civ-race-ethnicity
   legend="What is your race, ethnicity, or origin?"
-  name="race"
-  hint="Select all that apply"
->
-  <civ-checkbox label="American Indian or Alaska Native" value="aian"></civ-checkbox>
-  <civ-checkbox label="Asian" value="asian"></civ-checkbox>
-  <civ-checkbox label="Black or African American" value="black"></civ-checkbox>
-  <civ-checkbox label="Hispanic, Latino, or Spanish" value="hispanic"></civ-checkbox>
-  <civ-checkbox label="Native Hawaiian or Other Pacific Islander" value="nhpi"></civ-checkbox>
-  <civ-checkbox label="White" value="white"></civ-checkbox>
-  <civ-checkbox label="Prefer not to answer" value="pnta"></civ-checkbox>
-</civ-checkbox-group>
+  name="demographics"
+  required
+></civ-race-ethnicity>
 ```
 
 ---
@@ -262,7 +254,7 @@ For US-only address collection, use `civ-address`:
   required
 ></civ-yes-no>
 
-<civ-conditional when="sameAddress" eq="no">
+<civ-conditional when="sameAddress" equals="no">
   <civ-address
     legend="Home address"
     name="homeAddress"
@@ -513,7 +505,7 @@ VA pattern: [Ask users for Relationship](https://design.va.gov/patterns/ask-user
   <civ-radio label="Other" value="other"></civ-radio>
 </civ-radio-group>
 
-<civ-conditional when="relationship" eq="other">
+<civ-conditional when="relationship" equals="other">
   <civ-text-input
     label="Describe your relationship to the Veteran"
     name="relationshipOther"
@@ -651,7 +643,7 @@ Use `civ-conditional` to show/hide sections based on user responses:
 ```html
 <civ-yes-no label="Do you have a service-connected disability?" name="hasDisability"></civ-yes-no>
 
-<civ-conditional when="hasDisability" eq="yes">
+<civ-conditional when="hasDisability" equals="yes">
   <civ-text-input
     label="Disability rating percentage"
     name="disabilityRating"
@@ -670,12 +662,12 @@ Use `civ-conditional` to show/hide sections based on user responses:
   <civ-radio label="Healthcare" value="healthcare"></civ-radio>
 </civ-radio-group>
 
-<civ-conditional when="benefitType" eq="education">
+<civ-conditional when="benefitType" equals="education">
   <!-- Education-specific fields -->
   <civ-text-input label="School name" name="schoolName" required></civ-text-input>
 </civ-conditional>
 
-<civ-conditional when="benefitType" eq="housing">
+<civ-conditional when="benefitType" equals="housing">
   <!-- Housing-specific fields -->
   <civ-address legend="Property address" name="propertyAddress" required></civ-address>
 </civ-conditional>
@@ -701,7 +693,7 @@ VA pattern: [Ask users for Marital information](https://design.va.gov/patterns/a
   <civ-radio label="Never married" value="never-married"></civ-radio>
 </civ-radio-group>
 
-<civ-conditional when="maritalStatus" eq="married">
+<civ-conditional when="maritalStatus" equals="married">
   <civ-fieldset legend="Spouse information">
     <civ-text-input label="Spouse's first name" name="spouseFirstName" required></civ-text-input>
     <civ-text-input label="Spouse's last name" name="spouseLastName" required></civ-text-input>
@@ -904,21 +896,21 @@ persistence, so it's safe to use for screening flows.
     required
   ></civ-yes-no>
 
-  <civ-conditional when="isVeteran" eq="no">
+  <civ-conditional when="isVeteran" equals="no">
     <civ-alert variant="info" heading="You may not be eligible">
       This benefit is available to Veterans and active-duty service members.
       You may still be eligible as a dependent. Contact us for more information.
     </civ-alert>
   </civ-conditional>
 
-  <civ-conditional when="isVeteran" eq="yes">
+  <civ-conditional when="isVeteran" equals="yes">
     <civ-yes-no
       label="Were you honorably discharged?"
       name="honorableDischarge"
       required
     ></civ-yes-no>
 
-    <civ-conditional when="honorableDischarge" eq="yes">
+    <civ-conditional when="honorableDischarge" equals="yes">
       <civ-alert variant="success" heading="You may be eligible">
         Based on your answers, you may be eligible for this benefit. Continue to apply.
       </civ-alert>

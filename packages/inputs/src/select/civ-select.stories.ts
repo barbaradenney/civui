@@ -478,6 +478,15 @@ export const PresetIncomeSource: Story = {
   `,
 };
 
+export const PresetVeteranStatus: Story = {
+  name: 'Preset: Veteran Status',
+  render: () => html`
+    <civ-form-field label="Veteran status" required>
+      <civ-select name="veteranStatus" preset="veteran-status" required></civ-select>
+    </civ-form-field>
+  `,
+};
+
 // ── All Presets ──────────────────────────────────────────────
 
 export const AllPresets: Story = {
@@ -522,6 +531,9 @@ export const AllPresets: Story = {
       </civ-form-field>
       <civ-form-field label="Income source">
         <civ-select preset="income-source"></civ-select>
+      </civ-form-field>
+      <civ-form-field label="Veteran status">
+        <civ-select preset="veteran-status"></civ-select>
       </civ-form-field>
     </div>
   `,

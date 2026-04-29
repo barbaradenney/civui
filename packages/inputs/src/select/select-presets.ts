@@ -221,6 +221,20 @@ const INCOME_SOURCES: SelectOption[] = [
   { value: 'other', label: 'Other' },
 ];
 
+// ── Veteran Status ─────────────────────────────────────────────
+// Based on OPM veteran preference categories (5 USC § 2108) and
+// standard federal form questions (SF-171, OF-612).
+
+const VETERAN_STATUSES: SelectOption[] = [
+  { value: 'non-veteran', label: 'Not a veteran' },
+  { value: 'veteran', label: 'Veteran' },
+  { value: 'active-duty', label: 'Active duty service member' },
+  { value: 'reserve-guard', label: 'Reserve or National Guard' },
+  { value: 'retired-military', label: 'Retired military' },
+  { value: 'veteran-spouse', label: 'Spouse of veteran' },
+  { value: 'veteran-surviving-spouse', label: 'Surviving spouse of veteran' },
+];
+
 // ── US States ──────────────────────────────────────────────────
 // (imported from the existing us-state component data)
 
@@ -276,7 +290,8 @@ export type SelectPresetName =
   | 'housing-status'
   | 'education-level'
   | 'employment-status'
-  | 'income-source';
+  | 'income-source'
+  | 'veteran-status';
 
 /**
  * Resolve preset options based on preset name and variant.
@@ -338,6 +353,9 @@ export function resolvePresetOptions(
 
     case 'income-source':
       return [...INCOME_SOURCES];
+
+    case 'veteran-status':
+      return [...VETERAN_STATUSES];
 
     default:
       return [];

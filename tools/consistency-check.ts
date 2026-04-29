@@ -85,8 +85,22 @@ function discoverComponents(): ComponentFile[] {
 
 // ── Rules ────────────────────────────────────────────────────
 
-const FORM_CLASS_RE = /extends\s+(CivFormElement|CivBooleanFormElement|LightDomSlotMixin\(CivFormElement\)|LightDomTextMixin\(CivFormElement\))/;
+const FORM_CLASS_RE = /extends\s+(CivFormElement|CivBooleanFormElement|LightDomSlotMixin\(CivFormElement\)|LightDomTextMixin\(CivFormElement\)|PresetInputWrapper)/;
 const BASE_CLASS_RE = /extends\s+(CivBaseElement|LightDomSlotMixin\(CivBaseElement\)|LightDomTextMixin\(CivBaseElement\))/;
+
+// Bare control components that delegate label/hint/error rendering to
+// <civ-form-field> or <civ-form-fieldset> wrappers. These don't call
+// renderLabel/renderHint/renderError directly — that's by design.
+const WRAPPER_DELEGATED = new Set([
+  'civ-text-input', 'civ-textarea', 'civ-select', 'civ-combobox',
+  'civ-date-picker', 'civ-file-upload',
+  'civ-radio-group', 'civ-checkbox-group', 'civ-segmented-control',
+  'civ-memorable-date', 'civ-yes-no', 'civ-date-range-picker',
+  'civ-country',
+  // Preset wrappers — they render a child input, no direct label rendering
+  'civ-ssn', 'civ-ein', 'civ-zip', 'civ-phone', 'civ-email',
+  'civ-currency', 'civ-routing-number', 'civ-va-file-number',
+]);
 
 function checkBaseClass(comp: ComponentFile) {
   const isFormComponent = FORM_CLASS_RE.test(comp.src);
@@ -106,6 +120,7 @@ function checkCustomElement(comp: ComponentFile) {
 function checkRenderOrder(comp: ComponentFile) {
   const isFormParticipating = FORM_CLASS_RE.test(comp.src);
   if (!isFormParticipating) return;
+  if (WRAPPER_DELEGATED.has(comp.name)) return; // Label/hint/error handled by civ-form-field wrapper
 
   // Check that render uses renderLabel/renderLegend, renderHint, renderError in order
   const hasLabel = /renderLabel\(/.test(comp.src) || /renderLegend\(/.test(comp.src);
@@ -222,7 +237,7 @@ function checkTailwindPrefix(comp: ComponentFile) {
 function checkFormReset(comp: ComponentFile) {
   const isFormParticipating = FORM_CLASS_RE.test(comp.src);
   if (!isFormParticipating) return;
-  if (comp.name === 'civ-conditional' || comp.name === 'civ-progress-steps' || comp.name === 'civ-progress-bar' || comp.name === 'civ-form-group') return;
+  if (comp.name === 'civ-conditional' || comp.name === 'civ-progress-steps' || comp.name === 'civ-progress-bar' || comp.name === 'civ-form-field') return;
 
   if (!comp.src.includes('formResetCallback') && !comp.src.includes('_handleChange')) {
     addIssue(comp.path, 'form-reset', 'info', `${comp.name} does not override formResetCallback()`);
@@ -276,7 +291,7 @@ const CHILD_COMPONENTS = new Set([
 ]);
 // Structural/display/utility components that don't need analytics
 const NO_ANALYTICS = new Set([
-  'civ-fieldset', 'civ-form-group', 'civ-segment',
+  'civ-fieldset', 'civ-form-field', 'civ-segment',
   'civ-card', 'civ-divider', 'civ-tag', 'civ-page-header',
   'civ-button-group', 'civ-task-list', 'civ-task-group',
   'civ-skip-link', 'civ-prefill-notice', 'civ-read-only-field',
@@ -291,6 +306,10 @@ function checkNativeCounterparts(comp: ComponentFile) {
   if (comp.name === 'civ-icon') return;
   if (comp.name === 'civ-conditional' || comp.name === 'civ-progress-bar') return;
   if (CHILD_COMPONENTS.has(comp.name)) return; // Part of parent component on native
+  // Preset wrappers and form-field/form-fieldset are web-only — no native counterpart needed
+  if (comp.name === 'civ-form-field' || comp.name === 'civ-form-fieldset') return;
+  if (comp.name === 'civ-race-ethnicity') return; // Compound web component
+  if (comp.src.includes('extends PresetInputWrapper')) return; // Preset wrappers
 
   const componentName = comp.name.replace('civ-', '').split('-').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join('');
   const iosPath = join(ROOT, `packages/ios/Sources/CivUI/Civ${componentName}.swift`);
@@ -309,7 +328,8 @@ function checkNativeCounterparts(comp: ComponentFile) {
 function checkA11yErrorAnnouncement(comp: ComponentFile) {
   const isFormParticipating = FORM_CLASS_RE.test(comp.src);
   if (!isFormParticipating) return;
-  if (comp.name === 'civ-conditional' || comp.name === 'civ-progress-steps' || comp.name === 'civ-progress-bar' || comp.name === 'civ-form-group') return;
+  if (comp.name === 'civ-conditional' || comp.name === 'civ-progress-steps' || comp.name === 'civ-progress-bar') return;
+  if (WRAPPER_DELEGATED.has(comp.name)) return; // Error rendering handled by civ-form-field wrapper
 
   // Errors should use role="alert" (handled by renderError) or announce()
   if (!comp.src.includes('renderError') && !comp.src.includes('role="alert"') && !comp.src.includes('announce(')) {
@@ -321,6 +341,7 @@ function checkA11yLabelAssociation(comp: ComponentFile) {
   const isFormParticipating = FORM_CLASS_RE.test(comp.src);
   if (!isFormParticipating) return;
   if (CHILD_COMPONENTS.has(comp.name)) return;
+  if (WRAPPER_DELEGATED.has(comp.name)) return; // Label association handled by civ-form-field wrapper
   if (comp.name === 'civ-conditional' || comp.name === 'civ-progress-steps' || comp.name === 'civ-progress-bar') return;
 
   // Every form control needs a label/legend associated via for/id or inline <label>

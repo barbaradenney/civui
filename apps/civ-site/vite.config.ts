@@ -40,6 +40,7 @@ export default defineConfig({
       '@civui/inputs/va-file-number': resolve(packages, 'inputs/src/va-file-number/index.ts'),
       '@civui/inputs': resolve(packages, 'inputs/src/index.ts'),
       '@civui/controls/checkbox': resolve(packages, 'controls/src/checkbox/index.ts'),
+      '@civui/controls/radio': resolve(packages, 'controls/src/radio/index.ts'),
       '@civui/controls': resolve(packages, 'controls/src/index.ts'),
       '@civui/compound': resolve(packages, 'compound/src/index.ts'),
       '@civui/form-patterns': resolve(packages, 'form-patterns/src/index.ts'),

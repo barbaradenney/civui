@@ -45,6 +45,7 @@ const config: StorybookConfig = {
       '@civui/inputs/va-file-number': resolve(root, 'packages/inputs/src/va-file-number/index.ts'),
       '@civui/inputs': resolve(root, 'packages/inputs/src/index.ts'),
       '@civui/controls/checkbox': resolve(root, 'packages/controls/src/checkbox/index.ts'),
+      '@civui/controls/radio': resolve(root, 'packages/controls/src/radio/index.ts'),
       '@civui/controls': resolve(root, 'packages/controls/src/index.ts'),
       '@civui/compound': resolve(root, 'packages/compound/src/index.ts'),
       '@civui/form-patterns': resolve(root, 'packages/form-patterns/src/index.ts'),

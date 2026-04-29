@@ -91,7 +91,7 @@ describe('civ-checkbox', () => {
     expect(wrapper).toBeNull();
   });
 
-  it('stores error property without rendering it', async () => {
+  it('stores error property', async () => {
     const el = await fixture('<civ-checkbox label="Agree" error="You must agree"></civ-checkbox>') as any;
 
     expect(el.error).toBe('You must agree');

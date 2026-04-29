@@ -234,6 +234,68 @@ export const GovernmentCertificationForm: Story = {
   `,
 };
 
+// ── Indeterminate ────────────────────────────────────────────
+
+export const Indeterminate: Story = {
+  name: 'Indeterminate (Select All)',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'A parent "Select all" checkbox becomes indeterminate when some — but not all — child checkboxes are checked. Clicking the parent toggles all children on or off.',
+      },
+    },
+  },
+  render: () => html`
+    <fieldset class="civ-border-0 civ-p-0 civ-m-0">
+      <legend class="civ-label civ-mb-2">Manage notifications</legend>
+      <civ-checkbox
+        label="Select all"
+        name="select-all"
+        indeterminate
+        @civ-change=${(e: Event) => {
+          const target = e.target as HTMLElement;
+          const checked = (target as any).checked;
+          const children = target
+            .closest('fieldset')!
+            .querySelectorAll<any>('civ-checkbox:not([name="select-all"])');
+          children.forEach((cb: any) => {
+            cb.checked = checked;
+          });
+          (target as any).indeterminate = false;
+        }}
+      ></civ-checkbox>
+      <div class="civ-ps-6 civ-border-s-2 civ-border-base-lighter civ-ms-4">
+        ${['Email', 'Text message', 'Push notification'].map(
+          (label) => html`
+            <civ-checkbox
+              label="${label}"
+              name="notifications"
+              value="${label.toLowerCase().replace(/\s/g, '-')}"
+              checked
+              @civ-change=${(e: Event) => {
+                const fieldset = (e.target as HTMLElement).closest('fieldset')!;
+                const children = fieldset.querySelectorAll<any>(
+                  'civ-checkbox:not([name="select-all"])',
+                );
+                const selectAll = fieldset.querySelector<any>(
+                  'civ-checkbox[name="select-all"]',
+                );
+                const checkedCount = Array.from(children).filter(
+                  (cb: any) => cb.checked,
+                ).length;
+                selectAll.checked = checkedCount === children.length;
+                selectAll.indeterminate =
+                  checkedCount > 0 && checkedCount < children.length;
+              }}
+            ></civ-checkbox>
+          `,
+        )}
+      </div>
+    </fieldset>
+  `,
+};
+
 // ── Selection bounds ──────────────────────────────────────────
 
 export const MinSelections: Story = {

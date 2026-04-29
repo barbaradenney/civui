@@ -45,10 +45,10 @@ export class CivCheckbox extends CivBooleanFormElement {
             ${this.description
               ? html`<span id="${this._descriptionId}" class="civ-check-description">${this.description}</span>`
               : nothing}
+            ${renderHint(this._hintId, this.hint)}
+            ${renderError(this._errorId, this.error)}
           </div>
         </label>
-        ${renderHint(this._hintId, this.hint)}
-        ${renderError(this._errorId, this.error)}
       </div>
     `;
   }

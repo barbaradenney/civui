@@ -246,6 +246,18 @@
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23a0a0a0' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
     }
 
+    /* Browser autofill overrides — prevent light background flash in dark mode */
+    .civ-input:-webkit-autofill,
+    .civ-input:-webkit-autofill:hover,
+    .civ-input:-webkit-autofill:focus,
+    .civ-select-field:-webkit-autofill,
+    textarea:-webkit-autofill {
+      -webkit-box-shadow: 0 0 0 1000px var(--civ-color-white-DEFAULT) inset;
+      -webkit-text-fill-color: var(--civ-color-base-darkest);
+      caret-color: var(--civ-color-base-darkest);
+      transition: background-color 5000s ease-in-out 0s;
+    }
+
     /* Checkbox/radio dark mode handled by token-based border/bg variables */
   }
 
@@ -1227,7 +1239,7 @@
   /* Radio checked — filled dot via thick border */
   .civ-check-input[type="radio"]:checked {
     background-color: var(--civ-color-white-DEFAULT, #fff);
-    border-width: 6px;
+    border-width: calc(var(--civ-spacing-8) * 0.3);
     border-color: var(--civ-color-primary-DEFAULT);
   }
 

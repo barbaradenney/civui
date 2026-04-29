@@ -149,11 +149,16 @@ export class CivMemorableDate extends CivFormElement {
   }
 
   override render() {
+    const monthLabel = this.monthLabel || t('memorableDateMonthLabel');
+    const dayLabel = this.dayLabel || t('memorableDateDayLabel');
+    const yearLabel = this.yearLabel || t('memorableDateYearLabel');
+
     return html`
         <div class="civ-memorable-date-fields" data-civ-memorable-date>
           <div class="civ-memorable-date-month">
+            <span class="civ-text-base civ-font-semibold civ-block civ-mb-1">${monthLabel}</span>
             <civ-select
-              label="${this.monthLabel || t('memorableDateMonthLabel')}"
+              label="${monthLabel}"
               name="${this.name ? `${this.name}-month` : 'month'}"
               .options="${this._monthOptions}"
               .value="${this._month}"
@@ -165,8 +170,9 @@ export class CivMemorableDate extends CivFormElement {
             ></civ-select>
           </div>
           <div class="civ-memorable-date-day">
+            <span class="civ-text-base civ-font-semibold civ-block civ-mb-1">${dayLabel}</span>
             <civ-text-input
-              label="${this.dayLabel || t('memorableDateDayLabel')}"
+              label="${dayLabel}"
               name="${this.name ? `${this.name}-day` : 'day'}"
               type="text"
               inputmode="numeric"
@@ -182,8 +188,9 @@ export class CivMemorableDate extends CivFormElement {
             ></civ-text-input>
           </div>
           <div class="civ-memorable-date-year">
+            <span class="civ-text-base civ-font-semibold civ-block civ-mb-1">${yearLabel}</span>
             <civ-text-input
-              label="${this.yearLabel || t('memorableDateYearLabel')}"
+              label="${yearLabel}"
               name="${this.name ? `${this.name}-year` : 'year'}"
               type="text"
               inputmode="numeric"

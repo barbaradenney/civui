@@ -61,7 +61,7 @@ const RELATIONSHIP_GENERAL: SelectOption[] = [
   { value: 'other', label: 'Other' },
 ];
 
-const RELATIONSHIP_VA_DEPENDENT: SelectOption[] = [
+const RELATIONSHIP_DEPENDENT: SelectOption[] = [
   { value: 'spouse', label: 'Spouse' },
   { value: 'biological-child', label: 'Biological child' },
   { value: 'adopted-child', label: 'Adopted child' },
@@ -69,7 +69,7 @@ const RELATIONSHIP_VA_DEPENDENT: SelectOption[] = [
   { value: 'parent', label: 'Parent' },
 ];
 
-const RELATIONSHIP_VA_SURVIVOR: SelectOption[] = [
+const RELATIONSHIP_SURVIVOR: SelectOption[] = [
   { value: 'spouse', label: 'Surviving spouse' },
   { value: 'child', label: 'Surviving child' },
   { value: 'parent', label: 'Surviving parent' },
@@ -189,7 +189,7 @@ export type SelectPresetName =
  * @param preset - The preset name
  * @param variant - Optional variant string for presets with multiple tiers.
  *   - service-branch: "reserve", "historical", "all"
- *   - relationship-type: "va-dependent", "va-survivor"
+ *   - relationship-type: "dependent", "survivor"
  *   - gender: "binary"
  *   - us-state: "territories"
  */
@@ -215,8 +215,8 @@ export function resolvePresetOptions(
       return [...SUFFIXES];
 
     case 'relationship-type':
-      if (variant === 'va-dependent') return [...RELATIONSHIP_VA_DEPENDENT];
-      if (variant === 'va-survivor') return [...RELATIONSHIP_VA_SURVIVOR];
+      if (variant === 'dependent') return [...RELATIONSHIP_DEPENDENT];
+      if (variant === 'survivor') return [...RELATIONSHIP_SURVIVOR];
       return [...RELATIONSHIP_GENERAL];
 
     case 'marital-status':

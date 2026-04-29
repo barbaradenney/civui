@@ -56,7 +56,7 @@ export class CivSelect extends CivFormElement {
   /**
    * Variant for presets with multiple tiers:
    * - service-branch: `"reserve"`, `"historical"`, `"all"`
-   * - relationship-type: `"va-dependent"`, `"va-survivor"`
+   * - relationship-type: `"dependent"`, `"survivor"`
    * - gender: `"binary"`
    * - us-state: `"territories"`
    */

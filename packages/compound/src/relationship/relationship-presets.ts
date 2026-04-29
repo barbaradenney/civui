@@ -22,9 +22,9 @@ export interface RelationshipTypeConfig {
 
 export type RelationshipPreset =
   | 'general'
-  | 'va-dependent'
-  | 'va-survivor'
-  | 'ssa-survivor'
+  | 'dependent'
+  | 'survivor'
+  | 'benefits-survivor'
   | 'immigration'
   | 'tax';
 
@@ -37,7 +37,7 @@ export const RELATIONSHIP_PRESETS: Record<RelationshipPreset, RelationshipTypeCo
     { value: 'other', labelKey: 'relationshipOther', category: 'other' },
   ],
 
-  'va-dependent': [
+  'dependent': [
     { value: 'spouse', labelKey: 'relationshipSpouse', category: 'spousal' },
     { value: 'biological-child', labelKey: 'relationshipBiologicalChild', category: 'child' },
     { value: 'adopted-child', labelKey: 'relationshipAdoptedChild', category: 'child' },
@@ -45,7 +45,7 @@ export const RELATIONSHIP_PRESETS: Record<RelationshipPreset, RelationshipTypeCo
     { value: 'parent', labelKey: 'relationshipParent', category: 'none' },
   ],
 
-  'va-survivor': [
+  'survivor': [
     { value: 'spouse', labelKey: 'relationshipSpouse', category: 'spousal' },
     { value: 'child', labelKey: 'relationshipChild', category: 'child' },
     { value: 'parent', labelKey: 'relationshipParent', category: 'none' },
@@ -54,7 +54,7 @@ export const RELATIONSHIP_PRESETS: Record<RelationshipPreset, RelationshipTypeCo
     { value: 'other', labelKey: 'relationshipOther', category: 'other' },
   ],
 
-  'ssa-survivor': [
+  'benefits-survivor': [
     { value: 'spouse', labelKey: 'relationshipSpouse', category: 'spousal' },
     { value: 'ex-spouse', labelKey: 'relationshipExSpouse', category: 'spousal' },
     { value: 'child', labelKey: 'relationshipChild', category: 'child' },

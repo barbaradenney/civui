@@ -131,7 +131,7 @@ export const TraumaInformedForm: Story = {
           <civ-relationship
             legend="About the Veteran"
             name="veteran"
-            preset="va-survivor"
+            preset="survivor"
             deceased-assumed
             required
           ></civ-relationship>

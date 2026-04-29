@@ -48,8 +48,8 @@ describe('civ-relationship', () => {
     expect(values).toEqual(['spouse', 'child', 'parent', 'sibling', 'other']);
   });
 
-  it('switches to va-dependent preset', async () => {
-    const el = await fixture('<civ-relationship name="rel" preset="va-dependent"></civ-relationship>');
+  it('switches to dependent preset', async () => {
+    const el = await fixture('<civ-relationship name="rel" preset="dependent"></civ-relationship>');
     await elementUpdated(el);
 
     const select = el.querySelector('[data-relationship-type]') as any;
@@ -59,8 +59,8 @@ describe('civ-relationship', () => {
     expect(values).not.toContain('other');
   });
 
-  it('switches to va-survivor preset', async () => {
-    const el = await fixture('<civ-relationship name="rel" preset="va-survivor"></civ-relationship>');
+  it('switches to survivor preset', async () => {
+    const el = await fixture('<civ-relationship name="rel" preset="survivor"></civ-relationship>');
     await elementUpdated(el);
 
     const select = el.querySelector('[data-relationship-type]') as any;

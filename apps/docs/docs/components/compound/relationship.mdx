@@ -12,7 +12,7 @@ import StoryEmbed from "@site/src/components/StoryEmbed";
 
 Compound component for capturing a person and their relationship to the applicant. Includes conditional follow-up fields based on the relationship category — spousal types show marriage date, child types show date of birth, etc.
 
-Use the `preset` prop for agency-specific option lists, or pass custom `options` to override.
+Use the `preset` prop for pre-defined option lists, or pass custom `options` to override.
 
 ## Examples
 
@@ -20,23 +20,23 @@ Use the `preset` prop for agency-specific option lists, or pass custom `options`
 
 <StoryEmbed id="forms-compound-relationship--default" />
 
-### VA Dependent (21-686c)
+### Dependent
 
-<StoryEmbed id="forms-compound-relationship--va-dependent" />
+<StoryEmbed id="forms-compound-relationship--dependent" />
 
-### VA Survivor (21P-530)
+### Survivor
 
-<StoryEmbed id="forms-compound-relationship--va-survivor" />
+<StoryEmbed id="forms-compound-relationship--survivor" />
 
-### SSA Survivor Benefits
+### Survivor (Benefits)
 
-<StoryEmbed id="forms-compound-relationship--ssa-survivor" />
+<StoryEmbed id="forms-compound-relationship--benefits-survivor" />
 
-### Immigration (I-130)
+### Immigration
 
 <StoryEmbed id="forms-compound-relationship--immigration" />
 
-### Tax Filing (1040)
+### Tax Filing
 
 <StoryEmbed id="forms-compound-relationship--tax" />
 
@@ -60,7 +60,7 @@ Use the `preset` prop for agency-specific option lists, or pass custom `options`
 |------|------|---------|-------------|
 | `legend` | `string` | `'About this person'` | Fieldset legend text |
 | `name` | `string` | `''` | Form field name prefix |
-| `preset` | `'general' \| 'va-dependent' \| 'va-survivor' \| 'ssa-survivor' \| 'immigration' \| 'tax'` | `'general'` | Agency-specific relationship options |
+| `preset` | `'general' \| 'dependent' \| 'survivor' \| 'benefits-survivor' \| 'immigration' \| 'tax'` | `'general'` | Relationship type preset |
 | `options` | `RelationshipTypeConfig[]` | — | Custom options (overrides preset) |
 | `show-name` | `boolean` | `true` | Include name fields |
 | `show-deceased` | `boolean` | `false` | Include deceased yes/no and date of death |
@@ -90,16 +90,16 @@ Use the `preset` prop for agency-specific option lists, or pass custom `options`
 
 ## Presets
 
-Each preset provides a curated list of relationship types for a specific agency context:
+Each preset provides a curated list of relationship types for a specific context:
 
 | Preset | Options | Use case |
 |--------|---------|----------|
 | `general` | Spouse, Child, Parent, Sibling, Other | Generic forms |
-| `va-dependent` | Spouse, Biological child, Adopted child, Stepchild, Parent | VA dependency claims (21-686c) |
-| `va-survivor` | Spouse, Child, Parent, Executor, Funeral director, Other | VA burial benefits (21P-530) |
-| `ssa-survivor` | Spouse, Former spouse, Child, Grandchild, Parent | SSA survivor benefits |
-| `immigration` | Spouse, Biological child, Adopted child, Stepchild, Parent, Sibling | Family-based petitions (I-130) |
-| `tax` | Spouse, Biological/Adopted/Step/Foster child, Sibling, Parent | Tax dependents (1040) |
+| `dependent` | Spouse, Biological child, Adopted child, Stepchild, Parent | Dependency claims |
+| `survivor` | Spouse, Child, Parent, Executor, Funeral director, Other | Burial and survivor benefits |
+| `benefits-survivor` | Spouse, Former spouse, Child, Grandchild, Parent | Survivor benefits with extended family |
+| `immigration` | Spouse, Biological child, Adopted child, Stepchild, Parent, Sibling | Family-based petitions |
+| `tax` | Spouse, Biological/Adopted/Step/Foster child, Sibling, Parent | Tax dependents |
 
 ## Conditional fields
 
@@ -127,13 +127,13 @@ When the user switches relationship types and the category changes, stale condit
 ></civ-relationship>
 ```
 
-### VA survivor with deceased fields
+### Survivor with deceased fields
 
 ```html
 <civ-relationship
   legend="About the person who died"
   name="deceased"
-  preset="va-survivor"
+  preset="survivor"
   show-deceased
   required
 ></civ-relationship>

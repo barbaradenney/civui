@@ -290,7 +290,7 @@ export const WizardMode: Story = {
 };
 
 export const WizardWithRelationship: Story = {
-  name: 'Wizard: VA Dependents',
+  name: 'Wizard: Dependents',
   render: () => html`
     <civ-repeater
       legend="Your dependents"
@@ -306,7 +306,7 @@ export const WizardWithRelationship: Story = {
         <civ-relationship
           legend="Relationship details"
           name="rel"
-          preset="va-dependent"
+          preset="dependent"
           show-name="false"
           show-adoption-date
           required

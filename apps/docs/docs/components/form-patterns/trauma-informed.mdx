@@ -106,14 +106,14 @@ When a form is explicitly about someone who has died (burial benefits, survivor 
 <!-- Good: assumes the person is deceased -->
 <civ-relationship
   legend="About the person who died"
-  preset="va-survivor"
+  preset="survivor"
   deceased-assumed
 ></civ-relationship>
 
 <!-- Bad: asks a redundant, insensitive question -->
 <civ-relationship
   legend="About the person who died"
-  preset="va-survivor"
+  preset="survivor"
   show-deceased
 ></civ-relationship>
 ```
@@ -161,7 +161,7 @@ When using `<civ-repeater mode="wizard">` for sensitive content (e.g., adding mu
     <civ-name legend="Their name" name="name" required></civ-name>
   </div>
   <div data-step-label="Relationship">
-    <civ-relationship preset="va-survivor" deceased-assumed
+    <civ-relationship preset="survivor" deceased-assumed
       show-name="false" name="rel" required></civ-relationship>
   </div>
 </civ-repeater>
@@ -200,7 +200,7 @@ This example combines all trauma-informed patterns into a realistic VA burial be
       <civ-relationship
         legend="About the Veteran"
         name="veteran"
-        preset="va-survivor"
+        preset="survivor"
         deceased-assumed
         required
       ></civ-relationship>

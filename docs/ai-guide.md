@@ -870,11 +870,11 @@ Pre-section context panel. Sets expectations before a sensitive or complex form 
 
 ### civ-relationship
 
-Compound component for capturing a person and their relationship to the applicant. Supports agency-specific presets with conditional follow-up fields based on relationship category.
+Compound component for capturing a person and their relationship to the applicant. Supports presets with conditional follow-up fields based on relationship category.
 
 **Props (beyond standard):**
 - `legend` — fieldset legend (default: `'About this person'`)
-- `preset` — `'general'` | `'va-dependent'` | `'va-survivor'` | `'ssa-survivor'` | `'immigration'` | `'tax'`
+- `preset` — `'general'` | `'dependent'` | `'survivor'` | `'benefits-survivor'` | `'immigration'` | `'tax'`
 - `options` — custom `RelationshipTypeConfig[]` (overrides preset)
 - `show-name` — include name fields (default true)
 - `show-deceased` — include deceased yes/no + date of death (default false)
@@ -892,7 +892,7 @@ Compound component for capturing a person and their relationship to the applican
 <civ-relationship
   legend="About the dependent"
   name="dependent"
-  preset="va-dependent"
+  preset="dependent"
   show-adoption-date
   required
 ></civ-relationship>
@@ -1308,7 +1308,7 @@ Both can coexist on the same `civ-yes-no`.
 ```html
 <civ-form
   form-label="Survivor benefits application"
-  persist="ssa-survivor-benefits"
+  persist="survivor-benefits"
   .supportResources="${[
     { label: 'VA Bereavement Counseling', href: 'tel:202-461-6530', description: 'Mon–Fri, 8am–8pm ET' },
     { label: '988 Suicide & Crisis Lifeline', href: 'tel:988', description: '24/7' },
@@ -1324,7 +1324,7 @@ Both can coexist on the same `civ-yes-no`.
       <civ-relationship
         legend="About the person who died"
         name="deceased"
-        preset="va-survivor"
+        preset="survivor"
         show-deceased
         required
       ></civ-relationship>

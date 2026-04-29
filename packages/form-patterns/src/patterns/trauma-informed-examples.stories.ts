@@ -95,7 +95,7 @@ export const DeceasedAssumed: Story = {
         <civ-relationship
           legend="About the person who died"
           name="good"
-          preset="va-survivor"
+          preset="survivor"
           deceased-assumed
         ></civ-relationship>
       </div>
@@ -104,7 +104,7 @@ export const DeceasedAssumed: Story = {
         <civ-relationship
           legend="About the person who died"
           name="avoid"
-          preset="va-survivor"
+          preset="survivor"
           show-deceased
         ></civ-relationship>
       </div>
@@ -143,7 +143,7 @@ export const RepeaterWizardSensitive: Story = {
         <civ-name legend="Their name" name="name" required></civ-name>
       </div>
       <div data-step-label="Relationship">
-        <civ-relationship preset="va-survivor" deceased-assumed
+        <civ-relationship preset="survivor" deceased-assumed
           show-name="false" name="rel" required
           legend="Your relationship"></civ-relationship>
       </div>
@@ -152,7 +152,7 @@ export const RepeaterWizardSensitive: Story = {
 };
 
 export const CompleteSurvivorForm: Story = {
-  name: 'Complete: VA Survivor Benefit Form',
+  name: 'Complete: Survivor Benefit Form',
   render: () => html`
     <civ-form
       support-resources='[{"label":"Veterans Crisis Line","href":"tel:988"},{"label":"Caregiver Support","href":"tel:18552603274"}]'
@@ -174,7 +174,7 @@ export const CompleteSurvivorForm: Story = {
           <civ-relationship
             legend="About the Veteran"
             name="veteran"
-            preset="va-survivor"
+            preset="survivor"
             deceased-assumed
             required
           ></civ-relationship>

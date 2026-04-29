@@ -11,7 +11,7 @@ const meta: Meta = {
   argTypes: {
     preset: {
       control: 'select',
-      options: ['general', 'va-dependent', 'va-survivor', 'ssa-survivor', 'immigration', 'tax'],
+      options: ['general', 'dependent', 'survivor', 'benefits-survivor', 'immigration', 'tax'],
     },
   },
 };
@@ -32,37 +32,37 @@ export const Default: Story = {
   `,
 };
 
-export const VADependent: Story = {
-  name: 'VA Dependent (21-686c)',
+export const Dependent: Story = {
+  name: 'Dependent',
   render: () => html`
     <civ-relationship
       legend="About the dependent"
       name="dependent"
-      preset="va-dependent"
+      preset="dependent"
       show-adoption-date
     ></civ-relationship>
   `,
 };
 
-export const VASurvivor: Story = {
-  name: 'VA Survivor (21P-530)',
+export const Survivor: Story = {
+  name: 'Survivor',
   render: () => html`
     <civ-relationship
       legend="About the person who died"
       name="deceased"
-      preset="va-survivor"
+      preset="survivor"
       deceased-assumed
     ></civ-relationship>
   `,
 };
 
-export const SSASurvivor: Story = {
-  name: 'SSA Survivor Benefits',
+export const BenefitsSurvivor: Story = {
+  name: 'Survivor (Benefits)',
   render: () => html`
     <civ-relationship
       legend="About the deceased worker"
       name="deceased"
-      preset="ssa-survivor"
+      preset="benefits-survivor"
       deceased-assumed
       show-divorce-date
     ></civ-relationship>
@@ -70,7 +70,7 @@ export const SSASurvivor: Story = {
 };
 
 export const Immigration: Story = {
-  name: 'Immigration (I-130)',
+  name: 'Immigration',
   render: () => html`
     <civ-relationship
       legend="About the person you are petitioning for"
@@ -82,7 +82,7 @@ export const Immigration: Story = {
 };
 
 export const Tax: Story = {
-  name: 'Tax Filing (1040)',
+  name: 'Tax Filing',
   render: () => html`
     <civ-relationship
       legend="Dependent information"
@@ -98,7 +98,7 @@ export const WithoutName: Story = {
     <civ-relationship
       legend="Relationship to veteran"
       name="rel"
-      preset="va-survivor"
+      preset="survivor"
       show-name="false"
     ></civ-relationship>
   `,
@@ -138,16 +138,16 @@ export const AllPresets: Story = {
         <civ-relationship legend="Person" name="gen" preset="general"></civ-relationship>
       </div>
       <div>
-        <p class="civ-font-semibold civ-mb-2">VA Dependent</p>
-        <civ-relationship legend="Dependent" name="va-dep" preset="va-dependent"></civ-relationship>
+        <p class="civ-font-semibold civ-mb-2">Dependent</p>
+        <civ-relationship legend="Dependent" name="dep" preset="dependent"></civ-relationship>
       </div>
       <div>
-        <p class="civ-font-semibold civ-mb-2">VA Survivor</p>
-        <civ-relationship legend="Deceased" name="va-surv" preset="va-survivor"></civ-relationship>
+        <p class="civ-font-semibold civ-mb-2">Survivor</p>
+        <civ-relationship legend="Deceased" name="surv" preset="survivor"></civ-relationship>
       </div>
       <div>
-        <p class="civ-font-semibold civ-mb-2">SSA Survivor</p>
-        <civ-relationship legend="Deceased worker" name="ssa" preset="ssa-survivor"></civ-relationship>
+        <p class="civ-font-semibold civ-mb-2">Benefits Survivor</p>
+        <civ-relationship legend="Deceased worker" name="ben-surv" preset="benefits-survivor"></civ-relationship>
       </div>
       <div>
         <p class="civ-font-semibold civ-mb-2">Immigration</p>

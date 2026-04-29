@@ -388,11 +388,11 @@ export const PresetRelationshipType: Story = {
   `,
 };
 
-export const PresetRelationshipVaDependent: Story = {
-  name: 'Preset: Relationship (VA Dependent)',
+export const PresetRelationshipDependent: Story = {
+  name: 'Preset: Relationship (Dependent)',
   render: () => html`
     <civ-form-field label="Relationship to veteran" required>
-      <civ-select name="relationship" preset="relationship-type" preset-variant="va-dependent" required></civ-select>
+      <civ-select name="relationship" preset="relationship-type" preset-variant="dependent" required></civ-select>
     </civ-form-field>
   `,
 };

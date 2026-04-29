@@ -38,13 +38,13 @@ const EMPTY_RELATIONSHIP: RelationshipValue = {
  * applicant. Includes conditional follow-up fields based on the relationship
  * category (spousal → marriage date, child → date of birth, etc.).
  *
- * Use the `preset` prop for agency-specific option lists, or pass custom
+ * Use the `preset` prop for pre-defined option lists, or pass custom
  * `options` to override.
  *
  * @element civ-relationship
  *
  * @prop {string} legend - Fieldset legend text
- * @prop {RelationshipPreset} preset - Agency preset: 'general' | 'va-dependent' | 'va-survivor' | 'ssa-survivor' | 'immigration' | 'tax'
+ * @prop {RelationshipPreset} preset - Relationship type preset: 'general' | 'dependent' | 'survivor' | 'benefits-survivor' | 'immigration' | 'tax'
  * @prop {RelationshipTypeConfig[]} options - Custom options (overrides preset)
  * @prop {boolean} showName - Include name fields (default true)
  * @prop {boolean} showDeceased - Include deceased yes/no + date of death (default false)

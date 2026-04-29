@@ -1,8 +1,9 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivFormElement, LightDomSlotMixin, dispatch, syncGroupDisabled, stopChildEvent, syncLegendToLabel, t, interpolate } from '@civui/core';
-import type { SlotConfig } from '@civui/core';
+import { CivFormElement, LightDomSlotMixin, dispatch, syncGroupDisabled, stopChildEvent, syncLegendToLabel, t, interpolate, resolvePresetOptions } from '@civui/core';
+import type { SlotConfig, SelectPresetName } from '@civui/core';
 import type { CivCheckbox } from './civ-checkbox.js';
+import './civ-checkbox.js';
 
 /**
  * CivUI Checkbox Group
@@ -38,6 +39,12 @@ export class CivCheckboxGroup extends LightDomSlotMixin(CivFormElement) {
   @property({ type: Boolean, reflect: true }) tile = false;
   @property({ type: String, reflect: true }) orientation: 'vertical' | 'horizontal' = 'vertical';
   @property({ type: Boolean, attribute: 'show-select-all' }) showSelectAll = false;
+
+  /** Pre-populate checkbox options from a built-in preset data set. */
+  @property({ type: String }) preset?: SelectPresetName;
+
+  /** Variant for presets with multiple tiers. */
+  @property({ type: String, attribute: 'preset-variant' }) presetVariant?: string;
   @property({ type: Number, attribute: 'max-selections' }) maxSelections?: number;
   /**
    * Minimum number of options that must be checked. When > 0, the group
@@ -154,6 +161,10 @@ export class CivCheckboxGroup extends LightDomSlotMixin(CivFormElement) {
         ? 'civ-group-layout--horizontal'
         : 'civ-group-layout--vertical';
 
+    const presetOptions = this.preset && this._getSlottedChildren('default').length === 0
+      ? resolvePresetOptions(this.preset, this.presetVariant)
+      : [];
+
     return html`
         ${this.showSelectAll ? html`
           <civ-action-button
@@ -163,7 +174,7 @@ export class CivCheckboxGroup extends LightDomSlotMixin(CivFormElement) {
             @click="${this._onToggleAll}"
             class="civ-mb-2"
           ></civ-action-button>` : nothing}
-        <div class="${layoutClass}"></div>
+        <div class="${layoutClass}">${presetOptions.map(opt => html`<civ-checkbox value="${opt.value}" label="${opt.label}"></civ-checkbox>`)}</div>
     `;
   }
 

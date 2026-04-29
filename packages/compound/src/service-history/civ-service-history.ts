@@ -1,7 +1,7 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { CivFormElement, dispatch, renderLegend, renderFormHeader, buildDescribedBy, t } from '@civui/core';
-import { resolvePresetOptions } from '@civui/inputs/select';
+import { resolvePresetOptions } from '@civui/core';
 import '@civui/inputs';
 
 export interface ServicePeriodValue {

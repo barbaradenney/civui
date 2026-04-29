@@ -1,8 +1,9 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivFormElement, LightDomSlotMixin, dispatch, resolveGroupNavIndex, isRtl, syncGroupDisabled, stopChildEvent, syncLegendToLabel } from '@civui/core';
-import type { SlotConfig } from '@civui/core';
+import { CivFormElement, LightDomSlotMixin, dispatch, resolveGroupNavIndex, isRtl, syncGroupDisabled, stopChildEvent, syncLegendToLabel, resolvePresetOptions } from '@civui/core';
+import type { SlotConfig, SelectPresetName } from '@civui/core';
 import type { CivRadio } from './civ-radio.js';
+import './civ-radio.js';
 
 /**
  * CivUI Radio Group
@@ -37,6 +38,12 @@ export class CivRadioGroup extends LightDomSlotMixin(CivFormElement) {
   @property({ type: String }) legend = '';
   @property({ type: Boolean, reflect: true }) tile = false;
   @property({ type: String, reflect: true }) orientation: 'vertical' | 'horizontal' = 'vertical';
+
+  /** Pre-populate radio options from a built-in preset data set. */
+  @property({ type: String }) preset?: SelectPresetName;
+
+  /** Variant for presets with multiple tiers. */
+  @property({ type: String, attribute: 'preset-variant' }) presetVariant?: string;
 
   /**
    * When non-empty, renders a "Prefer not to answer" affordance below the
@@ -99,7 +106,8 @@ export class CivRadioGroup extends LightDomSlotMixin(CivFormElement) {
     super.updated(changed);
     const needsRadios =
       changed.has('name') || changed.has('value') ||
-      changed.has('disabled') || changed.has('required') || changed.has('tile');
+      changed.has('disabled') || changed.has('required') || changed.has('tile') ||
+      changed.has('preset') || changed.has('presetVariant');
     const radios = needsRadios ? this._getRadios() : undefined;
 
     if (changed.has('name')) {
@@ -135,6 +143,10 @@ export class CivRadioGroup extends LightDomSlotMixin(CivFormElement) {
     // affordance (a toggle-button, not a radio) can sit alongside the radio
     // choices inside the fieldset without joining the mutually-exclusive
     // group.
+    const presetOptions = this.preset && this._getSlottedChildren('default').length === 0
+      ? resolvePresetOptions(this.preset, this.presetVariant)
+      : [];
+
     return html`
         <div
           class="${layoutClass}"
@@ -144,7 +156,7 @@ export class CivRadioGroup extends LightDomSlotMixin(CivFormElement) {
           aria-describedby="${this._ariaDescribedBy || nothing}"
           aria-invalid="${this.error ? 'true' : nothing}"
           aria-required="${this.required || nothing}"
-        ></div>
+        >${presetOptions.map(opt => html`<civ-radio value="${opt.value}" label="${opt.label}"></civ-radio>`)}</div>
         ${this.skipLabel
           ? html`
               <button

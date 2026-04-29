@@ -2,10 +2,8 @@
 
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivFormElement, dispatch, inputClasses, inputWidthClass, t } from '@civui/core';
-import type { InputWidth } from '@civui/core';
-import { resolvePresetOptions } from './select-presets.js';
-import type { SelectPresetName } from './select-presets.js';
+import { CivFormElement, dispatch, inputClasses, inputWidthClass, t, resolvePresetOptions } from '@civui/core';
+import type { InputWidth, SelectPresetName } from '@civui/core';
 
 export interface SelectOption {
   value: string;

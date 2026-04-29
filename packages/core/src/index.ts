@@ -70,6 +70,10 @@ export type { InputWidth } from './templates/form-templates.js';
 export { CivFormField } from './form-field/civ-form-field.js';
 export { CivFormFieldset } from './form-field/civ-form-fieldset.js';
 
+// Preset data
+export { resolvePresetOptions } from './data/select-presets.js';
+export type { PresetOption, SelectPresetName } from './data/select-presets.js';
+
 // Icon
 export { CivIcon } from './icon/civ-icon.js';
 export { icons, registerIcon, getIconNames, resetIcons } from './icon/icon-library.js';

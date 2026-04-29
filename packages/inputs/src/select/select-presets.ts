@@ -55,9 +55,43 @@ const SUFFIXES: SelectOption[] = [
 
 const RELATIONSHIP_GENERAL: SelectOption[] = [
   { value: 'spouse', label: 'Spouse' },
+  { value: 'domestic-partner', label: 'Domestic partner' },
   { value: 'child', label: 'Child' },
+  { value: 'stepchild', label: 'Stepchild' },
   { value: 'parent', label: 'Parent' },
   { value: 'sibling', label: 'Sibling' },
+  { value: 'grandchild', label: 'Grandchild' },
+  { value: 'grandparent', label: 'Grandparent' },
+  { value: 'legal-guardian', label: 'Legal guardian' },
+  { value: 'other', label: 'Other' },
+];
+
+const RELATIONSHIP_DETAILED: SelectOption[] = [
+  { value: 'spouse', label: 'Spouse' },
+  { value: 'ex-spouse', label: 'Former spouse' },
+  { value: 'domestic-partner', label: 'Domestic partner' },
+  { value: 'biological-child', label: 'Biological child' },
+  { value: 'adopted-child', label: 'Adopted child' },
+  { value: 'stepchild', label: 'Stepchild' },
+  { value: 'foster-child', label: 'Foster child' },
+  { value: 'grandchild', label: 'Grandchild' },
+  { value: 'parent', label: 'Parent' },
+  { value: 'stepparent', label: 'Stepparent' },
+  { value: 'grandparent', label: 'Grandparent' },
+  { value: 'sibling', label: 'Sibling' },
+  { value: 'half-sibling', label: 'Half-sibling' },
+  { value: 'legal-guardian', label: 'Legal guardian' },
+  { value: 'ward', label: 'Ward' },
+  { value: 'power-of-attorney', label: 'Power of attorney' },
+  { value: 'executor', label: 'Executor or personal representative' },
+  { value: 'trustee', label: 'Trustee' },
+  { value: 'beneficiary', label: 'Beneficiary' },
+  { value: 'caretaker', label: 'Caretaker or custodian' },
+  { value: 'dependent', label: 'Dependent' },
+  { value: 'funeral-director', label: 'Funeral director' },
+  { value: 'self', label: 'Self' },
+  { value: 'other-relative', label: 'Other relative' },
+  { value: 'non-relative', label: 'Non-relative' },
   { value: 'other', label: 'Other' },
 ];
 
@@ -66,15 +100,19 @@ const RELATIONSHIP_DEPENDENT: SelectOption[] = [
   { value: 'biological-child', label: 'Biological child' },
   { value: 'adopted-child', label: 'Adopted child' },
   { value: 'stepchild', label: 'Stepchild' },
+  { value: 'foster-child', label: 'Foster child' },
   { value: 'parent', label: 'Parent' },
+  { value: 'ward', label: 'Ward' },
 ];
 
 const RELATIONSHIP_SURVIVOR: SelectOption[] = [
   { value: 'spouse', label: 'Surviving spouse' },
   { value: 'child', label: 'Surviving child' },
   { value: 'parent', label: 'Surviving parent' },
-  { value: 'executor', label: 'Executor of estate' },
+  { value: 'executor', label: 'Executor or personal representative' },
+  { value: 'power-of-attorney', label: 'Power of attorney' },
   { value: 'funeral-director', label: 'Funeral director' },
+  { value: 'other', label: 'Other' },
 ];
 
 // ── Marital Status ─────────────────────────────────────────────
@@ -189,7 +227,7 @@ export type SelectPresetName =
  * @param preset - The preset name
  * @param variant - Optional variant string for presets with multiple tiers.
  *   - service-branch: "reserve", "historical", "all"
- *   - relationship-type: "dependent", "survivor"
+ *   - relationship-type: "detailed", "dependent", "survivor"
  *   - gender: "binary"
  *   - us-state: "territories"
  */
@@ -215,6 +253,7 @@ export function resolvePresetOptions(
       return [...SUFFIXES];
 
     case 'relationship-type':
+      if (variant === 'detailed') return [...RELATIONSHIP_DETAILED];
       if (variant === 'dependent') return [...RELATIONSHIP_DEPENDENT];
       if (variant === 'survivor') return [...RELATIONSHIP_SURVIVOR];
       return [...RELATIONSHIP_GENERAL];

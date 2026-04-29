@@ -249,9 +249,22 @@ export interface CivLocaleStrings {
   relationshipChild: string;
   relationshipGrandchild: string;
   relationshipParent: string;
+  relationshipStepparent: string;
+  relationshipGrandparent: string;
   relationshipSibling: string;
+  relationshipHalfSibling: string;
+  relationshipLegalGuardian: string;
+  relationshipWard: string;
+  relationshipPowerOfAttorney: string;
   relationshipExecutor: string;
+  relationshipTrustee: string;
+  relationshipBeneficiary: string;
   relationshipFuneralDirector: string;
+  relationshipCaretaker: string;
+  relationshipDependent: string;
+  relationshipSelf: string;
+  relationshipOtherRelative: string;
+  relationshipNonRelative: string;
   relationshipOther: string;
 
   // Prefill notice
@@ -602,9 +615,22 @@ const defaultStrings: CivLocaleStrings = {
   relationshipChild: 'Child',
   relationshipGrandchild: 'Grandchild',
   relationshipParent: 'Parent',
+  relationshipStepparent: 'Stepparent',
+  relationshipGrandparent: 'Grandparent',
   relationshipSibling: 'Sibling',
+  relationshipHalfSibling: 'Half-sibling',
+  relationshipLegalGuardian: 'Legal guardian',
+  relationshipWard: 'Ward',
+  relationshipPowerOfAttorney: 'Power of attorney',
   relationshipExecutor: 'Executor or personal representative',
+  relationshipTrustee: 'Trustee',
+  relationshipBeneficiary: 'Beneficiary',
   relationshipFuneralDirector: 'Funeral director',
+  relationshipCaretaker: 'Caretaker or custodian',
+  relationshipDependent: 'Dependent',
+  relationshipSelf: 'Self',
+  relationshipOtherRelative: 'Other relative',
+  relationshipNonRelative: 'Non-relative',
   relationshipOther: 'Other',
 
   prefillNoticeHeading: 'We\u2019ve prefilled some of your information',

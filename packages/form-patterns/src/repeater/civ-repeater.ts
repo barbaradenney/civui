@@ -148,7 +148,7 @@ export class CivRepeater extends CivBaseElement {
         aria-invalid="${this.error ? 'true' : nothing}"
         ?disabled="${this.disabled}"
       >
-        ${renderFormHeader({ label: renderLegend({ legend: legendText, required: showList ? this.required : false, textSizeClass: 'civ-text-lg' }), hintId: this._hintId, hint: showList ? this.hint : '', errorId: this._errorId, error: showList ? this.error : '', fieldset: true })}
+        ${renderFormHeader({ label: renderLegend({ legend: legendText, required: showList ? this.required : false, textSizeClass: '' }), hintId: this._hintId, hint: showList ? this.hint : '', errorId: this._errorId, error: showList ? this.error : '', fieldset: true })}
 
         <div data-civ-repeater-rows class="${this._wizardActive ? 'civ-hidden' : ''}"></div>
 

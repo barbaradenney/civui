@@ -46,7 +46,7 @@ export class CivFieldset extends LightDomSlotMixin(CivBaseElement) {
         aria-invalid="${this.error ? 'true' : nothing}"
         ?disabled="${this.disabled}"
       >
-        ${renderFormHeader({ label: renderLegend({ legend: this.legend, required: this.required, textSizeClass: 'civ-text-lg' }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
+        ${renderFormHeader({ label: renderLegend({ legend: this.legend, required: this.required, textSizeClass: '' }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
         <div data-civ-fieldset-content></div>
       </fieldset>
     `;

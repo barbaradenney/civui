@@ -83,7 +83,7 @@ export class CivFormFieldset extends LightDomSlotMixin(CivBaseElement) {
           label: renderLegend({
             legend: this.legend,
             required: this.required,
-            textSizeClass: 'civ-text-lg',
+            textSizeClass: '',
           }),
           hintId: this._hintId,
           hint: this.hint,

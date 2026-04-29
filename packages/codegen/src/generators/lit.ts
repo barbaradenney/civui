@@ -134,7 +134,7 @@ function renderElement(el: RenderElement, schema: ComponentSchema, indent: strin
     case 'label':
       if (isGroup) {
         const legendProp = schema.props['legend'] ? 'this.legend' : 'this.label';
-        return `${indent}\${renderLegend({ legend: ${legendProp}, required: this.required, textSizeClass: 'civ-text-lg' })}`;
+        return `${indent}\${renderLegend({ legend: ${legendProp}, required: this.required, textSizeClass: '' })}`;
       }
       return `${indent}\${renderLabel({ label: this.label, inputId: this._inputId, required: this.required })}`;
     case 'hint':
@@ -591,7 +591,7 @@ export class CivFieldset extends CivBaseElement {
         aria-describedby="\${describedBy || nothing}"
         ?disabled="\${this.disabled}"
       >
-        \${renderLegend({ legend: this.legend, required: this.required, textSizeClass: 'civ-text-lg' })}
+        \${renderLegend({ legend: this.legend, required: this.required, textSizeClass: '' })}
         \${renderHint(this._hintId, this.hint, true)}
         \${renderError(this._errorId, this.error, true)}
         <div data-civ-fieldset-content></div>

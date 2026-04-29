@@ -84,9 +84,16 @@ describe('renderLegend', () => {
   });
 
   it('accepts custom text size class', () => {
-    const result = renderLegend({ legend: 'Section', required: false, textSizeClass: 'civ-text-lg' });
+    const result = renderLegend({ legend: 'Section', required: false, textSizeClass: 'civ-text-xl' });
     const output = renderToString(result);
-    expect(output).toContain('civ-text-lg');
+    expect(output).toContain('civ-text-xl');
+  });
+
+  it('renders with no size class when textSizeClass is empty', () => {
+    const result = renderLegend({ legend: 'Section', required: false, textSizeClass: '' });
+    const output = renderToString(result);
+    expect(output).toContain('<legend');
+    expect(output).not.toContain('civ-text-lg');
   });
 
   it('renders optional legendId', () => {

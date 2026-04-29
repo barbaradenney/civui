@@ -103,7 +103,16 @@ The `preset` prop pre-populates the select with a standard option list. Use `pre
 | `marital-status` | — | Marital status options |
 | `ethnicity` | — | OMB ethnicity categories |
 | `gender` | (default), `binary` | Gender identity. `binary` limits to Male/Female. |
-| `language` | — | Preferred language options |
+| `language` | — | Preferred language (Census Bureau frequency) |
+| `housing-status` | — | Housing status (HUD/Census categories) |
+| `education-level` | — | Educational attainment (Census ACS / ISCED) |
+| `employment-status` | — | Employment status (BLS CPS categories) |
+| `income-source` | — | Income source (SSA/HUD benefits patterns) |
+| `veteran-status` | — | Veteran preference status (OPM 5 USC § 2108) |
+| `disability-type` | — | Disability categories (ADA / DOL CC-305) |
+| `citizenship-status` | — | Citizenship/work authorization (USCIS I-9) |
+| `pay-frequency` | — | Pay frequency (DOL FLSA / IRS Pub 15) |
+| `contact-preference` | — | Preferred contact method (USDS/18F patterns) |
 
 ### US State
 
@@ -170,6 +179,53 @@ The `preset` prop pre-populates the select with a standard option list. Use `pre
 ### All Presets
 
 <StoryEmbed id="forms-inputs-select--all-presets" />
+
+### Customizing Presets
+
+Presets are a starting point — you can modify them or provide your own options entirely.
+
+**Override with your own options** (ignore presets):
+
+```html
+<civ-form-field label="Status">
+  <civ-select name="status">
+    <option value="active">Active</option>
+    <option value="inactive">Inactive</option>
+  </civ-select>
+</civ-form-field>
+```
+
+**Start from a preset and modify in JavaScript:**
+
+```js
+import { resolvePresetOptions } from '@civui/inputs';
+
+// Get the base preset options
+const options = resolvePresetOptions('education-level');
+
+// Add a custom option
+options.push({ value: 'trade-certificate', label: 'Trade certificate' });
+
+// Remove an option
+const filtered = options.filter(o => o.value !== 'doctoral');
+
+// Apply to the select
+document.querySelector('civ-select').options = filtered;
+```
+
+The `resolvePresetOptions(preset, variant?)` function is exported from `@civui/inputs` and returns a plain array of `{ value, label }` objects that you can modify freely.
+
+### Data Sources
+
+All preset data is sourced from federal standards and regulations. Each preset includes a source citation in the source code. Key references:
+
+- **OMB Directive 15** — Race and ethnicity categories
+- **Census Bureau ACS** — Marital status, education, language
+- **BLS Current Population Survey** — Employment status
+- **OPM 5 USC § 2108** — Veteran preference categories
+- **ADA / DOL CC-305** — Disability categories
+- **USCIS I-9** — Citizenship/work authorization
+- **10 USC § 101** — Military service branches
 
 ## Usage
 

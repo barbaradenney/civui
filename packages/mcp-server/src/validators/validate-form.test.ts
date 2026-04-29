@@ -645,7 +645,8 @@ describe('validateForm', () => {
 
   describe('summary', () => {
     it('pluralizes correctly for 1 error', () => {
-      const result = validateForm('<civ-form><civ-form-field label="Name" required><civ-text-input name="x" required></civ-text-input></civ-form-field><civ-radio-group name="y" legend="Pick"></civ-radio-group></civ-form>');
+      // A bare text-input without a form-field wrapper produces exactly 1 error (missing-label)
+      const result = validateForm('<civ-form><civ-text-input name="x"></civ-text-input></civ-form>');
       expect(result.summary).toContain('1 error');
       expect(result.summary).not.toContain('1 errors');
     });

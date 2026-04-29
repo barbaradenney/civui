@@ -1717,6 +1717,7 @@
       display: block;
     }
     .civ-btn {
+      display: flex;
       width: 100%;
     }
   }

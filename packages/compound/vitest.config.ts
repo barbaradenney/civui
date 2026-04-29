@@ -9,6 +9,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
+      '@civui/inputs/select': resolve(__dirname, '../inputs/src/select/index.ts'),
       '@civui/inputs': resolve(__dirname, '../inputs/src/index.ts'),
       '@civui/controls/checkbox': resolve(__dirname, '../controls/src/checkbox/index.ts'),
       '@civui/controls/radio': resolve(__dirname, '../controls/src/radio/index.ts'),

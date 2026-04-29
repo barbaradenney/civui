@@ -1,6 +1,7 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { CivFormElement, dispatch, renderLegend, renderFormHeader, buildDescribedBy, interpolate, t } from '@civui/core';
+import { resolvePresetOptions } from '@civui/inputs/select';
 import '@civui/inputs';
 
 export interface NameValue {
@@ -10,13 +11,7 @@ export interface NameValue {
   suffix: string;
 }
 
-const SUFFIX_OPTIONS = [
-  { value: 'Jr.', label: 'Jr.' },
-  { value: 'Sr.', label: 'Sr.' },
-  { value: 'II', label: 'II' },
-  { value: 'III', label: 'III' },
-  { value: 'IV', label: 'IV' },
-];
+const SUFFIX_OPTIONS = resolvePresetOptions('suffix');
 
 const EMPTY_NAME: NameValue = { first: '', middle: '', last: '', suffix: '' };
 

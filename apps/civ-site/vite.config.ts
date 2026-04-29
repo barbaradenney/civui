@@ -38,6 +38,7 @@ export default defineConfig({
       '@civui/inputs/routing-number': resolve(packages, 'inputs/src/routing-number/index.ts'),
       '@civui/inputs/country': resolve(packages, 'inputs/src/country/index.ts'),
       '@civui/inputs/va-file-number': resolve(packages, 'inputs/src/va-file-number/index.ts'),
+      '@civui/inputs/select': resolve(packages, 'inputs/src/select/index.ts'),
       '@civui/inputs': resolve(packages, 'inputs/src/index.ts'),
       '@civui/controls/checkbox': resolve(packages, 'controls/src/checkbox/index.ts'),
       '@civui/controls/radio': resolve(packages, 'controls/src/radio/index.ts'),

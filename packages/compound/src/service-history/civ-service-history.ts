@@ -1,6 +1,7 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { CivFormElement, dispatch, renderLegend, renderFormHeader, buildDescribedBy, t } from '@civui/core';
+import { resolvePresetOptions } from '@civui/inputs/select';
 import '@civui/inputs';
 
 export interface ServicePeriodValue {
@@ -15,25 +16,8 @@ const EMPTY_SERVICE: ServicePeriodValue = {
   branch: '', startDate: '', endDate: '', dischargeType: '', serviceNumber: '',
 };
 
-const BRANCH_OPTIONS = [
-  { value: 'army', label: 'Army' },
-  { value: 'navy', label: 'Navy' },
-  { value: 'air-force', label: 'Air Force' },
-  { value: 'marine-corps', label: 'Marine Corps' },
-  { value: 'coast-guard', label: 'Coast Guard' },
-  { value: 'space-force', label: 'Space Force' },
-  { value: 'noaa', label: 'NOAA' },
-  { value: 'usphs', label: 'USPHS' },
-];
-
-const DISCHARGE_OPTIONS = [
-  { value: 'honorable', label: 'Honorable' },
-  { value: 'general', label: 'General (under honorable conditions)' },
-  { value: 'other-than-honorable', label: 'Other than honorable' },
-  { value: 'bad-conduct', label: 'Bad conduct' },
-  { value: 'dishonorable', label: 'Dishonorable' },
-  { value: 'undesirable', label: 'Undesirable' },
-];
+const BRANCH_OPTIONS = resolvePresetOptions('service-branch', 'all');
+const DISCHARGE_OPTIONS = resolvePresetOptions('discharge-type');
 
 /**
  * CivUI Service History

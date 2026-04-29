@@ -1,6 +1,7 @@
 import type { SelectOption } from './civ-select.js';
 
 // ── Service Branch ─────────────────────────────────────────────
+/** Source: 10 USC § 101 — Armed Forces definitions. NOAA/USPHS per 42 USC § 204, 33 USC § 3001. */
 
 const SERVICE_BRANCH_ACTIVE: SelectOption[] = [
   { value: 'army', label: 'Army' },
@@ -30,6 +31,7 @@ const SERVICE_BRANCH_HISTORICAL: SelectOption[] = [
 ];
 
 // ── Discharge Type ─────────────────────────────────────────────
+/** Source: DoD Directive 1332.14 — Enlisted Administrative Separations. */
 
 const DISCHARGE_TYPES: SelectOption[] = [
   { value: 'honorable', label: 'Honorable' },
@@ -41,6 +43,7 @@ const DISCHARGE_TYPES: SelectOption[] = [
 ];
 
 // ── Suffix ─────────────────────────────────────────────────────
+/** Source: Common generational suffixes used on government forms (SF-171, DS-11). */
 
 const SUFFIXES: SelectOption[] = [
   { value: 'Jr.', label: 'Jr.' },
@@ -52,6 +55,7 @@ const SUFFIXES: SelectOption[] = [
 ];
 
 // ── Relationship Type ──────────────────────────────────────────
+/** Source: Composite of OPM SF-171, IRS 1040, USCIS I-130, SSA SSA-2. */
 
 const RELATIONSHIP_GENERAL: SelectOption[] = [
   { value: 'spouse', label: 'Spouse' },
@@ -116,6 +120,7 @@ const RELATIONSHIP_SURVIVOR: SelectOption[] = [
 ];
 
 // ── Marital Status ─────────────────────────────────────────────
+/** Source: Census Bureau / ACS — marital status categories. */
 
 const MARITAL_STATUSES: SelectOption[] = [
   { value: 'never-married', label: 'Never married' },
@@ -126,6 +131,7 @@ const MARITAL_STATUSES: SelectOption[] = [
 ];
 
 // ── Ethnicity ──────────────────────────────────────────────────
+/** Source: OMB Directive 15 — Standards for Race and Ethnicity (1997, revised 2024). */
 
 const ETHNICITIES: SelectOption[] = [
   { value: 'hispanic-latino', label: 'Hispanic or Latino' },
@@ -134,6 +140,7 @@ const ETHNICITIES: SelectOption[] = [
 ];
 
 // ── Gender ─────────────────────────────────────────────────────
+/** Source: Common federal form pattern. No single OMB standard; categories vary by agency. */
 
 const GENDERS_STANDARD: SelectOption[] = [
   { value: 'male', label: 'Male' },
@@ -149,6 +156,7 @@ const GENDERS_BINARY: SelectOption[] = [
 ];
 
 // ── Language ───────────────────────────────────────────────────
+/** Source: Census Bureau — languages most frequently spoken at home in the US. */
 
 const LANGUAGES: SelectOption[] = [
   { value: 'en', label: 'English' },
@@ -169,6 +177,7 @@ const LANGUAGES: SelectOption[] = [
 ];
 
 // ── Housing Status ─────────────────────────────────────────────
+/** Source: HUD PIT Count categories and Census Bureau AHS definitions. */
 
 const HOUSING_STATUSES: SelectOption[] = [
   { value: 'own', label: 'Own' },
@@ -182,6 +191,7 @@ const HOUSING_STATUSES: SelectOption[] = [
 ];
 
 // ── Education Level ───────────────────────────────────────────
+/** Source: Census Bureau / ACS educational attainment categories. Aligned with ISCED. */
 
 const EDUCATION_LEVELS: SelectOption[] = [
   { value: 'less-than-high-school', label: 'Less than high school' },
@@ -194,6 +204,7 @@ const EDUCATION_LEVELS: SelectOption[] = [
 ];
 
 // ── Employment Status ─────────────────────────────────────────
+/** Source: Bureau of Labor Statistics (BLS) Current Population Survey categories. */
 
 const EMPLOYMENT_STATUSES: SelectOption[] = [
   { value: 'employed-full-time', label: 'Employed full-time' },
@@ -207,6 +218,7 @@ const EMPLOYMENT_STATUSES: SelectOption[] = [
 ];
 
 // ── Income Source ──────────────────────────────────────────────
+/** Source: Common across SSA, HUD, and means-tested benefit applications. */
 
 const INCOME_SOURCES: SelectOption[] = [
   { value: 'employment', label: 'Employment or wages' },
@@ -222,8 +234,7 @@ const INCOME_SOURCES: SelectOption[] = [
 ];
 
 // ── Veteran Status ─────────────────────────────────────────────
-// Based on OPM veteran preference categories (5 USC § 2108) and
-// standard federal form questions (SF-171, OF-612).
+/** Source: OPM veteran preference categories (5 USC § 2108). */
 
 const VETERAN_STATUSES: SelectOption[] = [
   { value: 'non-veteran', label: 'Not a veteran' },
@@ -235,8 +246,59 @@ const VETERAN_STATUSES: SelectOption[] = [
   { value: 'veteran-surviving-spouse', label: 'Surviving spouse of veteran' },
 ];
 
+// ── Disability Type ───────────────────────────────────────────
+/** Source: ADA Amendments Act (2008) broad categories. Section 503 (DOL/OFCCP) self-ID form CC-305. */
+
+const DISABILITY_TYPES: SelectOption[] = [
+  { value: 'physical', label: 'Physical (mobility, dexterity)' },
+  { value: 'cognitive', label: 'Cognitive (memory, learning, intellectual)' },
+  { value: 'mental-health', label: 'Mental health (anxiety, depression, PTSD)' },
+  { value: 'vision', label: 'Vision (blindness, low vision)' },
+  { value: 'hearing', label: 'Hearing (deafness, hard of hearing)' },
+  { value: 'speech', label: 'Speech or communication' },
+  { value: 'chronic-illness', label: 'Chronic illness (diabetes, epilepsy, cancer)' },
+  { value: 'developmental', label: 'Developmental (autism, cerebral palsy)' },
+  { value: 'multiple', label: 'Multiple disabilities' },
+  { value: 'prefer-not-to-answer', label: 'Prefer not to answer' },
+];
+
+// ── Citizenship Status ────────────────────────────────────────
+/** Source: USCIS I-9 Employment Eligibility Verification categories. */
+
+const CITIZENSHIP_STATUSES: SelectOption[] = [
+  { value: 'us-citizen-birth', label: 'US citizen (by birth)' },
+  { value: 'us-citizen-naturalized', label: 'US citizen (naturalized)' },
+  { value: 'us-national', label: 'US national' },
+  { value: 'permanent-resident', label: 'Lawful permanent resident' },
+  { value: 'authorized-alien', label: 'Authorized to work (visa or other status)' },
+  { value: 'prefer-not-to-answer', label: 'Prefer not to answer' },
+];
+
+// ── Pay Frequency ─────────────────────────────────────────────
+/** Source: Common payroll categories per DOL FLSA regulations and IRS Publication 15. */
+
+const PAY_FREQUENCIES: SelectOption[] = [
+  { value: 'weekly', label: 'Weekly' },
+  { value: 'bi-weekly', label: 'Bi-weekly (every 2 weeks)' },
+  { value: 'semi-monthly', label: 'Semi-monthly (twice a month)' },
+  { value: 'monthly', label: 'Monthly' },
+  { value: 'annually', label: 'Annually' },
+  { value: 'one-time', label: 'One-time payment' },
+];
+
+// ── Contact Preference ───────────────────────────────────────
+/** Source: Common across government digital services (USDS, 18F design patterns). */
+
+const CONTACT_PREFERENCES: SelectOption[] = [
+  { value: 'email', label: 'Email' },
+  { value: 'phone', label: 'Phone call' },
+  { value: 'text', label: 'Text message (SMS)' },
+  { value: 'mail', label: 'US Mail' },
+  { value: 'no-preference', label: 'No preference' },
+];
+
 // ── US States ──────────────────────────────────────────────────
-// (imported from the existing us-state component data)
+/** Source: USPS state abbreviations (Publication 28). Territories per FIPS 5-2. */
 
 const US_STATES: SelectOption[] = [
   { value: 'AL', label: 'Alabama' }, { value: 'AK', label: 'Alaska' },
@@ -291,7 +353,11 @@ export type SelectPresetName =
   | 'education-level'
   | 'employment-status'
   | 'income-source'
-  | 'veteran-status';
+  | 'veteran-status'
+  | 'disability-type'
+  | 'citizenship-status'
+  | 'pay-frequency'
+  | 'contact-preference';
 
 /**
  * Resolve preset options based on preset name and variant.
@@ -356,6 +422,18 @@ export function resolvePresetOptions(
 
     case 'veteran-status':
       return [...VETERAN_STATUSES];
+
+    case 'disability-type':
+      return [...DISABILITY_TYPES];
+
+    case 'citizenship-status':
+      return [...CITIZENSHIP_STATUSES];
+
+    case 'pay-frequency':
+      return [...PAY_FREQUENCIES];
+
+    case 'contact-preference':
+      return [...CONTACT_PREFERENCES];
 
     default:
       return [];

@@ -487,6 +487,42 @@ export const PresetVeteranStatus: Story = {
   `,
 };
 
+export const PresetDisabilityType: Story = {
+  name: 'Preset: Disability Type',
+  render: () => html`
+    <civ-form-field label="Type of disability">
+      <civ-select name="disabilityType" preset="disability-type"></civ-select>
+    </civ-form-field>
+  `,
+};
+
+export const PresetCitizenshipStatus: Story = {
+  name: 'Preset: Citizenship Status',
+  render: () => html`
+    <civ-form-field label="Citizenship status" required>
+      <civ-select name="citizenshipStatus" preset="citizenship-status" required></civ-select>
+    </civ-form-field>
+  `,
+};
+
+export const PresetPayFrequency: Story = {
+  name: 'Preset: Pay Frequency',
+  render: () => html`
+    <civ-form-field label="How often are you paid?" required>
+      <civ-select name="payFrequency" preset="pay-frequency" required></civ-select>
+    </civ-form-field>
+  `,
+};
+
+export const PresetContactPreference: Story = {
+  name: 'Preset: Contact Preference',
+  render: () => html`
+    <civ-form-field label="Preferred contact method">
+      <civ-select name="contactPreference" preset="contact-preference"></civ-select>
+    </civ-form-field>
+  `,
+};
+
 // ── All Presets ──────────────────────────────────────────────
 
 export const AllPresets: Story = {
@@ -534,6 +570,18 @@ export const AllPresets: Story = {
       </civ-form-field>
       <civ-form-field label="Veteran status">
         <civ-select preset="veteran-status"></civ-select>
+      </civ-form-field>
+      <civ-form-field label="Disability type">
+        <civ-select preset="disability-type"></civ-select>
+      </civ-form-field>
+      <civ-form-field label="Citizenship status">
+        <civ-select preset="citizenship-status"></civ-select>
+      </civ-form-field>
+      <civ-form-field label="Pay frequency">
+        <civ-select preset="pay-frequency"></civ-select>
+      </civ-form-field>
+      <civ-form-field label="Contact preference">
+        <civ-select preset="contact-preference"></civ-select>
       </civ-form-field>
     </div>
   `,

@@ -51,7 +51,8 @@ export class CivSelect extends CivFormElement {
    * `us-state`, `service-branch`, `discharge-type`, `suffix`,
    * `relationship-type`, `marital-status`, `ethnicity`, `gender`, `language`,
    * `housing-status`, `education-level`, `employment-status`, `income-source`,
-   * `veteran-status`.
+   * `veteran-status`, `disability-type`, `citizenship-status`,
+   * `pay-frequency`, `contact-preference`.
    */
   @property({ type: String }) preset?: SelectPresetName;
 

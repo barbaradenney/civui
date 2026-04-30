@@ -1177,13 +1177,13 @@ Pre-configured wrappers around `civ-text-input` and `civ-combobox` with built-in
 |---|---|---|---|
 | `<civ-action-link>` | Clickable phone (`tel:`), email (`mailto:`), or download link with icon | `type`, `number`, `address`, `label`, `subject`, `href`, `filename`, `file-size` | `@civui/actions` |
 
-`civ-link` and `civ-link-card` live in `@civui/navigation` (wayfinding to a destination). Use `<civ-link external>` for links that open in a new tab. `civ-action-link` lives in `@civui/actions` (it triggers device actions: dial, compose, download).
+`civ-link` and `civ-link-card` live in `@civui/navigation` (wayfinding to a destination). Use `<civ-link new-tab>` for links that open in a new tab. `civ-action-link` lives in `@civui/actions` (it triggers device actions: dial, compose, download).
 
 **Example:**
 ```html
 <civ-action-link type="phone" number="1-800-827-1000" label="VA benefits hotline"></civ-action-link>
 <civ-action-link type="email" address="help@va.gov"></civ-action-link>
-<civ-link href="https://va.gov/find-forms" label="Find VA forms" external></civ-link>
+<civ-link href="https://va.gov/find-forms" label="Find VA forms" new-tab></civ-link>
 <civ-action-link type="download" href="/forms/21-526EZ.pdf" label="VA Form 21-526EZ" file-size="2.4 MB"></civ-action-link>
 ```
 

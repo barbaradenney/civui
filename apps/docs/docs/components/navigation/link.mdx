@@ -167,17 +167,25 @@ A unified link for device actions — phone calls and email compose. Set the `ty
 
 ## Specialized Links
 
-For external links, use `<civ-link>` with the `external` prop. For file downloads, use `<civ-action-link type="download">`.
+For new-tab links, use `<civ-link>` with the `new-tab` prop. For file downloads, use `<civ-action-link type="download">`.
 
-### External Link
+### New Tab
 
-Use `<civ-link external>` to open links in a new tab. This automatically sets `target="_blank"`, `rel="noopener noreferrer"`, appends an external-link icon, and adds screen-reader-only "(opens in new tab)" text.
+Use `<civ-link new-tab>` to open links in a new tab. This automatically sets `target="_blank"`, `rel="noopener noreferrer"`, appends an external-link icon, and adds screen-reader-only "(opens in new tab)" text. Works for both external and internal links.
 
 ```html
+<!-- External site -->
 <civ-link
   href="https://www.ssa.gov"
   label="Social Security Administration"
-  external
+  new-tab
+></civ-link>
+
+<!-- Internal link in new tab (e.g., keep form state) -->
+<civ-link
+  href="/forms/va-10-10ez.pdf"
+  label="View form (PDF)"
+  new-tab
 ></civ-link>
 ```
 

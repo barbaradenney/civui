@@ -24,6 +24,9 @@ const meta: Meta = {
     label: { control: 'text' },
     dot: { control: 'boolean' },
     overlay: { control: 'boolean' },
+    withIcon: { control: 'boolean', name: 'with-icon' },
+    iconStart: { control: 'text', name: 'icon-start' },
+    iconEnd: { control: 'text', name: 'icon-end' },
   },
   parameters: {
     docs: {
@@ -51,6 +54,9 @@ export const Default: Story = {
       badge-style="${args.badgeStyle || 'secondary'}"
       spacing="${args.spacing || 'default'}"
       label="${args.label}"
+      icon-start="${args.iconStart || ''}"
+      icon-end="${args.iconEnd || ''}"
+      ?with-icon="${args.withIcon}"
       ?dot="${args.dot}"
       ?overlay="${args.overlay}"
     ></civ-badge>
@@ -65,6 +71,53 @@ export const StatusVariants: Story = {
       <civ-badge variant="warning" label="Pending"></civ-badge>
       <civ-badge variant="error" label="Denied"></civ-badge>
       <civ-badge variant="neutral" label="Draft"></civ-badge>
+    </div>
+  `,
+};
+
+export const WithIcon: Story = {
+  name: 'With Icon (auto by variant)',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Set `with-icon` to render the variant\'s semantic icon at the start: success → check-circle, warning → warning, error → error, info → info. Neutral has no auto-icon. The icon is decorative (`aria-hidden`); the label remains the accessible name.',
+      },
+    },
+  },
+  render: () => html`
+    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+      <civ-badge variant="info" label="Info" with-icon></civ-badge>
+      <civ-badge variant="success" label="Approved" with-icon></civ-badge>
+      <civ-badge variant="warning" label="Pending" with-icon></civ-badge>
+      <civ-badge variant="error" label="Denied" with-icon></civ-badge>
+      <civ-badge variant="neutral" label="Draft" with-icon></civ-badge>
+    </div>
+  `,
+};
+
+export const ExplicitIcons: Story = {
+  name: 'Explicit Icons (start + end)',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Use `icon-start` / `icon-end` for explicit icons. `icon-start` overrides the `with-icon` variant default.',
+      },
+    },
+  },
+  render: () => html`
+    <div style="display: grid; gap: 0.5rem;">
+      <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
+        <civ-badge variant="success" label="Approved" icon-start="star"></civ-badge>
+        <civ-badge variant="info" label="Read more" icon-end="chevron-right"></civ-badge>
+        <civ-badge variant="success" label="Verified" with-icon icon-end="lock"></civ-badge>
+      </div>
+      <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
+        <civ-badge variant="success" label="Approved" badge-style="primary" with-icon></civ-badge>
+        <civ-badge variant="warning" label="Action needed" badge-style="primary" with-icon></civ-badge>
+        <civ-badge variant="error" label="Denied" badge-style="primary" with-icon></civ-badge>
+      </div>
     </div>
   `,
 };

@@ -48,7 +48,7 @@ For architecture and internals, see `CLAUDE.md` in the repo root.
 | `<civ-page-header>` | UI | `spacing` | — (uses slots: `data-tag`, `data-eyebrow`, `data-heading`, `data-subheading`) |
 | `<civ-icon>` | UI | `name`, `label` | — |
 | `<civ-alert>` | Feedback | `variant`, `heading`, `dismissible`, `slim`, `alert-style`, `heading-level` | `civ-dismiss` |
-| `<civ-badge>` | Feedback | `label`, `dot`, `variant`, `badge-style`, `spacing`, `overlay` | — |
+| `<civ-badge>` | Feedback | `label`, `dot`, `variant`, `badge-style`, `spacing`, `overlay`, `with-icon`, `icon-start`, `icon-end` | — |
 | `<civ-count>` | Feedback | `count`, `max`, `variant`, `count-style`, `spacing`, `overlay`, `live` | — |
 | `<civ-modal>` | Overlay | `open`, `heading`, `label`, `no-close-button`, `no-backdrop-close`, `no-escape-close` | `civ-modal-close` |
 | `<civ-action-sheet>` | Overlay | `open`, `max-height`, `trap-focus`, `no-click-outside` | `civ-action-sheet-close` |

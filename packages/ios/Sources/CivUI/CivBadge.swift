@@ -39,6 +39,15 @@ public struct CivBadge: View {
     /// Whether the badge overlays its parent content.
     public var overlay: Bool
 
+    /// Auto-render the variant's semantic icon at the start (no effect on neutral).
+    public var withIcon: Bool
+
+    /// Explicit leading icon name (overrides `withIcon` default).
+    public var iconStart: String
+
+    /// Explicit trailing icon name.
+    public var iconEnd: String
+
     // MARK: - Internal State
 
     @Environment(\.colorScheme) private var colorScheme
@@ -53,7 +62,10 @@ public struct CivBadge: View {
         variant: String = "neutral",
         badgeStyle: String = "default",
         spacing: String = "default",
-        overlay: Bool = false
+        overlay: Bool = false,
+        withIcon: Bool = false,
+        iconStart: String = "",
+        iconEnd: String = ""
     ) {
         self.label = label
         self.count = count
@@ -63,6 +75,9 @@ public struct CivBadge: View {
         self.badgeStyle = badgeStyle
         self.spacing = spacing
         self.overlay = overlay
+        self.withIcon = withIcon
+        self.iconStart = iconStart
+        self.iconEnd = iconEnd
     }
 
     // MARK: - Body

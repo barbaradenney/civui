@@ -270,15 +270,15 @@ export class CivRepeater extends CivBaseElement {
       // Summary bar — visible when row is collapsed
       const summary = document.createElement('div');
       summary.setAttribute('data-civ-repeater-summary', '');
-      summary.classList.add('civ-list-item');
+      summary.classList.add('civ-flex', 'civ-items-center', 'civ-justify-between', 'civ-p-2');
 
       const summaryText = document.createElement('span');
-      summaryText.classList.add('civ-list-item__content', 'civ-font-medium');
+      summaryText.classList.add('civ-flex-1', 'civ-min-w-0', 'civ-font-medium');
       summaryText.textContent = `${this.itemLabel} ${index + 1}`;
       summary.appendChild(summaryText);
 
       const summaryActions = document.createElement('span');
-      summaryActions.classList.add('civ-list-item__actions');
+      summaryActions.classList.add('civ-flex', 'civ-items-center', 'civ-gap-1', 'civ-shrink-0');
 
       const editBtn = document.createElement('civ-action-button');
       editBtn.setAttribute('variant', 'tertiary');

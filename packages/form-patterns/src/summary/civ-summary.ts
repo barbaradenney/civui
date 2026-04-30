@@ -3,6 +3,7 @@ import { customElement, property } from 'lit/decorators.js';
 import { CivBaseElement, dispatch, interpolate, t } from '@civui/core';
 import '@civui/navigation/link';
 import '@civui/layout/divider';
+import '@civui/layout/list';
 import '../read-only-field/civ-read-only-field.js';
 
 export interface SummarySection {
@@ -141,28 +142,27 @@ export class CivSummary extends CivBaseElement {
             ` : nothing}
           </div>
         ` : nothing}
-        <div class="civ-summary-list">
+        <civ-list ?dividers="${showDividers}">
           ${section.items.map((item, i) => {
             // Per-row edit: use item's own editHref, or section's if no heading (flat mode)
             const rawHref = item.editHref || (!section.heading ? (sectionEditHref || '') : '');
             const itemEditHref = rawHref && this._isSafeHref(rawHref) ? rawHref : '';
             const itemEditLabel = item.editLabel || (!section.heading ? (section.locked ? t('summaryEditProfile') : '') : '');
             return html`
-              <civ-read-only-field
-                label="${item.label}"
-                value="${Array.isArray(item.value) ? '' : (item.value || '')}"
-                .values="${Array.isArray(item.value) ? item.value : []}"
-                edit-href="${itemEditHref}"
-                edit-label="${itemEditLabel}"
-                data-civ-summary-section-index="${sectionIndex}"
-                data-civ-summary-item-index="${i}"
-              ></civ-read-only-field>
-              ${showDividers && i < section.items.length - 1
-                ? html`<civ-divider spacing="sm"></civ-divider>`
-                : nothing}
+              <civ-list-item>
+                <civ-read-only-field
+                  label="${item.label}"
+                  value="${Array.isArray(item.value) ? '' : (item.value || '')}"
+                  .values="${Array.isArray(item.value) ? item.value : []}"
+                  edit-href="${itemEditHref}"
+                  edit-label="${itemEditLabel}"
+                  data-civ-summary-section-index="${sectionIndex}"
+                  data-civ-summary-item-index="${i}"
+                ></civ-read-only-field>
+              </civ-list-item>
             `;
           })}
-        </div>
+        </civ-list>
       </div>
     `;
   }

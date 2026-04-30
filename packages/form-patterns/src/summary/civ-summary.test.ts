@@ -118,28 +118,23 @@ describe('civ-summary', () => {
     expect(field!.getAttribute('edit-label')).toBe('Edit');
   });
 
-  it('renders dividers between multiple items but not after last', async () => {
+  it('renders dividers via civ-list dividers attribute', async () => {
     const el = await fixture<CivSummary>('<civ-summary></civ-summary>') as CivSummary;
     el.sections = sampleSections;
     await elementUpdated(el);
 
-    const dividers = el.querySelectorAll('civ-divider');
-    // 3 items → 2 dividers (between 1-2 and 2-3, none after 3)
-    expect(dividers.length).toBe(2);
+    const list = el.querySelector('civ-list');
+    expect(list).not.toBeNull();
+    expect(list!.hasAttribute('dividers')).toBe(true);
   });
 
-  it('no dividers for single-item sections', async () => {
+  it('wraps items in civ-list-item elements', async () => {
     const el = await fixture<CivSummary>('<civ-summary></civ-summary>') as CivSummary;
-    el.sections = [
-      {
-        heading: '',
-        items: [{ label: 'Email', value: 'test@test.com' }],
-      },
-    ];
+    el.sections = sampleSections;
     await elementUpdated(el);
 
-    const dividers = el.querySelectorAll('civ-divider');
-    expect(dividers.length).toBe(0);
+    const items = el.querySelectorAll('civ-list-item');
+    expect(items.length).toBe(3);
   });
 
   it('renders array values as separate lines', async () => {

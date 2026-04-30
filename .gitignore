@@ -12,6 +12,7 @@ tailwind.config.d.ts.map
 
 # Storybook
 storybook-static/
+apps/docs/static/storybook/
 
 # IDE
 .vscode/

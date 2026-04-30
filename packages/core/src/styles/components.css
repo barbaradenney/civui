@@ -280,6 +280,7 @@
   /* ── Icon ──────────────────────────────────────────────────── */
 
   .civ-icon {
+    --civ-icon-stroke: 0.125em;
     position: relative;
     display: inline-flex;
     align-items: center;
@@ -298,8 +299,8 @@
     content: '';
     width: 0.35em;
     height: 0.35em;
-    border-right: 0.125em solid currentColor;
-    border-bottom: 0.125em solid currentColor;
+    border-right: var(--civ-icon-stroke) solid currentColor;
+    border-bottom: var(--civ-icon-stroke) solid currentColor;
     transform: rotate(-45deg) translate(-10%, 10%);
   }
 
@@ -307,8 +308,8 @@
     content: '';
     width: 0.35em;
     height: 0.35em;
-    border-left: 0.125em solid currentColor;
-    border-bottom: 0.125em solid currentColor;
+    border-left: var(--civ-icon-stroke) solid currentColor;
+    border-bottom: var(--civ-icon-stroke) solid currentColor;
     transform: rotate(45deg) translate(10%, 10%);
   }
 
@@ -316,8 +317,8 @@
     content: '';
     width: 0.35em;
     height: 0.35em;
-    border-right: 0.125em solid currentColor;
-    border-bottom: 0.125em solid currentColor;
+    border-right: var(--civ-icon-stroke) solid currentColor;
+    border-bottom: var(--civ-icon-stroke) solid currentColor;
     transform: rotate(45deg) translate(-10%, -10%);
   }
 
@@ -325,8 +326,8 @@
     content: '';
     width: 0.35em;
     height: 0.35em;
-    border-left: 0.125em solid currentColor;
-    border-top: 0.125em solid currentColor;
+    border-left: var(--civ-icon-stroke) solid currentColor;
+    border-top: var(--civ-icon-stroke) solid currentColor;
     transform: rotate(45deg) translate(10%, -10%);
   }
 
@@ -335,7 +336,7 @@
     content: '';
     position: absolute;
     width: 0.76em;
-    height: 0.125em;
+    height: var(--civ-icon-stroke);
     background: currentColor;
     top: 50%;
     left: 50%;
@@ -346,8 +347,8 @@
     position: absolute;
     width: 0.38em;
     height: 0.38em;
-    border-top: 0.125em solid currentColor;
-    border-right: 0.125em solid currentColor;
+    border-top: var(--civ-icon-stroke) solid currentColor;
+    border-right: var(--civ-icon-stroke) solid currentColor;
     top: 50%;
     right: 0.08em;
     transform: translateY(-50%) rotate(45deg);
@@ -357,7 +358,7 @@
     content: '';
     position: absolute;
     width: 0.76em;
-    height: 0.125em;
+    height: var(--civ-icon-stroke);
     background: currentColor;
     top: 50%;
     left: 50%;
@@ -368,8 +369,8 @@
     position: absolute;
     width: 0.38em;
     height: 0.38em;
-    border-top: 0.125em solid currentColor;
-    border-left: 0.125em solid currentColor;
+    border-top: var(--civ-icon-stroke) solid currentColor;
+    border-left: var(--civ-icon-stroke) solid currentColor;
     top: 50%;
     left: 0.08em;
     transform: translateY(-50%) rotate(-45deg);
@@ -378,7 +379,7 @@
   .civ-icon--arrow-up::before {
     content: '';
     position: absolute;
-    width: 0.125em;
+    width: var(--civ-icon-stroke);
     height: 0.76em;
     background: currentColor;
     top: 50%;
@@ -390,8 +391,8 @@
     position: absolute;
     width: 0.38em;
     height: 0.38em;
-    border-top: 0.125em solid currentColor;
-    border-left: 0.125em solid currentColor;
+    border-top: var(--civ-icon-stroke) solid currentColor;
+    border-left: var(--civ-icon-stroke) solid currentColor;
     top: 0.08em;
     left: 50%;
     transform: translateX(-50%) rotate(45deg);
@@ -400,7 +401,7 @@
   .civ-icon--arrow-down::before {
     content: '';
     position: absolute;
-    width: 0.125em;
+    width: var(--civ-icon-stroke);
     height: 0.7em;
     background: currentColor;
     top: 50%;
@@ -412,8 +413,8 @@
     position: absolute;
     width: 0.32em;
     height: 0.32em;
-    border-right: 0.125em solid currentColor;
-    border-bottom: 0.125em solid currentColor;
+    border-right: var(--civ-icon-stroke) solid currentColor;
+    border-bottom: var(--civ-icon-stroke) solid currentColor;
     bottom: 0.1em;
     left: 50%;
     transform: translateX(-50%) rotate(45deg);
@@ -425,7 +426,7 @@
     content: '';
     position: absolute;
     width: 0.9em;
-    height: 0.125em;
+    height: var(--civ-icon-stroke);
     background: currentColor;
     top: 50%;
     left: 50%;
@@ -443,14 +444,14 @@
     left: 50%;
     transform: translate(-50%, -50%);
   }
-  .civ-icon--plus::before { width: 0.72em; height: 0.125em; }
-  .civ-icon--plus::after  { width: 0.125em; height: 0.72em; }
+  .civ-icon--plus::before { width: 0.72em; height: var(--civ-icon-stroke); }
+  .civ-icon--plus::after  { width: var(--civ-icon-stroke); height: 0.72em; }
 
   /* Minus (−) — ported from cssicon */
   .civ-icon--minus::before {
     content: '';
     width: 0.72em;
-    height: 0.125em;
+    height: var(--civ-icon-stroke);
     background: currentColor;
   }
 
@@ -460,8 +461,8 @@
     position: absolute;
     width: 0.62em;
     height: 0.34em;
-    border-left: 0.125em solid currentColor;
-    border-bottom: 0.125em solid currentColor;
+    border-left: var(--civ-icon-stroke) solid currentColor;
+    border-bottom: var(--civ-icon-stroke) solid currentColor;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -65%) rotate(-45deg);
@@ -472,7 +473,7 @@
     content: '';
     position: absolute;
     width: 0.8em;
-    height: 0.125em;
+    height: var(--civ-icon-stroke);
     background: currentColor;
     top: 50%;
     left: 50%;
@@ -514,7 +515,7 @@
     position: absolute;
     width: 0.5em;
     height: 0.5em;
-    border: 0.125em solid currentColor;
+    border: var(--civ-icon-stroke) solid currentColor;
     border-radius: 50%;
     top: 0.06em;
     left: 0.06em;
@@ -597,7 +598,7 @@
     content: '';
     position: absolute;
     width: 0.7em;
-    height: 0.125em;
+    height: var(--civ-icon-stroke);
     background: currentColor;
     bottom: 0.12em;
     left: 50%;
@@ -620,7 +621,7 @@
     content: '';
     position: absolute;
     width: 0.7em;
-    height: 0.125em;
+    height: var(--civ-icon-stroke);
     background: currentColor;
     bottom: 0.12em;
     left: 50%;
@@ -656,7 +657,7 @@
     position: absolute;
     width: 0.55em;
     height: 0.4em;
-    border: 0.125em solid currentColor;
+    border: var(--civ-icon-stroke) solid currentColor;
     border-bottom: 0;
     border-radius: 0.4em 0.4em 0 0;
     top: 0.15em;
@@ -668,8 +669,8 @@
     position: absolute;
     width: 0.22em;
     height: 0.22em;
-    border-left: 0.125em solid currentColor;
-    border-bottom: 0.125em solid currentColor;
+    border-left: var(--civ-icon-stroke) solid currentColor;
+    border-bottom: var(--civ-icon-stroke) solid currentColor;
     transform: rotate(45deg);
     left: 0.1em;
     top: 0.28em;
@@ -681,7 +682,7 @@
     position: absolute;
     width: 0.5em;
     height: 0.5em;
-    border: 0.125em solid currentColor;
+    border: var(--civ-icon-stroke) solid currentColor;
     border-top: 0;
     border-right: 0;
     bottom: 0.08em;
@@ -691,7 +692,7 @@
     content: '';
     position: absolute;
     width: 0.45em;
-    height: 0.125em;
+    height: var(--civ-icon-stroke);
     background: currentColor;
     transform: rotate(-45deg);
     top: 0.28em;
@@ -708,7 +709,7 @@
     position: absolute;
     width: 0.55em;
     height: 0.2em;
-    border: 0.125em solid currentColor;
+    border: var(--civ-icon-stroke) solid currentColor;
     border-radius: 1px;
     top: 50%;
     left: 50%;
@@ -733,7 +734,7 @@
     position: absolute;
     width: 0.78em;
     height: 0.78em;
-    border: 0.125em solid currentColor;
+    border: var(--civ-icon-stroke) solid currentColor;
     border-radius: 50%;
   }
   .civ-icon--check-circle::after {
@@ -741,8 +742,8 @@
     position: absolute;
     width: 0.36em;
     height: 0.2em;
-    border-left: 0.125em solid currentColor;
-    border-bottom: 0.125em solid currentColor;
+    border-left: var(--civ-icon-stroke) solid currentColor;
+    border-bottom: var(--civ-icon-stroke) solid currentColor;
     transform: rotate(-45deg);
     top: 0.24em;
     left: 0.01em;
@@ -754,13 +755,13 @@
     position: absolute;
     width: 0.78em;
     height: 0.78em;
-    border: 0.125em solid currentColor;
+    border: var(--civ-icon-stroke) solid currentColor;
     border-radius: 50%;
   }
   .civ-icon--error::after {
     content: '';
     position: absolute;
-    width: 0.125em;
+    width: var(--civ-icon-stroke);
     height: 0.26em;
     background: currentColor;
     top: 0.18em;
@@ -785,7 +786,7 @@
   .civ-icon--warning::after {
     content: '';
     position: absolute;
-    width: 0.125em;
+    width: var(--civ-icon-stroke);
     height: 0.22em;
     background: currentColor;
     bottom: 0.22em;
@@ -799,7 +800,7 @@
     position: absolute;
     width: 0.75em;
     height: 0.75em;
-    border: 0.125em solid currentColor;
+    border: var(--civ-icon-stroke) solid currentColor;
     border-radius: 50%;
   }
   .civ-icon--info::after {
@@ -819,7 +820,7 @@
     position: absolute;
     width: 0.75em;
     height: 0.75em;
-    border: 0.125em solid currentColor;
+    border: var(--civ-icon-stroke) solid currentColor;
     border-radius: 50%;
   }
   .civ-icon--help::after {
@@ -838,7 +839,7 @@
     position: absolute;
     width: 0.7em;
     height: 0.6em;
-    border: 0.125em solid currentColor;
+    border: var(--civ-icon-stroke) solid currentColor;
     border-top: 3px solid currentColor;
     border-radius: 1px;
     bottom: 0.1em;
@@ -860,7 +861,7 @@
     position: absolute;
     width: 0.45em;
     height: 0.5em;
-    border: 0.125em solid currentColor;
+    border: var(--civ-icon-stroke) solid currentColor;
     border-radius: 1px;
     top: 0.06em;
     right: 0.12em;
@@ -870,7 +871,7 @@
     position: absolute;
     width: 0.45em;
     height: 0.5em;
-    border: 0.125em solid currentColor;
+    border: var(--civ-icon-stroke) solid currentColor;
     border-radius: 1px;
     bottom: 0.06em;
     left: 0.12em;
@@ -882,7 +883,7 @@
     position: absolute;
     width: 0.5em;
     height: 0.5em;
-    border: 0.125em solid currentColor;
+    border: var(--civ-icon-stroke) solid currentColor;
     border-top: 0;
     border-radius: 0 0 1px 1px;
     bottom: 0.08em;
@@ -893,7 +894,7 @@
     content: '';
     position: absolute;
     width: 0.75em;
-    height: 0.125em;
+    height: var(--civ-icon-stroke);
     background: currentColor;
     top: 0.22em;
     left: 50%;
@@ -906,7 +907,7 @@
     position: absolute;
     width: 0.65em;
     height: 0.65em;
-    border: 0.125em solid currentColor;
+    border: var(--civ-icon-stroke) solid currentColor;
     border-top-color: transparent;
     border-radius: 50%;
     animation: civ-spin var(--civ-motion-duration-slower, 500ms) var(--civ-motion-easing-linear, linear) infinite;
@@ -922,7 +923,7 @@
     position: absolute;
     width: 0.6em;
     height: 0.42em;
-    border: 0.125em solid currentColor;
+    border: var(--civ-icon-stroke) solid currentColor;
     border-radius: 1px;
     bottom: 0.1em;
     left: 50%;
@@ -933,7 +934,7 @@
     position: absolute;
     width: 0.38em;
     height: 0.32em;
-    border: 0.125em solid currentColor;
+    border: var(--civ-icon-stroke) solid currentColor;
     border-bottom: 0;
     border-radius: 0.22em 0.22em 0 0;
     top: 0.1em;
@@ -957,7 +958,7 @@
     position: absolute;
     width: 0.5em;
     height: 0.35em;
-    border: 0.125em solid currentColor;
+    border: var(--civ-icon-stroke) solid currentColor;
     border-top: 0;
     bottom: 0.1em;
   }
@@ -968,7 +969,7 @@
     position: absolute;
     width: 0.35em;
     height: 0.35em;
-    border: 0.125em solid currentColor;
+    border: var(--civ-icon-stroke) solid currentColor;
     border-radius: 50%;
   }
   .civ-icon--settings::after {
@@ -1056,7 +1057,7 @@
     position: absolute;
     width: 0.72em;
     height: 0.32em;
-    border: 0.125em solid currentColor;
+    border: var(--civ-icon-stroke) solid currentColor;
     border-radius: 1px 1px 0 0;
     top: 0.2em;
     left: 50%;
@@ -1067,7 +1068,7 @@
     position: absolute;
     width: 0.5em;
     height: 0.28em;
-    border: 0.125em solid currentColor;
+    border: var(--civ-icon-stroke) solid currentColor;
     border-top: 0;
     bottom: 0.12em;
     left: 50%;
@@ -1080,7 +1081,7 @@
     position: absolute;
     width: 0.38em;
     height: 0.38em;
-    border: 0.125em solid currentColor;
+    border: var(--civ-icon-stroke) solid currentColor;
     border-radius: 50%;
     top: 0.08em;
     left: 50%;
@@ -1091,7 +1092,7 @@
     position: absolute;
     width: 0.7em;
     height: 0.34em;
-    border: 0.125em solid currentColor;
+    border: var(--civ-icon-stroke) solid currentColor;
     border-bottom: 0;
     border-radius: 0.32em 0.32em 0 0;
     bottom: 0.05em;
@@ -1105,7 +1106,7 @@
     position: absolute;
     width: 0.78em;
     height: 0.56em;
-    border: 0.125em solid currentColor;
+    border: var(--civ-icon-stroke) solid currentColor;
     border-radius: 1px;
     top: 50%;
     left: 50%;
@@ -1130,7 +1131,7 @@
     position: absolute;
     width: 0.7em;
     height: 0.4em;
-    border: 0.125em solid currentColor;
+    border: var(--civ-icon-stroke) solid currentColor;
     border-radius: 50%;
   }
   .civ-icon--eye::after {
@@ -1148,7 +1149,7 @@
     position: absolute;
     width: 0.7em;
     height: 0.4em;
-    border: 0.125em solid currentColor;
+    border: var(--civ-icon-stroke) solid currentColor;
     border-radius: 50%;
     opacity: 0.5;
   }
@@ -1156,7 +1157,7 @@
     content: '';
     position: absolute;
     width: 0.85em;
-    height: 0.125em;
+    height: var(--civ-icon-stroke);
     background: currentColor;
     transform: rotate(-45deg);
   }
@@ -1167,14 +1168,14 @@
     position: absolute;
     width: 0.35em;
     height: 0.7em;
-    border: 0.125em solid currentColor;
+    border: var(--civ-icon-stroke) solid currentColor;
     border-radius: 0.15em;
   }
   .civ-icon--phone::after {
     content: '';
     position: absolute;
     width: 0.15em;
-    height: 0.125em;
+    height: var(--civ-icon-stroke);
     background: currentColor;
     bottom: 0.12em;
   }
@@ -1185,7 +1186,7 @@
     position: absolute;
     width: 0.5em;
     height: 0.5em;
-    border: 0.125em solid currentColor;
+    border: var(--civ-icon-stroke) solid currentColor;
     border-radius: 50% 50% 50% 0;
     transform: rotate(-45deg);
     top: 0.05em;

@@ -246,3 +246,82 @@ export const GovernmentSideNav: Story = {
     </nav>
   `,
 };
+
+// ── Status ───────────────────────────────────────────────────
+
+export const StatusIndicators: Story = {
+  name: 'Status indicators',
+  render: () => html`
+    <civ-list dividers>
+      <civ-list-item status="success" heading="tax-return.pdf" description="1.2 MB">
+        <civ-action-button data-list-item-end label="Remove" variant="tertiary" danger></civ-action-button>
+      </civ-list-item>
+      <civ-list-item status="error" heading="invalid-file.exe" error="This file type is not accepted">
+        <civ-action-button data-list-item-end label="Remove" variant="tertiary" danger></civ-action-button>
+      </civ-list-item>
+      <civ-list-item status="warning" heading="large-scan.tiff" description="48 MB — exceeds recommended size">
+        <civ-action-button data-list-item-end label="Remove" variant="tertiary" danger></civ-action-button>
+      </civ-list-item>
+      <civ-list-item status="loading" heading="uploading-doc.pdf" progress="65">
+        <civ-action-button data-list-item-end label="Cancel" variant="tertiary"></civ-action-button>
+      </civ-list-item>
+    </civ-list>
+  `,
+};
+
+export const FileUploadPattern: Story = {
+  name: 'File upload pattern',
+  render: () => html`
+    <div style="max-width: 500px;">
+      <h4 style="font-weight: bold; margin-bottom: 8px;">Uploaded documents</h4>
+      <civ-list dividers>
+        <civ-list-item status="success" heading="DD214.pdf" description="2.4 MB">
+          <civ-action-button data-list-item-end label="Remove" variant="tertiary" danger></civ-action-button>
+        </civ-list-item>
+        <civ-list-item status="success" heading="medical-records.pdf" description="8.1 MB">
+          <civ-action-button data-list-item-end label="Remove" variant="tertiary" danger></civ-action-button>
+        </civ-list-item>
+        <civ-list-item status="loading" heading="service-letter.pdf" progress="30">
+          <civ-action-button data-list-item-end label="Cancel" variant="tertiary"></civ-action-button>
+        </civ-list-item>
+      </civ-list>
+    </div>
+  `,
+};
+
+export const ErrorState: Story = {
+  name: 'Error state',
+  render: () => html`
+    <civ-list dividers>
+      <civ-list-item status="error" heading="budget.xlsx" error="File type not accepted. Upload a PDF, JPG, or PNG.">
+        <span data-list-item-end style="display: flex; gap: 4px;">
+          <civ-action-button label="Retry" variant="tertiary"></civ-action-button>
+          <civ-action-button label="Remove" variant="tertiary" danger></civ-action-button>
+        </span>
+      </civ-list-item>
+      <civ-list-item status="error" heading="photo.bmp" error="File exceeds 10 MB limit.">
+        <civ-action-button data-list-item-end label="Remove" variant="tertiary" danger></civ-action-button>
+      </civ-list-item>
+    </civ-list>
+  `,
+};
+
+export const ProgressStates: Story = {
+  name: 'Progress states',
+  render: () => html`
+    <civ-list dividers>
+      <civ-list-item status="loading" heading="document-1.pdf" progress="10">
+        <civ-action-button data-list-item-end label="Cancel" variant="tertiary"></civ-action-button>
+      </civ-list-item>
+      <civ-list-item status="loading" heading="document-2.pdf" progress="55">
+        <civ-action-button data-list-item-end label="Cancel" variant="tertiary"></civ-action-button>
+      </civ-list-item>
+      <civ-list-item status="loading" heading="document-3.pdf" progress="90">
+        <civ-action-button data-list-item-end label="Cancel" variant="tertiary"></civ-action-button>
+      </civ-list-item>
+      <civ-list-item status="success" heading="document-4.pdf" description="Complete">
+        <civ-action-button data-list-item-end label="Remove" variant="tertiary" danger></civ-action-button>
+      </civ-list-item>
+    </civ-list>
+  `,
+};

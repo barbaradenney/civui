@@ -262,7 +262,7 @@ export const StatusIndicators: Story = {
       <civ-list-item status="warning" heading="large-scan.tiff" description="48 MB — exceeds recommended size">
         <civ-action-button data-list-item-end label="Remove" variant="tertiary" danger></civ-action-button>
       </civ-list-item>
-      <civ-list-item status="loading" heading="uploading-doc.pdf" progress="65">
+      <civ-list-item status="loading" heading="uploading-doc.pdf" description="Uploading...">
         <civ-action-button data-list-item-end label="Cancel" variant="tertiary"></civ-action-button>
       </civ-list-item>
     </civ-list>
@@ -281,7 +281,7 @@ export const FileUploadPattern: Story = {
         <civ-list-item status="success" heading="medical-records.pdf" description="8.1 MB">
           <civ-action-button data-list-item-end label="Remove" variant="tertiary" danger></civ-action-button>
         </civ-list-item>
-        <civ-list-item status="loading" heading="service-letter.pdf" progress="30">
+        <civ-list-item status="loading" heading="service-letter.pdf" description="Uploading...">
           <civ-action-button data-list-item-end label="Cancel" variant="tertiary"></civ-action-button>
         </civ-list-item>
       </civ-list>
@@ -306,22 +306,3 @@ export const ErrorState: Story = {
   `,
 };
 
-export const ProgressStates: Story = {
-  name: 'Progress states',
-  render: () => html`
-    <civ-list dividers>
-      <civ-list-item status="loading" heading="document-1.pdf" progress="10">
-        <civ-action-button data-list-item-end label="Cancel" variant="tertiary"></civ-action-button>
-      </civ-list-item>
-      <civ-list-item status="loading" heading="document-2.pdf" progress="55">
-        <civ-action-button data-list-item-end label="Cancel" variant="tertiary"></civ-action-button>
-      </civ-list-item>
-      <civ-list-item status="loading" heading="document-3.pdf" progress="90">
-        <civ-action-button data-list-item-end label="Cancel" variant="tertiary"></civ-action-button>
-      </civ-list-item>
-      <civ-list-item status="success" heading="document-4.pdf" description="Complete">
-        <civ-action-button data-list-item-end label="Remove" variant="tertiary" danger></civ-action-button>
-      </civ-list-item>
-    </civ-list>
-  `,
-};

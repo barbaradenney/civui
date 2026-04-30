@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBaseElement, LightDomSlotMixin } from '@civui/core';
+import { CivBaseElement, LightDomSlotMixin, renderError } from '@civui/core';
 import type { SlotConfig } from '@civui/core';
 
 export type ListItemStatus = '' | 'success' | 'error' | 'warning' | 'loading';
@@ -23,9 +23,6 @@ const STATUS_ICON: Record<string, string> = {
  * the entire row becomes a clickable anchor; otherwise it's a plain
  * `<li>` with the same layout.
  *
- * Supports a leading icon (or auto-icon from status), heading/description
- * text, error messages, progress bar, trailing content slot, and nesting.
- *
  * @element civ-list-item
  *
  * @prop {string} href - Optional navigation target.
@@ -33,21 +30,13 @@ const STATUS_ICON: Record<string, string> = {
  * @prop {string} iconStart - Leading icon name. Overridden by status icon when status is set.
  * @prop {string} heading - Bold heading text.
  * @prop {string} description - Secondary text below the heading.
- * @prop {ListItemStatus} status - Status state: renders icon + left accent border.
- * @prop {string} error - Error text rendered below the content.
- * @prop {number} progress - 0-100. Renders a slim progress bar below the content.
+ * @prop {ListItemStatus} status - Renders a colored status icon (reuses civ-icon).
+ * @prop {string} error - Error text below content (uses shared renderError from core).
  *
  * @slot - Primary content. When `heading` is set, slot content renders after heading/description.
  * @slot end - Trailing content via `data-list-item-end` attribute.
  *
  * @fires civ-analytics - Analytics tracking on click (when href set).
- *
- * @example
- * ```html
- * <civ-list-item status="success" heading="report.pdf" description="1.2 MB">
- *   <civ-action-button data-list-item-end label="Remove" variant="tertiary" danger></civ-action-button>
- * </civ-list-item>
- * ```
  */
 @customElement('civ-list-item')
 export class CivListItem extends LightDomSlotMixin(CivBaseElement) {
@@ -66,14 +55,11 @@ export class CivListItem extends LightDomSlotMixin(CivBaseElement) {
   /** Secondary text below the heading. */
   @property({ type: String }) description = '';
 
-  /** Status — renders a status icon and left accent border. */
+  /** Status — renders a colored status icon automatically. */
   @property({ type: String }) status: ListItemStatus = '';
 
-  /** Error text rendered below the content area. */
+  /** Error text below the content. Uses the shared renderError pattern from core. */
   @property({ type: String }) error = '';
-
-  /** Progress value 0-100. Renders a slim progress bar below the content. */
-  @property({ type: Number }) progress: number | null = null;
 
   override _getSlotConfig(): SlotConfig {
     return {
@@ -133,29 +119,12 @@ export class CivListItem extends LightDomSlotMixin(CivBaseElement) {
       ${this.description ? html`<span class="civ-block civ-text-sm civ-text-base-dark">${this.description}</span>` : nothing}
     ` : nothing;
 
-    const errorBlock = this.error ? html`
-      <span class="civ-block civ-text-sm civ-text-error civ-font-bold civ-mt-1" role="alert">${this.error}</span>
-    ` : nothing;
-
-    const progressBlock = this.progress !== null ? html`
-      <div class="civ-mt-1" style="height: 4px; background: var(--civ-color-base-lighter); border-radius: 2px; overflow: hidden;">
-        <div
-          style="width: ${Math.min(100, Math.max(0, this.progress))}%; height: 100%; background: var(--civ-color-primary-DEFAULT); transition: width var(--civ-motion-duration-slow) var(--civ-motion-easing-ease-out);"
-          role="progressbar"
-          aria-valuenow="${this.progress}"
-          aria-valuemin="0"
-          aria-valuemax="100"
-        ></div>
-      </div>
-    ` : nothing;
-
     const inner = html`
       ${icon}
       <span class="civ-flex-1 civ-min-w-0">
         ${headingBlock}
         <span data-civ-list-item-content-slot></span>
-        ${errorBlock}
-        ${progressBlock}
+        ${renderError(this.generateId('error'), this.error)}
       </span>
       ${hasEnd ? html`
         <span class="civ-flex-shrink-0 civ-flex civ-items-center civ-gap-1" data-civ-list-item-end-slot></span>

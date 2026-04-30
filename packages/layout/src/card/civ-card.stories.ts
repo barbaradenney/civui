@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import './civ-card.js';
 import '../tag/civ-tag.js';
+import '@civui/feedback/badge';
 import '@civui/actions/button';
 import '@civui/navigation/link';
 import '@civui/actions/action-button';
@@ -123,7 +124,7 @@ export const WithTagAndActions: Story = {
   render: () => html`
     <civ-card>
       <div data-card-header>
-        <civ-tag label="In progress" variant="teal"></civ-tag>
+        <civ-badge label="In progress" variant="info"></civ-badge>
         <div class="civ-flex civ-justify-between civ-items-center">
           <h3 class="civ-heading-md">Disability compensation</h3>
           <div class="civ-flex civ-gap-2">
@@ -161,7 +162,7 @@ export const DensityScale: Story = {
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Dense</p>
         <civ-card>
           <div data-card-header>
-            <civ-tag label="In progress" variant="teal"></civ-tag>
+            <civ-badge label="In progress" variant="info"></civ-badge>
             <div class="civ-flex civ-justify-between civ-items-center">
               <civ-link href="#" class="civ-heading-md">Disability compensation</civ-link>
               <civ-action-button label="Edit" variant="tertiary"></civ-action-button>
@@ -178,7 +179,7 @@ export const DensityScale: Story = {
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Default</p>
         <civ-card>
           <div data-card-header>
-            <civ-tag label="In progress" variant="teal"></civ-tag>
+            <civ-badge label="In progress" variant="info"></civ-badge>
             <div class="civ-flex civ-justify-between civ-items-center">
               <civ-link href="#" class="civ-heading-md">Disability compensation</civ-link>
               <civ-action-button label="Edit" variant="tertiary"></civ-action-button>
@@ -195,7 +196,7 @@ export const DensityScale: Story = {
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Spacious</p>
         <civ-card>
           <div data-card-header>
-            <civ-tag label="In progress" variant="teal"></civ-tag>
+            <civ-badge label="In progress" variant="info"></civ-badge>
             <div class="civ-flex civ-justify-between civ-items-center">
               <civ-link href="#" class="civ-heading-md">Disability compensation</civ-link>
               <civ-action-button label="Edit" variant="tertiary"></civ-action-button>
@@ -229,7 +230,7 @@ export const AppointmentCards: Story = {
 
       <civ-card>
         <div data-card-header>
-          <civ-tag label="Video" variant="teal"></civ-tag>
+          <civ-tag label="Video" variant="purple"></civ-tag>
           <h3 class="civ-heading-md">Mental health</h3>
         </div>
         <p>Dr. Johnson — January 18, 2026 at 10:00 AM</p>
@@ -241,7 +242,7 @@ export const AppointmentCards: Story = {
 
       <civ-card>
         <div data-card-header>
-          <civ-tag label="Completed" variant="green" tag-style="primary"></civ-tag>
+          <civ-badge label="Completed" variant="success"></civ-badge>
           <h3 class="civ-heading-md">Lab work</h3>
         </div>
         <p>January 10, 2026</p>
@@ -261,7 +262,7 @@ export const ClaimStatusCards: Story = {
       <civ-card>
         <div data-card-header>
           <div class="civ-flex civ-justify-between civ-items-center">
-            <civ-tag label="In progress" variant="teal"></civ-tag>
+            <civ-badge label="In progress" variant="info"></civ-badge>
             <civ-action-button label="View details" variant="tertiary"></civ-action-button>
           </div>
           <civ-link href="#/claims/123" class="civ-heading-md">Disability compensation</civ-link>
@@ -273,7 +274,7 @@ export const ClaimStatusCards: Story = {
       <civ-card>
         <div data-card-header>
           <div class="civ-flex civ-justify-between civ-items-center">
-            <civ-tag label="Decision made" variant="green" tag-style="primary"></civ-tag>
+            <civ-badge label="Decision made" variant="success"></civ-badge>
             <civ-action-button label="View details" variant="tertiary"></civ-action-button>
           </div>
           <civ-link href="#/claims/456" class="civ-heading-md">Travel reimbursement</civ-link>
@@ -285,7 +286,7 @@ export const ClaimStatusCards: Story = {
       <civ-card>
         <div data-card-header>
           <div class="civ-flex civ-justify-between civ-items-center">
-            <civ-tag label="Action needed" variant="red"></civ-tag>
+            <civ-badge label="Action needed" variant="error"></civ-badge>
             <civ-action-button label="View details" variant="tertiary"></civ-action-button>
           </div>
           <civ-link href="#/claims/789" class="civ-heading-md">Education benefits</civ-link>

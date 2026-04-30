@@ -43,7 +43,7 @@ For architecture and internals, see `CLAUDE.md` in the repo root.
 | `<civ-link>` | UI | `label`, `href`, `variant`, `danger`, `disabled` | `civ-analytics` |
 | `<civ-link-card>` | UI | `href`, `heading`, `description`, `variant`, `spacing` | `civ-analytics` |
 | `<civ-card>` | UI | `heading`, `spacing` | — |
-| `<civ-tag>` | UI | `label`, `variant`, `tagStyle`, `status`, `spacing` | — |
+| `<civ-tag>` | UI | `label`, `variant` (blue/orange/purple/gray), `tagStyle`, `spacing` | — |
 | `<civ-divider>` | UI | `spacing`, `variant` | — |
 | `<civ-page-header>` | UI | `spacing` | — (uses slots: `data-tag`, `data-eyebrow`, `data-heading`, `data-subheading`) |
 | `<civ-icon>` | UI | `name`, `label` | — |
@@ -1319,10 +1319,10 @@ CivUI provides iOS (SwiftUI) and Android (Jetpack Compose) implementations with 
 | Status pill ("Approved", "Pending", "Error") | `civ-badge` | Semantic colors only, always `role="status"` |
 | Count / notification indicator (e.g. "5", "99+") | `civ-badge` (with `count`) | Built-in overflow, screen-reader announces |
 | Notification dot (no number) | `civ-badge` (with `dot`) | Compact marker, `label` becomes `aria-label` |
-| Categorization / taxonomy ("Healthcare", "Disability") | `civ-tag` | Full color palette for visual grouping |
-| Metadata / filter chip | `civ-tag` | Neutral semantics, broader color set |
+| Categorization / taxonomy ("Healthcare", "Disability") | `civ-tag` | Non-semantic palette (blue/orange/purple/gray) |
+| Metadata / filter chip | `civ-tag` | Same palette, multiple emphasis levels |
 
-`civ-badge` lives in `@civui/feedback`; `civ-tag` lives in `@civui/layout`. Both use hard edges — the distinction is semantic, not visual.
+`civ-badge` lives in `@civui/feedback`; `civ-tag` lives in `@civui/layout`. Both use hard edges — the distinction is semantic, not visual. Tag's color set excludes red/green/yellow/teal so semantic state colors only appear via badge.
 
 ### checkbox vs toggle
 

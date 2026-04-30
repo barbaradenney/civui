@@ -10,7 +10,7 @@ import StoryEmbed from "@site/src/components/StoryEmbed";
 
 `<civ-tag>`
 
-A small status label rendered as a colored pill. Used to indicate status, categories, or metadata.
+A small label rendered as a colored pill for **categorization** — topics, taxonomies, filter chips, metadata. For status indicators ("Approved", "Pending") or counts, use [`civ-badge`](../feedback/badge) instead.
 
 ## Examples
 
@@ -30,13 +30,13 @@ A small status label rendered as a colored pill. Used to indicate status, catego
 
 <StoryEmbed id="ui-tag--all-variants" />
 
+### Filter Chips
+
+<StoryEmbed id="ui-tag--filter-chips" />
+
 ### Density Scale
 
 <StoryEmbed id="ui-tag--density-scale" />
-
-### Claim Statuses
-
-<StoryEmbed id="ui-tag--claim-statuses" />
 
 ### Compact
 
@@ -49,7 +49,7 @@ A small status label rendered as a colored pill. Used to indicate status, catego
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `label` | `string` | `''` | Tag text content |
-| `variant` | `'blue' \| 'teal' \| 'red' \| 'green' \| 'yellow' \| 'orange' \| 'purple' \| 'gray'` | `'gray'` | Color variant |
+| `variant` | `'blue' \| 'orange' \| 'purple' \| 'gray'` | `'gray'` | Color variant (categorization palette) |
 | `tag-style` | `'primary' \| 'secondary'` | `'secondary'` | Emphasis level |
 | `spacing` | `'default' \| 'sm'` | `'default'` | Compact variant with smaller padding |
 
@@ -57,34 +57,32 @@ A small status label rendered as a colored pill. Used to indicate status, catego
 
 ### Primary (high emphasis)
 
-Bold/dark background with light text. Use for definitive statuses.
+Bold/dark background with light text. Use for prominent category labels.
 
 ```html
-<civ-tag label="Complete" variant="green" tag-style="primary"></civ-tag>
-<civ-tag label="Denied" variant="red" tag-style="primary"></civ-tag>
+<civ-tag label="Healthcare" variant="blue" tag-style="primary"></civ-tag>
+<civ-tag label="Disability" variant="purple" tag-style="primary"></civ-tag>
 ```
 
 ### Secondary (low emphasis, default)
 
-Light background with dark text. Use for informational or in-progress statuses.
+Light background with dark text. Use for filter chips and metadata.
 
 ```html
-<civ-tag label="Not started" variant="blue"></civ-tag>
-<civ-tag label="In progress" variant="teal"></civ-tag>
+<civ-tag label="Healthcare" variant="blue"></civ-tag>
+<civ-tag label="Education" variant="orange"></civ-tag>
 ```
 
 ## Color variants
 
 | Variant | Typical use |
 |---------|-------------|
-| `blue` | Not started, new |
-| `teal` | In progress, active |
-| `green` | Complete, approved |
-| `red` | Error, denied, rejected |
-| `yellow` | Warning, needs attention |
-| `orange` | Pending review |
-| `purple` | Special category |
-| `gray` | Inactive, archived |
+| `blue` | Primary brand category |
+| `orange` | Secondary category, accent |
+| `purple` | Specialized program category |
+| `gray` | Archived, inactive, neutral metadata |
+
+Semantic colors (red/green/yellow/teal) are intentionally excluded — they're reserved for [`civ-badge`](../feedback/badge), which carries `role="status"` for assistive tech.
 
 ## Dark mode
 
@@ -96,16 +94,15 @@ Tag size is controlled by the density system. Wrap in a parent with `data-civ-sc
 
 ```html
 <div data-civ-scale="dense">
-  <civ-tag label="Compact" variant="blue"></civ-tag>
+  <civ-tag label="Healthcare" variant="blue"></civ-tag>
 </div>
 ```
 
 ## Usage
 
 ```html
-<civ-tag label="Denied" variant="red" tag-style="primary"></civ-tag>
-<civ-tag label="Not started" variant="blue"></civ-tag>
-<civ-tag label="Complete" variant="green" tag-style="primary"></civ-tag>
-<civ-tag label="In progress" variant="teal"></civ-tag>
-<civ-tag label="Needs attention" variant="yellow"></civ-tag>
+<civ-tag label="Healthcare" variant="blue"></civ-tag>
+<civ-tag label="Education" variant="orange"></civ-tag>
+<civ-tag label="Disability" variant="purple" tag-style="primary"></civ-tag>
+<civ-tag label="Archived" variant="gray"></civ-tag>
 ```

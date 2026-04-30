@@ -2612,26 +2612,6 @@
     color: var(--civ-color-primary-dark);
   }
 
-  .civ-tag--teal {
-    background-color: var(--civ-color-info-lighter);
-    color: var(--civ-color-info-dark);
-  }
-
-  .civ-tag--red {
-    background-color: var(--civ-color-error-lighter);
-    color: var(--civ-color-error-dark);
-  }
-
-  .civ-tag--green {
-    background-color: var(--civ-color-success-lighter);
-    color: var(--civ-color-success-dark);
-  }
-
-  .civ-tag--yellow {
-    background-color: var(--civ-color-warning-lighter);
-    color: var(--civ-color-warning-dark);
-  }
-
   .civ-tag--orange {
     background-color: var(--civ-color-accent-warm-lightest);
     color: var(--civ-color-accent-warm-dark);
@@ -2652,26 +2632,6 @@
   .civ-tag--blue-primary {
     background-color: var(--civ-color-tag-blue-bg);
     color: var(--civ-color-tag-blue-text);
-  }
-
-  .civ-tag--teal-primary {
-    background-color: var(--civ-color-tag-teal-bg);
-    color: var(--civ-color-tag-teal-text);
-  }
-
-  .civ-tag--red-primary {
-    background-color: var(--civ-color-tag-red-bg);
-    color: var(--civ-color-tag-red-text);
-  }
-
-  .civ-tag--green-primary {
-    background-color: var(--civ-color-tag-green-bg);
-    color: var(--civ-color-tag-green-text);
-  }
-
-  .civ-tag--yellow-primary {
-    background-color: var(--civ-color-tag-yellow-bg);
-    color: var(--civ-color-tag-yellow-text);
   }
 
   .civ-tag--orange-primary {

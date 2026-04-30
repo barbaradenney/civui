@@ -35,7 +35,8 @@ For architecture and internals, see \`CLAUDE.md\` in the repo root.
 | \`<civ-form>\` | Layout | \`action\`, \`method\` | \`civ-submit: { formData }\`, \`civ-invalid: { errors }\` |
 | \`<civ-button>\` | Action | \`variant\` (primary/secondary/tertiary), \`danger\`, \`type\`, \`disabled\` | \`civ-analytics\` |
 | \`<civ-link>\` | Navigation | \`href\`, \`variant\` (primary/secondary/tertiary/back/danger), \`danger\`, \`disabled\` | \`civ-analytics\` |
-| \`<civ-tag>\` | Status | \`label\`, \`variant\` (blue/teal/red/green/yellow/orange/purple/gray), \`tag-style\` (primary/secondary) | — |
+| \`<civ-tag>\` | Layout | \`label\`, \`variant\` (blue/orange/purple/gray), \`tag-style\` (primary/secondary). Categorization only — use \`<civ-badge>\` for status. | — |
+| \`<civ-badge>\` | Feedback | \`label\`, \`count\`, \`max\`, \`dot\`, \`variant\` (info/warning/error/success/neutral). Status pills + count indicators with \`role="status"\`. | — |
 | \`<civ-card>\` | Layout | \`spacing\` (default/sm). Slots: \`data-card-header\`, \`data-card-footer\` | — |
 | \`<civ-page-header>\` | Layout | Slots: \`data-tag\`, \`data-eyebrow\`, \`data-heading\`, \`data-subheading\` | — |
 | \`<civ-link-card>\` | Navigation | \`href\`, \`heading\`, \`description\`, \`variant\` (primary/secondary/tertiary/critical) | \`civ-analytics\` |
@@ -531,13 +532,26 @@ Navigation link. Always renders an \`<a>\` element. For actions, use \`<civ-butt
 
 ### civ-tag
 
-Status label. Two emphasis levels: secondary (light bg, dark text) and primary (dark bg, light text).
+Categorization label (topic, taxonomy, filter chip). For status indicators ("Approved", "Pending"), use \`civ-badge\` instead. Two emphasis levels: secondary (light bg, dark text) and primary (dark bg, light text).
 
-**Props:** \`label\`, \`variant\` (blue/teal/red/green/yellow/orange/purple/gray), \`tag-style\` (primary/secondary)
+**Props:** \`label\`, \`variant\` (blue/orange/purple/gray), \`tag-style\` (primary/secondary)
 
 \`\`\`html
-<civ-tag label="Not started" variant="blue"></civ-tag>
-<civ-tag label="Complete" variant="green" tag-style="primary"></civ-tag>
+<civ-tag label="Healthcare" variant="blue"></civ-tag>
+<civ-tag label="Disability" variant="purple" tag-style="primary"></civ-tag>
+\`\`\`
+
+### civ-badge
+
+Compact status or count indicator. Always carries \`role="status"\` so screen readers announce changes. Restricted to semantic colors.
+
+**Props:** \`label\`, \`count\`, \`max\` (default 99), \`dot\`, \`variant\` (info/warning/error/success/neutral)
+
+\`\`\`html
+<civ-badge label="Approved" variant="success"></civ-badge>
+<civ-badge count="12" variant="info"></civ-badge>
+<civ-badge count="150" variant="error"></civ-badge>
+<civ-badge dot label="Unread messages" variant="error"></civ-badge>
 \`\`\`
 
 ### civ-page-header
@@ -548,11 +562,11 @@ Structured page heading with four slot areas: tag, eyebrow, heading, subheading.
 
 \`\`\`html
 <civ-page-header>
-  <civ-tag data-tag label="Active" variant="green" tag-style="primary"></civ-tag>
+  <civ-badge data-tag label="Active" variant="success"></civ-badge>
   <span data-eyebrow>Benefits</span>
   <h1 data-heading class="civ-heading-xl">
     Apply for disability compensation
-    <civ-tag label="In progress" variant="teal"></civ-tag>
+    <civ-badge label="In progress" variant="info"></civ-badge>
   </h1>
   <span data-subheading>VA Form 21-526EZ</span>
 </civ-page-header>
@@ -580,7 +594,7 @@ Structured container with header, body, and footer slots.
 \`\`\`html
 <civ-card>
   <div data-card-header>
-    <civ-tag label="In progress" variant="teal"></civ-tag>
+    <civ-badge label="In progress" variant="info"></civ-badge>
     <h3 class="civ-heading-md">Disability compensation</h3>
   </div>
   <p>Filed: March 10, 2026</p>

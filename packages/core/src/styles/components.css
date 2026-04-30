@@ -76,6 +76,10 @@
 
   /* ── List (civ-list / civ-list-item) ───────────────────────── */
 
+  .civ-list-item__row {
+    padding: var(--civ-spacing-4, 20px);
+  }
+
   .civ-list--dividers > civ-list-item + civ-list-item > li {
     border-top: 1px solid var(--civ-color-base-lighter);
   }
@@ -89,8 +93,7 @@
   }
 
   .civ-list--sm .civ-list-item__row {
-    padding-top: var(--civ-spacing-1, 4px);
-    padding-bottom: var(--civ-spacing-1, 4px);
+    padding: var(--civ-spacing-2, 8px) var(--civ-spacing-4, 20px);
     font-size: var(--civ-typography-fontSize-sm);
   }
 

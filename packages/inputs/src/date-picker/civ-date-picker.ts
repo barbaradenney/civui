@@ -394,7 +394,7 @@ export class CivDatePicker extends CivFormElement {
           <thead>
             <tr>
               ${headers.map(
-                (h) => html`<th scope="col" class="civ-p-1 civ-text-center civ-text-sm civ-text-base-dark civ-font-normal">
+                (h) => html`<th scope="col" class="civ-p-1 civ-text-center civ-text-sm civ-font-normal">
                   <abbr title="${h.long}">${h.short}</abbr>
                 </th>`,
               )}

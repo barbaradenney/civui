@@ -1439,7 +1439,7 @@
   }
 
   .civ-combobox-group-header {
-    @apply civ-px-3 civ-py-1 civ-text-xs civ-font-bold civ-text-base-dark;
+    @apply civ-px-3 civ-py-1 civ-text-xs civ-font-bold;
     text-transform: uppercase;
     letter-spacing: 0.05em;
   }

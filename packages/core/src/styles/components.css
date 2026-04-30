@@ -51,26 +51,26 @@
     color: var(--civ-color-base-dark);
   }
 
-  /* ── List Item (shared three-column layout) ────────────────── */
+  /* ── File Item (file-upload three-column layout) ────────────── */
 
-  .civ-list-item {
+  .civ-file-item {
     @apply civ-flex civ-items-center civ-justify-between civ-p-2
            civ-bg-base-lightest civ-rounded civ-text-sm;
   }
 
-  .civ-list-item__content {
+  .civ-file-item__content {
     @apply civ-flex-1 civ-min-w-0;
   }
 
-  .civ-list-item__actions {
+  .civ-file-item__actions {
     @apply civ-flex civ-items-center civ-gap-1 civ-shrink-0;
   }
 
-  .civ-list-item--success {
+  .civ-file-item--success {
     border-left: var(--civ-border-width-accent) solid var(--civ-color-success-DEFAULT);
   }
 
-  .civ-list-item--error {
+  .civ-file-item--error {
     border-left: var(--civ-border-width-accent) solid var(--civ-color-error-DEFAULT);
   }
 
@@ -1359,7 +1359,7 @@
     min-height: 250px;
   }
 
-  /* File items use the shared .civ-list-item layout */
+  /* File items use the .civ-file-item layout */
 
   .civ-progress-track--compact {
     height: 4px;

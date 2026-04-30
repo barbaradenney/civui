@@ -345,8 +345,8 @@ export class CivFileUpload extends CivFormElement {
               <ul id="${this._filesListId}" class="civ-list-none civ-p-0 civ-mt-2 civ-space-y-1" aria-label="${this.filesListLabel || t('fileUploadFilesListLabel')}">
                 ${(this._showAllFiles ? this._files : this._files.slice(0, CivFileUpload._FILE_LIST_LIMIT)).map(
                   (file, index) => html`
-                    <li class="civ-list-item ${file.status === 'success' ? 'civ-list-item--success' : ''} ${file.status === 'error' ? 'civ-list-item--error' : ''}">
-                      <div class="civ-list-item__content">
+                    <li class="civ-file-item ${file.status === 'success' ? 'civ-file-item--success' : ''} ${file.status === 'error' ? 'civ-file-item--error' : ''}">
+                      <div class="civ-file-item__content">
                         <span class="civ-flex civ-items-center civ-gap-2">
                           ${this.showPreview && file.type?.startsWith('image/')
                             ? html`<img class="civ-file-preview" src="${this._getPreviewUrl(file.file)}" alt="" />`
@@ -371,7 +371,7 @@ export class CivFileUpload extends CivFormElement {
                           <span class="civ-file-error-text">${file.error}</span>
                         ` : nothing}
                       </div>
-                      ${this.readonly ? nothing : html`<span class="civ-list-item__actions">
+                      ${this.readonly ? nothing : html`<span class="civ-file-item__actions">
                         ${file.status === 'uploading' ? html`
                           <civ-action-button
                             variant="tertiary"

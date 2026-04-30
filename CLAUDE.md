@@ -136,7 +136,7 @@ The `.civ-bottom-sheet` class is defined in `components.css` and applies bottom-
 Components using this: `civ-modal` (via native `<dialog>` + CSS), `civ-action-sheet`, `civ-datepicker-dialog`, `civ-combobox-listbox`. Native `<select>` gets OS-level bottom sheet automatically.
 
 ### Text Color
-Do **not** use gray text classes (`civ-text-base-dark`, `civ-text-base-light`, `civ-text-base`) on labels, headings, descriptions, or body text. All text inherits the default color (`base-darkest`). Visual hierarchy is achieved through **font size and weight**, not color muting. Gray text is only acceptable for disabled states and placeholder text.
+Do **not** use gray text classes (`civ-text-base-dark`, `civ-text-base-light`, `civ-text-base`) on labels, headings, descriptions, or body text. All text inherits the default color (`base-darkest`). Visual hierarchy is achieved through **font size and weight**, not color muting. Gray text is acceptable for: **hint text**, disabled states, and placeholder text.
 
 ### Focus Styles
 Use `focus-visible:civ-focus-ring` (not deprecated `focus:civ-outline-*` classes).

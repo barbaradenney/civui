@@ -49,7 +49,7 @@ globs:
 ## Text color rules
 - Do NOT use gray text (`civ-text-base-dark`, `civ-text-base-light`, `civ-text-base`) for labels, headings, descriptions, or body text. Let text inherit the default color (`base-darkest`).
 - Visual hierarchy comes from **font size and weight**, not color muting.
-- The only acceptable uses of muted/gray text are: disabled states (`civ-opacity-disabled`), placeholder text, and explicit consumer overrides.
+- The only acceptable uses of muted/gray text are: hint text, disabled states (`civ-opacity-disabled`), placeholder text, and explicit consumer overrides.
 - Error text uses `civ-text-error`, success uses `civ-text-success` — never gray for status.
 
 ## Form validation

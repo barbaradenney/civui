@@ -1,6 +1,5 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { ifDefined } from 'lit/directives/if-defined.js';
 import { CivBaseElement } from '@civui/core';
 
 export type BadgeVariant = 'info' | 'warning' | 'error' | 'success' | 'neutral';
@@ -88,12 +87,14 @@ export class CivBadge extends CivBaseElement {
     if (this.overlay) classes.push('civ-badge--overlay');
 
     if (this.dot) {
+      // With no label, the dot is purely decorative — mark aria-hidden so AT
+      // doesn't announce an empty live region. Callers who need AT exposure
+      // must supply `label` (which becomes aria-label and adds role="status").
+      if (!this.label) {
+        return html`<span class="${classes.join(' ')}" aria-hidden="true"></span>`;
+      }
       return html`
-        <span
-          class="${classes.join(' ')}"
-          role="status"
-          aria-label="${ifDefined(this.label || undefined)}"
-        ></span>
+        <span class="${classes.join(' ')}" role="status" aria-label="${this.label}"></span>
       `;
     }
 

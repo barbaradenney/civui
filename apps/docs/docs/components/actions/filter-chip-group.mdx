@@ -40,8 +40,8 @@ Coordinates a row of [`civ-filter-chip`](./filter-chip) children. Adds **roving 
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `mode` | `'single' \| 'multi'` | `'multi'` | `single` enforces radio-like behavior (one chip selected); `multi` lets each chip toggle independently |
-| `label` | `string` | `''` | Accessible label, applied as `aria-label` on the toolbar wrapper |
+| `mode` | `'single' \| 'multi'` | `'multi'` | `single` enforces radio-like behavior (one chip selected); `multi` lets each chip toggle independently. The wrapper role changes accordingly: `radiogroup` for single, `toolbar` for multi. |
+| `label` | `string` | `''` | Accessible label, applied as `aria-label` on the wrapper |
 
 ## Events
 
@@ -53,7 +53,7 @@ Coordinates a row of [`civ-filter-chip`](./filter-chip) children. Adds **roving 
 
 | Property | Type | Description |
 |----------|------|-------------|
-| `value` | `string \| string[]` | Currently selected value(s). Single mode returns a string (or `''` if none); multi mode returns an array. |
+| `value` | `string \| string[]` | Currently selected value(s). Single mode returns a string (or `''` if none); multi mode returns an array. **Settable** — assigning updates each child chip's `selected` flag to match. |
 
 ## Keyboard
 

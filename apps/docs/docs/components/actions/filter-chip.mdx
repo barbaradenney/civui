@@ -66,7 +66,9 @@ For static categorization labels use [`civ-tag`](../layout/tag); for status indi
 | `chip-style` | `'primary' \| 'secondary'` | `'secondary'` | Selected-state emphasis: primary (filled) or secondary (light tint) |
 | `spacing` | `'default' \| 'sm'` | `'default'` | Compact variant with smaller padding |
 | `icon-start` | `string` | `''` | Leading icon name (replaced by check on selection) |
+| `icon-end` | `string` | `''` | Trailing icon (kept on selection — useful for chevrons or open/close hints) |
 | `count` | `number \| null` | `null` | Match count rendered as " (N)" after the label |
+| `chip-role` | `'toggle' \| 'radio'` | `'toggle'` | ARIA mode. `civ-filter-chip-group` sets `radio` automatically in single-select mode. |
 
 ## Events
 
@@ -78,10 +80,11 @@ For static categorization labels use [`civ-tag`](../layout/tag); for status indi
 
 ## Accessibility
 
-- Renders as `<button type="button">` with `aria-pressed` for toggle state.
-- The remove affordance is a separate role-button with `aria-label="Remove {label} filter"`, keyboard-activatable via Enter or Space.
-- Click on `×` does not toggle the chip (event propagation is stopped); `civ-change` fires only for the body.
-- `disabled` blocks both toggle and remove.
+- The chip renders a non-interactive `<span role="presentation">` wrapper containing one or two real `<button>` elements (toggle + optional remove). This avoids the "interactive content nested inside a `<button>`" anti-pattern.
+- In default `chip-role="toggle"` mode the action button uses `aria-pressed`. In `chip-role="radio"` (set by a single-select group) it uses `role="radio"` + `aria-checked`. Re-clicking an already-selected radio is a no-op (matches platform radio semantics).
+- The remove `×` is its own real `<button>` with `aria-label="Remove {label} filter"` — Enter and Space activate it natively. Clicking it does not toggle the chip.
+- Touch targets meet WCAG 2.5.8 (24×24 minimum) in both default and `--sm` sizes.
+- `disabled` propagates to both inner buttons.
 
 ## Patterns
 

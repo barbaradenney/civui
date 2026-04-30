@@ -90,8 +90,8 @@ Precedence: **dot > count > label**.
 
 ## Accessibility
 
-- Always renders `role="status"` so screen readers announce the badge value.
-- In dot mode, `label` becomes the `aria-label` so the marker has an accessible name.
+- Text and count badges always render `role="status"` so screen readers announce the badge value.
+- In **dot mode**, `label` becomes the `aria-label` and `role="status"` is kept. **If `label` is omitted, the dot is marked `aria-hidden="true"`** (no empty live region), so always set `label` when the dot conveys meaning that isn't already present in a parent's accessible name.
 - Restricted to semantic colors so visual meaning matches the announced value.
 
 ### Notification overlay

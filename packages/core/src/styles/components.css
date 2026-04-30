@@ -2773,26 +2773,48 @@
     vertical-align: middle;
   }
 
+  /* Outer wrapper — owns the chip border/background. Non-interactive. */
   .civ-filter-chip {
-    @apply civ-inline-flex civ-items-center civ-gap-1 civ-px-3 civ-py-1 civ-text-base civ-font-normal;
+    @apply civ-inline-flex civ-items-stretch civ-text-base civ-font-normal;
     background-color: var(--civ-color-white-DEFAULT);
     color: var(--civ-color-base-darkest);
     border: 1px solid var(--civ-color-base-light);
     border-radius: 0;
-    cursor: pointer;
     transition:
       background-color var(--civ-motion-duration-fast, 100ms) var(--civ-motion-easing-ease-out, ease),
       border-color var(--civ-motion-duration-fast, 100ms) var(--civ-motion-easing-ease-out, ease),
       color var(--civ-motion-duration-fast, 100ms) var(--civ-motion-easing-ease-out, ease);
   }
 
-  .civ-filter-chip--sm {
-    @apply civ-px-2 civ-py-0.5 civ-text-sm;
+  /* Inner toggle button — inherits styling from the wrapper, no border of its own. */
+  .civ-filter-chip__action {
+    @apply civ-inline-flex civ-items-center civ-gap-1 civ-px-3 civ-py-1;
+    background: transparent;
+    color: inherit;
+    border: 0;
+    cursor: pointer;
+    font: inherit;
+    /* Touch target: ensure ≥ 24px tall in default size; --sm is enforced below. */
+    min-height: 1.75rem;
   }
 
-  .civ-filter-chip:hover:not([disabled]) {
+  .civ-filter-chip__action:disabled {
+    cursor: not-allowed;
+  }
+
+  /* Compact size: shrink padding while keeping a 24px-tall touch target. */
+  .civ-filter-chip--sm .civ-filter-chip__action {
+    @apply civ-px-2 civ-py-0.5 civ-text-sm;
+    min-height: 1.5rem;
+  }
+
+  .civ-filter-chip:hover:not(.civ-filter-chip--disabled) {
     background-color: var(--civ-color-base-lightest);
     border-color: var(--civ-color-base-darker);
+  }
+
+  .civ-filter-chip--disabled {
+    @apply civ-opacity-50;
   }
 
   /* Selected — secondary (default): light primary tint with dark text. */
@@ -2803,7 +2825,7 @@
     border-color: var(--civ-color-primary-dark);
   }
 
-  .civ-filter-chip--style-secondary.civ-filter-chip--selected:hover:not([disabled]) {
+  .civ-filter-chip--style-secondary.civ-filter-chip--selected:hover:not(.civ-filter-chip--disabled) {
     background-color: var(--civ-color-primary-lighter);
     border-color: var(--civ-color-primary-darker);
   }
@@ -2820,7 +2842,7 @@
     border-color: var(--civ-color-primary-DEFAULT);
   }
 
-  .civ-filter-chip--style-primary.civ-filter-chip--selected:hover:not([disabled]) {
+  .civ-filter-chip--style-primary.civ-filter-chip--selected:hover:not(.civ-filter-chip--disabled) {
     background-color: var(--civ-color-primary-dark);
     border-color: var(--civ-color-primary-dark);
   }
@@ -2839,23 +2861,34 @@
     opacity: 0.85;
   }
 
-  .civ-filter-chip-group {
-    @apply civ-inline-flex civ-flex-wrap civ-gap-2 civ-items-center;
-  }
-
+  /* Remove button — separated from action by an internal divider. */
   .civ-filter-chip__remove {
-    @apply civ-inline-flex civ-items-center civ-justify-center civ-ms-1 civ-cursor-pointer;
+    @apply civ-inline-flex civ-items-center civ-justify-center civ-cursor-pointer;
+    background: transparent;
     color: inherit;
-    padding: 0 0.125rem;
+    border: 0;
+    /* Touch target: 24px minimum (WCAG 2.5.8). */
+    min-width: 1.75rem;
+    min-height: 1.75rem;
+    padding: 0 0.375rem;
+    border-inline-start: 1px solid currentColor;
+    border-inline-start-color: var(--civ-color-base-lighter);
   }
 
-  .civ-filter-chip__remove:hover {
+  .civ-filter-chip--style-primary.civ-filter-chip--selected .civ-filter-chip__remove {
+    border-inline-start-color: rgba(255, 255, 255, 0.4);
+  }
+
+  .civ-filter-chip__remove:hover:not(:disabled) {
     color: var(--civ-color-error-dark);
   }
 
-  .civ-filter-chip__remove:focus-visible {
-    outline: var(--civ-focus-outline-width) solid var(--civ-focus-outline-color);
-    outline-offset: var(--civ-focus-outline-offset);
+  .civ-filter-chip__remove:disabled {
+    cursor: not-allowed;
+  }
+
+  .civ-filter-chip-group {
+    @apply civ-inline-flex civ-flex-wrap civ-gap-2 civ-items-center;
   }
 
   /* ── Card ─────────────────────────────────────────────────── */

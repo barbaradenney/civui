@@ -52,7 +52,7 @@ For architecture and internals, see `CLAUDE.md` in the repo root.
 | `<civ-modal>` | Overlay | `open`, `heading`, `label`, `no-close-button`, `no-backdrop-close`, `no-escape-close` | `civ-modal-close` |
 | `<civ-action-sheet>` | Overlay | `open`, `max-height`, `trap-focus`, `no-click-outside` | `civ-action-sheet-close` |
 | `<civ-button-group>` | UI | `orientation`, `label` | — (`role="toolbar"`) |
-| `<civ-filter-chip>` | UI | `label`, `value`, `selected`, `removable`, `disabled`, `chip-style`, `spacing`, `icon-start`, `count` | `civ-change`, `civ-remove`, `civ-analytics` |
+| `<civ-filter-chip>` | UI | `label`, `value`, `selected`, `removable`, `disabled`, `chip-style`, `chip-role` (toggle/radio), `spacing`, `icon-start`, `icon-end`, `count` | `civ-change`, `civ-remove`, `civ-analytics` |
 | `<civ-filter-chip-group>` | UI | `mode` (single/multi), `label`. Roving tabindex + keyboard nav. | `civ-change` (aggregated) |
 | `<civ-input-group>` | UI | — (layout container) | — |
 | `<civ-download-link>` | UI | `label`, `href`, `filename`, `file-size` | `civ-analytics` |

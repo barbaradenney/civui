@@ -34,7 +34,7 @@ For architecture and internals, see \`CLAUDE.md\` in the repo root.
 | \`<civ-fieldset>\` | Layout | \`legend\`, \`hint\`, \`error\`, \`required\`, \`disabled\` | — |
 | \`<civ-form>\` | Layout | \`action\`, \`method\` | \`civ-submit: { formData }\`, \`civ-invalid: { errors }\` |
 | \`<civ-button>\` | Action | \`variant\` (primary/secondary/tertiary), \`danger\`, \`type\`, \`disabled\` | \`civ-analytics\` |
-| \`<civ-filter-chip>\` | Action | \`label\`, \`value\`, \`selected\`, \`removable\`, \`disabled\`, \`chip-style\` (primary/secondary), \`spacing\` (default/sm), \`icon-start\`, \`count\`. Interactive filter chip — toggle or remove. | \`civ-change\`, \`civ-remove\`, \`civ-analytics\` |
+| \`<civ-filter-chip>\` | Action | \`label\`, \`value\`, \`selected\`, \`removable\`, \`disabled\`, \`chip-style\` (primary/secondary), \`chip-role\` (toggle/radio — set automatically by group in single mode), \`spacing\` (default/sm), \`icon-start\`, \`icon-end\`, \`count\`. Renders a non-interactive wrapper with sibling toggle + remove buttons. | \`civ-change\`, \`civ-remove\`, \`civ-analytics\` |
 | \`<civ-filter-chip-group>\` | Action | \`mode\` (single/multi), \`label\`. Wraps a row of chips with roving tabindex (arrow-key navigation) and an aggregated \`civ-change\` event carrying \`value\` (string in single mode, array in multi). | \`civ-change\` |
 | \`<civ-link>\` | Navigation | \`href\`, \`variant\` (primary/secondary/tertiary/back/danger), \`danger\`, \`disabled\` | \`civ-analytics\` |
 | \`<civ-tag>\` | Layout | \`label\`, \`variant\` (blue/orange/purple/gray), \`tag-style\` (primary/secondary), \`spacing\` (default/sm), \`icon-start\`. Categorization only — use \`<civ-badge>\` for status. | — |

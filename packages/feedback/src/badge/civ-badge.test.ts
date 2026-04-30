@@ -74,15 +74,18 @@ describe('civ-badge', () => {
     expect(badge.textContent?.trim()).toBe('');
   });
 
-  it('uses label as aria-label in dot mode', async () => {
+  it('uses label as aria-label in dot mode and keeps role=status', async () => {
     const el = await fixture<CivBadge>('<civ-badge dot label="3 unread messages"></civ-badge>');
     const badge = el.querySelector('.civ-badge')!;
     expect(badge.getAttribute('aria-label')).toBe('3 unread messages');
+    expect(badge.getAttribute('role')).toBe('status');
   });
 
-  it('omits aria-label in dot mode when label is empty', async () => {
+  it('marks dot aria-hidden (no role=status, no empty live region) when label is missing', async () => {
     const el = await fixture<CivBadge>('<civ-badge dot></civ-badge>');
     const badge = el.querySelector('.civ-badge')!;
+    expect(badge.getAttribute('aria-hidden')).toBe('true');
+    expect(badge.hasAttribute('role')).toBe(false);
     expect(badge.hasAttribute('aria-label')).toBe(false);
   });
 

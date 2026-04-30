@@ -15,26 +15,75 @@ const groupHtml = (mode = 'multi', selected: string[] = []) => `
   </civ-filter-chip-group>
 `;
 
+const actions = (el: Element) =>
+  el.querySelectorAll<HTMLButtonElement>('civ-filter-chip .civ-filter-chip__action');
+
+const settle = () => new Promise((r) => queueMicrotask(() => r(null)));
+
 describe('civ-filter-chip-group', () => {
-  it('renders a toolbar with the provided label', async () => {
-    const el = await fixture<CivFilterChipGroup>(groupHtml());
-    const toolbar = el.querySelector('[role="toolbar"]')!;
-    expect(toolbar).not.toBeNull();
-    expect(toolbar.getAttribute('aria-label')).toBe('Categories');
+  describe('wrapper role', () => {
+    it('uses role="toolbar" in multi mode', async () => {
+      const el = await fixture<CivFilterChipGroup>(groupHtml('multi'));
+      expect(el.querySelector('[role="toolbar"]')).not.toBeNull();
+      expect(el.querySelector('[role="radiogroup"]')).toBeNull();
+    });
+
+    it('uses role="radiogroup" in single mode', async () => {
+      const el = await fixture<CivFilterChipGroup>(groupHtml('single'));
+      expect(el.querySelector('[role="radiogroup"]')).not.toBeNull();
+      expect(el.querySelector('[role="toolbar"]')).toBeNull();
+    });
+
+    it('exposes aria-label on the wrapper', async () => {
+      const el = await fixture<CivFilterChipGroup>(groupHtml());
+      const wrapper = el.querySelector('[role="toolbar"], [role="radiogroup"]')!;
+      expect(wrapper.getAttribute('aria-label')).toBe('Categories');
+    });
+
+    it('relocates chips into the wrapper', async () => {
+      const el = await fixture<CivFilterChipGroup>(groupHtml());
+      const wrapper = el.querySelector('[role="toolbar"]')!;
+      expect(wrapper.querySelectorAll('civ-filter-chip').length).toBe(3);
+    });
   });
 
-  it('relocates chips into the toolbar', async () => {
-    const el = await fixture<CivFilterChipGroup>(groupHtml());
-    const toolbar = el.querySelector('[role="toolbar"]')!;
-    expect(toolbar.querySelectorAll('civ-filter-chip').length).toBe(3);
+  describe('chip-role coordination', () => {
+    it('sets chip-role="toggle" on every chip in multi mode', async () => {
+      const el = await fixture<CivFilterChipGroup>(groupHtml('multi'));
+      await settle();
+
+      for (const chip of el.querySelectorAll<CivFilterChip>('civ-filter-chip')) {
+        expect(chip.chipRole).toBe('toggle');
+      }
+    });
+
+    it('sets chip-role="radio" on every chip in single mode', async () => {
+      const el = await fixture<CivFilterChipGroup>(groupHtml('single'));
+      await settle();
+
+      for (const chip of el.querySelectorAll<CivFilterChip>('civ-filter-chip')) {
+        expect(chip.chipRole).toBe('radio');
+      }
+    });
+
+    it('updates chip-role when mode changes after mount', async () => {
+      const el = await fixture<CivFilterChipGroup>(groupHtml('multi'));
+      await settle();
+      const chips = Array.from(el.querySelectorAll<CivFilterChip>('civ-filter-chip'));
+
+      el.mode = 'single';
+      await elementUpdated(el);
+
+      for (const chip of chips) expect(chip.chipRole).toBe('radio');
+    });
   });
 
   describe('roving tabindex', () => {
     it('sets tabindex=0 on the first chip when none are selected', async () => {
       const el = await fixture<CivFilterChipGroup>(groupHtml());
-      await new Promise((r) => queueMicrotask(() => r(null)));
+      await settle();
 
-      const buttons = el.querySelectorAll<HTMLButtonElement>('civ-filter-chip button');
+      const buttons = actions(el);
       expect(buttons[0].tabIndex).toBe(0);
       expect(buttons[1].tabIndex).toBe(-1);
       expect(buttons[2].tabIndex).toBe(-1);
@@ -42,9 +91,9 @@ describe('civ-filter-chip-group', () => {
 
     it('sets tabindex=0 on the first selected chip', async () => {
       const el = await fixture<CivFilterChipGroup>(groupHtml('multi', ['education']));
-      await new Promise((r) => queueMicrotask(() => r(null)));
+      await settle();
 
-      const buttons = el.querySelectorAll<HTMLButtonElement>('civ-filter-chip button');
+      const buttons = actions(el);
       expect(buttons[0].tabIndex).toBe(-1);
       expect(buttons[1].tabIndex).toBe(0);
       expect(buttons[2].tabIndex).toBe(-1);
@@ -52,9 +101,9 @@ describe('civ-filter-chip-group', () => {
 
     it('moves focus on ArrowRight', async () => {
       const el = await fixture<CivFilterChipGroup>(groupHtml());
-      await new Promise((r) => queueMicrotask(() => r(null)));
+      await settle();
 
-      const buttons = el.querySelectorAll<HTMLButtonElement>('civ-filter-chip button');
+      const buttons = actions(el);
       buttons[0].focus();
       buttons[0].dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
       await elementUpdated(el);
@@ -66,9 +115,9 @@ describe('civ-filter-chip-group', () => {
 
     it('moves focus on ArrowLeft and wraps at the start', async () => {
       const el = await fixture<CivFilterChipGroup>(groupHtml());
-      await new Promise((r) => queueMicrotask(() => r(null)));
+      await settle();
 
-      const buttons = el.querySelectorAll<HTMLButtonElement>('civ-filter-chip button');
+      const buttons = actions(el);
       buttons[0].focus();
       buttons[0].dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true }));
       await elementUpdated(el);
@@ -78,9 +127,9 @@ describe('civ-filter-chip-group', () => {
 
     it('moves focus to the last chip on End', async () => {
       const el = await fixture<CivFilterChipGroup>(groupHtml());
-      await new Promise((r) => queueMicrotask(() => r(null)));
+      await settle();
 
-      const buttons = el.querySelectorAll<HTMLButtonElement>('civ-filter-chip button');
+      const buttons = actions(el);
       buttons[0].focus();
       buttons[0].dispatchEvent(new KeyboardEvent('keydown', { key: 'End', bubbles: true }));
       await elementUpdated(el);
@@ -90,9 +139,9 @@ describe('civ-filter-chip-group', () => {
 
     it('moves focus to the first chip on Home', async () => {
       const el = await fixture<CivFilterChipGroup>(groupHtml());
-      await new Promise((r) => queueMicrotask(() => r(null)));
+      await settle();
 
-      const buttons = el.querySelectorAll<HTMLButtonElement>('civ-filter-chip button');
+      const buttons = actions(el);
       buttons[2].focus();
       buttons[2].dispatchEvent(new KeyboardEvent('keydown', { key: 'Home', bubbles: true }));
       await elementUpdated(el);
@@ -109,9 +158,9 @@ describe('civ-filter-chip-group', () => {
         </civ-filter-chip-group>
       `;
       const el = await fixture<CivFilterChipGroup>(html);
-      await new Promise((r) => queueMicrotask(() => r(null)));
+      await settle();
 
-      const buttons = el.querySelectorAll<HTMLButtonElement>('civ-filter-chip button');
+      const buttons = actions(el);
       buttons[0].focus();
       buttons[0].dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
       await elementUpdated(el);
@@ -125,8 +174,8 @@ describe('civ-filter-chip-group', () => {
       const el = await fixture<CivFilterChipGroup>(groupHtml());
       const chips = el.querySelectorAll<CivFilterChip>('civ-filter-chip');
 
-      chips[0].querySelector('button')!.click();
-      chips[2].querySelector('button')!.click();
+      chips[0].querySelector<HTMLButtonElement>('.civ-filter-chip__action')!.click();
+      chips[2].querySelector<HTMLButtonElement>('.civ-filter-chip__action')!.click();
       await elementUpdated(el);
 
       expect(chips[0].selected).toBe(true);
@@ -140,9 +189,9 @@ describe('civ-filter-chip-group', () => {
       el.addEventListener('civ-change', handler);
 
       const chips = el.querySelectorAll<CivFilterChip>('civ-filter-chip');
-      chips[0].querySelector('button')!.click();
+      chips[0].querySelector<HTMLButtonElement>('.civ-filter-chip__action')!.click();
       await elementUpdated(el);
-      chips[2].querySelector('button')!.click();
+      chips[2].querySelector<HTMLButtonElement>('.civ-filter-chip__action')!.click();
       await elementUpdated(el);
 
       expect(handler).toHaveBeenCalledTimes(2);
@@ -162,7 +211,7 @@ describe('civ-filter-chip-group', () => {
       const el = await fixture<CivFilterChipGroup>(groupHtml('single', ['health']));
       const chips = el.querySelectorAll<CivFilterChip>('civ-filter-chip');
 
-      chips[1].querySelector('button')!.click();
+      chips[1].querySelector<HTMLButtonElement>('.civ-filter-chip__action')!.click();
       await elementUpdated(el);
 
       expect(chips[0].selected).toBe(false);
@@ -176,7 +225,7 @@ describe('civ-filter-chip-group', () => {
       el.addEventListener('civ-change', handler);
 
       const chips = el.querySelectorAll<CivFilterChip>('civ-filter-chip');
-      chips[1].querySelector('button')!.click();
+      chips[1].querySelector<HTMLButtonElement>('.civ-filter-chip__action')!.click();
       await elementUpdated(el);
 
       const detail = handler.mock.calls[0][0].detail;
@@ -192,6 +241,89 @@ describe('civ-filter-chip-group', () => {
     it('value returns empty string when nothing is selected', async () => {
       const el = await fixture<CivFilterChipGroup>(groupHtml('single'));
       expect(el.value).toBe('');
+    });
+  });
+
+  describe('value setter', () => {
+    it('selects chips matching the supplied array (multi)', async () => {
+      const el = await fixture<CivFilterChipGroup>(groupHtml('multi'));
+      el.value = ['health', 'housing'];
+      await elementUpdated(el);
+
+      const chips = el.querySelectorAll<CivFilterChip>('civ-filter-chip');
+      expect(chips[0].selected).toBe(true);
+      expect(chips[1].selected).toBe(false);
+      expect(chips[2].selected).toBe(true);
+    });
+
+    it('selects the chip matching the supplied string (single)', async () => {
+      const el = await fixture<CivFilterChipGroup>(groupHtml('single'));
+      el.value = 'education';
+      await elementUpdated(el);
+
+      const chips = el.querySelectorAll<CivFilterChip>('civ-filter-chip');
+      expect(chips[0].selected).toBe(false);
+      expect(chips[1].selected).toBe(true);
+      expect(chips[2].selected).toBe(false);
+    });
+
+    it('deselects all chips when value is empty', async () => {
+      const el = await fixture<CivFilterChipGroup>(groupHtml('multi', ['health', 'housing']));
+      el.value = [];
+      await elementUpdated(el);
+
+      for (const chip of el.querySelectorAll<CivFilterChip>('civ-filter-chip')) {
+        expect(chip.selected).toBe(false);
+      }
+    });
+  });
+
+  describe('mode change reconciliation', () => {
+    it('reduces to a single selection when switching multi → single', async () => {
+      const el = await fixture<CivFilterChipGroup>(groupHtml('multi', ['health', 'education', 'housing']));
+      await settle();
+
+      el.mode = 'single';
+      await elementUpdated(el);
+
+      const chips = el.querySelectorAll<CivFilterChip>('civ-filter-chip');
+      const stillSelected = Array.from(chips).filter((c) => c.selected);
+      expect(stillSelected.length).toBe(1);
+      expect(stillSelected[0].value).toBe('health');
+    });
+
+    it('keeps an existing single selection when switching multi → single', async () => {
+      const el = await fixture<CivFilterChipGroup>(groupHtml('multi', ['education']));
+      await settle();
+
+      el.mode = 'single';
+      await elementUpdated(el);
+
+      expect(el.value).toBe('education');
+    });
+  });
+
+  describe('mutation observer', () => {
+    it('syncs tabindex when a chip is appended after mount', async () => {
+      const el = await fixture<CivFilterChipGroup>(groupHtml('multi'));
+      await settle();
+
+      const newChip = document.createElement('civ-filter-chip') as CivFilterChip;
+      newChip.label = 'Employment';
+      newChip.value = 'employment';
+      const wrapper = el.querySelector<HTMLElement>('[data-civ-filter-chip-group-content]')!;
+      wrapper.appendChild(newChip);
+
+      // Wait for MutationObserver microtask + Lit update.
+      await elementUpdated(newChip);
+      await settle();
+      await elementUpdated(el);
+
+      const buttons = actions(el);
+      expect(buttons.length).toBe(4);
+      // Focus index should still be the first chip; the new (unselected, last) chip is -1.
+      expect(buttons[0].tabIndex).toBe(0);
+      expect(buttons[3].tabIndex).toBe(-1);
     });
   });
 });

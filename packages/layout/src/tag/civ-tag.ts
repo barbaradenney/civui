@@ -36,9 +36,9 @@ export type TagStyle = 'primary' | 'secondary';
  *
  * @example
  * ```html
- * <civ-tag label="Healthcare" variant="blue" icon-start="medical"></civ-tag>
- * <civ-tag label="Disability" variant="purple" tag-style="primary"></civ-tag>
- * <civ-tag label="Education" variant="orange"></civ-tag>
+ * <civ-tag label="Personal" variant="blue" icon-start="person"></civ-tag>
+ * <civ-tag label="Important" variant="purple" tag-style="primary" icon-start="star"></civ-tag>
+ * <civ-tag label="Mailed" variant="orange"></civ-tag>
  * ```
  */
 @customElement('civ-tag')

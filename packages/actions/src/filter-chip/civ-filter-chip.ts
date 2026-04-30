@@ -1,8 +1,10 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 import { CivBaseElement, LightDomTextMixin, dispatch, interpolate, t } from '@civui/core';
 
 export type FilterChipStyle = 'primary' | 'secondary';
+export type FilterChipRole = 'toggle' | 'radio';
 
 /**
  * CivUI Filter Chip
@@ -14,6 +16,15 @@ export type FilterChipStyle = 'primary' | 'secondary';
  *
  * For non-interactive categorization labels use `civ-tag`. For status
  * indicators use `civ-badge`. For primary CTAs use `civ-button`.
+ *
+ * **Structure.** Renders a non-interactive `<span role="presentation">`
+ * wrapper containing one or two real `<button>` elements (toggle, plus
+ * an optional dismiss button when `removable`). This avoids nested
+ * interactive content.
+ *
+ * **ARIA mode.** `chip-role="toggle"` (default) uses `aria-pressed`;
+ * `chip-role="radio"` uses `role="radio"` + `aria-checked` for use inside
+ * a single-select `civ-filter-chip-group`.
  *
  * **Emphasis levels** (apply when selected; unselected always renders the
  * neutral outlined chip):
@@ -27,9 +38,11 @@ export type FilterChipStyle = 'primary' | 'secondary';
  * @prop {boolean} selected - Active/inactive state (reflected attribute)
  * @prop {boolean} removable - When true, renders a trailing `×` dismiss button
  * @prop {boolean} disabled - Disabled state
- * @prop {FilterChipStyle} chipStyle - Selected-state emphasis: 'primary' or 'secondary' (default)
+ * @prop {FilterChipStyle} chipStyle - Selected-state emphasis
+ * @prop {FilterChipRole} chipRole - ARIA role: 'toggle' (default) or 'radio'
  * @prop {string} spacing - Padding size: 'default' or 'sm'
  * @prop {string} iconStart - Icon name to render before the label when not selected
+ * @prop {string} iconEnd - Icon name to render after the label
  * @prop {number | null} count - Match count rendered as " (N)" after the label
  *
  * @fires civ-change - `{ value, selected }` when chip is toggled
@@ -47,11 +60,17 @@ export class CivFilterChip extends LightDomTextMixin(CivBaseElement) {
   /** Selected-state emphasis: 'primary' (filled) or 'secondary' (light tint, default). */
   @property({ type: String, attribute: 'chip-style' }) chipStyle: FilterChipStyle = 'secondary';
 
+  /** ARIA mode: 'toggle' (aria-pressed) or 'radio' (aria-checked). Set automatically by civ-filter-chip-group in single mode. */
+  @property({ type: String, attribute: 'chip-role' }) chipRole: FilterChipRole = 'toggle';
+
   /** Padding size: 'default' or 'sm' for compact layouts. */
   @property({ type: String }) spacing: 'default' | 'sm' = 'default';
 
-  /** Icon name to render before the label (distinct from the selection check). */
+  /** Icon name to render before the label when not selected. */
   @property({ type: String, attribute: 'icon-start' }) iconStart = '';
+
+  /** Icon name to render after the label (and count). */
+  @property({ type: String, attribute: 'icon-end' }) iconEnd = '';
 
   /** Optional count suffix, rendered as " (N)" after the label. */
   @property({ type: Number }) count: number | null = null;
@@ -60,14 +79,14 @@ export class CivFilterChip extends LightDomTextMixin(CivBaseElement) {
     return this.label || this._initialText;
   }
 
-  private get _classes(): string {
+  private get _wrapperClasses(): string {
     return [
       'civ-filter-chip',
       `civ-filter-chip--style-${this.chipStyle}`,
       this.selected ? 'civ-filter-chip--selected' : '',
       this.spacing === 'sm' ? 'civ-filter-chip--sm' : '',
-      this.disabled ? 'civ-opacity-50 civ-cursor-not-allowed' : '',
-      'focus-visible:civ-focus-ring',
+      this.disabled ? 'civ-filter-chip--disabled' : '',
+      this.removable ? 'civ-filter-chip--removable' : '',
     ]
       .filter(Boolean)
       .join(' ');
@@ -75,38 +94,45 @@ export class CivFilterChip extends LightDomTextMixin(CivBaseElement) {
 
   override render() {
     const showCount = this.count !== null && this.count !== undefined;
+    const isRadio = this.chipRole === 'radio';
+    const stateValue = this.selected ? 'true' : 'false';
 
     return html`
-      <button
-        type="button"
-        class="${this._classes}"
-        aria-pressed="${this.selected ? 'true' : 'false'}"
-        ?disabled="${this.disabled}"
-        @click="${this._onToggle}"
-      >${this.selected
-        ? html`<civ-icon name="check" size="sm" class="civ-filter-chip__check" aria-hidden="true"></civ-icon>`
-        : this.iconStart
-          ? html`<civ-icon name="${this.iconStart}" size="sm" class="civ-filter-chip__icon" aria-hidden="true"></civ-icon>`
-          : nothing}<span class="civ-filter-chip__label">${this._text}</span>${showCount
-        ? html`<span class="civ-filter-chip__count">(${this.count})</span>`
-        : nothing}${this.removable
-        ? html`<span
-            class="civ-filter-chip__remove"
-            role="button"
-            tabindex="0"
+      <span class="${this._wrapperClasses}" role="presentation">
+        <button
+          type="button"
+          class="civ-filter-chip__action focus-visible:civ-focus-ring"
+          role="${ifDefined(isRadio ? 'radio' : undefined)}"
+          aria-checked="${ifDefined(isRadio ? stateValue : undefined)}"
+          aria-pressed="${ifDefined(isRadio ? undefined : stateValue)}"
+          ?disabled="${this.disabled}"
+          @click="${this._onToggle}"
+        >${this.selected
+          ? html`<civ-icon name="check" size="sm" class="civ-filter-chip__check" aria-hidden="true"></civ-icon>`
+          : this.iconStart
+            ? html`<civ-icon name="${this.iconStart}" size="sm" class="civ-filter-chip__icon" aria-hidden="true"></civ-icon>`
+            : nothing}<span class="civ-filter-chip__label">${this._text}</span>${showCount
+          ? html`<span class="civ-filter-chip__count">(${this.count})</span>`
+          : nothing}${this.iconEnd
+          ? html`<civ-icon name="${this.iconEnd}" size="sm" class="civ-filter-chip__icon civ-filter-chip__icon--end" aria-hidden="true"></civ-icon>`
+          : nothing}</button>${this.removable
+        ? html`<button
+            type="button"
+            class="civ-filter-chip__remove focus-visible:civ-focus-ring"
             aria-label="${interpolate(t('filterChipRemoveLabel'), { label: this._text })}"
+            ?disabled="${this.disabled}"
             @click="${this._onRemove}"
-            @keydown="${this._onRemoveKey}"
-          ><civ-icon name="close" size="sm" aria-hidden="true"></civ-icon></span>`
-        : nothing}</button>
+          ><civ-icon name="close" size="sm" aria-hidden="true"></civ-icon></button>`
+        : nothing}
+      </span>
     `;
   }
 
-  private _onToggle(event: MouseEvent): void {
+  private _onToggle(): void {
     if (this.disabled) return;
-    // Don't toggle if the click bubbled from the remove affordance.
-    const target = event.target as HTMLElement;
-    if (target.closest('.civ-filter-chip__remove')) return;
+    // In radio mode, clicking the already-selected chip is a no-op
+    // (you can't deselect a radio by re-clicking it).
+    if (this.chipRole === 'radio' && this.selected) return;
 
     this.selected = !this.selected;
     dispatch(this, 'civ-change', { value: this.value, selected: this.selected });
@@ -118,13 +144,6 @@ export class CivFilterChip extends LightDomTextMixin(CivBaseElement) {
     event.stopPropagation();
     dispatch(this, 'civ-remove', { value: this.value });
     this.sendAnalytics('remove');
-  }
-
-  private _onRemoveKey(event: KeyboardEvent): void {
-    if (event.key !== 'Enter' && event.key !== ' ') return;
-    event.preventDefault();
-    event.stopPropagation();
-    this._onRemove(event);
   }
 }
 

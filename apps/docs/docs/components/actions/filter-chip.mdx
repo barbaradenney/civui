@@ -1,0 +1,98 @@
+---
+title: Filter Chip
+sidebar_position: 6
+sidebar_label: Filter Chip
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
+# Filter Chip
+
+`<civ-filter-chip>`
+
+An interactive, button-like control for filter selection. Click to toggle the chip's `selected` state; in `removable` mode, click the trailing `×` to dismiss without toggling. Use horizontal rows of chips to represent active or available filters.
+
+For static categorization labels use [`civ-tag`](../layout/tag); for status indicators use [`civ-badge`](../feedback/badge); for primary CTAs use [`civ-button`](./button).
+
+## Examples
+
+### Default
+
+<StoryEmbed id="actions-filter-chip--default" />
+
+### States
+
+<StoryEmbed id="actions-filter-chip--states" />
+
+### Filter row
+
+<StoryEmbed id="actions-filter-chip--filter-row" />
+
+### Removable
+
+<StoryEmbed id="actions-filter-chip--removable" />
+
+### Filter chip vs Tag vs Badge
+
+<StoryEmbed id="actions-filter-chip--vs-tag-and-badge" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/actions-filter-chip--default)
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `label` | `string` | `''` | Chip text content |
+| `value` | `string` | `''` | Filter identifier; passed in event detail |
+| `selected` | `boolean` | `false` | Active state (reflected attribute) |
+| `removable` | `boolean` | `false` | Renders trailing `×` dismiss button |
+| `disabled` | `boolean` | `false` | Disabled state (reflected attribute) |
+
+## Events
+
+| Event | Detail | Fires when |
+|-------|--------|------------|
+| `civ-change` | `{ value, selected }` | The chip body is clicked, toggling selection |
+| `civ-remove` | `{ value }` | The `×` is clicked or activated (removable mode only) |
+| `civ-analytics` | `{ action }` | On any click — `change` (body toggle) or `remove` |
+
+## Accessibility
+
+- Renders as `<button type="button">` with `aria-pressed` for toggle state.
+- The remove affordance is a separate role-button with `aria-label="Remove {label} filter"`, keyboard-activatable via Enter or Space.
+- Click on `×` does not toggle the chip (event propagation is stopped); `civ-change` fires only for the body.
+- `disabled` blocks both toggle and remove.
+
+## Patterns
+
+### Faceted search results
+
+Wire `civ-change` to your filter store; let the chip own its `selected` state and observe the event:
+
+```html
+<civ-filter-chip label="Healthcare" value="healthcare"></civ-filter-chip>
+<civ-filter-chip label="Education" value="education"></civ-filter-chip>
+<civ-filter-chip label="Housing" value="housing"></civ-filter-chip>
+
+<script>
+  document.addEventListener('civ-change', (e) => {
+    const { value, selected } = e.detail;
+    console.log(value, selected ? 'applied' : 'removed');
+  });
+</script>
+```
+
+### Applied-filters bar
+
+Use `removable` to show currently-active filters that the user can dismiss:
+
+```html
+<civ-filter-chip label="Healthcare" value="healthcare" selected removable></civ-filter-chip>
+<civ-filter-chip label="VA Form 21-526EZ" value="form-21-526ez" selected removable></civ-filter-chip>
+```
+
+## Anti-patterns
+
+- **Don't use a filter chip as a category label.** If it doesn't filter anything, use `civ-tag` (a static `<span>`).
+- **Don't use a filter chip for status.** Use `civ-badge`, which carries `role="status"` for assistive tech.
+- **Don't use a filter chip as a primary action.** Use `civ-button` for "Submit", "Save", etc.

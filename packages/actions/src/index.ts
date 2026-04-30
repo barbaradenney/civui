@@ -2,6 +2,7 @@
 import './button/civ-button.js';
 import './action-button/civ-action-button.js';
 import './button-group/civ-button-group.js';
+import './filter-chip/civ-filter-chip.js';
 import './phone-link/civ-phone-link.js';
 import './email-link/civ-email-link.js';
 
@@ -15,6 +16,9 @@ export type { ActionButtonVariant } from './action-button/index.js';
 
 // Button Group
 export { CivButtonGroup } from './button-group/index.js';
+
+// Filter Chip
+export { CivFilterChip } from './filter-chip/index.js';
 
 // Phone Link
 export { CivPhoneLink } from './phone-link/index.js';

@@ -1,0 +1,104 @@
+import { html, nothing } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
+import { CivBaseElement, LightDomTextMixin, dispatch, interpolate, t } from '@civui/core';
+
+/**
+ * CivUI Filter Chip
+ *
+ * An interactive, button-like control for filter selection. Click to toggle
+ * `selected` state; in `removable` mode, click the trailing `×` to dismiss
+ * without toggling. Use horizontal rows of chips to represent active or
+ * available filters (search results, list views, faceted browse).
+ *
+ * For non-interactive categorization labels use `civ-tag`. For status
+ * indicators use `civ-badge`. For primary CTAs use `civ-button`.
+ *
+ * @element civ-filter-chip
+ *
+ * @prop {string} label - Chip text (preferred over child text)
+ * @prop {string} value - Filter identifier; passed in event detail
+ * @prop {boolean} selected - Active/inactive state (reflected attribute)
+ * @prop {boolean} removable - When true, renders a trailing `×` dismiss button
+ * @prop {boolean} disabled - Disabled state
+ *
+ * @fires civ-change - `{ value, selected }` when chip is toggled
+ * @fires civ-remove - `{ value }` when the dismiss button is clicked (removable only)
+ * @fires civ-analytics - Analytics tracking event on click
+ */
+@customElement('civ-filter-chip')
+export class CivFilterChip extends LightDomTextMixin(CivBaseElement) {
+  @property({ type: String }) label = '';
+  @property({ type: String }) value = '';
+  @property({ type: Boolean, reflect: true }) selected = false;
+  @property({ type: Boolean, reflect: true }) removable = false;
+  @property({ type: Boolean, reflect: true }) disabled = false;
+
+  private get _text(): string {
+    return this.label || this._initialText;
+  }
+
+  private get _classes(): string {
+    return [
+      'civ-filter-chip',
+      this.selected ? 'civ-filter-chip--selected' : '',
+      this.disabled ? 'civ-opacity-50 civ-cursor-not-allowed' : '',
+      'focus-visible:civ-focus-ring',
+    ]
+      .filter(Boolean)
+      .join(' ');
+  }
+
+  override render() {
+    return html`
+      <button
+        type="button"
+        class="${this._classes}"
+        aria-pressed="${this.selected ? 'true' : 'false'}"
+        ?disabled="${this.disabled}"
+        @click="${this._onToggle}"
+      >${this.selected
+        ? html`<civ-icon name="check" size="sm" class="civ-filter-chip__check" aria-hidden="true"></civ-icon>`
+        : nothing}<span class="civ-filter-chip__label">${this._text}</span>${this.removable
+        ? html`<span
+            class="civ-filter-chip__remove"
+            role="button"
+            tabindex="0"
+            aria-label="${interpolate(t('filterChipRemoveLabel'), { label: this._text })}"
+            @click="${this._onRemove}"
+            @keydown="${this._onRemoveKey}"
+          ><civ-icon name="close" size="sm" aria-hidden="true"></civ-icon></span>`
+        : nothing}</button>
+    `;
+  }
+
+  private _onToggle(event: MouseEvent): void {
+    if (this.disabled) return;
+    // Don't toggle if the click bubbled from the remove affordance.
+    const target = event.target as HTMLElement;
+    if (target.closest('.civ-filter-chip__remove')) return;
+
+    this.selected = !this.selected;
+    dispatch(this, 'civ-change', { value: this.value, selected: this.selected });
+    this.sendAnalytics('change');
+  }
+
+  private _onRemove(event: Event): void {
+    if (this.disabled) return;
+    event.stopPropagation();
+    dispatch(this, 'civ-remove', { value: this.value });
+    this.sendAnalytics('remove');
+  }
+
+  private _onRemoveKey(event: KeyboardEvent): void {
+    if (event.key !== 'Enter' && event.key !== ' ') return;
+    event.preventDefault();
+    event.stopPropagation();
+    this._onRemove(event);
+  }
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'civ-filter-chip': CivFilterChip;
+  }
+}

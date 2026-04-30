@@ -2703,6 +2703,60 @@
   .civ-badge--dot.civ-badge--error { background-color: var(--civ-color-error-DEFAULT); }
   .civ-badge--dot.civ-badge--neutral { background-color: var(--civ-color-base-darker); }
 
+  /* ── Filter Chip ──────────────────────────────────────────── */
+
+  civ-filter-chip {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  .civ-filter-chip {
+    @apply civ-inline-flex civ-items-center civ-gap-1 civ-px-3 civ-py-1 civ-text-base civ-font-normal;
+    background-color: var(--civ-color-white-DEFAULT);
+    color: var(--civ-color-base-darkest);
+    border: 1px solid var(--civ-color-base-light);
+    border-radius: 0;
+    cursor: pointer;
+    transition:
+      background-color var(--civ-motion-duration-fast, 100ms) var(--civ-motion-easing-ease-out, ease),
+      border-color var(--civ-motion-duration-fast, 100ms) var(--civ-motion-easing-ease-out, ease);
+  }
+
+  .civ-filter-chip:hover:not([disabled]) {
+    background-color: var(--civ-color-base-lightest);
+    border-color: var(--civ-color-base-darker);
+  }
+
+  .civ-filter-chip--selected {
+    background-color: var(--civ-color-primary-lightest);
+    color: var(--civ-color-primary-dark);
+    border-color: var(--civ-color-primary-dark);
+  }
+
+  .civ-filter-chip--selected:hover:not([disabled]) {
+    background-color: var(--civ-color-primary-lighter);
+    border-color: var(--civ-color-primary-darker);
+  }
+
+  .civ-filter-chip__check {
+    color: var(--civ-color-primary-dark);
+  }
+
+  .civ-filter-chip__remove {
+    @apply civ-inline-flex civ-items-center civ-justify-center civ-ms-1 civ-cursor-pointer;
+    color: inherit;
+    padding: 0 0.125rem;
+  }
+
+  .civ-filter-chip__remove:hover {
+    color: var(--civ-color-error-dark);
+  }
+
+  .civ-filter-chip__remove:focus-visible {
+    outline: var(--civ-focus-outline-width) solid var(--civ-focus-outline-color);
+    outline-offset: var(--civ-focus-outline-offset);
+  }
+
   /* ── Card ─────────────────────────────────────────────────── */
 
   .civ-card {

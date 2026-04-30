@@ -43,6 +43,7 @@ const TAG_TO_PACKAGE: Record<string, string> = {
   'civ-button': '@civui/actions',
   'civ-action-button': '@civui/actions',
   'civ-button-group': '@civui/actions',
+  'civ-filter-chip': '@civui/actions',
   'civ-phone-link': '@civui/actions',
   'civ-email-link': '@civui/actions',
   'civ-card': '@civui/layout',

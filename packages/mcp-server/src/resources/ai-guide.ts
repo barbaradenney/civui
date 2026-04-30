@@ -34,6 +34,7 @@ For architecture and internals, see \`CLAUDE.md\` in the repo root.
 | \`<civ-fieldset>\` | Layout | \`legend\`, \`hint\`, \`error\`, \`required\`, \`disabled\` | — |
 | \`<civ-form>\` | Layout | \`action\`, \`method\` | \`civ-submit: { formData }\`, \`civ-invalid: { errors }\` |
 | \`<civ-button>\` | Action | \`variant\` (primary/secondary/tertiary), \`danger\`, \`type\`, \`disabled\` | \`civ-analytics\` |
+| \`<civ-filter-chip>\` | Action | \`label\`, \`value\`, \`selected\`, \`removable\`, \`disabled\`. Interactive filter chip — toggle or remove. | \`civ-change\`, \`civ-remove\`, \`civ-analytics\` |
 | \`<civ-link>\` | Navigation | \`href\`, \`variant\` (primary/secondary/tertiary/back/danger), \`danger\`, \`disabled\` | \`civ-analytics\` |
 | \`<civ-tag>\` | Layout | \`label\`, \`variant\` (blue/orange/purple/gray), \`tag-style\` (primary/secondary). Categorization only — use \`<civ-badge>\` for status. | — |
 | \`<civ-badge>\` | Feedback | \`label\`, \`count\`, \`max\`, \`dot\`, \`variant\` (info/warning/error/success/neutral). Status pills + count indicators with \`role="status"\`. | — |

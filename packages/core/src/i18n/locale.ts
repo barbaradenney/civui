@@ -39,6 +39,9 @@ export interface CivLocaleStrings {
   linkDisabledTitle: string;
   externalLinkNewTab: string;
 
+  // Filter chip
+  filterChipRemoveLabel: string; // "Remove {label} filter"
+
   // Close button
   closeLabel: string;
 
@@ -612,6 +615,8 @@ const defaultStrings: CivLocaleStrings = {
 
   linkDisabledTitle: 'This link is currently unavailable',
   externalLinkNewTab: '(opens in new tab)',
+
+  filterChipRemoveLabel: 'Remove {label} filter',
 
   closeLabel: 'Close',
 

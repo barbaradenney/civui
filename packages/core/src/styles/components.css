@@ -1926,12 +1926,12 @@
   }
 
   .civ-action-btn--tertiary {
-    @apply civ-border-base-light;
-    background-color: var(--civ-color-base-lightest);
-    color: var(--civ-color-base-darker);
+    @apply civ-border-base-DEFAULT;
+    background-color: var(--civ-color-white-DEFAULT);
+    color: var(--civ-color-base-darkest);
   }
   .civ-action-btn--tertiary:hover:not(:disabled) {
-    background-color: var(--civ-color-base-lighter);
+    background-color: var(--civ-color-base-lightest);
   }
 
   .civ-action-btn[aria-pressed="true"] {
@@ -1956,10 +1956,11 @@
   }
 
   .civ-action-btn--tertiary-danger {
-    @apply civ-bg-transparent civ-text-error civ-border-error;
+    @apply civ-text-error civ-border-error;
+    background-color: var(--civ-color-error-lightest);
   }
   .civ-action-btn--tertiary-danger:hover:not(:disabled) {
-    @apply civ-bg-error civ-text-white;
+    background-color: var(--civ-color-error-lighter);
   }
 
   /* ── Button Group ──────────────────────────────────────────── */

@@ -14,13 +14,13 @@ CivUI validates on submit, not on blur. This avoids punishing users for incomple
 
 When a form submission fails validation, `civ-form` renders an error summary at the top with anchor links to each invalid field. Screen readers announce the error count.
 
-<StoryEmbed id="forms-layout-form--with-error" />
+<StoryEmbed id="forms-form-form--with-error" />
 
 ## Server-side errors
 
 Inject server-side validation errors after a failed submission using the `setErrors()` method:
 
-<StoryEmbed id="forms-layout-form--set-server-errors" />
+<StoryEmbed id="forms-form-form--set-server-errors" />
 
 ```js
 const form = document.querySelector('civ-form');

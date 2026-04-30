@@ -3,7 +3,7 @@ import { html } from 'lit';
 import './civ-read-only-field.js';
 
 const meta: Meta = {
-  title: 'Forms/Patterns/Read-Only Field',
+  title: 'Forms/Form/Read-Only Field',
   component: 'civ-read-only-field',
   tags: ['autodocs'],
   argTypes: {

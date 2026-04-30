@@ -3,7 +3,7 @@ import { html } from 'lit';
 import './civ-section-intro.js';
 
 const meta: Meta = {
-  title: 'Forms/Patterns/Section Intro',
+  title: 'Forms/Form/Section Intro',
   component: 'civ-section-intro',
   tags: ['autodocs'],
   argTypes: {

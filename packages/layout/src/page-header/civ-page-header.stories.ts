@@ -5,7 +5,7 @@ import '../tag/civ-tag.js';
 import '@civui/feedback/badge';
 
 const meta: Meta = {
-  title: 'UI/Page Header',
+  title: 'Layout/Page Header',
   component: 'civ-page-header',
   tags: ['autodocs'],
 };

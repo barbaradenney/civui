@@ -16,49 +16,49 @@ Statement of truth component for form submission. Renders a certification statem
 
 ### Default
 
-<StoryEmbed id="forms-patterns-signature--default" />
+<StoryEmbed id="forms-compound-signature--default" />
 
 ### With Hint
 
-<StoryEmbed id="forms-patterns-signature--with-hint" />
+<StoryEmbed id="forms-compound-signature--with-hint" />
 
 ### With Error
 
-<StoryEmbed id="forms-patterns-signature--with-error" />
+<StoryEmbed id="forms-compound-signature--with-error" />
 
 ### Required
 
-<StoryEmbed id="forms-patterns-signature--required" />
+<StoryEmbed id="forms-compound-signature--required" />
 
 ### Disabled
 
-<StoryEmbed id="forms-patterns-signature--disabled" />
+<StoryEmbed id="forms-compound-signature--disabled" />
 
 ### All States
 
-<StoryEmbed id="forms-patterns-signature--all-states" />
+<StoryEmbed id="forms-compound-signature--all-states" />
 
 ### Density Scale
 
-<StoryEmbed id="forms-patterns-signature--density-scale" />
+<StoryEmbed id="forms-compound-signature--density-scale" />
 
 ### Government Certification
 
-<StoryEmbed id="forms-patterns-signature--government-certification" />
+<StoryEmbed id="forms-compound-signature--government-certification" />
 
 ### Statement Slot (HTML)
 
 When the certification statement needs links or rich markup, pass a `slot="statement"` child instead of the plain-text `statement` prop. The slotted content is wired into the certify checkbox's `aria-describedby` so screen-reader users hear the full text on focus.
 
-<StoryEmbed id="forms-patterns-signature--statement-slot" />
+<StoryEmbed id="forms-compound-signature--statement-slot" />
 
 ### Captured signedAt Timestamp
 
 When the user checks certify, `el.signedAt` is captured as an ISO 8601 string. Listen for `civ-change` to read it. Unchecking clears the timestamp; re-checking captures a fresh one.
 
-<StoryEmbed id="forms-patterns-signature--signed-at-timestamp" />
+<StoryEmbed id="forms-compound-signature--signed-at-timestamp" />
 
-[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-patterns-signature--default)
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-compound-signature--default)
 
 ## Shared Props
 

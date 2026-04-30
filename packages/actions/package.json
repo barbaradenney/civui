@@ -10,7 +10,6 @@
     ".": "./dist/index.js",
     "./button": "./dist/button/index.js",
     "./action-button": "./dist/action-button/index.js",
-    "./button-group": "./dist/button-group/index.js",
     "./filter-chip": "./dist/filter-chip/index.js",
     "./filter-chip-group": "./dist/filter-chip-group/index.js",
     "./action-link": "./dist/action-link/index.js"

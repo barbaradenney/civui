@@ -6,7 +6,7 @@ import '@civui/navigation/link';
 import '@civui/layout/divider';
 
 const meta: Meta = {
-  title: 'Forms/Patterns/Summary',
+  title: 'Forms/Form/Summary',
   component: 'civ-summary',
   tags: ['autodocs'],
   argTypes: {

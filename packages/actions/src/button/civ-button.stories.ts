@@ -3,7 +3,7 @@ import { html } from 'lit';
 import './civ-button.js';
 
 const meta: Meta = {
-  title: 'UI/Button',
+  title: 'Actions/Button',
   component: 'civ-button',
   tags: ['autodocs'],
   argTypes: {

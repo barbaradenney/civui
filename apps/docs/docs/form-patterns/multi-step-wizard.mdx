@@ -12,7 +12,7 @@ Break long government forms into manageable steps. Each step covers one concept 
 
 ## Live example
 
-<StoryEmbed id="forms-patterns-form-step--government-benefit-application" />
+<StoryEmbed id="forms-form-form-step--government-benefit-application" />
 
 ## How it works
 
@@ -44,7 +44,7 @@ Break long government forms into manageable steps. Each step covers one concept 
 
 Use `civ-progress-steps` for forms with a known number of steps:
 
-<StoryEmbed id="forms-patterns-form-step--default" />
+<StoryEmbed id="forms-form-form-step--default" />
 
 Use `civ-progress-bar` for forms with a dynamic or unknown step count:
 
@@ -60,15 +60,15 @@ Use `civ-progress-bar` for forms with a dynamic or unknown step count:
 
 Each step validates its fields before allowing navigation to the next step. Invalid fields show errors and the step doesn't advance.
 
-<StoryEmbed id="forms-patterns-form-step--with-error" />
+<StoryEmbed id="forms-form-form-step--with-error" />
 
 ## Sensitive steps with pause
 
 For emotionally difficult sections, mark the step as `sensitive`. This adds a screen reader announcement and enables a "Save and come back later" action.
 
-<StoryEmbed id="forms-patterns-form-step--sensitive" />
+<StoryEmbed id="forms-form-form-step--sensitive" />
 
-<StoryEmbed id="forms-patterns-form-step--with-pause-and-resume" />
+<StoryEmbed id="forms-form-form-step--with-pause-and-resume" />
 
 ## Grouping guidance
 
@@ -87,4 +87,4 @@ Avoid one-field-per-step — it creates 20+ page forms with high abandonment. Gr
 - [`civ-progress-steps`](/docs/components/form/progress-steps) — step indicator
 - [`civ-progress-bar`](/docs/components/form/progress-steps#progress-bar) — percentage indicator
 
-[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-patterns-form-step--government-benefit-application)
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-form-form-step--government-benefit-application)

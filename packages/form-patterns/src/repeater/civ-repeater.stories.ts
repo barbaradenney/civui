@@ -6,7 +6,7 @@ import '@civui/inputs';
 import '@civui/compound';
 
 const meta: Meta = {
-  title: 'Forms/Patterns/Repeater',
+  title: 'Forms/Form/Repeater',
   component: 'civ-repeater',
   tags: ['autodocs'],
   argTypes: {

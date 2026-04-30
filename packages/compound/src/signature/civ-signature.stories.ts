@@ -5,7 +5,7 @@ import '@civui/inputs';
 import '@civui/controls';
 
 const meta: Meta = {
-  title: 'Forms/Patterns/Signature',
+  title: 'Forms/Compound/Signature',
   component: 'civ-signature',
   tags: ['autodocs'],
   argTypes: {

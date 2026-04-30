@@ -3,7 +3,7 @@ import { html } from 'lit';
 import './civ-divider.js';
 
 const meta: Meta = {
-  title: 'UI/Divider',
+  title: 'Layout/Divider',
   component: 'civ-divider',
   tags: ['autodocs'],
   argTypes: {

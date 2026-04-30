@@ -8,7 +8,7 @@ import '@civui/navigation/link';
 import '@civui/actions/action-button';
 
 const meta: Meta = {
-  title: 'UI/Card',
+  title: 'Layout/Card',
   component: 'civ-card',
   tags: ['autodocs'],
   argTypes: {

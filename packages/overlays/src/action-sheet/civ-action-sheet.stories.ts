@@ -3,7 +3,7 @@ import { html } from 'lit';
 import './civ-action-sheet.js';
 
 const meta: Meta = {
-  title: 'UI/Action Sheet',
+  title: 'Overlays/Action Sheet',
   component: 'civ-action-sheet',
   tags: ['autodocs'],
 };

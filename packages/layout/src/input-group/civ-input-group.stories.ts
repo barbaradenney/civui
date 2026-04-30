@@ -6,7 +6,7 @@ import '@civui/actions/action-button';
 import '@civui/inputs';
 
 const meta: Meta = {
-  title: 'UI/Input Group',
+  title: 'Layout/Input Group',
   component: 'civ-input-group',
   tags: ['autodocs'],
 };

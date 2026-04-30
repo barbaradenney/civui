@@ -4,7 +4,7 @@ import './civ-modal.js';
 import '@civui/actions';
 
 const meta: Meta = {
-  title: 'UI/Modal',
+  title: 'Overlays/Modal',
   component: 'civ-modal',
   tags: ['autodocs'],
 };

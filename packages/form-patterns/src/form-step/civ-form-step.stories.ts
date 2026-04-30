@@ -6,7 +6,7 @@ import '@civui/compound';
 import '@civui/inputs';
 
 const meta: Meta = {
-  title: 'Forms/Patterns/Form Step',
+  title: 'Forms/Form/Form Step',
   component: 'civ-form-step',
   tags: ['autodocs'],
   argTypes: {

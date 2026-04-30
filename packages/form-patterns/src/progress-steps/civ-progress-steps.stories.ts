@@ -4,7 +4,7 @@ import './civ-progress-steps.js';
 import './civ-progress-bar.js';
 
 const meta: Meta = {
-  title: 'Forms/Patterns/Progress Steps',
+  title: 'Forms/Form/Progress Steps',
   component: 'civ-progress-steps',
   tags: ['autodocs'],
   argTypes: {

@@ -4,7 +4,7 @@ import './civ-action-button.js';
 import '../button-group/civ-button-group.js';
 
 const meta: Meta = {
-  title: 'UI/Action Button',
+  title: 'Actions/Action Button',
   component: 'civ-action-button',
   tags: ['autodocs'],
   argTypes: {

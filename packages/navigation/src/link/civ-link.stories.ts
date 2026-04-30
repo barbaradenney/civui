@@ -3,7 +3,7 @@ import { html } from 'lit';
 import './civ-link.js';
 
 const meta: Meta = {
-  title: 'UI/Link',
+  title: 'Navigation/Link',
   component: 'civ-link',
   tags: ['autodocs'],
   argTypes: {

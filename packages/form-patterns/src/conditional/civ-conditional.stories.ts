@@ -8,7 +8,7 @@ import '@civui/actions';
 import '../form/civ-form.js';
 
 const meta: Meta = {
-  title: 'Forms/Layout/Conditional',
+  title: 'Forms/Form/Conditional',
   component: 'civ-conditional',
   tags: ['autodocs'],
   argTypes: {

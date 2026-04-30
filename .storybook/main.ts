@@ -57,7 +57,6 @@ const config: StorybookConfig = {
       // Actions
       '@civui/actions/button': resolve(root, 'packages/actions/src/button/index.ts'),
       '@civui/actions/action-button': resolve(root, 'packages/actions/src/action-button/index.ts'),
-      '@civui/actions/button-group': resolve(root, 'packages/actions/src/button-group/index.ts'),
       '@civui/actions/filter-chip': resolve(root, 'packages/actions/src/filter-chip/index.ts'),
       '@civui/actions/filter-chip-group': resolve(root, 'packages/actions/src/filter-chip-group/index.ts'),
       '@civui/actions/action-link': resolve(root, 'packages/actions/src/action-link/index.ts'),
@@ -72,6 +71,7 @@ const config: StorybookConfig = {
       '@civui/layout/input-group': resolve(root, 'packages/layout/src/input-group/index.ts'),
       '@civui/layout/page-header': resolve(root, 'packages/layout/src/page-header/index.ts'),
       '@civui/layout/tag': resolve(root, 'packages/layout/src/tag/index.ts'),
+      '@civui/layout/button-group': resolve(root, 'packages/layout/src/button-group/index.ts'),
       '@civui/layout': resolve(root, 'packages/layout/src/index.ts'),
       // Navigation
       '@civui/navigation/skip-link': resolve(root, 'packages/navigation/src/skip-link/index.ts'),

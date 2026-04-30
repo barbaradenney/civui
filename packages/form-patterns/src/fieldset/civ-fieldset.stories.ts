@@ -5,7 +5,7 @@ import './civ-fieldset.js';
 import '@civui/inputs';
 
 const meta: Meta = {
-  title: 'Forms/Layout/Fieldset',
+  title: 'Forms/Form/Fieldset',
   component: 'civ-fieldset',
   tags: ['autodocs'],
   argTypes: {

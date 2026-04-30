@@ -14,7 +14,7 @@ Collect variable-length lists of items — dependents, service periods, previous
 
 Best for 1-3 fields per item. Fields are visible on the page with add/remove buttons.
 
-<StoryEmbed id="forms-patterns-repeater--default" />
+<StoryEmbed id="forms-form-repeater--default" />
 
 ```html
 <civ-repeater
@@ -33,7 +33,7 @@ Best for 1-3 fields per item. Fields are visible on the page with add/remove but
 
 Best for 4+ fields. Shows summary cards for existing items. Clicking "Add" or "Edit" opens a focused detail view.
 
-<StoryEmbed id="forms-patterns-repeater--multiple-fields" />
+<StoryEmbed id="forms-form-repeater--multiple-fields" />
 
 ```html
 <civ-repeater
@@ -55,15 +55,15 @@ Best for 4+ fields. Shows summary cards for existing items. Clicking "Add" or "E
 
 For items complex enough to warrant their own mini-wizard. Each item is added through a step-by-step flow.
 
-<StoryEmbed id="forms-patterns-repeater--wizard-mode" />
+<StoryEmbed id="forms-form-repeater--wizard-mode" />
 
-<StoryEmbed id="forms-patterns-repeater--wizard-with-relationship" />
+<StoryEmbed id="forms-form-repeater--wizard-with-relationship" />
 
 ## Min and max constraints
 
 Set `min` and `max` to control the allowed number of items:
 
-<StoryEmbed id="forms-patterns-repeater--min-max" />
+<StoryEmbed id="forms-form-repeater--min-max" />
 
 ```html
 <!-- At least 1 service period, up to 10 -->
@@ -74,7 +74,7 @@ Set `min` and `max` to control the allowed number of items:
 
 ## Government service periods example
 
-<StoryEmbed id="forms-patterns-repeater--government-service-periods" />
+<StoryEmbed id="forms-form-repeater--government-service-periods" />
 
 ## Composition examples
 
@@ -97,4 +97,4 @@ Pre-built compositions for common government form sections:
 - [`civ-repeater`](/docs/components/form/repeater) — repeating section container
 - Compound components work inside repeaters: `civ-name`, `civ-address`, `civ-service-history`, `civ-relationship`
 
-[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-patterns-repeater--default)
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-form-repeater--default)

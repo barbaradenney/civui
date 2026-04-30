@@ -7,7 +7,7 @@ import '@civui/controls';
 import '@civui/actions';
 
 const meta: Meta = {
-  title: 'Forms/Layout/Form',
+  title: 'Forms/Form/Form',
   component: 'civ-form',
   tags: ['autodocs'],
   argTypes: {

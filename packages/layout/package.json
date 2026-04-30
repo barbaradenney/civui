@@ -12,7 +12,8 @@
     "./divider": "./dist/divider/index.js",
     "./input-group": "./dist/input-group/index.js",
     "./page-header": "./dist/page-header/index.js",
-    "./tag": "./dist/tag/index.js"
+    "./tag": "./dist/tag/index.js",
+    "./button-group": "./dist/button-group/index.js"
   },
   "files": ["dist"],
   "publishConfig": {

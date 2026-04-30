@@ -97,9 +97,11 @@ describe('civ-list-item', () => {
     expect(el.shadowRoot).toBeNull();
   });
 
-  it('renders icon-start as civ-icon element', async () => {
-    const el = await fixture('<civ-list-item icon-start="edit">Item</civ-list-item>');
-    const icon = el.querySelector('civ-icon');
+  it('relocates start slot content', async () => {
+    const el = await fixture('<civ-list-item><civ-icon data-list-item-start name="edit"></civ-icon>Item</civ-list-item>');
+    const startSlot = el.querySelector('[data-civ-list-item-start-slot]');
+    expect(startSlot).not.toBeNull();
+    const icon = startSlot!.querySelector('civ-icon');
     expect(icon).not.toBeNull();
     expect(icon!.getAttribute('name')).toBe('edit');
   });

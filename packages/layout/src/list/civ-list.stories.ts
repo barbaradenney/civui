@@ -3,6 +3,7 @@ import { html } from 'lit';
 import './civ-list.js';
 import './civ-list-item.js';
 import '@civui/feedback/badge';
+import '@civui/actions/action-button';
 
 const meta: Meta = {
   title: 'Layout/List',
@@ -43,16 +44,28 @@ export const WithDividers: Story = {
   `,
 };
 
-// ── Icons ────────────────────────────────────────────────────
+// ── Start slot (icons) ───────────────────────────────────────
 
 export const WithIcons: Story = {
-  name: 'With icons',
+  name: 'With icons (start slot)',
   render: () => html`
     <civ-list dividers>
-      <civ-list-item href="#/dashboard" icon-start="home">Dashboard</civ-list-item>
-      <civ-list-item href="#/claims" icon-start="edit">My claims</civ-list-item>
-      <civ-list-item href="#/messages" icon-start="mail">Messages</civ-list-item>
-      <civ-list-item href="#/settings" icon-start="settings">Settings</civ-list-item>
+      <civ-list-item href="#/dashboard">
+        <civ-icon data-list-item-start name="home"></civ-icon>
+        Dashboard
+      </civ-list-item>
+      <civ-list-item href="#/claims">
+        <civ-icon data-list-item-start name="edit"></civ-icon>
+        My claims
+      </civ-list-item>
+      <civ-list-item href="#/messages">
+        <civ-icon data-list-item-start name="mail"></civ-icon>
+        Messages
+      </civ-list-item>
+      <civ-list-item href="#/settings">
+        <civ-icon data-list-item-start name="settings"></civ-icon>
+        Settings
+      </civ-list-item>
     </civ-list>
   `,
 };
@@ -70,17 +83,18 @@ export const HeadingAndDescription: Story = {
   `,
 };
 
-export const HeadingWithIcons: Story = {
-  name: 'Heading + icons + badges',
+export const HeadingWithStartAndEnd: Story = {
+  name: 'Heading + start icon + end badge',
   render: () => html`
     <civ-list dividers>
-      <civ-list-item href="#/personal" icon-start="check-circle" heading="Personal information" description="Name, date of birth, SSN">
+      <civ-list-item href="#/personal" heading="Personal information" description="Name, date of birth, SSN">
+        <civ-icon data-list-item-start name="check-circle" class="civ-text-success"></civ-icon>
         <civ-badge data-list-item-end label="Complete" variant="success" badge-style="primary" with-icon></civ-badge>
       </civ-list-item>
-      <civ-list-item href="#/contact" icon-start="edit" heading="Contact information" description="Phone and email needed">
+      <civ-list-item href="#/contact" heading="Contact information" description="Phone and email needed">
         <civ-badge data-list-item-end label="In progress" variant="info" badge-style="primary" with-icon></civ-badge>
       </civ-list-item>
-      <civ-list-item icon-start="lock" heading="Service history">
+      <civ-list-item heading="Service history">
         <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
       </civ-list-item>
     </civ-list>
@@ -107,10 +121,22 @@ export const SideNavWithCurrent: Story = {
   name: 'Side nav with current page',
   render: () => html`
     <civ-list>
-      <civ-list-item href="#/dashboard" icon-start="home">Dashboard</civ-list-item>
-      <civ-list-item href="#/claims" icon-start="edit" current>Claims</civ-list-item>
-      <civ-list-item href="#/messages" icon-start="mail">Messages</civ-list-item>
-      <civ-list-item href="#/settings" icon-start="settings">Settings</civ-list-item>
+      <civ-list-item href="#/dashboard">
+        <civ-icon data-list-item-start name="home"></civ-icon>
+        Dashboard
+      </civ-list-item>
+      <civ-list-item href="#/claims" current>
+        <civ-icon data-list-item-start name="edit"></civ-icon>
+        Claims
+      </civ-list-item>
+      <civ-list-item href="#/messages">
+        <civ-icon data-list-item-start name="mail"></civ-icon>
+        Messages
+      </civ-list-item>
+      <civ-list-item href="#/settings">
+        <civ-icon data-list-item-start name="settings"></civ-icon>
+        Settings
+      </civ-list-item>
     </civ-list>
   `,
 };
@@ -145,20 +171,18 @@ export const CompactSpacing: Story = {
   name: 'Compact spacing (sm)',
   render: () => html`
     <civ-list dividers spacing="sm">
-      <civ-list-item href="#/1" icon-start="edit">Claim #1234 — Disability</civ-list-item>
-      <civ-list-item href="#/2" icon-start="edit">Claim #5678 — Education</civ-list-item>
-      <civ-list-item href="#/3" icon-start="edit">Claim #9012 — Healthcare</civ-list-item>
-    </civ-list>
-  `,
-};
-
-export const CompactWithHeadings: Story = {
-  name: 'Compact with headings',
-  render: () => html`
-    <civ-list dividers spacing="sm">
-      <civ-list-item href="#/1" heading="Claim #1234" description="Disability compensation"></civ-list-item>
-      <civ-list-item href="#/2" heading="Claim #5678" description="Education benefits"></civ-list-item>
-      <civ-list-item href="#/3" heading="Claim #9012" description="Healthcare enrollment"></civ-list-item>
+      <civ-list-item href="#/1">
+        <civ-icon data-list-item-start name="edit"></civ-icon>
+        Claim #1234 — Disability
+      </civ-list-item>
+      <civ-list-item href="#/2">
+        <civ-icon data-list-item-start name="edit"></civ-icon>
+        Claim #5678 — Education
+      </civ-list-item>
+      <civ-list-item href="#/3">
+        <civ-icon data-list-item-start name="edit"></civ-icon>
+        Claim #9012 — Healthcare
+      </civ-list-item>
     </civ-list>
   `,
 };
@@ -169,14 +193,16 @@ export const NestedList: Story = {
   name: 'Nested list',
   render: () => html`
     <civ-list dividers>
-      <civ-list-item icon-start="home" heading="Benefits">
+      <civ-list-item heading="Benefits">
+        <civ-icon data-list-item-start name="home"></civ-icon>
         <civ-list dividers>
           <civ-list-item href="#/disability">Disability compensation</civ-list-item>
           <civ-list-item href="#/education">Education benefits</civ-list-item>
           <civ-list-item href="#/housing">Housing assistance</civ-list-item>
         </civ-list>
       </civ-list-item>
-      <civ-list-item icon-start="user" heading="Records">
+      <civ-list-item heading="Records">
+        <civ-icon data-list-item-start name="user"></civ-icon>
         <civ-list>
           <civ-list-item href="#/dd214">DD214</civ-list-item>
           <civ-list-item href="#/medical">Medical records</civ-list-item>
@@ -186,23 +212,65 @@ export const NestedList: Story = {
   `,
 };
 
-// ── Trailing badges ──────────────────────────────────────────
+// ── End slot (badges, actions) ───────────────────────────────
 
 export const WithTrailingBadges: Story = {
   name: 'With trailing badges',
   render: () => html`
     <civ-list dividers>
-      <civ-list-item href="#/personal" icon-start="check-circle">
+      <civ-list-item href="#/personal">
+        <civ-icon data-list-item-start name="check-circle" class="civ-text-success"></civ-icon>
         Personal information
         <civ-badge data-list-item-end label="Complete" variant="success" badge-style="primary" with-icon></civ-badge>
       </civ-list-item>
-      <civ-list-item href="#/contact" icon-start="edit">
+      <civ-list-item href="#/contact">
         Contact information
         <civ-badge data-list-item-end label="In progress" variant="info" badge-style="primary" with-icon></civ-badge>
       </civ-list-item>
-      <civ-list-item icon-start="lock">
+      <civ-list-item>
         Service history
         <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
+      </civ-list-item>
+    </civ-list>
+  `,
+};
+
+export const WithActionButtons: Story = {
+  name: 'With action buttons (end slot)',
+  render: () => html`
+    <civ-list dividers>
+      <civ-list-item heading="tax-return.pdf" description="1.2 MB">
+        <civ-icon data-list-item-start name="check-circle" class="civ-text-success"></civ-icon>
+        <civ-action-button data-list-item-end label="Remove" variant="tertiary" danger></civ-action-button>
+      </civ-list-item>
+      <civ-list-item heading="invalid-file.exe" error="This file type is not accepted">
+        <civ-icon data-list-item-start name="error" class="civ-text-error"></civ-icon>
+        <civ-action-button data-list-item-end label="Remove" variant="tertiary" danger></civ-action-button>
+      </civ-list-item>
+      <civ-list-item heading="uploading.pdf" description="Uploading...">
+        <civ-icon data-list-item-start name="loading"></civ-icon>
+        <civ-action-button data-list-item-end label="Cancel" variant="tertiary"></civ-action-button>
+      </civ-list-item>
+    </civ-list>
+  `,
+};
+
+// ── Error ────────────────────────────────────────────────────
+
+export const WithErrors: Story = {
+  name: 'With errors',
+  render: () => html`
+    <civ-list dividers>
+      <civ-list-item heading="budget.xlsx" error="File type not accepted. Upload a PDF, JPG, or PNG.">
+        <civ-icon data-list-item-start name="error" class="civ-text-error"></civ-icon>
+        <span data-list-item-end style="display: flex; gap: 4px;">
+          <civ-action-button label="Retry" variant="tertiary"></civ-action-button>
+          <civ-action-button label="Remove" variant="tertiary" danger></civ-action-button>
+        </span>
+      </civ-list-item>
+      <civ-list-item heading="photo.bmp" error="File exceeds 10 MB limit.">
+        <civ-icon data-list-item-start name="error" class="civ-text-error"></civ-icon>
+        <civ-action-button data-list-item-end label="Remove" variant="tertiary" danger></civ-action-button>
       </civ-list-item>
     </civ-list>
   `,
@@ -216,7 +284,8 @@ export const GovernmentTaskList: Story = {
     <div style="max-width: 600px;">
       <h3 style="font-weight: bold; margin-bottom: 12px;">Fill out your application</h3>
       <civ-list dividers>
-        <civ-list-item href="#/personal" icon-start="check-circle" heading="Personal information" description="Name, date of birth, SSN">
+        <civ-list-item href="#/personal" heading="Personal information" description="Name, date of birth, SSN">
+          <civ-icon data-list-item-start name="check-circle" class="civ-text-success"></civ-icon>
           <civ-badge data-list-item-end label="Complete" variant="success" badge-style="primary" with-icon></civ-badge>
         </civ-list-item>
         <civ-list-item href="#/contact" heading="Contact information" description="Phone and email needed">
@@ -238,7 +307,10 @@ export const GovernmentSideNav: Story = {
   render: () => html`
     <nav style="max-width: 280px;" aria-label="Section navigation">
       <civ-list>
-        <civ-list-item href="#/step-1" icon-start="check-circle" current>Step 1: Personal info</civ-list-item>
+        <civ-list-item href="#/step-1" current>
+          <civ-icon data-list-item-start name="check-circle" class="civ-text-success"></civ-icon>
+          Step 1: Personal info
+        </civ-list-item>
         <civ-list-item href="#/step-2">Step 2: Contact info</civ-list-item>
         <civ-list-item href="#/step-3">Step 3: Service history</civ-list-item>
         <civ-list-item>Step 4: Review</civ-list-item>
@@ -246,63 +318,3 @@ export const GovernmentSideNav: Story = {
     </nav>
   `,
 };
-
-// ── Status ───────────────────────────────────────────────────
-
-export const StatusIndicators: Story = {
-  name: 'Status indicators',
-  render: () => html`
-    <civ-list dividers>
-      <civ-list-item status="success" heading="tax-return.pdf" description="1.2 MB">
-        <civ-action-button data-list-item-end label="Remove" variant="tertiary" danger></civ-action-button>
-      </civ-list-item>
-      <civ-list-item status="error" heading="invalid-file.exe" error="This file type is not accepted">
-        <civ-action-button data-list-item-end label="Remove" variant="tertiary" danger></civ-action-button>
-      </civ-list-item>
-      <civ-list-item status="warning" heading="large-scan.tiff" description="48 MB — exceeds recommended size">
-        <civ-action-button data-list-item-end label="Remove" variant="tertiary" danger></civ-action-button>
-      </civ-list-item>
-      <civ-list-item status="loading" heading="uploading-doc.pdf" description="Uploading...">
-        <civ-action-button data-list-item-end label="Cancel" variant="tertiary"></civ-action-button>
-      </civ-list-item>
-    </civ-list>
-  `,
-};
-
-export const FileUploadPattern: Story = {
-  name: 'File upload pattern',
-  render: () => html`
-    <div style="max-width: 500px;">
-      <h4 style="font-weight: bold; margin-bottom: 8px;">Uploaded documents</h4>
-      <civ-list dividers>
-        <civ-list-item status="success" heading="DD214.pdf" description="2.4 MB">
-          <civ-action-button data-list-item-end label="Remove" variant="tertiary" danger></civ-action-button>
-        </civ-list-item>
-        <civ-list-item status="success" heading="medical-records.pdf" description="8.1 MB">
-          <civ-action-button data-list-item-end label="Remove" variant="tertiary" danger></civ-action-button>
-        </civ-list-item>
-        <civ-list-item status="loading" heading="service-letter.pdf" description="Uploading...">
-          <civ-action-button data-list-item-end label="Cancel" variant="tertiary"></civ-action-button>
-        </civ-list-item>
-      </civ-list>
-    </div>
-  `,
-};
-
-export const ErrorState: Story = {
-  name: 'Error state',
-  render: () => html`
-    <civ-list dividers>
-      <civ-list-item status="error" heading="budget.xlsx" error="File type not accepted. Upload a PDF, JPG, or PNG.">
-        <span data-list-item-end style="display: flex; gap: 4px;">
-          <civ-action-button label="Retry" variant="tertiary"></civ-action-button>
-          <civ-action-button label="Remove" variant="tertiary" danger></civ-action-button>
-        </span>
-      </civ-list-item>
-      <civ-list-item status="error" heading="photo.bmp" error="File exceeds 10 MB limit.">
-        <civ-action-button data-list-item-end label="Remove" variant="tertiary" danger></civ-action-button>
-      </civ-list-item>
-    </civ-list>
-  `,
-};
-

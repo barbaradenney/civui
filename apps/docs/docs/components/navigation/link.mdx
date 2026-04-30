@@ -132,44 +132,7 @@ Add `danger` to any variant for destructive action styling.
 
 ---
 
-## Action Link
-
-`<civ-action-link>`
-
-A unified link for device actions — phone calls and email compose. Set the `type` prop to switch between phone and email behavior. Renders the correct protocol (`tel:` / `mailto:`), icon (phone / mail), and formatted display text automatically.
-
-<StoryEmbed id="actions-action-link--all-variants" />
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `type` | `'phone' \| 'email'` | `'phone'` | Action type — determines protocol and icon |
-| `number` | `string` | `''` | Phone number (used when type="phone") |
-| `address` | `string` | `''` | Email address (used when type="email") |
-| `subject` | `string` | `''` | Pre-filled email subject (used when type="email") |
-| `label` | `string` | `''` | Override display text |
-| `disabled` | `boolean` | `false` | Disabled state |
-
-```html
-<!-- Phone -->
-<civ-action-link type="phone" number="8005551234"></civ-action-link>
-<civ-action-link type="phone" number="8005551234" label="Call us"></civ-action-link>
-
-<!-- Email -->
-<civ-action-link type="email" address="help@va.gov"></civ-action-link>
-<civ-action-link type="email" address="help@va.gov" subject="Question"></civ-action-link>
-```
-
-<StoryEmbed id="actions-action-link--government-contact-section" />
-
-[Open in Storybook →](pathname:///civui/storybook/?path=/story/actions-action-link--all-variants)
-
----
-
-## Specialized Links
-
-For new-tab links, use `<civ-link>` with the `new-tab` prop. For file downloads, use `<civ-action-link type="download">`.
-
-### New Tab
+## New Tab
 
 Use `<civ-link new-tab>` to open links in a new tab. This automatically sets `target="_blank"`, `rel="noopener noreferrer"`, appends an external-link icon, and adds screen-reader-only "(opens in new tab)" text. Works for both external and internal links.
 
@@ -189,17 +152,4 @@ Use `<civ-link new-tab>` to open links in a new tab. This automatically sets `ta
 ></civ-link>
 ```
 
-### Download Link
-
-Use `<civ-action-link type="download">` for file downloads. This sets the `download` attribute, shows a download icon, and optionally displays the file size.
-
-```html
-<civ-action-link
-  type="download"
-  href="/forms/va-10-10ez.pdf"
-  label="Application for Health Benefits (VA 10-10EZ)"
-  filename="va-10-10ez.pdf"
-  file-size="1.2 MB"
-></civ-action-link>
-```
 

@@ -668,25 +668,25 @@
   .civ-icon--arrow-back::before {
     content: '';
     position: absolute;
-    width: 0.55em;
-    height: 0.4em;
+    width: 0.65em;
+    height: 0.35em;
     border: var(--civ-icon-stroke) solid currentColor;
     border-bottom: 0;
     border-radius: 0.4em 0.4em 0 0;
     top: 0.15em;
-    left: 50%;
-    transform: translateX(-50%);
+    left: 70%;
+    transform: translateX(-68%);
   }
   .civ-icon--arrow-back::after {
     content: '';
     position: absolute;
-    width: 0.22em;
-    height: 0.22em;
+    width: 0.38em;
+    height: 0.38em;
     border-left: var(--civ-icon-stroke) solid currentColor;
     border-bottom: var(--civ-icon-stroke) solid currentColor;
-    transform: rotate(45deg);
-    left: 0.1em;
-    top: 0.28em;
+    transform: rotate(-33deg);
+    left: 0.15em;
+    top: 0.22em;
   }
 
   /* External-link (box with arrow pointing out top-right) */

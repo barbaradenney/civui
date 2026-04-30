@@ -1,7 +1,7 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { CivBaseElement, announce, dispatch, t, interpolate } from '@civui/core';
-import '@civui/actions/link';
+import '@civui/navigation/link';
 
 /**
  * CivUI Progress Steps

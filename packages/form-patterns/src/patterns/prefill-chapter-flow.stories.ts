@@ -8,7 +8,7 @@ import '@civui/compound';
 import '../form-step/civ-form-step.js';
 import '@civui/feedback';
 import '@civui/navigation';
-import '@civui/actions/link';
+import '@civui/navigation/link';
 import '@civui/actions/button';
 import '@civui/layout/tag';
 import '@civui/layout/divider';

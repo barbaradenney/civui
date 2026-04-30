@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import './civ-summary.js';
 import '@civui/compound';
-import '@civui/actions/link';
+import '@civui/navigation/link';
 import '@civui/layout/divider';
 
 const meta: Meta = {

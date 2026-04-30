@@ -3,7 +3,7 @@ import { customElement, property } from 'lit/decorators.js';
 import { CivBaseElement, t } from '@civui/core';
 import type { CivLocaleStrings } from '@civui/core';
 import '@civui/layout/tag';
-import '@civui/actions/link';
+import '@civui/navigation/link';
 
 export type TaskStatus = 'not-started' | 'in-progress' | 'complete' | 'cannot-start' | 'error' | 'review';
 

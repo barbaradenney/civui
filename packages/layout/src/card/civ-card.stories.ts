@@ -3,7 +3,7 @@ import { html } from 'lit';
 import './civ-card.js';
 import '../tag/civ-tag.js';
 import '@civui/actions/button';
-import '@civui/actions/link';
+import '@civui/navigation/link';
 import '@civui/actions/action-button';
 
 const meta: Meta = {

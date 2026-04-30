@@ -1,7 +1,7 @@
 import { html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { CivBaseElement, LightDomTextMixin } from '@civui/core';
-import '../link/civ-link.js';
+import '@civui/navigation/link';
 
 /**
  * CivUI Phone Link

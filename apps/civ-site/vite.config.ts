@@ -48,12 +48,8 @@ export default defineConfig({
       // Actions
       '@civui/actions/button': resolve(packages, 'actions/src/button/index.ts'),
       '@civui/actions/action-button': resolve(packages, 'actions/src/action-button/index.ts'),
-      '@civui/actions/link': resolve(packages, 'actions/src/link/index.ts'),
-      '@civui/actions/link-card': resolve(packages, 'actions/src/link-card/index.ts'),
       '@civui/actions/button-group': resolve(packages, 'actions/src/button-group/index.ts'),
-      '@civui/actions/external-link': resolve(packages, 'actions/src/external-link/index.ts'),
       '@civui/actions/phone-link': resolve(packages, 'actions/src/phone-link/index.ts'),
-      '@civui/actions/download-link': resolve(packages, 'actions/src/download-link/index.ts'),
       '@civui/actions/email-link': resolve(packages, 'actions/src/email-link/index.ts'),
       '@civui/actions': resolve(packages, 'actions/src/index.ts'),
       // Overlays
@@ -67,6 +63,13 @@ export default defineConfig({
       '@civui/layout/page-header': resolve(packages, 'layout/src/page-header/index.ts'),
       '@civui/layout/tag': resolve(packages, 'layout/src/tag/index.ts'),
       '@civui/layout': resolve(packages, 'layout/src/index.ts'),
+      // Navigation
+      '@civui/navigation/skip-link': resolve(packages, 'navigation/src/skip-link/index.ts'),
+      '@civui/navigation/task-list': resolve(packages, 'navigation/src/task-list/index.ts'),
+      '@civui/navigation/link': resolve(packages, 'navigation/src/link/index.ts'),
+      '@civui/navigation/link-card': resolve(packages, 'navigation/src/link-card/index.ts'),
+      '@civui/navigation/external-link': resolve(packages, 'navigation/src/external-link/index.ts'),
+      '@civui/navigation/download-link': resolve(packages, 'navigation/src/download-link/index.ts'),
       '@civui/navigation': resolve(packages, 'navigation/src/index.ts'),
       '@civui/feedback': resolve(packages, 'feedback/src/index.ts'),
       '@civui/tokens/css': resolve(packages, 'tokens/dist/css/tokens.css'),

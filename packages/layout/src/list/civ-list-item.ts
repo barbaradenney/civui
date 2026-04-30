@@ -9,32 +9,48 @@ const UNSAFE_HREF_PATTERN = /^\s*javascript\s*:/i;
 /**
  * CivUI List Item
  *
- * A row inside `<civ-list>`. Renders as `<li>`. When `href` is set,
- * the entire row becomes a clickable anchor; otherwise it's a plain
- * `<li>` with the same layout.
+ * A row inside `<civ-list>`. Five slot zones for flexible composition:
  *
- * Three slot zones: start (leading content like icons), default (body),
- * and end (trailing content like badges or action buttons).
+ * - **start** (`data-list-item-start`) — leading content (icons, avatars)
+ * - **heading** (`data-list-item-heading`) — heading element (any level)
+ * - **description** (`data-list-item-description`) — secondary/rich text
+ * - **default** — body content
+ * - **end** (`data-list-item-end`) — trailing content (badges, buttons)
+ *
+ * String props `heading` and `description` are convenience shorthand.
+ * When the corresponding slot is present, it takes priority over the prop.
  *
  * @element civ-list-item
  *
  * @prop {string} href - Optional navigation target.
  * @prop {boolean} current - Mark as current page (`aria-current="page"`).
- * @prop {string} heading - Bold heading text.
- * @prop {string} description - Secondary text below the heading.
- * @prop {string} error - Error text below content (uses shared renderError from core).
+ * @prop {string} heading - Shorthand bold heading text.
+ * @prop {string} description - Shorthand secondary text below heading.
+ * @prop {string} error - Error text below content.
  *
- * @slot start - Leading content via `data-list-item-start` attribute (icons, avatars, thumbnails).
- * @slot - Primary content. When `heading` is set, slot content renders after heading/description.
- * @slot end - Trailing content via `data-list-item-end` attribute (badges, action buttons).
+ * @slot start - Leading content via `data-list-item-start`.
+ * @slot heading - Rich heading via `data-list-item-heading` (overrides heading prop).
+ * @slot description - Rich description via `data-list-item-description` (overrides description prop).
+ * @slot - Body content.
+ * @slot end - Trailing content via `data-list-item-end`.
  *
  * @fires civ-analytics - Analytics tracking on click (when href set).
  *
  * @example
  * ```html
- * <civ-list-item href="/claims" heading="My claims" description="3 active">
+ * <!-- Simple (string props) -->
+ * <civ-list-item heading="Personal info" description="Name, DOB, SSN">
+ *   <civ-badge data-list-item-end label="Complete" variant="success"></civ-badge>
+ * </civ-list-item>
+ *
+ * <!-- Rich (slots — any heading level, links in description) -->
+ * <civ-list-item>
  *   <civ-icon data-list-item-start name="edit"></civ-icon>
- *   <civ-badge data-list-item-end label="3" variant="info"></civ-badge>
+ *   <h3 data-list-item-heading class="civ-font-bold">Contact information</h3>
+ *   <p data-list-item-description class="civ-text-sm civ-text-base-dark">
+ *     Phone, email, and <a href="#/address">mailing address</a>
+ *   </p>
+ *   <civ-badge data-list-item-end label="In progress" variant="info"></civ-badge>
  * </civ-list-item>
  * ```
  */
@@ -46,18 +62,20 @@ export class CivListItem extends LightDomSlotMixin(CivBaseElement) {
   /** Mark this row as the current page. Sets aria-current="page" on the anchor. */
   @property({ type: Boolean }) current = false;
 
-  /** Bold heading text. */
+  /** Shorthand bold heading text. Overridden by the heading slot. */
   @property({ type: String }) heading = '';
 
-  /** Secondary text below the heading. */
+  /** Shorthand secondary text. Overridden by the description slot. */
   @property({ type: String }) description = '';
 
-  /** Error text below the content. Uses the shared renderError pattern from core. */
+  /** Error text below the content. */
   @property({ type: String }) error = '';
 
   override _getSlotConfig(): SlotConfig {
     return {
       'data-list-item-start': '[data-civ-list-item-start-slot]',
+      'data-list-item-heading': '[data-civ-list-item-heading-slot]',
+      'data-list-item-description': '[data-civ-list-item-description-slot]',
       'data-list-item-end': '[data-civ-list-item-end-slot]',
       default: '[data-civ-list-item-content-slot]',
     };
@@ -74,6 +92,8 @@ export class CivListItem extends LightDomSlotMixin(CivBaseElement) {
 
   override render() {
     const hasStart = this._hasSlottedChildren('data-list-item-start');
+    const hasHeadingSlot = this._hasSlottedChildren('data-list-item-heading');
+    const hasDescriptionSlot = this._hasSlottedChildren('data-list-item-description');
     const hasEnd = this._hasSlottedChildren('data-list-item-end');
     const isLink = !!this._safeHref;
 
@@ -93,17 +113,27 @@ export class CivListItem extends LightDomSlotMixin(CivBaseElement) {
       'civ-transition-colors',
     ].join(' ');
 
-    const headingBlock = this.heading ? html`
-      <span class="civ-block civ-font-bold">${this.heading}</span>
-      ${this.description ? html`<span class="civ-block civ-text-sm civ-text-base-dark">${this.description}</span>` : nothing}
-    ` : nothing;
+    // Heading: slot takes priority, then prop fallback
+    const headingContent = hasHeadingSlot
+      ? html`<span data-civ-list-item-heading-slot></span>`
+      : this.heading
+        ? html`<span class="civ-block civ-font-bold">${this.heading}</span>`
+        : nothing;
+
+    // Description: slot takes priority, then prop fallback
+    const descriptionContent = hasDescriptionSlot
+      ? html`<span data-civ-list-item-description-slot></span>`
+      : this.description
+        ? html`<span class="civ-block civ-text-sm civ-text-base-dark">${this.description}</span>`
+        : nothing;
 
     const inner = html`
       ${hasStart ? html`
         <span class="civ-flex-shrink-0 civ-flex civ-items-center" data-civ-list-item-start-slot></span>
       ` : nothing}
       <span class="civ-flex-1 civ-min-w-0">
-        ${headingBlock}
+        ${headingContent}
+        ${descriptionContent}
         <span data-civ-list-item-content-slot></span>
         ${renderError(this.generateId('error'), this.error)}
       </span>

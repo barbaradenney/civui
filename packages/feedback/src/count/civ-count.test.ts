@@ -23,6 +23,13 @@ describe('civ-count', () => {
     expect(el.querySelector('.civ-count')).toBeNull();
   });
 
+  it('renders nothing when count is NaN', async () => {
+    const el = await fixture<CivCount>('<civ-count></civ-count>');
+    el.count = Number('not a number'); // NaN
+    await elementUpdated(el);
+    expect(el.querySelector('.civ-count')).toBeNull();
+  });
+
   it('renders {max}+ when count exceeds default max of 99', async () => {
     const el = await fixture<CivCount>('<civ-count count="150"></civ-count>');
     expect(el.querySelector('.civ-count')!.textContent).toBe('99+');

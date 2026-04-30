@@ -15,14 +15,17 @@ export type CountLive = 'off' | 'polite' | 'assertive';
  * `civ-badge` so it sits inside other components without competing
  * with their visual weight.
  *
- * **Modes:**
- * - **Inline** (default `count-style="secondary"`): bare colored number,
- *   no background. Use inside chips, list items, nav links.
- * - **Pill** (`count-style="primary"`): filled background — for
- *   standalone or notification-style counters.
- * - **Overlay** (`overlay`): absolutely positioned over a relative
- *   parent, for the icon+count notification pattern. Use the
- *   `civ-badge-anchor` utility class on the parent.
+ * **Styles** (`count-style`):
+ * - `secondary` (default) — bare colored text, no background. Inherits
+ *   the parent's color when `variant="neutral"`. Use inside chips,
+ *   list items, nav links.
+ * - `primary` — filled rounded pill. Use for standalone or
+ *   notification-style counters.
+ *
+ * **Position** is independent of style: set `overlay` to absolutely
+ * position the count in the top-end corner of a relatively-positioned
+ * parent (use the `civ-badge-anchor` utility class), regardless of
+ * whether the style is `secondary` or `primary`.
  *
  * **Accessibility:** counts are static annotations by default
  * (`live="off"`). Set `live="polite"` for inbox-style counters that
@@ -30,7 +33,7 @@ export type CountLive = 'off' | 'polite' | 'assertive';
  *
  * @element civ-count
  *
- * @prop {number | null} count - Numeric value (required to render)
+ * @prop {number | null} count - Numeric value. Render is skipped when null, undefined, or NaN.
  * @prop {number} max - Overflow threshold; values above render as `{max}+` (default 99)
  * @prop {CountVariant} variant - Semantic color (default 'neutral')
  * @prop {CountStyle} countStyle - Emphasis: 'secondary' (text only, default) or 'primary' (filled pill)
@@ -47,7 +50,7 @@ export type CountLive = 'off' | 'polite' | 'assertive';
  */
 @customElement('civ-count')
 export class CivCount extends CivBaseElement {
-  /** Numeric value to render. */
+  /** Numeric value to render. Render is skipped when null, undefined, or NaN. */
   @property({ type: Number }) count: number | null = null;
 
   /** Overflow threshold; counts above render as "{max}+". */
@@ -69,12 +72,13 @@ export class CivCount extends CivBaseElement {
   @property({ type: String }) live: CountLive = 'off';
 
   private get _displayCount(): string {
-    if (this.count === null || this.count === undefined) return '';
-    return this.count > this.max ? `${this.max}+` : String(this.count);
+    return this.count! > this.max ? `${this.max}+` : String(this.count);
   }
 
   override render() {
-    if (this.count === null || this.count === undefined) return nothing;
+    if (this.count === null || this.count === undefined || Number.isNaN(this.count)) {
+      return nothing;
+    }
 
     const classes = [
       'civ-count',

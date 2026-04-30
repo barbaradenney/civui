@@ -49,7 +49,6 @@ export const Default: Story = {
     countStyle: 'secondary',
     spacing: 'default',
     overlay: false,
-    live: 'off',
   },
   render: (args) => html`
     <civ-count
@@ -99,21 +98,25 @@ export const Styles: Story = {
 export const Spacing: Story = {
   parameters: {
     docs: {
-      description: { story: 'Default and compact (`sm`) sizing.' },
+      description: { story: 'Default and compact (`sm`) sizing for both styles.' },
     },
   },
   render: () => html`
     <div style="display: grid; gap: 0.75rem;">
       <div>
         <p style="margin: 0 0 0.25rem; font-weight: 600;">Default</p>
-        <div style="display: flex; gap: 0.5rem; align-items: center;">
+        <div style="display: flex; gap: 1rem; align-items: center;">
+          <span>Inbox <civ-count count="12" variant="info"></civ-count></span>
+          <span>Errors <civ-count count="3" variant="error"></civ-count></span>
           <civ-count count="12" count-style="primary" variant="info"></civ-count>
           <civ-count count="42" count-style="primary" variant="error"></civ-count>
         </div>
       </div>
       <div>
         <p style="margin: 0 0 0.25rem; font-weight: 600;">Compact (sm)</p>
-        <div style="display: flex; gap: 0.5rem; align-items: center;">
+        <div style="display: flex; gap: 1rem; align-items: center;">
+          <span>Inbox <civ-count count="12" variant="info" spacing="sm"></civ-count></span>
+          <span>Errors <civ-count count="3" variant="error" spacing="sm"></civ-count></span>
           <civ-count count="12" count-style="primary" variant="info" spacing="sm"></civ-count>
           <civ-count count="42" count-style="primary" variant="error" spacing="sm"></civ-count>
         </div>

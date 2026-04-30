@@ -75,6 +75,7 @@ export default defineConfig({
       '@civui/navigation': resolve(packages, 'navigation/src/index.ts'),
       '@civui/feedback/alert': resolve(packages, 'feedback/src/alert/index.ts'),
       '@civui/feedback/badge': resolve(packages, 'feedback/src/badge/index.ts'),
+      '@civui/feedback/count': resolve(packages, 'feedback/src/count/index.ts'),
       '@civui/feedback': resolve(packages, 'feedback/src/index.ts'),
       '@civui/tokens/css': resolve(packages, 'tokens/dist/css/tokens.css'),
       '@civui/test-utils': resolve(packages, 'test-utils/src/index.ts'),

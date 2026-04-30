@@ -48,7 +48,8 @@ For architecture and internals, see `CLAUDE.md` in the repo root.
 | `<civ-page-header>` | UI | `spacing` | — (uses slots: `data-tag`, `data-eyebrow`, `data-heading`, `data-subheading`) |
 | `<civ-icon>` | UI | `name`, `label` | — |
 | `<civ-alert>` | Feedback | `variant`, `heading`, `dismissible`, `slim`, `alert-style`, `heading-level` | `civ-dismiss` |
-| `<civ-badge>` | Feedback | `label`, `count`, `max`, `dot`, `variant`, `badge-style`, `spacing`, `overlay` | — |
+| `<civ-badge>` | Feedback | `label`, `dot`, `variant`, `badge-style`, `spacing`, `overlay` | — |
+| `<civ-count>` | Feedback | `count`, `max`, `variant`, `count-style`, `spacing`, `overlay`, `live` | — |
 | `<civ-modal>` | Overlay | `open`, `heading`, `label`, `no-close-button`, `no-backdrop-close`, `no-escape-close` | `civ-modal-close` |
 | `<civ-action-sheet>` | Overlay | `open`, `max-height`, `trap-focus`, `no-click-outside` | `civ-action-sheet-close` |
 | `<civ-button-group>` | UI | `orientation`, `label` | — (`role="toolbar"`) |
@@ -1314,18 +1315,19 @@ CivUI provides iOS (SwiftUI) and Android (Jetpack Compose) implementations with 
 | Scheduling / appointment selection | `civ-date-picker` | Calendar browsing, min/max range |
 | Known past date (birthday, issue date) | `civ-memorable-date` | Three-field entry, no calendar needed |
 
-### badge vs tag
+### badge vs count vs tag vs filter chip
 
 | Scenario | Component | Why |
 |----------|-----------|-----|
-| Status pill ("Approved", "Pending", "Error") | `civ-badge` | Semantic colors only, always `role="status"` |
-| Count / notification indicator (e.g. "5", "99+") | `civ-badge` (with `count`) | Built-in overflow, screen-reader announces |
-| Notification dot (no number) | `civ-badge` (with `dot`) | Compact marker, `label` becomes `aria-label` |
+| Status pill ("Approved", "Pending", "Error") | `civ-badge` | Semantic colors, `role="status"` |
+| Notification dot (no number) | `civ-badge` (with `dot`) | Compact marker; `label` becomes `aria-label` |
+| Numeric count ("5", "99+") | `civ-count` | Lighter chrome than badge; primary/secondary emphasis; `live="off"` by default |
+| Notification count over an icon ("3 unread") | `civ-count` (with `overlay`) | Same primitive; `overlay` pins it top-end of a relative parent |
 | Interactive filter (toggle on/off, applied filter chip) | `civ-filter-chip` | Button-like, fires `civ-change` / `civ-remove` |
 | Static categorization / taxonomy ("Healthcare", "Disability") | `civ-tag` | Non-semantic palette (blue/orange/purple/gray) |
 | Metadata label | `civ-tag` | Same palette, multiple emphasis levels |
 
-`civ-badge` lives in `@civui/feedback`; `civ-tag` lives in `@civui/layout`. Both use hard edges — the distinction is semantic, not visual. Tag's color set excludes red/green/yellow/teal so semantic state colors only appear via badge.
+`civ-badge`, `civ-count` live in `@civui/feedback`; `civ-tag` lives in `@civui/layout`. Tag and badge use hard edges (display); filter chip uses rounded corners (interactive); count primary uses a rounded pill (notification convention).
 
 ### checkbox vs toggle
 

@@ -52,6 +52,7 @@ const config: StorybookConfig = {
       '@civui/form-patterns': resolve(root, 'packages/form-patterns/src/index.ts'),
       '@civui/feedback/alert': resolve(root, 'packages/feedback/src/alert/index.ts'),
       '@civui/feedback/badge': resolve(root, 'packages/feedback/src/badge/index.ts'),
+      '@civui/feedback/count': resolve(root, 'packages/feedback/src/count/index.ts'),
       '@civui/feedback': resolve(root, 'packages/feedback/src/index.ts'),
       // Actions
       '@civui/actions/button': resolve(root, 'packages/actions/src/button/index.ts'),

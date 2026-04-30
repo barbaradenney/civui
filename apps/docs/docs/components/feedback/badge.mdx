@@ -10,7 +10,9 @@ import StoryEmbed from "@site/src/components/StoryEmbed";
 
 `<civ-badge>`
 
-A compact status or count indicator. Use for state ("Approved", "Pending"), severity, or numeric counts. Always carries `role="status"` so assistive tech announces the value. For categorization (topics, taxonomies), use [`civ-tag`](../layout/tag) instead.
+A compact status indicator. Use for state ("Approved", "Pending"), severity, or as a notification dot. Renders `role="status"` so screen readers announce the value.
+
+For **numeric counts** ("5", "99+", or notification overlays like "3 unread"), use [`civ-count`](./count) instead. For categorization (topics, taxonomies), use [`civ-tag`](../layout/tag).
 
 ## Examples
 
@@ -21,10 +23,6 @@ A compact status or count indicator. Use for state ("Approved", "Pending"), seve
 ### Status variants
 
 <StoryEmbed id="feedback-badge--status-variants" />
-
-### Counts
-
-<StoryEmbed id="feedback-badge--counts" />
 
 ### Dots
 
@@ -42,9 +40,9 @@ A compact status or count indicator. Use for state ("Approved", "Pending"), seve
 
 <StoryEmbed id="feedback-badge--overlay" />
 
-### Badge vs Tag
+### Badge vs Tag vs Count
 
-<StoryEmbed id="feedback-badge--vs-tag" />
+<StoryEmbed id="feedback-badge--vs-tag-and-count" />
 
 [Open in Storybook →](pathname:///civui/storybook/?path=/story/feedback-badge--default)
 
@@ -53,8 +51,6 @@ A compact status or count indicator. Use for state ("Approved", "Pending"), seve
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `label` | `string` | `''` | Badge text (or accessible name when `dot` is set) |
-| `count` | `number \| null` | `null` | Numeric value; renders as a count badge |
-| `max` | `number` | `99` | Overflow threshold; values above render as `{max}+` |
 | `dot` | `boolean` | `false` | Render as a small colored dot only |
 | `variant` | `'info' \| 'warning' \| 'error' \| 'success' \| 'neutral'` | `'neutral'` | Semantic color |
 | `badge-style` | `'primary' \| 'secondary'` | `'secondary'` | Emphasis: primary (filled dark bg, light text) or secondary (light tint, dark text) |
@@ -63,22 +59,12 @@ A compact status or count indicator. Use for state ("Approved", "Pending"), seve
 
 ## Modes
 
-Precedence: **dot > count > label**.
-
 ### Status text
 
 ```html
 <civ-badge label="Approved" variant="success"></civ-badge>
 <civ-badge label="Pending" variant="warning"></civ-badge>
 <civ-badge label="Denied" variant="error"></civ-badge>
-```
-
-### Count
-
-```html
-<civ-badge count="5" variant="info"></civ-badge>
-<civ-badge count="150" max="99" variant="error"></civ-badge>
-<!-- renders as "99+" -->
 ```
 
 ### Dot
@@ -90,31 +76,30 @@ Precedence: **dot > count > label**.
 
 ## Accessibility
 
-- Text and count badges always render `role="status"` so screen readers announce the badge value.
-- In **dot mode**, `label` becomes the `aria-label` and `role="status"` is kept. **If `label` is omitted, the dot is marked `aria-hidden="true"`** (no empty live region), so always set `label` when the dot conveys meaning that isn't already present in a parent's accessible name.
+- Text badges and dots-with-label render `role="status"` so screen readers announce the badge value.
+- In **dot mode**, `label` becomes the `aria-label`. **If `label` is omitted, the dot is marked `aria-hidden="true"`** (no empty live region) — always set `label` when the dot conveys meaning that isn't already present in a parent's accessible name.
 - Restricted to semantic colors so visual meaning matches the announced value.
 
 ### Notification overlay
 
-Wrap an icon (or any container) with `civ-badge-anchor` to anchor the badge:
+Wrap a target (icon, button) with `civ-badge-anchor` to anchor the badge:
 
 ```html
 <button class="civ-badge-anchor">
   <civ-icon name="mail" size="lg"></civ-icon>
-  <civ-badge overlay count="3" variant="error"></civ-badge>
+  <civ-badge overlay dot label="New mail" variant="error"></civ-badge>
 </button>
 ```
 
-The `civ-badge-anchor` utility class sets `position: relative; display: inline-block`. Any other relatively-positioned parent works too.
+The `civ-badge-anchor` utility class sets `position: relative; display: inline-block`. Any other relatively-positioned parent works too. For numeric overlays ("3 unread"), use [`civ-count` with `overlay`](./count#overlay) instead.
 
-## Tag vs Badge
+## Component selection
 
 | Use case | Component |
 |----------|-----------|
 | Status pill ("Approved", "Pending", "Error") | `civ-badge` |
-| Count / notification indicator (`5`, `99+`) | `civ-badge` (with `count`) |
 | Notification dot | `civ-badge` (with `dot`) |
+| Numeric count (`5`, `99+`) | [`civ-count`](./count) |
+| Notification count over an icon | [`civ-count`](./count) (with `overlay`) |
 | Categorization ("Healthcare", "Disability") | [`civ-tag`](../layout/tag) |
-| Filter chip / metadata | [`civ-tag`](../layout/tag) |
-
-`civ-tag`'s color set excludes red/green/yellow/teal — those semantic colors only appear via `civ-badge`.
+| Interactive filter chip | [`civ-filter-chip`](../actions/filter-chip) |

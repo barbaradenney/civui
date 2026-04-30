@@ -104,7 +104,7 @@ export class CivLink extends LightDomTextMixin(CivBaseElement) {
         rel="${effectiveRel || nothing}"
         download="${this.download || nothing}"
         @click="${this._onClick}"
-      >${this._leadingIcon}${this._text}${this._trailingIcon}</a>${this.newTab ? html`<span class="civ-sr-only">${t('externalLinkNewTab')}</span>` : nothing}
+      >${this._leadingIcon}${this._text}${this._trailingIcon}${this.newTab ? html`<span class="civ-sr-only">${t('externalLinkNewTab')}</span>` : nothing}</a>
     `;
   }
 

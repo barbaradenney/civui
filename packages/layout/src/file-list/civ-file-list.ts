@@ -2,6 +2,9 @@ import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { CivBaseElement } from '@civui/core';
 
+/** Protocols that are never allowed in file link href values. */
+const UNSAFE_HREF_PATTERN = /^\s*javascript\s*:/i;
+
 export interface FileListItem {
   /** File name. */
   name: string;
@@ -33,8 +36,6 @@ function formatFileSize(bytes: number): string {
  *
  * @prop {FileListItem[]} files - Array of files to display.
  * @prop {string} label - Accessible label for the list.
- * @prop {boolean} dividers - Render dividers between items.
- *
  * @example
  * ```html
  * <civ-file-list label="Uploaded documents"></civ-file-list>
@@ -54,9 +55,6 @@ export class CivFileList extends CivBaseElement {
   /** Accessible label for the file list. */
   @property({ type: String }) label = '';
 
-  /** Render dividers between items. */
-  @property({ type: Boolean }) dividers = true;
-
   override render() {
     if (this.files.length === 0) return nothing;
 
@@ -71,7 +69,7 @@ export class CivFileList extends CivBaseElement {
             <civ-icon name="download" class="civ-shrink-0"></civ-icon>
             <span class="civ-flex-1 civ-min-w-0">
               <span class="civ-block">
-                ${file.url
+                ${file.url && !UNSAFE_HREF_PATTERN.test(file.url)
                   ? html`<a class="civ-font-bold" href="${file.url}" target="_blank" rel="noopener noreferrer">${file.name}</a>`
                   : html`<span class="civ-font-bold">${file.name}</span>`}
                 <span class="civ-text-sm civ-ms-2">(${formatFileSize(file.size)})</span>

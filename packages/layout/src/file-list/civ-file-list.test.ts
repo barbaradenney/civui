@@ -52,6 +52,34 @@ describe('civ-file-list', () => {
     expect(text).toContain('2.3 MB');
   });
 
+  it('renders javascript: url as plain text, not a link (XSS prevention)', async () => {
+    const el = await fixture<CivFileList>('<civ-file-list></civ-file-list>') as CivFileList;
+    el.files = [{ name: 'evil.pdf', size: 1000, url: 'javascript:alert(1)' }];
+    await elementUpdated(el);
+
+    expect(el.querySelector('.civ-file-item a')).toBeNull();
+    expect(el.querySelector('.civ-file-item .civ-font-bold')!.textContent).toBe('evil.pdf');
+  });
+
+  it('has role="list" on the <ul>', async () => {
+    const el = await fixture<CivFileList>('<civ-file-list></civ-file-list>') as CivFileList;
+    el.files = [{ name: 'doc.pdf', size: 1000 }];
+    await elementUpdated(el);
+
+    const ul = el.querySelector('ul');
+    expect(ul!.getAttribute('role')).toBe('list');
+  });
+
+  it('renders download icon for each file item', async () => {
+    const el = await fixture<CivFileList>('<civ-file-list></civ-file-list>') as CivFileList;
+    el.files = [{ name: 'doc.pdf', size: 1000 }];
+    await elementUpdated(el);
+
+    const icon = el.querySelector('.civ-file-item civ-icon');
+    expect(icon).not.toBeNull();
+    expect(icon!.getAttribute('name')).toBe('download');
+  });
+
   it('sets aria-label on the list', async () => {
     const el = await fixture<CivFileList>('<civ-file-list label="Uploaded documents"></civ-file-list>') as CivFileList;
     el.files = [{ name: 'doc.pdf', size: 1000 }];

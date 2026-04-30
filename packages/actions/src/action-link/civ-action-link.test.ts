@@ -74,6 +74,24 @@ describe('civ-action-link', () => {
     expect(link.getAttribute('label')).toBe('10-10EZ.pdf');
   });
 
+  it('strips non-numeric characters from phone number for tel: href', async () => {
+    const el = await fixture<CivActionLink>('<civ-action-link type="phone" number="(800) 555-1234"></civ-action-link>');
+    const link = el.querySelector('civ-link') as HTMLElement;
+    expect(link.getAttribute('href')).toBe('tel:8005551234');
+  });
+
+  it('renders empty href when number is empty', async () => {
+    const el = await fixture<CivActionLink>('<civ-action-link type="phone" number=""></civ-action-link>');
+    const link = el.querySelector('civ-link') as HTMLElement;
+    expect(link.getAttribute('href')).toBe('');
+  });
+
+  it('renders empty href when address is empty', async () => {
+    const el = await fixture<CivActionLink>('<civ-action-link type="email" address=""></civ-action-link>');
+    const link = el.querySelector('civ-link') as HTMLElement;
+    expect(link.getAttribute('href')).toBe('');
+  });
+
   it('disabled prop renders disabled link', async () => {
     const el = await fixture<CivActionLink>('<civ-action-link type="phone" number="8005551234" disabled></civ-action-link>');
     const link = el.querySelector('civ-link') as HTMLElement;

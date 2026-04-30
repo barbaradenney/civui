@@ -120,6 +120,13 @@ describe('civ-list-item', () => {
     expect(desc!.textContent).toContain('Some details');
   });
 
+  it('renders error with role="alert"', async () => {
+    const el = await fixture('<civ-list-item error="Required">Item</civ-list-item>');
+    const error = el.querySelector('[role="alert"]');
+    expect(error).not.toBeNull();
+    expect(error!.textContent).toContain('Required');
+  });
+
   it('renders heading + description together', async () => {
     const el = await fixture('<civ-list-item heading="Title" description="Details">Item</civ-list-item>');
     const bold = el.querySelector('.civ-font-bold');

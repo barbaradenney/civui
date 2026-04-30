@@ -114,7 +114,7 @@ export class CivActionLink extends LightDomTextMixin(CivBaseElement) {
         icon-start="${this._icon}"
         download="${isDownload ? (this.filename || '') : nothing}"
         ?disabled="${this.disabled}"
-      ></civ-link>${isDownload && this.fileSize ? html`<span class="civ-text-sm civ-text-base civ-ms-1">(${this.fileSize})</span>` : nothing}
+      ></civ-link>${isDownload && this.fileSize ? html`<span class="civ-text-sm civ-ms-1">(${this.fileSize})</span>` : nothing}
     `;
   }
 }

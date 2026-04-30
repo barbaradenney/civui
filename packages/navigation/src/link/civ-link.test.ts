@@ -154,6 +154,18 @@ describe('civ-link', () => {
     expect(icon!.getAttribute('name')).toBe('external-link');
   });
 
+  it('new-tab overrides custom target prop', async () => {
+    const el = await fixture('<civ-link href="/ext" new-tab target="_self">External</civ-link>');
+    const link = el.querySelector('a')!;
+    expect(link.getAttribute('target')).toBe('_blank');
+  });
+
+  it('new-tab overrides custom rel prop', async () => {
+    const el = await fixture('<civ-link href="/ext" new-tab rel="nofollow">External</civ-link>');
+    const link = el.querySelector('a')!;
+    expect(link.getAttribute('rel')).toBe('noopener noreferrer');
+  });
+
   it('new-tab adds screen reader text span', async () => {
     const el = await fixture('<civ-link href="/ext" new-tab>External</civ-link>');
     const srSpan = el.querySelector('.civ-sr-only');

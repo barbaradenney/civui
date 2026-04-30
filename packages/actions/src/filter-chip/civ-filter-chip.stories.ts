@@ -173,6 +173,46 @@ export const Spacing: Story = {
   `,
 };
 
+export const WithIcons: Story = {
+  name: 'With Icons',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Add a leading icon via `icon-start` to reinforce category meaning. The icon swaps to a check on selection so the visual treatment of selected vs unselected is consistent across icon and non-icon chips.',
+      },
+    },
+  },
+  render: () => html`
+    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+      <civ-filter-chip label="Personal" value="personal" icon-start="person"></civ-filter-chip>
+      <civ-filter-chip label="Important" value="important" icon-start="star" selected></civ-filter-chip>
+      <civ-filter-chip label="Mailed" value="mail" icon-start="mail"></civ-filter-chip>
+      <civ-filter-chip label="Recent" value="recent" icon-start="calendar"></civ-filter-chip>
+    </div>
+  `,
+};
+
+export const WithCounts: Story = {
+  name: 'With Counts',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Use `count` to show how many results match each filter — common in faceted search and benefit-finder UIs.',
+      },
+    },
+  },
+  render: () => html`
+    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+      <civ-filter-chip label="Healthcare" value="health" count="24"></civ-filter-chip>
+      <civ-filter-chip label="Education" value="education" count="12" selected></civ-filter-chip>
+      <civ-filter-chip label="Housing" value="housing" count="8"></civ-filter-chip>
+      <civ-filter-chip label="Employment" value="employment" count="3"></civ-filter-chip>
+    </div>
+  `,
+};
+
 export const VsTagAndBadge: Story = {
   name: 'Filter chip vs Tag vs Badge',
   parameters: {

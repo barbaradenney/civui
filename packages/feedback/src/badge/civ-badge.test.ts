@@ -139,4 +139,28 @@ describe('civ-badge', () => {
       expect(badge.className).toContain('civ-badge--sm');
     });
   });
+
+  describe('overlay', () => {
+    it('does not add overlay class by default', async () => {
+      const el = await fixture<CivBadge>('<civ-badge label="x"></civ-badge>');
+      expect(el.querySelector('.civ-badge')!.className).not.toContain('civ-badge--overlay');
+    });
+
+    it('adds civ-badge--overlay class when overlay is set', async () => {
+      const el = await fixture<CivBadge>('<civ-badge count="3" variant="error" overlay></civ-badge>');
+      expect(el.querySelector('.civ-badge')!.className).toContain('civ-badge--overlay');
+    });
+
+    it('reflects overlay attribute', async () => {
+      const el = await fixture<CivBadge>('<civ-badge overlay></civ-badge>');
+      expect(el.hasAttribute('overlay')).toBe(true);
+    });
+
+    it('combines with dot mode', async () => {
+      const el = await fixture<CivBadge>('<civ-badge dot overlay variant="error" label="Unread"></civ-badge>');
+      const badge = el.querySelector('.civ-badge')!;
+      expect(badge.className).toContain('civ-badge--dot');
+      expect(badge.className).toContain('civ-badge--overlay');
+    });
+  });
 });

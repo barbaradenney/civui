@@ -202,4 +202,60 @@ describe('civ-filter-chip', () => {
       expect(button.className).toContain('civ-filter-chip--sm');
     });
   });
+
+  describe('icon-start', () => {
+    it('renders no leading icon by default', async () => {
+      const el = await fixture<CivFilterChip>('<civ-filter-chip label="Test"></civ-filter-chip>');
+      expect(el.querySelector('.civ-filter-chip__icon')).toBeNull();
+    });
+
+    it('renders leading icon when icon-start is set and chip is unselected', async () => {
+      const el = await fixture<CivFilterChip>('<civ-filter-chip label="Healthcare" icon-start="medical"></civ-filter-chip>');
+      const icon = el.querySelector('.civ-filter-chip__icon');
+      expect(icon).not.toBeNull();
+      expect(icon?.getAttribute('name')).toBe('medical');
+    });
+
+    it('replaces leading icon with check when selected', async () => {
+      const el = await fixture<CivFilterChip>('<civ-filter-chip label="Healthcare" icon-start="medical" selected></civ-filter-chip>');
+      expect(el.querySelector('.civ-filter-chip__icon')).toBeNull();
+      expect(el.querySelector('.civ-filter-chip__check')).not.toBeNull();
+    });
+
+    it('toggles between leading icon and check on click', async () => {
+      const el = await fixture<CivFilterChip>('<civ-filter-chip label="Healthcare" icon-start="medical"></civ-filter-chip>');
+      expect(el.querySelector('.civ-filter-chip__icon')).not.toBeNull();
+      expect(el.querySelector('.civ-filter-chip__check')).toBeNull();
+
+      el.querySelector('button')!.click();
+      await elementUpdated(el);
+      expect(el.querySelector('.civ-filter-chip__icon')).toBeNull();
+      expect(el.querySelector('.civ-filter-chip__check')).not.toBeNull();
+    });
+  });
+
+  describe('count suffix', () => {
+    it('renders no count by default', async () => {
+      const el = await fixture<CivFilterChip>('<civ-filter-chip label="Healthcare"></civ-filter-chip>');
+      expect(el.querySelector('.civ-filter-chip__count')).toBeNull();
+    });
+
+    it('renders count in parens when set', async () => {
+      const el = await fixture<CivFilterChip>('<civ-filter-chip label="Healthcare" count="24"></civ-filter-chip>');
+      const count = el.querySelector('.civ-filter-chip__count')!;
+      expect(count.textContent).toBe('(24)');
+    });
+
+    it('renders count of 0', async () => {
+      const el = await fixture<CivFilterChip>('<civ-filter-chip label="Healthcare" count="0"></civ-filter-chip>');
+      expect(el.querySelector('.civ-filter-chip__count')?.textContent).toBe('(0)');
+    });
+
+    it('updates count reactively', async () => {
+      const el = await fixture<CivFilterChip>('<civ-filter-chip label="Healthcare" count="5"></civ-filter-chip>');
+      el.count = 10;
+      await elementUpdated(el);
+      expect(el.querySelector('.civ-filter-chip__count')?.textContent).toBe('(10)');
+    });
+  });
 });

@@ -64,4 +64,29 @@ describe('civ-tag', () => {
     const span = el.querySelector('.civ-tag--sm');
     expect(span).not.toBeNull();
   });
+
+  describe('icon-start', () => {
+    it('renders no icon by default', async () => {
+      const el = await fixture('<civ-tag label="Healthcare"></civ-tag>');
+      expect(el.querySelector('.civ-tag__icon')).toBeNull();
+      expect(el.querySelector('.civ-tag--with-icon')).toBeNull();
+    });
+
+    it('renders icon and adds with-icon class when icon-start is set', async () => {
+      const el = await fixture('<civ-tag label="Healthcare" icon-start="medical"></civ-tag>');
+      expect(el.querySelector('.civ-tag__icon')).not.toBeNull();
+      expect(el.querySelector('.civ-tag--with-icon')).not.toBeNull();
+    });
+
+    it('passes icon name to civ-icon', async () => {
+      const el = await fixture('<civ-tag label="Healthcare" icon-start="medical"></civ-tag>');
+      const icon = el.querySelector('civ-icon');
+      expect(icon?.getAttribute('name')).toBe('medical');
+    });
+
+    it('marks icon aria-hidden so the label remains the accessible name', async () => {
+      const el = await fixture('<civ-tag label="Healthcare" icon-start="medical"></civ-tag>');
+      expect(el.querySelector('civ-icon')?.getAttribute('aria-hidden')).toBe('true');
+    });
+  });
 });

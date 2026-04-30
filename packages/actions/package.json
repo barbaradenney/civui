@@ -12,6 +12,7 @@
     "./action-button": "./dist/action-button/index.js",
     "./button-group": "./dist/button-group/index.js",
     "./filter-chip": "./dist/filter-chip/index.js",
+    "./filter-chip-group": "./dist/filter-chip-group/index.js",
     "./phone-link": "./dist/phone-link/index.js",
     "./email-link": "./dist/email-link/index.js"
   },

@@ -84,6 +84,26 @@ export const AllVariants: Story = {
   `,
 };
 
+export const WithIcons: Story = {
+  name: 'With Icons',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Leading icon reinforces category meaning beyond color alone — useful for accessibility and quick scanning. The icon inherits the tag color via `currentColor`.',
+      },
+    },
+  },
+  render: () => html`
+    <div class="civ-flex civ-gap-2 civ-flex-wrap civ-items-center">
+      <civ-tag label="Personal" variant="blue" icon-start="person"></civ-tag>
+      <civ-tag label="Important" variant="purple" icon-start="star" tag-style="primary"></civ-tag>
+      <civ-tag label="Mailed" variant="orange" icon-start="mail"></civ-tag>
+      <civ-tag label="Locked" variant="gray" icon-start="lock" tag-style="primary"></civ-tag>
+    </div>
+  `,
+};
+
 export const FilterChips: Story = {
   name: 'Filter Chips',
   render: () => html`

@@ -156,6 +156,33 @@ export const Spacing: Story = {
   `,
 };
 
+export const Overlay: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Overlay mode pins a badge to the top-end corner of a relatively-positioned parent — the classic notification badge over an icon. Wrap the parent in `.civ-badge-anchor` (or set `position: relative` yourself).',
+      },
+    },
+  },
+  render: () => html`
+    <div style="display: flex; gap: 1.5rem; align-items: center;">
+      <span class="civ-badge-anchor">
+        <civ-icon name="mail" size="lg"></civ-icon>
+        <civ-badge overlay count="3" variant="error"></civ-badge>
+      </span>
+      <span class="civ-badge-anchor">
+        <civ-icon name="settings" size="lg"></civ-icon>
+        <civ-badge overlay dot label="Updates available" variant="info"></civ-badge>
+      </span>
+      <span class="civ-badge-anchor">
+        <civ-icon name="person" size="lg"></civ-icon>
+        <civ-badge overlay count="12" variant="success" badge-style="primary"></civ-badge>
+      </span>
+    </div>
+  `,
+};
+
 export const VsTag: Story = {
   parameters: {
     docs: {

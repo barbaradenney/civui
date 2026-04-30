@@ -29,6 +29,8 @@ export type FilterChipStyle = 'primary' | 'secondary';
  * @prop {boolean} disabled - Disabled state
  * @prop {FilterChipStyle} chipStyle - Selected-state emphasis: 'primary' or 'secondary' (default)
  * @prop {string} spacing - Padding size: 'default' or 'sm'
+ * @prop {string} iconStart - Icon name to render before the label when not selected
+ * @prop {number | null} count - Match count rendered as " (N)" after the label
  *
  * @fires civ-change - `{ value, selected }` when chip is toggled
  * @fires civ-remove - `{ value }` when the dismiss button is clicked (removable only)
@@ -48,6 +50,12 @@ export class CivFilterChip extends LightDomTextMixin(CivBaseElement) {
   /** Padding size: 'default' or 'sm' for compact layouts. */
   @property({ type: String }) spacing: 'default' | 'sm' = 'default';
 
+  /** Icon name to render before the label (distinct from the selection check). */
+  @property({ type: String, attribute: 'icon-start' }) iconStart = '';
+
+  /** Optional count suffix, rendered as " (N)" after the label. */
+  @property({ type: Number }) count: number | null = null;
+
   private get _text(): string {
     return this.label || this._initialText;
   }
@@ -66,6 +74,8 @@ export class CivFilterChip extends LightDomTextMixin(CivBaseElement) {
   }
 
   override render() {
+    const showCount = this.count !== null && this.count !== undefined;
+
     return html`
       <button
         type="button"
@@ -75,7 +85,11 @@ export class CivFilterChip extends LightDomTextMixin(CivBaseElement) {
         @click="${this._onToggle}"
       >${this.selected
         ? html`<civ-icon name="check" size="sm" class="civ-filter-chip__check" aria-hidden="true"></civ-icon>`
-        : nothing}<span class="civ-filter-chip__label">${this._text}</span>${this.removable
+        : this.iconStart
+          ? html`<civ-icon name="${this.iconStart}" size="sm" class="civ-filter-chip__icon" aria-hidden="true"></civ-icon>`
+          : nothing}<span class="civ-filter-chip__label">${this._text}</span>${showCount
+        ? html`<span class="civ-filter-chip__count">(${this.count})</span>`
+        : nothing}${this.removable
         ? html`<span
             class="civ-filter-chip__remove"
             role="button"

@@ -65,6 +65,13 @@ export class CivBadge extends CivBaseElement {
   /** Padding size: 'default' or 'sm' for compact layouts. */
   @property({ type: String }) spacing: 'default' | 'sm' = 'default';
 
+  /**
+   * Render in overlay (notification) mode — absolutely positioned in the
+   * top-end corner of the parent. The parent must be `position: relative`
+   * (or use the `civ-badge-anchor` utility class).
+   */
+  @property({ type: Boolean, reflect: true }) overlay = false;
+
   private get _displayCount(): string {
     if (this.count === null || this.count === undefined) return '';
     return this.count > this.max ? `${this.max}+` : String(this.count);
@@ -78,6 +85,7 @@ export class CivBadge extends CivBaseElement {
     ];
     if (this.spacing === 'sm') classes.push('civ-badge--sm');
     if (this.dot) classes.push('civ-badge--dot');
+    if (this.overlay) classes.push('civ-badge--overlay');
 
     if (this.dot) {
       return html`

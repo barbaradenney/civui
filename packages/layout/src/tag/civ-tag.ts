@@ -1,4 +1,4 @@
-import { html } from 'lit';
+import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { CivBaseElement } from '@civui/core';
 
@@ -32,10 +32,11 @@ export type TagStyle = 'primary' | 'secondary';
  * @prop {TagVariant} variant - Color variant (categorization palette)
  * @prop {TagStyle} tagStyle - Emphasis level: 'primary' (dark bg) or 'secondary' (light bg, default)
  * @prop {string} spacing - Padding size: 'default' or 'sm'
+ * @prop {string} iconStart - Icon name to render before the label
  *
  * @example
  * ```html
- * <civ-tag label="Healthcare" variant="blue"></civ-tag>
+ * <civ-tag label="Healthcare" variant="blue" icon-start="medical"></civ-tag>
  * <civ-tag label="Disability" variant="purple" tag-style="primary"></civ-tag>
  * <civ-tag label="Education" variant="orange"></civ-tag>
  * ```
@@ -54,6 +55,9 @@ export class CivTag extends CivBaseElement {
   /** Padding size: 'default' or 'sm' for compact layouts. */
   @property({ type: String }) spacing: 'default' | 'sm' = 'default';
 
+  /** Icon name to render before the label. */
+  @property({ type: String, attribute: 'icon-start' }) iconStart = '';
+
   override render() {
     const styleClass = this.tagStyle === 'primary'
       ? `civ-tag--${this.variant}-primary`
@@ -63,10 +67,13 @@ export class CivTag extends CivBaseElement {
       'civ-tag',
       styleClass,
       this.spacing === 'sm' ? 'civ-tag--sm' : '',
+      this.iconStart ? 'civ-tag--with-icon' : '',
     ].filter(Boolean).join(' ');
 
     return html`
-      <span class="${classes}">${this.label}</span>
+      <span class="${classes}">${this.iconStart
+        ? html`<civ-icon name="${this.iconStart}" size="sm" class="civ-tag__icon" aria-hidden="true"></civ-icon>`
+        : nothing}${this.label}</span>
     `;
   }
 }

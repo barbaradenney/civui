@@ -2607,6 +2607,14 @@
     @apply civ-px-1.5 civ-py-0 civ-text-sm;
   }
 
+  .civ-tag--with-icon {
+    @apply civ-inline-flex civ-items-center civ-gap-1;
+  }
+
+  .civ-tag__icon {
+    color: inherit;
+  }
+
   .civ-tag--blue {
     background-color: var(--civ-color-primary-lightest);
     color: var(--civ-color-primary-dark);
@@ -2738,6 +2746,26 @@
   .civ-badge--dot.civ-badge--error { background-color: var(--civ-color-error-DEFAULT); }
   .civ-badge--dot.civ-badge--neutral { background-color: var(--civ-color-base-darker); }
 
+  /* Overlay mode — absolute-positioned notification marker. Pin top-end of
+     a relatively-positioned parent (use `.civ-badge-anchor` for shorthand). */
+
+  .civ-badge-anchor {
+    position: relative;
+    display: inline-block;
+  }
+
+  .civ-badge--overlay {
+    position: absolute;
+    top: 0;
+    inset-inline-end: 0;
+    transform: translate(50%, -50%);
+    z-index: 1;
+  }
+
+  .civ-badge--overlay.civ-badge--dot {
+    transform: translate(25%, -25%);
+  }
+
   /* ── Filter Chip ──────────────────────────────────────────── */
 
   civ-filter-chip {
@@ -2799,6 +2827,20 @@
 
   .civ-filter-chip--style-primary.civ-filter-chip--selected .civ-filter-chip__check {
     color: var(--civ-color-white-DEFAULT);
+  }
+
+  .civ-filter-chip__icon {
+    color: inherit;
+  }
+
+  .civ-filter-chip__count {
+    @apply civ-ms-1 civ-font-semibold;
+    color: inherit;
+    opacity: 0.85;
+  }
+
+  .civ-filter-chip-group {
+    @apply civ-inline-flex civ-flex-wrap civ-gap-2 civ-items-center;
   }
 
   .civ-filter-chip__remove {

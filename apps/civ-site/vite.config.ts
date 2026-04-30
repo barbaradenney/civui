@@ -50,6 +50,7 @@ export default defineConfig({
       '@civui/actions/action-button': resolve(packages, 'actions/src/action-button/index.ts'),
       '@civui/actions/button-group': resolve(packages, 'actions/src/button-group/index.ts'),
       '@civui/actions/filter-chip': resolve(packages, 'actions/src/filter-chip/index.ts'),
+      '@civui/actions/filter-chip-group': resolve(packages, 'actions/src/filter-chip-group/index.ts'),
       '@civui/actions/phone-link': resolve(packages, 'actions/src/phone-link/index.ts'),
       '@civui/actions/email-link': resolve(packages, 'actions/src/email-link/index.ts'),
       '@civui/actions': resolve(packages, 'actions/src/index.ts'),

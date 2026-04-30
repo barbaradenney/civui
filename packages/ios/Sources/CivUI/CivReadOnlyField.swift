@@ -7,13 +7,29 @@ public struct CivReadOnlyField: View {
     public let label: String
     public var value: String
     public var hint: String?
+    public var values: String
+    public var editHref: String
+    public var editLabel: String
+    public var spacing: String
 
     @Environment(\.colorScheme) private var colorScheme
 
-    public init(label: String, value: String = "", hint: String? = nil) {
+    public init(
+        label: String,
+        value: String = "",
+        hint: String? = nil,
+        values: String = "",
+        editHref: String = "",
+        editLabel: String = "",
+        spacing: String = "default"
+    ) {
         self.label = label
         self.value = value
         self.hint = hint
+        self.values = values
+        self.editHref = editHref
+        self.editLabel = editLabel
+        self.spacing = spacing
     }
 
     public var body: some View {

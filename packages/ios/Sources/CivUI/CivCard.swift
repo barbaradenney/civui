@@ -9,6 +9,10 @@ public struct CivCard<Content: View, Footer: View>: View {
     public var eyebrowVariant: CivTagVariant
     public var href: String?
     public var spacing: String
+    public var color: String
+    public var cardStyle: String
+    public var iconStart: String
+    public var iconEnd: String
     @ViewBuilder public var content: () -> Content
     @ViewBuilder public var footer: () -> Footer
     @Environment(\.colorScheme) private var colorScheme
@@ -19,6 +23,10 @@ public struct CivCard<Content: View, Footer: View>: View {
         eyebrowVariant: CivTagVariant = .gray,
         href: String? = nil,
         spacing: String = "default",
+        color: String = "",
+        cardStyle: String = "default",
+        iconStart: String = "",
+        iconEnd: String = "",
         @ViewBuilder content: @escaping () -> Content,
         @ViewBuilder footer: @escaping () -> Footer = { EmptyView() }
     ) {
@@ -27,6 +35,10 @@ public struct CivCard<Content: View, Footer: View>: View {
         self.eyebrowVariant = eyebrowVariant
         self.href = href
         self.spacing = spacing
+        self.color = color
+        self.cardStyle = cardStyle
+        self.iconStart = iconStart
+        self.iconEnd = iconEnd
         self.content = content
         self.footer = footer
     }

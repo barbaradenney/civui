@@ -75,13 +75,22 @@ public struct CivTask: View {
     public var status: CivTaskStatus
     public var hint: String?
     public var onTap: (() -> Void)?
+
+    /// Navigation URL for the task.
+    public var href: String
+
+    /// Whether the task has been prefilled with data.
+    public var prefilled: Bool
+
     @Environment(\.colorScheme) private var colorScheme
 
-    public init(label: String, status: CivTaskStatus = .notStarted, hint: String? = nil, onTap: (() -> Void)? = nil) {
+    public init(label: String, status: CivTaskStatus = .notStarted, hint: String? = nil, onTap: (() -> Void)? = nil, href: String = "", prefilled: Bool = false) {
         self.label = label
         self.status = status
         self.hint = hint
         self.onTap = onTap
+        self.href = href
+        self.prefilled = prefilled
     }
 
     private var isNavigable: Bool { onTap != nil && status != .cannotStart }

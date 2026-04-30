@@ -174,6 +174,45 @@ public struct CivTextInput: View {
     /// Whether the field contains PII (excluded from getFormData).
     public var isPii: Bool
 
+    /// Regex pattern for input validation.
+    public var pattern: String
+
+    /// Whether to hide the character count indicator.
+    public var hideCharCount: Bool
+
+    /// HTML autocomplete attribute value.
+    public var autocomplete: String
+
+    /// HTML inputmode attribute value.
+    public var inputmode: String
+
+    /// Text prefix displayed before the input (e.g., "$").
+    public var prefix: String
+
+    /// Text suffix displayed after the input (e.g., "lbs").
+    public var suffix: String
+
+    /// Whether to show a clear button.
+    public var clearable: Bool
+
+    /// Leading icon name.
+    public var leadingIcon: String
+
+    /// Accessible label for the leading icon.
+    public var leadingIconLabel: String
+
+    /// Trailing icon name.
+    public var trailingIcon: String
+
+    /// Accessible label for the trailing icon.
+    public var trailingIconLabel: String
+
+    /// Mask display mode (e.g., "blur", "always").
+    public var maskMode: String
+
+    /// Declarative validation type (e.g., "email", "phone").
+    public var validateType: String
+
     // MARK: - Internal State
 
     @FocusState private var isFocused: Bool
@@ -203,7 +242,20 @@ public struct CivTextInput: View {
         formName: String? = nil,
         requiredMessage: String? = nil,
         formValidate: (() -> String?)? = nil,
-        isPii: Bool = false
+        isPii: Bool = false,
+        pattern: String = "",
+        hideCharCount: Bool = false,
+        autocomplete: String = "",
+        inputmode: String = "",
+        prefix: String = "",
+        suffix: String = "",
+        clearable: Bool = false,
+        leadingIcon: String = "",
+        leadingIconLabel: String = "",
+        trailingIcon: String = "",
+        trailingIconLabel: String = "",
+        maskMode: String = "blur",
+        validateType: String = ""
     ) {
         self.label = label
         self._value = value
@@ -227,6 +279,19 @@ public struct CivTextInput: View {
         self.requiredMessage = requiredMessage
         self.formValidate = formValidate
         self.isPii = isPii
+        self.pattern = pattern
+        self.hideCharCount = hideCharCount
+        self.autocomplete = autocomplete
+        self.inputmode = inputmode
+        self.prefix = prefix
+        self.suffix = suffix
+        self.clearable = clearable
+        self.leadingIcon = leadingIcon
+        self.leadingIconLabel = leadingIconLabel
+        self.trailingIcon = trailingIcon
+        self.trailingIconLabel = trailingIconLabel
+        self.maskMode = maskMode
+        self.validateType = validateType
     }
 
     // MARK: - Body

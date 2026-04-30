@@ -77,6 +77,12 @@ public struct CivYesNo: View {
     /// Whether the field contains PII (excluded from getFormData).
     public var isPii: Bool
 
+    /// Label for the skip option.
+    public var skipLabel: String?
+
+    /// Form value for the skip option.
+    public var skipValue: String?
+
     // MARK: - Internal State
 
     @Environment(\.colorScheme) private var colorScheme
@@ -101,7 +107,9 @@ public struct CivYesNo: View {
         formName: String? = nil,
         requiredMessage: String? = nil,
         formValidate: (() -> String?)? = nil,
-        isPii: Bool = false
+        isPii: Bool = false,
+        skipLabel: String? = nil,
+        skipValue: String? = nil
     ) {
         self.legend = legend
         self._value = value
@@ -121,6 +129,8 @@ public struct CivYesNo: View {
         self.requiredMessage = requiredMessage
         self.formValidate = formValidate
         self.isPii = isPii
+        self.skipLabel = skipLabel
+        self.skipValue = skipValue
     }
 
     // MARK: - Body

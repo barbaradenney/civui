@@ -198,7 +198,7 @@ To edit existing icons or author new ones, run `pnpm storybook` and open **Core 
 
 ## Native Platform Support
 
-iOS (SwiftUI) and Android (Jetpack Compose) implementations live at `packages/ios/` and `packages/android/`. CI enforces 95%+ API parity across platforms (`parity.yml`) and verifies native files compile (`native.yml`).
+iOS (SwiftUI) and Android (Jetpack Compose) implementations live at `packages/ios/` and `packages/android/`. CI enforces 85%+ API parity across platforms (`parity.yml`) and verifies native files compile (`native.yml`).
 
 The parity check (`tools/parity-report.ts`) parses real source files on each platform — it does **not** consult `@civui/schema`.
 

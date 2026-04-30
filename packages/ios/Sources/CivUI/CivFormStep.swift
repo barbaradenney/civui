@@ -12,6 +12,11 @@ public struct CivFormStep<Content: View>: View {
     public var completeLabel: String?
     public var onStepChange: ((Int) -> Void)?
     public var onComplete: (() -> Void)?
+    public var persist: Bool
+    public var validate: Bool
+    public var sensitive: Bool
+    public var showPause: Bool
+    public var pauseLabel: String
     @ViewBuilder public var content: (Int) -> Content
 
     @Environment(\.colorScheme) private var colorScheme
@@ -25,6 +30,11 @@ public struct CivFormStep<Content: View>: View {
         completeLabel: String? = nil,
         onStepChange: ((Int) -> Void)? = nil,
         onComplete: (() -> Void)? = nil,
+        persist: Bool = false,
+        validate: Bool = true,
+        sensitive: Bool = false,
+        showPause: Bool = false,
+        pauseLabel: String = "",
         @ViewBuilder content: @escaping (Int) -> Content
     ) {
         self._current = current
@@ -35,6 +45,11 @@ public struct CivFormStep<Content: View>: View {
         self.completeLabel = completeLabel
         self.onStepChange = onStepChange
         self.onComplete = onComplete
+        self.persist = persist
+        self.validate = validate
+        self.sensitive = sensitive
+        self.showPause = showPause
+        self.pauseLabel = pauseLabel
         self.content = content
     }
 

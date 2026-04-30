@@ -37,6 +37,12 @@ fun CivFormStep(
     backLabel: String = "Back",
     continueLabel: String = "Continue",
     completeLabel: String = "Save and continue",
+    persist: Boolean = false,
+    validate: Boolean = true,
+    sensitive: Boolean = false,
+    showPause: Boolean = false,
+    pauseLabel: String = "",
+    onPause: (() -> Unit)? = null,
     onComplete: (() -> Unit)? = null,
     content: @Composable (Int) -> Unit,
 ) {

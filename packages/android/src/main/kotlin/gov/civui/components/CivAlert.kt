@@ -73,6 +73,8 @@ fun CivAlert(
     label: String = "",
     dismissible: Boolean = false,
     slim: Boolean = false,
+    headingLevel: Int = 4,
+    spacing: String = "default",
     onDismiss: (() -> Unit)? = null,
     onAnalytics: ((event: String, data: Map<String, Any>?) -> Unit)? = null,
 ) {

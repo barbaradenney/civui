@@ -48,6 +48,15 @@ public struct CivActionButton: View {
     /// Called for analytics tracking (parallels `civ-analytics` event).
     public var onAnalytics: ((String, [String: Any]?) -> Void)?
 
+    /// Button type (e.g., "button", "submit", "reset").
+    public var type: String
+
+    /// Icon name rendered before the label text.
+    public var iconStart: String
+
+    /// Icon name rendered after the label text.
+    public var iconEnd: String
+
     // MARK: - Internal State
 
     @Environment(\.colorScheme) private var colorScheme
@@ -61,7 +70,10 @@ public struct CivActionButton: View {
         isDisabled: Bool = false,
         isPressed: Bool = false,
         onClick: (() -> Void)? = nil,
-        onAnalytics: ((String, [String: Any]?) -> Void)? = nil
+        onAnalytics: ((String, [String: Any]?) -> Void)? = nil,
+        type: String = "button",
+        iconStart: String = "",
+        iconEnd: String = ""
     ) {
         self.label = label
         self.variant = variant
@@ -70,6 +82,9 @@ public struct CivActionButton: View {
         self.isPressed = isPressed
         self.onClick = onClick
         self.onAnalytics = onAnalytics
+        self.type = type
+        self.iconStart = iconStart
+        self.iconEnd = iconEnd
     }
 
     // MARK: - Body
@@ -199,6 +214,9 @@ public struct CivButtonGroup<Content: View>: View {
     /// Layout orientation.
     public var orientation: String
 
+    /// Accessible label for the button group.
+    public var label: String
+
     /// Button content.
     public let content: () -> Content
 
@@ -206,9 +224,11 @@ public struct CivButtonGroup<Content: View>: View {
 
     public init(
         orientation: String = "horizontal",
+        label: String = "",
         @ViewBuilder content: @escaping () -> Content
     ) {
         self.orientation = orientation
+        self.label = label
         self.content = content
     }
 

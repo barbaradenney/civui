@@ -123,6 +123,12 @@ public struct CivAddress: View {
     /// Called on value change (parallels `civ-change` event).
     public var onChange: ((AddressValue) -> Void)?
 
+    /// Called on every field change (parallels `civ-input` event).
+    public var onInput: ((AddressValue) -> Void)?
+
+    /// Called on form reset (parallels `civ-reset` event).
+    public var onReset: (() -> Void)?
+
     /// Called for analytics tracking (parallels `civ-analytics` event).
     public var onAnalytics: ((String, [String: Any]?) -> Void)?
 
@@ -140,6 +146,18 @@ public struct CivAddress: View {
 
     /// Whether the field contains PII (excluded from getFormData).
     public var isPii: Bool
+
+    /// Whether to show the country field.
+    public var showCountry: Bool
+
+    /// Whether to show military address options (APO/FPO/DPO).
+    public var showMilitary: Bool
+
+    /// Whether to show a third street address line.
+    public var showStreet3: Bool
+
+    /// Custom address validation callback. Returns error string or nil.
+    public var validateAddress: ((AddressValue) -> String?)?
 
     // MARK: - Internal State
 
@@ -161,12 +179,18 @@ public struct CivAddress: View {
         isReadonly: Bool = false,
         showStreet2: Bool = true,
         onChange: ((AddressValue) -> Void)? = nil,
+        onInput: ((AddressValue) -> Void)? = nil,
+        onReset: (() -> Void)? = nil,
         onAnalytics: ((String, [String: Any]?) -> Void)? = nil,
         formState: CivFormState? = nil,
         formName: String? = nil,
         requiredMessage: String? = nil,
         formValidate: (() -> String?)? = nil,
-        isPii: Bool = false
+        isPii: Bool = false,
+        showCountry: Bool = false,
+        showMilitary: Bool = false,
+        showStreet3: Bool = false,
+        validateAddress: ((AddressValue) -> String?)? = nil
     ) {
         self.legend = legend
         self._value = value
@@ -181,12 +205,18 @@ public struct CivAddress: View {
         self.isReadonly = isReadonly
         self.showStreet2 = showStreet2
         self.onChange = onChange
+        self.onInput = onInput
+        self.onReset = onReset
         self.onAnalytics = onAnalytics
         self.formState = formState
         self.formName = formName
         self.requiredMessage = requiredMessage
         self.formValidate = formValidate
         self.isPii = isPii
+        self.showCountry = showCountry
+        self.showMilitary = showMilitary
+        self.showStreet3 = showStreet3
+        self.validateAddress = validateAddress
     }
 
     // MARK: - Body
@@ -510,8 +540,8 @@ struct CivAddress_Previews: PreviewProvider {
                     CivAddress(
                         legend: "Without street line 2",
                         value: $mailing,
-                        showStreet2: false,
-                        isRequired: true
+                        isRequired: true,
+                        showStreet2: false
                     )
                 }
                 .padding()

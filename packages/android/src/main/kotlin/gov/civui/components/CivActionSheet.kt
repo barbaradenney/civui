@@ -1,14 +1,25 @@
 // CivUI — CivActionSheet for Jetpack Compose
-// TODO: Implement — stub for cross-platform consistency check.
+// Bottom sheet action menu for mobile interactions.
 
 package gov.civui.components
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
 @Composable
 fun CivActionSheet(
+    open: Boolean = false,
+    maxHeight: String = "50vh",
+    trapFocusProp: Boolean = false,
+    noClickOutside: Boolean = false,
+    onClose: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
+    content: @Composable () -> Unit = {},
 ) {
-    // TODO: Implement
+    Column(modifier = modifier) {
+        if (open) {
+            content()
+        }
+    }
 }

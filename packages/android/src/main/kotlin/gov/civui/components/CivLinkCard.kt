@@ -51,6 +51,10 @@ fun CivLinkCard(
     modifier: Modifier = Modifier,
     description: String = "",
     variant: String = "primary",
+    color: String = "",
+    spacing: String = "default",
+    iconStart: String = "",
+    iconEnd: String = "",
     onTap: (() -> Unit)? = null,
     onAnalytics: ((event: String, data: Map<String, Any>?) -> Unit)? = null,
 ) {

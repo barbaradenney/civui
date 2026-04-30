@@ -24,13 +24,26 @@ public struct CivTag: View {
     public let label: String
     public var variant: CivTagVariant
     public var size: CivTagSize
+    public var tagStyle: String
+    public var spacing: String
+    public var iconStart: String
 
     @Environment(\.colorScheme) private var colorScheme
 
-    public init(label: String, variant: CivTagVariant = .gray, size: CivTagSize = .default) {
+    public init(
+        label: String,
+        variant: CivTagVariant = .gray,
+        size: CivTagSize = .default,
+        tagStyle: String = "secondary",
+        spacing: String = "default",
+        iconStart: String = ""
+    ) {
         self.label = label
         self.variant = variant
         self.size = size
+        self.tagStyle = tagStyle
+        self.spacing = spacing
+        self.iconStart = iconStart
     }
 
     private var fontSize: CGFloat {

@@ -42,6 +42,15 @@ public struct CivPageHeader: View {
     /// Tag style (primary = dark bg, secondary = light bg).
     public var tagStyle: String
 
+    /// Spacing variant.
+    public var spacing: String
+
+    /// Icon name rendered before the heading text.
+    public var iconStart: String
+
+    /// Icon name rendered after the heading text.
+    public var iconEnd: String
+
     // MARK: - Internal State
 
     @Environment(\.colorScheme) private var colorScheme
@@ -54,7 +63,10 @@ public struct CivPageHeader: View {
         subheading: String = "",
         tag: String = "",
         tagVariant: CivTagVariant = .gray,
-        tagStyle: String = "secondary"
+        tagStyle: String = "secondary",
+        spacing: String = "default",
+        iconStart: String = "",
+        iconEnd: String = ""
     ) {
         self.heading = heading
         self.eyebrow = eyebrow
@@ -62,6 +74,9 @@ public struct CivPageHeader: View {
         self.tag = tag
         self.tagVariant = tagVariant
         self.tagStyle = tagStyle
+        self.spacing = spacing
+        self.iconStart = iconStart
+        self.iconEnd = iconEnd
     }
 
     // MARK: - Body

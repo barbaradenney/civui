@@ -85,7 +85,7 @@ fun CivSummary(
     heading: String,
     sections: List<CivSummarySection>,
     modifier: Modifier = Modifier,
-    onEdit: ((section: String, href: String) -> Unit)? = null,
+    onEdit: ((String) -> Unit)? = null,
     onAnalytics: ((event: String, data: Map<String, Any>?) -> Unit)? = null,
 ) {
     val isDark = isSystemInDarkTheme()
@@ -127,7 +127,7 @@ fun CivSummary(
                 mutedColor = mutedColor,
                 linkColor = linkColor,
                 dividerColor = dividerColor,
-                onEdit = onEdit,
+                onEdit = if (onEdit != null) { { section, href -> onEdit(href) } } else null,
                 onAnalytics = onAnalytics,
             )
         }

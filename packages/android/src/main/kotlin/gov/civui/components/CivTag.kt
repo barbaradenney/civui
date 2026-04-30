@@ -26,6 +26,9 @@ fun CivTag(
     label: String,
     variant: String = "gray",
     size: String = "default",
+    tagStyle: String = "secondary",
+    spacing: String = "default",
+    iconStart: String = "",
     modifier: Modifier = Modifier,
 ) {
     val isDark = isSystemInDarkTheme()

@@ -60,6 +60,8 @@ fun CivButton(
     label: String,
     modifier: Modifier = Modifier,
     variant: String = "primary",
+    danger: Boolean = false,
+    type: String = "button",
     disabled: Boolean = false,
     iconStart: String = "",
     iconEnd: String = "",

@@ -49,6 +49,33 @@ public struct CivForm<Content: View>: View {
     /// Called for analytics tracking (parallels `civ-analytics` event).
     public var onAnalytics: ((String, [String: Any]?) -> Void)?
 
+    /// Form action URL.
+    public var action: String
+
+    /// HTTP method (e.g., "POST", "GET").
+    public var method: String
+
+    /// Heading level for the error summary (e.g., 3 for h3).
+    public var errorHeadingLevel: Int
+
+    /// Key for persisting form data to storage.
+    public var persist: String
+
+    /// Whether to enable prefill from external data.
+    public var prefill: Bool
+
+    /// Whether to track dirty state for unsaved changes warning.
+    public var trackDirty: Bool
+
+    /// URL for fetching prefill data.
+    public var prefillSrc: String
+
+    /// JSON headers for the prefill fetch request.
+    public var prefillHeaders: String
+
+    /// Heading for the support resources section.
+    public var supportResourcesHeading: String
+
     /// Content rendered inside the form.
     public let content: Content
 
@@ -64,6 +91,15 @@ public struct CivForm<Content: View>: View {
         state: CivFormState? = nil,
         onSubmit: (() -> Void)? = nil,
         onAnalytics: ((String, [String: Any]?) -> Void)? = nil,
+        action: String = "",
+        method: String = "POST",
+        errorHeadingLevel: Int = 3,
+        persist: String = "",
+        prefill: Bool = false,
+        trackDirty: Bool = false,
+        prefillSrc: String = "",
+        prefillHeaders: String = "",
+        supportResourcesHeading: String = "",
         @ViewBuilder content: () -> Content
     ) {
         self._errors = errors
@@ -71,6 +107,15 @@ public struct CivForm<Content: View>: View {
         self.state = state
         self.onSubmit = onSubmit
         self.onAnalytics = onAnalytics
+        self.action = action
+        self.method = method
+        self.errorHeadingLevel = errorHeadingLevel
+        self.persist = persist
+        self.prefill = prefill
+        self.trackDirty = trackDirty
+        self.prefillSrc = prefillSrc
+        self.prefillHeaders = prefillHeaders
+        self.supportResourcesHeading = supportResourcesHeading
         self.content = content()
     }
 

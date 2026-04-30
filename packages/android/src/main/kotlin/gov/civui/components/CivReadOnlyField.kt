@@ -24,6 +24,10 @@ fun CivReadOnlyField(
     value: String = "",
     modifier: Modifier = Modifier,
     hint: String = "",
+    values: String = "",
+    editHref: String = "",
+    editLabel: String = "",
+    spacing: String = "default",
 ) {
     val isDark = isSystemInDarkTheme()
     val labelColor = if (isDark) CivTokens.DarkColors.Base.dark else CivTokens.Colors.Base.dark

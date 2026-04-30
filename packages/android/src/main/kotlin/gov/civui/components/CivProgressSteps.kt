@@ -63,6 +63,14 @@ fun CivProgressSteps(
     current: Int,
     modifier: Modifier = Modifier,
     orientation: CivProgressStepsOrientation = CivProgressStepsOrientation.HORIZONTAL,
+    clickable: Boolean = false,
+    showCounter: Boolean = false,
+    errorSteps: String = "",
+    showBack: Boolean = false,
+    backLabel: String = "",
+    status: String = "",
+    onStepClick: ((Int) -> Unit)? = null,
+    onStepBack: (() -> Unit)? = null,
 ) {
     val isDark = isSystemInDarkTheme()
 

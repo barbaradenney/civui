@@ -37,6 +37,21 @@ public struct CivProgressSteps: View {
     /// Orientation of the step indicator.
     public var orientation: CivProgressStepsOrientation
 
+    /// Whether steps are clickable for navigation.
+    public var clickable: Bool
+
+    /// Whether to show a step counter (e.g., "Step 2 of 5").
+    public var showCounter: Bool
+
+    /// Comma-separated list of step indices that have errors.
+    public var errorSteps: String
+
+    /// Whether to show a back button.
+    public var showBack: Bool
+
+    /// Custom label for the back button.
+    public var backLabel: String
+
     // MARK: - Internal State
 
     @Environment(\.colorScheme) private var colorScheme
@@ -46,11 +61,21 @@ public struct CivProgressSteps: View {
     public init(
         steps: [String],
         current: Int,
-        orientation: CivProgressStepsOrientation = .horizontal
+        orientation: CivProgressStepsOrientation = .horizontal,
+        clickable: Bool = false,
+        showCounter: Bool = false,
+        errorSteps: String = "",
+        showBack: Bool = false,
+        backLabel: String = ""
     ) {
         self.steps = steps
         self.current = current
         self.orientation = orientation
+        self.clickable = clickable
+        self.showCounter = showCounter
+        self.errorSteps = errorSteps
+        self.showBack = showBack
+        self.backLabel = backLabel
     }
 
     // MARK: - Body

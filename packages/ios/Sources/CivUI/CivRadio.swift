@@ -259,6 +259,18 @@ public struct CivRadioGroup: View {
     /// Field name for form state registration.
     public var formName: String?
 
+    /// Preset option set name (e.g., "us-states").
+    public var preset: String
+
+    /// Preset variant (e.g., "abbreviated", "full").
+    public var presetVariant: String
+
+    /// Label for the skip option.
+    public var skipLabel: String?
+
+    /// Form value for the skip option.
+    public var skipValue: String?
+
     // MARK: - Internal State
 
     @Environment(\.colorScheme) private var colorScheme
@@ -279,7 +291,11 @@ public struct CivRadioGroup: View {
         onChange: ((String) -> Void)? = nil,
         onAnalytics: ((String, [String: Any]?) -> Void)? = nil,
         formState: CivFormState? = nil,
-        formName: String? = nil
+        formName: String? = nil,
+        preset: String = "",
+        presetVariant: String = "",
+        skipLabel: String? = nil,
+        skipValue: String? = nil
     ) {
         self.legend = legend
         self._value = value
@@ -295,6 +311,10 @@ public struct CivRadioGroup: View {
         self.onAnalytics = onAnalytics
         self.formState = formState
         self.formName = formName
+        self.preset = preset
+        self.presetVariant = presetVariant
+        self.skipLabel = skipLabel
+        self.skipValue = skipValue
     }
 
     // MARK: - Body

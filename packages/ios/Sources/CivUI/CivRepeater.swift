@@ -68,6 +68,15 @@ public struct CivRepeater<Content: View>: View {
     /// Called for analytics tracking (parallels `civ-analytics` event).
     public var onAnalytics: ((String, [String: Any]?) -> Void)?
 
+    /// Repeater mode (e.g., "inline", "wizard").
+    public var mode: String
+
+    /// Whether wizard mode content is sensitive (PII).
+    public var wizardSensitive: Bool
+
+    /// Whether to show a pause button in wizard mode.
+    public var wizardShowPause: Bool
+
     /// Content builder that receives the row index.
     @ViewBuilder public var content: (Int) -> Content
 
@@ -91,6 +100,9 @@ public struct CivRepeater<Content: View>: View {
         onAdd: ((Int) -> Void)? = nil,
         onRemove: ((Int) -> Void)? = nil,
         onAnalytics: ((String, [String: Any]?) -> Void)? = nil,
+        mode: String = "inline",
+        wizardSensitive: Bool = false,
+        wizardShowPause: Bool = false,
         @ViewBuilder content: @escaping (Int) -> Content
     ) {
         self.legend = legend
@@ -106,6 +118,9 @@ public struct CivRepeater<Content: View>: View {
         self.onAdd = onAdd
         self.onRemove = onRemove
         self.onAnalytics = onAnalytics
+        self.mode = mode
+        self.wizardSensitive = wizardSensitive
+        self.wizardShowPause = wizardShowPause
         self.content = content
     }
 

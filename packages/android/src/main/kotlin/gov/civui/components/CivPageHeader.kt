@@ -50,6 +50,9 @@ fun CivPageHeader(
     tag: String = "",
     tagVariant: String = "gray",
     tagStyle: String = "secondary",
+    spacing: String = "default",
+    iconStart: String = "",
+    iconEnd: String = "",
 ) {
     val isDark = isSystemInDarkTheme()
 

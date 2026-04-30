@@ -90,6 +90,18 @@ public struct CivSelect: View {
     /// Whether the field contains PII (excluded from getFormData).
     public var isPii: Bool
 
+    /// Width variant for the select field (e.g., "full", "auto").
+    public var width: String
+
+    /// Autocomplete hint for the browser/OS.
+    public var autocomplete: String
+
+    /// Preset option set name (e.g., "us-states", "countries").
+    public var preset: String
+
+    /// Preset variant (e.g., "abbreviated", "full").
+    public var presetVariant: String
+
     // MARK: - Internal State
 
     @Environment(\.colorScheme) private var colorScheme
@@ -112,7 +124,11 @@ public struct CivSelect: View {
         formName: String? = nil,
         requiredMessage: String? = nil,
         formValidate: (() -> String?)? = nil,
-        isPii: Bool = false
+        isPii: Bool = false,
+        width: String = "full",
+        autocomplete: String = "",
+        preset: String = "",
+        presetVariant: String = ""
     ) {
         self.label = label
         self._value = value
@@ -130,6 +146,10 @@ public struct CivSelect: View {
         self.requiredMessage = requiredMessage
         self.formValidate = formValidate
         self.isPii = isPii
+        self.width = width
+        self.autocomplete = autocomplete
+        self.preset = preset
+        self.presetVariant = presetVariant
     }
 
     // MARK: - Body

@@ -67,6 +67,11 @@ fun CivCheckboxGroup(
     disabled: Boolean = false,
     readonly: Boolean = false,
     name: String = "",
+    showSelectAll: Boolean = false,
+    preset: String = "",
+    presetVariant: String = "",
+    maxSelections: Int = 0,
+    minSelections: Int = 0,
     onAnalytics: ((event: String, data: Map<String, Any>?) -> Unit)? = null,
 ) {
     val isDark = isSystemInDarkTheme()

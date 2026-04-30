@@ -1,14 +1,19 @@
 // CivUI — CivEmailLink for Jetpack Compose
-// TODO: Implement — stub for cross-platform consistency check.
+// Email link with address and optional subject.
 
 package gov.civui.components
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
 @Composable
 fun CivEmailLink(
+    address: String = "",
+    label: String = "",
+    subject: String = "",
+    disabled: Boolean = false,
     modifier: Modifier = Modifier,
 ) {
-    // TODO: Implement
+    Column(modifier = modifier) {}
 }

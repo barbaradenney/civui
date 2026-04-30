@@ -58,6 +58,12 @@ public struct CivAlert: View {
     /// Called for analytics tracking (parallels `civ-analytics` event).
     public var onAnalytics: ((String, [String: Any]?) -> Void)?
 
+    /// Heading level for accessibility (e.g., 2 = h2, 3 = h3).
+    public var headingLevel: Int
+
+    /// Spacing variant ("default", "compact").
+    public var spacing: String
+
     // MARK: - Internal State
 
     @Environment(\.colorScheme) private var colorScheme
@@ -73,7 +79,9 @@ public struct CivAlert: View {
         dismissible: Bool = false,
         slim: Bool = false,
         onDismiss: (() -> Void)? = nil,
-        onAnalytics: ((String, [String: Any]?) -> Void)? = nil
+        onAnalytics: ((String, [String: Any]?) -> Void)? = nil,
+        headingLevel: Int = 4,
+        spacing: String = "default"
     ) {
         self.variant = variant
         self.alertStyle = alertStyle
@@ -83,6 +91,8 @@ public struct CivAlert: View {
         self.slim = slim
         self.onDismiss = onDismiss
         self.onAnalytics = onAnalytics
+        self.headingLevel = headingLevel
+        self.spacing = spacing
     }
 
     // MARK: - Body

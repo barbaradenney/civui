@@ -68,6 +68,8 @@ fun CivYesNo(
     noLabel: String = "No",
     unsureLabel: String = "",
     unsureValue: String = "unsure",
+    skipLabel: String = "",
+    skipValue: String = "",
     onChange: ((String) -> Unit)? = null,
     onAnalytics: ((event: String, data: Map<String, Any>?) -> Unit)? = null,
     name: String = "",

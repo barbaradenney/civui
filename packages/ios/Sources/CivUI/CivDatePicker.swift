@@ -77,6 +77,57 @@ public struct CivDatePicker: View {
     /// Whether the field contains PII (excluded from getFormData).
     public var isPii: Bool
 
+    /// Day the week starts on (0 = Sunday, 1 = Monday).
+    public var weekStartsOn: Int
+
+    /// Comma-separated list of disabled dates (YYYY-MM-DD).
+    public var disabledDates: String
+
+    /// Label for the clear button.
+    public var clearLabel: String
+
+    /// Label for the choose-date button.
+    public var chooseDateLabel: String
+
+    /// Label announced when a date is selected.
+    public var selectedDateLabel: String
+
+    /// Accessible label for the dialog.
+    public var dialogLabel: String
+
+    /// Label for the previous month button.
+    public var previousMonthLabel: String
+
+    /// Label for the next month button.
+    public var nextMonthLabel: String
+
+    /// Message announced when the dialog is opened.
+    public var dialogOpenedMessage: String
+
+    /// Message announced when a date is selected.
+    public var dateSelectedMessage: String
+
+    /// Label for today's date in the calendar.
+    public var todayLabel: String
+
+    /// Label for the today shortcut button.
+    public var todayButtonLabel: String
+
+    /// Whether to hide the today shortcut button.
+    public var hideTodayButton: Bool
+
+    /// Error message for invalid date format.
+    public var invalidFormatMessage: String
+
+    /// Error message for dates outside the allowed range.
+    public var dateRangeMessage: String
+
+    /// Error message for dates before the minimum.
+    public var minDateMessage: String
+
+    /// Error message for dates after the maximum.
+    public var maxDateMessage: String
+
     // MARK: - Internal State
 
     @Environment(\.colorScheme) private var colorScheme
@@ -101,7 +152,24 @@ public struct CivDatePicker: View {
         requiredMessage: String? = nil,
         formValidate: (() -> String?)? = nil,
         locale: String = "",
-        isPii: Bool = false
+        isPii: Bool = false,
+        weekStartsOn: Int = 0,
+        disabledDates: String = "",
+        clearLabel: String = "",
+        chooseDateLabel: String = "",
+        selectedDateLabel: String = "",
+        dialogLabel: String = "",
+        previousMonthLabel: String = "",
+        nextMonthLabel: String = "",
+        dialogOpenedMessage: String = "",
+        dateSelectedMessage: String = "",
+        todayLabel: String = "",
+        todayButtonLabel: String = "",
+        hideTodayButton: Bool = false,
+        invalidFormatMessage: String = "",
+        dateRangeMessage: String = "",
+        minDateMessage: String = "",
+        maxDateMessage: String = ""
     ) {
         self.label = label
         self._value = value
@@ -121,6 +189,23 @@ public struct CivDatePicker: View {
         self.formValidate = formValidate
         self.locale = locale
         self.isPii = isPii
+        self.weekStartsOn = weekStartsOn
+        self.disabledDates = disabledDates
+        self.clearLabel = clearLabel
+        self.chooseDateLabel = chooseDateLabel
+        self.selectedDateLabel = selectedDateLabel
+        self.dialogLabel = dialogLabel
+        self.previousMonthLabel = previousMonthLabel
+        self.nextMonthLabel = nextMonthLabel
+        self.dialogOpenedMessage = dialogOpenedMessage
+        self.dateSelectedMessage = dateSelectedMessage
+        self.todayLabel = todayLabel
+        self.todayButtonLabel = todayButtonLabel
+        self.hideTodayButton = hideTodayButton
+        self.invalidFormatMessage = invalidFormatMessage
+        self.dateRangeMessage = dateRangeMessage
+        self.minDateMessage = minDateMessage
+        self.maxDateMessage = maxDateMessage
     }
 
     // MARK: - Date Helpers

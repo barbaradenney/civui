@@ -74,6 +74,8 @@ fun CivTask(
     status: String = "not-started",
     modifier: Modifier = Modifier,
     hint: String = "",
+    href: String = "",
+    prefilled: Boolean = false,
     onClick: (() -> Unit)? = null,
 ) {
     val isDark = isSystemInDarkTheme()

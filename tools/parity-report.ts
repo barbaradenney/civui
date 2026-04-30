@@ -245,10 +245,19 @@ function parseKotlinParams(paramStr: string): Array<{ name: string; type: string
     while (i < s.length && /[\s,]/.test(s[i])) i++;
     if (i >= s.length) break;
 
-    // Read parameter name
-    const nameStart = i;
-    while (i < s.length && /\w/.test(s[i])) i++;
-    const paramName = s.slice(nameStart, i).trim();
+    // Read parameter name (support backtick-escaped names like `when`)
+    let paramName: string;
+    if (s[i] === '`') {
+      const nameStart = i + 1;
+      i++; // skip opening backtick
+      while (i < s.length && s[i] !== '`') i++;
+      paramName = s.slice(nameStart, i).trim();
+      if (i < s.length) i++; // skip closing backtick
+    } else {
+      const nameStart = i;
+      while (i < s.length && /\w/.test(s[i])) i++;
+      paramName = s.slice(nameStart, i).trim();
+    }
     if (!paramName) { i++; continue; }
 
     // Skip whitespace and colon
@@ -573,8 +582,9 @@ function generateReport(): string {
     // Collect all events
     const allEvents = new Map<string, { web?: EventDef; ios?: EventDef; android?: EventDef }>();
     web?.events.forEach(e => {
-      if (!allEvents.has(e.name)) allEvents.set(e.name, {});
-      allEvents.get(e.name)!.web = e;
+      const key = mapEventName(e.name);
+      if (!allEvents.has(key)) allEvents.set(key, {});
+      allEvents.get(key)!.web = e;
     });
     ios?.events.forEach(e => {
       const key = mapEventName(e.name);
@@ -596,7 +606,7 @@ function generateReport(): string {
       'type',
       // Task 'href' is web-only — native uses onTap/onClick callbacks
       'href',
-      // Address international/military mode flags — native address is US-only for now
+      // Address international/military mode flags — available on native now but excluded from parity
       'showCountry', 'showMilitary', 'showStreet3',
       // FormStep: navDisabled is web-only (native handles button disabled natively)
       'navDisabled',
@@ -809,6 +819,7 @@ function mapEventName(name: string): string {
     // iOS/Android callbacks -> web event names
     onChange: 'civ-change',
     onInput: 'civ-input',
+    onReset: 'civ-reset',
     onAnalytics: 'civ-analytics',
     onSubmit: 'civ-submit',
     onValueChange: 'civ-change',
@@ -819,13 +830,29 @@ function mapEventName(name: string): string {
     onSelect: 'civ-change',
     onAdd: 'civ-repeater-add',
     onRemove: 'civ-repeater-remove',
-    onEdit: 'civ-summary-edit',
+    onEdit: 'civ-edit',
     onClick: 'civ-analytics', // native click callback maps to analytics tracking
     onTap: 'civ-analytics', // iOS tap callback
     onStepChange: 'civ-step-change',
     onComplete: 'civ-step-complete',
     onLinkTap: 'civ-analytics', // prefill notice link tap
     onLinkClick: 'civ-analytics', // prefill notice link click
+    onDirty: 'civ-dirty',
+    onServerErrors: 'civ-server-errors',
+    onPrefillError: 'civ-prefill-error',
+    onPrefillApplied: 'civ-prefill-applied',
+    onInvalid: 'civ-invalid',
+    onClose: 'civ-dismiss',
+    'civ-action-sheet-close': 'civ-dismiss', // web action-sheet close -> dismiss
+    'civ-modal-close': 'civ-dismiss', // web modal close -> dismiss
+    onUploadCancel: 'civ-upload-cancel',
+    onUploadRetry: 'civ-upload-retry',
+    onFileRemoved: 'civ-file-removed',
+    onPause: 'civ-step-pause',
+    onStepClick: 'civ-step-click',
+    onStepBack: 'civ-step-back',
+    onWizardOpen: 'civ-repeater-wizard-open',
+    onWizardClose: 'civ-repeater-wizard-close',
   };
   return map[name] || name;
 }

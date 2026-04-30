@@ -94,6 +94,9 @@ public struct CivName: View {
     /// Whether the field contains PII (excluded from getFormData).
     public var isPii: Bool
 
+    /// Name format variant (e.g., "domestic", "international").
+    public var format: String
+
     // MARK: - Internal State
 
     @Environment(\.colorScheme) private var colorScheme
@@ -121,7 +124,8 @@ public struct CivName: View {
         formName: String? = nil,
         requiredMessage: String? = nil,
         formValidate: (() -> String?)? = nil,
-        isPii: Bool = false
+        isPii: Bool = false,
+        format: String = "domestic"
     ) {
         self.legend = legend
         self._value = value
@@ -142,6 +146,7 @@ public struct CivName: View {
         self.requiredMessage = requiredMessage
         self.formValidate = formValidate
         self.isPii = isPii
+        self.format = format
     }
 
     // MARK: - Body

@@ -85,6 +85,18 @@ public struct CivTextarea: View {
     /// Whether the field contains PII (excluded from getFormData).
     public var isPii: Bool
 
+    /// Minimum character length.
+    public var minlength: Int?
+
+    /// Whether the textarea auto-grows to fit content.
+    public var autogrow: Bool
+
+    /// Maximum height for auto-grow mode (CSS value, e.g., "300px").
+    public var maxHeight: String?
+
+    /// Validation type (e.g., "email", "url").
+    public var validateType: String
+
     // MARK: - Internal State
 
     @FocusState private var isFocused: Bool
@@ -114,7 +126,11 @@ public struct CivTextarea: View {
         formName: String? = nil,
         requiredMessage: String? = nil,
         formValidate: (() -> String?)? = nil,
-        isPii: Bool = false
+        isPii: Bool = false,
+        minlength: Int? = nil,
+        autogrow: Bool = false,
+        maxHeight: String? = nil,
+        validateType: String = ""
     ) {
         self.label = label
         self._value = value
@@ -135,6 +151,10 @@ public struct CivTextarea: View {
         self.requiredMessage = requiredMessage
         self.formValidate = formValidate
         self.isPii = isPii
+        self.minlength = minlength
+        self.autogrow = autogrow
+        self.maxHeight = maxHeight
+        self.validateType = validateType
     }
 
     // MARK: - Body

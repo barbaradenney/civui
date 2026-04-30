@@ -44,6 +44,18 @@ public struct CivLinkCard: View {
     /// Called for analytics tracking (parallels `civ-analytics` event).
     public var onAnalytics: ((String, [String: Any]?) -> Void)?
 
+    /// Color variant.
+    public var color: String
+
+    /// Spacing variant.
+    public var spacing: String
+
+    /// Icon name rendered before the heading text.
+    public var iconStart: String
+
+    /// Icon name rendered after the heading text.
+    public var iconEnd: String
+
     // MARK: - Internal State
 
     @Environment(\.colorScheme) private var colorScheme
@@ -56,7 +68,11 @@ public struct CivLinkCard: View {
         description: String = "",
         variant: LinkCardVariant = .primary,
         onTap: (() -> Void)? = nil,
-        onAnalytics: ((String, [String: Any]?) -> Void)? = nil
+        onAnalytics: ((String, [String: Any]?) -> Void)? = nil,
+        color: String = "",
+        spacing: String = "default",
+        iconStart: String = "",
+        iconEnd: String = ""
     ) {
         self.href = href
         self.heading = heading
@@ -64,6 +80,10 @@ public struct CivLinkCard: View {
         self.variant = variant
         self.onTap = onTap
         self.onAnalytics = onAnalytics
+        self.color = color
+        self.spacing = spacing
+        self.iconStart = iconStart
+        self.iconEnd = iconEnd
     }
 
     // MARK: - Body

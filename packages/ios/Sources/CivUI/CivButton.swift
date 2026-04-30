@@ -50,6 +50,12 @@ public struct CivButton: View {
     /// Called for analytics tracking (parallels `civ-analytics` event).
     public var onAnalytics: ((String, [String: Any]?) -> Void)?
 
+    /// Whether the button triggers a destructive action.
+    public var danger: Bool
+
+    /// Button type (e.g., "button", "submit", "reset").
+    public var type: String
+
     // MARK: - Internal State
 
     @Environment(\.colorScheme) private var colorScheme
@@ -64,7 +70,9 @@ public struct CivButton: View {
         iconEnd: String = "",
         href: String? = nil,
         onClick: (() -> Void)? = nil,
-        onAnalytics: ((String, [String: Any]?) -> Void)? = nil
+        onAnalytics: ((String, [String: Any]?) -> Void)? = nil,
+        danger: Bool = false,
+        type: String = "button"
     ) {
         self.label = label
         self.variant = variant
@@ -74,6 +82,8 @@ public struct CivButton: View {
         self.href = href
         self.onClick = onClick
         self.onAnalytics = onAnalytics
+        self.danger = danger
+        self.type = type
     }
 
     // MARK: - Body

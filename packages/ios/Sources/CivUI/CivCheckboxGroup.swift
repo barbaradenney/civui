@@ -75,6 +75,21 @@ public struct CivCheckboxGroup: View {
     /// Layout orientation for options: "vertical" (default) or "horizontal".
     public var orientation: String
 
+    /// Whether to show a "Select all" option.
+    public var showSelectAll: Bool
+
+    /// Preset options key (e.g., "us-states").
+    public var preset: String
+
+    /// Preset variant for alternative option sets.
+    public var presetVariant: String
+
+    /// Maximum number of selections allowed. Nil = unlimited.
+    public var maxSelections: Int?
+
+    /// Minimum number of selections required. Nil = no minimum.
+    public var minSelections: Int?
+
     /// Called when the set of checked values changes.
     public var onChange: (([String]) -> Void)?
 
@@ -99,6 +114,11 @@ public struct CivCheckboxGroup: View {
         formName: String = "",
         isTile: Bool = false,
         orientation: String = "vertical",
+        showSelectAll: Bool = false,
+        preset: String = "",
+        presetVariant: String = "",
+        maxSelections: Int? = nil,
+        minSelections: Int? = nil,
         onChange: (([String]) -> Void)? = nil,
         onAnalytics: ((String, [String: Any]?) -> Void)? = nil
     ) {
@@ -113,6 +133,11 @@ public struct CivCheckboxGroup: View {
         self.formName = formName
         self.isTile = isTile
         self.orientation = orientation
+        self.showSelectAll = showSelectAll
+        self.preset = preset
+        self.presetVariant = presetVariant
+        self.maxSelections = maxSelections
+        self.minSelections = minSelections
         self.onChange = onChange
         self.onAnalytics = onAnalytics
     }

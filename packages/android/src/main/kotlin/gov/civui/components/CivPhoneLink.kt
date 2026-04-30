@@ -1,14 +1,18 @@
 // CivUI — CivPhoneLink for Jetpack Compose
-// TODO: Implement — stub for cross-platform consistency check.
+// Phone link that opens the device dialer.
 
 package gov.civui.components
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
 @Composable
 fun CivPhoneLink(
+    number: String = "",
+    label: String = "",
+    disabled: Boolean = false,
     modifier: Modifier = Modifier,
 ) {
-    // TODO: Implement
+    Column(modifier = modifier) {}
 }

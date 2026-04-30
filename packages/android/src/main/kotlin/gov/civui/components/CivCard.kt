@@ -30,6 +30,10 @@ fun CivCard(
     eyebrow: String = "",
     eyebrowVariant: String = "gray",
     spacing: String = "default",
+    color: String = "",
+    cardStyle: String = "default",
+    iconStart: String = "",
+    iconEnd: String = "",
     content: @Composable () -> Unit,
     footer: (@Composable () -> Unit)? = null,
 ) {

@@ -49,6 +49,12 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun CivConditional(
     visible: Boolean,
+    `when`: String = "",
+    equals: String = "",
+    notEquals: String = "",
+    includes: String = "",
+    hasValue: Boolean = false,
+    pattern: String = "",
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {

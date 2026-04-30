@@ -82,8 +82,14 @@ fun CivRepeater(
     disabled: Boolean = false,
     min: Int = 1,
     max: Int = 0,
+    mode: String = "inline",
+    wizardSensitive: Boolean = false,
+    wizardShowPause: Boolean = false,
     onAdd: ((Int) -> Unit)? = null,
     onRemove: ((Int) -> Unit)? = null,
+    onWizardOpen: ((Int) -> Unit)? = null,
+    onWizardClose: (() -> Unit)? = null,
+    onAnalytics: ((String, Map<String, Any>?) -> Unit)? = null,
     content: @Composable (index: Int) -> Unit,
 ) {
     val isDark = isSystemInDarkTheme()

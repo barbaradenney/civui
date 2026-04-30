@@ -51,6 +51,15 @@ public struct CivLink: View {
     /// Called for analytics tracking (parallels `civ-analytics` event).
     public var onAnalytics: ((String, [String: Any]?) -> Void)?
 
+    /// Link target (e.g., "_blank", "_self").
+    public var target: String
+
+    /// Link rel attribute (e.g., "noopener noreferrer").
+    public var rel: String
+
+    /// Download filename. When non-empty, triggers download behavior.
+    public var download: String
+
     // MARK: - Internal State
 
     @Environment(\.colorScheme) private var colorScheme
@@ -66,7 +75,10 @@ public struct CivLink: View {
         iconStart: String = "",
         iconEnd: String = "",
         onTap: (() -> Void)? = nil,
-        onAnalytics: ((String, [String: Any]?) -> Void)? = nil
+        onAnalytics: ((String, [String: Any]?) -> Void)? = nil,
+        target: String = "",
+        rel: String = "",
+        download: String = ""
     ) {
         self.label = label
         self.href = href
@@ -77,6 +89,9 @@ public struct CivLink: View {
         self.iconEnd = iconEnd
         self.onTap = onTap
         self.onAnalytics = onAnalytics
+        self.target = target
+        self.rel = rel
+        self.download = download
     }
 
     private var leadingIconName: String {

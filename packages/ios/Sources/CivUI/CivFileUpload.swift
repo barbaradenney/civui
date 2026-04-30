@@ -83,6 +83,45 @@ public struct CivFileUpload: View {
     /// Called for analytics tracking (parallels `civ-analytics` event).
     public var onAnalytics: ((String, [String: Any]?) -> Void)?
 
+    /// Whether to show file previews (images).
+    public var showPreview: Bool
+
+    /// Camera capture mode (e.g., "user", "environment").
+    public var capture: String
+
+    /// Upload variant (e.g., "default", "dropzone").
+    public var variant: String
+
+    /// Custom text for the drag-and-drop area.
+    public var dragText: String
+
+    /// Label text describing accepted file types.
+    public var acceptedLabel: String
+
+    /// Label text showing the maximum file size.
+    public var maxSizeLabel: String
+
+    /// Accessible label for the remove button.
+    public var removeAriaLabel: String
+
+    /// Accessible label for the files list.
+    public var filesListLabel: String
+
+    /// VoiceOver message when a file is added.
+    public var fileAddedMessage: String
+
+    /// VoiceOver message when a file is removed.
+    public var fileRemovedMessage: String
+
+    /// Error message when a file exceeds the size limit.
+    public var fileSizeError: String
+
+    /// Error message when a file type is not accepted.
+    public var fileTypeError: String
+
+    /// Error message when the max files limit is reached.
+    public var maxFilesError: String
+
     /// Optional form state for centralized validation.
     public var formState: CivFormState?
 
@@ -120,6 +159,19 @@ public struct CivFileUpload: View {
         removeText: String = "",
         onChange: (([CivUploadedFile]) -> Void)? = nil,
         onAnalytics: ((String, [String: Any]?) -> Void)? = nil,
+        showPreview: Bool = false,
+        capture: String = "",
+        variant: String = "default",
+        dragText: String = "",
+        acceptedLabel: String = "",
+        maxSizeLabel: String = "",
+        removeAriaLabel: String = "",
+        filesListLabel: String = "",
+        fileAddedMessage: String = "",
+        fileRemovedMessage: String = "",
+        fileSizeError: String = "",
+        fileTypeError: String = "",
+        maxFilesError: String = "",
         formState: CivFormState? = nil,
         formName: String? = nil
     ) {
@@ -138,6 +190,19 @@ public struct CivFileUpload: View {
         self.removeText = removeText
         self.onChange = onChange
         self.onAnalytics = onAnalytics
+        self.showPreview = showPreview
+        self.capture = capture
+        self.variant = variant
+        self.dragText = dragText
+        self.acceptedLabel = acceptedLabel
+        self.maxSizeLabel = maxSizeLabel
+        self.removeAriaLabel = removeAriaLabel
+        self.filesListLabel = filesListLabel
+        self.fileAddedMessage = fileAddedMessage
+        self.fileRemovedMessage = fileRemovedMessage
+        self.fileSizeError = fileSizeError
+        self.fileTypeError = fileTypeError
+        self.maxFilesError = maxFilesError
         self.formState = formState
         self.formName = formName
     }

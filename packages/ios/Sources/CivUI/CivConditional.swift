@@ -27,6 +27,24 @@ public struct CivConditional<Content: View>: View {
     /// Whether the content is visible.
     @Binding public var isVisible: Bool
 
+    /// Selector string for the controlling field (web parity).
+    public var when: String
+
+    /// Show content when the controlling field equals this value.
+    public var equals: String
+
+    /// Show content when the controlling field does not equal this value.
+    public var notEquals: String
+
+    /// Show content when the controlling field includes this value.
+    public var includes: String
+
+    /// Show content when the controlling field has any value.
+    public var hasValue: Bool
+
+    /// Show content when the controlling field matches this regex pattern.
+    public var pattern: String
+
     /// Content rendered when visible.
     public let content: Content
 
@@ -34,9 +52,21 @@ public struct CivConditional<Content: View>: View {
 
     public init(
         isVisible: Binding<Bool>,
+        when: String = "",
+        equals: String = "",
+        notEquals: String = "",
+        includes: String = "",
+        hasValue: Bool = false,
+        pattern: String = "",
         @ViewBuilder content: () -> Content
     ) {
         self._isVisible = isVisible
+        self.when = when
+        self.equals = equals
+        self.notEquals = notEquals
+        self.includes = includes
+        self.hasValue = hasValue
+        self.pattern = pattern
         self.content = content()
     }
 

@@ -76,6 +76,8 @@ fun CivRaceEthnicity(
     required: Boolean = false,
     disabled: Boolean = false,
     readonly: Boolean = false,
+    ethnicityLegend: String = "Ethnicity",
+    raceLegend: String = "Race",
     onChange: ((RaceEthnicityValue) -> Unit)? = null,
     onAnalytics: ((event: String, data: Map<String, Any>?) -> Unit)? = null,
     name: String = "",

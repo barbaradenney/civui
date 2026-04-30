@@ -82,6 +82,12 @@ public struct CivRaceEthnicity: View {
     /// Whether the field contains PII.
     public var isPii: Bool
 
+    /// Legend for the ethnicity section.
+    public var ethnicityLegend: String
+
+    /// Legend for the race section.
+    public var raceLegend: String
+
     // MARK: - Internal State
 
     @Environment(\.colorScheme) private var colorScheme
@@ -121,7 +127,9 @@ public struct CivRaceEthnicity: View {
         formName: String? = nil,
         requiredMessage: String? = nil,
         formValidate: (() -> String?)? = nil,
-        isPii: Bool = false
+        isPii: Bool = false,
+        ethnicityLegend: String = "Ethnicity",
+        raceLegend: String = "Race"
     ) {
         self.legend = legend
         self._value = value
@@ -139,6 +147,8 @@ public struct CivRaceEthnicity: View {
         self.requiredMessage = requiredMessage
         self.formValidate = formValidate
         self.isPii = isPii
+        self.ethnicityLegend = ethnicityLegend
+        self.raceLegend = raceLegend
     }
 
     // MARK: - Body

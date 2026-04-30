@@ -91,6 +91,24 @@ public struct CivCombobox: View {
     /// Whether the field contains PII (excluded from getFormData).
     public var isPii: Bool
 
+    /// Width variant (e.g., "full", "md", "lg").
+    public var width: String
+
+    /// Debounce delay in milliseconds for async option loading.
+    public var loadDebounce: Int
+
+    /// Minimum query length before triggering option loading.
+    public var minQueryLength: Int
+
+    /// Text shown while options are loading.
+    public var loadingText: String
+
+    /// Text shown when option loading fails.
+    public var loadingErrorText: String
+
+    /// Called to load options asynchronously (parallels `civ-load` event).
+    public var loadOptions: ((String) -> Void)?
+
     // MARK: - Internal State
 
     @State private var filter = ""
@@ -120,7 +138,13 @@ public struct CivCombobox: View {
         formName: String? = nil,
         requiredMessage: String? = nil,
         formValidate: (() -> String?)? = nil,
-        isPii: Bool = false
+        isPii: Bool = false,
+        width: String = "full",
+        loadDebounce: Int = 300,
+        minQueryLength: Int = 1,
+        loadingText: String = "",
+        loadingErrorText: String = "",
+        loadOptions: ((String) -> Void)? = nil
     ) {
         self.label = label
         self._value = value
@@ -140,6 +164,12 @@ public struct CivCombobox: View {
         self.requiredMessage = requiredMessage
         self.formValidate = formValidate
         self.isPii = isPii
+        self.width = width
+        self.loadDebounce = loadDebounce
+        self.minQueryLength = minQueryLength
+        self.loadingText = loadingText
+        self.loadingErrorText = loadingErrorText
+        self.loadOptions = loadOptions
     }
 
     // MARK: - Computed

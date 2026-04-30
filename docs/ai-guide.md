@@ -57,9 +57,8 @@ For architecture and internals, see `CLAUDE.md` in the repo root.
 | `<civ-filter-chip-group>` | UI | `mode` (single/multi), `label`. Roving tabindex + keyboard nav. | `civ-change` (aggregated) |
 | `<civ-input-group>` | UI | — (layout container) | — |
 | `<civ-download-link>` | UI | `label`, `href`, `filename`, `file-size` | `civ-analytics` |
-| `<civ-email-link>` | UI | `address`, `label`, `subject` | `civ-analytics` |
+| `<civ-action-link>` | UI | `type` (`phone`/`email`), `number`, `address`, `label`, `subject` | `civ-analytics` |
 | `<civ-external-link>` | UI | `label`, `href` | `civ-analytics` |
-| `<civ-phone-link>` | UI | `number`, `label` | `civ-analytics` |
 | `<civ-ssn>` | Preset | `mode` (`'full'` \| `'last4'`) | `civ-input`, `civ-change` |
 | `<civ-ein>` | Preset | — (inherits standard) | `civ-input`, `civ-change` |
 | `<civ-phone>` | Preset | `international` | `civ-input`, `civ-change` |
@@ -1179,16 +1178,15 @@ Pre-configured wrappers around `civ-text-input` and `civ-combobox` with built-in
 | Component | Description | Key props | Package |
 |---|---|---|---|
 | `<civ-download-link>` | File download with icon and file size display | `label`, `href`, `filename`, `file-size` | `@civui/navigation` |
-| `<civ-email-link>` | Clickable email with `mailto:` and mail icon | `address`, `label`, `subject` | `@civui/actions` |
+| `<civ-action-link>` | Clickable phone (`tel:`) or email (`mailto:`) link with icon | `type`, `number`, `address`, `label`, `subject` | `@civui/actions` |
 | `<civ-external-link>` | Opens in new tab with SR "opens in new tab" text | `label`, `href` | `@civui/navigation` |
-| `<civ-phone-link>` | Clickable phone with `tel:` and phone icon | `number`, `label` | `@civui/actions` |
 
-`civ-link`, `civ-link-card`, `civ-external-link`, and `civ-download-link` live in `@civui/navigation` (wayfinding to a destination). `civ-phone-link` and `civ-email-link` live in `@civui/actions` (they trigger device actions: dial, compose).
+`civ-link`, `civ-link-card`, `civ-external-link`, and `civ-download-link` live in `@civui/navigation` (wayfinding to a destination). `civ-action-link` lives in `@civui/actions` (it triggers device actions: dial, compose).
 
 **Example:**
 ```html
-<civ-phone-link number="1-800-827-1000" label="VA benefits hotline"></civ-phone-link>
-<civ-email-link address="help@va.gov"></civ-email-link>
+<civ-action-link type="phone" number="1-800-827-1000" label="VA benefits hotline"></civ-action-link>
+<civ-action-link type="email" address="help@va.gov"></civ-action-link>
 <civ-external-link href="https://va.gov/find-forms" label="Find VA forms"></civ-external-link>
 <civ-download-link href="/forms/21-526EZ.pdf" label="VA Form 21-526EZ" file-size="2.4 MB"></civ-download-link>
 ```

@@ -51,8 +51,6 @@ export default defineConfig({
       '@civui/actions/button-group': resolve(packages, 'actions/src/button-group/index.ts'),
       '@civui/actions/filter-chip': resolve(packages, 'actions/src/filter-chip/index.ts'),
       '@civui/actions/filter-chip-group': resolve(packages, 'actions/src/filter-chip-group/index.ts'),
-      '@civui/actions/phone-link': resolve(packages, 'actions/src/phone-link/index.ts'),
-      '@civui/actions/email-link': resolve(packages, 'actions/src/email-link/index.ts'),
       '@civui/actions/action-link': resolve(packages, 'actions/src/action-link/index.ts'),
       '@civui/actions': resolve(packages, 'actions/src/index.ts'),
       // Overlays

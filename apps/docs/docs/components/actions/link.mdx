@@ -200,35 +200,6 @@ A link for navigating to external websites. Automatically sets `target="_blank"`
 
 ---
 
-### Phone Link
-
-`<civ-phone-link>`
-
-A link for telephone numbers. Generates a proper `tel:` href, auto-formats 10-digit US numbers (e.g., `8005551234` becomes `(800) 555-1234`), and shows a phone icon.
-
-<StoryEmbed id="actions-phone-link--default" />
-
-<StoryEmbed id="actions-phone-link--with-label" />
-
-<StoryEmbed id="actions-phone-link--international" />
-
-[Open in Storybook →](pathname:///civui/storybook/?path=/story/actions-phone-link--default)
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `number` | `string` | `''` | Phone number (required). Non-digit characters are stripped for `tel:` href; `+` is preserved for international. |
-| `label` | `string` | `''` | Display text override. When omitted, 10-digit US numbers auto-format as `(XXX) XXX-XXXX`. |
-| `disabled` | `boolean` | `false` | Disabled state |
-
-```html
-<civ-phone-link number="8005551234"></civ-phone-link>
-<civ-phone-link number="8005551234" label="Call the VA help desk"></civ-phone-link>
-<civ-phone-link number="+44 20 7946 0958"></civ-phone-link>
-<civ-phone-link number="711" label="TTY: 711"></civ-phone-link>
-```
-
----
-
 ### Download Link
 
 `<civ-download-link>`
@@ -258,31 +229,3 @@ A link for file downloads. Sets the `download` attribute, shows a download icon,
 ></civ-download-link>
 ```
 
----
-
-### Email Link
-
-`<civ-email-link>`
-
-A link for email addresses. Generates a proper `mailto:` href with optional subject line, shows a mail icon, and defaults display text to the address.
-
-<StoryEmbed id="actions-email-link--default" />
-
-<StoryEmbed id="actions-email-link--with-label" />
-
-<StoryEmbed id="actions-email-link--with-subject" />
-
-[Open in Storybook →](pathname:///civui/storybook/?path=/story/actions-email-link--default)
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `address` | `string` | `''` | Email address (required) |
-| `label` | `string` | `''` | Display text. Defaults to the email address when omitted. |
-| `subject` | `string` | `''` | Pre-filled subject line (URL-encoded automatically) |
-| `disabled` | `boolean` | `false` | Disabled state |
-
-```html
-<civ-email-link address="help@va.gov"></civ-email-link>
-<civ-email-link address="support@va.gov" label="Contact VA support"></civ-email-link>
-<civ-email-link address="benefits@va.gov" subject="Question about my claim"></civ-email-link>
-```

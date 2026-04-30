@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBaseElement, LightDomSlotMixin } from '@civui/core';
+import { CivBaseElement, LightDomSlotMixin, t } from '@civui/core';
 import type { SlotConfig } from '@civui/core';
 
 export type LinkCardVariant = 'primary' | 'secondary' | 'tertiary' | 'critical' | 'danger';
@@ -32,6 +32,7 @@ const UNSAFE_HREF_PATTERN = /^\s*javascript\s*:/i;
  * @prop {string} spacing - Padding size: 'default' or 'sm'
  * @prop {string} iconStart - Icon name to render before the heading
  * @prop {string} iconEnd - Icon name to render after the heading
+ * @prop {boolean} disabled - Disabled state — removes href and prevents navigation
  *
  * @slot - Optional content rendered inside the anchor above the heading
  *         (e.g., a status tag).
@@ -79,6 +80,9 @@ export class CivLinkCard extends LightDomSlotMixin(CivBaseElement) {
   /** Icon name to render after the heading. */
   @property({ type: String, attribute: 'icon-end' }) iconEnd = '';
 
+  /** Disabled state — removes href and prevents navigation. */
+  @property({ type: Boolean, reflect: true }) disabled = false;
+
   /** Return sanitized href, stripping dangerous protocols. */
   private get _safeHref(): string {
     if (UNSAFE_HREF_PATTERN.test(this.href)) return '';
@@ -105,6 +109,7 @@ export class CivLinkCard extends LightDomSlotMixin(CivBaseElement) {
       'civ-link-card',
       colorClass,
       this.spacing === 'sm' ? 'civ-link-card--sm' : '',
+      this.disabled ? 'civ-opacity-50 civ-cursor-not-allowed' : '',
       'focus-visible:civ-focus-ring',
     ].filter(Boolean).join(' ');
 
@@ -113,8 +118,11 @@ export class CivLinkCard extends LightDomSlotMixin(CivBaseElement) {
 
     return html`
       <a
-        href="${this._safeHref}"
+        href="${this.disabled ? nothing : this._safeHref}"
         class="${classes}"
+        aria-disabled="${this.disabled ? 'true' : nothing}"
+        tabindex="${this.disabled ? '-1' : nothing}"
+        title="${this.disabled ? t('linkDisabledTitle') : nothing}"
         @click="${this._onClick}"
       >
         <span data-civ-link-card-slot></span>
@@ -140,7 +148,11 @@ export class CivLinkCard extends LightDomSlotMixin(CivBaseElement) {
     `;
   }
 
-  private _onClick(): void {
+  private _onClick(e: Event): void {
+    if (this.disabled) {
+      e.preventDefault();
+      return;
+    }
     this.sendAnalytics('click');
   }
 }

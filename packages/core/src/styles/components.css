@@ -2751,7 +2751,7 @@
     top: 0;
     inset-inline-end: 0;
     transform: translate(50%, -50%);
-    z-index: 1;
+    z-index: 1; /* Intentional: badges need only 1 layer above parent, not full overlay z-index */
   }
 
   /* RTL: flip the X translation so the badge sticks out of the inline-end edge,
@@ -3114,11 +3114,36 @@
     }
   }
 
-  /* ── Summary label column ─────────────────────────────────── */
+  /* ── Dark mode overrides for popup/overlay backgrounds ────── */
+  @media (prefers-color-scheme: dark) {
+    .civ-combobox-listbox {
+      background-color: var(--civ-color-base-darkest);
+      border-color: var(--civ-color-base-dark);
+    }
 
-  .civ-summary-label {
-    flex-basis: 12rem;
-    flex-shrink: 0;
+    .civ-datepicker-dialog {
+      background-color: var(--civ-color-base-darkest);
+      border-color: var(--civ-color-base-dark);
+    }
+
+    dialog.civ-modal {
+      background-color: var(--civ-color-base-darkest);
+      color: var(--civ-color-base-lightest);
+    }
+
+    .civ-action-sheet {
+      background-color: var(--civ-color-base-darkest);
+      border-color: var(--civ-color-base-dark);
+    }
+
+    .civ-alert--style-tertiary {
+      background-color: var(--civ-color-base-darker);
+    }
+
+    .civ-link-card--tertiary {
+      background-color: var(--civ-color-base-darkest);
+      border-color: var(--civ-color-base-dark);
+    }
   }
 
 }

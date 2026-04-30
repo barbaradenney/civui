@@ -96,4 +96,47 @@ describe('civ-list-item', () => {
     const el = await fixture('<civ-list-item>x</civ-list-item>');
     expect(el.shadowRoot).toBeNull();
   });
+
+  it('renders icon-start as civ-icon element', async () => {
+    const el = await fixture('<civ-list-item icon-start="edit">Item</civ-list-item>');
+    const icon = el.querySelector('civ-icon');
+    expect(icon).not.toBeNull();
+    expect(icon!.getAttribute('name')).toBe('edit');
+  });
+
+  it('renders heading as bold text', async () => {
+    const el = await fixture('<civ-list-item heading="My claims">Item</civ-list-item>');
+    const bold = el.querySelector('.civ-font-bold');
+    expect(bold).not.toBeNull();
+    expect(bold!.textContent).toContain('My claims');
+  });
+
+  it('renders description as secondary text', async () => {
+    const el = await fixture('<civ-list-item heading="Title" description="Some details">Item</civ-list-item>');
+    const desc = el.querySelector('.civ-text-sm');
+    expect(desc).not.toBeNull();
+    expect(desc!.textContent).toContain('Some details');
+  });
+
+  it('renders heading + description together', async () => {
+    const el = await fixture('<civ-list-item heading="Title" description="Details">Item</civ-list-item>');
+    const bold = el.querySelector('.civ-font-bold');
+    const desc = el.querySelector('.civ-text-sm');
+    expect(bold).not.toBeNull();
+    expect(desc).not.toBeNull();
+    expect(bold!.textContent).toContain('Title');
+    expect(desc!.textContent).toContain('Details');
+  });
+
+  it('heading and description work with href (inside anchor)', async () => {
+    const el = await fixture('<civ-list-item href="/claims" heading="My claims" description="View all">Item</civ-list-item>');
+    const a = el.querySelector('a');
+    expect(a).not.toBeNull();
+    const bold = a!.querySelector('.civ-font-bold');
+    const desc = a!.querySelector('.civ-text-sm');
+    expect(bold).not.toBeNull();
+    expect(bold!.textContent).toContain('My claims');
+    expect(desc).not.toBeNull();
+    expect(desc!.textContent).toContain('View all');
+  });
 });

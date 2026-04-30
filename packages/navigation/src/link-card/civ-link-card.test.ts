@@ -177,6 +177,33 @@ describe('civ-link-card', () => {
     expect(el.querySelector('[data-civ-link-card-end-slot]')).toBeNull();
   });
 
+  it('renders disabled state without href', async () => {
+    const el = await fixture('<civ-link-card href="/test" heading="Title" disabled></civ-link-card>');
+    const link = el.querySelector('a')!;
+    expect(link.hasAttribute('href')).toBe(false);
+    expect(link.getAttribute('aria-disabled')).toBe('true');
+    expect(link.getAttribute('tabindex')).toBe('-1');
+    expect(link.className).toContain('civ-opacity-50');
+    expect(link.className).toContain('civ-cursor-not-allowed');
+  });
+
+  it('does not fire analytics event when disabled', async () => {
+    const el = await fixture('<civ-link-card href="/test" heading="Title" disabled></civ-link-card>');
+    const handler = vi.fn();
+    el.addEventListener('civ-analytics', handler as EventListener);
+
+    const link = el.querySelector('a') as HTMLAnchorElement;
+    link.click();
+
+    expect(handler).not.toHaveBeenCalled();
+  });
+
+  it('renders title tooltip when disabled', async () => {
+    const el = await fixture('<civ-link-card href="/test" heading="Title" disabled></civ-link-card>');
+    const link = el.querySelector('a')!;
+    expect(link.getAttribute('title')).toBeTruthy();
+  });
+
   it('supports both top and end slots simultaneously', async () => {
     const el = await fixture(
       '<civ-link-card href="/test" heading="Title">' +

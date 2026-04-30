@@ -47,4 +47,36 @@ describe('civ-action-link', () => {
     const link = el.querySelector('civ-link') as HTMLElement;
     expect(link.getAttribute('icon-start')).toBe('mail');
   });
+
+  it('type="download" renders download attribute and href', async () => {
+    const el = await fixture<CivActionLink>('<civ-action-link type="download" href="/forms/10-10EZ.pdf" filename="10-10EZ.pdf"></civ-action-link>');
+    const link = el.querySelector('civ-link') as HTMLElement;
+    expect(link.getAttribute('href')).toBe('/forms/10-10EZ.pdf');
+    expect(link.hasAttribute('download')).toBe(true);
+  });
+
+  it('type="download" shows download icon', async () => {
+    const el = await fixture<CivActionLink>('<civ-action-link type="download" href="/file.pdf"></civ-action-link>');
+    const link = el.querySelector('civ-link') as HTMLElement;
+    expect(link.getAttribute('icon-start')).toBe('download');
+  });
+
+  it('type="download" displays file size when fileSize is set', async () => {
+    const el = await fixture<CivActionLink>('<civ-action-link type="download" href="/file.pdf" file-size="2.4 MB"></civ-action-link>');
+    const sizeSpan = el.querySelector('span.civ-text-sm');
+    expect(sizeSpan).not.toBeNull();
+    expect(sizeSpan!.textContent).toContain('2.4 MB');
+  });
+
+  it('type="download" uses filename as display text when no label', async () => {
+    const el = await fixture<CivActionLink>('<civ-action-link type="download" href="/forms/10-10EZ.pdf" filename="10-10EZ.pdf"></civ-action-link>');
+    const link = el.querySelector('civ-link') as HTMLElement;
+    expect(link.getAttribute('label')).toBe('10-10EZ.pdf');
+  });
+
+  it('disabled prop renders disabled link', async () => {
+    const el = await fixture<CivActionLink>('<civ-action-link type="phone" number="8005551234" disabled></civ-action-link>');
+    const link = el.querySelector('civ-link') as HTMLElement;
+    expect(link.hasAttribute('disabled')).toBe(true);
+  });
 });

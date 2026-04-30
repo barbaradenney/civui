@@ -134,4 +134,29 @@ describe('civ-link', () => {
     const link = el.querySelector('a')!;
     expect(link.className).toContain('focus-visible:civ-focus-ring');
   });
+
+  it('new-tab sets target="_blank"', async () => {
+    const el = await fixture('<civ-link href="/ext" new-tab>External</civ-link>');
+    const link = el.querySelector('a')!;
+    expect(link.getAttribute('target')).toBe('_blank');
+  });
+
+  it('new-tab sets rel="noopener noreferrer"', async () => {
+    const el = await fixture('<civ-link href="/ext" new-tab>External</civ-link>');
+    const link = el.querySelector('a')!;
+    expect(link.getAttribute('rel')).toBe('noopener noreferrer');
+  });
+
+  it('new-tab renders external-link icon', async () => {
+    const el = await fixture('<civ-link href="/ext" new-tab>External</civ-link>');
+    const icon = el.querySelector('civ-icon');
+    expect(icon).not.toBeNull();
+    expect(icon!.getAttribute('name')).toBe('external-link');
+  });
+
+  it('new-tab adds screen reader text span', async () => {
+    const el = await fixture('<civ-link href="/ext" new-tab>External</civ-link>');
+    const srSpan = el.querySelector('.civ-sr-only');
+    expect(srSpan).not.toBeNull();
+  });
 });

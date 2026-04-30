@@ -11,7 +11,6 @@ import '@civui/navigation';
 import '@civui/navigation/link';
 import '@civui/actions/button';
 import '@civui/layout/list';
-import '@civui/layout/tag';
 import '@civui/layout/divider';
 import type { CivSummary } from '../summary/civ-summary.js';
 

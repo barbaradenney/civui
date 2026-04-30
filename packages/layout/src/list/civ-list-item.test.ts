@@ -72,6 +72,18 @@ describe('civ-list-item', () => {
     expect(el.querySelector('li')).not.toBeNull();
   });
 
+  it('does not set aria-current by default', async () => {
+    const el = await fixture('<civ-list-item href="/foo">x</civ-list-item>');
+    const a = el.querySelector('a')!;
+    expect(a.hasAttribute('aria-current')).toBe(false);
+  });
+
+  it('sets aria-current="page" when current is true', async () => {
+    const el = await fixture('<civ-list-item href="/foo" current>x</civ-list-item>');
+    const a = el.querySelector('a')!;
+    expect(a.getAttribute('aria-current')).toBe('page');
+  });
+
   it('fires civ-analytics on click when href is set', async () => {
     const el = await fixture('<civ-list-item href="/foo">x</civ-list-item>');
     const handler = vi.fn();

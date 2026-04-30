@@ -141,18 +141,14 @@ Use a standard `<civ-alert>` to explain where prefilled data came from:
 
 ```html
 <!-- Task list hub -->
-<civ-task-list>
-  <civ-task-group>
-    <h3 data-task-group-heading>Your information</h3>
-    <civ-task
-      label="Personal information"
-      hint="Name, date of birth, Social Security number"
-      href="#/personal"
-      status="review"
-      prefilled
-    ></civ-task>
-  </civ-task-group>
-</civ-task-list>
+<h3 class="civ-heading-md">Your information</h3>
+<civ-list dividers>
+  <civ-list-item href="#/personal" data-prefilled>
+    <span class="civ-block civ-font-bold">Personal information</span>
+    <span class="civ-block civ-text-sm civ-text-muted">Name, date of birth, Social Security number</span>
+    <civ-badge data-list-item-end label="Needs review" variant="warning" badge-style="primary" with-icon></civ-badge>
+  </civ-list-item>
+</civ-list>
 
 <!-- Chapter review page -->
 <civ-alert variant="info" alert-style="secondary" heading="We've prefilled some of your information" label="We pulled this information from your account. If any of this is wrong, you can correct it here."></civ-alert>

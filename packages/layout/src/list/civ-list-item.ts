@@ -22,6 +22,9 @@ const UNSAFE_HREF_PATTERN = /^\s*javascript\s*:/i;
  *
  * @prop {string} href - Optional navigation target. When set, the
  *   entire row is a clickable anchor.
+ * @prop {boolean} current - Mark as the current page (sets
+ *   `aria-current="page"` on the anchor). Useful for side navigation.
+ *   Has no effect on static rows.
  *
  * @slot - Primary content (label, description, anything).
  * @slot end - Trailing content. Children with the `data-list-item-end`
@@ -33,12 +36,12 @@ const UNSAFE_HREF_PATTERN = /^\s*javascript\s*:/i;
  * ```html
  * <civ-list-item href="/personal">
  *   Personal information
- *   <civ-tag data-list-item-end label="Complete" variant="green"></civ-tag>
+ *   <civ-badge data-list-item-end label="Complete" variant="success" badge-style="primary" with-icon></civ-badge>
  * </civ-list-item>
  *
  * <civ-list-item>
  *   Locked task
- *   <civ-tag data-list-item-end label="Cannot start" variant="gray"></civ-tag>
+ *   <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
  * </civ-list-item>
  * ```
  */
@@ -46,6 +49,9 @@ const UNSAFE_HREF_PATTERN = /^\s*javascript\s*:/i;
 export class CivListItem extends LightDomSlotMixin(CivBaseElement) {
   /** Optional navigation target. When set, the row becomes a clickable anchor. */
   @property({ type: String }) href = '';
+
+  /** Mark this row as the current page. Sets aria-current="page" on the anchor. */
+  @property({ type: Boolean }) current = false;
 
   override _getSlotConfig(): SlotConfig {
     return {
@@ -94,8 +100,13 @@ export class CivListItem extends LightDomSlotMixin(CivBaseElement) {
 
     if (isLink) {
       return html`
-        <li class="civ-list-item">
-          <a href="${this._safeHref}" class="${linkClasses}" @click="${this._onClick}">
+        <li>
+          <a
+            href="${this._safeHref}"
+            class="${linkClasses}"
+            aria-current="${this.current ? 'page' : nothing}"
+            @click="${this._onClick}"
+          >
             ${inner}
           </a>
         </li>
@@ -103,7 +114,7 @@ export class CivListItem extends LightDomSlotMixin(CivBaseElement) {
     }
 
     return html`
-      <li class="civ-list-item">
+      <li>
         <div class="${rowClasses}">${inner}</div>
       </li>
     `;

@@ -43,7 +43,6 @@ export class CivList extends LightDomSlotMixin(CivBaseElement) {
 
   override render() {
     const classes = [
-      'civ-list',
       'civ-list-none',
       'civ-p-0',
       'civ-m-0',

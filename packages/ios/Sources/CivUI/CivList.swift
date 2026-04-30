@@ -25,17 +25,20 @@ public struct CivList<Content: View>: View {
 
 public struct CivListItem<Content: View, End: View>: View {
     public var href: String
+    public var current: Bool
     public var onTap: (() -> Void)?
     @ViewBuilder public var content: () -> Content
     @ViewBuilder public var end: () -> End
 
     public init(
         href: String = "",
+        current: Bool = false,
         onTap: (() -> Void)? = nil,
         @ViewBuilder content: @escaping () -> Content,
         @ViewBuilder end: @escaping () -> End = { EmptyView() }
     ) {
         self.href = href
+        self.current = current
         self.onTap = onTap
         self.content = content
         self.end = end

@@ -38,6 +38,9 @@ const UNSAFE_HREF_PATTERN = /^\s*javascript\s*:/i;
  * @slot end - Optional content rendered on the trailing edge of the card,
  *             aligned vertically with the heading. Children with the
  *             `data-civ-link-card-end` attribute are placed in this slot.
+ *             Use either `iconEnd` *or* the end slot — when both are set
+ *             they render as adjacent siblings on the trailing edge with
+ *             no separator.
  *
  * @fires civ-analytics - Analytics tracking event on click
  *

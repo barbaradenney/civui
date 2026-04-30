@@ -1,0 +1,114 @@
+---
+title: List
+sidebar_position: 5
+sidebar_label: List
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
+# List
+
+`<civ-list>` and `<civ-list-item>`
+
+Generic list primitives. Use for any vertical row collection — side navigation, settings menus, link collections, search results, and the **task list pattern** for multi-chapter government forms.
+
+`<civ-list-item>` becomes a clickable anchor when `href` is set, and a static `<li>` otherwise. Both render with the same layout, so clickable and locked rows can sit in the same list with consistent visual rhythm.
+
+## Examples
+
+### Simple navigation list
+
+<StoryEmbed id="layout-list--simple-navigation-list" />
+
+### With dividers
+
+<StoryEmbed id="layout-list--with-dividers" />
+
+### Mixed clickable and static rows
+
+<StoryEmbed id="layout-list--mixed-clickable-and-static-rows" />
+
+### Side nav with current page
+
+<StoryEmbed id="layout-list--side-nav-with-current-page" />
+
+For the **task list pattern** (status badges, sequential unlocking), see the
+[Task List Hub](/docs/form-patterns/task-list-hub) pattern guide.
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/layout-list--simple-navigation-list)
+
+## civ-list Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `dividers` | `boolean` | `false` | Render a 1px divider between adjacent items |
+
+## civ-list-item Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `href` | `string` | `''` | Optional navigation target. When set, the entire row becomes a clickable anchor (whole-row click target, hover state, focus ring). Omit for static rows. |
+| `current` | `boolean` | `false` | Mark as the current page (sets `aria-current="page"` on the anchor). Useful for side navigation. |
+
+## Slots
+
+`<civ-list-item>` has two slots:
+
+| Slot | Description |
+|------|-------------|
+| (default) | Primary content (label, description, anything) |
+| `data-list-item-end` | Trailing content (status badge, switch, secondary action). Place the attribute on a child element. |
+
+## Task list pattern
+
+The "task list" is a usage pattern, not a dedicated component. Compose `<civ-list>` + `<civ-list-item>` + `<civ-badge>`. Setting `href` on a list item makes the whole row clickable; omit `href` for locked rows.
+
+`<civ-badge>` carries `role="status"` and the `with-icon` attribute auto-renders the variant's semantic icon (success → check-circle, error → ✕, warning → ⚠).
+
+| Status | Badge label | variant | badge-style |
+|--------|-------------|---------|-------------|
+| not-started | Not started | `info` | `secondary` |
+| in-progress | In progress | `info` | `primary` |
+| complete | Complete | `success` | `primary` |
+| cannot-start | Cannot start yet | `neutral` | `secondary` |
+| error | Has errors | `error` | `secondary` |
+| review | Needs review | `warning` | `primary` |
+
+```html
+<h3 class="civ-heading-md">Fill out your application</h3>
+<civ-list dividers>
+  <civ-list-item href="/personal">
+    <span class="civ-block civ-font-bold">Personal information</span>
+    <span class="civ-block civ-text-sm civ-text-muted">Name, date of birth, Social Security number</span>
+    <civ-badge data-list-item-end label="Complete" variant="success" badge-style="primary" with-icon></civ-badge>
+  </civ-list-item>
+  <civ-list-item href="/contact">
+    <span class="civ-block civ-font-bold">Contact information</span>
+    <civ-badge data-list-item-end label="In progress" variant="info" badge-style="primary" with-icon></civ-badge>
+  </civ-list-item>
+  <civ-list-item>
+    <span class="civ-block civ-font-bold">Service history</span>
+    <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
+  </civ-list-item>
+</civ-list>
+```
+
+See the [Task List Hub pattern](/docs/form-patterns/task-list-hub) for a full multi-chapter walkthrough.
+
+## Side navigation pattern
+
+```html
+<civ-list>
+  <civ-list-item href="/dashboard">Dashboard</civ-list-item>
+  <civ-list-item href="/claims" current>Claims</civ-list-item>
+  <civ-list-item href="/messages">Messages</civ-list-item>
+  <civ-list-item href="/settings">Settings</civ-list-item>
+</civ-list>
+```
+
+## Accessibility
+
+- Each clickable row is a real `<a>` filling the full `<li>` — works with keyboard, screen readers, and right-click "open in new tab".
+- Static rows are plain `<li>` with no anchor. Same visual rhythm, honest semantics — assistive tech doesn't announce them as links.
+- `<civ-list>` adds `role="list"` so dividers/styles applied with `list-style: none` don't strip the list semantics on some screen readers (Safari + VoiceOver historically).
+- `current` on `<civ-list-item>` sets `aria-current="page"` for navigation patterns.

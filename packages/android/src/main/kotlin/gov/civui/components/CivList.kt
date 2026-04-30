@@ -31,6 +31,7 @@ fun CivList(
 fun CivListItem(
     modifier: Modifier = Modifier,
     href: String = "",
+    current: Boolean = false,
     onTap: (() -> Unit)? = null,
     end: (@Composable () -> Unit)? = null,
     content: @Composable () -> Unit,

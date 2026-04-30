@@ -141,4 +141,14 @@ describe('civ-link-card', () => {
     expect(link.className).toContain('civ-link-card--tertiary');
     expect(link.className).not.toContain('civ-card--');
   });
+
+  it('relocates slotted children into the rendered anchor', async () => {
+    const el = await fixture(
+      '<civ-link-card href="/test" heading="Title"><span class="badge">flag</span></civ-link-card>'
+    );
+    const anchor = el.querySelector('a')!;
+    const slotted = anchor.querySelector('.badge');
+    expect(slotted).not.toBeNull();
+    expect(slotted!.textContent).toBe('flag');
+  });
 });

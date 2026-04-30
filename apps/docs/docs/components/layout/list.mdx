@@ -24,6 +24,26 @@ Generic list primitives. Use for any vertical row collection — side navigation
 
 <StoryEmbed id="layout-list--with-dividers" />
 
+### With icons (start slot)
+
+<StoryEmbed id="layout-list--with-icons" />
+
+### Heading and description
+
+<StoryEmbed id="layout-list--heading-and-description" />
+
+### Heading + start icon + end badge
+
+<StoryEmbed id="layout-list--heading-with-start-and-end" />
+
+### Rich heading slot (custom heading levels)
+
+<StoryEmbed id="layout-list--rich-heading-slot" />
+
+### Rich description with links
+
+<StoryEmbed id="layout-list--rich-description-slot" />
+
 ### Mixed clickable and static rows
 
 <StoryEmbed id="layout-list--mixed-clickable-and-static" />
@@ -32,9 +52,41 @@ Generic list primitives. Use for any vertical row collection — side navigation
 
 <StoryEmbed id="layout-list--side-nav-with-current" />
 
+### Compact spacing
+
+<StoryEmbed id="layout-list--compact-spacing" />
+
+### Nested list
+
+<StoryEmbed id="layout-list--nested-list" />
+
+### Nested task list (chapters with sections)
+
+<StoryEmbed id="layout-list--nested-task-list" />
+
+### With trailing badges
+
+<StoryEmbed id="layout-list--with-trailing-badges" />
+
+### With action buttons (end slot)
+
+<StoryEmbed id="layout-list--with-action-buttons" />
+
+### With errors
+
+<StoryEmbed id="layout-list--with-errors" />
+
 ### Density scale
 
 <StoryEmbed id="layout-list--density-scale" />
+
+### Government task list
+
+<StoryEmbed id="layout-list--government-task-list" />
+
+### Government side navigation
+
+<StoryEmbed id="layout-list--government-side-nav" />
 
 For the **task list pattern** (status badges, sequential unlocking), see the
 [Task List Hub](/docs/form-patterns/task-list-hub) pattern guide.
@@ -46,22 +98,29 @@ For the **task list pattern** (status badges, sequential unlocking), see the
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `dividers` | `boolean` | `false` | Render a 1px divider between adjacent items |
+| `spacing` | `'default'` \| `'sm'` | `'default'` | Density — `sm` gives compact rows with smaller text |
 
 ## civ-list-item Props
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `href` | `string` | `''` | Optional navigation target. When set, the entire row becomes a clickable anchor (whole-row click target, hover state, focus ring). Omit for static rows. |
-| `current` | `boolean` | `false` | Mark as the current page (sets `aria-current="page"` on the anchor). Useful for side navigation. |
+| `href` | `string` | `''` | Navigation target. When set, the row becomes a clickable anchor with link-card-style heading. |
+| `current` | `boolean` | `false` | Mark as the current page (`aria-current="page"`). For side navigation. |
+| `heading` | `string` | `''` | Shorthand bold heading. Linked rows render it underlined in primary color. |
+| `description` | `string` | `''` | Shorthand secondary text below heading. |
+| `error` | `string` | `''` | Error text below content with `role="alert"`. |
 
 ## Slots
 
-`<civ-list-item>` has two slots:
+`<civ-list-item>` has five slot zones:
 
-| Slot | Description |
-|------|-------------|
-| (default) | Primary content (label, description, anything) |
-| `data-list-item-end` | Trailing content (status badge, switch, secondary action). Place the attribute on a child element. |
+| Slot | Attribute | Description |
+|------|-----------|-------------|
+| **start** | `data-list-item-start` | Leading content (icons, avatars, thumbnails) |
+| **heading** | `data-list-item-heading` | Rich heading — any `<h2>`-`<h6>`, links, custom styles. Overrides `heading` prop. |
+| **description** | `data-list-item-description` | Rich description — links, bold, HTML. Overrides `description` prop. |
+| **(default)** | — | Body content |
+| **end** | `data-list-item-end` | Trailing content (badges, action buttons) |
 
 ## Task list pattern
 

@@ -82,6 +82,8 @@ export class CivListItem extends LightDomSlotMixin(CivBaseElement) {
       'civ-flex',
       'civ-items-center',
       'civ-gap-3',
+      'civ-py-4',
+      'civ-px-4',
     ].join(' ');
 
     const linkClasses = [

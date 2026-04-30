@@ -37,11 +37,6 @@ describe('civ-list', () => {
     expect(ul.className).toContain('civ-list--dividers');
   });
 
-  it('applies variant class', async () => {
-    const el = await fixture('<civ-list variant="primary"></civ-list>');
-    const ul = el.querySelector('ul')!;
-    expect(ul.className).toContain('civ-list--primary');
-  });
 
   it('applies compact spacing class', async () => {
     const el = await fixture('<civ-list spacing="sm"></civ-list>');
@@ -52,18 +47,6 @@ describe('civ-list', () => {
   it('uses Light DOM', async () => {
     const el = await fixture('<civ-list></civ-list>');
     expect(el.shadowRoot).toBeNull();
-  });
-
-  it('applies secondary variant class', async () => {
-    const el = await fixture('<civ-list variant="secondary"></civ-list>');
-    const ul = el.querySelector('ul')!;
-    expect(ul.className).toContain('civ-list--secondary');
-  });
-
-  it('does not apply variant class for default', async () => {
-    const el = await fixture('<civ-list></civ-list>');
-    const ul = el.querySelector('ul')!;
-    expect(ul.className).not.toContain('civ-list--');
   });
 
   it('applies sm spacing class', async () => {

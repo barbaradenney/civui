@@ -11,7 +11,6 @@ const meta: Meta = {
   tags: ['autodocs'],
   argTypes: {
     dividers: { control: 'boolean' },
-    variant: { control: 'select', options: ['default', 'primary', 'secondary'] },
     spacing: { control: 'select', options: ['default', 'sm'] },
   },
 };
@@ -137,30 +136,6 @@ export const SideNavWithCurrent: Story = {
         <civ-icon data-list-item-start name="settings"></civ-icon>
         Settings
       </civ-list-item>
-    </civ-list>
-  `,
-};
-
-// ── Variants ─────────────────────────────────────────────────
-
-export const PrimaryVariant: Story = {
-  name: 'Primary variant',
-  render: () => html`
-    <civ-list dividers variant="primary">
-      <civ-list-item href="#/1" heading="Education benefits" description="GI Bill, scholarships"></civ-list-item>
-      <civ-list-item href="#/2" heading="Disability compensation" description="Service-connected claims"></civ-list-item>
-      <civ-list-item href="#/3" heading="Healthcare enrollment" description="VA medical center"></civ-list-item>
-    </civ-list>
-  `,
-};
-
-export const SecondaryVariant: Story = {
-  name: 'Secondary variant',
-  render: () => html`
-    <civ-list dividers variant="secondary">
-      <civ-list-item href="#/1" heading="Education benefits"></civ-list-item>
-      <civ-list-item href="#/2" heading="Disability compensation"></civ-list-item>
-      <civ-list-item href="#/3" heading="Healthcare enrollment"></civ-list-item>
     </civ-list>
   `,
 };

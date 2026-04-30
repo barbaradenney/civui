@@ -34,9 +34,11 @@ For architecture and internals, see \`CLAUDE.md\` in the repo root.
 | \`<civ-fieldset>\` | Layout | \`legend\`, \`hint\`, \`error\`, \`required\`, \`disabled\` | — |
 | \`<civ-form>\` | Layout | \`action\`, \`method\` | \`civ-submit: { formData }\`, \`civ-invalid: { errors }\` |
 | \`<civ-button>\` | Action | \`variant\` (primary/secondary/tertiary), \`danger\`, \`type\`, \`disabled\` | \`civ-analytics\` |
+| \`<civ-filter-chip>\` | Action | \`label\`, \`value\`, \`selected\`, \`removable\`, \`disabled\`, \`chip-style\` (primary/secondary), \`chip-role\` (toggle/radio — set automatically by group in single mode), \`spacing\` (default/sm), \`icon-start\`, \`icon-end\`, \`count\`. Renders a non-interactive wrapper with sibling toggle + remove buttons. | \`civ-change\`, \`civ-remove\`, \`civ-analytics\` |
+| \`<civ-filter-chip-group>\` | Action | \`mode\` (single/multi), \`label\`. Wraps a row of chips with roving tabindex (arrow-key navigation) and an aggregated \`civ-change\` event carrying \`value\` (string in single mode, array in multi). | \`civ-change\` |
 | \`<civ-link>\` | Navigation | \`href\`, \`variant\` (primary/secondary/tertiary/back/danger), \`danger\`, \`disabled\` | \`civ-analytics\` |
-| \`<civ-tag>\` | Layout | \`label\`, \`variant\` (blue/orange/purple/gray), \`tag-style\` (primary/secondary). Categorization only — use \`<civ-badge>\` for status. | — |
-| \`<civ-badge>\` | Feedback | \`label\`, \`count\`, \`max\`, \`dot\`, \`variant\` (info/warning/error/success/neutral). Status pills + count indicators with \`role="status"\`. | — |
+| \`<civ-tag>\` | Layout | \`label\`, \`variant\` (blue/orange/purple/gray), \`tag-style\` (primary/secondary), \`spacing\` (default/sm), \`icon-start\`. Categorization only — use \`<civ-badge>\` for status. | — |
+| \`<civ-badge>\` | Feedback | \`label\`, \`count\`, \`max\`, \`dot\`, \`variant\` (info/warning/error/success/neutral), \`badge-style\` (primary/secondary), \`spacing\` (default/sm), \`overlay\`. Status pills + count indicators with \`role="status"\`; \`overlay\` pins to the top-end of a relative parent for notification badges. | — |
 | \`<civ-card>\` | Layout | \`spacing\` (default/sm). Slots: \`data-card-header\`, \`data-card-footer\` | — |
 | \`<civ-page-header>\` | Layout | Slots: \`data-tag\`, \`data-eyebrow\`, \`data-heading\`, \`data-subheading\` | — |
 | \`<civ-link-card>\` | Navigation | \`href\`, \`heading\`, \`description\`, \`variant\` (primary/secondary/tertiary/critical) | \`civ-analytics\` |
@@ -543,14 +545,14 @@ Categorization label (topic, taxonomy, filter chip). For status indicators ("App
 
 ### civ-badge
 
-Compact status or count indicator. Always carries \`role="status"\` so screen readers announce changes. Restricted to semantic colors.
+Compact status or count indicator. Always carries \`role="status"\` so screen readers announce changes. Restricted to semantic colors. Two emphasis levels (\`badge-style\`): secondary (light tint, default) and primary (filled dark).
 
-**Props:** \`label\`, \`count\`, \`max\` (default 99), \`dot\`, \`variant\` (info/warning/error/success/neutral)
+**Props:** \`label\`, \`count\`, \`max\` (default 99), \`dot\`, \`variant\` (info/warning/error/success/neutral), \`badge-style\` (primary/secondary), \`spacing\` (default/sm)
 
 \`\`\`html
 <civ-badge label="Approved" variant="success"></civ-badge>
-<civ-badge count="12" variant="info"></civ-badge>
-<civ-badge count="150" variant="error"></civ-badge>
+<civ-badge label="Denied" variant="error" badge-style="primary"></civ-badge>
+<civ-badge count="12" variant="info" spacing="sm"></civ-badge>
 <civ-badge dot label="Unread messages" variant="error"></civ-badge>
 \`\`\`
 

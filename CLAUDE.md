@@ -20,7 +20,7 @@ Build order: `tokens → core → layout → navigation → actions, overlays �
 |---------|------|-------------|
 | `@civui/tokens` | `packages/tokens/` | Design tokens (colors, spacing, typography) |
 | `@civui/core` | `packages/core/` | Base classes, a11y utilities, analytics, date utils, form-field wrappers |
-| `@civui/actions` | `packages/actions/` | Action components (button, action-button, button-group, phone-link, email-link) |
+| `@civui/actions` | `packages/actions/` | Action components (button, action-button, button-group, filter-chip, phone-link, email-link) |
 | `@civui/overlays` | `packages/overlays/` | Overlay components (modal, action-sheet) |
 | `@civui/layout` | `packages/layout/` | Layout components (card, divider, input-group, page-header, tag) |
 | `@civui/inputs` | `packages/inputs/` | Input components (text-input, textarea, select, combobox, date-picker, file-upload, toggle, yes-no) + preset wrappers (ssn, ein, phone, email, zip, currency, routing-number, va-file-number, country) |

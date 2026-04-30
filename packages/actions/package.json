@@ -1,7 +1,7 @@
 {
   "name": "@civui/actions",
   "version": "0.1.0",
-  "description": "CivUI action components — Button, ActionButton, ButtonGroup, PhoneLink, EmailLink",
+  "description": "CivUI action components — Button, ActionButton, ButtonGroup, FilterChip, PhoneLink, EmailLink",
   "license": "MIT",
   "type": "module",
   "main": "dist/index.js",
@@ -11,6 +11,8 @@
     "./button": "./dist/button/index.js",
     "./action-button": "./dist/action-button/index.js",
     "./button-group": "./dist/button-group/index.js",
+    "./filter-chip": "./dist/filter-chip/index.js",
+    "./filter-chip-group": "./dist/filter-chip-group/index.js",
     "./phone-link": "./dist/phone-link/index.js",
     "./email-link": "./dist/email-link/index.js"
   },

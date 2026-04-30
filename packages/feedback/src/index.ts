@@ -8,4 +8,4 @@ export type { AlertVariant, AlertStyle, AlertHeadingLevel } from './alert/index.
 
 // Badge
 export { CivBadge } from './badge/index.js';
-export type { BadgeVariant } from './badge/index.js';
+export type { BadgeVariant, BadgeStyle } from './badge/index.js';

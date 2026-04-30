@@ -11,6 +11,15 @@ const meta: Meta = {
       control: 'select',
       options: ['info', 'warning', 'error', 'success', 'neutral'],
     },
+    badgeStyle: {
+      control: 'select',
+      options: ['primary', 'secondary'],
+      name: 'badge-style',
+    },
+    spacing: {
+      control: 'select',
+      options: ['default', 'sm'],
+    },
     label: { control: 'text' },
     count: { control: 'number' },
     max: { control: 'number' },
@@ -32,11 +41,15 @@ type Story = StoryObj;
 export const Default: Story = {
   args: {
     variant: 'success',
+    badgeStyle: 'secondary',
+    spacing: 'default',
     label: 'Approved',
   },
   render: (args) => html`
     <civ-badge
       variant="${args.variant}"
+      badge-style="${args.badgeStyle || 'secondary'}"
+      spacing="${args.spacing || 'default'}"
       label="${args.label}"
       count="${args.count ?? ''}"
       max="${args.max ?? 99}"
@@ -74,6 +87,98 @@ export const Dots: Story = {
       <span>Messages <civ-badge dot label="Unread messages" variant="error"></civ-badge></span>
       <span>Tasks <civ-badge dot label="New tasks" variant="info"></civ-badge></span>
       <span>Status <civ-badge dot label="Online" variant="success"></civ-badge></span>
+    </div>
+  `,
+};
+
+export const Styles: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Two emphasis levels. **Secondary** (default) is a light tint with dark text — quieter, suited to inline use. **Primary** is a filled dark surface with light text — louder, for prominent state callouts.',
+      },
+    },
+  },
+  render: () => html`
+    <div style="display: grid; gap: 0.75rem;">
+      <div>
+        <p style="margin: 0 0 0.25rem; font-weight: 600;">Secondary (default)</p>
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+          <civ-badge variant="info" label="Info"></civ-badge>
+          <civ-badge variant="success" label="Approved"></civ-badge>
+          <civ-badge variant="warning" label="Pending"></civ-badge>
+          <civ-badge variant="error" label="Denied"></civ-badge>
+          <civ-badge variant="neutral" label="Draft"></civ-badge>
+        </div>
+      </div>
+      <div>
+        <p style="margin: 0 0 0.25rem; font-weight: 600;">Primary</p>
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+          <civ-badge variant="info" badge-style="primary" label="Info"></civ-badge>
+          <civ-badge variant="success" badge-style="primary" label="Approved"></civ-badge>
+          <civ-badge variant="warning" badge-style="primary" label="Pending"></civ-badge>
+          <civ-badge variant="error" badge-style="primary" label="Denied"></civ-badge>
+          <civ-badge variant="neutral" badge-style="primary" label="Draft"></civ-badge>
+        </div>
+      </div>
+    </div>
+  `,
+};
+
+export const Spacing: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: 'Default and compact (`sm`) padding for dense layouts.',
+      },
+    },
+  },
+  render: () => html`
+    <div style="display: grid; gap: 0.75rem;">
+      <div>
+        <p style="margin: 0 0 0.25rem; font-weight: 600;">Default</p>
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+          <civ-badge variant="success" label="Approved"></civ-badge>
+          <civ-badge variant="error" badge-style="primary" label="Denied"></civ-badge>
+          <civ-badge variant="info" count="12"></civ-badge>
+        </div>
+      </div>
+      <div>
+        <p style="margin: 0 0 0.25rem; font-weight: 600;">Compact (sm)</p>
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+          <civ-badge variant="success" spacing="sm" label="Approved"></civ-badge>
+          <civ-badge variant="error" badge-style="primary" spacing="sm" label="Denied"></civ-badge>
+          <civ-badge variant="info" spacing="sm" count="12"></civ-badge>
+        </div>
+      </div>
+    </div>
+  `,
+};
+
+export const Overlay: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Overlay mode pins a badge to the top-end corner of a relatively-positioned parent — the classic notification badge over an icon. Wrap the parent in `.civ-badge-anchor` (or set `position: relative` yourself).',
+      },
+    },
+  },
+  render: () => html`
+    <div style="display: flex; gap: 1.5rem; align-items: center;">
+      <span class="civ-badge-anchor">
+        <civ-icon name="mail" size="lg"></civ-icon>
+        <civ-badge overlay count="3" variant="error"></civ-badge>
+      </span>
+      <span class="civ-badge-anchor">
+        <civ-icon name="settings" size="lg"></civ-icon>
+        <civ-badge overlay dot label="Updates available" variant="info"></civ-badge>
+      </span>
+      <span class="civ-badge-anchor">
+        <civ-icon name="person" size="lg"></civ-icon>
+        <civ-badge overlay count="12" variant="success" badge-style="primary"></civ-badge>
+      </span>
     </div>
   `,
 };

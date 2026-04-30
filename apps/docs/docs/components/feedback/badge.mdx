@@ -30,6 +30,18 @@ A compact status or count indicator. Use for state ("Approved", "Pending"), seve
 
 <StoryEmbed id="feedback-badge--dots" />
 
+### Styles
+
+<StoryEmbed id="feedback-badge--styles" />
+
+### Spacing
+
+<StoryEmbed id="feedback-badge--spacing" />
+
+### Overlay (notification mode)
+
+<StoryEmbed id="feedback-badge--overlay" />
+
 ### Badge vs Tag
 
 <StoryEmbed id="feedback-badge--vs-tag" />
@@ -45,6 +57,9 @@ A compact status or count indicator. Use for state ("Approved", "Pending"), seve
 | `max` | `number` | `99` | Overflow threshold; values above render as `{max}+` |
 | `dot` | `boolean` | `false` | Render as a small colored dot only |
 | `variant` | `'info' \| 'warning' \| 'error' \| 'success' \| 'neutral'` | `'neutral'` | Semantic color |
+| `badge-style` | `'primary' \| 'secondary'` | `'secondary'` | Emphasis: primary (filled dark bg, light text) or secondary (light tint, dark text) |
+| `spacing` | `'default' \| 'sm'` | `'default'` | Compact variant with smaller padding |
+| `overlay` | `boolean` | `false` | Position absolutely in the top-end corner of a relatively-positioned parent (notification mode) |
 
 ## Modes
 
@@ -75,9 +90,22 @@ Precedence: **dot > count > label**.
 
 ## Accessibility
 
-- Always renders `role="status"` so screen readers announce the badge value.
-- In dot mode, `label` becomes the `aria-label` so the marker has an accessible name.
+- Text and count badges always render `role="status"` so screen readers announce the badge value.
+- In **dot mode**, `label` becomes the `aria-label` and `role="status"` is kept. **If `label` is omitted, the dot is marked `aria-hidden="true"`** (no empty live region), so always set `label` when the dot conveys meaning that isn't already present in a parent's accessible name.
 - Restricted to semantic colors so visual meaning matches the announced value.
+
+### Notification overlay
+
+Wrap an icon (or any container) with `civ-badge-anchor` to anchor the badge:
+
+```html
+<button class="civ-badge-anchor">
+  <civ-icon name="mail" size="lg"></civ-icon>
+  <civ-badge overlay count="3" variant="error"></civ-badge>
+</button>
+```
+
+The `civ-badge-anchor` utility class sets `position: relative; display: inline-block`. Any other relatively-positioned parent works too.
 
 ## Tag vs Badge
 

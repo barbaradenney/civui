@@ -1,0 +1,104 @@
+---
+title: Save & Resume
+sidebar_position: 9
+sidebar_label: Save & Resume
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
+# Save & Resume
+
+Government benefit forms can take 30-60 minutes. Users may need to pause — to find a document, take a break, or step away from a difficult section. CivUI supports both client-side and server-side persistence.
+
+## Client-side persistence
+
+Add `persist` to `civ-form` or `civ-form-step` to auto-save form state to `sessionStorage`. State restores automatically on page reload.
+
+```html
+<civ-form persist="va-form-21-526ez">
+  <!-- Form fields auto-save as the user types -->
+</civ-form>
+```
+
+The persist key (`va-form-21-526ez`) scopes the storage so multiple forms on the same domain don't collide.
+
+## Pause action
+
+For multi-step forms, `show-pause` adds a "Save and come back later" link next to the continue button:
+
+<StoryEmbed id="forms-patterns-form-step--with-pause-and-resume" />
+
+```html
+<civ-form-step show-pause>
+  <div data-step-label="Service history">
+    <!-- fields -->
+  </div>
+</civ-form-step>
+```
+
+The `sensitive` attribute auto-enables pause — users shouldn't feel trapped in emotionally difficult sections.
+
+## Server-side persistence
+
+For persistence across days or devices, implement a save endpoint and wire it to the pause action:
+
+```html
+<civ-form persist="va-21-526ez">
+  <civ-form-step show-pause>
+    <!-- steps -->
+  </civ-form-step>
+</civ-form>
+```
+
+```js
+const form = document.querySelector('civ-form');
+
+// Save to server when user clicks "Save and come back later"
+form.addEventListener('civ-step-pause', async (e) => {
+  const formData = form.getFormData();
+  await fetch('/api/drafts/va-21-526ez', {
+    method: 'PUT',
+    body: JSON.stringify(formData),
+  });
+  window.location.href = '/saved-confirmation';
+});
+```
+
+## Restoring a draft
+
+On page load, hydrate the form from the saved draft:
+
+```js
+const draft = await fetch('/api/drafts/va-21-526ez').then(r => r.json());
+
+const form = document.querySelector('civ-form');
+form.prefillData = {
+  fields: draft.fields,
+};
+```
+
+## What gets persisted
+
+| Data | `persist` (sessionStorage) | Server-side |
+|------|---------------------------|-------------|
+| Text input values | Yes | Yes |
+| Select/radio/checkbox state | Yes | Yes |
+| File uploads | No (too large) | Yes (separate upload) |
+| Current step index | Yes | Yes |
+| Validation errors | No (re-validated) | No |
+
+## Save and finish later button
+
+For forms without `civ-form-step`, add a secondary save button:
+
+```html
+<div class="civ-flex civ-gap-3 civ-mt-6">
+  <civ-button type="submit" label="Continue"></civ-button>
+  <civ-button variant="secondary" label="Save and finish later"></civ-button>
+</div>
+```
+
+## Components used
+
+- [`civ-form`](/docs/components/form/form) — `persist` attribute for sessionStorage
+- [`civ-form-step`](/docs/components/form/form-step) — `show-pause` for pause action, `sensitive` auto-enables pause

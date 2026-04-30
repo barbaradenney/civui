@@ -1,0 +1,100 @@
+---
+title: Conditional Reveal
+sidebar_position: 7
+sidebar_label: Conditional Reveal
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
+# Conditional Reveal
+
+Show or hide form fields based on the user's answers. This keeps forms short by only revealing fields that are relevant to the user's situation.
+
+## Basic example
+
+<StoryEmbed id="forms-layout-conditional--default" />
+
+```html
+<civ-yes-no label="Are you a veteran?" name="veteran" required></civ-yes-no>
+
+<civ-conditional when="veteran" equals="yes">
+  <civ-text-input label="Service branch" name="branch" required></civ-text-input>
+</civ-conditional>
+```
+
+## Multiple conditions
+
+Show different fields based on a selection:
+
+<StoryEmbed id="forms-layout-conditional--multiple-conditions" />
+
+```html
+<civ-radio-group legend="What type of benefit?" name="benefitType">
+  <civ-radio label="Education" value="education"></civ-radio>
+  <civ-radio label="Housing" value="housing"></civ-radio>
+  <civ-radio label="Healthcare" value="healthcare"></civ-radio>
+</civ-radio-group>
+
+<civ-conditional when="benefitType" equals="education">
+  <civ-text-input label="School name" name="schoolName" required></civ-text-input>
+</civ-conditional>
+
+<civ-conditional when="benefitType" equals="housing">
+  <civ-address legend="Property address" name="propertyAddress" required></civ-address>
+</civ-conditional>
+```
+
+## Operators
+
+`civ-conditional` supports multiple matching operators:
+
+| Attribute | Behavior |
+|-----------|----------|
+| `equals` | Show when field value equals this string |
+| `not-equals` | Show when field value does NOT equal this string |
+| `includes` | Show when field value is in a comma-separated list |
+| `has-value` | Show when field has any non-empty value |
+| `matches` | Show when field value matches a regex pattern |
+
+## Nested conditions
+
+Conditions can be nested for multi-level branching:
+
+```html
+<civ-yes-no label="Are you a veteran?" name="isVeteran" required></civ-yes-no>
+
+<civ-conditional when="isVeteran" equals="yes">
+  <civ-yes-no label="Were you honorably discharged?" name="honorable" required></civ-yes-no>
+
+  <civ-conditional when="honorable" equals="yes">
+    <civ-alert variant="success" heading="You may be eligible">
+      Based on your answers, you may qualify for this benefit.
+    </civ-alert>
+  </civ-conditional>
+</civ-conditional>
+
+<civ-conditional when="isVeteran" equals="no">
+  <civ-alert variant="info" heading="You may not be eligible">
+    This benefit is available to veterans and active-duty service members.
+  </civ-alert>
+</civ-conditional>
+```
+
+## Eligibility screening
+
+Use conditional reveal to build an eligibility screener at the start of a form:
+
+<StoryEmbed id="forms-layout-conditional--with-form" />
+
+## Behavior
+
+- Hidden fields are removed from the DOM (not just visually hidden)
+- Hidden fields don't participate in form validation
+- When a controlling field changes, dependent fields reset to their default values
+- Transitions are instantaneous (no animation) to respect reduced-motion preferences
+
+## Components used
+
+- [`civ-conditional`](/docs/components/form/conditional) — conditional container
+- [`civ-yes-no`](/docs/components/inputs/yes-no) — common trigger for binary conditions
+- Any input component can be a trigger via its `name` attribute

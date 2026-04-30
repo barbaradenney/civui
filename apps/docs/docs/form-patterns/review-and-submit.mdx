@@ -1,0 +1,106 @@
+---
+title: Review & Submit
+sidebar_position: 6
+sidebar_label: Review & Submit
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
+# Review & Submit
+
+Before final submission, show users everything they entered so they can verify and correct mistakes. CivUI uses a flat, scrollable layout — not accordions — so all answers are visible at once.
+
+## Review page
+
+<StoryEmbed id="forms-patterns-summary--government-application-review" />
+
+Use `civ-summary` to render the review page. Each section has an edit link that navigates back to the relevant form step.
+
+```html
+<civ-summary heading="Review your application"></civ-summary>
+```
+
+```js
+const summary = document.querySelector('civ-summary');
+summary.sections = [
+  {
+    heading: 'Personal information',
+    editHref: '#step-personal',
+    items: [
+      { label: 'Name', value: 'Jane A. Doe' },
+      { label: 'Date of birth', value: 'January 15, 1990' },
+      { label: 'Social Security number', value: '●●●-●●-6789' },
+    ],
+  },
+  {
+    heading: 'Contact information',
+    editHref: '#step-contact',
+    items: [
+      { label: 'Mailing address', value: ['123 Main St', 'Springfield, IL 62701'] },
+      { label: 'Phone', value: '(555) 123-4567' },
+      { label: 'Email', value: 'jane.doe@email.com' },
+    ],
+  },
+];
+```
+
+## Edit navigation
+
+When a user clicks an edit link, navigate them back to the relevant step. Listen for the `civ-edit` event:
+
+<StoryEmbed id="forms-patterns-summary--intercept-edit-with-civ-edit-event" />
+
+## Sensitive data masking
+
+Mask PII in the review page. SSN should show only the last 4 digits. The component handles this automatically for fields with PII-flagged masks.
+
+## Signature / Statement of truth
+
+Place the signature at the end of the review page, before the submit button:
+
+```html
+<civ-signature
+  legend="Statement of truth"
+  name="signature"
+  statement="I certify that the information I have provided is true and correct to the best of my knowledge and belief."
+  required
+></civ-signature>
+
+<civ-button label="Submit application" type="submit"></civ-button>
+```
+
+When using a statement of truth, do NOT also show a separate privacy policy checkbox.
+
+## Confirmation page
+
+After successful submission, show a confirmation with key details:
+
+```html
+<civ-alert variant="success" heading="We've received your application">
+  You submitted your application on April 18, 2026.
+</civ-alert>
+
+<civ-summary heading="What you submitted"></civ-summary>
+
+<civ-fieldset legend="What happens next">
+  <p>We'll review your application and contact you within 30 days.</p>
+  <p>If we need more information, we'll reach out using your preferred contact method.</p>
+</civ-fieldset>
+```
+
+## Guidance
+
+- Sections appear in the same order as the form steps
+- All sections visible at once — no accordions
+- Each section has an edit link back to the relevant step
+- Mask sensitive data (SSN shows last 4 only)
+- File upload and repeater sections show the same presentation as their input pages
+
+## Components used
+
+- [`civ-summary`](/docs/components/form/summary) — review page with edit links
+- [`civ-read-only-field`](/docs/components/form/read-only-field) — label/value display
+- [`civ-signature`](/docs/components/compound/signature) — certification and name capture
+- [`civ-alert`](/docs/components/feedback/alert) — confirmation message
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-patterns-summary--government-application-review)

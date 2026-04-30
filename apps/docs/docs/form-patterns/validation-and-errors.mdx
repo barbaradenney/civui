@@ -1,0 +1,99 @@
+---
+title: Validation & Errors
+sidebar_position: 5
+sidebar_label: Validation & Errors
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
+# Validation & Errors
+
+CivUI validates on submit, not on blur. This avoids punishing users for incomplete fields while they're still typing. Format-sensitive fields (email, SSN, ZIP) show inline feedback after the user finishes typing.
+
+## Error summary
+
+When a form submission fails validation, `civ-form` renders an error summary at the top with anchor links to each invalid field. Screen readers announce the error count.
+
+<StoryEmbed id="forms-layout-form--with-error" />
+
+## Server-side errors
+
+Inject server-side validation errors after a failed submission using the `setErrors()` method:
+
+<StoryEmbed id="forms-layout-form--set-server-errors" />
+
+```js
+const form = document.querySelector('civ-form');
+
+form.addEventListener('civ-submit', async (e) => {
+  const response = await fetch('/api/submit', {
+    method: 'POST',
+    body: e.detail.formData,
+  });
+
+  if (!response.ok) {
+    const errors = await response.json();
+    // errors: { fieldName: 'Error message', ... }
+    form.setErrors(errors);
+  }
+});
+```
+
+## Field-level errors
+
+Each field shows its error below the input with `role="alert"` for screen readers. Error borders use color + text (never color alone).
+
+```html
+<!-- Declarative validation via validate attribute -->
+<civ-form-field label="Email address" required>
+  <civ-text-input name="email" validate="email"></civ-text-input>
+</civ-form-field>
+
+<!-- Custom required message -->
+<civ-form-field label="Social Security number" required required-message="We need your SSN to verify your identity">
+  <civ-ssn name="ssn"></civ-ssn>
+</civ-form-field>
+```
+
+## Built-in validators
+
+Use the `validate` attribute for common patterns:
+
+| Validator | Validates |
+|-----------|----------|
+| `email` | Email format |
+| `phone` | US 10-digit phone |
+| `phoneIntl` | International phone (E.164) |
+| `ssn` | 9-digit SSN |
+| `ein` | Employer ID |
+| `routing` | Bank routing number (mod-10) |
+| `zip` | 5-digit ZIP |
+| `zip4` | ZIP+4 |
+| `url` | URL format |
+| `currency` | Dollar amount |
+| `alphanumeric` | Letters and numbers only |
+
+## Error message guidelines
+
+Follow plain language principles for government forms:
+
+| Instead of | Use |
+|-----------|-----|
+| "Invalid input" | "Enter a valid email address" |
+| "Required field" | "Enter your full name" |
+| "Format error" | "Enter a 10-digit phone number" |
+| "SSN invalid" | "Enter a 9-digit Social Security number" |
+
+## Validation flow
+
+1. User fills out form and clicks submit
+2. `civ-form` validates all fields
+3. If errors: error summary renders at top, fields show individual errors, focus moves to summary
+4. User fixes errors and resubmits
+5. `clearErrors()` is called automatically before re-validation
+
+## Components used
+
+- [`civ-form`](/docs/components/form/form) — form container with validation and error summary
+- [`civ-form-field`](/docs/components/form/form-group) — field wrapper that displays errors
+- All input components support `error`, `required`, and `validate` props

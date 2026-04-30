@@ -1,0 +1,100 @@
+---
+title: Repeating Sections
+sidebar_position: 8
+sidebar_label: Repeating Sections
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
+# Repeating Sections
+
+Collect variable-length lists of items — dependents, service periods, previous addresses, employment history. CivUI supports three modes depending on item complexity.
+
+## Inline mode (simple items)
+
+Best for 1-3 fields per item. Fields are visible on the page with add/remove buttons.
+
+<StoryEmbed id="forms-patterns-repeater--default" />
+
+```html
+<civ-repeater
+  legend="Other phone numbers"
+  name="phones"
+  item-label="phone number"
+  min="0"
+  max="5"
+>
+  <civ-phone name="phone" required></civ-phone>
+  <civ-text-input label="Label" name="phoneLabel" hint="For example: Work, Partner"></civ-text-input>
+</civ-repeater>
+```
+
+## Detail mode (complex items)
+
+Best for 4+ fields. Shows summary cards for existing items. Clicking "Add" or "Edit" opens a focused detail view.
+
+<StoryEmbed id="forms-patterns-repeater--multiple-fields" />
+
+```html
+<civ-repeater
+  legend="Dependents"
+  name="dependents"
+  item-label="dependent"
+  mode="detail"
+  min="0"
+  max="20"
+>
+  <civ-text-input label="First name" name="firstName" required></civ-text-input>
+  <civ-text-input label="Last name" name="lastName" required></civ-text-input>
+  <civ-memorable-date label="Date of birth" name="dob" required></civ-memorable-date>
+  <civ-ssn name="ssn"></civ-ssn>
+</civ-repeater>
+```
+
+## Wizard mode (multi-step items)
+
+For items complex enough to warrant their own mini-wizard. Each item is added through a step-by-step flow.
+
+<StoryEmbed id="forms-patterns-repeater--wizard-mode" />
+
+<StoryEmbed id="forms-patterns-repeater--wizard-with-relationship" />
+
+## Min and max constraints
+
+Set `min` and `max` to control the allowed number of items:
+
+<StoryEmbed id="forms-patterns-repeater--min-max" />
+
+```html
+<!-- At least 1 service period, up to 10 -->
+<civ-repeater legend="Service periods" name="service" item-label="service period" min="1" max="10">
+  ...
+</civ-repeater>
+```
+
+## Government service periods example
+
+<StoryEmbed id="forms-patterns-repeater--government-service-periods" />
+
+## Composition examples
+
+Pre-built compositions for common government form sections:
+
+<StoryEmbed id="forms-patterns-composition-examples--employment-basic" />
+
+<StoryEmbed id="forms-patterns-composition-examples--education-basic" />
+
+## Which mode to use
+
+| Item complexity | Fields per item | Mode | Example |
+|----------------|----------------|------|---------|
+| Simple | 1-3 | `inline` | Phone numbers, email addresses |
+| Medium | 4-8 | `detail` | Dependents, previous addresses |
+| Complex | 8+ or multi-step | `wizard` | Employment history, service periods |
+
+## Components used
+
+- [`civ-repeater`](/docs/components/form/repeater) — repeating section container
+- Compound components work inside repeaters: `civ-name`, `civ-address`, `civ-service-history`, `civ-relationship`
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-patterns-repeater--default)

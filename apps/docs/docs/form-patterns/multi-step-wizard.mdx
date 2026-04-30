@@ -1,0 +1,90 @@
+---
+title: Multi-Step Wizard
+sidebar_position: 4
+sidebar_label: Multi-Step Wizard
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
+# Multi-Step Wizard
+
+Break long government forms into manageable steps. Each step covers one concept (not one field) — group related inputs together to reduce page count without increasing cognitive load.
+
+## Live example
+
+<StoryEmbed id="forms-patterns-form-step--government-benefit-application" />
+
+## How it works
+
+1. Wrap each step's fields in a container with a `data-step-label` attribute
+2. `civ-form-step` handles navigation (back/continue), validation, and progress tracking
+3. `civ-progress-steps` shows the user where they are
+
+```html
+<civ-form-step>
+  <div data-step-label="Personal information">
+    <civ-name legend="Your name" name="fullName" required></civ-name>
+    <civ-memorable-date label="Date of birth" name="dob" required></civ-memorable-date>
+  </div>
+
+  <div data-step-label="Contact information">
+    <civ-address legend="Mailing address" name="address" required></civ-address>
+    <civ-phone name="phone" required></civ-phone>
+    <civ-email name="email" required></civ-email>
+  </div>
+
+  <div data-step-label="Review">
+    <civ-summary heading="Review your information"></civ-summary>
+    <civ-signature legend="Statement of truth" name="signature" required></civ-signature>
+  </div>
+</civ-form-step>
+```
+
+## Progress indicators
+
+Use `civ-progress-steps` for forms with a known number of steps:
+
+<StoryEmbed id="forms-patterns-form-step--default" />
+
+Use `civ-progress-bar` for forms with a dynamic or unknown step count:
+
+```html
+<civ-progress-bar
+  value="40"
+  label="Application progress"
+  status="2 of 5 sections complete"
+></civ-progress-bar>
+```
+
+## Step validation
+
+Each step validates its fields before allowing navigation to the next step. Invalid fields show errors and the step doesn't advance.
+
+<StoryEmbed id="forms-patterns-form-step--with-error" />
+
+## Sensitive steps with pause
+
+For emotionally difficult sections, mark the step as `sensitive`. This adds a screen reader announcement and enables a "Save and come back later" action.
+
+<StoryEmbed id="forms-patterns-form-step--sensitive" />
+
+<StoryEmbed id="forms-patterns-form-step--with-pause-and-resume" />
+
+## Grouping guidance
+
+| Grouping | Example fields | Why |
+|----------|---------------|-----|
+| Name + DOB | First, middle, last, suffix, date of birth | One identity concept |
+| Contact | Address, phone, email | One reachability concept |
+| Service | Branch, dates, discharge | One service period |
+| Review + Sign | Summary, signature, submit | One final confirmation |
+
+Avoid one-field-per-step — it creates 20+ page forms with high abandonment. Group by topic, not by field.
+
+## Components used
+
+- [`civ-form-step`](/docs/components/form/form-step) — wizard container with navigation
+- [`civ-progress-steps`](/docs/components/form/progress-steps) — step indicator
+- [`civ-progress-bar`](/docs/components/form/progress-steps#progress-bar) — percentage indicator
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-patterns-form-step--government-benefit-application)

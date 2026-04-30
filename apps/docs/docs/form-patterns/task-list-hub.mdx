@@ -1,0 +1,107 @@
+---
+title: Task List Hub
+sidebar_position: 10
+sidebar_label: Task List Hub
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
+# Task List Hub
+
+For large applications with multiple chapters (personal info, service history, documents, etc.), the task list hub is the user's home base. It shows all sections with their completion status and lets users work through them in any order.
+
+Based on the [GDS Task List pattern](https://design-system.service.gov.uk/components/task-list/) adapted for government benefit applications.
+
+## Live example
+
+<StoryEmbed id="navigation-task-list--government-disability-application" />
+
+## Basic structure
+
+```html
+<h1>Apply for disability compensation</h1>
+<p>Complete each section. You can do them in any order.</p>
+
+<civ-progress-bar
+  value="40"
+  label="Overall progress"
+  status="2 of 5 sections complete"
+></civ-progress-bar>
+
+<civ-task-list>
+  <civ-task-group>
+    <h2 data-task-group-heading>Prepare</h2>
+    <civ-task label="Check your eligibility" href="#/eligibility" status="complete"></civ-task>
+  </civ-task-group>
+
+  <civ-task-group>
+    <h2 data-task-group-heading>Fill out your application</h2>
+    <civ-task label="Personal information" href="#/personal" status="complete"></civ-task>
+    <civ-task label="Contact information" href="#/contact" status="in-progress" hint="Phone number needed"></civ-task>
+    <civ-task label="Service history" href="#/service" status="not-started"></civ-task>
+    <civ-task label="Supporting documents" href="#/documents" status="not-started"></civ-task>
+  </civ-task-group>
+
+  <civ-task-group>
+    <h2 data-task-group-heading>Review and submit</h2>
+    <civ-task label="Review your application" status="cannot-start" hint="Complete all sections first"></civ-task>
+  </civ-task-group>
+</civ-task-list>
+```
+
+## Task statuses
+
+<StoryEmbed id="navigation-task-list--all-statuses" />
+
+| Status | Visual | Meaning |
+|--------|--------|---------|
+| `not-started` | Blue tag | User hasn't begun this section |
+| `in-progress` | Teal tag | Started but incomplete |
+| `complete` | Plain text, no tag | All steps done and reviewed |
+| `cannot-start` | Grey, no link | Depends on other sections being complete |
+| `error` | Red tag | Validation errors need attention |
+| `review` | Yellow tag | Prefilled data needs user confirmation |
+
+## Sequential unlocking
+
+Lock later sections until prerequisites are complete:
+
+<StoryEmbed id="navigation-task-list--sequential-unlocking" />
+
+Tasks with `status="cannot-start"` render without an `href` — they're visible but not clickable. Add a `hint` to explain what's needed.
+
+## With prefilled data
+
+When data is prefilled from an authenticated source, the hub shows which sections need review vs which are ready:
+
+<StoryEmbed id="navigation-task-list--prefill-hub" />
+
+## Chapter flow
+
+Each task links to a chapter. Inside the chapter, the user works through steps using `civ-form-step`. When complete, they return to the hub with the task marked as `complete`.
+
+```
+Hub → Chapter (multi-step) → Hub (updated status)
+```
+
+## All complete
+
+When all tasks are complete, the review section unlocks:
+
+<StoryEmbed id="navigation-task-list--all-complete" />
+
+## Accessibility
+
+- Each task is a link (or plain text if locked)
+- Status is announced to screen readers
+- Task groups use headings for landmark navigation
+- Progress bar announces completion percentage
+
+## Components used
+
+- [`civ-task-list`](/docs/components/navigation/task-list) — container
+- `civ-task-group` — section grouping with heading
+- `civ-task` — individual task with status and link
+- [`civ-progress-bar`](/docs/components/form/progress-steps#progress-bar) — overall completion
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/navigation-task-list--government-disability-application)

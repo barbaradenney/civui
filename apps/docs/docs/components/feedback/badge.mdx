@@ -36,6 +36,14 @@ For **numeric counts** ("5", "99+", or notification overlays like "3 unread"), u
 
 <StoryEmbed id="feedback-badge--spacing" />
 
+### With Icon (auto by variant)
+
+<StoryEmbed id="feedback-badge--with-icon" />
+
+### Explicit Icons (start + end)
+
+<StoryEmbed id="feedback-badge--explicit-icons" />
+
 ### Overlay (notification mode)
 
 <StoryEmbed id="feedback-badge--overlay" />
@@ -56,6 +64,9 @@ For **numeric counts** ("5", "99+", or notification overlays like "3 unread"), u
 | `badge-style` | `'primary' \| 'secondary'` | `'secondary'` | Emphasis: primary (filled dark bg, light text) or secondary (light tint, dark text) |
 | `spacing` | `'default' \| 'sm'` | `'default'` | Compact variant with smaller padding |
 | `overlay` | `boolean` | `false` | Position absolutely in the top-end corner of a relatively-positioned parent (notification mode) |
+| `with-icon` | `boolean` | `false` | Auto-render the variant's semantic icon at the start (success → check-circle, warning → warning, error → error, info → info; neutral has no auto-icon) |
+| `icon-start` | `string` | `''` | Explicit leading icon name. Overrides `with-icon`'s variant default. |
+| `icon-end` | `string` | `''` | Explicit trailing icon name. |
 
 ## Modes
 

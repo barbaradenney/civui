@@ -2689,6 +2689,16 @@
     @apply civ-px-1.5 civ-py-0 civ-text-sm;
   }
 
+  /* Switch to inline-flex when icons are present so the icon + label align
+     with consistent gap. Text-align is irrelevant in flex. */
+  .civ-badge--with-icon {
+    @apply civ-inline-flex civ-items-center civ-gap-1;
+  }
+
+  .civ-badge__icon {
+    color: inherit;
+  }
+
   /* Secondary style — light tint background, dark text (default). */
 
   .civ-badge--style-secondary.civ-badge--info {

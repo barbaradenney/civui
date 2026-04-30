@@ -38,7 +38,7 @@ For architecture and internals, see \`CLAUDE.md\` in the repo root.
 | \`<civ-filter-chip-group>\` | Action | \`mode\` (single/multi), \`label\`. Wraps a row of chips with roving tabindex (arrow-key navigation) and an aggregated \`civ-change\` event carrying \`value\` (string in single mode, array in multi). | \`civ-change\` |
 | \`<civ-link>\` | Navigation | \`href\`, \`variant\` (primary/secondary/tertiary/back/danger), \`danger\`, \`disabled\` | \`civ-analytics\` |
 | \`<civ-tag>\` | Layout | \`label\`, \`variant\` (blue/orange/purple/gray), \`tag-style\` (primary/secondary), \`spacing\` (default/sm), \`icon-start\`. Categorization only — use \`<civ-badge>\` for status. | — |
-| \`<civ-badge>\` | Feedback | \`label\`, \`dot\`, \`variant\` (info/warning/error/success/neutral), \`badge-style\` (primary/secondary), \`spacing\` (default/sm), \`overlay\`. Status pills + notification dots with \`role="status"\`. | — |
+| \`<civ-badge>\` | Feedback | \`label\`, \`dot\`, \`variant\` (info/warning/error/success/neutral), \`badge-style\` (primary/secondary), \`spacing\` (default/sm), \`overlay\`, \`with-icon\` (auto variant icon), \`icon-start\`, \`icon-end\`. Status pills + notification dots with \`role="status"\`. | — |
 | \`<civ-count>\` | Feedback | \`count\`, \`max\`, \`variant\`, \`count-style\` (primary/secondary), \`spacing\`, \`overlay\`, \`live\` (off/polite/assertive). Numeric annotation; lighter chrome than badge. Used inside chips, list items, and as notification overlays. | — |
 | \`<civ-card>\` | Layout | \`spacing\` (default/sm). Slots: \`data-card-header\`, \`data-card-footer\` | — |
 | \`<civ-page-header>\` | Layout | Slots: \`data-tag\`, \`data-eyebrow\`, \`data-heading\`, \`data-subheading\` | — |
@@ -548,11 +548,14 @@ Categorization label (topic, taxonomy, filter chip). For status indicators ("App
 
 Compact status indicator (text or dot). Carries \`role="status"\` for label mode and dot-with-label mode. Restricted to semantic colors. For numeric counts, use \`civ-count\`.
 
-**Props:** \`label\`, \`dot\`, \`variant\` (info/warning/error/success/neutral), \`badge-style\` (primary/secondary), \`spacing\` (default/sm), \`overlay\`
+**Props:** \`label\`, \`dot\`, \`variant\` (info/warning/error/success/neutral), \`badge-style\` (primary/secondary), \`spacing\` (default/sm), \`overlay\`, \`with-icon\`, \`icon-start\`, \`icon-end\`
+
+Set \`with-icon\` to render the variant's semantic icon at the start (success → check-circle, warning → warning, error → error, info → info). Use \`icon-start\` / \`icon-end\` for explicit overrides.
 
 \`\`\`html
-<civ-badge label="Approved" variant="success"></civ-badge>
-<civ-badge label="Denied" variant="error" badge-style="primary"></civ-badge>
+<civ-badge label="Approved" variant="success" with-icon></civ-badge>
+<civ-badge label="Denied" variant="error" badge-style="primary" with-icon></civ-badge>
+<civ-badge label="Read more" variant="info" icon-end="chevron-right"></civ-badge>
 <civ-badge dot label="Unread messages" variant="error"></civ-badge>
 \`\`\`
 

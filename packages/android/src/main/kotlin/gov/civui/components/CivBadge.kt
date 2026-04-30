@@ -17,6 +17,9 @@ fun CivBadge(
     badgeStyle: String = "default",
     spacing: String = "default",
     overlay: Boolean = false,
+    withIcon: Boolean = false,
+    iconStart: String = "",
+    iconEnd: String = "",
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {}

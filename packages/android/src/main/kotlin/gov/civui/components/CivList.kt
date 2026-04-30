@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 fun CivList(
     modifier: Modifier = Modifier,
     dividers: Boolean = false,
+    spacing: String = "default",
     content: @Composable () -> Unit,
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
@@ -32,7 +33,11 @@ fun CivListItem(
     modifier: Modifier = Modifier,
     href: String = "",
     current: Boolean = false,
+    heading: String = "",
+    description: String = "",
+    error: String = "",
     onTap: (() -> Unit)? = null,
+    start: (@Composable () -> Unit)? = null,
     end: (@Composable () -> Unit)? = null,
     content: @Composable () -> Unit,
 ) {

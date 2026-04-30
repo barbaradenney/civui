@@ -6,13 +6,16 @@ import SwiftUI
 
 public struct CivList<Content: View>: View {
     public var dividers: Bool
+    public var spacing: String
     @ViewBuilder public var content: () -> Content
 
     public init(
         dividers: Bool = false,
+        spacing: String = "default",
         @ViewBuilder content: @escaping () -> Content
     ) {
         self.dividers = dividers
+        self.spacing = spacing
         self.content = content
     }
 
@@ -23,23 +26,35 @@ public struct CivList<Content: View>: View {
     }
 }
 
-public struct CivListItem<Content: View, End: View>: View {
+public struct CivListItem<Start: View, Content: View, End: View>: View {
     public var href: String
     public var current: Bool
+    public var heading: String
+    public var description: String
+    public var error: String
     public var onTap: (() -> Void)?
+    @ViewBuilder public var start: () -> Start
     @ViewBuilder public var content: () -> Content
     @ViewBuilder public var end: () -> End
 
     public init(
         href: String = "",
         current: Bool = false,
+        heading: String = "",
+        description: String = "",
+        error: String = "",
         onTap: (() -> Void)? = nil,
+        @ViewBuilder start: @escaping () -> Start = { EmptyView() },
         @ViewBuilder content: @escaping () -> Content,
         @ViewBuilder end: @escaping () -> End = { EmptyView() }
     ) {
         self.href = href
         self.current = current
+        self.heading = heading
+        self.description = description
+        self.error = error
         self.onTap = onTap
+        self.start = start
         self.content = content
         self.end = end
     }
@@ -47,6 +62,7 @@ public struct CivListItem<Content: View, End: View>: View {
     public var body: some View {
         let isLink = !href.isEmpty
         let row = HStack(alignment: .top, spacing: 16) {
+            start()
             VStack(alignment: .leading, spacing: 4) { content() }
                 .frame(maxWidth: .infinity, alignment: .leading)
             end()

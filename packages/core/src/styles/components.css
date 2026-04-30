@@ -2657,37 +2657,72 @@
   }
 
   .civ-badge {
-    @apply civ-inline-block civ-px-1.5 civ-py-0 civ-text-sm civ-font-semibold;
+    @apply civ-inline-block civ-px-2 civ-py-0.5 civ-text-base civ-font-semibold;
     border-radius: 0;
     vertical-align: text-bottom;
     min-width: 1.25rem;
     text-align: center;
   }
 
-  .civ-badge--info {
+  .civ-badge--sm {
+    @apply civ-px-1.5 civ-py-0 civ-text-sm;
+  }
+
+  /* Secondary style — light tint background, dark text (default). */
+
+  .civ-badge--style-secondary.civ-badge--info {
     background-color: var(--civ-color-info-lighter);
     color: var(--civ-color-info-dark);
   }
 
-  .civ-badge--success {
+  .civ-badge--style-secondary.civ-badge--success {
     background-color: var(--civ-color-success-lighter);
     color: var(--civ-color-success-dark);
   }
 
-  .civ-badge--warning {
+  .civ-badge--style-secondary.civ-badge--warning {
     background-color: var(--civ-color-warning-lighter);
     color: var(--civ-color-warning-dark);
   }
 
-  .civ-badge--error {
+  .civ-badge--style-secondary.civ-badge--error {
     background-color: var(--civ-color-error-lighter);
     color: var(--civ-color-error-dark);
   }
 
-  .civ-badge--neutral {
+  .civ-badge--style-secondary.civ-badge--neutral {
     background-color: var(--civ-color-base-lightest);
     color: var(--civ-color-base-darker);
   }
+
+  /* Primary style — filled dark background, light text. */
+
+  .civ-badge--style-primary.civ-badge--info {
+    background-color: var(--civ-color-info-dark);
+    color: var(--civ-color-white-DEFAULT);
+  }
+
+  .civ-badge--style-primary.civ-badge--success {
+    background-color: var(--civ-color-success-dark);
+    color: var(--civ-color-white-DEFAULT);
+  }
+
+  .civ-badge--style-primary.civ-badge--warning {
+    background-color: var(--civ-color-warning-dark);
+    color: var(--civ-color-white-DEFAULT);
+  }
+
+  .civ-badge--style-primary.civ-badge--error {
+    background-color: var(--civ-color-error-DEFAULT);
+    color: var(--civ-color-white-DEFAULT);
+  }
+
+  .civ-badge--style-primary.civ-badge--neutral {
+    background-color: var(--civ-color-base-darker);
+    color: var(--civ-color-white-DEFAULT);
+  }
+
+  /* Dot mode — always uses the dark (primary) fill regardless of style. */
 
   .civ-badge--dot {
     @apply civ-p-0;
@@ -2719,7 +2754,12 @@
     cursor: pointer;
     transition:
       background-color var(--civ-motion-duration-fast, 100ms) var(--civ-motion-easing-ease-out, ease),
-      border-color var(--civ-motion-duration-fast, 100ms) var(--civ-motion-easing-ease-out, ease);
+      border-color var(--civ-motion-duration-fast, 100ms) var(--civ-motion-easing-ease-out, ease),
+      color var(--civ-motion-duration-fast, 100ms) var(--civ-motion-easing-ease-out, ease);
+  }
+
+  .civ-filter-chip--sm {
+    @apply civ-px-2 civ-py-0.5 civ-text-sm;
   }
 
   .civ-filter-chip:hover:not([disabled]) {
@@ -2727,19 +2767,38 @@
     border-color: var(--civ-color-base-darker);
   }
 
-  .civ-filter-chip--selected {
+  /* Selected — secondary (default): light primary tint with dark text. */
+
+  .civ-filter-chip--style-secondary.civ-filter-chip--selected {
     background-color: var(--civ-color-primary-lightest);
     color: var(--civ-color-primary-dark);
     border-color: var(--civ-color-primary-dark);
   }
 
-  .civ-filter-chip--selected:hover:not([disabled]) {
+  .civ-filter-chip--style-secondary.civ-filter-chip--selected:hover:not([disabled]) {
     background-color: var(--civ-color-primary-lighter);
     border-color: var(--civ-color-primary-darker);
   }
 
-  .civ-filter-chip__check {
+  .civ-filter-chip--style-secondary.civ-filter-chip--selected .civ-filter-chip__check {
     color: var(--civ-color-primary-dark);
+  }
+
+  /* Selected — primary: filled primary surface with light text. */
+
+  .civ-filter-chip--style-primary.civ-filter-chip--selected {
+    background-color: var(--civ-color-primary-DEFAULT);
+    color: var(--civ-color-white-DEFAULT);
+    border-color: var(--civ-color-primary-DEFAULT);
+  }
+
+  .civ-filter-chip--style-primary.civ-filter-chip--selected:hover:not([disabled]) {
+    background-color: var(--civ-color-primary-dark);
+    border-color: var(--civ-color-primary-dark);
+  }
+
+  .civ-filter-chip--style-primary.civ-filter-chip--selected .civ-filter-chip__check {
+    color: var(--civ-color-white-DEFAULT);
   }
 
   .civ-filter-chip__remove {

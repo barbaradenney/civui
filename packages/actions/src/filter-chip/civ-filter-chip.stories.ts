@@ -14,6 +14,15 @@ const meta: Meta = {
     selected: { control: 'boolean' },
     removable: { control: 'boolean' },
     disabled: { control: 'boolean' },
+    chipStyle: {
+      control: 'select',
+      options: ['primary', 'secondary'],
+      name: 'chip-style',
+    },
+    spacing: {
+      control: 'select',
+      options: ['default', 'sm'],
+    },
   },
   parameters: {
     docs: {
@@ -35,11 +44,15 @@ export const Default: Story = {
     selected: false,
     removable: false,
     disabled: false,
+    chipStyle: 'secondary',
+    spacing: 'default',
   },
   render: (args) => html`
     <civ-filter-chip
       label="${args.label}"
       value="${args.value}"
+      chip-style="${args.chipStyle || 'secondary'}"
+      spacing="${args.spacing || 'default'}"
       ?selected="${args.selected}"
       ?removable="${args.removable}"
       ?disabled="${args.disabled}"
@@ -94,6 +107,67 @@ export const Removable: Story = {
         <civ-filter-chip label="Healthcare" value="healthcare" selected removable></civ-filter-chip>
         <civ-filter-chip label="Disability" value="disability" selected removable></civ-filter-chip>
         <civ-filter-chip label="VA Form 21-526EZ" value="form-21-526ez" selected removable></civ-filter-chip>
+      </div>
+    </div>
+  `,
+};
+
+export const Styles: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Two emphasis levels for the **selected** state. Secondary (default) tints the chip with light primary; primary fills it with the brand color and white text. Unselected chips look the same in both modes.',
+      },
+    },
+  },
+  render: () => html`
+    <div style="display: grid; gap: 0.75rem;">
+      <div>
+        <p style="margin: 0 0 0.25rem; font-weight: 600;">Secondary (default)</p>
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+          <civ-filter-chip label="Healthcare" value="healthcare"></civ-filter-chip>
+          <civ-filter-chip label="Education" value="education" selected></civ-filter-chip>
+          <civ-filter-chip label="Housing" value="housing" selected></civ-filter-chip>
+        </div>
+      </div>
+      <div>
+        <p style="margin: 0 0 0.25rem; font-weight: 600;">Primary</p>
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+          <civ-filter-chip label="Healthcare" value="healthcare" chip-style="primary"></civ-filter-chip>
+          <civ-filter-chip label="Education" value="education" chip-style="primary" selected></civ-filter-chip>
+          <civ-filter-chip label="Housing" value="housing" chip-style="primary" selected></civ-filter-chip>
+        </div>
+      </div>
+    </div>
+  `,
+};
+
+export const Spacing: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: 'Default and compact (`sm`) padding for dense filter rows.',
+      },
+    },
+  },
+  render: () => html`
+    <div style="display: grid; gap: 0.75rem;">
+      <div>
+        <p style="margin: 0 0 0.25rem; font-weight: 600;">Default</p>
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+          <civ-filter-chip label="Healthcare" value="healthcare" selected></civ-filter-chip>
+          <civ-filter-chip label="Education" value="education"></civ-filter-chip>
+          <civ-filter-chip label="Housing" value="housing"></civ-filter-chip>
+        </div>
+      </div>
+      <div>
+        <p style="margin: 0 0 0.25rem; font-weight: 600;">Compact (sm)</p>
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+          <civ-filter-chip label="Healthcare" value="healthcare" spacing="sm" selected></civ-filter-chip>
+          <civ-filter-chip label="Education" value="education" spacing="sm"></civ-filter-chip>
+          <civ-filter-chip label="Housing" value="housing" spacing="sm"></civ-filter-chip>
+        </div>
       </div>
     </div>
   `,

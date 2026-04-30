@@ -19,6 +19,7 @@ export { CivButtonGroup } from './button-group/index.js';
 
 // Filter Chip
 export { CivFilterChip } from './filter-chip/index.js';
+export type { FilterChipStyle } from './filter-chip/index.js';
 
 // Phone Link
 export { CivPhoneLink } from './phone-link/index.js';

@@ -34,10 +34,10 @@ For architecture and internals, see \`CLAUDE.md\` in the repo root.
 | \`<civ-fieldset>\` | Layout | \`legend\`, \`hint\`, \`error\`, \`required\`, \`disabled\` | — |
 | \`<civ-form>\` | Layout | \`action\`, \`method\` | \`civ-submit: { formData }\`, \`civ-invalid: { errors }\` |
 | \`<civ-button>\` | Action | \`variant\` (primary/secondary/tertiary), \`danger\`, \`type\`, \`disabled\` | \`civ-analytics\` |
-| \`<civ-filter-chip>\` | Action | \`label\`, \`value\`, \`selected\`, \`removable\`, \`disabled\`. Interactive filter chip — toggle or remove. | \`civ-change\`, \`civ-remove\`, \`civ-analytics\` |
+| \`<civ-filter-chip>\` | Action | \`label\`, \`value\`, \`selected\`, \`removable\`, \`disabled\`, \`chip-style\` (primary/secondary), \`spacing\` (default/sm). Interactive filter chip — toggle or remove. | \`civ-change\`, \`civ-remove\`, \`civ-analytics\` |
 | \`<civ-link>\` | Navigation | \`href\`, \`variant\` (primary/secondary/tertiary/back/danger), \`danger\`, \`disabled\` | \`civ-analytics\` |
 | \`<civ-tag>\` | Layout | \`label\`, \`variant\` (blue/orange/purple/gray), \`tag-style\` (primary/secondary). Categorization only — use \`<civ-badge>\` for status. | — |
-| \`<civ-badge>\` | Feedback | \`label\`, \`count\`, \`max\`, \`dot\`, \`variant\` (info/warning/error/success/neutral). Status pills + count indicators with \`role="status"\`. | — |
+| \`<civ-badge>\` | Feedback | \`label\`, \`count\`, \`max\`, \`dot\`, \`variant\` (info/warning/error/success/neutral), \`badge-style\` (primary/secondary), \`spacing\` (default/sm). Status pills + count indicators with \`role="status"\`. | — |
 | \`<civ-card>\` | Layout | \`spacing\` (default/sm). Slots: \`data-card-header\`, \`data-card-footer\` | — |
 | \`<civ-page-header>\` | Layout | Slots: \`data-tag\`, \`data-eyebrow\`, \`data-heading\`, \`data-subheading\` | — |
 | \`<civ-link-card>\` | Navigation | \`href\`, \`heading\`, \`description\`, \`variant\` (primary/secondary/tertiary/critical) | \`civ-analytics\` |
@@ -544,14 +544,14 @@ Categorization label (topic, taxonomy, filter chip). For status indicators ("App
 
 ### civ-badge
 
-Compact status or count indicator. Always carries \`role="status"\` so screen readers announce changes. Restricted to semantic colors.
+Compact status or count indicator. Always carries \`role="status"\` so screen readers announce changes. Restricted to semantic colors. Two emphasis levels (\`badge-style\`): secondary (light tint, default) and primary (filled dark).
 
-**Props:** \`label\`, \`count\`, \`max\` (default 99), \`dot\`, \`variant\` (info/warning/error/success/neutral)
+**Props:** \`label\`, \`count\`, \`max\` (default 99), \`dot\`, \`variant\` (info/warning/error/success/neutral), \`badge-style\` (primary/secondary), \`spacing\` (default/sm)
 
 \`\`\`html
 <civ-badge label="Approved" variant="success"></civ-badge>
-<civ-badge count="12" variant="info"></civ-badge>
-<civ-badge count="150" variant="error"></civ-badge>
+<civ-badge label="Denied" variant="error" badge-style="primary"></civ-badge>
+<civ-badge count="12" variant="info" spacing="sm"></civ-badge>
 <civ-badge dot label="Unread messages" variant="error"></civ-badge>
 \`\`\`
 

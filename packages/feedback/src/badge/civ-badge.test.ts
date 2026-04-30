@@ -99,4 +99,44 @@ describe('civ-badge', () => {
     const el = await fixture<CivBadge>('<civ-badge dot></civ-badge>');
     expect(el.hasAttribute('dot')).toBe(true);
   });
+
+  describe('badge-style', () => {
+    it('defaults to secondary style', async () => {
+      const el = await fixture<CivBadge>('<civ-badge label="x" variant="success"></civ-badge>');
+      const badge = el.querySelector('.civ-badge')!;
+      expect(badge.className).toContain('civ-badge--style-secondary');
+      expect(badge.className).not.toContain('civ-badge--style-primary');
+    });
+
+    it('applies primary style class', async () => {
+      const el = await fixture<CivBadge>('<civ-badge label="x" variant="error" badge-style="primary"></civ-badge>');
+      const badge = el.querySelector('.civ-badge')!;
+      expect(badge.className).toContain('civ-badge--style-primary');
+    });
+
+    it('applies primary style for all variants', async () => {
+      for (const variant of ['info', 'warning', 'error', 'success', 'neutral'] as const) {
+        const el = await fixture<CivBadge>(
+          `<civ-badge label="x" variant="${variant}" badge-style="primary"></civ-badge>`
+        );
+        const badge = el.querySelector('.civ-badge')!;
+        expect(badge.className).toContain(`civ-badge--${variant}`);
+        expect(badge.className).toContain('civ-badge--style-primary');
+      }
+    });
+  });
+
+  describe('spacing', () => {
+    it('defaults to default spacing (no --sm class)', async () => {
+      const el = await fixture<CivBadge>('<civ-badge label="x"></civ-badge>');
+      const badge = el.querySelector('.civ-badge')!;
+      expect(badge.className).not.toContain('civ-badge--sm');
+    });
+
+    it('applies civ-badge--sm when spacing="sm"', async () => {
+      const el = await fixture<CivBadge>('<civ-badge label="x" spacing="sm"></civ-badge>');
+      const badge = el.querySelector('.civ-badge')!;
+      expect(badge.className).toContain('civ-badge--sm');
+    });
+  });
 });

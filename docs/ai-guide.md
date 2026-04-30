@@ -48,11 +48,11 @@ For architecture and internals, see `CLAUDE.md` in the repo root.
 | `<civ-page-header>` | UI | `spacing` | — (uses slots: `data-tag`, `data-eyebrow`, `data-heading`, `data-subheading`) |
 | `<civ-icon>` | UI | `name`, `label` | — |
 | `<civ-alert>` | Feedback | `variant`, `heading`, `dismissible`, `slim`, `alert-style`, `heading-level` | `civ-dismiss` |
-| `<civ-badge>` | Feedback | `label`, `count`, `max`, `dot`, `variant` | — |
+| `<civ-badge>` | Feedback | `label`, `count`, `max`, `dot`, `variant`, `badge-style`, `spacing` | — |
 | `<civ-modal>` | Overlay | `open`, `heading`, `label`, `no-close-button`, `no-backdrop-close`, `no-escape-close` | `civ-modal-close` |
 | `<civ-action-sheet>` | Overlay | `open`, `max-height`, `trap-focus`, `no-click-outside` | `civ-action-sheet-close` |
 | `<civ-button-group>` | UI | `orientation`, `label` | — (`role="toolbar"`) |
-| `<civ-filter-chip>` | UI | `label`, `value`, `selected`, `removable`, `disabled` | `civ-change`, `civ-remove`, `civ-analytics` |
+| `<civ-filter-chip>` | UI | `label`, `value`, `selected`, `removable`, `disabled`, `chip-style`, `spacing` | `civ-change`, `civ-remove`, `civ-analytics` |
 | `<civ-input-group>` | UI | — (layout container) | — |
 | `<civ-download-link>` | UI | `label`, `href`, `filename`, `file-size` | `civ-analytics` |
 | `<civ-email-link>` | UI | `address`, `label`, `subject` | `civ-analytics` |

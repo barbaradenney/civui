@@ -163,4 +163,43 @@ describe('civ-filter-chip', () => {
       expect(handler).not.toHaveBeenCalled();
     });
   });
+
+  describe('chip-style', () => {
+    it('defaults to secondary style', async () => {
+      const el = await fixture<CivFilterChip>('<civ-filter-chip label="Test"></civ-filter-chip>');
+      const button = el.querySelector('button')!;
+      expect(button.className).toContain('civ-filter-chip--style-secondary');
+      expect(button.className).not.toContain('civ-filter-chip--style-primary');
+    });
+
+    it('applies primary style class', async () => {
+      const el = await fixture<CivFilterChip>('<civ-filter-chip label="Test" chip-style="primary"></civ-filter-chip>');
+      const button = el.querySelector('button')!;
+      expect(button.className).toContain('civ-filter-chip--style-primary');
+    });
+
+    it('keeps style class when toggled selected', async () => {
+      const el = await fixture<CivFilterChip>('<civ-filter-chip label="Test" chip-style="primary"></civ-filter-chip>');
+      el.querySelector('button')!.click();
+      await elementUpdated(el);
+
+      const button = el.querySelector('button')!;
+      expect(button.className).toContain('civ-filter-chip--style-primary');
+      expect(button.className).toContain('civ-filter-chip--selected');
+    });
+  });
+
+  describe('spacing', () => {
+    it('defaults to default spacing (no --sm class)', async () => {
+      const el = await fixture<CivFilterChip>('<civ-filter-chip label="Test"></civ-filter-chip>');
+      const button = el.querySelector('button')!;
+      expect(button.className).not.toContain('civ-filter-chip--sm');
+    });
+
+    it('applies civ-filter-chip--sm when spacing="sm"', async () => {
+      const el = await fixture<CivFilterChip>('<civ-filter-chip label="Test" spacing="sm"></civ-filter-chip>');
+      const button = el.querySelector('button')!;
+      expect(button.className).toContain('civ-filter-chip--sm');
+    });
+  });
 });

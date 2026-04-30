@@ -2,6 +2,8 @@ import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { CivBaseElement, LightDomTextMixin, dispatch, interpolate, t } from '@civui/core';
 
+export type FilterChipStyle = 'primary' | 'secondary';
+
 /**
  * CivUI Filter Chip
  *
@@ -13,6 +15,11 @@ import { CivBaseElement, LightDomTextMixin, dispatch, interpolate, t } from '@ci
  * For non-interactive categorization labels use `civ-tag`. For status
  * indicators use `civ-badge`. For primary CTAs use `civ-button`.
  *
+ * **Emphasis levels** (apply when selected; unselected always renders the
+ * neutral outlined chip):
+ * - `secondary` (default) — light primary tint when selected
+ * - `primary` — filled primary surface when selected
+ *
  * @element civ-filter-chip
  *
  * @prop {string} label - Chip text (preferred over child text)
@@ -20,6 +27,8 @@ import { CivBaseElement, LightDomTextMixin, dispatch, interpolate, t } from '@ci
  * @prop {boolean} selected - Active/inactive state (reflected attribute)
  * @prop {boolean} removable - When true, renders a trailing `×` dismiss button
  * @prop {boolean} disabled - Disabled state
+ * @prop {FilterChipStyle} chipStyle - Selected-state emphasis: 'primary' or 'secondary' (default)
+ * @prop {string} spacing - Padding size: 'default' or 'sm'
  *
  * @fires civ-change - `{ value, selected }` when chip is toggled
  * @fires civ-remove - `{ value }` when the dismiss button is clicked (removable only)
@@ -33,6 +42,12 @@ export class CivFilterChip extends LightDomTextMixin(CivBaseElement) {
   @property({ type: Boolean, reflect: true }) removable = false;
   @property({ type: Boolean, reflect: true }) disabled = false;
 
+  /** Selected-state emphasis: 'primary' (filled) or 'secondary' (light tint, default). */
+  @property({ type: String, attribute: 'chip-style' }) chipStyle: FilterChipStyle = 'secondary';
+
+  /** Padding size: 'default' or 'sm' for compact layouts. */
+  @property({ type: String }) spacing: 'default' | 'sm' = 'default';
+
   private get _text(): string {
     return this.label || this._initialText;
   }
@@ -40,7 +55,9 @@ export class CivFilterChip extends LightDomTextMixin(CivBaseElement) {
   private get _classes(): string {
     return [
       'civ-filter-chip',
+      `civ-filter-chip--style-${this.chipStyle}`,
       this.selected ? 'civ-filter-chip--selected' : '',
+      this.spacing === 'sm' ? 'civ-filter-chip--sm' : '',
       this.disabled ? 'civ-opacity-50 civ-cursor-not-allowed' : '',
       'focus-visible:civ-focus-ring',
     ]

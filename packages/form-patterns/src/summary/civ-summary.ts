@@ -35,6 +35,11 @@ export interface SummaryItem {
  * Works for both review pages (end of form) and hub pages (mid-form)
  * when combined with status indicators.
  *
+ * **Heading level:** Main heading renders at `heading-level` (default 2).
+ * Section headings auto-render one level below. If the summary sits under
+ * an `h1` page title, the default is correct. Under an `h2` section, set
+ * `heading-level="3"`.
+ *
  * @element civ-summary
  *
  * Edit links are rendered as `<civ-link>` elements that navigate

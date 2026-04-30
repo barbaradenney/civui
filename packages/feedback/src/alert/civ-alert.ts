@@ -17,6 +17,9 @@ export type AlertHeadingLevel = 2 | 3 | 4 | 5 | 6;
  * Body text is set via the `label` property. If `label` is not set,
  * initial Light DOM text content is used as a fallback.
  *
+ * **Heading level:** Renders at `heading-level` (default 4). Set to one
+ * level below the nearest parent heading in your document outline.
+ *
  * @element civ-alert
  *
  * @prop {AlertVariant} variant - Alert type (sets colors + ARIA role)

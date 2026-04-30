@@ -11,6 +11,10 @@ import type { SlotConfig } from '@civui/core';
  * ambushed by difficult content. Authored body content is rendered as
  * provided children — headings, paragraphs, lists, links all work.
  *
+ * **Heading level:** Renders at `heading-level` (default 3). Set to match
+ * the section depth — e.g., inside a form step under an `h2`, use the
+ * default `3`. Inside a nested fieldset, use `4`.
+ *
  * @element civ-section-intro
  *
  * @prop {string} heading - Section heading (required for accessible labelling)

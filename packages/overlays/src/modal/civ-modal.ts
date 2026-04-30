@@ -19,6 +19,10 @@ import type { SlotConfig } from '@civui/core';
  * `civ-modal-close` when the user tries to close it, and the parent
  * decides whether to actually close.
  *
+ * **Heading level:** Renders at `heading-level` (default 2). Set to match
+ * your document outline — e.g., if the modal opens from an `h2` section,
+ * use `heading-level="3"`.
+ *
  * @element civ-modal
  *
  * @prop {boolean} open - Controls visibility

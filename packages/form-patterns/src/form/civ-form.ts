@@ -61,6 +61,10 @@ export interface CivFormFieldLike extends HTMLElement {
  * the children (which remain as direct children of this element)
  * and handles submit/reset via event delegation.
  *
+ * **Error heading level:** The error summary heading renders at
+ * `error-heading-level` (default 3). Set to one level below the form's
+ * nearest parent heading.
+ *
  * @element civ-form
  *
  * @prop {string} action - Form action URL (for reference)

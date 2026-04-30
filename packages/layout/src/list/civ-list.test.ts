@@ -25,17 +25,28 @@ describe('civ-list', () => {
     expect(items.length).toBe(2);
   });
 
-  it('does not apply divider classes by default', async () => {
+  it('does not apply divider class by default', async () => {
     const el = await fixture('<civ-list></civ-list>');
     const ul = el.querySelector('ul')!;
-    expect(ul.className).not.toContain('civ-divide-y');
+    expect(ul.className).not.toContain('civ-list--dividers');
   });
 
-  it('applies divider classes when dividers attribute is set', async () => {
+  it('applies divider class when dividers attribute is set', async () => {
     const el = await fixture('<civ-list dividers></civ-list>');
     const ul = el.querySelector('ul')!;
-    expect(ul.className).toContain('civ-divide-y');
-    expect(ul.className).toContain('civ-divide-base-lighter');
+    expect(ul.className).toContain('civ-list--dividers');
+  });
+
+  it('applies variant class', async () => {
+    const el = await fixture('<civ-list variant="primary"></civ-list>');
+    const ul = el.querySelector('ul')!;
+    expect(ul.className).toContain('civ-list--primary');
+  });
+
+  it('applies compact spacing class', async () => {
+    const el = await fixture('<civ-list spacing="sm"></civ-list>');
+    const ul = el.querySelector('ul')!;
+    expect(ul.className).toContain('civ-list--sm');
   });
 
   it('uses Light DOM', async () => {

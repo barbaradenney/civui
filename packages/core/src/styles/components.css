@@ -74,6 +74,31 @@
     border-left: var(--civ-border-width-accent) solid var(--civ-color-error-DEFAULT);
   }
 
+  /* ── List (civ-list / civ-list-item) ───────────────────────── */
+
+  .civ-list--dividers > civ-list-item + civ-list-item > li {
+    border-top: 1px solid var(--civ-color-base-lighter);
+  }
+
+  .civ-list--primary > civ-list-item > li {
+    background-color: var(--civ-color-primary-lightest);
+  }
+
+  .civ-list--secondary > civ-list-item > li {
+    background-color: var(--civ-color-base-lightest);
+  }
+
+  .civ-list--sm .civ-list-item__row {
+    padding-top: var(--civ-spacing-1, 4px);
+    padding-bottom: var(--civ-spacing-1, 4px);
+    font-size: var(--civ-typography-fontSize-sm);
+  }
+
+  /* Nesting: indent nested civ-list inside civ-list-item */
+  civ-list-item civ-list {
+    padding-inline-start: var(--civ-spacing-6, 24px);
+  }
+
   /* ── Memorable Date ───────────────────────────────────────── */
 
   .civ-memorable-date-fields {

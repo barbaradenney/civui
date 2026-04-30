@@ -1,7 +1,7 @@
 import { describe, it, expect, afterEach } from 'vitest';
 import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
 import './civ-button-group.js';
-import '../action-button/civ-action-button.js';
+import '@civui/actions/action-button';
 
 afterEach(cleanupFixtures);
 

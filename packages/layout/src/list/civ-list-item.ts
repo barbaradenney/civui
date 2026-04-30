@@ -10,38 +10,28 @@ const UNSAFE_HREF_PATTERN = /^\s*javascript\s*:/i;
  * CivUI List Item
  *
  * A row inside `<civ-list>`. Renders as `<li>`. When `href` is set,
- * the entire row becomes a clickable anchor (whole-row click target,
- * hover state, focus ring); otherwise it's a plain `<li>` with the
- * same layout. This lets clickable and static rows sit in the same
- * list with identical visual rhythm.
+ * the entire row becomes a clickable anchor; otherwise it's a plain
+ * `<li>` with the same layout.
  *
- * Trailing content (status tag, switch, secondary action) goes in
- * the `end` slot via the `data-list-item-end` attribute on a child.
+ * Supports a leading icon, trailing content slot, and nesting
+ * (place a `<civ-list>` as a child for sub-lists).
  *
  * @element civ-list-item
  *
- * @prop {string} href - Optional navigation target. When set, the
- *   entire row is a clickable anchor.
- * @prop {boolean} current - Mark as the current page (sets
- *   `aria-current="page"` on the anchor). Useful for side navigation.
- *   Has no effect on static rows.
+ * @prop {string} href - Optional navigation target.
+ * @prop {boolean} current - Mark as current page (`aria-current="page"`).
+ * @prop {string} iconStart - Leading icon name from the civ-icon library.
  *
  * @slot - Primary content (label, description, anything).
- * @slot end - Trailing content. Children with the `data-list-item-end`
- *   attribute are routed here.
+ * @slot end - Trailing content via `data-list-item-end` attribute.
  *
- * @fires civ-analytics - Analytics tracking event on click (only when href set).
+ * @fires civ-analytics - Analytics tracking on click (when href set).
  *
  * @example
  * ```html
- * <civ-list-item href="/personal">
- *   Personal information
- *   <civ-badge data-list-item-end label="Complete" variant="success" badge-style="primary" with-icon></civ-badge>
- * </civ-list-item>
- *
- * <civ-list-item>
- *   Locked task
- *   <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
+ * <civ-list-item href="/claims" icon-start="edit">
+ *   My claims
+ *   <civ-badge data-list-item-end label="3" variant="info"></civ-badge>
  * </civ-list-item>
  * ```
  */
@@ -52,6 +42,9 @@ export class CivListItem extends LightDomSlotMixin(CivBaseElement) {
 
   /** Mark this row as the current page. Sets aria-current="page" on the anchor. */
   @property({ type: Boolean }) current = false;
+
+  /** Leading icon name from the civ-icon library. */
+  @property({ type: String, attribute: 'icon-start' }) iconStart = '';
 
   override _getSlotConfig(): SlotConfig {
     return {
@@ -75,11 +68,10 @@ export class CivListItem extends LightDomSlotMixin(CivBaseElement) {
     const isLink = !!this._safeHref;
 
     const rowClasses = [
+      'civ-list-item__row',
       'civ-flex',
-      'civ-justify-between',
-      'civ-items-start',
-      'civ-gap-4',
-      'civ-py-4',
+      'civ-items-center',
+      'civ-gap-3',
     ].join(' ');
 
     const linkClasses = [
@@ -91,7 +83,12 @@ export class CivListItem extends LightDomSlotMixin(CivBaseElement) {
       'civ-transition-colors',
     ].join(' ');
 
+    const icon = this.iconStart
+      ? html`<civ-icon name="${this.iconStart}" class="civ-flex-shrink-0 civ-text-base"></civ-icon>`
+      : nothing;
+
     const inner = html`
+      ${icon}
       <span class="civ-flex-1 civ-min-w-0" data-civ-list-item-content-slot></span>
       ${hasEnd ? html`
         <span class="civ-flex-shrink-0 civ-flex civ-items-center" data-civ-list-item-end-slot></span>
@@ -100,7 +97,7 @@ export class CivListItem extends LightDomSlotMixin(CivBaseElement) {
 
     if (isLink) {
       return html`
-        <li>
+        <li class="civ-list-item">
           <a
             href="${this._safeHref}"
             class="${linkClasses}"
@@ -114,7 +111,7 @@ export class CivListItem extends LightDomSlotMixin(CivBaseElement) {
     }
 
     return html`
-      <li>
+      <li class="civ-list-item">
         <div class="${rowClasses}">${inner}</div>
       </li>
     `;

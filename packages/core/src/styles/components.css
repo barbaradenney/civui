@@ -8,6 +8,19 @@
  */
 
 @layer components {
+  /* ── Design system variables ────────────────────────────────── */
+
+  :root {
+    --civ-opacity-disabled: 0.5;
+    --civ-opacity-muted: 0.4;
+    --civ-opacity-secondary: 0.85;
+    --civ-brightness-hover: 0.9;
+    --civ-brightness-active: 0.85;
+    --civ-brightness-subtle: 0.95;
+    --civ-border-width-accent: 3px;
+    --civ-icon-radius: 1px;
+  }
+
   /* ── Shared form primitives ─────────────────────────────────── */
 
   .civ-label,
@@ -54,11 +67,11 @@
   }
 
   .civ-list-item--success {
-    border-left: 3px solid var(--civ-color-success-DEFAULT);
+    border-left: var(--civ-border-width-accent) solid var(--civ-color-success-DEFAULT);
   }
 
   .civ-list-item--error {
-    border-left: 3px solid var(--civ-color-error-DEFAULT);
+    border-left: var(--civ-border-width-accent) solid var(--civ-color-error-DEFAULT);
   }
 
   /* ── Memorable Date ───────────────────────────────────────── */
@@ -529,7 +542,7 @@
     bottom: 0.14em;
     right: 0.08em;
     transform: rotate(45deg);
-    border-radius: 1px;
+    border-radius: var(--civ-icon-radius);
   }
 
   /* Sort ascending (▲) */
@@ -561,7 +574,7 @@
     height: 0;
     border-left: 0.2em solid transparent;
     border-right: 0.2em solid transparent;
-    opacity: 0.4;
+    opacity: var(--civ-opacity-muted);
   }
   .civ-icon--sort-none::before {
     border-bottom: 0.25em solid currentColor;
@@ -710,7 +723,7 @@
     width: 0.55em;
     height: 0.2em;
     border: var(--civ-icon-stroke) solid currentColor;
-    border-radius: 1px;
+    border-radius: var(--civ-icon-radius);
     top: 50%;
     left: 50%;
     transform: translate(-36%, -50%) rotate(-45deg);
@@ -765,7 +778,7 @@
     height: 0.26em;
     background: currentColor;
     top: 0.18em;
-    border-radius: 1px;
+    border-radius: var(--civ-icon-radius);
     box-shadow: 0 0.34em 0 currentColor;
   }
 
@@ -790,7 +803,7 @@
     height: 0.22em;
     background: currentColor;
     bottom: 0.22em;
-    border-radius: 1px;
+    border-radius: var(--civ-icon-radius);
     box-shadow: 0 0.28em 0 currentColor;
   }
 
@@ -841,7 +854,7 @@
     height: 0.6em;
     border: var(--civ-icon-stroke) solid currentColor;
     border-top: 3px solid currentColor;
-    border-radius: 1px;
+    border-radius: var(--civ-icon-radius);
     bottom: 0.1em;
   }
   .civ-icon--calendar::after {
@@ -862,7 +875,7 @@
     width: 0.45em;
     height: 0.5em;
     border: var(--civ-icon-stroke) solid currentColor;
-    border-radius: 1px;
+    border-radius: var(--civ-icon-radius);
     top: 0.06em;
     right: 0.12em;
   }
@@ -872,7 +885,7 @@
     width: 0.45em;
     height: 0.5em;
     border: var(--civ-icon-stroke) solid currentColor;
-    border-radius: 1px;
+    border-radius: var(--civ-icon-radius);
     bottom: 0.06em;
     left: 0.12em;
   }
@@ -924,7 +937,7 @@
     width: 0.6em;
     height: 0.42em;
     border: var(--civ-icon-stroke) solid currentColor;
-    border-radius: 1px;
+    border-radius: var(--civ-icon-radius);
     bottom: 0.1em;
     left: 50%;
     transform: translateX(-50%);
@@ -1058,7 +1071,7 @@
     width: 0.72em;
     height: 0.32em;
     border: var(--civ-icon-stroke) solid currentColor;
-    border-radius: 1px 1px 0 0;
+    border-radius: var(--civ-icon-radius) var(--civ-icon-radius) 0 0;
     top: 0.2em;
     left: 50%;
     transform: translateX(-50%);
@@ -1107,7 +1120,7 @@
     width: 0.78em;
     height: 0.56em;
     border: var(--civ-icon-stroke) solid currentColor;
-    border-radius: 1px;
+    border-radius: var(--civ-icon-radius);
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -1151,7 +1164,7 @@
     height: 0.4em;
     border: var(--civ-icon-stroke) solid currentColor;
     border-radius: 50%;
-    opacity: 0.5;
+    opacity: var(--civ-opacity-disabled);
   }
   .civ-icon--eye-off::after {
     content: '';
@@ -1397,7 +1410,7 @@
   }
   .civ-combobox-chevron:disabled {
     cursor: not-allowed;
-    opacity: 0.5;
+    opacity: var(--civ-opacity-disabled);
   }
   .civ-combobox-chevron svg {
     transition: transform var(--civ-motion-duration-fast, 100ms) var(--civ-motion-easing-ease-out, ease);
@@ -1698,7 +1711,7 @@
   }
   .civ-btn--primary-danger:active:not(:disabled):not([aria-disabled="true"]) {
     @apply civ-bg-error-dark civ-border-error-dark;
-    filter: brightness(0.85);
+    filter: brightness(var(--civ-brightness-active));
   }
 
   .civ-btn--secondary-danger {
@@ -2281,7 +2294,7 @@
   }
 
   button.civ-step-circle:hover {
-    filter: brightness(0.9);
+    filter: brightness(var(--civ-brightness-hover));
   }
 
   .civ-step-counter {
@@ -2499,10 +2512,10 @@
     color: var(--civ-color-base-darkest);
   }
   .civ-link-card--critical:hover {
-    filter: brightness(0.95);
+    filter: brightness(var(--civ-brightness-subtle));
   }
   .civ-link-card--critical:active {
-    filter: brightness(0.9);
+    filter: brightness(var(--civ-brightness-hover));
   }
 
   /* Danger — filled error, white text */
@@ -2517,12 +2530,12 @@
   }
   .civ-link-card--danger:active {
     background-color: var(--civ-color-error-dark);
-    filter: brightness(0.85);
+    filter: brightness(var(--civ-brightness-active));
   }
 
   /* Link card text — inherit color from variant */
   .civ-link-card__heading { color: inherit; }
-  .civ-link-card__description { color: inherit; opacity: 0.85; }
+  .civ-link-card__description { color: inherit; opacity: var(--civ-opacity-secondary); }
 
   /* ── Page Header ──────────────────────────────────────────── */
 
@@ -2869,7 +2882,7 @@
   .civ-filter-chip__count {
     @apply civ-ms-1 civ-font-semibold;
     color: inherit;
-    opacity: 0.85;
+    opacity: var(--civ-opacity-secondary);
   }
 
   /* Remove button — separated from action by an internal divider. */
@@ -2887,7 +2900,7 @@
   }
 
   .civ-filter-chip--style-primary.civ-filter-chip--selected .civ-filter-chip__remove {
-    border-inline-start-color: rgba(255, 255, 255, 0.4);
+    border-inline-start-color: color-mix(in srgb, var(--civ-color-white-DEFAULT, #fff) 40%, transparent);
   }
 
   .civ-filter-chip__remove:hover:not(:disabled) {

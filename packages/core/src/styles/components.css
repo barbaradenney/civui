@@ -77,7 +77,19 @@
   /* ── List (civ-list / civ-list-item) ───────────────────────── */
 
   .civ-list-item__row {
-    @apply civ-p-4;
+    @apply civ-p-4 civ-text-base;
+  }
+
+  /* Heading slot: bold, base size, no margin */
+  [data-civ-list-item-heading-slot] > * {
+    @apply civ-font-bold civ-text-base civ-m-0;
+    display: block;
+  }
+
+  /* Description slot: smaller, muted, no margin */
+  [data-civ-list-item-description-slot] > * {
+    @apply civ-text-sm civ-text-base-dark civ-m-0;
+    display: block;
   }
 
   .civ-list--dividers > civ-list-item + civ-list-item > li {
@@ -86,6 +98,14 @@
 
   .civ-list--sm .civ-list-item__row {
     @apply civ-py-2 civ-px-4 civ-text-sm;
+  }
+
+  .civ-list--sm [data-civ-list-item-heading-slot] > * {
+    @apply civ-text-sm;
+  }
+
+  .civ-list--sm [data-civ-list-item-description-slot] > * {
+    @apply civ-text-xs;
   }
 
   /* Nesting: indent nested civ-list inside civ-list-item */

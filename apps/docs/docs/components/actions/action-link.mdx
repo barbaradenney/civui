@@ -1,0 +1,102 @@
+---
+title: Action Link
+sidebar_position: 4
+sidebar_label: Action Link
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
+# Action Link
+
+`<civ-action-link>`
+
+A link that triggers a device action — phone call, email compose, or file download — rather than navigating to a page. Set the `type` prop to switch behavior. Renders the correct protocol, icon, and formatted display text automatically.
+
+## Examples
+
+### Phone
+
+<StoryEmbed id="actions-action-link--phone" />
+
+### Phone with Label
+
+<StoryEmbed id="actions-action-link--phone-with-label" />
+
+### Email
+
+<StoryEmbed id="actions-action-link--email" />
+
+### Email with Subject
+
+<StoryEmbed id="actions-action-link--email-with-subject" />
+
+### Disabled
+
+<StoryEmbed id="actions-action-link--disabled" />
+
+### All Variants
+
+<StoryEmbed id="actions-action-link--all-variants" />
+
+### Government Contact Section
+
+<StoryEmbed id="actions-action-link--government-contact-section" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/actions-action-link--all-variants)
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `type` | `'phone' \| 'email' \| 'download'` | `'phone'` | Action type — determines protocol, icon, and formatting |
+| `number` | `string` | `''` | Phone number (type="phone"). Non-digit characters stripped for `tel:` href; `+` preserved for international. |
+| `address` | `string` | `''` | Email address (type="email") |
+| `subject` | `string` | `''` | Pre-filled email subject (type="email"). URL-encoded automatically. |
+| `href` | `string` | `''` | File URL (type="download") |
+| `filename` | `string` | `''` | Suggested download filename (type="download") |
+| `file-size` | `string` | `''` | Display file size, e.g. "2.4 MB" (type="download") |
+| `label` | `string` | `''` | Override display text. Defaults to formatted number, email address, or filename. |
+| `disabled` | `boolean` | `false` | Disabled state |
+
+## Types
+
+### Phone
+
+Generates a `tel:` href, shows a phone icon, and auto-formats 10-digit US numbers for display (e.g., `8005551234` becomes `(800) 555-1234`).
+
+```html
+<civ-action-link type="phone" number="8005551234"></civ-action-link>
+<civ-action-link type="phone" number="8005551234" label="Call the VA help desk"></civ-action-link>
+<civ-action-link type="phone" number="+44 20 7946 0958"></civ-action-link>
+<civ-action-link type="phone" number="711" label="TTY: 711"></civ-action-link>
+```
+
+### Email
+
+Generates a `mailto:` href with optional subject line, shows a mail icon, and defaults display text to the email address.
+
+```html
+<civ-action-link type="email" address="help@va.gov"></civ-action-link>
+<civ-action-link type="email" address="support@va.gov" label="Contact VA support"></civ-action-link>
+<civ-action-link type="email" address="benefits@va.gov" subject="Question about my claim"></civ-action-link>
+```
+
+### Download
+
+Sets the `download` attribute, shows a download icon, and optionally displays the file size after the link text.
+
+```html
+<civ-action-link
+  type="download"
+  href="/forms/va-10-10ez.pdf"
+  label="Application for Health Benefits (VA 10-10EZ)"
+  filename="va-10-10ez.pdf"
+  file-size="1.2 MB"
+></civ-action-link>
+```
+
+## Events
+
+| Event | Detail | Description |
+|-------|--------|-------------|
+| `civ-analytics` | — | Analytics tracking event fired on click |

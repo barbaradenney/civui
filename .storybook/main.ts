@@ -60,8 +60,7 @@ const config: StorybookConfig = {
       '@civui/actions/button-group': resolve(root, 'packages/actions/src/button-group/index.ts'),
       '@civui/actions/filter-chip': resolve(root, 'packages/actions/src/filter-chip/index.ts'),
       '@civui/actions/filter-chip-group': resolve(root, 'packages/actions/src/filter-chip-group/index.ts'),
-      '@civui/actions/phone-link': resolve(root, 'packages/actions/src/phone-link/index.ts'),
-      '@civui/actions/email-link': resolve(root, 'packages/actions/src/email-link/index.ts'),
+      '@civui/actions/action-link': resolve(root, 'packages/actions/src/action-link/index.ts'),
       '@civui/actions': resolve(root, 'packages/actions/src/index.ts'),
       // Overlays
       '@civui/overlays/modal': resolve(root, 'packages/overlays/src/modal/index.ts'),
@@ -79,8 +78,6 @@ const config: StorybookConfig = {
       '@civui/navigation/skip-link': resolve(root, 'packages/navigation/src/skip-link/index.ts'),
       '@civui/navigation/link': resolve(root, 'packages/navigation/src/link/index.ts'),
       '@civui/navigation/link-card': resolve(root, 'packages/navigation/src/link-card/index.ts'),
-      '@civui/navigation/external-link': resolve(root, 'packages/navigation/src/external-link/index.ts'),
-      '@civui/navigation/download-link': resolve(root, 'packages/navigation/src/download-link/index.ts'),
       '@civui/navigation': resolve(root, 'packages/navigation/src/index.ts'),
       '@civui/tokens/css': resolve(root, 'packages/tokens/dist/css/tokens.css'),
     };

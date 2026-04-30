@@ -44,6 +44,9 @@ export class CivLink extends LightDomTextMixin(CivBaseElement) {
   @property({ type: String }) rel = '';
   @property({ type: String }) download = '';
 
+  /** Opens in a new tab — auto-sets target="_blank", rel="noopener noreferrer", external-link icon, and SR "(opens in new tab)" text. */
+  @property({ type: Boolean, attribute: 'new-tab' }) newTab = false;
+
   private get _text(): string {
     return this.label || this._initialText;
   }
@@ -63,7 +66,7 @@ export class CivLink extends LightDomTextMixin(CivBaseElement) {
   }
 
   private get _trailingIcon() {
-    const name = this.iconEnd || (this.variant === 'secondary' ? 'chevron-right' : '');
+    const name = this.iconEnd || (this.newTab ? 'external-link' : '') || (this.variant === 'secondary' ? 'chevron-right' : '');
     return name ? html`<civ-icon name="${name}" size="sm"></civ-icon>` : '';
   }
 
@@ -90,15 +93,18 @@ export class CivLink extends LightDomTextMixin(CivBaseElement) {
       `;
     }
 
+    const effectiveTarget = this.newTab ? '_blank' : this.target;
+    const effectiveRel = this.newTab ? 'noopener noreferrer' : this.rel;
+
     return html`
       <a
         href="${this._safeHref}"
         class="${this._classes}"
-        target="${this.target || nothing}"
-        rel="${this.rel || nothing}"
+        target="${effectiveTarget || nothing}"
+        rel="${effectiveRel || nothing}"
         download="${this.download || nothing}"
         @click="${this._onClick}"
-      >${this._leadingIcon}${this._text}${this._trailingIcon}</a>
+      >${this._leadingIcon}${this._text}${this._trailingIcon}</a>${this.newTab ? html`<span class="civ-sr-only">${t('externalLinkNewTab')}</span>` : nothing}
     `;
   }
 

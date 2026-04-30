@@ -1,7 +1,7 @@
 {
   "name": "@civui/navigation",
   "version": "0.1.0",
-  "description": "CivUI navigation components — SkipLink, Link, LinkCard, ExternalLink, DownloadLink",
+  "description": "CivUI navigation components — SkipLink, Link, LinkCard",
   "license": "MIT",
   "type": "module",
   "main": "dist/index.js",
@@ -10,9 +10,7 @@
     ".": "./dist/index.js",
     "./skip-link": "./dist/skip-link/index.js",
     "./link": "./dist/link/index.js",
-    "./link-card": "./dist/link-card/index.js",
-    "./external-link": "./dist/external-link/index.js",
-    "./download-link": "./dist/download-link/index.js"
+    "./link-card": "./dist/link-card/index.js"
   },
   "files": ["dist"],
   "publishConfig": {

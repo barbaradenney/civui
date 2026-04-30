@@ -22,7 +22,8 @@ import type { SlotConfig } from '@civui/core';
  * @element civ-modal
  *
  * @prop {boolean} open - Controls visibility
- * @prop {string} heading - Modal heading text (rendered as h2)
+ * @prop {string} heading - Modal heading text
+ * @prop {number} headingLevel - Heading level 2-6 (default: 2)
  * @prop {string} label - Accessible label when no heading is set
  * @prop {boolean} noCloseButton - Hide the X close button
  * @prop {boolean} noBackdropClose - Disable closing via backdrop click
@@ -34,6 +35,7 @@ import type { SlotConfig } from '@civui/core';
 export class CivModal extends LightDomSlotMixin(CivBaseElement) {
   @property({ type: Boolean, reflect: true }) open = false;
   @property({ type: String }) heading = '';
+  @property({ type: Number, attribute: 'heading-level' }) headingLevel: 2 | 3 | 4 | 5 | 6 = 2;
   @property({ type: String }) label = '';
   @property({ type: Boolean, attribute: 'no-close-button' }) noCloseButton = false;
   @property({ type: Boolean, attribute: 'no-backdrop-close' }) noBackdropClose = false;
@@ -76,7 +78,7 @@ export class CivModal extends LightDomSlotMixin(CivBaseElement) {
         ${this.heading || !this.noCloseButton ? html`
           <div class="civ-modal__header">
             ${this.heading ? html`
-              <h2 id="civ-modal-heading" class="civ-heading-lg civ-m-0">${this.heading}</h2>
+              <span id="civ-modal-heading" class="civ-heading-lg civ-m-0" role="heading" aria-level="${this.headingLevel}">${this.heading}</span>
             ` : nothing}
             ${!this.noCloseButton ? html`
               <button

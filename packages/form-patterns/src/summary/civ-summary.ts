@@ -52,6 +52,9 @@ export class CivSummary extends CivBaseElement {
   /** Main heading for the summary page. */
   @property({ type: String }) heading = '';
 
+  /** Heading level 2-6 (default: 2). */
+  @property({ type: Number, attribute: 'heading-level' }) headingLevel: 2 | 3 | 4 | 5 | 6 = 2;
+
   /** Sections to display. Set via JS property. */
   @property({ type: Array, attribute: false }) sections: SummarySection[] = [];
 
@@ -63,7 +66,7 @@ export class CivSummary extends CivBaseElement {
         aria-label="${this.heading || t('summaryDefaultHeading')}"
         @click="${this._onEditClick}"
       >
-        ${this.heading ? html`<h2 class="civ-heading-xl">${this.heading}</h2>` : nothing}
+        ${this.heading ? html`<span class="civ-heading-xl civ-block" role="heading" aria-level="${this.headingLevel}">${this.heading}</span>` : nothing}
         ${this.sections.map(section => this._renderSection(section))}
       </div>
     `;
@@ -130,7 +133,7 @@ export class CivSummary extends CivBaseElement {
       <div class="civ-summary-section">
         ${section.heading ? html`
           <div class="civ-flex civ-justify-between civ-items-center civ-mb-2">
-            <h3 class="civ-heading-md">${section.heading}</h3>
+            <span class="civ-heading-md" role="heading" aria-level="${Math.min(6, this.headingLevel + 1)}">${section.heading}</span>
             ${showHeaderEdit ? html`
               <civ-link
                 href="${sectionEditHref}"

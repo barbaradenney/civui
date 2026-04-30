@@ -20,9 +20,10 @@ describe('civ-summary', () => {
   it('renders a heading', async () => {
     const el = await fixture<CivSummary>('<civ-summary heading="Review your application"></civ-summary>');
 
-    const h2 = el.querySelector('h2');
-    expect(h2).not.toBeNull();
-    expect(h2!.textContent).toBe('Review your application');
+    const heading = el.querySelector('[role="heading"]');
+    expect(heading).not.toBeNull();
+    expect(heading!.textContent).toBe('Review your application');
+    expect(heading!.getAttribute('aria-level')).toBe('2');
   });
 
   it('renders items as definition list rows', async () => {
@@ -156,7 +157,7 @@ describe('civ-summary', () => {
   it('uses Light DOM (no shadow root)', async () => {
     const el = await fixture<CivSummary>('<civ-summary heading="Review"></civ-summary>');
     expect(el.shadowRoot).toBeNull();
-    expect(el.querySelector('h2')).not.toBeNull();
+    expect(el.querySelector('[role="heading"]')).not.toBeNull();
   });
 
   it('has region role with aria-label', async () => {
@@ -296,7 +297,7 @@ describe('civ-summary civ-edit event', () => {
     let fired = false;
     el.addEventListener('civ-edit', () => { fired = true; });
 
-    const heading = el.querySelector('h2') as HTMLElement;
+    const heading = el.querySelector('[role="heading"]') as HTMLElement;
     heading.click();
     await elementUpdated(el);
 

@@ -22,6 +22,9 @@ public struct CivActionLink: View {
     public var number: String
     public var address: String
     public var subject: String
+    public var href: String
+    public var filename: String
+    public var fileSize: String
     public var label: String
     public var disabled: Bool
 
@@ -30,6 +33,9 @@ public struct CivActionLink: View {
         number: String = "",
         address: String = "",
         subject: String = "",
+        href: String = "",
+        filename: String = "",
+        fileSize: String = "",
         label: String = "",
         disabled: Bool = false
     ) {
@@ -37,6 +43,9 @@ public struct CivActionLink: View {
         self.number = number
         self.address = address
         self.subject = subject
+        self.href = href
+        self.filename = filename
+        self.fileSize = fileSize
         self.label = label
         self.disabled = disabled
     }

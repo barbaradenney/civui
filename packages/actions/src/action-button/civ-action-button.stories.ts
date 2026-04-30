@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import './civ-action-button.js';
-import '../button-group/civ-button-group.js';
+import '@civui/layout/button-group';
 
 const meta: Meta = {
   title: 'Actions/Action Button',

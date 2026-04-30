@@ -90,7 +90,7 @@ Action button. Variants: \`primary\` (filled blue), \`secondary\` (outlined), \`
 Navigation link. Variants: \`primary\` (button-styled), \`secondary\` (underlined + caret), \`tertiary\` (plain underlined), \`back\` (left chevron). Add \`danger\` for destructive.
 
 ### civ-tag
-Status label. 8 color variants. \`tag-style="primary"\` for bold/dark background, \`"secondary"\` (default) for light.
+Categorization label (topics, taxonomies, filter chips). Variants: \`blue\`, \`orange\`, \`purple\`, \`gray\`. \`tag-style="primary"\` for bold/dark background, \`"secondary"\` (default) for light. For **status** ("Approved", "In progress", "Error"), use \`<civ-badge>\` instead — it carries \`role="status"\` and uses semantic colors (info/success/warning/error/neutral).
 
 ### civ-page-header
 Page heading. Slots: \`data-tag\` (top), \`data-eyebrow\`, \`data-heading\` (supports inline tags), \`data-subheading\`.
@@ -104,8 +104,8 @@ Container with slots: \`data-card-header\`, \`data-card-footer\`. Prop: \`spacin
 ### civ-divider
 Horizontal rule. Prop: \`spacing\` (default/sm).
 
-### civ-task-list / civ-task-group / civ-task
-Task list navigation. civ-task props: \`label\`, \`hint\`, \`href\`, \`status\` (not-started/in-progress/complete/cannot-start/error).
+### civ-list / civ-list-item
+Generic list primitive. \`<civ-list>\` renders \`<ul role="list">\` with optional \`dividers\` prop. \`<civ-list-item>\` renders \`<li>\`; setting \`href\` makes the whole row a clickable anchor. Trailing content (status tag, switch, etc.) is placed via the \`data-list-item-end\` attribute on a child. Use this for task lists, side nav, link collections, search results.
 
 ### civ-progress-bar
 Overall progress. Props: \`value\`, \`label\`, \`status\`.

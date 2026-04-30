@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import './civ-link-card.js';
+import '@civui/layout/tag';
 
 const meta: Meta = {
   title: 'Navigation/Link Card',
@@ -314,6 +315,48 @@ export const Compact: Story = {
           description="Start a new application for VA benefits."
           spacing="sm"
         ></civ-link-card>
+      </div>
+    </div>
+  `,
+};
+
+export const WithSlots: Story = {
+  name: 'With Slots (top + end)',
+  render: () => html`
+    <div class="civ-flex civ-flex-col civ-gap-4 civ-max-w-2xl">
+      <div>
+        <p class="civ-font-semibold civ-mb-2">Top slot</p>
+        <civ-link-card
+          href="#/benefits"
+          heading="Disability compensation"
+          description="File a claim for a service-connected disability."
+          variant="tertiary"
+        >
+          <civ-tag label="New" variant="blue"></civ-tag>
+        </civ-link-card>
+      </div>
+      <div>
+        <p class="civ-font-semibold civ-mb-2">End slot (data-civ-link-card-end)</p>
+        <civ-link-card
+          href="#/benefits"
+          heading="Disability compensation"
+          description="File a claim for a service-connected disability."
+          variant="tertiary"
+        >
+          <civ-tag data-civ-link-card-end label="In progress" variant="teal"></civ-tag>
+        </civ-link-card>
+      </div>
+      <div>
+        <p class="civ-font-semibold civ-mb-2">Both slots</p>
+        <civ-link-card
+          href="#/benefits"
+          heading="Disability compensation"
+          description="File a claim for a service-connected disability."
+          variant="tertiary"
+        >
+          <civ-tag label="Updated" variant="purple"></civ-tag>
+          <civ-tag data-civ-link-card-end label="In progress" variant="teal"></civ-tag>
+        </civ-link-card>
       </div>
     </div>
   `,

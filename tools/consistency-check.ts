@@ -286,16 +286,15 @@ const CHILD_COMPONENTS = new Set([
   'civ-segment',       // Inside CivSegmentedControl
   'civ-radio-group',   // Inside CivRadio
   'civ-button-group',  // Inside CivActionButton
-  'civ-task-group',    // Inside CivTaskList
-  'civ-task',          // Inside CivTaskList
+  'civ-list-item',     // Inside CivList
 ]);
 // Structural/display/utility components that don't need analytics
 const NO_ANALYTICS = new Set([
   'civ-fieldset', 'civ-form-field', 'civ-segment',
   'civ-card', 'civ-divider', 'civ-tag', 'civ-page-header',
-  'civ-button-group', 'civ-task-list', 'civ-task-group',
+  'civ-button-group', 'civ-list',
   'civ-skip-link', 'civ-prefill-notice', 'civ-read-only-field',
-  'civ-summary', 'civ-icon', 'civ-task',
+  'civ-summary', 'civ-icon',
   // Compound components delegate analytics to child form fields
   'civ-address', 'civ-name', 'civ-signature',
   // Orchestration components delegate to child fields/buttons

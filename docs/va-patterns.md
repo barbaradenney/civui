@@ -1030,68 +1030,58 @@ adapted for government benefit applications.
   status="2 of 5 sections complete"
 ></civ-progress-bar>
 
-<civ-task-list>
-  <civ-task-group heading="Prepare">
-    <civ-task
-      label="Check your eligibility"
-      href="#/eligibility"
-      status="complete"
-    ></civ-task>
-  </civ-task-group>
+<h3 class="civ-heading-md">Prepare</h3>
+<civ-list dividers>
+  <civ-list-item href="#/eligibility">
+    <span class="civ-block civ-font-bold">Check your eligibility</span>
+    <civ-badge data-list-item-end label="Complete" variant="success" badge-style="primary" with-icon></civ-badge>
+  </civ-list-item>
+</civ-list>
 
-  <civ-task-group heading="Fill out your application">
-    <civ-task
-      label="Personal information"
-      href="#/personal"
-      status="complete"
-    ></civ-task>
-    <civ-task
-      label="Contact information"
-      href="#/contact"
-      status="in-progress"
-      hint="Phone number needed"
-    ></civ-task>
-    <civ-task
-      label="Service history"
-      href="#/service"
-      status="not-started"
-    ></civ-task>
-    <civ-task
-      label="Disabilities and conditions"
-      href="#/disabilities"
-      status="not-started"
-    ></civ-task>
-    <civ-task
-      label="Supporting documents"
-      href="#/documents"
-      status="not-started"
-    ></civ-task>
-  </civ-task-group>
+<h3 class="civ-heading-md">Fill out your application</h3>
+<civ-list dividers>
+  <civ-list-item href="#/personal">
+    <span class="civ-block civ-font-bold">Personal information</span>
+    <civ-badge data-list-item-end label="Complete" variant="success" badge-style="primary" with-icon></civ-badge>
+  </civ-list-item>
+  <civ-list-item href="#/contact">
+    <span class="civ-block civ-font-bold">Contact information</span>
+    <span class="civ-block civ-text-sm civ-text-muted">Phone number needed</span>
+    <civ-badge data-list-item-end label="In progress" variant="info" badge-style="primary" with-icon></civ-badge>
+  </civ-list-item>
+  <civ-list-item href="#/service">
+    <span class="civ-block civ-font-bold">Service history</span>
+    <civ-badge data-list-item-end label="Not started" variant="info" badge-style="secondary" with-icon></civ-badge>
+  </civ-list-item>
+</civ-list>
 
-  <civ-task-group heading="Review and submit">
-    <civ-task
-      label="Review your application"
-      status="cannot-start"
-      hint="Complete all sections first"
-    ></civ-task>
-  </civ-task-group>
-</civ-task-list>
+<h3 class="civ-heading-md">Review and submit</h3>
+<civ-list dividers>
+  <civ-list-item>
+    <span class="civ-block civ-font-bold">Review your application</span>
+    <span class="civ-block civ-text-sm civ-text-muted">Complete all sections first</span>
+    <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
+  </civ-list-item>
+</civ-list>
 ```
+
+`<civ-badge>` carries `role="status"` and `with-icon` auto-renders the variant's semantic icon (success → check-circle, error → ✕, warning → ⚠).
 
 **Task statuses:**
 
-| Status | Visual | Meaning |
-|---|---|---|
-| `not-started` | Blue tag | User hasn't begun this chapter |
-| `in-progress` | Teal tag | Started but incomplete |
-| `complete` | Plain text, no tag | All steps done and reviewed |
-| `cannot-start` | Grey, no link | Depends on other chapters being complete first |
-| `error` | Red tag | Validation errors need attention |
+| Status | Badge |
+|---|---|
+| `not-started` | `info` secondary |
+| `in-progress` | `info` primary |
+| `complete` | `success` primary |
+| `cannot-start` | `neutral` secondary (omit `href` on the row to make it non-clickable) |
+| `error` | `error` secondary |
+| `review` | `warning` primary |
 
 **Accessibility:**
-- Each task is a link (or plain text if `cannot-start`)
-- Status is announced to screen readers via `aria-describedby`
-- Task groups use headings for navigation landmarks
+- Each clickable row is an `<a>` filling the whole `<li>`
+- Static rows are plain `<li>` with no anchor — same visual rhythm
+- Section headings are real `<h3>` elements that screen readers can navigate to
 
 ---
 
@@ -1324,7 +1314,7 @@ Book: VA Form 21-526EZ — Disability Compensation
 
 | Concept | Component |
 |---|---|
-| Task list hub | `civ-task-list` + `civ-task-group` + `civ-task` (new) |
+| Task list hub | `civ-list` + `civ-list-item` + `civ-tag` (composition pattern) |
 | Book-level progress | `civ-progress-bar` |
 | Chapter-level progress | `civ-progress-steps` or `civ-progress-bar` |
 | Chapter navigation | `civ-button` (back/continue) |
@@ -1336,10 +1326,10 @@ Book: VA Form 21-526EZ — Disability Compensation
 | Confirmation | `civ-alert` (success) + `civ-summary` |
 | Persistence | `civ-form` with `persist` + server-side draft saving |
 
-**New components needed:**
-- `civ-task-list` — container for task groups
-- `civ-task-group` — labeled group of tasks with heading
-- `civ-task` — individual task with label, href, status, and hint
+**Pattern primitives:**
+- `civ-list` — generic list container with optional `dividers`
+- `civ-list-item` — list row; set `href` to make the whole row a clickable anchor, omit for locked rows
+- `civ-badge` — semantic status indicator (`info | success | warning | error | neutral`) with `role="status"` and optional `with-icon` for the variant's semantic icon
 
 ---
 

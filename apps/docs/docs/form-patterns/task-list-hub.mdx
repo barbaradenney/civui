@@ -10,11 +10,15 @@ import StoryEmbed from "@site/src/components/StoryEmbed";
 
 For large applications with multiple chapters (personal info, service history, documents, etc.), the task list hub is the user's home base. It shows all sections with their completion status and lets users work through them in any order.
 
-Based on the [GDS Task List pattern](https://design-system.service.gov.uk/components/task-list/) adapted for government benefit applications.
+Based on the [GDS Task List pattern](https://design-system.service.gov.uk/components/task-list/) adapted for government benefit applications. Composed from `<civ-list>` + `<civ-list-item>` + `<civ-badge>` — there's no dedicated task-list component.
 
 ## Live example
 
-<StoryEmbed id="navigation-task-list--government-disability-application" />
+<StoryEmbed id="forms-patterns-task-list-hub--va-disability-application" />
+
+## All status badges
+
+<StoryEmbed id="forms-patterns-task-list-hub--all-status-badges" />
 
 ## Basic structure
 
@@ -28,80 +32,122 @@ Based on the [GDS Task List pattern](https://design-system.service.gov.uk/compon
   status="2 of 5 sections complete"
 ></civ-progress-bar>
 
-<civ-task-list>
-  <civ-task-group>
-    <h2 data-task-group-heading>Prepare</h2>
-    <civ-task label="Check your eligibility" href="#/eligibility" status="complete"></civ-task>
-  </civ-task-group>
+<h3 class="civ-heading-md">Prepare</h3>
+<civ-list dividers>
+  <civ-list-item href="#/eligibility">
+    <span class="civ-block civ-font-bold">Check your eligibility</span>
+    <civ-badge data-list-item-end label="Complete" variant="success" badge-style="primary" with-icon></civ-badge>
+  </civ-list-item>
+</civ-list>
 
-  <civ-task-group>
-    <h2 data-task-group-heading>Fill out your application</h2>
-    <civ-task label="Personal information" href="#/personal" status="complete"></civ-task>
-    <civ-task label="Contact information" href="#/contact" status="in-progress" hint="Phone number needed"></civ-task>
-    <civ-task label="Service history" href="#/service" status="not-started"></civ-task>
-    <civ-task label="Supporting documents" href="#/documents" status="not-started"></civ-task>
-  </civ-task-group>
+<h3 class="civ-heading-md">Fill out your application</h3>
+<civ-list dividers>
+  <civ-list-item href="#/personal">
+    <span class="civ-block civ-font-bold">Personal information</span>
+    <civ-badge data-list-item-end label="Complete" variant="success" badge-style="primary" with-icon></civ-badge>
+  </civ-list-item>
+  <civ-list-item href="#/contact">
+    <span class="civ-block civ-font-bold">Contact information</span>
+    <span class="civ-block civ-text-sm civ-text-muted">Phone number needed</span>
+    <civ-badge data-list-item-end label="In progress" variant="info" badge-style="primary" with-icon></civ-badge>
+  </civ-list-item>
+  <civ-list-item href="#/service">
+    <span class="civ-block civ-font-bold">Service history</span>
+    <civ-badge data-list-item-end label="Not started" variant="info" badge-style="secondary" with-icon></civ-badge>
+  </civ-list-item>
+  <civ-list-item>
+    <span class="civ-block civ-font-bold">Supporting documents</span>
+    <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
+  </civ-list-item>
+</civ-list>
 
-  <civ-task-group>
-    <h2 data-task-group-heading>Review and submit</h2>
-    <civ-task label="Review your application" status="cannot-start" hint="Complete all sections first"></civ-task>
-  </civ-task-group>
-</civ-task-list>
+<h3 class="civ-heading-md">Review and submit</h3>
+<civ-list dividers>
+  <civ-list-item>
+    <span class="civ-block civ-font-bold">Review your application</span>
+    <span class="civ-block civ-text-sm civ-text-muted">Complete all sections first</span>
+    <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
+  </civ-list-item>
+</civ-list>
 ```
 
-## Task statuses
+Setting `href` on a `<civ-list-item>` makes the whole row a clickable anchor. Omit `href` for locked rows — the row still renders with the same layout but is no longer a link, which is honest both visually and to assistive tech.
 
-<StoryEmbed id="navigation-task-list--all-statuses" />
+## Status badges
 
-| Status | Visual | Meaning |
-|--------|--------|---------|
-| `not-started` | Blue tag | User hasn't begun this section |
-| `in-progress` | Teal tag | Started but incomplete |
-| `complete` | Plain text, no tag | All steps done and reviewed |
-| `cannot-start` | Grey, no link | Depends on other sections being complete |
-| `error` | Red tag | Validation errors need attention |
-| `review` | Yellow tag | Prefilled data needs user confirmation |
+`<civ-badge>` carries `role="status"` and the `with-icon` attribute auto-renders the variant's semantic icon.
+
+| Status | Badge label | variant | badge-style | Meaning |
+|--------|-------------|---------|-------------|---------|
+| `not-started` | Not started | `info` | `secondary` | User hasn't begun this section |
+| `in-progress` | In progress | `info` | `primary` | Started but incomplete |
+| `complete` | Complete | `success` | `primary` | All steps done and reviewed |
+| `cannot-start` | Cannot start yet | `neutral` | `secondary` | Depends on other sections being complete (no `href`) |
+| `error` | Has errors | `error` | `secondary` | Validation errors need attention |
+| `review` | Needs review | `warning` | `primary` | Prefilled data needs user confirmation |
 
 ## Sequential unlocking
 
-Lock later sections until prerequisites are complete:
+Lock later sections until prerequisites are complete by **omitting the `href`** on `<civ-list-item>`. Without an `href`, the row renders as a plain `<li>` with no anchor — visually identical, but no longer a click target. Pair with the `cannot-start` badge so users see why the row is locked.
 
-<StoryEmbed id="navigation-task-list--sequential-unlocking" />
+```html
+<civ-list-item>
+  <span class="civ-block civ-font-bold">Supporting documents</span>
+  <span class="civ-block civ-text-sm civ-text-muted">Complete service history first</span>
+  <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
+</civ-list-item>
+```
 
-Tasks with `status="cannot-start"` render without an `href` — they're visible but not clickable. Add a `hint` to explain what's needed.
+## Updating status from JavaScript
 
-## With prefilled data
+When a chapter completes, find the matching `<civ-list-item>` by `data-chapter-id` and update its inner `<civ-badge>`:
 
-When data is prefilled from an authenticated source, the hub shows which sections need review vs which are ready:
-
-<StoryEmbed id="navigation-task-list--prefill-hub" />
+```js
+function setItemStatus(item, status, href) {
+  const badge = item.querySelector('civ-badge');
+  const map = {
+    'not-started':  { label: 'Not started',      variant: 'info',    style: 'secondary' },
+    'in-progress':  { label: 'In progress',      variant: 'info',    style: 'primary' },
+    'complete':     { label: 'Complete',         variant: 'success', style: 'primary' },
+    'cannot-start': { label: 'Cannot start yet', variant: 'neutral', style: 'secondary' },
+    'error':        { label: 'Has errors',       variant: 'error',   style: 'secondary' },
+    'review':       { label: 'Needs review',     variant: 'warning', style: 'primary' },
+  };
+  const def = map[status];
+  if (badge && def) {
+    badge.setAttribute('label', def.label);
+    badge.setAttribute('variant', def.variant);
+    badge.setAttribute('badge-style', def.style);
+  }
+  if (href) {
+    item.setAttribute('href', href);
+  } else {
+    item.removeAttribute('href');
+  }
+}
+```
 
 ## Chapter flow
 
-Each task links to a chapter. Inside the chapter, the user works through steps using `civ-form-step`. When complete, they return to the hub with the task marked as `complete`.
+Each row links to a chapter. Inside the chapter, the user works through steps using `civ-form-step`. When complete, they return to the hub with the row marked as `complete`.
 
 ```
 Hub → Chapter (multi-step) → Hub (updated status)
 ```
 
-## All complete
-
-When all tasks are complete, the review section unlocks:
-
-<StoryEmbed id="navigation-task-list--all-complete" />
-
 ## Accessibility
 
-- Each task is a link (or plain text if locked)
-- Status is announced to screen readers
-- Task groups use headings for landmark navigation
-- Progress bar announces completion percentage
+- Each clickable row is a real `<a>` filling the full `<li>` — works with keyboard, screen readers, and right-click "open in new tab".
+- Static (locked) rows are plain `<li>` with no anchor — assistive tech doesn't announce them as links.
+- Section headings are real `<h3>` elements that screen readers can navigate to as landmarks.
+- `<civ-badge>` carries `role="status"` so status changes are announced.
+- Progress bar announces completion percentage.
 
 ## Components used
 
-- [`civ-task-list`](/docs/components/navigation/task-list) — container
-- `civ-task-group` — section grouping with heading
-- `civ-task` — individual task with status and link
-- [`civ-progress-bar`](/docs/components/form/progress-steps#progress-bar) — overall completion
+- [`civ-list`](/docs/components/layout/list) — generic list container with optional `dividers`
+- [`civ-list-item`](/docs/components/layout/list) — list row; set `href` to make the whole row clickable, omit for locked rows
+- `civ-badge` — semantic status indicator with `role="status"` and `with-icon` for the variant's icon
+- `civ-progress-bar` — overall completion
 
-[Open in Storybook →](pathname:///civui/storybook/?path=/story/navigation-task-list--government-disability-application)
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-patterns-task-list-hub--va-disability-application)

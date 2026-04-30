@@ -47,12 +47,12 @@ export function validateGovForm(html: string): ValidateGovFormResult {
     });
   }
 
-  // Check for civ-task-list hub
-  if (!/<civ-task-list/.test(html)) {
+  // Check for civ-list hub (task list pattern)
+  if (!/<civ-list\b/.test(html)) {
     violations.push({
       rule: 'has-task-list',
       severity: 'error',
-      message: 'Missing civ-task-list hub. Every VA form needs a task list for chapter navigation.',
+      message: 'Missing civ-list hub. Every VA form needs a list of chapters (task list pattern) for navigation.',
     });
   }
 

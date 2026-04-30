@@ -185,12 +185,11 @@ ${chapterHeadings}
       }
     });
 
-    // Task list — navigate when clicking a task
-    document.querySelectorAll('civ-task').forEach(task => {
-      task.addEventListener('click', (e) => {
-        const chapterId = task.getAttribute('data-chapter-id');
-        const status = task.getAttribute('status');
-        if (chapterId && status !== 'cannot-start') {
+    // Task list — navigate when clicking a list item
+    document.querySelectorAll('civ-list-item[data-chapter-id]').forEach(item => {
+      item.addEventListener('click', (e) => {
+        const chapterId = item.getAttribute('data-chapter-id');
+        if (chapterId && item.hasAttribute('href')) {
           e.preventDefault();
           showPage(chapterId);
         }
@@ -248,34 +247,29 @@ ${chapterHeadings}
       let doneCount = 0;
       let nextUnlocked = false;
 
-      // Update each chapter task by data-chapter-id
+      // Update each chapter row by data-chapter-id
       CHAPTERS.forEach(chapterId => {
-        const task = document.querySelector('civ-task[data-chapter-id="' + chapterId + '"]');
-        if (!task) return;
+        const item = document.querySelector('civ-list-item[data-chapter-id="' + chapterId + '"]');
+        if (!item) return;
 
         if (completedChapters.has(chapterId)) {
-          task.setAttribute('status', 'complete');
-          task.setAttribute('href', '#/' + chapterId);
+          setItemStatus(item, 'complete', '#/' + chapterId);
           doneCount++;
         } else if (!nextUnlocked) {
-          task.setAttribute('status', 'not-started');
-          task.setAttribute('href', '#/' + chapterId);
+          setItemStatus(item, 'not-started', '#/' + chapterId);
           nextUnlocked = true;
         } else {
-          task.setAttribute('status', 'cannot-start');
-          task.removeAttribute('href');
+          setItemStatus(item, 'cannot-start', null);
         }
       });
 
-      // Update review task (last task, no data-chapter-id)
-      const reviewTask = document.querySelector('civ-task:not([data-chapter-id])');
-      if (reviewTask) {
+      // Update review row (marked with data-review)
+      const reviewItem = document.querySelector('civ-list-item[data-review]');
+      if (reviewItem) {
         if (doneCount >= totalChapters) {
-          reviewTask.setAttribute('status', 'not-started');
-          reviewTask.setAttribute('href', '#/review');
+          setItemStatus(reviewItem, 'not-started', '#/review');
         } else {
-          reviewTask.setAttribute('status', 'cannot-start');
-          reviewTask.removeAttribute('href');
+          setItemStatus(reviewItem, 'cannot-start', null);
         }
       }
 
@@ -285,6 +279,30 @@ ${chapterHeadings}
         const pct = Math.round((doneCount / totalChapters) * 100);
         progressBar.setAttribute('value', String(pct));
         progressBar.setAttribute('status', doneCount + ' of ' + totalChapters + ' sections complete');
+      }
+    }
+
+    const TASK_STATUS_MAP = {
+      'not-started': { label: 'Not started', variant: 'info', style: 'secondary' },
+      'in-progress': { label: 'In progress', variant: 'info', style: 'primary' },
+      'complete': { label: 'Complete', variant: 'success', style: 'primary' },
+      'cannot-start': { label: 'Cannot start yet', variant: 'neutral', style: 'secondary' },
+      'error': { label: 'Has errors', variant: 'error', style: 'secondary' },
+      'review': { label: 'Needs review', variant: 'warning', style: 'primary' },
+    };
+
+    function setItemStatus(item, status, href) {
+      const badge = item.querySelector('civ-badge');
+      const def = TASK_STATUS_MAP[status];
+      if (badge && def) {
+        badge.setAttribute('label', def.label);
+        badge.setAttribute('variant', def.variant);
+        badge.setAttribute('badge-style', def.style);
+      }
+      if (href) {
+        item.setAttribute('href', href);
+      } else {
+        item.removeAttribute('href');
       }
     }
 
@@ -383,11 +401,11 @@ ${chapterHeadings}
           });
         }
 
-        // Mark task as prefilled
+        // Mark row as prefilled
         var chapterId = review.closest('[data-chapter]');
         chapterId = chapterId ? chapterId.getAttribute('data-chapter') : '';
-        var task = document.querySelector('civ-task[data-chapter-id="' + chapterId + '"]');
-        if (task) task.setAttribute('prefilled', '');
+        var item = document.querySelector('civ-list-item[data-chapter-id="' + chapterId + '"]');
+        if (item) item.setAttribute('data-prefilled', '');
       });
 
       // Update task statuses — only the FIRST prefilled chapter gets "review"
@@ -396,15 +414,15 @@ ${chapterHeadings}
       var firstReviewSet = false;
       CHAPTERS.forEach(function(chapterId) {
         var review = document.querySelector('[data-chapter="' + chapterId + '"] [data-prefill-review]:not([hidden])');
-        var task = document.querySelector('civ-task[data-chapter-id="' + chapterId + '"]');
-        if (review && task && task.getAttribute('status') !== 'complete') {
+        var item = document.querySelector('civ-list-item[data-chapter-id="' + chapterId + '"]');
+        var badge = item && item.querySelector('civ-badge');
+        var isComplete = badge && badge.getAttribute('variant') === 'success';
+        if (review && item && !isComplete) {
           if (!firstReviewSet) {
-            task.setAttribute('status', 'review');
-            task.setAttribute('href', '#/' + chapterId);
+            setItemStatus(item, 'review', '#/' + chapterId);
             firstReviewSet = true;
           } else {
-            task.setAttribute('status', 'cannot-start');
-            task.removeAttribute('href');
+            setItemStatus(item, 'cannot-start', null);
           }
         }
       });
@@ -544,6 +562,19 @@ export default function ${toPascal(formNumber)}App() {
     return CHAPTERS[firstIncomplete] === id;
   }, [completed]);
 
+  // Maps a task status to props for <civ-badge>.
+  const statusBadgeProps = (status: string) => {
+    const map: Record<string, { label: string; variant: string; 'badge-style': string; 'with-icon': boolean }> = {
+      'not-started': { label: 'Not started', variant: 'info', 'badge-style': 'secondary', 'with-icon': true },
+      'in-progress': { label: 'In progress', variant: 'info', 'badge-style': 'primary', 'with-icon': true },
+      'complete': { label: 'Complete', variant: 'success', 'badge-style': 'primary', 'with-icon': true },
+      'cannot-start': { label: 'Cannot start yet', variant: 'neutral', 'badge-style': 'secondary', 'with-icon': true },
+      'error': { label: 'Has errors', variant: 'error', 'badge-style': 'secondary', 'with-icon': true },
+      'review': { label: 'Needs review', variant: 'warning', 'badge-style': 'primary', 'with-icon': true },
+    };
+    return map[status] || map['not-started'];
+  };
+
   const allComplete = completed.size >= CHAPTERS.length;
   const progress = Math.round((completed.size / CHAPTERS.length) * 100);
 
@@ -581,28 +612,31 @@ export default function ${toPascal(formNumber)}App() {
             status={\`\${completed.size} of ${chapters.length} sections complete\`}
           />
 
-          <civ-task-list>
-            <civ-task-group>
-              <h3 data-task-group-heading className="civ-heading-md">Fill out your application</h3>
-${chapters.map((ch, i) => `              <civ-task
-                label="${escapeHtml(ch.heading)}"
-                hint="${escapeHtml((ch as any).hint || '')}"
-                href={canNavigate('${ch.id}') ? '#/${ch.id}' : undefined}
-                status={chapterStatus('${ch.id}', ${i})}
-                onClick={() => canNavigate('${ch.id}') && navigate('${ch.id}')}
-              />`).join('\n')}
-            </civ-task-group>
-            <civ-task-group>
-              <h3 data-task-group-heading className="civ-heading-md">Review and submit</h3>
-              <civ-task
-                label="Review your application"
-                hint={allComplete ? '' : 'Complete all sections before reviewing'}
-                status={allComplete ? 'not-started' : 'cannot-start'}
-                href={allComplete ? '#/review' : undefined}
-                onClick={() => allComplete && navigate('review')}
-              />
-            </civ-task-group>
-          </civ-task-list>
+          <h3 className="civ-heading-md civ-mt-6 civ-mb-2">Fill out your application</h3>
+          <civ-list dividers>
+${chapters.map((ch, i) => `            <civ-list-item
+              data-chapter-id="${ch.id}"
+              href={canNavigate('${ch.id}') ? '#/${ch.id}' : undefined}
+              onClick={() => canNavigate('${ch.id}') && navigate('${ch.id}')}
+            >
+              <span className="civ-block civ-font-bold">${escapeHtml(ch.heading)}</span>
+              <span className="civ-block civ-text-sm civ-text-muted">${escapeHtml((ch as any).hint || '')}</span>
+              <civ-badge data-list-item-end {...statusBadgeProps(chapterStatus('${ch.id}', ${i}))} />
+            </civ-list-item>`).join('\n')}
+          </civ-list>
+
+          <h3 className="civ-heading-md civ-mt-6 civ-mb-2">Review and submit</h3>
+          <civ-list dividers>
+            <civ-list-item
+              data-review
+              href={allComplete ? '#/review' : undefined}
+              onClick={() => allComplete && navigate('review')}
+            >
+              <span className="civ-block civ-font-bold">Review your application</span>
+              {!allComplete && <span className="civ-block civ-text-sm civ-text-muted">Complete all sections before reviewing</span>}
+              <civ-badge data-list-item-end {...statusBadgeProps(allComplete ? 'not-started' : 'cannot-start')} />
+            </civ-list-item>
+          </civ-list>
         </div>
       )}
 
@@ -793,8 +827,8 @@ ${rules}
         const chapter = document.querySelector('[data-chapter="' + rule.chapterId + '"]');
         if (chapter) chapter.closest('[data-page]').hidden = !show;
         // Also update task list item
-        const task = document.querySelector('civ-task[href="#/' + rule.chapterId + '"]');
-        if (task) task.hidden = !show;
+        const item = document.querySelector('civ-list-item[data-chapter-id="' + rule.chapterId + '"]');
+        if (item) item.hidden = !show;
       }
     }
     document.addEventListener('civ-change', applyDynamicChapters);

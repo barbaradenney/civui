@@ -35,6 +35,12 @@ const UNSAFE_HREF_PATTERN = /^\s*javascript\s*:/i;
  *
  * @slot - Optional content rendered inside the anchor above the heading
  *         (e.g., a status tag).
+ * @slot end - Optional content rendered on the trailing edge of the card,
+ *             aligned vertically with the heading. Children with the
+ *             `data-civ-link-card-end` attribute are placed in this slot.
+ *             Use either `iconEnd` *or* the end slot — when both are set
+ *             they render as adjacent siblings on the trailing edge with
+ *             no separator.
  *
  * @fires civ-analytics - Analytics tracking event on click
  *
@@ -80,7 +86,10 @@ export class CivLinkCard extends LightDomSlotMixin(CivBaseElement) {
   }
 
   override _getSlotConfig(): SlotConfig {
-    return { default: '[data-civ-link-card-slot]' };
+    return {
+      'data-civ-link-card-end': '[data-civ-link-card-end-slot]',
+      default: '[data-civ-link-card-slot]',
+    };
   }
 
   override firstUpdated(): void {
@@ -99,7 +108,8 @@ export class CivLinkCard extends LightDomSlotMixin(CivBaseElement) {
       'focus-visible:civ-focus-ring',
     ].filter(Boolean).join(' ');
 
-    const hasFlank = this.iconStart || this.iconEnd;
+    const hasEndSlot = this._hasSlottedChildren('data-civ-link-card-end');
+    const useLayout = this.iconStart || this.iconEnd || hasEndSlot;
 
     return html`
       <a
@@ -108,7 +118,7 @@ export class CivLinkCard extends LightDomSlotMixin(CivBaseElement) {
         @click="${this._onClick}"
       >
         <span data-civ-link-card-slot></span>
-        ${hasFlank ? html`
+        ${useLayout ? html`
           <span class="civ-link-card__layout">
             ${this.iconStart ? html`<span class="civ-link-card__start"><civ-icon class="civ-link-card__icon" name="${this.iconStart}" aria-hidden="true"></civ-icon></span>` : nothing}
             <span class="civ-link-card__content">
@@ -118,6 +128,7 @@ export class CivLinkCard extends LightDomSlotMixin(CivBaseElement) {
                 : nothing}
             </span>
             ${this.iconEnd ? html`<span class="civ-link-card__end"><civ-icon class="civ-link-card__icon" name="${this.iconEnd}" aria-hidden="true"></civ-icon></span>` : nothing}
+            ${hasEndSlot ? html`<span class="civ-link-card__end" data-civ-link-card-end-slot></span>` : nothing}
           </span>
         ` : html`
           <span class="civ-link-card__heading">${this.heading}</span>

@@ -74,8 +74,8 @@ For architecture and internals, see `CLAUDE.md` in the repo root.
 | `<civ-race-ethnicity>` | Compound | `legend`, `ethnicity-legend`, `race-legend`, `ethnicity-error`, `race-error` | `{ value: RaceEthnicityValue }` |
 | `<civ-marriage-history>` | Compound | `legend`, `show-marriage-type`, `status-assumed` | `{ value: MarriageValue }` |
 | `<civ-service-history>` | Compound | `legend`, `show-service-number` | `{ value: ServicePeriodValue }` |
-| `<civ-task-list>` | Navigation | — | — (uses `<civ-task-group>` and `<civ-task>` children) |
-| `<civ-task>` | Navigation | `label`, `hint`, `href`, `status`, `prefilled` | — |
+| `<civ-list>` | Layout | `dividers` (boolean) | — |
+| `<civ-list-item>` | Layout | `href` (optional, makes whole row clickable). Trailing content via `data-list-item-end` attribute on a child. | `civ-analytics` |
 | `<civ-skip-link>` | Navigation | `label`, `href` | — |
 
 **Form input components** (text-input, textarea, select, combobox, date-picker, file-upload) are bare controls — wrap in `<civ-form-field>` for label/hint/error rendering. All have: `name`, `value`, `required`, `disabled`.
@@ -779,26 +779,39 @@ Informational banner for chapter review pages explaining that data was prefilled
 <civ-prefill-notice profile-href="/profile"></civ-prefill-notice>
 ```
 
-#### civ-task (in @civui/navigation)
+#### Task list pattern (using civ-list + civ-list-item)
 
-Individual task row within a task list. Renders label, hint, status tag, and optional link.
+There is no dedicated `civ-task` component. The "task list" is a usage pattern: compose `<civ-list>` + `<civ-list-item>` + `<civ-badge>`. Setting `href` on a list item makes the whole row a clickable anchor; omit `href` for locked rows. The status badge uses the `data-list-item-end` attribute. `<civ-badge>` carries `role="status"` and `with-icon` auto-renders the variant's semantic icon.
 
-**Props:**
-- `label` -- Task name
-- `hint` -- Optional hint text below the label
-- `href` -- Navigation target (omit for locked tasks)
-- `status` -- `'not-started'` | `'in-progress'` | `'complete'` | `'cannot-start'` | `'error'` | `'review'`
-- `prefilled` -- Boolean; shows a default prefill hint when no custom hint is set
+**Status badge mapping:**
+
+| Status | label | variant | badge-style |
+|---|---|---|---|
+| not-started | Not started | info | secondary |
+| in-progress | In progress | info | primary |
+| complete | Complete | success | primary |
+| cannot-start | Cannot start yet | neutral | secondary |
+| error | Has errors | error | secondary |
+| review | Needs review | warning | primary |
 
 **Example:**
 ```html
-<civ-task
-  label="Contact information"
-  hint="Phone, email, and mailing address"
-  href="#/contact"
-  status="review"
-  prefilled
-></civ-task>
+<h3 class="civ-heading-md">Fill out your application</h3>
+<civ-list dividers>
+  <civ-list-item href="#/personal">
+    <span class="civ-block civ-font-bold">Personal information</span>
+    <civ-badge data-list-item-end label="Complete" variant="success" badge-style="primary" with-icon></civ-badge>
+  </civ-list-item>
+  <civ-list-item href="#/contact">
+    <span class="civ-block civ-font-bold">Contact information</span>
+    <span class="civ-block civ-text-sm civ-text-muted">Phone needed</span>
+    <civ-badge data-list-item-end label="In progress" variant="info" badge-style="primary" with-icon></civ-badge>
+  </civ-list-item>
+  <civ-list-item>  <!-- no href = locked, same visual rhythm -->
+    <span class="civ-block civ-font-bold">Service history</span>
+    <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
+  </civ-list-item>
+</civ-list>
 ```
 
 #### Prefill chapter flow pattern
@@ -809,7 +822,7 @@ The recommended flow for multi-chapter government forms with prefilled data:
 Task List Hub → Chapter Prefill Review → (Edit Steps if needed) → Save & Complete → Hub
 ```
 
-1. **Hub** -- `civ-task-list` with `civ-task` items. Prefilled chapters show `status="review"` and `prefilled` attribute.
+1. **Hub** -- `civ-list` with `civ-list-item` rows. Prefilled chapters mark themselves with `data-prefilled` and use the `review` badge variant (`<civ-badge variant="warning" badge-style="primary">Needs review</civ-badge>`).
 2. **Chapter review** -- `civ-prefill-notice` banner + `civ-summary` showing prefilled data with edit links. Locked sections link to profile settings.
 3. **Edit step** -- Standard form fields for editing a specific piece of data. "Update and continue" returns to chapter review.
 4. **Complete** -- "Save and complete" marks the chapter done and returns to the hub.

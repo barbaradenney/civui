@@ -22,13 +22,13 @@ Build order: `tokens → core → layout → navigation → actions, overlays �
 | `@civui/core` | `packages/core/` | Base classes, a11y utilities, analytics, date utils, form-field wrappers |
 | `@civui/actions` | `packages/actions/` | Action components (button, action-button, button-group, filter-chip, action-link) |
 | `@civui/overlays` | `packages/overlays/` | Overlay components (modal, action-sheet) |
-| `@civui/layout` | `packages/layout/` | Layout components (card, divider, input-group, page-header, tag) |
+| `@civui/layout` | `packages/layout/` | Layout components (card, divider, input-group, list, page-header, tag) |
 | `@civui/inputs` | `packages/inputs/` | Input components (text-input, textarea, select, combobox, date-picker, file-upload, toggle, yes-no) + preset wrappers (ssn, ein, phone, email, zip, currency, routing-number, va-file-number, country) |
 | `@civui/controls` | `packages/controls/` | Selection controls (checkbox, radio, segmented-control) |
 | `@civui/compound` | `packages/compound/` | Compound fields (address, name, direct-deposit, signature, race-ethnicity, relationship, marriage-history, service-history) |
 | `@civui/form-patterns` | `packages/form-patterns/` | Form orchestration (form, form-step, repeater, summary, prefill, progress-steps, conditional) |
 | `@civui/feedback` | `packages/feedback/` | Feedback components (alert, badge, count) |
-| `@civui/navigation` | `packages/navigation/` | Navigation components (skip-link, task-list, link, link-card) |
+| `@civui/navigation` | `packages/navigation/` | Navigation components (skip-link, link, link-card) |
 | `@civui/test-utils` | `packages/test-utils/` | Test helpers: `fixture`, `cleanupFixtures`, `elementUpdated`, `pressKey`, `typeText` |
 | `@civui/cli` | `packages/cli/` | CLI tooling |
 | `@civui/content` | `packages/content/` | Content/copy management |

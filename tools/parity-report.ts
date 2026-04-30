@@ -429,8 +429,7 @@ function discoverComponents(): ComponentMapping[] {
   // Native files that contain multiple components (e.g., CivRadio.swift has both CivRadio and CivRadioGroup)
   const nativeMultiFiles: Record<string, string> = {
     'RadioGroup': 'Radio', // CivRadioGroup is inside CivRadio.swift/CivRadio.kt
-    'TaskGroup': 'TaskList', // CivTaskGroup is inside CivTaskList.swift/CivTaskList.kt
-    'Task': 'TaskList', // CivTask is inside CivTaskList.swift/CivTaskList.kt
+    'ListItem': 'List', // CivListItem is inside CivList.swift/CivList.kt
     'ButtonGroup': 'ActionButton', // CivButtonGroup is inside CivActionButton.swift/CivActionButton.kt
   };
 

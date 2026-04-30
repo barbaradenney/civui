@@ -91,27 +91,40 @@ CivUI supports two navigation patterns that work together:
 The task list shows all chapters and their completion status. It serves as the central navigation hub:
 
 ```html
-<civ-task-list>
-  <civ-task-group>
-    <h3 data-task-group-heading class="civ-heading-md">Personal information</h3>
-    <civ-task label="Name and date of birth" href="#/personal/name" status="complete"></civ-task>
-    <civ-task label="Contact information" href="#/personal/contact" status="in-progress"></civ-task>
-  </civ-task-group>
+<h3 class="civ-heading-md">Personal information</h3>
+<civ-list dividers>
+  <civ-list-item href="#/personal/name">
+    <span class="civ-block civ-font-bold">Name and date of birth</span>
+    <civ-badge data-list-item-end label="Complete" variant="success" badge-style="primary" with-icon></civ-badge>
+  </civ-list-item>
+  <civ-list-item href="#/personal/contact">
+    <span class="civ-block civ-font-bold">Contact information</span>
+    <civ-badge data-list-item-end label="In progress" variant="info" badge-style="primary" with-icon></civ-badge>
+  </civ-list-item>
+</civ-list>
 
-  <civ-task-group>
-    <h3 data-task-group-heading class="civ-heading-md">Service history</h3>
-    <civ-task label="Military service" href="#/service/history" status="not-started"></civ-task>
-    <civ-task label="Service-connected conditions" href="#/service/conditions" status="cannot-start"></civ-task>
-  </civ-task-group>
+<h3 class="civ-heading-md">Service history</h3>
+<civ-list dividers>
+  <civ-list-item href="#/service/history">
+    <span class="civ-block civ-font-bold">Military service</span>
+    <civ-badge data-list-item-end label="Not started" variant="info" badge-style="secondary" with-icon></civ-badge>
+  </civ-list-item>
+  <civ-list-item>
+    <span class="civ-block civ-font-bold">Service-connected conditions</span>
+    <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
+  </civ-list-item>
+</civ-list>
 
-  <civ-task-group>
-    <h3 data-task-group-heading class="civ-heading-md">Review and submit</h3>
-    <civ-task label="Review your answers" href="#/review" status="cannot-start"></civ-task>
-  </civ-task-group>
-</civ-task-list>
+<h3 class="civ-heading-md">Review and submit</h3>
+<civ-list dividers>
+  <civ-list-item>
+    <span class="civ-block civ-font-bold">Review your answers</span>
+    <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
+  </civ-list-item>
+</civ-list>
 ```
 
-Task statuses: `not-started`, `in-progress`, `complete`, `cannot-start`.
+Setting `href` on a `<civ-list-item>` makes the whole row a clickable anchor; omit `href` for locked rows. The status badge uses the `data-list-item-end` attribute to flow to the trailing edge. `<civ-badge>` carries `role="status"` and `with-icon` auto-renders the variant's semantic icon. Status mapping: `not-started → info`, `in-progress → info primary`, `complete → success primary`, `cannot-start → neutral`, `error → error`, `review → warning primary`.
 
 ### Form Step Navigation
 
@@ -255,9 +268,8 @@ Workflow features are generated with:
 | Component | Purpose |
 |-----------|---------|
 | `<civ-page-header>` | Page title with eyebrow and subheading |
-| `<civ-task-list>` | Task list hub showing chapter statuses |
-| `<civ-task-group>` | Group of related tasks within the list |
-| `<civ-task>` | Individual task with label, href, and status |
+| `<civ-list>` | Generic list container; use for task list hub showing chapter statuses |
+| `<civ-list-item>` | List row; set `href` to make the whole row clickable, omit for static rows |
 | `<civ-progress-steps>` | Linear step progress indicator |
 | `<civ-form>` | Form wrapper with validation and error summary |
 | `<civ-yes-no>` | Yes/No radio group |

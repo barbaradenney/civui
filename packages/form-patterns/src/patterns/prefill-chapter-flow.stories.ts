@@ -10,7 +10,7 @@ import '@civui/feedback';
 import '@civui/navigation';
 import '@civui/navigation/link';
 import '@civui/actions/button';
-import '@civui/layout/tag';
+import '@civui/layout/list';
 import '@civui/layout/divider';
 import type { CivSummary } from '../summary/civ-summary.js';
 
@@ -61,25 +61,46 @@ export const Step1_Hub: Story = {
       <h1 class="civ-heading-xl civ-mb-2">Apply for disability compensation</h1>
       <p class="civ-text-muted civ-mb-4">VA Form 21-526EZ</p>
 
-      <civ-task-list>
-        <civ-task-group>
-          <h3 data-task-group-heading class="civ-heading-md">Your information</h3>
-          <civ-task label="Personal information" hint="Name, date of birth, Social Security number" href="#/personal" status="review" prefilled></civ-task>
-          <civ-task label="Contact information" hint="Phone, email, and mailing address" status="cannot-start" prefilled></civ-task>
-        </civ-task-group>
+      <h3 class="civ-heading-md civ-mt-6 civ-mb-2">Your information</h3>
+      <civ-list dividers>
+        <civ-list-item href="#/personal" data-prefilled>
+          <span class="civ-block civ-font-bold">Personal information</span>
+          <span class="civ-block civ-text-sm civ-text-muted">Name, date of birth, Social Security number</span>
+          <civ-badge data-list-item-end label="Needs review" variant="warning" badge-style="primary" with-icon></civ-badge>
+        </civ-list-item>
+        <civ-list-item data-prefilled>
+          <span class="civ-block civ-font-bold">Contact information</span>
+          <span class="civ-block civ-text-sm civ-text-muted">Phone, email, and mailing address</span>
+          <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
+        </civ-list-item>
+      </civ-list>
 
-        <civ-task-group>
-          <h3 data-task-group-heading class="civ-heading-md">Your claim</h3>
-          <civ-task label="Service history" hint="Branch, dates, and character of service" status="cannot-start"></civ-task>
-          <civ-task label="Disabilities" hint="Conditions you are claiming" status="cannot-start"></civ-task>
-          <civ-task label="Supporting documents" hint="DD214 and medical records" status="cannot-start"></civ-task>
-        </civ-task-group>
+      <h3 class="civ-heading-md civ-mt-6 civ-mb-2">Your claim</h3>
+      <civ-list dividers>
+        <civ-list-item>
+          <span class="civ-block civ-font-bold">Service history</span>
+          <span class="civ-block civ-text-sm civ-text-muted">Branch, dates, and character of service</span>
+          <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
+        </civ-list-item>
+        <civ-list-item>
+          <span class="civ-block civ-font-bold">Disabilities</span>
+          <span class="civ-block civ-text-sm civ-text-muted">Conditions you are claiming</span>
+          <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
+        </civ-list-item>
+        <civ-list-item>
+          <span class="civ-block civ-font-bold">Supporting documents</span>
+          <span class="civ-block civ-text-sm civ-text-muted">DD214 and medical records</span>
+          <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
+        </civ-list-item>
+      </civ-list>
 
-        <civ-task-group>
-          <h3 data-task-group-heading class="civ-heading-md">Review and submit</h3>
-          <civ-task label="Review your application" status="cannot-start"></civ-task>
-        </civ-task-group>
-      </civ-task-list>
+      <h3 class="civ-heading-md civ-mt-6 civ-mb-2">Review and submit</h3>
+      <civ-list dividers>
+        <civ-list-item>
+          <span class="civ-block civ-font-bold">Review your application</span>
+          <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
+        </civ-list-item>
+      </civ-list>
     </div>
   `,
 };
@@ -267,25 +288,46 @@ export const Step5_HubAfterComplete: Story = {
       <h1 class="civ-heading-xl civ-mb-2">Apply for disability compensation</h1>
       <p class="civ-text-muted civ-mb-4">VA Form 21-526EZ</p>
 
-      <civ-task-list>
-        <civ-task-group>
-          <h3 data-task-group-heading class="civ-heading-md">Your information</h3>
-          <civ-task label="Personal information" hint="Name, date of birth, Social Security number" href="#/personal" status="complete"></civ-task>
-          <civ-task label="Contact information" hint="Phone, email, and mailing address" href="#/contact" status="complete"></civ-task>
-        </civ-task-group>
+      <h3 class="civ-heading-md civ-mt-6 civ-mb-2">Your information</h3>
+      <civ-list dividers>
+        <civ-list-item href="#/personal">
+          <span class="civ-block civ-font-bold">Personal information</span>
+          <span class="civ-block civ-text-sm civ-text-muted">Name, date of birth, Social Security number</span>
+          <civ-badge data-list-item-end label="Complete" variant="success" badge-style="primary" with-icon></civ-badge>
+        </civ-list-item>
+        <civ-list-item href="#/contact">
+          <span class="civ-block civ-font-bold">Contact information</span>
+          <span class="civ-block civ-text-sm civ-text-muted">Phone, email, and mailing address</span>
+          <civ-badge data-list-item-end label="Complete" variant="success" badge-style="primary" with-icon></civ-badge>
+        </civ-list-item>
+      </civ-list>
 
-        <civ-task-group>
-          <h3 data-task-group-heading class="civ-heading-md">Your claim</h3>
-          <civ-task label="Service history" hint="Branch, dates, and character of service" href="#/service" status="not-started"></civ-task>
-          <civ-task label="Disabilities" hint="Conditions you are claiming" status="cannot-start"></civ-task>
-          <civ-task label="Supporting documents" hint="DD214 and medical records" status="cannot-start"></civ-task>
-        </civ-task-group>
+      <h3 class="civ-heading-md civ-mt-6 civ-mb-2">Your claim</h3>
+      <civ-list dividers>
+        <civ-list-item href="#/service">
+          <span class="civ-block civ-font-bold">Service history</span>
+          <span class="civ-block civ-text-sm civ-text-muted">Branch, dates, and character of service</span>
+          <civ-badge data-list-item-end label="Not started" variant="info" badge-style="secondary" with-icon></civ-badge>
+        </civ-list-item>
+        <civ-list-item>
+          <span class="civ-block civ-font-bold">Disabilities</span>
+          <span class="civ-block civ-text-sm civ-text-muted">Conditions you are claiming</span>
+          <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
+        </civ-list-item>
+        <civ-list-item>
+          <span class="civ-block civ-font-bold">Supporting documents</span>
+          <span class="civ-block civ-text-sm civ-text-muted">DD214 and medical records</span>
+          <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
+        </civ-list-item>
+      </civ-list>
 
-        <civ-task-group>
-          <h3 data-task-group-heading class="civ-heading-md">Review and submit</h3>
-          <civ-task label="Review your application" status="cannot-start"></civ-task>
-        </civ-task-group>
-      </civ-task-list>
+      <h3 class="civ-heading-md civ-mt-6 civ-mb-2">Review and submit</h3>
+      <civ-list dividers>
+        <civ-list-item>
+          <span class="civ-block civ-font-bold">Review your application</span>
+          <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
+        </civ-list-item>
+      </civ-list>
     </div>
   `,
 };

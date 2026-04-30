@@ -190,15 +190,23 @@ generate_signature_block(schema, { type: "typed", legalText: "I certify..." })
 
 ### Add a task list
 \`\`\`html
-<civ-task-list>
-  <civ-task-group>
-    <h3 data-task-group-heading class="civ-heading-md">Section</h3>
-    <civ-task label="Step 1" href="#/step1" status="complete"></civ-task>
-    <civ-task label="Step 2" href="#/step2" status="in-progress"></civ-task>
-    <civ-task label="Step 3" status="cannot-start"></civ-task>
-  </civ-task-group>
-</civ-task-list>
+<h3 class="civ-heading-md">Section</h3>
+<civ-list dividers>
+  <civ-list-item href="#/step1">
+    <span class="civ-block civ-font-bold">Step 1</span>
+    <civ-badge data-list-item-end label="Complete" variant="success" badge-style="primary" with-icon></civ-badge>
+  </civ-list-item>
+  <civ-list-item href="#/step2">
+    <span class="civ-block civ-font-bold">Step 2</span>
+    <civ-badge data-list-item-end label="In progress" variant="info" badge-style="primary" with-icon></civ-badge>
+  </civ-list-item>
+  <civ-list-item>
+    <span class="civ-block civ-font-bold">Step 3</span>
+    <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
+  </civ-list-item>
+</civ-list>
 \`\`\`
+Setting \`href\` on a \`civ-list-item\` makes the whole row clickable; omit \`href\` for locked rows. Status badges use the \`data-list-item-end\` attribute to flow to the trailing edge. \`<civ-badge>\` carries \`role="status"\` and supports \`with-icon\` for the variant's semantic icon (success → check-circle, error → ✕, warning → ⚠).
 
 ### Validate accessibility
 \`\`\`

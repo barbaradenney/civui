@@ -2365,62 +2365,6 @@
     white-space: nowrap;
   }
 
-  /* ── Task List ─────────────────────────────────────────────── */
-
-  .civ-task-list {
-    @apply civ-mb-4;
-  }
-
-  .civ-task-group__list {
-    @apply civ-list-none civ-p-0 civ-m-0;
-  }
-
-  .civ-task {
-    @apply civ-flex civ-justify-between civ-items-start civ-py-5 civ-px-0;
-    border-bottom: 1px solid var(--civ-color-base-lighter);
-  }
-
-  @media (max-width: 480px) {
-    .civ-task {
-      @apply civ-flex-col-reverse civ-items-start civ-gap-1;
-    }
-    .civ-task__status {
-      margin-inline-start: 0 !important;
-    }
-  }
-
-  .civ-task:first-child {
-    border-top: 1px solid var(--civ-color-base-lighter);
-  }
-
-  .civ-task-group .civ-task:first-child {
-    border-top: none;
-  }
-
-  civ-task:last-child .civ-task {
-    border-bottom: none;
-  }
-
-  .civ-task__content {
-    @apply civ-flex-1 civ-min-w-0;
-  }
-
-  .civ-task__label {
-    @apply civ-font-bold civ-m-0;
-    font-size: var(--civ-typography-fontSize-base);
-    color: var(--civ-color-base-darkest);
-  }
-
-  .civ-task__hint {
-    @apply civ-m-0 civ-mt-0;
-    font-size: var(--civ-typography-fontSize-sm);
-    color: var(--civ-color-base-dark);
-  }
-
-  .civ-task__status {
-    @apply civ-ms-3 civ-flex-shrink-0;
-  }
-
   /* ── Link Card ────────────────────────────────────────────── */
 
   .civ-link-card {

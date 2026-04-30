@@ -2,6 +2,8 @@
 import './card/civ-card.js';
 import './divider/civ-divider.js';
 import './input-group/civ-input-group.js';
+import './list/civ-list.js';
+import './list/civ-list-item.js';
 import './page-header/civ-page-header.js';
 import './tag/civ-tag.js';
 import './button-group/civ-button-group.js';
@@ -15,6 +17,9 @@ export { CivDivider } from './divider/index.js';
 
 // Input Group
 export { CivInputGroup } from './input-group/index.js';
+
+// List
+export { CivList, CivListItem } from './list/index.js';
 
 // Page Header
 export { CivPageHeader } from './page-header/index.js';

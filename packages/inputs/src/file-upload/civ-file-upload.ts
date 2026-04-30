@@ -283,20 +283,19 @@ export class CivFileUpload extends CivFormElement {
           ? nothing
           : this.variant === 'compact'
           ? html`
-            <div class="civ-flex civ-gap-2 civ-items-center">
-              <span class="civ-input civ-flex-1 civ-truncate civ-text-muted">
+            <button
+              type="button"
+              class="civ-flex civ-gap-2 civ-items-center civ-w-full civ-bg-transparent civ-border-0 civ-p-0 civ-cursor-pointer"
+              @click="${this._onDropzoneClick}"
+              ?disabled="${this.disabled}"
+            >
+              <span class="civ-input civ-flex-1 civ-truncate civ-text-start">
                 ${this._files.length > 0
                   ? this._files.map(f => f.name).join(', ')
                   : (this.dragText || t('fileUploadNoFileChosen'))}
               </span>
-              <civ-action-button
-                variant="secondary"
-                label="${this.browseText || t('fileUploadBrowseText')}"
-                @click="${this._onDropzoneClick}"
-                ?disabled="${this.disabled}"
-                class="civ-shrink-0"
-              ></civ-action-button>
-            </div>`
+              <span class="civ-btn civ-btn--secondary civ-shrink-0 civ-text-sm">${this.browseText || t('fileUploadBrowseText')}</span>
+            </button>`
           : html`
             <button
               type="button"
@@ -312,16 +311,15 @@ export class CivFileUpload extends CivFormElement {
               aria-describedby="${[this._ariaDescribedBy, this._files.length > 0 ? this._filesListId : ''].filter(Boolean).join(' ') || nothing}"
               data-dragging="${this._dragging ? '' : nothing}"
             >
-              <civ-icon name="upload" size="${this.variant === 'full' ? '2.5em' : '1.5em'}" class="civ-block civ-mb-2 civ-dropzone__icon"></civ-icon>
-              <span class="civ-block civ-text-body civ-mb-3 civ-text-muted">
+              <span class="civ-block civ-text-body civ-mb-3">
                 ${this.dragText || t('fileUploadDragText')}
               </span>
               <span class="civ-btn civ-btn--tertiary civ-text-sm">${this.browseText || t('fileUploadBrowseText')}</span>
               ${this.accept
-                ? html`<span class="civ-block civ-text-sm civ-text-muted civ-mt-1">${this.acceptedLabel || t('fileUploadAcceptedLabel')}${formatAcceptedTypes(this.accept)}</span>`
+                ? html`<span class="civ-block civ-text-sm civ-mt-1">${this.acceptedLabel || t('fileUploadAcceptedLabel')}${formatAcceptedTypes(this.accept)}</span>`
                 : nothing}
               ${this.maxSize > 0
-                ? html`<span class="civ-block civ-text-sm civ-text-muted civ-mt-0.5">${this.maxSizeLabel || t('fileUploadMaxSizeLabel')}${formatFileSize(this.maxSize)}</span>`
+                ? html`<span class="civ-block civ-text-sm civ-mt-0.5">${this.maxSizeLabel || t('fileUploadMaxSizeLabel')}${formatFileSize(this.maxSize)}</span>`
                 : nothing}
             </button>`}
 

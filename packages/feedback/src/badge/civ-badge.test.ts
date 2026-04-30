@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach } from 'vitest';
-import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
+import { fixture, cleanupFixtures } from '@civui/test-utils';
 import './civ-badge.js';
 import type { CivBadge } from './civ-badge.js';
 
@@ -14,57 +14,24 @@ describe('civ-badge', () => {
 
   it('defaults to neutral variant', async () => {
     const el = await fixture<CivBadge>('<civ-badge label="Draft"></civ-badge>');
-    const badge = el.querySelector('.civ-badge')!;
-    expect(badge.className).toContain('civ-badge--neutral');
+    expect(el.querySelector('.civ-badge')!.className).toContain('civ-badge--neutral');
   });
 
   it('applies semantic variant classes', async () => {
     for (const variant of ['info', 'warning', 'error', 'success', 'neutral'] as const) {
       const el = await fixture<CivBadge>(`<civ-badge label="x" variant="${variant}"></civ-badge>`);
-      const badge = el.querySelector('.civ-badge')!;
-      expect(badge.className).toContain(`civ-badge--${variant}`);
+      expect(el.querySelector('.civ-badge')!.className).toContain(`civ-badge--${variant}`);
     }
   });
 
-  it('always has role="status"', async () => {
+  it('always has role="status" in label mode', async () => {
     const el = await fixture<CivBadge>('<civ-badge label="Pending"></civ-badge>');
     expect(el.querySelector('[role="status"]')).not.toBeNull();
   });
 
-  it('renders count instead of label when count is set', async () => {
-    const el = await fixture<CivBadge>('<civ-badge label="ignored" count="5"></civ-badge>');
-    const badge = el.querySelector('.civ-badge')!;
-    expect(badge.textContent).toBe('5');
-  });
-
-  it('renders count of 0 (does not fall back to label)', async () => {
-    const el = await fixture<CivBadge>('<civ-badge label="ignored" count="0"></civ-badge>');
-    const badge = el.querySelector('.civ-badge')!;
-    expect(badge.textContent).toBe('0');
-  });
-
-  it('renders {max}+ when count exceeds default max of 99', async () => {
-    const el = await fixture<CivBadge>('<civ-badge count="150"></civ-badge>');
-    const badge = el.querySelector('.civ-badge')!;
-    expect(badge.textContent).toBe('99+');
-  });
-
-  it('respects custom max prop', async () => {
-    const el = await fixture<CivBadge>('<civ-badge count="25" max="9"></civ-badge>');
-    const badge = el.querySelector('.civ-badge')!;
-    expect(badge.textContent).toBe('9+');
-  });
-
-  it('renders exact count when at the max threshold', async () => {
-    const el = await fixture<CivBadge>('<civ-badge count="99"></civ-badge>');
-    const badge = el.querySelector('.civ-badge')!;
-    expect(badge.textContent).toBe('99');
-  });
-
-  it('renders empty when label is empty and count is null', async () => {
+  it('renders empty when label is empty', async () => {
     const el = await fixture<CivBadge>('<civ-badge></civ-badge>');
-    const badge = el.querySelector('.civ-badge')!;
-    expect(badge.textContent?.trim()).toBe('');
+    expect(el.querySelector('.civ-badge')!.textContent?.trim()).toBe('');
   });
 
   it('renders dot mode with no text content', async () => {
@@ -89,15 +56,6 @@ describe('civ-badge', () => {
     expect(badge.hasAttribute('aria-label')).toBe(false);
   });
 
-  it('updates rendered text reactively when count changes', async () => {
-    const el = await fixture<CivBadge>('<civ-badge count="3"></civ-badge>');
-    expect(el.querySelector('.civ-badge')!.textContent).toBe('3');
-
-    el.count = 7;
-    await elementUpdated(el);
-    expect(el.querySelector('.civ-badge')!.textContent).toBe('7');
-  });
-
   it('reflects dot attribute', async () => {
     const el = await fixture<CivBadge>('<civ-badge dot></civ-badge>');
     expect(el.hasAttribute('dot')).toBe(true);
@@ -113,8 +71,7 @@ describe('civ-badge', () => {
 
     it('applies primary style class', async () => {
       const el = await fixture<CivBadge>('<civ-badge label="x" variant="error" badge-style="primary"></civ-badge>');
-      const badge = el.querySelector('.civ-badge')!;
-      expect(badge.className).toContain('civ-badge--style-primary');
+      expect(el.querySelector('.civ-badge')!.className).toContain('civ-badge--style-primary');
     });
 
     it('applies primary style for all variants', async () => {
@@ -132,14 +89,12 @@ describe('civ-badge', () => {
   describe('spacing', () => {
     it('defaults to default spacing (no --sm class)', async () => {
       const el = await fixture<CivBadge>('<civ-badge label="x"></civ-badge>');
-      const badge = el.querySelector('.civ-badge')!;
-      expect(badge.className).not.toContain('civ-badge--sm');
+      expect(el.querySelector('.civ-badge')!.className).not.toContain('civ-badge--sm');
     });
 
     it('applies civ-badge--sm when spacing="sm"', async () => {
       const el = await fixture<CivBadge>('<civ-badge label="x" spacing="sm"></civ-badge>');
-      const badge = el.querySelector('.civ-badge')!;
-      expect(badge.className).toContain('civ-badge--sm');
+      expect(el.querySelector('.civ-badge')!.className).toContain('civ-badge--sm');
     });
   });
 
@@ -150,7 +105,7 @@ describe('civ-badge', () => {
     });
 
     it('adds civ-badge--overlay class when overlay is set', async () => {
-      const el = await fixture<CivBadge>('<civ-badge count="3" variant="error" overlay></civ-badge>');
+      const el = await fixture<CivBadge>('<civ-badge label="New" variant="error" overlay></civ-badge>');
       expect(el.querySelector('.civ-badge')!.className).toContain('civ-badge--overlay');
     });
 
@@ -164,15 +119,6 @@ describe('civ-badge', () => {
       const badge = el.querySelector('.civ-badge')!;
       expect(badge.className).toContain('civ-badge--dot');
       expect(badge.className).toContain('civ-badge--overlay');
-    });
-
-    it('keeps a single overlay class regardless of dir (CSS handles RTL via [dir="rtl"])', async () => {
-      // Sanity check that we don't add a separate class for RTL — the CSS rule
-      // [dir="rtl"] .civ-badge--overlay { transform: ... } handles the flip.
-      const el = await fixture<CivBadge>('<civ-badge overlay count="3"></civ-badge>');
-      const badge = el.querySelector('.civ-badge')!;
-      const overlayClasses = Array.from(badge.classList).filter((c) => c.includes('overlay'));
-      expect(overlayClasses).toEqual(['civ-badge--overlay']);
     });
   });
 });

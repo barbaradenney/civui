@@ -1,0 +1,104 @@
+---
+title: Count
+sidebar_position: 5
+sidebar_label: Count
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
+# Count
+
+`<civ-count>`
+
+A numeric annotation — match counts on filter chips, item counts in navigation, notification counters. Lighter chrome than [`civ-badge`](./badge) so it composes inside other components without competing visually.
+
+For status text or dot indicators use [`civ-badge`](./badge). For categorization labels use [`civ-tag`](../layout/tag).
+
+## Examples
+
+### Default
+
+<StoryEmbed id="feedback-count--default" />
+
+### Styles
+
+<StoryEmbed id="feedback-count--styles" />
+
+### Spacing
+
+<StoryEmbed id="feedback-count--spacing" />
+
+### Overflow
+
+<StoryEmbed id="feedback-count--overflow" />
+
+### Notification overlay
+
+<StoryEmbed id="feedback-count--notification-overlay" />
+
+### Inline in chips
+
+<StoryEmbed id="feedback-count--inline-in-chips" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/feedback-count--default)
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `count` | `number \| null` | `null` | Numeric value to render. `null` means render nothing. |
+| `max` | `number` | `99` | Overflow threshold; values above render as `{max}+` |
+| `variant` | `'info' \| 'warning' \| 'error' \| 'success' \| 'neutral'` | `'neutral'` | Semantic color |
+| `count-style` | `'primary' \| 'secondary'` | `'secondary'` | `secondary` is bare colored text (for inline use); `primary` is a filled rounded pill (for standalone or notification counters) |
+| `spacing` | `'default' \| 'sm'` | `'default'` | Compact size |
+| `overlay` | `boolean` | `false` | Position absolutely in the top-end corner of a relatively-positioned parent |
+| `live` | `'off' \| 'polite' \| 'assertive'` | `'off'` | Controls `aria-live` and `role="status"`. Default `off` — use `polite` for counters that change as data updates and should announce. |
+
+## Modes
+
+### Inline (default — secondary style)
+
+Bare colored text that inherits its parent's color. Sits inside chips, list items, navigation links without adding chrome.
+
+```html
+<span>Inbox <civ-count count="12"></civ-count></span>
+<civ-filter-chip label="Healthcare" count="24"></civ-filter-chip>
+```
+
+### Pill (primary style)
+
+Filled rounded pill — for standalone counters or notification badges.
+
+```html
+<civ-count count="5" variant="info" count-style="primary"></civ-count>
+<civ-count count="150" max="99" variant="error" count-style="primary"></civ-count>
+```
+
+### Overlay
+
+Absolute-positioned over a relative parent. Pair with [`civ-badge-anchor`](./badge#notification-overlay) for the icon-with-counter pattern:
+
+```html
+<button class="civ-badge-anchor">
+  <civ-icon name="mail" size="lg"></civ-icon>
+  <civ-count overlay count="3" variant="error" count-style="primary" live="polite"></civ-count>
+</button>
+```
+
+## Accessibility
+
+- Counts are static annotations by default (`live="off"`), so they don't add live-region noise to nearby labels.
+- Set `live="polite"` for **inbox-style counters** that change as data arrives — screen readers will announce "Inbox 13" when the value updates.
+- Set `live="assertive"` for urgent updates (use sparingly).
+- The numeric value uses `font-variant-numeric: tabular-nums` so digit widths align across renders.
+
+## Component selection
+
+| Use case | Component |
+|----------|-----------|
+| Match count in a filter chip | `civ-count` (used internally by `civ-filter-chip`) |
+| Inbox / mailbox counter (changes over time) | `civ-count` with `live="polite"` |
+| Notification badge over an icon | `civ-count` with `overlay` and `count-style="primary"` |
+| Static status pill ("Approved") | [`civ-badge`](./badge) |
+| Notification dot (no number) | [`civ-badge`](./badge) with `dot` |
+| Categorization label | [`civ-tag`](../layout/tag) |

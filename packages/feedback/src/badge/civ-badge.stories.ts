@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import './civ-badge.js';
+import '@civui/feedback/count';
 
 const meta: Meta = {
   title: 'Feedback/Badge',
@@ -21,15 +22,14 @@ const meta: Meta = {
       options: ['default', 'sm'],
     },
     label: { control: 'text' },
-    count: { control: 'number' },
-    max: { control: 'number' },
     dot: { control: 'boolean' },
+    overlay: { control: 'boolean' },
   },
   parameters: {
     docs: {
       description: {
         component:
-          'A compact status or count indicator. Use for state ("Approved", "Pending"), severity, or numeric counts. For categorization, use `civ-tag` instead.',
+          'A compact status indicator. Use for state ("Approved", "Pending"), severity, or as a notification dot. For numeric counts use `civ-count`. For categorization use `civ-tag`.',
       },
     },
   },
@@ -51,9 +51,8 @@ export const Default: Story = {
       badge-style="${args.badgeStyle || 'secondary'}"
       spacing="${args.spacing || 'default'}"
       label="${args.label}"
-      count="${args.count ?? ''}"
-      max="${args.max ?? 99}"
       ?dot="${args.dot}"
+      ?overlay="${args.overlay}"
     ></civ-badge>
   `,
 };
@@ -66,17 +65,6 @@ export const StatusVariants: Story = {
       <civ-badge variant="warning" label="Pending"></civ-badge>
       <civ-badge variant="error" label="Denied"></civ-badge>
       <civ-badge variant="neutral" label="Draft"></civ-badge>
-    </div>
-  `,
-};
-
-export const Counts: Story = {
-  render: () => html`
-    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
-      <civ-badge variant="info" count="3"></civ-badge>
-      <civ-badge variant="warning" count="42"></civ-badge>
-      <civ-badge variant="error" count="150"></civ-badge>
-      <civ-badge variant="error" count="9" max="9"></civ-badge>
     </div>
   `,
 };
@@ -141,7 +129,6 @@ export const Spacing: Story = {
         <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
           <civ-badge variant="success" label="Approved"></civ-badge>
           <civ-badge variant="error" badge-style="primary" label="Denied"></civ-badge>
-          <civ-badge variant="info" count="12"></civ-badge>
         </div>
       </div>
       <div>
@@ -149,7 +136,6 @@ export const Spacing: Story = {
         <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
           <civ-badge variant="success" spacing="sm" label="Approved"></civ-badge>
           <civ-badge variant="error" badge-style="primary" spacing="sm" label="Denied"></civ-badge>
-          <civ-badge variant="info" spacing="sm" count="12"></civ-badge>
         </div>
       </div>
     </div>
@@ -161,7 +147,7 @@ export const Overlay: Story = {
     docs: {
       description: {
         story:
-          'Overlay mode pins a badge to the top-end corner of a relatively-positioned parent — the classic notification badge over an icon. Wrap the parent in `.civ-badge-anchor` (or set `position: relative` yourself).',
+          'Overlay mode pins a badge to the top-end corner of a relatively-positioned parent — useful for "new" or "online" indicators on icons. Wrap the parent in `.civ-badge-anchor` (or set `position: relative` yourself). For numeric notification counters (e.g. "3 unread"), use `civ-count` instead.',
       },
     },
   },
@@ -169,7 +155,7 @@ export const Overlay: Story = {
     <div style="display: flex; gap: 1.5rem; align-items: center;">
       <span class="civ-badge-anchor">
         <civ-icon name="mail" size="lg"></civ-icon>
-        <civ-badge overlay count="3" variant="error"></civ-badge>
+        <civ-badge overlay dot label="New mail" variant="error"></civ-badge>
       </span>
       <span class="civ-badge-anchor">
         <civ-icon name="settings" size="lg"></civ-icon>
@@ -177,18 +163,19 @@ export const Overlay: Story = {
       </span>
       <span class="civ-badge-anchor">
         <civ-icon name="person" size="lg"></civ-icon>
-        <civ-badge overlay count="12" variant="success" badge-style="primary"></civ-badge>
+        <civ-badge overlay label="New" variant="success" badge-style="primary"></civ-badge>
       </span>
     </div>
   `,
 };
 
-export const VsTag: Story = {
+export const VsTagAndCount: Story = {
+  name: 'Badge vs Tag vs Count',
   parameters: {
     docs: {
       description: {
         story:
-          'Side-by-side: `civ-badge` (semantic state) vs `civ-tag` (categorization). Both use hard edges; badges restrict to semantic colors.',
+          '**Badge** = status text or dot (semantic colors, role="status"). **Tag** = categorization label (non-semantic palette, no role). **Count** = numeric annotation (lighter chrome, no role by default).',
       },
     },
   },
@@ -196,6 +183,7 @@ export const VsTag: Story = {
     <div style="display: grid; gap: 0.75rem;">
       <div>Badge (status): <civ-badge variant="success" label="Approved"></civ-badge></div>
       <div>Tag (category): <civ-tag variant="purple" label="Healthcare"></civ-tag></div>
+      <div>Count (number): Inbox <civ-count count="12"></civ-count></div>
     </div>
   `,
 };

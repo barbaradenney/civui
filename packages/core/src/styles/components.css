@@ -2789,6 +2789,88 @@
     transform: translate(-25%, -25%);
   }
 
+  /* ── Count ────────────────────────────────────────────────── */
+
+  civ-count {
+    display: inline;
+    vertical-align: baseline;
+  }
+
+  .civ-count {
+    @apply civ-inline-block civ-font-semibold;
+    font-variant-numeric: tabular-nums;
+    color: inherit;
+  }
+
+  .civ-count--sm {
+    @apply civ-text-sm;
+  }
+
+  /* Secondary (default) — bare colored text, no chrome. Inherits parent color
+     by default, swaps to semantic colors when variant is set. */
+
+  .civ-count--style-secondary {
+    background: transparent;
+    padding: 0;
+  }
+
+  .civ-count--style-secondary.civ-count--info { color: var(--civ-color-info-dark); }
+  .civ-count--style-secondary.civ-count--success { color: var(--civ-color-success-dark); }
+  .civ-count--style-secondary.civ-count--warning { color: var(--civ-color-warning-dark); }
+  .civ-count--style-secondary.civ-count--error { color: var(--civ-color-error-dark); }
+  /* neutral keeps `color: inherit` so it blends with the host text. */
+
+  /* Primary — filled pill for standalone or notification counters. */
+
+  .civ-count--style-primary {
+    @apply civ-px-1.5 civ-py-0;
+    border-radius: 0.625rem;
+    min-width: 1.25rem;
+    text-align: center;
+    line-height: 1.25rem;
+  }
+
+  .civ-count--style-primary.civ-count--sm {
+    min-width: 1rem;
+    line-height: 1rem;
+    @apply civ-px-1;
+  }
+
+  .civ-count--style-primary.civ-count--info {
+    background-color: var(--civ-color-info-dark);
+    color: var(--civ-color-white-DEFAULT);
+  }
+  .civ-count--style-primary.civ-count--success {
+    background-color: var(--civ-color-success-dark);
+    color: var(--civ-color-white-DEFAULT);
+  }
+  .civ-count--style-primary.civ-count--warning {
+    background-color: var(--civ-color-warning-dark);
+    color: var(--civ-color-white-DEFAULT);
+  }
+  .civ-count--style-primary.civ-count--error {
+    background-color: var(--civ-color-error-DEFAULT);
+    color: var(--civ-color-white-DEFAULT);
+  }
+  .civ-count--style-primary.civ-count--neutral {
+    background-color: var(--civ-color-base-darker);
+    color: var(--civ-color-white-DEFAULT);
+  }
+
+  /* Overlay — notification-style positioning over a relative parent. */
+
+  .civ-count--overlay {
+    position: absolute;
+    top: 0;
+    inset-inline-end: 0;
+    transform: translate(50%, -50%);
+    z-index: 1;
+  }
+
+  [dir="rtl"] .civ-count--overlay {
+    transform: translate(-50%, -50%);
+  }
+
   /* ── Filter Chip ──────────────────────────────────────────── */
 
   civ-filter-chip {
@@ -2878,9 +2960,9 @@
     color: inherit;
   }
 
+  /* The chip count uses <civ-count> internally; styling comes from .civ-count.
+     This rule just adds a slight de-emphasis so the label stays primary. */
   .civ-filter-chip__count {
-    @apply civ-ms-1 civ-font-semibold;
-    color: inherit;
     opacity: var(--civ-opacity-secondary);
   }
 

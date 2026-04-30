@@ -65,6 +65,7 @@ const TAG_TO_PACKAGE: Record<string, string> = {
   'civ-icon': '@civui/core',
   'civ-alert': '@civui/feedback',
   'civ-badge': '@civui/feedback',
+  'civ-count': '@civui/feedback',
 };
 
 // Packages whose components compose children from other packages

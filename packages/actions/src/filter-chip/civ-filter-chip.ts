@@ -2,6 +2,7 @@ import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { CivBaseElement, LightDomTextMixin, dispatch, interpolate, t } from '@civui/core';
+import '@civui/feedback/count';
 
 export type FilterChipStyle = 'primary' | 'secondary';
 export type FilterChipRole = 'toggle' | 'radio';
@@ -112,7 +113,7 @@ export class CivFilterChip extends LightDomTextMixin(CivBaseElement) {
           : this.iconStart
             ? html`<civ-icon name="${this.iconStart}" size="sm" class="civ-filter-chip__icon" aria-hidden="true"></civ-icon>`
             : nothing}<span class="civ-filter-chip__label">${this._text}</span>${showCount
-          ? html`<span class="civ-filter-chip__count">(${this.count})</span>`
+          ? html`<civ-count class="civ-filter-chip__count" count="${this.count}"></civ-count>`
           : nothing}${this.iconEnd
           ? html`<civ-icon name="${this.iconEnd}" size="sm" class="civ-filter-chip__icon civ-filter-chip__icon--end" aria-hidden="true"></civ-icon>`
           : nothing}</button>${this.removable

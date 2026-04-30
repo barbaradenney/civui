@@ -38,7 +38,8 @@ For architecture and internals, see \`CLAUDE.md\` in the repo root.
 | \`<civ-filter-chip-group>\` | Action | \`mode\` (single/multi), \`label\`. Wraps a row of chips with roving tabindex (arrow-key navigation) and an aggregated \`civ-change\` event carrying \`value\` (string in single mode, array in multi). | \`civ-change\` |
 | \`<civ-link>\` | Navigation | \`href\`, \`variant\` (primary/secondary/tertiary/back/danger), \`danger\`, \`disabled\` | \`civ-analytics\` |
 | \`<civ-tag>\` | Layout | \`label\`, \`variant\` (blue/orange/purple/gray), \`tag-style\` (primary/secondary), \`spacing\` (default/sm), \`icon-start\`. Categorization only — use \`<civ-badge>\` for status. | — |
-| \`<civ-badge>\` | Feedback | \`label\`, \`count\`, \`max\`, \`dot\`, \`variant\` (info/warning/error/success/neutral), \`badge-style\` (primary/secondary), \`spacing\` (default/sm), \`overlay\`. Status pills + count indicators with \`role="status"\`; \`overlay\` pins to the top-end of a relative parent for notification badges. | — |
+| \`<civ-badge>\` | Feedback | \`label\`, \`dot\`, \`variant\` (info/warning/error/success/neutral), \`badge-style\` (primary/secondary), \`spacing\` (default/sm), \`overlay\`. Status pills + notification dots with \`role="status"\`. | — |
+| \`<civ-count>\` | Feedback | \`count\`, \`max\`, \`variant\`, \`count-style\` (primary/secondary), \`spacing\`, \`overlay\`, \`live\` (off/polite/assertive). Numeric annotation; lighter chrome than badge. Used inside chips, list items, and as notification overlays. | — |
 | \`<civ-card>\` | Layout | \`spacing\` (default/sm). Slots: \`data-card-header\`, \`data-card-footer\` | — |
 | \`<civ-page-header>\` | Layout | Slots: \`data-tag\`, \`data-eyebrow\`, \`data-heading\`, \`data-subheading\` | — |
 | \`<civ-link-card>\` | Navigation | \`href\`, \`heading\`, \`description\`, \`variant\` (primary/secondary/tertiary/critical) | \`civ-analytics\` |
@@ -545,15 +546,29 @@ Categorization label (topic, taxonomy, filter chip). For status indicators ("App
 
 ### civ-badge
 
-Compact status or count indicator. Always carries \`role="status"\` so screen readers announce changes. Restricted to semantic colors. Two emphasis levels (\`badge-style\`): secondary (light tint, default) and primary (filled dark).
+Compact status indicator (text or dot). Carries \`role="status"\` for label mode and dot-with-label mode. Restricted to semantic colors. For numeric counts, use \`civ-count\`.
 
-**Props:** \`label\`, \`count\`, \`max\` (default 99), \`dot\`, \`variant\` (info/warning/error/success/neutral), \`badge-style\` (primary/secondary), \`spacing\` (default/sm)
+**Props:** \`label\`, \`dot\`, \`variant\` (info/warning/error/success/neutral), \`badge-style\` (primary/secondary), \`spacing\` (default/sm), \`overlay\`
 
 \`\`\`html
 <civ-badge label="Approved" variant="success"></civ-badge>
 <civ-badge label="Denied" variant="error" badge-style="primary"></civ-badge>
-<civ-badge count="12" variant="info" spacing="sm"></civ-badge>
 <civ-badge dot label="Unread messages" variant="error"></civ-badge>
+\`\`\`
+
+### civ-count
+
+Numeric annotation — match counts in filter chips, item counts in nav, notification counters. Lighter chrome than badge so it composes inside other components.
+
+**Props:** \`count\`, \`max\` (default 99 — overflow as "99+"), \`variant\`, \`count-style\` (primary = filled pill / secondary = bare colored text), \`spacing\`, \`overlay\`, \`live\` (off/polite/assertive — default off)
+
+\`\`\`html
+<span>Inbox <civ-count count="12"></civ-count></span>
+<civ-count count="3" variant="error" count-style="primary"></civ-count>
+<span class="civ-badge-anchor">
+  <civ-icon name="mail"></civ-icon>
+  <civ-count overlay count="3" variant="error" count-style="primary"></civ-count>
+</span>
 \`\`\`
 
 ### civ-page-header

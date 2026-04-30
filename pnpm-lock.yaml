@@ -136,6 +136,9 @@ importers:
       '@civui/core':
         specifier: workspace:*
         version: link:../core
+      '@civui/feedback':
+        specifier: workspace:*
+        version: link:../feedback
       '@civui/navigation':
         specifier: workspace:*
         version: link:../navigation

@@ -6,6 +6,7 @@ import './filter-chip/civ-filter-chip.js';
 import './filter-chip-group/civ-filter-chip-group.js';
 import './phone-link/civ-phone-link.js';
 import './email-link/civ-email-link.js';
+import './action-link/civ-action-link.js';
 
 // Button
 export { CivButton } from './button/index.js';
@@ -31,3 +32,7 @@ export { CivPhoneLink } from './phone-link/index.js';
 
 // Email Link
 export { CivEmailLink } from './email-link/index.js';
+
+// Action Link (unified phone/email)
+export { CivActionLink } from './action-link/index.js';
+export type { ActionLinkType } from './action-link/index.js';

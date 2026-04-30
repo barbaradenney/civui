@@ -62,6 +62,7 @@ const config: StorybookConfig = {
       '@civui/actions/filter-chip-group': resolve(root, 'packages/actions/src/filter-chip-group/index.ts'),
       '@civui/actions/phone-link': resolve(root, 'packages/actions/src/phone-link/index.ts'),
       '@civui/actions/email-link': resolve(root, 'packages/actions/src/email-link/index.ts'),
+      '@civui/actions/action-link': resolve(root, 'packages/actions/src/action-link/index.ts'),
       '@civui/actions': resolve(root, 'packages/actions/src/index.ts'),
       // Overlays
       '@civui/overlays/modal': resolve(root, 'packages/overlays/src/modal/index.ts'),

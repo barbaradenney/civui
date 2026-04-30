@@ -132,9 +132,42 @@ Add `danger` to any variant for destructive action styling.
 
 ---
 
+## Action Link
+
+`<civ-action-link>`
+
+A unified link for device actions — phone calls and email compose. Set the `type` prop to switch between phone and email behavior. Renders the correct protocol (`tel:` / `mailto:`), icon (phone / mail), and formatted display text automatically.
+
+<StoryEmbed id="actions-action-link--all-variants" />
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `type` | `'phone' \| 'email'` | `'phone'` | Action type — determines protocol and icon |
+| `number` | `string` | `''` | Phone number (used when type="phone") |
+| `address` | `string` | `''` | Email address (used when type="email") |
+| `subject` | `string` | `''` | Pre-filled email subject (used when type="email") |
+| `label` | `string` | `''` | Override display text |
+| `disabled` | `boolean` | `false` | Disabled state |
+
+```html
+<!-- Phone -->
+<civ-action-link type="phone" number="8005551234"></civ-action-link>
+<civ-action-link type="phone" number="8005551234" label="Call us"></civ-action-link>
+
+<!-- Email -->
+<civ-action-link type="email" address="help@va.gov"></civ-action-link>
+<civ-action-link type="email" address="help@va.gov" subject="Question"></civ-action-link>
+```
+
+<StoryEmbed id="actions-action-link--government-contact-section" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/actions-action-link--all-variants)
+
+---
+
 ## Specialized Links
 
-CivUI provides purpose-built link components for common patterns. Each one wraps the correct protocol, icon, and accessibility announcements so you don't have to assemble them manually.
+CivUI also provides single-purpose link components for navigation patterns (external links, downloads).
 
 ---
 

@@ -90,7 +90,7 @@ Action button. Variants: \`primary\` (filled blue), \`secondary\` (outlined), \`
 Navigation link. Variants: \`primary\` (button-styled), \`secondary\` (underlined + caret), \`tertiary\` (plain underlined), \`back\` (left chevron). Add \`danger\` for destructive.
 
 ### civ-tag
-Status label. 8 color variants. \`tag-style="primary"\` for bold/dark background, \`"secondary"\` (default) for light.
+Categorization label (topics, taxonomies, filter chips). Variants: \`blue\`, \`orange\`, \`purple\`, \`gray\`. \`tag-style="primary"\` for bold/dark background, \`"secondary"\` (default) for light. For **status** ("Approved", "In progress", "Error"), use \`<civ-badge>\` instead — it carries \`role="status"\` and uses semantic colors (info/success/warning/error/neutral).
 
 ### civ-page-header
 Page heading. Slots: \`data-tag\` (top), \`data-eyebrow\`, \`data-heading\` (supports inline tags), \`data-subheading\`.

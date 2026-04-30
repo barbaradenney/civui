@@ -1034,7 +1034,7 @@ adapted for government benefit applications.
 <civ-list dividers>
   <civ-list-item href="#/eligibility">
     <span class="civ-block civ-font-bold">Check your eligibility</span>
-    <civ-tag data-list-item-end label="Complete" variant="green" tag-style="primary"></civ-tag>
+    <civ-badge data-list-item-end label="Complete" variant="success" badge-style="primary" with-icon></civ-badge>
   </civ-list-item>
 </civ-list>
 
@@ -1042,16 +1042,16 @@ adapted for government benefit applications.
 <civ-list dividers>
   <civ-list-item href="#/personal">
     <span class="civ-block civ-font-bold">Personal information</span>
-    <civ-tag data-list-item-end label="Complete" variant="green" tag-style="primary"></civ-tag>
+    <civ-badge data-list-item-end label="Complete" variant="success" badge-style="primary" with-icon></civ-badge>
   </civ-list-item>
   <civ-list-item href="#/contact">
     <span class="civ-block civ-font-bold">Contact information</span>
     <span class="civ-block civ-text-sm civ-text-muted">Phone number needed</span>
-    <civ-tag data-list-item-end label="In progress" variant="teal"></civ-tag>
+    <civ-badge data-list-item-end label="In progress" variant="info" badge-style="primary" with-icon></civ-badge>
   </civ-list-item>
   <civ-list-item href="#/service">
     <span class="civ-block civ-font-bold">Service history</span>
-    <civ-tag data-list-item-end label="Not started" variant="blue"></civ-tag>
+    <civ-badge data-list-item-end label="Not started" variant="info" badge-style="secondary" with-icon></civ-badge>
   </civ-list-item>
 </civ-list>
 
@@ -1060,23 +1060,23 @@ adapted for government benefit applications.
   <civ-list-item>
     <span class="civ-block civ-font-bold">Review your application</span>
     <span class="civ-block civ-text-sm civ-text-muted">Complete all sections first</span>
-    <civ-tag data-list-item-end label="Cannot start yet" variant="gray"></civ-tag>
+    <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
   </civ-list-item>
 </civ-list>
 ```
 
-The `taskStatusTag(status)` helper from `@civui/core` returns canonical `{label, variant, tagStyle}` props if you're rendering in code.
+`<civ-badge>` carries `role="status"` and `with-icon` auto-renders the variant's semantic icon (success → check-circle, error → ✕, warning → ⚠).
 
 **Task statuses:**
 
-| Status | Tag |
+| Status | Badge |
 |---|---|
-| `not-started` | Blue secondary tag |
-| `in-progress` | Teal secondary tag |
-| `complete` | Green primary tag |
-| `cannot-start` | Gray secondary tag (omit `href` on the row to make it non-clickable) |
-| `error` | Red secondary tag |
-| `review` | Yellow primary tag |
+| `not-started` | `info` secondary |
+| `in-progress` | `info` primary |
+| `complete` | `success` primary |
+| `cannot-start` | `neutral` secondary (omit `href` on the row to make it non-clickable) |
+| `error` | `error` secondary |
+| `review` | `warning` primary |
 
 **Accessibility:**
 - Each clickable row is an `<a>` filling the whole `<li>`
@@ -1329,7 +1329,7 @@ Book: VA Form 21-526EZ — Disability Compensation
 **Pattern primitives:**
 - `civ-list` — generic list container with optional `dividers`
 - `civ-list-item` — list row; set `href` to make the whole row a clickable anchor, omit for locked rows
-- `taskStatusTag(status)` from `@civui/core` — canonical mapping from a task status to `<civ-tag>` props
+- `civ-badge` — semantic status indicator (`info | success | warning | error | neutral`) with `role="status"` and optional `with-icon` for the variant's semantic icon
 
 ---
 

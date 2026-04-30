@@ -536,8 +536,8 @@ function generateTaskListHub(form: ReturnType<typeof getFormDefinition> & {}, ch
       // Only the first chapter starts as navigable; rest are locked until unlocked
       const href = i === 0 ? ` href="#/${slugify(ch.id)}"` : '';
       const tag = i === 0
-        ? '<civ-tag data-list-item-end label="Not started" variant="blue" tag-style="secondary"></civ-tag>'
-        : '<civ-tag data-list-item-end label="Cannot start yet" variant="gray" tag-style="secondary"></civ-tag>';
+        ? '<civ-badge data-list-item-end label="Not started" variant="info" badge-style="secondary" with-icon></civ-badge>'
+        : '<civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>';
       return `      <civ-list-item data-chapter-id="${slugify(ch.id)}"${href}>
         <span class="civ-block civ-font-bold">${escapeHtml(ch.heading)}</span>
         <span class="civ-block civ-text-sm civ-text-muted">${escapeHtml(ch.hint)}</span>
@@ -569,7 +569,7 @@ ${chapterRows}
     <civ-list-item data-review>
       <span class="civ-block civ-font-bold">Review your application</span>
       <span class="civ-block civ-text-sm civ-text-muted">Complete all sections before reviewing</span>
-      <civ-tag data-list-item-end label="Cannot start yet" variant="gray" tag-style="secondary"></civ-tag>
+      <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
     </civ-list-item>
   </civ-list>
 </div>`;

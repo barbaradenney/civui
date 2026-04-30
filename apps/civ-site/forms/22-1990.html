@@ -47,27 +47,27 @@
       <civ-list-item data-chapter-id="personal-info" href="#/personal-info">
         <span class="civ-block civ-font-bold">Personal information</span>
         <span class="civ-block civ-text-sm civ-text-muted">Name, date of birth, Social Security number</span>
-        <civ-tag data-list-item-end label="Not started" variant="blue" tag-style="secondary"></civ-tag>
+        <civ-badge data-list-item-end label="Not started" variant="info" badge-style="secondary" with-icon></civ-badge>
       </civ-list-item>
       <civ-list-item data-chapter-id="contact-info">
         <span class="civ-block civ-font-bold">Contact information</span>
         <span class="civ-block civ-text-sm civ-text-muted">Address, phone, email</span>
-        <civ-tag data-list-item-end label="Cannot start yet" variant="gray" tag-style="secondary"></civ-tag>
+        <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
       </civ-list-item>
       <civ-list-item data-chapter-id="service-history">
         <span class="civ-block civ-font-bold">Service history</span>
         <span class="civ-block civ-text-sm civ-text-muted">Branch, dates, and character of service</span>
-        <civ-tag data-list-item-end label="Cannot start yet" variant="gray" tag-style="secondary"></civ-tag>
+        <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
       </civ-list-item>
       <civ-list-item data-chapter-id="education-info">
         <span class="civ-block civ-font-bold">Education details</span>
         <span class="civ-block civ-text-sm civ-text-muted">School and program information</span>
-        <civ-tag data-list-item-end label="Cannot start yet" variant="gray" tag-style="secondary"></civ-tag>
+        <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
       </civ-list-item>
       <civ-list-item data-chapter-id="direct-deposit">
         <span class="civ-block civ-font-bold">Direct deposit</span>
         <span class="civ-block civ-text-sm civ-text-muted">Bank account for benefit payments</span>
-        <civ-tag data-list-item-end label="Cannot start yet" variant="gray" tag-style="secondary"></civ-tag>
+        <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
       </civ-list-item>
     </civ-list>
 
@@ -76,7 +76,7 @@
       <civ-list-item data-review>
         <span class="civ-block civ-font-bold">Review your application</span>
         <span class="civ-block civ-text-sm civ-text-muted">Complete all sections before reviewing</span>
-        <civ-tag data-list-item-end label="Cannot start yet" variant="gray" tag-style="secondary"></civ-tag>
+        <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
       </civ-list-item>
     </civ-list>
 
@@ -563,23 +563,21 @@
         progressBar.setAttribute('status', doneCount + ' of ' + totalChapters + ' sections complete');
       }
     }
-
     const TASK_STATUS_MAP = {
-      'not-started': { label: 'Not started', variant: 'blue', style: 'secondary' },
-      'in-progress': { label: 'In progress', variant: 'teal', style: 'secondary' },
-      'complete': { label: 'Complete', variant: 'green', style: 'primary' },
-      'cannot-start': { label: 'Cannot start yet', variant: 'gray', style: 'secondary' },
-      'error': { label: 'Has errors', variant: 'red', style: 'secondary' },
-      'review': { label: 'Needs review', variant: 'yellow', style: 'primary' },
+      'not-started': { label: 'Not started', variant: 'info', style: 'secondary' },
+      'in-progress': { label: 'In progress', variant: 'info', style: 'primary' },
+      'complete': { label: 'Complete', variant: 'success', style: 'primary' },
+      'cannot-start': { label: 'Cannot start yet', variant: 'neutral', style: 'secondary' },
+      'error': { label: 'Has errors', variant: 'error', style: 'secondary' },
+      'review': { label: 'Needs review', variant: 'warning', style: 'primary' },
     };
-
     function setItemStatus(item, status, href) {
-      const tag = item.querySelector('civ-tag');
+      const badge = item.querySelector('civ-badge');
       const def = TASK_STATUS_MAP[status];
-      if (tag && def) {
-        tag.setAttribute('label', def.label);
-        tag.setAttribute('variant', def.variant);
-        tag.setAttribute('tag-style', def.style);
+      if (badge && def) {
+        badge.setAttribute('label', def.label);
+        badge.setAttribute('variant', def.variant);
+        badge.setAttribute('badge-style', def.style);
       }
       if (href) {
         item.setAttribute('href', href);
@@ -697,8 +695,8 @@
       CHAPTERS.forEach(function(chapterId) {
         var review = document.querySelector('[data-chapter="' + chapterId + '"] [data-prefill-review]:not([hidden])');
         var task = document.querySelector('civ-list-item[data-chapter-id="' + chapterId + '"]');
-        const tag = task && task.querySelector('civ-tag');
-        const isComplete = tag && tag.getAttribute('variant') === 'green';
+        const badge = task && task.querySelector('civ-badge');
+        const isComplete = badge && badge.getAttribute('variant') === 'success';
         if (review && task && !isComplete) {
           if (!firstReviewSet) {
             setItemStatus(task, 'review', '#/' + chapterId);

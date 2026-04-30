@@ -95,11 +95,11 @@ The task list shows all chapters and their completion status. It serves as the c
 <civ-list dividers>
   <civ-list-item href="#/personal/name">
     <span class="civ-block civ-font-bold">Name and date of birth</span>
-    <civ-tag data-list-item-end label="Complete" variant="green" tag-style="primary"></civ-tag>
+    <civ-badge data-list-item-end label="Complete" variant="success" badge-style="primary" with-icon></civ-badge>
   </civ-list-item>
   <civ-list-item href="#/personal/contact">
     <span class="civ-block civ-font-bold">Contact information</span>
-    <civ-tag data-list-item-end label="In progress" variant="teal"></civ-tag>
+    <civ-badge data-list-item-end label="In progress" variant="info" badge-style="primary" with-icon></civ-badge>
   </civ-list-item>
 </civ-list>
 
@@ -107,11 +107,11 @@ The task list shows all chapters and their completion status. It serves as the c
 <civ-list dividers>
   <civ-list-item href="#/service/history">
     <span class="civ-block civ-font-bold">Military service</span>
-    <civ-tag data-list-item-end label="Not started" variant="blue"></civ-tag>
+    <civ-badge data-list-item-end label="Not started" variant="info" badge-style="secondary" with-icon></civ-badge>
   </civ-list-item>
   <civ-list-item>
     <span class="civ-block civ-font-bold">Service-connected conditions</span>
-    <civ-tag data-list-item-end label="Cannot start yet" variant="gray"></civ-tag>
+    <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
   </civ-list-item>
 </civ-list>
 
@@ -119,12 +119,12 @@ The task list shows all chapters and their completion status. It serves as the c
 <civ-list dividers>
   <civ-list-item>
     <span class="civ-block civ-font-bold">Review your answers</span>
-    <civ-tag data-list-item-end label="Cannot start yet" variant="gray"></civ-tag>
+    <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
   </civ-list-item>
 </civ-list>
 ```
 
-Setting `href` on a `<civ-list-item>` makes the whole row a clickable anchor; omit `href` for locked rows. The status tag uses the `data-list-item-end` attribute to flow to the trailing edge. Use `taskStatusTag(status)` from `@civui/core` for the canonical tag mapping if you're rendering in code.
+Setting `href` on a `<civ-list-item>` makes the whole row a clickable anchor; omit `href` for locked rows. The status badge uses the `data-list-item-end` attribute to flow to the trailing edge. `<civ-badge>` carries `role="status"` and `with-icon` auto-renders the variant's semantic icon. Status mapping: `not-started → info`, `in-progress → info primary`, `complete → success primary`, `cannot-start → neutral`, `error → error`, `review → warning primary`.
 
 ### Form Step Navigation
 

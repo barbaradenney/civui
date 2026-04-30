@@ -600,17 +600,17 @@
           </table>
 
           <h4>Task list pattern</h4>
-          <p>The "task list" is a usage pattern, not a dedicated component. Compose <code>&lt;civ-list&gt;</code> + <code>&lt;civ-list-item&gt;</code> + <code>&lt;civ-tag&gt;</code>. Use <code>taskStatusTag(status)</code> from <code>@civui/core</code> for the canonical tag mapping if rendering in code.</p>
+          <p>The "task list" is a usage pattern, not a dedicated component. Compose <code>&lt;civ-list&gt;</code> + <code>&lt;civ-list-item&gt;</code> + <code>&lt;civ-badge&gt;</code>. <code>civ-badge</code> carries <code>role="status"</code> and supports <code>with-icon</code> for the variant's semantic icon.</p>
 
           <table class="props-table">
-            <thead><tr><th>Status</th><th>Tag label</th><th>Color</th></tr></thead>
+            <thead><tr><th>Status</th><th>Badge label</th><th>variant</th><th>badge-style</th></tr></thead>
             <tbody>
-              <tr><td><code>not-started</code></td><td>Not started</td><td>Blue (secondary)</td></tr>
-              <tr><td><code>in-progress</code></td><td>In progress</td><td>Teal (secondary)</td></tr>
-              <tr><td><code>complete</code></td><td>Complete</td><td>Green (primary)</td></tr>
-              <tr><td><code>cannot-start</code></td><td>Cannot start yet</td><td>Gray (secondary)</td></tr>
-              <tr><td><code>error</code></td><td>Has errors</td><td>Red (secondary)</td></tr>
-              <tr><td><code>review</code></td><td>Needs review</td><td>Yellow (primary)</td></tr>
+              <tr><td><code>not-started</code></td><td>Not started</td><td><code>info</code></td><td><code>secondary</code></td></tr>
+              <tr><td><code>in-progress</code></td><td>In progress</td><td><code>info</code></td><td><code>primary</code></td></tr>
+              <tr><td><code>complete</code></td><td>Complete</td><td><code>success</code></td><td><code>primary</code></td></tr>
+              <tr><td><code>cannot-start</code></td><td>Cannot start yet</td><td><code>neutral</code></td><td><code>secondary</code></td></tr>
+              <tr><td><code>error</code></td><td>Has errors</td><td><code>error</code></td><td><code>secondary</code></td></tr>
+              <tr><td><code>review</code></td><td>Needs review</td><td><code>warning</code></td><td><code>primary</code></td></tr>
             </tbody>
           </table>
 
@@ -619,16 +619,16 @@
 &lt;civ-list dividers&gt;
   &lt;civ-list-item href="/name"&gt;
     &lt;span class="civ-block civ-font-bold"&gt;Your name&lt;/span&gt;
-    &lt;civ-tag data-list-item-end label="Complete" variant="green" tag-style="primary"&gt;&lt;/civ-tag&gt;
+    &lt;civ-badge data-list-item-end label="Complete" variant="success" badge-style="primary" with-icon&gt;&lt;/civ-badge&gt;
   &lt;/civ-list-item&gt;
   &lt;civ-list-item href="/contact"&gt;
     &lt;span class="civ-block civ-font-bold"&gt;Contact information&lt;/span&gt;
     &lt;span class="civ-block civ-text-sm civ-text-muted"&gt;Phone and email&lt;/span&gt;
-    &lt;civ-tag data-list-item-end label="In progress" variant="teal"&gt;&lt;/civ-tag&gt;
+    &lt;civ-badge data-list-item-end label="In progress" variant="info" badge-style="primary" with-icon&gt;&lt;/civ-badge&gt;
   &lt;/civ-list-item&gt;
   &lt;civ-list-item&gt;  &lt;!-- no href = locked, same visual rhythm --&gt;
     &lt;span class="civ-block civ-font-bold"&gt;Review and submit&lt;/span&gt;
-    &lt;civ-tag data-list-item-end label="Cannot start yet" variant="gray"&gt;&lt;/civ-tag&gt;
+    &lt;civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon&gt;&lt;/civ-badge&gt;
   &lt;/civ-list-item&gt;
 &lt;/civ-list&gt;</code></pre>
 

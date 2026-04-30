@@ -283,21 +283,21 @@ ${chapterHeadings}
     }
 
     const TASK_STATUS_MAP = {
-      'not-started': { label: 'Not started', variant: 'blue', style: 'secondary' },
-      'in-progress': { label: 'In progress', variant: 'teal', style: 'secondary' },
-      'complete': { label: 'Complete', variant: 'green', style: 'primary' },
-      'cannot-start': { label: 'Cannot start yet', variant: 'gray', style: 'secondary' },
-      'error': { label: 'Has errors', variant: 'red', style: 'secondary' },
-      'review': { label: 'Needs review', variant: 'yellow', style: 'primary' },
+      'not-started': { label: 'Not started', variant: 'info', style: 'secondary' },
+      'in-progress': { label: 'In progress', variant: 'info', style: 'primary' },
+      'complete': { label: 'Complete', variant: 'success', style: 'primary' },
+      'cannot-start': { label: 'Cannot start yet', variant: 'neutral', style: 'secondary' },
+      'error': { label: 'Has errors', variant: 'error', style: 'secondary' },
+      'review': { label: 'Needs review', variant: 'warning', style: 'primary' },
     };
 
     function setItemStatus(item, status, href) {
-      const tag = item.querySelector('civ-tag');
+      const badge = item.querySelector('civ-badge');
       const def = TASK_STATUS_MAP[status];
-      if (tag && def) {
-        tag.setAttribute('label', def.label);
-        tag.setAttribute('variant', def.variant);
-        tag.setAttribute('tag-style', def.style);
+      if (badge && def) {
+        badge.setAttribute('label', def.label);
+        badge.setAttribute('variant', def.variant);
+        badge.setAttribute('badge-style', def.style);
       }
       if (href) {
         item.setAttribute('href', href);
@@ -415,8 +415,8 @@ ${chapterHeadings}
       CHAPTERS.forEach(function(chapterId) {
         var review = document.querySelector('[data-chapter="' + chapterId + '"] [data-prefill-review]:not([hidden])');
         var item = document.querySelector('civ-list-item[data-chapter-id="' + chapterId + '"]');
-        var tag = item && item.querySelector('civ-tag');
-        var isComplete = tag && tag.getAttribute('variant') === 'green';
+        var badge = item && item.querySelector('civ-badge');
+        var isComplete = badge && badge.getAttribute('variant') === 'success';
         if (review && item && !isComplete) {
           if (!firstReviewSet) {
             setItemStatus(item, 'review', '#/' + chapterId);
@@ -562,15 +562,15 @@ export default function ${toPascal(formNumber)}App() {
     return CHAPTERS[firstIncomplete] === id;
   }, [completed]);
 
-  // Maps a task status to props for <civ-tag>.
-  const statusTagProps = (status: string) => {
-    const map: Record<string, { label: string; variant: string; 'tag-style': string }> = {
-      'not-started': { label: 'Not started', variant: 'blue', 'tag-style': 'secondary' },
-      'in-progress': { label: 'In progress', variant: 'teal', 'tag-style': 'secondary' },
-      'complete': { label: 'Complete', variant: 'green', 'tag-style': 'primary' },
-      'cannot-start': { label: 'Cannot start yet', variant: 'gray', 'tag-style': 'secondary' },
-      'error': { label: 'Has errors', variant: 'red', 'tag-style': 'secondary' },
-      'review': { label: 'Needs review', variant: 'yellow', 'tag-style': 'primary' },
+  // Maps a task status to props for <civ-badge>.
+  const statusBadgeProps = (status: string) => {
+    const map: Record<string, { label: string; variant: string; 'badge-style': string; 'with-icon': boolean }> = {
+      'not-started': { label: 'Not started', variant: 'info', 'badge-style': 'secondary', 'with-icon': true },
+      'in-progress': { label: 'In progress', variant: 'info', 'badge-style': 'primary', 'with-icon': true },
+      'complete': { label: 'Complete', variant: 'success', 'badge-style': 'primary', 'with-icon': true },
+      'cannot-start': { label: 'Cannot start yet', variant: 'neutral', 'badge-style': 'secondary', 'with-icon': true },
+      'error': { label: 'Has errors', variant: 'error', 'badge-style': 'secondary', 'with-icon': true },
+      'review': { label: 'Needs review', variant: 'warning', 'badge-style': 'primary', 'with-icon': true },
     };
     return map[status] || map['not-started'];
   };
@@ -621,7 +621,7 @@ ${chapters.map((ch, i) => `            <civ-list-item
             >
               <span className="civ-block civ-font-bold">${escapeHtml(ch.heading)}</span>
               <span className="civ-block civ-text-sm civ-text-muted">${escapeHtml((ch as any).hint || '')}</span>
-              <civ-tag data-list-item-end {...statusTagProps(chapterStatus('${ch.id}', ${i}))} />
+              <civ-badge data-list-item-end {...statusBadgeProps(chapterStatus('${ch.id}', ${i}))} />
             </civ-list-item>`).join('\n')}
           </civ-list>
 
@@ -634,7 +634,7 @@ ${chapters.map((ch, i) => `            <civ-list-item
             >
               <span className="civ-block civ-font-bold">Review your application</span>
               {!allComplete && <span className="civ-block civ-text-sm civ-text-muted">Complete all sections before reviewing</span>}
-              <civ-tag data-list-item-end {...statusTagProps(allComplete ? 'not-started' : 'cannot-start')} />
+              <civ-badge data-list-item-end {...statusBadgeProps(allComplete ? 'not-started' : 'cannot-start')} />
             </civ-list-item>
           </civ-list>
         </div>

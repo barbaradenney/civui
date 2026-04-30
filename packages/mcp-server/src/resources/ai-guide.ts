@@ -625,34 +625,34 @@ Structured container with header, body, and footer slots.
 
 ### civ-list / civ-list-item (task list pattern)
 
-The "task list" is a usage pattern, not a dedicated component. Compose \`<civ-list>\` + \`<civ-list-item>\` + \`<civ-tag>\`. Setting \`href\` on a list item makes the entire row a clickable anchor; omit \`href\` for locked rows. The status tag uses \`data-list-item-end\` to flow to the trailing edge.
+The "task list" is a usage pattern, not a dedicated component. Compose \`<civ-list>\` + \`<civ-list-item>\` + \`<civ-badge>\`. Setting \`href\` on a list item makes the entire row a clickable anchor; omit \`href\` for locked rows. The status badge uses \`data-list-item-end\` to flow to the trailing edge. \`<civ-badge>\` carries \`role="status"\` and \`with-icon\` auto-renders the variant's semantic icon.
 
-**Status tag mapping** (also available programmatically as \`taskStatusTag(status)\` from \`@civui/core\`):
+**Status badge mapping:**
 
-| Status | label | variant | tag-style |
+| Status | label | variant | badge-style |
 |---|---|---|---|
-| not-started | Not started | blue | secondary |
-| in-progress | In progress | teal | secondary |
-| complete | Complete | green | primary |
-| cannot-start | Cannot start yet | gray | secondary |
-| error | Has errors | red | secondary |
-| review | Needs review | yellow | primary |
+| not-started | Not started | info | secondary |
+| in-progress | In progress | info | primary |
+| complete | Complete | success | primary |
+| cannot-start | Cannot start yet | neutral | secondary |
+| error | Has errors | error | secondary |
+| review | Needs review | warning | primary |
 
 \`\`\`html
 <h3 class="civ-heading-md">Fill out your application</h3>
 <civ-list dividers>
   <civ-list-item href="#/personal">
     <span class="civ-block civ-font-bold">Personal info</span>
-    <civ-tag data-list-item-end label="Complete" variant="green" tag-style="primary"></civ-tag>
+    <civ-badge data-list-item-end label="Complete" variant="success" badge-style="primary" with-icon></civ-badge>
   </civ-list-item>
   <civ-list-item href="#/contact">
     <span class="civ-block civ-font-bold">Contact info</span>
     <span class="civ-block civ-text-sm civ-text-muted">Phone needed</span>
-    <civ-tag data-list-item-end label="In progress" variant="teal"></civ-tag>
+    <civ-badge data-list-item-end label="In progress" variant="info" badge-style="primary" with-icon></civ-badge>
   </civ-list-item>
   <civ-list-item>
     <span class="civ-block civ-font-bold">Service history</span>
-    <civ-tag data-list-item-end label="Cannot start yet" variant="gray"></civ-tag>
+    <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
   </civ-list-item>
 </civ-list>
 \`\`\`

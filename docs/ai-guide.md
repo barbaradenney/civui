@@ -784,26 +784,18 @@ Informational banner for chapter review pages explaining that data was prefilled
 
 #### Task list pattern (using civ-list + civ-list-item)
 
-There is no dedicated `civ-task` component. The "task list" is a usage pattern: compose `<civ-list>` + `<civ-list-item>` + `<civ-tag>`. Setting `href` on a list item makes the whole row a clickable anchor; omit `href` for locked rows. Trailing content (the status tag) uses the `data-list-item-end` attribute.
+There is no dedicated `civ-task` component. The "task list" is a usage pattern: compose `<civ-list>` + `<civ-list-item>` + `<civ-badge>`. Setting `href` on a list item makes the whole row a clickable anchor; omit `href` for locked rows. The status badge uses the `data-list-item-end` attribute. `<civ-badge>` carries `role="status"` and `with-icon` auto-renders the variant's semantic icon.
 
-For consistent status tags across consumers, use the `taskStatusTag(status)` helper from `@civui/core`:
+**Status badge mapping:**
 
-```ts
-import { taskStatusTag } from '@civui/core';
-const tag = taskStatusTag('complete');
-// → { label: 'Complete', variant: 'green', tagStyle: 'primary' }
-```
-
-**Status tag mapping:**
-
-| Status | label | variant | tag-style |
+| Status | label | variant | badge-style |
 |---|---|---|---|
-| not-started | Not started | blue | secondary |
-| in-progress | In progress | teal | secondary |
-| complete | Complete | green | primary |
-| cannot-start | Cannot start yet | gray | secondary |
-| error | Has errors | red | secondary |
-| review | Needs review | yellow | primary |
+| not-started | Not started | info | secondary |
+| in-progress | In progress | info | primary |
+| complete | Complete | success | primary |
+| cannot-start | Cannot start yet | neutral | secondary |
+| error | Has errors | error | secondary |
+| review | Needs review | warning | primary |
 
 **Example:**
 ```html
@@ -811,16 +803,16 @@ const tag = taskStatusTag('complete');
 <civ-list dividers>
   <civ-list-item href="#/personal">
     <span class="civ-block civ-font-bold">Personal information</span>
-    <civ-tag data-list-item-end label="Complete" variant="green" tag-style="primary"></civ-tag>
+    <civ-badge data-list-item-end label="Complete" variant="success" badge-style="primary" with-icon></civ-badge>
   </civ-list-item>
   <civ-list-item href="#/contact">
     <span class="civ-block civ-font-bold">Contact information</span>
     <span class="civ-block civ-text-sm civ-text-muted">Phone needed</span>
-    <civ-tag data-list-item-end label="In progress" variant="teal"></civ-tag>
+    <civ-badge data-list-item-end label="In progress" variant="info" badge-style="primary" with-icon></civ-badge>
   </civ-list-item>
   <civ-list-item>  <!-- no href = locked, same visual rhythm -->
     <span class="civ-block civ-font-bold">Service history</span>
-    <civ-tag data-list-item-end label="Cannot start yet" variant="gray"></civ-tag>
+    <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
   </civ-list-item>
 </civ-list>
 ```
@@ -833,7 +825,7 @@ The recommended flow for multi-chapter government forms with prefilled data:
 Task List Hub → Chapter Prefill Review → (Edit Steps if needed) → Save & Complete → Hub
 ```
 
-1. **Hub** -- `civ-list` with `civ-list-item` rows. Prefilled chapters mark themselves with `data-prefilled` and use `taskStatusTag('review')` for their tag.
+1. **Hub** -- `civ-list` with `civ-list-item` rows. Prefilled chapters mark themselves with `data-prefilled` and use the `review` badge variant (`<civ-badge variant="warning" badge-style="primary">Needs review</civ-badge>`).
 2. **Chapter review** -- `civ-prefill-notice` banner + `civ-summary` showing prefilled data with edit links. Locked sections link to profile settings.
 3. **Edit step** -- Standard form fields for editing a specific piece of data. "Update and continue" returns to chapter review.
 4. **Complete** -- "Save and complete" marks the chapter done and returns to the hub.

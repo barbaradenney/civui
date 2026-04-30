@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import './civ-list.js';
 import './civ-list-item.js';
-import '../tag/civ-tag.js';
+import '@civui/feedback/badge';
 
 const meta: Meta = {
   title: 'Layout/List',
@@ -43,19 +43,19 @@ export const MixedClickableAndStatic: Story = {
     <civ-list dividers>
       <civ-list-item href="#/personal">
         Personal information
-        <civ-tag data-list-item-end label="Complete" variant="green" tag-style="primary"></civ-tag>
+        <civ-badge data-list-item-end label="Complete" variant="success" badge-style="primary" with-icon></civ-badge>
       </civ-list-item>
       <civ-list-item href="#/contact">
         Contact information
-        <civ-tag data-list-item-end label="In progress" variant="teal"></civ-tag>
+        <civ-badge data-list-item-end label="In progress" variant="info" badge-style="primary" with-icon></civ-badge>
       </civ-list-item>
       <civ-list-item>
         Service history
-        <civ-tag data-list-item-end label="Cannot start" variant="gray"></civ-tag>
+        <civ-badge data-list-item-end label="Cannot start" variant="neutral" badge-style="secondary" with-icon></civ-badge>
       </civ-list-item>
       <civ-list-item>
         Supporting documents
-        <civ-tag data-list-item-end label="Cannot start" variant="gray"></civ-tag>
+        <civ-badge data-list-item-end label="Cannot start" variant="neutral" badge-style="secondary" with-icon></civ-badge>
       </civ-list-item>
     </civ-list>
   `,
@@ -71,7 +71,7 @@ export const TaskListPattern: Story = {
     <civ-list dividers>
       <civ-list-item href="#/eligibility">
         Check your eligibility
-        <civ-tag data-list-item-end label="Complete" variant="green" tag-style="primary"></civ-tag>
+        <civ-badge data-list-item-end label="Complete" variant="success" badge-style="primary" with-icon></civ-badge>
       </civ-list-item>
     </civ-list>
 
@@ -80,22 +80,22 @@ export const TaskListPattern: Story = {
       <civ-list-item href="#/personal">
         <span class="civ-font-bold">Personal information</span>
         <span class="civ-block civ-text-sm civ-text-muted">Name, date of birth, Social Security number</span>
-        <civ-tag data-list-item-end label="Complete" variant="green" tag-style="primary"></civ-tag>
+        <civ-badge data-list-item-end label="Complete" variant="success" badge-style="primary" with-icon></civ-badge>
       </civ-list-item>
       <civ-list-item href="#/contact">
         <span class="civ-font-bold">Contact information</span>
         <span class="civ-block civ-text-sm civ-text-muted">Address and phone number</span>
-        <civ-tag data-list-item-end label="In progress" variant="teal"></civ-tag>
+        <civ-badge data-list-item-end label="In progress" variant="info" badge-style="primary" with-icon></civ-badge>
       </civ-list-item>
       <civ-list-item>
         <span class="civ-font-bold">Service history</span>
         <span class="civ-block civ-text-sm civ-text-muted">Branch, dates, and character of service</span>
-        <civ-tag data-list-item-end label="Cannot start" variant="gray"></civ-tag>
+        <civ-badge data-list-item-end label="Cannot start" variant="neutral" badge-style="secondary" with-icon></civ-badge>
       </civ-list-item>
       <civ-list-item>
         <span class="civ-font-bold">Disabilities and conditions</span>
         <span class="civ-block civ-text-sm civ-text-muted">List each condition you are claiming</span>
-        <civ-tag data-list-item-end label="Cannot start" variant="gray"></civ-tag>
+        <civ-badge data-list-item-end label="Cannot start" variant="neutral" badge-style="secondary" with-icon></civ-badge>
       </civ-list-item>
     </civ-list>
 
@@ -103,7 +103,7 @@ export const TaskListPattern: Story = {
     <civ-list dividers>
       <civ-list-item>
         Review your application
-        <civ-tag data-list-item-end label="Cannot start" variant="gray"></civ-tag>
+        <civ-badge data-list-item-end label="Cannot start" variant="neutral" badge-style="secondary" with-icon></civ-badge>
       </civ-list-item>
     </civ-list>
   `,

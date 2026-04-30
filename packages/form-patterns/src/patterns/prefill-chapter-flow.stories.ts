@@ -67,12 +67,12 @@ export const Step1_Hub: Story = {
         <civ-list-item href="#/personal" data-prefilled>
           <span class="civ-block civ-font-bold">Personal information</span>
           <span class="civ-block civ-text-sm civ-text-muted">Name, date of birth, Social Security number</span>
-          <civ-tag data-list-item-end label="Needs review" variant="yellow" tag-style="primary"></civ-tag>
+          <civ-badge data-list-item-end label="Needs review" variant="warning" badge-style="primary" with-icon></civ-badge>
         </civ-list-item>
         <civ-list-item data-prefilled>
           <span class="civ-block civ-font-bold">Contact information</span>
           <span class="civ-block civ-text-sm civ-text-muted">Phone, email, and mailing address</span>
-          <civ-tag data-list-item-end label="Cannot start yet" variant="gray"></civ-tag>
+          <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
         </civ-list-item>
       </civ-list>
 
@@ -81,17 +81,17 @@ export const Step1_Hub: Story = {
         <civ-list-item>
           <span class="civ-block civ-font-bold">Service history</span>
           <span class="civ-block civ-text-sm civ-text-muted">Branch, dates, and character of service</span>
-          <civ-tag data-list-item-end label="Cannot start yet" variant="gray"></civ-tag>
+          <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
         </civ-list-item>
         <civ-list-item>
           <span class="civ-block civ-font-bold">Disabilities</span>
           <span class="civ-block civ-text-sm civ-text-muted">Conditions you are claiming</span>
-          <civ-tag data-list-item-end label="Cannot start yet" variant="gray"></civ-tag>
+          <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
         </civ-list-item>
         <civ-list-item>
           <span class="civ-block civ-font-bold">Supporting documents</span>
           <span class="civ-block civ-text-sm civ-text-muted">DD214 and medical records</span>
-          <civ-tag data-list-item-end label="Cannot start yet" variant="gray"></civ-tag>
+          <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
         </civ-list-item>
       </civ-list>
 
@@ -99,7 +99,7 @@ export const Step1_Hub: Story = {
       <civ-list dividers>
         <civ-list-item>
           <span class="civ-block civ-font-bold">Review your application</span>
-          <civ-tag data-list-item-end label="Cannot start yet" variant="gray"></civ-tag>
+          <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
         </civ-list-item>
       </civ-list>
     </div>
@@ -294,12 +294,12 @@ export const Step5_HubAfterComplete: Story = {
         <civ-list-item href="#/personal">
           <span class="civ-block civ-font-bold">Personal information</span>
           <span class="civ-block civ-text-sm civ-text-muted">Name, date of birth, Social Security number</span>
-          <civ-tag data-list-item-end label="Complete" variant="green" tag-style="primary"></civ-tag>
+          <civ-badge data-list-item-end label="Complete" variant="success" badge-style="primary" with-icon></civ-badge>
         </civ-list-item>
         <civ-list-item href="#/contact">
           <span class="civ-block civ-font-bold">Contact information</span>
           <span class="civ-block civ-text-sm civ-text-muted">Phone, email, and mailing address</span>
-          <civ-tag data-list-item-end label="Complete" variant="green" tag-style="primary"></civ-tag>
+          <civ-badge data-list-item-end label="Complete" variant="success" badge-style="primary" with-icon></civ-badge>
         </civ-list-item>
       </civ-list>
 
@@ -308,17 +308,17 @@ export const Step5_HubAfterComplete: Story = {
         <civ-list-item href="#/service">
           <span class="civ-block civ-font-bold">Service history</span>
           <span class="civ-block civ-text-sm civ-text-muted">Branch, dates, and character of service</span>
-          <civ-tag data-list-item-end label="Not started" variant="blue"></civ-tag>
+          <civ-badge data-list-item-end label="Not started" variant="info" badge-style="secondary" with-icon></civ-badge>
         </civ-list-item>
         <civ-list-item>
           <span class="civ-block civ-font-bold">Disabilities</span>
           <span class="civ-block civ-text-sm civ-text-muted">Conditions you are claiming</span>
-          <civ-tag data-list-item-end label="Cannot start yet" variant="gray"></civ-tag>
+          <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
         </civ-list-item>
         <civ-list-item>
           <span class="civ-block civ-font-bold">Supporting documents</span>
           <span class="civ-block civ-text-sm civ-text-muted">DD214 and medical records</span>
-          <civ-tag data-list-item-end label="Cannot start yet" variant="gray"></civ-tag>
+          <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
         </civ-list-item>
       </civ-list>
 
@@ -326,7 +326,7 @@ export const Step5_HubAfterComplete: Story = {
       <civ-list dividers>
         <civ-list-item>
           <span class="civ-block civ-font-bold">Review your application</span>
-          <civ-tag data-list-item-end label="Cannot start yet" variant="gray"></civ-tag>
+          <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
         </civ-list-item>
       </civ-list>
     </div>

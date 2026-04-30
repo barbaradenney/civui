@@ -80,22 +80,18 @@
     @apply civ-p-4 civ-text-base;
   }
 
-  /* Heading slot: bold, base size, no margin */
-  [data-civ-list-item-heading-slot] > * {
-    @apply civ-font-bold civ-text-base civ-m-0;
+  /* Heading slot: bold, lg size, no margin */
+  [data-civ-list-item-heading-slot] > *,
+  .civ-list-item-heading-prop {
+    @apply civ-font-bold civ-m-0;
+    font-size: var(--civ-typography-fontSize-lg);
     display: block;
   }
 
-  /* Linked rows: heading looks like a link-card heading */
-  a [data-civ-list-item-heading-slot] > * {
-    @apply civ-underline civ-text-primary;
-    font-size: var(--civ-typography-fontSize-lg);
-  }
-
-  /* Prop-based heading inside linked rows */
+  /* Linked rows: heading gets underline and primary color */
+  a [data-civ-list-item-heading-slot] > *,
   a > span > .civ-list-item-heading-prop {
     @apply civ-underline civ-text-primary;
-    font-size: var(--civ-typography-fontSize-lg);
   }
 
   /* Description slot: smaller, muted, no margin */
@@ -114,11 +110,6 @@
 
   .civ-list--sm [data-civ-list-item-heading-slot] > *,
   .civ-list--sm .civ-list-item-heading-prop {
-    @apply civ-text-sm;
-  }
-
-  .civ-list--sm a [data-civ-list-item-heading-slot] > *,
-  .civ-list--sm a .civ-list-item-heading-prop {
     font-size: var(--civ-typography-fontSize-base);
   }
 

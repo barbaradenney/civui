@@ -8,6 +8,7 @@ import './page-header/civ-page-header.js';
 import './tag/civ-tag.js';
 import './button-group/civ-button-group.js';
 import './file-list/civ-file-list.js';
+import './image-preview/civ-image-preview.js';
 
 // Card
 export { CivCard } from './card/index.js';
@@ -35,3 +36,7 @@ export { CivButtonGroup } from './button-group/index.js';
 // File List
 export { CivFileList } from './file-list/index.js';
 export type { FileListItem } from './file-list/index.js';
+
+// Image Preview
+export { CivImagePreview } from './image-preview/index.js';
+export type { ImagePreviewSize } from './image-preview/index.js';

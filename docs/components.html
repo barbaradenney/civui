@@ -767,16 +767,20 @@
       <h4 style="margin-top: 1.5rem;">Specialized Link Components</h4>
       <div class="form-list">
         <div class="form-list-item">
-          <code>&lt;civ-download-link&gt;</code>
+          <code>&lt;civ-link external&gt;</code>
+          <span>External link that opens in a new tab with security attributes and "opens in new tab" screen reader text. Set the <code>external</code> prop on <code>&lt;civ-link&gt;</code>.</span>
+        </div>
+        <div class="form-list-item">
+          <code>&lt;civ-action-link type="download"&gt;</code>
           <span>File download link with download icon and optional file size display. Props: <code>label</code>, <code>href</code>, <code>filename</code>, <code>file-size</code>.</span>
         </div>
         <div class="form-list-item">
-          <code>&lt;civ-action-link&gt;</code>
-          <span>Clickable phone (<code>tel:</code>) or email (<code>mailto:</code>) link with icon. Props: <code>type</code> (<code>phone</code>/<code>email</code>), <code>number</code>, <code>address</code>, <code>label</code>, <code>subject</code>.</span>
+          <code>&lt;civ-action-link type="phone"&gt;</code>
+          <span>Clickable phone (<code>tel:</code>) link with icon. Props: <code>number</code>, <code>label</code>.</span>
         </div>
         <div class="form-list-item">
-          <code>&lt;civ-external-link&gt;</code>
-          <span>Link that opens in a new tab with security attributes and "opens in new tab" screen reader text. Props: <code>label</code>, <code>href</code>.</span>
+          <code>&lt;civ-action-link type="email"&gt;</code>
+          <span>Clickable email (<code>mailto:</code>) link with icon. Props: <code>address</code>, <code>label</code>, <code>subject</code>.</span>
         </div>
       </div>
     </div>

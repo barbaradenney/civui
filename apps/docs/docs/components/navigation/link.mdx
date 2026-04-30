@@ -167,65 +167,31 @@ A unified link for device actions — phone calls and email compose. Set the `ty
 
 ## Specialized Links
 
-CivUI also provides single-purpose link components for navigation patterns (external links, downloads).
-
----
+For external links, use `<civ-link>` with the `external` prop. For file downloads, use `<civ-action-link type="download">`.
 
 ### External Link
 
-`<civ-external-link>`
-
-A link for navigating to external websites. Automatically sets `target="_blank"`, `rel="noopener noreferrer"`, appends an external-link icon, and adds screen-reader-only "(opens in new tab)" text.
-
-<StoryEmbed id="actions-external-link--default" />
-
-<StoryEmbed id="actions-external-link--disabled" />
-
-[Open in Storybook →](pathname:///civui/storybook/?path=/story/actions-external-link--default)
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `label` | `string` | `''` | Link text |
-| `href` | `string` | `''` | External URL destination (required) |
-| `disabled` | `boolean` | `false` | Disabled state |
-
-**Why use this component:** Forgetting `rel="noopener noreferrer"` creates a security vulnerability (reverse tabnapping). Forgetting to announce "opens in new tab" disorients screen reader users. This component handles both automatically.
+Use `<civ-link external>` to open links in a new tab. This automatically sets `target="_blank"`, `rel="noopener noreferrer"`, appends an external-link icon, and adds screen-reader-only "(opens in new tab)" text.
 
 ```html
-<civ-external-link
+<civ-link
   href="https://www.ssa.gov"
   label="Social Security Administration"
-></civ-external-link>
+  external
+></civ-link>
 ```
-
----
 
 ### Download Link
 
-`<civ-download-link>`
-
-A link for file downloads. Sets the `download` attribute, shows a download icon, and optionally displays the file size.
-
-<StoryEmbed id="actions-download-link--default" />
-
-<StoryEmbed id="actions-download-link--with-file-size" />
-
-[Open in Storybook →](pathname:///civui/storybook/?path=/story/actions-download-link--default)
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `href` | `string` | `''` | URL of the file to download (required) |
-| `label` | `string` | `''` | Link text describing the download |
-| `filename` | `string` | `''` | Suggested filename for the downloaded file |
-| `file-size` | `string` | `''` | Human-readable file size (e.g., "2.4 MB") |
-| `disabled` | `boolean` | `false` | Disabled state |
+Use `<civ-action-link type="download">` for file downloads. This sets the `download` attribute, shows a download icon, and optionally displays the file size.
 
 ```html
-<civ-download-link
+<civ-action-link
+  type="download"
   href="/forms/va-10-10ez.pdf"
   label="Application for Health Benefits (VA 10-10EZ)"
   filename="va-10-10ez.pdf"
   file-size="1.2 MB"
-></civ-download-link>
+></civ-action-link>
 ```
 

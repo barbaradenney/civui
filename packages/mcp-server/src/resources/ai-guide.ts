@@ -72,9 +72,7 @@ For architecture and internals, see \`CLAUDE.md\` in the repo root.
 | \`<civ-routing-number>\` | Preset | — | \`{ value }\` |
 | \`<civ-va-file-number>\` | Preset | — | \`{ value }\` |
 | \`<civ-country>\` | Preset | \`us-first\`, \`include\`, \`exclude\` | \`{ value }\` |
-| \`<civ-download-link>\` | Action | \`label\`, \`href\`, \`filename\`, \`file-size\` | — |
-| \`<civ-action-link>\` | Action | \`type\` (\`phone\`/\`email\`), \`number\`, \`address\`, \`label\`, \`subject\` | — |
-| \`<civ-external-link>\` | Action | \`label\`, \`href\` | — |
+| \`<civ-action-link>\` | Action | \`type\` (\`phone\`/\`email\`/\`download\`), \`number\`, \`address\`, \`label\`, \`subject\`, \`href\`, \`filename\`, \`file-size\` | — |
 | \`<civ-skip-link>\` | Navigation | \`label\`, \`href\` | — |
 | \`<civ-icon>\` | UI | \`name\`, \`label\` | — |
 
@@ -889,9 +887,7 @@ Pre-configured wrappers with built-in masking, validation, and labeling. Wrap in
 
 | Component | Key props | Description |
 |-----------|-----------|-------------|
-| \`<civ-download-link>\` | \`label\`, \`href\`, \`filename\`, \`file-size\` | File download with icon |
-| \`<civ-action-link>\` | \`type\`, \`number\`, \`address\`, \`label\`, \`subject\` | Phone (tel:) or email (mailto:) link with icon |
-| \`<civ-external-link>\` | \`label\`, \`href\` | Opens in new tab with SR text |
+| \`<civ-action-link>\` | \`type\` (\`phone\`/\`email\`/\`download\`), \`number\`, \`address\`, \`label\`, \`subject\`, \`href\`, \`filename\`, \`file-size\` | Phone, email, or download link with icon |
 
 ---
 

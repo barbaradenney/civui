@@ -69,8 +69,6 @@ export default defineConfig({
       '@civui/navigation/task-list': resolve(packages, 'navigation/src/task-list/index.ts'),
       '@civui/navigation/link': resolve(packages, 'navigation/src/link/index.ts'),
       '@civui/navigation/link-card': resolve(packages, 'navigation/src/link-card/index.ts'),
-      '@civui/navigation/external-link': resolve(packages, 'navigation/src/external-link/index.ts'),
-      '@civui/navigation/download-link': resolve(packages, 'navigation/src/download-link/index.ts'),
       '@civui/navigation': resolve(packages, 'navigation/src/index.ts'),
       '@civui/feedback/alert': resolve(packages, 'feedback/src/alert/index.ts'),
       '@civui/feedback/badge': resolve(packages, 'feedback/src/badge/index.ts'),

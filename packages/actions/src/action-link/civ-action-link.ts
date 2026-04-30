@@ -1,9 +1,9 @@
-import { html } from 'lit';
+import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { CivBaseElement, LightDomTextMixin } from '@civui/core';
 import '@civui/navigation/link';
 
-export type ActionLinkType = 'phone' | 'email';
+export type ActionLinkType = 'phone' | 'email' | 'download';
 
 /**
  * CivUI Action Link
@@ -14,10 +14,13 @@ export type ActionLinkType = 'phone' | 'email';
  *
  * @element civ-action-link
  *
- * @prop {'phone' | 'email'} type - The action type
+ * @prop {'phone' | 'email' | 'download'} type - The action type
  * @prop {string} number - Phone number (used when type="phone")
  * @prop {string} address - Email address (used when type="email")
  * @prop {string} subject - Pre-filled email subject (used when type="email")
+ * @prop {string} href - File URL (used when type="download")
+ * @prop {string} filename - Suggested download filename (used when type="download")
+ * @prop {string} fileSize - Display file size e.g. "2.4 MB" (used when type="download")
  * @prop {string} label - Override display text
  *
  * @fires civ-analytics - Analytics tracking event on click
@@ -26,6 +29,7 @@ export type ActionLinkType = 'phone' | 'email';
  * ```html
  * <civ-action-link type="phone" number="800-555-1234"></civ-action-link>
  * <civ-action-link type="email" address="help@va.gov"></civ-action-link>
+ * <civ-action-link type="download" href="/forms/10-10EZ.pdf" label="VA Form 10-10EZ" file-size="1.2 MB"></civ-action-link>
  * ```
  */
 @customElement('civ-action-link')
@@ -42,7 +46,16 @@ export class CivActionLink extends LightDomTextMixin(CivBaseElement) {
   /** Pre-filled email subject line. Used when type="email". */
   @property({ type: String }) subject = '';
 
-  /** Override display text. Defaults to formatted number or email address. */
+  /** File URL. Used when type="download". */
+  @property({ type: String }) href = '';
+
+  /** Suggested download filename. Used when type="download". */
+  @property({ type: String }) filename = '';
+
+  /** Human-readable file size displayed after link text. Used when type="download". */
+  @property({ type: String, attribute: 'file-size' }) fileSize = '';
+
+  /** Override display text. Defaults to formatted number, email address, or filename. */
   @property({ type: String }) label = '';
 
   /** Disabled state. */
@@ -58,6 +71,9 @@ export class CivActionLink extends LightDomTextMixin(CivBaseElement) {
       if (!this.address) return '';
       const params = this.subject ? `?subject=${encodeURIComponent(this.subject)}` : '';
       return `mailto:${this.address}${params}`;
+    }
+    if (this.type === 'download') {
+      return this.href;
     }
     return '';
   }
@@ -75,22 +91,30 @@ export class CivActionLink extends LightDomTextMixin(CivBaseElement) {
     if (this.type === 'email') {
       return this.address;
     }
+    if (this.type === 'download') {
+      return this.filename || this.href;
+    }
     return '';
   }
 
   /** Icon based on type. */
   private get _icon(): string {
-    return this.type === 'phone' ? 'phone' : 'mail';
+    if (this.type === 'phone') return 'phone';
+    if (this.type === 'email') return 'mail';
+    return 'download';
   }
 
   override render() {
+    const isDownload = this.type === 'download';
+
     return html`
       <civ-link
         label="${this._displayText}"
         href="${this._href}"
         icon-start="${this._icon}"
+        download="${isDownload ? (this.filename || '') : nothing}"
         ?disabled="${this.disabled}"
-      ></civ-link>
+      ></civ-link>${isDownload && this.fileSize ? html`<span class="civ-text-sm civ-text-base civ-ms-1">(${this.fileSize})</span>` : nothing}
     `;
   }
 }

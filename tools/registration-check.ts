@@ -53,8 +53,6 @@ const TAG_TO_PACKAGE: Record<string, string> = {
   'civ-page-header': '@civui/layout',
   'civ-link': '@civui/navigation',
   'civ-link-card': '@civui/navigation',
-  'civ-external-link': '@civui/navigation',
-  'civ-download-link': '@civui/navigation',
   'civ-skip-link': '@civui/navigation',
   'civ-task': '@civui/navigation',
   'civ-task-group': '@civui/navigation',

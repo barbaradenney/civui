@@ -78,8 +78,6 @@ const config: StorybookConfig = {
       '@civui/navigation/task-list': resolve(root, 'packages/navigation/src/task-list/index.ts'),
       '@civui/navigation/link': resolve(root, 'packages/navigation/src/link/index.ts'),
       '@civui/navigation/link-card': resolve(root, 'packages/navigation/src/link-card/index.ts'),
-      '@civui/navigation/external-link': resolve(root, 'packages/navigation/src/external-link/index.ts'),
-      '@civui/navigation/download-link': resolve(root, 'packages/navigation/src/download-link/index.ts'),
       '@civui/navigation': resolve(root, 'packages/navigation/src/index.ts'),
       '@civui/tokens/css': resolve(root, 'packages/tokens/dist/css/tokens.css'),
     };

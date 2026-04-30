@@ -94,9 +94,9 @@
     @apply civ-underline civ-text-primary;
   }
 
-  /* Description slot: smaller, muted, no margin */
+  /* Description slot: smaller, no margin */
   [data-civ-list-item-description-slot] > * {
-    @apply civ-text-sm civ-text-base-dark civ-m-0;
+    @apply civ-text-sm civ-m-0;
     display: block;
   }
 

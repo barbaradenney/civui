@@ -47,7 +47,7 @@ const UNSAFE_HREF_PATTERN = /^\s*javascript\s*:/i;
  * <civ-list-item>
  *   <civ-icon data-list-item-start name="edit"></civ-icon>
  *   <h3 data-list-item-heading class="civ-font-bold">Contact information</h3>
- *   <p data-list-item-description class="civ-text-sm civ-text-base-dark">
+ *   <p data-list-item-description class="civ-text-sm">
  *     Phone, email, and <a href="#/address">mailing address</a>
  *   </p>
  *   <civ-badge data-list-item-end label="In progress" variant="info"></civ-badge>
@@ -124,7 +124,7 @@ export class CivListItem extends LightDomSlotMixin(CivBaseElement) {
     const descriptionContent = hasDescriptionSlot
       ? html`<span data-civ-list-item-description-slot></span>`
       : this.description
-        ? html`<span class="civ-block civ-text-sm civ-text-base-dark">${this.description}</span>`
+        ? html`<span class="civ-block civ-text-sm">${this.description}</span>`
         : nothing;
 
     const inner = html`

@@ -54,11 +54,11 @@ The full mapping is maintained in each platform's `CivIcon` file. CI enforces th
 
 ### iOS (SwiftUI) -- 43 files
 
-CivAddress, CivAlert, CivButton, CivCard, CivCheckbox, CivCheckboxGroup, CivCombobox, CivConditional, CivDatePicker, CivDirectDeposit, CivDivider, CivFieldset, CivFileUpload, CivForm, CivFormGroup, CivFormState, CivFormStep, CivIcon, CivLink, CivLinkCard, CivLocale, CivMemorableDate, CivName, CivPageHeader, CivPrefillNotice, CivProgressBar, CivProgressSteps, CivRadio, CivReadOnlyField, CivRepeater, CivSegmentedControl, CivSelect, CivSignature, CivSkipLink, CivSummary, CivTag, CivTaskList, CivTextInput, CivTextarea, CivToggle, CivTokens, CivUI, CivYesNo.
+CivAddress, CivAlert, CivButton, CivCard, CivCheckbox, CivCheckboxGroup, CivCombobox, CivConditional, CivDatePicker, CivDirectDeposit, CivDivider, CivFieldset, CivFileUpload, CivForm, CivFormGroup, CivFormState, CivFormStep, CivIcon, CivLink, CivLinkCard, CivLocale, CivMemorableDate, CivName, CivPageHeader, CivPrefillNotice, CivProgressBar, CivProgressSteps, CivRadio, CivReadOnlyField, CivRepeater, CivSegmentedControl, CivSelect, CivSignature, CivSkipLink, CivSummary, CivList, CivTag, CivTextInput, CivTextarea, CivToggle, CivTokens, CivUI, CivYesNo.
 
 ### Android (Jetpack Compose) -- 41 files
 
-CivAddress, CivAlert, CivButton, CivCard, CivCheckbox, CivCheckboxGroup, CivCombobox, CivConditional, CivDatePicker, CivDirectDeposit, CivDivider, CivFieldHelpers, CivFieldset, CivFileUpload, CivForm, CivFormGroup, CivFormState, CivFormStep, CivIcon, CivLink, CivLinkCard, CivMemorableDate, CivName, CivPageHeader, CivPrefillNotice, CivProgressBar, CivProgressSteps, CivRadio, CivReadOnlyField, CivRepeater, CivSegmentedControl, CivSelect, CivSignature, CivSkipLink, CivSummary, CivTag, CivTaskList, CivTextInput, CivTextarea, CivToggle, CivYesNo.
+CivAddress, CivAlert, CivButton, CivCard, CivCheckbox, CivCheckboxGroup, CivCombobox, CivConditional, CivDatePicker, CivDirectDeposit, CivDivider, CivFieldHelpers, CivFieldset, CivFileUpload, CivForm, CivFormGroup, CivFormState, CivFormStep, CivIcon, CivLink, CivLinkCard, CivMemorableDate, CivName, CivPageHeader, CivPrefillNotice, CivProgressBar, CivProgressSteps, CivRadio, CivReadOnlyField, CivRepeater, CivSegmentedControl, CivSelect, CivSignature, CivSkipLink, CivSummary, CivList, CivTag, CivTextInput, CivTextarea, CivToggle, CivYesNo.
 
 ## Web-Only Features
 

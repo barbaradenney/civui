@@ -45,8 +45,8 @@ describe('generateGovForm', async () => {
 
   it('includes task list hub', async () => {
     const result = await generateGovForm('21-526EZ');
-    expect(result.taskListHub.html).toContain('civ-task-list');
-    expect(result.taskListHub.html).toContain('civ-task-group');
+    expect(result.taskListHub.html).toContain('civ-list');
+    expect(result.taskListHub.html).toContain('civ-list-item');
     expect(result.taskListHub.html).toContain('civ-progress-bar');
   });
 

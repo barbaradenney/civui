@@ -71,12 +71,12 @@ const config: StorybookConfig = {
       '@civui/layout/card': resolve(root, 'packages/layout/src/card/index.ts'),
       '@civui/layout/divider': resolve(root, 'packages/layout/src/divider/index.ts'),
       '@civui/layout/input-group': resolve(root, 'packages/layout/src/input-group/index.ts'),
+      '@civui/layout/list': resolve(root, 'packages/layout/src/list/index.ts'),
       '@civui/layout/page-header': resolve(root, 'packages/layout/src/page-header/index.ts'),
       '@civui/layout/tag': resolve(root, 'packages/layout/src/tag/index.ts'),
       '@civui/layout': resolve(root, 'packages/layout/src/index.ts'),
       // Navigation
       '@civui/navigation/skip-link': resolve(root, 'packages/navigation/src/skip-link/index.ts'),
-      '@civui/navigation/task-list': resolve(root, 'packages/navigation/src/task-list/index.ts'),
       '@civui/navigation/link': resolve(root, 'packages/navigation/src/link/index.ts'),
       '@civui/navigation/link-card': resolve(root, 'packages/navigation/src/link-card/index.ts'),
       '@civui/navigation/external-link': resolve(root, 'packages/navigation/src/external-link/index.ts'),

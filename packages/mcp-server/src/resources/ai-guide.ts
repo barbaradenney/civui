@@ -44,9 +44,8 @@ For architecture and internals, see \`CLAUDE.md\` in the repo root.
 | \`<civ-page-header>\` | Layout | Slots: \`data-tag\`, \`data-eyebrow\`, \`data-heading\`, \`data-subheading\` | — |
 | \`<civ-link-card>\` | Navigation | \`href\`, \`heading\`, \`description\`, \`variant\` (primary/secondary/tertiary/critical) | \`civ-analytics\` |
 | \`<civ-divider>\` | Layout | \`spacing\` (default/sm) | — |
-| \`<civ-task-list>\` | Navigation | Container for \`<civ-task-group>\` elements | — |
-| \`<civ-task-group>\` | Navigation | Slot: \`data-task-group-heading\` for group heading | — |
-| \`<civ-task>\` | Navigation | \`label\`, \`hint\`, \`href\`, \`status\` (not-started/in-progress/complete/cannot-start/error) | — |
+| \`<civ-list>\` | Layout | \`dividers\` (boolean) — generic list container. Renders \`<ul role="list">\`. Use for task lists, side nav, link collections, search results. | — |
+| \`<civ-list-item>\` | Layout | \`href\` (optional) — when set, the whole row becomes a clickable anchor. Use the \`data-list-item-end\` attribute on a child to place trailing content (status tag, switch, etc.). | \`civ-analytics\` |
 | \`<civ-progress-bar>\` | Feedback | \`value\`, \`label\`, \`status\` | — |
 | \`<civ-progress-steps>\` | Feedback | \`steps\` (JSON), \`current\`, \`show-counter\`, \`clickable\`, \`orientation\` | \`civ-step-click\` |
 | \`<civ-form-step>\` | Form | \`persist\`, \`sensitive\`, \`show-pause\`, \`continue-label\`, \`complete-label\`, \`pause-label\`, \`nav-disabled\`, \`validate\` | \`civ-step-complete\`, \`civ-step-pause\` |
@@ -624,22 +623,38 @@ Structured container with header, body, and footer slots.
 </civ-card>
 \`\`\`
 
-### civ-task-list / civ-task-group / civ-task
+### civ-list / civ-list-item (task list pattern)
 
-Task list navigation for multi-chapter forms. Tasks show a label, optional hint, and status tag.
+The "task list" is a usage pattern, not a dedicated component. Compose \`<civ-list>\` + \`<civ-list-item>\` + \`<civ-tag>\`. Setting \`href\` on a list item makes the entire row a clickable anchor; omit \`href\` for locked rows. The status tag uses \`data-list-item-end\` to flow to the trailing edge.
 
-**civ-task props:** \`label\`, \`hint\`, \`href\`, \`status\` (not-started/in-progress/complete/cannot-start/error)
-**civ-task-group slot:** \`data-task-group-heading\` for the group heading
+**Status tag mapping** (also available programmatically as \`taskStatusTag(status)\` from \`@civui/core\`):
+
+| Status | label | variant | tag-style |
+|---|---|---|---|
+| not-started | Not started | blue | secondary |
+| in-progress | In progress | teal | secondary |
+| complete | Complete | green | primary |
+| cannot-start | Cannot start yet | gray | secondary |
+| error | Has errors | red | secondary |
+| review | Needs review | yellow | primary |
 
 \`\`\`html
-<civ-task-list>
-  <civ-task-group>
-    <h3 data-task-group-heading class="civ-heading-md">Fill out your application</h3>
-    <civ-task label="Personal info" href="#/personal" status="complete"></civ-task>
-    <civ-task label="Contact info" hint="Phone needed" href="#/contact" status="in-progress"></civ-task>
-    <civ-task label="Service history" status="cannot-start"></civ-task>
-  </civ-task-group>
-</civ-task-list>
+<h3 class="civ-heading-md">Fill out your application</h3>
+<civ-list dividers>
+  <civ-list-item href="#/personal">
+    <span class="civ-block civ-font-bold">Personal info</span>
+    <civ-tag data-list-item-end label="Complete" variant="green" tag-style="primary"></civ-tag>
+  </civ-list-item>
+  <civ-list-item href="#/contact">
+    <span class="civ-block civ-font-bold">Contact info</span>
+    <span class="civ-block civ-text-sm civ-text-muted">Phone needed</span>
+    <civ-tag data-list-item-end label="In progress" variant="teal"></civ-tag>
+  </civ-list-item>
+  <civ-list-item>
+    <span class="civ-block civ-font-bold">Service history</span>
+    <civ-tag data-list-item-end label="Cannot start yet" variant="gray"></civ-tag>
+  </civ-list-item>
+</civ-list>
 \`\`\`
 
 ### civ-form-step

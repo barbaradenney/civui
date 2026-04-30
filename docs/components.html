@@ -567,85 +567,73 @@
         </div>
       </div>
 
-      <!-- civ-task-list / civ-task-group / civ-task -->
+      <!-- civ-list / civ-list-item -->
       <div class="component">
         <div class="component-header">
-          <h3>&lt;civ-task-list&gt; / &lt;civ-task-group&gt; / &lt;civ-task&gt;</h3>
-          <p>Task list navigation for multi-chapter form hubs. Based on the GDS Task List pattern adapted for government benefit applications.</p>
+          <h3>&lt;civ-list&gt; / &lt;civ-list-item&gt;</h3>
+          <p>Generic list primitives. Use for task list hubs (the GDS Task List pattern), side navigation, link collections, and any vertical row layout where some rows are clickable and some are static.</p>
         </div>
         <div class="component-body">
-          <h4>&lt;civ-task-list&gt;</h4>
-          <p>Container element. Renders a semantic list of task groups. No props &mdash; just wrap <code>&lt;civ-task-group&gt;</code> children inside it.</p>
-
-          <h4>&lt;civ-task-group&gt;</h4>
-          <p>Groups tasks under a heading. Uses the <code>data-task-group-heading</code> slot attribute for the group heading.</p>
-          <table class="props-table">
-            <thead><tr><th>Slot Attribute</th><th>Description</th></tr></thead>
-            <tbody>
-              <tr><td><code>data-task-group-heading</code></td><td>Group heading element (e.g., an <code>&lt;h3&gt;</code>)</td></tr>
-            </tbody>
-          </table>
-
-          <h4>&lt;civ-task&gt; Props</h4>
+          <h4>&lt;civ-list&gt; Props</h4>
           <table class="props-table">
             <thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
             <tbody>
-              <tr><td><code>label</code></td><td><code>string</code></td><td><code>''</code></td><td>Task name</td></tr>
-              <tr><td><code>hint</code></td><td><code>string</code></td><td><code>''</code></td><td>Optional hint text below the label</td></tr>
-              <tr><td><code>href</code></td><td><code>string</code></td><td><code>''</code></td><td>Navigation target (omit for locked tasks)</td></tr>
-              <tr><td><code>status</code></td><td><code>'not-started' | 'in-progress' | 'complete' | 'cannot-start' | 'error'</code></td><td><code>'not-started'</code></td><td>Current task status (renders as a colored tag)</td></tr>
+              <tr><td><code>dividers</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Render a 1px divider between adjacent items</td></tr>
             </tbody>
           </table>
 
-          <h4>Status Tags</h4>
+          <h4>&lt;civ-list-item&gt; Props</h4>
           <table class="props-table">
-            <thead><tr><th>Status</th><th>Tag Label</th><th>Color</th></tr></thead>
+            <thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><code>href</code></td><td><code>string</code></td><td><code>''</code></td><td>Navigation target. When set, the entire row becomes a clickable anchor (whole-row click target, hover state, focus ring). Omit for static rows.</td></tr>
+            </tbody>
+          </table>
+
+          <h4>Slots</h4>
+          <table class="props-table">
+            <thead><tr><th>Slot</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td>(default)</td><td>Primary content (label, description, anything)</td></tr>
+              <tr><td><code>data-list-item-end</code></td><td>Trailing content (status tag, switch, secondary action). Place the attribute on a child element.</td></tr>
+            </tbody>
+          </table>
+
+          <h4>Task list pattern</h4>
+          <p>The "task list" is a usage pattern, not a dedicated component. Compose <code>&lt;civ-list&gt;</code> + <code>&lt;civ-list-item&gt;</code> + <code>&lt;civ-tag&gt;</code>. Use <code>taskStatusTag(status)</code> from <code>@civui/core</code> for the canonical tag mapping if rendering in code.</p>
+
+          <table class="props-table">
+            <thead><tr><th>Status</th><th>Tag label</th><th>Color</th></tr></thead>
             <tbody>
               <tr><td><code>not-started</code></td><td>Not started</td><td>Blue (secondary)</td></tr>
               <tr><td><code>in-progress</code></td><td>In progress</td><td>Teal (secondary)</td></tr>
               <tr><td><code>complete</code></td><td>Complete</td><td>Green (primary)</td></tr>
               <tr><td><code>cannot-start</code></td><td>Cannot start yet</td><td>Gray (secondary)</td></tr>
-              <tr><td><code>error</code></td><td>Error</td><td>Red (secondary)</td></tr>
+              <tr><td><code>error</code></td><td>Has errors</td><td>Red (secondary)</td></tr>
+              <tr><td><code>review</code></td><td>Needs review</td><td>Yellow (primary)</td></tr>
             </tbody>
           </table>
 
           <h4>Example</h4>
-<pre><code>&lt;civ-task-list&gt;
-  &lt;civ-task-group&gt;
-    &lt;h3 data-task-group-heading class="civ-heading-md"&gt;
-      Fill out your application
-    &lt;/h3&gt;
-    &lt;civ-task
-      label="Your name"
-      href="/name"
-      status="complete"
-    &gt;&lt;/civ-task&gt;
-    &lt;civ-task
-      label="Contact information"
-      hint="Phone number and email"
-      href="/contact"
-      status="in-progress"
-    &gt;&lt;/civ-task&gt;
-    &lt;civ-task
-      label="Your address"
-      href="/address"
-      status="not-started"
-    &gt;&lt;/civ-task&gt;
-  &lt;/civ-task-group&gt;
-
-  &lt;civ-task-group&gt;
-    &lt;h3 data-task-group-heading class="civ-heading-md"&gt;
-      Submit
-    &lt;/h3&gt;
-    &lt;civ-task
-      label="Review and submit"
-      status="cannot-start"
-    &gt;&lt;/civ-task&gt;
-  &lt;/civ-task-group&gt;
-&lt;/civ-task-list&gt;</code></pre>
+<pre><code>&lt;h3 class="civ-heading-md"&gt;Fill out your application&lt;/h3&gt;
+&lt;civ-list dividers&gt;
+  &lt;civ-list-item href="/name"&gt;
+    &lt;span class="civ-block civ-font-bold"&gt;Your name&lt;/span&gt;
+    &lt;civ-tag data-list-item-end label="Complete" variant="green" tag-style="primary"&gt;&lt;/civ-tag&gt;
+  &lt;/civ-list-item&gt;
+  &lt;civ-list-item href="/contact"&gt;
+    &lt;span class="civ-block civ-font-bold"&gt;Contact information&lt;/span&gt;
+    &lt;span class="civ-block civ-text-sm civ-text-muted"&gt;Phone and email&lt;/span&gt;
+    &lt;civ-tag data-list-item-end label="In progress" variant="teal"&gt;&lt;/civ-tag&gt;
+  &lt;/civ-list-item&gt;
+  &lt;civ-list-item&gt;  &lt;!-- no href = locked, same visual rhythm --&gt;
+    &lt;span class="civ-block civ-font-bold"&gt;Review and submit&lt;/span&gt;
+    &lt;civ-tag data-list-item-end label="Cannot start yet" variant="gray"&gt;&lt;/civ-tag&gt;
+  &lt;/civ-list-item&gt;
+&lt;/civ-list&gt;</code></pre>
 
           <div class="note">
-            <strong>Note:</strong> When <code>status</code> is <code>"cannot-start"</code>, the task label is rendered as plain text (not a link), even if <code>href</code> is set. When <code>status</code> is <code>"error"</code>, the link renders with danger styling.
+            <strong>Note:</strong> Locked rows omit <code>href</code> and render as a plain <code>&lt;li&gt;</code> with no anchor &mdash; same visual rhythm, honest semantics.
           </div>
         </div>
       </div>

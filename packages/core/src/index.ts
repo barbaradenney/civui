@@ -83,6 +83,10 @@ export type { IconDef } from './icon/icon-library.js';
 export { t, setLocaleStrings, resetLocaleStrings, getLocaleStrings } from './i18n/index.js';
 export type { CivLocaleStrings } from './i18n/index.js';
 
+// Patterns
+export { taskStatusTag } from './patterns/task-status.js';
+export type { TaskStatus, TaskStatusTag } from './patterns/task-status.js';
+
 // Mask engine
 export {
   MASK_PRESETS,

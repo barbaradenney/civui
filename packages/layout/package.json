@@ -11,6 +11,7 @@
     "./card": "./dist/card/index.js",
     "./divider": "./dist/divider/index.js",
     "./input-group": "./dist/input-group/index.js",
+    "./list": "./dist/list/index.js",
     "./page-header": "./dist/page-header/index.js",
     "./tag": "./dist/tag/index.js"
   },

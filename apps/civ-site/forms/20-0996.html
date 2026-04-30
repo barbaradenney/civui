@@ -42,38 +42,34 @@
     status="0 of 3 sections complete"
   ></civ-progress-bar>
 
-  <civ-task-list>
-    <civ-task-group>
-      <h3 data-task-group-heading class="civ-heading-md">Fill out your application</h3>
-      <civ-task
-        data-chapter-id="personal-info"
-        label="Personal information"
-        hint="Name, date of birth, Social Security number" href="#/personal-info"
-        status="not-started"
-      ></civ-task>
-      <civ-task
-        data-chapter-id="contact-info"
-        label="Contact information"
-        hint="Address, phone, email"
-        status="cannot-start"
-      ></civ-task>
-      <civ-task
-        data-chapter-id="review-details"
-        label="Review details"
-        hint="Information about the decision you want reviewed"
-        status="cannot-start"
-      ></civ-task>
-    </civ-task-group>
+      <h3 class="civ-heading-md civ-mt-6 civ-mb-2">Fill out your application</h3>
+    <civ-list dividers>
+      <civ-list-item data-chapter-id="personal-info" href="#/personal-info">
+        <span class="civ-block civ-font-bold">Personal information</span>
+        <span class="civ-block civ-text-sm civ-text-muted">Name, date of birth, Social Security number</span>
+        <civ-tag data-list-item-end label="Not started" variant="blue" tag-style="secondary"></civ-tag>
+      </civ-list-item>
+      <civ-list-item data-chapter-id="contact-info">
+        <span class="civ-block civ-font-bold">Contact information</span>
+        <span class="civ-block civ-text-sm civ-text-muted">Address, phone, email</span>
+        <civ-tag data-list-item-end label="Cannot start yet" variant="gray" tag-style="secondary"></civ-tag>
+      </civ-list-item>
+      <civ-list-item data-chapter-id="review-details">
+        <span class="civ-block civ-font-bold">Review details</span>
+        <span class="civ-block civ-text-sm civ-text-muted">Information about the decision you want reviewed</span>
+        <civ-tag data-list-item-end label="Cannot start yet" variant="gray" tag-style="secondary"></civ-tag>
+      </civ-list-item>
+    </civ-list>
 
-    <civ-task-group>
-      <h3 data-task-group-heading class="civ-heading-md">Review and submit</h3>
-      <civ-task
-        label="Review your application"
-        hint="Complete all sections before reviewing"
-        status="cannot-start"
-      ></civ-task>
-    </civ-task-group>
-  </civ-task-list>
+    <h3 class="civ-heading-md civ-mt-6 civ-mb-2">Review and submit</h3>
+    <civ-list dividers>
+      <civ-list-item data-review>
+        <span class="civ-block civ-font-bold">Review your application</span>
+        <span class="civ-block civ-text-sm civ-text-muted">Complete all sections before reviewing</span>
+        <civ-tag data-list-item-end label="Cannot start yet" variant="gray" tag-style="secondary"></civ-tag>
+      </civ-list-item>
+    </civ-list>
+
 </div>
     </section>
 
@@ -392,13 +388,11 @@
         });
       }
     });
-
-    // Task list — navigate when clicking a task
-    document.querySelectorAll('civ-task').forEach(task => {
-      task.addEventListener('click', (e) => {
-        const chapterId = task.getAttribute('data-chapter-id');
-        const status = task.getAttribute('status');
-        if (chapterId && status !== 'cannot-start') {
+    // Task list — navigate when clicking a list item
+    document.querySelectorAll('civ-list-item[data-chapter-id]').forEach(item => {
+      item.addEventListener('click', (e) => {
+        const chapterId = item.getAttribute('data-chapter-id');
+        if (chapterId && item.hasAttribute('href')) {
           e.preventDefault();
           showPage(chapterId);
         }
@@ -451,39 +445,34 @@
 
     // ── Task List Status Tracking ────────────────────────────────
 
-    function updateTaskList() {
+        function updateTaskList() {
       const totalChapters = CHAPTERS.length;
       let doneCount = 0;
       let nextUnlocked = false;
 
-      // Update each chapter task by data-chapter-id
+      // Update each chapter row by data-chapter-id
       CHAPTERS.forEach(chapterId => {
-        const task = document.querySelector('civ-task[data-chapter-id="' + chapterId + '"]');
-        if (!task) return;
+        const item = document.querySelector('civ-list-item[data-chapter-id="' + chapterId + '"]');
+        if (!item) return;
 
         if (completedChapters.has(chapterId)) {
-          task.setAttribute('status', 'complete');
-          task.setAttribute('href', '#/' + chapterId);
+          setItemStatus(item, 'complete', '#/' + chapterId);
           doneCount++;
         } else if (!nextUnlocked) {
-          task.setAttribute('status', 'not-started');
-          task.setAttribute('href', '#/' + chapterId);
+          setItemStatus(item, 'not-started', '#/' + chapterId);
           nextUnlocked = true;
         } else {
-          task.setAttribute('status', 'cannot-start');
-          task.removeAttribute('href');
+          setItemStatus(item, 'cannot-start', null);
         }
       });
 
-      // Update review task (last task, no data-chapter-id)
-      const reviewTask = document.querySelector('civ-task:not([data-chapter-id])');
-      if (reviewTask) {
+      // Update review row (marked with data-review)
+      const reviewItem = document.querySelector('civ-list-item[data-review]');
+      if (reviewItem) {
         if (doneCount >= totalChapters) {
-          reviewTask.setAttribute('status', 'not-started');
-          reviewTask.setAttribute('href', '#/review');
+          setItemStatus(reviewItem, 'not-started', '#/review');
         } else {
-          reviewTask.setAttribute('status', 'cannot-start');
-          reviewTask.removeAttribute('href');
+          setItemStatus(reviewItem, 'cannot-start', null);
         }
       }
 
@@ -493,6 +482,30 @@
         const pct = Math.round((doneCount / totalChapters) * 100);
         progressBar.setAttribute('value', String(pct));
         progressBar.setAttribute('status', doneCount + ' of ' + totalChapters + ' sections complete');
+      }
+    }
+
+    const TASK_STATUS_MAP = {
+      'not-started': { label: 'Not started', variant: 'blue', style: 'secondary' },
+      'in-progress': { label: 'In progress', variant: 'teal', style: 'secondary' },
+      'complete': { label: 'Complete', variant: 'green', style: 'primary' },
+      'cannot-start': { label: 'Cannot start yet', variant: 'gray', style: 'secondary' },
+      'error': { label: 'Has errors', variant: 'red', style: 'secondary' },
+      'review': { label: 'Needs review', variant: 'yellow', style: 'primary' },
+    };
+
+    function setItemStatus(item, status, href) {
+      const tag = item.querySelector('civ-tag');
+      const def = TASK_STATUS_MAP[status];
+      if (tag && def) {
+        tag.setAttribute('label', def.label);
+        tag.setAttribute('variant', def.variant);
+        tag.setAttribute('tag-style', def.style);
+      }
+      if (href) {
+        item.setAttribute('href', href);
+      } else {
+        item.removeAttribute('href');
       }
     }
 
@@ -594,8 +607,8 @@
         // Mark task as prefilled
         var chapterId = review.closest('[data-chapter]');
         chapterId = chapterId ? chapterId.getAttribute('data-chapter') : '';
-        var task = document.querySelector('civ-task[data-chapter-id="' + chapterId + '"]');
-        if (task) task.setAttribute('prefilled', '');
+        var task = document.querySelector('civ-list-item[data-chapter-id="' + chapterId + '"]');
+        if (task) task.setAttribute('data-prefilled', '');
       });
 
       // Update task statuses — only the FIRST prefilled chapter gets "review"
@@ -604,15 +617,15 @@
       var firstReviewSet = false;
       CHAPTERS.forEach(function(chapterId) {
         var review = document.querySelector('[data-chapter="' + chapterId + '"] [data-prefill-review]:not([hidden])');
-        var task = document.querySelector('civ-task[data-chapter-id="' + chapterId + '"]');
-        if (review && task && task.getAttribute('status') !== 'complete') {
+        var task = document.querySelector('civ-list-item[data-chapter-id="' + chapterId + '"]');
+        const tag = task && task.querySelector('civ-tag');
+        const isComplete = tag && tag.getAttribute('variant') === 'green';
+        if (review && task && !isComplete) {
           if (!firstReviewSet) {
-            task.setAttribute('status', 'review');
-            task.setAttribute('href', '#/' + chapterId);
+            setItemStatus(task, 'review', '#/' + chapterId);
             firstReviewSet = true;
           } else {
-            task.setAttribute('status', 'cannot-start');
-            task.removeAttribute('href');
+            setItemStatus(task, 'cannot-start', null);
           }
         }
       });

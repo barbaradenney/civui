@@ -62,12 +62,12 @@ export default defineConfig({
       '@civui/layout/card': resolve(packages, 'layout/src/card/index.ts'),
       '@civui/layout/divider': resolve(packages, 'layout/src/divider/index.ts'),
       '@civui/layout/input-group': resolve(packages, 'layout/src/input-group/index.ts'),
+      '@civui/layout/list': resolve(packages, 'layout/src/list/index.ts'),
       '@civui/layout/page-header': resolve(packages, 'layout/src/page-header/index.ts'),
       '@civui/layout/tag': resolve(packages, 'layout/src/tag/index.ts'),
       '@civui/layout': resolve(packages, 'layout/src/index.ts'),
       // Navigation
       '@civui/navigation/skip-link': resolve(packages, 'navigation/src/skip-link/index.ts'),
-      '@civui/navigation/task-list': resolve(packages, 'navigation/src/task-list/index.ts'),
       '@civui/navigation/link': resolve(packages, 'navigation/src/link/index.ts'),
       '@civui/navigation/link-card': resolve(packages, 'navigation/src/link-card/index.ts'),
       '@civui/navigation/external-link': resolve(packages, 'navigation/src/external-link/index.ts'),

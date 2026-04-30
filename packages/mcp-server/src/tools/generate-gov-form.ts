@@ -531,17 +531,18 @@ function generateConfirmationPage(form: ReturnType<typeof getFormDefinition> & {
 /** Generate the task list hub page. */
 function generateTaskListHub(form: ReturnType<typeof getFormDefinition> & {}, chapters: Array<GovChapterMeta>): { html: string } {
   const filteredChapters = chapters.filter(ch => ch.id !== 'review-submit');
-  const chapterTasks = filteredChapters
+  const chapterRows = filteredChapters
     .map((ch, i) => {
       // Only the first chapter starts as navigable; rest are locked until unlocked
       const href = i === 0 ? ` href="#/${slugify(ch.id)}"` : '';
-      const status = i === 0 ? 'not-started' : 'cannot-start';
-      return `      <civ-task
-        data-chapter-id="${slugify(ch.id)}"
-        label="${escapeHtml(ch.heading)}"
-        hint="${escapeHtml(ch.hint)}"${href}
-        status="${status}"
-      ></civ-task>`;
+      const tag = i === 0
+        ? '<civ-tag data-list-item-end label="Not started" variant="blue" tag-style="secondary"></civ-tag>'
+        : '<civ-tag data-list-item-end label="Cannot start yet" variant="gray" tag-style="secondary"></civ-tag>';
+      return `      <civ-list-item data-chapter-id="${slugify(ch.id)}"${href}>
+        <span class="civ-block civ-font-bold">${escapeHtml(ch.heading)}</span>
+        <span class="civ-block civ-text-sm civ-text-muted">${escapeHtml(ch.hint)}</span>
+        ${tag}
+      </civ-list-item>`;
     })
     .join('\n');
 
@@ -558,21 +559,19 @@ function generateTaskListHub(form: ReturnType<typeof getFormDefinition> & {}, ch
     status="0 of ${chapters.filter(ch => ch.id !== 'review-submit').length} sections complete"
   ></civ-progress-bar>
 
-  <civ-task-list>
-    <civ-task-group>
-      <h3 data-task-group-heading class="civ-heading-md">Fill out your application</h3>
-${chapterTasks}
-    </civ-task-group>
+  <h3 class="civ-heading-md civ-mt-6 civ-mb-2">Fill out your application</h3>
+  <civ-list dividers>
+${chapterRows}
+  </civ-list>
 
-    <civ-task-group>
-      <h3 data-task-group-heading class="civ-heading-md">Review and submit</h3>
-      <civ-task
-        label="Review your application"
-        hint="Complete all sections before reviewing"
-        status="cannot-start"
-      ></civ-task>
-    </civ-task-group>
-  </civ-task-list>
+  <h3 class="civ-heading-md civ-mt-6 civ-mb-2">Review and submit</h3>
+  <civ-list dividers>
+    <civ-list-item data-review>
+      <span class="civ-block civ-font-bold">Review your application</span>
+      <span class="civ-block civ-text-sm civ-text-muted">Complete all sections before reviewing</span>
+      <civ-tag data-list-item-end label="Cannot start yet" variant="gray" tag-style="secondary"></civ-tag>
+    </civ-list-item>
+  </civ-list>
 </div>`;
 
   return { html };

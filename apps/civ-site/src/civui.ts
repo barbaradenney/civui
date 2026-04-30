@@ -18,9 +18,10 @@ import '@civui/feedback';
 // Force Vite to include form-step (tree-shaking workaround)
 import { CivFormStep } from '@civui/form-patterns';
 import { CivButton } from '@civui/actions';
-import { CivTask } from '@civui/navigation';
+import { CivList, CivListItem } from '@civui/layout';
 import { CivAlert } from '@civui/feedback';
 void CivFormStep;
 void CivButton;
-void CivTask;
+void CivList;
+void CivListItem;
 void CivAlert;

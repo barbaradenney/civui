@@ -190,15 +190,23 @@ generate_signature_block(schema, { type: "typed", legalText: "I certify..." })
 
 ### Add a task list
 \`\`\`html
-<civ-task-list>
-  <civ-task-group>
-    <h3 data-task-group-heading class="civ-heading-md">Section</h3>
-    <civ-task label="Step 1" href="#/step1" status="complete"></civ-task>
-    <civ-task label="Step 2" href="#/step2" status="in-progress"></civ-task>
-    <civ-task label="Step 3" status="cannot-start"></civ-task>
-  </civ-task-group>
-</civ-task-list>
+<h3 class="civ-heading-md">Section</h3>
+<civ-list dividers>
+  <civ-list-item href="#/step1">
+    <span class="civ-block civ-font-bold">Step 1</span>
+    <civ-tag data-list-item-end label="Complete" variant="green" tag-style="primary"></civ-tag>
+  </civ-list-item>
+  <civ-list-item href="#/step2">
+    <span class="civ-block civ-font-bold">Step 2</span>
+    <civ-tag data-list-item-end label="In progress" variant="teal"></civ-tag>
+  </civ-list-item>
+  <civ-list-item>
+    <span class="civ-block civ-font-bold">Step 3</span>
+    <civ-tag data-list-item-end label="Cannot start yet" variant="gray"></civ-tag>
+  </civ-list-item>
+</civ-list>
 \`\`\`
+Setting \`href\` on a \`civ-list-item\` makes the whole row clickable; omit \`href\` for locked rows. Status tags use the \`data-list-item-end\` attribute to flow to the trailing edge. The \`taskStatusTag(status)\` helper from \`@civui/core\` returns canonical \`{label, variant, tagStyle}\` props if you're rendering in code.
 
 ### Validate accessibility
 \`\`\`

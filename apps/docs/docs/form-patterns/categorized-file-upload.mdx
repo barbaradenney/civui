@@ -1,0 +1,151 @@
+---
+title: Categorized File Upload
+sidebar_position: 11
+sidebar_label: Categorized Upload
+---
+
+# Categorized File Upload
+
+Government forms often require uploaded documents to be categorized — the user selects a document type before uploading the file. This ensures every attachment is properly labeled for processing and prevents uncategorized documents from reaching caseworkers.
+
+## The pattern
+
+1. User selects a document category from a dropdown
+2. User uploads a file for that category
+3. The file appears in the list with its category label
+4. Repeat for additional documents using a repeater
+
+```html
+<civ-repeater
+  legend="Supporting documents"
+  name="documents"
+  item-label="document"
+  mode="detail"
+  min="1"
+>
+  <civ-form-field label="Document type" required>
+    <civ-select name="docType" preset="document-type" required></civ-select>
+  </civ-form-field>
+  <civ-file-upload
+    name="file"
+    accept=".pdf,.jpg,.png"
+    hint="Upload a PDF, JPG, or PNG file"
+    required
+  ></civ-file-upload>
+</civ-repeater>
+```
+
+## Why category first
+
+For government applications, **select the category before uploading** (not after):
+
+- Every file is categorized the moment it enters the system
+- No orphaned uncategorized files that require manual triage
+- The category label sets expectations for what to upload
+- Caseworkers can route documents immediately on receipt
+
+## Single document with category
+
+For forms that need one categorized file (not a repeating list):
+
+```html
+<civ-fieldset legend="Upload supporting document">
+  <civ-form-field label="Document type" required>
+    <civ-select name="docType">
+      <option value="">- Select -</option>
+      <option value="dd214">DD214 (Discharge papers)</option>
+      <option value="medical">Medical records</option>
+      <option value="buddy">Buddy statement</option>
+      <option value="other">Other</option>
+    </civ-select>
+  </civ-form-field>
+
+  <civ-conditional when="docType" has-value>
+    <civ-file-upload
+      name="document"
+      accept=".pdf,.jpg,.png"
+      hint="Upload a PDF, JPG, or PNG file"
+      required
+    ></civ-file-upload>
+  </civ-conditional>
+</civ-fieldset>
+```
+
+The file upload only appears after a category is selected, reinforcing the category-first flow.
+
+## Multiple categorized documents
+
+Use `civ-repeater` in detail mode so each document entry has its own category + file pair:
+
+```html
+<civ-repeater
+  legend="Supporting documents"
+  name="documents"
+  item-label="document"
+  mode="detail"
+  min="0"
+  max="10"
+>
+  <civ-form-field label="Document type" required>
+    <civ-select name="docType">
+      <option value="">- Select -</option>
+      <option value="dd214">DD214 (Discharge papers)</option>
+      <option value="medical">Medical records</option>
+      <option value="buddy">Buddy statement</option>
+      <option value="id">Government-issued ID</option>
+      <option value="other">Other</option>
+    </civ-select>
+  </civ-form-field>
+
+  <civ-conditional when="docType" equals="other">
+    <civ-form-field label="Describe the document" required>
+      <civ-text-input name="docDescription"></civ-text-input>
+    </civ-form-field>
+  </civ-conditional>
+
+  <civ-file-upload
+    name="file"
+    accept=".pdf,.jpg,.png"
+    hint="Upload a PDF, JPG, or PNG file"
+    required
+  ></civ-file-upload>
+</civ-repeater>
+```
+
+## Review page
+
+On the review page, use `civ-file-list` to display categorized uploads:
+
+```html
+<civ-summary heading="Review your application"></civ-summary>
+```
+
+```js
+summary.sections = [
+  {
+    heading: 'Supporting documents',
+    editHref: '#/documents',
+    items: [
+      { label: 'DD214', value: 'discharge-papers.pdf (2.4 MB)' },
+      { label: 'Medical records', value: 'medical-report.pdf (1.8 MB)' },
+      { label: 'Buddy statement', value: 'buddy-letter.pdf (340 KB)' },
+    ],
+  },
+];
+```
+
+## Accessibility
+
+- The category select has a visible label and is required — screen readers announce "Document type, required"
+- The file upload's label describes what to upload, reinforced by the `hint` text
+- The conditional reveal hides the upload until a category is chosen, reducing cognitive load
+- Each repeater entry is announced with its index ("document 1", "document 2")
+
+## Components used
+
+- [`civ-select`](/docs/components/inputs/select) — category dropdown
+- [`civ-file-upload`](/docs/components/inputs/file-upload) — file input
+- [`civ-conditional`](/docs/components/form/conditional) — show upload after category selection
+- [`civ-repeater`](/docs/components/form/repeater) — multiple categorized uploads
+- [`civ-file-list`](/docs/components/layout/list) — read-only file display on review pages
+- [`civ-fieldset`](/docs/components/form/fieldset) — group category + upload together

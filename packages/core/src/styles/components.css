@@ -725,7 +725,7 @@
     border-radius: var(--civ-icon-radius);
     top: 50%;
     left: 50%;
-    transform: translate(-36%, -50%) rotate(-45deg);
+    transform: translate(-50%, -100%) rotate(-45deg);
   }
   .civ-icon--edit::after {
     content: '';
@@ -735,8 +735,8 @@
     border-top: 0.14em solid transparent;
     border-bottom: 0.14em solid transparent;
     border-right: 0.18em solid currentColor;
-    bottom: 0.1em;
-    left: 0.06em;
+    bottom: 0.2em;
+    left: 0.12em;
     transform: rotate(-45deg);
   }
 

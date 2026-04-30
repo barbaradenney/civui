@@ -165,5 +165,14 @@ describe('civ-badge', () => {
       expect(badge.className).toContain('civ-badge--dot');
       expect(badge.className).toContain('civ-badge--overlay');
     });
+
+    it('keeps a single overlay class regardless of dir (CSS handles RTL via [dir="rtl"])', async () => {
+      // Sanity check that we don't add a separate class for RTL — the CSS rule
+      // [dir="rtl"] .civ-badge--overlay { transform: ... } handles the flip.
+      const el = await fixture<CivBadge>('<civ-badge overlay count="3"></civ-badge>');
+      const badge = el.querySelector('.civ-badge')!;
+      const overlayClasses = Array.from(badge.classList).filter((c) => c.includes('overlay'));
+      expect(overlayClasses).toEqual(['civ-badge--overlay']);
+    });
   });
 });

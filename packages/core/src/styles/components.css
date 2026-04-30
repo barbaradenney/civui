@@ -2762,8 +2762,18 @@
     z-index: 1;
   }
 
+  /* RTL: flip the X translation so the badge sticks out of the inline-end edge,
+     not back into the parent. (transform doesn't have a logical equivalent.) */
+  [dir="rtl"] .civ-badge--overlay {
+    transform: translate(-50%, -50%);
+  }
+
   .civ-badge--overlay.civ-badge--dot {
     transform: translate(25%, -25%);
+  }
+
+  [dir="rtl"] .civ-badge--overlay.civ-badge--dot {
+    transform: translate(-25%, -25%);
   }
 
   /* ── Filter Chip ──────────────────────────────────────────── */

@@ -67,7 +67,7 @@ export class CivTaskV2 extends CivBaseElement {
             description="${description}"
             variant="tertiary"
           >
-            <span class="civ-block civ-mb-2">${statusTag}</span>
+            <span data-civ-link-card-end>${statusTag}</span>
           </civ-link-card>
         </li>
       `;

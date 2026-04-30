@@ -151,4 +151,42 @@ describe('civ-link-card', () => {
     expect(slotted).not.toBeNull();
     expect(slotted!.textContent).toBe('flag');
   });
+
+  it('relocates data-civ-link-card-end children into the end slot', async () => {
+    const el = await fixture(
+      '<civ-link-card href="/test" heading="Title" description="Body"><span class="badge" data-civ-link-card-end>tag</span></civ-link-card>'
+    );
+    const endSlot = el.querySelector('[data-civ-link-card-end-slot]');
+    expect(endSlot).not.toBeNull();
+    const slotted = endSlot!.querySelector('.badge');
+    expect(slotted).not.toBeNull();
+    expect(slotted!.textContent).toBe('tag');
+  });
+
+  it('end slot uses the layout wrapper even without flank icons', async () => {
+    const el = await fixture(
+      '<civ-link-card href="/test" heading="Title"><span data-civ-link-card-end>x</span></civ-link-card>'
+    );
+    const layout = el.querySelector('.civ-link-card__layout');
+    expect(layout).not.toBeNull();
+    expect(layout!.querySelector('[data-civ-link-card-end-slot]')).not.toBeNull();
+  });
+
+  it('omits end slot container when no end-slotted children exist', async () => {
+    const el = await fixture('<civ-link-card href="/test" heading="Title"></civ-link-card>');
+    expect(el.querySelector('[data-civ-link-card-end-slot]')).toBeNull();
+  });
+
+  it('supports both top and end slots simultaneously', async () => {
+    const el = await fixture(
+      '<civ-link-card href="/test" heading="Title">' +
+        '<span class="top">top</span>' +
+        '<span class="end" data-civ-link-card-end>end</span>' +
+      '</civ-link-card>'
+    );
+    const top = el.querySelector('[data-civ-link-card-slot] .top');
+    const end = el.querySelector('[data-civ-link-card-end-slot] .end');
+    expect(top).not.toBeNull();
+    expect(end).not.toBeNull();
+  });
 });

@@ -35,11 +35,11 @@ describe('civ-task-v2', () => {
     expect(tag!.getAttribute('variant')).toBe('teal');
   });
 
-  it('slotted tag is relocated inside the rendered anchor', async () => {
+  it('slotted tag is relocated into the link card end slot', async () => {
     const el = await fixture('<civ-task-v2 label="Task" href="#" status="not-started"></civ-task-v2>');
-    const anchor = el.querySelector('civ-link-card a');
-    expect(anchor).not.toBeNull();
-    expect(anchor!.querySelector('civ-tag')).not.toBeNull();
+    const endSlot = el.querySelector('civ-link-card [data-civ-link-card-end-slot]');
+    expect(endSlot).not.toBeNull();
+    expect(endSlot!.querySelector('civ-tag')).not.toBeNull();
   });
 
   it('renders cannot-start as a plain row without a link card', async () => {

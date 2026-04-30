@@ -117,7 +117,7 @@ export class CivListItem extends LightDomSlotMixin(CivBaseElement) {
     const headingContent = hasHeadingSlot
       ? html`<span data-civ-list-item-heading-slot></span>`
       : this.heading
-        ? html`<span class="civ-block civ-font-bold">${this.heading}</span>`
+        ? html`<span class="civ-block civ-font-bold civ-list-item-heading-prop">${this.heading}</span>`
         : nothing;
 
     // Description: slot takes priority, then prop fallback

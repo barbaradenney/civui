@@ -86,6 +86,18 @@
     display: block;
   }
 
+  /* Linked rows: heading looks like a link-card heading */
+  a [data-civ-list-item-heading-slot] > * {
+    @apply civ-underline civ-text-primary;
+    font-size: var(--civ-typography-fontSize-lg);
+  }
+
+  /* Prop-based heading inside linked rows */
+  a > span > .civ-list-item-heading-prop {
+    @apply civ-underline civ-text-primary;
+    font-size: var(--civ-typography-fontSize-lg);
+  }
+
   /* Description slot: smaller, muted, no margin */
   [data-civ-list-item-description-slot] > * {
     @apply civ-text-sm civ-text-base-dark civ-m-0;
@@ -100,8 +112,14 @@
     @apply civ-py-2 civ-px-4 civ-text-sm;
   }
 
-  .civ-list--sm [data-civ-list-item-heading-slot] > * {
+  .civ-list--sm [data-civ-list-item-heading-slot] > *,
+  .civ-list--sm .civ-list-item-heading-prop {
     @apply civ-text-sm;
+  }
+
+  .civ-list--sm a [data-civ-list-item-heading-slot] > *,
+  .civ-list--sm a .civ-list-item-heading-prop {
+    font-size: var(--civ-typography-fontSize-base);
   }
 
   .civ-list--sm [data-civ-list-item-description-slot] > * {

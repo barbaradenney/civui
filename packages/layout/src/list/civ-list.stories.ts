@@ -292,6 +292,49 @@ export const NestedList: Story = {
   `,
 };
 
+export const NestedTaskList: Story = {
+  name: 'Nested task list (chapters with sections)',
+  render: () => html`
+    <div style="max-width: 600px;">
+      <h3 style="font-weight: bold; margin-bottom: 12px;">Apply for disability compensation</h3>
+      <civ-list dividers>
+        <civ-list-item heading="Prepare">
+          <civ-list dividers>
+            <civ-list-item href="#/eligibility" heading="Check your eligibility" description="Answer a few questions">
+              <civ-badge data-list-item-end label="Complete" variant="success" badge-style="primary" with-icon></civ-badge>
+            </civ-list-item>
+          </civ-list>
+        </civ-list-item>
+
+        <civ-list-item heading="Fill out your application">
+          <civ-list dividers>
+            <civ-list-item href="#/personal" heading="Personal information" description="Name, date of birth, SSN">
+              <civ-badge data-list-item-end label="Complete" variant="success" badge-style="primary" with-icon></civ-badge>
+            </civ-list-item>
+            <civ-list-item href="#/contact" heading="Contact information" description="Phone, email, address">
+              <civ-badge data-list-item-end label="In progress" variant="info" badge-style="primary" with-icon></civ-badge>
+            </civ-list-item>
+            <civ-list-item heading="Service history" description="Branch, dates, discharge">
+              <civ-badge data-list-item-end label="Not started" variant="info" badge-style="secondary"></civ-badge>
+            </civ-list-item>
+            <civ-list-item heading="Supporting documents">
+              <civ-badge data-list-item-end label="Not started" variant="info" badge-style="secondary"></civ-badge>
+            </civ-list-item>
+          </civ-list>
+        </civ-list-item>
+
+        <civ-list-item heading="Review and submit">
+          <civ-list>
+            <civ-list-item heading="Review your application" description="Complete all sections first">
+              <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary"></civ-badge>
+            </civ-list-item>
+          </civ-list>
+        </civ-list-item>
+      </civ-list>
+    </div>
+  `,
+};
+
 // ── End slot (badges, actions) ───────────────────────────────
 
 export const WithTrailingBadges: Story = {

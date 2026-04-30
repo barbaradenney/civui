@@ -530,17 +530,17 @@
     height: 0.5em;
     border: var(--civ-icon-stroke) solid currentColor;
     border-radius: 50%;
-    top: 0.06em;
-    left: 0.06em;
+    top: 0.04em;
+    left: 0.04em;
   }
   .civ-icon--search::after {
     content: '';
     position: absolute;
-    width: 0.28em;
-    height: 2.5px;
+    width: 0.3em;
+    height: var(--civ-icon-stroke);
     background: currentColor;
-    bottom: 0.14em;
-    right: 0.08em;
+    bottom: 0.12em;
+    right: 0.06em;
     transform: rotate(45deg);
     border-radius: var(--civ-icon-radius);
   }

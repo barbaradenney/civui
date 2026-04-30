@@ -4,7 +4,7 @@ import './civ-task-list.js';
 import './civ-task-group.js';
 import './civ-task.js';
 import '@civui/layout/tag';
-import '@civui/actions/link';
+import '@civui/navigation/link';
 
 const meta: Meta = {
   title: 'Navigation/Task List',

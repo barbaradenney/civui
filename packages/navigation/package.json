@@ -1,14 +1,19 @@
 {
   "name": "@civui/navigation",
   "version": "0.1.0",
-  "description": "CivUI navigation components — Skip Link, Breadcrumb, Tabs, and more",
+  "description": "CivUI navigation components — SkipLink, TaskList, Link, LinkCard, ExternalLink, DownloadLink",
   "license": "MIT",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
     ".": "./dist/index.js",
-    "./skip-link": "./dist/skip-link/index.js"
+    "./skip-link": "./dist/skip-link/index.js",
+    "./task-list": "./dist/task-list/index.js",
+    "./link": "./dist/link/index.js",
+    "./link-card": "./dist/link-card/index.js",
+    "./external-link": "./dist/external-link/index.js",
+    "./download-link": "./dist/download-link/index.js"
   },
   "files": ["dist"],
   "publishConfig": {
@@ -22,7 +27,6 @@
   },
   "dependencies": {
     "@civui/core": "workspace:*",
-    "@civui/actions": "workspace:*",
     "@civui/layout": "workspace:*",
     "lit": "^3.2.0"
   },

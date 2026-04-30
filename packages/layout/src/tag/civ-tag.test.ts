@@ -6,12 +6,12 @@ afterEach(cleanupFixtures);
 
 describe('civ-tag', () => {
   it('renders label text', async () => {
-    const el = await fixture('<civ-tag label="Active"></civ-tag>');
-    expect(el.textContent).toContain('Active');
+    const el = await fixture('<civ-tag label="Healthcare"></civ-tag>');
+    expect(el.textContent).toContain('Healthcare');
   });
 
   it('applies variant class', async () => {
-    const el = await fixture('<civ-tag label="Status" variant="blue"></civ-tag>');
+    const el = await fixture('<civ-tag label="Healthcare" variant="blue"></civ-tag>');
     const span = el.querySelector('.civ-tag--blue');
     expect(span).not.toBeNull();
   });
@@ -22,8 +22,8 @@ describe('civ-tag', () => {
     expect(span).not.toBeNull();
   });
 
-  it('renders all semantic variants', async () => {
-    const variants = ['blue', 'teal', 'red', 'green', 'yellow', 'orange', 'purple', 'gray'];
+  it('renders all category variants', async () => {
+    const variants = ['blue', 'orange', 'purple', 'gray'];
     for (const v of variants) {
       const el = await fixture(`<civ-tag label="${v}" variant="${v}"></civ-tag>`);
       expect(el.querySelector(`.civ-tag--${v}`)).not.toBeNull();
@@ -31,18 +31,18 @@ describe('civ-tag', () => {
   });
 
   it('defaults to secondary style', async () => {
-    const el = await fixture('<civ-tag label="Status" variant="blue"></civ-tag>');
+    const el = await fixture('<civ-tag label="Healthcare" variant="blue"></civ-tag>');
     expect(el.querySelector('.civ-tag--blue')).not.toBeNull();
     expect(el.querySelector('.civ-tag--blue-primary')).toBeNull();
   });
 
   it('applies primary style class', async () => {
-    const el = await fixture('<civ-tag label="Denied" variant="red" tag-style="primary"></civ-tag>');
-    expect(el.querySelector('.civ-tag--red-primary')).not.toBeNull();
+    const el = await fixture('<civ-tag label="Disability" variant="purple" tag-style="primary"></civ-tag>');
+    expect(el.querySelector('.civ-tag--purple-primary')).not.toBeNull();
   });
 
   it('renders all variants in primary style', async () => {
-    const variants = ['blue', 'teal', 'red', 'green', 'yellow', 'orange', 'purple', 'gray'];
+    const variants = ['blue', 'orange', 'purple', 'gray'];
     for (const v of variants) {
       const el = await fixture(`<civ-tag label="${v}" variant="${v}" tag-style="primary"></civ-tag>`);
       expect(el.querySelector(`.civ-tag--${v}-primary`)).not.toBeNull();
@@ -54,16 +54,9 @@ describe('civ-tag', () => {
     expect(el.shadowRoot).toBeNull();
   });
 
-  it('adds role="status" when status prop is set', async () => {
-    const el = await fixture('<civ-tag label="Processing" status></civ-tag>');
-    const span = el.querySelector('[role="status"]');
-    expect(span).not.toBeNull();
-  });
-
-  it('omits role="status" when status prop is not set', async () => {
-    const el = await fixture('<civ-tag label="Active"></civ-tag>');
-    const span = el.querySelector('[role="status"]');
-    expect(span).toBeNull();
+  it('does not render role="status" (categorization, not status)', async () => {
+    const el = await fixture('<civ-tag label="Healthcare"></civ-tag>');
+    expect(el.querySelector('[role="status"]')).toBeNull();
   });
 
   it('applies sm spacing class', async () => {

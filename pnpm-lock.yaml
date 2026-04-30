@@ -136,6 +136,9 @@ importers:
       '@civui/core':
         specifier: workspace:*
         version: link:../core
+      '@civui/navigation':
+        specifier: workspace:*
+        version: link:../navigation
       lit:
         specifier: ^3.2.0
         version: 3.3.2
@@ -301,6 +304,9 @@ importers:
       '@civui/layout':
         specifier: workspace:*
         version: link:../layout
+      '@civui/navigation':
+        specifier: workspace:*
+        version: link:../navigation
       lit:
         specifier: ^3.2.0
         version: 3.3.2
@@ -392,9 +398,6 @@ importers:
 
   packages/navigation:
     dependencies:
-      '@civui/actions':
-        specifier: workspace:*
-        version: link:../actions
       '@civui/core':
         specifier: workspace:*
         version: link:../core

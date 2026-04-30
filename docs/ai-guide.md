@@ -43,11 +43,12 @@ For architecture and internals, see `CLAUDE.md` in the repo root.
 | `<civ-link>` | UI | `label`, `href`, `variant`, `danger`, `disabled` | `civ-analytics` |
 | `<civ-link-card>` | UI | `href`, `heading`, `description`, `variant`, `spacing` | `civ-analytics` |
 | `<civ-card>` | UI | `heading`, `spacing` | — |
-| `<civ-tag>` | UI | `label`, `variant`, `tagStyle`, `status`, `spacing` | — |
+| `<civ-tag>` | UI | `label`, `variant` (blue/orange/purple/gray), `tagStyle`, `spacing` | — |
 | `<civ-divider>` | UI | `spacing`, `variant` | — |
 | `<civ-page-header>` | UI | `spacing` | — (uses slots: `data-tag`, `data-eyebrow`, `data-heading`, `data-subheading`) |
 | `<civ-icon>` | UI | `name`, `label` | — |
 | `<civ-alert>` | Feedback | `variant`, `heading`, `dismissible`, `slim`, `alert-style`, `heading-level` | `civ-dismiss` |
+| `<civ-badge>` | Feedback | `label`, `count`, `max`, `dot`, `variant` | — |
 | `<civ-modal>` | Overlay | `open`, `heading`, `label`, `no-close-button`, `no-backdrop-close`, `no-escape-close` | `civ-modal-close` |
 | `<civ-action-sheet>` | Overlay | `open`, `max-height`, `trap-focus`, `no-click-outside` | `civ-action-sheet-close` |
 | `<civ-button-group>` | UI | `orientation`, `label` | — (`role="toolbar"`) |
@@ -1172,12 +1173,14 @@ Pre-configured wrappers around `civ-text-input` and `civ-combobox` with built-in
 
 ### Specialized Link Components
 
-| Component | Description | Key props |
-|---|---|---|
-| `<civ-download-link>` | File download with icon and file size display | `label`, `href`, `filename`, `file-size` |
-| `<civ-email-link>` | Clickable email with `mailto:` and mail icon | `address`, `label`, `subject` |
-| `<civ-external-link>` | Opens in new tab with SR "opens in new tab" text | `label`, `href` |
-| `<civ-phone-link>` | Clickable phone with `tel:` and phone icon | `number`, `label` |
+| Component | Description | Key props | Package |
+|---|---|---|---|
+| `<civ-download-link>` | File download with icon and file size display | `label`, `href`, `filename`, `file-size` | `@civui/navigation` |
+| `<civ-email-link>` | Clickable email with `mailto:` and mail icon | `address`, `label`, `subject` | `@civui/actions` |
+| `<civ-external-link>` | Opens in new tab with SR "opens in new tab" text | `label`, `href` | `@civui/navigation` |
+| `<civ-phone-link>` | Clickable phone with `tel:` and phone icon | `number`, `label` | `@civui/actions` |
+
+`civ-link`, `civ-link-card`, `civ-external-link`, and `civ-download-link` live in `@civui/navigation` (wayfinding to a destination). `civ-phone-link` and `civ-email-link` live in `@civui/actions` (they trigger device actions: dial, compose).
 
 **Example:**
 ```html
@@ -1308,6 +1311,18 @@ CivUI provides iOS (SwiftUI) and Android (Jetpack Compose) implementations with 
 |----------|-----------|-----|
 | Scheduling / appointment selection | `civ-date-picker` | Calendar browsing, min/max range |
 | Known past date (birthday, issue date) | `civ-memorable-date` | Three-field entry, no calendar needed |
+
+### badge vs tag
+
+| Scenario | Component | Why |
+|----------|-----------|-----|
+| Status pill ("Approved", "Pending", "Error") | `civ-badge` | Semantic colors only, always `role="status"` |
+| Count / notification indicator (e.g. "5", "99+") | `civ-badge` (with `count`) | Built-in overflow, screen-reader announces |
+| Notification dot (no number) | `civ-badge` (with `dot`) | Compact marker, `label` becomes `aria-label` |
+| Categorization / taxonomy ("Healthcare", "Disability") | `civ-tag` | Non-semantic palette (blue/orange/purple/gray) |
+| Metadata / filter chip | `civ-tag` | Same palette, multiple emphasis levels |
+
+`civ-badge` lives in `@civui/feedback`; `civ-tag` lives in `@civui/layout`. Both use hard edges — the distinction is semantic, not visual. Tag's color set excludes red/green/yellow/teal so semantic state colors only appear via badge.
 
 ### checkbox vs toggle
 

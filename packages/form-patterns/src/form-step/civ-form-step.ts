@@ -4,7 +4,7 @@ import { CivBaseElement, LightDomSlotMixin, dispatch, announce, interpolate, t }
 import type { SlotConfig } from '@civui/core';
 import '@civui/inputs';
 import '@civui/actions/button';
-import '@civui/actions/link';
+import '@civui/navigation/link';
 
 /**
  * CivUI Form Step

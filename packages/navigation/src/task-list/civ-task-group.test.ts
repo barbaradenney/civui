@@ -3,7 +3,7 @@ import { fixture, cleanupFixtures } from '@civui/test-utils';
 import './civ-task-group.js';
 import './civ-task.js';
 import '@civui/layout/tag';
-import '@civui/actions/link';
+import '@civui/navigation/link';
 
 afterEach(cleanupFixtures);
 

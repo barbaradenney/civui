@@ -88,26 +88,6 @@
         "bg": { "$value": "#73b3e7" },
         "text": { "$value": "#162e51" }
       },
-      "teal": {
-        "$type": "color",
-        "bg": { "$value": "#7dd3e0" },
-        "text": { "$value": "#1a3a40" }
-      },
-      "red": {
-        "$type": "color",
-        "bg": { "$value": "#f28b82" },
-        "text": { "$value": "#3b0b0b" }
-      },
-      "green": {
-        "$type": "color",
-        "bg": { "$value": "#81d88a" },
-        "text": { "$value": "#1e3a20" }
-      },
-      "yellow": {
-        "$type": "color",
-        "bg": { "$value": "#f5d576" },
-        "text": { "$value": "#3d2d0a" }
-      },
       "orange": {
         "$type": "color",
         "bg": { "$value": "#f5a654" },

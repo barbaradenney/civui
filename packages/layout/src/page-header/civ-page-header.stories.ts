@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import './civ-page-header.js';
 import '../tag/civ-tag.js';
+import '@civui/feedback/badge';
 
 const meta: Meta = {
   title: 'UI/Page Header',
@@ -40,13 +41,13 @@ export const WithSubheading: Story = {
   `,
 };
 
-export const WithStatusTag: Story = {
-  name: 'With Status Tag',
+export const WithStatusBadge: Story = {
+  name: 'With Status Badge',
   render: () => html`
     <civ-page-header>
       <h1 data-heading class="civ-heading-xl">
         Disability compensation claim
-        <civ-tag label="Decision made" variant="green" tag-style="primary"></civ-tag>
+        <civ-badge label="Decision made" variant="success"></civ-badge>
       </h1>
       <span data-subheading>Claim ID: 12345678</span>
     </civ-page-header>
@@ -86,13 +87,13 @@ export const AllSlotCombinations: Story = {
         </civ-page-header>
       </div>
       <div>
-        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Stacked Tag + Eyebrow + Heading + Inline Tag + Subheading</p>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Stacked Tag + Eyebrow + Heading + Inline Badge + Subheading</p>
         <civ-page-header>
           <civ-tag data-tag label="Claim #12345678" variant="gray"></civ-tag>
           <span data-eyebrow>Benefits</span>
           <h1 data-heading class="civ-heading-xl">
             Disability compensation
-            <civ-tag label="Decision made" variant="green" tag-style="primary"></civ-tag>
+            <civ-badge label="Decision made" variant="success"></civ-badge>
           </h1>
           <span data-subheading>VA Form 21-526EZ</span>
         </civ-page-header>
@@ -111,7 +112,7 @@ export const DensityScale: Story = {
           <span data-eyebrow>Benefits</span>
           <h1 data-heading class="civ-heading-xl">
             Disability compensation
-            <civ-tag label="In progress" variant="teal"></civ-tag>
+            <civ-badge label="In progress" variant="info"></civ-badge>
           </h1>
           <span data-subheading>VA Form 21-526EZ</span>
         </civ-page-header>
@@ -122,7 +123,7 @@ export const DensityScale: Story = {
           <span data-eyebrow>Benefits</span>
           <h1 data-heading class="civ-heading-xl">
             Disability compensation
-            <civ-tag label="In progress" variant="teal"></civ-tag>
+            <civ-badge label="In progress" variant="info"></civ-badge>
           </h1>
           <span data-subheading>VA Form 21-526EZ</span>
         </civ-page-header>
@@ -133,7 +134,7 @@ export const DensityScale: Story = {
           <span data-eyebrow>Benefits</span>
           <h1 data-heading class="civ-heading-xl">
             Disability compensation
-            <civ-tag label="In progress" variant="teal"></civ-tag>
+            <civ-badge label="In progress" variant="info"></civ-badge>
           </h1>
           <span data-subheading>VA Form 21-526EZ</span>
         </civ-page-header>
@@ -157,37 +158,13 @@ export const ClaimDetailHeader: Story = {
   name: 'Claim Detail',
   render: () => html`
     <civ-page-header>
-      <civ-tag data-tag label="Active" variant="green" tag-style="primary"></civ-tag>
+      <civ-badge data-tag label="Active" variant="success"></civ-badge>
       <span data-eyebrow>Claims and appeals</span>
       <h1 data-heading class="civ-heading-xl">
         Disability compensation claim
-        <civ-tag label="Decision made" variant="green" tag-style="primary"></civ-tag>
+        <civ-badge label="Decision made" variant="success"></civ-badge>
       </h1>
       <span data-subheading>Claim ID: 12345678 — Filed March 10, 2026</span>
     </civ-page-header>
-  `,
-};
-
-export const Compact: Story = {
-  name: 'Compact',
-  render: () => html`
-    <div class="civ-flex civ-flex-col civ-gap-6">
-      <div>
-        <p class="civ-font-semibold civ-mb-2">Default</p>
-        <civ-page-header>
-          <span data-eyebrow>Benefits</span>
-          <h1 data-heading class="civ-heading-xl">Apply for disability compensation</h1>
-          <span data-subheading>VA Form 21-526EZ</span>
-        </civ-page-header>
-      </div>
-      <div>
-        <p class="civ-font-semibold civ-mb-2">Compact (sm)</p>
-        <civ-page-header spacing="sm">
-          <span data-eyebrow>Benefits</span>
-          <h1 data-heading class="civ-heading-xl">Apply for disability compensation</h1>
-          <span data-subheading>VA Form 21-526EZ</span>
-        </civ-page-header>
-      </div>
-    </div>
   `,
 };

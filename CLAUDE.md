@@ -14,21 +14,21 @@ Accessibility-first web components for government applications.
 
 ## Package Structure
 
-Build order: `tokens → core → actions, overlays, layout → inputs → controls → compound → form-patterns`
+Build order: `tokens → core → layout → navigation → actions, overlays → inputs → controls → compound → form-patterns`
 
 | Package | Path | Description |
 |---------|------|-------------|
 | `@civui/tokens` | `packages/tokens/` | Design tokens (colors, spacing, typography) |
 | `@civui/core` | `packages/core/` | Base classes, a11y utilities, analytics, date utils, form-field wrappers |
-| `@civui/actions` | `packages/actions/` | Action components (button, link, action-button, link-card, button-group) |
+| `@civui/actions` | `packages/actions/` | Action components (button, action-button, button-group, phone-link, email-link) |
 | `@civui/overlays` | `packages/overlays/` | Overlay components (modal, action-sheet) |
 | `@civui/layout` | `packages/layout/` | Layout components (card, divider, input-group, page-header, tag) |
 | `@civui/inputs` | `packages/inputs/` | Input components (text-input, textarea, select, combobox, date-picker, file-upload, toggle, yes-no) + preset wrappers (ssn, ein, phone, email, zip, currency, routing-number, va-file-number, country) |
 | `@civui/controls` | `packages/controls/` | Selection controls (checkbox, radio, segmented-control) |
 | `@civui/compound` | `packages/compound/` | Compound fields (address, name, direct-deposit, signature, race-ethnicity, relationship, marriage-history, service-history) |
 | `@civui/form-patterns` | `packages/form-patterns/` | Form orchestration (form, form-step, repeater, summary, prefill, progress-steps, conditional) |
-| `@civui/feedback` | `packages/feedback/` | Feedback components (alert) |
-| `@civui/navigation` | `packages/navigation/` | Navigation components (skip-link, task-list) |
+| `@civui/feedback` | `packages/feedback/` | Feedback components (alert, badge) |
+| `@civui/navigation` | `packages/navigation/` | Navigation components (skip-link, task-list, link, link-card, external-link, download-link) |
 | `@civui/test-utils` | `packages/test-utils/` | Test helpers: `fixture`, `cleanupFixtures`, `elementUpdated`, `pressKey`, `typeText` |
 | `@civui/cli` | `packages/cli/` | CLI tooling |
 | `@civui/content` | `packages/content/` | Content/copy management |

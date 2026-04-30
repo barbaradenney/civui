@@ -68,7 +68,7 @@ A structured container with header, body, and footer slot areas. The card provid
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `color` | `'blue' \| 'teal' \| 'red' \| 'green' \| 'yellow' \| 'orange' \| 'purple' \| 'gray' \| ''` | `''` | Color variant (same palette as civ-tag) |
+| `color` | `'blue' \| 'teal' \| 'red' \| 'green' \| 'yellow' \| 'orange' \| 'purple' \| 'gray' \| ''` | `''` | Color variant for the card surface |
 | `card-style` | `'primary' \| 'secondary' \| 'tertiary'` | `'tertiary'` | Emphasis style: primary (dark fill), secondary (light tint), tertiary (white + border) |
 | `spacing` | `'default' \| 'sm'` | `'default'` | Padding size inside the card |
 | `icon-start` | `string` | `''` | Icon name to render before the body content |
@@ -97,7 +97,7 @@ A structured container with header, body, and footer slot areas. The card provid
 ```html
 <civ-card>
   <div data-card-header>
-    <civ-tag label="In progress" variant="teal"></civ-tag>
+    <civ-badge label="In progress" variant="info"></civ-badge>
     <h3 class="civ-heading-md">Disability compensation</h3>
   </div>
   <p>Filed: March 10, 2026</p>

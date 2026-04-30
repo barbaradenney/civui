@@ -693,27 +693,26 @@
   .civ-icon--external-link::before {
     content: '';
     position: absolute;
-    width: 0.5em;
-    height: 0.5em;
-    border: var(--civ-icon-stroke) solid currentColor;
-    border-top: 0;
-    border-right: 0;
-    bottom: 0.08em;
-    left: 0.08em;
+    width: 0.55em;
+    height: 0.55em;
+    border-left: var(--civ-icon-stroke) solid currentColor;
+    border-bottom: var(--civ-icon-stroke) solid currentColor;
+    border-right: var(--civ-icon-stroke) solid currentColor;
+    bottom: 0.06em;
+    left: 0.04em;
+    border-radius: 0 0 var(--civ-icon-radius) var(--civ-icon-radius);
   }
   .civ-icon--external-link::after {
     content: '';
     position: absolute;
-    width: 0.45em;
-    height: var(--civ-icon-stroke);
-    background: currentColor;
-    transform: rotate(-45deg);
-    top: 0.28em;
-    right: 0.12em;
-    /* Arrowhead via box-shadow: horizontal bar + vertical bar at tip */
-    box-shadow:
-      0.1em -0.1em 0 -0.5px currentColor,
-      0.1em 0.02em 0 -0.5px currentColor;
+    width: 0.5em;
+    height: 0.5em;
+    border-top: var(--civ-icon-stroke) solid currentColor;
+    border-right: var(--civ-icon-stroke) solid currentColor;
+    top: 0.06em;
+    right: 0.06em;
+    /* Diagonal line from bottom-left to top-right via box-shadow */
+    box-shadow: inset -0.22em 0.22em 0 calc(-0.22em + var(--civ-icon-stroke)) currentColor;
   }
 
   /* Edit (pencil — angled body with pointed tip) */

@@ -4,6 +4,7 @@ import { CivFormElement, dispatch, renderLegend, renderFormHeader, buildDescribe
 import '@civui/inputs';
 import '@civui/controls';
 import '@civui/overlays/modal';
+import '@civui/actions/button';
 
 export interface AddressSuggestion {
   street1: string;

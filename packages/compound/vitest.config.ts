@@ -17,6 +17,8 @@ export default defineConfig({
       '@civui/core': resolve(__dirname, '../core/src/index.ts'),
       '@civui/overlays/modal': resolve(__dirname, '../overlays/src/modal/index.ts'),
       '@civui/overlays': resolve(__dirname, '../overlays/src/index.ts'),
+      '@civui/actions/button': resolve(__dirname, '../actions/src/button/index.ts'),
+      '@civui/actions': resolve(__dirname, '../actions/src/index.ts'),
     },
   },
 });

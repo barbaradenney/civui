@@ -101,8 +101,14 @@ function findComponentFiles(dir: string): string[] {
 
 for (const dir of COMPOSING_PACKAGES) {
   for (const file of findComponentFiles(dir)) {
-    const content = readFileSync(file, 'utf-8');
+    const raw = readFileSync(file, 'utf-8');
     const fileName = file.replace(ROOT + '/', '');
+
+    // Strip comments so JSDoc @example blocks and prose references
+    // don't trigger false positives (e.g., "For buttons, use <civ-button>")
+    const content = raw
+      .replace(/\/\*[\s\S]*?\*\//g, '')   // block comments (/** ... */)
+      .replace(/\/\/.*$/gm, '');           // line comments
 
     // Find all <civ-*> tags used in template literals
     const tagMatches = content.matchAll(/<(civ-[\w-]+)/g);

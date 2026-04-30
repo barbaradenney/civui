@@ -206,6 +206,67 @@ export const CompactSpacing: Story = {
   `,
 };
 
+// ── Density Scale ────────────────────────────────────────────
+
+export const DensityScale: Story = {
+  name: 'Density scale',
+  render: () => html`
+    <div style="display: flex; flex-direction: column; gap: 32px;">
+      <div>
+        <h4 style="margin-bottom: 8px; font-weight: bold;">Dense</h4>
+        <div data-civ-scale="dense">
+          <civ-list dividers>
+            <civ-list-item href="#/1" heading="Personal information" description="Name, date of birth, SSN">
+              <civ-icon data-list-item-start name="check-circle" class="civ-text-success"></civ-icon>
+              <civ-badge data-list-item-end label="Complete" variant="success" badge-style="primary" with-icon></civ-badge>
+            </civ-list-item>
+            <civ-list-item href="#/2" heading="Contact information" description="Phone and email">
+              <civ-badge data-list-item-end label="In progress" variant="info" badge-style="primary" with-icon></civ-badge>
+            </civ-list-item>
+            <civ-list-item heading="Service history">
+              <civ-badge data-list-item-end label="Not started" variant="info" badge-style="secondary"></civ-badge>
+            </civ-list-item>
+          </civ-list>
+        </div>
+      </div>
+
+      <div>
+        <h4 style="margin-bottom: 8px; font-weight: bold;">Default</h4>
+        <civ-list dividers>
+          <civ-list-item href="#/1" heading="Personal information" description="Name, date of birth, SSN">
+            <civ-icon data-list-item-start name="check-circle" class="civ-text-success"></civ-icon>
+            <civ-badge data-list-item-end label="Complete" variant="success" badge-style="primary" with-icon></civ-badge>
+          </civ-list-item>
+          <civ-list-item href="#/2" heading="Contact information" description="Phone and email">
+            <civ-badge data-list-item-end label="In progress" variant="info" badge-style="primary" with-icon></civ-badge>
+          </civ-list-item>
+          <civ-list-item heading="Service history">
+            <civ-badge data-list-item-end label="Not started" variant="info" badge-style="secondary"></civ-badge>
+          </civ-list-item>
+        </civ-list>
+      </div>
+
+      <div>
+        <h4 style="margin-bottom: 8px; font-weight: bold;">Spacious</h4>
+        <div data-civ-scale="spacious">
+          <civ-list dividers>
+            <civ-list-item href="#/1" heading="Personal information" description="Name, date of birth, SSN">
+              <civ-icon data-list-item-start name="check-circle" class="civ-text-success"></civ-icon>
+              <civ-badge data-list-item-end label="Complete" variant="success" badge-style="primary" with-icon></civ-badge>
+            </civ-list-item>
+            <civ-list-item href="#/2" heading="Contact information" description="Phone and email">
+              <civ-badge data-list-item-end label="In progress" variant="info" badge-style="primary" with-icon></civ-badge>
+            </civ-list-item>
+            <civ-list-item heading="Service history">
+              <civ-badge data-list-item-end label="Not started" variant="info" badge-style="secondary"></civ-badge>
+            </civ-list-item>
+          </civ-list>
+        </div>
+      </div>
+    </div>
+  `,
+};
+
 // ── Nested ───────────────────────────────────────────────────
 
 export const NestedList: Story = {

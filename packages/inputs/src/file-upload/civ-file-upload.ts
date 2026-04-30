@@ -340,33 +340,33 @@ export class CivFileUpload extends CivFormElement {
 
         ${this._files.length > 0
           ? html`
-              <ul id="${this._filesListId}" class="civ-list-none civ-p-0 civ-mt-2 civ-space-y-1" aria-label="${this.filesListLabel || t('fileUploadFilesListLabel')}">
+              <ul id="${this._filesListId}" class="civ-list-none civ-p-0 civ-mt-2" aria-label="${this.filesListLabel || t('fileUploadFilesListLabel')}">
                 ${(this._showAllFiles ? this._files : this._files.slice(0, CivFileUpload._FILE_LIST_LIMIT)).map(
                   (file, index) => html`
-                    <li class="civ-file-item ${file.status === 'success' ? 'civ-file-item--success' : ''} ${file.status === 'error' ? 'civ-file-item--error' : ''}">
+                    <li class="civ-file-item">
+                      ${this.showPreview && file.type?.startsWith('image/')
+                        ? html`<img class="civ-file-preview civ-shrink-0" src="${this._getPreviewUrl(file.file)}" alt="" />`
+                        : file.status === 'success'
+                          ? html`<civ-icon name="check-circle" class="civ-shrink-0 civ-text-success"></civ-icon>`
+                          : file.status === 'error'
+                            ? html`<civ-icon name="error" class="civ-shrink-0 civ-text-error"></civ-icon>`
+                            : file.status === 'uploading'
+                              ? html`<civ-icon name="loading" class="civ-shrink-0"></civ-icon>`
+                              : nothing}
                       <div class="civ-file-item__content">
-                        <span class="civ-flex civ-items-center civ-gap-2">
-                          ${this.showPreview && file.type?.startsWith('image/')
-                            ? html`<img class="civ-file-preview" src="${this._getPreviewUrl(file.file)}" alt="" />`
-                            : nothing}
-                          ${file.status === 'success'
-                            ? html`<span class="civ-icon civ-icon--check civ-text-success" aria-hidden="true"></span>`
-                            : nothing}
-                          ${file.status === 'error'
-                            ? html`<span class="civ-icon civ-icon--error civ-text-error" aria-hidden="true"></span>`
-                            : nothing}
+                        <span class="civ-block">
                           ${file.isInitial && file.url
-                            ? html`<a class="civ-font-semibold" href="${file.url}" target="_blank" rel="noopener noreferrer">${file.name}</a>`
-                            : html`<span class="civ-font-semibold">${file.name}</span>`}
-                          <span class="civ-ms-2">(${formatFileSize(file.size)})</span>
+                            ? html`<a class="civ-font-bold" href="${file.url}" target="_blank" rel="noopener noreferrer">${file.name}</a>`
+                            : html`<span class="civ-font-bold">${file.name}</span>`}
+                          <span class="civ-text-sm civ-ms-2">(${formatFileSize(file.size)})</span>
                         </span>
                         ${file.status === 'uploading' ? html`
-                          <div class="civ-progress-track civ-progress-track--compact">
+                          <div class="civ-progress-track civ-progress-track--compact civ-mt-1">
                             <div class="civ-progress-fill" style="width: ${file.progress}%" role="progressbar" aria-valuenow="${file.progress}" aria-valuemin="0" aria-valuemax="100" aria-label="${interpolate(t('fileUploadProgressAriaLabel'), { name: file.name })}"></div>
                           </div>
                         ` : nothing}
                         ${file.status === 'error' && file.error ? html`
-                          <span class="civ-file-error-text">${file.error}</span>
+                          <span class="civ-file-error-text civ-block civ-mt-1">${file.error}</span>
                         ` : nothing}
                       </div>
                       ${this.readonly ? nothing : html`<span class="civ-file-item__actions">

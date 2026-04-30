@@ -555,7 +555,7 @@ describe('civ-file-upload initialFiles (draft restore)', () => {
     await elementUpdated(el);
 
     expect(el.querySelector('.civ-file-item a')).toBeNull();
-    expect(el.querySelector('.civ-file-item .civ-font-semibold')!.tagName).toBe('SPAN');
+    expect(el.querySelector('.civ-file-item .civ-font-bold')!.tagName).toBe('SPAN');
   });
 
   it('hydration is idempotent — assigning initialFiles twice does not duplicate', async () => {

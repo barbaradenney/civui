@@ -7,6 +7,7 @@ import './list/civ-list-item.js';
 import './page-header/civ-page-header.js';
 import './tag/civ-tag.js';
 import './button-group/civ-button-group.js';
+import './file-list/civ-file-list.js';
 
 // Card
 export { CivCard } from './card/index.js';
@@ -30,3 +31,7 @@ export type { TagVariant, TagStyle } from './tag/index.js';
 
 // Button Group
 export { CivButtonGroup } from './button-group/index.js';
+
+// File List
+export { CivFileList } from './file-list/index.js';
+export type { FileListItem } from './file-list/index.js';

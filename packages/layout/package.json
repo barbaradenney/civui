@@ -14,7 +14,8 @@
     "./list": "./dist/list/index.js",
     "./page-header": "./dist/page-header/index.js",
     "./tag": "./dist/tag/index.js",
-    "./button-group": "./dist/button-group/index.js"
+    "./button-group": "./dist/button-group/index.js",
+    "./file-list": "./dist/file-list/index.js"
   },
   "files": ["dist"],
   "publishConfig": {

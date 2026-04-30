@@ -21,8 +21,10 @@ const UNSAFE_HREF_PATTERN = /^\s*javascript\s*:/i;
  * @prop {string} href - Optional navigation target.
  * @prop {boolean} current - Mark as current page (`aria-current="page"`).
  * @prop {string} iconStart - Leading icon name from the civ-icon library.
+ * @prop {string} heading - Bold heading text. When set, renders above the description and default slot.
+ * @prop {string} description - Secondary text below the heading.
  *
- * @slot - Primary content (label, description, anything).
+ * @slot - Primary content (label, description, anything). When `heading` is set, slot content renders after the heading/description.
  * @slot end - Trailing content via `data-list-item-end` attribute.
  *
  * @fires civ-analytics - Analytics tracking on click (when href set).
@@ -45,6 +47,12 @@ export class CivListItem extends LightDomSlotMixin(CivBaseElement) {
 
   /** Leading icon name from the civ-icon library. */
   @property({ type: String, attribute: 'icon-start' }) iconStart = '';
+
+  /** Bold heading text. When set, renders above the description and default slot. */
+  @property({ type: String }) heading = '';
+
+  /** Secondary text below the heading. */
+  @property({ type: String }) description = '';
 
   override _getSlotConfig(): SlotConfig {
     return {
@@ -87,9 +95,17 @@ export class CivListItem extends LightDomSlotMixin(CivBaseElement) {
       ? html`<civ-icon name="${this.iconStart}" class="civ-flex-shrink-0 civ-text-base"></civ-icon>`
       : nothing;
 
+    const headingBlock = this.heading ? html`
+      <span class="civ-block civ-font-bold">${this.heading}</span>
+      ${this.description ? html`<span class="civ-block civ-text-sm civ-text-base-dark">${this.description}</span>` : nothing}
+    ` : nothing;
+
     const inner = html`
       ${icon}
-      <span class="civ-flex-1 civ-min-w-0" data-civ-list-item-content-slot></span>
+      <span class="civ-flex-1 civ-min-w-0">
+        ${headingBlock}
+        <span data-civ-list-item-content-slot></span>
+      </span>
       ${hasEnd ? html`
         <span class="civ-flex-shrink-0 civ-flex civ-items-center" data-civ-list-item-end-slot></span>
       ` : nothing}

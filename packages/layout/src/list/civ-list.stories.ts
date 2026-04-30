@@ -154,29 +154,33 @@ export const WithTrailingBadges: Story = {
   `,
 };
 
+export const WithHeadingAndDescription: Story = {
+  name: 'With heading and description',
+  render: () => html`
+    <civ-list dividers>
+      <civ-list-item href="#/personal" heading="Personal information" description="Name, date of birth, SSN"></civ-list-item>
+      <civ-list-item href="#/contact" heading="Contact information" description="Phone and email"></civ-list-item>
+      <civ-list-item href="#/service" heading="Service history"></civ-list-item>
+    </civ-list>
+  `,
+};
+
 export const GovernmentTaskList: Story = {
   name: 'Government task list',
   render: () => html`
     <div style="max-width: 600px;">
       <h3 style="font-weight: bold; margin-bottom: 12px;">Fill out your application</h3>
       <civ-list dividers>
-        <civ-list-item href="#/personal" icon-start="check-circle">
-          <span class="civ-block civ-font-bold">Personal information</span>
-          <span class="civ-block civ-text-sm civ-text-base">Name, date of birth, SSN</span>
+        <civ-list-item href="#/personal" icon-start="check-circle" heading="Personal information" description="Name, date of birth, SSN">
           <civ-badge data-list-item-end label="Complete" variant="success" badge-style="primary" with-icon></civ-badge>
         </civ-list-item>
-        <civ-list-item href="#/contact">
-          <span class="civ-block civ-font-bold">Contact information</span>
-          <span class="civ-block civ-text-sm civ-text-base">Phone and email needed</span>
+        <civ-list-item href="#/contact" heading="Contact information" description="Phone and email needed">
           <civ-badge data-list-item-end label="In progress" variant="info" badge-style="primary" with-icon></civ-badge>
         </civ-list-item>
-        <civ-list-item>
-          <span class="civ-block civ-font-bold">Service history</span>
+        <civ-list-item heading="Service history">
           <civ-badge data-list-item-end label="Not started" variant="info" badge-style="secondary"></civ-badge>
         </civ-list-item>
-        <civ-list-item>
-          <span class="civ-block civ-font-bold">Review and submit</span>
-          <span class="civ-block civ-text-sm civ-text-base">Complete all sections first</span>
+        <civ-list-item heading="Review and submit" description="Complete all sections first">
           <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary"></civ-badge>
         </civ-list-item>
       </civ-list>

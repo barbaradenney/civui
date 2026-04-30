@@ -2689,6 +2689,60 @@
     color: var(--civ-color-tag-gray-text);
   }
 
+  /* ── Badge ────────────────────────────────────────────────── */
+
+  civ-badge {
+    display: inline;
+    vertical-align: text-bottom;
+  }
+
+  .civ-badge {
+    @apply civ-inline-block civ-px-1.5 civ-py-0 civ-text-sm civ-font-semibold;
+    border-radius: 0;
+    vertical-align: text-bottom;
+    min-width: 1.25rem;
+    text-align: center;
+  }
+
+  .civ-badge--info {
+    background-color: var(--civ-color-info-lighter);
+    color: var(--civ-color-info-dark);
+  }
+
+  .civ-badge--success {
+    background-color: var(--civ-color-success-lighter);
+    color: var(--civ-color-success-dark);
+  }
+
+  .civ-badge--warning {
+    background-color: var(--civ-color-warning-lighter);
+    color: var(--civ-color-warning-dark);
+  }
+
+  .civ-badge--error {
+    background-color: var(--civ-color-error-lighter);
+    color: var(--civ-color-error-dark);
+  }
+
+  .civ-badge--neutral {
+    background-color: var(--civ-color-base-lightest);
+    color: var(--civ-color-base-darker);
+  }
+
+  .civ-badge--dot {
+    @apply civ-p-0;
+    width: 0.5rem;
+    height: 0.5rem;
+    min-width: 0;
+    vertical-align: middle;
+  }
+
+  .civ-badge--dot.civ-badge--info { background-color: var(--civ-color-info-dark); }
+  .civ-badge--dot.civ-badge--success { background-color: var(--civ-color-success-dark); }
+  .civ-badge--dot.civ-badge--warning { background-color: var(--civ-color-warning-dark); }
+  .civ-badge--dot.civ-badge--error { background-color: var(--civ-color-error-DEFAULT); }
+  .civ-badge--dot.civ-badge--neutral { background-color: var(--civ-color-base-darker); }
+
   /* ── Card ─────────────────────────────────────────────────── */
 
   .civ-card {

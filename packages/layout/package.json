@@ -29,7 +29,6 @@
     "lit": "^3.2.0"
   },
   "devDependencies": {
-    "@civui/navigation": "workspace:*",
     "@civui/test-utils": "workspace:*",
     "@civui/tokens": "workspace:*",
     "typescript": "^5.6.0",

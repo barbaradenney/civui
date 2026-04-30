@@ -1,14 +1,15 @@
 {
   "name": "@civui/feedback",
   "version": "0.1.0",
-  "description": "CivUI feedback components — Alert, Banner, Modal, and more",
+  "description": "CivUI feedback components — Alert, Badge, and more",
   "license": "MIT",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
     ".": "./dist/index.js",
-    "./alert": "./dist/alert/index.js"
+    "./alert": "./dist/alert/index.js",
+    "./badge": "./dist/badge/index.js"
   },
   "files": ["dist"],
   "publishConfig": {

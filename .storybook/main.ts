@@ -50,6 +50,8 @@ const config: StorybookConfig = {
       '@civui/controls': resolve(root, 'packages/controls/src/index.ts'),
       '@civui/compound': resolve(root, 'packages/compound/src/index.ts'),
       '@civui/form-patterns': resolve(root, 'packages/form-patterns/src/index.ts'),
+      '@civui/feedback/alert': resolve(root, 'packages/feedback/src/alert/index.ts'),
+      '@civui/feedback/badge': resolve(root, 'packages/feedback/src/badge/index.ts'),
       '@civui/feedback': resolve(root, 'packages/feedback/src/index.ts'),
       // Actions
       '@civui/actions/button': resolve(root, 'packages/actions/src/button/index.ts'),

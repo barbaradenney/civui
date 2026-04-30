@@ -2785,11 +2785,11 @@
 
   /* Outer wrapper — owns the chip border/background. Non-interactive. */
   .civ-filter-chip {
-    @apply civ-inline-flex civ-items-stretch civ-text-base civ-font-normal;
+    @apply civ-inline-flex civ-items-stretch civ-text-base civ-font-normal civ-rounded;
     background-color: var(--civ-color-white-DEFAULT);
     color: var(--civ-color-base-darkest);
     border: 1px solid var(--civ-color-base-light);
-    border-radius: 0;
+    overflow: hidden;
     transition:
       background-color var(--civ-motion-duration-fast, 100ms) var(--civ-motion-easing-ease-out, ease),
       border-color var(--civ-motion-duration-fast, 100ms) var(--civ-motion-easing-ease-out, ease),

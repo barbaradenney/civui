@@ -1,6 +1,7 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBaseElement } from '@civui/core';
+import { CivBaseElement, LightDomSlotMixin } from '@civui/core';
+import type { SlotConfig } from '@civui/core';
 
 export type LinkCardVariant = 'primary' | 'secondary' | 'tertiary' | 'critical' | 'danger';
 export type LinkCardColor = 'blue' | 'teal' | 'red' | 'green' | 'yellow' | 'orange' | 'purple' | 'gray';
@@ -32,6 +33,9 @@ const UNSAFE_HREF_PATTERN = /^\s*javascript\s*:/i;
  * @prop {string} iconStart - Icon name to render before the heading
  * @prop {string} iconEnd - Icon name to render after the heading
  *
+ * @slot - Optional content rendered inside the anchor above the heading
+ *         (e.g., a status tag).
+ *
  * @fires civ-analytics - Analytics tracking event on click
  *
  * @example
@@ -44,7 +48,7 @@ const UNSAFE_HREF_PATTERN = /^\s*javascript\s*:/i;
  * ```
  */
 @customElement('civ-link-card')
-export class CivLinkCard extends CivBaseElement {
+export class CivLinkCard extends LightDomSlotMixin(CivBaseElement) {
   /** Navigation destination. */
   @property({ type: String }) href = '';
 
@@ -75,6 +79,14 @@ export class CivLinkCard extends CivBaseElement {
     return this.href;
   }
 
+  override _getSlotConfig(): SlotConfig {
+    return { default: '[data-civ-link-card-slot]' };
+  }
+
+  override firstUpdated(): void {
+    this._relocateSlots();
+  }
+
   override render() {
     const colorClass = this.color
       ? (this.variant === 'primary' ? `civ-card--${this.color}-primary` : `civ-card--${this.color}`)
@@ -95,6 +107,7 @@ export class CivLinkCard extends CivBaseElement {
         class="${classes}"
         @click="${this._onClick}"
       >
+        <span data-civ-link-card-slot></span>
         ${hasFlank ? html`
           <span class="civ-link-card__layout">
             ${this.iconStart ? html`<span class="civ-link-card__start"><civ-icon class="civ-link-card__icon" name="${this.iconStart}" aria-hidden="true"></civ-icon></span>` : nothing}

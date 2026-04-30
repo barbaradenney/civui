@@ -3,8 +3,10 @@ import { html } from 'lit';
 import './civ-task-list.js';
 import './civ-task-group.js';
 import './civ-task.js';
+import './civ-task-v2.js';
 import '@civui/layout/tag';
 import '@civui/navigation/link';
+import '@civui/navigation/link-card';
 
 const meta: Meta = {
   title: 'Navigation/Task List',
@@ -214,6 +216,62 @@ export const GovernmentDisabilityApplication: Story = {
         <civ-task label="Review your application" hint="Complete all sections before reviewing" status="cannot-start"></civ-task>
       </civ-task-group>
     </civ-task-list>
+  `,
+};
+
+// ── v2 (experimental) ────────────────────────────────────────
+
+export const V2LinkCard: Story = {
+  name: 'v2: Link Card Tasks',
+  render: () => html`
+    <civ-task-list>
+      <civ-task-group>
+        <h3 data-task-group-heading class="civ-heading-md">Fill out your application</h3>
+        <civ-task-v2 label="Personal information" hint="Name, date of birth, Social Security number" href="#/personal" status="complete"></civ-task-v2>
+        <civ-task-v2 label="Contact information" hint="Address and phone number" href="#/contact" status="in-progress"></civ-task-v2>
+        <civ-task-v2 label="Service history" hint="Branch, dates, and character of service" status="cannot-start"></civ-task-v2>
+        <civ-task-v2 label="Disabilities and conditions" status="cannot-start"></civ-task-v2>
+      </civ-task-group>
+
+      <civ-task-group>
+        <h3 data-task-group-heading class="civ-heading-md">Review and submit</h3>
+        <civ-task-v2 label="Review your application" status="cannot-start"></civ-task-v2>
+      </civ-task-group>
+    </civ-task-list>
+  `,
+};
+
+export const V2VsV1: Story = {
+  name: 'v2: Side-by-side with v1',
+  render: () => html`
+    <div class="civ-grid civ-grid-cols-1 md:civ-grid-cols-2 civ-gap-8">
+      <div>
+        <h3 class="civ-m-0 civ-mb-2 civ-font-semibold">v1 (current)</h3>
+        <civ-task-list>
+          <civ-task-group>
+            <h3 data-task-group-heading class="civ-heading-md">Application</h3>
+            <civ-task label="Personal information" hint="Name and SSN" href="#" status="complete"></civ-task>
+            <civ-task label="Contact information" hint="Address and phone" href="#" status="in-progress"></civ-task>
+            <civ-task label="Service history" hint="Complete previous sections" status="cannot-start"></civ-task>
+            <civ-task label="Documents with errors" hint="Fix validation errors" href="#" status="error"></civ-task>
+            <civ-task label="Prefilled section" hint="Phone and email" href="#" status="review" prefilled></civ-task>
+          </civ-task-group>
+        </civ-task-list>
+      </div>
+      <div>
+        <h3 class="civ-m-0 civ-mb-2 civ-font-semibold">v2 (experimental)</h3>
+        <civ-task-list>
+          <civ-task-group>
+            <h3 data-task-group-heading class="civ-heading-md">Application</h3>
+            <civ-task-v2 label="Personal information" hint="Name and SSN" href="#" status="complete"></civ-task-v2>
+            <civ-task-v2 label="Contact information" hint="Address and phone" href="#" status="in-progress"></civ-task-v2>
+            <civ-task-v2 label="Service history" hint="Complete previous sections" status="cannot-start"></civ-task-v2>
+            <civ-task-v2 label="Documents with errors" hint="Fix validation errors" href="#" status="error"></civ-task-v2>
+            <civ-task-v2 label="Prefilled section" hint="Phone and email" href="#" status="review" prefilled></civ-task-v2>
+          </civ-task-group>
+        </civ-task-list>
+      </div>
+    </div>
   `,
 };
 

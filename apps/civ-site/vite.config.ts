@@ -64,7 +64,6 @@ export default defineConfig({
       '@civui/layout/page-header': resolve(packages, 'layout/src/page-header/index.ts'),
       '@civui/layout/tag': resolve(packages, 'layout/src/tag/index.ts'),
       '@civui/layout/button-group': resolve(packages, 'layout/src/button-group/index.ts'),
-      '@civui/layout/file-list': resolve(packages, 'layout/src/file-list/index.ts'),
       '@civui/layout/image-preview': resolve(packages, 'layout/src/image-preview/index.ts'),
       '@civui/layout': resolve(packages, 'layout/src/index.ts'),
       // Navigation

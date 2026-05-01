@@ -17,6 +17,7 @@ import '@civui/navigation/link';
  *
  * @prop {string} label - Field label (left side)
  * @prop {string} value - Display value (right side, bold)
+ * @prop {string} href - When set, renders the value as a download link
  * @prop {string} editHref - Edit link destination (renders inline edit link)
  * @prop {string} editLabel - Edit link text (default: "Edit")
  * @prop {string} spacing - Vertical padding: 'default' or 'sm'
@@ -24,6 +25,7 @@ import '@civui/navigation/link';
  * @example
  * ```html
  * <civ-read-only-field label="Phone" value="(555) 123-4567" edit-href="#/phone"></civ-read-only-field>
+ * <civ-read-only-field label="DD214" value="discharge-papers.pdf (2.4 MB)" href="/files/dd214.pdf"></civ-read-only-field>
  * ```
  */
 @customElement('civ-read-only-field')
@@ -32,6 +34,9 @@ export class CivReadOnlyField extends CivBaseElement {
   @property({ type: String }) value = '';
   @property({ type: Array, attribute: false }) values: string[] = [];
   @property({ type: String }) hint = '';
+
+  /** When set, renders the value as a download link. */
+  @property({ type: String }) href = '';
 
   /** Edit link destination. When set, renders an inline edit link. */
   @property({ type: String, attribute: 'edit-href' }) editHref = '';
@@ -58,7 +63,9 @@ export class CivReadOnlyField extends CivBaseElement {
             ${hasValue
               ? this.values.length > 0
                 ? this.values.map(v => html`<span class="civ-block">${v}</span>`)
-                : this.value
+                : this.href
+                  ? html`<civ-link href="${this.href}" label="${this.value}" new-tab></civ-link>`
+                  : this.value
               : html`<span class="civ-text-muted civ-italic civ-font-normal">${t('summaryNotProvided')}</span>`}
           </span>
           ${this.editHref

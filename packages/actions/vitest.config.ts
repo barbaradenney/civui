@@ -12,6 +12,9 @@ export default defineConfig({
       '@civui/core': resolve(__dirname, '../core/src/index.ts'),
       '@civui/navigation/link': resolve(__dirname, '../navigation/src/link/index.ts'),
       '@civui/navigation': resolve(__dirname, '../navigation/src/index.ts'),
+      '@civui/feedback/count': resolve(__dirname, '../feedback/src/count/index.ts'),
+      '@civui/feedback/badge': resolve(__dirname, '../feedback/src/badge/index.ts'),
+      '@civui/feedback': resolve(__dirname, '../feedback/src/index.ts'),
     },
   },
 });

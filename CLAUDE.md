@@ -198,7 +198,7 @@ Input masking engine in `@civui/core` with blur-mode default (mask on blur, raw 
 Built-in icons render as pure CSS pseudo-element shapes via the `.civ-icon--{name}` class — no font, no SVG, no extra HTTP requests. Icons inherit `color` (via `currentColor`) and scale with `font-size`. The default registry is intentionally small (only the icons CivUI's own components reference). Use `<civ-icon name="..." label="...">`.
 
 Adding a new icon:
-1. Author the shape in `packages/core/src/styles/components.css` as a `.civ-icon--{name}::before` / `::after` rule.
+1. Author the shape in `packages/core/src/styles/components.css` as a `.civ-icon--{name}::before` / `::after` rule. To prototype interactively, run `pnpm storybook` and open **Core › Icon › Editor** — a live CSS editor with a snippet palette, multi-size preview, pixel grid, and dark-mode toggle. Copy the resulting CSS into `components.css` when you're done.
 2. Register the name in `packages/core/src/icon/icon-library.ts` with the SF Symbol (`ios`) and Material Symbols (`android`) names for native parity.
 
 **Optional Material Symbols font** — for icons not authored as CSS shapes, consumers can opt in to the full Material Symbols catalog:

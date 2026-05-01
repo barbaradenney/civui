@@ -1,20 +1,19 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { CivBaseElement } from '../base/civ-base-element.js';
-import { icons } from './icon-library.js';
+import { icons, getMaterialSymbolName } from './icon-library.js';
 import type { IconDef } from './icon-library.js';
 
 /**
- * A CSS-only icon component.
+ * Material Symbols icon component.
  *
- * Each icon is rendered as a single `<span>` with no inner content — the
- * shape is drawn entirely via CSS `::before`/`::after` pseudo-elements
- * defined in `components.css`.
+ * Renders a Material Symbols Outlined glyph via the icon font's ligature
+ * lookup — the symbol name is the element's text content. Icons inherit
+ * `color` and scale with `font-size`.
  *
- * Icons inherit `color` and scale with `font-size`, so they automatically
- * match surrounding text.
- *
- * All icons are implemented in pure CSS — no SVG needed.
+ * The `material-symbols-outlined` class (and font) ships with the
+ * `material-symbols` package; consumers must import
+ * `@civui/core/styles` (or `material-symbols/outlined.css`) once.
  *
  * @element civ-icon
  *
@@ -93,17 +92,18 @@ export class CivIcon extends CivBaseElement {
 
     const styleParts: string[] = [];
     if (fontSize) styleParts.push(`font-size:${fontSize}`);
-    if (transforms.length) styleParts.push(`display:inline-block`, `transform:${transforms.join(' ')}`);
+    if (transforms.length) styleParts.push(`transform:${transforms.join(' ')}`);
     const styleStr = styleParts.join(';');
 
-    return html`
-      <span
-        class="civ-icon civ-icon--${this.name}"
-        style=${styleStr || nothing}
-        role=${isDecorative ? 'none' : 'img'}
-        aria-hidden=${isDecorative ? 'true' : 'false'}
-        aria-label=${isDecorative ? nothing : accessibleLabel}
-      ></span>
-    `;
+    const symbol = getMaterialSymbolName(this.name);
+
+    return html`<span
+      class="civ-icon civ-icon--${this.name} material-symbols-outlined"
+      style=${styleStr || nothing}
+      role=${isDecorative ? 'none' : 'img'}
+      aria-hidden=${isDecorative ? 'true' : 'false'}
+      aria-label=${isDecorative ? nothing : accessibleLabel}
+      translate="no"
+    >${symbol}</span>`;
   }
 }

@@ -14,6 +14,7 @@
     "./date": "./dist/date/index.js",
     "./templates": "./dist/templates/index.js",
     "./form-field": "./dist/form-field/index.js",
+    "./icon": "./dist/icon/index.js",
     "./styles": "./src/styles/civ.css",
     "./styles/components": "./src/styles/components.css"
   },
@@ -28,7 +29,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "lit": "^3.2.0"
+    "lit": "^3.2.0",
+    "material-symbols": "^0.44.0"
   },
   "devDependencies": {
     "@civui/tokens": "workspace:*",

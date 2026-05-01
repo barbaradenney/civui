@@ -1,5 +1,7 @@
 /* Import design tokens as CSS custom properties */
 @import '@civui/tokens/css';
+/* Material Symbols Outlined icon font */
+@import 'material-symbols/outlined.css';
 @import './components.css';
 
 @layer civ {

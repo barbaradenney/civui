@@ -170,9 +170,9 @@ export class CivProgressSteps extends CivBaseElement {
 
     const circleClasses = 'civ-step-circle civ-flex civ-items-center civ-justify-center civ-rounded-full civ-w-8 civ-h-8 civ-text-sm civ-font-bold civ-shrink-0';
     const circleContent = hasError
-      ? html`<span class="civ-icon civ-icon--close" aria-hidden="true"></span>`
+      ? html`<civ-icon name="close"></civ-icon>`
       : isCompleted
-        ? html`<span class="civ-icon civ-icon--check" aria-hidden="true"></span>`
+        ? html`<civ-icon name="check"></civ-icon>`
         : html`${index + 1}`;
 
     // Errored completed steps stay clickable — users need to be able to

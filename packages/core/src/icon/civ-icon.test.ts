@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach } from 'vitest';
-import { icons, registerIcon, getIconNames } from './icon-library.js';
+import { icons, registerIcon, getIconNames, getMaterialSymbolName } from './icon-library.js';
 import type { IconDef } from './icon-library.js';
 import './civ-icon.js';
 import type { CivIcon } from './civ-icon.js';
@@ -48,36 +48,38 @@ describe('civ-icon', () => {
     expect(container.getAttribute('aria-label')).toBe('Approved');
   });
 
-  // ── CSS icon rendering ────────────────────────────────────
+  // ── Material Symbols rendering ───────────────────────────────
 
-  it('renders CSS icon with modifier class and no inner content', async () => {
+  it('renders the Material Symbols glyph name as text content', async () => {
+    const el = await create('<civ-icon name="check"></civ-icon>');
+    const container = el.querySelector('.civ-icon')!;
+    expect(container.textContent).toBe('check');
+    expect(container.classList.contains('material-symbols-outlined')).toBe(true);
+  });
+
+  it('uses the android mapping for the rendered glyph name', async () => {
+    const el = await create('<civ-icon name="chevron-down"></civ-icon>');
+    const container = el.querySelector('.civ-icon')!;
+    // chevron-down maps to expand_more in Material Symbols
+    expect(container.textContent).toBe('expand_more');
+  });
+
+  it('falls back to underscored name for icons without an android mapping', () => {
+    registerIcon('custom-fallback', { label: 'Fallback' });
+    expect(getMaterialSymbolName('custom-fallback')).toBe('custom_fallback');
+    delete (icons as Record<string, IconDef>)['custom-fallback'];
+  });
+
+  it('keeps the modifier class for selector targeting', async () => {
     const el = await create('<civ-icon name="check"></civ-icon>');
     const container = el.querySelector('.civ-icon')!;
     expect(container.classList.contains('civ-icon--check')).toBe(true);
-    expect(container.children.length).toBe(0);
   });
 
-  it('renders modifier class for each CSS icon', async () => {
-    for (const name of ['chevron-right', 'close', 'plus', 'search', 'menu', 'check']) {
-      const el = await create(`<civ-icon name="${name}"></civ-icon>`);
-      const container = el.querySelector('.civ-icon')!;
-      expect(container.classList.contains(`civ-icon--${name}`)).toBe(true);
-      el.remove();
-    }
-  });
-
-  it('renders SVG-placeholder icons with modifier class', async () => {
-    const el = await create('<civ-icon name="check-circle"></civ-icon>');
-    const container = el.querySelector('.civ-icon')!;
-    expect(container.classList.contains('civ-icon--check-circle')).toBe(true);
-    expect(container.children.length).toBe(0);
-  });
-
-  it('container has civ-icon class', async () => {
+  it('marks the glyph translate="no" so screen translators do not mangle it', async () => {
     const el = await create('<civ-icon name="check"></civ-icon>');
-    const container = el.querySelector('.civ-icon') as HTMLElement;
-    expect(container).toBeTruthy();
-    expect(container.classList.contains('civ-icon')).toBe(true);
+    const container = el.querySelector('.civ-icon')!;
+    expect(container.getAttribute('translate')).toBe('no');
   });
 
   // ── Size prop ───────────────────────────────────────────────
@@ -122,11 +124,11 @@ describe('civ-icon', () => {
 
   it('re-renders when name changes between icons', async () => {
     const el = await create('<civ-icon name="check"></civ-icon>');
-    expect(el.querySelector('.civ-icon')!.classList.contains('civ-icon--check')).toBe(true);
+    expect(el.querySelector('.civ-icon')!.textContent).toBe('check');
 
     el.name = 'close';
     await el.updateComplete;
-    expect(el.querySelector('.civ-icon')!.classList.contains('civ-icon--close')).toBe(true);
+    expect(el.querySelector('.civ-icon')!.textContent).toBe('close');
   });
 
   it('re-renders when label changes', async () => {
@@ -143,12 +145,12 @@ describe('civ-icon', () => {
   // ── Icon library ────────────────────────────────────────────
 
   it('registerIcon adds a custom icon', async () => {
-    registerIcon('custom-test', { label: 'Custom' });
+    registerIcon('custom-test', { label: 'Custom', android: 'star' });
 
     const el = await create('<civ-icon name="custom-test"></civ-icon>');
     const container = el.querySelector('.civ-icon')!;
     expect(container).toBeTruthy();
-    expect(container.classList.contains('civ-icon--custom-test')).toBe(true);
+    expect(container.textContent).toBe('star');
 
     delete (icons as Record<string, IconDef>)['custom-test'];
   });
@@ -169,9 +171,13 @@ describe('civ-icon', () => {
       const container = el.querySelector('.civ-icon');
       expect(container, `Icon "${name}" should render a container`).toBeTruthy();
       expect(
-        container!.classList.contains(`civ-icon--${name}`),
-        `Icon "${name}" should have modifier class`,
+        container!.classList.contains('material-symbols-outlined'),
+        `Icon "${name}" should have Material Symbols class`,
       ).toBe(true);
+      expect(
+        container!.textContent,
+        `Icon "${name}" should render a glyph name`,
+      ).toBeTruthy();
       el.remove();
     }
   });
@@ -182,13 +188,17 @@ describe('civ-icon', () => {
     }
   });
 
+  it('all built-in icons resolve to a Material Symbols glyph name', () => {
+    for (const [name] of Object.entries(icons)) {
+      const symbol = getMaterialSymbolName(name);
+      expect(symbol, `Icon "${name}" must resolve to a glyph name`).toMatch(/^[a-z0-9_]+$/);
+    }
+  });
+
   it('core icons have platform mappings', () => {
-    // Only check icons that were hand-authored with platform mappings.
-    // Imported icons (from cssicon.space) have label only — platform
-    // mappings are added as native implementations are built.
+    // Hand-authored icons with iOS mappings should also have Android.
     for (const [name, def] of Object.entries(icons)) {
-      if (def.ios || def.android) {
-        expect(def.ios, `Icon "${name}" has Android but no iOS mapping`).toBeTruthy();
+      if (def.ios) {
         expect(def.android, `Icon "${name}" has iOS but no Android mapping`).toBeTruthy();
       }
     }

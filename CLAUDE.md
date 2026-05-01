@@ -195,9 +195,9 @@ Input masking engine in `@civui/core` with blur-mode default (mask on blur, raw 
 
 ## Icon System
 
-48 pure CSS icons via `::before`/`::after` pseudo-elements — no font files, no SVG, no Unicode. Icons inherit `color` and scale with `font-size`. Each icon maps to SF Symbols (iOS) and Material Symbols (Android). Use `<civ-icon name="..." label="...">`.
+Icons are rendered with the [Material Symbols Outlined](https://fonts.google.com/icons) font (shipped via the `material-symbols` npm package). Icons inherit `color` and scale with `font-size`. Each icon name maps to a Material Symbols glyph (`android` field) and an SF Symbol for iOS native (`ios` field). Use `<civ-icon name="..." label="...">`.
 
-To edit existing icons or author new ones, run `pnpm storybook` and open **Core › Icon › Editor** — a live CSS editor with a snippet palette, multi-size preview, pixel grid, and dark-mode toggle. Copy the resulting CSS into `packages/core/src/styles/components.css` and register the name in `packages/core/src/icon/icon-library.ts`.
+To add a new icon, register it in `packages/core/src/icon/icon-library.ts` with the Material Symbols glyph name in the `android` field and (optionally) the SF Symbol name in `ios`. Icons without an explicit `android` mapping fall back to `name.replace(/-/g, '_')`.
 
 ## Native Platform Support
 
@@ -225,7 +225,7 @@ That guide covers:
 - Preset inputs, compound fields, overlays, link variants, and form patterns
 - Validation system (16 validators, declarative `validate` attribute)
 - Mask system (blur-mode default, 6 presets)
-- Icon system (48 pure CSS icons, no Unicode)
+- Icon system (Material Symbols Outlined font)
 - Native platform support (iOS + Android with 100% parity)
 - Component selection decision tables (checkbox vs toggle, select vs combobox, date picker vs memorable date)
 - Government design patterns (Section 508, plain language, form validation for .gov)

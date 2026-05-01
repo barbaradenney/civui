@@ -401,8 +401,8 @@
   .civ-icon--arrow-right::after {
     content: '';
     position: absolute;
-    width: 0.38em;
-    height: 0.38em;
+    width: 0.45em;
+    height: 0.45em;
     border-top: var(--civ-icon-stroke) solid currentColor;
     border-right: var(--civ-icon-stroke) solid currentColor;
     top: 50%;
@@ -423,8 +423,8 @@
   .civ-icon--arrow-left::after {
     content: '';
     position: absolute;
-    width: 0.38em;
-    height: 0.38em;
+    width: 0.45em;
+    height: 0.45em;
     border-top: var(--civ-icon-stroke) solid currentColor;
     border-left: var(--civ-icon-stroke) solid currentColor;
     top: 50%;
@@ -445,8 +445,8 @@
   .civ-icon--arrow-up::after {
     content: '';
     position: absolute;
-    width: 0.38em;
-    height: 0.38em;
+    width: 0.45em;
+    height: 0.45em;
     border-top: var(--civ-icon-stroke) solid currentColor;
     border-left: var(--civ-icon-stroke) solid currentColor;
     top: 0.08em;
@@ -467,8 +467,8 @@
   .civ-icon--arrow-down::after {
     content: '';
     position: absolute;
-    width: 0.32em;
-    height: 0.32em;
+    width: 0.45em;
+    height: 0.45em;
     border-right: var(--civ-icon-stroke) solid currentColor;
     border-bottom: var(--civ-icon-stroke) solid currentColor;
     bottom: 0.1em;

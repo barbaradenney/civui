@@ -4,6 +4,8 @@ sidebar_position: 11
 sidebar_label: Categorized Upload
 ---
 
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
 # Categorized File Upload
 
 Government forms often require uploaded documents to be categorized — the user selects a document type before uploading the file. This ensures every attachment is properly labeled for processing and prevents uncategorized documents from reaching caseworkers.
@@ -46,6 +48,8 @@ For government applications, **select the category before uploading** (not after
 
 ## Single document with category
 
+<StoryEmbed id="forms-patterns-categorized-upload--single-document" />
+
 For forms that need one categorized file (not a repeating list):
 
 ```html
@@ -74,6 +78,8 @@ For forms that need one categorized file (not a repeating list):
 The file upload only appears after a category is selected, reinforcing the category-first flow.
 
 ## Multiple categorized documents
+
+<StoryEmbed id="forms-patterns-categorized-upload--multiple-documents" />
 
 Use `civ-repeater` in detail mode so each document entry has its own category + file pair:
 
@@ -133,6 +139,18 @@ summary.sections = [
   },
 ];
 ```
+
+## Real-world examples
+
+### VA disability claim evidence
+
+<StoryEmbed id="forms-patterns-categorized-upload--va-disability-evidence" />
+
+### ID document upload (front + back)
+
+<StoryEmbed id="forms-patterns-categorized-upload--id-document-upload" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-patterns-categorized-upload--single-document)
 
 ## Accessibility
 

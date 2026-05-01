@@ -417,6 +417,75 @@
         </div>
       </div>
 
+      <!-- civ-file-list -->
+      <div class="component">
+        <div class="component-header">
+          <h3>&lt;civ-file-list&gt;</h3>
+          <p>Read-only display of uploaded files. Use on review pages, confirmation pages, and summary sections. For interactive upload, use <code>&lt;civ-file-upload&gt;</code>.</p>
+        </div>
+        <div class="component-body">
+          <h4>Props</h4>
+          <table class="props-table">
+            <thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><code>files</code></td><td><code>FileListItem[]</code></td><td><code>[]</code></td><td>Array of files to display (JS property, not HTML attribute)</td></tr>
+              <tr><td><code>label</code></td><td><code>string</code></td><td><code>''</code></td><td>Accessible label for the list (<code>aria-label</code>)</td></tr>
+            </tbody>
+          </table>
+
+          <h4>FileListItem Interface</h4>
+          <table class="props-table">
+            <thead><tr><th>Property</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><code>name</code></td><td><code>string</code></td><td>Yes</td><td>File name</td></tr>
+              <tr><td><code>size</code></td><td><code>number</code></td><td>Yes</td><td>File size in bytes (auto-formatted)</td></tr>
+              <tr><td><code>url</code></td><td><code>string</code></td><td>No</td><td>Download/preview URL. Renders name as a link when set.</td></tr>
+              <tr><td><code>type</code></td><td><code>string</code></td><td>No</td><td>MIME type for icon heuristic</td></tr>
+            </tbody>
+          </table>
+
+          <h4>Example</h4>
+<pre><code>&lt;civ-file-list label="Uploaded documents"&gt;&lt;/civ-file-list&gt;
+
+&lt;script&gt;
+  document.querySelector('civ-file-list').files = [
+    { name: 'DD214.pdf', size: 2400000, url: '/files/dd214.pdf' },
+    { name: 'medical-records.pdf', size: 8100000 },
+  ];
+&lt;/script&gt;</code></pre>
+        </div>
+      </div>
+
+      <!-- civ-image-preview -->
+      <div class="component">
+        <div class="component-header">
+          <h3>&lt;civ-image-preview&gt;</h3>
+          <p>Displays an uploaded or referenced image at a readable size with optional filename and file size caption. Use for ID documents, photos, and review pages.</p>
+        </div>
+        <div class="component-body">
+          <h4>Props</h4>
+          <table class="props-table">
+            <thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><code>src</code></td><td><code>string</code></td><td><code>''</code></td><td>Image source URL or object URL</td></tr>
+              <tr><td><code>alt</code></td><td><code>string</code></td><td><code>''</code></td><td>Alt text for the image (required for accessibility)</td></tr>
+              <tr><td><code>filename</code></td><td><code>string</code></td><td><code>''</code></td><td>Filename displayed below the image</td></tr>
+              <tr><td><code>file-size</code></td><td><code>string</code></td><td><code>''</code></td><td>File size displayed after filename</td></tr>
+              <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg' | 'full'</code></td><td><code>'md'</code></td><td>Preview size: sm (120px), md (240px), lg (360px), full (100%)</td></tr>
+            </tbody>
+          </table>
+
+          <h4>Example</h4>
+<pre><code>&lt;civ-image-preview
+  src="/uploads/id-front.jpg"
+  alt="Front of driver's license"
+  filename="id-front.jpg"
+  file-size="2.4 MB"
+  size="lg"
+&gt;&lt;/civ-image-preview&gt;</code></pre>
+        </div>
+      </div>
+
       <!-- civ-divider -->
       <div class="component">
         <div class="component-header">

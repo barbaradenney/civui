@@ -72,6 +72,8 @@ For architecture and internals, see \`CLAUDE.md\` in the repo root.
 | \`<civ-va-file-number>\` | Preset | — | \`{ value }\` |
 | \`<civ-country>\` | Preset | \`us-first\`, \`include\`, \`exclude\` | \`{ value }\` |
 | \`<civ-action-link>\` | Action | \`type\` (\`phone\`/\`email\`/\`download\`), \`number\`, \`address\`, \`label\`, \`subject\`, \`href\`, \`filename\`, \`file-size\` | — |
+| \`<civ-file-list>\` | Layout | \`files\` (JS property), \`label\` | — |
+| \`<civ-image-preview>\` | Layout | \`src\`, \`alt\`, \`filename\`, \`file-size\`, \`size\` | — |
 | \`<civ-skip-link>\` | Navigation | \`label\`, \`href\` | — |
 | \`<civ-icon>\` | UI | \`name\`, \`label\` | — |
 

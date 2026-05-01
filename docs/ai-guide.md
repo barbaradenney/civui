@@ -76,6 +76,8 @@ For architecture and internals, see `CLAUDE.md` in the repo root.
 | `<civ-service-history>` | Compound | `legend`, `show-service-number` | `{ value: ServicePeriodValue }` |
 | `<civ-list>` | Layout | `dividers` (boolean) | — |
 | `<civ-list-item>` | Layout | `href` (optional, makes whole row clickable). Trailing content via `data-list-item-end` attribute on a child. | `civ-analytics` |
+| `<civ-file-list>` | Layout | `files` (JS property), `label` | — |
+| `<civ-image-preview>` | Layout | `src`, `alt`, `filename`, `file-size`, `size` | — |
 | `<civ-skip-link>` | Navigation | `label`, `href` | — |
 
 **Form input components** (text-input, textarea, select, combobox, date-picker, file-upload) are bare controls — wrap in `<civ-form-field>` for label/hint/error rendering. All have: `name`, `value`, `required`, `disabled`.

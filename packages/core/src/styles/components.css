@@ -2590,17 +2590,6 @@
     width: 0.06em;
     height: 0.06em;
     border: var(--civ-icon-stroke) solid transparent;
-    box-shadow:;
-    -0.12em 0 0 -0.06em currentColor,;
-    0.13em 0 0 -0.06em currentColor,;
-    0 -0.12em 0 -0.06em currentColor,;
-    0 0.13em 0 -0.06em currentColor,;
-    -0.37em 0 0 -0.06em currentColor,;
-    0.38em 0 0 -0.06em currentColor,;
-    -0.25em -0.12em 0 -0.06em currentColor,;
-    -0.25em 0.13em 0 -0.06em currentColor,;
-    0.25em -0.12em 0 -0.06em currentColor,;
-    0.25em 0.13em 0 -0.06em currentColor;
   }
   .civ-icon--keyboard::after {
     content: '';
@@ -2622,17 +2611,6 @@
     height: 0.06em;
     border: var(--civ-icon-stroke) solid transparent;
     color: white;
-    box-shadow:;
-    -0.12em 0 0 -0.06em currentColor,;
-    0.13em 0 0 -0.06em currentColor,;
-    0 -0.12em 0 -0.06em currentColor,;
-    0 0.13em 0 -0.06em currentColor,;
-    -0.37em 0 0 -0.06em currentColor,;
-    0.38em 0 0 -0.06em currentColor,;
-    -0.25em -0.12em 0 -0.06em currentColor,;
-    -0.25em 0.13em 0 -0.06em currentColor,;
-    0.25em -0.12em 0 -0.06em currentColor,;
-    0.25em 0.13em 0 -0.06em currentColor;
   }
   .civ-icon--keyboard-solid::after {
     content: '';
@@ -4236,7 +4214,6 @@
     height: 0.38em;
     border-radius: 50%;
     border: var(--civ-icon-stroke) solid currentColor;
-    box-shadow:;
   }
 
   /* sun-brightness */
@@ -4249,7 +4226,6 @@
     border-color: currentColor;
     border-style: solid;
     border-width: 0.06em 0.25em 0.06em 0.06em;
-    box-shadow:;
   }
 
   /* sun-horizon */
@@ -4333,7 +4309,6 @@
     border-radius: 50%;
     border: var(--civ-icon-stroke) solid currentColor;
     background: currentColor;
-    box-shadow:;
   }
 
   /* sunrise */

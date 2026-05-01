@@ -511,6 +511,16 @@ class CivIconEditor extends LitElement {
     `;
   }
 
+  /** Get a percentage or em position value. */
+  private _getPositionValue(prop: string): { value: number; unit: string } {
+    const val = this._getProp(prop);
+    const pctMatch = val.match(/([\d.]+)%/);
+    if (pctMatch) return { value: parseFloat(pctMatch[1]), unit: '%' };
+    const emMatch = val.match(/([\d.]+)em/);
+    if (emMatch) return { value: parseFloat(emMatch[1]), unit: 'em' };
+    return { value: 0, unit: '%' };
+  }
+
   private _renderPropertyPanel() {
     const w = this._getEmValue('width');
     const h = this._getEmValue('height');
@@ -522,14 +532,29 @@ class CivIconEditor extends LitElement {
         ? parseFloat(this._getProp('border-top').match(/([\d.]+)em/)![1])
         : 0.125;
     const borderRadius = this._getEmValue('border-radius');
+    const top = this._getPositionValue('top');
+    const left = this._getPositionValue('left');
 
-    const slider = (label: string, value: number, min: number, max: number, step: number, onChange: (v: number) => void) => html`
+    const slider = (label: string, value: number, min: number, max: number, step: number, onChange: (v: number) => void, unit = 'em') => html`
       <label class="civ-icon-editor__prop-row">
         <span class="civ-icon-editor__prop-label">${label}</span>
         <input type="range" min="${min}" max="${max}" step="${step}" .value="${String(value)}"
           @input="${(e: Event) => onChange(parseFloat((e.target as HTMLInputElement).value))}" />
-        <span class="civ-icon-editor__prop-value">${value.toFixed(2)}em</span>
+        <span class="civ-icon-editor__prop-value">${unit === '%' ? `${value}%` : `${value.toFixed(2)}em`}</span>
       </label>
+    `;
+
+    const posPreset = (label: string, topVal: string, leftVal: string, transform: string) => html`
+      <button type="button" class="civ-icon-editor__pos-preset"
+        @click="${() => {
+          this._setProp('top', topVal);
+          this._setProp('left', leftVal);
+          // Preserve rotation if present
+          const existingRot = this._getRotation();
+          const rotPart = existingRot ? ` rotate(${existingRot}deg)` : '';
+          this._setProp('transform', `${transform}${rotPart}`);
+        }}"
+        title="${label}">${label}</button>
     `;
 
     return html`
@@ -544,6 +569,20 @@ class CivIconEditor extends LitElement {
         <div class="civ-icon-editor__prop-grid">
           ${slider('Width', w, 0, 1, 0.01, v => this._setProp('width', `${v}em`))}
           ${slider('Height', h, 0, 1, 0.01, v => this._setProp('height', `${v}em`))}
+
+          <div class="civ-icon-editor__prop-section">
+            <span class="civ-icon-editor__prop-section-label">Position</span>
+            <div class="civ-icon-editor__pos-presets">
+              ${posPreset('Center', '50%', '50%', 'translate(-50%, -50%)')}
+              ${posPreset('Top-L', '0', '0', 'none')}
+              ${posPreset('Top-R', '0', '100%', 'translateX(-100%)')}
+              ${posPreset('Bot-L', '100%', '0', 'translateY(-100%)')}
+              ${posPreset('Bot-R', '100%', '100%', 'translate(-100%, -100%)')}
+            </div>
+          </div>
+          ${slider('Top', top.value, 0, 100, 1, v => this._setProp('top', `${v}%`), '%')}
+          ${slider('Left', left.value, 0, 100, 1, v => this._setProp('left', `${v}%`), '%')}
+
           ${slider('Border radius', borderRadius, 0, 0.5, 0.01, v => this._setProp('border-radius', `${v}em`))}
           <label class="civ-icon-editor__prop-row">
             <span class="civ-icon-editor__prop-label">Rotation</span>
@@ -857,6 +896,37 @@ class CivIconEditor extends LitElement {
           height: 4px;
           cursor: pointer;
         }
+        .civ-icon-editor__prop-section {
+          margin: 0.3rem 0 0.1rem;
+        }
+        .civ-icon-editor__prop-section-label {
+          font-size: 0.7rem;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          display: block;
+          margin-bottom: 0.25rem;
+        }
+        .civ-icon-editor__pos-presets {
+          display: flex;
+          gap: 0.25rem;
+          flex-wrap: wrap;
+          margin-bottom: 0.3rem;
+        }
+        .civ-icon-editor__pos-preset {
+          padding: 0.2rem 0.4rem;
+          border: 1px solid #d1d5db;
+          background: #f9fafb;
+          border-radius: 3px;
+          cursor: pointer;
+          font: inherit;
+          font-size: 0.65rem;
+        }
+        .civ-icon-editor__pos-preset:hover {
+          background: #e0ecff;
+          border-color: #0050d8;
+        }
+
         .civ-icon-editor__prop-row input[type="checkbox"] {
           width: 16px;
           height: 16px;

@@ -1,0 +1,43 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Address
+status: stable
+group: CivUI Compound
+description: 'Compound address field with street, city, state, and zip inputs.'
+
+props:
+  type: object
+  properties:
+    legend:
+      title: Legend
+      type: string
+      description: 'Fieldset legend text'
+    name:
+      title: Name
+      type: string
+      description: 'Form field name prefix'
+    value:
+      title: Value
+      type: string
+      description: 'JSON-encoded address value'
+    show_street2:
+      title: Show street 2
+      type: boolean
+      default: false
+      description: 'Show second street address line'
+    show_country:
+      title: Show country
+      type: boolean
+      default: false
+      description: 'Show country selector'
+    required:
+      title: Required
+      type: boolean
+      default: false
+    disabled:
+      title: Disabled
+      type: boolean
+      default: false
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

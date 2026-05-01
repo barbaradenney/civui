@@ -1,0 +1,27 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: List
+status: stable
+group: CivUI Layout
+description: 'Structured list container with optional dividers.'
+
+props:
+  type: object
+  properties:
+    dividers:
+      title: Dividers
+      type: boolean
+      default: false
+      description: 'Show dividers between items'
+    spacing:
+      title: Spacing
+      type: string
+      description: 'Spacing between items'
+
+slots:
+  default:
+    title: Default
+    description: 'List item elements'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

@@ -1,0 +1,11 @@
+<civ-radio-group
+  {% if legend %}legend="{{ legend }}"{% endif %}
+  {% if name %}name="{{ name }}"{% endif %}
+  {% if value %}value="{{ value }}"{% endif %}
+  {% if required %}required{% endif %}
+  {% if disabled %}disabled{% endif %}
+  {% if preset %}preset="{{ preset }}"{% endif %}
+  {% if preset_variant %}preset-variant="{{ preset_variant }}"{% endif %}
+>
+  {% block default %}{% endblock %}
+</civ-radio-group>

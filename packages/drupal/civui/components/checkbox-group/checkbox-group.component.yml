@@ -1,0 +1,51 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Checkbox Group
+status: stable
+group: CivUI Controls
+description: 'Group of checkboxes for multi-select. Use with form-fieldset for legend/hint/error.'
+
+props:
+  type: object
+  properties:
+    legend:
+      title: Legend
+      type: string
+      description: 'Group legend text'
+    name:
+      title: Name
+      type: string
+      description: 'Form field name'
+    value:
+      title: Value
+      type: string
+      description: 'Comma-separated selected values'
+    required:
+      title: Required
+      type: boolean
+      default: false
+    disabled:
+      title: Disabled
+      type: boolean
+      default: false
+    show_select_all:
+      title: Show select all
+      type: boolean
+      default: false
+      description: 'Show a select all checkbox'
+    preset:
+      title: Preset
+      type: string
+      description: 'Preset option set name'
+    preset_variant:
+      title: Preset variant
+      type: string
+      description: 'Variant of the preset options'
+
+slots:
+  default:
+    title: Default
+    description: 'Checkbox elements'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

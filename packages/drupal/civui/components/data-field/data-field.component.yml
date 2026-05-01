@@ -1,0 +1,41 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Data Field
+status: stable
+group: CivUI Layout
+description: 'Read-only label-value pair for displaying submitted data.'
+
+props:
+  type: object
+  properties:
+    label:
+      title: Label
+      type: string
+      description: 'Field label'
+    value:
+      title: Value
+      type: string
+      description: 'Field value text'
+    href:
+      title: Href
+      type: string
+      description: 'Link the value to a URL'
+    hint:
+      title: Hint
+      type: string
+      description: 'Hint text below the value'
+    edit_href:
+      title: Edit href
+      type: string
+      description: 'URL for the edit link'
+    edit_label:
+      title: Edit label
+      type: string
+      description: 'Text for the edit link'
+    spacing:
+      title: Spacing
+      type: string
+      description: 'Spacing variant'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

@@ -1,0 +1,42 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Action Button
+status: stable
+group: CivUI Actions
+description: 'Stateful action button with toggle and danger support.'
+
+props:
+  type: object
+  properties:
+    label:
+      title: Label
+      type: string
+      description: 'Button label text'
+    variant:
+      title: Variant
+      type: string
+      enum: ['primary', 'secondary', 'tertiary']
+      description: 'Visual style variant'
+    danger:
+      title: Danger
+      type: boolean
+      default: false
+      description: 'Destructive action styling'
+    disabled:
+      title: Disabled
+      type: boolean
+      default: false
+    pressed:
+      title: Pressed
+      type: boolean
+      default: false
+      description: 'Toggle pressed state'
+    type:
+      title: Type
+      type: string
+      enum: ['button', 'submit', 'reset']
+      default: 'button'
+      description: 'HTML button type'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

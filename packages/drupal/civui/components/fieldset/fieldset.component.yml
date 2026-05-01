@@ -1,0 +1,38 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Fieldset
+status: stable
+group: CivUI Form Patterns
+description: 'Form fieldset wrapper that provides legend, hint, and error for grouped controls.'
+
+props:
+  type: object
+  properties:
+    legend:
+      title: Legend
+      type: string
+      description: 'Fieldset legend text'
+    hint:
+      title: Hint
+      type: string
+      description: 'Hint text shown below the legend'
+    error:
+      title: Error
+      type: string
+      description: 'Error message text'
+    required:
+      title: Required
+      type: boolean
+      default: false
+    disabled:
+      title: Disabled
+      type: boolean
+      default: false
+
+slots:
+  default:
+    title: Default
+    description: 'Grouped form controls'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

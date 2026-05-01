@@ -1,0 +1,37 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Memorable Date
+status: stable
+group: CivUI Inputs
+description: 'Three-field date input for known dates like birthdays. Use with form-fieldset.'
+
+props:
+  type: object
+  properties:
+    name:
+      title: Name
+      type: string
+      description: 'Form field name'
+    value:
+      title: Value
+      type: string
+      description: 'Date value in ISO format'
+    label:
+      title: Label
+      type: string
+      description: 'Accessible label'
+    locale:
+      title: Locale
+      type: string
+      description: 'Locale for month names'
+    required:
+      title: Required
+      type: boolean
+      default: false
+    disabled:
+      title: Disabled
+      type: boolean
+      default: false
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

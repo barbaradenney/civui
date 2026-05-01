@@ -1,0 +1,42 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Repeater
+status: stable
+group: CivUI Form Patterns
+description: 'Repeatable form section for adding multiple entries of the same fields.'
+
+props:
+  type: object
+  properties:
+    legend:
+      title: Legend
+      type: string
+      description: 'Fieldset legend text'
+    name:
+      title: Name
+      type: string
+      description: 'Form field name prefix'
+    item_label:
+      title: Item label
+      type: string
+      description: 'Label template for each item'
+    mode:
+      title: Mode
+      type: string
+      description: 'Repeater mode variant'
+    min:
+      title: Min
+      type: integer
+      description: 'Minimum number of entries'
+    max:
+      title: Max
+      type: integer
+      description: 'Maximum number of entries'
+
+slots:
+  default:
+    title: Default
+    description: 'Template for each repeated entry'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

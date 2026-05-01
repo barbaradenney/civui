@@ -1,0 +1,41 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Yes No
+status: stable
+group: CivUI Inputs
+description: 'Yes/No toggle input for binary questions.'
+
+props:
+  type: object
+  properties:
+    legend:
+      title: Legend
+      type: string
+      description: 'Question text'
+    name:
+      title: Name
+      type: string
+      description: 'Form field name'
+    value:
+      title: Value
+      type: string
+      description: 'Current value (yes or no)'
+    yes_label:
+      title: Yes label
+      type: string
+      description: 'Custom label for the yes option'
+    no_label:
+      title: No label
+      type: string
+      description: 'Custom label for the no option'
+    required:
+      title: Required
+      type: boolean
+      default: false
+    disabled:
+      title: Disabled
+      type: boolean
+      default: false
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

@@ -1,0 +1,33 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Image Preview
+status: stable
+group: CivUI Layout
+description: 'Image preview with filename and file size metadata.'
+
+props:
+  type: object
+  properties:
+    src:
+      title: Src
+      type: string
+      description: 'Image source URL'
+    alt:
+      title: Alt
+      type: string
+      description: 'Alternative text for the image'
+    filename:
+      title: Filename
+      type: string
+      description: 'Display filename'
+    file_size:
+      title: File size
+      type: string
+      description: 'Display file size'
+    size:
+      title: Size
+      type: string
+      description: 'Preview size variant'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

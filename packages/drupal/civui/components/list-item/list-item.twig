@@ -1,0 +1,11 @@
+<civ-list-item
+  {% if href %}href="{{ href }}"{% endif %}
+  {% if current %}current{% endif %}
+  {% if heading %}heading="{{ heading }}"{% endif %}
+  {% if description %}description="{{ description }}"{% endif %}
+  {% if error %}error="{{ error }}"{% endif %}
+>
+  {% block start %}{% endblock %}
+  {% block default %}{% endblock %}
+  {% block end %}{% endblock %}
+</civ-list-item>

@@ -1,0 +1,29 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Count
+status: stable
+group: CivUI Layout
+description: 'Numeric count display with label and variant styling.'
+
+props:
+  type: object
+  properties:
+    label:
+      title: Label
+      type: string
+      description: 'Count label text'
+    count:
+      title: Count
+      type: integer
+      description: 'Numeric count value'
+    max:
+      title: Max
+      type: integer
+      description: 'Maximum count before showing max+'
+    variant:
+      title: Variant
+      type: string
+      description: 'Color variant'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

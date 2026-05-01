@@ -1,0 +1,27 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Filter Chip Group
+status: stable
+group: CivUI Controls
+description: 'Group of filter chips with single or multi-select mode.'
+
+props:
+  type: object
+  properties:
+    mode:
+      title: Mode
+      type: string
+      enum: ['single', 'multi']
+      description: 'Selection mode'
+    label:
+      title: Label
+      type: string
+      description: 'Accessible group label'
+
+slots:
+  default:
+    title: Default
+    description: 'Filter chip elements'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

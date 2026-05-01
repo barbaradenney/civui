@@ -1,0 +1,22 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Summary
+status: stable
+group: CivUI Form Patterns
+description: 'Form summary display showing submitted data organized by section.'
+
+props:
+  type: object
+  properties:
+    heading:
+      title: Heading
+      type: string
+      description: 'Summary heading text'
+    heading_level:
+      title: Heading level
+      type: integer
+      default: 2
+      description: 'HTML heading level for the summary heading'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

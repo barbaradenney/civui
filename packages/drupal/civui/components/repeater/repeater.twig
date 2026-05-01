@@ -1,0 +1,10 @@
+<civ-repeater
+  {% if legend %}legend="{{ legend }}"{% endif %}
+  {% if name %}name="{{ name }}"{% endif %}
+  {% if item_label %}item-label="{{ item_label }}"{% endif %}
+  {% if mode %}mode="{{ mode }}"{% endif %}
+  {% if min %}min="{{ min }}"{% endif %}
+  {% if max %}max="{{ max }}"{% endif %}
+>
+  {% block default %}{% endblock %}
+</civ-repeater>

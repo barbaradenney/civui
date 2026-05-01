@@ -1,0 +1,30 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Progress Bar
+status: stable
+group: CivUI Layout
+description: 'Horizontal progress bar with label and percentage display.'
+
+props:
+  type: object
+  properties:
+    value:
+      title: Value
+      type: number
+      description: 'Progress value (0-100)'
+    label:
+      title: Label
+      type: string
+      description: 'Accessible label for the progress bar'
+    status:
+      title: Status
+      type: string
+      description: 'Status text displayed with the bar'
+    show_percent:
+      title: Show percent
+      type: boolean
+      default: false
+      description: 'Show percentage text'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

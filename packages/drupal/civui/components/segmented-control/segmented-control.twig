@@ -1,0 +1,9 @@
+<civ-segmented-control
+  {% if legend %}legend="{{ legend }}"{% endif %}
+  {% if name %}name="{{ name }}"{% endif %}
+  {% if value %}value="{{ value }}"{% endif %}
+  {% if required %}required{% endif %}
+  {% if disabled %}disabled{% endif %}
+>
+  {% block default %}{% endblock %}
+</civ-segmented-control>

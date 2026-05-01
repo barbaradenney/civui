@@ -1,0 +1,21 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Icon
+status: stable
+group: CivUI Core
+description: 'Pure CSS icon that scales with font-size and inherits color.'
+
+props:
+  type: object
+  properties:
+    name:
+      title: Name
+      type: string
+      description: 'Icon name from the icon library'
+    label:
+      title: Label
+      type: string
+      description: 'Accessible label for the icon'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

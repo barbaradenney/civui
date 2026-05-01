@@ -1,0 +1,9 @@
+<civ-card
+  {% if heading %}heading="{{ heading }}"{% endif %}
+  {% if spacing %}spacing="{{ spacing }}"{% endif %}
+  {% if color %}color="{{ color }}"{% endif %}
+  {% if card_style %}card-style="{{ card_style }}"{% endif %}
+>
+  {% block default %}{% endblock %}
+  {% block footer %}{% endblock %}
+</civ-card>

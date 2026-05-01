@@ -1,0 +1,27 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Button Group
+status: stable
+group: CivUI Actions
+description: 'Groups multiple buttons with consistent spacing and orientation.'
+
+props:
+  type: object
+  properties:
+    label:
+      title: Label
+      type: string
+      description: 'Accessible group label'
+    orientation:
+      title: Orientation
+      type: string
+      enum: ['horizontal', 'vertical']
+      description: 'Layout direction'
+
+slots:
+  default:
+    title: Default
+    description: 'Button elements'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

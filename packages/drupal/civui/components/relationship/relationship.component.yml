@@ -1,0 +1,43 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Relationship
+status: stable
+group: CivUI Compound
+description: 'Compound relationship field with type, name, and deceased status.'
+
+props:
+  type: object
+  properties:
+    legend:
+      title: Legend
+      type: string
+      description: 'Fieldset legend text'
+    name:
+      title: Name
+      type: string
+      description: 'Form field name prefix'
+    preset:
+      title: Preset
+      type: string
+      description: 'Relationship type preset'
+    show_name:
+      title: Show name
+      type: boolean
+      default: false
+      description: 'Show related person name fields'
+    show_deceased:
+      title: Show deceased
+      type: boolean
+      default: false
+      description: 'Show deceased status field'
+    required:
+      title: Required
+      type: boolean
+      default: false
+    disabled:
+      title: Disabled
+      type: boolean
+      default: false
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

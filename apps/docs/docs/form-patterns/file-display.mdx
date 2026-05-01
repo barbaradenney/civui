@@ -1,0 +1,137 @@
+---
+title: File & Document Display
+sidebar_position: 12
+sidebar_label: File Display
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
+# File & Document Display
+
+After files are uploaded, they need to be displayed across the form lifecycle — on review pages, confirmation pages, and summary sections. CivUI provides components for each context.
+
+## Components
+
+| Component | Context | What it does |
+|-----------|---------|--------------|
+| `civ-file-upload` | Upload form | Interactive upload with add/remove/progress |
+| `civ-file-list` | Review & confirmation | Read-only file list with optional download links |
+| `civ-image-preview` | Review & ID verification | Image display at configurable sizes |
+| `civ-summary` | Full review page | Structured sections with file metadata |
+
+## Review page — file list
+
+Show uploaded documents as a list with download links. Add a "Change" link that navigates back to the upload step.
+
+<StoryEmbed id="forms-patterns-file-display--review-page-files" />
+
+```html
+<h3>Supporting documents</h3>
+<civ-link href="#/documents" variant="tertiary">Change</civ-link>
+<civ-file-list label="Uploaded documents"></civ-file-list>
+```
+
+```js
+fileList.files = [
+  { name: 'DD214.pdf', size: 2400000, url: '/files/dd214.pdf' },
+  { name: 'medical-records.pdf', size: 8100000, url: '/files/medical.pdf' },
+];
+```
+
+## Review page — image previews
+
+For image uploads (ID documents, photos), show visual previews so the user can verify what they uploaded.
+
+<StoryEmbed id="forms-patterns-file-display--review-page-images" />
+
+```html
+<h3>ID documents</h3>
+<civ-link href="#/id-upload" variant="tertiary">Change</civ-link>
+<div style="display: flex; gap: 16px; flex-wrap: wrap;">
+  <civ-image-preview
+    src="/uploads/id-front.jpg"
+    alt="Front of driver's license"
+    filename="id-front.jpg"
+    file-size="1.8 MB"
+    size="sm"
+  ></civ-image-preview>
+  <civ-image-preview
+    src="/uploads/id-back.jpg"
+    alt="Back of driver's license"
+    filename="id-back.jpg"
+    file-size="1.6 MB"
+    size="sm"
+  ></civ-image-preview>
+</div>
+```
+
+## Confirmation page
+
+After submission, show what was submitted. No download links (the submission is done), no edit actions — purely informational.
+
+<StoryEmbed id="forms-patterns-file-display--confirmation-page" />
+
+```html
+<civ-alert variant="success" heading="We've received your application">
+  You submitted your application on May 1, 2026.
+</civ-alert>
+
+<h3>Documents submitted</h3>
+<civ-file-list label="Submitted documents"></civ-file-list>
+
+<civ-action-link
+  type="download"
+  href="/receipt.pdf"
+  label="Download confirmation receipt"
+  file-size="45 KB"
+></civ-action-link>
+```
+
+## Mixed documents and photos
+
+When a form collects both document files and photos (e.g., insurance claims), group them separately.
+
+<StoryEmbed id="forms-patterns-file-display--mixed-files-and-images" />
+
+## Summary section integration
+
+Use `civ-summary` to display file metadata alongside other form data on the review page:
+
+```js
+summary.sections = [
+  {
+    heading: 'Supporting documents',
+    editHref: '#/documents',
+    items: [
+      { label: 'DD214', value: 'discharge-papers.pdf (2.4 MB)' },
+      { label: 'Medical records', value: 'medical-report.pdf (1.8 MB)' },
+      { label: 'ID (front)', value: 'id-front.jpg (1.8 MB)' },
+    ],
+  },
+];
+```
+
+For richer file display inside summaries, render `civ-file-list` or `civ-image-preview` as custom content in the summary section.
+
+## Full lifecycle
+
+```
+Upload form          → civ-file-upload (interactive)
+         ↓
+Review page          → civ-file-list (download links) + civ-image-preview (visual)
+         ↓
+Confirmation page    → civ-file-list (no links, informational)
+         ↓
+Summary/print        → civ-summary with file metadata as text
+```
+
+## Components used
+
+- [`civ-file-upload`](/docs/components/inputs/file-upload) — interactive upload
+- [`civ-file-list`](/docs/components/layout/file-list) — read-only file display
+- [`civ-image-preview`](/docs/components/layout/image-preview) — image display
+- [`civ-summary`](/docs/components/form/summary) — structured review sections
+- [`civ-action-link`](/docs/components/actions/action-link) — download receipt
+- [`civ-alert`](/docs/components/feedback/alert) — confirmation message
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-patterns-file-display--review-page-files)

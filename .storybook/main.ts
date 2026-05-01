@@ -1,12 +1,17 @@
 import type { StorybookConfig } from '@storybook/web-components-vite';
-import { resolve, dirname } from 'path';
+import { resolve, dirname, join } from 'path';
 import { fileURLToPath } from 'url';
+// @ts-ignore — no types for this plugin
+import twig from 'vite-plugin-twig-drupal';
 
 const __dir = typeof __dirname !== 'undefined' ? __dirname : dirname(fileURLToPath(import.meta.url));
 const root = resolve(__dir, '..');
 
 const config: StorybookConfig = {
-  stories: ['../packages/*/src/**/*.stories.ts'],
+  stories: [
+    '../packages/*/src/**/*.stories.ts',
+    '../packages/drupal/civui/stories/**/*.stories.ts',
+  ],
   addons: [
     '@storybook/addon-essentials',
     '@storybook/addon-a11y',
@@ -27,6 +32,14 @@ const config: StorybookConfig = {
     config.build = config.build || {};
     config.build.rollupOptions = config.build.rollupOptions || {};
     (config.build.rollupOptions as any).treeshake = false;
+
+    // Twig plugin for Drupal SDC preview
+    config.plugins = config.plugins || [];
+    (config.plugins as any[]).push(twig({
+      namespaces: {
+        civui: join(root, 'packages/drupal/civui/components'),
+      },
+    }));
 
     // Resolve workspace packages to TypeScript source so Storybook dev
     // works without running `pnpm build` first.

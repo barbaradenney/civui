@@ -232,7 +232,7 @@
 
   <div class="hero">
     <h1>Zero-Dependency Icons</h1>
-    <p>Icons built from layered Unicode characters. No icon fonts, no SVG sprites, no external dependencies.</p>
+    <p>14 icons drawn with CSS pseudo-elements. No icon fonts, no SVG sprites, no external dependencies. Material Symbols available as an opt-in for richer needs.</p>
     <div class="hero-badges">
       <span class="badge">No Network Requests</span>
       <span class="badge">Inherits Color</span>
@@ -244,7 +244,8 @@
   <div class="content">
     <h2>The Approach</h2>
     <div class="approach">
-      <p>CivUI icons are composed from layered Unicode characters, rendered entirely with the browser's native text engine. There are no icon font files to load, no SVG sprite sheets to manage, and no external CDN dependencies. Each icon is a <span class="inline-code">&lt;civ-icon&gt;</span> custom element that inherits color from its parent, scales with <span class="inline-code">font-size</span>, and works in any context where text renders &mdash; including email, print, and high-contrast modes.</p>
+      <p>CivUI icons are drawn with CSS <span class="inline-code">::before</span> / <span class="inline-code">::after</span> pseudo-elements &mdash; borders, <span class="inline-code">clip-path</span>, <span class="inline-code">box-shadow</span>, and <span class="inline-code">transform</span>. There are no icon font files to load, no SVG sprite sheets to manage, and no external CDN dependencies. Each icon is a <span class="inline-code">&lt;civ-icon&gt;</span> custom element that inherits color from its parent via <span class="inline-code">currentColor</span>, scales with <span class="inline-code">font-size</span>, and works in any context where CSS renders &mdash; including print and high-contrast modes.</p>
+      <p>The default registry is intentionally small: only the 14 icons CivUI's own components reference. For broader catalogs, the full Material Symbols font is available as an opt-in (see <a href="#beyond-the-built-in-set">Beyond the Built-In Set</a> below).</p>
     </div>
 
     <h2>Benefits</h2>
@@ -268,155 +269,22 @@
     </div>
 
     <h2>Icon Library</h2>
+    <p>The 14 built-in icons:</p>
     <div class="icon-grid">
-      <div class="icon-cell">
-        <span class="icon-char" style="transform: rotate(90deg); display: inline-block;">&#x2303;</span>
-        <span class="icon-name">chevron-right</span>
-      </div>
-      <div class="icon-cell">
-        <span class="icon-char" style="transform: rotate(-90deg); display: inline-block;">&#x2303;</span>
-        <span class="icon-name">chevron-left</span>
-      </div>
-      <div class="icon-cell">
-        <span class="icon-char" style="transform: rotate(180deg); display: inline-block;">&#x2303;</span>
-        <span class="icon-name">chevron-down</span>
-      </div>
-      <div class="icon-cell">
-        <span class="icon-char">&#x2303;</span>
-        <span class="icon-name">chevron-up</span>
-      </div>
-      <div class="icon-cell">
-        <span class="icon-char">&rarr;</span>
-        <span class="icon-name">arrow-right</span>
-      </div>
-      <div class="icon-cell">
-        <span class="icon-char">&larr;</span>
-        <span class="icon-name">arrow-left</span>
-      </div>
-      <div class="icon-cell">
-        <span class="icon-char">&uarr;</span>
-        <span class="icon-name">arrow-up</span>
-      </div>
-      <div class="icon-cell">
-        <span class="icon-char">&darr;</span>
-        <span class="icon-name">arrow-down</span>
-      </div>
-      <div class="icon-cell">
-        <span class="icon-char">&#x2715;</span>
-        <span class="icon-name">close</span>
-      </div>
-      <div class="icon-cell">
-        <span class="icon-char">+</span>
-        <span class="icon-name">plus</span>
-      </div>
-      <div class="icon-cell">
-        <span class="icon-char">&minus;</span>
-        <span class="icon-name">minus</span>
-      </div>
-      <div class="icon-cell">
-        <span class="icon-char">&equiv;</span>
-        <span class="icon-name">menu</span>
-      </div>
-      <div class="icon-cell">
-        <span class="icon-char">&#x2315;</span>
-        <span class="icon-name">search</span>
-      </div>
-      <div class="icon-cell">
-        <span class="icon-char">&#x270E;</span>
-        <span class="icon-name">edit</span>
-      </div>
-      <div class="icon-cell">
-        <span class="icon-char">&#x2713;</span>
-        <span class="icon-name">check</span>
-      </div>
-      <div class="icon-cell">
-        <span class="icon-char">&#x25CB;!</span>
-        <span class="icon-name">error</span>
-      </div>
-      <div class="icon-cell">
-        <span class="icon-char">&#x25B3;!</span>
-        <span class="icon-name">warning</span>
-      </div>
-      <div class="icon-cell">
-        <span class="icon-char">&#x25CB;i</span>
-        <span class="icon-name">info</span>
-      </div>
-      <div class="icon-cell">
-        <span class="icon-char">&#x25CB;?</span>
-        <span class="icon-name">help</span>
-      </div>
-      <div class="icon-cell">
-        <span class="icon-char">&#x2606;</span>
-        <span class="icon-name">star</span>
-      </div>
-      <div class="icon-cell">
-        <span class="icon-char">&#x2605;</span>
-        <span class="icon-name">star-filled</span>
-      </div>
-      <div class="icon-cell">
-        <span class="icon-char">&#x1F4C5;</span>
-        <span class="icon-name">calendar</span>
-      </div>
-      <div class="icon-cell">
-        <span class="icon-char">&#x21E7;</span>
-        <span class="icon-name">upload</span>
-      </div>
-      <div class="icon-cell">
-        <span class="icon-char">&#x21E9;</span>
-        <span class="icon-name">download</span>
-      </div>
-      <div class="icon-cell">
-        <span class="icon-char">&#x2398;</span>
-        <span class="icon-name">copy</span>
-      </div>
-      <div class="icon-cell">
-        <span class="icon-char">&#x2421;</span>
-        <span class="icon-name">trash</span>
-      </div>
-      <div class="icon-cell">
-        <span class="icon-char">&#x1F512;</span>
-        <span class="icon-name">lock</span>
-      </div>
-      <div class="icon-cell">
-        <span class="icon-char">&#x2302;</span>
-        <span class="icon-name">home</span>
-      </div>
-      <div class="icon-cell">
-        <span class="icon-char">&#x2295;</span>
-        <span class="icon-name">settings</span>
-      </div>
-      <div class="icon-cell">
-        <span class="icon-char">&#x25BD;</span>
-        <span class="icon-name">filter</span>
-      </div>
-      <div class="icon-cell">
-        <span class="icon-char">&#x2399;</span>
-        <span class="icon-name">print</span>
-      </div>
-      <div class="icon-cell">
-        <span class="icon-char">&#x263A;</span>
-        <span class="icon-name">user</span>
-      </div>
-      <div class="icon-cell">
-        <span class="icon-char">&#x2709;</span>
-        <span class="icon-name">mail</span>
-      </div>
-      <div class="icon-cell">
-        <span class="icon-char">&#x283F;</span>
-        <span class="icon-name">grip</span>
-      </div>
-      <div class="icon-cell">
-        <span class="icon-char">&#x25D4;</span>
-        <span class="icon-name">loading</span>
-      </div>
-      <div class="icon-cell">
-        <span class="icon-char">&#x25B2;</span>
-        <span class="icon-name">sort-asc</span>
-      </div>
-      <div class="icon-cell">
-        <span class="icon-char">&#x25BC;</span>
-        <span class="icon-name">sort-desc</span>
-      </div>
+      <div class="icon-cell"><span class="icon-name">check</span></div>
+      <div class="icon-cell"><span class="icon-name">check-circle</span></div>
+      <div class="icon-cell"><span class="icon-name">chevron-down</span></div>
+      <div class="icon-cell"><span class="icon-name">chevron-left</span></div>
+      <div class="icon-cell"><span class="icon-name">chevron-right</span></div>
+      <div class="icon-cell"><span class="icon-name">close</span></div>
+      <div class="icon-cell"><span class="icon-name">download</span></div>
+      <div class="icon-cell"><span class="icon-name">error</span></div>
+      <div class="icon-cell"><span class="icon-name">external-link</span></div>
+      <div class="icon-cell"><span class="icon-name">info</span></div>
+      <div class="icon-cell"><span class="icon-name">loading</span></div>
+      <div class="icon-cell"><span class="icon-name">mail</span></div>
+      <div class="icon-cell"><span class="icon-name">phone</span></div>
+      <div class="icon-cell"><span class="icon-name">warning</span></div>
     </div>
 
     <h2>Usage</h2>
@@ -424,7 +292,7 @@
 &lt;civ-icon name="check"&gt;&lt;/civ-icon&gt;
 
 &lt;!-- With size variant --&gt;
-&lt;civ-icon name="search" size="lg"&gt;&lt;/civ-icon&gt;
+&lt;civ-icon name="info" size="lg"&gt;&lt;/civ-icon&gt;
 
 &lt;!-- Inherits parent color --&gt;
 &lt;span style="color: #00a91c;"&gt;
@@ -433,11 +301,11 @@
 
 &lt;!-- Inside a button --&gt;
 &lt;button&gt;
-  &lt;civ-icon name="plus"&gt;&lt;/civ-icon&gt; Add item
+  &lt;civ-icon name="download"&gt;&lt;/civ-icon&gt; Download
 &lt;/button&gt;
 
 &lt;!-- Accessible label for standalone icons --&gt;
-&lt;civ-icon name="close" aria-label="Close dialog"&gt;&lt;/civ-icon&gt;</code></pre>
+&lt;civ-icon name="close" label="Close dialog"&gt;&lt;/civ-icon&gt;</code></pre>
 
     <h2>Size Variants</h2>
     <table class="sizes-table">
@@ -477,18 +345,35 @@
       </tbody>
     </table>
 
-    <h2>Custom Icons</h2>
-    <p>Register custom icons using the <span class="inline-code">registerIcon()</span> API to extend the built-in library with your own Unicode compositions.</p>
+    <h2 id="beyond-the-built-in-set">Beyond the Built-In Set</h2>
+    <p>If you need icons outside the built-in 14, you have two paths:</p>
+
+    <h3>1. Author Your Own CSS Shape</h3>
+    <p>Author a <span class="inline-code">.civ-icon--{name}</span> rule alongside your application's stylesheet, then register the name with <span class="inline-code">registerIcon()</span>:</p>
     <pre><code>import { registerIcon } from '@civui/core';
 
-// Register a single custom icon
 registerIcon('agency-seal', {
-  characters: ['\u2B21', '\u2605'],  // hexagon + star
   label: 'Agency seal',
+  ios: 'shield',      // SF Symbol for iOS
+  android: 'shield',  // Material Symbol for Android native
 });
 
 // Use it like any built-in icon
 // &lt;civ-icon name="agency-seal"&gt;&lt;/civ-icon&gt;</code></pre>
+    <p>To prototype the CSS interactively, run <span class="inline-code">pnpm storybook</span> and open <strong>Core \u203A Icon \u203A Editor</strong> &mdash; a live CSS editor with snippet primitives, multi-size preview, pixel grid, and dark-mode toggle.</p>
+
+    <h3>2. Opt In to the Material Symbols Font</h3>
+    <p>For broad icon coverage without writing CSS, import the optional Material Symbols stylesheet and register icons by their glyph name with the <span class="inline-code">symbol</span> field:</p>
+    <pre><code>import '@civui/core/styles/material-symbols';
+import { registerIcon } from '@civui/core';
+
+registerIcon('home', {
+  label: 'Home',
+  symbol: 'home',     // Material Symbols ligature
+  ios: 'house',
+  android: 'home',
+});</code></pre>
+    <p><span class="inline-code">material-symbols</span> is an optional peer dependency &mdash; install it (<span class="inline-code">npm install material-symbols</span>) only if you import the stylesheet. The font weighs ~3.9&nbsp;MB.</p>
 
     <div class="hero-links" style="justify-content: flex-start; margin-top: 2rem;">
       <a href="../storybook/?path=/docs/core-civ-icon--docs" class="hero-link hero-link--primary" style="background: var(--color-primary); color: var(--color-white);">View Icon Stories</a>

@@ -70,11 +70,16 @@ A built-in Storybook playground for editing existing icons or authoring new ones
 | `rotate` | `number` | — | Rotation in degrees (e.g., 90, 180, 270) |
 | `flip` | `string` | — | Flip direction: `'horizontal'`, `'vertical'`, or `'both'` |
 
-## Icon Categories
+## Built-In Icons
 
-- **Navigation:** chevron-left, chevron-right, chevron-up, chevron-down, arrow-left, arrow-right, arrow-up, arrow-down, external-link
-- **Actions:** close, plus, minus, menu, search, edit
-- **Status:** check, check-circle, error, warning, info
+CivUI ships only the 14 icons used by its own components:
+
+- **Navigation:** `chevron-left`, `chevron-right`, `chevron-down`, `external-link`
+- **Status:** `check`, `check-circle`, `error`, `warning`, `info`, `loading`
+- **Actions:** `close`, `download`
+- **Communication:** `mail`, `phone`
+
+For anything outside this set, register your own CSS shape with `registerIcon()` or opt in to the [Material Symbols font](../../foundations/icons#beyond-the-built-in-set).
 
 ## Accessibility
 
@@ -92,7 +97,7 @@ A built-in Storybook playground for editing existing icons or authoring new ones
 <civ-icon name="error" label="Error"></civ-icon>
 
 <!-- Sized and colored -->
-<civ-icon name="search" size="lg" class="civ-text-primary"></civ-icon>
+<civ-icon name="mail" size="lg" class="civ-text-primary"></civ-icon>
 
 <!-- Rotated -->
 <civ-icon name="chevron-right" rotate="90"></civ-icon>

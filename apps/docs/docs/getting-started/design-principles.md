@@ -53,7 +53,7 @@ Visual states are handled with CSS:
 
 ## Every Byte Is Earned
 
-- 45 icons drawn entirely with CSS (no SVGs, no icon fonts)
+- 14 icons drawn entirely with CSS (no SVGs, no icon fonts) — full Material Symbols catalog available as an opt-in
 - No CSS-in-JS (static Tailwind)
 - No hidden input hacks (ElementInternals)
 - Lit (~16K gzipped) is the only runtime dependency

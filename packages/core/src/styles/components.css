@@ -353,8 +353,8 @@
   /* Chevrons (rotated border corner) */
   .civ-icon--chevron-right::before {
     content: '';
-    width: 0.35em;
-    height: 0.35em;
+    width: 0.45em;
+    height: 0.45em;
     border-right: var(--civ-icon-stroke) solid currentColor;
     border-bottom: var(--civ-icon-stroke) solid currentColor;
     transform: rotate(-45deg) translate(-10%, 10%);
@@ -362,8 +362,8 @@
 
   .civ-icon--chevron-left::before {
     content: '';
-    width: 0.35em;
-    height: 0.35em;
+    width: 0.45em;
+    height: 0.45em;
     border-left: var(--civ-icon-stroke) solid currentColor;
     border-bottom: var(--civ-icon-stroke) solid currentColor;
     transform: rotate(45deg) translate(10%, 10%);
@@ -371,8 +371,8 @@
 
   .civ-icon--chevron-down::before {
     content: '';
-    width: 0.35em;
-    height: 0.35em;
+    width: 0.45em;
+    height: 0.45em;
     border-right: var(--civ-icon-stroke) solid currentColor;
     border-bottom: var(--civ-icon-stroke) solid currentColor;
     transform: rotate(45deg) translate(-10%, -10%);
@@ -380,8 +380,8 @@
 
   .civ-icon--chevron-up::before {
     content: '';
-    width: 0.35em;
-    height: 0.35em;
+    width: 0.45em;
+    height: 0.45em;
     border-left: var(--civ-icon-stroke) solid currentColor;
     border-top: var(--civ-icon-stroke) solid currentColor;
     transform: rotate(45deg) translate(10%, -10%);

@@ -8,5 +8,5 @@
   {% if preset %}preset="{{ preset }}"{% endif %}
   {% if preset_variant %}preset-variant="{{ preset_variant }}"{% endif %}
 >
-  {% block default %}{% endblock %}
+  {% block default %}{{ default }}{% endblock %}
 </civ-checkbox-group>

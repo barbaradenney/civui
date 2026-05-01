@@ -4,6 +4,6 @@
   {% if color %}color="{{ color }}"{% endif %}
   {% if card_style %}card-style="{{ card_style }}"{% endif %}
 >
-  {% block default %}{% endblock %}
-  {% block footer %}{% endblock %}
+  {% block default %}{{ default }}{% endblock %}
+  {% block footer %}{{ footer }}{% endblock %}
 </civ-card>

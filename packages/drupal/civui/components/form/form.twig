@@ -4,5 +4,5 @@
   {% if persist %}persist="{{ persist }}"{% endif %}
   {% if error_heading_level and error_heading_level != 3 %}error-heading-level="{{ error_heading_level }}"{% endif %}
 >
-  {% block default %}{% endblock %}
+  {% block default %}{{ default }}{% endblock %}
 </civ-form>

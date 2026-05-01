@@ -6,5 +6,5 @@
   {% if slim %}slim{% endif %}
   {% if heading_level and heading_level != 4 %}heading-level="{{ heading_level }}"{% endif %}
 >
-  {% block default %}{% endblock %}
+  {% block default %}{{ default }}{% endblock %}
 </civ-alert>

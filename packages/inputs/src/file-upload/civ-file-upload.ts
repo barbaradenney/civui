@@ -294,7 +294,7 @@ export class CivFileUpload extends CivFormElement {
                   ? this._files.map(f => f.name).join(', ')
                   : (this.dragText || t('fileUploadNoFileChosen'))}
               </span>
-              <span class="civ-btn civ-btn--tertiary civ-shrink-0">${this.browseText || t('fileUploadBrowseText')}</span>
+              <span class="civ-action-btn civ-action-btn--tertiary civ-shrink-0">${this.browseText || t('fileUploadBrowseText')}</span>
             </button>`
           : html`
             <button
@@ -314,7 +314,7 @@ export class CivFileUpload extends CivFormElement {
               <span class="civ-block civ-text-body civ-mb-3">
                 ${this.dragText || t('fileUploadDragText')}
               </span>
-              <span class="civ-btn civ-btn--tertiary">${this.browseText || t('fileUploadBrowseText')}</span>
+              <span class="civ-action-btn civ-action-btn--tertiary">${this.browseText || t('fileUploadBrowseText')}</span>
               ${this.accept
                 ? html`<span class="civ-block civ-text-sm civ-mt-1">${this.acceptedLabel || t('fileUploadAcceptedLabel')}${formatAcceptedTypes(this.accept)}</span>`
                 : nothing}

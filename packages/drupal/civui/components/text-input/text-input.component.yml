@@ -1,0 +1,59 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Text Input
+status: stable
+group: CivUI Inputs
+description: 'Standard text input supporting multiple HTML input types. Wrap in form-field for label/hint/error.'
+
+props:
+  type: object
+  properties:
+    name:
+      title: Name
+      type: string
+      description: 'Form field name'
+    value:
+      title: Value
+      type: string
+      description: 'Current value'
+    type:
+      title: Type
+      type: string
+      enum: ['text', 'email', 'number', 'password', 'search', 'tel', 'url']
+      default: 'text'
+      description: 'HTML input type'
+    placeholder:
+      title: Placeholder
+      type: string
+      description: 'Placeholder text'
+    maxlength:
+      title: Max length
+      type: integer
+      description: 'Maximum character count'
+    required:
+      title: Required
+      type: boolean
+      default: false
+    disabled:
+      title: Disabled
+      type: boolean
+      default: false
+    readonly:
+      title: Read only
+      type: boolean
+      default: false
+    autocomplete:
+      title: Autocomplete
+      type: string
+      description: 'Browser autocomplete hint'
+    mask:
+      title: Mask
+      type: string
+      description: 'Input mask preset (ssn, phone-us, zip, etc.)'
+    validate:
+      title: Validate
+      type: string
+      description: 'Declarative validation type (email, phone, ssn, etc.)'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

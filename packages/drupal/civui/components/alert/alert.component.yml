@@ -1,0 +1,47 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Alert
+status: stable
+group: CivUI Layout
+description: 'Alert banner for informational, warning, error, or success messages.'
+
+props:
+  type: object
+  properties:
+    variant:
+      title: Variant
+      type: string
+      enum: ['info', 'warning', 'error', 'success']
+      description: 'Alert type'
+    heading:
+      title: Heading
+      type: string
+      description: 'Alert heading text'
+    label:
+      title: Label
+      type: string
+      description: 'Accessible label for the alert'
+    dismissible:
+      title: Dismissible
+      type: boolean
+      default: false
+      description: 'Show a dismiss button'
+    slim:
+      title: Slim
+      type: boolean
+      default: false
+      description: 'Compact variant without heading'
+    heading_level:
+      title: Heading level
+      type: integer
+      enum: [2, 3, 4, 5, 6]
+      default: 4
+      description: 'HTML heading level for the alert heading'
+
+slots:
+  default:
+    title: Default
+    description: 'Alert body content'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

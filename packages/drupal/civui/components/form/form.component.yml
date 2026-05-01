@@ -1,0 +1,35 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Form
+status: stable
+group: CivUI Form Patterns
+description: 'Form wrapper with built-in validation and error summary.'
+
+props:
+  type: object
+  properties:
+    action:
+      title: Action
+      type: string
+      description: 'Form submission URL'
+    method:
+      title: Method
+      type: string
+      description: 'HTTP method (get or post)'
+    persist:
+      title: Persist
+      type: string
+      description: 'Persistence strategy for form data'
+    error_heading_level:
+      title: Error heading level
+      type: integer
+      default: 3
+      description: 'Heading level for the error summary'
+
+slots:
+  default:
+    title: Default
+    description: 'Form content'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

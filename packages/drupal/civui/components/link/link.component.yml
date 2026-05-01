@@ -1,0 +1,40 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Link
+status: stable
+group: CivUI Actions
+description: 'Styled link component with variant styles.'
+
+props:
+  type: object
+  properties:
+    label:
+      title: Label
+      type: string
+      description: 'Link text'
+    href:
+      title: Href
+      type: string
+      description: 'Link URL'
+    variant:
+      title: Variant
+      type: string
+      enum: ['primary', 'secondary', 'tertiary', 'back']
+      description: 'Visual style variant'
+    danger:
+      title: Danger
+      type: boolean
+      default: false
+      description: 'Destructive action styling'
+    new_tab:
+      title: New tab
+      type: boolean
+      default: false
+      description: 'Open link in a new tab'
+    disabled:
+      title: Disabled
+      type: boolean
+      default: false
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

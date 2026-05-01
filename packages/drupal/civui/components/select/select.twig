@@ -1,0 +1,11 @@
+<civ-select
+  {% if name %}name="{{ name }}"{% endif %}
+  {% if value %}value="{{ value }}"{% endif %}
+  {% if preset %}preset="{{ preset }}"{% endif %}
+  {% if preset_variant %}preset-variant="{{ preset_variant }}"{% endif %}
+  {% if empty_label %}empty-label="{{ empty_label }}"{% endif %}
+  {% if required %}required{% endif %}
+  {% if disabled %}disabled{% endif %}
+>
+  {% block options %}{% endblock %}
+</civ-select>

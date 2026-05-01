@@ -1,0 +1,10 @@
+<civ-alert
+  {% if variant %}variant="{{ variant }}"{% endif %}
+  {% if heading %}heading="{{ heading }}"{% endif %}
+  {% if label %}label="{{ label }}"{% endif %}
+  {% if dismissible %}dismissible{% endif %}
+  {% if slim %}slim{% endif %}
+  {% if heading_level and heading_level != 4 %}heading-level="{{ heading_level }}"{% endif %}
+>
+  {% block default %}{% endblock %}
+</civ-alert>

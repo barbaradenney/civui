@@ -1,0 +1,38 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Form Field
+status: stable
+group: CivUI Form Patterns
+description: 'Wrapper that provides label, hint, and error for a single input component.'
+
+props:
+  type: object
+  properties:
+    label:
+      title: Label
+      type: string
+      description: 'Field label text'
+    hint:
+      title: Hint
+      type: string
+      description: 'Hint text shown below the label'
+    error:
+      title: Error
+      type: string
+      description: 'Error message text'
+    required:
+      title: Required
+      type: boolean
+      default: false
+    disabled:
+      title: Disabled
+      type: boolean
+      default: false
+
+slots:
+  default:
+    title: Default
+    description: 'The input component'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

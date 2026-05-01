@@ -182,10 +182,15 @@ describe('civ-icon', () => {
     }
   });
 
-  it('all built-in icons have platform mappings', () => {
+  it('core icons have platform mappings', () => {
+    // Only check icons that were hand-authored with platform mappings.
+    // Imported icons (from cssicon.space) have label only — platform
+    // mappings are added as native implementations are built.
     for (const [name, def] of Object.entries(icons)) {
-      expect(def.ios, `Icon "${name}" should have an iOS mapping`).toBeTruthy();
-      expect(def.android, `Icon "${name}" should have an Android mapping`).toBeTruthy();
+      if (def.ios || def.android) {
+        expect(def.ios, `Icon "${name}" has Android but no iOS mapping`).toBeTruthy();
+        expect(def.android, `Icon "${name}" has iOS but no Android mapping`).toBeTruthy();
+      }
     }
   });
 });

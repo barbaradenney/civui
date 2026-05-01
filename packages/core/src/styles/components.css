@@ -1921,7 +1921,7 @@
   }
 
   .civ-action-btn--tertiary {
-    @apply civ-border-base-DEFAULT;
+    @apply civ-border-base;
     background-color: var(--civ-color-white-DEFAULT);
     color: var(--civ-color-base-darkest);
   }

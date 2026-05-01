@@ -341,10 +341,11 @@
     vertical-align: middle;
     line-height: 1;
     user-select: none;
-    /* Glyph size tracks the host font-size so icons scale with text. */
+    /* Glyph size tracks the host font-size so icons scale with text.
+       Required to override `.material-symbols-outlined`'s `font-size: 24px`
+       (the material-symbols package CSS is imported into a lower-priority
+       cascade layer in civ.css). */
     font-size: inherit;
-    /* Optical size axis tuned for body-text rendering. */
-    font-variation-settings: 'opsz' 24;
   }
 
   /* ── Checkbox / Radio ───────────────────────────────────────── */

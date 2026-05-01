@@ -1110,7 +1110,7 @@ navigation. Each chapter ends with a chapter-level review page using `civ-summar
 ```html
 <!-- Top of each chapter page -->
 <a href="#/hub" class="civ-link civ-mb-4 civ-block">
-  <civ-icon name="arrow-left" size="sm"></civ-icon>
+  <civ-icon name="chevron-left" size="sm"></civ-icon>
   Back to task list
 </a>
 

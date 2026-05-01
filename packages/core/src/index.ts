@@ -76,7 +76,12 @@ export type { PresetOption, SelectPresetName } from './data/select-presets.js';
 
 // Icon
 export { CivIcon } from './icon/civ-icon.js';
-export { icons, registerIcon, getIconNames, resetIcons } from './icon/icon-library.js';
+export {
+  icons,
+  registerIcon,
+  getIconNames,
+  resetIcons,
+} from './icon/icon-library.js';
 export type { IconDef } from './icon/icon-library.js';
 
 // i18n

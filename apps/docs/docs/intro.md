@@ -17,7 +17,7 @@ Accessibility-first web components for government applications. Built on Lit 3, 
 - **Dark Mode** — automatic system preference detection with token-based colors
 - **Density Scale** — dense, default, and spacious modes via CSS custom properties
 - **Light DOM** — no Shadow DOM, external labels and ARIA work naturally
-- **45 CSS Icons** — pure CSS icons, no fonts or SVGs
+- **CSS Icons** — 14 pure-CSS icons, no fonts or SVGs (Material Symbols available as an opt-in)
 
 ## Quick Start
 

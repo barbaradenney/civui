@@ -56,7 +56,7 @@ describe('civ-progress-steps', () => {
     const completedSteps = el.querySelectorAll('.civ-step--completed');
     expect(completedSteps.length).toBe(2);
     for (const step of completedSteps) {
-      expect(step.querySelector('.civ-icon--check')).not.toBeNull();
+      expect(step.querySelector('civ-icon[name="check"]')).not.toBeNull();
     }
   });
 
@@ -122,7 +122,7 @@ describe('civ-progress-steps', () => {
 
     const items = el.querySelectorAll('li');
     expect(items[1].classList.contains('civ-step--error')).toBe(true);
-    expect(items[1].querySelector('.civ-icon--close')).not.toBeNull();
+    expect(items[1].querySelector('civ-icon[name="close"]')).not.toBeNull();
   });
 
   it('shows step counter when show-counter is set', async () => {

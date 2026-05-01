@@ -33,6 +33,7 @@ const config: StorybookConfig = {
     config.resolve = config.resolve || {};
     config.resolve.alias = {
       ...(config.resolve.alias as Record<string, string> | undefined),
+      '@civui/core/icon': resolve(root, 'packages/core/src/icon/index.ts'),
       '@civui/core': resolve(root, 'packages/core/src/index.ts'),
       '@civui/inputs/ssn': resolve(root, 'packages/inputs/src/ssn/index.ts'),
       '@civui/inputs/phone': resolve(root, 'packages/inputs/src/phone/index.ts'),

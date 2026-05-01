@@ -696,12 +696,12 @@ describe('text-input inline icons', () => {
   afterEach(cleanupFixtures);
 
   it('renders a leading icon overlay when leading-icon is set', async () => {
-    const el = await fixture('<civ-text-input label="Search" leading-icon="search"></civ-text-input>');
+    const el = await fixture('<civ-text-input label="Search" leading-icon="phone"></civ-text-input>');
     const wrap = el.querySelector('.civ-input-icon-wrap');
     const leading = el.querySelector('.civ-input-icon--leading');
     expect(wrap).not.toBeNull();
     expect(leading).not.toBeNull();
-    expect(leading!.querySelector('civ-icon')!.getAttribute('name')).toBe('search');
+    expect(leading!.querySelector('civ-icon')!.getAttribute('name')).toBe('phone');
   });
 
   it('renders a trailing icon overlay when trailing-icon is set', async () => {
@@ -712,7 +712,7 @@ describe('text-input inline icons', () => {
   });
 
   it('adds padding-class to the input when a leading icon is shown', async () => {
-    const el = await fixture('<civ-text-input label="Search" leading-icon="search"></civ-text-input>');
+    const el = await fixture('<civ-text-input label="Search" leading-icon="phone"></civ-text-input>');
     const input = el.querySelector('input')!;
     expect(input.className).toContain('civ-input-with-leading-icon');
   });
@@ -724,7 +724,7 @@ describe('text-input inline icons', () => {
   });
 
   it('icons are decorative by default (aria-hidden via civ-icon)', async () => {
-    const el = await fixture('<civ-text-input label="Search" leading-icon="search"></civ-text-input>');
+    const el = await fixture('<civ-text-input label="Search" leading-icon="phone"></civ-text-input>');
     const icon = el.querySelector('.civ-input-icon--leading civ-icon')!;
     // civ-icon renders aria-hidden="true" on its inner span when no label
     const inner = icon.querySelector('[aria-hidden]');
@@ -733,7 +733,7 @@ describe('text-input inline icons', () => {
 
   it('labeled icons are exposed to assistive tech as role="img"', async () => {
     const el = await fixture(
-      '<civ-text-input label="Search" leading-icon="search" leading-icon-label="Search"></civ-text-input>'
+      '<civ-text-input label="Search" leading-icon="phone" leading-icon-label="Search"></civ-text-input>'
     );
     const icon = el.querySelector('.civ-input-icon--leading civ-icon')!;
     const inner = icon.querySelector('[role="img"]');
@@ -743,7 +743,7 @@ describe('text-input inline icons', () => {
 
   it('drops the leading icon when prefix is set (prefix wins)', async () => {
     const el = await fixture(
-      '<civ-text-input label="Handle" prefix="@" leading-icon="search"></civ-text-input>'
+      '<civ-text-input label="Handle" prefix="@" leading-icon="phone"></civ-text-input>'
     );
     expect(el.querySelector('.civ-input-prefix')).not.toBeNull();
     expect(el.querySelector('.civ-input-icon--leading')).toBeNull();
@@ -784,7 +784,7 @@ describe('text-input inline icons', () => {
 
   it('supports both leading and trailing icons together', async () => {
     const el = await fixture(
-      '<civ-text-input label="Search" leading-icon="search" trailing-icon="info"></civ-text-input>'
+      '<civ-text-input label="Search" leading-icon="phone" trailing-icon="info"></civ-text-input>'
     );
     expect(el.querySelector('.civ-input-icon--leading')).not.toBeNull();
     expect(el.querySelector('.civ-input-icon--trailing')).not.toBeNull();

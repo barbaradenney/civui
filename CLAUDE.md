@@ -195,9 +195,23 @@ Input masking engine in `@civui/core` with blur-mode default (mask on blur, raw 
 
 ## Icon System
 
-48 pure CSS icons via `::before`/`::after` pseudo-elements — no font files, no SVG, no Unicode. Icons inherit `color` and scale with `font-size`. Each icon maps to SF Symbols (iOS) and Material Symbols (Android). Use `<civ-icon name="..." label="...">`.
+Built-in icons render as pure CSS pseudo-element shapes via the `.civ-icon--{name}` class — no font, no SVG, no extra HTTP requests. Icons inherit `color` (via `currentColor`) and scale with `font-size`. The default registry is intentionally small (only the icons CivUI's own components reference). Use `<civ-icon name="..." label="...">`.
 
-To edit existing icons or author new ones, run `pnpm storybook` and open **Core › Icon › Editor** — a live CSS editor with a snippet palette, multi-size preview, pixel grid, and dark-mode toggle. Copy the resulting CSS into `packages/core/src/styles/components.css` and register the name in `packages/core/src/icon/icon-library.ts`.
+Adding a new icon:
+1. Author the shape in `packages/core/src/styles/components.css` as a `.civ-icon--{name}::before` / `::after` rule. To prototype interactively, run `pnpm storybook` and open **Core › Icon › Editor** — a live CSS editor with a snippet palette, multi-size preview, pixel grid, and dark-mode toggle. Copy the resulting CSS into `components.css` when you're done.
+2. Register the name in `packages/core/src/icon/icon-library.ts` with the SF Symbol (`ios`) and Material Symbols (`android`) names for native parity.
+
+**Optional Material Symbols font** — for icons not authored as CSS shapes, consumers can opt in to the full Material Symbols catalog:
+
+```ts
+// once, at app entry
+import '@civui/core/styles/material-symbols';
+
+// then register icons with a `symbol` field instead of authoring CSS
+registerIcon('home', { label: 'Home', symbol: 'home', ios: 'house', android: 'home' });
+```
+
+The `material-symbols` npm package is an optional peer dependency — install it only if you import the opt-in stylesheet.
 
 ## Native Platform Support
 
@@ -225,7 +239,7 @@ That guide covers:
 - Preset inputs, compound fields, overlays, link variants, and form patterns
 - Validation system (16 validators, declarative `validate` attribute)
 - Mask system (blur-mode default, 6 presets)
-- Icon system (48 pure CSS icons, no Unicode)
+- Icon system (pure CSS shapes, with optional Material Symbols font opt-in)
 - Native platform support (iOS + Android with 100% parity)
 - Component selection decision tables (checkbox vs toggle, select vs combobox, date picker vs memorable date)
 - Government design patterns (Section 508, plain language, form validation for .gov)

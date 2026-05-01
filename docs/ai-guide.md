@@ -1276,7 +1276,7 @@ Input masking for formatted fields. Uses blur-mode by default (mask applied on b
 
 ## Icon System
 
-45 pure CSS icons rendered via `::before`/`::after` pseudo-elements. No font files, no SVG, no Unicode — just CSS.
+14 pure-CSS icons rendered via `::before`/`::after` pseudo-elements — only the icons CivUI's own components reference. No font files, no SVG, no Unicode — just CSS.
 
 **Usage:**
 ```html
@@ -1285,7 +1285,9 @@ Input masking for formatted fields. Uses blur-mode by default (mask applied on b
 
 Icons inherit `color` and scale with `font-size`. Each icon maps to platform-native equivalents (SF Symbols for iOS, Material Symbols for Android).
 
-**Categories:** Navigation (chevrons, arrows, external-link), Actions (close, plus, minus, menu, search, edit), Status (check, error, warning), and more.
+**Built-in set:** `check`, `check-circle`, `chevron-down`, `chevron-left`, `chevron-right`, `close`, `download`, `error`, `external-link`, `info`, `loading`, `mail`, `phone`, `warning`.
+
+**Beyond the built-in set:** for icons outside this list, register your own CSS shape via `registerIcon()` or opt in to the full Material Symbols catalog with `import '@civui/core/styles/material-symbols'` and register icons with a `symbol` field (`registerIcon('home', { label: 'Home', symbol: 'home' })`). The `material-symbols` package is an optional peer dependency.
 
 **Authoring new icons:** Storybook ships a live CSS editor at **Core › Icon › Editor**. Pick any icon to edit its `::before`/`::after` rules with a side preview, or click **+ New icon** to author one from scratch using snippet primitives (chevron, triangle, circle, diamond). The editor only writes to a scoped `<style>` in the preview pane — when you're happy, click **Copy CSS** and paste into `packages/core/src/styles/components.css`, then add the icon's metadata to `packages/core/src/icon/icon-library.ts`.
 

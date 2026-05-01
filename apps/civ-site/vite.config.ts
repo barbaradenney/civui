@@ -28,6 +28,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
+      '@civui/core/icon': resolve(packages, 'core/src/icon/index.ts'),
       '@civui/core': resolve(packages, 'core/src/index.ts'),
       '@civui/inputs/ssn': resolve(packages, 'inputs/src/ssn/index.ts'),
       '@civui/inputs/phone': resolve(packages, 'inputs/src/phone/index.ts'),

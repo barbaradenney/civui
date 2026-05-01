@@ -45,8 +45,8 @@ Web icons are pure CSS (no font files, no SVG). Native platforms use platform-na
 | Web (CSS) | iOS | Android |
 |-----------|-----|---------|
 | `<civ-icon name="check">` | SF Symbols `checkmark` | Material Symbols `check` |
-| `<civ-icon name="error">` | SF Symbols `xmark.circle` | Material Symbols `error` |
-| `<civ-icon name="search">` | SF Symbols `magnifyingglass` | Material Symbols `search` |
+| `<civ-icon name="error">` | SF Symbols `exclamationmark.circle` | Material Symbols `error` |
+| `<civ-icon name="phone">` | SF Symbols `phone` | Material Symbols `call` |
 
 The full mapping is maintained in each platform's `CivIcon` file. CI enforces that every web icon has native counterparts.
 

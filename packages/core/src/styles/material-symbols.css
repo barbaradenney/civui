@@ -1,0 +1,16 @@
+/* Optional: load the full Material Symbols Outlined font.
+ *
+ * CivUI's built-in icons render as pure CSS shapes and don't need this
+ * file. Import it only when you want to register additional icons that
+ * use the Material Symbols glyph catalog via font ligatures, e.g.:
+ *
+ *   import '@civui/core/styles/material-symbols';
+ *   registerIcon('home', { label: 'Home', symbol: 'home' });
+ *
+ * The font weighs ~3.9 MB; consider whether you actually need it before
+ * importing.
+ *
+ * Layered so the component-level `.civ-icon` rule (in @layer components)
+ * defeats the font CSS's hard-coded `font-size: 24px` declaration.
+ */
+@import 'material-symbols/outlined.css' layer(material-symbols);

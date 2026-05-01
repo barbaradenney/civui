@@ -5,16 +5,18 @@ import { icons } from './icon-library.js';
 import type { IconDef } from './icon-library.js';
 
 /**
- * A CSS-only icon component.
+ * CivUI icon component.
  *
- * Each icon is rendered as a single `<span>` with no inner content — the
- * shape is drawn entirely via CSS `::before`/`::after` pseudo-elements
- * defined in `components.css`.
+ * Built-in icons render as pure CSS shapes via the `.civ-icon--{name}`
+ * class — no font, no SVG, no extra HTTP requests. Icons inherit `color`
+ * (via `currentColor`) and scale with `font-size`.
  *
- * Icons inherit `color` and scale with `font-size`, so they automatically
- * match surrounding text.
+ * For icons registered with a `symbol` (Material Symbols glyph name),
+ * the component renders the font ligature instead. That path requires
+ * the consumer to opt in to the font:
  *
- * All icons are implemented in pure CSS — no SVG needed.
+ *   import '@civui/core/styles/material-symbols';
+ *   registerIcon('home', { label: 'Home', symbol: 'home' });
  *
  * @element civ-icon
  *
@@ -22,7 +24,7 @@ import type { IconDef } from './icon-library.js';
  * ```html
  * <civ-icon name="check"></civ-icon>
  * <civ-icon name="error" class="civ-text-error civ-text-2xl"></civ-icon>
- * <civ-icon name="search" label="Search documents"></civ-icon>
+ * <civ-icon name="check" label="Approved"></civ-icon>
  * ```
  */
 @customElement('civ-icon')
@@ -46,15 +48,11 @@ export class CivIcon extends CivBaseElement {
   @property({ reflect: true })
   size = '';
 
-  /**
-   * Rotation in degrees. Common values: 90, 180, 270.
-   */
+  /** Rotation in degrees. Common values: 90, 180, 270. */
   @property({ type: Number })
   rotate?: number;
 
-  /**
-   * Flip direction: 'horizontal', 'vertical', or 'both'.
-   */
+  /** Flip direction: 'horizontal', 'vertical', or 'both'. */
   @property({ type: String })
   flip?: string;
 
@@ -74,7 +72,7 @@ export class CivIcon extends CivBaseElement {
     const def = this._getIconDef();
     if (!def) {
       if (this.name) {
-        console.warn(`[civ-icon] Unknown icon name: "${this.name}". Check icon-library.ts for available names.`);
+        console.warn(`[civ-icon] Unknown icon name: "${this.name}". Register it with registerIcon() or check icon-library.ts for available names.`);
       }
       return nothing;
     }
@@ -94,16 +92,29 @@ export class CivIcon extends CivBaseElement {
     const styleParts: string[] = [];
     if (fontSize) styleParts.push(`font-size:${fontSize}`);
     if (transforms.length) styleParts.push(`display:inline-block`, `transform:${transforms.join(' ')}`);
-    const styleStr = styleParts.join(';');
+    const styleStr = styleParts.join(';') || nothing;
 
-    return html`
-      <span
-        class="civ-icon civ-icon--${this.name}"
-        style=${styleStr || nothing}
-        role=${isDecorative ? 'none' : 'img'}
-        aria-hidden=${isDecorative ? 'true' : 'false'}
-        aria-label=${isDecorative ? nothing : accessibleLabel}
-      ></span>
-    `;
+    const role = isDecorative ? 'none' : 'img';
+    const ariaHidden = isDecorative ? 'true' : 'false';
+    const ariaLabel = isDecorative ? nothing : accessibleLabel;
+
+    if (def.symbol) {
+      return html`<span
+        class="civ-icon civ-icon--${this.name} material-symbols-outlined"
+        style=${styleStr}
+        role=${role}
+        aria-hidden=${ariaHidden}
+        aria-label=${ariaLabel}
+        translate="no"
+      >${def.symbol}</span>`;
+    }
+
+    return html`<span
+      class="civ-icon civ-icon--${this.name}"
+      style=${styleStr}
+      role=${role}
+      aria-hidden=${ariaHidden}
+      aria-label=${ariaLabel}
+    ></span>`;
   }
 }

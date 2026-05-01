@@ -213,6 +213,7 @@ class CivIconEditor extends LitElement {
   @state() private _cssError: string | null = null;
   @state() private _copied = false;
   @state() private _filter = '';
+  @state() private _activeLayer: 'before' | 'after' = 'before';
 
   @query('#civ-icon-editor-style') private _styleEl!: HTMLStyleElement;
 
@@ -326,6 +327,76 @@ class CivIconEditor extends LitElement {
     });
   };
 
+  /** Extract CSS property value from the active layer's block. */
+  private _getProp(prop: string): string {
+    const block = this._getLayerBlock();
+    const regex = new RegExp(`${prop}\\s*:\\s*([^;]+);`);
+    const match = block.match(regex);
+    return match ? match[1].trim() : '';
+  }
+
+  /** Get numeric em value from a CSS property. */
+  private _getEmValue(prop: string): number {
+    const val = this._getProp(prop);
+    const match = val.match(/([\d.]+)em/);
+    return match ? parseFloat(match[1]) : 0;
+  }
+
+  /** Get the rotation angle from transform. */
+  private _getRotation(): number {
+    const transform = this._getProp('transform');
+    const match = transform.match(/rotate\(([-\d.]+)deg\)/);
+    return match ? parseFloat(match[1]) : 0;
+  }
+
+  /** Get the active layer's CSS block content. */
+  private _getLayerBlock(): string {
+    const selector = `.civ-icon--${this._selectedIcon}::${this._activeLayer}`;
+    const idx = this._editorValue.indexOf(selector);
+    if (idx === -1) return '';
+    const braceStart = this._editorValue.indexOf('{', idx);
+    if (braceStart === -1) return '';
+    let depth = 1;
+    let i = braceStart + 1;
+    while (i < this._editorValue.length && depth > 0) {
+      if (this._editorValue[i] === '{') depth++;
+      else if (this._editorValue[i] === '}') depth--;
+      i++;
+    }
+    return this._editorValue.slice(braceStart + 1, i - 1);
+  }
+
+  /** Update a CSS property in the active layer's block. */
+  private _setProp(prop: string, value: string) {
+    const selector = `.civ-icon--${this._selectedIcon}::${this._activeLayer}`;
+    const idx = this._editorValue.indexOf(selector);
+    if (idx === -1) return;
+    const braceStart = this._editorValue.indexOf('{', idx);
+    if (braceStart === -1) return;
+    let depth = 1;
+    let i = braceStart + 1;
+    while (i < this._editorValue.length && depth > 0) {
+      if (this._editorValue[i] === '{') depth++;
+      else if (this._editorValue[i] === '}') depth--;
+      i++;
+    }
+    let block = this._editorValue.slice(braceStart + 1, i - 1);
+    const regex = new RegExp(`(${prop})\\s*:[^;]+;`);
+    if (regex.test(block)) {
+      block = block.replace(regex, `${prop}: ${value};`);
+    } else {
+      block = block.trimEnd() + `\n  ${prop}: ${value};`;
+    }
+    this._editorValue = this._editorValue.slice(0, braceStart + 1) + block + this._editorValue.slice(i - 1);
+    this._copied = false;
+    this._scheduleUpdate();
+  }
+
+  /** Check if a property exists in the active layer. */
+  private _hasProp(prop: string): boolean {
+    return this._getLayerBlock().includes(`${prop}:`);
+  }
+
   override updated() {
     this._applyPreview();
   }
@@ -403,6 +474,7 @@ class CivIconEditor extends LitElement {
             </button>
           </div>
         </header>
+        ${this._renderPropertyPanel()}
         <textarea
           class="civ-icon-editor__textarea"
           spellcheck="false"
@@ -436,6 +508,90 @@ class CivIconEditor extends LitElement {
           </p>
         </details>
       </section>
+    `;
+  }
+
+  private _renderPropertyPanel() {
+    const w = this._getEmValue('width');
+    const h = this._getEmValue('height');
+    const rot = this._getRotation();
+    const hasBg = this._hasProp('background');
+    const borderWidth = this._getProp('border')?.match(/([\d.]+)em/)
+      ? parseFloat(this._getProp('border').match(/([\d.]+)em/)![1])
+      : this._getProp('border-top')?.match(/([\d.]+)em/)
+        ? parseFloat(this._getProp('border-top').match(/([\d.]+)em/)![1])
+        : 0.125;
+    const borderRadius = this._getEmValue('border-radius');
+
+    const slider = (label: string, value: number, min: number, max: number, step: number, onChange: (v: number) => void) => html`
+      <label class="civ-icon-editor__prop-row">
+        <span class="civ-icon-editor__prop-label">${label}</span>
+        <input type="range" min="${min}" max="${max}" step="${step}" .value="${String(value)}"
+          @input="${(e: Event) => onChange(parseFloat((e.target as HTMLInputElement).value))}" />
+        <span class="civ-icon-editor__prop-value">${value.toFixed(2)}em</span>
+      </label>
+    `;
+
+    return html`
+      <details class="civ-icon-editor__props" open>
+        <summary>Visual Properties</summary>
+        <div class="civ-icon-editor__layer-tabs">
+          <button type="button" class="${this._activeLayer === 'before' ? 'is-active' : ''}"
+            @click="${() => { this._activeLayer = 'before'; }}">::before</button>
+          <button type="button" class="${this._activeLayer === 'after' ? 'is-active' : ''}"
+            @click="${() => { this._activeLayer = 'after'; }}">::after</button>
+        </div>
+        <div class="civ-icon-editor__prop-grid">
+          ${slider('Width', w, 0, 1, 0.01, v => this._setProp('width', `${v}em`))}
+          ${slider('Height', h, 0, 1, 0.01, v => this._setProp('height', `${v}em`))}
+          ${slider('Border radius', borderRadius, 0, 0.5, 0.01, v => this._setProp('border-radius', `${v}em`))}
+          <label class="civ-icon-editor__prop-row">
+            <span class="civ-icon-editor__prop-label">Rotation</span>
+            <input type="range" min="-180" max="180" step="1" .value="${String(rot)}"
+              @input="${(e: Event) => {
+                const deg = parseFloat((e.target as HTMLInputElement).value);
+                const current = this._getProp('transform');
+                if (current.includes('rotate')) {
+                  this._setProp('transform', current.replace(/rotate\([^)]+\)/, `rotate(${deg}deg)`));
+                } else if (current) {
+                  this._setProp('transform', `${current} rotate(${deg}deg)`);
+                } else {
+                  this._setProp('transform', `rotate(${deg}deg)`);
+                }
+              }}" />
+            <span class="civ-icon-editor__prop-value">${rot}°</span>
+          </label>
+          ${slider('Stroke', borderWidth, 0, 0.25, 0.005, v => {
+            // Update all border properties that exist
+            const block = this._getLayerBlock();
+            if (block.includes('border-top:')) this._setProp('border-top', `${v}em solid currentColor`);
+            if (block.includes('border-bottom:')) this._setProp('border-bottom', `${v}em solid currentColor`);
+            if (block.includes('border-left:')) this._setProp('border-left', `${v}em solid currentColor`);
+            if (block.includes('border-right:')) this._setProp('border-right', `${v}em solid currentColor`);
+            if (block.includes('border:') && !block.includes('border-top:')) this._setProp('border', `${v}em solid currentColor`);
+            if (block.includes('height: var(--civ-icon-stroke)') || block.match(/height:\s*[\d.]+em/) && hasBg) {
+              this._setProp('height', `${v}em`);
+            }
+          })}
+          <label class="civ-icon-editor__prop-row">
+            <span class="civ-icon-editor__prop-label">Fill</span>
+            <input type="checkbox" .checked="${hasBg}"
+              @change="${(e: Event) => {
+                if ((e.target as HTMLInputElement).checked) {
+                  this._setProp('background', 'currentColor');
+                } else {
+                  // Remove background line
+                  const selector = `.civ-icon--${this._selectedIcon}::${this._activeLayer}`;
+                  const idx = this._editorValue.indexOf(selector);
+                  if (idx >= 0) {
+                    this._editorValue = this._editorValue.replace(/\n?\s*background:\s*[^;]+;/, '');
+                    this._scheduleUpdate();
+                  }
+                }
+              }}" />
+          </label>
+        </div>
+      </details>
     `;
   }
 
@@ -648,6 +804,65 @@ class CivIconEditor extends LitElement {
         .civ-icon-editor__actions button:hover {
           background: #f3f4f6;
         }
+        .civ-icon-editor__props {
+          margin-bottom: 0.5rem;
+          font-size: 0.8rem;
+        }
+        .civ-icon-editor__props summary {
+          cursor: pointer;
+          font-weight: 600;
+          margin-bottom: 0.4rem;
+        }
+        .civ-icon-editor__layer-tabs {
+          display: flex;
+          gap: 0.25rem;
+          margin-bottom: 0.5rem;
+        }
+        .civ-icon-editor__layer-tabs button {
+          padding: 0.25rem 0.6rem;
+          border: 1px solid #d1d5db;
+          background: #fff;
+          border-radius: 4px;
+          cursor: pointer;
+          font: inherit;
+          font-size: 0.75rem;
+          font-family: ui-monospace, monospace;
+        }
+        .civ-icon-editor__layer-tabs button.is-active {
+          background: #0050d8;
+          color: #fff;
+          border-color: #0050d8;
+        }
+        .civ-icon-editor__prop-grid {
+          display: flex;
+          flex-direction: column;
+          gap: 0.3rem;
+        }
+        .civ-icon-editor__prop-row {
+          display: grid;
+          grid-template-columns: 80px 1fr 55px;
+          align-items: center;
+          gap: 0.4rem;
+        }
+        .civ-icon-editor__prop-label {
+          font-size: 0.75rem;
+        }
+        .civ-icon-editor__prop-value {
+          font-family: ui-monospace, monospace;
+          font-size: 0.7rem;
+          text-align: right;
+        }
+        .civ-icon-editor__prop-row input[type="range"] {
+          width: 100%;
+          height: 4px;
+          cursor: pointer;
+        }
+        .civ-icon-editor__prop-row input[type="checkbox"] {
+          width: 16px;
+          height: 16px;
+          cursor: pointer;
+        }
+
         .civ-icon-editor__textarea {
           flex: 1;
           width: 100%;

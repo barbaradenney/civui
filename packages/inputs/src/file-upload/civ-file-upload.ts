@@ -311,7 +311,7 @@ export class CivFileUpload extends CivFormElement {
               aria-describedby="${[this._ariaDescribedBy, this._files.length > 0 ? this._filesListId : ''].filter(Boolean).join(' ') || nothing}"
               data-dragging="${this._dragging ? '' : nothing}"
             >
-              <span class="civ-block civ-text-body civ-mb-3">
+              <span class="civ-block civ-text-body civ-mb-1">
                 ${this.dragText || t('fileUploadDragText')}
               </span>
               <span class="civ-action-btn civ-action-btn--tertiary">${this.browseText || t('fileUploadBrowseText')}</span>

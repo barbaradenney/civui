@@ -1,19 +1,22 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { CivBaseElement } from '../base/civ-base-element.js';
-import { icons, getMaterialSymbolName } from './icon-library.js';
+import { icons } from './icon-library.js';
 import type { IconDef } from './icon-library.js';
 
 /**
- * Material Symbols icon component.
+ * CivUI icon component.
  *
- * Renders a Material Symbols Outlined glyph via the icon font's ligature
- * lookup — the symbol name is the element's text content. Icons inherit
- * `color` and scale with `font-size`.
+ * Built-in icons render as pure CSS shapes via the `.civ-icon--{name}`
+ * class — no font, no SVG, no extra HTTP requests. Icons inherit `color`
+ * (via `currentColor`) and scale with `font-size`.
  *
- * The `material-symbols-outlined` class (and font) ships with the
- * `material-symbols` package; consumers must import
- * `@civui/core/styles` (or `material-symbols/outlined.css`) once.
+ * For icons registered with a `symbol` (Material Symbols glyph name),
+ * the component renders the font ligature instead. That path requires
+ * the consumer to opt in to the font:
+ *
+ *   import '@civui/core/styles/material-symbols';
+ *   registerIcon('home', { label: 'Home', symbol: 'home' });
  *
  * @element civ-icon
  *
@@ -21,7 +24,7 @@ import type { IconDef } from './icon-library.js';
  * ```html
  * <civ-icon name="check"></civ-icon>
  * <civ-icon name="error" class="civ-text-error civ-text-2xl"></civ-icon>
- * <civ-icon name="search" label="Search documents"></civ-icon>
+ * <civ-icon name="check" label="Approved"></civ-icon>
  * ```
  */
 @customElement('civ-icon')
@@ -45,15 +48,11 @@ export class CivIcon extends CivBaseElement {
   @property({ reflect: true })
   size = '';
 
-  /**
-   * Rotation in degrees. Common values: 90, 180, 270.
-   */
+  /** Rotation in degrees. Common values: 90, 180, 270. */
   @property({ type: Number })
   rotate?: number;
 
-  /**
-   * Flip direction: 'horizontal', 'vertical', or 'both'.
-   */
+  /** Flip direction: 'horizontal', 'vertical', or 'both'. */
   @property({ type: String })
   flip?: string;
 
@@ -73,7 +72,7 @@ export class CivIcon extends CivBaseElement {
     const def = this._getIconDef();
     if (!def) {
       if (this.name) {
-        console.warn(`[civ-icon] Unknown icon name: "${this.name}". Check icon-library.ts for available names.`);
+        console.warn(`[civ-icon] Unknown icon name: "${this.name}". Register it with registerIcon() or check icon-library.ts for available names.`);
       }
       return nothing;
     }
@@ -92,18 +91,30 @@ export class CivIcon extends CivBaseElement {
 
     const styleParts: string[] = [];
     if (fontSize) styleParts.push(`font-size:${fontSize}`);
-    if (transforms.length) styleParts.push(`transform:${transforms.join(' ')}`);
-    const styleStr = styleParts.join(';');
+    if (transforms.length) styleParts.push(`display:inline-block`, `transform:${transforms.join(' ')}`);
+    const styleStr = styleParts.join(';') || nothing;
 
-    const symbol = getMaterialSymbolName(this.name);
+    const role = isDecorative ? 'none' : 'img';
+    const ariaHidden = isDecorative ? 'true' : 'false';
+    const ariaLabel = isDecorative ? nothing : accessibleLabel;
+
+    if (def.symbol) {
+      return html`<span
+        class="civ-icon civ-icon--${this.name} material-symbols-outlined"
+        style=${styleStr}
+        role=${role}
+        aria-hidden=${ariaHidden}
+        aria-label=${ariaLabel}
+        translate="no"
+      >${def.symbol}</span>`;
+    }
 
     return html`<span
-      class="civ-icon civ-icon--${this.name} material-symbols-outlined"
-      style=${styleStr || nothing}
-      role=${isDecorative ? 'none' : 'img'}
-      aria-hidden=${isDecorative ? 'true' : 'false'}
-      aria-label=${isDecorative ? nothing : accessibleLabel}
-      translate="no"
-    >${symbol}</span>`;
+      class="civ-icon civ-icon--${this.name}"
+      style=${styleStr}
+      role=${role}
+      aria-hidden=${ariaHidden}
+      aria-label=${ariaLabel}
+    ></span>`;
   }
 }

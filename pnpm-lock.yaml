@@ -263,13 +263,13 @@ importers:
       lit:
         specifier: ^3.2.0
         version: 3.3.2
-      material-symbols:
-        specifier: ^0.44.0
-        version: 0.44.4
     devDependencies:
       '@civui/tokens':
         specifier: workspace:*
         version: link:../tokens
+      material-symbols:
+        specifier: ^0.44.0
+        version: 0.44.4
       typescript:
         specifier: ^5.6.0
         version: 5.9.3

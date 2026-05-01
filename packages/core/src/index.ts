@@ -81,7 +81,6 @@ export {
   registerIcon,
   getIconNames,
   resetIcons,
-  getMaterialSymbolName,
 } from './icon/icon-library.js';
 export type { IconDef } from './icon/icon-library.js';
 

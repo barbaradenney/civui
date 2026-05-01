@@ -1,9 +1,5 @@
 /* Import design tokens as CSS custom properties */
 @import '@civui/tokens/css';
-/* Material Symbols Outlined icon font.
-   Layered so component-level overrides (.civ-icon) win over the
-   font's hard-coded `font-size: 24px` declaration. */
-@import 'material-symbols/outlined.css' layer(material-symbols);
 @import './components.css';
 
 @layer civ {

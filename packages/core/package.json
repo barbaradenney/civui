@@ -16,7 +16,8 @@
     "./form-field": "./dist/form-field/index.js",
     "./icon": "./dist/icon/index.js",
     "./styles": "./src/styles/civ.css",
-    "./styles/components": "./src/styles/components.css"
+    "./styles/components": "./src/styles/components.css",
+    "./styles/material-symbols": "./src/styles/material-symbols.css"
   },
   "files": ["dist", "src/styles"],
   "publishConfig": {
@@ -29,11 +30,19 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "lit": "^3.2.0",
+    "lit": "^3.2.0"
+  },
+  "peerDependencies": {
     "material-symbols": "^0.44.0"
+  },
+  "peerDependenciesMeta": {
+    "material-symbols": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@civui/tokens": "workspace:*",
+    "material-symbols": "^0.44.0",
     "typescript": "^5.6.0",
     "vitest": "^2.0.0"
   }

@@ -4,7 +4,7 @@ import { CivBaseElement, dispatch, interpolate, t } from '@civui/core';
 import '@civui/navigation/link';
 import '@civui/layout/divider';
 import '@civui/layout/list';
-import '../read-only-field/civ-read-only-field.js';
+import '../data-field/civ-data-field.js';
 
 export interface SummarySection {
   /** Section heading (e.g., "Personal information"). */
@@ -83,7 +83,7 @@ export class CivSummary extends CivBaseElement {
    * section (and item, if applicable) from `data-civ-summary-*`
    * attributes stamped during render. The section-edit civ-link
    * carries them directly; per-item edits live inside
-   * <civ-read-only-field>, which is the element that carries the
+   * <civ-data-field>, which is the element that carries the
    * dataset, so we walk up to it.
    */
   private _onEditClick(e: MouseEvent): void {
@@ -158,7 +158,7 @@ export class CivSummary extends CivBaseElement {
             const itemEditLabel = item.editLabel || (!section.heading ? (section.locked ? t('summaryEditProfile') : '') : '');
             return html`
               <civ-list-item>
-                <civ-read-only-field
+                <civ-data-field
                   label="${item.label}"
                   value="${Array.isArray(item.value) ? '' : (item.value || '')}"
                   .values="${Array.isArray(item.value) ? item.value : []}"
@@ -166,7 +166,7 @@ export class CivSummary extends CivBaseElement {
                   edit-label="${itemEditLabel}"
                   data-civ-summary-section-index="${sectionIndex}"
                   data-civ-summary-item-index="${i}"
-                ></civ-read-only-field>
+                ></civ-data-field>
               </civ-list-item>
             `;
           })}

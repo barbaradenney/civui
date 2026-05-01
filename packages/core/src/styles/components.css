@@ -3090,17 +3090,17 @@
     border-top: 2px solid var(--civ-color-base-light);
   }
 
-  /* ── Read-Only Field ─────────────────────────────────────── */
+  /* ── Data Field ──────────────────────────────────────────── */
 
-  .civ-read-only-field {
+  .civ-data-field {
     @apply civ-m-0 civ-flex civ-items-baseline civ-gap-4;
   }
 
-  .civ-read-only-field--sm {
+  .civ-data-field--sm {
     @apply civ-py-1;
   }
 
-  .civ-read-only-field__label {
+  .civ-data-field__label {
     @apply civ-flex-shrink-0;
     font-size: var(--civ-typography-fontSize-base);
     color: var(--civ-color-base-darkest);
@@ -3109,25 +3109,25 @@
     text-overflow: ellipsis;
   }
 
-  .civ-read-only-field__value {
+  .civ-data-field__value {
     @apply civ-m-0 civ-flex civ-items-baseline civ-gap-3 civ-flex-1 civ-justify-end;
   }
 
-  .civ-read-only-field__data {
+  .civ-data-field__data {
     font-size: var(--civ-typography-fontSize-base);
     font-weight: var(--civ-typography-fontWeight-bold);
     color: var(--civ-color-base-darkest);
   }
 
-  .civ-read-only-field__edit {
+  .civ-data-field__edit {
     @apply civ-flex-shrink-0;
   }
 
   @media (max-width: 480px) {
-    .civ-read-only-field {
+    .civ-data-field {
       @apply civ-flex-col civ-items-start civ-gap-0;
     }
-    .civ-read-only-field__value {
+    .civ-data-field__value {
       @apply civ-justify-start;
       margin-top: var(--civ-spacing-0_5);
     }

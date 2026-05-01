@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import '@civui/core';
 import '../summary/civ-summary.js';
-import '../read-only-field/civ-read-only-field.js';
+import '../data-field/civ-data-field.js';
 import '@civui/inputs';
 import '@civui/compound';
 import '../form-step/civ-form-step.js';

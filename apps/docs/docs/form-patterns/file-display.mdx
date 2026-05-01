@@ -15,7 +15,7 @@ After files are uploaded, they need to be displayed across the form lifecycle �
 | Component | Context | What it does |
 |-----------|---------|--------------|
 | `civ-file-upload` | Upload form | Interactive upload with add/remove/progress |
-| `civ-read-only-field` | Review & confirmation | Read-only display with optional download link via `href` |
+| `civ-data-field` | Review & confirmation | Read-only display with optional download link via `href` |
 | `civ-image-preview` | Review & ID verification | Image display at configurable sizes |
 | `civ-summary` | Full review page | Structured sections with file metadata |
 
@@ -28,8 +28,8 @@ Show uploaded documents as read-only fields with download links. Add a "Change" 
 ```html
 <h3>Supporting documents</h3>
 <civ-link href="#/documents" variant="tertiary">Change</civ-link>
-<civ-read-only-field label="DD214" value="DD214.pdf (2.3 MB)" href="/files/dd214.pdf"></civ-read-only-field>
-<civ-read-only-field label="Medical records" value="medical-records.pdf (7.7 MB)" href="/files/medical.pdf"></civ-read-only-field>
+<civ-data-field label="DD214" value="DD214.pdf (2.3 MB)" href="/files/dd214.pdf"></civ-data-field>
+<civ-data-field label="Medical records" value="medical-records.pdf (7.7 MB)" href="/files/medical.pdf"></civ-data-field>
 ```
 
 ## Review page — image previews
@@ -71,9 +71,9 @@ After submission, show what was submitted. No download links (the submission is 
 </civ-alert>
 
 <h3>Documents submitted</h3>
-<civ-read-only-field label="DD214" value="DD214.pdf (2.3 MB)"></civ-read-only-field>
-<civ-read-only-field label="Medical records" value="medical-records.pdf (7.7 MB)"></civ-read-only-field>
-<civ-read-only-field label="ID photo" value="id-front.jpg (1.7 MB)"></civ-read-only-field>
+<civ-data-field label="DD214" value="DD214.pdf (2.3 MB)"></civ-data-field>
+<civ-data-field label="Medical records" value="medical-records.pdf (7.7 MB)"></civ-data-field>
+<civ-data-field label="ID photo" value="id-front.jpg (1.7 MB)"></civ-data-field>
 
 <civ-action-link
   type="download"
@@ -107,16 +107,16 @@ summary.sections = [
 ];
 ```
 
-For richer file display inside summaries, render `civ-read-only-field` with `href` or `civ-image-preview` as custom content in the summary section.
+For richer file display inside summaries, render `civ-data-field` with `href` or `civ-image-preview` as custom content in the summary section.
 
 ## Full lifecycle
 
 ```
 Upload form          → civ-file-upload (interactive)
          ↓
-Review page          → civ-read-only-field with href (download links) + civ-image-preview (visual)
+Review page          → civ-data-field with href (download links) + civ-image-preview (visual)
          ↓
-Confirmation page    → civ-read-only-field without href (informational)
+Confirmation page    → civ-data-field without href (informational)
          ↓
 Summary/print        → civ-summary with file metadata as text
 ```
@@ -124,7 +124,7 @@ Summary/print        → civ-summary with file metadata as text
 ## Components used
 
 - [`civ-file-upload`](/docs/components/inputs/file-upload) — interactive upload
-- [`civ-read-only-field`](/docs/components/form/read-only-field) — read-only file display with optional download link
+- [`civ-data-field`](/docs/components/form/data-field) — read-only file display with optional download link
 - [`civ-image-preview`](/docs/components/layout/image-preview) — image display
 - [`civ-summary`](/docs/components/form/summary) — structured review sections
 - [`civ-action-link`](/docs/components/actions/action-link) — download receipt

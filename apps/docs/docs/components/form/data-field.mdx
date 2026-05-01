@@ -1,14 +1,14 @@
 ---
-title: Read-Only Field
+title: Data Field
 sidebar_position: 9
-sidebar_label: Read-Only Field
+sidebar_label: Data Field
 ---
 
 import StoryEmbed from "@site/src/components/StoryEmbed";
 
-# Read-Only Field
+# Data Field
 
-`<civ-read-only-field>`
+`<civ-data-field>`
 
 Displays a label and value as a flat row with an optional inline edit link. Used inside `<civ-summary>` and on review pages to show submitted or prefilled data.
 
@@ -16,25 +16,25 @@ Displays a label and value as a flat row with an optional inline edit link. Used
 
 ### Default
 
-<StoryEmbed id="forms-form-read-only-field--default" />
+<StoryEmbed id="forms-form-data-field--default" />
 
 ### With Hint
 
-<StoryEmbed id="forms-form-read-only-field--with-hint" />
+<StoryEmbed id="forms-form-data-field--with-hint" />
 
 ### Empty Value
 
-<StoryEmbed id="forms-form-read-only-field--empty-value" />
+<StoryEmbed id="forms-form-data-field--empty-value" />
 
 ### Multiple Fields
 
-<StoryEmbed id="forms-form-read-only-field--multiple-fields" />
+<StoryEmbed id="forms-form-data-field--multiple-fields" />
 
 ### Compact
 
-<StoryEmbed id="forms-form-read-only-field--compact" />
+<StoryEmbed id="forms-form-data-field--compact" />
 
-[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-form-read-only-field--default)
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-form-data-field--default)
 
 ## Props
 
@@ -52,23 +52,23 @@ Displays a label and value as a flat row with an optional inline edit link. Used
 
 ```html
 <!-- Single value with edit link -->
-<civ-read-only-field
+<civ-data-field
   label="Phone number"
   value="(555) 123-4567"
   edit-href="#/contact/phone"
-></civ-read-only-field>
+></civ-data-field>
 
 <!-- Multi-value (address) -->
-<civ-read-only-field
+<civ-data-field
   label="Mailing address"
   .values="${['123 Main St', 'Springfield, IL 62701']}"
   edit-href="#/contact/address"
-></civ-read-only-field>
+></civ-data-field>
 
 <!-- With hint -->
-<civ-read-only-field
+<civ-data-field
   label="Email"
   value="jane@agency.gov"
   hint="From your login.gov account"
-></civ-read-only-field>
+></civ-data-field>
 ```

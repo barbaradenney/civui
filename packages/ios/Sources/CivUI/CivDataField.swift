@@ -1,9 +1,9 @@
-// CivUI — CivReadOnlyField for SwiftUI
+// CivUI — CivDataField for SwiftUI
 // Read-only label + value display for verified data.
 
 import SwiftUI
 
-public struct CivReadOnlyField: View {
+public struct CivDataField: View {
     public let label: String
     public var value: String
     public var hint: String?
@@ -62,12 +62,12 @@ public struct CivReadOnlyField: View {
 }
 
 #if DEBUG
-struct CivReadOnlyField_Previews: PreviewProvider {
+struct CivDataField_Previews: PreviewProvider {
     static var previews: some View {
         VStack(alignment: .leading, spacing: 0) {
-            CivReadOnlyField(label: "Full name", value: "Jane Doe")
-            CivReadOnlyField(label: "SSN", value: "●●●-●●-6789", hint: "Last 4 digits shown")
-            CivReadOnlyField(label: "Phone number")
+            CivDataField(label: "Full name", value: "Jane Doe")
+            CivDataField(label: "SSN", value: "●●●-●●-6789", hint: "Last 4 digits shown")
+            CivDataField(label: "Phone number")
         }.padding()
     }
 }

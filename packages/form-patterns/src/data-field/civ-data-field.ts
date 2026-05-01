@@ -4,7 +4,7 @@ import { CivBaseElement, t } from '@civui/core';
 import '@civui/navigation/link';
 
 /**
- * CivUI Read-Only Field
+ * CivUI Data Field
  *
  * Displays a label and value as a single row — label on the left,
  * bold value on the right, with an optional inline edit link.
@@ -13,7 +13,7 @@ import '@civui/navigation/link';
  * Renders a self-contained `<dl>` so it can be used standalone
  * or composed inside `civ-summary` sections.
  *
- * @element civ-read-only-field
+ * @element civ-data-field
  *
  * @prop {string} label - Field label (left side)
  * @prop {string} value - Display value (right side, bold)
@@ -24,12 +24,12 @@ import '@civui/navigation/link';
  *
  * @example
  * ```html
- * <civ-read-only-field label="Phone" value="(555) 123-4567" edit-href="#/phone"></civ-read-only-field>
- * <civ-read-only-field label="DD214" value="discharge-papers.pdf (2.4 MB)" href="/files/dd214.pdf"></civ-read-only-field>
+ * <civ-data-field label="Phone" value="(555) 123-4567" edit-href="#/phone"></civ-data-field>
+ * <civ-data-field label="DD214" value="discharge-papers.pdf (2.4 MB)" href="/files/dd214.pdf"></civ-data-field>
  * ```
  */
-@customElement('civ-read-only-field')
-export class CivReadOnlyField extends CivBaseElement {
+@customElement('civ-data-field')
+export class CivDataField extends CivBaseElement {
   @property({ type: String }) label = '';
   @property({ type: String }) value = '';
   @property({ type: Array, attribute: false }) values: string[] = [];
@@ -48,18 +48,18 @@ export class CivReadOnlyField extends CivBaseElement {
   @property({ type: String }) spacing: 'default' | 'sm' = 'default';
 
   override render() {
-    const displayLabel = this.label || t('readOnlyLabel');
+    const displayLabel = this.label || t('dataFieldLabel');
     const hasValue = this.values.length > 0 || Boolean(this.value);
     const editText = this.editLabel || t('summaryEditLink');
 
     return html`
       <dl class="${[
-          'civ-read-only-field',
-          this.spacing === 'sm' ? 'civ-read-only-field--sm civ-py-1' : 'civ-py-2',
+          'civ-data-field',
+          this.spacing === 'sm' ? 'civ-data-field--sm civ-py-1' : 'civ-py-2',
         ].filter(Boolean).join(' ')}">
-        <dt class="civ-read-only-field__label">${displayLabel}</dt>
-        <dd class="civ-read-only-field__value">
-          <span class="civ-read-only-field__data">
+        <dt class="civ-data-field__label">${displayLabel}</dt>
+        <dd class="civ-data-field__value">
+          <span class="civ-data-field__data">
             ${hasValue
               ? this.values.length > 0
                 ? this.values.map(v => html`<span class="civ-block">${v}</span>`)
@@ -74,7 +74,7 @@ export class CivReadOnlyField extends CivBaseElement {
                 label="${editText}"
                 aria-label="${editText} ${displayLabel}"
                 variant="tertiary"
-                class="civ-read-only-field__edit"
+                class="civ-data-field__edit"
               ></civ-link>`
             : nothing}
         </dd>
@@ -88,6 +88,6 @@ export class CivReadOnlyField extends CivBaseElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'civ-read-only-field': CivReadOnlyField;
+    'civ-data-field': CivDataField;
   }
 }

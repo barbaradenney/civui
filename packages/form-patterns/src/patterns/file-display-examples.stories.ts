@@ -34,9 +34,9 @@ export const ReviewPageFiles: Story = {
       <p style="margin-bottom: 12px;">
         <civ-link href="#/documents" variant="tertiary">Change</civ-link>
       </p>
-      <civ-read-only-field label="DD214" value="DD214.pdf (2.3 MB)" href="#/files/dd214.pdf"></civ-read-only-field>
-      <civ-read-only-field label="Medical records" value="medical-records.pdf (7.7 MB)" href="#/files/medical.pdf"></civ-read-only-field>
-      <civ-read-only-field label="Buddy statement" value="buddy-statement.pdf (332 KB)" href="#/files/buddy.pdf"></civ-read-only-field>
+      <civ-data-field label="DD214" value="DD214.pdf (2.3 MB)" href="#/files/dd214.pdf"></civ-data-field>
+      <civ-data-field label="Medical records" value="medical-records.pdf (7.7 MB)" href="#/files/medical.pdf"></civ-data-field>
+      <civ-data-field label="Buddy statement" value="buddy-statement.pdf (332 KB)" href="#/files/buddy.pdf"></civ-data-field>
     </div>
   `,
 };
@@ -82,9 +82,9 @@ export const ConfirmationPage: Story = {
       </civ-alert>
 
       <h3 style="font-weight: bold; margin-top: 24px; margin-bottom: 12px;">Documents submitted</h3>
-      <civ-read-only-field label="DD214" value="DD214.pdf (2.3 MB)"></civ-read-only-field>
-      <civ-read-only-field label="Medical records" value="medical-records.pdf (7.7 MB)"></civ-read-only-field>
-      <civ-read-only-field label="ID photo" value="id-front.jpg (1.7 MB)"></civ-read-only-field>
+      <civ-data-field label="DD214" value="DD214.pdf (2.3 MB)"></civ-data-field>
+      <civ-data-field label="Medical records" value="medical-records.pdf (7.7 MB)"></civ-data-field>
+      <civ-data-field label="ID photo" value="id-front.jpg (1.7 MB)"></civ-data-field>
 
       <p style="margin-top: 16px;">
         <civ-action-link type="download" href="#/receipt.pdf" label="Download confirmation receipt" file-size="45 KB"></civ-action-link>
@@ -102,9 +102,9 @@ export const MixedFilesAndImages: Story = {
       <h3 style="font-weight: bold; margin-bottom: 12px;">Evidence submitted</h3>
 
       <h4 style="font-weight: bold; margin-bottom: 8px;">Documents</h4>
-      <civ-read-only-field label="Insurance claim" value="insurance-claim.pdf (439 KB)" href="#/files/claim.pdf"></civ-read-only-field>
-      <civ-read-only-field label="Police report" value="police-report.pdf (1.1 MB)" href="#/files/report.pdf"></civ-read-only-field>
-      <civ-read-only-field label="Repair estimate" value="repair-estimate.pdf (869 KB)" href="#/files/estimate.pdf"></civ-read-only-field>
+      <civ-data-field label="Insurance claim" value="insurance-claim.pdf (439 KB)" href="#/files/claim.pdf"></civ-data-field>
+      <civ-data-field label="Police report" value="police-report.pdf (1.1 MB)" href="#/files/report.pdf"></civ-data-field>
+      <civ-data-field label="Repair estimate" value="repair-estimate.pdf (869 KB)" href="#/files/estimate.pdf"></civ-data-field>
 
       <h4 style="font-weight: bold; margin-top: 16px; margin-bottom: 8px;">Photos</h4>
       <div style="display: flex; gap: 16px; flex-wrap: wrap;">

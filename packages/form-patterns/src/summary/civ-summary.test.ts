@@ -31,7 +31,7 @@ describe('civ-summary', () => {
     el.sections = sampleSections;
     await elementUpdated(el);
 
-    const fields = el.querySelectorAll('civ-read-only-field');
+    const fields = el.querySelectorAll('civ-data-field');
     expect(fields.length).toBe(3);
     expect(fields[0].getAttribute('label')).toBe('First name');
     expect(fields[0].getAttribute('value')).toBe('Jane');
@@ -42,7 +42,7 @@ describe('civ-summary', () => {
     el.sections = sampleSections;
     await elementUpdated(el);
 
-    const fields = el.querySelectorAll('civ-read-only-field');
+    const fields = el.querySelectorAll('civ-data-field');
     // Phone number (3rd item) has no value
     expect(fields[2].getAttribute('value')).toBe('');
   });
@@ -52,7 +52,7 @@ describe('civ-summary', () => {
     el.sections = sampleSections;
     await elementUpdated(el);
 
-    const fields = el.querySelectorAll('civ-read-only-field');
+    const fields = el.querySelectorAll('civ-data-field');
     expect(fields[0].getAttribute('edit-href')).toBe('#step-1');
     expect(fields[2].getAttribute('edit-href')).toBe(''); // no edit link
   });
@@ -72,7 +72,7 @@ describe('civ-summary', () => {
     ];
     await elementUpdated(el);
 
-    const fields = el.querySelectorAll('civ-read-only-field');
+    const fields = el.querySelectorAll('civ-data-field');
     expect(fields[0].getAttribute('edit-href')).toBe('/profile/settings');
     expect(fields[1].getAttribute('edit-href')).toBe('/profile/settings');
   });
@@ -98,7 +98,7 @@ describe('civ-summary', () => {
     expect(headerLink!.getAttribute('href')).toBe('/profile/settings');
 
     // Items do NOT have per-row edit links
-    const fields = el.querySelectorAll('civ-read-only-field');
+    const fields = el.querySelectorAll('civ-data-field');
     expect(fields[0].getAttribute('edit-href')).toBe('');
     expect(fields[1].getAttribute('edit-href')).toBe('');
   });
@@ -115,7 +115,7 @@ describe('civ-summary', () => {
     ];
     await elementUpdated(el);
 
-    const field = el.querySelector('civ-read-only-field');
+    const field = el.querySelector('civ-data-field');
     expect(field!.getAttribute('edit-label')).toBe('Edit');
   });
 
@@ -150,7 +150,7 @@ describe('civ-summary', () => {
     ];
     await elementUpdated(el);
 
-    const field = el.querySelector('civ-read-only-field');
+    const field = el.querySelector('civ-data-field');
     expect(field).not.toBeNull();
   });
 
@@ -185,7 +185,7 @@ describe('civ-summary', () => {
     ];
     await elementUpdated(el);
 
-    const field = el.querySelector('civ-read-only-field');
+    const field = el.querySelector('civ-data-field');
     expect(field!.getAttribute('edit-href')).toBe('');
   });
 
@@ -200,7 +200,7 @@ describe('civ-summary', () => {
     ];
     await elementUpdated(el);
 
-    const field = el.querySelector('civ-read-only-field');
+    const field = el.querySelector('civ-data-field');
     expect(field!.getAttribute('edit-href')).toBe('');
   });
 });
@@ -253,7 +253,7 @@ describe('civ-summary civ-edit event', () => {
 
     const fields = el.querySelectorAll<HTMLElement>('[data-civ-summary-item-index]');
     expect(fields.length).toBe(2);
-    // The actual rendered link lives inside civ-read-only-field as a
+    // The actual rendered link lives inside civ-data-field as a
     // civ-link descendant. Click that — the handler walks up to find
     // the dataset on the field host.
     const innerLink = fields[1].querySelector('civ-link') as HTMLElement;

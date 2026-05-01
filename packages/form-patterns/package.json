@@ -15,7 +15,7 @@
     "./conditional": "./dist/conditional/index.js",
     "./repeater": "./dist/repeater/index.js",
     "./summary": "./dist/summary/index.js",
-    "./read-only-field": "./dist/read-only-field/index.js",
+    "./data-field": "./dist/data-field/index.js",
     "./section-intro": "./dist/section-intro/index.js",
     "./progress-steps": "./dist/progress-steps/index.js",
     "./prefill": "./dist/prefill/index.js"

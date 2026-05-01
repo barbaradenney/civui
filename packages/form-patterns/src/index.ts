@@ -18,8 +18,8 @@ export { CivRepeater } from './repeater/index.js';
 export { CivSummary } from './summary/index.js';
 export type { SummarySection, SummaryItem } from './summary/index.js';
 
-// Read-Only Field
-export { CivReadOnlyField } from './read-only-field/index.js';
+// Data Field
+export { CivDataField } from './data-field/index.js';
 
 // Section Intro (trauma-informed context panel)
 export { CivSectionIntro } from './section-intro/index.js';

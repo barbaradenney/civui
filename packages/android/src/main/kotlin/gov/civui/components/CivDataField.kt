@@ -1,4 +1,4 @@
-// CivUI — CivReadOnlyField for Jetpack Compose
+// CivUI — CivDataField for Jetpack Compose
 // Read-only label + value display for verified data.
 
 package gov.civui.components
@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import gov.civui.tokens.CivTokens
 
 @Composable
-fun CivReadOnlyField(
+fun CivDataField(
     label: String,
     value: String = "",
     modifier: Modifier = Modifier,
@@ -60,10 +60,10 @@ fun CivReadOnlyField(
 
 @Preview(showBackground = true)
 @Composable
-private fun CivReadOnlyFieldPreview() {
+private fun CivDataFieldPreview() {
     Column(modifier = Modifier.padding(16.dp)) {
-        CivReadOnlyField(label = "Full name", value = "Jane Doe")
-        CivReadOnlyField(label = "SSN", value = "●●●-●●-6789", hint = "Last 4 digits shown")
-        CivReadOnlyField(label = "Phone number")
+        CivDataField(label = "Full name", value = "Jane Doe")
+        CivDataField(label = "SSN", value = "●●●-●●-6789", hint = "Last 4 digits shown")
+        CivDataField(label = "Phone number")
     }
 }

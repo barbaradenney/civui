@@ -37,7 +37,7 @@ For architecture and internals, see `CLAUDE.md` in the repo root.
 | `<civ-repeater>` | Layout | `legend`, `name`, `min`, `max`, `addLabel`, `removeLabel` | `civ-change: { value }` |
 | `<civ-section-intro>` | Layout | `heading`, `headingLevel`, `tone` | — |
 | `<civ-summary>` | Display | `data`, `editLabel` | `civ-edit: { section }` |
-| `<civ-read-only-field>` | Display | `label`, `value` | — |
+| `<civ-data-field>` | Display | `label`, `value` | — |
 | `<civ-button>` | UI | `label`, `variant`, `danger`, `disabled`, `type` | `civ-analytics` |
 | `<civ-action-button>` | UI | `label`, `variant`, `danger`, `disabled`, `pressed`, `type` | `civ-analytics` |
 | `<civ-link>` | UI | `label`, `href`, `variant`, `danger`, `disabled` | `civ-analytics` |
@@ -687,7 +687,7 @@ form.prefillData = {
 };
 ```
 
-#### civ-read-only-field
+#### civ-data-field
 
 Displays a label and value as a flat row with optional inline edit link. Used inside `civ-summary` and on review pages.
 
@@ -701,23 +701,23 @@ Displays a label and value as a flat row with optional inline edit link. Used in
 
 **Example:**
 ```html
-<civ-read-only-field
+<civ-data-field
   label="Phone number"
   value="(555) 123-4567"
   edit-href="#/contact/phone"
-></civ-read-only-field>
+></civ-data-field>
 
 <!-- Multi-value (address) -->
-<civ-read-only-field
+<civ-data-field
   label="Mailing address"
   .values="${['123 Main St', 'Springfield, IL 62701']}"
   edit-href="#/contact/address"
-></civ-read-only-field>
+></civ-data-field>
 ```
 
 #### civ-summary
 
-Read-only review page that displays structured sections with headings, edit links, and key-value pairs using `civ-read-only-field` internally.
+Read-only review page that displays structured sections with headings, edit links, and key-value pairs using `civ-data-field` internally.
 
 **Props:**
 - `heading` -- Main heading for the summary page

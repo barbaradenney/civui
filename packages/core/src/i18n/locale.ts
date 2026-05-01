@@ -275,8 +275,10 @@ export interface CivLocaleStrings {
   prefillNoticeBody: string;
   prefillNoticeLink: string;
 
-  // Read-only field
-  readOnlyLabel: string; // fallback if no label
+  // Data field
+  dataFieldLabel: string; // fallback if no label
+  /** @deprecated Use `dataFieldLabel` instead. */
+  readOnlyLabel: string;
 
   // Repeater
   repeaterAddButton: string; // "Add another {item}"
@@ -831,6 +833,7 @@ const defaultStrings: CivLocaleStrings = {
   prefillNoticeBody: 'We pulled this information from your account. If any of this is wrong, you can correct it here.',
   prefillNoticeLink: 'Update your profile',
 
+  dataFieldLabel: 'Information',
   readOnlyLabel: 'Information',
 
   repeaterAddButton: 'Add another {item}',

@@ -1363,7 +1363,7 @@
     @apply civ-block civ-w-full civ-border-2 civ-border-dashed civ-rounded
            civ-py-12 civ-px-6 civ-text-center civ-transition-all civ-border-base-light civ-cursor-pointer;
     appearance: none;
-    background: none;
+    @apply civ-bg-base-lightest;
     font: inherit;
     color: inherit;
   }

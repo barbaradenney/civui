@@ -29,9 +29,9 @@ For architecture and internals, see \`CLAUDE.md\` in the repo root.
 | \`<civ-date-picker>\` | Date | \`min\`, \`max\`, \`placeholder\`, \`locale\`, \`weekStartsOn\` | \`{ value }\` |
 | \`<civ-memorable-date>\` | Date | \`legend\`, \`monthLabel\`, \`dayLabel\`, \`yearLabel\`, \`locale\` | \`{ value, month, day, year }\` |
 | \`<civ-file-upload>\` | File | \`accept\`, \`multiple\`, \`maxSize\`, \`maxFiles\` | \`{ files: File[] }\` |
-| \`<civ-form-field>\` | Wrapper | \`label\`, \`hint\`, \`error\`, \`required\`, \`touched\` | — |
-| \`<civ-form-fieldset>\` | Wrapper | \`legend\`, \`hint\`, \`error\`, \`required\`, \`touched\` | — |
-| \`<civ-fieldset>\` | Layout | \`legend\`, \`hint\`, \`error\`, \`required\`, \`disabled\` | — |
+| \`<civ-form-field>\` | Wrapper | \`label\`, \`hint\`, \`error\`, \`required\`, \`touched\`, \`heading-level\` (1-6), \`size\` (sm/md/lg/xl) | — |
+| \`<civ-form-fieldset>\` | Wrapper | \`legend\`, \`hint\`, \`error\`, \`required\`, \`touched\`, \`heading-level\` (1-6), \`size\` (sm/md/lg/xl) | — |
+| \`<civ-fieldset>\` | Layout | \`legend\`, \`hint\`, \`error\`, \`required\`, \`disabled\`, \`heading-level\` (1-6), \`size\` (sm/md/lg/xl) | — |
 | \`<civ-form>\` | Layout | \`action\`, \`method\` | \`civ-submit: { formData }\`, \`civ-invalid: { errors }\` |
 | \`<civ-button>\` | Action | \`variant\` (primary/secondary/tertiary), \`danger\`, \`type\`, \`disabled\` | \`civ-analytics\` |
 | \`<civ-filter-chip>\` | Action | \`label\`, \`value\`, \`selected\`, \`removable\`, \`disabled\`, \`chip-style\` (primary/secondary), \`chip-role\` (toggle/radio — set automatically by group in single mode), \`spacing\` (default/sm), \`icon-start\`, \`icon-end\`, \`count\`. Renders a non-interactive wrapper with sibling toggle + remove buttons. | \`civ-change\`, \`civ-remove\`, \`civ-analytics\` |
@@ -54,14 +54,14 @@ For architecture and internals, see \`CLAUDE.md\` in the repo root.
 | \`<civ-alert>\` | Feedback | \`variant\` (info/warning/error/success), \`heading\`, \`dismissible\`, \`slim\`, \`alert-style\` | \`civ-dismiss\` |
 | \`<civ-modal>\` | Overlay | \`open\`, \`heading\`, \`label\`, \`no-close-button\`, \`no-backdrop-close\`, \`no-escape-close\` | \`civ-modal-close\` |
 | \`<civ-action-sheet>\` | Overlay | \`open\`, \`max-height\`, \`trap-focus\`, \`no-click-outside\` | \`civ-action-sheet-close\` |
-| \`<civ-address>\` | Compound | \`legend\`, \`show-street2\`, \`show-country\`, \`show-military\` | \`{ value: AddressValue }\` |
-| \`<civ-name>\` | Compound | \`legend\`, \`format\`, \`show-middle\`, \`show-suffix\` | \`{ value: NameValue }\` |
-| \`<civ-direct-deposit>\` | Compound | \`legend\` | \`{ value: DirectDepositValue }\` |
-| \`<civ-signature>\` | Compound | \`legend\`, \`statement\` | \`{ value: { name, certified, signedAt } }\` |
-| \`<civ-relationship>\` | Compound | \`legend\`, \`preset\`, \`show-deceased\`, \`show-name\` | \`{ value: RelationshipValue }\` |
-| \`<civ-race-ethnicity>\` | Compound | \`legend\`, \`ethnicity-legend\`, \`race-legend\` | \`{ value: RaceEthnicityValue }\` |
-| \`<civ-marriage-history>\` | Compound | \`legend\`, \`show-marriage-type\`, \`status-assumed\` | \`{ value: MarriageValue }\` |
-| \`<civ-service-history>\` | Compound | \`legend\`, \`show-service-number\` | \`{ value: ServicePeriodValue }\` |
+| \`<civ-address>\` | Compound | \`legend\`, \`heading-level\`, \`size\`, \`show-street2\`, \`show-country\`, \`show-military\` | \`{ value: AddressValue }\` |
+| \`<civ-name>\` | Compound | \`legend\`, \`heading-level\`, \`size\`, \`format\`, \`show-middle\`, \`show-suffix\` | \`{ value: NameValue }\` |
+| \`<civ-direct-deposit>\` | Compound | \`legend\`, \`heading-level\`, \`size\` | \`{ value: DirectDepositValue }\` |
+| \`<civ-signature>\` | Compound | \`legend\`, \`heading-level\`, \`size\`, \`statement\` | \`{ value: { name, certified, signedAt } }\` |
+| \`<civ-relationship>\` | Compound | \`legend\`, \`heading-level\`, \`size\`, \`preset\`, \`show-deceased\`, \`show-name\` | \`{ value: RelationshipValue }\` |
+| \`<civ-race-ethnicity>\` | Compound | \`legend\`, \`heading-level\`, \`size\`, \`ethnicity-legend\`, \`race-legend\` | \`{ value: RaceEthnicityValue }\` |
+| \`<civ-marriage-history>\` | Compound | \`legend\`, \`heading-level\`, \`size\`, \`show-marriage-type\`, \`status-assumed\` | \`{ value: MarriageValue }\` |
+| \`<civ-service-history>\` | Compound | \`legend\`, \`heading-level\`, \`size\`, \`show-service-number\` | \`{ value: ServicePeriodValue }\` |
 | \`<civ-ssn>\` | Preset | \`mode\` (full/last4) | \`{ value }\` |
 | \`<civ-ein>\` | Preset | — | \`{ value }\` |
 | \`<civ-phone>\` | Preset | \`international\` | \`{ value }\` |
@@ -414,7 +414,7 @@ Drag-and-drop file upload with validation.
 
 Wrapper for single-value form inputs. Renders label, hint, error, and required indicator around a slotted input component. Tracks per-field \`touched\` state (set to true after the first \`civ-change\` event from the child).
 
-**Props:** \`label\`, \`hint\`, \`error\`, \`required\`, \`requiredMessage\`, \`hide-required-indicator\`, \`touched\`
+**Props:** \`label\`, \`hint\`, \`error\`, \`required\`, \`requiredMessage\`, \`hide-required-indicator\`, \`touched\`, \`heading-level\` (1-6), \`size\` (sm/md/lg/xl)
 
 **Example:**
 \`\`\`html
@@ -424,6 +424,8 @@ Wrapper for single-value form inputs. Renders label, hint, error, and required i
 </civ-form-field>
 \`\`\`
 
+**Heading promotion:** Set \`heading-level="1"\` (and typically \`size="xl"\`) when the field doubles as the page \`<h1>\` (single-question-per-page pattern). See **Heading hierarchy** below.
+
 **Self-contained components that do NOT need \`civ-form-field\`:** \`civ-address\`, \`civ-name\`, \`civ-signature\`, \`civ-checkbox\` (standalone), \`civ-toggle\`. These render their own label internally.
 
 ---
@@ -432,7 +434,7 @@ Wrapper for single-value form inputs. Renders label, hint, error, and required i
 
 Wrapper for group components (radio groups, checkbox groups, memorable dates, segmented controls). Renders legend, hint, error, and required indicator. Tracks per-field \`touched\` state.
 
-**Props:** \`legend\`, \`hint\`, \`error\`, \`required\`, \`requiredMessage\`, \`hide-required-indicator\`, \`touched\`
+**Props:** \`legend\`, \`hint\`, \`error\`, \`required\`, \`requiredMessage\`, \`hide-required-indicator\`, \`touched\`, \`heading-level\` (1-6), \`size\` (sm/md/lg/xl)
 
 **Example:**
 \`\`\`html
@@ -444,6 +446,8 @@ Wrapper for group components (radio groups, checkbox groups, memorable dates, se
   </civ-radio-group>
 </civ-form-fieldset>
 \`\`\`
+
+**Heading promotion:** Set \`heading-level="1"\` (and typically \`size="xl"\`) when the legend doubles as the page \`<h1>\`. See **Heading hierarchy** below.
 
 ---
 
@@ -1078,6 +1082,52 @@ CivUI components are built for WCAG 2.1 AA (which satisfies Section 508). Key pa
 4. **Focus management** — all interactive elements are keyboard accessible. Dialogs trap focus. Groups use roving tabindex.
 5. **Color is never the sole indicator.** Errors use text + border, not just red color.
 6. **Focus ring** meets WCAG 2.2 SC 2.4.13 — W3C Two-Color Technique (C40) with 3px outline + 2px offset + halo shadow.
+
+### Heading hierarchy and labels-as-headings
+
+Government forms commonly follow the **VA.gov / GOV.UK "one question per page" pattern**, where the main question on each page is *also* the page's \`<h1>\`. This:
+
+- Lets screen-reader users navigate forms by heading.
+- Satisfies WCAG 2.4.6 (Headings and Labels) and 2.4.10 (Section Headings).
+
+CivUI exposes two opt-in props on \`civ-form-field\`, \`civ-form-fieldset\`, \`civ-fieldset\`, \`civ-repeater\`, and every compound component:
+
+- **\`heading-level\`** (1-6) — adds \`role="heading"\` + \`aria-level=N\` to the rendered \`<label>\`/\`<legend>\`. The native element is preserved, so click-to-focus and \`for\`/\`aria-labelledby\` keep working — heading promotion is purely an accessibility-tree affordance.
+- **\`size\`** (\`sm\` | \`md\` | \`lg\` | \`xl\`) — visual size variant. \`sm\` (default, omitted) = body size; \`md\` ≈ \`text-lg\`; \`lg\` ≈ \`text-xl\`; \`xl\` ≈ \`text-2xl\`. Independent of \`heading-level\`.
+
+**Rules:**
+
+- **Exactly one \`h1\` per page.** On a single-question page, set \`heading-level="1"\` on the field that asks the question.
+- On a multi-question page, the page or step uses its own \`<h1>\` and each fieldset uses \`heading-level="2"\` or \`"3"\`.
+- Pair a higher \`heading-level\` with a larger \`size\` so the visual hierarchy matches the semantic hierarchy.
+- Don't promote sub-fields inside compound components — only the top-level legend is a heading.
+
+**Single-question page:**
+
+\`\`\`html
+<civ-form-field label="What is your email address?" heading-level="1" size="xl" required>
+  <civ-text-input type="email" name="email"></civ-text-input>
+</civ-form-field>
+\`\`\`
+
+**Multi-question page with a fieldset as h2:**
+
+\`\`\`html
+<h1 class="civ-heading-xl">Your contact information</h1>
+
+<civ-form-fieldset legend="Preferred contact method" heading-level="2" size="md" required>
+  <civ-radio-group name="contact">
+    <civ-radio value="email" label="Email"></civ-radio>
+    <civ-radio value="phone" label="Phone"></civ-radio>
+  </civ-radio-group>
+</civ-form-fieldset>
+\`\`\`
+
+**Compound component as the page h1:**
+
+\`\`\`html
+<civ-name legend="What is your full name?" heading-level="1" size="xl" required></civ-name>
+\`\`\`
 
 ### Plain language requirements
 

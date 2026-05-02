@@ -22,9 +22,9 @@ export const COMPONENT_CATALOG = `# CivUI Component Catalog
 | \`<civ-date-picker>\` | Date | \`min\`, \`max\`, \`placeholder\`, \`locale\`, \`weekStartsOn\` | \`{ value }\` |
 | \`<civ-memorable-date>\` | Date | \`legend\`, \`monthLabel\`, \`dayLabel\`, \`yearLabel\`, \`locale\` | \`{ value, month, day, year }\` |
 | \`<civ-file-upload>\` | File | \`accept\`, \`multiple\`, \`maxSize\`, \`maxFiles\` | \`{ files: File[] }\` |
-| \`<civ-form-field>\` | Wrapper | \`label\`, \`hint\`, \`error\`, \`required\`, \`requiredMessage\`, \`touched\` | — |
-| \`<civ-form-fieldset>\` | Wrapper | \`legend\`, \`hint\`, \`error\`, \`required\`, \`requiredMessage\`, \`touched\` | — |
-| \`<civ-fieldset>\` | Layout | \`legend\`, \`hint\`, \`error\`, \`required\`, \`disabled\` | — |
+| \`<civ-form-field>\` | Wrapper | \`label\`, \`hint\`, \`error\`, \`required\`, \`requiredMessage\`, \`touched\`, \`heading-level\` (1-6), \`size\` (sm/md/lg/xl) | — |
+| \`<civ-form-fieldset>\` | Wrapper | \`legend\`, \`hint\`, \`error\`, \`required\`, \`requiredMessage\`, \`touched\`, \`heading-level\` (1-6), \`size\` (sm/md/lg/xl) | — |
+| \`<civ-fieldset>\` | Layout | \`legend\`, \`hint\`, \`error\`, \`required\`, \`disabled\`, \`heading-level\` (1-6), \`size\` (sm/md/lg/xl) | — |
 | \`<civ-form>\` | Layout | \`action\`, \`method\` | \`civ-submit: { formData }\`, \`civ-invalid: { errors }\` |
 
 **Wrapper pattern:** Wrap single-value inputs in \`<civ-form-field>\` and group components in \`<civ-form-fieldset>\`. These wrappers provide label/legend, hint, error, required indicator, and per-field \`touched\` tracking. Self-contained components (\`civ-address\`, \`civ-name\`, \`civ-signature\`, \`civ-checkbox\`, \`civ-toggle\`) do not need wrapping.
@@ -45,10 +45,10 @@ Multi-line text input. Props: \`rows\` (default 5), \`maxlength\` (enables chara
 Dropdown select. Props: \`options\` (Array<{value, label, disabled?}>), \`emptyLabel\` (default "- Select -"), \`preset\` (pre-built list: \`'us-state'\`, \`'service-branch'\`, \`'discharge-type'\`, \`'suffix'\`, \`'gender'\`, \`'marital-status'\`, etc.), \`preset-variant\` (e.g., \`'territories'\`, \`'all'\`, \`'binary'\`). Presets also work on \`civ-radio-group\` and \`civ-checkbox-group\`. Use \`import { resolvePresetOptions } from '@civui/core'\` for programmatic access.
 
 ### civ-form-field
-Wrapper for single-value inputs. Renders label, hint, error, required indicator. Props: \`label\`, \`hint\`, \`error\`, \`required\`, \`requiredMessage\`, \`hide-required-indicator\`, \`touched\`. Tracks per-field \`touched\` state (set after first \`civ-change\`).
+Wrapper for single-value inputs. Renders label, hint, error, required indicator. Props: \`label\`, \`hint\`, \`error\`, \`required\`, \`requiredMessage\`, \`hide-required-indicator\`, \`touched\`, \`heading-level\` (1-6, promotes label to a heading via \`role="heading"\` + \`aria-level=N\`), \`size\` (sm/md/lg/xl, visual size). Tracks per-field \`touched\` state (set after first \`civ-change\`).
 
 ### civ-form-fieldset
-Wrapper for group components. Renders legend, hint, error, required indicator. Props: \`legend\`, \`hint\`, \`error\`, \`required\`, \`requiredMessage\`, \`hide-required-indicator\`, \`touched\`.
+Wrapper for group components. Renders legend, hint, error, required indicator. Props: \`legend\`, \`hint\`, \`error\`, \`required\`, \`requiredMessage\`, \`hide-required-indicator\`, \`touched\`, \`heading-level\` (1-6), \`size\` (sm/md/lg/xl).
 
 ### civ-combobox
 Searchable dropdown with type-ahead. Props: \`options\`, \`placeholder\`, \`noResultsText\`.

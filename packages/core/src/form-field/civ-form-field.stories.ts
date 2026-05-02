@@ -166,6 +166,89 @@ export const FieldsetWithError: Story = {
   `,
 };
 
+// ── Heading-level + size (the "label as page heading" pattern) ─────
+
+export const FieldAsPageHeading: Story = {
+  name: 'Heading: Field as page H1',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Single-question-per-page pattern (VA.gov / GOV.UK). The field label is promoted to the page `<h1>` via `heading-level="1"`, and `size="xl"` matches the visual prominence to the semantic level. Screen-reader users can navigate to it as the page heading; sighted users see a large heading.',
+      },
+    },
+  },
+  render: () => html`
+    <civ-form-field
+      label="What is your email address?"
+      heading-level="1"
+      size="xl"
+      hint="We'll use this to send your confirmation"
+      required
+    >
+      <civ-text-input type="email" name="email" required></civ-text-input>
+    </civ-form-field>
+  `,
+};
+
+export const FieldsetAsSectionHeading: Story = {
+  name: 'Heading: Fieldset as section H2',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Multi-question page pattern. The page renders its own `<h1>` (typically from page chrome), and each fieldset legend is a section `<h2>` via `heading-level="2"` with `size="md"` for visual emphasis.',
+      },
+    },
+  },
+  render: () => html`
+    <div style="max-width: 480px;">
+      <h1 class="civ-heading-xl">Your contact information</h1>
+
+      <civ-form-fieldset
+        legend="Preferred contact method"
+        heading-level="2"
+        size="md"
+        required
+      >
+        <civ-radio-group name="contact" required>
+          <civ-radio value="email" label="Email"></civ-radio>
+          <civ-radio value="phone" label="Phone"></civ-radio>
+          <civ-radio value="mail" label="Postal mail"></civ-radio>
+        </civ-radio-group>
+      </civ-form-fieldset>
+    </div>
+  `,
+};
+
+export const SizeVariants: Story = {
+  name: 'Size: sm / md / lg / xl',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          '`size` is independent of `heading-level`. Default (omitted) and `sm` render at body size. `md` ≈ `text-lg`, `lg` ≈ `text-xl`, `xl` ≈ `text-2xl`. Pair the size with a `heading-level` when the label is a heading.',
+      },
+    },
+  },
+  render: () => html`
+    <div class="civ-flex civ-flex-col civ-gap-6" style="max-width: 480px;">
+      <civ-form-field label="Default (sm) — body size">
+        <civ-text-input name="a"></civ-text-input>
+      </civ-form-field>
+      <civ-form-field label="Size md — slightly larger" size="md">
+        <civ-text-input name="b"></civ-text-input>
+      </civ-form-field>
+      <civ-form-field label="Size lg — section heading" size="lg">
+        <civ-text-input name="c"></civ-text-input>
+      </civ-form-field>
+      <civ-form-field label="Size xl — page heading" size="xl">
+        <civ-text-input name="d"></civ-text-input>
+      </civ-form-field>
+    </div>
+  `,
+};
+
 // ── Complete form example ──────────────────────────────────────
 
 export const CompleteForm: Story = {

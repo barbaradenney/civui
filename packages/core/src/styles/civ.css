@@ -116,6 +116,36 @@
     -webkit-print-color-adjust: exact;
   }
 
+  /* Hide filter controls in printed lists */
+  .civ-filterable-list__filters {
+    display: none !important;
+  }
+
+  .civ-filterable-list__status {
+    display: none !important;
+  }
+
+  /* Show all filterable list items when printing */
+  civ-filterable-list [hidden] {
+    display: revert !important;
+  }
+
+  /* Hide edit links on read-only fields */
+  .civ-data-field__edit {
+    display: none !important;
+  }
+
+  /* Prevent page breaks inside list items and data fields */
+  civ-list-item,
+  civ-data-field {
+    break-inside: avoid;
+  }
+
+  /* Image preview: constrain for print */
+  civ-image-preview img {
+    max-width: 200pt !important;
+  }
+
   /* Remove focus ring styles */
   *:focus-visible {
     outline: none !important;

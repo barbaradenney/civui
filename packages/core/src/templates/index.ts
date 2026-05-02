@@ -9,4 +9,4 @@ export {
   INPUT_WIDTH_CLASSES,
   inputWidthClass,
 } from './form-templates.js';
-export type { InputWidth } from './form-templates.js';
+export type { InputWidth, HeadingLevel, LabelSize } from './form-templates.js';

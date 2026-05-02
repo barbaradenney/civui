@@ -1,6 +1,7 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { CivFormElement, dispatch, renderLegend, renderFormHeader, buildDescribedBy, t } from '@civui/core';
+import type { HeadingLevel, LabelSize } from '@civui/core';
 import '@civui/inputs';
 import '@civui/controls';
 import '../name/civ-name.js';
@@ -57,6 +58,21 @@ const EMPTY_RELATIONSHIP: RelationshipValue = {
 @customElement('civ-relationship')
 export class CivRelationship extends CivFormElement {
   @property({ type: String }) legend = '';
+
+  /**
+   * Promote the legend to a heading via `role="heading"` + `aria-level=N`.
+   * Use sparingly — typically only when this field is the primary question
+   * on a single-question page (level 1) or the top legend inside a
+   * form-step (level 2 or 3).
+   */
+  @property({ type: Number, attribute: 'heading-level' }) headingLevel?: HeadingLevel;
+
+  /**
+   * Visual size of the legend. Default and `sm` render at body size;
+   * `md`/`lg`/`xl` increase the size for use as a section/page heading.
+   * At `[data-civ-scale="fluid"]`, `xl` renders very large.
+   */
+  @property({ type: String }) size?: LabelSize;
   @property({ type: String }) preset: RelationshipPreset = 'general';
   @property({ type: Array }) options?: RelationshipTypeConfig[];
   @property({ type: Boolean, attribute: 'show-name' }) showName = true;
@@ -140,7 +156,7 @@ export class CivRelationship extends CivFormElement {
         aria-required="${this.required || nothing}"
         ?disabled="${this.disabled}"
       >
-        ${renderFormHeader({ label: renderLegend({ legend, required: this.required, textSizeClass: '' }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
+        ${renderFormHeader({ label: renderLegend({ legend, required: this.required, headingLevel: this.headingLevel, size: this.size }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
 
         ${this.showName ? html`
           <civ-name

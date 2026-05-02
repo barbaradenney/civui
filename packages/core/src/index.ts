@@ -64,7 +64,7 @@ export {
   INPUT_WIDTH_CLASSES,
   inputWidthClass,
 } from './templates/form-templates.js';
-export type { InputWidth } from './templates/form-templates.js';
+export type { InputWidth, HeadingLevel, LabelSize } from './templates/form-templates.js';
 
 // Form field wrappers
 export { CivFormField } from './form-field/civ-form-field.js';

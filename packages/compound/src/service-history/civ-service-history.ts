@@ -1,6 +1,7 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { CivFormElement, dispatch, renderLegend, renderFormHeader, buildDescribedBy, t } from '@civui/core';
+import type { HeadingLevel, LabelSize } from '@civui/core';
 import { resolvePresetOptions } from '@civui/core';
 import '@civui/inputs';
 
@@ -34,6 +35,21 @@ const DISCHARGE_OPTIONS = resolvePresetOptions('discharge-type');
 @customElement('civ-service-history')
 export class CivServiceHistory extends CivFormElement {
   @property({ type: String }) legend = '';
+
+  /**
+   * Promote the legend to a heading via `role="heading"` + `aria-level=N`.
+   * Use sparingly — typically only when this field is the primary question
+   * on a single-question page (level 1) or the top legend inside a
+   * form-step (level 2 or 3).
+   */
+  @property({ type: Number, attribute: 'heading-level' }) headingLevel?: HeadingLevel;
+
+  /**
+   * Visual size of the legend. Default and `sm` render at body size;
+   * `md`/`lg`/`xl` increase the size for use as a section/page heading.
+   * At `[data-civ-scale="fluid"]`, `xl` renders very large.
+   */
+  @property({ type: String }) size?: LabelSize;
   @property({ type: Boolean, attribute: 'show-service-number' }) showServiceNumber = false;
 
   @property({ type: String, attribute: 'branch-error' }) branchError = '';
@@ -79,7 +95,7 @@ export class CivServiceHistory extends CivFormElement {
         aria-required="${this.required || nothing}"
         ?disabled="${this.disabled}"
       >
-        ${renderFormHeader({ label: renderLegend({ legend, required: this.required, textSizeClass: '' }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
+        ${renderFormHeader({ label: renderLegend({ legend, required: this.required, headingLevel: this.headingLevel, size: this.size }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
 
         <civ-form-field label="${t('serviceBranchLabel')}" error="${this.branchError}">
           <civ-select

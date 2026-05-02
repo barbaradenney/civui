@@ -29,12 +29,12 @@ For architecture and internals, see `CLAUDE.md` in the repo root.
 | `<civ-yes-no>` | Choice | `legend`, `yesLabel`, `noLabel`, `unsureLabel`, `unsureValue`, `skipLabel`, `skipValue` | `{ value }` |
 | `<civ-conditional>` | Layout | `when`, `eq`, `neq` | — |
 | `<civ-progress-steps>` | Navigation | `steps`, `current`, `legend` | — |
-| `<civ-fieldset>` | Layout | `legend`, `hint`, `error`, `required`, `disabled` | — |
+| `<civ-fieldset>` | Layout | `legend`, `hint`, `error`, `required`, `disabled`, `heading-level` (1-6), `size` (sm/md/lg/xl) | — |
 | `<civ-form>` | Layout | `action`, `method`, `supportResources` | `civ-submit: { formData }`, `civ-invalid: { errors }` |
 | `<civ-form-step>` | Layout | `persist`, `sensitive`, `show-pause`, `continue-label`, `complete-label`, `pause-label`, `nav-disabled`, `validate` | `civ-step-change`, `civ-step-pause`, `civ-step-complete` |
-| `<civ-form-field>` | Wrapper | `label`, `hint`, `error`, `required`, `disabled`, `requiredMessage` | — |
-| `<civ-form-fieldset>` | Wrapper | `legend`, `hint`, `error`, `required`, `disabled`, `requiredMessage` | — |
-| `<civ-repeater>` | Layout | `legend`, `name`, `min`, `max`, `addLabel`, `removeLabel` | `civ-change: { value }` |
+| `<civ-form-field>` | Wrapper | `label`, `hint`, `error`, `required`, `disabled`, `requiredMessage`, `heading-level` (1-6), `size` (sm/md/lg/xl) | — |
+| `<civ-form-fieldset>` | Wrapper | `legend`, `hint`, `error`, `required`, `disabled`, `requiredMessage`, `heading-level` (1-6), `size` (sm/md/lg/xl) | — |
+| `<civ-repeater>` | Layout | `legend`, `name`, `min`, `max`, `addLabel`, `removeLabel`, `heading-level` (1-6), `size` (sm/md/lg/xl) | `civ-change: { value }` |
 | `<civ-section-intro>` | Layout | `heading`, `headingLevel`, `tone` | — |
 | `<civ-summary>` | Display | `data`, `editLabel` | `civ-edit: { section }` |
 | `<civ-data-field>` | Display | `label`, `value` | — |
@@ -1511,6 +1511,53 @@ CivUI components are built for WCAG 2.1 AA (which satisfies Section 508). Key pa
 4. **Focus management** — all interactive elements are keyboard accessible. Dialogs trap focus. Groups use roving tabindex.
 5. **Color is never the sole indicator.** Errors use text + border, not just red color.
 6. **Focus ring** meets WCAG 2.2 SC 2.4.13 — W3C Two-Color Technique (C40) with 3px outline + 2px offset + halo shadow.
+
+### Heading hierarchy and labels-as-headings
+
+Government forms commonly follow the **VA.gov / GOV.UK "one question per page" pattern**, where the main question on each page is *also* the page's `<h1>`. This:
+
+- Lets screen-reader users navigate forms by heading.
+- Satisfies WCAG 2.4.6 (Headings and Labels) and 2.4.10 (Section Headings).
+- Reinforces that the form is a sequence of single decisions, not a dense grid.
+
+CivUI supports this through two opt-in props on `civ-form-field`, `civ-form-fieldset`, all compound components (`civ-name`, `civ-address`, etc.), and `civ-fieldset` / `civ-repeater`:
+
+- **`heading-level`** (`1` through `6`) — adds `role="heading"` + `aria-level=N` to the rendered `<label>`/`<legend>`. The native element is preserved, so click-to-focus and `for`/`aria-labelledby` still work; the heading promotion is purely an accessibility-tree affordance.
+- **`size`** (`sm` | `md` | `lg` | `xl`) — visual size variant. `sm` (default, omitted) = body size; `md` ≈ `text-lg`; `lg` ≈ `text-xl`; `xl` ≈ `text-2xl`. Independent of `heading-level`, so visual prominence and screen-reader semantics can be tuned separately.
+
+**Rules for use:**
+
+- **Exactly one `h1` per page.** On a single-question page, set `heading-level="1"` on the field (or compound component) that asks the question.
+- On a multi-question page, the page or step uses its own `<h1>` (typically rendered outside CivUI by the page chrome) and each fieldset uses `heading-level="2"` or `"3"`.
+- Don't promote sub-fields inside compound components — only the top-level legend is a heading. (Sub-fields like "First name" / "Last name" inside `civ-name` stay as plain labels.)
+- Pair a higher `heading-level` with a larger `size` so the visual hierarchy matches the semantic hierarchy. A typical single-question page uses `heading-level="1" size="xl"`.
+
+**Single-question page (the question *is* the h1):**
+
+```html
+<civ-form-field label="What is your email address?" heading-level="1" size="xl" required>
+  <civ-text-input type="email" name="email"></civ-text-input>
+</civ-form-field>
+```
+
+**Multi-question page with a fieldset as h2:**
+
+```html
+<h1 class="civ-heading-xl">Your contact information</h1>
+
+<civ-form-fieldset legend="Preferred contact method" heading-level="2" size="md" required>
+  <civ-radio-group name="contact">
+    <civ-radio value="email" label="Email"></civ-radio>
+    <civ-radio value="phone" label="Phone"></civ-radio>
+  </civ-radio-group>
+</civ-form-fieldset>
+```
+
+**Compound component as the page h1:**
+
+```html
+<civ-name legend="What is your full name?" heading-level="1" size="xl" required></civ-name>
+```
 
 ### Plain language requirements
 

@@ -1,6 +1,7 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { CivBaseElement, dispatch, renderLegend, renderFormHeader, buildDescribedBy, announce, interpolate, t } from '@civui/core';
+import type { HeadingLevel, LabelSize } from '@civui/core';
 import '@civui/inputs';
 import '@civui/actions/button';
 import '@civui/actions/action-button';
@@ -40,6 +41,21 @@ import '../form-step/civ-form-step.js';
 export class CivRepeater extends CivBaseElement {
   /** Fieldset legend. */
   @property({ type: String }) legend = '';
+
+  /**
+   * Promote the legend to a heading via `role="heading"` + `aria-level=N`.
+   * Use sparingly — typically only when this repeater is the primary
+   * section on a page (level 1) or the top section inside a form-step
+   * (level 2 or 3).
+   */
+  @property({ type: Number, attribute: 'heading-level' }) headingLevel?: HeadingLevel;
+
+  /**
+   * Visual size of the legend. Default and `sm` render at body size;
+   * `md`/`lg`/`xl` increase the size for use as a section/page heading.
+   * At `[data-civ-scale="fluid"]`, `xl` renders very large.
+   */
+  @property({ type: String }) size?: LabelSize;
 
   /** Base name for indexed form fields. */
   @property({ type: String }) name = '';
@@ -148,7 +164,7 @@ export class CivRepeater extends CivBaseElement {
         aria-invalid="${this.error ? 'true' : nothing}"
         ?disabled="${this.disabled}"
       >
-        ${renderFormHeader({ label: renderLegend({ legend: legendText, required: showList ? this.required : false, textSizeClass: '' }), hintId: this._hintId, hint: showList ? this.hint : '', errorId: this._errorId, error: showList ? this.error : '', fieldset: true })}
+        ${renderFormHeader({ label: renderLegend({ legend: legendText, required: showList ? this.required : false, headingLevel: this.headingLevel, size: this.size }), hintId: this._hintId, hint: showList ? this.hint : '', errorId: this._errorId, error: showList ? this.error : '', fieldset: true })}
 
         <div data-civ-repeater-rows class="${this._wizardActive ? 'civ-hidden' : ''}"></div>
 

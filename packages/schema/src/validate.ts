@@ -8,8 +8,6 @@
 
 import type {
   ComponentSchema,
-  PropDef,
-  RenderElement,
   FormValueMode,
   PropType,
 } from './schema.types.js';

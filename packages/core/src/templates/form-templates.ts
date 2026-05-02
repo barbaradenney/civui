@@ -2,15 +2,52 @@ import { html, nothing } from 'lit';
 import { t } from '../i18n/locale.js';
 
 /**
+ * Heading level for promoting a label / legend / group label to a heading
+ * via `role="heading"` + `aria-level=N`. Use sparingly — typically only the
+ * primary question on a single-question page (level 1) or the top legend
+ * inside a form-step (level 2/3).
+ */
+export type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
+
+/**
+ * Visual size of a label or legend. Default (`undefined`) renders at body
+ * size, bold — appropriate for inline form labels. Larger sizes are used
+ * when the label doubles as the page or section heading.
+ *
+ * - `sm` — body size (same as default)
+ * - `md` — `text-lg`, ~1.125rem
+ * - `lg` — `text-xl`, ~1.25rem
+ * - `xl` — `text-2xl`, ~1.5rem
+ */
+export type LabelSize = 'sm' | 'md' | 'lg' | 'xl';
+
+/** Resolve a label-size variant to its CSS modifier class. */
+function labelSizeClass(prefix: 'civ-label' | 'civ-legend', size?: LabelSize): string {
+  if (!size || size === 'sm') return '';
+  return `${prefix}--${size}`;
+}
+
+/** Build the ARIA-heading attributes object for a label/legend. */
+function headingAttrs(headingLevel?: HeadingLevel) {
+  return {
+    role: headingLevel ? 'heading' : nothing,
+    ariaLevel: headingLevel ? String(headingLevel) : nothing,
+  };
+}
+
+/**
  * Render a standard form label with optional required indicator.
  * Used by text-input, textarea, select, combobox, date-input, date-picker, file-upload.
  * Checkbox and toggle have inline labels — they don't use this.
- */
-/**
+ *
  * @param showRequired - Override required indicator visibility. When false,
  *   the "(required)" text is hidden even if required is true. Used by compound
  *   components (memorable-date, address) whose parent legend already shows
  *   the required indicator. Defaults to the value of `required`.
+ * @param headingLevel - When set, promotes the label to a heading via
+ *   `role="heading"` + `aria-level=N` for screen-reader navigation. Keeps
+ *   the native `<label>` element so click-to-focus continues to work.
+ * @param size - Visual size variant. Defaults to body size (`sm`).
  */
 export function renderLabel({
   label,
@@ -18,20 +55,28 @@ export function renderLabel({
   required,
   showRequired,
   labelId,
+  headingLevel,
+  size,
 }: {
   label: string;
   inputId: string;
   required: boolean;
   showRequired?: boolean;
   labelId?: string;
+  headingLevel?: HeadingLevel;
+  size?: LabelSize;
 }) {
   if (!label) return nothing;
   const indicatorVisible = showRequired ?? required;
+  const sizeClass = labelSizeClass('civ-label', size);
+  const { role, ariaLevel } = headingAttrs(headingLevel);
   return html`
     <label
-      class="civ-label"
+      class="civ-label ${sizeClass}"
       for="${inputId || nothing}"
       id="${labelId ?? nothing}"
+      role="${role}"
+      aria-level="${ariaLevel}"
     >
       ${label}
       ${indicatorVisible
@@ -44,29 +89,46 @@ export function renderLabel({
 /**
  * Render a fieldset legend with optional required indicator.
  * Used by radio-group, checkbox-group, fieldset, memorable-date.
+ *
+ * @param headingLevel - When set, promotes the legend to a heading via
+ *   `role="heading"` + `aria-level=N` for screen-reader navigation.
+ * @param size - Visual size variant. Defaults to body size (`sm`).
+ * @param srOnly - When true, the legend is visually hidden (`civ-sr-only`)
+ *   and `headingLevel`/`size` are intentionally ignored — a hidden legend
+ *   should not appear in the heading outline or carry visual weight.
+ * @param textSizeClass - **Deprecated.** Pre-`size` arbitrary class hook.
+ *   Accepted for backward compatibility but ignored. Use `size` instead.
  */
 export function renderLegend({
   legend,
   required,
   legendId,
-  textSizeClass,
+  size,
+  headingLevel,
   srOnly,
+  textSizeClass: _textSizeClass,
 }: {
   legend: string;
   required: boolean;
   legendId?: string;
-  textSizeClass?: string;
+  size?: LabelSize;
+  headingLevel?: HeadingLevel;
   srOnly?: boolean;
+  /** @deprecated Use `size` instead. Accepted but ignored. */
+  textSizeClass?: string;
 }) {
   if (!legend) return nothing;
   if (srOnly) {
     return html`<legend class="civ-sr-only">${legend}${required ? html` <span>${t('required')}</span>` : nothing}</legend>`;
   }
-  const sizeClass = textSizeClass ?? '';
+  const sizeClass = labelSizeClass('civ-legend', size);
+  const { role, ariaLevel } = headingAttrs(headingLevel);
   return html`
     <legend
       class="civ-legend ${sizeClass}"
       id="${legendId ?? nothing}"
+      role="${role}"
+      aria-level="${ariaLevel}"
     >
       ${legend}
       ${required
@@ -88,18 +150,26 @@ export function renderGroupLabel({
   labelId,
   required,
   showRequired,
+  headingLevel,
+  size,
 }: {
   label: string;
   labelId: string;
   required: boolean;
   showRequired?: boolean;
+  headingLevel?: HeadingLevel;
+  size?: LabelSize;
 }) {
   if (!label) return nothing;
   const indicatorVisible = showRequired ?? required;
+  const sizeClass = labelSizeClass('civ-label', size);
+  const { role, ariaLevel } = headingAttrs(headingLevel);
   return html`
     <label
-      class="civ-label"
+      class="civ-label ${sizeClass}"
       id="${labelId}"
+      role="${role}"
+      aria-level="${ariaLevel}"
     >
       ${label}
       ${indicatorVisible

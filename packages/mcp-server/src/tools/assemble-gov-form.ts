@@ -14,6 +14,7 @@
 
 import { escapeHtml } from './html-utils.js';
 import { generateGovForm } from './generate-gov-form.js';
+import type { GovFormResult } from './generate-gov-form.js';
 
 export interface AssembleResult {
   /** HTML output (when format is 'html'). */
@@ -765,7 +766,7 @@ export default function ConfirmationPage() {
 /**
  * Build HTML fragments from complex form features (workflow, delegation, feedback, lock matrix).
  */
-function buildComplexFeaturesHtml(complex?: import('./generate-gov-form.js').GovFormResult['complex']): {
+function buildComplexFeaturesHtml(complex?: GovFormResult['complex']): {
   hubInsert: string;
   chapterWrap: (chapterId: string, html: string) => string;
   script: string;

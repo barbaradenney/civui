@@ -9,7 +9,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-const swatch = (name: string, token: string, hex: string, textDark = true) => html`
+const swatch = (name: string, token: string, hex: string) => html`
   <div class="civ-flex civ-items-center civ-gap-3 civ-mb-1">
     <div
       style="width: 48px; height: 48px; border-radius: 6px; background: var(${token}); border: 1px solid var(--civ-color-base-lighter);"

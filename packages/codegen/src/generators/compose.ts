@@ -15,7 +15,7 @@
  * - Form / form-group (structural containers)
  */
 
-import type { ComponentSchema, PropDef } from '@civui/schema/types';
+import type { ComponentSchema } from '@civui/schema/types';
 import { WIDTH_KOTLIN_NAMES, INPUT_TYPE_KOTLIN_NAMES } from '@civui/schema/naming-maps';
 import { toComponentName } from '../utils/naming.js';
 
@@ -57,32 +57,6 @@ function detectPattern(schema: ComponentSchema): ComponentPattern {
   if (name === 'civ-form-group') return 'formGroup';
   if (name === 'civ-fieldset') return 'fieldset';
   return 'textInput';
-}
-
-// ---------------------------------------------------------------------------
-// Kotlin type helpers
-// ---------------------------------------------------------------------------
-
-function kotlinType(prop: PropDef, name: string): string {
-  if (prop.type === 'enum' && prop.values) return `Civ${toComponentName(`-${name}`)}`;
-  switch (prop.type) {
-    case 'string': return 'String';
-    case 'boolean': return 'Boolean';
-    case 'number': return 'Int';
-    case 'array': return 'List<CivOption>';
-    default: return 'String';
-  }
-}
-
-function kotlinDefault(prop: PropDef, name: string): string {
-  if (name === 'type') return ' = CivInputType.Text';
-  if (name === 'width') return ' = CivInputWidth.Full';
-  if (prop.default === undefined) return '';
-  if (Array.isArray(prop.default)) return ' = emptyList()';
-  if (typeof prop.default === 'string') return prop.default === '' ? ' = ""' : ` = "${prop.default}"`;
-  if (typeof prop.default === 'boolean') return ` = ${prop.default}`;
-  if (typeof prop.default === 'number') return ` = ${prop.default}`;
-  return '';
 }
 
 // ---------------------------------------------------------------------------

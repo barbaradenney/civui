@@ -57,19 +57,6 @@ function extractProperties(code: string): string[] {
   return props.sort();
 }
 
-function extractMethods(code: string): string[] {
-  const methodRegex = /(?:private|protected|public|override)?\s+(?:get\s+)?(\w+)\s*\(/g;
-  const methods: string[] = [];
-  let match;
-  while ((match = methodRegex.exec(code)) !== null) {
-    const name = match[1];
-    if (!['constructor', 'static', 'import', 'export', 'if', 'for', 'while', 'return', 'switch', 'case'].includes(name)) {
-      methods.push(name);
-    }
-  }
-  return [...new Set(methods)].sort();
-}
-
 function extractBaseClass(code: string): string | null {
   const match = code.match(/class\s+\w+\s+extends\s+(\w+)/);
   return match ? match[1] : null;

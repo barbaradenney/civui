@@ -2,6 +2,7 @@ import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { CivFormElement, dispatch, renderLegend, renderFormHeader, buildDescribedBy, interpolate, t } from '@civui/core';
+import type { HeadingLevel, LabelSize } from '@civui/core';
 import '@civui/inputs';
 import '@civui/controls';
 
@@ -67,6 +68,21 @@ const EMPTY_SIGNATURE: InternalSignature = { name: '', certified: false, signedA
 export class CivSignature extends CivFormElement {
   /** Fieldset legend. */
   @property({ type: String }) legend = '';
+
+  /**
+   * Promote the legend to a heading via `role="heading"` + `aria-level=N`.
+   * Use sparingly — typically only when this field is the primary question
+   * on a single-question page (level 1) or the top legend inside a
+   * form-step (level 2 or 3).
+   */
+  @property({ type: Number, attribute: 'heading-level' }) headingLevel?: HeadingLevel;
+
+  /**
+   * Visual size of the legend. Default and `sm` render at body size;
+   * `md`/`lg`/`xl` increase the size for use as a section/page heading.
+   * At `[data-civ-scale="fluid"]`, `xl` renders very large.
+   */
+  @property({ type: String }) size?: LabelSize;
 
   /** Certification statement text displayed above the fields. Ignored when a `slot="statement"` child is present. */
   @property({ type: String }) statement = '';
@@ -139,7 +155,7 @@ export class CivSignature extends CivFormElement {
         aria-required="${this.required || nothing}"
         ?disabled="${this.disabled}"
       >
-        ${renderFormHeader({ label: renderLegend({ legend: this.legend || this.label, required: this.required, textSizeClass: '' }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
+        ${renderFormHeader({ label: renderLegend({ legend: this.legend || this.label, required: this.required, headingLevel: this.headingLevel, size: this.size }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
 
         ${this._hasStatement ? html`
           <div id="${this._statementId}" class="civ-text-base civ-text-muted civ-mb-4">

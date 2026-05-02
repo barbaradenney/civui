@@ -1,6 +1,7 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { CivFormElement, dispatch, renderLegend, renderFormHeader, buildDescribedBy, interpolate, t } from '@civui/core';
+import type { HeadingLevel, LabelSize } from '@civui/core';
 import '@civui/inputs';
 import '@civui/controls';
 import '@civui/overlays/modal';
@@ -94,6 +95,21 @@ export class CivAddress extends CivFormElement {
   /** Fieldset legend displayed above the address fields. */
   @property({ type: String }) legend = '';
 
+  /**
+   * Promote the legend to a heading via `role="heading"` + `aria-level=N`.
+   * Use sparingly — typically only when this field is the primary question
+   * on a single-question page (level 1) or the top legend inside a
+   * form-step (level 2 or 3).
+   */
+  @property({ type: Number, attribute: 'heading-level' }) headingLevel?: HeadingLevel;
+
+  /**
+   * Visual size of the legend. Default and `sm` render at body size;
+   * `md`/`lg`/`xl` increase the size for use as a section/page heading.
+   * At `[data-civ-scale="fluid"]`, `xl` renders very large.
+   */
+  @property({ type: String }) size?: LabelSize;
+
   /** Whether to show the Street address line 2 field. */
   @property({ type: Boolean, attribute: 'show-street2' }) showStreet2 = true;
 
@@ -164,7 +180,7 @@ export class CivAddress extends CivFormElement {
         aria-required="${this.required || nothing}"
         ?disabled="${this.disabled}"
       >
-        ${renderFormHeader({ label: renderLegend({ legend: this.legend || this.label, required: this.required, textSizeClass: '' }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
+        ${renderFormHeader({ label: renderLegend({ legend: this.legend || this.label, required: this.required, headingLevel: this.headingLevel, size: this.size }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
 
         ${this.showMilitary ? html`
           <civ-checkbox

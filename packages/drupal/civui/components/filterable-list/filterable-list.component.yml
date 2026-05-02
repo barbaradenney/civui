@@ -1,0 +1,44 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Filterable List
+status: stable
+group: CivUI Layout
+description: 'A filtering controller that coordinates slotted filter controls with a list of items.'
+
+props:
+  type: object
+  properties:
+    label:
+      title: Label
+      type: string
+      description: 'Accessible label for the filterable list region'
+    no_results_message:
+      title: No results message
+      type: string
+      description: 'Message shown when zero items match'
+    announce_delay:
+      title: Announce delay
+      type: integer
+      default: 300
+      description: 'Debounce in ms before SR announcement'
+    result_count_hidden:
+      title: Result count hidden
+      type: boolean
+      default: false
+      description: 'Hide visible result count'
+    filter_attribute:
+      title: Filter attribute
+      type: string
+      default: 'data-filter'
+      description: 'Attribute name on items for searchable text'
+
+slots:
+  filters:
+    title: Filters
+    description: 'Filter controls (search, chips, selects)'
+  default:
+    title: Default
+    description: 'List content'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

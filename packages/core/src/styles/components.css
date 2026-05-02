@@ -134,6 +134,17 @@
     @apply civ-ps-6;
   }
 
+  /* Filterable list */
+  .civ-filterable-list__filters {
+    @apply civ-mb-4;
+  }
+  .civ-filterable-list__status {
+    @apply civ-min-h-0;
+  }
+  .civ-filterable-list__no-results {
+    @apply civ-text-center;
+  }
+
   /* ── Memorable Date ───────────────────────────────────────── */
 
   .civ-memorable-date-fields {

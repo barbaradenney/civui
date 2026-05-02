@@ -1,0 +1,14 @@
+<civ-filterable-list
+  {% if label %}label="{{ label }}"{% endif %}
+  {% if no_results_message %}no-results-message="{{ no_results_message }}"{% endif %}
+  {% if announce_delay %}announce-delay="{{ announce_delay }}"{% endif %}
+  {% if result_count_hidden %}result-count-hidden{% endif %}
+  {% if filter_attribute %}filter-attribute="{{ filter_attribute }}"{% endif %}
+>
+  {% if filters %}
+    <div data-filterable-list-filters>
+      {{ filters }}
+    </div>
+  {% endif %}
+  {% block default %}{{ default }}{% endblock %}
+</civ-filterable-list>

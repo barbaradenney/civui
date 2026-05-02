@@ -589,6 +589,12 @@ export interface CivLocaleStrings {
   validateLengthMax: string; // "Must be no more than {max} characters"
   validateLengthBetween: string; // "Must be between {min} and {max} characters"
   validateAlphanumeric: string;
+
+  // Filterable list
+  filterableListNoResults: string;
+  filterableListShowingAll: string; // "Showing all {total} results"
+  filterableListShowingCount: string; // "Showing {count} of {total} results"
+  filterableListResultAnnouncement: string; // "{count} results"
 }
 
 const defaultStrings: CivLocaleStrings = {
@@ -1133,6 +1139,11 @@ const defaultStrings: CivLocaleStrings = {
   validateLengthMax: 'Must be no more than {max} characters',
   validateLengthBetween: 'Must be between {min} and {max} characters',
   validateAlphanumeric: 'Only letters and numbers are allowed',
+
+  filterableListNoResults: 'No results found.',
+  filterableListShowingAll: 'Showing all {total} results',
+  filterableListShowingCount: 'Showing {count} of {total} results',
+  filterableListResultAnnouncement: '{count} results',
 };
 
 let currentStrings: CivLocaleStrings = { ...defaultStrings };

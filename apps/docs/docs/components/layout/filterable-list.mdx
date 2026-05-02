@@ -1,0 +1,141 @@
+---
+title: Filterable List
+sidebar_position: 8
+sidebar_label: Filterable List
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
+# Filterable List
+
+`<civ-filterable-list>`
+
+A filtering controller that coordinates slotted filter controls with a slotted list of items. The component handles search matching, named attribute filtering, AND composition, result counts, and screen-reader announcements — while the consumer provides any filter UI they want.
+
+## How it works
+
+1. **Slot filter controls** (search inputs, chips, selects) into the filter zone via `data-filterable-list-filters`
+2. **Add `data-filter` attributes** on list items with searchable text
+3. **Add `data-filter-{name}`** for named filters (e.g., `data-filter-letter="A"`)
+4. The component listens for `civ-input`/`civ-change` events and shows/hides items automatically
+
+## Examples
+
+### Glossary (A-Z)
+
+<StoryEmbed id="layout-filterable-list--glossary" />
+
+### Organization directory
+
+<StoryEmbed id="layout-filterable-list--organization-directory" />
+
+### Medication lookup
+
+<StoryEmbed id="layout-filterable-list--medication-lookup" />
+
+### People directory
+
+<StoryEmbed id="layout-filterable-list--people-directory" />
+
+### Search only (minimal)
+
+<StoryEmbed id="layout-filterable-list--search-only" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/layout-filterable-list--glossary)
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `label` | `string` | `''` | Accessible label for the region (`aria-label`) |
+| `no-results-message` | `string` | `'No results found.'` | Message shown when zero items match |
+| `announce-delay` | `number` | `300` | Debounce in ms before screen reader announcement |
+| `result-count-hidden` | `boolean` | `false` | Hide visible result count (SR still announces) |
+| `filter-attribute` | `string` | `'data-filter'` | Attribute name on items for searchable text |
+
+## Events
+
+| Event | Detail | Fires when |
+|-------|--------|------------|
+| `civ-filter` | `{ query, matchCount, totalCount }` | After each filter pass |
+
+## Slots
+
+| Slot | Attribute | Description |
+|------|-----------|-------------|
+| `filters` | `data-filterable-list-filters` | Consumer-provided filter controls (search, chips, etc.) |
+| `default` | — | The list content (typically `<civ-list>` with `<civ-list-item>`) |
+
+## JavaScript API
+
+```js
+const list = document.querySelector('civ-filterable-list');
+
+list.search('accessibility');       // Text search
+list.setFilter('letter', 'A');      // Named filter
+list.setFilter('type', ['a', 'b']); // Multi-value filter
+list.clearFilter('letter');         // Clear one filter
+list.clearAllFilters();             // Reset everything
+
+list.matchCount;  // Number of visible items
+list.totalCount;  // Total filterable items
+```
+
+## Filter connection mechanism
+
+### Search inputs
+
+Any `<civ-text-input type="search">` or element with `data-filterable-list-search` in the filter zone triggers text matching. Text is matched case-insensitively against:
+
+1. The item's `data-filter` attribute (primary — can include hidden keywords)
+2. The item's `heading` property
+3. The item's `textContent` (fallback)
+
+### Named controls
+
+Controls with a `name` attribute (chip groups, selects) trigger attribute matching. The `name` maps to `data-filter-{name}` on items:
+
+| Control | Matches |
+|---------|---------|
+| `<civ-filter-chip-group name="letter">` with value `"A"` | Items where `data-filter-letter="A"` |
+| `<civ-filter-chip-group name="type" mode="multi">` with value `["dept", "agency"]` | Items where `data-filter-type` is `"dept"` or `"agency"` |
+| `<civ-select name="category">` with value `"health"` | Items where `data-filter-category="health"` |
+
+### AND composition
+
+Multiple active filters compose with AND logic — an item must pass ALL active filters to remain visible.
+
+## Accessibility
+
+- Wraps content in `role="region"` with `aria-label`
+- Status zone uses `role="status"` with `aria-live="polite"` for result counts
+- Screen reader announcements are debounced (default 300ms) to avoid rapid-fire during typing
+- Host sets `data-civ-no-results` attribute when zero matches (CSS hook)
+- Keyboard: Tab into search, type to filter; Tab to chips, select to filter
+
+## Patterns
+
+### Hidden search keywords
+
+Use `data-filter` to include keywords that are searchable but not displayed:
+
+```html
+<civ-list-item
+  data-filter="Acetaminophen Tylenol pain fever headache"
+  heading="Acetaminophen"
+  description="Brand: Tylenol. Used for pain relief."
+></civ-list-item>
+```
+
+Searching "Tylenol" or "headache" finds this item even though those words aren't in the heading or description.
+
+### Custom filter attribute
+
+Override the default attribute name for environments where `data-filter` conflicts:
+
+```html
+<civ-filterable-list filter-attribute="data-search-text">
+  ...
+  <civ-list-item data-search-text="My searchable text" heading="..."></civ-list-item>
+</civ-filterable-list>
+```

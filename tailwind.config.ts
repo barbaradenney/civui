@@ -160,15 +160,13 @@ const config: Config = {
           outline:
             'var(--civ-focus-outline-width) solid var(--civ-focus-outline-color)',
           'outline-offset': 'var(--civ-focus-outline-offset)',
-          'box-shadow':
-            '0 0 0 calc(var(--civ-focus-outline-offset) + var(--civ-focus-outline-width) + var(--civ-focus-shadow-spread)) var(--civ-focus-shadow-color)',
+          'box-shadow': '0 0 0 var(--civ-focus-outline-offset) var(--civ-focus-shadow-color)',
         },
         '.civ-focus-ring-inverse': {
           outline:
-            'var(--civ-focus-outline-width) solid var(--civ-focus-shadow-color)',
+            'var(--civ-focus-outline-width) solid var(--civ-focus-outline-color)',
           'outline-offset': 'var(--civ-focus-outline-offset)',
-          'box-shadow':
-            '0 0 0 calc(var(--civ-focus-outline-offset) + var(--civ-focus-outline-width) + var(--civ-focus-shadow-spread)) var(--civ-focus-outline-color)',
+          'box-shadow': '0 0 0 var(--civ-focus-outline-offset) var(--civ-focus-shadow-color)',
         },
 
         // Logical border-width (replaces border-l-4 / border-l-0)

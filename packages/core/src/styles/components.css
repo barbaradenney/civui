@@ -281,6 +281,12 @@
     color: var(--civ-color-base-darkest);
   }
 
+  .civ-input:focus-visible {
+    outline: var(--civ-focus-outline-width) solid var(--civ-focus-outline-color);
+    outline-offset: var(--civ-focus-outline-offset);
+    box-shadow: 0 0 0 var(--civ-focus-outline-offset) var(--civ-focus-shadow-color);
+  }
+
   .civ-input-prefix {
     @apply civ-flex civ-items-center civ-px-2 civ-border civ-border-e-0 civ-rounded-s civ-border-base civ-bg-white;
     font-size: var(--civ-typography-fontSize-base);
@@ -674,6 +680,12 @@
     width: var(--civ-spacing-8);
     height: var(--civ-spacing-8);
     flex-shrink: 0;
+  }
+
+  .civ-check-input:focus-visible {
+    outline: var(--civ-focus-outline-width) solid var(--civ-focus-outline-color);
+    outline-offset: var(--civ-focus-outline-offset);
+    box-shadow: 0 0 0 var(--civ-focus-outline-offset) var(--civ-focus-shadow-color);
   }
 
   /* Checkbox checked — checkmark SVG */

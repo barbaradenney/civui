@@ -1,5 +1,5 @@
 import type { Preview } from '@storybook/web-components';
-import '../packages/tokens/dist/css/tokens.css';
+import '@civui/tokens/css';
 import '../packages/core/src/styles/civ.css';
 
 /** Detect system color scheme preference. */

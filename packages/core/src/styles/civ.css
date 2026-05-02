@@ -13,29 +13,28 @@
   .civ-focus-ring:focus {
     outline: var(--civ-focus-outline-width) solid var(--civ-focus-outline-color);
     outline-offset: var(--civ-focus-outline-offset);
-    box-shadow: 0 0 0 calc(var(--civ-focus-outline-offset) + var(--civ-focus-outline-width) + var(--civ-focus-shadow-spread)) var(--civ-focus-shadow-color);
+    box-shadow: 0 0 0 var(--civ-focus-outline-offset) var(--civ-focus-shadow-color);
   }
   .civ-focus-ring-inverse:focus {
-    outline: var(--civ-focus-outline-width) solid var(--civ-focus-shadow-color);
+    outline: var(--civ-focus-outline-width) solid var(--civ-focus-outline-color);
     outline-offset: var(--civ-focus-outline-offset);
-    box-shadow: 0 0 0 calc(var(--civ-focus-outline-offset) + var(--civ-focus-outline-width) + var(--civ-focus-shadow-spread)) var(--civ-focus-outline-color);
+    box-shadow: 0 0 0 var(--civ-focus-outline-offset) var(--civ-focus-shadow-color);
   }
 }
 
 /* Dark mode: ensure focus rings remain visible on dark backgrounds.
    Uses token palette values (primary-lighter, primary-darker) to stay
    in sync with the design token system. */
+/* Dark mode: keep yellow focus ring, switch halo to lighter for visibility on dark backgrounds */
 @media (prefers-color-scheme: dark) {
   :root {
-    --civ-focus-outline-color: var(--civ-color-primary-lighter);
-    --civ-focus-shadow-color: var(--civ-color-primary-darker);
+    --civ-focus-shadow-color: var(--civ-color-white-DEFAULT);
   }
 }
 
 /* Same overrides for manual dark mode toggle (Storybook toolbar) */
 :root[data-civ-theme="dark"] {
-  --civ-focus-outline-color: var(--civ-color-primary-lighter);
-  --civ-focus-shadow-color: var(--civ-color-primary-darker);
+  --civ-focus-shadow-color: var(--civ-color-white-DEFAULT);
 }
 
 /* Z-index scale — named layers for predictable stacking */
@@ -159,7 +158,7 @@
   .civ-focus-ring-inverse:focus-visible {
     outline: var(--civ-focus-outline-width) solid transparent;
     outline-offset: var(--civ-focus-outline-offset);
-    box-shadow: none;
+    box-shadow: 0 0 0 var(--civ-focus-outline-offset) var(--civ-focus-shadow-color);
   }
 
   /* Selected day cell in date picker — bg-primary disappears */

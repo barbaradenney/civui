@@ -1,4 +1,4 @@
-import { html, nothing } from 'lit';
+import { html, svg, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { CivBaseElement } from '../base/civ-base-element.js';
 import { icons } from './icon-library.js';
@@ -7,16 +7,13 @@ import type { IconDef } from './icon-library.js';
 /**
  * CivUI icon component.
  *
- * Built-in icons render as pure CSS shapes via the `.civ-icon--{name}`
- * class — no font, no SVG, no extra HTTP requests. Icons inherit `color`
- * (via `currentColor`) and scale with `font-size`.
+ * Renders inline SVG paths — no font files, no external requests, no
+ * pseudo-element hacks. Icons inherit `color` (via `currentColor`) and
+ * scale with `font-size`. All paths use a 24×24 viewBox with stroke-based
+ * rendering (round caps and joins).
  *
- * For icons registered with a `symbol` (Material Symbols glyph name),
- * the component renders the font ligature instead. That path requires
- * the consumer to opt in to the font:
- *
- *   import '@civui/core/styles/material-symbols';
- *   registerIcon('home', { label: 'Home', symbol: 'home' });
+ * For icons registered with a `symbol` (Material Symbols glyph name)
+ * and no `path`, the component renders the font ligature instead.
  *
  * @element civ-icon
  *
@@ -42,7 +39,7 @@ export class CivIcon extends CivBaseElement {
 
   /**
    * Size shorthand — maps to `font-size` on the host.
-   * Accepts any CSS length value: `sm` (0.75em), `md` (1em), `lg` (1.5em),
+   * Accepts: `sm` (0.875em), `md` (1em), `lg` (1.5em),
    * `xl` (2em), `2xl` (3em), or an explicit value like `24px`.
    */
   @property({ reflect: true })
@@ -57,7 +54,7 @@ export class CivIcon extends CivBaseElement {
   flip?: string;
 
   private static _sizeMap: Record<string, string> = {
-    sm: '0.75em',
+    sm: '0.875em',
     md: '1em',
     lg: '1.5em',
     xl: '2em',
@@ -91,30 +88,42 @@ export class CivIcon extends CivBaseElement {
 
     const styleParts: string[] = [];
     if (fontSize) styleParts.push(`font-size:${fontSize}`);
-    if (transforms.length) styleParts.push(`display:inline-block`, `transform:${transforms.join(' ')}`);
-    const styleStr = styleParts.join(';') || nothing;
+    if (transforms.length) styleParts.push(`transform:${transforms.join(' ')}`);
+    const styleStr = styleParts.join(';') || undefined;
 
-    const role = isDecorative ? 'none' : 'img';
-    const ariaHidden = isDecorative ? 'true' : 'false';
-    const ariaLabel = isDecorative ? nothing : accessibleLabel;
-
-    if (def.symbol) {
+    // Material Symbols font fallback (when path is empty but symbol is set)
+    if (!def.path && def.symbol) {
       return html`<span
-        class="civ-icon civ-icon--${this.name} material-symbols-outlined"
-        style=${styleStr}
-        role=${role}
-        aria-hidden=${ariaHidden}
-        aria-label=${ariaLabel}
+        class="civ-icon material-symbols-outlined"
+        style=${styleStr || nothing}
+        role=${isDecorative ? 'none' : 'img'}
+        aria-hidden=${isDecorative ? 'true' : 'false'}
+        aria-label=${isDecorative ? nothing : accessibleLabel}
         translate="no"
       >${def.symbol}</span>`;
     }
 
-    return html`<span
-      class="civ-icon civ-icon--${this.name}"
-      style=${styleStr}
-      role=${role}
-      aria-hidden=${ariaHidden}
-      aria-label=${ariaLabel}
-    ></span>`;
+    // Split multi-path strings (separated by |||)
+    const paths = (def.path || '').split('|||').filter(Boolean);
+
+    // Loading icon gets the spin animation class
+    const isLoading = this.name === 'loading';
+
+    return html`<svg
+      class="civ-icon ${isLoading ? 'civ-icon--loading' : ''}"
+      style=${styleStr || nothing}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      role=${isDecorative ? 'none' : 'img'}
+      aria-hidden=${isDecorative ? 'true' : 'false'}
+      aria-label=${isDecorative ? nothing : accessibleLabel}
+      xmlns="http://www.w3.org/2000/svg"
+    >${paths.map(d => svg`<path d="${d}"/>`)}</svg>`;
+  }
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'civ-icon': CivIcon;
   }
 }

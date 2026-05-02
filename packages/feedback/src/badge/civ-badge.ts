@@ -134,9 +134,9 @@ export class CivBadge extends CivBaseElement {
 
     return html`
       <span class="${classes.join(' ')}" role="status">${leading
-        ? html`<civ-icon name="${leading}" size="sm" class="civ-badge__icon" aria-hidden="true"></civ-icon>`
+        ? html`<civ-icon name="${leading}" class="civ-badge__icon" aria-hidden="true"></civ-icon>`
         : nothing}${this.label || nothing}${this.iconEnd
-        ? html`<civ-icon name="${this.iconEnd}" size="sm" class="civ-badge__icon civ-badge__icon--end" aria-hidden="true"></civ-icon>`
+        ? html`<civ-icon name="${this.iconEnd}" class="civ-badge__icon civ-badge__icon--end" aria-hidden="true"></civ-icon>`
         : nothing}</span>
     `;
   }

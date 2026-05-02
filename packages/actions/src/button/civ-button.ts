@@ -64,7 +64,7 @@ export class CivButton extends LightDomTextMixin(CivBaseElement) {
         class="${this._classes}"
         ?disabled="${this.disabled}"
         @click="${this._onClick}"
-      >${this.iconStart ? html`<civ-icon name="${this.iconStart}" size="sm"></civ-icon>` : ''}${this._text}${this.iconEnd ? html`<civ-icon name="${this.iconEnd}" size="sm"></civ-icon>` : ''}</button>
+      >${this.iconStart ? html`<civ-icon name="${this.iconStart}"></civ-icon>` : ''}${this._text}${this.iconEnd ? html`<civ-icon name="${this.iconEnd}"></civ-icon>` : ''}</button>
     `;
   }
 

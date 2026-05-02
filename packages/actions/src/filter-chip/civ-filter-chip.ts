@@ -109,13 +109,13 @@ export class CivFilterChip extends LightDomTextMixin(CivBaseElement) {
           ?disabled="${this.disabled}"
           @click="${this._onToggle}"
         >${this.selected
-          ? html`<civ-icon name="check" size="sm" class="civ-filter-chip__check" aria-hidden="true"></civ-icon>`
+          ? html`<civ-icon name="check" class="civ-filter-chip__check" aria-hidden="true"></civ-icon>`
           : this.iconStart
-            ? html`<civ-icon name="${this.iconStart}" size="sm" class="civ-filter-chip__icon" aria-hidden="true"></civ-icon>`
+            ? html`<civ-icon name="${this.iconStart}" class="civ-filter-chip__icon" aria-hidden="true"></civ-icon>`
             : nothing}<span class="civ-filter-chip__label">${this._text}</span>${showCount
           ? html`<civ-count class="civ-filter-chip__count" count="${this.count}"></civ-count>`
           : nothing}${this.iconEnd
-          ? html`<civ-icon name="${this.iconEnd}" size="sm" class="civ-filter-chip__icon civ-filter-chip__icon--end" aria-hidden="true"></civ-icon>`
+          ? html`<civ-icon name="${this.iconEnd}" class="civ-filter-chip__icon civ-filter-chip__icon--end" aria-hidden="true"></civ-icon>`
           : nothing}</button>${this.removable
         ? html`<button
             type="button"
@@ -123,7 +123,7 @@ export class CivFilterChip extends LightDomTextMixin(CivBaseElement) {
             aria-label="${interpolate(t('filterChipRemoveLabel'), { label: this._text })}"
             ?disabled="${this.disabled}"
             @click="${this._onRemove}"
-          ><civ-icon name="close" size="sm" aria-hidden="true"></civ-icon></button>`
+          ><civ-icon name="close" aria-hidden="true"></civ-icon></button>`
         : nothing}
       </span>
     `;

@@ -30,27 +30,32 @@ describe('civ-icon', () => {
     expect(el.querySelector('.civ-icon')).toBeNull();
   });
 
-  // ── CSS icon rendering (default) ─────────────────────────────
+  // ── SVG rendering ───────────────────────────────────────────
 
-  it('renders a span with the modifier class and no inner content', async () => {
+  it('renders an SVG with path elements', async () => {
     const el = await create('<civ-icon name="check"></civ-icon>');
-    const span = el.querySelector('span.civ-icon')!;
-    expect(span).toBeTruthy();
-    expect(span.classList.contains('civ-icon--check')).toBe(true);
-    expect(span.children.length).toBe(0);
+    const svg = el.querySelector('svg.civ-icon')!;
+    expect(svg).toBeTruthy();
+    expect(svg.getAttribute('viewBox')).toBe('0 0 24 24');
+    expect(svg.getAttribute('fill')).toBe('currentColor');
+    const paths = svg.querySelectorAll('path');
+    expect(paths.length).toBeGreaterThanOrEqual(1);
   });
 
-  it('does NOT add the material-symbols-outlined class for built-in CSS icons', async () => {
-    const el = await create('<civ-icon name="check"></civ-icon>');
-    const span = el.querySelector('span.civ-icon')!;
-    expect(span.classList.contains('material-symbols-outlined')).toBe(false);
+  it('renders multiple path elements for multi-path icons', async () => {
+    const el = await create('<civ-icon name="check-circle"></civ-icon>');
+    const svg = el.querySelector('svg.civ-icon')!;
+    const paths = svg.querySelectorAll('path');
+    // check-circle has circle + checkmark as separate path segments
+    expect(paths.length).toBeGreaterThanOrEqual(1);
   });
 
-  it('renders a modifier class for every built-in icon', async () => {
+  it('renders an SVG for every built-in icon', async () => {
     for (const name of Object.keys(icons)) {
       const el = await create(`<civ-icon name="${name}"></civ-icon>`);
-      const span = el.querySelector('span.civ-icon')!;
-      expect(span.classList.contains(`civ-icon--${name}`)).toBe(true);
+      const svg = el.querySelector('svg.civ-icon')!;
+      expect(svg, `Icon "${name}" should render an SVG`).toBeTruthy();
+      expect(svg.querySelectorAll('path').length, `Icon "${name}" should have at least one path`).toBeGreaterThanOrEqual(1);
       el.remove();
     }
   });
@@ -59,23 +64,23 @@ describe('civ-icon', () => {
 
   it('renders role="none" + aria-hidden for decorative icons', async () => {
     const el = await create('<civ-icon name="check"></civ-icon>');
-    const span = el.querySelector('span.civ-icon')!;
-    expect(span.getAttribute('role')).toBe('none');
-    expect(span.getAttribute('aria-hidden')).toBe('true');
+    const svg = el.querySelector('svg.civ-icon')!;
+    expect(svg.getAttribute('role')).toBe('none');
+    expect(svg.getAttribute('aria-hidden')).toBe('true');
   });
 
   it('renders role="img" + aria-label when label is set', async () => {
     const el = await create('<civ-icon name="check" label="Approved"></civ-icon>');
-    const span = el.querySelector('span.civ-icon')!;
-    expect(span.getAttribute('role')).toBe('img');
-    expect(span.getAttribute('aria-hidden')).toBe('false');
-    expect(span.getAttribute('aria-label')).toBe('Approved');
+    const svg = el.querySelector('svg.civ-icon')!;
+    expect(svg.getAttribute('role')).toBe('img');
+    expect(svg.getAttribute('aria-hidden')).toBe('false');
+    expect(svg.getAttribute('aria-label')).toBe('Approved');
   });
 
   // ── Size prop ────────────────────────────────────────────────
 
   it.each([
-    ['sm', '0.75em'],
+    ['sm', '0.875em'],
     ['md', '1em'],
     ['lg', '1.5em'],
     ['xl', '2em'],
@@ -83,57 +88,57 @@ describe('civ-icon', () => {
     ['24px', '24px'],
   ])('size="%s" → font-size %s', async (size, expected) => {
     const el = await create(`<civ-icon name="check" size="${size}"></civ-icon>`);
-    const span = el.querySelector('span.civ-icon') as HTMLElement;
-    expect(span.style.fontSize).toBe(expected);
+    const svg = el.querySelector('svg.civ-icon') as unknown as HTMLElement;
+    expect(svg.style.fontSize).toBe(expected);
   });
 
   it('omits font-size when size is unset', async () => {
     const el = await create('<civ-icon name="check"></civ-icon>');
-    const span = el.querySelector('span.civ-icon') as HTMLElement;
-    expect(span.style.fontSize).toBe('');
+    const svg = el.querySelector('svg.civ-icon') as unknown as HTMLElement;
+    expect(svg.style.fontSize).toBe('');
   });
 
   // ── Transforms ───────────────────────────────────────────────
 
-  it('applies a rotate transform with display:inline-block', async () => {
+  it('applies a rotate transform', async () => {
     const el = await create('<civ-icon name="check" rotate="90"></civ-icon>');
-    const span = el.querySelector('span.civ-icon') as HTMLElement;
-    expect(span.style.transform).toBe('rotate(90deg)');
-    expect(span.style.display).toBe('inline-block');
+    const svg = el.querySelector('svg.civ-icon') as unknown as HTMLElement;
+    expect(svg.style.transform).toBe('rotate(90deg)');
   });
 
   it('applies a horizontal flip transform', async () => {
     const el = await create('<civ-icon name="check" flip="horizontal"></civ-icon>');
-    const span = el.querySelector('span.civ-icon') as HTMLElement;
-    expect(span.style.transform).toBe('scaleX(-1)');
+    const svg = el.querySelector('svg.civ-icon') as unknown as HTMLElement;
+    expect(svg.style.transform).toBe('scaleX(-1)');
   });
 
   // ── Dynamic updates ──────────────────────────────────────────
 
   it('re-renders when name changes', async () => {
     const el = await create('<civ-icon name="check"></civ-icon>');
-    expect(el.querySelector('.civ-icon')!.classList.contains('civ-icon--check')).toBe(true);
+    const pathBefore = el.querySelector('svg path')!.getAttribute('d');
 
     el.name = 'close';
     await el.updateComplete;
-    expect(el.querySelector('.civ-icon')!.classList.contains('civ-icon--close')).toBe(true);
+    const pathAfter = el.querySelector('svg path')!.getAttribute('d');
+    expect(pathAfter).not.toBe(pathBefore);
   });
 
   it('re-renders when label changes', async () => {
     const el = await create('<civ-icon name="check"></civ-icon>');
-    const span = () => el.querySelector('.civ-icon')!;
-    expect(span().getAttribute('aria-hidden')).toBe('true');
+    const icon = () => el.querySelector('.civ-icon')!;
+    expect(icon().getAttribute('aria-hidden')).toBe('true');
 
     el.label = 'Done';
     await el.updateComplete;
-    expect(span().getAttribute('role')).toBe('img');
-    expect(span().getAttribute('aria-label')).toBe('Done');
+    expect(icon().getAttribute('role')).toBe('img');
+    expect(icon().getAttribute('aria-label')).toBe('Done');
   });
 
   // ── Material Symbols font fallback (opt-in) ──────────────────
 
-  it('renders Material Symbols ligature when icon defines a `symbol`', async () => {
-    registerIcon('home', { label: 'Home', symbol: 'home' });
+  it('renders Material Symbols ligature when icon defines a symbol and no path', async () => {
+    registerIcon('home', { label: 'Home', path: '', symbol: 'home' });
 
     const el = await create('<civ-icon name="home"></civ-icon>');
     const span = el.querySelector('span.civ-icon')!;
@@ -143,7 +148,7 @@ describe('civ-icon', () => {
   });
 
   it('preserves a11y attributes in the font-fallback path', async () => {
-    registerIcon('home', { label: 'Home', symbol: 'home' });
+    registerIcon('home', { label: 'Home', path: '', symbol: 'home' });
 
     const el = await create('<civ-icon name="home" label="Go home"></civ-icon>');
     const span = el.querySelector('span.civ-icon')!;
@@ -153,13 +158,13 @@ describe('civ-icon', () => {
 
   // ── Icon library ─────────────────────────────────────────────
 
-  it('registerIcon adds a custom CSS-only icon', async () => {
-    registerIcon('agency-seal', { label: 'Agency seal' });
+  it('registerIcon adds a custom SVG icon', async () => {
+    registerIcon('agency-seal', { label: 'Agency seal', path: 'M12 2L2 7l10 5 10-5z' });
 
     const el = await create('<civ-icon name="agency-seal"></civ-icon>');
-    const span = el.querySelector('span.civ-icon')!;
-    expect(span.classList.contains('civ-icon--agency-seal')).toBe(true);
-    expect(span.classList.contains('material-symbols-outlined')).toBe(false);
+    const svg = el.querySelector('svg.civ-icon')!;
+    expect(svg).toBeTruthy();
+    expect(svg.querySelector('path')!.getAttribute('d')).toBe('M12 2L2 7l10 5 10-5z');
   });
 
   it('getIconNames returns all registered icon names', () => {
@@ -171,7 +176,7 @@ describe('civ-icon', () => {
   });
 
   it('resetIcons reverts to the built-in registry', () => {
-    registerIcon('temp-icon', { label: 'Temp' });
+    registerIcon('temp-icon', { label: 'Temp', path: 'M0 0' });
     expect(getIconNames()).toContain('temp-icon');
 
     resetIcons();
@@ -181,9 +186,10 @@ describe('civ-icon', () => {
 
   // ── Built-in registry sanity checks ──────────────────────────
 
-  it('every built-in icon has a label and platform mappings', () => {
+  it('every built-in icon has a label, path, and platform mappings', () => {
     for (const [name, def] of Object.entries(icons)) {
       expect(def.label, `Icon "${name}" should have a label`).toBeTruthy();
+      expect(def.path, `Icon "${name}" should have an SVG path`).toBeTruthy();
       expect(def.ios, `Icon "${name}" should have an iOS mapping`).toBeTruthy();
       expect(def.android, `Icon "${name}" should have an Android mapping`).toBeTruthy();
     }

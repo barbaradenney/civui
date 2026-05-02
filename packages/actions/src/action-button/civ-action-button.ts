@@ -76,7 +76,7 @@ export class CivActionButton extends CivBaseElement {
         ?disabled="${this.disabled}"
         aria-pressed="${ifDefined(ariaPressed)}"
         @click="${this._onClick}"
-      >${this.iconStart ? html`<civ-icon name="${this.iconStart}" size="sm"></civ-icon>` : ''}${this.label}${this.iconEnd ? html`<civ-icon name="${this.iconEnd}" size="sm"></civ-icon>` : ''}</button>
+      >${this.iconStart ? html`<civ-icon name="${this.iconStart}"></civ-icon>` : ''}${this.label}${this.iconEnd ? html`<civ-icon name="${this.iconEnd}"></civ-icon>` : ''}</button>
     `;
   }
 

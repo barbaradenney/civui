@@ -188,7 +188,7 @@ export class CivCombobox extends CivFormElement {
               class="civ-clear-btn focus-visible:civ-focus-ring"
               aria-label="${t('comboboxClearLabel')}"
               @click="${this._onClear}"
-            ><civ-icon name="close" size="sm" aria-hidden="true"></civ-icon></button>
+            ><civ-icon name="close" aria-hidden="true"></civ-icon></button>
           ` : nothing}
           <button
             type="button"

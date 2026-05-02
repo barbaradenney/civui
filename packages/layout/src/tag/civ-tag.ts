@@ -72,7 +72,7 @@ export class CivTag extends CivBaseElement {
 
     return html`
       <span class="${classes}">${this.iconStart
-        ? html`<civ-icon name="${this.iconStart}" size="sm" class="civ-tag__icon" aria-hidden="true"></civ-icon>`
+        ? html`<civ-icon name="${this.iconStart}" class="civ-tag__icon" aria-hidden="true"></civ-icon>`
         : nothing}${this.label}</span>
     `;
   }

@@ -380,7 +380,7 @@ export class CivTextInput extends CivFormElement {
           ? html`<span class="civ-input-prefix" aria-hidden="true">${isCurrency ? '$' : this.prefix}</span>`
           : nothing}${inputEl}${needsClearButton
           ? html`<button type="button" class="civ-input-clear focus-visible:civ-focus-ring" aria-label="${t('clearButton')}" @click="${this._onClear}">
-              <civ-icon name="close" size="sm"></civ-icon>
+              <civ-icon name="close"></civ-icon>
             </button>`
           : nothing}${hasSuffix
           ? html`<span class="civ-input-suffix" aria-hidden="true">${this.suffix}</span>`
@@ -389,11 +389,11 @@ export class CivTextInput extends CivFormElement {
       wrappedInput = html`<div class="civ-input-icon-wrap ${widthClass} civ-max-w-full"
         >${inputEl}${showLeadingIcon
           ? html`<span class="civ-input-icon civ-input-icon--leading"
-              ><civ-icon name="${this.leadingIcon}" label="${this.leadingIconLabel || nothing}" size="sm"></civ-icon
+              ><civ-icon name="${this.leadingIcon}" label="${this.leadingIconLabel || nothing}"></civ-icon
             ></span>`
           : nothing}${showTrailingIcon
           ? html`<span class="civ-input-icon civ-input-icon--trailing"
-              ><civ-icon name="${this.trailingIcon}" label="${this.trailingIconLabel || nothing}" size="sm"></civ-icon
+              ><civ-icon name="${this.trailingIcon}" label="${this.trailingIconLabel || nothing}"></civ-icon
             ></span>`
           : nothing}</div>`;
     } else {

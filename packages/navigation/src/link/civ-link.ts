@@ -67,12 +67,12 @@ export class CivLink extends LightDomTextMixin(CivBaseElement) {
 
   private get _trailingIcon() {
     const name = this.iconEnd || (this.newTab ? 'external-link' : '') || (this.variant === 'secondary' ? 'chevron-right' : '');
-    return name ? html`<civ-icon name="${name}" size="sm"></civ-icon>` : '';
+    return name ? html`<civ-icon name="${name}"></civ-icon>` : '';
   }
 
   private get _leadingIcon() {
     const name = this.iconStart || (this.variant === 'back' ? 'chevron-left' : '');
-    return name ? html`<civ-icon name="${name}" size="sm"></civ-icon>` : '';
+    return name ? html`<civ-icon name="${name}"></civ-icon>` : '';
   }
 
   /** Return sanitized href, stripping dangerous protocols. */

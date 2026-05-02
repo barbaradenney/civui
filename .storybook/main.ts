@@ -8,10 +8,7 @@ const __dir = typeof __dirname !== 'undefined' ? __dirname : dirname(fileURLToPa
 const root = resolve(__dir, '..');
 
 const config: StorybookConfig = {
-  stories: [
-    '../packages/*/src/**/*.stories.ts',
-    '../packages/drupal/civui/stories/**/*.stories.ts',
-  ],
+  stories: ['../packages/*/src/**/*.stories.ts'],
   addons: [
     '@storybook/addon-essentials',
     '@storybook/addon-a11y',

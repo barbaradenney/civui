@@ -92,6 +92,7 @@ export class CivSegmentedControl extends LightDomSlotMixin(CivFormElement) {
           class="civ-inline-flex"
           data-civ-segment-content
           role="radiogroup"
+          aria-label="${this.legend || nothing}"
           aria-orientation="horizontal"
           aria-describedby="${this._ariaDescribedBy || nothing}"
           aria-invalid="${this.error ? 'true' : nothing}"

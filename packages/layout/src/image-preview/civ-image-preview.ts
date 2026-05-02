@@ -58,6 +58,9 @@ export class CivImagePreview extends CivBaseElement {
 
   override render() {
     if (!this.src) return nothing;
+    if (!this.alt && typeof console !== 'undefined') {
+      console.warn(`<civ-image-preview> is missing an alt attribute. Images without alt text are inaccessible (WCAG 1.1.1).`);
+    }
 
     return html`
       <figure class="civ-m-0 civ-p-0" style="max-width: ${this._maxWidth};">

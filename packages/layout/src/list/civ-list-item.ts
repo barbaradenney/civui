@@ -159,7 +159,7 @@ export class CivListItem extends LightDomSlotMixin(CivBaseElement) {
 
     return html`
       <li>
-        <div class="${rowClasses}">${inner}</div>
+        <div class="${rowClasses}" aria-current="${this.current ? 'page' : nothing}">${inner}</div>
       </li>
     `;
   }

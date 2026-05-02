@@ -249,6 +249,15 @@ export class CivFilterableList extends LightDomSlotMixin(CivBaseElement) {
 
     this._matchCount = matchCount;
 
+    // If the currently focused element was hidden, move focus to first visible item
+    const active = document.activeElement;
+    if (active && active.hasAttribute('hidden') && this.contains(active)) {
+      const firstVisible = items.find(i => !i.hasAttribute('hidden'));
+      if (firstVisible instanceof HTMLElement) {
+        firstVisible.focus();
+      }
+    }
+
     // Update host attribute for CSS hooks
     if (matchCount === 0 && this._hasActiveFilters) {
       this.setAttribute('data-civ-no-results', '');

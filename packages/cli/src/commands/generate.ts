@@ -32,8 +32,13 @@ export async function generate(
   header(`Generating component: civ-${name}`);
 
   const root = findRoot();
-  const className = `Civ${toPascalCase(name)}`;
+  const pascalName = toPascalCase(name);
+  const className = `Civ${pascalName}`;
   const tagName = `civ-${name}`;
+  const displayName = name
+    .split('-')
+    .map((s) => s.charAt(0).toUpperCase() + s.slice(1))
+    .join(' ');
   const dir = resolve(root, 'packages/forms/src', name);
 
   if (existsSync(dir)) {
@@ -70,12 +75,57 @@ export async function generate(
   );
   success(`Created index.ts`);
 
-  console.log(`\nComponent scaffolded at: packages/forms/src/${name}/`);
+  // --- iOS stub ---
+  const iosDir = resolve(root, 'packages/ios/Sources/CivUI');
+  const iosFile = resolve(iosDir, `${className}.swift`);
+  if (!existsSync(iosFile)) {
+    mkdirSync(iosDir, { recursive: true });
+    writeFileSync(iosFile, iosTemplate(className, displayName));
+    success(`Created iOS: ${className}.swift`);
+  }
+
+  // --- Android stub ---
+  const androidDir = resolve(root, 'packages/android/src/main/kotlin/gov/civui/components');
+  const androidFile = resolve(androidDir, `${className}.kt`);
+  if (!existsSync(androidFile)) {
+    mkdirSync(androidDir, { recursive: true });
+    writeFileSync(androidFile, androidTemplate(className, displayName));
+    success(`Created Android: ${className}.kt`);
+  }
+
+  // --- Drupal SDC ---
+  const drupalDir = resolve(root, 'packages/drupal/civui/components', name);
+  if (!existsSync(drupalDir)) {
+    mkdirSync(drupalDir, { recursive: true });
+    writeFileSync(
+      resolve(drupalDir, `${name}.component.yml`),
+      drupalYmlTemplate(name, displayName),
+    );
+    writeFileSync(
+      resolve(drupalDir, `${name}.twig`),
+      drupalTwigTemplate(name),
+    );
+    success(`Created Drupal SDC: ${name}.component.yml + ${name}.twig`);
+  }
+
+  // --- Drupal Storybook story ---
+  writeFileSync(
+    resolve(dir, `${tagName}.drupal.stories.ts`),
+    drupalStoriesTemplate(name, displayName),
+  );
+  success(`Created ${tagName}.drupal.stories.ts`);
+
+  console.log(`\nComponent scaffolded across 4 platforms:`);
+  console.log(`  Web:     packages/forms/src/${name}/`);
+  console.log(`  iOS:     packages/ios/Sources/CivUI/${className}.swift`);
+  console.log(`  Android: packages/android/src/main/kotlin/gov/civui/components/${className}.kt`);
+  console.log(`  Drupal:  packages/drupal/civui/components/${name}/`);
   console.log(`\nNext steps:`);
   console.log(`  1. Implement the component in ${tagName}.ts`);
   console.log(`  2. Add exports to packages/forms/src/index.ts`);
   console.log(`  3. Write tests and stories`);
-  console.log(`  4. Run: civui build forms && civui test --unit`);
+  console.log(`  4. Implement native views in the iOS and Android stubs`);
+  console.log(`  5. Run: civui build forms && civui test --unit`);
 }
 
 function componentTemplate(className: string, tagName: string): string {
@@ -205,7 +255,7 @@ describe('${tagName}', () => {
 function storiesTemplate(tagName: string, name: string): string {
   const title = name
     .split('-')
-    .map((s) => s.charAt(0).toUpperCase() + s.slice(1))
+    .map((s: string) => s.charAt(0).toUpperCase() + s.slice(1))
     .join(' ');
 
   return `import type { Meta, StoryObj } from '@storybook/web-components';
@@ -243,6 +293,139 @@ export const Disabled: Story = {
   render: () => html\`
     <${tagName} label="${title}" name="${name}" disabled></${tagName}>
   \`,
+};
+`;
+}
+
+function iosTemplate(className: string, displayName: string): string {
+  return `import SwiftUI
+
+/// CivUI ${displayName}
+public struct ${className}: View {
+    public var label: String = ""
+    public var name: String = ""
+    public var value: String = ""
+    public var hint: String = ""
+    public var error: String = ""
+    public var required: Bool = false
+    public var disabled: Bool = false
+    public var onChange: ((String) -> Void)?
+
+    public init(
+        label: String = "",
+        name: String = "",
+        value: String = "",
+        hint: String = "",
+        error: String = "",
+        required: Bool = false,
+        disabled: Bool = false,
+        onChange: ((String) -> Void)? = nil
+    ) {
+        self.label = label
+        self.name = name
+        self.value = value
+        self.hint = hint
+        self.error = error
+        self.required = required
+        self.disabled = disabled
+        self.onChange = onChange
+    }
+
+    public var body: some View {
+        Text("TODO: Implement ${className}")
+    }
+}
+`;
+}
+
+function androidTemplate(className: string, displayName: string): string {
+  return `package gov.civui.components
+
+import androidx.compose.runtime.Composable
+
+/**
+ * CivUI ${displayName}
+ */
+@Composable
+fun ${className}(
+    label: String = "",
+    name: String = "",
+    value: String = "",
+    hint: String = "",
+    error: String = "",
+    required: Boolean = false,
+    disabled: Boolean = false,
+    onChange: ((String) -> Unit)? = null,
+) {
+    // TODO: Implement ${className}
+}
+`;
+}
+
+function drupalYmlTemplate(_name: string, displayName: string): string {
+  return `$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: ${displayName}
+status: stable
+group: CivUI
+description: '${displayName} component.'
+
+props:
+  type: object
+  properties:
+    name:
+      title: Name
+      type: string
+      description: 'Form field name'
+    value:
+      title: Value
+      type: string
+      description: 'Current value'
+    required:
+      title: Required
+      type: boolean
+      default: false
+    disabled:
+      title: Disabled
+      type: boolean
+      default: false
+
+slots:
+  default:
+    title: Default
+    description: 'Component content'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui
+`;
+}
+
+function drupalTwigTemplate(name: string): string {
+  return `<civ-${name}
+  {% if name %}name="{{ name }}"{% endif %}
+  {% if value %}value="{{ value }}"{% endif %}
+  {% if required %}required{% endif %}
+  {% if disabled %}disabled{% endif %}
+></civ-${name}>
+`;
+}
+
+function drupalStoriesTemplate(name: string, displayName: string): string {
+  return `import type { Meta, StoryObj } from '@storybook/web-components';
+import { html } from 'lit';
+import { unsafeHTML } from 'lit/directives/unsafe-html.js';
+import template from '../../../drupal/civui/components/${name}/${name}.twig';
+
+const meta: Meta = {
+  title: 'Drupal/${displayName}',
+  tags: ['autodocs'],
+};
+
+export default meta;
+type Story = StoryObj;
+
+export const Default: Story = {
+  render: () => html\`\${unsafeHTML(template({ name: '${name}' }))}\`,
 };
 `;
 }

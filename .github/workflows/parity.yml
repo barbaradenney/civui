@@ -23,6 +23,8 @@ jobs:
         run: node --experimental-strip-types tools/consistency-check.ts
       - name: Check component registration
         run: node --experimental-strip-types tools/registration-check.ts
+      - name: Validate Drupal SDCs
+        run: node --experimental-strip-types tools/validate-drupal-sdc.ts
 
   parity:
     runs-on: ubuntu-latest
@@ -38,7 +40,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - name: Generate parity report
         run: node --experimental-strip-types tools/parity-report.ts
-      - name: Check parity threshold (informational)
+      - name: Enforce parity threshold (85%)
         run: |
           node --experimental-strip-types -e "
             import { readFileSync } from 'fs';
@@ -54,7 +56,6 @@ jobs:
             }
             if (below > 0) {
               console.warn('\n' + below + ' component(s) below 85% parity threshold.');
-              console.warn('This check is informational while native implementations catch up to web.');
               console.warn('See the uploaded parity-report artifact for details.');
             } else {
               console.log('All components at 85%+ parity');

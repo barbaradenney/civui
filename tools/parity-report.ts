@@ -385,6 +385,127 @@ function parseKotlinComponent(filePath: string, targetName?: string): ComponentA
   return { name, props, events, file: filePath.replace(ROOT + '/', '') };
 }
 
+// ── Drupal (YAML) parser ────────────────────────────────────
+
+function parseDrupalComponent(dirPath: string, targetName?: string): ComponentAPI | null {
+  const dirName = basename(dirPath);
+  const ymlPath = join(dirPath, `${dirName}.component.yml`);
+  if (!existsSync(ymlPath)) return null;
+  const src = readFileSync(ymlPath, 'utf-8');
+
+  const name = targetName || dirName.split('-').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join('');
+  const props: PropDef[] = [];
+
+  // Simple line-by-line YAML parser for the props.properties block
+  const lines = src.split('\n');
+  let inProps = false;       // inside top-level `props:` block
+  let inProperties = false;  // inside `properties:` under props
+  let currentProp: string | null = null;
+  let currentType = 'string';
+  let currentRequired = false;
+  let currentDefault: string | undefined;
+  let propsIndent = -1;
+  let propertiesIndent = -1;
+  let propNameIndent = -1;
+
+  for (const line of lines) {
+    const stripped = line.trimEnd();
+    if (stripped === '' || stripped.trimStart().startsWith('#')) continue;
+
+    const indent = line.length - line.trimStart().length;
+
+    // Detect top-level `props:` key
+    if (/^props:\s*$/.test(stripped)) {
+      inProps = true;
+      propsIndent = indent;
+      continue;
+    }
+
+    if (inProps && !inProperties) {
+      // Look for `properties:` inside props
+      if (/^\s+properties:\s*$/.test(stripped)) {
+        inProperties = true;
+        propertiesIndent = indent;
+        continue;
+      }
+      // If we hit another top-level key (same or lesser indent than props), we're done
+      if (indent <= propsIndent && stripped.match(/^\S/)) {
+        inProps = false;
+        continue;
+      }
+    }
+
+    if (!inProperties) continue;
+
+    // If indent goes back to or before properties level, we're done with properties
+    if (indent <= propertiesIndent && stripped.match(/^\S/) || (indent <= propertiesIndent && !stripped.trimStart().startsWith(' '))) {
+      // Flush last prop
+      if (currentProp) {
+        props.push({ name: currentProp, type: currentType, required: currentRequired, default: currentDefault });
+        currentProp = null;
+      }
+      inProperties = false;
+      inProps = false;
+      continue;
+    }
+
+    // Detect a property name (direct child of properties — indented exactly one level deeper)
+    const propNameMatch = stripped.match(/^(\s+)(\w+):\s*$/);
+    if (propNameMatch && indent > propertiesIndent) {
+      // Check if this is a direct child (first property sets the reference indent)
+      if (propNameIndent === -1 || indent === propNameIndent) {
+        // Flush previous prop
+        if (currentProp) {
+          props.push({ name: currentProp, type: currentType, required: currentRequired, default: currentDefault });
+        }
+        propNameIndent = indent;
+        currentProp = propNameMatch[2];
+        currentType = 'string';
+        currentRequired = false;
+        currentDefault = undefined;
+        continue;
+      }
+    }
+
+    // If we're inside a property definition, parse its fields
+    if (currentProp && indent > propNameIndent) {
+      const typeMatch = stripped.match(/^\s+type:\s+(.+)$/);
+      if (typeMatch) {
+        currentType = typeMatch[1].trim().replace(/['"]/g, '');
+        continue;
+      }
+      const defaultMatch = stripped.match(/^\s+default:\s+(.+)$/);
+      if (defaultMatch) {
+        currentDefault = defaultMatch[1].trim().replace(/^['"]|['"]$/g, '');
+        continue;
+      }
+    }
+
+    // If indent goes back to property name level, it's a new property or end of block
+    if (indent <= propNameIndent && currentProp && indent <= propertiesIndent) {
+      props.push({ name: currentProp, type: currentType, required: currentRequired, default: currentDefault });
+      currentProp = null;
+      inProperties = false;
+      inProps = false;
+    }
+  }
+
+  // Flush last property
+  if (currentProp) {
+    props.push({ name: currentProp, type: currentType, required: currentRequired, default: currentDefault });
+  }
+
+  // Drupal SDCs don't have events — they render web components that handle events client-side
+  return { name, props, events: [], file: ymlPath.replace(ROOT + '/', '') };
+}
+
+// ── Drupal prop name normalization (snake_case → camelCase) ──
+
+function mapDrupalPropName(name: string): string {
+  // Convert snake_case to camelCase
+  return name.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase());
+}
+
 // ── Component mapping ────────────────────────────────────────
 
 interface ComponentMapping {
@@ -488,14 +609,14 @@ function generateReport(): string {
     web: ComponentAPI | null;
     ios: ComponentAPI | null;
     android: ComponentAPI | null;
-    drupal: boolean;
+    drupal: ComponentAPI | null;
   }> = [];
 
   for (const comp of components) {
     const web = comp.web ? parseWebComponent(comp.web) : null;
     const ios = comp.ios ? parseSwiftComponent(comp.ios, comp.displayName) : null;
     const android = comp.android ? parseKotlinComponent(comp.android, comp.displayName) : null;
-    const drupal = !!comp.drupal;
+    const drupal = comp.drupal ? parseDrupalComponent(comp.drupal, comp.displayName) : null;
     results.push({ displayName: comp.displayName, web, ios, android, drupal });
   }
 
@@ -504,7 +625,7 @@ function generateReport(): string {
   const withWeb = results.filter(r => r.web).length;
   const withIos = results.filter(r => r.ios).length;
   const withAndroid = results.filter(r => r.android).length;
-  const withDrupal = results.filter(r => r.drupal).length;
+  const withDrupal = results.filter(r => r.drupal !== null).length;
 
   let html = `<!DOCTYPE html>
 <html lang="en">
@@ -568,7 +689,7 @@ function generateReport(): string {
     const { displayName, web, ios, android, drupal } = result;
 
     // Collect all unique prop names across platforms
-    const allProps = new Map<string, { web?: PropDef; ios?: PropDef; android?: PropDef }>();
+    const allProps = new Map<string, { web?: PropDef; ios?: PropDef; android?: PropDef; drupal?: PropDef }>();
     web?.props.forEach(p => {
       if (!allProps.has(p.name)) allProps.set(p.name, {});
       allProps.get(p.name)!.web = p;
@@ -583,18 +704,23 @@ function generateReport(): string {
       if (!allProps.has(key)) allProps.set(key, {});
       allProps.get(key)!.android = p;
     });
+    drupal?.props.forEach(p => {
+      const key = mapDrupalPropName(p.name);
+      if (!allProps.has(key)) allProps.set(key, {});
+      allProps.get(key)!.drupal = p;
+    });
 
     // If a component has 'legend', treat 'label' as web-only (inherited from base class, not used for groups)
     if (allProps.has('legend') && allProps.has('label')) {
       const labelEntry = allProps.get('label')!;
-      // Only remove if label is web-only (not on native)
-      if (labelEntry.web && !labelEntry.ios && !labelEntry.android) {
+      // Only remove if label is web-only (not on native/drupal)
+      if (labelEntry.web && !labelEntry.ios && !labelEntry.android && !labelEntry.drupal) {
         allProps.delete('label');
       }
     }
 
     // Collect all events
-    const allEvents = new Map<string, { web?: EventDef; ios?: EventDef; android?: EventDef }>();
+    const allEvents = new Map<string, { web?: EventDef; ios?: EventDef; android?: EventDef; drupal?: EventDef }>();
     web?.events.forEach(e => {
       const key = mapEventName(e.name);
       if (!allEvents.has(key)) allEvents.set(key, {});
@@ -609,6 +735,11 @@ function generateReport(): string {
       const key = mapEventName(e.name);
       if (!allEvents.has(key)) allEvents.set(key, {});
       allEvents.get(key)!.android = e;
+    });
+    drupal?.events.forEach(e => {
+      const key = mapEventName(e.name);
+      if (!allEvents.has(key)) allEvents.set(key, {});
+      allEvents.get(key)!.drupal = e;
     });
 
     // Props that are web-only and should not count against native parity
@@ -669,7 +800,7 @@ function generateReport(): string {
       'formValidate', // native form validation callback, not a user-facing event
     ]);
 
-    // Remove native-only props so they don't show as gaps
+    // Remove native/drupal-only props so they don't show as gaps
     for (const name of Array.from(allProps.keys())) {
       const v = allProps.get(name)!;
       if (!v.web && nativeOnlyProps.has(name)) {
@@ -677,7 +808,7 @@ function generateReport(): string {
       }
     }
 
-    // Remove native-only events so they don't show as gaps
+    // Remove native/drupal-only events so they don't show as gaps
     for (const name of Array.from(allEvents.keys())) {
       const v = allEvents.get(name)!;
       if (!v.web && nativeOnlyEvents.has(name)) {
@@ -685,18 +816,18 @@ function generateReport(): string {
       }
     }
 
-    // Calculate parity: what % of web props/events exist on at least one native platform
+    // Calculate parity: what % of web props/events exist on at least one non-web platform
     let webItems = 0;
     let matchedItems = 0;
     allProps.forEach((v, name) => {
-      if (v.web && !webOnlyProps.has(name)) { webItems++; if (v.ios || v.android) matchedItems++; }
+      if (v.web && !webOnlyProps.has(name)) { webItems++; if (v.ios || v.android || v.drupal) matchedItems++; }
     });
     allEvents.forEach((v, name) => {
-      // Only skip web-only events when no native platform has them
-      const isWebOnly = webOnlyEvents.has(name) && !v.ios && !v.android;
-      if (v.web && !isWebOnly) { webItems++; if (v.ios || v.android) matchedItems++; }
+      // Only skip web-only events when no non-web platform has them
+      const isWebOnly = webOnlyEvents.has(name) && !v.ios && !v.android && !v.drupal;
+      if (v.web && !isWebOnly) { webItems++; if (v.ios || v.android || v.drupal) matchedItems++; }
     });
-    const parityPct = webItems > 0 ? Math.round((matchedItems / webItems) * 100) : (ios || android ? 100 : 0);
+    const parityPct = webItems > 0 ? Math.round((matchedItems / webItems) * 100) : (ios || android || drupal ? 100 : 0);
     const parityClass = parityPct >= 80 ? 'high' : parityPct >= 50 ? 'mid' : 'low';
 
     html += `
@@ -706,7 +837,7 @@ function generateReport(): string {
     <span class="badge ${web ? 'yes' : 'no'}">${web ? 'Web' : 'No Web'}</span>
     <span class="badge ${ios ? 'yes' : 'no'}">${ios ? 'iOS' : 'No iOS'}</span>
     <span class="badge ${android ? 'yes' : 'no'}">${android ? 'Android' : 'No Android'}</span>
-    <span class="badge ${drupal ? 'yes' : 'no'}">${drupal ? 'Drupal' : 'No Drupal'}</span>
+    <span class="badge ${drupal !== null ? 'yes' : 'no'}">${drupal !== null ? 'Drupal' : 'No Drupal'}</span>
     <span class="parity-meter"><span class="parity-fill ${parityClass}" style="width:${parityPct}%"></span></span>
     <span style="font-size:12px;color:#71767a;">${parityPct}%</span>
   </div>
@@ -715,36 +846,39 @@ function generateReport(): string {
       ${web ? `Web: ${web.file}` : ''}
       ${ios ? `<br>iOS: ${ios.file}` : ''}
       ${android ? `<br>Android: ${android.file}` : ''}
+      ${drupal ? `<br>Drupal: ${drupal.file}` : ''}
     </div>
     <div class="section-label">Properties <button class="toggle-excluded" onclick="document.body.classList.toggle('show-excluded')">Toggle web-only / native-only props</button></div>
     <table>
-      <tr><th>Property</th><th>Web</th><th>iOS</th><th>Android</th></tr>
+      <tr><th>Property</th><th>Web</th><th>iOS</th><th>Android</th><th>Drupal</th></tr>
       ${Array.from(allProps.entries()).map(([name, platforms]) => {
-        const hasGap = (!platforms.web || !platforms.ios || !platforms.android) && (platforms.web || platforms.ios || platforms.android);
-        const isExcluded = (webOnlyProps.has(name) && platforms.web && !platforms.ios && !platforms.android) ||
-                           (nativeOnlyProps.has(name) && !platforms.web && (platforms.ios || platforms.android));
+        const hasGap = (!platforms.web || !platforms.ios || !platforms.android || !platforms.drupal) && (platforms.web || platforms.ios || platforms.android || platforms.drupal);
+        const isExcluded = (webOnlyProps.has(name) && platforms.web && !platforms.ios && !platforms.android && !platforms.drupal) ||
+                           (nativeOnlyProps.has(name) && !platforms.web && (platforms.ios || platforms.android || platforms.drupal));
         const rowClass = isExcluded ? 'excluded-row' : (hasGap ? 'gap-row' : '');
         return `<tr class="${rowClass}">
           <td><strong>${name}</strong></td>
           <td>${platforms.web ? `<span class="check">✓</span> <span class="prop-type">${platforms.web.type}</span>` : '<span class="cross">✗</span>'}</td>
           <td>${platforms.ios ? `<span class="check">✓</span> <span class="prop-type">${platforms.ios.type}</span>` : '<span class="cross">✗</span>'}</td>
           <td>${platforms.android ? `<span class="check">✓</span> <span class="prop-type">${platforms.android.type}</span>` : '<span class="cross">✗</span>'}</td>
+          <td>${platforms.drupal ? `<span class="check">✓</span> <span class="prop-type">${platforms.drupal.type}</span>` : '<span class="cross">✗</span>'}</td>
         </tr>`;
       }).join('')}
     </table>
     <div class="section-label">Events / Callbacks</div>
     <table>
-      <tr><th>Event</th><th>Web</th><th>iOS</th><th>Android</th></tr>
+      <tr><th>Event</th><th>Web</th><th>iOS</th><th>Android</th><th>Drupal</th></tr>
       ${Array.from(allEvents.entries()).map(([name, platforms]) => {
-        const hasGap = (!platforms.web || !platforms.ios || !platforms.android) && (platforms.web || platforms.ios || platforms.android);
-        const isExcluded = (webOnlyEvents.has(name) && platforms.web && !platforms.ios && !platforms.android) ||
-                           (nativeOnlyEvents.has(name) && !platforms.web && (platforms.ios || platforms.android));
+        const hasGap = (!platforms.web || !platforms.ios || !platforms.android || !platforms.drupal) && (platforms.web || platforms.ios || platforms.android || platforms.drupal);
+        const isExcluded = (webOnlyEvents.has(name) && platforms.web && !platforms.ios && !platforms.android && !platforms.drupal) ||
+                           (nativeOnlyEvents.has(name) && !platforms.web && (platforms.ios || platforms.android || platforms.drupal));
         const rowClass = isExcluded ? 'excluded-row' : (hasGap ? 'gap-row' : '');
         return `<tr class="${rowClass}">
           <td><strong>${name}</strong></td>
           <td>${platforms.web ? '<span class="check">✓</span>' : '<span class="cross">✗</span>'}</td>
           <td>${platforms.ios ? '<span class="check">✓</span>' : '<span class="cross">✗</span>'}</td>
           <td>${platforms.android ? '<span class="check">✓</span>' : '<span class="cross">✗</span>'}</td>
+          <td>${platforms.drupal ? '<span class="check">✓</span>' : '<span class="cross">✗</span>'}</td>
         </tr>`;
       }).join('')}
     </table>

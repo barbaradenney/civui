@@ -14,12 +14,12 @@ CivUI enforces consistency and cross-platform parity through automated CI checks
 
 **Workflow:** `.github/workflows/parity.yml` (job: `parity`)
 
-The parity check extracts component APIs from all three platforms and compares them:
+The parity check extracts component APIs from all four platforms and compares them:
 
-1. **API extraction** -- Parses web (TypeScript), iOS (Swift), and Android (Kotlin) source files to extract props, events, and callbacks.
-2. **Cross-platform comparison** -- For each component, checks that every prop and event on the web side has a corresponding parameter or callback on iOS and Android.
-3. **Report generation** -- Produces `tools/parity-report.html` with a per-component breakdown showing which props and events are present or missing on each platform.
-4. **Threshold enforcement** -- Fails the build if any component falls below **95% parity**.
+1. **API extraction** -- Parses web (TypeScript), iOS (Swift), Android (Kotlin), and Drupal (SDC YAML/Twig) source files to extract props, events, and callbacks.
+2. **Cross-platform comparison** -- For each component, checks that every prop and event on the web side has a corresponding parameter or callback on iOS, Android, and Drupal.
+3. **Report generation** -- Produces `tools/parity-report.html` with a per-component breakdown showing which props and events are present or missing on each platform (4 columns: Web, iOS, Android, Drupal).
+4. **Threshold enforcement** -- Fails the build if any component falls below **85% parity**.
 5. **Artifact upload** -- The HTML report is uploaded as a CI artifact (available even on failure) so you can see exactly what's missing.
 
 **Run locally:**
@@ -43,6 +43,7 @@ The consistency checker scans all web component source files and verifies they f
 - **Render order** -- Templates follow the label, hint, error, control order
 - **ARIA attributes** -- Required accessibility attributes are present
 - **CSS class conventions** -- Tailwind utilities use the `civ-` prefix
+- **Drupal SDC coverage** -- Warns when a web component is missing a corresponding Drupal SDC (non-blocking)
 
 **Run locally:**
 
@@ -51,6 +52,22 @@ node --experimental-strip-types tools/consistency-check.ts
 ```
 
 Issues are reported with severity levels: `error` (fails CI), `warning` (logged but non-blocking), and `info` (suggestions).
+
+### Drupal SDC Validation
+
+**Workflow:** `.github/workflows/parity.yml` (job: `consistency`)
+
+The Drupal SDC validator checks all 69 Single Directory Components:
+
+- **YAML structure** -- Each SDC has a valid `.component.yml` with name, props, and slots
+- **Twig correctness** -- Templates render the correct `<civ-*>` web component tag
+- **Prop mapping** -- Props in the YAML schema map to attributes in the Twig template
+
+**Run locally:**
+
+```bash
+node --experimental-strip-types tools/validate-drupal-sdc.ts
+```
 
 ### Native Compile Check
 
@@ -74,7 +91,7 @@ Tracks the bundled output size of web packages to prevent unintended size regres
 
 ## Fixing Parity Failures
 
-When the parity check fails, the CI log will show which components are below 95%:
+When the parity check fails, the CI log will show which components are below 85%:
 
 ```
 FAIL: TextInput at 90% (minimum 95%)
@@ -85,9 +102,10 @@ To fix it:
 1. Download the parity report artifact from the CI run, or generate it locally.
 2. Open `tools/parity-report.html` and find the failing component.
 3. The report shows which props or events are missing on each platform.
-4. Add the missing props/callbacks to the native component files:
+4. Add the missing props/callbacks to the platform component files:
    - iOS: `packages/ios/Sources/CivUI/Civ{Name}.swift`
    - Android: `packages/android/src/main/kotlin/gov/civui/components/Civ{Name}.kt`
+   - Drupal: `packages/drupal/civui/components/{name}/{name}.component.yml` + `{name}.twig`
 5. Re-run the parity report locally to verify the fix.
 6. Push and confirm CI passes.
 
@@ -107,7 +125,8 @@ Fix the component source to follow the pattern described in the error message, t
 
 | Check | Threshold | Blocking |
 |-------|-----------|----------|
-| Parity | 95% per component | Yes |
+| Parity | 85% per component | Yes |
+| Drupal SDC validation | All SDCs valid | Yes |
 | Consistency errors | 0 errors | Yes |
 | Consistency warnings | Unlimited | No |
 | Native compile (Swift) | Must parse | Yes |

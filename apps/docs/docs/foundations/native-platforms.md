@@ -6,15 +6,16 @@ sidebar_label: Native Platforms
 
 # Native Platforms
 
-CivUI ships components for three platforms: web (Lit), iOS (SwiftUI), and Android (Jetpack Compose). All three share the same design tokens, the same component APIs, and the same accessibility standards.
+CivUI ships components for four platforms: Web (Lit), iOS (SwiftUI), Android (Jetpack Compose), and Drupal (SDC). All platforms share the same design tokens, the same component APIs, and the same accessibility standards.
 
 ## File Locations
 
 | Platform | Path | Convention |
 |----------|------|------------|
-| Web | `packages/forms/src/{name}/civ-{name}.ts` | Lit web components |
+| Web | `packages/{package}/src/{name}/civ-{name}.ts` | Lit web components |
 | iOS | `packages/ios/Sources/CivUI/Civ{Name}.swift` | SwiftUI views |
 | Android | `packages/android/src/main/kotlin/gov/civui/components/Civ{Name}.kt` | Jetpack Compose composables |
+| Drupal | `packages/drupal/civui/components/{name}/{name}.twig` | Twig SDC templates |
 
 ## How Native Components Mirror Web APIs
 
@@ -71,10 +72,64 @@ Some features are inherently web-specific and have no native counterpart:
 - **ElementInternals** -- browser form participation API
 - **Tailwind CSS utilities** -- native platforms use token constants directly
 
-## Adding a New Native Component
+## Drupal (Single Directory Components)
+
+CivUI includes a Drupal module at `packages/drupal/civui/` with 69 Single Directory Components for Drupal 10.3+ and Drupal 11. Each SDC consists of:
+
+- **`{name}.component.yml`** — Schema defining props, their types, and descriptions
+- **`{name}.twig`** — Twig template that renders the corresponding `<civ-*>` web component
+
+### Installation
+
+1. Copy `packages/drupal/civui/` into your Drupal site's `modules/custom/` folder
+2. Build the CivUI assets (`pnpm build`) and place them in the module
+3. Enable the module: `drush en civui`
+
+### Usage in Twig
+
+```twig
+{% include 'civui:form-field' with {
+  label: 'Email address',
+  hint: 'We will use this to contact you',
+  required: true,
+} %}
+  {% block default %}
+    {% include 'civui:text-input' with {
+      name: 'email',
+      type: 'email',
+    } %}
+  {% endblock %}
+{% endinclude %}
+```
+
+### Storybook Preview
+
+Drupal components can be previewed in Storybook using `vite-plugin-twig-drupal`. Story files are co-located next to each web component as `*.drupal.stories.ts` files. Run `pnpm storybook` and look for the "Drupal" sidebar entries.
+
+### Validation
+
+Run the SDC validator to check all 69 components:
+
+```bash
+node --experimental-strip-types tools/validate-drupal-sdc.ts
+```
+
+### Customization
+
+Themes can override any CivUI SDC by creating a matching component with the `replaces` key in the YAML schema:
+
+```yaml
+# your-theme/components/text-input/text-input.component.yml
+replaces: civui:text-input
+```
+
+## Adding a New Platform Component
 
 1. Build the web component first and get it passing all tests.
 2. Create `Civ{Name}.swift` in `packages/ios/Sources/CivUI/` with the same props and callbacks.
 3. Create `Civ{Name}.kt` in `packages/android/src/main/kotlin/gov/civui/components/` with the same props and callbacks.
-4. Run the parity report locally to verify 95%+ coverage: `node --experimental-strip-types tools/parity-report.ts`
-5. Push and confirm the parity CI check passes.
+4. Create a Drupal SDC in `packages/drupal/civui/components/{name}/` with `.component.yml` and `.twig` files.
+5. Create a co-located Drupal story: `civ-{name}.drupal.stories.ts` next to the web component source.
+6. Run the parity report locally to verify 85%+ coverage: `node --experimental-strip-types tools/parity-report.ts`
+7. Run the Drupal SDC validator: `node --experimental-strip-types tools/validate-drupal-sdc.ts`
+8. Push and confirm the parity CI check passes.

@@ -146,6 +146,14 @@ Use `removable` to show currently-active filters that the user can dismiss:
 
 <StoryEmbed id="actions-filter-chip-group--keyboard-navigation" />
 
+#### Appointment time slots
+
+<StoryEmbed id="actions-filter-chip-group--appointment-time-slots" />
+
+#### Appointment — Pre-selected
+
+<StoryEmbed id="actions-filter-chip-group--appointment-pre-selected" />
+
 #### Primary-style chips
 
 <StoryEmbed id="actions-filter-chip-group--primary-style-group" />
@@ -211,3 +219,28 @@ Disabled chips are skipped during arrow-key navigation.
   <civ-filter-chip label="A → Z" value="alpha"></civ-filter-chip>
 </civ-filter-chip-group>
 ```
+
+#### Appointment time picker
+
+Use `mode="single"` with compact `spacing="sm"` chips to show available appointment slots for each date. Mark unavailable times as `disabled`. Each date gets its own group so the user picks one time per day.
+
+```html
+<h3>Monday, May 5</h3>
+<civ-filter-chip-group mode="single" label="Available times for May 5">
+  <civ-filter-chip label="9:00 AM" value="0900" spacing="sm"></civ-filter-chip>
+  <civ-filter-chip label="9:30 AM" value="0930" spacing="sm"></civ-filter-chip>
+  <civ-filter-chip label="10:00 AM" value="1000" spacing="sm" disabled></civ-filter-chip>
+  <civ-filter-chip label="10:30 AM" value="1030" spacing="sm"></civ-filter-chip>
+  <civ-filter-chip label="11:00 AM" value="1100" spacing="sm"></civ-filter-chip>
+  <civ-filter-chip label="1:00 PM" value="1300" spacing="sm"></civ-filter-chip>
+  <civ-filter-chip label="2:00 PM" value="1400" spacing="sm"></civ-filter-chip>
+</civ-filter-chip-group>
+
+<script>
+  document.querySelector('civ-filter-chip-group').addEventListener('civ-change', (e) => {
+    console.log('selected time:', e.detail.value); // e.g. '1030'
+  });
+</script>
+```
+
+Use `chip-style="primary"` for stronger visual emphasis on the selected time slot.

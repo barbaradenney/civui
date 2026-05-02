@@ -96,6 +96,87 @@ export const KeyboardNavigation: Story = {
   `,
 };
 
+export const AppointmentTimeSlots: Story = {
+  name: 'Appointment Time Slots',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Use single-select chip groups to let users pick an available appointment time. Pair with a date picker or segmented control for the date, then show available slots as chips. Unavailable times are `disabled`. The compact `spacing="sm"` keeps the layout tight when there are many slots.',
+      },
+    },
+  },
+  render: () => html`
+    <div style="display: grid; gap: 1.5rem; max-width: 480px;">
+      <div>
+        <p style="margin: 0 0 0.5rem; font-weight: 700;">Monday, May 5</p>
+        <civ-filter-chip-group mode="single" label="Available times for May 5">
+          <civ-filter-chip label="9:00 AM" value="mon-0900" spacing="sm"></civ-filter-chip>
+          <civ-filter-chip label="9:30 AM" value="mon-0930" spacing="sm"></civ-filter-chip>
+          <civ-filter-chip label="10:00 AM" value="mon-1000" spacing="sm" disabled></civ-filter-chip>
+          <civ-filter-chip label="10:30 AM" value="mon-1030" spacing="sm"></civ-filter-chip>
+          <civ-filter-chip label="11:00 AM" value="mon-1100" spacing="sm"></civ-filter-chip>
+          <civ-filter-chip label="1:00 PM" value="mon-1300" spacing="sm"></civ-filter-chip>
+          <civ-filter-chip label="1:30 PM" value="mon-1330" spacing="sm" disabled></civ-filter-chip>
+          <civ-filter-chip label="2:00 PM" value="mon-1400" spacing="sm"></civ-filter-chip>
+          <civ-filter-chip label="2:30 PM" value="mon-1430" spacing="sm"></civ-filter-chip>
+          <civ-filter-chip label="3:00 PM" value="mon-1500" spacing="sm"></civ-filter-chip>
+        </civ-filter-chip-group>
+      </div>
+      <div>
+        <p style="margin: 0 0 0.5rem; font-weight: 700;">Tuesday, May 6</p>
+        <civ-filter-chip-group mode="single" label="Available times for May 6">
+          <civ-filter-chip label="9:00 AM" value="tue-0900" spacing="sm" disabled></civ-filter-chip>
+          <civ-filter-chip label="9:30 AM" value="tue-0930" spacing="sm" disabled></civ-filter-chip>
+          <civ-filter-chip label="10:00 AM" value="tue-1000" spacing="sm"></civ-filter-chip>
+          <civ-filter-chip label="10:30 AM" value="tue-1030" spacing="sm"></civ-filter-chip>
+          <civ-filter-chip label="11:00 AM" value="tue-1100" spacing="sm"></civ-filter-chip>
+          <civ-filter-chip label="1:00 PM" value="tue-1300" spacing="sm"></civ-filter-chip>
+          <civ-filter-chip label="1:30 PM" value="tue-1330" spacing="sm"></civ-filter-chip>
+          <civ-filter-chip label="2:00 PM" value="tue-1400" spacing="sm" disabled></civ-filter-chip>
+        </civ-filter-chip-group>
+      </div>
+      <div>
+        <p style="margin: 0 0 0.5rem; font-weight: 700;">Wednesday, May 7</p>
+        <civ-filter-chip-group mode="single" label="Available times for May 7">
+          <civ-filter-chip label="9:00 AM" value="wed-0900" spacing="sm"></civ-filter-chip>
+          <civ-filter-chip label="10:00 AM" value="wed-1000" spacing="sm"></civ-filter-chip>
+          <civ-filter-chip label="11:00 AM" value="wed-1100" spacing="sm"></civ-filter-chip>
+          <civ-filter-chip label="2:00 PM" value="wed-1400" spacing="sm"></civ-filter-chip>
+          <civ-filter-chip label="3:00 PM" value="wed-1500" spacing="sm"></civ-filter-chip>
+        </civ-filter-chip-group>
+      </div>
+    </div>
+  `,
+};
+
+export const AppointmentWithSelection: Story = {
+  name: 'Appointment — Pre-selected',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Shows a selected time slot with primary chip style for stronger visual emphasis. The selected chip uses `chip-style="primary"` to stand out as the confirmed choice.',
+      },
+    },
+  },
+  render: () => html`
+    <div style="max-width: 480px;">
+      <p style="margin: 0 0 0.5rem; font-weight: 700;">Monday, May 5</p>
+      <civ-filter-chip-group mode="single" label="Available times for May 5">
+        <civ-filter-chip label="9:00 AM" value="0900" spacing="sm" chip-style="primary"></civ-filter-chip>
+        <civ-filter-chip label="9:30 AM" value="0930" spacing="sm" chip-style="primary"></civ-filter-chip>
+        <civ-filter-chip label="10:00 AM" value="1000" spacing="sm" chip-style="primary" disabled></civ-filter-chip>
+        <civ-filter-chip label="10:30 AM" value="1030" spacing="sm" chip-style="primary" selected></civ-filter-chip>
+        <civ-filter-chip label="11:00 AM" value="1100" spacing="sm" chip-style="primary"></civ-filter-chip>
+        <civ-filter-chip label="1:00 PM" value="1300" spacing="sm" chip-style="primary"></civ-filter-chip>
+        <civ-filter-chip label="1:30 PM" value="1330" spacing="sm" chip-style="primary" disabled></civ-filter-chip>
+        <civ-filter-chip label="2:00 PM" value="1400" spacing="sm" chip-style="primary"></civ-filter-chip>
+      </civ-filter-chip-group>
+    </div>
+  `,
+};
+
 export const PrimaryStyleGroup: Story = {
   name: 'Primary-style chips',
   render: () => html`

@@ -1,6 +1,7 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { CivFormElement, dispatch, renderLegend, renderFormHeader, buildDescribedBy, interpolate, t } from '@civui/core';
+import type { HeadingLevel, LabelSize } from '@civui/core';
 import { resolvePresetOptions } from '@civui/core';
 import '@civui/inputs';
 
@@ -35,6 +36,12 @@ const EMPTY_NAME: NameValue = { first: '', middle: '', last: '', suffix: '' };
 export class CivName extends CivFormElement {
   /** Fieldset legend displayed above the name fields. */
   @property({ type: String }) legend = '';
+
+  /** Promote the legend to a heading via `role="heading"` + `aria-level=N`. */
+  @property({ type: Number, attribute: 'heading-level' }) headingLevel?: HeadingLevel;
+
+  /** Visual size of the legend. */
+  @property({ type: String }) size?: LabelSize;
 
   /**
    * Label format for name fields.
@@ -104,7 +111,7 @@ export class CivName extends CivFormElement {
         aria-required="${this.required || nothing}"
         ?disabled="${this.disabled}"
       >
-        ${renderFormHeader({ label: renderLegend({ legend: this.legend || this.label, required: this.required, textSizeClass: '' }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
+        ${renderFormHeader({ label: renderLegend({ legend: this.legend || this.label, required: this.required, headingLevel: this.headingLevel, size: this.size }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
 
         <civ-form-field label="${firstLabel}" error="${this.firstError}">
           <civ-text-input

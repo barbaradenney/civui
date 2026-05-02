@@ -4,6 +4,7 @@ import { CivBaseElement } from '../base/civ-base-element.js';
 import { LightDomSlotMixin } from '../base/light-dom-mixins.js';
 import type { SlotConfig } from '../base/light-dom-mixins.js';
 import { renderLegend, renderFormHeader, buildDescribedBy } from '../templates/form-templates.js';
+import type { HeadingLevel, LabelSize } from '../templates/form-templates.js';
 
 const CIV_CONTROL_SELECTOR = '[data-civ-form-field]';
 
@@ -37,6 +38,19 @@ export class CivFormFieldset extends LightDomSlotMixin(CivBaseElement) {
   @property({ type: Boolean, reflect: true }) required = false;
   @property({ type: Boolean, reflect: true }) disabled = false;
   @property({ type: String, attribute: 'required-message' }) requiredMessage = '';
+
+  /**
+   * Promote the legend to a heading via `role="heading"` + `aria-level=N`.
+   * Use sparingly — typically only for the primary question on a single-question
+   * page (level 1) or the top legend inside a form-step (level 2 or 3).
+   */
+  @property({ type: Number, attribute: 'heading-level' }) headingLevel?: HeadingLevel;
+
+  /**
+   * Visual size of the legend. Default (omitted) and `sm` render at body size;
+   * `md`/`lg`/`xl` increase the size for use as a section/page heading.
+   */
+  @property({ type: String }) size?: LabelSize;
 
   private _hintId = this.generateId('hint');
   private _errorId = this.generateId('error');
@@ -83,7 +97,8 @@ export class CivFormFieldset extends LightDomSlotMixin(CivBaseElement) {
           label: renderLegend({
             legend: this.legend,
             required: this.required,
-            textSizeClass: '',
+            headingLevel: this.headingLevel,
+            size: this.size,
           }),
           hintId: this._hintId,
           hint: this.hint,

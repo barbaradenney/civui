@@ -1,6 +1,7 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { CivBaseElement, dispatch, renderLegend, renderFormHeader, buildDescribedBy, announce, interpolate, t } from '@civui/core';
+import type { HeadingLevel, LabelSize } from '@civui/core';
 import '@civui/inputs';
 import '@civui/actions/button';
 import '@civui/actions/action-button';
@@ -40,6 +41,12 @@ import '../form-step/civ-form-step.js';
 export class CivRepeater extends CivBaseElement {
   /** Fieldset legend. */
   @property({ type: String }) legend = '';
+
+  /** Promote the legend to a heading via `role="heading"` + `aria-level=N`. */
+  @property({ type: Number, attribute: 'heading-level' }) headingLevel?: HeadingLevel;
+
+  /** Visual size of the legend. */
+  @property({ type: String }) size?: LabelSize;
 
   /** Base name for indexed form fields. */
   @property({ type: String }) name = '';
@@ -148,7 +155,7 @@ export class CivRepeater extends CivBaseElement {
         aria-invalid="${this.error ? 'true' : nothing}"
         ?disabled="${this.disabled}"
       >
-        ${renderFormHeader({ label: renderLegend({ legend: legendText, required: showList ? this.required : false, textSizeClass: '' }), hintId: this._hintId, hint: showList ? this.hint : '', errorId: this._errorId, error: showList ? this.error : '', fieldset: true })}
+        ${renderFormHeader({ label: renderLegend({ legend: legendText, required: showList ? this.required : false, headingLevel: this.headingLevel, size: this.size }), hintId: this._hintId, hint: showList ? this.hint : '', errorId: this._errorId, error: showList ? this.error : '', fieldset: true })}
 
         <div data-civ-repeater-rows class="${this._wizardActive ? 'civ-hidden' : ''}"></div>
 

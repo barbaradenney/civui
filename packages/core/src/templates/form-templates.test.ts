@@ -59,6 +59,28 @@ describe('renderLabel', () => {
     const label = container.querySelector('label');
     expect(label?.hasAttribute('for')).toBe(false);
   });
+
+  it('applies size modifier classes', () => {
+    expect(renderToString(renderLabel({ label: 'Q', inputId: 'i', required: false, size: 'lg' }))).toContain('civ-label--lg');
+    expect(renderToString(renderLabel({ label: 'Q', inputId: 'i', required: false, size: 'xl' }))).toContain('civ-label--xl');
+  });
+
+  it('renders with no size modifier when size is omitted or sm', () => {
+    expect(renderToString(renderLabel({ label: 'Q', inputId: 'i', required: false }))).not.toContain('civ-label--');
+    expect(renderToString(renderLabel({ label: 'Q', inputId: 'i', required: false, size: 'sm' }))).not.toContain('civ-label--');
+  });
+
+  it('promotes label to heading when headingLevel is set', () => {
+    const output = renderToString(renderLabel({ label: 'Q', inputId: 'i', required: false, headingLevel: 1 }));
+    expect(output).toContain('role="heading"');
+    expect(output).toContain('aria-level="1"');
+  });
+
+  it('does not add heading attributes when headingLevel is omitted', () => {
+    const output = renderToString(renderLabel({ label: 'Q', inputId: 'i', required: false }));
+    expect(output).not.toContain('role="heading"');
+    expect(output).not.toContain('aria-level');
+  });
 });
 
 describe('renderLegend', () => {
@@ -83,17 +105,26 @@ describe('renderLegend', () => {
     expect(output).toContain('civ-required-mark');
   });
 
-  it('accepts custom text size class', () => {
-    const result = renderLegend({ legend: 'Section', required: false, textSizeClass: 'civ-text-xl' });
-    const output = renderToString(result);
-    expect(output).toContain('civ-text-xl');
+  it('applies size modifier classes', () => {
+    expect(renderToString(renderLegend({ legend: 'Section', required: false, size: 'lg' }))).toContain('civ-legend--lg');
+    expect(renderToString(renderLegend({ legend: 'Section', required: false, size: 'xl' }))).toContain('civ-legend--xl');
   });
 
-  it('renders with no size class when textSizeClass is empty', () => {
-    const result = renderLegend({ legend: 'Section', required: false, textSizeClass: '' });
-    const output = renderToString(result);
-    expect(output).toContain('<legend');
-    expect(output).not.toContain('civ-text-lg');
+  it('renders with no size modifier when size is omitted or sm', () => {
+    expect(renderToString(renderLegend({ legend: 'Section', required: false }))).not.toContain('civ-legend--');
+    expect(renderToString(renderLegend({ legend: 'Section', required: false, size: 'sm' }))).not.toContain('civ-legend--');
+  });
+
+  it('promotes legend to heading when headingLevel is set', () => {
+    const output = renderToString(renderLegend({ legend: 'Section', required: false, headingLevel: 2 }));
+    expect(output).toContain('role="heading"');
+    expect(output).toContain('aria-level="2"');
+  });
+
+  it('does not add heading attributes when headingLevel is omitted', () => {
+    const output = renderToString(renderLegend({ legend: 'Section', required: false }));
+    expect(output).not.toContain('role="heading"');
+    expect(output).not.toContain('aria-level');
   });
 
   it('renders optional legendId', () => {

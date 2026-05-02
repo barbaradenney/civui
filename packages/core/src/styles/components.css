@@ -31,6 +31,24 @@
     text-box-edge: cap alphabetic;
   }
 
+  /* Size variants — bump the visual prominence when a label/legend doubles as
+     the page or section heading. Default (.civ-label / .civ-legend with no
+     modifier) and `--sm` both render at body size. */
+  .civ-label--md,
+  .civ-legend--md {
+    font-size: var(--civ-typography-fontSize-lg);
+  }
+
+  .civ-label--lg,
+  .civ-legend--lg {
+    font-size: var(--civ-typography-fontSize-xl);
+  }
+
+  .civ-label--xl,
+  .civ-legend--xl {
+    font-size: var(--civ-typography-fontSize-2xl);
+  }
+
   .civ-text-body {
     font-size: var(--civ-typography-fontSize-base);
     color: var(--civ-color-base-darkest);

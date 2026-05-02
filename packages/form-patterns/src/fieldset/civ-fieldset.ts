@@ -3,7 +3,7 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { CivBaseElement, LightDomSlotMixin, renderLegend, renderFormHeader, buildDescribedBy } from '@civui/core';
-import type { SlotConfig } from '@civui/core';
+import type { HeadingLevel, LabelSize, SlotConfig } from '@civui/core';
 
 /**
  * CivUI Fieldset
@@ -29,6 +29,12 @@ export class CivFieldset extends LightDomSlotMixin(CivBaseElement) {
   @property({ type: Boolean, reflect: true }) required = false;
   @property({ type: Boolean, reflect: true }) disabled = false;
 
+  /** Promote the legend to a heading via `role="heading"` + `aria-level=N`. */
+  @property({ type: Number, attribute: 'heading-level' }) headingLevel?: HeadingLevel;
+
+  /** Visual size of the legend. */
+  @property({ type: String }) size?: LabelSize;
+
   private _hintId = this.generateId('hint');
   private _errorId = this.generateId('error');
   override firstUpdated(): void {
@@ -46,7 +52,7 @@ export class CivFieldset extends LightDomSlotMixin(CivBaseElement) {
         aria-invalid="${this.error ? 'true' : nothing}"
         ?disabled="${this.disabled}"
       >
-        ${renderFormHeader({ label: renderLegend({ legend: this.legend, required: this.required, textSizeClass: '' }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
+        ${renderFormHeader({ label: renderLegend({ legend: this.legend, required: this.required, headingLevel: this.headingLevel, size: this.size }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
         <div data-civ-fieldset-content></div>
       </fieldset>
     `;

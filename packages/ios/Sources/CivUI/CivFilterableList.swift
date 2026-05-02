@@ -8,7 +8,9 @@ import SwiftUI
 public struct CivFilterableList<Content: View, Filters: View>: View {
     public var label: String = ""
     public var noResultsMessage: String = "No results found."
+    public var announceDelay: Int = 300
     public var resultCountHidden: Bool = false
+    public var filterAttribute: String = "data-filter"
 
     public var filters: Filters
     public var content: Content
@@ -16,13 +18,17 @@ public struct CivFilterableList<Content: View, Filters: View>: View {
     public init(
         label: String = "",
         noResultsMessage: String = "No results found.",
+        announceDelay: Int = 300,
         resultCountHidden: Bool = false,
+        filterAttribute: String = "data-filter",
         @ViewBuilder filters: () -> Filters,
         @ViewBuilder content: () -> Content
     ) {
         self.label = label
         self.noResultsMessage = noResultsMessage
+        self.announceDelay = announceDelay
         self.resultCountHidden = resultCountHidden
+        self.filterAttribute = filterAttribute
         self.filters = filters()
         self.content = content()
     }

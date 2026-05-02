@@ -54,6 +54,7 @@ const config: StorybookConfig = {
       '@civui/inputs/routing-number': resolve(root, 'packages/inputs/src/routing-number/index.ts'),
       '@civui/inputs/country': resolve(root, 'packages/inputs/src/country/index.ts'),
       '@civui/inputs/va-file-number': resolve(root, 'packages/inputs/src/va-file-number/index.ts'),
+      '@civui/inputs/text-input': resolve(root, 'packages/inputs/src/text-input/index.ts'),
       '@civui/inputs/select': resolve(root, 'packages/inputs/src/select/index.ts'),
       '@civui/inputs': resolve(root, 'packages/inputs/src/index.ts'),
       '@civui/controls/checkbox': resolve(root, 'packages/controls/src/checkbox/index.ts'),

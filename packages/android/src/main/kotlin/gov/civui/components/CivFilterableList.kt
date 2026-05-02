@@ -13,7 +13,9 @@ import androidx.compose.runtime.Composable
 fun CivFilterableList(
     label: String = "",
     noResultsMessage: String = "No results found.",
+    announceDelay: Int = 300,
     resultCountHidden: Boolean = false,
+    filterAttribute: String = "data-filter",
     filters: @Composable () -> Unit = {},
     content: @Composable () -> Unit = {},
 ) {

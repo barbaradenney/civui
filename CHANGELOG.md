@@ -12,6 +12,7 @@ across all 21 components.
 
 ### Added
 
+- **`civ-form-field` / `civ-form-fieldset` / `civ-fieldset` / `civ-repeater` / all 8 compound components** — `heading-level` (1-6) and `size` (sm/md/lg/xl) props. `heading-level` promotes the `<label>`/`<legend>` to a heading via `role="heading"` + `aria-level=N` for screen-reader navigation while preserving the native element. `size` is an independent visual size variant for use as a section/page heading. Supports the VA.gov / GOV.UK "one question per page" pattern (WCAG 2.4.6 / 2.4.10).
 - **`civ-text-input`** — Character counter when `maxlength` is set (visual + 1s-debounced `aria-live` polite announcement). Suppressed when a mask is active.
 - **`civ-text-input`** — `leading-icon` / `trailing-icon` attributes (decorative civ-icon overlay inside the input). Optional `leading-icon-label` / `trailing-icon-label` exposes the icon as `role="img"` for assistive tech. Prefix/suffix and the clear button take precedence on the same edge.
 - **`civ-textarea`** — `minlength` prop (was missing) and declarative `validate="length"` that runs on blur against `minlength` / `maxlength`.
@@ -42,6 +43,7 @@ across all 21 components.
 
 ### Fixed
 
+- **`civ-checkbox` / `civ-radio`** — Replaced flex-with-inner-div layout with a 2-column CSS grid (`.civ-check-row`). The input is grid-anchored to row 1 with `align-self: center`, so it stays vertically centered on the *first line* of the label whether or not a description is present — fixes the previous behavior where the input drifted to the midpoint of the label-plus-description block.
 - **`civ-text-input`** — Clear button now resets mask/validate errors and has a focus-visible ring; mask-stripped initial value is captured as the form-reset default; empty `name` no longer rendered.
 - **`civ-date-picker`** — Stale errors clear on `_onClear`, empty text input, dialog selection, and successful parse. `civ-input` now fires on dialog selection. Locale cache keyed on `locale|weekStartsOn`.
 - **`civ-toggle` / `civ-checkbox`** — Removed duplicate `civ-reset` dispatch in `formResetCallback` overrides.

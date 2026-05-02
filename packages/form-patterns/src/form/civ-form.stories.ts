@@ -334,7 +334,7 @@ export const GovernmentInquiryForm: Story = {
   render: () => html`
     <civ-form
       form-label="General inquiry"
-      @civ-submit="${(e: CustomEvent) => {
+      @civ-submit="${() => {
         alert('Inquiry submitted! Reference: INQ-2026-' + Math.floor(Math.random() * 9999));
       }}"
     >

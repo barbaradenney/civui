@@ -32,8 +32,8 @@ const schemaDir = join(rootDir, 'schema', 'src', 'components');
 // Output directories
 const outputDirs = {
   web: (name: string) => join(rootDir, 'codegen', 'dist', 'web', name),
-  ios: (name: string) => join(rootDir, 'codegen', 'dist', 'ios'),
-  android: (name: string) => join(rootDir, 'codegen', 'dist', 'android'),
+  ios: (_name: string) => join(rootDir, 'codegen', 'dist', 'ios'),
+  android: (_name: string) => join(rootDir, 'codegen', 'dist', 'android'),
 };
 
 type Platform = 'web' | 'ios' | 'android';

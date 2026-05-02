@@ -51,7 +51,7 @@ export const SimpleForm: Story = {
 export const MultiStepForm: Story = {
   name: 'Multi-Step Form',
   render: () => html`
-    <civ-form @civ-submit="${(e: CustomEvent) => alert('Submitted!')}">
+    <civ-form @civ-submit="${() => alert('Submitted!')}">
       <civ-form-step>
         <div data-step-label="Personal info">
           <civ-name legend="Your name" name="name" required></civ-name>

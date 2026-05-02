@@ -12,7 +12,7 @@ const render = (props: Record<string, any>) => html`${unsafeHTML(template(props)
 
 const meta: Meta = {
   title: 'Core/Form Fieldset/Drupal SDC',
-  tags: ['autodocs'],
+
 };
 export default meta;
 type Story = StoryObj;

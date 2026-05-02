@@ -10,7 +10,7 @@ const render = (props: Record<string, any>) => html`${unsafeHTML(template(props)
 
 const meta: Meta = {
   title: 'Overlays/Action Sheet/Drupal SDC',
-  tags: ['autodocs'],
+
 };
 export default meta;
 type Story = StoryObj;

@@ -11,7 +11,7 @@ const render = (twigFn: (ctx: Record<string, any>) => string, props: Record<stri
 
 const meta: Meta = {
   title: 'Forms/Form/Progress Steps/Drupal SDC',
-  tags: ['autodocs'],
+
 };
 export default meta;
 type Story = StoryObj;

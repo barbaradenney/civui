@@ -30,3 +30,24 @@ export const Default: Story = {
     });
   },
 };
+
+export const MultipleFields: Story = {
+  name: 'Multiple Conditional Fields',
+  render: () => {
+    const field1 = formFieldTemplate({
+      label: 'Service branch',
+      required: true,
+      default: textInputTemplate({ name: 'branch', required: true }),
+    });
+    const field2 = formFieldTemplate({
+      label: 'Discharge date',
+      required: true,
+      default: textInputTemplate({ name: 'discharge_date', required: true }),
+    });
+    return render({
+      when: 'veteran',
+      equals: 'yes',
+      default: field1 + field2,
+    });
+  },
+};

@@ -20,3 +20,20 @@ export const Default: Story = {
     required: true,
   }),
 };
+
+export const WithError: Story = {
+  render: () => render({
+    legend: 'Marriage history',
+    name: 'marriage_err',
+    required: true,
+    error: 'Complete your marriage history information',
+  }),
+};
+
+export const Disabled: Story = {
+  render: () => render({
+    legend: 'Marriage history',
+    name: 'marriage_dis',
+    disabled: true,
+  }),
+};

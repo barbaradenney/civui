@@ -20,3 +20,20 @@ export const Default: Story = {
     required: true,
   }),
 };
+
+export const WithError: Story = {
+  render: () => render({
+    legend: 'Direct deposit information',
+    name: 'deposit_err',
+    required: true,
+    error: 'Complete all banking information fields',
+  }),
+};
+
+export const Disabled: Story = {
+  render: () => render({
+    legend: 'Direct deposit information',
+    name: 'deposit_dis',
+    disabled: true,
+  }),
+};

@@ -19,3 +19,42 @@ export const Default: Story = {
     variant: 'info',
   }),
 };
+
+export const Info: Story = {
+  render: () => render({
+    count: 3,
+    variant: 'info',
+  }),
+};
+
+export const Warning: Story = {
+  render: () => render({
+    count: 2,
+    variant: 'warning',
+  }),
+};
+
+export const Error: Story = {
+  render: () => render({
+    count: 1,
+    variant: 'error',
+  }),
+};
+
+export const Success: Story = {
+  render: () => render({
+    count: 10,
+    variant: 'success',
+  }),
+};
+
+export const AllVariants: Story = {
+  name: 'All Variants',
+  render: () => {
+    const info = template({ count: 3, variant: 'info' });
+    const warning = template({ count: 2, variant: 'warning' });
+    const error = template({ count: 1, variant: 'error' });
+    const success = template({ count: 10, variant: 'success' });
+    return html`${unsafeHTML(info + warning + error + success)}`;
+  },
+};

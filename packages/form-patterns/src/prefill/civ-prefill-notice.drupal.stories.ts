@@ -18,3 +18,10 @@ export const Default: Story = {
     profile_href: '#/profile',
   }),
 };
+
+export const CustomProfileLink: Story = {
+  name: 'Custom Profile Link',
+  render: () => render({
+    profile_href: '#/settings/profile',
+  }),
+};

@@ -27,3 +27,39 @@ export const Default: Story = {
     return render({ default: nameField });
   },
 };
+
+export const MultipleFields: Story = {
+  name: 'Multiple Fields',
+  render: () => {
+    const firstName = formFieldTemplate({
+      label: 'First name',
+      required: true,
+      default: textInputTemplate({ name: 'firstName', required: true }),
+    });
+    const lastName = formFieldTemplate({
+      label: 'Last name',
+      required: true,
+      default: textInputTemplate({ name: 'lastName', required: true }),
+    });
+    const email = formFieldTemplate({
+      label: 'Email address',
+      hint: 'Work email preferred',
+      required: true,
+      default: textInputTemplate({ name: 'email', type: 'email', required: true }),
+    });
+    return render({ default: firstName + lastName + email });
+  },
+};
+
+export const WithErrors: Story = {
+  name: 'With Errors',
+  render: () => {
+    const nameField = formFieldTemplate({
+      label: 'Full name',
+      required: true,
+      error: 'Enter your full name',
+      default: textInputTemplate({ name: 'fullName', required: true }),
+    });
+    return render({ default: nameField });
+  },
+};

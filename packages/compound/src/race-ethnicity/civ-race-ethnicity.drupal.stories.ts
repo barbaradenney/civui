@@ -20,3 +20,20 @@ export const Default: Story = {
     required: true,
   }),
 };
+
+export const WithError: Story = {
+  render: () => render({
+    legend: 'Race, ethnicity, and origin',
+    name: 'race_ethnicity_err',
+    required: true,
+    error: 'Select at least one option',
+  }),
+};
+
+export const Disabled: Story = {
+  render: () => render({
+    legend: 'Race, ethnicity, and origin',
+    name: 'race_ethnicity_dis',
+    disabled: true,
+  }),
+};

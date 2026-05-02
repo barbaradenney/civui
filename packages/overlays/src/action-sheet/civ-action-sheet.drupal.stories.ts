@@ -25,3 +25,25 @@ export const Default: Story = {
     return render({ open: true, default: actions });
   },
 };
+
+export const TwoActions: Story = {
+  name: 'Two Actions',
+  render: () => {
+    const actions = [
+      buttonTemplate({ label: 'Confirm', type: 'submit' }),
+      buttonTemplate({ label: 'Cancel', variant: 'tertiary' }),
+    ].join('');
+    return render({ open: true, default: actions });
+  },
+};
+
+export const DangerAction: Story = {
+  name: 'Danger Action',
+  render: () => {
+    const actions = [
+      buttonTemplate({ label: 'Delete permanently', danger: true }),
+      buttonTemplate({ label: 'Cancel', variant: 'tertiary' }),
+    ].join('');
+    return render({ open: true, default: actions });
+  },
+};

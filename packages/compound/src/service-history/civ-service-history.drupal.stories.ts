@@ -20,3 +20,20 @@ export const Default: Story = {
     required: true,
   }),
 };
+
+export const WithError: Story = {
+  render: () => render({
+    legend: 'Service history',
+    name: 'service_err',
+    required: true,
+    error: 'Complete your service history information',
+  }),
+};
+
+export const Disabled: Story = {
+  render: () => render({
+    legend: 'Service history',
+    name: 'service_dis',
+    disabled: true,
+  }),
+};

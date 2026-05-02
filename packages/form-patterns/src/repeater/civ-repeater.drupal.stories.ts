@@ -21,3 +21,23 @@ export const Default: Story = {
     mode: 'detail',
   }),
 };
+
+export const ListMode: Story = {
+  name: 'List Mode',
+  render: () => render({
+    legend: 'Previous employers',
+    name: 'employers',
+    item_label: 'Employer',
+    mode: 'list',
+  }),
+};
+
+export const Disabled: Story = {
+  render: () => render({
+    legend: 'Dependents',
+    name: 'dependents_dis',
+    item_label: 'Dependent',
+    mode: 'detail',
+    disabled: true,
+  }),
+};

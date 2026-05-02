@@ -34,3 +34,25 @@ export const Default: Story = {
     return render({ default: city + state });
   },
 };
+
+export const ThreeColumns: Story = {
+  name: 'Three Columns',
+  render: () => {
+    const city = formFieldTemplate({
+      label: 'City',
+      required: true,
+      default: textInputTemplate({ name: 'city', required: true }),
+    });
+    const state = formFieldTemplate({
+      label: 'State',
+      required: true,
+      default: selectTemplate({ name: 'state', preset: 'us-state', required: true }),
+    });
+    const zip = formFieldTemplate({
+      label: 'ZIP code',
+      required: true,
+      default: textInputTemplate({ name: 'zip', required: true }),
+    });
+    return render({ default: city + state + zip });
+  },
+};

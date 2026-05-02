@@ -20,3 +20,20 @@ export const Default: Story = {
     required: true,
   }),
 };
+
+export const WithError: Story = {
+  render: () => render({
+    legend: 'Mailing address',
+    name: 'mailing_err',
+    required: true,
+    error: 'Complete all required address fields',
+  }),
+};
+
+export const Disabled: Story = {
+  render: () => render({
+    legend: 'Mailing address',
+    name: 'mailing_dis',
+    disabled: true,
+  }),
+};

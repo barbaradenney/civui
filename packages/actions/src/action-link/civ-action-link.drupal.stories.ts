@@ -20,3 +20,31 @@ export const Default: Story = {
     label: 'VA benefits hotline',
   }),
 };
+
+export const EmailLink: Story = {
+  name: 'Email',
+  render: () => render({
+    type: 'email',
+    email: 'help@va.gov',
+    label: 'Email VA support',
+  }),
+};
+
+export const ExternalLink: Story = {
+  name: 'External',
+  render: () => render({
+    type: 'external',
+    href: 'https://www.va.gov',
+    label: 'Visit VA.gov',
+  }),
+};
+
+export const AllTypes: Story = {
+  name: 'All Types',
+  render: () => {
+    const phone = template({ type: 'phone', number: '8005271000', label: 'VA benefits hotline' });
+    const email = template({ type: 'email', email: 'help@va.gov', label: 'Email VA support' });
+    const external = template({ type: 'external', href: 'https://www.va.gov', label: 'Visit VA.gov' });
+    return html`${unsafeHTML(phone + email + external)}`;
+  },
+};

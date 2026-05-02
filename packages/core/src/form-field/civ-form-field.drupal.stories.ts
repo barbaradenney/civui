@@ -47,3 +47,77 @@ export const FormGroup: Story = {
     return render(formGroupTemplate, { default: firstName + lastName });
   },
 };
+
+export const WithHint: Story = {
+  render: () => {
+    const input = textInputTemplate({ name: 'phone', type: 'tel' });
+    return render(template, {
+      label: 'Phone number',
+      hint: 'We may call this number to verify your identity',
+      default: input,
+    });
+  },
+};
+
+export const WithError: Story = {
+  render: () => {
+    const input = textInputTemplate({ name: 'email_err', type: 'email' });
+    return render(template, {
+      label: 'Email address',
+      error: 'Enter a valid email address',
+      default: input,
+    });
+  },
+};
+
+export const Required: Story = {
+  render: () => {
+    const input = textInputTemplate({ name: 'name_req', required: true });
+    return render(template, {
+      label: 'Full name',
+      required: true,
+      default: input,
+    });
+  },
+};
+
+export const Disabled: Story = {
+  render: () => {
+    const input = textInputTemplate({ name: 'name_dis', disabled: true });
+    return render(template, {
+      label: 'Full name',
+      disabled: true,
+      default: input,
+    });
+  },
+};
+
+export const AllStates: Story = {
+  render: () => {
+    const defaultField = template({
+      label: 'Default',
+      default: textInputTemplate({ name: 'ff1' }),
+    });
+    const hintField = template({
+      label: 'With hint',
+      hint: 'Hint text here',
+      default: textInputTemplate({ name: 'ff2' }),
+    });
+    const errorField = template({
+      label: 'With error',
+      error: 'This field has an error',
+      default: textInputTemplate({ name: 'ff3' }),
+    });
+    const requiredField = template({
+      label: 'Required',
+      required: true,
+      default: textInputTemplate({ name: 'ff4', required: true }),
+    });
+    const disabledField = template({
+      label: 'Disabled',
+      disabled: true,
+      default: textInputTemplate({ name: 'ff5', disabled: true }),
+    });
+    return html`${unsafeHTML(defaultField + hintField + errorField + requiredField + disabledField)}`;
+  },
+};

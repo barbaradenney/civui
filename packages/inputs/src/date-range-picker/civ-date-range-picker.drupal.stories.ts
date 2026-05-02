@@ -19,3 +19,46 @@ export const Default: Story = {
     min: '2026-01-01',
   }),
 };
+
+export const WithHint: Story = {
+  render: () => render({
+    name: 'service_dates',
+    min: '2026-01-01',
+    hint: 'Select start and end dates for your service period',
+  }),
+};
+
+export const WithError: Story = {
+  render: () => render({
+    name: 'service_dates',
+    min: '2026-01-01',
+    error: 'End date must be after start date',
+  }),
+};
+
+export const Required: Story = {
+  render: () => render({
+    name: 'service_dates',
+    min: '2026-01-01',
+    required: true,
+  }),
+};
+
+export const Disabled: Story = {
+  render: () => render({
+    name: 'service_dates',
+    min: '2026-01-01',
+    disabled: true,
+  }),
+};
+
+export const AllStates: Story = {
+  render: () => {
+    const defaultState = template({ name: 'dr1', min: '2026-01-01' });
+    const hintState = template({ name: 'dr2', min: '2026-01-01', hint: 'Select date range' });
+    const errorState = template({ name: 'dr3', min: '2026-01-01', error: 'Invalid date range' });
+    const requiredState = template({ name: 'dr4', min: '2026-01-01', required: true });
+    const disabledState = template({ name: 'dr5', min: '2026-01-01', disabled: true });
+    return html`${unsafeHTML(defaultState + hintState + errorState + requiredState + disabledState)}`;
+  },
+};

@@ -21,3 +21,22 @@ export const Default: Story = {
     required: true,
   }),
 };
+
+export const WithError: Story = {
+  render: () => render({
+    legend: 'Veteran signature',
+    name: 'signature_err',
+    statement: 'I certify the information above is accurate and complete to the best of my knowledge and belief.',
+    required: true,
+    error: 'You must sign to continue',
+  }),
+};
+
+export const Disabled: Story = {
+  render: () => render({
+    legend: 'Veteran signature',
+    name: 'signature_dis',
+    statement: 'I certify the information above is accurate and complete to the best of my knowledge and belief.',
+    disabled: true,
+  }),
+};

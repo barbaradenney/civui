@@ -19,3 +19,11 @@ export const Default: Story = {
     href: '#main-content',
   }),
 };
+
+export const CustomLabel: Story = {
+  name: 'Custom Label',
+  render: () => render({
+    label: 'Skip to form',
+    href: '#form-start',
+  }),
+};

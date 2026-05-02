@@ -21,3 +21,23 @@ export const Default: Story = {
     default: '<p>Are you sure you want to submit this application? This action cannot be undone.</p>',
   }),
 };
+
+export const WithLongContent: Story = {
+  name: 'Long Content',
+  render: () => render({
+    heading: 'Terms and conditions',
+    heading_level: 2,
+    open: true,
+    default: '<p>By submitting this application, you certify that all information provided is accurate.</p><p>You understand that providing false information may result in penalties.</p><p>You agree to notify the agency of any changes to your circumstances.</p>',
+  }),
+};
+
+export const Danger: Story = {
+  render: () => render({
+    heading: 'Delete application',
+    heading_level: 3,
+    open: true,
+    danger: true,
+    default: '<p>This will permanently delete your application and all associated data. This action cannot be undone.</p>',
+  }),
+};

@@ -31,3 +31,28 @@ export const ProgressBar: Story = {
     status: '2 of 5',
   }),
 };
+
+export const MidProgress: Story = {
+  name: 'Mid Progress',
+  render: () => render(progressStepsTemplate, {
+    current: 3,
+  }),
+};
+
+export const ProgressBarFull: Story = {
+  name: 'Progress Bar Full',
+  render: () => render(progressBarTemplate, {
+    value: 100,
+    label: 'Progress',
+    status: '5 of 5',
+  }),
+};
+
+export const ProgressBarEmpty: Story = {
+  name: 'Progress Bar Empty',
+  render: () => render(progressBarTemplate, {
+    value: 0,
+    label: 'Progress',
+    status: '0 of 5',
+  }),
+};

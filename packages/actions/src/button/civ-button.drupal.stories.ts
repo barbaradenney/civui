@@ -19,3 +19,54 @@ export const Default: Story = {
     type: 'submit',
   }),
 };
+
+export const Secondary: Story = {
+  render: () => render({
+    label: 'Save draft',
+    variant: 'secondary',
+  }),
+};
+
+export const Tertiary: Story = {
+  render: () => render({
+    label: 'Cancel',
+    variant: 'tertiary',
+  }),
+};
+
+export const Danger: Story = {
+  render: () => render({
+    label: 'Delete application',
+    danger: true,
+  }),
+};
+
+export const DangerSecondary: Story = {
+  name: 'Danger Secondary',
+  render: () => render({
+    label: 'Remove item',
+    variant: 'secondary',
+    danger: true,
+  }),
+};
+
+export const Disabled: Story = {
+  render: () => render({
+    label: 'Submit application',
+    type: 'submit',
+    disabled: true,
+  }),
+};
+
+export const AllVariants: Story = {
+  name: 'All Variants',
+  render: () => {
+    const primary = template({ label: 'Primary', type: 'submit' });
+    const secondary = template({ label: 'Secondary', variant: 'secondary' });
+    const tertiary = template({ label: 'Tertiary', variant: 'tertiary' });
+    const danger = template({ label: 'Danger', danger: true });
+    const dangerSecondary = template({ label: 'Danger Secondary', variant: 'secondary', danger: true });
+    const disabled = template({ label: 'Disabled', disabled: true });
+    return html`${unsafeHTML(primary + secondary + tertiary + danger + dangerSecondary + disabled)}`;
+  },
+};

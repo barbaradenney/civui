@@ -25,3 +25,26 @@ export const Default: Story = {
     return render({ default: chips });
   },
 };
+
+export const WithSelections: Story = {
+  name: 'With Selections',
+  render: () => {
+    const chips = [
+      filterChipTemplate({ label: 'Healthcare', name: 'filter', value: 'healthcare', checked: true }),
+      filterChipTemplate({ label: 'Education', name: 'filter', value: 'education' }),
+      filterChipTemplate({ label: 'Housing', name: 'filter', value: 'housing', checked: true }),
+    ].join('');
+    return render({ default: chips });
+  },
+};
+
+export const Disabled: Story = {
+  render: () => {
+    const chips = [
+      filterChipTemplate({ label: 'Healthcare', name: 'filter', value: 'healthcare', disabled: true }),
+      filterChipTemplate({ label: 'Education', name: 'filter', value: 'education', disabled: true }),
+      filterChipTemplate({ label: 'Housing', name: 'filter', value: 'housing', disabled: true }),
+    ].join('');
+    return render({ default: chips });
+  },
+};

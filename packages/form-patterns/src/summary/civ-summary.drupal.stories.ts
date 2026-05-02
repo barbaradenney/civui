@@ -28,3 +28,29 @@ export const Default: Story = {
     });
   },
 };
+
+export const SingleField: Story = {
+  name: 'Single Field',
+  render: () => {
+    const field = dataFieldTemplate({ label: 'Mailing address', value: '123 Main St, Springfield, VA 22150', href: '#/edit' });
+    return render({
+      heading: 'Address information',
+      default: field,
+    });
+  },
+};
+
+export const ReadOnly: Story = {
+  name: 'Read Only',
+  render: () => {
+    const fields = [
+      dataFieldTemplate({ label: 'Full name', value: 'Jane Doe' }),
+      dataFieldTemplate({ label: 'Date of birth', value: 'January 15, 1990' }),
+      dataFieldTemplate({ label: 'SSN', value: '***-**-6789' }),
+    ].join('');
+    return render({
+      heading: 'Prefilled information',
+      default: fields,
+    });
+  },
+};

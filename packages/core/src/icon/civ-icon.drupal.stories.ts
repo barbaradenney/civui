@@ -19,3 +19,33 @@ export const Default: Story = {
     label: 'Check',
   }),
 };
+
+export const Warning: Story = {
+  render: () => render({
+    name: 'warning',
+    label: 'Warning',
+  }),
+};
+
+export const Info: Story = {
+  render: () => render({
+    name: 'info',
+    label: 'Info',
+  }),
+};
+
+export const Error: Story = {
+  render: () => render({
+    name: 'error',
+    label: 'Error',
+  }),
+};
+
+export const AllIcons: Story = {
+  name: 'Common Icons',
+  render: () => {
+    const icons = ['check', 'warning', 'info', 'error', 'close', 'search', 'edit', 'delete', 'add', 'remove', 'chevron-right', 'chevron-left', 'chevron-down', 'chevron-up'];
+    const rendered = icons.map(name => template({ name, label: name })).join(' ');
+    return html`${unsafeHTML(rendered)}`;
+  },
+};

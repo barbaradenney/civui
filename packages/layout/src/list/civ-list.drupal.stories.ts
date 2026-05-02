@@ -41,3 +41,27 @@ export const ListItem: Story = {
     });
   },
 };
+
+export const WithBadges: Story = {
+  name: 'With Badges',
+  render: () => {
+    const items = [
+      listItemTemplate({ heading: 'Claim #1234', description: 'Submitted January 15, 2026', end: badgeTemplate({ label: 'Approved', variant: 'success' }) }),
+      listItemTemplate({ heading: 'Claim #5678', description: 'Submitted March 3, 2026', end: badgeTemplate({ label: 'Pending', variant: 'info' }) }),
+      listItemTemplate({ heading: 'Claim #9012', description: 'Submitted April 20, 2026', end: badgeTemplate({ label: 'Denied', variant: 'error' }) }),
+    ].join('');
+    return render(listTemplate, { dividers: true, default: items });
+  },
+};
+
+export const WithoutDividers: Story = {
+  name: 'Without Dividers',
+  render: () => {
+    const items = [
+      listItemTemplate({ heading: 'Healthcare', description: 'Enrolled since 2020' }),
+      listItemTemplate({ heading: 'Education', description: 'GI Bill active' }),
+      listItemTemplate({ heading: 'Disability', description: '30% service-connected' }),
+    ].join('');
+    return render(listTemplate, { dividers: false, default: items });
+  },
+};

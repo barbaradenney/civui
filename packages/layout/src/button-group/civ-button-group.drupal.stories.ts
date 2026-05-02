@@ -25,3 +25,25 @@ export const Default: Story = {
     return render({ default: children });
   },
 };
+
+export const TwoButtons: Story = {
+  name: 'Two Buttons',
+  render: () => {
+    const children = [
+      buttonTemplate({ label: 'Submit', type: 'submit' }),
+      buttonTemplate({ label: 'Cancel', variant: 'tertiary' }),
+    ].join('');
+    return render({ default: children });
+  },
+};
+
+export const WithDanger: Story = {
+  name: 'With Danger',
+  render: () => {
+    const children = [
+      buttonTemplate({ label: 'Delete', danger: true }),
+      buttonTemplate({ label: 'Cancel', variant: 'tertiary' }),
+    ].join('');
+    return render({ default: children });
+  },
+};

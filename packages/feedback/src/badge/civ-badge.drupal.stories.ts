@@ -19,3 +19,42 @@ export const Default: Story = {
     variant: 'success',
   }),
 };
+
+export const Info: Story = {
+  render: () => render({
+    label: 'In progress',
+    variant: 'info',
+  }),
+};
+
+export const Warning: Story = {
+  render: () => render({
+    label: 'Pending review',
+    variant: 'warning',
+  }),
+};
+
+export const Error: Story = {
+  render: () => render({
+    label: 'Denied',
+    variant: 'error',
+  }),
+};
+
+export const Success: Story = {
+  render: () => render({
+    label: 'Approved',
+    variant: 'success',
+  }),
+};
+
+export const AllVariants: Story = {
+  name: 'All Variants',
+  render: () => {
+    const info = template({ label: 'In progress', variant: 'info' });
+    const warning = template({ label: 'Pending', variant: 'warning' });
+    const error = template({ label: 'Denied', variant: 'error' });
+    const success = template({ label: 'Approved', variant: 'success' });
+    return html`${unsafeHTML(info + warning + error + success)}`;
+  },
+};

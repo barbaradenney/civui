@@ -21,3 +21,22 @@ export const Default: Story = {
     required: true,
   }),
 };
+
+export const WithError: Story = {
+  render: () => render({
+    legend: 'Dependent relationship',
+    name: 'relationship_err',
+    preset: 'dependent',
+    required: true,
+    error: 'Select a relationship type',
+  }),
+};
+
+export const Disabled: Story = {
+  render: () => render({
+    legend: 'Dependent relationship',
+    name: 'relationship_dis',
+    preset: 'dependent',
+    disabled: true,
+  }),
+};

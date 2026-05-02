@@ -20,3 +20,20 @@ export const Default: Story = {
     required: true,
   }),
 };
+
+export const WithError: Story = {
+  render: () => render({
+    legend: 'Veteran name',
+    name: 'veteran_err',
+    required: true,
+    error: 'Enter your full legal name',
+  }),
+};
+
+export const Disabled: Story = {
+  render: () => render({
+    legend: 'Veteran name',
+    name: 'veteran_dis',
+    disabled: true,
+  }),
+};

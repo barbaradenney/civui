@@ -20,3 +20,21 @@ export const Default: Story = {
     href: '#/edit-address',
   }),
 };
+
+export const WithoutEditLink: Story = {
+  name: 'Without Edit Link',
+  render: () => render({
+    label: 'Date of birth',
+    value: 'January 15, 1990',
+  }),
+};
+
+export const MultipleFields: Story = {
+  name: 'Multiple Fields',
+  render: () => {
+    const field1 = template({ label: 'Full name', value: 'Jane Doe', href: '#/edit' });
+    const field2 = template({ label: 'Email', value: 'jane@agency.gov', href: '#/edit' });
+    const field3 = template({ label: 'Phone', value: '(800) 555-1234', href: '#/edit' });
+    return html`${unsafeHTML(field1 + field2 + field3)}`;
+  },
+};

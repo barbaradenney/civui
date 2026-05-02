@@ -18,3 +18,17 @@ export const Default: Story = {
     default: '<h1>Apply for VA health care</h1><p>VA Form 10-10EZ</p>',
   }),
 };
+
+export const SimpleHeading: Story = {
+  name: 'Simple Heading',
+  render: () => render({
+    default: '<h1>My VA Benefits</h1>',
+  }),
+};
+
+export const WithSubtitle: Story = {
+  name: 'With Subtitle',
+  render: () => render({
+    default: '<h1>Education benefits</h1><p>Apply for and manage your GI Bill and education benefits.</p>',
+  }),
+};

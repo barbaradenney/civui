@@ -172,6 +172,11 @@
     .civ-memorable-date-month {
       width: 100%;
     }
+
+    .civ-memorable-date-day,
+    .civ-memorable-date-year {
+      width: calc(50% - var(--civ-spacing-2, 10px));
+    }
   }
 
   /* Fieldset header spacing — mirrors .civ-form-header for consistency */
@@ -205,6 +210,16 @@
 
   .civ-field-width-lg {
     max-width: 20rem;
+  }
+
+  /* Mobile: remove field width constraints so inputs go full-width */
+  @media (max-width: 480px) {
+    .civ-field-width-xs,
+    .civ-field-width-sm,
+    .civ-field-width-md,
+    .civ-field-width-lg {
+      max-width: none;
+    }
   }
 
   /* ── Heading styles ──────────────────────────────────────── */
@@ -874,6 +889,13 @@
            civ-px-5 civ-py-3 civ-border civ-cursor-pointer
            civ-transition-colors;
     font-size: var(--civ-typography-fontSize-base);
+  }
+
+  /* Mobile: buttons go full-width for easier tap targets */
+  @media (max-width: 480px) {
+    .civ-btn {
+      @apply civ-flex civ-w-full;
+    }
   }
 
   .civ-btn--primary {

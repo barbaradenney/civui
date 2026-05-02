@@ -93,6 +93,11 @@ export function renderLabel({
  * @param headingLevel - When set, promotes the legend to a heading via
  *   `role="heading"` + `aria-level=N` for screen-reader navigation.
  * @param size - Visual size variant. Defaults to body size (`sm`).
+ * @param srOnly - When true, the legend is visually hidden (`civ-sr-only`)
+ *   and `headingLevel`/`size` are intentionally ignored — a hidden legend
+ *   should not appear in the heading outline or carry visual weight.
+ * @param textSizeClass - **Deprecated.** Pre-`size` arbitrary class hook.
+ *   Accepted for backward compatibility but ignored. Use `size` instead.
  */
 export function renderLegend({
   legend,
@@ -101,6 +106,7 @@ export function renderLegend({
   size,
   headingLevel,
   srOnly,
+  textSizeClass: _textSizeClass,
 }: {
   legend: string;
   required: boolean;
@@ -108,6 +114,8 @@ export function renderLegend({
   size?: LabelSize;
   headingLevel?: HeadingLevel;
   srOnly?: boolean;
+  /** @deprecated Use `size` instead. Accepted but ignored. */
+  textSizeClass?: string;
 }) {
   if (!legend) return nothing;
   if (srOnly) {

@@ -47,6 +47,8 @@ Both cascade `required` and `disabled` to the child control and wire ARIA attrib
 | `required` | `boolean` | `false` | Shows "(required)" indicator, cascades to child |
 | `disabled` | `boolean` | `false` | Disables the field, cascades to child |
 | `required-message` | `string` | `''` | Custom validation message for required fields |
+| `heading-level` | `1`–`6` | — | Promote the label to a heading via `role="heading"` + `aria-level=N`. Use sparingly — see [Heading hierarchy](#heading-hierarchy). |
+| `size` | `'sm' \| 'md' \| 'lg' \| 'xl'` | `'sm'` | Visual size. `sm` = body size; `md`/`lg`/`xl` step up for use as a section/page heading. |
 
 ## Props — civ-form-fieldset
 
@@ -58,6 +60,8 @@ Both cascade `required` and `disabled` to the child control and wire ARIA attrib
 | `required` | `boolean` | `false` | Shows "(required)" indicator, cascades to child |
 | `disabled` | `boolean` | `false` | Disables the fieldset, cascades to child |
 | `required-message` | `string` | `''` | Custom validation message for required fields |
+| `heading-level` | `1`–`6` | — | Promote the legend to a heading via `role="heading"` + `aria-level=N`. Use sparingly — see [Heading hierarchy](#heading-hierarchy). |
+| `size` | `'sm' \| 'md' \| 'lg' \| 'xl'` | `'sm'` | Visual size. `sm` = body size; `md`/`lg`/`xl` step up for use as a section/page heading. |
 
 ## Usage
 
@@ -82,3 +86,41 @@ These components render their own labels and do **not** need wrappers:
 
 - `<civ-checkbox>` and `<civ-toggle>` — inline labels
 - `<civ-address>`, `<civ-name>`, `<civ-direct-deposit>`, `<civ-signature>` — compound components with internal form-field wrappers
+
+## Heading hierarchy
+
+Government forms commonly follow the **VA.gov / GOV.UK "one question per page" pattern**, where the main question on each page is *also* the page's `<h1>`. This:
+
+- Lets screen-reader users navigate forms by heading.
+- Satisfies WCAG 2.4.6 (Headings and Labels) and 2.4.10 (Section Headings).
+
+The `heading-level` prop adds `role="heading"` + `aria-level=N` to the rendered `<label>`/`<legend>`. The native element is preserved so click-to-focus and `for`/`aria-labelledby` still work — heading promotion is purely an accessibility-tree affordance. The `size` prop is independent: visual prominence and screen-reader semantics tune separately.
+
+**Rules:**
+
+- **Exactly one `h1` per page.** On a single-question page, set `heading-level="1"` on the field that asks the question.
+- On a multi-question page, the page or step uses its own `<h1>` and each fieldset uses `heading-level="2"` or `"3"`.
+- Pair a higher `heading-level` with a larger `size` so the visual hierarchy matches the semantic hierarchy.
+
+**Single-question page (the question is the h1):**
+
+```html
+<civ-form-field label="What is your email address?" heading-level="1" size="xl" required>
+  <civ-text-input type="email" name="email"></civ-text-input>
+</civ-form-field>
+```
+
+**Multi-question page with a fieldset as h2:**
+
+```html
+<h1 class="civ-heading-xl">Your contact information</h1>
+
+<civ-form-fieldset legend="Preferred contact method" heading-level="2" size="md" required>
+  <civ-radio-group name="contact">
+    <civ-radio value="email" label="Email"></civ-radio>
+    <civ-radio value="phone" label="Phone"></civ-radio>
+  </civ-radio-group>
+</civ-form-fieldset>
+```
+
+The same `heading-level` and `size` props are available on `<civ-fieldset>`, `<civ-repeater>`, and all compound components (`<civ-name>`, `<civ-address>`, `<civ-direct-deposit>`, `<civ-marriage-history>`, `<civ-race-ethnicity>`, `<civ-relationship>`, `<civ-service-history>`, `<civ-signature>`).

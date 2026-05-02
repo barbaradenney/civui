@@ -616,6 +616,8 @@ function generateReport(): string {
       // Web platform specifics
       'action', 'method', 'inputmode', 'autocomplete', 'pattern', 'persist', 'prefill',
       'errorHeadingLevel', 'maskPattern', 'headingLevel',
+      // Label/legend size variant — CSS typography knob, native uses platform text styles
+      'size',
       // Button 'type' (button vs submit) is a web HTML form concept
       'type',
       // Task 'href' is web-only — native uses onTap/onClick callbacks

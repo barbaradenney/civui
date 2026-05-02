@@ -59,6 +59,8 @@ Use the `preset` prop for pre-defined option lists, or pass custom `options` to 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `legend` | `string` | `'About this person'` | Fieldset legend text |
+| `heading-level` | `1`–`6` | — | Promote the legend to a heading via `role="heading"` + `aria-level=N`. See [Heading hierarchy](/docs/components/form/form-group#heading-hierarchy). |
+| `size` | `'sm' \| 'md' \| 'lg' \| 'xl'` | `'sm'` | Visual size. `sm` = body size; `md`/`lg`/`xl` step up for section/page heading use. |
 | `name` | `string` | `''` | Form field name prefix |
 | `preset` | `'general' \| 'dependent' \| 'survivor' \| 'benefits-survivor' \| 'immigration' \| 'tax'` | `'general'` | Relationship type preset |
 | `options` | `RelationshipTypeConfig[]` | — | Custom options (overrides preset) |

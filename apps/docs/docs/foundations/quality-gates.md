@@ -16,9 +16,9 @@ CivUI enforces consistency and cross-platform parity through automated CI checks
 
 The parity check extracts component APIs from all four platforms and compares them:
 
-1. **API extraction** -- Parses web (TypeScript), iOS (Swift), Android (Kotlin), and Drupal (SDC YAML/Twig) source files to extract props, events, and callbacks.
-2. **Cross-platform comparison** -- For each component, checks that every prop and event on the web side has a corresponding parameter or callback on iOS, Android, and Drupal.
-3. **Report generation** -- Produces `tools/parity-report.html` with a per-component breakdown showing which props and events are present or missing on each platform (4 columns: Web, iOS, Android, Drupal).
+1. **API extraction** -- Parses web (TypeScript `@property`), iOS (Swift struct properties), Android (Kotlin `@Composable` parameters), and Drupal (SDC `.component.yml` prop schemas) to extract props, events, and callbacks at the property level.
+2. **Cross-platform comparison** -- For each component, checks that every prop and event on the web side has a corresponding parameter or callback on iOS, Android, and Drupal. Drupal prop names are normalized from `snake_case` to `camelCase` for matching.
+3. **Report generation** -- Produces `tools/parity-report.html` with a per-component breakdown showing which props and events are present or missing on each platform (5 columns: Property, Web, iOS, Android, Drupal).
 4. **Threshold enforcement** -- Fails the build if any component falls below **85% parity**.
 5. **Artifact upload** -- The HTML report is uploaded as a CI artifact (available even on failure) so you can see exactly what's missing.
 
@@ -120,6 +120,15 @@ ERROR: packages/forms/src/text-input/civ-text-input.ts
 ```
 
 Fix the component source to follow the pattern described in the error message, then re-run the check locally to confirm.
+
+## Pull Request Template
+
+Every PR uses the template at `.github/PULL_REQUEST_TEMPLATE.md`, which includes:
+
+- **Platform checklist** — checkboxes for Web, iOS, Android, Drupal SDC, and Drupal story updates
+- **Testing checklist** — unit tests, Storybook verification, parity report
+
+This ensures contributors don't forget to update native counterparts when changing component APIs.
 
 ## Summary of Thresholds
 

@@ -46,6 +46,7 @@ pnpm typecheck     # TypeScript type checking
 pnpm lint          # ESLint
 pnpm validate      # lint + typecheck + test (full CI check)
 pnpm storybook     # Dev server on port 6006
+civui generate component <name>  # Scaffold new component across all 4 platforms
 ```
 
 ## Architecture Patterns

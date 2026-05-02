@@ -1316,11 +1316,16 @@ Each Drupal SDC has a `.component.yml` schema and a `.twig` template that render
 
 Drupal stories are co-located next to web component source as `*.drupal.stories.ts` files and can be previewed in Storybook.
 
+### Scaffolding
+
+`civui generate component <name>` creates stubs for all four platforms at once — web (component, test, story), iOS (SwiftUI), Android (Compose), and Drupal (SDC YAML, Twig, Storybook story).
+
 ### CI Enforcement
 
-- **Parity CI:** `parity.yml` enforces 85%+ feature parity across all four platforms
+- **Parity CI:** `parity.yml` enforces 85%+ feature parity across all four platforms (prop-level parsing for Drupal SDC YAML schemas)
 - **Native CI:** `native.yml` verifies Swift and Kotlin files compile
 - **Drupal CI:** `validate-drupal-sdc.ts` checks YAML structure, Twig correctness, and prop mapping
+- **PR template:** `.github/PULL_REQUEST_TEMPLATE.md` includes a platform checklist for Web, iOS, Android, and Drupal
 
 ---
 

@@ -125,11 +125,27 @@ replaces: civui:text-input
 
 ## Adding a New Platform Component
 
-1. Build the web component first and get it passing all tests.
-2. Create `Civ{Name}.swift` in `packages/ios/Sources/CivUI/` with the same props and callbacks.
-3. Create `Civ{Name}.kt` in `packages/android/src/main/kotlin/gov/civui/components/` with the same props and callbacks.
-4. Create a Drupal SDC in `packages/drupal/civui/components/{name}/` with `.component.yml` and `.twig` files.
-5. Create a co-located Drupal story: `civ-{name}.drupal.stories.ts` next to the web component source.
-6. Run the parity report locally to verify 85%+ coverage: `node --experimental-strip-types tools/parity-report.ts`
-7. Run the Drupal SDC validator: `node --experimental-strip-types tools/validate-drupal-sdc.ts`
-8. Push and confirm the parity CI check passes.
+The CLI scaffolder generates stubs for all four platforms at once:
+
+```bash
+civui generate component my-widget
+```
+
+This creates:
+- **Web:** `packages/forms/src/my-widget/civ-my-widget.ts` (component, test, story, index)
+- **iOS:** `packages/ios/Sources/CivUI/CivMyWidget.swift` (SwiftUI stub)
+- **Android:** `packages/android/src/main/kotlin/gov/civui/components/CivMyWidget.kt` (Compose stub)
+- **Drupal:** `packages/drupal/civui/components/my-widget/` (`.component.yml` + `.twig` + co-located `.drupal.stories.ts`)
+
+After scaffolding:
+
+1. Implement the web component and get it passing all tests.
+2. Implement the native views in the iOS and Android stubs.
+3. Add any additional props to the Drupal SDC YAML schema.
+4. Run the parity report locally to verify 85%+ coverage: `node --experimental-strip-types tools/parity-report.ts`
+5. Run the Drupal SDC validator: `node --experimental-strip-types tools/validate-drupal-sdc.ts`
+6. Push and confirm the parity CI check passes.
+
+## PR Checklist
+
+Every pull request uses a template (`.github/PULL_REQUEST_TEMPLATE.md`) that includes a platform checklist. Before merging, verify that all affected platforms have been updated.

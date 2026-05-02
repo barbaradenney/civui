@@ -1,0 +1,86 @@
+---
+title: Healthcare Patterns
+sidebar_position: 12
+sidebar_label: Healthcare
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
+# Healthcare Patterns
+
+Common medical and healthcare form patterns for government applications. These patterns compose existing CivUI components — no custom components needed. Useful for VA healthcare enrollment, Medicare/Medicaid applications, clinic scheduling, and patient portals.
+
+## Medication List
+
+A repeatable medication entry using `civ-repeater`. Each entry captures medication name (searchable combobox), dosage, frequency, and prescribing provider.
+
+<StoryEmbed id="patterns-healthcare--medication-list" />
+
+## Provider Selection
+
+Combobox for searching a provider directory by name, optionally filtered by specialty. Use `civ-combobox` for large provider lists where the user likely knows who they are looking for.
+
+<StoryEmbed id="patterns-healthcare--provider-selection" />
+
+## Insurance Card Upload
+
+Front and back insurance card capture using two `civ-file-upload` instances with `accept="image/*"`. On mobile, this prompts the camera option.
+
+<StoryEmbed id="patterns-healthcare--insurance-card-upload" />
+
+## Allergy List
+
+Repeatable allergy entry with a yes/no gate, severity radio, and reaction description. Uses `civ-conditional` to only show the repeater if the patient has allergies.
+
+<StoryEmbed id="patterns-healthcare--allergy-list" />
+
+## Appointment Confirmation
+
+Read-only confirmation card showing appointment details after scheduling. Uses `civ-card` with `civ-data-field` rows and action links for reschedule/cancel.
+
+<StoryEmbed id="patterns-healthcare--appointment-confirmation" />
+
+## Symptom Checker
+
+Checkbox group of common symptoms with conditional follow-up questions. When a symptom is checked, a conditional reveal asks for details. Common in pre-visit screening questionnaires.
+
+<StoryEmbed id="patterns-healthcare--symptom-checker" />
+
+## Pharmacy Selection
+
+Preferred pharmacy selection using radio cards with descriptions showing address and hours. Includes a combobox fallback for searching a larger directory.
+
+<StoryEmbed id="patterns-healthcare--pharmacy-selection" />
+
+## Medical History Screening
+
+A series of yes/no screening questions with conditional reveals for follow-up details. Each condition asks if diagnosed, then conditionally asks for diagnosis date and current treatment. Includes a repeater for surgical history.
+
+<StoryEmbed id="patterns-healthcare--medical-history-screening" />
+
+## Vitals Display
+
+Read-only display of patient vitals using `civ-data-field` in a card. Tags indicate whether values are within normal range. Suitable for patient portals and provider dashboards.
+
+<StoryEmbed id="patterns-healthcare--vitals-display" />
+
+## Referral Status Tracker
+
+Read-only status view for tracking referral authorization steps. Uses `civ-list` with badges to show step status (complete, in progress, pending) and descriptions for each stage.
+
+<StoryEmbed id="patterns-healthcare--referral-status-tracker" />
+
+## Component Usage Summary
+
+| Pattern | Components Used |
+|---------|----------------|
+| Medication list | `civ-repeater`, `civ-combobox`, `civ-text-input`, `civ-select` |
+| Provider selection | `civ-combobox`, `civ-select`, `civ-textarea` |
+| Insurance card upload | `civ-file-upload`, `civ-text-input`, `civ-alert` |
+| Allergy list | `civ-repeater`, `civ-yes-no`, `civ-conditional`, `civ-radio-group`, `civ-textarea` |
+| Appointment confirmation | `civ-card`, `civ-data-field`, `civ-action-link`, `civ-alert` |
+| Symptom checker | `civ-checkbox-group`, `civ-conditional`, `civ-select`, `civ-alert` |
+| Pharmacy selection | `civ-radio-group` (tile), `civ-combobox` |
+| Medical history screening | `civ-yes-no`, `civ-conditional`, `civ-repeater`, `civ-radio-group` |
+| Vitals display | `civ-card`, `civ-data-field`, `civ-tag` |
+| Referral status tracker | `civ-card`, `civ-data-field`, `civ-list`, `civ-badge`, `civ-alert` |

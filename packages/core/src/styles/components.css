@@ -276,19 +276,19 @@
 
   .civ-input {
     @apply civ-block civ-w-full civ-border civ-rounded civ-px-2 civ-py-2
-           civ-font-sans civ-bg-white civ-border-base-light;
+           civ-font-sans civ-bg-white civ-border-base;
     font-size: var(--civ-typography-fontSize-base);
     color: var(--civ-color-base-darkest);
   }
 
   .civ-input-prefix {
-    @apply civ-flex civ-items-center civ-px-2 civ-border civ-border-e-0 civ-rounded-s civ-border-base-light civ-bg-white;
+    @apply civ-flex civ-items-center civ-px-2 civ-border civ-border-e-0 civ-rounded-s civ-border-base civ-bg-white;
     font-size: var(--civ-typography-fontSize-base);
     color: var(--civ-color-base-dark);
   }
 
   .civ-input-suffix {
-    @apply civ-flex civ-items-center civ-px-2 civ-border civ-border-s-0 civ-rounded-e civ-border-base-light civ-bg-white;
+    @apply civ-flex civ-items-center civ-px-2 civ-border civ-border-s-0 civ-rounded-e civ-border-base civ-bg-white;
     font-size: var(--civ-typography-fontSize-base);
     color: var(--civ-color-base-dark);
   }
@@ -668,7 +668,7 @@
   }
 
   .civ-check-input {
-    @apply civ-me-2 civ-align-middle civ-cursor-pointer civ-border civ-border-base-light civ-rounded civ-bg-white;
+    @apply civ-me-2 civ-align-middle civ-cursor-pointer civ-border civ-border-base civ-rounded civ-bg-white;
     appearance: none;
     -webkit-appearance: none;
     width: var(--civ-spacing-8);
@@ -724,7 +724,7 @@
   }
 
   .civ-check-tile {
-    @apply civ-relative civ-border civ-rounded civ-border-base-light civ-cursor-pointer civ-p-3;
+    @apply civ-relative civ-border civ-rounded civ-border-base civ-cursor-pointer civ-p-3;
     border-style: solid;
   }
 
@@ -763,14 +763,14 @@
 
   .civ-segment-btn {
     @apply civ-px-4 civ-py-2 civ-text-sm civ-font-sans civ-font-medium civ-border
-           civ-bg-white civ-text-base-darkest civ-border-base-light civ-cursor-pointer;
+           civ-bg-white civ-text-base-darkest civ-border-base civ-cursor-pointer;
   }
 
   /* ── File Upload ────────────────────────────────────────────── */
 
   .civ-dropzone {
     @apply civ-block civ-w-full civ-border-2 civ-border-dashed civ-rounded
-           civ-py-12 civ-px-6 civ-text-center civ-transition-all civ-border-base-light civ-cursor-pointer;
+           civ-py-12 civ-px-6 civ-text-center civ-transition-all civ-border-base civ-cursor-pointer;
     appearance: none;
     @apply civ-bg-base-lightest;
     font: inherit;
@@ -922,7 +922,7 @@
   .civ-datepicker-month-select,
   .civ-datepicker-year-select {
     @apply civ-px-2 civ-py-1 civ-rounded civ-text-sm civ-font-bold civ-bg-transparent
-           civ-border civ-border-base-light civ-cursor-pointer;
+           civ-border civ-border-base civ-cursor-pointer;
     color: var(--civ-color-base-darkest);
     appearance: none;
     -webkit-appearance: none;
@@ -953,7 +953,7 @@
   }
 
   .civ-datepicker-cal-btn {
-    @apply civ-border civ-border-s-0 civ-border-base-light civ-rounded-e
+    @apply civ-border civ-border-s-0 civ-border-base civ-rounded-e
            civ-px-2 civ-py-2 civ-bg-base-lightest;
   }
 
@@ -1146,7 +1146,7 @@
   }
 
   .civ-btn--yesno {
-    @apply civ-bg-white civ-border-base-light;
+    @apply civ-bg-white civ-border-base;
   }
   .civ-btn--yesno[aria-checked="true"] {
     @apply civ-bg-primary civ-text-white civ-border-primary;

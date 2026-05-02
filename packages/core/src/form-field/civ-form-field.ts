@@ -41,15 +41,19 @@ export class CivFormField extends LightDomSlotMixin(CivBaseElement) {
 
   /**
    * Promote the label to a heading via `role="heading"` + `aria-level=N` so
-   * screen-reader users can navigate to it by heading. Use sparingly — typically
-   * only for the primary question on a single-question page (level 1) or the
-   * top label inside a form-step (level 2 or 3). Leave unset for inline labels.
+   * screen-reader users can navigate to it by heading. Use sparingly —
+   * typically only for the primary question on a single-question page
+   * (level 1) or the top label inside a form-step (level 2 or 3). Leave
+   * unset for inline labels.
    */
   @property({ type: Number, attribute: 'heading-level' }) headingLevel?: HeadingLevel;
 
   /**
-   * Visual size of the label. Default (omitted) and `sm` render at body size;
-   * `md`/`lg`/`xl` increase the size for use as a section/page heading.
+   * Visual size of the label. Default (omitted) and `sm` render at body
+   * size; `md`/`lg`/`xl` step up through the typography scale for use as a
+   * section/page heading. Heads up: at `[data-civ-scale="fluid"]`, `xl`
+   * renders very large (clamp up to ~2.6rem) — only use it when the label
+   * is the page's primary heading.
    */
   @property({ type: String }) size?: LabelSize;
 

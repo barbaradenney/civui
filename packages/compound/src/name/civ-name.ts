@@ -34,13 +34,26 @@ const EMPTY_NAME: NameValue = { first: '', middle: '', last: '', suffix: '' };
  */
 @customElement('civ-name')
 export class CivName extends CivFormElement {
-  /** Fieldset legend displayed above the name fields. */
+  /**
+   * Fieldset legend displayed above the name fields. This component is
+   * self-contained — render it on its own, not inside `<civ-form-fieldset>`,
+   * or you'll get two stacked legends.
+   */
   @property({ type: String }) legend = '';
 
-  /** Promote the legend to a heading via `role="heading"` + `aria-level=N`. */
+  /**
+   * Promote the legend to a heading via `role="heading"` + `aria-level=N`.
+   * Use sparingly — typically only when this name field is the primary
+   * question on a single-question page (level 1) or the top legend inside
+   * a form-step (level 2 or 3).
+   */
   @property({ type: Number, attribute: 'heading-level' }) headingLevel?: HeadingLevel;
 
-  /** Visual size of the legend. */
+  /**
+   * Visual size of the legend. Default and `sm` render at body size;
+   * `md`/`lg`/`xl` increase the size for use as a section/page heading.
+   * At `[data-civ-scale="fluid"]`, `xl` renders very large.
+   */
   @property({ type: String }) size?: LabelSize;
 
   /**

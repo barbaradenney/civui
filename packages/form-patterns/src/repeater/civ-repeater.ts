@@ -42,10 +42,19 @@ export class CivRepeater extends CivBaseElement {
   /** Fieldset legend. */
   @property({ type: String }) legend = '';
 
-  /** Promote the legend to a heading via `role="heading"` + `aria-level=N`. */
+  /**
+   * Promote the legend to a heading via `role="heading"` + `aria-level=N`.
+   * Use sparingly — typically only when this repeater is the primary
+   * section on a page (level 1) or the top section inside a form-step
+   * (level 2 or 3).
+   */
   @property({ type: Number, attribute: 'heading-level' }) headingLevel?: HeadingLevel;
 
-  /** Visual size of the legend. */
+  /**
+   * Visual size of the legend. Default and `sm` render at body size;
+   * `md`/`lg`/`xl` increase the size for use as a section/page heading.
+   * At `[data-civ-scale="fluid"]`, `xl` renders very large.
+   */
   @property({ type: String }) size?: LabelSize;
 
   /** Base name for indexed form fields. */

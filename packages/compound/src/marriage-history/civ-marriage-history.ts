@@ -63,10 +63,19 @@ const EMPTY_MARRIAGE: MarriageValue = {
 export class CivMarriageHistory extends CivFormElement {
   @property({ type: String }) legend = '';
 
-  /** Promote the legend to a heading via `role="heading"` + `aria-level=N`. */
+  /**
+   * Promote the legend to a heading via `role="heading"` + `aria-level=N`.
+   * Use sparingly — typically only when this field is the primary question
+   * on a single-question page (level 1) or the top legend inside a
+   * form-step (level 2 or 3).
+   */
   @property({ type: Number, attribute: 'heading-level' }) headingLevel?: HeadingLevel;
 
-  /** Visual size of the legend. */
+  /**
+   * Visual size of the legend. Default and `sm` render at body size;
+   * `md`/`lg`/`xl` increase the size for use as a section/page heading.
+   * At `[data-civ-scale="fluid"]`, `xl` renders very large.
+   */
   @property({ type: String }) size?: LabelSize;
   /** Show the marriage type selector (civil union, common law, etc.). */
   @property({ type: Boolean, attribute: 'show-marriage-type' }) showMarriageType = false;

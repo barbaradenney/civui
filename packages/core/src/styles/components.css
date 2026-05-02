@@ -622,6 +622,40 @@
 
   /* ── Checkbox / Radio ───────────────────────────────────────── */
 
+  /* Two-column grid that lays out: input | label, then description / hint /
+     error wrapped under the label in column 2. The input is anchored to the
+     first row only, so it stays vertically centered on the *first line of
+     the label* even when the description wraps to multiple lines. Without
+     this row anchoring, `align-items: center` would drift the input to the
+     midpoint of the entire label+description block, and `align-items: start`
+     would leave it floating above the visible label cap-top. */
+  .civ-check-row {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: var(--civ-spacing-2);
+  }
+
+  .civ-check-row > .civ-check-input {
+    grid-column: 1;
+    grid-row: 1;
+    align-self: center;
+    margin-inline-end: 0; /* gap handles spacing — avoid double margin */
+  }
+
+  .civ-check-row > .civ-check-label {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: center;
+  }
+
+  .civ-check-row > .civ-check-description,
+  .civ-check-row > .civ-hint,
+  .civ-check-row > .civ-hint--group,
+  .civ-check-row > .civ-error-text,
+  .civ-check-row > .civ-error-text--group {
+    grid-column: 2;
+  }
+
   .civ-check-input {
     @apply civ-me-2 civ-align-middle civ-cursor-pointer civ-border civ-border-base-light civ-rounded civ-bg-white;
     appearance: none;

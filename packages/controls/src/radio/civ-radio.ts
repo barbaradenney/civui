@@ -50,7 +50,7 @@ export class CivRadio extends CivBaseElement {
   override render() {
     return html`
       <div class="${this.tile ? 'civ-check-tile' : 'civ-mb-2'}" data-civ-tile="${this.tile ? '' : nothing}" @click="${this.tile ? this._onTileClick : nothing}">
-        <label class="civ-flex civ-items-start civ-cursor-pointer civ-w-full" for="${this._inputId}">
+        <label class="civ-check-row civ-cursor-pointer civ-w-full" for="${this._inputId}">
           <input
             class="civ-check-input focus-visible:civ-focus-ring"
             id="${this._inputId}"
@@ -65,12 +65,10 @@ export class CivRadio extends CivBaseElement {
             aria-describedby="${this._ariaDescribedBy || nothing}"
             @change="${this._onRadioChange}"
           />
-          <div class="civ-flex-1">
-            <span class="civ-check-label">${this.label}</span>
-            ${this.description
-              ? html`<span id="${this._descriptionId}" class="civ-check-description">${this.description}</span>`
-              : nothing}
-          </div>
+          <span class="civ-check-label">${this.label}</span>
+          ${this.description
+            ? html`<span id="${this._descriptionId}" class="civ-check-description">${this.description}</span>`
+            : nothing}
         </label>
       </div>
     `;

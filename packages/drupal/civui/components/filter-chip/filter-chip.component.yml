@@ -1,0 +1,35 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Filter Chip
+status: stable
+group: CivUI Controls
+description: 'Selectable filter chip with optional remove button.'
+
+props:
+  type: object
+  properties:
+    label:
+      title: Label
+      type: string
+      description: 'Chip label text'
+    value:
+      title: Value
+      type: string
+      description: 'Chip value'
+    selected:
+      title: Selected
+      type: boolean
+      default: false
+      description: 'Whether the chip is selected'
+    removable:
+      title: Removable
+      type: boolean
+      default: false
+      description: 'Show a remove button'
+    disabled:
+      title: Disabled
+      type: boolean
+      default: false
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

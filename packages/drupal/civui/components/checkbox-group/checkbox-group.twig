@@ -1,0 +1,12 @@
+<civ-checkbox-group
+  {% if legend %}legend="{{ legend }}"{% endif %}
+  {% if name %}name="{{ name }}"{% endif %}
+  {% if value %}value="{{ value }}"{% endif %}
+  {% if required %}required{% endif %}
+  {% if disabled %}disabled{% endif %}
+  {% if show_select_all %}show-select-all{% endif %}
+  {% if preset %}preset="{{ preset }}"{% endif %}
+  {% if preset_variant %}preset-variant="{{ preset_variant }}"{% endif %}
+>
+  {% block default %}{{ default }}{% endblock %}
+</civ-checkbox-group>

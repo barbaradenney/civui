@@ -1,0 +1,45 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Date Range Picker
+status: stable
+group: CivUI Inputs
+description: 'Date range picker with start and end date fields.'
+
+props:
+  type: object
+  properties:
+    name:
+      title: Name
+      type: string
+      description: 'Form field name prefix'
+    value:
+      title: Value
+      type: string
+      description: 'JSON-encoded date range value'
+    min:
+      title: Min
+      type: string
+      description: 'Minimum selectable date (ISO format)'
+    max:
+      title: Max
+      type: string
+      description: 'Maximum selectable date (ISO format)'
+    start_label:
+      title: Start label
+      type: string
+      description: 'Label for the start date field'
+    end_label:
+      title: End label
+      type: string
+      description: 'Label for the end date field'
+    required:
+      title: Required
+      type: boolean
+      default: false
+    disabled:
+      title: Disabled
+      type: boolean
+      default: false
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

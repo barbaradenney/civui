@@ -1,0 +1,9 @@
+<civ-form-field
+  {% if label %}label="{{ label }}"{% endif %}
+  {% if hint %}hint="{{ hint }}"{% endif %}
+  {% if error %}error="{{ error }}"{% endif %}
+  {% if required %}required{% endif %}
+  {% if disabled %}disabled{% endif %}
+>
+  {% block default %}{{ default }}{% endblock %}
+</civ-form-field>

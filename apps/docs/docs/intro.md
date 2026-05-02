@@ -18,6 +18,7 @@ Accessibility-first web components for government applications. Built on Lit 3, 
 - **Density Scale** — dense, default, and spacious modes via CSS custom properties
 - **Light DOM** — no Shadow DOM, external labels and ARIA work naturally
 - **CSS Icons** — 14 pure-CSS icons, no fonts or SVGs (Material Symbols available as an opt-in)
+- **4 Platforms** — Web (Lit), iOS (SwiftUI), Android (Compose), Drupal (SDC)
 
 ## Quick Start
 
@@ -56,6 +57,7 @@ import '@civui/form-patterns';
 | `@civui/layout` | Layout components (card, divider, input-group, page-header, tag) |
 | `@civui/feedback` | Alert, progress bar |
 | `@civui/navigation` | Skip link, task list |
+| `@civui/drupal` | Drupal SDC module (69 components for Drupal 10.3+/11) |
 | `@civui/mcp-server` | 80-tool MCP server for form generation |
 
 ## Design Philosophy

@@ -1,0 +1,10 @@
+<civ-textarea
+  {% if name %}name="{{ name }}"{% endif %}
+  {% if value %}value="{{ value }}"{% endif %}
+  {% if rows and rows != 4 %}rows="{{ rows }}"{% endif %}
+  {% if maxlength %}maxlength="{{ maxlength }}"{% endif %}
+  {% if placeholder %}placeholder="{{ placeholder }}"{% endif %}
+  {% if required %}required{% endif %}
+  {% if disabled %}disabled{% endif %}
+  {% if readonly %}readonly{% endif %}
+></civ-textarea>

@@ -1,0 +1,13 @@
+<civ-text-input
+  {% if name %}name="{{ name }}"{% endif %}
+  {% if value %}value="{{ value }}"{% endif %}
+  {% if type and type != 'text' %}type="{{ type }}"{% endif %}
+  {% if placeholder %}placeholder="{{ placeholder }}"{% endif %}
+  {% if maxlength %}maxlength="{{ maxlength }}"{% endif %}
+  {% if required %}required{% endif %}
+  {% if disabled %}disabled{% endif %}
+  {% if readonly %}readonly{% endif %}
+  {% if autocomplete %}autocomplete="{{ autocomplete }}"{% endif %}
+  {% if mask %}mask="{{ mask }}"{% endif %}
+  {% if validate %}validate="{{ validate }}"{% endif %}
+></civ-text-input>

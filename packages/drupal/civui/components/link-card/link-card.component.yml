@@ -1,0 +1,41 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Link Card
+status: stable
+group: CivUI Actions
+description: 'Clickable card that navigates to a URL.'
+
+props:
+  type: object
+  properties:
+    href:
+      title: Href
+      type: string
+      description: 'Link URL'
+    heading:
+      title: Heading
+      type: string
+      description: 'Card heading text'
+    description:
+      title: Description
+      type: string
+      description: 'Card description text'
+    variant:
+      title: Variant
+      type: string
+      description: 'Visual style variant'
+    spacing:
+      title: Spacing
+      type: string
+      description: 'Internal spacing variant'
+    color:
+      title: Color
+      type: string
+      description: 'Card color variant'
+    disabled:
+      title: Disabled
+      type: boolean
+      default: false
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

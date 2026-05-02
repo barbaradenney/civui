@@ -320,6 +320,13 @@ function checkNativeCounterparts(comp: ComponentFile) {
   if (!existsSync(androidPath)) {
     addIssue(comp.path, 'native-android', 'error', `${comp.name} has no Android counterpart (expected Civ${componentName}.kt)`);
   }
+
+  // Drupal SDC check (informational — does not block CI)
+  const drupalName = comp.name.replace('civ-', '');
+  const drupalPath = join(ROOT, `packages/drupal/civui/components/${drupalName}`);
+  if (!existsSync(drupalPath)) {
+    addIssue(comp.path, 'drupal-sdc', 'warn', `${comp.name} has no Drupal SDC (expected components/${drupalName}/)`);
+  }
 }
 
 // ── A11y checks ──────────────────────────────────────────────

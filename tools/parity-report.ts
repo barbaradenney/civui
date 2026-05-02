@@ -26,6 +26,7 @@ const WEB_DIRS = [
 ];
 const IOS_DIR = join(ROOT, 'packages/ios/Sources/CivUI');
 const ANDROID_DIR = join(ROOT, 'packages/android/src/main/kotlin/gov/civui/components');
+const DRUPAL_DIR = join(ROOT, 'packages/drupal/civui/components');
 
 interface PropDef {
   name: string;
@@ -465,6 +466,16 @@ function discoverComponents(): ComponentMapping[] {
     }
   }
 
+  // Match Drupal SDC directories
+  if (existsSync(DRUPAL_DIR)) {
+    for (const dir of readdirSync(DRUPAL_DIR, { withFileTypes: true }).filter(d => d.isDirectory())) {
+      // Convert directory name (kebab-case) to PascalCase for matching
+      const pascal = dir.name.split('-').map(w => w[0].toUpperCase() + w.slice(1)).join('');
+      if (!nameMap[pascal]) nameMap[pascal] = { displayName: pascal };
+      nameMap[pascal].drupal = join(DRUPAL_DIR, dir.name);
+    }
+  }
+
   return Object.values(nameMap).sort((a, b) => a.displayName.localeCompare(b.displayName));
 }
 
@@ -477,13 +488,15 @@ function generateReport(): string {
     web: ComponentAPI | null;
     ios: ComponentAPI | null;
     android: ComponentAPI | null;
+    drupal: boolean;
   }> = [];
 
   for (const comp of components) {
     const web = comp.web ? parseWebComponent(comp.web) : null;
     const ios = comp.ios ? parseSwiftComponent(comp.ios, comp.displayName) : null;
     const android = comp.android ? parseKotlinComponent(comp.android, comp.displayName) : null;
-    results.push({ displayName: comp.displayName, web, ios, android });
+    const drupal = !!comp.drupal;
+    results.push({ displayName: comp.displayName, web, ios, android, drupal });
   }
 
   // Count totals
@@ -491,6 +504,7 @@ function generateReport(): string {
   const withWeb = results.filter(r => r.web).length;
   const withIos = results.filter(r => r.ios).length;
   const withAndroid = results.filter(r => r.android).length;
+  const withDrupal = results.filter(r => r.drupal).length;
 
   let html = `<!DOCTYPE html>
 <html lang="en">
@@ -546,11 +560,12 @@ function generateReport(): string {
   <div class="summary-card"><div class="num">${withWeb}</div><div class="label">Web (Lit)</div></div>
   <div class="summary-card"><div class="num">${withIos}</div><div class="label">iOS (SwiftUI)</div></div>
   <div class="summary-card"><div class="num">${withAndroid}</div><div class="label">Android (Compose)</div></div>
+  <div class="summary-card"><div class="num">${withDrupal}</div><div class="label">Drupal (SDC)</div></div>
 </div>
 `;
 
   for (const result of results) {
-    const { displayName, web, ios, android } = result;
+    const { displayName, web, ios, android, drupal } = result;
 
     // Collect all unique prop names across platforms
     const allProps = new Map<string, { web?: PropDef; ios?: PropDef; android?: PropDef }>();
@@ -691,6 +706,7 @@ function generateReport(): string {
     <span class="badge ${web ? 'yes' : 'no'}">${web ? 'Web' : 'No Web'}</span>
     <span class="badge ${ios ? 'yes' : 'no'}">${ios ? 'iOS' : 'No iOS'}</span>
     <span class="badge ${android ? 'yes' : 'no'}">${android ? 'Android' : 'No Android'}</span>
+    <span class="badge ${drupal ? 'yes' : 'no'}">${drupal ? 'Drupal' : 'No Drupal'}</span>
     <span class="parity-meter"><span class="parity-fill ${parityClass}" style="width:${parityPct}%"></span></span>
     <span style="font-size:12px;color:#71767a;">${parityPct}%</span>
   </div>

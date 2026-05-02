@@ -1,0 +1,42 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Button
+status: stable
+group: CivUI Actions
+description: 'Action button with variant styles.'
+
+props:
+  type: object
+  properties:
+    label:
+      title: Label
+      type: string
+      description: 'Button text (alternative to default slot)'
+    variant:
+      title: Variant
+      type: string
+      enum: ['primary', 'secondary', 'tertiary']
+      description: 'Visual style variant'
+    danger:
+      title: Danger
+      type: boolean
+      default: false
+      description: 'Destructive action styling'
+    type:
+      title: Type
+      type: string
+      enum: ['button', 'submit', 'reset']
+      default: 'button'
+      description: 'HTML button type'
+    disabled:
+      title: Disabled
+      type: boolean
+      default: false
+
+slots:
+  default:
+    title: Default
+    description: 'Child content (alternative to label prop)'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

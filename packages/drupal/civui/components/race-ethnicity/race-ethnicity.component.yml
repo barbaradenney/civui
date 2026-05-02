@@ -1,0 +1,37 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Race Ethnicity
+status: stable
+group: CivUI Compound
+description: 'Compound race and ethnicity selection field per federal standards.'
+
+props:
+  type: object
+  properties:
+    legend:
+      title: Legend
+      type: string
+      description: 'Fieldset legend text'
+    name:
+      title: Name
+      type: string
+      description: 'Form field name prefix'
+    ethnicity_legend:
+      title: Ethnicity legend
+      type: string
+      description: 'Legend for the ethnicity group'
+    race_legend:
+      title: Race legend
+      type: string
+      description: 'Legend for the race group'
+    required:
+      title: Required
+      type: boolean
+      default: false
+    disabled:
+      title: Disabled
+      type: boolean
+      default: false
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

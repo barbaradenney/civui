@@ -1,0 +1,43 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Name
+status: stable
+group: CivUI Compound
+description: 'Compound name field with first, middle, last, and suffix inputs.'
+
+props:
+  type: object
+  properties:
+    legend:
+      title: Legend
+      type: string
+      description: 'Fieldset legend text'
+    name:
+      title: Name
+      type: string
+      description: 'Form field name prefix'
+    format:
+      title: Format
+      type: string
+      description: 'Name format variant'
+    show_middle:
+      title: Show middle
+      type: boolean
+      default: false
+      description: 'Show middle name field'
+    show_suffix:
+      title: Show suffix
+      type: boolean
+      default: false
+      description: 'Show suffix field'
+    required:
+      title: Required
+      type: boolean
+      default: false
+    disabled:
+      title: Disabled
+      type: boolean
+      default: false
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

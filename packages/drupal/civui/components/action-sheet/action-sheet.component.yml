@@ -1,0 +1,37 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Action Sheet
+status: stable
+group: CivUI Overlays
+description: 'Bottom sheet overlay for mobile-friendly action menus.'
+
+props:
+  type: object
+  properties:
+    open:
+      title: Open
+      type: boolean
+      default: false
+      description: 'Whether the action sheet is visible'
+    max_height:
+      title: Max height
+      type: string
+      description: 'Maximum height of the sheet'
+    trap_focus:
+      title: Trap focus
+      type: boolean
+      default: false
+      description: 'Whether to trap focus within the sheet'
+    no_click_outside:
+      title: No click outside
+      type: boolean
+      default: false
+      description: 'Prevent closing by clicking outside'
+
+slots:
+  default:
+    title: Default
+    description: 'Action sheet content'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

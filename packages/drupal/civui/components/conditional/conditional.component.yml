@@ -1,0 +1,43 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Conditional
+status: stable
+group: CivUI Form Patterns
+description: 'Conditionally shows or hides content based on form field values.'
+
+props:
+  type: object
+  properties:
+    when:
+      title: When
+      type: string
+      description: 'Name of the field to watch'
+    equals:
+      title: Equals
+      type: string
+      description: 'Show when field equals this value'
+    not_equals:
+      title: Not equals
+      type: string
+      description: 'Show when field does not equal this value'
+    includes:
+      title: Includes
+      type: string
+      description: 'Show when multi-value field includes this value'
+    has_value:
+      title: Has value
+      type: boolean
+      default: false
+      description: 'Show when the field has any value'
+    matches:
+      title: Matches
+      type: string
+      description: 'Show when field matches this regex pattern'
+
+slots:
+  default:
+    title: Default
+    description: 'Conditionally visible content'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

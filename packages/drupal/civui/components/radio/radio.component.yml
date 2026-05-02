@@ -1,0 +1,38 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Radio
+status: stable
+group: CivUI Controls
+description: 'Single radio button. Use inside a radio-group wrapped in form-fieldset.'
+
+props:
+  type: object
+  properties:
+    label:
+      title: Label
+      type: string
+      description: 'Radio button label text'
+    name:
+      title: Name
+      type: string
+      description: 'Form field name'
+    value:
+      title: Value
+      type: string
+      description: 'Value submitted when selected'
+    checked:
+      title: Checked
+      type: boolean
+      default: false
+      description: 'Whether the radio is selected'
+    description:
+      title: Description
+      type: string
+      description: 'Additional description text'
+    disabled:
+      title: Disabled
+      type: boolean
+      default: false
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

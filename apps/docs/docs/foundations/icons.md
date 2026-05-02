@@ -70,7 +70,7 @@ Each CSS icon maps to platform-native equivalents:
 - **iOS**: SF Symbols
 - **Android**: Material Symbols
 
-CI enforces icon parity across all three platforms.
+CI enforces icon parity across all four platforms.
 
 ## Authoring Icons
 

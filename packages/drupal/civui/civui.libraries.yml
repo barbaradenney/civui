@@ -1,0 +1,8 @@
+# CivUI web component runtime — loaded once, all components register automatically.
+civui:
+  version: VERSION
+  css:
+    theme:
+      css/civui.css: { minified: true }
+  js:
+    js/civui.js: { minified: true, attributes: { type: module } }

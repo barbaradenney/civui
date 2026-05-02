@@ -1293,14 +1293,34 @@ Icons inherit `color` and scale with `font-size`. Each icon maps to platform-nat
 
 ---
 
-## Native Platform Support
+## Platform Support
 
-CivUI provides iOS (SwiftUI) and Android (Jetpack Compose) implementations with 100% API parity validated in CI.
+CivUI ships components for four platforms with automated parity enforcement:
 
-- **iOS:** `packages/ios/Sources/CivUI/` — Swift files with SwiftUI views
-- **Android:** `packages/android/src/main/kotlin/gov/civui/components/` — Kotlin files with Compose composables
-- **Parity CI:** The `parity.yml` workflow enforces 95%+ feature parity across platforms
-- **Native CI:** The `native.yml` workflow verifies Swift and Kotlin files compile
+- **Web (Lit):** `packages/{package}/src/{name}/` — Lit 3 web components
+- **iOS (SwiftUI):** `packages/ios/Sources/CivUI/` — Swift files with SwiftUI views
+- **Android (Compose):** `packages/android/src/main/kotlin/gov/civui/components/` — Kotlin files with Compose composables
+- **Drupal (SDC):** `packages/drupal/civui/components/{name}/` — 69 Single Directory Components for Drupal 10.3+/11
+
+### Drupal Integration
+
+Each Drupal SDC has a `.component.yml` schema and a `.twig` template that renders the corresponding web component. Use them in Twig:
+
+```twig
+{% include 'civui:form-field' with { label: 'Email', required: true } %}
+  {% block default %}
+    {% include 'civui:text-input' with { name: 'email', type: 'email' } %}
+  {% endblock %}
+{% endinclude %}
+```
+
+Drupal stories are co-located next to web component source as `*.drupal.stories.ts` files and can be previewed in Storybook.
+
+### CI Enforcement
+
+- **Parity CI:** `parity.yml` enforces 85%+ feature parity across all four platforms
+- **Native CI:** `native.yml` verifies Swift and Kotlin files compile
+- **Drupal CI:** `validate-drupal-sdc.ts` checks YAML structure, Twig correctness, and prop mapping
 
 ---
 

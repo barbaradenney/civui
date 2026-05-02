@@ -1,0 +1,31 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Page Header
+status: stable
+group: CivUI Layout
+description: 'Page header with tag, eyebrow, heading, and subheading slots.'
+
+props:
+  type: object
+  properties:
+    spacing:
+      title: Spacing
+      type: string
+      description: 'Bottom spacing variant'
+
+slots:
+  tag:
+    title: Tag
+    description: 'Tag element above the eyebrow'
+  eyebrow:
+    title: Eyebrow
+    description: 'Eyebrow text above the heading'
+  heading:
+    title: Heading
+    description: 'Main heading content'
+  subheading:
+    title: Subheading
+    description: 'Subheading below the main heading'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

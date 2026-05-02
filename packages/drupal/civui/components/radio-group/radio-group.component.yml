@@ -1,0 +1,46 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Radio Group
+status: stable
+group: CivUI Controls
+description: 'Group of radio buttons for single-select. Use with form-fieldset for legend/hint/error.'
+
+props:
+  type: object
+  properties:
+    legend:
+      title: Legend
+      type: string
+      description: 'Group legend text'
+    name:
+      title: Name
+      type: string
+      description: 'Form field name'
+    value:
+      title: Value
+      type: string
+      description: 'Currently selected value'
+    required:
+      title: Required
+      type: boolean
+      default: false
+    disabled:
+      title: Disabled
+      type: boolean
+      default: false
+    preset:
+      title: Preset
+      type: string
+      description: 'Preset option set name'
+    preset_variant:
+      title: Preset variant
+      type: string
+      description: 'Variant of the preset options'
+
+slots:
+  default:
+    title: Default
+    description: 'Radio elements'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

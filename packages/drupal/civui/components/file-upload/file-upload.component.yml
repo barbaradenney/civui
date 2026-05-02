@@ -1,0 +1,42 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: File Upload
+status: stable
+group: CivUI Inputs
+description: 'File upload with drag-and-drop support. Wrap in form-field for label/hint/error.'
+
+props:
+  type: object
+  properties:
+    name:
+      title: Name
+      type: string
+      description: 'Form field name'
+    accept:
+      title: Accept
+      type: string
+      description: 'Accepted file types (e.g. .pdf,.jpg)'
+    multiple:
+      title: Multiple
+      type: boolean
+      default: false
+      description: 'Allow multiple file selection'
+    max_size:
+      title: Max size
+      type: integer
+      description: 'Maximum file size in bytes'
+    max_files:
+      title: Max files
+      type: integer
+      description: 'Maximum number of files'
+    required:
+      title: Required
+      type: boolean
+      default: false
+    disabled:
+      title: Disabled
+      type: boolean
+      default: false
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

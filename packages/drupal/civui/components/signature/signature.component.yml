@@ -1,0 +1,33 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Signature
+status: stable
+group: CivUI Compound
+description: 'Digital signature field with certification statement.'
+
+props:
+  type: object
+  properties:
+    legend:
+      title: Legend
+      type: string
+      description: 'Fieldset legend text'
+    name:
+      title: Name
+      type: string
+      description: 'Form field name'
+    statement:
+      title: Statement
+      type: string
+      description: 'Certification statement text'
+    required:
+      title: Required
+      type: boolean
+      default: false
+    disabled:
+      title: Disabled
+      type: boolean
+      default: false
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

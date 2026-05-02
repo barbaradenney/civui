@@ -1,0 +1,37 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Card
+status: stable
+group: CivUI Layout
+description: 'Content card container with heading and optional footer.'
+
+props:
+  type: object
+  properties:
+    heading:
+      title: Heading
+      type: string
+      description: 'Card heading text'
+    spacing:
+      title: Spacing
+      type: string
+      description: 'Internal spacing variant'
+    color:
+      title: Color
+      type: string
+      description: 'Card color variant'
+    card_style:
+      title: Card style
+      type: string
+      description: 'Visual style of the card'
+
+slots:
+  default:
+    title: Default
+    description: 'Card body content'
+  footer:
+    title: Footer
+    description: 'Card footer content'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

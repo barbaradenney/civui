@@ -1,0 +1,42 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Country
+status: stable
+group: CivUI Inputs
+description: 'Country selector input. Wrap in form-field for label/hint/error.'
+
+props:
+  type: object
+  properties:
+    name:
+      title: Name
+      type: string
+      description: 'Form field name'
+    value:
+      title: Value
+      type: string
+      description: 'Selected country code'
+    us_first:
+      title: US first
+      type: boolean
+      default: false
+      description: 'Show United States at top of list'
+    include:
+      title: Include
+      type: string
+      description: 'Comma-separated country codes to include'
+    exclude:
+      title: Exclude
+      type: string
+      description: 'Comma-separated country codes to exclude'
+    required:
+      title: Required
+      type: boolean
+      default: false
+    disabled:
+      title: Disabled
+      type: boolean
+      default: false
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

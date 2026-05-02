@@ -1,0 +1,7 @@
+<civ-section-intro
+  {% if heading %}heading="{{ heading }}"{% endif %}
+  {% if heading_level and heading_level != 2 %}heading-level="{{ heading_level }}"{% endif %}
+  {% if tone %}tone="{{ tone }}"{% endif %}
+>
+  {% block default %}{{ default }}{% endblock %}
+</civ-section-intro>

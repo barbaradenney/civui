@@ -97,11 +97,12 @@ civui/
 │   ├── mcp-server/   — 80-tool MCP server
 │   ├── test-utils/   — Shared test helpers
 │   ├── cli/          — Developer CLI
-│   └── content/      — Content management
+│   ├── content/      — Content management
+│   ├── drupal/       — Drupal SDC module (69 components)
+│   ├── ios/          — SwiftUI components
+│   └── android/      — Jetpack Compose components
 ├── apps/
 │   ├── civ-site/     — VA Forms demo
 │   └── docs/         — This documentation (Docusaurus)
-├── docs/             — Static docs site (legacy)
-└── packages/ios/     — SwiftUI components
-    packages/android/ — Jetpack Compose components
+└── docs/             — AI guide, research docs
 ```

@@ -1,0 +1,21 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Skip Link
+status: stable
+group: CivUI Core
+description: 'Skip navigation link for keyboard accessibility.'
+
+props:
+  type: object
+  properties:
+    label:
+      title: Label
+      type: string
+      description: 'Link text (e.g. "Skip to main content")'
+    href:
+      title: Href
+      type: string
+      description: 'Target anchor (e.g. "#main-content")'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

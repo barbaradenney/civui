@@ -1,0 +1,45 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Date Picker
+status: stable
+group: CivUI Inputs
+description: 'Calendar date picker for scheduling dates. Wrap in form-field for label/hint/error.'
+
+props:
+  type: object
+  properties:
+    name:
+      title: Name
+      type: string
+      description: 'Form field name'
+    value:
+      title: Value
+      type: string
+      description: 'Current date value (ISO format)'
+    min:
+      title: Min date
+      type: string
+      description: 'Earliest selectable date (ISO format)'
+    max:
+      title: Max date
+      type: string
+      description: 'Latest selectable date (ISO format)'
+    placeholder:
+      title: Placeholder
+      type: string
+      description: 'Placeholder text'
+    locale:
+      title: Locale
+      type: string
+      description: 'Locale for date formatting'
+    required:
+      title: Required
+      type: boolean
+      default: false
+    disabled:
+      title: Disabled
+      type: boolean
+      default: false
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

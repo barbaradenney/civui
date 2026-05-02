@@ -1,0 +1,6 @@
+name: CivUI
+type: module
+description: 'Accessibility-first web components for government applications, exposed as Drupal Single Directory Components.'
+core_version_requirement: ^10.3 || ^11
+package: CivUI
+lifecycle: experimental

@@ -1,0 +1,9 @@
+<civ-button
+  {% if label %}label="{{ label }}"{% endif %}
+  {% if variant %}variant="{{ variant }}"{% endif %}
+  {% if danger %}danger{% endif %}
+  {% if type and type != 'button' %}type="{{ type }}"{% endif %}
+  {% if disabled %}disabled{% endif %}
+>
+  {% block default %}{{ default }}{% endblock %}
+</civ-button>

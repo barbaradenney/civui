@@ -1,0 +1,31 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Section Intro
+status: stable
+group: CivUI Layout
+description: 'Section introduction with heading and body content.'
+
+props:
+  type: object
+  properties:
+    heading:
+      title: Heading
+      type: string
+      description: 'Section heading text'
+    heading_level:
+      title: Heading level
+      type: integer
+      default: 2
+      description: 'HTML heading level'
+    tone:
+      title: Tone
+      type: string
+      description: 'Tone variant for styling'
+
+slots:
+  default:
+    title: Default
+    description: 'Section intro body content'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

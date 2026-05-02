@@ -1,0 +1,10 @@
+<civ-conditional
+  {% if when %}when="{{ when }}"{% endif %}
+  {% if equals %}equals="{{ equals }}"{% endif %}
+  {% if not_equals %}not-equals="{{ not_equals }}"{% endif %}
+  {% if includes %}includes="{{ includes }}"{% endif %}
+  {% if has_value %}has-value{% endif %}
+  {% if matches %}matches="{{ matches }}"{% endif %}
+>
+  {% block default %}{{ default }}{% endblock %}
+</civ-conditional>

@@ -1,0 +1,42 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Toggle
+status: stable
+group: CivUI Controls
+description: 'Toggle switch with inline label. Self-contained — does not need form-field wrapper.'
+
+props:
+  type: object
+  properties:
+    label:
+      title: Label
+      type: string
+      description: 'Toggle label text'
+    name:
+      title: Name
+      type: string
+      description: 'Form field name'
+    value:
+      title: Value
+      type: string
+      description: 'Value submitted when toggled on'
+    checked:
+      title: Checked
+      type: boolean
+      default: false
+      description: 'Whether the toggle is on'
+    description:
+      title: Description
+      type: string
+      description: 'Additional description text'
+    required:
+      title: Required
+      type: boolean
+      default: false
+    disabled:
+      title: Disabled
+      type: boolean
+      default: false
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

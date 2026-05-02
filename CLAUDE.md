@@ -33,6 +33,7 @@ Build order: `tokens → core → layout → navigation → actions, overlays �
 | `@civui/cli` | `packages/cli/` | CLI tooling |
 | `@civui/content` | `packages/content/` | Content/copy management |
 | `@civui/mcp-server` | `packages/mcp-server/` | MCP server for AI-assisted form conversion |
+| `@civui/drupal` | `packages/drupal/` | Drupal SDC module — 69 Single Directory Components for Drupal 10.3+/11 |
 | `@civui/schema` | `packages/schema/` | Platform-neutral component schemas (dormant — see below) |
 | `@civui/codegen` | `packages/codegen/` | Cross-platform code generator (dormant — see below) |
 
@@ -183,6 +184,8 @@ Named z-index layers as CSS custom properties — no hardcoded values:
 - Component test: `packages/forms/src/{name}/civ-{name}.test.ts`
 - iOS counterpart: `packages/ios/Sources/CivUI/Civ{Name}.swift`
 - Android counterpart: `packages/android/src/main/kotlin/gov/civui/components/Civ{Name}.kt`
+- Drupal SDC: `packages/drupal/civui/components/{name}/{name}.component.yml` + `{name}.twig`
+- Drupal Storybook story: co-located at `packages/{package}/src/{name}/civ-{name}.drupal.stories.ts`
 - Each component dir has an `index.ts` barrel export
 
 ## Validation System
@@ -213,9 +216,13 @@ registerIcon('home', { label: 'Home', symbol: 'home', ios: 'house', android: 'ho
 
 The `material-symbols` npm package is an optional peer dependency — install it only if you import the opt-in stylesheet.
 
-## Native Platform Support
+## Platform Support
 
-iOS (SwiftUI) and Android (Jetpack Compose) implementations live at `packages/ios/` and `packages/android/`. CI enforces 85%+ API parity across platforms (`parity.yml`) and verifies native files compile (`native.yml`).
+CivUI ships components for four platforms: Web (Lit), iOS (SwiftUI), Android (Jetpack Compose), and Drupal (SDC).
+
+- **iOS/Android:** `packages/ios/` and `packages/android/`. CI enforces 85%+ API parity across platforms (`parity.yml`) and verifies native files compile (`native.yml`).
+- **Drupal:** `packages/drupal/civui/` — a Drupal module with 69 Single Directory Components. Each SDC has a `.component.yml` schema and a `.twig` template that renders the corresponding `<civ-*>` web component. Requires Drupal 10.3+ or 11. Validated by `tools/validate-drupal-sdc.ts`. Drupal parity is included in the parity report.
+- **Storybook Twig preview:** Drupal components can be previewed in Storybook via `vite-plugin-twig-drupal`. Stories are co-located as `*.drupal.stories.ts` files next to web component source.
 
 The parity check (`tools/parity-report.ts`) parses real source files on each platform — it does **not** consult `@civui/schema`.
 
@@ -240,7 +247,7 @@ That guide covers:
 - Validation system (16 validators, declarative `validate` attribute)
 - Mask system (blur-mode default, 6 presets)
 - Icon system (pure CSS shapes, with optional Material Symbols font opt-in)
-- Native platform support (iOS + Android with 100% parity)
+- Platform support (iOS, Android, Drupal SDC — 4 platforms with 85%+ parity)
 - Component selection decision tables (checkbox vs toggle, select vs combobox, date picker vs memorable date)
 - Government design patterns (Section 508, plain language, form validation for .gov)
 - WCAG 2.1 AA checklist specific to CivUI

@@ -1,0 +1,21 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Divider
+status: stable
+group: CivUI Layout
+description: 'Horizontal divider line with spacing options.'
+
+props:
+  type: object
+  properties:
+    spacing:
+      title: Spacing
+      type: string
+      description: 'Vertical spacing variant'
+    variant:
+      title: Variant
+      type: string
+      description: 'Visual style variant'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

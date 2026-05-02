@@ -1,0 +1,14 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Input Group
+status: stable
+group: CivUI Layout
+description: 'Layout container for grouping related form fields side by side.'
+
+slots:
+  default:
+    title: Default
+    description: 'Grouped form fields'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

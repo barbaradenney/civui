@@ -1,0 +1,43 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Badge
+status: stable
+group: CivUI Layout
+description: 'Notification badge with count display and dot variant.'
+
+props:
+  type: object
+  properties:
+    label:
+      title: Label
+      type: string
+      description: 'Accessible label for the badge'
+    count:
+      title: Count
+      type: integer
+      description: 'Numeric count to display'
+    max:
+      title: Max
+      type: integer
+      description: 'Maximum count before showing max+'
+    dot:
+      title: Dot
+      type: boolean
+      default: false
+      description: 'Show as dot indicator instead of count'
+    variant:
+      title: Variant
+      type: string
+      description: 'Color variant'
+    badge_style:
+      title: Badge style
+      type: string
+      description: 'Visual style of the badge'
+    with_icon:
+      title: With icon
+      type: boolean
+      default: false
+      description: 'Include an icon in the badge'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

@@ -1,0 +1,46 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Select
+status: stable
+group: CivUI Inputs
+description: 'Dropdown select input. Wrap in form-field for label/hint/error.'
+
+props:
+  type: object
+  properties:
+    name:
+      title: Name
+      type: string
+      description: 'Form field name'
+    value:
+      title: Value
+      type: string
+      description: 'Currently selected value'
+    preset:
+      title: Preset
+      type: string
+      description: 'Preset option list (e.g. us-states, countries)'
+    preset_variant:
+      title: Preset variant
+      type: string
+      description: 'Variant of the preset (e.g. abbreviation, full)'
+    empty_label:
+      title: Empty label
+      type: string
+      description: 'Placeholder text for the empty first option'
+    required:
+      title: Required
+      type: boolean
+      default: false
+    disabled:
+      title: Disabled
+      type: boolean
+      default: false
+
+slots:
+  options:
+    title: Options
+    description: 'Slotted <option> elements'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

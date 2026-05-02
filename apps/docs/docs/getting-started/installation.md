@@ -76,6 +76,45 @@ function MyForm() {
 }
 ```
 
+## Usage in Drupal
+
+CivUI provides a Drupal module with 69 Single Directory Components (SDC) for Drupal 10.3+ and Drupal 11.
+
+### Setup
+
+1. Copy `packages/drupal/civui/` into your Drupal `modules/custom/` folder
+2. Build the CivUI assets and place them in the module:
+   ```bash
+   pnpm build
+   ```
+3. Enable the module:
+   ```bash
+   drush en civui
+   ```
+
+### Usage in Twig
+
+```twig
+{% include 'civui:form-field' with {
+  label: 'Full name',
+  required: true,
+} %}
+  {% block default %}
+    {% include 'civui:text-input' with {
+      name: 'name',
+      required: true,
+    } %}
+  {% endblock %}
+{% endinclude %}
+
+{% include 'civui:button' with {
+  label: 'Submit',
+  type: 'submit',
+} %}
+```
+
+All 69 web components are available as SDCs using the `civui:` namespace. See the [Native Platforms](/foundations/native-platforms) page for full details.
+
 ## Build Order
 
 Packages must be built in dependency order:

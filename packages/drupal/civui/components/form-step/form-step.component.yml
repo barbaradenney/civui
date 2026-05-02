@@ -1,0 +1,46 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Form Step
+status: stable
+group: CivUI Form Patterns
+description: 'Single step in a multi-step form flow.'
+
+props:
+  type: object
+  properties:
+    persist:
+      title: Persist
+      type: boolean
+      default: false
+      description: 'Persist step data to storage'
+    sensitive:
+      title: Sensitive
+      type: boolean
+      default: false
+      description: 'Mark step as containing sensitive data'
+    show_pause:
+      title: Show pause
+      type: boolean
+      default: false
+      description: 'Show a save and pause button'
+    continue_label:
+      title: Continue label
+      type: string
+      description: 'Label for the continue button'
+    complete_label:
+      title: Complete label
+      type: string
+      description: 'Label for the final step button'
+    heading_level:
+      title: Heading level
+      type: integer
+      default: 2
+      description: 'HTML heading level for the step heading'
+
+slots:
+  default:
+    title: Default
+    description: 'Step form content'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

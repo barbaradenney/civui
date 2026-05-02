@@ -1,0 +1,51 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Modal
+status: stable
+group: CivUI Overlays
+description: 'Modal dialog overlay. Renders as bottom sheet on mobile.'
+
+props:
+  type: object
+  properties:
+    open:
+      title: Open
+      type: boolean
+      default: false
+      description: 'Whether the modal is visible'
+    heading:
+      title: Heading
+      type: string
+      description: 'Modal heading text'
+    label:
+      title: Label
+      type: string
+      description: 'Accessible label for the modal'
+    no_close_button:
+      title: No close button
+      type: boolean
+      default: false
+      description: 'Hide the close button'
+    no_backdrop_close:
+      title: No backdrop close
+      type: boolean
+      default: false
+      description: 'Prevent closing by clicking the backdrop'
+    no_escape_close:
+      title: No escape close
+      type: boolean
+      default: false
+      description: 'Prevent closing with the Escape key'
+    heading_level:
+      title: Heading level
+      type: integer
+      default: 2
+      description: 'HTML heading level for the modal heading'
+
+slots:
+  default:
+    title: Default
+    description: 'Modal content'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

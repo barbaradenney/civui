@@ -199,20 +199,17 @@ Input masking engine in `@civui/core` with blur-mode default (mask on blur, raw 
 
 ## Icon System
 
-Built-in icons render as pure CSS pseudo-element shapes via the `.civ-icon--{name}` class — no font, no SVG, no extra HTTP requests. Icons inherit `color` (via `currentColor`) and scale with `font-size`. The default registry is intentionally small (only the icons CivUI's own components reference). Use `<civ-icon name="..." label="...">`.
+14 inline SVG icons based on Material Icons Outlined — no font files, no external requests. Each icon is an SVG path in a 24×24 viewBox with `fill="currentColor"`, so icons inherit color and scale with font-size. Use `<civ-icon name="..." label="...">`.
 
 Adding a new icon:
-1. Author the shape in `packages/core/src/styles/components.css` as a `.civ-icon--{name}::before` / `::after` rule. To prototype interactively, run `pnpm storybook` and open **Core › Icon › Editor** — a live CSS editor with a snippet palette, multi-size preview, pixel grid, and dark-mode toggle. Copy the resulting CSS into `components.css` when you're done.
-2. Register the name in `packages/core/src/icon/icon-library.ts` with the SF Symbol (`ios`) and Material Symbols (`android`) names for native parity.
+1. Find the SVG path from [Material Icons](https://fonts.google.com/icons), [Lucide](https://lucide.dev/), or any SVG icon set.
+2. Register it in `packages/core/src/icon/icon-library.ts` with the `path` (SVG `d` attribute), `label`, and native mappings (`ios`, `android`). Multiple paths are separated by `|||`.
 
-**Optional Material Symbols font** — for icons not authored as CSS shapes, consumers can opt in to the full Material Symbols catalog:
+**Optional Material Symbols font** — for broad icon coverage without individual paths, consumers can opt in to the full Material Symbols catalog:
 
 ```ts
-// once, at app entry
 import '@civui/core/styles/material-symbols';
-
-// then register icons with a `symbol` field instead of authoring CSS
-registerIcon('home', { label: 'Home', symbol: 'home', ios: 'house', android: 'home' });
+registerIcon('home', { label: 'Home', path: '', symbol: 'home', ios: 'house', android: 'home' });
 ```
 
 The `material-symbols` npm package is an optional peer dependency — install it only if you import the opt-in stylesheet.
@@ -247,7 +244,7 @@ That guide covers:
 - Preset inputs, compound fields, overlays, link variants, and form patterns
 - Validation system (16 validators, declarative `validate` attribute)
 - Mask system (blur-mode default, 6 presets)
-- Icon system (pure CSS shapes, with optional Material Symbols font opt-in)
+- Icon system (14 inline SVG icons from Material Icons Outlined, with optional font opt-in)
 - Platform support (iOS, Android, Drupal SDC — 4 platforms with 85%+ parity)
 - Component selection decision tables (checkbox vs toggle, select vs combobox, date picker vs memorable date)
 - Government design patterns (Section 508, plain language, form validation for .gov)

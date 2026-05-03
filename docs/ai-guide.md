@@ -1276,20 +1276,24 @@ Input masking for formatted fields. Uses blur-mode by default (mask applied on b
 
 ## Icon System
 
-14 pure-CSS icons rendered via `::before`/`::after` pseudo-elements — only the icons CivUI's own components reference. No font files, no SVG, no Unicode — just CSS.
+14 inline SVG icons based on Material Icons Outlined — only the icons CivUI's own components reference. No font files, no external requests — just lightweight SVG paths inlined in the component.
 
 **Usage:**
 ```html
 <civ-icon name="check-circle" label="Success"></civ-icon>
 ```
 
-Icons inherit `color` and scale with `font-size`. Each icon maps to platform-native equivalents (SF Symbols for iOS, Material Symbols for Android).
+Icons inherit `color` (via `fill="currentColor"`) and scale with `font-size`. Each icon maps to platform-native equivalents (SF Symbols for iOS, Material Symbols for Android).
 
 **Built-in set:** `check`, `check-circle`, `chevron-down`, `chevron-left`, `chevron-right`, `close`, `download`, `error`, `external-link`, `info`, `loading`, `mail`, `phone`, `warning`.
 
-**Beyond the built-in set:** for icons outside this list, register your own CSS shape via `registerIcon()` or opt in to the full Material Symbols catalog with `import '@civui/core/styles/material-symbols'` and register icons with a `symbol` field (`registerIcon('home', { label: 'Home', symbol: 'home' })`). The `material-symbols` package is an optional peer dependency.
+**Adding custom icons:** Register an SVG path (24×24 viewBox) via `registerIcon()`:
 
-**Authoring new icons:** Storybook ships a live CSS editor at **Core › Icon › Editor**. Pick any icon to edit its `::before`/`::after` rules with a side preview, or click **+ New icon** to author one from scratch using snippet primitives (chevron, triangle, circle, diamond). The editor only writes to a scoped `<style>` in the preview pane — when you're happy, click **Copy CSS** and paste into `packages/core/src/styles/components.css`, then add the icon's metadata to `packages/core/src/icon/icon-library.ts`.
+```ts
+registerIcon('lock', { label: 'Locked', path: 'M18 8h-1V6c0-2.76...', ios: 'lock', android: 'lock' });
+```
+
+For broad icon coverage, opt in to the Material Symbols font: `import '@civui/core/styles/material-symbols'` and register icons with a `symbol` field and empty `path`.
 
 ---
 

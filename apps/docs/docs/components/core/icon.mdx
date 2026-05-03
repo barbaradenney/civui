@@ -10,7 +10,7 @@ import StoryEmbed from "@site/src/components/StoryEmbed";
 
 `<civ-icon>`
 
-A pure CSS icon component. Each icon is rendered as a single `<span>` with the shape drawn entirely via `::before`/`::after` pseudo-elements. No SVG, no font files, no Unicode characters -- just CSS.
+An inline SVG icon component using Material Icons Outlined paths. Each icon renders as an `<svg>` element with `fill="currentColor"` — no font files, no external requests.
 
 Icons inherit `color` and scale with `font-size`, so they automatically match surrounding text.
 
@@ -79,7 +79,7 @@ CivUI ships only the 14 icons used by its own components:
 - **Actions:** `close`, `download`
 - **Communication:** `mail`, `phone`
 
-For anything outside this set, register your own CSS shape with `registerIcon()` or opt in to the [Material Symbols font](../../foundations/icons#beyond-the-built-in-set).
+For anything outside this set, register your own SVG path with `registerIcon()` or opt in to the [Material Symbols font](../../foundations/icons#beyond-the-built-in-set).
 
 ## Accessibility
 

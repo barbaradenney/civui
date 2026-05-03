@@ -17,7 +17,7 @@ Accessibility-first web components for government applications. Built on Lit 3, 
 - **Dark Mode** — automatic system preference detection with token-based colors
 - **Density Scale** — dense, default, and spacious modes via CSS custom properties
 - **Light DOM** — no Shadow DOM, external labels and ARIA work naturally
-- **CSS Icons** — 14 pure-CSS icons, no fonts or SVGs (Material Symbols available as an opt-in)
+- **SVG Icons** — 14 inline Material Icons, no fonts or external requests (Material Symbols font available as opt-in)
 - **4 Platforms** — Web (Lit), iOS (SwiftUI), Android (Compose), Drupal (SDC)
 
 ## Quick Start
@@ -63,7 +63,7 @@ import '@civui/form-patterns';
 ## Design Philosophy
 
 - **Use the platform** — native `<select>`, `<input>`, `<fieldset>`, `<button>` elements
-- **CSS over JavaScript** — states handled with attribute selectors, icons drawn with CSS
+- **CSS over JavaScript** — states handled with attribute selectors, icons rendered as inline SVG
 - **System fonts** — zero network requests, no flash of unstyled text
 - **Border radius signals interactivity** — only clickable elements get rounded corners
 - **Underlines signal navigation** — links are underlined, action buttons are not

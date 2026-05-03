@@ -6,16 +6,17 @@ sidebar_label: Icons
 
 # Icons
 
-CivUI ships 14 pure-CSS icons rendered via `::before`/`::after` pseudo-elements — only the icons CivUI's own components reference. No font files, no SVG, no Unicode characters -- just CSS. For richer icon needs, the full Material Symbols catalog is available as an opt-in (see [Beyond the Built-In Set](#beyond-the-built-in-set) below).
+CivUI ships 14 inline SVG icons based on Material Icons Outlined — only the icons CivUI's own components reference. No font files, no external requests, no pseudo-element hacks — just lightweight SVG paths inlined in the component. For richer icon needs, the full Material Symbols catalog is available as an opt-in (see [Beyond the Built-In Set](#beyond-the-built-in-set) below).
 
 ## How It Works
 
-Each icon is a single `<span>` element styled with CSS pseudo-elements. The shapes are drawn using CSS properties like `border`, `transform`, and `box-shadow`. This approach means:
+Each icon renders as an inline `<svg>` element with Material Icons Outlined path data. The SVG uses a 24×24 viewBox with `fill="currentColor"`, which means:
 
 - Zero network requests for icon assets
-- Icons inherit `color` from their parent
-- Icons scale with `font-size`
+- Icons inherit `color` from their parent (via `currentColor`)
+- Icons scale with `font-size` (sized at `0.875em` for optical text matching)
 - No flash of unstyled content
+- Pixel-perfect rendering at any size
 - Works in all modern browsers without polyfills
 
 ## Usage
@@ -48,7 +49,7 @@ Each icon is a single `<span>` element styled with CSS pseudo-elements. The shap
 
 | Value | Font Size |
 |-------|-----------|
-| `sm` | 0.75em |
+| `sm` | 0.875em |
 | `md` | 1em |
 | `lg` | 1.5em |
 | `xl` | 2em |
@@ -65,38 +66,50 @@ Always set `label` on icons that convey information the user needs, such as stat
 
 ## Native Platform Mapping
 
-Each CSS icon maps to platform-native equivalents:
+Each SVG icon maps to platform-native equivalents:
 
 - **iOS**: SF Symbols
 - **Android**: Material Symbols
 
 CI enforces icon parity across all four platforms.
 
-## Authoring Icons
+## Adding Custom Icons
 
-To edit an existing icon or author a new one, run `pnpm storybook` and open **Core › Icon › Editor**. The editor gives you a live CSS textarea with a scoped preview, a snippet palette of common shape primitives (chevron, triangle, circle, diamond, etc.), a multi-size preview (16/24/32/64 px), color swatches, a pixel grid, and a dark-mode toggle. Edits never touch the real library — when you're happy, click **Copy CSS** and paste the rules into `packages/core/src/styles/components.css`, then add the icon's name and platform mappings to `packages/core/src/icon/icon-library.ts`.
-
-## Beyond the Built-In Set
-
-If you need icons outside the built-in 14, you have two paths:
-
-**1. Author your own CSS shape**
-
-Author a `.civ-icon--{name}` rule alongside your application's stylesheet, then register the name:
+Register a custom icon with an SVG path (24×24 viewBox):
 
 ```ts
 import { registerIcon } from '@civui/core';
 
 registerIcon('agency-seal', {
   label: 'Agency seal',
+  path: 'M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5',
   ios: 'shield',
   android: 'shield',
 });
 ```
 
+You can find SVG path data from [Material Icons](https://fonts.google.com/icons), [Lucide](https://lucide.dev/), or any SVG icon set — just extract the `d` attribute from the `<path>` element.
+
+For icons with multiple paths, separate them with `|||`:
+
+```ts
+registerIcon('lock', {
+  label: 'Locked',
+  path: 'M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2z|||M12 17c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z',
+});
+```
+
+## Beyond the Built-In Set
+
+If you need icons outside the built-in 14, you have two paths:
+
+**1. Register a custom SVG path icon** (recommended)
+
+Find the icon you need from any SVG icon library, extract the path data, and register it as shown above. This adds zero bundle size — just a string in your JavaScript.
+
 **2. Opt in to the Material Symbols font**
 
-For broad icon coverage without writing CSS, import the optional Material Symbols font and register icons by their glyph name:
+For broad icon coverage without finding individual paths, import the optional Material Symbols font and register icons by their glyph name:
 
 ```ts
 import '@civui/core/styles/material-symbols';
@@ -104,6 +117,7 @@ import { registerIcon } from '@civui/core';
 
 registerIcon('home', {
   label: 'Home',
+  path: '', // empty path — font glyph is used instead
   symbol: 'home',
   ios: 'house',
   android: 'home',

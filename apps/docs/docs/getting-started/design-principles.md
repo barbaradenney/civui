@@ -49,11 +49,11 @@ Visual states are handled with CSS:
 - Error borders via `[aria-invalid]`
 - Disabled opacity via `:disabled`
 - Selection highlights via `:has(:checked)`
-- Icons drawn with borders, clip-path, and pseudo-elements — zero SVGs
+- Icons rendered as inline SVG paths — zero external requests
 
 ## Every Byte Is Earned
 
-- 14 icons drawn entirely with CSS (no SVGs, no icon fonts) — full Material Symbols catalog available as an opt-in
+- 14 inline SVG icons from Material Icons Outlined (no icon fonts, no external requests) — full Material Symbols font available as opt-in
 - No CSS-in-JS (static Tailwind)
 - No hidden input hacks (ElementInternals)
 - Lit (~16K gzipped) is the only runtime dependency

@@ -41,7 +41,7 @@ When you add or change a token in the JSON source files, all platform outputs re
 
 ## Icon Mapping
 
-Web icons are pure CSS (no font files, no SVG). Native platforms use platform-native icon systems:
+Web icons are inline SVG paths from Material Icons Outlined. Native platforms use platform-native icon systems:
 
 | Web (CSS) | iOS | Android |
 |-----------|-----|---------|
@@ -67,7 +67,7 @@ Some features are inherently web-specific and have no native counterpart:
 
 - **sessionStorage/persist** -- browser storage for form state persistence across page loads
 - **URL prefill** -- populating form fields from URL query parameters
-- **CSS pseudo-element icons** -- native platforms use SF Symbols and Material Symbols instead
+- **Inline SVG icons** -- web uses Material Icons Outlined SVG paths; native platforms use SF Symbols and Material Symbols instead
 - **Light DOM rendering** -- a Lit/web platform concept
 - **ElementInternals** -- browser form participation API
 - **Tailwind CSS utilities** -- native platforms use token constants directly

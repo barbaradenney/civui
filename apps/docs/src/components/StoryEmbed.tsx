@@ -102,12 +102,15 @@ export default function StoryEmbed({ id, title, minHeight = 100 }: StoryEmbedPro
     return () => observerRef.current?.disconnect();
   }, [visible, setupResizeObserver]);
 
+  const isDev = typeof window !== 'undefined' && window.location.hostname === 'localhost';
+  const storybookBase = isDev ? 'http://localhost:6006' : '/civui/storybook';
+
   return (
     <div ref={containerRef} style={{ minHeight }}>
       {visible && (
         <iframe
           ref={iframeRef}
-          src={`/civui/storybook/iframe.html?id=${id}&viewMode=story`}
+          src={`${storybookBase}/iframe.html?id=${id}&viewMode=story`}
           title={title || id}
           width="100%"
           height={height}

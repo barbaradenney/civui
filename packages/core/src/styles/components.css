@@ -71,7 +71,7 @@
   /* ── File Item (matches civ-list-item__row layout) ──────────── */
 
   .civ-file-item {
-    @apply civ-flex civ-items-center civ-justify-between civ-gap-3 civ-p-4 civ-text-base;
+    @apply civ-flex civ-items-center civ-justify-between civ-gap-3 civ-py-3 civ-px-0 civ-text-base;
   }
 
   .civ-file-item + .civ-file-item {
@@ -80,6 +80,10 @@
 
   .civ-file-item__content {
     @apply civ-flex-1 civ-min-w-0;
+  }
+
+  .civ-file-item__content span {
+    @apply civ-truncate civ-block;
   }
 
   .civ-file-item__actions {
@@ -579,6 +583,20 @@
     color: var(--civ-color-base-light);
   }
 
+  /* Mobile: collapse dropzone to compact browse button (no drag on touch) */
+  @media (max-width: 480px) {
+    .civ-dropzone {
+      @apply civ-py-3 civ-px-4 civ-text-start civ-border civ-border-solid;
+    }
+    .civ-dropzone > span:first-child {
+      display: none;
+    }
+    .civ-dropzone--full {
+      min-height: auto;
+      @apply civ-py-3;
+    }
+  }
+
   .civ-dropzone--full {
     @apply civ-py-20;
     min-height: 250px;
@@ -654,6 +672,7 @@
            civ-p-1;
     inset-inline-end: 0.25rem;
     top: 50%;
+    font-size: 1.25em;
     transform: translateY(-50%);
     color: var(--civ-color-base-dark);
   }
@@ -675,10 +694,13 @@
 
   /* When the clear button is present too, shift it left of the chevron and
      widen the input padding to accommodate both. */
-  [data-civ-combobox] > .civ-clear-btn {
+  [data-civ-combobox] > .civ-close-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
     inset-inline-end: 2rem;
   }
-  [data-civ-combobox]:has(> .civ-clear-btn) > input {
+  [data-civ-combobox]:has(> .civ-close-btn) > input {
     padding-inline-end: 4.25rem;
   }
 
@@ -2350,12 +2372,13 @@
   /* ── Dark mode overrides for popup/overlay backgrounds ────── */
   @media (prefers-color-scheme: dark) {
     .civ-combobox-listbox {
-      background-color: var(--civ-color-base-darkest);
+      background-color: var(--civ-color-white-DEFAULT);
       border-color: var(--civ-color-base-dark);
+      color: var(--civ-color-base-darkest);
     }
 
     .civ-datepicker-dialog {
-      background-color: var(--civ-color-base-darkest);
+      background-color: var(--civ-color-white-DEFAULT);
       border-color: var(--civ-color-base-dark);
     }
 
@@ -2377,6 +2400,28 @@
       background-color: var(--civ-color-base-darkest);
       border-color: var(--civ-color-base-dark);
     }
+  }
+
+  /* Same dark overrides for Storybook toolbar toggle */
+  :root[data-civ-theme="dark"] .civ-combobox-listbox {
+    background-color: var(--civ-color-white-DEFAULT);
+    border-color: var(--civ-color-base-dark);
+    color: var(--civ-color-base-darkest);
+  }
+
+  :root[data-civ-theme="dark"] .civ-datepicker-dialog {
+    background-color: var(--civ-color-white-DEFAULT);
+    border-color: var(--civ-color-base-dark);
+  }
+
+  :root[data-civ-theme="dark"] dialog.civ-modal {
+    background-color: var(--civ-color-white-DEFAULT);
+    color: var(--civ-color-base-darkest);
+  }
+
+  :root[data-civ-theme="dark"] .civ-action-sheet {
+    background-color: var(--civ-color-white-DEFAULT);
+    border-color: var(--civ-color-base-dark);
   }
 
 }

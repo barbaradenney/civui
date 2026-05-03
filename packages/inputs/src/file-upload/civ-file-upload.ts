@@ -356,9 +356,9 @@ export class CivFileUpload extends CivFormElement {
                       <div class="civ-file-item__content">
                         <span class="civ-block">
                           ${file.isInitial && file.url
-                            ? html`<a class="civ-font-bold" href="${file.url}" target="_blank" rel="noopener noreferrer">${file.name}</a>`
-                            : html`<span class="civ-font-bold">${file.name}</span>`}
-                          <span class="civ-text-sm civ-ms-2">(${formatFileSize(file.size)})</span>
+                            ? html`<a href="${file.url}" target="_blank" rel="noopener noreferrer">${file.name}</a>`
+                            : html`<span>${file.name}</span>`}
+                          <span class="civ-ms-2">(${formatFileSize(file.size)})</span>
                         </span>
                         ${file.status === 'uploading' ? html`
                           <div class="civ-progress-track civ-progress-track--compact civ-mt-1">
@@ -387,15 +387,14 @@ export class CivFileUpload extends CivFormElement {
                           ></civ-action-button>
                         ` : nothing}
                         ${file.status !== 'uploading' ? html`
-                          <civ-action-button
-                            variant="tertiary"
-                            danger
-                            label="${this.removeText || t('fileUploadRemoveText')}"
+                          <button
+                            type="button"
+                            class="civ-close-btn"
                             aria-label="${interpolate(this.removeAriaLabel || t('fileUploadRemoveAriaLabel'), { name: file.name })}"
                             ?disabled="${this.disabled}"
                             @click="${() => this._removeFile(index)}"
                             data-file-remove
-                          ></civ-action-button>
+                          ><civ-icon name="close" aria-hidden="true"></civ-icon></button>
                         ` : nothing}
                       </span>`}
                     </li>

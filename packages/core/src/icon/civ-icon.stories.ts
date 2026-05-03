@@ -59,10 +59,10 @@ export const Sizes: Story = {
 export const InheritColor: Story = {
   render: () => html`
     <div class="civ-flex civ-items-center civ-gap-4">
-      <span class="civ-text-primary"><civ-icon name="info" size="lg"></civ-icon> Information</span>
-      <span class="civ-text-success"><civ-icon name="check-circle" size="lg"></civ-icon> Success</span>
-      <span class="civ-text-error"><civ-icon name="error" size="lg"></civ-icon> Error</span>
-      <span class="civ-text-warning"><civ-icon name="warning" size="lg"></civ-icon> Warning</span>
+      <span class="civ-text-primary"><civ-icon name="info"></civ-icon> Information</span>
+      <span class="civ-text-success"><civ-icon name="check-circle"></civ-icon> Success</span>
+      <span class="civ-text-error"><civ-icon name="error"></civ-icon> Error</span>
+      <span class="civ-text-warning"><civ-icon name="warning"></civ-icon> Warning</span>
     </div>
   `,
 };

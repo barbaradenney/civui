@@ -118,9 +118,11 @@ export default function StoryEmbed({ id, title, minHeight = 100 }: StoryEmbedPro
           loading="lazy"
           onLoad={handleLoad}
           style={{
-            border: '1px solid #dfe1e2',
+            border: '1px solid var(--ifm-toc-border-color, #dfe1e2)',
             borderRadius: '6px',
             overflow: 'hidden',
+            background: 'var(--ifm-background-color, #fff)',
+            colorScheme: 'normal',
           }}
         />
       )}

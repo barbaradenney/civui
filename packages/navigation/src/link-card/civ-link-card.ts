@@ -80,6 +80,9 @@ export class CivLinkCard extends LightDomSlotMixin(CivBaseElement) {
   /** Icon name to render after the heading. */
   @property({ type: String, attribute: 'icon-end' }) iconEnd = '';
 
+  /** Eyebrow text rendered above the heading in small caps. */
+  @property({ type: String }) eyebrow = '';
+
   /** Disabled state — removes href and prevents navigation. */
   @property({ type: Boolean, reflect: true }) disabled = false;
 
@@ -125,6 +128,7 @@ export class CivLinkCard extends LightDomSlotMixin(CivBaseElement) {
         title="${this.disabled ? t('linkDisabledTitle') : nothing}"
         @click="${this._onClick}"
       >
+        ${this.eyebrow ? html`<span class="civ-link-card__eyebrow">${this.eyebrow}</span>` : nothing}
         <span data-civ-link-card-slot></span>
         ${useLayout ? html`
           <span class="civ-link-card__layout">
@@ -140,6 +144,7 @@ export class CivLinkCard extends LightDomSlotMixin(CivBaseElement) {
           </span>
         ` : html`
           <span class="civ-link-card__heading">${this.heading}</span>
+
           ${this.description
             ? html`<span class="civ-link-card__description">${this.description}</span>`
             : nothing}

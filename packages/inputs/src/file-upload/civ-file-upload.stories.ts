@@ -237,8 +237,10 @@ export const UploadSimulation: Story = {
       const detail = (e as CustomEvent).detail;
       if (!detail?.files?.length) return;
 
-      const startIndex = detail.files.length - 1;
-      for (let i = 0; i <= startIndex; i++) {
+      const totalFiles = el.files?.length ?? detail.files.length;
+      const newCount = detail.files.length;
+      const startIndex = totalFiles - newCount;
+      for (let i = startIndex; i < totalFiles; i++) {
         const fileIndex = i;
         el.setFileStatus(fileIndex, 'uploading', { progress: 0 });
         el.getAbortController(fileIndex);

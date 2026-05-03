@@ -71,7 +71,7 @@
   /* ── File Item (matches civ-list-item__row layout) ──────────── */
 
   .civ-file-item {
-    @apply civ-flex civ-items-center civ-justify-between civ-gap-3 civ-py-3 civ-px-0 civ-text-base;
+    @apply civ-flex civ-items-start civ-justify-between civ-gap-3 civ-py-3 civ-px-0 civ-text-base;
   }
 
   .civ-file-item + .civ-file-item {
@@ -80,10 +80,7 @@
 
   .civ-file-item__content {
     @apply civ-flex-1 civ-min-w-0;
-  }
-
-  .civ-file-item__content span {
-    @apply civ-truncate civ-block;
+    word-break: break-word;
   }
 
   .civ-file-item__actions {
@@ -224,6 +221,14 @@
     .civ-field-width-lg {
       max-width: none;
     }
+  }
+
+  /* ── Eyebrow (shared across page-header, link-card, card) ── */
+
+  .civ-eyebrow {
+    @apply civ-text-sm civ-font-semibold civ-uppercase;
+    letter-spacing: 0.05em;
+    color: var(--civ-color-base-dark);
   }
 
   /* ── Heading styles ──────────────────────────────────────── */
@@ -1677,6 +1682,10 @@
     min-width: 0;
   }
 
+  .civ-link-card__eyebrow {
+    @apply civ-block civ-mb-1 civ-eyebrow;
+  }
+
   .civ-link-card__heading {
     @apply civ-block civ-font-bold civ-underline;
     font-size: var(--civ-typography-fontSize-lg);
@@ -1730,8 +1739,8 @@
 
   /* Critical — bold gold, always dark text regardless of color scheme */
   .civ-link-card--critical {
-    background-color: var(--civ-color-warning-light);
-    border-color: var(--civ-color-warning-light);
+    background-color: var(--civ-color-warning-lighter);
+    border-color: var(--civ-color-warning-DEFAULT);
     color: var(--civ-color-base-darkest);
   }
   .civ-link-card--critical:hover {
@@ -1775,10 +1784,7 @@
   }
 
   .civ-page-header__eyebrow {
-    @apply civ-text-sm civ-font-bold;
-    color: var(--civ-color-base-dark);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+    @apply civ-eyebrow;
   }
 
   .civ-page-header__heading {
@@ -2397,8 +2403,15 @@
     }
 
     .civ-link-card--tertiary {
-      background-color: var(--civ-color-base-darkest);
+      background-color: var(--civ-color-white-DEFAULT);
       border-color: var(--civ-color-base-dark);
+      color: var(--civ-color-base-darkest);
+    }
+
+    .civ-link-card--critical {
+      background-color: var(--civ-color-warning-lighter);
+      border-color: var(--civ-color-warning-DEFAULT);
+      color: var(--civ-color-black-DEFAULT);
     }
   }
 
@@ -2422,6 +2435,18 @@
   :root[data-civ-theme="dark"] .civ-action-sheet {
     background-color: var(--civ-color-white-DEFAULT);
     border-color: var(--civ-color-base-dark);
+  }
+
+  :root[data-civ-theme="dark"] .civ-link-card--tertiary {
+    background-color: var(--civ-color-white-DEFAULT);
+    border-color: var(--civ-color-base-dark);
+    color: var(--civ-color-base-darkest);
+  }
+
+  :root[data-civ-theme="dark"] .civ-link-card--critical {
+    background-color: var(--civ-color-warning-dark);
+    border-color: var(--civ-color-warning-dark);
+    color: var(--civ-color-base-darkest);
   }
 
 }

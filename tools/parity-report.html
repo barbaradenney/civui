@@ -48,11 +48,11 @@
 <p class="subtitle">Auto-generated 5/2/2026 — extracted from source code</p>
 
 <div class="summary">
-  <div class="summary-card"><div class="num">69</div><div class="label">Components</div></div>
-  <div class="summary-card"><div class="num">63</div><div class="label">Web (Lit)</div></div>
-  <div class="summary-card"><div class="num">67</div><div class="label">iOS (SwiftUI)</div></div>
-  <div class="summary-card"><div class="num">67</div><div class="label">Android (Compose)</div></div>
-  <div class="summary-card"><div class="num">69</div><div class="label">Drupal (SDC)</div></div>
+  <div class="summary-card"><div class="num">70</div><div class="label">Components</div></div>
+  <div class="summary-card"><div class="num">64</div><div class="label">Web (Lit)</div></div>
+  <div class="summary-card"><div class="num">68</div><div class="label">iOS (SwiftUI)</div></div>
+  <div class="summary-card"><div class="num">68</div><div class="label">Android (Compose)</div></div>
+  <div class="summary-card"><div class="num">70</div><div class="label">Drupal (SDC)</div></div>
 </div>
 
 <div class="component">
@@ -2791,6 +2791,77 @@
           <td><span class="check">✓</span></td>
           <td><span class="check">✓</span></td>
           <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr>
+    </table>
+  </div>
+</div>
+<div class="component">
+  <div class="component-header" onclick="this.nextElementSibling.classList.toggle('open')">
+    FilterableList
+    <span class="badge yes">Web</span>
+    <span class="badge yes">iOS</span>
+    <span class="badge yes">Android</span>
+    <span class="badge yes">Drupal</span>
+    <span class="parity-meter"><span class="parity-fill high" style="width:80%"></span></span>
+    <span style="font-size:12px;color:#71767a;">80%</span>
+  </div>
+  <div class="component-body">
+    <div class="file-path" style="padding:8px 12px;">
+      Web: packages/layout/src/filterable-list/civ-filterable-list.ts
+      <br>iOS: packages/ios/Sources/CivUI/CivFilterableList.swift
+      <br>Android: packages/android/src/main/kotlin/gov/civui/components/CivFilterableList.kt
+      <br>Drupal: packages/drupal/civui/components/filterable-list/filterable-list.component.yml
+    </div>
+    <div class="section-label">Properties <button class="toggle-excluded" onclick="document.body.classList.toggle('show-excluded')">Toggle web-only / native-only props</button></div>
+    <table>
+      <tr><th>Property</th><th>Web</th><th>iOS</th><th>Android</th><th>Drupal</th></tr>
+      <tr class="">
+          <td><strong>noResultsMessage</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">string</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>announceDelay</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Number</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">integer</span></td>
+        </tr><tr class="">
+          <td><strong>resultCountHidden</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">boolean</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>filterAttribute</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">string</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>label</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">string</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>filters</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Filters</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr>
+    </table>
+    <div class="section-label">Events / Callbacks</div>
+    <table>
+      <tr><th>Event</th><th>Web</th><th>iOS</th><th>Android</th><th>Drupal</th></tr>
+      <tr class="gap-row">
+          <td><strong>civ-filter</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
           <td><span class="cross">✗</span></td>
         </tr>
     </table>

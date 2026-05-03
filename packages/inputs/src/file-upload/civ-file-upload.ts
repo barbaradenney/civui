@@ -285,16 +285,16 @@ export class CivFileUpload extends CivFormElement {
           ? html`
             <button
               type="button"
-              class="civ-flex civ-gap-2 civ-items-center civ-w-full civ-bg-transparent civ-border-0 civ-p-0 civ-cursor-pointer"
+              class="civ-flex civ-items-stretch civ-w-full civ-bg-transparent civ-border-0 civ-p-0 civ-cursor-pointer"
               @click="${this._onDropzoneClick}"
               ?disabled="${this.disabled}"
             >
-              <span class="civ-input civ-flex-1 civ-truncate civ-text-start">
+              <span class="civ-input civ-flex-1 civ-truncate civ-text-start civ-rounded-s" style="border-inline-end:0;border-start-end-radius:0;border-end-end-radius:0;">
                 ${this._files.length > 0
                   ? this._files.map(f => f.name).join(', ')
                   : (this.dragText || t('fileUploadNoFileChosen'))}
               </span>
-              <span class="civ-action-btn civ-action-btn--tertiary civ-shrink-0">${this.browseText || t('fileUploadBrowseText')}</span>
+              <span class="civ-action-btn civ-action-btn--tertiary civ-shrink-0 civ-rounded-e" style="border-start-start-radius:0;border-end-start-radius:0;">${this.browseText || t('fileUploadBrowseText')}</span>
             </button>`
           : html`
             <button
@@ -357,8 +357,8 @@ export class CivFileUpload extends CivFormElement {
                         <span class="civ-block">
                           ${file.isInitial && file.url
                             ? html`<a href="${file.url}" target="_blank" rel="noopener noreferrer">${file.name}</a>`
-                            : html`<span>${file.name}</span>`}
-                          <span class="civ-ms-2">(${formatFileSize(file.size)})</span>
+                            : html`${file.name}`}
+                          <span class="civ-text-sm">(${formatFileSize(file.size)})</span>
                         </span>
                         ${file.status === 'uploading' ? html`
                           <div class="civ-progress-track civ-progress-track--compact civ-mt-1">

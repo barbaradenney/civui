@@ -1,21 +1,26 @@
 <style>
   /* Storybook-specific styles — tokens are imported via preview.ts */
 
-  body {
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    color: var(--civ-color-base-darkest);
-    background-color: var(--civ-color-white-DEFAULT, #ffffff);
+  /* Prevent white flash: set background before tokens load */
+  :root {
+    color-scheme: light dark;
   }
 
-  /* Docs page dark background via system preference */
+  body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    color: #1b1b1b;
+    background-color: #ffffff;
+  }
+
+  /* Dark background via system preference — applied immediately, no token dependency */
   @media (prefers-color-scheme: dark) {
-    body:not([style*="background-color"]) {
+    body {
       background-color: #1b1b1b;
       color: #f0f0f0;
     }
   }
 
-  /* Docs page dark background via toolbar toggle */
+  /* Dark background via Storybook toolbar toggle */
   :root[data-civ-theme="dark"] ~ body,
   :root[data-civ-theme="dark"] body {
     background-color: #1b1b1b;

@@ -61,7 +61,7 @@ function detectFeatures(schema: FormSchema): string[] {
   if (schema.workflow) features.push('workflow');
   if (schema.delegation) features.push('delegation');
   if (schema.feedback) features.push('feedback');
-  if (schema.steps && schema.steps.length > 0) features.push('wizard');
+  if (schema.steps && schema.steps.length > 0) features.push('form-steps');
   if (schema.saveResume) features.push('saveResume');
   if (schema.eligibility) features.push('eligibility');
   if (schema.documents) features.push('documents');

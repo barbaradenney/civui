@@ -96,7 +96,7 @@ export const MultipleDocuments: Story = {
       legend="Supporting documents"
       name="documents"
       item-label="document"
-      mode="detail"
+      
       min="0"
       max="10"
     >
@@ -136,7 +136,7 @@ export const VADisabilityEvidence: Story = {
       legend="Evidence to support your claim"
       name="evidence"
       item-label="document"
-      mode="detail"
+      
       min="1"
       max="20"
     >

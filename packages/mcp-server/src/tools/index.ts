@@ -42,8 +42,8 @@ export type { CrossFieldResult, CrossFieldError, FiredRule } from './validate-cr
 export { analyzeRelationships } from './analyze-relationships.js';
 export type { RelationshipAnalysis, Entity, Relationship } from './analyze-relationships.js';
 
-export { generateWizard } from './generate-wizard.js';
-export type { WizardResult, StepSummary } from './generate-wizard.js';
+export { generateFormSteps } from './generate-form-steps.js';
+export type { FormStepsResult, StepSummary } from './generate-form-steps.js';
 
 export { generatePrefillJs } from './generate-prefill-js.js';
 export type { PrefillJsResult } from './generate-prefill-js.js';

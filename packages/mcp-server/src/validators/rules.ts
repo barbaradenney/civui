@@ -988,18 +988,18 @@ const repeatableNoMin: Rule = {
   },
 };
 
-// --- Wizard rules ---
+// --- Form steps rules ---
 
-const wizardMissingProgress: Rule = {
-  id: 'wizard-missing-progress',
+const formStepsMissingProgress: Rule = {
+  id: 'form-steps-missing-progress',
   severity: 'error',
-  description: 'Wizard step containers found but no progress indicator',
+  description: 'Form steps step containers found but no progress indicator',
   check($, violations) {
     const hasSteps = $('[data-civ-step]').length > 0;
     const hasProgress = $('[data-civ-progress]').length > 0;
     if (hasSteps && !hasProgress) {
       violations.push({
-        rule: 'wizard-missing-progress',
+        rule: 'form-steps-missing-progress',
         severity: 'error',
         message: 'Form has [data-civ-step] containers but no [data-civ-progress] indicator',
         element: 'div',
@@ -1009,10 +1009,10 @@ const wizardMissingProgress: Rule = {
   },
 };
 
-const wizardStepGap: Rule = {
-  id: 'wizard-step-gap',
+const formStepsStepGap: Rule = {
+  id: 'form-steps-step-gap',
   severity: 'warning',
-  description: 'Wizard has non-contiguous step numbers',
+  description: 'Form steps has non-contiguous step numbers',
   check($, violations) {
     const stepNums: number[] = [];
     $('[data-civ-step]').each((_, el) => {
@@ -1024,9 +1024,9 @@ const wizardStepGap: Rule = {
     for (let i = 1; i < stepNums.length; i++) {
       if (stepNums[i] !== stepNums[i - 1] + 1) {
         violations.push({
-          rule: 'wizard-step-gap',
+          rule: 'form-steps-step-gap',
           severity: 'warning',
-          message: `Wizard steps are not contiguous: found steps ${stepNums.join(', ')}`,
+          message: `Form steps steps are not contiguous: found steps ${stepNums.join(', ')}`,
           element: 'div',
           fix: 'Use sequential step numbers starting from 0: 0, 1, 2, ...',
         });
@@ -1036,10 +1036,10 @@ const wizardStepGap: Rule = {
   },
 };
 
-const wizardStepNoFields: Rule = {
-  id: 'wizard-step-no-fields',
+const formStepsStepNoFields: Rule = {
+  id: 'form-steps-step-no-fields',
   severity: 'warning',
-  description: 'Wizard step contains no form fields',
+  description: 'Form steps step contains no form fields',
   check($, violations) {
     const formSelector = FORM_COMPONENTS.join(', ');
     $('[data-civ-step]').each((_, el) => {
@@ -1048,9 +1048,9 @@ const wizardStepNoFields: Rule = {
       const fieldCount = $el.find(formSelector).length;
       if (fieldCount === 0) {
         violations.push({
-          rule: 'wizard-step-no-fields',
+          rule: 'form-steps-step-no-fields',
           severity: 'warning',
-          message: `Wizard step ${stepNum} contains no form fields`,
+          message: `Form steps step ${stepNum} contains no form fields`,
           element: 'div',
           fix: 'Add form fields to this step or remove the empty step',
         });
@@ -1302,7 +1302,7 @@ export const RULES: Rule[] = [
   repeatableMissingKey,
   repeatableMissingButtons,
   conditionalTargetMissing,
-  wizardMissingProgress,
+  formStepsMissingProgress,
   cascadingSourceMissing,
   imgMissingAlt,
   positiveTabindex,
@@ -1326,8 +1326,8 @@ export const RULES: Rule[] = [
   formLength,
   repeatableNoAriaLive,
   repeatableNoMin,
-  wizardStepGap,
-  wizardStepNoFields,
+  formStepsStepGap,
+  formStepsStepNoFields,
   cascadingEmptyMap,
   tableLayoutNotRepeatable,
   headingHierarchy,

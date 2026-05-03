@@ -135,9 +135,9 @@ export const RepeaterWizardSensitive: Story = {
       legend="People who died"
       name="deceased"
       item-label="person"
-      mode="wizard"
-      wizard-sensitive
-      wizard-show-pause
+      
+      form-steps-sensitive
+      form-steps-show-pause
     >
       <div data-step-label="Their name">
         <civ-name legend="Their name" name="name" required></civ-name>

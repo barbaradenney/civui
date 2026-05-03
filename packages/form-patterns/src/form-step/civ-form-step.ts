@@ -9,9 +9,9 @@ import '@civui/navigation/link';
 /**
  * CivUI Form Step
  *
- * Multi-step wizard for navigating within a form chapter. Shows one
- * step at a time, validates required fields before advancing, and
- * renders a compact nav bar with back link and step counter.
+ * Multi-step navigation within a form chapter. Shows one step at a
+ * time, validates required fields before advancing, and renders a
+ * compact nav bar with back link and step counter.
  *
  * Each direct child element with `data-step-label` is treated as a step.
  * Only the current step is visible.
@@ -124,7 +124,7 @@ export class CivFormStep extends LightDomSlotMixin(CivBaseElement) {
   }
 
   /**
-   * Capture Enter on inputs inside the step so the wizard advances instead
+   * Capture Enter on inputs inside the step so the form-step advances instead
    * of letting the keystroke bubble to a parent `<civ-form>` and submit the
    * whole form mid-flow. Skips controls that have their own native Enter
    * behavior (button, textarea, anchor, select, option), respects
@@ -167,16 +167,16 @@ export class CivFormStep extends LightDomSlotMixin(CivBaseElement) {
     return html`
       <div class="civ-form-step">
         ${total > 1 ? html`
-          <div class="civ-wizard-nav">
+          <div class="civ-form-steps-nav">
             ${!isFirst ? html`
               <civ-link
                 variant="back"
                 label="${t('formStepBack')}"
                 @click="${this._onBack}"
               ></civ-link>
-              <span class="civ-wizard-nav__divider"></span>
+              <span class="civ-form-steps-nav__divider"></span>
             ` : nothing}
-            <span class="civ-wizard-nav__counter" aria-live="polite">
+            <span class="civ-form-steps-nav__counter" aria-live="polite">
               ${interpolate(t('formStepOf'), {
                 current: String(this._current + 1),
                 total: String(total),

@@ -62,7 +62,8 @@ describe('generateGovForm', async () => {
     const result = await generateGovForm('21-526EZ');
     const serviceHistory = result.pages.chapters.find(c => c.id === 'service-history')!;
     expect(serviceHistory.html).toContain('civ-repeater');
-    expect(serviceHistory.html).toContain('mode="detail"');
+    // Default repeater (inline mode) — no explicit mode attribute
+    expect(serviceHistory.html).not.toContain('mode="detail"');
   });
 
   it('chapters use civ-form-step', async () => {

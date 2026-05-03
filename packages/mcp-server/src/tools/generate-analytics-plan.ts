@@ -93,7 +93,7 @@ export function generateAnalyticsPlan(schema: FormSchema): AnalyticsPlanResult {
     });
   }
 
-  // Wizard step events
+  // Form steps step events
   if (schema.steps) {
     for (let i = 0; i < schema.steps.length; i++) {
       events.push({
@@ -136,7 +136,7 @@ export function generateAnalyticsPlan(schema: FormSchema): AnalyticsPlanResult {
   let completionRate = 95;
 
   if (schema.steps && schema.steps.length > 0) {
-    // Wizard-based funnel
+    // Form steps-based funnel
     for (let i = 0; i < schema.steps.length; i++) {
       const stepSections = schema.sections.filter((s) => s.step === i);
       const stepFields = collectFields(stepSections);

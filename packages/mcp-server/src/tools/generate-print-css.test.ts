@@ -39,7 +39,7 @@ describe('generatePrintCss', () => {
     expect(result.css).toContain('grid-template-columns');
   });
 
-  it('includes wizard CSS when schema has steps', () => {
+  it('includes form-steps CSS when schema has steps', () => {
     const schema: FormSchema = {
       steps: [{ title: 'Step 1' }, { title: 'Step 2' }],
       sections: [
@@ -48,19 +48,19 @@ describe('generatePrintCss', () => {
       ],
     };
     const result = generatePrintCss(schema);
-    expect(result.features).toContain('wizard');
+    expect(result.features).toContain('form-steps');
     expect(result.css).toContain('data-civ-step');
     expect(result.css).toContain('data-civ-step-nav');
     expect(result.css).toContain('data-civ-progress');
     expect(result.css).toContain('display: none !important');
   });
 
-  it('excludes wizard CSS when no steps', () => {
+  it('excludes form-steps CSS when no steps', () => {
     const schema: FormSchema = {
       sections: [{ fields: [{ type: 'text', name: 'x', label: 'X' }] }],
     };
     const result = generatePrintCss(schema);
-    expect(result.features).not.toContain('wizard');
+    expect(result.features).not.toContain('form-steps');
     expect(result.css).not.toContain('data-civ-step-nav');
   });
 
@@ -154,7 +154,7 @@ describe('generatePrintCss', () => {
     };
     const result = generatePrintCss(schema);
     expect(result.features).toContain('base');
-    expect(result.features).toContain('wizard');
+    expect(result.features).toContain('form-steps');
     expect(result.features).toContain('repeatable');
     expect(result.features).toContain('conditional');
     expect(result.features).toContain('table');

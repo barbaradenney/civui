@@ -53,7 +53,6 @@ export const InRepeater: Story = {
       legend="Marriage history"
       name="marriages"
       item-label="marriage"
-      mode="detail"
       min="0"
       max="10"
     >

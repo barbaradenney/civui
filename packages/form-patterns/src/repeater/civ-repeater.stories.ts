@@ -228,23 +228,29 @@ export const GovernmentServicePeriods: Story = {
       legend="Service periods"
       name="servicePeriods"
       item-label="service period"
-      mode="detail"
+      mode="form-steps"
       min="1"
       max="10"
       hint="Add each period of military service separately"
     >
-      <civ-form-field label="Branch of service" required>
-        <civ-text-input name="branch" required></civ-text-input>
-      </civ-form-field>
-      <civ-form-fieldset legend="Service start date" required hint="Enter your best estimate if unsure">
-        <civ-memorable-date name="startDate" required></civ-memorable-date>
-      </civ-form-fieldset>
-      <civ-form-fieldset legend="Service end date" required>
-        <civ-memorable-date name="endDate" required></civ-memorable-date>
-      </civ-form-fieldset>
-      <civ-form-field label="Character of service" required>
-        <civ-select name="discharge" required></civ-select>
-      </civ-form-field>
+      <div data-step-label="Branch">
+        <civ-form-field label="Branch of service" required>
+          <civ-text-input name="branch" required></civ-text-input>
+        </civ-form-field>
+      </div>
+      <div data-step-label="Dates">
+        <civ-form-fieldset legend="Service start date" required hint="Enter your best estimate if unsure">
+          <civ-memorable-date name="startDate" required></civ-memorable-date>
+        </civ-form-fieldset>
+        <civ-form-fieldset legend="Service end date" required>
+          <civ-memorable-date name="endDate" required></civ-memorable-date>
+        </civ-form-fieldset>
+      </div>
+      <div data-step-label="Discharge">
+        <civ-form-field label="Character of service" required>
+          <civ-select name="discharge" required></civ-select>
+        </civ-form-field>
+      </div>
     </civ-repeater>
   `,
   play: async ({ canvasElement }) => {
@@ -258,16 +264,16 @@ export const GovernmentServicePeriods: Story = {
   },
 };
 
-// ── Wizard Mode ──────────────────────────────────────────────
+// ── Form Steps Mode ──────────────────────────────────────────
 
-export const WizardMode: Story = {
-  name: 'Wizard Mode',
+export const FormStepsMode: Story = {
+  name: 'Form Steps Mode',
   render: () => html`
     <civ-repeater
       legend="Dependents"
       name="dependents"
       item-label="dependent"
-      mode="wizard"
+      mode="form-steps"
     >
       <div data-step-label="Name">
         <civ-form-field label="First name" required>
@@ -289,14 +295,14 @@ export const WizardMode: Story = {
   `,
 };
 
-export const WizardWithRelationship: Story = {
-  name: 'Wizard: Dependents',
+export const FormStepsWithRelationship: Story = {
+  name: 'Form Steps: Dependents',
   render: () => html`
     <civ-repeater
       legend="Your dependents"
       name="dependents"
       item-label="dependent"
-      mode="wizard"
+      mode="form-steps"
       max="10"
     >
       <div data-step-label="Name">
@@ -316,14 +322,14 @@ export const WizardWithRelationship: Story = {
   `,
 };
 
-export const WizardWithMax: Story = {
-  name: 'Wizard: Max 3 Items',
+export const FormStepsWithMax: Story = {
+  name: 'Form Steps: Max 3 Items',
   render: () => html`
     <civ-repeater
       legend="Emergency contacts"
       name="contacts"
       item-label="contact"
-      mode="wizard"
+      mode="form-steps"
       max="3"
     >
       <div data-step-label="Contact info">

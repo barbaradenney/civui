@@ -33,7 +33,7 @@ describe('generateAnalyticsPlan', () => {
     expect(names).toContain('error-cleared');
   });
 
-  it('generates wizard step events when steps defined', () => {
+  it('generates form step events when steps defined', () => {
     const schema: FormSchema = {
       steps: [{ title: 'Step 1' }, { title: 'Step 2' }],
       sections: [
@@ -146,7 +146,7 @@ describe('generateAnalyticsPlan', () => {
     expect(result.summary).toContain('funnel');
   });
 
-  it('creates wizard-based funnel when steps defined', () => {
+  it('creates form-steps-based funnel when steps defined', () => {
     const schema: FormSchema = {
       steps: [{ title: 'Info' }, { title: 'Review' }],
       sections: [

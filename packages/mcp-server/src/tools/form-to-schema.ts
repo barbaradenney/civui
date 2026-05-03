@@ -286,7 +286,7 @@ export function formToSchema(html: string): FormSchema {
     schema.title = $heading.text().trim();
   }
 
-  // Detect wizard steps
+  // Detect form steps
   const $stepContainers = $('[data-civ-step]');
   const $progress = $('[data-civ-progress]');
   if ($stepContainers.length > 0 && $progress.length > 0) {

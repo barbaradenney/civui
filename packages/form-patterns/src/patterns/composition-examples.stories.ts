@@ -18,7 +18,7 @@ type Story = StoryObj;
 export const EmploymentBasic: Story = {
   name: 'Employment: Basic (VA/HUD)',
   render: () => html`
-    <civ-repeater legend="Employment history" name="jobs" item-label="employer" mode="detail" min="0">
+    <civ-repeater legend="Employment history" name="jobs" item-label="employer" min="0">
       <civ-form-field label="Employer name" required>
         <civ-text-input name="employer" required></civ-text-input>
       </civ-form-field>
@@ -41,7 +41,7 @@ export const EmploymentBasic: Story = {
 export const EmploymentDetailed: Story = {
   name: 'Employment: Detailed (SSA Disability)',
   render: () => html`
-    <civ-repeater legend="Work history" name="jobs" item-label="job" mode="wizard">
+    <civ-repeater legend="Work history" name="jobs" item-label="job" mode="form-steps">
       <div data-step-label="Employer">
         <civ-form-field label="Employer name" required>
           <civ-text-input name="employer" required></civ-text-input>
@@ -80,7 +80,7 @@ export const EmploymentDetailed: Story = {
 export const EmploymentImmigration: Story = {
   name: 'Employment: Immigration (I-485)',
   render: () => html`
-    <civ-repeater legend="Employment history (last 5 years)" name="employment" item-label="employer" mode="detail" min="0">
+    <civ-repeater legend="Employment history (last 5 years)" name="employment" item-label="employer" min="0">
       <civ-form-field label="Employer or company name" required>
         <civ-text-input name="employer" required></civ-text-input>
       </civ-form-field>
@@ -103,7 +103,7 @@ export const EmploymentImmigration: Story = {
 export const EducationBasic: Story = {
   name: 'Education: Basic (VA)',
   render: () => html`
-    <civ-repeater legend="Education history" name="education" item-label="school" mode="detail" min="0">
+    <civ-repeater legend="Education history" name="education" item-label="school" min="0">
       <civ-form-field label="School name" required>
         <civ-text-input name="school" required></civ-text-input>
       </civ-form-field>
@@ -129,7 +129,7 @@ export const EducationBasic: Story = {
 export const EducationFederal: Story = {
   name: 'Education: Federal Employment (SF-171)',
   render: () => html`
-    <civ-repeater legend="Education" name="education" item-label="school" mode="wizard">
+    <civ-repeater legend="Education" name="education" item-label="school" mode="form-steps">
       <div data-step-label="School">
         <civ-form-field label="School name" required>
           <civ-text-input name="school" required></civ-text-input>
@@ -163,7 +163,7 @@ export const EducationFederal: Story = {
 export const EducationImmigration: Story = {
   name: 'Education: Immigration (I-485)',
   render: () => html`
-    <civ-repeater legend="Schools attended (last 5 years)" name="schools" item-label="school" mode="detail" min="0">
+    <civ-repeater legend="Schools attended (last 5 years)" name="schools" item-label="school" min="0">
       <civ-form-field label="School name" required>
         <civ-text-input name="school" required></civ-text-input>
       </civ-form-field>

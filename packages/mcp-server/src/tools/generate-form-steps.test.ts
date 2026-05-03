@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import { generateWizard } from './generate-wizard.js';
+import { generateFormSteps } from './generate-form-steps.js';
 import type { FormSchema } from '../schema/index.js';
 
-describe('generateWizard', () => {
+describe('generateFormSteps', () => {
   const baseSchema: FormSchema = {
     steps: [
       { title: 'Personal Info', description: 'Enter your personal details' },
@@ -36,14 +36,14 @@ describe('generateWizard', () => {
   };
 
   it('generates HTML with step containers', () => {
-    const result = generateWizard(baseSchema);
+    const result = generateFormSteps(baseSchema);
     expect(result.html).toContain('data-civ-step="0"');
     expect(result.html).toContain('data-civ-step="1"');
     expect(result.html).toContain('data-civ-step="2"');
   });
 
   it('generates HTML with progress indicator', () => {
-    const result = generateWizard(baseSchema);
+    const result = generateFormSteps(baseSchema);
     expect(result.html).toContain('<nav data-civ-progress');
     expect(result.html).toContain('Personal Info');
     expect(result.html).toContain('Contact Info');
@@ -51,25 +51,25 @@ describe('generateWizard', () => {
   });
 
   it('generates HTML with step navigation', () => {
-    const result = generateWizard(baseSchema);
+    const result = generateFormSteps(baseSchema);
     expect(result.html).toContain('data-civ-step-nav');
     expect(result.html).toContain('data-civ-step-prev');
     expect(result.html).toContain('data-civ-step-next');
   });
 
-  it('generates wizard JavaScript', () => {
-    const result = generateWizard(baseSchema);
+  it('generates form-steps JavaScript', () => {
+    const result = generateFormSteps(baseSchema);
     expect(result.javascript).toContain('showStep');
     expect(result.javascript).toContain('stepCount = 3');
   });
 
-  it('includes wizard in features', () => {
-    const result = generateWizard(baseSchema);
-    expect(result.features).toContain('wizard');
+  it('includes form-steps in features', () => {
+    const result = generateFormSteps(baseSchema);
+    expect(result.features).toContain('form-steps');
   });
 
   it('builds step summary with field counts and names', () => {
-    const result = generateWizard(baseSchema);
+    const result = generateFormSteps(baseSchema);
     expect(result.stepSummary).toHaveLength(3);
 
     expect(result.stepSummary[0].stepIndex).toBe(0);
@@ -87,7 +87,7 @@ describe('generateWizard', () => {
   });
 
   it('hides non-first step containers', () => {
-    const result = generateWizard(baseSchema);
+    const result = generateFormSteps(baseSchema);
     expect(result.html).toContain('data-civ-step="0">');
     expect(result.html).toContain('data-civ-step="1" hidden>');
     expect(result.html).toContain('data-civ-step="2" hidden>');
@@ -97,7 +97,7 @@ describe('generateWizard', () => {
     const noSteps: FormSchema = {
       sections: [{ fields: [{ type: 'text', name: 'x', label: 'X' }] }],
     };
-    expect(() => generateWizard(noSteps)).toThrow('non-empty `steps`');
+    expect(() => generateFormSteps(noSteps)).toThrow('non-empty `steps`');
   });
 
   it('throws when steps array is empty', () => {
@@ -105,6 +105,6 @@ describe('generateWizard', () => {
       steps: [],
       sections: [{ fields: [{ type: 'text', name: 'x', label: 'X' }] }],
     };
-    expect(() => generateWizard(emptySteps)).toThrow('non-empty `steps`');
+    expect(() => generateFormSteps(emptySteps)).toThrow('non-empty `steps`');
   });
 });

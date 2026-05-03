@@ -199,7 +199,7 @@ export function validateSchema(schema: FormSchema): ValidateSchemaResult {
     }
   }
 
-  // --- 10. Wizard steps mismatch ---
+  // --- 10. Form steps steps mismatch ---
   if (schema.steps) {
     const distinctStepValues = new Set(
       schema.sections.map((s) => s.step).filter((s) => s !== undefined),

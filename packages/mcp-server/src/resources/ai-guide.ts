@@ -665,7 +665,7 @@ Multi-step form with built-in validation, progress steps, and navigation.
 Children with \`data-step\` define each step. Validates required fields before advancing.
 
 **Props:** \`persist\`, \`show-progress\`, \`show-counter\`, \`continue-label\`, \`back-label\`, \`complete-label\`
-**Events:** \`civ-step-complete\` (all steps done), \`civ-wizard-step\` { step, total }
+**Events:** \`civ-step-complete\` (all steps done), \`civ-step-change\` { current, total, label }
 
 \`\`\`html
 <civ-form-step persist="form-personal" complete-label="Save and continue">
@@ -680,7 +680,7 @@ Children with \`data-step\` define each step. Validates required fields before a
 </civ-form-step>
 \`\`\`
 
-The wizard automatically renders progress steps, Continue/Back buttons, and validates
+\`civ-form-step\` automatically renders progress steps, Continue/Back buttons, and validates
 required fields before advancing. No custom JavaScript needed.
 
 ### civ-progress-steps

@@ -119,7 +119,7 @@ Not every form needs every layer. A simple contact form might just use `civ-form
 
     <div data-step-label="Service history">
       <civ-repeater legend="Service periods" name="service"
-        item-label="service period" mode="detail" min="1">
+        item-label="service period" mode="form-steps" min="1">
         <civ-service-history name="period"></civ-service-history>
       </civ-repeater>
     </div>
@@ -183,8 +183,8 @@ Not every form needs every layer. A simple contact form might just use `civ-form
       </civ-section-intro>
 
       <civ-repeater legend="People who died" name="deceased"
-        item-label="person" mode="wizard"
-        wizard-sensitive wizard-show-pause>
+        item-label="person" mode="form-steps"
+        form-steps-sensitive form-steps-show-pause>
         <div data-step-label="Their name">
           <civ-name legend="Their name" name="name" required></civ-name>
         </div>

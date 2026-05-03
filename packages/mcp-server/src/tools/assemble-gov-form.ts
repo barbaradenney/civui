@@ -175,7 +175,7 @@ ${chapterHeadings}
       showPage('hub');
     });
 
-    // "Back to task list" links — inside wizards and standalone
+    // "Back to task list" links — inside form steps and standalone
     document.querySelectorAll('civ-link[variant="back"]').forEach(link => {
       const href = link.getAttribute('href') || '';
       if (href.includes('hub')) {
@@ -202,17 +202,17 @@ ${chapterHeadings}
       const chapterId = chapter.dataset.chapter;
 
       // civ-form-step fires civ-step-complete when all steps pass validation
-      const wizard = chapter.querySelector('civ-form-step');
-      if (wizard) {
-        wizard.addEventListener('civ-step-complete', () => {
+      const formStep = chapter.querySelector('civ-form-step');
+      if (formStep) {
+        formStep.addEventListener('civ-step-complete', () => {
           completedChapters.add(chapterId);
           updateTaskList();
           showPage('hub');
         });
       }
 
-      // Repeatable sections (no wizard) — use Save and continue button
-      if (!wizard) {
+      // Repeatable sections (no form-step) — use Save and continue button
+      if (!formStep) {
         chapter.querySelectorAll('civ-button').forEach(btn => {
           const label = btn.getAttribute('label') || '';
           if (label === 'Save and continue') {
@@ -491,7 +491,7 @@ ${chapterHeadings}
  *
  * Uses the same generated HTML as the HTML format, rendered via
  * dangerouslySetInnerHTML. CivUI web components work as custom elements
- * in React — the wizard, validation, and progress are all handled by
+ * in React — the form steps, validation, and progress are all handled by
  * the components themselves. React manages page routing and task state.
  */
 async function assembleReactForm(formNumber: string, options?: {
@@ -687,11 +687,11 @@ export default function ${toPascal(ch.id)}Chapter({ onBack, onComplete }: { onBa
     const cleanups: Array<() => void> = [];
 
     // civ-form-step fires civ-step-complete when all steps validated
-    const wizard = ref.current.querySelector('civ-form-step');
-    if (wizard) {
+    const formStep = ref.current.querySelector('civ-form-step');
+    if (formStep) {
       const handler = () => onComplete();
-      wizard.addEventListener('civ-step-complete', handler);
-      cleanups.push(() => wizard.removeEventListener('civ-step-complete', handler));
+      formStep.addEventListener('civ-step-complete', handler);
+      cleanups.push(() => formStep.removeEventListener('civ-step-complete', handler));
     }
 
     // Back link

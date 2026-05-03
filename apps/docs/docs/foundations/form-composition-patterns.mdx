@@ -19,7 +19,7 @@ Employment history varies significantly across agencies. Compose what you need f
 <StoryEmbed id="forms-patterns-composition-examples--employment-basic" />
 
 ```html
-<civ-repeater legend="Employment history" name="jobs" item-label="employer" mode="detail" min="0">
+<civ-repeater legend="Employment history" name="jobs" item-label="employer" mode="form-steps" min="0">
   <civ-text-input label="Employer name" name="employer" required></civ-text-input>
   <civ-text-input label="Job title" name="title"></civ-text-input>
   <civ-memorable-date label="Start date" name="startDate" required></civ-memorable-date>
@@ -33,7 +33,7 @@ Employment history varies significantly across agencies. Compose what you need f
 <StoryEmbed id="forms-patterns-composition-examples--employment-detailed" />
 
 ```html
-<civ-repeater legend="Work history" name="jobs" item-label="job" mode="wizard">
+<civ-repeater legend="Work history" name="jobs" item-label="job" mode="form-steps">
   <div data-step-label="Employer">
     <civ-text-input label="Employer name" name="employer" required></civ-text-input>
     <civ-address legend="Employer address" name="address"></civ-address>
@@ -57,7 +57,7 @@ Employment history varies significantly across agencies. Compose what you need f
 <StoryEmbed id="forms-patterns-composition-examples--employment-immigration" />
 
 ```html
-<civ-repeater legend="Employment history (last 5 years)" name="employment" item-label="employer" mode="detail" min="0">
+<civ-repeater legend="Employment history (last 5 years)" name="employment" item-label="employer" mode="form-steps" min="0">
   <civ-text-input label="Employer or company name" name="employer" required></civ-text-input>
   <civ-text-input label="Your occupation or job title" name="occupation" required></civ-text-input>
   <civ-address legend="Employer address" name="address"></civ-address>
@@ -75,7 +75,7 @@ Education history also varies by agency and purpose.
 <StoryEmbed id="forms-patterns-composition-examples--education-basic" />
 
 ```html
-<civ-repeater legend="Education history" name="education" item-label="school" mode="detail" min="0">
+<civ-repeater legend="Education history" name="education" item-label="school" mode="form-steps" min="0">
   <civ-text-input label="School name" name="school" required></civ-text-input>
   <civ-text-input label="City and state" name="location"></civ-text-input>
   <civ-memorable-date label="Date started" name="startDate" required></civ-memorable-date>
@@ -90,7 +90,7 @@ Education history also varies by agency and purpose.
 <StoryEmbed id="forms-patterns-composition-examples--education-federal" />
 
 ```html
-<civ-repeater legend="Education" name="education" item-label="school" mode="wizard">
+<civ-repeater legend="Education" name="education" item-label="school" mode="form-steps">
   <div data-step-label="School">
     <civ-text-input label="School name" name="school" required></civ-text-input>
     <civ-address legend="School address" name="address"></civ-address>
@@ -111,7 +111,7 @@ Education history also varies by agency and purpose.
 <StoryEmbed id="forms-patterns-composition-examples--education-immigration" />
 
 ```html
-<civ-repeater legend="Schools attended (last 5 years)" name="schools" item-label="school" mode="detail" min="0">
+<civ-repeater legend="Schools attended (last 5 years)" name="schools" item-label="school" mode="form-steps" min="0">
   <civ-text-input label="School name" name="school" required></civ-text-input>
   <civ-address legend="School address" name="address"></civ-address>
   <civ-text-input label="Course of study" name="course"></civ-text-input>

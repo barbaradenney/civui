@@ -110,8 +110,8 @@ describe('generateSummary', () => {
     expect(result.html).toContain('&lt;script&gt;');
   });
 
-  it('adds edit links with step anchors for wizard forms', () => {
-    const wizardSchema: FormSchema = {
+  it('adds edit links with step anchors for multi-step forms', () => {
+    const formStepsSchema: FormSchema = {
       steps: [{ title: 'Step 1' }, { title: 'Step 2' }],
       sections: [
         {
@@ -126,7 +126,7 @@ describe('generateSummary', () => {
         },
       ],
     };
-    const result = generateSummary(wizardSchema, { name: 'X', email: 'x@y.com' });
+    const result = generateSummary(formStepsSchema, { name: 'X', email: 'x@y.com' });
     expect(result.html).toContain('href="#step-0"');
     expect(result.html).toContain('href="#step-1"');
     expect(result.html).toContain('>Edit</a>');

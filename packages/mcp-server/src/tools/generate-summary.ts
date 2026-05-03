@@ -77,7 +77,7 @@ function renderSectionSummary(
     lines.push('</dl>');
   }
 
-  // Add edit link for wizard forms
+  // Add edit link for multi-step forms
   if (hasSteps && stepIndex !== undefined) {
     lines.push(`<a href="#step-${stepIndex}">Edit</a>`);
   }

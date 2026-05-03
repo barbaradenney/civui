@@ -63,7 +63,6 @@ export const InRepeater: Story = {
       legend="Service periods"
       name="servicePeriods"
       item-label="service period"
-      mode="detail"
       min="1"
       max="20"
     >

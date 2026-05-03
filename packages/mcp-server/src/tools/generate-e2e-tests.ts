@@ -1,6 +1,6 @@
 /**
  * generate_e2e_tests tool — generate Playwright end-to-end tests
- * from a FormSchema, covering validation, submission, wizard flow,
+ * from a FormSchema, covering validation, submission, form-steps flow,
  * conditional fields, repeatable sections, and save/resume.
  */
 import type { FormSchema } from '../schema/index.js';
@@ -68,7 +68,7 @@ export function generateE2eTests(
   const features: string[] = [];
   const allFields = collectFields(schema);
   const requiredFields = allFields.filter((f) => f.required);
-  const hasWizard = !!(schema.steps && schema.steps.length > 0);
+  const hasFormSteps = !!(schema.steps && schema.steps.length > 0);
   const hasConditional = allFields.some((f) => f.visibleWhen);
   const hasRepeatable = schema.sections.some((s) => s.repeatable);
   const hasSaveResume = !!schema.saveResume;
@@ -108,10 +108,10 @@ export function generateE2eTests(
   lines.push(`  });`);
   features.push('submission');
 
-  // --- Test 3: wizard steps (if applicable) ---
-  if (hasWizard) {
+  // --- Test 3: form steps (if applicable) ---
+  if (hasFormSteps) {
     lines.push('');
-    lines.push(`  test('completes wizard steps', async ({ page }) => {`);
+    lines.push(`  test('completes form steps', async ({ page }) => {`);
     for (let i = 0; i < schema.steps!.length; i++) {
       const step = schema.steps![i];
       lines.push(`    // Step ${i + 1}: ${step.title}`);
@@ -135,7 +135,7 @@ export function generateE2eTests(
     lines.push(`    await page.locator('[type="submit"]').click();`);
     lines.push(`    await expect(page.locator('[data-civ-confirmation]')).toBeVisible();`);
     lines.push(`  });`);
-    features.push('wizard');
+    features.push('form-steps');
   }
 
   // --- Test 4: conditional fields (if applicable) ---
@@ -212,7 +212,7 @@ export function generateE2eTests(
 
   // Count tests: 2 base + conditional features
   let testCount = 2;
-  if (hasWizard) testCount++;
+  if (hasFormSteps) testCount++;
   if (hasConditional) testCount++;
   if (hasRepeatable) testCount++;
   if (hasSaveResume) testCount++;

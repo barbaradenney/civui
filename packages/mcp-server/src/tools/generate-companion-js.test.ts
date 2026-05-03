@@ -213,9 +213,9 @@ describe('generateCompanionJs', () => {
     expect(result.javascript).toContain('.some(');
   });
 
-  // ---- Wizard JS ----
+  // ---- Form steps JS ----
 
-  it('generates wizard JS when schema has steps', () => {
+  it('generates form-steps JS when schema has steps', () => {
     const schema: FormSchema = {
       steps: [{ title: 'Step 1' }, { title: 'Step 2' }],
       sections: [
@@ -224,13 +224,13 @@ describe('generateCompanionJs', () => {
       ],
     };
     const result = generateCompanionJs(schema);
-    expect(result.features).toContain('wizard');
+    expect(result.features).toContain('form-steps');
     expect(result.javascript).toContain('data-civ-step');
     expect(result.javascript).toContain('data-civ-progress');
     expect(result.javascript).toContain('showStep');
   });
 
-  it('wizard JS includes step count', () => {
+  it('form-steps JS includes step count', () => {
     const schema: FormSchema = {
       steps: [{ title: 'A' }, { title: 'B' }, { title: 'C' }],
       sections: [
@@ -241,7 +241,7 @@ describe('generateCompanionJs', () => {
     expect(result.javascript).toContain('stepCount = 3');
   });
 
-  it('wizard JS handles hash-based navigation', () => {
+  it('form-steps JS handles hash-based navigation', () => {
     const schema: FormSchema = {
       steps: [{ title: 'S1' }, { title: 'S2' }],
       sections: [

@@ -205,7 +205,7 @@ export interface CivLocaleStrings {
   signatureNameHint: string;
   signatureCertify: string;
 
-  // Form step wizard
+  // Form step (multi-step navigation within a form chapter)
   formStepBack: string;
   formStepContinue: string;
   formStepSave: string;
@@ -293,8 +293,8 @@ export interface CivLocaleStrings {
   repeaterItemSaved: string; // "{item} {index} saved"
   repeaterItemLabel: string; // "{item} {index}"
   repeaterEditingAnnouncement: string; // "Editing {item} {index}"
-  repeaterWizardAddTitle: string; // "Add {item}"
-  repeaterWizardEditTitle: string; // "Edit {item} {index}"
+  repeaterFormStepsAddTitle: string; // "Add {item}"
+  repeaterFormStepsEditTitle: string; // "Edit {item} {index}"
   repeaterMinReached: string; // "At least {min} {item} required"
 
   // Marriage history
@@ -854,8 +854,8 @@ const defaultStrings: CivLocaleStrings = {
   repeaterItemSaved: '{item} {index} saved',
   repeaterItemLabel: '{item} {index}',
   repeaterEditingAnnouncement: 'Editing {item} {index}',
-  repeaterWizardAddTitle: 'Add {item}',
-  repeaterWizardEditTitle: 'Edit {item} {index}',
+  repeaterFormStepsAddTitle: 'Add {item}',
+  repeaterFormStepsEditTitle: 'Edit {item} {index}',
   repeaterMinReached: 'At least {min} {item} required',
 
   marriageLegend: 'About this marriage',

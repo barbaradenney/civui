@@ -21,7 +21,7 @@ Complete specification for the FormSchema JSON format used by CivUI MCP tools.
 | \`sections\` | FormSection[] | **yes** | Array of form sections |
 | \`subForms\` | Record<string, SubFormDefinition> | no | Named sub-form definitions |
 | \`crossFieldRules\` | CrossFieldRule[] | no | Cross-field validation rules |
-| \`steps\` | StepDefinition[] | no | Wizard step definitions |
+| \`steps\` | StepDefinition[] | no | Form steps step definitions |
 | \`actors\` | ActorDefinition[] | no | Actor roles for multi-actor workflows |
 | \`workflow\` | WorkflowDefinition | no | Workflow state machine |
 | \`delegation\` | DelegationConfig | no | Third-party filing configuration |
@@ -164,7 +164,7 @@ A condition can be a **SimpleCondition** or a **CompoundCondition**.
 | \`repeatableRemoveLabel\` | string | no | Custom "Remove" button label |
 | \`ref\` | string | no | Reference to a subForm definition |
 | \`namespace\` | string | no | Namespace prefix for field names |
-| \`step\` | number | no | Wizard step index (0-based) |
+| \`step\` | number | no | Form steps step index (0-based) |
 | \`visibleWhen\` | ConditionExpression | no | Show section conditionally |
 | \`layout\` | "default" \\| "table" | no | Section layout mode |
 | \`tableColumns\` | string[] | no | Column field names for table layout |
@@ -196,7 +196,7 @@ A condition can be a **SimpleCondition** or a **CompoundCondition**.
 
 ---
 
-## StepDefinition (Wizard)
+## StepDefinition (Form steps)
 
 | Property | Type | Required | Description |
 |----------|------|----------|-------------|
@@ -457,7 +457,7 @@ A condition can be a **SimpleCondition** or a **CompoundCondition**.
 }
 \`\`\`
 
-### Wizard with steps
+### Form steps with steps
 \`\`\`json
 {
   "steps": [

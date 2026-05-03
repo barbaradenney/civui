@@ -22,7 +22,7 @@ describe('civ-form-step', () => {
 
   it('shows step counter', async () => {
     const el = await fixture<CivFormStep>(threeSteps);
-    const counter = el.querySelector('.civ-wizard-nav__counter');
+    const counter = el.querySelector('.civ-form-steps-nav__counter');
     expect(counter).not.toBeNull();
     expect(counter!.textContent).toContain('1');
     expect(counter!.textContent).toContain('3');

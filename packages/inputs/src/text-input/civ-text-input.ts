@@ -379,7 +379,7 @@ export class CivTextInput extends CivFormElement {
         >${hasPrefix
           ? html`<span class="civ-input-prefix" aria-hidden="true">${isCurrency ? '$' : this.prefix}</span>`
           : nothing}${inputEl}${needsClearButton
-          ? html`<button type="button" class="civ-input-clear focus-visible:civ-focus-ring" aria-label="${t('clearButton')}" @click="${this._onClear}">
+          ? html`<button type="button" class="civ-close-btn" aria-label="${t('clearButton')}" @click="${this._onClear}">
               <civ-icon name="close"></civ-icon>
             </button>`
           : nothing}${hasSuffix

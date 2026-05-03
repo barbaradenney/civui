@@ -80,7 +80,7 @@ export class CivActionSheet extends LightDomSlotMixin(CivBaseElement) {
         <div class="civ-action-sheet__mobile-close">
           <button
             type="button"
-            class="civ-close-btn focus-visible:civ-focus-ring"
+            class="civ-close-btn"
             aria-label="${t('closeLabel')}"
             @click="${this._requestClose}"
           ><civ-icon name="close" aria-hidden="true"></civ-icon></button>

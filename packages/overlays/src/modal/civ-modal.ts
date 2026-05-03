@@ -87,7 +87,7 @@ export class CivModal extends LightDomSlotMixin(CivBaseElement) {
             ${!this.noCloseButton ? html`
               <button
                 type="button"
-                class="civ-close-btn civ-modal__close focus-visible:civ-focus-ring"
+                class="civ-close-btn civ-modal__close"
                 aria-label="${t('closeLabel')}"
                 @click="${this._requestClose}"
               ><civ-icon name="close" aria-hidden="true"></civ-icon></button>

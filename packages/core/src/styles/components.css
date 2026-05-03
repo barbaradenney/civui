@@ -314,9 +314,28 @@
     color: var(--civ-color-base-dark);
   }
 
-  .civ-input-clear {
-    @apply civ-flex civ-items-center civ-justify-center civ-bg-transparent civ-border-0 civ-cursor-pointer civ-px-1;
+  /* Shared close/clear/dismiss button — used across inputs, modals, alerts, chips */
+  .civ-close-btn {
+    @apply civ-inline-flex civ-items-center civ-justify-center
+           civ-bg-transparent civ-border-0 civ-cursor-pointer civ-rounded;
     color: var(--civ-color-base-dark);
+    width: 1.5em;
+    height: 1.5em;
+    padding: 0;
+    font-size: inherit;
+  }
+  .civ-close-btn:hover { color: var(--civ-color-base-darkest); background: var(--civ-color-base-lightest); }
+  .civ-close-btn:focus-visible {
+    outline: var(--civ-focus-outline-width) solid var(--civ-focus-outline-color);
+    outline-offset: var(--civ-focus-outline-offset);
+    box-shadow: 0 0 0 var(--civ-focus-outline-offset) var(--civ-focus-shadow-color);
+  }
+
+  /* Legacy alias — maps to shared close button */
+  .civ-input-clear {
+    @apply civ-inline-flex civ-items-center civ-justify-center civ-bg-transparent civ-border-0 civ-cursor-pointer civ-px-1;
+    color: var(--civ-color-base-dark);
+    font-size: 1.25em;
   }
   .civ-input-clear:hover { color: var(--civ-color-base-darkest); }
 
@@ -329,6 +348,7 @@
     top: 0;
     bottom: 0;
     color: var(--civ-color-base-dark);
+    font-size: 1.25em;
   }
   .civ-input-icon--leading { inset-inline-start: 0; }
   .civ-input-icon--trailing { inset-inline-end: 0; }

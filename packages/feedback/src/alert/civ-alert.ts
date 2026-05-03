@@ -90,7 +90,7 @@ export class CivAlert extends LightDomTextMixin(CivBaseElement) {
               ? html`
                   <button
                     type="button"
-                    class="civ-close-btn focus-visible:civ-focus-ring"
+                    class="civ-close-btn"
                     aria-label="${t('alertDismissLabel')}"
                     @click="${this._onDismiss}"
                   ><civ-icon name="close" aria-hidden="true"></civ-icon></button>

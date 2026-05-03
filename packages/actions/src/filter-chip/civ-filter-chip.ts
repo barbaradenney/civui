@@ -119,7 +119,7 @@ export class CivFilterChip extends LightDomTextMixin(CivBaseElement) {
           : nothing}</button>${this.removable
         ? html`<button
             type="button"
-            class="civ-filter-chip__remove focus-visible:civ-focus-ring"
+            class="civ-close-btn civ-filter-chip__remove"
             aria-label="${interpolate(t('filterChipRemoveLabel'), { label: this._text })}"
             ?disabled="${this.disabled}"
             @click="${this._onRemove}"

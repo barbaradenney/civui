@@ -65,10 +65,12 @@ export class CivRadio extends CivBaseElement {
             aria-describedby="${this._ariaDescribedBy || nothing}"
             @change="${this._onRadioChange}"
           />
-          <span class="civ-check-label">${this.label}</span>
-          ${this.description
-            ? html`<span id="${this._descriptionId}" class="civ-check-description">${this.description}</span>`
-            : nothing}
+          <span class="civ-check-label">
+            ${this.label}
+            ${this.description
+              ? html`<span id="${this._descriptionId}" class="civ-check-description">${this.description}</span>`
+              : nothing}
+          </span>
         </label>
       </div>
     `;

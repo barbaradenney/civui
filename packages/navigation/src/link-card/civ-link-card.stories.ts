@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import './civ-link-card.js';
 import '@civui/layout/tag';
+import '@civui/feedback/badge';
 
 const meta: Meta = {
   title: 'Navigation/Link Card',
@@ -343,7 +344,7 @@ export const WithSlots: Story = {
           description="File a claim for a service-connected disability."
           variant="tertiary"
         >
-          <civ-tag data-civ-link-card-end label="In progress" variant="teal"></civ-tag>
+          <civ-badge data-civ-link-card-end label="In progress" variant="warning"></civ-badge>
         </civ-link-card>
       </div>
       <div>
@@ -355,8 +356,57 @@ export const WithSlots: Story = {
           variant="tertiary"
         >
           <civ-tag label="Updated" variant="purple"></civ-tag>
-          <civ-tag data-civ-link-card-end label="In progress" variant="teal"></civ-tag>
+          <civ-badge data-civ-link-card-end label="In progress" variant="warning"></civ-badge>
         </civ-link-card>
+      </div>
+    </div>
+  `,
+};
+
+export const WithEyebrow: Story = {
+  name: 'With Eyebrow',
+  render: () => html`
+    <div class="civ-flex civ-flex-col civ-gap-4 civ-max-w-2xl">
+      <div>
+        <p class="civ-font-semibold civ-mb-2">Eyebrow text</p>
+        <civ-link-card
+          href="#/benefits/disability"
+          eyebrow="Benefits"
+          heading="Disability compensation"
+          description="File a claim for a service-connected disability."
+          variant="tertiary"
+        ></civ-link-card>
+      </div>
+      <div>
+        <p class="civ-font-semibold civ-mb-2">Eyebrow + badge slot</p>
+        <civ-link-card
+          href="#/claims/123"
+          eyebrow="Claim"
+          heading="Claim #VA-2026-0847"
+          description="Filed January 15, 2026"
+          variant="tertiary"
+        >
+          <civ-badge label="In Progress" variant="warning"></civ-badge>
+        </civ-link-card>
+      </div>
+      <div>
+        <p class="civ-font-semibold civ-mb-2">Eyebrow on primary variant</p>
+        <civ-link-card
+          href="#/healthcare"
+          eyebrow="Healthcare"
+          heading="Schedule an appointment"
+          description="Book a visit with your primary care provider."
+        ></civ-link-card>
+      </div>
+      <div>
+        <p class="civ-font-semibold civ-mb-2">Eyebrow on critical variant</p>
+        <civ-link-card
+          href="#/action"
+          eyebrow="Action required"
+          heading="Upload missing documents"
+          description="Your claim requires additional evidence before it can be processed."
+          variant="critical"
+        ></civ-link-card>
       </div>
     </div>
   `,

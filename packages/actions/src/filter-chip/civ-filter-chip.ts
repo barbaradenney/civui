@@ -113,7 +113,7 @@ export class CivFilterChip extends LightDomTextMixin(CivBaseElement) {
           : this.iconStart
             ? html`<civ-icon name="${this.iconStart}" class="civ-filter-chip__icon" aria-hidden="true"></civ-icon>`
             : nothing}<span class="civ-filter-chip__label">${this._text}</span>${showCount
-          ? html`<civ-count class="civ-filter-chip__count" count="${this.count}"></civ-count>`
+          ? html`<civ-count class="civ-filter-chip__count" count="${this.count}" count-style="tertiary"></civ-count>`
           : nothing}${this.iconEnd
           ? html`<civ-icon name="${this.iconEnd}" class="civ-filter-chip__icon civ-filter-chip__icon--end" aria-hidden="true"></civ-icon>`
           : nothing}</button>${this.removable

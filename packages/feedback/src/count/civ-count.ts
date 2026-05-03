@@ -4,7 +4,7 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 import { CivBaseElement } from '@civui/core';
 
 export type CountVariant = 'info' | 'warning' | 'error' | 'success' | 'neutral';
-export type CountStyle = 'primary' | 'secondary';
+export type CountStyle = 'primary' | 'secondary' | 'tertiary';
 export type CountLive = 'off' | 'polite' | 'assertive';
 
 /**
@@ -16,11 +16,12 @@ export type CountLive = 'off' | 'polite' | 'assertive';
  * with their visual weight.
  *
  * **Styles** (`count-style`):
- * - `secondary` (default) — bare colored text, no background. Inherits
- *   the parent's color when `variant="neutral"`. Use inside chips,
- *   list items, nav links.
- * - `primary` — filled rounded pill. Use for standalone or
- *   notification-style counters.
+ * - `secondary` (default) — tinted background pill with semantic color text.
+ *   Use inside chips, list items, nav links.
+ * - `primary` — filled rounded pill with white text. Use for standalone
+ *   or notification-style counters.
+ * - `tertiary` — bare text with parentheses, e.g. "(12)". Minimal
+ *   emphasis for inline counts.
  *
  * **Position** is independent of style: set `overlay` to absolutely
  * position the count in the top-end corner of a relatively-positioned
@@ -96,7 +97,7 @@ export class CivCount extends CivBaseElement {
         class="${classes.join(' ')}"
         role="${ifDefined(role)}"
         aria-live="${ifDefined(ariaLive)}"
-      >${this._displayCount}</span>
+      >${this.countStyle === 'tertiary' ? `(${this._displayCount})` : this._displayCount}</span>
     `;
   }
 }

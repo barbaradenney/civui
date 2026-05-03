@@ -40,12 +40,12 @@ export class CivCheckbox extends CivBooleanFormElement {
             ${this.required
               ? html`<span class="civ-required-mark">${t('required')}</span>`
               : nothing}
+            ${this.description
+              ? html`<span id="${this._descriptionId}" class="civ-check-description">${this.description}</span>`
+              : nothing}
+            ${renderHint(this._hintId, this.hint)}
+            ${renderError(this._errorId, this.error)}
           </span>
-          ${this.description
-            ? html`<span id="${this._descriptionId}" class="civ-check-description">${this.description}</span>`
-            : nothing}
-          ${renderHint(this._hintId, this.hint)}
-          ${renderError(this._errorId, this.error)}
         </label>
       </div>
     `;

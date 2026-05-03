@@ -24,14 +24,16 @@
       "lighter": { "$value": "#4a3d1a" },
       "light": { "$value": "#f5d576" },
       "DEFAULT": { "$value": "#f5c542" },
-      "dark": { "$value": "#c9a24d" }
+      "dark": { "$value": "#c9a24d" },
+      "darkest": { "$value": "#f5d576" }
     },
     "success": {
       "$type": "color",
       "lighter": { "$value": "#1e3a20" },
       "light": { "$value": "#81d88a" },
       "DEFAULT": { "$value": "#5cb85c" },
-      "dark": { "$value": "#7ec97e" }
+      "dark": { "$value": "#7ec97e" },
+      "darkest": { "$value": "#81d88a" }
     },
     "info": {
       "$type": "color",
@@ -78,7 +80,8 @@
         "lightest": { "$value": "#3d2d1a" },
         "light": { "$value": "#f5b87a" },
         "DEFAULT": { "$value": "#f5a654" },
-        "dark": { "$value": "#e8924a" }
+        "dark": { "$value": "#e8924a" },
+        "darkest": { "$value": "#f5b87a" }
       }
     },
     "tag": {
@@ -87,6 +90,26 @@
         "$type": "color",
         "bg": { "$value": "#73b3e7" },
         "text": { "$value": "#162e51" }
+      },
+      "teal": {
+        "$type": "color",
+        "bg": { "$value": "#7dd3e0" },
+        "text": { "$value": "#1a3a40" }
+      },
+      "red": {
+        "$type": "color",
+        "bg": { "$value": "#f28b82" },
+        "text": { "$value": "#3b0b0b" }
+      },
+      "green": {
+        "$type": "color",
+        "bg": { "$value": "#81d88a" },
+        "text": { "$value": "#1e3a20" }
+      },
+      "yellow": {
+        "$type": "color",
+        "bg": { "$value": "#f5d576" },
+        "text": { "$value": "#3d2d0a" }
       },
       "orange": {
         "$type": "color",

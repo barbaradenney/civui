@@ -38,6 +38,12 @@ export type IconDef = {
  * Built-in icon set — Material Icons Outlined, 24×24 fill-based SVG paths.
  */
 export const icons: Record<string, IconDef> = {
+  add: {
+    label: 'Add',
+    path: 'M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z',
+    ios: 'plus',
+    android: 'add',
+  },
   check: {
     label: 'Success',
     path: 'M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z',

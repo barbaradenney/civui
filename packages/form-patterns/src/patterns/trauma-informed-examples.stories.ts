@@ -128,14 +128,14 @@ export const SupportResources: Story = {
   `,
 };
 
-export const RepeaterWizardSensitive: Story = {
-  name: 'Repeater Wizard (Sensitive)',
+export const RepeaterFormStepsSensitive: Story = {
+  name: 'Repeater Form Steps (Sensitive)',
   render: () => html`
     <civ-repeater
       legend="People who died"
       name="deceased"
       item-label="person"
-      
+      mode="form-steps"
       form-steps-sensitive
       form-steps-show-pause
     >

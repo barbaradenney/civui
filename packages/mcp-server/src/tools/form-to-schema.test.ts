@@ -237,7 +237,7 @@ describe('formToSchema', () => {
     });
   });
 
-  // ---- Form steps step detection ----
+  // ---- Form step detection ----
 
   it('detects form steps from data-civ-step containers', () => {
     const html = `

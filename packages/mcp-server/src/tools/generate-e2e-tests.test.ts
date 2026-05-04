@@ -77,7 +77,7 @@ describe('generateE2eTests', () => {
 
   it('generates form-steps test when steps are present', () => {
     const schema: FormSchema = {
-      title: 'Form steps Form',
+      title: 'Multi-Step Form',
       steps: [{ title: 'Step One' }, { title: 'Step Two' }],
       sections: [
         { step: 0, fields: [{ type: 'text', name: 'a', label: 'A' }] },

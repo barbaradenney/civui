@@ -993,7 +993,7 @@ const repeatableNoMin: Rule = {
 const formStepsMissingProgress: Rule = {
   id: 'form-steps-missing-progress',
   severity: 'error',
-  description: 'Form steps step containers found but no progress indicator',
+  description: 'Step containers found but no progress indicator',
   check($, violations) {
     const hasSteps = $('[data-civ-step]').length > 0;
     const hasProgress = $('[data-civ-progress]').length > 0;
@@ -1012,7 +1012,7 @@ const formStepsMissingProgress: Rule = {
 const formStepsStepGap: Rule = {
   id: 'form-steps-step-gap',
   severity: 'warning',
-  description: 'Form steps has non-contiguous step numbers',
+  description: 'Form has non-contiguous step numbers',
   check($, violations) {
     const stepNums: number[] = [];
     $('[data-civ-step]').each((_, el) => {
@@ -1026,7 +1026,7 @@ const formStepsStepGap: Rule = {
         violations.push({
           rule: 'form-steps-step-gap',
           severity: 'warning',
-          message: `Form steps steps are not contiguous: found steps ${stepNums.join(', ')}`,
+          message: `Form steps are not contiguous: found steps ${stepNums.join(', ')}`,
           element: 'div',
           fix: 'Use sequential step numbers starting from 0: 0, 1, 2, ...',
         });
@@ -1039,7 +1039,7 @@ const formStepsStepGap: Rule = {
 const formStepsStepNoFields: Rule = {
   id: 'form-steps-step-no-fields',
   severity: 'warning',
-  description: 'Form steps step contains no form fields',
+  description: 'Form step contains no form fields',
   check($, violations) {
     const formSelector = FORM_COMPONENTS.join(', ');
     $('[data-civ-step]').each((_, el) => {
@@ -1050,7 +1050,7 @@ const formStepsStepNoFields: Rule = {
         violations.push({
           rule: 'form-steps-step-no-fields',
           severity: 'warning',
-          message: `Form steps step ${stepNum} contains no form fields`,
+          message: `Form step ${stepNum} contains no form fields`,
           element: 'div',
           fix: 'Add form fields to this step or remove the empty step',
         });

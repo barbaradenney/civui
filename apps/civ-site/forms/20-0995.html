@@ -6,7 +6,17 @@
   <title>File a Supplemental Claim | VA Form 20-0995</title>
 
   <!-- CivUI Design System -->
-  <script type="module" src="../src/civui.ts"></script>
+  <link rel="stylesheet" href="https://unpkg.com/@civui/core/dist/styles/civ.css">
+  <script type="module" src="https://unpkg.com/@civui/core/dist/index.js"></script>
+  <script type="module" src="https://unpkg.com/@civui/inputs/dist/index.js"></script>
+  <script type="module" src="https://unpkg.com/@civui/controls/dist/index.js"></script>
+  <script type="module" src="https://unpkg.com/@civui/compound/dist/index.js"></script>
+  <script type="module" src="https://unpkg.com/@civui/form-patterns/dist/index.js"></script>
+  <script type="module" src="https://unpkg.com/@civui/actions/dist/index.js"></script>
+  <script type="module" src="https://unpkg.com/@civui/overlays/dist/index.js"></script>
+  <script type="module" src="https://unpkg.com/@civui/layout/dist/index.js"></script>
+  <script type="module" src="https://unpkg.com/@civui/navigation/dist/index.js"></script>
+  <script type="module" src="https://unpkg.com/@civui/feedback/dist/index.js"></script>
 </head>
 <body>
   <main id="main-content" class="civ-p-6" style="max-width: 720px; margin: 0 auto;">
@@ -42,8 +52,8 @@
     status="0 of 5 sections complete"
   ></civ-progress-bar>
 
-    <h3 class="civ-heading-md civ-mt-6 civ-mb-2">Fill out your application</h3>
-    <civ-list dividers>
+  <h3 class="civ-heading-md civ-mt-6 civ-mb-2">Fill out your application</h3>
+  <civ-list dividers>
       <civ-list-item data-chapter-id="personal-info" href="#/personal-info">
         <span class="civ-block civ-font-bold">Personal information</span>
         <span class="civ-block civ-text-sm civ-text-muted">Name, date of birth, Social Security number</span>
@@ -69,17 +79,16 @@
         <span class="civ-block civ-text-sm civ-text-muted">Upload DD214 and supporting evidence</span>
         <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
       </civ-list-item>
-    </civ-list>
+  </civ-list>
 
-    <h3 class="civ-heading-md civ-mt-6 civ-mb-2">Review and submit</h3>
-    <civ-list dividers>
-      <civ-list-item data-review>
-        <span class="civ-block civ-font-bold">Review your application</span>
-        <span class="civ-block civ-text-sm civ-text-muted">Complete all sections before reviewing</span>
-        <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
-      </civ-list-item>
-    </civ-list>
-
+  <h3 class="civ-heading-md civ-mt-6 civ-mb-2">Review and submit</h3>
+  <civ-list dividers>
+    <civ-list-item data-review>
+      <span class="civ-block civ-font-bold">Review your application</span>
+      <span class="civ-block civ-text-sm civ-text-muted">Complete all sections before reviewing</span>
+      <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
+    </civ-list-item>
+  </civ-list>
 </div>
     </section>
 
@@ -96,7 +105,7 @@
 
   <!-- Prefill review (hidden by default, shown by runtime JS when prefill data exists) -->
   <div data-prefill-review hidden data-chapter-fields="fullName,dateOfBirth,ssn">
-    <civ-alert variant="info" alert-style="secondary" heading="We&rsquo;ve prefilled some of your information" label="We pulled this information from your account. If any of this is wrong, you can correct it here."></civ-alert>
+    <civ-alert variant="info" alert-style="secondary" heading="We've prefilled some of your information" label="We pulled this information from your account. If any of this is wrong, you can correct it here."></civ-alert>
     <civ-summary data-prefill-summary></civ-summary>
     <p class="civ-mt-4">If this information is accurate, press continue to fill out the rest of the form.</p>
     <div class="civ-mt-4">
@@ -110,25 +119,25 @@
       <civ-name name="fullName" legend="Your name" required></civ-name>
     </div>
     <div data-step data-step-label="Date of birth">
-      <civ-memorable-date
-        label="Date of birth"
-        name="dateOfBirth"
-        required
-        hint="For example: January 15 1990"
-      ></civ-memorable-date>
+      <civ-form-fieldset legend="Date of birth" hint="For example: January 15 1990" required>
+        <civ-memorable-date
+          name="dateOfBirth"
+          required
+        ></civ-memorable-date>
+      </civ-form-fieldset>
     </div>
     <div data-step data-step-label="Social Security number">
-      <civ-text-input
-        label="Social Security number"
-        name="ssn"
-        required
-        hint="We need this to verify your identity"
-        autocomplete="off"
-        inputmode="numeric"
-        type="tel"
-        mask="ssn"
-        validate="ssn"
-      ></civ-text-input>
+      <civ-form-field label="Social Security number" hint="We need this to verify your identity" required>
+        <civ-text-input
+          name="ssn"
+          required
+          autocomplete="off"
+          inputmode="numeric"
+          type="tel"
+          mask="ssn"
+          validate="ssn"
+        ></civ-text-input>
+      </civ-form-field>
     </div>
     </civ-form-step>
   </div>
@@ -148,7 +157,7 @@
 
   <!-- Prefill review (hidden by default, shown by runtime JS when prefill data exists) -->
   <div data-prefill-review hidden data-chapter-fields="mailingAddress,homePhone,mobilePhone,email,contactMethod">
-    <civ-alert variant="info" alert-style="secondary" heading="We&rsquo;ve prefilled some of your information" label="We pulled this information from your account. If any of this is wrong, you can correct it here."></civ-alert>
+    <civ-alert variant="info" alert-style="secondary" heading="We've prefilled some of your information" label="We pulled this information from your account. If any of this is wrong, you can correct it here."></civ-alert>
     <civ-summary data-prefill-summary></civ-summary>
     <p class="civ-mt-4">If this information is accurate, press continue to fill out the rest of the form.</p>
     <div class="civ-mt-4">
@@ -162,44 +171,47 @@
       <civ-address name="mailingAddress" legend="Mailing address" required></civ-address>
     </div>
     <div data-step data-step-label="Home phone number">
-      <civ-text-input
-        label="Home phone number"
-        name="homePhone"
-        hint="Enter a 10-digit phone number"
-        autocomplete="tel"
-        inputmode="numeric"
-        type="tel"
-      ></civ-text-input>
+      <civ-form-field label="Home phone number" hint="Enter a 10-digit phone number">
+        <civ-text-input
+          name="homePhone"
+          autocomplete="tel"
+          inputmode="numeric"
+          type="tel"
+        ></civ-text-input>
+      </civ-form-field>
     </div>
     <div data-step data-step-label="Mobile phone number">
-      <civ-text-input
-        label="Mobile phone number"
-        name="mobilePhone"
-        autocomplete="tel"
-        inputmode="numeric"
-        type="tel"
-      ></civ-text-input>
+      <civ-form-field label="Mobile phone number" >
+        <civ-text-input
+          name="mobilePhone"
+          autocomplete="tel"
+          inputmode="numeric"
+          type="tel"
+        ></civ-text-input>
+      </civ-form-field>
     </div>
     <div data-step data-step-label="Email address">
-      <civ-text-input
-        label="Email address"
-        name="email"
-        required
-        autocomplete="email"
-        type="email"
-      ></civ-text-input>
+      <civ-form-field label="Email address" required>
+        <civ-text-input
+          name="email"
+          required
+          autocomplete="email"
+          type="email"
+        ></civ-text-input>
+      </civ-form-field>
     </div>
     <div data-step data-step-label="How should we contact you if we have questions?">
-      <civ-radio-group
-        legend="How should we contact you if we have questions?"
-        name="contactMethod"
-        required
-      >
-        <civ-radio label="Email" value="email"></civ-radio>
-        <civ-radio label="Home phone" value="homePhone"></civ-radio>
-        <civ-radio label="Mobile phone" value="mobilePhone"></civ-radio>
-        <civ-radio label="U.S. mail" value="mail"></civ-radio>
-      </civ-radio-group>
+      <civ-form-fieldset legend="How should we contact you if we have questions?" required>
+        <civ-radio-group
+          name="contactMethod"
+          required
+        >
+          <civ-radio label="Email" value="email"></civ-radio>
+          <civ-radio label="Home phone" value="homePhone"></civ-radio>
+          <civ-radio label="Mobile phone" value="mobilePhone"></civ-radio>
+          <civ-radio label="U.S. mail" value="mail"></civ-radio>
+        </civ-radio-group>
+      </civ-form-fieldset>
     </div>
     </civ-form-step>
   </div>
@@ -219,7 +231,7 @@
 
   <!-- Prefill review (hidden by default, shown by runtime JS when prefill data exists) -->
   <div data-prefill-review hidden data-chapter-fields="benefitType,previousDecisionDate,issuesOnAppeal">
-    <civ-alert variant="info" alert-style="secondary" heading="We&rsquo;ve prefilled some of your information" label="We pulled this information from your account. If any of this is wrong, you can correct it here."></civ-alert>
+    <civ-alert variant="info" alert-style="secondary" heading="We've prefilled some of your information" label="We pulled this information from your account. If any of this is wrong, you can correct it here."></civ-alert>
     <civ-summary data-prefill-summary></civ-summary>
     <p class="civ-mt-4">If this information is accurate, press continue to fill out the rest of the form.</p>
     <div class="civ-mt-4">
@@ -230,28 +242,29 @@
   <div data-chapter-steps>
     <civ-form-step complete-label="Save and continue">
     <div data-step data-step-label="Benefit type">
-      <civ-select
-        label="Benefit type"
-        name="benefitType"
-        required
-      ></civ-select>
+      <civ-form-field label="Benefit type" required>
+        <civ-select
+          name="benefitType"
+          required
+        ></civ-select>
+      </civ-form-field>
     </div>
     <div data-step data-step-label="Date of previous decision">
-      <civ-memorable-date
-        label="Date of previous decision"
-        name="previousDecisionDate"
-        required
-        hint="The date on your decision letter"
-      ></civ-memorable-date>
+      <civ-form-fieldset legend="Date of previous decision" hint="The date on your decision letter" required>
+        <civ-memorable-date
+          name="previousDecisionDate"
+          required
+        ></civ-memorable-date>
+      </civ-form-fieldset>
     </div>
     <div data-step data-step-label="Issues on appeal">
-      <civ-textarea
-        label="Issues on appeal"
-        name="issuesOnAppeal"
-        required
-        hint="List each issue you are contesting, one per line"
-        
-      ></civ-textarea>
+      <civ-form-field label="Issues on appeal" hint="List each issue you are contesting, one per line" required>
+        <civ-textarea
+          name="issuesOnAppeal"
+          required
+          
+        ></civ-textarea>
+      </civ-form-field>
     </div>
     </civ-form-step>
   </div>
@@ -271,7 +284,7 @@
 
   <!-- Prefill review (hidden by default, shown by runtime JS when prefill data exists) -->
   <div data-prefill-review hidden data-chapter-fields="newEvidenceType,newEvidenceDescription,vaHelpObtainRecords">
-    <civ-alert variant="info" alert-style="secondary" heading="We&rsquo;ve prefilled some of your information" label="We pulled this information from your account. If any of this is wrong, you can correct it here."></civ-alert>
+    <civ-alert variant="info" alert-style="secondary" heading="We've prefilled some of your information" label="We pulled this information from your account. If any of this is wrong, you can correct it here."></civ-alert>
     <civ-summary data-prefill-summary></civ-summary>
     <p class="civ-mt-4">If this information is accurate, press continue to fill out the rest of the form.</p>
     <div class="civ-mt-4">
@@ -282,36 +295,38 @@
   <div data-chapter-steps>
     <civ-form-step complete-label="Save and continue">
     <div data-step data-step-label="Type of new evidence">
-      <civ-checkbox-group
-        legend="Type of new evidence"
-        name="newEvidenceType"
-        
-      >
-        <civ-checkbox label="VA medical records" value="va-medical-records"></civ-checkbox>
-        <civ-checkbox label="Private medical records" value="private-medical-records"></civ-checkbox>
-        <civ-checkbox label="Lay statements" value="lay-statements"></civ-checkbox>
-        <civ-checkbox label="Service records" value="service-records"></civ-checkbox>
-        <civ-checkbox label="Other" value="other"></civ-checkbox>
-      </civ-checkbox-group>
+      <civ-form-fieldset legend="Type of new evidence" >
+        <civ-checkbox-group
+          name="newEvidenceType"
+          
+        >
+          <civ-checkbox label="VA medical records" value="va-medical-records"></civ-checkbox>
+          <civ-checkbox label="Private medical records" value="private-medical-records"></civ-checkbox>
+          <civ-checkbox label="Lay statements" value="lay-statements"></civ-checkbox>
+          <civ-checkbox label="Service records" value="service-records"></civ-checkbox>
+          <civ-checkbox label="Other" value="other"></civ-checkbox>
+        </civ-checkbox-group>
+      </civ-form-fieldset>
     </div>
     <div data-step data-step-label="Description of new evidence">
-      <civ-textarea
-        label="Description of new evidence"
-        name="newEvidenceDescription"
-        required
-        hint="Describe what new evidence you have and why it is relevant"
-        
-      ></civ-textarea>
+      <civ-form-field label="Description of new evidence" hint="Describe what new evidence you have and why it is relevant" required>
+        <civ-textarea
+          name="newEvidenceDescription"
+          required
+          
+        ></civ-textarea>
+      </civ-form-field>
     </div>
     <div data-step data-step-label="Do you want VA to help obtain records?">
-      <civ-radio-group
-        legend="Do you want VA to help obtain records?"
-        name="vaHelpObtainRecords"
-        
-      >
-        <civ-radio label="Yes" value="yes"></civ-radio>
-        <civ-radio label="No" value="no"></civ-radio>
-      </civ-radio-group>
+      <civ-form-fieldset legend="Do you want VA to help obtain records?" >
+        <civ-radio-group
+          name="vaHelpObtainRecords"
+          
+        >
+          <civ-radio label="Yes" value="yes"></civ-radio>
+          <civ-radio label="No" value="no"></civ-radio>
+        </civ-radio-group>
+      </civ-form-fieldset>
     </div>
     </civ-form-step>
   </div>
@@ -331,7 +346,7 @@
 
   <!-- Prefill review (hidden by default, shown by runtime JS when prefill data exists) -->
   <div data-prefill-review hidden data-chapter-fields="documents">
-    <civ-alert variant="info" alert-style="secondary" heading="We&rsquo;ve prefilled some of your information" label="We pulled this information from your account. If any of this is wrong, you can correct it here."></civ-alert>
+    <civ-alert variant="info" alert-style="secondary" heading="We've prefilled some of your information" label="We pulled this information from your account. If any of this is wrong, you can correct it here."></civ-alert>
     <civ-summary data-prefill-summary></civ-summary>
     <p class="civ-mt-4">If this information is accurate, press continue to fill out the rest of the form.</p>
     <div class="civ-mt-4">
@@ -342,15 +357,15 @@
   <div data-chapter-steps>
     <civ-form-step complete-label="Save and continue">
     <div data-step data-step-label="Upload supporting documents">
-      <civ-file-upload
-        label="Upload supporting documents"
-        name="documents"
-        hint="Upload PDF, JPG, or PNG files. Maximum file size: 20MB"
-        accept=".pdf,.jpg,.jpeg,.png"
-        multiple
-        max-size="20000000"
-        max-files="10"
-      ></civ-file-upload>
+      <civ-form-field label="Upload supporting documents" hint="Upload PDF, JPG, or PNG files. Maximum file size: 20MB">
+        <civ-file-upload
+          name="documents"
+          accept=".pdf,.jpg,.jpeg,.png"
+          multiple
+          max-size="20000000"
+          max-files="10"
+        ></civ-file-upload>
+      </civ-form-field>
     </div>
     </civ-form-step>
   </div>
@@ -473,7 +488,7 @@
       showPage('hub');
     });
 
-    // "Back to task list" links — inside wizards and standalone
+    // "Back to task list" links — inside form steps and standalone
     document.querySelectorAll('civ-link[variant="back"]').forEach(link => {
       const href = link.getAttribute('href') || '';
       if (href.includes('hub')) {
@@ -483,6 +498,7 @@
         });
       }
     });
+
     // Task list — navigate when clicking a list item
     document.querySelectorAll('civ-list-item[data-chapter-id]').forEach(item => {
       item.addEventListener('click', (e) => {
@@ -499,17 +515,17 @@
       const chapterId = chapter.dataset.chapter;
 
       // civ-form-step fires civ-step-complete when all steps pass validation
-      const wizard = chapter.querySelector('civ-form-step');
-      if (wizard) {
-        wizard.addEventListener('civ-step-complete', () => {
+      const formStep = chapter.querySelector('civ-form-step');
+      if (formStep) {
+        formStep.addEventListener('civ-step-complete', () => {
           completedChapters.add(chapterId);
           updateTaskList();
           showPage('hub');
         });
       }
 
-      // Repeatable sections (no wizard) — use Save and continue button
-      if (!wizard) {
+      // Repeatable sections (no form-step) — use Save and continue button
+      if (!formStep) {
         chapter.querySelectorAll('civ-button').forEach(btn => {
           const label = btn.getAttribute('label') || '';
           if (label === 'Save and continue') {
@@ -579,6 +595,7 @@
         progressBar.setAttribute('status', doneCount + ' of ' + totalChapters + ' sections complete');
       }
     }
+
     const TASK_STATUS_MAP = {
       'not-started': { label: 'Not started', variant: 'info', style: 'secondary' },
       'in-progress': { label: 'In progress', variant: 'info', style: 'primary' },
@@ -587,6 +604,7 @@
       'error': { label: 'Has errors', variant: 'error', style: 'secondary' },
       'review': { label: 'Needs review', variant: 'warning', style: 'primary' },
     };
+
     function setItemStatus(item, status, href) {
       const badge = item.querySelector('civ-badge');
       const def = TASK_STATUS_MAP[status];
@@ -697,11 +715,11 @@
           });
         }
 
-        // Mark task as prefilled
+        // Mark row as prefilled
         var chapterId = review.closest('[data-chapter]');
         chapterId = chapterId ? chapterId.getAttribute('data-chapter') : '';
-        var task = document.querySelector('civ-list-item[data-chapter-id="' + chapterId + '"]');
-        if (task) task.setAttribute('data-prefilled', '');
+        var item = document.querySelector('civ-list-item[data-chapter-id="' + chapterId + '"]');
+        if (item) item.setAttribute('data-prefilled', '');
       });
 
       // Update task statuses — only the FIRST prefilled chapter gets "review"
@@ -710,15 +728,15 @@
       var firstReviewSet = false;
       CHAPTERS.forEach(function(chapterId) {
         var review = document.querySelector('[data-chapter="' + chapterId + '"] [data-prefill-review]:not([hidden])');
-        var task = document.querySelector('civ-list-item[data-chapter-id="' + chapterId + '"]');
-        const badge = task && task.querySelector('civ-badge');
-        const isComplete = badge && badge.getAttribute('variant') === 'success';
-        if (review && task && !isComplete) {
+        var item = document.querySelector('civ-list-item[data-chapter-id="' + chapterId + '"]');
+        var badge = item && item.querySelector('civ-badge');
+        var isComplete = badge && badge.getAttribute('variant') === 'success';
+        if (review && item && !isComplete) {
           if (!firstReviewSet) {
-            setItemStatus(task, 'review', '#/' + chapterId);
+            setItemStatus(item, 'review', '#/' + chapterId);
             firstReviewSet = true;
           } else {
-            setItemStatus(task, 'cannot-start', null);
+            setItemStatus(item, 'cannot-start', null);
           }
         }
       });

@@ -93,7 +93,7 @@ export function generateAnalyticsPlan(schema: FormSchema): AnalyticsPlanResult {
     });
   }
 
-  // Form steps step events
+  // Form step events
   if (schema.steps) {
     for (let i = 0; i < schema.steps.length; i++) {
       events.push({

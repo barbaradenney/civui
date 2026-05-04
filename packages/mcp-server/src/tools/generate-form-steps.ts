@@ -27,7 +27,7 @@ export interface FormStepsResult {
  */
 export function generateFormSteps(schema: FormSchema): FormStepsResult {
   if (!schema.steps || schema.steps.length === 0) {
-    throw new Error('Schema must have a non-empty `steps` array to generate a form-steps');
+    throw new Error('Schema must have a non-empty `steps` array to generate a multi-step form');
   }
 
   const html = generateCivUI(schema);

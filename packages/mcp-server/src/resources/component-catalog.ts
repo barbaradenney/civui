@@ -110,7 +110,7 @@ Generic list primitive. \`<civ-list>\` renders \`<ul role="list">\` with optiona
 ### civ-progress-bar
 Overall progress. Props: \`value\`, \`label\`, \`status\`.
 
-### civ-progress-steps
+### civ-progress
 Step indicator. Props: \`steps\` (JSON), \`current\`, \`show-counter\`, \`clickable\`.
 
 ---

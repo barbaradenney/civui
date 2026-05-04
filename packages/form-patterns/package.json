@@ -17,7 +17,7 @@
     "./summary": "./dist/summary/index.js",
     "./data-field": "./dist/data-field/index.js",
     "./section-intro": "./dist/section-intro/index.js",
-    "./progress-steps": "./dist/progress-steps/index.js",
+    "./progress": "./dist/progress/index.js",
     "./prefill": "./dist/prefill/index.js"
   },
   "files": ["dist"],

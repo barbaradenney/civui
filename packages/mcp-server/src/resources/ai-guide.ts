@@ -47,7 +47,7 @@ For architecture and internals, see \`CLAUDE.md\` in the repo root.
 | \`<civ-list>\` | Layout | \`dividers\` (boolean) — generic list container. Renders \`<ul role="list">\`. Use for task lists, side nav, link collections, search results. | — |
 | \`<civ-list-item>\` | Layout | \`href\` (optional) — when set, the whole row becomes a clickable anchor. Use the \`data-list-item-end\` attribute on a child to place trailing content (status tag, switch, etc.). | \`civ-analytics\` |
 | \`<civ-progress-bar>\` | Feedback | \`value\`, \`label\`, \`status\` | — |
-| \`<civ-progress-steps>\` | Feedback | \`steps\` (JSON), \`current\`, \`show-counter\`, \`clickable\`, \`orientation\` | \`civ-step-click\` |
+| \`<civ-progress>\` | Feedback | \`steps\` (JSON), \`current\`, \`show-counter\`, \`clickable\`, \`orientation\` | \`civ-step-click\` |
 | \`<civ-form-step>\` | Form | \`persist\`, \`sensitive\`, \`show-pause\`, \`continue-label\`, \`complete-label\`, \`pause-label\`, \`nav-disabled\`, \`validate\` | \`civ-step-complete\`, \`civ-step-pause\` |
 | \`<civ-yes-no>\` | Choice | \`legend\`, \`yes-label\`, \`no-label\`, \`unsure-label\`, \`skip-label\` | \`{ value }\` |
 | \`<civ-conditional>\` | Layout | \`when\`, \`equals\`, \`not-equals\`, \`includes\`, \`has-value\`, \`matches\` | — |
@@ -683,18 +683,18 @@ Children with \`data-step\` define each step. Validates required fields before a
 \`civ-form-step\` automatically renders progress steps, Continue/Back buttons, and validates
 required fields before advancing. No custom JavaScript needed.
 
-### civ-progress-steps
+### civ-progress
 
 Step indicator for multi-step forms. Shows numbered circles with labels.
 
 **Props:** \`steps\` (JSON array of labels or objects), \`current\` (0-based index), \`show-counter\`, \`clickable\`, \`orientation\`
 
 \`\`\`html
-<civ-progress-steps
+<civ-progress
   steps='["Your name","Date of birth","SSN"]'
   current="1"
   show-counter
-></civ-progress-steps>
+></civ-progress>
 \`\`\`
 
 ---

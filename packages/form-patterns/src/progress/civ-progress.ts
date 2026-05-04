@@ -4,16 +4,20 @@ import { CivBaseElement, announce, dispatch, t, interpolate } from '@civui/core'
 import '@civui/navigation/link';
 
 /**
- * CivUI Progress Steps
+ * CivUI Progress
  *
  * A step indicator for multi-step forms. Displays current progress
  * with completed, current, and upcoming step states.
+ *
+ * Supports two variants:
+ * - `full` (default): horizontal/vertical step circles with labels and connectors
+ * - `minimal`: compact "Step X of Y: Title" header (same styling as form-step header)
  *
  * Responsive: horizontal on desktop, auto-switches to vertical on
  * narrow screens via CSS. Labels truncate with ellipsis when space
  * is tight.
  *
- * @element civ-progress-steps
+ * @element civ-progress
  *
  * @prop {string} steps - JSON string of step objects or labels
  *   Simple: '["Personal Info","Address","Review"]'
@@ -26,8 +30,18 @@ import '@civui/navigation/link';
  *
  * @fires civ-step-click - When a completed step is clicked, detail: { step: number }
  */
-@customElement('civ-progress-steps')
-export class CivProgressSteps extends CivBaseElement {
+@customElement('civ-progress')
+export class CivProgress extends CivBaseElement {
+  /** Rendering variant: 'full' shows step circles, 'minimal' shows a compact header. */
+  @property({ type: String }) variant: 'full' | 'minimal' = 'full';
+  /** Heading size class for minimal variant header. */
+  @property({ type: String, attribute: 'header-size' }) headerSize: 'sm' | 'md' | 'lg' | 'xl' = 'lg';
+  /** Spacing class for minimal variant header. */
+  @property({ type: String, attribute: 'header-spacing' }) headerSpacing = 'civ-mb-4';
+  /** Heading level (1-6) for minimal variant header. */
+  @property({ type: Number, attribute: 'heading-level' }) headingLevel: number = 2;
+  /** Title override for minimal variant (defaults to current step label). */
+  @property({ type: String, attribute: 'step-title' }) stepTitle = '';
   @property({ type: String }) steps = '[]';
   @property({ type: Number }) current = 0;
   @property({ type: String, reflect: true }) orientation: 'horizontal' | 'vertical' = 'horizontal';
@@ -101,6 +115,10 @@ export class CivProgressSteps extends CivBaseElement {
     const stepData = this._getStepData();
     if (stepData.length === 0) return nothing;
 
+    if (this.variant === 'minimal') {
+      return this._renderMinimal(stepData);
+    }
+
     const isVertical = this.orientation === 'vertical';
     const errorSet = this._getErrorSet();
 
@@ -130,6 +148,24 @@ export class CivProgressSteps extends CivBaseElement {
           </div>
         ` : nothing}
       </nav>
+    `;
+  }
+
+  private _renderMinimal(stepData: Array<{ label: string; description?: string }>) {
+    const idx = this._safeCurrent;
+    const step = stepData[idx];
+    const title = this.stepTitle || step?.label || '';
+    const sizeClass = `civ-heading-${this.headerSize}`;
+
+    return html`
+      <div class="civ-form-step__header ${this.headerSpacing}">
+        <span class="civ-form-step__counter">
+          ${interpolate(t('progressStepsCounter'), { current: idx + 1, total: stepData.length })}
+        </span>
+        <span class="${sizeClass} civ-form-step__title"
+          role="heading" aria-level="${this.headingLevel}"
+        >${title}</span>
+      </div>
     `;
   }
 
@@ -236,6 +272,6 @@ export class CivProgressSteps extends CivBaseElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'civ-progress-steps': CivProgressSteps;
+    'civ-progress': CivProgress;
   }
 }

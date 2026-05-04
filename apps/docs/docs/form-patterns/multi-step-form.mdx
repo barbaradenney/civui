@@ -18,7 +18,7 @@ Break long government forms into manageable steps. Each step covers one concept 
 
 1. Wrap each step's fields in a container with a `data-step-label` attribute
 2. `civ-form-step` handles navigation (back/continue), validation, and progress tracking
-3. `civ-progress-steps` shows the user where they are
+3. `civ-progress` shows the user where they are
 
 ```html
 <civ-form-step>
@@ -42,7 +42,7 @@ Break long government forms into manageable steps. Each step covers one concept 
 
 ## Progress indicators
 
-Use `civ-progress-steps` for forms with a known number of steps:
+Use `civ-progress` for forms with a known number of steps:
 
 <StoryEmbed id="forms-form-form-step--default" />
 
@@ -84,7 +84,7 @@ Avoid one-field-per-step — it creates 20+ page forms with high abandonment. Gr
 ## Components used
 
 - [`civ-form-step`](/docs/components/form/form-step) — multi-step container with navigation
-- [`civ-progress-steps`](/docs/components/form/progress-steps) — step indicator
-- [`civ-progress-bar`](/docs/components/form/progress-steps#progress-bar) — percentage indicator
+- [`civ-progress`](/docs/components/form/progress) — step indicator
+- [`civ-progress-bar`](/docs/components/form/progress#progress-bar) — percentage indicator
 
 [Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-form-form-step--government-benefit-application)

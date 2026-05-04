@@ -849,14 +849,14 @@ grouping logically related fields on the same step (name + DOB, phone + email, s
 city + state + ZIP) reduces page count and form abandonment without increasing cognitive
 load. Group by topic, not by field — each step should cover one *concept*, not one *input*.
 
-Use `civ-progress-steps` for multi-page form navigation:
+Use `civ-progress` for multi-page form navigation:
 
 ```html
-<civ-progress-steps current="2"></civ-progress-steps>
+<civ-progress current="2"></civ-progress>
 ```
 
 ```js
-const steps = document.querySelector('civ-progress-steps');
+const steps = document.querySelector('civ-progress');
 steps.steps = [
   { label: 'Personal information', status: 'complete' },
   { label: 'Contact information', status: 'current' },
@@ -1087,7 +1087,7 @@ adapted for government benefit applications.
 
 ### Chapter Flow
 
-Within each chapter, use `civ-progress-steps` or `civ-progress-bar` for step-level
+Within each chapter, use `civ-progress` or `civ-progress-bar` for step-level
 navigation. Each chapter ends with a chapter-level review page using `civ-summary`.
 
 ```
@@ -1316,7 +1316,7 @@ Book: VA Form 21-526EZ — Disability Compensation
 |---|---|
 | Task list hub | `civ-list` + `civ-list-item` + `civ-tag` (composition pattern) |
 | Book-level progress | `civ-progress-bar` |
-| Chapter-level progress | `civ-progress-steps` or `civ-progress-bar` |
+| Chapter-level progress | `civ-progress` or `civ-progress-bar` |
 | Chapter navigation | `civ-button` (back/continue) |
 | Conditional chapters | `civ-conditional` + JS chapter computation |
 | Repeating items | `civ-repeater` (`mode="detail"` for complex items) |

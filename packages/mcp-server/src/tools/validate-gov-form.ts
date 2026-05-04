@@ -112,11 +112,11 @@ export function validateGovForm(html: string): ValidateGovFormResult {
   }
 
   // Check for progress indicator
-  if (!/<civ-progress-bar/.test(html) && !/<civ-progress-steps/.test(html)) {
+  if (!/<civ-progress-bar/.test(html) && !/<civ-progress/.test(html)) {
     violations.push({
       rule: 'has-progress',
       severity: 'warning',
-      message: 'Missing progress indicator (civ-progress-bar or civ-progress-steps).',
+      message: 'Missing progress indicator (civ-progress-bar or civ-progress).',
     });
   }
 

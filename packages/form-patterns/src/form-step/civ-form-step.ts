@@ -5,6 +5,7 @@ import type { SlotConfig } from '@civui/core';
 import '@civui/inputs';
 import '@civui/actions/button';
 import '@civui/navigation/link';
+import '../progress/civ-progress.js';
 
 /**
  * CivUI Form Step
@@ -224,7 +225,17 @@ export class CivFormStep extends LightDomSlotMixin(CivBaseElement) {
           ` : nothing;
         })()}
 
-        ${this._renderStepHeader(total)}
+        ${total > 1 ? html`
+          <civ-progress
+            variant="minimal"
+            .steps="${JSON.stringify(this._steps.map(s => ({ label: s.getAttribute('data-step-label') || '' })))}"
+            current="${this._current}"
+            header-size="${this.headerSize}"
+            header-spacing="${this.headerSpacing}"
+            heading-level="${this.headingLevel}"
+            step-title="${this.stepTitle || this._steps[this._current]?.getAttribute('data-step-label') || ''}"
+          ></civ-progress>
+        ` : nothing}
 
         <section aria-label="${this.stepTitle || this._steps[this._current]?.getAttribute('data-step-label') || nothing}">
           <div data-civ-form-step-content></div>
@@ -254,38 +265,6 @@ export class CivFormStep extends LightDomSlotMixin(CivBaseElement) {
     `;
   }
 
-  private _renderStepHeader(total: number) {
-    const stepLabel = this._steps[this._current]?.getAttribute('data-step-label') || '';
-    const title = this.stepTitle || stepLabel;
-    if (!title && this.headerSize === 'secondary') return nothing;
-
-    const isPrimary = this.headerSize === 'primary';
-    const counterText = total > 1
-      ? interpolate(t('formStepOf'), {
-          current: String(this._current + 1),
-          total: String(total),
-        })
-      : '';
-
-    // Single line: "Step 1 of 3: Personal information"
-    const headerText = counterText && title
-      ? `${counterText}: ${title}`
-      : counterText || title;
-
-    if (!headerText) return nothing;
-
-    const level = Math.max(2, Math.min(6, this.headingLevel));
-
-    return html`
-      ${this.headerDividers ? html`<hr class="civ-divider civ-my-4" />` : nothing}
-      <div class="civ-form-step__header ${isPrimary ? 'civ-form-step__header--primary' : ''} ${this.headerSpacing === 'compact' ? 'civ-form-step__header--compact' : ''}"
-           role="heading" aria-level="${level}" aria-live="polite">
-        ${counterText ? html`<span class="civ-form-step__counter">${counterText}${title ? ':' : ''}</span>` : nothing}
-        ${title ? html`<span class="civ-form-step__title">${title}</span>` : nothing}
-      </div>
-      ${this.headerDividers ? html`<hr class="civ-divider civ-my-4" />` : nothing}
-    `;
-  }
 
   /** Pause action shows when explicitly requested or on sensitive steps. */
   private get _shouldShowPause(): boolean {

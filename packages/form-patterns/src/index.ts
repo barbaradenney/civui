@@ -25,7 +25,7 @@ export { CivDataField } from './data-field/index.js';
 export { CivSectionIntro } from './section-intro/index.js';
 
 // Progress Steps
-export { CivProgressSteps, CivProgressBar } from './progress-steps/index.js';
+export { CivProgress, CivProgressBar } from './progress/index.js';
 
 // Prefill Types
 export type { PrefillField, PrefillData, PrefillMeta } from './prefill/index.js';

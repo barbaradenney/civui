@@ -16,7 +16,7 @@ A typical government form composes these layers:
 
 ```
 civ-form                         ← validates, error summary, submit handling
-├── civ-progress-steps           ← visual step indicator (optional)
+├── civ-progress           ← visual step indicator (optional)
 ├── civ-form-step                ← multi-step navigation (optional)
 │   ├── civ-section-intro        ← context before sensitive sections
 │   ├── civ-fieldset             ← groups related fields with legend
@@ -44,7 +44,7 @@ Not every form needs every layer. A simple contact form might just use `civ-form
 | Component | Purpose |
 |-----------|---------|
 | `civ-form-step` | Multi-step navigation within a form. Shows one step at a time, validates before advancing. Each child with `data-step-label` is a step. Supports `sensitive` mode for trauma-informed flows and `showPause` for save-and-resume. |
-| `civ-progress-steps` | Visual step indicator. Shows completed, current, and upcoming steps. Responsive — horizontal on desktop, vertical on mobile. Optional `clickable` prop lets users jump to completed steps. |
+| `civ-progress` | Visual step indicator. Shows completed, current, and upcoming steps. Responsive — horizontal on desktop, vertical on mobile. Optional `clickable` prop lets users jump to completed steps. |
 
 ### Field organization
 
@@ -106,10 +106,10 @@ Not every form needs every layer. A simple contact form might just use `civ-form
 
 ```html
 <civ-form @civ-submit="${handleSubmit}">
-  <civ-progress-steps
+  <civ-progress
     steps='["Personal info","Service history","Review"]'
     current="0"
-  ></civ-progress-steps>
+  ></civ-progress>
 
   <civ-form-step>
     <div data-step-label="Personal info">

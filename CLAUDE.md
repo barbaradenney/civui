@@ -26,7 +26,7 @@ Build order: `tokens → core → layout → navigation → actions, overlays �
 | `@civui/inputs` | `packages/inputs/` | Input components (text-input, textarea, select, combobox, date-picker, file-upload, toggle, yes-no) + preset wrappers (ssn, ein, phone, email, zip, currency, routing-number, va-file-number, country) |
 | `@civui/controls` | `packages/controls/` | Selection controls (checkbox, radio, segmented-control) |
 | `@civui/compound` | `packages/compound/` | Compound fields (address, name, direct-deposit, signature, race-ethnicity, relationship, marriage-history, service-history) |
-| `@civui/form-patterns` | `packages/form-patterns/` | Form orchestration (form, form-step, repeater, summary, prefill, progress-steps, conditional) |
+| `@civui/form-patterns` | `packages/form-patterns/` | Form orchestration (form, form-step, repeater, summary, prefill, progress, conditional) |
 | `@civui/feedback` | `packages/feedback/` | Feedback components (alert, badge, count) |
 | `@civui/navigation` | `packages/navigation/` | Navigation components (skip-link, link, link-card) |
 | `@civui/test-utils` | `packages/test-utils/` | Test helpers: `fixture`, `cleanupFixtures`, `elementUpdated`, `pressKey`, `typeText` |
@@ -228,7 +228,7 @@ The parity check (`tools/parity-report.ts`) parses real source files on each pla
 
 `packages/schema/src/components/*.schema.ts` files describe component APIs in a platform-neutral form, intended as input to `@civui/codegen` (Lit / SwiftUI / Compose generators). **Today these are out of date and not consumed by CI:**
 
-- Schemas don't exist for several recent components (`civ-yes-no`, `civ-address`, `civ-name`, `civ-direct-deposit`, `civ-signature`, `civ-form-step`, `civ-repeater`, `civ-progress-steps`, etc.).
+- Schemas don't exist for several recent components (`civ-yes-no`, `civ-address`, `civ-name`, `civ-direct-deposit`, `civ-signature`, `civ-form-step`, `civ-repeater`, `civ-progress`, etc.).
 - Existing schemas drift from the components — many props (e.g. `mask`, `validate`, `clearable`, `prefix`, `suffix`, `width`, `autogrow`, `maxwords`) aren't reflected.
 - Codegen output writes to `packages/codegen/dist/` — never into the real platform packages — and isn't run by CI.
 

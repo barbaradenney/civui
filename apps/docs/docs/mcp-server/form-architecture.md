@@ -131,9 +131,9 @@ Setting `href` on a `<civ-list-item>` makes the whole row a clickable anchor; om
 Within a chapter, linear step-by-step navigation with a progress indicator:
 
 ```html
-<civ-progress-steps current="2" total="4">
+<civ-progress current="2" total="4">
   <span data-label>Step 2 of 4</span>
-</civ-progress-steps>
+</civ-progress>
 ```
 
 ## Dynamic and Conditional Forms
@@ -270,7 +270,7 @@ Workflow features are generated with:
 | `<civ-page-header>` | Page title with eyebrow and subheading |
 | `<civ-list>` | Generic list container; use for task list hub showing chapter statuses |
 | `<civ-list-item>` | List row; set `href` to make the whole row clickable, omit for static rows |
-| `<civ-progress-steps>` | Linear step progress indicator |
+| `<civ-progress>` | Linear step progress indicator |
 | `<civ-form>` | Form wrapper with validation and error summary |
 | `<civ-yes-no>` | Yes/No radio group |
 | `<civ-conditional>` | Conditional reveal container |

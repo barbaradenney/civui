@@ -130,10 +130,10 @@ function checkRenderOrder(comp: ComponentFile) {
   if (!hasLabel && !comp.name.includes('checkbox') && !comp.name.includes('radio') && !comp.name.includes('toggle') && !comp.name.includes('segment')) {
     addIssue(comp.path, 'render-order', 'warning', `${comp.name} does not use renderLabel() or renderLegend()`);
   }
-  if (!hasHint && !comp.name.includes('segment') && !comp.name.includes('radio') && !comp.name.includes('checkbox') && comp.name !== 'civ-conditional' && comp.name !== 'civ-progress-steps' && comp.name !== 'civ-progress-bar') {
+  if (!hasHint && !comp.name.includes('segment') && !comp.name.includes('radio') && !comp.name.includes('checkbox') && comp.name !== 'civ-conditional' && comp.name !== 'civ-progress' && comp.name !== 'civ-progress-bar') {
     addIssue(comp.path, 'render-order', 'warning', `${comp.name} does not use renderHint()`);
   }
-  if (!hasError && !comp.name.includes('segment') && !comp.name.includes('radio') && !comp.name.includes('checkbox') && comp.name !== 'civ-conditional' && comp.name !== 'civ-progress-steps' && comp.name !== 'civ-progress-bar') {
+  if (!hasError && !comp.name.includes('segment') && !comp.name.includes('radio') && !comp.name.includes('checkbox') && comp.name !== 'civ-conditional' && comp.name !== 'civ-progress' && comp.name !== 'civ-progress-bar') {
     addIssue(comp.path, 'render-order', 'warning', `${comp.name} does not use renderError()`);
   }
 
@@ -177,7 +177,7 @@ function checkAriaAttributes(comp: ComponentFile) {
 function checkEvents(comp: ComponentFile) {
   const isFormParticipating = FORM_CLASS_RE.test(comp.src);
   if (!isFormParticipating) return;
-  if (comp.name === 'civ-conditional' || comp.name === 'civ-progress-steps' || comp.name === 'civ-progress-bar') return;
+  if (comp.name === 'civ-conditional' || comp.name === 'civ-progress' || comp.name === 'civ-progress-bar') return;
 
   // Check for civ-input event
   if (!comp.src.includes("'civ-input'") && !comp.src.includes('_handleInput')) {
@@ -191,7 +191,7 @@ function checkEvents(comp: ComponentFile) {
 }
 
 function checkAnalytics(comp: ComponentFile) {
-  if (comp.name === 'civ-conditional' || comp.name === 'civ-progress-steps' || comp.name === 'civ-progress-bar' || comp.name === 'civ-icon') return;
+  if (comp.name === 'civ-conditional' || comp.name === 'civ-progress' || comp.name === 'civ-progress-bar' || comp.name === 'civ-icon') return;
   if (NO_ANALYTICS.has(comp.name)) return; // Structural components don't fire analytics
 
   // sendAnalytics can be called directly OR inherited via _handleChange from base class
@@ -237,7 +237,7 @@ function checkTailwindPrefix(comp: ComponentFile) {
 function checkFormReset(comp: ComponentFile) {
   const isFormParticipating = FORM_CLASS_RE.test(comp.src);
   if (!isFormParticipating) return;
-  if (comp.name === 'civ-conditional' || comp.name === 'civ-progress-steps' || comp.name === 'civ-progress-bar' || comp.name === 'civ-form-field') return;
+  if (comp.name === 'civ-conditional' || comp.name === 'civ-progress' || comp.name === 'civ-progress-bar' || comp.name === 'civ-form-field') return;
 
   if (!comp.src.includes('formResetCallback') && !comp.src.includes('_handleChange')) {
     addIssue(comp.path, 'form-reset', 'info', `${comp.name} does not override formResetCallback()`);
@@ -247,7 +247,7 @@ function checkFormReset(comp: ComponentFile) {
 function checkDisabledState(comp: ComponentFile) {
   const isFormParticipating = FORM_CLASS_RE.test(comp.src);
   if (!isFormParticipating) return;
-  if (comp.name === 'civ-conditional' || comp.name === 'civ-progress-steps' || comp.name === 'civ-progress-bar') return;
+  if (comp.name === 'civ-conditional' || comp.name === 'civ-progress' || comp.name === 'civ-progress-bar') return;
 
   if (!comp.src.includes('disabled')) {
     addIssue(comp.path, 'disabled', 'warning', `${comp.name} does not handle disabled state`);
@@ -334,7 +334,7 @@ function checkNativeCounterparts(comp: ComponentFile) {
 function checkA11yErrorAnnouncement(comp: ComponentFile) {
   const isFormParticipating = FORM_CLASS_RE.test(comp.src);
   if (!isFormParticipating) return;
-  if (comp.name === 'civ-conditional' || comp.name === 'civ-progress-steps' || comp.name === 'civ-progress-bar') return;
+  if (comp.name === 'civ-conditional' || comp.name === 'civ-progress' || comp.name === 'civ-progress-bar') return;
   if (WRAPPER_DELEGATED.has(comp.name)) return; // Error rendering handled by civ-form-field wrapper
 
   // Errors should use role="alert" (handled by renderError) or announce()
@@ -348,7 +348,7 @@ function checkA11yLabelAssociation(comp: ComponentFile) {
   if (!isFormParticipating) return;
   if (CHILD_COMPONENTS.has(comp.name)) return;
   if (WRAPPER_DELEGATED.has(comp.name)) return; // Label association handled by civ-form-field wrapper
-  if (comp.name === 'civ-conditional' || comp.name === 'civ-progress-steps' || comp.name === 'civ-progress-bar') return;
+  if (comp.name === 'civ-conditional' || comp.name === 'civ-progress' || comp.name === 'civ-progress-bar') return;
 
   // Every form control needs a label/legend associated via for/id or inline <label>
   const hasLabelAssociation = comp.src.includes('renderLabel(') || comp.src.includes('renderLegend(') || comp.src.includes('aria-label') || comp.src.includes('<label');

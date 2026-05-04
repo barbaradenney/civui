@@ -28,7 +28,7 @@ For architecture and internals, see `CLAUDE.md` in the repo root.
 | `<civ-file-upload>` | File | `accept`, `multiple`, `maxSize`, `maxFiles` | `{ files: File[] }` |
 | `<civ-yes-no>` | Choice | `legend`, `yesLabel`, `noLabel`, `unsureLabel`, `unsureValue`, `skipLabel`, `skipValue` | `{ value }` |
 | `<civ-conditional>` | Layout | `when`, `eq`, `neq` | — |
-| `<civ-progress-steps>` | Navigation | `steps`, `current`, `legend` | — |
+| `<civ-progress>` | Navigation | `steps`, `current`, `legend` | — |
 | `<civ-fieldset>` | Layout | `legend`, `hint`, `error`, `required`, `disabled`, `heading-level` (1-6), `size` (sm/md/lg/xl) | — |
 | `<civ-form>` | Layout | `action`, `method`, `supportResources` | `civ-submit: { formData }`, `civ-invalid: { errors }` |
 | `<civ-form-step>` | Layout | `persist`, `sensitive`, `show-pause`, `continue-label`, `complete-label`, `pause-label`, `nav-disabled`, `validate` | `civ-step-change`, `civ-step-pause`, `civ-step-complete` |
@@ -1203,7 +1203,7 @@ Pre-configured wrappers around `civ-text-input` and `civ-combobox` with built-in
 
 ---
 
-### civ-progress-steps
+### civ-progress
 
 Multi-step form progress indicator.
 
@@ -1214,7 +1214,7 @@ Multi-step form progress indicator.
 
 **Example:**
 ```html
-<civ-progress-steps
+<civ-progress
   legend="Application progress"
   .steps="${[
     { label: 'Personal info', status: 'complete' },
@@ -1222,7 +1222,7 @@ Multi-step form progress indicator.
     { label: 'Review', status: 'upcoming' }
   ]}"
   current="1"
-></civ-progress-steps>
+></civ-progress>
 ```
 
 ---

@@ -1,11 +1,11 @@
-// CivUI — CivProgressSteps for SwiftUI
+// CivUI — CivProgress for SwiftUI
 // Accessible step indicator following government design system patterns.
 // Shows completed, current, and upcoming steps with VoiceOver support.
 
 import SwiftUI
 
 /// Step indicator orientation.
-public enum CivProgressStepsOrientation {
+public enum CivProgressOrientation {
     case horizontal
     case vertical
 }
@@ -19,13 +19,13 @@ public enum CivProgressStepsOrientation {
 ///
 /// Usage:
 /// ```swift
-/// CivProgressSteps(
+/// CivProgress(
 ///     steps: ["Personal info", "Address", "Review", "Submit"],
 ///     current: 1, // zero-indexed
 ///     orientation: .horizontal
 /// )
 /// ```
-public struct CivProgressSteps: View {
+public struct CivProgress: View {
     // MARK: - Properties
 
     /// Array of step label strings.
@@ -35,7 +35,7 @@ public struct CivProgressSteps: View {
     public let current: Int
 
     /// Orientation of the step indicator.
-    public var orientation: CivProgressStepsOrientation
+    public var orientation: CivProgressOrientation
 
     /// Whether steps are clickable for navigation.
     public var clickable: Bool
@@ -61,7 +61,7 @@ public struct CivProgressSteps: View {
     public init(
         steps: [String],
         current: Int,
-        orientation: CivProgressStepsOrientation = .horizontal,
+        orientation: CivProgressOrientation = .horizontal,
         clickable: Bool = false,
         showCounter: Bool = false,
         errorSteps: String = "",
@@ -258,23 +258,23 @@ public struct CivProgressSteps: View {
 // MARK: - Preview
 
 #if DEBUG
-struct CivProgressSteps_Previews: PreviewProvider {
+struct CivProgress_Previews: PreviewProvider {
     static var previews: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 32) {
-                CivProgressSteps(
+                CivProgress(
                     steps: ["Personal info", "Address", "Review", "Submit"],
                     current: 2,
                     orientation: .horizontal
                 )
 
-                CivProgressSteps(
+                CivProgress(
                     steps: ["Personal info", "Address", "Review", "Submit"],
                     current: 1,
                     orientation: .vertical
                 )
 
-                CivProgressSteps(
+                CivProgress(
                     steps: ["Start", "Finish"],
                     current: 0,
                     orientation: .horizontal

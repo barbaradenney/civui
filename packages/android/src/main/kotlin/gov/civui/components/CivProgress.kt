@@ -1,4 +1,4 @@
-// CivUI — CivProgressSteps for Jetpack Compose
+// CivUI — CivProgress for Jetpack Compose
 // Accessible step indicator with completed, current, and upcoming states.
 // TalkBack announces "Step X of Y: label, completed/current/upcoming".
 
@@ -35,7 +35,7 @@ import gov.civui.tokens.CivTokens
 /**
  * Step indicator orientation.
  */
-enum class CivProgressStepsOrientation {
+enum class CivProgressOrientation {
     HORIZONTAL,
     VERTICAL,
 }
@@ -50,19 +50,19 @@ enum class CivProgressStepsOrientation {
  *
  * Usage:
  * ```kotlin
- * CivProgressSteps(
+ * CivProgress(
  *     steps = listOf("Personal info", "Address", "Review", "Submit"),
  *     current = 1,
- *     orientation = CivProgressStepsOrientation.HORIZONTAL,
+ *     orientation = CivProgressOrientation.HORIZONTAL,
  * )
  * ```
  */
 @Composable
-fun CivProgressSteps(
+fun CivProgress(
     steps: List<String>,
     current: Int,
     modifier: Modifier = Modifier,
-    orientation: CivProgressStepsOrientation = CivProgressStepsOrientation.HORIZONTAL,
+    orientation: CivProgressOrientation = CivProgressOrientation.HORIZONTAL,
     clickable: Boolean = false,
     showCounter: Boolean = false,
     errorSteps: String = "",
@@ -83,7 +83,7 @@ fun CivProgressSteps(
     val defaultColor = if (isDark) CivTokens.DarkColors.Base.default_ else CivTokens.Colors.Base.default_
 
     when (orientation) {
-        CivProgressStepsOrientation.HORIZONTAL -> {
+        CivProgressOrientation.HORIZONTAL -> {
             Row(
                 modifier = modifier.padding(bottom = CivTokens.Spacing._4),
                 verticalAlignment = Alignment.Top,
@@ -138,7 +138,7 @@ fun CivProgressSteps(
             }
         }
 
-        CivProgressStepsOrientation.VERTICAL -> {
+        CivProgressOrientation.VERTICAL -> {
             Column(
                 modifier = modifier.padding(bottom = CivTokens.Spacing._4),
             ) {
@@ -245,26 +245,26 @@ private fun stepAccessibilityText(index: Int, total: Int, label: String, current
 
 // MARK: - Preview
 
-@Preview(showBackground = true, name = "CivProgressSteps Horizontal")
+@Preview(showBackground = true, name = "CivProgress Horizontal")
 @Composable
-private fun CivProgressStepsHorizontalPreview() {
+private fun CivProgressHorizontalPreview() {
     Column(modifier = Modifier.padding(16.dp)) {
-        CivProgressSteps(
+        CivProgress(
             steps = listOf("Personal info", "Address", "Review", "Submit"),
             current = 2,
-            orientation = CivProgressStepsOrientation.HORIZONTAL,
+            orientation = CivProgressOrientation.HORIZONTAL,
         )
     }
 }
 
-@Preview(showBackground = true, name = "CivProgressSteps Vertical")
+@Preview(showBackground = true, name = "CivProgress Vertical")
 @Composable
-private fun CivProgressStepsVerticalPreview() {
+private fun CivProgressVerticalPreview() {
     Column(modifier = Modifier.padding(16.dp)) {
-        CivProgressSteps(
+        CivProgress(
             steps = listOf("Personal info", "Address", "Review", "Submit"),
             current = 1,
-            orientation = CivProgressStepsOrientation.VERTICAL,
+            orientation = CivProgressOrientation.VERTICAL,
         )
     }
 }

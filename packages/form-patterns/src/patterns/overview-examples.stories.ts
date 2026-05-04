@@ -12,7 +12,7 @@ import '../fieldset/civ-fieldset.js';
 import '../conditional/civ-conditional.js';
 import '../repeater/civ-repeater.js';
 import '../summary/civ-summary.js';
-import '../progress-steps/civ-progress-steps.js';
+import '../progress/civ-progress.js';
 import '../section-intro/civ-section-intro.js';
 
 const meta: Meta = {

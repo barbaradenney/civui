@@ -1,14 +1,14 @@
 ---
-title: Progress Steps
+title: Progress
 sidebar_position: 2
-sidebar_label: Progress Steps
+sidebar_label: Progress
 ---
 
 import StoryEmbed from "@site/src/components/StoryEmbed";
 
-# Progress Steps
+# Progress
 
-`<civ-progress-steps>`
+`<civ-progress>`
 
 A step indicator for multi-step forms. Displays current progress with completed, current, and upcoming step states. Responsive: horizontal on desktop, auto-switches to vertical on narrow screens.
 
@@ -16,53 +16,53 @@ A step indicator for multi-step forms. Displays current progress with completed,
 
 ### Default
 
-<StoryEmbed id="forms-form-progress-steps--default" />
+<StoryEmbed id="forms-form-progress--default" />
 
 ### With Hint
 
-<StoryEmbed id="forms-form-progress-steps--with-hint" />
+<StoryEmbed id="forms-form-progress--with-hint" />
 
 ### With Error
 
-<StoryEmbed id="forms-form-progress-steps--with-error" />
+<StoryEmbed id="forms-form-progress--with-error" />
 
 ### Required
 
-<StoryEmbed id="forms-form-progress-steps--required" />
+<StoryEmbed id="forms-form-progress--required" />
 
 ### Disabled
 
-<StoryEmbed id="forms-form-progress-steps--disabled" />
+<StoryEmbed id="forms-form-progress--disabled" />
 
 ### With Descriptions
 
-<StoryEmbed id="forms-form-progress-steps--with-descriptions" />
+<StoryEmbed id="forms-form-progress--with-descriptions" />
 
 ### Clickable
 
-<StoryEmbed id="forms-form-progress-steps--clickable" />
+<StoryEmbed id="forms-form-progress--clickable" />
 
 ### All States
 
-<StoryEmbed id="forms-form-progress-steps--all-states" />
+<StoryEmbed id="forms-form-progress--all-states" />
 
 ### Density Scale
 
-<StoryEmbed id="forms-form-progress-steps--density-scale" />
+<StoryEmbed id="forms-form-progress--density-scale" />
 
 ### Progress Bar
 
-<StoryEmbed id="forms-form-progress-steps--progress-bar" />
+<StoryEmbed id="forms-form-progress--progress-bar" />
 
 ### Progress Bar Complete
 
-<StoryEmbed id="forms-form-progress-steps--progress-bar-complete" />
+<StoryEmbed id="forms-form-progress--progress-bar-complete" />
 
 ### Government Application Progress
 
-<StoryEmbed id="forms-form-progress-steps--government-application-progress" />
+<StoryEmbed id="forms-form-progress--government-application-progress" />
 
-[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-form-progress-steps--default)
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-form-progress--default)
 
 ## Props
 
@@ -89,50 +89,50 @@ A step indicator for multi-step forms. Displays current progress with completed,
 ### Simple steps
 
 ```html
-<civ-progress-steps
+<civ-progress
   steps='["Personal Info", "Address", "Review", "Submit"]'
   current="1"
-></civ-progress-steps>
+></civ-progress>
 ```
 
 ### With descriptions
 
 ```html
-<civ-progress-steps
+<civ-progress
   steps='[{"label":"Personal","description":"Name and DOB"},{"label":"Address","description":"Mailing address"},{"label":"Review"}]'
   current="0"
-></civ-progress-steps>
+></civ-progress>
 ```
 
 ### Clickable with counter and back link
 
 ```html
-<civ-progress-steps
+<civ-progress
   steps='["Eligibility", "Personal Info", "Documents", "Review"]'
   current="2"
   clickable
   show-counter
   show-back
   back-label="Previous step"
-></civ-progress-steps>
+></civ-progress>
 ```
 
 ### Vertical orientation
 
 ```html
-<civ-progress-steps
+<civ-progress
   steps='["Step 1", "Step 2", "Step 3", "Step 4"]'
   current="1"
   orientation="vertical"
-></civ-progress-steps>
+></civ-progress>
 ```
 
 ### Error steps
 
 ```html
-<civ-progress-steps
+<civ-progress
   steps='["Personal Info", "Address", "Documents", "Review"]'
   current="3"
   error-steps="[1]"
-></civ-progress-steps>
+></civ-progress>
 ```

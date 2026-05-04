@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 // @ts-ignore
-import progressStepsTemplate from '../../../drupal/civui/components/progress-steps/progress-steps.twig';
+import progressStepsTemplate from '../../../drupal/civui/components/progress/progress.twig';
 // @ts-ignore
 import progressBarTemplate from '../../../drupal/civui/components/progress-bar/progress-bar.twig';
 
@@ -10,7 +10,7 @@ const render = (twigFn: (ctx: Record<string, any>) => string, props: Record<stri
   html`${unsafeHTML(twigFn(props))}`;
 
 const meta: Meta = {
-  title: 'Forms/Form/Progress Steps/Drupal SDC',
+  title: 'Forms/Form/Progress/Drupal SDC',
 
 };
 export default meta;

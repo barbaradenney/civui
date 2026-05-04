@@ -1,5 +1,5 @@
 $schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
-name: Progress Steps
+name: Progress
 status: stable
 group: CivUI Form Patterns
 description: 'Step indicator for multi-step form progress.'

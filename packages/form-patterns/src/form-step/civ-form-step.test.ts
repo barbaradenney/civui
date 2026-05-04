@@ -20,13 +20,11 @@ describe('civ-form-step', () => {
     expect(el.total).toBe(3);
   });
 
-  it('shows step counter', async () => {
+  it('shows step progress via civ-progress minimal', async () => {
     const el = await fixture<CivFormStep>(threeSteps);
-    // When steps have data-step-label, the counter renders in the step header.
-    const counter = el.querySelector('.civ-form-step__counter');
-    expect(counter).not.toBeNull();
-    expect(counter!.textContent).toContain('1');
-    expect(counter!.textContent).toContain('3');
+    const progress = el.querySelector('civ-progress');
+    expect(progress).not.toBeNull();
+    expect(progress!.getAttribute('variant')).toBe('minimal');
   });
 
   it('hides nav bar for single step', async () => {
@@ -35,7 +33,7 @@ describe('civ-form-step', () => {
         <div data-step-label="Only"><p>Only step</p></div>
       </civ-form-step>
     `);
-    expect(el.querySelector('civ-progress-steps')).toBeNull();
+    expect(el.querySelector('civ-progress')).toBeNull();
   });
 
   it('fires civ-step-continue on continue click', async () => {

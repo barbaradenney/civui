@@ -90,7 +90,7 @@
   /* ── List (civ-list / civ-list-item) ───────────────────────── */
 
   .civ-list-item__row {
-    @apply civ-p-4 civ-text-base;
+    @apply civ-py-3 civ-px-0 civ-text-base;
   }
 
   /* Heading slot: bold, lg size, no margin */
@@ -118,7 +118,7 @@
   }
 
   .civ-list--sm .civ-list-item__row {
-    @apply civ-py-2 civ-px-4 civ-text-sm;
+    @apply civ-py-2 civ-px-0 civ-text-sm;
   }
 
   .civ-list--sm [data-civ-list-item-heading-slot] > *,
@@ -2465,10 +2465,16 @@
     font-size: var(--civ-typography-fontSize-base);
     font-weight: var(--civ-typography-fontWeight-bold);
     color: var(--civ-color-base-darkest);
+    text-align: end;
   }
 
   .civ-data-field__edit {
     @apply civ-flex-shrink-0;
+  }
+
+  /* Summary section spacing */
+  .civ-summary-section + .civ-summary-section {
+    padding-top: var(--civ-spacing-6, 30px);
   }
 
   @media (max-width: 480px) {

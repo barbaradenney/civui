@@ -235,7 +235,8 @@ export const GovernmentBenefitApplication: Story = {
           name="signature"
           statement="I certify that the information I have provided is true and correct to the best of my knowledge and belief."
           required
-          size="lg"
+          size="xl"
+          card
         ></civ-signature>
       </div>
     </civ-form-step>

@@ -201,3 +201,24 @@ export const SignedAtTimestamp: Story = {
     <pre id="signed-at-out" class="civ-mt-4 civ-p-3 civ-bg-base-lightest civ-rounded civ-text-sm" style="white-space:pre-wrap;">Toggle the certify box to capture a timestamp…</pre>
   `,
 };
+
+export const CardVariant: Story = {
+  name: 'Card Variant',
+  parameters: {
+    docs: {
+      description: {
+        story: 'Wrap the signature in a card with `card` prop for visual emphasis. Use with `size="xl"` for a prominent heading at the end of a form review.',
+      },
+    },
+  },
+  render: () => html`
+    <civ-signature
+      legend="Statement of truth"
+      name="signature"
+      statement="I certify that the information I have provided is true and correct to the best of my knowledge and belief."
+      required
+      size="xl"
+      card
+    ></civ-signature>
+  `,
+};

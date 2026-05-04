@@ -99,6 +99,9 @@ export class CivSignature extends CivFormElement {
   /** Error for the certification checkbox. */
   @property({ type: String, attribute: 'certify-error' }) certifyError = '';
 
+  /** Wrap the signature in a card for visual emphasis. */
+  @property({ type: Boolean }) card = false;
+
   @state() private _signature: InternalSignature = { ...EMPTY_SIGNATURE };
 
   /** Get the current signature value. */
@@ -148,6 +151,7 @@ export class CivSignature extends CivFormElement {
     const describedBy = buildDescribedBy(this._hintId, this.hint, this._errorId, this.error);
 
     return html`
+      ${this.card ? html`<div class="civ-card civ-p-6">` : nothing}
       <fieldset
         class="civ-fieldset"
         aria-describedby="${describedBy || nothing}"
@@ -190,6 +194,7 @@ export class CivSignature extends CivFormElement {
           @civ-change="${this._onCertifyChange}"
         ></civ-checkbox>
       </fieldset>
+      ${this.card ? html`</div>` : nothing}
     `;
   }
 

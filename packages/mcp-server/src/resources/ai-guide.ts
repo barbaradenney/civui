@@ -807,7 +807,7 @@ Compound address component with street, city, state, ZIP.
 
 Compound name component with first, middle, last, suffix fields.
 
-**Props:** \`legend\`, \`format\` (domestic/international), \`show-middle\` (default true), \`show-suffix\` (default true). Per-field errors: \`first-error\`, \`middle-error\`, \`last-error\`.
+**Props:** \`legend\`, \`show-middle\` (default true), \`show-suffix\` (default true). Per-field errors: \`first-error\`, \`middle-error\`, \`last-error\`. Field labels read "First name or given name" and "Last name or family name" so they apply to any naming convention.
 
 \`\`\`html
 <civ-name legend="Your full legal name" name="fullName" required></civ-name>

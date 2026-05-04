@@ -136,13 +136,6 @@ export const WithoutSuffix: Story = {
   },
 };
 
-export const InternationalFormat: Story = {
-  name: 'International Format',
-  render: () => html`
-    <civ-name legend="Applicant's name" name="applicantName" format="international" required></civ-name>
-  `,
-};
-
 // ── Usage Example ─────────────────────────────────────────────
 
 export const GovernmentIdentitySection: Story = {

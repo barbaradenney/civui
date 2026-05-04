@@ -82,7 +82,6 @@ fun CivName(
     readonly: Boolean = false,
     showMiddle: Boolean = true,
     showSuffix: Boolean = true,
-    format: String = "domestic",
     onChange: ((NameValue) -> Unit)? = null,
     onAnalytics: ((event: String, data: Map<String, Any>?) -> Unit)? = null,
     name: String = "",
@@ -144,7 +143,7 @@ fun CivName(
 
         // 4. First name
         NameTextField(
-            label = "First name",
+            label = "First name or given name",
             value = value.first,
             onValueChange = {
                 val updated = value.copy(first = it)
@@ -180,7 +179,7 @@ fun CivName(
 
         // 6. Last name
         NameTextField(
-            label = "Last name",
+            label = "Last name or family name",
             value = value.last,
             onValueChange = {
                 val updated = value.copy(last = it)

@@ -1006,10 +1006,11 @@ Compound component for full name entry. Renders first, middle (optional), last, 
 
 **Props (beyond standard):**
 - `legend` — fieldset legend
-- `format` — `'domestic'` | `'international'` (default: `'domestic'`)
 - `show-middle` — show middle name field (default: true)
 - `show-suffix` — show suffix field (default: true)
 - Per-field errors: `first-error`, `middle-error`, `last-error`
+
+Field labels read "First name or given name" and "Last name or family name" so the form works for any naming convention.
 
 **Value shape:** `NameValue` — `{ first, middle?, last, suffix? }`
 

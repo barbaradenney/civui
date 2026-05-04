@@ -174,8 +174,6 @@ export interface CivLocaleStrings {
   nameMiddle: string;
   nameLast: string;
   nameSuffix: string;
-  nameGiven: string;
-  nameFamily: string;
   nameInvalidChars: string; // "You entered a character we can't accept. Try removing '{chars}'"
 
   // Address
@@ -743,12 +741,10 @@ const defaultStrings: CivLocaleStrings = {
   minSelectionsError: 'Please select at least {min} options',
   clearButton: 'Clear',
 
-  nameFirst: 'First name',
+  nameFirst: 'First name or given name',
   nameMiddle: 'Middle name',
-  nameLast: 'Last name',
+  nameLast: 'Last name or family name',
   nameSuffix: 'Suffix',
-  nameGiven: 'Given name',
-  nameFamily: 'Family name',
   nameInvalidChars: "You entered a character we can't accept. Try removing '{chars}'",
 
   addressStreet1: 'Street address',

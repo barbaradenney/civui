@@ -175,7 +175,7 @@ export class CivRepeater extends CivBaseElement {
         ${showList && canAdd ? html`
           <civ-button
             variant="secondary"
-            icon-start="add"
+            icon-start="plus"
             label="${interpolate(t('repeaterAddButton'), { item: this.itemLabel })}"
             ?disabled="${this.disabled}"
             @click="${this.mode === 'form-steps' ? this._openFormStepsForAdd : this._addRow}"

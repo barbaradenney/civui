@@ -210,7 +210,7 @@ describe('civ-repeater', () => {
     `);
 
     const addBtn = el.querySelector('civ-button[variant="secondary"]')!;
-    expect(addBtn.getAttribute('icon-start')).toBe('add');
+    expect(addBtn.getAttribute('icon-start')).toBe('plus');
   });
 
   it('renders hint and error', async () => {

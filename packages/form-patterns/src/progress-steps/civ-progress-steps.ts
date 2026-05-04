@@ -168,28 +168,23 @@ export class CivProgressSteps extends CivBaseElement {
       label: step.label,
     });
 
-    const circleClasses = 'civ-step-circle civ-flex civ-items-center civ-justify-center civ-rounded-full civ-w-8 civ-h-8 civ-text-sm civ-font-bold civ-shrink-0';
+    const circleClasses = 'civ-step-circle civ-flex civ-items-center civ-justify-center civ-rounded-full civ-w-10 civ-h-10 civ-font-bold civ-shrink-0';
     const circleContent = hasError
       ? html`<civ-icon name="close"></civ-icon>`
       : isCompleted
         ? html`<civ-icon name="check"></civ-icon>`
         : html`${index + 1}`;
 
-    // Errored completed steps stay clickable — users need to be able to
-    // jump back to fix them.
-    const circle = this.clickable && isCompleted
-      ? html`<button type="button"
-          class="${circleClasses} focus-visible:civ-focus-ring"
-          @click="${() => this._onStepClick(index)}"
-          aria-label="${interpolate(t('progressStepGoTo'), { step: index + 1, label: step.label })}"
-        >${circleContent}</button>`
-      : html`<div class="${circleClasses}">${circleContent}</div>`;
+    const circle = html`<div class="${circleClasses}">${circleContent}</div>`;
+
+    const isClickable = this.clickable && isCompleted;
 
     const labelClasses = [
       'civ-step-label',
       isVertical ? 'civ-step-label--vertical' : '',
       isCurrent ? 'civ-step-label--current' : '',
       hasError ? 'civ-step-label--error' : '',
+      isClickable ? 'civ-step-label--clickable' : '',
     ].filter(Boolean).join(' ');
 
     const descClasses = [
@@ -203,10 +198,12 @@ export class CivProgressSteps extends CivBaseElement {
           <div class="civ-flex civ-items-start civ-gap-3">
             <div class="civ-flex civ-items-center civ-flex-col">
               ${circle}
-              ${!isLast ? html`<div class="civ-step-connector ${connectorCompleted} civ-w-0.5 civ-h-8 civ-my-1"></div>` : nothing}
+              ${!isLast ? html`<div class="civ-step-connector ${connectorCompleted} civ-w-0.5 civ-h-6 civ-my-1"></div>` : nothing}
             </div>
-            <div class="civ-h-8 civ-flex civ-flex-col civ-justify-center">
-              <span class="${labelClasses}">${step.label}</span>
+            <div class="civ-h-10 civ-flex civ-flex-col civ-justify-center">
+              ${isClickable
+                ? html`<button type="button" class="${labelClasses} focus-visible:civ-focus-ring" @click="${() => this._onStepClick(index)}">${step.label}</button>`
+                : html`<span class="${labelClasses}">${step.label}</span>`}
               ${step.description ? html`<span class="${descClasses}">${step.description}</span>` : nothing}
             </div>
           </div>
@@ -219,7 +216,9 @@ export class CivProgressSteps extends CivBaseElement {
         <div class="civ-flex civ-items-center">
           ${circle}
           <div class="civ-ms-2">
-            <span class="${labelClasses}">${step.label}</span>
+            ${isClickable
+              ? html`<button type="button" class="${labelClasses} focus-visible:civ-focus-ring" @click="${() => this._onStepClick(index)}">${step.label}</button>`
+              : html`<span class="${labelClasses}">${step.label}</span>`}
             ${step.description ? html`<span class="${descClasses}">${step.description}</span>` : nothing}
           </div>
         </div>

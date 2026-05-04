@@ -40,7 +40,7 @@ export type IconDef = {
 export const icons: Record<string, IconDef> = {
   check: {
     label: 'Success',
-    path: 'M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z',
+    path: 'M8.5 16.586l-4.95-4.95 2.122-2.121L8.5 12.343l8.828-8.828 2.122 2.121z',
     ios: 'checkmark',
     android: 'check',
   },
@@ -76,7 +76,7 @@ export const icons: Record<string, IconDef> = {
   },
   close: {
     label: 'Close',
-    path: 'M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z',
+    path: 'M18.3 5.71a1 1 0 0 0-1.41 0L12 10.59 7.11 5.7A1 1 0 0 0 5.7 7.11L10.59 12 5.7 16.89a1 1 0 1 0 1.41 1.41L12 13.41l4.89 4.89a1 1 0 0 0 1.41-1.41L13.41 12l4.89-4.89a1 1 0 0 0 0-1.4z',
     ios: 'xmark',
     android: 'close',
   },

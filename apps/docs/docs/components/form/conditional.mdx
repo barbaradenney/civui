@@ -30,6 +30,22 @@ A declarative show/hide wrapper that reveals its content only when a named field
 
 <StoryEmbed id="forms-form-conditional--with-form" />
 
+### Checkbox conditional
+
+<StoryEmbed id="forms-form-conditional--checkbox-conditional" />
+
+### Checkbox group conditional
+
+<StoryEmbed id="forms-form-conditional--checkbox-group-conditional" />
+
+### Radio conditional
+
+<StoryEmbed id="forms-form-conditional--radio-conditional" />
+
+### Toggle conditional
+
+<StoryEmbed id="forms-form-conditional--toggle-conditional" />
+
 [Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-form-conditional--default)
 
 ## Props
@@ -46,10 +62,19 @@ A declarative show/hide wrapper that reveals its content only when a named field
 ## Behavior
 
 - Content starts hidden
-- The component listens for `civ-input` events from the field matching the `when` name
-- When the condition is met, content is revealed with `aria-live="polite"` for screen reader announcement
+- The component listens for `civ-input` and `civ-change` events from the field matching the `when` name
+- When the condition is met, content is revealed with `aria-hidden="false"` for screen readers
 - When the condition is no longer met, content is hidden
 - Uses CSS transitions for smooth show/hide
+
+## Supported field types
+
+| Field type | Event detail | How to match |
+|-----------|-------------|--------------|
+| Text input, select, yes-no | `{ value: string }` | `equals`, `not-equals`, `includes`, `has-value`, `matches` |
+| Checkbox, toggle | `{ checked: boolean, value: string }` | `equals="true"` (show when checked), `equals="false"` (show when unchecked) |
+| Checkbox group | `{ values: string[] }` | `equals="optionValue"` (show when that option is selected) |
+| Radio group | `{ value: string }` | Same as text input — matches the selected radio's value |
 
 ## Event Scoping
 

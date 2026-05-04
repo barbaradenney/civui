@@ -106,10 +106,20 @@ export class CivConditional extends LightDomSlotMixin(CivBaseElement) {
     const escapedName = typeof CSS !== 'undefined' && CSS.escape
       ? CSS.escape(this.when)
       : this.when.replace(/["\\]/g, '\\$&');
-    const field = root.querySelector(`[name="${escapedName}"]`) as HTMLElement & { value?: string } | null;
-    if (field) {
-      const value = field.value ?? '';
-      this._evaluateVisibility(value);
+    const field = root.querySelector(`[name="${escapedName}"]`) as HTMLElement & { value?: string; checked?: boolean; values?: string[] } | null;
+    if (!field) return;
+
+    // Checkbox group
+    if ('values' in field && Array.isArray((field as any).values)) {
+      this._evaluateMultiValue((field as any).values);
+    }
+    // Single checkbox/toggle
+    else if (typeof field.checked === 'boolean') {
+      this._evaluateChecked(field.checked, field.value ?? '');
+    }
+    // Standard value
+    else {
+      this._evaluateVisibility(field.value ?? '');
     }
   }
 
@@ -118,10 +128,25 @@ export class CivConditional extends LightDomSlotMixin(CivBaseElement) {
     if (target.name !== this.when) return;
 
     const detail = (e as CustomEvent).detail;
+
+    // Checkbox group: { values: string[] }
+    if (Array.isArray(detail?.values)) {
+      this._evaluateMultiValue(detail.values);
+      return;
+    }
+
+    // Single checkbox/toggle: { checked: boolean, value: string }
+    if (typeof detail?.checked === 'boolean') {
+      this._evaluateChecked(detail.checked, detail.value ?? '');
+      return;
+    }
+
+    // Standard: { value: string }
     const value = detail?.value ?? '';
     this._evaluateVisibility(value);
   }
 
+  /** Evaluate for single string value (text input, select, radio group, yes-no). */
   private _evaluateVisibility(value: string): void {
     if (this.equals) {
       this._visible = value === this.equals;
@@ -140,6 +165,39 @@ export class CivConditional extends LightDomSlotMixin(CivBaseElement) {
       }
     } else {
       this._visible = false;
+    }
+  }
+
+  /** Evaluate for checkbox/toggle: show when checked (optionally matching a value). */
+  private _evaluateChecked(checked: boolean, value: string): void {
+    if (this.equals) {
+      // equals="true" → show when checked; equals="false" → show when unchecked
+      if (this.equals === 'true') this._visible = checked;
+      else if (this.equals === 'false') this._visible = !checked;
+      else this._visible = checked && value === this.equals;
+    } else if (this.notEquals) {
+      this._visible = !checked || value !== this.notEquals;
+    } else if (this.hasValue) {
+      this._visible = checked;
+    } else {
+      // Default: show when checked
+      this._visible = checked;
+    }
+  }
+
+  /** Evaluate for checkbox group: show when any value matches. */
+  private _evaluateMultiValue(values: string[]): void {
+    if (this.equals) {
+      this._visible = values.includes(this.equals);
+    } else if (this.notEquals) {
+      this._visible = !values.includes(this.notEquals);
+    } else if (this.includes) {
+      const allowed = this.includes.split(',').map(s => s.trim());
+      this._visible = values.some(v => allowed.includes(v));
+    } else if (this.hasValue) {
+      this._visible = values.length > 0;
+    } else {
+      this._visible = values.length > 0;
     }
   }
 }

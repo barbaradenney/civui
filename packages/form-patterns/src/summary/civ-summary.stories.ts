@@ -54,7 +54,7 @@ export const Default: Story = {
 
 // ── Individual States ─────────────────────────────────────────
 
-export const WithHint: Story = {
+export const WithMissingValues: Story = {
   name: 'With Missing Values',
   render: () => html`
     <civ-summary heading="Review your information"></civ-summary>
@@ -78,7 +78,7 @@ export const WithHint: Story = {
   },
 };
 
-export const WithError: Story = {
+export const WithoutEditLinks: Story = {
   name: 'Without Edit Links',
   render: () => html`
     <civ-summary heading="Submission summary"></civ-summary>
@@ -323,6 +323,8 @@ export const GovernmentApplicationReview: Story = {
       name="signature"
       statement="I certify that the information I have provided is true and correct to the best of my knowledge and belief."
       required
+      size="xl"
+      card
     ></civ-signature>
   `,
   play: async ({ canvasElement }) => {

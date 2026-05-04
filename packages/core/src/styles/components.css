@@ -446,8 +446,8 @@
     display: grid;
     grid-template-columns: auto 1fr;
     column-gap: var(--civ-spacing-2);
-    padding: var(--civ-spacing-1) var(--civ-spacing-2);
-    border-radius: var(--civ-border-radius-DEFAULT);
+    padding: var(--civ-spacing-1) var(--civ-spacing-2) var(--civ-spacing-1) 0;
+    border-radius: 0 var(--civ-border-radius-DEFAULT) var(--civ-border-radius-DEFAULT) 0;
     transition: background-color var(--civ-motion-duration-fast, 100ms);
   }
 
@@ -1896,6 +1896,44 @@
     @apply civ-font-normal;
   }
 
+  /* ── Callout (shared accent border — used by section-intro, alerts, custom callouts) */
+
+  .civ-callout {
+    border-inline-start: 5px solid var(--civ-color-primary-DEFAULT);
+    padding: var(--civ-spacing-3) var(--civ-spacing-4);
+  }
+
+  .civ-callout--info { border-inline-start-color: var(--civ-color-info-DEFAULT); }
+  .civ-callout--warning { border-inline-start-color: var(--civ-color-warning-DEFAULT); }
+  .civ-callout--error { border-inline-start-color: var(--civ-color-error-DEFAULT); }
+  .civ-callout--success { border-inline-start-color: var(--civ-color-success-DEFAULT); }
+
+  /* ── Section Intro (uses callout) ───────────────────────────── */
+
+  .civ-section-intro {
+    @apply civ-mb-6;
+  }
+
+  .civ-section-intro--sensitive {
+    border-inline-start-color: var(--civ-color-warning-DEFAULT);
+  }
+
+  .civ-section-intro__heading {
+    @apply civ-font-bold civ-mb-1;
+    font-size: var(--civ-typography-fontSize-lg);
+  }
+
+  .civ-section-intro__body {
+    font-size: var(--civ-typography-fontSize-base);
+  }
+
+  .civ-section-intro__body ul,
+  .civ-section-intro__body ol {
+    list-style: revert;
+    padding-inline-start: 1.5em;
+    margin: var(--civ-spacing-1) 0;
+  }
+
   /* ── Status tags ───────────────────────────────────────────── */
 
   civ-tag {
@@ -2441,11 +2479,11 @@
   /* ── Data Field ──────────────────────────────────────────── */
 
   .civ-data-field {
-    @apply civ-m-0 civ-flex civ-items-baseline civ-gap-4;
+    @apply civ-m-0 civ-flex civ-items-baseline civ-gap-4 civ-py-2;
   }
 
   .civ-data-field--sm {
-    @apply civ-py-1;
+    @apply civ-py-0;
   }
 
   .civ-data-field__label {

@@ -158,3 +158,97 @@ export const WithForm: Story = {
     </civ-form>
   `,
 };
+
+export const CheckboxConditional: Story = {
+  name: 'Checkbox conditional',
+  parameters: {
+    docs: {
+      description: {
+        story: 'Show content when a single checkbox is checked. Use `equals="true"` to match the checked state.',
+      },
+    },
+  },
+  render: () => html`
+    <civ-checkbox name="agree" label="I have a mailing address outside the United States"></civ-checkbox>
+    <civ-conditional when="agree" equals="true">
+      <civ-form-field label="Country" required>
+        <civ-select name="country" preset="countries"></civ-select>
+      </civ-form-field>
+    </civ-conditional>
+  `,
+};
+
+export const CheckboxGroupConditional: Story = {
+  name: 'Checkbox group conditional',
+  parameters: {
+    docs: {
+      description: {
+        story: 'Show content when a specific option in a checkbox group is selected. The conditional matches against the `values` array from the group event.',
+      },
+    },
+  },
+  render: () => html`
+    <civ-form-fieldset legend="Which benefits are you applying for?" hint="Select all that apply">
+      <civ-checkbox-group name="benefits">
+        <civ-checkbox label="Healthcare" value="health"></civ-checkbox>
+        <civ-checkbox label="Dental" value="dental"></civ-checkbox>
+        <civ-checkbox label="Vision" value="vision"></civ-checkbox>
+        <civ-checkbox label="Prescription drugs" value="rx"></civ-checkbox>
+      </civ-checkbox-group>
+    </civ-form-fieldset>
+    <civ-conditional when="benefits" equals="rx">
+      <civ-form-field label="Preferred pharmacy" required>
+        <civ-text-input name="pharmacy"></civ-text-input>
+      </civ-form-field>
+    </civ-conditional>
+  `,
+};
+
+export const RadioConditional: Story = {
+  name: 'Radio conditional',
+  parameters: {
+    docs: {
+      description: {
+        story: 'Show content based on a radio group selection. Works the same as select — matches the `value` string.',
+      },
+    },
+  },
+  render: () => html`
+    <civ-form-fieldset legend="How would you like to be contacted?">
+      <civ-radio-group name="contactMethod">
+        <civ-radio label="Email" value="email"></civ-radio>
+        <civ-radio label="Phone" value="phone"></civ-radio>
+        <civ-radio label="Mail" value="mail"></civ-radio>
+      </civ-radio-group>
+    </civ-form-fieldset>
+    <civ-conditional when="contactMethod" equals="phone">
+      <civ-form-field label="Phone number" required>
+        <civ-text-input name="phone" type="tel" mask="phone-us"></civ-text-input>
+      </civ-form-field>
+    </civ-conditional>
+    <civ-conditional when="contactMethod" equals="mail">
+      <civ-form-field label="Mailing address" required>
+        <civ-text-input name="mailAddress"></civ-text-input>
+      </civ-form-field>
+    </civ-conditional>
+  `,
+};
+
+export const ToggleConditional: Story = {
+  name: 'Toggle conditional',
+  parameters: {
+    docs: {
+      description: {
+        story: 'Show content when a toggle is switched on. Uses the same `equals="true"` pattern as checkboxes.',
+      },
+    },
+  },
+  render: () => html`
+    <civ-toggle name="notifications" label="Enable email notifications"></civ-toggle>
+    <civ-conditional when="notifications" equals="true">
+      <civ-form-field label="Notification email" required hint="We will send updates to this address">
+        <civ-text-input name="notifEmail" type="email"></civ-text-input>
+      </civ-form-field>
+    </civ-conditional>
+  `,
+};

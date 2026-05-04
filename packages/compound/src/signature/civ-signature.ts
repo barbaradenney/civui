@@ -150,8 +150,7 @@ export class CivSignature extends CivFormElement {
   override render() {
     const describedBy = buildDescribedBy(this._hintId, this.hint, this._errorId, this.error);
 
-    return html`
-      ${this.card ? html`<div class="civ-card civ-p-6">` : nothing}
+    const fieldset = html`
       <fieldset
         class="civ-fieldset"
         aria-describedby="${describedBy || nothing}"
@@ -194,8 +193,11 @@ export class CivSignature extends CivFormElement {
           @civ-change="${this._onCertifyChange}"
         ></civ-checkbox>
       </fieldset>
-      ${this.card ? html`</div>` : nothing}
     `;
+
+    return this.card
+      ? html`<div class="civ-card civ-p-6">${fieldset}</div>`
+      : fieldset;
   }
 
   private _onNameInput(e: CustomEvent<{ value: string }>): void {

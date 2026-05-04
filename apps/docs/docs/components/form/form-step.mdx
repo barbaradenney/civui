@@ -48,6 +48,26 @@ Each direct child element with a `data-step-label` attribute is treated as a ste
 
 <StoryEmbed id="forms-form-form-step--government-benefit-application" />
 
+### Primary — Default spacing
+
+<StoryEmbed id="forms-form-form-step--primary-default" />
+
+### Primary — Compact spacing
+
+<StoryEmbed id="forms-form-form-step--primary-compact" />
+
+### Secondary — Default spacing
+
+<StoryEmbed id="forms-form-form-step--secondary-default" />
+
+### Secondary — Compact spacing
+
+<StoryEmbed id="forms-form-form-step--secondary-compact" />
+
+### Async Validation
+
+<StoryEmbed id="forms-form-form-step--async-validation" />
+
 [Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-form-form-step--default)
 
 ## Props
@@ -55,10 +75,15 @@ Each direct child element with a `data-step-label` attribute is treated as a ste
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `persist` | `string` | `''` | Storage key for auto-saving form data via `civ-form` |
+| `step-title` | `string` | `''` | Title for the current step, shown after the step counter |
+| `header-size` | `'primary' \| 'secondary'` | `'secondary'` | Heading prominence — primary (xl) or secondary (lg) |
+| `header-spacing` | `'default' \| 'compact'` | `'default'` | Default shows border lines with generous padding; compact removes lines with tight padding |
+| `heading-level` | `number` | `2` | HTML heading level (2–6) for the step header |
 | `continue-label` | `string` | `'Continue'` | Label for the continue button |
 | `complete-label` | `string` | `'Save'` | Label for the final step's button |
 | `validate` | `boolean` | `true` | Enable built-in required field validation before advancing |
 | `nav-disabled` | `boolean` | `false` | Disable navigation buttons (e.g., during async validation) |
+| `beforeContinue` | `(stepEl, index) => Promise<boolean> \| boolean` | — | Async validation callback. Called after built-in validation passes. Return `true` to advance, `false` to block. Button shows loading spinner while pending. (JS property only, not an HTML attribute.) |
 
 ## Step Definition
 
@@ -75,14 +100,37 @@ Steps are defined as child elements with `data-step-label`:
 </civ-form-step>
 ```
 
+## Step Header
+
+When `step-title` is set (or `data-step-label` provides a title), the header renders as a single line:
+
+**Step 1 of 3:** Personal information
+
+The bold counter and normal-weight title sit on one line. The header uses `role="heading"` with a configurable `heading-level` (default 2) and `aria-live="polite"` for screen reader announcements.
+
+### Header styles
+
+| `header-size` | `header-spacing` | Appearance |
+|---------------|-----------------|------------|
+| `primary` | `default` | xl text, border lines top/bottom, generous padding |
+| `primary` | `compact` | lg text, no border lines, tight padding |
+| `secondary` | `default` | lg text, border lines top/bottom, moderate padding |
+| `secondary` | `compact` | base text, no border lines, minimal padding |
+
 ## Navigation Bar
 
-When there are multiple steps, a compact nav bar is rendered:
+When there are multiple steps, a `<nav>` bar with the back link is rendered above the header. When a step title is present, the step counter moves into the header (avoiding duplication).
 
-- **First step**: Shows only "Step 1 of N"
-- **Subsequent steps**: Shows "Go back | Step X of N"
+## Auto-scroll and Focus
 
-The step counter uses `aria-live="polite"` to announce step changes to screen readers.
+When navigating between steps, the component automatically:
+
+1. **Scrolls to the top** of the form step using `scrollIntoView({ behavior: 'smooth', block: 'start' })`
+2. **Focuses the first form field** in the new step for keyboard users
+3. **Respects `prefers-reduced-motion`** — uses instant scroll instead of smooth when the user prefers reduced motion
+4. **Announces the step change** to screen readers via `aria-live`
+
+This prevents the common multi-step form problem where users click "Continue" and don't realize the page content changed because they're scrolled mid-page.
 
 ## Validation Logic
 
@@ -92,6 +140,29 @@ When `validate` is `true` (default), the component checks all `[required]` field
 2. Falls back to checking empty `value` on required fields
 3. Sets descriptive error messages on invalid fields
 4. Prevents advancement if any field is invalid
+
+### Async validation
+
+For server-side validation, set the `beforeContinue` property to an async function:
+
+```js
+const stepper = document.querySelector('civ-form-step');
+
+stepper.beforeContinue = async (stepEl, stepIndex) => {
+  const formData = new FormData(stepEl.closest('form'));
+  const response = await fetch('/api/validate-step', {
+    method: 'POST',
+    body: formData,
+  });
+  if (!response.ok) {
+    // Set error on the component or individual fields
+    return false; // blocks navigation
+  }
+  return true; // allows navigation
+};
+```
+
+While the promise is pending, the Continue button shows a loading spinner and is disabled to prevent double-clicks.
 
 ## Persistence
 

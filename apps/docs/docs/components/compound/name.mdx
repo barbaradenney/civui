@@ -10,7 +10,7 @@ import StoryEmbed from "@site/src/components/StoryEmbed";
 
 `<civ-name>`
 
-Compound name input with first, middle (optional), last, and suffix fields. Follows the VA.gov name pattern with plain language labels. The `required` indicator is NOT placed on the legend since middle name and suffix are always optional; instead `required` is set on the first and last name sub-fields individually.
+Compound name input with first, middle (optional), last, and suffix fields. Follows the VA.gov name pattern with plain language labels. Field labels read "First name or given name" and "Last name or family name" so the form works for any naming convention. The `required` indicator is NOT placed on the legend since middle name and suffix are always optional; instead `required` is set on the first and last name sub-fields individually.
 
 ## Examples
 
@@ -50,12 +50,6 @@ Compound name input with first, middle (optional), last, and suffix fields. Foll
 
 <StoryEmbed id="forms-compound-name--without-suffix" />
 
-### International Format
-
-Uses "Given name" and "Family name" labels instead of "First name" and "Last name" — appropriate for immigration, naturalization, and international forms.
-
-<StoryEmbed id="forms-compound-name--international-format" />
-
 ### Government Identity Section
 
 <StoryEmbed id="forms-compound-name--government-identity-section" />
@@ -72,8 +66,7 @@ All form components share these props: `name`, `value`, `hint`, `error`, `requir
 |------|------|---------|-------------|
 | `legend` | `string` | `''` | Fieldset legend text |
 | `heading-level` | `1`–`6` | — | Promote the legend to a heading via `role="heading"` + `aria-level=N`. See [Heading hierarchy](/docs/components/form/form-group#heading-hierarchy). |
-| `size` | `'sm' \| 'md' \| 'lg' \| 'xl'` | `'sm'` | Visual size. `sm` = body size; `md`/`lg`/`xl` step up for section/page heading use. |
-| `format` | `'domestic' \| 'international'` | `'domestic'` | Label format: domestic uses "First/Last name", international uses "Given/Family name" |
+| `size` | `'sm' \| 'md' \| 'lg' \| 'xl'` | `'md'` | Visual size of the legend. Defaults to `md` so the compound field reads as a section heading; `sm` matches body text. |
 | `show-middle` | `boolean` | `true` | Whether to show the middle name field |
 | `show-suffix` | `boolean` | `true` | Whether to show the suffix select |
 | `first-error` | `string` | `''` | Error message for the first name field |
@@ -146,14 +139,6 @@ name.nameValue; // { first: 'Jane', middle: 'A', last: 'Doe', suffix: '' }
   name="spouseName"
   show-middle="false"
   show-suffix="false"
-  required
-></civ-name>
-
-<!-- International format (immigration, USCIS forms) -->
-<civ-name
-  legend="Applicant's name"
-  name="applicantName"
-  format="international"
   required
 ></civ-name>
 

@@ -281,6 +281,7 @@
 
   .civ-required-mark {
     @apply civ-text-error civ-font-normal civ-ms-0;
+    font-size: var(--civ-typography-fontSize-base);
   }
 
   .civ-hint,
@@ -333,7 +334,7 @@
     padding: 0;
     font-size: inherit;
   }
-  .civ-close-btn:hover { color: var(--civ-color-base-darkest); background: var(--civ-color-base-lightest); }
+  .civ-close-btn:hover { color: var(--civ-color-base-darkest); background: rgba(0, 0, 0, 0.08); }
   .civ-close-btn:focus-visible {
     outline: var(--civ-focus-outline-width) solid var(--civ-focus-outline-color);
     outline-offset: var(--civ-focus-outline-offset);
@@ -445,6 +446,13 @@
     display: grid;
     grid-template-columns: auto 1fr;
     column-gap: var(--civ-spacing-2);
+    padding: var(--civ-spacing-1) var(--civ-spacing-2);
+    border-radius: var(--civ-border-radius-DEFAULT);
+    transition: background-color var(--civ-motion-duration-fast, 100ms);
+  }
+
+  .civ-check-row:hover:not(:has(:disabled)) {
+    background-color: var(--civ-color-primary-lightest);
   }
 
   .civ-check-row > .civ-check-input {
@@ -487,8 +495,8 @@
   .civ-check-input[type="checkbox"]:checked {
     background-color: var(--civ-color-primary-DEFAULT);
     border-color: var(--civ-color-primary-DEFAULT);
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");
-    background-size: 70%;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='4' stroke-linecap='square' stroke-linejoin='miter'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");
+    background-size: 80%;
     background-position: center;
     background-repeat: no-repeat;
   }
@@ -497,8 +505,8 @@
   .civ-check-input[type="checkbox"]:indeterminate {
     background-color: var(--civ-color-primary-DEFAULT);
     border-color: var(--civ-color-primary-DEFAULT);
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round'%3E%3Cline x1='6' y1='12' x2='18' y2='12'/%3E%3C/svg%3E");
-    background-size: 70%;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='4' stroke-linecap='square'%3E%3Cline x1='5' y1='12' x2='19' y2='12'/%3E%3C/svg%3E");
+    background-size: 80%;
     background-position: center;
     background-repeat: no-repeat;
   }
@@ -533,6 +541,17 @@
   .civ-check-tile {
     @apply civ-relative civ-border civ-rounded civ-border-base civ-cursor-pointer civ-p-3;
     border-style: solid;
+    transition: background-color var(--civ-motion-duration-fast, 100ms), border-color var(--civ-motion-duration-fast, 100ms);
+  }
+
+  .civ-check-tile:hover:not(:has(:disabled)) {
+    background-color: var(--civ-color-primary-lightest);
+    border-color: var(--civ-color-primary-DEFAULT);
+  }
+
+  /* Suppress inner row hover when inside a tile */
+  .civ-check-tile .civ-check-row:hover {
+    background-color: transparent;
   }
 
   /* ── Toggle ─────────────────────────────────────────────────── */
@@ -1484,40 +1503,50 @@
   }
 
   .civ-step--completed .civ-step-circle {
-    background-color: var(--civ-color-success-DEFAULT);
-    color: var(--civ-color-white-DEFAULT);
-    border: 2px solid var(--civ-color-success-DEFAULT);
+    background-color: var(--civ-color-success-light);
+    color: var(--civ-color-success-darkest);
+    border: none;
   }
 
   .civ-step--current .civ-step-circle {
     background-color: var(--civ-color-primary-DEFAULT);
     color: var(--civ-color-white-DEFAULT);
-    border: 2px solid var(--civ-color-primary-DEFAULT);
+    border: none;
   }
 
   .civ-step--upcoming .civ-step-circle {
-    background-color: var(--civ-color-base-lighter);
+    background-color: var(--civ-color-base-lightest);
     color: var(--civ-color-base-dark);
-    border: 2px solid var(--civ-color-base-light);
+    border: none;
   }
 
   .civ-step-connector {
-    @apply civ-bg-base-light;
+    @apply civ-bg-base-lighter;
   }
 
   .civ-step--error .civ-step-circle {
-    background-color: var(--civ-color-error-lighter);
+    background-color: var(--civ-color-error-lightest);
     color: var(--civ-color-error-DEFAULT);
-    border: 2px solid var(--civ-color-error-DEFAULT);
+    border: none;
   }
 
   .civ-step-connector--completed {
     @apply civ-bg-success;
   }
 
-  .civ-step-circle .civ-icon {
-    font-size: 0.6em;
+  .civ-step-circle {
+    position: relative;
   }
+
+  .civ-step-circle .civ-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -45%);
+    width: 55%;
+    height: 55%;
+  }
+
 
   .civ-step-connector--vertical-auto {
     display: none;
@@ -1536,7 +1565,7 @@
   .civ-step-label {
     font-size: var(--civ-typography-fontSize-sm, 14px);
     color: var(--civ-color-base-darkest);
-    max-width: 120px;
+    max-width: none;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -1555,6 +1584,19 @@
     color: var(--civ-color-error-DEFAULT);
   }
 
+  button.civ-step-label--clickable {
+    @apply civ-underline civ-cursor-pointer civ-bg-transparent civ-border-0 civ-p-0 civ-font-sans;
+    color: var(--civ-color-primary-dark);
+    font-size: var(--civ-typography-fontSize-sm, 14px);
+    font-weight: normal;
+    text-align: start;
+    line-height: inherit;
+  }
+
+  .civ-step-label--clickable:hover {
+    color: var(--civ-color-primary-DEFAULT);
+  }
+
   .civ-step-desc {
     font-size: var(--civ-typography-fontSize-xs, 12px);
     color: var(--civ-color-base-DEFAULT);
@@ -1569,17 +1611,6 @@
     white-space: normal;
   }
 
-  button.civ-step-circle {
-    appearance: none;
-    -webkit-appearance: none;
-    padding: 0;
-    margin: 0;
-    cursor: pointer;
-  }
-
-  button.civ-step-circle:hover {
-    filter: brightness(var(--civ-brightness-hover));
-  }
 
   .civ-step-counter {
     font-size: var(--civ-typography-fontSize-sm, 14px);
@@ -1626,7 +1657,7 @@
   }
 
   .civ-progress-fill--complete {
-    background-color: var(--civ-color-success-DEFAULT);
+    background-color: var(--civ-color-success-light);
   }
 
   /* ── Skip Link ─────────────────────────────────────────────── */
@@ -1739,8 +1770,8 @@
 
   /* Critical — bold gold, always dark text regardless of color scheme */
   .civ-link-card--critical {
-    background-color: var(--civ-color-warning-lighter);
-    border-color: var(--civ-color-warning-DEFAULT);
+    background-color: var(--civ-color-warning-light);
+    border-color: var(--civ-color-warning-light);
     color: var(--civ-color-base-darkest);
   }
   .civ-link-card--critical:hover {
@@ -1833,6 +1864,38 @@
     color: var(--civ-color-base-dark);
   }
 
+  /* Step header — single line: "Step 1 of 3: Title" */
+  .civ-form-step__header {
+    @apply civ-mb-4 civ-py-2;
+    font-size: var(--civ-typography-fontSize-lg);
+    border-top: 1px solid var(--civ-color-base-lighter);
+    border-bottom: 1px solid var(--civ-color-base-lighter);
+  }
+
+  .civ-form-step__header--primary {
+    @apply civ-mb-6 civ-py-3;
+    font-size: var(--civ-typography-fontSize-xl);
+  }
+
+  .civ-form-step__header--compact {
+    @apply civ-mb-3 civ-py-2;
+    font-size: var(--civ-typography-fontSize-base);
+    border: none;
+  }
+
+  .civ-form-step__header--primary.civ-form-step__header--compact {
+    @apply civ-mb-4 civ-py-2;
+    font-size: var(--civ-typography-fontSize-lg);
+  }
+
+  .civ-form-step__counter {
+    @apply civ-font-bold;
+  }
+
+  .civ-form-step__title {
+    @apply civ-font-normal;
+  }
+
   /* ── Status tags ───────────────────────────────────────────── */
 
   civ-tag {
@@ -1865,7 +1928,7 @@
 
   .civ-tag--orange {
     background-color: var(--civ-color-accent-warm-lightest);
-    color: var(--civ-color-base-darkest);
+    color: var(--civ-color-accent-warm-darkest);
   }
 
   .civ-tag--purple {
@@ -1938,12 +2001,12 @@
 
   .civ-badge--style-secondary.civ-badge--success {
     background-color: var(--civ-color-success-lighter);
-    color: var(--civ-color-base-darkest);
+    color: var(--civ-color-success-darkest);
   }
 
   .civ-badge--style-secondary.civ-badge--warning {
     background-color: var(--civ-color-warning-lighter);
-    color: var(--civ-color-base-darkest);
+    color: var(--civ-color-warning-darkest);
   }
 
   .civ-badge--style-secondary.civ-badge--error {
@@ -1986,7 +2049,7 @@
   /* Dot mode — always uses the dark (primary) fill regardless of style. */
 
   .civ-badge--dot {
-    @apply civ-p-0;
+    @apply civ-p-0 civ-rounded-full;
     width: 0.5rem;
     height: 0.5rem;
     min-width: 0;
@@ -2049,15 +2112,52 @@
   /* Secondary (default) — bare colored text, no chrome. Inherits parent color
      by default, swaps to semantic colors when variant is set. */
 
+  /* Secondary — tinted background pill with semantic text */
   .civ-count--style-secondary {
+    @apply civ-px-1.5 civ-py-0;
+    border-radius: 0.625rem;
+    min-width: 1.25rem;
+    line-height: 1.25rem;
+    text-align: center;
+  }
+
+  .civ-count--style-secondary.civ-count--sm {
+    min-width: 1rem;
+    line-height: 1rem;
+    @apply civ-px-1;
+  }
+
+  .civ-count--style-secondary.civ-count--info {
+    background-color: var(--civ-color-info-lighter);
+    color: var(--civ-color-info-dark);
+  }
+  .civ-count--style-secondary.civ-count--success {
+    background-color: var(--civ-color-success-lighter);
+    color: var(--civ-color-success-darkest);
+  }
+  .civ-count--style-secondary.civ-count--warning {
+    background-color: var(--civ-color-warning-lighter);
+    color: var(--civ-color-warning-darkest);
+  }
+  .civ-count--style-secondary.civ-count--error {
+    background-color: var(--civ-color-error-lightest);
+    color: var(--civ-color-error-dark);
+  }
+  .civ-count--style-secondary.civ-count--neutral {
+    background-color: var(--civ-color-base-lightest);
+    color: var(--civ-color-base-darker);
+  }
+
+  /* Tertiary — bare text with parentheses, minimal emphasis */
+  .civ-count--style-tertiary {
     background: transparent;
     padding: 0;
   }
 
-  .civ-count--style-secondary.civ-count--info { color: var(--civ-color-info-dark); }
-  .civ-count--style-secondary.civ-count--success { color: var(--civ-color-success-dark); }
-  .civ-count--style-secondary.civ-count--warning { color: var(--civ-color-warning-dark); }
-  .civ-count--style-secondary.civ-count--error { color: var(--civ-color-error-dark); }
+  .civ-count--style-tertiary.civ-count--info { color: var(--civ-color-info-dark); }
+  .civ-count--style-tertiary.civ-count--success { color: var(--civ-color-success-dark); }
+  .civ-count--style-tertiary.civ-count--warning { color: var(--civ-color-warning-dark); }
+  .civ-count--style-tertiary.civ-count--error { color: var(--civ-color-error-dark); }
   /* neutral keeps `color: inherit` so it blends with the host text. */
 
   /* Primary — filled pill for standalone or notification counters. */
@@ -2101,9 +2201,9 @@
 
   .civ-count--overlay {
     position: absolute;
-    top: 0;
-    inset-inline-end: 0;
-    transform: translate(50%, -50%);
+    top: -0.25em;
+    inset-inline-end: -0.25em;
+    transform: translate(25%, -25%);
     z-index: 1;
   }
 
@@ -2208,24 +2308,30 @@
 
   /* Remove button — separated from action by an internal divider. */
   .civ-filter-chip__remove {
-    @apply civ-inline-flex civ-items-center civ-justify-center civ-cursor-pointer;
+    @apply civ-inline-flex civ-items-center civ-justify-center civ-cursor-pointer civ-self-stretch;
     background: transparent;
     color: inherit;
     border: 0;
+    /* Override .civ-close-btn sizing for chip context */
+    width: auto;
+    height: auto;
     /* Touch target: 24px minimum (WCAG 2.5.8). */
     min-width: 1.75rem;
-    min-height: 1.75rem;
-    padding: 0 0.375rem;
-    border-inline-start: 1px solid currentColor;
-    border-inline-start-color: var(--civ-color-base-lighter);
+    padding: 0 0.5rem;
+    border-inline-start: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 0;
+    border-start-end-radius: inherit;
+    border-end-end-radius: inherit;
+    margin: 0;
   }
 
   .civ-filter-chip--style-primary.civ-filter-chip--selected .civ-filter-chip__remove {
-    border-inline-start-color: color-mix(in srgb, var(--civ-color-white-DEFAULT, #fff) 40%, transparent);
+    border-inline-start-color: rgba(255, 255, 255, 0.3);
   }
 
   .civ-filter-chip__remove:hover:not(:disabled) {
-    color: var(--civ-color-error-dark);
+    background: rgba(0, 0, 0, 0.08);
+    color: inherit;
   }
 
   .civ-filter-chip__remove:disabled {
@@ -2261,9 +2367,9 @@
   .civ-card--blue { background-color: var(--civ-color-primary-lightest); color: var(--civ-color-primary-dark); border-color: transparent; }
   .civ-card--teal { background-color: var(--civ-color-info-lighter); color: var(--civ-color-info-dark); border-color: transparent; }
   .civ-card--red { background-color: var(--civ-color-error-lighter); color: var(--civ-color-error-dark); border-color: transparent; }
-  .civ-card--green { background-color: var(--civ-color-success-lighter); color: var(--civ-color-base-darkest); border-color: transparent; }
-  .civ-card--yellow { background-color: var(--civ-color-warning-lighter); color: var(--civ-color-base-darkest); border-color: transparent; }
-  .civ-card--orange { background-color: var(--civ-color-accent-warm-lightest); color: var(--civ-color-base-darkest); border-color: transparent; }
+  .civ-card--green { background-color: var(--civ-color-success-lighter); color: var(--civ-color-success-darkest); border-color: transparent; }
+  .civ-card--yellow { background-color: var(--civ-color-warning-lighter); color: var(--civ-color-warning-darkest); border-color: transparent; }
+  .civ-card--orange { background-color: var(--civ-color-accent-warm-lightest); color: var(--civ-color-accent-warm-darkest); border-color: transparent; }
   .civ-card--purple { background-color: var(--civ-color-purple-lightest); color: var(--civ-color-purple-dark); border-color: transparent; }
   .civ-card--gray { background-color: var(--civ-color-base-lightest); color: var(--civ-color-base-darker); border-color: transparent; }
 
@@ -2409,8 +2515,8 @@
     }
 
     .civ-link-card--critical {
-      background-color: var(--civ-color-warning-lighter);
-      border-color: var(--civ-color-warning-DEFAULT);
+      background-color: var(--civ-color-warning-light);
+      border-color: var(--civ-color-warning-light);
       color: var(--civ-color-black-DEFAULT);
     }
   }

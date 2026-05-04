@@ -210,11 +210,10 @@ export const WithPauseAndResume: Story = {
 export const GovernmentBenefitApplication: Story = {
   name: 'Usage: Benefit Application Flow',
   render: () => html`
-    <civ-form-step complete-label="Review your answers" show-progress>
+    <civ-form-step complete-label="Review your answers" header-size="primary">
       <div data-step-label="Personal information">
-        <h3 class="civ-heading-md">Personal information</h3>
-        <civ-name legend="Your name" name="name" required></civ-name>
-        <civ-form-fieldset legend="Date of birth" required hint="For example: January 15 1990">
+        <civ-name legend="Your name" name="name" required size="lg"></civ-name>
+        <civ-form-fieldset legend="Date of birth" required hint="For example: January 15 1990" size="lg">
           <civ-memorable-date name="dob" required></civ-memorable-date>
         </civ-form-fieldset>
         <civ-form-field label="Social Security number" required hint="We need this to verify your identity">
@@ -222,8 +221,7 @@ export const GovernmentBenefitApplication: Story = {
         </civ-form-field>
       </div>
       <div data-step-label="Contact information">
-        <h3 class="civ-heading-md">Contact information</h3>
-        <civ-address legend="Mailing address" name="address" required></civ-address>
+        <civ-address legend="Mailing address" name="address" required size="lg"></civ-address>
         <civ-form-field label="Home phone number">
           <civ-text-input name="homePhone" type="tel" mask="phone-us" validate="phone"></civ-text-input>
         </civ-form-field>
@@ -232,14 +230,168 @@ export const GovernmentBenefitApplication: Story = {
         </civ-form-field>
       </div>
       <div data-step-label="Certification">
-        <h3 class="civ-heading-md">Certification</h3>
         <civ-signature
           legend="Statement of truth"
           name="signature"
           statement="I certify that the information I have provided is true and correct to the best of my knowledge and belief."
           required
+          size="lg"
         ></civ-signature>
       </div>
     </civ-form-step>
   `,
+};
+
+export const PrimaryDefault: Story = {
+  name: 'Primary — Default spacing',
+  parameters: {
+    docs: {
+      description: {
+        story: 'Large heading with border lines and generous padding. Use as the main multi-step form page heading.',
+      },
+    },
+  },
+  render: () => html`
+    <civ-form-step header-size="primary" step-title="Personal information">
+      <div data-step-label="Personal information">
+        <civ-form-field label="Full name" required>
+          <civ-text-input name="name"></civ-text-input>
+        </civ-form-field>
+      </div>
+      <div data-step-label="Contact information">
+        <civ-form-field label="Email address" required>
+          <civ-text-input name="email" type="email"></civ-text-input>
+        </civ-form-field>
+      </div>
+      <div data-step-label="Review">
+        <p>Review your information before submitting.</p>
+      </div>
+    </civ-form-step>
+  `,
+};
+
+export const PrimaryCompact: Story = {
+  name: 'Primary — Compact spacing',
+  parameters: {
+    docs: {
+      description: {
+        story: 'Large heading without border lines and tight padding. Use for embedded sub-forms or tight layouts.',
+      },
+    },
+  },
+  render: () => html`
+    <civ-form-step header-size="primary" header-spacing="compact" step-title="Personal information">
+      <div data-step-label="Personal information">
+        <civ-form-field label="Full name" required>
+          <civ-text-input name="name"></civ-text-input>
+        </civ-form-field>
+      </div>
+      <div data-step-label="Contact information">
+        <civ-form-field label="Email address" required>
+          <civ-text-input name="email" type="email"></civ-text-input>
+        </civ-form-field>
+      </div>
+      <div data-step-label="Review">
+        <p>Review your information before submitting.</p>
+      </div>
+    </civ-form-step>
+  `,
+};
+
+export const SecondaryDefault: Story = {
+  name: 'Secondary — Default spacing',
+  parameters: {
+    docs: {
+      description: {
+        story: 'Standard heading with border lines and moderate padding. The default style for multi-step sections.',
+      },
+    },
+  },
+  render: () => html`
+    <civ-form-step step-title="Personal information">
+      <div data-step-label="Personal information">
+        <civ-form-field label="Full name" required>
+          <civ-text-input name="name"></civ-text-input>
+        </civ-form-field>
+      </div>
+      <div data-step-label="Contact information">
+        <civ-form-field label="Email address" required>
+          <civ-text-input name="email" type="email"></civ-text-input>
+        </civ-form-field>
+      </div>
+    </civ-form-step>
+  `,
+};
+
+export const SecondaryCompact: Story = {
+  name: 'Secondary — Compact spacing',
+  parameters: {
+    docs: {
+      description: {
+        story: 'Compact heading without border lines and minimal padding. Use for mobile or tight layouts.',
+      },
+    },
+  },
+  render: () => html`
+    <civ-form-step header-spacing="compact" step-title="Personal information">
+      <div data-step-label="Personal information">
+        <civ-form-field label="Full name" required>
+          <civ-text-input name="name"></civ-text-input>
+        </civ-form-field>
+      </div>
+      <div data-step-label="Contact information">
+        <civ-form-field label="Email address" required>
+          <civ-text-input name="email" type="email"></civ-text-input>
+        </civ-form-field>
+      </div>
+    </civ-form-step>
+  `,
+};
+
+export const AsyncValidation: Story = {
+  name: 'Async Validation',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Set `beforeContinue` to an async function that validates server-side before advancing. The continue button shows a loading spinner while the promise is pending. Return `false` to block navigation.',
+      },
+    },
+  },
+  render: () => {
+    const setup = (e: Event) => {
+      const el = (e.target as HTMLElement).closest('civ-form-step') as any;
+      if (!el || el._asyncSetup) return;
+      el._asyncSetup = true;
+      el.beforeContinue = async (_step: Element, index: number) => {
+        await new Promise(r => setTimeout(r, 1500));
+        if (index === 0 && Math.random() > 0.5) {
+          return false;
+        }
+        return true;
+      };
+    };
+    return html`
+      <civ-form-step
+        header-size="primary"
+        step-title="Personal information"
+        @civ-step-change="${setup}"
+      >
+        <div data-step-label="Personal information">
+          <p class="civ-mb-4 civ-text-sm" style="color: var(--civ-color-base-dark)">Click Continue to trigger a simulated server validation (1.5s delay, 50% chance of failing on step 1).</p>
+          <civ-form-field label="Full name" required>
+            <civ-text-input name="name"></civ-text-input>
+          </civ-form-field>
+        </div>
+        <div data-step-label="Contact information">
+          <civ-form-field label="Email address" required>
+            <civ-text-input name="email" type="email"></civ-text-input>
+          </civ-form-field>
+        </div>
+        <div data-step-label="Review">
+          <p>All validations passed. Review and submit.</p>
+        </div>
+      </civ-form-step>
+    `;
+  },
 };

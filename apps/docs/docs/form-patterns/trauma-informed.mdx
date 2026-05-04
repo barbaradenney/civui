@@ -142,9 +142,9 @@ URL schemes are restricted to `http`, `https`, `tel`, `mailto`, `sms`, same-orig
 
 **When to use:** Any form touching mental health, self-harm risk, domestic violence, sexual trauma, or bereavement.
 
-### 6. Repeater wizard sensitive — multi-item sensitive flows
+### 6. Repeater form-steps sensitive — multi-item sensitive flows
 
-When using `<civ-repeater mode="form-steps">` for sensitive content (e.g., adding multiple deceased dependents), pass `form-steps-sensitive` and `form-steps-show-pause` to enable trauma-informed affordances inside the wizard sub-flow.
+When using `<civ-repeater mode="form-steps">` for sensitive content (e.g., adding multiple deceased dependents), pass `form-steps-sensitive` and `form-steps-show-pause` to enable trauma-informed affordances inside the form-steps sub-flow.
 
 <StoryEmbed id="forms-patterns-trauma-informed--repeater-form-steps-sensitive" />
 
@@ -167,7 +167,7 @@ When using `<civ-repeater mode="form-steps">` for sensitive content (e.g., addin
 </civ-repeater>
 ```
 
-Without these props, the wizard sub-flow has no pause affordance or sensitive announcements.
+Without these props, the form-steps sub-flow has no pause affordance or sensitive announcements.
 
 ## Complete example: VA survivor benefit form
 

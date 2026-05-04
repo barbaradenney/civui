@@ -22,7 +22,8 @@ describe('civ-form-step', () => {
 
   it('shows step counter', async () => {
     const el = await fixture<CivFormStep>(threeSteps);
-    const counter = el.querySelector('.civ-form-steps-nav__counter');
+    // When steps have data-step-label, the counter renders in the step header.
+    const counter = el.querySelector('.civ-form-step__counter');
     expect(counter).not.toBeNull();
     expect(counter!.textContent).toContain('1');
     expect(counter!.textContent).toContain('3');

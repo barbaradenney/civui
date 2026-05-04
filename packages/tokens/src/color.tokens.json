@@ -24,14 +24,16 @@
       "lighter": { "$value": "#faf3d1" },
       "light": { "$value": "#fee685" },
       "DEFAULT": { "$value": "#e5a000" },
-      "dark": { "$value": "#936f38" }
+      "dark": { "$value": "#936f38" },
+      "darkest": { "$value": "#6b4c11", "$description": "Dark amber — AA text on warning-lighter" }
     },
     "success": {
       "$type": "color",
       "lighter": { "$value": "#ecf3ec" },
       "light": { "$value": "#70e17b" },
       "DEFAULT": { "$value": "#00a91c" },
-      "dark": { "$value": "#4d8055" }
+      "dark": { "$value": "#4d8055" },
+      "darkest": { "$value": "#1a4d1a", "$description": "Dark green — AA text on success-lighter" }
     },
     "info": {
       "$type": "color",
@@ -78,7 +80,8 @@
         "lightest": { "$value": "#f2e4d4" },
         "light": { "$value": "#ffbc78" },
         "DEFAULT": { "$value": "#fa9441" },
-        "dark": { "$value": "#c05600" }
+        "dark": { "$value": "#c05600" },
+        "darkest": { "$value": "#7a3300", "$description": "Dark burnt orange — AA text on accent-warm-lightest" }
       }
     },
     "tag": {
@@ -86,6 +89,26 @@
       "blue": {
         "$type": "color",
         "bg": { "$value": "#1a4480" },
+        "text": { "$value": "#ffffff" }
+      },
+      "teal": {
+        "$type": "color",
+        "bg": { "$value": "#2e6276" },
+        "text": { "$value": "#ffffff" }
+      },
+      "red": {
+        "$type": "color",
+        "bg": { "$value": "#8b0a03" },
+        "text": { "$value": "#ffffff" }
+      },
+      "green": {
+        "$type": "color",
+        "bg": { "$value": "#2e7d32" },
+        "text": { "$value": "#ffffff" }
+      },
+      "yellow": {
+        "$type": "color",
+        "bg": { "$value": "#936f38" },
         "text": { "$value": "#ffffff" }
       },
       "orange": {

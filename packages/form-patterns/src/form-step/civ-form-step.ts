@@ -9,9 +9,9 @@ import '@civui/navigation/link';
 /**
  * CivUI Form Step
  *
- * Multi-step navigation within a form chapter. Shows one step at a
- * time, validates required fields before advancing, and renders a
- * compact nav bar with back link and step counter.
+ * * Multi-step navigation within a form chapter. Shows one
+ * step at a time, validates required fields before advancing, and
+ * renders a compact nav bar with back link and step counter.
  *
  * Each direct child element with `data-step-label` is treated as a step.
  * Only the current step is visible.
@@ -59,6 +59,23 @@ export class CivFormStep extends LightDomSlotMixin(CivBaseElement) {
   /** Whether navigation buttons are disabled (e.g., during async validation). */
   @property({ type: Boolean, attribute: 'nav-disabled' }) navDisabled = false;
 
+  /**
+   * Async validation callback. Called after built-in validation passes
+   * and before advancing to the next step. Return `true` to allow,
+   * `false` to block. The continue button shows a loading state while
+   * the promise is pending.
+   *
+   * @example
+   * ```ts
+   * el.beforeContinue = async (step, index) => {
+   *   const response = await fetch('/api/validate', { method: 'POST', body: formData });
+   *   return response.ok;
+   * };
+   * ```
+   */
+  @property({ attribute: false })
+  beforeContinue?: (stepEl: Element, stepIndex: number) => Promise<boolean> | boolean;
+
   /** Enable built-in required field validation before advancing. */
   @property({ type: Boolean }) validate = true;
 
@@ -69,6 +86,21 @@ export class CivFormStep extends LightDomSlotMixin(CivBaseElement) {
    */
   @property({ type: Boolean, reflect: true }) sensitive = false;
 
+  /** Title for the current step, rendered below the step counter. */
+  @property({ type: String, attribute: 'step-title' }) stepTitle = '';
+
+  /** Header size: 'primary' (large, prominent) or 'secondary' (compact, default). */
+  @property({ type: String, attribute: 'header-size' }) headerSize: 'primary' | 'secondary' = 'secondary';
+
+  /** Show divider lines above and below the step header. */
+  @property({ type: Boolean, attribute: 'header-dividers' }) headerDividers = false;
+
+  /** Header spacing: 'default' or 'compact'. */
+  @property({ type: String, attribute: 'header-spacing' }) headerSpacing: 'default' | 'compact' = 'default';
+
+  /** Heading level for the step title (2–6). Defaults to 2. */
+  @property({ type: Number, attribute: 'heading-level' }) headingLevel: number = 2;
+
   /** Render a "Save and come back later" secondary action. */
   @property({ type: Boolean, attribute: 'show-pause' }) showPause = false;
 
@@ -76,6 +108,7 @@ export class CivFormStep extends LightDomSlotMixin(CivBaseElement) {
   @property({ type: String, attribute: 'pause-label' }) pauseLabel = '';
 
   @state() private _current = 0;
+  @state() private _loading = false;
   /** Tracks whether a sensitive-notice announcement has already been made. */
   private _sensitiveNoticeAnnounced = false;
 
@@ -166,33 +199,44 @@ export class CivFormStep extends LightDomSlotMixin(CivBaseElement) {
 
     return html`
       <div class="civ-form-step">
-        ${total > 1 ? html`
-          <div class="civ-form-steps-nav">
-            ${!isFirst ? html`
-              <civ-link
-                variant="back"
-                label="${t('formStepBack')}"
-                @click="${this._onBack}"
-              ></civ-link>
-              <span class="civ-form-steps-nav__divider"></span>
-            ` : nothing}
-            <span class="civ-form-steps-nav__counter" aria-live="polite">
-              ${interpolate(t('formStepOf'), {
-                current: String(this._current + 1),
-                total: String(total),
-              })}
-            </span>
-          </div>
-        ` : nothing}
+        ${(() => {
+          const hasStepHeader = !!(this.stepTitle || this._steps[this._current]?.getAttribute('data-step-label'));
+          const showNavCounter = !hasStepHeader;
+          return total > 1 ? html`
+            <nav class="civ-form-steps-nav" aria-label="Step navigation">
+              ${!isFirst ? html`
+                <civ-link
+                  variant="back"
+                  label="${t('formStepBack')}"
+                  @click="${this._onBack}"
+                ></civ-link>
+                ${showNavCounter ? html`<span class="civ-form-steps-nav__divider"></span>` : nothing}
+              ` : nothing}
+              ${showNavCounter ? html`
+                <span class="civ-form-steps-nav__counter" aria-live="polite">
+                  ${interpolate(t('formStepOf'), {
+                    current: String(this._current + 1),
+                    total: String(total),
+                  })}
+                </span>
+              ` : nothing}
+            </nav>
+          ` : nothing;
+        })()}
 
-        <div data-civ-form-step-content></div>
+        ${this._renderStepHeader(total)}
+
+        <section aria-label="${this.stepTitle || this._steps[this._current]?.getAttribute('data-step-label') || nothing}">
+          <div data-civ-form-step-content></div>
+        </section>
 
         <div class="civ-mt-6 civ-flex civ-flex-wrap civ-items-center civ-gap-4">
           <civ-button
-            label="${isLast
+            label="${this._loading ? t('formStepValidating') || 'Validating…' : isLast
               ? (this.completeLabel || t('formStepSave'))
               : (this.continueLabel || t('formStepContinue'))}"
-            ?disabled="${this.navDisabled}"
+            ?disabled="${this.navDisabled || this._loading}"
+            icon-start="${this._loading ? 'loading' : ''}"
             @click="${this._onContinue}"
           ></civ-button>
           ${this._shouldShowPause
@@ -207,6 +251,39 @@ export class CivFormStep extends LightDomSlotMixin(CivBaseElement) {
             : nothing}
         </div>
       </div>
+    `;
+  }
+
+  private _renderStepHeader(total: number) {
+    const stepLabel = this._steps[this._current]?.getAttribute('data-step-label') || '';
+    const title = this.stepTitle || stepLabel;
+    if (!title && this.headerSize === 'secondary') return nothing;
+
+    const isPrimary = this.headerSize === 'primary';
+    const counterText = total > 1
+      ? interpolate(t('formStepOf'), {
+          current: String(this._current + 1),
+          total: String(total),
+        })
+      : '';
+
+    // Single line: "Step 1 of 3: Personal information"
+    const headerText = counterText && title
+      ? `${counterText}: ${title}`
+      : counterText || title;
+
+    if (!headerText) return nothing;
+
+    const level = Math.max(2, Math.min(6, this.headingLevel));
+
+    return html`
+      ${this.headerDividers ? html`<hr class="civ-divider civ-my-4" />` : nothing}
+      <div class="civ-form-step__header ${isPrimary ? 'civ-form-step__header--primary' : ''} ${this.headerSpacing === 'compact' ? 'civ-form-step__header--compact' : ''}"
+           role="heading" aria-level="${level}" aria-live="polite">
+        ${counterText ? html`<span class="civ-form-step__counter">${counterText}${title ? ':' : ''}</span>` : nothing}
+        ${title ? html`<span class="civ-form-step__title">${title}</span>` : nothing}
+      </div>
+      ${this.headerDividers ? html`<hr class="civ-divider civ-my-4" />` : nothing}
     `;
   }
 
@@ -340,10 +417,27 @@ export class CivFormStep extends LightDomSlotMixin(CivBaseElement) {
     });
   }
 
-  private _onContinue(): void {
+  private async _onContinue(): Promise<void> {
+    if (this._loading) return;
     if (!this._validateCurrentStep()) return;
 
     const from = this._current;
+
+    // Run async beforeContinue callback if provided
+    if (this.beforeContinue) {
+      this._loading = true;
+      try {
+        const allowed = await this.beforeContinue(this._steps[from], from);
+        if (!allowed) {
+          this._loading = false;
+          return;
+        }
+      } catch {
+        this._loading = false;
+        return;
+      }
+      this._loading = false;
+    }
 
     if (from >= this._steps.length - 1) {
       dispatch(this, 'civ-step-complete', { total: this._steps.length });

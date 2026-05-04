@@ -8,7 +8,7 @@ import StoryEmbed from "@site/src/components/StoryEmbed";
 
 # Form Patterns Overview
 
-CivUI form patterns are components that orchestrate form structure, navigation, validation, and review. They compose together to handle everything from a single-page form to a multi-step wizard with repeating sections, conditional fields, and trauma-informed affordances.
+CivUI form patterns are components that orchestrate form structure, navigation, validation, and review. They compose together to handle everything from a single-page form to a multi-step form with repeating sections, conditional fields, and trauma-informed affordances.
 
 ## Form structure
 
@@ -43,7 +43,7 @@ Not every form needs every layer. A simple contact form might just use `civ-form
 
 | Component | Purpose |
 |-----------|---------|
-| `civ-form-step` | Multi-step wizard within a form. Shows one step at a time, validates before advancing. Each child with `data-step-label` is a step. Supports `sensitive` mode for trauma-informed flows and `showPause` for save-and-resume. |
+| `civ-form-step` | Multi-step navigation within a form. Shows one step at a time, validates before advancing. Each child with `data-step-label` is a step. Supports `sensitive` mode for trauma-informed flows and `showPause` for save-and-resume. |
 | `civ-progress-steps` | Visual step indicator. Shows completed, current, and upcoming steps. Responsive — horizontal on desktop, vertical on mobile. Optional `clickable` prop lets users jump to completed steps. |
 
 ### Field organization
@@ -59,7 +59,7 @@ Not every form needs every layer. A simple contact form might just use `civ-form
 
 | Component | Purpose |
 |-----------|---------|
-| `civ-repeater` | "Add another" pattern. Three modes: `inline` (all rows visible), `detail` (summary cards that expand), `wizard` (full-page multi-step sub-flow per item). Field names auto-index. |
+| `civ-repeater` | "Add another" pattern. Two modes: `inline` (all rows visible) and `form-steps` (full-page multi-step sub-flow per item). Field names auto-index. |
 
 ### Context & guidance
 
@@ -220,5 +220,5 @@ In multi-step mode, `civ-form-step` validates each step before advancing — use
 | `civ-step-pause` | `civ-form-step` | `{ current, label }` | User pauses |
 | `civ-repeater-add` | `civ-repeater` | `{ index }` | Row added |
 | `civ-repeater-remove` | `civ-repeater` | `{ index }` | Row removed |
-| `civ-repeater-wizard-open` | `civ-repeater` | `{ index, isNew }` | Wizard opens |
-| `civ-repeater-wizard-close` | `civ-repeater` | `{ index, action }` | Wizard closes |
+| `civ-repeater-form-steps-open` | `civ-repeater` | `{ index, isNew }` | Form-steps flow opens |
+| `civ-repeater-form-steps-close` | `civ-repeater` | `{ index, action }` | Form-steps flow closes |

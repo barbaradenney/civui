@@ -148,16 +148,8 @@ export const NotificationOverlay: Story = {
   render: () => html`
     <div style="display: flex; gap: 1.5rem; align-items: center;">
       <span class="civ-badge-anchor">
-        <civ-icon name="mail" size="lg"></civ-icon>
+        <civ-icon name="mail" size="2xl"></civ-icon>
         <civ-count overlay count="3" variant="error" count-style="primary"></civ-count>
-      </span>
-      <span class="civ-badge-anchor">
-        <civ-icon name="settings" size="lg"></civ-icon>
-        <civ-count overlay count="12" variant="info" count-style="primary"></civ-count>
-      </span>
-      <span class="civ-badge-anchor">
-        <civ-icon name="person" size="lg"></civ-icon>
-        <civ-count overlay count="150" variant="error" count-style="primary" live="polite"></civ-count>
       </span>
     </div>
   `,

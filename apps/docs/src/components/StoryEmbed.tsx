@@ -10,15 +10,13 @@ interface StoryEmbedProps {
  * Storybook iframe embed with automatic height sizing and lazy loading.
  *
  * - **Lazy loading**: Uses IntersectionObserver to defer iframe creation
- *   until the embed scrolls into view. Pages with many story embeds
- *   no longer load all iframes upfront.
+ *   until the embed scrolls into view.
  *
- * - **Auto-resize**: Uses ResizeObserver on the iframe's contentDocument
- *   body (same-origin) to reactively match the iframe height to its
- *   content. No polling, no timeouts.
+ * - **Auto-resize**: Two strategies:
+ *   1. Same-origin (prod): ResizeObserver on iframe's contentDocument body
+ *   2. Cross-origin (dev): postMessage from Storybook iframe sends height
  *
- * - **Refresh-safe**: Checks if the iframe is already loaded on mount
- *   (handles the case where the iframe loads before React hydrates).
+ * - **Refresh-safe**: Checks if the iframe is already loaded on mount.
  */
 export default function StoryEmbed({ id, title, minHeight = 100 }: StoryEmbedProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -39,7 +37,7 @@ export default function StoryEmbed({ id, title, minHeight = 100 }: StoryEmbedPro
           io.disconnect();
         }
       },
-      { rootMargin: '200px' }, // start loading 200px before visible
+      { rootMargin: '200px' },
     );
 
     io.observe(container);
@@ -54,7 +52,6 @@ export default function StoryEmbed({ id, title, minHeight = 100 }: StoryEmbedPro
       const doc = iframe.contentDocument || iframe.contentWindow?.document;
       if (!doc?.body) return;
 
-      // Clean up previous observer
       observerRef.current?.disconnect();
 
       const syncHeight = () => {
@@ -67,7 +64,6 @@ export default function StoryEmbed({ id, title, minHeight = 100 }: StoryEmbedPro
         }
       };
 
-      // Initial sync
       syncHeight();
 
       const ro = new ResizeObserver(syncHeight);
@@ -75,7 +71,7 @@ export default function StoryEmbed({ id, title, minHeight = 100 }: StoryEmbedPro
       ro.observe(doc.documentElement);
       observerRef.current = ro;
     } catch {
-      // Cross-origin fallback — keep minHeight
+      // Cross-origin — postMessage fallback handles this
     }
   }, [minHeight]);
 
@@ -83,20 +79,34 @@ export default function StoryEmbed({ id, title, minHeight = 100 }: StoryEmbedPro
     setupResizeObserver();
   }, [setupResizeObserver]);
 
-  // Refresh-safe: if iframe loaded before React hydrated, onLoad won't fire.
-  // Check on mount + when iframe ref changes.
+  // Listen for postMessage from Storybook iframe (cross-origin resize)
+  useEffect(() => {
+    const onMessage = (e: MessageEvent) => {
+      if (e.data?.type !== 'civ-story-resize') return;
+      const iframe = iframeRef.current;
+      if (!iframe) return;
+      // Match by checking the iframe's src contains the story id
+      if (e.data.storyId === id && e.data.height > minHeight) {
+        setHeight(e.data.height + 2);
+      }
+    };
+
+    window.addEventListener('message', onMessage);
+    return () => window.removeEventListener('message', onMessage);
+  }, [id, minHeight]);
+
+  // Refresh-safe: check if iframe already loaded
   useEffect(() => {
     const iframe = iframeRef.current;
     if (!iframe) return;
 
-    // Check if already loaded (readyState or body exists)
     try {
       const doc = iframe.contentDocument || iframe.contentWindow?.document;
       if (doc?.readyState === 'complete' && doc?.body?.childElementCount > 0) {
         setupResizeObserver();
       }
     } catch {
-      // Cross-origin — ignore
+      // Cross-origin — postMessage handles it
     }
 
     return () => observerRef.current?.disconnect();

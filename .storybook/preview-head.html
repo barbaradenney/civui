@@ -27,3 +27,38 @@
     color: #f0f0f0;
   }
 </style>
+<script>
+  // Report iframe height to parent via postMessage (enables cross-origin resize in dev)
+  (function() {
+    var storyId = new URLSearchParams(window.location.search).get('id') || '';
+    var lastHeight = 0;
+
+    function reportHeight() {
+      var h = Math.max(
+        document.body ? document.body.scrollHeight : 0,
+        document.documentElement ? document.documentElement.scrollHeight : 0
+      );
+      if (h !== lastHeight && h > 0) {
+        lastHeight = h;
+        try {
+          window.parent.postMessage({ type: 'civ-story-resize', storyId: storyId, height: h }, '*');
+        } catch(e) {}
+      }
+    }
+
+    // Report on load, resize, and DOM mutations
+    window.addEventListener('load', function() {
+      reportHeight();
+      // Observe body for DOM changes (component rendering)
+      if (window.ResizeObserver) {
+        new ResizeObserver(reportHeight).observe(document.body);
+      } else {
+        setInterval(reportHeight, 500);
+      }
+    });
+
+    // Also report after a short delay for late-rendering components
+    setTimeout(reportHeight, 300);
+    setTimeout(reportHeight, 1000);
+  })();
+</script>

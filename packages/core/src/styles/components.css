@@ -281,6 +281,7 @@
 
   .civ-required-mark {
     @apply civ-text-error civ-font-normal civ-ms-0;
+    font-size: var(--civ-typography-fontSize-base);
   }
 
   .civ-hint,
@@ -1853,14 +1854,14 @@
 
   /* Step header — single line: "Step 1 of 3: Title" */
   .civ-form-step__header {
-    @apply civ-mb-4 civ-py-3;
+    @apply civ-mb-4 civ-py-2;
     font-size: var(--civ-typography-fontSize-lg);
     border-top: 1px solid var(--civ-color-base-lighter);
     border-bottom: 1px solid var(--civ-color-base-lighter);
   }
 
   .civ-form-step__header--primary {
-    @apply civ-mb-6 civ-py-4;
+    @apply civ-mb-6 civ-py-3;
     font-size: var(--civ-typography-fontSize-xl);
   }
 

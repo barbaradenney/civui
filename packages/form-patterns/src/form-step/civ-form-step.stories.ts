@@ -210,11 +210,10 @@ export const WithPauseAndResume: Story = {
 export const GovernmentBenefitApplication: Story = {
   name: 'Usage: Benefit Application Flow',
   render: () => html`
-    <civ-form-step complete-label="Review your answers" show-progress>
+    <civ-form-step complete-label="Review your answers" header-size="primary">
       <div data-step-label="Personal information">
-        <h3 class="civ-heading-md">Personal information</h3>
-        <civ-name legend="Your name" name="name" required></civ-name>
-        <civ-form-fieldset legend="Date of birth" required hint="For example: January 15 1990">
+        <civ-name legend="Your name" name="name" required size="lg"></civ-name>
+        <civ-form-fieldset legend="Date of birth" required hint="For example: January 15 1990" size="lg">
           <civ-memorable-date name="dob" required></civ-memorable-date>
         </civ-form-fieldset>
         <civ-form-field label="Social Security number" required hint="We need this to verify your identity">
@@ -222,8 +221,7 @@ export const GovernmentBenefitApplication: Story = {
         </civ-form-field>
       </div>
       <div data-step-label="Contact information">
-        <h3 class="civ-heading-md">Contact information</h3>
-        <civ-address legend="Mailing address" name="address" required></civ-address>
+        <civ-address legend="Mailing address" name="address" required size="lg"></civ-address>
         <civ-form-field label="Home phone number">
           <civ-text-input name="homePhone" type="tel" mask="phone-us" validate="phone"></civ-text-input>
         </civ-form-field>
@@ -232,12 +230,12 @@ export const GovernmentBenefitApplication: Story = {
         </civ-form-field>
       </div>
       <div data-step-label="Certification">
-        <h3 class="civ-heading-md">Certification</h3>
         <civ-signature
           legend="Statement of truth"
           name="signature"
           statement="I certify that the information I have provided is true and correct to the best of my knowledge and belief."
           required
+          size="lg"
         ></civ-signature>
       </div>
     </civ-form-step>

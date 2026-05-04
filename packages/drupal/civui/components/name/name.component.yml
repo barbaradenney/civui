@@ -15,10 +15,6 @@ props:
       title: Name
       type: string
       description: 'Form field name prefix'
-    format:
-      title: Format
-      type: string
-      description: 'Name format variant'
     show_middle:
       title: Show middle
       type: boolean

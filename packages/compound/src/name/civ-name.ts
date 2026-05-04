@@ -50,18 +50,12 @@ export class CivName extends CivFormElement {
   @property({ type: Number, attribute: 'heading-level' }) headingLevel?: HeadingLevel;
 
   /**
-   * Visual size of the legend. Default and `sm` render at body size;
-   * `md`/`lg`/`xl` increase the size for use as a section/page heading.
+   * Visual size of the legend. Defaults to `md` so the compound field reads
+   * as a section heading above its sub-inputs. `sm` renders at body size;
+   * `lg`/`xl` increase the size for use as a section/page heading.
    * At `[data-civ-scale="fluid"]`, `xl` renders very large.
    */
-  @property({ type: String }) size?: LabelSize;
-
-  /**
-   * Label format for name fields.
-   * - `domestic` (default): "First name" / "Middle name" / "Last name"
-   * - `international`: "Given name" / "Middle name" / "Family name"
-   */
-  @property({ type: String }) format: 'domestic' | 'international' = 'domestic';
+  @property({ type: String }) size: LabelSize = 'md';
 
   /** Whether to show the middle name field. */
   @property({ type: Boolean, attribute: 'show-middle' }) showMiddle = true;
@@ -112,9 +106,8 @@ export class CivName extends CivFormElement {
 
   override render() {
     const describedBy = buildDescribedBy(this._hintId, this.hint, this._errorId, this.error);
-    const intl = this.format === 'international';
-    const firstLabel = intl ? t('nameGiven') : t('nameFirst');
-    const lastLabel = intl ? t('nameFamily') : t('nameLast');
+    const firstLabel = t('nameFirst');
+    const lastLabel = t('nameLast');
 
     return html`
       <fieldset
@@ -124,9 +117,9 @@ export class CivName extends CivFormElement {
         aria-required="${this.required || nothing}"
         ?disabled="${this.disabled}"
       >
-        ${renderFormHeader({ label: renderLegend({ legend: this.legend || this.label, required: this.required, headingLevel: this.headingLevel, size: this.size }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
+        ${renderFormHeader({ label: renderLegend({ legend: this.legend || this.label, required: false, headingLevel: this.headingLevel, size: this.size }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
 
-        <civ-form-field label="${firstLabel}" error="${this.firstError}">
+        <civ-form-field label="${firstLabel}" error="${this.firstError}" ?required="${this.required}">
           <civ-text-input
             name="${this.name ? `${this.name}.first` : ''}"
             value="${this._name.first}"
@@ -154,7 +147,7 @@ export class CivName extends CivFormElement {
           </civ-form-field>
         ` : nothing}
 
-        <civ-form-field label="${lastLabel}" error="${this.lastError}">
+        <civ-form-field label="${lastLabel}" error="${this.lastError}" ?required="${this.required}">
           <civ-text-input
             name="${this.name ? `${this.name}.last` : ''}"
             value="${this._name.last}"

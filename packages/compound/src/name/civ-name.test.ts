@@ -138,25 +138,14 @@ describe('civ-name', () => {
     });
   });
 
-  it('uses domestic labels by default', async () => {
+  it('uses combined first/given and last/family labels', async () => {
     const el = await fixture<CivName>('<civ-name legend="Name"></civ-name>') as CivName;
     const labels = Array.from(el.querySelectorAll('civ-form-field')).map(
       (field: any) => field.label,
     );
-    expect(labels).toContain('First name');
-    expect(labels).toContain('Last name');
-  });
-
-  it('uses international labels when format is international', async () => {
-    const el = await fixture<CivName>('<civ-name legend="Name"></civ-name>') as CivName;
-    el.format = 'international';
-    await elementUpdated(el);
-    const labels = Array.from(el.querySelectorAll('civ-form-field')).map(
-      (field: any) => field.label,
-    );
-    expect(labels).toContain('Given name');
-    expect(labels).toContain('Family name');
-    expect(labels).toContain('Middle name'); // middle stays the same
+    expect(labels).toContain('First name or given name');
+    expect(labels).toContain('Last name or family name');
+    expect(labels).toContain('Middle name');
   });
 
   it('sets autocomplete="honorific-suffix" on suffix select', async () => {

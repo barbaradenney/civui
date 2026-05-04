@@ -58,6 +58,7 @@ export const WithError: Story = {
     <civ-name
       legend="Your name"
       name="applicant"
+      required
       first-error="Enter a first name"
       last-error="Enter a last name"
     ></civ-name>
@@ -83,7 +84,7 @@ export const AllStates: Story = {
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-8">
       <civ-name legend="Normal" name="normal"></civ-name>
-      <civ-name legend="With errors" name="errors" first-error="Enter a first name" last-error="Enter a last name"></civ-name>
+      <civ-name legend="With errors" name="errors" required first-error="Enter a first name" last-error="Enter a last name"></civ-name>
       <civ-name legend="Required" name="required" required></civ-name>
       <civ-name legend="Disabled" name="disabled" disabled></civ-name>
     </div>

@@ -55,7 +55,7 @@ export class CivDataField extends CivBaseElement {
     return html`
       <dl class="${[
           'civ-data-field',
-          this.spacing === 'sm' ? 'civ-data-field--sm civ-py-1' : 'civ-py-2',
+          this.spacing === 'sm' ? 'civ-data-field--sm' : '',
         ].filter(Boolean).join(' ')}">
         <dt class="civ-data-field__label">${displayLabel}</dt>
         <dd class="civ-data-field__value">

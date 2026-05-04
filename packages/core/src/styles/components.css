@@ -2519,6 +2519,14 @@
       border-color: var(--civ-color-warning-light);
       color: var(--civ-color-black-DEFAULT);
     }
+
+    /* Cards, fieldsets, repeater rows — subtle border in dark mode */
+    .civ-card,
+    .civ-fieldset,
+    .civ-repeater-row,
+    .civ-check-tile {
+      border-color: var(--civ-color-base-lightest);
+    }
   }
 
   /* Same dark overrides for Storybook toolbar toggle */
@@ -2553,6 +2561,13 @@
     background-color: var(--civ-color-warning-dark);
     border-color: var(--civ-color-warning-dark);
     color: var(--civ-color-base-darkest);
+  }
+
+  :root[data-civ-theme="dark"] .civ-card,
+  :root[data-civ-theme="dark"] .civ-fieldset,
+  :root[data-civ-theme="dark"] .civ-repeater-row,
+  :root[data-civ-theme="dark"] .civ-check-tile {
+    border-color: var(--civ-color-base-lighter);
   }
 
 }

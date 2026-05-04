@@ -63,7 +63,7 @@ export const TESTING_TOOLS: ToolDefinition[] = [
   },
   {
     name: 'generate_e2e_tests',
-    description: 'Generate Playwright end-to-end tests from a FormSchema covering validation, submission, wizard flow, conditional fields, repeatable sections, and save/resume.',
+    description: 'Generate Playwright end-to-end tests from a FormSchema covering validation, submission, form-steps flow, conditional fields, repeatable sections, and save/resume.',
     params: {
       schema: FormSchema.describe('Form schema to generate tests for'),
       baseUrl: z.string().optional().describe('Base URL for the form page (default: http://localhost:3000)'),

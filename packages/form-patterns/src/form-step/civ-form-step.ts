@@ -9,7 +9,7 @@ import '@civui/navigation/link';
 /**
  * CivUI Form Step
  *
- * Multi-step wizard for navigating within a form chapter. Shows one
+ * * Multi-step navigation within a form chapter. Shows one
  * step at a time, validates required fields before advancing, and
  * renders a compact nav bar with back link and step counter.
  *
@@ -157,7 +157,7 @@ export class CivFormStep extends LightDomSlotMixin(CivBaseElement) {
   }
 
   /**
-   * Capture Enter on inputs inside the step so the wizard advances instead
+   * Capture Enter on inputs inside the step so the form-step advances instead
    * of letting the keystroke bubble to a parent `<civ-form>` and submit the
    * whole form mid-flow. Skips controls that have their own native Enter
    * behavior (button, textarea, anchor, select, option), respects
@@ -203,17 +203,17 @@ export class CivFormStep extends LightDomSlotMixin(CivBaseElement) {
           const hasStepHeader = !!(this.stepTitle || this._steps[this._current]?.getAttribute('data-step-label'));
           const showNavCounter = !hasStepHeader;
           return total > 1 ? html`
-            <nav class="civ-wizard-nav" aria-label="Step navigation">
+            <nav class="civ-form-steps-nav" aria-label="Step navigation">
               ${!isFirst ? html`
                 <civ-link
                   variant="back"
                   label="${t('formStepBack')}"
                   @click="${this._onBack}"
                 ></civ-link>
-                ${showNavCounter ? html`<span class="civ-wizard-nav__divider"></span>` : nothing}
+                ${showNavCounter ? html`<span class="civ-form-steps-nav__divider"></span>` : nothing}
               ` : nothing}
               ${showNavCounter ? html`
-                <span class="civ-wizard-nav__counter" aria-live="polite">
+                <span class="civ-form-steps-nav__counter" aria-live="polite">
                   ${interpolate(t('formStepOf'), {
                     current: String(this._current + 1),
                     total: String(total),

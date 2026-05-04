@@ -239,16 +239,16 @@ export function generateA11yTests(html: string, suiteName?: string): A11yTestsRe
   }
 
   // --- Category: focus-management ---
-  const hasWizard = html.includes('data-civ-step');
+  const hasFormSteps = html.includes('data-civ-step');
   const hasRepeatable = html.includes('data-civ-repeatable');
-  if (hasWizard || hasRepeatable) {
+  if (hasFormSteps || hasRepeatable) {
     categories.add('focus-management');
     lines.push('');
     lines.push(`  // --- focus-management ---`);
 
-    if (hasWizard) {
+    if (hasFormSteps) {
       lines.push('');
-      lines.push(`  it('focuses first input on wizard step change', async () => {`);
+      lines.push(`  it('focuses first input on form step change', async () => {`);
       lines.push(`    const el = await fixture(\`${escapedHtml}\`);`);
       lines.push(`    const steps = el.querySelectorAll('[data-civ-step]');`);
       lines.push(`    expect(steps.length).toBeGreaterThan(0);`);

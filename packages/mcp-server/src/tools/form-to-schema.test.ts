@@ -237,9 +237,9 @@ describe('formToSchema', () => {
     });
   });
 
-  // ---- Wizard step detection ----
+  // ---- Form step detection ----
 
-  it('detects wizard steps from data-civ-step containers', () => {
+  it('detects form steps from data-civ-step containers', () => {
     const html = `
       <civ-form>
         <nav data-civ-progress aria-label="Progress">

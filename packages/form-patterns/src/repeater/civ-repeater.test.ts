@@ -202,6 +202,17 @@ describe('civ-repeater', () => {
     expect(addBtn.getAttribute('label')).toContain('dependent');
   });
 
+  it('renders add button with plus icon', async () => {
+    const el = await fixture<CivRepeater>(`
+      <civ-repeater legend="Items" name="items" item-label="item">
+        <input type="text" name="val" />
+      </civ-repeater>
+    `);
+
+    const addBtn = el.querySelector('civ-button[variant="secondary"]')!;
+    expect(addBtn.getAttribute('icon-start')).toBe('add');
+  });
+
   it('renders hint and error', async () => {
     const el = await fixture<CivRepeater>(`
       <civ-repeater legend="Items" name="items" item-label="item" hint="Add at least one" error="At least one required">
@@ -289,112 +300,9 @@ describe('civ-repeater', () => {
   });
 });
 
-describe('civ-repeater detail mode', () => {
-  it('renders summary and detail containers per row', async () => {
-    const el = await fixture<CivRepeater>(`
-      <civ-repeater legend="Items" name="items" item-label="item" mode="detail" min="1">
-        <input type="text" name="val" />
-      </civ-repeater>
-    `);
-
-    const summary = el.querySelector('[data-civ-repeater-summary]');
-    const detail = el.querySelector('[data-civ-repeater-detail]');
-    expect(summary).not.toBeNull();
-    expect(detail).not.toBeNull();
-  });
-
-  it('collapses rows initially in detail mode', async () => {
-    const el = await fixture<CivRepeater>(`
-      <civ-repeater legend="Items" name="items" item-label="item" mode="detail" min="1">
-        <input type="text" name="val" />
-      </civ-repeater>
-    `);
-
-    const detail = el.querySelector('[data-civ-repeater-detail]') as HTMLElement;
-    expect(detail.style.display).toBe('none');
-  });
-
-  it('expands row when edit button is clicked', async () => {
-    const el = await fixture<CivRepeater>(`
-      <civ-repeater legend="Items" name="items" item-label="item" mode="detail" min="1">
-        <input type="text" name="val" />
-      </civ-repeater>
-    `);
-
-    const editBtn = el.querySelector('civ-action-button') as HTMLButtonElement;
-    editBtn.click();
-    await elementUpdated(el);
-
-    const summary = el.querySelector('[data-civ-repeater-summary]') as HTMLElement;
-    const detail = el.querySelector('[data-civ-repeater-detail]') as HTMLElement;
-    expect(summary.style.display).toBe('none');
-    expect(detail.style.display).toBe('');
-  });
-
-  it('collapses row when save button is clicked', async () => {
-    const el = await fixture<CivRepeater>(`
-      <civ-repeater legend="Items" name="items" item-label="item" mode="detail" min="1">
-        <input type="text" name="val" />
-      </civ-repeater>
-    `);
-
-    // Expand
-    const editBtn = el.querySelector('civ-action-button') as HTMLButtonElement;
-    editBtn.click();
-    await elementUpdated(el);
-
-    // Save
-    const saveBtn = el.querySelector('civ-action-button[variant="primary"]') as HTMLButtonElement;
-    saveBtn.click();
-    await elementUpdated(el);
-
-    const detail = el.querySelector('[data-civ-repeater-detail]') as HTMLElement;
-    expect(detail.style.display).toBe('none');
-  });
-
-  it('auto-expands new row on add in detail mode', async () => {
-    const el = await fixture<CivRepeater>(`
-      <civ-repeater legend="Items" name="items" item-label="item" mode="detail" min="0">
-        <input type="text" name="val" />
-      </civ-repeater>
-    `) as CivRepeater;
-
-    el.addRow();
-    await elementUpdated(el);
-
-    const rows = el.querySelectorAll('[data-civ-repeater-row]');
-    const lastDetail = rows[rows.length - 1].querySelector('[data-civ-repeater-detail]') as HTMLElement;
-    expect(lastDetail.style.display).toBe('');
-  });
-
-  it('has edit button with aria-label', async () => {
-    const el = await fixture<CivRepeater>(`
-      <civ-repeater legend="Items" name="items" item-label="item" mode="detail" min="1">
-        <input type="text" name="val" />
-      </civ-repeater>
-    `);
-
-    const editBtn = el.querySelector('civ-action-button');
-    expect(editBtn).not.toBeNull();
-    expect(editBtn!.getAttribute('aria-label')).toBe('Edit item 1');
-  });
-
-  it('indexes field names inside detail container', async () => {
-    const el = await fixture<CivRepeater>(`
-      <civ-repeater legend="Items" name="items" item-label="item" mode="detail" min="1">
-        <input type="text" name="val" />
-      </civ-repeater>
-    `);
-
-    const input = el.querySelector('[data-civ-repeater-detail] input');
-    expect(input).not.toBeNull();
-    expect(input!.getAttribute('name')).toBe('items[0].val');
-  });
-});
-
-describe('civ-repeater wizard mode', () => {
-  const wizardTemplate = `
-    <civ-repeater legend="Dependents" name="deps" item-label="dependent" mode="wizard">
+describe('civ-repeater form-steps mode', () => {
+  const formStepsTemplate = `
+    <civ-repeater legend="Dependents" name="deps" item-label="dependent" mode="form-steps">
       <div data-step-label="Name">
         <civ-text-input label="First name" name="firstName"></civ-text-input>
       </div>
@@ -405,7 +313,7 @@ describe('civ-repeater wizard mode', () => {
   `;
 
   it('starts with empty list and add button', async () => {
-    const el = await fixture<CivRepeater>(wizardTemplate);
+    const el = await fixture<CivRepeater>(formStepsTemplate);
     await elementUpdated(el);
 
     expect(el.rowCount).toBe(0);
@@ -415,12 +323,12 @@ describe('civ-repeater wizard mode', () => {
     expect(addBtn).not.toBeNull();
   });
 
-  it('opens wizard on add click', async () => {
-    const el = await fixture<CivRepeater>(wizardTemplate);
+  it('opens form-steps flow on add click', async () => {
+    const el = await fixture<CivRepeater>(formStepsTemplate);
     await elementUpdated(el);
 
     const handler = vi.fn();
-    el.addEventListener('civ-repeater-wizard-open', handler as EventListener);
+    el.addEventListener('civ-repeater-form-steps-open', handler as EventListener);
 
     const addBtn = el.querySelector('civ-button') as HTMLElement;
     addBtn.click();
@@ -430,8 +338,8 @@ describe('civ-repeater wizard mode', () => {
     expect(handler.mock.calls[0][0].detail.isNew).toBe(true);
   });
 
-  it('shows form-step inside wizard container', async () => {
-    const el = await fixture<CivRepeater>(wizardTemplate);
+  it('shows form-step inside form-steps container', async () => {
+    const el = await fixture<CivRepeater>(formStepsTemplate);
     await elementUpdated(el);
 
     const addBtn = el.querySelector('civ-button') as HTMLElement;
@@ -444,8 +352,8 @@ describe('civ-repeater wizard mode', () => {
     expect(steps.length).toBe(2);
   });
 
-  it('hides list when wizard is active', async () => {
-    const el = await fixture<CivRepeater>(wizardTemplate);
+  it('hides list when form-steps flow is active', async () => {
+    const el = await fixture<CivRepeater>(formStepsTemplate);
     await elementUpdated(el);
 
     const addBtn = el.querySelector('civ-button') as HTMLElement;
@@ -456,8 +364,8 @@ describe('civ-repeater wizard mode', () => {
     expect(rowContainer.classList.contains('civ-hidden')).toBe(true);
   });
 
-  it('indexes field names inside wizard steps', async () => {
-    const el = await fixture<CivRepeater>(wizardTemplate);
+  it('indexes field names inside form-steps', async () => {
+    const el = await fixture<CivRepeater>(formStepsTemplate);
     await elementUpdated(el);
 
     const addBtn = el.querySelector('civ-button') as HTMLElement;
@@ -468,8 +376,8 @@ describe('civ-repeater wizard mode', () => {
     expect(field!.getAttribute('name')).toBe('deps[0].firstName');
   });
 
-  it('cancel closes wizard without saving', async () => {
-    const el = await fixture<CivRepeater>(wizardTemplate);
+  it('cancel closes form-steps flow without saving', async () => {
+    const el = await fixture<CivRepeater>(formStepsTemplate);
     await elementUpdated(el);
 
     const addBtn = el.querySelector('civ-button') as HTMLElement;
@@ -477,7 +385,7 @@ describe('civ-repeater wizard mode', () => {
     await elementUpdated(el);
 
     const handler = vi.fn();
-    el.addEventListener('civ-repeater-wizard-close', handler as EventListener);
+    el.addEventListener('civ-repeater-form-steps-close', handler as EventListener);
 
     const cancelBtn = el.querySelector('civ-button[variant="secondary"]') as HTMLElement;
     cancelBtn.click();
@@ -491,7 +399,7 @@ describe('civ-repeater wizard mode', () => {
 
   it('respects max limit on add', async () => {
     const el = await fixture<CivRepeater>(`
-      <civ-repeater legend="Items" name="items" item-label="item" mode="wizard" max="0">
+      <civ-repeater legend="Items" name="items" item-label="item" mode="form-steps" max="0">
         <div data-step-label="Step">
           <civ-text-input label="Value" name="val"></civ-text-input>
         </div>
@@ -505,12 +413,12 @@ describe('civ-repeater wizard mode', () => {
   });
 
   it('uses Light DOM', async () => {
-    const el = await fixture<CivRepeater>(wizardTemplate);
+    const el = await fixture<CivRepeater>(formStepsTemplate);
     expect(el.shadowRoot).toBeNull();
   });
 
-  it('changes legend text when wizard is active', async () => {
-    const el = await fixture<CivRepeater>(wizardTemplate);
+  it('changes legend text when form-steps flow is active', async () => {
+    const el = await fixture<CivRepeater>(formStepsTemplate);
     await elementUpdated(el);
 
     const addBtn = el.querySelector('civ-button') as HTMLElement;
@@ -521,9 +429,9 @@ describe('civ-repeater wizard mode', () => {
     expect(legend!.textContent).toContain('Add dependent');
   });
 
-  it('passes wizard-sensitive to form-step', async () => {
+  it('passes form-steps-sensitive to form-step', async () => {
     const el = await fixture<CivRepeater>(`
-      <civ-repeater legend="People" name="people" item-label="person" mode="wizard" wizard-sensitive>
+      <civ-repeater legend="People" name="people" item-label="person" mode="form-steps" form-steps-sensitive>
         <div data-step-label="Info">
           <civ-text-input label="Name" name="name"></civ-text-input>
         </div>
@@ -540,9 +448,9 @@ describe('civ-repeater wizard mode', () => {
     expect(formStep!.hasAttribute('sensitive')).toBe(true);
   });
 
-  it('passes wizard-show-pause to form-step', async () => {
+  it('passes form-steps-show-pause to form-step', async () => {
     const el = await fixture<CivRepeater>(`
-      <civ-repeater legend="People" name="people" item-label="person" mode="wizard" wizard-show-pause>
+      <civ-repeater legend="People" name="people" item-label="person" mode="form-steps" form-steps-show-pause>
         <div data-step-label="Info">
           <civ-text-input label="Name" name="name"></civ-text-input>
         </div>

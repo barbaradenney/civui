@@ -591,9 +591,9 @@ describe('generateCivUI', () => {
     expect(html).toContain('data-civ-show-when="has-dependents=yes"');
   });
 
-  // ---- Wizard generation ----
+  // ---- Form steps generation ----
 
-  it('generates wizard step containers and progress indicator', () => {
+  it('generates form step containers and progress indicator', () => {
     const schema: FormSchema = {
       steps: [
         { title: 'Personal Info' },
@@ -623,7 +623,7 @@ describe('generateCivUI', () => {
     expect(html).toContain('data-civ-step-next');
   });
 
-  it('hides non-first wizard steps', () => {
+  it('hides non-first form steps', () => {
     const schema: FormSchema = {
       steps: [{ title: 'Step 1' }, { title: 'Step 2' }],
       sections: [

@@ -433,7 +433,7 @@ export function generateCivUI(
     parts.push(formOpen);
   }
 
-  // Wizard mode: group sections by step
+  // Form steps mode: group sections by step
   if (schema.steps && schema.steps.length > 0) {
     parts.push(generateProgressIndicator(schema.steps, baseIndent));
     parts.push('');

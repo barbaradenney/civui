@@ -62,7 +62,7 @@ export const MultiStepForm: Story = {
 
         <div data-step-label="Service history">
           <civ-repeater legend="Service periods" name="service"
-            item-label="service period" mode="detail" min="1">
+            item-label="service period" min="1">
             <civ-service-history name="period"></civ-service-history>
           </civ-repeater>
         </div>

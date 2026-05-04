@@ -666,9 +666,9 @@ describe('validateForm', () => {
     });
   });
 
-  // ---- Wizard rules ----
+  // ---- Form steps rules ----
 
-  describe('wizard-missing-progress', () => {
+  describe('form-steps-missing-progress', () => {
     it('flags step containers without progress indicator', () => {
       const html = `
         <civ-form>
@@ -681,7 +681,7 @@ describe('validateForm', () => {
         </civ-form>
       `;
       const result = validateForm(html);
-      expect(result.errors.some((e) => e.rule === 'wizard-missing-progress')).toBe(true);
+      expect(result.errors.some((e) => e.rule === 'form-steps-missing-progress')).toBe(true);
     });
 
     it('does not flag when progress indicator is present', () => {
@@ -699,11 +699,11 @@ describe('validateForm', () => {
         </civ-form>
       `;
       const result = validateForm(html);
-      expect(result.errors.some((e) => e.rule === 'wizard-missing-progress')).toBe(false);
+      expect(result.errors.some((e) => e.rule === 'form-steps-missing-progress')).toBe(false);
     });
   });
 
-  describe('wizard-step-gap', () => {
+  describe('form-steps-step-gap', () => {
     it('flags non-contiguous step numbers', () => {
       const html = `
         <civ-form>
@@ -713,12 +713,12 @@ describe('validateForm', () => {
         </civ-form>
       `;
       const result = validateForm(html);
-      expect(result.warnings.some((w) => w.rule === 'wizard-step-gap')).toBe(true);
+      expect(result.warnings.some((w) => w.rule === 'form-steps-step-gap')).toBe(true);
     });
   });
 
-  describe('wizard-step-no-fields', () => {
-    it('flags empty wizard step', () => {
+  describe('form-steps-step-no-fields', () => {
+    it('flags empty form step', () => {
       const html = `
         <civ-form>
           <nav data-civ-progress aria-label="Progress"><ol><li>S1</li><li>S2</li></ol></nav>
@@ -727,7 +727,7 @@ describe('validateForm', () => {
         </civ-form>
       `;
       const result = validateForm(html);
-      expect(result.warnings.some((w) => w.rule === 'wizard-step-no-fields')).toBe(true);
+      expect(result.warnings.some((w) => w.rule === 'form-steps-step-no-fields')).toBe(true);
     });
   });
 

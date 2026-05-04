@@ -196,7 +196,7 @@ export const UTILITY_TOOLS: ToolDefinition[] = [
   },
   {
     name: 'visualize_form_flow',
-    description: "Generate a Mermaid flowchart visualizing a form's conditional logic, wizard steps, cascading options, and cross-field rules. Returns Mermaid syntax plus node/edge counts and a summary.",
+    description: "Generate a Mermaid flowchart visualizing a form's conditional logic, form steps, cascading options, and cross-field rules. Returns Mermaid syntax plus node/edge counts and a summary.",
     params: {
       schema: FormSchema.describe('Form schema to visualize'),
     },

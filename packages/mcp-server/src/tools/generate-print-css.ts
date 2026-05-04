@@ -1,6 +1,6 @@
 /**
  * generate_print_css tool — reads a FormSchema, outputs @media print CSS
- * tailored to the form's features (wizard, repeatable, conditional, table).
+ * tailored to the form's features (form-steps, repeatable, conditional, table).
  */
 import type { FormSchema } from '../schema/index.js';
 
@@ -41,7 +41,7 @@ const BASE_CSS = `  /* Base print styles */
     margin: 0;
   }`;
 
-const WIZARD_CSS = `  /* Wizard: show all steps, hide nav */
+const FORM_STEPS_CSS = `  /* Form steps: show all steps, hide nav */
   [data-civ-step] {
     display: block !important;
   }
@@ -94,10 +94,10 @@ export function generatePrintCss(schema: FormSchema): PrintCssResult {
   const features: string[] = ['base'];
   const cssParts: string[] = [BASE_CSS];
 
-  // Check for wizard steps
+  // Check for form steps
   if (schema.steps && schema.steps.length > 0) {
-    features.push('wizard');
-    cssParts.push(WIZARD_CSS);
+    features.push('form-steps');
+    cssParts.push(FORM_STEPS_CSS);
   }
 
   // Check for repeatable sections

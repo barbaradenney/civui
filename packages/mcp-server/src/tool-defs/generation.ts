@@ -8,7 +8,7 @@ import { generateCivUI } from '../generator/index.js';
 import {
   exportSchema,
   composeForms,
-  generateWizard,
+  generateFormSteps,
   generateValidationSchema,
   generatePayloadSchema,
   generateOpenApiSpec,
@@ -44,12 +44,12 @@ export const GENERATION_TOOLS: ToolDefinition[] = [
     handler: ({ schema, componentName }) => generateReactForm(schema, componentName),
   },
   {
-    name: 'generate_wizard',
-    description: 'Generate multi-step wizard navigation from a FormSchema with steps, back/next buttons, and progress.',
+    name: 'generate_form_steps',
+    description: 'Generate multi-step form navigation from a FormSchema with steps, back/next buttons, and progress.',
     params: {
       schema: FormSchema.describe('Form schema with steps defined'),
     },
-    handler: ({ schema }) => generateWizard(schema),
+    handler: ({ schema }) => generateFormSteps(schema),
   },
   {
     name: 'export_schema',

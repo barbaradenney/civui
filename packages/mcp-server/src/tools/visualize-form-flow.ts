@@ -1,6 +1,6 @@
 /**
  * visualize_form_flow tool — reads a FormSchema, outputs a Mermaid flowchart
- * showing wizard steps, sections, conditional visibility, cross-field rules,
+ * showing form steps, sections, conditional visibility, cross-field rules,
  * and cascading option dependencies.
  */
 import type { FormSchema, ConditionExpression } from '../schema/index.js';
@@ -51,8 +51,8 @@ export function visualizeFormFlow(schema: FormSchema): VisualizeResult {
   let edgeCount = 0;
   const fieldNodes = new Set<string>();
 
-  const wizardSteps = schema.steps ?? [];
-  const hasWizard = wizardSteps.length > 0;
+  const formStepNodes = schema.steps ?? [];
+  const hasFormSteps = formStepNodes.length > 0;
 
   // Helper to ensure a field node exists
   function ensureFieldNode(fieldName: string): string {
@@ -66,19 +66,19 @@ export function visualizeFormFlow(schema: FormSchema): VisualizeResult {
   }
 
   // Step nodes
-  if (hasWizard) {
+  if (hasFormSteps) {
     lines.push('  START((Start))');
     nodeCount++;
 
-    for (let i = 0; i < wizardSteps.length; i++) {
-      lines.push(`  step${i}([Step ${i + 1}: ${escapeLabel(wizardSteps[i].title)}])`);
+    for (let i = 0; i < formStepNodes.length; i++) {
+      lines.push(`  step${i}([Step ${i + 1}: ${escapeLabel(formStepNodes[i].title)}])`);
       nodeCount++;
     }
 
     // Sequential step flow
     lines.push(`  START ==> step0`);
     edgeCount++;
-    for (let i = 0; i < wizardSteps.length - 1; i++) {
+    for (let i = 0; i < formStepNodes.length - 1; i++) {
       lines.push(`  step${i} ==> step${i + 1}`);
       edgeCount++;
     }
@@ -104,7 +104,7 @@ export function visualizeFormFlow(schema: FormSchema): VisualizeResult {
 
     // Link section to step
     const stepNum = section.step ?? 0;
-    if (hasWizard) {
+    if (hasFormSteps) {
       lines.push(`  step${stepNum} --- ${sectionId}`);
       edgeCount++;
     }
@@ -165,7 +165,7 @@ export function visualizeFormFlow(schema: FormSchema): VisualizeResult {
 
   // Build summary
   const summaryParts: string[] = [];
-  if (hasWizard) summaryParts.push(`${wizardSteps.length} wizard steps`);
+  if (hasFormSteps) summaryParts.push(`${formStepNodes.length} form steps`);
   const conditionalCount = schema.sections.reduce((count, s) => {
     return count + s.fields.filter((f) => f.visibleWhen).length + (s.visibleWhen ? 1 : 0);
   }, 0);

@@ -65,7 +65,7 @@ export const TOOL_REGISTRY: ToolInfo[] = [
   // Form generation variants
   { name: 'generate_react_form', tier: 'advanced', category: 'form-generation', description: 'Generate a React TSX component from FormSchema using CivUI web components as custom elements' },
   { name: 'generate_intro_page', tier: 'advanced', category: 'gov-forms', description: 'Generate government form introduction page' },
-  { name: 'generate_wizard', tier: 'advanced', category: 'form-generation', description: 'Generate multi-step wizard navigation' },
+  { name: 'generate_form_steps', tier: 'advanced', category: 'form-generation', description: 'Generate multi-step form navigation' },
 
   // Feature generators
   { name: 'generate_signature_block', tier: 'advanced', category: 'form-generation', description: 'Generate e-signature block (typed, drawn, or checkbox)' },

@@ -147,9 +147,9 @@ The system infers entity types from field name patterns:
 - \`employer\`, \`company\` → **organization**
 - \`account\`, \`routing\`, \`bank\` → **financial**
 
-## Multi-Step Wizard
+## Multi-Step Form (Form Steps)
 
-Use \`steps\` on the FormSchema and \`step\` on each FormSection to create a multi-step wizard.
+Use \`steps\` on the FormSchema and \`step\` on each FormSection to create a multi-step form.
 
 ### Schema
 
@@ -199,9 +199,9 @@ Use \`steps\` on the FormSchema and \`step\` on each FormSection to create a mul
 
 ### Validation Rules
 
-- \`wizard-missing-progress\` (error): Step containers without a progress indicator
-- \`wizard-step-gap\` (warning): Non-contiguous step numbers
-- \`wizard-step-no-fields\` (warning): Empty wizard step
+- \`form-steps-missing-progress\` (error): Step containers without a progress indicator
+- \`form-steps-step-gap\` (warning): Non-contiguous step numbers
+- \`form-steps-step-no-fields\` (warning): Empty form step
 
 ## Compound Conditions
 
@@ -399,7 +399,7 @@ generate_print_css({ schema: myFormSchema })
 
 Returns CSS with feature-specific rules:
 - **base**: Focus ring removal, page-break avoidance, \`<dl>\` grid formatting
-- **wizard**: Shows all steps, hides navigation and progress indicator
+- **form-steps**: Shows all steps, hides navigation and progress indicator
 - **repeatable**: Hides add/remove buttons
 - **conditional**: Shows all conditional sections
 - **table**: Table borders, thead repeat, cell padding
@@ -439,7 +439,7 @@ visualize_form_flow({ schema: myFormSchema })
 \`\`\`
 
 Returns Mermaid syntax showing:
-- **Wizard steps** as stadium nodes with sequential flow
+- **Form steps** as stadium nodes with sequential flow
 - **Sections** as rounded rectangles linked to steps
 - **Repeatable sections** as hexagons
 - **Table sections** as trapezoids

@@ -113,17 +113,17 @@ export class CivProgressSteps extends CivBaseElement {
           ${stepData.map((step, i) => this._renderStep(step, i, stepData.length, isVertical, errorSet))}
         </ol>
         ${this.showCounter || (this.showBack && this._safeCurrent > 0) ? html`
-          <div class="civ-wizard-nav">
+          <div class="civ-form-steps-nav">
             ${this.showBack && this._safeCurrent > 0 ? html`
               <civ-link
                 variant="back"
                 label="${this.backLabel || t('formStepBack')}"
                 @click="${this._onBack}"
               ></civ-link>
-              <span class="civ-wizard-nav__divider"></span>
+              <span class="civ-form-steps-nav__divider"></span>
             ` : nothing}
             ${this.showCounter ? html`
-              <span class="civ-wizard-nav__counter" aria-live="polite">
+              <span class="civ-form-steps-nav__counter" aria-live="polite">
                 ${interpolate(t('progressStepsCounter'), { current: this._safeCurrent + 1, total: stepData.length })}
               </span>
             ` : nothing}

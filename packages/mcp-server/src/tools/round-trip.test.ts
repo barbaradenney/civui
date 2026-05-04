@@ -242,7 +242,7 @@ describe('round-trip: schema → HTML → schema', () => {
     expect(fields[2].visibleWhen).toEqual({ field: 'veteran', operator: 'eq', value: 'yes' });
   });
 
-  it('round-trips wizard steps', () => {
+  it('round-trips form steps', () => {
     const schema: FormSchema = {
       steps: [{ title: 'Step 1' }, { title: 'Step 2' }],
       sections: [

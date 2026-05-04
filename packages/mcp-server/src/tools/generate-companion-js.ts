@@ -1,6 +1,6 @@
 /**
  * generate_companion_js tool — generate client-side JavaScript for
- * repeatable sections, conditional visibility, wizard navigation,
+ * repeatable sections, conditional visibility, form-steps navigation,
  * and compound conditions in CivUI forms.
  */
 import type { FormSchema } from '../schema/index.js';
@@ -403,9 +403,9 @@ function generateCascadingOptionsJs(): string {
   })();`;
 }
 
-export function generateWizardJs(stepCount: number): string {
+export function generateFormStepsJs(stepCount: number): string {
   return `
-  // Multi-step wizard navigation
+  // Multi-step form-steps navigation
   (function() {
     var stepCount = ${stepCount};
     var current = 0;
@@ -545,10 +545,10 @@ export function generateCompanionJs(schema: FormSchema): CompanionJsResult {
     jsParts.push(generateCascadingOptionsJs());
   }
 
-  // Check for wizard steps
+  // Check for form steps
   if (schema.steps && schema.steps.length > 0) {
-    features.push('wizard');
-    jsParts.push(generateWizardJs(schema.steps.length));
+    features.push('form-steps');
+    jsParts.push(generateFormStepsJs(schema.steps.length));
   }
 
   if (jsParts.length === 0) {

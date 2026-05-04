@@ -142,20 +142,20 @@ URL schemes are restricted to `http`, `https`, `tel`, `mailto`, `sms`, same-orig
 
 **When to use:** Any form touching mental health, self-harm risk, domestic violence, sexual trauma, or bereavement.
 
-### 6. Repeater wizard sensitive — multi-item sensitive flows
+### 6. Repeater form-steps sensitive — multi-item sensitive flows
 
-When using `<civ-repeater mode="wizard">` for sensitive content (e.g., adding multiple deceased dependents), pass `wizard-sensitive` and `wizard-show-pause` to enable trauma-informed affordances inside the wizard sub-flow.
+When using `<civ-repeater mode="form-steps">` for sensitive content (e.g., adding multiple deceased dependents), pass `form-steps-sensitive` and `form-steps-show-pause` to enable trauma-informed affordances inside the form-steps sub-flow.
 
-<StoryEmbed id="forms-patterns-trauma-informed--repeater-wizard-sensitive" />
+<StoryEmbed id="forms-patterns-trauma-informed--repeater-form-steps-sensitive" />
 
 ```html
 <civ-repeater
   legend="People who died"
   name="deceased"
   item-label="person"
-  mode="wizard"
-  wizard-sensitive
-  wizard-show-pause
+  mode="form-steps"
+  form-steps-sensitive
+  form-steps-show-pause
 >
   <div data-step-label="Their name">
     <civ-name legend="Their name" name="name" required></civ-name>
@@ -167,7 +167,7 @@ When using `<civ-repeater mode="wizard">` for sensitive content (e.g., adding mu
 </civ-repeater>
 ```
 
-Without these props, the wizard sub-flow has no pause affordance or sensitive announcements.
+Without these props, the form-steps sub-flow has no pause affordance or sensitive announcements.
 
 ## Complete example: VA survivor benefit form
 
@@ -241,5 +241,5 @@ This example combines all trauma-informed patterns into a realistic VA burial be
 | Form asks about trauma or abuse | `section-intro sensitive`, `form-step sensitive`, `skipLabel`, `supportResources` |
 | Form asks demographic questions | `skipLabel` on each question |
 | Form is long and emotionally draining | `form-step show-pause`, `supportResources` |
-| Repeater collects sensitive items | `wizard-sensitive`, `wizard-show-pause` |
+| Repeater collects sensitive items | `form-steps-sensitive`, `form-steps-show-pause` |
 | Form context already establishes a fact | `deceased-assumed` (don't re-ask what's known) |

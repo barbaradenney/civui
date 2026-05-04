@@ -21,7 +21,7 @@ describe('visualizeFormFlow', () => {
     expect(result.edgeCount).toBe(0);
   });
 
-  it('generates wizard step nodes with sequential flow', () => {
+  it('generates form step nodes with sequential flow', () => {
     const schema: FormSchema = {
       steps: [
         { title: 'Step 1' },
@@ -38,7 +38,7 @@ describe('visualizeFormFlow', () => {
     expect(result.mermaid).toContain('step1([Step 2: Step 2])');
     expect(result.mermaid).toContain('START ==> step0');
     expect(result.mermaid).toContain('step0 ==> step1');
-    expect(result.summary).toContain('2 wizard steps');
+    expect(result.summary).toContain('2 form steps');
   });
 
   it('links sections to their steps', () => {
@@ -286,7 +286,7 @@ describe('visualizeFormFlow', () => {
     expect(result.nodeCount).toBe(2);
   });
 
-  it('combines wizard, conditional, and cascading in summary', () => {
+  it('combines form-steps, conditional, and cascading in summary', () => {
     const schema: FormSchema = {
       steps: [{ title: 'S1' }, { title: 'S2' }],
       sections: [
@@ -309,7 +309,7 @@ describe('visualizeFormFlow', () => {
       ],
     };
     const result = visualizeFormFlow(schema);
-    expect(result.summary).toContain('2 wizard steps');
+    expect(result.summary).toContain('2 form steps');
     expect(result.summary).toContain('1 conditional');
     expect(result.summary).toContain('1 cascading');
   });

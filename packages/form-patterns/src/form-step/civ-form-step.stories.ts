@@ -247,7 +247,7 @@ export const PrimaryDefault: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Large heading with border lines and generous padding. Use as the main form wizard page heading.',
+        story: 'Large heading with border lines and generous padding. Use as the main multi-step form page heading.',
       },
     },
   },
@@ -275,7 +275,7 @@ export const PrimaryCompact: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Large heading without border lines and tight padding. Use for embedded sub-wizards or tight layouts.',
+        story: 'Large heading without border lines and tight padding. Use for embedded sub-forms or tight layouts.',
       },
     },
   },

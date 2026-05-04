@@ -130,7 +130,7 @@ describe('civ-progress-steps', () => {
 
     expect(el.textContent).toContain('2');
     expect(el.textContent).toContain('3');
-    const counter = el.querySelector('.civ-wizard-nav__counter');
+    const counter = el.querySelector('.civ-form-steps-nav__counter');
     expect(counter).not.toBeNull();
   });
 });

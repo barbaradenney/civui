@@ -1,5 +1,5 @@
 /**
- * generate_wizard tool — generate a multi-step wizard form from a FormSchema
+ * generate_form_steps tool — generate a multi-step form from a FormSchema
  * that has steps defined. Produces HTML, JavaScript, features, and step summary.
  */
 import type { FormSchema } from '../schema/index.js';
@@ -14,7 +14,7 @@ export interface StepSummary {
   fieldNames: string[];
 }
 
-export interface WizardResult {
+export interface FormStepsResult {
   html: string;
   javascript: string;
   features: string[];
@@ -22,12 +22,12 @@ export interface WizardResult {
 }
 
 /**
- * Generate a multi-step wizard form from a FormSchema.
+ * Generate a multi-step form from a FormSchema.
  * The schema must have a `steps` array defined.
  */
-export function generateWizard(schema: FormSchema): WizardResult {
+export function generateFormSteps(schema: FormSchema): FormStepsResult {
   if (!schema.steps || schema.steps.length === 0) {
-    throw new Error('Schema must have a non-empty `steps` array to generate a wizard');
+    throw new Error('Schema must have a non-empty `steps` array to generate a multi-step form');
   }
 
   const html = generateCivUI(schema);

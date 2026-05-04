@@ -18,17 +18,17 @@ export const Default: Story = {
     legend: 'Dependents',
     name: 'dependents',
     item_label: 'Dependent',
-    mode: 'detail',
+    mode: 'form-steps',
   }),
 };
 
-export const ListMode: Story = {
-  name: 'List Mode',
+export const InlineMode: Story = {
+  name: 'Inline Mode',
   render: () => render({
     legend: 'Previous employers',
     name: 'employers',
     item_label: 'Employer',
-    mode: 'list',
+    mode: 'inline',
   }),
 };
 
@@ -37,7 +37,7 @@ export const Disabled: Story = {
     legend: 'Dependents',
     name: 'dependents_dis',
     item_label: 'Dependent',
-    mode: 'detail',
+    mode: 'form-steps',
     disabled: true,
   }),
 };

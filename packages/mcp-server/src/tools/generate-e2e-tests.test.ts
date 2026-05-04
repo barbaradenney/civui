@@ -75,9 +75,9 @@ describe('generateE2eTests', () => {
     expect(result.code).toContain("textarea').fill('Test response')");
   });
 
-  it('generates wizard test when steps are present', () => {
+  it('generates form-steps test when steps are present', () => {
     const schema: FormSchema = {
-      title: 'Wizard Form',
+      title: 'Multi-Step Form',
       steps: [{ title: 'Step One' }, { title: 'Step Two' }],
       sections: [
         { step: 0, fields: [{ type: 'text', name: 'a', label: 'A' }] },
@@ -85,8 +85,8 @@ describe('generateE2eTests', () => {
       ],
     };
     const result = generateE2eTests(schema);
-    expect(result.features).toContain('wizard');
-    expect(result.code).toContain("'completes wizard steps'");
+    expect(result.features).toContain('form-steps');
+    expect(result.code).toContain("'completes form steps'");
     expect(result.code).toContain('Step One');
     expect(result.code).toContain('[data-civ-next]');
     expect(result.testCount).toBe(3);
@@ -219,7 +219,7 @@ describe('generateE2eTests', () => {
       saveResume: {},
     };
     const result = generateE2eTests(schema);
-    expect(result.testCount).toBe(6); // validation + submission + wizard + conditional + repeatable + save-resume
+    expect(result.testCount).toBe(6); // validation + submission + form-steps + conditional + repeatable + save-resume
     expect(result.features).toHaveLength(6);
   });
 });

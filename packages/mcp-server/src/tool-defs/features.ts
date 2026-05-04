@@ -377,7 +377,7 @@ export const FEATURES_TOOLS: ToolDefinition[] = [
     name: 'generate_print_css',
     description:
       'Generate a @media print stylesheet for a CivUI form schema. ' +
-      'Includes base print styles plus feature-specific rules for wizards, ' +
+      'Includes base print styles plus feature-specific rules for form steps, ' +
       'repeatable sections, conditional visibility, and table layouts.',
     params: {
       schema: FormSchema.describe('Form schema to generate print CSS for'),
@@ -389,7 +389,7 @@ export const FEATURES_TOOLS: ToolDefinition[] = [
     description:
       'Generate a read-only HTML summary of form values for review pages. ' +
       'Groups by section with <dl> elements, handles repeatable sections, ' +
-      'and adds edit links for wizard forms.',
+      'and adds edit links for multi-step forms.',
     params: {
       schema: FormSchema.describe('Form schema'),
       values: z

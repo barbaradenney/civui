@@ -205,13 +205,14 @@ export interface CivLocaleStrings {
   signatureNameHint: string;
   signatureCertify: string;
 
-  // Form step wizard
+  // Form step (multi-step navigation within a form chapter)
   formStepBack: string;
   formStepContinue: string;
   formStepSave: string;
   formStepOf: string; // "Step {current} of {total}"
   formStepPauseLabel: string; // "Save and come back later"
   formStepSensitiveNotice: string; // soft announcement when entering a sensitive step
+  formStepValidating: string; // "Validating…" — continue button label while async beforeContinue is pending
 
   // Sensitive form patterns
   sectionIntroRegionLabel: string; // fallback aria-label for section-intro
@@ -293,8 +294,8 @@ export interface CivLocaleStrings {
   repeaterItemSaved: string; // "{item} {index} saved"
   repeaterItemLabel: string; // "{item} {index}"
   repeaterEditingAnnouncement: string; // "Editing {item} {index}"
-  repeaterWizardAddTitle: string; // "Add {item}"
-  repeaterWizardEditTitle: string; // "Edit {item} {index}"
+  repeaterFormStepsAddTitle: string; // "Add {item}"
+  repeaterFormStepsEditTitle: string; // "Edit {item} {index}"
   repeaterMinReached: string; // "At least {min} {item} required"
 
   // Marriage history
@@ -777,6 +778,7 @@ const defaultStrings: CivLocaleStrings = {
   formStepBack: 'Back',
   formStepContinue: 'Continue',
   formStepSave: 'Save and continue',
+  formStepValidating: 'Validating…',
   formStepOf: 'Step {current} of {total}',
   formStepPauseLabel: 'Save and come back later',
   formStepSensitiveNotice: 'This section asks personal questions. Your answers are saved as you go.',
@@ -854,8 +856,8 @@ const defaultStrings: CivLocaleStrings = {
   repeaterItemSaved: '{item} {index} saved',
   repeaterItemLabel: '{item} {index}',
   repeaterEditingAnnouncement: 'Editing {item} {index}',
-  repeaterWizardAddTitle: 'Add {item}',
-  repeaterWizardEditTitle: 'Edit {item} {index}',
+  repeaterFormStepsAddTitle: 'Add {item}',
+  repeaterFormStepsEditTitle: 'Edit {item} {index}',
   repeaterMinReached: 'At least {min} {item} required',
 
   marriageLegend: 'About this marriage',

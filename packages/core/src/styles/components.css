@@ -1847,19 +1847,19 @@
     color: var(--civ-color-base-dark);
   }
 
-  /* ── Form Wizard ──────────────────────────────────────────── */
+  /* ── Form steps nav ───────────────────────────────────────── */
 
-  .civ-wizard-nav {
+  .civ-form-steps-nav {
     @apply civ-flex civ-items-center civ-gap-3 civ-py-2 civ-mb-4;
   }
 
-  .civ-wizard-nav__divider {
+  .civ-form-steps-nav__divider {
     width: 1px;
     height: 1em;
     background-color: var(--civ-color-base-lighter);
   }
 
-  .civ-wizard-nav__counter {
+  .civ-form-steps-nav__counter {
     @apply civ-text-sm civ-font-bold;
     color: var(--civ-color-base-dark);
   }

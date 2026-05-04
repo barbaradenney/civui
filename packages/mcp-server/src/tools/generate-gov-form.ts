@@ -231,7 +231,6 @@ function generateChapterPage(chapter: GovChapterMeta, form: ReturnType<typeof ge
       legend="${escapeHtml(chapter.heading)}"
       name="${chapterSlug}"
       item-label="${chapterSlug.replace(/-/g, ' ')}"
-      mode="detail"
       min="${chapter.section.repeatableMin ?? 1}"
       max="${chapter.section.repeatableMax ?? 20}"
     >

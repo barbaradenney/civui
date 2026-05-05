@@ -31,10 +31,10 @@ const DEFAULT_MAIL_OPTIONS: MailOption[] = [
   {
     value: 'general-delivery',
     label: 'USPS General Delivery',
-    description: 'Free service that holds mail at your local post office for up to 30 days. Just bring a photo ID to pick it up. No PO Box or permanent address required.',
+    description: 'Free service that holds mail at your local post office for up to 30 days. Just bring a photo ID to pick it up. Not available at all post offices. Contact your local post office to confirm availability.',
     renders: 'address',
     addressLegend: 'General Delivery post office',
-    addressHint: "Enter the city, state, and ZIP of the post office where you'll pick up mail. Use 'General Delivery' as the street address.",
+    addressHint: "Enter the city, state, and ZIP of the post office where you'll pick up mail. Use 'General Delivery' as the street address. Contact the post office first to confirm they offer General Delivery.",
   },
   {
     value: 'alternate-address',

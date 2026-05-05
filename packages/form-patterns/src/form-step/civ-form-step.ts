@@ -6,19 +6,26 @@ import '@civui/inputs';
 import '@civui/actions/button';
 import '@civui/navigation/link';
 import '../progress/civ-progress.js';
+import '../progress/civ-progress-bar.js';
+import '../progress/civ-progress-header.js';
 
 /**
  * CivUI Form Step
  *
- * * Multi-step navigation within a form chapter. Shows one
+ * Multi-step navigation within a form chapter. Shows one
  * step at a time, validates required fields before advancing, and
- * renders a compact nav bar with back link and step counter.
+ * renders a progress indicator above the step content.
  *
  * Each direct child element with `data-step-label` is treated as a step.
  * Only the current step is visible.
  *
  * @element civ-form-step
  *
+ * @prop {'minimal'|'steps'|'bar'} progress - Progress indicator style (default 'minimal')
+ *   - 'minimal': compact "Step X of Y: Title" header (civ-progress-header)
+ *   - 'steps': circle step indicators with labels and connectors (civ-progress)
+ *   - 'bar': percentage progress bar (civ-progress-bar)
+ *   Back link is rendered above all three indicators on non-first steps.
  * @prop {string} persist - Storage key for civ-form persistence
  * @prop {string} continueLabel - Label for continue button
  * @prop {string} completeLabel - Label for final step button
@@ -62,6 +69,9 @@ export class CivFormStep extends LightDomSlotMixin(CivBaseElement) {
 
   /** Hide all navigation UI (back link, step counter, progress header). Use for simple flows. */
   @property({ type: Boolean, attribute: 'hide-nav' }) hideNav = false;
+
+  /** Progress indicator style: 'minimal' (compact header), 'steps' (circle indicators), 'bar' (percentage bar). */
+  @property({ type: String }) progress: 'minimal' | 'steps' | 'bar' = 'minimal';
 
   /**
    * Async validation callback. Called after built-in validation passes
@@ -201,19 +211,7 @@ export class CivFormStep extends LightDomSlotMixin(CivBaseElement) {
 
     return html`
       <div class="civ-form-step">
-        ${total > 1 && !this.hideNav ? html`
-          <civ-progress
-            variant="minimal"
-            .steps="${JSON.stringify(this._steps.map(s => ({ label: s.getAttribute('data-step-label') || '' })))}"
-            current="${this._current}"
-            header-size="${this.headerSize}"
-            header-spacing="${this.headerSpacing}"
-            heading-level="${this.headingLevel}"
-            step-title="${this.stepTitle || this._steps[this._current]?.getAttribute('data-step-label') || ''}"
-            show-back
-            @civ-step-back="${this._onBack}"
-          ></civ-progress>
-        ` : nothing}
+        ${total > 1 && !this.hideNav ? this._renderProgress() : nothing}
 
         <section aria-label="${this.stepTitle || this._steps[this._current]?.getAttribute('data-step-label') || nothing}">
           <div data-civ-form-step-content></div>
@@ -243,6 +241,60 @@ export class CivFormStep extends LightDomSlotMixin(CivBaseElement) {
     `;
   }
 
+
+  private _renderProgress() {
+    const total = this._steps.length;
+    const idx = this._current;
+    const isFirst = idx === 0;
+
+    const backLink = !isFirst ? html`
+      <nav class="civ-wizard-nav" aria-label="Step navigation">
+        <civ-link
+          variant="back"
+          label="${t('formStepBack')}"
+          @click="${this._onBack}"
+        ></civ-link>
+      </nav>
+    ` : nothing;
+
+    switch (this.progress) {
+      case 'steps':
+        return html`
+          ${backLink}
+          <civ-progress
+            .steps="${JSON.stringify(this._steps.map(s => ({ label: s.getAttribute('data-step-label') || '' })))}"
+            current="${idx}"
+            show-counter
+            clickable
+            @civ-step-click="${(e: CustomEvent) => this.goToStep(e.detail.step)}"
+          ></civ-progress>
+        `;
+
+      case 'bar':
+        return html`
+          ${backLink}
+          <civ-progress-bar
+            value="${Math.round((idx / total) * 100)}"
+            label="${interpolate(t('progressStepsCounter'), { current: String(idx + 1), total: String(total) })}"
+            status="${interpolate(t('progressStepsCounter'), { current: String(idx + 1), total: String(total) })}"
+          ></civ-progress-bar>
+        `;
+
+      case 'minimal':
+      default:
+        return html`
+          ${backLink}
+          <civ-progress-header
+            current="${idx}"
+            total="${total}"
+            step-title="${this.stepTitle || this._steps[idx]?.getAttribute('data-step-label') || ''}"
+            header-size="${this.headerSize}"
+            header-spacing="${this.headerSpacing}"
+            heading-level="${this.headingLevel}"
+          ></civ-progress-header>
+        `;
+    }
+  }
 
   /** Pause action shows when explicitly requested or on sensitive steps. */
   private get _shouldShowPause(): boolean {

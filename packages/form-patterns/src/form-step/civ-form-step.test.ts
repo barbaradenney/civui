@@ -20,11 +20,55 @@ describe('civ-form-step', () => {
     expect(el.total).toBe(3);
   });
 
-  it('shows step progress via civ-progress minimal', async () => {
+  it('shows civ-progress-header by default (minimal mode)', async () => {
     const el = await fixture<CivFormStep>(threeSteps);
+    // Minimal mode renders civ-progress-header, not civ-progress
+    expect(el.querySelector('civ-progress-header')).not.toBeNull();
+    expect(el.querySelector('civ-progress:not(civ-progress-header):not(civ-progress-bar)')).toBeNull();
+    const counter = el.querySelector('.civ-progress-header__counter');
+    expect(counter).not.toBeNull();
+    expect(counter!.textContent).toContain('1');
+    expect(counter!.textContent).toContain('3');
+  });
+
+  it('renders civ-progress when progress="steps"', async () => {
+    const el = await fixture<CivFormStep>(`
+      <civ-form-step progress="steps">
+        <div data-step-label="A"><p>a</p></div>
+        <div data-step-label="B"><p>b</p></div>
+      </civ-form-step>
+    `);
     const progress = el.querySelector('civ-progress');
     expect(progress).not.toBeNull();
-    expect(progress!.getAttribute('variant')).toBe('minimal');
+    const items = progress!.querySelectorAll('li');
+    expect(items.length).toBe(2);
+  });
+
+  it('renders civ-progress-bar when progress="bar"', async () => {
+    const el = await fixture<CivFormStep>(`
+      <civ-form-step progress="bar">
+        <div data-step-label="A"><p>a</p></div>
+        <div data-step-label="B"><p>b</p></div>
+        <div data-step-label="C"><p>c</p></div>
+      </civ-form-step>
+    `);
+    const bar = el.querySelector('civ-progress-bar');
+    expect(bar).not.toBeNull();
+    expect(bar!.getAttribute('value')).toBe('0'); // step 0 of 3 = 0%
+  });
+
+  it('updates progress-bar value on step change', async () => {
+    const el = await fixture<CivFormStep>(`
+      <civ-form-step progress="bar">
+        <div data-step-label="A"><p>a</p></div>
+        <div data-step-label="B"><p>b</p></div>
+        <div data-step-label="C"><p>c</p></div>
+      </civ-form-step>
+    `) as CivFormStep;
+    el.goToStep(1);
+    await elementUpdated(el);
+    const bar = el.querySelector('civ-progress-bar');
+    expect(Number(bar!.getAttribute('value'))).toBe(33);
   });
 
   it('hides nav bar for single step', async () => {
@@ -33,7 +77,43 @@ describe('civ-form-step', () => {
         <div data-step-label="Only"><p>Only step</p></div>
       </civ-form-step>
     `);
-    expect(el.querySelector('civ-progress')).toBeNull();
+    expect(el.querySelector('.civ-progress-header__counter')).toBeNull();
+  });
+
+  it('hide-nav suppresses all progress modes', async () => {
+    for (const mode of ['minimal', 'steps', 'bar']) {
+      const el = await fixture<CivFormStep>(`
+        <civ-form-step hide-nav progress="${mode}">
+          <div data-step-label="A"><p>a</p></div>
+          <div data-step-label="B"><p>b</p></div>
+        </civ-form-step>
+      `);
+      expect(el.querySelector('civ-progress')).toBeNull();
+      expect(el.querySelector('civ-progress-bar')).toBeNull();
+      expect(el.querySelector('.civ-progress-header__counter')).toBeNull();
+    }
+  });
+
+  it('shows back link on non-first step for all progress modes', async () => {
+    for (const mode of ['minimal', 'steps', 'bar']) {
+      const el = await fixture<CivFormStep>(`
+        <civ-form-step progress="${mode}">
+          <div data-step-label="A"><p>a</p></div>
+          <div data-step-label="B"><p>b</p></div>
+        </civ-form-step>
+      `) as CivFormStep;
+
+      // First step — no back link
+      expect(el.querySelector('.civ-wizard-nav')).toBeNull();
+
+      // Advance to step 2
+      el.goToStep(1);
+      await elementUpdated(el);
+
+      // Back link visible
+      const nav = el.querySelector('.civ-wizard-nav');
+      expect(nav).not.toBeNull();
+    }
   });
 
   it('fires civ-step-continue on continue click', async () => {

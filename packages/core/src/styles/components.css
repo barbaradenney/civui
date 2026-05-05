@@ -1866,35 +1866,25 @@
     color: var(--civ-color-base-dark);
   }
 
-  /* Step header — single line: "Step 1 of 3: Title" */
-  .civ-form-step__header {
+  /* Progress header — compact "Step 1 of 3: Title" indicator */
+  .civ-progress-header {
     @apply civ-mb-4 civ-py-2;
     font-size: var(--civ-typography-fontSize-lg);
     border-top: 1px solid var(--civ-color-base-lighter);
     border-bottom: 1px solid var(--civ-color-base-lighter);
   }
 
-  .civ-form-step__header--primary {
-    @apply civ-mb-6 civ-py-3;
-    font-size: var(--civ-typography-fontSize-xl);
-  }
-
-  .civ-form-step__header--compact {
+  .civ-progress-header--compact {
     @apply civ-mb-3 civ-py-2;
     font-size: var(--civ-typography-fontSize-base);
     border: none;
   }
 
-  .civ-form-step__header--primary.civ-form-step__header--compact {
-    @apply civ-mb-4 civ-py-2;
-    font-size: var(--civ-typography-fontSize-lg);
-  }
-
-  .civ-form-step__counter {
+  .civ-progress-header__counter {
     @apply civ-font-bold;
   }
 
-  .civ-form-step__title {
+  .civ-progress-header__title {
     @apply civ-font-normal;
   }
 

@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import './civ-progress.js';
 import './civ-progress-bar.js';
+import './civ-progress-header.js';
 
 const meta: Meta = {
   title: 'Forms/Form/Progress',
@@ -152,6 +153,31 @@ export const DensityScale: Story = {
         <civ-progress steps='${defaultSteps}' current="1"></civ-progress>
       </div>
     </div>
+  `,
+};
+
+// ── Progress Header ──────────────────────────────────────────
+
+export const ProgressHeader: Story = {
+  name: 'Progress Header (Minimal)',
+  render: () => html`
+    <civ-progress-header
+      current="1"
+      total="4"
+      step-title="Contact Information"
+    ></civ-progress-header>
+  `,
+};
+
+export const ProgressHeaderPrimary: Story = {
+  name: 'Progress Header (Primary Size)',
+  render: () => html`
+    <civ-progress-header
+      current="0"
+      total="3"
+      step-title="Personal Information"
+      header-size="xl"
+    ></civ-progress-header>
   `,
 };
 

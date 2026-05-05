@@ -10,7 +10,7 @@ const meta: Meta = {
   component: 'civ-form-step',
   tags: ['autodocs'],
   argTypes: {
-    showProgress: { control: 'boolean' },
+    progress: { control: 'select', options: ['minimal', 'steps', 'bar'] },
     backLabel: { control: 'text' },
     continueLabel: { control: 'text' },
     completeLabel: { control: 'text' },
@@ -40,10 +40,10 @@ export const Default: Story = {
 
 // ── Individual States ─────────────────────────────────────────
 
-export const WithHint: Story = {
+export const WithProgressBar: Story = {
   name: 'With Progress Bar',
   render: () => html`
-    <civ-form-step show-progress>
+    <civ-form-step progress="bar">
       <div data-step-label="Personal information">
         <p>Step 1: Personal information.</p>
       </div>
@@ -60,11 +60,30 @@ export const WithHint: Story = {
   `,
 };
 
+export const WithStepCircles: Story = {
+  name: 'With Step Circles',
+  render: () => html`
+    <civ-form-step progress="steps">
+      <div data-step-label="Eligibility">
+        <p>Answer the following questions to determine eligibility.</p>
+      </div>
+      <div data-step-label="Personal Info">
+        <p>Enter your personal details.</p>
+      </div>
+      <div data-step-label="Documents">
+        <p>Upload supporting documents.</p>
+      </div>
+      <div data-step-label="Review">
+        <p>Review and submit your application.</p>
+      </div>
+    </civ-form-step>
+  `,
+};
+
 export const WithError: Story = {
   name: 'Custom Button Labels',
   render: () => html`
     <civ-form-step
-      back-label="Previous section"
       continue-label="Next section"
       complete-label="Submit application"
     >
@@ -112,19 +131,28 @@ export const Disabled: Story = {
 // ── All States ────────────────────────────────────────────────
 
 export const AllStates: Story = {
-  name: 'All States',
+  name: 'All Progress Modes',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-12">
       <div>
-        <h3 class="civ-m-0 civ-mb-2 civ-font-semibold">Without progress bar</h3>
+        <h3 class="civ-m-0 civ-mb-2 civ-font-semibold">Minimal (default)</h3>
         <civ-form-step>
           <div data-step-label="Step 1"><p>Content for step 1.</p></div>
           <div data-step-label="Step 2"><p>Content for step 2.</p></div>
+          <div data-step-label="Step 3"><p>Content for step 3.</p></div>
         </civ-form-step>
       </div>
       <div>
-        <h3 class="civ-m-0 civ-mb-2 civ-font-semibold">With progress bar</h3>
-        <civ-form-step show-progress>
+        <h3 class="civ-m-0 civ-mb-2 civ-font-semibold">Step Circles</h3>
+        <civ-form-step progress="steps">
+          <div data-step-label="Step 1"><p>Content for step 1.</p></div>
+          <div data-step-label="Step 2"><p>Content for step 2.</p></div>
+          <div data-step-label="Step 3"><p>Content for step 3.</p></div>
+        </civ-form-step>
+      </div>
+      <div>
+        <h3 class="civ-m-0 civ-mb-2 civ-font-semibold">Progress Bar</h3>
+        <civ-form-step progress="bar">
           <div data-step-label="Step 1"><p>Content for step 1.</p></div>
           <div data-step-label="Step 2"><p>Content for step 2.</p></div>
           <div data-step-label="Step 3"><p>Content for step 3.</p></div>

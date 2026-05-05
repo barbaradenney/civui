@@ -933,15 +933,12 @@
               <tr><td><code>clickable</code></td><td><code>boolean</code></td><td><code>false</code></td><td>When true, completed steps become clickable buttons</td></tr>
               <tr><td><code>show-counter</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Show "Step X of Y" text below the steps</td></tr>
               <tr><td><code>error-steps</code></td><td><code>string (JSON)</code></td><td><code>'[]'</code></td><td>JSON array of step indices with validation errors</td></tr>
-              <tr><td><code>show-back</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Show a "Go back" link before the step counter (visible when current &gt; 0)</td></tr>
-              <tr><td><code>back-label</code></td><td><code>string</code></td><td><code>'Go back'</code></td><td>Label for the back link</td></tr>
             </tbody>
           </table>
 
           <h4>Events</h4>
           <ul class="event-list">
             <li><code>civ-step-click</code> &mdash; When a completed step is clicked (requires <code>clickable</code>). Detail: <code>{ step: number }</code></li>
-            <li><code>civ-step-back</code> &mdash; When the "Go back" link is clicked (requires <code>show-back</code>). Detail: <code>{ from, to }</code></li>
           </ul>
 
           <h4>Example: Simple steps</h4>
@@ -1025,7 +1022,7 @@
 &lt;/civ-form-step&gt;</code></pre>
 
           <h4>Component composition</h4>
-          <p><code>&lt;civ-form-step&gt;</code> composes <code>&lt;civ-progress-steps&gt;</code> internally, passing the step labels, current index, <code>show-counter</code>, and <code>show-back</code>. <code>&lt;civ-progress-steps&gt;</code> is a standalone component that can also be used independently outside of forms.</p>
+          <p><code>&lt;civ-form-step&gt;</code> supports three progress indicator styles via the <code>progress</code> prop: <code>"minimal"</code> (compact header), <code>"steps"</code> (circle indicators), or <code>"bar"</code> (percentage bar). The back link is rendered consistently by <code>civ-form-step</code> above all three indicators.</p>
         </div>
       </div>
 

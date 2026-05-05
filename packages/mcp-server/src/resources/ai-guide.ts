@@ -664,7 +664,7 @@ The "task list" is a usage pattern, not a dedicated component. Compose \`<civ-li
 Multi-step form with built-in validation, progress steps, and navigation.
 Children with \`data-step\` define each step. Validates required fields before advancing.
 
-**Props:** \`persist\`, \`show-progress\`, \`show-counter\`, \`continue-label\`, \`back-label\`, \`complete-label\`
+**Props:** \`persist\`, \`progress\` ('minimal' | 'steps' | 'bar'), \`continue-label\`, \`complete-label\`
 **Events:** \`civ-step-complete\` (all steps done), \`civ-step-change\` { current, total, label }
 
 \`\`\`html

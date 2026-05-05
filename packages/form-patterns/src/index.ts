@@ -28,7 +28,7 @@ export { CivSectionIntro } from './section-intro/index.js';
 export { CivSupportResources } from './support-resources/index.js';
 
 // Progress Steps
-export { CivProgress, CivProgressBar } from './progress/index.js';
+export { CivProgress, CivProgressBar, CivProgressHeader } from './progress/index.js';
 
 // Prefill Types
 export type { PrefillField, PrefillData, PrefillMeta } from './prefill/index.js';

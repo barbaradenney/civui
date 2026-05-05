@@ -1,17 +1,12 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { CivBaseElement, announce, dispatch, t, interpolate } from '@civui/core';
-import '@civui/navigation/link';
 
 /**
  * CivUI Progress
  *
- * A step indicator for multi-step forms. Displays current progress
+ * A step circle indicator for multi-step forms. Displays current progress
  * with completed, current, and upcoming step states.
- *
- * Supports two variants:
- * - `full` (default): horizontal/vertical step circles with labels and connectors
- * - `minimal`: compact "Step X of Y: Title" header (same styling as form-step header)
  *
  * Responsive: horizontal on desktop, auto-switches to vertical on
  * narrow screens via CSS. Labels truncate with ellipsis when space
@@ -32,26 +27,12 @@ import '@civui/navigation/link';
  */
 @customElement('civ-progress')
 export class CivProgress extends CivBaseElement {
-  /** Rendering variant: 'full' shows step circles, 'minimal' shows a compact header. */
-  @property({ type: String }) variant: 'full' | 'minimal' = 'full';
-  /** Heading size class for minimal variant header. */
-  @property({ type: String, attribute: 'header-size' }) headerSize: 'sm' | 'md' | 'lg' | 'xl' = 'lg';
-  /** Spacing class for minimal variant header. */
-  @property({ type: String, attribute: 'header-spacing' }) headerSpacing = 'civ-mb-4';
-  /** Heading level (1-6) for minimal variant header. */
-  @property({ type: Number, attribute: 'heading-level' }) headingLevel: number = 2;
-  /** Title override for minimal variant (defaults to current step label). */
-  @property({ type: String, attribute: 'step-title' }) stepTitle = '';
   @property({ type: String }) steps = '[]';
   @property({ type: Number }) current = 0;
   @property({ type: String, reflect: true }) orientation: 'horizontal' | 'vertical' = 'horizontal';
   @property({ type: Boolean }) clickable = false;
   @property({ type: Boolean, attribute: 'show-counter' }) showCounter = false;
   @property({ type: String, attribute: 'error-steps' }) errorSteps = '[]';
-  /** Show a "Go back" link before the step counter. Only visible when current > 0. */
-  @property({ type: Boolean, attribute: 'show-back' }) showBack = false;
-  /** Label for the back link. */
-  @property({ type: String, attribute: 'back-label' }) backLabel = '';
 
   private _cachedSteps: string | null = null;
   private _cachedStepData: Array<{ label: string; description?: string }> = [];
@@ -115,10 +96,6 @@ export class CivProgress extends CivBaseElement {
     const stepData = this._getStepData();
     if (stepData.length === 0) return nothing;
 
-    if (this.variant === 'minimal') {
-      return this._renderMinimal(stepData);
-    }
-
     const isVertical = this.orientation === 'vertical';
     const errorSet = this._getErrorSet();
 
@@ -130,58 +107,15 @@ export class CivProgress extends CivBaseElement {
         >
           ${stepData.map((step, i) => this._renderStep(step, i, stepData.length, isVertical, errorSet))}
         </ol>
-        ${this.showCounter || (this.showBack && this._safeCurrent > 0) ? html`
+        ${this.showCounter ? html`
           <div class="civ-form-steps-nav">
-            ${this.showBack && this._safeCurrent > 0 ? html`
-              <civ-link
-                variant="back"
-                label="${this.backLabel || t('formStepBack')}"
-                @click="${this._onBack}"
-              ></civ-link>
-              <span class="civ-form-steps-nav__divider"></span>
-            ` : nothing}
-            ${this.showCounter ? html`
-              <span class="civ-form-steps-nav__counter" aria-live="polite">
-                ${interpolate(t('progressStepsCounter'), { current: this._safeCurrent + 1, total: stepData.length })}
-              </span>
-            ` : nothing}
+            <span class="civ-form-steps-nav__counter" aria-live="polite">
+              ${interpolate(t('progressStepsCounter'), { current: this._safeCurrent + 1, total: stepData.length })}
+            </span>
           </div>
         ` : nothing}
       </nav>
     `;
-  }
-
-  private _renderMinimal(stepData: Array<{ label: string; description?: string }>) {
-    const idx = this._safeCurrent;
-    const step = stepData[idx];
-    const title = this.stepTitle || step?.label || '';
-    const sizeClass = `civ-heading-${this.headerSize}`;
-    const isFirst = idx === 0;
-
-    return html`
-      ${this.showBack && !isFirst ? html`
-        <nav class="civ-wizard-nav" aria-label="Step navigation">
-          <civ-link
-            variant="back"
-            label="${this.backLabel || t('formStepBack')}"
-            @click="${this._onBack}"
-          ></civ-link>
-        </nav>
-      ` : nothing}
-      <div class="civ-form-step__header ${this.headerSpacing}">
-        <span class="civ-form-step__counter">
-          ${interpolate(t('progressStepsCounter'), { current: idx + 1, total: stepData.length })}:
-        </span>
-        <span class="${sizeClass} civ-form-step__title"
-          role="heading" aria-level="${this.headingLevel}"
-        >${title}</span>
-      </div>
-    `;
-  }
-
-  private _onBack(): void {
-    const from = this._safeCurrent;
-    dispatch(this, 'civ-step-back', { from, to: from - 1 });
   }
 
   private _renderStep(

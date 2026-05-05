@@ -65,12 +65,12 @@ export const WithSupportResources: Story = {
   `,
 };
 
-export const WithoutGeneralDelivery: Story = {
-  name: 'Without General Delivery',
+export const CustomOptions: Story = {
+  name: 'Custom mail options',
   parameters: {
     docs: {
       description: {
-        story: 'Set `show-general-delivery="false"` to hide the USPS General Delivery option if not applicable.',
+        story: 'Override the default mail delivery options with custom ones via the `mail-options` prop. Each option specifies what to render when selected: `address` (shows civ-address), `contact` (city/state/contact fields), or `none` (consumer handles).',
       },
     },
   },
@@ -80,7 +80,59 @@ export const WithoutGeneralDelivery: Story = {
       legend="Your mailing address"
       name="housing"
       required
-      show-general-delivery="false"
+      mail-options='[
+        {"value":"po-box","label":"PO Box","description":"I have a PO Box at a post office","renders":"address","addressLegend":"PO Box address"},
+        {"value":"shelter","label":"Shelter or transitional housing","description":"I receive mail at a shelter","renders":"address","addressLegend":"Shelter address"},
+        {"value":"alternate","label":"Someone else can receive mail for me","description":"A friend, family, or organization","renders":"address"},
+        {"value":"no-mail","label":"I cannot receive mail at this time","renders":"contact"}
+      ]'
     ></civ-housing-options>
+  `,
+};
+
+export const CustomLabels: Story = {
+  name: 'Custom labels and intro',
+  parameters: {
+    docs: {
+      description: {
+        story: 'Override the intro heading, intro text, checkbox label, and options legend via props.',
+      },
+    },
+  },
+  render: () => html`
+    <civ-housing-options
+      size="lg"
+      legend="Where should we send documents?"
+      name="housing"
+      required
+      intro-heading="We need a way to reach you"
+      intro-text="Your application requires us to mail you a verification letter. Please provide an address or let us know how to contact you."
+      checkbox-label="I do not have a mailing address"
+      options-legend="What works best for you?"
+    ></civ-housing-options>
+  `,
+};
+
+export const CustomCallout: Story = {
+  name: 'Custom callout slot',
+  parameters: {
+    docs: {
+      description: {
+        story: 'Replace the default General Delivery callout with custom content via the `data-housing-callout` slot.',
+      },
+    },
+  },
+  render: () => html`
+    <civ-housing-options
+      size="lg"
+      legend="Your mailing address"
+      name="housing"
+      required
+    >
+      <div data-housing-callout class="civ-callout civ-callout--success">
+        <p class="civ-font-bold civ-mb-1">Local VA office can help</p>
+        <p class="civ-m-0">Visit your nearest VA office to set up mail delivery assistance. They can provide a mailing address for your benefits correspondence.</p>
+      </div>
+    </civ-housing-options>
   `,
 };

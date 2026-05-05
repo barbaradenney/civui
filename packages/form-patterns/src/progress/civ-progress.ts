@@ -156,11 +156,21 @@ export class CivProgress extends CivBaseElement {
     const step = stepData[idx];
     const title = this.stepTitle || step?.label || '';
     const sizeClass = `civ-heading-${this.headerSize}`;
+    const isFirst = idx === 0;
 
     return html`
+      ${this.showBack && !isFirst ? html`
+        <nav class="civ-wizard-nav" aria-label="Step navigation">
+          <civ-link
+            variant="back"
+            label="${this.backLabel || t('formStepBack')}"
+            @click="${this._onBack}"
+          ></civ-link>
+        </nav>
+      ` : nothing}
       <div class="civ-form-step__header ${this.headerSpacing}">
         <span class="civ-form-step__counter">
-          ${interpolate(t('progressStepsCounter'), { current: idx + 1, total: stepData.length })}
+          ${interpolate(t('progressStepsCounter'), { current: idx + 1, total: stepData.length })}:
         </span>
         <span class="${sizeClass} civ-form-step__title"
           role="heading" aria-level="${this.headingLevel}"

@@ -60,6 +60,9 @@ export class CivFormStep extends LightDomSlotMixin(CivBaseElement) {
   /** Whether navigation buttons are disabled (e.g., during async validation). */
   @property({ type: Boolean, attribute: 'nav-disabled' }) navDisabled = false;
 
+  /** Hide all navigation UI (back link, step counter, progress header). Use for simple flows. */
+  @property({ type: Boolean, attribute: 'hide-nav' }) hideNav = false;
+
   /**
    * Async validation callback. Called after built-in validation passes
    * and before advancing to the next step. Return `true` to allow,
@@ -200,32 +203,7 @@ export class CivFormStep extends LightDomSlotMixin(CivBaseElement) {
 
     return html`
       <div class="civ-form-step">
-        ${(() => {
-          const hasStepHeader = !!(this.stepTitle || this._steps[this._current]?.getAttribute('data-step-label'));
-          const showNavCounter = !hasStepHeader;
-          return total > 1 ? html`
-            <nav class="civ-form-steps-nav" aria-label="Step navigation">
-              ${!isFirst ? html`
-                <civ-link
-                  variant="back"
-                  label="${t('formStepBack')}"
-                  @click="${this._onBack}"
-                ></civ-link>
-                ${showNavCounter ? html`<span class="civ-form-steps-nav__divider"></span>` : nothing}
-              ` : nothing}
-              ${showNavCounter ? html`
-                <span class="civ-form-steps-nav__counter" aria-live="polite">
-                  ${interpolate(t('formStepOf'), {
-                    current: String(this._current + 1),
-                    total: String(total),
-                  })}
-                </span>
-              ` : nothing}
-            </nav>
-          ` : nothing;
-        })()}
-
-        ${total > 1 ? html`
+        ${total > 1 && !this.hideNav ? html`
           <civ-progress
             variant="minimal"
             .steps="${JSON.stringify(this._steps.map(s => ({ label: s.getAttribute('data-step-label') || '' })))}"
@@ -234,6 +212,8 @@ export class CivFormStep extends LightDomSlotMixin(CivBaseElement) {
             header-spacing="${this.headerSpacing}"
             heading-level="${this.headingLevel}"
             step-title="${this.stepTitle || this._steps[this._current]?.getAttribute('data-step-label') || ''}"
+            show-back
+            @civ-step-back="${this._onBack}"
           ></civ-progress>
         ` : nothing}
 

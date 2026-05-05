@@ -4,6 +4,8 @@ import { CivFormElement, LightDomSlotMixin, dispatch, renderLegend, renderFormHe
 import type { HeadingLevel, LabelSize, SlotConfig } from '@civui/core';
 import '@civui/inputs';
 import '@civui/controls';
+import '@civui/actions/button';
+import '@civui/navigation/link';
 import '../address/civ-address.js';
 import '@civui/form-patterns';
 
@@ -15,7 +17,7 @@ export interface MailOption {
   /** Description text below the label. */
   description?: string;
   /**
-   * What to render when this option is selected:
+   * What to render on page 2 when this option is selected:
    * - `'address'` — renders civ-address with optional hint
    * - `'contact'` — renders city/state + contact method fields
    * - `'none'` — renders nothing (consumer handles via slot/event)
@@ -55,30 +57,23 @@ const DEFAULT_MAIL_OPTIONS: MailOption[] = [
 /**
  * CivUI Housing Options
  *
- * Compound component for collecting mailing addresses from people who
- * may not have permanent housing. Provides a checkbox to indicate no
- * permanent address, then offers configurable mail delivery options.
+ * Two-page compound component for collecting mailing addresses from
+ * people who may not have permanent housing.
  *
- * **Customization:**
- * - `mail-options` — JSON array of MailOption objects to replace defaults
- * - `checkbox-label` — override the "I don't have a permanent address" text
- * - `intro-heading` / `intro-text` — override the section intro content
- * - `callout` slot — replace the General Delivery callout with custom content
- * - All text uses i18n keys overridable via `setLocaleStrings()`
+ * **Page 1:** Checkbox "I don't have a permanent address"
+ * - If unchecked → address form (complete, no page 2)
+ * - If checked → tile radio options for how to receive mail + Continue
+ *
+ * **Page 2:** Based on radio selection, shows the appropriate form:
+ * - Address form (General Delivery or alternate address)
+ * - Contact method fields (city/state + how to reach you)
  *
  * @element civ-housing-options
  *
+ * @slot callout - Custom callout content on page 1 when checkbox is checked.
+ *
  * @fires civ-input - On every value change
  * @fires civ-change - On committed value change
- *
- * @slot callout - Custom callout content shown when no permanent address is checked.
- *                 Default renders the USPS General Delivery info callout.
- *
- * @example
- * ```html
- * <civ-housing-options legend="Your mailing address" name="housing" required>
- * </civ-housing-options>
- * ```
  */
 @customElement('civ-housing-options')
 export class CivHousingOptions extends LightDomSlotMixin(CivFormElement) {
@@ -87,26 +82,14 @@ export class CivHousingOptions extends LightDomSlotMixin(CivFormElement) {
   @property({ type: String }) size?: LabelSize;
   @property({ type: String, attribute: 'address-name' }) addressName = 'address';
 
-  /** Override the checkbox label. Default: i18n key housingNoPermanentAddress. */
   @property({ type: String, attribute: 'checkbox-label' }) checkboxLabel = '';
-
-  /** Override the section intro heading. */
   @property({ type: String, attribute: 'intro-heading' }) introHeading = '';
-
-  /** Override the section intro body text. */
   @property({ type: String, attribute: 'intro-text' }) introText = '';
-
-  /** Override the mail options radio group legend. */
   @property({ type: String, attribute: 'options-legend' }) optionsLegend = '';
-
-  /** Hide the section intro entirely. */
   @property({ type: Boolean, attribute: 'hide-intro' }) hideIntro = false;
+  @property({ type: String, attribute: 'continue-label' }) continueLabel = '';
+  @property({ type: String, attribute: 'back-label' }) backLabel = '';
 
-  /**
-   * Custom mail delivery options. JSON string or JS array of MailOption objects.
-   * Each option has: value, label, description, renders ('address'|'contact'|'none'),
-   * and optional addressHint/addressLegend.
-   */
   @property({ attribute: 'mail-options' })
   set mailOptions(val: string | MailOption[]) {
     if (typeof val === 'string') {
@@ -118,10 +101,15 @@ export class CivHousingOptions extends LightDomSlotMixin(CivFormElement) {
 
   @state() private _noPermanentAddress = false;
   @state() private _mailMethod = '';
+  @state() private _step: 1 | 2 = 1;
   private _mailOptions: MailOption[] | null = null;
 
   private get _options(): MailOption[] {
     return this._mailOptions ?? DEFAULT_MAIL_OPTIONS;
+  }
+
+  private get _selectedOption(): MailOption | undefined {
+    return this._options.find(o => o.value === this._mailMethod);
   }
 
   override _getSlotConfig(): SlotConfig {
@@ -134,9 +122,6 @@ export class CivHousingOptions extends LightDomSlotMixin(CivFormElement) {
 
   override render() {
     const describedBy = buildDescribedBy(this._hintId, this.hint, this._errorId, this.error);
-    const options = this._options;
-    const selectedOption = options.find(o => o.value === this._mailMethod);
-    const hasCalloutSlot = this._hasSlottedChildren('data-housing-callout');
 
     return html`
       <fieldset
@@ -146,85 +131,128 @@ export class CivHousingOptions extends LightDomSlotMixin(CivFormElement) {
       >
         ${renderFormHeader({ label: renderLegend({ legend: this.legend || this.label, required: false, headingLevel: this.headingLevel, size: this.size }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
 
-        ${!this.hideIntro ? html`
-          <civ-section-intro
-            heading="${this.introHeading || 'Your mailing address'}"
-            tone="sensitive"
-          >
-            <p>${this.introText || "We need a mailing address to send you important documents. If you don't have a permanent address, we can work with you on other options."}</p>
-          </civ-section-intro>
-        ` : nothing}
-
-        <civ-checkbox
-          name="${this.name ? `${this.name}.noPermanentAddress` : ''}"
-          label="${this.checkboxLabel || t('housingNoPermanentAddress')}"
-          ?checked="${this._noPermanentAddress}"
-          ?disabled="${this.disabled}"
-          @civ-change="${this._onCheckboxChange}"
-        ></civ-checkbox>
-
-        ${!this._noPermanentAddress ? html`
-          <civ-address
-            size="lg"
-            legend="Mailing address"
-            name="${this.addressName}"
-            ?required="${this.required}"
-            ?disabled="${this.disabled}"
-          ></civ-address>
-        ` : html`
-          ${hasCalloutSlot
-            ? html`<div data-civ-housing-callout class="civ-mb-4"></div>`
-            : nothing}
-
-          <civ-form-fieldset legend="${this.optionsLegend || 'How would you like to receive mail?'}" size="lg">
-            <civ-radio-group
-              name="${this.name ? `${this.name}.mailMethod` : ''}"
-              value="${this._mailMethod}"
-              tile
-              ?disabled="${this.disabled}"
-              @civ-change="${this._onMailMethodChange}"
-            >
-              ${options.map(o => html`
-                <civ-radio
-                  value="${o.value}"
-                  label="${o.label}"
-                  description="${o.description || nothing}"
-                ></civ-radio>
-              `)}
-            </civ-radio-group>
-          </civ-form-fieldset>
-
-          ${selectedOption?.renders === 'address' ? html`
-            <civ-address
-              size="lg"
-              legend="${selectedOption.addressLegend || 'Mailing address'}"
-              name="${this.addressName}"
-              ?required="${this.required}"
-              ?disabled="${this.disabled}"
-              hint="${selectedOption.addressHint || nothing}"
-            ></civ-address>
-          ` : nothing}
-
-          ${selectedOption?.renders === 'contact' ? html`
-            <civ-form-field label="${t('housingGeneralLocation')}">
-              <civ-text-input name="${this.name ? `${this.name}.generalLocation` : ''}" ?disabled="${this.disabled}"></civ-text-input>
-            </civ-form-field>
-            <civ-form-field label="State" ?required="${this.required}">
-              <civ-select name="${this.name ? `${this.name}.state` : ''}" preset="us-states" ?disabled="${this.disabled}"></civ-select>
-            </civ-form-field>
-            <civ-form-field label="${t('housingContactMethod')}" ?required="${this.required}" hint="${t('housingContactMethodHint')}">
-              <civ-textarea name="${this.name ? `${this.name}.contactMethod` : ''}" rows="3" ?disabled="${this.disabled}"></civ-textarea>
-            </civ-form-field>
-          ` : nothing}
-        `}
+        ${this._step === 1 ? this._renderStep1() : this._renderStep2()}
       </fieldset>
     `;
+  }
+
+  private _renderStep1() {
+    const options = this._options;
+    const hasCalloutSlot = this._hasSlottedChildren('data-housing-callout');
+
+    return html`
+      ${!this.hideIntro ? html`
+        <civ-section-intro
+          heading="${this.introHeading || 'Your mailing address'}"
+          tone="sensitive"
+        >
+          <p>${this.introText || "We need a mailing address to send you important documents. If you don't have a permanent address, we can work with you on other options."}</p>
+        </civ-section-intro>
+      ` : nothing}
+
+      <civ-checkbox
+        name="${this.name ? `${this.name}.noPermanentAddress` : ''}"
+        label="${this.checkboxLabel || t('housingNoPermanentAddress')}"
+        ?checked="${this._noPermanentAddress}"
+        ?disabled="${this.disabled}"
+        @civ-change="${this._onCheckboxChange}"
+      ></civ-checkbox>
+
+      ${!this._noPermanentAddress ? html`
+        <civ-address
+          size="lg"
+          legend="Mailing address"
+          name="${this.addressName}"
+          ?required="${this.required}"
+          ?disabled="${this.disabled}"
+        ></civ-address>
+      ` : html`
+        ${hasCalloutSlot
+          ? html`<div data-civ-housing-callout class="civ-mb-4"></div>`
+          : nothing}
+
+        <civ-form-fieldset legend="${this.optionsLegend || 'How would you like to receive mail?'}" size="lg">
+          <civ-radio-group
+            name="${this.name ? `${this.name}.mailMethod` : ''}"
+            value="${this._mailMethod}"
+            tile
+            ?disabled="${this.disabled}"
+            @civ-change="${this._onMailMethodChange}"
+          >
+            ${options.map(o => html`
+              <civ-radio
+                value="${o.value}"
+                label="${o.label}"
+                description="${o.description || nothing}"
+              ></civ-radio>
+            `)}
+          </civ-radio-group>
+        </civ-form-fieldset>
+
+        ${this._mailMethod ? html`
+          <div class="civ-mt-4">
+            <civ-button
+              label="${this.continueLabel || 'Continue'}"
+              @click="${this._goToStep2}"
+            ></civ-button>
+          </div>
+        ` : nothing}
+      `}
+    `;
+  }
+
+  private _renderStep2() {
+    const option = this._selectedOption;
+    if (!option) return nothing;
+
+    return html`
+      <civ-link
+        variant="back"
+        label="${this.backLabel || 'Back'}"
+        @click="${this._goToStep1}"
+        class="civ-mb-4 civ-block"
+      ></civ-link>
+
+      ${option.renders === 'address' ? html`
+        <civ-address
+          size="lg"
+          legend="${option.addressLegend || 'Mailing address'}"
+          name="${this.addressName}"
+          ?required="${this.required}"
+          ?disabled="${this.disabled}"
+          hint="${option.addressHint || nothing}"
+        ></civ-address>
+      ` : nothing}
+
+      ${option.renders === 'contact' ? html`
+        <civ-form-field label="${t('housingGeneralLocation')}">
+          <civ-text-input name="${this.name ? `${this.name}.generalLocation` : ''}" ?disabled="${this.disabled}"></civ-text-input>
+        </civ-form-field>
+        <civ-form-field label="State" ?required="${this.required}">
+          <civ-select name="${this.name ? `${this.name}.state` : ''}" preset="us-states" ?disabled="${this.disabled}"></civ-select>
+        </civ-form-field>
+        <civ-form-field label="${t('housingContactMethod')}" ?required="${this.required}" hint="${t('housingContactMethodHint')}">
+          <civ-textarea name="${this.name ? `${this.name}.contactMethod` : ''}" rows="3" ?disabled="${this.disabled}"></civ-textarea>
+        </civ-form-field>
+      ` : nothing}
+    `;
+  }
+
+  private _goToStep2(): void {
+    this._step = 2;
+    this.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  private _goToStep1(): void {
+    this._step = 1;
+    this.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   private _onCheckboxChange(e: CustomEvent<{ checked: boolean }>): void {
     e.stopPropagation();
     this._noPermanentAddress = e.detail.checked;
     this._mailMethod = '';
+    this._step = 1;
     this._dispatchValue();
   }
 

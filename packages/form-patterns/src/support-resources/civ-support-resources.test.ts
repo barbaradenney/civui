@@ -13,13 +13,14 @@ describe('civ-support-resources', () => {
     expect(aside!.getAttribute('role')).toBe('complementary');
   });
 
-  it('renders heading with correct aria-label', async () => {
+  it('renders heading with aria-labelledby', async () => {
     const el = await fixture('<civ-support-resources heading="Need help?"></civ-support-resources>');
     await elementUpdated(el);
     const aside = el.querySelector('aside');
-    expect(aside!.getAttribute('aria-label')).toBe('Need help?');
     const heading = el.querySelector('[role="heading"]');
     expect(heading!.textContent).toContain('Need help?');
+    expect(heading!.id).toBeTruthy();
+    expect(aside!.getAttribute('aria-labelledby')).toBe(heading!.id);
   });
 
   it('uses default heading from i18n when heading is empty', async () => {

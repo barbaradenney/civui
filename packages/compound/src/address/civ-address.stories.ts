@@ -139,7 +139,6 @@ export const Prefilled: Story = {
         city: 'Washington',
         state: 'DC',
         zip: '20500',
-        military: false,
       };
     }
   },

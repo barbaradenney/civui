@@ -55,13 +55,16 @@ export class CivSupportResources extends LightDomSlotMixin(CivBaseElement) {
     const toneClass = this.tone === 'crisis' ? 'civ-callout--error' : '';
     const level = Math.max(2, Math.min(6, this.headingLevel));
 
+    const headingId = this.generateId('heading');
+
     return html`
       <aside
         class="civ-support-resources civ-callout ${toneClass}"
         role="complementary"
-        aria-label="${headingText}"
+        aria-labelledby="${headingId}"
       >
         <p
+          id="${headingId}"
           class="civ-support-resources__heading"
           role="heading"
           aria-level="${level}"

@@ -243,8 +243,18 @@ export class CivHousingOptions extends LightDomSlotMixin(CivFormElement) {
       noPermanentAddress: this._noPermanentAddress,
       mailMethod: this._mailMethod,
     };
+    this.value = JSON.stringify(value);
     dispatch(this, 'civ-input', { value });
     dispatch(this, 'civ-change', { value });
+  }
+
+  protected override _syncFormValue(): void {
+    if (this.name) {
+      this.syncFormDataFromState({
+        noPermanentAddress: this._noPermanentAddress,
+        mailMethod: this._mailMethod,
+      }, this.name);
+    }
   }
 }
 

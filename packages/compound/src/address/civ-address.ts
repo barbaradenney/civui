@@ -174,7 +174,7 @@ export class CivAddress extends CivFormElement {
 
   override updated(changed: Map<string, unknown>): void {
     super.updated(changed);
-    // Re-sync select options when military or country changes
+    // Re-sync select options when country changes
     if (changed.has('_address')) {
       this.updateComplete.then(() => this._syncSelectOptions());
     }
@@ -404,8 +404,8 @@ export class CivAddress extends CivFormElement {
   }
 
   /** Whether to render a select dropdown for the state field.
-   * Only US (and military APO/FPO/DPO) ship with a state list today. Other
-   * countries fall back to free-text entry until province lists are added. */
+   * US ships with a full state list (50 states + territories + military codes).
+   * Other countries fall back to free-text entry until province lists are added. */
   private get _useSelectForState(): boolean {
     return this._address.country === 'US';
   }
@@ -420,7 +420,10 @@ export class CivAddress extends CivFormElement {
 
   /** State/province options for the current country. */
   private get _stateOptions(): Array<{ value: string; label: string }> {
-    return [...US_STATES, ...MILITARY_STATES];
+    if (this._address.country === 'US') {
+      return [...US_STATES, ...MILITARY_STATES];
+    }
+    return US_STATES;
   }
 
   /** Set options on the select sub-components after render. */
@@ -447,7 +450,12 @@ export class CivAddress extends CivFormElement {
   /** Combined handler for select sub-fields (fires both civ-input and civ-change in one update). */
   private _onSubSelectChange(field: keyof AddressValue, e: CustomEvent<{ value: string }>): void {
     e.stopPropagation();
-    this._address = { ...this._address, [field]: e.detail.value };
+    // Reset dependent fields when country changes
+    if (field === 'country') {
+      this._address = { ...this._address, country: e.detail.value, state: '', zip: '' };
+    } else {
+      this._address = { ...this._address, [field]: e.detail.value };
+    }
     this.value = JSON.stringify(this._address);
     dispatch(this, 'civ-input', { value: { ...this._address } });
     dispatch(this, 'civ-change', { value: { ...this._address } });
@@ -476,8 +484,7 @@ export class CivAddress extends CivFormElement {
 
   /**
    * An address is considered complete when street1, city, state, and zip
-   * are all filled. street2/street3 and country/military are optional or
-   * have defaults.
+   * are all filled. street2/street3 are optional and country has a default.
    */
   private _isComplete(): boolean {
     const a = this._address;

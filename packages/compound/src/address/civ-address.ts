@@ -105,6 +105,14 @@ const EMPTY_ADDRESS: AddressValue = { country: 'US', street1: '', street2: '', s
  */
 @customElement('civ-address')
 export class CivAddress extends CivFormElement {
+  /**
+   * Address variant:
+   * - `default` — full address form (street, city, state, zip)
+   * - `general-delivery` — address form with USPS General Delivery hints
+   * - `contact` — simplified city/state + contact method (no street/zip)
+   */
+  @property({ type: String }) variant: 'default' | 'general-delivery' | 'contact' = 'default';
+
   /** Fieldset legend displayed above the address fields. */
   @property({ type: String }) legend = '';
 
@@ -183,6 +191,12 @@ export class CivAddress extends CivFormElement {
   override render() {
     const describedBy = buildDescribedBy(this._hintId, this.hint, this._errorId, this.error);
 
+    if (this.variant === 'contact') return this._renderContact(describedBy);
+
+    const generalDeliveryHint = this.variant === 'general-delivery'
+      ? "Enter the city, state, and ZIP of the post office where you'll pick up mail. Use 'General Delivery' as the street address. Contact the post office first to confirm they offer General Delivery."
+      : '';
+
     return html`
       <fieldset
         class="civ-fieldset"
@@ -191,7 +205,7 @@ export class CivAddress extends CivFormElement {
         aria-required="${this.required || nothing}"
         ?disabled="${this.disabled}"
       >
-        ${renderFormHeader({ label: renderLegend({ legend: this.legend || this.label, required: false, headingLevel: this.headingLevel, size: this.size }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
+        ${renderFormHeader({ label: renderLegend({ legend: this.legend || this.label, required: false, headingLevel: this.headingLevel, size: this.size }), hintId: this._hintId, hint: generalDeliveryHint || this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
 
         <civ-form-field label="${t('addressCountry')}">
           <civ-country
@@ -302,6 +316,50 @@ export class CivAddress extends CivFormElement {
       </fieldset>
 
       ${this._renderValidationModal()}
+    `;
+  }
+
+  private _renderContact(describedBy: string) {
+    return html`
+      <fieldset
+        class="civ-fieldset"
+        aria-describedby="${describedBy || nothing}"
+        ?disabled="${this.disabled}"
+      >
+        ${renderFormHeader({ label: renderLegend({ legend: this.legend || this.label, required: false, headingLevel: this.headingLevel, size: this.size }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
+
+        <civ-form-field label="${t('housingGeneralLocation')}">
+          <civ-text-input
+            name="${this.name ? `${this.name}.city` : ''}"
+            value="${this._address.city}"
+            ?disabled="${this.disabled}"
+            ?readonly="${this.readonly}"
+            @civ-input="${(e: CustomEvent) => this._onSubInput('city', e)}"
+            @civ-change="${(e: CustomEvent) => this._onSubChange('city', e)}"
+          ></civ-text-input>
+        </civ-form-field>
+
+        ${this._showState ? html`
+          <civ-form-field label="${t('addressState')}" ?required="${this.required}">
+            <civ-select
+              name="${this.name ? `${this.name}.state` : ''}"
+              value="${this._address.state}"
+              ?disabled="${this.disabled}"
+              data-address-state
+              @civ-change="${(e: CustomEvent) => this._onSubSelectChange('state', e)}"
+            ></civ-select>
+          </civ-form-field>
+        ` : nothing}
+
+        <civ-form-field label="${t('housingContactMethod')}" ?required="${this.required}" hint="${t('housingContactMethodHint')}">
+          <civ-textarea
+            name="${this.name ? `${this.name}.contactMethod` : ''}"
+            rows="3"
+            ?disabled="${this.disabled}"
+            ?readonly="${this.readonly}"
+          ></civ-textarea>
+        </civ-form-field>
+      </fieldset>
     `;
   }
 

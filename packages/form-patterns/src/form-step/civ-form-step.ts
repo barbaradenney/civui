@@ -199,8 +199,6 @@ export class CivFormStep extends LightDomSlotMixin(CivBaseElement) {
     const isLast = this._current >= this._steps.length - 1;
     const total = this._steps.length;
 
-    const isFirst = this._current === 0;
-
     return html`
       <div class="civ-form-step">
         ${total > 1 && !this.hideNav ? html`

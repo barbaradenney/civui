@@ -66,27 +66,15 @@ export const Simple: Story = {
       </civ-form-fieldset>
 
       <civ-conditional when="mailMethod" equals="general-delivery">
-        <civ-address size="lg" legend="General Delivery post office" name="address" required
-          hint="Enter the city, state, and ZIP of the post office where you'll pick up mail. Use 'General Delivery' as the street address."
-        ></civ-address>
+        <civ-address variant="general-delivery" size="lg" legend="General Delivery post office" name="address" required></civ-address>
       </civ-conditional>
 
       <civ-conditional when="mailMethod" equals="alternate-address">
-        <civ-address size="lg" legend="Mailing address" name="address" required
-          hint="Enter the address where someone can receive mail on your behalf."
-        ></civ-address>
+        <civ-address size="lg" legend="Mailing address" name="address" required></civ-address>
       </civ-conditional>
 
       <civ-conditional when="mailMethod" equals="no-mail">
-        <civ-form-field label="City or area where you currently stay">
-          <civ-text-input name="generalLocation"></civ-text-input>
-        </civ-form-field>
-        <civ-form-field label="State" required>
-          <civ-select name="locationState" preset="us-states"></civ-select>
-        </civ-form-field>
-        <civ-form-field label="Best way to reach you" required hint="Phone number, email, shelter name, or someone who can relay messages">
-          <civ-textarea name="contactMethod" rows="3"></civ-textarea>
-        </civ-form-field>
+        <civ-address variant="contact" size="lg" legend="How to reach you" name="contact" required></civ-address>
       </civ-conditional>
     </civ-conditional>
   `,
@@ -126,9 +114,7 @@ export const WithSupportResources: Story = {
         </civ-form-fieldset>
 
         <civ-conditional when="mailMethod" equals="general-delivery">
-          <civ-address size="lg" legend="General Delivery post office" name="address" required
-            hint="Enter the city, state, and ZIP of the post office. Use 'General Delivery' as the street address."
-          ></civ-address>
+          <civ-address variant="general-delivery" size="lg" legend="General Delivery post office" name="address" required></civ-address>
         </civ-conditional>
 
         <civ-conditional when="mailMethod" equals="alternate-address">
@@ -136,15 +122,7 @@ export const WithSupportResources: Story = {
         </civ-conditional>
 
         <civ-conditional when="mailMethod" equals="no-mail">
-          <civ-form-field label="City or area where you currently stay">
-            <civ-text-input name="generalLocation"></civ-text-input>
-          </civ-form-field>
-          <civ-form-field label="State" required>
-            <civ-select name="locationState" preset="us-states"></civ-select>
-          </civ-form-field>
-          <civ-form-field label="Best way to reach you" required hint="Phone number, email, shelter name, or someone who can relay messages">
-            <civ-textarea name="contactMethod" rows="3"></civ-textarea>
-          </civ-form-field>
+          <civ-address variant="contact" size="lg" legend="How to reach you" name="contact" required></civ-address>
         </civ-conditional>
       </civ-conditional>
 

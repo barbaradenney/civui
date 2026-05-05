@@ -61,6 +61,7 @@ All form components share these props: `name`, `value`, `hint`, `error`, `requir
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `legend` | `string` | `''` | Fieldset legend text |
+| `variant` | `'default' \| 'general-delivery' \| 'contact'` | `'default'` | Address variant (see below) |
 | `heading-level` | `1`–`6` | — | Promote the legend to a heading via `role="heading"` + `aria-level=N`. |
 | `size` | `'sm' \| 'md' \| 'lg' \| 'xl'` | `'sm'` | Visual size of the legend. |
 | `show-street2` | `boolean` | `true` | Show Street address line 2 |
@@ -69,6 +70,20 @@ All form components share these props: `name`, `value`, `hint`, `error`, `requir
 | `city-error` | `string` | `''` | Error for city field |
 | `state-error` | `string` | `''` | Error for state field |
 | `zip-error` | `string` | `''` | Error for ZIP code field |
+
+## Variants
+
+### Default
+
+The standard full address form with country, street, city, state, and ZIP/postal code.
+
+### General Delivery (`variant="general-delivery"`)
+
+For USPS General Delivery addresses. Renders the same fields as the default variant but adds a hint explaining how to use General Delivery (enter the post office city/state/ZIP, use "General Delivery" as the street address).
+
+### Contact (`variant="contact"`)
+
+For situations where someone cannot receive mail. Renders a simplified form with just city/state and a contact method textarea (phone, email, shelter name, or someone who can relay messages).
 
 ## Value Structure
 
@@ -143,4 +158,4 @@ Fields automatically set appropriate `autocomplete` values:
 
 ## Related patterns
 
-- [Housing & Address](/form-patterns/housing-address) — patterns for collecting addresses from people who may not have permanent housing, including VA-style housing situation questionnaire
+- [Housing & Address](/form-patterns/housing-address) — patterns for collecting addresses from people who may not have permanent housing, using address variants and composed components

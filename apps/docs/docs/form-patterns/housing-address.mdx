@@ -25,9 +25,19 @@ Patterns for collecting addresses from people who may not have permanent housing
 - **Use sensitive tone** — `civ-section-intro tone="sensitive"` before the questions
 - **Support resources** — link to housing assistance when appropriate
 
+## Address variants
+
+The `civ-address` component supports three variants that power the housing pattern:
+
+| Variant | Use case |
+|---------|----------|
+| `default` | Standard full address form |
+| `general-delivery` | USPS General Delivery — adds a hint about using the post office city/state/ZIP |
+| `contact` | No mail — simplified city/state + contact method |
+
 ## Simple (checkbox + conditional)
 
-For forms that just need to know if the user has a mailable address. A single checkbox toggles between the full address form and a simplified contact section.
+For forms that just need to know if the user has a mailable address. A single checkbox toggles between the full address form and radio tile options for alternative contact methods.
 
 <StoryEmbed id="patterns-housing-address--simple" />
 
@@ -48,7 +58,7 @@ The housing pattern wrapped in a `civ-form` with `support-resources` for crisis/
 - `civ-section-intro tone="sensitive"` provides context before the housing questions
 - `civ-conditional` properly toggles `aria-hidden` when showing/hiding fields
 - All form fields have proper labels and required indicators
-- `civ-yes-no` provides clear binary choice for "can you receive mail?"
+- Radio tiles provide clear, descriptive options with hint text
 - Support resources are always visible, not hidden behind the conditional
 
 ## Components used
@@ -56,10 +66,11 @@ The housing pattern wrapped in a `civ-form` with `support-resources` for crisis/
 | Component | Role |
 |-----------|------|
 | `civ-section-intro` | Sensitive context-setting before housing questions |
-| `civ-checkbox` / `civ-checkbox-group` | Housing status selection |
+| `civ-checkbox` | "I don't have a permanent address" toggle |
 | `civ-conditional` | Show/hide fields based on responses |
-| `civ-yes-no` | "Can you receive mail?" binary question |
-| `civ-address` | Full address form when user has a mailing address |
-| `civ-form-field` | Individual fields for alternative contact info |
+| `civ-radio-group` with `tile` | Mail delivery method selection |
+| `civ-address` | Full address form (default variant) |
+| `civ-address variant="general-delivery"` | USPS General Delivery address |
+| `civ-address variant="contact"` | Alternative contact method |
 | `civ-form` | Optional wrapper with `support-resources` for crisis links |
-| `.civ-callout` | Informational callout explaining why we collect the info |
+| `civ-support-resources` | Structured crisis/support contact links |

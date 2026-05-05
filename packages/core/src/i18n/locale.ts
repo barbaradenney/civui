@@ -191,6 +191,17 @@ export interface CivLocaleStrings {
   addressStateProvince: string;
   addressPostalCode: string;
 
+  // Housing status (no permanent address pattern)
+  housingNoPermanentAddress: string;
+  housingGeneralLocation: string;
+  housingContactMethod: string;
+  housingContactMethodHint: string;
+  housingPointOfContact: string;
+  housingPointOfContactHint: string;
+  housingCanReceiveMail: string;
+  housingLivingSituation: string;
+  housingLivingSituationHint: string;
+
   // Direct deposit
   directDepositAccountType: string;
   directDepositChecking: string;
@@ -762,6 +773,16 @@ const defaultStrings: CivLocaleStrings = {
   addressMilitaryState: 'Overseas "state" abbreviation',
   addressStateProvince: 'State, province, or region',
   addressPostalCode: 'Postal code',
+
+  housingNoPermanentAddress: 'I don\'t have a permanent address',
+  housingGeneralLocation: 'City or area where you currently stay',
+  housingContactMethod: 'Best way to reach you',
+  housingContactMethodHint: 'Phone number, email, shelter name, or someone who can relay messages',
+  housingPointOfContact: 'Point of contact',
+  housingPointOfContactHint: 'Name and phone number of someone who can help us reach you',
+  housingCanReceiveMail: 'Do you have an address where you can receive mail?',
+  housingLivingSituation: 'Which of these describe your living situation?',
+  housingLivingSituationHint: 'We ask this to connect you with the right services. Select all that apply.',
 
   directDepositAccountType: 'Account type',
   directDepositChecking: 'Checking',

@@ -1,0 +1,78 @@
+---
+title: Housing & Address
+sidebar_position: 13
+sidebar_label: Housing & Address
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
+# Housing & Address
+
+Patterns for collecting addresses from people who may not have permanent housing. These compose existing CivUI components — no custom component needed.
+
+## When to use
+
+- Government benefits forms where applicants may be experiencing homelessness
+- Healthcare enrollment where housing status affects eligibility
+- Any form requiring a mailing address from a population that may not have one
+
+## Language principles
+
+- **Never use "homeless"** in labels — use "permanent address" or "living situation"
+- **Don't make assumptions** — "I don't have a permanent address" is factual, not judgmental
+- **Explain why we ask** — "We ask this to connect you with the right services"
+- **Provide alternatives** — always give a path forward (general location + contact method)
+- **Use sensitive tone** — `civ-section-intro tone="sensitive"` before the questions
+- **Support resources** — link to housing assistance when appropriate
+
+## Simple (checkbox + conditional)
+
+For forms that just need to know if the user has a mailable address. A single checkbox toggles between the full address form and a simplified contact section.
+
+<StoryEmbed id="patterns-housing-address--simple" />
+
+### When to use
+
+- Simple benefits applications
+- Forms where housing status isn't relevant to eligibility
+- When you just need a way to reach the person
+
+## Housing situation (VA-style)
+
+For forms that need to understand the housing situation for eligibility or services. Uses a series of criteria checkboxes rather than a blunt yes/no question — research shows this approach is more effective and less stigmatizing.
+
+<StoryEmbed id="patterns-housing-address--housing-situation" />
+
+### When to use
+
+- VA healthcare enrollment
+- Benefits applications where housing status affects eligibility
+- Forms that route applicants to housing-specific services
+- Comprehensive intake forms
+
+## With support resources
+
+The housing pattern wrapped in a `civ-form` with `support-resources` for crisis/housing assistance links.
+
+<StoryEmbed id="patterns-housing-address--with-support-resources" />
+
+## Accessibility
+
+- `civ-section-intro tone="sensitive"` provides context before the housing questions
+- `civ-conditional` properly toggles `aria-hidden` when showing/hiding fields
+- All form fields have proper labels and required indicators
+- `civ-yes-no` provides clear binary choice for "can you receive mail?"
+- Support resources are always visible, not hidden behind the conditional
+
+## Components used
+
+| Component | Role |
+|-----------|------|
+| `civ-section-intro` | Sensitive context-setting before housing questions |
+| `civ-checkbox` / `civ-checkbox-group` | Housing status selection |
+| `civ-conditional` | Show/hide fields based on responses |
+| `civ-yes-no` | "Can you receive mail?" binary question |
+| `civ-address` | Full address form when user has a mailing address |
+| `civ-form-field` | Individual fields for alternative contact info |
+| `civ-form` | Optional wrapper with `support-resources` for crisis links |
+| `.civ-callout` | Informational callout explaining why we collect the info |

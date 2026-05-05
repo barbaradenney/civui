@@ -59,7 +59,7 @@ export const Simple: Story = {
     <civ-conditional when="noPermanentAddress" equals="true">
       <civ-form-fieldset legend="How would you like to receive mail?" size="lg">
         <civ-radio-group name="mailMethod" tile>
-          <civ-radio value="general-delivery" label="USPS General Delivery" description="Free — mail is held at a post office for pickup with photo ID"></civ-radio>
+          <civ-radio value="general-delivery" label="USPS General Delivery" description="Free service that holds mail at your local post office for up to 30 days. Just bring a photo ID to pick it up. No PO Box or permanent address required."></civ-radio>
           <civ-radio value="alternate-address" label="Someone else's address" description="A friend, family member, shelter, or organization that can receive mail for you"></civ-radio>
           <civ-radio value="no-mail" label="I can't receive mail" description="We'll use other ways to contact you"></civ-radio>
         </civ-radio-group>
@@ -119,7 +119,7 @@ export const WithSupportResources: Story = {
       <civ-conditional when="noPermanentAddress" equals="true">
         <civ-form-fieldset legend="How would you like to receive mail?" size="lg">
           <civ-radio-group name="mailMethod" tile>
-            <civ-radio value="general-delivery" label="USPS General Delivery" description="Free — mail is held at a post office for pickup with photo ID"></civ-radio>
+            <civ-radio value="general-delivery" label="USPS General Delivery" description="Free service that holds mail at your local post office for up to 30 days. Just bring a photo ID to pick it up. No PO Box or permanent address required."></civ-radio>
             <civ-radio value="alternate-address" label="Someone else's address" description="A friend, family member, shelter, or organization"></civ-radio>
             <civ-radio value="no-mail" label="I can't receive mail" description="We'll use other ways to contact you"></civ-radio>
           </civ-radio-group>

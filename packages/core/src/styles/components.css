@@ -1931,6 +1931,17 @@
     border-inline-start-color: var(--civ-color-warning-DEFAULT);
   }
 
+  /* ── Support Resources ───────────────────────────────────── */
+
+  .civ-support-resources__heading {
+    @apply civ-font-bold civ-mb-2 civ-m-0;
+    font-size: var(--civ-typography-fontSize-lg);
+  }
+
+  .civ-support-resources__content {
+    @apply civ-flex civ-flex-col civ-gap-2;
+  }
+
   .civ-section-intro__heading {
     @apply civ-font-bold civ-mb-1;
     font-size: var(--civ-typography-fontSize-lg);

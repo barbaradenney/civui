@@ -32,3 +32,6 @@ export type { RelationshipPreset, RelationshipTypeConfig, RelationshipCategory }
 export { CivRaceEthnicity } from './race-ethnicity/index.js';
 export type { RaceEthnicityValue } from './race-ethnicity/index.js';
 
+// Housing Options
+export { CivHousingOptions } from './housing-options/index.js';
+

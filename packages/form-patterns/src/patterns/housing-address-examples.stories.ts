@@ -58,17 +58,42 @@ export const Simple: Story = {
 
     <civ-conditional when="noPermanentAddress" equals="true">
       <div class="civ-callout civ-callout--info civ-mb-4">
-        <p class="civ-m-0">We'll use this information to determine your service area and find the best way to reach you.</p>
+        <p class="civ-font-bold civ-mb-1">You can still receive mail</p>
+        <p class="civ-m-0">USPS General Delivery is a free service that holds mail at your local post office for pickup — no PO Box or permanent address required. Use this address format:</p>
+        <p class="civ-m-0 civ-mt-2 civ-font-semibold">[Your Name], General Delivery, [City], [State] [ZIP]</p>
       </div>
-      <civ-form-field label="City or area where you currently stay">
-        <civ-text-input name="generalLocation"></civ-text-input>
-      </civ-form-field>
-      <civ-form-field label="State" required>
-        <civ-select name="locationState" preset="us-states"></civ-select>
-      </civ-form-field>
-      <civ-form-field label="Best way to reach you" required hint="Phone number, email, shelter name, or someone who can relay messages">
-        <civ-textarea name="contactMethod" rows="3"></civ-textarea>
-      </civ-form-field>
+
+      <civ-form-fieldset legend="How would you like to receive mail?" size="lg">
+        <civ-radio-group name="mailMethod">
+          <civ-radio value="general-delivery" label="USPS General Delivery" description="Free — mail is held at a post office for pickup with photo ID"></civ-radio>
+          <civ-radio value="alternate-address" label="Someone else's address" description="A friend, family member, shelter, or organization that can receive mail for you"></civ-radio>
+          <civ-radio value="no-mail" label="I can't receive mail" description="We'll use other ways to contact you"></civ-radio>
+        </civ-radio-group>
+      </civ-form-fieldset>
+
+      <civ-conditional when="mailMethod" equals="general-delivery">
+        <civ-address size="lg" legend="General Delivery post office" name="address" required
+          hint="Enter the city, state, and ZIP of the post office where you'll pick up mail. Use 'General Delivery' as the street address."
+        ></civ-address>
+      </civ-conditional>
+
+      <civ-conditional when="mailMethod" equals="alternate-address">
+        <civ-address size="lg" legend="Mailing address" name="address" required
+          hint="Enter the address where someone can receive mail on your behalf."
+        ></civ-address>
+      </civ-conditional>
+
+      <civ-conditional when="mailMethod" equals="no-mail">
+        <civ-form-field label="City or area where you currently stay">
+          <civ-text-input name="generalLocation"></civ-text-input>
+        </civ-form-field>
+        <civ-form-field label="State" required>
+          <civ-select name="locationState" preset="us-states"></civ-select>
+        </civ-form-field>
+        <civ-form-field label="Best way to reach you" required hint="Phone number, email, shelter name, or someone who can relay messages">
+          <civ-textarea name="contactMethod" rows="3"></civ-textarea>
+        </civ-form-field>
+      </civ-conditional>
     </civ-conditional>
   `,
 };
@@ -165,17 +190,39 @@ export const WithSupportResources: Story = {
 
       <civ-conditional when="noPermanentAddress" equals="true">
         <div class="civ-callout civ-callout--info civ-mb-4">
-          <p class="civ-m-0">We'll use this information to determine your service area and find the best way to reach you.</p>
+          <p class="civ-font-bold civ-mb-1">You can still receive mail</p>
+          <p class="civ-m-0">USPS General Delivery is a free service that holds mail at your local post office for pickup — no PO Box or permanent address required.</p>
         </div>
-        <civ-form-field label="City or area where you currently stay">
-          <civ-text-input name="generalLocation"></civ-text-input>
-        </civ-form-field>
-        <civ-form-field label="State" required>
-          <civ-select name="locationState" preset="us-states"></civ-select>
-        </civ-form-field>
-        <civ-form-field label="Best way to reach you" required hint="Phone number, email, shelter name, or someone who can relay messages">
-          <civ-textarea name="contactMethod" rows="3"></civ-textarea>
-        </civ-form-field>
+
+        <civ-form-fieldset legend="How would you like to receive mail?" size="lg">
+          <civ-radio-group name="mailMethod">
+            <civ-radio value="general-delivery" label="USPS General Delivery" description="Free — mail is held at a post office for pickup with photo ID"></civ-radio>
+            <civ-radio value="alternate-address" label="Someone else's address" description="A friend, family member, shelter, or organization"></civ-radio>
+            <civ-radio value="no-mail" label="I can't receive mail" description="We'll use other ways to contact you"></civ-radio>
+          </civ-radio-group>
+        </civ-form-fieldset>
+
+        <civ-conditional when="mailMethod" equals="general-delivery">
+          <civ-address size="lg" legend="General Delivery post office" name="address" required
+            hint="Enter the city, state, and ZIP of the post office. Use 'General Delivery' as the street address."
+          ></civ-address>
+        </civ-conditional>
+
+        <civ-conditional when="mailMethod" equals="alternate-address">
+          <civ-address size="lg" legend="Mailing address" name="address" required></civ-address>
+        </civ-conditional>
+
+        <civ-conditional when="mailMethod" equals="no-mail">
+          <civ-form-field label="City or area where you currently stay">
+            <civ-text-input name="generalLocation"></civ-text-input>
+          </civ-form-field>
+          <civ-form-field label="State" required>
+            <civ-select name="locationState" preset="us-states"></civ-select>
+          </civ-form-field>
+          <civ-form-field label="Best way to reach you" required hint="Phone number, email, shelter name, or someone who can relay messages">
+            <civ-textarea name="contactMethod" rows="3"></civ-textarea>
+          </civ-form-field>
+        </civ-conditional>
       </civ-conditional>
 
       <civ-button type="submit" class="civ-mt-4">Continue</civ-button>

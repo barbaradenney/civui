@@ -24,6 +24,9 @@ export { CivDataField } from './data-field/index.js';
 // Section Intro (trauma-informed context panel)
 export { CivSectionIntro } from './section-intro/index.js';
 
+// Support Resources
+export { CivSupportResources } from './support-resources/index.js';
+
 // Progress Steps
 export { CivProgress, CivProgressBar } from './progress/index.js';
 

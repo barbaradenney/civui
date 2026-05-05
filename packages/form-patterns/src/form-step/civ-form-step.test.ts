@@ -40,8 +40,8 @@ describe('civ-form-step', () => {
     `);
     const progress = el.querySelector('civ-progress');
     expect(progress).not.toBeNull();
-    const items = progress!.querySelectorAll('li');
-    expect(items.length).toBe(2);
+    const segments = progress!.querySelectorAll('.civ-progress-segment');
+    expect(segments.length).toBe(2);
   });
 
   it('renders civ-progress-bar when progress="bar"', async () => {

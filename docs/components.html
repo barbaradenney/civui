@@ -927,11 +927,10 @@
           <table class="props-table">
             <thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
             <tbody>
-              <tr><td><code>steps</code></td><td><code>string (JSON)</code></td><td><code>'[]'</code></td><td>JSON array of step labels or objects: <code>["Step 1","Step 2"]</code> or <code>[{"label":"Step 1","description":"Details"}]</code></td></tr>
+              <tr><td><code>steps</code></td><td><code>string (JSON)</code></td><td><code>'[]'</code></td><td>JSON array of step labels: <code>["Step 1","Step 2"]</code> or <code>[{"label":"Step 1"}]</code></td></tr>
               <tr><td><code>current</code></td><td><code>number</code></td><td><code>0</code></td><td>Current step index (0-based)</td></tr>
-              <tr><td><code>orientation</code></td><td><code>'horizontal' | 'vertical'</code></td><td><code>'horizontal'</code></td><td>Layout direction</td></tr>
-              <tr><td><code>clickable</code></td><td><code>boolean</code></td><td><code>false</code></td><td>When true, completed steps become clickable buttons</td></tr>
-              <tr><td><code>show-counter</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Show "Step X of Y" text below the steps</td></tr>
+              <tr><td><code>clickable</code></td><td><code>boolean</code></td><td><code>false</code></td><td>When true, completed segments become clickable</td></tr>
+              <tr><td><code>show-counter</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Show "Step X of Y" text below the segments</td></tr>
               <tr><td><code>error-steps</code></td><td><code>string (JSON)</code></td><td><code>'[]'</code></td><td>JSON array of step indices with validation errors</td></tr>
             </tbody>
           </table>
@@ -941,31 +940,20 @@
             <li><code>civ-step-click</code> &mdash; When a completed step is clicked (requires <code>clickable</code>). Detail: <code>{ step: number }</code></li>
           </ul>
 
-          <h4>Example: Simple steps</h4>
-<pre><code>&lt;civ-progress-steps
+          <h4>Example: Segmented progress</h4>
+<pre><code>&lt;civ-progress
   steps='["Personal info","Employment","Review","Submit"]'
   current="1"
   show-counter
-&gt;&lt;/civ-progress-steps&gt;</code></pre>
-
-          <h4>Example: Rich steps with descriptions</h4>
-<pre><code>&lt;civ-progress-steps
-  steps='[
-    {"label":"Personal info","description":"Name and contact details"},
-    {"label":"Employment","description":"Current employer"},
-    {"label":"Review","description":"Check your answers"}
-  ]'
-  current="1"
   clickable
-&gt;&lt;/civ-progress-steps&gt;</code></pre>
+&gt;&lt;/civ-progress&gt;</code></pre>
 
-          <h4>Example: Vertical with errors</h4>
-<pre><code>&lt;civ-progress-steps
+          <h4>Example: With error steps</h4>
+<pre><code>&lt;civ-progress
   steps='["Step 1","Step 2","Step 3","Step 4"]'
   current="2"
-  orientation="vertical"
   error-steps="[0]"
-&gt;&lt;/civ-progress-steps&gt;</code></pre>
+&gt;&lt;/civ-progress&gt;</code></pre>
         </div>
       </div>
 

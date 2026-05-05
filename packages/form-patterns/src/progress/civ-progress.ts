@@ -5,41 +5,36 @@ import { CivBaseElement, announce, dispatch, t, interpolate } from '@civui/core'
 /**
  * CivUI Progress
  *
- * A step circle indicator for multi-step forms. Displays current progress
- * with completed, current, and upcoming step states.
- *
- * Responsive: horizontal on desktop, auto-switches to vertical on
- * narrow screens via CSS. Labels truncate with ellipsis when space
- * is tight.
+ * A segmented progress bar for multi-step forms. Each step is a
+ * small rectangle — filled for completed, highlighted for current,
+ * and empty for upcoming. Compact at any screen size with no
+ * responsive breakpoints needed.
  *
  * @element civ-progress
  *
- * @prop {string} steps - JSON string of step objects or labels
+ * @prop {string} steps - JSON string of step labels
  *   Simple: '["Personal Info","Address","Review"]'
- *   Rich:   '[{"label":"Info","description":"Basic details"},{"label":"Address"}]'
  * @prop {number} current - Current step index (0-based)
- * @prop {string} orientation - Layout direction ('horizontal' | 'vertical', default 'horizontal')
- * @prop {boolean} clickable - When true, completed steps become clickable buttons
- * @prop {boolean} showCounter - Show "Step X of Y" text below the steps
- * @prop {number[]} errorSteps - Array of step indices with validation errors
+ * @prop {boolean} clickable - When true, completed steps become clickable
+ * @prop {boolean} showCounter - Show "Step X of Y" text below the segments
+ * @prop {string} errorSteps - JSON array of step indices with errors
  *
- * @fires civ-step-click - When a completed step is clicked, detail: { step: number }
+ * @fires civ-step-click - When a completed segment is clicked, detail: { step: number }
  */
 @customElement('civ-progress')
 export class CivProgress extends CivBaseElement {
   @property({ type: String }) steps = '[]';
   @property({ type: Number }) current = 0;
-  @property({ type: String, reflect: true }) orientation: 'horizontal' | 'vertical' = 'horizontal';
   @property({ type: Boolean }) clickable = false;
   @property({ type: Boolean, attribute: 'show-counter' }) showCounter = false;
   @property({ type: String, attribute: 'error-steps' }) errorSteps = '[]';
 
   private _cachedSteps: string | null = null;
-  private _cachedStepData: Array<{ label: string; description?: string }> = [];
+  private _cachedStepData: Array<{ label: string }> = [];
   private _cachedErrorSteps: string | null = null;
   private _cachedErrorSet: Set<number> = new Set();
 
-  private _getStepData(): Array<{ label: string; description?: string }> {
+  private _getStepData(): Array<{ label: string }> {
     if (this._cachedSteps === this.steps) return this._cachedStepData;
     this._cachedSteps = this.steps;
     try {
@@ -48,7 +43,7 @@ export class CivProgress extends CivBaseElement {
         this._cachedStepData = [];
         return this._cachedStepData;
       }
-      this._cachedStepData = parsed.map((item: string | { label: string; description?: string }) =>
+      this._cachedStepData = parsed.map((item: string | { label: string }) =>
         typeof item === 'string' ? { label: item } : item
       );
     } catch {
@@ -69,7 +64,6 @@ export class CivProgress extends CivBaseElement {
     return this._cachedErrorSet;
   }
 
-  /** Clamp `current` to a valid step index for downstream use. */
   private get _safeCurrent(): number {
     const total = this._getStepData().length;
     if (total === 0) return 0;
@@ -96,116 +90,66 @@ export class CivProgress extends CivBaseElement {
     const stepData = this._getStepData();
     if (stepData.length === 0) return nothing;
 
-    const isVertical = this.orientation === 'vertical';
+    const current = this._safeCurrent;
     const errorSet = this._getErrorSet();
 
     return html`
-      <nav aria-label="${t('progressStepsLabel')}">
-        <ol
-          class="${isVertical ? 'civ-steps-vertical' : 'civ-steps-horizontal'} civ-list-none civ-p-0 civ-m-0"
-          role="list"
-        >
-          ${stepData.map((step, i) => this._renderStep(step, i, stepData.length, isVertical, errorSet))}
-        </ol>
+      <div role="group" aria-label="${t('progressStepsLabel')}">
+        <div class="civ-progress-segments">
+          ${stepData.map((step, i) => this._renderSegment(step, i, stepData.length, current, errorSet))}
+        </div>
         ${this.showCounter ? html`
-          <div class="civ-form-steps-nav">
-            <span class="civ-form-steps-nav__counter" aria-live="polite">
-              ${interpolate(t('progressStepsCounter'), { current: this._safeCurrent + 1, total: stepData.length })}
-            </span>
+          <div class="civ-progress-steps__counter" aria-live="polite">
+            ${interpolate(t('progressStepsCounter'), { current: current + 1, total: stepData.length })}
           </div>
         ` : nothing}
-      </nav>
+      </div>
     `;
   }
 
-  private _renderStep(
-    step: { label: string; description?: string },
+  private _renderSegment(
+    step: { label: string },
     index: number,
     total: number,
-    isVertical: boolean,
+    current: number,
     errorSet: Set<number>,
   ) {
-    const current = this._safeCurrent;
     const isCompleted = index < current;
     const isCurrent = index === current;
-    const isLast = index === total - 1;
     const hasError = errorSet.has(index);
 
-    const stepClass = [
-      'civ-step',
-      isCompleted && !hasError ? 'civ-step--completed' : '',
-      isCurrent ? 'civ-step--current' : '',
-      !isCompleted && !isCurrent ? 'civ-step--upcoming' : '',
-      hasError ? 'civ-step--error' : '',
+    const segmentClass = [
+      'civ-progress-segment',
+      hasError ? 'civ-progress-segment--error' : '',
+      !hasError && isCompleted ? 'civ-progress-segment--completed' : '',
+      !hasError && isCurrent ? 'civ-progress-segment--current' : '',
     ].filter(Boolean).join(' ');
 
-    const connectorCompleted = isCompleted && index + 1 < current
-      ? 'civ-step-connector--completed' : '';
-
-    const stepAriaLabel = interpolate(t('progressStepLabel'), {
+    const label = interpolate(t('progressStepLabel'), {
       step: index + 1,
       total,
       label: step.label,
     });
 
-    const circleClasses = 'civ-step-circle civ-flex civ-items-center civ-justify-center civ-rounded-full civ-w-10 civ-h-10 civ-font-bold civ-shrink-0';
-    const circleContent = hasError
-      ? html`<civ-icon name="close"></civ-icon>`
-      : isCompleted
-        ? html`<civ-icon name="check"></civ-icon>`
-        : html`${index + 1}`;
-
-    const circle = html`<div class="${circleClasses}">${circleContent}</div>`;
-
-    const isClickable = this.clickable && isCompleted;
-
-    const labelClasses = [
-      'civ-step-label',
-      isVertical ? 'civ-step-label--vertical' : '',
-      isCurrent ? 'civ-step-label--current' : '',
-      hasError ? 'civ-step-label--error' : '',
-      isClickable ? 'civ-step-label--clickable' : '',
-    ].filter(Boolean).join(' ');
-
-    const descClasses = [
-      'civ-step-desc',
-      isVertical ? 'civ-step-desc--vertical' : 'civ-block',
-    ].filter(Boolean).join(' ');
-
-    if (isVertical) {
+    if (this.clickable && isCompleted) {
       return html`
-        <li class="${stepClass}" aria-label="${stepAriaLabel}" aria-current="${isCurrent ? 'step' : nothing}">
-          <div class="civ-flex civ-items-start civ-gap-3">
-            <div class="civ-flex civ-items-center civ-flex-col">
-              ${circle}
-              ${!isLast ? html`<div class="civ-step-connector ${connectorCompleted} civ-w-0.5 civ-h-6 civ-my-1"></div>` : nothing}
-            </div>
-            <div class="civ-h-10 civ-flex civ-flex-col civ-justify-center">
-              ${isClickable
-                ? html`<button type="button" class="${labelClasses} focus-visible:civ-focus-ring" @click="${() => this._onStepClick(index)}">${step.label}</button>`
-                : html`<span class="${labelClasses}">${step.label}</span>`}
-              ${step.description ? html`<span class="${descClasses}">${step.description}</span>` : nothing}
-            </div>
-          </div>
-        </li>
+        <button
+          type="button"
+          class="${segmentClass}"
+          aria-label="${label}"
+          aria-current="${isCurrent ? 'step' : nothing}"
+          @click="${() => this._onStepClick(index)}"
+        ></button>
       `;
     }
 
     return html`
-      <li class="${stepClass}" aria-label="${stepAriaLabel}" aria-current="${isCurrent ? 'step' : nothing}">
-        <div class="civ-flex civ-items-center">
-          ${circle}
-          <div class="civ-ms-2">
-            ${isClickable
-              ? html`<button type="button" class="${labelClasses} focus-visible:civ-focus-ring" @click="${() => this._onStepClick(index)}">${step.label}</button>`
-              : html`<span class="${labelClasses}">${step.label}</span>`}
-            ${step.description ? html`<span class="${descClasses}">${step.description}</span>` : nothing}
-          </div>
-        </div>
-        <!-- Vertical connector for responsive auto-switch -->
-        ${!isLast ? html`<div class="civ-step-connector--vertical-auto civ-step-connector ${connectorCompleted} civ-w-0.5 civ-h-6 civ-ms-4 civ-my-1"></div>` : nothing}
-        ${!isLast ? html`<div class="civ-step-connector--horizontal civ-step-connector ${connectorCompleted} civ-h-0.5 civ-flex-1 civ-mx-2 civ-min-w-4"></div>` : nothing}
-      </li>
+      <div
+        class="${segmentClass}"
+        role="listitem"
+        aria-label="${label}"
+        aria-current="${isCurrent ? 'step' : nothing}"
+      ></div>
     `;
   }
 

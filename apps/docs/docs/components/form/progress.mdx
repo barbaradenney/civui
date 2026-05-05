@@ -10,33 +10,35 @@ import StoryEmbed from "@site/src/components/StoryEmbed";
 
 CivUI provides three progress indicator components for multi-step forms:
 
-- **`civ-progress`** — step circle indicators with labels and connectors
+- **`civ-progress`** — segmented progress bar (one rectangle per step)
 - **`civ-progress-header`** — compact "Step X of Y: Title" text header
 - **`civ-progress-bar`** — percentage-based progress bar
 
 All three are used by `civ-form-step` via the `progress` prop, or standalone.
 
-## Step Circles (`civ-progress`)
+## Segmented Progress (`civ-progress`)
+
+Each step is a small rectangle — filled for completed, highlighted for current, and empty for upcoming. Compact at any screen size.
 
 ### Default
 
 <StoryEmbed id="forms-form-progress--default" />
 
+### With Counter
+
+<StoryEmbed id="forms-form-progress--with-counter" />
+
 ### With Error
 
 <StoryEmbed id="forms-form-progress--with-error" />
-
-### With Descriptions
-
-<StoryEmbed id="forms-form-progress--with-descriptions" />
 
 ### Clickable
 
 <StoryEmbed id="forms-form-progress--clickable" />
 
-### Vertical Orientation
+### Many Steps
 
-<StoryEmbed id="forms-form-progress--disabled" />
+<StoryEmbed id="forms-form-progress--many-steps" />
 
 ### All States
 
@@ -48,18 +50,17 @@ All three are used by `civ-form-step` via the `progress` prop, or standalone.
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `steps` | `string` | `'[]'` | JSON array of step labels or step objects (`{label, description?}`) |
+| `steps` | `string` | `'[]'` | JSON array of step labels or step objects (`{label}`) |
 | `current` | `number` | `0` | Current step index (0-based) |
-| `orientation` | `'horizontal' \| 'vertical'` | `'horizontal'` | Layout direction |
-| `clickable` | `boolean` | `false` | When true, completed steps become clickable buttons |
-| `show-counter` | `boolean` | `false` | Show "Step X of Y" text below the steps |
+| `clickable` | `boolean` | `false` | When true, completed segments become clickable |
+| `show-counter` | `boolean` | `false` | Show "Step X of Y" text below the segments |
 | `error-steps` | `string` | `'[]'` | JSON array of step indices with validation errors |
 
 ### Events
 
 | Event | Detail | Description |
 |-------|--------|-------------|
-| `civ-step-click` | `{ step: number }` | Fired when a completed step is clicked (requires `clickable`) |
+| `civ-step-click` | `{ step: number }` | Fired when a completed segment is clicked (requires `clickable`) |
 
 ### Usage
 
@@ -128,7 +129,7 @@ The `progress` prop on `civ-form-step` selects which indicator to display:
 <!-- Compact header (default) -->
 <civ-form-step progress="minimal">...</civ-form-step>
 
-<!-- Step circles -->
+<!-- Segmented bar -->
 <civ-form-step progress="steps">...</civ-form-step>
 
 <!-- Percentage bar -->

@@ -11,7 +11,6 @@ const meta: Meta = {
   argTypes: {
     steps: { control: 'text' },
     current: { control: 'number' },
-    orientation: { control: 'select', options: ['horizontal', 'vertical'] },
   },
 };
 
@@ -20,7 +19,7 @@ type Story = StoryObj;
 
 const defaultSteps = '["Personal Info","Address","Review"]';
 
-// ── Default ───────────────────────────────────────────────────
+// ── Segmented Progress ───────────────────────────────────────
 
 export const Default: Story = {
   args: {
@@ -31,19 +30,37 @@ export const Default: Story = {
     <civ-progress
       steps="${args.steps}"
       current="${args.current}"
-      orientation="${args.orientation ?? 'horizontal'}"
     ></civ-progress>
   `,
 };
 
-// ── Individual States ─────────────────────────────────────────
-
-export const WithHint: Story = {
+export const MiddleStep: Story = {
   name: 'Middle Step',
   render: () => html`
     <civ-progress
       steps='${defaultSteps}'
       current="1"
+    ></civ-progress>
+  `,
+};
+
+export const LastStep: Story = {
+  name: 'Last Step',
+  render: () => html`
+    <civ-progress
+      steps='${defaultSteps}'
+      current="2"
+    ></civ-progress>
+  `,
+};
+
+export const WithCounter: Story = {
+  name: 'With Counter',
+  render: () => html`
+    <civ-progress
+      steps='["Personal Info","Address","Employment","Review"]'
+      current="2"
+      show-counter
     ></civ-progress>
   `,
 };
@@ -60,42 +77,10 @@ export const WithError: Story = {
   `,
 };
 
-export const Required: Story = {
-  name: 'With Counter',
-  render: () => html`
-    <civ-progress
-      steps='["Personal Info","Address","Employment","Review"]'
-      current="2"
-      show-counter
-    ></civ-progress>
-  `,
-};
-
-export const Disabled: Story = {
-  name: 'Vertical Orientation',
-  render: () => html`
-    <civ-progress
-      steps='${defaultSteps}'
-      current="1"
-      orientation="vertical"
-    ></civ-progress>
-  `,
-};
-
-export const WithDescriptions: Story = {
-  render: () => html`
-    <civ-progress
-      steps='[{"label":"Eligibility","description":"Verify requirements"},{"label":"Personal Info","description":"Name, DOB, SSN"},{"label":"Documents","description":"Upload files"},{"label":"Review","description":"Confirm details"}]'
-      current="1"
-      orientation="vertical"
-    ></civ-progress>
-  `,
-};
-
 export const Clickable: Story = {
   render: () => html`
     <civ-progress
-      steps='[{"label":"Eligibility","description":"Complete"},{"label":"Personal Info","description":"Complete"},{"label":"Documents","description":"In progress"},{"label":"Review","description":"Not started"}]'
+      steps='["Eligibility","Personal Info","Documents","Review"]'
       current="2"
       clickable
       show-counter
@@ -104,53 +89,40 @@ export const Clickable: Story = {
   `,
 };
 
-// ── All States ────────────────────────────────────────────────
+export const ManySteps: Story = {
+  name: 'Many Steps (8)',
+  render: () => html`
+    <civ-progress
+      steps='["Eligibility","Personal Info","Contact","Employment","Income","Documents","Review","Submit"]'
+      current="3"
+      show-counter
+    ></civ-progress>
+  `,
+};
 
 export const AllStates: Story = {
   name: 'All States',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-8">
       <div>
-        <h3 class="civ-m-0 civ-mb-2 civ-font-semibold">First step (horizontal)</h3>
-        <civ-progress steps='${defaultSteps}' current="0"></civ-progress>
+        <h3 class="civ-m-0 civ-mb-2 civ-font-semibold">First step</h3>
+        <civ-progress steps='${defaultSteps}' current="0" show-counter></civ-progress>
       </div>
       <div>
         <h3 class="civ-m-0 civ-mb-2 civ-font-semibold">Middle step</h3>
-        <civ-progress steps='${defaultSteps}' current="1"></civ-progress>
+        <civ-progress steps='${defaultSteps}' current="1" show-counter></civ-progress>
       </div>
       <div>
         <h3 class="civ-m-0 civ-mb-2 civ-font-semibold">Last step</h3>
-        <civ-progress steps='${defaultSteps}' current="2"></civ-progress>
+        <civ-progress steps='${defaultSteps}' current="2" show-counter></civ-progress>
       </div>
       <div>
-        <h3 class="civ-m-0 civ-mb-2 civ-font-semibold">With error step</h3>
-        <civ-progress steps='["Step 1","Step 2","Step 3","Step 4"]' current="3" error-steps="[1]"></civ-progress>
+        <h3 class="civ-m-0 civ-mb-2 civ-font-semibold">With error</h3>
+        <civ-progress steps='["Step 1","Step 2","Step 3","Step 4"]' current="3" error-steps="[1]" show-counter></civ-progress>
       </div>
       <div>
-        <h3 class="civ-m-0 civ-mb-2 civ-font-semibold">Vertical with descriptions</h3>
-        <civ-progress steps='[{"label":"Step 1","description":"Complete"},{"label":"Step 2","description":"In progress"},{"label":"Step 3","description":"Not started"}]' current="1" orientation="vertical"></civ-progress>
-      </div>
-    </div>
-  `,
-};
-
-// ── Density Scale ─────────────────────────────────────────────
-
-export const DensityScale: Story = {
-  name: 'Density Scale',
-  render: () => html`
-    <div class="civ-flex civ-flex-col civ-gap-6">
-      <div data-civ-scale="dense">
-        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Dense</p>
-        <civ-progress steps='${defaultSteps}' current="1"></civ-progress>
-      </div>
-      <div>
-        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Default</p>
-        <civ-progress steps='${defaultSteps}' current="1"></civ-progress>
-      </div>
-      <div data-civ-scale="spacious">
-        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Spacious</p>
-        <civ-progress steps='${defaultSteps}' current="1"></civ-progress>
+        <h3 class="civ-m-0 civ-mb-2 civ-font-semibold">Many steps</h3>
+        <civ-progress steps='["A","B","C","D","E","F","G","H"]' current="4" show-counter></civ-progress>
       </div>
     </div>
   `,
@@ -214,11 +186,5 @@ export const GovernmentApplicationProgress: Story = {
       show-counter
       clickable
     ></civ-progress>
-    <civ-progress-bar
-      value="37"
-      label="Application progress"
-      status="3 of 8 sections complete"
-      class="civ-mt-4"
-    ></civ-progress-bar>
   `,
 };

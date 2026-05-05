@@ -1498,149 +1498,41 @@
     color: var(--civ-color-base-darkest);
   }
 
-  /* ── Progress Steps ────────────────────────────────────────── */
+  /* ── Progress Steps (segmented bar) ────────────────────────── */
 
-  .civ-step {
-    @apply civ-flex civ-items-center;
+  .civ-progress-segments {
+    @apply civ-flex civ-gap-1;
   }
 
-  .civ-step--completed .civ-step-circle {
-    background-color: var(--civ-color-success-light);
-    color: var(--civ-color-success-darkest);
-    border: none;
+  .civ-progress-segment {
+    @apply civ-flex-1 civ-rounded-sm;
+    height: 8px;
+    background-color: var(--civ-color-base-lighter);
+    transition: background-color var(--civ-motion-duration-fast, 150ms) var(--civ-motion-easing-ease-out, ease);
   }
 
-  .civ-step--current .civ-step-circle {
+  .civ-progress-segment--completed {
     background-color: var(--civ-color-primary-DEFAULT);
-    color: var(--civ-color-white-DEFAULT);
-    border: none;
   }
 
-  .civ-step--upcoming .civ-step-circle {
-    background-color: var(--civ-color-base-lightest);
-    color: var(--civ-color-base-dark);
-    border: none;
+  .civ-progress-segment--current {
+    background-color: var(--civ-color-primary-dark);
   }
 
-  .civ-step-connector {
-    @apply civ-bg-base-lighter;
+  .civ-progress-segment--error {
+    background-color: var(--civ-color-error-DEFAULT);
   }
 
-  .civ-step--error .civ-step-circle {
-    background-color: var(--civ-color-error-lightest);
-    color: var(--civ-color-error-DEFAULT);
-    border: none;
+  button.civ-progress-segment {
+    @apply civ-border-0 civ-p-0 civ-cursor-pointer;
   }
 
-  .civ-step-connector--completed {
-    @apply civ-bg-success;
+  button.civ-progress-segment:hover {
+    opacity: 0.8;
   }
 
-  .civ-step-circle {
-    position: relative;
-  }
-
-  .civ-step-circle .civ-icon {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -45%);
-    width: 55%;
-    height: 55%;
-  }
-
-
-  .civ-step-connector--vertical-auto {
-    display: none;
-  }
-
-  .civ-steps-horizontal {
-    @apply civ-flex civ-flex-row civ-items-center civ-p-0 civ-m-0;
-    gap: 0;
-  }
-
-  .civ-steps-vertical {
-    @apply civ-flex civ-flex-col;
-    gap: 0;
-  }
-
-  .civ-step-label {
-    font-size: var(--civ-typography-fontSize-sm, 14px);
-    color: var(--civ-color-base-darkest);
-    max-width: none;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .civ-step-label--vertical {
-    max-width: none;
-    white-space: normal;
-  }
-
-  .civ-step-label--current {
-    font-weight: bold;
-  }
-
-  .civ-step-label--error {
-    color: var(--civ-color-error-DEFAULT);
-  }
-
-  button.civ-step-label--clickable {
-    @apply civ-underline civ-cursor-pointer civ-bg-transparent civ-border-0 civ-p-0 civ-font-sans;
-    color: var(--civ-color-primary-dark);
-    font-size: var(--civ-typography-fontSize-sm, 14px);
-    font-weight: normal;
-    text-align: start;
-    line-height: inherit;
-  }
-
-  .civ-step-label--clickable:hover {
-    color: var(--civ-color-primary-DEFAULT);
-  }
-
-  .civ-step-desc {
-    font-size: var(--civ-typography-fontSize-xs, 12px);
-    color: var(--civ-color-base-DEFAULT);
-    max-width: 120px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .civ-step-desc--vertical {
-    max-width: none;
-    white-space: normal;
-  }
-
-
-  .civ-step-counter {
-    font-size: var(--civ-typography-fontSize-sm, 14px);
-    color: var(--civ-color-base-dark);
-    margin-top: var(--civ-spacing-2, 8px);
-  }
-
-  @media (max-width: 480px) {
-    .civ-steps-horizontal {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-
-    .civ-steps-horizontal .civ-step-connector--horizontal {
-      display: none;
-    }
-
-    .civ-steps-horizontal .civ-step-connector--vertical-auto {
-      display: block;
-    }
-
-    .civ-step-label {
-      max-width: none;
-    }
-
-    .civ-step-desc {
-      max-width: none;
-    }
+  button.civ-progress-segment:focus-visible {
+    @apply civ-focus-ring;
   }
 
   /* ── Progress Bar ─────────────────────────────────────────── */
@@ -1849,20 +1741,10 @@
     color: var(--civ-color-base-dark);
   }
 
-  /* ── Form steps nav ───────────────────────────────────────── */
+  /* ── Progress steps counter ───────────────────────────────── */
 
-  .civ-form-steps-nav {
-    @apply civ-flex civ-items-center civ-gap-3 civ-py-2 civ-mb-4;
-  }
-
-  .civ-form-steps-nav__divider {
-    width: 1px;
-    height: 1em;
-    background-color: var(--civ-color-base-lighter);
-  }
-
-  .civ-form-steps-nav__counter {
-    @apply civ-text-sm civ-font-bold;
+  .civ-progress-steps__counter {
+    @apply civ-text-sm civ-font-bold civ-mt-1;
     color: var(--civ-color-base-dark);
   }
 

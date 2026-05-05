@@ -174,17 +174,13 @@ export class CivHousingOptions extends LightDomSlotMixin(CivFormElement) {
         ` : html`
           ${hasCalloutSlot
             ? html`<div data-civ-housing-callout class="civ-mb-4"></div>`
-            : html`
-              <div class="civ-callout civ-callout--info civ-mb-4">
-                <p class="civ-font-bold civ-mb-1">You can still receive mail</p>
-                <p class="civ-m-0">USPS General Delivery is a free service that holds mail at your local post office for pickup — no PO Box or permanent address required. Just bring a photo ID.</p>
-              </div>
-            `}
+            : nothing}
 
           <civ-form-fieldset legend="${this.optionsLegend || 'How would you like to receive mail?'}" size="lg">
             <civ-radio-group
               name="${this.name ? `${this.name}.mailMethod` : ''}"
               value="${this._mailMethod}"
+              tile
               ?disabled="${this.disabled}"
               @civ-change="${this._onMailMethodChange}"
             >

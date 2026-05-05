@@ -459,13 +459,6 @@
     display: grid;
     grid-template-columns: auto 1fr;
     column-gap: var(--civ-spacing-2);
-    padding: var(--civ-spacing-1) var(--civ-spacing-2) var(--civ-spacing-1) 0;
-    border-radius: 0 var(--civ-border-radius-DEFAULT) var(--civ-border-radius-DEFAULT) 0;
-    transition: background-color var(--civ-motion-duration-fast, 100ms);
-  }
-
-  .civ-check-row:hover:not(:has(:disabled)) {
-    background-color: var(--civ-color-primary-lightest);
   }
 
   .civ-check-row > .civ-check-input {
@@ -562,10 +555,6 @@
     border-color: var(--civ-color-primary-DEFAULT);
   }
 
-  /* Suppress inner row hover when inside a tile */
-  .civ-check-tile .civ-check-row:hover {
-    background-color: transparent;
-  }
 
   /* ── Toggle ─────────────────────────────────────────────────── */
 

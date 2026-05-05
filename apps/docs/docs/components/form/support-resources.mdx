@@ -1,0 +1,75 @@
+---
+title: Support Resources
+sidebar_position: 13
+sidebar_label: Support Resources
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
+# Support Resources
+
+`<civ-support-resources>`
+
+A structured container for support and crisis contact information. Renders as an `<aside>` landmark with a heading and slotted content for phone, email, and other contact links. Use at the bottom of sensitive forms — benefits, healthcare, housing — to provide crisis lines, helpdesk numbers, or support links.
+
+## Examples
+
+### Default
+
+<StoryEmbed id="forms-form-support-resources--default" />
+
+### Crisis tone
+
+<StoryEmbed id="forms-form-support-resources--crisis-tone" />
+
+### Multiple contact types
+
+<StoryEmbed id="forms-form-support-resources--multiple-contact-types" />
+
+### With custom content
+
+<StoryEmbed id="forms-form-support-resources--with-custom-content" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-form-support-resources--default)
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `heading` | `string` | `'If you need support'` | Heading text (falls back to i18n key `supportResourcesHeading`) |
+| `heading-level` | `number` | `3` | Semantic heading level (2–6) |
+| `tone` | `'default' \| 'crisis'` | `'default'` | Crisis uses error-colored left border for urgency |
+
+## Slots
+
+The default slot accepts any content — typically `civ-action-link` components for phone/email:
+
+```html
+<civ-support-resources heading="If you need support">
+  <civ-action-link type="phone" number="988" label="Veterans Crisis Line (press 1)"></civ-action-link>
+  <civ-action-link type="phone" number="18774243838" label="Homeless Veterans Hotline"></civ-action-link>
+  <civ-action-link type="email" address="help@va.gov" label="Email VA support"></civ-action-link>
+</civ-support-resources>
+```
+
+You can also include paragraphs, lists, or any custom HTML:
+
+```html
+<civ-support-resources heading="Housing assistance">
+  <p>If you are experiencing homelessness or at risk of losing your housing:</p>
+  <civ-action-link type="phone" number="18774243838" label="National Call Center for Homeless Veterans"></civ-action-link>
+  <p class="civ-mt-2 civ-text-sm">Available 24/7.</p>
+</civ-support-resources>
+```
+
+## Accessibility
+
+- Renders as `<aside role="complementary">` — a landmark for screen reader navigation
+- Heading uses `aria-labelledby` to label the landmark (no duplicate announcements)
+- Heading level is configurable to fit the page's heading hierarchy
+- Always visible — not hidden behind conditionals or collapsed sections
+
+## Related
+
+- [Housing & Address pattern](/form-patterns/housing-address) — pairs with support resources for housing-insecure forms
+- [`civ-action-link`](/components/actions/action-link) — phone, email, and download links used inside support resources

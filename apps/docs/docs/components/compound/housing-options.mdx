@@ -1,0 +1,118 @@
+---
+title: Housing Options
+sidebar_position: 8
+sidebar_label: Housing Options
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
+# Housing Options
+
+`<civ-housing-options>`
+
+Compound component for collecting mailing addresses from people who may not have permanent housing. Provides a checkbox to indicate no permanent address, then offers configurable mail delivery options: USPS General Delivery, an alternate address, or alternative contact methods.
+
+## Examples
+
+### Default
+
+<StoryEmbed id="forms-compound-housing-options--default" />
+
+### With support resources
+
+<StoryEmbed id="forms-compound-housing-options--with-support-resources" />
+
+### Custom mail options
+
+<StoryEmbed id="forms-compound-housing-options--custom-options" />
+
+### Custom labels and intro
+
+<StoryEmbed id="forms-compound-housing-options--custom-labels" />
+
+### Custom callout slot
+
+<StoryEmbed id="forms-compound-housing-options--custom-callout" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-compound-housing-options--default)
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `legend` | `string` | `''` | Fieldset legend text |
+| `heading-level` | `number` | — | Semantic heading level for the legend |
+| `size` | `'sm' \| 'md' \| 'lg' \| 'xl'` | — | Visual size of the legend |
+| `name` | `string` | `''` | Form field name prefix |
+| `address-name` | `string` | `'address'` | Name for the address sub-component |
+| `checkbox-label` | `string` | `'I don't have a permanent address'` | Override the checkbox text |
+| `intro-heading` | `string` | `'Your mailing address'` | Override the section intro heading |
+| `intro-text` | `string` | — | Override the section intro body text |
+| `options-legend` | `string` | `'How would you like to receive mail?'` | Override the radio group legend |
+| `hide-intro` | `boolean` | `false` | Hide the section intro entirely |
+| `mail-options` | `MailOption[] \| string` | See below | Custom mail delivery options (JSON or JS array) |
+| `required` | `boolean` | `false` | Whether a contact method is required |
+| `disabled` | `boolean` | `false` | Disable all fields |
+
+## Mail Options
+
+The `mail-options` prop accepts a JSON array of objects to replace the default options:
+
+```typescript
+interface MailOption {
+  value: string;           // Unique identifier
+  label: string;           // Display label
+  description?: string;    // Description text below the label
+  renders: 'address' | 'contact' | 'none';  // What to show when selected
+  addressHint?: string;    // Hint for the address form
+  addressLegend?: string;  // Legend for the address form
+}
+```
+
+- `renders: 'address'` — shows a `civ-address` form
+- `renders: 'contact'` — shows city/state + contact method fields
+- `renders: 'none'` — renders nothing (consumer handles via events)
+
+### Default options
+
+| Value | Label | Renders |
+|-------|-------|---------|
+| `general-delivery` | USPS General Delivery | `address` |
+| `alternate-address` | Someone else's address | `address` |
+| `no-mail` | I can't receive mail | `contact` |
+
+### Custom options example
+
+```html
+<civ-housing-options mail-options='[
+  {"value":"po-box","label":"PO Box","renders":"address","addressLegend":"PO Box address"},
+  {"value":"shelter","label":"Shelter address","renders":"address"},
+  {"value":"no-mail","label":"Cannot receive mail","renders":"contact"}
+]'></civ-housing-options>
+```
+
+## Slots
+
+| Slot | Attribute | Description |
+|------|-----------|-------------|
+| `callout` | `data-housing-callout` | Custom callout content shown when the checkbox is checked. Replaces the default (no callout). |
+
+## Events
+
+| Event | Detail | Description |
+|-------|--------|-------------|
+| `civ-input` | `{ value: { noPermanentAddress, mailMethod } }` | On every state change |
+| `civ-change` | `{ value: { noPermanentAddress, mailMethod } }` | On committed state change |
+
+## Language principles
+
+- **Never use "homeless"** in labels — use "permanent address" or "living situation"
+- **Don't make assumptions** — "I don't have a permanent address" is factual, not judgmental
+- **Explain why we ask** — the section intro provides context
+- **Provide alternatives** — every path leads to a way to reach the person
+
+## Related
+
+- [Housing & Address pattern](/form-patterns/housing-address) — pattern-based alternative using composed components
+- [`civ-address`](/components/compound/address) — the address form rendered inside housing options
+- [`civ-support-resources`](/components/form/support-resources) — crisis/support contacts to pair with housing forms

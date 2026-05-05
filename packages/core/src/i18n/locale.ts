@@ -186,6 +186,8 @@ export interface CivLocaleStrings {
   addressCountry: string;
   addressMilitary: string;
   addressMilitaryHint: string;
+  addressMilitaryPostOffice: string;
+  addressMilitaryState: string;
   addressStateProvince: string;
   addressPostalCode: string;
 
@@ -754,8 +756,10 @@ const defaultStrings: CivLocaleStrings = {
   addressState: 'State',
   addressZip: 'ZIP code',
   addressCountry: 'Country',
-  addressMilitary: 'I receive mail outside of the United States on a military base',
-  addressMilitaryHint: 'The United States is automatically chosen as your country if you have a military address',
+  addressMilitary: 'I live on a U.S. military base outside of the United States',
+  addressMilitaryHint: 'Learn more about military base addresses',
+  addressMilitaryPostOffice: 'Military post office',
+  addressMilitaryState: 'Overseas "state" abbreviation',
   addressStateProvince: 'State, province, or region',
   addressPostalCode: 'Postal code',
 

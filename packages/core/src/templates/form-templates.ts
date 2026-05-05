@@ -227,7 +227,7 @@ export function renderFormHeader({
   /** True for fieldset/legend components — skips wrapper div (CSS handles spacing). */
   fieldset?: boolean;
 }) {
-  const hintEl = renderHint(hintId, hint);
+  const hintEl = renderHint(hintId, hint, fieldset);
   const errorEl = renderError(errorId, error);
 
   if (fieldset) {

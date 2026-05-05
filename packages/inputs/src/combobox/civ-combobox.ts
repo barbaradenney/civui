@@ -176,7 +176,7 @@ export class CivCombobox extends CivFormElement {
             ?disabled="${this.disabled}"
             ?required="${this.required}"
             aria-required="${this.required || nothing}"
-            autocomplete="off"
+            autocomplete="nope"
             @input="${this._onFilterInput}"
             @focus="${this._onFocus}"
             @blur="${this._onBlur}"

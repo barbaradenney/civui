@@ -25,7 +25,6 @@ export interface AddressValue {
   city: string;
   state: string;
   zip: string;
-  military: boolean;
 }
 
 const US_STATES: Array<{ value: string; label: string }> = [
@@ -61,18 +60,32 @@ const US_STATES: Array<{ value: string; label: string }> = [
 ];
 
 const MILITARY_STATES = [
-  { value: 'AA', label: 'Armed Forces Americas (AA)' },
-  { value: 'AE', label: 'Armed Forces Europe (AE)' },
-  { value: 'AP', label: 'Armed Forces Pacific (AP)' },
+  { value: 'AA', label: 'AA — Armed Forces Americas' },
+  { value: 'AE', label: 'AE — Armed Forces Europe' },
+  { value: 'AP', label: 'AP — Armed Forces Pacific' },
 ];
 
-const COUNTRY_OPTIONS = [
-  { value: 'US', label: 'United States' },
-  { value: 'CA', label: 'Canada' },
-  { value: 'MX', label: 'Mexico' },
-];
+/** Countries that don't use a state/province/region field. */
+const NO_STATE_COUNTRIES = new Set([
+  'AE', 'AG', 'AI', 'AQ', 'AW', 'BB', 'BH', 'BM', 'BN', 'BS', 'BW',
+  'CW', 'CY', 'DK', 'DJ', 'DM', 'EE', 'FI', 'FJ', 'FK', 'GD', 'GI',
+  'GL', 'GP', 'GQ', 'GY', 'HK', 'HR', 'HU', 'IE', 'IL', 'IS', 'JM',
+  'KI', 'KN', 'KW', 'KY', 'LC', 'LI', 'LT', 'LU', 'LV', 'MC', 'MO',
+  'MT', 'MU', 'MV', 'NR', 'NU', 'OM', 'PR', 'QA', 'SG', 'SI', 'SK',
+  'SM', 'SR', 'SX', 'SZ', 'TC', 'TT', 'TV', 'VA', 'VC', 'VG', 'WS',
+]);
 
-const EMPTY_ADDRESS: AddressValue = { country: 'US', street1: '', street2: '', street3: '', city: '', state: '', zip: '', military: false };
+/** Countries that don't use postal codes. */
+const NO_POSTAL_CODE_COUNTRIES = new Set([
+  'AO', 'AG', 'AW', 'BS', 'BZ', 'BJ', 'BW', 'BF', 'BI', 'CM', 'CF',
+  'KM', 'CG', 'CD', 'CK', 'CI', 'CW', 'DJ', 'DM', 'GQ', 'ER', 'FJ',
+  'GA', 'GM', 'GH', 'GD', 'GN', 'GY', 'HK', 'KI', 'KP', 'LY', 'MW',
+  'ML', 'MR', 'MU', 'NR', 'NU', 'PA', 'QA', 'RW', 'KN', 'LC', 'VC',
+  'WS', 'ST', 'SC', 'SL', 'SB', 'SO', 'SR', 'SX', 'SY', 'TL', 'TK',
+  'TO', 'TT', 'TV', 'UG', 'AE', 'VU', 'YE', 'ZW',
+]);
+
+const EMPTY_ADDRESS: AddressValue = { country: 'US', street1: '', street2: '', street3: '', city: '', state: '', zip: '' };
 
 /**
  * CivUI Address
@@ -116,8 +129,6 @@ export class CivAddress extends CivFormElement {
   /** Whether to show the country selector (enables international addresses). */
   @property({ type: Boolean, attribute: 'show-country' }) showCountry = false;
 
-  /** Whether to show the military address checkbox. */
-  @property({ type: Boolean, attribute: 'show-military' }) showMilitary = false;
 
   /** Whether to show a third street address line. */
   @property({ type: Boolean, attribute: 'show-street3' }) showStreet3 = false;
@@ -180,34 +191,20 @@ export class CivAddress extends CivFormElement {
         aria-required="${this.required || nothing}"
         ?disabled="${this.disabled}"
       >
-        ${renderFormHeader({ label: renderLegend({ legend: this.legend || this.label, required: this.required, headingLevel: this.headingLevel, size: this.size }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
+        ${renderFormHeader({ label: renderLegend({ legend: this.legend || this.label, required: false, headingLevel: this.headingLevel, size: this.size }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
 
-        ${this.showMilitary ? html`
-          <civ-checkbox
-            label="${t('addressMilitary')}"
-            name="${this.name ? `${this.name}.military` : ''}"
-            value="true"
-            ?checked="${this._address.military}"
+        <civ-form-field label="${t('addressCountry')}">
+          <civ-country
+            name="${this.name ? `${this.name}.country` : ''}"
+            value="${this._address.country}"
+            us-first
             ?disabled="${this.disabled}"
-            hint="${this._address.military ? t('addressMilitaryHint') : ''}"
-            @civ-change="${this._onMilitaryChange}"
-          ></civ-checkbox>
-        ` : nothing}
+            data-address-country
+            @civ-change="${(e: CustomEvent) => this._onSubSelectChange('country', e)}"
+          ></civ-country>
+        </civ-form-field>
 
-        ${this.showCountry && !this._address.military ? html`
-          <civ-form-field label="${t('addressCountry')}">
-            <civ-select
-              name="${this.name ? `${this.name}.country` : ''}"
-              value="${this._address.country}"
-              autocomplete="country"
-              ?disabled="${this.disabled}"
-              data-address-country
-              @civ-change="${(e: CustomEvent) => this._onSubSelectChange('country', e)}"
-            ></civ-select>
-          </civ-form-field>
-        ` : nothing}
-
-        <civ-form-field label="${t('addressStreet1')}" error="${this.streetError}">
+        <civ-form-field label="${t('addressStreet1')}" error="${this.streetError}" ?required="${this.required}">
           <civ-text-input
             name="${this.name ? `${this.name}.street1` : ''}"
             value="${this._address.street1}"
@@ -248,7 +245,7 @@ export class CivAddress extends CivFormElement {
           </civ-form-field>
         ` : nothing}
 
-        <civ-form-field label="${t('addressCity')}" error="${this.cityError}">
+        <civ-form-field label="${t('addressCity')}" error="${this.cityError}" ?required="${this.required}">
           <civ-text-input
             name="${this.name ? `${this.name}.city` : ''}"
             value="${this._address.city}"
@@ -261,8 +258,8 @@ export class CivAddress extends CivFormElement {
           ></civ-text-input>
         </civ-form-field>
 
-        ${this._useSelectForState ? html`
-          <civ-form-field label="${t('addressState')}" error="${this.stateError}">
+        ${this._showState ? this._useSelectForState ? html`
+          <civ-form-field label="${t('addressState')}" error="${this.stateError}" ?required="${this.required}">
             <civ-select
               name="${this.name ? `${this.name}.state` : ''}"
               value="${this._address.state}"
@@ -274,7 +271,7 @@ export class CivAddress extends CivFormElement {
             ></civ-select>
           </civ-form-field>
         ` : html`
-          <civ-form-field label="${t('addressStateProvince')}" error="${this.stateError}">
+          <civ-form-field label="${t('addressStateProvince')}" error="${this.stateError}" ?required="${this.required}">
             <civ-text-input
               name="${this.name ? `${this.name}.state` : ''}"
               value="${this._address.state}"
@@ -286,22 +283,22 @@ export class CivAddress extends CivFormElement {
               @civ-change="${(e: CustomEvent) => this._onSubChange('state', e)}"
             ></civ-text-input>
           </civ-form-field>
-        `}
+        ` : nothing}
 
-        <civ-form-field label="${this._address.country === 'US' || !this.showCountry ? t('addressZip') : t('addressPostalCode')}" error="${this.zipError}">
-          <civ-text-input
-            name="${this.name ? `${this.name}.zip` : ''}"
-            value="${this._address.zip}"
-            error="${this.zipError}"
-            inputmode="numeric"
-            autocomplete="postal-code"
-            maxlength="10"
-            ?disabled="${this.disabled}"
-            ?readonly="${this.readonly}"
-            @civ-input="${(e: CustomEvent) => this._onSubInput('zip', e)}"
-            @civ-change="${(e: CustomEvent) => this._onSubChange('zip', e)}"
+        ${this._showPostalCode ? html`
+          <civ-form-field label="${this._address.country === 'US' ? t('addressZip') : t('addressPostalCode')}" error="${this.zipError}" ?required="${this.required}">
+            <civ-text-input
+              name="${this.name ? `${this.name}.zip` : ''}"
+              value="${this._address.zip}"
+              error="${this.zipError}"
+              autocomplete="postal-code"
+              ?disabled="${this.disabled}"
+              ?readonly="${this.readonly}"
+              @civ-input="${(e: CustomEvent) => this._onSubInput('zip', e)}"
+              @civ-change="${(e: CustomEvent) => this._onSubChange('zip', e)}"
           ></civ-text-input>
         </civ-form-field>
+        ` : nothing}
       </fieldset>
 
       ${this._renderValidationModal()}
@@ -410,36 +407,26 @@ export class CivAddress extends CivFormElement {
    * Only US (and military APO/FPO/DPO) ship with a state list today. Other
    * countries fall back to free-text entry until province lists are added. */
   private get _useSelectForState(): boolean {
-    if (this._address.military) return true;
-    return !this.showCountry || this._address.country === 'US';
+    return this._address.country === 'US';
+  }
+
+  private get _showState(): boolean {
+    return !NO_STATE_COUNTRIES.has(this._address.country);
+  }
+
+  private get _showPostalCode(): boolean {
+    return !NO_POSTAL_CODE_COUNTRIES.has(this._address.country);
   }
 
   /** State/province options for the current country. */
   private get _stateOptions(): Array<{ value: string; label: string }> {
-    if (this._address.military) return MILITARY_STATES;
-    return US_STATES;
+    return [...US_STATES, ...MILITARY_STATES];
   }
 
   /** Set options on the select sub-components after render. */
   private _syncSelectOptions(): void {
     const stateSelect = this.querySelector('[data-address-state]') as any;
     if (stateSelect) stateSelect.options = this._stateOptions;
-
-    const countrySelect = this.querySelector('[data-address-country]') as any;
-    if (countrySelect) countrySelect.options = COUNTRY_OPTIONS;
-  }
-
-  private _onMilitaryChange(e: CustomEvent<{ checked: boolean }>): void {
-    e.stopPropagation();
-    this._address = {
-      ...this._address,
-      military: e.detail.checked,
-      country: e.detail.checked ? 'US' : this._address.country,
-      state: '',
-    };
-    this.value = JSON.stringify(this._address);
-    dispatch(this, 'civ-input', { value: { ...this._address } });
-    dispatch(this, 'civ-change', { value: { ...this._address } });
   }
 
   private _onSubInput(field: keyof AddressValue, e: CustomEvent<{ value: string }>): void {

@@ -1,6 +1,6 @@
 ---
 title: Address
-sidebar_position: 2
+sidebar_position: 3
 sidebar_label: Address
 ---
 
@@ -10,7 +10,7 @@ import StoryEmbed from "@site/src/components/StoryEmbed";
 
 `<civ-address>`
 
-Structured address input with street, city, state, and ZIP fields. Supports US domestic addresses, military addresses (AA/AE/AP), and international addresses with country selection.
+Structured address input with country selection, street, city, state, and ZIP/postal code fields. Adapts automatically based on the selected country — US addresses show a state dropdown (including military codes AA/AE/AP), other countries show a text input for state/province, and countries without states or postal codes hide those fields entirely.
 
 ## Examples
 
@@ -18,13 +18,9 @@ Structured address input with street, city, state, and ZIP fields. Supports US d
 
 <StoryEmbed id="forms-compound-address--default" />
 
-### With Hint
+### With Errors
 
-<StoryEmbed id="forms-compound-address--with-hint" />
-
-### With Error
-
-<StoryEmbed id="forms-compound-address--with-error" />
+<StoryEmbed id="forms-compound-address--with-errors" />
 
 ### Required
 
@@ -33,10 +29,6 @@ Structured address input with street, city, state, and ZIP fields. Supports US d
 ### Disabled
 
 <StoryEmbed id="forms-compound-address--disabled" />
-
-### Field Errors
-
-<StoryEmbed id="forms-compound-address--field-errors" />
 
 ### All States
 
@@ -49,14 +41,6 @@ Structured address input with street, city, state, and ZIP fields. Supports US d
 ### Prefilled
 
 <StoryEmbed id="forms-compound-address--prefilled" />
-
-### International
-
-<StoryEmbed id="forms-compound-address--international" />
-
-### Military Address
-
-<StoryEmbed id="forms-compound-address--military-address" />
 
 ### Full Options
 
@@ -77,10 +61,8 @@ All form components share these props: `name`, `value`, `hint`, `error`, `requir
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `legend` | `string` | `''` | Fieldset legend text |
-| `heading-level` | `1`–`6` | — | Promote the legend to a heading via `role="heading"` + `aria-level=N`. See [Heading hierarchy](/docs/components/form/form-group#heading-hierarchy). |
-| `size` | `'sm' \| 'md' \| 'lg' \| 'xl'` | `'sm'` | Visual size. `sm` = body size; `md`/`lg`/`xl` step up for section/page heading use. |
-| `show-country` | `boolean` | `false` | Show country selector (enables international addresses) |
-| `show-military` | `boolean` | `false` | Show military address checkbox |
+| `heading-level` | `1`–`6` | — | Promote the legend to a heading via `role="heading"` + `aria-level=N`. |
+| `size` | `'sm' \| 'md' \| 'lg' \| 'xl'` | `'sm'` | Visual size of the legend. |
 | `show-street2` | `boolean` | `true` | Show Street address line 2 |
 | `show-street3` | `boolean` | `false` | Show Street address line 3 |
 | `street-error` | `string` | `''` | Error for street address field |
@@ -94,58 +76,36 @@ The component stores its value as a JSON string:
 
 ```typescript
 interface AddressValue {
-  country: string;   // 'US', 'CA', 'MX'
+  country: string;   // ISO 3166-1 alpha-2 code (e.g., 'US', 'GB', 'JP')
   street1: string;
   street2: string;
   street3: string;
   city: string;
-  state: string;     // 2-letter state/territory code
+  state: string;     // 2-letter code for US, free text for others
   zip: string;
-  military: boolean;
 }
 ```
 
-## Form Data
+## Country-Adaptive Fields
 
-The component submits as separate fields:
-- `{name}.country`
-- `{name}.street1`
-- `{name}.street2`
-- `{name}.street3`
-- `{name}.city`
-- `{name}.state`
-- `{name}.zip`
-- `{name}.military`
+The form adapts based on the selected country:
 
-## Military Address Mode
+| Country | State field | Postal code | Labels |
+|---------|-----------|-------------|--------|
+| **United States** | Select dropdown (50 states + territories + AA/AE/AP) | Shown | "State", "ZIP code" |
+| **UK, Canada, etc.** | Text input | Shown | "State/Province/Region", "Postal code" |
+| **Hong Kong, Singapore, etc.** | Hidden (no states) | Hidden (no postal codes) | — |
 
-When the military checkbox is checked:
-- Country is locked to US
-- State dropdown shows military options: AA (Americas), AE (Europe), AP (Pacific)
-- Country selector is hidden
-
-## State Field Behavior
-
-- For US addresses: renders a `<select>` with all 50 states + territories
-- For military: renders a `<select>` with AA/AE/AP
-- For international: renders a text input for state/province
+Military addresses use the standard form — select AA, AE, or AP from the State dropdown and enter APO, FPO, or DPO as the city.
 
 ## Sub-field Autocomplete
 
 Fields automatically set appropriate `autocomplete` values:
+- Country: `country`
 - Street: `address-line1`, `address-line2`, `address-line3`
 - City: `address-level2`
 - State: `address-level1`
 - ZIP: `postal-code`
-- Country: `country`
-
-## Programmatic API
-
-```js
-const addr = document.querySelector('civ-address');
-addr.addressValue;  // { country: 'US', street1: '123 Main St', ... }
-addr.isEmpty();     // true if no fields are filled
-```
 
 ## Events
 
@@ -157,27 +117,19 @@ addr.isEmpty();     // true if no fields are filled
 ## Usage
 
 ```html
-<!-- Basic US address -->
+<!-- Standard address -->
 <civ-address
   legend="Mailing address"
   name="mailing"
   required
 ></civ-address>
 
-<!-- With military option -->
+<!-- With extra street line -->
 <civ-address
-  legend="Current address"
-  name="currentAddress"
-  show-military
-  required
-></civ-address>
-
-<!-- International with all lines -->
-<civ-address
-  legend="Overseas address"
-  name="overseas"
-  show-country
+  legend="Complete address"
+  name="fullAddr"
   show-street3
+  required
 ></civ-address>
 
 <!-- Minimal (no street2) -->

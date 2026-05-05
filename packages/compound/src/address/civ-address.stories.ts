@@ -18,7 +18,6 @@ const meta: Meta = {
     showStreet2: { control: 'boolean' },
     showStreet3: { control: 'boolean' },
     showCountry: { control: 'boolean' },
-    showMilitary: { control: 'boolean' },
   },
 };
 
@@ -39,6 +38,7 @@ export const Default: Story = {
   render: (args) => html`
     <civ-address
       legend="${args.legend}"
+      size="lg"
       name="${args.name}"
       hint="${args.hint}"
       error="${args.error}"
@@ -50,22 +50,16 @@ export const Default: Story = {
 
 // ── Individual States ─────────────────────────────────────────
 
-export const WithHint: Story = {
+export const WithErrors: Story = {
+  name: 'With Errors',
   render: () => html`
     <civ-address
-      legend="Mailing address"
+      size="lg" legend="Mailing address"
       name="mailing"
-      hint="US addresses only. Include apartment or unit number if applicable."
-    ></civ-address>
-  `,
-};
-
-export const WithError: Story = {
-  render: () => html`
-    <civ-address
-      legend="Mailing address"
-      name="mailing"
-      error="Enter a complete mailing address"
+      street-error="Enter a street address"
+      city-error="Enter a city"
+      state-error="Select a state"
+      zip-error="Enter a ZIP code"
       required
     ></civ-address>
   `,
@@ -74,7 +68,7 @@ export const WithError: Story = {
 export const Required: Story = {
   render: () => html`
     <civ-address
-      legend="Home address"
+      size="lg" legend="Home address"
       name="home"
       required
     ></civ-address>
@@ -84,24 +78,9 @@ export const Required: Story = {
 export const Disabled: Story = {
   render: () => html`
     <civ-address
-      legend="Mailing address"
+      size="lg" legend="Mailing address"
       name="mailing"
       disabled
-    ></civ-address>
-  `,
-};
-
-export const FieldErrors: Story = {
-  name: 'Individual Field Errors',
-  render: () => html`
-    <civ-address
-      legend="Mailing address"
-      name="mailing"
-      street-error="Enter a street address"
-      city-error="Enter a city"
-      state-error="Select a state"
-      zip-error="Enter a ZIP code"
-      required
     ></civ-address>
   `,
 };
@@ -166,36 +145,12 @@ export const Prefilled: Story = {
   },
 };
 
-export const International: Story = {
-  name: 'International (With Country)',
-  render: () => html`
-    <civ-address
-      legend="Mailing address"
-      name="mailing"
-      show-country
-    ></civ-address>
-  `,
-};
-
-export const MilitaryAddress: Story = {
-  name: 'Military Address',
-  render: () => html`
-    <civ-address
-      legend="Mailing address"
-      name="mailing"
-      show-military
-    ></civ-address>
-  `,
-};
-
 export const FullOptions: Story = {
   name: 'All Options Enabled',
   render: () => html`
     <civ-address
-      legend="Complete address"
+      size="lg" legend="Complete address"
       name="fullAddr"
-      show-country
-      show-military
       show-street3
       required
       hint="Enter your full mailing address including country"
@@ -209,12 +164,10 @@ export const GovernmentMailingForm: Story = {
   name: 'Usage: Correspondence Address',
   render: () => html`
     <h3 class="civ-m-0 civ-mb-4 civ-text-xl">Where should we send correspondence?</h3>
-    <p class="civ-m-0 civ-mb-4 civ-text-muted">We will mail important documents about your application to this address.</p>
     <civ-address
-      legend="Mailing address"
+      size="lg" legend="Mailing address"
       name="correspondence"
       required
-      hint="Include apartment, suite, or unit number"
     ></civ-address>
   `,
 };

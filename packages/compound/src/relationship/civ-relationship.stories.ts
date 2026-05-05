@@ -25,7 +25,7 @@ export const Default: Story = {
   },
   render: (args) => html`
     <civ-relationship
-      legend="About the dependent"
+      size="lg" legend="About the dependent"
       name="dependent"
       preset="${args.preset}"
     ></civ-relationship>
@@ -36,7 +36,7 @@ export const Dependent: Story = {
   name: 'Dependent',
   render: () => html`
     <civ-relationship
-      legend="About the dependent"
+      size="lg" legend="About the dependent"
       name="dependent"
       preset="dependent"
       show-adoption-date
@@ -48,7 +48,7 @@ export const Survivor: Story = {
   name: 'Survivor',
   render: () => html`
     <civ-relationship
-      legend="About the person who died"
+      size="lg" legend="About the person who died"
       name="deceased"
       preset="survivor"
       deceased-assumed
@@ -60,7 +60,7 @@ export const BenefitsSurvivor: Story = {
   name: 'Survivor (Benefits)',
   render: () => html`
     <civ-relationship
-      legend="About the deceased worker"
+      size="lg" legend="About the deceased worker"
       name="deceased"
       preset="benefits-survivor"
       deceased-assumed
@@ -73,7 +73,7 @@ export const Immigration: Story = {
   name: 'Immigration',
   render: () => html`
     <civ-relationship
-      legend="About the person you are petitioning for"
+      size="lg" legend="About the person you are petitioning for"
       name="beneficiary"
       preset="immigration"
       show-adoption-date
@@ -85,7 +85,7 @@ export const Tax: Story = {
   name: 'Tax Filing',
   render: () => html`
     <civ-relationship
-      legend="Dependent information"
+      size="lg" legend="Dependent information"
       name="dependent"
       preset="tax"
     ></civ-relationship>
@@ -96,7 +96,7 @@ export const WithoutName: Story = {
   name: 'Without Name Fields',
   render: () => html`
     <civ-relationship
-      legend="Relationship to veteran"
+      size="lg" legend="Relationship to veteran"
       name="rel"
       preset="survivor"
       show-name="false"
@@ -107,7 +107,7 @@ export const WithoutName: Story = {
 export const Required: Story = {
   render: () => html`
     <civ-relationship
-      legend="About the spouse"
+      size="lg" legend="About the spouse"
       name="spouse"
       preset="general"
       required
@@ -119,11 +119,10 @@ export const WithErrors: Story = {
   name: 'With Errors',
   render: () => html`
     <civ-relationship
-      legend="About the dependent"
+      size="lg" legend="About the dependent"
       name="dep"
       preset="general"
       required
-      name-error="Enter the person's name"
       relationship-error="Select a relationship"
     ></civ-relationship>
   `,

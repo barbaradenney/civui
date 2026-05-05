@@ -156,14 +156,16 @@ export class CivRelationship extends CivFormElement {
         aria-required="${this.required || nothing}"
         ?disabled="${this.disabled}"
       >
-        ${renderFormHeader({ label: renderLegend({ legend, required: this.required, headingLevel: this.headingLevel, size: this.size }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
+        ${renderFormHeader({ label: renderLegend({ legend, required: false, headingLevel: this.headingLevel, size: this.size }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
 
         ${this.showName ? html`
           <civ-name
             legend="${t('relationshipNameLegend')}"
+            size="md"
             name="${prefix}.name"
             value="${nameJson}"
             error="${this.nameError}"
+            ?required="${this.required}"
             ?disabled="${this.disabled}"
             ?readonly="${this.readonly}"
             @civ-input="${this._onNameInput}"
@@ -171,11 +173,12 @@ export class CivRelationship extends CivFormElement {
           ></civ-name>
         ` : nothing}
 
-        <civ-form-field label="${t('relationshipTypeLabel')}" error="${this.relationshipError}">
+        <civ-form-field label="${t('relationshipTypeLabel')}" error="${this.relationshipError}" ?required="${this.required}">
           <civ-select
             name="${prefix}.relationship"
             value="${this._data.relationship}"
             error="${this.relationshipError}"
+            ?required="${this.required}"
             ?disabled="${this.disabled}"
             data-relationship-type
             @civ-change="${this._onRelationshipChange}"

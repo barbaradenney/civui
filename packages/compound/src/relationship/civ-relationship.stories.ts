@@ -135,27 +135,27 @@ export const AllPresets: Story = {
     <div class="civ-flex civ-flex-col civ-gap-8">
       <div>
         <p class="civ-font-semibold civ-mb-2">General</p>
-        <civ-relationship legend="Person" name="gen" preset="general"></civ-relationship>
+        <civ-relationship legend="Person" size="lg" name="gen" preset="general"></civ-relationship>
       </div>
       <div>
         <p class="civ-font-semibold civ-mb-2">Dependent</p>
-        <civ-relationship legend="Dependent" name="dep" preset="dependent"></civ-relationship>
+        <civ-relationship legend="Dependent" size="lg" name="dep" preset="dependent"></civ-relationship>
       </div>
       <div>
         <p class="civ-font-semibold civ-mb-2">Survivor</p>
-        <civ-relationship legend="Deceased" name="surv" preset="survivor"></civ-relationship>
+        <civ-relationship legend="Deceased" size="lg" name="surv" preset="survivor"></civ-relationship>
       </div>
       <div>
         <p class="civ-font-semibold civ-mb-2">Benefits Survivor</p>
-        <civ-relationship legend="Deceased worker" name="ben-surv" preset="benefits-survivor"></civ-relationship>
+        <civ-relationship legend="Deceased worker" size="lg" name="ben-surv" preset="benefits-survivor"></civ-relationship>
       </div>
       <div>
         <p class="civ-font-semibold civ-mb-2">Immigration</p>
-        <civ-relationship legend="Beneficiary" name="imm" preset="immigration"></civ-relationship>
+        <civ-relationship legend="Beneficiary" size="lg" name="imm" preset="immigration"></civ-relationship>
       </div>
       <div>
         <p class="civ-font-semibold civ-mb-2">Tax</p>
-        <civ-relationship legend="Dependent" name="tax" preset="tax"></civ-relationship>
+        <civ-relationship legend="Dependent" size="lg" name="tax" preset="tax"></civ-relationship>
       </div>
     </div>
   `,

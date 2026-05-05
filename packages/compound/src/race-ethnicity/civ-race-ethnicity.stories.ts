@@ -30,6 +30,7 @@ export const Default: Story = {
   render: () => html`
     <civ-race-ethnicity
       legend="Race and ethnicity"
+      size="lg"
       name="demographics"
       required
     ></civ-race-ethnicity>
@@ -53,6 +54,7 @@ export const Prefilled: Story = {
   render: () => html`
     <civ-race-ethnicity
       legend="Race and ethnicity"
+      size="lg"
       name="demographics"
       value='{"ethnicity":"not-hispanic-latino","race":["white","asian"]}'
     ></civ-race-ethnicity>
@@ -63,6 +65,7 @@ export const Disabled: Story = {
   render: () => html`
     <civ-race-ethnicity
       legend="Race and ethnicity"
+      size="lg"
       name="demographics"
       value='{"ethnicity":"hispanic-latino","race":["white"]}'
       disabled

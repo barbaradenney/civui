@@ -44,7 +44,7 @@ export const Default: Story = {
 export const WithHint: Story = {
   name: 'Prefilled',
   render: () => html`
-    <civ-direct-deposit legend="Direct deposit information" name="bank"></civ-direct-deposit>
+    <civ-direct-deposit legend="Direct deposit information" size="lg" name="bank"></civ-direct-deposit>
   `,
   play: async ({ canvasElement }) => {
     const el = canvasElement.querySelector('civ-direct-deposit') as any;
@@ -92,19 +92,19 @@ export const AllStates: Story = {
     <div class="civ-flex civ-flex-col civ-gap-8">
       <div>
         <h3 class="civ-m-0 civ-mb-2 civ-font-semibold">Normal</h3>
-        <civ-direct-deposit legend="Direct deposit" name="normal"></civ-direct-deposit>
+        <civ-direct-deposit legend="Direct deposit" size="lg" name="normal"></civ-direct-deposit>
       </div>
       <div>
         <h3 class="civ-m-0 civ-mb-2 civ-font-semibold">With errors</h3>
-        <civ-direct-deposit legend="Direct deposit" name="errors" type-error="Select account type" routing-error="Enter routing number" account-error="Enter account number"></civ-direct-deposit>
+        <civ-direct-deposit legend="Direct deposit" size="lg" name="errors" type-error="Select account type" routing-error="Enter routing number" account-error="Enter account number"></civ-direct-deposit>
       </div>
       <div>
         <h3 class="civ-m-0 civ-mb-2 civ-font-semibold">Required</h3>
-        <civ-direct-deposit legend="Direct deposit" name="required" required></civ-direct-deposit>
+        <civ-direct-deposit legend="Direct deposit" size="lg" name="required" required></civ-direct-deposit>
       </div>
       <div>
         <h3 class="civ-m-0 civ-mb-2 civ-font-semibold">Disabled</h3>
-        <civ-direct-deposit legend="Direct deposit" name="disabled" disabled></civ-direct-deposit>
+        <civ-direct-deposit legend="Direct deposit" size="lg" name="disabled" disabled></civ-direct-deposit>
       </div>
     </div>
   `,
@@ -118,15 +118,15 @@ export const DensityScale: Story = {
     <div class="civ-flex civ-flex-col civ-gap-6">
       <div data-civ-scale="dense">
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Dense</p>
-        <civ-direct-deposit legend="Direct deposit" name="dense-bank"></civ-direct-deposit>
+        <civ-direct-deposit legend="Direct deposit" size="lg" name="dense-bank"></civ-direct-deposit>
       </div>
       <div>
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Default</p>
-        <civ-direct-deposit legend="Direct deposit" name="default-bank"></civ-direct-deposit>
+        <civ-direct-deposit legend="Direct deposit" size="lg" name="default-bank"></civ-direct-deposit>
       </div>
       <div data-civ-scale="spacious">
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Spacious</p>
-        <civ-direct-deposit legend="Direct deposit" name="spacious-bank"></civ-direct-deposit>
+        <civ-direct-deposit legend="Direct deposit" size="lg" name="spacious-bank"></civ-direct-deposit>
       </div>
     </div>
   `,

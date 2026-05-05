@@ -16,6 +16,7 @@ export const Default: Story = {
   render: () => html`
     <civ-service-history
       legend="About this service period"
+      size="lg"
       name="service"
     ></civ-service-history>
   `,
@@ -26,6 +27,7 @@ export const WithServiceNumber: Story = {
   render: () => html`
     <civ-service-history
       legend="About this service period"
+      size="lg"
       name="service"
       show-service-number
     ></civ-service-history>
@@ -36,6 +38,7 @@ export const Required: Story = {
   render: () => html`
     <civ-service-history
       legend="About this service period"
+      size="lg"
       name="service"
       required
     ></civ-service-history>
@@ -47,6 +50,7 @@ export const WithErrors: Story = {
   render: () => html`
     <civ-service-history
       legend="About this service period"
+      size="lg"
       name="service"
       required
       branch-error="Select a branch of service"
@@ -61,6 +65,7 @@ export const InRepeater: Story = {
   render: () => html`
     <civ-repeater
       legend="Service periods"
+      size="lg"
       name="servicePeriods"
       item-label="service period"
       min="1"

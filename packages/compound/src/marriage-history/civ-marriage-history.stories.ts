@@ -17,6 +17,7 @@ export const Default: Story = {
   render: () => html`
     <civ-marriage-history
       legend="About this marriage"
+      size="lg"
       name="marriage"
     ></civ-marriage-history>
   `,
@@ -26,6 +27,7 @@ export const Required: Story = {
   render: () => html`
     <civ-marriage-history
       legend="About this marriage"
+      size="lg"
       name="marriage"
       required
     ></civ-marriage-history>
@@ -37,6 +39,7 @@ export const WithErrors: Story = {
   render: () => html`
     <civ-marriage-history
       legend="About this marriage"
+      size="lg"
       name="marriage"
       required
       spouse-error="Enter your spouse's name"
@@ -51,6 +54,7 @@ export const InRepeater: Story = {
   render: () => html`
     <civ-repeater
       legend="Marriage history"
+      size="lg"
       name="marriages"
       item-label="marriage"
       min="0"

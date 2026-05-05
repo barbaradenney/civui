@@ -112,11 +112,11 @@ export const AllStates: Story = {
   name: 'All States',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-8">
-      <civ-address legend="Normal" name="normal"></civ-address>
-      <civ-address legend="With hint" name="hint" hint="US addresses only"></civ-address>
-      <civ-address legend="With error" name="error" error="Enter a complete address" required></civ-address>
-      <civ-address legend="Required" name="required" required></civ-address>
-      <civ-address legend="Disabled" name="disabled" disabled></civ-address>
+      <civ-address legend="\1" size="lg" name="normal"></civ-address>
+      <civ-address legend="\1" size="lg" name="hint" hint="US addresses only"></civ-address>
+      <civ-address legend="\1" size="lg" name="error" error="Enter a complete address" required></civ-address>
+      <civ-address legend="\1" size="lg" name="required" required></civ-address>
+      <civ-address legend="\1" size="lg" name="disabled" disabled></civ-address>
     </div>
   `,
 };
@@ -129,15 +129,15 @@ export const DensityScale: Story = {
     <div class="civ-flex civ-flex-col civ-gap-6">
       <div data-civ-scale="dense">
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Dense</p>
-        <civ-address legend="Mailing address" name="dense-addr"></civ-address>
+        <civ-address legend="\1" size="lg" name="dense-addr"></civ-address>
       </div>
       <div>
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Default</p>
-        <civ-address legend="Mailing address" name="default-addr"></civ-address>
+        <civ-address legend="\1" size="lg" name="default-addr"></civ-address>
       </div>
       <div data-civ-scale="spacious">
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Spacious</p>
-        <civ-address legend="Mailing address" name="spacious-addr"></civ-address>
+        <civ-address legend="\1" size="lg" name="spacious-addr"></civ-address>
       </div>
     </div>
   `,
@@ -147,7 +147,7 @@ export const DensityScale: Story = {
 
 export const Prefilled: Story = {
   render: () => html`
-    <civ-address legend="Mailing address" name="mailing"></civ-address>
+    <civ-address legend="\1" size="lg" name="mailing"></civ-address>
   `,
   play: async ({ canvasElement }) => {
     const el = canvasElement.querySelector('civ-address');

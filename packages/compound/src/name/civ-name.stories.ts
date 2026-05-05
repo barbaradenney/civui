@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import './civ-name.js';
+import '@civui/core';
 import '@civui/inputs';
 
 const meta: Meta = {
@@ -45,7 +46,7 @@ export const Default: Story = {
 export const WithHint: Story = {
   name: 'With Prefilled Value',
   render: () => html`
-    <civ-name legend="Your name" name="applicant"></civ-name>
+    <civ-name legend="Your name" size="lg" name="applicant"></civ-name>
   `,
   play: async ({ canvasElement }) => {
     const el = canvasElement.querySelector('civ-name') as any;
@@ -58,7 +59,6 @@ export const WithError: Story = {
     <civ-name
       legend="Your name"
       name="applicant"
-      required
       first-error="Enter a first name"
       last-error="Enter a last name"
     ></civ-name>
@@ -67,13 +67,13 @@ export const WithError: Story = {
 
 export const Required: Story = {
   render: () => html`
-    <civ-name legend="Veteran's name" name="veteran" required></civ-name>
+    <civ-name legend="Veteran's name" size="lg" name="veteran" required></civ-name>
   `,
 };
 
 export const Disabled: Story = {
   render: () => html`
-    <civ-name legend="Your name" name="applicant" disabled></civ-name>
+    <civ-name legend="Your name" size="lg" name="applicant" disabled></civ-name>
   `,
 };
 
@@ -83,10 +83,10 @@ export const AllStates: Story = {
   name: 'All States',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-8">
-      <civ-name legend="Normal" name="normal"></civ-name>
-      <civ-name legend="With errors" name="errors" required first-error="Enter a first name" last-error="Enter a last name"></civ-name>
-      <civ-name legend="Required" name="required" required></civ-name>
-      <civ-name legend="Disabled" name="disabled" disabled></civ-name>
+      <civ-name legend="Normal" size="lg" name="normal"></civ-name>
+      <civ-name legend="With errors" size="lg" name="errors" first-error="Enter a first name" last-error="Enter a last name"></civ-name>
+      <civ-name legend="Required" size="lg" name="required" required></civ-name>
+      <civ-name legend="Disabled" size="lg" name="disabled" disabled></civ-name>
     </div>
   `,
 };
@@ -99,15 +99,15 @@ export const DensityScale: Story = {
     <div class="civ-flex civ-flex-col civ-gap-6">
       <div data-civ-scale="dense">
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Dense</p>
-        <civ-name legend="Your name" name="dense-name"></civ-name>
+        <civ-name legend="Your name" size="lg" name="dense-name"></civ-name>
       </div>
       <div>
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Default</p>
-        <civ-name legend="Your name" name="default-name"></civ-name>
+        <civ-name legend="Your name" size="lg" name="default-name"></civ-name>
       </div>
       <div data-civ-scale="spacious">
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Spacious</p>
-        <civ-name legend="Your name" name="spacious-name"></civ-name>
+        <civ-name legend="Your name" size="lg" name="spacious-name"></civ-name>
       </div>
     </div>
   `,
@@ -118,7 +118,7 @@ export const DensityScale: Story = {
 export const WithoutMiddle: Story = {
   name: 'Without Middle Name',
   render: () => html`
-    <civ-name legend="Spouse's name" name="spouse"></civ-name>
+    <civ-name legend="Spouse's name" size="lg" name="spouse"></civ-name>
   `,
   play: async ({ canvasElement }) => {
     const el = canvasElement.querySelector('civ-name') as any;
@@ -129,12 +129,19 @@ export const WithoutMiddle: Story = {
 export const WithoutSuffix: Story = {
   name: 'Without Suffix',
   render: () => html`
-    <civ-name legend="Your name" name="n"></civ-name>
+    <civ-name legend="Your name" size="lg" name="n"></civ-name>
   `,
   play: async ({ canvasElement }) => {
     const el = canvasElement.querySelector('civ-name') as any;
     el.showSuffix = false;
   },
+};
+
+export const InternationalFormat: Story = {
+  name: 'International Format',
+  render: () => html`
+    <civ-name legend="Applicant's name" size="lg" name="applicantName" format="international" required></civ-name>
+  `,
 };
 
 // ── Usage Example ─────────────────────────────────────────────
@@ -143,12 +150,9 @@ export const GovernmentIdentitySection: Story = {
   name: 'Usage: Identity Section',
   render: () => html`
     <h3 class="civ-m-0 civ-mb-4 civ-text-xl">Personal information</h3>
-    <civ-name legend="Veteran's name" name="veteranName" required></civ-name>
-    <civ-memorable-date
-      label="Date of birth"
-      name="dateOfBirth"
-      required
-      hint="For example: January 15 1990"
-    ></civ-memorable-date>
+    <civ-name legend="Veteran's name" size="lg" name="veteranName" required></civ-name>
+    <civ-form-fieldset legend="Date of birth" required hint="For example: January 15 1990">
+      <civ-memorable-date name="dateOfBirth" required></civ-memorable-date>
+    </civ-form-fieldset>
   `,
 };

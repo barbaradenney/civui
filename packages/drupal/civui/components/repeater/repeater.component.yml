@@ -31,6 +31,43 @@ props:
       title: Max
       type: integer
       description: 'Maximum number of entries'
+    heading_level:
+      title: Heading level
+      type: integer
+      default: 2
+      description: 'Heading level for the legend (1-6)'
+    size:
+      title: Size
+      type: string
+      description: 'Visual size of the legend'
+    hint:
+      title: Hint
+      type: string
+      description: 'Help text shown below the legend'
+    error:
+      title: Error
+      type: string
+      description: 'Error message'
+    required:
+      title: Required
+      type: boolean
+      default: false
+      description: 'Whether at least one entry is required'
+    disabled:
+      title: Disabled
+      type: boolean
+      default: false
+      description: 'Whether the repeater is disabled'
+    form_steps_sensitive:
+      title: Form steps sensitive
+      type: boolean
+      default: false
+      description: 'Mark form-steps mode as sensitive'
+    form_steps_show_pause:
+      title: Form steps show pause
+      type: boolean
+      default: false
+      description: 'Show pause button in form-steps mode'
 
 slots:
   default:

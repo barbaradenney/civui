@@ -781,6 +781,8 @@ function generateReport(): string {
       'formValidate', 'modifier',
       'formState', 'requiredMessage', 'pii', 'formName',
       'options', 'values', 'files', 'state', 'onSelect',
+      // FilterableList: native view builder param, not a web attribute
+      'filters',
       // Native icon platform-specific
       'sfSymbol', 'accessibilityLabel', 'decorative', 'contentDescription', 'tint',
     ]);
@@ -793,6 +795,7 @@ function generateReport(): string {
       'civ-analytics', // native uses onAnalytics closure; excluded only for components where no native has it
       'civ-step-back', // FormStep: web-only navigation event, native handles internally
       'civ-step-continue', // FormStep: web-only navigation event, native handles internally
+      'civ-filter', // FilterableList: web-only event, native uses callback
     ]);
 
     // Native-only events/callbacks (not real events, excluded from parity)

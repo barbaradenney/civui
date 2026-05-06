@@ -39,7 +39,7 @@ import type { SlotConfig } from '@civui/core';
 @customElement('civ-filterable-list')
 export class CivFilterableList extends LightDomSlotMixin(CivBaseElement) {
   /** Accessible label for the region. */
-  @property() label = '';
+  @property({ type: String }) label = '';
 
   /** Message shown when zero items match. */
   @property({ attribute: 'no-results-message' }) noResultsMessage = '';

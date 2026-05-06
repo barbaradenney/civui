@@ -68,14 +68,20 @@ public struct CivRepeater<Content: View>: View {
     /// Called for analytics tracking (parallels `civ-analytics` event).
     public var onAnalytics: ((String, [String: Any]?) -> Void)?
 
-    /// Repeater mode (e.g., "inline", "wizard").
+    /// Repeater mode: "inline" or "form-steps".
     public var mode: String
 
-    /// Whether wizard mode content is sensitive (PII).
-    public var wizardSensitive: Bool
+    /// Heading level for the legend (1–6).
+    public var headingLevel: Int
 
-    /// Whether to show a pause button in wizard mode.
-    public var wizardShowPause: Bool
+    /// Visual size of the legend.
+    public var size: String
+
+    /// Whether form-steps mode content is sensitive.
+    public var formStepsSensitive: Bool
+
+    /// Whether to show a pause button in form-steps mode.
+    public var formStepsShowPause: Bool
 
     /// Content builder that receives the row index.
     @ViewBuilder public var content: (Int) -> Content
@@ -101,8 +107,10 @@ public struct CivRepeater<Content: View>: View {
         onRemove: ((Int) -> Void)? = nil,
         onAnalytics: ((String, [String: Any]?) -> Void)? = nil,
         mode: String = "inline",
-        wizardSensitive: Bool = false,
-        wizardShowPause: Bool = false,
+        headingLevel: Int = 2,
+        size: String = "sm",
+        formStepsSensitive: Bool = false,
+        formStepsShowPause: Bool = false,
         @ViewBuilder content: @escaping (Int) -> Content
     ) {
         self.legend = legend
@@ -119,8 +127,10 @@ public struct CivRepeater<Content: View>: View {
         self.onRemove = onRemove
         self.onAnalytics = onAnalytics
         self.mode = mode
-        self.wizardSensitive = wizardSensitive
-        self.wizardShowPause = wizardShowPause
+        self.headingLevel = headingLevel
+        self.size = size
+        self.formStepsSensitive = formStepsSensitive
+        self.formStepsShowPause = formStepsShowPause
         self.content = content
     }
 

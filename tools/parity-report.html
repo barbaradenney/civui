@@ -2809,8 +2809,8 @@
     <span class="badge yes">iOS</span>
     <span class="badge yes">Android</span>
     <span class="badge yes">Drupal</span>
-    <span class="parity-meter"><span class="parity-fill high" style="width:80%"></span></span>
-    <span style="font-size:12px;color:#71767a;">80%</span>
+    <span class="parity-meter"><span class="parity-fill high" style="width:100%"></span></span>
+    <span style="font-size:12px;color:#71767a;">100%</span>
   </div>
   <div class="component-body">
     <div class="file-path" style="padding:8px 12px;">
@@ -2823,6 +2823,12 @@
     <table>
       <tr><th>Property</th><th>Web</th><th>iOS</th><th>Android</th><th>Drupal</th></tr>
       <tr class="">
+          <td><strong>label</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">string</span></td>
+        </tr><tr class="">
           <td><strong>noResultsMessage</strong></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
@@ -2846,24 +2852,12 @@
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
           <td><span class="check">✓</span> <span class="prop-type">string</span></td>
-        </tr><tr class="gap-row">
-          <td><strong>label</strong></td>
-          <td><span class="cross">✗</span></td>
-          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
-          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
-          <td><span class="check">✓</span> <span class="prop-type">string</span></td>
-        </tr><tr class="gap-row">
-          <td><strong>filters</strong></td>
-          <td><span class="cross">✗</span></td>
-          <td><span class="check">✓</span> <span class="prop-type">Filters</span></td>
-          <td><span class="cross">✗</span></td>
-          <td><span class="cross">✗</span></td>
         </tr>
     </table>
     <div class="section-label">Events / Callbacks</div>
     <table>
       <tr><th>Event</th><th>Web</th><th>iOS</th><th>Android</th><th>Drupal</th></tr>
-      <tr class="gap-row">
+      <tr class="excluded-row">
           <td><strong>civ-filter</strong></td>
           <td><span class="check">✓</span></td>
           <td><span class="cross">✗</span></td>
@@ -5569,8 +5563,8 @@
     <span class="badge yes">iOS</span>
     <span class="badge yes">Android</span>
     <span class="badge yes">Drupal</span>
-    <span class="parity-meter"><span class="parity-fill mid" style="width:75%"></span></span>
-    <span style="font-size:12px;color:#71767a;">75%</span>
+    <span class="parity-meter"><span class="parity-fill high" style="width:88%"></span></span>
+    <span style="font-size:12px;color:#71767a;">88%</span>
   </div>
   <div class="component-body">
     <div class="file-path" style="padding:8px 12px;">
@@ -5588,18 +5582,18 @@
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
           <td><span class="check">✓</span> <span class="prop-type">string</span></td>
-        </tr><tr class="excluded-row">
+        </tr><tr class="">
           <td><strong>headingLevel</strong></td>
           <td><span class="check">✓</span> <span class="prop-type">Number</span></td>
-          <td><span class="cross">✗</span></td>
-          <td><span class="cross">✗</span></td>
-          <td><span class="cross">✗</span></td>
-        </tr><tr class="excluded-row">
+          <td><span class="check">✓</span> <span class="prop-type">Int</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Int</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">integer</span></td>
+        </tr><tr class="">
           <td><strong>size</strong></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
-          <td><span class="cross">✗</span></td>
-          <td><span class="cross">✗</span></td>
-          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">string</span></td>
         </tr><tr class="">
           <td><strong>name</strong></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
@@ -5618,42 +5612,42 @@
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
           <td><span class="check">✓</span> <span class="prop-type">string</span></td>
-        </tr><tr class="gap-row">
+        </tr><tr class="">
           <td><strong>hint</strong></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
-          <td><span class="cross">✗</span></td>
-        </tr><tr class="gap-row">
+          <td><span class="check">✓</span> <span class="prop-type">string</span></td>
+        </tr><tr class="">
           <td><strong>error</strong></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
-          <td><span class="cross">✗</span></td>
-        </tr><tr class="gap-row">
+          <td><span class="check">✓</span> <span class="prop-type">string</span></td>
+        </tr><tr class="">
           <td><strong>required</strong></td>
           <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
           <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
           <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
-          <td><span class="cross">✗</span></td>
-        </tr><tr class="gap-row">
+          <td><span class="check">✓</span> <span class="prop-type">boolean</span></td>
+        </tr><tr class="">
           <td><strong>disabled</strong></td>
           <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
           <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
           <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
-          <td><span class="cross">✗</span></td>
-        </tr><tr class="gap-row">
+          <td><span class="check">✓</span> <span class="prop-type">boolean</span></td>
+        </tr><tr class="">
           <td><strong>formStepsSensitive</strong></td>
           <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
-          <td><span class="cross">✗</span></td>
-          <td><span class="cross">✗</span></td>
-          <td><span class="cross">✗</span></td>
-        </tr><tr class="gap-row">
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">boolean</span></td>
+        </tr><tr class="">
           <td><strong>formStepsShowPause</strong></td>
           <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
-          <td><span class="cross">✗</span></td>
-          <td><span class="cross">✗</span></td>
-          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">boolean</span></td>
         </tr><tr class="">
           <td><strong>min</strong></td>
           <td><span class="check">✓</span> <span class="prop-type">Number</span></td>
@@ -5666,18 +5660,6 @@
           <td><span class="check">✓</span> <span class="prop-type">Int</span></td>
           <td><span class="check">✓</span> <span class="prop-type">Int</span></td>
           <td><span class="check">✓</span> <span class="prop-type">integer</span></td>
-        </tr><tr class="gap-row">
-          <td><strong>wizardSensitive</strong></td>
-          <td><span class="cross">✗</span></td>
-          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
-          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
-          <td><span class="cross">✗</span></td>
-        </tr><tr class="gap-row">
-          <td><strong>wizardShowPause</strong></td>
-          <td><span class="cross">✗</span></td>
-          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
-          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
-          <td><span class="cross">✗</span></td>
         </tr>
     </table>
     <div class="section-label">Events / Callbacks</div>

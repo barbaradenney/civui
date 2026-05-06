@@ -21,9 +21,17 @@ export function dispatch<T>(element: HTMLElement, name: string, detail?: T, canc
 /** Forward clicks on tile padding to the inner input so the entire tile is clickable.
  * Ignores clicks on the label (already handled natively) and
  * any child content (hint, error) — only the tile div itself triggers.
+ *
+ * Focuses the input first so the :focus ring lights up on the tile.
+ * `input.click()` alone toggles the value but doesn't move focus, so
+ * clicking dead space inside the tile would otherwise check the box
+ * silently with no visible feedback.
  */
 export function forwardTileClick(host: HTMLElement, e: Event): void {
   if (e.target !== e.currentTarget) return;
   const input = host.querySelector('input');
-  if (input && !input.disabled && !input.readOnly) input.click();
+  if (input && !input.disabled && !input.readOnly) {
+    input.focus();
+    input.click();
+  }
 }

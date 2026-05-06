@@ -150,6 +150,40 @@ describe('civ-checkbox-group orientation', () => {
   });
 });
 
+describe('civ-checkbox-group variant', () => {
+  it('does not apply civ-group-list by default (card variant)', async () => {
+    const el = await fixture(`
+      <civ-checkbox-group legend="Toppings">
+        <civ-checkbox label="Cheese" value="cheese"></civ-checkbox>
+      </civ-checkbox-group>
+    `);
+
+    expect(el.querySelector('.civ-group-list')).toBeNull();
+  });
+
+  it('applies civ-group-list when variant is list and orientation is vertical', async () => {
+    const el = await fixture(`
+      <civ-checkbox-group legend="Toppings" variant="list">
+        <civ-checkbox label="Cheese" value="cheese"></civ-checkbox>
+        <civ-checkbox label="Pepperoni" value="pepperoni"></civ-checkbox>
+      </civ-checkbox-group>
+    `);
+
+    const container = el.querySelector('.civ-group-layout--vertical.civ-group-list');
+    expect(container).not.toBeNull();
+  });
+
+  it('does not apply civ-group-list when orientation is horizontal even with variant=list', async () => {
+    const el = await fixture(`
+      <civ-checkbox-group legend="Toppings" variant="list" orientation="horizontal">
+        <civ-checkbox label="Cheese" value="cheese"></civ-checkbox>
+      </civ-checkbox-group>
+    `);
+
+    expect(el.querySelector('.civ-group-list')).toBeNull();
+  });
+});
+
 describe('civ-checkbox-group form association', () => {
   it('has static formAssociated = true', () => {
     const Ctor = customElements.get('civ-checkbox-group') as any;

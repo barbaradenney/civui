@@ -202,6 +202,13 @@
     margin-top: var(--civ-spacing-1, 4px);
   }
 
+  /* Pull the group hint flush with the controls when `tight-hint` is set on
+     the wrapping civ-form-fieldset. Used by compact compounds (e.g. the OMB
+     race group) where the legend + hint should read as one stacked header. */
+  civ-form-fieldset[tight-hint] .civ-fieldset > .civ-hint--group {
+    margin-bottom: 0;
+  }
+
 
   /* ── Field width constraints ──────────────────────────────── */
 
@@ -408,8 +415,12 @@
     @apply civ-border-0 civ-p-0 civ-m-0 civ-mb-4;
   }
 
-  /* Remove bottom margin on nested fieldsets (compound inside compound) */
-  .civ-fieldset .civ-fieldset:last-child {
+  /* Remove bottom margin on the last nested fieldset (compound inside compound).
+     Match the inner fieldset only when its wrapper is the outer fieldset's
+     last direct child — without the wrapper hop, each civ-form-fieldset
+     looks like its own :last-child and every section loses its margin. */
+  .civ-fieldset > .civ-fieldset:last-child,
+  .civ-fieldset > :last-child .civ-fieldset {
     @apply civ-mb-0;
   }
 
@@ -423,6 +434,40 @@
 
   .civ-group-layout--horizontal {
     @apply civ-flex civ-flex-row civ-flex-wrap civ-gap-4;
+  }
+
+  /* List variant: tiles collapse into a single connected list with shared
+     1px borders. Only the first and last tile keep rounded corners.
+     Compound selector outranks the [tile] .civ-group-layout--vertical rule
+     so the gap-2 set by tile mode doesn't sneak through. */
+  .civ-group-layout--vertical.civ-group-list {
+    gap: 0;
+  }
+
+  .civ-group-list > * > .civ-check-tile {
+    border-radius: 0;
+    margin-top: -1px;
+    position: relative;
+    z-index: 0;
+  }
+
+  .civ-group-list > :first-child > .civ-check-tile {
+    margin-top: 0;
+    border-top-left-radius: var(--civ-border-radius-DEFAULT);
+    border-top-right-radius: var(--civ-border-radius-DEFAULT);
+  }
+
+  .civ-group-list > :last-child > .civ-check-tile {
+    border-bottom-left-radius: var(--civ-border-radius-DEFAULT);
+    border-bottom-right-radius: var(--civ-border-radius-DEFAULT);
+  }
+
+  /* Lift hovered/checked tiles above neighbors so their full border shows
+     instead of being clipped by the next tile's overlapping top border. */
+  .civ-group-list > * > .civ-check-tile:hover,
+  .civ-group-list > * > .civ-check-tile:has(:checked),
+  .civ-group-list > * > .civ-check-tile:has(:focus-visible) {
+    z-index: 1;
   }
 
   /* ── Icon ─────────────────────────────────────────────────── */

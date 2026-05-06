@@ -210,6 +210,33 @@ export const TileVariant: Story = {
   `,
 };
 
+export const ListVariant: Story = {
+  name: 'List variant (joined tiles)',
+  parameters: {
+    docs: {
+      description: {
+        story: `
+Set \`variant="list"\` on the group to collapse the gap between tiles.
+Adjacent tiles share a single 1px border and only the first / last tile
+keep rounded corners — useful for dense option lists like ethnicity
+selection or single-choice surveys.
+
+Only takes effect with \`tile\` (the default) and vertical orientation.
+        `,
+      },
+    },
+  },
+  render: () => html`
+    <civ-form-fieldset legend="Ethnicity">
+      <civ-radio-group name="ethnicity" variant="list">
+        <civ-radio label="Hispanic or Latino" value="hispanic"></civ-radio>
+        <civ-radio label="Not Hispanic or Latino" value="not-hispanic"></civ-radio>
+        <civ-radio label="Prefer not to answer" value="skip"></civ-radio>
+      </civ-radio-group>
+    </civ-form-fieldset>
+  `,
+};
+
 export const Horizontal: Story = {
   render: () => html`
     <civ-form-fieldset legend="Preferred language">

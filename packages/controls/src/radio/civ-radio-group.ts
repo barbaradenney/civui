@@ -38,6 +38,15 @@ export class CivRadioGroup extends LightDomSlotMixin(CivFormElement) {
   @property({ type: String }) legend = '';
   @property({ type: Boolean, reflect: true }) tile = true;
   @property({ type: String, reflect: true }) orientation: 'vertical' | 'horizontal' = 'vertical';
+  /**
+   * Tile rendering variant. `card` (default) gives each tile its own rounded
+   * border with a gap between tiles. `list` collapses the gap so adjacent
+   * tiles share a single 1px border, with rounded corners only on the first
+   * and last tile — useful for dense option lists like the OMB race & ethnicity
+   * groups. Only affects rendering when `tile` is also true and orientation
+   * is vertical.
+   */
+  @property({ type: String, reflect: true }) variant: 'card' | 'list' = 'card';
 
   /** Pre-populate radio options from a built-in preset data set. */
   @property({ type: String }) preset?: SelectPresetName;
@@ -134,10 +143,13 @@ export class CivRadioGroup extends LightDomSlotMixin(CivFormElement) {
   }
 
   override render() {
-    const layoutClass =
+    const layoutBase =
       this.orientation === 'horizontal'
         ? 'civ-group-layout--horizontal'
         : 'civ-group-layout--vertical';
+    const layoutClass = this.variant === 'list' && this.orientation !== 'horizontal'
+      ? `${layoutBase} civ-group-list`
+      : layoutBase;
 
     // The radiogroup role lives on the inner div so the optional skip
     // affordance (a toggle-button, not a radio) can sit alongside the radio

@@ -121,4 +121,27 @@ describe('civ-race-ethnicity', () => {
     expect(texts).toContain('Ethnicity');
     expect(texts).toContain('Race');
   });
+
+  it('renders Race section before Ethnicity section', async () => {
+    const el = await fixture<CivRaceEthnicity>(
+      '<civ-race-ethnicity legend="Demographics" name="demo"></civ-race-ethnicity>'
+    );
+    await elementUpdated(el);
+
+    const subLegends = Array.from(el.querySelectorAll('civ-form-fieldset legend')).map(
+      (l) => l.textContent?.replace(/\(required\)/g, '').trim(),
+    );
+    expect(subLegends[0]).toBe('Race');
+    expect(subLegends[1]).toBe('Ethnicity');
+  });
+
+  it('forwards variant to inner radio and checkbox groups', async () => {
+    const el = await fixture<CivRaceEthnicity>(
+      '<civ-race-ethnicity legend="Demo" name="demo" variant="list"></civ-race-ethnicity>'
+    );
+    await elementUpdated(el);
+
+    expect(el.querySelector('civ-checkbox-group')?.getAttribute('variant')).toBe('list');
+    expect(el.querySelector('civ-radio-group')?.getAttribute('variant')).toBe('list');
+  });
 });

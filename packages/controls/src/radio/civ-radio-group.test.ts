@@ -430,6 +430,40 @@ describe('civ-radio-group orientation', () => {
   });
 });
 
+describe('civ-radio-group variant', () => {
+  it('does not apply civ-group-list by default (card variant)', async () => {
+    const el = await fixture(`
+      <civ-radio-group legend="Color" name="color">
+        <civ-radio label="Red" value="red"></civ-radio>
+      </civ-radio-group>
+    `);
+
+    expect(el.querySelector('.civ-group-list')).toBeNull();
+  });
+
+  it('applies civ-group-list when variant is list and orientation is vertical', async () => {
+    const el = await fixture(`
+      <civ-radio-group legend="Color" name="color" variant="list">
+        <civ-radio label="Red" value="red"></civ-radio>
+        <civ-radio label="Blue" value="blue"></civ-radio>
+      </civ-radio-group>
+    `);
+
+    const container = el.querySelector('.civ-group-layout--vertical.civ-group-list');
+    expect(container).not.toBeNull();
+  });
+
+  it('does not apply civ-group-list when orientation is horizontal even with variant=list', async () => {
+    const el = await fixture(`
+      <civ-radio-group legend="Color" name="color" variant="list" orientation="horizontal">
+        <civ-radio label="Red" value="red"></civ-radio>
+      </civ-radio-group>
+    `);
+
+    expect(el.querySelector('.civ-group-list')).toBeNull();
+  });
+});
+
 describe('civ-radio-group form association', () => {
   it('has static formAssociated = true', () => {
     const Ctor = customElements.get('civ-radio-group') as any;

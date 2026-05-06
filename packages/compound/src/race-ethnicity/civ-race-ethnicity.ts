@@ -34,8 +34,11 @@ const EMPTY_VALUE: RaceEthnicityValue = { ethnicity: '', race: [] };
  * standard for collecting race and ethnicity data on federal forms.
  *
  * Renders:
- * 1. Ethnicity as a radio group (Hispanic/Latino, Not Hispanic/Latino, Prefer not to answer)
- * 2. Race as a checkbox group (6 OMB categories, multi-select)
+ * 1. Race as a checkbox group (6 OMB categories, multi-select)
+ * 2. Ethnicity as a radio group (Hispanic/Latino, Not Hispanic/Latino, Prefer not to answer)
+ *
+ * Race is presented first because it's the more granular, multi-select
+ * question; ethnicity follows as a single-choice radio group.
  *
  * @element civ-race-ethnicity
  *
@@ -73,6 +76,13 @@ export class CivRaceEthnicity extends CivFormElement {
   @property({ type: String, attribute: 'race-legend' }) raceLegend = '';
   @property({ type: String, attribute: 'ethnicity-error' }) ethnicityError = '';
   @property({ type: String, attribute: 'race-error' }) raceError = '';
+  /**
+   * Tile rendering variant for the underlying race / ethnicity groups.
+   * `card` (default) gives each option its own bordered card with a gap.
+   * `list` collapses the gap so options share a single border, useful for
+   * dense option lists.
+   */
+  @property({ type: String }) variant: 'card' | 'list' = 'card';
 
   @state() private _data: RaceEthnicityValue = { ...EMPTY_VALUE };
 
@@ -152,26 +162,12 @@ export class CivRaceEthnicity extends CivFormElement {
       >
         ${renderFormHeader({ label: renderLegend({ legend: this.legend || this.label, required: this.required, headingLevel: this.headingLevel, size: this.size }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
 
-        <civ-form-fieldset legend="${this.ethnicityLegend || 'Ethnicity'}">
-          <civ-radio-group
-            name="${this.name ? `${this.name}.ethnicity` : 'ethnicity'}"
-            value="${this._data.ethnicity}"
-            error="${this.ethnicityError}"
-            ?required="${this.required}"
-            ?disabled="${this.disabled}"
-            @civ-change="${this._onEthnicityChange}"
-          >
-            ${ETHNICITY_OPTIONS.map(
-              (opt) => html`<civ-radio value="${opt.value}" label="${opt.label}"></civ-radio>`,
-            )}
-          </civ-radio-group>
-        </civ-form-fieldset>
-
-        <civ-form-fieldset legend="${this.raceLegend || 'Race'}" hint="Select one or more">
+        <civ-form-fieldset legend="${this.raceLegend || 'Race'}" hint="Select one or more" size="md" tight-hint>
           <civ-checkbox-group
             name="${this.name ? `${this.name}.race` : 'race'}"
             value="${this._data.race.join(',')}"
             error="${this.raceError}"
+            variant="${this.variant}"
             ?required="${this.required}"
             ?disabled="${this.disabled}"
             @civ-input="${this._onRaceInput}"
@@ -181,6 +177,22 @@ export class CivRaceEthnicity extends CivFormElement {
               (opt) => html`<civ-checkbox value="${opt.value}" label="${opt.label}"></civ-checkbox>`,
             )}
           </civ-checkbox-group>
+        </civ-form-fieldset>
+
+        <civ-form-fieldset legend="${this.ethnicityLegend || 'Ethnicity'}" size="md">
+          <civ-radio-group
+            name="${this.name ? `${this.name}.ethnicity` : 'ethnicity'}"
+            value="${this._data.ethnicity}"
+            error="${this.ethnicityError}"
+            variant="${this.variant}"
+            ?required="${this.required}"
+            ?disabled="${this.disabled}"
+            @civ-change="${this._onEthnicityChange}"
+          >
+            ${ETHNICITY_OPTIONS.map(
+              (opt) => html`<civ-radio value="${opt.value}" label="${opt.label}"></civ-radio>`,
+            )}
+          </civ-radio-group>
         </civ-form-fieldset>
       </fieldset>
     `;

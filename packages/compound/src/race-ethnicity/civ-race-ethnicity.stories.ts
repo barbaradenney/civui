@@ -11,12 +11,12 @@ const meta: Meta = {
       description: {
         component: `
 Compound component implementing the OMB standard for collecting race
-and ethnicity data. Renders ethnicity as a radio group and race as
-a checkbox group (multi-select).
+and ethnicity data. Renders race as a multi-select checkbox group
+followed by ethnicity as a single-choice radio group.
 
-This is the standard pattern required on federal forms — ethnicity and
-race are collected separately because individuals may identify with
-multiple races but select one ethnicity category.
+This is the standard pattern required on federal forms — race and
+ethnicity are collected separately because individuals may identify
+with multiple races but select one ethnicity category.
         `,
       },
     },
@@ -32,6 +32,19 @@ export const Default: Story = {
       legend="Race and ethnicity"
       size="lg"
       name="demographics"
+      required
+    ></civ-race-ethnicity>
+  `,
+};
+
+export const ListVariant: Story = {
+  name: 'List Variant (joined tiles)',
+  render: () => html`
+    <civ-race-ethnicity
+      legend="Race and ethnicity"
+      size="lg"
+      name="demographics"
+      variant="list"
       required
     ></civ-race-ethnicity>
   `,

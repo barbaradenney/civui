@@ -57,6 +57,15 @@ export class CivFormFieldset extends LightDomSlotMixin(CivBaseElement) {
    */
   @property({ type: String }) size?: LabelSize;
 
+  /**
+   * Pull the hint visually flush with the controls below it by removing the
+   * default 16px gap under group hints. Useful for compact compounds where
+   * the legend + hint should read as one stacked header (e.g. the OMB race
+   * group's "Race / Select one or more"). Renders as `tight-hint` attribute
+   * for CSS targeting.
+   */
+  @property({ type: Boolean, attribute: 'tight-hint', reflect: true }) tightHint = false;
+
   private _hintId = this.generateId('hint');
   private _errorId = this.generateId('error');
 

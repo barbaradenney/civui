@@ -205,6 +205,36 @@ export const GroupHorizontal: Story = {
   `,
 };
 
+export const GroupListVariant: Story = {
+  name: 'Group: List variant (joined tiles)',
+  parameters: {
+    docs: {
+      description: {
+        story: `
+Set \`variant="list"\` on the group to collapse the gap between tiles.
+Adjacent tiles share a single 1px border and only the first / last tile
+keep rounded corners — useful for dense option lists like demographic
+selection or multi-select preferences.
+
+Only takes effect with \`tile\` (the default) and vertical orientation.
+        `,
+      },
+    },
+  },
+  render: () => html`
+    <civ-form-fieldset legend="Race" hint="Select one or more">
+      <civ-checkbox-group name="race" variant="list">
+        <civ-checkbox label="American Indian or Alaska Native" value="aian"></civ-checkbox>
+        <civ-checkbox label="Asian" value="asian"></civ-checkbox>
+        <civ-checkbox label="Black or African American" value="black"></civ-checkbox>
+        <civ-checkbox label="Native Hawaiian or Other Pacific Islander" value="nhpi"></civ-checkbox>
+        <civ-checkbox label="White" value="white"></civ-checkbox>
+        <civ-checkbox label="Prefer not to answer" value="skip"></civ-checkbox>
+      </civ-checkbox-group>
+    </civ-form-fieldset>
+  `,
+};
+
 // ── Usage Example ─────────────────────────────────────────────
 
 export const GovernmentCertificationForm: Story = {

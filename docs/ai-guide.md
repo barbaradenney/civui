@@ -16,9 +16,9 @@ For architecture and internals, see `CLAUDE.md` in the repo root.
 | `<civ-select>` | Input | `options`, `emptyLabel`, `preset` | `{ value }` |
 | `<civ-combobox>` | Input | `options`, `placeholder`, `noResultsText` | `{ value }` |
 | `<civ-checkbox>` | Choice | `checked`, `indeterminate`, `description`, `tile` | `{ checked, value }` |
-| `<civ-checkbox-group>` | Group | `legend`, `tile`, `orientation`, `preset` | `{ values: string[] }` |
+| `<civ-checkbox-group>` | Group | `legend`, `tile`, `variant`, `orientation`, `preset` | `{ values: string[] }` |
 | `<civ-radio>` | Choice | `label`, `value`, `checked`, `description`, `tile` | (bubbles to group) |
-| `<civ-radio-group>` | Group | `legend`, `tile`, `orientation`, `preset` | `{ value }` |
+| `<civ-radio-group>` | Group | `legend`, `tile`, `variant`, `orientation`, `preset` | `{ value }` |
 | `<civ-toggle>` | Choice | `checked`, `description` | `{ checked, value }` |
 | `<civ-segmented-control>` | Group | `legend` | `{ value }` |
 | `<civ-segment>` | Choice | `label`, `value`, `selected` | (bubbles to parent) |
@@ -296,6 +296,7 @@ Groups multiple checkboxes. Uses `legend` (not `label`). Multi-value.
 **Props (beyond standard):**
 - `legend` — group label (renders as `<legend>`)
 - `tile` — apply tile variant to all children
+- `variant` — `'card'` (default, individual rounded tiles with gaps) | `'list'` (joined tiles sharing a 1px border, rounded corners only on first / last). Vertical + tile only.
 - `orientation` — `'vertical'` (default) | `'horizontal'`
 - `preset` — pre-built option list (same presets as `civ-select`). Renders `<civ-checkbox>` children automatically.
 - `preset-variant` — variant of the preset (e.g., `'territories'`, `'all'`, `'binary'`)
@@ -333,6 +334,7 @@ Mutually exclusive choice group. `civ-radio` is always used inside `civ-radio-gr
 **Radio-group props (beyond standard):**
 - `legend` — group label
 - `tile` — apply tile variant to all children
+- `variant` — `'card'` (default, individual rounded tiles with gaps) | `'list'` (joined tiles sharing a 1px border, rounded corners only on first / last). Vertical + tile only.
 - `orientation` — `'vertical'` (default) | `'horizontal'`
 - `preset` — pre-built option list (same presets as `civ-select`). Renders `<civ-radio>` children automatically.
 - `preset-variant` — variant of the preset (e.g., `'territories'`, `'all'`, `'binary'`)

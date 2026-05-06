@@ -271,12 +271,12 @@ export const GovernmentBenefitApplication: Story = {
   `,
 };
 
-export const PrimaryDefault: Story = {
-  name: 'Primary — Default spacing',
+export const HeaderPrimary: Story = {
+  name: 'Header — Primary',
   parameters: {
     docs: {
       description: {
-        story: 'Large heading with border lines and generous padding. Use as the main multi-step form page heading.',
+        story: 'Large heading with divider lines. Use as the main multi-step form page heading.',
       },
     },
   },
@@ -299,45 +299,17 @@ export const PrimaryDefault: Story = {
   `,
 };
 
-export const PrimaryCompact: Story = {
-  name: 'Primary — Compact spacing',
+export const HeaderSecondary: Story = {
+  name: 'Header — Secondary',
   parameters: {
     docs: {
       description: {
-        story: 'Large heading without border lines and tight padding. Use for embedded sub-forms or tight layouts.',
+        story: 'Medium heading without dividers. Use for inline form sections.',
       },
     },
   },
   render: () => html`
-    <civ-form-step header-size="primary" header-spacing="compact" step-title="Personal information">
-      <div data-step-label="Personal information">
-        <civ-form-field label="Full name" required>
-          <civ-text-input name="name"></civ-text-input>
-        </civ-form-field>
-      </div>
-      <div data-step-label="Contact information">
-        <civ-form-field label="Email address" required>
-          <civ-text-input name="email" type="email"></civ-text-input>
-        </civ-form-field>
-      </div>
-      <div data-step-label="Review">
-        <p>Review your information before submitting.</p>
-      </div>
-    </civ-form-step>
-  `,
-};
-
-export const SecondaryDefault: Story = {
-  name: 'Secondary — Default spacing',
-  parameters: {
-    docs: {
-      description: {
-        story: 'Standard heading with border lines and moderate padding. The default style for multi-step sections.',
-      },
-    },
-  },
-  render: () => html`
-    <civ-form-step step-title="Personal information">
+    <civ-form-step header-size="secondary" step-title="Personal information">
       <div data-step-label="Personal information">
         <civ-form-field label="Full name" required>
           <civ-text-input name="name"></civ-text-input>
@@ -352,17 +324,17 @@ export const SecondaryDefault: Story = {
   `,
 };
 
-export const SecondaryCompact: Story = {
-  name: 'Secondary — Compact spacing',
+export const HeaderTertiary: Story = {
+  name: 'Header — Tertiary',
   parameters: {
     docs: {
       description: {
-        story: 'Compact heading without border lines and minimal padding. Use for mobile or tight layouts.',
+        story: 'Compact heading that pairs with progress-steps or progress-percent bars.',
       },
     },
   },
   render: () => html`
-    <civ-form-step header-spacing="compact" step-title="Personal information">
+    <civ-form-step header-size="tertiary" step-title="Personal information">
       <div data-step-label="Personal information">
         <civ-form-field label="Full name" required>
           <civ-text-input name="name"></civ-text-input>

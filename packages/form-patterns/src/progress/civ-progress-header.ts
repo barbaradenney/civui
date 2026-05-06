@@ -5,8 +5,13 @@ import { CivBaseElement, announce, t, interpolate } from '@civui/core';
 /**
  * CivUI Progress Header
  *
- * A compact step counter for multi-step forms. Displays
- * "Step X of Y: Title" with configurable heading level and size.
+ * A step counter for multi-step forms. Displays
+ * "Step X of Y: Title" with configurable size and heading level.
+ *
+ * Three sizes:
+ * - `primary` — divider lines, large heading, generous spacing. Use as a standalone page heading.
+ * - `secondary` — no dividers, base font. Use inline in form sections.
+ * - `tertiary` — compact, small font. Use alongside civ-progress-steps or civ-progress-percent.
  *
  * Pure display — no navigation or back link. The parent component
  * (typically `civ-form-step`) handles back navigation separately.
@@ -16,8 +21,7 @@ import { CivBaseElement, announce, t, interpolate } from '@civui/core';
  * @prop {number} current - Current step index (0-based, clamped to 0..total-1)
  * @prop {number} total - Total number of steps
  * @prop {string} stepTitle - Title of the current step
- * @prop {string} headerSize - Heading size ('sm' | 'md' | 'lg' | 'xl')
- * @prop {string} headerSpacing - Spacing variant ('default' | 'compact')
+ * @prop {'primary'|'secondary'|'tertiary'} size - Visual size variant
  * @prop {number} headingLevel - Semantic heading level (1–6)
  */
 @customElement('civ-progress-header')
@@ -31,11 +35,8 @@ export class CivProgressHeader extends CivBaseElement {
   /** Title of the current step. */
   @property({ type: String, attribute: 'step-title' }) stepTitle = '';
 
-  /** Heading size: applies civ-heading-{size} class. */
-  @property({ type: String, attribute: 'header-size' }) headerSize: 'sm' | 'md' | 'lg' | 'xl' = 'lg';
-
-  /** Spacing variant: 'compact' removes borders and reduces margin. */
-  @property({ type: String, attribute: 'header-spacing' }) headerSpacing: 'default' | 'compact' = 'default';
+  /** Visual size: 'primary' (large with dividers), 'secondary' (medium), 'tertiary' (compact). */
+  @property({ type: String }) size: 'primary' | 'secondary' | 'tertiary' = 'primary';
 
   /** Semantic heading level (1–6). */
   @property({ type: Number, attribute: 'heading-level' }) headingLevel: number = 2;
@@ -60,16 +61,13 @@ export class CivProgressHeader extends CivBaseElement {
     if (this.total <= 1) return nothing;
 
     const idx = this._safeCurrent;
-    const headerClass = this.headerSpacing === 'compact'
-      ? 'civ-progress-header civ-progress-header--compact'
-      : 'civ-progress-header';
 
     return html`
-      <div class="${headerClass}">
+      <div class="civ-progress-header--${this.size}">
         <span class="civ-progress-header__counter">
           ${interpolate(t('progressStepsCounter'), { current: String(idx + 1), total: String(this.total) })}:
         </span>
-        <span class="civ-heading-${this.headerSize} civ-progress-header__title"
+        <span class="civ-progress-header__title"
           role="heading" aria-level="${this.headingLevel}"
         >${this.stepTitle}</span>
       </div>

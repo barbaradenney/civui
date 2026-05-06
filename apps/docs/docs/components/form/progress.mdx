@@ -75,29 +75,43 @@ Each step is a small rectangle — filled for completed, highlighted for current
 
 ## Progress Header (`civ-progress-header`)
 
-### Default
+### Primary
 
-<StoryEmbed id="forms-form-progress--progress-header" />
-
-### Primary Size
+Large heading with divider lines. Use as the main multi-step form page heading.
 
 <StoryEmbed id="forms-form-progress--progress-header-primary" />
 
-### In Form Step — Primary with Default Spacing
+### Secondary
 
-<StoryEmbed id="forms-form-form-step--primary-default" />
+Medium heading without dividers. Use for inline form sections.
 
-### In Form Step — Primary with Compact Spacing
+<StoryEmbed id="forms-form-progress--progress-header-secondary" />
 
-<StoryEmbed id="forms-form-form-step--primary-compact" />
+### Tertiary
 
-### In Form Step — Secondary with Default Spacing
+Compact heading that pairs with progress-steps or progress-percent bars.
 
-<StoryEmbed id="forms-form-form-step--secondary-default" />
+<StoryEmbed id="forms-form-progress--progress-header-tertiary" />
 
-### In Form Step — Secondary with Compact Spacing
+### Paired with Steps
 
-<StoryEmbed id="forms-form-form-step--secondary-compact" />
+<StoryEmbed id="forms-form-progress--header-with-steps" />
+
+### Paired with Percent
+
+<StoryEmbed id="forms-form-progress--header-with-percent" />
+
+### In Form Step — Primary
+
+<StoryEmbed id="forms-form-form-step--header-primary" />
+
+### In Form Step — Secondary
+
+<StoryEmbed id="forms-form-form-step--header-secondary" />
+
+### In Form Step — Tertiary
+
+<StoryEmbed id="forms-form-form-step--header-tertiary" />
 
 ### Props
 
@@ -106,8 +120,7 @@ Each step is a small rectangle — filled for completed, highlighted for current
 | `current` | `number` | `0` | Current step index (0-based, clamped) |
 | `total` | `number` | `0` | Total number of steps |
 | `step-title` | `string` | `''` | Title of the current step |
-| `header-size` | `'sm' \| 'md' \| 'lg' \| 'xl'` | `'lg'` | Heading size |
-| `header-spacing` | `'default' \| 'compact'` | `'default'` | Spacing variant |
+| `size` | `'primary' \| 'secondary' \| 'tertiary'` | `'primary'` | Visual size variant |
 | `heading-level` | `number` | `2` | Semantic heading level (1–6) |
 
 ### Usage

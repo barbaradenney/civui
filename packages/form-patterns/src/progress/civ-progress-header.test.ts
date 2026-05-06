@@ -24,14 +24,14 @@ describe('civ-progress-header', () => {
     const el = await fixture<CivProgressHeader>(
       '<civ-progress-header current="0" total="1" step-title="Only"></civ-progress-header>'
     );
-    expect(el.querySelector('.civ-progress-header')).toBeNull();
+    expect(el.querySelector('[class^="civ-progress-header--"]')).toBeNull();
   });
 
   it('renders nothing for zero steps', async () => {
     const el = await fixture<CivProgressHeader>(
       '<civ-progress-header current="0" total="0" step-title="None"></civ-progress-header>'
     );
-    expect(el.querySelector('.civ-progress-header')).toBeNull();
+    expect(el.querySelector('[class^="civ-progress-header--"]')).toBeNull();
   });
 
   it('clamps current to valid range', async () => {
@@ -39,7 +39,6 @@ describe('civ-progress-header', () => {
       '<civ-progress-header current="10" total="3" step-title="Clamped"></civ-progress-header>'
     );
     const counter = el.querySelector('.civ-progress-header__counter');
-    // Should display "Step 3 of 3" (clamped to last step)
     expect(counter!.textContent).toContain('3');
   });
 
@@ -60,28 +59,25 @@ describe('civ-progress-header', () => {
     expect(title!.getAttribute('aria-level')).toBe('3');
   });
 
-  it('applies header size class', async () => {
+  it('renders primary size by default', async () => {
     const el = await fixture<CivProgressHeader>(
-      '<civ-progress-header current="0" total="3" step-title="Test" header-size="xl"></civ-progress-header>'
+      '<civ-progress-header current="0" total="3" step-title="Test"></civ-progress-header>'
     );
-    const title = el.querySelector('.civ-progress-header__title');
-    expect(title!.classList.contains('civ-heading-xl')).toBe(true);
+    expect(el.querySelector('.civ-progress-header--primary')).not.toBeNull();
   });
 
-  it('applies compact spacing modifier', async () => {
+  it('renders secondary size', async () => {
     const el = await fixture<CivProgressHeader>(
-      '<civ-progress-header current="0" total="3" step-title="Compact" header-spacing="compact"></civ-progress-header>'
+      '<civ-progress-header current="0" total="3" step-title="Test" size="secondary"></civ-progress-header>'
     );
-    const header = el.querySelector('.civ-progress-header');
-    expect(header!.classList.contains('civ-progress-header--compact')).toBe(true);
+    expect(el.querySelector('.civ-progress-header--secondary')).not.toBeNull();
   });
 
-  it('uses default spacing without compact modifier', async () => {
+  it('renders tertiary size', async () => {
     const el = await fixture<CivProgressHeader>(
-      '<civ-progress-header current="0" total="3" step-title="Default"></civ-progress-header>'
+      '<civ-progress-header current="0" total="3" step-title="Test" size="tertiary"></civ-progress-header>'
     );
-    const header = el.querySelector('.civ-progress-header');
-    expect(header!.classList.contains('civ-progress-header--compact')).toBe(false);
+    expect(el.querySelector('.civ-progress-header--tertiary')).not.toBeNull();
   });
 
   it('updates when current changes', async () => {

@@ -103,14 +103,8 @@ export class CivFormStep extends LightDomSlotMixin(CivBaseElement) {
   /** Title for the current step, rendered below the step counter. */
   @property({ type: String, attribute: 'step-title' }) stepTitle = '';
 
-  /** Header size: 'primary' (large, prominent) or 'secondary' (compact, default). */
-  @property({ type: String, attribute: 'header-size' }) headerSize: 'primary' | 'secondary' = 'secondary';
-
-  /** Show divider lines above and below the step header. */
-  @property({ type: Boolean, attribute: 'header-dividers' }) headerDividers = false;
-
-  /** Header spacing: 'default' or 'compact'. */
-  @property({ type: String, attribute: 'header-spacing' }) headerSpacing: 'default' | 'compact' = 'default';
+  /** Header size: 'primary' (large with dividers), 'secondary' (medium), 'tertiary' (compact, pairs with progress bars). */
+  @property({ type: String, attribute: 'header-size' }) headerSize: 'primary' | 'secondary' | 'tertiary' = 'primary';
 
   /** Heading level for the step title (2–6). Defaults to 2. */
   @property({ type: Number, attribute: 'heading-level' }) headingLevel: number = 2;
@@ -288,8 +282,7 @@ export class CivFormStep extends LightDomSlotMixin(CivBaseElement) {
             current="${idx}"
             total="${total}"
             step-title="${this.stepTitle || this._steps[idx]?.getAttribute('data-step-label') || ''}"
-            header-size="${this.headerSize}"
-            header-spacing="${this.headerSpacing}"
+            size="${this.headerSize}"
             heading-level="${this.headingLevel}"
           ></civ-progress-header>
         `;

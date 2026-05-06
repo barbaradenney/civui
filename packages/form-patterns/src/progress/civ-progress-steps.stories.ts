@@ -130,26 +130,72 @@ export const AllStates: Story = {
 
 // ── Progress Header ──────────────────────────────────────────
 
-export const ProgressHeader: Story = {
-  name: 'Progress Header (Minimal)',
+export const ProgressHeaderPrimary: Story = {
+  name: 'Header — Primary',
   render: () => html`
     <civ-progress-header
       current="1"
       total="4"
       step-title="Contact Information"
+      size="primary"
     ></civ-progress-header>
   `,
 };
 
-export const ProgressHeaderPrimary: Story = {
-  name: 'Progress Header (Primary Size)',
+export const ProgressHeaderSecondary: Story = {
+  name: 'Header — Secondary',
   render: () => html`
     <civ-progress-header
-      current="0"
-      total="3"
-      step-title="Personal Information"
-      header-size="xl"
+      current="1"
+      total="4"
+      step-title="Contact Information"
+      size="secondary"
     ></civ-progress-header>
+  `,
+};
+
+export const ProgressHeaderTertiary: Story = {
+  name: 'Header — Tertiary',
+  render: () => html`
+    <civ-progress-header
+      current="1"
+      total="4"
+      step-title="Contact Information"
+      size="tertiary"
+    ></civ-progress-header>
+  `,
+};
+
+export const HeaderWithSteps: Story = {
+  name: 'Header + Steps (paired)',
+  render: () => html`
+    <civ-progress-header
+      current="2"
+      total="5"
+      step-title="Employment History"
+      size="tertiary"
+    ></civ-progress-header>
+    <civ-progress-steps
+      steps='["Eligibility","Personal Info","Employment","Documents","Review"]'
+      current="2"
+    ></civ-progress-steps>
+  `,
+};
+
+export const HeaderWithPercent: Story = {
+  name: 'Header + Percent (paired)',
+  render: () => html`
+    <civ-progress-header
+      current="2"
+      total="5"
+      step-title="Employment History"
+      size="tertiary"
+    ></civ-progress-header>
+    <civ-progress-percent
+      value="40"
+      label="Form completion"
+      status="2 of 5 sections complete"
+    ></civ-progress-percent>
   `,
 };
 

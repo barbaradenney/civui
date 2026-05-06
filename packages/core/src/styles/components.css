@@ -1747,19 +1747,7 @@
     color: var(--civ-color-base-dark);
   }
 
-  /* Progress header — compact "Step 1 of 3: Title" indicator */
-  .civ-progress-header {
-    @apply civ-mb-4 civ-py-2;
-    font-size: var(--civ-typography-fontSize-lg);
-    border-top: 1px solid var(--civ-color-base-lighter);
-    border-bottom: 1px solid var(--civ-color-base-lighter);
-  }
-
-  .civ-progress-header--compact {
-    @apply civ-mb-3 civ-py-2;
-    font-size: var(--civ-typography-fontSize-base);
-    border: none;
-  }
+  /* Progress header — "Step X of Y: Title" indicator */
 
   .civ-progress-header__counter {
     @apply civ-font-bold;
@@ -1767,6 +1755,27 @@
 
   .civ-progress-header__title {
     @apply civ-font-normal;
+  }
+
+  /* Primary — divider lines, large heading, generous spacing */
+  .civ-progress-header--primary {
+    @apply civ-mb-4 civ-py-2;
+    font-size: var(--civ-typography-fontSize-lg);
+    border-top: 1px solid var(--civ-color-base-lighter);
+    border-bottom: 1px solid var(--civ-color-base-lighter);
+  }
+
+  /* Secondary — no dividers, base font, moderate spacing */
+  .civ-progress-header--secondary {
+    @apply civ-mb-3 civ-py-1;
+    font-size: var(--civ-typography-fontSize-base);
+  }
+
+  /* Tertiary — compact, pairs with progress-steps/percent bars */
+  .civ-progress-header--tertiary {
+    @apply civ-mb-1;
+    font-size: var(--civ-typography-fontSize-sm);
+    color: var(--civ-color-base-dark);
   }
 
   /* ── Callout (shared accent border — used by section-intro, alerts, custom callouts) */

@@ -2,9 +2,10 @@
  * These encapsulate repeated Tailwind utility patterns so components
  * render `class="civ-input"` instead of 15+ utilities.
  *
- * Note: focus-visible:civ-focus-ring stays as a utility class on DOM
- * elements (not via @apply) so forced-colors rules in civ.css keep
- * matching `.civ-focus-ring:focus-visible`.
+ * Note: the `focus-visible:civ-focus-ring` class name stays on DOM
+ * elements for source compatibility, but the rule attached to it
+ * triggers on :focus (not :focus-visible) — the GOV.UK pattern that
+ * shows the ring on click as well as keyboard focus.
  */
 
 @layer components {
@@ -321,7 +322,7 @@
     color: var(--civ-color-base-darkest);
   }
 
-  .civ-input:focus-visible {
+  .civ-input:focus {
     outline: var(--civ-focus-outline-width) solid var(--civ-focus-shadow-color);
     outline-offset: 0;
     box-shadow: 0 0 0 var(--civ-focus-shadow-radius) var(--civ-focus-outline-color);
@@ -351,7 +352,7 @@
     font-size: inherit;
   }
   .civ-close-btn:hover { color: var(--civ-color-base-darkest); background: rgba(0, 0, 0, 0.08); }
-  .civ-close-btn:focus-visible {
+  .civ-close-btn:focus {
     outline: var(--civ-focus-outline-width) solid var(--civ-focus-outline-color);
     outline-offset: var(--civ-focus-outline-offset);
     box-shadow: 0 0 0 var(--civ-focus-outline-offset) var(--civ-focus-shadow-color);
@@ -467,7 +468,7 @@
      instead of being clipped by the next tile's overlapping top border. */
   .civ-group-list > * > .civ-check-tile:hover,
   .civ-group-list > * > .civ-check-tile:has(:checked),
-  .civ-group-list > * > .civ-check-tile:has(:focus-visible) {
+  .civ-group-list > * > .civ-check-tile:has(:focus) {
     z-index: 1;
   }
 
@@ -537,7 +538,7 @@
     flex-shrink: 0;
   }
 
-  .civ-check-input:focus-visible {
+  .civ-check-input:focus {
     outline: var(--civ-focus-outline-width) solid var(--civ-focus-shadow-color);
     outline-offset: 0;
     box-shadow: 0 0 0 var(--civ-focus-shadow-radius) var(--civ-focus-outline-color);
@@ -938,16 +939,16 @@
   }
 
   /* In tile mode, the tile is the visual click target — ring the whole
-     tile on keyboard focus and suppress the inner input's ring so we
-     don't stack two indicators. Blank (non-tile) checkboxes / radios
-     keep their input-level ring via the `.civ-check-input:focus-visible`
-     rule above. */
-  .civ-check-tile:has(:focus-visible) {
+     tile when focus lands anywhere inside (click or keyboard) and
+     suppress the inner input's own ring so we don't stack two
+     indicators. Blank (non-tile) checkboxes / radios keep their
+     input-level ring via the `.civ-check-input:focus` rule above. */
+  .civ-check-tile:has(:focus) {
     outline: var(--civ-focus-outline-width) solid var(--civ-focus-shadow-color);
     outline-offset: 0;
     box-shadow: 0 0 0 var(--civ-focus-shadow-radius) var(--civ-focus-outline-color);
   }
-  .civ-check-tile .civ-check-input:focus-visible {
+  .civ-check-tile .civ-check-input:focus {
     outline: none;
     box-shadow: none;
   }
@@ -1616,7 +1617,7 @@
     opacity: 0.8;
   }
 
-  button.civ-progress-segment:focus-visible {
+  button.civ-progress-segment:focus {
     @apply civ-focus-ring;
   }
 
@@ -1654,7 +1655,7 @@
     @apply civ-sr-only;
   }
 
-  .civ-skip-link:focus-visible {
+  .civ-skip-link:focus {
     position: fixed;
     top: 0;
     inset-inline-start: 0;

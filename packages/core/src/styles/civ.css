@@ -37,16 +37,20 @@
    focus indicator at all. Match the class via attribute selector so we
    don't depend on either Tailwind's variant resolver OR colon-escape
    parsing inside @layer components.
+   Triggers on :focus (not :focus-visible) so the ring shows on mouse
+   clicks too — matches GOV.UK Design System behavior. The class name
+   keeps the `focus-visible:` prefix for source compatibility, but the
+   semantics are "ring on any focus."
    Layering: dark band sits flush against the element (outline), yellow
    halo extends past it (box-shadow). The dark inner band reads as the
    "border" of the focus state and the yellow outer band carries the
    high-visibility contrast on light backgrounds. */
-[class~="focus-visible:civ-focus-ring"]:focus-visible {
+[class~="focus-visible:civ-focus-ring"]:focus {
   outline: var(--civ-focus-outline-width) solid var(--civ-focus-shadow-color);
   outline-offset: 0;
   box-shadow: 0 0 0 var(--civ-focus-shadow-radius) var(--civ-focus-outline-color);
 }
-[class~="focus-visible:civ-focus-ring-inverse"]:focus-visible {
+[class~="focus-visible:civ-focus-ring-inverse"]:focus {
   outline: var(--civ-focus-outline-width) solid var(--civ-focus-outline-color);
   outline-offset: 0;
   box-shadow: 0 0 0 var(--civ-focus-shadow-radius) var(--civ-focus-shadow-color);
@@ -176,7 +180,7 @@
   }
 
   /* Remove focus ring styles */
-  *:focus-visible {
+  *:focus {
     outline: none !important;
     box-shadow: none !important;
   }
@@ -184,8 +188,8 @@
 
 /* Windows High Contrast Mode: transparent outline becomes system highlight color */
 @media (forced-colors: active) {
-  .civ-focus-ring:focus-visible,
-  .civ-focus-ring-inverse:focus-visible {
+  .civ-focus-ring:focus,
+  .civ-focus-ring-inverse:focus {
     outline: var(--civ-focus-outline-width) solid transparent;
     outline-offset: var(--civ-focus-outline-offset);
     box-shadow: 0 0 0 var(--civ-focus-outline-offset) var(--civ-focus-shadow-color);

@@ -19,6 +19,7 @@ export class CivCheckbox extends CivBooleanFormElement {
 
   override render() {
     return html`
+      ${renderError(this._errorId, this.error)}
       <div class="${this.tile ? 'civ-check-tile' : 'civ-mb-2'}" data-civ-tile="${this.tile ? '' : nothing}" @click="${this.tile ? this._onTileClick : nothing}">
         <label class="civ-check-row civ-cursor-pointer civ-w-full" for="${this._inputId}">
           <input
@@ -44,7 +45,6 @@ export class CivCheckbox extends CivBooleanFormElement {
               ? html`<span id="${this._descriptionId}" class="civ-check-description">${this.description}</span>`
               : nothing}
             ${renderHint(this._hintId, this.hint)}
-            ${renderError(this._errorId, this.error)}
           </span>
         </label>
       </div>

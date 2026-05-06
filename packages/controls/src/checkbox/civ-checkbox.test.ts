@@ -99,6 +99,20 @@ describe('civ-checkbox', () => {
     expect(el.error).toBe('You must agree');
   });
 
+  it('renders the error above the tile, not inside the label', async () => {
+    const el = await fixture('<civ-checkbox label="Agree" error="You must agree"></civ-checkbox>');
+
+    const errorEl = el.querySelector('[role="alert"]');
+    const tile = el.querySelector('.civ-check-tile');
+    expect(errorEl).not.toBeNull();
+    expect(tile).not.toBeNull();
+    // Error must appear before the tile in document order so screen-reader
+    // and sighted users meet it before the control.
+    expect(errorEl!.compareDocumentPosition(tile!) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    // Error must not live inside the label span anymore.
+    expect(el.querySelector('.civ-check-label [role="alert"]')).toBeNull();
+  });
+
   it('renders disabled state', async () => {
     const el = await fixture('<civ-checkbox label="Agree" disabled></civ-checkbox>');
 

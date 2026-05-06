@@ -926,6 +926,14 @@
     @apply civ-opacity-50 civ-cursor-not-allowed;
   }
 
+  /* Error border on tiles — listed after the checked rule so it wins
+     when a user has selected an option but the field is still invalid
+     (e.g. min-selections not met). Pairs with the inline error text
+     rendered above the tile by civ-checkbox. */
+  .civ-check-tile:has([aria-invalid="true"]) {
+    border-color: var(--civ-color-error-DEFAULT);
+  }
+
   /* Toggle checked */
   .civ-toggle-track[aria-checked="true"] {
     @apply civ-bg-primary civ-border-primary;

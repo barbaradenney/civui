@@ -358,14 +358,6 @@
     box-shadow: 0 0 0 var(--civ-focus-outline-offset) var(--civ-focus-shadow-color);
   }
 
-  /* Legacy alias — maps to shared close button */
-  .civ-input-clear {
-    @apply civ-inline-flex civ-items-center civ-justify-center civ-bg-transparent civ-border-0 civ-cursor-pointer civ-px-1;
-    color: var(--civ-color-base-dark);
-    font-size: 1.25em;
-  }
-  .civ-input-clear:hover { color: var(--civ-color-base-darkest); }
-
   .civ-input-icon-wrap {
     @apply civ-relative civ-flex civ-items-stretch;
   }
@@ -848,28 +840,6 @@
   .civ-datepicker-cal-btn {
     @apply civ-border civ-border-s-0 civ-border-base civ-rounded-e
            civ-px-2 civ-py-2 civ-bg-base-lightest;
-  }
-
-  /* ── Clear button (inside input fields) ──────────────────────── */
-
-  .civ-clear-btn {
-    @apply civ-absolute civ-flex civ-items-center civ-justify-center
-           civ-border-0 civ-bg-transparent civ-cursor-pointer civ-rounded-full;
-    width: 1.5rem;
-    height: 1.5rem;
-    inset-inline-end: 0.625rem;
-    top: 50%;
-    transform: translateY(-50%);
-    transition: background-color var(--civ-motion-duration-fast, 100ms);
-  }
-
-  .civ-clear-btn:hover {
-    background-color: var(--civ-color-base-lighter);
-  }
-
-  /* Add padding so input text doesn't overlap the clear button */
-  :has(> .civ-clear-btn) > input {
-    padding-inline-end: 2.25rem;
   }
 
   /* ── Form header (label + hint + error wrapper) ─────────────── */

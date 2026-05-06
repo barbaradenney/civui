@@ -35,8 +35,7 @@ directly in Storybook without printing.
         .civ-print-preview [data-civ-combobox] button,
         .civ-print-preview .civ-combobox-chevron,
         .civ-print-preview .civ-toggle-track,
-        .civ-print-preview .civ-clear-btn,
-        .civ-print-preview .civ-input-clear,
+        .civ-print-preview .civ-close-btn,
         .civ-print-preview .civ-skip-link,
         .civ-print-preview .civ-progress-track {
           display: none !important;

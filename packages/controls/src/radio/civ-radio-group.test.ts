@@ -192,7 +192,7 @@ describe('civ-radio-group child syncing', () => {
 
   it('syncs tile variant to child radios', async () => {
     const el = await fixture(`
-      <civ-radio-group legend="Color" name="color" tile>
+      <civ-radio-group legend="Color" name="color">
         <civ-radio label="Red" value="red"></civ-radio>
         <civ-radio label="Blue" value="blue"></civ-radio>
       </civ-radio-group>

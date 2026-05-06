@@ -231,7 +231,7 @@ describe('civ-checkbox-group form association', () => {
 
   it('syncs tile to children', async () => {
     const el = await fixture(`
-      <civ-checkbox-group legend="Options" name="opts" tile>
+      <civ-checkbox-group legend="Options" name="opts">
         <civ-checkbox label="A" value="a"></civ-checkbox>
         <civ-checkbox label="B" value="b"></civ-checkbox>
       </civ-checkbox-group>
@@ -434,7 +434,7 @@ describe('civ-checkbox indeterminate', () => {
   });
 
   it('applies tile class and indeterminate state', async () => {
-    const el = await fixture('<civ-checkbox label="Option" tile indeterminate></civ-checkbox>');
+    const el = await fixture('<civ-checkbox label="Option" indeterminate></civ-checkbox>');
 
     const tile = el.querySelector('.civ-check-tile');
     expect(tile).not.toBeNull();

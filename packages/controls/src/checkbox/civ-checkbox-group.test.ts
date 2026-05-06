@@ -85,7 +85,7 @@ describe('civ-checkbox-group child syncing', () => {
 
   it('syncs tile variant to child checkboxes', async () => {
     const el = await fixture(`
-      <civ-checkbox-group legend="Toppings" name="toppings" tile>
+      <civ-checkbox-group legend="Toppings" name="toppings">
         <civ-checkbox label="Cheese" value="cheese"></civ-checkbox>
         <civ-checkbox label="Pepperoni" value="pepperoni"></civ-checkbox>
       </civ-checkbox-group>

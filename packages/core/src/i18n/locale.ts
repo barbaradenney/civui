@@ -52,7 +52,6 @@ export interface CivLocaleStrings {
   fileUploadBrowseText: string;
   fileUploadAcceptedLabel: string;
   fileUploadMaxSizeLabel: string;
-  fileUploadRemoveText: string;
   fileUploadRemoveAriaLabel: string; // "Remove {name}"
   fileUploadFilesListLabel: string;
   fileUploadFileAddedMessage: string; // "{count} file(s) added..."
@@ -648,7 +647,6 @@ const defaultStrings: CivLocaleStrings = {
   fileUploadBrowseText: 'Choose from folder',
   fileUploadAcceptedLabel: 'Accepted: ',
   fileUploadMaxSizeLabel: 'Max size: ',
-  fileUploadRemoveText: 'Remove',
   fileUploadRemoveAriaLabel: 'Remove {name}',
   fileUploadFilesListLabel: 'Selected files',
   fileUploadFileAddedMessage: '{count} file(s) added. {total} file(s) selected.',

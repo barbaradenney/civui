@@ -102,17 +102,18 @@ describe('civ-file-upload', () => {
     expect(dropzone.tagName).toBe('BUTTON');
   });
 
-  it('renders Remove as civ-action-button with danger', async () => {
+  it('renders Remove as a close-button-icon real <button> with the standard aria-label', async () => {
     const el = await fixture('<civ-file-upload label="Upload" name="doc"></civ-file-upload>') as any;
 
     const file = new File(['content'], 'test.pdf', { type: 'application/pdf' });
     el._addFiles([file]);
     await elementUpdated(el);
 
-    const removeBtn = el.querySelector('[data-file-remove]');
-    expect(removeBtn).not.toBeNull();
-    expect(removeBtn!.tagName.toLowerCase()).toBe('civ-action-button');
-    expect(removeBtn!.hasAttribute('danger')).toBe(true);
+    const removeBtn = el.querySelector('[data-file-remove]')!;
+    expect(removeBtn.tagName).toBe('BUTTON');
+    expect(removeBtn.className).toContain('civ-close-btn');
+    expect(removeBtn.getAttribute('aria-label')).toBe('Remove test.pdf');
+    expect(removeBtn.querySelector('civ-icon[name="close"]')).not.toBeNull();
   });
 
   it('does not use deprecated focus: outline classes on dropzone', async () => {
@@ -201,16 +202,14 @@ describe('civ-file-upload', () => {
       expect(dropzone!.textContent).toContain('elegir de carpeta');
     });
 
-    it('uses custom remove-text and remove-aria-label', async () => {
-      const el = await fixture('<civ-file-upload label="Upload" remove-text="Eliminar" remove-aria-label="Eliminar {name}"></civ-file-upload>') as any;
+    it('interpolates remove-aria-label with the file name', async () => {
+      const el = await fixture('<civ-file-upload label="Upload" remove-aria-label="Eliminar {name}"></civ-file-upload>') as any;
 
       const file = new File(['content'], 'test.pdf', { type: 'application/pdf' });
       el._addFiles([file]);
       await elementUpdated(el);
 
-      const btn = el.querySelector('[data-file-remove]') as any;
-      expect(btn).not.toBeNull();
-      expect(btn.getAttribute('label')).toBe('Eliminar');
+      const btn = el.querySelector('[data-file-remove]') as HTMLButtonElement;
       expect(btn.getAttribute('aria-label')).toBe('Eliminar test.pdf');
     });
 
@@ -597,13 +596,14 @@ describe('civ-file-upload initialFiles (draft restore)', () => {
     expect(link.textContent).toBe('report.pdf');
   });
 
-  it('renders a plain span when no url is provided', async () => {
+  it('renders the file name as plain text (no anchor) when no url is provided', async () => {
     const el = await fixture('<civ-file-upload label="Docs" name="docs"></civ-file-upload>') as any;
     el.initialFiles = [{ id: 'srv-1', name: 'report.pdf', size: 100 }];
     await elementUpdated(el);
 
     expect(el.querySelector('.civ-file-item a')).toBeNull();
-    expect(el.querySelector('.civ-file-item .civ-font-bold')!.tagName).toBe('SPAN');
+    const item = el.querySelector('.civ-file-item')!;
+    expect(item.textContent).toContain('report.pdf');
   });
 
   it('hydration is idempotent — assigning initialFiles twice does not duplicate', async () => {

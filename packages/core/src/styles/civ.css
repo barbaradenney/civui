@@ -21,16 +21,6 @@
   );
 }
 
-/* Focus-visible fallback for browsers without :focus-visible support */
-@supports not selector(:focus-visible) {
-  .civ-focus-ring:focus,
-  .civ-focus-ring-inverse:focus {
-    outline: var(--civ-focus-outline-width) solid var(--civ-focus-shadow-color);
-    outline-offset: 0;
-    box-shadow: 0 0 0 var(--civ-focus-shadow-radius) var(--civ-focus-outline-color);
-  }
-}
-
 /* Global focus indicator — every interactive element gets the same
    ring on :focus by default. Components with bespoke focus needs
    (.civ-input, .civ-check-tile, .civ-filter-chip wrapper, etc.)

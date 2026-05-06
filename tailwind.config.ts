@@ -156,18 +156,12 @@ const config: Config = {
   plugins: [
     plugin(function ({ addUtilities }) {
       addUtilities({
-        '.civ-focus-ring': {
-          outline:
-            'var(--civ-focus-outline-width) solid var(--civ-focus-outline-color)',
-          'outline-offset': 'var(--civ-focus-outline-offset)',
-          'box-shadow': '0 0 0 var(--civ-focus-outline-offset) var(--civ-focus-shadow-color)',
-        },
-        '.civ-focus-ring-inverse': {
-          outline:
-            'var(--civ-focus-outline-width) solid var(--civ-focus-outline-color)',
-          'outline-offset': 'var(--civ-focus-outline-offset)',
-          'box-shadow': '0 0 0 var(--civ-focus-outline-offset) var(--civ-focus-shadow-color)',
-        },
+        // Focus ring is handled directly in civ.css via the global
+        // selector `button:focus, a[href]:focus, ...` — the plugin
+        // utility was registered but its `focus-visible:` variant
+        // never made it into the compiled bundle, leaving every
+        // element relying on it without a focus indicator. The
+        // direct CSS rule supersedes it entirely.
 
         // Logical border-width (replaces border-l-4 / border-l-0)
         '.civ-border-s-4': { 'border-inline-start-width': '4px' },

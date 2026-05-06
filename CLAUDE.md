@@ -141,7 +141,11 @@ Components using this: `civ-modal` (via native `<dialog>` + CSS), `civ-action-sh
 Do **not** use gray text classes (`civ-text-base-dark`, `civ-text-base-light`, `civ-text-base`) on labels, headings, descriptions, or body text. All text inherits the default color (`base-darkest`). Visual hierarchy is achieved through **font size and weight**, not color muting. Gray text is acceptable for: **hint text**, disabled states, and placeholder text.
 
 ### Focus Styles
-Use `focus-visible:civ-focus-ring` (not deprecated `focus:civ-outline-*` classes).
+Focus indicators are applied automatically by a global rule in `civ.css` to every native interactive element (`button`, `[role="button"]`, `a[href]`, `input`, `select`, `textarea`, `summary`, `[contenteditable]`, `[tabindex]:not([tabindex="-1"])`). **You do not need to add a focus-ring class** — render a real `<button>` or `<a href>` and the ring shows. Components with bespoke focus needs (`.civ-input`, `.civ-check-tile`, `.civ-filter-chip` wrapper, `.civ-close-btn`) override with more specific rules.
+
+The ring follows the GOV.UK pattern: triggers on `:focus` (so it shows on click as well as keyboard), dark band flush against the element with a yellow halo extending outside it. Use `focus-visible:civ-focus-ring-inverse` only when you need the inverted treatment for dark backgrounds (currently only the date-picker selected day cell).
+
+**Watch out for `overflow: hidden` on focus-ring ancestors** — the rounded-corner trick clips both `outline` and `box-shadow`, so the ring disappears entirely on focused descendants. If a wrapper needs `overflow: hidden`, move the focus rule to the wrapper itself with `:has(.thing-inside:focus)` and suppress the inner element's own ring (see `civ-filter-chip` for the pattern).
 
 ### Screen Reader Announcements
 `announce(message, priority)` from `@civui/core` queues messages to `aria-live` regions. Uses polite/assertive priorities. Queue is capped at 10 messages with oldest-drop strategy.

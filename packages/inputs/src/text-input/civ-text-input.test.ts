@@ -765,7 +765,7 @@ describe('text-input inline icons', () => {
       '<civ-text-input label="Search" clearable trailing-icon="info" value="hello"></civ-text-input>'
     );
     await elementUpdated(el);
-    expect(el.querySelector('.civ-input-clear')).not.toBeNull();
+    expect(el.querySelector('.civ-close-btn')).not.toBeNull();
     expect(el.querySelector('.civ-input-icon--trailing')).toBeNull();
   });
 
@@ -773,7 +773,7 @@ describe('text-input inline icons', () => {
     const el = await fixture(
       '<civ-text-input label="Search" clearable trailing-icon="info"></civ-text-input>'
     );
-    expect(el.querySelector('.civ-input-clear')).toBeNull();
+    expect(el.querySelector('.civ-close-btn')).toBeNull();
     expect(el.querySelector('.civ-input-icon--trailing')).not.toBeNull();
   });
 

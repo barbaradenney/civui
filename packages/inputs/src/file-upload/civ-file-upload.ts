@@ -199,7 +199,6 @@ export class CivFileUpload extends CivFormElement {
   @property({ type: String, attribute: 'browse-text' }) browseText = '';
   @property({ type: String, attribute: 'accepted-label' }) acceptedLabel = '';
   @property({ type: String, attribute: 'max-size-label' }) maxSizeLabel = '';
-  @property({ type: String, attribute: 'remove-text' }) removeText = '';
   @property({ type: String, attribute: 'remove-aria-label' }) removeAriaLabel = '';
   @property({ type: String, attribute: 'files-list-label' }) filesListLabel = '';
   @property({ type: String, attribute: 'file-added-message' }) fileAddedMessage = '';

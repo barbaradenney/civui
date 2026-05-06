@@ -286,13 +286,13 @@ describe('civ-filter-chip', () => {
       const count = el.querySelector('civ-count')!;
       expect(count).not.toBeNull();
       expect(count.getAttribute('count')).toBe('24');
-      // The count's own span renders the number.
-      expect(count.querySelector('.civ-count')?.textContent).toBe('24');
+      // The count's own span wraps the number in parens for visual readability.
+      expect(count.querySelector('.civ-count')?.textContent).toBe('(24)');
     });
 
     it('renders count of 0', async () => {
       const el = await fixture<CivFilterChip>('<civ-filter-chip label="Healthcare" count="0"></civ-filter-chip>');
-      expect(el.querySelector('.civ-count')?.textContent).toBe('0');
+      expect(el.querySelector('.civ-count')?.textContent).toBe('(0)');
     });
 
     it('updates count reactively', async () => {
@@ -302,7 +302,7 @@ describe('civ-filter-chip', () => {
       const civCount = el.querySelector('civ-count') as HTMLElement & { count: number };
       civCount.count = 10;
       await elementUpdated(civCount as never);
-      expect(el.querySelector('.civ-count')?.textContent).toBe('10');
+      expect(el.querySelector('.civ-count')?.textContent).toBe('(10)');
     });
   });
 });

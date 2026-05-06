@@ -220,7 +220,8 @@ describe('civ-repeater', () => {
       </civ-repeater>
     `);
 
-    const hint = el.querySelector('.civ-hint');
+    // Group-level hints (fieldset context) use the .civ-hint--group class.
+    const hint = el.querySelector('.civ-hint--group');
     expect(hint).not.toBeNull();
     expect(hint!.textContent).toBe('Add at least one');
 

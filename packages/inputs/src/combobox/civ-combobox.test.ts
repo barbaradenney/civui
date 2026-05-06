@@ -553,7 +553,7 @@ describe('civ-combobox chevron toggle', () => {
     await elementUpdated(el);
 
     expect(el.querySelector('[data-civ-combobox-chevron]')).not.toBeNull();
-    expect(el.querySelector('.civ-clear-btn')).not.toBeNull();
+    expect(el.querySelector('.civ-close-btn')).not.toBeNull();
   });
 });
 
@@ -751,7 +751,7 @@ describe('civ-combobox async loadOptions', () => {
     await elementUpdated(el);
     expect(el.value).toBe('a');
 
-    (el.querySelector('.civ-clear-btn') as HTMLButtonElement).click();
+    (el.querySelector('.civ-close-btn') as HTMLButtonElement).click();
     // Assert state synchronously — the post-clear re-focus would trigger an
     // immediate re-fetch which would repopulate _remoteOptions before any
     // microtask flush.

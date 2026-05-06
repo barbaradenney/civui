@@ -106,15 +106,20 @@ export class CivConditional extends LightDomSlotMixin(CivBaseElement) {
     const escapedName = typeof CSS !== 'undefined' && CSS.escape
       ? CSS.escape(this.when)
       : this.when.replace(/["\\]/g, '\\$&');
-    const field = root.querySelector(`[name="${escapedName}"]`) as HTMLElement & { value?: string; checked?: boolean; values?: string[] } | null;
+    const field = root.querySelector(`[name="${escapedName}"]`) as HTMLElement & { value?: string; checked?: boolean; values?: string[]; type?: string } | null;
     if (!field) return;
 
     // Checkbox group
     if ('values' in field && Array.isArray((field as any).values)) {
       this._evaluateMultiValue((field as any).values);
     }
-    // Single checkbox/toggle
-    else if (typeof field.checked === 'boolean') {
+    // Single native checkbox / radio. Plain `'checked' in field` matches
+    // every <input> (text, email, etc. all expose .checked as a boolean),
+    // so explicitly gate on the input type instead of duck-typing.
+    else if (
+      field instanceof HTMLInputElement &&
+      (field.type === 'checkbox' || field.type === 'radio')
+    ) {
       this._evaluateChecked(field.checked, field.value ?? '');
     }
     // Standard value

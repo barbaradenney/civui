@@ -1505,18 +1505,18 @@
   }
 
   .civ-progress-segment {
-    @apply civ-flex-1 civ-rounded-sm;
+    @apply civ-flex-1;
     height: 8px;
     background-color: var(--civ-color-base-lighter);
     transition: background-color var(--civ-motion-duration-fast, 150ms) var(--civ-motion-easing-ease-out, ease);
   }
 
   .civ-progress-segment--completed {
-    background-color: var(--civ-color-primary-DEFAULT);
+    background-color: var(--civ-color-success-DEFAULT);
   }
 
   .civ-progress-segment--current {
-    background-color: var(--civ-color-primary-dark);
+    background-color: var(--civ-color-warning-DEFAULT);
   }
 
   .civ-progress-segment--error {
@@ -1524,7 +1524,7 @@
   }
 
   button.civ-progress-segment {
-    @apply civ-border-0 civ-p-0 civ-cursor-pointer;
+    @apply civ-border-0 civ-p-0 civ-cursor-pointer civ-rounded-sm;
   }
 
   button.civ-progress-segment:hover {
@@ -1538,14 +1538,13 @@
   /* ── Progress Bar ─────────────────────────────────────────── */
 
   .civ-progress-track {
-    @apply civ-w-full civ-rounded-full civ-overflow-hidden;
+    @apply civ-w-full civ-overflow-hidden;
     height: 0.5em;
     background-color: var(--civ-color-base-lighter);
   }
 
   .civ-progress-fill {
     height: 100%;
-    border-radius: inherit;
     background-color: var(--civ-color-primary-DEFAULT);
     transition: width var(--civ-motion-duration-slow, 300ms) var(--civ-motion-easing-ease-out, ease);
   }

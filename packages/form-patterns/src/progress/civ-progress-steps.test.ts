@@ -144,4 +144,5 @@ describe('civ-progress-steps', () => {
     const segments = el.querySelectorAll('.civ-progress-segment');
     expect(segments[0].getAttribute('aria-label')).toContain('Step A');
   });
+
 });

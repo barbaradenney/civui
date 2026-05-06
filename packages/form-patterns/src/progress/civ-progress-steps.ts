@@ -125,7 +125,7 @@ export class CivProgressSteps extends CivBaseElement {
       !hasError && isCurrent ? 'civ-progress-segment--current' : '',
     ].filter(Boolean).join(' ');
 
-    const label = interpolate(t('progressStepLabel'), {
+    const ariaLabel = interpolate(t('progressStepLabel'), {
       step: index + 1,
       total,
       label: step.label,
@@ -136,7 +136,7 @@ export class CivProgressSteps extends CivBaseElement {
         <button
           type="button"
           class="${segmentClass}"
-          aria-label="${label}"
+          aria-label="${ariaLabel}"
           aria-current="${isCurrent ? 'step' : nothing}"
           @click="${() => this._onStepClick(index)}"
         ></button>
@@ -147,7 +147,7 @@ export class CivProgressSteps extends CivBaseElement {
       <div
         class="${segmentClass}"
         role="listitem"
-        aria-label="${label}"
+        aria-label="${ariaLabel}"
         aria-current="${isCurrent ? 'step' : nothing}"
       ></div>
     `;

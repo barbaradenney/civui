@@ -327,6 +327,7 @@
     box-shadow: 0 0 0 var(--civ-focus-outline-offset) var(--civ-focus-shadow-color);
   }
 
+
   .civ-input-prefix {
     @apply civ-flex civ-items-center civ-px-2 civ-border civ-border-e-0 civ-rounded-s civ-border-base civ-bg-white;
     font-size: var(--civ-typography-fontSize-base);
@@ -934,6 +935,21 @@
      (non-tile) checkboxes / radios stay unmarked. */
   .civ-check-tile:has([aria-invalid="true"]) {
     @apply civ-border-error civ-border-s-4;
+  }
+
+  /* In tile mode, the tile is the visual click target — ring the whole
+     tile on keyboard focus and suppress the inner input's ring so we
+     don't stack two indicators. Blank (non-tile) checkboxes / radios
+     keep their input-level ring via the `.civ-check-input:focus-visible`
+     rule above. */
+  .civ-check-tile:has(:focus-visible) {
+    outline: var(--civ-focus-outline-width) solid var(--civ-focus-outline-color);
+    outline-offset: var(--civ-focus-outline-offset);
+    box-shadow: 0 0 0 var(--civ-focus-outline-offset) var(--civ-focus-shadow-color);
+  }
+  .civ-check-tile .civ-check-input:focus-visible {
+    outline: none;
+    box-shadow: none;
   }
 
   /* Toggle checked */

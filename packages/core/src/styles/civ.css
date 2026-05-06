@@ -22,6 +22,23 @@
   }
 }
 
+/* The Tailwind plugin registers `.civ-focus-ring` as a utility, but the
+   `focus-visible:civ-focus-ring` variant never made it into the compiled
+   CSS — buttons, links, and other elements relying on the class had no
+   focus indicator at all. Match the class via attribute selector so we
+   don't depend on either Tailwind's variant resolver OR colon-escape
+   parsing inside @layer components. */
+[class~="focus-visible:civ-focus-ring"]:focus-visible {
+  outline: var(--civ-focus-outline-width) solid var(--civ-focus-outline-color);
+  outline-offset: var(--civ-focus-outline-offset);
+  box-shadow: 0 0 0 var(--civ-focus-outline-offset) var(--civ-focus-shadow-color);
+}
+[class~="focus-visible:civ-focus-ring-inverse"]:focus-visible {
+  outline: var(--civ-focus-outline-width) solid var(--civ-focus-shadow-color);
+  outline-offset: var(--civ-focus-outline-offset);
+  box-shadow: 0 0 0 var(--civ-focus-outline-offset) var(--civ-focus-outline-color);
+}
+
 /* Dark mode: ensure focus rings remain visible on dark backgrounds.
    Uses token palette values (primary-lighter, primary-darker) to stay
    in sync with the design token system. */

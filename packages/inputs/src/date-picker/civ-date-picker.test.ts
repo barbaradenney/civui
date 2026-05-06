@@ -679,30 +679,31 @@ describe('civ-date-picker', () => {
     });
   });
 
-  describe('focus-visible', () => {
-    it('applies focus-visible ring class to text input', async () => {
+  describe('focus indicators', () => {
+    it('renders the text input as a real <input> so the global focus ring applies', async () => {
       const el = await fixture('<civ-date-picker label="Date" name="date"></civ-date-picker>');
 
-      const input = el.querySelector('input[type="text"]');
-      expect(input!.className).toContain('focus-visible:civ-focus-ring');
+      const input = el.querySelector('input[type="text"]')!;
+      expect(input.tagName).toBe('INPUT');
+      expect(input.className).toContain('civ-input');
     });
 
-    it('applies focus-visible ring class to calendar button', async () => {
+    it('renders the calendar trigger as a real <button>', async () => {
       const el = await fixture('<civ-date-picker label="Date" name="date"></civ-date-picker>');
 
-      const button = el.querySelector('button[type="button"]');
-      expect(button!.className).toContain('focus-visible:civ-focus-ring');
+      const button = el.querySelector('button[type="button"]')!;
+      expect(button.tagName).toBe('BUTTON');
     });
 
-    it('applies focus-visible ring class to day cells', async () => {
+    it('renders day cells as real <button> elements', async () => {
       const el = await fixture('<civ-date-picker label="Date" name="date"></civ-date-picker>') as any;
       el._open = true;
       el._displayMonth = 2;
       el._displayYear = 2026;
       await elementUpdated(el);
 
-      const dayButton = el.querySelector('[data-civ-day]');
-      expect(dayButton!.className).toContain('focus-visible:civ-focus-ring');
+      const dayButton = el.querySelector('[data-civ-day]')!;
+      expect(dayButton.tagName).toBe('BUTTON');
     });
 
     it('applies inverse focus-visible ring class to selected day cells', async () => {
@@ -712,17 +713,17 @@ describe('civ-date-picker', () => {
       el._displayYear = 2026;
       await elementUpdated(el);
 
+      // Selected day uses the inverse ring (light yellow on the dark
+      // primary background); unselected days fall through to the global
+      // focus rule.
       const selectedDay = el.querySelector('[data-date="2026-03-15"]');
       expect(selectedDay!.className).toContain('focus-visible:civ-focus-ring-inverse');
-      expect(selectedDay!.className).not.toContain('focus-visible:civ-focus-ring ');
 
-      // Unselected day should use standard focus ring
       const unselectedDay = el.querySelector('[data-date="2026-03-16"]');
-      expect(unselectedDay!.className).toContain('focus-visible:civ-focus-ring');
       expect(unselectedDay!.className).not.toContain('focus-visible:civ-focus-ring-inverse');
     });
 
-    it('applies focus-visible ring class to navigation buttons', async () => {
+    it('renders navigation buttons as real <button> elements', async () => {
       const el = await fixture('<civ-date-picker label="Date" name="date"></civ-date-picker>') as any;
       el._open = true;
       el._displayMonth = 2;
@@ -730,8 +731,9 @@ describe('civ-date-picker', () => {
       await elementUpdated(el);
 
       const navButtons = el.querySelectorAll('[data-civ-dialog] > div > button');
+      expect(navButtons.length).toBeGreaterThan(0);
       for (const btn of navButtons) {
-        expect(btn.className).toContain('focus-visible:civ-focus-ring');
+        expect(btn.tagName).toBe('BUTTON');
       }
     });
 

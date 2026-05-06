@@ -136,15 +136,16 @@ describe('civ-segmented-control accessibility', () => {
     expect(buttons[1].getAttribute('tabindex')).toBe('0');
   });
 
-  it('applies focus-visible:civ-focus-ring on segment buttons', async () => {
+  it('renders segment buttons as real <button> elements so the global focus ring applies', async () => {
     const el = await fixture(`
       <civ-segmented-control legend="View" name="view" value="list">
         <civ-segment label="List" value="list"></civ-segment>
       </civ-segmented-control>
     `);
 
-    const button = el.querySelector('button');
-    expect(button!.className).toContain('focus-visible:civ-focus-ring');
+    const button = el.querySelector('button')!;
+    expect(button.tagName).toBe('BUTTON');
+    expect(button.className).toContain('civ-segment-btn');
   });
 });
 

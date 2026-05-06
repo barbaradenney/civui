@@ -113,7 +113,6 @@ export class CivLinkCard extends LightDomSlotMixin(CivBaseElement) {
       colorClass,
       this.spacing === 'sm' ? 'civ-link-card--sm' : '',
       this.disabled ? 'civ-opacity-50 civ-cursor-not-allowed' : '',
-      'focus-visible:civ-focus-ring',
     ].filter(Boolean).join(' ');
 
     const hasEndSlot = this._hasSlottedChildren('data-civ-link-card-end');

@@ -57,11 +57,10 @@ describe('civ-list-item', () => {
     expect(endSlot!.querySelector('.badge')).not.toBeNull();
   });
 
-  it('anchor has hover and focus-visible classes', async () => {
+  it('anchor has hover and styling classes (focus ring applied globally to a[href])', async () => {
     const el = await fixture('<civ-list-item href="/foo">x</civ-list-item>');
     const a = el.querySelector('a')!;
     expect(a.className).toContain('hover:civ-bg-primary-lightest');
-    expect(a.className).toContain('focus-visible:civ-focus-ring');
     expect(a.className).toContain('civ-no-underline');
   });
 

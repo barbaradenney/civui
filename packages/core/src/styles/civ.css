@@ -31,25 +31,31 @@
   }
 }
 
-/* The Tailwind plugin registers `.civ-focus-ring` as a utility, but the
-   `focus-visible:civ-focus-ring` variant never made it into the compiled
-   CSS — buttons, links, and other elements relying on the class had no
-   focus indicator at all. Match the class via attribute selector so we
-   don't depend on either Tailwind's variant resolver OR colon-escape
-   parsing inside @layer components.
+/* Global focus indicator — every interactive element gets the same
+   ring on :focus by default. Components with bespoke focus needs
+   (.civ-input, .civ-check-tile, .civ-filter-chip wrapper, etc.)
+   override with more specific selectors and win on cascade.
    Triggers on :focus (not :focus-visible) so the ring shows on mouse
-   clicks too — matches GOV.UK Design System behavior. The class name
-   keeps the `focus-visible:` prefix for source compatibility, but the
-   semantics are "ring on any focus."
+   clicks too — matches GOV.UK Design System behavior.
    Layering: dark band sits flush against the element (outline), yellow
    halo extends past it (box-shadow). The dark inner band reads as the
    "border" of the focus state and the yellow outer band carries the
    high-visibility contrast on light backgrounds. */
-[class~="focus-visible:civ-focus-ring"]:focus {
+button:focus,
+[role="button"]:focus,
+a[href]:focus,
+input:focus,
+select:focus,
+textarea:focus,
+summary:focus,
+[contenteditable]:focus,
+[tabindex]:not([tabindex="-1"]):focus {
   outline: var(--civ-focus-outline-width) solid var(--civ-focus-shadow-color);
   outline-offset: 0;
   box-shadow: 0 0 0 var(--civ-focus-shadow-radius) var(--civ-focus-outline-color);
 }
+
+/* Inverse variant for dark backgrounds — opt-in via the class. */
 [class~="focus-visible:civ-focus-ring-inverse"]:focus {
   outline: var(--civ-focus-outline-width) solid var(--civ-focus-outline-color);
   outline-offset: 0;

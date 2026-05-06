@@ -55,11 +55,12 @@ describe('civ-skip-link', () => {
     expect(link.getAttribute('tabindex')).not.toBe('-1');
   });
 
-  it('applies focus-visible:civ-focus-ring class', async () => {
+  it('renders a real <a href> so the global focus ring applies', async () => {
     const el = await fixture('<civ-skip-link></civ-skip-link>');
 
     const link = el.querySelector('a')!;
-    expect(link.className).toContain('focus-visible:civ-focus-ring');
+    expect(link).not.toBeNull();
+    expect(link.getAttribute('href')).toBeTruthy();
   });
 
   it('uses Light DOM (no shadowRoot)', async () => {

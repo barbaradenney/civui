@@ -198,7 +198,7 @@ export class CivRadioGroup extends LightDomSlotMixin(CivFormElement) {
           ? html`
               <button
                 type="button"
-                class="civ-radio-group__skip civ-btn--link focus-visible:civ-focus-ring"
+                class="civ-radio-group__skip civ-btn--link"
                 aria-pressed="${this.value === this.skipValue ? 'true' : 'false'}"
                 data-civ-skip
                 ?disabled="${this.disabled}"

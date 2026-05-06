@@ -109,7 +109,6 @@ export class CivListItem extends LightDomSlotMixin(CivBaseElement) {
       'civ-no-underline',
       'civ-text-inherit',
       'hover:civ-bg-primary-lightest',
-      'focus-visible:civ-focus-ring',
       'civ-transition-colors',
     ].join(' ');
 

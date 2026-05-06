@@ -298,7 +298,7 @@ export class CivDatePicker extends CivFormElement {
           <button
             id="${this._buttonId}"
             type="button"
-            class="civ-action-btn civ-action-btn--tertiary focus-visible:civ-focus-ring"
+            class="civ-action-btn civ-action-btn--tertiary"
             aria-label="${buttonLabel}"
             aria-haspopup="dialog"
             aria-expanded="${this._open}"
@@ -345,7 +345,7 @@ export class CivDatePicker extends CivFormElement {
         <div class="civ-flex civ-items-center civ-justify-between civ-mb-2">
           <button
             type="button"
-            class="civ-datepicker-nav-btn hover:civ-bg-base-lightest focus-visible:civ-focus-ring"
+            class="civ-datepicker-nav-btn hover:civ-bg-base-lightest"
             aria-label="${this.previousMonthLabel || t('datePickerPreviousMonthLabel')}"
             ?disabled="${prevMonthDisabled}"
             @click="${this._prevMonth}"
@@ -354,7 +354,7 @@ export class CivDatePicker extends CivFormElement {
           </button>
           <div id="${this._headingId}" class="civ-flex civ-items-center civ-gap-1" aria-live="polite">
             <select
-              class="civ-datepicker-month-select focus-visible:civ-focus-ring"
+              class="civ-datepicker-month-select"
               aria-label="${t('datePickerMonthLabel')}"
               data-civ-month-select
               .value="${String(this._displayMonth)}"
@@ -369,7 +369,7 @@ export class CivDatePicker extends CivFormElement {
               `)}
             </select>
             <select
-              class="civ-datepicker-year-select focus-visible:civ-focus-ring"
+              class="civ-datepicker-year-select"
               aria-label="${t('datePickerYearLabel')}"
               data-civ-year-select
               .value="${String(this._displayYear)}"
@@ -382,7 +382,7 @@ export class CivDatePicker extends CivFormElement {
           </div>
           <button
             type="button"
-            class="civ-datepicker-nav-btn hover:civ-bg-base-lightest focus-visible:civ-focus-ring"
+            class="civ-datepicker-nav-btn hover:civ-bg-base-lightest"
             aria-label="${this.nextMonthLabel || t('datePickerNextMonthLabel')}"
             ?disabled="${nextMonthDisabled}"
             @click="${this._nextMonth}"
@@ -414,7 +414,7 @@ export class CivDatePicker extends CivFormElement {
           <div class="civ-datepicker-footer">
             <button
               type="button"
-              class="civ-datepicker-today-btn focus-visible:civ-focus-ring"
+              class="civ-datepicker-today-btn"
               ?disabled="${!this._isTodayAvailable()}"
               @click="${this._onTodayClick}"
             >${this.todayButtonLabel || t('datePickerTodayButton')}</button>
@@ -434,7 +434,7 @@ export class CivDatePicker extends CivFormElement {
       !day.inCurrentMonth ? 'civ-text-base-light' : '',
       !disabled ? 'hover:civ-bg-primary-lightest' : '',
       day.isToday && !selected ? 'civ-font-bold civ-underline' : '',
-      selected ? 'focus-visible:civ-focus-ring-inverse' : 'focus-visible:civ-focus-ring',
+      selected ? 'focus-visible:civ-focus-ring-inverse' : '',
     ]
       .filter(Boolean)
       .join(' ');

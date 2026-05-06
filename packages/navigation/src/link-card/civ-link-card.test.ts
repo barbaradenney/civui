@@ -31,10 +31,11 @@ describe('civ-link-card', () => {
     expect(el.querySelector('.civ-link-card__description')).toBeNull();
   });
 
-  it('has focus-visible:civ-focus-ring class', async () => {
+  it('renders a real <a href> so the global focus ring applies', async () => {
     const el = await fixture('<civ-link-card href="/test" heading="Title"></civ-link-card>');
     const link = el.querySelector('a')!;
-    expect(link.className).toContain('focus-visible:civ-focus-ring');
+    expect(link).not.toBeNull();
+    expect(link.getAttribute('href')).toBe('/test');
   });
 
   it('fires analytics event on click', async () => {

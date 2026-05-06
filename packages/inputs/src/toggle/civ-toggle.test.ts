@@ -193,11 +193,12 @@ describe('civ-toggle', () => {
     expect(el.querySelector('button[role="switch"]')).not.toBeNull();
   });
 
-  it('applies focus-visible:civ-focus-ring to the toggle button', async () => {
+  it('renders the toggle as a real <button role="switch"> so the global focus ring applies', async () => {
     const el = await fixture('<civ-toggle label="Dark mode"></civ-toggle>');
 
     const btn = el.querySelector('button[role="switch"]') as HTMLButtonElement;
-    expect(btn.className).toContain('focus-visible:civ-focus-ring');
+    expect(btn).not.toBeNull();
+    expect(btn.tagName).toBe('BUTTON');
     expect(btn.className).not.toContain('focus:civ-outline');
   });
 

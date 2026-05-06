@@ -59,7 +59,6 @@ export class CivLink extends LightDomTextMixin(CivBaseElement) {
     return [
       variantClass,
       this.disabled ? 'civ-opacity-50 civ-cursor-not-allowed' : '',
-      'focus-visible:civ-focus-ring',
     ]
       .filter(Boolean)
       .join(' ');

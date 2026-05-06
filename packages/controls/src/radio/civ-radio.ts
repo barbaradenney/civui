@@ -52,7 +52,7 @@ export class CivRadio extends CivBaseElement {
       <div class="${this.tile ? 'civ-check-tile' : 'civ-mb-2'}" data-civ-tile="${this.tile ? '' : nothing}" @click="${this.tile ? this._onTileClick : nothing}">
         <label class="civ-check-row civ-cursor-pointer civ-w-full" for="${this._inputId}">
           <input
-            class="civ-check-input focus-visible:civ-focus-ring"
+            class="civ-check-input"
             id="${this._inputId}"
             type="radio"
             name="${this.name}"

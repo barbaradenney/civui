@@ -203,11 +203,12 @@ describe('civ-alert', () => {
     expect(btn.getAttribute('aria-label')).toBe('Dismiss alert');
   });
 
-  it('applies focus-visible:civ-focus-ring on dismiss button', async () => {
+  it('renders the dismiss button as a real <button> so the global focus ring applies', async () => {
     const el = await fixture('<civ-alert dismissible>Alert.</civ-alert>');
 
     const btn = el.querySelector('.civ-close-btn')!;
-    expect(btn.className).toContain('focus-visible:civ-focus-ring');
+    expect(btn).not.toBeNull();
+    expect(btn.tagName).toBe('BUTTON');
   });
 
   it('renders body content with civ-alert__body class', async () => {

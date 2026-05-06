@@ -95,11 +95,11 @@ describe('civ-file-upload', () => {
     expect(Ctor.formAssociated).toBe(true);
   });
 
-  it('applies focus-visible ring class to dropzone', async () => {
+  it('renders the dropzone as a real <button> so the global focus ring applies', async () => {
     const el = await fixture('<civ-file-upload label="Upload" name="doc"></civ-file-upload>');
 
-    const dropzone = el.querySelector('.civ-dropzone');
-    expect(dropzone!.className).toContain('focus-visible:civ-focus-ring');
+    const dropzone = el.querySelector('.civ-dropzone')!;
+    expect(dropzone.tagName).toBe('BUTTON');
   });
 
   it('renders Remove as civ-action-button with danger', async () => {

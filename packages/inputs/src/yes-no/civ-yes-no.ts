@@ -75,7 +75,7 @@ export class CivYesNo extends CivFormElement {
   override render() {
     const describedBy = buildDescribedBy(this._hintId, this.hint, this._errorId, this.error);
 
-    const btnClasses = 'civ-btn civ-btn--yesno focus-visible:civ-focus-ring';
+    const btnClasses = 'civ-btn civ-btn--yesno';
 
     // The radiogroup role lives on the inner div so the optional skip
     // affordance (which is a toggle-button, not a radio) can sit alongside
@@ -126,7 +126,7 @@ export class CivYesNo extends CivFormElement {
           ? html`
               <button
                 type="button"
-                class="civ-yes-no__skip civ-btn--link focus-visible:civ-focus-ring"
+                class="civ-yes-no__skip civ-btn--link"
                 aria-pressed="${this.value === this.skipValue ? 'true' : 'false'}"
                 data-civ-skip
                 ?disabled="${this.disabled}"

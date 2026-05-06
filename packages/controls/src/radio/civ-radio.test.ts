@@ -107,11 +107,12 @@ describe('civ-radio', () => {
     expect(el.querySelector('input')).not.toBeNull();
   });
 
-  it('applies focus-visible ring class to radio input', async () => {
+  it('renders the radio as a real <input> so the global focus ring applies', async () => {
     const el = await fixture('<civ-radio label="Option A" value="a"></civ-radio>');
 
-    const input = el.querySelector('input[type="radio"]');
-    expect(input!.className).toContain('focus-visible:civ-focus-ring');
+    const input = el.querySelector('input[type="radio"]')!;
+    expect(input.tagName).toBe('INPUT');
+    expect(input.className).toContain('civ-check-input');
   });
 
   it('does not use deprecated focus: outline classes on radio', async () => {

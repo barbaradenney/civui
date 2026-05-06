@@ -48,7 +48,7 @@ export class CivSegment extends CivBaseElement {
         ?disabled="${this.disabled}"
         tabindex="${tabIdx}"
         @click="${this._onSelect}"
-        class="civ-segment-btn focus-visible:civ-focus-ring"
+        class="civ-segment-btn"
       >
         ${this.label}
       </button>

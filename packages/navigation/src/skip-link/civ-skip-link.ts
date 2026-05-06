@@ -31,7 +31,7 @@ export class CivSkipLink extends LightDomTextMixin(CivBaseElement) {
     return html`
       <a
         href="${this.href}"
-        class="civ-skip-link focus-visible:civ-focus-ring"
+        class="civ-skip-link"
       >${this._text}</a>
     `;
   }

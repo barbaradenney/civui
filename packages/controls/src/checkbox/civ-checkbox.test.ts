@@ -399,11 +399,12 @@ describe('civ-checkbox-group orientation', () => {
 });
 
 describe('civ-checkbox-group accessibility', () => {
-  it('applies focus-visible ring class to checkbox input', async () => {
+  it('renders the checkbox as a real <input> so the global focus ring applies', async () => {
     const el = await fixture('<civ-checkbox label="Agree"></civ-checkbox>');
 
-    const input = el.querySelector('input[type="checkbox"]');
-    expect(input!.className).toContain('focus-visible:civ-focus-ring');
+    const input = el.querySelector('input[type="checkbox"]')!;
+    expect(input.tagName).toBe('INPUT');
+    expect(input.className).toContain('civ-check-input');
   });
 
   it('does not use deprecated focus: outline classes on checkbox', async () => {

@@ -80,11 +80,12 @@ describe('civ-segment', () => {
     expect(handler).not.toHaveBeenCalled();
   });
 
-  it('applies focus-visible:civ-focus-ring class', async () => {
+  it('renders a real <button> so the global focus ring applies', async () => {
     const el = await fixture('<civ-segment label="List" value="list"></civ-segment>');
 
-    const button = el.querySelector('button');
-    expect(button!.className).toContain('focus-visible:civ-focus-ring');
+    const button = el.querySelector('button')!;
+    expect(button.tagName).toBe('BUTTON');
+    expect(button.className).toContain('civ-segment-btn');
   });
 
   it('uses Light DOM', async () => {

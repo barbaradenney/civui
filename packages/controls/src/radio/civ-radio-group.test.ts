@@ -108,15 +108,16 @@ describe('civ-radio-group accessibility', () => {
     expect(group.hasAttribute('aria-required')).toBe(false);
   });
 
-  it('applies focus-visible:civ-focus-ring on child radio inputs', async () => {
+  it('renders child radios as real <input> elements so the global focus ring applies', async () => {
     const el = await fixture(`
       <civ-radio-group legend="Color" name="color">
         <civ-radio label="Red" value="red"></civ-radio>
       </civ-radio-group>
     `);
 
-    const input = el.querySelector('input[type="radio"]');
-    expect(input!.className).toContain('focus-visible:civ-focus-ring');
+    const input = el.querySelector('input[type="radio"]')!;
+    expect(input.tagName).toBe('INPUT');
+    expect(input.className).toContain('civ-check-input');
   });
 });
 

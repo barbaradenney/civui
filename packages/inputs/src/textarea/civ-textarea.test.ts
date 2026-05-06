@@ -193,11 +193,12 @@ describe('civ-textarea', () => {
     expect(Ctor.formAssociated).toBe(true);
   });
 
-  it('applies focus-visible ring class', async () => {
+  it('renders a real <textarea> so the global focus ring applies', async () => {
     const el = await fixture('<civ-textarea label="Comments"></civ-textarea>');
 
-    const textarea = el.querySelector('textarea');
-    expect(textarea!.className).toContain('focus-visible:civ-focus-ring');
+    const textarea = el.querySelector('textarea')!;
+    expect(textarea.tagName).toBe('TEXTAREA');
+    expect(textarea.className).toContain('civ-input');
   });
 
   it('does not use deprecated focus: outline classes', async () => {

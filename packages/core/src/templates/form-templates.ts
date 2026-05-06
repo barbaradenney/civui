@@ -256,7 +256,6 @@ export function inputClasses({
     rounded ?? '',
     width ?? '',
     ...(extra ?? []),
-    'focus-visible:civ-focus-ring',
   ]
     .filter(Boolean)
     .join(' ');

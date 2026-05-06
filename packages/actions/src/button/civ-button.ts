@@ -51,7 +51,6 @@ export class CivButton extends LightDomTextMixin(CivBaseElement) {
       'civ-btn',
       variantClass,
       this.disabled ? 'civ-opacity-50 civ-cursor-not-allowed' : '',
-      'focus-visible:civ-focus-ring',
     ]
       .filter(Boolean)
       .join(' ');

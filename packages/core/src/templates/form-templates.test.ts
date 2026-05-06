@@ -258,7 +258,6 @@ describe('inputClasses', () => {
   it('returns civ-input base class with no arguments', () => {
     const result = inputClasses();
     expect(result).toContain('civ-input');
-    expect(result).toContain('focus-visible:civ-focus-ring');
   });
 
   it('appends extra classes', () => {

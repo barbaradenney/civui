@@ -30,15 +30,16 @@ describe('civ-checkbox-group rendering', () => {
 });
 
 describe('civ-checkbox-group accessibility', () => {
-  it('applies focus-visible:civ-focus-ring on child checkbox inputs', async () => {
+  it('renders child checkboxes as real <input> elements so the global focus ring applies', async () => {
     const el = await fixture(`
       <civ-checkbox-group legend="Toppings" name="toppings">
         <civ-checkbox label="Cheese" value="cheese"></civ-checkbox>
       </civ-checkbox-group>
     `);
 
-    const input = el.querySelector('input[type="checkbox"]');
-    expect(input!.className).toContain('focus-visible:civ-focus-ring');
+    const input = el.querySelector('input[type="checkbox"]')!;
+    expect(input.tagName).toBe('INPUT');
+    expect(input.className).toContain('civ-check-input');
   });
 
   it('does not use deprecated focus: outline classes on child checkboxes', async () => {

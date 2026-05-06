@@ -230,7 +230,7 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
       ${this._prefillError
         ? html`<div class="civ-mb-4 civ-text-error" role="alert">
             <p>${t('prefillError')}
-              <button type="button" class="civ-link civ-underline focus-visible:civ-focus-ring" @click="${this._fetchPrefillData}">${t('prefillRetry')}</button>
+              <button type="button" class="civ-link civ-underline" @click="${this._fetchPrefillData}">${t('prefillRetry')}</button>
             </p>
           </div>`
         : nothing}
@@ -254,7 +254,7 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
                     <li class="civ-mb-1">
                       <a
                         href="#${this._getFieldInputId(err.element)}"
-                        class="civ-text-error civ-underline focus-visible:civ-focus-ring"
+                        class="civ-text-error civ-underline"
                         @click="${(e: Event) => this._focusField(e, err.element)}"
                       >
                         ${err.message}
@@ -283,7 +283,7 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
                   .map(
                     (r) => html`
                       <li class="civ-mb-1">
-                        <a href="${r.href}" class="civ-link civ-underline focus-visible:civ-focus-ring">${r.label}</a>
+                        <a href="${r.href}" class="civ-link civ-underline">${r.label}</a>
                         ${r.description
                           ? html`<span class="civ-text-muted civ-ms-2">${r.description}</span>`
                           : nothing}

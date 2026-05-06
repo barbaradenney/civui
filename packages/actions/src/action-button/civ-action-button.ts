@@ -56,7 +56,6 @@ export class CivActionButton extends CivBaseElement {
       'civ-action-btn',
       variantClass,
       this.disabled ? 'civ-opacity-50 civ-cursor-not-allowed' : '',
-      'focus-visible:civ-focus-ring',
     ]
       .filter(Boolean)
       .join(' ');

@@ -154,11 +154,12 @@ describe('civ-select', () => {
     expect(Ctor.formAssociated).toBe(true);
   });
 
-  it('applies focus-visible ring class', async () => {
+  it('renders a real <select> so the global focus ring applies', async () => {
     const el = await fixture('<civ-select label="State" name="state"></civ-select>');
 
-    const select = el.querySelector('select');
-    expect(select!.className).toContain('focus-visible:civ-focus-ring');
+    const select = el.querySelector('select')!;
+    expect(select.tagName).toBe('SELECT');
+    expect(select.className).toContain('civ-input');
   });
 
   it('does not use deprecated focus: outline classes', async () => {

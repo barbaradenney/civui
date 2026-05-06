@@ -31,7 +31,7 @@ export class CivToggle extends CivBooleanFormElement {
             aria-describedby="${this._ariaDescribedBy || nothing}"
             ?disabled="${this.disabled}"
             @click="${this._onToggle}"
-            class="civ-toggle-track focus-visible:civ-focus-ring"
+            class="civ-toggle-track"
           >
             <span class="civ-toggle-thumb ${this.checked ? 'civ-toggle-thumb--checked' : ''}">
               ${this.checked

@@ -277,13 +277,14 @@ describe('civ-combobox', () => {
     expect(noResults!.getAttribute('aria-live')).toBe('polite');
   });
 
-  it('applies focus-visible ring class', async () => {
+  it('renders a real <input> so the global focus ring applies', async () => {
     const el = await fixture('<civ-combobox label="State" name="state"></civ-combobox>') as any;
     el.options = [{ value: 'CA', label: 'California' }];
     await elementUpdated(el);
 
-    const input = el.querySelector('input');
-    expect(input!.className).toContain('focus-visible:civ-focus-ring');
+    const input = el.querySelector('input')!;
+    expect(input.tagName).toBe('INPUT');
+    expect(input.className).toContain('civ-input');
   });
 
   it('does not use deprecated focus: outline classes', async () => {

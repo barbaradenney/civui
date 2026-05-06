@@ -102,7 +102,7 @@ export class CivFilterChip extends LightDomTextMixin(CivBaseElement) {
       <span class="${this._wrapperClasses}" role="presentation">
         <button
           type="button"
-          class="civ-filter-chip__action focus-visible:civ-focus-ring"
+          class="civ-filter-chip__action"
           role="${ifDefined(isRadio ? 'radio' : undefined)}"
           aria-checked="${ifDefined(isRadio ? stateValue : undefined)}"
           aria-pressed="${ifDefined(isRadio ? undefined : stateValue)}"

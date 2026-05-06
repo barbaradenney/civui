@@ -34,7 +34,6 @@ export const Default: Story = {
     label: 'I agree to the terms and conditions',
     name: 'agree',
     checked: false,
-    tile: false,
     required: false,
     disabled: false,
   },
@@ -168,7 +167,7 @@ export const GroupWithError: Story = {
 export const GroupTileVariant: Story = {
   render: () => html`
     <civ-form-fieldset legend="Benefits you are applying for" hint="Select all that apply">
-      <civ-checkbox-group tile>
+      <civ-checkbox-group>
         <civ-checkbox
           label="Health care"
           name="benefits"

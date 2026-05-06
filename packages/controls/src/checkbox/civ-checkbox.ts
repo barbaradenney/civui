@@ -15,7 +15,7 @@ import { CivBooleanFormElement, dispatch, forwardTileClick, renderHint, renderEr
 @customElement('civ-checkbox')
 export class CivCheckbox extends CivBooleanFormElement {
   @property({ type: Boolean, reflect: true }) indeterminate = false;
-  @property({ type: Boolean, reflect: true }) tile = false;
+  @property({ type: Boolean, reflect: true }) tile = true;
 
   override render() {
     return html`

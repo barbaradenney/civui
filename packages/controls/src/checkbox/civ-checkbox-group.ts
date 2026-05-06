@@ -36,7 +36,7 @@ export class CivCheckboxGroup extends LightDomSlotMixin(CivFormElement) {
   }
 
   @property({ type: String }) legend = '';
-  @property({ type: Boolean, reflect: true }) tile = false;
+  @property({ type: Boolean, reflect: true }) tile = true;
   @property({ type: String, reflect: true }) orientation: 'vertical' | 'horizontal' = 'vertical';
   @property({ type: Boolean, attribute: 'show-select-all' }) showSelectAll = false;
 

@@ -70,22 +70,24 @@ describe('civ-radio', () => {
     expect(desc!.textContent).toContain('This is option A');
   });
 
-  it('renders tile variant', async () => {
-    const el = await fixture('<civ-radio label="Option A" value="a" tile></civ-radio>');
+  it('renders tile variant by default', async () => {
+    const el = await fixture('<civ-radio label="Option A" value="a"></civ-radio>');
 
     const tile = el.querySelector('.civ-check-tile');
     expect(tile).not.toBeNull();
   });
 
-  it('sets data-civ-tile on tile wrapper', async () => {
-    const el = await fixture('<civ-radio label="Option A" value="a" tile></civ-radio>');
+  it('sets data-civ-tile by default', async () => {
+    const el = await fixture('<civ-radio label="Option A" value="a"></civ-radio>');
 
     const wrapper = el.querySelector('[data-civ-tile]');
     expect(wrapper).not.toBeNull();
   });
 
-  it('does not set data-civ-tile when not tile variant', async () => {
-    const el = await fixture('<civ-radio label="Option A" value="a"></civ-radio>');
+  it('does not set data-civ-tile when tile is disabled', async () => {
+    const el = await fixture('<civ-radio label="Option A" value="a"></civ-radio>') as any;
+    el.tile = false;
+    await elementUpdated(el);
 
     const wrapper = el.querySelector('[data-civ-tile]');
     expect(wrapper).toBeNull();

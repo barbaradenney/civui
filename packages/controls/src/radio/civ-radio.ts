@@ -34,7 +34,7 @@ export class CivRadio extends CivBaseElement {
   @property({ type: String }) value = '';
   @property({ type: Boolean, reflect: true }) checked = false;
   @property({ type: String }) description = '';
-  @property({ type: Boolean, reflect: true }) tile = false;
+  @property({ type: Boolean, reflect: true }) tile = true;
   @property({ type: Boolean, reflect: true }) disabled = false;
   @property({ type: String }) name = '';
   @property({ type: Boolean, reflect: true }) required = false;

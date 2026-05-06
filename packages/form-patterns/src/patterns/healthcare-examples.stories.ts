@@ -342,7 +342,7 @@ export const PharmacySelection: Story = {
   render: () => html`
     <div style="max-width: 480px; display: grid; gap: 1.5rem;">
       <civ-form-fieldset legend="Select your preferred pharmacy" required>
-        <civ-radio-group name="pharmacy" tile>
+        <civ-radio-group name="pharmacy">
           <civ-radio
             label="VA Medical Center Pharmacy"
             value="va-pharmacy"

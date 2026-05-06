@@ -69,23 +69,25 @@ describe('civ-checkbox', () => {
     expect(desc!.textContent).toContain('By checking this');
   });
 
-  it('renders tile variant with border', async () => {
-    const el = await fixture('<civ-checkbox label="Option A" tile></civ-checkbox>');
+  it('renders tile variant with border by default', async () => {
+    const el = await fixture('<civ-checkbox label="Option A"></civ-checkbox>');
 
     // Tile variant should have civ-check-tile class on outer wrapper
     const outerDiv = el.querySelector('.civ-check-tile');
     expect(outerDiv).not.toBeNull();
   });
 
-  it('sets data-civ-tile on tile wrapper', async () => {
-    const el = await fixture('<civ-checkbox label="Option A" tile></civ-checkbox>');
+  it('sets data-civ-tile on tile wrapper by default', async () => {
+    const el = await fixture('<civ-checkbox label="Option A"></civ-checkbox>');
 
     const wrapper = el.querySelector('[data-civ-tile]');
     expect(wrapper).not.toBeNull();
   });
 
-  it('does not set data-civ-tile when not tile variant', async () => {
-    const el = await fixture('<civ-checkbox label="Option A"></civ-checkbox>');
+  it('does not set data-civ-tile when tile is disabled', async () => {
+    const el = await fixture('<civ-checkbox label="Option A"></civ-checkbox>') as any;
+    el.tile = false;
+    await elementUpdated(el);
 
     const wrapper = el.querySelector('[data-civ-tile]');
     expect(wrapper).toBeNull();

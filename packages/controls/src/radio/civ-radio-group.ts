@@ -36,7 +36,7 @@ export class CivRadioGroup extends LightDomSlotMixin(CivFormElement) {
   }
 
   @property({ type: String }) legend = '';
-  @property({ type: Boolean, reflect: true }) tile = false;
+  @property({ type: Boolean, reflect: true }) tile = true;
   @property({ type: String, reflect: true }) orientation: 'vertical' | 'horizontal' = 'vertical';
 
   /** Pre-populate radio options from a built-in preset data set. */

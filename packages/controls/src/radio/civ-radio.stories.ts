@@ -37,7 +37,6 @@ export const Default: Story = {
     value: '',
     hint: '',
     error: '',
-    tile: false,
     required: false,
     disabled: false,
     orientation: 'vertical',
@@ -195,7 +194,7 @@ export const DensityScale: Story = {
 export const TileVariant: Story = {
   render: () => html`
     <civ-form-fieldset legend="Account type">
-      <civ-radio-group name="account-type" tile>
+      <civ-radio-group name="account-type">
         <civ-radio
           label="Checking"
           value="checking"

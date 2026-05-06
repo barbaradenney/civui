@@ -151,10 +151,42 @@ describe('civ-checkbox-group orientation', () => {
 });
 
 describe('civ-checkbox-group variant', () => {
-  it('does not apply civ-group-list by default (card variant)', async () => {
+  it('auto resolves to card (no civ-group-list) for ≤4 options', async () => {
     const el = await fixture(`
       <civ-checkbox-group legend="Toppings">
         <civ-checkbox label="Cheese" value="cheese"></civ-checkbox>
+        <civ-checkbox label="Pepperoni" value="pepperoni"></civ-checkbox>
+        <civ-checkbox label="Mushrooms" value="mushrooms"></civ-checkbox>
+        <civ-checkbox label="Olives" value="olives"></civ-checkbox>
+      </civ-checkbox-group>
+    `);
+
+    expect(el.querySelector('.civ-group-list')).toBeNull();
+  });
+
+  it('auto resolves to list (civ-group-list applied) for >4 options', async () => {
+    const el = await fixture(`
+      <civ-checkbox-group legend="Toppings">
+        <civ-checkbox label="Cheese" value="cheese"></civ-checkbox>
+        <civ-checkbox label="Pepperoni" value="pepperoni"></civ-checkbox>
+        <civ-checkbox label="Mushrooms" value="mushrooms"></civ-checkbox>
+        <civ-checkbox label="Olives" value="olives"></civ-checkbox>
+        <civ-checkbox label="Onions" value="onions"></civ-checkbox>
+      </civ-checkbox-group>
+    `);
+
+    const container = el.querySelector('.civ-group-layout--vertical.civ-group-list');
+    expect(container).not.toBeNull();
+  });
+
+  it('explicit variant=card stays card even for >4 options', async () => {
+    const el = await fixture(`
+      <civ-checkbox-group legend="Toppings" variant="card">
+        <civ-checkbox label="Cheese" value="cheese"></civ-checkbox>
+        <civ-checkbox label="Pepperoni" value="pepperoni"></civ-checkbox>
+        <civ-checkbox label="Mushrooms" value="mushrooms"></civ-checkbox>
+        <civ-checkbox label="Olives" value="olives"></civ-checkbox>
+        <civ-checkbox label="Onions" value="onions"></civ-checkbox>
       </civ-checkbox-group>
     `);
 

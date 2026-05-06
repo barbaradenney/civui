@@ -296,7 +296,7 @@ Groups multiple checkboxes. Uses `legend` (not `label`). Multi-value.
 **Props (beyond standard):**
 - `legend` — group label (renders as `<legend>`)
 - `tile` — apply tile variant to all children
-- `variant` — `'card'` (default, individual rounded tiles with gaps) | `'list'` (joined tiles sharing a 1px border, rounded corners only on first / last). Vertical + tile only.
+- `variant` — `'auto'` (default — picks `card` for ≤4 options, `list` for 5+) | `'card'` (individual rounded tiles with gaps, best for short groups) | `'list'` (joined tiles sharing a 1px border, rounded corners only on first / last, best for dense lists). Vertical + tile only.
 - `orientation` — `'vertical'` (default) | `'horizontal'`
 - `preset` — pre-built option list (same presets as `civ-select`). Renders `<civ-checkbox>` children automatically.
 - `preset-variant` — variant of the preset (e.g., `'territories'`, `'all'`, `'binary'`)
@@ -334,7 +334,7 @@ Mutually exclusive choice group. `civ-radio` is always used inside `civ-radio-gr
 **Radio-group props (beyond standard):**
 - `legend` — group label
 - `tile` — apply tile variant to all children
-- `variant` — `'card'` (default, individual rounded tiles with gaps) | `'list'` (joined tiles sharing a 1px border, rounded corners only on first / last). Vertical + tile only.
+- `variant` — `'auto'` (default — picks `card` for ≤4 options, `list` for 5+) | `'card'` (individual rounded tiles with gaps, best for short groups) | `'list'` (joined tiles sharing a 1px border, rounded corners only on first / last, best for dense lists). Vertical + tile only.
 - `orientation` — `'vertical'` (default) | `'horizontal'`
 - `preset` — pre-built option list (same presets as `civ-select`). Renders `<civ-radio>` children automatically.
 - `preset-variant` — variant of the preset (e.g., `'territories'`, `'all'`, `'binary'`)

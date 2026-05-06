@@ -39,14 +39,20 @@ export class CivRadioGroup extends LightDomSlotMixin(CivFormElement) {
   @property({ type: Boolean, reflect: true }) tile = true;
   @property({ type: String, reflect: true }) orientation: 'vertical' | 'horizontal' = 'vertical';
   /**
-   * Tile rendering variant. `card` (default) gives each tile its own rounded
-   * border with a gap between tiles. `list` collapses the gap so adjacent
-   * tiles share a single 1px border, with rounded corners only on the first
-   * and last tile — useful for dense option lists like the OMB race & ethnicity
-   * groups. Only affects rendering when `tile` is also true and orientation
-   * is vertical.
+   * Tile rendering variant.
+   * - `auto` (default) — picks `card` for groups of 4 or fewer options and
+   *   `list` for groups of 5+, on the theory that long card stacks waste
+   *   vertical space and read better as a connected list.
+   * - `card` — each tile has its own rounded border with a gap. Best for
+   *   short groups (≤4) where each option deserves visual weight.
+   * - `list` — adjacent tiles share a single 1px border with rounded corners
+   *   only on the first and last tile. Best for dense option lists.
+   *
+   * Only affects rendering when `tile` is also true and orientation is
+   * vertical. The auto threshold counts slotted `<civ-radio>` children
+   * (or `preset` option count when used).
    */
-  @property({ type: String, reflect: true }) variant: 'card' | 'list' = 'card';
+  @property({ type: String, reflect: true }) variant: 'card' | 'list' | 'auto' = 'auto';
 
   /** Pre-populate radio options from a built-in preset data set. */
   @property({ type: String }) preset?: SelectPresetName;
@@ -142,12 +148,31 @@ export class CivRadioGroup extends LightDomSlotMixin(CivFormElement) {
     this._syncRadioDisabled();
   }
 
+  /**
+   * Resolve the effective variant. `auto` picks `list` once the group has
+   * more than 4 options, otherwise `card`. Reads the captured slot map
+   * because at first render LightDomSlotMixin has already pulled children
+   * out of the DOM, so querySelector('civ-radio') would return 0.
+   */
+  private _resolveVariant(): 'card' | 'list' {
+    if (this.variant !== 'auto') return this.variant;
+    const presetCount = this.preset
+      ? resolvePresetOptions(this.preset, this.presetVariant).length
+      : 0;
+    const slottedCount = this._getSlottedChildren('default').filter(
+      (n) => n.nodeType === Node.ELEMENT_NODE && (n as Element).tagName === 'CIV-RADIO',
+    ).length;
+    const count = presetCount || slottedCount;
+    return count > 4 ? 'list' : 'card';
+  }
+
   override render() {
     const layoutBase =
       this.orientation === 'horizontal'
         ? 'civ-group-layout--horizontal'
         : 'civ-group-layout--vertical';
-    const layoutClass = this.variant === 'list' && this.orientation !== 'horizontal'
+    const effectiveVariant = this._resolveVariant();
+    const layoutClass = effectiveVariant === 'list' && this.orientation !== 'horizontal'
       ? `${layoutBase} civ-group-list`
       : layoutBase;
 

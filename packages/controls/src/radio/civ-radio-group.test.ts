@@ -431,10 +431,42 @@ describe('civ-radio-group orientation', () => {
 });
 
 describe('civ-radio-group variant', () => {
-  it('does not apply civ-group-list by default (card variant)', async () => {
+  it('auto resolves to card (no civ-group-list) for ≤4 options', async () => {
     const el = await fixture(`
       <civ-radio-group legend="Color" name="color">
         <civ-radio label="Red" value="red"></civ-radio>
+        <civ-radio label="Blue" value="blue"></civ-radio>
+        <civ-radio label="Green" value="green"></civ-radio>
+        <civ-radio label="Yellow" value="yellow"></civ-radio>
+      </civ-radio-group>
+    `);
+
+    expect(el.querySelector('.civ-group-list')).toBeNull();
+  });
+
+  it('auto resolves to list (civ-group-list applied) for >4 options', async () => {
+    const el = await fixture(`
+      <civ-radio-group legend="Color" name="color">
+        <civ-radio label="Red" value="red"></civ-radio>
+        <civ-radio label="Blue" value="blue"></civ-radio>
+        <civ-radio label="Green" value="green"></civ-radio>
+        <civ-radio label="Yellow" value="yellow"></civ-radio>
+        <civ-radio label="Purple" value="purple"></civ-radio>
+      </civ-radio-group>
+    `);
+
+    const container = el.querySelector('.civ-group-layout--vertical.civ-group-list');
+    expect(container).not.toBeNull();
+  });
+
+  it('explicit variant=card stays card even for >4 options', async () => {
+    const el = await fixture(`
+      <civ-radio-group legend="Color" name="color" variant="card">
+        <civ-radio label="Red" value="red"></civ-radio>
+        <civ-radio label="Blue" value="blue"></civ-radio>
+        <civ-radio label="Green" value="green"></civ-radio>
+        <civ-radio label="Yellow" value="yellow"></civ-radio>
+        <civ-radio label="Purple" value="purple"></civ-radio>
       </civ-radio-group>
     `);
 

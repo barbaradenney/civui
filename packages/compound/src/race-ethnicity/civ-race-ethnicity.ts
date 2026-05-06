@@ -77,12 +77,12 @@ export class CivRaceEthnicity extends CivFormElement {
   @property({ type: String, attribute: 'ethnicity-error' }) ethnicityError = '';
   @property({ type: String, attribute: 'race-error' }) raceError = '';
   /**
-   * Tile rendering variant for the underlying race / ethnicity groups.
-   * `card` (default) gives each option its own bordered card with a gap.
-   * `list` collapses the gap so options share a single border, useful for
-   * dense option lists.
+   * Tile rendering variant forwarded to both inner groups. Defaults to
+   * `auto` so each group picks `card` for ≤4 options and `list` for 5+
+   * — which matches the OMB shape (Race has 6, Ethnicity has 3) without
+   * the consumer having to set anything. Pass `card` or `list` to override.
    */
-  @property({ type: String }) variant: 'card' | 'list' = 'card';
+  @property({ type: String }) variant: 'card' | 'list' | 'auto' = 'auto';
 
   @state() private _data: RaceEthnicityValue = { ...EMPTY_VALUE };
 

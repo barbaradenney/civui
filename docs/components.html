@@ -879,10 +879,10 @@
       <h2>Feedback Components</h2>
       <p>Components for progress indication, alerts, and user feedback.</p>
 
-      <!-- civ-progress-bar -->
+      <!-- civ-progress-percent -->
       <div class="component">
         <div class="component-header">
-          <h3>&lt;civ-progress-bar&gt;</h3>
+          <h3>&lt;civ-progress-percent&gt;</h3>
           <p>A percentage-based progress indicator for dynamic forms where the number of steps is not fixed.</p>
         </div>
         <div class="component-body">
@@ -898,21 +898,21 @@
           </table>
 
           <h4>Example</h4>
-<pre><code>&lt;civ-progress-bar
+<pre><code>&lt;civ-progress-percent
   value="37"
   label="Application progress"
   status="3 of 8 sections complete"
-&gt;&lt;/civ-progress-bar&gt;
+&gt;&lt;/civ-progress-percent&gt;
 
 &lt;!-- Complete state --&gt;
-&lt;civ-progress-bar
+&lt;civ-progress-percent
   value="100"
   label="Upload progress"
   status="All files uploaded"
-&gt;&lt;/civ-progress-bar&gt;
+&gt;&lt;/civ-progress-percent&gt;
 
 &lt;!-- Without percentage text --&gt;
-&lt;civ-progress-bar value="60" label="Loading" show-percent="false"&gt;&lt;/civ-progress-bar&gt;</code></pre>
+&lt;civ-progress-percent value="60" label="Loading" show-percent="false"&gt;&lt;/civ-progress-percent&gt;</code></pre>
         </div>
       </div>
 
@@ -946,14 +946,14 @@
   current="1"
   show-counter
   clickable
-&gt;&lt;/civ-progress&gt;</code></pre>
+&gt;&lt;/civ-progress-steps&gt;</code></pre>
 
           <h4>Example: With error steps</h4>
 <pre><code>&lt;civ-progress
   steps='["Step 1","Step 2","Step 3","Step 4"]'
   current="2"
   error-steps="[0]"
-&gt;&lt;/civ-progress&gt;</code></pre>
+&gt;&lt;/civ-progress-steps&gt;</code></pre>
         </div>
       </div>
 

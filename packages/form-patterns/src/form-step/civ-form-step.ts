@@ -5,8 +5,8 @@ import type { SlotConfig } from '@civui/core';
 import '@civui/inputs';
 import '@civui/actions/button';
 import '@civui/navigation/link';
-import '../progress/civ-progress.js';
-import '../progress/civ-progress-bar.js';
+import '../progress/civ-progress-steps.js';
+import '../progress/civ-progress-percent.js';
 import '../progress/civ-progress-header.js';
 
 /**
@@ -23,8 +23,8 @@ import '../progress/civ-progress-header.js';
  *
  * @prop {'minimal'|'steps'|'bar'} progress - Progress indicator style (default 'minimal')
  *   - 'minimal': compact "Step X of Y: Title" header (civ-progress-header)
- *   - 'steps': circle step indicators with labels and connectors (civ-progress)
- *   - 'bar': percentage progress bar (civ-progress-bar)
+ *   - 'steps': segmented step indicators (civ-progress-steps)
+ *   - 'bar': percentage progress bar (civ-progress-percent)
  *   Back link is rendered above all three indicators on non-first steps.
  * @prop {string} persist - Storage key for civ-form persistence
  * @prop {string} continueLabel - Label for continue button
@@ -261,23 +261,23 @@ export class CivFormStep extends LightDomSlotMixin(CivBaseElement) {
       case 'steps':
         return html`
           ${backLink}
-          <civ-progress
+          <civ-progress-steps
             .steps="${JSON.stringify(this._steps.map(s => ({ label: s.getAttribute('data-step-label') || '' })))}"
             current="${idx}"
             show-counter
             clickable
             @civ-step-click="${(e: CustomEvent) => this.goToStep(e.detail.step)}"
-          ></civ-progress>
+          ></civ-progress-steps>
         `;
 
       case 'bar':
         return html`
           ${backLink}
-          <civ-progress-bar
+          <civ-progress-percent
             value="${Math.round((idx / total) * 100)}"
             label="${interpolate(t('progressStepsCounter'), { current: String(idx + 1), total: String(total) })}"
             status="${interpolate(t('progressStepsCounter'), { current: String(idx + 1), total: String(total) })}"
-          ></civ-progress-bar>
+          ></civ-progress-percent>
         `;
 
       case 'minimal':

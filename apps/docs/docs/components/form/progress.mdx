@@ -10,13 +10,13 @@ import StoryEmbed from "@site/src/components/StoryEmbed";
 
 CivUI provides three progress indicator components for multi-step forms:
 
-- **`civ-progress`** — segmented progress bar (one rectangle per step)
+- **`civ-progress-steps`** — segmented progress bar (one rectangle per step)
 - **`civ-progress-header`** — compact "Step X of Y: Title" text header
-- **`civ-progress-bar`** — percentage-based progress bar
+- **`civ-progress-percent`** — percentage-based progress bar
 
 All three are used by `civ-form-step` via the `progress` prop, or standalone.
 
-## Segmented Progress (`civ-progress`)
+## Segmented Progress (`civ-progress-steps`)
 
 Each step is a small rectangle — filled for completed, highlighted for current, and empty for upcoming. Compact at any screen size.
 
@@ -65,12 +65,12 @@ Each step is a small rectangle — filled for completed, highlighted for current
 ### Usage
 
 ```html
-<civ-progress
+<civ-progress-steps
   steps='["Personal Info", "Address", "Review", "Submit"]'
   current="1"
   clickable
   show-counter
-></civ-progress>
+></civ-progress-steps>
 ```
 
 ## Progress Header (`civ-progress-header`)
@@ -98,7 +98,7 @@ Each step is a small rectangle — filled for completed, highlighted for current
 ></civ-progress-header>
 ```
 
-## Progress Bar (`civ-progress-bar`)
+## Progress Bar (`civ-progress-percent`)
 
 <StoryEmbed id="forms-form-progress--progress-bar" />
 
@@ -114,11 +114,11 @@ Each step is a small rectangle — filled for completed, highlighted for current
 ### Usage
 
 ```html
-<civ-progress-bar
+<civ-progress-percent
   value="40"
   label="Form completion"
   status="3 of 8 sections complete"
-></civ-progress-bar>
+></civ-progress-percent>
 ```
 
 ## Using with `civ-form-step`

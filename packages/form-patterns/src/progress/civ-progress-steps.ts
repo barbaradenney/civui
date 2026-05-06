@@ -10,7 +10,7 @@ import { CivBaseElement, announce, dispatch, t, interpolate } from '@civui/core'
  * and empty for upcoming. Compact at any screen size with no
  * responsive breakpoints needed.
  *
- * @element civ-progress
+ * @element civ-progress-steps
  *
  * @prop {string} steps - JSON string of step labels
  *   Simple: '["Personal Info","Address","Review"]'
@@ -21,8 +21,8 @@ import { CivBaseElement, announce, dispatch, t, interpolate } from '@civui/core'
  *
  * @fires civ-step-click - When a completed segment is clicked, detail: { step: number }
  */
-@customElement('civ-progress')
-export class CivProgress extends CivBaseElement {
+@customElement('civ-progress-steps')
+export class CivProgressSteps extends CivBaseElement {
   @property({ type: String }) steps = '[]';
   @property({ type: Number }) current = 0;
   @property({ type: Boolean }) clickable = false;
@@ -160,6 +160,6 @@ export class CivProgress extends CivBaseElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'civ-progress': CivProgress;
+    'civ-progress-steps': CivProgressSteps;
   }
 }

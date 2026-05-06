@@ -24,27 +24,27 @@ describe('civ-form-step', () => {
     const el = await fixture<CivFormStep>(threeSteps);
     // Minimal mode renders civ-progress-header, not civ-progress
     expect(el.querySelector('civ-progress-header')).not.toBeNull();
-    expect(el.querySelector('civ-progress:not(civ-progress-header):not(civ-progress-bar)')).toBeNull();
+    expect(el.querySelector('civ-progress-steps')).toBeNull();
     const counter = el.querySelector('.civ-progress-header__counter');
     expect(counter).not.toBeNull();
     expect(counter!.textContent).toContain('1');
     expect(counter!.textContent).toContain('3');
   });
 
-  it('renders civ-progress when progress="steps"', async () => {
+  it('renders civ-progress-steps when progress="steps"', async () => {
     const el = await fixture<CivFormStep>(`
       <civ-form-step progress="steps">
         <div data-step-label="A"><p>a</p></div>
         <div data-step-label="B"><p>b</p></div>
       </civ-form-step>
     `);
-    const progress = el.querySelector('civ-progress');
+    const progress = el.querySelector('civ-progress-steps');
     expect(progress).not.toBeNull();
     const segments = progress!.querySelectorAll('.civ-progress-segment');
     expect(segments.length).toBe(2);
   });
 
-  it('renders civ-progress-bar when progress="bar"', async () => {
+  it('renders civ-progress-percent when progress="bar"', async () => {
     const el = await fixture<CivFormStep>(`
       <civ-form-step progress="bar">
         <div data-step-label="A"><p>a</p></div>
@@ -52,7 +52,7 @@ describe('civ-form-step', () => {
         <div data-step-label="C"><p>c</p></div>
       </civ-form-step>
     `);
-    const bar = el.querySelector('civ-progress-bar');
+    const bar = el.querySelector('civ-progress-percent');
     expect(bar).not.toBeNull();
     expect(bar!.getAttribute('value')).toBe('0'); // step 0 of 3 = 0%
   });
@@ -67,7 +67,7 @@ describe('civ-form-step', () => {
     `) as CivFormStep;
     el.goToStep(1);
     await elementUpdated(el);
-    const bar = el.querySelector('civ-progress-bar');
+    const bar = el.querySelector('civ-progress-percent');
     expect(Number(bar!.getAttribute('value'))).toBe(33);
   });
 
@@ -88,8 +88,8 @@ describe('civ-form-step', () => {
           <div data-step-label="B"><p>b</p></div>
         </civ-form-step>
       `);
-      expect(el.querySelector('civ-progress')).toBeNull();
-      expect(el.querySelector('civ-progress-bar')).toBeNull();
+      expect(el.querySelector('civ-progress-steps')).toBeNull();
+      expect(el.querySelector('civ-progress-percent')).toBeNull();
       expect(el.querySelector('.civ-progress-header__counter')).toBeNull();
     }
   });

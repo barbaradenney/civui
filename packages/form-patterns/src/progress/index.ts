@@ -1,3 +1,3 @@
-export { CivProgress } from './civ-progress.js';
-export { CivProgressBar } from './civ-progress-bar.js';
+export { CivProgressSteps } from './civ-progress-steps.js';
+export { CivProgressPercent } from './civ-progress-percent.js';
 export { CivProgressHeader } from './civ-progress-header.js';

@@ -9,15 +9,15 @@ import { CivBaseElement } from '@civui/core';
  * the number of steps isn't fixed. Shows a filled bar with
  * percentage label and optional status text.
  *
- * @element civ-progress-bar
+ * @element civ-progress-percent
  *
  * @prop {number} value - Current progress percentage (0-100)
  * @prop {string} label - Accessible label for the progress bar
  * @prop {string} status - Optional status text (e.g., "3 of 8 sections complete")
  * @prop {boolean} showPercent - Show percentage text (default true)
  */
-@customElement('civ-progress-bar')
-export class CivProgressBar extends CivBaseElement {
+@customElement('civ-progress-percent')
+export class CivProgressPercent extends CivBaseElement {
   @property({ type: Number }) value = 0;
   @property({ type: String }) label = 'Progress';
   @property({ type: String }) status = '';
@@ -57,6 +57,6 @@ export class CivProgressBar extends CivBaseElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'civ-progress-bar': CivProgressBar;
+    'civ-progress-percent': CivProgressPercent;
   }
 }

@@ -46,8 +46,8 @@ For architecture and internals, see \`CLAUDE.md\` in the repo root.
 | \`<civ-divider>\` | Layout | \`spacing\` (default/sm) | — |
 | \`<civ-list>\` | Layout | \`dividers\` (boolean) — generic list container. Renders \`<ul role="list">\`. Use for task lists, side nav, link collections, search results. | — |
 | \`<civ-list-item>\` | Layout | \`href\` (optional) — when set, the whole row becomes a clickable anchor. Use the \`data-list-item-end\` attribute on a child to place trailing content (status tag, switch, etc.). | \`civ-analytics\` |
-| \`<civ-progress-bar>\` | Feedback | \`value\`, \`label\`, \`status\` | — |
-| \`<civ-progress>\` | Feedback | \`steps\` (JSON), \`current\`, \`show-counter\`, \`clickable\`, \`orientation\` | \`civ-step-click\` |
+| \`<civ-progress-percent>\` | Feedback | \`value\`, \`label\`, \`status\` | — |
+| \`<civ-progress-steps>\` | Feedback | \`steps\` (JSON), \`current\`, \`show-counter\`, \`clickable\` | \`civ-step-click\` |
 | \`<civ-form-step>\` | Form | \`persist\`, \`sensitive\`, \`show-pause\`, \`continue-label\`, \`complete-label\`, \`pause-label\`, \`nav-disabled\`, \`validate\` | \`civ-step-complete\`, \`civ-step-pause\` |
 | \`<civ-yes-no>\` | Choice | \`legend\`, \`yes-label\`, \`no-label\`, \`unsure-label\`, \`skip-label\` | \`{ value }\` |
 | \`<civ-conditional>\` | Layout | \`when\`, \`equals\`, \`not-equals\`, \`includes\`, \`has-value\`, \`matches\` | — |
@@ -683,30 +683,30 @@ Children with \`data-step\` define each step. Validates required fields before a
 \`civ-form-step\` automatically renders progress steps, Continue/Back buttons, and validates
 required fields before advancing. No custom JavaScript needed.
 
-### civ-progress
+### civ-progress-steps
 
-Step indicator for multi-step forms. Shows numbered circles with labels.
+Segmented step indicator for multi-step forms. Each step is a rectangle — filled for completed, highlighted for current.
 
-**Props:** \`steps\` (JSON array of labels or objects), \`current\` (0-based index), \`show-counter\`, \`clickable\`, \`orientation\`
+**Props:** \`steps\` (JSON array of labels), \`current\` (0-based index), \`show-counter\`, \`clickable\`
 
 \`\`\`html
-<civ-progress
+<civ-progress-steps
   steps='["Your name","Date of birth","SSN"]'
   current="1"
   show-counter
-></civ-progress>
+></civ-progress-steps>
 \`\`\`
 
 ---
 
-### civ-progress-bar
+### civ-progress-percent
 
 Percentage-based progress indicator for dynamic forms.
 
 **Props:** \`value\` (0-100), \`label\` (aria-label), \`status\` (e.g., "3 of 8 sections"), \`show-percent\`
 
 \`\`\`html
-<civ-progress-bar value="37" label="Application progress" status="3 of 8 sections complete"></civ-progress-bar>
+<civ-progress-percent value="37" label="Application progress" status="3 of 8 sections complete"></civ-progress-percent>
 \`\`\`
 
 ---

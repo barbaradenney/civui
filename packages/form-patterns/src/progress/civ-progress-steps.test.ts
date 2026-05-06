@@ -1,21 +1,21 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
-import './civ-progress.js';
+import './civ-progress-steps.js';
 
 afterEach(cleanupFixtures);
 
-describe('civ-progress', () => {
+describe('civ-progress-steps', () => {
   const threeSteps = '["Personal Info","Address","Review"]';
 
   it('renders segments for each step', async () => {
-    const el = await fixture(`<civ-progress steps='${threeSteps}' current="0"></civ-progress>`);
+    const el = await fixture(`<civ-progress-steps steps='${threeSteps}' current="0"></civ-progress-steps>`);
 
     const segments = el.querySelectorAll('.civ-progress-segment');
     expect(segments.length).toBe(3);
   });
 
   it('renders a group with accessible label', async () => {
-    const el = await fixture(`<civ-progress steps='${threeSteps}' current="0"></civ-progress>`);
+    const el = await fixture(`<civ-progress-steps steps='${threeSteps}' current="0"></civ-progress-steps>`);
 
     const group = el.querySelector('[role="group"]');
     expect(group).not.toBeNull();
@@ -23,7 +23,7 @@ describe('civ-progress', () => {
   });
 
   it('marks completed segments', async () => {
-    const el = await fixture(`<civ-progress steps='${threeSteps}' current="2"></civ-progress>`);
+    const el = await fixture(`<civ-progress-steps steps='${threeSteps}' current="2"></civ-progress-steps>`);
 
     const segments = el.querySelectorAll('.civ-progress-segment');
     expect(segments[0].classList.contains('civ-progress-segment--completed')).toBe(true);
@@ -32,7 +32,7 @@ describe('civ-progress', () => {
   });
 
   it('marks current segment', async () => {
-    const el = await fixture(`<civ-progress steps='${threeSteps}' current="1"></civ-progress>`);
+    const el = await fixture(`<civ-progress-steps steps='${threeSteps}' current="1"></civ-progress-steps>`);
 
     const segments = el.querySelectorAll('.civ-progress-segment');
     expect(segments[1].classList.contains('civ-progress-segment--current')).toBe(true);
@@ -40,7 +40,7 @@ describe('civ-progress', () => {
   });
 
   it('leaves upcoming segments unstyled', async () => {
-    const el = await fixture(`<civ-progress steps='${threeSteps}' current="0"></civ-progress>`);
+    const el = await fixture(`<civ-progress-steps steps='${threeSteps}' current="0"></civ-progress-steps>`);
 
     const segments = el.querySelectorAll('.civ-progress-segment');
     expect(segments[1].classList.contains('civ-progress-segment--completed')).toBe(false);
@@ -49,7 +49,7 @@ describe('civ-progress', () => {
   });
 
   it('sets aria-label with step label on each segment', async () => {
-    const el = await fixture(`<civ-progress steps='${threeSteps}' current="0"></civ-progress>`);
+    const el = await fixture(`<civ-progress-steps steps='${threeSteps}' current="0"></civ-progress-steps>`);
 
     const segments = el.querySelectorAll('.civ-progress-segment');
     expect(segments[0].getAttribute('aria-label')).toContain('Personal Info');
@@ -58,7 +58,7 @@ describe('civ-progress', () => {
   });
 
   it('shows error state on specified steps', async () => {
-    const el = await fixture(`<civ-progress steps='${threeSteps}' current="2" error-steps="[1]"></civ-progress>`);
+    const el = await fixture(`<civ-progress-steps steps='${threeSteps}' current="2" error-steps="[1]"></civ-progress-steps>`);
 
     const segments = el.querySelectorAll('.civ-progress-segment');
     expect(segments[1].classList.contains('civ-progress-segment--error')).toBe(true);
@@ -67,7 +67,7 @@ describe('civ-progress', () => {
   });
 
   it('shows counter when show-counter is set', async () => {
-    const el = await fixture(`<civ-progress steps='${threeSteps}' current="1" show-counter></civ-progress>`);
+    const el = await fixture(`<civ-progress-steps steps='${threeSteps}' current="1" show-counter></civ-progress-steps>`);
 
     const counter = el.querySelector('.civ-progress-steps__counter');
     expect(counter).not.toBeNull();
@@ -76,13 +76,13 @@ describe('civ-progress', () => {
   });
 
   it('hides counter by default', async () => {
-    const el = await fixture(`<civ-progress steps='${threeSteps}' current="0"></civ-progress>`);
+    const el = await fixture(`<civ-progress-steps steps='${threeSteps}' current="0"></civ-progress-steps>`);
 
     expect(el.querySelector('.civ-progress-steps__counter')).toBeNull();
   });
 
   it('updates when current step changes', async () => {
-    const el = await fixture(`<civ-progress steps='${threeSteps}' current="0"></civ-progress>`) as any;
+    const el = await fixture(`<civ-progress-steps steps='${threeSteps}' current="0"></civ-progress-steps>`) as any;
 
     el.current = 2;
     await elementUpdated(el);
@@ -94,14 +94,14 @@ describe('civ-progress', () => {
   });
 
   it('renders nothing for empty steps', async () => {
-    const el = await fixture('<civ-progress steps="[]" current="0"></civ-progress>');
+    const el = await fixture('<civ-progress-steps steps="[]" current="0"></civ-progress-steps>');
     await elementUpdated(el);
 
     expect(el.querySelector('.civ-progress-segments')).toBeNull();
   });
 
   it('renders completed segments as buttons when clickable', async () => {
-    const el = await fixture(`<civ-progress steps='${threeSteps}' current="2" clickable></civ-progress>`);
+    const el = await fixture(`<civ-progress-steps steps='${threeSteps}' current="2" clickable></civ-progress-steps>`);
 
     const segments = el.querySelectorAll('.civ-progress-segment');
     expect(segments[0].tagName).toBe('BUTTON');
@@ -111,7 +111,7 @@ describe('civ-progress', () => {
   });
 
   it('fires civ-step-click when a clickable segment is clicked', async () => {
-    const el = await fixture(`<civ-progress steps='${threeSteps}' current="2" clickable></civ-progress>`);
+    const el = await fixture(`<civ-progress-steps steps='${threeSteps}' current="2" clickable></civ-progress-steps>`);
 
     const handler = vi.fn();
     el.addEventListener('civ-step-click', handler as EventListener);
@@ -124,14 +124,14 @@ describe('civ-progress', () => {
   });
 
   it('uses Light DOM', async () => {
-    const el = await fixture(`<civ-progress steps='${threeSteps}' current="0"></civ-progress>`);
+    const el = await fixture(`<civ-progress-steps steps='${threeSteps}' current="0"></civ-progress-steps>`);
 
     expect(el.shadowRoot).toBeNull();
     expect(el.querySelector('.civ-progress-segments')).not.toBeNull();
   });
 
   it('supports string step labels', async () => {
-    const el = await fixture('<civ-progress steps=\'["A","B"]\' current="0"></civ-progress>');
+    const el = await fixture('<civ-progress-steps steps=\'["A","B"]\' current="0"></civ-progress-steps>');
 
     const segments = el.querySelectorAll('.civ-progress-segment');
     expect(segments.length).toBe(2);
@@ -139,7 +139,7 @@ describe('civ-progress', () => {
   });
 
   it('supports object step labels', async () => {
-    const el = await fixture('<civ-progress steps=\'[{"label":"Step A"},{"label":"Step B"}]\' current="0"></civ-progress>');
+    const el = await fixture('<civ-progress-steps steps=\'[{"label":"Step A"},{"label":"Step B"}]\' current="0"></civ-progress-steps>');
 
     const segments = el.querySelectorAll('.civ-progress-segment');
     expect(segments[0].getAttribute('aria-label')).toContain('Step A');

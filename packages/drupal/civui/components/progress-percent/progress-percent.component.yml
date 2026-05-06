@@ -1,5 +1,5 @@
 $schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
-name: Progress Bar
+name: Progress Percent
 status: stable
 group: CivUI Layout
 description: 'Horizontal progress bar with label and percentage display.'

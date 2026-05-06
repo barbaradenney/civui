@@ -1,0 +1,35 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Progress Header
+status: stable
+group: CivUI Form Patterns
+description: 'Compact step counter header: Step X of Y: Title.'
+
+props:
+  type: object
+  properties:
+    current:
+      title: Current
+      type: integer
+      description: 'Current step index (zero-based)'
+    total:
+      title: Total
+      type: integer
+      description: 'Total number of steps'
+    step_title:
+      title: Step title
+      type: string
+      description: 'Title of the current step'
+    size:
+      title: Size
+      type: string
+      default: secondary
+      description: 'Visual size: primary, secondary, tertiary'
+    heading_level:
+      title: Heading level
+      type: integer
+      default: 2
+      description: 'Semantic heading level (1-6)'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

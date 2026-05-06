@@ -35,6 +35,39 @@ props:
       type: integer
       default: 2
       description: 'HTML heading level for the step heading'
+    progress:
+      title: Progress
+      type: string
+      default: minimal
+      description: 'Progress indicator style: minimal, steps, bar'
+    header_size:
+      title: Header size
+      type: string
+      default: secondary
+      description: 'Header size: primary, secondary, tertiary'
+    step_title:
+      title: Step title
+      type: string
+      description: 'Title for the current step'
+    nav_disabled:
+      title: Nav disabled
+      type: boolean
+      default: false
+      description: 'Disable navigation buttons'
+    hide_nav:
+      title: Hide nav
+      type: boolean
+      default: false
+      description: 'Hide all navigation UI'
+    validate:
+      title: Validate
+      type: boolean
+      default: true
+      description: 'Enable required field validation before advancing'
+    pause_label:
+      title: Pause label
+      type: string
+      description: 'Override the pause action label'
 
 slots:
   default:

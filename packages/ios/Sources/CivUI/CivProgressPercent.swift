@@ -1,4 +1,4 @@
-// CivUI — CivProgressBar for SwiftUI
+// CivUI — CivProgressPercent for SwiftUI
 // Accessible percentage-based progress indicator following government design system patterns.
 // Renders: status text → percentage → track with colored fill bar
 
@@ -8,20 +8,20 @@ import SwiftUI
 ///
 /// Displays a horizontal track with a colored fill bar representing percentage
 /// completion. Shows optional status text and percentage label. At 100% the
-/// fill switches to a green "complete" state. Mirrors the web `civ-progress-bar`
+/// fill switches to a green "complete" state. Mirrors the web `civ-progress-percent`
 /// component.
 ///
 /// VoiceOver announces the progress value and label.
 ///
 /// Usage:
 /// ```swift
-/// CivProgressBar(
+/// CivProgressPercent(
 ///     value: 37.5,
 ///     label: "Application progress",
 ///     status: "3 of 8 sections complete"
 /// )
 /// ```
-public struct CivProgressBar: View {
+public struct CivProgressPercent: View {
     // MARK: - Properties
 
     /// Current progress percentage (0-100, clamped).
@@ -140,33 +140,33 @@ public struct CivProgressBar: View {
 // MARK: - Preview
 
 #if DEBUG
-struct CivProgressBar_Previews: PreviewProvider {
+struct CivProgressPercent_Previews: PreviewProvider {
     struct PreviewWrapper: View {
         var body: some View {
             ScrollView {
                 VStack(alignment: .leading, spacing: CivTokens.Spacing._6) {
-                    CivProgressBar(
+                    CivProgressPercent(
                         value: 0,
                         status: "0 of 8 sections complete"
                     )
 
-                    CivProgressBar(
+                    CivProgressPercent(
                         value: 37.5,
                         label: "Application progress",
                         status: "3 of 8 sections complete"
                     )
 
-                    CivProgressBar(
+                    CivProgressPercent(
                         value: 75,
                         status: "6 of 8 sections complete"
                     )
 
-                    CivProgressBar(
+                    CivProgressPercent(
                         value: 100,
                         status: "8 of 8 sections complete"
                     )
 
-                    CivProgressBar(
+                    CivProgressPercent(
                         value: 50,
                         label: "Upload progress",
                         showPercent: false

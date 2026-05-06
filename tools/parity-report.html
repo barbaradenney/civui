@@ -45,14 +45,14 @@
 </head>
 <body>
 <h1>CivUI Platform Parity Report</h1>
-<p class="subtitle">Auto-generated 5/2/2026 — extracted from source code</p>
+<p class="subtitle">Auto-generated 5/6/2026 — extracted from source code</p>
 
 <div class="summary">
-  <div class="summary-card"><div class="num">70</div><div class="label">Components</div></div>
-  <div class="summary-card"><div class="num">64</div><div class="label">Web (Lit)</div></div>
-  <div class="summary-card"><div class="num">68</div><div class="label">iOS (SwiftUI)</div></div>
-  <div class="summary-card"><div class="num">68</div><div class="label">Android (Compose)</div></div>
-  <div class="summary-card"><div class="num">70</div><div class="label">Drupal (SDC)</div></div>
+  <div class="summary-card"><div class="num">73</div><div class="label">Components</div></div>
+  <div class="summary-card"><div class="num">66</div><div class="label">Web (Lit)</div></div>
+  <div class="summary-card"><div class="num">70</div><div class="label">iOS (SwiftUI)</div></div>
+  <div class="summary-card"><div class="num">70</div><div class="label">Android (Compose)</div></div>
+  <div class="summary-card"><div class="num">72</div><div class="label">Drupal (SDC)</div></div>
 </div>
 
 <div class="component">
@@ -299,8 +299,8 @@
     <span class="badge yes">iOS</span>
     <span class="badge yes">Android</span>
     <span class="badge yes">Drupal</span>
-    <span class="parity-meter"><span class="parity-fill high" style="width:94%"></span></span>
-    <span style="font-size:12px;color:#71767a;">94%</span>
+    <span class="parity-meter"><span class="parity-fill high" style="width:89%"></span></span>
+    <span style="font-size:12px;color:#71767a;">89%</span>
   </div>
   <div class="component-body">
     <div class="file-path" style="padding:8px 12px;">
@@ -312,7 +312,13 @@
     <div class="section-label">Properties <button class="toggle-excluded" onclick="document.body.classList.toggle('show-excluded')">Toggle web-only / native-only props</button></div>
     <table>
       <tr><th>Property</th><th>Web</th><th>iOS</th><th>Android</th><th>Drupal</th></tr>
-      <tr class="">
+      <tr class="gap-row">
+          <td><strong>variant</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="">
           <td><strong>legend</strong></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
@@ -342,12 +348,6 @@
           <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
           <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
           <td><span class="check">✓</span> <span class="prop-type">boolean</span></td>
-        </tr><tr class="gap-row">
-          <td><strong>showMilitary</strong></td>
-          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
-          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
-          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
-          <td><span class="cross">✗</span></td>
         </tr><tr class="gap-row">
           <td><strong>showStreet3</strong></td>
           <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
@@ -423,6 +423,12 @@
         </tr><tr class="gap-row">
           <td><strong>readonly</strong></td>
           <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>showMilitary</strong></td>
+          <td><span class="cross">✗</span></td>
           <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
           <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
           <td><span class="cross">✗</span></td>
@@ -2822,11 +2828,11 @@
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
           <td><span class="check">✓</span> <span class="prop-type">string</span></td>
-        </tr><tr class="gap-row">
+        </tr><tr class="">
           <td><strong>announceDelay</strong></td>
           <td><span class="check">✓</span> <span class="prop-type">Number</span></td>
-          <td><span class="cross">✗</span></td>
-          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Int</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Int</span></td>
           <td><span class="check">✓</span> <span class="prop-type">integer</span></td>
         </tr><tr class="">
           <td><strong>resultCountHidden</strong></td>
@@ -2834,11 +2840,11 @@
           <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
           <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
           <td><span class="check">✓</span> <span class="prop-type">boolean</span></td>
-        </tr><tr class="gap-row">
+        </tr><tr class="">
           <td><strong>filterAttribute</strong></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
-          <td><span class="cross">✗</span></td>
-          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
           <td><span class="check">✓</span> <span class="prop-type">string</span></td>
         </tr><tr class="gap-row">
           <td><strong>label</strong></td>
@@ -3354,8 +3360,8 @@
     <span class="badge yes">iOS</span>
     <span class="badge yes">Android</span>
     <span class="badge yes">Drupal</span>
-    <span class="parity-meter"><span class="parity-fill high" style="width:100%"></span></span>
-    <span style="font-size:12px;color:#71767a;">100%</span>
+    <span class="parity-meter"><span class="parity-fill high" style="width:93%"></span></span>
+    <span style="font-size:12px;color:#71767a;">93%</span>
   </div>
   <div class="component-body">
     <div class="file-path" style="padding:8px 12px;">
@@ -3385,18 +3391,36 @@
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
           <td><span class="check">✓</span> <span class="prop-type">string</span></td>
-        </tr><tr class="excluded-row">
+        </tr><tr class="">
           <td><strong>navDisabled</strong></td>
           <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
-          <td><span class="cross">✗</span></td>
-          <td><span class="cross">✗</span></td>
-          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">boolean</span></td>
+        </tr><tr class="">
+          <td><strong>hideNav</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">boolean</span></td>
+        </tr><tr class="">
+          <td><strong>progress</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">string</span></td>
         </tr><tr class="gap-row">
+          <td><strong>beforeContinue</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="">
           <td><strong>validate</strong></td>
           <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
           <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
           <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
-          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">boolean</span></td>
         </tr><tr class="">
           <td><strong>sensitive</strong></td>
           <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
@@ -3404,35 +3428,35 @@
           <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
           <td><span class="check">✓</span> <span class="prop-type">boolean</span></td>
         </tr><tr class="">
+          <td><strong>stepTitle</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">string</span></td>
+        </tr><tr class="">
+          <td><strong>headerSize</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">string</span></td>
+        </tr><tr class="">
+          <td><strong>headingLevel</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Number</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Int</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Int</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">integer</span></td>
+        </tr><tr class="">
           <td><strong>showPause</strong></td>
           <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
           <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
           <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
           <td><span class="check">✓</span> <span class="prop-type">boolean</span></td>
-        </tr><tr class="gap-row">
+        </tr><tr class="">
           <td><strong>pauseLabel</strong></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
-          <td><span class="cross">✗</span></td>
-        </tr><tr class="gap-row">
-          <td><strong>showProgress</strong></td>
-          <td><span class="cross">✗</span></td>
-          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
-          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
-          <td><span class="cross">✗</span></td>
-        </tr><tr class="gap-row">
-          <td><strong>backLabel</strong></td>
-          <td><span class="cross">✗</span></td>
-          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
-          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
-          <td><span class="cross">✗</span></td>
-        </tr><tr class="gap-row">
-          <td><strong>headingLevel</strong></td>
-          <td><span class="cross">✗</span></td>
-          <td><span class="cross">✗</span></td>
-          <td><span class="cross">✗</span></td>
-          <td><span class="check">✓</span> <span class="prop-type">integer</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">string</span></td>
         </tr>
     </table>
     <div class="section-label">Events / Callbacks</div>
@@ -3709,8 +3733,8 @@
     <span class="badge yes">iOS</span>
     <span class="badge yes">Android</span>
     <span class="badge yes">Drupal</span>
-    <span class="parity-meter"><span class="parity-fill high" style="width:100%"></span></span>
-    <span style="font-size:12px;color:#71767a;">100%</span>
+    <span class="parity-meter"><span class="parity-fill high" style="width:90%"></span></span>
+    <span style="font-size:12px;color:#71767a;">90%</span>
   </div>
   <div class="component-body">
     <div class="file-path" style="padding:8px 12px;">
@@ -3769,6 +3793,12 @@
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>eyebrow</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
           <td><span class="cross">✗</span></td>
         </tr><tr class="gap-row">
           <td><strong>disabled</strong></td>
@@ -4359,12 +4389,6 @@
           <td><span class="cross">✗</span></td>
           <td><span class="cross">✗</span></td>
         </tr><tr class="">
-          <td><strong>format</strong></td>
-          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
-          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
-          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
-          <td><span class="check">✓</span> <span class="prop-type">string</span></td>
-        </tr><tr class="">
           <td><strong>showMiddle</strong></td>
           <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
           <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
@@ -4726,7 +4750,54 @@
 </div>
 <div class="component">
   <div class="component-header" onclick="this.nextElementSibling.classList.toggle('open')">
-    ProgressBar
+    Progress
+    <span class="badge no">No Web</span>
+    <span class="badge no">No iOS</span>
+    <span class="badge no">No Android</span>
+    <span class="badge yes">Drupal</span>
+    <span class="parity-meter"><span class="parity-fill high" style="width:100%"></span></span>
+    <span style="font-size:12px;color:#71767a;">100%</span>
+  </div>
+  <div class="component-body">
+    <div class="file-path" style="padding:8px 12px;">
+      
+      
+      
+      <br>Drupal: packages/drupal/civui/components/progress/progress.component.yml
+    </div>
+    <div class="section-label">Properties <button class="toggle-excluded" onclick="document.body.classList.toggle('show-excluded')">Toggle web-only / native-only props</button></div>
+    <table>
+      <tr><th>Property</th><th>Web</th><th>iOS</th><th>Android</th><th>Drupal</th></tr>
+      <tr class="gap-row">
+          <td><strong>steps</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">string</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>clickable</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">boolean</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>errorSteps</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">string</span></td>
+        </tr>
+    </table>
+    <div class="section-label">Events / Callbacks</div>
+    <table>
+      <tr><th>Event</th><th>Web</th><th>iOS</th><th>Android</th><th>Drupal</th></tr>
+      
+    </table>
+  </div>
+</div>
+<div class="component">
+  <div class="component-header" onclick="this.nextElementSibling.classList.toggle('open')">
+    ProgressHeader
     <span class="badge yes">Web</span>
     <span class="badge yes">iOS</span>
     <span class="badge yes">Android</span>
@@ -4736,10 +4807,69 @@
   </div>
   <div class="component-body">
     <div class="file-path" style="padding:8px 12px;">
-      Web: packages/form-patterns/src/progress-steps/civ-progress-bar.ts
-      <br>iOS: packages/ios/Sources/CivUI/CivProgressBar.swift
-      <br>Android: packages/android/src/main/kotlin/gov/civui/components/CivProgressBar.kt
-      <br>Drupal: packages/drupal/civui/components/progress-bar/progress-bar.component.yml
+      Web: packages/form-patterns/src/progress/civ-progress-header.ts
+      <br>iOS: packages/ios/Sources/CivUI/CivProgressHeader.swift
+      <br>Android: packages/android/src/main/kotlin/gov/civui/components/CivProgressHeader.kt
+      <br>Drupal: packages/drupal/civui/components/progress-header/progress-header.component.yml
+    </div>
+    <div class="section-label">Properties <button class="toggle-excluded" onclick="document.body.classList.toggle('show-excluded')">Toggle web-only / native-only props</button></div>
+    <table>
+      <tr><th>Property</th><th>Web</th><th>iOS</th><th>Android</th><th>Drupal</th></tr>
+      <tr class="">
+          <td><strong>current</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Number</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Int</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Int</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">integer</span></td>
+        </tr><tr class="">
+          <td><strong>total</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Number</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Int</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Int</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">integer</span></td>
+        </tr><tr class="">
+          <td><strong>stepTitle</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">string</span></td>
+        </tr><tr class="">
+          <td><strong>size</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">string</span></td>
+        </tr><tr class="">
+          <td><strong>headingLevel</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Number</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Int</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Int</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">integer</span></td>
+        </tr>
+    </table>
+    <div class="section-label">Events / Callbacks</div>
+    <table>
+      <tr><th>Event</th><th>Web</th><th>iOS</th><th>Android</th><th>Drupal</th></tr>
+      
+    </table>
+  </div>
+</div>
+<div class="component">
+  <div class="component-header" onclick="this.nextElementSibling.classList.toggle('open')">
+    ProgressPercent
+    <span class="badge yes">Web</span>
+    <span class="badge yes">iOS</span>
+    <span class="badge yes">Android</span>
+    <span class="badge yes">Drupal</span>
+    <span class="parity-meter"><span class="parity-fill high" style="width:100%"></span></span>
+    <span style="font-size:12px;color:#71767a;">100%</span>
+  </div>
+  <div class="component-body">
+    <div class="file-path" style="padding:8px 12px;">
+      Web: packages/form-patterns/src/progress/civ-progress-percent.ts
+      <br>iOS: packages/ios/Sources/CivUI/CivProgressPercent.swift
+      <br>Android: packages/android/src/main/kotlin/gov/civui/components/CivProgressPercent.kt
+      <br>Drupal: packages/drupal/civui/components/progress-percent/progress-percent.component.yml
     </div>
     <div class="section-label">Properties <button class="toggle-excluded" onclick="document.body.classList.toggle('show-excluded')">Toggle web-only / native-only props</button></div>
     <table>
@@ -4783,16 +4913,16 @@
     <span class="badge yes">Web</span>
     <span class="badge yes">iOS</span>
     <span class="badge yes">Android</span>
-    <span class="badge yes">Drupal</span>
+    <span class="badge no">No Drupal</span>
     <span class="parity-meter"><span class="parity-fill high" style="width:100%"></span></span>
     <span style="font-size:12px;color:#71767a;">100%</span>
   </div>
   <div class="component-body">
     <div class="file-path" style="padding:8px 12px;">
-      Web: packages/form-patterns/src/progress-steps/civ-progress-steps.ts
+      Web: packages/form-patterns/src/progress/civ-progress-steps.ts
       <br>iOS: packages/ios/Sources/CivUI/CivProgressSteps.swift
       <br>Android: packages/android/src/main/kotlin/gov/civui/components/CivProgressSteps.kt
-      <br>Drupal: packages/drupal/civui/components/progress-steps/progress-steps.component.yml
+      
     </div>
     <div class="section-label">Properties <button class="toggle-excluded" onclick="document.body.classList.toggle('show-excluded')">Toggle web-only / native-only props</button></div>
     <table>
@@ -4803,44 +4933,20 @@
           <td><span class="check">✓</span> <span class="prop-type">[String]</span></td>
           <td><span class="check">✓</span> <span class="prop-type">List<String></span></td>
           <td><span class="cross">✗</span></td>
-        </tr><tr class="">
+        </tr><tr class="gap-row">
           <td><strong>current</strong></td>
           <td><span class="check">✓</span> <span class="prop-type">Number</span></td>
           <td><span class="check">✓</span> <span class="prop-type">Int</span></td>
           <td><span class="check">✓</span> <span class="prop-type">Int</span></td>
-          <td><span class="check">✓</span> <span class="prop-type">integer</span></td>
-        </tr><tr class="gap-row">
-          <td><strong>orientation</strong></td>
-          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
-          <td><span class="check">✓</span> <span class="prop-type">CivProgressStepsOrientation</span></td>
-          <td><span class="check">✓</span> <span class="prop-type">CivProgressStepsOrientation</span></td>
           <td><span class="cross">✗</span></td>
-        </tr><tr class="">
+        </tr><tr class="gap-row">
           <td><strong>clickable</strong></td>
           <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
           <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
           <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
-          <td><span class="check">✓</span> <span class="prop-type">boolean</span></td>
-        </tr><tr class="">
-          <td><strong>showCounter</strong></td>
-          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
-          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
-          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
-          <td><span class="check">✓</span> <span class="prop-type">boolean</span></td>
+          <td><span class="cross">✗</span></td>
         </tr><tr class="gap-row">
           <td><strong>errorSteps</strong></td>
-          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
-          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
-          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
-          <td><span class="cross">✗</span></td>
-        </tr><tr class="gap-row">
-          <td><strong>showBack</strong></td>
-          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
-          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
-          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
-          <td><span class="cross">✗</span></td>
-        </tr><tr class="gap-row">
-          <td><strong>backLabel</strong></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
@@ -4849,26 +4955,14 @@
           <td><strong>status</strong></td>
           <td><span class="cross">✗</span></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
-          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
-          <td><span class="cross">✗</span></td>
-        </tr><tr class="gap-row">
-          <td><strong>legend</strong></td>
           <td><span class="cross">✗</span></td>
           <td><span class="cross">✗</span></td>
-          <td><span class="cross">✗</span></td>
-          <td><span class="check">✓</span> <span class="prop-type">string</span></td>
         </tr>
     </table>
     <div class="section-label">Events / Callbacks</div>
     <table>
       <tr><th>Event</th><th>Web</th><th>iOS</th><th>Android</th><th>Drupal</th></tr>
       <tr class="gap-row">
-          <td><strong>civ-step-back</strong></td>
-          <td><span class="check">✓</span></td>
-          <td><span class="cross">✗</span></td>
-          <td><span class="check">✓</span></td>
-          <td><span class="cross">✗</span></td>
-        </tr><tr class="gap-row">
           <td><strong>civ-step-click</strong></td>
           <td><span class="check">✓</span></td>
           <td><span class="cross">✗</span></td>
@@ -5475,8 +5569,8 @@
     <span class="badge yes">iOS</span>
     <span class="badge yes">Android</span>
     <span class="badge yes">Drupal</span>
-    <span class="parity-meter"><span class="parity-fill high" style="width:100%"></span></span>
-    <span style="font-size:12px;color:#71767a;">100%</span>
+    <span class="parity-meter"><span class="parity-fill mid" style="width:75%"></span></span>
+    <span style="font-size:12px;color:#71767a;">75%</span>
   </div>
   <div class="component-body">
     <div class="file-path" style="padding:8px 12px;">
@@ -5549,16 +5643,16 @@
           <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
           <td><span class="cross">✗</span></td>
         </tr><tr class="gap-row">
-          <td><strong>wizardSensitive</strong></td>
-          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
-          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><strong>formStepsSensitive</strong></td>
           <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
           <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
         </tr><tr class="gap-row">
-          <td><strong>wizardShowPause</strong></td>
+          <td><strong>formStepsShowPause</strong></td>
           <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
-          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
-          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
           <td><span class="cross">✗</span></td>
         </tr><tr class="">
           <td><strong>min</strong></td>
@@ -5572,6 +5666,18 @@
           <td><span class="check">✓</span> <span class="prop-type">Int</span></td>
           <td><span class="check">✓</span> <span class="prop-type">Int</span></td>
           <td><span class="check">✓</span> <span class="prop-type">integer</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>wizardSensitive</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>wizardShowPause</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="cross">✗</span></td>
         </tr>
     </table>
     <div class="section-label">Events / Callbacks</div>
@@ -5590,21 +5696,33 @@
           <td><span class="check">✓</span></td>
           <td><span class="cross">✗</span></td>
         </tr><tr class="gap-row">
-          <td><strong>civ-repeater-wizard-open</strong></td>
+          <td><strong>civ-repeater-form-steps-open</strong></td>
           <td><span class="check">✓</span></td>
           <td><span class="cross">✗</span></td>
-          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
           <td><span class="cross">✗</span></td>
         </tr><tr class="gap-row">
-          <td><strong>civ-repeater-wizard-close</strong></td>
+          <td><strong>civ-repeater-form-steps-close</strong></td>
           <td><span class="check">✓</span></td>
           <td><span class="cross">✗</span></td>
-          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
           <td><span class="cross">✗</span></td>
         </tr><tr class="gap-row">
           <td><strong>civ-analytics</strong></td>
           <td><span class="cross">✗</span></td>
           <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>civ-repeater-wizard-open</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>civ-repeater-wizard-close</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
           <td><span class="check">✓</span></td>
           <td><span class="cross">✗</span></td>
         </tr>
@@ -6141,8 +6259,8 @@
     <span class="badge yes">iOS</span>
     <span class="badge yes">Android</span>
     <span class="badge yes">Drupal</span>
-    <span class="parity-meter"><span class="parity-fill high" style="width:100%"></span></span>
-    <span style="font-size:12px;color:#71767a;">100%</span>
+    <span class="parity-meter"><span class="parity-fill high" style="width:93%"></span></span>
+    <span style="font-size:12px;color:#71767a;">93%</span>
   </div>
   <div class="component-body">
     <div class="file-path" style="padding:8px 12px;">
@@ -6189,6 +6307,12 @@
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>card</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
           <td><span class="cross">✗</span></td>
         </tr><tr class="gap-row">
           <td><strong>name</strong></td>
@@ -6479,6 +6603,59 @@
           <td><span class="cross">✗</span></td>
           <td><span class="check">✓</span></td>
           <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr>
+    </table>
+  </div>
+</div>
+<div class="component">
+  <div class="component-header" onclick="this.nextElementSibling.classList.toggle('open')">
+    SupportResources
+    <span class="badge yes">Web</span>
+    <span class="badge yes">iOS</span>
+    <span class="badge yes">Android</span>
+    <span class="badge yes">Drupal</span>
+    <span class="parity-meter"><span class="parity-fill high" style="width:100%"></span></span>
+    <span style="font-size:12px;color:#71767a;">100%</span>
+  </div>
+  <div class="component-body">
+    <div class="file-path" style="padding:8px 12px;">
+      Web: packages/form-patterns/src/support-resources/civ-support-resources.ts
+      <br>iOS: packages/ios/Sources/CivUI/CivSupportResources.swift
+      <br>Android: packages/android/src/main/kotlin/gov/civui/components/CivSupportResources.kt
+      <br>Drupal: packages/drupal/civui/components/support-resources/support-resources.component.yml
+    </div>
+    <div class="section-label">Properties <button class="toggle-excluded" onclick="document.body.classList.toggle('show-excluded')">Toggle web-only / native-only props</button></div>
+    <table>
+      <tr><th>Property</th><th>Web</th><th>iOS</th><th>Android</th><th>Drupal</th></tr>
+      <tr class="">
+          <td><strong>heading</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">string</span></td>
+        </tr><tr class="">
+          <td><strong>headingLevel</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Number</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Int</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Int</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">integer</span></td>
+        </tr><tr class="">
+          <td><strong>tone</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">string</span></td>
+        </tr>
+    </table>
+    <div class="section-label">Events / Callbacks</div>
+    <table>
+      <tr><th>Event</th><th>Web</th><th>iOS</th><th>Android</th><th>Drupal</th></tr>
+      <tr class="gap-row">
+          <td><strong>content</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
           <td><span class="cross">✗</span></td>
         </tr>
     </table>

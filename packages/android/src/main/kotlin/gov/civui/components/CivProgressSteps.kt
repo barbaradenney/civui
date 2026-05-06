@@ -1,4 +1,4 @@
-// CivUI — CivProgress for Jetpack Compose
+// CivUI — CivProgressSteps for Jetpack Compose
 // Accessible step indicator with completed, current, and upcoming states.
 // TalkBack announces "Step X of Y: label, completed/current/upcoming".
 
@@ -33,44 +33,27 @@ import androidx.compose.ui.unit.dp
 import gov.civui.tokens.CivTokens
 
 /**
- * Step indicator orientation.
- */
-enum class CivProgressOrientation {
-    HORIZONTAL,
-    VERTICAL,
-}
-
-/**
- * Accessible progress step indicator for government applications.
+ * Accessible segmented progress indicator for government applications.
  *
- * Displays a series of steps with completed (check icon), current (primary
- * circle), and upcoming (gray circle) states.
- *
- * TalkBack announces each step as "Step X of Y: label, completed/current/upcoming".
+ * Displays a row of segments — filled for completed, highlighted for current,
+ * and empty for upcoming. Mirrors the web `civ-progress-steps` component.
  *
  * Usage:
  * ```kotlin
- * CivProgress(
+ * CivProgressSteps(
  *     steps = listOf("Personal info", "Address", "Review", "Submit"),
  *     current = 1,
- *     orientation = CivProgressOrientation.HORIZONTAL,
  * )
  * ```
  */
 @Composable
-fun CivProgress(
+fun CivProgressSteps(
     steps: List<String>,
     current: Int,
     modifier: Modifier = Modifier,
-    orientation: CivProgressOrientation = CivProgressOrientation.HORIZONTAL,
     clickable: Boolean = false,
-    showCounter: Boolean = false,
     errorSteps: String = "",
-    showBack: Boolean = false,
-    backLabel: String = "",
-    status: String = "",
     onStepClick: ((Int) -> Unit)? = null,
-    onStepBack: (() -> Unit)? = null,
 ) {
     val isDark = isSystemInDarkTheme()
 
@@ -83,7 +66,7 @@ fun CivProgress(
     val defaultColor = if (isDark) CivTokens.DarkColors.Base.default_ else CivTokens.Colors.Base.default_
 
     when (orientation) {
-        CivProgressOrientation.HORIZONTAL -> {
+        CivProgressStepsOrientation.HORIZONTAL -> {
             Row(
                 modifier = modifier.padding(bottom = CivTokens.Spacing._4),
                 verticalAlignment = Alignment.Top,
@@ -138,7 +121,7 @@ fun CivProgress(
             }
         }
 
-        CivProgressOrientation.VERTICAL -> {
+        CivProgressStepsOrientation.VERTICAL -> {
             Column(
                 modifier = modifier.padding(bottom = CivTokens.Spacing._4),
             ) {
@@ -245,26 +228,26 @@ private fun stepAccessibilityText(index: Int, total: Int, label: String, current
 
 // MARK: - Preview
 
-@Preview(showBackground = true, name = "CivProgress Horizontal")
+@Preview(showBackground = true, name = "CivProgressSteps Horizontal")
 @Composable
-private fun CivProgressHorizontalPreview() {
+private fun CivProgressStepsHorizontalPreview() {
     Column(modifier = Modifier.padding(16.dp)) {
-        CivProgress(
+        CivProgressSteps(
             steps = listOf("Personal info", "Address", "Review", "Submit"),
             current = 2,
-            orientation = CivProgressOrientation.HORIZONTAL,
+            orientation = CivProgressStepsOrientation.HORIZONTAL,
         )
     }
 }
 
-@Preview(showBackground = true, name = "CivProgress Vertical")
+@Preview(showBackground = true, name = "CivProgressSteps Vertical")
 @Composable
-private fun CivProgressVerticalPreview() {
+private fun CivProgressStepsVerticalPreview() {
     Column(modifier = Modifier.padding(16.dp)) {
-        CivProgress(
+        CivProgressSteps(
             steps = listOf("Personal info", "Address", "Review", "Submit"),
             current = 1,
-            orientation = CivProgressOrientation.VERTICAL,
+            orientation = CivProgressStepsOrientation.VERTICAL,
         )
     }
 }

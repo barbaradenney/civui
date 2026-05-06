@@ -1,6 +1,6 @@
-<civ-progress
+<civ-progress-steps
+  {% if steps %}steps="{{ steps }}"{% endif %}
   {% if current is not null %}current="{{ current }}"{% endif %}
-  {% if legend %}legend="{{ legend }}"{% endif %}
   {% if clickable %}clickable{% endif %}
-  {% if show_counter %}show-counter{% endif %}
-></civ-progress>
+  {% if error_steps %}error-steps="{{ error_steps }}"{% endif %}
+></civ-progress-steps>

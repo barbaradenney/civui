@@ -1,0 +1,32 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Support Resources
+status: stable
+group: CivUI Form Patterns
+description: 'Crisis and support contact links for sensitive forms.'
+
+props:
+  type: object
+  properties:
+    heading:
+      title: Heading
+      type: string
+      description: 'Heading text'
+    heading_level:
+      title: Heading level
+      type: integer
+      default: 3
+      description: 'Semantic heading level (2-6)'
+    tone:
+      title: Tone
+      type: string
+      default: default
+      description: 'Visual tone: default or crisis'
+
+slots:
+  default:
+    title: Content
+    description: 'Action links for support contacts'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

@@ -1,4 +1,4 @@
-// CivUI — CivProgressBar for Jetpack Compose
+// CivUI — CivProgressPercent for Jetpack Compose
 // Percentage-based progress indicator with optional status text.
 // Renders: status/percent labels -> filled track bar (Section 508 compliant)
 
@@ -30,13 +30,13 @@ import gov.civui.tokens.CivTokens
  * Accessible percentage-based progress bar for government applications.
  *
  * Shows a horizontal filled bar with optional percentage label and status text.
- * Mirrors the web `civ-progress-bar` component.
+ * Mirrors the web `civ-progress-percent` component.
  *
  * TalkBack announces the progress value and label.
  *
  * Usage:
  * ```kotlin
- * CivProgressBar(
+ * CivProgressPercent(
  *     value = 45f,
  *     label = "Application progress",
  *     status = "3 of 8 sections complete",
@@ -44,7 +44,7 @@ import gov.civui.tokens.CivTokens
  * ```
  */
 @Composable
-fun CivProgressBar(
+fun CivProgressPercent(
     value: Float,
     modifier: Modifier = Modifier,
     label: String = "Progress",
@@ -122,27 +122,27 @@ fun CivProgressBar(
 
 // MARK: - Preview
 
-@Preview(showBackground = true, name = "CivProgressBar")
+@Preview(showBackground = true, name = "CivProgressPercent")
 @Composable
-private fun CivProgressBarPreview() {
+private fun CivProgressPercentPreview() {
     Column(modifier = Modifier.padding(16.dp)) {
-        CivProgressBar(
+        CivProgressPercent(
             value = 45f,
             label = "Application progress",
             status = "3 of 8 sections complete",
         )
 
-        CivProgressBar(
+        CivProgressPercent(
             value = 100f,
             status = "All sections complete",
         )
 
-        CivProgressBar(
+        CivProgressPercent(
             value = 0f,
             status = "Not started",
         )
 
-        CivProgressBar(
+        CivProgressPercent(
             value = 75f,
             showPercent = false,
         )

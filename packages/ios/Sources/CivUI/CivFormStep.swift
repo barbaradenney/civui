@@ -6,8 +6,12 @@ import SwiftUI
 public struct CivFormStep<Content: View>: View {
     @Binding public var current: Int
     public let total: Int
-    public var showProgress: Bool
-    public var backLabel: String?
+    public var progress: String
+    public var headerSize: String
+    public var stepTitle: String
+    public var headingLevel: Int
+    public var navDisabled: Bool
+    public var hideNav: Bool
     public var continueLabel: String?
     public var completeLabel: String?
     public var onStepChange: ((Int) -> Void)?
@@ -24,8 +28,12 @@ public struct CivFormStep<Content: View>: View {
     public init(
         current: Binding<Int>,
         total: Int,
-        showProgress: Bool = true,
-        backLabel: String? = nil,
+        progress: String = "minimal",
+        headerSize: String = "secondary",
+        stepTitle: String = "",
+        headingLevel: Int = 2,
+        navDisabled: Bool = false,
+        hideNav: Bool = false,
         continueLabel: String? = nil,
         completeLabel: String? = nil,
         onStepChange: ((Int) -> Void)? = nil,
@@ -39,8 +47,12 @@ public struct CivFormStep<Content: View>: View {
     ) {
         self._current = current
         self.total = total
-        self.showProgress = showProgress
-        self.backLabel = backLabel
+        self.progress = progress
+        self.headerSize = headerSize
+        self.stepTitle = stepTitle
+        self.headingLevel = headingLevel
+        self.navDisabled = navDisabled
+        self.hideNav = hideNav
         self.continueLabel = continueLabel
         self.completeLabel = completeLabel
         self.onStepChange = onStepChange
@@ -55,7 +67,7 @@ public struct CivFormStep<Content: View>: View {
 
     public var body: some View {
         VStack(alignment: .leading, spacing: CivTokens.Spacing._4) {
-            if showProgress && total > 1 {
+            if !hideNav && total > 1 {
                 Text("Step \(current + 1) of \(total)")
                     .font(.system(size: CivTokens.Typography.FontSize.sm))
                     .foregroundColor(colorScheme == .dark ? CivTokens.DarkColors.Base.dark : CivTokens.Colors.Base.dark)
@@ -66,7 +78,7 @@ public struct CivFormStep<Content: View>: View {
 
             HStack {
                 if current > 0 {
-                    Button(backLabel ?? "Back") {
+                    Button("Back") {
                         current -= 1
                         onStepChange?(current)
                     }

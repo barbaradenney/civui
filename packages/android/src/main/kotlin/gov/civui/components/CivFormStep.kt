@@ -33,8 +33,12 @@ fun CivFormStep(
     total: Int,
     onStepChange: (Int) -> Unit,
     modifier: Modifier = Modifier,
-    showProgress: Boolean = true,
-    backLabel: String = "Back",
+    progress: String = "minimal",
+    headerSize: String = "secondary",
+    stepTitle: String = "",
+    headingLevel: Int = 2,
+    navDisabled: Boolean = false,
+    hideNav: Boolean = false,
     continueLabel: String = "Continue",
     completeLabel: String = "Save and continue",
     persist: Boolean = false,
@@ -52,7 +56,7 @@ fun CivFormStep(
     val whiteColor = if (isDark) CivTokens.DarkColors.White.default_ else CivTokens.Colors.White.default_
 
     Column(modifier = modifier) {
-        if (showProgress && total > 1) {
+        if (!hideNav && total > 1) {
             Text(
                 "Step ${current + 1} of $total",
                 fontSize = CivTokens.Typography.FontSize.sm,
@@ -71,7 +75,7 @@ fun CivFormStep(
         ) {
             if (current > 0) {
                 OutlinedButton(onClick = { onStepChange(current - 1) }) {
-                    Text(backLabel, fontWeight = FontWeight.SemiBold)
+                    Text("Back", fontWeight = FontWeight.SemiBold)
                 }
             } else {
                 Spacer(modifier = Modifier)

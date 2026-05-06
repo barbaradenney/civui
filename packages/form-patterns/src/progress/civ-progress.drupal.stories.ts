@@ -4,7 +4,7 @@ import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 // @ts-ignore
 import progressStepsTemplate from '../../../drupal/civui/components/progress/progress.twig';
 // @ts-ignore
-import progressBarTemplate from '../../../drupal/civui/components/progress-bar/progress-bar.twig';
+import progressBarTemplate from '../../../drupal/civui/components/progress-percent/progress-percent.twig';
 
 const render = (twigFn: (ctx: Record<string, any>) => string, props: Record<string, any>) =>
   html`${unsafeHTML(twigFn(props))}`;

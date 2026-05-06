@@ -1,31 +1,22 @@
-// CivUI — CivProgress for SwiftUI
+// CivUI — CivProgressSteps for SwiftUI
 // Accessible step indicator following government design system patterns.
 // Shows completed, current, and upcoming steps with VoiceOver support.
 
 import SwiftUI
 
-/// Step indicator orientation.
-public enum CivProgressOrientation {
-    case horizontal
-    case vertical
-}
-
-/// Accessible progress step indicator for government applications.
+/// Accessible segmented progress indicator for government applications.
 ///
-/// Displays a series of steps with completed (checkmark), current (highlighted),
-/// and upcoming (grayed) states. Uses SF Symbols for the checkmark icon.
-///
-/// VoiceOver announces each step as "Step X of Y: label, completed/current/upcoming".
+/// Displays a row of segments — filled for completed, highlighted for current,
+/// and empty for upcoming. Mirrors the web `civ-progress-steps` component.
 ///
 /// Usage:
 /// ```swift
-/// CivProgress(
+/// CivProgressSteps(
 ///     steps: ["Personal info", "Address", "Review", "Submit"],
-///     current: 1, // zero-indexed
-///     orientation: .horizontal
+///     current: 1
 /// )
 /// ```
-public struct CivProgress: View {
+public struct CivProgressSteps: View {
     // MARK: - Properties
 
     /// Array of step label strings.
@@ -34,23 +25,11 @@ public struct CivProgress: View {
     /// Zero-indexed current step.
     public let current: Int
 
-    /// Orientation of the step indicator.
-    public var orientation: CivProgressOrientation
-
-    /// Whether steps are clickable for navigation.
+    /// Whether completed steps are clickable for navigation.
     public var clickable: Bool
-
-    /// Whether to show a step counter (e.g., "Step 2 of 5").
-    public var showCounter: Bool
 
     /// Comma-separated list of step indices that have errors.
     public var errorSteps: String
-
-    /// Whether to show a back button.
-    public var showBack: Bool
-
-    /// Custom label for the back button.
-    public var backLabel: String
 
     // MARK: - Internal State
 
@@ -61,32 +40,19 @@ public struct CivProgress: View {
     public init(
         steps: [String],
         current: Int,
-        orientation: CivProgressOrientation = .horizontal,
         clickable: Bool = false,
-        showCounter: Bool = false,
-        errorSteps: String = "",
-        showBack: Bool = false,
-        backLabel: String = ""
+        errorSteps: String = ""
     ) {
         self.steps = steps
         self.current = current
-        self.orientation = orientation
         self.clickable = clickable
-        self.showCounter = showCounter
         self.errorSteps = errorSteps
-        self.showBack = showBack
-        self.backLabel = backLabel
     }
 
     // MARK: - Body
 
     public var body: some View {
-        switch orientation {
-        case .horizontal:
-            horizontalLayout
-        case .vertical:
-            verticalLayout
-        }
+        horizontalLayout
     }
 
     // MARK: - Horizontal Layout
@@ -98,30 +64,6 @@ public struct CivProgress: View {
                     connector(isCompleted: index <= current)
                 }
                 stepView(index: index, label: stepLabel)
-            }
-        }
-        .padding(.bottom, CivTokens.Spacing._4)
-    }
-
-    // MARK: - Vertical Layout
-
-    private var verticalLayout: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            ForEach(Array(steps.enumerated()), id: \.offset) { index, stepLabel in
-                if index > 0 {
-                    verticalConnector(isCompleted: index <= current)
-                }
-                HStack(alignment: .center, spacing: CivTokens.Spacing._3) {
-                    stepCircle(index: index)
-                    Text(stepLabel)
-                        .font(.system(size: CivTokens.Typography.FontSize.base,
-                                      weight: index == current
-                                          ? CivTokens.Typography.FontWeight.bold
-                                          : CivTokens.Typography.FontWeight.regular))
-                        .foregroundColor(stepLabelColor(index: index))
-                }
-                .accessibilityElement(children: .combine)
-                .accessibilityLabel(accessibilityText(index: index, label: stepLabel))
             }
         }
         .padding(.bottom, CivTokens.Spacing._4)
@@ -207,20 +149,6 @@ public struct CivProgress: View {
             .padding(.top, 14) // center vertically with circle
     }
 
-    private func verticalConnector(isCompleted: Bool) -> some View {
-        HStack {
-            Rectangle()
-                .fill(isCompleted
-                    ? adaptiveColor(light: CivTokens.Colors.Success.default_,
-                                    dark: CivTokens.DarkColors.Success.default_)
-                    : adaptiveColor(light: CivTokens.Colors.Base.lighter,
-                                    dark: CivTokens.DarkColors.Base.lighter))
-                .frame(width: 2, height: 20)
-                .padding(.leading, 13) // center with circle
-            Spacer()
-        }
-    }
-
     // MARK: - Helpers
 
     private func stepLabelColor(index: Int) -> Color {
@@ -258,26 +186,24 @@ public struct CivProgress: View {
 // MARK: - Preview
 
 #if DEBUG
-struct CivProgress_Previews: PreviewProvider {
+struct CivProgressSteps_Previews: PreviewProvider {
     static var previews: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 32) {
-                CivProgress(
+                CivProgressSteps(
                     steps: ["Personal info", "Address", "Review", "Submit"],
-                    current: 2,
-                    orientation: .horizontal
+                    current: 2
                 )
 
-                CivProgress(
+                CivProgressSteps(
                     steps: ["Personal info", "Address", "Review", "Submit"],
                     current: 1,
-                    orientation: .vertical
+                    clickable: true
                 )
 
-                CivProgress(
+                CivProgressSteps(
                     steps: ["Start", "Finish"],
-                    current: 0,
-                    orientation: .horizontal
+                    current: 0
                 )
             }
             .padding()

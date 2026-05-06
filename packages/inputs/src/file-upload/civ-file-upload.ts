@@ -284,7 +284,7 @@ export class CivFileUpload extends CivFormElement {
           ? html`
             <button
               type="button"
-              class="civ-flex civ-items-stretch civ-w-full civ-bg-transparent civ-border-0 civ-p-0 civ-cursor-pointer"
+              class="civ-flex civ-items-stretch civ-w-full civ-bg-transparent civ-border-0 civ-p-0 civ-cursor-pointer focus-visible:civ-focus-ring civ-rounded"
               @click="${this._onDropzoneClick}"
               ?disabled="${this.disabled}"
             >
@@ -355,7 +355,7 @@ export class CivFileUpload extends CivFormElement {
                       <div class="civ-file-item__content">
                         <span class="civ-block">
                           ${file.isInitial && file.url
-                            ? html`<a href="${file.url}" target="_blank" rel="noopener noreferrer">${file.name}</a>`
+                            ? html`<a href="${file.url}" target="_blank" rel="noopener noreferrer" class="focus-visible:civ-focus-ring">${file.name}</a>`
                             : html`${file.name}`}
                           <span class="civ-text-sm">(${formatFileSize(file.size)})</span>
                         </span>
@@ -403,7 +403,7 @@ export class CivFileUpload extends CivFormElement {
               ${!this._showAllFiles && this._files.length > CivFileUpload._FILE_LIST_LIMIT ? html`
                 <button
                   type="button"
-                  class="civ-btn civ-btn--tertiary civ-mt-2"
+                  class="civ-btn civ-btn--tertiary civ-mt-2 focus-visible:civ-focus-ring"
                   @click="${this._onShowAllFiles}"
                 >${interpolate(t('fileUploadShowAll'), { count: this._files.length })}</button>
               ` : nothing}

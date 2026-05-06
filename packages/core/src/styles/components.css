@@ -2264,6 +2264,20 @@
     min-height: 1.75rem;
   }
 
+  /* Move the focus ring to the outer wrapper because `.civ-filter-chip`
+     has `overflow: hidden` (rounded corners over a tinted bg) which
+     clips the inner button's outline + box-shadow. Suppress the inner
+     button's own ring so we don't paint anything that gets clipped. */
+  .civ-filter-chip:has(.civ-filter-chip__action:focus) {
+    outline: var(--civ-focus-outline-width) solid var(--civ-focus-shadow-color);
+    outline-offset: 0;
+    box-shadow: 0 0 0 var(--civ-focus-shadow-radius) var(--civ-focus-outline-color);
+  }
+  .civ-filter-chip .civ-filter-chip__action:focus {
+    outline: none;
+    box-shadow: none;
+  }
+
   .civ-filter-chip__action:disabled {
     cursor: not-allowed;
   }

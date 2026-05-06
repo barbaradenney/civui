@@ -138,6 +138,54 @@ describe('civ-file-upload', () => {
     expect(liveRegion!.textContent).toContain('1 file(s) selected');
   });
 
+  it('includes the removed file name in the remove announcement', async () => {
+    const el = await fixture('<civ-file-upload label="Upload" name="doc" multiple></civ-file-upload>') as any;
+    el._addFiles([new File(['a'], 'alpha.pdf', { type: 'application/pdf' })]);
+    await elementUpdated(el);
+
+    el._removeFile(0);
+    await new Promise((r) => requestAnimationFrame(r));
+
+    const liveRegion = document.querySelector('[aria-live]');
+    expect(liveRegion!.textContent).toContain('Removed alpha.pdf');
+    expect(liveRegion!.textContent).toContain('0 file(s) selected');
+  });
+
+  it('announces retry and clears progress milestones for the file', async () => {
+    const el = await fixture('<civ-file-upload label="Upload" name="doc" multiple></civ-file-upload>') as any;
+    el._addFiles([new File(['a'], 'alpha.pdf', { type: 'application/pdf' })]);
+    await elementUpdated(el);
+    // Force the file into an error state so retry is meaningful.
+    el._files[0].status = 'error';
+    el._files[0].error = 'Network failure';
+    el._progressMilestones.set('alpha.pdf', 50);
+    await elementUpdated(el);
+
+    el._retryUpload(0);
+    await new Promise((r) => requestAnimationFrame(r));
+
+    const liveRegion = document.querySelector('[aria-live]');
+    expect(liveRegion!.textContent).toContain('Retrying upload of alpha.pdf');
+    expect(el._progressMilestones.has('alpha.pdf')).toBe(false);
+  });
+
+  it('throttles progress announcements to 25/50/75/100 milestones', async () => {
+    const el = await fixture('<civ-file-upload label="Upload" name="doc"></civ-file-upload>') as any;
+
+    el._announceProgress('big.zip', 10);
+    el._announceProgress('big.zip', 24);
+    expect(el._progressMilestones.get('big.zip')).toBeUndefined();
+
+    el._announceProgress('big.zip', 30);
+    expect(el._progressMilestones.get('big.zip')).toBe(25);
+
+    el._announceProgress('big.zip', 60);
+    expect(el._progressMilestones.get('big.zip')).toBe(50);
+
+    el._announceProgress('big.zip', 100);
+    expect(el._progressMilestones.get('big.zip')).toBe(100);
+  });
+
   describe('i18n overrides', () => {
     it('uses custom drag-text', async () => {
       const el = await fixture('<civ-file-upload label="Upload" drag-text="Arrastra archivos aquí o"></civ-file-upload>');

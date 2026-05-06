@@ -236,7 +236,6 @@ export class CivFileUpload extends CivFormElement {
   private _filesListId = this.generateId('files');
 
   private _previewUrls = new Map<File, string>();
-  private _progressAnnounceTimer?: ReturnType<typeof setTimeout>;
   private _hydratedFromInitial = false;
 
   private _boundDragOver = this._onDragOver.bind(this);
@@ -405,7 +404,7 @@ export class CivFileUpload extends CivFormElement {
                 <button
                   type="button"
                   class="civ-btn civ-btn--tertiary civ-mt-2"
-                  @click="${() => { this._showAllFiles = true; }}"
+                  @click="${this._onShowAllFiles}"
                 >${interpolate(t('fileUploadShowAll'), { count: this._files.length })}</button>
               ` : nothing}
             `
@@ -459,18 +458,25 @@ export class CivFileUpload extends CivFormElement {
   override disconnectedCallback(): void {
     super.disconnectedCallback();
     this._revokeAllPreviewUrls();
-    if (this._progressAnnounceTimer) {
-      clearTimeout(this._progressAnnounceTimer);
-    }
   }
 
+  /**
+   * Announce upload progress at quarter milestones (25/50/75/100) per
+   * file. Continuous announcements would be too noisy on long uploads
+   * — AT users only need confirmation that progress is happening.
+   * The map tracks the highest milestone announced per file name so
+   * we don't re-announce the same threshold if progress oscillates.
+   */
+  private _progressMilestones = new Map<string, number>();
+
   private _announceProgress(name: string, progress: number): void {
-    if (this._progressAnnounceTimer) {
-      clearTimeout(this._progressAnnounceTimer);
-    }
-    this._progressAnnounceTimer = setTimeout(() => {
-      this.announce(interpolate(t('fileUploadUploading'), { name, progress: String(progress) }));
-    }, 500);
+    const milestones = [25, 50, 75, 100];
+    const lastAnnounced = this._progressMilestones.get(name) ?? 0;
+    // Highest milestone reached so far; jumping from 50 to 100 announces 100, not 75.
+    const reached = milestones.filter((m) => m <= progress).at(-1);
+    if (reached === undefined || reached <= lastAnnounced) return;
+    this._progressMilestones.set(name, reached);
+    this.announce(interpolate(t('fileUploadUploading'), { name, progress: String(reached) }));
   }
 
   private _getPreviewUrl(file: File): string {
@@ -505,6 +511,23 @@ export class CivFileUpload extends CivFormElement {
     if (this.disabled || this.readonly) return;
     const input = this.querySelector(`#${this._inputId}`) as HTMLInputElement;
     input?.click();
+  }
+
+  /**
+   * Reveal hidden files past the list limit. The toggle button itself
+   * disappears, so move focus onto the first newly-revealed remove
+   * button — otherwise focus is lost and AT users have no signal that
+   * the list grew. Announce the change for screen readers that aren't
+   * tracking focus position.
+   */
+  private _onShowAllFiles(): void {
+    const previouslyVisible = CivFileUpload._FILE_LIST_LIMIT;
+    this._showAllFiles = true;
+    this.announce(interpolate(t('fileUploadShowAllAnnounce'), { count: this._files.length }));
+    this.updateComplete.then(() => {
+      const buttons = this.querySelectorAll<HTMLButtonElement>('[data-file-remove]');
+      buttons[previouslyVisible]?.focus();
+    });
   }
 
   private _onDragOver(e: DragEvent): void {
@@ -572,7 +595,9 @@ export class CivFileUpload extends CivFormElement {
     file.error = undefined;
     file.progress = 0;
     file.abortController = undefined;
+    this._progressMilestones.delete(file.name);
     this.requestUpdate();
+    this.announce(interpolate(t('fileUploadRetryAnnounce'), { name: file.name }));
     dispatch(this, 'civ-upload-retry', { index, name: file.name, file: file.file });
   }
 
@@ -664,6 +689,12 @@ export class CivFileUpload extends CivFormElement {
     }
     this._files = this._files.filter((_, i) => i !== index);
     if (this._files.length === 0) this.error = '';
+    if (this._files.length <= CivFileUpload._FILE_LIST_LIMIT) {
+      this._showAllFiles = false;
+    }
+    if (removed) {
+      this._progressMilestones.delete(removed.name);
+    }
     this._updateFormData();
     this._dispatchChange();
     if (removed) {
@@ -681,7 +712,7 @@ export class CivFileUpload extends CivFormElement {
       dispatch(this, 'civ-file-removed', detail);
     }
     this.sendAnalytics('remove', { fileCount: this._files.length });
-    this.announce(interpolate(this.fileRemovedMessage || t('fileUploadFileRemovedMessage'), { total: this._files.length }));
+    this.announce(interpolate(this.fileRemovedMessage || t('fileUploadFileRemovedMessage'), { name: removed?.name ?? '', total: this._files.length }));
 
     // Move focus to the next remove button, or the dropzone if no files remain
     this.updateComplete.then(() => {

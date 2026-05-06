@@ -56,7 +56,9 @@ export interface CivLocaleStrings {
   fileUploadRemoveAriaLabel: string; // "Remove {name}"
   fileUploadFilesListLabel: string;
   fileUploadFileAddedMessage: string; // "{count} file(s) added..."
-  fileUploadFileRemovedMessage: string;
+  fileUploadFileRemovedMessage: string; // "Removed {name}. {total} file(s) selected."
+  fileUploadShowAllAnnounce: string; // "Showing all {count} files"
+  fileUploadRetryAnnounce: string; // "Retrying upload of {name}"
   fileUploadFileSizeError: string; // "{name} exceeds..."
   fileUploadFileTypeError: string;
   fileUploadMaxFilesError: string;
@@ -650,7 +652,9 @@ const defaultStrings: CivLocaleStrings = {
   fileUploadRemoveAriaLabel: 'Remove {name}',
   fileUploadFilesListLabel: 'Selected files',
   fileUploadFileAddedMessage: '{count} file(s) added. {total} file(s) selected.',
-  fileUploadFileRemovedMessage: 'File removed. {total} file(s) selected.',
+  fileUploadFileRemovedMessage: 'Removed {name}. {total} file(s) selected.',
+  fileUploadShowAllAnnounce: 'Showing all {count} files',
+  fileUploadRetryAnnounce: 'Retrying upload of {name}',
   fileUploadFileSizeError: '{name} exceeds the maximum size of {size}',
   fileUploadFileTypeError: '{name} is not an accepted file type. Accepted: {accepted}',
   fileUploadMaxFilesError: 'Maximum of {max} files allowed. {name} was not added',

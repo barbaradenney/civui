@@ -24,6 +24,7 @@ import { CivBaseElement, announce, t, interpolate } from '@civui/core';
  * @prop {'primary'|'secondary'|'tertiary'} size - Visual size variant
  * @prop {number} headingLevel - Semantic heading level (1–6)
  */
+// Tailwind JIT: civ-progress-header--primary civ-progress-header--secondary civ-progress-header--tertiary
 @customElement('civ-progress-header')
 export class CivProgressHeader extends CivBaseElement {
   /** Current step index (0-based). Clamped to valid range. */
@@ -35,8 +36,8 @@ export class CivProgressHeader extends CivBaseElement {
   /** Title of the current step. */
   @property({ type: String, attribute: 'step-title' }) stepTitle = '';
 
-  /** Visual size: 'primary' (large with dividers), 'secondary' (medium), 'tertiary' (compact). */
-  @property({ type: String }) size: 'primary' | 'secondary' | 'tertiary' = 'primary';
+  /** Visual size: 'primary' (large with dividers), 'secondary' (medium, default), 'tertiary' (compact). */
+  @property({ type: String }) size: 'primary' | 'secondary' | 'tertiary' = 'secondary';
 
   /** Semantic heading level (1–6). */
   @property({ type: Number, attribute: 'heading-level' }) headingLevel: number = 2;
@@ -50,9 +51,10 @@ export class CivProgressHeader extends CivBaseElement {
   override updated(changed: Map<string, unknown>): void {
     super.updated(changed);
     if (changed.has('current') && this.total > 1) {
-      announce(interpolate(t('progressStepsCounter'), {
-        current: String(this._safeCurrent + 1),
-        total: String(this.total),
+      announce(interpolate(t('progressStepLabel'), {
+        step: this._safeCurrent + 1,
+        total: this.total,
+        label: this.stepTitle,
       }), 'polite');
     }
   }

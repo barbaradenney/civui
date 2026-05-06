@@ -103,8 +103,8 @@ export class CivFormStep extends LightDomSlotMixin(CivBaseElement) {
   /** Title for the current step, rendered below the step counter. */
   @property({ type: String, attribute: 'step-title' }) stepTitle = '';
 
-  /** Header size: 'primary' (large with dividers), 'secondary' (medium), 'tertiary' (compact, pairs with progress bars). */
-  @property({ type: String, attribute: 'header-size' }) headerSize: 'primary' | 'secondary' | 'tertiary' = 'primary';
+  /** Header size: 'primary' (large with dividers), 'secondary' (medium, default), 'tertiary' (compact, pairs with progress bars). */
+  @property({ type: String, attribute: 'header-size' }) headerSize: 'primary' | 'secondary' | 'tertiary' = 'secondary';
 
   /** Heading level for the step title (2–6). Defaults to 2. */
   @property({ type: Number, attribute: 'heading-level' }) headingLevel: number = 2;
@@ -251,40 +251,50 @@ export class CivFormStep extends LightDomSlotMixin(CivBaseElement) {
       </nav>
     ` : nothing;
 
+    const stepHeader = html`
+      <civ-progress-header
+        current="${idx}"
+        total="${total}"
+        step-title="${this.stepTitle || this._steps[idx]?.getAttribute('data-step-label') || ''}"
+        size="${this.headerSize}"
+        heading-level="${this.headingLevel}"
+      ></civ-progress-header>
+    `;
+
     switch (this.progress) {
       case 'steps':
         return html`
           ${backLink}
+          ${stepHeader}
           <civ-progress-steps
             .steps="${JSON.stringify(this._steps.map(s => ({ label: s.getAttribute('data-step-label') || '' })))}"
             current="${idx}"
-            show-counter
             clickable
             @civ-step-click="${(e: CustomEvent) => this.goToStep(e.detail.step)}"
           ></civ-progress-steps>
         `;
 
-      case 'bar':
+      case 'bar': {
+        const pct = Math.round((idx / total) * 100);
         return html`
           ${backLink}
+          <div class="civ-flex civ-justify-between civ-items-center civ-mb-1">
+            ${stepHeader}
+            <span class="civ-text-sm civ-font-bold">${pct}%</span>
+          </div>
           <civ-progress-percent
-            value="${Math.round((idx / total) * 100)}"
+            value="${pct}"
             label="${interpolate(t('progressStepsCounter'), { current: String(idx + 1), total: String(total) })}"
-            status="${interpolate(t('progressStepsCounter'), { current: String(idx + 1), total: String(total) })}"
+            .showPercent="${false}"
           ></civ-progress-percent>
         `;
+      }
 
       case 'minimal':
       default:
         return html`
           ${backLink}
-          <civ-progress-header
-            current="${idx}"
-            total="${total}"
-            step-title="${this.stepTitle || this._steps[idx]?.getAttribute('data-step-label') || ''}"
-            size="${this.headerSize}"
-            heading-level="${this.headingLevel}"
-          ></civ-progress-header>
+          ${stepHeader}
         `;
     }
   }

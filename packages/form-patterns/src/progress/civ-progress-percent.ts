@@ -27,16 +27,20 @@ export class CivProgressPercent extends CivBaseElement {
     const clamped = Math.max(0, Math.min(100, this.value));
     const isComplete = clamped >= 100;
 
+    const hasHeader = this.status || this.showPercent;
+
     return html`
-      <div class="civ-mb-4">
-        <div class="civ-flex civ-justify-between civ-items-center civ-mb-1">
-          ${this.status
-            ? html`<span class="civ-text-sm civ-text-muted">${this.status}</span>`
-            : html`<span></span>`}
-          ${this.showPercent
-            ? html`<span class="civ-text-sm civ-font-bold civ-text-body">${Math.round(clamped)}%</span>`
-            : nothing}
-        </div>
+      <div>
+        ${hasHeader ? html`
+          <div class="civ-flex civ-justify-between civ-items-center civ-mb-1">
+            ${this.status
+              ? html`<span class="civ-text-sm civ-text-muted">${this.status}</span>`
+              : html`<span></span>`}
+            ${this.showPercent
+              ? html`<span class="civ-text-sm civ-font-bold civ-text-body">${Math.round(clamped)}%</span>`
+              : nothing}
+          </div>
+        ` : nothing}
         <div
           class="civ-progress-track"
           role="progressbar"

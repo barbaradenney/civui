@@ -22,14 +22,11 @@ const defaultSteps = '["Personal Info","Address","Review"]';
 // ── Segmented Progress ───────────────────────────────────────
 
 export const Default: Story = {
-  args: {
-    steps: defaultSteps,
-    current: 0,
-  },
-  render: (args) => html`
+  render: () => html`
+    <civ-progress-header current="0" total="3" step-title="Personal Info"></civ-progress-header>
     <civ-progress-steps
-      steps="${args.steps}"
-      current="${args.current}"
+      steps='${defaultSteps}'
+      current="0"
     ></civ-progress-steps>
   `,
 };
@@ -37,6 +34,7 @@ export const Default: Story = {
 export const MiddleStep: Story = {
   name: 'Middle Step',
   render: () => html`
+    <civ-progress-header current="1" total="3" step-title="Address"></civ-progress-header>
     <civ-progress-steps
       steps='${defaultSteps}'
       current="1"
@@ -47,6 +45,7 @@ export const MiddleStep: Story = {
 export const LastStep: Story = {
   name: 'Last Step',
   render: () => html`
+    <civ-progress-header current="2" total="3" step-title="Review"></civ-progress-header>
     <civ-progress-steps
       steps='${defaultSteps}'
       current="2"
@@ -54,20 +53,10 @@ export const LastStep: Story = {
   `,
 };
 
-export const WithCounter: Story = {
-  name: 'With Counter',
-  render: () => html`
-    <civ-progress-steps
-      steps='["Personal Info","Address","Employment","Review"]'
-      current="2"
-      show-counter
-    ></civ-progress-steps>
-  `,
-};
-
 export const WithError: Story = {
   name: 'With Error Step',
   render: () => html`
+    <civ-progress-header current="3" total="4" step-title="Review"></civ-progress-header>
     <civ-progress-steps
       steps='["Personal Info","Address","Employment","Review"]'
       current="3"
@@ -79,11 +68,11 @@ export const WithError: Story = {
 
 export const Clickable: Story = {
   render: () => html`
+    <civ-progress-header current="2" total="4" step-title="Documents"></civ-progress-header>
     <civ-progress-steps
       steps='["Eligibility","Personal Info","Documents","Review"]'
       current="2"
       clickable
-      show-counter
       @civ-step-click="${(e: CustomEvent) => alert('Navigate to step ' + (e.detail.step + 1))}"
     ></civ-progress-steps>
   `,
@@ -92,10 +81,10 @@ export const Clickable: Story = {
 export const ManySteps: Story = {
   name: 'Many Steps (8)',
   render: () => html`
+    <civ-progress-header current="3" total="8" step-title="Employment"></civ-progress-header>
     <civ-progress-steps
       steps='["Eligibility","Personal Info","Contact","Employment","Income","Documents","Review","Submit"]'
       current="3"
-      show-counter
     ></civ-progress-steps>
   `,
 };
@@ -106,23 +95,28 @@ export const AllStates: Story = {
     <div class="civ-flex civ-flex-col civ-gap-8">
       <div>
         <h3 class="civ-m-0 civ-mb-2 civ-font-semibold">First step</h3>
-        <civ-progress-steps steps='${defaultSteps}' current="0" show-counter></civ-progress-steps>
+        <civ-progress-header current="0" total="3" step-title="Personal Info"></civ-progress-header>
+        <civ-progress-steps steps='${defaultSteps}' current="0"></civ-progress-steps>
       </div>
       <div>
         <h3 class="civ-m-0 civ-mb-2 civ-font-semibold">Middle step</h3>
-        <civ-progress-steps steps='${defaultSteps}' current="1" show-counter></civ-progress-steps>
+        <civ-progress-header current="1" total="3" step-title="Address"></civ-progress-header>
+        <civ-progress-steps steps='${defaultSteps}' current="1"></civ-progress-steps>
       </div>
       <div>
         <h3 class="civ-m-0 civ-mb-2 civ-font-semibold">Last step</h3>
-        <civ-progress-steps steps='${defaultSteps}' current="2" show-counter></civ-progress-steps>
+        <civ-progress-header current="2" total="3" step-title="Review"></civ-progress-header>
+        <civ-progress-steps steps='${defaultSteps}' current="2"></civ-progress-steps>
       </div>
       <div>
         <h3 class="civ-m-0 civ-mb-2 civ-font-semibold">With error</h3>
-        <civ-progress-steps steps='["Step 1","Step 2","Step 3","Step 4"]' current="3" error-steps="[1]" show-counter></civ-progress-steps>
+        <civ-progress-header current="3" total="4" step-title="Review"></civ-progress-header>
+        <civ-progress-steps steps='["Step 1","Step 2","Step 3","Step 4"]' current="3" error-steps="[1]"></civ-progress-steps>
       </div>
       <div>
         <h3 class="civ-m-0 civ-mb-2 civ-font-semibold">Many steps</h3>
-        <civ-progress-steps steps='["A","B","C","D","E","F","G","H"]' current="4" show-counter></civ-progress-steps>
+        <civ-progress-header current="4" total="8" step-title="Income"></civ-progress-header>
+        <civ-progress-steps steps='["A","B","C","D","E","F","G","H"]' current="4"></civ-progress-steps>
       </div>
     </div>
   `,
@@ -173,7 +167,6 @@ export const HeaderWithSteps: Story = {
       current="2"
       total="5"
       step-title="Employment History"
-      size="tertiary"
     ></civ-progress-header>
     <civ-progress-steps
       steps='["Eligibility","Personal Info","Employment","Documents","Review"]'
@@ -185,39 +178,41 @@ export const HeaderWithSteps: Story = {
 export const HeaderWithPercent: Story = {
   name: 'Header + Percent (paired)',
   render: () => html`
-    <civ-progress-header
-      current="2"
-      total="5"
-      step-title="Employment History"
-      size="tertiary"
-    ></civ-progress-header>
-    <civ-progress-percent
-      value="40"
-      label="Form completion"
-      status="2 of 5 sections complete"
-    ></civ-progress-percent>
+    <div class="civ-mb-4">
+      <div class="civ-flex civ-justify-between civ-items-center civ-mb-1">
+        <civ-progress-header current="2" total="5" step-title="Employment History" size="secondary"></civ-progress-header>
+        <span class="civ-text-sm civ-font-bold">40%</span>
+      </div>
+      <civ-progress-percent value="40" label="Form completion" .showPercent="${false}"></civ-progress-percent>
+    </div>
   `,
 };
 
 // ── Progress Percent ─────────────────────────────────────────
 
 export const ProgressBar: Story = {
+  name: 'Percent Bar',
   render: () => html`
-    <civ-progress-percent
-      value="40"
-      label="Form completion"
-      status="3 of 8 sections complete"
-    ></civ-progress-percent>
+    <div class="civ-mb-4">
+      <div class="civ-flex civ-justify-between civ-items-center civ-mb-1">
+        <civ-progress-header current="2" total="8" step-title="Employment"></civ-progress-header>
+        <span class="civ-text-sm civ-font-bold">25%</span>
+      </div>
+      <civ-progress-percent value="25" label="Form completion" .showPercent="${false}"></civ-progress-percent>
+    </div>
   `,
 };
 
 export const ProgressBarComplete: Story = {
+  name: 'Percent Bar (Complete)',
   render: () => html`
-    <civ-progress-percent
-      value="100"
-      label="Form completion"
-      status="All sections complete"
-    ></civ-progress-percent>
+    <div class="civ-mb-4">
+      <div class="civ-flex civ-justify-between civ-items-center civ-mb-1">
+        <civ-progress-header current="7" total="8" step-title="Submit"></civ-progress-header>
+        <span class="civ-text-sm civ-font-bold">100%</span>
+      </div>
+      <civ-progress-percent value="100" label="Form completion" .showPercent="${false}"></civ-progress-percent>
+    </div>
   `,
 };
 
@@ -226,10 +221,10 @@ export const ProgressBarComplete: Story = {
 export const GovernmentApplicationProgress: Story = {
   name: 'Usage: Multi-Step Application',
   render: () => html`
+    <civ-progress-header current="3" total="8" step-title="Employment"></civ-progress-header>
     <civ-progress-steps
       steps='["Eligibility","Personal Info","Contact Details","Employment","Income","Documents","Review","Submit"]'
       current="3"
-      show-counter
       clickable
     ></civ-progress-steps>
   `,

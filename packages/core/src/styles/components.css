@@ -1523,6 +1523,20 @@
     background-color: var(--civ-color-error-DEFAULT);
   }
 
+  @media (prefers-color-scheme: dark) {
+    .civ-progress-segment--completed {
+      background-color: var(--civ-color-success-dark);
+    }
+
+    .civ-progress-segment--current {
+      background-color: var(--civ-color-warning-dark);
+    }
+
+    .civ-progress-segment--error {
+      background-color: var(--civ-color-error-dark);
+    }
+  }
+
   button.civ-progress-segment {
     @apply civ-border-0 civ-p-0 civ-cursor-pointer civ-rounded-sm;
   }
@@ -1551,6 +1565,16 @@
 
   .civ-progress-fill--complete {
     background-color: var(--civ-color-success-light);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .civ-progress-fill {
+      background-color: var(--civ-color-primary-light);
+    }
+
+    .civ-progress-fill--complete {
+      background-color: var(--civ-color-success-dark);
+    }
   }
 
   /* ── Skip Link ─────────────────────────────────────────────── */
@@ -1740,13 +1764,6 @@
     color: var(--civ-color-base-dark);
   }
 
-  /* ── Progress steps counter ───────────────────────────────── */
-
-  .civ-progress-steps__counter {
-    @apply civ-text-sm civ-font-bold civ-mt-1;
-    color: var(--civ-color-base-dark);
-  }
-
   /* Progress header — "Step X of Y: Title" indicator */
 
   .civ-progress-header__counter {
@@ -1759,23 +1776,24 @@
 
   /* Primary — divider lines, large heading, generous spacing */
   .civ-progress-header--primary {
-    @apply civ-mb-4 civ-py-2;
+    margin-bottom: var(--civ-spacing-4, 16px);
+    padding-top: var(--civ-spacing-2, 8px);
+    padding-bottom: var(--civ-spacing-2, 8px);
     font-size: var(--civ-typography-fontSize-lg);
     border-top: 1px solid var(--civ-color-base-lighter);
     border-bottom: 1px solid var(--civ-color-base-lighter);
   }
 
-  /* Secondary — no dividers, base font, moderate spacing */
+  /* Secondary — no dividers, base font */
   .civ-progress-header--secondary {
-    @apply civ-mb-3 civ-py-1;
+    margin-bottom: var(--civ-spacing-1, 4px);
     font-size: var(--civ-typography-fontSize-base);
   }
 
   /* Tertiary — compact, pairs with progress-steps/percent bars */
   .civ-progress-header--tertiary {
-    @apply civ-mb-1;
+    margin-bottom: var(--civ-spacing-1, 4px);
     font-size: var(--civ-typography-fontSize-sm);
-    color: var(--civ-color-base-dark);
   }
 
   /* ── Callout (shared accent border — used by section-intro, alerts, custom callouts) */

@@ -59,16 +59,16 @@ describe('civ-progress-header', () => {
     expect(title!.getAttribute('aria-level')).toBe('3');
   });
 
-  it('renders primary size by default', async () => {
+  it('renders primary size', async () => {
     const el = await fixture<CivProgressHeader>(
-      '<civ-progress-header current="0" total="3" step-title="Test"></civ-progress-header>'
+      '<civ-progress-header current="0" total="3" step-title="Test" size="primary"></civ-progress-header>'
     );
     expect(el.querySelector('.civ-progress-header--primary')).not.toBeNull();
   });
 
-  it('renders secondary size', async () => {
+  it('renders secondary size by default', async () => {
     const el = await fixture<CivProgressHeader>(
-      '<civ-progress-header current="0" total="3" step-title="Test" size="secondary"></civ-progress-header>'
+      '<civ-progress-header current="0" total="3" step-title="Test"></civ-progress-header>'
     );
     expect(el.querySelector('.civ-progress-header--secondary')).not.toBeNull();
   });

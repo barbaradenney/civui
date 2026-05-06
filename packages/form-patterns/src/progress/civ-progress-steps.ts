@@ -16,7 +16,6 @@ import { CivBaseElement, announce, dispatch, t, interpolate } from '@civui/core'
  *   Simple: '["Personal Info","Address","Review"]'
  * @prop {number} current - Current step index (0-based)
  * @prop {boolean} clickable - When true, completed steps become clickable
- * @prop {boolean} showCounter - Show "Step X of Y" text below the segments
  * @prop {string} errorSteps - JSON array of step indices with errors
  *
  * @fires civ-step-click - When a completed segment is clicked, detail: { step: number }
@@ -26,7 +25,6 @@ export class CivProgressSteps extends CivBaseElement {
   @property({ type: String }) steps = '[]';
   @property({ type: Number }) current = 0;
   @property({ type: Boolean }) clickable = false;
-  @property({ type: Boolean, attribute: 'show-counter' }) showCounter = false;
   @property({ type: String, attribute: 'error-steps' }) errorSteps = '[]';
 
   private _cachedSteps: string | null = null;
@@ -98,11 +96,6 @@ export class CivProgressSteps extends CivBaseElement {
         <div class="civ-progress-segments">
           ${stepData.map((step, i) => this._renderSegment(step, i, stepData.length, current, errorSet))}
         </div>
-        ${this.showCounter ? html`
-          <div class="civ-progress-steps__counter" aria-live="polite">
-            ${interpolate(t('progressStepsCounter'), { current: current + 1, total: stepData.length })}
-          </div>
-        ` : nothing}
       </div>
     `;
   }

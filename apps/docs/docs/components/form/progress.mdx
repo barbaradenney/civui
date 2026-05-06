@@ -53,7 +53,6 @@ Each step is a small rectangle — filled for completed, highlighted for current
 | `steps` | `string` | `'[]'` | JSON array of step labels or step objects (`{label}`) |
 | `current` | `number` | `0` | Current step index (0-based) |
 | `clickable` | `boolean` | `false` | When true, completed segments become clickable |
-| `show-counter` | `boolean` | `false` | Show "Step X of Y" text below the segments |
 | `error-steps` | `string` | `'[]'` | JSON array of step indices with validation errors |
 
 ### Events
@@ -69,7 +68,6 @@ Each step is a small rectangle — filled for completed, highlighted for current
   steps='["Personal Info", "Address", "Review", "Submit"]'
   current="1"
   clickable
-  show-counter
 ></civ-progress-steps>
 ```
 

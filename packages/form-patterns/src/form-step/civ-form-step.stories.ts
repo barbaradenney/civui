@@ -60,8 +60,8 @@ export const WithProgressBar: Story = {
   `,
 };
 
-export const WithStepCircles: Story = {
-  name: 'With Step Circles',
+export const WithSegmentedSteps: Story = {
+  name: 'With Segmented Steps',
   render: () => html`
     <civ-form-step progress="steps">
       <div data-step-label="Eligibility">
@@ -75,6 +75,46 @@ export const WithStepCircles: Story = {
       </div>
       <div data-step-label="Review">
         <p>Review and submit your application.</p>
+      </div>
+    </civ-form-step>
+  `,
+};
+
+export const WithStepsTertiary: Story = {
+  name: 'With Steps (Tertiary Header)',
+  render: () => html`
+    <civ-form-step progress="steps" header-size="tertiary">
+      <div data-step-label="Eligibility">
+        <p>Answer the following questions to determine eligibility.</p>
+      </div>
+      <div data-step-label="Personal Info">
+        <p>Enter your personal details.</p>
+      </div>
+      <div data-step-label="Documents">
+        <p>Upload supporting documents.</p>
+      </div>
+      <div data-step-label="Review">
+        <p>Review and submit your application.</p>
+      </div>
+    </civ-form-step>
+  `,
+};
+
+export const WithProgressBarTertiary: Story = {
+  name: 'With Progress Bar (Tertiary Header)',
+  render: () => html`
+    <civ-form-step progress="bar" header-size="tertiary">
+      <div data-step-label="Personal information">
+        <p>Step 1: Personal information.</p>
+      </div>
+      <div data-step-label="Employment history">
+        <p>Step 2: Employment history.</p>
+      </div>
+      <div data-step-label="Education">
+        <p>Step 3: Education background.</p>
+      </div>
+      <div data-step-label="Review">
+        <p>Step 4: Review and submit.</p>
       </div>
     </civ-form-step>
   `,

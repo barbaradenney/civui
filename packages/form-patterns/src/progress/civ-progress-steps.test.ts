@@ -66,20 +66,6 @@ describe('civ-progress-steps', () => {
     expect(segments[1].classList.contains('civ-progress-segment--completed')).toBe(false);
   });
 
-  it('shows counter when show-counter is set', async () => {
-    const el = await fixture(`<civ-progress-steps steps='${threeSteps}' current="1" show-counter></civ-progress-steps>`);
-
-    const counter = el.querySelector('.civ-progress-steps__counter');
-    expect(counter).not.toBeNull();
-    expect(counter!.textContent).toContain('2');
-    expect(counter!.textContent).toContain('3');
-  });
-
-  it('hides counter by default', async () => {
-    const el = await fixture(`<civ-progress-steps steps='${threeSteps}' current="0"></civ-progress-steps>`);
-
-    expect(el.querySelector('.civ-progress-steps__counter')).toBeNull();
-  });
 
   it('updates when current step changes', async () => {
     const el = await fixture(`<civ-progress-steps steps='${threeSteps}' current="0"></civ-progress-steps>`) as any;

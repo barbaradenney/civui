@@ -322,9 +322,9 @@
   }
 
   .civ-input:focus-visible {
-    outline: var(--civ-focus-outline-width) solid var(--civ-focus-outline-color);
-    outline-offset: var(--civ-focus-outline-offset);
-    box-shadow: 0 0 0 var(--civ-focus-outline-offset) var(--civ-focus-shadow-color);
+    outline: var(--civ-focus-outline-width) solid var(--civ-focus-shadow-color);
+    outline-offset: 0;
+    box-shadow: 0 0 0 var(--civ-focus-shadow-radius) var(--civ-focus-outline-color);
   }
 
 
@@ -538,9 +538,9 @@
   }
 
   .civ-check-input:focus-visible {
-    outline: var(--civ-focus-outline-width) solid var(--civ-focus-outline-color);
-    outline-offset: var(--civ-focus-outline-offset);
-    box-shadow: 0 0 0 var(--civ-focus-outline-offset) var(--civ-focus-shadow-color);
+    outline: var(--civ-focus-outline-width) solid var(--civ-focus-shadow-color);
+    outline-offset: 0;
+    box-shadow: 0 0 0 var(--civ-focus-shadow-radius) var(--civ-focus-outline-color);
   }
 
   /* Checkbox checked — checkmark SVG */
@@ -943,9 +943,9 @@
      keep their input-level ring via the `.civ-check-input:focus-visible`
      rule above. */
   .civ-check-tile:has(:focus-visible) {
-    outline: var(--civ-focus-outline-width) solid var(--civ-focus-outline-color);
-    outline-offset: var(--civ-focus-outline-offset);
-    box-shadow: 0 0 0 var(--civ-focus-outline-offset) var(--civ-focus-shadow-color);
+    outline: var(--civ-focus-outline-width) solid var(--civ-focus-shadow-color);
+    outline-offset: 0;
+    box-shadow: 0 0 0 var(--civ-focus-shadow-radius) var(--civ-focus-outline-color);
   }
   .civ-check-tile .civ-check-input:focus-visible {
     outline: none;

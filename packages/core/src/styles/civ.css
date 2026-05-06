@@ -8,17 +8,26 @@
   @tailwind utilities;
 }
 
+/* Focus indicator: yellow outline paints flush against the element
+   (outline-offset: 0) and the dark halo via box-shadow extends past
+   the outline. Without offset there's no gap for the box-shadow's
+   inner edge to "leak" through, so the result is a single yellow ring
+   with one solid dark band outside it — no double border. Halo width
+   = outline-width + shadow-spread, kept in sync with the tokens. */
+:root {
+  --civ-focus-shadow-radius: calc(
+    var(--civ-focus-outline-width) +
+    var(--civ-focus-shadow-spread)
+  );
+}
+
 /* Focus-visible fallback for browsers without :focus-visible support */
 @supports not selector(:focus-visible) {
-  .civ-focus-ring:focus {
-    outline: var(--civ-focus-outline-width) solid var(--civ-focus-outline-color);
-    outline-offset: var(--civ-focus-outline-offset);
-    box-shadow: 0 0 0 var(--civ-focus-outline-offset) var(--civ-focus-shadow-color);
-  }
+  .civ-focus-ring:focus,
   .civ-focus-ring-inverse:focus {
-    outline: var(--civ-focus-outline-width) solid var(--civ-focus-outline-color);
-    outline-offset: var(--civ-focus-outline-offset);
-    box-shadow: 0 0 0 var(--civ-focus-outline-offset) var(--civ-focus-shadow-color);
+    outline: var(--civ-focus-outline-width) solid var(--civ-focus-shadow-color);
+    outline-offset: 0;
+    box-shadow: 0 0 0 var(--civ-focus-shadow-radius) var(--civ-focus-outline-color);
   }
 }
 
@@ -27,16 +36,20 @@
    CSS — buttons, links, and other elements relying on the class had no
    focus indicator at all. Match the class via attribute selector so we
    don't depend on either Tailwind's variant resolver OR colon-escape
-   parsing inside @layer components. */
+   parsing inside @layer components.
+   Layering: dark band sits flush against the element (outline), yellow
+   halo extends past it (box-shadow). The dark inner band reads as the
+   "border" of the focus state and the yellow outer band carries the
+   high-visibility contrast on light backgrounds. */
 [class~="focus-visible:civ-focus-ring"]:focus-visible {
-  outline: var(--civ-focus-outline-width) solid var(--civ-focus-outline-color);
-  outline-offset: var(--civ-focus-outline-offset);
-  box-shadow: 0 0 0 var(--civ-focus-outline-offset) var(--civ-focus-shadow-color);
+  outline: var(--civ-focus-outline-width) solid var(--civ-focus-shadow-color);
+  outline-offset: 0;
+  box-shadow: 0 0 0 var(--civ-focus-shadow-radius) var(--civ-focus-outline-color);
 }
 [class~="focus-visible:civ-focus-ring-inverse"]:focus-visible {
-  outline: var(--civ-focus-outline-width) solid var(--civ-focus-shadow-color);
-  outline-offset: var(--civ-focus-outline-offset);
-  box-shadow: 0 0 0 var(--civ-focus-outline-offset) var(--civ-focus-outline-color);
+  outline: var(--civ-focus-outline-width) solid var(--civ-focus-outline-color);
+  outline-offset: 0;
+  box-shadow: 0 0 0 var(--civ-focus-shadow-radius) var(--civ-focus-shadow-color);
 }
 
 /* Dark mode: ensure focus rings remain visible on dark backgrounds.

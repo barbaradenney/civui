@@ -65,6 +65,13 @@ const COMPONENTS = [
   'civ-button',
   'civ-link',
   'civ-link-card',
+  'civ-skip-link',
+  'civ-action-button',
+  'civ-action-link',
+  'civ-button-group',
+  'civ-icon',
+  'civ-filter-chip',
+  'civ-filter-chip-group',
 ];
 
 function camelToKebab(name: string): string {

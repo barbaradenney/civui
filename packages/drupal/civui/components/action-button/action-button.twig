@@ -4,5 +4,7 @@
   {% if danger %}danger{% endif %}
   {% if disabled %}disabled{% endif %}
   {% if pressed %}pressed{% endif %}
-  {% if type and type != 'button' %}type="{{ type }}"{% endif %}
+  {% if type %}type="{{ type }}"{% endif %}
+  {% if icon_start %}icon-start="{{ icon_start }}"{% endif %}
+  {% if icon_end %}icon-end="{{ icon_end }}"{% endif %}
 ></civ-action-button>

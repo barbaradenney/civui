@@ -236,14 +236,14 @@ Why schemas matter:
 - Drift between schema and Lit is enforced by `pnpm parity:schema`, which exits 1 on mismatch.
 - Schemas serve the contract role directly; no code-generation step is required (the previous `@civui/codegen` package was removed when this approach replaced it).
 
-**Coverage status (46 components, every cross-platform component covered):**
+**Coverage status (53 components, every cross-platform component covered):**
 - Form controls: `civ-text-input`, `civ-textarea`, `civ-select`, `civ-combobox`, `civ-date-picker`, `civ-date-range-picker`, `civ-memorable-date`, `civ-file-upload`, `civ-yes-no`, `civ-toggle`
 - Choice groups: `civ-checkbox`, `civ-checkbox-group`, `civ-radio-group`, `civ-segmented-control`
 - Compound + orchestration: `civ-address`, `civ-name`, `civ-direct-deposit`, `civ-signature`, `civ-race-ethnicity`, `civ-marriage-history`, `civ-relationship`, `civ-service-history`, `civ-repeater`, `civ-form-step`, `civ-conditional`, `civ-summary`, `civ-data-field`, `civ-section-intro`
 - Progress + feedback: `civ-progress-steps`, `civ-progress-percent`, `civ-progress-header`, `civ-support-resources`, `civ-alert`, `civ-badge`, `civ-count`
 - Overlays: `civ-modal`, `civ-action-sheet`
-- Layout + UI: `civ-filterable-list`, `civ-card`, `civ-divider`, `civ-tag`, `civ-list`, `civ-page-header`
-- Actions + navigation: `civ-button`, `civ-link`, `civ-link-card`
+- Layout + UI: `civ-filterable-list`, `civ-card`, `civ-divider`, `civ-tag`, `civ-list`, `civ-page-header`, `civ-icon`
+- Actions + navigation: `civ-button`, `civ-link`, `civ-link-card`, `civ-skip-link`, `civ-action-button`, `civ-action-link`, `civ-button-group`, `civ-filter-chip`, `civ-filter-chip-group`
 
 Four CI gates protect the contract (`.github/workflows/parity.yml`):
 - **`schema-parity`** runs `pnpm parity:schema --platforms` — fails on Lit ↔ schema ↔ iOS ↔ Android ↔ Drupal SDC drift.
@@ -251,7 +251,7 @@ Four CI gates protect the contract (`.github/workflows/parity.yml`):
 - **`drupal-sync-clean`** runs `pnpm sync:drupal && git diff --exit-code` — catches hand-edits to Twig / SDC YAML that diverge from regenerator output.
 - **`tool-tests`** runs `pnpm test:tools` — guards regressions in the parity / sync helper functions themselves (53 tests covering prop normalization, snake↔camel, Twig rendering).
 
-The check validates **prop name coverage** only (types differ across platforms). Naming conventions are normalized automatically:
+The check validates **prop name coverage** on all platforms, plus **prop type matching on Drupal SDC YAML** (a `boolean` schema prop must surface as `type: boolean` in Drupal; iOS / Android type-parsing is intentionally not enforced — Swift / Kotlin type expressions are too varied to compare reliably). Naming conventions are normalized automatically:
 - iOS `is`-prefix for booleans (`required` → `isRequired`, `tile` → `isTile`)
 - HTML-attribute lowercase → native camelCase (`maxlength` → `maxLength`)
 - iOS keyword/builtin renames (`type` → `inputType`, `name` → `formName`)

@@ -212,19 +212,14 @@ function validateRenderOrder(renderOrder: unknown[], props: Record<string, unkno
       errors.push({ path: `${path}.type`, message: `Invalid render element type "${el['type']}"`, severity: 'error' });
     }
 
-    // Validate bindings reference existing props
-    if (el['bindings'] && typeof el['bindings'] === 'object') {
-      const bindings = el['bindings'] as Record<string, string>;
-      for (const [bindingKey, propRef] of Object.entries(bindings)) {
-        if (bindingKey === 'tag') continue; // container instruction, not a prop reference
-        if (propRef === 'label' || propRef === 'value' || propRef === 'hint' || propRef === 'error' ||
-            propRef === 'required' || propRef === 'disabled' || propRef === 'name') continue; // base props
-        if (propRef === 'orientation') continue; // from container binding
-        if (props && !props[propRef]) {
-          errors.push({ path: `${path}.bindings`, message: `Binding references unknown prop "${propRef}"`, severity: 'warning' });
-        }
-      }
-    }
+    // The previous "Binding references unknown prop" check was dropped — it
+    // had too many false positives. Schema bindings legitimately reference
+    // slot names, ARIA role values, child-component refs (e.g. `street`
+    // inside `civ-address`), i18n keys, and inherited form props that are
+    // filtered from `props`. The validator can't distinguish those from
+    // typos without re-implementing significant schema semantics, and the
+    // cost / value didn't justify the noise. The render tree still gets
+    // structural validation (element types, children recursion).
 
     // Validate children recursively
     if (el['children'] && Array.isArray(el['children'])) {

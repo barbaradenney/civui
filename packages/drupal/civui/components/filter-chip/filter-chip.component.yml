@@ -29,6 +29,37 @@ props:
       title: Disabled
       type: boolean
       default: false
+    chip_style:
+      title: Chip style
+      type: string
+      enum: ['primary', 'secondary']
+      default: 'secondary'
+      description: 'Visual treatment. `primary` = solid filled when selected; `secondary` = subtle background'
+    chip_role:
+      title: Chip role
+      type: string
+      enum: ['toggle', 'select']
+      default: 'toggle'
+      description: 'Interaction model. `toggle` = standalone on/off; `select` = single member of a multi-select group'
+    spacing:
+      title: Spacing
+      type: string
+      enum: ['default', 'sm']
+      default: 'default'
+      description: 'Padding density. `default` for standalone; `sm` for dense filter strips'
+    icon_start:
+      title: Icon start
+      type: string
+      description: 'Leading icon name (e.g. category emoji-replacement)'
+    icon_end:
+      title: Icon end
+      type: string
+      description: 'Trailing icon name (note: `removable` overrides this with a × icon)'
+    count:
+      title: Count
+      type: integer
+      description: 'Optional count badge appended after the label (e.g. `Open jobs (12)`). `null` hides the badge'
+
 
 libraryOverrides:
   dependencies:

@@ -1,5 +1,5 @@
 <civ-form-step
-  {% if persist %}persist{% endif %}
+  {% if persist %}persist="{{ persist }}"{% endif %}
   {% if sensitive %}sensitive{% endif %}
   {% if show_pause %}show-pause{% endif %}
   {% if continue_label %}continue-label="{{ continue_label }}"{% endif %}

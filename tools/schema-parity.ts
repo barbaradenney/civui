@@ -125,6 +125,14 @@ const COVERED_COMPONENTS: ComponentSpec[] = [
   { name: 'civ-button',            source: 'packages/actions/src/button/civ-button.ts',                                               ios: 'packages/ios/Sources/CivUI/CivButton.swift',        android: 'packages/android/src/main/kotlin/gov/civui/components/CivButton.kt',        drupal: 'packages/drupal/civui/components/button/button.component.yml' },
   { name: 'civ-link',              source: 'packages/navigation/src/link/civ-link.ts',                                                ios: 'packages/ios/Sources/CivUI/CivLink.swift',          android: 'packages/android/src/main/kotlin/gov/civui/components/CivLink.kt',          drupal: 'packages/drupal/civui/components/link/link.component.yml' },
   { name: 'civ-link-card',         source: 'packages/navigation/src/link-card/civ-link-card.ts',                                      ios: 'packages/ios/Sources/CivUI/CivLinkCard.swift',      android: 'packages/android/src/main/kotlin/gov/civui/components/CivLinkCard.kt',      drupal: 'packages/drupal/civui/components/link-card/link-card.component.yml' },
+  { name: 'civ-skip-link',         source: 'packages/navigation/src/skip-link/civ-skip-link.ts',                                      ios: 'packages/ios/Sources/CivUI/CivSkipLink.swift',      android: 'packages/android/src/main/kotlin/gov/civui/components/CivSkipLink.kt',      drupal: 'packages/drupal/civui/components/skip-link/skip-link.component.yml' },
+  { name: 'civ-action-button',     source: 'packages/actions/src/action-button/civ-action-button.ts',                                 ios: 'packages/ios/Sources/CivUI/CivActionButton.swift',  android: 'packages/android/src/main/kotlin/gov/civui/components/CivActionButton.kt',  drupal: 'packages/drupal/civui/components/action-button/action-button.component.yml' },
+  { name: 'civ-action-link',       source: 'packages/actions/src/action-link/civ-action-link.ts',                                     ios: 'packages/ios/Sources/CivUI/CivActionLink.swift',    android: 'packages/android/src/main/kotlin/gov/civui/components/CivActionLink.kt',    drupal: 'packages/drupal/civui/components/action-link/action-link.component.yml' },
+  // civ-button-group is bundled into CivActionButton on iOS — no separate Swift file.
+  { name: 'civ-button-group',      source: 'packages/layout/src/button-group/civ-button-group.ts',                                                                                                              android: 'packages/android/src/main/kotlin/gov/civui/components/CivButtonGroup.kt',   drupal: 'packages/drupal/civui/components/button-group/button-group.component.yml' },
+  { name: 'civ-icon',              source: 'packages/core/src/icon/civ-icon.ts',                                                      ios: 'packages/ios/Sources/CivUI/CivIcon.swift',          android: 'packages/android/src/main/kotlin/gov/civui/components/CivIcon.kt',          drupal: 'packages/drupal/civui/components/icon/icon.component.yml' },
+  { name: 'civ-filter-chip',       source: 'packages/actions/src/filter-chip/civ-filter-chip.ts',                                     ios: 'packages/ios/Sources/CivUI/CivFilterChip.swift',    android: 'packages/android/src/main/kotlin/gov/civui/components/CivFilterChip.kt',    drupal: 'packages/drupal/civui/components/filter-chip/filter-chip.component.yml' },
+  { name: 'civ-filter-chip-group', source: 'packages/actions/src/filter-chip-group/civ-filter-chip-group.ts',                         ios: 'packages/ios/Sources/CivUI/CivFilterChipGroup.swift', android: 'packages/android/src/main/kotlin/gov/civui/components/CivFilterChipGroup.kt', drupal: 'packages/drupal/civui/components/filter-chip-group/filter-chip-group.component.yml' },
 ];
 
 /**
@@ -374,13 +382,31 @@ export function camelToSnake(name: string): string {
   return name.replace(/([A-Z]+)/g, '_$1').replace(/^_/, '').toLowerCase();
 }
 
-export function parseDrupalPropNamesFromYaml(src: string): string[] {
-  // Drupal SDCs declare props under `props.properties.<name>`. Parse by
-  // looking for the `properties:` section and extracting indented keys.
+export interface DrupalProp {
+  name: string;
+  /** YAML type token: 'string' | 'boolean' | 'integer' | 'array' (or undefined when the SDC omits type) */
+  type?: string;
+}
+
+/**
+ * Parse the props.properties block of a Drupal SDC YAML, capturing each
+ * prop name AND its declared type. The type drives the cross-platform
+ * type-drift check (a `boolean` schema prop must surface in Drupal as
+ * `type: boolean`, etc.).
+ */
+export function parseDrupalPropsFromYaml(src: string): DrupalProp[] {
   const lines = src.split('\n');
-  const names = new Set<string>();
+  const props: DrupalProp[] = [];
   let inProperties = false;
   let baseIndent = 0;
+  let currentName: string | null = null;
+  let currentIndent = 0;
+  let pendingType: string | undefined;
+  function flush(): void {
+    if (currentName) props.push({ name: currentName, type: pendingType });
+    currentName = null;
+    pendingType = undefined;
+  }
   for (const line of lines) {
     const propsMatch = line.match(/^(\s*)properties\s*:/);
     if (propsMatch && !inProperties) {
@@ -389,24 +415,52 @@ export function parseDrupalPropNamesFromYaml(src: string): string[] {
       continue;
     }
     if (!inProperties) continue;
-    const m = line.match(/^(\s*)([\w-]+)\s*:/);
+    const m = line.match(/^(\s*)([\w-]+)\s*:(.*)$/);
     if (!m) continue;
     const indent = m[1].length;
     if (indent <= baseIndent) {
-      // dedented past the properties block — done
+      flush();
       inProperties = false;
       continue;
     }
     if (indent === baseIndent + 2) {
-      // direct child of `properties:` is a prop name
-      names.add(m[2]);
+      flush();
+      currentName = m[2];
+      currentIndent = indent;
+    } else if (currentName && m[2] === 'type' && indent > currentIndent) {
+      pendingType = m[3].trim();
     }
   }
-  return [...names];
+  flush();
+  return props;
+}
+
+export function parseDrupalPropNamesFromYaml(src: string): string[] {
+  return parseDrupalPropsFromYaml(src).map((p) => p.name);
 }
 
 function parseDrupalPropNames(yamlPath: string): string[] {
   return parseDrupalPropNamesFromYaml(readFileSync(yamlPath, 'utf-8'));
+}
+
+function parseDrupalProps(yamlPath: string): DrupalProp[] {
+  return parseDrupalPropsFromYaml(readFileSync(yamlPath, 'utf-8'));
+}
+
+/**
+ * Map a schema PropDef.type to the Drupal SDC YAML `type:` token that
+ * sync-drupal-sdc.ts emits when synthesizing missing props. Drift from
+ * this mapping flags as a type mismatch — usually means the SDC was
+ * hand-edited or the schema's type changed without a re-sync.
+ */
+export function expectedDrupalType(schemaType: string): string {
+  switch (schemaType) {
+    case 'number': return 'integer';
+    case 'enum': return 'string';
+    case 'boolean': return 'boolean';
+    case 'array': return 'array';
+    default: return 'string';
+  }
 }
 
 async function loadSchema(name: string): Promise<any | null> {
@@ -565,14 +619,18 @@ interface PlatformDrift {
   platform: 'ios' | 'android' | 'drupal';
   /** Schema-declared props missing from this platform's source */
   missing: string[];
+  /** Schema-declared props whose type differs from what the platform declares (Drupal only — iOS / Android type-parsing is too noisy to enforce) */
+  typeMismatches?: Array<{ name: string; expected: string; got: string }>;
 }
 
 function checkPlatformParity(
-  schemaPropNames: string[],
+  /** Schema props in cross-platform-applicable form. Includes name + canonical schema type so platform diffs can flag both shape and naming drift. */
+  schemaProps: SchemaProp[],
   spec: ComponentSpec,
   /** Map from schema prop name → schema's `attribute` override, when set. */
   schemaAttributes: Map<string, string> = new Map(),
 ): PlatformDrift[] {
+  const schemaPropNames = schemaProps.map((p) => p.name);
   const drifts: PlatformDrift[] = [];
 
   if (spec.ios) {
@@ -612,18 +670,34 @@ function checkPlatformParity(
   if (spec.drupal) {
     const path = join(ROOT, spec.drupal);
     if (existsSync(path)) {
-      const drupalNames = new Set(parseDrupalPropNames(path));
+      const drupalProps = parseDrupalProps(path);
+      const drupalByName = new Map(drupalProps.map((p) => [p.name, p]));
+      const drupalNames = new Set(drupalProps.map((p) => p.name));
       // Drupal SDCs mirror the Lit HTML attribute (with `-` → `_`). When
       // the schema declares `attribute: 'foo-bar'`, that's the source of
       // truth — `validateType` with attribute `validate` lives in Drupal
       // as `validate`, not `validate_type`.
-      const missing = schemaPropNames.filter((p) => {
-        const candidates = [p, camelToSnake(p)];
-        const attr = schemaAttributes.get(p);
+      function resolveDrupalKey(propName: string): string | undefined {
+        const candidates = [propName, camelToSnake(propName)];
+        const attr = schemaAttributes.get(propName);
         if (attr) candidates.push(attr.replace(/-/g, '_'));
-        return !candidates.some((c) => drupalNames.has(c));
-      });
-      if (missing.length > 0) drifts.push({ platform: 'drupal', missing });
+        return candidates.find((c) => drupalNames.has(c));
+      }
+      const missing = schemaPropNames.filter((p) => !resolveDrupalKey(p));
+      const typeMismatches: NonNullable<PlatformDrift['typeMismatches']> = [];
+      for (const sp of schemaProps) {
+        const drupalKey = resolveDrupalKey(sp.name);
+        if (!drupalKey) continue;
+        const drupalProp = drupalByName.get(drupalKey);
+        if (!drupalProp || drupalProp.type === undefined) continue;
+        const expected = expectedDrupalType(sp.type);
+        if (drupalProp.type !== expected) {
+          typeMismatches.push({ name: sp.name, expected, got: drupalProp.type });
+        }
+      }
+      if (missing.length > 0 || typeMismatches.length > 0) {
+        drifts.push({ platform: 'drupal', missing, typeMismatches: typeMismatches.length > 0 ? typeMismatches : undefined });
+      }
     }
   }
 
@@ -670,13 +744,12 @@ async function main(): Promise<void> {
     // silently skipped. webOnly props are excluded — they're abstractions
     // that don't have a clean cross-platform mapping.
     const crossPlatformProps = schemaProps.filter((p) => !p.webOnly);
-    const crossPlatformPropNames = crossPlatformProps.map((p) => p.name);
     const schemaAttributes = new Map<string, string>();
     for (const p of crossPlatformProps) {
       if (p.attribute) schemaAttributes.set(p.name, p.attribute);
     }
     const platformDrifts = checkPlatformParity(
-      crossPlatformPropNames,
+      crossPlatformProps,
       spec,
       schemaAttributes,
     );
@@ -707,7 +780,14 @@ async function main(): Promise<void> {
       console.log(`   ${m.name} detail keys differ: schema=${JSON.stringify(m.schema)}, source=${JSON.stringify(m.source)}`);
     }
     for (const pd of platformDrifts) {
-      console.log(`   ${pd.platform}: missing schema props in source (${pd.missing.length}): ${pd.missing.join(', ')}`);
+      if (pd.missing.length > 0) {
+        console.log(`   ${pd.platform}: missing schema props in source (${pd.missing.length}): ${pd.missing.join(', ')}`);
+      }
+      if (pd.typeMismatches && pd.typeMismatches.length > 0) {
+        for (const tm of pd.typeMismatches) {
+          console.log(`   ${pd.platform}: ${tm.name} type mismatch — schema expects ${tm.expected}, ${pd.platform} declares ${tm.got}`);
+        }
+      }
     }
   }
   const litFailure = drift > 0;

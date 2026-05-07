@@ -9,9 +9,8 @@ props:
   properties:
     persist:
       title: Persist
-      type: boolean
-      default: false
-      description: 'Persist step data to storage'
+      type: string
+      description: 'Storage key for persisting this step''s draft state. Empty = no persistence'
     sensitive:
       title: Sensitive
       type: boolean

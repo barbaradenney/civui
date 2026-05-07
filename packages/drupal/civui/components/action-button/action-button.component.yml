@@ -36,6 +36,15 @@ props:
       enum: ['button', 'submit', 'reset']
       default: 'button'
       description: 'HTML button type'
+    icon_start:
+      title: Icon start
+      type: string
+      description: 'Leading icon name'
+    icon_end:
+      title: Icon end
+      type: string
+      description: 'Trailing icon name'
+
 
 libraryOverrides:
   dependencies:

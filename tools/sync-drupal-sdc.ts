@@ -78,6 +78,13 @@ const COMPONENTS: ComponentMapping[] = [
   { schema: 'civ-button', drupal: 'button' },
   { schema: 'civ-link', drupal: 'link' },
   { schema: 'civ-link-card', drupal: 'link-card' },
+  { schema: 'civ-skip-link', drupal: 'skip-link' },
+  { schema: 'civ-action-button', drupal: 'action-button' },
+  { schema: 'civ-action-link', drupal: 'action-link' },
+  { schema: 'civ-button-group', drupal: 'button-group' },
+  { schema: 'civ-icon', drupal: 'icon' },
+  { schema: 'civ-filter-chip', drupal: 'filter-chip' },
+  { schema: 'civ-filter-chip-group', drupal: 'filter-chip-group' },
 ];
 
 const INHERITED_FORM_PROPS = new Set([

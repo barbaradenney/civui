@@ -15,6 +15,20 @@ props:
       title: Label
       type: string
       description: 'Accessible label for the icon'
+    size:
+      title: Size
+      type: string
+      description: 'Size shorthand — `sm` / `md` / `lg` / `xl` / `2xl` map to font-size multipliers; explicit values like `24px` or `1.5em` are passed through. Empty inherits parent font-size'
+    rotate:
+      title: Rotate
+      type: integer
+      description: 'Rotation in degrees. Common values: 90, 180, 270'
+    flip:
+      title: Flip
+      type: string
+      enum: ['horizontal', 'vertical', 'both']
+      description: 'Mirror axis. `horizontal` flips left-right; `vertical` flips top-bottom; `both` flips both'
+
 
 libraryOverrides:
   dependencies:

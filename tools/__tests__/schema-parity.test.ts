@@ -14,6 +14,8 @@ import {
   parseSwiftPropNamesFromSource,
   parseKotlinPropNamesFromSource,
   parseDrupalPropNamesFromYaml,
+  parseDrupalPropsFromYaml,
+  expectedDrupalType,
   iosPropAlternatives,
   androidPropAlternatives,
   normalizeType,
@@ -287,5 +289,62 @@ slots:
     title: Default
 `;
     expect(parseDrupalPropNamesFromYaml(yaml)).toEqual(['label']);
+  });
+});
+
+describe('parseDrupalPropsFromYaml', () => {
+  it('captures both name and type for each prop', () => {
+    const yaml = `
+props:
+  type: object
+  properties:
+    label:
+      type: string
+    required:
+      type: boolean
+    count:
+      type: integer
+    options:
+      type: array
+`;
+    const props = parseDrupalPropsFromYaml(yaml);
+    const byName = new Map(props.map((p) => [p.name, p.type]));
+    expect(byName.get('label')).toBe('string');
+    expect(byName.get('required')).toBe('boolean');
+    expect(byName.get('count')).toBe('integer');
+    expect(byName.get('options')).toBe('array');
+  });
+
+  it('returns undefined for type when the YAML omits it', () => {
+    const yaml = `
+props:
+  type: object
+  properties:
+    bareKey:
+      title: Bare
+      description: 'no type field'
+`;
+    const props = parseDrupalPropsFromYaml(yaml);
+    expect(props).toEqual([{ name: 'bareKey', type: undefined }]);
+  });
+});
+
+describe('expectedDrupalType', () => {
+  it('maps schema number to drupal integer', () => {
+    expect(expectedDrupalType('number')).toBe('integer');
+  });
+
+  it('maps schema enum to drupal string (enums are stringly-typed in YAML)', () => {
+    expect(expectedDrupalType('enum')).toBe('string');
+  });
+
+  it('preserves boolean and array', () => {
+    expect(expectedDrupalType('boolean')).toBe('boolean');
+    expect(expectedDrupalType('array')).toBe('array');
+  });
+
+  it('falls back to string for unknown / string types', () => {
+    expect(expectedDrupalType('string')).toBe('string');
+    expect(expectedDrupalType('something-weird')).toBe('string');
   });
 });

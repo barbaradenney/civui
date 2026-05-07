@@ -29,8 +29,62 @@ import { pathToFileURL } from 'url';
 
 const ROOT = join(import.meta.dirname, '..');
 const SCHEMAS_DIR = join(ROOT, 'packages/schema/src/components');
+const COMPONENTS_DOC_DIR = join(ROOT, 'apps/docs/docs/components');
 const OUTPUT_DIR = join(ROOT, 'apps/docs/docs/contract');
 const DRY_RUN = process.argv.includes('--dry-run');
+
+/**
+ * Some schemas share a component doc page with related siblings — the
+ * docs are organized around capability groups (e.g. one "Date" page
+ * covering picker / range-picker / memorable-date) rather than 1:1.
+ * Map the schema slug to the canonical doc-page slug for these aliases.
+ */
+const SLUG_ALIAS: Record<string, string> = {
+  'checkbox-group': 'checkbox',
+  'radio-group': 'radio',
+  'date-picker': 'date',
+  'date-range-picker': 'date',
+  'memorable-date': 'date',
+  'progress-steps': 'progress',
+  'progress-header': 'progress',
+  'progress-percent': 'progress',
+  'filter-chip-group': 'filter-chip',
+};
+
+/**
+ * Walk apps/docs/docs/components/<category>/<slug>.mdx and build a map
+ * from slug (e.g. "button") to its Docusaurus URL (e.g.
+ * "/components/actions/button"). Schemas don't carry category metadata
+ * that maps to docs structure, so the only reliable lookup is by file
+ * existence.
+ */
+function buildComponentPageMap(): Map<string, string> {
+  const map = new Map<string, string>();
+  if (!existsSync(COMPONENTS_DOC_DIR)) return map;
+  const categories = readdirSync(COMPONENTS_DOC_DIR);
+  for (const category of categories) {
+    const categoryPath = join(COMPONENTS_DOC_DIR, category);
+    let entries: string[];
+    try {
+      entries = readdirSync(categoryPath);
+    } catch {
+      continue; // not a directory
+    }
+    for (const entry of entries) {
+      if (!entry.endsWith('.mdx') && !entry.endsWith('.md')) continue;
+      const slug = entry.replace(/\.(mdx|md)$/, '');
+      map.set(slug, `/components/${category}/${slug}`);
+    }
+  }
+  return map;
+}
+
+function resolveComponentPageUrl(schemaSlug: string, map: Map<string, string>): string | undefined {
+  if (map.has(schemaSlug)) return map.get(schemaSlug);
+  const alias = SLUG_ALIAS[schemaSlug];
+  if (alias && map.has(alias)) return map.get(alias);
+  return undefined;
+}
 
 interface PropDef {
   type: string;
@@ -144,7 +198,7 @@ function renderForm(form: ComponentSchema['form']): string {
   return lines.join('\n') + '\n';
 }
 
-function renderPage(schema: ComponentSchema, position: number): string {
+function renderPage(schema: ComponentSchema, position: number, componentPageUrl: string | undefined): string {
   const out: string[] = [];
   out.push(`---`);
   // Quote scalar values so frontmatter YAML doesn't choke on colons,
@@ -160,6 +214,12 @@ function renderPage(schema: ComponentSchema, position: number): string {
   out.push('');
   out.push(`> **Auto-generated from \`packages/schema/src/components/${schema.name}.schema.ts\`** — do not hand-edit. Run \`pnpm docs:contract\` (or rebuild docs) to regenerate.`);
   out.push('');
+  if (componentPageUrl) {
+    out.push(`:::tip Worked examples`);
+    out.push(`See [**${schema.name}** in Components](${componentPageUrl}) for usage examples and Storybook embeds. This page is the structured contract reference; that page is the hands-on guide.`);
+    out.push(`:::`);
+    out.push('');
+  }
   // Escape MDX-significant characters in the body too — `<select>` mentions
   // would otherwise be parsed as JSX tags. Preserve newlines (unlike the
   // table-cell escapeMd, which flattens them).
@@ -211,21 +271,72 @@ async function loadSchema(file: string): Promise<ComponentSchema> {
   return mod.default ?? mod;
 }
 
-interface CategoryFile {
-  label: string;
-  position?: number;
-  link?: { type: string; title?: string; description?: string };
+// The sidebar entry in `apps/docs/sidebars.ts` defines the category
+// metadata (label, link, slug). We don't write a `_category_.json`
+// file here because the sidebar entry is the source of truth; emitting
+// one would just duplicate the same metadata in two places.
+
+/**
+ * Build the reverse map: for each component-page URL, the list of
+ * schemas that document it. Combined pages (e.g. `/components/inputs/date`)
+ * link to multiple contract pages.
+ */
+function buildReverseMap(schemas: ComponentSchema[], componentPageMap: Map<string, string>): Map<string, string[]> {
+  const reverse = new Map<string, string[]>();
+  for (const schema of schemas) {
+    const slug = schema.name.replace(/^civ-/, '');
+    const url = resolveComponentPageUrl(slug, componentPageMap);
+    if (!url) continue;
+    if (!reverse.has(url)) reverse.set(url, []);
+    reverse.get(url)!.push(schema.name);
+  }
+  return reverse;
 }
 
-const CATEGORY_FILE: CategoryFile = {
-  label: 'Contract Reference',
-  position: 100,
-  link: {
-    type: 'generated-index',
-    title: 'Contract Reference',
-    description: 'Auto-generated per-component contract documentation. Each page captures the platform-neutral schema (props, events, accessibility, form behavior) that every CivUI platform implementation must satisfy. Generated from `@civui/schema` — do not hand-edit. Use the existing per-component pages under "Components" for worked examples and Storybook embeds.',
-  },
-};
+const CONTRACT_LINK_MARKER_START = '<!-- contract-link:start -->';
+const CONTRACT_LINK_MARKER_END = '<!-- contract-link:end -->';
+
+/**
+ * Inject (or refresh) a "Contract reference" admonition into each component
+ * page that has matching schemas. The block is delimited by HTML comment
+ * markers so we can update it idempotently — we only touch the marker block,
+ * not the rest of the hand-written page. New schemas → existing markers
+ * get rewritten with updated links; removed schemas → markers go away.
+ */
+function injectContractLinkIntoComponentPage(
+  pagePath: string,
+  schemaNames: string[],
+): { changed: boolean } {
+  const original = readFileSync(pagePath, 'utf-8');
+  const links = schemaNames
+    .map((name) => `[\`${name}\`](/contract/${name})`)
+    .join(' · ');
+  const block = [
+    CONTRACT_LINK_MARKER_START,
+    '',
+    `> **Contract reference:** ${links} — auto-generated structured contract for cross-platform implementation.`,
+    '',
+    CONTRACT_LINK_MARKER_END,
+  ].join('\n');
+
+  // If the page already has a marker block, replace it. Otherwise insert
+  // immediately after the YAML frontmatter (keeps the marker near the top
+  // where it's discoverable).
+  let next: string;
+  const markerRegex = new RegExp(`${CONTRACT_LINK_MARKER_START}[\\s\\S]*?${CONTRACT_LINK_MARKER_END}`, 'm');
+  if (markerRegex.test(original)) {
+    next = original.replace(markerRegex, block);
+  } else {
+    // Find the end of YAML frontmatter (second `---` line).
+    const fmEnd = original.indexOf('\n---', 4); // skip leading `---\n`
+    if (fmEnd < 0) return { changed: false }; // no frontmatter — skip rather than guess
+    const insertAt = original.indexOf('\n', fmEnd + 4) + 1; // after the closing `---`
+    next = original.slice(0, insertAt) + '\n' + block + '\n' + original.slice(insertAt);
+  }
+  if (next === original) return { changed: false };
+  if (!DRY_RUN) writeFileSync(pagePath, next);
+  return { changed: true };
+}
 
 async function main(): Promise<void> {
   if (!existsSync(OUTPUT_DIR)) {
@@ -240,11 +351,15 @@ async function main(): Promise<void> {
     .filter((f) => f.endsWith('.schema.ts'))
     .sort();
 
+  const componentPageMap = buildComponentPageMap();
+
   let written = 0;
   for (let i = 0; i < files.length; i++) {
     const schema = await loadSchema(files[i]);
+    const slug = schema.name.replace(/^civ-/, '');
+    const componentPageUrl = resolveComponentPageUrl(slug, componentPageMap);
     const outPath = join(OUTPUT_DIR, `${schema.name}.md`);
-    const content = renderPage(schema, i + 1);
+    const content = renderPage(schema, i + 1, componentPageUrl);
     const existing = existsSync(outPath) ? readFileSync(outPath, 'utf-8') : '';
     if (existing === content) continue;
     if (DRY_RUN) {
@@ -255,20 +370,30 @@ async function main(): Promise<void> {
     written++;
   }
 
-  // Emit the category file so the sidebar gets a "Contract Reference" entry.
-  const categoryPath = join(OUTPUT_DIR, '_category_.json');
-  const categoryContent = JSON.stringify(CATEGORY_FILE, null, 2) + '\n';
-  const existingCategory = existsSync(categoryPath) ? readFileSync(categoryPath, 'utf-8') : '';
-  if (existingCategory !== categoryContent) {
-    if (DRY_RUN) {
-      console.log(`[dry-run] would write ${categoryPath}`);
-    } else {
-      writeFileSync(categoryPath, categoryContent);
+// Second pass: inject reverse "Contract reference" links into each
+  // hand-written component page. Idempotent — uses HTML-comment markers
+  // so we can update without touching the rest of the page.
+  const allSchemas: ComponentSchema[] = [];
+  for (const f of files) allSchemas.push(await loadSchema(f));
+  const reverseMap = buildReverseMap(allSchemas, componentPageMap);
+  let pagesUpdated = 0;
+  for (const [url, schemaNames] of reverseMap) {
+    // The Docusaurus URL is `/components/<category>/<slug>`. The file lives
+    // at `apps/docs/docs/components/<category>/<slug>.mdx` (or `.md`).
+    const rel = url.replace(/^\/components\//, '');
+    const baseDir = join(COMPONENTS_DOC_DIR, ...rel.split('/').slice(0, -1));
+    const slug = rel.split('/').pop()!;
+    let pagePath = join(baseDir, `${slug}.mdx`);
+    if (!existsSync(pagePath)) pagePath = join(baseDir, `${slug}.md`);
+    if (!existsSync(pagePath)) continue;
+    const { changed } = injectContractLinkIntoComponentPage(pagePath, schemaNames.sort());
+    if (changed) {
+      pagesUpdated++;
+      if (DRY_RUN) console.log(`[dry-run] would update component page ${pagePath}`);
     }
-    written++;
   }
 
-  console.log(`${DRY_RUN ? '[dry-run] would update' : 'updated'} ${written} file(s) for ${files.length} schema(s).`);
+  console.log(`${DRY_RUN ? '[dry-run] would update' : 'updated'} ${written} contract file(s) and ${pagesUpdated} component page(s) for ${files.length} schema(s).`);
 }
 
 main().catch((err) => {

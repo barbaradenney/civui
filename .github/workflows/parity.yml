@@ -127,6 +127,28 @@ jobs:
       - name: Run tool unit tests
         run: pnpm test:tools
 
+  docs-build:
+    name: Docusaurus build (catches contract-page generation drift)
+    runs-on: ubuntu-latest
+    # Catches schema changes that break the contract generator OR produce
+    # invalid MDX in any docs page before they reach main. The pages.yml
+    # workflow runs the full build on push to main, but this PR-time gate
+    # surfaces the same failure before merge instead of after.
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Build Docusaurus (regenerates contract pages via prebuild hook)
+        run: cd apps/docs && pnpm build
+        env:
+          NODE_OPTIONS: '--max-old-space-size=4096'
+
   drupal-sync-clean:
     name: Drupal SDC + Twig in sync with schema
     runs-on: ubuntu-latest

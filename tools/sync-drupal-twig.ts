@@ -27,6 +27,16 @@ import { pathToFileURL } from 'url';
 const ROOT = join(import.meta.dirname, '..');
 const DRY_RUN = process.argv.includes('--dry-run');
 
+function isCliInvocation(): boolean {
+  const argv = process.argv[1];
+  if (!argv) return false;
+  try {
+    return import.meta.url === pathToFileURL(argv).href;
+  } catch {
+    return false;
+  }
+}
+
 const COMPONENTS = [
   'civ-text-input', 'civ-checkbox', 'civ-radio-group', 'civ-yes-no',
   'civ-checkbox-group', 'civ-combobox', 'civ-date-picker', 'civ-file-upload',
@@ -36,25 +46,22 @@ const COMPONENTS = [
   'civ-marriage-history', 'civ-relationship', 'civ-service-history',
   'civ-filterable-list',
   'civ-support-resources',
+  'civ-date-range-picker',
+  'civ-progress-header',
+  'civ-data-field',
+  'civ-conditional',
+  'civ-summary',
 ];
 
 function camelToKebab(name: string): string {
   return name.replace(/([A-Z]+)/g, '-$1').replace(/^-/, '').toLowerCase();
 }
 
-function snakeToKebab(name: string): string {
+export function snakeToKebab(name: string): string {
   return name.replace(/_/g, '-');
 }
 
-interface YamlProp {
-  /** Drupal SDC key (snake_case) */
-  key: string;
-  /** YAML type: boolean, integer, string, array */
-  type: string;
-}
-
-function parseSdcProps(yamlPath: string): YamlProp[] {
-  const src = readFileSync(yamlPath, 'utf-8');
+export function parseSdcPropsFromYaml(src: string): YamlProp[] {
   const lines = src.split('\n');
   const props: YamlProp[] = [];
   let inProperties = false;
@@ -93,8 +100,11 @@ function parseSdcProps(yamlPath: string): YamlProp[] {
   return props;
 }
 
-function parseSdcSlots(yamlPath: string): string[] {
-  const src = readFileSync(yamlPath, 'utf-8');
+function parseSdcProps(yamlPath: string): YamlProp[] {
+  return parseSdcPropsFromYaml(readFileSync(yamlPath, 'utf-8'));
+}
+
+export function parseSdcSlotsFromYaml(src: string): string[] {
   const lines = src.split('\n');
   const slots: string[] = [];
   let inSlots = false;
@@ -121,8 +131,19 @@ function parseSdcSlots(yamlPath: string): string[] {
   return slots;
 }
 
-interface AttrLookup {
+function parseSdcSlots(yamlPath: string): string[] {
+  return parseSdcSlotsFromYaml(readFileSync(yamlPath, 'utf-8'));
+}
+
+export interface AttrLookup {
   [propName: string]: string;
+}
+
+export interface YamlProp {
+  /** Drupal SDC key (snake_case) */
+  key: string;
+  /** YAML type: boolean, integer, string, array */
+  type: string;
 }
 
 async function loadSchemaAttributes(componentName: string): Promise<AttrLookup> {
@@ -137,7 +158,7 @@ async function loadSchemaAttributes(componentName: string): Promise<AttrLookup> 
   return attrs;
 }
 
-function htmlAttrFor(snakeKey: string, schemaAttrs: AttrLookup): string {
+export function htmlAttrFor(snakeKey: string, schemaAttrs: AttrLookup): string {
   // Two ways the snake_case key relates to a camelCase schema prop:
   //   show_middle ↔ showMiddle (camelToSnake(showMiddle) === show_middle)
   //   validate    ↔ validateType  (schema explicit attribute: 'validate')
@@ -149,7 +170,7 @@ function htmlAttrFor(snakeKey: string, schemaAttrs: AttrLookup): string {
   return snakeToKebab(snakeKey);
 }
 
-function renderTwigLine(prop: YamlProp, attrName: string): string {
+export function renderTwigLine(prop: YamlProp, attrName: string): string {
   if (prop.type === 'boolean') {
     return `  {% if ${prop.key} %}${attrName}{% endif %}`;
   }
@@ -218,7 +239,9 @@ async function main() {
   console.log(`\n${DRY_RUN ? '[dry-run] would update' : 'updated'} ${changed} twig template(s).`);
 }
 
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
+if (isCliInvocation()) {
+  main().catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
+}

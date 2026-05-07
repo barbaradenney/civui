@@ -39,6 +39,43 @@ props:
       title: Disabled
       type: boolean
       default: false
+    min_range_days:
+      title: Min range days
+      type: integer
+      default: 0
+      description: 'Inclusive minimum range duration in days. 0 disables the cross-field check'
+    max_range_days:
+      title: Max range days
+      type: integer
+      default: 0
+      description: 'Inclusive maximum range duration in days. 0 disables the cross-field check'
+    start_hint:
+      title: Start hint
+      type: string
+      description: 'Hint text shown under the start picker'
+    end_hint:
+      title: End hint
+      type: string
+      description: 'Hint text shown under the end picker'
+    start_error:
+      title: Start error
+      type: string
+      description: 'Field-level error rendered on the start picker (independent of host-level cross-field errors)'
+    end_error:
+      title: End error
+      type: string
+      description: 'Field-level error rendered on the end picker'
+    locale:
+      title: Locale
+      type: string
+      default: 'en-US'
+      description: 'BCP-47 locale forwarded to both pickers for date formatting'
+    week_starts_on:
+      title: Week starts on
+      type: integer
+      default: 0
+      description: 'Day-of-week the calendar starts on (0 = Sunday, 1 = Monday). Forwarded to both pickers'
+
 
 libraryOverrides:
   dependencies:

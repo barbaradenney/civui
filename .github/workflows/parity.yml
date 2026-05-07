@@ -86,3 +86,52 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - name: Validate every platform implements every schema prop
         run: pnpm parity:schema --platforms
+
+  tool-tests:
+    name: Tooling unit tests (parity / sync helpers)
+    runs-on: ubuntu-latest
+    # Catches regressions in the prop-name normalization, snake↔camel
+    # conversions, and Twig rendering helpers that all the parity / sync
+    # CI gates rely on. Without this, a broken parser could silently
+    # report drift as in-sync.
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Run tool unit tests
+        run: pnpm test:tools
+
+  drupal-sync-clean:
+    name: Drupal SDC + Twig in sync with schema
+    runs-on: ubuntu-latest
+    # Catches hand-edits to *.component.yml or *.twig that diverge from
+    # what `pnpm sync:drupal` would emit — e.g. a boolean prop rendered
+    # as a string in Twig, a missing slot block, or a stale prop after
+    # a schema rename. Schema-parity catches missing props; this catches
+    # rendering drift.
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Regenerate from schema
+        run: pnpm sync:drupal
+      - name: Verify the regenerated output matches what's committed
+        run: |
+          if ! git diff --exit-code; then
+            echo ""
+            echo "::error::Drupal SDC YAML or Twig templates drift from schema."
+            echo "::error::Run \`pnpm sync:drupal\` locally and commit the result."
+            exit 1
+          fi

@@ -7,4 +7,12 @@
   {% if end_label %}end-label="{{ end_label }}"{% endif %}
   {% if required %}required{% endif %}
   {% if disabled %}disabled{% endif %}
+  {% if min_range_days %}min-range-days="{{ min_range_days }}"{% endif %}
+  {% if max_range_days %}max-range-days="{{ max_range_days }}"{% endif %}
+  {% if start_hint %}start-hint="{{ start_hint }}"{% endif %}
+  {% if end_hint %}end-hint="{{ end_hint }}"{% endif %}
+  {% if start_error %}start-error="{{ start_error }}"{% endif %}
+  {% if end_error %}end-error="{{ end_error }}"{% endif %}
+  {% if locale %}locale="{{ locale }}"{% endif %}
+  {% if week_starts_on %}week-starts-on="{{ week_starts_on }}"{% endif %}
 ></civ-date-range-picker>

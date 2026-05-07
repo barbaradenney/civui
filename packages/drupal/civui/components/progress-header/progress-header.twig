@@ -1,6 +1,6 @@
 <civ-progress-header
-  {% if current is not null %}current="{{ current }}"{% endif %}
-  {% if total is not null %}total="{{ total }}"{% endif %}
+  {% if current %}current="{{ current }}"{% endif %}
+  {% if total %}total="{{ total }}"{% endif %}
   {% if step_title %}step-title="{{ step_title }}"{% endif %}
   {% if size %}size="{{ size }}"{% endif %}
   {% if heading_level %}heading-level="{{ heading_level }}"{% endif %}

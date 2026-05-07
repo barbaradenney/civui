@@ -236,15 +236,17 @@ Why schemas matter:
 - Drift between schema and Lit is enforced by `pnpm parity:schema`, which exits 1 on mismatch.
 - Schemas serve the contract role directly; no code-generation step is required (the previous `@civui/codegen` package was removed when this approach replaced it).
 
-**Coverage status (25 components, every cross-platform component covered):**
-- Form controls: `civ-text-input`, `civ-textarea`, `civ-select`, `civ-combobox`, `civ-date-picker`, `civ-memorable-date`, `civ-file-upload`, `civ-yes-no`, `civ-toggle`
+**Coverage status (32 components, every cross-platform component covered):**
+- Form controls: `civ-text-input`, `civ-textarea`, `civ-select`, `civ-combobox`, `civ-date-picker`, `civ-date-range-picker`, `civ-memorable-date`, `civ-file-upload`, `civ-yes-no`, `civ-toggle`
 - Choice groups: `civ-checkbox`, `civ-checkbox-group`, `civ-radio-group`, `civ-segmented-control`
-- Compound + orchestration: `civ-address`, `civ-name`, `civ-direct-deposit`, `civ-signature`, `civ-race-ethnicity`, `civ-marriage-history`, `civ-relationship`, `civ-service-history`, `civ-repeater`, `civ-form-step`
-- Progress: `civ-progress-steps`, `civ-progress-percent`
+- Compound + orchestration: `civ-address`, `civ-name`, `civ-direct-deposit`, `civ-signature`, `civ-race-ethnicity`, `civ-marriage-history`, `civ-relationship`, `civ-service-history`, `civ-repeater`, `civ-form-step`, `civ-conditional`, `civ-summary`, `civ-data-field`
+- Progress + feedback: `civ-progress-steps`, `civ-progress-percent`, `civ-progress-header`, `civ-support-resources`
+- Layout: `civ-filterable-list`
 
-CI gate: the `schema-parity` job in `.github/workflows/parity.yml` runs `pnpm parity:schema` on every push and PR. Lit ↔ schema drift fails the build.
-
-`pnpm parity:schema` also validates cross-platform drift between the schema and each platform's source (iOS Swift struct, Android `@Composable` function, Drupal SDC YAML). The `schema-parity-platforms` CI job runs `pnpm parity:schema --platforms` on every push and PR — drift on any platform fails the build.
+Three CI gates protect the contract (`.github/workflows/parity.yml`):
+- **`schema-parity`** runs `pnpm parity:schema --platforms` — fails on Lit ↔ schema ↔ iOS ↔ Android ↔ Drupal SDC drift.
+- **`drupal-sync-clean`** runs `pnpm sync:drupal && git diff --exit-code` — catches hand-edits to Twig / SDC YAML that diverge from regenerator output.
+- **`tool-tests`** runs `pnpm test:tools` — guards regressions in the parity / sync helper functions themselves (53 tests covering prop normalization, snake↔camel, Twig rendering).
 
 The check validates **prop name coverage** only (types differ across platforms). Naming conventions are normalized automatically:
 - iOS `is`-prefix for booleans (`required` → `isRequired`, `tile` → `isTile`)
@@ -254,7 +256,7 @@ The check validates **prop name coverage** only (types differ across platforms).
 
 Mark genuinely web-specific props (Tailwind size variants, ARIA heading-level promotion, JS-only callbacks like `loadOptions`/`beforeContinue`/`validateAddress`) with `webOnly: true` in the schema's `PropDef` — those are excluded from cross-platform diffs.
 
-When the Drupal SDC YAMLs drift, regenerate from schemas with `npx tsx tools/sync-drupal-sdc.ts` (idempotent — only appends missing props, preserves the rest of the YAML). Native platform updates are hand-edited Swift / Kotlin.
+When the Drupal SDC YAMLs drift, regenerate from schemas with `pnpm sync:drupal` (runs both `sync-drupal-sdc.ts` and `sync-drupal-twig.ts` — idempotent; only appends missing props and rewrites the Twig from the YAML). Native platform updates are hand-edited Swift / Kotlin. See `packages/schema/README.md` for the full naming-convention map and "how to add a new schema" walk-through.
 
 **Out of scope (web-specific layout wrappers):** `civ-form-field`, `civ-form-fieldset`, `civ-fieldset`, `civ-form` — these abstract over how form-headers are rendered on web; native platforms compose the same affordances differently and don't need a contract translation.
 

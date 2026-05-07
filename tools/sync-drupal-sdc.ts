@@ -17,6 +17,16 @@ import { pathToFileURL } from 'url';
 const ROOT = join(import.meta.dirname, '..');
 const DRY_RUN = process.argv.includes('--dry-run');
 
+function isCliInvocation(): boolean {
+  const argv = process.argv[1];
+  if (!argv) return false;
+  try {
+    return import.meta.url === pathToFileURL(argv).href;
+  } catch {
+    return false;
+  }
+}
+
 interface ComponentMapping {
   schema: string;
   drupal: string;
@@ -49,6 +59,11 @@ const COMPONENTS: ComponentMapping[] = [
   { schema: 'civ-service-history', drupal: 'service-history' },
   { schema: 'civ-filterable-list', drupal: 'filterable-list' },
   { schema: 'civ-support-resources', drupal: 'support-resources' },
+  { schema: 'civ-date-range-picker', drupal: 'date-range-picker' },
+  { schema: 'civ-progress-header', drupal: 'progress-header' },
+  { schema: 'civ-data-field', drupal: 'data-field' },
+  { schema: 'civ-conditional', drupal: 'conditional' },
+  { schema: 'civ-summary', drupal: 'summary' },
 ];
 
 const INHERITED_FORM_PROPS = new Set([
@@ -57,7 +72,7 @@ const INHERITED_FORM_PROPS = new Set([
   'touched', 'disableAnalytics',
 ]);
 
-function camelToSnake(name: string): string {
+export function camelToSnake(name: string): string {
   return name.replace(/([A-Z]+)/g, '_$1').replace(/^_/, '').toLowerCase();
 }
 
@@ -70,7 +85,7 @@ function camelToSnake(name: string): string {
  * - Otherwise Lit defaults to the lowercased property name; Drupal uses
  *   snake_case so `showMiddle` becomes `show_middle`.
  */
-function drupalKeyFor(propName: string, def: any): string {
+export function drupalKeyFor(propName: string, def: any): string {
   if (def.attribute) return def.attribute.replace(/-/g, '_');
   return camelToSnake(propName);
 }
@@ -107,7 +122,7 @@ function escapeYamlString(s: string): string {
   return `'${s.replace(/'/g, "''")}'`;
 }
 
-function renderPropYaml(propName: string, def: any, indent: string): string {
+export function renderPropYaml(propName: string, def: any, indent: string): string {
   const key = drupalKeyFor(propName, def);
   const lines = [`${indent}${key}:`];
   lines.push(`${indent}  title: ${camelToTitle(propName)}`);
@@ -138,7 +153,7 @@ function renderPropYaml(propName: string, def: any, indent: string): string {
   return lines.join('\n');
 }
 
-function existingDrupalProps(yaml: string): Set<string> {
+export function existingDrupalProps(yaml: string): Set<string> {
   const names = new Set<string>();
   const lines = yaml.split('\n');
   let inProperties = false;
@@ -283,7 +298,9 @@ async function main() {
   console.log(`\n${DRY_RUN ? '[dry-run] would add' : 'added'} ${totalAdded} prop(s) across ${COMPONENTS.length} components.`);
 }
 
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
+if (isCliInvocation()) {
+  main().catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
+}

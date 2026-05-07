@@ -23,6 +23,17 @@ import { pathToFileURL } from 'url';
 
 const ROOT = join(import.meta.dirname, '..');
 
+/** True when the module is run directly (CLI), false when imported by tests. */
+function isCliInvocation(): boolean {
+  const argv = process.argv[1];
+  if (!argv) return false;
+  try {
+    return import.meta.url === pathToFileURL(argv).href;
+  } catch {
+    return false;
+  }
+}
+
 interface SchemaProp {
   name: string;
   type: string;
@@ -95,6 +106,11 @@ const COVERED_COMPONENTS: ComponentSpec[] = [
   { name: 'civ-service-history',   source: 'packages/compound/src/service-history/civ-service-history.ts',                            ios: 'packages/ios/Sources/CivUI/CivServiceHistory.swift',   android: 'packages/android/src/main/kotlin/gov/civui/components/CivServiceHistory.kt',   drupal: 'packages/drupal/civui/components/service-history/service-history.component.yml' },
   { name: 'civ-filterable-list',   source: 'packages/layout/src/filterable-list/civ-filterable-list.ts',                                ios: 'packages/ios/Sources/CivUI/CivFilterableList.swift',   android: 'packages/android/src/main/kotlin/gov/civui/components/CivFilterableList.kt',   drupal: 'packages/drupal/civui/components/filterable-list/filterable-list.component.yml' },
   { name: 'civ-support-resources', source: 'packages/form-patterns/src/support-resources/civ-support-resources.ts',                    ios: 'packages/ios/Sources/CivUI/CivSupportResources.swift', android: 'packages/android/src/main/kotlin/gov/civui/components/CivSupportResources.kt', drupal: 'packages/drupal/civui/components/support-resources/support-resources.component.yml' },
+  { name: 'civ-date-range-picker', source: 'packages/inputs/src/date-range-picker/civ-date-range-picker.ts',                          ios: 'packages/ios/Sources/CivUI/CivDateRangePicker.swift', android: 'packages/android/src/main/kotlin/gov/civui/components/CivDateRangePicker.kt', drupal: 'packages/drupal/civui/components/date-range-picker/date-range-picker.component.yml' },
+  { name: 'civ-progress-header',   source: 'packages/form-patterns/src/progress/civ-progress-header.ts',                              ios: 'packages/ios/Sources/CivUI/CivProgressHeader.swift', android: 'packages/android/src/main/kotlin/gov/civui/components/CivProgressHeader.kt', drupal: 'packages/drupal/civui/components/progress-header/progress-header.component.yml' },
+  { name: 'civ-data-field',        source: 'packages/form-patterns/src/data-field/civ-data-field.ts',                                  ios: 'packages/ios/Sources/CivUI/CivDataField.swift',     android: 'packages/android/src/main/kotlin/gov/civui/components/CivDataField.kt',     drupal: 'packages/drupal/civui/components/data-field/data-field.component.yml' },
+  { name: 'civ-conditional',       source: 'packages/form-patterns/src/conditional/civ-conditional.ts',                                ios: 'packages/ios/Sources/CivUI/CivConditional.swift',   android: 'packages/android/src/main/kotlin/gov/civui/components/CivConditional.kt',   drupal: 'packages/drupal/civui/components/conditional/conditional.component.yml' },
+  { name: 'civ-summary',           source: 'packages/form-patterns/src/summary/civ-summary.ts',                                        ios: 'packages/ios/Sources/CivUI/CivSummary.swift',       android: 'packages/android/src/main/kotlin/gov/civui/components/CivSummary.kt',       drupal: 'packages/drupal/civui/components/summary/summary.component.yml' },
 ];
 
 /**
@@ -134,8 +150,7 @@ const INHERITED_FORM_EVENTS = new Set(['civ-analytics', 'civ-reset']);
  */
 const BASE_DISPATCHED_EVENTS = new Set(['civ-input', 'civ-change']);
 
-function parseLitProps(filePath: string, isBoolean: boolean): LitProp[] {
-  const src = readFileSync(filePath, 'utf-8');
+export function parseLitPropsFromSource(src: string, isBoolean: boolean): LitProp[] {
   const props: LitProp[] = [];
   // Capture everything from `@property({ ... })` through the next ; or newline,
   // including optional access modifiers and a default-value initializer.
@@ -159,14 +174,17 @@ function parseLitProps(filePath: string, isBoolean: boolean): LitProp[] {
   return props;
 }
 
+function parseLitProps(filePath: string, isBoolean: boolean): LitProp[] {
+  return parseLitPropsFromSource(readFileSync(filePath, 'utf-8'), isBoolean);
+}
+
 /**
  * Walk the source for `dispatch(this, '<name>', { detail-keys })` calls
  * and collect a deduped list. Detail-key parsing is shallow — picks up
  * the top-level keys of the literal object passed as the third arg —
  * which is the surface contract a consumer relies on.
  */
-function parseLitEvents(filePath: string): ComponentEvent[] {
-  const src = readFileSync(filePath, 'utf-8');
+export function parseLitEventsFromSource(src: string): ComponentEvent[] {
   const eventsByName = new Map<string, { keys: Set<string>; unknown: boolean }>();
 
   function record(name: string, detailArg: string | undefined): void {
@@ -223,6 +241,10 @@ function parseLitEvents(filePath: string): ComponentEvent[] {
   }));
 }
 
+function parseLitEvents(filePath: string): ComponentEvent[] {
+  return parseLitEventsFromSource(readFileSync(filePath, 'utf-8'));
+}
+
 /**
  * iOS uses Swift naming conventions, particularly an `is` prefix for
  * boolean props (`required` → `isRequired`, `tile` → `isTile`, etc.).
@@ -241,7 +263,7 @@ const HTML_ATTR_TO_NATIVE_CAMEL: Record<string, string> = {
   autocomplete: 'autocomplete', // already camel-friendly
 };
 
-function iosPropAlternatives(name: string): string[] {
+export function iosPropAlternatives(name: string): string[] {
   const alternatives = [name, `is${name[0].toUpperCase()}${name.slice(1)}`];
   // iOS also commonly maps `type` → `inputType` and `name` → `formName`,
   // since `type` shadows Swift's metatype keyword and `name` collides
@@ -256,15 +278,14 @@ function iosPropAlternatives(name: string): string[] {
  * Android Compose largely follows Lit's prop names verbatim, but a few
  * collide with reserved/builtin keywords and get renamed.
  */
-function androidPropAlternatives(name: string): string[] {
+export function androidPropAlternatives(name: string): string[] {
   const alternatives = [name];
   if (name === 'type') alternatives.push('inputType');
   if (HTML_ATTR_TO_NATIVE_CAMEL[name]) alternatives.push(HTML_ATTR_TO_NATIVE_CAMEL[name]);
   return alternatives;
 }
 
-function parseSwiftPropNames(filePath: string): string[] {
-  const src = readFileSync(filePath, 'utf-8');
+export function parseSwiftPropNamesFromSource(src: string): string[] {
   const names = new Set<string>();
   // Match `public var name:` and `public let name:` and `@Binding public var name:`
   // Skip computed-property declarations (those use `var name: Type {`)
@@ -277,8 +298,11 @@ function parseSwiftPropNames(filePath: string): string[] {
   return [...names];
 }
 
-function parseKotlinPropNames(filePath: string, displayName: string): string[] {
-  const src = readFileSync(filePath, 'utf-8');
+function parseSwiftPropNames(filePath: string): string[] {
+  return parseSwiftPropNamesFromSource(readFileSync(filePath, 'utf-8'));
+}
+
+export function parseKotlinPropNamesFromSource(src: string, displayName: string): string[] {
   // Find the @Composable function signature for the matching component.
   // Pattern: `fun CivXxx(\n  param1: Type,\n  param2: Type,...)`
   const fnStart = src.search(new RegExp(`fun\\s+${displayName}\\s*\\(`));
@@ -318,19 +342,25 @@ function parseKotlinPropNames(filePath: string, displayName: string): string[] {
       paramStart = i + 1;
       const colonIdx = piece.indexOf(':');
       if (colonIdx < 0) continue;
-      const name = piece.slice(0, colonIdx).trim();
+      // Kotlin escapes reserved words like `when` and `is` with backticks
+      // in parameter declarations. Strip them so the bare identifier
+      // matches the schema prop name.
+      const name = piece.slice(0, colonIdx).trim().replace(/^`(.+)`$/, '$1');
       if (name && /^[a-zA-Z_]\w*$/.test(name)) names.add(name);
     }
   }
   return [...names];
 }
 
-function camelToSnake(name: string): string {
+function parseKotlinPropNames(filePath: string, displayName: string): string[] {
+  return parseKotlinPropNamesFromSource(readFileSync(filePath, 'utf-8'), displayName);
+}
+
+export function camelToSnake(name: string): string {
   return name.replace(/([A-Z]+)/g, '_$1').replace(/^_/, '').toLowerCase();
 }
 
-function parseDrupalPropNames(yamlPath: string): string[] {
-  const src = readFileSync(yamlPath, 'utf-8');
+export function parseDrupalPropNamesFromYaml(src: string): string[] {
   // Drupal SDCs declare props under `props.properties.<name>`. Parse by
   // looking for the `properties:` section and extracting indented keys.
   const lines = src.split('\n');
@@ -359,6 +389,10 @@ function parseDrupalPropNames(yamlPath: string): string[] {
     }
   }
   return [...names];
+}
+
+function parseDrupalPropNames(yamlPath: string): string[] {
+  return parseDrupalPropNamesFromYaml(readFileSync(yamlPath, 'utf-8'));
 }
 
 async function loadSchema(name: string): Promise<any | null> {
@@ -414,7 +448,7 @@ interface PropDrift {
  * type token. We normalize a few common variants here so we don't
  * report cosmetic differences.
  */
-function normalizeType(type: string): string {
+export function normalizeType(type: string): string {
   const lower = type.toLowerCase();
   if (lower === 'string' || lower === 'enum') return 'string-or-enum';
   if (lower === 'array') return 'array';
@@ -677,7 +711,9 @@ async function main(): Promise<void> {
   console.log(`\n${COVERED_COMPONENTS.length}/${COVERED_COMPONENTS.length} components match their schema.`);
 }
 
-main().catch((err) => {
-  console.error(err);
-  process.exit(2);
-});
+if (isCliInvocation()) {
+  main().catch((err) => {
+    console.error(err);
+    process.exit(2);
+  });
+}

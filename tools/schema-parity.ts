@@ -28,6 +28,8 @@ interface SchemaProp {
   type: string;
   default?: string | number | boolean;
   attribute?: string;
+  /** Web-specific prop that the platform parity check should skip */
+  webOnly?: boolean;
 }
 
 interface LitProp {
@@ -283,6 +285,10 @@ function parseKotlinPropNames(filePath: string, displayName: string): string[] {
   return [...names];
 }
 
+function camelToSnake(name: string): string {
+  return name.replace(/([A-Z]+)/g, '_$1').replace(/^_/, '').toLowerCase();
+}
+
 function parseDrupalPropNames(yamlPath: string): string[] {
   const src = readFileSync(yamlPath, 'utf-8');
   // Drupal SDCs declare props under `props.properties.<name>`. Parse by
@@ -337,6 +343,7 @@ function schemaPropsFrom(schema: any, isBoolean: boolean): SchemaProp[] {
       type: def.type,
       default: def.default,
       attribute: def.attribute,
+      webOnly: def.webOnly,
     });
   }
   return props;
@@ -510,7 +517,12 @@ function checkPlatformParity(
     const path = join(ROOT, spec.drupal);
     if (existsSync(path)) {
       const drupalNames = new Set(parseDrupalPropNames(path));
-      const missing = schemaPropNames.filter((p) => !drupalNames.has(p));
+      // Drupal SDCs use snake_case; schema uses camelCase. Normalize both
+      // sides so `showPercent` (schema) matches `show_percent` (SDC).
+      const missing = schemaPropNames.filter((p) => {
+        const snake = camelToSnake(p);
+        return !drupalNames.has(p) && !drupalNames.has(snake);
+      });
       if (missing.length > 0) drifts.push({ platform: 'drupal', missing });
     }
   }
@@ -555,9 +567,11 @@ async function main(): Promise<void> {
     // Cross-platform parity: validate each platform's source declares
     // the schema's props (informational by default; failing only when
     // --platforms is passed). Platforms without a source file are
-    // silently skipped.
+    // silently skipped. webOnly props are excluded — they're abstractions
+    // that don't have a clean cross-platform mapping.
+    const crossPlatformPropNames = schemaProps.filter((p) => !p.webOnly).map((p) => p.name);
     const platformDrifts = checkPlatformParity(
-      schemaProps.map((p) => p.name),
+      crossPlatformPropNames,
       spec,
     );
     if (platformDrifts.length > 0) platformDriftCount++;

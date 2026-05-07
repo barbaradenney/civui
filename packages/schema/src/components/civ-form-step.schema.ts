@@ -47,6 +47,7 @@ const schema: ComponentSchema = {
     beforeContinue: {
       type: 'string',
       description: 'Async hook `(stepEl, stepIndex) => Promise<boolean> | boolean` invoked before advancing. Return false to block navigation (e.g. server-side validation failed). Set programmatically (not as an attribute)',
+      webOnly: true,
     },
     validate: {
       type: 'boolean',

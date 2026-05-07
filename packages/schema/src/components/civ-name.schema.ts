@@ -18,12 +18,14 @@ const schema: ComponentSchema = {
       type: 'number',
       description: 'When set, promotes the legend to a heading via role="heading" + aria-level=N',
       attribute: 'heading-level',
+      webOnly: true,
     },
     size: {
       type: 'enum',
       description: 'Visual size of the legend',
       default: 'md',
       values: ['sm', 'md', 'lg', 'xl'],
+      webOnly: true,
     },
     showMiddle: {
       type: 'boolean',

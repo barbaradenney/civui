@@ -24,11 +24,13 @@ const schema: ComponentSchema = {
       type: 'number',
       description: 'When set, promotes the legend to a heading via role="heading" + aria-level=N. Use sparingly',
       attribute: 'heading-level',
+      webOnly: true,
     },
     size: {
       type: 'enum',
       description: 'Visual size of the legend. md/lg/xl step up through the typography scale for use as a section/page heading',
       values: ['sm', 'md', 'lg', 'xl'],
+      webOnly: true,
     },
     showStreet2: {
       type: 'boolean',
@@ -75,6 +77,7 @@ const schema: ComponentSchema = {
     validateAddress: {
       type: 'string',
       description: 'Async validator function `(addr: AddressValue) => Promise<{valid: boolean; suggestion?: AddressValue; error?: string}>`. Set programmatically (not as an attribute) — wires into the address-validation flow',
+      webOnly: true,
     },
   },
 

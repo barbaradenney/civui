@@ -38,6 +38,7 @@ const schema: ComponentSchema = {
     loadOptions: {
       type: 'string',
       description: 'Async loader function `(query: string) => Promise<ComboboxOption[]>` for remote-driven option lists. Set programmatically (not as an attribute)',
+      webOnly: true,
     },
     loadDebounce: {
       type: 'number',

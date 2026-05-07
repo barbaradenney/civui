@@ -244,7 +244,14 @@ Why schemas matter:
 
 CI gate: the `schema-parity` job in `.github/workflows/parity.yml` runs `pnpm parity:schema` on every push and PR. Lit ↔ schema drift fails the build.
 
-`pnpm parity:schema` also reports cross-platform drift between the schema and each platform's source (iOS Swift struct, Android `@Composable` function, Drupal SDC YAML). By default platform gaps are informational warnings (⚠), not failures. Pass `--platforms` to fail the build on platform drift too — useful once iOS / Android / Drupal have caught up to the Lit reference. The check validates **prop name coverage** only; types differ across platforms, and the iOS `is`-prefix convention (`required` → `isRequired`, etc.) is handled automatically.
+`pnpm parity:schema` also reports cross-platform drift between the schema and each platform's source (iOS Swift struct, Android `@Composable` function, Drupal SDC YAML). By default platform gaps are informational warnings (⚠), not failures. Pass `--platforms` to fail the build on platform drift too — useful once iOS / Android / Drupal have caught up to the Lit reference. The check validates **prop name coverage** only; types differ across platforms, the iOS `is`-prefix convention (`required` → `isRequired`, etc.) is handled automatically, and Drupal's snake_case (`show_percent`) is normalized to camelCase for the comparison. Mark genuinely web-specific props (Tailwind size variants, ARIA heading-level promotion, JS-only callbacks like `loadOptions`/`beforeContinue`/`validateAddress`) with `webOnly: true` in the schema's `PropDef` — those are excluded from cross-platform diffs.
+
+Current platform gap inventory (run `pnpm parity:schema` for the live list):
+- **iOS**: ~12 props across 9 components (`maxlength`/`minlength` on text-input, `tile`/`variant` on radio-group + checkbox-group + checkbox + race-ethnicity + address, `card` on signature, `initialFiles` on file-upload, 5 props on memorable-date)
+- **Android**: ~10 props across the same components plus `type` on text-input
+- **Drupal**: ~150 props across most SDCs — the YAMLs are skeletal and need a dedicated sweep to catch up to Phase 2/3 schema additions
+
+Closing iOS / Android gaps is real native engineering work; closing the Drupal SDC gaps is bulk YAML editing. Both are tracked as follow-ups, not blocked by the schema-parity machinery itself.
 
 **Out of scope (web-specific layout wrappers):** `civ-form-field`, `civ-form-fieldset`, `civ-fieldset`, `civ-form` — these abstract over how form-headers are rendered on web; native platforms compose the same affordances differently and don't need a contract translation.
 

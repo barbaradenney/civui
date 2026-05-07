@@ -41,6 +41,15 @@ export interface PropDef {
 
   /** HTML attribute name if different from the prop name */
   attribute?: string;
+
+  /**
+   * When true, this prop is a web-specific abstraction (Tailwind
+   * size class, ARIA heading-level promotion, JS-only callback, etc.)
+   * that doesn't have a clean cross-platform mapping. The schema-parity
+   * check skips it on iOS / Android / Drupal so platform parity isn't
+   * blocked by props that don't translate.
+   */
+  webOnly?: boolean;
 }
 
 // ---------------------------------------------------------------------------

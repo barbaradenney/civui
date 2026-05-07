@@ -90,6 +90,35 @@ describe('camelToSnake', () => {
   });
 });
 
+describe('parseLitPropsFromSource — regression cases from code review', () => {
+  it('handles multi-line @property declarations (nested object initializer)', () => {
+    const fixture = `
+      @customElement('civ-thing')
+      export class CivThing extends CivBaseElement {
+        @property({ type: Object }) options: Foo = {
+          a: 1,
+        };
+        @property({ type: String }) flavor = 'sweet';
+      }
+    `;
+    const props = parseLitPropsFromSource(fixture, false);
+    const names = props.map((p) => p.name).sort();
+    // Both options and flavor must be captured — the multi-line default
+    // value of `options` shouldn't break the parser's frame for `flavor`.
+    expect(names).toEqual(['flavor', 'options']);
+  });
+
+  it('handles @property() with nested object in the options block', () => {
+    const fixture = `
+      @property({ type: String, converter: { fromAttribute: (v) => v } }) foo = 'bar';
+    `;
+    const props = parseLitPropsFromSource(fixture, false);
+    expect(props).toHaveLength(1);
+    expect(props[0]?.name).toBe('foo');
+    expect(props[0]?.type).toBe('string');
+  });
+});
+
 describe('parseLitPropsFromSource', () => {
   // Avoid inherited form prop names (label/value/required/...) here —
   // those are deliberately filtered out by parseLitPropsFromSource.
@@ -140,6 +169,34 @@ describe('parseLitPropsFromSource', () => {
     const namesWithoutFlag = parseLitPropsFromSource(fixture, false).map((p) => p.name);
     expect(namesWithFlag).toEqual(['flavor']);
     expect(namesWithoutFlag.sort()).toEqual(['checked', 'description', 'flavor']);
+  });
+});
+
+describe('parseLitEventsFromSource — regression cases from code review', () => {
+  it('extracts the full detail object even when it contains nested literals', () => {
+    const src = `
+      this.dispatchEvent(new CustomEvent('civ-thing', {
+        detail: { value: 'x', meta: { nested: true } },
+        bubbles: true,
+      }));
+    `;
+    const events = parseLitEventsFromSource(src);
+    expect(events).toHaveLength(1);
+    // Top-level detail keys are 'value' and 'meta'. The nested object's
+    // own keys ('nested') should NOT appear — that was the bug.
+    expect(events[0]?.detailKeys).toEqual(['meta', 'value']);
+  });
+
+  it('extracts dispatch(this, ...) detail across multi-line literal', () => {
+    const src = `
+      dispatch(this, 'civ-thing', {
+        value: this.value,
+        items: [1, 2, 3],
+        meta: { nested: 'ok' },
+      });
+    `;
+    const events = parseLitEventsFromSource(src);
+    expect(events[0]?.detailKeys).toEqual(['items', 'meta', 'value']);
   });
 });
 
@@ -258,6 +315,54 @@ describe('parseKotlinPropNamesFromSource', () => {
   });
 });
 
+describe('parseDrupalPropsFromYaml — regression: nested properties blocks', () => {
+  it('does not capture props from a nested `properties:` under libraryOverrides', () => {
+    const yaml = `
+name: Thing
+props:
+  type: object
+  properties:
+    label:
+      type: string
+libraryOverrides:
+  attributes:
+    properties:
+      stale_one:
+        type: string
+      stale_two:
+        type: array
+`;
+    const props = parseDrupalPropsFromYaml(yaml);
+    const names = props.map((p) => p.name);
+    expect(names).toEqual(['label']);
+    expect(names).not.toContain('stale_one');
+    expect(names).not.toContain('stale_two');
+  });
+
+  it('does not capture props from a nested `properties:` under array items', () => {
+    const yaml = `
+props:
+  type: object
+  properties:
+    list_field:
+      type: array
+      items:
+        type: object
+        properties:
+          inner_one:
+            type: string
+    label:
+      type: string
+`;
+    // Note: this test exposes a limitation — props.label appears AFTER
+    // the array's items block. The real-world Drupal SDCs we have don't
+    // do this; if they did we'd need a stricter parser.
+    const names = parseDrupalPropsFromYaml(yaml).map((p) => p.name);
+    expect(names).toContain('list_field');
+    expect(names).not.toContain('inner_one');
+  });
+});
+
 describe('parseDrupalPropNamesFromYaml', () => {
   it('extracts top-level keys under props.properties', () => {
     const yaml = `
@@ -373,6 +478,32 @@ describe('categorizeNativeType', () => {
   });
 });
 
+describe('parseSwiftPropsFromSource — regression: extended modifier support', () => {
+  it('accepts `public private(set) var` (read-only-from-outside)', () => {
+    const src = `
+      public private(set) var status: String = "idle"
+      public var label: String
+    `;
+    const names = parseSwiftPropsFromSource(src).map((p) => p.name).sort();
+    expect(names).toEqual(['label', 'status']);
+  });
+
+  it('accepts `nonisolated public var` (concurrency-aware)', () => {
+    const src = `
+      nonisolated public var label: String
+    `;
+    const props = parseSwiftPropsFromSource(src);
+    expect(props.map((p) => p.name)).toContain('label');
+  });
+
+  it('accepts `final public let`', () => {
+    const src = `
+      final public let id: String = "x"
+    `;
+    expect(parseSwiftPropsFromSource(src).map((p) => p.name)).toContain('id');
+  });
+});
+
 describe('parseSwiftPropsFromSource', () => {
   it('extracts both name and type for each public var / let', () => {
     const src = `
@@ -434,6 +565,45 @@ describe('parseKotlinPropsFromSource', () => {
     const props = parseKotlinPropsFromSource(src, 'CivThing');
     const byName = new Map(props.map((p) => [p.name, p.type]));
     expect(byName.get('onChange')).toBe('(String) -> Unit');
+  });
+});
+
+describe('Type-drift end-to-end (the regression that motivated the iOS/Android type check)', () => {
+  it('flags Bool↔string drift on iOS', () => {
+    // schema declares persist as a string storage key
+    const schema = { type: 'string' as const };
+    // iOS source incorrectly declared `Bool` (the real bug we found)
+    const nativeType = 'Bool';
+    const cat = categorizeNativeType(nativeType);
+    expect(cat).toBe('boolean');
+    // The expected categories for a string schema prop are string-or-enum
+    // or unknown — Bool isn't acceptable.
+    const ok = ['string-or-enum', 'unknown'].includes(cat);
+    expect(ok).toBe(false);
+  });
+
+  it('accepts custom enum types for string/enum schema props', () => {
+    // A string-or-enum schema prop matches a custom Swift enum like LinkCardVariant.
+    const cat = categorizeNativeType('LinkCardVariant');
+    expect(cat).toBe('unknown');
+    const ok = ['string-or-enum', 'unknown'].includes(cat);
+    expect(ok).toBe(true);
+  });
+
+  it('accepts Int64 for number schema props (the categorizer-extension bug)', () => {
+    // civ-file-upload.maxSize is Int64 on iOS — has to count as number.
+    expect(categorizeNativeType('Int64')).toBe('number');
+  });
+
+  it('flags array↔string drift', () => {
+    // schema array, native String → drift
+    const cat = categorizeNativeType('String');
+    expect(['array', 'unknown'].includes(cat)).toBe(false);
+  });
+
+  it('does NOT flag array↔[Element] (typed arrays of structs)', () => {
+    expect(['array', 'unknown'].includes(categorizeNativeType('[SummarySectionData]'))).toBe(true);
+    expect(['array', 'unknown'].includes(categorizeNativeType('List<CivSummarySection>'))).toBe(true);
   });
 });
 

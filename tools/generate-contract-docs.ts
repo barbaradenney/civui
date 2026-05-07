@@ -319,10 +319,12 @@ function injectContractLinkIntoComponentPage(
     CONTRACT_LINK_MARKER_END,
   ].join('\n');
 
-  // First, strip any existing marker block (could be at any location from a
-  // previous generator pass). The new block is then inserted after the H1
-  // title — that's where it reads most naturally.
-  const markerRegex = new RegExp(`\\n*${CONTRACT_LINK_MARKER_START}[\\s\\S]*?${CONTRACT_LINK_MARKER_END}\\n*`, 'm');
+  // First, strip ALL existing marker blocks (could be multiple if a prior
+  // generator pass / hand-edit left duplicates). The new block is then
+  // inserted after the H1 title — natural reading position. Global flag
+  // ensures idempotency: re-running the generator converges, even if the
+  // page has stale marker pairs.
+  const markerRegex = new RegExp(`\\n*${CONTRACT_LINK_MARKER_START}[\\s\\S]*?${CONTRACT_LINK_MARKER_END}\\n*`, 'gm');
   const cleaned = original.replace(markerRegex, '\n\n');
 
   // Find the first H1 line (`# Title`). The hand-written component pages
@@ -362,9 +364,15 @@ async function main(): Promise<void> {
 
   const componentPageMap = buildComponentPageMap();
 
+  // Load every schema once, up front. Earlier versions did this twice
+  // (once during the per-file generate loop, once during the reverse-
+  // map build), doubling the dynamic-import cache pressure for no gain.
+  const allSchemas: ComponentSchema[] = [];
+  for (const f of files) allSchemas.push(await loadSchema(f));
+
   let written = 0;
-  for (let i = 0; i < files.length; i++) {
-    const schema = await loadSchema(files[i]);
+  for (let i = 0; i < allSchemas.length; i++) {
+    const schema = allSchemas[i];
     const slug = schema.name.replace(/^civ-/, '');
     const componentPageUrl = resolveComponentPageUrl(slug, componentPageMap);
     const outPath = join(OUTPUT_DIR, `${schema.name}.md`);
@@ -379,11 +387,9 @@ async function main(): Promise<void> {
     written++;
   }
 
-// Second pass: inject reverse "Contract reference" links into each
+  // Second pass: inject reverse "Contract reference" links into each
   // hand-written component page. Idempotent — uses HTML-comment markers
   // so we can update without touching the rest of the page.
-  const allSchemas: ComponentSchema[] = [];
-  for (const f of files) allSchemas.push(await loadSchema(f));
   const reverseMap = buildReverseMap(allSchemas, componentPageMap);
   let pagesUpdated = 0;
   for (const [url, schemaNames] of reverseMap) {

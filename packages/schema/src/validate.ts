@@ -65,22 +65,25 @@ export function validateSchema(schema: unknown): ValidationError[] {
     errors.push({ path: 'isGroup', message: 'isGroup must be a boolean', severity: 'error' });
   }
 
-  // Props validation
-  if (s['props'] && typeof s['props'] === 'object') {
+  // Props validation. `typeof` returns 'object' for arrays AND null, so
+  // we explicitly require a plain object — schemas passing an array would
+  // otherwise reach validateProps with array semantics and produce
+  // confusing downstream errors.
+  if (isPlainObject(s['props'])) {
     validateProps(s['props'] as Record<string, unknown>, errors);
   } else {
     errors.push({ path: 'props', message: 'props must be an object', severity: 'error' });
   }
 
   // Events validation
-  if (s['events'] && typeof s['events'] === 'object') {
+  if (isPlainObject(s['events'])) {
     validateEvents(s['events'] as Record<string, unknown>, errors);
   } else {
     errors.push({ path: 'events', message: 'events must be an object', severity: 'error' });
   }
 
   // A11y validation
-  if (s['a11y'] && typeof s['a11y'] === 'object') {
+  if (isPlainObject(s['a11y'])) {
     validateA11y(s['a11y'] as Record<string, unknown>, errors);
   } else {
     errors.push({ path: 'a11y', message: 'a11y must be an object', severity: 'error' });
@@ -94,7 +97,7 @@ export function validateSchema(schema: unknown): ValidationError[] {
   }
 
   // Form validation
-  if (s['form'] && typeof s['form'] === 'object') {
+  if (isPlainObject(s['form'])) {
     validateForm(s['form'] as Record<string, unknown>, s as unknown as ComponentSchema, errors);
   } else {
     errors.push({ path: 'form', message: 'form must be an object', severity: 'error' });
@@ -108,10 +111,22 @@ export function validateSchema(schema: unknown): ValidationError[] {
 
   // Widths validation
   if (s['widths'] !== undefined) {
-    validateWidths(s['widths'] as Record<string, unknown>, errors);
+    if (isPlainObject(s['widths'])) {
+      validateWidths(s['widths'] as Record<string, unknown>, errors);
+    } else {
+      errors.push({ path: 'widths', message: 'widths must be an object', severity: 'error' });
+    }
   }
 
   return errors;
+}
+
+/**
+ * `typeof` returns 'object' for arrays and `null`. Use this when the
+ * spec requires a plain object so we don't silently accept those.
+ */
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  return value !== null && typeof value === 'object' && !Array.isArray(value);
 }
 
 function validateRequired(obj: Record<string, unknown>, field: string, type: string, errors: ValidationError[]): void {

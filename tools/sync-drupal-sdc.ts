@@ -87,11 +87,7 @@ const COMPONENTS: ComponentMapping[] = [
   { schema: 'civ-filter-chip-group', drupal: 'filter-chip-group' },
 ];
 
-const INHERITED_FORM_PROPS = new Set([
-  'label', 'name', 'value', 'hint', 'error',
-  'required', 'requiredMessage', 'disabled', 'readonly',
-  'touched', 'disableAnalytics',
-]);
+import { INHERITED_FORM_PROPS } from './lib/inherited.js';
 
 export function camelToSnake(name: string): string {
   return name.replace(/([A-Z]+)/g, '_$1').replace(/^_/, '').toLowerCase();

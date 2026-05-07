@@ -135,57 +135,76 @@ const COVERED_COMPONENTS: ComponentSpec[] = [
   { name: 'civ-filter-chip-group', source: 'packages/actions/src/filter-chip-group/civ-filter-chip-group.ts',                         ios: 'packages/ios/Sources/CivUI/CivFilterChipGroup.swift', android: 'packages/android/src/main/kotlin/gov/civui/components/CivFilterChipGroup.kt', drupal: 'packages/drupal/civui/components/filter-chip-group/filter-chip-group.component.yml' },
 ];
 
-/**
- * Props inherited from CivFormElement / CivBaseElement that aren't
- * worth declaring in every schema. The schema-parity check ignores
- * these on the Lit side so schemas don't need to repeat them.
- */
-const INHERITED_FORM_PROPS = new Set([
-  'label',
-  'name',
-  'value',
-  'hint',
-  'error',
-  'required',
-  'requiredMessage',
-  'disabled',
-  'readonly',
-  'touched',
-  'disableAnalytics',
-]);
-
-const INHERITED_BOOLEAN_PROPS = new Set(['checked', 'description']);
+// Inherited props / events live in tools/lib/inherited.ts so the parity
+// check, the Drupal SDC sync, and (potentially) other tooling all agree
+// on the same source of truth. Adding a new framework-level prop edits
+// one file; consumers re-import.
+import {
+  INHERITED_FORM_PROPS,
+  INHERITED_BOOLEAN_PROPS,
+  INHERITED_FORM_EVENTS,
+  BASE_DISPATCHED_EVENTS,
+} from './lib/inherited.js';
 
 /**
- * Events fired by the base form classes that every form component
- * inherits. Skip them on both sides so schemas only have to declare
- * truly component-specific events.
+ * Walk source from `openIndex` (which points at the opening `{`) and
+ * return the content between the matching braces, plus the position
+ * just after the closing `}`. Tracks string literals and the three
+ * bracket pairs so nested objects, generics, and array literals are
+ * handled correctly. Returns null if no balanced match.
  */
-const INHERITED_FORM_EVENTS = new Set(['civ-analytics', 'civ-reset']);
-
-/**
- * Events that the base CivFormElement class dispatches via the
- * `_handleInput` / `_handleChange` helpers. Subclasses that delegate
- * to those helpers don't need to dispatch these explicitly. The
- * schema can still declare them — we just don't flag them as
- * "removed from source" when the subclass file has no dispatch call.
- */
-const BASE_DISPATCHED_EVENTS = new Set(['civ-input', 'civ-change']);
+function extractBraceBlock(src: string, openIndex: number): { body: string; endIndex: number } | null {
+  if (src[openIndex] !== '{') return null;
+  let depth = 0;
+  let stringChar: string | null = null;
+  for (let i = openIndex; i < src.length; i++) {
+    const ch = src[i];
+    if (stringChar) {
+      if (ch === '\\') { i++; continue; } // skip escaped char
+      if (ch === stringChar) stringChar = null;
+      continue;
+    }
+    if (ch === '"' || ch === "'" || ch === '`') { stringChar = ch; continue; }
+    if (ch === '{') depth++;
+    else if (ch === '}') {
+      depth--;
+      if (depth === 0) return { body: src.slice(openIndex + 1, i), endIndex: i + 1 };
+    }
+  }
+  return null;
+}
 
 export function parseLitPropsFromSource(src: string, isBoolean: boolean): LitProp[] {
   const props: LitProp[] = [];
-  // Capture everything from `@property({ ... })` through the next ; or newline,
-  // including optional access modifiers and a default-value initializer.
-  const regex = /@property\(\{([^}]*)\}\)\s+(?:public\s+|private\s+|protected\s+|override\s+)*(\w+)(?:[?!])?(?:\s*:\s*[^=;\n]+)?(?:\s*=\s*([^;\n]+))?/g;
+  // The previous regex used `[^}]*` for the @property options, which broke
+  // on any nested brace (multi-line objects, converter literals, default-
+  // value object initializers). Walk the source, find each `@property(`
+  // occurrence, extract the parenthesized options block via brace-depth
+  // scanning, then parse the prop name + default off the rest of the
+  // declaration line.
+  const headerRegex = /@property\s*\(\s*\{/g;
   let m: RegExpExecArray | null;
-  while ((m = regex.exec(src)) !== null) {
-    const opts = m[1];
-    const name = m[2];
-    const dflt = m[3]?.trim();
+  while ((m = headerRegex.exec(src)) !== null) {
+    const openBrace = m.index + m[0].length - 1; // position of `{`
+    const block = extractBraceBlock(src, openBrace);
+    if (!block) continue;
+    // After the options, expect `})` then optional whitespace and the
+    // property declaration: `<modifiers> <name>[?!]?[: Type][= default]`.
+    let after = block.endIndex;
+    if (src[after] !== ')') continue;
+    after++; // skip `)`
+    // Skip whitespace and modifiers (`public`, `private`, `protected`,
+    // `override`, `readonly`, `static`, `accessor`, plus decorators).
+    const declRegex = /\s*(?:(?:public|private|protected|override|readonly|static|accessor|declare)\s+|@\w+\s*)*(\w+)([?!])?(?:\s*:\s*[^=;\n{]+)?(?:\s*=\s*([^;\n]+))?/y;
+    declRegex.lastIndex = after;
+    const declMatch = declRegex.exec(src);
+    if (!declMatch) continue;
+    const name = declMatch[1];
+    const dflt = declMatch[3]?.trim();
     const skip = INHERITED_FORM_PROPS.has(name) || (isBoolean && INHERITED_BOOLEAN_PROPS.has(name));
     if (skip) continue;
-    const typeMatch = opts.match(/type:\s*(\w+)/);
-    const attrMatch = opts.match(/attribute:\s*['"]([^'"]+)['"]/);
+    const typeMatch = block.body.match(/type:\s*(\w+)/);
+    const attrMatch = block.body.match(/attribute:\s*['"]([^'"]+)['"]/);
     props.push({
       name,
       type: typeMatch ? typeMatch[1].toLowerCase() : 'string',
@@ -220,7 +239,10 @@ export function parseLitEventsFromSource(src: string): ComponentEvent[] {
       return;
     }
     const body = arg.replace(/^\{/, '').replace(/\}$/, '');
-    for (const piece of body.split(',')) {
+    // Split on top-level commas only — nested objects (`meta: { ... }`)
+    // and arrays (`items: [1, 2, 3]`) and string-literal commas
+    // (`label: 'a, b'`) shouldn't fragment.
+    for (const piece of splitTopLevelCommas(body)) {
       const trimmed = piece.trim();
       if (!trimmed) continue;
       if (trimmed.startsWith('...')) {
@@ -234,26 +256,85 @@ export function parseLitEventsFromSource(src: string): ComponentEvent[] {
     }
   }
 
-  // Pattern 1: dispatch(this, 'name', { ... })  — preferred helper
-  const dispatchRegex = /dispatch\(this,\s*['"]([\w-]+)['"](?:,\s*([^)]+))?\)/g;
-  // Pattern 2: this.dispatchEvent(new CustomEvent('name', { detail: {...}, ... }))
-  //   Some components dispatch raw CustomEvents instead of using the
-  //   helper. Pull the detail object out of the init body so we can
-  //   compare detail keys.
-  const customEventRegex = /this\.dispatchEvent\(\s*new\s+CustomEvent\(\s*['"]([\w-]+)['"](?:\s*,\s*\{([\s\S]*?)\}\s*\))?/g;
-
-  let m: RegExpExecArray | null;
-  while ((m = dispatchRegex.exec(src)) !== null) {
-    record(m[1], m[2]);
-  }
-  while ((m = customEventRegex.exec(src)) !== null) {
-    const initBody = m[2];
-    let detailArg: string | undefined;
-    if (initBody) {
-      const detailMatch = initBody.match(/detail:\s*(\{[\s\S]*?\})/);
-      detailArg = detailMatch?.[1];
+  function splitTopLevelCommas(s: string): string[] {
+    const out: string[] = [];
+    let depth = 0;
+    let stringChar: string | null = null;
+    let start = 0;
+    for (let i = 0; i < s.length; i++) {
+      const ch = s[i];
+      if (stringChar) {
+        if (ch === '\\') { i++; continue; }
+        if (ch === stringChar) stringChar = null;
+        continue;
+      }
+      if (ch === '"' || ch === "'" || ch === '`') { stringChar = ch; continue; }
+      if (ch === '{' || ch === '[' || ch === '(') depth++;
+      else if (ch === '}' || ch === ']' || ch === ')') depth--;
+      else if (ch === ',' && depth === 0) {
+        out.push(s.slice(start, i));
+        start = i + 1;
+      }
     }
-    record(m[1], detailArg);
+    out.push(s.slice(start));
+    return out;
+  }
+
+  // Pattern 1: dispatch(this, 'name', { ... })  — preferred helper. The
+  // detail block (if present) is extracted via brace-depth scanning so
+  // nested-object literals don't truncate the match.
+  const dispatchHeader = /dispatch\(\s*this\s*,\s*['"]([\w-]+)['"]\s*(,)?/g;
+  let m: RegExpExecArray | null;
+  while ((m = dispatchHeader.exec(src)) !== null) {
+    const name = m[1];
+    if (!m[2]) {
+      // No second arg — fire with no detail.
+      record(name, undefined);
+      continue;
+    }
+    // Skip whitespace after the comma, then either match a `{...}` literal
+    // (extract via brace depth) or fall back to "unknown shape" if the arg
+    // is a variable or spread.
+    let i = m.index + m[0].length;
+    while (i < src.length && /\s/.test(src[i])) i++;
+    if (src[i] === '{') {
+      const block = extractBraceBlock(src, i);
+      if (block) record(name, '{' + block.body + '}');
+      else record(name, undefined);
+    } else {
+      record(name, src.slice(i, i + 1)); // non-`{` first char triggers "unknown" branch
+    }
+  }
+
+  // Pattern 2: this.dispatchEvent(new CustomEvent('name', { detail: {...}, ... }))
+  // The init object is captured via brace-depth scanning, then `detail:`
+  // is found inside it (also via brace-depth) so nested literals don't
+  // truncate the detail-keys list.
+  const customEventHeader = /this\.dispatchEvent\(\s*new\s+CustomEvent\(\s*['"]([\w-]+)['"]\s*(,)?/g;
+  while ((m = customEventHeader.exec(src)) !== null) {
+    const name = m[1];
+    if (!m[2]) {
+      record(name, undefined);
+      continue;
+    }
+    let i = m.index + m[0].length;
+    while (i < src.length && /\s/.test(src[i])) i++;
+    if (src[i] !== '{') {
+      record(name, src.slice(i, i + 1));
+      continue;
+    }
+    const init = extractBraceBlock(src, i);
+    if (!init) { record(name, undefined); continue; }
+    // Find `detail:` at top level of the init body.
+    const detailIdx = init.body.search(/(^|[\s,{])detail\s*:/);
+    if (detailIdx < 0) { record(name, undefined); continue; }
+    const colonIdx = init.body.indexOf(':', detailIdx);
+    let j = colonIdx + 1;
+    while (j < init.body.length && /\s/.test(init.body[j])) j++;
+    if (init.body[j] !== '{') { record(name, init.body.slice(j, j + 1)); continue; }
+    const detail = extractBraceBlock(init.body, j);
+    if (!detail) { record(name, undefined); continue; }
+    record(name, '{' + detail.body + '}');
   }
 
   return [...eventsByName.entries()].map(([name, entry]) => ({
@@ -328,10 +409,12 @@ export function parseSwiftPropNamesFromSource(src: string): string[] {
 export function parseSwiftPropsFromSource(src: string): NativeProp[] {
   const props: NativeProp[] = [];
   const seen = new Set<string>();
-  // Match a single declaration: optional `@Decorator`s, `public var|let`,
-  // capture name and the rest of the line. Anchored to line start so we
-  // don't catch occurrences inside larger expressions.
-  const declRegex = /^[ \t]*(?:@\w+[ \t]+)*public\s+(?:var|let)\s+(\w+)\s*:\s*(.+)$/gm;
+  // Match a single declaration: optional decorators (`@Foo`), bare modifiers
+  // (`final`, `nonisolated`), and access-level modifiers with optional
+  // setter qualifier (`public`, `public private(set)`, `internal(set)`),
+  // followed by `var|let`, name, type. Anchored to line start so we don't
+  // catch matches inside larger expressions.
+  const declRegex = /^[ \t]*(?:(?:@\w+(?:\([^)]*\))?[ \t]+)|(?:(?:final|nonisolated|static|class|override|weak|unowned|lazy|dynamic)[ \t]+))*public(?:[ \t]+(?:private|fileprivate|internal)\([ \t]*set[ \t]*\))?[ \t]+(?:var|let)\s+(\w+)\s*:\s*(.+)$/gm;
   let m: RegExpExecArray | null;
   while ((m = declRegex.exec(src)) !== null) {
     const name = m[1];
@@ -451,7 +534,11 @@ export function parseKotlinPropsFromSource(src: string, displayName: string): Na
  * lists rarely have a top-level `=` inside them.
  *
  * Skips `==` / `!=` / `<=` / `>=` / `=>` to avoid false matches inside
- * default-value expressions.
+ * default-value expressions. Idiomatic Kotlin always surrounds the
+ * parameter-default `=` with whitespace, so we use that as the
+ * disambiguator for the rare `Foo<Bar>= default` case (no-space close-
+ * generic followed by default) — the operator characters never appear
+ * with whitespace in the parameter-default position.
  */
 function findTopLevelEquals(s: string): number {
   let depth = 0;
@@ -462,8 +549,23 @@ function findTopLevelEquals(s: string): number {
     if (ch === '=' && depth === 0) {
       const next = s[i + 1];
       const prev = s[i - 1];
-      // Skip `==`, `=>`, `<=`, `>=`, `!=`.
-      if (next === '=' || next === '>' || prev === '=' || prev === '<' || prev === '>' || prev === '!') continue;
+      // Skip equality / arrow operators.
+      if (next === '=' || next === '>') continue; // ==, =>
+      if (prev === '=' || prev === '!') continue; // == (already advancing past first `=`), !=
+      // `<=` / `>=` are operators ONLY when the relational operand starts
+      // immediately. The parameter-default `=` is idiomatically separated
+      // by whitespace; require that to disambiguate `Foo<Bar>= default`
+      // (default marker, prev=`>` close-generic) from `a >= b` (operator).
+      if ((prev === '<' || prev === '>') && prev !== ' ') {
+        // Only skip if the `=` looks like part of a comparison operator —
+        // i.e. there's no whitespace separating the param-type from `=`,
+        // AND no whitespace between `=` and the next character. A Kotlin
+        // formatter writes `param: Foo<Bar> = default` (spaces) for the
+        // default and `a >= b` (spaces) for comparison, so the no-space
+        // form is exclusively the operator case in real source.
+        const hasSpaceAfter = next === ' ' || next === '\n' || next === '\t';
+        if (!hasSpaceAfter) continue;
+      }
       return i;
     }
   }
@@ -546,11 +648,20 @@ export interface DrupalProp {
  * prop name AND its declared type. The type drives the cross-platform
  * type-drift check (a `boolean` schema prop must surface in Drupal as
  * `type: boolean`, etc.).
+ *
+ * Only the FIRST `properties:` block (the immediate child of top-level
+ * `props:`) is captured. Nested `properties:` blocks under `slots:`,
+ * `libraryOverrides:`, or array `items:` are ignored.
  */
 export function parseDrupalPropsFromYaml(src: string): DrupalProp[] {
   const lines = src.split('\n');
   const props: DrupalProp[] = [];
-  let inProperties = false;
+  // 'before-props': haven't seen the top-level `props:` line yet.
+  // 'in-props': inside the props: block, looking for `properties:` child.
+  // 'in-properties': capturing prop entries.
+  // 'done': captured the first properties block, ignore everything after.
+  let state: 'before-props' | 'in-props' | 'in-properties' | 'done' = 'before-props';
+  let propsIndent = 0;
   let baseIndent = 0;
   let currentName: string | null = null;
   let currentIndent = 0;
@@ -561,26 +672,38 @@ export function parseDrupalPropsFromYaml(src: string): DrupalProp[] {
     pendingType = undefined;
   }
   for (const line of lines) {
-    const propsMatch = line.match(/^(\s*)properties\s*:/);
-    if (propsMatch && !inProperties) {
-      inProperties = true;
-      baseIndent = propsMatch[1].length;
-      continue;
-    }
-    if (!inProperties) continue;
+    if (state === 'done') break;
     const m = line.match(/^(\s*)([\w-]+)\s*:(.*)$/);
     if (!m) continue;
     const indent = m[1].length;
+    const key = m[2];
+    if (state === 'before-props') {
+      if (key === 'props' && indent === 0) {
+        state = 'in-props';
+        propsIndent = indent;
+      }
+      continue;
+    }
+    if (state === 'in-props') {
+      // Dedented out of `props:` without finding `properties:` — stop.
+      if (indent <= propsIndent) { state = 'done'; break; }
+      if (key === 'properties' && indent === propsIndent + 2) {
+        state = 'in-properties';
+        baseIndent = indent;
+      }
+      continue;
+    }
+    // state === 'in-properties'
     if (indent <= baseIndent) {
       flush();
-      inProperties = false;
-      continue;
+      state = 'done';
+      break;
     }
     if (indent === baseIndent + 2) {
       flush();
-      currentName = m[2];
+      currentName = key;
       currentIndent = indent;
-    } else if (currentName && m[2] === 'type' && indent > currentIndent) {
+    } else if (currentName && key === 'type' && indent > currentIndent) {
       pendingType = m[3].trim();
     }
   }

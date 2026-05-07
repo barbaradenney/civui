@@ -146,10 +146,23 @@ function checkRenderOrder(comp: ComponentFile) {
     }
   }
   if (hasHint && hasError) {
-    const hintIdx = comp.src.indexOf('renderHint(');
-    const errorIdx = comp.src.indexOf('renderError(');
-    if (hintIdx > errorIdx && errorIdx !== -1) {
-      addIssue(comp.path, 'render-order', 'error', `${comp.name} renders error before hint`);
+    // Self-contained components with tile layouts (checkbox, radio,
+    // segmented-control) deliberately render the error OUTSIDE the
+    // tile body — typically above the tile so the user sees the
+    // validation message before they interact with the control. The
+    // generic "hint must come before error in source" rule doesn't
+    // fit that layout, so skip it for those families. The same
+    // components are also excluded from the `hasHint` / `hasError`
+    // existence warnings above for the same reason.
+    const isTileLayout = comp.name.includes('checkbox') ||
+                         comp.name.includes('radio') ||
+                         comp.name.includes('segment');
+    if (!isTileLayout) {
+      const hintIdx = comp.src.indexOf('renderHint(');
+      const errorIdx = comp.src.indexOf('renderError(');
+      if (hintIdx > errorIdx && errorIdx !== -1) {
+        addIssue(comp.path, 'render-order', 'error', `${comp.name} renders error before hint`);
+      }
     }
   }
 }

@@ -222,7 +222,7 @@ These are mistakes AIs commonly make in this codebase. Each has surfaced during 
 | Anti-pattern | Correct approach |
 |---|---|
 | Hand-editing a Drupal SDC YAML or Twig | Edit the schema, run `pnpm sync:drupal`. The `drupal-sync-clean` CI gate fails on hand-edits. |
-| Hand-editing a `/contract/civ-X.md` page | Edit the schema, regenerate. Contract pages are gitignored — they regenerate on every docs build. |
+| Hand-editing a `.storybook/contract/civ-X.docs.mdx` page | Edit the schema, regenerate. Contract pages are gitignored — they regenerate on every Storybook build. |
 | Adding a `webOnly` flag to dodge a real drift | webOnly is for genuine platform divergence, not "I don't want to add this to iOS yet." Verify the criteria above. |
 | Putting a colon (`:`) in a schema description without thinking | The contract-docs generator quotes YAML scalars, but new descriptions with raw `<select>`, `{`, `}` need MDX-friendly escaping. Look at existing descriptions for the pattern. |
 | Running `pnpm publish` from `packages/schema` | The `prepublishOnly` hook builds, but actual publishing is a manual step requiring credentials. Don't publish unless explicitly asked. |
@@ -264,8 +264,8 @@ pnpm parity:schema --platforms 2>&1 | grep -A5 "civ-<name>"
 # Regenerate Drupal SDC YAML and Twig from schemas:
 pnpm sync:drupal
 
-# Regenerate contract pages (auto-runs on docs build via prebuild hook):
-pnpm docs:contract
+# Regenerate Storybook contract pages (auto-runs on storybook build via prestorybook hook):
+pnpm storybook:contract
 
 # Build the publish-ready @civui/schema package:
 cd packages/schema && pnpm build

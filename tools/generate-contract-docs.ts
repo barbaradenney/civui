@@ -1,26 +1,32 @@
 #!/usr/bin/env npx tsx
 /**
- * CivUI Contract Reference doc generator
+ * CivUI Contract Reference doc generator (for Storybook).
  *
- * Walks every `*.schema.ts` in `@civui/schema` and emits a Docusaurus
- * markdown page documenting the contract for that component. Output
- * lives in `apps/docs/docs/contract/civ-<name>.md` — these pages are
+ * Walks every `*.schema.ts` in `@civui/schema` and emits a Storybook
+ * MDX docs page per component. Output lives in
+ * `.storybook/contract/civ-<name>.docs.mdx` — these pages are
  * **generated artifacts** and should not be hand-edited (changes get
- * overwritten on next build).
+ * overwritten on next Storybook build).
  *
- * The contract pages serve as a contractor-facing reference: when a new
- * platform implementation (or a contractor) needs to know exactly which
- * props / events / accessibility behavior a component must expose, this
- * page is the canonical answer. The existing per-component pages under
- * `/components/...` continue to host the worked examples and Storybook
- * embeds — the contract pages are a complementary structured resource.
+ * The contract pages serve as a developer-facing reference inside
+ * Storybook (where worked examples + Storybook controls already live),
+ * sidebar-grouped under "Contract". The matching Docusaurus pages under
+ * `/components/...` continue to host narrative usage docs and link
+ * across to the Storybook contract page via an injected admonition.
+ *
+ * Why Storybook? Contract details (props, events, types) are inherently
+ * developer-facing. Putting them in Docusaurus next to narrative usage
+ * docs created redundancy with Storybook's existing prop tables, and
+ * forced a context switch when developers wanted to see a component's
+ * full surface. Co-locating with stories closes that gap.
  *
  * Usage:
- *   pnpm docs:contract           # regenerate all pages
- *   pnpm docs:contract --dry-run # report what would change
+ *   pnpm storybook:contract           # regenerate all pages
+ *   pnpm storybook:contract --dry-run # report what would change
  *
- * The Docusaurus `prebuild` script runs this so the generated pages are
- * always in sync with the schemas at build time.
+ * The Storybook `prestorybook` / `prestorybook:build` scripts run this
+ * automatically so the generated pages are always in sync with the
+ * schemas at build / dev-server time.
  */
 
 import { readdirSync, writeFileSync, existsSync, mkdirSync, readFileSync } from 'fs';
@@ -30,7 +36,7 @@ import { pathToFileURL } from 'url';
 const ROOT = join(import.meta.dirname, '..');
 const SCHEMAS_DIR = join(ROOT, 'packages/schema/src/components');
 const COMPONENTS_DOC_DIR = join(ROOT, 'apps/docs/docs/components');
-const OUTPUT_DIR = join(ROOT, 'apps/docs/docs/contract');
+const OUTPUT_DIR = join(ROOT, '.storybook/contract');
 const DRY_RUN = process.argv.includes('--dry-run');
 
 /**
@@ -50,41 +56,6 @@ const SLUG_ALIAS: Record<string, string> = {
   'progress-percent': 'progress',
   'filter-chip-group': 'filter-chip',
 };
-
-/**
- * Walk apps/docs/docs/components/<category>/<slug>.mdx and build a map
- * from slug (e.g. "button") to its Docusaurus URL (e.g.
- * "/components/actions/button"). Schemas don't carry category metadata
- * that maps to docs structure, so the only reliable lookup is by file
- * existence.
- */
-function buildComponentPageMap(): Map<string, string> {
-  const map = new Map<string, string>();
-  if (!existsSync(COMPONENTS_DOC_DIR)) return map;
-  const categories = readdirSync(COMPONENTS_DOC_DIR);
-  for (const category of categories) {
-    const categoryPath = join(COMPONENTS_DOC_DIR, category);
-    let entries: string[];
-    try {
-      entries = readdirSync(categoryPath);
-    } catch {
-      continue; // not a directory
-    }
-    for (const entry of entries) {
-      if (!entry.endsWith('.mdx') && !entry.endsWith('.md')) continue;
-      const slug = entry.replace(/\.(mdx|md)$/, '');
-      map.set(slug, `/components/${category}/${slug}`);
-    }
-  }
-  return map;
-}
-
-function resolveComponentPageUrl(schemaSlug: string, map: Map<string, string>): string | undefined {
-  if (map.has(schemaSlug)) return map.get(schemaSlug);
-  const alias = SLUG_ALIAS[schemaSlug];
-  if (alias && map.has(alias)) return map.get(alias);
-  return undefined;
-}
 
 interface PropDef {
   type: string;
@@ -142,6 +113,10 @@ function formatType(prop: PropDef): string {
   return `\`${prop.type}\``;
 }
 
+function camelToKebab(name: string): string {
+  return name.replace(/([A-Z]+)/g, '-$1').replace(/^-/, '').toLowerCase();
+}
+
 function renderPropsTable(props: Record<string, PropDef>): string {
   const rows = Object.entries(props);
   if (rows.length === 0) return '*No component-specific props (inherits standard form props from base class).*\n';
@@ -159,10 +134,6 @@ function renderPropsTable(props: Record<string, PropDef>): string {
     lines.push(`| \`${name}\` | \`${attr}\` | ${formatType(prop)} | ${formatDefault(prop.default)} | ${notes} |`);
   }
   return lines.join('\n') + '\n';
-}
-
-function camelToKebab(name: string): string {
-  return name.replace(/([A-Z]+)/g, '-$1').replace(/^-/, '').toLowerCase();
 }
 
 function renderEventsTable(events: Record<string, EventDef>): string {
@@ -198,31 +169,18 @@ function renderForm(form: ComponentSchema['form']): string {
   return lines.join('\n') + '\n';
 }
 
-function renderPage(schema: ComponentSchema, position: number, componentPageUrl: string | undefined): string {
+function renderPage(schema: ComponentSchema): string {
   const out: string[] = [];
-  out.push(`---`);
-  // Quote scalar values so frontmatter YAML doesn't choke on colons,
-  // backticks, or other punctuation in descriptions.
-  const yamlString = (s: string) => `'${s.replace(/'/g, "''")}'`;
-  out.push(`title: ${yamlString(schema.name)}`);
-  out.push(`sidebar_position: ${position}`);
-  out.push(`sidebar_label: ${yamlString(schema.name)}`);
-  out.push(`description: ${yamlString(escapeMd(schema.description.slice(0, 200)))}`);
-  out.push(`---`);
+  // Storybook MDX preamble — places the page under "Contract" in the sidebar.
+  out.push(`import { Meta } from '@storybook/blocks';`);
+  out.push('');
+  out.push(`<Meta title="Contract/${schema.name}" />`);
   out.push('');
   out.push(`# ${schema.name}`);
   out.push('');
-  out.push(`> **Auto-generated from \`packages/schema/src/components/${schema.name}.schema.ts\`** — do not hand-edit. Run \`pnpm docs:contract\` (or rebuild docs) to regenerate.`);
+  out.push(`> **Auto-generated from \`packages/schema/src/components/${schema.name}.schema.ts\`** — do not hand-edit. Run \`pnpm storybook:contract\` (or rebuild Storybook) to regenerate.`);
   out.push('');
-  if (componentPageUrl) {
-    out.push(`:::tip Worked examples`);
-    out.push(`See [**${schema.name}** in Components](${componentPageUrl}) for usage examples and Storybook embeds. This page is the structured contract reference; that page is the hands-on guide.`);
-    out.push(`:::`);
-    out.push('');
-  }
-  // Escape MDX-significant characters in the body too — `<select>` mentions
-  // would otherwise be parsed as JSX tags. Preserve newlines (unlike the
-  // table-cell escapeMd, which flattens them).
+  // Body description, with MDX-significant chars escaped.
   out.push(schema.description.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\{/g, '\\{').replace(/\}/g, '\\}'));
   out.push('');
   out.push('| Field | Value |');
@@ -271,16 +229,32 @@ async function loadSchema(file: string): Promise<ComponentSchema> {
   return mod.default ?? mod;
 }
 
-// The sidebar entry in `apps/docs/sidebars.ts` defines the category
-// metadata (label, link, slug). We don't write a `_category_.json`
-// file here because the sidebar entry is the source of truth; emitting
-// one would just duplicate the same metadata in two places.
-
 /**
- * Build the reverse map: for each component-page URL, the list of
- * schemas that document it. Combined pages (e.g. `/components/inputs/date`)
- * link to multiple contract pages.
+ * Walk apps/docs/docs/components/<category>/<slug>.mdx and build a map
+ * from slug (e.g. "button") to its Docusaurus URL (e.g.
+ * "/components/actions/button"). Used for the reverse-link admonition.
  */
+function buildComponentPageMap(): Map<string, string> {
+  const map = new Map<string, string>();
+  if (!existsSync(COMPONENTS_DOC_DIR)) return map;
+  const categories = readdirSync(COMPONENTS_DOC_DIR);
+  for (const category of categories) {
+    const categoryPath = join(COMPONENTS_DOC_DIR, category);
+    let entries: string[];
+    try {
+      entries = readdirSync(categoryPath);
+    } catch {
+      continue;
+    }
+    for (const entry of entries) {
+      if (!entry.endsWith('.mdx') && !entry.endsWith('.md')) continue;
+      const slug = entry.replace(/\.(mdx|md)$/, '');
+      map.set(slug, `/components/${category}/${slug}`);
+    }
+  }
+  return map;
+}
+
 function buildReverseMap(schemas: ComponentSchema[], componentPageMap: Map<string, string>): Map<string, string[]> {
   const reverse = new Map<string, string[]>();
   for (const schema of schemas) {
@@ -293,15 +267,31 @@ function buildReverseMap(schemas: ComponentSchema[], componentPageMap: Map<strin
   return reverse;
 }
 
+function resolveComponentPageUrl(slug: string, map: Map<string, string>): string | undefined {
+  if (map.has(slug)) return map.get(slug);
+  const alias = SLUG_ALIAS[slug];
+  if (alias && map.has(alias)) return map.get(alias);
+  return undefined;
+}
+
 const CONTRACT_LINK_MARKER_START = '<!-- contract-link:start -->';
 const CONTRACT_LINK_MARKER_END = '<!-- contract-link:end -->';
 
 /**
- * Inject (or refresh) a "Contract reference" admonition into each component
- * page that has matching schemas. The block is delimited by HTML comment
- * markers so we can update it idempotently — we only touch the marker block,
- * not the rest of the hand-written page. New schemas → existing markers
- * get rewritten with updated links; removed schemas → markers go away.
+ * The Storybook URL for an MDX docs page titled "Contract/civ-button" is
+ * `?path=/docs/contract-civ-button--docs`. The slug is lowercase, with
+ * `/` collapsed to `-`. Storybook is mounted at /civui/storybook/ on
+ * the deployed site.
+ */
+function storybookContractUrl(schemaName: string): string {
+  return `pathname:///civui/storybook/?path=/docs/contract-${schemaName}--docs`;
+}
+
+/**
+ * Inject (or refresh) a "Contract reference" admonition into each
+ * Docusaurus component page that has matching schemas. Idempotent —
+ * uses HTML-comment markers so we can update without touching the
+ * rest of the hand-written page. Placed immediately after the H1.
  */
 function injectContractLinkIntoComponentPage(
   pagePath: string,
@@ -309,7 +299,7 @@ function injectContractLinkIntoComponentPage(
 ): { changed: boolean } {
   const original = readFileSync(pagePath, 'utf-8');
   const links = schemaNames
-    .map((name) => `[\`${name}\`](/contract/${name})`)
+    .map((name) => `[\`${name}\`](${storybookContractUrl(name)})`)
     .join(' · ');
   const block = [
     CONTRACT_LINK_MARKER_START,
@@ -319,26 +309,16 @@ function injectContractLinkIntoComponentPage(
     CONTRACT_LINK_MARKER_END,
   ].join('\n');
 
-  // First, strip ALL existing marker blocks (could be multiple if a prior
-  // generator pass / hand-edit left duplicates). The new block is then
-  // inserted after the H1 title — natural reading position. Global flag
-  // ensures idempotency: re-running the generator converges, even if the
-  // page has stale marker pairs.
   const markerRegex = new RegExp(`\\n*${CONTRACT_LINK_MARKER_START}[\\s\\S]*?${CONTRACT_LINK_MARKER_END}\\n*`, 'gm');
   const cleaned = original.replace(markerRegex, '\n\n');
 
-  // Find the first H1 line (`# Title`). The hand-written component pages
-  // all have one. The admonition goes immediately after it so it shows up
-  // between the title and the body — natural reading position, not awkward
-  // floating-above-title placement.
+  // Insert immediately after the H1 title.
   const h1Match = cleaned.match(/^# .+$/m);
   let next: string;
   if (h1Match && h1Match.index !== undefined) {
     const insertAt = h1Match.index + h1Match[0].length;
-    // Insert: blank line, marker block, blank line, then continue.
     next = cleaned.slice(0, insertAt) + '\n\n' + block + cleaned.slice(insertAt);
   } else {
-    // Fallback: no H1 found, insert after frontmatter end.
     const fmEnd = cleaned.indexOf('\n---', 4);
     if (fmEnd < 0) return { changed: false };
     const insertAt = cleaned.indexOf('\n', fmEnd + 4) + 1;
@@ -364,19 +344,13 @@ async function main(): Promise<void> {
 
   const componentPageMap = buildComponentPageMap();
 
-  // Load every schema once, up front. Earlier versions did this twice
-  // (once during the per-file generate loop, once during the reverse-
-  // map build), doubling the dynamic-import cache pressure for no gain.
   const allSchemas: ComponentSchema[] = [];
   for (const f of files) allSchemas.push(await loadSchema(f));
 
   let written = 0;
-  for (let i = 0; i < allSchemas.length; i++) {
-    const schema = allSchemas[i];
-    const slug = schema.name.replace(/^civ-/, '');
-    const componentPageUrl = resolveComponentPageUrl(slug, componentPageMap);
-    const outPath = join(OUTPUT_DIR, `${schema.name}.md`);
-    const content = renderPage(schema, i + 1, componentPageUrl);
+  for (const schema of allSchemas) {
+    const outPath = join(OUTPUT_DIR, `${schema.name}.docs.mdx`);
+    const content = renderPage(schema);
     const existing = existsSync(outPath) ? readFileSync(outPath, 'utf-8') : '';
     if (existing === content) continue;
     if (DRY_RUN) {
@@ -387,14 +361,12 @@ async function main(): Promise<void> {
     written++;
   }
 
-  // Second pass: inject reverse "Contract reference" links into each
-  // hand-written component page. Idempotent — uses HTML-comment markers
-  // so we can update without touching the rest of the page.
+  // Inject reverse "Contract reference" links into each Docusaurus
+  // component page, pointing at the Storybook contract URL. Idempotent
+  // via marker blocks.
   const reverseMap = buildReverseMap(allSchemas, componentPageMap);
   let pagesUpdated = 0;
   for (const [url, schemaNames] of reverseMap) {
-    // The Docusaurus URL is `/components/<category>/<slug>`. The file lives
-    // at `apps/docs/docs/components/<category>/<slug>.mdx` (or `.md`).
     const rel = url.replace(/^\/components\//, '');
     const baseDir = join(COMPONENTS_DOC_DIR, ...rel.split('/').slice(0, -1));
     const slug = rel.split('/').pop()!;
@@ -408,7 +380,7 @@ async function main(): Promise<void> {
     }
   }
 
-  console.log(`${DRY_RUN ? '[dry-run] would update' : 'updated'} ${written} contract file(s) and ${pagesUpdated} component page(s) for ${files.length} schema(s).`);
+  console.log(`${DRY_RUN ? '[dry-run] would update' : 'updated'} ${written} Storybook MDX file(s) and ${pagesUpdated} Docusaurus component page(s) for ${files.length} schema(s).`);
 }
 
 main().catch((err) => {

@@ -11,11 +11,11 @@ You are a CivUI docs validator. Your job is to ensure the Docusaurus site builds
 The docs surface has two parts:
 
 1. **Hand-written pages** under `apps/docs/docs/{components,form-patterns,foundations,getting-started,mcp-server}/`. These are authored by humans/AIs and committed to git.
-2. **Auto-generated pages** under `apps/docs/docs/contract/`. These are gitignored and regenerated from schemas on every docs build via the `prebuild` hook (`pnpm docs:contract`).
+2. **Auto-generated Storybook contract pages** under `.storybook/contract/civ-<name>.docs.mdx`. These are gitignored and regenerated from schemas on every Storybook build via the `prestorybook` / `prestorybook:build` hooks (which run `pnpm storybook:contract`). They surface in Storybook under the "Contract" sidebar group at URLs like `/?path=/docs/contract-civ-button--docs`.
 
 The two are cross-linked:
-- Each contract page has a `:::tip Worked examples` admonition pointing to the matching component page (when one exists).
-- Each component page has a `<!-- contract-link:start -->` marker block (auto-injected, idempotent) pointing to the matching contract page(s).
+- Each Storybook contract page surfaces alongside the component's stories — same Storybook tree.
+- Each Docusaurus component page has a `<!-- contract-link:start -->` marker block (auto-injected, idempotent) pointing to the matching Storybook contract URL.
 
 ## Common failure modes
 
@@ -49,7 +49,7 @@ The link references `#some-section` but the heading slug differs. Slugs are auto
 
 ### Contract page out of sync with schema
 
-Run `pnpm docs:contract` to regenerate. The pages are gitignored so re-running is non-destructive. If the generator itself crashes, the schema has structural issues — run `pnpm validate:schemas` first.
+Run `pnpm storybook:contract` to regenerate. The pages are gitignored so re-running is non-destructive. If the generator itself crashes, the schema has structural issues — run `pnpm validate:schemas` first.
 
 ## Verify
 

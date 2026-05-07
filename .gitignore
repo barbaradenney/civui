@@ -4,9 +4,9 @@ dist/
 .build/
 *.tsbuildinfo
 
-# Auto-generated Docusaurus contract reference pages — regenerated from
-# @civui/schema on every `apps/docs` build via the prebuild hook.
-apps/docs/docs/contract/
+# Auto-generated Storybook contract reference pages — regenerated from
+# @civui/schema via the prestorybook hook.
+.storybook/contract/
 
 # Root config build artifacts (Tailwind reads .ts natively)
 tailwind.config.js

@@ -8,7 +8,13 @@ const __dir = typeof __dirname !== 'undefined' ? __dirname : dirname(fileURLToPa
 const root = resolve(__dir, '..');
 
 const config: StorybookConfig = {
-  stories: ['../packages/*/src/**/*.stories.ts'],
+  stories: [
+    '../packages/*/src/**/*.stories.ts',
+    // Auto-generated contract reference (one MDX docs page per schema).
+    // Files are written by `pnpm storybook:contract` (run automatically
+    // via the prestorybook hook). Gitignored.
+    '../.storybook/contract/*.docs.mdx',
+  ],
   addons: [
     '@storybook/addon-essentials',
     '@storybook/addon-a11y',

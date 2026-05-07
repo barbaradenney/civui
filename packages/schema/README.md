@@ -23,7 +23,7 @@ Four CI gates protect the contract (`.github/workflows/parity.yml`):
 | `schema-parity` | `tools/schema-parity.ts --platforms` | Lit ↔ schema ↔ iOS ↔ Android ↔ Drupal SDC prop drift, plus Drupal SDC YAML type-drift (a `boolean` schema prop must surface as `type: boolean` in YAML, etc.) |
 | `schema-validate` | `pnpm validate:schemas` | Structural typos that TypeScript misses — invalid `category` / `extends` / `valueMode` / `requiredIndicator`, enum defaults outside the values list, malformed `renderOrder` |
 | `drupal-sync-clean` | `tools/sync-drupal-{sdc,twig}.ts` + `git diff --exit-code` | Hand-edits to SDC YAML / Twig that diverge from regenerator output |
-| `tool-tests` | `pnpm test:tools` | Regressions in the parity / sync helper functions themselves (59 unit tests) |
+| `tool-tests` | `pnpm test:tools` | Regressions in the parity / sync helper functions themselves (84 unit tests) |
 
 iOS / Android type-parsing is intentionally **not** enforced — Swift / Kotlin type expressions vary too much (`Bool`, `@Binding<Bool>`, `Int?`, custom enums like `LinkCardVariant`, etc.) to diff reliably without a full type system. The check covers names on all platforms and types on Drupal SDC, where YAML directly declares them.
 

@@ -142,7 +142,9 @@ See [`packages/schema/README.md`](https://github.com/anthropics/civui/blob/main/
 
 ### Generated contract reference
 
-The Docusaurus site includes a [Contract Reference](/contract) section with one auto-generated page per component (53 pages, one per schema). Each page lists the component's props, events, accessibility role, form behavior, and the file path on each platform. Pages are regenerated from `@civui/schema` on every `docusaurus build` via the `prebuild` hook (`pnpm docs:contract`), so the documentation can never drift from the canonical schema. The generated directory is gitignored — pages are byproducts of the schema, not source.
+The Storybook site includes a [Contract](pathname:///civui/storybook/?path=/docs/contract-civ-button--docs) section with one auto-generated page per component (53 pages, one per schema). Each page lists the component's props, events, accessibility role, form behavior, and the file path on each platform. Contract pages live in Storybook (alongside worked examples and the Storybook controls panel) rather than Docusaurus — developers reading a component's contract usually want to see the matching examples in the same context.
+
+Pages are regenerated from `@civui/schema` on every `pnpm storybook` / `pnpm storybook:build` via the `prestorybook` hook (`pnpm storybook:contract`), so the documentation can never drift from the canonical schema. The generated directory (`.storybook/contract/`) is gitignored — pages are byproducts of the schema, not source. Each Docusaurus component page also carries an auto-injected admonition that links across to the matching Storybook contract page.
 
 ### Native Compile Check
 

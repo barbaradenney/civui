@@ -28,8 +28,8 @@ const schema: ComponentSchema = {
     },
     tile: {
       type: 'boolean',
-      description: 'Tile variant with bordered card styling',
-      default: false,
+      description: 'Tile variant with bordered card styling. Default is true — tiles are the standard treatment; opt out for blank inline checkboxes',
+      default: true,
       reflect: true,
     },
   },

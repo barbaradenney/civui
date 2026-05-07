@@ -16,8 +16,8 @@ const schema: ComponentSchema = {
     },
     tile: {
       type: 'boolean',
-      description: 'Tile variant with bordered card styling for child radios',
-      default: false,
+      description: 'Tile variant with bordered card styling for child radios. Default true — tiles are the standard treatment',
+      default: true,
       reflect: true,
     },
     orientation: {
@@ -26,6 +26,35 @@ const schema: ComponentSchema = {
       default: 'vertical',
       values: ['vertical', 'horizontal'],
       reflect: true,
+    },
+    variant: {
+      type: 'enum',
+      description: 'Tile rendering variant. auto picks card for ≤4 options and list for 5+. Vertical + tile only',
+      default: 'auto',
+      values: ['auto', 'card', 'list'],
+      reflect: true,
+    },
+    preset: {
+      type: 'enum',
+      description: 'Pre-built option list. Renders <civ-radio> children automatically when no slotted children are present',
+      values: ['us-state', 'service-branch', 'discharge-type', 'suffix', 'relationship-type', 'marital-status', 'ethnicity', 'gender', 'language', 'housing-status', 'education-level', 'employment-status', 'income-source', 'veteran-status'],
+    },
+    presetVariant: {
+      type: 'string',
+      description: 'Variant of the preset (e.g. "territories", "all", "binary")',
+      attribute: 'preset-variant',
+    },
+    skipLabel: {
+      type: 'string',
+      description: 'When non-empty, renders a "Prefer not to answer" affordance below the radio group. Outside the roving tabindex',
+      default: '',
+      attribute: 'skip-label',
+    },
+    skipValue: {
+      type: 'string',
+      description: 'Form value used when the skip affordance is selected',
+      default: 'skip',
+      attribute: 'skip-value',
     },
   },
 

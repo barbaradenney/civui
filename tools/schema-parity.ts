@@ -505,6 +505,8 @@ interface PlatformDrift {
 function checkPlatformParity(
   schemaPropNames: string[],
   spec: ComponentSpec,
+  /** Map from schema prop name → schema's `attribute` override, when set. */
+  schemaAttributes: Map<string, string> = new Map(),
 ): PlatformDrift[] {
   const drifts: PlatformDrift[] = [];
 
@@ -546,11 +548,15 @@ function checkPlatformParity(
     const path = join(ROOT, spec.drupal);
     if (existsSync(path)) {
       const drupalNames = new Set(parseDrupalPropNames(path));
-      // Drupal SDCs use snake_case; schema uses camelCase. Normalize both
-      // sides so `showPercent` (schema) matches `show_percent` (SDC).
+      // Drupal SDCs mirror the Lit HTML attribute (with `-` → `_`). When
+      // the schema declares `attribute: 'foo-bar'`, that's the source of
+      // truth — `validateType` with attribute `validate` lives in Drupal
+      // as `validate`, not `validate_type`.
       const missing = schemaPropNames.filter((p) => {
-        const snake = camelToSnake(p);
-        return !drupalNames.has(p) && !drupalNames.has(snake);
+        const candidates = [p, camelToSnake(p)];
+        const attr = schemaAttributes.get(p);
+        if (attr) candidates.push(attr.replace(/-/g, '_'));
+        return !candidates.some((c) => drupalNames.has(c));
       });
       if (missing.length > 0) drifts.push({ platform: 'drupal', missing });
     }
@@ -598,10 +604,16 @@ async function main(): Promise<void> {
     // --platforms is passed). Platforms without a source file are
     // silently skipped. webOnly props are excluded — they're abstractions
     // that don't have a clean cross-platform mapping.
-    const crossPlatformPropNames = schemaProps.filter((p) => !p.webOnly).map((p) => p.name);
+    const crossPlatformProps = schemaProps.filter((p) => !p.webOnly);
+    const crossPlatformPropNames = crossPlatformProps.map((p) => p.name);
+    const schemaAttributes = new Map<string, string>();
+    for (const p of crossPlatformProps) {
+      if (p.attribute) schemaAttributes.set(p.name, p.attribute);
+    }
     const platformDrifts = checkPlatformParity(
       crossPlatformPropNames,
       spec,
+      schemaAttributes,
     );
     if (platformDrifts.length > 0) platformDriftCount++;
 

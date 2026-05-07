@@ -7,6 +7,11 @@
   {% if show_select_all %}show-select-all{% endif %}
   {% if preset %}preset="{{ preset }}"{% endif %}
   {% if preset_variant %}preset-variant="{{ preset_variant }}"{% endif %}
+  {% if tile %}tile{% endif %}
+  {% if orientation %}orientation="{{ orientation }}"{% endif %}
+  {% if variant %}variant="{{ variant }}"{% endif %}
+  {% if max_selections %}max-selections="{{ max_selections }}"{% endif %}
+  {% if min_selections %}min-selections="{{ min_selections }}"{% endif %}
 >
   {% block default %}{{ default }}{% endblock %}
 </civ-checkbox-group>

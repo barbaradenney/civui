@@ -6,6 +6,9 @@
   {% if empty_label %}empty-label="{{ empty_label }}"{% endif %}
   {% if required %}required{% endif %}
   {% if disabled %}disabled{% endif %}
+  {% if options %}options="{{ options }}"{% endif %}
+  {% if width %}width="{{ width }}"{% endif %}
+  {% if autocomplete %}autocomplete="{{ autocomplete }}"{% endif %}
 >
   {% block options %}{{ options }}{% endblock %}
 </civ-select>

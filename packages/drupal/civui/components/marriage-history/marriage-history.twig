@@ -4,4 +4,15 @@
   {% if show_marriage_type %}show-marriage-type{% endif %}
   {% if required %}required{% endif %}
   {% if disabled %}disabled{% endif %}
+  {% if status_assumed %}status-assumed="{{ status_assumed }}"{% endif %}
+  {% if spouse_error %}spouse-error="{{ spouse_error }}"{% endif %}
+  {% if marriage_type_error %}marriage-type-error="{{ marriage_type_error }}"{% endif %}
+  {% if marriage_date_error %}marriage-date-error="{{ marriage_date_error }}"{% endif %}
+  {% if city_error %}city-error="{{ city_error }}"{% endif %}
+  {% if state_error %}state-error="{{ state_error }}"{% endif %}
+  {% if jurisdiction_error %}jurisdiction-error="{{ jurisdiction_error }}"{% endif %}
+  {% if cohabitation_start_error %}cohabitation-start-error="{{ cohabitation_start_error }}"{% endif %}
+  {% if cohabitation_state_error %}cohabitation-state-error="{{ cohabitation_state_error }}"{% endif %}
+  {% if status_error %}status-error="{{ status_error }}"{% endif %}
+  {% if end_date_error %}end-date-error="{{ end_date_error }}"{% endif %}
 ></civ-marriage-history>

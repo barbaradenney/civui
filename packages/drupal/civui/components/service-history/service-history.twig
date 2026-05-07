@@ -4,4 +4,9 @@
   {% if show_service_number %}show-service-number{% endif %}
   {% if required %}required{% endif %}
   {% if disabled %}disabled{% endif %}
+  {% if branch_error %}branch-error="{{ branch_error }}"{% endif %}
+  {% if start_date_error %}start-date-error="{{ start_date_error }}"{% endif %}
+  {% if end_date_error %}end-date-error="{{ end_date_error }}"{% endif %}
+  {% if discharge_error %}discharge-error="{{ discharge_error }}"{% endif %}
+  {% if service_number_error %}service-number-error="{{ service_number_error }}"{% endif %}
 ></civ-service-history>

@@ -6,4 +6,19 @@
   {% if max_files %}max-files="{{ max_files }}"{% endif %}
   {% if required %}required{% endif %}
   {% if disabled %}disabled{% endif %}
+  {% if show_preview %}show-preview{% endif %}
+  {% if capture %}capture="{{ capture }}"{% endif %}
+  {% if variant %}variant="{{ variant }}"{% endif %}
+  {% if initial_files %}initial-files="{{ initial_files }}"{% endif %}
+  {% if drag_text %}drag-text="{{ drag_text }}"{% endif %}
+  {% if browse_text %}browse-text="{{ browse_text }}"{% endif %}
+  {% if accepted_label %}accepted-label="{{ accepted_label }}"{% endif %}
+  {% if max_size_label %}max-size-label="{{ max_size_label }}"{% endif %}
+  {% if remove_aria_label %}remove-aria-label="{{ remove_aria_label }}"{% endif %}
+  {% if files_list_label %}files-list-label="{{ files_list_label }}"{% endif %}
+  {% if file_added_message %}file-added-message="{{ file_added_message }}"{% endif %}
+  {% if file_removed_message %}file-removed-message="{{ file_removed_message }}"{% endif %}
+  {% if file_size_error %}file-size-error="{{ file_size_error }}"{% endif %}
+  {% if file_type_error %}file-type-error="{{ file_type_error }}"{% endif %}
+  {% if max_files_error %}max-files-error="{{ max_files_error }}"{% endif %}
 ></civ-file-upload>

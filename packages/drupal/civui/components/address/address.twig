@@ -6,4 +6,10 @@
   {% if show_country %}show-country{% endif %}
   {% if required %}required{% endif %}
   {% if disabled %}disabled{% endif %}
+  {% if variant %}variant="{{ variant }}"{% endif %}
+  {% if show_street3 %}show-street3{% endif %}
+  {% if street_error %}street-error="{{ street_error }}"{% endif %}
+  {% if city_error %}city-error="{{ city_error }}"{% endif %}
+  {% if state_error %}state-error="{{ state_error }}"{% endif %}
+  {% if zip_error %}zip-error="{{ zip_error }}"{% endif %}
 ></civ-address>

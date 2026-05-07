@@ -5,6 +5,14 @@
   {% if mode %}mode="{{ mode }}"{% endif %}
   {% if min %}min="{{ min }}"{% endif %}
   {% if max %}max="{{ max }}"{% endif %}
+  {% if heading_level %}heading-level="{{ heading_level }}"{% endif %}
+  {% if size %}size="{{ size }}"{% endif %}
+  {% if hint %}hint="{{ hint }}"{% endif %}
+  {% if error %}error="{{ error }}"{% endif %}
+  {% if required %}required{% endif %}
+  {% if disabled %}disabled{% endif %}
+  {% if form_steps_sensitive %}form-steps-sensitive{% endif %}
+  {% if form_steps_show_pause %}form-steps-show-pause{% endif %}
 >
   {% block default %}{{ default }}{% endblock %}
 </civ-repeater>

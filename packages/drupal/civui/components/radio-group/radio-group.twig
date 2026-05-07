@@ -6,6 +6,11 @@
   {% if disabled %}disabled{% endif %}
   {% if preset %}preset="{{ preset }}"{% endif %}
   {% if preset_variant %}preset-variant="{{ preset_variant }}"{% endif %}
+  {% if tile %}tile{% endif %}
+  {% if orientation %}orientation="{{ orientation }}"{% endif %}
+  {% if variant %}variant="{{ variant }}"{% endif %}
+  {% if skip_label %}skip-label="{{ skip_label }}"{% endif %}
+  {% if skip_value %}skip-value="{{ skip_value }}"{% endif %}
 >
   {% block default %}{{ default }}{% endblock %}
 </civ-radio-group>

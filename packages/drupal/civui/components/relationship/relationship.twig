@@ -6,4 +6,16 @@
   {% if show_deceased %}show-deceased{% endif %}
   {% if required %}required{% endif %}
   {% if disabled %}disabled{% endif %}
+  {% if options %}options="{{ options }}"{% endif %}
+  {% if deceased_assumed %}deceased-assumed{% endif %}
+  {% if show_divorce_date %}show-divorce-date{% endif %}
+  {% if show_adoption_date %}show-adoption-date{% endif %}
+  {% if name_error %}name-error="{{ name_error }}"{% endif %}
+  {% if relationship_error %}relationship-error="{{ relationship_error }}"{% endif %}
+  {% if marriage_date_error %}marriage-date-error="{{ marriage_date_error }}"{% endif %}
+  {% if divorce_date_error %}divorce-date-error="{{ divorce_date_error }}"{% endif %}
+  {% if date_of_birth_error %}date-of-birth-error="{{ date_of_birth_error }}"{% endif %}
+  {% if adoption_date_error %}adoption-date-error="{{ adoption_date_error }}"{% endif %}
+  {% if date_of_death_error %}date-of-death-error="{{ date_of_death_error }}"{% endif %}
+  {% if other_description_error %}other-description-error="{{ other_description_error }}"{% endif %}
 ></civ-relationship>

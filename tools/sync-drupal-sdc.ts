@@ -59,6 +59,20 @@ function camelToSnake(name: string): string {
   return name.replace(/([A-Z]+)/g, '_$1').replace(/^_/, '').toLowerCase();
 }
 
+/**
+ * Resolve the Drupal SDC prop key for a schema prop. The convention is
+ * to mirror the Lit HTML attribute the Twig template actually renders,
+ * with kebab-case converted to snake_case:
+ *
+ * - When the schema declares `attribute: 'foo-bar'`, Drupal uses `foo_bar`.
+ * - Otherwise Lit defaults to the lowercased property name; Drupal uses
+ *   snake_case so `showMiddle` becomes `show_middle`.
+ */
+function drupalKeyFor(propName: string, def: any): string {
+  if (def.attribute) return def.attribute.replace(/-/g, '_');
+  return camelToSnake(propName);
+}
+
 function camelToTitle(name: string): string {
   // showStreet2 → "Show street 2"
   return name
@@ -92,8 +106,8 @@ function escapeYamlString(s: string): string {
 }
 
 function renderPropYaml(propName: string, def: any, indent: string): string {
-  const snake = camelToSnake(propName);
-  const lines = [`${indent}${snake}:`];
+  const key = drupalKeyFor(propName, def);
+  const lines = [`${indent}${key}:`];
   lines.push(`${indent}  title: ${camelToTitle(propName)}`);
   lines.push(`${indent}  type: ${schemaTypeToDrupal(def.type)}`);
   if (def.values && def.values.length > 0) {
@@ -172,8 +186,16 @@ async function syncComponent(c: ComponentMapping): Promise<SyncResult> {
   for (const [propName, def] of Object.entries(schemaProps) as [string, any][]) {
     if (INHERITED_FORM_PROPS.has(propName)) continue;
     if (def.webOnly) continue;
-    const snake = camelToSnake(propName);
-    if (existing.has(propName) || existing.has(snake)) continue;
+    const drupalKey = drupalKeyFor(propName, def);
+    // Match against the resolved key (which honors the schema's attribute
+    // override, e.g. `validateType` → `validate`) plus the bare snake form
+    // and the camelCase form, so older SDCs that already declared the prop
+    // under a slightly different name still register as present.
+    if (
+      existing.has(propName) ||
+      existing.has(drupalKey) ||
+      existing.has(camelToSnake(propName))
+    ) continue;
     toAdd.push({ name: propName, def });
   }
 

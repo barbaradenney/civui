@@ -1,7 +1,7 @@
 <civ-text-input
   {% if name %}name="{{ name }}"{% endif %}
   {% if value %}value="{{ value }}"{% endif %}
-  {% if type and type != 'text' %}type="{{ type }}"{% endif %}
+  {% if type %}type="{{ type }}"{% endif %}
   {% if placeholder %}placeholder="{{ placeholder }}"{% endif %}
   {% if maxlength %}maxlength="{{ maxlength }}"{% endif %}
   {% if required %}required{% endif %}
@@ -10,4 +10,18 @@
   {% if autocomplete %}autocomplete="{{ autocomplete }}"{% endif %}
   {% if mask %}mask="{{ mask }}"{% endif %}
   {% if validate %}validate="{{ validate }}"{% endif %}
+  {% if width %}width="{{ width }}"{% endif %}
+  {% if pattern %}pattern="{{ pattern }}"{% endif %}
+  {% if minlength %}minlength="{{ minlength }}"{% endif %}
+  {% if hide_char_count %}hide-char-count{% endif %}
+  {% if inputmode %}inputmode="{{ inputmode }}"{% endif %}
+  {% if mask_pattern %}mask-pattern="{{ mask_pattern }}"{% endif %}
+  {% if mask_mode %}mask-mode="{{ mask_mode }}"{% endif %}
+  {% if prefix %}prefix="{{ prefix }}"{% endif %}
+  {% if suffix %}suffix="{{ suffix }}"{% endif %}
+  {% if clearable %}clearable{% endif %}
+  {% if leading_icon %}leading-icon="{{ leading_icon }}"{% endif %}
+  {% if leading_icon_label %}leading-icon-label="{{ leading_icon_label }}"{% endif %}
+  {% if trailing_icon %}trailing-icon="{{ trailing_icon }}"{% endif %}
+  {% if trailing_icon_label %}trailing-icon-label="{{ trailing_icon_label }}"{% endif %}
 ></civ-text-input>

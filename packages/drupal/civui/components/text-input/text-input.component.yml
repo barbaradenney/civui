@@ -52,7 +52,8 @@ props:
     validate:
       title: Validate
       type: string
-      description: 'Declarative validation type (email, phone, ssn, etc.)'
+      enum: ['email', 'phone', 'phoneIntl', 'ssn', 'ein', 'routing', 'zip', 'zip4', 'usState', 'url', 'currency', 'alphanumeric']
+      description: 'Declarative validation preset — auto-validates on blur. Empty string means no validation'
     width:
       title: Width
       type: string
@@ -86,11 +87,6 @@ props:
       enum: ['blur', 'live']
       default: 'blur'
       description: 'Mask formatting mode. blur (default) is accessible; live formats as user types'
-    validate_type:
-      title: Validate type
-      type: string
-      enum: ['email', 'phone', 'phoneIntl', 'ssn', 'ein', 'routing', 'zip', 'zip4', 'usState', 'url', 'currency', 'alphanumeric']
-      description: 'Declarative validation preset — auto-validates on blur. Empty string means no validation'
     prefix:
       title: Prefix
       type: string

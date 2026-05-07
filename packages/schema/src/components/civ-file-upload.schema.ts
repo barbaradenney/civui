@@ -141,6 +141,30 @@ const schema: ComponentSchema = {
         files: { type: 'File[]', description: 'Current array of selected files' },
       },
     },
+    'civ-upload-cancel': {
+      description: 'Fires when the user cancels an in-progress upload',
+      detail: {
+        index: { type: 'number', description: 'Index of the cancelled file in the list' },
+        name: { type: 'string', description: 'Cancelled file name' },
+      },
+    },
+    'civ-upload-retry': {
+      description: 'Fires when the user retries a failed upload',
+      detail: {
+        index: { type: 'number', description: 'Index of the retried file' },
+        name: { type: 'string', description: 'Retried file name' },
+        file: { type: 'string', description: 'The File object being retried' },
+      },
+    },
+    'civ-file-removed': {
+      description: 'Fires when a file is removed from the list (after upload completes or user-initiated)',
+      detail: {
+        index: { type: 'number', description: 'Index of the removed file' },
+        name: { type: 'string', description: 'Removed file name' },
+        isInitial: { type: 'boolean', description: 'True if the removed file was hydrated from initialFiles (server-resident)' },
+        id: { type: 'string', description: 'Stable identifier from initialFiles, when present' },
+      },
+    },
   },
 
   a11y: {

@@ -73,6 +73,20 @@ const schema: ComponentSchema = {
         index: { type: 'number', description: 'Index of the removed instance' },
       },
     },
+    'civ-repeater-form-steps-open': {
+      description: 'Fires when an instance opens for editing in form-steps mode (either a new instance being added or an existing one re-opened)',
+      detail: {
+        index: { type: 'number', description: 'Index of the instance being opened' },
+        isNew: { type: 'boolean', description: 'True when this is a freshly-added instance (not a re-edit of an existing one)' },
+      },
+    },
+    'civ-repeater-form-steps-close': {
+      description: 'Fires when the form-steps editor closes — either via Save or Cancel',
+      detail: {
+        index: { type: 'number', description: 'Index of the instance being closed' },
+        action: { type: 'string', description: 'Either "save" (committed) or "cancel" (aborted, edits discarded)' },
+      },
+    },
   },
 
   a11y: {

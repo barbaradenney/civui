@@ -1,4 +1,3 @@
-// Schema: packages/schema/src/components/civ-fieldset.schema.ts
 
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';

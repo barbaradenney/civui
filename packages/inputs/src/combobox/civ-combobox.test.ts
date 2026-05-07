@@ -560,9 +560,18 @@ describe('civ-combobox chevron toggle', () => {
 describe('civ-combobox async loadOptions', () => {
   afterEach(cleanupFixtures);
 
-  /** Resolve once a microtask flush + the requested debounce timeout passes. */
+  /**
+   * Resolve once both the debounce timeout AND the microtask queue
+   * have drained. The debounce uses setTimeout, but the loader is
+   * `async` and queues a microtask before its first `await`, so a
+   * single `setTimeout` resolution leaves the loading-state assignment
+   * unobserved on slow CI runners. Pumping a few extra microtasks
+   * after the timer covers that race.
+   */
   const flushDebounce = async (ms: number) => {
     await new Promise((r) => setTimeout(r, ms + 10));
+    await Promise.resolve();
+    await Promise.resolve();
   };
 
   it('calls loadOptions with the typed query (debounced)', async () => {

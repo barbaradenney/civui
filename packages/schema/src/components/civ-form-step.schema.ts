@@ -93,21 +93,40 @@ const schema: ComponentSchema = {
   },
 
   events: {
+    'civ-step-change': {
+      description: 'Fires when the active step changes — covers both forward (continue) and backward (back) navigation as well as programmatic jumps',
+      detail: {
+        current: { type: 'number', description: 'Index of the now-active step' },
+        total: { type: 'number', description: 'Total step count' },
+        label: { type: 'string', description: 'Visible title of the now-active step' },
+      },
+    },
     'civ-step-continue': {
       description: 'Fires when the user advances to the next step',
       detail: {
-        index: { type: 'number', description: 'Index of the just-completed step' },
+        from: { type: 'number', description: 'Index of the step being left' },
+        to: { type: 'number', description: 'Index of the step being entered' },
+      },
+    },
+    'civ-step-back': {
+      description: 'Fires when the user navigates back to the previous step',
+      detail: {
+        from: { type: 'number', description: 'Index of the step being left' },
+        to: { type: 'number', description: 'Index of the step being entered' },
       },
     },
     'civ-step-pause': {
       description: 'Fires when the user clicks "Save and continue later"',
       detail: {
-        index: { type: 'number', description: 'Index of the step being paused' },
+        current: { type: 'number', description: 'Index of the step being paused' },
+        label: { type: 'string', description: 'Visible title of the step being paused' },
       },
     },
     'civ-step-complete': {
       description: 'Fires when the user submits the final step',
-      detail: {},
+      detail: {
+        total: { type: 'number', description: 'Total step count' },
+      },
     },
   },
 

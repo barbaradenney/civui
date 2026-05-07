@@ -36,7 +36,7 @@ const schema: ComponentSchema = {
     'civ-step-click': {
       description: 'Fires when a clickable completed step is activated',
       detail: {
-        index: { type: 'number', description: 'Index of the clicked step' },
+        step: { type: 'number', description: 'Index of the clicked step' },
       },
     },
   },

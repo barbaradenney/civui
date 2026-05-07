@@ -1,4 +1,3 @@
-// Schema: packages/schema/src/components/civ-form.schema.ts
 // Note: complex validation/summary logic layered on top of generated scaffold
 
 import { html, nothing } from 'lit';

@@ -94,6 +94,7 @@ const COVERED_COMPONENTS: ComponentSpec[] = [
   { name: 'civ-relationship',      source: 'packages/compound/src/relationship/civ-relationship.ts',                                  ios: 'packages/ios/Sources/CivUI/CivRelationship.swift',     android: 'packages/android/src/main/kotlin/gov/civui/components/CivRelationship.kt',     drupal: 'packages/drupal/civui/components/relationship/relationship.component.yml' },
   { name: 'civ-service-history',   source: 'packages/compound/src/service-history/civ-service-history.ts',                            ios: 'packages/ios/Sources/CivUI/CivServiceHistory.swift',   android: 'packages/android/src/main/kotlin/gov/civui/components/CivServiceHistory.kt',   drupal: 'packages/drupal/civui/components/service-history/service-history.component.yml' },
   { name: 'civ-filterable-list',   source: 'packages/layout/src/filterable-list/civ-filterable-list.ts',                                ios: 'packages/ios/Sources/CivUI/CivFilterableList.swift',   android: 'packages/android/src/main/kotlin/gov/civui/components/CivFilterableList.kt',   drupal: 'packages/drupal/civui/components/filterable-list/filterable-list.component.yml' },
+  { name: 'civ-support-resources', source: 'packages/form-patterns/src/support-resources/civ-support-resources.ts',                    ios: 'packages/ios/Sources/CivUI/CivSupportResources.swift', android: 'packages/android/src/main/kotlin/gov/civui/components/CivSupportResources.kt', drupal: 'packages/drupal/civui/components/support-resources/support-resources.component.yml' },
 ];
 
 /**

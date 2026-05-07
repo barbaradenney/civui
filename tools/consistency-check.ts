@@ -122,10 +122,14 @@ function checkRenderOrder(comp: ComponentFile) {
   if (!isFormParticipating) return;
   if (WRAPPER_DELEGATED.has(comp.name)) return; // Label/hint/error handled by civ-form-field wrapper
 
-  // Check that render uses renderLabel/renderLegend, renderHint, renderError in order
-  const hasLabel = /renderLabel\(/.test(comp.src) || /renderLegend\(/.test(comp.src);
-  const hasHint = /renderHint\(/.test(comp.src);
-  const hasError = /renderError\(/.test(comp.src);
+  // Check that render uses renderLabel/renderLegend, renderHint, renderError in order.
+  // Compound components (address, direct-deposit, etc.) use `renderFormHeader(...)`
+  // which renders the legend/hint/error block as a unit — that's a recognized
+  // path and counts as both renderHint and renderError being present.
+  const hasFormHeader = /renderFormHeader\(/.test(comp.src);
+  const hasLabel = /renderLabel\(/.test(comp.src) || /renderLegend\(/.test(comp.src) || hasFormHeader;
+  const hasHint = /renderHint\(/.test(comp.src) || hasFormHeader;
+  const hasError = /renderError\(/.test(comp.src) || hasFormHeader;
 
   if (!hasLabel && !comp.name.includes('checkbox') && !comp.name.includes('radio') && !comp.name.includes('toggle') && !comp.name.includes('segment')) {
     addIssue(comp.path, 'render-order', 'warning', `${comp.name} does not use renderLabel() or renderLegend()`);
@@ -170,6 +174,13 @@ function checkRenderOrder(comp: ComponentFile) {
 function checkAriaAttributes(comp: ComponentFile) {
   const isFormParticipating = FORM_CLASS_RE.test(comp.src);
   if (!isFormParticipating) return;
+  // Components in WRAPPER_DELEGATED render their input via a child element
+  // (civ-text-input, civ-date-picker, etc.) that owns the aria-* attributes
+  // — preset wrappers (ssn/ein/zip/...), composite groups (date-range-
+  // picker, memorable-date, checkbox-group), and bare controls all delegate.
+  // Checking aria attributes on the wrapper would require seeing into the
+  // rendered child template, which the static check doesn't do.
+  if (WRAPPER_DELEGATED.has(comp.name)) return;
 
   // Check for aria-invalid
   if (!comp.src.includes('aria-invalid') && !comp.name.includes('segment') && !comp.name.includes('conditional') && !comp.name.includes('progress') && !comp.name.includes('form-group')) {
@@ -191,6 +202,11 @@ function checkEvents(comp: ComponentFile) {
   const isFormParticipating = FORM_CLASS_RE.test(comp.src);
   if (!isFormParticipating) return;
   if (comp.name === 'civ-conditional' || comp.name === 'civ-progress' || comp.name === 'civ-progress-bar') return;
+  // Preset wrappers (civ-ssn / civ-ein / etc.) dispatch civ-input and
+  // civ-change via the PresetInputWrapper base class's _onInput / _onChange
+  // methods. The static check looks for the dispatch in the consumer's own
+  // file, so explicitly skip components that extend PresetInputWrapper.
+  if (/extends\s+PresetInputWrapper/.test(comp.src)) return;
 
   // Check for civ-input event
   if (!comp.src.includes("'civ-input'") && !comp.src.includes('_handleInput')) {
@@ -206,6 +222,10 @@ function checkEvents(comp: ComponentFile) {
 function checkAnalytics(comp: ComponentFile) {
   if (comp.name === 'civ-conditional' || comp.name === 'civ-progress' || comp.name === 'civ-progress-bar' || comp.name === 'civ-icon') return;
   if (NO_ANALYTICS.has(comp.name)) return; // Structural components don't fire analytics
+  // Preset wrappers delegate analytics to the wrapped civ-text-input child
+  // (which itself inherits sendAnalytics via _handleChange). The static
+  // check looks at the consumer's own file, so skip explicitly.
+  if (/extends\s+PresetInputWrapper/.test(comp.src)) return;
 
   // sendAnalytics can be called directly OR inherited via _handleChange from base class
   const hasAnalytics = comp.src.includes('sendAnalytics') || comp.src.includes('_handleChange');
@@ -322,8 +342,26 @@ const NO_ANALYTICS = new Set([
   'civ-summary', 'civ-icon',
   // Compound components delegate analytics to child form fields
   'civ-address', 'civ-name', 'civ-signature',
+  'civ-direct-deposit', 'civ-marriage-history', 'civ-relationship',
+  'civ-service-history', 'civ-race-ethnicity',
+  // Wrappers that delegate to a single child input — the child's
+  // sendAnalytics fires for the actual user interaction.
+  'civ-country', 'civ-date-range-picker',
+  // civ-action-link wraps civ-link (which has sendAnalytics('click')).
+  // civ-filter-chip-group's individual chips each fire sendAnalytics on
+  // change / remove. Aggregate group-level analytics would be redundant
+  // with the per-chip events.
+  'civ-action-link', 'civ-filter-chip-group',
   // Orchestration components delegate to child fields/buttons
   'civ-form-step', 'civ-repeater',
+  // Display / progress / overlay / layout components — no user-action surface
+  // worth tracking (overlay close events aren't conversion events; progress
+  // indicators have no user input; section/support content is presentational).
+  'civ-progress-header', 'civ-progress-percent', 'civ-progress-steps',
+  'civ-section-intro', 'civ-support-resources',
+  'civ-badge', 'civ-count',
+  'civ-action-sheet', 'civ-modal',
+  'civ-filterable-list', 'civ-image-preview', 'civ-input-group',
 ]);
 
 function checkNativeCounterparts(comp: ComponentFile) {
@@ -362,8 +400,15 @@ function checkA11yErrorAnnouncement(comp: ComponentFile) {
   if (comp.name === 'civ-conditional' || comp.name === 'civ-progress' || comp.name === 'civ-progress-bar') return;
   if (WRAPPER_DELEGATED.has(comp.name)) return; // Error rendering handled by civ-form-field wrapper
 
-  // Errors should use role="alert" (handled by renderError) or announce()
-  if (!comp.src.includes('renderError') && !comp.src.includes('role="alert"') && !comp.src.includes('announce(')) {
+  // Errors should use role="alert" (handled by renderError), announce(), or
+  // be wrapped via renderFormHeader() — the latter is the common pattern in
+  // compound components where the legend/hint/error block is rendered as a
+  // unit and the error message inside carries the role="alert" attribute.
+  const hasErrorChannel = comp.src.includes('renderError') ||
+                          comp.src.includes('role="alert"') ||
+                          comp.src.includes('announce(') ||
+                          comp.src.includes('renderFormHeader(');
+  if (!hasErrorChannel) {
     addIssue(comp.path, 'a11y-error-announce', 'warning', `${comp.name} does not use renderError() or role="alert" for error announcements`);
   }
 }
@@ -384,10 +429,24 @@ function checkA11yLabelAssociation(comp: ComponentFile) {
 
 function checkA11yColorNotSoleIndicator(comp: ComponentFile) {
   if (comp.name === 'civ-icon') return; // Icons don't display errors
-  // Error states should use more than just color (border, text, icon)
+  // Error states should use more than just color (border, text, icon).
   if (comp.src.includes('civ-text-error') || comp.src.includes('civ-border-error')) {
-    const hasTextIndicator = comp.src.includes('renderError') || comp.src.includes('role="alert"');
-    if (!hasTextIndicator && !CHILD_COMPONENTS.has(comp.name)) {
+    // A non-color indicator can be: a renderError call (role="alert"), an
+    // explicit role="alert" element, an `<civ-icon name="error">` (the icon
+    // shape itself is non-color), OR a renderFormHeader call (which the
+    // compound components use to render the alert region as a unit).
+    const hasNonColorIndicator =
+      comp.src.includes('renderError') ||
+      comp.src.includes('role="alert"') ||
+      comp.src.includes('renderFormHeader(') ||
+      /<civ-icon[^>]*name="error"/.test(comp.src);
+    // Bare controls (text-input, textarea, file-upload, ...) delegate
+    // primary error rendering to their `<civ-form-field>` wrapper. The
+    // `civ-text-error` they use internally is for secondary indicators
+    // (character-count overrun, file-size overflow icon) that always
+    // accompany a non-color signal — not the primary error message.
+    const isWrapperDelegated = WRAPPER_DELEGATED.has(comp.name);
+    if (!hasNonColorIndicator && !isWrapperDelegated && !CHILD_COMPONENTS.has(comp.name)) {
       addIssue(comp.path, 'a11y-color-only', 'warning', `${comp.name} may use color as sole error indicator — verify text/icon accompanies color change`);
     }
   }

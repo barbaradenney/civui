@@ -47,6 +47,7 @@ const COMPONENTS: ComponentMapping[] = [
   { schema: 'civ-marriage-history', drupal: 'marriage-history' },
   { schema: 'civ-relationship', drupal: 'relationship' },
   { schema: 'civ-service-history', drupal: 'service-history' },
+  { schema: 'civ-filterable-list', drupal: 'filterable-list' },
 ];
 
 const INHERITED_FORM_PROPS = new Set([

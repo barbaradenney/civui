@@ -93,6 +93,7 @@ const COVERED_COMPONENTS: ComponentSpec[] = [
   { name: 'civ-marriage-history',  source: 'packages/compound/src/marriage-history/civ-marriage-history.ts',                          ios: 'packages/ios/Sources/CivUI/CivMarriageHistory.swift',  android: 'packages/android/src/main/kotlin/gov/civui/components/CivMarriageHistory.kt',  drupal: 'packages/drupal/civui/components/marriage-history/marriage-history.component.yml' },
   { name: 'civ-relationship',      source: 'packages/compound/src/relationship/civ-relationship.ts',                                  ios: 'packages/ios/Sources/CivUI/CivRelationship.swift',     android: 'packages/android/src/main/kotlin/gov/civui/components/CivRelationship.kt',     drupal: 'packages/drupal/civui/components/relationship/relationship.component.yml' },
   { name: 'civ-service-history',   source: 'packages/compound/src/service-history/civ-service-history.ts',                            ios: 'packages/ios/Sources/CivUI/CivServiceHistory.swift',   android: 'packages/android/src/main/kotlin/gov/civui/components/CivServiceHistory.kt',   drupal: 'packages/drupal/civui/components/service-history/service-history.component.yml' },
+  { name: 'civ-filterable-list',   source: 'packages/layout/src/filterable-list/civ-filterable-list.ts',                                ios: 'packages/ios/Sources/CivUI/CivFilterableList.swift',   android: 'packages/android/src/main/kotlin/gov/civui/components/CivFilterableList.kt',   drupal: 'packages/drupal/civui/components/filterable-list/filterable-list.component.yml' },
 ];
 
 /**
@@ -166,25 +167,17 @@ function parseLitProps(filePath: string, isBoolean: boolean): LitProp[] {
 function parseLitEvents(filePath: string): ComponentEvent[] {
   const src = readFileSync(filePath, 'utf-8');
   const eventsByName = new Map<string, { keys: Set<string>; unknown: boolean }>();
-  // Capture two flavors:
-  //   dispatch(this, 'name', { ...inline })   — keys parseable
-  //   dispatch(this, 'name', otherArg)         — variable detail, opaque
-  const dispatchRegex = /dispatch\(this,\s*['"]([\w-]+)['"](?:,\s*([^)]+))?\)/g;
-  let m: RegExpExecArray | null;
-  while ((m = dispatchRegex.exec(src)) !== null) {
-    const name = m[1];
-    if (INHERITED_FORM_EVENTS.has(name)) continue;
-    const arg = m[2]?.trim();
+
+  function record(name: string, detailArg: string | undefined): void {
+    if (INHERITED_FORM_EVENTS.has(name)) return;
     if (!eventsByName.has(name)) eventsByName.set(name, { keys: new Set(), unknown: false });
     const entry = eventsByName.get(name)!;
-    if (!arg) continue; // dispatched with no detail at all — nothing to compare
+    const arg = detailArg?.trim();
+    if (!arg) return;
     if (!arg.startsWith('{')) {
-      // Variable / function call / spread — shape is opaque. Don't flag
-      // detail-key drift for any site of this event.
       entry.unknown = true;
-      continue;
+      return;
     }
-    // Strip the outermost braces and walk the body.
     const body = arg.replace(/^\{/, '').replace(/\}$/, '');
     for (const piece of body.split(',')) {
       const trimmed = piece.trim();
@@ -199,6 +192,29 @@ function parseLitEvents(filePath: string): ComponentEvent[] {
       if (key) entry.keys.add(key);
     }
   }
+
+  // Pattern 1: dispatch(this, 'name', { ... })  — preferred helper
+  const dispatchRegex = /dispatch\(this,\s*['"]([\w-]+)['"](?:,\s*([^)]+))?\)/g;
+  // Pattern 2: this.dispatchEvent(new CustomEvent('name', { detail: {...}, ... }))
+  //   Some components dispatch raw CustomEvents instead of using the
+  //   helper. Pull the detail object out of the init body so we can
+  //   compare detail keys.
+  const customEventRegex = /this\.dispatchEvent\(\s*new\s+CustomEvent\(\s*['"]([\w-]+)['"](?:\s*,\s*\{([\s\S]*?)\}\s*\))?/g;
+
+  let m: RegExpExecArray | null;
+  while ((m = dispatchRegex.exec(src)) !== null) {
+    record(m[1], m[2]);
+  }
+  while ((m = customEventRegex.exec(src)) !== null) {
+    const initBody = m[2];
+    let detailArg: string | undefined;
+    if (initBody) {
+      const detailMatch = initBody.match(/detail:\s*(\{[\s\S]*?\})/);
+      detailArg = detailMatch?.[1];
+    }
+    record(m[1], detailArg);
+  }
+
   return [...eventsByName.entries()].map(([name, entry]) => ({
     name,
     detailKeys: [...entry.keys].sort(),

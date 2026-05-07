@@ -5,10 +5,6 @@
   {% if result_count_hidden %}result-count-hidden{% endif %}
   {% if filter_attribute %}filter-attribute="{{ filter_attribute }}"{% endif %}
 >
-  {% if filters %}
-    <div data-filterable-list-filters>
-      {{ filters }}
-    </div>
-  {% endif %}
+  {% block filters %}{{ filters }}{% endblock %}
   {% block default %}{{ default }}{% endblock %}
 </civ-filterable-list>

@@ -34,6 +34,7 @@ const COMPONENTS = [
   'civ-toggle', 'civ-address', 'civ-repeater', 'civ-name', 'civ-direct-deposit',
   'civ-signature', 'civ-form-step', 'civ-progress-percent', 'civ-race-ethnicity',
   'civ-marriage-history', 'civ-relationship', 'civ-service-history',
+  'civ-filterable-list',
 ];
 
 function camelToKebab(name: string): string {

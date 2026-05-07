@@ -662,7 +662,7 @@ const deprecatedFocusClass: Rule = {
           severity: 'warning',
           message: `<${tag}> uses deprecated focus:civ-outline class`,
           element: tag,
-          fix: 'Replace with focus-visible:civ-focus-ring',
+          fix: 'Remove the class — civ.css applies the focus ring globally to native interactive elements',
         });
       }
     });

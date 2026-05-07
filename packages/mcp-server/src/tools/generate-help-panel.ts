@@ -21,7 +21,7 @@ function generateSidebar(sections: HelpSection[]): { html: string; js: string } 
   const htmlParts: string[] = [];
 
   htmlParts.push(
-    `<button type="button" data-civ-help-toggle class="civ-px-3 civ-py-1 civ-bg-primary civ-text-white civ-rounded focus-visible:civ-focus-ring" aria-expanded="false" aria-controls="civ-help-sidebar">Help</button>`,
+    `<button type="button" data-civ-help-toggle class="civ-px-3 civ-py-1 civ-bg-primary civ-text-white civ-rounded" aria-expanded="false" aria-controls="civ-help-sidebar">Help</button>`,
   );
   htmlParts.push(
     `<aside data-civ-help-panel id="civ-help-sidebar" class="civ-border-s civ-p-4" hidden>`,
@@ -68,7 +68,7 @@ function generateInline(sections: HelpSection[]): { html: string; js: string } {
 
     htmlParts.push(
       `<div data-civ-help-inline="${escapeHtml(section.id)}" class="civ-mb-4">`,
-      `  <button type="button" id="${escapeHtml(linkId)}" data-civ-help-expand="${escapeHtml(section.id)}" class="civ-text-primary civ-underline civ-text-sm focus-visible:civ-focus-ring" aria-expanded="false" aria-controls="${escapeHtml(contentId)}">More info: ${escapeHtml(section.heading)}</button>`,
+      `  <button type="button" id="${escapeHtml(linkId)}" data-civ-help-expand="${escapeHtml(section.id)}" class="civ-text-primary civ-underline civ-text-sm" aria-expanded="false" aria-controls="${escapeHtml(contentId)}">More info: ${escapeHtml(section.heading)}</button>`,
       `  <div id="${escapeHtml(contentId)}" class="civ-p-2 civ-mt-1 civ-bg-info-lighter civ-rounded civ-text-sm" hidden>`,
       `    <p>${escapeHtml(section.body)}</p>`,
       `  </div>`,
@@ -105,7 +105,7 @@ function generateTooltip(sections: HelpSection[]): { html: string; js: string } 
     const tooltipId = `tooltip-${section.id}`;
     htmlParts.push(
       `<span class="civ-relative civ-inline-flex civ-items-center civ-gap-1">`,
-      `  <button type="button" data-civ-help-trigger="${escapeHtml(section.id)}" aria-describedby="${escapeHtml(tooltipId)}" class="civ-rounded-full civ-w-5 civ-h-5 civ-bg-info civ-text-white civ-text-xs civ-inline-flex civ-items-center civ-justify-center focus-visible:civ-focus-ring">?</button>`,
+      `  <button type="button" data-civ-help-trigger="${escapeHtml(section.id)}" aria-describedby="${escapeHtml(tooltipId)}" class="civ-rounded-full civ-w-5 civ-h-5 civ-bg-info civ-text-white civ-text-xs civ-inline-flex civ-items-center civ-justify-center">?</button>`,
       `  <div role="tooltip" id="${escapeHtml(tooltipId)}" class="civ-absolute civ-p-2 civ-bg-base-darkest civ-text-white civ-rounded civ-text-sm civ-max-w-xs" hidden>${escapeHtml(section.body)}</div>`,
       `</span>`,
     );

@@ -164,14 +164,6 @@ describe('renderLegend', () => {
     expect(output).not.toContain('civ-legend--xl');
   });
 
-  it('accepts the deprecated textSizeClass option without rendering it', () => {
-    const output = renderToString(renderLegend({
-      legend: 'Section',
-      required: false,
-      textSizeClass: 'should-be-ignored',
-    }));
-    expect(output).not.toContain('should-be-ignored');
-  });
 });
 
 describe('renderGroupLabel', () => {

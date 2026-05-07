@@ -399,8 +399,12 @@ const FIXERS: Record<string, FixerFn> = {
           .replace(/focus:civ-outline-\S+/g, '')
           .replace(/\s+/g, ' ')
           .trim();
-        $(el).attr('class', (fixed + ' focus-visible:civ-focus-ring').trim());
-        fixes.push('Replaced deprecated focus:civ-outline with focus-visible:civ-focus-ring');
+        if (fixed) {
+          $(el).attr('class', fixed);
+        } else {
+          $(el).removeAttr('class');
+        }
+        fixes.push('Removed deprecated focus:civ-outline (focus ring is applied globally by civ.css to native interactive elements)');
       }
     });
     return fixes;

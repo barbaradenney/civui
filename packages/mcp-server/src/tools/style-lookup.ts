@@ -43,7 +43,7 @@ interface ElementStyleDef {
   notes?: string[];
 }
 
-const FOCUS_RING_NOTE = 'Add focus-visible:civ-focus-ring to the interactive element';
+const FOCUS_RING_NOTE = 'Use a real <button> / <a href> / <input> — civ.css applies the focus ring globally to all interactive elements; no class is required';
 
 /**
  * Complete element style definitions derived from components.css.

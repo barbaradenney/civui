@@ -144,7 +144,7 @@ const schema: ComponentSchema = {
 
   platform: {
     web: {
-      controlClasses: ['civ-input', 'focus-visible:civ-focus-ring'],
+      controlClasses: ['civ-input'],
     },
     ios: {
       // Uses native DatePicker

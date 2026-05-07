@@ -1200,7 +1200,7 @@ Most components support label customization for i18n:
 | 2.1.1 Keyboard | All controls keyboard accessible, arrow nav in groups |
 | 2.1.2 No Keyboard Trap | Focus trap only in modal dialogs, Escape closes |
 | 2.4.3 Focus Order | DOM order matches visual order (Light DOM) |
-| 2.4.7 Focus Visible | \`focus-visible:civ-focus-ring\` on all interactive elements |
+| 2.4.7 Focus Visible | Global rule in civ.css applies the ring to every interactive element |
 | 2.4.13 Focus Appearance | W3C Two-Color Technique, 3px outline, WCAG 2.2 |
 | 3.2.2 On Input | No unexpected context changes on input |
 | 3.3.1 Error Identification | \`role="alert"\` on error messages |
@@ -1248,7 +1248,7 @@ Avoid these common mistakes when using CivUI components:
 
 9. **Never omit \`name\` on form-participating components.** Without \`name\`, the value won't appear in form data.
 
-10. **Never use \`focus:\` prefix for focus styles.** Use \`focus-visible:civ-focus-ring\` for keyboard-only focus indication.
+10. **Don't add a focus-ring class to interactive elements.** \`civ.css\` applies the focus indicator globally to every \`button\` / \`a[href]\` / \`input\` / \`select\` / \`textarea\` / \`[role="button"]\` / \`[tabindex]:not([tabindex="-1"])\` — render a real interactive element and the ring shows. The legacy \`focus:civ-outline-*\` and \`focus-visible:civ-focus-ring\` per-element classes are deprecated.
 
 11. **Never use generic required messages.** Use \`required-message\` with field-specific text: "Enter your email address", not "This field is required".
 
@@ -1295,15 +1295,17 @@ Example: \`civ-bg-error-lighter\`, \`civ-text-primary-dark\`, \`civ-border-base-
 
 ### Focus ring
 
-\`\`\`html
-<!-- Standard focus ring (keyboard-only) -->
-<button class="focus-visible:civ-focus-ring">Click me</button>
+The focus ring is applied automatically by a global rule in \`civ.css\` — you don't add a class:
 
-<!-- Inverse variant (for dark backgrounds) -->
+\`\`\`html
+<!-- Standard ring shows on focus, no class needed -->
+<button>Click me</button>
+
+<!-- Inverse opt-in for dark / colored backgrounds -->
 <button class="focus-visible:civ-focus-ring-inverse">Click me</button>
 \`\`\`
 
-The focus ring uses the W3C Two-Color Technique: 3px solid outline at 2px offset with a halo shadow for contrast.
+The ring uses the W3C Two-Color Technique: 3px outline + halo. It triggers on \`:focus\` (so it shows on click as well as keyboard) — matches GOV.UK Design System.
 
 ### Density system
 

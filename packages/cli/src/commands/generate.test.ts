@@ -77,9 +77,9 @@ describe('generate', () => {
     );
   });
 
-  it('creates exactly 4 files', async () => {
+  it('scaffolds across all 4 platforms (9 files: web src/test/stories/index, iOS swift, Android kt, Drupal yml/twig/stories)', async () => {
     await generate('component', ['date-picker'], {});
-    expect(mockWriteFileSync).toHaveBeenCalledTimes(4);
+    expect(mockWriteFileSync).toHaveBeenCalledTimes(9);
   });
 
   it('creates the component source file with correct path', async () => {

@@ -202,10 +202,22 @@ function checkAnalytics(comp: ComponentFile) {
 }
 
 function checkFocusRing(comp: ComponentFile) {
-  // Check that interactive elements use focus-visible:civ-focus-ring
-  if (comp.src.includes('focus:civ-outline') || comp.src.includes('focus:civ-ring')) {
-    const lineNum = comp.lines.findIndex(l => l.includes('focus:civ-outline') || l.includes('focus:civ-ring'));
-    addIssue(comp.path, 'focus-ring', 'error', `${comp.name} uses deprecated focus: class instead of focus-visible:civ-focus-ring`, lineNum + 1);
+  // Focus ring is applied by a global rule in civ.css to every native
+  // interactive element — components shouldn't add their own focus-* class.
+  // Flag the deprecated focus:civ-outline-* AND the now-redundant
+  // focus-visible:civ-focus-ring per-element class.
+  const deprecated = ['focus:civ-outline', 'focus:civ-ring', 'focus-visible:civ-focus-ring'];
+  for (const pattern of deprecated) {
+    if (comp.src.includes(pattern)) {
+      // Allow the inverse variant — it's still a real opt-in for dark backgrounds.
+      if (pattern === 'focus-visible:civ-focus-ring' && !comp.src.match(/focus-visible:civ-focus-ring(?!-inverse)/)) continue;
+      const lineNum = comp.lines.findIndex(l => {
+        if (!l.includes(pattern)) return false;
+        return pattern !== 'focus-visible:civ-focus-ring' || /focus-visible:civ-focus-ring(?!-inverse)/.test(l);
+      });
+      addIssue(comp.path, 'focus-ring', 'error', `${comp.name} uses deprecated ${pattern} — focus ring is now applied globally by civ.css to native interactive elements`, lineNum + 1);
+      return;
+    }
   }
 }
 

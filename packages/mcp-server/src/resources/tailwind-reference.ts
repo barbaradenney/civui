@@ -250,17 +250,25 @@ Semantic classes from \`components.css\` — use these instead of composing raw 
 
 ## 6. Focus Ring
 
-Use \`focus-visible:civ-focus-ring\` on all interactive elements. This renders a two-layer
-outline + box-shadow ring that meets WCAG 2.4.7 Focus Visible.
+The focus ring is applied **automatically** by a global rule in \`civ.css\` to every
+native interactive element: \`button\`, \`[role="button"]\`, \`a[href]\`, \`input\`,
+\`select\`, \`textarea\`, \`summary\`, \`[contenteditable]\`, and \`[tabindex]:not([tabindex="-1"])\`.
+Render real interactive elements and the ring shows on focus — no class required.
 
 \`\`\`html
-<button class="civ-segment-btn focus-visible:civ-focus-ring">Option</button>
-<input class="civ-input focus-visible:civ-focus-ring" />
+<button class="civ-segment-btn">Option</button>
+<input class="civ-input" />
 \`\`\`
 
-For dark/inverse backgrounds, use \`focus-visible:civ-focus-ring-inverse\`.
+The ring follows the GOV.UK pattern: triggers on \`:focus\` (so it shows on click as
+well as keyboard focus), with a dark band flush against the element and a yellow
+halo extending past it. WCAG 2.4.7 Focus Visible compliant.
 
-**DEPRECATED:** Do NOT use \`focus:civ-outline-*\` classes — they have been replaced by \`focus-visible:civ-focus-ring\`.
+For dark/inverse backgrounds, opt-in with \`focus-visible:civ-focus-ring-inverse\` —
+the global rule's specificity is low enough that this opt-in still wins.
+
+**DEPRECATED:** Do NOT use \`focus:civ-outline-*\` classes — they predate the global
+rule and only suppressed the ring without replacing it.
 
 ---
 
@@ -370,7 +378,7 @@ CivUI respects \`prefers-reduced-motion\` — animations are disabled when the u
 |--------------|-----|
 | \`p-4\` (missing prefix) | \`civ-p-4\` |
 | \`bg-[#005ea2]\` (raw hex) | \`civ-bg-primary\` (use semantic token) |
-| \`focus:civ-outline-2\` (deprecated) | \`focus-visible:civ-focus-ring\` |
+| \`focus:civ-outline-2\` (deprecated) | _(remove the class — focus ring is applied globally)_ |
 | \`civ-border-l-4\` (physical direction) | \`civ-border-s-4\` (logical property) |
 | \`civ-mr-2\` (physical margin) | \`civ-me-2\` (logical margin) |
 | \`civ-rounded-l\` (physical radius) | \`civ-rounded-s\` (logical radius) |

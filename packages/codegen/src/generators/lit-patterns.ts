@@ -1015,7 +1015,7 @@ ${propDecls}
           <button
             id="\${this._buttonId}"
             type="button"
-            class="civ-datepicker-cal-btn hover:civ-bg-base-lighter focus-visible:civ-focus-ring"
+            class="civ-datepicker-cal-btn hover:civ-bg-base-lighter"
             aria-label="\${buttonLabel}"
             aria-haspopup="dialog"
             aria-expanded="\${this._open}"
@@ -1064,7 +1064,7 @@ ${propDecls}
         <div class="civ-flex civ-items-center civ-justify-between civ-mb-2">
           <button
             type="button"
-            class="civ-datepicker-nav-btn hover:civ-bg-base-lightest focus-visible:civ-focus-ring"
+            class="civ-datepicker-nav-btn hover:civ-bg-base-lightest"
             aria-label="\${this.previousMonthLabel}"
             ?disabled="\${prevMonthDisabled}"
             @click="\${this._prevMonth}"
@@ -1078,7 +1078,7 @@ ${propDecls}
           </div>
           <button
             type="button"
-            class="civ-datepicker-nav-btn hover:civ-bg-base-lightest focus-visible:civ-focus-ring"
+            class="civ-datepicker-nav-btn hover:civ-bg-base-lightest"
             aria-label="\${this.nextMonthLabel}"
             ?disabled="\${nextMonthDisabled}"
             @click="\${this._nextMonth}"
@@ -1122,7 +1122,7 @@ ${propDecls}
       !day.inCurrentMonth ? 'civ-text-base-light' : '',
       !disabled ? 'hover:civ-bg-primary-lightest' : '',
       day.isToday && !selected ? 'civ-font-bold civ-underline' : '',
-      selected ? 'focus-visible:civ-focus-ring-inverse' : 'focus-visible:civ-focus-ring',
+      selected ? 'focus-visible:civ-focus-ring-inverse' : '',
     ]
       .filter(Boolean)
       .join(' ');
@@ -1353,7 +1353,7 @@ ${propDecls}
         \${renderError(this._errorId, this.error)}
 
         <div
-          class="civ-dropzone focus-visible:civ-focus-ring"
+          class="civ-dropzone"
           @dragover="\${this._boundDragOver}"
           @dragleave="\${this._boundDragLeave}"
           @drop="\${this._boundDrop}"
@@ -1406,7 +1406,6 @@ ${propDecls}
                       </span>
                       <button
                         type="button"
-                        class="focus-visible:civ-focus-ring"
                         data-file-remove
                         @click="\${() => this._removeFile(index)}"
                         aria-label="\${interpolate(this.removeAriaLabel, { name: file.name })}"

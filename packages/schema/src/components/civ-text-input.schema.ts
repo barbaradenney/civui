@@ -127,7 +127,7 @@ const schema: ComponentSchema = {
 
   platform: {
     web: {
-      controlClasses: ['civ-input', 'civ-max-w-full', 'focus-visible:civ-focus-ring'],
+      controlClasses: ['civ-input', 'civ-max-w-full'],
     },
     ios: {
       secureVariant: 'password',

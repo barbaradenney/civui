@@ -18,7 +18,7 @@ Every component is designed for WCAG 2.2 AA compliance from the start, not retro
 - **Keyboard operable** — every interactive component works with keyboard alone
 - **Screen reader tested** — `announce()` utility for dynamic content, `aria-live` regions
 - **Error states** — never rely on color alone (text + border + icon)
-- **Focus visible** — `focus-visible:civ-focus-ring` on all interactive elements
+- **Focus visible** — applied globally by `civ.css` to every native interactive element
 
 ## One Thing Per Page
 

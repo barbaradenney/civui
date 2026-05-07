@@ -169,7 +169,7 @@ function renderInputElement(schema: ComponentSchema, indent: string): string {
     lines.push(`${indent}<${tag}`);
     lines.push(`${indent}  class="\${classes}"`);
   } else {
-    const extraClasses = schema.platform?.web?.controlClasses?.join(' ') || 'civ-input focus-visible:civ-focus-ring';
+    const extraClasses = schema.platform?.web?.controlClasses?.join(' ') || 'civ-input';
     lines.push(`${indent}<${tag}`);
     lines.push(`${indent}  class="${extraClasses}"`);
   }
@@ -249,7 +249,7 @@ function renderSelectElement(schema: ComponentSchema, indent: string): string {
 }
 
 function renderCheckboxElement(schema: ComponentSchema, indent: string): string {
-  const classes = schema.platform?.web?.controlClasses?.join(' ') || 'civ-check-input focus-visible:civ-focus-ring';
+  const classes = schema.platform?.web?.controlClasses?.join(' ') || 'civ-check-input';
 
   return [
     `${indent}<input`,
@@ -271,7 +271,7 @@ function renderCheckboxElement(schema: ComponentSchema, indent: string): string 
 }
 
 function renderSwitchElement(schema: ComponentSchema, indent: string): string {
-  const classes = schema.platform?.web?.controlClasses?.join(' ') || 'civ-toggle-track focus-visible:civ-focus-ring';
+  const classes = schema.platform?.web?.controlClasses?.join(' ') || 'civ-toggle-track';
 
   return [
     `${indent}<button`,
@@ -479,7 +479,7 @@ function generateRenderBody(schema: ComponentSchema): string {
   } else if (schema.platform?.web?.controlClasses) {
     // Extract extra classes beyond the defaults provided by inputClasses()
     const extraClasses = schema.platform.web.controlClasses
-      .filter((c: string) => c !== 'civ-input' && !c.includes('civ-focus-ring'));
+      .filter((c: string) => c !== 'civ-input');
     if (extraClasses.length > 0) {
       lines.push(`    const classes = inputClasses({`);
       lines.push(`      extra: [${extraClasses.map((c: string) => `'${c}'`).join(', ')}],`);

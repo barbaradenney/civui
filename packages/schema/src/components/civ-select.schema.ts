@@ -87,7 +87,7 @@ const schema: ComponentSchema = {
 
   platform: {
     web: {
-      controlClasses: ['civ-input', 'civ-appearance-auto', 'focus-visible:civ-focus-ring'],
+      controlClasses: ['civ-input', 'civ-appearance-auto'],
     },
     ios: {
       // SwiftUI Picker with menu style

@@ -43,15 +43,20 @@ Available presets: \`us-state\`, \`us-territory\`, \`country\`, \`service-branch
 </civ-form-field>
 \`\`\`
 
-### Focus ring class change
-\`focus:civ-outline-*\` classes are deprecated. Use \`focus-visible:civ-focus-ring\` on all interactive elements.
+### Focus ring is now applied globally
+
+\`focus:civ-outline-*\` and the legacy \`focus-visible:civ-focus-ring\` per-element
+class are both deprecated. The focus ring is applied automatically by a global
+rule in \`civ.css\` to every native interactive element. Render a real
+\`<button>\` / \`<a href>\` / \`<input>\` and the ring shows — no class required.
 
 \`\`\`html
 <!-- Before (deprecated) -->
 <button class="focus:civ-outline-primary">Submit</button>
+<button class="focus-visible:civ-focus-ring">Submit</button>
 
 <!-- After -->
-<button class="focus-visible:civ-focus-ring">Submit</button>
+<button>Submit</button>
 \`\`\`
 
 ### Physical → logical CSS properties
@@ -127,6 +132,6 @@ Apply \`[data-civ-scale="dense"]\` or \`[data-civ-scale="spacious"]\` on a paren
 | \`<civ-us-state>\` | Removed | \`<civ-select preset="us-state">\` |
 | \`<civ-service-branch>\` | Removed | \`<civ-select preset="service-branch">\` |
 | Data-list components | Removed | \`<civ-select preset="...">\` |
-| \`focus:civ-outline-*\` | Deprecated | \`focus-visible:civ-focus-ring\` |
+| \`focus:civ-outline-*\` | Deprecated | _(remove — focus ring is now applied globally by civ.css)_ |
 | Physical CSS (\`civ-ml-\`, etc.) | Deprecated | Logical CSS (\`civ-ms-\`, etc.) |
 `;

@@ -87,7 +87,7 @@ const schema: ComponentSchema = {
 
   platform: {
     web: {
-      controlClasses: ['civ-toggle-track', 'focus-visible:civ-focus-ring'],
+      controlClasses: ['civ-toggle-track'],
     },
     ios: {
       // SwiftUI Toggle with default switch style

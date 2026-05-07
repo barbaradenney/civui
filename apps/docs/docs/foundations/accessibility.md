@@ -19,7 +19,7 @@ CivUI components are built for WCAG 2.1 AA compliance, which satisfies Section 5
 | 2.1.2 No Keyboard Trap | Focus trap only in modal dialogs, Escape closes |
 | 2.4.1 Bypass Blocks | `<civ-skip-link>` for skip navigation |
 | 2.4.3 Focus Order | DOM order matches visual order (Light DOM) |
-| 2.4.7 Focus Visible | `focus-visible:civ-focus-ring` on all interactive elements |
+| 2.4.7 Focus Visible | Global rule in `civ.css` applies the ring to every interactive element |
 | 2.4.13 Focus Appearance | W3C Two-Color Technique, 3px outline, WCAG 2.2 |
 | 3.2.2 On Input | No unexpected context changes on input |
 | 3.3.1 Error Identification | `role="alert"` on error messages |
@@ -44,16 +44,19 @@ CivUI components are built for WCAG 2.1 AA compliance, which satisfies Section 5
 CivUI uses the W3C Two-Color Technique (C40) for focus indicators:
 
 - 3px solid outline
-- 2px offset from the element
 - Halo shadow for additional contrast
+- Triggers on `:focus` (so it shows on click as well as keyboard) — matches GOV.UK Design System
 - Meets WCAG 2.2 SC 2.4.13 Focus Appearance
 
-```html
-<!-- Applied automatically on all CivUI interactive elements -->
-<!-- For custom elements, use: -->
-<button class="focus-visible:civ-focus-ring">Custom button</button>
+The ring is applied automatically by a global rule in `civ.css` to every native
+interactive element — `button`, `[role="button"]`, `a[href]`, `input`, `select`,
+`textarea`, `summary`, `[contenteditable]`, `[tabindex]:not([tabindex="-1"])`.
+You don't add a class:
 
-<!-- Inverse variant for dark backgrounds -->
+```html
+<button>Custom button</button>
+
+<!-- Inverse opt-in for dark / colored backgrounds -->
 <button class="focus-visible:civ-focus-ring-inverse">On dark</button>
 ```
 

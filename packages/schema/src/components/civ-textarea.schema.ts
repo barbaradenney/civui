@@ -87,7 +87,7 @@ const schema: ComponentSchema = {
 
   platform: {
     web: {
-      controlClasses: ['civ-input', 'civ-resize-y', 'focus-visible:civ-focus-ring'],
+      controlClasses: ['civ-input', 'civ-resize-y'],
     },
     ios: {
       // SwiftUI TextEditor with character count overlay

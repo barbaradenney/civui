@@ -19,7 +19,7 @@ globs:
 - Set `required` on the `<civ-form-field>` or `<civ-form-fieldset>` wrapper — renders "(required)" text and cascades to the child control.
 - Error messages MUST use `role="alert"` (handled by `renderError()`).
 - Color must never be the sole error indicator — use text + border.
-- Focus ring: `focus-visible:civ-focus-ring` on all interactive elements.
+- Focus ring: applied automatically by `civ.css` to every native interactive element. Render a real `<button>` / `<a href>` / `<input>` — no class required.
 
 ## Plain language
 - Labels use plain language: "Date of birth" not "DOB", "Social Security number" not "SSN".

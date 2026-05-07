@@ -56,7 +56,7 @@ export function generateProgressBar(
     if (clickable && isComplete) {
       htmlParts.push(
         `    <li ${dataAttrs}${ariaCurrent} class="civ-flex civ-items-center civ-gap-1">` +
-          `<button type="button" data-civ-step-btn="${escapeHtml(step.id)}" class="civ-flex civ-items-center civ-gap-1 ${statusClass} civ-px-3 civ-py-1 civ-rounded-full focus-visible:civ-focus-ring">` +
+          `<button type="button" data-civ-step-btn="${escapeHtml(step.id)}" class="civ-flex civ-items-center civ-gap-1 ${statusClass} civ-px-3 civ-py-1 civ-rounded-full">` +
           `<span aria-hidden="true">${indicator}</span> ${escapeHtml(step.label)}</button></li>`,
       );
     } else {

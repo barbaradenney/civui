@@ -101,7 +101,7 @@ const schema: ComponentSchema = {
 
   platform: {
     web: {
-      controlClasses: ['civ-check-input', 'focus-visible:civ-focus-ring'],
+      controlClasses: ['civ-check-input'],
     },
     ios: {
       // SwiftUI Toggle with checkbox style

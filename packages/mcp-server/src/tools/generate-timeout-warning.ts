@@ -58,11 +58,11 @@ export function generateTimeoutWarning(
   htmlParts.push(`  <div class="civ-flex civ-gap-4 civ-mt-6">`);
   if (extendable) {
     htmlParts.push(
-      `    <button type="button" data-civ-timeout-extend class="civ-bg-primary civ-text-white civ-px-4 civ-py-2 civ-rounded focus-visible:civ-focus-ring">Extend session</button>`,
+      `    <button type="button" data-civ-timeout-extend class="civ-bg-primary civ-text-white civ-px-4 civ-py-2 civ-rounded">Extend session</button>`,
     );
   }
   htmlParts.push(
-    `    <button type="button" data-civ-timeout-logout class="civ-bg-base-lighter civ-px-4 civ-py-2 civ-rounded focus-visible:civ-focus-ring">Log out</button>`,
+    `    <button type="button" data-civ-timeout-logout class="civ-bg-base-lighter civ-px-4 civ-py-2 civ-rounded">Log out</button>`,
   );
   htmlParts.push(`  </div>`);
   htmlParts.push(`</dialog>`);

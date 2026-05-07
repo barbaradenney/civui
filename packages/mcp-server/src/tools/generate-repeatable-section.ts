@@ -77,7 +77,7 @@ export function generateRepeatableSection(
 
   if (minRepeats < 1) {
     htmlParts.push(
-      `    <button type="button" data-civ-repeat-remove class="civ-text-error civ-underline civ-text-sm focus-visible:civ-focus-ring" aria-label="${escapeHtml(removeLabel)} ${escapeHtml(heading)} 1">${escapeHtml(removeLabel)}</button>`,
+      `    <button type="button" data-civ-repeat-remove class="civ-text-error civ-underline civ-text-sm" aria-label="${escapeHtml(removeLabel)} ${escapeHtml(heading)} 1">${escapeHtml(removeLabel)}</button>`,
     );
   }
 
@@ -86,7 +86,7 @@ export function generateRepeatableSection(
   // Counter and add button
   htmlParts.push(`  <p class="civ-text-sm civ-mb-2"><span data-civ-repeat-count>1</span> item(s)</p>`);
   htmlParts.push(
-    `  <button type="button" data-civ-repeat-add class="civ-bg-primary civ-text-white civ-px-4 civ-py-2 civ-rounded focus-visible:civ-focus-ring">${escapeHtml(addLabel)}</button>`,
+    `  <button type="button" data-civ-repeat-add class="civ-bg-primary civ-text-white civ-px-4 civ-py-2 civ-rounded">${escapeHtml(addLabel)}</button>`,
   );
 
   // Announcer

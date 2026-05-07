@@ -113,7 +113,7 @@ describe('lookupStyle', () => {
 
     it('includes focusRing', () => {
       const result = lookupStyle('input');
-      expect(result.focusRing).toContain('focus-visible:civ-focus-ring');
+      expect(result.focusRing).toContain('global');
     });
 
     it('filters states when requested', () => {

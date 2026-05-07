@@ -14,7 +14,7 @@ Light DOM only. Tailwind CSS with `civ-` prefix. ElementInternals for form parti
 - Events: `civ-input` (every change), `civ-change` (committed change)
 - Single-value detail: `{ value }`. Multi-value: `{ values: string[] }`. File: `{ files: File[] }`
 - Render order: label → hint → error → control → supplementary info
-- Focus: use `focus-visible:civ-focus-ring` (not `focus:` prefix)
+- Focus: applied automatically by `civ.css` to every native interactive element — render a real `<button>` / `<a href>` / `<input>` and the ring shows; no class required
 - All Tailwind classes prefixed: `civ-p-4`, `civ-text-error`, `civ-bg-primary`
 - Density system: `data-civ-scale="spacious|dense"` on any container
 
@@ -211,7 +211,7 @@ Light DOM only. Tailwind CSS with `civ-` prefix. ElementInternals for form parti
 2. **Use `required` attribute** — renders asterisk and sets `aria-required="true"`.
 3. **Error messages use `role="alert"`** — announced immediately by screen readers.
 4. **Use `required-message` for field-specific errors** — "Enter your email address", not "This field is required".
-5. **Focus ring** uses W3C Two-Color Technique (WCAG 2.2 SC 2.4.13): `focus-visible:civ-focus-ring`.
+5. **Focus ring** uses W3C Two-Color Technique (WCAG 2.2 SC 2.4.13). Applied globally by `civ.css` to every native interactive element — no per-element class needed.
 6. **Keyboard navigation** — groups use arrow keys (RTL-aware), Home/End. Date picker uses arrows, PageUp/Down, Escape.
 7. **Color is never the sole indicator.** Errors use text + border, not just color.
 8. **Screen reader announcements** — use `announce(message, priority)` from `@civui/core`.
@@ -250,7 +250,7 @@ Light DOM only. Tailwind CSS with `civ-` prefix. ElementInternals for form parti
 4. **No `civ-radio` outside `civ-radio-group`** — radio has no form participation alone.
 5. **No `civ-segment` outside `civ-segmented-control`** — same reason.
 6. **No missing `name` attribute** — value won't appear in form data.
-7. **No `focus:` prefix** — use `focus-visible:civ-focus-ring`.
+7. **No focus-related class on interactive elements** — `civ.css` applies the focus ring globally; both `focus:civ-outline-*` and the legacy `focus-visible:civ-focus-ring` per-element classes are deprecated.
 8. **No generic "This field is required"** — use `required-message` with specific text.
 9. **No commas in checkbox values** — `civ-checkbox-group` uses commas as delimiter.
 10. **No native `input`/`change` events** — use `civ-input` and `civ-change`.

@@ -14,7 +14,7 @@ export const GOVERNMENT_PATTERNS = `# Government Form Accessibility Patterns
 - Set \`required\` attribute on mandatory fields — renders asterisk + \`aria-required="true"\`.
 - Error messages MUST use \`role="alert"\` (handled by \`renderError()\`).
 - Color must never be the sole error indicator — use text + border.
-- Focus ring: \`focus-visible:civ-focus-ring\` on all interactive elements.
+- Focus ring: applied automatically by \`civ.css\` to every native interactive element. Render a real \`<button>\` / \`<a href>\` / \`<input>\` — no class required.
 
 ## Plain Language
 - Labels use plain language: "Date of birth" not "DOB", "Social Security number" not "SSN".
@@ -78,7 +78,7 @@ field-specific error text:
 | 2.1.1 Keyboard | All controls keyboard accessible |
 | 2.1.2 No Keyboard Trap | Escape closes dialogs |
 | 2.4.3 Focus Order | DOM order = visual order (Light DOM) |
-| 2.4.7 Focus Visible | focus-visible:civ-focus-ring |
+| 2.4.7 Focus Visible | Global rule in civ.css applies the ring to every interactive element |
 | 3.3.1 Error Identification | role="alert" on errors |
 | 3.3.2 Labels or Instructions | Visible labels + hint text |
 | 3.3.3 Error Suggestion | Correction guidance in errors |

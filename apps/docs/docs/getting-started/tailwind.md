@@ -37,15 +37,18 @@ Examples: `civ-bg-error-lighter`, `civ-text-primary-dark`, `civ-border-base-ligh
 
 ## Focus Ring
 
-```html
-<!-- Standard focus ring (keyboard-only) -->
-<button class="focus-visible:civ-focus-ring">Click me</button>
+The focus ring is applied automatically by a global rule in `civ.css` to every
+native interactive element. Render a real `<button>` / `<a href>` / `<input>` and
+the ring shows on focus — no class required.
 
-<!-- Inverse variant (for dark backgrounds) -->
+```html
+<button>Click me</button>
+
+<!-- Inverse opt-in for dark / colored backgrounds -->
 <button class="focus-visible:civ-focus-ring-inverse">Click me</button>
 ```
 
-The focus ring uses the W3C Two-Color Technique: 3px solid outline at 2px offset with a halo shadow for contrast. Always use `focus-visible:` (not `focus:`) for keyboard-only focus indication.
+The ring uses the W3C Two-Color Technique: 3px outline + halo for contrast. It triggers on `:focus` (so it shows on click as well as keyboard) — matches GOV.UK Design System.
 
 ## Component CSS Classes
 

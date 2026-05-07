@@ -105,11 +105,13 @@ describe('suggestFix', () => {
     expect(result.fixedHtml).toContain('name="full-name"');
   });
 
-  it('replaces deprecated focus class', () => {
+  it('removes deprecated focus class (focus ring is applied globally now)', () => {
     const html = '<div class="focus:civ-outline-2 civ-p-2"></div>';
     const result = suggestFix(html, ['deprecated-focus-class']);
-    expect(result.fixedHtml).toContain('focus-visible:civ-focus-ring');
     expect(result.fixedHtml).not.toContain('focus:civ-outline-2');
+    expect(result.fixedHtml).not.toContain('focus-visible:civ-focus-ring');
+    // Surviving classes are preserved.
+    expect(result.fixedHtml).toContain('civ-p-2');
   });
 
   it('replaces physical CSS with logical properties', () => {

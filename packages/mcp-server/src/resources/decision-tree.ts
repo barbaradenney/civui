@@ -90,6 +90,6 @@ Use this guide to select the correct CivUI component for each form field.
 | Generic required-message | Not helpful for users | Use field-specific text: "Enter your full name" |
 | Abbreviations in labels | Violates plain language | Spell out: "Date of birth" not "DOB" |
 | Physical CSS properties | Breaks RTL layouts | Use logical properties: \`civ-ms-\` not \`civ-ml-\` |
-| \`focus:civ-outline-*\` | Deprecated focus style | Use \`focus-visible:civ-focus-ring\` |
+| \`focus:civ-outline-*\` or \`focus-visible:civ-focus-ring\` | Both deprecated | Remove — focus ring is applied globally by \`civ.css\` to native interactive elements |
 | Checkbox value with comma | Breaks checkbox-group delimiter | Remove commas from checkbox values |
 `;

@@ -21,8 +21,6 @@ import type { InputWidth, MaskDefinition } from '@civui/core';
 import { dispatch } from '@civui/core';
 
 export type TextInputType = 'text' | 'email' | 'number' | 'password' | 'search' | 'tel' | 'url';
-/** @deprecated Use `InputWidth` from `@civui/core`. Re-exported for backwards compatibility. */
-export type TextInputWidth = InputWidth;
 export type TextInputMask = 'ssn' | 'phone-us' | 'zip' | 'zip4' | 'ein' | 'currency' | '';
 export type TextInputValidate = 'email' | 'phone' | 'phoneIntl' | 'ssn' | 'ein' | 'routing' | 'zip' | 'zip4' | 'usState' | 'url' | 'currency' | 'alphanumeric' | '';
 

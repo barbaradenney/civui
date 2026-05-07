@@ -138,7 +138,7 @@ Default text, backgrounds, borders, and neutral elements.
 | Alert backgrounds | varies | `civ-bg-info-lighter`, `civ-bg-warning-lighter` |
 | Success indicators | `success` | `civ-text-success`, `civ-bg-success-lighter` |
 | Disabled elements | `base-light` | `civ-text-base-light` |
-| Focus ring | `primary` | Applied automatically by `focus-visible:civ-focus-ring` |
+| Focus ring | `primary` | Applied automatically by `civ.css` to every native interactive element |
 
 ## Accessibility
 

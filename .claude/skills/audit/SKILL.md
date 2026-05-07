@@ -54,7 +54,7 @@ Audit against WAI-ARIA Authoring Practices and WCAG 2.2 Level AA. Every componen
 - **Date picker**: Calendar grid navigable with Arrow keys, Page Up/Down for month, Home/End for week boundaries, Enter selects, Escape closes dialog
 - **Segmented control**: Roving tabindex like radio group
 - **Home/End** in linear lists, **Escape** to close overlays, **Space/Enter** to activate
-- Focus visible indicator: `focus-visible:civ-focus-ring` class, not `focus:` (which fires on click too)
+- Focus visible indicator: applied automatically by `civ.css` to every native interactive element. Triggers on `:focus` (so it shows on click as well as keyboard) — matches GOV.UK Design System.
 - Focus trapping in modal dialogs (date picker dialog)
 - Focus restoration when closing overlays (return to trigger element)
 
@@ -134,7 +134,7 @@ A design system's value is proportional to its consistency. Audit for deviations
 - Hint elements have an ID referenced in `aria-describedby`
 - Required indicator: `<abbr class="civ-text-error civ-no-underline" title="required">*</abbr>`
 - Disabled state: `civ-opacity-50 civ-cursor-not-allowed` classes + native `disabled` attribute
-- Focus style: `focus-visible:civ-focus-ring` (not deprecated `focus:civ-outline-*`)
+- Focus style: applied globally by `civ.css` to native interactive elements (no per-element class). Both `focus:civ-outline-*` and the legacy `focus-visible:civ-focus-ring` per-element class are deprecated.
 
 **Base class usage:**
 - Simple display components extend `CivBaseElement`

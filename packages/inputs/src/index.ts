@@ -25,7 +25,7 @@ export { PresetInputWrapper } from './preset-input/index.js';
 
 // Text Input
 export { CivTextInput } from './text-input/index.js';
-export type { TextInputType, TextInputWidth, TextInputMask, TextInputValidate } from './text-input/index.js';
+export type { TextInputType, TextInputMask, TextInputValidate } from './text-input/index.js';
 
 // Textarea
 export { CivTextarea } from './textarea/index.js';

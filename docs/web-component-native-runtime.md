@@ -238,7 +238,7 @@ Mapping table for CivUI's Tailwind utilities:
 | `civ-hidden` | `display: 'none'` |
 | `civ-sr-only` | off-screen positioning styles |
 | `civ-opacity-{n}` | `opacity: n / 100` |
-| `focus-visible:civ-focus-ring` | conditional `borderWidth` + `borderColor` + `shadowOffset` on focus |
+| native `:focus` (web applies via global rule) | conditional `borderWidth` + `borderColor` + `shadowOffset` on focus |
 
 #### Density system
 

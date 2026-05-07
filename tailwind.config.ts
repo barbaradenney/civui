@@ -1,5 +1,4 @@
 import type { Config } from 'tailwindcss';
-import plugin from 'tailwindcss/plugin';
 
 const config: Config = {
   prefix: 'civ-',
@@ -153,36 +152,10 @@ const config: Config = {
       },
     },
   },
-  plugins: [
-    plugin(function ({ addUtilities }) {
-      addUtilities({
-        // Focus ring is handled directly in civ.css via the global
-        // selector `button:focus, a[href]:focus, ...` — the plugin
-        // utility was registered but its `focus-visible:` variant
-        // never made it into the compiled bundle, leaving every
-        // element relying on it without a focus indicator. The
-        // direct CSS rule supersedes it entirely.
-
-        // Logical border-width (replaces border-l-4 / border-l-0)
-        '.civ-border-s-4': { 'border-inline-start-width': '4px' },
-        '.civ-border-s-0': { 'border-inline-start-width': '0' },
-
-        // Logical rounding (replaces rounded-l / rounded-r)
-        '.civ-rounded-s': {
-          'border-start-start-radius': 'var(--civ-border-radius-DEFAULT, 0.25rem)',
-          'border-end-start-radius': 'var(--civ-border-radius-DEFAULT, 0.25rem)',
-        },
-        '.civ-rounded-e': {
-          'border-start-end-radius': 'var(--civ-border-radius-DEFAULT, 0.25rem)',
-          'border-end-end-radius': 'var(--civ-border-radius-DEFAULT, 0.25rem)',
-        },
-
-        // Logical margin (replaces mr-2 / ml-2)
-        '.civ-me-2': { 'margin-inline-end': 'var(--civ-spacing-2)' },
-        '.civ-ms-2': { 'margin-inline-start': 'var(--civ-spacing-2)' },
-      });
-    }),
-  ],
+  // Logical-property utilities (border-s-*, rounded-s, ms-*, me-*, etc.)
+  // are native to Tailwind 3.3+, so we don't need a custom plugin to
+  // emit them. Tailwind generates them with the configured `civ-` prefix
+  // automatically.
 };
 
 export default config;

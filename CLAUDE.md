@@ -237,18 +237,19 @@ Why schemas matter:
 - Drift between schema and Lit is enforced by `pnpm parity:schema`, which exits 1 on mismatch.
 - The dormant `@civui/codegen` package can still consume schemas if revived, but the contract role works without codegen.
 
-**Coverage status (15 components):**
+**Coverage status (25 components, every cross-platform component covered):**
 - Form controls: `civ-text-input`, `civ-textarea`, `civ-select`, `civ-combobox`, `civ-date-picker`, `civ-memorable-date`, `civ-file-upload`, `civ-yes-no`, `civ-toggle`
 - Choice groups: `civ-checkbox`, `civ-checkbox-group`, `civ-radio-group`, `civ-segmented-control`
-- Compound + orchestration: `civ-address`, `civ-repeater`
+- Compound + orchestration: `civ-address`, `civ-name`, `civ-direct-deposit`, `civ-signature`, `civ-race-ethnicity`, `civ-marriage-history`, `civ-relationship`, `civ-service-history`, `civ-repeater`, `civ-form-step`
+- Progress: `civ-progress-steps`, `civ-progress-percent`
+
+CI gate: the `schema-parity` job in `.github/workflows/parity.yml` runs `pnpm parity:schema` on every push and PR. Drift fails the build.
 
 **Out of scope (web-specific layout wrappers):** `civ-form-field`, `civ-form-fieldset`, `civ-fieldset`, `civ-form` — these abstract over how form-headers are rendered on web; native platforms compose the same affordances differently and don't need a contract translation.
 
-**Phase 3 (planned):** add schemas for the remaining cross-platform components (`civ-name`, `civ-direct-deposit`, `civ-signature`, `civ-form-step`, `civ-progress-steps`, `civ-progress-percent`, `civ-race-ethnicity`, `civ-marriage-history`, `civ-relationship`, `civ-service-history`); wire `pnpm parity:schema` into CI so drift fails the build.
-
 **If you modify a covered component**, update its schema in the same change. Run `pnpm parity:schema` before committing — the check fails on missing/added/renamed/retyped props. Inherited form props (`label`, `name`, `value`, `hint`, `error`, `required`, `disabled`, `readonly`, etc.) are filtered on both sides; you don't need to declare them.
 
-**If you modify an uncovered component**, no obligation yet — but if you can sync the schema while you're there, you make Phase 3 cheaper.
+**Adding a new component:** drop a schema next to its source in `packages/schema/src/components/civ-<name>.schema.ts`, add a `COVERED_COMPONENTS` entry in `tools/schema-parity.ts`, and the CI gate picks it up automatically.
 
 ## AI Component Usage Guide
 

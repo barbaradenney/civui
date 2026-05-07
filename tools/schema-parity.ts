@@ -65,6 +65,17 @@ const COVERED_COMPONENTS: ComponentSpec[] = [
   // Phase 2 — new compound / orchestration schemas
   { name: 'civ-address', source: 'packages/compound/src/address/civ-address.ts' },
   { name: 'civ-repeater', source: 'packages/form-patterns/src/repeater/civ-repeater.ts' },
+  // Phase 3 — remaining cross-platform compounds + form orchestration
+  { name: 'civ-name', source: 'packages/compound/src/name/civ-name.ts' },
+  { name: 'civ-direct-deposit', source: 'packages/compound/src/direct-deposit/civ-direct-deposit.ts' },
+  { name: 'civ-signature', source: 'packages/compound/src/signature/civ-signature.ts' },
+  { name: 'civ-form-step', source: 'packages/form-patterns/src/form-step/civ-form-step.ts' },
+  { name: 'civ-progress-steps', source: 'packages/form-patterns/src/progress/civ-progress-steps.ts' },
+  { name: 'civ-progress-percent', source: 'packages/form-patterns/src/progress/civ-progress-percent.ts' },
+  { name: 'civ-race-ethnicity', source: 'packages/compound/src/race-ethnicity/civ-race-ethnicity.ts' },
+  { name: 'civ-marriage-history', source: 'packages/compound/src/marriage-history/civ-marriage-history.ts' },
+  { name: 'civ-relationship', source: 'packages/compound/src/relationship/civ-relationship.ts' },
+  { name: 'civ-service-history', source: 'packages/compound/src/service-history/civ-service-history.ts' },
 ];
 
 /**

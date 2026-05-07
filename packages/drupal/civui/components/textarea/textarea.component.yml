@@ -40,6 +40,29 @@ props:
       title: Read only
       type: boolean
       default: false
+    minlength:
+      title: Minlength
+      type: integer
+      description: 'Minimum character length'
+    maxwords:
+      title: Maxwords
+      type: integer
+      description: 'Maximum word count. Switches the counter from characters to words and surfaces a "{n} words remaining" hint'
+    autogrow:
+      title: Autogrow
+      type: boolean
+      default: false
+      description: 'Auto-expand the textarea height to fit the content as the user types'
+    max_height:
+      title: Max height
+      type: string
+      description: 'Cap on autogrow height (any CSS length, e.g. "20rem"). Empty string = unlimited'
+    validate_type:
+      title: Validate type
+      type: string
+      enum: ['length']
+      description: 'Declarative validation preset. length checks min/max boundaries on blur'
+
 
 libraryOverrides:
   dependencies:

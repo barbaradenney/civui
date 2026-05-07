@@ -37,6 +37,58 @@ props:
       title: Disabled
       type: boolean
       default: false
+    options:
+      title: Options
+      type: array
+      description: 'Custom relationship-type configuration. When set, overrides the preset. Each entry: {value, label, fields?: ("marriage-date"|"divorce-date"|"date-of-birth"|"adoption-date"|"date-of-death")[]}'
+    deceased_assumed:
+      title: Deceased assumed
+      type: boolean
+      default: false
+      description: 'Suppress the deceased toggle and treat all entries as deceased — used for survivor-only contexts'
+    show_divorce_date:
+      title: Show divorce date
+      type: boolean
+      default: false
+      description: 'Render the divorce-date input when the relationship type is spouse-related'
+    show_adoption_date:
+      title: Show adoption date
+      type: boolean
+      default: false
+      description: 'Render the adoption-date input when the relationship type is child-related'
+    name_error:
+      title: Name error
+      type: string
+      description: 'Per-field error for the relative-name input'
+    relationship_error:
+      title: Relationship error
+      type: string
+      description: 'Per-field error for the relationship-type selector'
+    marriage_date_error:
+      title: Marriage date error
+      type: string
+      description: 'Per-field error for the marriage-date input'
+    divorce_date_error:
+      title: Divorce date error
+      type: string
+      description: 'Per-field error for the divorce-date input'
+    date_of_birth_error:
+      title: Date of birth error
+      type: string
+      description: 'Per-field error for the date-of-birth input'
+    adoption_date_error:
+      title: Adoption date error
+      type: string
+      description: 'Per-field error for the adoption-date input'
+    date_of_death_error:
+      title: Date of death error
+      type: string
+      description: 'Per-field error for the date-of-death input'
+    other_description_error:
+      title: Other description error
+      type: string
+      description: 'Per-field error for the "describe the relationship" free-text input (shown when relationship = other)'
+
 
 libraryOverrides:
   dependencies:

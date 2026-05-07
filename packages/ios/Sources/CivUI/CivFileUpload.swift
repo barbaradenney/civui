@@ -128,6 +128,11 @@ public struct CivFileUpload: View {
     /// Field name for form state registration.
     public var formName: String?
 
+    /// Server-resident files hydrated on mount (e.g. draft restore).
+    /// Each item is a CivUploadedFile representing a file already
+    /// stored server-side. Empty array = no hydrated files.
+    public var initialFiles: [CivUploadedFile]
+
     /// Comma-separated file names, matching the web component's form value pattern.
     public var value: String {
         files.map(\.name).joined(separator: ",")
@@ -173,7 +178,8 @@ public struct CivFileUpload: View {
         fileTypeError: String = "",
         maxFilesError: String = "",
         formState: CivFormState? = nil,
-        formName: String? = nil
+        formName: String? = nil,
+        initialFiles: [CivUploadedFile] = []
     ) {
         self.label = label
         self._files = files
@@ -205,6 +211,7 @@ public struct CivFileUpload: View {
         self.maxFilesError = maxFilesError
         self.formState = formState
         self.formName = formName
+        self.initialFiles = initialFiles
     }
 
     // MARK: - Body

@@ -39,6 +39,85 @@ props:
       title: Disabled
       type: boolean
       default: false
+    week_starts_on:
+      title: Week starts on
+      type: integer
+      default: 0
+      description: 'Day the week starts on (0=Sunday, 1=Monday)'
+    choose_date_label:
+      title: Choose date label
+      type: string
+      default: 'Choose date'
+      description: 'Aria label for the calendar toggle button'
+    selected_date_label:
+      title: Selected date label
+      type: string
+      default: 'Choose date, selected date is {date}'
+      description: 'Aria label template when a date is selected ({date} interpolated)'
+    dialog_label:
+      title: Dialog label
+      type: string
+      default: 'Choose Date'
+      description: 'Aria label for the calendar dialog'
+    previous_month_label:
+      title: Previous month label
+      type: string
+      default: 'Previous month'
+      description: 'Aria label for previous month button'
+    next_month_label:
+      title: Next month label
+      type: string
+      default: 'Next month'
+      description: 'Aria label for next month button'
+    dialog_opened_message:
+      title: Dialog opened message
+      type: string
+      default: 'Calendar dialog opened'
+      description: 'Screen reader announcement when calendar opens'
+    date_selected_message:
+      title: Date selected message
+      type: string
+      default: 'Selected {date}'
+      description: 'Screen reader announcement when date is selected ({date} interpolated)'
+    today_label:
+      title: Today label
+      type: string
+      default: 'today'
+      description: 'Text appended to today''s date for screen readers'
+    disabled_dates:
+      title: Disabled dates
+      type: string
+      description: 'Comma-separated list of YYYY-MM-DD dates to mark unselectable (e.g. holidays)'
+    clear_label:
+      title: Clear label
+      type: string
+      description: 'Aria label for the clear (×) button when a value is set'
+    today_button_label:
+      title: Today button label
+      type: string
+      description: 'Visible label on the "today" shortcut button inside the calendar dialog'
+    hide_today_button:
+      title: Hide today button
+      type: boolean
+      default: false
+      description: 'Suppress the "today" shortcut button. Useful for date-of-birth and other historical-only fields'
+    invalid_format_message:
+      title: Invalid format message
+      type: string
+      description: 'Validation error shown when typed text doesn''t parse as MM/DD/YYYY'
+    date_range_message:
+      title: Date range message
+      type: string
+      description: 'Validation error shown when selected date is outside min/max'
+    min_date_message:
+      title: Min date message
+      type: string
+      description: 'Validation error shown when selected date is before min ({min} interpolated)'
+    max_date_message:
+      title: Max date message
+      type: string
+      description: 'Validation error shown when selected date is after max ({max} interpolated)'
+
 
 libraryOverrides:
   dependencies:

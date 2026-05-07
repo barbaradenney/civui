@@ -244,6 +244,10 @@ public struct CivRadioGroup: View {
     /// Whether to render in tile (card) style.
     public var isTile: Bool
 
+    /// Tile rendering variant. `auto` picks `card` for ≤4 options and
+    /// `list` for 5+. Vertical + tile only.
+    public var variant: String
+
     /// Layout orientation for the radio options.
     public var orientation: String
 
@@ -287,6 +291,7 @@ public struct CivRadioGroup: View {
         isDisabled: Bool = false,
         isReadonly: Bool = false,
         isTile: Bool = false,
+        variant: String = "auto",
         orientation: String = "vertical",
         onChange: ((String) -> Void)? = nil,
         onAnalytics: ((String, [String: Any]?) -> Void)? = nil,
@@ -306,6 +311,7 @@ public struct CivRadioGroup: View {
         self.isDisabled = isDisabled
         self.isReadonly = isReadonly
         self.isTile = isTile
+        self.variant = variant
         self.orientation = orientation
         self.onChange = onChange
         self.onAnalytics = onAnalytics

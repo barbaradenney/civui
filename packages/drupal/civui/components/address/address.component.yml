@@ -37,6 +37,34 @@ props:
       title: Disabled
       type: boolean
       default: false
+    variant:
+      title: Variant
+      type: string
+      enum: ['default', 'general-delivery', 'contact']
+      default: 'default'
+      description: 'Layout variant. default = standard postal mail address; general-delivery = relaxed structure for unhoused / general-delivery addresses; contact = single-line contact-card layout'
+    show_street3:
+      title: Show street 3
+      type: boolean
+      default: false
+      description: 'Render the optional third address line'
+    street_error:
+      title: Street error
+      type: string
+      description: 'Per-field error for the street line, surfaced via the inner civ-text-input'
+    city_error:
+      title: City error
+      type: string
+      description: 'Per-field error for the city input'
+    state_error:
+      title: State error
+      type: string
+      description: 'Per-field error for the state select'
+    zip_error:
+      title: Zip error
+      type: string
+      description: 'Per-field error for the ZIP input'
+
 
 libraryOverrides:
   dependencies:

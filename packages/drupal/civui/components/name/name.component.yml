@@ -33,6 +33,19 @@ props:
       title: Disabled
       type: boolean
       default: false
+    first_error:
+      title: First error
+      type: string
+      description: 'Per-field error for the first-name input'
+    middle_error:
+      title: Middle error
+      type: string
+      description: 'Per-field error for the middle-name input'
+    last_error:
+      title: Last error
+      type: string
+      description: 'Per-field error for the last-name input'
+
 
 libraryOverrides:
   dependencies:

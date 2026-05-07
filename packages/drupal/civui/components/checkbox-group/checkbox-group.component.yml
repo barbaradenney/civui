@@ -40,6 +40,32 @@ props:
       title: Preset variant
       type: string
       description: 'Variant of the preset options'
+    tile:
+      title: Tile
+      type: boolean
+      default: true
+      description: 'Tile variant with bordered card styling for child checkboxes. Default true — tiles are the standard treatment'
+    orientation:
+      title: Orientation
+      type: string
+      enum: ['vertical', 'horizontal']
+      default: 'vertical'
+      description: 'Layout orientation for child checkboxes'
+    variant:
+      title: Variant
+      type: string
+      enum: ['auto', 'card', 'list']
+      default: 'auto'
+      description: 'Tile rendering variant. auto picks card for ≤4 options and list for 5+. Vertical + tile only'
+    max_selections:
+      title: Max selections
+      type: integer
+      description: 'Maximum number of options the user may check. Blocks the over-pick interactively + auto-appends a "Select up to N" hint'
+    min_selections:
+      title: Min selections
+      type: integer
+      description: 'Minimum required count. Positive value implicitly marks the group as required and surfaces "Select at least N" on submit'
+
 
 slots:
   default:

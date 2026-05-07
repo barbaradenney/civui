@@ -72,6 +72,7 @@ fun CivCheckboxGroup(
     presetVariant: String = "",
     maxSelections: Int = 0,
     minSelections: Int = 0,
+    variant: String = "auto",
     onAnalytics: ((event: String, data: Map<String, Any>?) -> Unit)? = null,
 ) {
     val isDark = isSystemInDarkTheme()

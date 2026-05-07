@@ -90,6 +90,10 @@ public struct CivCheckboxGroup: View {
     /// Minimum number of selections required. Nil = no minimum.
     public var minSelections: Int?
 
+    /// Tile rendering variant. `auto` picks `card` for ≤4 options and
+    /// `list` for 5+. Vertical + tile only.
+    public var variant: String
+
     /// Called when the set of checked values changes.
     public var onChange: (([String]) -> Void)?
 
@@ -119,6 +123,7 @@ public struct CivCheckboxGroup: View {
         presetVariant: String = "",
         maxSelections: Int? = nil,
         minSelections: Int? = nil,
+        variant: String = "auto",
         onChange: (([String]) -> Void)? = nil,
         onAnalytics: ((String, [String: Any]?) -> Void)? = nil
     ) {
@@ -138,6 +143,7 @@ public struct CivCheckboxGroup: View {
         self.presetVariant = presetVariant
         self.maxSelections = maxSelections
         self.minSelections = minSelections
+        self.variant = variant
         self.onChange = onChange
         self.onAnalytics = onAnalytics
     }

@@ -156,6 +156,11 @@ public struct CivAddress: View {
     /// Whether to show a third street address line.
     public var showStreet3: Bool
 
+    /// Layout variant. `default` is the standard postal address;
+    /// `general-delivery` relaxes structure for unhoused addresses;
+    /// `contact` is a single-line contact-card layout.
+    public var variant: String
+
     /// Custom address validation callback. Returns error string or nil.
     public var validateAddress: ((AddressValue) -> String?)?
 
@@ -190,6 +195,7 @@ public struct CivAddress: View {
         showCountry: Bool = false,
         showMilitary: Bool = false,
         showStreet3: Bool = false,
+        variant: String = "default",
         validateAddress: ((AddressValue) -> String?)? = nil
     ) {
         self.legend = legend
@@ -216,6 +222,7 @@ public struct CivAddress: View {
         self.showCountry = showCountry
         self.showMilitary = showMilitary
         self.showStreet3 = showStreet3
+        self.variant = variant
         self.validateAddress = validateAddress
     }
 

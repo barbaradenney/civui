@@ -36,6 +36,82 @@ props:
       title: Disabled
       type: boolean
       default: false
+    show_preview:
+      title: Show preview
+      type: boolean
+      default: false
+      description: 'When true, image files render as thumbnails in the file list'
+    capture:
+      title: Capture
+      type: string
+      enum: ['user', 'environment']
+      description: 'On mobile, hint which camera to open. Empty string keeps the standard file picker'
+    variant:
+      title: Variant
+      type: string
+      enum: ['default', 'compact', 'full']
+      default: 'default'
+      description: 'Dropzone visual variant. compact = file-name + button row, default = standard dropzone, full = larger drag-target'
+    initial_files:
+      title: Initial files
+      type: array
+      description: 'Server-resident files hydrated on mount (e.g. draft restore). Each item: {id, name, size, url?, type?}'
+    drag_text:
+      title: Drag text
+      type: string
+      default: 'Drag files here or'
+      description: 'Text shown in the dropzone'
+    browse_text:
+      title: Browse text
+      type: string
+      default: 'choose from folder'
+      description: 'Text for the browse link in the dropzone'
+    accepted_label:
+      title: Accepted label
+      type: string
+      default: 'Accepted: '
+      description: 'Label prefix for accepted types display'
+    max_size_label:
+      title: Max size label
+      type: string
+      default: 'Max size: '
+      description: 'Label prefix for max size display'
+    remove_aria_label:
+      title: Remove aria label
+      type: string
+      default: 'Remove {name}'
+      description: 'Aria label template for remove button ({name} interpolated)'
+    files_list_label:
+      title: Files list label
+      type: string
+      default: 'Selected files'
+      description: 'Aria label for the file list region'
+    file_added_message:
+      title: File added message
+      type: string
+      default: '{count} file(s) added. {total} file(s) selected.'
+      description: 'Screen reader announcement when files are added ({count}, {total} interpolated)'
+    file_removed_message:
+      title: File removed message
+      type: string
+      default: 'File removed. {total} file(s) selected.'
+      description: 'Screen reader announcement when a file is removed ({total} interpolated)'
+    file_size_error:
+      title: File size error
+      type: string
+      default: '{name} exceeds maximum size of {size}'
+      description: 'Error template for oversized files ({name}, {size} interpolated)'
+    file_type_error:
+      title: File type error
+      type: string
+      default: '{name} is not an accepted file type'
+      description: 'Error template for invalid file types ({name} interpolated)'
+    max_files_error:
+      title: Max files error
+      type: string
+      default: 'Maximum of {max} files allowed'
+      description: 'Error template when file limit is exceeded ({max} interpolated)'
+
 
 libraryOverrides:
   dependencies:

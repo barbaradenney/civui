@@ -35,6 +35,25 @@ props:
       title: Disabled
       type: boolean
       default: false
+    unsure_label:
+      title: Unsure label
+      type: string
+      description: 'Visible label for the optional third button. When empty, only Yes/No are rendered'
+    unsure_value:
+      title: Unsure value
+      type: string
+      default: 'unsure'
+      description: 'Form value submitted when the third button is selected'
+    skip_label:
+      title: Skip label
+      type: string
+      description: 'When non-empty, renders a "Prefer not to answer" affordance below the buttons. Outside the roving tabindex'
+    skip_value:
+      title: Skip value
+      type: string
+      default: 'skip'
+      description: 'Form value submitted when the skip affordance is selected'
+
 
 libraryOverrides:
   dependencies:

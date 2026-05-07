@@ -36,6 +36,17 @@ props:
       title: Disabled
       type: boolean
       default: false
+    indeterminate:
+      title: Indeterminate
+      type: boolean
+      default: false
+      description: 'Tri-state mixed/indeterminate state'
+    tile:
+      title: Tile
+      type: boolean
+      default: true
+      description: 'Tile variant with bordered card styling. Default is true — tiles are the standard treatment; opt out for blank inline checkboxes'
+
 
 libraryOverrides:
   dependencies:

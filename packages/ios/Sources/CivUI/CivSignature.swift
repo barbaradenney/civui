@@ -85,6 +85,11 @@ public struct CivSignature: View {
     /// Whether the field contains PII (excluded from getFormData).
     public var isPii: Bool
 
+    /// When true, render the signature block as an outlined card
+    /// rather than a bare fieldset — highlights the legal weight
+    /// of the action.
+    public var card: Bool
+
     // MARK: - Internal State
 
     @Environment(\.colorScheme) private var colorScheme
@@ -115,7 +120,8 @@ public struct CivSignature: View {
         formName: String? = nil,
         requiredMessage: String? = nil,
         formValidate: (() -> String?)? = nil,
-        isPii: Bool = false
+        isPii: Bool = false,
+        card: Bool = false
     ) {
         self.legend = legend
         self._value = value
@@ -134,6 +140,7 @@ public struct CivSignature: View {
         self.requiredMessage = requiredMessage
         self.formValidate = formValidate
         self.isPii = isPii
+        self.card = card
     }
 
     // MARK: - Body

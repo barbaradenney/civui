@@ -31,6 +31,47 @@ props:
       title: Disabled
       type: boolean
       default: false
+    month_label:
+      title: Month label
+      type: string
+      default: 'Month'
+      description: 'Label for the month select'
+    day_label:
+      title: Day label
+      type: string
+      default: 'Day'
+      description: 'Label for the day input'
+    year_label:
+      title: Year label
+      type: string
+      default: 'Year'
+      description: 'Label for the year input'
+    month_empty_label:
+      title: Month empty label
+      type: string
+      default: '- Month -'
+      description: 'Empty option text for month select'
+    day_placeholder:
+      title: Day placeholder
+      type: string
+      default: 'DD'
+      description: 'Placeholder for day input'
+    year_placeholder:
+      title: Year placeholder
+      type: string
+      default: 'YYYY'
+      description: 'Placeholder for year input'
+    date_set_message:
+      title: Date set message
+      type: string
+      default: 'Date set to {date}'
+      description: 'Screen reader announcement when date is set ({date} interpolated)'
+    invalid_date_message:
+      title: Invalid date message
+      type: string
+      default: 'Enter a valid date'
+      description: 'Error message for invalid date combinations'
+
 
 libraryOverrides:
   dependencies:

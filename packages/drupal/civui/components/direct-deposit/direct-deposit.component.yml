@@ -23,6 +23,19 @@ props:
       title: Disabled
       type: boolean
       default: false
+    routing_error:
+      title: Routing error
+      type: string
+      description: 'Per-field error for the routing-number input'
+    account_error:
+      title: Account error
+      type: string
+      description: 'Per-field error for the account-number input'
+    type_error:
+      title: Type error
+      type: string
+      description: 'Per-field error for the account-type radio group'
+
 
 libraryOverrides:
   dependencies:

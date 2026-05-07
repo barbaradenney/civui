@@ -50,6 +50,21 @@ public struct CivMemorableDate: View {
     /// Custom label for the year field.
     public var yearLabel: String
 
+    /// Empty-state label for the month picker (e.g. "Select").
+    public var monthEmptyLabel: String
+
+    /// Placeholder for the day input (e.g. "DD").
+    public var dayPlaceholder: String
+
+    /// Placeholder for the year input (e.g. "YYYY").
+    public var yearPlaceholder: String
+
+    /// Aria-live announcement template when the full date is set.
+    public var dateSetMessage: String
+
+    /// Validation error shown when the entered date isn't a real date.
+    public var invalidDateMessage: String
+
     /// Called when the date changes. Parameters: (value, month, day, year).
     public var onChange: ((String, String, String, String) -> Void)?
 
@@ -94,6 +109,11 @@ public struct CivMemorableDate: View {
         monthLabel: String? = nil,
         dayLabel: String? = nil,
         yearLabel: String? = nil,
+        monthEmptyLabel: String = "",
+        dayPlaceholder: String = "",
+        yearPlaceholder: String = "",
+        dateSetMessage: String = "",
+        invalidDateMessage: String = "",
         onChange: ((String, String, String, String) -> Void)? = nil,
         onAnalytics: ((String, [String: Any]?) -> Void)? = nil,
         formState: CivFormState? = nil,
@@ -113,6 +133,11 @@ public struct CivMemorableDate: View {
         self.monthLabel = monthLabel ?? CivLocale.shared.t("memorableDateMonthLabel")
         self.dayLabel = dayLabel ?? CivLocale.shared.t("memorableDateDayLabel")
         self.yearLabel = yearLabel ?? CivLocale.shared.t("memorableDateYearLabel")
+        self.monthEmptyLabel = monthEmptyLabel
+        self.dayPlaceholder = dayPlaceholder
+        self.yearPlaceholder = yearPlaceholder
+        self.dateSetMessage = dateSetMessage
+        self.invalidDateMessage = invalidDateMessage
         self.onChange = onChange
         self.onAnalytics = onAnalytics
         self.formState = formState

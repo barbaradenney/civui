@@ -31,6 +31,36 @@ props:
       title: Disabled
       type: boolean
       default: false
+    options:
+      title: Options
+      type: array
+      default: 
+      description: 'Array of selectable options'
+    width:
+      title: Width
+      type: string
+      enum: ['default', '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl']
+      default: 'default'
+      description: 'Width variant'
+    load_debounce:
+      title: Load debounce
+      type: integer
+      default: 300
+      description: 'Debounce in ms before invoking loadOptions on input'
+    min_query_length:
+      title: Min query length
+      type: integer
+      default: 0
+      description: 'Minimum query length before loadOptions is called. 0 means call on first focus'
+    loading_text:
+      title: Loading text
+      type: string
+      description: 'Text shown in the dropdown while loadOptions is in flight'
+    loading_error_text:
+      title: Loading error text
+      type: string
+      description: 'Text shown when loadOptions rejects'
+
 
 slots:
   default:

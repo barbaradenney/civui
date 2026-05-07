@@ -35,6 +35,33 @@ props:
       title: Preset variant
       type: string
       description: 'Variant of the preset options'
+    tile:
+      title: Tile
+      type: boolean
+      default: true
+      description: 'Tile variant with bordered card styling for child radios. Default true — tiles are the standard treatment'
+    orientation:
+      title: Orientation
+      type: string
+      enum: ['vertical', 'horizontal']
+      default: 'vertical'
+      description: 'Layout orientation for child radio buttons'
+    variant:
+      title: Variant
+      type: string
+      enum: ['auto', 'card', 'list']
+      default: 'auto'
+      description: 'Tile rendering variant. auto picks card for ≤4 options and list for 5+. Vertical + tile only'
+    skip_label:
+      title: Skip label
+      type: string
+      description: 'When non-empty, renders a "Prefer not to answer" affordance below the radio group. Outside the roving tabindex'
+    skip_value:
+      title: Skip value
+      type: string
+      default: 'skip'
+      description: 'Form value used when the skip affordance is selected'
+
 
 slots:
   default:

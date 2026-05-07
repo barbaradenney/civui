@@ -127,6 +127,7 @@ fun CivAddress(
     showCountry: Boolean = false,
     showMilitary: Boolean = false,
     showStreet3: Boolean = false,
+    variant: String = "default",
     validateAddress: ((AddressValue) -> String?)? = null,
     onChange: ((AddressValue) -> Unit)? = null,
     onInput: ((AddressValue) -> Unit)? = null,

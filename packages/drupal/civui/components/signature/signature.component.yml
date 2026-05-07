@@ -27,6 +27,20 @@ props:
       title: Disabled
       type: boolean
       default: false
+    name_error:
+      title: Name error
+      type: string
+      description: 'Per-field error for the typed-name input'
+    certify_error:
+      title: Certify error
+      type: string
+      description: 'Per-field error for the certify checkbox'
+    card:
+      title: Card
+      type: boolean
+      default: false
+      description: 'Render the signature block as an outlined card instead of a bare fieldset. Highlights the legal weight of the action'
+
 
 libraryOverrides:
   dependencies:

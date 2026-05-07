@@ -207,19 +207,42 @@ function parseLitEvents(filePath: string): ComponentEvent[] {
 }
 
 /**
- * iOS uses Swift naming conventions for boolean props — `required` becomes
- * `isRequired`, `disabled` becomes `isDisabled`, etc. Map a schema prop to
- * the variant the iOS struct will actually declare.
+ * iOS uses Swift naming conventions, particularly an `is` prefix for
+ * boolean props (`required` → `isRequired`, `tile` → `isTile`, etc.).
+ * For each schema prop, also accept the `isXxx` variant — false-positive
+ * collisions are vanishingly rare for well-named props.
  */
+/**
+ * Native platforms use Swift/Kotlin camelCase for HTML-attribute-derived
+ * props that the schema and Lit keep all-lowercase (matching the HTML
+ * attribute spec). Translate `maxlength` → `maxLength`, etc.
+ */
+const HTML_ATTR_TO_NATIVE_CAMEL: Record<string, string> = {
+  maxlength: 'maxLength',
+  minlength: 'minLength',
+  inputmode: 'inputMode',
+  autocomplete: 'autocomplete', // already camel-friendly
+};
+
 function iosPropAlternatives(name: string): string[] {
-  const alternatives = [name];
-  if (/^(required|disabled|readonly|checked)$/.test(name)) {
-    alternatives.push(`is${name[0].toUpperCase()}${name.slice(1)}`);
-  }
-  // iOS also commonly maps `type` → `inputType`, `value` → bound `value`. Skip
-  // these for now — the schema declares `type` and the iOS struct has
-  // `inputType`. Treat both as acceptable.
+  const alternatives = [name, `is${name[0].toUpperCase()}${name.slice(1)}`];
+  // iOS also commonly maps `type` → `inputType` and `name` → `formName`,
+  // since `type` shadows Swift's metatype keyword and `name` collides
+  // with View's accessibility name.
   if (name === 'type') alternatives.push('inputType');
+  if (name === 'name') alternatives.push('formName');
+  if (HTML_ATTR_TO_NATIVE_CAMEL[name]) alternatives.push(HTML_ATTR_TO_NATIVE_CAMEL[name]);
+  return alternatives;
+}
+
+/**
+ * Android Compose largely follows Lit's prop names verbatim, but a few
+ * collide with reserved/builtin keywords and get renamed.
+ */
+function androidPropAlternatives(name: string): string[] {
+  const alternatives = [name];
+  if (name === 'type') alternatives.push('inputType');
+  if (HTML_ATTR_TO_NATIVE_CAMEL[name]) alternatives.push(HTML_ATTR_TO_NATIVE_CAMEL[name]);
   return alternatives;
 }
 
@@ -508,7 +531,13 @@ function checkPlatformParity(
         .map((s) => s.charAt(0).toUpperCase() + s.slice(1))
         .join('');
       const androidNames = new Set(parseKotlinPropNames(path, display));
-      const missing = schemaPropNames.filter((p) => !androidNames.has(p));
+      const missing = schemaPropNames.filter((p) => {
+        // Compose follows Lit's prop names directly, but a few conflict
+        // with reserved words (type → inputType) — borrow the iOS
+        // alternative list for those collisions.
+        const alts = androidPropAlternatives(p);
+        return !alts.some((alt) => androidNames.has(alt));
+      });
       if (missing.length > 0) drifts.push({ platform: 'android', missing });
     }
   }

@@ -28,6 +28,51 @@ props:
       title: Disabled
       type: boolean
       default: false
+    status_assumed:
+      title: Status assumed
+      type: string
+      description: 'When set, suppresses the status sub-field and uses this value instead. Useful for "current spouse" contexts where status is implied'
+    spouse_error:
+      title: Spouse error
+      type: string
+      description: 'Per-field error for the spouse-name input'
+    marriage_type_error:
+      title: Marriage type error
+      type: string
+      description: 'Per-field error for the marriage-type selector'
+    marriage_date_error:
+      title: Marriage date error
+      type: string
+      description: 'Per-field error for the marriage-date input'
+    city_error:
+      title: City error
+      type: string
+      description: 'Per-field error for the marriage-location city input'
+    state_error:
+      title: State error
+      type: string
+      description: 'Per-field error for the marriage-location state select'
+    jurisdiction_error:
+      title: Jurisdiction error
+      type: string
+      description: 'Per-field error for the foreign-jurisdiction input (when state = "Other / outside US")'
+    cohabitation_start_error:
+      title: Cohabitation start error
+      type: string
+      description: 'Per-field error for the cohabitation-start date input (common-law marriages)'
+    cohabitation_state_error:
+      title: Cohabitation state error
+      type: string
+      description: 'Per-field error for the cohabitation-state select'
+    status_error:
+      title: Status error
+      type: string
+      description: 'Per-field error for the status selector'
+    end_date_error:
+      title: End date error
+      type: string
+      description: 'Per-field error for the end-date input (when status = divorced / widowed / annulled)'
+
 
 libraryOverrides:
   dependencies:

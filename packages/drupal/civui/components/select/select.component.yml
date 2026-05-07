@@ -35,6 +35,22 @@ props:
       title: Disabled
       type: boolean
       default: false
+    options:
+      title: Options
+      type: array
+      default: 
+      description: 'Array of selectable options'
+    width:
+      title: Width
+      type: string
+      enum: ['default', '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl']
+      default: 'default'
+      description: 'Width variant'
+    autocomplete:
+      title: Autocomplete
+      type: string
+      description: 'Autocomplete hint forwarded to the underlying <select>'
+
 
 slots:
   options:

@@ -53,6 +53,74 @@ props:
       title: Validate
       type: string
       description: 'Declarative validation type (email, phone, ssn, etc.)'
+    width:
+      title: Width
+      type: string
+      enum: ['default', '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl']
+      default: 'default'
+      description: 'Width variant'
+    pattern:
+      title: Pattern
+      type: string
+      description: 'Validation regex pattern'
+    minlength:
+      title: Minlength
+      type: integer
+      description: 'Minimum character length'
+    hide_char_count:
+      title: Hide char count
+      type: boolean
+      default: false
+      description: 'When maxlength is set, suppresses the visual character counter and aria-live announcements'
+    inputmode:
+      title: Inputmode
+      type: string
+      description: 'Input mode hint for virtual keyboards'
+    mask_pattern:
+      title: Mask pattern
+      type: string
+      description: 'Custom mask pattern: # = digit, A = letter, * = any printable char. Other chars are literal inserts'
+    mask_mode:
+      title: Mask mode
+      type: string
+      enum: ['blur', 'live']
+      default: 'blur'
+      description: 'Mask formatting mode. blur (default) is accessible; live formats as user types'
+    validate_type:
+      title: Validate type
+      type: string
+      enum: ['email', 'phone', 'phoneIntl', 'ssn', 'ein', 'routing', 'zip', 'zip4', 'usState', 'url', 'currency', 'alphanumeric']
+      description: 'Declarative validation preset — auto-validates on blur. Empty string means no validation'
+    prefix:
+      title: Prefix
+      type: string
+      description: 'Inline prefix label rendered to the left of the input (e.g. "$"). Mutually exclusive with leadingIcon'
+    suffix:
+      title: Suffix
+      type: string
+      description: 'Inline suffix label rendered to the right of the input (e.g. ".com"). Mutually exclusive with trailingIcon and the clear button'
+    clearable:
+      title: Clearable
+      type: boolean
+      default: false
+      description: 'When true and the value is non-empty, renders a clear button on the trailing edge'
+    leading_icon:
+      title: Leading icon
+      type: string
+      description: 'Icon rendered inside the input on the leading edge. Any civ-icon name. Ignored when prefix is set'
+    leading_icon_label:
+      title: Leading icon label
+      type: string
+      description: 'Accessible label for the leading icon. When omitted, icon is decorative (aria-hidden)'
+    trailing_icon:
+      title: Trailing icon
+      type: string
+      description: 'Icon rendered inside the input on the trailing edge. Ignored when suffix is set or the clear button is showing'
+    trailing_icon_label:
+      title: Trailing icon label
+      type: string
+      description: 'Accessible label for the trailing icon. When omitted, icon is decorative'
+
 
 libraryOverrides:
   dependencies:

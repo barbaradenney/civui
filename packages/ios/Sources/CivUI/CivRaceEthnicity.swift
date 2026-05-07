@@ -88,6 +88,10 @@ public struct CivRaceEthnicity: View {
     /// Legend for the race section.
     public var raceLegend: String
 
+    /// Tile rendering variant forwarded to both inner groups.
+    /// `auto` picks `card` for ≤4 options and `list` for 5+.
+    public var variant: String
+
     // MARK: - Internal State
 
     @Environment(\.colorScheme) private var colorScheme
@@ -129,7 +133,8 @@ public struct CivRaceEthnicity: View {
         formValidate: (() -> String?)? = nil,
         isPii: Bool = false,
         ethnicityLegend: String = "Ethnicity",
-        raceLegend: String = "Race"
+        raceLegend: String = "Race",
+        variant: String = "auto"
     ) {
         self.legend = legend
         self._value = value
@@ -149,6 +154,7 @@ public struct CivRaceEthnicity: View {
         self.isPii = isPii
         self.ethnicityLegend = ethnicityLegend
         self.raceLegend = raceLegend
+        self.variant = variant
     }
 
     // MARK: - Body

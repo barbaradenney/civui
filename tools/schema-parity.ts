@@ -1022,24 +1022,102 @@ function checkPlatformParity(
   return drifts;
 }
 
-async function main(): Promise<void> {
-  const strict = process.argv.includes('--strict');
-  // Platforms check is opt-in (informational by default). When --platforms
-  // is passed, drift on ios/android/drupal also fails the build.
-  const enforcePlatforms = process.argv.includes('--platforms');
-  let drift = 0;
-  let platformDriftCount = 0;
+// ---------------------------------------------------------------------------
+// Structured report shape (consumed by --json output and AI agents)
+// ---------------------------------------------------------------------------
+
+interface DriftItem {
+  /** Stable identifier for the kind of drift — useful for routing fixes */
+  kind:
+    | 'missing-source-file'
+    | 'missing-schema-file'
+    | 'prop-missing-from-schema'
+    | 'prop-removed-from-source'
+    | 'prop-mismatch'
+    | 'event-missing-from-schema'
+    | 'event-removed-from-source'
+    | 'event-detail-mismatch'
+    | 'platform-prop-missing'
+    | 'platform-type-mismatch';
+  message: string;
+  /** Optional concrete-fix suggestion (set when --explain is passed) */
+  fix?: string;
+  /** Optional contextual data — prop name, platform, types, etc. */
+  data?: Record<string, unknown>;
+}
+
+interface ComponentReport {
+  name: string;
+  status: 'in-sync' | 'drift';
+  drift: DriftItem[];
+  /** Counts for human-readable summary */
+  propCount: number;
+  eventCount: number;
+}
+
+interface DriftReport {
+  components: ComponentReport[];
+  summary: {
+    total: number;
+    inSync: number;
+    litDriftCount: number;
+    platformDriftCount: number;
+  };
+}
+
+function fixForKind(item: Omit<DriftItem, 'fix'>, componentName: string): string {
+  const d = item.data ?? {};
+  switch (item.kind) {
+    case 'prop-missing-from-schema':
+      return `Add a prop to packages/schema/src/components/${componentName}.schema.ts: \`${d.prop}: { type: '...', description: '...', default: '...' }\` — match the Lit @property declaration.`;
+    case 'prop-removed-from-source':
+      return `Remove \`${d.prop}\` from the schema, OR re-add it to the Lit source if its removal was unintended.`;
+    case 'prop-mismatch':
+      return `Reconcile \`${d.prop}.${d.field}\`: schema=${JSON.stringify(d.schemaValue)}, source=${JSON.stringify(d.sourceValue)}. Update whichever is wrong.`;
+    case 'event-missing-from-schema':
+      return `Add \`${d.event}\` to the schema's \`events\` map with the dispatched detail keys, OR remove the dispatch call.`;
+    case 'event-removed-from-source':
+      return `Remove \`${d.event}\` from the schema's \`events\` map (or restore the dispatch call in the Lit source).`;
+    case 'event-detail-mismatch':
+      return `\`${d.event}\` detail keys diverge — schema declares ${JSON.stringify(d.schemaKeys)}, source dispatches ${JSON.stringify(d.sourceKeys)}. Update one to match.`;
+    case 'platform-prop-missing': {
+      const platform = d.platform as string;
+      const prop = d.prop as string;
+      if (platform === 'drupal') return `Run \`pnpm sync:drupal\` to auto-add \`${prop}\` to the SDC YAML — the regenerator pulls from the schema.`;
+      return `Either (1) add \`${prop}\` to the ${platform} source (matching the schema's type), OR (2) mark the prop \`webOnly: true\` in the schema if it's a web-specific concept (HTML attribute, JS-only callback, Tailwind sizing). See AGENTS.md for the decision tree.`;
+    }
+    case 'platform-type-mismatch': {
+      const platform = d.platform as string;
+      const expected = d.expected as string;
+      if (platform === 'drupal') return `Edit packages/drupal/civui/components/${componentName.replace(/^civ-/, '')}/${componentName.replace(/^civ-/, '')}.component.yml — change \`type:\` of \`${d.prop}\` to match schema (expected ${expected}).`;
+      return `Either fix the ${platform} type for \`${d.prop}\` to match the schema (categorized as ${expected}), OR mark the prop \`webOnly: true\` in the schema if the wire format genuinely differs per platform.`;
+    }
+    case 'missing-source-file':
+      return `The Lit source file ${d.path} doesn't exist. Either create it or remove the COVERED_COMPONENTS entry.`;
+    case 'missing-schema-file':
+      return `Create a schema at ${d.path}. Use \`pnpm scaffold:component ${componentName}\` to bootstrap.`;
+    default:
+      return '';
+  }
+}
+
+async function buildReport(strict: boolean, explain: boolean): Promise<DriftReport> {
+  const components: ComponentReport[] = [];
+
   for (const spec of COVERED_COMPONENTS) {
+    const drift: DriftItem[] = [];
     const sourcePath = join(ROOT, spec.source);
     if (!existsSync(sourcePath)) {
-      console.log(`⚠  ${spec.name}: source file not found at ${spec.source}`);
-      drift++;
+      drift.push({ kind: 'missing-source-file', message: `source file not found: ${spec.source}`, data: { path: spec.source } });
+      components.push({ name: spec.name, status: 'drift', drift, propCount: 0, eventCount: 0 });
       continue;
     }
     const schemaPath = join(ROOT, 'packages/schema/src/components', `${spec.name}.schema.ts`);
     if (!existsSync(schemaPath)) {
-      console.log(`${strict ? '✗' : '⚠'}  ${spec.name}: no schema file at packages/schema/src/components/${spec.name}.schema.ts`);
-      if (strict) drift++;
+      const item: DriftItem = { kind: 'missing-schema-file', message: `no schema at ${schemaPath}`, data: { path: schemaPath } };
+      const status = strict ? 'drift' : 'in-sync'; // matches old behavior: warning unless --strict
+      if (status === 'drift') drift.push(item);
+      components.push({ name: spec.name, status, drift, propCount: 0, eventCount: 0 });
       continue;
     }
     const schema = await loadSchema(spec.name);
@@ -1049,78 +1127,126 @@ async function main(): Promise<void> {
     const litEvents = parseLitEvents(sourcePath);
     const propResult = diffProps(schemaProps, litProps);
     const eventResult = diffEvents(schemaEvents, litEvents);
-    const hasDrift =
-      propResult.missingFromSchema.length > 0 ||
-      propResult.removedFromSource.length > 0 ||
-      propResult.mismatched.length > 0 ||
-      eventResult.missingFromSchema.length > 0 ||
-      eventResult.removedFromSource.length > 0 ||
-      eventResult.detailMismatches.length > 0;
-    // Cross-platform parity: validate each platform's source declares
-    // the schema's props (informational by default; failing only when
-    // --platforms is passed). Platforms without a source file are
-    // silently skipped. webOnly props are excluded — they're abstractions
-    // that don't have a clean cross-platform mapping.
+
+    for (const prop of propResult.missingFromSchema) {
+      drift.push({ kind: 'prop-missing-from-schema', message: `prop in source but missing from schema: ${prop}`, data: { prop } });
+    }
+    for (const prop of propResult.removedFromSource) {
+      drift.push({ kind: 'prop-removed-from-source', message: `prop in schema but no longer in source: ${prop}`, data: { prop } });
+    }
+    for (const m of propResult.mismatched) {
+      drift.push({ kind: 'prop-mismatch', message: `${m.name}.${m.field} differs: schema=${JSON.stringify(m.schema)}, source=${JSON.stringify(m.source)}`, data: { prop: m.name, field: m.field, schemaValue: m.schema, sourceValue: m.source } });
+    }
+    for (const event of eventResult.missingFromSchema) {
+      drift.push({ kind: 'event-missing-from-schema', message: `event fired in source but missing from schema: ${event}`, data: { event } });
+    }
+    for (const event of eventResult.removedFromSource) {
+      drift.push({ kind: 'event-removed-from-source', message: `event declared in schema but never dispatched: ${event}`, data: { event } });
+    }
+    for (const m of eventResult.detailMismatches) {
+      drift.push({ kind: 'event-detail-mismatch', message: `${m.name} detail keys differ: schema=${JSON.stringify(m.schema)}, source=${JSON.stringify(m.source)}`, data: { event: m.name, schemaKeys: m.schema, sourceKeys: m.source } });
+    }
+
     const crossPlatformProps = schemaProps.filter((p) => !p.webOnly);
     const schemaAttributes = new Map<string, string>();
     for (const p of crossPlatformProps) {
       if (p.attribute) schemaAttributes.set(p.name, p.attribute);
     }
-    const platformDrifts = checkPlatformParity(
-      crossPlatformProps,
-      spec,
-      schemaAttributes,
-    );
-    if (platformDrifts.length > 0) platformDriftCount++;
-
-    if (!hasDrift && platformDrifts.length === 0) {
-      console.log(`✓  ${spec.name} (${litProps.length} props, ${litEvents.length} events in sync across all platforms)`);
-      continue;
-    }
-    if (hasDrift) drift++;
-    console.log(`${hasDrift ? '✗' : '⚠'}  ${spec.name}`);
-    if (propResult.missingFromSchema.length > 0) {
-      console.log(`   props in source but missing from schema: ${propResult.missingFromSchema.join(', ')}`);
-    }
-    if (propResult.removedFromSource.length > 0) {
-      console.log(`   props in schema but no longer in source: ${propResult.removedFromSource.join(', ')}`);
-    }
-    for (const m of propResult.mismatched) {
-      console.log(`   ${m.name}.${m.field} differs: schema=${JSON.stringify(m.schema)}, source=${JSON.stringify(m.source)}`);
-    }
-    if (eventResult.missingFromSchema.length > 0) {
-      console.log(`   events fired in source but missing from schema: ${eventResult.missingFromSchema.join(', ')}`);
-    }
-    if (eventResult.removedFromSource.length > 0) {
-      console.log(`   events declared in schema but never dispatched: ${eventResult.removedFromSource.join(', ')}`);
-    }
-    for (const m of eventResult.detailMismatches) {
-      console.log(`   ${m.name} detail keys differ: schema=${JSON.stringify(m.schema)}, source=${JSON.stringify(m.source)}`);
-    }
+    const platformDrifts = checkPlatformParity(crossPlatformProps, spec, schemaAttributes);
     for (const pd of platformDrifts) {
-      if (pd.missing.length > 0) {
-        console.log(`   ${pd.platform}: missing schema props in source (${pd.missing.length}): ${pd.missing.join(', ')}`);
+      for (const prop of pd.missing) {
+        drift.push({ kind: 'platform-prop-missing', message: `${pd.platform}: missing schema prop ${prop}`, data: { platform: pd.platform, prop } });
       }
-      if (pd.typeMismatches && pd.typeMismatches.length > 0) {
+      if (pd.typeMismatches) {
         for (const tm of pd.typeMismatches) {
-          console.log(`   ${pd.platform}: ${tm.name} type mismatch — schema expects ${tm.expected}, ${pd.platform} declares ${tm.got}`);
+          drift.push({ kind: 'platform-type-mismatch', message: `${pd.platform}: ${tm.name} type mismatch — schema expects ${tm.expected}, ${pd.platform} declares ${tm.got}`, data: { platform: pd.platform, prop: tm.name, expected: tm.expected, got: tm.got } });
         }
       }
     }
-  }
-  const litFailure = drift > 0;
-  const platformFailure = enforcePlatforms && platformDriftCount > 0;
-  if (litFailure || platformFailure) {
-    if (litFailure) {
-      console.log(`\n${drift} component(s) have Lit ↔ schema drift.`);
+
+    if (explain) {
+      for (const item of drift) {
+        item.fix = fixForKind(item, spec.name);
+      }
     }
+
+    components.push({
+      name: spec.name,
+      status: drift.length > 0 ? 'drift' : 'in-sync',
+      drift,
+      propCount: litProps.length,
+      eventCount: litEvents.length,
+    });
+  }
+
+  let litDriftCount = 0;
+  let platformDriftCount = 0;
+  for (const c of components) {
+    const hasLitDrift = c.drift.some((d) => !d.kind.startsWith('platform-'));
+    const hasPlatformDrift = c.drift.some((d) => d.kind.startsWith('platform-'));
+    if (hasLitDrift) litDriftCount++;
+    if (hasPlatformDrift) platformDriftCount++;
+  }
+  return {
+    components,
+    summary: {
+      total: COVERED_COMPONENTS.length,
+      inSync: components.filter((c) => c.status === 'in-sync').length,
+      litDriftCount,
+      platformDriftCount,
+    },
+  };
+}
+
+function renderTextReport(report: DriftReport, enforcePlatforms: boolean, explain: boolean): boolean {
+  let exitFailure = false;
+  for (const c of report.components) {
+    if (c.status === 'in-sync' && c.drift.length === 0) {
+      console.log(`✓  ${c.name} (${c.propCount} props, ${c.eventCount} events in sync across all platforms)`);
+      continue;
+    }
+    const hasLitDrift = c.drift.some((d) => !d.kind.startsWith('platform-'));
+    console.log(`${hasLitDrift ? '✗' : '⚠'}  ${c.name}`);
+    for (const item of c.drift) {
+      console.log(`   ${item.message}`);
+      if (explain && item.fix) console.log(`     → fix: ${item.fix}`);
+    }
+  }
+  const { litDriftCount, platformDriftCount } = report.summary;
+  if (litDriftCount > 0 || (enforcePlatforms && platformDriftCount > 0)) {
+    if (litDriftCount > 0) console.log(`\n${litDriftCount} component(s) have Lit ↔ schema drift.`);
     if (platformDriftCount > 0) {
       const verb = enforcePlatforms ? 'have' : 'have informational';
       console.log(`${platformDriftCount} component(s) ${verb} platform parity gaps (run with --platforms to fail the build).`);
     }
-    if (litFailure || platformFailure) process.exit(1);
+    exitFailure = true;
+  } else {
+    console.log(`\n${report.summary.total}/${report.summary.total} components match their schema.`);
   }
-  console.log(`\n${COVERED_COMPONENTS.length}/${COVERED_COMPONENTS.length} components match their schema.`);
+  return exitFailure;
+}
+
+async function main(): Promise<void> {
+  const strict = process.argv.includes('--strict');
+  // Platforms check is opt-in (informational by default). When --platforms
+  // is passed, drift on ios/android/drupal also fails the build.
+  const enforcePlatforms = process.argv.includes('--platforms');
+  // --json: emit a structured DriftReport for tooling / AI agent consumption.
+  // --explain: include a concrete `fix` suggestion on every drift item.
+  const json = process.argv.includes('--json');
+  const explain = process.argv.includes('--explain');
+
+  const report = await buildReport(strict, explain || json);
+
+  if (json) {
+    console.log(JSON.stringify(report, null, 2));
+    const platformFailure = enforcePlatforms && report.summary.platformDriftCount > 0;
+    if (report.summary.litDriftCount > 0 || platformFailure) process.exit(1);
+    return;
+  }
+
+  const failure = renderTextReport(report, enforcePlatforms, explain);
+  if (failure) process.exit(1);
 }
 
 if (isCliInvocation()) {

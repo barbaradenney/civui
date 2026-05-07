@@ -319,19 +319,28 @@ function injectContractLinkIntoComponentPage(
     CONTRACT_LINK_MARKER_END,
   ].join('\n');
 
-  // If the page already has a marker block, replace it. Otherwise insert
-  // immediately after the YAML frontmatter (keeps the marker near the top
-  // where it's discoverable).
+  // First, strip any existing marker block (could be at any location from a
+  // previous generator pass). The new block is then inserted after the H1
+  // title — that's where it reads most naturally.
+  const markerRegex = new RegExp(`\\n*${CONTRACT_LINK_MARKER_START}[\\s\\S]*?${CONTRACT_LINK_MARKER_END}\\n*`, 'm');
+  const cleaned = original.replace(markerRegex, '\n\n');
+
+  // Find the first H1 line (`# Title`). The hand-written component pages
+  // all have one. The admonition goes immediately after it so it shows up
+  // between the title and the body — natural reading position, not awkward
+  // floating-above-title placement.
+  const h1Match = cleaned.match(/^# .+$/m);
   let next: string;
-  const markerRegex = new RegExp(`${CONTRACT_LINK_MARKER_START}[\\s\\S]*?${CONTRACT_LINK_MARKER_END}`, 'm');
-  if (markerRegex.test(original)) {
-    next = original.replace(markerRegex, block);
+  if (h1Match && h1Match.index !== undefined) {
+    const insertAt = h1Match.index + h1Match[0].length;
+    // Insert: blank line, marker block, blank line, then continue.
+    next = cleaned.slice(0, insertAt) + '\n\n' + block + cleaned.slice(insertAt);
   } else {
-    // Find the end of YAML frontmatter (second `---` line).
-    const fmEnd = original.indexOf('\n---', 4); // skip leading `---\n`
-    if (fmEnd < 0) return { changed: false }; // no frontmatter — skip rather than guess
-    const insertAt = original.indexOf('\n', fmEnd + 4) + 1; // after the closing `---`
-    next = original.slice(0, insertAt) + '\n' + block + '\n' + original.slice(insertAt);
+    // Fallback: no H1 found, insert after frontmatter end.
+    const fmEnd = cleaned.indexOf('\n---', 4);
+    if (fmEnd < 0) return { changed: false };
+    const insertAt = cleaned.indexOf('\n', fmEnd + 4) + 1;
+    next = cleaned.slice(0, insertAt) + '\n' + block + '\n' + cleaned.slice(insertAt);
   }
   if (next === original) return { changed: false };
   if (!DRY_RUN) writeFileSync(pagePath, next);

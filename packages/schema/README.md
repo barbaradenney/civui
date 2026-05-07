@@ -109,3 +109,33 @@ import { validateSchema } from '@civui/schema/validate';
 import schema from './components/civ-foo.schema.js';
 console.log(validateSchema(schema));
 ```
+
+## Consuming the contracts as JSON
+
+Running `pnpm build` in this package emits three categories of JSON artifact under `dist/`:
+
+| Artifact | Path | Purpose |
+|----------|------|---------|
+| Master file | `dist/contracts.json` | All 53 schemas in one object, keyed by component name |
+| Per-component files | `dist/contracts/civ-<name>.json` | One file per schema |
+| JSON Schema for the format | `dist/contract.schema.json` | Draft 2020-12 JSON Schema describing the SHAPE of a contract document — use any standard JSON Schema validator (ajv, etc.) to validate a custom or external schema |
+
+External consumers without TypeScript can read them directly:
+
+```js
+// All schemas:
+import contracts from '@civui/schema/contracts.json' with { type: 'json' };
+const button = contracts['civ-button'];
+
+// One component:
+import button from '@civui/schema/contracts/civ-button.json' with { type: 'json' };
+
+// Validate a custom schema with ajv:
+import Ajv from 'ajv';
+import contractSchema from '@civui/schema/contract.schema.json' with { type: 'json' };
+const ajv = new Ajv();
+const validate = ajv.compile(contractSchema);
+const ok = validate(myCustomSchema);
+```
+
+These JSON files mirror the canonical TypeScript schemas exactly — `pnpm build` regenerates them from the `.schema.ts` source. The `prepublishOnly` script ensures they're always rebuilt before publish.

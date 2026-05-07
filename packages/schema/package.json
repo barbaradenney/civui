@@ -1,13 +1,68 @@
 {
   "name": "@civui/schema",
   "version": "0.1.0",
-  "private": true,
   "type": "module",
-  "description": "Platform-neutral component schemas for CivUI — the single source of truth for generating cross-platform implementations",
+  "description": "Platform-neutral component contracts for CivUI — the single source of truth that every CivUI platform implementation (Lit, iOS SwiftUI, Android Compose, Drupal SDC) must satisfy.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/barbaradenney/civui.git",
+    "directory": "packages/schema"
+  },
+  "keywords": [
+    "civui",
+    "design-system",
+    "schema",
+    "contract",
+    "cross-platform",
+    "lit",
+    "swiftui",
+    "jetpack-compose",
+    "drupal-sdc",
+    "accessibility",
+    "government"
+  ],
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "src",
+    "README.md"
+  ],
   "exports": {
-    "./types": "./src/schema.types.ts",
-    "./naming-maps": "./src/naming-maps.ts",
-    "./validate": "./src/validate.ts",
-    "./components/*": "./src/components/*"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./types": {
+      "types": "./dist/schema.types.d.ts",
+      "import": "./dist/schema.types.js"
+    },
+    "./validate": {
+      "types": "./dist/validate.d.ts",
+      "import": "./dist/validate.js"
+    },
+    "./naming-maps": {
+      "types": "./dist/naming-maps.d.ts",
+      "import": "./dist/naming-maps.js"
+    },
+    "./components/*": {
+      "types": "./dist/components/*.d.ts",
+      "import": "./dist/components/*.js"
+    },
+    "./contracts.json": "./dist/contracts.json",
+    "./contracts/*.json": "./dist/contracts/*.json",
+    "./contract.schema.json": "./dist/contract.schema.json"
+  },
+  "scripts": {
+    "build": "tsx build.ts",
+    "prepublishOnly": "pnpm build"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "tsx": "^4.0.0",
+    "typescript": "^5.6.0"
   }
 }

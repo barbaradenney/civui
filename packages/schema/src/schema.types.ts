@@ -32,7 +32,7 @@ export interface PropDef {
   description: string;
 
   /** Default value (omit for required props with no default) */
-  default?: string | number | boolean;
+  default?: string | number | boolean | unknown[];
 
   /** Whether this prop is required for the component to function */
   required?: boolean;
@@ -64,7 +64,7 @@ export interface PropDef {
 // ---------------------------------------------------------------------------
 
 export interface EventDetailField {
-  type: 'string' | 'boolean' | 'number' | 'string[]' | 'File[]';
+  type: 'string' | 'boolean' | 'number' | 'string[]' | 'File[]' | 'object';
   description?: string;
 }
 

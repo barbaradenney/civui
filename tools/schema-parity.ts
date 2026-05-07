@@ -307,24 +307,84 @@ export function androidPropAlternatives(name: string): string[] {
   return alternatives;
 }
 
+export interface NativeProp {
+  name: string;
+  /** The raw type expression as written in the source (e.g. "Bool", "@Binding<String>", "LinkCardVariant", "[String]") */
+  type: string;
+}
+
 export function parseSwiftPropNamesFromSource(src: string): string[] {
-  const names = new Set<string>();
-  // Match `public var name:` and `public let name:` and `@Binding public var name:`
-  // Skip computed-property declarations (those use `var name: Type {`)
-  // and the body of preview structs.
-  const propRegex = /(?:^|\n)\s*(?:@\w+\s+)*public\s+(?:var|let)\s+(\w+)\s*:/g;
+  return parseSwiftPropsFromSource(src).map((p) => p.name);
+}
+
+/**
+ * Extract `public var name: Type` and `public let name: Type` declarations
+ * from a Swift source file. Walks line by line so the type extraction is
+ * straightforward — the type starts after the colon and runs until the
+ * next `=`, `{`, or end-of-line. Computed properties (which write
+ * `var name: Type { get { ... } }`) are filtered out by checking what
+ * character ends the declaration line — `{` means computed.
+ */
+export function parseSwiftPropsFromSource(src: string): NativeProp[] {
+  const props: NativeProp[] = [];
+  const seen = new Set<string>();
+  // Match a single declaration: optional `@Decorator`s, `public var|let`,
+  // capture name and the rest of the line. Anchored to line start so we
+  // don't catch occurrences inside larger expressions.
+  const declRegex = /^[ \t]*(?:@\w+[ \t]+)*public\s+(?:var|let)\s+(\w+)\s*:\s*(.+)$/gm;
   let m: RegExpExecArray | null;
-  while ((m = propRegex.exec(src)) !== null) {
-    names.add(m[1]);
+  while ((m = declRegex.exec(src)) !== null) {
+    const name = m[1];
+    if (seen.has(name)) continue;
+    const rest = m[2];
+    // The type runs until the first top-level `=` (default value) or `{`
+    // (computed property body). If it ends with `{`, this is a computed
+    // property — skip it.
+    const stop = findTypeEnd(rest);
+    if (stop.kind === 'computed') continue;
+    seen.add(name);
+    props.push({ name, type: rest.slice(0, stop.index).trim() });
   }
-  return [...names];
+  return props;
+}
+
+/**
+ * Walk a Swift type-expression-plus-rest string and find where the type
+ * ends — at the first top-level `=` (returns `default`) or `{` (returns
+ * `computed`), or end of string (returns `eol`). Tracks `<>`, `()`, and
+ * `[]` depth so generics and tuple types don't break the scan.
+ */
+function findTypeEnd(s: string): { kind: 'default' | 'computed' | 'eol'; index: number } {
+  let depth = 0;
+  for (let i = 0; i < s.length; i++) {
+    const ch = s[i];
+    if (ch === '(' || ch === '[' || ch === '<') depth++;
+    else if (ch === ')' || ch === ']' || ch === '>') depth--;
+    else if (ch === '=' && depth === 0 && s[i + 1] !== '=') return { kind: 'default', index: i };
+    else if (ch === '{' && depth === 0) return { kind: 'computed', index: i };
+  }
+  return { kind: 'eol', index: s.length };
 }
 
 function parseSwiftPropNames(filePath: string): string[] {
   return parseSwiftPropNamesFromSource(readFileSync(filePath, 'utf-8'));
 }
 
+function parseSwiftProps(filePath: string): NativeProp[] {
+  return parseSwiftPropsFromSource(readFileSync(filePath, 'utf-8'));
+}
+
 export function parseKotlinPropNamesFromSource(src: string, displayName: string): string[] {
+  return parseKotlinPropsFromSource(src, displayName).map((p) => p.name);
+}
+
+/**
+ * Extract `name: Type` parameter declarations from the matching @Composable
+ * function. Captures the type expression up to the next `=` or top-level
+ * comma — covers basic types, optionals (`String?`), generics
+ * (`List<String>`), and lambda types (`(String) -> Unit`).
+ */
+export function parseKotlinPropsFromSource(src: string, displayName: string): NativeProp[] {
   // Find the @Composable function signature for the matching component.
   // Pattern: `fun CivXxx(\n  param1: Type,\n  param2: Type,...)`
   const fnStart = src.search(new RegExp(`fun\\s+${displayName}\\s*\\(`));
@@ -346,7 +406,8 @@ export function parseKotlinPropNamesFromSource(src: string, displayName: string)
     }
     if (depth >= 1) body += ch;
   }
-  const names = new Set<string>();
+  const props: NativeProp[] = [];
+  const seen = new Set<string>();
   // Each parameter is `name: Type[ = default]`, separated by commas at the
   // top level. Track paren/brace depth for nested lambda types like
   // `(AddressValue) -> Unit`. Skip generic-angle tracking — the `>` in
@@ -368,14 +429,106 @@ export function parseKotlinPropNamesFromSource(src: string, displayName: string)
       // in parameter declarations. Strip them so the bare identifier
       // matches the schema prop name.
       const name = piece.slice(0, colonIdx).trim().replace(/^`(.+)`$/, '$1');
-      if (name && /^[a-zA-Z_]\w*$/.test(name)) names.add(name);
+      if (!name || !/^[a-zA-Z_]\w*$/.test(name)) continue;
+      if (seen.has(name)) continue;
+      seen.add(name);
+      // Type runs from after the colon to the next `=` (default value
+      // separator) or end-of-piece.
+      const rest = piece.slice(colonIdx + 1);
+      const eqIdx = findTopLevelEquals(rest);
+      const type = (eqIdx >= 0 ? rest.slice(0, eqIdx) : rest).trim();
+      props.push({ name, type });
     }
   }
-  return [...names];
+  return props;
+}
+
+/**
+ * Find the position of the top-level `=` separator (the parameter-default
+ * marker) in a Kotlin parameter piece. Tracks `()`, `[]`, and `{}` depth —
+ * deliberately does NOT track `<>` because the lambda arrow `->` is
+ * ambiguous with a generic close, and Kotlin generic types in parameter
+ * lists rarely have a top-level `=` inside them.
+ *
+ * Skips `==` / `!=` / `<=` / `>=` / `=>` to avoid false matches inside
+ * default-value expressions.
+ */
+function findTopLevelEquals(s: string): number {
+  let depth = 0;
+  for (let i = 0; i < s.length; i++) {
+    const ch = s[i];
+    if (ch === '(' || ch === '{' || ch === '[') depth++;
+    else if (ch === ')' || ch === '}' || ch === ']') depth--;
+    if (ch === '=' && depth === 0) {
+      const next = s[i + 1];
+      const prev = s[i - 1];
+      // Skip `==`, `=>`, `<=`, `>=`, `!=`.
+      if (next === '=' || next === '>' || prev === '=' || prev === '<' || prev === '>' || prev === '!') continue;
+      return i;
+    }
+  }
+  return -1;
 }
 
 function parseKotlinPropNames(filePath: string, displayName: string): string[] {
   return parseKotlinPropNamesFromSource(readFileSync(filePath, 'utf-8'), displayName);
+}
+
+function parseKotlinProps(filePath: string, displayName: string): NativeProp[] {
+  return parseKotlinPropsFromSource(readFileSync(filePath, 'utf-8'), displayName);
+}
+
+/**
+ * Categorize a native (Swift / Kotlin) type expression into one of the
+ * schema's PropDef types. Returns `unknown` for custom types (PascalCase
+ * identifiers like `LinkCardVariant`) — those are accepted for string /
+ * enum schema props on the assumption they're enum-like, but rejected
+ * for boolean / number / array (those should use built-ins).
+ *
+ * The categorization is deliberately forgiving — false positives on
+ * type-drift would be more painful than missing a real one.
+ */
+export function categorizeNativeType(rawType: string): 'boolean' | 'number' | 'string-or-enum' | 'array' | 'unknown' | 'callback' {
+  const t = rawType.trim()
+    // Strip trailing optionality / nullability markers (Swift `?`, Kotlin `?`).
+    .replace(/\?+$/, '')
+    // Unwrap `Binding<X>` / `@Binding ... X` — schema cares about the wrapped
+    // value type. The Swift parser strips the @Binding decorator already, but
+    // a generic `Binding<X>` form would still wrap.
+    .replace(/^Binding<(.+)>$/, '$1')
+    .trim();
+
+  // Lambda / function types are callbacks, not schema props — should be
+  // filtered out by the caller (they don't appear in schema.props at all).
+  if (/->\s*\w/.test(t)) return 'callback';
+
+  // Built-in scalars.
+  if (/^Bool(ean)?$/.test(t)) return 'boolean';
+  if (/^(Int|Int8|Int16|Int32|Int64|UInt|UInt8|UInt16|UInt32|UInt64|Long|ULong|Short|UShort|Byte|UByte|Double|Float|CGFloat|Number)$/.test(t)) return 'number';
+  if (/^String$/.test(t)) return 'string-or-enum';
+
+  // Array forms.
+  if (/^\[.+\]$/.test(t)) return 'array'; // Swift [String]
+  if (/^(List|Array|Set|MutableList)<.+>$/.test(t)) return 'array';
+
+  // PascalCase identifiers — likely a custom enum or struct. Treat as
+  // string-or-enum for matching purposes (variants are commonly modeled
+  // as native enums on iOS/Android).
+  if (/^[A-Z][a-zA-Z0-9_]*$/.test(t)) return 'unknown';
+
+  return 'unknown';
+}
+
+/** Map a schema PropDef.type to the native-type categories that satisfy it. */
+function expectedNativeCategories(schemaType: string): Array<'boolean' | 'number' | 'string-or-enum' | 'array' | 'unknown'> {
+  switch (schemaType) {
+    case 'boolean': return ['boolean'];
+    case 'number': return ['number'];
+    case 'string': return ['string-or-enum', 'unknown'];
+    case 'enum': return ['string-or-enum', 'unknown'];
+    case 'array': return ['array', 'unknown']; // typed arrays of structs surface as `[SummarySectionData]` etc.
+    default: return ['string-or-enum', 'unknown'];
+  }
 }
 
 export function camelToSnake(name: string): string {
@@ -619,8 +772,41 @@ interface PlatformDrift {
   platform: 'ios' | 'android' | 'drupal';
   /** Schema-declared props missing from this platform's source */
   missing: string[];
-  /** Schema-declared props whose type differs from what the platform declares (Drupal only — iOS / Android type-parsing is too noisy to enforce) */
+  /** Schema-declared props whose type differs from what the platform declares */
   typeMismatches?: Array<{ name: string; expected: string; got: string }>;
+}
+
+/**
+ * For each schema prop that resolves to a native prop, check that the
+ * native type's category is one of the categories satisfying the schema
+ * type. Built-in scalar mismatches (Bool ↔ String) are flagged; custom
+ * PascalCase types are accepted for string / enum schema props (variants
+ * commonly map to native enums) and array schema props (typed arrays of
+ * struct types).
+ */
+function collectNativeTypeMismatches(
+  schemaProps: SchemaProp[],
+  resolveName: (propName: string) => string | undefined,
+  nativeByName: Map<string, NativeProp>,
+): Array<{ name: string; expected: string; got: string }> {
+  const mismatches: Array<{ name: string; expected: string; got: string }> = [];
+  for (const sp of schemaProps) {
+    const nativeName = resolveName(sp.name);
+    if (!nativeName) continue;
+    const nativeProp = nativeByName.get(nativeName);
+    if (!nativeProp) continue;
+    const nativeCategory = categorizeNativeType(nativeProp.type);
+    if (nativeCategory === 'callback') continue; // Lambda params aren't schema props
+    const expected = expectedNativeCategories(sp.type);
+    if (!expected.includes(nativeCategory)) {
+      mismatches.push({
+        name: sp.name,
+        expected: `${sp.type} (one of: ${expected.join(', ')})`,
+        got: `${nativeProp.type} (${nativeCategory})`,
+      });
+    }
+  }
+  return mismatches;
 }
 
 function checkPlatformParity(
@@ -636,12 +822,18 @@ function checkPlatformParity(
   if (spec.ios) {
     const path = join(ROOT, spec.ios);
     if (existsSync(path)) {
-      const iosNames = new Set(parseSwiftPropNames(path));
-      const missing = schemaPropNames.filter((p) => {
-        const alts = iosPropAlternatives(p);
-        return !alts.some((alt) => iosNames.has(alt));
-      });
-      if (missing.length > 0) drifts.push({ platform: 'ios', missing });
+      const iosProps = parseSwiftProps(path);
+      const iosByName = new Map(iosProps.map((p) => [p.name, p]));
+      const iosNames = new Set(iosProps.map((p) => p.name));
+      function resolveIosName(propName: string): string | undefined {
+        const alts = iosPropAlternatives(propName);
+        return alts.find((alt) => iosNames.has(alt));
+      }
+      const missing = schemaPropNames.filter((p) => !resolveIosName(p));
+      const typeMismatches = collectNativeTypeMismatches(schemaProps, resolveIosName, iosByName);
+      if (missing.length > 0 || typeMismatches.length > 0) {
+        drifts.push({ platform: 'ios', missing, typeMismatches: typeMismatches.length > 0 ? typeMismatches : undefined });
+      }
     }
   }
 
@@ -655,15 +847,18 @@ function checkPlatformParity(
         .split('-')
         .map((s) => s.charAt(0).toUpperCase() + s.slice(1))
         .join('');
-      const androidNames = new Set(parseKotlinPropNames(path, display));
-      const missing = schemaPropNames.filter((p) => {
-        // Compose follows Lit's prop names directly, but a few conflict
-        // with reserved words (type → inputType) — borrow the iOS
-        // alternative list for those collisions.
-        const alts = androidPropAlternatives(p);
-        return !alts.some((alt) => androidNames.has(alt));
-      });
-      if (missing.length > 0) drifts.push({ platform: 'android', missing });
+      const androidProps = parseKotlinProps(path, display);
+      const androidByName = new Map(androidProps.map((p) => [p.name, p]));
+      const androidNames = new Set(androidProps.map((p) => p.name));
+      function resolveAndroidName(propName: string): string | undefined {
+        const alts = androidPropAlternatives(propName);
+        return alts.find((alt) => androidNames.has(alt));
+      }
+      const missing = schemaPropNames.filter((p) => !resolveAndroidName(p));
+      const typeMismatches = collectNativeTypeMismatches(schemaProps, resolveAndroidName, androidByName);
+      if (missing.length > 0 || typeMismatches.length > 0) {
+        drifts.push({ platform: 'android', missing, typeMismatches: typeMismatches.length > 0 ? typeMismatches : undefined });
+      }
     }
   }
 

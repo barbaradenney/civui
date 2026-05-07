@@ -41,7 +41,7 @@ fun CivFormStep(
     hideNav: Boolean = false,
     continueLabel: String = "Continue",
     completeLabel: String = "Save and continue",
-    persist: Boolean = false,
+    persist: String = "",
     validate: Boolean = true,
     sensitive: Boolean = false,
     showPause: Boolean = false,

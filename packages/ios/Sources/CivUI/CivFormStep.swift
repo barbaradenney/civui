@@ -16,7 +16,8 @@ public struct CivFormStep<Content: View>: View {
     public var completeLabel: String?
     public var onStepChange: ((Int) -> Void)?
     public var onComplete: (() -> Void)?
-    public var persist: Bool
+    /// Storage key for persisting this step's draft state. Empty string disables persistence.
+    public var persist: String
     public var validate: Bool
     public var sensitive: Bool
     public var showPause: Bool
@@ -38,7 +39,7 @@ public struct CivFormStep<Content: View>: View {
         completeLabel: String? = nil,
         onStepChange: ((Int) -> Void)? = nil,
         onComplete: (() -> Void)? = nil,
-        persist: Bool = false,
+        persist: String = "",
         validate: Bool = true,
         sensitive: Bool = false,
         showPause: Bool = false,

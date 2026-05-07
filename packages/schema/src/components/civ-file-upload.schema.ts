@@ -11,8 +11,9 @@ const schema: ComponentSchema = {
   props: {
     accept: {
       type: 'string',
-      description: 'Accepted file types (MIME types or extensions, comma-separated)',
+      description: 'Accepted file types. Web: comma-separated MIME types / extensions (`image/*,application/pdf`) for the HTML `accept` attribute. Native: a typed array of platform-idiomatic types (`[UTType]` on iOS, `List<String>` of MIME types on Android). Conceptually the same constraint, different wire format per platform',
       default: '',
+      webOnly: true,
     },
     multiple: {
       type: 'boolean',

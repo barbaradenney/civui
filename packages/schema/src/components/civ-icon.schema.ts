@@ -17,9 +17,10 @@ const schema: ComponentSchema = {
     },
     size: {
       type: 'string',
-      description: 'Size shorthand — `sm` / `md` / `lg` / `xl` / `2xl` map to font-size multipliers; explicit values like `24px` or `1.5em` are passed through. Empty inherits parent font-size',
+      description: 'Size shorthand — `sm` / `md` / `lg` / `xl` / `2xl` map to font-size multipliers; explicit values like `24px` or `1.5em` are passed through. Empty inherits parent font-size. Web-specific: native platforms take a numeric size in their idiomatic unit (CGFloat on iOS, Dp on Android) — consumers pass the resolved value directly',
       default: '',
       reflect: true,
+      webOnly: true,
     },
     rotate: {
       type: 'number',

@@ -11,8 +11,9 @@ const schema: ComponentSchema = {
   props: {
     steps: {
       type: 'string',
-      description: 'JSON array of step objects: `[{id, label, status?}, ...]`. Status can be "complete" | "current" | "upcoming" | "error". Defaults computed from `current` index when omitted',
+      description: 'Step list. On web: JSON-encoded array of `{id, label, status?}` (HTML attributes are strings). On native: a typed `[String]` / `List<String>` of step labels. Conceptually the same data, different wire format per platform',
       default: '[]',
+      webOnly: true,
     },
     current: {
       type: 'number',
@@ -26,9 +27,10 @@ const schema: ComponentSchema = {
     },
     errorSteps: {
       type: 'string',
-      description: 'JSON array of step IDs to mark as error state, overriding the default sequence',
+      description: 'Step IDs to render in error state. Web: JSON-encoded array string; native: typed list. See `steps` for the same wire-format note',
       default: '[]',
       attribute: 'error-steps',
+      webOnly: true,
     },
   },
 

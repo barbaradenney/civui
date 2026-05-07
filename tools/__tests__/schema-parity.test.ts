@@ -12,10 +12,13 @@ import {
   parseLitPropsFromSource,
   parseLitEventsFromSource,
   parseSwiftPropNamesFromSource,
+  parseSwiftPropsFromSource,
   parseKotlinPropNamesFromSource,
+  parseKotlinPropsFromSource,
   parseDrupalPropNamesFromYaml,
   parseDrupalPropsFromYaml,
   expectedDrupalType,
+  categorizeNativeType,
   iosPropAlternatives,
   androidPropAlternatives,
   normalizeType,
@@ -326,6 +329,111 @@ props:
 `;
     const props = parseDrupalPropsFromYaml(yaml);
     expect(props).toEqual([{ name: 'bareKey', type: undefined }]);
+  });
+});
+
+describe('categorizeNativeType', () => {
+  it('recognizes Swift / Kotlin booleans', () => {
+    expect(categorizeNativeType('Bool')).toBe('boolean');
+    expect(categorizeNativeType('Boolean')).toBe('boolean');
+    expect(categorizeNativeType('Bool?')).toBe('boolean');
+  });
+
+  it('recognizes the full numeric type family on both platforms', () => {
+    for (const t of ['Int', 'Int32', 'Int64', 'UInt', 'Long', 'Double', 'Float', 'CGFloat', 'Number']) {
+      expect(categorizeNativeType(t)).toBe('number');
+    }
+  });
+
+  it('recognizes String as string-or-enum', () => {
+    expect(categorizeNativeType('String')).toBe('string-or-enum');
+    expect(categorizeNativeType('String?')).toBe('string-or-enum');
+  });
+
+  it('recognizes Swift / Kotlin array forms', () => {
+    expect(categorizeNativeType('[String]')).toBe('array');
+    expect(categorizeNativeType('[SummarySectionData]')).toBe('array');
+    expect(categorizeNativeType('List<String>')).toBe('array');
+    expect(categorizeNativeType('Array<Int>')).toBe('array');
+  });
+
+  it('unwraps Binding<...> to the inner type', () => {
+    expect(categorizeNativeType('Binding<String>')).toBe('string-or-enum');
+    expect(categorizeNativeType('Binding<Bool>')).toBe('boolean');
+  });
+
+  it('classifies PascalCase custom types as `unknown` (treated as enum-like)', () => {
+    expect(categorizeNativeType('LinkCardVariant')).toBe('unknown');
+    expect(categorizeNativeType('BadgeVariant')).toBe('unknown');
+  });
+
+  it('classifies lambda / function types as callbacks (skipped, not props)', () => {
+    expect(categorizeNativeType('(String) -> Unit')).toBe('callback');
+    expect(categorizeNativeType('() -> Void')).toBe('callback');
+  });
+});
+
+describe('parseSwiftPropsFromSource', () => {
+  it('extracts both name and type for each public var / let', () => {
+    const src = `
+      public struct CivThing: View {
+        public var label: String
+        public let isRequired: Bool = false
+        public var count: Int?
+        @Binding public var value: String
+        public var sections: [SummarySectionData]
+      }
+    `;
+    const props = parseSwiftPropsFromSource(src);
+    const byName = new Map(props.map((p) => [p.name, p.type]));
+    expect(byName.get('label')).toBe('String');
+    expect(byName.get('isRequired')).toBe('Bool');
+    expect(byName.get('count')).toBe('Int?');
+    expect(byName.get('value')).toBe('String');
+    expect(byName.get('sections')).toBe('[SummarySectionData]');
+  });
+
+  it('skips computed properties (var name: Type { ... })', () => {
+    const src = `
+      public var stored: String
+      public var computed: String { "value" }
+    `;
+    const names = parseSwiftPropsFromSource(src).map((p) => p.name);
+    expect(names).toContain('stored');
+    expect(names).not.toContain('computed');
+  });
+});
+
+describe('parseKotlinPropsFromSource', () => {
+  it('extracts both name and type for each composable parameter', () => {
+    const src = `
+      @Composable
+      fun CivThing(
+        label: String,
+        required: Boolean = false,
+        count: Int? = null,
+        items: List<String> = emptyList(),
+      ) { }
+    `;
+    const props = parseKotlinPropsFromSource(src, 'CivThing');
+    const byName = new Map(props.map((p) => [p.name, p.type]));
+    expect(byName.get('label')).toBe('String');
+    expect(byName.get('required')).toBe('Boolean');
+    expect(byName.get('count')).toBe('Int?');
+    expect(byName.get('items')).toBe('List<String>');
+  });
+
+  it('handles lambda-typed parameters with their own arrows', () => {
+    const src = `
+      @Composable
+      fun CivThing(
+        label: String,
+        onChange: (String) -> Unit = {},
+      ) { }
+    `;
+    const props = parseKotlinPropsFromSource(src, 'CivThing');
+    const byName = new Map(props.map((p) => [p.name, p.type]));
+    expect(byName.get('onChange')).toBe('(String) -> Unit');
   });
 });
 

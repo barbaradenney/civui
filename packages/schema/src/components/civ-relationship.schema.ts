@@ -34,11 +34,12 @@ const schema: ComponentSchema = {
     },
     options: {
       type: 'array',
-      description: 'Custom relationship-type configuration. When set, overrides the preset. Each entry: {value, label, fields?: ("marriage-date"|"divorce-date"|"date-of-birth"|"adoption-date"|"date-of-death")[]}',
+      description: 'Custom relationship-type configuration. When set, overrides the preset. Web: typed array of `{value, label, fields?}` objects (set as JS property, attribute: false). Native: passed as a JSON-encoded string for serialization. Conceptually the same data, different wire format per platform',
       items: {
         value: { type: 'string', description: 'Form value for this relationship type', required: true },
         label: { type: 'string', description: 'Visible label', required: true },
       },
+      webOnly: true,
     },
     showName: {
       type: 'boolean',

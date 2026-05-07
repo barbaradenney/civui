@@ -33,7 +33,7 @@ Build order: `tokens → core → layout → navigation → actions, overlays �
 | `@civui/cli` | `packages/cli/` | CLI tooling |
 | `@civui/content` | `packages/content/` | Content/copy management |
 | `@civui/mcp-server` | `packages/mcp-server/` | MCP server for AI-assisted form conversion |
-| `@civui/drupal` | `packages/drupal/` | Drupal SDC module — 69 Single Directory Components for Drupal 10.3+/11 |
+| `@civui/drupal` | `packages/drupal/` | Drupal SDC module — 71 Single Directory Components for Drupal 10.3+/11 |
 | `@civui/schema` | `packages/schema/` | Platform-neutral component schemas — the contract each platform implementation must satisfy (see "Schemas as contract" below) |
 
 ## Commands
@@ -222,7 +222,7 @@ The `material-symbols` npm package is an optional peer dependency — install it
 CivUI ships components for four platforms: Web (Lit), iOS (SwiftUI), Android (Jetpack Compose), and Drupal (SDC).
 
 - **iOS/Android:** `packages/ios/` and `packages/android/`. CI enforces 85%+ API parity across platforms (`parity.yml`) and verifies native files compile (`native.yml`).
-- **Drupal:** `packages/drupal/civui/` — a Drupal module with 69 Single Directory Components. Each SDC has a `.component.yml` schema and a `.twig` template that renders the corresponding `<civ-*>` web component. Requires Drupal 10.3+ or 11. Validated by `tools/validate-drupal-sdc.ts`. Drupal parity is included in the parity report.
+- **Drupal:** `packages/drupal/civui/` — a Drupal module with 71 Single Directory Components. Each SDC has a `.component.yml` schema and a `.twig` template that renders the corresponding `<civ-*>` web component. Requires Drupal 10.3+ or 11. Validated by `tools/validate-drupal-sdc.ts`. Drupal parity is included in the parity report.
 - **Storybook Twig preview:** Drupal components can be previewed in Storybook via `vite-plugin-twig-drupal`. Stories are co-located as `*.drupal.stories.ts` files next to web component source.
 
 The cross-platform parity check (`tools/parity-report.ts`) parses real source files on each platform and compares APIs. It does **not** validate against `@civui/schema` — that's a separate check (see below).

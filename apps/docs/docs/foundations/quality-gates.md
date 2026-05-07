@@ -57,7 +57,7 @@ Issues are reported with severity levels: `error` (fails CI), `warning` (logged 
 
 **Workflow:** `.github/workflows/parity.yml` (job: `consistency`)
 
-The Drupal SDC validator checks all 69 Single Directory Components:
+The Drupal SDC validator checks all 71 Single Directory Components:
 
 - **YAML structure** -- Each SDC has a valid `.component.yml` with name, props, and slots
 - **Twig correctness** -- Templates render the correct `<civ-*>` web component tag
@@ -68,6 +68,77 @@ The Drupal SDC validator checks all 69 Single Directory Components:
 ```bash
 node --experimental-strip-types tools/validate-drupal-sdc.ts
 ```
+
+## Schema-as-Contract Gates
+
+In addition to the parity report (which extracts and compares APIs from all four platforms), CivUI maintains a fifth artifact per component: a **platform-neutral schema** in `@civui/schema` that describes the public contract — props, events, accessibility role, render order, form behavior. **53 of the cross-platform components are covered**; the schema is the source a contractor (or a new platform implementation) reads when writing equivalent native code.
+
+The Lit web implementation is the canonical reference. Four additional CI gates protect drift between the schema and the four implementations.
+
+### Schema Parity
+
+**Workflow:** `.github/workflows/parity.yml` (job: `schema-parity`)
+
+```bash
+pnpm parity:schema --platforms
+```
+
+Validates that for every covered component:
+
+1. **Lit ↔ schema match** — every `@property` in the Lit source is declared in the schema, and vice versa. Types and `attribute` overrides must match.
+2. **Cross-platform name coverage** — every non-`webOnly` schema prop appears on iOS (`Civ{Name}.swift` struct properties), Android (`Civ{Name}.kt` `@Composable` parameters), and Drupal (`{name}.component.yml` props). Naming conventions are normalized automatically (iOS `is`-prefix for booleans, Drupal snake_case, etc.).
+3. **Drupal SDC YAML type-drift** — when the schema declares `boolean`, the SDC YAML must declare `type: boolean`. Schema `enum` ↔ Drupal `string`, schema `number` ↔ Drupal `integer`. iOS / Android type-parsing is intentionally not enforced — Swift / Kotlin type expressions vary too much to diff reliably.
+4. **Event drift** — events dispatched by the Lit source (`dispatch(this, 'civ-...')` or raw `CustomEvent`) must match the events declared in the schema, including their detail-key shape.
+
+Mark genuinely web-specific props (Tailwind size variants, ARIA `headingLevel`, JS-only callbacks like `loadOptions`/`beforeContinue`, anchor `href` semantics) with `webOnly: true` in the schema's `PropDef` to exclude them from cross-platform diffs.
+
+### Schema Validate
+
+**Workflow:** `.github/workflows/parity.yml` (job: `schema-validate`)
+
+```bash
+pnpm validate:schemas
+```
+
+Runs `validateAll()` from `@civui/schema/validate` over every `*.schema.ts`. Catches structural typos that TypeScript misses:
+- Invalid `category` / `extends` / `valueMode` / `requiredIndicator` values
+- Enum defaults outside the declared `values` list
+- Malformed `renderOrder` (unknown element types)
+- Missing required top-level fields
+
+The validator's accepted-value lists are imported from `schema.types.ts` `as const` arrays — adding a new category, render type, or value mode requires editing exactly one file (the type union and runtime check stay in sync).
+
+### Drupal Sync Clean
+
+**Workflow:** `.github/workflows/parity.yml` (job: `drupal-sync-clean`)
+
+```bash
+pnpm sync:drupal && git diff --exit-code
+```
+
+Regenerates the Drupal SDC YAMLs and Twig templates from the schemas (idempotent), then fails if `git diff` produces any output. Catches hand-edits to Twig / SDC YAML that diverge from what the regenerator would emit — e.g. a boolean prop rendered as a value-bearing attribute, a missing slot block, a stale prop after a schema rename.
+
+### Tool Tests
+
+**Workflow:** `.github/workflows/parity.yml` (job: `tool-tests`)
+
+```bash
+pnpm test:tools
+```
+
+59 unit tests over the parity / sync helpers in `tools/__tests__/`. Guards against regressions in:
+- Prop-name normalization (iOS `is`-prefix, type → inputType, Kotlin backtick stripping for `when`, HTML-attribute lowercase mapping)
+- Snake↔camel conversion
+- Drupal SDC key resolution (honors schema's `attribute:` override over default snake conversion)
+- Twig boolean/string/slot rendering
+
+Without this gate, a broken parser could silently report drift as in-sync.
+
+### Adding a new schema
+
+When you add a new cross-platform component, drop a schema next to its source in `packages/schema/src/components/civ-<name>.schema.ts`, add a `COVERED_COMPONENTS` entry in `tools/schema-parity.ts`, and add it to the `COMPONENTS` lists in `tools/sync-drupal-sdc.ts` and `tools/sync-drupal-twig.ts`. Run `pnpm sync:drupal` to auto-generate the missing Drupal SDC props, then `pnpm parity:schema --platforms` to verify the cross-platform check passes. The CI gates pick it up automatically — no workflow changes needed.
+
+See [`packages/schema/README.md`](https://github.com/anthropics/civui/blob/main/packages/schema/README.md) for the full naming-convention map, the `webOnly` flag semantics, and the exhaustive list of out-of-scope wrappers.
 
 ### Native Compile Check
 
@@ -134,8 +205,13 @@ This ensures contributors don't forget to update native counterparts when changi
 
 | Check | Threshold | Blocking |
 |-------|-----------|----------|
-| Parity | 85% per component | Yes |
-| Drupal SDC validation | All SDCs valid | Yes |
+| Parity report | 85% per component | Yes |
+| Schema parity (Lit ↔ schema ↔ iOS ↔ Android ↔ Drupal SDC) | 0 drift across 53 components | Yes |
+| Schema parity — Drupal SDC YAML type-drift | 0 type mismatches | Yes |
+| Schema validate (structural correctness) | 0 errors | Yes |
+| Drupal sync clean (regenerator output matches commit) | 0 diff | Yes |
+| Tool tests (parity / sync helpers) | 59/59 pass | Yes |
+| Drupal SDC validation | All 71 SDCs valid | Yes |
 | Consistency errors | 0 errors | Yes |
 | Consistency warnings | Unlimited | No |
 | Native compile (Swift) | Must parse | Yes |

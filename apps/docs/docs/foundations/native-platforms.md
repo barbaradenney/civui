@@ -26,6 +26,12 @@ Native components replicate the web component API as closely as platform convent
 - **Validation** uses the same 15 validators. The validation logic is reimplemented natively to avoid WebView overhead.
 - **Render order** is identical: label, hint, error, control, supplementary info.
 
+## Schemas as Contract
+
+The Lit web implementation is the canonical reference, but the **schema** in `@civui/schema` is the platform-neutral contract that captures props, events, accessibility role, render order, and form behavior — without knowing about Tailwind, SwiftUI modifiers, or Compose semantics. **53 cross-platform components are covered.** When writing a new platform implementation (or hiring a contractor for one), the schema is what they read.
+
+CI enforces drift in every direction: see the [Schema-as-Contract Gates](./quality-gates.md#schema-as-contract-gates) section in Quality Gates for the four protective checks.
+
 ## Token Pipeline
 
 The token build at `packages/tokens/build/build-tokens.js` reads W3C DTCG JSON files and generates outputs for all platforms:
@@ -74,7 +80,7 @@ Some features are inherently web-specific and have no native counterpart:
 
 ## Drupal (Single Directory Components)
 
-CivUI includes a Drupal module at `packages/drupal/civui/` with 69 Single Directory Components for Drupal 10.3+ and Drupal 11. Each SDC consists of:
+CivUI includes a Drupal module at `packages/drupal/civui/` with 71 Single Directory Components for Drupal 10.3+ and Drupal 11. Each SDC consists of:
 
 - **`{name}.component.yml`** — Schema defining props, their types, and descriptions
 - **`{name}.twig`** — Twig template that renders the corresponding `<civ-*>` web component

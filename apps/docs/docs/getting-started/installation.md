@@ -78,7 +78,7 @@ function MyForm() {
 
 ## Usage in Drupal
 
-CivUI provides a Drupal module with 69 Single Directory Components (SDC) for Drupal 10.3+ and Drupal 11.
+CivUI provides a Drupal module with 71 Single Directory Components (SDC) for Drupal 10.3+ and Drupal 11.
 
 ### Setup
 

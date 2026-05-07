@@ -1292,7 +1292,7 @@ CivUI ships components for four platforms with automated parity enforcement:
 - **Web (Lit):** `packages/{package}/src/{name}/` — Lit 3 web components
 - **iOS (SwiftUI):** `packages/ios/Sources/CivUI/` — Swift files with SwiftUI views
 - **Android (Compose):** `packages/android/src/main/kotlin/gov/civui/components/` — Kotlin files with Compose composables
-- **Drupal (SDC):** `packages/drupal/civui/components/{name}/` — 69 Single Directory Components for Drupal 10.3+/11
+- **Drupal (SDC):** `packages/drupal/civui/components/{name}/` — 71 Single Directory Components for Drupal 10.3+/11
 
 ### Drupal Integration
 

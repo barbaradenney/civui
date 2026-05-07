@@ -23,6 +23,7 @@
     "storybook:build": "storybook build",
     "parity": "node --experimental-strip-types tools/parity-report.ts && open tools/parity-report.html",
     "parity:schema": "tsx tools/schema-parity.ts",
+    "sync:drupal": "tsx tools/sync-drupal-sdc.ts",
     "consistency": "node --experimental-strip-types tools/consistency-check.ts",
     "build:cdn": "node scripts/build-cdn.js",
     "validate": "pnpm lint && pnpm typecheck && pnpm test"

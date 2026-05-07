@@ -70,24 +70,10 @@ jobs:
           path: tools/parity-report.html
 
   schema-parity:
-    name: Schema parity (Lit ↔ @civui/schema)
+    name: Schema parity (Lit ↔ schema ↔ iOS ↔ Android ↔ Drupal)
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v2
-        with:
-          version: 9
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: pnpm
-      - run: pnpm install --frozen-lockfile
-      - name: Validate covered components match their schemas
-        run: pnpm parity:schema
-
-  schema-parity-platforms:
-    name: Cross-platform schema parity (Lit ↔ iOS ↔ Android ↔ Drupal)
-    runs-on: ubuntu-latest
+    # `--platforms` runs the Lit↔schema check first (always) and adds
+    # cross-platform validation on top — one job covers both.
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v2

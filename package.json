@@ -30,7 +30,7 @@
     "sync:drupal:twig": "tsx tools/sync-drupal-twig.ts",
     "consistency": "node --experimental-strip-types tools/consistency-check.ts",
     "build:cdn": "node scripts/build-cdn.js",
-    "validate": "pnpm lint && pnpm typecheck && pnpm test"
+    "validate": "pnpm lint && pnpm typecheck && pnpm test && pnpm parity:schema --platforms && pnpm validate:schemas && pnpm test:tools"
   },
   "devDependencies": {
     "@storybook/addon-a11y": "8.6.17",

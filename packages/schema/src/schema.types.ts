@@ -15,7 +15,14 @@
 // Prop types
 // ---------------------------------------------------------------------------
 
-export type PropType = 'string' | 'boolean' | 'number' | 'enum' | 'array';
+/**
+ * Source of truth for prop types. The TS union below is derived from this
+ * array, and the runtime validator imports the array directly — adding a
+ * new value here automatically flows through both compile-time typing and
+ * runtime validation.
+ */
+export const PROP_TYPES = ['string', 'boolean', 'number', 'enum', 'array'] as const;
+export type PropType = typeof PROP_TYPES[number];
 
 export interface PropDef {
   /** Data type of this prop */
@@ -120,9 +127,14 @@ export interface WidthVariant {
  *   button → <button>      / Button          / Button
  *   slot   → <slot>        / ViewBuilder     / @Composable content
  */
+export const RENDER_ELEMENT_TYPES = [
+  'label', 'hint', 'error', 'input', 'select', 'checkbox', 'switch', 'button', 'slot', 'container',
+] as const;
+export type RenderElementType = typeof RENDER_ELEMENT_TYPES[number];
+
 export interface RenderElement {
   /** Element type — maps to platform primitives */
-  type: 'label' | 'hint' | 'error' | 'input' | 'select' | 'checkbox' | 'switch' | 'button' | 'slot' | 'container';
+  type: RenderElementType;
 
   /** Condition for rendering (prop name or expression) */
   condition?: string;
@@ -138,11 +150,16 @@ export interface RenderElement {
 // Form behavior
 // ---------------------------------------------------------------------------
 
-export type FormValueMode =
-  | 'string'           // value is always a string (text-input, select, textarea)
-  | 'boolean'          // value is submitted when checked, null when unchecked (checkbox, toggle)
-  | 'multi'            // FormData with multiple values (checkbox-group)
-  | 'file';            // FormData with File objects (file-upload)
+/**
+ * How a component participates in form submission. Source-of-truth array;
+ * the union below is derived and the runtime validator imports the array.
+ *  - string:  value is always a string (text-input, select, textarea)
+ *  - boolean: value is submitted when checked, null when unchecked (checkbox, toggle)
+ *  - multi:   FormData with multiple values (checkbox-group, date-range-picker)
+ *  - file:    FormData with File objects (file-upload)
+ */
+export const FORM_VALUE_MODES = ['string', 'boolean', 'multi', 'file'] as const;
+export type FormValueMode = typeof FORM_VALUE_MODES[number];
 
 export interface FormBehavior {
   /** How this component participates in form submission */
@@ -190,6 +207,14 @@ export interface PlatformOverrides {
 // Component Schema (top-level)
 // ---------------------------------------------------------------------------
 
+export const COMPONENT_CATEGORIES = [
+  'form-control', 'form-group', 'form-container', 'ui', 'feedback', 'navigation',
+] as const;
+export type ComponentCategory = typeof COMPONENT_CATEGORIES[number];
+
+export const COMPONENT_BASE_CLASSES = ['CivFormElement', 'CivBaseElement'] as const;
+export type ComponentBaseClass = typeof COMPONENT_BASE_CLASSES[number];
+
 export interface ComponentSchema {
   /** Schema version for forward compatibility */
   $schema: '1.0';
@@ -201,10 +226,10 @@ export interface ComponentSchema {
   description: string;
 
   /** Component category */
-  category: 'form-control' | 'form-group' | 'form-container' | 'ui' | 'feedback' | 'navigation';
+  category: ComponentCategory;
 
   /** Base class pattern this component follows */
-  extends: 'CivFormElement' | 'CivBaseElement';
+  extends: ComponentBaseClass;
 
   /** Whether this is a group component (uses legend instead of label) */
   isGroup: boolean;

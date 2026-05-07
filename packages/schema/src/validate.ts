@@ -6,10 +6,15 @@
  * misconfigured render order, and inconsistent form behavior.
  */
 
-import type {
-  ComponentSchema,
-  FormValueMode,
-  PropType,
+import {
+  COMPONENT_BASE_CLASSES,
+  COMPONENT_CATEGORIES,
+  FORM_VALUE_MODES,
+  PROP_TYPES,
+  RENDER_ELEMENT_TYPES,
+  type ComponentSchema,
+  type FormValueMode,
+  type PropType,
 } from './schema.types.js';
 
 export interface ValidationError {
@@ -18,11 +23,14 @@ export interface ValidationError {
   severity: 'error' | 'warning';
 }
 
-const VALID_PROP_TYPES: PropType[] = ['string', 'boolean', 'number', 'enum', 'array'];
-const VALID_VALUE_MODES: FormValueMode[] = ['string', 'boolean', 'multi', 'file'];
-const VALID_RENDER_TYPES = ['label', 'hint', 'error', 'input', 'select', 'checkbox', 'switch', 'button', 'slot', 'container'];
-const VALID_CATEGORIES = ['form-control', 'form-group', 'form-container', 'ui', 'feedback', 'navigation'];
-const VALID_BASE_CLASSES = ['CivFormElement', 'CivBaseElement'];
+// All accepted-value lists are imported from schema.types.ts so the runtime
+// validator and the compile-time TS unions cannot drift. Adding a new
+// category, render type, etc. requires touching exactly one file.
+const VALID_PROP_TYPES: readonly PropType[] = PROP_TYPES;
+const VALID_VALUE_MODES: readonly FormValueMode[] = FORM_VALUE_MODES;
+const VALID_RENDER_TYPES: readonly string[] = RENDER_ELEMENT_TYPES;
+const VALID_CATEGORIES: readonly string[] = COMPONENT_CATEGORIES;
+const VALID_BASE_CLASSES: readonly string[] = COMPONENT_BASE_CLASSES;
 
 export function validateSchema(schema: unknown): ValidationError[] {
   const errors: ValidationError[] = [];
@@ -92,13 +100,11 @@ export function validateSchema(schema: unknown): ValidationError[] {
     errors.push({ path: 'form', message: 'form must be an object', severity: 'error' });
   }
 
-  // Group components should have legend, not label in props
-  if (s['isGroup'] === true) {
-    const props = s['props'] as Record<string, unknown> | undefined;
-    if (props && !props['legend']) {
-      errors.push({ path: 'props', message: 'Group components (isGroup: true) should have a "legend" prop', severity: 'warning' });
-    }
-  }
+  // Note: a previous "isGroup components should have a `legend` prop" check
+  // was removed. CivUI's composition pattern wraps groups in
+  // `civ-form-fieldset`, which owns the legend — the group component itself
+  // doesn't carry the `legend` prop. The check produced false positives on
+  // every covered group component (memorable-date, filter-chip-group, ...).
 
   // Widths validation
   if (s['widths'] !== undefined) {
@@ -145,8 +151,10 @@ function validateProps(props: Record<string, unknown>, errors: ValidationError[]
       }
     }
 
-    // Array must have items
-    if (prop['type'] === 'array' && !prop['items']) {
+    // Array must have items — but webOnly arrays are JS-only (e.g. typed
+    // sections / values arrays passed via property, not HTML attribute), so
+    // there's no cross-platform items shape to declare.
+    if (prop['type'] === 'array' && !prop['items'] && !prop['webOnly']) {
       errors.push({ path: `${path}.items`, message: 'Array props should have an "items" definition', severity: 'warning' });
     }
 

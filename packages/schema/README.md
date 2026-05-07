@@ -16,18 +16,22 @@ It is **not** a code generator. The previous `@civui/codegen` package was retire
 
 ## How drift is enforced
 
-Three CI gates protect the contract (`.github/workflows/parity.yml`):
+Four CI gates protect the contract (`.github/workflows/parity.yml`):
 
 | Gate | Tool | Catches |
 |------|------|---------|
-| `schema-parity` | `tools/schema-parity.ts --platforms` | Lit ↔ schema ↔ iOS ↔ Android ↔ Drupal SDC prop drift |
+| `schema-parity` | `tools/schema-parity.ts --platforms` | Lit ↔ schema ↔ iOS ↔ Android ↔ Drupal SDC prop drift, plus Drupal SDC YAML type-drift (a `boolean` schema prop must surface as `type: boolean` in YAML, etc.) |
+| `schema-validate` | `pnpm validate:schemas` | Structural typos that TypeScript misses — invalid `category` / `extends` / `valueMode` / `requiredIndicator`, enum defaults outside the values list, malformed `renderOrder` |
 | `drupal-sync-clean` | `tools/sync-drupal-{sdc,twig}.ts` + `git diff --exit-code` | Hand-edits to SDC YAML / Twig that diverge from regenerator output |
-| `tool-tests` | `pnpm test:tools` | Regressions in the parity / sync helper functions themselves |
+| `tool-tests` | `pnpm test:tools` | Regressions in the parity / sync helper functions themselves (59 unit tests) |
+
+iOS / Android type-parsing is intentionally **not** enforced — Swift / Kotlin type expressions vary too much (`Bool`, `@Binding<Bool>`, `Int?`, custom enums like `LinkCardVariant`, etc.) to diff reliably without a full type system. The check covers names on all platforms and types on Drupal SDC, where YAML directly declares them.
 
 Run locally before pushing:
 
 ```sh
 pnpm parity:schema --platforms
+pnpm validate:schemas
 pnpm sync:drupal && git diff --exit-code
 pnpm test:tools
 ```
@@ -96,7 +100,9 @@ These are tracked in `tools/schema-parity.ts` as deliberately out of scope (see 
 
 ## Schema validator
 
-`src/validate.ts` exports `validateSchema(schema)` which checks structural correctness (required fields, valid prop types, enum values, render-order shape). It is **not** part of CI today — drift is caught by the parity / sync gates instead. Run it ad-hoc when authoring a new schema:
+`src/validate.ts` exports `validateSchema(schema)` (single schema) and `validateAll(schemas)` (batched). `tools/validate-schemas.ts` walks every `*.schema.ts` and runs `validateAll`; CI runs it via the `schema-validate` job.
+
+Run it ad-hoc against a single schema during authoring:
 
 ```ts
 import { validateSchema } from '@civui/schema/validate';

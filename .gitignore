@@ -4,6 +4,10 @@ dist/
 .build/
 *.tsbuildinfo
 
+# Auto-generated Docusaurus contract reference pages — regenerated from
+# @civui/schema on every `apps/docs` build via the prebuild hook.
+apps/docs/docs/contract/
+
 # Root config build artifacts (Tailwind reads .ts natively)
 tailwind.config.js
 tailwind.config.js.map

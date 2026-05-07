@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "docusaurus": "docusaurus",
+    "prestart": "pnpm -w run docs:contract",
     "start": "docusaurus start",
+    "prebuild": "pnpm -w run docs:contract",
     "build": "docusaurus build",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",

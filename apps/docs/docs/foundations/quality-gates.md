@@ -140,6 +140,10 @@ When you add a new cross-platform component, drop a schema next to its source in
 
 See [`packages/schema/README.md`](https://github.com/anthropics/civui/blob/main/packages/schema/README.md) for the full naming-convention map, the `webOnly` flag semantics, and the exhaustive list of out-of-scope wrappers.
 
+### Generated contract reference
+
+The Docusaurus site includes a [Contract Reference](/contract) section with one auto-generated page per component (53 pages, one per schema). Each page lists the component's props, events, accessibility role, form behavior, and the file path on each platform. Pages are regenerated from `@civui/schema` on every `docusaurus build` via the `prebuild` hook (`pnpm docs:contract`), so the documentation can never drift from the canonical schema. The generated directory is gitignored — pages are byproducts of the schema, not source.
+
 ### Native Compile Check
 
 **Workflow:** `.github/workflows/native.yml`

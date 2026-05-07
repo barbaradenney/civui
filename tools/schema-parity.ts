@@ -8,9 +8,9 @@
  * expected to satisfy — this tool fails the build when the Lit source
  * drifts from the schema.
  *
- * Phase 1 covers a representative slice (text-input, checkbox,
- * radio-group, yes-no). Expand `PHASE_1_COMPONENTS` as more schemas
- * are synced.
+ * Coverage grows incrementally as schemas are synced and added —
+ * extend `COVERED_COMPONENTS` below to include a component once
+ * its schema matches the Lit source.
  *
  * Usage:
  *   npx tsx tools/schema-parity.ts          # report drift, exit 1 on any drift
@@ -46,24 +46,25 @@ interface ComponentSpec {
   isBoolean?: boolean;
 }
 
-const PHASE_1_COMPONENTS: ComponentSpec[] = [
-  {
-    name: 'civ-text-input',
-    source: 'packages/inputs/src/text-input/civ-text-input.ts',
-  },
-  {
-    name: 'civ-checkbox',
-    source: 'packages/controls/src/checkbox/civ-checkbox.ts',
-    isBoolean: true,
-  },
-  {
-    name: 'civ-radio-group',
-    source: 'packages/controls/src/radio/civ-radio-group.ts',
-  },
-  {
-    name: 'civ-yes-no',
-    source: 'packages/inputs/src/yes-no/civ-yes-no.ts',
-  },
+const COVERED_COMPONENTS: ComponentSpec[] = [
+  // Phase 1
+  { name: 'civ-text-input', source: 'packages/inputs/src/text-input/civ-text-input.ts' },
+  { name: 'civ-checkbox', source: 'packages/controls/src/checkbox/civ-checkbox.ts', isBoolean: true },
+  { name: 'civ-radio-group', source: 'packages/controls/src/radio/civ-radio-group.ts' },
+  { name: 'civ-yes-no', source: 'packages/inputs/src/yes-no/civ-yes-no.ts' },
+  // Phase 2
+  { name: 'civ-checkbox-group', source: 'packages/controls/src/checkbox/civ-checkbox-group.ts' },
+  { name: 'civ-combobox', source: 'packages/inputs/src/combobox/civ-combobox.ts' },
+  { name: 'civ-date-picker', source: 'packages/inputs/src/date-picker/civ-date-picker.ts' },
+  { name: 'civ-file-upload', source: 'packages/inputs/src/file-upload/civ-file-upload.ts' },
+  { name: 'civ-memorable-date', source: 'packages/inputs/src/date-input/civ-memorable-date.ts' },
+  { name: 'civ-segmented-control', source: 'packages/controls/src/segmented-control/civ-segmented-control.ts' },
+  { name: 'civ-select', source: 'packages/inputs/src/select/civ-select.ts' },
+  { name: 'civ-textarea', source: 'packages/inputs/src/textarea/civ-textarea.ts' },
+  { name: 'civ-toggle', source: 'packages/inputs/src/toggle/civ-toggle.ts', isBoolean: true },
+  // Phase 2 — new compound / orchestration schemas
+  { name: 'civ-address', source: 'packages/compound/src/address/civ-address.ts' },
+  { name: 'civ-repeater', source: 'packages/form-patterns/src/repeater/civ-repeater.ts' },
 ];
 
 /**
@@ -203,19 +204,20 @@ function diffProps(schema: SchemaProp[], lit: LitProp[]): PropDrift {
 async function main(): Promise<void> {
   const strict = process.argv.includes('--strict');
   let drift = 0;
-  for (const spec of PHASE_1_COMPONENTS) {
+  for (const spec of COVERED_COMPONENTS) {
     const sourcePath = join(ROOT, spec.source);
     if (!existsSync(sourcePath)) {
       console.log(`⚠  ${spec.name}: source file not found at ${spec.source}`);
       drift++;
       continue;
     }
-    const schemaProps = await loadSchemaProps(spec.name, !!spec.isBoolean);
-    if (schemaProps.length === 0) {
-      console.log(`${strict ? '✗' : '⚠'}  ${spec.name}: no schema found at packages/schema/src/components/${spec.name}.schema.ts`);
+    const schemaPath = join(ROOT, 'packages/schema/src/components', `${spec.name}.schema.ts`);
+    if (!existsSync(schemaPath)) {
+      console.log(`${strict ? '✗' : '⚠'}  ${spec.name}: no schema file at packages/schema/src/components/${spec.name}.schema.ts`);
       if (strict) drift++;
       continue;
     }
+    const schemaProps = await loadSchemaProps(spec.name, !!spec.isBoolean);
     const litProps = parseLitProps(sourcePath, !!spec.isBoolean);
     const result = diffProps(schemaProps, litProps);
     const hasDrift =
@@ -242,7 +244,7 @@ async function main(): Promise<void> {
     console.log(`\n${drift} component(s) have schema drift.`);
     process.exit(1);
   }
-  console.log(`\n${PHASE_1_COMPONENTS.length}/${PHASE_1_COMPONENTS.length} components match their schema.`);
+  console.log(`\n${COVERED_COMPONENTS.length}/${COVERED_COMPONENTS.length} components match their schema.`);
 }
 
 main().catch((err) => {

@@ -9,11 +9,6 @@ const schema: ComponentSchema = {
   isGroup: true,
 
   props: {
-    legend: {
-      type: 'string',
-      description: 'Fieldset legend text',
-      default: '',
-    },
     monthLabel: {
       type: 'string',
       description: 'Label for the month select',

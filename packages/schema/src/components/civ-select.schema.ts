@@ -25,6 +25,27 @@ const schema: ComponentSchema = {
       default: '- Select -',
       attribute: 'empty-label',
     },
+    width: {
+      type: 'enum',
+      description: 'Width variant',
+      default: 'default',
+      values: ['default', '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'],
+    },
+    autocomplete: {
+      type: 'string',
+      description: 'Autocomplete hint forwarded to the underlying <select>',
+      default: '',
+    },
+    preset: {
+      type: 'enum',
+      description: 'Pre-built option list. Populates options when no consumer-provided options array is set',
+      values: ['us-state', 'service-branch', 'discharge-type', 'suffix', 'relationship-type', 'marital-status', 'ethnicity', 'gender', 'language', 'housing-status', 'education-level', 'employment-status', 'income-source', 'veteran-status'],
+    },
+    presetVariant: {
+      type: 'string',
+      description: 'Variant of the preset (e.g. "territories", "all", "binary")',
+      attribute: 'preset-variant',
+    },
   },
 
   events: {

@@ -19,6 +19,35 @@ const schema: ComponentSchema = {
       description: 'Whether multiple files can be selected',
       default: false,
     },
+    showPreview: {
+      type: 'boolean',
+      description: 'When true, image files render as thumbnails in the file list',
+      default: false,
+      attribute: 'show-preview',
+    },
+    capture: {
+      type: 'enum',
+      description: 'On mobile, hint which camera to open. Empty string keeps the standard file picker',
+      default: '',
+      values: ['', 'user', 'environment'],
+    },
+    variant: {
+      type: 'enum',
+      description: 'Dropzone visual variant. compact = file-name + button row, default = standard dropzone, full = larger drag-target',
+      default: 'default',
+      values: ['default', 'compact', 'full'],
+    },
+    initialFiles: {
+      type: 'array',
+      description: 'Server-resident files hydrated on mount (e.g. draft restore). Each item: {id, name, size, url?, type?}',
+      items: {
+        id: { type: 'string', description: 'Stable identifier for the server file', required: true },
+        name: { type: 'string', description: 'Display file name', required: true },
+        size: { type: 'number', description: 'File size in bytes', required: true },
+        url: { type: 'string', description: 'Optional download/preview URL' },
+        type: { type: 'string', description: 'Optional MIME type' },
+      },
+    },
     maxSize: {
       type: 'number',
       description: 'Maximum file size in bytes (0 = no limit)',
@@ -54,12 +83,6 @@ const schema: ComponentSchema = {
       description: 'Label prefix for max size display',
       default: 'Max size: ',
       attribute: 'max-size-label',
-    },
-    removeText: {
-      type: 'string',
-      description: 'Text for the remove button',
-      default: 'Remove',
-      attribute: 'remove-text',
     },
     removeAriaLabel: {
       type: 'string',

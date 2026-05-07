@@ -16,8 +16,8 @@ const schema: ComponentSchema = {
     },
     tile: {
       type: 'boolean',
-      description: 'Tile variant with bordered card styling for child checkboxes',
-      default: false,
+      description: 'Tile variant with bordered card styling for child checkboxes. Default true — tiles are the standard treatment',
+      default: true,
       reflect: true,
     },
     orientation: {
@@ -26,6 +26,39 @@ const schema: ComponentSchema = {
       default: 'vertical',
       values: ['vertical', 'horizontal'],
       reflect: true,
+    },
+    variant: {
+      type: 'enum',
+      description: 'Tile rendering variant. auto picks card for ≤4 options and list for 5+. Vertical + tile only',
+      default: 'auto',
+      values: ['auto', 'card', 'list'],
+      reflect: true,
+    },
+    showSelectAll: {
+      type: 'boolean',
+      description: 'When true, renders a "Select all" / "Deselect all" toggle button above the group',
+      default: false,
+      attribute: 'show-select-all',
+    },
+    preset: {
+      type: 'enum',
+      description: 'Pre-built option list. Renders <civ-checkbox> children automatically when no slotted children are present',
+      values: ['us-state', 'service-branch', 'discharge-type', 'suffix', 'relationship-type', 'marital-status', 'ethnicity', 'gender', 'language', 'housing-status', 'education-level', 'employment-status', 'income-source', 'veteran-status'],
+    },
+    presetVariant: {
+      type: 'string',
+      description: 'Variant of the preset (e.g. "territories", "all", "binary")',
+      attribute: 'preset-variant',
+    },
+    maxSelections: {
+      type: 'number',
+      description: 'Maximum number of options the user may check. Blocks the over-pick interactively + auto-appends a "Select up to N" hint',
+      attribute: 'max-selections',
+    },
+    minSelections: {
+      type: 'number',
+      description: 'Minimum required count. Positive value implicitly marks the group as required and surfaces "Select at least N" on submit',
+      attribute: 'min-selections',
     },
   },
 

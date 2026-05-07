@@ -18,10 +18,36 @@ const schema: ComponentSchema = {
       type: 'number',
       description: 'Maximum character length (enables character counter when set)',
     },
+    minlength: {
+      type: 'number',
+      description: 'Minimum character length',
+    },
+    maxwords: {
+      type: 'number',
+      description: 'Maximum word count. Switches the counter from characters to words and surfaces a "{n} words remaining" hint',
+    },
     placeholder: {
       type: 'string',
       description: 'Placeholder text (never use as sole label)',
       default: '',
+    },
+    autogrow: {
+      type: 'boolean',
+      description: 'Auto-expand the textarea height to fit the content as the user types',
+      default: false,
+    },
+    maxHeight: {
+      type: 'string',
+      description: 'Cap on autogrow height (any CSS length, e.g. "20rem"). Empty string = unlimited',
+      default: '',
+      attribute: 'max-height',
+    },
+    validateType: {
+      type: 'enum',
+      description: 'Declarative validation preset. length checks min/max boundaries on blur',
+      default: '',
+      values: ['', 'length'],
+      attribute: 'validate',
     },
   },
 

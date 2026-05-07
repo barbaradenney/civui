@@ -29,6 +29,40 @@ const schema: ComponentSchema = {
       default: 'No results found',
       attribute: 'no-results-text',
     },
+    width: {
+      type: 'enum',
+      description: 'Width variant',
+      default: 'default',
+      values: ['default', '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'],
+    },
+    loadOptions: {
+      type: 'string',
+      description: 'Async loader function `(query: string) => Promise<ComboboxOption[]>` for remote-driven option lists. Set programmatically (not as an attribute)',
+    },
+    loadDebounce: {
+      type: 'number',
+      description: 'Debounce in ms before invoking loadOptions on input',
+      default: 300,
+      attribute: 'load-debounce',
+    },
+    minQueryLength: {
+      type: 'number',
+      description: 'Minimum query length before loadOptions is called. 0 means call on first focus',
+      default: 0,
+      attribute: 'min-query-length',
+    },
+    loadingText: {
+      type: 'string',
+      description: 'Text shown in the dropdown while loadOptions is in flight',
+      default: '',
+      attribute: 'loading-text',
+    },
+    loadingErrorText: {
+      type: 'string',
+      description: 'Text shown when loadOptions rejects',
+      default: '',
+      attribute: 'loading-error-text',
+    },
   },
 
   events: {

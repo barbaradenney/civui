@@ -83,6 +83,54 @@ const schema: ComponentSchema = {
       default: 'today',
       attribute: 'today-label',
     },
+    disabledDates: {
+      type: 'string',
+      description: 'Comma-separated list of YYYY-MM-DD dates to mark unselectable (e.g. holidays)',
+      default: '',
+      attribute: 'disabled-dates',
+    },
+    clearLabel: {
+      type: 'string',
+      description: 'Aria label for the clear (×) button when a value is set',
+      default: '',
+      attribute: 'clear-label',
+    },
+    todayButtonLabel: {
+      type: 'string',
+      description: 'Visible label on the "today" shortcut button inside the calendar dialog',
+      default: '',
+      attribute: 'today-button-label',
+    },
+    hideTodayButton: {
+      type: 'boolean',
+      description: 'Suppress the "today" shortcut button. Useful for date-of-birth and other historical-only fields',
+      default: false,
+      attribute: 'hide-today-button',
+    },
+    invalidFormatMessage: {
+      type: 'string',
+      description: 'Validation error shown when typed text doesn\'t parse as MM/DD/YYYY',
+      default: '',
+      attribute: 'invalid-format-message',
+    },
+    dateRangeMessage: {
+      type: 'string',
+      description: 'Validation error shown when selected date is outside min/max',
+      default: '',
+      attribute: 'date-range-message',
+    },
+    minDateMessage: {
+      type: 'string',
+      description: 'Validation error shown when selected date is before min ({min} interpolated)',
+      default: '',
+      attribute: 'min-date-message',
+    },
+    maxDateMessage: {
+      type: 'string',
+      description: 'Validation error shown when selected date is after max ({max} interpolated)',
+      default: '',
+      attribute: 'max-date-message',
+    },
   },
 
   events: {

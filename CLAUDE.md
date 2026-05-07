@@ -237,13 +237,18 @@ Why schemas matter:
 - Drift between schema and Lit is enforced by `pnpm parity:schema`, which exits 1 on mismatch.
 - The dormant `@civui/codegen` package can still consume schemas if revived, but the contract role works without codegen.
 
-**Coverage status:**
-- Phase 1 (covered by `parity:schema`): `civ-text-input`, `civ-checkbox`, `civ-radio-group`, `civ-yes-no`.
-- Phase 2 (planned): sync the remaining ~12 existing schemas, add schemas for `civ-address`, `civ-name`, `civ-direct-deposit`, `civ-signature`, `civ-form-step`, `civ-repeater`, `civ-progress`, then expand `PHASE_1_COMPONENTS` in `tools/schema-parity.ts` to cover them.
+**Coverage status (15 components):**
+- Form controls: `civ-text-input`, `civ-textarea`, `civ-select`, `civ-combobox`, `civ-date-picker`, `civ-memorable-date`, `civ-file-upload`, `civ-yes-no`, `civ-toggle`
+- Choice groups: `civ-checkbox`, `civ-checkbox-group`, `civ-radio-group`, `civ-segmented-control`
+- Compound + orchestration: `civ-address`, `civ-repeater`
 
-**If you modify a Phase 1 component**, update its schema in the same change. Run `pnpm parity:schema` before committing — the check fails on missing/added/renamed/retyped props. Inherited form props (`label`, `name`, `value`, `hint`, `error`, `required`, `disabled`, `readonly`, etc.) are filtered on both sides; you don't need to declare them.
+**Out of scope (web-specific layout wrappers):** `civ-form-field`, `civ-form-fieldset`, `civ-fieldset`, `civ-form` — these abstract over how form-headers are rendered on web; native platforms compose the same affordances differently and don't need a contract translation.
 
-**If you modify a non-Phase-1 component**, no obligation yet — but if you can sync the schema while you're there, you make Phase 2 cheaper.
+**Phase 3 (planned):** add schemas for the remaining cross-platform components (`civ-name`, `civ-direct-deposit`, `civ-signature`, `civ-form-step`, `civ-progress-steps`, `civ-progress-percent`, `civ-race-ethnicity`, `civ-marriage-history`, `civ-relationship`, `civ-service-history`); wire `pnpm parity:schema` into CI so drift fails the build.
+
+**If you modify a covered component**, update its schema in the same change. Run `pnpm parity:schema` before committing — the check fails on missing/added/renamed/retyped props. Inherited form props (`label`, `name`, `value`, `hint`, `error`, `required`, `disabled`, `readonly`, etc.) are filtered on both sides; you don't need to declare them.
+
+**If you modify an uncovered component**, no obligation yet — but if you can sync the schema while you're there, you make Phase 3 cheaper.
 
 ## AI Component Usage Guide
 

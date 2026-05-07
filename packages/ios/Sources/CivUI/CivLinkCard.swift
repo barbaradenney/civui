@@ -56,6 +56,9 @@ public struct CivLinkCard: View {
     /// Icon name rendered after the heading text.
     public var iconEnd: String
 
+    /// Small text label rendered above the heading (e.g. category, status).
+    public var eyebrow: String
+
     // MARK: - Internal State
 
     @Environment(\.colorScheme) private var colorScheme
@@ -72,7 +75,8 @@ public struct CivLinkCard: View {
         color: String = "",
         spacing: String = "default",
         iconStart: String = "",
-        iconEnd: String = ""
+        iconEnd: String = "",
+        eyebrow: String = ""
     ) {
         self.href = href
         self.heading = heading
@@ -84,6 +88,7 @@ public struct CivLinkCard: View {
         self.spacing = spacing
         self.iconStart = iconStart
         self.iconEnd = iconEnd
+        self.eyebrow = eyebrow
     }
 
     // MARK: - Body

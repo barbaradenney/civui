@@ -767,21 +767,6 @@ interface SummaryItem {
 </script>
 ```
 
-#### civ-prefill-notice
-
-Informational banner for chapter review pages explaining that data was prefilled from a profile.
-
-**Props:**
-- `heading` -- Custom heading text (uses i18n default if empty)
-- `body` -- Custom body text (uses i18n default if empty)
-- `profile-href` -- URL for the "update profile" link (omit to hide link)
-- `link-text` -- Custom link text
-
-**Example:**
-```html
-<civ-prefill-notice profile-href="/profile"></civ-prefill-notice>
-```
-
 #### Task list pattern (using civ-list + civ-list-item)
 
 There is no dedicated `civ-task` component. The "task list" is a usage pattern: compose `<civ-list>` + `<civ-list-item>` + `<civ-badge>`. Setting `href` on a list item makes the whole row a clickable anchor; omit `href` for locked rows. The status badge uses the `data-list-item-end` attribute. `<civ-badge>` carries `role="status"` and `with-icon` auto-renders the variant's semantic icon.
@@ -826,7 +811,7 @@ Task List Hub → Chapter Prefill Review → (Edit Steps if needed) → Save & C
 ```
 
 1. **Hub** -- `civ-list` with `civ-list-item` rows. Prefilled chapters mark themselves with `data-prefilled` and use the `review` badge variant (`<civ-badge variant="warning" badge-style="primary">Needs review</civ-badge>`).
-2. **Chapter review** -- `civ-prefill-notice` banner + `civ-summary` showing prefilled data with edit links. Locked sections link to profile settings.
+2. **Chapter review** -- `civ-alert` banner explaining that data was prefilled + `civ-summary` showing prefilled data with edit links. Locked sections link to profile settings.
 3. **Edit step** -- Standard form fields for editing a specific piece of data. "Update and continue" returns to chapter review.
 4. **Complete** -- "Save and complete" marks the chapter done and returns to the hub.
 

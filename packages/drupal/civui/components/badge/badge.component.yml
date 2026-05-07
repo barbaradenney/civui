@@ -37,6 +37,26 @@ props:
       type: boolean
       default: false
       description: 'Include an icon in the badge'
+    spacing:
+      title: Spacing
+      type: string
+      enum: ['default', 'sm']
+      default: 'default'
+      description: 'Padding density. `default` for standalone badges; `sm` for inline / table contexts'
+    overlay:
+      title: Overlay
+      type: boolean
+      default: false
+      description: 'Position the badge as an overlay over a parent element (notification-count style)'
+    icon_start:
+      title: Icon start
+      type: string
+      description: 'Override the leading icon name. Takes precedence over with-icon when both are set'
+    icon_end:
+      title: Icon end
+      type: string
+      description: 'Trailing icon name (e.g. dismiss / chevron)'
+
 
 libraryOverrides:
   dependencies:

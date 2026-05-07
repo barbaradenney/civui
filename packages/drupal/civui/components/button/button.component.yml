@@ -31,6 +31,15 @@ props:
       title: Disabled
       type: boolean
       default: false
+    icon_start:
+      title: Icon start
+      type: string
+      description: 'Leading icon name'
+    icon_end:
+      title: Icon end
+      type: string
+      description: 'Trailing icon name'
+
 
 slots:
   default:

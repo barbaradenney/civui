@@ -23,6 +23,15 @@ props:
       title: Card style
       type: string
       description: 'Visual style of the card'
+    icon_start:
+      title: Icon start
+      type: string
+      description: 'Leading icon name (rendered before slotted content)'
+    icon_end:
+      title: Icon end
+      type: string
+      description: 'Trailing icon name'
+
 
 slots:
   default:

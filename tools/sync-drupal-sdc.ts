@@ -64,6 +64,20 @@ const COMPONENTS: ComponentMapping[] = [
   { schema: 'civ-data-field', drupal: 'data-field' },
   { schema: 'civ-conditional', drupal: 'conditional' },
   { schema: 'civ-summary', drupal: 'summary' },
+  { schema: 'civ-modal', drupal: 'modal' },
+  { schema: 'civ-action-sheet', drupal: 'action-sheet' },
+  { schema: 'civ-alert', drupal: 'alert' },
+  { schema: 'civ-badge', drupal: 'badge' },
+  { schema: 'civ-count', drupal: 'count' },
+  { schema: 'civ-card', drupal: 'card' },
+  { schema: 'civ-divider', drupal: 'divider' },
+  { schema: 'civ-tag', drupal: 'tag' },
+  { schema: 'civ-list', drupal: 'list' },
+  { schema: 'civ-page-header', drupal: 'page-header' },
+  { schema: 'civ-section-intro', drupal: 'section-intro' },
+  { schema: 'civ-button', drupal: 'button' },
+  { schema: 'civ-link', drupal: 'link' },
+  { schema: 'civ-link-card', drupal: 'link-card' },
 ];
 
 const INHERITED_FORM_PROPS = new Set([

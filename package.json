@@ -23,6 +23,7 @@
     "storybook:build": "storybook build",
     "parity": "node --experimental-strip-types tools/parity-report.ts && open tools/parity-report.html",
     "parity:schema": "tsx tools/schema-parity.ts",
+    "validate:schemas": "tsx tools/validate-schemas.ts",
     "test:tools": "vitest run --config tools/vitest.config.ts",
     "sync:drupal": "tsx tools/sync-drupal-sdc.ts && tsx tools/sync-drupal-twig.ts",
     "sync:drupal:sdc": "tsx tools/sync-drupal-sdc.ts",

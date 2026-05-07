@@ -4,7 +4,7 @@ const schema: ComponentSchema = {
   $schema: '1.0',
   name: 'civ-date-range-picker',
   description: 'Two `civ-date-picker` instances cross-bound as a start/end range. The end picker\'s effective `min` follows `start`, and vice versa. Submits as `${name}.start` and `${name}.end` form fields. Cross-field range validation via `minRangeDays` and `maxRangeDays`.',
-  category: 'date',
+  category: 'form-control',
   extends: 'CivFormElement',
   isGroup: false,
 
@@ -97,7 +97,7 @@ const schema: ComponentSchema = {
 
   a11y: {
     role: 'group',
-    requiredIndicator: 'optional',
+    requiredIndicator: 'text',
     errorAnnouncement: 'polite',
   },
 
@@ -106,14 +106,15 @@ const schema: ComponentSchema = {
       type: 'container',
       bindings: { tag: 'div' },
       children: [
-        { type: 'date-picker', bindings: { label: 'startLabel', name: 'name.start', value: 'start' } },
-        { type: 'date-picker', bindings: { label: 'endLabel', name: 'name.end', value: 'end' } },
+        { type: 'input', bindings: { label: 'startLabel', value: 'value' } },
+        { type: 'input', bindings: { label: 'endLabel', value: 'value' } },
       ],
     },
   ],
 
   form: {
-    valueMode: 'compound',
+    // Submits as `${name}.start` and `${name}.end` — multiple FormData entries.
+    valueMode: 'multi',
     formAssociated: true,
     resetBehavior: 'restore-default-value',
   },

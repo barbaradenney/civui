@@ -87,6 +87,26 @@ jobs:
       - name: Validate every platform implements every schema prop
         run: pnpm parity:schema --platforms
 
+  schema-validate:
+    name: Schema structural validation (validateAll)
+    runs-on: ubuntu-latest
+    # Catches structural typos that TypeScript misses: invalid category /
+    # extends / valueMode / requiredIndicator values, enum defaults outside
+    # the values array, malformed renderOrder. Errors fail the build;
+    # binding-reference warnings are informational.
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Run validateAll over every schema
+        run: pnpm validate:schemas
+
   tool-tests:
     name: Tooling unit tests (parity / sync helpers)
     runs-on: ubuntu-latest

@@ -23,6 +23,11 @@ props:
       title: Spacing
       type: string
       description: 'Spacing variant'
+    icon_start:
+      title: Icon start
+      type: string
+      description: 'Leading icon name'
+
 
 libraryOverrides:
   dependencies:

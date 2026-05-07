@@ -23,6 +23,30 @@ props:
       title: Variant
       type: string
       description: 'Color variant'
+    count_style:
+      title: Count style
+      type: string
+      enum: ['primary', 'secondary']
+      default: 'secondary'
+      description: 'Visual treatment. `primary` = solid; `secondary` = subtle'
+    spacing:
+      title: Spacing
+      type: string
+      enum: ['default', 'sm']
+      default: 'default'
+      description: 'Padding density. `default` for standalone; `sm` for inline / overlay contexts'
+    overlay:
+      title: Overlay
+      type: boolean
+      default: false
+      description: 'Position as overlay over a parent (notification-count style)'
+    live:
+      title: Live
+      type: string
+      enum: ['off', 'polite', 'assertive']
+      default: 'off'
+      description: 'aria-live politeness for dynamic count changes. `off` (default) skips announcements; `polite` announces on idle; `assertive` interrupts'
+
 
 libraryOverrides:
   dependencies:

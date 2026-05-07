@@ -35,6 +35,19 @@ props:
       title: Disabled
       type: boolean
       default: false
+    icon_start:
+      title: Icon start
+      type: string
+      description: 'Leading icon name'
+    icon_end:
+      title: Icon end
+      type: string
+      description: 'Trailing icon name (defaults to chevron / arrow on most variants)'
+    eyebrow:
+      title: Eyebrow
+      type: string
+      description: 'Small text rendered above the heading (e.g. category label, status)'
+
 
 libraryOverrides:
   dependencies:

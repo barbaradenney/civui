@@ -51,6 +51,20 @@ const COMPONENTS = [
   'civ-data-field',
   'civ-conditional',
   'civ-summary',
+  'civ-modal',
+  'civ-action-sheet',
+  'civ-alert',
+  'civ-badge',
+  'civ-count',
+  'civ-card',
+  'civ-divider',
+  'civ-tag',
+  'civ-list',
+  'civ-page-header',
+  'civ-section-intro',
+  'civ-button',
+  'civ-link',
+  'civ-link-card',
 ];
 
 function camelToKebab(name: string): string {

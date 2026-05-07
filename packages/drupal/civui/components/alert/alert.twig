@@ -4,7 +4,9 @@
   {% if label %}label="{{ label }}"{% endif %}
   {% if dismissible %}dismissible{% endif %}
   {% if slim %}slim{% endif %}
-  {% if heading_level and heading_level != 4 %}heading-level="{{ heading_level }}"{% endif %}
+  {% if heading_level %}heading-level="{{ heading_level }}"{% endif %}
+  {% if alert_style %}alert-style="{{ alert_style }}"{% endif %}
+  {% if spacing %}spacing="{{ spacing }}"{% endif %}
 >
   {% block default %}{{ default }}{% endblock %}
 </civ-alert>

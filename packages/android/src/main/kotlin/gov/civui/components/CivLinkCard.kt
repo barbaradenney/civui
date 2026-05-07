@@ -55,6 +55,7 @@ fun CivLinkCard(
     spacing: String = "default",
     iconStart: String = "",
     iconEnd: String = "",
+    eyebrow: String = "",
     onTap: (() -> Unit)? = null,
     onAnalytics: ((event: String, data: Map<String, Any>?) -> Unit)? = null,
 ) {

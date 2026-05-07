@@ -1,5 +1,7 @@
 <civ-page-header
   {% if spacing %}spacing="{{ spacing }}"{% endif %}
+  {% if icon_start %}icon-start="{{ icon_start }}"{% endif %}
+  {% if icon_end %}icon-end="{{ icon_end }}"{% endif %}
 >
   {% block tag %}{{ tag }}{% endblock %}
   {% block eyebrow %}{{ eyebrow }}{% endblock %}

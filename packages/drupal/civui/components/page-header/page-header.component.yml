@@ -11,6 +11,15 @@ props:
       title: Spacing
       type: string
       description: 'Bottom spacing variant'
+    icon_start:
+      title: Icon start
+      type: string
+      description: 'Leading icon name (e.g. category icon)'
+    icon_end:
+      title: Icon end
+      type: string
+      description: 'Trailing icon name'
+
 
 slots:
   tag:

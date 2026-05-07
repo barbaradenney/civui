@@ -36,6 +36,19 @@ props:
       enum: [2, 3, 4, 5, 6]
       default: 4
       description: 'HTML heading level for the alert heading'
+    alert_style:
+      title: Alert style
+      type: string
+      enum: ['primary', 'secondary']
+      default: 'secondary'
+      description: 'Visual treatment. `primary` = filled with stronger emphasis; `secondary` = subtle background'
+    spacing:
+      title: Spacing
+      type: string
+      enum: ['default', 'sm']
+      default: 'default'
+      description: 'Vertical padding. `default` for standalone alerts; `sm` for nested/dense contexts'
+
 
 slots:
   default:

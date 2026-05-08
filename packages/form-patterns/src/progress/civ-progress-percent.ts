@@ -34,7 +34,7 @@ export class CivProgressPercent extends CivBaseElement {
         ${hasHeader ? html`
           <div class="civ-flex civ-justify-between civ-items-center civ-mb-1">
             ${this.status
-              ? html`<span class="civ-text-sm civ-text-muted">${this.status}</span>`
+              ? html`<span class="civ-text-sm">${this.status}</span>`
               : html`<span></span>`}
             ${this.showPercent
               ? html`<span class="civ-text-sm civ-font-bold civ-text-body">${Math.round(clamped)}%</span>`

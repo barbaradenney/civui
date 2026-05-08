@@ -169,7 +169,7 @@ export class CivSignature extends CivFormElement {
         ${renderFormHeader({ label: renderLegend({ legend: this.legend || this.label, required: this.required, headingLevel: this.headingLevel, size: this.size }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
 
         ${this._hasStatement ? html`
-          <div id="${this._statementId}" class="civ-text-base civ-text-muted civ-mb-4">
+          <div id="${this._statementId}" class="civ-mb-4">
             ${this._slottedStatementHTML
               ? unsafeHTML(this._slottedStatementHTML)
               : this.statement}

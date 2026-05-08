@@ -60,6 +60,114 @@ export const Inclusive: Story = {
   `,
 };
 
+export const TypeMarriage: Story = {
+  name: 'Type: Legal marriage',
+  render: () => html`
+    <civ-partnership-history
+      legend="About this marriage"
+      size="lg"
+      name="partnership"
+      show-marriage-type
+      .marriageValue=${{
+        spouseFirst: '', spouseMiddle: '', spouseLast: '', spouseSuffix: '',
+        marriageType: 'legal',
+        marriageDate: '', marriageCity: '', marriageState: '',
+        jurisdiction: '', cohabitationStartDate: '', cohabitationState: '',
+        marriageTypeDescription: '',
+        status: '', endDate: '',
+      }}
+    ></civ-partnership-history>
+  `,
+};
+
+export const TypeCivilUnion: Story = {
+  name: 'Type: Civil union / domestic partnership',
+  render: () => html`
+    <civ-partnership-history
+      size="lg"
+      name="partnership"
+      show-marriage-type
+      .marriageValue=${{
+        spouseFirst: '', spouseMiddle: '', spouseLast: '', spouseSuffix: '',
+        marriageType: 'civil-union',
+        marriageDate: '', marriageCity: '', marriageState: '',
+        jurisdiction: '', cohabitationStartDate: '', cohabitationState: '',
+        marriageTypeDescription: '',
+        status: '', endDate: '',
+      }}
+    ></civ-partnership-history>
+  `,
+};
+
+export const TypeCohabitation: Story = {
+  name: 'Type: Cohabitation / common-law',
+  render: () => html`
+    <civ-partnership-history
+      size="lg"
+      name="partnership"
+      show-marriage-type
+      .marriageValue=${{
+        spouseFirst: '', spouseMiddle: '', spouseLast: '', spouseSuffix: '',
+        marriageType: 'common-law',
+        marriageDate: '', marriageCity: '', marriageState: '',
+        jurisdiction: '', cohabitationStartDate: '', cohabitationState: '',
+        marriageTypeDescription: '',
+        status: '', endDate: '',
+      }}
+    ></civ-partnership-history>
+  `,
+};
+
+export const TypeOther: Story = {
+  name: 'Type: Other long-term partnership',
+  render: () => html`
+    <civ-partnership-history
+      size="lg"
+      name="partnership"
+      show-marriage-type
+      .marriageValue=${{
+        spouseFirst: '', spouseMiddle: '', spouseLast: '', spouseSuffix: '',
+        marriageType: 'other',
+        marriageDate: '', marriageCity: '', marriageState: '',
+        jurisdiction: '', cohabitationStartDate: '', cohabitationState: '',
+        marriageTypeDescription: '',
+        status: '', endDate: '',
+      }}
+    ></civ-partnership-history>
+  `,
+};
+
+export const StatusEnded: Story = {
+  name: 'Status: Ended (shows end-date field)',
+  render: () => html`
+    <civ-partnership-history
+      size="lg"
+      name="partnership"
+      show-marriage-type
+      .marriageValue=${{
+        spouseFirst: 'Alex', spouseMiddle: '', spouseLast: 'Rivera', spouseSuffix: '',
+        marriageType: 'common-law',
+        marriageDate: '', marriageCity: '', marriageState: '',
+        jurisdiction: '', cohabitationStartDate: '2010-06-01', cohabitationState: 'CA',
+        marriageTypeDescription: '',
+        status: 'ended', endDate: '',
+      }}
+    ></civ-partnership-history>
+  `,
+};
+
+export const StatusAssumed: Story = {
+  name: 'Status assumed (current spouse context)',
+  render: () => html`
+    <civ-partnership-history
+      legend="About your current spouse"
+      size="lg"
+      name="partnership"
+      status-assumed="current"
+    ></civ-partnership-history>
+  `,
+};
+
 export const InRepeater: Story = {
   name: 'Usage: In Repeater',
   render: () => html`

@@ -2589,10 +2589,10 @@
     margin: var(--civ-spacing-4) 0 var(--civ-spacing-1);
     /* Hard-set height (not min-height) so the box never grows. Sized for
        the cursive font's full ascender + descender extent (`f`, `g`, `j`,
-       `p`, `y` all have descenders that drop below the baseline by ~30%
-       of font-size in most cursive faces). 3rem ≈ 1.6 × font-size,
-       generous enough for the noisiest glyphs without clipping. */
-    height: 3rem;
+       `p`, `y` all have descenders that drop below the baseline). 4.5rem
+       ≈ 1.5 × font-size, generous enough for the noisiest glyphs without
+       clipping. */
+    height: 4.5rem;
     /* Single line: clip if the name overflows rather than wrapping —
        wrapping would re-introduce a layout shift, which is the whole
        thing we're trying to prevent. The full name is still in the
@@ -2604,11 +2604,15 @@
 
   .civ-signature-preview__cursive {
     font-family: 'Brush Script MT', 'Snell Roundhand', 'Lucida Handwriting', cursive;
-    font-size: 1.875rem;
+    /* 3rem (48px) — substantially larger than body text (1rem / 16px) so
+       the cursive name reads as a signature, not as a label. Aligns with
+       production e-sign UX (DocuSign, Adobe Sign) where the rendered
+       signature is the visual focal point of the sign step. */
+    font-size: 3rem;
     /* Match the parent's hard height so the line-box never differs from
        what the parent reserves. Critical: a cursive font with content
-       can otherwise produce a taller line-box than a numerical 1.2
-       multiple of font-size, which used to push the parent. */
+       can otherwise produce a taller line-box than a numerical multiple
+       of font-size and push the parent. */
     line-height: 1;
     color: var(--civ-color-base-darkest);
     /* Single-line: the parent clips if the name overflows; no wrap. */

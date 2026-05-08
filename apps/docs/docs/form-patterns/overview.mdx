@@ -114,7 +114,9 @@ Not every form needs every layer. A simple contact form might just use `civ-form
   <civ-form-step>
     <div data-step-label="Personal info">
       <civ-name legend="Your name" name="name" required></civ-name>
-      <civ-memorable-date label="Date of birth" name="dob" required></civ-memorable-date>
+      <civ-form-fieldset legend="Date of birth" required>
+        <civ-memorable-date name="dob"></civ-memorable-date>
+      </civ-form-fieldset>
     </div>
 
     <div data-step-label="Service history">

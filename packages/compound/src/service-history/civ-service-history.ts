@@ -108,27 +108,27 @@ export class CivServiceHistory extends CivFormElement {
           ></civ-select>
         </civ-form-field>
 
-        <civ-memorable-date
-          label="${t('serviceStartDateLegend')}"
-          name="${prefix}.startDate"
-          value="${this._service.startDate}"
-          hint="${t('serviceStartDateHint')}"
-          error="${this.startDateError}"
-          ?disabled="${this.disabled}"
-          @civ-input="${(e: CustomEvent) => this._onFieldInput('startDate', e)}"
-          @civ-change="${(e: CustomEvent) => this._onFieldChange('startDate', e)}"
-        ></civ-memorable-date>
+        <civ-form-fieldset legend="${t('serviceStartDateLegend')}" hint="${t('serviceStartDateHint')}" error="${this.startDateError}">
+          <civ-memorable-date
+            name="${prefix}.startDate"
+            value="${this._service.startDate}"
+            error="${this.startDateError}"
+            ?disabled="${this.disabled}"
+            @civ-input="${(e: CustomEvent) => this._onFieldInput('startDate', e)}"
+            @civ-change="${(e: CustomEvent) => this._onFieldChange('startDate', e)}"
+          ></civ-memorable-date>
+        </civ-form-fieldset>
 
-        <civ-memorable-date
-          label="${t('serviceEndDateLegend')}"
-          name="${prefix}.endDate"
-          value="${this._service.endDate}"
-          hint="${t('serviceEndDateHint')}"
-          error="${this.endDateError}"
-          ?disabled="${this.disabled}"
-          @civ-input="${(e: CustomEvent) => this._onFieldInput('endDate', e)}"
-          @civ-change="${(e: CustomEvent) => this._onFieldChange('endDate', e)}"
-        ></civ-memorable-date>
+        <civ-form-fieldset legend="${t('serviceEndDateLegend')}" hint="${t('serviceEndDateHint')}" error="${this.endDateError}">
+          <civ-memorable-date
+            name="${prefix}.endDate"
+            value="${this._service.endDate}"
+            error="${this.endDateError}"
+            ?disabled="${this.disabled}"
+            @civ-input="${(e: CustomEvent) => this._onFieldInput('endDate', e)}"
+            @civ-change="${(e: CustomEvent) => this._onFieldChange('endDate', e)}"
+          ></civ-memorable-date>
+        </civ-form-fieldset>
 
         <civ-form-field label="${t('serviceDischargeLabel')}" error="${this.dischargeError}">
           <civ-select

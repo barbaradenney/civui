@@ -74,6 +74,8 @@ Setting `disabled` on `civ-fieldset` uses the native `<fieldset disabled>` behav
 <!-- Disabled section -->
 <civ-fieldset legend="Spouse information" disabled>
   <civ-text-input label="Spouse name" name="spouseName"></civ-text-input>
-  <civ-memorable-date label="Spouse date of birth" name="spouseDob"></civ-memorable-date>
+  <civ-form-fieldset legend="Spouse date of birth">
+    <civ-memorable-date name="spouseDob"></civ-memorable-date>
+  </civ-form-fieldset>
 </civ-fieldset>
 ```

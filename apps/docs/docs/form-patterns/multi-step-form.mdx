@@ -24,7 +24,9 @@ Break long government forms into manageable steps. Each step covers one concept 
 <civ-form-step>
   <div data-step-label="Personal information">
     <civ-name legend="Your name" name="fullName" required></civ-name>
-    <civ-memorable-date label="Date of birth" name="dob" required></civ-memorable-date>
+    <civ-form-fieldset legend="Date of birth" required>
+      <civ-memorable-date name="dob"></civ-memorable-date>
+    </civ-form-fieldset>
   </div>
 
   <div data-step-label="Contact information">

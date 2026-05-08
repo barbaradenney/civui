@@ -227,14 +227,17 @@ export class CivSignature extends CivFormElement {
 
         <!--
           Persistent signature line. Always rendered so typing the name
-          does not push the form layout — the line reserves height via
-          its min-height + the empty inner span. Cursive text fills in
-          as the user types. Visually mirrors a wet-ink signature line
-          at the bottom of a paper form. \`aria-hidden\` because the
-          input value is already announced by the screen reader.
+          does not push the form layout. The cursive span always carries
+          content — either the trimmed name or a non-breaking space —
+          so its line-box has consistent height whether populated or
+          empty (an empty inline span collapses, a filled one expands
+          to the font's metrics; we lock both states to the same
+          baseline). Visually mirrors a wet-ink signature line at the
+          bottom of a paper form. \`aria-hidden\` because the input
+          value is already announced by the screen reader.
         -->
         <div class="civ-signature-preview" aria-hidden="true">
-          <span class="civ-signature-preview__cursive">${this._signature.name.trim()}</span>
+          <span class="civ-signature-preview__cursive">${this._signature.name.trim() || ' '}</span>
         </div>
 
         <!--

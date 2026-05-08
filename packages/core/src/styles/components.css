@@ -2587,10 +2587,17 @@
     border-bottom: 1px solid var(--civ-color-base-light);
     padding: var(--civ-spacing-2) var(--civ-spacing-1) var(--civ-spacing-1);
     margin: var(--civ-spacing-4) 0 var(--civ-spacing-1);
-    /* Reserve height so the line is visible even when empty and the
-       form layout doesn't shift as the user types. Tied to the cursive
-       font-size so the empty box matches the filled-in baseline. */
-    min-height: calc(1.875rem * 1.2);
+    /* Hard-set height (not min-height) so the box never grows. Sized for
+       the cursive font's full ascender + descender extent (`f`, `g`, `j`,
+       `p`, `y` all have descenders that drop below the baseline by ~30%
+       of font-size in most cursive faces). 3rem ≈ 1.6 × font-size,
+       generous enough for the noisiest glyphs without clipping. */
+    height: 3rem;
+    /* Single line: clip if the name overflows rather than wrapping —
+       wrapping would re-introduce a layout shift, which is the whole
+       thing we're trying to prevent. The full name is still in the
+       form data; the cursive line is decorative. */
+    overflow: hidden;
     display: flex;
     align-items: flex-end;
   }
@@ -2598,9 +2605,18 @@
   .civ-signature-preview__cursive {
     font-family: 'Brush Script MT', 'Snell Roundhand', 'Lucida Handwriting', cursive;
     font-size: 1.875rem;
-    line-height: 1.2;
+    /* Match the parent's hard height so the line-box never differs from
+       what the parent reserves. Critical: a cursive font with content
+       can otherwise produce a taller line-box than a numerical 1.2
+       multiple of font-size, which used to push the parent. */
+    line-height: 1;
     color: var(--civ-color-base-darkest);
-    word-break: break-word;
+    /* Single-line: the parent clips if the name overflows; no wrap. */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: clip;
+    flex: 1 1 auto;
+    min-width: 0;
   }
 
   /* Reserve a single line of small text below the signature preview so

@@ -10,11 +10,11 @@ import StoryEmbed from "@site/src/components/StoryEmbed";
 
 <!-- contract-link:start -->
 
-> **Contract reference:** [`civ-marriage-history`](pathname:///civui/storybook/?path=/docs/contract-civ-marriage-history--docs) — auto-generated structured contract for cross-platform implementation.
+> **Contract reference:** [`civ-partnership-history`](pathname:///civui/storybook/?path=/docs/contract-civ-partnership-history--docs) — auto-generated structured contract for cross-platform implementation.
 
 <!-- contract-link:end -->
 
-`<civ-marriage-history>`
+`<civ-partnership-history>`
 
 Compound component for a single marriage entry — spouse name, marriage date and location, status, and conditional end date. Designed to be used inside a `civ-repeater` for multiple marriages.
 
@@ -22,17 +22,17 @@ Compound component for a single marriage entry — spouse name, marriage date an
 
 ### Default
 
-<StoryEmbed id="forms-compound-marriage-history--default" />
+<StoryEmbed id="forms-compound-partnership-history--default" />
 
 ### With Errors
 
-<StoryEmbed id="forms-compound-marriage-history--with-errors" />
+<StoryEmbed id="forms-compound-partnership-history--with-errors" />
 
 ### In Repeater
 
-<StoryEmbed id="forms-compound-marriage-history--in-repeater" />
+<StoryEmbed id="forms-compound-partnership-history--in-repeater" />
 
-[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-compound-marriage-history--default)
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-compound-partnership-history--default)
 
 ## Props
 
@@ -60,6 +60,6 @@ The "Date marriage ended" field only appears when the status is **not** "Current
 
 ```html
 <civ-repeater legend="Marriage history" name="marriages" item-label="marriage" mode="form-steps" min="0" max="10">
-  <civ-marriage-history name="entry"></civ-marriage-history>
+  <civ-partnership-history name="entry"></civ-partnership-history>
 </civ-repeater>
 ```

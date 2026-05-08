@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 // @ts-ignore
-import template from '../../../drupal/civui/components/marriage-history/marriage-history.twig';
+import template from '../../../drupal/civui/components/partnership-history/partnership-history.twig';
 
 const render = (props: Record<string, any>) => html`${unsafeHTML(template(props))}`;
 

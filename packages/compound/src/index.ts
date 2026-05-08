@@ -15,8 +15,8 @@ export { CivSignature } from './signature/index.js';
 export type { SignatureValue } from './signature/index.js';
 
 // Marriage History
-export { CivMarriageHistory } from './marriage-history/index.js';
-export type { MarriageValue } from './marriage-history/index.js';
+export { CivPartnershipHistory } from './partnership-history/index.js';
+export type { MarriageValue } from './partnership-history/index.js';
 
 // Service History
 export { CivServiceHistory } from './service-history/index.js';

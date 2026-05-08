@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
-import './civ-marriage-history.js';
+import './civ-partnership-history.js';
 import '@civui/inputs';
 import '@civui/controls';
 
 const meta: Meta = {
   title: 'Forms/Compound/Marriage History',
-  component: 'civ-marriage-history',
+  component: 'civ-partnership-history',
   tags: ['autodocs'],
 };
 
@@ -15,29 +15,29 @@ type Story = StoryObj;
 
 export const Default: Story = {
   render: () => html`
-    <civ-marriage-history
+    <civ-partnership-history
       legend="About this marriage"
       size="lg"
       name="marriage"
-    ></civ-marriage-history>
+    ></civ-partnership-history>
   `,
 };
 
 export const Required: Story = {
   render: () => html`
-    <civ-marriage-history
+    <civ-partnership-history
       legend="About this marriage"
       size="lg"
       name="marriage"
       required
-    ></civ-marriage-history>
+    ></civ-partnership-history>
   `,
 };
 
 export const WithErrors: Story = {
   name: 'With Errors',
   render: () => html`
-    <civ-marriage-history
+    <civ-partnership-history
       legend="About this marriage"
       size="lg"
       name="marriage"
@@ -45,7 +45,7 @@ export const WithErrors: Story = {
       spouse-error="Enter your spouse's name"
       marriage-date-error="Enter the date of marriage"
       status-error="Select the marriage status"
-    ></civ-marriage-history>
+    ></civ-partnership-history>
   `,
 };
 
@@ -60,7 +60,7 @@ export const InRepeater: Story = {
       min="0"
       max="10"
     >
-      <civ-marriage-history name="entry"></civ-marriage-history>
+      <civ-partnership-history name="entry"></civ-partnership-history>
     </civ-repeater>
   `,
 };

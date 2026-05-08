@@ -54,13 +54,13 @@ const EMPTY_MARRIAGE: MarriageValue = {
  * marriage date and location, status, and conditional end date.
  * Designed to be used inside a `civ-repeater` for multiple marriages.
  *
- * @element civ-marriage-history
+ * @element civ-partnership-history
  *
  * @fires civ-input - On every field change, detail: { value: MarriageValue }
  * @fires civ-change - On committed field change, detail: { value: MarriageValue }
  */
-@customElement('civ-marriage-history')
-export class CivMarriageHistory extends CivFormElement {
+@customElement('civ-partnership-history')
+export class CivPartnershipHistory extends CivFormElement {
   @property({ type: String }) legend = '';
 
   /**
@@ -424,6 +424,6 @@ export class CivMarriageHistory extends CivFormElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'civ-marriage-history': CivMarriageHistory;
+    'civ-partnership-history': CivPartnershipHistory;
   }
 }

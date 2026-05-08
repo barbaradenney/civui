@@ -54,7 +54,7 @@ const COMPONENTS: ComponentMapping[] = [
   { schema: 'civ-form-step', drupal: 'form-step' },
   { schema: 'civ-progress-percent', drupal: 'progress-percent' },
   { schema: 'civ-race-ethnicity', drupal: 'race-ethnicity' },
-  { schema: 'civ-marriage-history', drupal: 'marriage-history' },
+  { schema: 'civ-partnership-history', drupal: 'partnership-history' },
   { schema: 'civ-relationship', drupal: 'relationship' },
   { schema: 'civ-service-history', drupal: 'service-history' },
   { schema: 'civ-filterable-list', drupal: 'filterable-list' },

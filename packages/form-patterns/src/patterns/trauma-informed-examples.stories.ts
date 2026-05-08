@@ -190,11 +190,11 @@ export const CompleteSurvivorForm: Story = {
           </civ-form-fieldset>
 
           <civ-conditional when="marriedAtDeath" equals="yes">
-            <civ-marriage-history
+            <civ-partnership-history
               legend="About your marriage"
               name="marriage"
               status-assumed="widowed"
-            ></civ-marriage-history>
+            ></civ-partnership-history>
           </civ-conditional>
         </div>
 

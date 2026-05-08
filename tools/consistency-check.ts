@@ -342,7 +342,7 @@ const NO_ANALYTICS = new Set([
   'civ-summary', 'civ-icon',
   // Compound components delegate analytics to child form fields
   'civ-address', 'civ-name', 'civ-signature',
-  'civ-direct-deposit', 'civ-marriage-history', 'civ-relationship',
+  'civ-direct-deposit', 'civ-partnership-history', 'civ-relationship',
   'civ-service-history', 'civ-race-ethnicity',
   // Wrappers that delegate to a single child input — the child's
   // sendAnalytics fires for the actual user interaction.

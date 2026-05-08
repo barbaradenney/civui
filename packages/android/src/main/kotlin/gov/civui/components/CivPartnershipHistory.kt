@@ -1,4 +1,4 @@
-// CivUI — CivMarriageHistory for Jetpack Compose
+// CivUI — CivPartnershipHistory for Jetpack Compose
 // Compound marriage history form with spouse, dates, and status fields.
 
 package gov.civui.components
@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
 @Composable
-fun CivMarriageHistory(
+fun CivPartnershipHistory(
     legend: String = "",
     showMarriageType: Boolean = false,
     statusAssumed: String = "",

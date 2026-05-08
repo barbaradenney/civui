@@ -2,7 +2,7 @@ import type { ComponentSchema } from '../schema.types.js';
 
 const schema: ComponentSchema = {
   $schema: '1.0',
-  name: 'civ-marriage-history',
+  name: 'civ-partnership-history',
   description: 'Compound marriage record — captures spouse name, marriage date, location (city/state/jurisdiction), optional cohabitation start, status (current / divorced / widowed / annulled), and end date when applicable. Used in benefits applications that require dependent or beneficiary documentation.',
   category: 'form-group',
   extends: 'CivFormElement',

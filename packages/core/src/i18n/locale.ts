@@ -350,6 +350,9 @@ export interface CivLocaleStrings {
   partnershipStatusPartnerDeceased: string; // "Partner has passed away"
   partnershipEndDateLegend: string; // "Date the relationship ended"
   partnershipEndDatePartnerDeceasedLegend: string; // "Date of their passing"
+  partnershipStepWhoLegend: string; // "About your partner"
+  partnershipStepDetailsLegend: string; // "Partnership details"
+  partnershipStepStatusLegend: string; // "Partnership status"
 
   // Address validation
   addressValidationHeading: string;
@@ -930,6 +933,9 @@ const defaultStrings: CivLocaleStrings = {
   partnershipStatusPartnerDeceased: 'Partner has passed away',
   partnershipEndDateLegend: 'Date the relationship ended',
   partnershipEndDatePartnerDeceasedLegend: 'Date of their passing',
+  partnershipStepWhoLegend: 'About your partner',
+  partnershipStepDetailsLegend: 'Partnership details',
+  partnershipStepStatusLegend: 'Partnership status',
 
   addressValidationHeading: 'Verify your address',
   addressValidationOriginalLabel: 'You entered',

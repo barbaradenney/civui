@@ -38,6 +38,11 @@ const schema: ComponentSchema = {
       default: '',
       attribute: 'status-assumed',
     },
+    step: {
+      type: 'enum',
+      description: 'Render only one section of the compound. Use to split the form across multiple form-step pages: "who" (partner name + type), "details" (date/location), "status" (current status + end-date). Default (unset) renders the full single-page form.',
+      values: ['who', 'details', 'status'],
+    },
     spouseError: {
       type: 'string',
       description: 'Per-field error for the spouse-name input',

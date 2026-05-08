@@ -72,6 +72,12 @@ props:
       title: End date error
       type: string
       description: 'Per-field error for the end-date input (when status = divorced / widowed / annulled)'
+    step:
+      title: Step
+      type: string
+      enum: ['who', 'details', 'status']
+      description: 'Render only one section of the compound. Use to split the form across multiple form-step pages: "who" (partner name + type), "details" (date/location), "status" (current status + end-date). Default (unset) renders the full single-page form.'
+
 
 
 libraryOverrides:

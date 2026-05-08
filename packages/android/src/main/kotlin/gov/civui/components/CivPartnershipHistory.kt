@@ -13,6 +13,7 @@ fun CivPartnershipHistory(
     legend: String = "",
     showMarriageType: Boolean = false,
     statusAssumed: String = "",
+    step: String = "",
     spouseError: String = "",
     marriageTypeError: String = "",
     marriageDateError: String = "",

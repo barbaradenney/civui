@@ -104,6 +104,20 @@ export class CivPartnershipHistory extends CivFormElement {
   /** Skip the status question and assume this value. Use 'widowed' when the spouse's death is already established. */
   @property({ type: String, attribute: 'status-assumed' }) statusAssumed = '';
 
+  /**
+   * Render only one section of the form. Useful when splitting the
+   * compound across multiple `<civ-form-step>` pages so each page asks
+   * one focused question:
+   *  - `'who'` — partner name (and partnership type if `show-marriage-type`)
+   *  - `'details'` — type-specific date/location/jurisdiction fields
+   *  - `'status'` — current status and conditional end-date
+   *
+   * When unset (default), the component renders all sections on one page.
+   * The component still serializes the same `MarriageValue` shape across
+   * all steps — consumers thread the `value` through each step.
+   */
+  @property({ type: String }) step?: 'who' | 'details' | 'status';
+
   @property({ type: String, attribute: 'spouse-error' }) spouseError = '';
   @property({ type: String, attribute: 'marriage-type-error' }) marriageTypeError = '';
   @property({ type: String, attribute: 'marriage-date-error' }) marriageDateError = '';
@@ -171,29 +185,28 @@ export class CivPartnershipHistory extends CivFormElement {
     }
   }
 
+  /**
+   * Default legend per step. Used when the consumer doesn't pass an
+   * explicit `legend`. The all-on-one-page form falls back to the
+   * generic "About this partnership".
+   */
+  private _legendForStep(): string {
+    if (this.legend) return this.legend;
+    switch (this.step) {
+      case 'who': return t('partnershipStepWhoLegend');
+      case 'details': return t('partnershipStepDetailsLegend');
+      case 'status': return t('partnershipStepStatusLegend');
+      default: return t('partnershipLegendDefault');
+    }
+  }
+
   override render() {
     const describedBy = buildDescribedBy(this._hintId, this.hint, this._errorId, this.error);
     const prefix = this.name || 'marriage';
-    // The component now covers any long-term partner relationship — marriage,
-    // civil union, registered domestic partnership, cohabitation, or other.
-    // Default to the inclusive "About this partnership" so consumers who
-    // don't pass a `legend` get a label that doesn't presume marriage. When
-    // a marriage-specific form needs the original wording, the consumer
-    // sets `legend="About this marriage"` explicitly.
-    const legend = this.legend || t('partnershipLegendDefault');
-    // Two status vocabularies: marriage uses divorced/widowed/annulled; the
-    // other partnership categories use a more generic ended/partner-deceased
-    // set. When `showMarriageType` is off, the form is implicitly marriage
-    // (the original use case) so we default to the marriage vocabulary.
-    const isMarriageStatusVocab = !this.showMarriageType ||
-      this._typeCategory === 'marriage' ||
-      this._typeCategory === 'none';
-    const nameJson = JSON.stringify({
-      first: this._marriage.spouseFirst,
-      middle: this._marriage.spouseMiddle,
-      last: this._marriage.spouseLast,
-      suffix: this._marriage.spouseSuffix,
-    });
+    const showAll = !this.step;
+    const showWho = showAll || this.step === 'who';
+    const showDetails = showAll || this.step === 'details';
+    const showStatus = showAll || this.step === 'status';
 
     return html`
       <fieldset
@@ -203,79 +216,104 @@ export class CivPartnershipHistory extends CivFormElement {
         aria-required="${this.required || nothing}"
         ?disabled="${this.disabled}"
       >
-        ${renderFormHeader({ label: renderLegend({ legend, required: false, headingLevel: this.headingLevel, size: this.size }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
+        ${renderFormHeader({ label: renderLegend({ legend: this._legendForStep(), required: false, headingLevel: this.headingLevel, size: this.size }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
 
-        <civ-name
-          legend="${t('marriageSpouseLegend')}"
-          name="${prefix}.spouse"
-          value="${nameJson}"
-          error="${this.spouseError}"
-          ?required="${this.required}"
-          ?disabled="${this.disabled}"
-          ?readonly="${this.readonly}"
-          @civ-input="${this._onNameInput}"
-          @civ-change="${this._onNameChange}"
-        ></civ-name>
-
-        ${this.showMarriageType ? html`
-          <civ-form-field label="${t('marriageTypeLabel')}" error="${this.marriageTypeError}">
-            <civ-select
-              name="${prefix}.marriageType"
-              value="${this._marriage.marriageType}"
-              error="${this.marriageTypeError}"
-              ?disabled="${this.disabled}"
-              data-marriage-type
-              @civ-change="${this._onMarriageTypeChange}"
-            ></civ-select>
-          </civ-form-field>
-        ` : nothing}
-
-        ${this._renderCategoryFields(prefix)}
-
-        ${this.statusAssumed ? nothing : html`
-          <civ-form-fieldset
-            legend="${isMarriageStatusVocab ? t('marriageStatusLegend') : t('partnershipStatusLegend')}"
-            error="${this.statusError}"
-            ?required="${this.required}"
-          >
-            <civ-radio-group
-              name="${prefix}.status"
-              value="${this._marriage.status}"
-              error="${this.statusError}"
-              variant="list"
-              ?disabled="${this.disabled}"
-              ?required="${this.required}"
-              data-marriage-status
-              @civ-input="${(e: CustomEvent) => e.stopPropagation()}"
-              @civ-change="${this._onStatusChange}"
-            >
-              ${isMarriageStatusVocab ? html`
-                <civ-radio label="${t('marriageStatusCurrent')}" value="current"></civ-radio>
-                <civ-radio label="${t('marriageStatusDivorced')}" value="divorced"></civ-radio>
-                <civ-radio label="${t('marriageStatusWidowed')}" value="widowed"></civ-radio>
-                <civ-radio label="${t('marriageStatusAnnulled')}" value="annulled"></civ-radio>
-              ` : html`
-                <civ-radio label="${t('partnershipStatusOngoing')}" value="current"></civ-radio>
-                <civ-radio label="${t('partnershipStatusEnded')}" value="ended"></civ-radio>
-                <civ-radio label="${t('partnershipStatusPartnerDeceased')}" value="partner-deceased"></civ-radio>
-              `}
-            </civ-radio-group>
-          </civ-form-fieldset>
-        `}
-
-        ${this._marriage.status && this._marriage.status !== 'current' ? html`
-          <civ-form-fieldset legend="${this._endDateLegend()}">
-            <civ-memorable-date
-              name="${prefix}.endDate"
-              value="${this._marriage.endDate}"
-              error="${this.endDateError}"
-              ?disabled="${this.disabled}"
-              @civ-input="${(e: CustomEvent) => this._onFieldInput('endDate', e)}"
-              @civ-change="${(e: CustomEvent) => this._onFieldChange('endDate', e)}"
-            ></civ-memorable-date>
-          </civ-form-fieldset>
-        ` : nothing}
+        ${showWho ? this._renderWho(prefix) : nothing}
+        ${showDetails ? this._renderCategoryFields(prefix) : nothing}
+        ${showStatus ? this._renderStatus(prefix) : nothing}
       </fieldset>
+    `;
+  }
+
+  /** Step 1: who — partner name + (optional) partnership type. */
+  private _renderWho(prefix: string) {
+    const nameJson = JSON.stringify({
+      first: this._marriage.spouseFirst,
+      middle: this._marriage.spouseMiddle,
+      last: this._marriage.spouseLast,
+      suffix: this._marriage.spouseSuffix,
+    });
+    return html`
+      <civ-name
+        legend="${t('marriageSpouseLegend')}"
+        name="${prefix}.spouse"
+        value="${nameJson}"
+        error="${this.spouseError}"
+        ?required="${this.required}"
+        ?disabled="${this.disabled}"
+        ?readonly="${this.readonly}"
+        @civ-input="${this._onNameInput}"
+        @civ-change="${this._onNameChange}"
+      ></civ-name>
+
+      ${this.showMarriageType ? html`
+        <civ-form-field label="${t('marriageTypeLabel')}" error="${this.marriageTypeError}">
+          <civ-select
+            name="${prefix}.marriageType"
+            value="${this._marriage.marriageType}"
+            error="${this.marriageTypeError}"
+            ?disabled="${this.disabled}"
+            data-marriage-type
+            @civ-change="${this._onMarriageTypeChange}"
+          ></civ-select>
+        </civ-form-field>
+      ` : nothing}
+    `;
+  }
+
+  /** Step 3: status — current status + conditional end-date. */
+  private _renderStatus(prefix: string) {
+    // Two status vocabularies: marriage uses divorced/widowed/annulled; the
+    // other partnership categories use a more generic ended/partner-deceased
+    // set. When `showMarriageType` is off, the form is implicitly marriage
+    // (the original use case) so we default to the marriage vocabulary.
+    const isMarriageStatusVocab = !this.showMarriageType ||
+      this._typeCategory === 'marriage' ||
+      this._typeCategory === 'none';
+    return html`
+      ${this.statusAssumed ? nothing : html`
+        <civ-form-fieldset
+          legend="${isMarriageStatusVocab ? t('marriageStatusLegend') : t('partnershipStatusLegend')}"
+          error="${this.statusError}"
+          ?required="${this.required}"
+        >
+          <civ-radio-group
+            name="${prefix}.status"
+            value="${this._marriage.status}"
+            error="${this.statusError}"
+            variant="list"
+            ?disabled="${this.disabled}"
+            ?required="${this.required}"
+            data-marriage-status
+            @civ-input="${(e: CustomEvent) => e.stopPropagation()}"
+            @civ-change="${this._onStatusChange}"
+          >
+            ${isMarriageStatusVocab ? html`
+              <civ-radio label="${t('marriageStatusCurrent')}" value="current"></civ-radio>
+              <civ-radio label="${t('marriageStatusDivorced')}" value="divorced"></civ-radio>
+              <civ-radio label="${t('marriageStatusWidowed')}" value="widowed"></civ-radio>
+              <civ-radio label="${t('marriageStatusAnnulled')}" value="annulled"></civ-radio>
+            ` : html`
+              <civ-radio label="${t('partnershipStatusOngoing')}" value="current"></civ-radio>
+              <civ-radio label="${t('partnershipStatusEnded')}" value="ended"></civ-radio>
+              <civ-radio label="${t('partnershipStatusPartnerDeceased')}" value="partner-deceased"></civ-radio>
+            `}
+          </civ-radio-group>
+        </civ-form-fieldset>
+      `}
+
+      ${this._marriage.status && this._marriage.status !== 'current' ? html`
+        <civ-form-fieldset legend="${this._endDateLegend()}">
+          <civ-memorable-date
+            name="${prefix}.endDate"
+            value="${this._marriage.endDate}"
+            error="${this.endDateError}"
+            ?disabled="${this.disabled}"
+            @civ-input="${(e: CustomEvent) => this._onFieldInput('endDate', e)}"
+            @civ-change="${(e: CustomEvent) => this._onFieldChange('endDate', e)}"
+          ></civ-memorable-date>
+        </civ-form-fieldset>
+      ` : nothing}
     `;
   }
 

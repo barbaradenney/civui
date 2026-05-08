@@ -136,6 +136,51 @@ describe('civ-partnership-history', () => {
   });
 });
 
+describe('civ-partnership-history step prop', () => {
+  it('renders only the partner name + type for step="who"', async () => {
+    const el = await fixture('<civ-partnership-history name="m" step="who" show-marriage-type></civ-partnership-history>');
+    expect(el.querySelector('civ-name')).not.toBeNull();
+    expect(el.querySelector('[data-marriage-type]')).not.toBeNull();
+    expect(el.querySelector('[data-marriage-status]')).toBeNull();
+    expect(el.querySelector('civ-memorable-date')).toBeNull();
+  });
+
+  it('renders only the type-specific date/location for step="details"', async () => {
+    const el = await fixture('<civ-partnership-history name="m" step="details"></civ-partnership-history>');
+    expect(el.querySelector('civ-name')).toBeNull();
+    expect(el.querySelector('[data-marriage-status]')).toBeNull();
+    expect(el.querySelector('civ-memorable-date')).not.toBeNull();
+  });
+
+  it('renders only the status + end-date for step="status"', async () => {
+    const el = await fixture('<civ-partnership-history name="m" step="status"></civ-partnership-history>') as any;
+    el.marriageValue = { ...el.marriageValue, status: 'divorced' };
+    await elementUpdated(el);
+    expect(el.querySelector('civ-name')).toBeNull();
+    expect(el.querySelector('[data-marriage-status]')).not.toBeNull();
+    expect(el.querySelector('civ-memorable-date')).not.toBeNull();
+  });
+
+  it('renders all sections when step is unset', async () => {
+    const el = await fixture('<civ-partnership-history name="m" show-marriage-type></civ-partnership-history>');
+    expect(el.querySelector('civ-name')).not.toBeNull();
+    expect(el.querySelector('[data-marriage-type]')).not.toBeNull();
+    expect(el.querySelector('[data-marriage-status]')).not.toBeNull();
+  });
+
+  it('uses step-specific default legend when consumer omits legend', async () => {
+    const el = await fixture('<civ-partnership-history name="m" step="who"></civ-partnership-history>');
+    const legend = el.querySelector('legend');
+    expect(legend?.textContent).toContain('About your partner');
+  });
+
+  it('consumer-supplied legend overrides the step default', async () => {
+    const el = await fixture('<civ-partnership-history name="m" step="who" legend="Tell us about your spouse"></civ-partnership-history>');
+    const legend = el.querySelector('legend');
+    expect(legend?.textContent).toContain('Tell us about your spouse');
+  });
+});
+
 describe('civ-partnership-history status-assumed', () => {
   it('skips the status radio group when status-assumed is set', async () => {
     const el = await fixture('<civ-partnership-history name="m" status-assumed="widowed"></civ-partnership-history>');

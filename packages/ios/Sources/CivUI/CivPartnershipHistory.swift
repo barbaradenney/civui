@@ -32,6 +32,10 @@ public struct CivPartnershipHistory: View {
     /// Assumed status value.
     public var statusAssumed: String
 
+    /// Render only one section of the compound. One of "who", "details", "status".
+    /// When unset, the full single-page form is rendered.
+    public var step: String
+
     /// Error message for the spouse field.
     public var spouseError: String
 
@@ -102,6 +106,7 @@ public struct CivPartnershipHistory: View {
         legend: String = "",
         showMarriageType: Bool = false,
         statusAssumed: String = "",
+        step: String = "",
         spouseError: String = "",
         marriageTypeError: String = "",
         marriageDateError: String = "",
@@ -126,6 +131,7 @@ public struct CivPartnershipHistory: View {
         self.legend = legend
         self.showMarriageType = showMarriageType
         self.statusAssumed = statusAssumed
+        self.step = step
         self.spouseError = spouseError
         self.marriageTypeError = marriageTypeError
         self.marriageDateError = marriageDateError

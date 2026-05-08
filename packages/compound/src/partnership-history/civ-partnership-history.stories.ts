@@ -168,6 +168,105 @@ export const StatusAssumed: Story = {
   `,
 };
 
+export const StepWho: Story = {
+  name: 'Step: Who',
+  render: () => html`
+    <civ-partnership-history
+      size="lg"
+      name="partnership"
+      step="who"
+      show-marriage-type
+    ></civ-partnership-history>
+  `,
+};
+
+export const StepDetails: Story = {
+  name: 'Step: Details',
+  render: () => html`
+    <civ-partnership-history
+      size="lg"
+      name="partnership"
+      step="details"
+      show-marriage-type
+      .marriageValue=${{
+        spouseFirst: 'Alex', spouseMiddle: '', spouseLast: 'Rivera', spouseSuffix: '',
+        marriageType: 'legal',
+        marriageDate: '', marriageCity: '', marriageState: '',
+        jurisdiction: '', cohabitationStartDate: '', cohabitationState: '',
+        marriageTypeDescription: '',
+        status: '', endDate: '',
+      }}
+    ></civ-partnership-history>
+  `,
+};
+
+export const StepStatus: Story = {
+  name: 'Step: Status',
+  render: () => html`
+    <civ-partnership-history
+      size="lg"
+      name="partnership"
+      step="status"
+      show-marriage-type
+      .marriageValue=${{
+        spouseFirst: 'Alex', spouseMiddle: '', spouseLast: 'Rivera', spouseSuffix: '',
+        marriageType: 'legal',
+        marriageDate: '2015-06-12', marriageCity: 'Chicago', marriageState: 'IL',
+        jurisdiction: '', cohabitationStartDate: '', cohabitationState: '',
+        marriageTypeDescription: '',
+        status: '', endDate: '',
+      }}
+    ></civ-partnership-history>
+  `,
+};
+
+export const MultiStepFlow: Story = {
+  name: 'Multi-step flow (3 pages)',
+  render: () => html`
+    <p class="civ-mb-4">Same component on three separate pages, each showing one section.</p>
+
+    <h3 class="civ-text-lg civ-font-bold civ-mt-6 civ-mb-2">Page 1 of 3</h3>
+    <civ-partnership-history
+      size="lg"
+      name="partnership"
+      step="who"
+      show-marriage-type
+    ></civ-partnership-history>
+
+    <h3 class="civ-text-lg civ-font-bold civ-mt-8 civ-mb-2">Page 2 of 3</h3>
+    <civ-partnership-history
+      size="lg"
+      name="partnership"
+      step="details"
+      show-marriage-type
+      .marriageValue=${{
+        spouseFirst: 'Alex', spouseMiddle: '', spouseLast: 'Rivera', spouseSuffix: '',
+        marriageType: 'legal',
+        marriageDate: '', marriageCity: '', marriageState: '',
+        jurisdiction: '', cohabitationStartDate: '', cohabitationState: '',
+        marriageTypeDescription: '',
+        status: '', endDate: '',
+      }}
+    ></civ-partnership-history>
+
+    <h3 class="civ-text-lg civ-font-bold civ-mt-8 civ-mb-2">Page 3 of 3</h3>
+    <civ-partnership-history
+      size="lg"
+      name="partnership"
+      step="status"
+      show-marriage-type
+      .marriageValue=${{
+        spouseFirst: 'Alex', spouseMiddle: '', spouseLast: 'Rivera', spouseSuffix: '',
+        marriageType: 'legal',
+        marriageDate: '2015-06-12', marriageCity: 'Chicago', marriageState: 'IL',
+        jurisdiction: '', cohabitationStartDate: '', cohabitationState: '',
+        marriageTypeDescription: '',
+        status: '', endDate: '',
+      }}
+    ></civ-partnership-history>
+  `,
+};
+
 export const InRepeater: Story = {
   name: 'Usage: In Repeater',
   render: () => html`

@@ -160,9 +160,7 @@ Light DOM only. Tailwind CSS with `civ-` prefix. ElementInternals for form parti
 ### Memorable date (known dates like birthday)
 
 ```html
-<civ-form-fieldset legend="Date of birth" hint="For example: January 15 1990" required>
-  <civ-memorable-date name="dob"></civ-memorable-date>
-</civ-form-fieldset>
+<civ-memorable-date legend="Date of birth" hint="For example: January 15 1990" required name="dob"></civ-memorable-date>
 ```
 
 ### File upload

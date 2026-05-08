@@ -46,7 +46,7 @@ function renderFieldHtml(
     case 'date':
       return `<civ-form-field label="${label}"${hint}${req}><civ-date-picker name="${name}"${req}></civ-date-picker></civ-form-field>`;
     case 'memorable-date':
-      return `<civ-form-fieldset legend="${label}"${hint}${req}><civ-memorable-date name="${name}"${req}></civ-memorable-date></civ-form-fieldset>`;
+      return `<civ-memorable-date legend="${label}"${hint}${req} name="${name}"></civ-memorable-date>`;
     case 'file':
       return `<civ-form-field label="${label}"${req}><civ-file-upload name="${name}"${req}></civ-file-upload></civ-form-field>`;
     case 'toggle':
@@ -232,7 +232,7 @@ export function generateBilingualForm(
               htmlParts.push(`  <civ-form-fieldset legend="${inlineLabel}"${hint}${req}><civ-checkbox-group name="${name}"${req}></civ-checkbox-group></civ-form-fieldset>`);
               break;
             case 'memorable-date':
-              htmlParts.push(`  <civ-form-fieldset legend="${inlineLabel}"${hint}${req}><civ-memorable-date name="${name}"${req}></civ-memorable-date></civ-form-fieldset>`);
+              htmlParts.push(`  <civ-memorable-date legend="${inlineLabel}"${hint}${req} name="${name}"></civ-memorable-date>`);
               break;
             default:
               htmlParts.push(`  ${renderFieldHtml({ ...field, label: `${field.label} (${translatedLabel})` })}`);

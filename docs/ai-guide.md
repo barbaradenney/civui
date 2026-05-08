@@ -508,9 +508,7 @@ Three-field date entry (Month select + Day input + Year input). Preferred for kn
 
 **Example:**
 ```html
-<civ-form-fieldset legend="Date of birth" hint="For example: January 15 1990" required>
-  <civ-memorable-date name="dob"></civ-memorable-date>
-</civ-form-fieldset>
+<civ-memorable-date legend="Date of birth" hint="For example: January 15 1990" required name="dob"></civ-memorable-date>
 ```
 
 ---
@@ -1395,9 +1393,7 @@ Drupal stories are co-located next to web component source as `*.drupal.stories.
   </civ-fieldset>
 
   <civ-fieldset legend="Application details">
-    <civ-form-fieldset legend="Date of birth" hint="For example: January 15 1990" required>
-      <civ-memorable-date name="dob"></civ-memorable-date>
-    </civ-form-fieldset>
+    <civ-memorable-date legend="Date of birth" hint="For example: January 15 1990" required name="dob"></civ-memorable-date>
     <civ-select
       label="Application type"
       name="appType"

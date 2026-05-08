@@ -135,16 +135,12 @@ VA pattern: [Ask users for Dates](https://design.va.gov/patterns/ask-users-for/d
 Use `civ-memorable-date` for dates users know (birth, marriage). Use `civ-date-picker` for scheduling.
 
 ```html
-<civ-form-fieldset legend="Date of birth" required hint="For example: January 15 1990">
-  <civ-memorable-date name="dateOfBirth" required-message="Enter a date of birth"></civ-memorable-date>
-</civ-form-fieldset>
+<civ-memorable-date legend="Date of birth" required hint="For example: January 15 1990" name="dateOfBirth" required-message="Enter a date of birth"></civ-memorable-date>
 ```
 
 **For approximate dates** (service periods, employment):
 ```html
-<civ-form-fieldset legend="Approximate date of service start" hint="If you don't know the exact date, give us your best estimate">
-  <civ-memorable-date name="serviceStartDate"></civ-memorable-date>
-</civ-form-fieldset>
+<civ-memorable-date legend="Approximate date of service start" hint="If you don't know the exact date, give us your best estimate" name="serviceStartDate"></civ-memorable-date>
 ```
 
 **VA validation rules:**
@@ -430,12 +426,8 @@ Use `civ-repeater` for multiple service periods:
     required-message="Select a branch of service"
   ></civ-combobox>
 
-  <civ-form-fieldset legend="Service start date" required hint="If you don't know the exact date, enter your best estimate">
-    <civ-memorable-date name="startDate"></civ-memorable-date>
-  </civ-form-fieldset>
-  <civ-form-fieldset legend="Service end date" required hint="If you don't know the exact date, enter your best estimate">
-    <civ-memorable-date name="endDate"></civ-memorable-date>
-  </civ-form-fieldset>
+  <civ-memorable-date legend="Service start date" required hint="If you don't know the exact date, enter your best estimate" name="startDate"></civ-memorable-date>
+  <civ-memorable-date legend="Service end date" required hint="If you don't know the exact date, enter your best estimate" name="endDate"></civ-memorable-date>
   <civ-select
     label="Character of service"
     name="dischargeType"
@@ -610,9 +602,7 @@ supports two modes depending on complexity:
 >
   <civ-text-input label="First name" name="firstName" required></civ-text-input>
   <civ-text-input label="Last name" name="lastName" required></civ-text-input>
-  <civ-form-fieldset legend="Date of birth" required>
-    <civ-memorable-date name="dob"></civ-memorable-date>
-  </civ-form-fieldset>
+  <civ-memorable-date legend="Date of birth" required name="dob"></civ-memorable-date>
   <civ-text-input label="Social Security number" name="ssn" mask="ssn" validate="ssn" type="tel"></civ-text-input>
   <civ-radio-group legend="Relationship" name="relationship" required>
     <civ-radio label="Son or daughter" value="child"></civ-radio>
@@ -685,9 +675,7 @@ VA pattern: [Ask users for Marital information](https://design.va.gov/patterns/a
   <civ-fieldset legend="Spouse information">
     <civ-text-input label="Spouse's first name" name="spouseFirstName" required></civ-text-input>
     <civ-text-input label="Spouse's last name" name="spouseLastName" required></civ-text-input>
-    <civ-form-fieldset legend="Date of marriage" required>
-      <civ-memorable-date name="marriageDate"></civ-memorable-date>
-    </civ-form-fieldset>
+    <civ-memorable-date legend="Date of marriage" required name="marriageDate"></civ-memorable-date>
     <civ-text-input
       label="Spouse's Social Security number"
       name="spouseSsn"

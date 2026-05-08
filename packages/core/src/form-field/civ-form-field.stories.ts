@@ -148,9 +148,7 @@ export const YesNo: Story = {
 export const MemorableDate: Story = {
   name: 'Fieldset: Memorable Date',
   render: () => html`
-    <civ-form-fieldset legend="Date of birth" hint="For example: January 15 1990" required>
-      <civ-memorable-date name="dob" required></civ-memorable-date>
-    </civ-form-fieldset>
+    <civ-memorable-date legend="Date of birth" hint="For example: January 15 1990" required name="dob"></civ-memorable-date>
   `,
 };
 
@@ -267,9 +265,7 @@ export const CompleteForm: Story = {
         <civ-text-input name="phone" mask="phone-us"></civ-text-input>
       </civ-form-field>
 
-      <civ-form-fieldset legend="Date of birth" hint="For example: January 15 1990" required>
-        <civ-memorable-date name="dob" required></civ-memorable-date>
-      </civ-form-fieldset>
+      <civ-memorable-date legend="Date of birth" hint="For example: January 15 1990" required name="dob"></civ-memorable-date>
 
       <civ-form-fieldset legend="Are you a veteran?" required>
         <civ-yes-no name="veteran" required></civ-yes-no>

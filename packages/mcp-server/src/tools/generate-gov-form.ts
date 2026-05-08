@@ -421,12 +421,12 @@ ${checkOptions}
     }
 
     case 'memorable-date':
-      return `      <civ-form-fieldset legend="${escapeHtml(field.label)}" ${wrapperAttrs}>
-        <civ-memorable-date
-          name="${escapeHtml(field.name)}"
-          ${field.required ? 'required' : ''}
-        ></civ-memorable-date>
-      </civ-form-fieldset>`;
+      return `      <civ-memorable-date
+        legend="${escapeHtml(field.label)}"
+        name="${escapeHtml(field.name)}"
+        ${field.required ? 'required' : ''}
+        ${wrapperAttrs}
+      ></civ-memorable-date>`;
 
     case 'date':
       return `      <civ-form-field label="${escapeHtml(field.label)}" ${wrapperAttrs}>

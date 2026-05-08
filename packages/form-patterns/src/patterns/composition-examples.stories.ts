@@ -25,12 +25,8 @@ export const EmploymentBasic: Story = {
       <civ-form-field label="Job title">
         <civ-text-input name="title"></civ-text-input>
       </civ-form-field>
-      <civ-form-fieldset legend="Start date" required>
-        <civ-memorable-date name="startDate" required></civ-memorable-date>
-      </civ-form-fieldset>
-      <civ-form-fieldset legend="End date">
-        <civ-memorable-date name="endDate"></civ-memorable-date>
-      </civ-form-fieldset>
+      <civ-memorable-date legend="Start date" required name="startDate"></civ-memorable-date>
+      <civ-memorable-date legend="End date" name="endDate"></civ-memorable-date>
       <civ-form-field label="Annual income">
         <civ-text-input name="income" inputmode="numeric" mask="currency"></civ-text-input>
       </civ-form-field>
@@ -63,12 +59,8 @@ export const EmploymentDetailed: Story = {
         </civ-form-field>
       </div>
       <div data-step-label="Dates and pay">
-        <civ-form-fieldset legend="Start date" required>
-          <civ-memorable-date name="startDate" required></civ-memorable-date>
-        </civ-form-fieldset>
-        <civ-form-fieldset legend="End date">
-          <civ-memorable-date name="endDate"></civ-memorable-date>
-        </civ-form-fieldset>
+        <civ-memorable-date legend="Start date" required name="startDate"></civ-memorable-date>
+        <civ-memorable-date legend="End date" name="endDate"></civ-memorable-date>
         <civ-form-field label="Pay per month">
           <civ-text-input name="monthlyPay" inputmode="numeric" mask="currency"></civ-text-input>
         </civ-form-field>
@@ -88,12 +80,8 @@ export const EmploymentImmigration: Story = {
         <civ-text-input name="occupation" required></civ-text-input>
       </civ-form-field>
       <civ-address legend="Employer address" name="address"></civ-address>
-      <civ-form-fieldset legend="Date started" required>
-        <civ-memorable-date name="startDate" required></civ-memorable-date>
-      </civ-form-fieldset>
-      <civ-form-fieldset legend="Date ended" hint="Leave blank if this is your current job">
-        <civ-memorable-date name="endDate"></civ-memorable-date>
-      </civ-form-fieldset>
+      <civ-memorable-date legend="Date started" required name="startDate"></civ-memorable-date>
+      <civ-memorable-date legend="Date ended" hint="Leave blank if this is your current job" name="endDate"></civ-memorable-date>
     </civ-repeater>
   `,
 };
@@ -110,12 +98,8 @@ export const EducationBasic: Story = {
       <civ-form-field label="City and state">
         <civ-text-input name="location"></civ-text-input>
       </civ-form-field>
-      <civ-form-fieldset legend="Date started" required>
-        <civ-memorable-date name="startDate" required></civ-memorable-date>
-      </civ-form-fieldset>
-      <civ-form-fieldset legend="Date ended">
-        <civ-memorable-date name="endDate"></civ-memorable-date>
-      </civ-form-fieldset>
+      <civ-memorable-date legend="Date started" required name="startDate"></civ-memorable-date>
+      <civ-memorable-date legend="Date ended" name="endDate"></civ-memorable-date>
       <civ-form-field label="Degree or certificate">
         <civ-text-input name="degree"></civ-text-input>
       </civ-form-field>
@@ -137,12 +121,8 @@ export const EducationFederal: Story = {
         <civ-address legend="School address" name="address"></civ-address>
       </div>
       <div data-step-label="Degree">
-        <civ-form-fieldset legend="Date started" required>
-          <civ-memorable-date name="startDate" required></civ-memorable-date>
-        </civ-form-fieldset>
-        <civ-form-fieldset legend="Date completed or expected">
-          <civ-memorable-date name="endDate"></civ-memorable-date>
-        </civ-form-fieldset>
+        <civ-memorable-date legend="Date started" required name="startDate"></civ-memorable-date>
+        <civ-memorable-date legend="Date completed or expected" name="endDate"></civ-memorable-date>
         <civ-form-field label="Degree type">
           <civ-text-input name="degreeType"></civ-text-input>
         </civ-form-field>
@@ -171,12 +151,8 @@ export const EducationImmigration: Story = {
       <civ-form-field label="Course of study">
         <civ-text-input name="course"></civ-text-input>
       </civ-form-field>
-      <civ-form-fieldset legend="Date started" required>
-        <civ-memorable-date name="startDate" required></civ-memorable-date>
-      </civ-form-fieldset>
-      <civ-form-fieldset legend="Date ended">
-        <civ-memorable-date name="endDate"></civ-memorable-date>
-      </civ-form-fieldset>
+      <civ-memorable-date legend="Date started" required name="startDate"></civ-memorable-date>
+      <civ-memorable-date legend="Date ended" name="endDate"></civ-memorable-date>
     </civ-repeater>
   `,
 };

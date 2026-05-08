@@ -159,9 +159,7 @@ export const DateFields: Story = {
   render: () => html`
     <h2 class="civ-text-lg civ-font-bold civ-mb-4">Date Fields — Print Preview</h2>
 
-    <civ-form-fieldset legend="Date of birth" hint="For example: January 15 1990" required>
-      <civ-memorable-date name="dob" value="1990-01-15" required></civ-memorable-date>
-    </civ-form-fieldset>
+    <civ-memorable-date legend="Date of birth" hint="For example: January 15 1990" required name="dob" value="1990-01-15"></civ-memorable-date>
 
     <civ-form-field label="Appointment date">
       <civ-date-picker name="appointment" value="2026-05-15"></civ-date-picker>
@@ -199,9 +197,7 @@ export const CompleteForm: Story = {
       show-middle
     ></civ-name>
 
-    <civ-form-fieldset legend="Date of birth" required>
-      <civ-memorable-date name="dob" value="1990-01-15" required></civ-memorable-date>
-    </civ-form-fieldset>
+    <civ-memorable-date legend="Date of birth" required name="dob" value="1990-01-15"></civ-memorable-date>
 
     <civ-form-field label="Social Security number" required>
       <civ-text-input name="ssn" value="***-**-6789" mask="ssn" required></civ-text-input>

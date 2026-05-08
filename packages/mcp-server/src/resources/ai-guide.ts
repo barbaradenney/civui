@@ -380,9 +380,7 @@ Three-field date entry (Month select + Day input + Year input). Preferred for kn
 
 **Example:**
 \`\`\`html
-<civ-form-fieldset legend="Date of birth" hint="For example: January 15 1990" required>
-  <civ-memorable-date name="dob" required></civ-memorable-date>
-</civ-form-fieldset>
+<civ-memorable-date legend="Date of birth" hint="For example: January 15 1990" required name="dob"></civ-memorable-date>
 \`\`\`
 
 ---
@@ -673,9 +671,7 @@ Children with \`data-step\` define each step. Validates required fields before a
     <civ-name legend="Your name" name="fullName" required></civ-name>
   </div>
   <div data-step data-step-label="Date of birth">
-    <civ-form-fieldset legend="Date of birth" hint="For example: January 15 1990" required>
-      <civ-memorable-date name="dob" required></civ-memorable-date>
-    </civ-form-fieldset>
+    <civ-memorable-date legend="Date of birth" hint="For example: January 15 1990" required name="dob"></civ-memorable-date>
   </div>
 </civ-form-step>
 \`\`\`
@@ -960,9 +956,7 @@ Pre-configured wrappers with built-in masking, validation, and labeling. Wrap in
   </civ-fieldset>
 
   <civ-fieldset legend="Application details">
-    <civ-form-fieldset legend="Date of birth" hint="For example: January 15 1990" required>
-      <civ-memorable-date name="dob" required></civ-memorable-date>
-    </civ-form-fieldset>
+    <civ-memorable-date legend="Date of birth" hint="For example: January 15 1990" required name="dob"></civ-memorable-date>
 
     <civ-form-field label="Application type" required>
       <civ-select name="appType" required

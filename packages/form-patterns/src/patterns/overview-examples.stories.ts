@@ -55,9 +55,7 @@ export const MultiStepForm: Story = {
       <civ-form-step>
         <div data-step-label="Personal info">
           <civ-name legend="Your name" name="name" required></civ-name>
-          <civ-form-fieldset legend="Date of birth" required hint="For example: January 15 1990">
-            <civ-memorable-date name="dob" required></civ-memorable-date>
-          </civ-form-fieldset>
+          <civ-memorable-date legend="Date of birth" required hint="For example: January 15 1990" name="dob"></civ-memorable-date>
         </div>
 
         <div data-step-label="Service history">

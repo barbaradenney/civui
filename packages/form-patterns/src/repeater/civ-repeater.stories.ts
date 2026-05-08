@@ -239,12 +239,8 @@ export const GovernmentServicePeriods: Story = {
         </civ-form-field>
       </div>
       <div data-step-label="Dates">
-        <civ-form-fieldset legend="Service start date" required hint="Enter your best estimate if unsure">
-          <civ-memorable-date name="startDate" required></civ-memorable-date>
-        </civ-form-fieldset>
-        <civ-form-fieldset legend="Service end date" required>
-          <civ-memorable-date name="endDate" required></civ-memorable-date>
-        </civ-form-fieldset>
+        <civ-memorable-date legend="Service start date" required hint="Enter your best estimate if unsure" name="startDate"></civ-memorable-date>
+        <civ-memorable-date legend="Service end date" required name="endDate"></civ-memorable-date>
       </div>
       <div data-step-label="Discharge">
         <civ-form-field label="Character of service" required>

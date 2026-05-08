@@ -264,3 +264,89 @@ describe('civ-partnership-history marriage type', () => {
     expect(el.marriageValue.marriageCity).toBe('');
   });
 });
+
+describe('civ-partnership-history adaptive status options', () => {
+  afterEach(() => {});
+
+  it('uses marriage status vocabulary when showMarriageType is off (implicit marriage)', async () => {
+    const el = await fixture('<civ-partnership-history name="m"></civ-partnership-history>') as any;
+    await elementUpdated(el);
+    const radios = el.querySelectorAll('[data-marriage-status] civ-radio');
+    const values = Array.from(radios).map((r: any) => r.getAttribute('value'));
+    expect(values).toEqual(['current', 'divorced', 'widowed', 'annulled']);
+  });
+
+  it('uses marriage status vocabulary when type is legal marriage', async () => {
+    const el = await fixture('<civ-partnership-history name="m" show-marriage-type></civ-partnership-history>') as any;
+    el.marriageValue = { ...el.marriageValue, marriageType: 'legal' };
+    await elementUpdated(el);
+    const radios = el.querySelectorAll('[data-marriage-status] civ-radio');
+    const values = Array.from(radios).map((r: any) => r.getAttribute('value'));
+    expect(values).toContain('divorced');
+    expect(values).toContain('widowed');
+    expect(values).toContain('annulled');
+  });
+
+  it('switches to partnership status vocabulary for cohabitation', async () => {
+    const el = await fixture('<civ-partnership-history name="m" show-marriage-type></civ-partnership-history>') as any;
+    el.marriageValue = { ...el.marriageValue, marriageType: 'common-law' };
+    await elementUpdated(el);
+    const radios = el.querySelectorAll('[data-marriage-status] civ-radio');
+    const values = Array.from(radios).map((r: any) => r.getAttribute('value'));
+    expect(values).toEqual(['current', 'ended', 'partner-deceased']);
+  });
+
+  it('switches to partnership status vocabulary for civil-union / DP', async () => {
+    const el = await fixture('<civ-partnership-history name="m" show-marriage-type></civ-partnership-history>') as any;
+    el.marriageValue = { ...el.marriageValue, marriageType: 'civil-union' };
+    await elementUpdated(el);
+    const radios = el.querySelectorAll('[data-marriage-status] civ-radio');
+    const values = Array.from(radios).map((r: any) => r.getAttribute('value'));
+    expect(values).not.toContain('divorced');
+    expect(values).not.toContain('annulled');
+    expect(values).toContain('ended');
+    expect(values).toContain('partner-deceased');
+  });
+
+  it('uses "Date the relationship ended" for ended status (partnership)', async () => {
+    const el = await fixture('<civ-partnership-history name="m" show-marriage-type></civ-partnership-history>') as any;
+    el.marriageValue = { ...el.marriageValue, marriageType: 'common-law', status: 'ended' };
+    await elementUpdated(el);
+    const fieldsets = el.querySelectorAll('civ-form-fieldset');
+    const legends = Array.from(fieldsets)
+      .filter((fs: any) => fs.querySelector('civ-memorable-date[name="m.endDate"]'))
+      .map((fs: any) => fs.getAttribute('legend'));
+    expect(legends).toContain('Date the relationship ended');
+  });
+
+  it('uses "Date of their passing" for partner-deceased status', async () => {
+    const el = await fixture('<civ-partnership-history name="m" show-marriage-type></civ-partnership-history>') as any;
+    el.marriageValue = { ...el.marriageValue, marriageType: 'common-law', status: 'partner-deceased' };
+    await elementUpdated(el);
+    const fieldsets = el.querySelectorAll('civ-form-fieldset');
+    const legends = Array.from(fieldsets)
+      .filter((fs: any) => fs.querySelector('civ-memorable-date[name="m.endDate"]'))
+      .map((fs: any) => fs.getAttribute('legend'));
+    expect(legends).toContain('Date of their passing');
+  });
+});
+
+describe('civ-partnership-history default legend', () => {
+  afterEach(() => {});
+
+  it('defaults to the inclusive "About this partnership" rather than marriage-specific text', async () => {
+    const el = await fixture('<civ-partnership-history name="m"></civ-partnership-history>') as any;
+    await elementUpdated(el);
+    // The top-level legend is rendered via renderFormHeader → renderLegend.
+    // Look for the legend element with the "About this" text.
+    const legendText = el.querySelector('legend')?.textContent ?? '';
+    expect(legendText).toContain('About this partnership');
+  });
+
+  it('honors a consumer-set legend over the default', async () => {
+    const el = await fixture('<civ-partnership-history name="m" legend="About this marriage"></civ-partnership-history>') as any;
+    await elementUpdated(el);
+    const legendText = el.querySelector('legend')?.textContent ?? '';
+    expect(legendText).toContain('About this marriage');
+  });
+});

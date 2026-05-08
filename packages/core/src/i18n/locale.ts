@@ -312,7 +312,11 @@ export interface CivLocaleStrings {
   repeaterFormStepsEditTitle: string; // "Edit {item} {index}"
   repeaterMinReached: string; // "At least {min} {item} required"
 
-  // Marriage history
+  // Partnership history (covers marriage, civil union, domestic partnership,
+  // cohabitation, and other long-term partner relationships).
+  // The marriage* keys are kept for backwards compatibility; partnership*
+  // keys provide the more inclusive defaults that the renamed component
+  // now uses (since not every consumer's relationship is a marriage).
   marriageLegend: string;
   marriageSpouseLegend: string;
   marriageDateLegend: string;
@@ -339,6 +343,13 @@ export interface CivLocaleStrings {
   marriageCohabitationStartLegend: string; // "Date you began living together"
   marriageCohabitationStateLabel: string; // "State where you live together"
   marriageApproxDateLegend: string; // "Approximate date union began"
+  partnershipLegendDefault: string; // "About this partnership"
+  partnershipStatusLegend: string; // "What is the current status of this relationship?"
+  partnershipStatusOngoing: string; // "Currently together"
+  partnershipStatusEnded: string; // "Relationship ended"
+  partnershipStatusPartnerDeceased: string; // "Partner has passed away"
+  partnershipEndDateLegend: string; // "Date the relationship ended"
+  partnershipEndDatePartnerDeceasedLegend: string; // "Date of their passing"
 
   // Address validation
   addressValidationHeading: string;
@@ -912,6 +923,13 @@ const defaultStrings: CivLocaleStrings = {
   marriageCohabitationStartLegend: 'Date you began living together',
   marriageCohabitationStateLabel: 'State where you live together',
   marriageApproxDateLegend: 'Approximate date union began',
+  partnershipLegendDefault: 'About this partnership',
+  partnershipStatusLegend: 'What is the current status of this relationship?',
+  partnershipStatusOngoing: 'Currently together',
+  partnershipStatusEnded: 'Relationship ended',
+  partnershipStatusPartnerDeceased: 'Partner has passed away',
+  partnershipEndDateLegend: 'Date the relationship ended',
+  partnershipEndDatePartnerDeceasedLegend: 'Date of their passing',
 
   addressValidationHeading: 'Verify your address',
   addressValidationOriginalLabel: 'You entered',

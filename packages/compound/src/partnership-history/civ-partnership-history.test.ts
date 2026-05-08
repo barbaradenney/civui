@@ -188,7 +188,7 @@ describe('civ-partnership-history marriage type', () => {
     expect(select.options.length).toBe(6);
   });
 
-  it('shows ceremony fields for legal marriage (date, city, state)', async () => {
+  it('shows marriage-category fields for legal marriage (date, city, state)', async () => {
     const el = await fixture('<civ-partnership-history name="m" show-marriage-type></civ-partnership-history>') as any;
     el.marriageValue = { ...el.marriageValue, marriageType: 'legal' };
     await elementUpdated(el);
@@ -203,7 +203,7 @@ describe('civ-partnership-history marriage type', () => {
     expect(el.querySelector('civ-text-input[name="m.marriageCity"]')).not.toBeNull();
   });
 
-  it('shows registration fields for civil union (date, jurisdiction)', async () => {
+  it('shows civil-union-category fields for civil union (date, jurisdiction)', async () => {
     const el = await fixture('<civ-partnership-history name="m" show-marriage-type></civ-partnership-history>') as any;
     el.marriageValue = { ...el.marriageValue, marriageType: 'civil-union' };
     await elementUpdated(el);
@@ -216,7 +216,7 @@ describe('civ-partnership-history marriage type', () => {
       .map((fs: any) => fs.getAttribute('legend'));
     expect(legends).toContain('Date of registration');
     expect(el.querySelector('civ-text-input[name="m.jurisdiction"]')).not.toBeNull();
-    // Should NOT show ceremony fields
+    // Should NOT show marriage-category fields
     expect(el.querySelector('civ-text-input[name="m.marriageCity"]')).toBeNull();
   });
 
@@ -251,7 +251,7 @@ describe('civ-partnership-history marriage type', () => {
     expect(el.querySelector('civ-text-input[name="m.marriageTypeDescription"]')).not.toBeNull();
   });
 
-  it('clears ceremony fields when switching to registration category', async () => {
+  it('clears marriage-category fields when switching to civil-union category', async () => {
     const el = await fixture('<civ-partnership-history name="m" show-marriage-type></civ-partnership-history>') as any;
     el.marriageValue = { ...el.marriageValue, marriageType: 'legal', marriageDate: '2020-06-15', marriageCity: 'Austin' };
     await elementUpdated(el);

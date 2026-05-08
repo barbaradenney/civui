@@ -27,13 +27,31 @@ export interface MarriageValue {
   endDate: string;
 }
 
-type MarriageTypeCategory = 'ceremony' | 'registration' | 'cohabitation' | 'other' | 'none';
+/**
+ * Internal category each visible partnership type maps to. The category
+ * drives which type-specific fields render and which status vocabulary
+ * to use:
+ *  - `marriage`    — legal marriage and tribal marriage. Marriage status
+ *                    vocabulary (current / divorced / widowed / annulled).
+ *                    Renders ceremony fields (date, city, state).
+ *  - `civil-union` — civil unions and registered domestic partnerships.
+ *                    Partnership status vocabulary. Renders registration
+ *                    fields (registration date, jurisdiction).
+ *  - `cohabitation`— informal long-term partnerships, common-law marriages.
+ *                    Partnership status vocabulary. Renders cohabitation
+ *                    fields (start date, state, optional description).
+ *  - `other`       — anything else. Partnership status vocabulary. Renders
+ *                    approximate-date + free-form description fields.
+ *  - `none`        — no type selected yet. Treated as marriage by default
+ *                    so the form has a sensible initial state.
+ */
+type PartnershipTypeCategory = 'marriage' | 'civil-union' | 'cohabitation' | 'other' | 'none';
 
-const TYPE_CATEGORIES: Record<string, MarriageTypeCategory> = {
-  'legal': 'ceremony',
-  'tribal': 'ceremony',
-  'civil-union': 'registration',
-  'domestic-partnership': 'registration',
+const TYPE_CATEGORIES: Record<string, PartnershipTypeCategory> = {
+  'legal': 'marriage',
+  'tribal': 'marriage',
+  'civil-union': 'civil-union',
+  'domestic-partnership': 'civil-union',
   'common-law': 'cohabitation',
   'other': 'other',
 };
@@ -95,7 +113,7 @@ export class CivPartnershipHistory extends CivFormElement {
 
   @state() private _marriage: MarriageValue = { ...EMPTY_MARRIAGE };
 
-  private get _typeCategory(): MarriageTypeCategory {
+  private get _typeCategory(): PartnershipTypeCategory {
     return TYPE_CATEGORIES[this._marriage.marriageType] ?? 'none';
   }
 
@@ -164,7 +182,7 @@ export class CivPartnershipHistory extends CivFormElement {
     // set. When `showMarriageType` is off, the form is implicitly marriage
     // (the original use case) so we default to the marriage vocabulary.
     const isMarriageStatusVocab = !this.showMarriageType ||
-      this._typeCategory === 'ceremony' ||
+      this._typeCategory === 'marriage' ||
       this._typeCategory === 'none';
     const nameJson = JSON.stringify({
       first: this._marriage.spouseFirst,
@@ -253,7 +271,7 @@ export class CivPartnershipHistory extends CivFormElement {
   private _renderCategoryFields(prefix: string) {
     const cat = this._typeCategory;
 
-    if (cat === 'ceremony' || !this.showMarriageType) {
+    if (cat === 'marriage' || !this.showMarriageType) {
       return html`
         <civ-form-fieldset legend="${t('marriageDateLegend')}">
           <civ-memorable-date name="${prefix}.marriageDate"
@@ -276,7 +294,7 @@ export class CivPartnershipHistory extends CivFormElement {
       `;
     }
 
-    if (cat === 'registration') {
+    if (cat === 'civil-union') {
       return html`
         <civ-form-fieldset legend="${t('marriageRegistrationDateLegend')}">
           <civ-memorable-date name="${prefix}.marriageDate"
@@ -361,12 +379,12 @@ export class CivPartnershipHistory extends CivFormElement {
 
     // Clear fields that no longer apply when category changes
     if (oldCategory !== newCategory) {
-      if (oldCategory === 'ceremony') {
+      if (oldCategory === 'marriage') {
         this._marriage = { ...this._marriage, marriageDate: '', marriageCity: '', marriageState: '' };
         this.marriageDateError = '';
         this.cityError = '';
         this.stateError = '';
-      } else if (oldCategory === 'registration') {
+      } else if (oldCategory === 'civil-union') {
         this._marriage = { ...this._marriage, marriageDate: '', jurisdiction: '' };
         this.marriageDateError = '';
         this.jurisdictionError = '';

@@ -2576,20 +2576,30 @@
   }
 
   /* ── Signature preview ────────────────────────────────────────
-     Cursive rendering of the typed name, shown between the input
-     and the certify checkbox. Reads as a "signature" rather than
-     plain text — the visual cue ties the typed name to the legal
-     act of signing. \`aria-hidden\` on the element itself: the input
-     value is already announced by the screen reader, so the preview
-     is purely decorative. */
+     Persistent signature line below the certify checkbox. Always
+     rendered with a reserved height so typing the name doesn't push
+     the certify checkbox or any subsequent content. The cursive
+     glyph fills in as the user types — visual cue that ties the
+     typed name to the legal act of signing. \`aria-hidden\` on the
+     wrapping element: the input value is already announced by the
+     screen reader, so the preview is purely decorative. */
   .civ-signature-preview {
+    border-bottom: 1px solid var(--civ-color-base-light);
+    padding: var(--civ-spacing-2) var(--civ-spacing-1) var(--civ-spacing-1);
+    margin: var(--civ-spacing-4) 0 var(--civ-spacing-1);
+    /* Reserve height so the line is visible even when empty and the
+       form layout doesn't shift as the user types. Tied to the cursive
+       font-size so the empty box matches the filled-in baseline. */
+    min-height: calc(1.875rem * 1.2);
+    display: flex;
+    align-items: flex-end;
+  }
+
+  .civ-signature-preview__cursive {
     font-family: 'Brush Script MT', 'Snell Roundhand', 'Lucida Handwriting', cursive;
     font-size: 1.875rem;
     line-height: 1.2;
     color: var(--civ-color-base-darkest);
-    border-bottom: 1px solid var(--civ-color-base-light);
-    padding: var(--civ-spacing-2) var(--civ-spacing-1);
-    margin: var(--civ-spacing-2) 0 var(--civ-spacing-4);
     word-break: break-word;
   }
 }

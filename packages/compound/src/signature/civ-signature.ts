@@ -214,10 +214,6 @@ export class CivSignature extends CivFormElement {
           ></civ-text-input>
         </civ-form-field>
 
-        ${this._signature.name.trim() ? html`
-          <div class="civ-signature-preview" aria-hidden="true">${this._signature.name}</div>
-        ` : nothing}
-
         <civ-checkbox
           label="${t('signatureCertify')}"
           name="${this.name ? `${this.name}.certified` : ''}"
@@ -229,8 +225,20 @@ export class CivSignature extends CivFormElement {
           @civ-change="${this._onCertifyChange}"
         ></civ-checkbox>
 
+        <!--
+          Persistent signature line. Always rendered so typing the name
+          does not push the form layout — the line reserves height via
+          its min-height + the empty inner span. Cursive text fills in
+          as the user types. Visually mirrors a wet-ink signature line
+          at the bottom of a paper form. \`aria-hidden\` because the
+          input value is already announced by the screen reader.
+        -->
+        <div class="civ-signature-preview" aria-hidden="true">
+          <span class="civ-signature-preview__cursive">${this._signature.name.trim()}</span>
+        </div>
+
         ${this._signature.certified && this._signature.signedAt ? html`
-          <div class="civ-signature-signed-at civ-text-sm civ-mt-3" role="status" aria-live="polite">
+          <div class="civ-signature-signed-at civ-text-sm civ-mt-1" role="status" aria-live="polite">
             ${interpolate(t('signatureSignedAt'), { date: this._formatSignedAt() })}
           </div>
         ` : nothing}

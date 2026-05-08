@@ -337,13 +337,18 @@ describe('civ-signature', () => {
   });
 
   describe('cursive signature preview', () => {
-    it('does not render when the name is empty', async () => {
+    it('always renders the signature line, even when the name is empty', async () => {
+      // Line is persistent: typing the name shouldn't push the certify
+      // checkbox or the rest of the form. The cursive span is empty when
+      // there's nothing to show, but the wrapping line reserves height.
       const el = await fixture<CivSignature>('<civ-signature legend="Sign"></civ-signature>') as CivSignature;
       await elementUpdated(el);
-      expect(el.querySelector('.civ-signature-preview')).toBeNull();
+      const preview = el.querySelector('.civ-signature-preview') as HTMLElement;
+      expect(preview).not.toBeNull();
+      expect(preview.textContent?.trim()).toBe('');
     });
 
-    it('renders the typed name in the preview', async () => {
+    it('fills in the cursive name as the user types', async () => {
       const el = await fixture<CivSignature>('<civ-signature legend="Sign"></civ-signature>') as CivSignature;
       await elementUpdated(el);
       const input = el.querySelector('input[type="text"], input:not([type])') as HTMLInputElement;
@@ -351,29 +356,48 @@ describe('civ-signature', () => {
       input.dispatchEvent(new Event('input', { bubbles: true }));
       await elementUpdated(el);
       const preview = el.querySelector('.civ-signature-preview') as HTMLElement;
-      expect(preview).not.toBeNull();
       expect(preview.textContent?.trim()).toBe('Ada Lovelace');
     });
 
     it('marks the preview aria-hidden so screen readers ignore it', async () => {
-      const initial = JSON.stringify({ name: 'Ada', certified: false, signedAt: '' });
-      const el = await fixture<CivSignature>(
-        `<civ-signature legend="Sign" value='${initial}'></civ-signature>`,
-      ) as CivSignature;
+      const el = await fixture<CivSignature>('<civ-signature legend="Sign"></civ-signature>') as CivSignature;
       await elementUpdated(el);
       const preview = el.querySelector('.civ-signature-preview') as HTMLElement;
       expect(preview).not.toBeNull();
       expect(preview.getAttribute('aria-hidden')).toBe('true');
     });
 
-    it('hides the preview when only whitespace is typed', async () => {
+    it('shows an empty cursive span when only whitespace is typed', async () => {
       const el = await fixture<CivSignature>('<civ-signature legend="Sign"></civ-signature>') as CivSignature;
       await elementUpdated(el);
       const input = el.querySelector('input[type="text"], input:not([type])') as HTMLInputElement;
       input.value = '   ';
       input.dispatchEvent(new Event('input', { bubbles: true }));
       await elementUpdated(el);
-      expect(el.querySelector('.civ-signature-preview')).toBeNull();
+      const preview = el.querySelector('.civ-signature-preview') as HTMLElement;
+      // Line still rendered, but the cursive content is empty (whitespace
+      // is trimmed before display so a stray space-press doesn't leave a
+      // visible artifact in the cursive field).
+      expect(preview).not.toBeNull();
+      expect(preview.textContent?.trim()).toBe('');
+    });
+
+    it('renders below the certify checkbox in document order', async () => {
+      // The line is intentionally placed after the certify checkbox so
+      // typing the name doesn't push the checkbox (and any error text
+      // beneath it). Confirm DOM order so layout regressions are caught.
+      const initial = JSON.stringify({ name: 'Ada', certified: false, signedAt: '' });
+      const el = await fixture<CivSignature>(
+        `<civ-signature legend="Sign" value='${initial}'></civ-signature>`,
+      ) as CivSignature;
+      await elementUpdated(el);
+      const checkbox = el.querySelector('civ-checkbox') as HTMLElement;
+      const preview = el.querySelector('.civ-signature-preview') as HTMLElement;
+      expect(checkbox).not.toBeNull();
+      expect(preview).not.toBeNull();
+      // DOCUMENT_POSITION_FOLLOWING (4) means preview comes after checkbox.
+      const cmp = checkbox.compareDocumentPosition(preview);
+      expect(cmp & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     });
   });
 

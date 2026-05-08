@@ -216,6 +216,10 @@ export interface CivLocaleStrings {
   signatureName: string;
   signatureNameHint: string;
   signatureCertify: string;
+  /** Visible-only label for the cursive preview rendered alongside the typed name (screen-reader hidden — the input value is already announced). */
+  signaturePreviewLabel: string;
+  /** Timestamp shown after the user certifies. Pattern: "{date}" gets the locale-formatted long-date + short-time. */
+  signatureSignedAt: string;
 
   // Form step (multi-step navigation within a form chapter)
   formStepBack: string;
@@ -795,6 +799,8 @@ const defaultStrings: CivLocaleStrings = {
   signatureName: 'Your full name',
   signatureNameHint: 'Please type your first and last name',
   signatureCertify: 'I certify the information above is correct and true to the best of my knowledge and belief',
+  signaturePreviewLabel: 'Signature preview',
+  signatureSignedAt: 'Signed {date}',
 
   formStepBack: 'Back',
   formStepContinue: 'Continue',

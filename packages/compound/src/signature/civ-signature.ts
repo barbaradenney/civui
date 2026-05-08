@@ -160,6 +160,25 @@ export class CivSignature extends CivFormElement {
     return !!this._slottedStatementHTML || !!this.statement;
   }
 
+  /**
+   * Format the captured `signedAt` ISO timestamp for display below the
+   * certify checkbox. Long date + short time in the user's locale —
+   * `January 15, 2026 at 3:42 PM` (en-US). Returns empty string if the
+   * timestamp is missing or unparseable so the caller can fall back to
+   * showing nothing.
+   */
+  private _formatSignedAt(): string {
+    if (!this._signature.signedAt) return '';
+    const d = new Date(this._signature.signedAt);
+    if (isNaN(d.getTime())) return '';
+    try {
+      return d.toLocaleString(undefined, { dateStyle: 'long', timeStyle: 'short' });
+    } catch {
+      // Some Node / older runtimes don't support dateStyle/timeStyle.
+      return d.toLocaleString();
+    }
+  }
+
   override render() {
     const describedBy = buildDescribedBy(this._hintId, this.hint, this._errorId, this.error);
 
@@ -195,6 +214,10 @@ export class CivSignature extends CivFormElement {
           ></civ-text-input>
         </civ-form-field>
 
+        ${this._signature.name.trim() ? html`
+          <div class="civ-signature-preview" aria-hidden="true">${this._signature.name}</div>
+        ` : nothing}
+
         <civ-checkbox
           label="${t('signatureCertify')}"
           name="${this.name ? `${this.name}.certified` : ''}"
@@ -205,6 +228,12 @@ export class CivSignature extends CivFormElement {
           extra-describedby="${this._hasStatement ? this._statementId : nothing}"
           @civ-change="${this._onCertifyChange}"
         ></civ-checkbox>
+
+        ${this._signature.certified && this._signature.signedAt ? html`
+          <div class="civ-signature-signed-at civ-text-sm civ-mt-3" role="status" aria-live="polite">
+            ${interpolate(t('signatureSignedAt'), { date: this._formatSignedAt() })}
+          </div>
+        ` : nothing}
       </fieldset>
     `;
 

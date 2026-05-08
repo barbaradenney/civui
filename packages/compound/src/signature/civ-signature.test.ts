@@ -328,4 +328,85 @@ describe('civ-signature', () => {
       expect(el.signedAt).toBe('2026-04-01T12:00:00.000Z');
     });
   });
+
+  describe('cursive signature preview', () => {
+    it('does not render when the name is empty', async () => {
+      const el = await fixture<CivSignature>('<civ-signature legend="Sign"></civ-signature>') as CivSignature;
+      await elementUpdated(el);
+      expect(el.querySelector('.civ-signature-preview')).toBeNull();
+    });
+
+    it('renders the typed name in the preview', async () => {
+      const el = await fixture<CivSignature>('<civ-signature legend="Sign"></civ-signature>') as CivSignature;
+      await elementUpdated(el);
+      const input = el.querySelector('input[type="text"], input:not([type])') as HTMLInputElement;
+      input.value = 'Ada Lovelace';
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      await elementUpdated(el);
+      const preview = el.querySelector('.civ-signature-preview') as HTMLElement;
+      expect(preview).not.toBeNull();
+      expect(preview.textContent?.trim()).toBe('Ada Lovelace');
+    });
+
+    it('marks the preview aria-hidden so screen readers ignore it', async () => {
+      const initial = JSON.stringify({ name: 'Ada', certified: false, signedAt: '' });
+      const el = await fixture<CivSignature>(
+        `<civ-signature legend="Sign" value='${initial}'></civ-signature>`,
+      ) as CivSignature;
+      await elementUpdated(el);
+      const preview = el.querySelector('.civ-signature-preview') as HTMLElement;
+      expect(preview).not.toBeNull();
+      expect(preview.getAttribute('aria-hidden')).toBe('true');
+    });
+
+    it('hides the preview when only whitespace is typed', async () => {
+      const el = await fixture<CivSignature>('<civ-signature legend="Sign"></civ-signature>') as CivSignature;
+      await elementUpdated(el);
+      const input = el.querySelector('input[type="text"], input:not([type])') as HTMLInputElement;
+      input.value = '   ';
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      await elementUpdated(el);
+      expect(el.querySelector('.civ-signature-preview')).toBeNull();
+    });
+  });
+
+  describe('signed-at display', () => {
+    it('does not render the signed-at line before certification', async () => {
+      const el = await fixture<CivSignature>('<civ-signature legend="Sign"></civ-signature>') as CivSignature;
+      await elementUpdated(el);
+      expect(el.querySelector('.civ-signature-signed-at')).toBeNull();
+    });
+
+    it('renders a signed-at line once the user certifies', async () => {
+      const el = await fixture<CivSignature>('<civ-signature legend="Sign"></civ-signature>') as CivSignature;
+      await elementUpdated(el);
+      const checkbox = el.querySelectorAll('input[type="checkbox"]')[0] as HTMLInputElement;
+      checkbox.checked = true;
+      checkbox.dispatchEvent(new Event('change', { bubbles: true }));
+      await elementUpdated(el);
+      const signedAt = el.querySelector('.civ-signature-signed-at') as HTMLElement;
+      expect(signedAt).not.toBeNull();
+      // The text starts with the localized "Signed " prefix.
+      expect(signedAt.textContent?.toLowerCase()).toContain('signed');
+      // Polite announcement so screen readers pick it up when it appears.
+      expect(signedAt.getAttribute('role')).toBe('status');
+      expect(signedAt.getAttribute('aria-live')).toBe('polite');
+    });
+
+    it('removes the signed-at line when the user unchecks certify', async () => {
+      const el = await fixture<CivSignature>('<civ-signature legend="Sign"></civ-signature>') as CivSignature;
+      await elementUpdated(el);
+      const checkbox = el.querySelectorAll('input[type="checkbox"]')[0] as HTMLInputElement;
+
+      checkbox.checked = true;
+      checkbox.dispatchEvent(new Event('change', { bubbles: true }));
+      await elementUpdated(el);
+      expect(el.querySelector('.civ-signature-signed-at')).not.toBeNull();
+
+      checkbox.checked = false;
+      checkbox.dispatchEvent(new Event('change', { bubbles: true }));
+      await elementUpdated(el);
+      expect(el.querySelector('.civ-signature-signed-at')).toBeNull();
+    });
+  });
 });

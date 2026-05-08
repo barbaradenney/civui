@@ -2575,4 +2575,21 @@
     border-color: var(--civ-color-base-lighter);
   }
 
+  /* ── Signature preview ────────────────────────────────────────
+     Cursive rendering of the typed name, shown between the input
+     and the certify checkbox. Reads as a "signature" rather than
+     plain text — the visual cue ties the typed name to the legal
+     act of signing. \`aria-hidden\` on the element itself: the input
+     value is already announced by the screen reader, so the preview
+     is purely decorative. */
+  .civ-signature-preview {
+    font-family: 'Brush Script MT', 'Snell Roundhand', 'Lucida Handwriting', cursive;
+    font-size: 1.875rem;
+    line-height: 1.2;
+    color: var(--civ-color-base-darkest);
+    border-bottom: 1px solid var(--civ-color-base-light);
+    padding: var(--civ-spacing-2) var(--civ-spacing-1);
+    margin: var(--civ-spacing-2) 0 var(--civ-spacing-4);
+    word-break: break-word;
+  }
 }

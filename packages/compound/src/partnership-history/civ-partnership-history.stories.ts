@@ -3,7 +3,7 @@ import { html } from 'lit';
 import './civ-partnership-history.js';
 import '@civui/inputs';
 import '@civui/controls';
-import '@civui/form-patterns/repeater';
+import '@civui/form-patterns';
 
 /**
  * Inside civ-repeater's form-steps mode, the three partnership-history

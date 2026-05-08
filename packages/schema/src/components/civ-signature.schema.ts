@@ -22,7 +22,8 @@ const schema: ComponentSchema = {
     },
     size: {
       type: 'enum',
-      description: 'Visual size of the legend',
+      description: 'Visual size of the legend. Defaults to `xl` because signatures are typically the prominent end-of-form legal affirmation — the large heading paired with the default card framing communicates the weight of the action',
+      default: 'xl',
       values: ['sm', 'md', 'lg', 'xl'],
       webOnly: true,
     },

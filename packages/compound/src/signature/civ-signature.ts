@@ -81,8 +81,13 @@ export class CivSignature extends CivFormElement {
    * Visual size of the legend. Default and `sm` render at body size;
    * `md`/`lg`/`xl` increase the size for use as a section/page heading.
    * At `[data-civ-scale="fluid"]`, `xl` renders very large.
+   *
+   * Defaults to `xl` because signatures are typically the prominent
+   * end-of-form legal affirmation — paired with the default card
+   * framing, the large heading communicates the weight of the action.
+   * Override to `sm` / `md` for inline / dense placements.
    */
-  @property({ type: String }) size?: LabelSize;
+  @property({ type: String }) size: LabelSize = 'xl';
 
   /** Certification statement text displayed above the fields. Ignored when a `slot="statement"` child is present. */
   @property({ type: String }) statement = '';

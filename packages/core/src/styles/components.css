@@ -908,20 +908,14 @@
     @apply civ-border-error civ-border-s-4;
   }
 
-  /* In tile mode, the tile is the visual click target — ring the whole
-     tile when focus lands anywhere inside (click or keyboard) and
-     suppress the inner input's own ring so we don't stack two
-     indicators. Blank (non-tile) checkboxes / radios keep their
-     input-level ring via the `.civ-check-input:focus` rule above. */
-  .civ-check-tile:has(:focus) {
-    outline: var(--civ-focus-outline-width) solid var(--civ-focus-shadow-color);
-    outline-offset: 0;
-    box-shadow: 0 0 0 var(--civ-focus-shadow-radius) var(--civ-focus-outline-color);
-  }
-  .civ-check-tile .civ-check-input:focus {
-    outline: none;
-    box-shadow: none;
-  }
+  /* In tile mode, the focus ring lives on the checkbox / radio input
+     itself (via the `.civ-check-input:focus` rule above) — NOT on the
+     surrounding tile. Tile-level rings on long horizontal rows (the
+     race-ethnicity OMB list, for example) read as "the whole row is
+     the focus target," which is visually heavier than necessary when
+     the actual interactive element is the small input. The tile still
+     gets `:checked` and `:hover` background treatments to communicate
+     state; focus is communicated only by the input's own ring. */
 
   /* Toggle checked */
   .civ-toggle-track[aria-checked="true"] {

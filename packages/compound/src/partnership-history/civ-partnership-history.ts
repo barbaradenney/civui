@@ -203,13 +203,14 @@ export class CivPartnershipHistory extends CivFormElement {
         aria-required="${this.required || nothing}"
         ?disabled="${this.disabled}"
       >
-        ${renderFormHeader({ label: renderLegend({ legend, required: this.required, headingLevel: this.headingLevel, size: this.size }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
+        ${renderFormHeader({ label: renderLegend({ legend, required: false, headingLevel: this.headingLevel, size: this.size }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
 
         <civ-name
           legend="${t('marriageSpouseLegend')}"
           name="${prefix}.spouse"
           value="${nameJson}"
           error="${this.spouseError}"
+          ?required="${this.required}"
           ?disabled="${this.disabled}"
           ?readonly="${this.readonly}"
           @civ-input="${this._onNameInput}"

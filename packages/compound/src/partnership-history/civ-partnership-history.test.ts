@@ -20,6 +20,12 @@ describe('civ-partnership-history', () => {
     expect(el.querySelector('civ-name')).not.toBeNull();
   });
 
+  it('cascades required to the spouse civ-name child', async () => {
+    const el = await fixture('<civ-partnership-history name="m" required></civ-partnership-history>');
+    const name = el.querySelector('civ-name') as HTMLElement;
+    expect(name.hasAttribute('required')).toBe(true);
+  });
+
   it('renders marriage date', async () => {
     const el = await fixture('<civ-partnership-history name="m"></civ-partnership-history>');
     const dates = el.querySelectorAll('civ-memorable-date');

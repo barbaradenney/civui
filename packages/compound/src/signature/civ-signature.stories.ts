@@ -202,12 +202,12 @@ export const SignedAtTimestamp: Story = {
   `,
 };
 
-export const CardVariant: Story = {
-  name: 'Card Variant',
+export const BareFieldset: Story = {
+  name: 'Bare Fieldset (opt out of card)',
   parameters: {
     docs: {
       description: {
-        story: 'Wrap the signature in a card with `card` prop for visual emphasis. Use with `size="xl"` for a prominent heading at the end of a form review.',
+        story: 'The signature renders with a card wrapper by default — this story shows the bare-fieldset alternative. Use it when nesting inside an already-bordered container that would double the visual weight. Opt out via `?card="${false}"` in a lit-html template, or `el.card = false` imperatively.',
       },
     },
   },
@@ -218,7 +218,7 @@ export const CardVariant: Story = {
       statement="I certify that the information I have provided is true and correct to the best of my knowledge and belief."
       required
       size="xl"
-      card
+      ?card="${false}"
     ></civ-signature>
   `,
 };

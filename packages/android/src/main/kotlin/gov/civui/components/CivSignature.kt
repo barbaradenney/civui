@@ -47,7 +47,7 @@ fun CivSignature(
     certifyError: String = "",
     required: Boolean = false,
     disabled: Boolean = false,
-    card: Boolean = false,
+    card: Boolean = true,
     onChange: ((SignatureValue) -> Unit)? = null,
 ) {
     val isDark = isSystemInDarkTheme()

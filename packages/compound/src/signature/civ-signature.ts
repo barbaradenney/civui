@@ -99,8 +99,16 @@ export class CivSignature extends CivFormElement {
   /** Error for the certification checkbox. */
   @property({ type: String, attribute: 'certify-error' }) certifyError = '';
 
-  /** Wrap the signature in a card for visual emphasis. */
-  @property({ type: Boolean }) card = false;
+  /**
+   * Wrap the signature in a card for visual emphasis. Defaults to true —
+   * signature blocks carry legal weight (statement of truth, certify-and-
+   * submit) and the card framing communicates that to the user. To opt
+   * out for a bare fieldset (e.g. when nesting inside an already-bordered
+   * container that would double up the visual weight), set the JS
+   * property: `?card="${false}"` in lit-html templates, or `el.card =
+   * false` imperatively.
+   */
+  @property({ type: Boolean }) card = true;
 
   @state() private _signature: InternalSignature = { ...EMPTY_SIGNATURE };
 

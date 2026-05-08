@@ -121,7 +121,7 @@ public struct CivSignature: View {
         requiredMessage: String? = nil,
         formValidate: (() -> String?)? = nil,
         isPii: Bool = false,
-        card: Bool = false
+        card: Bool = true
     ) {
         self.legend = legend
         self._value = value

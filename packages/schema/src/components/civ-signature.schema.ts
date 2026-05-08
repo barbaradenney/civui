@@ -45,8 +45,8 @@ const schema: ComponentSchema = {
     },
     card: {
       type: 'boolean',
-      description: 'Render the signature block as an outlined card instead of a bare fieldset. Highlights the legal weight of the action',
-      default: false,
+      description: 'Render the signature block as an outlined card. Defaults to true — signature blocks carry legal weight (statement of truth, certify-and-submit) and the card framing communicates that. Set false for a bare fieldset when nesting inside an already-bordered container',
+      default: true,
     },
   },
 

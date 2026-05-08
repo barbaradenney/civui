@@ -206,7 +206,7 @@ export class CivSignature extends CivFormElement {
             value="${this._signature.name}"
             hint="${t('signatureNameHint')}"
             error="${this.nameError}"
-            autocomplete="name"
+            autocomplete="off"
             ?disabled="${this.disabled}"
             ?readonly="${this.readonly}"
             @civ-input="${this._onNameInput}"

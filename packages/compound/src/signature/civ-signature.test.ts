@@ -29,10 +29,17 @@ describe('civ-signature', () => {
     expect(checkbox).not.toBeNull();
   });
 
-  it('name input has autocomplete="name"', async () => {
+  it('name input has autocomplete="off" so the browser does not autofill the signing field', async () => {
+    // Signatures are intentional acts, not data-entry fields. Autofilling
+    // the name would (a) undermine demonstrable intent (E-SIGN Act
+    // expectations), (b) bypass the cursive preview's "I typed this"
+    // moment, and (c) encourage skipping the certification statement.
+    // WCAG 1.3.5 (Identify Input Purpose) was written for profile / billing
+    // forms, not signature blocks — autofill belongs on civ-name and the
+    // text-input "name" preset, not here.
     const el = await fixture<CivSignature>('<civ-signature legend="Sign"></civ-signature>');
     const input = el.querySelector('input[type="text"]')!;
-    expect(input.getAttribute('autocomplete')).toBe('name');
+    expect(input.getAttribute('autocomplete')).toBe('off');
   });
 
   it('fires civ-input when name changes', async () => {

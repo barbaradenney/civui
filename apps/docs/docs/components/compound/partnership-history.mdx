@@ -42,12 +42,13 @@ The component adapts its status vocabulary by the selected partnership type:
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `legend` | `string` | `'About this partnership'` | Fieldset legend. Set to `'About this marriage'` for marriage-specific forms. |
+| `legend` | `string` | `'About this partnership'` | Fieldset legend. Set to `'About this marriage'` for marriage-specific forms. Step-specific defaults apply when `step` is set and `legend` is omitted. |
 | `heading-level` | `1`–`6` | — | Promote the legend to a heading via `role="heading"` + `aria-level=N`. See [Heading hierarchy](/components/form/form-group#heading-hierarchy). |
 | `size` | `'sm' \| 'md' \| 'lg' \| 'xl'` | `'sm'` | Visual size. `sm` = body size; `md`/`lg`/`xl` step up for section/page heading use. |
 | `name` | `string` | `''` | Form field name prefix |
 | `value` | `string` | `''` | JSON-serialized partnership value |
 | `show-marriage-type` | `boolean` | `false` | When true, renders a type dropdown (legal marriage, civil union, domestic partnership, common-law, tribal, other) and shows type-specific fields. The status vocabulary adapts automatically. |
+| `step` | `'who' \| 'details' \| 'status'` | — | Render only one section of the compound. See [Splitting across multiple pages](#splitting-across-multiple-pages). When unset, all sections render on one page. |
 | `status-assumed` | `string` | `''` | Skip the status question and assume this value. Useful when the relationship's status is already established by an earlier form step. |
 | `required` | `boolean` | `false` | Shows required indicator on legend |
 | `disabled` | `boolean` | `false` | Disables all fields |
@@ -77,9 +78,73 @@ The component adapts its status vocabulary by the selected partnership type:
 
 <!-- Inclusive partnership form (auto-adapts vocabulary by type) -->
 <civ-partnership-history name="entry" show-marriage-type></civ-partnership-history>
+```
 
-<!-- Multiple partnership entries via repeater -->
-<civ-repeater legend="Partnership history" name="partnerships" item-label="partnership" mode="form-steps" min="0" max="10">
-  <civ-partnership-history name="entry" show-marriage-type></civ-partnership-history>
+## Splitting across multiple pages
+
+The full single-page form can run long when the marriage type is shown
+and a status with end-date is captured. For applications that prefer a
+"one question per page" feel, use the `step` prop to render one section
+at a time. Each step keeps the same `MarriageValue` serialization, so
+the value threads through unchanged.
+
+| Step | Renders |
+|------|---------|
+| `who` | Partner's name and (when `show-marriage-type`) the type selector |
+| `details` | Type-specific date / location / jurisdiction / description fields |
+| `status` | Current status radios and the conditional end-date |
+
+When `legend` is omitted, each step uses a step-specific default
+("About your partner" / "Partnership details" / "Partnership status").
+
+```html
+<civ-form-step>
+  <div data-step-label="About your partner">
+    <civ-partnership-history step="who" name="entry" show-marriage-type></civ-partnership-history>
+  </div>
+  <div data-step-label="Partnership details">
+    <civ-partnership-history step="details" name="entry" show-marriage-type></civ-partnership-history>
+  </div>
+  <div data-step-label="Current status">
+    <civ-partnership-history step="status" name="entry" show-marriage-type></civ-partnership-history>
+  </div>
+</civ-form-step>
+```
+
+<StoryEmbed id="forms-compound-partnership-history--multi-step-flow" />
+
+## Multiple entries via repeater
+
+For applications that allow multiple partnership entries (e.g. a full
+marriage history), wrap the compound in `<civ-repeater>` with
+`mode="form-steps"`. Each row opens a multi-step add/edit flow that
+mirrors the three-page split above:
+
+```html
+<civ-repeater
+  legend="Partnership history"
+  name="partnerships"
+  item-label="partnership"
+  mode="form-steps"
+  min="0"
+  max="10"
+>
+  <div data-step-label="Partner">
+    <civ-partnership-history step="who" name="entry" show-marriage-type></civ-partnership-history>
+  </div>
+  <div data-step-label="Details">
+    <civ-partnership-history step="details" name="entry" show-marriage-type></civ-partnership-history>
+  </div>
+  <div data-step-label="Status">
+    <civ-partnership-history step="status" name="entry" show-marriage-type></civ-partnership-history>
+  </div>
 </civ-repeater>
 ```
+
+<StoryEmbed id="forms-compound-partnership-history--in-repeater" />
+
+Because each `step` instance keeps its own state, thread the value
+between them by listening for `civ-input` on the wrapping repeater
+and copying the source's `marriageValue` to its peers. The
+[Storybook example](pathname:///civui/storybook/?path=/story/forms-compound-partnership-history--in-repeater)
+shows the listener in full.

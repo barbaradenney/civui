@@ -3,6 +3,29 @@ import { html } from 'lit';
 import './civ-partnership-history.js';
 import '@civui/inputs';
 import '@civui/controls';
+import '@civui/form-patterns/repeater';
+
+/**
+ * Inside civ-repeater's form-steps mode, the three partnership-history
+ * instances (one per step) each maintain their own internal value. This
+ * handler threads the latest value from whichever instance fired the
+ * event into its peers within the same repeater so step 2 can render
+ * type-specific fields based on the type the user picked in step 1.
+ */
+const threadPartnershipValue = (e: Event) => {
+  const source = e.target as HTMLElement | null;
+  if (!source || source.tagName !== 'CIV-PARTNERSHIP-HISTORY') return;
+  const repeater = source.closest('civ-repeater');
+  if (!repeater) return;
+  const v = (source as any).marriageValue;
+  const peers = repeater.querySelectorAll<HTMLElement>('civ-partnership-history');
+  peers.forEach((peer) => {
+    if (peer === source) return;
+    const p = peer as any;
+    if (JSON.stringify(p.marriageValue) === JSON.stringify(v)) return;
+    p.marriageValue = v;
+  });
+};
 
 const meta: Meta = {
   title: 'Forms/Compound/Partnership History',
@@ -268,17 +291,27 @@ export const MultiStepFlow: Story = {
 };
 
 export const InRepeater: Story = {
-  name: 'Usage: In Repeater',
+  name: 'Usage: In Repeater (multi-step per entry)',
   render: () => html`
     <civ-repeater
       legend="Partnership history"
       size="lg"
       name="partnerships"
       item-label="partnership"
+      mode="form-steps"
       min="0"
       max="10"
+      @civ-input=${threadPartnershipValue}
     >
-      <civ-partnership-history name="entry" show-marriage-type></civ-partnership-history>
+      <div data-step-label="Partner">
+        <civ-partnership-history step="who" name="entry" show-marriage-type></civ-partnership-history>
+      </div>
+      <div data-step-label="Details">
+        <civ-partnership-history step="details" name="entry" show-marriage-type></civ-partnership-history>
+      </div>
+      <div data-step-label="Status">
+        <civ-partnership-history step="status" name="entry" show-marriage-type></civ-partnership-history>
+      </div>
     </civ-repeater>
   `,
 };

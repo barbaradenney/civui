@@ -104,13 +104,13 @@ const schema: ComponentSchema = {
     'civ-input': {
       description: 'Fires on every sub-field change',
       detail: {
-        value: { type: 'string', description: 'JSON-serialized MarriageHistoryValue: {spouse, marriageType?, marriageDate, city, state, jurisdiction?, cohabitationStart?, cohabitationState?, status, endDate?}' },
+        value: { type: 'string', description: 'JSON-serialized MarriageValue: {spouse, marriageType?, marriageDate, city, state, jurisdiction?, cohabitationStart?, cohabitationState?, status, endDate?}' },
       },
     },
     'civ-change': {
       description: 'Fires on committed sub-field change',
       detail: {
-        value: { type: 'string', description: 'JSON-serialized MarriageHistoryValue (same shape as civ-input)' },
+        value: { type: 'string', description: 'JSON-serialized MarriageValue (same shape as civ-input)' },
       },
     },
   },

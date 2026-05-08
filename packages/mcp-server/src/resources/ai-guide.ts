@@ -60,7 +60,7 @@ For architecture and internals, see \`CLAUDE.md\` in the repo root.
 | \`<civ-signature>\` | Compound | \`legend\`, \`heading-level\`, \`size\`, \`statement\` | \`{ value: { name, certified, signedAt } }\` |
 | \`<civ-relationship>\` | Compound | \`legend\`, \`heading-level\`, \`size\`, \`preset\`, \`show-deceased\`, \`show-name\` | \`{ value: RelationshipValue }\` |
 | \`<civ-race-ethnicity>\` | Compound | \`legend\`, \`heading-level\`, \`size\`, \`ethnicity-legend\`, \`race-legend\` | \`{ value: RaceEthnicityValue }\` |
-| \`<civ-marriage-history>\` | Compound | \`legend\`, \`heading-level\`, \`size\`, \`show-marriage-type\`, \`status-assumed\` | \`{ value: MarriageValue }\` |
+| \`<civ-partnership-history>\` | Compound | \`legend\`, \`heading-level\`, \`size\`, \`show-marriage-type\`, \`status-assumed\` | \`{ value: PartnershipValue }\` |
 | \`<civ-service-history>\` | Compound | \`legend\`, \`heading-level\`, \`size\`, \`show-service-number\` | \`{ value: ServicePeriodValue }\` |
 | \`<civ-ssn>\` | Preset | \`mode\` (full/last4) | \`{ value }\` |
 | \`<civ-ein>\` | Preset | — | \`{ value }\` |
@@ -863,11 +863,11 @@ OMB-standard race and ethnicity with ethnicity radio group and race multi-select
 
 ---
 
-### civ-marriage-history
+### civ-partnership-history
 
-Single marriage entry. Use inside \`civ-repeater\` for multiple marriages.
+Single long-term partner relationship — marriage, civil union, registered DP, cohabitation, or other. Use inside \`civ-repeater\` for multiple entries. Status vocabulary adapts to the selected partnership type (marriage statuses for marriage, inclusive partnership statuses for non-marriage relationships).
 
-**Props:** \`legend\`, \`show-marriage-type\`, \`status-assumed\`. Per-field errors: \`spouse-error\`, \`marriage-date-error\`, \`status-error\`, \`end-date-error\`, etc.
+**Props:** \`legend\` (default \`"About this partnership"\`), \`show-marriage-type\`, \`status-assumed\`. Per-field errors: \`spouse-error\`, \`marriage-date-error\`, \`status-error\`, \`end-date-error\`, etc.
 
 ---
 

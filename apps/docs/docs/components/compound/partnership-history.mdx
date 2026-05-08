@@ -1,12 +1,12 @@
 ---
-title: Marriage History
+title: Partnership History
 sidebar_position: 6
-sidebar_label: Marriage History
+sidebar_label: Partnership History
 ---
 
 import StoryEmbed from "@site/src/components/StoryEmbed";
 
-# Marriage History
+# Partnership History
 
 <!-- contract-link:start -->
 
@@ -16,7 +16,11 @@ import StoryEmbed from "@site/src/components/StoryEmbed";
 
 `<civ-partnership-history>`
 
-Compound component for a single marriage entry — spouse name, marriage date and location, status, and conditional end date. Designed to be used inside a `civ-repeater` for multiple marriages.
+Compound component for a single long-term partner relationship — covers marriage, civil union, registered domestic partnership, common-law / cohabitation, and other long-term partnerships. Renders the partner's name, the relationship's start date and location, current status, and a conditional end date. Designed to be used inside a `civ-repeater` for multiple partnership entries.
+
+The component adapts its status vocabulary by the selected partnership type:
+- **Marriage** (or no type shown): *Currently married / Divorced / Widowed / Annulled*
+- **Civil union, domestic partnership, cohabitation, other**: *Currently together / Relationship ended / Partner has passed away*
 
 ## Examples
 
@@ -38,28 +42,44 @@ Compound component for a single marriage entry — spouse name, marriage date an
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `legend` | `string` | `'About this marriage'` | Fieldset legend |
+| `legend` | `string` | `'About this partnership'` | Fieldset legend. Set to `'About this marriage'` for marriage-specific forms. |
 | `heading-level` | `1`–`6` | — | Promote the legend to a heading via `role="heading"` + `aria-level=N`. See [Heading hierarchy](/components/form/form-group#heading-hierarchy). |
 | `size` | `'sm' \| 'md' \| 'lg' \| 'xl'` | `'sm'` | Visual size. `sm` = body size; `md`/`lg`/`xl` step up for section/page heading use. |
 | `name` | `string` | `''` | Form field name prefix |
-| `value` | `string` | `''` | JSON-serialized MarriageValue |
+| `value` | `string` | `''` | JSON-serialized partnership value |
+| `show-marriage-type` | `boolean` | `false` | When true, renders a type dropdown (legal marriage, civil union, domestic partnership, common-law, tribal, other) and shows type-specific fields. The status vocabulary adapts automatically. |
+| `status-assumed` | `string` | `''` | Skip the status question and assume this value. Useful when the relationship's status is already established by an earlier form step. |
 | `required` | `boolean` | `false` | Shows required indicator on legend |
 | `disabled` | `boolean` | `false` | Disables all fields |
-| `spouse-error` | `string` | `''` | Error for spouse name fields |
-| `marriage-date-error` | `string` | `''` | Error for marriage date |
-| `city-error` | `string` | `''` | Error for marriage city |
-| `state-error` | `string` | `''` | Error for marriage state |
-| `status-error` | `string` | `''` | Error for marriage status |
+| `spouse-error` | `string` | `''` | Error for partner name fields |
+| `marriage-date-error` | `string` | `''` | Error for relationship start date |
+| `city-error` | `string` | `''` | Error for marriage city (ceremony types) |
+| `state-error` | `string` | `''` | Error for marriage state (ceremony types) |
+| `jurisdiction-error` | `string` | `''` | Error for jurisdiction (civil union types) |
+| `cohabitation-start-error` | `string` | `''` | Error for cohabitation start date |
+| `cohabitation-state-error` | `string` | `''` | Error for cohabitation state |
+| `status-error` | `string` | `''` | Error for partnership status |
 | `end-date-error` | `string` | `''` | Error for end date |
 
 ## Conditional fields
 
-The "Date marriage ended" field only appears when the status is **not** "Currently married." Selecting "Currently married" clears any previously entered end date.
+- **Type-specific field set.** When `show-marriage-type` is on, the dropdown selection drives which middle-section fields render: marriage shows date + city + state; civil union shows registration date + jurisdiction; cohabitation shows start date + state + optional description; other shows approximate date + description.
+- **End date.** Only renders when status is **not** the "current/together" option. The fieldset legend adapts to the chosen status (*Date marriage ended*, *Date the relationship ended*, *Date of their passing*).
 
 ## Usage
 
 ```html
-<civ-repeater legend="Marriage history" name="marriages" item-label="marriage" mode="form-steps" min="0" max="10">
-  <civ-partnership-history name="entry"></civ-partnership-history>
+<!-- Marriage-only form -->
+<civ-partnership-history
+  legend="About this marriage"
+  name="entry"
+></civ-partnership-history>
+
+<!-- Inclusive partnership form (auto-adapts vocabulary by type) -->
+<civ-partnership-history name="entry" show-marriage-type></civ-partnership-history>
+
+<!-- Multiple partnership entries via repeater -->
+<civ-repeater legend="Partnership history" name="partnerships" item-label="partnership" mode="form-steps" min="0" max="10">
+  <civ-partnership-history name="entry" show-marriage-type></civ-partnership-history>
 </civ-repeater>
 ```

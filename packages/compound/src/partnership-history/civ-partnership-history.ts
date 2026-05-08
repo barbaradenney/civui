@@ -66,11 +66,15 @@ const EMPTY_MARRIAGE: MarriageValue = {
 };
 
 /**
- * CivUI Marriage History
+ * CivUI Partnership History
  *
- * Compound component for a single marriage entry. Captures spouse name,
- * marriage date and location, status, and conditional end date.
- * Designed to be used inside a `civ-repeater` for multiple marriages.
+ * Compound component for a single long-term partner relationship —
+ * covers marriage, civil union, registered domestic partnership,
+ * cohabitation / common-law, and other long-term partnerships.
+ * Captures the partner's name, the relationship's start date and
+ * location, current status, and a conditional end date. Status
+ * vocabulary adapts to the selected partnership type. Designed to
+ * be used inside a `civ-repeater` for multiple entries.
  *
  * @element civ-partnership-history
  *

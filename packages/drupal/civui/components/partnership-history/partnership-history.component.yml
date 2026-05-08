@@ -1,8 +1,8 @@
 $schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
-name: Marriage History
+name: Partnership History
 status: stable
 group: CivUI Compound
-description: 'Compound marriage history field with spouse name, dates, and marriage type.'
+description: 'Compound partnership history field (marriage, civil union, cohabitation, or other) with partner name, dates, location, status, and type.'
 
 props:
   type: object

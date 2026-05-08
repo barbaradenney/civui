@@ -1,18 +1,21 @@
 // CivUI — CivPartnershipHistory for SwiftUI
-// Accessible marriage history compound component following government design system patterns.
+// Accessible partnership-history compound (marriage / civil union /
+// cohabitation / other) following government design system patterns.
 
 import SwiftUI
 
-/// Accessible marriage history form for government applications.
+/// Accessible partnership-history form for government applications.
 ///
-/// Renders a structured form for capturing marriage history details.
-/// Mirrors the web `civ-partnership-history` component.
+/// Renders a structured form for capturing a long-term partner
+/// relationship — marriage, civil union, registered domestic
+/// partnership, common-law / cohabitation, or other. Mirrors the
+/// web `civ-partnership-history` component.
 ///
 /// Usage:
 /// ```swift
 /// CivPartnershipHistory(
-///     legend: "Marriage history",
-///     name: "marriage",
+///     legend: "About this partnership",
+///     name: "partnership",
 ///     value: $marriageValue,
 ///     isRequired: true
 /// )
@@ -167,7 +170,7 @@ struct CivPartnershipHistory_Previews: PreviewProvider {
 
         var body: some View {
             CivPartnershipHistory(
-                legend: "Marriage history",
+                legend: "About this partnership",
                 name: "marriage",
                 value: $value,
                 isRequired: true

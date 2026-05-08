@@ -72,7 +72,7 @@ For architecture and internals, see `CLAUDE.md` in the repo root.
 | `<civ-signature>` | Compound | `legend`, `statement`, slot `[name="statement"]` for HTML | `civ-change: { value: { name, certified, signedAt } }` |
 | `<civ-relationship>` | Compound | `legend`, `preset`, `show-deceased`, `show-name`, `show-divorce-date`, `show-adoption-date` | `{ value: RelationshipValue }` |
 | `<civ-race-ethnicity>` | Compound | `legend`, `ethnicity-legend`, `race-legend`, `ethnicity-error`, `race-error` | `{ value: RaceEthnicityValue }` |
-| `<civ-marriage-history>` | Compound | `legend`, `show-marriage-type`, `status-assumed` | `{ value: MarriageValue }` |
+| `<civ-partnership-history>` | Compound | `legend`, `show-marriage-type`, `status-assumed` | `{ value: PartnershipValue }` |
 | `<civ-service-history>` | Compound | `legend`, `show-service-number` | `{ value: ServicePeriodValue }` |
 | `<civ-list>` | Layout | `dividers` (boolean) | — |
 | `<civ-list-item>` | Layout | `href` (optional, makes whole row clickable). Trailing content via `data-list-item-end` attribute on a child. | `civ-analytics` |
@@ -1056,23 +1056,25 @@ Electronic signature component for form certification. Renders a certification s
 
 ---
 
-### civ-marriage-history
+### civ-partnership-history
 
-Compound component for a single marriage entry. Captures spouse name, marriage date and location, marital status, and conditional end date. Use inside `civ-repeater` for multiple marriages.
+Compound component for a single long-term partner relationship — covers marriage, civil union, registered domestic partnership, common-law / cohabitation, and other partnerships. Captures partner name, the relationship's start date and location, status, and a conditional end date. Use inside `civ-repeater` for multiple entries.
+
+The component adapts its status vocabulary by the selected partnership type. Marriage / no-type-shown gets the marriage statuses (current / divorced / widowed / annulled); civil union / cohabitation / other get the inclusive partnership statuses (current / ended / partner-deceased). Default legend is *"About this partnership"* — set `legend="About this marriage"` for marriage-specific forms.
 
 **Props (beyond standard):**
-- `legend` — fieldset legend
-- `show-marriage-type` — show marriage type selector (default: false)
-- `status-assumed` — pre-set the marital status value
+- `legend` — fieldset legend (default: "About this partnership")
+- `show-marriage-type` — show partnership-type selector (default: false). When on, the type drives both the visible field set and the status vocabulary.
+- `status-assumed` — pre-set the status value (skip the question)
 - Per-field errors: `spouse-error`, `marriage-type-error`, `marriage-date-error`, `city-error`, `state-error`, `jurisdiction-error`, `cohabitation-start-error`, `cohabitation-state-error`, `status-error`, `end-date-error`
 
-**Value shape:** `MarriageValue`
+**Value shape:** `PartnershipValue` (alias `MarriageValue` retained for backwards compatibility)
 
 **Example:**
 ```html
-<civ-repeater legend="Marriage history" name="marriages" min="1">
+<civ-repeater legend="Partnership history" name="partnerships" min="1">
   <template>
-    <civ-marriage-history legend="Marriage"></civ-marriage-history>
+    <civ-partnership-history show-marriage-type></civ-partnership-history>
   </template>
 </civ-repeater>
 ```

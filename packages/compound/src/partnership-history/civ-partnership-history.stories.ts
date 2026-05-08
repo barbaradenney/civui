@@ -5,7 +5,7 @@ import '@civui/inputs';
 import '@civui/controls';
 
 const meta: Meta = {
-  title: 'Forms/Compound/Marriage History',
+  title: 'Forms/Compound/Partnership History',
   component: 'civ-partnership-history',
   tags: ['autodocs'],
 };
@@ -49,18 +49,29 @@ export const WithErrors: Story = {
   `,
 };
 
+export const Inclusive: Story = {
+  name: 'Inclusive (any partnership type)',
+  render: () => html`
+    <civ-partnership-history
+      size="lg"
+      name="partnership"
+      show-marriage-type
+    ></civ-partnership-history>
+  `,
+};
+
 export const InRepeater: Story = {
   name: 'Usage: In Repeater',
   render: () => html`
     <civ-repeater
-      legend="Marriage history"
+      legend="Partnership history"
       size="lg"
-      name="marriages"
-      item-label="marriage"
+      name="partnerships"
+      item-label="partnership"
       min="0"
       max="10"
     >
-      <civ-partnership-history name="entry"></civ-partnership-history>
+      <civ-partnership-history name="entry" show-marriage-type></civ-partnership-history>
     </civ-repeater>
   `,
 };

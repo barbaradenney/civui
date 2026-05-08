@@ -1,5 +1,6 @@
 // CivUI — CivPartnershipHistory for Jetpack Compose
-// Compound marriage history form with spouse, dates, and status fields.
+// Compound partnership history form (marriage / civil union / cohabitation /
+// other) with partner name, dates, location, and status fields.
 
 package gov.civui.components
 

@@ -14,7 +14,7 @@ export type { DirectDepositValue } from './direct-deposit/index.js';
 export { CivSignature } from './signature/index.js';
 export type { SignatureValue } from './signature/index.js';
 
-// Marriage History
+// Partnership History
 export { CivPartnershipHistory } from './partnership-history/index.js';
 export type { MarriageValue } from './partnership-history/index.js';
 

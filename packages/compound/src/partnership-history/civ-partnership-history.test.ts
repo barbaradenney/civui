@@ -43,12 +43,10 @@ describe('civ-partnership-history', () => {
     el.marriageValue = { ...el.marriageValue, status: 'current' };
     await elementUpdated(el);
 
-    // Each memorable-date is wrapped in a `civ-form-fieldset` whose
-    // `legend` attribute carries the visible group label. Collect those.
-    const fieldsets = el.querySelectorAll('civ-form-fieldset');
-    const legends = Array.from(fieldsets)
-      .filter((fs: any) => fs.querySelector('civ-memorable-date'))
-      .map((fs: any) => fs.getAttribute('legend'));
+    // civ-memorable-date is self-contained — its `legend` attribute
+    // is the visible group label. Collect those.
+    const dates = el.querySelectorAll('civ-memorable-date');
+    const legends = Array.from(dates).map((d: any) => d.getAttribute('legend'));
     expect(legends).not.toContain('Date marriage ended');
   });
 
@@ -57,12 +55,10 @@ describe('civ-partnership-history', () => {
     el.marriageValue = { ...el.marriageValue, status: 'divorced' };
     await elementUpdated(el);
 
-    // Each memorable-date is wrapped in a `civ-form-fieldset` whose
-    // `legend` attribute carries the visible group label. Collect those.
-    const fieldsets = el.querySelectorAll('civ-form-fieldset');
-    const legends = Array.from(fieldsets)
-      .filter((fs: any) => fs.querySelector('civ-memorable-date'))
-      .map((fs: any) => fs.getAttribute('legend'));
+    // civ-memorable-date is self-contained — its `legend` attribute
+    // is the visible group label. Collect those.
+    const dates = el.querySelectorAll('civ-memorable-date');
+    const legends = Array.from(dates).map((d: any) => d.getAttribute('legend'));
     expect(legends).toContain('Date marriage ended');
   });
 
@@ -71,12 +67,10 @@ describe('civ-partnership-history', () => {
     el.marriageValue = { ...el.marriageValue, status: 'widowed' };
     await elementUpdated(el);
 
-    // Each memorable-date is wrapped in a `civ-form-fieldset` whose
-    // `legend` attribute carries the visible group label. Collect those.
-    const fieldsets = el.querySelectorAll('civ-form-fieldset');
-    const legends = Array.from(fieldsets)
-      .filter((fs: any) => fs.querySelector('civ-memorable-date'))
-      .map((fs: any) => fs.getAttribute('legend'));
+    // civ-memorable-date is self-contained — its `legend` attribute
+    // is the visible group label. Collect those.
+    const dates = el.querySelectorAll('civ-memorable-date');
+    const legends = Array.from(dates).map((d: any) => d.getAttribute('legend'));
     expect(legends).toContain('Date of their passing');
   });
 
@@ -200,12 +194,10 @@ describe('civ-partnership-history status-assumed', () => {
     const el = await fixture('<civ-partnership-history name="m" status-assumed="widowed"></civ-partnership-history>') as any;
     await elementUpdated(el);
 
-    // Each memorable-date is wrapped in a `civ-form-fieldset` whose
-    // `legend` attribute carries the visible group label. Collect those.
-    const fieldsets = el.querySelectorAll('civ-form-fieldset');
-    const legends = Array.from(fieldsets)
-      .filter((fs: any) => fs.querySelector('civ-memorable-date'))
-      .map((fs: any) => fs.getAttribute('legend'));
+    // civ-memorable-date is self-contained — its `legend` attribute
+    // is the visible group label. Collect those.
+    const dates = el.querySelectorAll('civ-memorable-date');
+    const legends = Array.from(dates).map((d: any) => d.getAttribute('legend'));
     expect(legends).toContain('Date of their passing');
     expect(legends).not.toContain('Date marriage ended');
   });
@@ -214,12 +206,10 @@ describe('civ-partnership-history status-assumed', () => {
     const el = await fixture('<civ-partnership-history name="m" status-assumed="divorced"></civ-partnership-history>') as any;
     await elementUpdated(el);
 
-    // Each memorable-date is wrapped in a `civ-form-fieldset` whose
-    // `legend` attribute carries the visible group label. Collect those.
-    const fieldsets = el.querySelectorAll('civ-form-fieldset');
-    const legends = Array.from(fieldsets)
-      .filter((fs: any) => fs.querySelector('civ-memorable-date'))
-      .map((fs: any) => fs.getAttribute('legend'));
+    // civ-memorable-date is self-contained — its `legend` attribute
+    // is the visible group label. Collect those.
+    const dates = el.querySelectorAll('civ-memorable-date');
+    const legends = Array.from(dates).map((d: any) => d.getAttribute('legend'));
     expect(legends).toContain('Date marriage ended');
   });
 });
@@ -244,12 +234,10 @@ describe('civ-partnership-history marriage type', () => {
     el.marriageValue = { ...el.marriageValue, marriageType: 'legal' };
     await elementUpdated(el);
 
-    // Each memorable-date is wrapped in a `civ-form-fieldset` whose
-    // `legend` attribute carries the visible group label. Collect those.
-    const fieldsets = el.querySelectorAll('civ-form-fieldset');
-    const legends = Array.from(fieldsets)
-      .filter((fs: any) => fs.querySelector('civ-memorable-date'))
-      .map((fs: any) => fs.getAttribute('legend'));
+    // civ-memorable-date is self-contained — its `legend` attribute
+    // is the visible group label. Collect those.
+    const dates = el.querySelectorAll('civ-memorable-date');
+    const legends = Array.from(dates).map((d: any) => d.getAttribute('legend'));
     expect(legends).toContain('Date of marriage');
     expect(el.querySelector('civ-text-input[name="m.marriageCity"]')).not.toBeNull();
   });
@@ -259,12 +247,10 @@ describe('civ-partnership-history marriage type', () => {
     el.marriageValue = { ...el.marriageValue, marriageType: 'civil-union' };
     await elementUpdated(el);
 
-    // Each memorable-date is wrapped in a `civ-form-fieldset` whose
-    // `legend` attribute carries the visible group label. Collect those.
-    const fieldsets = el.querySelectorAll('civ-form-fieldset');
-    const legends = Array.from(fieldsets)
-      .filter((fs: any) => fs.querySelector('civ-memorable-date'))
-      .map((fs: any) => fs.getAttribute('legend'));
+    // civ-memorable-date is self-contained — its `legend` attribute
+    // is the visible group label. Collect those.
+    const dates = el.querySelectorAll('civ-memorable-date');
+    const legends = Array.from(dates).map((d: any) => d.getAttribute('legend'));
     expect(legends).toContain('Date of registration');
     expect(el.querySelector('civ-text-input[name="m.jurisdiction"]')).not.toBeNull();
     // Should NOT show marriage-category fields
@@ -276,12 +262,10 @@ describe('civ-partnership-history marriage type', () => {
     el.marriageValue = { ...el.marriageValue, marriageType: 'common-law' };
     await elementUpdated(el);
 
-    // Each memorable-date is wrapped in a `civ-form-fieldset` whose
-    // `legend` attribute carries the visible group label. Collect those.
-    const fieldsets = el.querySelectorAll('civ-form-fieldset');
-    const legends = Array.from(fieldsets)
-      .filter((fs: any) => fs.querySelector('civ-memorable-date'))
-      .map((fs: any) => fs.getAttribute('legend'));
+    // civ-memorable-date is self-contained — its `legend` attribute
+    // is the visible group label. Collect those.
+    const dates = el.querySelectorAll('civ-memorable-date');
+    const legends = Array.from(dates).map((d: any) => d.getAttribute('legend'));
     expect(legends).toContain('Date you began living together');
     expect(el.querySelector('civ-text-input[name="m.cohabitationState"]')).not.toBeNull();
     expect(el.querySelector('civ-text-input[name="m.marriageTypeDescription"]')).not.toBeNull();
@@ -292,12 +276,10 @@ describe('civ-partnership-history marriage type', () => {
     el.marriageValue = { ...el.marriageValue, marriageType: 'other' };
     await elementUpdated(el);
 
-    // Each memorable-date is wrapped in a `civ-form-fieldset` whose
-    // `legend` attribute carries the visible group label. Collect those.
-    const fieldsets = el.querySelectorAll('civ-form-fieldset');
-    const legends = Array.from(fieldsets)
-      .filter((fs: any) => fs.querySelector('civ-memorable-date'))
-      .map((fs: any) => fs.getAttribute('legend'));
+    // civ-memorable-date is self-contained — its `legend` attribute
+    // is the visible group label. Collect those.
+    const dates = el.querySelectorAll('civ-memorable-date');
+    const legends = Array.from(dates).map((d: any) => d.getAttribute('legend'));
     expect(legends).toContain('Approximate date union began');
     expect(el.querySelector('civ-text-input[name="m.marriageTypeDescription"]')).not.toBeNull();
   });
@@ -363,22 +345,16 @@ describe('civ-partnership-history adaptive status options', () => {
     const el = await fixture('<civ-partnership-history name="m" show-marriage-type></civ-partnership-history>') as any;
     el.marriageValue = { ...el.marriageValue, marriageType: 'common-law', status: 'ended' };
     await elementUpdated(el);
-    const fieldsets = el.querySelectorAll('civ-form-fieldset');
-    const legends = Array.from(fieldsets)
-      .filter((fs: any) => fs.querySelector('civ-memorable-date[name="m.endDate"]'))
-      .map((fs: any) => fs.getAttribute('legend'));
-    expect(legends).toContain('Date the relationship ended');
+    const endDate = el.querySelector('civ-memorable-date[name="m.endDate"]');
+    expect(endDate?.getAttribute('legend')).toBe('Date the relationship ended');
   });
 
   it('uses "Date of their passing" for partner-deceased status', async () => {
     const el = await fixture('<civ-partnership-history name="m" show-marriage-type></civ-partnership-history>') as any;
     el.marriageValue = { ...el.marriageValue, marriageType: 'common-law', status: 'partner-deceased' };
     await elementUpdated(el);
-    const fieldsets = el.querySelectorAll('civ-form-fieldset');
-    const legends = Array.from(fieldsets)
-      .filter((fs: any) => fs.querySelector('civ-memorable-date[name="m.endDate"]'))
-      .map((fs: any) => fs.getAttribute('legend'));
-    expect(legends).toContain('Date of their passing');
+    const endDate = el.querySelector('civ-memorable-date[name="m.endDate"]');
+    expect(endDate?.getAttribute('legend')).toBe('Date of their passing');
   });
 });
 

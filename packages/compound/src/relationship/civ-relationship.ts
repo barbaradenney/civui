@@ -186,54 +186,50 @@ export class CivRelationship extends CivFormElement {
         </civ-form-field>
 
         ${category === 'spousal' ? html`
-          <civ-form-fieldset legend="${t('relationshipMarriageDateLegend')}" error="${this.marriageDateError}">
-            <civ-memorable-date
-              name="${prefix}.marriageDate"
-              value="${this._data.marriageDate}"
-              error="${this.marriageDateError}"
-              ?disabled="${this.disabled}"
-              @civ-input="${(e: CustomEvent) => this._onDateInput('marriageDate', e)}"
-              @civ-change="${(e: CustomEvent) => this._onDateChange('marriageDate', e)}"
-            ></civ-memorable-date>
-          </civ-form-fieldset>
+          <civ-memorable-date
+            legend="${t('relationshipMarriageDateLegend')}"
+            name="${prefix}.marriageDate"
+            value="${this._data.marriageDate}"
+            error="${this.marriageDateError}"
+            ?disabled="${this.disabled}"
+            @civ-input="${(e: CustomEvent) => this._onDateInput('marriageDate', e)}"
+            @civ-change="${(e: CustomEvent) => this._onDateChange('marriageDate', e)}"
+          ></civ-memorable-date>
 
           ${this.showDivorceDate ? html`
-            <civ-form-fieldset legend="${t('relationshipDivorceDateLegend')}" error="${this.divorceDateError}">
-              <civ-memorable-date
-                name="${prefix}.divorceDate"
-                value="${this._data.divorceDate}"
-                error="${this.divorceDateError}"
-                ?disabled="${this.disabled}"
-                @civ-input="${(e: CustomEvent) => this._onDateInput('divorceDate', e)}"
-                @civ-change="${(e: CustomEvent) => this._onDateChange('divorceDate', e)}"
-              ></civ-memorable-date>
-            </civ-form-fieldset>
+            <civ-memorable-date
+              legend="${t('relationshipDivorceDateLegend')}"
+              name="${prefix}.divorceDate"
+              value="${this._data.divorceDate}"
+              error="${this.divorceDateError}"
+              ?disabled="${this.disabled}"
+              @civ-input="${(e: CustomEvent) => this._onDateInput('divorceDate', e)}"
+              @civ-change="${(e: CustomEvent) => this._onDateChange('divorceDate', e)}"
+            ></civ-memorable-date>
           ` : nothing}
         ` : nothing}
 
         ${category === 'child' ? html`
-          <civ-form-fieldset legend="${t('relationshipDateOfBirthLegend')}" error="${this.dateOfBirthError}">
-            <civ-memorable-date
-              name="${prefix}.dateOfBirth"
-              value="${this._data.dateOfBirth}"
-              error="${this.dateOfBirthError}"
-              ?disabled="${this.disabled}"
-              @civ-input="${(e: CustomEvent) => this._onDateInput('dateOfBirth', e)}"
-              @civ-change="${(e: CustomEvent) => this._onDateChange('dateOfBirth', e)}"
-            ></civ-memorable-date>
-          </civ-form-fieldset>
+          <civ-memorable-date
+            legend="${t('relationshipDateOfBirthLegend')}"
+            name="${prefix}.dateOfBirth"
+            value="${this._data.dateOfBirth}"
+            error="${this.dateOfBirthError}"
+            ?disabled="${this.disabled}"
+            @civ-input="${(e: CustomEvent) => this._onDateInput('dateOfBirth', e)}"
+            @civ-change="${(e: CustomEvent) => this._onDateChange('dateOfBirth', e)}"
+          ></civ-memorable-date>
 
           ${this.showAdoptionDate ? html`
-            <civ-form-fieldset legend="${t('relationshipAdoptionDateLegend')}" error="${this.adoptionDateError}">
-              <civ-memorable-date
-                name="${prefix}.adoptionDate"
-                value="${this._data.adoptionDate}"
-                error="${this.adoptionDateError}"
-                ?disabled="${this.disabled}"
-                @civ-input="${(e: CustomEvent) => this._onDateInput('adoptionDate', e)}"
-                @civ-change="${(e: CustomEvent) => this._onDateChange('adoptionDate', e)}"
-              ></civ-memorable-date>
-            </civ-form-fieldset>
+            <civ-memorable-date
+              legend="${t('relationshipAdoptionDateLegend')}"
+              name="${prefix}.adoptionDate"
+              value="${this._data.adoptionDate}"
+              error="${this.adoptionDateError}"
+              ?disabled="${this.disabled}"
+              @civ-input="${(e: CustomEvent) => this._onDateInput('adoptionDate', e)}"
+              @civ-change="${(e: CustomEvent) => this._onDateChange('adoptionDate', e)}"
+            ></civ-memorable-date>
           ` : nothing}
         ` : nothing}
 
@@ -253,16 +249,15 @@ export class CivRelationship extends CivFormElement {
         ` : nothing}
 
         ${this.deceasedAssumed ? html`
-          <civ-form-fieldset legend="${t('relationshipDateOfDeathLegend')}" error="${this.dateOfDeathError}">
-            <civ-memorable-date
-              name="${prefix}.dateOfDeath"
-              value="${this._data.dateOfDeath}"
-              error="${this.dateOfDeathError}"
-              ?disabled="${this.disabled}"
-              @civ-input="${(e: CustomEvent) => this._onDateInput('dateOfDeath', e)}"
-              @civ-change="${(e: CustomEvent) => this._onDateChange('dateOfDeath', e)}"
-            ></civ-memorable-date>
-          </civ-form-fieldset>
+          <civ-memorable-date
+            legend="${t('relationshipDateOfDeathLegend')}"
+            name="${prefix}.dateOfDeath"
+            value="${this._data.dateOfDeath}"
+            error="${this.dateOfDeathError}"
+            ?disabled="${this.disabled}"
+            @civ-input="${(e: CustomEvent) => this._onDateInput('dateOfDeath', e)}"
+            @civ-change="${(e: CustomEvent) => this._onDateChange('dateOfDeath', e)}"
+          ></civ-memorable-date>
         ` : this.showDeceased ? html`
           <civ-yes-no
             label="${t('relationshipDeceasedLegend')}"
@@ -275,16 +270,15 @@ export class CivRelationship extends CivFormElement {
           ></civ-yes-no>
 
           ${this._data.deceased === 'yes' ? html`
-            <civ-form-fieldset legend="${t('relationshipDateOfDeathLegend')}" error="${this.dateOfDeathError}">
-              <civ-memorable-date
-                name="${prefix}.dateOfDeath"
-                value="${this._data.dateOfDeath}"
-                error="${this.dateOfDeathError}"
-                ?disabled="${this.disabled}"
-                @civ-input="${(e: CustomEvent) => this._onDateInput('dateOfDeath', e)}"
-                @civ-change="${(e: CustomEvent) => this._onDateChange('dateOfDeath', e)}"
-              ></civ-memorable-date>
-            </civ-form-fieldset>
+            <civ-memorable-date
+              legend="${t('relationshipDateOfDeathLegend')}"
+              name="${prefix}.dateOfDeath"
+              value="${this._data.dateOfDeath}"
+              error="${this.dateOfDeathError}"
+              ?disabled="${this.disabled}"
+              @civ-input="${(e: CustomEvent) => this._onDateInput('dateOfDeath', e)}"
+              @civ-change="${(e: CustomEvent) => this._onDateChange('dateOfDeath', e)}"
+            ></civ-memorable-date>
           ` : nothing}
         ` : nothing}
       </fieldset>

@@ -71,6 +71,11 @@ props:
       type: string
       default: 'Enter a valid date'
       description: 'Error message for invalid date combinations'
+    legend:
+      title: Legend
+      type: string
+      description: 'Fieldset legend rendered above the date sub-fields. The component is self-contained — do not wrap in civ-form-fieldset.'
+
 
 
 libraryOverrides:

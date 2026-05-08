@@ -1,6 +1,7 @@
-import { html } from 'lit';
+import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivFormElement, dispatch, getMonthNames, interpolate, parseISODate, t } from '@civui/core';
+import { CivFormElement, dispatch, getMonthNames, interpolate, parseISODate, renderFormHeader, renderLegend, buildDescribedBy, syncLegendToLabel, t } from '@civui/core';
+import type { HeadingLevel, LabelSize } from '@civui/core';
 
 // Import child components
 import '../select/civ-select.js';
@@ -9,13 +10,17 @@ import '../text-input/civ-text-input.js';
 /**
  * CivUI Memorable Date
  *
- * Three-field date input (month select + day + year text inputs)
- * wrapped in a fieldset. Composes civ-select and civ-text-input.
- * Outputs value in YYYY-MM-DD format.
+ * Self-contained three-field date input (month select + day + year
+ * text inputs) wrapped in a fieldset. Composes civ-select and
+ * civ-text-input. Outputs value in YYYY-MM-DD format.
+ *
+ * Renders its own legend / hint / error — do **not** wrap in
+ * `<civ-form-fieldset>` (you'd get nested fieldsets with double
+ * legends). Use the `legend` prop directly on the component.
  *
  * @element civ-memorable-date
  *
- * @prop {string} label - Group label text
+ * @prop {string} legend - Fieldset legend rendered above the fields
  * @prop {string} name - Base form field name (fields named {name}-month, {name}-day, {name}-year)
  * @prop {string} value - Date value in YYYY-MM-DD format
  * @prop {string} hint - Hint text
@@ -29,6 +34,23 @@ import '../text-input/civ-text-input.js';
  */
 @customElement('civ-memorable-date')
 export class CivMemorableDate extends CivFormElement {
+  /** Fieldset legend displayed above the date sub-fields. */
+  @property({ type: String }) legend = '';
+
+  /**
+   * Promote the legend to a heading via `role="heading"` + `aria-level=N`.
+   * Use sparingly — typically only when this date field is the primary
+   * question on a single-question page (level 1) or the top legend
+   * inside a form-step (level 2 or 3).
+   */
+  @property({ type: Number, attribute: 'heading-level' }) headingLevel?: HeadingLevel;
+
+  /**
+   * Visual size of the legend. Default and `sm` render at body size;
+   * `md`/`lg`/`xl` increase the size for use as a section/page heading.
+   */
+  @property({ type: String }) size?: LabelSize;
+
   @property({ type: String, attribute: 'month-label' }) monthLabel = '';
   @property({ type: String, attribute: 'day-label' }) dayLabel = '';
   @property({ type: String, attribute: 'year-label' }) yearLabel = '';
@@ -59,6 +81,11 @@ export class CivMemorableDate extends CivFormElement {
     super.disconnectedCallback();
     this.removeEventListener('civ-input', this._boundFieldInput as EventListener);
     this.removeEventListener('civ-change', this._boundFieldChange as EventListener);
+  }
+
+  protected override willUpdate(changed: Map<string, unknown>): void {
+    super.willUpdate(changed);
+    syncLegendToLabel(this, changed);
   }
 
   override updated(changed: Map<string, unknown>): void {
@@ -152,8 +179,27 @@ export class CivMemorableDate extends CivFormElement {
     const monthLabel = this.monthLabel || t('memorableDateMonthLabel');
     const dayLabel = this.dayLabel || t('memorableDateDayLabel');
     const yearLabel = this.yearLabel || t('memorableDateYearLabel');
+    const legend = this.legend || this.label;
+    const describedBy = buildDescribedBy(this._hintId, this.hint, this._errorId, this.error);
 
     return html`
+      <fieldset
+        class="civ-fieldset"
+        aria-describedby="${describedBy || nothing}"
+        aria-invalid="${this.error ? 'true' : nothing}"
+        aria-required="${this.required || nothing}"
+        ?disabled="${this.disabled}"
+      >
+        ${legend
+          ? renderFormHeader({
+              label: renderLegend({ legend, required: this.required, headingLevel: this.headingLevel, size: this.size }),
+              hintId: this._hintId,
+              hint: this.hint,
+              errorId: this._errorId,
+              error: this.error,
+              fieldset: true,
+            })
+          : nothing}
         <div class="civ-memorable-date-fields" data-civ-memorable-date>
           <div class="civ-memorable-date-month">
             <span class="civ-font-semibold civ-block civ-mb-1">${monthLabel}</span>
@@ -206,6 +252,7 @@ export class CivMemorableDate extends CivFormElement {
             ></civ-text-input>
           </div>
         </div>
+      </fieldset>
     `;
   }
 

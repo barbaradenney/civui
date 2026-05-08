@@ -151,6 +151,13 @@ export class CivRaceEthnicity extends CivFormElement {
 
   override render() {
     const describedBy = buildDescribedBy(this._hintId, this.hint, this._errorId, this.error);
+    // Force `auto` to resolve to `list` for both sub-groups so race
+    // (6 options) and ethnicity (3 options) share the same visual
+    // treatment. Without this, race auto-resolves to `list` (dense)
+    // and ethnicity auto-resolves to `card` (sparse) and the two
+    // sub-groups look like different components. Explicit `card` /
+    // `list` from the consumer is honored on both groups symmetrically.
+    const groupVariant = this.variant === 'auto' ? 'list' : this.variant;
 
     return html`
       <fieldset
@@ -167,7 +174,7 @@ export class CivRaceEthnicity extends CivFormElement {
             name="${this.name ? `${this.name}.race` : 'race'}"
             value="${this._data.race.join(',')}"
             error="${this.raceError}"
-            variant="${this.variant}"
+            variant="${groupVariant}"
             ?required="${this.required}"
             ?disabled="${this.disabled}"
             @civ-input="${this._onRaceInput}"
@@ -184,7 +191,7 @@ export class CivRaceEthnicity extends CivFormElement {
             name="${this.name ? `${this.name}.ethnicity` : 'ethnicity'}"
             value="${this._data.ethnicity}"
             error="${this.ethnicityError}"
-            variant="${this.variant}"
+            variant="${groupVariant}"
             ?required="${this.required}"
             ?disabled="${this.disabled}"
             @civ-change="${this._onEthnicityChange}"

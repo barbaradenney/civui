@@ -402,13 +402,21 @@ describe('civ-signature', () => {
   });
 
   describe('signed-at display', () => {
-    it('does not render the signed-at line before certification', async () => {
+    it('always renders the signed-at container so the layout does not shift on certify', async () => {
       const el = await fixture<CivSignature>('<civ-signature legend="Sign"></civ-signature>') as CivSignature;
       await elementUpdated(el);
-      expect(el.querySelector('.civ-signature-signed-at')).toBeNull();
+      const signedAt = el.querySelector('.civ-signature-signed-at') as HTMLElement;
+      expect(signedAt).not.toBeNull();
+      // Empty content before certification — the wrapper reserves height
+      // via min-height so the form layout stays stable.
+      expect(signedAt.textContent?.trim()).toBe('');
+      // The role/aria-live are present so screen readers announce the
+      // timestamp the moment it populates.
+      expect(signedAt.getAttribute('role')).toBe('status');
+      expect(signedAt.getAttribute('aria-live')).toBe('polite');
     });
 
-    it('renders a signed-at line once the user certifies', async () => {
+    it('populates the signed-at line once the user certifies', async () => {
       const el = await fixture<CivSignature>('<civ-signature legend="Sign"></civ-signature>') as CivSignature;
       await elementUpdated(el);
       const checkbox = el.querySelectorAll('input[type="checkbox"]')[0] as HTMLInputElement;
@@ -416,15 +424,11 @@ describe('civ-signature', () => {
       checkbox.dispatchEvent(new Event('change', { bubbles: true }));
       await elementUpdated(el);
       const signedAt = el.querySelector('.civ-signature-signed-at') as HTMLElement;
-      expect(signedAt).not.toBeNull();
       // The text starts with the localized "Signed " prefix.
       expect(signedAt.textContent?.toLowerCase()).toContain('signed');
-      // Polite announcement so screen readers pick it up when it appears.
-      expect(signedAt.getAttribute('role')).toBe('status');
-      expect(signedAt.getAttribute('aria-live')).toBe('polite');
     });
 
-    it('removes the signed-at line when the user unchecks certify', async () => {
+    it('clears the signed-at content when the user unchecks certify (container persists)', async () => {
       const el = await fixture<CivSignature>('<civ-signature legend="Sign"></civ-signature>') as CivSignature;
       await elementUpdated(el);
       const checkbox = el.querySelectorAll('input[type="checkbox"]')[0] as HTMLInputElement;
@@ -432,12 +436,16 @@ describe('civ-signature', () => {
       checkbox.checked = true;
       checkbox.dispatchEvent(new Event('change', { bubbles: true }));
       await elementUpdated(el);
-      expect(el.querySelector('.civ-signature-signed-at')).not.toBeNull();
+      let signedAt = el.querySelector('.civ-signature-signed-at') as HTMLElement;
+      expect(signedAt.textContent?.toLowerCase()).toContain('signed');
 
       checkbox.checked = false;
       checkbox.dispatchEvent(new Event('change', { bubbles: true }));
       await elementUpdated(el);
-      expect(el.querySelector('.civ-signature-signed-at')).toBeNull();
+      signedAt = el.querySelector('.civ-signature-signed-at') as HTMLElement;
+      // Container still rendered — content is cleared.
+      expect(signedAt).not.toBeNull();
+      expect(signedAt.textContent?.trim()).toBe('');
     });
   });
 });

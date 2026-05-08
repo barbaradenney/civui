@@ -237,11 +237,19 @@ export class CivSignature extends CivFormElement {
           <span class="civ-signature-preview__cursive">${this._signature.name.trim()}</span>
         </div>
 
-        ${this._signature.certified && this._signature.signedAt ? html`
-          <div class="civ-signature-signed-at civ-text-sm civ-mt-1" role="status" aria-live="polite">
-            ${interpolate(t('signatureSignedAt'), { date: this._formatSignedAt() })}
-          </div>
-        ` : nothing}
+        <!--
+          Persistent signed-at line. Always rendered with reserved height
+          so checking the certify box doesn't push subsequent content
+          (any error message, surrounding form layout). \`role="status"\` +
+          \`aria-live="polite"\` so screen readers announce the timestamp
+          when it fills in — they monitor the existing element for
+          content changes rather than detecting a freshly-appended node.
+        -->
+        <div class="civ-signature-signed-at civ-text-sm" role="status" aria-live="polite">
+          ${this._signature.certified && this._signature.signedAt
+            ? interpolate(t('signatureSignedAt'), { date: this._formatSignedAt() })
+            : nothing}
+        </div>
       </fieldset>
     `;
 

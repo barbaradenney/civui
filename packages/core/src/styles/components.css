@@ -2602,4 +2602,15 @@
     color: var(--civ-color-base-darkest);
     word-break: break-word;
   }
+
+  /* Reserve a single line of small text below the signature preview so
+     checking the certify box does not push the rest of the form. The
+     element is always rendered (with `aria-live="polite"` already in
+     place) so screen readers announce the timestamp the moment it
+     populates — they monitor the existing node for content changes
+     instead of detecting a freshly appended one. */
+  .civ-signature-signed-at {
+    min-height: calc(0.875rem * 1.5);
+    margin-top: var(--civ-spacing-1);
+  }
 }

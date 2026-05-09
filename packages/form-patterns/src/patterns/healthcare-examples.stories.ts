@@ -276,18 +276,16 @@ export const SymptomChecker: Story = {
   },
   render: () => html`
     <div style="max-width: 480px; display: grid; gap: 1rem;">
-      <civ-form-fieldset legend="What symptoms are you experiencing?" required hint="Select all that apply">
-        <civ-checkbox-group name="symptoms">
-          <civ-checkbox label="Headache" value="headache"></civ-checkbox>
-          <civ-checkbox label="Fever or chills" value="fever"></civ-checkbox>
-          <civ-checkbox label="Cough" value="cough"></civ-checkbox>
-          <civ-checkbox label="Shortness of breath" value="breathing"></civ-checkbox>
-          <civ-checkbox label="Fatigue" value="fatigue"></civ-checkbox>
-          <civ-checkbox label="Nausea or vomiting" value="nausea"></civ-checkbox>
-          <civ-checkbox label="Muscle or joint pain" value="pain"></civ-checkbox>
-          <civ-checkbox label="Dizziness" value="dizziness"></civ-checkbox>
-        </civ-checkbox-group>
-      </civ-form-fieldset>
+      <civ-checkbox-group legend="What symptoms are you experiencing?" required hint="Select all that apply" name="symptoms">
+        <civ-checkbox label="Headache" value="headache"></civ-checkbox>
+        <civ-checkbox label="Fever or chills" value="fever"></civ-checkbox>
+        <civ-checkbox label="Cough" value="cough"></civ-checkbox>
+        <civ-checkbox label="Shortness of breath" value="breathing"></civ-checkbox>
+        <civ-checkbox label="Fatigue" value="fatigue"></civ-checkbox>
+        <civ-checkbox label="Nausea or vomiting" value="nausea"></civ-checkbox>
+        <civ-checkbox label="Muscle or joint pain" value="pain"></civ-checkbox>
+        <civ-checkbox label="Dizziness" value="dizziness"></civ-checkbox>
+      </civ-checkbox-group>
 
       <civ-conditional when="symptoms" equals="fever">
         <civ-form-field label="What is your current temperature?" hint="For example: 101.2">

@@ -124,13 +124,11 @@ export const RadioGroup: Story = {
 export const CheckboxGroup: Story = {
   name: 'Fieldset: Checkbox Group',
   render: () => html`
-    <civ-form-fieldset legend="Benefits you are applying for" required>
-      <civ-checkbox-group name="benefits" required>
-        <civ-checkbox value="disability" label="Disability compensation"></civ-checkbox>
-        <civ-checkbox value="education" label="Education benefits"></civ-checkbox>
-        <civ-checkbox value="healthcare" label="VA healthcare"></civ-checkbox>
-      </civ-checkbox-group>
-    </civ-form-fieldset>
+    <civ-checkbox-group legend="Benefits you are applying for" required name="benefits">
+      <civ-checkbox value="disability" label="Disability compensation"></civ-checkbox>
+      <civ-checkbox value="education" label="Education benefits"></civ-checkbox>
+      <civ-checkbox value="healthcare" label="VA healthcare"></civ-checkbox>
+    </civ-checkbox-group>
   `,
 };
 

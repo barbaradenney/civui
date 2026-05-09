@@ -169,22 +169,24 @@ export class CivRaceEthnicity extends CivFormElement {
       >
         ${renderFormHeader({ label: renderLegend({ legend: this.legend || this.label, required: this.required, headingLevel: this.headingLevel, size: this.size }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
 
-        <civ-form-fieldset legend="${this.raceLegend || 'Race'}" hint="Select one or more" size="md" tight-hint>
-          <civ-checkbox-group
-            name="${this.name ? `${this.name}.race` : 'race'}"
-            value="${this._data.race.join(',')}"
-            error="${this.raceError}"
-            variant="${groupVariant}"
-            ?required="${this.required}"
-            ?disabled="${this.disabled}"
-            @civ-input="${this._onRaceInput}"
-            @civ-change="${this._onRaceChange}"
-          >
-            ${RACE_OPTIONS.map(
-              (opt) => html`<civ-checkbox value="${opt.value}" label="${opt.label}"></civ-checkbox>`,
-            )}
-          </civ-checkbox-group>
-        </civ-form-fieldset>
+        <civ-checkbox-group
+          legend="${this.raceLegend || 'Race'}"
+          hint="Select one or more"
+          size="md"
+          tight-hint
+          name="${this.name ? `${this.name}.race` : 'race'}"
+          value="${this._data.race.join(',')}"
+          error="${this.raceError}"
+          variant="${groupVariant}"
+          ?required="${this.required}"
+          ?disabled="${this.disabled}"
+          @civ-input="${this._onRaceInput}"
+          @civ-change="${this._onRaceChange}"
+        >
+          ${RACE_OPTIONS.map(
+            (opt) => html`<civ-checkbox value="${opt.value}" label="${opt.label}"></civ-checkbox>`,
+          )}
+        </civ-checkbox-group>
 
         <civ-radio-group
           legend="${this.ethnicityLegend || 'Ethnicity'}"

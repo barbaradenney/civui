@@ -206,7 +206,9 @@
   /* Pull the group hint flush with the controls when `tight-hint` is set on
      the wrapping civ-form-fieldset. Used by compact compounds (e.g. the OMB
      race group) where the legend + hint should read as one stacked header. */
-  civ-form-fieldset[tight-hint] .civ-fieldset > .civ-hint--group {
+  civ-form-fieldset[tight-hint] .civ-fieldset > .civ-hint--group,
+  civ-checkbox-group[tight-hint] .civ-fieldset > .civ-hint--group,
+  civ-radio-group[tight-hint] .civ-fieldset > .civ-hint--group {
     margin-bottom: 0;
   }
 

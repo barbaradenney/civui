@@ -1,16 +1,20 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivFormElement, LightDomSlotMixin, dispatch, syncGroupDisabled, stopChildEvent, syncLegendToLabel, t, interpolate, resolvePresetOptions } from '@civui/core';
-import type { SlotConfig, SelectPresetName } from '@civui/core';
+import { CivFormElement, LightDomSlotMixin, dispatch, syncGroupDisabled, stopChildEvent, syncLegendToLabel, t, interpolate, resolvePresetOptions, renderFormHeader, renderLegend, buildDescribedBy } from '@civui/core';
+import type { SlotConfig, SelectPresetName, HeadingLevel, LabelSize } from '@civui/core';
 import type { CivCheckbox } from './civ-checkbox.js';
 import './civ-checkbox.js';
 
 /**
  * CivUI Checkbox Group
  *
- * Groups multiple civ-checkbox elements with a shared legend,
- * hint, and error message using a native fieldset.
- * Uses ElementInternals for form participation.
+ * Self-contained group of civ-checkbox elements with a shared
+ * legend, hint, and error message using a native fieldset. Uses
+ * ElementInternals for form participation.
+ *
+ * Renders its own legend / hint / error — do **not** wrap in
+ * `<civ-form-fieldset>` (you'd get nested fieldsets with double
+ * legends). Use the `legend` prop directly on the component.
  *
  * @element civ-checkbox-group
  *
@@ -35,7 +39,31 @@ export class CivCheckboxGroup extends LightDomSlotMixin(CivFormElement) {
     return { default: '.civ-group-layout--vertical, .civ-group-layout--horizontal' };
   }
 
+  /** Fieldset legend displayed above the checkbox choices. */
   @property({ type: String }) legend = '';
+
+  /**
+   * Promote the legend to a heading via `role="heading"` + `aria-level=N`.
+   * Use sparingly — typically only when this checkbox group is the
+   * primary question on a single-question page (level 1) or the top
+   * legend inside a form-step (level 2 or 3).
+   */
+  @property({ type: Number, attribute: 'heading-level' }) headingLevel?: HeadingLevel;
+
+  /**
+   * Visual size of the legend. Default and `sm` render at body size;
+   * `md`/`lg`/`xl` increase the size for use as a section/page heading.
+   */
+  @property({ type: String }) size?: LabelSize;
+
+  /**
+   * Pull the hint visually flush with the controls below it by removing
+   * the default 16px gap under group hints. Useful for compact compounds
+   * (e.g. the OMB race group) where the legend + hint should read as one
+   * stacked header. Renders as `tight-hint` attribute for CSS targeting.
+   */
+  @property({ type: Boolean, attribute: 'tight-hint', reflect: true }) tightHint = false;
+
   @property({ type: Boolean, reflect: true }) tile = true;
   @property({ type: String, reflect: true }) orientation: 'vertical' | 'horizontal' = 'vertical';
   /**
@@ -202,16 +230,46 @@ export class CivCheckboxGroup extends LightDomSlotMixin(CivFormElement) {
       ? resolvePresetOptions(this.preset, this.presetVariant)
       : [];
 
+    // Self-contain only when the consumer set `legend` directly. If the
+    // component is wrapped in an external civ-form-fieldset, that wrapper
+    // cascades its own legend to our inherited `label` — but our `legend`
+    // stays empty. Gating on `this.legend` (NOT `this.label`) distinguishes
+    // "render my own fieldset" from "let the wrapper do it".
+    const selfContained = !!this.legend;
+    const describedBy = buildDescribedBy(this._hintId, this.hint, this._errorId, this.error);
+
+    const inner = html`
+      ${this.showSelectAll ? html`
+        <civ-action-button
+          variant="tertiary"
+          label="${this._allChecked ? t('deselectAll') : t('selectAll')}"
+          ?disabled="${this.disabled}"
+          @click="${this._onToggleAll}"
+          class="civ-mb-2"
+        ></civ-action-button>` : nothing}
+      <div class="${layoutClass}">${presetOptions.map(opt => html`<civ-checkbox value="${opt.value}" label="${opt.label}"></civ-checkbox>`)}</div>
+    `;
+
+    if (!selfContained) return inner;
+
     return html`
-        ${this.showSelectAll ? html`
-          <civ-action-button
-            variant="tertiary"
-            label="${this._allChecked ? t('deselectAll') : t('selectAll')}"
-            ?disabled="${this.disabled}"
-            @click="${this._onToggleAll}"
-            class="civ-mb-2"
-          ></civ-action-button>` : nothing}
-        <div class="${layoutClass}">${presetOptions.map(opt => html`<civ-checkbox value="${opt.value}" label="${opt.label}"></civ-checkbox>`)}</div>
+      <fieldset
+        class="civ-fieldset"
+        aria-describedby="${describedBy || nothing}"
+        aria-invalid="${this.error ? 'true' : nothing}"
+        aria-required="${this.required || nothing}"
+        ?disabled="${this.disabled}"
+      >
+        ${renderFormHeader({
+          label: renderLegend({ legend: this.legend, required: this.required, headingLevel: this.headingLevel, size: this.size }),
+          hintId: this._hintId,
+          hint: this.hint,
+          errorId: this._errorId,
+          error: this.error,
+          fieldset: true,
+        })}
+        ${inner}
+      </fieldset>
     `;
   }
 

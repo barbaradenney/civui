@@ -236,13 +236,11 @@ Groups multiple checkboxes. Uses \`legend\` (not \`label\`). Multi-value.
 
 **Example:**
 \`\`\`html
-<civ-form-fieldset legend="Select all that apply" required>
-  <civ-checkbox-group name="interests" required>
-    <civ-checkbox label="Education" value="education"></civ-checkbox>
-    <civ-checkbox label="Healthcare" value="healthcare"></civ-checkbox>
-    <civ-checkbox label="Transportation" value="transportation"></civ-checkbox>
-  </civ-checkbox-group>
-</civ-form-fieldset>
+<civ-checkbox-group legend="Select all that apply" required name="interests">
+  <civ-checkbox label="Education" value="education"></civ-checkbox>
+  <civ-checkbox label="Healthcare" value="healthcare"></civ-checkbox>
+  <civ-checkbox label="Transportation" value="transportation"></civ-checkbox>
+</civ-checkbox-group>
 
 <!-- Using a preset -->
 <civ-form-fieldset legend="Disability categories" required>

@@ -45,18 +45,17 @@ Generate a single CivUI component snippet for a **${fieldType}** field with labe
    - textarea → \`<civ-form-field>\` wrapping \`<civ-textarea>\`
    - select → \`<civ-form-field>\` wrapping \`<civ-select>\`
    - combobox → \`<civ-form-field>\` wrapping \`<civ-combobox>\`
-   - radio → \`<civ-form-fieldset>\` wrapping \`<civ-radio-group>\` with \`<civ-radio>\` children
+   - radio → \`<civ-radio-group legend="...">\` with \`<civ-radio>\` children (self-contained, no external wrapper)
    - checkbox → \`<civ-checkbox>\` (self-contained, no wrapper)
-   - checkbox-group → \`<civ-form-fieldset>\` wrapping \`<civ-checkbox-group>\` with \`<civ-checkbox>\` children
+   - checkbox-group → \`<civ-checkbox-group legend="...">\` with \`<civ-checkbox>\` children (self-contained, no external wrapper)
    - date → \`<civ-form-field>\` wrapping \`<civ-date-picker>\`
-   - memorable-date → \`<civ-form-fieldset>\` wrapping \`<civ-memorable-date>\`
+   - memorable-date → \`<civ-memorable-date legend="...">\` (self-contained, no external wrapper)
    - file → \`<civ-form-field>\` wrapping \`<civ-file-upload>\`
    - toggle → \`<civ-toggle>\` (self-contained, no wrapper)
 
 2. Wrap the component in the correct wrapper:
-   - Single-value inputs → \`<civ-form-field label="..." required>\`
-   - Group components (radio, checkbox-group, memorable-date) → \`<civ-form-fieldset legend="..." required>\`
-   - Self-contained (checkbox standalone, toggle) → no wrapper needed
+   - Single-value inputs (text, textarea, select, combobox, date-picker, file) → \`<civ-form-field label="..." required>\`
+   - Self-contained (radio-group, checkbox-group, memorable-date, checkbox, toggle, all compounds) → no wrapper needed; pass \`legend\` (or \`label\` for checkbox/toggle) directly
 
 3. Include these attributes:
    - On the **wrapper**: \`label\`/\`legend\`, \`hint\`, \`required\`, \`required-message\` with field-specific text

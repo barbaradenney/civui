@@ -11,8 +11,27 @@ const schema: ComponentSchema = {
   props: {
     legend: {
       type: 'string',
-      description: 'Group legend text (rendered as <legend>)',
+      description: 'Group legend text (rendered as <legend>). The component is self-contained — do not wrap in civ-form-fieldset.',
       default: '',
+    },
+    headingLevel: {
+      type: 'number',
+      description: 'When set, promotes the legend to a heading via role="heading" + aria-level=N',
+      attribute: 'heading-level',
+      webOnly: true,
+    },
+    size: {
+      type: 'enum',
+      description: 'Visual size of the legend',
+      values: ['sm', 'md', 'lg', 'xl'],
+      webOnly: true,
+    },
+    tightHint: {
+      type: 'boolean',
+      description: 'Pull the hint visually flush with the controls below it. Useful for compact compounds where legend + hint should read as one stacked header.',
+      default: false,
+      attribute: 'tight-hint',
+      webOnly: true,
     },
     tile: {
       type: 'boolean',

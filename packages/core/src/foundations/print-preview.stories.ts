@@ -137,14 +137,12 @@ export const SelectionControls: Story = {
       <civ-radio value="mail" label="US Mail"></civ-radio>
     </civ-radio-group>
 
-    <civ-form-fieldset legend="Benefits you are applying for">
-      <civ-checkbox-group name="benefits" value="disability,education">
-        <civ-checkbox value="disability" label="Disability compensation"></civ-checkbox>
-        <civ-checkbox value="education" label="Education benefits"></civ-checkbox>
-        <civ-checkbox value="healthcare" label="VA healthcare"></civ-checkbox>
-        <civ-checkbox value="housing" label="Housing assistance"></civ-checkbox>
-      </civ-checkbox-group>
-    </civ-form-fieldset>
+    <civ-checkbox-group legend="Benefits you are applying for" name="benefits" value="disability,education">
+      <civ-checkbox value="disability" label="Disability compensation"></civ-checkbox>
+      <civ-checkbox value="education" label="Education benefits"></civ-checkbox>
+      <civ-checkbox value="healthcare" label="VA healthcare"></civ-checkbox>
+      <civ-checkbox value="housing" label="Housing assistance"></civ-checkbox>
+    </civ-checkbox-group>
 
     <civ-form-fieldset legend="Are you a US citizen?">
       <civ-yes-no name="citizen" value="yes"></civ-yes-no>
@@ -224,13 +222,11 @@ export const CompleteForm: Story = {
       <civ-radio value="mail" label="US Mail"></civ-radio>
     </civ-radio-group>
 
-    <civ-form-fieldset legend="Benefits you are applying for" required>
-      <civ-checkbox-group name="benefits" value="disability,education" required>
-        <civ-checkbox value="disability" label="Disability compensation"></civ-checkbox>
-        <civ-checkbox value="education" label="Education benefits"></civ-checkbox>
-        <civ-checkbox value="healthcare" label="VA healthcare"></civ-checkbox>
-      </civ-checkbox-group>
-    </civ-form-fieldset>
+    <civ-checkbox-group legend="Benefits you are applying for" required name="benefits" value="disability,education">
+      <civ-checkbox value="disability" label="Disability compensation"></civ-checkbox>
+      <civ-checkbox value="education" label="Education benefits"></civ-checkbox>
+      <civ-checkbox value="healthcare" label="VA healthcare"></civ-checkbox>
+    </civ-checkbox-group>
 
     <civ-form-field label="Additional information" hint="Describe any supporting details for your application">
       <civ-textarea name="notes" rows="4" value="I am filing this claim based on service-connected injuries sustained during deployment in 2018. Medical records are available through the VA Medical Center in Richmond, VA."></civ-textarea>

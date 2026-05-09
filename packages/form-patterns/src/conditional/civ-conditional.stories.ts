@@ -188,14 +188,12 @@ export const CheckboxGroupConditional: Story = {
     },
   },
   render: () => html`
-    <civ-form-fieldset legend="Which benefits are you applying for?" hint="Select all that apply">
-      <civ-checkbox-group name="benefits">
-        <civ-checkbox label="Healthcare" value="health"></civ-checkbox>
-        <civ-checkbox label="Dental" value="dental"></civ-checkbox>
-        <civ-checkbox label="Vision" value="vision"></civ-checkbox>
-        <civ-checkbox label="Prescription drugs" value="rx"></civ-checkbox>
-      </civ-checkbox-group>
-    </civ-form-fieldset>
+    <civ-checkbox-group legend="Which benefits are you applying for?" hint="Select all that apply" name="benefits">
+      <civ-checkbox label="Healthcare" value="health"></civ-checkbox>
+      <civ-checkbox label="Dental" value="dental"></civ-checkbox>
+      <civ-checkbox label="Vision" value="vision"></civ-checkbox>
+      <civ-checkbox label="Prescription drugs" value="rx"></civ-checkbox>
+    </civ-checkbox-group>
     <civ-conditional when="benefits" equals="rx">
       <civ-form-field label="Preferred pharmacy" required>
         <civ-text-input name="pharmacy"></civ-text-input>

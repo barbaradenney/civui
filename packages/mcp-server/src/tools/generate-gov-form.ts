@@ -408,16 +408,16 @@ ${radioOptions}
 
     case 'checkbox-group': {
       const checkOptions = (field.options || [])
-        .map(o => `          <civ-checkbox label="${escapeHtml(o.label)}" value="${escapeHtml(o.value)}"></civ-checkbox>`)
+        .map(o => `        <civ-checkbox label="${escapeHtml(o.label)}" value="${escapeHtml(o.value)}"></civ-checkbox>`)
         .join('\n');
-      return `      <civ-form-fieldset legend="${escapeHtml(field.label)}" ${wrapperAttrs}>
-        <civ-checkbox-group
-          name="${escapeHtml(field.name)}"
-          ${field.required ? 'required' : ''}
-        >
+      return `      <civ-checkbox-group
+        legend="${escapeHtml(field.label)}"
+        name="${escapeHtml(field.name)}"
+        ${field.required ? 'required' : ''}
+        ${wrapperAttrs}
+      >
 ${checkOptions}
-        </civ-checkbox-group>
-      </civ-form-fieldset>`;
+      </civ-checkbox-group>`;
     }
 
     case 'memorable-date':

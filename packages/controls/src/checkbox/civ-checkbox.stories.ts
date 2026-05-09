@@ -142,66 +142,58 @@ export const DensityScale: Story = {
 
 export const Group: Story = {
   render: () => html`
-    <civ-form-fieldset legend="Notification preferences" hint="Select all that apply">
-      <civ-checkbox-group>
-        <civ-checkbox label="Email" name="notifications" value="email"></civ-checkbox>
-        <civ-checkbox label="Text message" name="notifications" value="sms"></civ-checkbox>
-        <civ-checkbox label="Push notifications" name="notifications" value="push"></civ-checkbox>
-      </civ-checkbox-group>
-    </civ-form-fieldset>
+    <civ-checkbox-group legend="Notification preferences" hint="Select all that apply">
+      <civ-checkbox label="Email" name="notifications" value="email"></civ-checkbox>
+      <civ-checkbox label="Text message" name="notifications" value="sms"></civ-checkbox>
+      <civ-checkbox label="Push notifications" name="notifications" value="push"></civ-checkbox>
+    </civ-checkbox-group>
   `,
 };
 
 export const GroupWithError: Story = {
   render: () => html`
-    <civ-form-fieldset legend="Notification preferences" error="Select at least one method" required>
-      <civ-checkbox-group required>
-        <civ-checkbox label="Email" name="notifications" value="email"></civ-checkbox>
-        <civ-checkbox label="Text message" name="notifications" value="sms"></civ-checkbox>
-        <civ-checkbox label="Push notifications" name="notifications" value="push"></civ-checkbox>
-      </civ-checkbox-group>
-    </civ-form-fieldset>
+    <civ-checkbox-group legend="Notification preferences" error="Select at least one method" required>
+      <civ-checkbox label="Email" name="notifications" value="email"></civ-checkbox>
+      <civ-checkbox label="Text message" name="notifications" value="sms"></civ-checkbox>
+      <civ-checkbox label="Push notifications" name="notifications" value="push"></civ-checkbox>
+    </civ-checkbox-group>
   `,
 };
 
 export const GroupTileVariant: Story = {
   render: () => html`
-    <civ-form-fieldset legend="Benefits you are applying for" hint="Select all that apply">
-      <civ-checkbox-group>
-        <civ-checkbox
-          label="Health care"
-          name="benefits"
-          value="health"
-          description="Medical, dental, and vision coverage"
-        ></civ-checkbox>
-        <civ-checkbox
-          label="Education"
-          name="benefits"
-          value="education"
-          description="GI Bill and tuition assistance"
-        ></civ-checkbox>
-        <civ-checkbox
-          label="Housing assistance"
-          name="benefits"
-          value="housing"
-          description="Home loan guaranty and housing grants"
-        ></civ-checkbox>
-      </civ-checkbox-group>
-    </civ-form-fieldset>
+    <civ-checkbox-group legend="Benefits you are applying for" hint="Select all that apply">
+      <civ-checkbox
+        label="Health care"
+        name="benefits"
+        value="health"
+        description="Medical, dental, and vision coverage"
+      ></civ-checkbox>
+      <civ-checkbox
+        label="Education"
+        name="benefits"
+        value="education"
+        description="GI Bill and tuition assistance"
+      ></civ-checkbox>
+      <civ-checkbox
+        label="Housing assistance"
+        name="benefits"
+        value="housing"
+        description="Home loan guaranty and housing grants"
+      ></civ-checkbox>
+    </civ-checkbox-group>
   `,
 };
 
 export const GroupHorizontal: Story = {
   render: () => html`
-    <civ-form-fieldset legend="Available days">
-      <civ-checkbox-group name="days" orientation="horizontal">
-        <civ-checkbox label="Mon" value="mon"></civ-checkbox>
-        <civ-checkbox label="Tue" value="tue"></civ-checkbox>
-        <civ-checkbox label="Wed" value="wed"></civ-checkbox>
-        <civ-checkbox label="Thu" value="thu"></civ-checkbox>
-        <civ-checkbox label="Fri" value="fri"></civ-checkbox>
-      </civ-checkbox-group>
-    </civ-form-fieldset>
+    <civ-checkbox-group legend="Available days" name="days" orientation="horizontal">
+      <civ-checkbox label="Mon" value="mon"></civ-checkbox>
+      <civ-checkbox label="Tue" value="tue"></civ-checkbox>
+      <civ-checkbox label="Wed" value="wed"></civ-checkbox>
+      <civ-checkbox label="Thu" value="thu"></civ-checkbox>
+      <civ-checkbox label="Fri" value="fri"></civ-checkbox>
+    </civ-checkbox-group>
   `,
 };
 
@@ -222,16 +214,14 @@ Only takes effect with \`tile\` (the default) and vertical orientation.
     },
   },
   render: () => html`
-    <civ-form-fieldset legend="Race" hint="Select one or more">
-      <civ-checkbox-group name="race" variant="list">
-        <civ-checkbox label="American Indian or Alaska Native" value="aian"></civ-checkbox>
-        <civ-checkbox label="Asian" value="asian"></civ-checkbox>
-        <civ-checkbox label="Black or African American" value="black"></civ-checkbox>
-        <civ-checkbox label="Native Hawaiian or Other Pacific Islander" value="nhpi"></civ-checkbox>
-        <civ-checkbox label="White" value="white"></civ-checkbox>
-        <civ-checkbox label="Prefer not to answer" value="skip"></civ-checkbox>
-      </civ-checkbox-group>
-    </civ-form-fieldset>
+    <civ-checkbox-group legend="Race" hint="Select one or more" name="race" variant="list">
+      <civ-checkbox label="American Indian or Alaska Native" value="aian"></civ-checkbox>
+      <civ-checkbox label="Asian" value="asian"></civ-checkbox>
+      <civ-checkbox label="Black or African American" value="black"></civ-checkbox>
+      <civ-checkbox label="Native Hawaiian or Other Pacific Islander" value="nhpi"></civ-checkbox>
+      <civ-checkbox label="White" value="white"></civ-checkbox>
+      <civ-checkbox label="Prefer not to answer" value="skip"></civ-checkbox>
+    </civ-checkbox-group>
   `,
 };
 
@@ -247,17 +237,11 @@ export const GovernmentCertificationForm: Story = {
         alert('Submitted: ' + JSON.stringify(Object.fromEntries(fd)));
       }}
     >
-      <civ-form-fieldset
-        legend="Certifications"
-        hint="You must agree to all statements below"
-        required
-      >
-        <civ-checkbox-group name="certifications" required>
-          <civ-checkbox label="I certify that all information provided is true and complete" value="truth"></civ-checkbox>
-          <civ-checkbox label="I understand that false statements may result in penalties" value="penalties"></civ-checkbox>
-          <civ-checkbox label="I agree to notify the agency of any changes to my information" value="notify"></civ-checkbox>
-        </civ-checkbox-group>
-      </civ-form-fieldset>
+      <civ-checkbox-group legend="Certifications" hint="You must agree to all statements below" required name="certifications">
+        <civ-checkbox label="I certify that all information provided is true and complete" value="truth"></civ-checkbox>
+        <civ-checkbox label="I understand that false statements may result in penalties" value="penalties"></civ-checkbox>
+        <civ-checkbox label="I agree to notify the agency of any changes to my information" value="notify"></civ-checkbox>
+      </civ-checkbox-group>
       <civ-button type="submit" class="civ-mt-4">Submit</civ-button>
     </form>
   `,
@@ -338,14 +322,12 @@ export const MinSelections: Story = {
     },
   },
   render: () => html`
-    <civ-form-fieldset legend="Preferred contact methods" hint="We'll use these to reach you about your application.">
-      <civ-checkbox-group name="contact" min-selections="2">
-        <civ-checkbox label="Email" value="email"></civ-checkbox>
-        <civ-checkbox label="Phone" value="phone"></civ-checkbox>
-        <civ-checkbox label="Postal mail" value="mail"></civ-checkbox>
-        <civ-checkbox label="Text message" value="sms"></civ-checkbox>
-      </civ-checkbox-group>
-    </civ-form-fieldset>
+    <civ-checkbox-group legend="Preferred contact methods" hint="We'll use these to reach you about your application." name="contact" min-selections="2">
+      <civ-checkbox label="Email" value="email"></civ-checkbox>
+      <civ-checkbox label="Phone" value="phone"></civ-checkbox>
+      <civ-checkbox label="Postal mail" value="mail"></civ-checkbox>
+      <civ-checkbox label="Text message" value="sms"></civ-checkbox>
+    </civ-checkbox-group>
   `,
 };
 
@@ -360,18 +342,12 @@ export const MinAndMaxSelections: Story = {
     },
   },
   render: () => html`
-    <civ-form-fieldset legend="Languages spoken">
-      <civ-checkbox-group
-        name="languages"
-        min-selections="1"
-        max-selections="3"
-      >
-        <civ-checkbox label="English" value="en"></civ-checkbox>
-        <civ-checkbox label="Spanish" value="es"></civ-checkbox>
-        <civ-checkbox label="Tagalog" value="tl"></civ-checkbox>
-        <civ-checkbox label="Vietnamese" value="vi"></civ-checkbox>
-        <civ-checkbox label="Chinese" value="zh"></civ-checkbox>
-      </civ-checkbox-group>
-    </civ-form-fieldset>
+    <civ-checkbox-group legend="Languages spoken" name="languages" min-selections="1" max-selections="3">
+      <civ-checkbox label="English" value="en"></civ-checkbox>
+      <civ-checkbox label="Spanish" value="es"></civ-checkbox>
+      <civ-checkbox label="Tagalog" value="tl"></civ-checkbox>
+      <civ-checkbox label="Vietnamese" value="vi"></civ-checkbox>
+      <civ-checkbox label="Chinese" value="zh"></civ-checkbox>
+    </civ-checkbox-group>
   `,
 };

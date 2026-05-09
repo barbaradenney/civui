@@ -42,7 +42,7 @@ function renderFieldHtml(
       // Standalone checkbox — self-contained, no wrapping
       return `<civ-checkbox label="${label}" name="${name}"${req}></civ-checkbox>`;
     case 'checkbox-group':
-      return `<civ-form-fieldset legend="${label}"${hint}${req}><civ-checkbox-group name="${name}"${req}></civ-checkbox-group></civ-form-fieldset>`;
+      return `<civ-checkbox-group legend="${label}"${hint}${req} name="${name}"></civ-checkbox-group>`;
     case 'date':
       return `<civ-form-field label="${label}"${hint}${req}><civ-date-picker name="${name}"${req}></civ-date-picker></civ-form-field>`;
     case 'memorable-date':
@@ -229,7 +229,7 @@ export function generateBilingualForm(
               htmlParts.push(`  <civ-radio-group legend="${inlineLabel}"${hint}${req} name="${name}"></civ-radio-group>`);
               break;
             case 'checkbox-group':
-              htmlParts.push(`  <civ-form-fieldset legend="${inlineLabel}"${hint}${req}><civ-checkbox-group name="${name}"${req}></civ-checkbox-group></civ-form-fieldset>`);
+              htmlParts.push(`  <civ-checkbox-group legend="${inlineLabel}"${hint}${req} name="${name}"></civ-checkbox-group>`);
               break;
             case 'memorable-date':
               htmlParts.push(`  <civ-memorable-date legend="${inlineLabel}"${hint}${req} name="${name}"></civ-memorable-date>`);

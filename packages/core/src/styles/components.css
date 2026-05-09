@@ -778,15 +778,17 @@
 
   /* Position the clear button absolutely inside the input wrapper so it
      overlays the input on the right edge instead of wrapping below it
-     when a date is set. Mirrors the combobox pattern. */
+     when a date is set. Sits flush against the input's right edge with
+     a small inset so the circular hover background doesn't clip the
+     border. Mirrors the combobox pattern. */
   [data-civ-date-picker-input] > .civ-close-btn {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    inset-inline-end: 0.5rem;
+    inset-inline-end: 0.25rem;
   }
   [data-civ-date-picker-input]:has(> .civ-close-btn) > input {
-    padding-inline-end: 2.5rem;
+    padding-inline-end: 2.25rem;
   }
 
   /* Date picker dialog extends the shared action sheet mobile pattern */

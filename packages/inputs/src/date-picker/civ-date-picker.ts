@@ -271,7 +271,7 @@ export class CivDatePicker extends CivFormElement {
     return html`
       <div class="civ-relative">
         <div class="civ-input-group">
-          <div class="civ-relative civ-flex-1">
+          <div class="civ-relative civ-flex-1" data-civ-date-picker-input>
             <input
               class="${classes}"
               id="${this._inputId}"

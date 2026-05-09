@@ -407,6 +407,15 @@ export interface CivLocaleStrings {
   prefillLoading: string;
   prefillError: string;
   prefillRetry: string;
+  prefillTimeout: string;          // "Request timed out"
+  prefillFailed: string;           // "Failed to load"
+  prefillUnsafeUrl: string;        // "Prefill source URL is not allowed"
+
+  // File upload error fallbacks
+  fileUploadUnknownError: string;  // "Unknown error"
+
+  // Address general-delivery hint
+  addressGeneralDeliveryHint: string;
 
   // Select presets — service branch
   presetServiceBranchArmy: string;
@@ -981,6 +990,13 @@ const defaultStrings: CivLocaleStrings = {
   prefillLoading: 'Loading your information\u2026',
   prefillError: 'We couldn\u2019t load your information.',
   prefillRetry: 'Try again',
+  prefillTimeout: 'Request timed out',
+  prefillFailed: 'Failed to load',
+  prefillUnsafeUrl: 'Prefill source URL is not allowed',
+
+  fileUploadUnknownError: 'Unknown error',
+
+  addressGeneralDeliveryHint: "Enter the city, state, and ZIP of the post office where you'll pick up mail. Use 'General Delivery' as the street address. Contact the post office first to confirm they offer General Delivery.",
 
   // Select presets — service branch
   presetServiceBranchArmy: 'Army',

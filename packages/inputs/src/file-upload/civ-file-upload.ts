@@ -261,7 +261,7 @@ export class CivFileUpload extends CivFormElement {
     } else if (status === 'success') {
       this.announce(interpolate(t('fileUploadSuccess'), { name: file.name }));
     } else if (status === 'error' && prevStatus !== 'error') {
-      this.announce(interpolate(t('fileUploadError'), { name: file.name, error: file.error || 'Unknown error' }));
+      this.announce(interpolate(t('fileUploadError'), { name: file.name, error: file.error || t('fileUploadUnknownError') }));
     }
   }
 

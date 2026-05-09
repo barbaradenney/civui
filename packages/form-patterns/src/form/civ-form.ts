@@ -628,6 +628,15 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
 
   private async _fetchPrefillData(): Promise<void> {
     if (!this.prefillSrc) return;
+    // Validate before fetching — rejects javascript:/data:/protocol-relative
+    // URLs the same way support-resource links are gated. Without this guard
+    // an attacker-controlled prefillSrc could exfiltrate the request headers
+    // (auth tokens, session cookies) to an arbitrary origin.
+    if (!this._isSafeHref(this.prefillSrc)) {
+      this._prefillError = t('prefillUnsafeUrl');
+      dispatch(this, 'civ-prefill-error', { error: this._prefillError });
+      return;
+    }
     this._prefillAbort?.abort();
     this._prefillAbort = new AbortController();
     const timeoutId = setTimeout(() => this._prefillAbort?.abort(), 15000);
@@ -645,9 +654,9 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
       this.prefillData = await res.json();
     } catch (err) {
       if ((err as Error).name === 'AbortError') {
-        this._prefillError = 'Request timed out';
+        this._prefillError = t('prefillTimeout');
       } else {
-        this._prefillError = err instanceof Error ? err.message : 'Failed to load';
+        this._prefillError = err instanceof Error ? err.message : t('prefillFailed');
       }
       dispatch(this, 'civ-prefill-error', { error: this._prefillError });
     } finally {

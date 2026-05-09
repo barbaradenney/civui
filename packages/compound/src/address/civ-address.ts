@@ -179,9 +179,7 @@ export class CivAddress extends LegendHeadingMixin(CivFormElement) {
 
     if (this.variant === 'contact') return this._renderContact(describedBy);
 
-    const generalDeliveryHint = this.variant === 'general-delivery'
-      ? "Enter the city, state, and ZIP of the post office where you'll pick up mail. Use 'General Delivery' as the street address. Contact the post office first to confirm they offer General Delivery."
-      : '';
+    const generalDeliveryHint = this.variant === 'general-delivery' ? t('addressGeneralDeliveryHint') : '';
 
     return html`
       <fieldset

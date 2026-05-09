@@ -1323,6 +1323,17 @@
     @apply civ-flex civ-items-stretch;
   }
 
+  /* Children of an input-group sit edge-to-edge (border-radius / border
+     stripped on the shared edge). When one of them is focused, the focus
+     ring's outer halo would otherwise be clipped by the neighbor. Lift
+     the focused child so the ring paints above its siblings. */
+  .civ-input-group > *:focus-within,
+  .civ-input-group > :focus,
+  .civ-input-group > *:has(:focus) {
+    position: relative;
+    z-index: 1;
+  }
+
   /* The input element inside the first child loses its right radius and border */
   .civ-input-group > :first-child .civ-input,
   .civ-input-group > :first-child input {

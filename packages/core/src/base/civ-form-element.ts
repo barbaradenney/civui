@@ -200,6 +200,38 @@ export class CivFormElement extends CivBaseElement {
   }
 
   /**
+   * Compound-component validity helper. Subclasses with multi-field state
+   * (civ-name, civ-address, civ-direct-deposit, civ-signature, etc.) call
+   * this from their `_updateValidity()` override with a local
+   * `_isComplete()` check. The helper:
+   *
+   *  - sets `valueMissing` when required && !complete, using
+   *    `requiredMessage` (or i18n fallback) interpolated with the legend /
+   *    label as the field name, and pointing at the first native input as
+   *    the validity anchor for the error summary;
+   *  - returns true when validity was already set (so the caller can skip
+   *    additional checks like customError);
+   *  - clears validity in the simple case so callers usually don't need
+   *    to call `_setValidity({})` themselves.
+   *
+   * Returns true if validity was set (including the cleared case), false
+   * if the caller still has more validity work to do.
+   */
+  protected _setRequiredCompoundValidity(complete: boolean): boolean {
+    if (this.required && !complete && !this.disabled && !this.readonly) {
+      const label = (this as any).legend || this.label || t('fieldFallbackLabel');
+      const anchor = this.querySelector('input, select, textarea') as HTMLElement | null;
+      this._setValidity(
+        { valueMissing: true },
+        this.error || interpolate(this.requiredMessage || t('fieldRequired'), { label }),
+        anchor ?? undefined,
+      );
+      return true;
+    }
+    return false;
+  }
+
+  /**
    * Wrapper around `_internals.setValidity()` that also stores the flags
    * and message locally so `checkValidity()` works without a full
    * ElementInternals implementation.

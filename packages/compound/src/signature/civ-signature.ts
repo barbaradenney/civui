@@ -315,15 +315,7 @@ export class CivSignature extends CivFormElement {
   protected override _updateValidity(): void {
     // A signature is complete when both the name is filled and the
     // certify checkbox is ticked (mirrors the public isComplete getter).
-    if (this.required && !this.isComplete) {
-      const label = this.legend || this.label || t('fieldFallbackLabel');
-      const anchor = this.querySelector('input, select, textarea') as HTMLElement | null;
-      this._setValidity(
-        { valueMissing: true },
-        this.error || interpolate(this.requiredMessage || t('fieldRequired'), { label }),
-        anchor ?? undefined,
-      );
-    } else {
+    if (!this._setRequiredCompoundValidity(this.isComplete)) {
       this._setValidity({});
     }
   }

@@ -314,16 +314,7 @@ export class CivDateRangePicker extends CivFormElement {
   }
 
   protected override _updateValidity(): void {
-    if (this.required && !this._isComplete()) {
-      const label = this.label || t('fieldFallbackLabel');
-      const anchor = this.querySelector('input') as HTMLElement | null;
-      this._setValidity(
-        { valueMissing: true },
-        this.error || interpolate(this.requiredMessage || t('fieldRequired'), { label }),
-        anchor ?? undefined,
-      );
-      return;
-    }
+    if (this._setRequiredCompoundValidity(this._isComplete())) return;
     if (this.error) {
       const anchor = this.querySelector('input') as HTMLElement | null;
       this._setValidity({ customError: true }, this.error, anchor ?? undefined);

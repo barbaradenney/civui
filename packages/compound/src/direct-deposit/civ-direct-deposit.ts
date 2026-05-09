@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivFormElement, dispatch, renderLegend, renderFormHeader, buildDescribedBy, interpolate, t } from '@civui/core';
+import { CivFormElement, dispatch, renderLegend, renderFormHeader, buildDescribedBy, t } from '@civui/core';
 import type { HeadingLevel, LabelSize } from '@civui/core';
 import '@civui/inputs';
 import '@civui/controls';
@@ -171,15 +171,7 @@ export class CivDirectDeposit extends CivFormElement {
   }
 
   protected override _updateValidity(): void {
-    if (this.required && !this._isComplete()) {
-      const label = this.legend || this.label || t('fieldFallbackLabel');
-      const anchor = this.querySelector('input, select, textarea') as HTMLElement | null;
-      this._setValidity(
-        { valueMissing: true },
-        this.error || interpolate(this.requiredMessage || t('fieldRequired'), { label }),
-        anchor ?? undefined,
-      );
-    } else {
+    if (!this._setRequiredCompoundValidity(this._isComplete())) {
       this._setValidity({});
     }
   }

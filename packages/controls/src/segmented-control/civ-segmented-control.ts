@@ -161,7 +161,7 @@ export class CivSegmentedControl extends LegendHeadingMixin(GroupListenerMixin(L
     });
   }
 
-  private _onChildChange(e: Event): void {
+  override _onChildChange(e: Event): void {
     const detail = (e as CustomEvent).detail;
     if (detail?.value == null) return;
 
@@ -181,7 +181,7 @@ export class CivSegmentedControl extends LegendHeadingMixin(GroupListenerMixin(L
     this.sendAnalytics('change');
   }
 
-  private _onKeydown(e: KeyboardEvent): void {
+  override _onKeydown(e: KeyboardEvent): void {
     const segments = this._getEnabledSegments();
     if (segments.length === 0) return;
 

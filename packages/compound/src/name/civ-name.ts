@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivFormElement, LegendHeadingMixin, dispatch, renderLegend, renderFormHeader, buildDescribedBy, t } from '@civui/core';
+import { CivFormElement, LegendHeadingMixin, renderLegend, renderFormHeader, buildDescribedBy, t } from '@civui/core';
 import { resolvePresetOptions } from '@civui/core';
 import '@civui/inputs';
 
@@ -40,10 +40,14 @@ export class CivName extends LegendHeadingMixin(CivFormElement) {
    */
   @property({ type: String }) legend = '';
 
-  // headingLevel + size inherited from LegendHeadingMixin.
-  // Note: civ-name traditionally renders the legend at `md` size (compound
-  // field reads as a section heading above sub-inputs). The render path
-  // applies that default below via `this.size ?? 'md'`.
+  /**
+   * Size defaults to `md` so the compound field reads as a section
+   * heading above its sub-inputs (overrides the mixin's `undefined`
+   * default). `sm` renders at body size; `lg`/`xl` step up further.
+   */
+  override size: import('@civui/core').LabelSize = 'md';
+
+  // headingLevel inherited from LegendHeadingMixin (default: undefined).
 
   /** Whether to show the middle name field. */
   @property({ type: Boolean, attribute: 'show-middle' }) showMiddle = true;
@@ -105,7 +109,7 @@ export class CivName extends LegendHeadingMixin(CivFormElement) {
         aria-required="${this.required || nothing}"
         ?disabled="${this.disabled}"
       >
-        ${renderFormHeader({ label: renderLegend({ legend: this.legend || this.label, required: false, headingLevel: this.headingLevel, size: this.size ?? 'md' }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
+        ${renderFormHeader({ label: renderLegend({ legend: this.legend || this.label, required: false, headingLevel: this.headingLevel, size: this.size }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
 
         <civ-form-field label="${firstLabel}" error="${this.firstError}" ?required="${this.required}">
           <civ-text-input

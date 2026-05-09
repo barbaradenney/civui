@@ -68,12 +68,15 @@ export class CivSignature extends LegendHeadingMixin(CivFormElement) {
   /** Fieldset legend. */
   @property({ type: String }) legend = '';
 
-  // headingLevel + size inherited from LegendHeadingMixin.
-  // Note: civ-signature renders the legend at `xl` size by default
-  // because signatures are typically the prominent end-of-form legal
-  // affirmation — paired with the default card framing, the large
-  // heading communicates the weight of the action. The render path
-  // applies that default below via `this.size ?? 'xl'`.
+  /**
+   * Size defaults to `xl` because signatures are typically the prominent
+   * end-of-form legal affirmation — paired with the default card framing,
+   * the large heading communicates the weight of the action. Override to
+   * `sm`/`md` for inline / dense placements.
+   */
+  override size: import('@civui/core').LabelSize = 'xl';
+
+  // headingLevel inherited from LegendHeadingMixin (default: undefined).
 
   /** Certification statement text displayed above the fields. Ignored when a `slot="statement"` child is present. */
   @property({ type: String }) statement = '';
@@ -176,7 +179,7 @@ export class CivSignature extends LegendHeadingMixin(CivFormElement) {
         aria-required="${this.required || nothing}"
         ?disabled="${this.disabled}"
       >
-        ${renderFormHeader({ label: renderLegend({ legend: this.legend || this.label, required: this.required, headingLevel: this.headingLevel, size: this.size ?? 'xl' }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
+        ${renderFormHeader({ label: renderLegend({ legend: this.legend || this.label, required: this.required, headingLevel: this.headingLevel, size: this.size }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
 
         ${this._hasStatement ? html`
           <div id="${this._statementId}" class="civ-mb-4">

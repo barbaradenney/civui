@@ -265,6 +265,20 @@ describe('civ-relationship form reset', () => {
     expect(el.nameError).toBe('');
     expect(el.relationshipError).toBe('');
   });
+
+  it('clears the top-level error on reset', async () => {
+    // Regression: the pre-extraction reset block in this component (and a
+    // few other compounds) silently skipped clearing `this.error`. The
+    // _resetCompound helper normalizes the behavior — top-level errors
+    // are now cleared on reset like every other compound.
+    const el = await fixture('<civ-relationship name="rel" error="Server validation failed"></civ-relationship>') as any;
+    expect(el.error).toBe('Server validation failed');
+
+    el.formResetCallback();
+    await elementUpdated(el);
+
+    expect(el.error).toBe('');
+  });
 });
 
 describe('civ-relationship category change error clearing', () => {

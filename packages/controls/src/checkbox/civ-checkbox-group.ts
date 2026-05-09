@@ -327,7 +327,7 @@ export class CivCheckboxGroup extends LegendHeadingMixin(GroupListenerMixin(Ligh
     this.updateFormValue(fd);
   }
 
-  private _onChildChange(e: Event): void {
+  override _onChildChange(e: Event): void {
     // Only handle events from child checkboxes, not re-dispatched group events
     if (e.target === this) return;
 

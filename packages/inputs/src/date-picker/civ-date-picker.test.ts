@@ -574,7 +574,18 @@ describe('civ-date-picker', () => {
       expect(el.value).toBe('');
     });
 
-    it('keeps invalid text in input', async () => {
+    it('strips non-digits and applies the slash mask while typing', async () => {
+      const el = await fixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
+
+      const input = el.querySelector('input') as HTMLInputElement;
+      input.value = '12121983';
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      await elementUpdated(el);
+
+      expect(el._inputValue).toBe('12/12/1983');
+    });
+
+    it('discards typed non-digits in invalid input', async () => {
       const el = await fixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
 
       const input = el.querySelector('input') as HTMLInputElement;
@@ -582,7 +593,8 @@ describe('civ-date-picker', () => {
       input.dispatchEvent(new Event('input', { bubbles: true }));
       await elementUpdated(el);
 
-      expect(el._inputValue).toBe('not a date');
+      // Mask strips letters; with no digits typed, value is empty
+      expect(el._inputValue).toBe('');
     });
   });
 

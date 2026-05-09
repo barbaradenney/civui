@@ -24,6 +24,7 @@ import {
   isRtl,
   clickOutside,
   inputClasses,
+  applyMask,
   t,
   type CalendarDay,
   type DateConstraints,
@@ -546,8 +547,20 @@ export class CivDatePicker extends CivFormElement {
 
   private _onTextInput(e: Event): void {
     const target = e.target as HTMLInputElement;
-    this._inputValue = target.value;
-    dispatch(this, 'civ-input', { value: target.value });
+    // Auto-format digits as the user types: 12121983 → 12/12/1983.
+    // Strip non-digits, apply the MM/DD/YYYY (or DD/MM/YYYY for non-US
+    // locales — the slot pattern is the same, only the parse meaning
+    // differs) slash mask. Skip for ISO-style locales that don't use
+    // slashes; the parser still accepts unmasked input as a fallback.
+    const useSlashMask = !this.locale.startsWith('iso');
+    const masked = useSlashMask
+      ? applyMask(target.value.replace(/\D/g, ''), '##/##/####')
+      : target.value;
+    if (masked !== target.value) {
+      target.value = masked;
+    }
+    this._inputValue = masked;
+    dispatch(this, 'civ-input', { value: masked });
   }
 
   private _onTextChange(e: Event): void {

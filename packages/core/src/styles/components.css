@@ -343,10 +343,13 @@
     color: var(--civ-color-base-dark);
   }
 
-  /* Shared close/clear/dismiss button — used across inputs, modals, alerts, chips */
+  /* Shared close/clear/dismiss button — used across inputs, modals, alerts,
+     chips. The button is square (1.5em × 1.5em) so `rounded-full` paints
+     the hover background as a perfect circle, which reads cleanly when
+     the button overlays an input or sits adjacent to other elements. */
   .civ-close-btn {
     @apply civ-inline-flex civ-items-center civ-justify-center
-           civ-bg-transparent civ-border-0 civ-cursor-pointer civ-rounded;
+           civ-bg-transparent civ-border-0 civ-cursor-pointer civ-rounded-full;
     color: var(--civ-color-base-dark);
     width: 1.5em;
     height: 1.5em;

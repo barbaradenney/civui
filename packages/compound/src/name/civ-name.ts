@@ -168,25 +168,18 @@ export class CivName extends LegendHeadingMixin(CivFormElement) {
 
   private _onSubInput(field: keyof NameValue, e: CustomEvent<{ value: string }>): void {
     e.stopPropagation();
-    this._name = { ...this._name, [field]: e.detail.value };
-    this.value = JSON.stringify(this._name);
-    dispatch(this, 'civ-input', { value: { ...this._name } });
+    this._name = this._patchStructured(this._name, { [field]: e.detail.value } as Partial<NameValue>);
   }
 
   private _onSubChange(field: keyof NameValue, e: CustomEvent<{ value: string }>): void {
     e.stopPropagation();
-    this._name = { ...this._name, [field]: e.detail.value };
-    this.value = JSON.stringify(this._name);
-    dispatch(this, 'civ-change', { value: { ...this._name } });
+    this._name = this._patchStructured(this._name, { [field]: e.detail.value } as Partial<NameValue>, ['change']);
   }
 
   /** Combined handler for select sub-fields (fires both civ-input and civ-change in one update). */
   private _onSubSelectChange(field: keyof NameValue, e: CustomEvent<{ value: string }>): void {
     e.stopPropagation();
-    this._name = { ...this._name, [field]: e.detail.value };
-    this.value = JSON.stringify(this._name);
-    dispatch(this, 'civ-input', { value: { ...this._name } });
-    dispatch(this, 'civ-change', { value: { ...this._name } });
+    this._name = this._patchStructured(this._name, { [field]: e.detail.value } as Partial<NameValue>, ['input', 'change']);
   }
 
   protected override _syncFormValue(): void {

@@ -128,16 +128,14 @@ export class CivDirectDeposit extends LegendHeadingMixin(CivFormElement) {
 
   private _onSubInput(field: keyof DirectDepositValue, e: CustomEvent<{ value: string }>): void {
     e.stopPropagation();
-    this._deposit = { ...this._deposit, [field]: e.detail.value };
-    this.value = JSON.stringify(this._deposit);
-    dispatch(this, 'civ-input', { value: { ...this._deposit } });
+
+    this._deposit = this._patchStructured(this._deposit, { [field]: e.detail.value } as Partial<DirectDepositValue>);
   }
 
   private _onSubChange(field: keyof DirectDepositValue, e: CustomEvent<{ value: string }>): void {
     e.stopPropagation();
-    this._deposit = { ...this._deposit, [field]: e.detail.value };
-    this.value = JSON.stringify(this._deposit);
-    dispatch(this, 'civ-change', { value: { ...this._deposit } });
+
+    this._deposit = this._patchStructured(this._deposit, { [field]: e.detail.value } as Partial<DirectDepositValue>, ['change']);
   }
 
   protected override _syncFormValue(): void {

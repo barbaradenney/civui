@@ -464,16 +464,14 @@ export class CivPartnershipHistory extends LegendHeadingMixin(CivFormElement) {
 
   private _onFieldInput(field: keyof MarriageValue, e: CustomEvent): void {
     e.stopPropagation();
-    this._marriage = { ...this._marriage, [field]: e.detail.value };
-    this.value = JSON.stringify(this._marriage);
-    dispatch(this, 'civ-input', { value: { ...this._marriage } });
+
+    this._marriage = this._patchStructured(this._marriage, { [field]: e.detail.value } as Partial<MarriageValue>);
   }
 
   private _onFieldChange(field: keyof MarriageValue, e: CustomEvent): void {
     e.stopPropagation();
-    this._marriage = { ...this._marriage, [field]: e.detail.value };
-    this.value = JSON.stringify(this._marriage);
-    dispatch(this, 'civ-change', { value: { ...this._marriage } });
+
+    this._marriage = this._patchStructured(this._marriage, { [field]: e.detail.value } as Partial<MarriageValue>, ['change']);
   }
 
   protected override _syncFormValue(): void {

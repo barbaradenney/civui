@@ -200,6 +200,41 @@ export class CivFormElement extends CivBaseElement {
   }
 
   /**
+   * Compound-component patch helper. Subclasses with structured (object)
+   * value state call this from their per-field input/change handlers to
+   * apply a single-field patch, JSON-serialize the new state into
+   * `this.value`, and dispatch the requested events.
+   *
+   * The caller is responsible for `e.stopPropagation()` on the source
+   * event before calling — the helper doesn't see the event.
+   *
+   * @returns the new state, ready to assign back to the caller's
+   *   internal `_<state>` field.
+   *
+   * @example
+   *   private _onFieldInput(field: keyof NameValue, e: CustomEvent): void {
+   *     e.stopPropagation();
+   *     this._name = this._patchStructured(this._name, { [field]: e.detail.value });
+   *   }
+   *   private _onFieldChange(field: keyof NameValue, e: CustomEvent): void {
+   *     e.stopPropagation();
+   *     this._name = this._patchStructured(this._name, { [field]: e.detail.value }, ['change']);
+   *   }
+   */
+  protected _patchStructured<T extends object>(
+    state: T,
+    patch: Partial<T>,
+    events: ReadonlyArray<'input' | 'change'> = ['input'],
+  ): T {
+    const next = { ...state, ...patch };
+    this.value = JSON.stringify(next);
+    for (const ev of events) {
+      dispatch(this, `civ-${ev}`, { value: { ...next } });
+    }
+    return next;
+  }
+
+  /**
    * Compound-component reset helper. Subclasses with multi-field state
    * call this from their `formResetCallback` after resetting their
    * internal `_<state>` field. Clears `value`, top-level `error`, and any

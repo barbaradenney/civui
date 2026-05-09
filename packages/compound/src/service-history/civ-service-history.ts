@@ -169,16 +169,14 @@ export class CivServiceHistory extends LegendHeadingMixin(CivFormElement) {
 
   private _onFieldInput(field: keyof ServicePeriodValue, e: CustomEvent): void {
     e.stopPropagation();
-    this._service = { ...this._service, [field]: e.detail.value };
-    this.value = JSON.stringify(this._service);
-    dispatch(this, 'civ-input', { value: { ...this._service } });
+
+    this._service = this._patchStructured(this._service, { [field]: e.detail.value } as Partial<ServicePeriodValue>);
   }
 
   private _onFieldChange(field: keyof ServicePeriodValue, e: CustomEvent): void {
     e.stopPropagation();
-    this._service = { ...this._service, [field]: e.detail.value };
-    this.value = JSON.stringify(this._service);
-    dispatch(this, 'civ-change', { value: { ...this._service } });
+
+    this._service = this._patchStructured(this._service, { [field]: e.detail.value } as Partial<ServicePeriodValue>, ['change']);
   }
 
   protected override _syncFormValue(): void {

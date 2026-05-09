@@ -478,16 +478,14 @@ export class CivAddress extends LegendHeadingMixin(CivFormElement) {
 
   private _onSubInput(field: keyof AddressValue, e: CustomEvent<{ value: string }>): void {
     e.stopPropagation();
-    this._address = { ...this._address, [field]: e.detail.value };
-    this.value = JSON.stringify(this._address);
-    dispatch(this, 'civ-input', { value: { ...this._address } });
+
+    this._address = this._patchStructured(this._address, { [field]: e.detail.value } as Partial<AddressValue>);
   }
 
   private _onSubChange(field: keyof AddressValue, e: CustomEvent<{ value: string }>): void {
     e.stopPropagation();
-    this._address = { ...this._address, [field]: e.detail.value };
-    this.value = JSON.stringify(this._address);
-    dispatch(this, 'civ-change', { value: { ...this._address } });
+
+    this._address = this._patchStructured(this._address, { [field]: e.detail.value } as Partial<AddressValue>, ['change']);
     // Sub-component already fires civ-analytics; don't duplicate
   }
 

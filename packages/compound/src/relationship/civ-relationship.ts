@@ -335,16 +335,14 @@ export class CivRelationship extends LegendHeadingMixin(CivFormElement) {
 
   private _onDateInput(field: keyof RelationshipValue, e: CustomEvent): void {
     e.stopPropagation();
-    this._data = { ...this._data, [field]: e.detail.value };
-    this.value = JSON.stringify(this._data);
-    dispatch(this, 'civ-input', { value: { ...this._data } });
+
+    this._data = this._patchStructured(this._data, { [field]: e.detail.value });
   }
 
   private _onDateChange(field: keyof RelationshipValue, e: CustomEvent): void {
     e.stopPropagation();
-    this._data = { ...this._data, [field]: e.detail.value };
-    this.value = JSON.stringify(this._data);
-    dispatch(this, 'civ-change', { value: { ...this._data } });
+
+    this._data = this._patchStructured(this._data, { [field]: e.detail.value }, ['change']);
   }
 
   private _onDeceasedChange(e: CustomEvent): void {

@@ -128,9 +128,13 @@ describe('civ-race-ethnicity', () => {
     );
     await elementUpdated(el);
 
-    const subLegends = Array.from(el.querySelectorAll('civ-form-fieldset legend')).map(
+    // The compound's outer legend is "Demographics"; sub-section legends
+    // appear inside civ-form-fieldset (Race / checkbox-group) and inside
+    // civ-radio-group's own self-contained fieldset (Ethnicity).
+    const allLegends = Array.from(el.querySelectorAll('legend')).map(
       (l) => l.textContent?.replace(/\(required\)/g, '').trim(),
     );
+    const subLegends = allLegends.filter((t) => t !== 'Demographics');
     expect(subLegends[0]).toBe('Race');
     expect(subLegends[1]).toBe('Ethnicity');
   });

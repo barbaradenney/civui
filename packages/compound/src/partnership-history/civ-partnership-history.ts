@@ -272,34 +272,29 @@ export class CivPartnershipHistory extends CivFormElement {
       this._typeCategory === 'none';
     return html`
       ${this.statusAssumed ? nothing : html`
-        <civ-form-fieldset
+        <civ-radio-group
           legend="${isMarriageStatusVocab ? t('marriageStatusLegend') : t('partnershipStatusLegend')}"
+          name="${prefix}.status"
+          value="${this._marriage.status}"
           error="${this.statusError}"
+          variant="list"
+          ?disabled="${this.disabled}"
           ?required="${this.required}"
+          data-marriage-status
+          @civ-input="${(e: CustomEvent) => e.stopPropagation()}"
+          @civ-change="${this._onStatusChange}"
         >
-          <civ-radio-group
-            name="${prefix}.status"
-            value="${this._marriage.status}"
-            error="${this.statusError}"
-            variant="list"
-            ?disabled="${this.disabled}"
-            ?required="${this.required}"
-            data-marriage-status
-            @civ-input="${(e: CustomEvent) => e.stopPropagation()}"
-            @civ-change="${this._onStatusChange}"
-          >
-            ${isMarriageStatusVocab ? html`
-              <civ-radio label="${t('marriageStatusCurrent')}" value="current"></civ-radio>
-              <civ-radio label="${t('marriageStatusDivorced')}" value="divorced"></civ-radio>
-              <civ-radio label="${t('marriageStatusWidowed')}" value="widowed"></civ-radio>
-              <civ-radio label="${t('marriageStatusAnnulled')}" value="annulled"></civ-radio>
-            ` : html`
-              <civ-radio label="${t('partnershipStatusOngoing')}" value="current"></civ-radio>
-              <civ-radio label="${t('partnershipStatusEnded')}" value="ended"></civ-radio>
-              <civ-radio label="${t('partnershipStatusPartnerDeceased')}" value="partner-deceased"></civ-radio>
-            `}
-          </civ-radio-group>
-        </civ-form-fieldset>
+          ${isMarriageStatusVocab ? html`
+            <civ-radio label="${t('marriageStatusCurrent')}" value="current"></civ-radio>
+            <civ-radio label="${t('marriageStatusDivorced')}" value="divorced"></civ-radio>
+            <civ-radio label="${t('marriageStatusWidowed')}" value="widowed"></civ-radio>
+            <civ-radio label="${t('marriageStatusAnnulled')}" value="annulled"></civ-radio>
+          ` : html`
+            <civ-radio label="${t('partnershipStatusOngoing')}" value="current"></civ-radio>
+            <civ-radio label="${t('partnershipStatusEnded')}" value="ended"></civ-radio>
+            <civ-radio label="${t('partnershipStatusPartnerDeceased')}" value="partner-deceased"></civ-radio>
+          `}
+        </civ-radio-group>
       `}
 
       ${this._marriage.status && this._marriage.status !== 'current' ? html`

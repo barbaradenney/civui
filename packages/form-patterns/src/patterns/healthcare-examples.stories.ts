@@ -209,13 +209,11 @@ export const AllergyList: Story = {
             <civ-form-field label="Allergen" required hint="Medication, food, or environmental allergen">
               <civ-text-input name="allergen"></civ-text-input>
             </civ-form-field>
-            <civ-form-fieldset legend="Severity" required>
-              <civ-radio-group name="severity">
-                <civ-radio label="Mild" value="mild" description="Rash, itching, or minor swelling"></civ-radio>
-                <civ-radio label="Moderate" value="moderate" description="Hives, significant swelling, or breathing difficulty"></civ-radio>
-                <civ-radio label="Severe" value="severe" description="Anaphylaxis or life-threatening reaction"></civ-radio>
-              </civ-radio-group>
-            </civ-form-fieldset>
+            <civ-radio-group legend="Severity" required name="severity">
+              <civ-radio label="Mild" value="mild" description="Rash, itching, or minor swelling"></civ-radio>
+              <civ-radio label="Moderate" value="moderate" description="Hives, significant swelling, or breathing difficulty"></civ-radio>
+              <civ-radio label="Severe" value="severe" description="Anaphylaxis or life-threatening reaction"></civ-radio>
+            </civ-radio-group>
             <civ-form-field label="Reaction" hint="Describe what happens when exposed">
               <civ-textarea name="reaction" rows="2"></civ-textarea>
             </civ-form-field>
@@ -301,13 +299,11 @@ export const SymptomChecker: Story = {
         <civ-alert variant="warning" slim>
           If you are having severe difficulty breathing, please call 911 or go to the nearest emergency room.
         </civ-alert>
-        <civ-form-fieldset legend="When does the shortness of breath occur?" required>
-          <civ-radio-group name="breathing_when">
-            <civ-radio label="At rest" value="rest"></civ-radio>
-            <civ-radio label="During light activity" value="light-activity"></civ-radio>
-            <civ-radio label="Only during exercise" value="exercise"></civ-radio>
-          </civ-radio-group>
-        </civ-form-fieldset>
+        <civ-radio-group legend="When does the shortness of breath occur?" required name="breathing_when">
+          <civ-radio label="At rest" value="rest"></civ-radio>
+          <civ-radio label="During light activity" value="light-activity"></civ-radio>
+          <civ-radio label="Only during exercise" value="exercise"></civ-radio>
+        </civ-radio-group>
       </civ-conditional>
 
       <civ-form-field label="How long have you had these symptoms?" required>
@@ -341,25 +337,23 @@ export const PharmacySelection: Story = {
   },
   render: () => html`
     <div style="max-width: 480px; display: grid; gap: 1.5rem;">
-      <civ-form-fieldset legend="Select your preferred pharmacy" required>
-        <civ-radio-group name="pharmacy">
-          <civ-radio
-            label="VA Medical Center Pharmacy"
-            value="va-pharmacy"
-            description="123 Veterans Blvd, Building 1 — Mon–Fri 8:00 AM – 5:00 PM"
-          ></civ-radio>
-          <civ-radio
-            label="VA Community Pharmacy — Eastside"
-            value="va-east"
-            description="456 Oak Street — Mon–Sat 9:00 AM – 7:00 PM"
-          ></civ-radio>
-          <civ-radio
-            label="VA Mail-Order Pharmacy"
-            value="va-mail"
-            description="Prescriptions mailed to your home — allow 7–10 business days"
-          ></civ-radio>
-        </civ-radio-group>
-      </civ-form-fieldset>
+      <civ-radio-group legend="Select your preferred pharmacy" required name="pharmacy">
+        <civ-radio
+          label="VA Medical Center Pharmacy"
+          value="va-pharmacy"
+          description="123 Veterans Blvd, Building 1 — Mon–Fri 8:00 AM – 5:00 PM"
+        ></civ-radio>
+        <civ-radio
+          label="VA Community Pharmacy — Eastside"
+          value="va-east"
+          description="456 Oak Street — Mon–Sat 9:00 AM – 7:00 PM"
+        ></civ-radio>
+        <civ-radio
+          label="VA Mail-Order Pharmacy"
+          value="va-mail"
+          description="Prescriptions mailed to your home — allow 7–10 business days"
+        ></civ-radio>
+      </civ-radio-group>
 
       <civ-divider></civ-divider>
 
@@ -417,13 +411,11 @@ export const MedicalHistoryScreening: Story = {
       </civ-form-fieldset>
       <civ-conditional when="diabetes" equals="yes">
         <div style="padding-left: 1.5rem; border-left: 4px solid var(--civ-color-primary); display: grid; gap: 1rem;">
-          <civ-form-fieldset legend="Type of diabetes" required>
-            <civ-radio-group name="diabetes_type">
-              <civ-radio label="Type 1" value="type1"></civ-radio>
-              <civ-radio label="Type 2" value="type2"></civ-radio>
-              <civ-radio label="Not sure" value="unsure"></civ-radio>
-            </civ-radio-group>
-          </civ-form-fieldset>
+          <civ-radio-group legend="Type of diabetes" required name="diabetes_type">
+            <civ-radio label="Type 1" value="type1"></civ-radio>
+            <civ-radio label="Type 2" value="type2"></civ-radio>
+            <civ-radio label="Not sure" value="unsure"></civ-radio>
+          </civ-radio-group>
           <civ-form-field label="Year diagnosed">
             <civ-text-input name="diabetes_year" type="number" inputmode="numeric"></civ-text-input>
           </civ-form-field>

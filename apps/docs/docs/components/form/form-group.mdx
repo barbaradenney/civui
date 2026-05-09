@@ -72,12 +72,10 @@ Both cascade `required` and `disabled` to the child control and wire ARIA attrib
 </civ-form-field>
 
 <!-- Group control -->
-<civ-form-fieldset legend="Preferred contact method" required>
-  <civ-radio-group name="contact" required>
-    <civ-radio value="email" label="Email"></civ-radio>
-    <civ-radio value="phone" label="Phone"></civ-radio>
-  </civ-radio-group>
-</civ-form-fieldset>
+<civ-radio-group legend="Preferred contact method" required name="contact">
+  <civ-radio value="email" label="Email"></civ-radio>
+  <civ-radio value="phone" label="Phone"></civ-radio>
+</civ-radio-group>
 ```
 
 ## Self-contained components
@@ -115,12 +113,10 @@ The `heading-level` prop adds `role="heading"` + `aria-level=N` to the rendered 
 ```html
 <h1 class="civ-heading-xl">Your contact information</h1>
 
-<civ-form-fieldset legend="Preferred contact method" heading-level="2" size="md" required>
-  <civ-radio-group name="contact">
-    <civ-radio value="email" label="Email"></civ-radio>
-    <civ-radio value="phone" label="Phone"></civ-radio>
-  </civ-radio-group>
-</civ-form-fieldset>
+<civ-radio-group legend="Preferred contact method" heading-level="2" size="md" required name="contact">
+  <civ-radio value="email" label="Email"></civ-radio>
+  <civ-radio value="phone" label="Phone"></civ-radio>
+</civ-radio-group>
 ```
 
 The same `heading-level` and `size` props are available on `<civ-fieldset>`, `<civ-repeater>`, and all compound components (`<civ-name>`, `<civ-address>`, `<civ-direct-deposit>`, `<civ-partnership-history>`, `<civ-race-ethnicity>`, `<civ-relationship>`, `<civ-service-history>`, `<civ-signature>`).

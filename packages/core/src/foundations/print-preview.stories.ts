@@ -131,13 +131,11 @@ export const SelectionControls: Story = {
   render: () => html`
     <h2 class="civ-text-lg civ-font-bold civ-mb-4">Selection Controls — Print Preview</h2>
 
-    <civ-form-fieldset legend="Preferred contact method" required>
-      <civ-radio-group name="contact" value="email" required>
-        <civ-radio value="email" label="Email"></civ-radio>
-        <civ-radio value="phone" label="Phone"></civ-radio>
-        <civ-radio value="mail" label="US Mail"></civ-radio>
-      </civ-radio-group>
-    </civ-form-fieldset>
+    <civ-radio-group legend="Preferred contact method" required name="contact" value="email">
+      <civ-radio value="email" label="Email"></civ-radio>
+      <civ-radio value="phone" label="Phone"></civ-radio>
+      <civ-radio value="mail" label="US Mail"></civ-radio>
+    </civ-radio-group>
 
     <civ-form-fieldset legend="Benefits you are applying for">
       <civ-checkbox-group name="benefits" value="disability,education">
@@ -220,13 +218,11 @@ export const CompleteForm: Story = {
       <civ-yes-no name="citizen" value="yes" required></civ-yes-no>
     </civ-form-fieldset>
 
-    <civ-form-fieldset legend="Preferred contact method" required>
-      <civ-radio-group name="contact" value="email" required>
-        <civ-radio value="email" label="Email"></civ-radio>
-        <civ-radio value="phone" label="Phone"></civ-radio>
-        <civ-radio value="mail" label="US Mail"></civ-radio>
-      </civ-radio-group>
-    </civ-form-fieldset>
+    <civ-radio-group legend="Preferred contact method" required name="contact" value="email">
+      <civ-radio value="email" label="Email"></civ-radio>
+      <civ-radio value="phone" label="Phone"></civ-radio>
+      <civ-radio value="mail" label="US Mail"></civ-radio>
+    </civ-radio-group>
 
     <civ-form-fieldset legend="Benefits you are applying for" required>
       <civ-checkbox-group name="benefits" value="disability,education" required>

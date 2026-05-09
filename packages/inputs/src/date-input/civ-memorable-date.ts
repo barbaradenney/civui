@@ -179,28 +179,16 @@ export class CivMemorableDate extends CivFormElement {
     const monthLabel = this.monthLabel || t('memorableDateMonthLabel');
     const dayLabel = this.dayLabel || t('memorableDateDayLabel');
     const yearLabel = this.yearLabel || t('memorableDateYearLabel');
-    const legend = this.legend || this.label;
+    // Self-contain only when the consumer set `legend` directly. If the
+    // component is wrapped in an external civ-form-fieldset, that wrapper
+    // cascades its own legend to our inherited `label` — but our `legend`
+    // stays empty. Gating on `this.legend` (NOT `this.label`) distinguishes
+    // "render my own fieldset" from "let the wrapper do it".
+    const selfContained = !!this.legend;
     const describedBy = buildDescribedBy(this._hintId, this.hint, this._errorId, this.error);
 
-    return html`
-      <fieldset
-        class="civ-fieldset"
-        aria-describedby="${describedBy || nothing}"
-        aria-invalid="${this.error ? 'true' : nothing}"
-        aria-required="${this.required || nothing}"
-        ?disabled="${this.disabled}"
-      >
-        ${legend
-          ? renderFormHeader({
-              label: renderLegend({ legend, required: this.required, headingLevel: this.headingLevel, size: this.size }),
-              hintId: this._hintId,
-              hint: this.hint,
-              errorId: this._errorId,
-              error: this.error,
-              fieldset: true,
-            })
-          : nothing}
-        <div class="civ-memorable-date-fields" data-civ-memorable-date>
+    const fields = html`
+      <div class="civ-memorable-date-fields" data-civ-memorable-date>
           <div class="civ-memorable-date-month">
             <span class="civ-font-semibold civ-block civ-mb-1">${monthLabel}</span>
             <civ-select
@@ -252,6 +240,27 @@ export class CivMemorableDate extends CivFormElement {
             ></civ-text-input>
           </div>
         </div>
+    `;
+
+    if (!selfContained) return fields;
+
+    return html`
+      <fieldset
+        class="civ-fieldset"
+        aria-describedby="${describedBy || nothing}"
+        aria-invalid="${this.error ? 'true' : nothing}"
+        aria-required="${this.required || nothing}"
+        ?disabled="${this.disabled}"
+      >
+        ${renderFormHeader({
+          label: renderLegend({ legend: this.legend, required: this.required, headingLevel: this.headingLevel, size: this.size }),
+          hintId: this._hintId,
+          hint: this.hint,
+          errorId: this._errorId,
+          error: this.error,
+          fieldset: true,
+        })}
+        ${fields}
       </fieldset>
     `;
   }

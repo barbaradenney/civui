@@ -37,7 +37,7 @@ function renderFieldHtml(
     case 'select':
       return `<civ-form-field label="${label}"${hint}${req}><civ-select name="${name}"${req}></civ-select></civ-form-field>`;
     case 'radio':
-      return `<civ-form-fieldset legend="${label}"${hint}${req}><civ-radio-group name="${name}"${req}></civ-radio-group></civ-form-fieldset>`;
+      return `<civ-radio-group legend="${label}"${hint}${req} name="${name}"></civ-radio-group>`;
     case 'checkbox':
       // Standalone checkbox — self-contained, no wrapping
       return `<civ-checkbox label="${label}" name="${name}"${req}></civ-checkbox>`;
@@ -226,7 +226,7 @@ export function generateBilingualForm(
           // Use wrapper with inline translation label
           switch (field.type) {
             case 'radio':
-              htmlParts.push(`  <civ-form-fieldset legend="${inlineLabel}"${hint}${req}><civ-radio-group name="${name}"${req}></civ-radio-group></civ-form-fieldset>`);
+              htmlParts.push(`  <civ-radio-group legend="${inlineLabel}"${hint}${req} name="${name}"></civ-radio-group>`);
               break;
             case 'checkbox-group':
               htmlParts.push(`  <civ-form-fieldset legend="${inlineLabel}"${hint}${req}><civ-checkbox-group name="${name}"${req}></civ-checkbox-group></civ-form-fieldset>`);

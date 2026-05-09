@@ -386,16 +386,16 @@ function renderField(field: FormField): string {
 
     case 'radio': {
       const radioOptions = (field.options || [])
-        .map(o => `          <civ-radio label="${escapeHtml(o.label)}" value="${escapeHtml(o.value)}"></civ-radio>`)
+        .map(o => `        <civ-radio label="${escapeHtml(o.label)}" value="${escapeHtml(o.value)}"></civ-radio>`)
         .join('\n');
-      return `      <civ-form-fieldset legend="${escapeHtml(field.label)}" ${wrapperAttrs}>
-        <civ-radio-group
-          name="${escapeHtml(field.name)}"
-          ${field.required ? 'required' : ''}
-        >
+      return `      <civ-radio-group
+        legend="${escapeHtml(field.label)}"
+        name="${escapeHtml(field.name)}"
+        ${field.required ? 'required' : ''}
+        ${wrapperAttrs}
+      >
 ${radioOptions}
-        </civ-radio-group>
-      </civ-form-fieldset>`;
+      </civ-radio-group>`;
     }
 
     case 'checkbox':

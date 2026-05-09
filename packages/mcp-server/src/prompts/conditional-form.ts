@@ -83,12 +83,10 @@ Call the \`generate_civui_form\` tool, then enhance the markup with:
 
 Example:
 \`\`\`html
-<civ-form-fieldset legend="Do you have a disability?">
-  <civ-radio-group name="has-disability">
-    <civ-radio label="Yes" value="yes"></civ-radio>
-    <civ-radio label="No" value="no"></civ-radio>
-  </civ-radio-group>
-</civ-form-fieldset>
+<civ-radio-group legend="Do you have a disability?" name="has-disability">
+  <civ-radio label="Yes" value="yes"></civ-radio>
+  <civ-radio label="No" value="no"></civ-radio>
+</civ-radio-group>
 
 <civ-fieldset legend="Disability details" data-civ-show-when="has-disability=yes">
   <civ-form-field label="Type of disability">

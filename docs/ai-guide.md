@@ -1553,12 +1553,10 @@ CivUI supports this through two opt-in props on `civ-form-field`, `civ-form-fiel
 ```html
 <h1 class="civ-heading-xl">Your contact information</h1>
 
-<civ-form-fieldset legend="Preferred contact method" heading-level="2" size="md" required>
-  <civ-radio-group name="contact">
-    <civ-radio value="email" label="Email"></civ-radio>
-    <civ-radio value="phone" label="Phone"></civ-radio>
-  </civ-radio-group>
-</civ-form-fieldset>
+<civ-radio-group legend="Preferred contact method" heading-level="2" size="md" required name="contact">
+  <civ-radio value="email" label="Email"></civ-radio>
+  <civ-radio value="phone" label="Phone"></civ-radio>
+</civ-radio-group>
 ```
 
 **Compound component as the page h1:**

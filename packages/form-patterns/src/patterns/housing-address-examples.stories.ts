@@ -57,13 +57,11 @@ export const Simple: Story = {
     </civ-conditional>
 
     <civ-conditional when="noPermanentAddress" equals="true">
-      <civ-form-fieldset legend="How would you like to receive mail?" size="lg">
-        <civ-radio-group name="mailMethod">
-          <civ-radio value="general-delivery" label="USPS General Delivery" description="Free service that holds mail at your local post office for up to 30 days. Just bring a photo ID to pick it up. Not available at all post offices. Contact your local post office to confirm availability."></civ-radio>
-          <civ-radio value="alternate-address" label="Someone else's address" description="A friend, family member, shelter, or organization that can receive mail for you"></civ-radio>
-          <civ-radio value="no-mail" label="I can't receive mail" description="We'll use other ways to contact you"></civ-radio>
-        </civ-radio-group>
-      </civ-form-fieldset>
+      <civ-radio-group legend="How would you like to receive mail?" size="lg" name="mailMethod">
+        <civ-radio value="general-delivery" label="USPS General Delivery" description="Free service that holds mail at your local post office for up to 30 days. Just bring a photo ID to pick it up. Not available at all post offices. Contact your local post office to confirm availability."></civ-radio>
+        <civ-radio value="alternate-address" label="Someone else's address" description="A friend, family member, shelter, or organization that can receive mail for you"></civ-radio>
+        <civ-radio value="no-mail" label="I can't receive mail" description="We'll use other ways to contact you"></civ-radio>
+      </civ-radio-group>
 
       <civ-conditional when="mailMethod" equals="general-delivery">
         <civ-address variant="general-delivery" size="lg" legend="General Delivery post office" name="address" required></civ-address>
@@ -105,13 +103,11 @@ export const WithSupportResources: Story = {
       </civ-conditional>
 
       <civ-conditional when="noPermanentAddress" equals="true">
-        <civ-form-fieldset legend="How would you like to receive mail?" size="lg">
-          <civ-radio-group name="mailMethod">
-            <civ-radio value="general-delivery" label="USPS General Delivery" description="Free service that holds mail at your local post office for up to 30 days. Just bring a photo ID to pick it up. Not available at all post offices. Contact your local post office to confirm availability."></civ-radio>
-            <civ-radio value="alternate-address" label="Someone else's address" description="A friend, family member, shelter, or organization"></civ-radio>
-            <civ-radio value="no-mail" label="I can't receive mail" description="We'll use other ways to contact you"></civ-radio>
-          </civ-radio-group>
-        </civ-form-fieldset>
+        <civ-radio-group legend="How would you like to receive mail?" size="lg" name="mailMethod">
+          <civ-radio value="general-delivery" label="USPS General Delivery" description="Free service that holds mail at your local post office for up to 30 days. Just bring a photo ID to pick it up. Not available at all post offices. Contact your local post office to confirm availability."></civ-radio>
+          <civ-radio value="alternate-address" label="Someone else's address" description="A friend, family member, shelter, or organization"></civ-radio>
+          <civ-radio value="no-mail" label="I can't receive mail" description="We'll use other ways to contact you"></civ-radio>
+        </civ-radio-group>
 
         <civ-conditional when="mailMethod" equals="general-delivery">
           <civ-address variant="general-delivery" size="lg" legend="General Delivery post office" name="address" required></civ-address>

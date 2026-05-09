@@ -48,12 +48,10 @@ export function generateEligibilityScreener(schema: FormSchema): EligibilityScre
 
     switch (q.type) {
       case 'yes-no':
-        htmlLines.push(`  <civ-form-fieldset legend="${escapedText}" required${hintAttr}>`);
-        htmlLines.push(`    <civ-radio-group name="${escapedId}" required>`);
-        htmlLines.push(`      <civ-radio value="yes" label="Yes"></civ-radio>`);
-        htmlLines.push(`      <civ-radio value="no" label="No"></civ-radio>`);
-        htmlLines.push(`    </civ-radio-group>`);
-        htmlLines.push(`  </civ-form-fieldset>`);
+        htmlLines.push(`  <civ-radio-group legend="${escapedText}" required${hintAttr} name="${escapedId}">`);
+        htmlLines.push(`    <civ-radio value="yes" label="Yes"></civ-radio>`);
+        htmlLines.push(`    <civ-radio value="no" label="No"></civ-radio>`);
+        htmlLines.push(`  </civ-radio-group>`);
         break;
 
       case 'select':

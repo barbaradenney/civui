@@ -71,18 +71,13 @@ export const SkipAffordanceYesNo: Story = {
 export const SkipAffordanceRadio: Story = {
   name: 'Skip Affordance (Radio Group)',
   render: () => html`
-    <civ-form-fieldset legend="What is your race?">
-      <civ-radio-group
-        name="race"
-        skip-label="Prefer not to answer"
-      >
-        <civ-radio label="American Indian or Alaska Native" value="aian"></civ-radio>
-        <civ-radio label="Asian" value="asian"></civ-radio>
-        <civ-radio label="Black or African American" value="black"></civ-radio>
-        <civ-radio label="Native Hawaiian or Pacific Islander" value="nhpi"></civ-radio>
-        <civ-radio label="White" value="white"></civ-radio>
-      </civ-radio-group>
-    </civ-form-fieldset>
+    <civ-radio-group legend="What is your race?" name="race" skip-label="Prefer not to answer">
+      <civ-radio label="American Indian or Alaska Native" value="aian"></civ-radio>
+      <civ-radio label="Asian" value="asian"></civ-radio>
+      <civ-radio label="Black or African American" value="black"></civ-radio>
+      <civ-radio label="Native Hawaiian or Pacific Islander" value="nhpi"></civ-radio>
+      <civ-radio label="White" value="white"></civ-radio>
+    </civ-radio-group>
   `,
 };
 

@@ -186,21 +186,21 @@ export class CivRaceEthnicity extends CivFormElement {
           </civ-checkbox-group>
         </civ-form-fieldset>
 
-        <civ-form-fieldset legend="${this.ethnicityLegend || 'Ethnicity'}" size="md">
-          <civ-radio-group
-            name="${this.name ? `${this.name}.ethnicity` : 'ethnicity'}"
-            value="${this._data.ethnicity}"
-            error="${this.ethnicityError}"
-            variant="${groupVariant}"
-            ?required="${this.required}"
-            ?disabled="${this.disabled}"
-            @civ-change="${this._onEthnicityChange}"
-          >
-            ${ETHNICITY_OPTIONS.map(
-              (opt) => html`<civ-radio value="${opt.value}" label="${opt.label}"></civ-radio>`,
-            )}
-          </civ-radio-group>
-        </civ-form-fieldset>
+        <civ-radio-group
+          legend="${this.ethnicityLegend || 'Ethnicity'}"
+          size="md"
+          name="${this.name ? `${this.name}.ethnicity` : 'ethnicity'}"
+          value="${this._data.ethnicity}"
+          error="${this.ethnicityError}"
+          variant="${groupVariant}"
+          ?required="${this.required}"
+          ?disabled="${this.disabled}"
+          @civ-change="${this._onEthnicityChange}"
+        >
+          ${ETHNICITY_OPTIONS.map(
+            (opt) => html`<civ-radio value="${opt.value}" label="${opt.label}"></civ-radio>`,
+          )}
+        </civ-radio-group>
       </fieldset>
     `;
   }

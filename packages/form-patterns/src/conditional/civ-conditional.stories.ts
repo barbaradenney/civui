@@ -214,13 +214,11 @@ export const RadioConditional: Story = {
     },
   },
   render: () => html`
-    <civ-form-fieldset legend="How would you like to be contacted?">
-      <civ-radio-group name="contactMethod">
-        <civ-radio label="Email" value="email"></civ-radio>
-        <civ-radio label="Phone" value="phone"></civ-radio>
-        <civ-radio label="Mail" value="mail"></civ-radio>
-      </civ-radio-group>
-    </civ-form-fieldset>
+    <civ-radio-group legend="How would you like to be contacted?" name="contactMethod">
+      <civ-radio label="Email" value="email"></civ-radio>
+      <civ-radio label="Phone" value="phone"></civ-radio>
+      <civ-radio label="Mail" value="mail"></civ-radio>
+    </civ-radio-group>
     <civ-conditional when="contactMethod" equals="phone">
       <civ-form-field label="Phone number" required>
         <civ-text-input name="phone" type="tel" mask="phone-us"></civ-text-input>

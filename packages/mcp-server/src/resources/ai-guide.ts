@@ -273,13 +273,11 @@ Mutually exclusive choice group. \`civ-radio\` is always used inside \`civ-radio
 
 **Example:**
 \`\`\`html
-<civ-form-fieldset legend="Preferred contact method" required>
-  <civ-radio-group name="contact" required>
-    <civ-radio label="Email" value="email"></civ-radio>
-    <civ-radio label="Phone" value="phone"></civ-radio>
-    <civ-radio label="Mail" value="mail" description="Physical mail to your address on file"></civ-radio>
-  </civ-radio-group>
-</civ-form-fieldset>
+<civ-radio-group legend="Preferred contact method" required name="contact">
+  <civ-radio label="Email" value="email"></civ-radio>
+  <civ-radio label="Phone" value="phone"></civ-radio>
+  <civ-radio label="Mail" value="mail" description="Physical mail to your address on file"></civ-radio>
+</civ-radio-group>
 
 <!-- Using a preset -->
 <civ-form-fieldset legend="Gender" required>
@@ -436,13 +434,11 @@ Wrapper for group components (radio groups, checkbox groups, memorable dates, se
 
 **Example:**
 \`\`\`html
-<civ-form-fieldset legend="Preferred contact method" required>
-  <civ-radio-group name="contact" required>
-    <civ-radio label="Email" value="email"></civ-radio>
-    <civ-radio label="Phone" value="phone"></civ-radio>
-    <civ-radio label="Mail" value="mail"></civ-radio>
-  </civ-radio-group>
-</civ-form-fieldset>
+<civ-radio-group legend="Preferred contact method" required name="contact">
+  <civ-radio label="Email" value="email"></civ-radio>
+  <civ-radio label="Phone" value="phone"></civ-radio>
+  <civ-radio label="Mail" value="mail"></civ-radio>
+</civ-radio-group>
 \`\`\`
 
 **Heading promotion:** Set \`heading-level="1"\` (and typically \`size="xl"\`) when the legend doubles as the page \`<h1>\`. See **Heading hierarchy** below.
@@ -1109,12 +1105,10 @@ CivUI exposes two opt-in props on \`civ-form-field\`, \`civ-form-fieldset\`, \`c
 \`\`\`html
 <h1 class="civ-heading-xl">Your contact information</h1>
 
-<civ-form-fieldset legend="Preferred contact method" heading-level="2" size="md" required>
-  <civ-radio-group name="contact">
-    <civ-radio value="email" label="Email"></civ-radio>
-    <civ-radio value="phone" label="Phone"></civ-radio>
-  </civ-radio-group>
-</civ-form-fieldset>
+<civ-radio-group legend="Preferred contact method" heading-level="2" size="md" required name="contact">
+  <civ-radio value="email" label="Email"></civ-radio>
+  <civ-radio value="phone" label="Phone"></civ-radio>
+</civ-radio-group>
 \`\`\`
 
 **Compound component as the page h1:**

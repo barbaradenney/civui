@@ -113,13 +113,11 @@ export const Disabled: Story = {
 export const RadioGroup: Story = {
   name: 'Fieldset: Radio Group',
   render: () => html`
-    <civ-form-fieldset legend="Preferred contact method" hint="We'll use this to reach you about your claim" required>
-      <civ-radio-group name="contact" required>
-        <civ-radio value="email" label="Email"></civ-radio>
-        <civ-radio value="phone" label="Phone"></civ-radio>
-        <civ-radio value="mail" label="US Mail"></civ-radio>
-      </civ-radio-group>
-    </civ-form-fieldset>
+    <civ-radio-group legend="Preferred contact method" hint="We'll use this to reach you about your claim" required name="contact">
+      <civ-radio value="email" label="Email"></civ-radio>
+      <civ-radio value="phone" label="Phone"></civ-radio>
+      <civ-radio value="mail" label="US Mail"></civ-radio>
+    </civ-radio-group>
   `,
 };
 
@@ -155,12 +153,10 @@ export const MemorableDate: Story = {
 export const FieldsetWithError: Story = {
   name: 'Fieldset: With Error',
   render: () => html`
-    <civ-form-fieldset legend="Preferred contact method" error="Select a contact method" required>
-      <civ-radio-group name="contact" required>
-        <civ-radio value="email" label="Email"></civ-radio>
-        <civ-radio value="phone" label="Phone"></civ-radio>
-      </civ-radio-group>
-    </civ-form-fieldset>
+    <civ-radio-group legend="Preferred contact method" error="Select a contact method" required name="contact">
+      <civ-radio value="email" label="Email"></civ-radio>
+      <civ-radio value="phone" label="Phone"></civ-radio>
+    </civ-radio-group>
   `,
 };
 
@@ -203,18 +199,11 @@ export const FieldsetAsSectionHeading: Story = {
     <div style="max-width: 480px;">
       <h1 class="civ-heading-xl">Your contact information</h1>
 
-      <civ-form-fieldset
-        legend="Preferred contact method"
-        heading-level="2"
-        size="md"
-        required
-      >
-        <civ-radio-group name="contact" required>
-          <civ-radio value="email" label="Email"></civ-radio>
-          <civ-radio value="phone" label="Phone"></civ-radio>
-          <civ-radio value="mail" label="Postal mail"></civ-radio>
-        </civ-radio-group>
-      </civ-form-fieldset>
+      <civ-radio-group legend="Preferred contact method" heading-level="2" size="md" required name="contact">
+        <civ-radio value="email" label="Email"></civ-radio>
+        <civ-radio value="phone" label="Phone"></civ-radio>
+        <civ-radio value="mail" label="Postal mail"></civ-radio>
+      </civ-radio-group>
     </div>
   `,
 };

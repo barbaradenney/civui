@@ -51,16 +51,14 @@ function renderFieldHtml(field: FormField): string {
       );
     case 'radio':
       return (
-        `    <civ-form-fieldset legend="${label}"${hintAttr}${required}>\n` +
-        `      <civ-radio-group name="${name}"${required}>\n` +
+        `    <civ-radio-group legend="${label}"${hintAttr}${required} name="${name}">\n` +
         (field.options || [])
           .map(
             (o) =>
-              `        <civ-radio value="${escapeHtml(o.value)}" label="${escapeHtml(o.label)}"></civ-radio>`,
+              `      <civ-radio value="${escapeHtml(o.value)}" label="${escapeHtml(o.label)}"></civ-radio>`,
           )
           .join('\n') +
-        `\n      </civ-radio-group>\n` +
-        `    </civ-form-fieldset>`
+        `\n    </civ-radio-group>`
       );
     case 'checkbox':
       // Standalone checkbox — self-contained, no wrapping

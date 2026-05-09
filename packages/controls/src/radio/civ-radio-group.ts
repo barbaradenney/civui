@@ -1,17 +1,21 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivFormElement, LightDomSlotMixin, dispatch, resolveGroupNavIndex, isRtl, syncGroupDisabled, stopChildEvent, syncLegendToLabel, resolvePresetOptions } from '@civui/core';
-import type { SlotConfig, SelectPresetName } from '@civui/core';
+import { CivFormElement, LightDomSlotMixin, dispatch, resolveGroupNavIndex, isRtl, syncGroupDisabled, stopChildEvent, syncLegendToLabel, resolvePresetOptions, renderFormHeader, renderLegend, buildDescribedBy } from '@civui/core';
+import type { SlotConfig, SelectPresetName, HeadingLevel, LabelSize } from '@civui/core';
 import type { CivRadio } from './civ-radio.js';
 import './civ-radio.js';
 
 /**
  * CivUI Radio Group
  *
- * Groups multiple civ-radio elements with mutual exclusivity,
+ * Self-contained group of civ-radio elements with mutual exclusivity,
  * a shared legend, hint, and error message using a native fieldset.
- * Uses ElementInternals for form participation.
- * Implements WAI-ARIA Radio Group pattern with roving tabindex.
+ * Uses ElementInternals for form participation. Implements WAI-ARIA
+ * Radio Group pattern with roving tabindex.
+ *
+ * Renders its own legend / hint / error — do **not** wrap in
+ * `<civ-form-fieldset>` (you'd get nested fieldsets with double
+ * legends). Use the `legend` prop directly on the component.
  *
  * @element civ-radio-group
  *
@@ -35,7 +39,22 @@ export class CivRadioGroup extends LightDomSlotMixin(CivFormElement) {
     return { default: '.civ-group-layout--vertical, .civ-group-layout--horizontal' };
   }
 
+  /** Fieldset legend displayed above the radio choices. */
   @property({ type: String }) legend = '';
+
+  /**
+   * Promote the legend to a heading via `role="heading"` + `aria-level=N`.
+   * Use sparingly — typically only when this radio group is the primary
+   * question on a single-question page (level 1) or the top legend
+   * inside a form-step (level 2 or 3).
+   */
+  @property({ type: Number, attribute: 'heading-level' }) headingLevel?: HeadingLevel;
+
+  /**
+   * Visual size of the legend. Default and `sm` render at body size;
+   * `md`/`lg`/`xl` increase the size for use as a section/page heading.
+   */
+  @property({ type: String }) size?: LabelSize;
   @property({ type: Boolean, reflect: true }) tile = true;
   @property({ type: String, reflect: true }) orientation: 'vertical' | 'horizontal' = 'vertical';
   /**
@@ -184,28 +203,55 @@ export class CivRadioGroup extends LightDomSlotMixin(CivFormElement) {
       ? resolvePresetOptions(this.preset, this.presetVariant)
       : [];
 
+    // Self-contain only when the consumer set `legend` directly. If the
+    // component is wrapped in an external civ-form-fieldset, that wrapper
+    // cascades its own legend to our inherited `label` prop — but our
+    // `legend` stays empty. So gating on `this.legend` (NOT `this.label`)
+    // distinguishes "render my own fieldset" from "let the wrapper do it".
+    const selfContained = !!this.legend;
+    const describedBy = buildDescribedBy(this._hintId, this.hint, this._errorId, this.error);
+
+    const inner = html`
+      <div
+        class="${layoutClass}"
+        role="radiogroup"
+        aria-labelledby="${selfContained ? this._legendId : nothing}"
+        aria-orientation="${this.orientation}"
+        aria-describedby="${describedBy || nothing}"
+        aria-invalid="${this.error ? 'true' : nothing}"
+        aria-required="${this.required || nothing}"
+      >${presetOptions.map(opt => html`<civ-radio value="${opt.value}" label="${opt.label}"></civ-radio>`)}</div>
+      ${this.skipLabel
+        ? html`
+            <button
+              type="button"
+              class="civ-radio-group__skip civ-btn--link"
+              aria-pressed="${this.value === this.skipValue ? 'true' : 'false'}"
+              data-civ-skip
+              ?disabled="${this.disabled}"
+              @click="${this._onSkipClick}"
+            >${this.skipLabel}</button>
+          `
+        : nothing}
+    `;
+
+    if (!selfContained) return inner;
+
     return html`
-        <div
-          class="${layoutClass}"
-          role="radiogroup"
-          aria-labelledby="${this.legend ? this._legendId : nothing}"
-          aria-orientation="${this.orientation}"
-          aria-describedby="${this._ariaDescribedBy || nothing}"
-          aria-invalid="${this.error ? 'true' : nothing}"
-          aria-required="${this.required || nothing}"
-        >${presetOptions.map(opt => html`<civ-radio value="${opt.value}" label="${opt.label}"></civ-radio>`)}</div>
-        ${this.skipLabel
-          ? html`
-              <button
-                type="button"
-                class="civ-radio-group__skip civ-btn--link"
-                aria-pressed="${this.value === this.skipValue ? 'true' : 'false'}"
-                data-civ-skip
-                ?disabled="${this.disabled}"
-                @click="${this._onSkipClick}"
-              >${this.skipLabel}</button>
-            `
-          : nothing}
+      <fieldset
+        class="civ-fieldset"
+        ?disabled="${this.disabled}"
+      >
+        ${renderFormHeader({
+          label: renderLegend({ legend: this.legend, required: this.required, legendId: this._legendId, headingLevel: this.headingLevel, size: this.size }),
+          hintId: this._hintId,
+          hint: this.hint,
+          errorId: this._errorId,
+          error: this.error,
+          fieldset: true,
+        })}
+        ${inner}
+      </fieldset>
     `;
   }
 

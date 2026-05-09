@@ -138,11 +138,9 @@ export const ListItem: Story = {
 export const HorizontalRadioGroup: Story = {
   name: 'Horizontal Radio Group',
   render: () => html`
-    <civ-form-fieldset legend="Preferred language">
-      <civ-radio-group orientation="horizontal">
-        <civ-radio label="English" value="en"></civ-radio>
-        <civ-radio label="Spanish" value="es"></civ-radio>
-      </civ-radio-group>
-    </civ-form-fieldset>
+    <civ-radio-group legend="Preferred language" orientation="horizontal">
+      <civ-radio label="English" value="en"></civ-radio>
+      <civ-radio label="Spanish" value="es"></civ-radio>
+    </civ-radio-group>
   `,
 };

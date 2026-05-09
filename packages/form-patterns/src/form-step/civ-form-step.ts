@@ -48,9 +48,7 @@ import '../progress/civ-progress-header.js';
  *     <civ-name legend="Your name" name="fullName" required></civ-name>
  *   </div>
  *   <div data-step-label="Date of birth">
- *     <civ-form-fieldset legend="Date of birth" required>
- *       <civ-memorable-date name="dob"></civ-memorable-date>
- *     </civ-form-fieldset>
+ *     <civ-memorable-date legend="Date of birth" name="dob" required></civ-memorable-date>
  *   </div>
  * </civ-form-step>
  * ```

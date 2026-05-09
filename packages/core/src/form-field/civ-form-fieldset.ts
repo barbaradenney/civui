@@ -12,15 +12,19 @@ const CIV_CONTROL_SELECTOR = '[data-civ-form-field]';
  * CivUI FormFieldset
  *
  * Wrapper that provides fieldset + legend + hint + error rendering for
- * group controls (radio-group, checkbox-group, segmented-control, etc.).
+ * Use this for genuine multi-field grouping — putting one section
+ * heading over several controls (e.g. an address with street/city/state).
  * Cascades `required` / `disabled` to the child CivUI component.
  *
+ * The six self-contained group components (radio-group, checkbox-group,
+ * segmented-control, yes-no, memorable-date, date-range-picker) render
+ * their own legend / hint / error from a `legend` prop and should NOT
+ * be wrapped in this — pass `legend` directly on the component.
+ *
  * ```html
- * <civ-form-fieldset legend="Preferred contact method" required>
- *   <civ-radio-group name="contact">
- *     <civ-radio value="email" label="Email"></civ-radio>
- *     <civ-radio value="phone" label="Phone"></civ-radio>
- *   </civ-radio-group>
+ * <civ-form-fieldset legend="Mailing address" required>
+ *   <civ-form-field label="Street"><civ-text-input name="street" required></civ-text-input></civ-form-field>
+ *   <civ-form-field label="City"><civ-text-input name="city" required></civ-text-input></civ-form-field>
  * </civ-form-fieldset>
  * ```
  *

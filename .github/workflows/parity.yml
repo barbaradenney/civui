@@ -107,6 +107,29 @@ jobs:
       - name: Run validateAll over every schema
         run: pnpm validate:schemas
 
+  fieldset-wrappers:
+    name: Self-contained group components (no external civ-form-fieldset)
+    runs-on: ubuntu-latest
+    # Six group components (memorable-date, radio-group, checkbox-group,
+    # yes-no, segmented-control, date-range-picker) render their own
+    # legend / hint / error from a `legend` prop. Wrapping them in
+    # civ-form-fieldset produces nested fieldsets with double legends
+    # and breaks slot relocation. This audit-only check fails the build
+    # if any consumer / doc / generator code reintroduces the legacy
+    # wrapping pattern.
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Audit for external civ-form-fieldset wrapping self-contained group components
+        run: pnpm lint:fieldsets
+
   tool-tests:
     name: Tooling unit tests (parity / sync helpers)
     runs-on: ubuntu-latest

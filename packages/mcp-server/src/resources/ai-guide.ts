@@ -243,9 +243,7 @@ Groups multiple checkboxes. Uses \`legend\` (not \`label\`). Multi-value.
 </civ-checkbox-group>
 
 <!-- Using a preset -->
-<civ-form-fieldset legend="Disability categories" required>
-  <civ-checkbox-group name="disabilities" preset="disability-type" required></civ-checkbox-group>
-</civ-form-fieldset>
+<civ-checkbox-group legend="Disability categories" name="disabilities" preset="disability-type" required></civ-checkbox-group>
 \`\`\`
 
 > Note: Individual checkbox values must not contain commas (used internally as delimiter).
@@ -278,9 +276,7 @@ Mutually exclusive choice group. \`civ-radio\` is always used inside \`civ-radio
 </civ-radio-group>
 
 <!-- Using a preset -->
-<civ-form-fieldset legend="Gender" required>
-  <civ-radio-group name="gender" preset="gender" required></civ-radio-group>
-</civ-form-fieldset>
+<civ-radio-group legend="Gender" name="gender" preset="gender" required></civ-radio-group>
 \`\`\`
 
 ---

@@ -24,6 +24,7 @@
     "parity": "node --experimental-strip-types tools/parity-report.ts && open tools/parity-report.html",
     "parity:schema": "tsx tools/schema-parity.ts",
     "validate:schemas": "tsx tools/validate-schemas.ts",
+    "lint:fieldsets": "tsx tools/lint-fieldset-wrappers.ts",
     "storybook:contract": "tsx tools/generate-contract-docs.ts",
     "scaffold:component": "tsx tools/scaffold-component.ts",
     "test:tools": "vitest run --config tools/vitest.config.ts",
@@ -32,7 +33,7 @@
     "sync:drupal:twig": "tsx tools/sync-drupal-twig.ts",
     "consistency": "node --experimental-strip-types tools/consistency-check.ts",
     "build:cdn": "node scripts/build-cdn.js",
-    "validate": "pnpm lint && pnpm typecheck && pnpm test && pnpm parity:schema --platforms && pnpm validate:schemas && pnpm test:tools"
+    "validate": "pnpm lint && pnpm typecheck && pnpm test && pnpm parity:schema --platforms && pnpm validate:schemas && pnpm lint:fieldsets && pnpm test:tools"
   },
   "devDependencies": {
     "@storybook/addon-a11y": "8.6.17",

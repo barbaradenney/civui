@@ -9,6 +9,23 @@ const schema: ComponentSchema = {
   isGroup: false,
 
   props: {
+    legend: {
+      type: 'string',
+      description: 'Group legend rendered as <legend>. The component is self-contained — do not wrap in civ-form-fieldset.',
+      default: '',
+    },
+    headingLevel: {
+      type: 'number',
+      description: 'When set, promotes the legend to a heading via role="heading" + aria-level=N',
+      attribute: 'heading-level',
+      webOnly: true,
+    },
+    size: {
+      type: 'enum',
+      description: 'Visual size of the legend',
+      values: ['sm', 'md', 'lg', 'xl'],
+      webOnly: true,
+    },
     min: {
       type: 'string',
       description: 'Outer lower bound for both pickers (ISO yyyy-mm-dd). Empty disables the bound',

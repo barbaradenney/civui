@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 
 @Composable
 fun CivDateRangePicker(
+    legend: String = "",
     min: String = "",
     max: String = "",
     minRangeDays: Int = 0,

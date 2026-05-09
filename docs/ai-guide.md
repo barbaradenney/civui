@@ -476,7 +476,7 @@ The error appears on the host (so the form error summary picks it up) and clears
 **Example:**
 ```html
 <civ-date-range-picker
-  label="Leave dates"
+  legend="Leave dates"
   name="leave"
   min="2026-01-01"
   max="2026-12-31"

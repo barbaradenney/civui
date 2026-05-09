@@ -1,6 +1,7 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivFormElement, dispatch, interpolate, t } from '@civui/core';
+import { CivFormElement, dispatch, interpolate, t, syncLegendToLabel, renderFormHeader, renderLegend, buildDescribedBy } from '@civui/core';
+import type { HeadingLevel, LabelSize } from '@civui/core';
 import '../date-picker/civ-date-picker.js';
 
 export interface DateRangeValue {
@@ -31,14 +32,19 @@ function daysBetween(startIso: string, endIso: string): number {
 /**
  * CivUI Date Range Picker
  *
- * Composed from two `civ-date-picker` instances. Cross-binds their `min`/`max`
- * so the end picker can never go before the start (and vice versa), surfaces a
- * single `civ-change` event with `{ start, end }`, and writes two FormData
- * fields on form submit: `${name}.start` and `${name}.end`.
+ * Self-contained group composed from two `civ-date-picker` instances.
+ * Cross-binds their `min`/`max` so the end picker can never go before the
+ * start (and vice versa), surfaces a single `civ-change` event with
+ * `{ start, end }`, and writes two FormData fields on form submit:
+ * `${name}.start` and `${name}.end`.
+ *
+ * Renders its own legend / hint / error — do **not** wrap in
+ * `<civ-form-fieldset>` (you'd get nested fieldsets with double
+ * legends). Use the `legend` prop directly on the component.
  *
  * @element civ-date-range-picker
  *
- * @prop {string} label - Group label text
+ * @prop {string} legend - Group legend rendered as <legend>
  * @prop {string} name - Base form-data key. Submits as `${name}.start` and `${name}.end`
  * @prop {string} value - JSON `{ start, end }` for declarative initialization
  * @prop {string} min - Outer lower bound (ISO yyyy-mm-dd)
@@ -76,6 +82,15 @@ export class CivDateRangePicker extends CivFormElement {
 
 
   /** Outer lower bound (ISO yyyy-mm-dd). */
+  /** Fieldset legend rendered above the start / end pickers. */
+  @property({ type: String }) legend = '';
+
+  /** Promote the legend to a heading via `role="heading"` + `aria-level=N`. */
+  @property({ type: Number, attribute: 'heading-level' }) headingLevel?: HeadingLevel;
+
+  /** Visual size of the legend. */
+  @property({ type: String }) size?: LabelSize;
+
   @property({ type: String }) min = '';
 
   /** Outer upper bound (ISO yyyy-mm-dd). */
@@ -137,6 +152,11 @@ export class CivDateRangePicker extends CivFormElement {
     }
   }
 
+  protected override willUpdate(changed: Map<string, unknown>): void {
+    super.willUpdate(changed);
+    syncLegendToLabel(this, changed);
+  }
+
   /** End picker's effective `min` is the later of `start value` and `min`. */
   private get _effectiveEndMin(): string {
     const start = this._range.start;
@@ -154,42 +174,69 @@ export class CivDateRangePicker extends CivFormElement {
   override render() {
     const startLabel = this.startLabel || t('dateRangeStartLabel');
     const endLabel = this.endLabel || t('dateRangeEndLabel');
+    // Self-contain only when the consumer set `legend` directly. If wrapped
+    // in an external civ-form-fieldset, that wrapper cascades its own legend
+    // to our inherited `label` — but our `legend` stays empty.
+    const selfContained = !!this.legend;
+    const describedBy = buildDescribedBy(this._hintId, this.hint, this._errorId, this.error);
+
+    const inner = html`
+      <div class="civ-flex civ-flex-col civ-gap-4 sm:civ-flex-row sm:civ-items-start">
+        <civ-date-picker
+          data-civ-range-start
+          label="${startLabel}"
+          name="${this.name ? `${this.name}.start` : ''}"
+          value="${this._range.start}"
+          min="${this.min || nothing}"
+          max="${this._effectiveStartMax || nothing}"
+          hint="${this.startHint}"
+          error="${this.startError}"
+          ?required="${this.required}"
+          ?disabled="${this.disabled}"
+          locale="${this.locale}"
+          week-starts-on="${this.weekStartsOn}"
+          @civ-input="${this._onStartInput}"
+          @civ-change="${this._onStartChange}"
+        ></civ-date-picker>
+        <civ-date-picker
+          data-civ-range-end
+          label="${endLabel}"
+          name="${this.name ? `${this.name}.end` : ''}"
+          value="${this._range.end}"
+          min="${this._effectiveEndMin || nothing}"
+          max="${this.max || nothing}"
+          hint="${this.endHint}"
+          error="${this.endError}"
+          ?required="${this.required}"
+          ?disabled="${this.disabled}"
+          locale="${this.locale}"
+          week-starts-on="${this.weekStartsOn}"
+          @civ-input="${this._onEndInput}"
+          @civ-change="${this._onEndChange}"
+        ></civ-date-picker>
+      </div>
+    `;
+
+    if (!selfContained) return inner;
 
     return html`
-        <div class="civ-flex civ-flex-col civ-gap-4 sm:civ-flex-row sm:civ-items-start">
-          <civ-date-picker
-            data-civ-range-start
-            label="${startLabel}"
-            name="${this.name ? `${this.name}.start` : ''}"
-            value="${this._range.start}"
-            min="${this.min || nothing}"
-            max="${this._effectiveStartMax || nothing}"
-            hint="${this.startHint}"
-            error="${this.startError}"
-            ?required="${this.required}"
-            ?disabled="${this.disabled}"
-            locale="${this.locale}"
-            week-starts-on="${this.weekStartsOn}"
-            @civ-input="${this._onStartInput}"
-            @civ-change="${this._onStartChange}"
-          ></civ-date-picker>
-          <civ-date-picker
-            data-civ-range-end
-            label="${endLabel}"
-            name="${this.name ? `${this.name}.end` : ''}"
-            value="${this._range.end}"
-            min="${this._effectiveEndMin || nothing}"
-            max="${this.max || nothing}"
-            hint="${this.endHint}"
-            error="${this.endError}"
-            ?required="${this.required}"
-            ?disabled="${this.disabled}"
-            locale="${this.locale}"
-            week-starts-on="${this.weekStartsOn}"
-            @civ-input="${this._onEndInput}"
-            @civ-change="${this._onEndChange}"
-          ></civ-date-picker>
-        </div>
+      <fieldset
+        class="civ-fieldset"
+        aria-describedby="${describedBy || nothing}"
+        aria-invalid="${this.error ? 'true' : nothing}"
+        aria-required="${this.required || nothing}"
+        ?disabled="${this.disabled}"
+      >
+        ${renderFormHeader({
+          label: renderLegend({ legend: this.legend, required: this.required, headingLevel: this.headingLevel, size: this.size }),
+          hintId: this._hintId,
+          hint: this.hint,
+          errorId: this._errorId,
+          error: this.error,
+          fieldset: true,
+        })}
+        ${inner}
+      </fieldset>
     `;
   }
 

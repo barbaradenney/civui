@@ -75,6 +75,11 @@ props:
       type: integer
       default: 0
       description: 'Day-of-week the calendar starts on (0 = Sunday, 1 = Monday). Forwarded to both pickers'
+    legend:
+      title: Legend
+      type: string
+      description: 'Group legend rendered as <legend>. The component is self-contained — do not wrap in civ-form-fieldset.'
+
 
 
 libraryOverrides:

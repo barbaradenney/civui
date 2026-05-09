@@ -21,6 +21,9 @@ import SwiftUI
 public struct CivDateRangePicker: View {
     // MARK: - Properties
 
+    /// Group legend rendered as the fieldset legend.
+    public var legend: String
+
     /// Minimum selectable date (ISO string).
     public var min: String
 
@@ -97,6 +100,7 @@ public struct CivDateRangePicker: View {
     // MARK: - Initializer
 
     public init(
+        legend: String = "",
         min: String = "",
         max: String = "",
         minRangeDays: Int? = nil,
@@ -121,6 +125,7 @@ public struct CivDateRangePicker: View {
         onChange: ((String) -> Void)? = nil,
         onAnalytics: ((String, [String: Any]?) -> Void)? = nil
     ) {
+        self.legend = legend
         self.min = min
         self.max = max
         self.minRangeDays = minRangeDays

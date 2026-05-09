@@ -20,9 +20,9 @@ Three date components for different use cases:
 
 | Use case | Component | Wrapper | Example |
 |----------|-----------|---------|---------|
-| **Known dates** (birthday, document dates) | `<civ-memorable-date>` | `<civ-form-fieldset>` | Date of birth, discharge date |
+| **Known dates** (birthday, document dates) | `<civ-memorable-date>` | None — self-contained, pass `legend` | Date of birth, discharge date |
 | **Scheduling** (appointments, deadlines) | `<civ-date-picker>` | `<civ-form-field>` | Appointment date, filing deadline |
-| **Date ranges** (start/end pairs) | `<civ-date-range-picker>` | `<civ-form-fieldset>` | Leave dates, service period |
+| **Date ranges** (start/end pairs) | `<civ-date-range-picker>` | None — self-contained, pass `legend` | Leave dates, service period |
 
 ---
 
@@ -30,7 +30,7 @@ Three date components for different use cases:
 
 `<civ-memorable-date>`
 
-Three-field date input (month select + day + year) for dates the user knows from memory. Wrapped in `<civ-form-fieldset>` because it contains multiple sub-inputs.
+Three-field date input (month select + day + year) for dates the user knows from memory. Self-contained — pass `legend` directly; no external wrapper needed.
 
 ### Examples
 
@@ -139,7 +139,7 @@ ISO `YYYY-MM-DD` regardless of display locale.
 
 `<civ-date-range-picker>`
 
-Two linked date pickers that form a start/end range. Cross-validates so end can never precede start. Wrapped in `<civ-form-fieldset>` because it contains two sub-pickers.
+Two linked date pickers that form a start/end range. Cross-validates so end can never precede start. Self-contained — pass `legend` directly; no external wrapper needed.
 
 ### Examples
 
@@ -178,16 +178,16 @@ Automatically checks: end ≥ start, duration ≥ min-range-days, duration ≤ m
 ### Usage
 
 ```html
-<civ-form-fieldset legend="Leave dates" hint="First and last day of leave" required>
-  <civ-date-range-picker
-    name="leave"
-    min="2026-01-01"
-    max="2026-12-31"
-    min-range-days="1"
-    max-range-days="30"
-    required
-  ></civ-date-range-picker>
-</civ-form-fieldset>
+<civ-date-range-picker
+  legend="Leave dates"
+  hint="First and last day of leave"
+  required
+  name="leave"
+  min="2026-01-01"
+  max="2026-12-31"
+  min-range-days="1"
+  max-range-days="30"
+></civ-date-range-picker>
 ```
 
 [Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-inputs-date-range-picker--default)

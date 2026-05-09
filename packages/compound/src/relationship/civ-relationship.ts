@@ -394,17 +394,11 @@ export class CivRelationship extends CivFormElement {
 
   override formResetCallback(): void {
     this._data = { ...EMPTY_RELATIONSHIP };
-    this.value = '';
-    this.nameError = '';
-    this.relationshipError = '';
-    this.marriageDateError = '';
-    this.divorceDateError = '';
-    this.dateOfBirthError = '';
-    this.adoptionDateError = '';
-    this.dateOfDeathError = '';
-    this.otherDescriptionError = '';
-    this.updateFormValue(null);
-    dispatch(this, 'civ-reset');
+    this._resetCompound([
+      'nameError', 'relationshipError', 'marriageDateError', 'divorceDateError',
+      'dateOfBirthError', 'adoptionDateError', 'dateOfDeathError',
+      'otherDescriptionError',
+    ]);
   }
 }
 

@@ -498,19 +498,11 @@ export class CivPartnershipHistory extends CivFormElement {
 
   override formResetCallback(): void {
     this._marriage = { ...EMPTY_MARRIAGE };
-    this.value = '';
-    this.spouseError = '';
-    this.marriageTypeError = '';
-    this.marriageDateError = '';
-    this.cityError = '';
-    this.stateError = '';
-    this.jurisdictionError = '';
-    this.cohabitationStartError = '';
-    this.cohabitationStateError = '';
-    this.statusError = '';
-    this.endDateError = '';
-    this.updateFormValue(null);
-    dispatch(this, 'civ-reset');
+    this._resetCompound([
+      'spouseError', 'marriageTypeError', 'marriageDateError', 'cityError',
+      'stateError', 'jurisdictionError', 'cohabitationStartError',
+      'cohabitationStateError', 'statusError', 'endDateError',
+    ]);
   }
 }
 

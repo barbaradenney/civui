@@ -203,14 +203,10 @@ export class CivServiceHistory extends CivFormElement {
 
   override formResetCallback(): void {
     this._service = { ...EMPTY_SERVICE };
-    this.value = '';
-    this.branchError = '';
-    this.startDateError = '';
-    this.endDateError = '';
-    this.dischargeError = '';
-    this.serviceNumberError = '';
-    this.updateFormValue(null);
-    dispatch(this, 'civ-reset');
+    this._resetCompound([
+      'branchError', 'startDateError', 'endDateError', 'dischargeError',
+      'serviceNumberError',
+    ]);
   }
 }
 

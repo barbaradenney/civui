@@ -322,12 +322,7 @@ export class CivSignature extends CivFormElement {
 
   override formResetCallback(): void {
     this._signature = { ...EMPTY_SIGNATURE };
-    this.value = '';
-    this.error = '';
-    this.nameError = '';
-    this.certifyError = '';
-    this.updateFormValue(null);
-    dispatch(this, 'civ-reset');
+    this._resetCompound(['nameError', 'certifyError']);
   }
 }
 

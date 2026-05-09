@@ -525,14 +525,7 @@ export class CivAddress extends CivFormElement {
 
   override formResetCallback(): void {
     this._address = { ...EMPTY_ADDRESS };
-    this.value = '';
-    this.error = '';
-    this.streetError = '';
-    this.cityError = '';
-    this.stateError = '';
-    this.zipError = '';
-    this.updateFormValue(null);
-    dispatch(this, 'civ-reset');
+    this._resetCompound(['streetError', 'cityError', 'stateError', 'zipError']);
   }
 
   /** Check if the address has any filled fields. */

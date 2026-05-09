@@ -137,12 +137,7 @@ export class CivRaceEthnicity extends CivFormElement {
 
   override formResetCallback(): void {
     this._data = { ...EMPTY_VALUE };
-    this.value = '';
-    this.error = '';
-    this.ethnicityError = '';
-    this.raceError = '';
-    this.updateFormValue(null);
-    dispatch(this, 'civ-reset');
+    this._resetCompound(['ethnicityError', 'raceError']);
   }
 
   protected override _syncFormValue(): void {

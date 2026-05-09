@@ -221,13 +221,7 @@ export class CivName extends CivFormElement {
 
   override formResetCallback(): void {
     this._name = { ...EMPTY_NAME };
-    this.value = '';
-    this.error = '';
-    this.firstError = '';
-    this.middleError = '';
-    this.lastError = '';
-    this.updateFormValue(null);
-    dispatch(this, 'civ-reset');
+    this._resetCompound(['firstError', 'middleError', 'lastError']);
   }
 }
 

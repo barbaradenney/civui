@@ -178,13 +178,7 @@ export class CivDirectDeposit extends CivFormElement {
 
   override formResetCallback(): void {
     this._deposit = { ...EMPTY_DEPOSIT };
-    this.value = '';
-    this.error = '';
-    this.routingError = '';
-    this.accountError = '';
-    this.typeError = '';
-    this.updateFormValue(null);
-    dispatch(this, 'civ-reset');
+    this._resetCompound(['routingError', 'accountError', 'typeError']);
   }
 }
 

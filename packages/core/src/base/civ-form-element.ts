@@ -200,6 +200,31 @@ export class CivFormElement extends CivBaseElement {
   }
 
   /**
+   * Compound-component reset helper. Subclasses with multi-field state
+   * call this from their `formResetCallback` after resetting their
+   * internal `_<state>` field. Clears `value`, top-level `error`, and any
+   * named per-field error properties; then mirrors the empty value to
+   * ElementInternals and dispatches `civ-reset`.
+   *
+   * @example
+   *   override formResetCallback(): void {
+   *     this._name = { ...EMPTY_NAME };
+   *     this._resetCompound(['firstError', 'middleError', 'lastError']);
+   *   }
+   */
+  protected _resetCompound(errorProps?: readonly string[]): void {
+    this.value = '';
+    this.error = '';
+    if (errorProps) {
+      for (const prop of errorProps) {
+        (this as Record<string, unknown>)[prop] = '';
+      }
+    }
+    this.updateFormValue(null);
+    dispatch(this, 'civ-reset');
+  }
+
+  /**
    * Compound-component validity helper. Subclasses with multi-field state
    * (civ-name, civ-address, civ-direct-deposit, civ-signature, etc.) call
    * this from their `_updateValidity()` override with a local

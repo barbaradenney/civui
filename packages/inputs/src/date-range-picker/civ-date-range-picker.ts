@@ -325,13 +325,8 @@ export class CivDateRangePicker extends CivFormElement {
 
   override formResetCallback(): void {
     this._range = { ...EMPTY_RANGE };
-    this.value = '';
-    this.error = '';
-    this.startError = '';
-    this.endError = '';
     this._ownsRangeError = false;
-    this.updateFormValue(null);
-    dispatch(this, 'civ-reset');
+    this._resetCompound(['startError', 'endError']);
   }
 }
 

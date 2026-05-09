@@ -1,7 +1,7 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivFormElement, LightDomSlotMixin, dispatch, resolveGroupNavIndex, isRtl, syncGroupDisabled, stopChildEvent, renderFormHeader, renderLegend, buildDescribedBy } from '@civui/core';
-import type { SlotConfig, HeadingLevel, LabelSize } from '@civui/core';
+import { CivFormElement, LegendHeadingMixin, LightDomSlotMixin, dispatch, resolveGroupNavIndex, isRtl, syncGroupDisabled, stopChildEvent, renderFormHeader, renderLegend, buildDescribedBy } from '@civui/core';
+import type { SlotConfig } from '@civui/core';
 import type { CivSegment } from './civ-segment.js';
 
 /**
@@ -31,7 +31,7 @@ import type { CivSegment } from './civ-segment.js';
  * @fires civ-analytics - Analytics tracking event on change
  */
 @customElement('civ-segmented-control')
-export class CivSegmentedControl extends LightDomSlotMixin(CivFormElement) {
+export class CivSegmentedControl extends LegendHeadingMixin(LightDomSlotMixin(CivFormElement)) {
   override _getSlotConfig(): SlotConfig {
     return { default: '[data-civ-segment-content]' };
   }
@@ -39,11 +39,7 @@ export class CivSegmentedControl extends LightDomSlotMixin(CivFormElement) {
   /** Fieldset legend rendered above the segments. */
   @property({ type: String }) legend = '';
 
-  /** Promote the legend to a heading via `role="heading"` + `aria-level=N`. */
-  @property({ type: Number, attribute: 'heading-level' }) headingLevel?: HeadingLevel;
-
-  /** Visual size of the legend. */
-  @property({ type: String }) size?: LabelSize;
+  // headingLevel + size inherited from LegendHeadingMixin.
 
   protected override _defaultValue = '';
   private _boundOnChildChange = this._onChildChange.bind(this);

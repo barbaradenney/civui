@@ -1,7 +1,7 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivFormElement, LightDomSlotMixin, dispatch, syncGroupDisabled, stopChildEvent, t, interpolate, resolvePresetOptions, renderFormHeader, renderLegend, buildDescribedBy } from '@civui/core';
-import type { SlotConfig, SelectPresetName, HeadingLevel, LabelSize } from '@civui/core';
+import { CivFormElement, LegendHeadingMixin, LightDomSlotMixin, dispatch, syncGroupDisabled, stopChildEvent, t, interpolate, resolvePresetOptions, renderFormHeader, renderLegend, buildDescribedBy } from '@civui/core';
+import type { SlotConfig, SelectPresetName } from '@civui/core';
 import type { CivCheckbox } from './civ-checkbox.js';
 import './civ-checkbox.js';
 
@@ -34,27 +34,13 @@ import './civ-checkbox.js';
  * @fires civ-analytics - Analytics tracking event on change
  */
 @customElement('civ-checkbox-group')
-export class CivCheckboxGroup extends LightDomSlotMixin(CivFormElement) {
+export class CivCheckboxGroup extends LegendHeadingMixin(LightDomSlotMixin(CivFormElement)) {
   override _getSlotConfig(): SlotConfig {
     return { default: '.civ-group-layout--vertical, .civ-group-layout--horizontal' };
   }
 
   /** Fieldset legend displayed above the checkbox choices. */
   @property({ type: String }) legend = '';
-
-  /**
-   * Promote the legend to a heading via `role="heading"` + `aria-level=N`.
-   * Use sparingly — typically only when this checkbox group is the
-   * primary question on a single-question page (level 1) or the top
-   * legend inside a form-step (level 2 or 3).
-   */
-  @property({ type: Number, attribute: 'heading-level' }) headingLevel?: HeadingLevel;
-
-  /**
-   * Visual size of the legend. Default and `sm` render at body size;
-   * `md`/`lg`/`xl` increase the size for use as a section/page heading.
-   */
-  @property({ type: String }) size?: LabelSize;
 
   /**
    * Pull the hint visually flush with the controls below it by removing

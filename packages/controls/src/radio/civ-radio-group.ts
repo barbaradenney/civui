@@ -1,7 +1,7 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivFormElement, LightDomSlotMixin, dispatch, resolveGroupNavIndex, isRtl, syncGroupDisabled, stopChildEvent, resolvePresetOptions, renderFormHeader, renderLegend, buildDescribedBy } from '@civui/core';
-import type { SlotConfig, SelectPresetName, HeadingLevel, LabelSize } from '@civui/core';
+import { CivFormElement, LegendHeadingMixin, LightDomSlotMixin, dispatch, resolveGroupNavIndex, isRtl, syncGroupDisabled, stopChildEvent, resolvePresetOptions, renderFormHeader, renderLegend, buildDescribedBy } from '@civui/core';
+import type { SlotConfig, SelectPresetName } from '@civui/core';
 import type { CivRadio } from './civ-radio.js';
 import './civ-radio.js';
 
@@ -34,27 +34,13 @@ import './civ-radio.js';
  * @fires civ-analytics - Analytics tracking event on change
  */
 @customElement('civ-radio-group')
-export class CivRadioGroup extends LightDomSlotMixin(CivFormElement) {
+export class CivRadioGroup extends LegendHeadingMixin(LightDomSlotMixin(CivFormElement)) {
   override _getSlotConfig(): SlotConfig {
     return { default: '.civ-group-layout--vertical, .civ-group-layout--horizontal' };
   }
 
   /** Fieldset legend displayed above the radio choices. */
   @property({ type: String }) legend = '';
-
-  /**
-   * Promote the legend to a heading via `role="heading"` + `aria-level=N`.
-   * Use sparingly — typically only when this radio group is the primary
-   * question on a single-question page (level 1) or the top legend
-   * inside a form-step (level 2 or 3).
-   */
-  @property({ type: Number, attribute: 'heading-level' }) headingLevel?: HeadingLevel;
-
-  /**
-   * Visual size of the legend. Default and `sm` render at body size;
-   * `md`/`lg`/`xl` increase the size for use as a section/page heading.
-   */
-  @property({ type: String }) size?: LabelSize;
   @property({ type: Boolean, reflect: true }) tile = true;
   @property({ type: String, reflect: true }) orientation: 'vertical' | 'horizontal' = 'vertical';
   /**

@@ -23,6 +23,12 @@ export const INHERITED_FORM_PROPS: ReadonlySet<string> = new Set([
   'readonly',
   'touched',
   'disableAnalytics',
+  // Provided by LegendHeadingMixin (packages/core/src/base/legend-heading-mixin.ts).
+  // Filtered here so components that mix in the heading props don't fail
+  // schema parity for "missing from source" — the props are real, just
+  // declared once in the mixin instead of N times across consumers.
+  'headingLevel',
+  'size',
 ]);
 
 /** Boolean-form base props that components extending CivBooleanFormElement inherit. */

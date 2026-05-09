@@ -1,7 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivFormElement, dispatch, interpolate, t, renderFormHeader, renderLegend, buildDescribedBy } from '@civui/core';
-import type { HeadingLevel, LabelSize } from '@civui/core';
+import { CivFormElement, LegendHeadingMixin, dispatch, interpolate, t, renderFormHeader, renderLegend, buildDescribedBy } from '@civui/core';
 import '../date-picker/civ-date-picker.js';
 
 export interface DateRangeValue {
@@ -77,20 +76,13 @@ function daysBetween(startIso: string, endIso: string): number {
  * ```
  */
 @customElement('civ-date-range-picker')
-export class CivDateRangePicker extends CivFormElement {
-
-
-
-  /** Outer lower bound (ISO yyyy-mm-dd). */
+export class CivDateRangePicker extends LegendHeadingMixin(CivFormElement) {
   /** Fieldset legend rendered above the start / end pickers. */
   @property({ type: String }) legend = '';
 
-  /** Promote the legend to a heading via `role="heading"` + `aria-level=N`. */
-  @property({ type: Number, attribute: 'heading-level' }) headingLevel?: HeadingLevel;
+  // headingLevel + size inherited from LegendHeadingMixin.
 
-  /** Visual size of the legend. */
-  @property({ type: String }) size?: LabelSize;
-
+  /** Outer lower bound (ISO yyyy-mm-dd). */
   @property({ type: String }) min = '';
 
   /** Outer upper bound (ISO yyyy-mm-dd). */

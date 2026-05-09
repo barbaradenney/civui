@@ -1,7 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivFormElement, dispatch, renderLegend, renderFormHeader, buildDescribedBy, t } from '@civui/core';
-import type { HeadingLevel, LabelSize } from '@civui/core';
+import { CivFormElement, LegendHeadingMixin, dispatch, renderLegend, renderFormHeader, buildDescribedBy, t } from '@civui/core';
 import '@civui/inputs';
 import '@civui/controls';
 import '@civui/overlays/modal';
@@ -104,7 +103,7 @@ const EMPTY_ADDRESS: AddressValue = { country: 'US', street1: '', street2: '', s
  * @fires civ-change - On committed field change, detail: { value: AddressValue }
  */
 @customElement('civ-address')
-export class CivAddress extends CivFormElement {
+export class CivAddress extends LegendHeadingMixin(CivFormElement) {
   /**
    * Address variant:
    * - `default` — full address form (street, city, state, zip)
@@ -116,20 +115,7 @@ export class CivAddress extends CivFormElement {
   /** Fieldset legend displayed above the address fields. */
   @property({ type: String }) legend = '';
 
-  /**
-   * Promote the legend to a heading via `role="heading"` + `aria-level=N`.
-   * Use sparingly — typically only when this field is the primary question
-   * on a single-question page (level 1) or the top legend inside a
-   * form-step (level 2 or 3).
-   */
-  @property({ type: Number, attribute: 'heading-level' }) headingLevel?: HeadingLevel;
-
-  /**
-   * Visual size of the legend. Default and `sm` render at body size;
-   * `md`/`lg`/`xl` increase the size for use as a section/page heading.
-   * At `[data-civ-scale="fluid"]`, `xl` renders very large.
-   */
-  @property({ type: String }) size?: LabelSize;
+  // headingLevel + size inherited from LegendHeadingMixin.
 
   /** Whether to show the Street address line 2 field. */
   @property({ type: Boolean, attribute: 'show-street2' }) showStreet2 = true;

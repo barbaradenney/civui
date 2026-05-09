@@ -1,8 +1,7 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
-import { CivFormElement, dispatch, renderLegend, renderFormHeader, buildDescribedBy, interpolate, t } from '@civui/core';
-import type { HeadingLevel, LabelSize } from '@civui/core';
+import { CivFormElement, LegendHeadingMixin, dispatch, renderLegend, renderFormHeader, buildDescribedBy, interpolate, t } from '@civui/core';
 import '@civui/inputs';
 import '@civui/controls';
 
@@ -65,29 +64,16 @@ const EMPTY_SIGNATURE: InternalSignature = { name: '', certified: false, signedA
  * @fires civ-change - On committed field change, detail: { value: SignatureValue }
  */
 @customElement('civ-signature')
-export class CivSignature extends CivFormElement {
+export class CivSignature extends LegendHeadingMixin(CivFormElement) {
   /** Fieldset legend. */
   @property({ type: String }) legend = '';
 
-  /**
-   * Promote the legend to a heading via `role="heading"` + `aria-level=N`.
-   * Use sparingly — typically only when this field is the primary question
-   * on a single-question page (level 1) or the top legend inside a
-   * form-step (level 2 or 3).
-   */
-  @property({ type: Number, attribute: 'heading-level' }) headingLevel?: HeadingLevel;
-
-  /**
-   * Visual size of the legend. Default and `sm` render at body size;
-   * `md`/`lg`/`xl` increase the size for use as a section/page heading.
-   * At `[data-civ-scale="fluid"]`, `xl` renders very large.
-   *
-   * Defaults to `xl` because signatures are typically the prominent
-   * end-of-form legal affirmation — paired with the default card
-   * framing, the large heading communicates the weight of the action.
-   * Override to `sm` / `md` for inline / dense placements.
-   */
-  @property({ type: String }) size: LabelSize = 'xl';
+  // headingLevel + size inherited from LegendHeadingMixin.
+  // Note: civ-signature renders the legend at `xl` size by default
+  // because signatures are typically the prominent end-of-form legal
+  // affirmation — paired with the default card framing, the large
+  // heading communicates the weight of the action. The render path
+  // applies that default below via `this.size ?? 'xl'`.
 
   /** Certification statement text displayed above the fields. Ignored when a `slot="statement"` child is present. */
   @property({ type: String }) statement = '';
@@ -190,7 +176,7 @@ export class CivSignature extends CivFormElement {
         aria-required="${this.required || nothing}"
         ?disabled="${this.disabled}"
       >
-        ${renderFormHeader({ label: renderLegend({ legend: this.legend || this.label, required: this.required, headingLevel: this.headingLevel, size: this.size }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
+        ${renderFormHeader({ label: renderLegend({ legend: this.legend || this.label, required: this.required, headingLevel: this.headingLevel, size: this.size ?? 'xl' }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
 
         ${this._hasStatement ? html`
           <div id="${this._statementId}" class="civ-mb-4">

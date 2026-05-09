@@ -1,7 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivFormElement, dispatch, buildDescribedBy, resolveGroupNavIndex, isRtl, renderFormHeader, renderLegend } from '@civui/core';
-import type { HeadingLevel, LabelSize } from '@civui/core';
+import { CivFormElement, LegendHeadingMixin, dispatch, buildDescribedBy, resolveGroupNavIndex, isRtl, renderFormHeader, renderLegend } from '@civui/core';
 
 /**
  * CivUI Yes/No
@@ -34,15 +33,11 @@ import type { HeadingLevel, LabelSize } from '@civui/core';
  * @fires civ-analytics - Analytics tracking event on change
  */
 @customElement('civ-yes-no')
-export class CivYesNo extends CivFormElement {
+export class CivYesNo extends LegendHeadingMixin(CivFormElement) {
   /** Question text rendered as the fieldset legend. */
   @property({ type: String }) legend = '';
 
-  /** Promote the legend to a heading via `role="heading"` + `aria-level=N`. */
-  @property({ type: Number, attribute: 'heading-level' }) headingLevel?: HeadingLevel;
-
-  /** Visual size of the legend. */
-  @property({ type: String }) size?: LabelSize;
+  // headingLevel + size inherited from LegendHeadingMixin.
 
   @property({ type: String, attribute: 'yes-label' }) yesLabel = 'Yes';
   @property({ type: String, attribute: 'no-label' }) noLabel = 'No';

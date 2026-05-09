@@ -1,7 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivFormElement, dispatch, getMonthNames, interpolate, parseISODate, renderFormHeader, renderLegend, buildDescribedBy, t } from '@civui/core';
-import type { HeadingLevel, LabelSize } from '@civui/core';
+import { CivFormElement, LegendHeadingMixin, dispatch, getMonthNames, interpolate, parseISODate, renderFormHeader, renderLegend, buildDescribedBy, t } from '@civui/core';
 
 // Import child components
 import '../select/civ-select.js';
@@ -33,23 +32,9 @@ import '../text-input/civ-text-input.js';
  * @fires civ-analytics - Analytics tracking event on change
  */
 @customElement('civ-memorable-date')
-export class CivMemorableDate extends CivFormElement {
+export class CivMemorableDate extends LegendHeadingMixin(CivFormElement) {
   /** Fieldset legend displayed above the date sub-fields. */
   @property({ type: String }) legend = '';
-
-  /**
-   * Promote the legend to a heading via `role="heading"` + `aria-level=N`.
-   * Use sparingly — typically only when this date field is the primary
-   * question on a single-question page (level 1) or the top legend
-   * inside a form-step (level 2 or 3).
-   */
-  @property({ type: Number, attribute: 'heading-level' }) headingLevel?: HeadingLevel;
-
-  /**
-   * Visual size of the legend. Default and `sm` render at body size;
-   * `md`/`lg`/`xl` increase the size for use as a section/page heading.
-   */
-  @property({ type: String }) size?: LabelSize;
 
   @property({ type: String, attribute: 'month-label' }) monthLabel = '';
   @property({ type: String, attribute: 'day-label' }) dayLabel = '';

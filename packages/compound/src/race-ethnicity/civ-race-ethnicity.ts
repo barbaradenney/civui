@@ -1,7 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivFormElement, dispatch, renderLegend, renderFormHeader, buildDescribedBy } from '@civui/core';
-import type { HeadingLevel, LabelSize } from '@civui/core';
+import { CivFormElement, LegendHeadingMixin, dispatch, renderLegend, renderFormHeader, buildDescribedBy } from '@civui/core';
 import '@civui/controls/checkbox';
 import '@civui/controls/radio';
 
@@ -55,23 +54,8 @@ const EMPTY_VALUE: RaceEthnicityValue = { ethnicity: '', race: [] };
  * ```
  */
 @customElement('civ-race-ethnicity')
-export class CivRaceEthnicity extends CivFormElement {
+export class CivRaceEthnicity extends LegendHeadingMixin(CivFormElement) {
   @property({ type: String }) legend = '';
-
-  /**
-   * Promote the legend to a heading via `role="heading"` + `aria-level=N`.
-   * Use sparingly — typically only when this field is the primary question
-   * on a single-question page (level 1) or the top legend inside a
-   * form-step (level 2 or 3).
-   */
-  @property({ type: Number, attribute: 'heading-level' }) headingLevel?: HeadingLevel;
-
-  /**
-   * Visual size of the legend. Default and `sm` render at body size;
-   * `md`/`lg`/`xl` increase the size for use as a section/page heading.
-   * At `[data-civ-scale="fluid"]`, `xl` renders very large.
-   */
-  @property({ type: String }) size?: LabelSize;
   @property({ type: String, attribute: 'ethnicity-legend' }) ethnicityLegend = '';
   @property({ type: String, attribute: 'race-legend' }) raceLegend = '';
   @property({ type: String, attribute: 'ethnicity-error' }) ethnicityError = '';

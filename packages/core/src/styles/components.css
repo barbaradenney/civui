@@ -191,14 +191,16 @@
     margin-bottom: 0;
   }
 
-  /* 16px gap before the first control element after the header (legend +
-     hint + error stack). Header items themselves have margin-bottom: 0 so
-     they stack tightly together; this rule reintroduces the breathing room
+  /* 4px gap before the first control element after the header (legend +
+     hint + error stack). Mirrors `.civ-form-header { mb-1 }` for the
+     non-fieldset pattern so single-input form-fields and group fieldsets
+     have the same tightness. Header items themselves have margin-bottom:
+     0 so they stack tightly together; this rule reintroduces a small gap
      once the controls start. Per CLAUDE.md, hint text uses the base
      `.civ-hint--group` size (sm) and gray (`base-DEFAULT`) — those styles
      come from the base rule and are intentionally NOT overridden here. */
   .civ-fieldset > :is(.civ-legend, .civ-label, .civ-hint, .civ-hint--group, .civ-error-text, .civ-error-text--group) + :not(.civ-legend, .civ-label, .civ-hint, .civ-hint--group, .civ-error-text, .civ-error-text--group) {
-    margin-top: var(--civ-spacing-4);
+    margin-top: var(--civ-spacing-1);
   }
 
   /* Pull the group hint flush with the controls when `tight-hint` is set on

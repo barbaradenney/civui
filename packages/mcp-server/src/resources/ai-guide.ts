@@ -321,13 +321,11 @@ Button-style radio group for mutually exclusive UI options.
 
 **Example:**
 \`\`\`html
-<civ-form-fieldset legend="View mode">
-  <civ-segmented-control name="view">
-    <civ-segment label="List" value="list"></civ-segment>
-    <civ-segment label="Grid" value="grid"></civ-segment>
-    <civ-segment label="Map" value="map"></civ-segment>
-  </civ-segmented-control>
-</civ-form-fieldset>
+<civ-segmented-control legend="View mode" name="view">
+  <civ-segment label="List" value="list"></civ-segment>
+  <civ-segment label="Grid" value="grid"></civ-segment>
+  <civ-segment label="Map" value="map"></civ-segment>
+</civ-segmented-control>
 \`\`\`
 
 ---

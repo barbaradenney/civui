@@ -1,15 +1,19 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivFormElement, LightDomSlotMixin, dispatch, resolveGroupNavIndex, isRtl, syncGroupDisabled, stopChildEvent, syncLegendToLabel } from '@civui/core';
-import type { SlotConfig } from '@civui/core';
+import { CivFormElement, LightDomSlotMixin, dispatch, resolveGroupNavIndex, isRtl, syncGroupDisabled, stopChildEvent, syncLegendToLabel, renderFormHeader, renderLegend, buildDescribedBy } from '@civui/core';
+import type { SlotConfig, HeadingLevel, LabelSize } from '@civui/core';
 import type { CivSegment } from './civ-segment.js';
 
 /**
  * CivUI Segmented Control
  *
- * A segmented control (button-style radio group) that groups multiple
- * civ-segment elements with mutual exclusivity.
- * Uses ElementInternals for form participation.
+ * Self-contained segmented control (button-style radio group) that
+ * groups multiple civ-segment elements with mutual exclusivity. Uses
+ * ElementInternals for form participation.
+ *
+ * Renders its own legend / hint / error — do **not** wrap in
+ * `<civ-form-fieldset>` (you'd get nested fieldsets with double
+ * legends). Use the `legend` prop directly on the component.
  *
  * @element civ-segmented-control
  *
@@ -32,7 +36,14 @@ export class CivSegmentedControl extends LightDomSlotMixin(CivFormElement) {
     return { default: '[data-civ-segment-content]' };
   }
 
+  /** Fieldset legend rendered above the segments. */
   @property({ type: String }) legend = '';
+
+  /** Promote the legend to a heading via `role="heading"` + `aria-level=N`. */
+  @property({ type: Number, attribute: 'heading-level' }) headingLevel?: HeadingLevel;
+
+  /** Visual size of the legend. */
+  @property({ type: String }) size?: LabelSize;
 
   protected override _defaultValue = '';
   private _boundOnChildChange = this._onChildChange.bind(this);
@@ -87,17 +98,46 @@ export class CivSegmentedControl extends LightDomSlotMixin(CivFormElement) {
   }
 
   override render() {
+    // Self-contain only when the consumer set `legend` directly. If the
+    // component is wrapped in an external civ-form-fieldset, that wrapper
+    // cascades its own legend to our inherited `label` — but our `legend`
+    // stays empty.
+    const selfContained = !!this.legend;
+    const describedBy = buildDescribedBy(this._hintId, this.hint, this._errorId, this.error);
+
+    const inner = html`
+      <div
+        class="civ-inline-flex"
+        data-civ-segment-content
+        role="radiogroup"
+        aria-label="${selfContained ? nothing : (this.label || nothing)}"
+        aria-orientation="horizontal"
+        aria-describedby="${describedBy || nothing}"
+        aria-invalid="${this.error ? 'true' : nothing}"
+        aria-required="${this.required || nothing}"
+      ></div>
+    `;
+
+    if (!selfContained) return inner;
+
     return html`
-        <div
-          class="civ-inline-flex"
-          data-civ-segment-content
-          role="radiogroup"
-          aria-label="${this.legend || nothing}"
-          aria-orientation="horizontal"
-          aria-describedby="${this._ariaDescribedBy || nothing}"
-          aria-invalid="${this.error ? 'true' : nothing}"
-          aria-required="${this.required || nothing}"
-        ></div>
+      <fieldset
+        class="civ-fieldset"
+        aria-describedby="${describedBy || nothing}"
+        aria-invalid="${this.error ? 'true' : nothing}"
+        aria-required="${this.required || nothing}"
+        ?disabled="${this.disabled}"
+      >
+        ${renderFormHeader({
+          label: renderLegend({ legend: this.legend, required: this.required, headingLevel: this.headingLevel, size: this.size }),
+          hintId: this._hintId,
+          hint: this.hint,
+          errorId: this._errorId,
+          error: this.error,
+          fieldset: true,
+        })}
+        ${inner}
+      </fieldset>
     `;
   }
 

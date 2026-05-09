@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivFormElement, dispatch, getMonthNames, interpolate, parseISODate, renderFormHeader, renderLegend, buildDescribedBy, syncLegendToLabel, t } from '@civui/core';
+import { CivFormElement, dispatch, getMonthNames, interpolate, parseISODate, renderFormHeader, renderLegend, buildDescribedBy, t } from '@civui/core';
 import type { HeadingLevel, LabelSize } from '@civui/core';
 
 // Import child components
@@ -81,11 +81,6 @@ export class CivMemorableDate extends CivFormElement {
     super.disconnectedCallback();
     this.removeEventListener('civ-input', this._boundFieldInput as EventListener);
     this.removeEventListener('civ-change', this._boundFieldChange as EventListener);
-  }
-
-  protected override willUpdate(changed: Map<string, unknown>): void {
-    super.willUpdate(changed);
-    syncLegendToLabel(this, changed);
   }
 
   override updated(changed: Map<string, unknown>): void {
@@ -179,12 +174,6 @@ export class CivMemorableDate extends CivFormElement {
     const monthLabel = this.monthLabel || t('memorableDateMonthLabel');
     const dayLabel = this.dayLabel || t('memorableDateDayLabel');
     const yearLabel = this.yearLabel || t('memorableDateYearLabel');
-    // Self-contain only when the consumer set `legend` directly. If the
-    // component is wrapped in an external civ-form-fieldset, that wrapper
-    // cascades its own legend to our inherited `label` — but our `legend`
-    // stays empty. Gating on `this.legend` (NOT `this.label`) distinguishes
-    // "render my own fieldset" from "let the wrapper do it".
-    const selfContained = !!this.legend;
     const describedBy = buildDescribedBy(this._hintId, this.hint, this._errorId, this.error);
 
     const fields = html`
@@ -242,8 +231,6 @@ export class CivMemorableDate extends CivFormElement {
         </div>
     `;
 
-    if (!selfContained) return fields;
-
     return html`
       <fieldset
         class="civ-fieldset"
@@ -252,14 +239,16 @@ export class CivMemorableDate extends CivFormElement {
         aria-required="${this.required || nothing}"
         ?disabled="${this.disabled}"
       >
-        ${renderFormHeader({
-          label: renderLegend({ legend: this.legend, required: this.required, headingLevel: this.headingLevel, size: this.size }),
-          hintId: this._hintId,
-          hint: this.hint,
-          errorId: this._errorId,
-          error: this.error,
-          fieldset: true,
-        })}
+        ${this.legend
+          ? renderFormHeader({
+              label: renderLegend({ legend: this.legend, required: this.required, headingLevel: this.headingLevel, size: this.size }),
+              hintId: this._hintId,
+              hint: this.hint,
+              errorId: this._errorId,
+              error: this.error,
+              fieldset: true,
+            })
+          : nothing}
         ${fields}
       </fieldset>
     `;

@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivFormElement, LightDomSlotMixin, dispatch, syncGroupDisabled, stopChildEvent, syncLegendToLabel, t, interpolate, resolvePresetOptions, renderFormHeader, renderLegend, buildDescribedBy } from '@civui/core';
+import { CivFormElement, LightDomSlotMixin, dispatch, syncGroupDisabled, stopChildEvent, t, interpolate, resolvePresetOptions, renderFormHeader, renderLegend, buildDescribedBy } from '@civui/core';
 import type { SlotConfig, SelectPresetName, HeadingLevel, LabelSize } from '@civui/core';
 import type { CivCheckbox } from './civ-checkbox.js';
 import './civ-checkbox.js';
@@ -141,11 +141,6 @@ export class CivCheckboxGroup extends LightDomSlotMixin(CivFormElement) {
     this._defaultValue = this.value;
   }
 
-  protected override willUpdate(changed: Map<string, unknown>): void {
-    super.willUpdate(changed);
-    syncLegendToLabel(this, changed);
-  }
-
   override updated(changed: Map<string, unknown>): void {
     super.updated(changed);
     const needsCheckboxes =
@@ -230,27 +225,7 @@ export class CivCheckboxGroup extends LightDomSlotMixin(CivFormElement) {
       ? resolvePresetOptions(this.preset, this.presetVariant)
       : [];
 
-    // Self-contain only when the consumer set `legend` directly. If the
-    // component is wrapped in an external civ-form-fieldset, that wrapper
-    // cascades its own legend to our inherited `label` — but our `legend`
-    // stays empty. Gating on `this.legend` (NOT `this.label`) distinguishes
-    // "render my own fieldset" from "let the wrapper do it".
-    const selfContained = !!this.legend;
     const describedBy = buildDescribedBy(this._hintId, this.hint, this._errorId, this.error);
-
-    const inner = html`
-      ${this.showSelectAll ? html`
-        <civ-action-button
-          variant="tertiary"
-          label="${this._allChecked ? t('deselectAll') : t('selectAll')}"
-          ?disabled="${this.disabled}"
-          @click="${this._onToggleAll}"
-          class="civ-mb-2"
-        ></civ-action-button>` : nothing}
-      <div class="${layoutClass}">${presetOptions.map(opt => html`<civ-checkbox value="${opt.value}" label="${opt.label}"></civ-checkbox>`)}</div>
-    `;
-
-    if (!selfContained) return inner;
 
     return html`
       <fieldset
@@ -260,15 +235,25 @@ export class CivCheckboxGroup extends LightDomSlotMixin(CivFormElement) {
         aria-required="${this.required || nothing}"
         ?disabled="${this.disabled}"
       >
-        ${renderFormHeader({
-          label: renderLegend({ legend: this.legend, required: this.required, headingLevel: this.headingLevel, size: this.size }),
-          hintId: this._hintId,
-          hint: this.hint,
-          errorId: this._errorId,
-          error: this.error,
-          fieldset: true,
-        })}
-        ${inner}
+        ${this.legend
+          ? renderFormHeader({
+              label: renderLegend({ legend: this.legend, required: this.required, headingLevel: this.headingLevel, size: this.size }),
+              hintId: this._hintId,
+              hint: this.hint,
+              errorId: this._errorId,
+              error: this.error,
+              fieldset: true,
+            })
+          : nothing}
+        ${this.showSelectAll ? html`
+          <civ-action-button
+            variant="tertiary"
+            label="${this._allChecked ? t('deselectAll') : t('selectAll')}"
+            ?disabled="${this.disabled}"
+            @click="${this._onToggleAll}"
+            class="civ-mb-2"
+          ></civ-action-button>` : nothing}
+        <div class="${layoutClass}">${presetOptions.map(opt => html`<civ-checkbox value="${opt.value}" label="${opt.label}"></civ-checkbox>`)}</div>
       </fieldset>
     `;
   }

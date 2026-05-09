@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivFormElement, LightDomSlotMixin, dispatch, resolveGroupNavIndex, isRtl, syncGroupDisabled, stopChildEvent, syncLegendToLabel, renderFormHeader, renderLegend, buildDescribedBy } from '@civui/core';
+import { CivFormElement, LightDomSlotMixin, dispatch, resolveGroupNavIndex, isRtl, syncGroupDisabled, stopChildEvent, renderFormHeader, renderLegend, buildDescribedBy } from '@civui/core';
 import type { SlotConfig, HeadingLevel, LabelSize } from '@civui/core';
 import type { CivSegment } from './civ-segment.js';
 
@@ -64,11 +64,6 @@ export class CivSegmentedControl extends LightDomSlotMixin(CivFormElement) {
     this.removeEventListener('keydown', this._boundOnKeydown as EventListener);
   }
 
-  override willUpdate(changed: Map<string, unknown>): void {
-    super.willUpdate(changed);
-    syncLegendToLabel(this, changed);
-  }
-
   override firstUpdated(): void {
     this._relocateSlots();
 
@@ -98,27 +93,7 @@ export class CivSegmentedControl extends LightDomSlotMixin(CivFormElement) {
   }
 
   override render() {
-    // Self-contain only when the consumer set `legend` directly. If the
-    // component is wrapped in an external civ-form-fieldset, that wrapper
-    // cascades its own legend to our inherited `label` — but our `legend`
-    // stays empty.
-    const selfContained = !!this.legend;
     const describedBy = buildDescribedBy(this._hintId, this.hint, this._errorId, this.error);
-
-    const inner = html`
-      <div
-        class="civ-inline-flex"
-        data-civ-segment-content
-        role="radiogroup"
-        aria-label="${selfContained ? nothing : (this.label || nothing)}"
-        aria-orientation="horizontal"
-        aria-describedby="${describedBy || nothing}"
-        aria-invalid="${this.error ? 'true' : nothing}"
-        aria-required="${this.required || nothing}"
-      ></div>
-    `;
-
-    if (!selfContained) return inner;
 
     return html`
       <fieldset
@@ -128,15 +103,25 @@ export class CivSegmentedControl extends LightDomSlotMixin(CivFormElement) {
         aria-required="${this.required || nothing}"
         ?disabled="${this.disabled}"
       >
-        ${renderFormHeader({
-          label: renderLegend({ legend: this.legend, required: this.required, headingLevel: this.headingLevel, size: this.size }),
-          hintId: this._hintId,
-          hint: this.hint,
-          errorId: this._errorId,
-          error: this.error,
-          fieldset: true,
-        })}
-        ${inner}
+        ${this.legend
+          ? renderFormHeader({
+              label: renderLegend({ legend: this.legend, required: this.required, headingLevel: this.headingLevel, size: this.size }),
+              hintId: this._hintId,
+              hint: this.hint,
+              errorId: this._errorId,
+              error: this.error,
+              fieldset: true,
+            })
+          : nothing}
+        <div
+          class="civ-inline-flex"
+          data-civ-segment-content
+          role="radiogroup"
+          aria-orientation="horizontal"
+          aria-describedby="${describedBy || nothing}"
+          aria-invalid="${this.error ? 'true' : nothing}"
+          aria-required="${this.required || nothing}"
+        ></div>
       </fieldset>
     `;
   }

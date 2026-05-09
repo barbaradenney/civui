@@ -16,7 +16,7 @@ export { debounce } from './utils/debounce.js';
 export { dispatch, forwardTileClick } from './utils/events.js';
 export { interpolate } from './utils/interpolate.js';
 export { isRtl } from './utils/direction.js';
-export { syncGroupDisabled, stopChildEvent, syncLegendToLabel } from './utils/group-utils.js';
+export { syncGroupDisabled, stopChildEvent } from './utils/group-utils.js';
 export { clickOutside } from './utils/click-outside.js';
 
 // Date utilities

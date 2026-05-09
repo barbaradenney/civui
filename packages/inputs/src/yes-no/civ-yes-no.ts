@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivFormElement, dispatch, buildDescribedBy, resolveGroupNavIndex, isRtl, syncLegendToLabel, renderFormHeader, renderLegend } from '@civui/core';
+import { CivFormElement, dispatch, buildDescribedBy, resolveGroupNavIndex, isRtl, renderFormHeader, renderLegend } from '@civui/core';
 import type { HeadingLevel, LabelSize } from '@civui/core';
 
 /**
@@ -86,19 +86,10 @@ export class CivYesNo extends CivFormElement {
     this._defaultValue = this.value;
   }
 
-  protected override willUpdate(changed: Map<string, unknown>): void {
-    super.willUpdate(changed);
-    syncLegendToLabel(this, changed);
-  }
-
   override render() {
     const describedBy = buildDescribedBy(this._hintId, this.hint, this._errorId, this.error);
 
     const btnClasses = 'civ-btn civ-btn--yesno';
-    // Self-contain only when the consumer set `legend` directly. If wrapped
-    // in an external civ-form-fieldset, that wrapper cascades its own legend
-    // to our inherited `label` — but our `legend` stays empty.
-    const selfContained = !!this.legend;
 
     // The radiogroup role lives on the inner div so the optional skip
     // affordance (which is a toggle-button, not a radio) can sit alongside
@@ -159,8 +150,6 @@ export class CivYesNo extends CivFormElement {
         : nothing}
     `;
 
-    if (!selfContained) return inner;
-
     return html`
       <fieldset
         class="civ-fieldset"
@@ -169,14 +158,16 @@ export class CivYesNo extends CivFormElement {
         aria-required="${this.required || nothing}"
         ?disabled="${this.disabled}"
       >
-        ${renderFormHeader({
-          label: renderLegend({ legend: this.legend, required: this.required, headingLevel: this.headingLevel, size: this.size }),
-          hintId: this._hintId,
-          hint: this.hint,
-          errorId: this._errorId,
-          error: this.error,
-          fieldset: true,
-        })}
+        ${this.legend
+          ? renderFormHeader({
+              label: renderLegend({ legend: this.legend, required: this.required, headingLevel: this.headingLevel, size: this.size }),
+              hintId: this._hintId,
+              hint: this.hint,
+              errorId: this._errorId,
+              error: this.error,
+              fieldset: true,
+            })
+          : nothing}
         ${inner}
       </fieldset>
     `;

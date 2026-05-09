@@ -596,6 +596,26 @@ describe('civ-date-picker', () => {
       // Mask strips letters; with no digits typed, value is empty
       expect(el._inputValue).toBe('');
     });
+
+    it('bubbles internal error state to a wrapping civ-form-field', async () => {
+      const wrapper = await fixture(
+        '<civ-form-field label="Date"><civ-date-picker name="d"></civ-date-picker></civ-form-field>'
+      ) as any;
+      const datePicker = wrapper.querySelector('civ-date-picker') as any;
+
+      // Simulate the picker's internal validation rejecting an unparseable date
+      datePicker.error = 'Enter a valid date';
+      await elementUpdated(wrapper);
+
+      // The civ-error-change event should have propagated up so the
+      // form-field renders the error from its own state.
+      expect(wrapper.error).toBe('Enter a valid date');
+
+      // Reverse direction also works: clearing the child's error clears the parent's
+      datePicker.error = '';
+      await elementUpdated(wrapper);
+      expect(wrapper.error).toBe('');
+    });
   });
 
   describe('focus management', () => {

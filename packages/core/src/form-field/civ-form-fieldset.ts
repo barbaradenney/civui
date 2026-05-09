@@ -72,6 +72,25 @@ export class CivFormFieldset extends LightDomSlotMixin(CivBaseElement) {
 
   private _hintId = this.generateId('hint');
   private _errorId = this.generateId('error');
+  private _boundOnChildErrorChange = this._onChildErrorChange.bind(this);
+
+  override connectedCallback(): void {
+    super.connectedCallback();
+    // Mirror child-internal error state (e.g. memorable-date rejecting an
+    // invalid date) up so the visible error text re-renders.
+    this.addEventListener('civ-error-change', this._boundOnChildErrorChange as EventListener);
+  }
+
+  override disconnectedCallback(): void {
+    super.disconnectedCallback();
+    this.removeEventListener('civ-error-change', this._boundOnChildErrorChange as EventListener);
+  }
+
+  private _onChildErrorChange(e: CustomEvent<{ error: string }>): void {
+    if (e.target === this) return;
+    if (e.detail.error === this.error) return;
+    this.error = e.detail.error;
+  }
 
   override firstUpdated(): void {
     this._relocateSlots();

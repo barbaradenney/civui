@@ -247,6 +247,18 @@ export class CivFormElement extends CivBaseElement {
       // message even when the value didn't move.
       this._updateValidity();
     }
+    if (changed.has('error')) {
+      // Bubble error changes up so a wrapping civ-form-field /
+      // civ-form-fieldset can mirror the child's internal validation
+      // state (e.g. date-picker rejecting an unparseable typed value).
+      // The wrapper's listener is loop-safe because it only updates when
+      // the value actually differs.
+      this.dispatchEvent(new CustomEvent('civ-error-change', {
+        detail: { error: this.error },
+        bubbles: true,
+        composed: false,
+      }));
+    }
   }
 
   /**

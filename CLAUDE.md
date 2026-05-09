@@ -92,20 +92,20 @@ Form input components (text-input, textarea, select, combobox, date-picker, file
 </civ-form-field>
 ```
 
-Group components (radio-group, checkbox-group, segmented-control, yes-no, memorable-date, date-range-picker) use `<civ-form-fieldset>`:
+Group components (radio-group, checkbox-group, segmented-control, yes-no, memorable-date, date-range-picker) are **self-contained** — pass `legend` directly, do **not** wrap in `<civ-form-fieldset>` (you'd get nested fieldsets with double legends). The `fieldset-wrappers` CI gate enforces this.
 
 ```html
-<civ-form-fieldset legend="Preferred contact method" required>
-  <civ-radio-group name="contact">
-    <civ-radio value="email" label="Email"></civ-radio>
-    <civ-radio value="phone" label="Phone"></civ-radio>
-  </civ-radio-group>
-</civ-form-fieldset>
+<civ-radio-group legend="Preferred contact method" name="contact" required>
+  <civ-radio value="email" label="Email"></civ-radio>
+  <civ-radio value="phone" label="Phone"></civ-radio>
+</civ-radio-group>
 ```
 
-`civ-form-field` and `civ-form-fieldset` cascade `required`/`disabled` to their child component and wire ARIA attributes automatically.
+`civ-form-fieldset` is now reserved for **genuine multi-field grouping** — putting one section heading over several controls (e.g. an address with street/city/state inside).
 
-**Self-contained components** (checkbox, toggle, and all compound components) render their own labels inline and do not need wrappers.
+`civ-form-field` (single-control wrapper) cascades `required`/`disabled` to its child and wires ARIA attributes automatically.
+
+**Self-contained components** (checkbox, toggle, all compound components, and now all six group components above) render their own labels inline and do not need wrappers.
 
 ### Events
 - `civ-input` — fires on every value change (like native `input`)

@@ -17,7 +17,7 @@ describe('civ-yes-no', () => {
   });
 
   it('renders Yes and No buttons with role="radio"', async () => {
-    const el = await fixture('<civ-yes-no label="Question"></civ-yes-no>');
+    const el = await fixture('<civ-yes-no legend="Question"></civ-yes-no>');
 
     const buttons = el.querySelectorAll('button[role="radio"]');
     expect(buttons.length).toBe(2);
@@ -26,7 +26,7 @@ describe('civ-yes-no', () => {
   });
 
   it('renders a div with role="radiogroup"', async () => {
-    const el = await fixture('<civ-yes-no label="Question"></civ-yes-no>');
+    const el = await fixture('<civ-yes-no legend="Question"></civ-yes-no>');
 
     const group = el.querySelector('[role="radiogroup"]');
     expect(group).not.toBeNull();
@@ -34,7 +34,7 @@ describe('civ-yes-no', () => {
   });
 
   it('sets aria-checked on selected button', async () => {
-    const el = await fixture('<civ-yes-no label="Question" value="yes"></civ-yes-no>') as any;
+    const el = await fixture('<civ-yes-no legend="Question" value="yes"></civ-yes-no>') as any;
     await elementUpdated(el);
 
     const buttons = el.querySelectorAll('button[role="radio"]');
@@ -43,7 +43,7 @@ describe('civ-yes-no', () => {
   });
 
   it('selects Yes on click', async () => {
-    const el = await fixture('<civ-yes-no label="Question"></civ-yes-no>') as any;
+    const el = await fixture('<civ-yes-no legend="Question"></civ-yes-no>') as any;
 
     const buttons = el.querySelectorAll('button[role="radio"]');
     (buttons[0] as HTMLButtonElement).click();
@@ -54,7 +54,7 @@ describe('civ-yes-no', () => {
   });
 
   it('selects No on click', async () => {
-    const el = await fixture('<civ-yes-no label="Question"></civ-yes-no>') as any;
+    const el = await fixture('<civ-yes-no legend="Question"></civ-yes-no>') as any;
 
     const buttons = el.querySelectorAll('button[role="radio"]');
     (buttons[1] as HTMLButtonElement).click();
@@ -65,7 +65,7 @@ describe('civ-yes-no', () => {
   });
 
   it('fires civ-input and civ-change with { value } on selection', async () => {
-    const el = await fixture('<civ-yes-no label="Question" name="citizen"></civ-yes-no>');
+    const el = await fixture('<civ-yes-no legend="Question" name="citizen"></civ-yes-no>');
 
     const inputHandler = vi.fn();
     const changeHandler = vi.fn();
@@ -96,21 +96,21 @@ describe('civ-yes-no', () => {
   });
 
   it('sets aria-invalid on the radiogroup when error is present', async () => {
-    const el = await fixture('<civ-yes-no label="Question" error="Required"></civ-yes-no>');
+    const el = await fixture('<civ-yes-no legend="Question" error="Required"></civ-yes-no>');
 
     const group = el.querySelector('[role="radiogroup"]')!;
     expect(group.getAttribute('aria-invalid')).toBe('true');
   });
 
   it('sets aria-required on the radiogroup when required', async () => {
-    const el = await fixture('<civ-yes-no label="Question" required></civ-yes-no>');
+    const el = await fixture('<civ-yes-no legend="Question" required></civ-yes-no>');
 
     const group = el.querySelector('[role="radiogroup"]')!;
     expect(group.getAttribute('aria-required')).toBe('true');
   });
 
   it('disabled state prevents selection', async () => {
-    const el = await fixture('<civ-yes-no label="Question" disabled></civ-yes-no>') as any;
+    const el = await fixture('<civ-yes-no legend="Question" disabled></civ-yes-no>') as any;
 
     const buttons = el.querySelectorAll('button[role="radio"]') as NodeListOf<HTMLButtonElement>;
     expect(buttons[0].disabled).toBe(true);
@@ -127,7 +127,7 @@ describe('civ-yes-no', () => {
   });
 
   it('resets to default value on formResetCallback', async () => {
-    const el = await fixture('<civ-yes-no label="Question" value="yes"></civ-yes-no>') as any;
+    const el = await fixture('<civ-yes-no legend="Question" value="yes"></civ-yes-no>') as any;
     await elementUpdated(el);
 
     el.value = 'no';
@@ -140,7 +140,7 @@ describe('civ-yes-no', () => {
   });
 
   it('fires analytics on change', async () => {
-    const el = await fixture('<civ-yes-no label="Question" name="citizen"></civ-yes-no>');
+    const el = await fixture('<civ-yes-no legend="Question" name="citizen"></civ-yes-no>');
 
     const handler = vi.fn();
     el.addEventListener('civ-analytics', handler as EventListener);
@@ -155,14 +155,14 @@ describe('civ-yes-no', () => {
   });
 
   it('uses Light DOM (no shadowRoot)', async () => {
-    const el = await fixture('<civ-yes-no label="Question"></civ-yes-no>');
+    const el = await fixture('<civ-yes-no legend="Question"></civ-yes-no>');
 
     expect(el.shadowRoot).toBeNull();
     expect(el.querySelector('[role="radiogroup"]')).not.toBeNull();
   });
 
   it('renders the choices as real <button> elements so the global focus ring applies', async () => {
-    const el = await fixture('<civ-yes-no label="Question"></civ-yes-no>');
+    const el = await fixture('<civ-yes-no legend="Question"></civ-yes-no>');
 
     const buttons = el.querySelectorAll('button[role="radio"]');
     expect(buttons.length).toBeGreaterThanOrEqual(2);
@@ -171,7 +171,7 @@ describe('civ-yes-no', () => {
   });
 
   it('uses custom labels when provided', async () => {
-    const el = await fixture('<civ-yes-no label="Agree?" yes-label="Agree" no-label="Disagree"></civ-yes-no>');
+    const el = await fixture('<civ-yes-no legend="Agree?" yes-label="Agree" no-label="Disagree"></civ-yes-no>');
 
     const buttons = el.querySelectorAll('button[role="radio"]');
     expect(buttons[0].textContent).toBe('Agree');
@@ -179,7 +179,7 @@ describe('civ-yes-no', () => {
   });
 
   it('navigates with arrow keys', async () => {
-    const el = await fixture('<civ-yes-no label="Question" value="yes"></civ-yes-no>') as any;
+    const el = await fixture('<civ-yes-no legend="Question" value="yes"></civ-yes-no>') as any;
     await elementUpdated(el);
 
     const buttons = el.querySelectorAll('button[role="radio"]') as NodeListOf<HTMLButtonElement>;
@@ -195,7 +195,7 @@ describe('civ-yes-no', () => {
   });
 
   it('does not fire events when selecting already-selected value', async () => {
-    const el = await fixture('<civ-yes-no label="Question" value="yes"></civ-yes-no>') as any;
+    const el = await fixture('<civ-yes-no legend="Question" value="yes"></civ-yes-no>') as any;
     await elementUpdated(el);
 
     const handler = vi.fn();
@@ -208,7 +208,7 @@ describe('civ-yes-no', () => {
   });
 
   it('applies civ-btn--yesno class to both buttons', async () => {
-    const el = await fixture('<civ-yes-no label="Question" value="yes"></civ-yes-no>');
+    const el = await fixture('<civ-yes-no legend="Question" value="yes"></civ-yes-no>');
     await elementUpdated(el);
 
     const buttons = el.querySelectorAll('button[role="radio"]');
@@ -222,14 +222,14 @@ describe('civ-yes-no', () => {
   // ── Third option (unsure) ────────────────────────────────────
 
   it('renders only 2 buttons by default (no unsure-label)', async () => {
-    const el = await fixture('<civ-yes-no label="Question"></civ-yes-no>');
+    const el = await fixture('<civ-yes-no legend="Question"></civ-yes-no>');
 
     const buttons = el.querySelectorAll('button[role="radio"]');
     expect(buttons.length).toBe(2);
   });
 
   it('renders 3 buttons when unsure-label is set', async () => {
-    const el = await fixture('<civ-yes-no label="Question" unsure-label="I\'m not sure"></civ-yes-no>');
+    const el = await fixture('<civ-yes-no legend="Question" unsure-label="I\'m not sure"></civ-yes-no>');
 
     const buttons = el.querySelectorAll('button[role="radio"]');
     expect(buttons.length).toBe(3);
@@ -237,7 +237,7 @@ describe('civ-yes-no', () => {
   });
 
   it('selects unsure value on third button click', async () => {
-    const el = await fixture('<civ-yes-no label="Question" unsure-label="Unsure"></civ-yes-no>') as any;
+    const el = await fixture('<civ-yes-no legend="Question" unsure-label="Unsure"></civ-yes-no>') as any;
 
     const buttons = el.querySelectorAll('button[role="radio"]');
     (buttons[2] as HTMLButtonElement).click();
@@ -250,7 +250,7 @@ describe('civ-yes-no', () => {
   });
 
   it('uses custom unsure-value when set', async () => {
-    const el = await fixture('<civ-yes-no label="Question" unsure-label="N/A" unsure-value="n/a"></civ-yes-no>') as any;
+    const el = await fixture('<civ-yes-no legend="Question" unsure-label="N/A" unsure-value="n/a"></civ-yes-no>') as any;
 
     const buttons = el.querySelectorAll('button[role="radio"]');
     (buttons[2] as HTMLButtonElement).click();
@@ -260,7 +260,7 @@ describe('civ-yes-no', () => {
   });
 
   it('fires civ-change with unsure value', async () => {
-    const el = await fixture('<civ-yes-no label="Question" unsure-label="Unsure"></civ-yes-no>');
+    const el = await fixture('<civ-yes-no legend="Question" unsure-label="Unsure"></civ-yes-no>');
 
     const handler = vi.fn();
     el.addEventListener('civ-change', handler as EventListener);
@@ -273,7 +273,7 @@ describe('civ-yes-no', () => {
   });
 
   it('navigates through 3 options with arrow keys', async () => {
-    const el = await fixture('<civ-yes-no label="Question" value="yes" unsure-label="Unsure"></civ-yes-no>') as any;
+    const el = await fixture('<civ-yes-no legend="Question" value="yes" unsure-label="Unsure"></civ-yes-no>') as any;
     await elementUpdated(el);
 
     const buttons = el.querySelectorAll('button[role="radio"]') as NodeListOf<HTMLButtonElement>;
@@ -293,7 +293,7 @@ describe('civ-yes-no', () => {
   });
 
   it('applies civ-btn--yesno class to third button', async () => {
-    const el = await fixture('<civ-yes-no label="Question" unsure-label="Unsure"></civ-yes-no>');
+    const el = await fixture('<civ-yes-no legend="Question" unsure-label="Unsure"></civ-yes-no>');
 
     const buttons = el.querySelectorAll('button[role="radio"]');
     expect(buttons[2].className).toContain('civ-btn--yesno');
@@ -302,18 +302,18 @@ describe('civ-yes-no', () => {
 
   describe('prefer-not-to-answer affordance', () => {
     it('renders a skip button only when skip-label is set', async () => {
-      const without = await fixture('<civ-yes-no label="Q"></civ-yes-no>');
+      const without = await fixture('<civ-yes-no legend="Q"></civ-yes-no>');
       expect(without.querySelector('[data-civ-skip]')).toBeNull();
 
       const withSkip = await fixture(
-        '<civ-yes-no label="Q" skip-label="Prefer not to answer"></civ-yes-no>',
+        '<civ-yes-no legend="Q" skip-label="Prefer not to answer"></civ-yes-no>',
       );
       expect(withSkip.querySelector('[data-civ-skip]')).not.toBeNull();
     });
 
     it('skip button is not part of the radio group', async () => {
       const el = await fixture(
-        '<civ-yes-no label="Q" skip-label="Prefer not to answer"></civ-yes-no>',
+        '<civ-yes-no legend="Q" skip-label="Prefer not to answer"></civ-yes-no>',
       );
       const skip = el.querySelector('[data-civ-skip]')!;
       expect(skip.getAttribute('role')).not.toBe('radio');
@@ -325,7 +325,7 @@ describe('civ-yes-no', () => {
 
     it('sets value to skip-value on click and fires civ-change', async () => {
       const el = await fixture(
-        '<civ-yes-no label="Q" skip-label="Prefer not to answer" skip-value="opt_out"></civ-yes-no>',
+        '<civ-yes-no legend="Q" skip-label="Prefer not to answer" skip-value="opt_out"></civ-yes-no>',
       ) as any;
 
       let changeValue: string | null = null;
@@ -342,7 +342,7 @@ describe('civ-yes-no', () => {
 
     it('does not interfere with arrow-key navigation on the radios', async () => {
       const el = await fixture(
-        '<civ-yes-no label="Q" skip-label="Prefer not to answer"></civ-yes-no>',
+        '<civ-yes-no legend="Q" skip-label="Prefer not to answer"></civ-yes-no>',
       ) as any;
       const yesBtn = el.querySelectorAll('button[role="radio"]')[0] as HTMLButtonElement;
       yesBtn.focus();
@@ -353,7 +353,7 @@ describe('civ-yes-no', () => {
 
     it('sets aria-describedby / aria-invalid / aria-required on the radiogroup', async () => {
       const el = await fixture(
-        '<civ-yes-no label="Q" hint="Pick" error="err" required skip-label="Skip"></civ-yes-no>',
+        '<civ-yes-no legend="Q" hint="Pick" error="err" required skip-label="Skip"></civ-yes-no>',
       );
 
       const inner = el.querySelector('[role="radiogroup"]')!;

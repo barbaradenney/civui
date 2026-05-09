@@ -574,26 +574,44 @@ describe('civ-date-picker', () => {
       expect(el.value).toBe('');
     });
 
-    it('strips non-digits and applies the slash mask while typing', async () => {
+    it('applies the slash mask on blur (not while typing)', async () => {
       const el = await fixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
 
       const input = el.querySelector('input') as HTMLInputElement;
+
+      // While typing: raw passes through (no cursor jumps for screen readers)
       input.value = '12121983';
       input.dispatchEvent(new Event('input', { bubbles: true }));
       await elementUpdated(el);
+      expect(el._inputValue).toBe('12121983');
 
+      // On blur: mask reformats to MM/DD/YYYY
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+      await elementUpdated(el);
       expect(el._inputValue).toBe('12/12/1983');
     });
 
-    it('discards typed non-digits in invalid input', async () => {
+    it('skips the mask when the user already typed slashes (no mangling)', async () => {
+      const el = await fixture('<civ-date-picker label="Date" name="date"></civ-date-picker>') as any;
+
+      const input = el.querySelector('input') as HTMLInputElement;
+      input.value = '3/15/2026';
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+      await elementUpdated(el);
+
+      // Single-digit month survives — not stripped+re-masked into '31/52/026'
+      expect(el.value).toBe('2026-03-15');
+    });
+
+    it('discards typed non-digits on blur', async () => {
       const el = await fixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
 
       const input = el.querySelector('input') as HTMLInputElement;
       input.value = 'not a date';
-      input.dispatchEvent(new Event('input', { bubbles: true }));
+      input.dispatchEvent(new Event('change', { bubbles: true }));
       await elementUpdated(el);
 
-      // Mask strips letters; with no digits typed, value is empty
+      // No digits typed → mask result is empty → cleared
       expect(el._inputValue).toBe('');
     });
 

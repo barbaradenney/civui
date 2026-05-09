@@ -547,24 +547,28 @@ export class CivDatePicker extends CivFormElement {
 
   private _onTextInput(e: Event): void {
     const target = e.target as HTMLInputElement;
-    // Auto-format digits as the user types: 12121983 → 12/12/1983.
-    // Strip non-digits, apply the MM/DD/YYYY (or DD/MM/YYYY for non-US
-    // locales — the slot pattern is the same, only the parse meaning
-    // differs) slash mask. Skip for ISO-style locales that don't use
-    // slashes; the parser still accepts unmasked input as a fallback.
-    const useSlashMask = !this.locale.startsWith('iso');
-    const masked = useSlashMask
-      ? applyMask(target.value.replace(/\D/g, ''), '##/##/####')
-      : target.value;
-    if (masked !== target.value) {
-      target.value = masked;
-    }
-    this._inputValue = masked;
-    dispatch(this, 'civ-input', { value: masked });
+    // Pass raw keystrokes through during typing — masking on every input
+    // shifts the cursor and is read out as a stream of value changes by
+    // screen readers. The mask runs once on blur (in _onTextChange).
+    this._inputValue = target.value;
+    dispatch(this, 'civ-input', { value: target.value });
   }
 
   private _onTextChange(e: Event): void {
     const target = e.target as HTMLInputElement;
+    // Apply the slash mask on blur: 12121983 → 12/12/1983. Skip when the
+    // user already typed slashes (so "3/15/2026" isn't mangled into
+    // "31/52/026" by stripping and re-inserting at fixed positions).
+    // ISO-style locales skip entirely; the parser handles those formats.
+    const useSlashMask = !this.locale.startsWith('iso') && !target.value.includes('/');
+    if (useSlashMask) {
+      const digits = target.value.replace(/\D/g, '');
+      const masked = applyMask(digits, '##/##/####');
+      if (masked !== target.value) {
+        target.value = masked;
+        this._inputValue = masked;
+      }
+    }
     const text = target.value.trim();
 
     if (!text) {

@@ -43,6 +43,11 @@ summary:focus,
   outline: var(--civ-focus-outline-width) solid var(--civ-focus-shadow-color);
   outline-offset: 0;
   box-shadow: 0 0 0 var(--civ-focus-shadow-radius) var(--civ-focus-outline-color);
+  /* Lift the focused element so its outer halo paints above adjacent
+     siblings (e.g. a button next to an input in an input-group, where
+     the input would otherwise clip the ring on the shared edge). */
+  position: relative;
+  z-index: 1;
 }
 
 /* Inverse variant for dark backgrounds — opt-in via the class. */

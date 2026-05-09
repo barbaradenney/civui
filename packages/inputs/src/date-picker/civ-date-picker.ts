@@ -24,7 +24,7 @@ import {
   isRtl,
   clickOutside,
   inputClasses,
-  applyMask,
+  applyDateMask,
   t,
   type CalendarDay,
   type DateConstraints,
@@ -556,18 +556,12 @@ export class CivDatePicker extends CivFormElement {
 
   private _onTextChange(e: Event): void {
     const target = e.target as HTMLInputElement;
-    // Apply the slash mask on blur: 12121983 → 12/12/1983. Skip when the
-    // user already typed slashes (so "3/15/2026" isn't mangled into
-    // "31/52/026" by stripping and re-inserting at fixed positions).
-    // ISO-style locales skip entirely; the parser handles those formats.
-    const useSlashMask = !this.locale.startsWith('iso') && !target.value.includes('/');
-    if (useSlashMask) {
-      const digits = target.value.replace(/\D/g, '');
-      const masked = applyMask(digits, '##/##/####');
-      if (masked !== target.value) {
-        target.value = masked;
-        this._inputValue = masked;
-      }
+    // Apply the slash mask on blur (see applyDateMask for the rules —
+    // skips when slashes are already typed, opts out for ISO locales).
+    const masked = applyDateMask(target.value, this.locale);
+    if (masked !== target.value) {
+      target.value = masked;
+      this._inputValue = masked;
     }
     const text = target.value.trim();
 

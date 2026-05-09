@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import {
   MASK_PRESETS,
   applyMask,
+  applyDateMask,
   stripMask,
   isComplete,
   getMaxRawLength,
@@ -104,6 +105,37 @@ describe('mask-engine', () => {
 
     it('handles empty input', () => {
       expect(applyMask('', '###-##-####')).toBe('');
+    });
+  });
+
+  describe('applyDateMask', () => {
+    it('formats raw 8-digit input as MM/DD/YYYY', () => {
+      expect(applyDateMask('12121983')).toBe('12/12/1983');
+    });
+
+    it('skips formatting when the input already contains slashes', () => {
+      // Avoids mangling "3/15/2026" into "31/52/026"
+      expect(applyDateMask('3/15/2026')).toBe('3/15/2026');
+      expect(applyDateMask('12/31/2026')).toBe('12/31/2026');
+    });
+
+    it('strips non-digits from raw input', () => {
+      expect(applyDateMask('not a date')).toBe('');
+      expect(applyDateMask('12-31-2026')).toBe('12/31/2026');
+    });
+
+    it('opts out for ISO-style locales', () => {
+      expect(applyDateMask('2026-03-15', 'iso-8601')).toBe('2026-03-15');
+    });
+
+    it('handles partial input gracefully', () => {
+      expect(applyDateMask('12')).toBe('12');
+      expect(applyDateMask('1212')).toBe('12/12');
+      expect(applyDateMask('121219')).toBe('12/12/19');
+    });
+
+    it('handles empty input', () => {
+      expect(applyDateMask('')).toBe('');
     });
   });
 

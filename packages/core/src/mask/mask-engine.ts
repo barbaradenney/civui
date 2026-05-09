@@ -130,6 +130,33 @@ export function applyMask(raw: string, pattern: string): string {
 }
 
 /**
+ * Apply the standard MM/DD/YYYY (or DD/MM/YYYY) slash mask to a typed
+ * date string. Used by date-picker (and reusable for any component that
+ * accepts user-typed dates) to auto-format raw digits on blur:
+ *
+ *   "12121983"  → "12/12/1983"
+ *   "3152026"   → "31/52/026"   ← NOT what users mean — see guard below
+ *   "3/15/2026" → "3/15/2026"   (skipped: already has slashes)
+ *   "not a date" → ""           (non-digits stripped, mask of "" is "")
+ *
+ * The mask is skipped when the input already contains slashes — the
+ * date parser accepts single-digit segments ("3/15/2026"), and stripping
+ * + re-inserting at fixed positions would mangle them. ISO-style locales
+ * (those passed as `locale` starting with "iso") opt out entirely; their
+ * dash-separated format is handled by the parser directly.
+ *
+ * Apply on blur (`change` event) rather than every keystroke — live-mode
+ * masking shifts the cursor and is read by screen readers as a stream of
+ * value changes.
+ */
+export function applyDateMask(value: string, locale = 'en-US'): string {
+  if (locale.startsWith('iso')) return value;
+  if (value.includes('/')) return value;
+  const digits = value.replace(/\D/g, '');
+  return applyMask(digits, '##/##/####');
+}
+
+/**
  * Removes literal characters from a formatted string,
  * returning only the user-typed characters.
  */

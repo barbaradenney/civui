@@ -1,6 +1,7 @@
 export {
   MASK_PRESETS,
   applyMask,
+  applyDateMask,
   stripMask,
   isComplete,
   getMaxRawLength,

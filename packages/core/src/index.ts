@@ -92,6 +92,7 @@ export type { CivLocaleStrings } from './i18n/index.js';
 export {
   MASK_PRESETS,
   applyMask,
+  applyDateMask,
   stripMask,
   isComplete,
   getMaxRawLength,

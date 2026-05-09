@@ -6,12 +6,12 @@ import '@civui/core';
 afterEach(cleanupFixtures);
 
 describe('civ-memorable-date rendering', () => {
-  it('renders label when wrapped in civ-form-fieldset', async () => {
-    const wrapper = await fixture(
-      '<civ-form-fieldset legend="Date of birth"><civ-memorable-date name="dob"></civ-memorable-date></civ-form-fieldset>',
+  it('renders the legend when set directly (self-contained)', async () => {
+    const el = await fixture(
+      '<civ-memorable-date legend="Date of birth" name="dob"></civ-memorable-date>',
     );
 
-    const legend = wrapper.querySelector('legend');
+    const legend = el.querySelector('legend');
     expect(legend).not.toBeNull();
     expect(legend!.textContent).toContain('Date of birth');
   });

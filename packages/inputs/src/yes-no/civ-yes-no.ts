@@ -102,14 +102,15 @@ export class CivYesNo extends CivFormElement {
     // fieldset's implicit grouping, so screen readers want the
     // associations on the radiogroup element directly.
     const inner = html`
-      <div
-        class="civ-flex civ-gap-2"
-        role="radiogroup"
-        aria-labelledby="${this.legend ? this._legendId : nothing}"
-        aria-describedby="${describedBy || nothing}"
-        aria-invalid="${this.error ? 'true' : nothing}"
-        aria-required="${this.required || nothing}"
-      >
+      <div class="civ-flex civ-flex-wrap civ-items-center civ-gap-4">
+        <div
+          class="civ-flex civ-gap-2"
+          role="radiogroup"
+          aria-labelledby="${this.legend ? this._legendId : nothing}"
+          aria-describedby="${describedBy || nothing}"
+          aria-invalid="${this.error ? 'true' : nothing}"
+          aria-required="${this.required || nothing}"
+        >
           <button
             type="button"
             role="radio"
@@ -143,18 +144,19 @@ export class CivYesNo extends CivFormElement {
             >${this.unsureLabel}</button>
           ` : nothing}
         </div>
-      ${this.skipLabel
-        ? html`
-            <button
-              type="button"
-              class="civ-yes-no__skip civ-link--tertiary"
-              aria-pressed="${this.value === this.skipValue ? 'true' : 'false'}"
-              data-civ-skip
-              ?disabled="${this.disabled}"
-              @click="${() => this._selectSkip()}"
-            >${this.skipLabel}</button>
-          `
-        : nothing}
+        ${this.skipLabel
+          ? html`
+              <button
+                type="button"
+                class="civ-yes-no__skip civ-link--tertiary"
+                aria-pressed="${this.value === this.skipValue ? 'true' : 'false'}"
+                data-civ-skip
+                ?disabled="${this.disabled}"
+                @click="${() => this._selectSkip()}"
+              >${this.skipLabel}</button>
+            `
+          : nothing}
+      </div>
     `;
 
     return html`

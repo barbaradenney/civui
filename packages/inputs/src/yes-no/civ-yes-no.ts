@@ -64,6 +64,9 @@ export class CivYesNo extends CivFormElement {
   protected override _defaultValue = '';
   private _boundOnKeydown = this._onKeydown.bind(this);
 
+  /** Legend ID — referenced by the inner radiogroup's `aria-labelledby`. */
+  private _legendId = this.generateId('yes-no-legend');
+
   /** Ordered list of option values, dynamically includes the third option. */
   private get _options(): string[] {
     const opts = ['yes', 'no'];
@@ -94,11 +97,15 @@ export class CivYesNo extends CivFormElement {
     // The radiogroup role lives on the inner div so the optional skip
     // affordance (which is a toggle-button, not a radio) can sit alongside
     // the radio choices inside the fieldset without becoming part of the
-    // mutually-exclusive group.
+    // mutually-exclusive group. ARIA attributes (labelledby/describedby/
+    // invalid/required) live HERE — `role="radiogroup"` overrides the
+    // fieldset's implicit grouping, so screen readers want the
+    // associations on the radiogroup element directly.
     const inner = html`
       <div
         class="civ-flex civ-gap-2"
         role="radiogroup"
+        aria-labelledby="${this.legend ? this._legendId : nothing}"
         aria-describedby="${describedBy || nothing}"
         aria-invalid="${this.error ? 'true' : nothing}"
         aria-required="${this.required || nothing}"
@@ -153,14 +160,11 @@ export class CivYesNo extends CivFormElement {
     return html`
       <fieldset
         class="civ-fieldset"
-        aria-describedby="${describedBy || nothing}"
-        aria-invalid="${this.error ? 'true' : nothing}"
-        aria-required="${this.required || nothing}"
         ?disabled="${this.disabled}"
       >
         ${this.legend
           ? renderFormHeader({
-              label: renderLegend({ legend: this.legend, required: this.required, headingLevel: this.headingLevel, size: this.size }),
+              label: renderLegend({ legend: this.legend, required: this.required, legendId: this._legendId, headingLevel: this.headingLevel, size: this.size }),
               hintId: this._hintId,
               hint: this.hint,
               errorId: this._errorId,

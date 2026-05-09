@@ -50,6 +50,9 @@ export class CivSegmentedControl extends LightDomSlotMixin(CivFormElement) {
   private _boundStopChildInput = stopChildEvent(this);
   private _boundOnKeydown = this._onKeydown.bind(this);
 
+  /** Legend ID — referenced by the inner radiogroup's `aria-labelledby`. */
+  private _legendId = this.generateId('segmented-legend');
+
   override connectedCallback(): void {
     super.connectedCallback();
     this.addEventListener('civ-change', this._boundOnChildChange as EventListener);
@@ -95,17 +98,18 @@ export class CivSegmentedControl extends LightDomSlotMixin(CivFormElement) {
   override render() {
     const describedBy = buildDescribedBy(this._hintId, this.hint, this._errorId, this.error);
 
+    // ARIA attributes live on the inner role="radiogroup" div — that role
+    // overrides the fieldset's implicit grouping, so screen readers want
+    // the legend / hint / error associations on the radiogroup element
+    // directly, not duplicated on the outer fieldset.
     return html`
       <fieldset
         class="civ-fieldset"
-        aria-describedby="${describedBy || nothing}"
-        aria-invalid="${this.error ? 'true' : nothing}"
-        aria-required="${this.required || nothing}"
         ?disabled="${this.disabled}"
       >
         ${this.legend
           ? renderFormHeader({
-              label: renderLegend({ legend: this.legend, required: this.required, headingLevel: this.headingLevel, size: this.size }),
+              label: renderLegend({ legend: this.legend, required: this.required, legendId: this._legendId, headingLevel: this.headingLevel, size: this.size }),
               hintId: this._hintId,
               hint: this.hint,
               errorId: this._errorId,
@@ -117,6 +121,7 @@ export class CivSegmentedControl extends LightDomSlotMixin(CivFormElement) {
           class="civ-inline-flex"
           data-civ-segment-content
           role="radiogroup"
+          aria-labelledby="${this.legend ? this._legendId : nothing}"
           aria-orientation="horizontal"
           aria-describedby="${describedBy || nothing}"
           aria-invalid="${this.error ? 'true' : nothing}"

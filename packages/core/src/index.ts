@@ -5,6 +5,7 @@ export { CivBooleanFormElement } from './base/civ-boolean-form-element.js';
 export { LightDomSlotMixin, LightDomTextMixin } from './base/light-dom-mixins.js';
 export type { SlotConfig } from './base/light-dom-mixins.js';
 export { LegendHeadingMixin } from './base/legend-heading-mixin.js';
+export { GroupListenerMixin } from './base/group-listener-mixin.js';
 
 // A11y utilities
 export { announce, cancelAnnouncements, cleanupLiveRegions } from './a11y/live-region.js';

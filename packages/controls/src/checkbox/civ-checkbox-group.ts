@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivFormElement, LegendHeadingMixin, LightDomSlotMixin, dispatch, syncGroupDisabled, stopChildEvent, t, interpolate, resolvePresetOptions, renderFormHeader, renderLegend, buildDescribedBy } from '@civui/core';
+import { CivFormElement, LegendHeadingMixin, LightDomSlotMixin, GroupListenerMixin, dispatch, syncGroupDisabled, t, interpolate, resolvePresetOptions, renderFormHeader, renderLegend, buildDescribedBy } from '@civui/core';
 import type { SlotConfig, SelectPresetName } from '@civui/core';
 import type { CivCheckbox } from './civ-checkbox.js';
 import './civ-checkbox.js';
@@ -34,7 +34,7 @@ import './civ-checkbox.js';
  * @fires civ-analytics - Analytics tracking event on change
  */
 @customElement('civ-checkbox-group')
-export class CivCheckboxGroup extends LegendHeadingMixin(LightDomSlotMixin(CivFormElement)) {
+export class CivCheckboxGroup extends LegendHeadingMixin(GroupListenerMixin(LightDomSlotMixin(CivFormElement))) {
   override _getSlotConfig(): SlotConfig {
     return { default: '.civ-group-layout--vertical, .civ-group-layout--horizontal' };
   }
@@ -95,20 +95,10 @@ export class CivCheckboxGroup extends LegendHeadingMixin(LightDomSlotMixin(CivFo
    * native validity check.
    */
   protected override _defaultValue = '';
-  private _boundOnChildChange = this._onChildChange.bind(this);
-  private _boundStopChildInput = stopChildEvent(this);
 
-  override connectedCallback(): void {
-    super.connectedCallback();
-    this.addEventListener('civ-change', this._boundOnChildChange as EventListener);
-    this.addEventListener('civ-input', this._boundStopChildInput as EventListener);
-  }
-
-  override disconnectedCallback(): void {
-    super.disconnectedCallback();
-    this.removeEventListener('civ-change', this._boundOnChildChange as EventListener);
-    this.removeEventListener('civ-input', this._boundStopChildInput as EventListener);
-  }
+  // civ-change / civ-input listeners wired by GroupListenerMixin —
+  // it calls _onChildChange. (No keydown — checkbox-group has no
+  // roving tabindex.)
 
   override firstUpdated(): void {
     this._relocateSlots();

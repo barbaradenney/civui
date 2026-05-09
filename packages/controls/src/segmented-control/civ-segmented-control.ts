@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivFormElement, LegendHeadingMixin, LightDomSlotMixin, dispatch, resolveGroupNavIndex, isRtl, syncGroupDisabled, stopChildEvent, renderFormHeader, renderLegend, buildDescribedBy } from '@civui/core';
+import { CivFormElement, LegendHeadingMixin, LightDomSlotMixin, GroupListenerMixin, dispatch, resolveGroupNavIndex, isRtl, syncGroupDisabled, renderFormHeader, renderLegend, buildDescribedBy } from '@civui/core';
 import type { SlotConfig } from '@civui/core';
 import type { CivSegment } from './civ-segment.js';
 
@@ -31,7 +31,7 @@ import type { CivSegment } from './civ-segment.js';
  * @fires civ-analytics - Analytics tracking event on change
  */
 @customElement('civ-segmented-control')
-export class CivSegmentedControl extends LegendHeadingMixin(LightDomSlotMixin(CivFormElement)) {
+export class CivSegmentedControl extends LegendHeadingMixin(GroupListenerMixin(LightDomSlotMixin(CivFormElement))) {
   override _getSlotConfig(): SlotConfig {
     return { default: '[data-civ-segment-content]' };
   }
@@ -42,26 +42,12 @@ export class CivSegmentedControl extends LegendHeadingMixin(LightDomSlotMixin(Ci
   // headingLevel + size inherited from LegendHeadingMixin.
 
   protected override _defaultValue = '';
-  private _boundOnChildChange = this._onChildChange.bind(this);
-  private _boundStopChildInput = stopChildEvent(this);
-  private _boundOnKeydown = this._onKeydown.bind(this);
 
   /** Legend ID — referenced by the inner radiogroup's `aria-labelledby`. */
   private _legendId = this.generateId('segmented-legend');
 
-  override connectedCallback(): void {
-    super.connectedCallback();
-    this.addEventListener('civ-change', this._boundOnChildChange as EventListener);
-    this.addEventListener('civ-input', this._boundStopChildInput as EventListener);
-    this.addEventListener('keydown', this._boundOnKeydown as EventListener);
-  }
-
-  override disconnectedCallback(): void {
-    super.disconnectedCallback();
-    this.removeEventListener('civ-change', this._boundOnChildChange as EventListener);
-    this.removeEventListener('civ-input', this._boundStopChildInput as EventListener);
-    this.removeEventListener('keydown', this._boundOnKeydown as EventListener);
-  }
+  // civ-change / civ-input / keydown listeners wired by GroupListenerMixin —
+  // it calls _onChildChange and _onKeydown.
 
   override firstUpdated(): void {
     this._relocateSlots();

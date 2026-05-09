@@ -68,9 +68,7 @@ export const NotEquals: Story = {
 export const MultipleConditions: Story = {
   render: () => html`
     <div>
-      <civ-form-fieldset legend="Are you a veteran?">
-        <civ-yes-no name="veteran"></civ-yes-no>
-      </civ-form-fieldset>
+      <civ-yes-no legend="Are you a veteran?" name="veteran"></civ-yes-no>
 
       <civ-conditional when="veteran" equals="yes">
         <civ-form-field label="Branch of service" hint="For example: Army, Navy, Air Force">
@@ -104,9 +102,7 @@ export const WithForm: Story = {
         <civ-text-input name="email" type="email" required></civ-text-input>
       </civ-form-field>
 
-      <civ-form-fieldset legend="Are you a veteran?">
-        <civ-yes-no name="isVeteran"></civ-yes-no>
-      </civ-form-fieldset>
+      <civ-yes-no legend="Are you a veteran?" name="isVeteran"></civ-yes-no>
 
       <civ-conditional when="isVeteran" equals="yes">
         <civ-form-field label="Branch of service" required hint="For example: Army, Navy, Air Force, Marine Corps, Coast Guard">
@@ -117,9 +113,7 @@ export const WithForm: Story = {
           <civ-text-input name="yearsOfService" width="sm"></civ-text-input>
         </civ-form-field>
 
-        <civ-form-fieldset legend="Do you have a service-connected disability?">
-          <civ-yes-no name="hasDisability"></civ-yes-no>
-        </civ-form-fieldset>
+        <civ-yes-no legend="Do you have a service-connected disability?" name="hasDisability"></civ-yes-no>
 
         <civ-conditional when="hasDisability" equals="yes">
           <civ-form-field label="Disability rating" required>
@@ -136,9 +130,7 @@ export const WithForm: Story = {
       </civ-conditional>
 
       <civ-conditional when="isVeteran" equals="no">
-        <civ-form-fieldset legend="Are you a dependent of a veteran?">
-          <civ-yes-no name="isDependent"></civ-yes-no>
-        </civ-form-fieldset>
+        <civ-yes-no legend="Are you a dependent of a veteran?" name="isDependent"></civ-yes-no>
 
         <civ-conditional when="isDependent" equals="yes">
           <civ-form-field label="Veteran's full name" required>

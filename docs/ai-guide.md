@@ -830,14 +830,14 @@ Yes/no radio group — common in government eligibility forms. Supports an optio
 ```html
 <!-- Standard yes/no -->
 <civ-yes-no
-  label="Are you a United States citizen?"
+  legend="Are you a United States citizen?"
   name="citizen"
   required
 ></civ-yes-no>
 
 <!-- With third option -->
 <civ-yes-no
-  label="Do you have a service-connected disability?"
+  legend="Do you have a service-connected disability?"
   name="disability"
   unsure-label="I'm not sure"
   required
@@ -845,7 +845,7 @@ Yes/no radio group — common in government eligibility forms. Supports an optio
 
 <!-- Custom third option value -->
 <civ-yes-no
-  label="Does this apply to your household?"
+  legend="Does this apply to your household?"
   name="applies"
   unsure-label="Does not apply"
   unsure-value="n/a"
@@ -868,7 +868,7 @@ Conditionally shows its children based on another field's value. Not form-partic
 
 **Example:**
 ```html
-<civ-yes-no label="Are you a veteran?" name="veteran" required></civ-yes-no>
+<civ-yes-no legend="Are you a veteran?" name="veteran" required></civ-yes-no>
 <civ-conditional when="veteran" equals="yes">
   <civ-text-input label="Service branch" name="branch" required></civ-text-input>
 </civ-conditional>
@@ -1709,7 +1709,7 @@ Both can coexist on the same `civ-yes-no`.
 
     <div data-step-label="Your relationship">
       <civ-yes-no
-        label="Were you legally married at the time of their death?"
+        legend="Were you legally married at the time of their death?"
         name="married"
         skip-label="Prefer not to answer"
         required

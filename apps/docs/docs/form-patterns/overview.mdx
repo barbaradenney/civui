@@ -139,7 +139,7 @@ Not every form needs every layer. A simple contact form might just use `civ-form
 
 ```html
 <civ-form>
-  <civ-yes-no label="Are you a veteran?" name="isVeteran" required></civ-yes-no>
+  <civ-yes-no legend="Are you a veteran?" name="isVeteran" required></civ-yes-no>
 
   <civ-conditional when="isVeteran" equals="yes">
     <civ-fieldset legend="Service information">
@@ -147,7 +147,7 @@ Not every form needs every layer. A simple contact form might just use `civ-form
     </civ-fieldset>
   </civ-conditional>
 
-  <civ-yes-no label="Are you currently married?" name="isMarried" required></civ-yes-no>
+  <civ-yes-no legend="Are you currently married?" name="isMarried" required></civ-yes-no>
 
   <civ-conditional when="isMarried" equals="yes">
     <civ-relationship

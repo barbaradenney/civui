@@ -200,9 +200,7 @@ export const AllergyList: Story = {
   },
   render: () => html`
     <div style="max-width: 480px; display: grid; gap: 1rem;">
-      <civ-form-fieldset legend="Do you have any known allergies?" required>
-        <civ-yes-no name="has_allergies"></civ-yes-no>
-      </civ-form-fieldset>
+      <civ-yes-no legend="Do you have any known allergies?" required name="has_allergies"></civ-yes-no>
       <civ-conditional when="has_allergies" equals="yes">
         <civ-repeater legend="Allergies" name="allergies" add-label="Add another allergy">
           <div slot="entry">
@@ -390,23 +388,17 @@ export const MedicalHistoryScreening: Story = {
         Please answer the following questions about your medical history. This information helps your provider give you the best care.
       </civ-alert>
 
-      <civ-form-fieldset legend="Have you ever been diagnosed with high blood pressure (hypertension)?">
-        <civ-yes-no name="hypertension"></civ-yes-no>
-      </civ-form-fieldset>
+      <civ-yes-no legend="Have you ever been diagnosed with high blood pressure (hypertension)?" name="hypertension"></civ-yes-no>
       <civ-conditional when="hypertension" equals="yes">
         <div style="padding-left: 1.5rem; border-left: 4px solid var(--civ-color-primary); display: grid; gap: 1rem;">
           <civ-form-field label="Year diagnosed" hint="For example: 2018">
             <civ-text-input name="hypertension_year" type="number" inputmode="numeric"></civ-text-input>
           </civ-form-field>
-          <civ-form-fieldset legend="Are you currently taking medication for this?">
-            <civ-yes-no name="hypertension_medication"></civ-yes-no>
-          </civ-form-fieldset>
+          <civ-yes-no legend="Are you currently taking medication for this?" name="hypertension_medication"></civ-yes-no>
         </div>
       </civ-conditional>
 
-      <civ-form-fieldset legend="Have you ever been diagnosed with diabetes?">
-        <civ-yes-no name="diabetes"></civ-yes-no>
-      </civ-form-fieldset>
+      <civ-yes-no legend="Have you ever been diagnosed with diabetes?" name="diabetes"></civ-yes-no>
       <civ-conditional when="diabetes" equals="yes">
         <div style="padding-left: 1.5rem; border-left: 4px solid var(--civ-color-primary); display: grid; gap: 1rem;">
           <civ-radio-group legend="Type of diabetes" required name="diabetes_type">
@@ -420,9 +412,7 @@ export const MedicalHistoryScreening: Story = {
         </div>
       </civ-conditional>
 
-      <civ-form-fieldset legend="Have you ever been diagnosed with heart disease?">
-        <civ-yes-no name="heart_disease"></civ-yes-no>
-      </civ-form-fieldset>
+      <civ-yes-no legend="Have you ever been diagnosed with heart disease?" name="heart_disease"></civ-yes-no>
       <civ-conditional when="heart_disease" equals="yes">
         <div style="padding-left: 1.5rem; border-left: 4px solid var(--civ-color-primary); display: grid; gap: 1rem;">
           <civ-form-field label="Describe the condition" hint="For example: coronary artery disease, heart failure, arrhythmia">
@@ -431,9 +421,7 @@ export const MedicalHistoryScreening: Story = {
         </div>
       </civ-conditional>
 
-      <civ-form-fieldset legend="Have you ever had surgery?">
-        <civ-yes-no name="surgery"></civ-yes-no>
-      </civ-form-fieldset>
+      <civ-yes-no legend="Have you ever had surgery?" name="surgery"></civ-yes-no>
       <civ-conditional when="surgery" equals="yes">
         <div style="padding-left: 1.5rem; border-left: 4px solid var(--civ-color-primary);">
           <civ-repeater legend="Surgeries" name="surgeries" add-label="Add another surgery">

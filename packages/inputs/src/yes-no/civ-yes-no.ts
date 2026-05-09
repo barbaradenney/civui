@@ -1,17 +1,22 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivFormElement, dispatch, buildDescribedBy, resolveGroupNavIndex, isRtl } from '@civui/core';
+import { CivFormElement, dispatch, buildDescribedBy, resolveGroupNavIndex, isRtl, syncLegendToLabel, renderFormHeader, renderLegend } from '@civui/core';
+import type { HeadingLevel, LabelSize } from '@civui/core';
 
 /**
  * CivUI Yes/No
  *
- * A simple boolean question component for yes/no questions in government forms.
- * Renders as a fieldset with two styled buttons (Yes / No).
- * Uses ElementInternals for form participation.
+ * Self-contained boolean question component for yes/no questions in
+ * government forms. Renders as a fieldset with two styled buttons
+ * (Yes / No). Uses ElementInternals for form participation.
+ *
+ * Renders its own legend / hint / error — do **not** wrap in
+ * `<civ-form-fieldset>` (you'd get nested fieldsets with double
+ * legends). Use the `legend` prop directly on the component.
  *
  * @element civ-yes-no
  *
- * @prop {string} label - Question text
+ * @prop {string} legend - Question text rendered as <legend>
  * @prop {string} hint - Hint text displayed below legend
  * @prop {string} error - Error message for the group
  * @prop {boolean} required - Whether a selection is required
@@ -30,6 +35,15 @@ import { CivFormElement, dispatch, buildDescribedBy, resolveGroupNavIndex, isRtl
  */
 @customElement('civ-yes-no')
 export class CivYesNo extends CivFormElement {
+  /** Question text rendered as the fieldset legend. */
+  @property({ type: String }) legend = '';
+
+  /** Promote the legend to a heading via `role="heading"` + `aria-level=N`. */
+  @property({ type: Number, attribute: 'heading-level' }) headingLevel?: HeadingLevel;
+
+  /** Visual size of the legend. */
+  @property({ type: String }) size?: LabelSize;
+
   @property({ type: String, attribute: 'yes-label' }) yesLabel = 'Yes';
   @property({ type: String, attribute: 'no-label' }) noLabel = 'No';
   @property({ type: String, attribute: 'unsure-label' }) unsureLabel = '';
@@ -72,23 +86,32 @@ export class CivYesNo extends CivFormElement {
     this._defaultValue = this.value;
   }
 
+  protected override willUpdate(changed: Map<string, unknown>): void {
+    super.willUpdate(changed);
+    syncLegendToLabel(this, changed);
+  }
+
   override render() {
     const describedBy = buildDescribedBy(this._hintId, this.hint, this._errorId, this.error);
 
     const btnClasses = 'civ-btn civ-btn--yesno';
+    // Self-contain only when the consumer set `legend` directly. If wrapped
+    // in an external civ-form-fieldset, that wrapper cascades its own legend
+    // to our inherited `label` — but our `legend` stays empty.
+    const selfContained = !!this.legend;
 
     // The radiogroup role lives on the inner div so the optional skip
     // affordance (which is a toggle-button, not a radio) can sit alongside
     // the radio choices inside the fieldset without becoming part of the
     // mutually-exclusive group.
-    return html`
-        <div
-          class="civ-flex civ-gap-2"
-          role="radiogroup"
-          aria-describedby="${describedBy || nothing}"
-          aria-invalid="${this.error ? 'true' : nothing}"
-          aria-required="${this.required || nothing}"
-        >
+    const inner = html`
+      <div
+        class="civ-flex civ-gap-2"
+        role="radiogroup"
+        aria-describedby="${describedBy || nothing}"
+        aria-invalid="${this.error ? 'true' : nothing}"
+        aria-required="${this.required || nothing}"
+      >
           <button
             type="button"
             role="radio"
@@ -122,18 +145,40 @@ export class CivYesNo extends CivFormElement {
             >${this.unsureLabel}</button>
           ` : nothing}
         </div>
-        ${this.skipLabel
-          ? html`
-              <button
-                type="button"
-                class="civ-yes-no__skip civ-btn--link"
-                aria-pressed="${this.value === this.skipValue ? 'true' : 'false'}"
-                data-civ-skip
-                ?disabled="${this.disabled}"
-                @click="${() => this._selectSkip()}"
-              >${this.skipLabel}</button>
-            `
-          : nothing}
+      ${this.skipLabel
+        ? html`
+            <button
+              type="button"
+              class="civ-yes-no__skip civ-btn--link"
+              aria-pressed="${this.value === this.skipValue ? 'true' : 'false'}"
+              data-civ-skip
+              ?disabled="${this.disabled}"
+              @click="${() => this._selectSkip()}"
+            >${this.skipLabel}</button>
+          `
+        : nothing}
+    `;
+
+    if (!selfContained) return inner;
+
+    return html`
+      <fieldset
+        class="civ-fieldset"
+        aria-describedby="${describedBy || nothing}"
+        aria-invalid="${this.error ? 'true' : nothing}"
+        aria-required="${this.required || nothing}"
+        ?disabled="${this.disabled}"
+      >
+        ${renderFormHeader({
+          label: renderLegend({ legend: this.legend, required: this.required, headingLevel: this.headingLevel, size: this.size }),
+          hintId: this._hintId,
+          hint: this.hint,
+          errorId: this._errorId,
+          error: this.error,
+          fieldset: true,
+        })}
+        ${inner}
+      </fieldset>
     `;
   }
 

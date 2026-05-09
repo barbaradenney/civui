@@ -79,9 +79,7 @@ export const ConditionalFields: Story = {
   name: 'Form with Conditional Fields',
   render: () => html`
     <civ-form>
-      <civ-form-fieldset legend="Are you a veteran?" required>
-        <civ-yes-no name="isVeteran" required></civ-yes-no>
-      </civ-form-fieldset>
+      <civ-yes-no legend="Are you a veteran?" required name="isVeteran"></civ-yes-no>
 
       <civ-conditional when="isVeteran" equals="yes">
         <civ-fieldset legend="Service information">
@@ -89,9 +87,7 @@ export const ConditionalFields: Story = {
         </civ-fieldset>
       </civ-conditional>
 
-      <civ-form-fieldset legend="Are you currently married?" required>
-        <civ-yes-no name="isMarried" required></civ-yes-no>
-      </civ-form-fieldset>
+      <civ-yes-no legend="Are you currently married?" required name="isMarried"></civ-yes-no>
 
       <civ-conditional when="isMarried" equals="yes">
         <civ-relationship

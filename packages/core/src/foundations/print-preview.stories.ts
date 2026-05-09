@@ -144,9 +144,7 @@ export const SelectionControls: Story = {
       <civ-checkbox value="housing" label="Housing assistance"></civ-checkbox>
     </civ-checkbox-group>
 
-    <civ-form-fieldset legend="Are you a US citizen?">
-      <civ-yes-no name="citizen" value="yes"></civ-yes-no>
-    </civ-form-fieldset>
+    <civ-yes-no legend="Are you a US citizen?" name="citizen" value="yes"></civ-yes-no>
   `,
 };
 
@@ -212,9 +210,7 @@ export const CompleteForm: Story = {
       value='{"street1":"123 Main Street","street2":"","city":"Springfield","state":"VA","zip":"22150","country":"US"}'
     ></civ-address>
 
-    <civ-form-fieldset legend="Are you a US citizen?" required>
-      <civ-yes-no name="citizen" value="yes" required></civ-yes-no>
-    </civ-form-fieldset>
+    <civ-yes-no legend="Are you a US citizen?" required name="citizen" value="yes"></civ-yes-no>
 
     <civ-radio-group legend="Preferred contact method" required name="contact" value="email">
       <civ-radio value="email" label="Email"></civ-radio>

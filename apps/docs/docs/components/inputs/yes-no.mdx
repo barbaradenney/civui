@@ -107,14 +107,14 @@ Uses `legend` instead of `label` because it renders as a fieldset with radio sem
 ```html
 <!-- Basic yes/no question -->
 <civ-yes-no
-  label="Are you a Veteran?"
+  legend="Are you a Veteran?"
   name="isVeteran"
   required
 ></civ-yes-no>
 
 <!-- With hint -->
 <civ-yes-no
-  label="Do you currently have health insurance?"
+  legend="Do you currently have health insurance?"
   name="hasInsurance"
   hint="Include Medicare, Medicaid, or private insurance."
   required
@@ -122,7 +122,7 @@ Uses `legend` instead of `label` because it renders as a fieldset with radio sem
 
 <!-- Custom labels -->
 <civ-yes-no
-  label="Would you like to add a dependent?"
+  legend="Would you like to add a dependent?"
   name="addDependent"
   yes-label="Yes, add a dependent"
   no-label="No, continue"

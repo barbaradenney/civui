@@ -260,7 +260,7 @@ export class CivRelationship extends CivFormElement {
           ></civ-memorable-date>
         ` : this.showDeceased ? html`
           <civ-yes-no
-            label="${t('relationshipDeceasedLegend')}"
+            legend="${t('relationshipDeceasedLegend')}"
             name="${prefix}.deceased"
             value="${this._data.deceased}"
             ?disabled="${this.disabled}"

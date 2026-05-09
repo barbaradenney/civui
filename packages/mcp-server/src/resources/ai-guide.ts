@@ -721,7 +721,7 @@ Yes/No binary question rendered as a radio group. Self-contained (renders its ow
 **Props:** \`legend\`, \`yes-label\`, \`no-label\`, \`unsure-label\`, \`unsure-value\`, \`skip-label\`, \`skip-value\`
 
 \`\`\`html
-<civ-yes-no label="Are you a veteran?" name="veteran" required></civ-yes-no>
+<civ-yes-no legend="Are you a veteran?" name="veteran" required></civ-yes-no>
 \`\`\`
 
 ---

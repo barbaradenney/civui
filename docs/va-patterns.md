@@ -239,7 +239,7 @@ For US-only address collection, use `civ-address`:
 ></civ-address>
 
 <civ-yes-no
-  label="Is your home address the same as your mailing address?"
+  legend="Is your home address the same as your mailing address?"
   name="sameAddress"
   required
 ></civ-yes-no>
@@ -545,7 +545,7 @@ VA pattern: [Ask users for A mutually exclusive answer](https://design.va.gov/pa
 **Use yes-no** for binary questions:
 ```html
 <civ-yes-no
-  label="Are you currently homeless or at risk of becoming homeless?"
+  legend="Are you currently homeless or at risk of becoming homeless?"
   name="homelessRisk"
   required
 ></civ-yes-no>
@@ -619,7 +619,7 @@ supports two modes depending on complexity:
 Use `civ-conditional` to show/hide sections based on user responses:
 
 ```html
-<civ-yes-no label="Do you have a service-connected disability?" name="hasDisability"></civ-yes-no>
+<civ-yes-no legend="Do you have a service-connected disability?" name="hasDisability"></civ-yes-no>
 
 <civ-conditional when="hasDisability" equals="yes">
   <civ-text-input
@@ -683,7 +683,7 @@ VA pattern: [Ask users for Marital information](https://design.va.gov/patterns/a
       validate="ssn"
       type="tel"
     ></civ-text-input>
-    <civ-yes-no label="Is your spouse a Veteran?" name="spouseIsVeteran"></civ-yes-no>
+    <civ-yes-no legend="Is your spouse a Veteran?" name="spouseIsVeteran"></civ-yes-no>
   </civ-fieldset>
 </civ-conditional>
 ```
@@ -869,7 +869,7 @@ persistence, so it's safe to use for screening flows.
 ```html
 <civ-form>
   <civ-yes-no
-    label="Are you a Veteran or active-duty service member?"
+    legend="Are you a Veteran or active-duty service member?"
     name="isVeteran"
     required
   ></civ-yes-no>
@@ -883,7 +883,7 @@ persistence, so it's safe to use for screening flows.
 
   <civ-conditional when="isVeteran" equals="yes">
     <civ-yes-no
-      label="Were you honorably discharged?"
+      legend="Were you honorably discharged?"
       name="honorableDischarge"
       required
     ></civ-yes-no>

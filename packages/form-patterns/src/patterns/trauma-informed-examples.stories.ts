@@ -39,12 +39,7 @@ export const FormStepSensitive: Story = {
         <civ-section-intro heading="Service-connected trauma" tone="sensitive">
           <p>You can save and come back to this section later.</p>
         </civ-section-intro>
-        <civ-form-fieldset legend="Have you experienced military sexual trauma?">
-          <civ-yes-no
-            name="mst"
-            skip-label="Prefer not to answer"
-          ></civ-yes-no>
-        </civ-form-fieldset>
+        <civ-yes-no legend="Have you experienced military sexual trauma?" name="mst" skip-label="Prefer not to answer"></civ-yes-no>
       </div>
       <div data-step-label="Additional details">
         <civ-form-field label="Is there anything else you'd like us to know?" hint="This is optional">
@@ -58,13 +53,7 @@ export const FormStepSensitive: Story = {
 export const SkipAffordanceYesNo: Story = {
   name: 'Skip Affordance (Yes/No)',
   render: () => html`
-    <civ-form-fieldset legend="Have you experienced military sexual trauma?">
-      <civ-yes-no
-        name="mst"
-        skip-label="Prefer not to answer"
-        skip-value="skip"
-      ></civ-yes-no>
-    </civ-form-fieldset>
+    <civ-yes-no legend="Have you experienced military sexual trauma?" name="mst" skip-label="Prefer not to answer" skip-value="skip"></civ-yes-no>
   `,
 };
 
@@ -176,13 +165,7 @@ export const CompleteSurvivorForm: Story = {
         </div>
 
         <div data-step-label="Your relationship">
-          <civ-form-fieldset legend="Were you legally married at the time of their death?" required>
-            <civ-yes-no
-              name="marriedAtDeath"
-              skip-label="Prefer not to answer"
-              required
-            ></civ-yes-no>
-          </civ-form-fieldset>
+          <civ-yes-no legend="Were you legally married at the time of their death?" required name="marriedAtDeath" skip-label="Prefer not to answer"></civ-yes-no>
 
           <civ-conditional when="marriedAtDeath" equals="yes">
             <civ-partnership-history

@@ -15,7 +15,7 @@ Show or hide form fields based on the user's answers. This keeps forms short by 
 <StoryEmbed id="forms-form-conditional--default" />
 
 ```html
-<civ-yes-no label="Are you a veteran?" name="veteran" required></civ-yes-no>
+<civ-yes-no legend="Are you a veteran?" name="veteran" required></civ-yes-no>
 
 <civ-conditional when="veteran" equals="yes">
   <civ-text-input label="Service branch" name="branch" required></civ-text-input>
@@ -61,10 +61,10 @@ Show different fields based on a selection:
 Conditions can be nested for multi-level branching:
 
 ```html
-<civ-yes-no label="Are you a veteran?" name="isVeteran" required></civ-yes-no>
+<civ-yes-no legend="Are you a veteran?" name="isVeteran" required></civ-yes-no>
 
 <civ-conditional when="isVeteran" equals="yes">
-  <civ-yes-no label="Were you honorably discharged?" name="honorable" required></civ-yes-no>
+  <civ-yes-no legend="Were you honorably discharged?" name="honorable" required></civ-yes-no>
 
   <civ-conditional when="honorable" equals="yes">
     <civ-alert variant="success" heading="You may be eligible">

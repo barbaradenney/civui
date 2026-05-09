@@ -135,9 +135,7 @@ export const CheckboxGroup: Story = {
 export const YesNo: Story = {
   name: 'Fieldset: Yes/No',
   render: () => html`
-    <civ-form-fieldset legend="Are you a US citizen?" required>
-      <civ-yes-no name="citizen" required></civ-yes-no>
-    </civ-form-fieldset>
+    <civ-yes-no legend="Are you a US citizen?" required name="citizen"></civ-yes-no>
   `,
 };
 
@@ -254,9 +252,7 @@ export const CompleteForm: Story = {
 
       <civ-memorable-date legend="Date of birth" hint="For example: January 15 1990" required name="dob"></civ-memorable-date>
 
-      <civ-form-fieldset legend="Are you a veteran?" required>
-        <civ-yes-no name="veteran" required></civ-yes-no>
-      </civ-form-fieldset>
+      <civ-yes-no legend="Are you a veteran?" required name="veteran"></civ-yes-no>
 
       <civ-form-field label="Additional notes">
         <civ-textarea name="notes" rows="3"></civ-textarea>

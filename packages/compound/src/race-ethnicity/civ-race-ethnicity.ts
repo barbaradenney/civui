@@ -84,13 +84,14 @@ export class CivRaceEthnicity extends LegendHeadingMixin(CivFormElement) {
     }
   }
 
-  override firstUpdated(): void {
-    super.firstUpdated();
+  override connectedCallback(): void {
+    super.connectedCallback();
     this._data = this._parseValue(this.value);
   }
 
-  override updated(changed: Map<string, unknown>): void {
-    super.updated(changed);
+  override willUpdate(changed: Map<string, unknown>): void {
+    // Re-parse `value` before render so the change is picked up in this
+    // pass instead of triggering a second update from `updated()`.
     if (changed.has('value') && !changed.has('_data')) {
       this._data = this._parseValue(this.value);
     }
@@ -143,7 +144,6 @@ export class CivRaceEthnicity extends LegendHeadingMixin(CivFormElement) {
         class="civ-fieldset"
         aria-describedby="${describedBy || nothing}"
         aria-invalid="${this.error ? 'true' : nothing}"
-        aria-required="${this.required || nothing}"
         ?disabled="${this.disabled}"
       >
         ${renderFormHeader({ label: renderLegend({ legend: this.legend || this.label, required: this.required, headingLevel: this.headingLevel, size: this.size }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}

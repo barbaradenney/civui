@@ -68,11 +68,16 @@ export class CivMemorableDate extends LegendHeadingMixin(CivFormElement) {
     this.removeEventListener('civ-change', this._boundFieldChange as EventListener);
   }
 
-  override updated(changed: Map<string, unknown>): void {
-    super.updated(changed);
+  override willUpdate(changed: Map<string, unknown>): void {
+    // Re-parse `value` before render so the change is picked up in this
+    // pass instead of triggering a second update from `updated()`.
     if (changed.has('value') && !changed.has('_month')) {
       this._parseValue();
     }
+  }
+
+  override updated(changed: Map<string, unknown>): void {
+    super.updated(changed);
     if (changed.has('hint') || changed.has('error')) {
       this._propagateAriaToChildren();
     }
@@ -163,7 +168,7 @@ export class CivMemorableDate extends LegendHeadingMixin(CivFormElement) {
 
     const fields = html`
       <div class="civ-memorable-date-fields" data-civ-memorable-date>
-          <div class="civ-memorable-date-month">
+          <label class="civ-memorable-date-month">
             <span class="civ-font-semibold civ-block civ-mb-1">${monthLabel}</span>
             <civ-select
               label="${monthLabel}"
@@ -176,8 +181,8 @@ export class CivMemorableDate extends LegendHeadingMixin(CivFormElement) {
               ?hide-required-indicator="${this.required}"
               disable-analytics
             ></civ-select>
-          </div>
-          <div class="civ-memorable-date-day">
+          </label>
+          <label class="civ-memorable-date-day">
             <span class="civ-font-semibold civ-block civ-mb-1">${dayLabel}</span>
             <civ-text-input
               label="${dayLabel}"
@@ -194,8 +199,8 @@ export class CivMemorableDate extends LegendHeadingMixin(CivFormElement) {
               ?hide-required-indicator="${this.required}"
               disable-analytics
             ></civ-text-input>
-          </div>
-          <div class="civ-memorable-date-year">
+          </label>
+          <label class="civ-memorable-date-year">
             <span class="civ-font-semibold civ-block civ-mb-1">${yearLabel}</span>
             <civ-text-input
               label="${yearLabel}"
@@ -212,7 +217,7 @@ export class CivMemorableDate extends LegendHeadingMixin(CivFormElement) {
               ?hide-required-indicator="${this.required}"
               disable-analytics
             ></civ-text-input>
-          </div>
+          </label>
         </div>
     `;
 
@@ -221,7 +226,6 @@ export class CivMemorableDate extends LegendHeadingMixin(CivFormElement) {
         class="civ-fieldset"
         aria-describedby="${describedBy || nothing}"
         aria-invalid="${this.error ? 'true' : nothing}"
-        aria-required="${this.required || nothing}"
         ?disabled="${this.disabled}"
       >
         ${this.legend

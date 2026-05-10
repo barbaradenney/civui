@@ -106,9 +106,10 @@ export class CivTextarea extends CivFormElement {
   }
 
   protected override get _ariaDescribedBy(): string {
+    // Hint and error are owned by the wrapping `<civ-form-field>`. Only
+    // include IDs of elements this component actually renders (char-count
+    // and word-count spans).
     const ids: string[] = [];
-    if (this.hint) ids.push(this._hintId);
-    if (this.error) ids.push(this._errorId);
     if (this.maxlength != null && this.maxlength > 0) ids.push(this._charCountId);
     if (this._showWordCount) ids.push(this._wordCountId);
     return ids.join(' ') || '';
@@ -147,7 +148,7 @@ export class CivTextarea extends CivFormElement {
           aria-describedby="${this._ariaDescribedBy || nothing}"
           aria-invalid="${this.error ? 'true' : nothing}"
           @input="${this._onInput}"
-          @change="${this._handleChange}"
+          @change="${this._onChange}"
           @blur="${this.validateType === 'length' ? this._onValidateBlur : nothing}"
         ></textarea>
         ${showCharCount
@@ -205,7 +206,7 @@ export class CivTextarea extends CivFormElement {
     }
   }
 
-  private _onInput(e: Event): void {
+  protected override _onInput(e: Event): void {
     const target = e.target as HTMLTextAreaElement;
     this.value = target.value;
     this._charCount = target.value.length;

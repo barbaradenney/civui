@@ -86,8 +86,13 @@ export class CivFormField extends LightDomSlotMixin(CivBaseElement) {
 
   override firstUpdated(): void {
     this._relocateSlots();
-    // Re-render so the label's `for` attribute picks up the child input's ID
-    // (not available during the initial render before slot relocation).
+    // Re-render so the label's `for` attribute picks up the child input's
+    // ID. This intentionally schedules a second render — the alternative
+    // (patching `for` imperatively here) races with deeply-nested children
+    // (e.g. civ-country → civ-combobox → input) whose own render hasn't
+    // committed by the time `firstUpdated` runs. Lit emits a
+    // "scheduled an update after an update completed" warning for this;
+    // we accept it as the cost of the late-binding label association.
     this.requestUpdate();
   }
 
@@ -103,13 +108,21 @@ export class CivFormField extends LightDomSlotMixin(CivBaseElement) {
    * props to the child CivUI component.
    */
   private _wireChild(): void {
-    const describedBy = buildDescribedBy(this._hintId, this.hint, this._errorId, this.error);
+    const ourIds = buildDescribedBy(this._hintId, this.hint, this._errorId, this.error);
 
     // Wire ARIA to the native input element
     const input = this.querySelector(NATIVE_INPUT_SELECTOR) as HTMLElement | null;
     if (input) {
-      if (describedBy) {
-        input.setAttribute('aria-describedby', describedBy);
+      // Merge our hint/error IDs with any IDs the child component already
+      // contributed via its own template (e.g. `civ-text-input`'s char-count
+      // id). The child re-sets its piece on every render; we re-merge here
+      // so the resulting attribute always reflects both sides.
+      const existing = (input.getAttribute('aria-describedby') || '')
+        .split(/\s+/)
+        .filter((id) => id && id !== this._hintId && id !== this._errorId);
+      const merged = [...existing, ...(ourIds ? ourIds.split(' ') : [])].join(' ');
+      if (merged) {
+        input.setAttribute('aria-describedby', merged);
       } else {
         input.removeAttribute('aria-describedby');
       }

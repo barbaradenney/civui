@@ -1,8 +1,9 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { CivFormElement, LegendHeadingMixin, dispatch, renderLegend, renderFormHeader, buildDescribedBy, t } from '@civui/core';
-import '@civui/inputs';
-import '@civui/controls';
+import '@civui/inputs/text-input';
+import '@civui/inputs/routing-number';
+import '@civui/controls/radio';
 
 export interface DirectDepositValue {
   accountType: 'checking' | 'savings' | '';
@@ -56,8 +57,8 @@ export class CivDirectDeposit extends LegendHeadingMixin(CivFormElement) {
     this.value = JSON.stringify(this._deposit);
   }
 
-  override firstUpdated(): void {
-    super.firstUpdated();
+  override connectedCallback(): void {
+    super.connectedCallback();
     this._deposit = this.parseStructuredValue(this.value, EMPTY_DEPOSIT);
   }
 
@@ -69,7 +70,6 @@ export class CivDirectDeposit extends LegendHeadingMixin(CivFormElement) {
         class="civ-fieldset"
         aria-describedby="${describedBy || nothing}"
         aria-invalid="${this.error ? 'true' : nothing}"
-        aria-required="${this.required || nothing}"
         ?disabled="${this.disabled}"
       >
         ${renderFormHeader({ label: renderLegend({ legend: this.legend || this.label, required: this.required, headingLevel: this.headingLevel, size: this.size }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}

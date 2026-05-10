@@ -2,7 +2,6 @@ import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { CivBaseElement, dispatch, renderLegend, renderFormHeader, buildDescribedBy, announce, interpolate, t } from '@civui/core';
 import type { HeadingLevel, LabelSize } from '@civui/core';
-import '@civui/inputs';
 import '@civui/actions/button';
 import '@civui/actions/action-button';
 import '../form-step/civ-form-step.js';

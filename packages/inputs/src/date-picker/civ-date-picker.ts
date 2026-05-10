@@ -126,6 +126,17 @@ export class CivDatePicker extends CivFormElement {
         this._parsedDisabledDates = new Set(JSON.parse(this.disabledDates));
       } catch { this._parsedDisabledDates = new Set(); }
     }
+    // Sync derived state (input text, display month/year, focused date)
+    // before render so we don't trigger a second update cycle.
+    if (changed.has('value') && this.value) {
+      const parsed = parseISODate(this.value);
+      if (parsed) {
+        this._inputValue = formatDate(parsed, this.locale);
+        this._displayMonth = parsed.getMonth();
+        this._displayYear = parsed.getFullYear();
+        this._focusedDate = parsed;
+      }
+    }
   }
 
   private get _constraints(): DateConstraints {
@@ -232,17 +243,13 @@ export class CivDatePicker extends CivFormElement {
     this._cleanupTrap?.();
   }
 
+  protected override get _ariaDescribedBy(): string {
+    // Hint and error are owned by the wrapping `<civ-form-field>`.
+    return '';
+  }
+
   override updated(changed: Map<string, unknown>): void {
     super.updated(changed);
-    if (changed.has('value') && this.value) {
-      const parsed = parseISODate(this.value);
-      if (parsed) {
-        this._inputValue = formatDate(parsed, this.locale);
-        this._displayMonth = parsed.getMonth();
-        this._displayYear = parsed.getFullYear();
-        this._focusedDate = parsed;
-      }
-    }
     if (changed.has('_open') && this._open) {
       this._setupDialog();
     }

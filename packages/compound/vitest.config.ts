@@ -9,7 +9,13 @@ export default defineConfig({
   },
   resolve: {
     alias: {
+      '@civui/inputs/text-input': resolve(__dirname, '../inputs/src/text-input/index.ts'),
+      '@civui/inputs/textarea': resolve(__dirname, '../inputs/src/textarea/index.ts'),
       '@civui/inputs/select': resolve(__dirname, '../inputs/src/select/index.ts'),
+      '@civui/inputs/country': resolve(__dirname, '../inputs/src/country/index.ts'),
+      '@civui/inputs/memorable-date': resolve(__dirname, '../inputs/src/date-input/index.ts'),
+      '@civui/inputs/yes-no': resolve(__dirname, '../inputs/src/yes-no/index.ts'),
+      '@civui/inputs/routing-number': resolve(__dirname, '../inputs/src/routing-number/index.ts'),
       '@civui/inputs': resolve(__dirname, '../inputs/src/index.ts'),
       '@civui/controls/checkbox': resolve(__dirname, '../controls/src/checkbox/index.ts'),
       '@civui/controls/radio': resolve(__dirname, '../controls/src/radio/index.ts'),

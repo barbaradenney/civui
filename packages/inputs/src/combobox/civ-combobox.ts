@@ -105,6 +105,13 @@ export class CivCombobox extends CivFormElement {
     }
   }
 
+  protected override get _ariaDescribedBy(): string {
+    // Hint and error are owned by the wrapping `<civ-form-field>`. The
+    // listbox/feedback IDs that combobox does need are wired explicitly via
+    // `aria-controls` / `aria-activedescendant` rather than describedby.
+    return '';
+  }
+
   override disconnectedCallback(): void {
     super.disconnectedCallback();
     this._clickOutside.remove();
@@ -176,7 +183,7 @@ export class CivCombobox extends CivFormElement {
             ?disabled="${this.disabled}"
             ?required="${this.required}"
             aria-required="${this.required || nothing}"
-            autocomplete="nope"
+            autocomplete="off"
             @input="${this._onFilterInput}"
             @focus="${this._onFocus}"
             @blur="${this._onBlur}"

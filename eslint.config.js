@@ -26,18 +26,31 @@ export default [
         { prefer: 'type-imports', fixStyle: 'inline-type-imports' },
       ],
 
-      // Prevent named imports from sibling @civui/* packages in component source.
-      // Web component registration is a side effect — named imports can be
-      // tree-shaken, silently breaking child component rendering.
-      // Use bare imports instead: `import '@civui/inputs'` (not `import { CivTextInput } from '@civui/inputs'`)
+      // Prevent two anti-patterns from sibling @civui/* packages in component source:
+      //   1. Named class imports (`import { CivTextInput }`) — get tree-shaken,
+      //      silently breaking custom-element registration.
+      //   2. Barrel side-effect imports (`import '@civui/inputs'`) — pull in
+      //      *every* component in the barrel, defeating consumer tree-shaking.
+      //      Use a sub-path instead: `import '@civui/inputs/text-input';`.
       'no-restricted-imports': [
         'error',
         {
+          paths: [
+            { name: '@civui/inputs', message: 'Use sub-path imports: `import \'@civui/inputs/text-input\'`. Barrel imports register every component, defeating tree-shaking for consumers.' },
+            { name: '@civui/controls', message: 'Use sub-path imports: `import \'@civui/controls/radio\'`. Barrel imports register every component.' },
+            { name: '@civui/actions', message: 'Use sub-path imports: `import \'@civui/actions/button\'`.' },
+            { name: '@civui/overlays', message: 'Use sub-path imports: `import \'@civui/overlays/modal\'`.' },
+            { name: '@civui/layout', message: 'Use sub-path imports: `import \'@civui/layout/card\'`.' },
+            { name: '@civui/feedback', message: 'Use sub-path imports: `import \'@civui/feedback/alert\'`.' },
+            { name: '@civui/navigation', message: 'Use sub-path imports: `import \'@civui/navigation/link\'`.' },
+            { name: '@civui/form-patterns', message: 'Use sub-path imports: `import \'@civui/form-patterns/form\'`.' },
+            { name: '@civui/compound', message: 'Use sub-path imports: `import \'@civui/compound/address\'`.' },
+          ],
           patterns: [
             {
-              group: ['@civui/inputs', '@civui/controls', '@civui/compound', '@civui/actions', '@civui/actions/*', '@civui/overlays', '@civui/overlays/*', '@civui/layout', '@civui/layout/*', '@civui/feedback', '@civui/navigation', '@civui/form-patterns'],
+              group: ['@civui/inputs', '@civui/inputs/*', '@civui/controls', '@civui/controls/*', '@civui/compound', '@civui/compound/*', '@civui/actions', '@civui/actions/*', '@civui/overlays', '@civui/overlays/*', '@civui/layout', '@civui/layout/*', '@civui/feedback', '@civui/feedback/*', '@civui/navigation', '@civui/navigation/*', '@civui/form-patterns', '@civui/form-patterns/*'],
               importNamePattern: '^Civ',
-              message: 'Use bare side-effect imports for component registration: `import \'@civui/inputs\'` — named imports get tree-shaken.',
+              message: 'Named class imports get tree-shaken — custom-element registration is a side effect. Use a side-effect sub-path import instead: `import \'@civui/inputs/text-input\'`.',
             },
           ],
         },

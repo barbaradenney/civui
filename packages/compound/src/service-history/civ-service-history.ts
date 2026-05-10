@@ -2,7 +2,10 @@ import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { CivFormElement, LegendHeadingMixin, dispatch, renderLegend, renderFormHeader, buildDescribedBy, t } from '@civui/core';
 import { resolvePresetOptions } from '@civui/core';
-import '@civui/inputs';
+import type { SelectLike } from '@civui/core';
+import '@civui/inputs/text-input';
+import '@civui/inputs/select';
+import '@civui/inputs/memorable-date';
 
 export interface ServicePeriodValue {
   branch: string;
@@ -53,9 +56,13 @@ export class CivServiceHistory extends LegendHeadingMixin(CivFormElement) {
     this.value = JSON.stringify(this._service);
   }
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this._service = this.parseStructuredValue(this.value, EMPTY_SERVICE);
+  }
+
   override firstUpdated(): void {
     super.firstUpdated();
-    this._service = this.parseStructuredValue(this.value, EMPTY_SERVICE);
     this.updateComplete.then(() => this._syncSelectOptions());
   }
 
@@ -76,7 +83,6 @@ export class CivServiceHistory extends LegendHeadingMixin(CivFormElement) {
         class="civ-fieldset"
         aria-describedby="${describedBy || nothing}"
         aria-invalid="${this.error ? 'true' : nothing}"
-        aria-required="${this.required || nothing}"
         ?disabled="${this.disabled}"
       >
         ${renderFormHeader({ label: renderLegend({ legend, required: this.required, headingLevel: this.headingLevel, size: this.size }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
@@ -144,10 +150,10 @@ export class CivServiceHistory extends LegendHeadingMixin(CivFormElement) {
   }
 
   private _syncSelectOptions(): void {
-    const branchSelect = this.querySelector('[data-service-branch]') as any;
+    const branchSelect = this.querySelector('[data-service-branch]') as SelectLike | null;
     if (branchSelect) branchSelect.options = BRANCH_OPTIONS;
 
-    const dischargeSelect = this.querySelector('[data-service-discharge]') as any;
+    const dischargeSelect = this.querySelector('[data-service-discharge]') as SelectLike | null;
     if (dischargeSelect) dischargeSelect.options = DISCHARGE_OPTIONS;
   }
 

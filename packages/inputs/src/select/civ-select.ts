@@ -140,6 +140,12 @@ export class CivSelect extends CivFormElement {
     }
   }
 
+  protected override get _ariaDescribedBy(): string {
+    // Hint and error are owned by the wrapping `<civ-form-field>`. This
+    // component renders no descriptive elements of its own.
+    return '';
+  }
+
   override render() {
     const widthClass = inputWidthClass(this.width);
     const classes = inputClasses({

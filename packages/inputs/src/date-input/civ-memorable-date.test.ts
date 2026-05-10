@@ -93,13 +93,17 @@ describe('civ-memorable-date accessibility', () => {
     expect(fieldset!.getAttribute('aria-invalid')).toBeNull();
   });
 
-  it('sets aria-required on fieldset when required', async () => {
+  it('does not set aria-required on the fieldset (invalid ARIA on fieldset role)', async () => {
     const wrapper = await fixture(
       '<civ-form-fieldset legend="Date of birth" required><civ-memorable-date name="dob"></civ-memorable-date></civ-form-fieldset>',
     );
 
+    // aria-required is not a valid ARIA attribute on the implicit `group`
+    // role of <fieldset> (axe rule `aria-allowed-attr`). The required
+    // signal is communicated via the legend "(required)" indicator and via
+    // aria-required cascading to the underlying form controls.
     const fieldset = wrapper.querySelector('fieldset');
-    expect(fieldset!.getAttribute('aria-required')).toBe('true');
+    expect(fieldset!.hasAttribute('aria-required')).toBe(false);
   });
 
   it('day and year inputs use type="text" with inputmode="numeric"', async () => {

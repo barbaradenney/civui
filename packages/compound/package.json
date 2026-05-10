@@ -16,7 +16,9 @@
     "./service-history": "./dist/service-history/index.js",
     "./relationship": "./dist/relationship/index.js"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "publishConfig": {
     "access": "public"
   },
@@ -27,15 +29,17 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@civui/actions": "workspace:*",
+    "@civui/controls": "workspace:*",
     "@civui/core": "workspace:*",
     "@civui/inputs": "workspace:*",
-    "@civui/controls": "workspace:*",
     "@civui/overlays": "workspace:*",
     "lit": "^3.2.0"
   },
   "devDependencies": {
     "@civui/test-utils": "workspace:*",
     "@civui/tokens": "workspace:*",
+    "axe-core": "^4.11.4",
     "typescript": "^5.6.0",
     "vitest": "^2.0.0"
   }

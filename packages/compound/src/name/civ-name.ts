@@ -1,8 +1,10 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { CivFormElement, LegendHeadingMixin, renderLegend, renderFormHeader, buildDescribedBy, t } from '@civui/core';
+import type { LabelSize, SelectLike } from '@civui/core';
 import { resolvePresetOptions } from '@civui/core';
-import '@civui/inputs';
+import '@civui/inputs/text-input';
+import '@civui/inputs/select';
 
 export interface NameValue {
   first: string;
@@ -45,7 +47,7 @@ export class CivName extends LegendHeadingMixin(CivFormElement) {
    * heading above its sub-inputs (overrides the mixin's `undefined`
    * default). `sm` renders at body size; `lg`/`xl` step up further.
    */
-  override size: import('@civui/core').LabelSize = 'md';
+  override size: LabelSize = 'md';
 
   // headingLevel inherited from LegendHeadingMixin (default: undefined).
 
@@ -77,9 +79,15 @@ export class CivName extends LegendHeadingMixin(CivFormElement) {
     this.value = JSON.stringify(this._name);
   }
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    // Hydrate before the first render so we don't trigger a second render
+    // (Lit warns when reactive state mutates during/after `updated`).
+    this._name = this.parseStructuredValue(this.value, EMPTY_NAME);
+  }
+
   override firstUpdated(): void {
     super.firstUpdated();
-    this._name = this.parseStructuredValue(this.value, EMPTY_NAME);
     this._syncSuffixOptions();
   }
 
@@ -92,7 +100,7 @@ export class CivName extends LegendHeadingMixin(CivFormElement) {
 
   /** Set suffix options on the select sub-component after render. */
   private _syncSuffixOptions(): void {
-    const suffixSelect = this.querySelector('[data-name-suffix]') as any;
+    const suffixSelect = this.querySelector('[data-name-suffix]') as SelectLike | null;
     if (suffixSelect) suffixSelect.options = SUFFIX_OPTIONS;
   }
 
@@ -106,7 +114,6 @@ export class CivName extends LegendHeadingMixin(CivFormElement) {
         class="civ-fieldset"
         aria-describedby="${describedBy || nothing}"
         aria-invalid="${this.error ? 'true' : nothing}"
-        aria-required="${this.required || nothing}"
         ?disabled="${this.disabled}"
       >
         ${renderFormHeader({ label: renderLegend({ legend: this.legend || this.label, required: false, headingLevel: this.headingLevel, size: this.size }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}

@@ -182,8 +182,8 @@ export class ${className} extends CivFormElement {
           ?required="\${this.required}"
           aria-describedby="\${this._ariaDescribedBy || nothing}"
           aria-invalid="\${this.error ? 'true' : 'false'}"
-          @input="\${this._handleInput}"
-          @change="\${this._handleChange}"
+          @input="\${this._onInput}"
+          @change="\${this._onChange}"
         />
       </div>
     \`;

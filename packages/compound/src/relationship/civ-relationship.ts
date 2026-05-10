@@ -1,8 +1,11 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { CivFormElement, LegendHeadingMixin, dispatch, renderLegend, renderFormHeader, buildDescribedBy, t } from '@civui/core';
-import '@civui/inputs';
-import '@civui/controls';
+import type { SelectLike } from '@civui/core';
+import '@civui/inputs/text-input';
+import '@civui/inputs/select';
+import '@civui/inputs/memorable-date';
+import '@civui/inputs/yes-no';
 import '../name/civ-name.js';
 import { RELATIONSHIP_PRESETS } from './relationship-presets.js';
 import type { RelationshipPreset, RelationshipTypeConfig, RelationshipCategory } from './relationship-presets.js';
@@ -97,13 +100,26 @@ export class CivRelationship extends LegendHeadingMixin(CivFormElement) {
     this.value = JSON.stringify(this._data);
   }
 
-  override firstUpdated(): void {
-    super.firstUpdated();
+  override connectedCallback(): void {
+    super.connectedCallback();
     this._data = this.parseStructuredValue(this.value, EMPTY_RELATIONSHIP);
     if (this.deceasedAssumed) {
       this._data = { ...this._data, deceased: 'yes' };
       this.value = JSON.stringify(this._data);
     }
+  }
+
+  override willUpdate(changed: Map<string, unknown>): void {
+    // Sync derived state before render so we don't trigger a second update
+    // cycle from `updated()`.
+    if (changed.has('deceasedAssumed') && this.deceasedAssumed && this._data.deceased !== 'yes') {
+      this._data = { ...this._data, deceased: 'yes' };
+      this.value = JSON.stringify(this._data);
+    }
+  }
+
+  override firstUpdated(): void {
+    super.firstUpdated();
     // Defer option sync — form-field wrappers need their slot relocation
     // to complete before querySelector can find the select.
     this.updateComplete.then(() => this._syncSelectOptions());
@@ -111,10 +127,6 @@ export class CivRelationship extends LegendHeadingMixin(CivFormElement) {
 
   override updated(changed: Map<string, unknown>): void {
     super.updated(changed);
-    if (changed.has('deceasedAssumed') && this.deceasedAssumed && this._data.deceased !== 'yes') {
-      this._data = { ...this._data, deceased: 'yes' };
-      this.value = JSON.stringify(this._data);
-    }
     if (changed.has('preset') || changed.has('options')) {
       this.updateComplete.then(() => this._syncSelectOptions());
     }
@@ -137,7 +149,6 @@ export class CivRelationship extends LegendHeadingMixin(CivFormElement) {
         class="civ-fieldset"
         aria-describedby="${describedBy || nothing}"
         aria-invalid="${this.error ? 'true' : nothing}"
-        aria-required="${this.required || nothing}"
         ?disabled="${this.disabled}"
       >
         ${renderFormHeader({ label: renderLegend({ legend, required: false, headingLevel: this.headingLevel, size: this.size }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
@@ -270,7 +281,7 @@ export class CivRelationship extends LegendHeadingMixin(CivFormElement) {
   }
 
   private _syncSelectOptions(): void {
-    const select = this.querySelector('[data-relationship-type]') as any;
+    const select = this.querySelector('[data-relationship-type]') as SelectLike | null;
     if (!select) return;
     select.options = this._activeOptions.map(o => ({
       value: o.value,

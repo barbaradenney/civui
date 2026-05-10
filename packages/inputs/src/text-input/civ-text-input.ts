@@ -200,6 +200,15 @@ export class CivTextInput extends CivFormElement {
    */
   override connectedCallback(): void {
     super.connectedCallback();
+    // Hydrate hint + normalize masked value before the first render so
+    // these don't trigger a second update cycle.
+    const maskDef = this._maskDef;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if (!this.hint && maskDef?.hintKey) this.hint = t(maskDef.hintKey as any);
+    if (this._activePattern && this.value) {
+      this.value = processRawInput(stripMask(this.value, this._activePattern), this._activePattern);
+      this._defaultValue = this.value;
+    }
     this._announcedCharCount = (this.value ?? '').length;
   }
 
@@ -210,22 +219,13 @@ export class CivTextInput extends CivFormElement {
 
   override firstUpdated(): void {
     super.firstUpdated();
-    // Auto-populate hint from mask preset when no explicit hint is set
-    const maskDef = this._maskDef;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    if (!this.hint && maskDef?.hintKey) this.hint = t(maskDef.hintKey as any);
-    if (this._activePattern && this.value) {
-      this.value = processRawInput(stripMask(this.value, this._activePattern), this._activePattern);
-      this._defaultValue = this.value;
+    if (this._activePattern && this.value && this.maskMode === 'blur') {
       // Apply mask formatting to the visible input for pre-populated values
       requestAnimationFrame(() => {
         const input = this.querySelector('input') as HTMLInputElement;
-        if (input && this.maskMode === 'blur') {
-          input.value = applyMask(this.value, this._activePattern!);
-        }
+        if (input) input.value = applyMask(this.value, this._activePattern!);
       });
     }
-    this._announcedCharCount = (this.value ?? '').length;
   }
 
   override updated(changed: Map<string, unknown>): void {
@@ -241,9 +241,11 @@ export class CivTextInput extends CivFormElement {
   }
 
   protected override get _ariaDescribedBy(): string {
+    // Hint and error are owned by the wrapping `<civ-form-field>`, which sets
+    // aria-describedby on the native input imperatively (`_wireChild`). We
+    // only track IDs that this component actually renders (the char-count
+    // span). The form-field merges its own hint/error IDs onto the input.
     const ids: string[] = [];
-    if (this.hint) ids.push(this._hintId);
-    if (this.error) ids.push(this._errorId);
     if (this._showCharCount) ids.push(this._charCountId);
     return ids.join(' ') || '';
   }
@@ -257,6 +259,33 @@ export class CivTextInput extends CivFormElement {
     // Inline icons defer to prefix/suffix and the clear button on the same edge.
     const showLeadingIcon = !!this.leadingIcon && !hasPrefix;
     const showTrailingIcon = !!this.trailingIcon && !hasSuffix && !needsClearButton;
+
+    const inputEl = this._renderInput({ widthClass, hasPrefix, hasSuffix, showLeadingIcon, showTrailingIcon });
+    const wrappedInput = this._wrapInput(inputEl, { widthClass, hasPrefix, hasSuffix, needsClearButton, showLeadingIcon, showTrailingIcon, isCurrency });
+
+    return html`
+      ${wrappedInput}
+      ${this._renderCharCount()}
+    `;
+  }
+
+  /**
+   * Render the bare `<input>` element with mask-aware attributes and handlers.
+   * The wrapper layer (prefix/suffix/icon overlay) is composed separately by
+   * `_wrapInput`.
+   */
+  private _renderInput(opts: {
+    widthClass: string;
+    hasPrefix: boolean;
+    hasSuffix: boolean;
+    showLeadingIcon: boolean;
+    showTrailingIcon: boolean;
+  }) {
+    const { widthClass, hasPrefix, hasSuffix, showLeadingIcon, showTrailingIcon } = opts;
+    const isCurrency = this._isCurrency;
+    const maskDef = this._maskDef;
+    const pattern = this._activePattern;
+    const isLiveMode = this.maskMode === 'live';
 
     const roundingClasses = hasPrefix && hasSuffix
       ? ['civ-rounded-none']
@@ -277,77 +306,32 @@ export class CivTextInput extends CivFormElement {
       ],
     });
 
-    const maskDef = this._maskDef;
-    const pattern = this._activePattern;
-    const isLiveMode = this.maskMode === 'live';
-
-    // Determine effective inputmode: preset inputmode > explicit inputmode > nothing
+    // Preset inputmode wins over explicit inputmode prop
     const effectiveInputmode = (maskDef?.inputmode && this.type === 'text')
       ? maskDef.inputmode
       : this.inputmode;
 
-    // Determine maxlength:
-    // - Currency: no maxlength (variable length)
-    // - Live mask: formatted pattern length (includes literals)
-    // - Blur mask: raw digit count only (user types without literals)
-    // - No mask: explicit maxlength prop
+    // Currency: no cap. Live mask: full pattern length. Blur mask: raw-digit
+    // count. None: explicit prop.
     const effectiveMaxlength = isCurrency
       ? undefined
       : pattern
         ? (isLiveMode ? pattern.length : pattern.replace(/[^#A*]/g, '').length)
         : (this.maxlength && this.maxlength > 0 ? this.maxlength : undefined);
 
-    // Display value:
-    // - Currency: raw (blur handler formats imperatively)
-    // - Live mask: formatted always
-    // - Blur mask: raw (blur handler formats imperatively)
-    // - No mask: raw
+    // Live mask shows formatted; everything else shows raw (blur handler formats imperatively).
     const displayValue = (pattern && isLiveMode)
       ? this.formattedValue
       : this.value;
 
-    // Auto-set autocomplete="off" for PII masks unless user explicitly set autocomplete
+    // PII masks default to autocomplete=off
     const effectiveAutocomplete = (maskDef?.pii && !this.autocomplete)
       ? 'off'
       : this.autocomplete;
 
-    // Determine event handlers based on mask mode. Loose type because each
-    // handler may receive a different DOM event subtype (InputEvent for
-    // input/change, ClipboardEvent for paste, FocusEvent for blur/focus);
-    // Lit's `@event="${fn}"` binding doesn't care, so we don't enforce a
-    // single signature here.
-    type Handler = ((e: any) => void) | undefined;
-    let inputHandler: Handler;
-    let changeHandler: Handler;
-    let blurHandler: Handler;
-    let focusHandler: Handler;
-    let pasteHandler: Handler;
+    const handlers = this._resolveHandlers();
 
-    if (isCurrency) {
-      inputHandler = this._onCurrencyInput;
-      changeHandler = this._onCurrencyChange;
-      blurHandler = this._onCurrencyBlur;
-      focusHandler = this._onCurrencyFocus;
-    } else if (pattern && isLiveMode) {
-      // Live mode: format as you type (accessibility tradeoffs)
-      inputHandler = this._onMaskInput;
-      changeHandler = this._onMaskChange;
-      pasteHandler = this._onMaskPaste;
-    } else if (pattern) {
-      // Blur mode (default): free-form input, format on blur
-      inputHandler = this._onBlurMaskInput;
-      changeHandler = this._onBlurMaskChange;
-      blurHandler = this._onBlurMaskBlur;
-      focusHandler = this._onBlurMaskFocus;
-    } else {
-      inputHandler = this._handleInput;
-      changeHandler = this._handleChange;
-      if (this.validateType) {
-        blurHandler = this._onValidateBlur;
-      }
-    }
-
-    const inputEl = html`
+    return html`
       <input
         class="${classes}"
         id="${this._inputId}"
@@ -366,20 +350,84 @@ export class CivTextInput extends CivFormElement {
         inputmode="${effectiveInputmode || nothing}"
         aria-describedby="${this._ariaDescribedBy || nothing}"
         aria-invalid="${this.error ? 'true' : nothing}"
-        @input="${inputHandler}"
-        @change="${changeHandler}"
-        @paste="${pasteHandler}"
-        @blur="${blurHandler}"
-        @focus="${focusHandler}"
+        @input="${handlers.input}"
+        @change="${handlers.change}"
+        @paste="${handlers.paste}"
+        @blur="${handlers.blur}"
+        @focus="${handlers.focus}"
       />
     `;
+  }
 
+  /**
+   * Pick the right input/change/paste/blur/focus handlers for the active
+   * mode (currency / live-mask / blur-mask / plain).
+   *
+   * Loose Handler type because each handler receives a different DOM event
+   * subtype (InputEvent, ClipboardEvent, FocusEvent); Lit's `@event="${fn}"`
+   * binding doesn't enforce a single signature.
+   */
+  private _resolveHandlers(): {
+    input?: (e: any) => void;
+    change?: (e: any) => void;
+    blur?: (e: any) => void;
+    focus?: (e: any) => void;
+    paste?: (e: any) => void;
+  } {
+    const pattern = this._activePattern;
+    const isLiveMode = this.maskMode === 'live';
+
+    if (this._isCurrency) {
+      return {
+        input: this._onCurrencyInput,
+        change: this._onCurrencyChange,
+        blur: this._onCurrencyBlur,
+        focus: this._onCurrencyFocus,
+      };
+    }
+    if (pattern && isLiveMode) {
+      // Live mode: format as you type (accessibility tradeoffs)
+      return {
+        input: this._onMaskInput,
+        change: this._onMaskChange,
+        paste: this._onMaskPaste,
+      };
+    }
+    if (pattern) {
+      // Blur mode (default): free-form input, format on blur
+      return {
+        input: this._onBlurMaskInput,
+        change: this._onBlurMaskChange,
+        blur: this._onBlurMaskBlur,
+        focus: this._onBlurMaskFocus,
+      };
+    }
+    return {
+      input: this._onInput,
+      change: this._onChange,
+      blur: this.validateType ? this._onValidateBlur : undefined,
+    };
+  }
+
+  /**
+   * Compose the input with prefix/suffix segments, a clear button, or icon
+   * overlays. Returns the bare input unchanged when none of those are needed.
+   */
+  private _wrapInput(inputEl: unknown, opts: {
+    widthClass: string;
+    hasPrefix: boolean;
+    hasSuffix: boolean;
+    needsClearButton: boolean;
+    showLeadingIcon: boolean;
+    showTrailingIcon: boolean;
+    isCurrency: boolean;
+  }) {
+    const { widthClass, hasPrefix, hasSuffix, needsClearButton, showLeadingIcon, showTrailingIcon, isCurrency } = opts;
     const needsAdjacentWrapper = hasPrefix || hasSuffix || needsClearButton;
     const needsIconOverlay = !needsAdjacentWrapper && (showLeadingIcon || showTrailingIcon);
 
-    let wrappedInput;
     if (needsAdjacentWrapper) {
-      wrappedInput = html`<div class="civ-flex ${widthClass} civ-max-w-full"
+      return html`<div class="civ-flex ${widthClass} civ-max-w-full"
         >${hasPrefix
           ? html`<span class="civ-input-prefix" aria-hidden="true">${isCurrency ? '$' : this.prefix}</span>`
           : nothing}${inputEl}${needsClearButton
@@ -389,8 +437,9 @@ export class CivTextInput extends CivFormElement {
           : nothing}${hasSuffix
           ? html`<span class="civ-input-suffix" aria-hidden="true">${this.suffix}</span>`
           : nothing}</div>`;
-    } else if (needsIconOverlay) {
-      wrappedInput = html`<div class="civ-input-icon-wrap ${widthClass} civ-max-w-full"
+    }
+    if (needsIconOverlay) {
+      return html`<div class="civ-input-icon-wrap ${widthClass} civ-max-w-full"
         >${inputEl}${showLeadingIcon
           ? html`<span class="civ-input-icon civ-input-icon--leading"
               ><civ-icon name="${this.leadingIcon}" label="${this.leadingIconLabel || nothing}"></civ-icon
@@ -400,30 +449,29 @@ export class CivTextInput extends CivFormElement {
               ><civ-icon name="${this.trailingIcon}" label="${this.trailingIconLabel || nothing}"></civ-icon
             ></span>`
           : nothing}</div>`;
-    } else {
-      wrappedInput = inputEl;
     }
+    return inputEl;
+  }
 
-    const showCharCount = this._showCharCount;
-    const remaining = showCharCount ? this.maxlength! - (this.value?.length ?? 0) : 0;
-
+  /**
+   * Render the visible "N characters remaining" counter and its sr-only
+   * debounced live region. Returns `nothing` when char-count UI isn't active.
+   */
+  private _renderCharCount() {
+    if (!this._showCharCount) return nothing;
+    const remaining = this.maxlength! - (this.value?.length ?? 0);
     return html`
-      ${wrappedInput}
-      ${showCharCount
-        ? html`
-            <span
-              id="${this._charCountId}"
-              class="civ-block civ-mt-0.5 civ-text-sm ${remaining < 0
-                ? 'civ-text-error civ-font-bold'
-                : 'civ-text-muted'}"
-            >
-              ${interpolate(t('inputCharsRemaining'), { count: remaining })}
-            </span>
-            <span class="civ-sr-only" aria-live="polite">
-              ${interpolate(t('inputCharsRemaining'), { count: this.maxlength! - this._announcedCharCount })}
-            </span>
-          `
-        : nothing}
+      <span
+        id="${this._charCountId}"
+        class="civ-block civ-mt-0.5 civ-text-sm ${remaining < 0
+          ? 'civ-text-error civ-font-bold'
+          : 'civ-text-muted'}"
+      >
+        ${interpolate(t('inputCharsRemaining'), { count: remaining })}
+      </span>
+      <span class="civ-sr-only" aria-live="polite">
+        ${interpolate(t('inputCharsRemaining'), { count: this.maxlength! - this._announcedCharCount })}
+      </span>
     `;
   }
 

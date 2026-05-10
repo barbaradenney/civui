@@ -222,14 +222,16 @@ describe('civ-address', () => {
     expect(el.error).toBe('');
   });
 
-  it('sets aria-required on fieldset and required sub-fields', async () => {
+  it('cascades aria-required to required sub-fields (not the fieldset)', async () => {
     const el = await fixture<CivAddress>('<civ-address legend="Address" name="addr" required></civ-address>');
 
+    // aria-required is not a valid ARIA attribute on <fieldset> (axe rule
+    // `aria-allowed-attr`). The required state is communicated via the
+    // legend's "(required)" text and via aria-required on the underlying
+    // form controls.
     const fieldset = el.querySelector('fieldset')!;
-    expect(fieldset.getAttribute('aria-required')).toBe('true');
+    expect(fieldset.hasAttribute('aria-required')).toBe(false);
 
-    // Required sub-fields (street1, city, state, zip) should have aria-required
-    // Non-required sub-fields (country, street2) should not
     const streetInput = el.querySelector('civ-text-input')!;
     expect(streetInput.querySelector('input')!.getAttribute('aria-required')).toBe('true');
   });

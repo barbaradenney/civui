@@ -84,16 +84,18 @@ export class CivCountry extends CivFormElement {
     `;
   }
 
-  private _onInput(e: CustomEvent): void {
-    e.stopPropagation();
-    this.value = e.detail.value;
+  protected override _onInput(e: Event): void {
+    const ce = e as CustomEvent<{ value: string }>;
+    ce.stopPropagation();
+    this.value = ce.detail.value;
     dispatch(this, 'civ-input', { value: this.value });
   }
 
-  private _onChange(e: CustomEvent): void {
-    e.stopPropagation();
-    this.value = e.detail.value;
-    dispatch(this, 'civ-change', { value: this.value, label: e.detail.label });
+  protected override _onChange(e: Event): void {
+    const ce = e as CustomEvent<{ value: string; label: string }>;
+    ce.stopPropagation();
+    this.value = ce.detail.value;
+    dispatch(this, 'civ-change', { value: this.value, label: ce.detail.label });
   }
 
   override formResetCallback(): void {

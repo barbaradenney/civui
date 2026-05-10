@@ -377,7 +377,7 @@ export class CivFormElement extends CivBaseElement {
   /**
    * Handle input events from the inner input element.
    */
-  protected _handleInput(e: Event): void {
+  protected _onInput(e: Event): void {
     const target = e.target as HTMLInputElement;
     this.value = target.value;
     // Form value sync handled by _syncFormValue() in updated()
@@ -387,7 +387,7 @@ export class CivFormElement extends CivBaseElement {
   /**
    * Handle change events from the inner input element.
    */
-  protected _handleChange(e: Event): void {
+  protected _onChange(e: Event): void {
     const target = e.target as HTMLInputElement;
     this.value = target.value;
     // Form value sync handled by _syncFormValue() in updated()

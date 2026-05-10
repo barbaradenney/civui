@@ -134,8 +134,10 @@ export class CivDateRangePicker extends LegendHeadingMixin(CivFormElement) {
     this.requestUpdate();
   }
 
-  override firstUpdated(): void {
-    super.firstUpdated();
+  override connectedCallback(): void {
+    super.connectedCallback();
+    // Parse `value` before the first render so the seeded range is reflected
+    // in the initial DOM without needing a follow-up update cycle.
     if (this.value) {
       try {
         const parsed = JSON.parse(this.value);

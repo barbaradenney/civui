@@ -1,8 +1,11 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { CivFormElement, LegendHeadingMixin, dispatch, renderLegend, renderFormHeader, buildDescribedBy, t } from '@civui/core';
-import '@civui/inputs';
-import '@civui/controls';
+import type { SelectLike } from '@civui/core';
+import '@civui/inputs/text-input';
+import '@civui/inputs/select';
+import '@civui/inputs/memorable-date';
+import '@civui/controls/radio';
 import '../name/civ-name.js';
 
 export interface MarriageValue {
@@ -148,22 +151,31 @@ export class CivPartnershipHistory extends LegendHeadingMixin(CivFormElement) {
     this.value = JSON.stringify(this._marriage);
   }
 
-  override firstUpdated(): void {
-    super.firstUpdated();
+  override connectedCallback(): void {
+    super.connectedCallback();
     this._marriage = this.parseStructuredValue(this.value, EMPTY_MARRIAGE);
     if (this.statusAssumed) {
       this._marriage = { ...this._marriage, status: this.statusAssumed };
       this.value = JSON.stringify(this._marriage);
     }
+  }
+
+  override willUpdate(changed: Map<string, unknown>): void {
+    // Sync derived state before render so we don't trigger a second update
+    // cycle from `updated()`.
+    if (changed.has('statusAssumed') && this.statusAssumed && this._marriage.status !== this.statusAssumed) {
+      this._marriage = { ...this._marriage, status: this.statusAssumed };
+      this.value = JSON.stringify(this._marriage);
+    }
+  }
+
+  override firstUpdated(): void {
+    super.firstUpdated();
     this.updateComplete.then(() => this._syncStatusOptions());
   }
 
   override updated(changed: Map<string, unknown>): void {
     super.updated(changed);
-    if (changed.has('statusAssumed') && this.statusAssumed && this._marriage.status !== this.statusAssumed) {
-      this._marriage = { ...this._marriage, status: this.statusAssumed };
-      this.value = JSON.stringify(this._marriage);
-    }
     if (changed.has('_marriage')) {
       this.updateComplete.then(() => this._syncStatusOptions());
     }
@@ -197,7 +209,6 @@ export class CivPartnershipHistory extends LegendHeadingMixin(CivFormElement) {
         class="civ-fieldset"
         aria-describedby="${describedBy || nothing}"
         aria-invalid="${this.error ? 'true' : nothing}"
-        aria-required="${this.required || nothing}"
         ?disabled="${this.disabled}"
       >
         ${renderFormHeader({ label: renderLegend({ legend: this._legendForStep(), required: false, headingLevel: this.headingLevel, size: this.size }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
@@ -377,7 +388,7 @@ export class CivPartnershipHistory extends LegendHeadingMixin(CivFormElement) {
 
   private _syncStatusOptions(): void {
     // Sync marriage type select options
-    const typeSelect = this.querySelector('[data-marriage-type]') as any;
+    const typeSelect = this.querySelector('[data-marriage-type]') as SelectLike | null;
     if (typeSelect) {
       typeSelect.options = [
         { value: 'legal', label: t('marriageTypeLegal') },

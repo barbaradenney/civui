@@ -16,11 +16,11 @@ class TestBase extends CivBaseElement {
 class TestForm extends CivFormElement {
   override connectedCallback() {
     super.connectedCallback();
-    this.addEventListener('change', (e: Event) => this._handleChange(e));
+    this.addEventListener('change', (e: Event) => this._onChange(e));
   }
 
   triggerChange() {
-    // _handleChange reads e.target.value, so dispatch from a real input
+    // _onChange reads e.target.value, so dispatch from a real input
     const input = document.createElement('input');
     input.value = 'new-value';
     this.appendChild(input);
@@ -127,7 +127,7 @@ describe('sendAnalytics', () => {
 });
 
 describe('CivFormElement analytics integration', () => {
-  it('fires analytics on _handleChange', async () => {
+  it('fires analytics on _onChange', async () => {
     const el = document.createElement('test-analytics-form') as TestForm;
     el.label = 'Email';
     el.name = 'email';

@@ -1,8 +1,11 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { CivFormElement, LegendHeadingMixin, dispatch, renderLegend, renderFormHeader, buildDescribedBy, t } from '@civui/core';
-import '@civui/inputs';
-import '@civui/controls';
+import type { SelectLike } from '@civui/core';
+import '@civui/inputs/text-input';
+import '@civui/inputs/textarea';
+import '@civui/inputs/select';
+import '@civui/inputs/country';
 import '@civui/overlays/modal';
 import '@civui/actions/button';
 
@@ -160,9 +163,15 @@ export class CivAddress extends LegendHeadingMixin(CivFormElement) {
     this.value = JSON.stringify(this._address);
   }
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    // Hydrate before the first render so we don't trigger a second render
+    // (Lit warns when reactive state mutates during/after `updated`).
+    this._address = this.parseStructuredValue(this.value, EMPTY_ADDRESS);
+  }
+
   override firstUpdated(): void {
     super.firstUpdated();
-    this._address = this.parseStructuredValue(this.value, EMPTY_ADDRESS);
     this.updateComplete.then(() => this._syncSelectOptions());
   }
 
@@ -186,121 +195,93 @@ export class CivAddress extends LegendHeadingMixin(CivFormElement) {
         class="civ-fieldset"
         aria-describedby="${describedBy || nothing}"
         aria-invalid="${this.error ? 'true' : nothing}"
-        aria-required="${this.required || nothing}"
         ?disabled="${this.disabled}"
       >
         ${renderFormHeader({ label: renderLegend({ legend: this.legend || this.label, required: false, headingLevel: this.headingLevel, size: this.size }), hintId: this._hintId, hint: generalDeliveryHint || this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
 
-        <civ-form-field label="${t('addressCountry')}">
-          <civ-country
-            name="${this.name ? `${this.name}.country` : ''}"
-            value="${this._address.country}"
-            us-first
-            ?disabled="${this.disabled}"
-            data-address-country
-            @civ-change="${(e: CustomEvent) => this._onSubSelectChange('country', e)}"
-          ></civ-country>
-        </civ-form-field>
-
-        <civ-form-field label="${t('addressStreet1')}" error="${this.streetError}" ?required="${this.required}">
-          <civ-text-input
-            name="${this.name ? `${this.name}.street1` : ''}"
-            value="${this._address.street1}"
-            error="${this.streetError}"
-            autocomplete="address-line1"
-            ?disabled="${this.disabled}"
-            ?readonly="${this.readonly}"
-            @civ-input="${(e: CustomEvent) => this._onSubInput('street1', e)}"
-            @civ-change="${(e: CustomEvent) => this._onSubChange('street1', e)}"
-          ></civ-text-input>
-        </civ-form-field>
-
-        ${this.showStreet2 ? html`
-          <civ-form-field label="${t('addressStreet2')}">
-            <civ-text-input
-              name="${this.name ? `${this.name}.street2` : ''}"
-              value="${this._address.street2}"
-              autocomplete="address-line2"
-              ?disabled="${this.disabled}"
-              ?readonly="${this.readonly}"
-              @civ-input="${(e: CustomEvent) => this._onSubInput('street2', e)}"
-              @civ-change="${(e: CustomEvent) => this._onSubChange('street2', e)}"
-            ></civ-text-input>
-          </civ-form-field>
-        ` : nothing}
-
-        ${this.showStreet3 ? html`
-          <civ-form-field label="${t('addressStreet3')}">
-            <civ-text-input
-              name="${this.name ? `${this.name}.street3` : ''}"
-              value="${this._address.street3}"
-              autocomplete="address-line3"
-              ?disabled="${this.disabled}"
-              ?readonly="${this.readonly}"
-              @civ-input="${(e: CustomEvent) => this._onSubInput('street3', e)}"
-              @civ-change="${(e: CustomEvent) => this._onSubChange('street3', e)}"
-            ></civ-text-input>
-          </civ-form-field>
-        ` : nothing}
-
-        <civ-form-field label="${t('addressCity')}" error="${this.cityError}" ?required="${this.required}">
-          <civ-text-input
-            name="${this.name ? `${this.name}.city` : ''}"
-            value="${this._address.city}"
-            error="${this.cityError}"
-            autocomplete="address-level2"
-            ?disabled="${this.disabled}"
-            ?readonly="${this.readonly}"
-            @civ-input="${(e: CustomEvent) => this._onSubInput('city', e)}"
-            @civ-change="${(e: CustomEvent) => this._onSubChange('city', e)}"
-          ></civ-text-input>
-        </civ-form-field>
-
-        ${this._showState ? this._useSelectForState ? html`
-          <civ-form-field label="${t('addressState')}" error="${this.stateError}" ?required="${this.required}">
-            <civ-select
-              name="${this.name ? `${this.name}.state` : ''}"
-              value="${this._address.state}"
-              error="${this.stateError}"
-              autocomplete="address-level1"
-              ?disabled="${this.disabled}"
-              data-address-state
-              @civ-change="${(e: CustomEvent) => this._onSubSelectChange('state', e)}"
-            ></civ-select>
-          </civ-form-field>
-        ` : html`
-          <civ-form-field label="${t('addressStateProvince')}" error="${this.stateError}" ?required="${this.required}">
-            <civ-text-input
-              name="${this.name ? `${this.name}.state` : ''}"
-              value="${this._address.state}"
-              error="${this.stateError}"
-              autocomplete="address-level1"
-              ?disabled="${this.disabled}"
-              ?readonly="${this.readonly}"
-              @civ-input="${(e: CustomEvent) => this._onSubInput('state', e)}"
-              @civ-change="${(e: CustomEvent) => this._onSubChange('state', e)}"
-            ></civ-text-input>
-          </civ-form-field>
-        ` : nothing}
-
-        ${this._showPostalCode ? html`
-          <civ-form-field label="${this._address.country === 'US' ? t('addressZip') : t('addressPostalCode')}" error="${this.zipError}" ?required="${this.required}">
-            <civ-text-input
-              name="${this.name ? `${this.name}.zip` : ''}"
-              value="${this._address.zip}"
-              error="${this.zipError}"
-              autocomplete="postal-code"
-              ?disabled="${this.disabled}"
-              ?readonly="${this.readonly}"
-              @civ-input="${(e: CustomEvent) => this._onSubInput('zip', e)}"
-              @civ-change="${(e: CustomEvent) => this._onSubChange('zip', e)}"
-          ></civ-text-input>
-        </civ-form-field>
-        ` : nothing}
+        ${this._renderCountryField()}
+        ${this._renderTextField('street1', t('addressStreet1'), 'address-line1', { error: this.streetError, required: this.required })}
+        ${this.showStreet2 ? this._renderTextField('street2', t('addressStreet2'), 'address-line2') : nothing}
+        ${this.showStreet3 ? this._renderTextField('street3', t('addressStreet3'), 'address-line3') : nothing}
+        ${this._renderTextField('city', t('addressCity'), 'address-level2', { error: this.cityError, required: this.required })}
+        ${this._renderStateField()}
+        ${this._showPostalCode
+          ? this._renderTextField('zip', this._address.country === 'US' ? t('addressZip') : t('addressPostalCode'), 'postal-code', { error: this.zipError, required: this.required })
+          : nothing}
       </fieldset>
 
       ${this._renderValidationModal()}
     `;
+  }
+
+  /**
+   * Render a single `<civ-form-field><civ-text-input>` row keyed off
+   * `_address[field]`. Centralizes the repetitive name/value/event/disabled
+   * wiring shared by every text address field. `error` and `required` are
+   * passed in because they vary per field.
+   */
+  private _renderTextField(
+    field: 'street1' | 'street2' | 'street3' | 'city' | 'state' | 'zip',
+    label: string,
+    autocomplete: string,
+    opts: { error?: string; required?: boolean } = {},
+  ) {
+    const { error = '', required = false } = opts;
+    return html`
+      <civ-form-field label="${label}" error="${error}" ?required="${required}">
+        <civ-text-input
+          name="${this.name ? `${this.name}.${field}` : ''}"
+          value="${this._address[field]}"
+          error="${error}"
+          autocomplete="${autocomplete}"
+          ?disabled="${this.disabled}"
+          ?readonly="${this.readonly}"
+          @civ-input="${(e: CustomEvent) => this._onSubInput(field, e)}"
+          @civ-change="${(e: CustomEvent) => this._onSubChange(field, e)}"
+        ></civ-text-input>
+      </civ-form-field>
+    `;
+  }
+
+  /** Country selector with `us-first` ordering. */
+  private _renderCountryField() {
+    return html`
+      <civ-form-field label="${t('addressCountry')}">
+        <civ-country
+          name="${this.name ? `${this.name}.country` : ''}"
+          value="${this._address.country}"
+          us-first
+          ?disabled="${this.disabled}"
+          data-address-country
+          @civ-change="${(e: CustomEvent) => this._onSubSelectChange('country', e)}"
+        ></civ-country>
+      </civ-form-field>
+    `;
+  }
+
+  /**
+   * State / province field — renders a `<civ-select>` populated from
+   * `US_STATES` for US addresses, or a free-form text input otherwise.
+   * Returns `nothing` when the country variant doesn't surface a state.
+   */
+  private _renderStateField() {
+    if (!this._showState) return nothing;
+    if (this._useSelectForState) {
+      return html`
+        <civ-form-field label="${t('addressState')}" error="${this.stateError}" ?required="${this.required}">
+          <civ-select
+            name="${this.name ? `${this.name}.state` : ''}"
+            value="${this._address.state}"
+            error="${this.stateError}"
+            autocomplete="address-level1"
+            ?disabled="${this.disabled}"
+            data-address-state
+            @civ-change="${(e: CustomEvent) => this._onSubSelectChange('state', e)}"
+          ></civ-select>
+        </civ-form-field>
+      `;
+    }
+    return this._renderTextField('state', t('addressStateProvince'), 'address-level1', { error: this.stateError, required: this.required });
   }
 
   private _renderContact(describedBy: string) {
@@ -470,7 +451,7 @@ export class CivAddress extends LegendHeadingMixin(CivFormElement) {
 
   /** Set options on the select sub-components after render. */
   private _syncSelectOptions(): void {
-    const stateSelect = this.querySelector('[data-address-state]') as any;
+    const stateSelect = this.querySelector('[data-address-state]') as SelectLike | null;
     if (stateSelect) stateSelect.options = this._stateOptions;
   }
 

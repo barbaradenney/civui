@@ -277,137 +277,160 @@ export class CivFileUpload extends CivFormElement {
 
   override render() {
     return html`
-        ${this.readonly
-          ? nothing
-          : this.variant === 'compact'
-          ? html`
-            <button
-              type="button"
-              class="civ-flex civ-items-stretch civ-w-full civ-bg-transparent civ-border-0 civ-p-0 civ-cursor-pointer civ-rounded"
-              @click="${this._onDropzoneClick}"
-              ?disabled="${this.disabled}"
-            >
-              <span class="civ-input civ-flex-1 civ-truncate civ-text-start civ-rounded-s" style="border-inline-end:0;border-start-end-radius:0;border-end-end-radius:0;">
-                ${this._files.length > 0
-                  ? this._files.map(f => f.name).join(', ')
-                  : (this.dragText || t('fileUploadNoFileChosen'))}
-              </span>
-              <span class="civ-action-btn civ-action-btn--tertiary civ-shrink-0 civ-rounded-e" style="border-start-start-radius:0;border-end-start-radius:0;">${this.browseText || t('fileUploadBrowseText')}</span>
-            </button>`
-          : html`
-            <button
-              type="button"
-              class="civ-dropzone ${this.variant === 'full' ? 'civ-dropzone--full' : ''}"
-              @dragover="${this._boundDragOver}"
-              @dragleave="${this._boundDragLeave}"
-              @drop="${this._boundDrop}"
-              @click="${this._onDropzoneClick}"
-              aria-label="${this.label}"
-              aria-required="${this.required || nothing}"
-              aria-invalid="${this.error ? 'true' : nothing}"
-              ?disabled="${this.disabled}"
-              aria-describedby="${[this._ariaDescribedBy, this._files.length > 0 ? this._filesListId : ''].filter(Boolean).join(' ') || nothing}"
-              data-dragging="${this._dragging ? '' : nothing}"
-            >
-              <span class="civ-block civ-text-body civ-mb-1">
-                ${this.dragText || t('fileUploadDragText')}
-              </span>
-              <span class="civ-action-btn civ-action-btn--tertiary">${this.browseText || t('fileUploadBrowseText')}</span>
-              ${this.accept
-                ? html`<span class="civ-block civ-text-sm civ-mt-1">${this.acceptedLabel || t('fileUploadAcceptedLabel')}${formatAcceptedTypes(this.accept)}</span>`
-                : nothing}
-              ${this.maxSize > 0
-                ? html`<span class="civ-block civ-text-sm civ-mt-0.5">${this.maxSizeLabel || t('fileUploadMaxSizeLabel')}${formatFileSize(this.maxSize)}</span>`
-                : nothing}
-            </button>`}
+        ${this.readonly ? nothing : this._renderTrigger()}
+        ${this._renderHiddenInput()}
+        ${this._renderFileList()}
+    `;
+  }
 
-        <input
-          id="${this._inputId}"
-          type="file"
-          name="${this.name}"
-          accept="${this.accept || nothing}"
-          capture="${this.capture || nothing}"
-          ?multiple="${this.multiple}"
-          ?disabled="${this.disabled || this.readonly}"
-          ?required="${this.required && this._files.length === 0}"
-          class="civ-hidden"
-          @change="${this._onFileSelect}"
-          aria-hidden="true"
-          tabindex="-1"
-        />
-
-        ${this._files.length > 0
-          ? html`
-              <ul id="${this._filesListId}" class="civ-list-none civ-p-0 civ-mt-2" aria-label="${this.filesListLabel || t('fileUploadFilesListLabel')}">
-                ${(this._showAllFiles ? this._files : this._files.slice(0, CivFileUpload._FILE_LIST_LIMIT)).map(
-                  (file, index) => html`
-                    <li class="civ-file-item">
-                      ${this.showPreview && file.type?.startsWith('image/')
-                        ? html`<img class="civ-file-preview civ-shrink-0" src="${this._getPreviewUrl(file.file)}" alt="" />`
-                        : file.status === 'success'
-                          ? html`<civ-icon name="check-circle" class="civ-shrink-0 civ-text-success"></civ-icon>`
-                          : file.status === 'error'
-                            ? html`<civ-icon name="error" class="civ-shrink-0 civ-text-error"></civ-icon>`
-                            : file.status === 'uploading'
-                              ? html`<civ-icon name="loading" class="civ-shrink-0"></civ-icon>`
-                              : nothing}
-                      <div class="civ-file-item__content">
-                        <span class="civ-block">
-                          ${file.isInitial && file.url
-                            ? html`<a href="${file.url}" target="_blank" rel="noopener noreferrer">${file.name}</a>`
-                            : html`${file.name}`}
-                          <span class="civ-text-sm">(${formatFileSize(file.size)})</span>
-                        </span>
-                        ${file.status === 'uploading' ? html`
-                          <div class="civ-progress-track civ-progress-track--compact civ-mt-1">
-                            <div class="civ-progress-fill" style="width: ${file.progress}%" role="progressbar" aria-valuenow="${file.progress}" aria-valuemin="0" aria-valuemax="100" aria-label="${interpolate(t('fileUploadProgressAriaLabel'), { name: file.name })}"></div>
-                          </div>
-                        ` : nothing}
-                        ${file.status === 'error' && file.error ? html`
-                          <span class="civ-file-error-text civ-block civ-mt-1">${file.error}</span>
-                        ` : nothing}
-                      </div>
-                      ${this.readonly ? nothing : html`<span class="civ-file-item__actions">
-                        ${file.status === 'uploading' ? html`
-                          <civ-action-button
-                            variant="tertiary"
-                            label="${t('fileUploadCancelText')}"
-                            aria-label="${interpolate(t('fileUploadCancelAriaLabel'), { name: file.name })}"
-                            @click="${() => this._cancelUpload(index)}"
-                          ></civ-action-button>
-                        ` : nothing}
-                        ${file.status === 'error' ? html`
-                          <civ-action-button
-                            variant="tertiary"
-                            label="${t('fileUploadRetryText')}"
-                            aria-label="${interpolate(t('fileUploadRetryAriaLabel'), { name: file.name })}"
-                            @click="${() => this._retryUpload(index)}"
-                          ></civ-action-button>
-                        ` : nothing}
-                        ${file.status !== 'uploading' ? html`
-                          <button
-                            type="button"
-                            class="civ-close-btn"
-                            aria-label="${interpolate(this.removeAriaLabel || t('fileUploadRemoveAriaLabel'), { name: file.name })}"
-                            ?disabled="${this.disabled}"
-                            @click="${() => this._removeFile(index)}"
-                            data-file-remove
-                          ><civ-icon name="close" aria-hidden="true"></civ-icon></button>
-                        ` : nothing}
-                      </span>`}
-                    </li>
-                  `,
-                )}
-              </ul>
-              ${!this._showAllFiles && this._files.length > CivFileUpload._FILE_LIST_LIMIT ? html`
-                <button
-                  type="button"
-                  class="civ-btn civ-btn--tertiary civ-mt-2"
-                  @click="${this._onShowAllFiles}"
-                >${interpolate(t('fileUploadShowAll'), { count: this._files.length })}</button>
-              ` : nothing}
-            `
+  /**
+   * Render the visible file-picker trigger — either the compact "Browse" pill
+   * or the full dropzone with drag/drop affordances.
+   */
+  private _renderTrigger() {
+    if (this.variant === 'compact') {
+      return html`
+        <button
+          type="button"
+          class="civ-flex civ-items-stretch civ-w-full civ-bg-transparent civ-border-0 civ-p-0 civ-cursor-pointer civ-rounded"
+          @click="${this._onDropzoneClick}"
+          ?disabled="${this.disabled}"
+        >
+          <span class="civ-input civ-flex-1 civ-truncate civ-text-start civ-rounded-s" style="border-inline-end:0;border-start-end-radius:0;border-end-end-radius:0;">
+            ${this._files.length > 0
+              ? this._files.map(f => f.name).join(', ')
+              : (this.dragText || t('fileUploadNoFileChosen'))}
+          </span>
+          <span class="civ-action-btn civ-action-btn--tertiary civ-shrink-0 civ-rounded-e" style="border-start-start-radius:0;border-end-start-radius:0;">${this.browseText || t('fileUploadBrowseText')}</span>
+        </button>`;
+    }
+    return html`
+      <button
+        type="button"
+        class="civ-dropzone ${this.variant === 'full' ? 'civ-dropzone--full' : ''}"
+        @dragover="${this._boundDragOver}"
+        @dragleave="${this._boundDragLeave}"
+        @drop="${this._boundDrop}"
+        @click="${this._onDropzoneClick}"
+        aria-label="${this.label}"
+        aria-required="${this.required || nothing}"
+        aria-invalid="${this.error ? 'true' : nothing}"
+        ?disabled="${this.disabled}"
+        aria-describedby="${[this._ariaDescribedBy, this._files.length > 0 ? this._filesListId : ''].filter(Boolean).join(' ') || nothing}"
+        data-dragging="${this._dragging ? '' : nothing}"
+      >
+        <span class="civ-block civ-text-body civ-mb-1">
+          ${this.dragText || t('fileUploadDragText')}
+        </span>
+        <span class="civ-action-btn civ-action-btn--tertiary">${this.browseText || t('fileUploadBrowseText')}</span>
+        ${this.accept
+          ? html`<span class="civ-block civ-text-sm civ-mt-1">${this.acceptedLabel || t('fileUploadAcceptedLabel')}${formatAcceptedTypes(this.accept)}</span>`
           : nothing}
+        ${this.maxSize > 0
+          ? html`<span class="civ-block civ-text-sm civ-mt-0.5">${this.maxSizeLabel || t('fileUploadMaxSizeLabel')}${formatFileSize(this.maxSize)}</span>`
+          : nothing}
+      </button>`;
+  }
+
+  /** Render the offscreen native `<input type="file">` that backs the picker. */
+  private _renderHiddenInput() {
+    return html`
+      <input
+        id="${this._inputId}"
+        type="file"
+        name="${this.name}"
+        accept="${this.accept || nothing}"
+        capture="${this.capture || nothing}"
+        ?multiple="${this.multiple}"
+        ?disabled="${this.disabled || this.readonly}"
+        ?required="${this.required && this._files.length === 0}"
+        class="civ-hidden"
+        @change="${this._onFileSelect}"
+        aria-hidden="true"
+        tabindex="-1"
+      />`;
+  }
+
+  /**
+   * Render the selected-files list (status icon, name, progress bar, error,
+   * action buttons) plus the "show all" expander when there are more than
+   * `_FILE_LIST_LIMIT`. Returns `nothing` while the list is empty.
+   */
+  private _renderFileList() {
+    if (this._files.length === 0) return nothing;
+    const visible = this._showAllFiles ? this._files : this._files.slice(0, CivFileUpload._FILE_LIST_LIMIT);
+    return html`
+      <ul id="${this._filesListId}" class="civ-list-none civ-p-0 civ-mt-2" aria-label="${this.filesListLabel || t('fileUploadFilesListLabel')}">
+        ${visible.map((file, index) => this._renderFileItem(file, index))}
+      </ul>
+      ${!this._showAllFiles && this._files.length > CivFileUpload._FILE_LIST_LIMIT ? html`
+        <button
+          type="button"
+          class="civ-btn civ-btn--tertiary civ-mt-2"
+          @click="${this._onShowAllFiles}"
+        >${interpolate(t('fileUploadShowAll'), { count: this._files.length })}</button>
+      ` : nothing}
+    `;
+  }
+
+  /** Render a single file row: status icon, name (linkable for initial files), progress, error, actions. */
+  private _renderFileItem(file: typeof this._files[number], index: number) {
+    return html`
+      <li class="civ-file-item">
+        ${this.showPreview && file.type?.startsWith('image/')
+          ? html`<img class="civ-file-preview civ-shrink-0" src="${this._getPreviewUrl(file.file)}" alt="" />`
+          : file.status === 'success'
+            ? html`<civ-icon name="check-circle" class="civ-shrink-0 civ-text-success"></civ-icon>`
+            : file.status === 'error'
+              ? html`<civ-icon name="error" class="civ-shrink-0 civ-text-error"></civ-icon>`
+              : file.status === 'uploading'
+                ? html`<civ-icon name="loading" class="civ-shrink-0"></civ-icon>`
+                : nothing}
+        <div class="civ-file-item__content">
+          <span class="civ-block">
+            ${file.isInitial && file.url
+              ? html`<a href="${file.url}" target="_blank" rel="noopener noreferrer">${file.name}</a>`
+              : html`${file.name}`}
+            <span class="civ-text-sm">(${formatFileSize(file.size)})</span>
+          </span>
+          ${file.status === 'uploading' ? html`
+            <div class="civ-progress-track civ-progress-track--compact civ-mt-1">
+              <div class="civ-progress-fill" style="width: ${file.progress}%" role="progressbar" aria-valuenow="${file.progress}" aria-valuemin="0" aria-valuemax="100" aria-label="${interpolate(t('fileUploadProgressAriaLabel'), { name: file.name })}"></div>
+            </div>
+          ` : nothing}
+          ${file.status === 'error' && file.error ? html`
+            <span class="civ-file-error-text civ-block civ-mt-1">${file.error}</span>
+          ` : nothing}
+        </div>
+        ${this.readonly ? nothing : html`<span class="civ-file-item__actions">
+          ${file.status === 'uploading' ? html`
+            <civ-action-button
+              variant="tertiary"
+              label="${t('fileUploadCancelText')}"
+              aria-label="${interpolate(t('fileUploadCancelAriaLabel'), { name: file.name })}"
+              @click="${() => this._cancelUpload(index)}"
+            ></civ-action-button>
+          ` : nothing}
+          ${file.status === 'error' ? html`
+            <civ-action-button
+              variant="tertiary"
+              label="${t('fileUploadRetryText')}"
+              aria-label="${interpolate(t('fileUploadRetryAriaLabel'), { name: file.name })}"
+              @click="${() => this._retryUpload(index)}"
+            ></civ-action-button>
+          ` : nothing}
+          ${file.status !== 'uploading' ? html`
+            <button
+              type="button"
+              class="civ-close-btn"
+              aria-label="${interpolate(this.removeAriaLabel || t('fileUploadRemoveAriaLabel'), { name: file.name })}"
+              ?disabled="${this.disabled}"
+              @click="${() => this._removeFile(index)}"
+              data-file-remove
+            ><civ-icon name="close" aria-hidden="true"></civ-icon></button>
+          ` : nothing}
+        </span>`}
+      </li>
     `;
   }
 
@@ -416,11 +439,19 @@ export class CivFileUpload extends CivFormElement {
     this._maybeHydrateInitialFiles();
   }
 
-  override updated(changed: Map<string, unknown>): void {
-    super.updated(changed);
+  protected override get _ariaDescribedBy(): string {
+    // Hint and error are owned by the wrapping `<civ-form-field>`. The
+    // files-list ID is added separately at the dropzone's aria-describedby
+    // template binding.
+    return '';
+  }
+
+  override willUpdate(changed: Map<string, unknown>): void {
     // initialFiles can land async (e.g. fetched after mount) — hydrate when
     // it first becomes non-empty. Subsequent reassignments after hydration
-    // are ignored intentionally to avoid mid-flow surprises.
+    // are ignored intentionally to avoid mid-flow surprises. Run before
+    // render so the hydration state is reflected in this update cycle
+    // instead of triggering a second update.
     if (changed.has('initialFiles')) {
       this._maybeHydrateInitialFiles();
     }

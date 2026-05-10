@@ -2,8 +2,9 @@ import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { CivFormElement, LegendHeadingMixin, dispatch, renderLegend, renderFormHeader, buildDescribedBy, interpolate, t } from '@civui/core';
-import '@civui/inputs';
-import '@civui/controls';
+import type { LabelSize } from '@civui/core';
+import '@civui/inputs/text-input';
+import '@civui/controls/checkbox';
 
 export interface SignatureValue {
   name: string;
@@ -74,7 +75,7 @@ export class CivSignature extends LegendHeadingMixin(CivFormElement) {
    * the large heading communicates the weight of the action. Override to
    * `sm`/`md` for inline / dense placements.
    */
-  override size: import('@civui/core').LabelSize = 'xl';
+  override size: LabelSize = 'xl';
 
   // headingLevel inherited from LegendHeadingMixin (default: undefined).
 
@@ -131,6 +132,10 @@ export class CivSignature extends LegendHeadingMixin(CivFormElement) {
 
   override connectedCallback(): void {
     super.connectedCallback();
+    // Hydrate before the first render so we don't trigger a second render
+    // (Lit warns when reactive state mutates during/after `updated`).
+    this._signature = this.parseStructuredValue(this.value, EMPTY_SIGNATURE);
+
     // Light DOM: capture any `slot="statement"` children before Lit's first
     // render destroys them. Multiple children get joined; their content is
     // re-rendered via unsafeHTML so consumer-supplied <a> tags survive.
@@ -138,17 +143,11 @@ export class CivSignature extends LegendHeadingMixin(CivFormElement) {
       (child) => child.getAttribute('slot') === 'statement',
     );
     if (slotted.length > 0) {
-      // Use innerHTML so the wrapper element (with its slot attribute) is
-      // discarded — only the consumer's content survives into the rendered
-      // statement container.
+      // innerHTML drops the wrapper (with its slot attribute) — only the
+      // consumer's content survives into the rendered statement container.
       this._slottedStatementHTML = slotted.map((c) => c.innerHTML).join('');
       for (const child of slotted) child.remove();
     }
-  }
-
-  override firstUpdated(): void {
-    super.firstUpdated();
-    this._signature = this.parseStructuredValue(this.value, EMPTY_SIGNATURE);
   }
 
   /** Whether any statement (slot or prop) is present. */
@@ -183,7 +182,6 @@ export class CivSignature extends LegendHeadingMixin(CivFormElement) {
         class="civ-fieldset"
         aria-describedby="${describedBy || nothing}"
         aria-invalid="${this.error ? 'true' : nothing}"
-        aria-required="${this.required || nothing}"
         ?disabled="${this.disabled}"
       >
         ${renderFormHeader({ label: renderLegend({ legend: this.legend || this.label, required: this.required, headingLevel: this.headingLevel, size: this.size }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}

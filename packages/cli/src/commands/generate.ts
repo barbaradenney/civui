@@ -258,7 +258,7 @@ function storiesTemplate(tagName: string, name: string): string {
     .map((s: string) => s.charAt(0).toUpperCase() + s.slice(1))
     .join(' ');
 
-  return `import type { Meta, StoryObj } from '@storybook/web-components';
+  return `import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html } from 'lit';
 import './${tagName}.js';
 
@@ -411,7 +411,7 @@ function drupalTwigTemplate(name: string): string {
 }
 
 function drupalStoriesTemplate(name: string, displayName: string): string {
-  return `import type { Meta, StoryObj } from '@storybook/web-components';
+  return `import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html } from 'lit';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import template from '../../../drupal/civui/components/${name}/${name}.twig';

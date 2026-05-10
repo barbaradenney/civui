@@ -88,7 +88,7 @@ Setting `href` on a `<civ-list-item>` makes the whole row a clickable anchor. Om
 
 ## Sequential unlocking
 
-Lock later sections until prerequisites are complete by **omitting the `href`** on `<civ-list-item>`. Without an `href`, the row renders as a plain `<li>` with no anchor — visually identical, but no longer a click target. Pair with the `cannot-start` badge so users see why the row is locked.
+Lock later sections until prerequisites are complete by **omitting the `href`** on `<civ-list-item>`. Without an `href`, the row renders without an anchor — visually identical, but no longer a click target. Pair with the `cannot-start` badge so users see why the row is locked.
 
 ```html
 <civ-list-item>
@@ -137,8 +137,8 @@ Hub → Chapter (multi-step) → Hub (updated status)
 
 ## Accessibility
 
-- Each clickable row is a real `<a>` filling the full `<li>` — works with keyboard, screen readers, and right-click "open in new tab".
-- Static (locked) rows are plain `<li>` with no anchor — assistive tech doesn't announce them as links.
+- Each clickable row is a real `<a>` filling the row — works with keyboard, screen readers, and right-click "open in new tab".
+- Static (locked) rows render without an anchor — assistive tech doesn't announce them as links. The `<civ-list-item>` host carries `role="listitem"` so the parent `<ul role="list">` accessibility tree sees a proper list item either way.
 - Section headings are real `<h3>` elements that screen readers can navigate to as landmarks.
 - `<civ-badge>` carries `role="status"` so status changes are announced.
 - Progress bar announces completion percentage.

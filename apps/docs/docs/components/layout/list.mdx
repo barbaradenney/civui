@@ -177,7 +177,7 @@ See the [Task List Hub pattern](/form-patterns/task-list-hub) for a full multi-c
 
 ## Accessibility
 
-- Each clickable row is a real `<a>` filling the full `<li>` — works with keyboard, screen readers, and right-click "open in new tab".
-- Static rows are plain `<li>` with no anchor. Same visual rhythm, honest semantics — assistive tech doesn't announce them as links.
-- `<civ-list>` adds `role="list"` so dividers/styles applied with `list-style: none` don't strip the list semantics on some screen readers (Safari + VoiceOver historically).
+- Each clickable row is a real `<a>` filling the row — works with keyboard, screen readers, and right-click "open in new tab".
+- Static rows render as a plain row with no anchor. Same visual rhythm, honest semantics — assistive tech doesn't announce them as links.
+- `<civ-list>` adds `role="list"` on its `<ul>` and `<civ-list-item>` carries `role="listitem"` on the host. The custom element doesn't render its own `<li>` (that would break the HTML spec, which requires `<li>` to be a direct child of `<ul>`/`<ol>`), but the accessibility tree still sees a proper list-item child via the role.
 - `current` on `<civ-list-item>` sets `aria-current="page"` for navigation patterns.

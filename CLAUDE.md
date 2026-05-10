@@ -181,6 +181,9 @@ Named z-index layers as CSS custom properties — no hardcoded values:
 - Every test file must have `afterEach(cleanupFixtures)`
 - After setting properties, `await elementUpdated(el)` before assertions
 - Tests are co-located with source: `civ-select.ts` → `civ-select.test.ts`
+- **Coverage** (ad-hoc): `npx vitest run --coverage --coverage.reporter=text-summary` from any package. `@vitest/coverage-v8` is pinned to the same **major** version as `vitest` (currently `^2.0.0`). When you bump vitest, bump coverage-v8 in lockstep — version skew throws `BaseCoverageProvider not exported`.
+- **`as any` in tests is allowed.** ESLint exempts test files. The dominant pattern is `await fixture(...) as any` to access underscore-prefixed reactive state (`el._loading`, `el._files`, `el._data`) without writing per-component test helpers. Refactor risk: renaming `_state` fields silently breaks tests. Mitigation: keep field renames adjacent to the test edits, or grep for the old name across `*.test.ts` before merging.
+- **Long-running validate/test commands may lose output under background runners.** When running `pnpm validate` or `pnpm test` in a background harness, the harness pipe occasionally drops stdout for runs longer than ~30s while still reporting `exit 0`. If you need to capture full output, redirect to a file explicitly: `pnpm validate > /tmp/log.txt 2>&1`, then read `/tmp/log.txt`. Cached turbo runs (`>>> FULL TURBO`) finish in <1s and don't hit the issue.
 
 ## File Naming
 

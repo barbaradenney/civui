@@ -4,7 +4,7 @@ export { CivFormElement } from './base/civ-form-element.js';
 export { CivBooleanFormElement } from './base/civ-boolean-form-element.js';
 export { LightDomSlotMixin, LightDomTextMixin } from './base/light-dom-mixins.js';
 export type { SlotConfig } from './base/light-dom-mixins.js';
-export type { SelectLike } from './types/sub-components.js';
+export type { SelectLike, FormControlLike } from './types/sub-components.js';
 export { LegendHeadingMixin } from './base/legend-heading-mixin.js';
 export { GroupListenerMixin } from './base/group-listener-mixin.js';
 

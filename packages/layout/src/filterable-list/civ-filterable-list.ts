@@ -307,10 +307,9 @@ export class CivFilterableList extends LightDomSlotMixin(CivBaseElement) {
     // Check the filter attribute
     const filterText = item.getAttribute(this.filterAttribute) ?? '';
     if (filterText.toLowerCase().includes(lowerQuery)) return true;
-    // Fallback: heading prop
-    if ('heading' in item && typeof (item as any).heading === 'string') {
-      if ((item as any).heading.toLowerCase().includes(lowerQuery)) return true;
-    }
+    // Fallback: heading prop (e.g. civ-list-item exposes a `heading` field)
+    const heading = (item as { heading?: unknown }).heading;
+    if (typeof heading === 'string' && heading.toLowerCase().includes(lowerQuery)) return true;
     // Fallback: text content
     return (item.textContent ?? '').toLowerCase().includes(lowerQuery);
   }

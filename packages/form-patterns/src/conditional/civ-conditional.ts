@@ -110,8 +110,8 @@ export class CivConditional extends LightDomSlotMixin(CivBaseElement) {
     if (!field) return;
 
     // Checkbox group
-    if ('values' in field && Array.isArray((field as any).values)) {
-      this._evaluateMultiValue((field as any).values);
+    if (Array.isArray(field.values)) {
+      this._evaluateMultiValue(field.values);
     }
     // Single native checkbox / radio. Plain `'checked' in field` matches
     // every <input> (text, email, etc. all expose .checked as a boolean),

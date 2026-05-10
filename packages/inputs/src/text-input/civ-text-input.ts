@@ -202,8 +202,7 @@ export class CivTextInput extends CivFormElement {
     // Hydrate hint + normalize masked value before the first render so
     // these don't trigger a second update cycle.
     const maskDef = this._maskDef;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    if (!this.hint && maskDef?.hintKey) this.hint = t(maskDef.hintKey as any);
+    if (!this.hint && maskDef?.hintKey) this.hint = t(maskDef.hintKey);
     if (this._activePattern && this.value) {
       // processRawInput filters per-character, so it handles both formatted
       // input (e.g. "123-45-6789") and raw input (e.g. "123456789") — the
@@ -575,8 +574,7 @@ export class CivTextInput extends CivFormElement {
     if (this.value) {
       const num = Number(this.value);
       if (isNaN(num) || num < 0) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        this.error = t('maskCurrencyError' as any);
+        this.error = t('maskCurrencyError');
         this._maskError = true;
       } else if (this._maskError) {
         this.error = '';
@@ -682,8 +680,7 @@ export class CivTextInput extends CivFormElement {
       if (!isComplete(this.value, pattern)) {
         // Set error from preset error key, or generic pattern error for custom masks
         if (maskDef?.errorKey) {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          this.error = t(maskDef.errorKey as any);
+          this.error = t(maskDef.errorKey);
         } else {
           this.error = interpolate(t('maskPatternError'), { label: this.label || t('fieldFallbackLabel') });
         }
@@ -767,8 +764,7 @@ export class CivTextInput extends CivFormElement {
     // Validate completeness
     if (this.value && !isComplete(this.value, pattern)) {
       if (maskDef?.errorKey) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        this.error = t(maskDef.errorKey as any);
+        this.error = t(maskDef.errorKey);
       } else {
         this.error = interpolate(t('maskPatternError'), { label: this.label || t('fieldFallbackLabel') });
       }

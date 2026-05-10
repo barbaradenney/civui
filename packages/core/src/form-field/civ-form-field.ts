@@ -5,6 +5,7 @@ import { LightDomSlotMixin } from '../base/light-dom-mixins.js';
 import type { SlotConfig } from '../base/light-dom-mixins.js';
 import { renderLabel, renderFormHeader, buildDescribedBy } from '../templates/form-templates.js';
 import type { HeadingLevel, LabelSize } from '../templates/form-templates.js';
+import type { FormControlLike } from '../types/sub-components.js';
 
 const NATIVE_INPUT_SELECTOR = 'input, select, textarea, button[role="switch"]';
 const CIV_CONTROL_SELECTOR = '[data-civ-form-field]';
@@ -142,7 +143,7 @@ export class CivFormField extends LightDomSlotMixin(CivBaseElement) {
     }
 
     // Cascade props to the child CivUI component
-    const control = this.querySelector(CIV_CONTROL_SELECTOR) as any;
+    const control = this.querySelector(CIV_CONTROL_SELECTOR) as FormControlLike | null;
     if (control) {
       control.label = this.label;
       control.hint = this.hint;

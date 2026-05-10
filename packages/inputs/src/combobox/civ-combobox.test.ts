@@ -565,13 +565,18 @@ describe('civ-combobox async loadOptions', () => {
    * have drained. The debounce uses setTimeout, but the loader is
    * `async` and queues a microtask before its first `await`, so a
    * single `setTimeout` resolution leaves the loading-state assignment
-   * unobserved on slow CI runners. Pumping a few extra microtasks
-   * after the timer covers that race.
+   * unobserved on slow CI runners.
+   *
+   * We bump the buffer to 50ms (was 10ms) because under parallel turbo
+   * runs the macrotask queue can stall longer than 10ms — the test
+   * was occasionally flaking when `setTimeout(fn, ms+10)` returned
+   * before `_runLoad`'s `_loading = true` had been observed. Then we
+   * pump several microtasks to flush the chain of `await`s inside
+   * `_runLoad` (loader call, render, updateComplete).
    */
   const flushDebounce = async (ms: number) => {
-    await new Promise((r) => setTimeout(r, ms + 10));
-    await Promise.resolve();
-    await Promise.resolve();
+    await new Promise((r) => setTimeout(r, ms + 50));
+    for (let i = 0; i < 4; i++) await Promise.resolve();
   };
 
   it('calls loadOptions with the typed query (debounced)', async () => {

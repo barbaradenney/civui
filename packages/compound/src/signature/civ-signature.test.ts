@@ -448,4 +448,24 @@ describe('civ-signature', () => {
       expect(signedAt.textContent?.trim()).toBe('');
     });
   });
+
+  describe('name commit', () => {
+    it('fires civ-change with the committed name on civ-text-input civ-change', async () => {
+      const el = await fixture('<civ-signature></civ-signature>') as any;
+      await elementUpdated(el);
+
+      const changes: any[] = [];
+      el.addEventListener('civ-change', (e: any) => changes.push(e.detail.value));
+
+      const nameInput = el.querySelector('civ-text-input')!;
+      nameInput.dispatchEvent(new CustomEvent('civ-change', {
+        detail: { value: 'Jane Doe' }, bubbles: true,
+      }));
+      await elementUpdated(el);
+
+      expect(el._signature.name).toBe('Jane Doe');
+      expect(changes).toHaveLength(1);
+      expect(changes[0].name).toBe('Jane Doe');
+    });
+  });
 });

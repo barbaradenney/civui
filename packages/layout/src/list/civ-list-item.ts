@@ -81,6 +81,15 @@ export class CivListItem extends LightDomSlotMixin(CivBaseElement) {
     };
   }
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    // Carry the listitem role on the host element so the parent <ul>'s
+    // accessibility tree sees a list-item child even though we don't
+    // render a literal <li> (which would violate the HTML spec when
+    // wrapped by <civ-list-item>).
+    if (!this.hasAttribute('role')) this.setAttribute('role', 'listitem');
+  }
+
   override firstUpdated(): void {
     this._relocateSlots();
   }
@@ -141,25 +150,27 @@ export class CivListItem extends LightDomSlotMixin(CivBaseElement) {
       ` : nothing}
     `;
 
+    // The custom element itself carries `role="listitem"` (set in
+    // connectedCallback). We don't render a literal `<li>` because the
+    // resulting `<ul> > <civ-list-item> > <li>` tree would put the `<li>`
+    // outside its required parent — axe rule `listitem` flags this and
+    // the HTML spec disallows it. The accessibility tree still sees a
+    // proper list-item via the role.
     if (isLink) {
       return html`
-        <li>
-          <a
-            href="${this._safeHref}"
-            class="${linkClasses}"
-            aria-current="${this.current ? 'page' : nothing}"
-            @click="${this._onClick}"
-          >
-            ${inner}
-          </a>
-        </li>
+        <a
+          href="${this._safeHref}"
+          class="${linkClasses}"
+          aria-current="${this.current ? 'page' : nothing}"
+          @click="${this._onClick}"
+        >
+          ${inner}
+        </a>
       `;
     }
 
     return html`
-      <li>
-        <div class="${rowClasses}" aria-current="${this.current ? 'page' : nothing}">${inner}</div>
-      </li>
+      <div class="${rowClasses}" aria-current="${this.current ? 'page' : nothing}">${inner}</div>
     `;
   }
 

@@ -114,7 +114,7 @@
     display: block;
   }
 
-  .civ-list--dividers > civ-list-item + civ-list-item > li {
+  .civ-list--dividers > civ-list-item + civ-list-item {
     @apply civ-border-t civ-border-base-lighter;
   }
 

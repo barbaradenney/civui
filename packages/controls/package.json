@@ -12,7 +12,9 @@
     "./radio": "./dist/radio/index.js",
     "./segmented-control": "./dist/segmented-control/index.js"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "publishConfig": {
     "access": "public"
   },

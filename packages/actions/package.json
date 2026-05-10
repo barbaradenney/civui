@@ -14,7 +14,9 @@
     "./filter-chip-group": "./dist/filter-chip-group/index.js",
     "./action-link": "./dist/action-link/index.js"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "publishConfig": {
     "access": "public"
   },

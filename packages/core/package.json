@@ -19,7 +19,10 @@
     "./styles/components": "./src/styles/components.css",
     "./styles/material-symbols": "./src/styles/material-symbols.css"
   },
-  "files": ["dist", "src/styles"],
+  "files": [
+    "dist",
+    "src/styles"
+  ],
   "publishConfig": {
     "access": "public"
   },

@@ -377,3 +377,59 @@ describe('civ-partnership-history default legend', () => {
     expect(legendText).toContain('About this marriage');
   });
 });
+
+describe('civ-partnership-history sub-component event handlers', () => {
+  afterEach(cleanupFixtures);
+
+  it('updates spouse name fields and fires civ-input on civ-name input', async () => {
+    const el = await fixture('<civ-partnership-history name="m"></civ-partnership-history>') as any;
+    await elementUpdated(el);
+
+    const inputs: any[] = [];
+    el.addEventListener('civ-input', (e: any) => inputs.push(e.detail.value));
+
+    const name = el.querySelector('civ-name')!;
+    name.dispatchEvent(new CustomEvent('civ-input', {
+      detail: { value: { first: 'Alice', middle: '', last: 'Smith', suffix: '' } },
+      bubbles: true,
+    }));
+    await elementUpdated(el);
+
+    expect(el._marriage.spouseFirst).toBe('Alice');
+    expect(el._marriage.spouseLast).toBe('Smith');
+    expect(inputs).toHaveLength(1);
+  });
+
+  it('fires civ-change on civ-name commit', async () => {
+    const el = await fixture('<civ-partnership-history name="m"></civ-partnership-history>') as any;
+    await elementUpdated(el);
+
+    const changes: any[] = [];
+    el.addEventListener('civ-change', (e: any) => changes.push(e.detail.value));
+
+    const name = el.querySelector('civ-name')!;
+    name.dispatchEvent(new CustomEvent('civ-change', {
+      detail: { value: { first: 'Alice', middle: '', last: 'Smith', suffix: 'Jr' } },
+      bubbles: true,
+    }));
+    await elementUpdated(el);
+
+    expect(changes).toHaveLength(1);
+    expect(changes[0].spouseSuffix).toBe('Jr');
+  });
+
+  it('updates a date field via _onFieldInput / _onFieldChange (married status)', async () => {
+    const el = await fixture('<civ-partnership-history name="m" status-assumed="married" show-marriage-date></civ-partnership-history>') as any;
+    await elementUpdated(el);
+
+    const date = el.querySelector('civ-memorable-date[name="m.marriageDate"]') as any;
+    expect(date).not.toBeNull();
+    date.dispatchEvent(new CustomEvent('civ-input', { detail: { value: '2010-06-15' }, bubbles: true }));
+    await elementUpdated(el);
+    expect(el._marriage.marriageDate).toBe('2010-06-15');
+
+    date.dispatchEvent(new CustomEvent('civ-change', { detail: { value: '2010-06-15' }, bubbles: true }));
+    await elementUpdated(el);
+    expect(el._marriage.marriageDate).toBe('2010-06-15');
+  });
+});

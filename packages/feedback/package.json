@@ -12,7 +12,9 @@
     "./badge": "./dist/badge/index.js",
     "./count": "./dist/count/index.js"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "publishConfig": {
     "access": "public"
   },

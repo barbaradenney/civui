@@ -32,6 +32,7 @@ apps/docs/static/storybook/
 # Test
 coverage/
 test-results/
+playwright-report/
 
 # Claude Code
 .claude/settings.local.json

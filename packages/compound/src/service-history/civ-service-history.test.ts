@@ -100,3 +100,42 @@ describe('civ-service-history', () => {
     expect(Ctor.formAssociated).toBe(true);
   });
 });
+
+describe('civ-service-history sub-component event handlers', () => {
+  afterEach(cleanupFixtures);
+
+  it('updates dischargeType on civ-select change and dispatches civ-input + civ-change', async () => {
+    const el = await fixture('<civ-service-history name="s"></civ-service-history>') as any;
+    await elementUpdated(el);
+
+    const inputs: any[] = [];
+    const changes: any[] = [];
+    el.addEventListener('civ-input', (e: any) => inputs.push(e.detail.value));
+    el.addEventListener('civ-change', (e: any) => changes.push(e.detail.value));
+
+    const select = el.querySelector('[data-service-discharge]')!;
+    select.dispatchEvent(new CustomEvent('civ-change', {
+      detail: { value: 'honorable' }, bubbles: true,
+    }));
+    await elementUpdated(el);
+
+    expect(el._service.dischargeType).toBe('honorable');
+    expect(inputs).toHaveLength(1);
+    expect(changes).toHaveLength(1);
+  });
+
+  it('updates start/end date fields via _onFieldInput / _onFieldChange', async () => {
+    const el = await fixture('<civ-service-history name="s"></civ-service-history>') as any;
+    await elementUpdated(el);
+
+    const startDate = el.querySelector('civ-memorable-date[name="s.startDate"]') as any;
+    expect(startDate).not.toBeNull();
+    startDate.dispatchEvent(new CustomEvent('civ-input', { detail: { value: '2010-01-01' }, bubbles: true }));
+    await elementUpdated(el);
+    expect(el._service.startDate).toBe('2010-01-01');
+
+    startDate.dispatchEvent(new CustomEvent('civ-change', { detail: { value: '2010-01-01' }, bubbles: true }));
+    await elementUpdated(el);
+    expect(el._service.startDate).toBe('2010-01-01');
+  });
+});

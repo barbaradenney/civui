@@ -5,17 +5,19 @@ import './civ-list-item.js';
 afterEach(cleanupFixtures);
 
 describe('civ-list-item', () => {
-  it('renders as <li> with no href', async () => {
+  it('exposes role="listitem" on the host (no inner <li> — see civ-list-item.ts)', async () => {
     const el = await fixture('<civ-list-item>Plain row</civ-list-item>');
-    expect(el.querySelector('li')).not.toBeNull();
+    // Renders no <li> wrapper — the host element carries role="listitem"
+    // so the parent <ul> a11y tree still sees a proper list item.
+    expect(el.querySelector('li')).toBeNull();
+    expect(el.getAttribute('role')).toBe('listitem');
     expect(el.querySelector('a')).toBeNull();
   });
 
-  it('renders <li><a> when href is set', async () => {
+  it('renders an <a> when href is set (no <li> wrapper)', async () => {
     const el = await fixture('<civ-list-item href="/foo">Clickable</civ-list-item>');
-    const li = el.querySelector('li');
     const a = el.querySelector('a');
-    expect(li).not.toBeNull();
+    expect(el.querySelector('li')).toBeNull();
     expect(a).not.toBeNull();
     expect(a!.getAttribute('href')).toBe('/foo');
   });
@@ -64,11 +66,13 @@ describe('civ-list-item', () => {
     expect(a.className).toContain('civ-no-underline');
   });
 
-  it('sanitizes javascript: href', async () => {
+  it('sanitizes javascript: href (renders a non-anchor row instead)', async () => {
     const el = await fixture('<civ-list-item href="javascript:alert(1)">x</civ-list-item>');
-    const a = el.querySelector('a');
-    expect(a).toBeNull();
-    expect(el.querySelector('li')).not.toBeNull();
+    expect(el.querySelector('a')).toBeNull();
+    // Falls back to the non-link rendering — the host element still
+    // carries role="listitem" so it's a valid child of <ul>.
+    expect(el.getAttribute('role')).toBe('listitem');
+    expect(el.querySelector('.civ-list-item__row')).not.toBeNull();
   });
 
   it('does not set aria-current by default', async () => {

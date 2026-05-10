@@ -1,4 +1,4 @@
-import type { Preview } from '@storybook/web-components';
+import type { Preview } from '@storybook/web-components-vite';
 import '@civui/tokens/css';
 import '../packages/core/src/styles/civ.css';
 

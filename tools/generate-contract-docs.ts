@@ -172,7 +172,7 @@ function renderForm(form: ComponentSchema['form']): string {
 function renderPage(schema: ComponentSchema): string {
   const out: string[] = [];
   // Storybook MDX preamble — places the page under "Contract" in the sidebar.
-  out.push(`import { Meta } from '@storybook/blocks';`);
+  out.push(`import { Meta } from '@storybook/addon-docs/blocks';`);
   out.push('');
   out.push(`<Meta title="Contract/${schema.name}" />`);
   out.push('');

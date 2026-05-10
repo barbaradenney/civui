@@ -1,5 +1,5 @@
 /// <reference types="vite/client" />
-import type { Meta, StoryObj } from '@storybook/web-components';
+import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import { LitElement, html, nothing } from 'lit';
 import { customElement, state, query } from 'lit/decorators.js';
 import { getIconNames, registerIcon } from './icon-library.js';

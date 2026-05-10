@@ -20,7 +20,9 @@
     "./progress": "./dist/progress/index.js",
     "./prefill": "./dist/prefill/index.js"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "publishConfig": {
     "access": "public"
   },

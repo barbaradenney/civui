@@ -1,8 +1,15 @@
+// This file has been automatically migrated to valid ESM format by Storybook.
+import { createRequire } from "node:module";
 import type { StorybookConfig } from '@storybook/web-components-vite';
 import { resolve, dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 // @ts-ignore — no types for this plugin
 import twig from 'vite-plugin-twig-drupal';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+const require = createRequire(import.meta.url);
 
 const __dir = typeof __dirname !== 'undefined' ? __dirname : dirname(fileURLToPath(import.meta.url));
 const root = resolve(__dir, '..');
@@ -15,12 +22,9 @@ const config: StorybookConfig = {
     // via the prestorybook hook). Gitignored.
     '../.storybook/contract/*.docs.mdx',
   ],
-  addons: [
-    '@storybook/addon-essentials',
-    '@storybook/addon-a11y',
-  ],
+  addons: [getAbsolutePath("@storybook/addon-a11y"), getAbsolutePath("@storybook/addon-docs")],
   framework: {
-    name: '@storybook/web-components-vite',
+    name: getAbsolutePath("@storybook/web-components-vite"),
     options: {},
   },
   viteFinal: async (config) => {
@@ -61,7 +65,10 @@ const config: StorybookConfig = {
       '@civui/inputs/country': resolve(root, 'packages/inputs/src/country/index.ts'),
       '@civui/inputs/va-file-number': resolve(root, 'packages/inputs/src/va-file-number/index.ts'),
       '@civui/inputs/text-input': resolve(root, 'packages/inputs/src/text-input/index.ts'),
+      '@civui/inputs/textarea': resolve(root, 'packages/inputs/src/textarea/index.ts'),
       '@civui/inputs/select': resolve(root, 'packages/inputs/src/select/index.ts'),
+      '@civui/inputs/memorable-date': resolve(root, 'packages/inputs/src/date-input/index.ts'),
+      '@civui/inputs/yes-no': resolve(root, 'packages/inputs/src/yes-no/index.ts'),
       '@civui/inputs': resolve(root, 'packages/inputs/src/index.ts'),
       '@civui/controls/checkbox': resolve(root, 'packages/controls/src/checkbox/index.ts'),
       '@civui/controls/radio': resolve(root, 'packages/controls/src/radio/index.ts'),
@@ -105,3 +112,7 @@ const config: StorybookConfig = {
 };
 
 export default config;
+
+function getAbsolutePath(value: string): any {
+  return dirname(require.resolve(join(value, "package.json")));
+}

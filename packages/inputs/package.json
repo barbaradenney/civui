@@ -29,7 +29,9 @@
     "./va-file-number": "./dist/va-file-number/index.js",
     "./preset-input": "./dist/preset-input/index.js"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "publishConfig": {
     "access": "public"
   },

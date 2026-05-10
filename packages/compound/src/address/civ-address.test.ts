@@ -415,3 +415,66 @@ describe('civ-address validation modal', () => {
     expect(el.querySelector('civ-modal')).toBeNull();
   });
 });
+
+describe('civ-address contact variant', () => {
+  afterEach(cleanupFixtures);
+
+  it('renders housing-style fields: general location, state, and contact method (no street/zip)', async () => {
+    const el = await fixture<CivAddress>(
+      '<civ-address legend="Mailing address" name="addr" variant="contact"></civ-address>'
+    );
+    await elementUpdated(el);
+
+    const labels = Array.from(el.querySelectorAll('label')).map((l) => l.textContent!.trim());
+    expect(labels.some((l) => l.includes('Street'))).toBe(false);
+    expect(labels.some((l) => l.includes('ZIP'))).toBe(false);
+    // The contact variant has its own city + contact-method textarea.
+    expect(el.querySelector('civ-textarea[name="addr.contactMethod"]')).not.toBeNull();
+  });
+});
+
+describe('civ-address country/state cascade', () => {
+  afterEach(cleanupFixtures);
+
+  it('clears state and zip when country changes', async () => {
+    const el = await fixture<CivAddress>(
+      '<civ-address legend="Mailing address" name="addr" value=\'{"country":"US","street1":"1 Main","city":"Austin","state":"TX","zip":"78701"}\'></civ-address>'
+    ) as any;
+    await elementUpdated(el);
+
+    expect(el._address.state).toBe('TX');
+    expect(el._address.zip).toBe('78701');
+
+    const country = el.querySelector('civ-country')!;
+    country.dispatchEvent(new CustomEvent('civ-change', {
+      detail: { value: 'CA' }, bubbles: true,
+    }));
+    await elementUpdated(el);
+
+    expect(el._address.country).toBe('CA');
+    expect(el._address.state).toBe('');
+    expect(el._address.zip).toBe('');
+  });
+
+  it('updates `value` and fires civ-input + civ-change when state changes', async () => {
+    const el = await fixture<CivAddress>(
+      '<civ-address legend="Mailing address" name="addr" required></civ-address>'
+    ) as any;
+    await elementUpdated(el);
+
+    const inputs: any[] = [];
+    const changes: any[] = [];
+    el.addEventListener('civ-input', (e: any) => inputs.push(e.detail.value));
+    el.addEventListener('civ-change', (e: any) => changes.push(e.detail.value));
+
+    const stateSelect = el.querySelector('[data-address-state]')!;
+    stateSelect.dispatchEvent(new CustomEvent('civ-change', {
+      detail: { value: 'CA' }, bubbles: true,
+    }));
+    await elementUpdated(el);
+
+    expect(el._address.state).toBe('CA');
+    expect(inputs).toHaveLength(1);
+    expect(changes).toHaveLength(1);
+  });
+});

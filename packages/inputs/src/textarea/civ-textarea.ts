@@ -105,14 +105,17 @@ export class CivTextarea extends CivFormElement {
     this._debouncedAnnounceWordCount.cancel();
   }
 
+  protected override _requiresFormFieldWrapper = true;
+
   protected override get _ariaDescribedBy(): string {
-    // Hint and error are owned by the wrapping `<civ-form-field>`. Only
-    // include IDs of elements this component actually renders (char-count
-    // and word-count spans).
+    // Hint and error are owned by the wrapping `<civ-form-field>` (cascaded
+    // here via `describedByExtra`). Char-count and word-count IDs are
+    // contributed by this component's own template.
     const ids: string[] = [];
+    if (this.describedByExtra) ids.push(this.describedByExtra);
     if (this.maxlength != null && this.maxlength > 0) ids.push(this._charCountId);
     if (this._showWordCount) ids.push(this._wordCountId);
-    return ids.join(' ') || '';
+    return ids.join(' ');
   }
 
   private get _showWordCount(): boolean {

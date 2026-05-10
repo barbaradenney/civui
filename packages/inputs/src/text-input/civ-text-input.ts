@@ -244,14 +244,17 @@ export class CivTextInput extends CivFormElement {
     }
   }
 
+  protected override _requiresFormFieldWrapper = true;
+
   protected override get _ariaDescribedBy(): string {
-    // Hint and error are owned by the wrapping `<civ-form-field>`, which sets
-    // aria-describedby on the native input imperatively (`_wireChild`). We
-    // only track IDs that this component actually renders (the char-count
-    // span). The form-field merges its own hint/error IDs onto the input.
+    // Hint and error are owned by the wrapping `<civ-form-field>`. It cascades
+    // its hint/error IDs to us via `describedByExtra`, which we include here
+    // so the child's own template binding survives re-renders without the
+    // wrapper having to re-merge imperatively.
     const ids: string[] = [];
+    if (this.describedByExtra) ids.push(this.describedByExtra);
     if (this._showCharCount) ids.push(this._charCountId);
-    return ids.join(' ') || '';
+    return ids.join(' ');
   }
 
   override render() {

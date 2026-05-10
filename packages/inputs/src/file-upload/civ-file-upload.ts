@@ -439,11 +439,13 @@ export class CivFileUpload extends CivFormElement {
     this._maybeHydrateInitialFiles();
   }
 
+  protected override _requiresFormFieldWrapper = true;
+
   protected override get _ariaDescribedBy(): string {
-    // Hint and error are owned by the wrapping `<civ-form-field>`. The
-    // files-list ID is added separately at the dropzone's aria-describedby
-    // template binding.
-    return '';
+    // Hint and error are owned by the wrapping `<civ-form-field>` (cascaded
+    // via `describedByExtra`). The files-list ID is added separately at
+    // the dropzone's aria-describedby template binding.
+    return this.describedByExtra;
   }
 
   override willUpdate(changed: Map<string, unknown>): void {

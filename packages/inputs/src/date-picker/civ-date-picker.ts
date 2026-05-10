@@ -243,9 +243,12 @@ export class CivDatePicker extends CivFormElement {
     this._cleanupTrap?.();
   }
 
+  protected override _requiresFormFieldWrapper = true;
+
   protected override get _ariaDescribedBy(): string {
-    // Hint and error are owned by the wrapping `<civ-form-field>`.
-    return '';
+    // Hint and error are owned by the wrapping `<civ-form-field>` (cascaded
+    // via `describedByExtra`).
+    return this.describedByExtra;
   }
 
   override updated(changed: Map<string, unknown>): void {

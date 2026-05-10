@@ -105,11 +105,14 @@ export class CivCombobox extends CivFormElement {
     }
   }
 
+  protected override _requiresFormFieldWrapper = true;
+
   protected override get _ariaDescribedBy(): string {
-    // Hint and error are owned by the wrapping `<civ-form-field>`. The
-    // listbox/feedback IDs that combobox does need are wired explicitly via
-    // `aria-controls` / `aria-activedescendant` rather than describedby.
-    return '';
+    // Hint and error are owned by the wrapping `<civ-form-field>` (cascaded
+    // via `describedByExtra`). The listbox / activedescendant IDs combobox
+    // needs are wired explicitly via `aria-controls` / `aria-activedescendant`
+    // rather than describedby.
+    return this.describedByExtra;
   }
 
   override disconnectedCallback(): void {

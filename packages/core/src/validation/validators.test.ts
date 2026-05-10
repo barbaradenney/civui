@@ -96,6 +96,14 @@ describe('validate.phoneIntl', () => {
     expect(validate.phoneIntl('+4412345678')).toEqual({ valid: true });
   });
 
+  it('accepts dot-separated format (+33.1.42.34.56.78)', () => {
+    // Common European format. The character class includes '.', the strip
+    // must include it too — earlier audit caught a mismatch where '.' was
+    // accepted at the front door but not stripped.
+    expect(validate.phoneIntl('+33.1.42.34.56.78')).toEqual({ valid: true });
+    expect(validate.phoneIntl('+1.202.555.1234')).toEqual({ valid: true });
+  });
+
   it('rejects missing plus', () => {
     expect(validate.phoneIntl('12025551234').valid).toBe(false);
   });

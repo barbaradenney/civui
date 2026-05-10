@@ -1023,4 +1023,32 @@ describe('text-input inline icons', () => {
       expect(el.error).toBe('');
     });
   });
+
+  describe('standalone-without-form-field warning', () => {
+    it('logs a console.warn when error is set on a bare civ-text-input (no form-field parent)', async () => {
+      const spy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      const el = await fixture<CivTextInput>(
+        '<civ-text-input label="Email"></civ-text-input>'
+      );
+      el.error = 'Required';
+      await elementUpdated(el);
+      expect(spy).toHaveBeenCalled();
+      const msg = (spy.mock.calls[0][0] as string).toLowerCase();
+      expect(msg).toContain('civ-text-input');
+      expect(msg).toContain('civ-form-field');
+      spy.mockRestore();
+    });
+
+    it('does NOT warn when wrapped in civ-form-field', async () => {
+      const spy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      const wrapper = await fixture(
+        '<civ-form-field label="Email" error="Required"><civ-text-input></civ-text-input></civ-form-field>'
+      );
+      const child = wrapper.querySelector('civ-text-input') as CivTextInput;
+      await elementUpdated(child);
+      await elementUpdated(wrapper);
+      expect(spy).not.toHaveBeenCalled();
+      spy.mockRestore();
+    });
+  });
 });

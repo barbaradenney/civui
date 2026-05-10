@@ -41,6 +41,16 @@ export class CivFormElement extends CivBaseElement {
   @property({ type: String }) hint = '';
   @property({ type: String }) label = '';
   @property({ type: String, attribute: 'required-message' }) requiredMessage = '';
+
+  /**
+   * IDs the wrapping `civ-form-field` / `civ-form-fieldset` cascades onto
+   * the child so the child's own `aria-describedby` template binding
+   * survives re-renders. Without this, a child re-render (e.g. a char-count
+   * toggle) would emit `aria-describedby` with only the child's own IDs,
+   * clobbering whatever the wrapper had set imperatively. Bare controls
+   * include this in `_ariaDescribedBy`; consumers should not set it.
+   */
+  @property({ type: String, attribute: 'described-by-extra' }) describedByExtra = '';
   /** Hides the "(required)" text while keeping validation active. Used by compound components. */
   @property({ type: Boolean, attribute: 'hide-required-indicator' }) hideRequiredIndicator = false;
 
@@ -166,6 +176,45 @@ export class CivFormElement extends CivBaseElement {
    */
   protected get _ariaDescribedBy(): string {
     return [this.hint && this._hintId, this.error && this._errorId].filter(Boolean).join(' ');
+  }
+
+  /**
+   * Bare-control subclasses (text-input, textarea, select, combobox,
+   * date-picker, file-upload) override this to `true`. They don't render
+   * their own hint/error text — that's the wrapping `civ-form-field`'s
+   * job. When set, `_warnIfStandalone()` emits a one-time dev warning
+   * if the component is mounted without a form-field parent and has a
+   * non-empty `hint` or `error` (those would otherwise be silent — a
+   * Section 508 risk for .gov consumers).
+   */
+  protected _requiresFormFieldWrapper = false;
+
+  private _standaloneWarned = false;
+
+  /**
+   * Bare-control hint/error rendering is delegated to `civ-form-field`.
+   * If consumer code sets `hint=` or `error=` on a bare control without
+   * wrapping it, the text never reaches the user. Surface a one-time
+   * console warning so developers catch this in dev tools.
+   */
+  protected _warnIfStandalone(): void {
+    if (
+      !this._requiresFormFieldWrapper ||
+      this._standaloneWarned ||
+      !(this.hint || this.error) ||
+      this.closest('civ-form-field') ||
+      this.closest('civ-form-fieldset')
+    ) {
+      return;
+    }
+    this._standaloneWarned = true;
+    // eslint-disable-next-line no-console
+    console.warn(
+      `[${this.tagName.toLowerCase()}] \`hint\` / \`error\` was set without a <civ-form-field> parent — ` +
+        `bare controls don't render their own hint/error text, so the message will never reach the user. ` +
+        `Wrap the component: <civ-form-field label="..." hint="${this.hint}" error="${this.error}">…</civ-form-field>.`,
+      this,
+    );
   }
 
   /**
@@ -339,6 +388,9 @@ export class CivFormElement extends CivBaseElement {
 
   override updated(changed: Map<string, unknown>): void {
     super.updated(changed);
+    if (changed.has('hint') || changed.has('error')) {
+      this._warnIfStandalone();
+    }
     // Error announcement is handled by renderError()'s role="alert" attribute.
     // No manual announce() needed — role="alert" triggers immediate SR announcement.
     if (changed.has('value')) {

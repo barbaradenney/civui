@@ -140,10 +140,13 @@ export class CivSelect extends CivFormElement {
     }
   }
 
+  protected override _requiresFormFieldWrapper = true;
+
   protected override get _ariaDescribedBy(): string {
-    // Hint and error are owned by the wrapping `<civ-form-field>`. This
-    // component renders no descriptive elements of its own.
-    return '';
+    // Hint and error are owned by the wrapping `<civ-form-field>` (cascaded
+    // via `describedByExtra`). This component renders no descriptive
+    // elements of its own.
+    return this.describedByExtra;
   }
 
   override render() {

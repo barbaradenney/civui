@@ -18,7 +18,7 @@ import StoryEmbed from "@site/src/components/StoryEmbed";
 
 Generic list primitives. Use for any vertical row collection — side navigation, settings menus, link collections, search results, and the **task list pattern** for multi-chapter government forms.
 
-`<civ-list-item>` becomes a clickable anchor when `href` is set, and a static `<li>` otherwise. Both render with the same layout, so clickable and locked rows can sit in the same list with consistent visual rhythm.
+`<civ-list-item>` becomes a clickable anchor when `href` is set, and a static row otherwise. The host element carries `role="listitem"` so the parent `<civ-list>`'s `<ul role="list">` accessibility tree sees a proper list item. Both variants render with the same layout, so clickable and locked rows can sit in the same list with consistent visual rhythm.
 
 ## Examples
 

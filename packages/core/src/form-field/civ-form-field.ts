@@ -110,39 +110,11 @@ export class CivFormField extends LightDomSlotMixin(CivBaseElement) {
    * props to the child CivUI component.
    */
   private _wireChild(): void {
-    const ourIds = buildDescribedBy(this._hintId, this.hint, this._errorId, this.error);
-
-    // Wire ARIA to the native input element
-    const input = this.querySelector(NATIVE_INPUT_SELECTOR) as HTMLElement | null;
-    if (input) {
-      // Merge our hint/error IDs with any IDs the child component already
-      // contributed via its own template (e.g. `civ-text-input`'s char-count
-      // id). The child re-sets its piece on every render; we re-merge here
-      // so the resulting attribute always reflects both sides.
-      const existing = (input.getAttribute('aria-describedby') || '')
-        .split(/\s+/)
-        .filter((id) => id && id !== this._hintId && id !== this._errorId);
-      const merged = [...existing, ...(ourIds ? ourIds.split(' ') : [])].join(' ');
-      if (merged) {
-        input.setAttribute('aria-describedby', merged);
-      } else {
-        input.removeAttribute('aria-describedby');
-      }
-
-      if (this.error) {
-        input.setAttribute('aria-invalid', 'true');
-      } else {
-        input.removeAttribute('aria-invalid');
-      }
-
-      if (this.required) {
-        input.setAttribute('aria-required', 'true');
-      } else {
-        input.removeAttribute('aria-required');
-      }
-    }
-
-    // Cascade props to the child CivUI component
+    // Cascade props + our hint/error IDs onto the child. The child's own
+    // template handles aria-describedby / aria-invalid / aria-required via
+    // its bindings, so we don't set those imperatively — that survives
+    // child re-renders cleanly. `describedByExtra` carries our IDs through
+    // to the child's `_ariaDescribedBy` getter.
     const control = this.querySelector(CIV_CONTROL_SELECTOR) as FormControlLike | null;
     if (control) {
       control.label = this.label;
@@ -150,6 +122,9 @@ export class CivFormField extends LightDomSlotMixin(CivBaseElement) {
       control.error = this.error;
       control.required = this.required;
       control.disabled = this.disabled;
+      control.describedByExtra = buildDescribedBy(
+        this._hintId, this.hint, this._errorId, this.error,
+      );
       if (this.requiredMessage) {
         control.requiredMessage = this.requiredMessage;
       }

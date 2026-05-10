@@ -74,10 +74,14 @@ export const validate = {
     return valid();
   },
 
-  /** International phone: E.164, 7–15 digits with + prefix. */
+  /**
+   * International phone: E.164, 7–15 digits with `+` prefix. Accepts
+   * spaces, dashes, dots, and parens as separators (`.` covered for the
+   * common European dot-separated format `+33.1.42.34.56.78`).
+   */
   phoneIntl(value: string): ValidationResult {
     if (!/^[\d\s\-+().]+$/.test(value)) return fail('validatePhoneIntl');
-    const stripped = value.replace(/[\s\-()]/g, '');
+    const stripped = value.replace(/[\s\-().]/g, '');
     if (!/^\+\d{7,15}$/.test(stripped)) {
       return fail('validatePhoneIntl');
     }

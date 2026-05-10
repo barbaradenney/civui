@@ -10,6 +10,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Component review pass: bug fixes, a11y consistency, and feature additions
 across all 21 components.
 
+### Breaking
+
+- **`civ-list-item`** no longer renders a literal `<li>` element. The
+  custom-element host now carries `role="listitem"` so the parent
+  `<civ-list>`'s `<ul role="list">` accessibility tree still sees a
+  proper list-item child. Consumers querying `el.querySelector('li')`
+  inside a list-item will get `null` — query the host element directly
+  or use `[role="listitem"]`. Fix is required by the HTML spec
+  (`<li>` parent must be `<ul>`/`<ol>`/`<menu>`; the previous markup
+  put the `<li>` inside the custom element wrapper).
+- **Validators tightened** to reject embedded garbage: `validate.ssn`,
+  `validate.phone`, `validate.phoneIntl`, `validate.routing`, and
+  `validate.ein` now reject inputs with characters outside digits +
+  conventional separators. Previously these stripped non-digits and
+  validated the remaining digits, accepting things like
+  `'<script>123-45-6789'` as a valid SSN. `validate.range` now
+  rejects `NaN` / `Infinity` (previously slipped through because JS
+  comparison operators silently return `false` for NaN).
+- **`@civui/compound`** — `CivMarriageHistory` class export renamed to
+  `CivPartnershipHistory` (file path: `marriage-history` →
+  `partnership-history`). The `MarriageValue` type alias is preserved.
+  Update class imports if you used them by name.
+- **`@civui/inputs`** — `TextInputWidth` type removed. Use the unified
+  `InputWidth` type from `@civui/core`.
+- **`@civui/core`** — `syncLegendToLabel` utility removed (unused
+  internally; was never exposed via stable docs).
+
 ### Added
 
 - **`civ-form-field` / `civ-form-fieldset` / `civ-fieldset` / `civ-repeater` / all 8 compound components** — `heading-level` (1-6) and `size` (sm/md/lg/xl) props. `heading-level` promotes the `<label>`/`<legend>` to a heading via `role="heading"` + `aria-level=N` for screen-reader navigation while preserving the native element. `size` is an independent visual size variant for use as a section/page heading. Supports the VA.gov / GOV.UK "one question per page" pattern (WCAG 2.4.6 / 2.4.10).

@@ -41,5 +41,6 @@ export interface FormControlLike extends HTMLElement {
   error: string;
   required: boolean;
   disabled: boolean;
+  describedByExtra: string;
   requiredMessage?: string;
 }

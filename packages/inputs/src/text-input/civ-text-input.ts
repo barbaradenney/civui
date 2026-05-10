@@ -16,6 +16,7 @@ import {
   t,
   validate,
   debounce,
+  COUNT_ANNOUNCE_MS,
 } from '@civui/core';
 import type { InputWidth, MaskDefinition } from '@civui/core';
 import { dispatch } from '@civui/core';
@@ -124,7 +125,7 @@ export class CivTextInput extends CivFormElement {
   private _charCountId = this.generateId('charcount');
   private _debouncedAnnounceCharCount = debounce(() => {
     this._announcedCharCount = this.value.length;
-  }, 1000);
+  }, COUNT_ANNOUNCE_MS);
 
   /**
    * Show a "characters remaining" counter when the consumer set an explicit
@@ -310,12 +311,17 @@ export class CivTextInput extends CivFormElement {
       ? 'off'
       : this.autocomplete;
 
-    // Determine event handlers based on mask mode
-    let inputHandler;
-    let changeHandler;
-    let blurHandler = nothing as any;
-    let focusHandler = nothing as any;
-    let pasteHandler = nothing as any;
+    // Determine event handlers based on mask mode. Loose type because each
+    // handler may receive a different DOM event subtype (InputEvent for
+    // input/change, ClipboardEvent for paste, FocusEvent for blur/focus);
+    // Lit's `@event="${fn}"` binding doesn't care, so we don't enforce a
+    // single signature here.
+    type Handler = ((e: any) => void) | undefined;
+    let inputHandler: Handler;
+    let changeHandler: Handler;
+    let blurHandler: Handler;
+    let focusHandler: Handler;
+    let pasteHandler: Handler;
 
     if (isCurrency) {
       inputHandler = this._onCurrencyInput;

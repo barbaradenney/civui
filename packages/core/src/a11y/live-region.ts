@@ -9,6 +9,23 @@ let assertiveRegion: HTMLElement | null = null;
 
 const QUEUE_DELAY = 150;
 const MAX_QUEUE_SIZE = 10;
+
+/**
+ * Standard debounce intervals for screen-reader announcements that
+ * fire on user typing. Components that announce per-keystroke (combobox
+ * search, textarea/text-input character counts) should debounce so
+ * SRs don't read every intermediate value.
+ *
+ * Two named values cover the existing cases:
+ *  - SEARCH_ANNOUNCE_MS — "X results found" after a search input lands.
+ *    300ms feels responsive without being chatty (combobox).
+ *  - COUNT_ANNOUNCE_MS — character-count updates on free-form text.
+ *    1000ms is long because the count moves on every keystroke; we
+ *    only want to interrupt the user when they pause (textarea,
+ *    text-input).
+ */
+export const SEARCH_ANNOUNCE_MS = 300;
+export const COUNT_ANNOUNCE_MS = 1000;
 let politeQueue: string[] = [];
 let assertiveQueue: string[] = [];
 let politeTimer: ReturnType<typeof setTimeout> | null = null;

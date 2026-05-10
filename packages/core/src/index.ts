@@ -8,7 +8,7 @@ export { LegendHeadingMixin } from './base/legend-heading-mixin.js';
 export { GroupListenerMixin } from './base/group-listener-mixin.js';
 
 // A11y utilities
-export { announce, cancelAnnouncements, cleanupLiveRegions } from './a11y/live-region.js';
+export { announce, cancelAnnouncements, cleanupLiveRegions, SEARCH_ANNOUNCE_MS, COUNT_ANNOUNCE_MS } from './a11y/live-region.js';
 export { getFocusableElements, trapFocus, focusFirst } from './a11y/focus-manager.js';
 export { createKeyboardHandler, resolveGroupNavIndex, type KeyBinding } from './a11y/keyboard-handler.js';
 

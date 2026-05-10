@@ -1,7 +1,7 @@
 import { html, nothing, type TemplateResult } from 'lit';
 import { repeat } from 'lit/directives/repeat.js';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivFormElement, dispatch, inputClasses, inputWidthClass, clickOutside, t, interpolate, debounce } from '@civui/core';
+import { CivFormElement, dispatch, inputClasses, inputWidthClass, clickOutside, t, interpolate, debounce, SEARCH_ANNOUNCE_MS } from '@civui/core';
 import type { InputWidth } from '@civui/core';
 
 export interface ComboboxOption {
@@ -402,7 +402,7 @@ export class CivCombobox extends CivFormElement {
           ? (this.noResultsText || t('comboboxNoResults'))
           : interpolate(t(count === 1 ? 'comboboxResultAvailable' : 'comboboxResultsAvailable'), { count }),
       );
-    }, 300);
+    }, SEARCH_ANNOUNCE_MS);
   }
 
   private _onFocus(): void {

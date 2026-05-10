@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivFormElement, debounce, dispatch, inputClasses, t, interpolate, validate } from '@civui/core';
+import { CivFormElement, debounce, dispatch, inputClasses, t, interpolate, validate, COUNT_ANNOUNCE_MS } from '@civui/core';
 
 export type TextareaValidate = 'length' | '';
 
@@ -68,16 +68,16 @@ export class CivTextarea extends CivFormElement {
 
   private _charCountId = this.generateId('charcount');
   private _wordCountId = this.generateId('wordcount');
-  // Debounce SR character count announcements at 1000ms to avoid
-  // spamming screen readers on every keystroke. The visual counter
+  // Debounce SR character count announcements (COUNT_ANNOUNCE_MS) to
+  // avoid spamming screen readers on every keystroke. The visual counter
   // updates immediately; the aria-live region updates after a pause.
   private _debouncedAnnounceCount = debounce(() => {
     this._announcedCharCount = this._charCount;
-  }, 1000);
+  }, COUNT_ANNOUNCE_MS);
 
   private _debouncedAnnounceWordCount = debounce(() => {
     this._announcedWordCount = this._wordCount;
-  }, 1000);
+  }, COUNT_ANNOUNCE_MS);
 
   override firstUpdated(): void {
     super.firstUpdated();

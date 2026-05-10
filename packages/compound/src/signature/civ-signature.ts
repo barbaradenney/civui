@@ -117,7 +117,14 @@ export class CivSignature extends LegendHeadingMixin(CivFormElement) {
     this.value = JSON.stringify(this._signature);
   }
 
-  /** Whether the signature is complete (name entered and checkbox checked). */
+  /**
+   * Whether the signature is complete: name entered AND certify checkbox
+   * ticked. Public API — consumer code can read this to decide whether to
+   * enable a "Submit" button or unblock the next step in a flow. Other
+   * compounds use a private `_isComplete()` helper because there's no
+   * meaningful single "complete" state for a name or address; signature
+   * is the exception because the affirmation is binary.
+   */
   get isComplete(): boolean {
     return this._signature.name.trim().length > 0 && this._signature.certified;
   }

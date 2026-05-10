@@ -122,20 +122,19 @@ export class CivRepeater extends CivBaseElement {
       this._templateCaptured = true;
     }
     super.connectedCallback();
+    // Seed `_rowCount` before the first render so the template (e.g. the
+    // "Add" button's `canAdd` check) reflects the right count. Doing this
+    // in `firstUpdated` would mutate reactive state after the update
+    // committed, triggering a second render. The actual row DOM is appended
+    // in `firstUpdated` since it needs the rendered list container.
+    this._rowCount = this.mode === 'form-steps' ? 0 : Math.max(this.min, 1);
   }
 
   override firstUpdated(): void {
-    if (this.mode === 'form-steps') {
-      // Form-steps mode starts with an empty list — rows are added via the form-steps flow
-      this._rowCount = 0;
-      return;
-    }
-    // Build initial rows up to min count
-    const initial = Math.max(this.min, 1);
-    for (let i = 0; i < initial; i++) {
+    if (this.mode === 'form-steps') return;
+    for (let i = 0; i < this._rowCount; i++) {
       this._appendRow(i);
     }
-    this._rowCount = initial;
   }
 
   override render() {

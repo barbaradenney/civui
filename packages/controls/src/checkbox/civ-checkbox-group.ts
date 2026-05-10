@@ -100,6 +100,31 @@ export class CivCheckboxGroup extends LegendHeadingMixin(GroupListenerMixin(Ligh
   // it calls _onChildChange. (No keydown — checkbox-group has no
   // roving tabindex.)
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    // If `value` wasn't supplied explicitly, hydrate it from any captured
+    // child <civ-checkbox> with a `checked` attribute. Done before the first
+    // render so we don't trigger a second update cycle from `firstUpdated`.
+    if (!this.value) {
+      const values: string[] = [];
+      for (const node of this._getSlottedChildren('default')) {
+        if (!(node instanceof Element)) continue;
+        const candidates = node.matches?.('civ-checkbox')
+          ? [node]
+          : Array.from(node.querySelectorAll?.('civ-checkbox') ?? []);
+        for (const cb of candidates) {
+          if (cb.hasAttribute('checked')) {
+            values.push(cb.getAttribute('value') || '');
+          }
+        }
+      }
+      if (values.length) {
+        this.value = this._serializeValue(values);
+      }
+    }
+    this._defaultValue = this.value;
+  }
+
   override firstUpdated(): void {
     this._relocateSlots();
 
@@ -107,14 +132,8 @@ export class CivCheckboxGroup extends LegendHeadingMixin(GroupListenerMixin(Ligh
     this._syncCheckboxNames(checkboxes);
     this._syncCheckboxDisabled(checkboxes);
     this._syncCheckboxTile(checkboxes);
-
-    if (this.value) {
-      this._syncCheckboxChecked(checkboxes);
-    } else {
-      this._readCheckedFromChildren(checkboxes);
-    }
-
-    this._defaultValue = this.value;
+    this._syncCheckboxChecked(checkboxes);
+    this._updateGroupFormValue();
   }
 
   override updated(changed: Map<string, unknown>): void {

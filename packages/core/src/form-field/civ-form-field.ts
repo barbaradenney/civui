@@ -87,12 +87,13 @@ export class CivFormField extends LightDomSlotMixin(CivBaseElement) {
   override firstUpdated(): void {
     this._relocateSlots();
     // Re-render so the label's `for` attribute picks up the child input's
-    // ID. This intentionally schedules a second render — the alternative
-    // (patching `for` imperatively here) races with deeply-nested children
-    // (e.g. civ-country → civ-combobox → input) whose own render hasn't
-    // committed by the time `firstUpdated` runs. Lit emits a
-    // "scheduled an update after an update completed" warning for this;
-    // we accept it as the cost of the late-binding label association.
+    // ID. This intentionally schedules a second render and emits Lit's
+    // "scheduled an update after an update completed" warning — we accept
+    // it here because deferring the update (via queueMicrotask) would
+    // resolve after `await el.updateComplete` settles, leaving tests and
+    // sync consumers reading a half-bound DOM. Patching `for` imperatively
+    // races with deeply-nested children (civ-country → civ-combobox →
+    // input) whose own render hasn't committed yet.
     this.requestUpdate();
   }
 

@@ -94,6 +94,10 @@ export class CivFormFieldset extends LightDomSlotMixin(CivBaseElement) {
 
   override firstUpdated(): void {
     this._relocateSlots();
+    // Re-render so legend / inner controls bind to the relocated children.
+    // Lit warns ("scheduled an update after an update completed") — we
+    // accept it; deferring via queueMicrotask resolves after consumers'
+    // `await el.updateComplete`, leaving them reading a half-bound DOM.
     this.requestUpdate();
   }
 

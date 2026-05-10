@@ -91,15 +91,20 @@ export class CivFilterableList extends LightDomSlotMixin(CivBaseElement) {
 
   override firstUpdated(): void {
     this._relocateSlots();
-    // Observe content zone for dynamic item changes
     const contentZone = this.querySelector('[data-civ-filterable-list-content]');
     if (contentZone) {
+      // Seed counts from a microtask so the state mutation is scheduled
+      // outside the current update cycle (Lit warns when reactive state
+      // mutates synchronously inside firstUpdated/updated). Then attach
+      // the MutationObserver for runtime changes from the consumer.
+      queueMicrotask(() => {
+        const items = this._getFilterableItems();
+        this._totalCount = items.length;
+        this._matchCount = items.length;
+      });
       this._observer = new MutationObserver(() => this._applyFilters());
       this._observer.observe(contentZone, { childList: true, subtree: true });
     }
-    // Initial count
-    this._totalCount = this._getFilterableItems().length;
-    this._matchCount = this._totalCount;
   }
 
   // ── Public API ──────────────────────────────────────────────

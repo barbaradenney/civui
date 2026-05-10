@@ -84,23 +84,35 @@ export class CivRadioGroup extends LegendHeadingMixin(GroupListenerMixin(LightDo
   // civ-change / civ-input / keydown listeners wired by GroupListenerMixin —
   // it calls _onChildChange and _onKeydown when those methods are defined.
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    // If `value` wasn't supplied explicitly, hydrate it from any captured
+    // child <civ-radio> with a `checked` attribute. Done before the first
+    // render so we don't trigger a second update cycle from `firstUpdated`.
+    if (!this.value) {
+      for (const node of this._getSlottedChildren('default')) {
+        if (!(node instanceof Element)) continue;
+        const checked = node.matches?.('civ-radio[checked]')
+          ? node
+          : node.querySelector?.('civ-radio[checked]');
+        if (checked) {
+          this.value = checked.getAttribute('value') || '';
+          break;
+        }
+      }
+    }
+    this._defaultValue = this.value;
+  }
+
   override firstUpdated(): void {
     this._relocateSlots();
 
     const radios = this._getRadios();
     this._syncRadioNames(radios);
-    if (this.value) {
-      this._syncRadioChecked(radios);
-    } else {
-      // Read initial checked state from children (e.g., set via HTML attribute)
-      const checked = radios.find((r) => r.checked);
-      if (checked) this.value = checked.value;
-      this._syncRadioChecked(radios);
-    }
+    this._syncRadioChecked(radios);
     this._syncTabindex(radios);
     this._syncRadioRequired(radios);
     this._syncRadioTile(radios);
-    this._defaultValue = this.value;
   }
 
   override updated(changed: Map<string, unknown>): void {

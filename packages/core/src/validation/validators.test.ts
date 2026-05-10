@@ -492,3 +492,51 @@ describe('validate.routing', () => {
     );
   });
 });
+
+describe('validate strictness — embedded-garbage rejection', () => {
+  // Pre-strictening, the strip-then-test approach accepted any input whose
+  // digits matched the pattern, even when the input contained letters or
+  // arbitrary other characters (`'<script>123-45-6789'` validated as SSN).
+  // These tests lock in the current stricter behavior.
+  it('ssn rejects letters before the digit run', () => {
+    expect(validate.ssn('abc-123-45-6789').valid).toBe(false);
+    expect(validate.ssn('<script>123-45-6789').valid).toBe(false);
+  });
+
+  it('ssn rejects leading/trailing whitespace', () => {
+    expect(validate.ssn('  123-45-6789').valid).toBe(false);
+    expect(validate.ssn('123-45-6789\t').valid).toBe(false);
+  });
+
+  it('phone rejects letters', () => {
+    expect(validate.phone('call 555-1234567').valid).toBe(false);
+    expect(validate.phone('555-1234567abc').valid).toBe(false);
+  });
+
+  it('routing rejects letters', () => {
+    expect(validate.routing('021000021abc').valid).toBe(false);
+  });
+
+  it('ein rejects letters', () => {
+    expect(validate.ein('01-3456789x').valid).toBe(false);
+  });
+
+  it('phoneIntl rejects letters', () => {
+    expect(validate.phoneIntl('+12025551234x').valid).toBe(false);
+  });
+});
+
+describe('validate.range numeric edge cases', () => {
+  it('rejects NaN even when within nominal range bounds', () => {
+    // JS comparison operators silently return false for NaN, which would
+    // otherwise let NaN slip through as "valid" against `value < min`.
+    expect(validate.range(NaN, { min: 0, max: 10 }).valid).toBe(false);
+    expect(validate.range(NaN, { min: 0 }).valid).toBe(false);
+    expect(validate.range(NaN, { max: 10 }).valid).toBe(false);
+  });
+
+  it('rejects Infinity', () => {
+    expect(validate.range(Infinity, { min: 0, max: 10 }).valid).toBe(false);
+    expect(validate.range(-Infinity, { min: 0 }).valid).toBe(false);
+  });
+});

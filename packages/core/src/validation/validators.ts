@@ -59,8 +59,14 @@ export const validate = {
     return valid();
   },
 
-  /** US phone: 10 digits, area code not 0xx or 1xx. */
+  /**
+   * US phone: 10 digits, area code not 0xx or 1xx.
+   * Accepts raw (`5551234567`) or conventionally separated input (spaces,
+   * dashes, dots, parens). Rejects letters or any other characters — passing
+   * `'call 555-123-4567'` returns invalid even though the digits parse out.
+   */
   phone(value: string): ValidationResult {
+    if (!/^[\d\s\-().]+$/.test(value)) return fail('validatePhone');
     const digits = value.replace(/\D/g, '');
     if (digits.length !== 10 || /^[01]/.test(digits)) {
       return fail('validatePhone');
@@ -70,6 +76,7 @@ export const validate = {
 
   /** International phone: E.164, 7–15 digits with + prefix. */
   phoneIntl(value: string): ValidationResult {
+    if (!/^[\d\s\-+().]+$/.test(value)) return fail('validatePhoneIntl');
     const stripped = value.replace(/[\s\-()]/g, '');
     if (!/^\+\d{7,15}$/.test(stripped)) {
       return fail('validatePhoneIntl');
@@ -77,10 +84,14 @@ export const validate = {
     return valid();
   },
 
-  /** SSN: 9 digits, area not 000/666/9xx. */
+  /**
+   * SSN: 9 digits, area not 000/666/9xx. Accepts raw (`123456789`) or
+   * dash-separated (`123-45-6789`). Rejects letters, leading/trailing
+   * whitespace, or any other characters.
+   */
   ssn(value: string): ValidationResult {
-    const digits = value.replace(/\D/g, '');
-    if (digits.length !== 9) return fail('validateSsn');
+    if (!/^\d{3}-?\d{2}-?\d{4}$/.test(value)) return fail('validateSsn');
+    const digits = value.replace(/-/g, '');
     const area = digits.substring(0, 3);
     if (area === '000' || area === '666' || area[0] === '9') {
       return fail('validateSsn');
@@ -92,11 +103,13 @@ export const validate = {
    * US bank routing number (ABA): 9 digits with a mod-10 checksum.
    * Reference: https://en.wikipedia.org/wiki/ABA_routing_transit_number#Check_digit
    * Sum = 3·d1 + 7·d2 + 1·d3 + 3·d4 + 7·d5 + 1·d6 + 3·d7 + 7·d8 + 1·d9
-   * Valid when Sum % 10 === 0 and not all digits are zero.
+   * Valid when Sum % 10 === 0 and not all digits are zero. Accepts raw
+   * digits or dash-separated triples (`121-000-248`); rejects other
+   * characters.
    */
   routing(value: string): ValidationResult {
-    const digits = value.replace(/\D/g, '');
-    if (digits.length !== 9) return fail('validateRouting');
+    if (!/^\d{3}-?\d{3}-?\d{3}$/.test(value)) return fail('validateRouting');
+    const digits = value.replace(/-/g, '');
     if (/^0{9}$/.test(digits)) return fail('validateRouting');
     const weights = [3, 7, 1, 3, 7, 1, 3, 7, 1];
     let sum = 0;
@@ -106,10 +119,13 @@ export const validate = {
     return sum % 10 === 0 ? valid() : fail('validateRouting');
   },
 
-  /** EIN: 9 digits, valid IRS campus prefix. */
+  /**
+   * EIN: 9 digits, valid IRS campus prefix. Accepts raw (`123456789`) or
+   * IRS-canonical (`12-3456789`); rejects other characters.
+   */
   ein(value: string): ValidationResult {
-    const digits = value.replace(/\D/g, '');
-    if (digits.length !== 9) return fail('validateEin');
+    if (!/^\d{2}-?\d{7}$/.test(value)) return fail('validateEin');
+    const digits = value.replace(/-/g, '');
     const prefix = digits.substring(0, 2);
     if (!VALID_EIN_PREFIXES.has(prefix)) {
       return fail('validateEin');
@@ -177,8 +193,21 @@ export const validate = {
     return valid();
   },
 
-  /** Numeric range: value between min and max. */
+  /**
+   * Numeric range: value between min and max. NaN, Infinity, and non-finite
+   * inputs are rejected — JS comparison operators silently return `false`
+   * for NaN, which would otherwise let it slip through as "valid."
+   */
   range(value: number, opts: { min?: number; max?: number }): ValidationResult {
+    if (!Number.isFinite(value)) {
+      const { min, max } = opts;
+      if (min != null && max != null) {
+        return { valid: false, error: interpolate(t('validateRangeBetween'), { min, max }) };
+      }
+      if (min != null) return { valid: false, error: interpolate(t('validateRangeMin'), { min }) };
+      if (max != null) return { valid: false, error: interpolate(t('validateRangeMax'), { max }) };
+      return { valid: false };
+    }
     const { min, max } = opts;
     if (min != null && max != null) {
       if (value < min || value > max) {
@@ -192,7 +221,12 @@ export const validate = {
     return valid();
   },
 
-  /** String length: between min and max characters. */
+  /**
+   * String length: between min and max characters. Counts UTF-16 code
+   * units (`value.length`), not Unicode code points — emoji and surrogate
+   * pairs count as 2. Adequate for English-language form fields; if you
+   * need user-perceived character count, use `[...value].length`.
+   */
   length(value: string, opts: { min?: number; max?: number }): ValidationResult {
     const len = value.length;
     const { min, max } = opts;

@@ -362,3 +362,120 @@ describe('civ-relationship deceased-assumed', () => {
     expect(el.querySelector('civ-memorable-date')).not.toBeNull();
   });
 });
+
+describe('civ-relationship sub-component event handlers', () => {
+  afterEach(cleanupFixtures);
+
+  it('updates `_data` and fires civ-input when name input fires', async () => {
+    const el = await fixture('<civ-relationship name="rel"></civ-relationship>') as any;
+    await elementUpdated(el);
+
+    const inputs: any[] = [];
+    el.addEventListener('civ-input', (e: any) => inputs.push(e.detail.value));
+
+    const name = el.querySelector('civ-name')!;
+    name.dispatchEvent(new CustomEvent('civ-input', {
+      detail: { value: { first: 'Jane', middle: '', last: 'Doe', suffix: '' } },
+      bubbles: true,
+    }));
+    await elementUpdated(el);
+
+    expect(el._data.first).toBe('Jane');
+    expect(el._data.last).toBe('Doe');
+    expect(inputs).toHaveLength(1);
+    expect(inputs[0].first).toBe('Jane');
+  });
+
+  it('updates `_data` and fires civ-change when name change fires', async () => {
+    const el = await fixture('<civ-relationship name="rel"></civ-relationship>') as any;
+    await elementUpdated(el);
+
+    const changes: any[] = [];
+    el.addEventListener('civ-change', (e: any) => changes.push(e.detail.value));
+
+    const name = el.querySelector('civ-name')!;
+    name.dispatchEvent(new CustomEvent('civ-change', {
+      detail: { value: { first: 'Jane', middle: '', last: 'Doe', suffix: 'Jr' } },
+      bubbles: true,
+    }));
+    await elementUpdated(el);
+
+    expect(changes).toHaveLength(1);
+    expect(changes[0].suffix).toBe('Jr');
+  });
+
+  it('handles missing name detail gracefully (preserves existing fields)', async () => {
+    const el = await fixture('<civ-relationship name="rel"></civ-relationship>') as any;
+    el._data = { ...el._data, first: 'Existing' };
+    await elementUpdated(el);
+
+    const name = el.querySelector('civ-name')!;
+    name.dispatchEvent(new CustomEvent('civ-input', { detail: {}, bubbles: true }));
+    await elementUpdated(el);
+
+    expect(el._data.first).toBe('Existing');
+  });
+
+  it('updates date fields via _onDateInput / _onDateChange (spousal)', async () => {
+    const el = await fixture(
+      '<civ-relationship name="rel" preset="spouse" value=\'{"relationship":"spouse"}\'></civ-relationship>'
+    ) as any;
+    await elementUpdated(el);
+
+    const date = el.querySelector('civ-memorable-date[name="rel.marriageDate"]') as any;
+    expect(date).not.toBeNull();
+    date.dispatchEvent(new CustomEvent('civ-input', { detail: { value: '2010-06-15' }, bubbles: true }));
+    await elementUpdated(el);
+
+    expect(el._data.marriageDate).toBe('2010-06-15');
+
+    date.dispatchEvent(new CustomEvent('civ-change', { detail: { value: '2010-06-15' }, bubbles: true }));
+    await elementUpdated(el);
+
+    expect(el._data.marriageDate).toBe('2010-06-15');
+  });
+
+  it('clears date-of-death when deceased changes from yes to no', async () => {
+    const el = await fixture('<civ-relationship name="rel" show-deceased></civ-relationship>') as any;
+    await elementUpdated(el);
+
+    el._data = { ...el._data, deceased: 'yes', dateOfDeath: '2020-01-01' };
+    await elementUpdated(el);
+
+    const yesNo = el.querySelector('civ-yes-no')!;
+    yesNo.dispatchEvent(new CustomEvent('civ-change', { detail: { value: 'no' }, bubbles: true }));
+    await elementUpdated(el);
+
+    expect(el._data.deceased).toBe('no');
+    expect(el._data.dateOfDeath).toBe('');
+  });
+
+  it('updates otherDescription on civ-input from `other` text input', async () => {
+    const el = await fixture('<civ-relationship name="rel" preset="other"></civ-relationship>') as any;
+    el._data = { ...el._data, relationship: 'other' };
+    await elementUpdated(el);
+
+    const input = el.querySelector('civ-text-input[name="rel.otherDescription"]') as any;
+    expect(input).not.toBeNull();
+    input.dispatchEvent(new CustomEvent('civ-input', { detail: { value: 'Cousin' }, bubbles: true }));
+    await elementUpdated(el);
+
+    expect(el._data.otherDescription).toBe('Cousin');
+  });
+
+  it('fires civ-change on otherDescription commit', async () => {
+    const el = await fixture('<civ-relationship name="rel" preset="other"></civ-relationship>') as any;
+    el._data = { ...el._data, relationship: 'other' };
+    await elementUpdated(el);
+
+    const changes: any[] = [];
+    el.addEventListener('civ-change', (e: any) => changes.push(e.detail.value));
+
+    const input = el.querySelector('civ-text-input[name="rel.otherDescription"]') as any;
+    input.dispatchEvent(new CustomEvent('civ-change', { detail: { value: 'Cousin' }, bubbles: true }));
+    await elementUpdated(el);
+
+    expect(changes).toHaveLength(1);
+    expect(changes[0].otherDescription).toBe('Cousin');
+  });
+});

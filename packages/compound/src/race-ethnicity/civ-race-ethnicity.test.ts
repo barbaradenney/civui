@@ -148,4 +148,90 @@ describe('civ-race-ethnicity', () => {
     expect(el.querySelector('civ-checkbox-group')?.getAttribute('variant')).toBe('list');
     expect(el.querySelector('civ-radio-group')?.getAttribute('variant')).toBe('list');
   });
+
+  describe('event handlers', () => {
+    it('updates `value` and fires civ-input + civ-change when ethnicity changes', async () => {
+      const el = await fixture<CivRaceEthnicity>('<civ-race-ethnicity legend="Demo" name="demo"></civ-race-ethnicity>');
+      await elementUpdated(el);
+
+      const inputs: any[] = [];
+      const changes: any[] = [];
+      el.addEventListener('civ-input', (e: any) => inputs.push(e.detail.value));
+      el.addEventListener('civ-change', (e: any) => changes.push(e.detail.value));
+
+      const radioGroup = el.querySelector('civ-radio-group')!;
+      radioGroup.dispatchEvent(new CustomEvent('civ-change', { detail: { value: 'hispanic' }, bubbles: true }));
+      await elementUpdated(el);
+
+      expect(JSON.parse(el.value).ethnicity).toBe('hispanic');
+      expect(inputs[0].ethnicity).toBe('hispanic');
+      expect(changes[0].ethnicity).toBe('hispanic');
+    });
+
+    it('updates `value` on race civ-input (multi-select) but does not fire civ-change', async () => {
+      const el = await fixture<CivRaceEthnicity>('<civ-race-ethnicity legend="Demo" name="demo"></civ-race-ethnicity>');
+      await elementUpdated(el);
+
+      const inputs: any[] = [];
+      const changes: any[] = [];
+      el.addEventListener('civ-input', (e: any) => inputs.push(e.detail.value));
+      el.addEventListener('civ-change', (e: any) => changes.push(e.detail.value));
+
+      const checkboxGroup = el.querySelector('civ-checkbox-group')!;
+      checkboxGroup.dispatchEvent(new CustomEvent('civ-input', { detail: { values: ['white', 'asian'] }, bubbles: true }));
+      await elementUpdated(el);
+
+      expect(JSON.parse(el.value).race).toEqual(['white', 'asian']);
+      expect(inputs).toHaveLength(1);
+      expect(changes).toHaveLength(0);
+    });
+
+    it('fires civ-change when race selection commits', async () => {
+      const el = await fixture<CivRaceEthnicity>('<civ-race-ethnicity legend="Demo" name="demo"></civ-race-ethnicity>');
+      await elementUpdated(el);
+
+      const changes: any[] = [];
+      el.addEventListener('civ-change', (e: any) => changes.push(e.detail.value));
+
+      const checkboxGroup = el.querySelector('civ-checkbox-group')!;
+      checkboxGroup.dispatchEvent(new CustomEvent('civ-change', { detail: { values: ['black'] }, bubbles: true }));
+      await elementUpdated(el);
+
+      expect(changes).toHaveLength(1);
+      expect(changes[0].race).toEqual(['black']);
+    });
+
+    it('formResetCallback restores empty data and clears errors', async () => {
+      const el = await fixture<CivRaceEthnicity>('<civ-race-ethnicity legend="Demo" name="demo"></civ-race-ethnicity>') as any;
+      el.value = JSON.stringify({ ethnicity: 'hispanic', race: ['white'] });
+      el.ethnicityError = 'Required';
+      el.raceError = 'Required';
+      await elementUpdated(el);
+
+      el.formResetCallback();
+      await elementUpdated(el);
+
+      expect(el._data.ethnicity).toBe('');
+      expect(el._data.race).toEqual([]);
+      expect(el.ethnicityError).toBe('');
+      expect(el.raceError).toBe('');
+    });
+
+    it('willUpdate re-parses value when set externally', async () => {
+      const el = await fixture<CivRaceEthnicity>('<civ-race-ethnicity legend="Demo" name="demo"></civ-race-ethnicity>') as any;
+      el.value = JSON.stringify({ ethnicity: 'not-hispanic', race: ['asian'] });
+      await elementUpdated(el);
+
+      expect(el._data.ethnicity).toBe('not-hispanic');
+      expect(el._data.race).toEqual(['asian']);
+    });
+
+    it('handles malformed JSON value (returns empty)', async () => {
+      const el = await fixture<CivRaceEthnicity>('<civ-race-ethnicity legend="Demo" name="demo" value="not-json"></civ-race-ethnicity>') as any;
+      await elementUpdated(el);
+
+      expect(el._data.ethnicity).toBe('');
+      expect(el._data.race).toEqual([]);
+    });
+  });
 });

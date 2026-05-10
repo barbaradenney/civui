@@ -241,7 +241,7 @@ export class CivFormStep extends LightDomSlotMixin(CivBaseElement) {
     const isFirst = idx === 0;
 
     const backLink = !isFirst ? html`
-      <nav class="civ-wizard-nav" aria-label="Step navigation">
+      <nav class="civ-wizard-nav" aria-label="${t('formStepNavLabel')}">
         <civ-link
           variant="back"
           label="${t('formStepBack')}"

@@ -8,7 +8,6 @@ import {
   inputWidthClass,
   MASK_PRESETS,
   applyMask,
-  stripMask,
   isComplete,
   computeCursorPosition,
   processRawInput,
@@ -206,7 +205,13 @@ export class CivTextInput extends CivFormElement {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if (!this.hint && maskDef?.hintKey) this.hint = t(maskDef.hintKey as any);
     if (this._activePattern && this.value) {
-      this.value = processRawInput(stripMask(this.value, this._activePattern), this._activePattern);
+      // processRawInput filters per-character, so it handles both formatted
+      // input (e.g. "123-45-6789") and raw input (e.g. "123456789") — the
+      // separator chars don't pass `filterInput` for '#' slots and get
+      // dropped naturally. Calling stripMask first would drop digits at
+      // literal positions when the consumer passes a raw value, since
+      // stripMask is positional.
+      this.value = processRawInput(this.value, this._activePattern);
       this._defaultValue = this.value;
     }
     this._announcedCharCount = (this.value ?? '').length;

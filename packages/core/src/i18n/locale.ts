@@ -229,6 +229,7 @@ export interface CivLocaleStrings {
   formStepPauseLabel: string; // "Save and come back later"
   formStepSensitiveNotice: string; // soft announcement when entering a sensitive step
   formStepValidating: string; // "Validating…" — continue button label while async beforeContinue is pending
+  formStepNavLabel: string; // aria-label for the wizard back-navigation <nav> region
 
   // Sensitive form patterns
   sectionIntroRegionLabel: string; // fallback aria-label for section-intro
@@ -829,6 +830,7 @@ const defaultStrings: CivLocaleStrings = {
   formStepContinue: 'Continue',
   formStepSave: 'Save and continue',
   formStepValidating: 'Validating…',
+  formStepNavLabel: 'Step navigation',
   formStepOf: 'Step {current} of {total}',
   formStepPauseLabel: 'Save and come back later',
   formStepSensitiveNotice: 'This section asks personal questions. Your answers are saved as you go.',

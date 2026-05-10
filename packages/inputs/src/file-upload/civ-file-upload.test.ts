@@ -703,3 +703,150 @@ describe('civ-file-upload initialFiles (draft restore)', () => {
     expect(el.keptInitialFileIds).toEqual(['srv-1']);
   });
 });
+
+describe('civ-file-upload upload status API', () => {
+  afterEach(cleanupFixtures);
+
+  it('setFileStatus updates progress and announces uploading', async () => {
+    const el = await fixture('<civ-file-upload label="Docs" name="docs"></civ-file-upload>') as any;
+    el._addFiles([new File(['x'], 'a.pdf', { type: 'application/pdf' })]);
+    await elementUpdated(el);
+
+    el.setFileStatus(0, 'uploading', { progress: 25 });
+    await elementUpdated(el);
+    expect(el._files[0].status).toBe('uploading');
+    expect(el._files[0].progress).toBe(25);
+  });
+
+  it('setFileStatus marks success', async () => {
+    const el = await fixture('<civ-file-upload label="Docs" name="docs"></civ-file-upload>') as any;
+    el._addFiles([new File(['x'], 'a.pdf', { type: 'application/pdf' })]);
+    await elementUpdated(el);
+
+    el.setFileStatus(0, 'success');
+    await elementUpdated(el);
+    expect(el._files[0].status).toBe('success');
+  });
+
+  it('setFileStatus marks error with message', async () => {
+    const el = await fixture('<civ-file-upload label="Docs" name="docs"></civ-file-upload>') as any;
+    el._addFiles([new File(['x'], 'a.pdf', { type: 'application/pdf' })]);
+    await elementUpdated(el);
+
+    el.setFileStatus(0, 'error', { error: 'Server rejected file' });
+    await elementUpdated(el);
+    expect(el._files[0].status).toBe('error');
+    expect(el._files[0].error).toBe('Server rejected file');
+  });
+
+  it('setFileStatus is a no-op for an out-of-range index', async () => {
+    const el = await fixture('<civ-file-upload label="Docs" name="docs"></civ-file-upload>') as any;
+    expect(() => el.setFileStatus(99, 'success')).not.toThrow();
+  });
+
+  it('getAbortController returns a fresh AbortController per file (memoized)', async () => {
+    const el = await fixture('<civ-file-upload label="Docs" name="docs"></civ-file-upload>') as any;
+    el._addFiles([new File(['x'], 'a.pdf', { type: 'application/pdf' })]);
+    await elementUpdated(el);
+
+    const ctrl = el.getAbortController(0);
+    expect(ctrl).toBeInstanceOf(AbortController);
+    // Idempotent — same controller returned on second call
+    expect(el.getAbortController(0)).toBe(ctrl);
+  });
+
+  it('getAbortController returns undefined for an out-of-range index', async () => {
+    const el = await fixture('<civ-file-upload label="Docs" name="docs"></civ-file-upload>') as any;
+    expect(el.getAbortController(99)).toBeUndefined();
+  });
+});
+
+describe('civ-file-upload interactions', () => {
+  afterEach(cleanupFixtures);
+
+  it('clicking the dropzone forwards to the hidden file input', async () => {
+    const el = await fixture('<civ-file-upload label="Docs" name="docs"></civ-file-upload>') as any;
+    const input = el.querySelector('input[type="file"]') as HTMLInputElement;
+    const clickSpy = vi.spyOn(input, 'click');
+    const dropzone = el.querySelector('.civ-dropzone') as HTMLButtonElement;
+    dropzone.click();
+    expect(clickSpy).toHaveBeenCalled();
+  });
+
+  it('disabled dropzone click does not forward to the hidden input', async () => {
+    const el = await fixture('<civ-file-upload label="Docs" name="docs" disabled></civ-file-upload>') as any;
+    const input = el.querySelector('input[type="file"]') as HTMLInputElement;
+    const clickSpy = vi.spyOn(input, 'click');
+    el._onDropzoneClick();
+    expect(clickSpy).not.toHaveBeenCalled();
+  });
+
+  it('dragover sets dragging state', async () => {
+    const el = await fixture('<civ-file-upload label="Docs" name="docs"></civ-file-upload>') as any;
+    el._onDragOver({ preventDefault: () => {} });
+    await elementUpdated(el);
+    expect(el._dragging).toBe(true);
+  });
+
+  it('dragover does not set dragging when disabled', async () => {
+    const el = await fixture('<civ-file-upload label="Docs" name="docs" disabled></civ-file-upload>') as any;
+    el._onDragOver({ preventDefault: () => {} });
+    expect(el._dragging).toBe(false);
+  });
+
+  it('dragleave clears dragging state', async () => {
+    const el = await fixture('<civ-file-upload label="Docs" name="docs"></civ-file-upload>') as any;
+    el._dragging = true;
+    el._onDragLeave();
+    expect(el._dragging).toBe(false);
+  });
+
+  it('show-all expander toggles _showAllFiles state', async () => {
+    const el = await fixture('<civ-file-upload label="Docs" name="docs" multiple></civ-file-upload>') as any;
+    // 6 files exceeds the default _FILE_LIST_LIMIT of 5
+    const files = Array.from({ length: 6 }, (_, i) =>
+      new File(['x'], `f${i}.pdf`, { type: 'application/pdf' })
+    );
+    el._addFiles(files);
+    await elementUpdated(el);
+
+    expect(el._showAllFiles).toBe(false);
+    el._onShowAllFiles();
+    await elementUpdated(el);
+    expect(el._showAllFiles).toBe(true);
+  });
+
+  it('_onFileSelect forwards files from the input event to _addFiles', async () => {
+    const el = await fixture('<civ-file-upload label="Docs" name="docs"></civ-file-upload>') as any;
+    const file = new File(['x'], 'a.pdf', { type: 'application/pdf' });
+    const input = el.querySelector('input[type="file"]') as HTMLInputElement;
+    Object.defineProperty(input, 'files', { value: [file], configurable: true });
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+    await elementUpdated(el);
+    expect(el._files.length).toBe(1);
+    expect(el._files[0].name).toBe('a.pdf');
+  });
+
+  it('cancelUpload aborts the controller, marks error, fires civ-upload-cancel', async () => {
+    const el = await fixture('<civ-file-upload label="Docs" name="docs"></civ-file-upload>') as any;
+    el._addFiles([new File(['x'], 'a.pdf', { type: 'application/pdf' })]);
+    await elementUpdated(el);
+
+    const ctrl = el.getAbortController(0);
+    const events: any[] = [];
+    el.addEventListener('civ-upload-cancel', (e: any) => events.push(e.detail));
+
+    el._cancelUpload(0);
+    await elementUpdated(el);
+
+    expect(ctrl.signal.aborted).toBe(true);
+    expect(el._files[0].status).toBe('error');
+    expect(events).toHaveLength(1);
+    expect(events[0].name).toBe('a.pdf');
+  });
+
+  it('cancelUpload is a no-op for an out-of-range index', async () => {
+    const el = await fixture('<civ-file-upload label="Docs" name="docs"></civ-file-upload>') as any;
+    expect(() => el._cancelUpload(99)).not.toThrow();
+  });
+});

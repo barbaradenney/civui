@@ -793,4 +793,234 @@ describe('text-input inline icons', () => {
     expect(input.className).toContain('civ-input-with-leading-icon');
     expect(input.className).toContain('civ-input-with-trailing-icon');
   });
+
+  describe('clear button (clearable)', () => {
+    it('clears value, clears component-set error, fires civ-input + civ-change on click', async () => {
+      const el = await fixture<CivTextInput>(
+        '<civ-text-input label="Search" clearable value="hello"></civ-text-input>'
+      );
+      const inputEvents: string[] = [];
+      el.addEventListener('civ-input', (e) => inputEvents.push((e as CustomEvent).detail.value));
+      const changeEvents: string[] = [];
+      el.addEventListener('civ-change', (e) => changeEvents.push((e as CustomEvent).detail.value));
+
+      const clearBtn = el.querySelector('.civ-close-btn') as HTMLButtonElement;
+      expect(clearBtn).not.toBeNull();
+      clearBtn.click();
+      await elementUpdated(el);
+
+      expect(el.value).toBe('');
+      expect(inputEvents).toEqual(['']);
+      expect(changeEvents).toEqual(['']);
+    });
+
+    it('clears mask error state on clear', async () => {
+      const el = await fixture<CivTextInput>(
+        '<civ-text-input label="SSN" mask="ssn" clearable value="123"></civ-text-input>'
+      );
+      // Trigger blur to populate mask error
+      const input = el.querySelector('input') as HTMLInputElement;
+      input.dispatchEvent(new Event('blur', { bubbles: true }));
+      await elementUpdated(el);
+      expect(el.error).toBeTruthy();
+
+      const clearBtn = el.querySelector('.civ-close-btn') as HTMLButtonElement;
+      clearBtn.click();
+      await elementUpdated(el);
+      expect(el.error).toBe('');
+    });
+  });
+
+  describe('currency mask handlers', () => {
+    it('shows raw value on focus (strips formatting for editing)', async () => {
+      const el = await fixture<CivTextInput>(
+        '<civ-text-input label="Amount" mask="currency" value="1234.56"></civ-text-input>'
+      );
+      const input = el.querySelector('input') as HTMLInputElement;
+      input.value = '1,234.56'; // simulate the formatted display value
+      input.dispatchEvent(new Event('focus', { bubbles: true }));
+      await elementUpdated(el);
+      expect(input.value).toBe('1234.56');
+    });
+
+    it('flags negative currency values as errors on change', async () => {
+      const el = await fixture<CivTextInput>(
+        '<civ-text-input label="Amount" mask="currency"></civ-text-input>'
+      );
+      el.value = '-50';
+      const input = el.querySelector('input') as HTMLInputElement;
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+      await elementUpdated(el);
+      expect(el.error).toBeTruthy();
+    });
+
+    it('clears currency mask error when value becomes valid', async () => {
+      const el = await fixture<CivTextInput>(
+        '<civ-text-input label="Amount" mask="currency"></civ-text-input>'
+      );
+      el.value = '-50';
+      const input = el.querySelector('input') as HTMLInputElement;
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+      await elementUpdated(el);
+      expect(el.error).toBeTruthy();
+
+      el.value = '50';
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+      await elementUpdated(el);
+      expect(el.error).toBe('');
+    });
+
+    it('clears currency error when value becomes empty', async () => {
+      const el = await fixture<CivTextInput>(
+        '<civ-text-input label="Amount" mask="currency"></civ-text-input>'
+      );
+      el.value = '-1';
+      const input = el.querySelector('input') as HTMLInputElement;
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+      await elementUpdated(el);
+      expect(el.error).toBeTruthy();
+
+      el.value = '';
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+      await elementUpdated(el);
+      expect(el.error).toBe('');
+    });
+  });
+
+  describe('live-mode mask handlers', () => {
+    it('paste filters non-digits and reformats (mask-mode=live)', async () => {
+      const el = await fixture<CivTextInput>(
+        '<civ-text-input label="SSN" mask="ssn" mask-mode="live"></civ-text-input>'
+      );
+      const input = el.querySelector('input') as HTMLInputElement;
+      const pasteEvent = new Event('paste', { bubbles: true, cancelable: true }) as ClipboardEvent;
+      Object.defineProperty(pasteEvent, 'clipboardData', {
+        value: { getData: () => '123-45-6789' },
+      });
+      input.dispatchEvent(pasteEvent);
+      await elementUpdated(el);
+      expect(el.value).toBe('123456789');
+      expect(input.value).toBe('123-45-6789');
+    });
+
+    it('change event fires civ-change with current value (mask-mode=live)', async () => {
+      const el = await fixture<CivTextInput>(
+        '<civ-text-input label="SSN" mask="ssn" mask-mode="live" value="123456789"></civ-text-input>'
+      );
+      const events: string[] = [];
+      el.addEventListener('civ-change', (e) => events.push((e as CustomEvent).detail.value));
+      const input = el.querySelector('input') as HTMLInputElement;
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+      await elementUpdated(el);
+      expect(events).toEqual(['123456789']);
+    });
+  });
+
+  describe('blur-mode mask handlers (default)', () => {
+    it('focus shows raw unformatted value for editing', async () => {
+      const el = await fixture<CivTextInput>(
+        '<civ-text-input label="SSN" mask="ssn" value="123456789"></civ-text-input>'
+      );
+      const input = el.querySelector('input') as HTMLInputElement;
+      input.value = '123-45-6789'; // formatted display
+      input.dispatchEvent(new Event('focus', { bubbles: true }));
+      await elementUpdated(el);
+      expect(input.value).toBe('123456789');
+    });
+
+    it('blur formats display and validates completeness', async () => {
+      const el = await fixture<CivTextInput>(
+        '<civ-text-input label="SSN" mask="ssn" value="123456789"></civ-text-input>'
+      );
+      const input = el.querySelector('input') as HTMLInputElement;
+      input.dispatchEvent(new Event('blur', { bubbles: true }));
+      await elementUpdated(el);
+      expect(input.value).toBe('123-45-6789');
+      expect(el.error).toBe('');
+    });
+
+    it('blur sets error when raw value is incomplete', async () => {
+      const el = await fixture<CivTextInput>(
+        '<civ-text-input label="SSN" mask="ssn"></civ-text-input>'
+      );
+      el.value = '12345';
+      const input = el.querySelector('input') as HTMLInputElement;
+      input.dispatchEvent(new Event('blur', { bubbles: true }));
+      await elementUpdated(el);
+      expect(el.error).toBeTruthy();
+    });
+
+    it('blur clears mask error when value becomes complete', async () => {
+      const el = await fixture<CivTextInput>(
+        '<civ-text-input label="SSN" mask="ssn"></civ-text-input>'
+      );
+      const input = el.querySelector('input') as HTMLInputElement;
+      el.value = '12345';
+      input.dispatchEvent(new Event('blur', { bubbles: true }));
+      await elementUpdated(el);
+      expect(el.error).toBeTruthy();
+
+      el.value = '123456789';
+      input.dispatchEvent(new Event('blur', { bubbles: true }));
+      await elementUpdated(el);
+      expect(el.error).toBe('');
+    });
+
+    it('change fires civ-change with raw value', async () => {
+      const el = await fixture<CivTextInput>(
+        '<civ-text-input label="SSN" mask="ssn" value="123456789"></civ-text-input>'
+      );
+      const events: string[] = [];
+      el.addEventListener('civ-change', (e) => events.push((e as CustomEvent).detail.value));
+      const input = el.querySelector('input') as HTMLInputElement;
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+      await elementUpdated(el);
+      expect(events).toEqual(['123456789']);
+    });
+  });
+
+  describe('declarative validate on blur', () => {
+    it('runs `validate="email"` on blur and sets error for invalid email', async () => {
+      const el = await fixture<CivTextInput>(
+        '<civ-text-input label="Email" type="email" validate="email"></civ-text-input>'
+      );
+      el.value = 'not-an-email';
+      const input = el.querySelector('input') as HTMLInputElement;
+      input.dispatchEvent(new Event('blur', { bubbles: true }));
+      await elementUpdated(el);
+      expect(el.error).toBeTruthy();
+    });
+
+    it('clears prior validate-error when value becomes valid', async () => {
+      const el = await fixture<CivTextInput>(
+        '<civ-text-input label="Email" type="email" validate="email"></civ-text-input>'
+      );
+      el.value = 'bad';
+      const input = el.querySelector('input') as HTMLInputElement;
+      input.dispatchEvent(new Event('blur', { bubbles: true }));
+      await elementUpdated(el);
+      expect(el.error).toBeTruthy();
+
+      el.value = 'ok@example.com';
+      input.dispatchEvent(new Event('blur', { bubbles: true }));
+      await elementUpdated(el);
+      expect(el.error).toBe('');
+    });
+
+    it('clears validate error when value becomes empty', async () => {
+      const el = await fixture<CivTextInput>(
+        '<civ-text-input label="Email" type="email" validate="email"></civ-text-input>'
+      );
+      el.value = 'bad';
+      const input = el.querySelector('input') as HTMLInputElement;
+      input.dispatchEvent(new Event('blur', { bubbles: true }));
+      await elementUpdated(el);
+      expect(el.error).toBeTruthy();
+
+      el.value = '';
+      input.dispatchEvent(new Event('blur', { bubbles: true }));
+      await elementUpdated(el);
+      expect(el.error).toBe('');
+    });
+  });
 });

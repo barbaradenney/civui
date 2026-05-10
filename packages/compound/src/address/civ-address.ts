@@ -524,6 +524,10 @@ export class CivAddress extends LegendHeadingMixin(CivFormElement) {
     return !!(a.street1.trim() && a.city.trim() && a.state.trim() && a.zip.trim());
   }
 
+  protected override get _fieldName(): string {
+    return this.legend || super._fieldName;
+  }
+
   protected override _updateValidity(): void {
     if (!this._setRequiredCompoundValidity(this._isComplete())) {
       this._setValidity({});

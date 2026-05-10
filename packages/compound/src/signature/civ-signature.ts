@@ -301,6 +301,10 @@ export class CivSignature extends LegendHeadingMixin(CivFormElement) {
     this.updateFormValue(fd);
   }
 
+  protected override get _fieldName(): string {
+    return this.legend || super._fieldName;
+  }
+
   protected override _updateValidity(): void {
     // A signature is complete when both the name is filled and the
     // certify checkbox is ticked (mirrors the public isComplete getter).

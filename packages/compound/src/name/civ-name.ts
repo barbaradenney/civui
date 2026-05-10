@@ -198,6 +198,10 @@ export class CivName extends LegendHeadingMixin(CivFormElement) {
     return !!(this._name.first.trim() && this._name.last.trim());
   }
 
+  protected override get _fieldName(): string {
+    return this.legend || super._fieldName;
+  }
+
   protected override _updateValidity(): void {
     if (!this._setRequiredCompoundValidity(this._isComplete())) {
       this._setValidity({});

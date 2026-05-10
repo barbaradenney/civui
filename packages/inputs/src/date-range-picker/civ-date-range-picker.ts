@@ -305,6 +305,10 @@ export class CivDateRangePicker extends LegendHeadingMixin(CivFormElement) {
     return !!(this._range.start && this._range.end);
   }
 
+  protected override get _fieldName(): string {
+    return this.legend || super._fieldName;
+  }
+
   protected override _updateValidity(): void {
     if (this._setRequiredCompoundValidity(this._isComplete())) return;
     if (this.error) {

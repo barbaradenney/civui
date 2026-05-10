@@ -279,16 +279,25 @@ export class CivFormElement extends CivBaseElement {
    */
   protected _setRequiredCompoundValidity(complete: boolean): boolean {
     if (this.required && !complete && !this.disabled && !this.readonly) {
-      const label = (this as any).legend || this.label || t('fieldFallbackLabel');
       const anchor = this.querySelector('input, select, textarea') as HTMLElement | null;
       this._setValidity(
         { valueMissing: true },
-        this.error || interpolate(this.requiredMessage || t('fieldRequired'), { label }),
+        this.error || interpolate(this.requiredMessage || t('fieldRequired'), { label: this._fieldName }),
         anchor ?? undefined,
       );
       return true;
     }
     return false;
+  }
+
+  /**
+   * The user-facing name of this field, used by the validity helper to
+   * interpolate "Enter your {label}" style required-field messages.
+   * Default: `this.label || t('fieldFallbackLabel')`. Compound subclasses
+   * with a `legend` prop override to prefer the legend.
+   */
+  protected get _fieldName(): string {
+    return this.label || t('fieldFallbackLabel');
   }
 
   /**

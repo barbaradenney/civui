@@ -107,16 +107,40 @@ jobs:
       - name: Run validateAll over every schema
         run: pnpm validate:schemas
 
-  fieldset-wrappers:
-    name: Self-contained group components (no external civ-form-fieldset)
+  pattern-drift:
+    name: Pattern drift (story embeds, names, props, doc tables, fieldsets)
     runs-on: ubuntu-latest
-    # Six group components (memorable-date, radio-group, checkbox-group,
-    # yes-no, segmented-control, date-range-picker) render their own
-    # legend / hint / error from a `legend` prop. Wrapping them in
-    # civ-form-fieldset produces nested fieldsets with double legends
-    # and breaks slot relocation. This audit-only check fails the build
-    # if any consumer / doc / generator code reintroduces the legacy
-    # wrapping pattern.
+    # Catches the recurring drift modes surfaced by the form-pattern
+    # audit (May 2026). The umbrella runs five gates in one job:
+    #
+    #   lint:fieldsets       - No self-contained group component is
+    #                          wrapped in civ-form-fieldset (would
+    #                          produce nested fieldsets with double
+    #                          legends + broken slot relocation).
+    #   lint:story-embeds    - Every <StoryEmbed id="..."/> in
+    #                          apps/docs resolves to a real story
+    #                          export. Catches renames, slug typos,
+    #                          and refs to deleted components.
+    #   lint:story-names     - StoryObj export name and `name:`
+    #                          display title share at least one
+    #                          substantive token. Catches the
+    #                          WithError → "Custom Button Labels"
+    #                          drift that misled the audit.
+    #   lint:story-props     - Every <civ-*> attribute used in any
+    #                          *.stories.ts corresponds to a declared
+    #                          @property on the underlying component
+    #                          (or one of its known base classes).
+    #                          Catches phantom attrs like add-label,
+    #                          preset="document-type", invented
+    #                          variants on civ-action-link, etc.
+    #   sync:doc-tables      - Regenerate _<component>.props.mdx and
+    #                          _<component>.events.mdx partials from
+    #                          @civui/schema, then `git diff
+    #                          --exit-code` to fail if they drifted
+    #                          since the last commit.
+    #
+    # The umbrella is `pnpm validate:patterns` locally; CI invokes it
+    # the same way so failure modes match.
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v2
@@ -127,8 +151,19 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - name: Audit for external civ-form-fieldset wrapping self-contained group components
-        run: pnpm lint:fieldsets
+      - name: Run pattern-drift umbrella
+        run: pnpm validate:patterns
+      - name: Show drift diff on failure
+        if: failure()
+        run: |
+          echo "::error::Pattern drift detected. Run \`pnpm validate:patterns\` locally to reproduce."
+          echo ""
+          echo "If the failure was in the doc-table drift check, regenerate with:"
+          echo "  pnpm sync:doc-tables"
+          echo "  git add apps/docs/docs/components/**/_*.mdx"
+          echo "  git commit -m \"docs: sync doc tables\""
+          echo ""
+          git diff -- 'apps/docs/docs/components/**/_*.props.mdx' 'apps/docs/docs/components/**/_*.events.mdx' || true
 
   tool-tests:
     name: Tooling unit tests (parity / sync helpers)

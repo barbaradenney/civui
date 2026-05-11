@@ -45,8 +45,8 @@ export const MedicationList: Story = {
     },
   },
   render: () => html`
-    <civ-repeater legend="Current medications" name="medications" add-label="Add another medication">
-      <div slot="entry">
+    <civ-repeater legend="Current medications" name="medications" item-label="medication">
+      <div>
         <civ-combobox label="Medication name" required name="medication_name"
             placeholder="Search or type medication name"
             .options=${[
@@ -129,7 +129,7 @@ export const InsuranceCardUpload: Story = {
     docs: {
       description: {
         story:
-          'Front and back insurance card capture using two `civ-file-upload` instances with `accept="image/*"`. Each is wrapped in a form field with clear labeling. On mobile, `accept="image/*"` prompts the camera option.',
+          'Front and back insurance card capture using two `civ-file-upload` instances with `accept="image/*"`. Each carries its own `label` for clear instructions. On mobile, `accept="image/*"` prompts the camera option.',
       },
     },
   },
@@ -170,8 +170,8 @@ export const AllergyList: Story = {
     <div style="max-width: 480px; display: grid; gap: 1rem;">
       <civ-yes-no legend="Do you have any known allergies?" required name="has_allergies"></civ-yes-no>
       <civ-conditional when="has_allergies" equals="yes">
-        <civ-repeater legend="Allergies" name="allergies" add-label="Add another allergy">
-          <div slot="entry">
+        <civ-repeater legend="Allergies" name="allergies" item-label="allergy">
+          <div>
             <civ-text-input label="Allergen" required hint="Medication, food, or environmental allergen" name="allergen"></civ-text-input>
             <civ-radio-group legend="Severity" required name="severity">
               <civ-radio label="Mild" value="mild" description="Rash, itching, or minor swelling"></civ-radio>
@@ -372,8 +372,8 @@ export const MedicalHistoryScreening: Story = {
       <civ-yes-no legend="Have you ever had surgery?" name="surgery"></civ-yes-no>
       <civ-conditional when="surgery" equals="yes">
         <div style="padding-left: 1.5rem; border-left: 4px solid var(--civ-color-primary);">
-          <civ-repeater legend="Surgeries" name="surgeries" add-label="Add another surgery">
-            <div slot="entry">
+          <civ-repeater legend="Surgeries" name="surgeries" item-label="surgery">
+            <div>
               <civ-text-input label="Surgery or procedure" required name="surgery_name"></civ-text-input>
               <civ-text-input label="Approximate date" hint="For example: March 2020" name="surgery_date"></civ-text-input>
             </div>

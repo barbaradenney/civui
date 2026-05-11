@@ -80,7 +80,7 @@ Conditional reveals chain naturally into multi-branch eligibility flows. The exa
 - The slotted content is kept in the DOM and toggled with `display: none` plus `aria-hidden="true"` when the condition isn't met. Screen readers skip hidden content and focus order excludes it.
 - Event scoping: civ-conditional listens for `civ-input` and `civ-change` on the nearest `civ-form` / `<form>` / `civ-fieldset` ancestor, so hundreds of conditionals on one page don't fight over global listeners.
 - No animation: the wrapper just flips `display`, so there's no transition to disable for `prefers-reduced-motion`.
-- **Form-validation caveat:** because hidden content stays in the DOM, a `required` field inside a hidden conditional will still be picked up by `civ-form.validate()`. If a hidden field could block submit, either remove `required` from it or gate validation through the trigger.
+- **`civ-form` skips hidden conditional content** when validating and when collecting form data. Required fields inside a hidden branch don't block submit or appear in the error summary, and their stale values aren't sent to the server.
 
 ## Components used
 

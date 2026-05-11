@@ -1,6 +1,7 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
 import './civ-form.js';
+import '../conditional/civ-conditional.js';
 import '@civui/inputs';
 
 async function waitForChildren(el: HTMLElement): Promise<void> {
@@ -643,5 +644,69 @@ describe('civ-form setServerErrors', () => {
     expect(captured.errors.length).toBe(1);
     expect(captured.errors[0].name).toBe('email');
     expect(captured.errors[0].message).toBe('Server says no');
+  });
+});
+
+async function settleConditional(el: HTMLElement): Promise<void> {
+  await elementUpdated(el);
+  const conditionals = el.querySelectorAll('civ-conditional');
+  for (const c of conditionals) {
+    await elementUpdated(c);
+  }
+  // _relocateSlots runs in firstUpdated; wait one more microtask so children
+  // are inside the [data-civ-conditional-content] wrapper.
+  await new Promise((r) => requestAnimationFrame(r));
+  await elementUpdated(el);
+}
+
+describe('civ-form + civ-conditional', () => {
+  it('does not validate fields inside a hidden civ-conditional', async () => {
+    const el = await fixture(`
+      <civ-form form-label="Test">
+        <civ-yes-no legend="Are you a veteran?" name="isVeteran" required></civ-yes-no>
+        <civ-conditional when="isVeteran" equals="yes">
+          <civ-text-input label="Branch of service" name="branch" required></civ-text-input>
+        </civ-conditional>
+      </civ-form>
+    `) as any;
+    await settleConditional(el);
+
+    const errors = el.validate();
+    // Only the visible required field (the yes-no) should be flagged —
+    // the hidden text-input must not appear in the error summary.
+    expect(errors.map((e: { name: string }) => e.name)).toEqual(['isVeteran']);
+  });
+
+  it('validates fields inside a revealed civ-conditional', async () => {
+    const el = await fixture(`
+      <civ-form form-label="Test">
+        <civ-yes-no legend="Are you a veteran?" name="isVeteran" required value="yes"></civ-yes-no>
+        <civ-conditional when="isVeteran" equals="yes">
+          <civ-text-input label="Branch of service" name="branch" required></civ-text-input>
+        </civ-conditional>
+      </civ-form>
+    `) as any;
+    await settleConditional(el);
+
+    const errors = el.validate();
+    const names = errors.map((e: { name: string }) => e.name).sort();
+    expect(names).toEqual(['branch']);
+  });
+
+  it('omits hidden-conditional fields from getFormData()', async () => {
+    const el = await fixture(`
+      <civ-form form-label="Test">
+        <civ-text-input label="Name" name="name" value="Ada"></civ-text-input>
+        <civ-yes-no legend="Are you a veteran?" name="isVeteran"></civ-yes-no>
+        <civ-conditional when="isVeteran" equals="yes">
+          <civ-text-input label="Branch" name="branch" value="Army"></civ-text-input>
+        </civ-conditional>
+      </civ-form>
+    `) as any;
+    await settleConditional(el);
+
+    const data = el.getFormData();
+    expect(data.name).toBe('Ada');
+    expect(data.branch).toBeUndefined();
   });
 });

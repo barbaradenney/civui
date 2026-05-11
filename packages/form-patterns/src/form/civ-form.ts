@@ -156,6 +156,20 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
     return this.querySelectorAll('[data-civ-form-field]');
   }
 
+  /**
+   * True when `el` is inside the slot of a `civ-conditional` whose condition
+   * isn't currently met. civ-conditional renders its slotted children into
+   * a `[data-civ-conditional-content]` wrapper that flips
+   * `aria-hidden="true"` (and `display: none`) when hidden — so a field
+   * inside that wrapper should be excluded from validation and form-data
+   * collection. The error summary would otherwise list fields the user
+   * can't see, and submit payloads would carry stale values left over
+   * from a previously-visible branch.
+   */
+  private _isInHiddenConditional(el: Element): boolean {
+    return !!el.closest('[data-civ-conditional-content][aria-hidden="true"]');
+  }
+
   private _summaryId = this.generateId('summary');
   private _summaryHeadingId = this.generateId('summary-heading');
   private _boundOnClick = this._onButtonClick.bind(this);
@@ -333,6 +347,7 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
     for (const el of formElements) {
       const formEl = el as unknown as CivFormFieldLike;
       if (formEl.disabled) continue;
+      if (this._isInHiddenConditional(el)) continue;
       if (formEl.required && !formEl.value) {
         const label = formEl.label || formEl.name || t('fieldFallbackLabel');
         const message = interpolate(t('fieldRequired'), { label });
@@ -471,6 +486,7 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
     for (const el of formElements) {
       const formEl = el as unknown as CivFormFieldLike;
       if (formEl.disabled) continue;
+      if (this._isInHiddenConditional(el)) continue;
       if (formEl.name) {
         data[formEl.name] = formEl.value ?? '';
       }
@@ -492,6 +508,7 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
     for (const el of formElements) {
       const formEl = el as unknown as CivFormFieldLike;
       if (!formEl.name || formEl.disabled) continue;
+      if (this._isInHiddenConditional(el)) continue;
 
       // file-upload: append actual File objects
       if (Array.isArray(formEl.files) && formEl.files.length > 0) {

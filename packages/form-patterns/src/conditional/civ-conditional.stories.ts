@@ -73,7 +73,7 @@ export const WithForm: Story = {
       <civ-text-input label="Full name" name="fullName" required></civ-text-input>
       <civ-text-input label="Email address" name="email" required type="email"></civ-text-input>
 
-      <civ-yes-no legend="Are you a veteran?" name="isVeteran"></civ-yes-no>
+      <civ-yes-no legend="Are you a veteran?" name="isVeteran" required></civ-yes-no>
 
       <civ-conditional when="isVeteran" equals="yes">
         <civ-text-input label="Branch of service" name="branch" hint="For example: Army, Navy, Air Force, Marine Corps, Coast Guard" required></civ-text-input>

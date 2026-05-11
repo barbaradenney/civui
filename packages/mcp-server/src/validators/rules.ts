@@ -90,16 +90,12 @@ const missingLabel: Rule = {
       $(tag).each((_, el) => {
         const label = $(el).attr('label');
         if (!label || label.trim() === '') {
-          // Check if wrapped in <civ-form-field> with a label (not for self-contained)
-          const wrapper = $(el).closest('civ-form-field');
-          const wrapperLabel = wrapper.length > 0 ? wrapper.attr('label') : undefined;
-          if (wrapperLabel && wrapperLabel.trim() !== '') return;
           violations.push({
             rule: 'missing-label',
             severity: 'error',
             message: `<${tag}> is missing a label attribute`,
             element: tag,
-            fix: `Add label="..." to <${tag}> or wrap in <civ-form-field label="...">`,
+            fix: `Add label="..." to <${tag}>`,
           });
         }
       });
@@ -116,16 +112,16 @@ const missingLegend: Rule = {
       $(tag).each((_, el) => {
         const legend = $(el).attr('legend');
         if (!legend || legend.trim() === '') {
-          // Check if wrapped in <civ-form-fieldset> with a legend
+          // civ-form-fieldset still exists for multi-field grouping — accept
+          // its legend as covering an inner group.
           const wrapper = $(el).closest('civ-form-fieldset');
-          const wrapperLegend = wrapper.length > 0 ? wrapper.attr('legend') : undefined;
-          if (wrapperLegend && wrapperLegend.trim() !== '') return;
+          if (wrapper.length > 0 && wrapper.attr('legend')?.trim()) return;
           violations.push({
             rule: 'missing-legend',
             severity: 'error',
             message: `<${tag}> is missing a legend attribute`,
             element: tag,
-            fix: `Add legend="..." to <${tag}> or wrap in <civ-form-fieldset legend="...">`,
+            fix: `Add legend="..." to <${tag}>`,
           });
         }
       });
@@ -143,10 +139,6 @@ const placeholderAsLabel: Rule = {
         const placeholder = $(el).attr('placeholder');
         const label = $(el).attr('label');
         if (placeholder && (!label || label.trim() === '')) {
-          // Check if wrapped in <civ-form-field> with a label
-          const wrapper = $(el).closest('civ-form-field');
-          const wrapperLabel = wrapper.length > 0 ? wrapper.attr('label') : undefined;
-          if (wrapperLabel && wrapperLabel.trim() !== '') return;
           violations.push({
             rule: 'placeholder-as-label',
             severity: 'error',
@@ -172,9 +164,6 @@ const missingRequiredMessage: Rule = {
           $el.attr('required') !== undefined &&
           !$el.attr('required-message')
         ) {
-          // Check if wrapper has required-message
-          const wrapper = $el.closest('civ-form-field, civ-form-fieldset');
-          if (wrapper.length > 0 && wrapper.attr('required-message')) return;
           violations.push({
             rule: 'missing-required-message',
             severity: 'error',
@@ -354,21 +343,6 @@ const genericRequiredMessage: Rule = {
   severity: 'warning',
   description: 'Generic required-message should be field-specific',
   check($, violations) {
-    // Check wrappers
-    $('civ-form-field, civ-form-fieldset').each((_, el) => {
-      const msg = $(el).attr('required-message');
-      if (msg && GENERIC_REQUIRED.test(msg.trim())) {
-        const tag = (el as unknown as { tagName: string }).tagName ?? 'civ-form-field';
-        violations.push({
-          rule: 'generic-required-message',
-          severity: 'warning',
-          message: `<${tag}> has generic required-message "${msg}"`,
-          element: tag,
-          fix: 'Use field-specific text, e.g., "Enter your full name"',
-        });
-      }
-    });
-    // Check unwrapped components
     for (const tag of FORM_COMPONENTS) {
       $(tag).each((_, el) => {
         const msg = $(el).attr('required-message');
@@ -394,9 +368,6 @@ const missingHintDate: Rule = {
     for (const tag of ['civ-memorable-date', 'civ-date-picker'] as const) {
       $(tag).each((_, el) => {
         if (!$(el).attr('hint')) {
-          // Check wrapper for hint
-          const wrapper = $(el).closest('civ-form-field, civ-form-fieldset');
-          if (wrapper.length > 0 && wrapper.attr('hint')) return;
           violations.push({
             rule: 'missing-hint-date',
             severity: 'warning',
@@ -421,9 +392,6 @@ const missingHintSsn: Rule = {
     $('civ-text-input').each((_, el) => {
       const name = $(el).attr('name') ?? '';
       if (/ssn/i.test(name) && !$(el).attr('hint')) {
-        // Check wrapper for hint
-        const wrapper = $(el).closest('civ-form-field');
-        if (wrapper.length > 0 && wrapper.attr('hint')) return;
         violations.push({
           rule: 'missing-hint-ssn',
           severity: 'warning',
@@ -466,22 +434,6 @@ const abbreviationInLabel: Rule = {
   severity: 'warning',
   description: 'Label contains abbreviation instead of plain language',
   check($, violations) {
-    // Check wrappers
-    $('civ-form-field, civ-form-fieldset').each((_, el) => {
-      const label = $(el).attr('label') ?? $(el).attr('legend') ?? '';
-      const match = ABBREVIATIONS_RE.exec(label);
-      if (match) {
-        const tag = (el as unknown as { tagName: string }).tagName ?? 'civ-form-field';
-        violations.push({
-          rule: 'abbreviation-in-label',
-          severity: 'warning',
-          message: `<${tag}> label contains abbreviation "${match[1]}"`,
-          element: tag,
-          fix: 'Use plain language: "Date of birth" not "DOB", "Social Security number" not "SSN"',
-        });
-      }
-    });
-    // Check unwrapped components
     const allComponents = [...LABEL_COMPONENTS, ...LEGEND_COMPONENTS];
     for (const tag of allComponents) {
       $(tag).each((_, el) => {
@@ -698,18 +650,6 @@ const readingLevel: Rule = {
     const allComponents = [...LABEL_COMPONENTS, ...LEGEND_COMPONENTS];
     const words: string[] = [];
 
-    // Collect text from wrappers
-    $('civ-form-field, civ-form-fieldset').each((_, el) => {
-      const label = $(el).attr('label') ?? $(el).attr('legend') ?? '';
-      const hint = $(el).attr('hint') ?? '';
-      for (const text of [label, hint]) {
-        if (text.trim()) {
-          words.push(...text.trim().split(/\s+/));
-        }
-      }
-    });
-
-    // Collect text from unwrapped components
     for (const tag of allComponents) {
       $(tag).each((_, el) => {
         const label = $(el).attr('label') ?? $(el).attr('legend') ?? '';

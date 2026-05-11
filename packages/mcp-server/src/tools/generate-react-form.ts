@@ -13,18 +13,12 @@ export interface ReactFormResult {
   warnings: string[];
 }
 
-/** Group components use fieldset wrapper with legend. */
+/** Group components carry a `legend` instead of a `label`. */
 const FIELDSET_TYPES: Set<FieldType> = new Set([
   'radio',
   'checkbox-group',
   'memorable-date',
   'segmented-control',
-]);
-
-/** Self-contained components that do NOT get wrapped. */
-const SELF_CONTAINED_TYPES: Set<FieldType> = new Set([
-  'checkbox',
-  'toggle',
 ]);
 
 /** FieldType → CivUI HTML tag mapping. */
@@ -84,10 +78,12 @@ function fieldToTsType(field: FormField): string {
   }
 }
 
-/** Build wrapper attributes (label/legend, hint, required, disabled). */
-function buildWrapperAttrs(field: FormField): string {
+/** Build JSX attributes for an input element (label/legend, hint, required, name, type-specific). */
+function buildAttrs(field: FormField): string {
   const attrs: string[] = [];
   const type = field.type;
+
+  attrs.push(`name="${field.name}"`);
 
   if (FIELDSET_TYPES.has(type)) {
     attrs.push(`legend="${escapeJsx(field.label)}"`);
@@ -97,32 +93,6 @@ function buildWrapperAttrs(field: FormField): string {
 
   if (field.hint) {
     attrs.push(`hint="${escapeJsx(field.hint)}"`);
-  }
-
-  if (field.required) {
-    attrs.push('required');
-  }
-
-  if (field.disabled) {
-    attrs.push('disabled');
-  }
-
-  return attrs.join('\n            ');
-}
-
-/** Build JSX attributes for a child input (no label/hint — those go on the wrapper). */
-function buildAttrs(field: FormField): string {
-  const attrs: string[] = [];
-  const type = field.type;
-
-  attrs.push(`name="${field.name}"`);
-
-  // Self-contained types keep label on themselves
-  if (SELF_CONTAINED_TYPES.has(type)) {
-    attrs.push(`label="${escapeJsx(field.label)}"`);
-    if (field.hint) {
-      attrs.push(`hint="${escapeJsx(field.hint)}"`);
-    }
   }
 
   if (field.required) {
@@ -287,27 +257,11 @@ export function generateReactForm(
       const attrsStr = buildAttrs(field);
       const children = buildChildren(field, '            ');
 
-      // Self-contained types (checkbox, toggle) — no wrapper
-      if (SELF_CONTAINED_TYPES.has(field.type)) {
-        if (children) {
-          fieldLines.push(`          <${tag}\n            ${attrsStr}\n          >\n${children}\n          </${tag}>`);
-        } else {
-          fieldLines.push(`          <${tag}\n            ${attrsStr}\n          ></${tag}>`);
-        }
-      } else if (FIELDSET_TYPES.has(field.type)) {
-        // Group types — wrap in civ-form-fieldset
-        const wrapperAttrsStr = buildWrapperAttrs(field);
-        const innerTag = children
-          ? `<${tag}\n              ${attrsStr}\n            >\n${children}\n            </${tag}>`
-          : `<${tag}\n              ${attrsStr}\n            ></${tag}>`;
-        fieldLines.push(`          <civ-form-fieldset\n            ${wrapperAttrsStr}\n          >\n            ${innerTag}\n          </civ-form-fieldset>`);
+      // Every CivUI control renders its own label/legend chrome — no wrapping.
+      if (children) {
+        fieldLines.push(`          <${tag}\n            ${attrsStr}\n          >\n${children}\n          </${tag}>`);
       } else {
-        // Single-value types — wrap in civ-form-field
-        const wrapperAttrsStr = buildWrapperAttrs(field);
-        const innerTag = children
-          ? `<${tag}\n              ${attrsStr}\n            >\n${children}\n            </${tag}>`
-          : `<${tag}\n              ${attrsStr}\n            ></${tag}>`;
-        fieldLines.push(`          <civ-form-field\n            ${wrapperAttrsStr}\n          >\n            ${innerTag}\n          </civ-form-field>`);
+        fieldLines.push(`          <${tag}\n            ${attrsStr}\n          ></${tag}>`);
       }
     }
 

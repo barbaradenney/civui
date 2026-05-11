@@ -4,7 +4,7 @@ import { validateForms } from './validate-forms.js';
 describe('validateForms', () => {
   it('validates multiple forms and returns results', () => {
     const result = validateForms([
-      { id: 'form1', html: '<civ-form><civ-form-field label="Name"><civ-text-input name="name"></civ-text-input></civ-form-field></civ-form>' },
+      { id: 'form1', html: '<civ-form><civ-text-input label="Name" name="name"></civ-text-input></civ-form>' },
       { id: 'form2', html: '<civ-form><civ-text-input name="x"></civ-text-input></civ-form>' },
     ]);
     expect(result.results).toHaveLength(2);
@@ -14,7 +14,7 @@ describe('validateForms', () => {
 
   it('reports valid count in summary', () => {
     const result = validateForms([
-      { id: 'ok', html: '<civ-form><civ-form-field label="Name"><civ-text-input name="name"></civ-text-input></civ-form-field></civ-form>' },
+      { id: 'ok', html: '<civ-form><civ-text-input label="Name" name="name"></civ-text-input></civ-form>' },
       { id: 'bad', html: '<civ-form><civ-text-input name="x"></civ-text-input></civ-form>' },
     ]);
     expect(result.summary).toBe('1/2 forms valid');
@@ -22,8 +22,8 @@ describe('validateForms', () => {
 
   it('handles all valid forms', () => {
     const result = validateForms([
-      { id: 'a', html: '<civ-form><civ-form-field label="A"><civ-text-input name="a"></civ-text-input></civ-form-field></civ-form>' },
-      { id: 'b', html: '<civ-form><civ-form-field label="B"><civ-text-input name="b"></civ-text-input></civ-form-field></civ-form>' },
+      { id: 'a', html: '<civ-form><civ-text-input label="A" name="a"></civ-text-input></civ-form>' },
+      { id: 'b', html: '<civ-form><civ-text-input label="B" name="b"></civ-text-input></civ-form>' },
     ]);
     expect(result.summary).toBe('2/2 forms valid');
   });
@@ -38,7 +38,7 @@ describe('validateForms', () => {
 
   it('handles single form', () => {
     const result = validateForms([
-      { id: 'solo', html: '<civ-form><civ-form-field label="Name"><civ-text-input name="name"></civ-text-input></civ-form-field></civ-form>' },
+      { id: 'solo', html: '<civ-form><civ-text-input label="Name" name="name"></civ-text-input></civ-form>' },
     ]);
     expect(result.summary).toBe('1/1 form valid');
   });

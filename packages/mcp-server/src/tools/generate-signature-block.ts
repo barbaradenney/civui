@@ -57,9 +57,7 @@ export function generateSignatureBlock(
     features.push('typed-signature');
     fields.push('signature');
     htmlParts.push(
-      `  <civ-form-field label="Type your full legal name" required>`,
-      `    <civ-text-input name="signature" required class="civ-signature-typed"></civ-text-input>`,
-      `  </civ-form-field>`,
+      `  <civ-text-input label="Type your full legal name" name="signature" required class="civ-signature-typed"></civ-text-input>`,
     );
   } else if (type === 'drawn') {
     features.push('drawn-signature', 'canvas');
@@ -86,9 +84,7 @@ export function generateSignatureBlock(
     features.push('print-name');
     fields.push('signature-print-name');
     htmlParts.push(
-      `  <civ-form-field label="Printed name" required>`,
-      `    <civ-text-input name="signature-print-name" required></civ-text-input>`,
-      `  </civ-form-field>`,
+      `  <civ-text-input label="Printed name" name="signature-print-name" required></civ-text-input>`,
     );
   }
 
@@ -96,9 +92,7 @@ export function generateSignatureBlock(
     features.push('title-field');
     fields.push('signature-title');
     htmlParts.push(
-      `  <civ-form-field label="Title" required>`,
-      `    <civ-text-input name="signature-title" required></civ-text-input>`,
-      `  </civ-form-field>`,
+      `  <civ-text-input label="Title" name="signature-title" required></civ-text-input>`,
     );
   }
 
@@ -106,9 +100,7 @@ export function generateSignatureBlock(
     features.push('date-field');
     fields.push('signature-date');
     htmlParts.push(
-      `  <civ-form-field label="Date" required>`,
-      `    <civ-text-input name="signature-date" required placeholder="MM/DD/YYYY"></civ-text-input>`,
-      `  </civ-form-field>`,
+      `  <civ-text-input label="Date" name="signature-date" required placeholder="MM/DD/YYYY"></civ-text-input>`,
     );
   }
 
@@ -119,12 +111,8 @@ export function generateSignatureBlock(
     htmlParts.push(
       `  <fieldset data-civ-witness>`,
       `    <legend>Witness</legend>`,
-      `    <civ-form-field label="Witness name" required>`,
-      `      <civ-text-input name="witness-name" required></civ-text-input>`,
-      `    </civ-form-field>`,
-      `    <civ-form-field label="Witness date" required>`,
-      `      <civ-text-input name="witness-date" required></civ-text-input>`,
-      `    </civ-form-field>`,
+      `    <civ-text-input label="Witness name" name="witness-name" required></civ-text-input>`,
+      `    <civ-text-input label="Witness date" name="witness-date" required></civ-text-input>`,
       `  </fieldset>`,
     );
   }

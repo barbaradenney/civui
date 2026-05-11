@@ -29,7 +29,6 @@ For architecture and internals, see \`CLAUDE.md\` in the repo root.
 | \`<civ-date-picker>\` | Date | \`min\`, \`max\`, \`placeholder\`, \`locale\`, \`weekStartsOn\` | \`{ value }\` |
 | \`<civ-memorable-date>\` | Date | \`legend\`, \`monthLabel\`, \`dayLabel\`, \`yearLabel\`, \`locale\` | \`{ value, month, day, year }\` |
 | \`<civ-file-upload>\` | File | \`accept\`, \`multiple\`, \`maxSize\`, \`maxFiles\` | \`{ files: File[] }\` |
-| \`<civ-form-field>\` | Wrapper | \`label\`, \`hint\`, \`error\`, \`required\`, \`touched\`, \`heading-level\` (1-6), \`size\` (sm/md/lg/xl) | — |
 | \`<civ-form-fieldset>\` | Wrapper | \`legend\`, \`hint\`, \`error\`, \`required\`, \`touched\`, \`heading-level\` (1-6), \`size\` (sm/md/lg/xl) | — |
 | \`<civ-fieldset>\` | Layout | \`legend\`, \`hint\`, \`error\`, \`required\`, \`disabled\`, \`heading-level\` (1-6), \`size\` (sm/md/lg/xl) | — |
 | \`<civ-form>\` | Layout | \`action\`, \`method\` | \`civ-submit: { formData }\`, \`civ-invalid: { errors }\` |
@@ -78,9 +77,7 @@ For architecture and internals, see \`CLAUDE.md\` in the repo root.
 
 **All form-participating components** also have: \`name\`, \`value\`, \`required\`, \`disabled\`.
 
-**Wrapper pattern:** Most input components should be wrapped in \`<civ-form-field>\` (single-value) or \`<civ-form-fieldset>\` (group) which provide \`label\`/\`legend\`, \`hint\`, \`error\`, \`required\`, \`requiredMessage\`, and \`touched\` tracking. Self-contained components (\`civ-address\`, \`civ-name\`, \`civ-signature\`, \`civ-checkbox\`, \`civ-toggle\`) render their own label and do not need wrapping.
-
-**Group components** (\`checkbox-group\`, \`radio-group\`, \`memorable-date\`, \`segmented-control\`) use \`<civ-form-fieldset legend="...">\` instead of \`<civ-form-field label="...">\`.
+**Self-contained pattern:** Every CivUI control renders its own label / legend chrome — set \`label="..."\` directly on single inputs and \`legend="..."\` directly on group components (\`radio-group\`, \`checkbox-group\`, \`segmented-control\`, \`yes-no\`, \`memorable-date\`, \`date-range-picker\`). \`<civ-form-fieldset>\` exists only for genuine multi-field grouping.
 
 ---
 
@@ -382,26 +379,23 @@ Drag-and-drop file upload with validation.
 
 ---
 
-### civ-form-field
+### Self-contained chrome (no wrapper)
 
-Wrapper for single-value form inputs. Renders label, hint, error, and required indicator around a slotted input component. Tracks per-field \`touched\` state (set to true after the first \`civ-change\` event from the child).
+Every CivUI control renders its own label / legend / hint / error / required indicator chrome from its own props. Set them directly on the control:
 
-**Props:** \`label\`, \`hint\`, \`error\`, \`required\`, \`requiredMessage\`, \`hide-required-indicator\`, \`touched\`, \`heading-level\` (1-6), \`size\` (sm/md/lg/xl)
-
-**Example:**
 \`\`\`html
 <civ-text-input label="Email address" hint="We'll send confirmation here" required-message="Enter your email address" name="email" type="email" required autocomplete="email"></civ-text-input>
 \`\`\`
 
-**Heading promotion:** Set \`heading-level="1"\` (and typically \`size="xl"\`) when the field doubles as the page \`<h1>\` (single-question-per-page pattern). See **Heading hierarchy** below.
-
-**Self-contained components that do NOT need \`civ-form-field\`:** \`civ-address\`, \`civ-name\`, \`civ-signature\`, \`civ-checkbox\` (standalone), \`civ-toggle\`. These render their own label internally.
+**Heading promotion:** Set \`heading-level="1"\` (and typically \`size="xl"\`) on the control when its label doubles as the page \`<h1>\` (single-question-per-page pattern). See **Heading hierarchy** below.
 
 ---
 
 ### civ-form-fieldset
 
-Wrapper for group components (radio groups, checkbox groups, memorable dates, segmented controls). Renders legend, hint, error, and required indicator. Tracks per-field \`touched\` state.
+Wrapper for multi-field grouping — e.g. a custom block of related controls sharing one section heading. Renders legend, hint, error, and required indicator. Tracks per-field \`touched\` state.
+
+Single inputs and self-contained group components (radio-group, checkbox-group, segmented-control, yes-no, memorable-date, date-range-picker) already carry their own label / legend — **do not wrap them in \`civ-form-fieldset\`** or you'll get nested fieldsets with double legends.
 
 **Props:** \`legend\`, \`hint\`, \`error\`, \`required\`, \`requiredMessage\`, \`hide-required-indicator\`, \`touched\`, \`heading-level\` (1-6), \`size\` (sm/md/lg/xl)
 
@@ -832,7 +826,7 @@ Single military service period. Use inside \`civ-repeater\` for multiple periods
 
 ### Preset Input Components
 
-Pre-configured wrappers with built-in masking, validation, and labeling. Wrap in \`<civ-form-field>\`.
+Pre-configured wrappers with built-in masking, validation, and labeling. Set \`label\` directly on the preset element.
 
 | Component | Unique props |
 |-----------|-------------|
@@ -1024,7 +1018,7 @@ Government forms commonly follow the **VA.gov / GOV.UK "one question per page" p
 - Lets screen-reader users navigate forms by heading.
 - Satisfies WCAG 2.4.6 (Headings and Labels) and 2.4.10 (Section Headings).
 
-CivUI exposes two opt-in props on \`civ-form-field\`, \`civ-form-fieldset\`, \`civ-fieldset\`, \`civ-repeater\`, and every compound component:
+CivUI exposes two opt-in props on every chrome-rendering control (every form input and group component, \`civ-form-fieldset\`, \`civ-fieldset\`, \`civ-repeater\`, and every compound component):
 
 - **\`heading-level\`** (1-6) — adds \`role="heading"\` + \`aria-level=N\` to the rendered \`<label>\`/\`<legend>\`. The native element is preserved, so click-to-focus and \`for\`/\`aria-labelledby\` keep working — heading promotion is purely an accessibility-tree affordance.
 - **\`size\`** (\`sm\` | \`md\` | \`lg\` | \`xl\`) — visual size variant. \`sm\` (default, omitted) = body size; \`md\` ≈ \`text-lg\`; \`lg\` ≈ \`text-xl\`; \`xl\` ≈ \`text-2xl\`. Independent of \`heading-level\`.
@@ -1159,9 +1153,9 @@ Avoid these common mistakes when using CivUI components:
 
 3. **Never use \`civ-toggle\` for choices that require form submission.** Toggles have immediate-effect semantics. Use \`civ-checkbox\` for choices that take effect on submit.
 
-4. **Never put label/hint/error directly on input components.** Use \`<civ-form-field>\` or \`<civ-form-fieldset>\` wrappers instead. Exception: self-contained components (\`civ-checkbox\`, \`civ-toggle\`, \`civ-address\`, \`civ-name\`, \`civ-signature\`) manage their own labels.
+4. **Always put label/hint/error directly on the input control.** Every CivUI control renders its own chrome — there is no separate wrapper for single inputs. Group components carry \`legend\` instead of \`label\`. \`<civ-form-fieldset>\` is only for multi-field grouping.
 
-5. **Never use \`civ-form-group\`.** It has been replaced by \`<civ-form-field>\` (single inputs) and \`<civ-form-fieldset>\` (groups).
+5. **Never use \`civ-form-group\` or \`civ-form-field\`.** Both have been retired — set \`label\` directly on single inputs and \`legend\` directly on group components.
 
 6. **Never use \`civ-us-state\` or \`civ-service-branch\`.** Use \`preset="us-state"\` or \`preset="service-branch"\` on \`<civ-select>\`, \`<civ-radio-group>\`, or \`<civ-checkbox-group>\` instead.
 

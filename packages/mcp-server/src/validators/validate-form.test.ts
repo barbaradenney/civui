@@ -16,9 +16,7 @@ describe('validateForm', () => {
   it('returns valid:true and empty arrays for valid markup', () => {
     const html = `
       <civ-form>
-        <civ-form-field label="Full name" required required-message="Enter your full name">
-          <civ-text-input name="fullName" required autocomplete="name"></civ-text-input>
-        </civ-form-field>
+        <civ-text-input label="Full name" required-message="Enter your full name" name="fullName" required autocomplete="name"></civ-text-input>
       </civ-form>
     `;
     const result = validateForm(html);
@@ -82,7 +80,7 @@ describe('validateForm', () => {
     });
 
     it('does not flag when label is on wrapper', () => {
-      const result = validateForm('<civ-form-field label="Name"><civ-text-input name="x"></civ-text-input></civ-form-field>');
+      const result = validateForm('<civ-text-input label="Name" name="x"></civ-text-input>');
       expect(result.errors.filter((e) => e.rule === 'missing-label')).toHaveLength(0);
     });
 
@@ -141,24 +139,24 @@ describe('validateForm', () => {
     });
 
     it('does not flag placeholder when wrapper has label', () => {
-      const result = validateForm('<civ-form-field label="Name"><civ-text-input placeholder="Enter name" name="x"></civ-text-input></civ-form-field>');
+      const result = validateForm('<civ-text-input label="Name" placeholder="Enter name" name="x"></civ-text-input>');
       expect(result.errors.filter((e) => e.rule === 'placeholder-as-label')).toHaveLength(0);
     });
   });
 
   describe('missing-required-message', () => {
     it('flags required without required-message', () => {
-      const result = validateForm('<civ-form-field label="Name" required><civ-text-input name="x" required></civ-text-input></civ-form-field>');
+      const result = validateForm('<civ-text-input label="Name" name="x" required></civ-text-input>');
       expect(result.errors.some((e) => e.rule === 'missing-required-message')).toBe(true);
     });
 
     it('does not flag required with required-message on wrapper', () => {
-      const result = validateForm('<civ-form-field label="Name" required required-message="Enter your name"><civ-text-input name="x" required></civ-text-input></civ-form-field>');
+      const result = validateForm('<civ-text-input label="Name" required-message="Enter your name" name="x" required></civ-text-input>');
       expect(result.errors.filter((e) => e.rule === 'missing-required-message')).toHaveLength(0);
     });
 
     it('does not flag non-required field', () => {
-      const result = validateForm('<civ-form-field label="Name"><civ-text-input name="x"></civ-text-input></civ-form-field>');
+      const result = validateForm('<civ-text-input label="Name" name="x"></civ-text-input>');
       expect(result.errors.filter((e) => e.rule === 'missing-required-message')).toHaveLength(0);
     });
   });
@@ -218,7 +216,7 @@ describe('validateForm', () => {
     });
 
     it('does not flag single component with label on wrapper', () => {
-      const result = validateForm('<civ-form-field label="Name"><civ-text-input name="x"></civ-text-input></civ-form-field>');
+      const result = validateForm('<civ-text-input label="Name" name="x"></civ-text-input>');
       expect(result.errors.filter((e) => e.rule === 'legend-on-single')).toHaveLength(0);
     });
   });
@@ -227,90 +225,90 @@ describe('validateForm', () => {
 
   describe('generic-required-message', () => {
     it('flags "This field is required" on wrapper', () => {
-      const result = validateForm('<civ-form-field label="Name" required required-message="This field is required"><civ-text-input name="x" required></civ-text-input></civ-form-field>');
+      const result = validateForm('<civ-text-input label="Name" required-message="This field is required" name="x" required></civ-text-input>');
       expect(result.warnings.some((w) => w.rule === 'generic-required-message')).toBe(true);
     });
 
     it('flags "Required" (case insensitive) on wrapper', () => {
-      const result = validateForm('<civ-form-field label="Name" required required-message="Required"><civ-text-input name="x" required></civ-text-input></civ-form-field>');
+      const result = validateForm('<civ-text-input label="Name" required-message="Required" name="x" required></civ-text-input>');
       expect(result.warnings.some((w) => w.rule === 'generic-required-message')).toBe(true);
     });
 
     it('does not flag field-specific message on wrapper', () => {
-      const result = validateForm('<civ-form-field label="Name" required required-message="Enter your full name"><civ-text-input name="x" required></civ-text-input></civ-form-field>');
+      const result = validateForm('<civ-text-input label="Name" required-message="Enter your full name" name="x" required></civ-text-input>');
       expect(result.warnings.filter((w) => w.rule === 'generic-required-message')).toHaveLength(0);
     });
   });
 
   describe('missing-hint-date', () => {
     it('flags civ-memorable-date without hint', () => {
-      const result = validateForm('<civ-form-field label="Date of birth"><civ-memorable-date name="dob"></civ-memorable-date></civ-form-field>');
+      const result = validateForm('<civ-memorable-date legend="Date of birth" name="dob"></civ-memorable-date>');
       expect(result.warnings.some((w) => w.rule === 'missing-hint-date')).toBe(true);
     });
 
     it('flags civ-date-picker without hint', () => {
-      const result = validateForm('<civ-form-field label="Appointment"><civ-date-picker name="appt"></civ-date-picker></civ-form-field>');
+      const result = validateForm('<civ-date-picker label="Appointment" name="appt"></civ-date-picker>');
       expect(result.warnings.some((w) => w.rule === 'missing-hint-date')).toBe(true);
     });
 
-    it('does not flag date component with hint on wrapper', () => {
-      const result = validateForm('<civ-form-field label="Date of birth" hint="For example: January 15 1990"><civ-memorable-date name="dob"></civ-memorable-date></civ-form-field>');
+    it('does not flag date component with hint set directly', () => {
+      const result = validateForm('<civ-memorable-date legend="Date of birth" hint="For example: January 15 1990" name="dob"></civ-memorable-date>');
       expect(result.warnings.filter((w) => w.rule === 'missing-hint-date')).toHaveLength(0);
     });
   });
 
   describe('missing-hint-ssn', () => {
     it('flags SSN field without hint', () => {
-      const result = validateForm('<civ-form-field label="Social Security number"><civ-text-input name="ssn"></civ-text-input></civ-form-field>');
+      const result = validateForm('<civ-text-input label="Social Security number" name="ssn"></civ-text-input>');
       expect(result.warnings.some((w) => w.rule === 'missing-hint-ssn')).toBe(true);
     });
 
     it('does not flag SSN field with hint on wrapper', () => {
-      const result = validateForm('<civ-form-field label="Social Security number" hint="For example: 123 45 6789"><civ-text-input name="ssn"></civ-text-input></civ-form-field>');
+      const result = validateForm('<civ-text-input label="Social Security number" hint="For example: 123 45 6789" name="ssn"></civ-text-input>');
       expect(result.warnings.filter((w) => w.rule === 'missing-hint-ssn')).toHaveLength(0);
     });
 
     it('does not flag non-SSN field', () => {
-      const result = validateForm('<civ-form-field label="Full name"><civ-text-input name="fullName"></civ-text-input></civ-form-field>');
+      const result = validateForm('<civ-text-input label="Full name" name="fullName"></civ-text-input>');
       expect(result.warnings.filter((w) => w.rule === 'missing-hint-ssn')).toHaveLength(0);
     });
   });
 
   describe('missing-autocomplete', () => {
     it('flags email field without autocomplete', () => {
-      const result = validateForm('<civ-form-field label="Email"><civ-text-input name="email"></civ-text-input></civ-form-field>');
+      const result = validateForm('<civ-text-input label="Email" name="email"></civ-text-input>');
       const w = result.warnings.find((w) => w.rule === 'missing-autocomplete');
       expect(w).toBeDefined();
       expect(w!.fix).toContain('email');
     });
 
     it('flags phone field without autocomplete', () => {
-      const result = validateForm('<civ-form-field label="Phone"><civ-text-input name="phone"></civ-text-input></civ-form-field>');
+      const result = validateForm('<civ-text-input label="Phone" name="phone"></civ-text-input>');
       expect(result.warnings.some((w) => w.rule === 'missing-autocomplete')).toBe(true);
     });
 
     it('flags zip field without autocomplete', () => {
-      const result = validateForm('<civ-form-field label="ZIP code"><civ-text-input name="zip"></civ-text-input></civ-form-field>');
+      const result = validateForm('<civ-text-input label="ZIP code" name="zip"></civ-text-input>');
       expect(result.warnings.some((w) => w.rule === 'missing-autocomplete')).toBe(true);
     });
 
     it('does not flag field with autocomplete', () => {
-      const result = validateForm('<civ-form-field label="Email"><civ-text-input name="email" autocomplete="email"></civ-text-input></civ-form-field>');
+      const result = validateForm('<civ-text-input label="Email" name="email" autocomplete="email"></civ-text-input>');
       expect(result.warnings.filter((w) => w.rule === 'missing-autocomplete')).toHaveLength(0);
     });
 
     it('does not false-positive on "username"', () => {
-      const result = validateForm('<civ-form-field label="Username"><civ-text-input name="username"></civ-text-input></civ-form-field>');
+      const result = validateForm('<civ-text-input label="Username" name="username"></civ-text-input>');
       expect(result.warnings.filter((w) => w.rule === 'missing-autocomplete')).toHaveLength(0);
     });
 
     it('does not false-positive on "companyName"', () => {
-      const result = validateForm('<civ-form-field label="Company"><civ-text-input name="companyName"></civ-text-input></civ-form-field>');
+      const result = validateForm('<civ-text-input label="Company" name="companyName"></civ-text-input>');
       expect(result.warnings.filter((w) => w.rule === 'missing-autocomplete')).toHaveLength(0);
     });
 
     it('flags first-name field without autocomplete', () => {
-      const result = validateForm('<civ-form-field label="First name"><civ-text-input name="first-name"></civ-text-input></civ-form-field>');
+      const result = validateForm('<civ-text-input label="First name" name="first-name"></civ-text-input>');
       const w = result.warnings.find((w) => w.rule === 'missing-autocomplete');
       expect(w).toBeDefined();
       expect(w!.fix).toContain('given-name');
@@ -319,7 +317,7 @@ describe('validateForm', () => {
 
   describe('abbreviation-in-label', () => {
     it('flags DOB in wrapper label', () => {
-      const result = validateForm('<civ-form-field label="DOB"><civ-text-input name="dob"></civ-text-input></civ-form-field>');
+      const result = validateForm('<civ-text-input label="DOB" name="dob"></civ-text-input>');
       expect(result.warnings.some((w) => w.rule === 'abbreviation-in-label')).toBe(true);
     });
 
@@ -329,12 +327,12 @@ describe('validateForm', () => {
     });
 
     it('does not flag plain language on wrapper', () => {
-      const result = validateForm('<civ-form-field label="Date of birth"><civ-text-input name="dob"></civ-text-input></civ-form-field>');
+      const result = validateForm('<civ-text-input label="Date of birth" name="dob"></civ-text-input>');
       expect(result.warnings.filter((w) => w.rule === 'abbreviation-in-label')).toHaveLength(0);
     });
 
     it('does not flag ID (common in gov forms)', () => {
-      const result = validateForm('<civ-form-field label="Claim ID number"><civ-text-input name="claimId"></civ-text-input></civ-form-field>');
+      const result = validateForm('<civ-text-input label="Claim ID number" name="claimId"></civ-text-input>');
       expect(result.warnings.filter((w) => w.rule === 'abbreviation-in-label')).toHaveLength(0);
     });
   });
@@ -353,12 +351,12 @@ describe('validateForm', () => {
 
   describe('missing-name', () => {
     it('flags form component without name', () => {
-      const result = validateForm('<civ-form-field label="Name"><civ-text-input></civ-text-input></civ-form-field>');
+      const result = validateForm('<civ-text-input label="Name"></civ-text-input>');
       expect(result.warnings.some((w) => w.rule === 'missing-name')).toBe(true);
     });
 
     it('does not flag component with name', () => {
-      const result = validateForm('<civ-form-field label="Name"><civ-text-input name="fullName"></civ-text-input></civ-form-field>');
+      const result = validateForm('<civ-text-input label="Name" name="fullName"></civ-text-input>');
       expect(result.warnings.filter((w) => w.rule === 'missing-name')).toHaveLength(0);
     });
   });
@@ -412,24 +410,24 @@ describe('validateForm', () => {
   describe('duplicate-name', () => {
     it('flags two components with the same name', () => {
       const result = validateForm(`
-        <civ-form-field label="First"><civ-text-input name="field1"></civ-text-input></civ-form-field>
-        <civ-form-field label="Second"><civ-textarea name="field1"></civ-textarea></civ-form-field>
+        <civ-text-input label="First" name="field1"></civ-text-input>
+        <civ-textarea label="Second" name="field1"></civ-textarea>
       `);
       expect(result.errors.some((e) => e.rule === 'duplicate-name')).toBe(true);
     });
 
     it('does not flag unique names', () => {
       const result = validateForm(`
-        <civ-form-field label="First"><civ-text-input name="field1"></civ-text-input></civ-form-field>
-        <civ-form-field label="Second"><civ-text-input name="field2"></civ-text-input></civ-form-field>
+        <civ-text-input label="First" name="field1"></civ-text-input>
+        <civ-text-input label="Second" name="field2"></civ-text-input>
       `);
       expect(result.errors.filter((e) => e.rule === 'duplicate-name')).toHaveLength(0);
     });
 
     it('does not flag components without name', () => {
       const result = validateForm(`
-        <civ-form-field label="First"><civ-text-input></civ-text-input></civ-form-field>
-        <civ-form-field label="Second"><civ-text-input></civ-text-input></civ-form-field>
+        <civ-text-input label="First"></civ-text-input>
+        <civ-text-input label="Second"></civ-text-input>
       `);
       expect(result.errors.filter((e) => e.rule === 'duplicate-name')).toHaveLength(0);
     });
@@ -437,28 +435,26 @@ describe('validateForm', () => {
 
   describe('empty-select-options', () => {
     it('flags civ-select without options', () => {
-      const result = validateForm('<civ-form-field label="Topic"><civ-select name="topic"></civ-select></civ-form-field>');
+      const result = validateForm('<civ-select label="Topic" name="topic"></civ-select>');
       expect(result.errors.some((e) => e.rule === 'empty-select-options')).toBe(true);
     });
 
     it('flags civ-combobox without options', () => {
-      const result = validateForm('<civ-form-field label="State"><civ-combobox name="state"></civ-combobox></civ-form-field>');
+      const result = validateForm('<civ-combobox label="State" name="state"></civ-combobox>');
       expect(result.errors.some((e) => e.rule === 'empty-select-options')).toBe(true);
     });
 
     it('does not flag civ-select with options attr', () => {
-      const html = `<civ-form-field label="Topic"><civ-select name="topic" options='[{"value":"a","label":"A"}]'></civ-select></civ-form-field>`;
+      const html = `<civ-select label="Topic" name="topic" options='[{"value":"a","label":"A"}]'></civ-select>`;
       const result = validateForm(html);
       expect(result.errors.filter((e) => e.rule === 'empty-select-options')).toHaveLength(0);
     });
 
     it('does not flag civ-select with child options', () => {
       const result = validateForm(`
-        <civ-form-field label="Topic">
-          <civ-select name="topic">
+        <civ-select label="Topic" name="topic">
             <option value="a">A</option>
           </civ-select>
-        </civ-form-field>
       `);
       expect(result.errors.filter((e) => e.rule === 'empty-select-options')).toHaveLength(0);
     });
@@ -501,7 +497,7 @@ describe('validateForm', () => {
       const result = validateForm(`
         <civ-fieldset legend="Outer">
           <civ-fieldset legend="Inner">
-            <civ-form-field label="Name"><civ-text-input name="x"></civ-text-input></civ-form-field>
+            <civ-text-input label="Name" name="x"></civ-text-input>
           </civ-fieldset>
         </civ-fieldset>
       `);
@@ -511,10 +507,10 @@ describe('validateForm', () => {
     it('does not flag non-nested fieldsets', () => {
       const result = validateForm(`
         <civ-fieldset legend="Section 1">
-          <civ-form-field label="Name"><civ-text-input name="x"></civ-text-input></civ-form-field>
+          <civ-text-input label="Name" name="x"></civ-text-input>
         </civ-fieldset>
         <civ-fieldset legend="Section 2">
-          <civ-form-field label="Email"><civ-text-input name="y"></civ-text-input></civ-form-field>
+          <civ-text-input label="Email" name="y"></civ-text-input>
         </civ-fieldset>
       `);
       expect(result.warnings.filter((w) => w.rule === 'nested-fieldset')).toHaveLength(0);
@@ -545,14 +541,14 @@ describe('validateForm', () => {
 
   describe('missing-form-wrapper', () => {
     it('flags component not inside form', () => {
-      const result = validateForm('<civ-form-field label="Name"><civ-text-input name="x"></civ-text-input></civ-form-field>');
+      const result = validateForm('<civ-text-input label="Name" name="x"></civ-text-input>');
       expect(result.warnings.some((w) => w.rule === 'missing-form-wrapper')).toBe(true);
     });
 
     it('does not flag component inside civ-form', () => {
       const result = validateForm(`
         <civ-form>
-          <civ-form-field label="Name"><civ-text-input name="x"></civ-text-input></civ-form-field>
+          <civ-text-input label="Name" name="x"></civ-text-input>
         </civ-form>
       `);
       expect(result.warnings.filter((w) => w.rule === 'missing-form-wrapper')).toHaveLength(0);
@@ -561,7 +557,7 @@ describe('validateForm', () => {
     it('does not flag component inside native form', () => {
       const result = validateForm(`
         <form>
-          <civ-form-field label="Name"><civ-text-input name="x"></civ-text-input></civ-form-field>
+          <civ-text-input label="Name" name="x"></civ-text-input>
         </form>
       `);
       expect(result.warnings.filter((w) => w.rule === 'missing-form-wrapper')).toHaveLength(0);
@@ -571,18 +567,18 @@ describe('validateForm', () => {
   describe('excessive-file-size', () => {
     it('flags max-size > 25 MB', () => {
       const thirtyMB = 30 * 1024 * 1024;
-      const result = validateForm(`<civ-form-field label="Upload"><civ-file-upload name="doc" max-size="${thirtyMB}"></civ-file-upload></civ-form-field>`);
+      const result = validateForm(`<civ-file-upload label="Upload" name="doc" max-size="${thirtyMB}"></civ-file-upload>`);
       expect(result.warnings.some((w) => w.rule === 'excessive-file-size')).toBe(true);
     });
 
     it('does not flag max-size <= 25 MB', () => {
       const twentyMB = 20 * 1024 * 1024;
-      const result = validateForm(`<civ-form-field label="Upload"><civ-file-upload name="doc" max-size="${twentyMB}"></civ-file-upload></civ-form-field>`);
+      const result = validateForm(`<civ-file-upload label="Upload" name="doc" max-size="${twentyMB}"></civ-file-upload>`);
       expect(result.warnings.filter((w) => w.rule === 'excessive-file-size')).toHaveLength(0);
     });
 
     it('does not flag file-upload without max-size', () => {
-      const result = validateForm('<civ-form-field label="Upload"><civ-file-upload name="doc"></civ-file-upload></civ-form-field>');
+      const result = validateForm('<civ-file-upload label="Upload" name="doc"></civ-file-upload>');
       expect(result.warnings.filter((w) => w.rule === 'excessive-file-size')).toHaveLength(0);
     });
   });
@@ -612,7 +608,7 @@ describe('validateForm', () => {
     });
 
     it('promoteWarnings promotes warnings to errors', () => {
-      const html = '<civ-form-field label="Name"><civ-text-input name="email"></civ-text-input></civ-form-field>';
+      const html = '<civ-text-input label="Name" name="email"></civ-text-input>';
       const full = validateForm(html);
       expect(full.warnings.some((w) => w.rule === 'missing-autocomplete')).toBe(true);
       expect(full.errors.filter((e) => e.rule === 'missing-autocomplete')).toHaveLength(0);
@@ -623,7 +619,7 @@ describe('validateForm', () => {
     });
 
     it('suppressRules and promoteWarnings work together', () => {
-      const html = '<civ-form-field label="Name"><civ-text-input name="email"></civ-text-input></civ-form-field>';
+      const html = '<civ-text-input label="Name" name="email"></civ-text-input>';
       const result = validateForm(html, {
         suppressRules: ['missing-form-wrapper'],
         promoteWarnings: ['missing-autocomplete'],
@@ -633,7 +629,7 @@ describe('validateForm', () => {
     });
 
     it('empty config has no effect', () => {
-      const html = '<civ-form-field label="Name"><civ-text-input name="x"></civ-text-input></civ-form-field>';
+      const html = '<civ-text-input label="Name" name="x"></civ-text-input>';
       const noConfig = validateForm(html);
       const emptyConfig = validateForm(html, {});
       expect(emptyConfig.errors).toEqual(noConfig.errors);
@@ -673,10 +669,10 @@ describe('validateForm', () => {
       const html = `
         <civ-form>
           <div data-civ-step="0">
-            <civ-form-field label="Name" required required-message="Name is required"><civ-text-input name="name" required></civ-text-input></civ-form-field>
+            <civ-text-input label="Name" required-message="Name is required" name="name" required></civ-text-input>
           </div>
           <div data-civ-step="1">
-            <civ-form-field label="Email" required required-message="Email is required"><civ-text-input name="email" required></civ-text-input></civ-form-field>
+            <civ-text-input label="Email" required-message="Email is required" name="email" required></civ-text-input>
           </div>
         </civ-form>
       `;
@@ -691,10 +687,10 @@ describe('validateForm', () => {
             <ol><li data-civ-progress-step="0">Step 1</li><li data-civ-progress-step="1">Step 2</li></ol>
           </nav>
           <div data-civ-step="0">
-            <civ-form-field label="Name" required required-message="Name is required"><civ-text-input name="name" required></civ-text-input></civ-form-field>
+            <civ-text-input label="Name" required-message="Name is required" name="name" required></civ-text-input>
           </div>
           <div data-civ-step="1">
-            <civ-form-field label="Email" required required-message="Email is required"><civ-text-input name="email" required></civ-text-input></civ-form-field>
+            <civ-text-input label="Email" required-message="Email is required" name="email" required></civ-text-input>
           </div>
         </civ-form>
       `;
@@ -708,8 +704,8 @@ describe('validateForm', () => {
       const html = `
         <civ-form>
           <nav data-civ-progress aria-label="Progress"><ol><li>S1</li><li>S3</li></ol></nav>
-          <div data-civ-step="0"><civ-form-field label="A" required required-message="A is required"><civ-text-input name="a" required></civ-text-input></civ-form-field></div>
-          <div data-civ-step="2"><civ-form-field label="B" required required-message="B is required"><civ-text-input name="b" required></civ-text-input></civ-form-field></div>
+          <div data-civ-step="0"><civ-text-input label="A" required-message="A is required" name="a" required></civ-text-input></div>
+          <div data-civ-step="2"><civ-text-input label="B" required-message="B is required" name="b" required></civ-text-input></div>
         </civ-form>
       `;
       const result = validateForm(html);
@@ -722,7 +718,7 @@ describe('validateForm', () => {
       const html = `
         <civ-form>
           <nav data-civ-progress aria-label="Progress"><ol><li>S1</li><li>S2</li></ol></nav>
-          <div data-civ-step="0"><civ-form-field label="A" required required-message="A is required"><civ-text-input name="a" required></civ-text-input></civ-form-field></div>
+          <div data-civ-step="0"><civ-text-input label="A" required-message="A is required" name="a" required></civ-text-input></div>
           <div data-civ-step="1"></div>
         </civ-form>
       `;
@@ -737,7 +733,7 @@ describe('validateForm', () => {
     it('flags when parent field does not exist', () => {
       const html = `
         <civ-form>
-          <civ-form-field label="County"><civ-select name="county" data-civ-options-from="nonexistent"></civ-select></civ-form-field>
+          <civ-select label="County" name="county" data-civ-options-from="nonexistent"></civ-select>
           <script type="application/json" data-civ-options-map="county">{"CA":[]}</script>
         </civ-form>
       `;
@@ -748,8 +744,8 @@ describe('validateForm', () => {
     it('does not flag when parent field exists', () => {
       const html = `
         <civ-form>
-          <civ-form-field label="State"><civ-select name="state" options='[{"value":"CA","label":"CA"}]'></civ-select></civ-form-field>
-          <civ-form-field label="County"><civ-select name="county" data-civ-options-from="state"></civ-select></civ-form-field>
+          <civ-select label="State" name="state" options='[{"value":"CA","label":"CA"}]'></civ-select>
+          <civ-select label="County" name="county" data-civ-options-from="state"></civ-select>
           <script type="application/json" data-civ-options-map="county">{"CA":[{"value":"la","label":"LA"}]}</script>
         </civ-form>
       `;
@@ -762,8 +758,8 @@ describe('validateForm', () => {
     it('warns when options map is empty', () => {
       const html = `
         <civ-form>
-          <civ-form-field label="State"><civ-select name="state" options='[{"value":"CA","label":"CA"}]'></civ-select></civ-form-field>
-          <civ-form-field label="County"><civ-select name="county" data-civ-options-from="state"></civ-select></civ-form-field>
+          <civ-select label="State" name="state" options='[{"value":"CA","label":"CA"}]'></civ-select>
+          <civ-select label="County" name="county" data-civ-options-from="state"></civ-select>
           <script type="application/json" data-civ-options-map="county">{}</script>
         </civ-form>
       `;
@@ -774,8 +770,8 @@ describe('validateForm', () => {
     it('does not warn when options map has entries', () => {
       const html = `
         <civ-form>
-          <civ-form-field label="State"><civ-select name="state" options='[{"value":"CA","label":"CA"}]'></civ-select></civ-form-field>
-          <civ-form-field label="County"><civ-select name="county" data-civ-options-from="state"></civ-select></civ-form-field>
+          <civ-select label="State" name="state" options='[{"value":"CA","label":"CA"}]'></civ-select>
+          <civ-select label="County" name="county" data-civ-options-from="state"></civ-select>
           <script type="application/json" data-civ-options-map="county">{"CA":[{"value":"la","label":"LA"}]}</script>
         </civ-form>
       `;
@@ -788,8 +784,8 @@ describe('validateForm', () => {
     it('does not flag select with data-civ-options-from', () => {
       const html = `
         <civ-form>
-          <civ-form-field label="State"><civ-select name="state" options='[{"value":"CA","label":"CA"}]'></civ-select></civ-form-field>
-          <civ-form-field label="County"><civ-select name="county" data-civ-options-from="state"></civ-select></civ-form-field>
+          <civ-select label="State" name="state" options='[{"value":"CA","label":"CA"}]'></civ-select>
+          <civ-select label="County" name="county" data-civ-options-from="state"></civ-select>
           <script type="application/json" data-civ-options-map="county">{"CA":[{"value":"la","label":"LA"}]}</script>
         </civ-form>
       `;
@@ -805,7 +801,7 @@ describe('validateForm', () => {
       const html = `
         <civ-form>
           <div data-civ-layout="table">
-            <table><tbody><tr><td><civ-form-field label="X"><civ-text-input name="x"></civ-text-input></civ-form-field></td></tr></tbody></table>
+            <table><tbody><tr><td><civ-text-input label="X" name="x"></civ-text-input></td></tr></tbody></table>
           </div>
         </civ-form>
       `;

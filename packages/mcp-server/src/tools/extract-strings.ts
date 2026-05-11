@@ -53,12 +53,13 @@ export function extractStrings(html: string): ExtractStringsResult {
       }
     }
 
-    // Check wrapper (civ-form-field / civ-form-fieldset) for text attributes
-    const wrapper = $el.closest('civ-form-field, civ-form-fieldset');
+    // civ-form-fieldset can carry a group-level legend / hint that applies
+    // to the inner controls.
+    const wrapper = $el.closest('civ-form-fieldset');
     if (wrapper.length > 0) {
       for (const attr of TEXT_ATTRIBUTES) {
         const key = `${name}.${attr}`;
-        if (strings[key]) continue; // element-level attr takes precedence
+        if (strings[key]) continue;
         const value = wrapper.attr(attr);
         if (value && value.trim()) {
           strings[key] = value;

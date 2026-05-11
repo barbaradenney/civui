@@ -43,8 +43,8 @@ Use this guide to select the correct CivUI component for each form field.
 
 - **Email** → \`<civ-text-input type="email" autocomplete="email">\`
 - **Phone** → \`<civ-text-input type="tel" autocomplete="tel" inputmode="tel">\`
-- **SSN** → \`<civ-form-field hint="For example: 123 45 6789"><civ-text-input inputmode="numeric">\`
-- **ZIP code** → \`<civ-form-field><civ-text-input inputmode="numeric" autocomplete="postal-code">\`
+- **SSN** → \`<civ-text-input hint="For example: 123 45 6789" inputmode="numeric">\`
+- **ZIP code** → \`<civ-text-input inputmode="numeric" autocomplete="postal-code">\`
 - **URL** → \`<civ-text-input type="url">\`
 - **Password** → \`<civ-text-input type="password" autocomplete="new-password">\`
 - **Search** → \`<civ-text-input type="search">\`
@@ -53,10 +53,11 @@ Use this guide to select the correct CivUI component for each form field.
 
 ## Structural decisions
 
-### Should I wrap the input?
-- **Single-value input** (text, textarea, select, combobox, date-picker, file-upload) → Wrap in \`<civ-form-field label="...">\`
-- **Group component** (radio-group, checkbox-group, memorable-date, segmented-control) → Wrap in \`<civ-form-fieldset legend="...">\`
-- **Self-contained component** (civ-address, civ-name, civ-signature, civ-checkbox, civ-toggle) → No wrapping needed, these manage their own labels
+### Label vs legend
+- **Single-value input** (text, textarea, select, combobox, date-picker, file-upload) → Set \`label="..."\` directly on the control.
+- **Group component** (radio-group, checkbox-group, memorable-date, segmented-control, yes-no, date-range-picker) → Set \`legend="..."\` directly on the control.
+- **Self-contained compound** (civ-address, civ-name, civ-signature, civ-checkbox, civ-toggle) → Pass \`label\` / \`legend\` directly; no wrapper.
+- **Multi-field grouping** (rare — e.g. a custom block of related controls) → Wrap in \`<civ-form-fieldset legend="...">\`.
 
 ### Should I group fields?
 - **Yes, if fields are logically related** → Wrap in \`<civ-fieldset legend="...">\`
@@ -80,9 +81,9 @@ Use this guide to select the correct CivUI component for each form field.
 
 | Pattern | Problem | Fix |
 |---------|---------|-----|
-| \`<civ-form-group>\` | Removed | Use \`<civ-form-field>\` or \`<civ-form-fieldset>\` |
+| \`<civ-form-group>\` / \`<civ-form-field>\` | Removed | Set \`label\` directly on the control |
 | \`<civ-us-state>\` / \`<civ-service-branch>\` | Removed | Use \`<civ-select preset="us-state|service-branch">\` |
-| Label on input component | Incorrect — wrapper owns the label | Move label/hint/error to \`<civ-form-field>\` or \`<civ-form-fieldset>\` |
+| Wrapping a single input in \`<civ-form-fieldset>\` | Use the control's own \`label\` | Move label/hint/error to the control directly |
 | \`placeholder\` without \`label\` | Not accessible — placeholder is not a label | Always provide a \`label\` attribute |
 | Radio group with 1 option | Semantically incorrect | Use \`<civ-checkbox>\` instead |
 | Radio group with 8+ options | Too many options for radio | Use \`<civ-select>\` or \`<civ-combobox>\` |

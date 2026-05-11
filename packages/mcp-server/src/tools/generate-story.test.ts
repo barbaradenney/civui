@@ -4,12 +4,8 @@ import type { FormSchema } from '../schema/index.js';
 
 const SAMPLE_HTML = `
 <civ-form>
-  <civ-form-field label="Full name" required>
-    <civ-text-input name="full-name" required required-message="Enter your name"></civ-text-input>
-  </civ-form-field>
-  <civ-form-field label="Email">
-    <civ-text-input name="email" type="email"></civ-text-input>
-  </civ-form-field>
+  <civ-text-input label="Full name" name="full-name" required required-message="Enter your name"></civ-text-input>
+  <civ-text-input label="Email" name="email" type="email"></civ-text-input>
 </civ-form>
 `;
 

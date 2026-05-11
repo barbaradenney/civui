@@ -55,21 +55,17 @@ export function generateEligibilityScreener(schema: FormSchema): EligibilityScre
         break;
 
       case 'select':
-        htmlLines.push(`  <civ-form-field label="${escapedText}" required${hintAttr}>`);
-        htmlLines.push(`    <civ-select name="${escapedId}" required>`);
+        htmlLines.push(`  <civ-select label="${escapedText}" required${hintAttr} name="${escapedId}">`);
         if (q.options) {
           for (const opt of q.options) {
-            htmlLines.push(`      <option value="${escapeHtml(opt.value)}">${escapeHtml(opt.label)}</option>`);
+            htmlLines.push(`    <option value="${escapeHtml(opt.value)}">${escapeHtml(opt.label)}</option>`);
           }
         }
-        htmlLines.push(`    </civ-select>`);
-        htmlLines.push(`  </civ-form-field>`);
+        htmlLines.push(`  </civ-select>`);
         break;
 
       case 'number':
-        htmlLines.push(`  <civ-form-field label="${escapedText}" required${hintAttr}>`);
-        htmlLines.push(`    <civ-text-input name="${escapedId}" type="number" inputmode="numeric" required></civ-text-input>`);
-        htmlLines.push(`  </civ-form-field>`);
+        htmlLines.push(`  <civ-text-input label="${escapedText}" required${hintAttr} name="${escapedId}" type="number" inputmode="numeric"></civ-text-input>`);
         break;
     }
   }

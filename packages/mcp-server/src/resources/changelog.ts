@@ -13,8 +13,8 @@ export const CHANGELOG = `# CivUI Changelog
 - For known dates (birthdays, document dates): use \`<civ-memorable-date>\`
 - For scheduling / appointment dates: use \`<civ-date-picker>\`
 
-### \`civ-form-group\` replaced by \`civ-form-field\` / \`civ-form-fieldset\`
-\`<civ-form-group>\` has been removed. Use \`<civ-form-field>\` for single-value inputs and \`<civ-form-fieldset>\` for group components. Labels, hints, errors, and required indicators now live on the wrapper, not on the input component itself.
+### \`civ-form-field\` and \`civ-form-group\` removed
+\`<civ-form-field>\` (the single-input wrapper) and the older \`<civ-form-group>\` have both been removed. Every CivUI control now renders its own label / legend / hint / error chrome — set those props directly on the control. \`<civ-form-fieldset>\` is reserved for genuine multi-field grouping (multiple unrelated controls sharing one section heading).
 
 \`\`\`html
 <!-- Before (removed) -->
@@ -72,8 +72,8 @@ Physical CSS properties (\`civ-ml-\`, \`civ-mr-\`, \`civ-pl-\`, \`civ-pr-\`, \`c
 
 ## New Components
 
-### \`civ-form-field\` / \`civ-form-fieldset\`
-Wrapper components that provide label/legend, hint, error, required indicator, and per-field \`touched\` tracking. Use \`<civ-form-field>\` for single-value inputs and \`<civ-form-fieldset>\` for group components. Self-contained components (\`civ-address\`, \`civ-name\`, \`civ-signature\`, \`civ-checkbox\`, \`civ-toggle\`) do not need wrapping.
+### \`civ-form-fieldset\`
+Wrapper for multi-field grouping (one section heading over several related controls). Renders legend, hint, error, required indicator, and per-field \`touched\` tracking. Single inputs and self-contained group components already render their own chrome — set those props on the control directly.
 
 ### \`civ-select preset\` attribute
 Pre-built option lists for common data: \`us-state\`, \`us-territory\`, \`country\`, \`service-branch\`, \`suffix\`, \`month\`. Replaces removed data-list components (\`civ-us-state\`, \`civ-service-branch\`, etc.).
@@ -122,7 +122,7 @@ Apply \`[data-civ-scale="dense"]\` or \`[data-civ-scale="spacious"]\` on a paren
 | API | Status | Replacement |
 |-----|--------|-------------|
 | \`<civ-date-input>\` | Removed | \`<civ-memorable-date>\` or \`<civ-date-picker>\` |
-| \`<civ-form-group>\` | Removed | \`<civ-form-field>\` or \`<civ-form-fieldset>\` |
+| \`<civ-form-group>\` / \`<civ-form-field>\` | Removed | Set \`label\` / \`legend\` directly on the control |
 | \`<civ-us-state>\` | Removed | \`<civ-select preset="us-state">\` |
 | \`<civ-service-branch>\` | Removed | \`<civ-select preset="service-branch">\` |
 | Data-list components | Removed | \`<civ-select preset="...">\` |

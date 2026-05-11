@@ -4,14 +4,7 @@ import { extractStrings } from './extract-strings.js';
 describe('extractStrings', () => {
   it('extracts label, hint, error, and required-message from wrapper', () => {
     const html = `
-      <civ-form-field
-        label="Full name"
-        hint="Enter your legal name"
-        error="Name is required"
-        required-message="Please enter your full name"
-      >
-        <civ-text-input name="full-name"></civ-text-input>
-      </civ-form-field>
+      <civ-text-input label="Full name" hint="Enter your legal name" error="Name is required" required-message="Please enter your full name" name="full-name"></civ-text-input>
     `;
     const result = extractStrings(html);
     expect(result.strings['full-name.label']).toBe('Full name');
@@ -21,7 +14,7 @@ describe('extractStrings', () => {
   });
 
   it('extracts placeholder from component', () => {
-    const html = '<civ-form-field label="Email"><civ-text-input name="email" placeholder="you@example.com"></civ-text-input></civ-form-field>';
+    const html = '<civ-text-input label="Email" name="email" placeholder="you@example.com"></civ-text-input>';
     const result = extractStrings(html);
     expect(result.strings['email.placeholder']).toBe('you@example.com');
   });
@@ -68,7 +61,7 @@ describe('extractStrings', () => {
   });
 
   it('keys follow {name}.{attribute} format', () => {
-    const html = '<civ-form-field label="Comments" hint="Optional"><civ-textarea name="comments"></civ-textarea></civ-form-field>';
+    const html = '<civ-textarea label="Comments" hint="Optional" name="comments"></civ-textarea>';
     const result = extractStrings(html);
     const keys = Object.keys(result.strings);
     for (const key of keys) {
@@ -78,21 +71,21 @@ describe('extractStrings', () => {
 
   it('returns correct count', () => {
     const html = `
-      <civ-form-field label="Label A" hint="Hint A"><civ-text-input name="a"></civ-text-input></civ-form-field>
-      <civ-form-field label="Label B"><civ-text-input name="b"></civ-text-input></civ-form-field>
+      <civ-text-input label="Label A" hint="Hint A" name="a"></civ-text-input>
+      <civ-text-input label="Label B" name="b"></civ-text-input>
     `;
     const result = extractStrings(html);
     expect(result.count).toBe(3);
   });
 
   it('skips elements without name attribute', () => {
-    const html = '<civ-form-field label="No name"><civ-text-input></civ-text-input></civ-form-field>';
+    const html = '<civ-text-input label="No name"></civ-text-input>';
     const result = extractStrings(html);
     expect(result.count).toBe(0);
   });
 
   it('skips empty attribute values', () => {
-    const html = '<civ-form-field label="" hint="Valid"><civ-text-input name="test"></civ-text-input></civ-form-field>';
+    const html = '<civ-text-input label="" hint="Valid" name="test"></civ-text-input>';
     const result = extractStrings(html);
     expect(result.strings['test.label']).toBeUndefined();
     expect(result.strings['test.hint']).toBe('Valid');

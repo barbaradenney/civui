@@ -3,7 +3,7 @@ import { suggestFix } from './suggest-fix.js';
 
 describe('suggestFix', () => {
   it('returns original HTML unchanged when no violations', () => {
-    const html = '<civ-form><civ-form-field label="Name"><civ-text-input name="name" autocomplete="name"></civ-text-input></civ-form-field></civ-form>';
+    const html = '<civ-form><civ-text-input label="Name" name="name" autocomplete="name"></civ-text-input></civ-form>';
     const result = suggestFix(html);
     expect(result.appliedFixes).toHaveLength(0);
     expect(result.fixedHtml).toContain('label="Name"');
@@ -16,22 +16,21 @@ describe('suggestFix', () => {
     expect(result.fixedHtml).toContain('label=');
   });
 
-  it('wraps group component with civ-form-fieldset for missing legend', () => {
+  it('sets legend on group component when missing', () => {
     const html = '<civ-radio-group name="choice"><civ-radio label="A" value="a"></civ-radio><civ-radio label="B" value="b"></civ-radio></civ-radio-group>';
     const result = suggestFix(html, ['missing-legend']);
     expect(result.appliedFixes.length).toBeGreaterThan(0);
     expect(result.fixedHtml).toContain('legend=');
   });
 
-  it('wraps with civ-form-field using placeholder as label', () => {
+  it('sets label from placeholder', () => {
     const html = '<civ-text-input placeholder="Enter name" name="name"></civ-text-input>';
     const result = suggestFix(html, ['placeholder-as-label']);
     expect(result.fixedHtml).toContain('label="Enter name"');
-    expect(result.fixedHtml).toContain('civ-form-field');
   });
 
-  it('adds required-message for required fields on wrapper', () => {
-    const html = '<civ-form-field label="Email" required><civ-text-input name="email" required></civ-text-input></civ-form-field>';
+  it('adds required-message for required fields', () => {
+    const html = '<civ-text-input label="Email" name="email" required></civ-text-input>';
     const result = suggestFix(html, ['missing-required-message']);
     expect(result.fixedHtml).toContain('required-message="Email is required"');
   });
@@ -48,46 +47,46 @@ describe('suggestFix', () => {
     expect(result.fixedHtml).toContain('civ-segmented-control');
   });
 
-  it('wraps group with civ-form-fieldset when label used instead of legend', () => {
+  it('renames label→legend on group component', () => {
     const html = '<civ-radio-group label="Pick one" name="x"><civ-radio label="A" value="a"></civ-radio><civ-radio label="B" value="b"></civ-radio></civ-radio-group>';
     const result = suggestFix(html, ['label-on-group']);
     expect(result.fixedHtml).toContain('legend="Pick one"');
-    expect(result.fixedHtml).toContain('civ-form-fieldset');
+    expect(result.fixedHtml).not.toContain('label="Pick one"');
   });
 
-  it('wraps single component with civ-form-field when legend used instead of label', () => {
+  it('renames legend→label on single-input component', () => {
     const html = '<civ-text-input legend="Full name" name="name"></civ-text-input>';
     const result = suggestFix(html, ['legend-on-single']);
     expect(result.fixedHtml).toContain('label="Full name"');
-    expect(result.fixedHtml).toContain('civ-form-field');
+    expect(result.fixedHtml).not.toContain('legend="Full name"');
   });
 
-  it('replaces generic required-message with field-specific on wrapper', () => {
-    const html = '<civ-form-field label="Email" required required-message="Required"><civ-text-input name="email" required></civ-text-input></civ-form-field>';
+  it('replaces generic required-message with field-specific text', () => {
+    const html = '<civ-text-input label="Email" name="email" required required-message="Required"></civ-text-input>';
     const result = suggestFix(html, ['generic-required-message']);
     expect(result.fixedHtml).toContain('required-message="Email is required"');
   });
 
-  it('adds date format hints to wrapper', () => {
-    const html = '<civ-form-field label="Date of birth"><civ-memorable-date name="dob"></civ-memorable-date></civ-form-field>';
+  it('adds date format hint', () => {
+    const html = '<civ-memorable-date label="Date of birth" name="dob"></civ-memorable-date>';
     const result = suggestFix(html, ['missing-hint-date']);
     expect(result.fixedHtml).toContain('hint="For example: January 15 1990"');
   });
 
-  it('adds SSN format hint to wrapper', () => {
-    const html = '<civ-form-field label="Social Security number"><civ-text-input name="ssn"></civ-text-input></civ-form-field>';
+  it('adds SSN format hint', () => {
+    const html = '<civ-text-input label="Social Security number" name="ssn"></civ-text-input>';
     const result = suggestFix(html, ['missing-hint-ssn']);
     expect(result.fixedHtml).toContain('hint="For example: 123 45 6789"');
   });
 
   it('adds autocomplete to identity fields', () => {
-    const html = '<civ-form-field label="Email address"><civ-text-input name="email"></civ-text-input></civ-form-field>';
+    const html = '<civ-text-input label="Email address" name="email"></civ-text-input>';
     const result = suggestFix(html, ['missing-autocomplete']);
     expect(result.fixedHtml).toContain('autocomplete="email"');
   });
 
-  it('expands abbreviations in wrapper labels', () => {
-    const html = '<civ-form-field label="DOB"><civ-text-input name="dob"></civ-text-input></civ-form-field>';
+  it('expands abbreviations in labels', () => {
+    const html = '<civ-text-input label="DOB" name="dob"></civ-text-input>';
     const result = suggestFix(html, ['abbreviation-in-label']);
     expect(result.fixedHtml).toContain('Date of birth');
     expect(result.fixedHtml).not.toContain('label="DOB"');
@@ -99,8 +98,8 @@ describe('suggestFix', () => {
     expect(result.fixedHtml).toContain('value="a-b"');
   });
 
-  it('adds name from wrapper label when missing', () => {
-    const html = '<civ-form-field label="Full Name"><civ-text-input></civ-text-input></civ-form-field>';
+  it('adds name derived from label when missing', () => {
+    const html = '<civ-text-input label="Full Name"></civ-text-input>';
     const result = suggestFix(html, ['missing-name']);
     expect(result.fixedHtml).toContain('name="full-name"');
   });

@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { reviewFormUxPrompt, REVIEW_FORM_UX_NAME, REVIEW_FORM_UX_DESCRIPTION } from './review-form-ux.js';
 
 describe('reviewFormUxPrompt', () => {
-  const markup = '<civ-form-field label="Name"><civ-text-input name="name"></civ-text-input></civ-form-field>';
+  const markup = '<civ-text-input label="Name" name="name"></civ-text-input>';
 
   it('returns 3 messages (2 resources + 1 text)', () => {
     const result = reviewFormUxPrompt(markup);

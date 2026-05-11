@@ -103,9 +103,7 @@ export function generateDocumentChecklist(schema: FormSchema): DocumentChecklist
     }
 
     htmlParts.push(
-      `      <civ-form-field label="Upload ${label}" class="civ-mt-2">`,
-      `        <civ-file-upload ${uploadAttrs.join(' ')}></civ-file-upload>`,
-      `      </civ-form-field>`,
+      `      <civ-file-upload label="Upload ${label}" class="civ-mt-2" ${uploadAttrs.join(' ')}></civ-file-upload>`,
     );
 
     htmlParts.push(`    </li>`);

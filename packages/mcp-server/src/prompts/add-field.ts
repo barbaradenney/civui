@@ -40,27 +40,24 @@ Generate a single CivUI component snippet for a **${fieldType}** field with labe
 
 ## Requirements
 
-1. Use the correct CivUI tag for the field type:
-   - text/email/tel/number/password/search/url/ssn/zip → \`<civ-form-field>\` wrapping \`<civ-text-input>\`
-   - textarea → \`<civ-form-field>\` wrapping \`<civ-textarea>\`
-   - select → \`<civ-form-field>\` wrapping \`<civ-select>\`
-   - combobox → \`<civ-form-field>\` wrapping \`<civ-combobox>\`
-   - radio → \`<civ-radio-group legend="...">\` with \`<civ-radio>\` children (self-contained, no external wrapper)
-   - checkbox → \`<civ-checkbox>\` (self-contained, no wrapper)
-   - checkbox-group → \`<civ-checkbox-group legend="...">\` with \`<civ-checkbox>\` children (self-contained, no external wrapper)
-   - date → \`<civ-form-field>\` wrapping \`<civ-date-picker>\`
-   - memorable-date → \`<civ-memorable-date legend="...">\` (self-contained, no external wrapper)
-   - file → \`<civ-form-field>\` wrapping \`<civ-file-upload>\`
-   - toggle → \`<civ-toggle>\` (self-contained, no wrapper)
+1. Use the correct CivUI tag for the field type — every CivUI control carries its own \`label\` (or \`legend\` for groups), \`hint\`, \`error\`, and \`required\` attributes; no external wrapper is needed:
+   - text/email/tel/number/password/search/url/ssn/zip → \`<civ-text-input label="...">\`
+   - textarea → \`<civ-textarea label="...">\`
+   - select → \`<civ-select label="...">\`
+   - combobox → \`<civ-combobox label="...">\`
+   - radio → \`<civ-radio-group legend="...">\` with \`<civ-radio>\` children
+   - checkbox → \`<civ-checkbox label="...">\`
+   - checkbox-group → \`<civ-checkbox-group legend="...">\` with \`<civ-checkbox>\` children
+   - date → \`<civ-date-picker label="...">\`
+   - memorable-date → \`<civ-memorable-date legend="...">\`
+   - file → \`<civ-file-upload label="...">\`
+   - toggle → \`<civ-toggle label="...">\`
 
-2. Wrap the component in the correct wrapper:
-   - Single-value inputs (text, textarea, select, combobox, date-picker, file) → \`<civ-form-field label="..." required>\`
-   - Self-contained (radio-group, checkbox-group, memorable-date, checkbox, toggle, all compounds) → no wrapper needed; pass \`legend\` (or \`label\` for checkbox/toggle) directly
-
-3. Include these attributes:
-   - On the **wrapper**: \`label\`/\`legend\`, \`hint\`, \`required\`, \`required-message\` with field-specific text
-   - On the **input**: \`name\` (kebab-case from the label), \`required\`, \`autocomplete\`, \`inputmode\`, \`type\`
+2. Include these attributes directly on the control:
+   - \`label\` (single inputs) or \`legend\` (group components)
    - \`hint\` for date and SSN fields with expected format
+   - \`required\` and \`required-message\` with field-specific text
+   - \`name\` (kebab-case from the label)
    - \`autocomplete\` for identity fields (email, tel, name, address, zip)
    - \`inputmode\` for numeric input (tel, ssn, zip)
    - \`type\` attribute for civ-text-input variants (email, tel, number, etc.)

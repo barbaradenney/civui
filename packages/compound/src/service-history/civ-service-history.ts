@@ -84,16 +84,15 @@ export class CivServiceHistory extends LegendHeadingMixin(CivCompoundElement) {
       >
         ${renderFormHeader({ label: renderLegend({ legend, required: this.required, headingLevel: this.headingLevel, size: this.size }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
 
-        <civ-form-field label="${t('serviceBranchLabel')}" error="${this.branchError}">
-          <civ-select
-            name="${prefix}.branch"
-            value="${this._data.branch}"
-            error="${this.branchError}"
-            ?disabled="${this.disabled}"
-            data-service-branch
-            @civ-change="${this._onBranchChange}"
-          ></civ-select>
-        </civ-form-field>
+        <civ-select
+          label="${t('serviceBranchLabel')}"
+          name="${prefix}.branch"
+          value="${this._data.branch}"
+          error="${this.branchError}"
+          ?disabled="${this.disabled}"
+          data-service-branch
+          @civ-change="${this._onBranchChange}"
+        ></civ-select>
 
         <civ-memorable-date
           legend="${t('serviceStartDateLegend')}"
@@ -117,30 +116,28 @@ export class CivServiceHistory extends LegendHeadingMixin(CivCompoundElement) {
           @civ-change="${(e: CustomEvent) => this._onFieldChange('endDate', e)}"
         ></civ-memorable-date>
 
-        <civ-form-field label="${t('serviceDischargeLabel')}" error="${this.dischargeError}">
-          <civ-select
-            name="${prefix}.dischargeType"
-            value="${this._data.dischargeType}"
-            error="${this.dischargeError}"
-            ?disabled="${this.disabled}"
-            data-service-discharge
-            @civ-change="${this._onDischargeChange}"
-          ></civ-select>
-        </civ-form-field>
+        <civ-select
+          label="${t('serviceDischargeLabel')}"
+          name="${prefix}.dischargeType"
+          value="${this._data.dischargeType}"
+          error="${this.dischargeError}"
+          ?disabled="${this.disabled}"
+          data-service-discharge
+          @civ-change="${this._onDischargeChange}"
+        ></civ-select>
 
         ${this.showServiceNumber ? html`
-          <civ-form-field label="${t('serviceNumberLabel')}" hint="${t('serviceNumberHint')}" error="${this.serviceNumberError}">
-            <civ-text-input
-              name="${prefix}.serviceNumber"
-              value="${this._data.serviceNumber}"
-              hint="${t('serviceNumberHint')}"
-              error="${this.serviceNumberError}"
-              ?disabled="${this.disabled}"
-              ?readonly="${this.readonly}"
-              @civ-input="${(e: CustomEvent) => this._onFieldInput('serviceNumber', e)}"
-              @civ-change="${(e: CustomEvent) => this._onFieldChange('serviceNumber', e)}"
-            ></civ-text-input>
-          </civ-form-field>
+          <civ-text-input
+            label="${t('serviceNumberLabel')}"
+            name="${prefix}.serviceNumber"
+            value="${this._data.serviceNumber}"
+            hint="${t('serviceNumberHint')}"
+            error="${this.serviceNumberError}"
+            ?disabled="${this.disabled}"
+            ?readonly="${this.readonly}"
+            @civ-input="${(e: CustomEvent) => this._onFieldInput('serviceNumber', e)}"
+            @civ-change="${(e: CustomEvent) => this._onFieldChange('serviceNumber', e)}"
+          ></civ-text-input>
         ` : nothing}
       </fieldset>
     `;

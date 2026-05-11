@@ -245,16 +245,15 @@ export class CivPartnershipHistory extends LegendHeadingMixin(CivCompoundElement
       ></civ-name>
 
       ${this.showMarriageType ? html`
-        <civ-form-field label="${t('marriageTypeLabel')}" error="${this.marriageTypeError}">
-          <civ-select
-            name="${prefix}.marriageType"
-            value="${this._data.marriageType}"
-            error="${this.marriageTypeError}"
-            ?disabled="${this.disabled}"
-            data-marriage-type
-            @civ-change="${this._onMarriageTypeChange}"
-          ></civ-select>
-        </civ-form-field>
+        <civ-select
+          label="${t('marriageTypeLabel')}"
+          name="${prefix}.marriageType"
+          value="${this._data.marriageType}"
+          error="${this.marriageTypeError}"
+          ?disabled="${this.disabled}"
+          data-marriage-type
+          @civ-change="${this._onMarriageTypeChange}"
+        ></civ-select>
       ` : nothing}
     `;
   }
@@ -318,18 +317,14 @@ export class CivPartnershipHistory extends LegendHeadingMixin(CivCompoundElement
           value="${this._data.marriageDate}" error="${this.marriageDateError}" ?disabled="${this.disabled}"
           @civ-input="${(e: CustomEvent) => this._onFieldInput('marriageDate', e)}"
           @civ-change="${(e: CustomEvent) => this._onFieldChange('marriageDate', e)}"></civ-memorable-date>
-        <civ-form-field label="${t('marriageCityLabel')}" error="${this.cityError}">
-          <civ-text-input name="${prefix}.marriageCity"
-            value="${this._data.marriageCity}" error="${this.cityError}" ?disabled="${this.disabled}" ?readonly="${this.readonly}"
-            @civ-input="${(e: CustomEvent) => this._onFieldInput('marriageCity', e)}"
-            @civ-change="${(e: CustomEvent) => this._onFieldChange('marriageCity', e)}"></civ-text-input>
-        </civ-form-field>
-        <civ-form-field label="${t('marriageStateLabel')}" error="${this.stateError}">
-          <civ-text-input name="${prefix}.marriageState"
-            value="${this._data.marriageState}" error="${this.stateError}" ?disabled="${this.disabled}" ?readonly="${this.readonly}"
-            @civ-input="${(e: CustomEvent) => this._onFieldInput('marriageState', e)}"
-            @civ-change="${(e: CustomEvent) => this._onFieldChange('marriageState', e)}"></civ-text-input>
-        </civ-form-field>
+        <civ-text-input label="${t('marriageCityLabel')}" name="${prefix}.marriageCity"
+          value="${this._data.marriageCity}" error="${this.cityError}" ?disabled="${this.disabled}" ?readonly="${this.readonly}"
+          @civ-input="${(e: CustomEvent) => this._onFieldInput('marriageCity', e)}"
+          @civ-change="${(e: CustomEvent) => this._onFieldChange('marriageCity', e)}"></civ-text-input>
+        <civ-text-input label="${t('marriageStateLabel')}" name="${prefix}.marriageState"
+          value="${this._data.marriageState}" error="${this.stateError}" ?disabled="${this.disabled}" ?readonly="${this.readonly}"
+          @civ-input="${(e: CustomEvent) => this._onFieldInput('marriageState', e)}"
+          @civ-change="${(e: CustomEvent) => this._onFieldChange('marriageState', e)}"></civ-text-input>
       `;
     }
 
@@ -339,12 +334,10 @@ export class CivPartnershipHistory extends LegendHeadingMixin(CivCompoundElement
           value="${this._data.marriageDate}" error="${this.marriageDateError}" ?disabled="${this.disabled}"
           @civ-input="${(e: CustomEvent) => this._onFieldInput('marriageDate', e)}"
           @civ-change="${(e: CustomEvent) => this._onFieldChange('marriageDate', e)}"></civ-memorable-date>
-        <civ-form-field label="${t('marriageJurisdictionLabel')}" error="${this.jurisdictionError}">
-          <civ-text-input name="${prefix}.jurisdiction"
-            value="${this._data.jurisdiction}" error="${this.jurisdictionError}" ?disabled="${this.disabled}" ?readonly="${this.readonly}"
-            @civ-input="${(e: CustomEvent) => this._onFieldInput('jurisdiction', e)}"
-            @civ-change="${(e: CustomEvent) => this._onFieldChange('jurisdiction', e)}"></civ-text-input>
-        </civ-form-field>
+        <civ-text-input label="${t('marriageJurisdictionLabel')}" name="${prefix}.jurisdiction"
+          value="${this._data.jurisdiction}" error="${this.jurisdictionError}" ?disabled="${this.disabled}" ?readonly="${this.readonly}"
+          @civ-input="${(e: CustomEvent) => this._onFieldInput('jurisdiction', e)}"
+          @civ-change="${(e: CustomEvent) => this._onFieldChange('jurisdiction', e)}"></civ-text-input>
       `;
     }
 
@@ -354,12 +347,10 @@ export class CivPartnershipHistory extends LegendHeadingMixin(CivCompoundElement
           value="${this._data.cohabitationStartDate}" error="${this.cohabitationStartError}" ?disabled="${this.disabled}"
           @civ-input="${(e: CustomEvent) => this._onFieldInput('cohabitationStartDate', e)}"
           @civ-change="${(e: CustomEvent) => this._onFieldChange('cohabitationStartDate', e)}"></civ-memorable-date>
-        <civ-form-field label="${t('marriageCohabitationStateLabel')}" error="${this.cohabitationStateError}">
-          <civ-text-input name="${prefix}.cohabitationState"
-            value="${this._data.cohabitationState}" error="${this.cohabitationStateError}" ?disabled="${this.disabled}" ?readonly="${this.readonly}"
-            @civ-input="${(e: CustomEvent) => this._onFieldInput('cohabitationState', e)}"
-            @civ-change="${(e: CustomEvent) => this._onFieldChange('cohabitationState', e)}"></civ-text-input>
-        </civ-form-field>
+        <civ-text-input label="${t('marriageCohabitationStateLabel')}" name="${prefix}.cohabitationState"
+          value="${this._data.cohabitationState}" error="${this.cohabitationStateError}" ?disabled="${this.disabled}" ?readonly="${this.readonly}"
+          @civ-input="${(e: CustomEvent) => this._onFieldInput('cohabitationState', e)}"
+          @civ-change="${(e: CustomEvent) => this._onFieldChange('cohabitationState', e)}"></civ-text-input>
         ${this._renderDescriptionField(prefix)}
       `;
     }
@@ -379,13 +370,11 @@ export class CivPartnershipHistory extends LegendHeadingMixin(CivCompoundElement
 
   private _renderDescriptionField(prefix: string) {
     return html`
-      <civ-form-field label="${t('marriageTypeDescriptionLabel')}" hint="${t('marriageTypeDescriptionHint')}">
-        <civ-text-input name="${prefix}.marriageTypeDescription"
-          value="${this._data.marriageTypeDescription}" hint="${t('marriageTypeDescriptionHint')}"
-          ?disabled="${this.disabled}" ?readonly="${this.readonly}"
-          @civ-input="${(e: CustomEvent) => this._onFieldInput('marriageTypeDescription', e)}"
-          @civ-change="${(e: CustomEvent) => this._onFieldChange('marriageTypeDescription', e)}"></civ-text-input>
-      </civ-form-field>
+      <civ-text-input label="${t('marriageTypeDescriptionLabel')}" name="${prefix}.marriageTypeDescription"
+        value="${this._data.marriageTypeDescription}" hint="${t('marriageTypeDescriptionHint')}"
+        ?disabled="${this.disabled}" ?readonly="${this.readonly}"
+        @civ-input="${(e: CustomEvent) => this._onFieldInput('marriageTypeDescription', e)}"
+        @civ-change="${(e: CustomEvent) => this._onFieldChange('marriageTypeDescription', e)}"></civ-text-input>
     `;
   }
 

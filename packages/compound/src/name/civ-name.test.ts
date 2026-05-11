@@ -140,7 +140,8 @@ describe('civ-name', () => {
 
   it('uses combined first/given and last/family labels', async () => {
     const el = await fixture<CivName>('<civ-name legend="Name"></civ-name>') as CivName;
-    const labels = Array.from(el.querySelectorAll('civ-form-field')).map(
+    // Post-Phase-2 unification: sub-inputs render their own labels.
+    const labels = Array.from(el.querySelectorAll('civ-text-input')).map(
       (field: any) => field.label,
     );
     expect(labels).toContain('First name or given name');

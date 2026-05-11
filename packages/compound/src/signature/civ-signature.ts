@@ -195,19 +195,18 @@ export class CivSignature extends LegendHeadingMixin(CivCompoundElement) {
           </div>
         ` : nothing}
 
-        <civ-form-field label="${t('signatureName')}" hint="${t('signatureNameHint')}" error="${this.nameError}">
-          <civ-text-input
-            name="${this.name ? `${this.name}.name` : ''}"
-            value="${this._data.name}"
-            hint="${t('signatureNameHint')}"
-            error="${this.nameError}"
-            autocomplete="off"
-            ?disabled="${this.disabled}"
-            ?readonly="${this.readonly}"
-            @civ-input="${this._onNameInput}"
-            @civ-change="${this._onNameChange}"
-          ></civ-text-input>
-        </civ-form-field>
+        <civ-text-input
+          label="${t('signatureName')}"
+          name="${this.name ? `${this.name}.name` : ''}"
+          value="${this._data.name}"
+          hint="${t('signatureNameHint')}"
+          error="${this.nameError}"
+          autocomplete="off"
+          ?disabled="${this.disabled}"
+          ?readonly="${this.readonly}"
+          @civ-input="${this._onNameInput}"
+          @civ-change="${this._onNameChange}"
+        ></civ-text-input>
 
         <civ-checkbox
           label="${t('signatureCertify')}"

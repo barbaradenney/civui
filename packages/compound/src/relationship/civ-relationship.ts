@@ -172,17 +172,16 @@ export class CivRelationship extends LegendHeadingMixin(CivCompoundElement) {
           ></civ-name>
         ` : nothing}
 
-        <civ-form-field label="${t('relationshipTypeLabel')}" error="${this.relationshipError}" ?required="${this.required}">
-          <civ-select
-            name="${prefix}.relationship"
-            value="${this._data.relationship}"
-            error="${this.relationshipError}"
-            ?required="${this.required}"
-            ?disabled="${this.disabled}"
-            data-relationship-type
-            @civ-change="${this._onRelationshipChange}"
-          ></civ-select>
-        </civ-form-field>
+        <civ-select
+          label="${t('relationshipTypeLabel')}"
+          name="${prefix}.relationship"
+          value="${this._data.relationship}"
+          error="${this.relationshipError}"
+          ?required="${this.required}"
+          ?disabled="${this.disabled}"
+          data-relationship-type
+          @civ-change="${this._onRelationshipChange}"
+        ></civ-select>
 
         ${category === 'spousal' ? html`
           <civ-memorable-date
@@ -233,18 +232,17 @@ export class CivRelationship extends LegendHeadingMixin(CivCompoundElement) {
         ` : nothing}
 
         ${category === 'other' ? html`
-          <civ-form-field label="${t('relationshipOtherLabel')}" hint="${t('relationshipOtherHint')}" error="${this.otherDescriptionError}">
-            <civ-text-input
-              name="${prefix}.otherDescription"
-              value="${this._data.otherDescription}"
-              hint="${t('relationshipOtherHint')}"
-              error="${this.otherDescriptionError}"
-              ?disabled="${this.disabled}"
-              ?readonly="${this.readonly}"
-              @civ-input="${this._onOtherInput}"
-              @civ-change="${this._onOtherChange}"
-            ></civ-text-input>
-          </civ-form-field>
+          <civ-text-input
+            label="${t('relationshipOtherLabel')}"
+            name="${prefix}.otherDescription"
+            value="${this._data.otherDescription}"
+            hint="${t('relationshipOtherHint')}"
+            error="${this.otherDescriptionError}"
+            ?disabled="${this.disabled}"
+            ?readonly="${this.readonly}"
+            @civ-input="${this._onOtherInput}"
+            @civ-change="${this._onOtherChange}"
+          ></civ-text-input>
         ` : nothing}
 
         ${this.deceasedAssumed ? html`

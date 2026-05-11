@@ -84,32 +84,30 @@ export class CivDirectDeposit extends LegendHeadingMixin(CivCompoundElement) {
           <civ-radio label="${t('directDepositSavings')}" value="savings"></civ-radio>
         </civ-radio-group>
 
-        <civ-form-field label="${t('directDepositRouting')}" hint="${t('directDepositRoutingHint')}" error="${this.routingError}">
-          <civ-routing-number
-            name="${this.name ? `${this.name}.routingNumber` : ''}"
-            value="${this._data.routingNumber}"
-            hint="${t('directDepositRoutingHint')}"
-            error="${this.routingError}"
-            ?disabled="${this.disabled}"
-            ?readonly="${this.readonly}"
-            @civ-input="${(e: CustomEvent) => this._onSubInput('routingNumber', e)}"
-            @civ-change="${(e: CustomEvent) => this._onSubChange('routingNumber', e)}"
-          ></civ-routing-number>
-        </civ-form-field>
+        <civ-routing-number
+          label="${t('directDepositRouting')}"
+          name="${this.name ? `${this.name}.routingNumber` : ''}"
+          value="${this._data.routingNumber}"
+          hint="${t('directDepositRoutingHint')}"
+          error="${this.routingError}"
+          ?disabled="${this.disabled}"
+          ?readonly="${this.readonly}"
+          @civ-input="${(e: CustomEvent) => this._onSubInput('routingNumber', e)}"
+          @civ-change="${(e: CustomEvent) => this._onSubChange('routingNumber', e)}"
+        ></civ-routing-number>
 
-        <civ-form-field label="${t('directDepositAccount')}" hint="${t('directDepositAccountHint')}" error="${this.accountError}">
-          <civ-text-input
-            name="${this.name ? `${this.name}.accountNumber` : ''}"
-            value="${this._data.accountNumber}"
-            hint="${t('directDepositAccountHint')}"
-            error="${this.accountError}"
-            inputmode="numeric"
-            ?disabled="${this.disabled}"
-            ?readonly="${this.readonly}"
-            @civ-input="${(e: CustomEvent) => this._onSubInput('accountNumber', e)}"
-            @civ-change="${(e: CustomEvent) => this._onSubChange('accountNumber', e)}"
-          ></civ-text-input>
-        </civ-form-field>
+        <civ-text-input
+          label="${t('directDepositAccount')}"
+          name="${this.name ? `${this.name}.accountNumber` : ''}"
+          value="${this._data.accountNumber}"
+          hint="${t('directDepositAccountHint')}"
+          error="${this.accountError}"
+          inputmode="numeric"
+          ?disabled="${this.disabled}"
+          ?readonly="${this.readonly}"
+          @civ-input="${(e: CustomEvent) => this._onSubInput('accountNumber', e)}"
+          @civ-change="${(e: CustomEvent) => this._onSubChange('accountNumber', e)}"
+        ></civ-text-input>
       </fieldset>
     `;
   }

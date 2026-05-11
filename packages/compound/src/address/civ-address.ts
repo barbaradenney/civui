@@ -223,34 +223,33 @@ export class CivAddress extends LegendHeadingMixin(CivCompoundElement) {
   ) {
     const { error = '', required = false } = opts;
     return html`
-      <civ-form-field label="${label}" error="${error}" ?required="${required}">
-        <civ-text-input
-          name="${this.name ? `${this.name}.${field}` : ''}"
-          value="${this._data[field]}"
-          error="${error}"
-          autocomplete="${autocomplete}"
-          ?disabled="${this.disabled}"
-          ?readonly="${this.readonly}"
-          @civ-input="${(e: CustomEvent) => this._onSubInput(field, e)}"
-          @civ-change="${(e: CustomEvent) => this._onSubChange(field, e)}"
-        ></civ-text-input>
-      </civ-form-field>
+      <civ-text-input
+        label="${label}"
+        name="${this.name ? `${this.name}.${field}` : ''}"
+        value="${this._data[field]}"
+        error="${error}"
+        autocomplete="${autocomplete}"
+        ?required="${required}"
+        ?disabled="${this.disabled}"
+        ?readonly="${this.readonly}"
+        @civ-input="${(e: CustomEvent) => this._onSubInput(field, e)}"
+        @civ-change="${(e: CustomEvent) => this._onSubChange(field, e)}"
+      ></civ-text-input>
     `;
   }
 
   /** Country selector with `us-first` ordering. */
   private _renderCountryField() {
     return html`
-      <civ-form-field label="${t('addressCountry')}">
-        <civ-country
-          name="${this.name ? `${this.name}.country` : ''}"
-          value="${this._data.country}"
-          us-first
-          ?disabled="${this.disabled}"
-          data-address-country
-          @civ-change="${(e: CustomEvent) => this._onSubSelectChange('country', e)}"
-        ></civ-country>
-      </civ-form-field>
+      <civ-country
+        label="${t('addressCountry')}"
+        name="${this.name ? `${this.name}.country` : ''}"
+        value="${this._data.country}"
+        us-first
+        ?disabled="${this.disabled}"
+        data-address-country
+        @civ-change="${(e: CustomEvent) => this._onSubSelectChange('country', e)}"
+      ></civ-country>
     `;
   }
 
@@ -263,17 +262,17 @@ export class CivAddress extends LegendHeadingMixin(CivCompoundElement) {
     if (!this._showState) return nothing;
     if (this._useSelectForState) {
       return html`
-        <civ-form-field label="${t('addressState')}" error="${this.stateError}" ?required="${this.required}">
-          <civ-select
-            name="${this.name ? `${this.name}.state` : ''}"
-            value="${this._data.state}"
-            error="${this.stateError}"
-            autocomplete="address-level1"
-            ?disabled="${this.disabled}"
-            data-address-state
-            @civ-change="${(e: CustomEvent) => this._onSubSelectChange('state', e)}"
-          ></civ-select>
-        </civ-form-field>
+        <civ-select
+          label="${t('addressState')}"
+          name="${this.name ? `${this.name}.state` : ''}"
+          value="${this._data.state}"
+          error="${this.stateError}"
+          autocomplete="address-level1"
+          ?required="${this.required}"
+          ?disabled="${this.disabled}"
+          data-address-state
+          @civ-change="${(e: CustomEvent) => this._onSubSelectChange('state', e)}"
+        ></civ-select>
       `;
     }
     return this._renderTextField('state', t('addressStateProvince'), 'address-level1', { error: this.stateError, required: this.required });
@@ -288,37 +287,37 @@ export class CivAddress extends LegendHeadingMixin(CivCompoundElement) {
       >
         ${renderFormHeader({ label: renderLegend({ legend: this.legend || this.label, required: false, headingLevel: this.headingLevel, size: this.size }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
 
-        <civ-form-field label="${t('housingGeneralLocation')}">
-          <civ-text-input
-            name="${this.name ? `${this.name}.city` : ''}"
-            value="${this._data.city}"
-            ?disabled="${this.disabled}"
-            ?readonly="${this.readonly}"
-            @civ-input="${(e: CustomEvent) => this._onSubInput('city', e)}"
-            @civ-change="${(e: CustomEvent) => this._onSubChange('city', e)}"
-          ></civ-text-input>
-        </civ-form-field>
+        <civ-text-input
+          label="${t('housingGeneralLocation')}"
+          name="${this.name ? `${this.name}.city` : ''}"
+          value="${this._data.city}"
+          ?disabled="${this.disabled}"
+          ?readonly="${this.readonly}"
+          @civ-input="${(e: CustomEvent) => this._onSubInput('city', e)}"
+          @civ-change="${(e: CustomEvent) => this._onSubChange('city', e)}"
+        ></civ-text-input>
 
         ${this._showState ? html`
-          <civ-form-field label="${t('addressState')}" ?required="${this.required}">
-            <civ-select
-              name="${this.name ? `${this.name}.state` : ''}"
-              value="${this._data.state}"
-              ?disabled="${this.disabled}"
-              data-address-state
-              @civ-change="${(e: CustomEvent) => this._onSubSelectChange('state', e)}"
-            ></civ-select>
-          </civ-form-field>
+          <civ-select
+            label="${t('addressState')}"
+            name="${this.name ? `${this.name}.state` : ''}"
+            value="${this._data.state}"
+            ?required="${this.required}"
+            ?disabled="${this.disabled}"
+            data-address-state
+            @civ-change="${(e: CustomEvent) => this._onSubSelectChange('state', e)}"
+          ></civ-select>
         ` : nothing}
 
-        <civ-form-field label="${t('housingContactMethod')}" ?required="${this.required}" hint="${t('housingContactMethodHint')}">
-          <civ-textarea
-            name="${this.name ? `${this.name}.contactMethod` : ''}"
-            rows="3"
-            ?disabled="${this.disabled}"
-            ?readonly="${this.readonly}"
-          ></civ-textarea>
-        </civ-form-field>
+        <civ-textarea
+          label="${t('housingContactMethod')}"
+          hint="${t('housingContactMethodHint')}"
+          name="${this.name ? `${this.name}.contactMethod` : ''}"
+          rows="3"
+          ?required="${this.required}"
+          ?disabled="${this.disabled}"
+          ?readonly="${this.readonly}"
+        ></civ-textarea>
       </fieldset>
     `;
   }

@@ -71,7 +71,7 @@ You can also use `show-pause` independently without `sensitive` if you want the 
 
 `skipLabel` on `<civ-yes-no>` and `<civ-radio-group>` renders a "Prefer not to answer" link-button below the options. This is distinct from "unsure" — it's about opting out, not uncertainty.
 
-<StoryEmbed id="forms-patterns-trauma-informed--skip-affordance-yes-no" />
+<StoryEmbed id="forms-patterns-trauma-informed--skip-affordance" />
 
 ```html
 <civ-yes-no
@@ -161,8 +161,18 @@ When using `<civ-repeater mode="form-steps">` for sensitive content (e.g., addin
     <civ-name legend="Their name" name="name" required></civ-name>
   </div>
   <div data-step-label="Relationship">
-    <civ-relationship preset="survivor" deceased-assumed
-      show-name="false" name="rel" required></civ-relationship>
+    <!--
+      In Lit templates, hide the redundant name with the `.showName` property
+      binding: `.showName=${false}`. The boolean `show-name` attribute can
+      only enable (the default) — there's no HTML way to flip it off.
+    -->
+    <civ-relationship
+      legend="Your relationship"
+      preset="survivor"
+      deceased-assumed
+      name="rel"
+      required
+    ></civ-relationship>
   </div>
 </civ-repeater>
 ```

@@ -22,49 +22,81 @@ export default meta;
 type Story = StoryObj;
 
 export const SectionIntro: Story = {
-  name: 'Section Intro (Sensitive)',
+  name: 'Section Intro — tones',
   render: () => html`
-    <civ-section-intro heading="About your service-connected trauma" tone="sensitive">
-      <p>The next questions ask about events that may be difficult to remember.</p>
-      <p>You can skip any question, and your answers are saved as you go.</p>
-    </civ-section-intro>
+    <div class="civ-flex civ-flex-col civ-gap-6">
+      <div>
+        <p class="civ-text-sm civ-mb-2"><code>tone="info"</code> (default)</p>
+        <civ-section-intro heading="About your service history" tone="info">
+          <p>The next questions ask about your dates and branches of service.</p>
+        </civ-section-intro>
+      </div>
+      <div>
+        <p class="civ-text-sm civ-mb-2"><code>tone="sensitive"</code></p>
+        <civ-section-intro heading="About your service-connected trauma" tone="sensitive">
+          <p>The next questions ask about events that may be difficult to remember.</p>
+          <p>You can skip any question, and your answers are saved as you go.</p>
+        </civ-section-intro>
+      </div>
+      <div>
+        <p class="civ-text-sm civ-mb-2"><code>tone="neutral"</code></p>
+        <civ-section-intro heading="Optional supporting documents" tone="neutral">
+          <p>If you have any of the following documents available, you can upload them now.</p>
+        </civ-section-intro>
+      </div>
+    </div>
   `,
 };
 
 export const FormStepSensitive: Story = {
-  name: 'Form Step with Sensitive + Pause',
+  name: 'Form Step — sensitive vs default',
   render: () => html`
-    <civ-form-step sensitive>
-      <div data-step-label="About your trauma">
-        <civ-section-intro heading="Service-connected trauma" tone="sensitive">
-          <p>You can save and come back to this section later.</p>
-        </civ-section-intro>
-        <civ-yes-no legend="Have you experienced military sexual trauma?" name="mst" skip-label="Prefer not to answer"></civ-yes-no>
+    <div class="civ-flex civ-flex-col civ-gap-8">
+      <div>
+        <p class="civ-font-semibold civ-mb-2">Default — no pause affordance, no announcement</p>
+        <civ-form-step>
+          <div data-step-label="Service dates">
+            <civ-memorable-date legend="When did you start active duty?" name="startDate"></civ-memorable-date>
+          </div>
+        </civ-form-step>
       </div>
-      <div data-step-label="Additional details">
-        <civ-textarea label="Is there anything else you'd like us to know?" name="additional" hint="This is optional"></civ-textarea>
+      <div>
+        <p class="civ-font-semibold civ-mb-2">
+          <code>sensitive</code> — adds a "Save and come back later" link below the controls
+          and a polite SR announcement on step entry
+        </p>
+        <civ-form-step sensitive>
+          <div data-step-label="About your trauma">
+            <civ-section-intro heading="Service-connected trauma" tone="sensitive">
+              <p>You can save and come back to this section later.</p>
+            </civ-section-intro>
+            <civ-yes-no legend="Have you experienced military sexual trauma?" name="mst" skip-label="Prefer not to answer"></civ-yes-no>
+          </div>
+        </civ-form-step>
       </div>
-    </civ-form-step>
+    </div>
   `,
 };
 
-export const SkipAffordanceYesNo: Story = {
-  name: 'Skip Affordance (Yes/No)',
+export const SkipAffordance: Story = {
+  name: 'Skip Affordance (Yes/No + Radio Group)',
   render: () => html`
-    <civ-yes-no legend="Have you experienced military sexual trauma?" name="mst" skip-label="Prefer not to answer" skip-value="skip"></civ-yes-no>
-  `,
-};
-
-export const SkipAffordanceRadio: Story = {
-  name: 'Skip Affordance (Radio Group)',
-  render: () => html`
-    <civ-radio-group legend="What is your race?" name="race" skip-label="Prefer not to answer">
-      <civ-radio label="American Indian or Alaska Native" value="aian"></civ-radio>
-      <civ-radio label="Asian" value="asian"></civ-radio>
-      <civ-radio label="Black or African American" value="black"></civ-radio>
-      <civ-radio label="Native Hawaiian or Pacific Islander" value="nhpi"></civ-radio>
-      <civ-radio label="White" value="white"></civ-radio>
-    </civ-radio-group>
+    <div class="civ-flex civ-flex-col civ-gap-8">
+      <div>
+        <p class="civ-font-semibold civ-mb-2"><code>&lt;civ-yes-no&gt;</code> with <code>skip-label</code></p>
+        <civ-yes-no legend="Have you experienced military sexual trauma?" name="mst" skip-label="Prefer not to answer" skip-value="skip"></civ-yes-no>
+      </div>
+      <div>
+        <p class="civ-font-semibold civ-mb-2"><code>&lt;civ-radio-group&gt;</code> with <code>skip-label</code></p>
+        <civ-radio-group legend="What is your race?" name="race" skip-label="Prefer not to answer">
+          <civ-radio label="American Indian or Alaska Native" value="aian"></civ-radio>
+          <civ-radio label="Asian" value="asian"></civ-radio>
+          <civ-radio label="Black or African American" value="black"></civ-radio>
+          <civ-radio label="Native Hawaiian or Pacific Islander" value="nhpi"></civ-radio>
+          <civ-radio label="White" value="white"></civ-radio>
+        </civ-radio-group>
+      </div>
+    </div>
   `,
 };
 
@@ -135,9 +167,14 @@ export const RepeaterFormStepsSensitive: Story = {
         <civ-name legend="Their name" name="name" required></civ-name>
       </div>
       <div data-step-label="Relationship">
-        <civ-relationship preset="survivor" deceased-assumed
-          show-name="false" name="rel" required
-          legend="Your relationship"></civ-relationship>
+        <civ-relationship
+          legend="Your relationship"
+          preset="survivor"
+          deceased-assumed
+          .showName=${false}
+          name="rel"
+          required
+        ></civ-relationship>
       </div>
     </civ-repeater>
   `,
@@ -183,7 +220,7 @@ export const CompleteSurvivorForm: Story = {
         </div>
 
         <div data-step-label="Review">
-          <p class="civ-text-body civ-mb-4">Please review your information before submitting.</p>
+          <civ-summary></civ-summary>
         </div>
       </civ-form-step>
 

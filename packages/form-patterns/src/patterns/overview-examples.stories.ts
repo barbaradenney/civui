@@ -58,7 +58,7 @@ export const MultiStepForm: Story = {
         </div>
 
         <div data-step-label="Review">
-          <p class="civ-text-body civ-mb-4">Please review your information before submitting.</p>
+          <civ-summary></civ-summary>
         </div>
       </civ-form-step>
 

@@ -51,8 +51,7 @@ Not every form needs every layer. A simple contact form might just use `civ-form
 | Component | Purpose |
 |-----------|---------|
 | `civ-fieldset` | Groups related fields with a `<fieldset>` and `<legend>`. Disabled state cascades to all children automatically. |
-| `civ-form-field` | Wraps a single input with label, hint, and error rendering. Cascades required/disabled and wires ARIA automatically. |
-| `civ-form-fieldset` | Wraps a group control with fieldset, legend, hint, and error. Cascades required/disabled and wires ARIA automatically. |
+| `civ-form-fieldset` | Wraps a custom multi-field block with fieldset, legend, hint, and error chrome. Use when several unrelated controls share one section heading. Single inputs and self-contained group components already render their own chrome — set `label` / `legend` directly on them. |
 | `civ-conditional` | Shows or hides content based on another field's value. Supports `equals`, `not-equals`, `includes`, `has-value`, and `matches` operators. |
 
 ### Repeating sections
@@ -106,20 +105,15 @@ Not every form needs every layer. A simple contact form might just use `civ-form
 
 ```html
 <civ-form @civ-submit="${handleSubmit}">
-  <civ-progress
-    steps='["Personal info","Service history","Review"]'
-    current="0"
-  ></civ-progress>
-
   <civ-form-step>
     <div data-step-label="Personal info">
       <civ-name legend="Your name" name="name" required></civ-name>
-      <civ-memorable-date legend="Date of birth" required name="dob"></civ-memorable-date>
+      <civ-memorable-date legend="Date of birth" required hint="For example: January 15 1990" name="dob"></civ-memorable-date>
     </div>
 
     <div data-step-label="Service history">
       <civ-repeater legend="Service periods" name="service"
-        item-label="service period" mode="form-steps" min="1">
+        item-label="service period" min="1">
         <civ-service-history name="period"></civ-service-history>
       </civ-repeater>
     </div>
@@ -132,6 +126,8 @@ Not every form needs every layer. A simple contact form might just use `civ-form
   <civ-button type="submit" label="Submit application"></civ-button>
 </civ-form>
 ```
+
+`civ-form-step` renders its own step counter — pair with `civ-progress` only if you need explicit circle / bar indicators above the form.
 
 ### Form with conditional fields
 
@@ -154,11 +150,12 @@ Not every form needs every layer. A simple contact form might just use `civ-form
       legend="About your spouse"
       name="spouse"
       preset="general"
-      show-name
     ></civ-relationship>
   </civ-conditional>
 </civ-form>
 ```
+
+`civ-relationship` renders the name fields by default (`show-name` is `true`). The MultiStepForm story above uses the same pattern. To suppress the inner name compound — for example, in a repeater where the previous step already collected the name — bind the property in lit-html as `.showName=${false}`; the HTML boolean attribute can only set it true.
 
 ### Trauma-informed form
 
@@ -172,31 +169,30 @@ Not every form needs every layer. A simple contact form might just use `civ-form
   ]'
 >
   <civ-form-step>
-    <div data-step-label="About you">
-      <civ-name legend="Your name" name="name" required></civ-name>
+    <div data-step-label="Your information">
+      <civ-name legend="Your name" name="claimant" required></civ-name>
+      <civ-text-input label="Phone number" name="phone" type="tel"></civ-text-input>
     </div>
 
     <div data-step-label="About the person who died">
       <civ-section-intro heading="About the person who died" tone="sensitive">
-        <p>The next questions ask about someone close to you.</p>
-        <p>You can save and come back later at any time.</p>
+        <p>We need some information about the Veteran who died to process your claim.</p>
+        <p>You can save your progress and come back later at any time.</p>
       </civ-section-intro>
 
-      <civ-repeater legend="People who died" name="deceased"
-        item-label="person" mode="form-steps"
-        form-steps-sensitive form-steps-show-pause>
-        <div data-step-label="Their name">
-          <civ-name legend="Their name" name="name" required></civ-name>
-        </div>
-        <div data-step-label="Relationship">
-          <civ-relationship preset="survivor" deceased-assumed
-            show-name="false" name="rel" required></civ-relationship>
-        </div>
-      </civ-repeater>
+      <civ-relationship
+        legend="About the Veteran"
+        name="veteran"
+        preset="survivor"
+        deceased-assumed
+        required
+      ></civ-relationship>
     </div>
   </civ-form-step>
 </civ-form>
 ```
+
+See [Trauma-Informed Patterns](trauma-informed) for the repeater + form-steps-sensitive variant when collecting multiple deceased dependents.
 
 ## Validation flow
 

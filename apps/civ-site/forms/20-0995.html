@@ -119,25 +119,17 @@
       <civ-name name="fullName" legend="Your name" required></civ-name>
     </div>
     <div data-step data-step-label="Date of birth">
-      <civ-form-fieldset legend="Date of birth" hint="For example: January 15 1990" required>
-        <civ-memorable-date
-          name="dateOfBirth"
-          required
-        ></civ-memorable-date>
-      </civ-form-fieldset>
+      <civ-memorable-date legend="Date of birth" hint="For example: January 15 1990" name="dateOfBirth"
+          required></civ-memorable-date>
     </div>
     <div data-step data-step-label="Social Security number">
-      <civ-form-field label="Social Security number" hint="We need this to verify your identity" required>
-        <civ-text-input
-          name="ssn"
+      <civ-text-input label="Social Security number" hint="We need this to verify your identity" name="ssn"
           required
           autocomplete="off"
           inputmode="numeric"
           type="tel"
           mask="ssn"
-          validate="ssn"
-        ></civ-text-input>
-      </civ-form-field>
+          validate="ssn"></civ-text-input>
     </div>
     </civ-form-step>
   </div>
@@ -171,47 +163,31 @@
       <civ-address name="mailingAddress" legend="Mailing address" required></civ-address>
     </div>
     <div data-step data-step-label="Home phone number">
-      <civ-form-field label="Home phone number" hint="Enter a 10-digit phone number">
-        <civ-text-input
-          name="homePhone"
+      <civ-text-input label="Home phone number" hint="Enter a 10-digit phone number" name="homePhone"
           autocomplete="tel"
           inputmode="numeric"
-          type="tel"
-        ></civ-text-input>
-      </civ-form-field>
+          type="tel"></civ-text-input>
     </div>
     <div data-step data-step-label="Mobile phone number">
-      <civ-form-field label="Mobile phone number" >
-        <civ-text-input
-          name="mobilePhone"
+      <civ-text-input label="Mobile phone number" name="mobilePhone"
           autocomplete="tel"
           inputmode="numeric"
-          type="tel"
-        ></civ-text-input>
-      </civ-form-field>
+          type="tel"></civ-text-input>
     </div>
     <div data-step data-step-label="Email address">
-      <civ-form-field label="Email address" required>
-        <civ-text-input
-          name="email"
+      <civ-text-input label="Email address" name="email"
           required
           autocomplete="email"
-          type="email"
-        ></civ-text-input>
-      </civ-form-field>
+          type="email"></civ-text-input>
     </div>
     <div data-step data-step-label="How should we contact you if we have questions?">
-      <civ-form-fieldset legend="How should we contact you if we have questions?" required>
-        <civ-radio-group
-          name="contactMethod"
-          required
-        >
+      <civ-radio-group legend="How should we contact you if we have questions?" name="contactMethod"
+          required>
           <civ-radio label="Email" value="email"></civ-radio>
           <civ-radio label="Home phone" value="homePhone"></civ-radio>
           <civ-radio label="Mobile phone" value="mobilePhone"></civ-radio>
           <civ-radio label="U.S. mail" value="mail"></civ-radio>
         </civ-radio-group>
-      </civ-form-fieldset>
     </div>
     </civ-form-step>
   </div>
@@ -242,29 +218,16 @@
   <div data-chapter-steps>
     <civ-form-step complete-label="Save and continue">
     <div data-step data-step-label="Benefit type">
-      <civ-form-field label="Benefit type" required>
-        <civ-select
-          name="benefitType"
-          required
-        ></civ-select>
-      </civ-form-field>
+      <civ-select label="Benefit type" name="benefitType"
+          required></civ-select>
     </div>
     <div data-step data-step-label="Date of previous decision">
-      <civ-form-fieldset legend="Date of previous decision" hint="The date on your decision letter" required>
-        <civ-memorable-date
-          name="previousDecisionDate"
-          required
-        ></civ-memorable-date>
-      </civ-form-fieldset>
+      <civ-memorable-date legend="Date of previous decision" hint="The date on your decision letter" name="previousDecisionDate"
+          required></civ-memorable-date>
     </div>
     <div data-step data-step-label="Issues on appeal">
-      <civ-form-field label="Issues on appeal" hint="List each issue you are contesting, one per line" required>
-        <civ-textarea
-          name="issuesOnAppeal"
-          required
-          
-        ></civ-textarea>
-      </civ-form-field>
+      <civ-textarea label="Issues on appeal" hint="List each issue you are contesting, one per line" name="issuesOnAppeal"
+          required></civ-textarea>
     </div>
     </civ-form-step>
   </div>
@@ -295,38 +258,23 @@
   <div data-chapter-steps>
     <civ-form-step complete-label="Save and continue">
     <div data-step data-step-label="Type of new evidence">
-      <civ-form-fieldset legend="Type of new evidence" >
-        <civ-checkbox-group
-          name="newEvidenceType"
-          
-        >
+      <civ-checkbox-group legend="Type of new evidence" name="newEvidenceType">
           <civ-checkbox label="VA medical records" value="va-medical-records"></civ-checkbox>
           <civ-checkbox label="Private medical records" value="private-medical-records"></civ-checkbox>
           <civ-checkbox label="Lay statements" value="lay-statements"></civ-checkbox>
           <civ-checkbox label="Service records" value="service-records"></civ-checkbox>
           <civ-checkbox label="Other" value="other"></civ-checkbox>
         </civ-checkbox-group>
-      </civ-form-fieldset>
     </div>
     <div data-step data-step-label="Description of new evidence">
-      <civ-form-field label="Description of new evidence" hint="Describe what new evidence you have and why it is relevant" required>
-        <civ-textarea
-          name="newEvidenceDescription"
-          required
-          
-        ></civ-textarea>
-      </civ-form-field>
+      <civ-textarea label="Description of new evidence" hint="Describe what new evidence you have and why it is relevant" name="newEvidenceDescription"
+          required></civ-textarea>
     </div>
     <div data-step data-step-label="Do you want VA to help obtain records?">
-      <civ-form-fieldset legend="Do you want VA to help obtain records?" >
-        <civ-radio-group
-          name="vaHelpObtainRecords"
-          
-        >
+      <civ-radio-group legend="Do you want VA to help obtain records?" name="vaHelpObtainRecords">
           <civ-radio label="Yes" value="yes"></civ-radio>
           <civ-radio label="No" value="no"></civ-radio>
         </civ-radio-group>
-      </civ-form-fieldset>
     </div>
     </civ-form-step>
   </div>
@@ -357,15 +305,11 @@
   <div data-chapter-steps>
     <civ-form-step complete-label="Save and continue">
     <div data-step data-step-label="Upload supporting documents">
-      <civ-form-field label="Upload supporting documents" hint="Upload PDF, JPG, or PNG files. Maximum file size: 20MB">
-        <civ-file-upload
-          name="documents"
+      <civ-file-upload label="Upload supporting documents" hint="Upload PDF, JPG, or PNG files. Maximum file size: 20MB" name="documents"
           accept=".pdf,.jpg,.jpeg,.png"
           multiple
           max-size="20000000"
-          max-files="10"
-        ></civ-file-upload>
-      </civ-form-field>
+          max-files="10"></civ-file-upload>
     </div>
     </civ-form-step>
   </div>

@@ -119,25 +119,17 @@
       <civ-name name="fullName" legend="Your name" required></civ-name>
     </div>
     <div data-step data-step-label="Date of birth">
-      <civ-form-fieldset legend="Date of birth" hint="For example: January 15 1990" required>
-        <civ-memorable-date
-          name="dateOfBirth"
-          required
-        ></civ-memorable-date>
-      </civ-form-fieldset>
+      <civ-memorable-date legend="Date of birth" hint="For example: January 15 1990" name="dateOfBirth"
+          required></civ-memorable-date>
     </div>
     <div data-step data-step-label="Social Security number">
-      <civ-form-field label="Social Security number" hint="We need this to verify your identity" required>
-        <civ-text-input
-          name="ssn"
+      <civ-text-input label="Social Security number" hint="We need this to verify your identity" name="ssn"
           required
           autocomplete="off"
           inputmode="numeric"
           type="tel"
           mask="ssn"
-          validate="ssn"
-        ></civ-text-input>
-      </civ-form-field>
+          validate="ssn"></civ-text-input>
     </div>
     </civ-form-step>
   </div>
@@ -171,47 +163,31 @@
       <civ-address name="mailingAddress" legend="Mailing address" required></civ-address>
     </div>
     <div data-step data-step-label="Home phone number">
-      <civ-form-field label="Home phone number" hint="Enter a 10-digit phone number">
-        <civ-text-input
-          name="homePhone"
+      <civ-text-input label="Home phone number" hint="Enter a 10-digit phone number" name="homePhone"
           autocomplete="tel"
           inputmode="numeric"
-          type="tel"
-        ></civ-text-input>
-      </civ-form-field>
+          type="tel"></civ-text-input>
     </div>
     <div data-step data-step-label="Mobile phone number">
-      <civ-form-field label="Mobile phone number" >
-        <civ-text-input
-          name="mobilePhone"
+      <civ-text-input label="Mobile phone number" name="mobilePhone"
           autocomplete="tel"
           inputmode="numeric"
-          type="tel"
-        ></civ-text-input>
-      </civ-form-field>
+          type="tel"></civ-text-input>
     </div>
     <div data-step data-step-label="Email address">
-      <civ-form-field label="Email address" required>
-        <civ-text-input
-          name="email"
+      <civ-text-input label="Email address" name="email"
           required
           autocomplete="email"
-          type="email"
-        ></civ-text-input>
-      </civ-form-field>
+          type="email"></civ-text-input>
     </div>
     <div data-step data-step-label="How should we contact you if we have questions?">
-      <civ-form-fieldset legend="How should we contact you if we have questions?" required>
-        <civ-radio-group
-          name="contactMethod"
-          required
-        >
+      <civ-radio-group legend="How should we contact you if we have questions?" name="contactMethod"
+          required>
           <civ-radio label="Email" value="email"></civ-radio>
           <civ-radio label="Home phone" value="homePhone"></civ-radio>
           <civ-radio label="Mobile phone" value="mobilePhone"></civ-radio>
           <civ-radio label="U.S. mail" value="mail"></civ-radio>
         </civ-radio-group>
-      </civ-form-fieldset>
     </div>
     </civ-form-step>
   </div>
@@ -242,21 +218,13 @@
   <div data-chapter-steps>
     <civ-form-step complete-label="Save and continue">
     <div data-step data-step-label="Current school name">
-      <civ-form-field label="Current school name" required>
-        <civ-text-input
-          name="currentSchoolName"
+      <civ-text-input label="Current school name" name="currentSchoolName"
           required
-          type="text"
-        ></civ-text-input>
-      </civ-form-field>
+          type="text"></civ-text-input>
     </div>
     <div data-step data-step-label="VA file number">
-      <civ-form-field label="VA file number" hint="Your VA file number or SSN">
-        <civ-text-input
-          name="vaFileNumber"
-          type="text"
-        ></civ-text-input>
-      </civ-form-field>
+      <civ-text-input label="VA file number" hint="Your VA file number or SSN" name="vaFileNumber"
+          type="text"></civ-text-input>
     </div>
     </civ-form-step>
   </div>
@@ -287,52 +255,28 @@
   <div data-chapter-steps>
     <civ-form-step complete-label="Save and continue">
     <div data-step data-step-label="New school name">
-      <civ-form-field label="New school name" required>
-        <civ-text-input
-          name="newSchoolName"
+      <civ-text-input label="New school name" name="newSchoolName"
           required
-          type="text"
-        ></civ-text-input>
-      </civ-form-field>
+          type="text"></civ-text-input>
     </div>
     <div data-step data-step-label="New school address">
-      <civ-form-field label="New school address" >
-        <civ-text-input
-          name="newSchoolAddress"
-          type="text"
-        ></civ-text-input>
-      </civ-form-field>
+      <civ-text-input label="New school address" name="newSchoolAddress"
+          type="text"></civ-text-input>
     </div>
     <div data-step data-step-label="New program name">
-      <civ-form-field label="New program name" required>
-        <civ-text-input
-          name="newProgramName"
+      <civ-text-input label="New program name" name="newProgramName"
           required
-          type="text"
-        ></civ-text-input>
-      </civ-form-field>
+          type="text"></civ-text-input>
     </div>
     <div data-step data-step-label="Reason for change">
-      <civ-form-field label="Reason for change" >
-        <civ-select
-          name="reasonForChange"
-        ></civ-select>
-      </civ-form-field>
+      <civ-select label="Reason for change" name="reasonForChange"></civ-select>
     </div>
     <div data-step data-step-label="Expected start date">
-      <civ-form-fieldset legend="Expected start date" required>
-        <civ-memorable-date
-          name="expectedStartDate"
-          required
-        ></civ-memorable-date>
-      </civ-form-fieldset>
+      <civ-memorable-date legend="Expected start date" name="expectedStartDate"
+          required></civ-memorable-date>
     </div>
     <div data-step data-step-label="Type of training">
-      <civ-form-field label="Type of training" >
-        <civ-select
-          name="typeOfTraining"
-        ></civ-select>
-      </civ-form-field>
+      <civ-select label="Type of training" name="typeOfTraining"></civ-select>
     </div>
     </civ-form-step>
   </div>

@@ -114,25 +114,17 @@
       <civ-name name="fullName" legend="Your name" required></civ-name>
     </div>
     <div data-step data-step-label="Date of birth">
-      <civ-form-fieldset legend="Date of birth" hint="For example: January 15 1990" required>
-        <civ-memorable-date
-          name="dateOfBirth"
-          required
-        ></civ-memorable-date>
-      </civ-form-fieldset>
+      <civ-memorable-date legend="Date of birth" hint="For example: January 15 1990" name="dateOfBirth"
+          required></civ-memorable-date>
     </div>
     <div data-step data-step-label="Social Security number">
-      <civ-form-field label="Social Security number" hint="We need this to verify your identity" required>
-        <civ-text-input
-          name="ssn"
+      <civ-text-input label="Social Security number" hint="We need this to verify your identity" name="ssn"
           required
           autocomplete="off"
           inputmode="numeric"
           type="tel"
           mask="ssn"
-          validate="ssn"
-        ></civ-text-input>
-      </civ-form-field>
+          validate="ssn"></civ-text-input>
     </div>
     </civ-form-step>
   </div>
@@ -166,47 +158,31 @@
       <civ-address name="mailingAddress" legend="Mailing address" required></civ-address>
     </div>
     <div data-step data-step-label="Home phone number">
-      <civ-form-field label="Home phone number" hint="Enter a 10-digit phone number">
-        <civ-text-input
-          name="homePhone"
+      <civ-text-input label="Home phone number" hint="Enter a 10-digit phone number" name="homePhone"
           autocomplete="tel"
           inputmode="numeric"
-          type="tel"
-        ></civ-text-input>
-      </civ-form-field>
+          type="tel"></civ-text-input>
     </div>
     <div data-step data-step-label="Mobile phone number">
-      <civ-form-field label="Mobile phone number" >
-        <civ-text-input
-          name="mobilePhone"
+      <civ-text-input label="Mobile phone number" name="mobilePhone"
           autocomplete="tel"
           inputmode="numeric"
-          type="tel"
-        ></civ-text-input>
-      </civ-form-field>
+          type="tel"></civ-text-input>
     </div>
     <div data-step data-step-label="Email address">
-      <civ-form-field label="Email address" required>
-        <civ-text-input
-          name="email"
+      <civ-text-input label="Email address" name="email"
           required
           autocomplete="email"
-          type="email"
-        ></civ-text-input>
-      </civ-form-field>
+          type="email"></civ-text-input>
     </div>
     <div data-step data-step-label="How should we contact you if we have questions?">
-      <civ-form-fieldset legend="How should we contact you if we have questions?" required>
-        <civ-radio-group
-          name="contactMethod"
-          required
-        >
+      <civ-radio-group legend="How should we contact you if we have questions?" name="contactMethod"
+          required>
           <civ-radio label="Email" value="email"></civ-radio>
           <civ-radio label="Home phone" value="homePhone"></civ-radio>
           <civ-radio label="Mobile phone" value="mobilePhone"></civ-radio>
           <civ-radio label="U.S. mail" value="mail"></civ-radio>
         </civ-radio-group>
-      </civ-form-fieldset>
     </div>
     </civ-form-step>
   </div>
@@ -234,44 +210,17 @@
       min="1"
       max="5"
     >
-      <civ-form-field label="Provider or facility name" required>
-        <civ-text-input
-          name="providerName"
+      <civ-text-input label="Provider or facility name" name="providerName"
           required
-          type="text"
-        ></civ-text-input>
-      </civ-form-field>
-      <civ-form-field label="Provider address" required>
-        <civ-text-input
-          name="providerAddress"
+          type="text"></civ-text-input>
+      <civ-text-input label="Provider address" name="providerAddress"
           required
-          type="text"
-        ></civ-text-input>
-      </civ-form-field>
-      <civ-form-field label="Provider phone number" >
-        <civ-text-input
-          name="providerPhone"
-          type="tel"
-        ></civ-text-input>
-      </civ-form-field>
-      <civ-form-fieldset legend="Treatment dates from" >
-        <civ-memorable-date
-          name="treatmentDateFrom"
-          
-        ></civ-memorable-date>
-      </civ-form-fieldset>
-      <civ-form-fieldset legend="Treatment dates to" >
-        <civ-memorable-date
-          name="treatmentDateTo"
-          
-        ></civ-memorable-date>
-      </civ-form-fieldset>
-      <civ-form-field label="Conditions treated" hint="List the conditions relevant to your claim">
-        <civ-textarea
-          name="conditionsTreated"
-          
-        ></civ-textarea>
-      </civ-form-field>
+          type="text"></civ-text-input>
+      <civ-text-input label="Provider phone number" name="providerPhone"
+          type="tel"></civ-text-input>
+      <civ-memorable-date legend="Treatment dates from" name="treatmentDateFrom"></civ-memorable-date>
+      <civ-memorable-date legend="Treatment dates to" name="treatmentDateTo"></civ-memorable-date>
+      <civ-textarea label="Conditions treated" hint="List the conditions relevant to your claim" name="conditionsTreated"></civ-textarea>
     </civ-repeater>
 
     <div class="civ-mt-6">
@@ -305,34 +254,19 @@
   <div data-chapter-steps>
     <civ-form-step complete-label="Save and continue">
     <div data-step data-step-label="Records to release">
-      <civ-form-fieldset legend="Records to release" >
-        <civ-checkbox-group
-          name="recordsToRelease"
-          
-        >
+      <civ-checkbox-group legend="Records to release" name="recordsToRelease">
           <civ-checkbox label="Treatment records" value="treatment-records"></civ-checkbox>
           <civ-checkbox label="Lab results" value="lab-results"></civ-checkbox>
           <civ-checkbox label="Imaging" value="imaging"></civ-checkbox>
           <civ-checkbox label="Mental health records" value="mental-health-records"></civ-checkbox>
           <civ-checkbox label="All records" value="all-records"></civ-checkbox>
         </civ-checkbox-group>
-      </civ-form-fieldset>
     </div>
     <div data-step data-step-label="Date range start">
-      <civ-form-fieldset legend="Date range start" >
-        <civ-memorable-date
-          name="dateRangeStart"
-          
-        ></civ-memorable-date>
-      </civ-form-fieldset>
+      <civ-memorable-date legend="Date range start" name="dateRangeStart"></civ-memorable-date>
     </div>
     <div data-step data-step-label="Date range end">
-      <civ-form-fieldset legend="Date range end" >
-        <civ-memorable-date
-          name="dateRangeEnd"
-          
-        ></civ-memorable-date>
-      </civ-form-fieldset>
+      <civ-memorable-date legend="Date range end" name="dateRangeEnd"></civ-memorable-date>
     </div>
     </civ-form-step>
   </div>

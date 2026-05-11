@@ -8,6 +8,8 @@ type Constructor<T = {}> = new (...args: any[]) => T;
  * Mixin that adds the standard `heading-level` and `size` properties used
  * by every component that renders its own legend or label. Applied to:
  *
+ *  - Single inputs (text-input, textarea, select, combobox, date-picker,
+ *    file-upload)
  *  - Self-contained group components (radio-group, checkbox-group,
  *    segmented-control, yes-no, memorable-date, date-range-picker)
  *  - Compound components (name, address, direct-deposit, signature,

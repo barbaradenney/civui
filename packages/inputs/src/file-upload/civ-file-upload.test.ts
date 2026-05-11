@@ -822,4 +822,18 @@ describe('civ-file-upload interactions', () => {
     const el = await fixture('<civ-file-upload label="Docs" name="docs"></civ-file-upload>') as any;
     expect(() => el._cancelUpload(99)).not.toThrow();
   });
+
+  it('wires hint and error IDs into aria-describedby when chrome is set', async () => {
+    const el = await fixture(
+      '<civ-file-upload label="Upload" hint="PDF only" error="Required" name="docs"></civ-file-upload>',
+    );
+    const dropzone = el.querySelector('.civ-dropzone') as HTMLElement;
+    const describedBy = dropzone.getAttribute('aria-describedby');
+    expect(describedBy).toBeTruthy();
+    const ids = describedBy!.split(' ').filter(Boolean);
+    expect(ids.length).toBeGreaterThanOrEqual(2);
+    for (const id of ids) {
+      expect(el.querySelector(`#${id}`)).not.toBeNull();
+    }
+  });
 });

@@ -32,7 +32,6 @@ For architecture and internals, see `CLAUDE.md` in the repo root.
 | `<civ-fieldset>` | Layout | `legend`, `hint`, `error`, `required`, `disabled`, `heading-level` (1-6), `size` (sm/md/lg/xl) | — |
 | `<civ-form>` | Layout | `action`, `method`, `supportResources` | `civ-submit: { formData }`, `civ-invalid: { errors }` |
 | `<civ-form-step>` | Layout | `persist`, `sensitive`, `show-pause`, `continue-label`, `complete-label`, `pause-label`, `nav-disabled`, `validate` | `civ-step-change`, `civ-step-pause`, `civ-step-complete` |
-| `<civ-form-field>` | Wrapper | `label`, `hint`, `error`, `required`, `disabled`, `requiredMessage`, `heading-level` (1-6), `size` (sm/md/lg/xl) | — |
 | `<civ-form-fieldset>` | Wrapper | `legend`, `hint`, `error`, `required`, `disabled`, `requiredMessage`, `heading-level` (1-6), `size` (sm/md/lg/xl) | — |
 | `<civ-repeater>` | Layout | `legend`, `name`, `min`, `max`, `addLabel`, `removeLabel`, `heading-level` (1-6), `size` (sm/md/lg/xl) | `civ-change: { value }` |
 | `<civ-section-intro>` | Layout | `heading`, `headingLevel`, `tone` | — |
@@ -79,11 +78,15 @@ For architecture and internals, see `CLAUDE.md` in the repo root.
 | `<civ-image-preview>` | Layout | `src`, `alt`, `filename`, `file-size`, `size` | — |
 | `<civ-skip-link>` | Navigation | `label`, `href` | — |
 
-**Form input components** (text-input, textarea, select, combobox, date-picker, file-upload) are bare controls — wrap in `<civ-form-field>` for label/hint/error rendering. All have: `name`, `value`, `required`, `disabled`.
+**All form controls are self-contained.** Every CivUI input renders its own label / legend / hint / error / required-indicator chrome from its own props — there is no separate wrapper component for single inputs. All have: `name`, `value`, `required`, `disabled`.
 
-**Group components** (radio-group, checkbox-group, segmented-control, yes-no, memorable-date, date-range-picker) are bare controls — wrap in `<civ-form-fieldset>` for legend/hint/error rendering.
+**Single inputs** (text-input, textarea, select, combobox, date-picker, file-upload, all preset variants, checkbox, toggle) carry `label="..."` directly.
 
-**Self-contained components** (checkbox, toggle, compound components) render their own labels and do not need wrappers.
+**Group components** (radio-group, checkbox-group, segmented-control, yes-no, memorable-date, date-range-picker) carry `legend="..."` directly.
+
+**Compound components** (address, name, signature, etc.) render their own legend and the per-field chrome of their nested controls.
+
+`<civ-form-fieldset>` is reserved for genuine **multi-field grouping** — a custom block of several unrelated controls under one section heading. Don't wrap a single input or a self-contained group component in it (you'd get nested fieldsets).
 
 **Per-field state:** All form components have `touched` (set on first blur) and `pristine` (inverse of touched) for validation UX.
 
@@ -115,13 +118,9 @@ Standard text input supporting multiple HTML input types.
 
 **Example:**
 ```html
-<civ-form-field label="Full name" hint="As it appears on your ID" required>
-  <civ-text-input name="fullName"></civ-text-input>
-</civ-form-field>
+<civ-text-input label="Full name" hint="As it appears on your ID" required name="fullName"></civ-text-input>
 
-<civ-form-field label="Email address" hint="We'll use this to send your confirmation" required>
-  <civ-text-input name="email" type="email" autocomplete="email"></civ-text-input>
-</civ-form-field>
+<civ-text-input label="Email address" hint="We'll use this to send your confirmation" required name="email" type="email" autocomplete="email"></civ-text-input>
 
 <!-- Character counter -->
 <civ-text-input label="Short bio" name="bio" maxlength="60"></civ-text-input>
@@ -1139,7 +1138,7 @@ Popup/overlay that renders as an absolute dropdown on desktop and a fixed bottom
 
 ### Preset Input Components
 
-Pre-configured wrappers around `civ-text-input` and `civ-combobox` with built-in masking, validation, and labeling. All inherit standard form element props (`name`, `value`, `required`, `disabled`, `error`, `hint`). Wrap in `<civ-form-field>` for label/hint/error rendering.
+Pre-configured wrappers around `civ-text-input` and `civ-combobox` with built-in masking, validation, and labeling. All inherit standard form element props (`name`, `value`, `required`, `disabled`, `error`, `hint`) and render their own label chrome — set `label="..."` directly on the preset element.
 
 | Component | Description | Unique props |
 |---|---|---|
@@ -1155,17 +1154,11 @@ Pre-configured wrappers around `civ-text-input` and `civ-combobox` with built-in
 
 **Example:**
 ```html
-<civ-form-field label="Social Security number" hint="We need this to verify your identity" required>
-  <civ-ssn name="ssn"></civ-ssn>
-</civ-form-field>
+<civ-ssn label="Social Security number" hint="We need this to verify your identity" required name="ssn"></civ-ssn>
 
-<civ-form-field label="Phone number" required>
-  <civ-phone name="phone"></civ-phone>
-</civ-form-field>
+<civ-phone label="Phone number" required name="phone"></civ-phone>
 
-<civ-form-field label="Country of birth">
-  <civ-country name="birthCountry" us-first></civ-country>
-</civ-form-field>
+<civ-country label="Country of birth" name="birthCountry" us-first></civ-country>
 ```
 
 ---
@@ -1528,7 +1521,7 @@ Government forms commonly follow the **VA.gov / GOV.UK "one question per page" p
 - Satisfies WCAG 2.4.6 (Headings and Labels) and 2.4.10 (Section Headings).
 - Reinforces that the form is a sequence of single decisions, not a dense grid.
 
-CivUI supports this through two opt-in props on `civ-form-field`, `civ-form-fieldset`, all compound components (`civ-name`, `civ-address`, etc.), and `civ-fieldset` / `civ-repeater`:
+CivUI supports this through two opt-in props on every chrome-rendering control (every form input and group component, `civ-form-fieldset`, every compound component, and `civ-fieldset` / `civ-repeater`):
 
 - **`heading-level`** (`1` through `6`) — adds `role="heading"` + `aria-level=N` to the rendered `<label>`/`<legend>`. The native element is preserved, so click-to-focus and `for`/`aria-labelledby` still work; the heading promotion is purely an accessibility-tree affordance.
 - **`size`** (`sm` | `md` | `lg` | `xl`) — visual size variant. `sm` (default, omitted) = body size; `md` ≈ `text-lg`; `lg` ≈ `text-xl`; `xl` ≈ `text-2xl`. Independent of `heading-level`, so visual prominence and screen-reader semantics can be tuned separately.
@@ -1543,9 +1536,7 @@ CivUI supports this through two opt-in props on `civ-form-field`, `civ-form-fiel
 **Single-question page (the question *is* the h1):**
 
 ```html
-<civ-form-field label="What is your email address?" heading-level="1" size="xl" required>
-  <civ-text-input type="email" name="email"></civ-text-input>
-</civ-form-field>
+<civ-text-input label="What is your email address?" heading-level="1" size="xl" required type="email" name="email"></civ-text-input>
 ```
 
 **Multi-question page with a fieldset as h2:**

@@ -5,27 +5,29 @@ import { LightDomSlotMixin } from '../base/light-dom-mixins.js';
 import type { SlotConfig } from '../base/light-dom-mixins.js';
 import { renderLegend, renderFormHeader, buildDescribedBy } from '../templates/form-templates.js';
 import type { HeadingLevel, LabelSize } from '../templates/form-templates.js';
-import type { FormControlLike } from '../types/sub-components.js';
-
-const CIV_CONTROL_SELECTOR = '[data-civ-form-field]';
 
 /**
  * CivUI FormFieldset
  *
- * Wrapper that provides fieldset + legend + hint + error rendering for
- * Use this for genuine multi-field grouping — putting one section
- * heading over several controls (e.g. an address with street/city/state).
- * Cascades `required` / `disabled` to the child CivUI component.
+ * Wrapper that provides fieldset + legend + hint + error rendering around
+ * a custom multi-field group — several unrelated controls sharing one
+ * section heading (e.g. a manually composed address block of street /
+ * city / state, where each child input carries its own `label`).
  *
- * The six self-contained group components (radio-group, checkbox-group,
- * segmented-control, yes-no, memorable-date, date-range-picker) render
- * their own legend / hint / error from a `legend` prop and should NOT
- * be wrapped in this — pass `legend` directly on the component.
+ * The wrapper renders its own legend; children render their own labels.
+ * No prop cascade — each child stays the source of truth for its own
+ * label / hint / error / required / disabled state.
+ *
+ * **Do not wrap a single input or a self-contained group component
+ * (radio-group, checkbox-group, segmented-control, yes-no,
+ * memorable-date, date-range-picker) in this** — those already render
+ * their own chrome, so you'd get nested fieldsets with double legends.
  *
  * ```html
- * <civ-form-fieldset legend="Mailing address" required>
- *   <civ-form-field label="Street"><civ-text-input name="street" required></civ-text-input></civ-form-field>
- *   <civ-form-field label="City"><civ-text-input name="city" required></civ-text-input></civ-form-field>
+ * <civ-form-fieldset legend="Mailing address">
+ *   <civ-text-input label="Street" name="street" required></civ-text-input>
+ *   <civ-text-input label="City" name="city" required></civ-text-input>
+ *   <civ-select label="State" name="state" preset="us-state" required></civ-select>
  * </civ-form-fieldset>
  * ```
  *
@@ -100,28 +102,6 @@ export class CivFormFieldset extends LightDomSlotMixin(CivBaseElement) {
     // accept it; deferring via queueMicrotask resolves after consumers'
     // `await el.updateComplete`, leaving them reading a half-bound DOM.
     this.requestUpdate();
-  }
-
-  override updated(_changed: Map<string, unknown>): void {
-    super.updated(_changed);
-    this._wireChild();
-  }
-
-  /**
-   * Cascade props to the child CivUI component.
-   */
-  private _wireChild(): void {
-    const control = this.querySelector(CIV_CONTROL_SELECTOR) as FormControlLike | null;
-    if (control) {
-      control.label = this.legend;
-      control.hint = this.hint;
-      control.error = this.error;
-      control.required = this.required;
-      control.disabled = this.disabled;
-      if (this.requiredMessage) {
-        control.requiredMessage = this.requiredMessage;
-      }
-    }
   }
 
   override render() {

@@ -400,4 +400,18 @@ describe('civ-select civ-input event', () => {
       expect(el.options[0].value).toBe('CA');
     });
   });
+
+  it('wires hint and error IDs into aria-describedby when chrome is set', async () => {
+    const el = await fixture(
+      '<civ-select label="State" hint="Pick one" error="Required" name="state"></civ-select>',
+    );
+    const select = el.querySelector('select')!;
+    const describedBy = select.getAttribute('aria-describedby');
+    expect(describedBy).toBeTruthy();
+    const ids = describedBy!.split(' ');
+    expect(ids.length).toBe(2);
+    for (const id of ids) {
+      expect(el.querySelector(`#${id}`)).not.toBeNull();
+    }
+  });
 });

@@ -88,16 +88,14 @@ function discoverComponents(): ComponentFile[] {
 const FORM_CLASS_RE = /extends\s+(CivFormElement|CivBooleanFormElement|LightDomSlotMixin\(CivFormElement\)|LightDomTextMixin\(CivFormElement\)|PresetInputWrapper)/;
 const BASE_CLASS_RE = /extends\s+(CivBaseElement|LightDomSlotMixin\(CivBaseElement\)|LightDomTextMixin\(CivBaseElement\))/;
 
-// Bare control components that delegate label/hint/error rendering to
-// <civ-form-field> or <civ-form-fieldset> wrappers. These don't call
-// renderLabel/renderHint/renderError directly — that's by design.
-const WRAPPER_DELEGATED = new Set([
-  'civ-text-input', 'civ-textarea', 'civ-select', 'civ-combobox',
-  'civ-date-picker', 'civ-file-upload',
-  'civ-radio-group', 'civ-checkbox-group', 'civ-segmented-control',
-  'civ-memorable-date', 'civ-yes-no', 'civ-date-range-picker',
+// Preset wrapper components that delegate to an inner civ-text-input or
+// civ-combobox child. They don't call renderLabel/renderHint/renderError
+// directly — the wrapped child does — so the render-order, aria-attribute,
+// and label-association audits don't apply. Bare controls and self-
+// contained group components are NOT in this set: they each render their
+// own chrome and are audited normally.
+const CHILD_INPUT_WRAPPERS = new Set([
   'civ-country',
-  // Preset wrappers — they render a child input, no direct label rendering
   'civ-ssn', 'civ-ein', 'civ-zip', 'civ-phone', 'civ-email',
   'civ-currency', 'civ-routing-number', 'civ-va-file-number',
 ]);
@@ -120,7 +118,7 @@ function checkCustomElement(comp: ComponentFile) {
 function checkRenderOrder(comp: ComponentFile) {
   const isFormParticipating = FORM_CLASS_RE.test(comp.src);
   if (!isFormParticipating) return;
-  if (WRAPPER_DELEGATED.has(comp.name)) return; // Label/hint/error handled by civ-form-field wrapper
+  if (CHILD_INPUT_WRAPPERS.has(comp.name)) return; // Label/hint/error rendered by the inner child input
 
   // Check that render uses renderLabel/renderLegend, renderHint, renderError in order.
   // Compound components (address, direct-deposit, etc.) use `renderFormHeader(...)`
@@ -174,13 +172,13 @@ function checkRenderOrder(comp: ComponentFile) {
 function checkAriaAttributes(comp: ComponentFile) {
   const isFormParticipating = FORM_CLASS_RE.test(comp.src);
   if (!isFormParticipating) return;
-  // Components in WRAPPER_DELEGATED render their input via a child element
+  // Components in CHILD_INPUT_WRAPPERS render their input via a child element
   // (civ-text-input, civ-date-picker, etc.) that owns the aria-* attributes
   // — preset wrappers (ssn/ein/zip/...), composite groups (date-range-
   // picker, memorable-date, checkbox-group), and bare controls all delegate.
   // Checking aria attributes on the wrapper would require seeing into the
   // rendered child template, which the static check doesn't do.
-  if (WRAPPER_DELEGATED.has(comp.name)) return;
+  if (CHILD_INPUT_WRAPPERS.has(comp.name)) return;
 
   // Check for aria-invalid
   if (!comp.src.includes('aria-invalid') && !comp.name.includes('segment') && !comp.name.includes('conditional') && !comp.name.includes('progress') && !comp.name.includes('form-group')) {
@@ -282,7 +280,7 @@ function checkTailwindPrefix(comp: ComponentFile) {
 function checkFormReset(comp: ComponentFile) {
   const isFormParticipating = FORM_CLASS_RE.test(comp.src);
   if (!isFormParticipating) return;
-  if (comp.name === 'civ-conditional' || comp.name === 'civ-progress' || comp.name === 'civ-progress-bar' || comp.name === 'civ-form-field') return;
+  if (comp.name === 'civ-conditional' || comp.name === 'civ-progress' || comp.name === 'civ-progress-bar') return;
 
   if (!comp.src.includes('formResetCallback') && !comp.src.includes('_handleChange')) {
     addIssue(comp.path, 'form-reset', 'info', `${comp.name} does not override formResetCallback()`);
@@ -335,7 +333,7 @@ const CHILD_COMPONENTS = new Set([
 ]);
 // Structural/display/utility components that don't need analytics
 const NO_ANALYTICS = new Set([
-  'civ-fieldset', 'civ-form-field', 'civ-segment',
+  'civ-fieldset', 'civ-segment',
   'civ-card', 'civ-divider', 'civ-tag', 'civ-page-header',
   'civ-button-group', 'civ-list',
   'civ-skip-link', 'civ-data-field',
@@ -368,8 +366,8 @@ function checkNativeCounterparts(comp: ComponentFile) {
   if (comp.name === 'civ-icon') return;
   if (comp.name === 'civ-conditional' || comp.name === 'civ-progress-bar') return;
   if (CHILD_COMPONENTS.has(comp.name)) return; // Part of parent component on native
-  // Preset wrappers and form-field/form-fieldset are web-only — no native counterpart needed
-  if (comp.name === 'civ-form-field' || comp.name === 'civ-form-fieldset') return;
+  // civ-form-fieldset is a web-only layout wrapper — no native counterpart needed
+  if (comp.name === 'civ-form-fieldset') return;
   if (comp.name === 'civ-race-ethnicity') return; // Compound web component
   if (comp.src.includes('extends PresetInputWrapper')) return; // Preset wrappers
 
@@ -398,7 +396,7 @@ function checkA11yErrorAnnouncement(comp: ComponentFile) {
   const isFormParticipating = FORM_CLASS_RE.test(comp.src);
   if (!isFormParticipating) return;
   if (comp.name === 'civ-conditional' || comp.name === 'civ-progress' || comp.name === 'civ-progress-bar') return;
-  if (WRAPPER_DELEGATED.has(comp.name)) return; // Error rendering handled by civ-form-field wrapper
+  if (CHILD_INPUT_WRAPPERS.has(comp.name)) return; // Error rendering handled by the inner child input
 
   // Errors should use role="alert" (handled by renderError), announce(), or
   // be wrapped via renderFormHeader() — the latter is the common pattern in
@@ -417,7 +415,7 @@ function checkA11yLabelAssociation(comp: ComponentFile) {
   const isFormParticipating = FORM_CLASS_RE.test(comp.src);
   if (!isFormParticipating) return;
   if (CHILD_COMPONENTS.has(comp.name)) return;
-  if (WRAPPER_DELEGATED.has(comp.name)) return; // Label association handled by civ-form-field wrapper
+  if (CHILD_INPUT_WRAPPERS.has(comp.name)) return; // Label association handled by the inner child input
   if (comp.name === 'civ-conditional' || comp.name === 'civ-progress' || comp.name === 'civ-progress-bar') return;
 
   // Every form control needs a label/legend associated via for/id or inline <label>
@@ -440,13 +438,13 @@ function checkA11yColorNotSoleIndicator(comp: ComponentFile) {
       comp.src.includes('role="alert"') ||
       comp.src.includes('renderFormHeader(') ||
       /<civ-icon[^>]*name="error"/.test(comp.src);
-    // Bare controls (text-input, textarea, file-upload, ...) delegate
-    // primary error rendering to their `<civ-form-field>` wrapper. The
-    // `civ-text-error` they use internally is for secondary indicators
+    // Preset input wrappers (civ-ssn, civ-zip, etc.) delegate primary
+    // error rendering to the inner civ-text-input / civ-combobox child.
+    // The `civ-text-error` they use internally is for secondary indicators
     // (character-count overrun, file-size overflow icon) that always
     // accompany a non-color signal — not the primary error message.
-    const isWrapperDelegated = WRAPPER_DELEGATED.has(comp.name);
-    if (!hasNonColorIndicator && !isWrapperDelegated && !CHILD_COMPONENTS.has(comp.name)) {
+    const isChildInputWrapper = CHILD_INPUT_WRAPPERS.has(comp.name);
+    if (!hasNonColorIndicator && !isChildInputWrapper && !CHILD_COMPONENTS.has(comp.name)) {
       addIssue(comp.path, 'a11y-color-only', 'warning', `${comp.name} may use color as sole error indicator — verify text/icon accompanies color change`);
     }
   }

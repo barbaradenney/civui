@@ -63,7 +63,6 @@ function parseYamlProps(yaml: string): { name: string; props: string[]; slots: s
 // SDC directory name → actual web component tag overrides
 const TAG_OVERRIDES: Record<string, string> = {
   'fieldset': 'civ-form-fieldset',
-  'form-group': 'civ-form-field',
 };
 
 // Check that Twig template references the correct web component

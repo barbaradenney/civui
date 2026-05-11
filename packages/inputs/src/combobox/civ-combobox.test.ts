@@ -757,4 +757,18 @@ describe('civ-combobox async loadOptions', () => {
 
     expect(loader).toHaveBeenCalledWith('');
   });
+
+  it('wires hint and error IDs into aria-describedby when chrome is set', async () => {
+    const el = await fixture(
+      '<civ-combobox label="State" hint="Type to filter" error="Required" name="state"></civ-combobox>',
+    );
+    const input = el.querySelector('input')!;
+    const describedBy = input.getAttribute('aria-describedby');
+    expect(describedBy).toBeTruthy();
+    const ids = describedBy!.split(' ');
+    expect(ids.length).toBe(2);
+    for (const id of ids) {
+      expect(el.querySelector(`#${id}`)).not.toBeNull();
+    }
+  });
 });

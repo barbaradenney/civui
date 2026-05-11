@@ -311,16 +311,16 @@ function renderField(field: FormField): string {
     return `      <${componentTag} name="${escapeHtml(field.name)}" ${props}></${componentTag}>`;
   }
 
-  // Wrapper attributes: label, hint, required, disabled
-  const wrapperAttrs = [
+  // All chrome attrs (label, hint, required) and input attrs (name,
+  // autocomplete, inputmode, maxlength, placeholder) go directly on the
+  // control — there is no wrapper element to split them across.
+  const headerAttrs = [
     field.hint ? `hint="${escapeHtml(field.hint)}"` : '',
     field.required ? 'required' : '',
   ].filter(Boolean).join(' ');
 
-  // Child attributes: name, autocomplete, inputmode, maxlength, placeholder (NOT label/hint)
   const childAttrs = [
     `name="${escapeHtml(field.name)}"`,
-    field.required ? 'required' : '',
     field.autocomplete ? `autocomplete="${escapeHtml(field.autocomplete)}"` : '',
     field.inputmode ? `inputmode="${escapeHtml(field.inputmode)}"` : '',
     field.maxlength ? `maxlength="${field.maxlength}"` : '',
@@ -335,30 +335,30 @@ function renderField(field: FormField): string {
     case 'password':
     case 'search':
     case 'url':
-      return `      <civ-text-input label="${escapeHtml(field.label)}" ${wrapperAttrs} ${childAttrs}
+      return `      <civ-text-input label="${escapeHtml(field.label)}" ${headerAttrs} ${childAttrs}
           type="${field.type}"></civ-text-input>`;
 
     case 'ssn':
-      return `      <civ-text-input label="${escapeHtml(field.label)}" ${wrapperAttrs} ${childAttrs}
+      return `      <civ-text-input label="${escapeHtml(field.label)}" ${headerAttrs} ${childAttrs}
           type="tel"
           mask="ssn"
           validate="ssn"></civ-text-input>`;
 
     case 'zip':
-      return `      <civ-text-input label="${escapeHtml(field.label)}" ${wrapperAttrs} ${childAttrs}
+      return `      <civ-text-input label="${escapeHtml(field.label)}" ${headerAttrs} ${childAttrs}
           type="tel"
           mask="zip"
           validate="zip"></civ-text-input>`;
 
     case 'textarea':
-      return `      <civ-textarea label="${escapeHtml(field.label)}" ${wrapperAttrs} ${childAttrs}
+      return `      <civ-textarea label="${escapeHtml(field.label)}" ${headerAttrs} ${childAttrs}
           ${field.rows ? `rows="${field.rows}"` : ''}></civ-textarea>`;
 
     case 'select':
-      return `      <civ-select label="${escapeHtml(field.label)}" ${wrapperAttrs} ${childAttrs}></civ-select>`;
+      return `      <civ-select label="${escapeHtml(field.label)}" ${headerAttrs} ${childAttrs}></civ-select>`;
 
     case 'combobox':
-      return `      <civ-combobox label="${escapeHtml(field.label)}" ${wrapperAttrs} ${childAttrs}></civ-combobox>`;
+      return `      <civ-combobox label="${escapeHtml(field.label)}" ${headerAttrs} ${childAttrs}></civ-combobox>`;
 
     case 'radio': {
       const radioOptions = (field.options || [])
@@ -367,8 +367,7 @@ function renderField(field: FormField): string {
       return `      <civ-radio-group
         legend="${escapeHtml(field.label)}"
         name="${escapeHtml(field.name)}"
-        ${field.required ? 'required' : ''}
-        ${wrapperAttrs}
+        ${headerAttrs}
       >
 ${radioOptions}
       </civ-radio-group>`;
@@ -389,8 +388,7 @@ ${radioOptions}
       return `      <civ-checkbox-group
         legend="${escapeHtml(field.label)}"
         name="${escapeHtml(field.name)}"
-        ${field.required ? 'required' : ''}
-        ${wrapperAttrs}
+        ${headerAttrs}
       >
 ${checkOptions}
       </civ-checkbox-group>`;
@@ -400,15 +398,14 @@ ${checkOptions}
       return `      <civ-memorable-date
         legend="${escapeHtml(field.label)}"
         name="${escapeHtml(field.name)}"
-        ${field.required ? 'required' : ''}
-        ${wrapperAttrs}
+        ${headerAttrs}
       ></civ-memorable-date>`;
 
     case 'date':
-      return `      <civ-date-picker label="${escapeHtml(field.label)}" ${wrapperAttrs} ${childAttrs}></civ-date-picker>`;
+      return `      <civ-date-picker label="${escapeHtml(field.label)}" ${headerAttrs} ${childAttrs}></civ-date-picker>`;
 
     case 'file':
-      return `      <civ-file-upload label="${escapeHtml(field.label)}" ${wrapperAttrs} ${childAttrs}
+      return `      <civ-file-upload label="${escapeHtml(field.label)}" \${headerAttrs} ${childAttrs}
           ${field.accept ? `accept="${escapeHtml(field.accept)}"` : ''}
           ${field.multiple ? 'multiple' : ''}
           ${field.maxSize ? `max-size="${field.maxSize}"` : ''}
@@ -424,7 +421,7 @@ ${checkOptions}
       ></civ-toggle>`;
 
     default:
-      return `      <civ-text-input label="${escapeHtml(field.label)}" ${wrapperAttrs} ${childAttrs}></civ-text-input>`;
+      return `      <civ-text-input label="${escapeHtml(field.label)}" \${headerAttrs} ${childAttrs}></civ-text-input>`;
   }
 }
 

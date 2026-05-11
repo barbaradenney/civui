@@ -208,4 +208,18 @@ describe('civ-toggle', () => {
 
     expect(eventDetail).toEqual({ checked: true, value: 'yes' });
   });
+
+  it('wires description, hint, and error IDs into aria-describedby', async () => {
+    const el = await fixture(
+      '<civ-toggle label="Notifications" description="Send push notifications" hint="Reduces eye strain" error="Required"></civ-toggle>',
+    );
+    const btn = el.querySelector('button[role="switch"]') as HTMLButtonElement;
+    const describedBy = btn.getAttribute('aria-describedby');
+    expect(describedBy).toBeTruthy();
+    const ids = describedBy!.split(' ').filter(Boolean);
+    expect(ids.length).toBeGreaterThanOrEqual(2);
+    for (const id of ids) {
+      expect(el.querySelector(`#${id}`)).not.toBeNull();
+    }
+  });
 });

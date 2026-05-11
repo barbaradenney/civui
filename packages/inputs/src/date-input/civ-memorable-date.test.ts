@@ -36,7 +36,7 @@ describe('civ-memorable-date rendering', () => {
 
   it('renders hint and error when wrapped in civ-form-fieldset', async () => {
     const wrapper = await fixture(
-      '<civ-form-fieldset legend="Date of birth" hint="For example: January 19 2000" error="Date is required"><civ-memorable-date name="dob"></civ-memorable-date></civ-form-fieldset>',
+      '<civ-memorable-date legend="Date of birth" hint="For example: January 19 2000" error="Date is required" name="dob"></civ-memorable-date>',
     );
 
     const spans = wrapper.querySelectorAll('span');
@@ -50,7 +50,7 @@ describe('civ-memorable-date rendering', () => {
 
   it('shows required indicator when wrapped in civ-form-fieldset', async () => {
     const wrapper = await fixture(
-      '<civ-form-fieldset legend="Date of birth" required><civ-memorable-date name="dob"></civ-memorable-date></civ-form-fieldset>',
+      '<civ-memorable-date legend="Date of birth" required name="dob"></civ-memorable-date>',
     );
 
     const requiredMark = wrapper.querySelector('.civ-required-mark');
@@ -77,7 +77,7 @@ describe('civ-memorable-date rendering', () => {
 describe('civ-memorable-date accessibility', () => {
   it('sets aria-invalid on fieldset when error is present (via form-fieldset)', async () => {
     const wrapper = await fixture(
-      '<civ-form-fieldset legend="Date of birth" error="Invalid date"><civ-memorable-date name="dob"></civ-memorable-date></civ-form-fieldset>',
+      '<civ-memorable-date legend="Date of birth" error="Invalid date" name="dob"></civ-memorable-date>',
     );
 
     const fieldset = wrapper.querySelector('fieldset');
@@ -86,7 +86,7 @@ describe('civ-memorable-date accessibility', () => {
 
   it('omits aria-invalid on fieldset when no error', async () => {
     const wrapper = await fixture(
-      '<civ-form-fieldset legend="Date of birth"><civ-memorable-date name="dob"></civ-memorable-date></civ-form-fieldset>',
+      '<civ-memorable-date legend="Date of birth" name="dob"></civ-memorable-date>',
     );
 
     const fieldset = wrapper.querySelector('fieldset');
@@ -95,7 +95,7 @@ describe('civ-memorable-date accessibility', () => {
 
   it('does not set aria-required on the fieldset (invalid ARIA on fieldset role)', async () => {
     const wrapper = await fixture(
-      '<civ-form-fieldset legend="Date of birth" required><civ-memorable-date name="dob"></civ-memorable-date></civ-form-fieldset>',
+      '<civ-memorable-date legend="Date of birth" required name="dob"></civ-memorable-date>',
     );
 
     // aria-required is not a valid ARIA attribute on the implicit `group`

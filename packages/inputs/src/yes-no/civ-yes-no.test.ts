@@ -83,7 +83,7 @@ describe('civ-yes-no', () => {
 
   it('renders hint and error when wrapped in civ-form-fieldset', async () => {
     const wrapper = await fixture(
-      '<civ-form-fieldset legend="Question" hint="Select one option" error="Please select an answer"><civ-yes-no></civ-yes-no></civ-form-fieldset>',
+      '<civ-yes-no legend="Question" hint="Select one option" error="Please select an answer"></civ-yes-no>',
     );
 
     const spans = wrapper.querySelectorAll('span');
@@ -364,7 +364,7 @@ describe('civ-yes-no', () => {
 
     it('labels the inner radiogroup via aria-labelledby when wrapped in form-fieldset', async () => {
       const wrapper = await fixture(
-        '<civ-form-fieldset legend="Did you serve?"><civ-yes-no skip-label="Skip"></civ-yes-no></civ-form-fieldset>',
+        '<civ-yes-no legend="Did you serve?" skip-label="Skip"></civ-yes-no>',
       );
       const inner = wrapper.querySelector('[role="radiogroup"]')!;
       // radiogroup should not use a redundant aria-label

@@ -106,9 +106,9 @@ describe('validateForm', () => {
       expect(result.errors.some((e) => e.rule === 'missing-legend' && e.element === 'civ-checkbox-group')).toBe(true);
     });
 
-    it('flags civ-memorable-date without label', () => {
+    it('flags civ-memorable-date without legend', () => {
       const result = validateForm('<civ-memorable-date name="x"></civ-memorable-date>');
-      expect(result.errors.some((e) => e.rule === 'missing-label' && e.element === 'civ-memorable-date')).toBe(true);
+      expect(result.errors.some((e) => e.rule === 'missing-legend' && e.element === 'civ-memorable-date')).toBe(true);
     });
 
     it('flags civ-segmented-control without legend', () => {

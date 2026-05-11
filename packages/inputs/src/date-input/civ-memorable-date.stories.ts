@@ -38,20 +38,10 @@ export const Default: Story = {
     disabled: false,
   },
   render: (args) => html`
-    <civ-form-fieldset
-      legend="${args.label}"
-      hint="${args.hint}"
-      error="${args.error}"
-      ?required="${args.required}"
-      ?disabled="${args.disabled}"
-    >
-      <civ-memorable-date
-        name="${args.name}"
+    <civ-memorable-date legend="${args.label}" hint="${args.hint}" error="${args.error}" name="${args.name}"
         value="${args.value}"
         ?required="${args.required}"
-        ?disabled="${args.disabled}"
-      ></civ-memorable-date>
-    </civ-form-fieldset>
+        ?disabled="${args.disabled}"></civ-memorable-date>
   `,
 };
 
@@ -59,41 +49,31 @@ export const Default: Story = {
 
 export const WithHint: Story = {
   render: () => html`
-    <civ-form-fieldset legend="Date of birth" hint="For example: January 15 1990">
-      <civ-memorable-date name="dob"></civ-memorable-date>
-    </civ-form-fieldset>
+    <civ-memorable-date legend="Date of birth" hint="For example: January 15 1990" name="dob"></civ-memorable-date>
   `,
 };
 
 export const WithError: Story = {
   render: () => html`
-    <civ-form-fieldset legend="Date of birth" error="Enter a valid date of birth" hint="For example: January 15 1990">
-      <civ-memorable-date name="dob"></civ-memorable-date>
-    </civ-form-fieldset>
+    <civ-memorable-date legend="Date of birth" error="Enter a valid date of birth" hint="For example: January 15 1990" name="dob"></civ-memorable-date>
   `,
 };
 
 export const Required: Story = {
   render: () => html`
-    <civ-form-fieldset legend="Date of birth" hint="For example: January 15 1990" required>
-      <civ-memorable-date name="dob" required></civ-memorable-date>
-    </civ-form-fieldset>
+    <civ-memorable-date legend="Date of birth" hint="For example: January 15 1990" name="dob" required></civ-memorable-date>
   `,
 };
 
 export const Disabled: Story = {
   render: () => html`
-    <civ-form-fieldset legend="Date of birth" disabled>
-      <civ-memorable-date name="dob" value="1990-07-04" disabled></civ-memorable-date>
-    </civ-form-fieldset>
+    <civ-memorable-date legend="Date of birth" name="dob" value="1990-07-04" disabled></civ-memorable-date>
   `,
 };
 
 export const Prefilled: Story = {
   render: () => html`
-    <civ-form-fieldset legend="Date of birth">
-      <civ-memorable-date name="dob" value="1990-07-04"></civ-memorable-date>
-    </civ-form-fieldset>
+    <civ-memorable-date legend="Date of birth" name="dob" value="1990-07-04"></civ-memorable-date>
   `,
 };
 
@@ -103,21 +83,11 @@ export const AllStates: Story = {
   name: 'All States',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-6">
-      <civ-form-fieldset legend="Normal">
-        <civ-memorable-date name="normal"></civ-memorable-date>
-      </civ-form-fieldset>
-      <civ-form-fieldset legend="With hint" hint="For example: January 15 1990">
-        <civ-memorable-date name="hint"></civ-memorable-date>
-      </civ-form-fieldset>
-      <civ-form-fieldset legend="With error" error="Enter a valid date" hint="For example: January 15 1990">
-        <civ-memorable-date name="error"></civ-memorable-date>
-      </civ-form-fieldset>
-      <civ-form-fieldset legend="Required" required>
-        <civ-memorable-date name="required" required></civ-memorable-date>
-      </civ-form-fieldset>
-      <civ-form-fieldset legend="Disabled" disabled>
-        <civ-memorable-date name="disabled" value="1990-07-04" disabled></civ-memorable-date>
-      </civ-form-fieldset>
+      <civ-memorable-date legend="Normal" name="normal"></civ-memorable-date>
+      <civ-memorable-date legend="With hint" hint="For example: January 15 1990" name="hint"></civ-memorable-date>
+      <civ-memorable-date legend="With error" error="Enter a valid date" hint="For example: January 15 1990" name="error"></civ-memorable-date>
+      <civ-memorable-date legend="Required" name="required" required></civ-memorable-date>
+      <civ-memorable-date legend="Disabled" name="disabled" value="1990-07-04" disabled></civ-memorable-date>
     </div>
   `,
 };
@@ -130,21 +100,15 @@ export const DensityScale: Story = {
     <div class="civ-flex civ-flex-col civ-gap-6">
       <div data-civ-scale="dense">
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Dense</p>
-        <civ-form-fieldset legend="Date of birth" hint="For example: January 15 1990">
-          <civ-memorable-date name="dense-dob"></civ-memorable-date>
-        </civ-form-fieldset>
+        <civ-memorable-date legend="Date of birth" hint="For example: January 15 1990" name="dense-dob"></civ-memorable-date>
       </div>
       <div>
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Default</p>
-        <civ-form-fieldset legend="Date of birth" hint="For example: January 15 1990">
-          <civ-memorable-date name="default-dob"></civ-memorable-date>
-        </civ-form-fieldset>
+        <civ-memorable-date legend="Date of birth" hint="For example: January 15 1990" name="default-dob"></civ-memorable-date>
       </div>
       <div data-civ-scale="spacious">
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Spacious</p>
-        <civ-form-fieldset legend="Date of birth" hint="For example: January 15 1990">
-          <civ-memorable-date name="spacious-dob"></civ-memorable-date>
-        </civ-form-fieldset>
+        <civ-memorable-date legend="Date of birth" hint="For example: January 15 1990" name="spacious-dob"></civ-memorable-date>
       </div>
     </div>
   `,
@@ -154,14 +118,10 @@ export const DensityScale: Story = {
 
 export const CustomLabels: Story = {
   render: () => html`
-    <civ-form-fieldset legend="Fecha de nacimiento" hint="Por ejemplo: enero 15 1990">
-      <civ-memorable-date
-        name="dob"
+    <civ-memorable-date legend="Fecha de nacimiento" hint="Por ejemplo: enero 15 1990" name="dob"
         month-label="Mes"
         day-label="Dia"
-        year-label="Ano"
-      ></civ-memorable-date>
-    </civ-form-fieldset>
+        year-label="Ano"></civ-memorable-date>
   `,
 };
 
@@ -178,12 +138,8 @@ export const GovernmentIdentityVerification: Story = {
       }}"
     >
       <h3 class="civ-m-0 civ-mb-4 civ-text-xl">Verify your identity</h3>
-      <civ-form-fieldset legend="Date of birth" hint="For example: January 15 1990" required>
-        <civ-memorable-date name="dob" required></civ-memorable-date>
-      </civ-form-fieldset>
-      <civ-form-fieldset legend="Date of marriage (if applicable)" hint="For example: June 10 2015">
-        <civ-memorable-date name="marriage-date"></civ-memorable-date>
-      </civ-form-fieldset>
+      <civ-memorable-date legend="Date of birth" hint="For example: January 15 1990" name="dob" required></civ-memorable-date>
+      <civ-memorable-date legend="Date of marriage (if applicable)" hint="For example: June 10 2015" name="marriage-date"></civ-memorable-date>
       <civ-button type="submit" class="civ-mt-4">Verify</civ-button>
     </form>
   `,

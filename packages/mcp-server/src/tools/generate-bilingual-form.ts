@@ -33,27 +33,25 @@ function renderFieldHtml(
 
   switch (field.type) {
     case 'textarea':
-      return `<civ-textarea label="${label}" ${hint}${req} name="${name}"${req}></civ-textarea>`;
+      return `<civ-textarea label="${label}"${hint}${req} name="${name}"></civ-textarea>`;
     case 'select':
-      return `<civ-select label="${label}" ${hint}${req} name="${name}"${req}></civ-select>`;
+      return `<civ-select label="${label}"${hint}${req} name="${name}"></civ-select>`;
     case 'radio':
       return `<civ-radio-group legend="${label}"${hint}${req} name="${name}"></civ-radio-group>`;
     case 'checkbox':
-      // Standalone checkbox — self-contained, no wrapping
       return `<civ-checkbox label="${label}" name="${name}"${req}></civ-checkbox>`;
     case 'checkbox-group':
       return `<civ-checkbox-group legend="${label}"${hint}${req} name="${name}"></civ-checkbox-group>`;
     case 'date':
-      return `<civ-date-picker label="${label}" ${hint}${req} name="${name}"${req}></civ-date-picker>`;
+      return `<civ-date-picker label="${label}"${hint}${req} name="${name}"></civ-date-picker>`;
     case 'memorable-date':
       return `<civ-memorable-date legend="${label}"${hint}${req} name="${name}"></civ-memorable-date>`;
     case 'file':
-      return `<civ-file-upload label="${label}" ${req} name="${name}"${req}></civ-file-upload>`;
+      return `<civ-file-upload label="${label}"${req} name="${name}"></civ-file-upload>`;
     case 'toggle':
-      // Self-contained — no wrapping
       return `<civ-toggle label="${label}" name="${name}"${req}></civ-toggle>`;
     default:
-      return `<civ-text-input label="${label}" ${hint}${req} name="${name}"${req}></civ-text-input>`;
+      return `<civ-text-input label="${label}"${hint}${req} name="${name}"></civ-text-input>`;
   }
 }
 

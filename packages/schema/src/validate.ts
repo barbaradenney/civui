@@ -104,10 +104,12 @@ export function validateSchema(schema: unknown): ValidationError[] {
   }
 
   // Note: a previous "isGroup components should have a `legend` prop" check
-  // was removed. CivUI's composition pattern wraps groups in
-  // `civ-form-fieldset`, which owns the legend — the group component itself
-  // doesn't carry the `legend` prop. The check produced false positives on
-  // every covered group component (memorable-date, filter-chip-group, ...).
+  // was removed. The check produced false positives because some group
+  // components (filter-chip-group) don't carry a `legend` prop themselves
+  // — their consumer provides labeling. Self-contained group components
+  // (radio-group, checkbox-group, segmented-control, yes-no, memorable-date,
+  // date-range-picker) do carry `legend` but the schema's `extends: forms`
+  // chain already declares it, so the dedicated check was redundant.
 
   // Widths validation
   if (s['widths'] !== undefined) {

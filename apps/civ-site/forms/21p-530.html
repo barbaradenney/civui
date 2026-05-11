@@ -129,25 +129,17 @@
       <civ-name name="fullName" legend="Your name" required></civ-name>
     </div>
     <div data-step data-step-label="Date of birth">
-      <civ-form-fieldset legend="Date of birth" hint="For example: January 15 1990" required>
-        <civ-memorable-date
-          name="dateOfBirth"
-          required
-        ></civ-memorable-date>
-      </civ-form-fieldset>
+      <civ-memorable-date legend="Date of birth" hint="For example: January 15 1990" name="dateOfBirth"
+          required></civ-memorable-date>
     </div>
     <div data-step data-step-label="Social Security number">
-      <civ-form-field label="Social Security number" hint="We need this to verify your identity" required>
-        <civ-text-input
-          name="ssn"
+      <civ-text-input label="Social Security number" hint="We need this to verify your identity" name="ssn"
           required
           autocomplete="off"
           inputmode="numeric"
           type="tel"
           mask="ssn"
-          validate="ssn"
-        ></civ-text-input>
-      </civ-form-field>
+          validate="ssn"></civ-text-input>
     </div>
     </civ-form-step>
   </div>
@@ -181,47 +173,31 @@
       <civ-address name="mailingAddress" legend="Mailing address" required></civ-address>
     </div>
     <div data-step data-step-label="Home phone number">
-      <civ-form-field label="Home phone number" hint="Enter a 10-digit phone number">
-        <civ-text-input
-          name="homePhone"
+      <civ-text-input label="Home phone number" hint="Enter a 10-digit phone number" name="homePhone"
           autocomplete="tel"
           inputmode="numeric"
-          type="tel"
-        ></civ-text-input>
-      </civ-form-field>
+          type="tel"></civ-text-input>
     </div>
     <div data-step data-step-label="Mobile phone number">
-      <civ-form-field label="Mobile phone number" >
-        <civ-text-input
-          name="mobilePhone"
+      <civ-text-input label="Mobile phone number" name="mobilePhone"
           autocomplete="tel"
           inputmode="numeric"
-          type="tel"
-        ></civ-text-input>
-      </civ-form-field>
+          type="tel"></civ-text-input>
     </div>
     <div data-step data-step-label="Email address">
-      <civ-form-field label="Email address" required>
-        <civ-text-input
-          name="email"
+      <civ-text-input label="Email address" name="email"
           required
           autocomplete="email"
-          type="email"
-        ></civ-text-input>
-      </civ-form-field>
+          type="email"></civ-text-input>
     </div>
     <div data-step data-step-label="How should we contact you if we have questions?">
-      <civ-form-fieldset legend="How should we contact you if we have questions?" required>
-        <civ-radio-group
-          name="contactMethod"
-          required
-        >
+      <civ-radio-group legend="How should we contact you if we have questions?" name="contactMethod"
+          required>
           <civ-radio label="Email" value="email"></civ-radio>
           <civ-radio label="Home phone" value="homePhone"></civ-radio>
           <civ-radio label="Mobile phone" value="mobilePhone"></civ-radio>
           <civ-radio label="U.S. mail" value="mail"></civ-radio>
         </civ-radio-group>
-      </civ-form-fieldset>
     </div>
     </civ-form-step>
   </div>
@@ -252,60 +228,36 @@
   <div data-chapter-steps>
     <civ-form-step complete-label="Save and continue">
     <div data-step data-step-label="Veteran&#39;s full name">
-      <civ-form-field label="Veteran&#39;s full name" required>
-        <civ-text-input
-          name="veteranFullName"
+      <civ-text-input label="Veteran&#39;s full name" name="veteranFullName"
           required
-          type="text"
-        ></civ-text-input>
-      </civ-form-field>
+          type="text"></civ-text-input>
     </div>
     <div data-step data-step-label="Veteran&#39;s Social Security number">
-      <civ-form-field label="Veteran&#39;s Social Security number" required>
-        <civ-text-input
-          name="veteranSsn"
+      <civ-text-input label="Veteran&#39;s Social Security number" name="veteranSsn"
           required
           type="tel"
           mask="ssn"
-          validate="ssn"
-        ></civ-text-input>
-      </civ-form-field>
+          validate="ssn"></civ-text-input>
     </div>
     <div data-step data-step-label="Veteran&#39;s date of birth">
-      <civ-form-fieldset legend="Veteran&#39;s date of birth" required>
-        <civ-memorable-date
-          name="veteranDateOfBirth"
-          required
-        ></civ-memorable-date>
-      </civ-form-fieldset>
+      <civ-memorable-date legend="Veteran&#39;s date of birth" name="veteranDateOfBirth"
+          required></civ-memorable-date>
     </div>
     <div data-step data-step-label="Veteran&#39;s date of death">
-      <civ-form-fieldset legend="Veteran&#39;s date of death" required>
-        <civ-memorable-date
-          name="veteranDateOfDeath"
-          required
-        ></civ-memorable-date>
-      </civ-form-fieldset>
+      <civ-memorable-date legend="Veteran&#39;s date of death" name="veteranDateOfDeath"
+          required></civ-memorable-date>
     </div>
     <div data-step data-step-label="Veteran&#39;s place of burial">
-      <civ-form-field label="Veteran&#39;s place of burial" required>
-        <civ-text-input
-          name="veteranPlaceOfBurial"
+      <civ-text-input label="Veteran&#39;s place of burial" name="veteranPlaceOfBurial"
           required
-          type="text"
-        ></civ-text-input>
-      </civ-form-field>
+          type="text"></civ-text-input>
     </div>
     <div data-step data-step-label="Was the Veteran receiving VA compensation or pension at time of death?">
-      <civ-form-fieldset legend="Was the Veteran receiving VA compensation or pension at time of death?" required>
-        <civ-radio-group
-          name="veteranReceivingBenefits"
-          required
-        >
+      <civ-radio-group legend="Was the Veteran receiving VA compensation or pension at time of death?" name="veteranReceivingBenefits"
+          required>
           <civ-radio label="Yes" value="yes"></civ-radio>
           <civ-radio label="No" value="no"></civ-radio>
         </civ-radio-group>
-      </civ-form-fieldset>
     </div>
     </civ-form-step>
   </div>
@@ -336,54 +288,33 @@
   <div data-chapter-steps>
     <civ-form-step complete-label="Save and continue">
     <div data-step data-step-label="Type of burial">
-      <civ-form-fieldset legend="Type of burial" required>
-        <civ-radio-group
-          name="burialType"
-          required
-        >
+      <civ-radio-group legend="Type of burial" name="burialType"
+          required>
           <civ-radio label="Non-service-connected death" value="non-service-connected"></civ-radio>
           <civ-radio label="Service-connected death" value="service-connected"></civ-radio>
           <civ-radio label="Unclaimed remains" value="unclaimed-remains"></civ-radio>
         </civ-radio-group>
-      </civ-form-fieldset>
     </div>
     <div data-step data-step-label="Date of burial">
-      <civ-form-fieldset legend="Date of burial" required>
-        <civ-memorable-date
-          name="dateOfBurial"
-          required
-        ></civ-memorable-date>
-      </civ-form-fieldset>
+      <civ-memorable-date legend="Date of burial" name="dateOfBurial"
+          required></civ-memorable-date>
     </div>
     <div data-step data-step-label="Total burial costs">
-      <civ-form-field label="Total burial costs" hint="Enter total amount of burial expenses" required>
-        <civ-text-input
-          name="totalBurialCosts"
+      <civ-text-input label="Total burial costs" hint="Enter total amount of burial expenses" name="totalBurialCosts"
           required
           inputmode="numeric"
-          type="text"
-        ></civ-text-input>
-      </civ-form-field>
+          type="text"></civ-text-input>
     </div>
     <div data-step data-step-label="Has government or employer already paid part of costs?">
-      <civ-form-fieldset legend="Has government or employer already paid part of costs?" >
-        <civ-radio-group
-          name="govPaid"
-          
-        >
+      <civ-radio-group legend="Has government or employer already paid part of costs?" name="govPaid">
           <civ-radio label="Yes" value="yes"></civ-radio>
           <civ-radio label="No" value="no"></civ-radio>
         </civ-radio-group>
-      </civ-form-fieldset>
     </div>
     <div data-step data-step-label="Amount already received">
-      <civ-form-field label="Amount already received" >
-        <civ-text-input
-          name="amountAlreadyReceived"
+      <civ-text-input label="Amount already received" name="amountAlreadyReceived"
           inputmode="numeric"
-          type="text"
-        ></civ-text-input>
-      </civ-form-field>
+          type="text"></civ-text-input>
     </div>
     </civ-form-step>
   </div>
@@ -414,23 +345,15 @@
   <div data-chapter-steps>
     <civ-form-step complete-label="Save and continue">
     <div data-step data-step-label="Your relationship to the Veteran">
-      <civ-form-field label="Your relationship to the Veteran" required>
-        <civ-select
-          name="relationshipToVeteran"
-          required
-        ></civ-select>
-      </civ-form-field>
+      <civ-select label="Your relationship to the Veteran" name="relationshipToVeteran"
+          required></civ-select>
     </div>
     <div data-step data-step-label="Did you pay the burial expenses?">
-      <civ-form-fieldset legend="Did you pay the burial expenses?" required>
-        <civ-radio-group
-          name="paidBurialExpenses"
-          required
-        >
+      <civ-radio-group legend="Did you pay the burial expenses?" name="paidBurialExpenses"
+          required>
           <civ-radio label="Yes" value="yes"></civ-radio>
           <civ-radio label="No" value="no"></civ-radio>
         </civ-radio-group>
-      </civ-form-fieldset>
     </div>
     </civ-form-step>
   </div>
@@ -492,15 +415,11 @@
   <div data-chapter-steps>
     <civ-form-step complete-label="Save and continue">
     <div data-step data-step-label="Upload supporting documents">
-      <civ-form-field label="Upload supporting documents" hint="Upload PDF, JPG, or PNG files. Maximum file size: 20MB">
-        <civ-file-upload
-          name="documents"
+      <civ-file-upload label="Upload supporting documents" hint="Upload PDF, JPG, or PNG files. Maximum file size: 20MB" name="documents"
           accept=".pdf,.jpg,.jpeg,.png"
           multiple
           max-size="20000000"
-          max-files="10"
-        ></civ-file-upload>
-      </civ-form-field>
+          max-files="10"></civ-file-upload>
     </div>
     </civ-form-step>
   </div>

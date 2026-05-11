@@ -1031,6 +1031,22 @@ describe('civ-date-picker', () => {
       expect(yearSel.getAttribute('aria-label')).toBe('Year');
     });
   });
+
+  describe('aria-describedby', () => {
+    it('wires hint and error IDs into aria-describedby when chrome is set', async () => {
+      const el = await fixture(
+        '<civ-date-picker label="Appointment" hint="Pick a date" error="Required" name="appt"></civ-date-picker>',
+      );
+      const input = el.querySelector('input[type="text"]')!;
+      const describedBy = input.getAttribute('aria-describedby');
+      expect(describedBy).toBeTruthy();
+      const ids = describedBy!.split(' ');
+      expect(ids.length).toBe(2);
+      for (const id of ids) {
+        expect(el.querySelector(`#${id}`)).not.toBeNull();
+      }
+    });
+  });
 });
 
 // Helper for keyboard events on dialog

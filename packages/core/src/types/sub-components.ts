@@ -23,22 +23,3 @@
 export interface SelectLike extends HTMLElement {
   options: Array<{ value: string; label: string }>;
 }
-
-/**
- * The shared shape of any CivUI form control that `civ-form-fieldset`
- * cascades wrapper-level props onto. Every CivUI form-input class declares
- * these as `@property` reactive fields, so the structural assignment matches
- * at runtime; this type just lets the wrapper cascade without `as any`.
- *
- * `requiredMessage` is optional because a few group components don't
- * accept it (the wrapper checks `if (this.requiredMessage)` before
- * assigning).
- */
-export interface FormControlLike extends HTMLElement {
-  label: string;
-  hint: string;
-  error: string;
-  required: boolean;
-  disabled: boolean;
-  requiredMessage?: string;
-}

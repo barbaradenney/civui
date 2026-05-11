@@ -129,25 +129,17 @@
       <civ-name name="fullName" legend="Your name" required></civ-name>
     </div>
     <div data-step data-step-label="Date of birth">
-      <civ-form-fieldset legend="Date of birth" hint="For example: January 15 1990" required>
-        <civ-memorable-date
-          name="dateOfBirth"
-          required
-        ></civ-memorable-date>
-      </civ-form-fieldset>
+      <civ-memorable-date legend="Date of birth" hint="For example: January 15 1990" name="dateOfBirth"
+          required></civ-memorable-date>
     </div>
     <div data-step data-step-label="Social Security number">
-      <civ-form-field label="Social Security number" hint="We need this to verify your identity" required>
-        <civ-text-input
-          name="ssn"
+      <civ-text-input label="Social Security number" hint="We need this to verify your identity" name="ssn"
           required
           autocomplete="off"
           inputmode="numeric"
           type="tel"
           mask="ssn"
-          validate="ssn"
-        ></civ-text-input>
-      </civ-form-field>
+          validate="ssn"></civ-text-input>
     </div>
     </civ-form-step>
   </div>
@@ -181,47 +173,31 @@
       <civ-address name="mailingAddress" legend="Mailing address" required></civ-address>
     </div>
     <div data-step data-step-label="Home phone number">
-      <civ-form-field label="Home phone number" hint="Enter a 10-digit phone number">
-        <civ-text-input
-          name="homePhone"
+      <civ-text-input label="Home phone number" hint="Enter a 10-digit phone number" name="homePhone"
           autocomplete="tel"
           inputmode="numeric"
-          type="tel"
-        ></civ-text-input>
-      </civ-form-field>
+          type="tel"></civ-text-input>
     </div>
     <div data-step data-step-label="Mobile phone number">
-      <civ-form-field label="Mobile phone number" >
-        <civ-text-input
-          name="mobilePhone"
+      <civ-text-input label="Mobile phone number" name="mobilePhone"
           autocomplete="tel"
           inputmode="numeric"
-          type="tel"
-        ></civ-text-input>
-      </civ-form-field>
+          type="tel"></civ-text-input>
     </div>
     <div data-step data-step-label="Email address">
-      <civ-form-field label="Email address" required>
-        <civ-text-input
-          name="email"
+      <civ-text-input label="Email address" name="email"
           required
           autocomplete="email"
-          type="email"
-        ></civ-text-input>
-      </civ-form-field>
+          type="email"></civ-text-input>
     </div>
     <div data-step data-step-label="How should we contact you if we have questions?">
-      <civ-form-fieldset legend="How should we contact you if we have questions?" required>
-        <civ-radio-group
-          name="contactMethod"
-          required
-        >
+      <civ-radio-group legend="How should we contact you if we have questions?" name="contactMethod"
+          required>
           <civ-radio label="Email" value="email"></civ-radio>
           <civ-radio label="Home phone" value="homePhone"></civ-radio>
           <civ-radio label="Mobile phone" value="mobilePhone"></civ-radio>
           <civ-radio label="U.S. mail" value="mail"></civ-radio>
         </civ-radio-group>
-      </civ-form-fieldset>
     </div>
     </civ-form-step>
   </div>
@@ -249,30 +225,14 @@
       min="1"
       max="20"
     >
-      <civ-form-field label="Branch of service" required>
-        <civ-combobox
-          name="branch"
-          required
-        ></civ-combobox>
-      </civ-form-field>
-      <civ-form-fieldset legend="Service start date" hint="If you don&#39;t know the exact date, enter your best estimate" required>
-        <civ-memorable-date
-          name="serviceStartDate"
-          required
-        ></civ-memorable-date>
-      </civ-form-fieldset>
-      <civ-form-fieldset legend="Service end date" hint="If you don&#39;t know the exact date, enter your best estimate" required>
-        <civ-memorable-date
-          name="serviceEndDate"
-          required
-        ></civ-memorable-date>
-      </civ-form-fieldset>
-      <civ-form-field label="Character of service" required>
-        <civ-select
-          name="dischargeType"
-          required
-        ></civ-select>
-      </civ-form-field>
+      <civ-combobox label="Branch of service" name="branch"
+          required></civ-combobox>
+      <civ-memorable-date legend="Service start date" hint="If you don&#39;t know the exact date, enter your best estimate" name="serviceStartDate"
+          required></civ-memorable-date>
+      <civ-memorable-date legend="Service end date" hint="If you don&#39;t know the exact date, enter your best estimate" name="serviceEndDate"
+          required></civ-memorable-date>
+      <civ-select label="Character of service" name="dischargeType"
+          required></civ-select>
     </civ-repeater>
 
     <div class="civ-mt-6">
@@ -306,33 +266,21 @@
   <div data-chapter-steps>
     <civ-form-step complete-label="Save and continue">
     <div data-step data-step-label="Total annual household income">
-      <civ-form-field label="Total annual household income" hint="Include all sources of income" required>
-        <civ-text-input
-          name="annualIncome"
+      <civ-text-input label="Total annual household income" hint="Include all sources of income" name="annualIncome"
           required
           inputmode="numeric"
-          type="text"
-        ></civ-text-input>
-      </civ-form-field>
+          type="text"></civ-text-input>
     </div>
     <div data-step data-step-label="Total net worth">
-      <civ-form-field label="Total net worth" hint="Include bank accounts, investments, and property value" required>
-        <civ-text-input
-          name="netWorth"
+      <civ-text-input label="Total net worth" hint="Include bank accounts, investments, and property value" name="netWorth"
           required
           inputmode="numeric"
-          type="text"
-        ></civ-text-input>
-      </civ-form-field>
+          type="text"></civ-text-input>
     </div>
     <div data-step data-step-label="Unreimbursed medical expenses in the past year">
-      <civ-form-field label="Unreimbursed medical expenses in the past year" >
-        <civ-text-input
-          name="medicalExpenses"
+      <civ-text-input label="Unreimbursed medical expenses in the past year" name="medicalExpenses"
           inputmode="numeric"
-          type="text"
-        ></civ-text-input>
-      </civ-form-field>
+          type="text"></civ-text-input>
     </div>
     </civ-form-step>
   </div>
@@ -363,18 +311,14 @@
   <div data-chapter-steps>
     <civ-form-step complete-label="Save and continue">
     <div data-step data-step-label="What is your current marital status?">
-      <civ-form-fieldset legend="What is your current marital status?" required>
-        <civ-radio-group
-          name="maritalStatus"
-          required
-        >
+      <civ-radio-group legend="What is your current marital status?" name="maritalStatus"
+          required>
           <civ-radio label="Married" value="married"></civ-radio>
           <civ-radio label="Divorced or annulled" value="divorced"></civ-radio>
           <civ-radio label="Separated" value="separated"></civ-radio>
           <civ-radio label="Widowed" value="widowed"></civ-radio>
           <civ-radio label="Never married" value="never-married"></civ-radio>
         </civ-radio-group>
-      </civ-form-fieldset>
     </div>
     </civ-form-step>
   </div>
@@ -436,15 +380,11 @@
   <div data-chapter-steps>
     <civ-form-step complete-label="Save and continue">
     <div data-step data-step-label="Upload supporting documents">
-      <civ-form-field label="Upload supporting documents" hint="Upload PDF, JPG, or PNG files. Maximum file size: 20MB">
-        <civ-file-upload
-          name="documents"
+      <civ-file-upload label="Upload supporting documents" hint="Upload PDF, JPG, or PNG files. Maximum file size: 20MB" name="documents"
           accept=".pdf,.jpg,.jpeg,.png"
           multiple
           max-size="20000000"
-          max-files="10"
-        ></civ-file-upload>
-      </civ-form-field>
+          max-files="10"></civ-file-upload>
     </div>
     </civ-form-step>
   </div>

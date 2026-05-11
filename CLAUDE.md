@@ -116,9 +116,9 @@ Group components (radio-group, checkbox-group, segmented-control, yes-no, memora
   - `{ value: string, month: string, day: string, year: string }` — memorable-date
 
 ### Rendering Order
-`civ-form-field` enforces: label → hint → error → control → supplementary info.
-`civ-form-fieldset` enforces: legend → hint → error → controls.
-Both use `renderFormHeader()` from `@civui/core` internally.
+Every form control renders its own chrome in this order: label/legend → hint → error → control → supplementary info.
+`civ-form-fieldset` (multi-field grouping) enforces: legend → hint → error → child controls.
+All paths use `renderFormHeader()` from `@civui/core` internally.
 
 ### Mobile Popups — Bottom Sheet Rule
 All popups, dropdowns, and dialogs **must** render as bottom sheets on mobile (≤480px). Use the shared `.civ-bottom-sheet` utility class for new popup components:
@@ -260,7 +260,7 @@ Mark genuinely web-specific props (Tailwind size variants, ARIA heading-level pr
 
 When the Drupal SDC YAMLs drift, regenerate from schemas with `pnpm sync:drupal` (runs both `sync-drupal-sdc.ts` and `sync-drupal-twig.ts` — idempotent; only appends missing props and rewrites the Twig from the YAML). Native platform updates are hand-edited Swift / Kotlin. See `packages/schema/README.md` for the full naming-convention map and "how to add a new schema" walk-through.
 
-**Out of scope (web-specific layout wrappers):** `civ-form-field`, `civ-form-fieldset`, `civ-fieldset`, `civ-form` — these abstract over how form-headers are rendered on web; native platforms compose the same affordances differently and don't need a contract translation.
+**Out of scope (web-specific layout wrappers):** `civ-form-fieldset`, `civ-fieldset`, `civ-form` — these abstract over how form-headers are rendered on web; native platforms compose the same affordances differently and don't need a contract translation.
 
 **If you modify a covered component**, update its schema in the same change. Run `pnpm parity:schema` before committing — the check fails on missing/added/renamed/retyped props. Inherited form props (`label`, `name`, `value`, `hint`, `error`, `required`, `disabled`, `readonly`, etc.) are filtered on both sides; you don't need to declare them.
 

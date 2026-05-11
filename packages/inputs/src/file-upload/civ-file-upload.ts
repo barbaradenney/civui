@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivFormElement, dispatch, interpolate, t } from '@civui/core';
+import { CivFormElement, LegendHeadingMixin, dispatch, interpolate, renderLabel, renderFormHeader, t } from '@civui/core';
 
 type FileStatus = 'pending' | 'uploading' | 'success' | 'error';
 
@@ -167,7 +167,7 @@ function formatAcceptedTypes(accept: string): string {
 export type FileUploadCapture = 'user' | 'environment' | '';
 
 @customElement('civ-file-upload')
-export class CivFileUpload extends CivFormElement {
+export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
   @property({ type: String }) accept = '';
   @property({ type: Boolean }) multiple = false;
   @property({ type: Boolean, attribute: 'show-preview' }) showPreview = false;
@@ -275,11 +275,35 @@ export class CivFileUpload extends CivFormElement {
     return file.abortController;
   }
 
+  /** True when wrapped in `<civ-form-field>`; the wrapper renders the chrome. */
+  private _wrappedInFormField = false;
+
   override render() {
-    return html`
+    const inner = html`
         ${this.readonly ? nothing : this._renderTrigger()}
         ${this._renderHiddenInput()}
         ${this._renderFileList()}
+    `;
+
+    if (this._wrappedInFormField) return inner;
+
+    return html`
+      <div class="civ-mb-4">
+        ${renderFormHeader({
+          label: renderLabel({
+            label: this.label,
+            inputId: this._inputId,
+            required: this.required,
+            headingLevel: this.headingLevel,
+            size: this.size,
+          }),
+          hintId: this._hintId,
+          hint: this.hint,
+          errorId: this._errorId,
+          error: this.error,
+        })}
+        ${inner}
+      </div>
     `;
   }
 
@@ -436,16 +460,20 @@ export class CivFileUpload extends CivFormElement {
 
   override connectedCallback(): void {
     super.connectedCallback();
+    this._wrappedInFormField = !!this.closest('civ-form-field');
     this._maybeHydrateInitialFiles();
   }
 
-  protected override _requiresFormFieldWrapper = true;
 
   protected override get _ariaDescribedBy(): string {
-    // Hint and error are owned by the wrapping `<civ-form-field>` (cascaded
-    // via `describedByExtra`). The files-list ID is added separately at
-    // the dropzone's aria-describedby template binding.
-    return this.describedByExtra;
+    // When wrapped, IDs cascade via `describedByExtra`. Standalone, we own
+    // hint/error. The files-list ID is appended separately by the dropzone
+    // template binding.
+    if (this._wrappedInFormField) return this.describedByExtra;
+    const ids: string[] = [];
+    if (this.hint) ids.push(this._hintId);
+    if (this.error) ids.push(this._errorId);
+    return ids.join(' ');
   }
 
   override willUpdate(changed: Map<string, unknown>): void {

@@ -1024,31 +1024,57 @@ describe('text-input inline icons', () => {
     });
   });
 
-  describe('standalone-without-form-field warning', () => {
-    it('logs a console.warn when error is set on a bare civ-text-input (no form-field parent)', async () => {
-      const spy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+  describe('standalone label/hint/error chrome', () => {
+    // Phase 1 of the bare-control + form-field unification: bare controls
+    // render their own label/hint/error chrome when used without a wrapper.
+    // The earlier "standalone warning" machinery was removed because
+    // standalone usage is now first-class.
+    it('renders its own <label> with the input id when used without form-field', async () => {
       const el = await fixture<CivTextInput>(
         '<civ-text-input label="Email"></civ-text-input>'
       );
-      el.error = 'Required';
-      await elementUpdated(el);
-      expect(spy).toHaveBeenCalled();
-      const msg = (spy.mock.calls[0][0] as string).toLowerCase();
-      expect(msg).toContain('civ-text-input');
-      expect(msg).toContain('civ-form-field');
-      spy.mockRestore();
+      const label = el.querySelector('label');
+      expect(label).not.toBeNull();
+      expect(label!.textContent).toContain('Email');
+      const input = el.querySelector('input');
+      expect(label!.getAttribute('for')).toBe(input!.id);
     });
 
-    it('does NOT warn when wrapped in civ-form-field', async () => {
-      const spy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    it('renders the hint span with the right id wired to aria-describedby', async () => {
+      const el = await fixture<CivTextInput>(
+        '<civ-text-input label="Email" hint="Work email"></civ-text-input>'
+      );
+      const hint = el.querySelector('.civ-hint');
+      expect(hint).not.toBeNull();
+      expect(hint!.textContent).toBe('Work email');
+      const input = el.querySelector('input')!;
+      expect(input.getAttribute('aria-describedby')).toContain(hint!.id);
+    });
+
+    it('renders error span with role="alert" when set standalone', async () => {
+      const el = await fixture<CivTextInput>(
+        '<civ-text-input label="Email" error="Required"></civ-text-input>'
+      );
+      const err = el.querySelector('[role="alert"]');
+      expect(err).not.toBeNull();
+      expect(err!.textContent).toBe('Required');
+      const input = el.querySelector('input')!;
+      expect(input.getAttribute('aria-describedby')).toContain(err!.id);
+      expect(input.getAttribute('aria-invalid')).toBe('true');
+    });
+
+    it('does NOT render its own chrome when wrapped in civ-form-field (avoids double-rendering)', async () => {
       const wrapper = await fixture(
         '<civ-form-field label="Email" error="Required"><civ-text-input></civ-text-input></civ-form-field>'
       );
       const child = wrapper.querySelector('civ-text-input') as CivTextInput;
-      await elementUpdated(child);
-      await elementUpdated(wrapper);
-      expect(spy).not.toHaveBeenCalled();
-      spy.mockRestore();
+      // form-field renders the chrome; the child should not render its own.
+      // Count labels in the child element's direct subtree (exclude wrapper).
+      const childLabel = child.querySelector('label');
+      // The only label visible to the child's subtree is form-field's, which
+      // form-field renders OUTSIDE the data-civ-form-field-content slot —
+      // so the child element itself has no label child element.
+      expect(childLabel).toBeNull();
     });
   });
 });

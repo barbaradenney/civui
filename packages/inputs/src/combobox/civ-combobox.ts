@@ -1,7 +1,7 @@
 import { html, nothing, type TemplateResult } from 'lit';
 import { repeat } from 'lit/directives/repeat.js';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivFormElement, dispatch, inputClasses, inputWidthClass, clickOutside, t, interpolate, debounce, SEARCH_ANNOUNCE_MS } from '@civui/core';
+import { CivFormElement, LegendHeadingMixin, dispatch, inputClasses, inputWidthClass, clickOutside, renderLabel, renderFormHeader, t, interpolate, debounce, SEARCH_ANNOUNCE_MS } from '@civui/core';
 import type { InputWidth } from '@civui/core';
 
 export interface ComboboxOption {
@@ -37,7 +37,7 @@ export type LoadOptionsFn = (query: string) => Promise<ComboboxOption[]>;
  * @fires civ-analytics - Analytics tracking event on change
  */
 @customElement('civ-combobox')
-export class CivCombobox extends CivFormElement {
+export class CivCombobox extends LegendHeadingMixin(CivFormElement) {
   @property({ type: Array }) options: ComboboxOption[] = [];
   @property({ type: String }) placeholder = '';
   @property({ type: String, attribute: 'no-results-text' }) noResultsText = '';
@@ -105,14 +105,24 @@ export class CivCombobox extends CivFormElement {
     }
   }
 
-  protected override _requiresFormFieldWrapper = true;
+
+  /** True when wrapped in `<civ-form-field>`; the wrapper renders the chrome. */
+  private _wrappedInFormField = false;
+
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this._wrappedInFormField = !!this.closest('civ-form-field');
+  }
 
   protected override get _ariaDescribedBy(): string {
-    // Hint and error are owned by the wrapping `<civ-form-field>` (cascaded
-    // via `describedByExtra`). The listbox / activedescendant IDs combobox
-    // needs are wired explicitly via `aria-controls` / `aria-activedescendant`
-    // rather than describedby.
-    return this.describedByExtra;
+    // When wrapped, IDs cascade via `describedByExtra`. Standalone, we own
+    // them. Listbox / activedescendant are wired separately via
+    // `aria-controls` / `aria-activedescendant`, not describedby.
+    if (this._wrappedInFormField) return this.describedByExtra;
+    const ids: string[] = [];
+    if (this.hint) ids.push(this._hintId);
+    if (this.error) ids.push(this._errorId);
+    return ids.join(' ');
   }
 
   override disconnectedCallback(): void {
@@ -166,7 +176,7 @@ export class CivCombobox extends CivFormElement {
     const widthClass = inputWidthClass(this.width);
     const classes = inputClasses({ extra: [widthClass, 'civ-max-w-full'] });
 
-    return html`
+    const inner = html`
       <div class="civ-relative">
         <div class="civ-relative ${widthClass} civ-max-w-full" data-civ-combobox>
           <input
@@ -231,6 +241,28 @@ export class CivCombobox extends CivFormElement {
             : nothing}
           ${this._open && filtered.length === 0 ? this._renderEmptyState() : nothing}
         </div>
+      </div>
+    `;
+
+    if (this._wrappedInFormField) return inner;
+
+    return html`
+      <div class="civ-mb-4">
+        ${renderFormHeader({
+          label: renderLabel({
+            label: this.label,
+            inputId: this._inputId,
+            required: this.required,
+            headingLevel: this.headingLevel,
+            size: this.size,
+            labelId: this._labelId,
+          }),
+          hintId: this._hintId,
+          hint: this.hint,
+          errorId: this._errorId,
+          error: this.error,
+        })}
+        ${inner}
       </div>
     `;
   }

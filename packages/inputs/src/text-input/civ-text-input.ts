@@ -4,6 +4,7 @@ import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import {
   CivFormElement,
+  LegendHeadingMixin,
   inputClasses,
   inputWidthClass,
   MASK_PRESETS,
@@ -12,6 +13,8 @@ import {
   computeCursorPosition,
   processRawInput,
   interpolate,
+  renderLabel,
+  renderFormHeader,
   t,
   validate,
   debounce,
@@ -34,7 +37,7 @@ export type TextInputValidate = 'email' | 'phone' | 'phoneIntl' | 'ssn' | 'ein' 
  * @element civ-text-input
  */
 @customElement('civ-text-input')
-export class CivTextInput extends CivFormElement {
+export class CivTextInput extends LegendHeadingMixin(CivFormElement) {
   @property({ type: String }) type: TextInputType = 'text';
   @property({ type: String }) width: InputWidth = 'default';
   @property({ type: String }) placeholder: string = '';
@@ -199,6 +202,9 @@ export class CivTextInput extends CivFormElement {
    */
   override connectedCallback(): void {
     super.connectedCallback();
+    // Detect whether we're wrapped in `<civ-form-field>`. Cached at mount
+    // because the wrapper relationship doesn't change after.
+    this._wrappedInFormField = !!this.closest('civ-form-field');
     // Hydrate hint + normalize masked value before the first render so
     // these don't trigger a second update cycle.
     const maskDef = this._maskDef;
@@ -244,15 +250,28 @@ export class CivTextInput extends CivFormElement {
     }
   }
 
-  protected override _requiresFormFieldWrapper = true;
+  /**
+   * Set on connect; tracks whether the control is rendered inside a
+   * `<civ-form-field>` wrapper. When true, the wrapper renders the
+   * label/hint/error chrome and cascades its IDs via `describedByExtra`.
+   * When false, we render the chrome ourselves from `label` / `hint` /
+   * `error` props directly on this element.
+   *
+   * Cached in `connectedCallback` rather than re-querying on every render —
+   * the wrapper relationship doesn't change after mount.
+   */
+  private _wrappedInFormField = false;
 
   protected override get _ariaDescribedBy(): string {
-    // Hint and error are owned by the wrapping `<civ-form-field>`. It cascades
-    // its hint/error IDs to us via `describedByExtra`, which we include here
-    // so the child's own template binding survives re-renders without the
-    // wrapper having to re-merge imperatively.
+    // When wrapped in `<civ-form-field>`, hint/error IDs are cascaded via
+    // `describedByExtra`. When standalone, we own them and include our own.
     const ids: string[] = [];
-    if (this.describedByExtra) ids.push(this.describedByExtra);
+    if (this._wrappedInFormField) {
+      if (this.describedByExtra) ids.push(this.describedByExtra);
+    } else {
+      if (this.hint) ids.push(this._hintId);
+      if (this.error) ids.push(this._errorId);
+    }
     if (this._showCharCount) ids.push(this._charCountId);
     return ids.join(' ');
   }
@@ -270,9 +289,33 @@ export class CivTextInput extends CivFormElement {
     const inputEl = this._renderInput({ widthClass, hasPrefix, hasSuffix, showLeadingIcon, showTrailingIcon });
     const wrappedInput = this._wrapInput(inputEl, { widthClass, hasPrefix, hasSuffix, needsClearButton, showLeadingIcon, showTrailingIcon, isCurrency });
 
-    return html`
+    const inner = html`
       ${wrappedInput}
       ${this._renderCharCount()}
+    `;
+
+    // When wrapped in `<civ-form-field>`, that element renders the chrome
+    // and our `data-civ-form-field` marker lets it find us. Don't double-
+    // render the label/hint/error here.
+    if (this._wrappedInFormField) return inner;
+
+    return html`
+      <div class="civ-mb-4">
+        ${renderFormHeader({
+          label: renderLabel({
+            label: this.label,
+            inputId: this._inputId,
+            required: this.required,
+            headingLevel: this.headingLevel,
+            size: this.size,
+          }),
+          hintId: this._hintId,
+          hint: this.hint,
+          errorId: this._errorId,
+          error: this.error,
+        })}
+        ${inner}
+      </div>
     `;
   }
 

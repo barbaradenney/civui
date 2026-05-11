@@ -2,7 +2,7 @@
 
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivFormElement, dispatch, inputClasses, inputWidthClass, t, resolvePresetOptions } from '@civui/core';
+import { CivFormElement, LegendHeadingMixin, dispatch, inputClasses, inputWidthClass, renderLabel, renderFormHeader, t, resolvePresetOptions } from '@civui/core';
 import type { InputWidth, SelectPresetName } from '@civui/core';
 
 export interface SelectOption {
@@ -38,7 +38,7 @@ export interface SelectOption {
  * ```
  */
 @customElement('civ-select')
-export class CivSelect extends CivFormElement {
+export class CivSelect extends LegendHeadingMixin(CivFormElement) {
   @property({ type: Array }) options: SelectOption[] = [];
   @property({ type: String, attribute: 'empty-label' }) emptyLabel: string = '';
   @property({ type: String }) width: InputWidth = 'default';
@@ -63,8 +63,12 @@ export class CivSelect extends CivFormElement {
    */
   @property({ type: String, attribute: 'preset-variant' }) presetVariant?: string;
 
+  /** True when wrapped in `<civ-form-field>`; the wrapper renders the chrome. */
+  private _wrappedInFormField = false;
+
   override connectedCallback(): void {
     super.connectedCallback();
+    this._wrappedInFormField = !!this.closest('civ-form-field');
     // Light DOM: original <option>/<optgroup> children would remain in the
     // host alongside the rendered template. Capture their data into
     // `options` (only when the property hasn't been populated otherwise),
@@ -140,13 +144,16 @@ export class CivSelect extends CivFormElement {
     }
   }
 
-  protected override _requiresFormFieldWrapper = true;
 
   protected override get _ariaDescribedBy(): string {
-    // Hint and error are owned by the wrapping `<civ-form-field>` (cascaded
-    // via `describedByExtra`). This component renders no descriptive
-    // elements of its own.
-    return this.describedByExtra;
+    // When wrapped in `<civ-form-field>`, hint/error IDs are cascaded via
+    // `describedByExtra`. When standalone, we own them and include our own.
+    // Select renders no other descriptive elements of its own.
+    if (this._wrappedInFormField) return this.describedByExtra;
+    const ids: string[] = [];
+    if (this.hint) ids.push(this._hintId);
+    if (this.error) ids.push(this._errorId);
+    return ids.join(' ');
   }
 
   override render() {
@@ -155,7 +162,7 @@ export class CivSelect extends CivFormElement {
       extra: ['civ-select-field', widthClass, 'civ-max-w-full'],
     });
 
-    return html`
+    const inner = html`
         <select
           class="${classes}"
           id="${this._inputId}"
@@ -172,6 +179,27 @@ export class CivSelect extends CivFormElement {
           <option value="">${this.emptyLabel || t('selectEmpty')}</option>
           ${this._renderGroupedOptions()}
         </select>
+    `;
+
+    if (this._wrappedInFormField) return inner;
+
+    return html`
+      <div class="civ-mb-4">
+        ${renderFormHeader({
+          label: renderLabel({
+            label: this.label,
+            inputId: this._inputId,
+            required: this.required,
+            headingLevel: this.headingLevel,
+            size: this.size,
+          }),
+          hintId: this._hintId,
+          hint: this.hint,
+          errorId: this._errorId,
+          error: this.error,
+        })}
+        ${inner}
+      </div>
     `;
   }
 

@@ -2,6 +2,7 @@ import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import {
   CivFormElement,
+  LegendHeadingMixin,
   createKeyboardHandler,
   trapFocus,
   generateCalendarMonth,
@@ -25,6 +26,8 @@ import {
   clickOutside,
   inputClasses,
   applyDateMask,
+  renderLabel,
+  renderFormHeader,
   t,
   type CalendarDay,
   type DateConstraints,
@@ -57,7 +60,7 @@ import {
  * @fires civ-analytics - Analytics tracking event on change
  */
 @customElement('civ-date-picker')
-export class CivDatePicker extends CivFormElement {
+export class CivDatePicker extends LegendHeadingMixin(CivFormElement) {
   @property({ type: String }) min = '';
   @property({ type: String }) max = '';
   @property({ type: String }) placeholder = '';
@@ -237,18 +240,29 @@ export class CivDatePicker extends CivFormElement {
     },
   ]);
 
+  /** True when wrapped in `<civ-form-field>`; the wrapper renders the chrome. */
+  private _wrappedInFormField = false;
+
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this._wrappedInFormField = !!this.closest('civ-form-field');
+  }
+
   override disconnectedCallback(): void {
     super.disconnectedCallback();
     this._clickOutside.remove();
     this._cleanupTrap?.();
   }
 
-  protected override _requiresFormFieldWrapper = true;
 
   protected override get _ariaDescribedBy(): string {
-    // Hint and error are owned by the wrapping `<civ-form-field>` (cascaded
-    // via `describedByExtra`).
-    return this.describedByExtra;
+    // When wrapped in `<civ-form-field>`, IDs cascade via `describedByExtra`.
+    // Standalone, we own the hint/error and reference our own IDs.
+    if (this._wrappedInFormField) return this.describedByExtra;
+    const ids: string[] = [];
+    if (this.hint) ids.push(this._hintId);
+    if (this.error) ids.push(this._errorId);
+    return ids.join(' ');
   }
 
   override updated(changed: Map<string, unknown>): void {
@@ -279,7 +293,7 @@ export class CivDatePicker extends CivFormElement {
       ? interpolate(this.selectedDateLabel || t('datePickerSelectedDateLabel'), { date: formatDateLong(selectedDate, this.locale) })
       : (this.chooseDateLabel || t('datePickerChooseDateLabel'));
 
-    return html`
+    const inner = html`
       <div class="civ-relative">
         <div class="civ-input-group">
           <div class="civ-relative civ-flex-1" data-civ-date-picker-input>
@@ -319,6 +333,27 @@ export class CivDatePicker extends CivFormElement {
           >${this.chooseDateLabel || t('datePickerChooseDateLabel')}</button>
         </div>
         ${this._open ? this._renderDialog(selectedDate) : nothing}
+      </div>
+    `;
+
+    if (this._wrappedInFormField) return inner;
+
+    return html`
+      <div class="civ-mb-4">
+        ${renderFormHeader({
+          label: renderLabel({
+            label: this.label,
+            inputId: this._inputId,
+            required: this.required,
+            headingLevel: this.headingLevel,
+            size: this.size,
+          }),
+          hintId: this._hintId,
+          hint: this.hint,
+          errorId: this._errorId,
+          error: this.error,
+        })}
+        ${inner}
       </div>
     `;
   }

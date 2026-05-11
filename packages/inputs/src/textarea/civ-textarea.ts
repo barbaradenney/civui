@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivFormElement, debounce, dispatch, inputClasses, t, interpolate, validate, COUNT_ANNOUNCE_MS } from '@civui/core';
+import { CivFormElement, LegendHeadingMixin, debounce, dispatch, inputClasses, renderLabel, renderFormHeader, t, interpolate, validate, COUNT_ANNOUNCE_MS } from '@civui/core';
 
 export type TextareaValidate = 'length' | '';
 
@@ -31,7 +31,7 @@ export type TextareaValidate = 'length' | '';
  * @fires civ-analytics - Analytics tracking event on change
  */
 @customElement('civ-textarea')
-export class CivTextarea extends CivFormElement {
+export class CivTextarea extends LegendHeadingMixin(CivFormElement) {
   @property({ type: Number }) rows = 5;
   @property({ type: Number }) maxlength?: number;
   @property({ type: Number }) minlength?: number;
@@ -93,11 +93,15 @@ export class CivTextarea extends CivFormElement {
 
   override connectedCallback(): void {
     super.connectedCallback();
+    this._wrappedInFormField = !!this.closest('civ-form-field');
     this._charCount = this.value?.length || 0;
     this._announcedCharCount = this._charCount;
     this._wordCount = this._countWords(this.value);
     this._announcedWordCount = this._wordCount;
   }
+
+  /** True when wrapped in `<civ-form-field>`; the wrapper renders the chrome. */
+  private _wrappedInFormField = false;
 
   override disconnectedCallback(): void {
     super.disconnectedCallback();
@@ -105,14 +109,18 @@ export class CivTextarea extends CivFormElement {
     this._debouncedAnnounceWordCount.cancel();
   }
 
-  protected override _requiresFormFieldWrapper = true;
 
   protected override get _ariaDescribedBy(): string {
-    // Hint and error are owned by the wrapping `<civ-form-field>` (cascaded
-    // here via `describedByExtra`). Char-count and word-count IDs are
-    // contributed by this component's own template.
+    // When wrapped in `<civ-form-field>`, hint/error IDs are cascaded via
+    // `describedByExtra`. When standalone, we own them and include our own.
+    // Char-count and word-count IDs are always rendered by this component.
     const ids: string[] = [];
-    if (this.describedByExtra) ids.push(this.describedByExtra);
+    if (this._wrappedInFormField) {
+      if (this.describedByExtra) ids.push(this.describedByExtra);
+    } else {
+      if (this.hint) ids.push(this._hintId);
+      if (this.error) ids.push(this._errorId);
+    }
     if (this.maxlength != null && this.maxlength > 0) ids.push(this._charCountId);
     if (this._showWordCount) ids.push(this._wordCountId);
     return ids.join(' ');
@@ -134,7 +142,7 @@ export class CivTextarea extends CivFormElement {
     const showCharCount = this.maxlength != null && this.maxlength > 0;
     const remaining = showCharCount ? this.maxlength! - this._charCount : 0;
 
-    return html`
+    const inner = html`
         <textarea
           class="${classes}"
           id="${this._inputId}"
@@ -184,6 +192,28 @@ export class CivTextarea extends CivFormElement {
               </span>
             `
           : nothing}
+    `;
+
+    // When wrapped in `<civ-form-field>`, that element renders the chrome.
+    if (this._wrappedInFormField) return inner;
+
+    return html`
+      <div class="civ-mb-4">
+        ${renderFormHeader({
+          label: renderLabel({
+            label: this.label,
+            inputId: this._inputId,
+            required: this.required,
+            headingLevel: this.headingLevel,
+            size: this.size,
+          }),
+          hintId: this._hintId,
+          hint: this.hint,
+          errorId: this._errorId,
+          error: this.error,
+        })}
+        ${inner}
+      </div>
     `;
   }
 

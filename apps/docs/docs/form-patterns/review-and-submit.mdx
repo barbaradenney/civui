@@ -52,7 +52,7 @@ When a user clicks an edit link, navigate them back to the relevant step. Listen
 
 ## Sensitive data masking
 
-Mask PII in the review page. SSN should show only the last 4 digits. The component handles this automatically for fields with PII-flagged masks.
+Mask PII in the review page — SSN, account numbers, and routing numbers should show only the last 4 digits. `civ-summary` displays whatever string you pass in `items[].value`, so pre-mask the value when building the section data. The example above uses `●●●-●●-6789` for SSN and `●●●●●6789` for routing numbers.
 
 ## Signature / Statement of truth
 

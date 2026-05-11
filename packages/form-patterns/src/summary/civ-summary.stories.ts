@@ -100,7 +100,7 @@ export const WithoutEditLinks: Story = {
   },
 };
 
-export const Required: Story = {
+export const WithArrayValues: Story = {
   name: 'With Array Values',
   render: () => html`
     <civ-summary heading="Review your selections"></civ-summary>
@@ -122,7 +122,7 @@ export const Required: Story = {
   },
 };
 
-export const Disabled: Story = {
+export const EmptyState: Story = {
   name: 'Empty State',
   render: () => html`
     <civ-summary heading="Review your information"></civ-summary>

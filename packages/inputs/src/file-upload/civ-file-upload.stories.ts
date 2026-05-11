@@ -41,7 +41,13 @@ export const Default: Story = {
     disabled: false,
   },
   render: (args) => html`
-    <civ-file-upload label="${args.label}" name="${args.name}" hint="${args.hint}" error="${args.error}" accept="${args.accept}" ?multiple="${args.multiple}" max-size="${args.maxSize}" max-files="${args.maxFiles}" ?required="${args.required}" ?disabled="${args.disabled}"></civ-file-upload>
+    <civ-file-upload label="${args.label}" hint="${args.hint}" error="${args.error}" name="${args.name}"
+        accept="${args.accept}"
+        ?multiple="${args.multiple}"
+        max-size="${args.maxSize}"
+        max-files="${args.maxFiles}"
+        ?required="${args.required}"
+        ?disabled="${args.disabled}"></civ-file-upload>
   `,
 };
 
@@ -49,19 +55,19 @@ export const Default: Story = {
 
 export const WithHint: Story = {
   render: () => html`
-    <civ-file-upload label="Upload supporting document" name="document" hint="PDF or image files only, maximum 10 MB" accept=".pdf,.jpg,.png"></civ-file-upload>
+    <civ-file-upload label="Upload supporting document" hint="PDF or image files only, maximum 10 MB" name="document" accept=".pdf,.jpg,.png"></civ-file-upload>
   `,
 };
 
 export const WithError: Story = {
   render: () => html`
-    <civ-file-upload label="Upload required document" name="document" error="Upload at least one document to continue" required></civ-file-upload>
+    <civ-file-upload label="Upload required document" error="Upload at least one document to continue" name="document" required></civ-file-upload>
   `,
 };
 
 export const Required: Story = {
   render: () => html`
-    <civ-file-upload label="Upload identification" name="identification" required accept=".pdf,.jpg,.png"></civ-file-upload>
+    <civ-file-upload label="Upload identification" name="identification" accept=".pdf,.jpg,.png" required></civ-file-upload>
   `,
 };
 
@@ -78,8 +84,8 @@ export const AllStates: Story = {
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-6">
       <civ-file-upload label="Normal" name="normal"></civ-file-upload>
-      <civ-file-upload label="With hint" name="hint" hint="PDF files only, max 5 MB" accept=".pdf"></civ-file-upload>
-      <civ-file-upload label="With error" name="error" error="Upload a document" required></civ-file-upload>
+      <civ-file-upload label="With hint" hint="PDF files only, max 5 MB" name="hint" accept=".pdf"></civ-file-upload>
+      <civ-file-upload label="With error" error="Upload a document" name="error" required></civ-file-upload>
       <civ-file-upload label="Required" name="required" required></civ-file-upload>
       <civ-file-upload label="Disabled" name="disabled" disabled></civ-file-upload>
     </div>
@@ -94,15 +100,15 @@ export const DensityScale: Story = {
     <div class="civ-flex civ-flex-col civ-gap-6">
       <div data-civ-scale="dense">
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Dense</p>
-        <civ-file-upload label="Upload document" name="dense-doc" hint="PDF only" accept=".pdf"></civ-file-upload>
+        <civ-file-upload label="Upload document" hint="PDF only" name="dense-doc" accept=".pdf"></civ-file-upload>
       </div>
       <div>
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Default</p>
-        <civ-file-upload label="Upload document" name="default-doc" hint="PDF only" accept=".pdf"></civ-file-upload>
+        <civ-file-upload label="Upload document" hint="PDF only" name="default-doc" accept=".pdf"></civ-file-upload>
       </div>
       <div data-civ-scale="spacious">
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Spacious</p>
-        <civ-file-upload label="Upload document" name="spacious-doc" hint="PDF only" accept=".pdf"></civ-file-upload>
+        <civ-file-upload label="Upload document" hint="PDF only" name="spacious-doc" accept=".pdf"></civ-file-upload>
       </div>
     </div>
   `,
@@ -112,25 +118,37 @@ export const DensityScale: Story = {
 
 export const MultipleFiles: Story = {
   render: () => html`
-    <civ-file-upload label="Supporting documents" name="documents" hint="You can upload up to 5 files. Accepted formats: PDF, Word." multiple max-files="5" accept=".pdf,.doc,.docx"></civ-file-upload>
+    <civ-file-upload label="Supporting documents" hint="You can upload up to 5 files. Accepted formats: PDF, Word." name="documents"
+        multiple
+        max-files="5"
+        accept=".pdf,.doc,.docx"></civ-file-upload>
   `,
 };
 
 export const ImagePreview: Story = {
   render: () => html`
-    <civ-file-upload label="Upload identification photo" name="id-photo" hint="Upload a clear photo of your government-issued ID. JPEG or PNG only." accept="image/jpeg,image/png" show-preview></civ-file-upload>
+    <civ-file-upload label="Upload identification photo" hint="Upload a clear photo of your government-issued ID. JPEG or PNG only." name="id-photo"
+        accept="image/jpeg,image/png"
+        show-preview></civ-file-upload>
   `,
 };
 
 export const CompactVariant: Story = {
   render: () => html`
-    <civ-file-upload label="Resume" name="resume" hint="PDF or Word document, max 5 MB" variant="compact" accept=".pdf,.doc,.docx"></civ-file-upload>
+    <civ-file-upload label="Resume" hint="PDF or Word document, max 5 MB" name="resume"
+        variant="compact"
+        accept=".pdf,.doc,.docx"></civ-file-upload>
   `,
 };
 
 export const FullVariant: Story = {
   render: () => html`
-    <civ-file-upload label="Upload case documents" name="case-docs" hint="Drag all related documents here. Accepted: PDF, JPEG, PNG, TIFF. Maximum 10 files." variant="full" multiple accept=".pdf,.jpg,.png,.tiff" max-files="10" show-preview></civ-file-upload>
+    <civ-file-upload label="Upload case documents" hint="Drag all related documents here. Accepted: PDF, JPEG, PNG, TIFF. Maximum 10 files." name="case-docs"
+        variant="full"
+        multiple
+        accept=".pdf,.jpg,.png,.tiff"
+        max-files="10"
+        show-preview></civ-file-upload>
   `,
 };
 
@@ -190,9 +208,7 @@ export const UploadSimulation: Story = {
     };
 
     return html`
-      <civ-form-field label="Upload documents (simulated)" hint="Add files to see simulated upload progress. Some uploads will randomly fail to demonstrate error handling and retry.">
-        <civ-file-upload
-          name="simulation"
+      <civ-file-upload label="Upload documents (simulated)" hint="Add files to see simulated upload progress. Some uploads will randomly fail to demonstrate error handling and retry." name="simulation"
           multiple
           max-files="5"
           @civ-change="${simulate}"
@@ -215,7 +231,6 @@ export const UploadSimulation: Story = {
             }, 250);
           }}"
         ></civ-file-upload>
-      </civ-form-field>
     `;
   },
 };
@@ -227,9 +242,15 @@ export const GovernmentDocumentSubmission: Story = {
   render: () => html`
     <h3 class="civ-m-0 civ-mb-4 civ-text-xl">Upload required documents</h3>
     <p class="civ-m-0 civ-mb-4" style="color: #565c65;">Upload clear copies of the following documents to support your application.</p>
-    <civ-file-upload label="Government-issued identification" name="id-doc" hint="Driver's license, passport, or state ID. JPEG, PNG, or PDF." required accept=".pdf,.jpg,.png"></civ-file-upload>
-    <civ-file-upload label="Proof of residence" name="proof-of-residence" hint="Utility bill, bank statement, or lease agreement from the last 90 days." accept=".pdf,.jpg,.png"></civ-file-upload>
-    <civ-file-upload label="Additional supporting documents" name="supporting" hint="Upload any other documents that support your application. Up to 5 files." multiple max-files="5" accept=".pdf,.jpg,.png,.doc,.docx"></civ-file-upload>
+    <civ-file-upload label="Government-issued identification" hint="Driver's license, passport, or state ID. JPEG, PNG, or PDF." name="id-doc"
+        accept=".pdf,.jpg,.png"
+        required></civ-file-upload>
+    <civ-file-upload label="Proof of residence" hint="Utility bill, bank statement, or lease agreement from the last 90 days." name="proof-of-residence"
+        accept=".pdf,.jpg,.png"></civ-file-upload>
+    <civ-file-upload label="Additional supporting documents" hint="Upload any other documents that support your application. Up to 5 files." name="supporting"
+        multiple
+        max-files="5"
+        accept=".pdf,.jpg,.png,.doc,.docx"></civ-file-upload>
   `,
 };
 
@@ -246,7 +267,9 @@ export const CaptureEnvironment: Story = {
     },
   },
   render: () => html`
-    <civ-file-upload label="Driver's license photo" name="license" hint="Take a photo of your license, or upload one from your device" accept="image/*" capture="environment"></civ-file-upload>
+    <civ-file-upload label="Driver's license photo" hint="Take a photo of your license, or upload one from your device" name="license"
+        accept="image/*"
+        capture="environment"></civ-file-upload>
   `,
 };
 
@@ -261,7 +284,9 @@ export const CaptureUser: Story = {
     },
   },
   render: () => html`
-    <civ-file-upload label="Identity verification photo" name="selfie" hint="Take a photo of your face for identity verification" accept="image/*" capture="user"></civ-file-upload>
+    <civ-file-upload label="Identity verification photo" hint="Take a photo of your face for identity verification" name="selfie"
+        accept="image/*"
+        capture="user"></civ-file-upload>
   `,
 };
 
@@ -278,7 +303,7 @@ export const DuplicateDetection: Story = {
     },
   },
   render: () => html`
-    <civ-file-upload label="Supporting documents" name="docs" hint="Try selecting the same file twice — the second add is rejected." multiple></civ-file-upload>
+    <civ-file-upload label="Supporting documents" hint="Try selecting the same file twice — the second add is rejected." name="docs" multiple></civ-file-upload>
   `,
 };
 
@@ -295,7 +320,9 @@ export const InitialFiles: Story = {
     },
   },
   render: () => html`
-    <civ-file-upload label="Supporting documents" name="docs" multiple .initialFiles="${[
+    <civ-file-upload label="Supporting documents" name="docs"
+        multiple
+        .initialFiles="${[
           { id: 'srv-001', name: 'tax-return-2025.pdf', size: 1240000, type: 'application/pdf', url: 'https://example.test/files/srv-001' },
           { id: 'srv-002', name: 'w2.pdf', size: 380000, type: 'application/pdf', url: 'https://example.test/files/srv-002' },
         ]}"></civ-file-upload>

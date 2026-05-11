@@ -23,9 +23,7 @@ export const CHANGELOG = `# CivUI Changelog
 </civ-form-group>
 
 <!-- After -->
-<civ-form-field label="Name" required>
-  <civ-text-input name="name" required></civ-text-input>
-</civ-form-field>
+<civ-text-input label="Name" name="name" required></civ-text-input>
 \`\`\`
 
 ### Data-list components replaced by \`civ-select preset\`
@@ -38,9 +36,7 @@ Available presets: \`us-state\`, \`us-territory\`, \`country\`, \`service-branch
 <civ-us-state label="State" name="state" required></civ-us-state>
 
 <!-- After -->
-<civ-form-field label="State" required>
-  <civ-select name="state" preset="us-state" required></civ-select>
-</civ-form-field>
+<civ-select label="State" name="state" preset="us-state" required></civ-select>
 \`\`\`
 
 ### Focus ring is now applied globally
@@ -100,9 +96,7 @@ File attachment with drag-and-drop, accept filter, size limits, and multi-file s
 All form components now support \`required-message\` for field-specific validation text. Generic messages like "This field is required" are flagged as warnings.
 
 \`\`\`html
-<civ-form-field label="Full name" required required-message="Enter your full legal name">
-  <civ-text-input name="full-name" required></civ-text-input>
-</civ-form-field>
+<civ-text-input label="Full name" required-message="Enter your full legal name" name="full-name" required></civ-text-input>
 \`\`\`
 
 ### \`autocomplete\` attribute

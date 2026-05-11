@@ -186,31 +186,24 @@ export const ChevronToggle: Story = {
 export const AsyncLoading: Story = {
   name: 'Async: remote loadOptions',
   render: () => {
-    const wrapper = document.createElement('civ-form-field') as any;
-    wrapper.label = 'Federal agency';
-    wrapper.hint = 'Type to search across federal agencies';
-
     const el = document.createElement('civ-combobox') as any;
+    el.label = 'Federal agency';
+    el.hint = 'Type to search across federal agencies';
     el.name = 'agency';
     el.placeholder = 'Type an agency name...';
     el.loadOptions = async (q: string) => {
       await new Promise((r) => setTimeout(r, 400));
       return AGENCIES.filter((a) => a.label.toLowerCase().includes(q.toLowerCase()));
     };
-
-    wrapper.innerHTML = '';
-    wrapper.appendChild(el);
-    return wrapper;
+    return el;
   },
 };
 
 export const AsyncWithMinQuery: Story = {
   name: 'Async: with min-query-length',
   render: () => {
-    const wrapper = document.createElement('civ-form-field') as any;
-    wrapper.label = 'Federal agency';
-
     const el = document.createElement('civ-combobox') as any;
+    el.label = 'Federal agency';
     el.name = 'agency';
     el.setAttribute('min-query-length', '3');
     el.placeholder = 'Type at least 3 characters...';
@@ -218,29 +211,21 @@ export const AsyncWithMinQuery: Story = {
       await new Promise((r) => setTimeout(r, 250));
       return AGENCIES.filter((a) => a.label.toLowerCase().includes(q.toLowerCase()));
     };
-
-    wrapper.innerHTML = '';
-    wrapper.appendChild(el);
-    return wrapper;
+    return el;
   },
 };
 
 export const AsyncError: Story = {
   name: 'Async: error state',
   render: () => {
-    const wrapper = document.createElement('civ-form-field') as any;
-    wrapper.label = 'Federal agency';
-
     const el = document.createElement('civ-combobox') as any;
+    el.label = 'Federal agency';
     el.name = 'agency';
     el.loadOptions = async () => {
       await new Promise((r) => setTimeout(r, 400));
       throw new Error('Network unavailable');
     };
-
-    wrapper.innerHTML = '';
-    wrapper.appendChild(el);
-    return wrapper;
+    return el;
   },
 };
 

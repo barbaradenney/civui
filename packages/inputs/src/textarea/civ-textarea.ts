@@ -93,15 +93,11 @@ export class CivTextarea extends LegendHeadingMixin(CivFormElement) {
 
   override connectedCallback(): void {
     super.connectedCallback();
-    this._wrappedInFormField = !!this.closest('civ-form-field');
     this._charCount = this.value?.length || 0;
     this._announcedCharCount = this._charCount;
     this._wordCount = this._countWords(this.value);
     this._announcedWordCount = this._wordCount;
   }
-
-  /** True when wrapped in `<civ-form-field>`; the wrapper renders the chrome. */
-  private _wrappedInFormField = false;
 
   override disconnectedCallback(): void {
     super.disconnectedCallback();
@@ -111,16 +107,9 @@ export class CivTextarea extends LegendHeadingMixin(CivFormElement) {
 
 
   protected override get _ariaDescribedBy(): string {
-    // When wrapped in `<civ-form-field>`, hint/error IDs are cascaded via
-    // `describedByExtra`. When standalone, we own them and include our own.
-    // Char-count and word-count IDs are always rendered by this component.
     const ids: string[] = [];
-    if (this._wrappedInFormField) {
-      if (this.describedByExtra) ids.push(this.describedByExtra);
-    } else {
-      if (this.hint) ids.push(this._hintId);
-      if (this.error) ids.push(this._errorId);
-    }
+    if (this.hint) ids.push(this._hintId);
+    if (this.error) ids.push(this._errorId);
     if (this.maxlength != null && this.maxlength > 0) ids.push(this._charCountId);
     if (this._showWordCount) ids.push(this._wordCountId);
     return ids.join(' ');
@@ -193,9 +182,6 @@ export class CivTextarea extends LegendHeadingMixin(CivFormElement) {
             `
           : nothing}
     `;
-
-    // When wrapped in `<civ-form-field>`, that element renders the chrome.
-    if (this._wrappedInFormField) return inner;
 
     return html`
       <div class="civ-mb-4">

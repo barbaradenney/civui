@@ -202,9 +202,6 @@ export class CivTextInput extends LegendHeadingMixin(CivFormElement) {
    */
   override connectedCallback(): void {
     super.connectedCallback();
-    // Detect whether we're wrapped in `<civ-form-field>`. Cached at mount
-    // because the wrapper relationship doesn't change after.
-    this._wrappedInFormField = !!this.closest('civ-form-field');
     // Hydrate hint + normalize masked value before the first render so
     // these don't trigger a second update cycle.
     const maskDef = this._maskDef;
@@ -250,28 +247,10 @@ export class CivTextInput extends LegendHeadingMixin(CivFormElement) {
     }
   }
 
-  /**
-   * Set on connect; tracks whether the control is rendered inside a
-   * `<civ-form-field>` wrapper. When true, the wrapper renders the
-   * label/hint/error chrome and cascades its IDs via `describedByExtra`.
-   * When false, we render the chrome ourselves from `label` / `hint` /
-   * `error` props directly on this element.
-   *
-   * Cached in `connectedCallback` rather than re-querying on every render —
-   * the wrapper relationship doesn't change after mount.
-   */
-  private _wrappedInFormField = false;
-
   protected override get _ariaDescribedBy(): string {
-    // When wrapped in `<civ-form-field>`, hint/error IDs are cascaded via
-    // `describedByExtra`. When standalone, we own them and include our own.
     const ids: string[] = [];
-    if (this._wrappedInFormField) {
-      if (this.describedByExtra) ids.push(this.describedByExtra);
-    } else {
-      if (this.hint) ids.push(this._hintId);
-      if (this.error) ids.push(this._errorId);
-    }
+    if (this.hint) ids.push(this._hintId);
+    if (this.error) ids.push(this._errorId);
     if (this._showCharCount) ids.push(this._charCountId);
     return ids.join(' ');
   }
@@ -293,11 +272,6 @@ export class CivTextInput extends LegendHeadingMixin(CivFormElement) {
       ${wrappedInput}
       ${this._renderCharCount()}
     `;
-
-    // When wrapped in `<civ-form-field>`, that element renders the chrome
-    // and our `data-civ-form-field` marker lets it find us. Don't double-
-    // render the label/hint/error here.
-    if (this._wrappedInFormField) return inner;
 
     return html`
       <div class="civ-mb-4">

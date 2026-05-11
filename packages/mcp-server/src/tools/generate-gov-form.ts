@@ -335,54 +335,30 @@ function renderField(field: FormField): string {
     case 'password':
     case 'search':
     case 'url':
-      return `      <civ-form-field label="${escapeHtml(field.label)}" ${wrapperAttrs}>
-        <civ-text-input
-          ${childAttrs}
-          type="${field.type}"
-        ></civ-text-input>
-      </civ-form-field>`;
+      return `      <civ-text-input label="${escapeHtml(field.label)}" ${wrapperAttrs} ${childAttrs}
+          type="${field.type}"></civ-text-input>`;
 
     case 'ssn':
-      return `      <civ-form-field label="${escapeHtml(field.label)}" ${wrapperAttrs}>
-        <civ-text-input
-          ${childAttrs}
+      return `      <civ-text-input label="${escapeHtml(field.label)}" ${wrapperAttrs} ${childAttrs}
           type="tel"
           mask="ssn"
-          validate="ssn"
-        ></civ-text-input>
-      </civ-form-field>`;
+          validate="ssn"></civ-text-input>`;
 
     case 'zip':
-      return `      <civ-form-field label="${escapeHtml(field.label)}" ${wrapperAttrs}>
-        <civ-text-input
-          ${childAttrs}
+      return `      <civ-text-input label="${escapeHtml(field.label)}" ${wrapperAttrs} ${childAttrs}
           type="tel"
           mask="zip"
-          validate="zip"
-        ></civ-text-input>
-      </civ-form-field>`;
+          validate="zip"></civ-text-input>`;
 
     case 'textarea':
-      return `      <civ-form-field label="${escapeHtml(field.label)}" ${wrapperAttrs}>
-        <civ-textarea
-          ${childAttrs}
-          ${field.rows ? `rows="${field.rows}"` : ''}
-        ></civ-textarea>
-      </civ-form-field>`;
+      return `      <civ-textarea label="${escapeHtml(field.label)}" ${wrapperAttrs} ${childAttrs}
+          ${field.rows ? `rows="${field.rows}"` : ''}></civ-textarea>`;
 
     case 'select':
-      return `      <civ-form-field label="${escapeHtml(field.label)}" ${wrapperAttrs}>
-        <civ-select
-          ${childAttrs}
-        ></civ-select>
-      </civ-form-field>`;
+      return `      <civ-select label="${escapeHtml(field.label)}" ${wrapperAttrs} ${childAttrs}></civ-select>`;
 
     case 'combobox':
-      return `      <civ-form-field label="${escapeHtml(field.label)}" ${wrapperAttrs}>
-        <civ-combobox
-          ${childAttrs}
-        ></civ-combobox>
-      </civ-form-field>`;
+      return `      <civ-combobox label="${escapeHtml(field.label)}" ${wrapperAttrs} ${childAttrs}></civ-combobox>`;
 
     case 'radio': {
       const radioOptions = (field.options || [])
@@ -429,22 +405,14 @@ ${checkOptions}
       ></civ-memorable-date>`;
 
     case 'date':
-      return `      <civ-form-field label="${escapeHtml(field.label)}" ${wrapperAttrs}>
-        <civ-date-picker
-          ${childAttrs}
-        ></civ-date-picker>
-      </civ-form-field>`;
+      return `      <civ-date-picker label="${escapeHtml(field.label)}" ${wrapperAttrs} ${childAttrs}></civ-date-picker>`;
 
     case 'file':
-      return `      <civ-form-field label="${escapeHtml(field.label)}" ${wrapperAttrs}>
-        <civ-file-upload
-          ${childAttrs}
+      return `      <civ-file-upload label="${escapeHtml(field.label)}" ${wrapperAttrs} ${childAttrs}
           ${field.accept ? `accept="${escapeHtml(field.accept)}"` : ''}
           ${field.multiple ? 'multiple' : ''}
           ${field.maxSize ? `max-size="${field.maxSize}"` : ''}
-          ${field.maxFiles ? `max-files="${field.maxFiles}"` : ''}
-        ></civ-file-upload>
-      </civ-form-field>`;
+          ${field.maxFiles ? `max-files="${field.maxFiles}"` : ''}></civ-file-upload>`;
 
     case 'toggle':
       // Self-contained — no wrapping needed
@@ -456,11 +424,7 @@ ${checkOptions}
       ></civ-toggle>`;
 
     default:
-      return `      <civ-form-field label="${escapeHtml(field.label)}" ${wrapperAttrs}>
-        <civ-text-input
-          ${childAttrs}
-        ></civ-text-input>
-      </civ-form-field>`;
+      return `      <civ-text-input label="${escapeHtml(field.label)}" ${wrapperAttrs} ${childAttrs}></civ-text-input>`;
   }
 }
 

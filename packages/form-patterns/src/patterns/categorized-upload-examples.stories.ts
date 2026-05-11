@@ -31,15 +31,13 @@ export const SingleDocument: Story = {
   name: 'Single categorized document',
   render: () => html`
     <civ-fieldset legend="Upload supporting document">
-      <civ-form-field label="Document type" required>
-        <civ-select name="docType">
+      <civ-select label="Document type" name="docType" required>
           <option value="">- Select -</option>
           <option value="dd214">DD214 (Discharge papers)</option>
           <option value="medical">Medical records</option>
           <option value="buddy">Buddy statement</option>
           <option value="other">Other</option>
         </civ-select>
-      </civ-form-field>
 
       <civ-conditional when="docType" has-value>
         <civ-file-upload
@@ -59,15 +57,13 @@ export const SingleWithOther: Story = {
   name: 'Single with "Other" description',
   render: () => html`
     <civ-fieldset legend="Upload supporting document">
-      <civ-form-field label="Document type" required>
-        <civ-select name="docType">
+      <civ-select label="Document type" name="docType" required>
           <option value="">- Select -</option>
           <option value="dd214">DD214 (Discharge papers)</option>
           <option value="medical">Medical records</option>
           <option value="buddy">Buddy statement</option>
           <option value="other">Other</option>
         </civ-select>
-      </civ-form-field>
 
       <civ-conditional when="docType" equals="other">
         <civ-text-input label="Describe the document" name="docDescription" required></civ-text-input>
@@ -97,8 +93,7 @@ export const MultipleDocuments: Story = {
       min="0"
       max="10"
     >
-      <civ-form-field label="Document type" required>
-        <civ-select name="docType">
+      <civ-select label="Document type" name="docType" required>
           <option value="">- Select -</option>
           <option value="dd214">DD214 (Discharge papers)</option>
           <option value="medical">Medical records</option>
@@ -106,7 +101,6 @@ export const MultipleDocuments: Story = {
           <option value="id">Government-issued ID</option>
           <option value="other">Other</option>
         </civ-select>
-      </civ-form-field>
 
       <civ-conditional when="docType" equals="other">
         <civ-text-input label="Describe the document" name="docDescription" required></civ-text-input>
@@ -134,8 +128,7 @@ export const VADisabilityEvidence: Story = {
       min="1"
       max="20"
     >
-      <civ-form-field label="Type of evidence" required>
-        <civ-select name="evidenceType">
+      <civ-select label="Type of evidence" name="evidenceType" required>
           <option value="">- Select -</option>
           <option value="service-treatment">Service treatment records</option>
           <option value="va-medical">VA medical records</option>
@@ -146,7 +139,6 @@ export const VADisabilityEvidence: Story = {
           <option value="dd214">DD214 or other separation documents</option>
           <option value="other">Other supporting evidence</option>
         </civ-select>
-      </civ-form-field>
 
       <civ-conditional when="evidenceType" equals="other">
         <civ-textarea label="Description of evidence" name="evidenceDescription" hint="Briefly describe what this document is" required></civ-textarea>
@@ -171,15 +163,13 @@ export const IDDocumentUpload: Story = {
   name: 'ID document upload (front + back)',
   render: () => html`
     <civ-fieldset legend="Government-issued ID">
-      <civ-form-field label="ID type" required>
-        <civ-select name="idType">
+      <civ-select label="ID type" name="idType" required>
           <option value="">- Select -</option>
           <option value="drivers-license">Driver's license</option>
           <option value="state-id">State ID card</option>
           <option value="passport">U.S. Passport</option>
           <option value="military-id">Military ID (CAC)</option>
         </civ-select>
-      </civ-form-field>
 
       <civ-conditional when="idType" has-value>
         <civ-file-upload

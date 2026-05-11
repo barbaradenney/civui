@@ -8,17 +8,16 @@ globs:
 # Government Form Component Rules
 
 ## Render order
-- `civ-form-field` enforces: label → hint → error → control.
-- `civ-form-fieldset` enforces: legend → hint → error → controls.
-- Both use `renderFormHeader()` from `@civui/core` internally.
-- Single-input components (text-input, textarea, select, combobox, date-picker, file-upload) are bare controls — they do NOT render their own label/hint/error.
+- Every form control renders its own chrome: label → hint → error → control via `renderFormHeader()` from `@civui/core`.
+- `civ-form-fieldset` enforces: legend → hint → error → controls (multi-field grouping only).
+- Single-input components (text-input, textarea, select, combobox, date-picker, file-upload) are self-contained — they render their own label/hint/error from props.
 - Group components (radio-group, checkbox-group, segmented-control, yes-no, memorable-date, date-range-picker) are **self-contained** — they render their own legend/hint/error from a `legend` prop. Do NOT wrap in `<civ-form-fieldset>`.
 
 ## Section 508 non-negotiables
-- Every single input MUST be wrapped in `<civ-form-field>` with a visible `label`.
+- Every single input MUST have a visible `label` prop set directly on the control.
 - Every group input MUST have a `legend` prop set directly on the component (self-contained — no external wrapper).
 - Never use `placeholder` as the sole label.
-- Set `required` on the `<civ-form-field>` wrapper (single inputs) or directly on the group component — renders "(required)" text and cascades to child controls.
+- Set `required` directly on the control — renders "(required)" text on the label/legend.
 - Error messages MUST use `role="alert"` (handled by `renderError()`).
 - Color must never be the sole error indicator — use text + border.
 - Focus ring: applied automatically by `civ.css` to every native interactive element. Render a real `<button>` / `<a href>` / `<input>` — no class required.

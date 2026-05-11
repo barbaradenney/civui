@@ -7,16 +7,6 @@ afterEach(cleanupFixtures);
 
 describe('civ-date-picker', () => {
   describe('rendering', () => {
-    it('renders label when wrapped in civ-form-field', async () => {
-      const wrapper = await fixture(
-        '<civ-form-field label="Appointment date"><civ-date-picker></civ-date-picker></civ-form-field>',
-      );
-
-      const label = wrapper.querySelector('label');
-      expect(label).not.toBeNull();
-      expect(label!.textContent).toContain('Appointment date');
-    });
-
     it('renders a text input', async () => {
       const el = await fixture('<civ-date-picker label="Date" name="date"></civ-date-picker>');
 
@@ -29,18 +19,6 @@ describe('civ-date-picker', () => {
 
       const button = el.querySelector('button[aria-label^="Choose date"]');
       expect(button).not.toBeNull();
-    });
-
-    it('associates form-field label with input', async () => {
-      const wrapper = await fixture(
-        '<civ-form-field label="Date"><civ-date-picker></civ-date-picker></civ-form-field>',
-      );
-      const child = wrapper.querySelector('civ-date-picker')!;
-      await elementUpdated(child);
-
-      const label = wrapper.querySelector('label');
-      const input = wrapper.querySelector('input');
-      expect(label!.getAttribute('for')).toBe(input!.id);
     });
 
     it('uses Light DOM', async () => {
@@ -56,29 +34,6 @@ describe('civ-date-picker', () => {
   });
 
   describe('states', () => {
-    it('shows required indicator when wrapped in form-field', async () => {
-      const wrapper = await fixture(
-        '<civ-form-field label="Date" required><civ-date-picker></civ-date-picker></civ-form-field>',
-      );
-
-      const requiredMark = wrapper.querySelector('.civ-required-mark');
-      expect(requiredMark).not.toBeNull();
-    });
-
-    it('renders hint and error when wrapped in form-field', async () => {
-      const wrapper = await fixture(
-        '<civ-form-field label="Date" hint="Select a date" error="Date is required"><civ-date-picker></civ-date-picker></civ-form-field>',
-      );
-
-      const hint = wrapper.querySelector('span');
-      expect(hint).not.toBeNull();
-      expect(hint!.textContent).toBe('Select a date');
-
-      const errorEl = wrapper.querySelector('[role="alert"]');
-      expect(errorEl).not.toBeNull();
-      expect(errorEl!.textContent).toBe('Date is required');
-    });
-
     it('sets aria-invalid when error is present', async () => {
       const el = await fixture('<civ-date-picker label="Date" error="Bad"></civ-date-picker>');
 
@@ -615,25 +570,6 @@ describe('civ-date-picker', () => {
       expect(el._inputValue).toBe('');
     });
 
-    it('bubbles internal error state to a wrapping civ-form-field', async () => {
-      const wrapper = await fixture(
-        '<civ-form-field label="Date"><civ-date-picker name="d"></civ-date-picker></civ-form-field>'
-      ) as any;
-      const datePicker = wrapper.querySelector('civ-date-picker') as any;
-
-      // Simulate the picker's internal validation rejecting an unparseable date
-      datePicker.error = 'Enter a valid date';
-      await elementUpdated(wrapper);
-
-      // The civ-error-change event should have propagated up so the
-      // form-field renders the error from its own state.
-      expect(wrapper.error).toBe('Enter a valid date');
-
-      // Reverse direction also works: clearing the child's error clears the parent's
-      datePicker.error = '';
-      await elementUpdated(wrapper);
-      expect(wrapper.error).toBe('');
-    });
   });
 
   describe('focus management', () => {

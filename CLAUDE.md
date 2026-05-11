@@ -83,13 +83,11 @@ Form-participating components extend `CivFormElement` (which extends `CivBaseEle
 - `touched` property tracks per-field interaction (set on first `focusout`, reset on form reset)
 - jsdom doesn't fully support ElementInternals, so guards like `typeof setFormValue === 'function'` are needed
 
-### Form Field Wrappers
-Form input components (text-input, textarea, select, combobox, date-picker, file-upload) are **bare controls** — they render only the input element. Wrap them in `<civ-form-field>` for label/hint/error:
+### Self-Contained Controls
+Every form input renders its own label / hint / error chrome from `label`, `hint`, `error`, `required` props. There is no separate wrapper component for single inputs — pass the props directly on the control:
 
 ```html
-<civ-form-field label="Email address" hint="Work email preferred" required>
-  <civ-text-input type="email" name="email"></civ-text-input>
-</civ-form-field>
+<civ-text-input label="Email address" name="email" type="email" hint="Work email preferred" required></civ-text-input>
 ```
 
 Group components (radio-group, checkbox-group, segmented-control, yes-no, memorable-date, date-range-picker) are **self-contained** — pass `legend` directly, do **not** wrap in `<civ-form-fieldset>` (you'd get nested fieldsets with double legends). The `fieldset-wrappers` CI gate enforces this.
@@ -101,11 +99,9 @@ Group components (radio-group, checkbox-group, segmented-control, yes-no, memora
 </civ-radio-group>
 ```
 
-`civ-form-fieldset` is now reserved for **genuine multi-field grouping** — putting one section heading over several controls (e.g. an address with street/city/state inside).
+`civ-form-fieldset` is reserved for **genuine multi-field grouping** — putting one section heading over several controls (e.g. an address with street/city/state inside).
 
-`civ-form-field` (single-control wrapper) cascades `required`/`disabled` to its child and wires ARIA attributes automatically.
-
-**Self-contained components** (checkbox, toggle, all compound components, and now all six group components above) render their own labels inline and do not need wrappers.
+**Self-contained components** (every input, checkbox, toggle, all compound components, and all six group components above) render their own labels inline and do not need wrappers.
 
 ### Events
 - `civ-input` — fires on every value change (like native `input`)

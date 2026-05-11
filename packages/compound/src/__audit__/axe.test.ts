@@ -20,22 +20,10 @@ import '../name/civ-name.js';
 
 describe.skip('a11y audit (axe-core)', () => {
   const fixtures: Array<[string, string]> = [
-    ['form-field with text input', `
-      <civ-form-field label="Email address" hint="Work email" required>
-        <civ-text-input type="email" name="email"></civ-text-input>
-      </civ-form-field>`],
-    ['form-field with error', `
-      <civ-form-field label="ZIP code" error="Enter a valid ZIP code">
-        <civ-text-input name="zip"></civ-text-input>
-      </civ-form-field>`],
-    ['textarea', `
-      <civ-form-field label="Comments">
-        <civ-textarea name="comments"></civ-textarea>
-      </civ-form-field>`],
-    ['select', `
-      <civ-form-field label="State" required>
-        <civ-select name="state"></civ-select>
-      </civ-form-field>`],
+    ['text input', `<civ-text-input label="Email address" type="email" name="email" hint="Work email" required></civ-text-input>`],
+    ['text input with error', `<civ-text-input label="ZIP code" name="zip" error="Enter a valid ZIP code"></civ-text-input>`],
+    ['textarea', `<civ-textarea label="Comments" name="comments"></civ-textarea>`],
+    ['select', `<civ-select label="State" name="state" required></civ-select>`],
     ['radio group', `
       <civ-radio-group legend="Preferred contact" name="contact">
         <civ-radio value="email" label="Email"></civ-radio>

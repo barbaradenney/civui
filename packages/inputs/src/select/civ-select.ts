@@ -63,12 +63,8 @@ export class CivSelect extends LegendHeadingMixin(CivFormElement) {
    */
   @property({ type: String, attribute: 'preset-variant' }) presetVariant?: string;
 
-  /** True when wrapped in `<civ-form-field>`; the wrapper renders the chrome. */
-  private _wrappedInFormField = false;
-
   override connectedCallback(): void {
     super.connectedCallback();
-    this._wrappedInFormField = !!this.closest('civ-form-field');
     // Light DOM: original <option>/<optgroup> children would remain in the
     // host alongside the rendered template. Capture their data into
     // `options` (only when the property hasn't been populated otherwise),
@@ -146,10 +142,6 @@ export class CivSelect extends LegendHeadingMixin(CivFormElement) {
 
 
   protected override get _ariaDescribedBy(): string {
-    // When wrapped in `<civ-form-field>`, hint/error IDs are cascaded via
-    // `describedByExtra`. When standalone, we own them and include our own.
-    // Select renders no other descriptive elements of its own.
-    if (this._wrappedInFormField) return this.describedByExtra;
     const ids: string[] = [];
     if (this.hint) ids.push(this._hintId);
     if (this.error) ids.push(this._errorId);
@@ -180,8 +172,6 @@ export class CivSelect extends LegendHeadingMixin(CivFormElement) {
           ${this._renderGroupedOptions()}
         </select>
     `;
-
-    if (this._wrappedInFormField) return inner;
 
     return html`
       <div class="civ-mb-4">

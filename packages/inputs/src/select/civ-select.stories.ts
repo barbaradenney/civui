@@ -37,19 +37,7 @@ export const Default: Story = {
     disabled: false,
   },
   render: (args) => html`
-    <civ-form-field
-      label="${args.label}"
-      hint="${args.hint}"
-      error="${args.error}"
-      ?required="${args.required}"
-      ?disabled="${args.disabled}"
-    >
-      <civ-select
-        name="${args.name}"
-        empty-label="${args.emptyLabel}"
-        ?required="${args.required}"
-        ?disabled="${args.disabled}"
-      >
+    <civ-select label="${args.label}" name="${args.name}" hint="${args.hint}" error="${args.error}" empty-label="${args.emptyLabel}" ?required="${args.required}" ?disabled="${args.disabled}">
         <option value="AL">Alabama</option>
         <option value="AK">Alaska</option>
         <option value="AZ">Arizona</option>
@@ -60,7 +48,6 @@ export const Default: Story = {
         <option value="TX">Texas</option>
         <option value="WA">Washington</option>
       </civ-select>
-    </civ-form-field>
   `,
 };
 
@@ -68,47 +55,39 @@ export const Default: Story = {
 
 export const WithHint: Story = {
   render: () => html`
-    <civ-form-field label="State of residence" hint="Select the state where you currently live">
-      <civ-select name="state">
+    <civ-select label="State of residence" name="state" hint="Select the state where you currently live">
         <option value="CA">California</option>
         <option value="NY">New York</option>
         <option value="TX">Texas</option>
       </civ-select>
-    </civ-form-field>
   `,
 };
 
 export const WithError: Story = {
   render: () => html`
-    <civ-form-field label="State of residence" error="Select a state to continue" required>
-      <civ-select name="state" required>
+    <civ-select label="State of residence" name="state" error="Select a state to continue" required>
         <option value="CA">California</option>
         <option value="NY">New York</option>
         <option value="TX">Texas</option>
       </civ-select>
-    </civ-form-field>
   `,
 };
 
 export const Required: Story = {
   render: () => html`
-    <civ-form-field label="State of residence" required>
-      <civ-select name="state" required>
+    <civ-select label="State of residence" name="state" required>
         <option value="CA">California</option>
         <option value="NY">New York</option>
       </civ-select>
-    </civ-form-field>
   `,
 };
 
 export const Disabled: Story = {
   render: () => html`
-    <civ-form-field label="State of residence" disabled>
-      <civ-select name="state" value="CA" disabled>
+    <civ-select label="State of residence" name="state" value="CA" disabled>
         <option value="CA">California</option>
         <option value="NY">New York</option>
       </civ-select>
-    </civ-form-field>
   `,
 };
 
@@ -118,35 +97,25 @@ export const AllStates: Story = {
   name: 'All States',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-4">
-      <civ-form-field label="Normal">
-        <civ-select name="normal">
+      <civ-select label="Normal" name="normal">
           <option value="CA">California</option>
           <option value="NY">New York</option>
           <option value="TX">Texas</option>
         </civ-select>
-      </civ-form-field>
-      <civ-form-field label="With hint" hint="Select where you currently reside">
-        <civ-select name="hint">
+      <civ-select label="With hint" name="hint" hint="Select where you currently reside">
           <option value="CA">California</option>
           <option value="NY">New York</option>
         </civ-select>
-      </civ-form-field>
-      <civ-form-field label="With error" error="Select a state" required>
-        <civ-select name="error" required>
+      <civ-select label="With error" name="error" error="Select a state" required>
           <option value="CA">California</option>
           <option value="NY">New York</option>
         </civ-select>
-      </civ-form-field>
-      <civ-form-field label="Required" required>
-        <civ-select name="required" required>
+      <civ-select label="Required" name="required" required>
           <option value="CA">California</option>
         </civ-select>
-      </civ-form-field>
-      <civ-form-field label="Disabled" disabled>
-        <civ-select name="disabled" value="NY" disabled>
+      <civ-select label="Disabled" name="disabled" value="NY" disabled>
           <option value="NY">New York</option>
         </civ-select>
-      </civ-form-field>
     </div>
   `,
 };
@@ -155,8 +124,7 @@ export const AllStates: Story = {
 
 export const OptionGroups: Story = {
   render: () => html`
-    <civ-form-field label="Department" hint="Select your department">
-      <civ-select name="department">
+    <civ-select label="Department" name="department" hint="Select your department">
         <optgroup label="Administration">
           <option value="hr">Human Resources</option>
           <option value="finance">Finance</option>
@@ -172,28 +140,24 @@ export const OptionGroups: Story = {
           <option value="outreach">Public Outreach</option>
         </optgroup>
       </civ-select>
-    </civ-form-field>
   `,
 };
 
 export const SlottedOptions: Story = {
   name: 'Declarative <option> slot',
   render: () => html`
-    <civ-form-field label="State">
-      <civ-select name="state">
+    <civ-select label="State" name="state">
         <option value="CA">California</option>
         <option value="NY">New York</option>
         <option value="TX" selected>Texas</option>
       </civ-select>
-    </civ-form-field>
   `,
 };
 
 export const SlottedWithOptgroup: Story = {
   name: 'Declarative <optgroup>',
   render: () => html`
-    <civ-form-field label="State">
-      <civ-select name="state">
+    <civ-select label="State" name="state">
         <option value="CA">California</option>
         <optgroup label="Pacific">
           <option value="OR">Oregon</option>
@@ -204,7 +168,6 @@ export const SlottedWithOptgroup: Story = {
           <option value="UT">Utah</option>
         </optgroup>
       </civ-select>
-    </civ-form-field>
   `,
 };
 
@@ -214,54 +177,38 @@ export const WidthVariants: Story = {
   name: 'Width variants',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-4">
-      <civ-form-field label="2xs width">
-        <civ-select width="2xs">
+      <civ-select label="2xs width" width="2xs">
           <option value="1">1</option>
           <option value="2">2</option>
         </civ-select>
-      </civ-form-field>
-      <civ-form-field label="xs width">
-        <civ-select width="xs">
+      <civ-select label="xs width" width="xs">
           <option value="CA">CA</option>
           <option value="NY">NY</option>
         </civ-select>
-      </civ-form-field>
-      <civ-form-field label="sm width">
-        <civ-select width="sm">
+      <civ-select label="sm width" width="sm">
           <option value="CA">California</option>
           <option value="NY">New York</option>
         </civ-select>
-      </civ-form-field>
-      <civ-form-field label="md width">
-        <civ-select width="md">
+      <civ-select label="md width" width="md">
           <option value="active">Active</option>
           <option value="inactive">Inactive</option>
         </civ-select>
-      </civ-form-field>
-      <civ-form-field label="lg width">
-        <civ-select width="lg">
+      <civ-select label="lg width" width="lg">
           <option value="education">Education benefits</option>
           <option value="housing">Housing assistance</option>
         </civ-select>
-      </civ-form-field>
-      <civ-form-field label="xl width">
-        <civ-select width="xl">
+      <civ-select label="xl width" width="xl">
           <option value="va-dc">Washington DC VA Medical Center</option>
           <option value="va-richmond">Richmond VA Medical Center</option>
         </civ-select>
-      </civ-form-field>
-      <civ-form-field label="2xl width">
-        <civ-select width="2xl">
+      <civ-select label="2xl width" width="2xl">
           <option value="long">This is a very long option for wide fields</option>
           <option value="another">Another long option to demonstrate the width</option>
         </civ-select>
-      </civ-form-field>
-      <civ-form-field label="default (full width)">
-        <civ-select>
+      <civ-select label="default (full width)">
           <option value="active">Active</option>
           <option value="inactive">Inactive</option>
         </civ-select>
-      </civ-form-field>
     </div>
   `,
 };
@@ -272,33 +219,27 @@ export const DensityScale: Story = {
     <div class="civ-flex civ-flex-col civ-gap-6">
       <div data-civ-scale="dense">
         <p class="civ-text-sm civ-font-semibold civ-mb-2">Dense</p>
-        <civ-form-field label="State" hint="Select where you reside">
-          <civ-select name="dense-state">
+        <civ-select label="State" name="dense-state" hint="Select where you reside">
             <option value="CA">California</option>
             <option value="NY">New York</option>
             <option value="TX">Texas</option>
           </civ-select>
-        </civ-form-field>
       </div>
       <div>
         <p class="civ-text-sm civ-font-semibold civ-mb-2">Default</p>
-        <civ-form-field label="State" hint="Select where you reside">
-          <civ-select name="default-state">
+        <civ-select label="State" name="default-state" hint="Select where you reside">
             <option value="CA">California</option>
             <option value="NY">New York</option>
             <option value="TX">Texas</option>
           </civ-select>
-        </civ-form-field>
       </div>
       <div data-civ-scale="spacious">
         <p class="civ-text-sm civ-font-semibold civ-mb-2">Spacious</p>
-        <civ-form-field label="State" hint="Select where you reside">
-          <civ-select name="spacious-state">
+        <civ-select label="State" name="spacious-state" hint="Select where you reside">
             <option value="CA">California</option>
             <option value="NY">New York</option>
             <option value="TX">Texas</option>
           </civ-select>
-        </civ-form-field>
       </div>
     </div>
   `,
@@ -309,14 +250,12 @@ export const GovernmentBenefitsForm: Story = {
   render: () => html`
     <div style="max-width: 480px;">
       <civ-select label="State of residence" name="state" required preset="us-state"></civ-select>
-      <civ-form-field label="Benefit type" hint="Select the benefit you are applying for" required>
-        <civ-select name="benefit" required>
+      <civ-select label="Benefit type" name="benefit" hint="Select the benefit you are applying for" required>
           <option value="health">Health care</option>
           <option value="education">Education</option>
           <option value="disability">Disability compensation</option>
           <option value="housing">Housing assistance</option>
         </civ-select>
-      </civ-form-field>
     </div>
   `,
 };

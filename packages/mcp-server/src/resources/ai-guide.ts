@@ -101,9 +101,7 @@ Standard text input supporting multiple HTML input types.
 
 **Example:**
 \`\`\`html
-<civ-form-field label="Email address" hint="We'll use this to send your confirmation" required>
-  <civ-text-input name="email" type="email" required autocomplete="email"></civ-text-input>
-</civ-form-field>
+<civ-text-input label="Email address" hint="We'll use this to send your confirmation" name="email" type="email" required autocomplete="email"></civ-text-input>
 \`\`\`
 
 ---
@@ -119,9 +117,7 @@ Multi-line text input. Shows character count when \`maxlength\` is set.
 
 **Example:**
 \`\`\`html
-<civ-form-field label="Describe your issue" hint="Include any relevant details" required>
-  <civ-textarea name="description" rows="8" maxlength="2000" required></civ-textarea>
-</civ-form-field>
+<civ-textarea label="Describe your issue" hint="Include any relevant details" name="description" rows="8" maxlength="2000" required></civ-textarea>
 \`\`\`
 
 ---
@@ -140,22 +136,17 @@ Dropdown select. Populate via \`options\` property, slotted \`<option>\` element
 
 **Example (property-driven):**
 \`\`\`html
-<civ-form-field label="State" hint="Select your state of residence" required>
-  <civ-select name="state" required
+<civ-select label="State" hint="Select your state of residence" name="state" required
     .options="\${[
       { value: 'CA', label: 'California' },
       { value: 'NY', label: 'New York' },
       { value: 'TX', label: 'Texas' }
-    ]}"
-  ></civ-select>
-</civ-form-field>
+    ]}"></civ-select>
 \`\`\`
 
 **Example (preset):**
 \`\`\`html
-<civ-form-field label="State" required>
-  <civ-select name="state" preset="us-state" required></civ-select>
-</civ-form-field>
+<civ-select label="State" name="state" preset="us-state" required></civ-select>
 \`\`\`
 
 > Note: \`.options="\${...}"\` uses Lit property binding syntax. In plain HTML (non-template),
@@ -179,15 +170,12 @@ Searchable dropdown with type-ahead filtering.
 
 **Example:**
 \`\`\`html
-<civ-form-field label="Agency" hint="Search by name or acronym">
-  <civ-combobox name="agency" placeholder="Start typing..."
+<civ-combobox label="Agency" hint="Search by name or acronym" name="agency" placeholder="Start typing..."
     .options="\${[
       { value: 'doj', label: 'Department of Justice' },
       { value: 'doe', label: 'Department of Energy' },
       { value: 'dod', label: 'Department of Defense' }
-    ]}"
-  ></civ-combobox>
-</civ-form-field>
+    ]}"></civ-combobox>
 \`\`\`
 
 **Keyboard:** ArrowDown/Up navigate, Enter selects, Escape closes.
@@ -344,9 +332,7 @@ Calendar dialog with text input. Preferred for appointment/scheduling dates.
 
 **Example:**
 \`\`\`html
-<civ-form-field label="Appointment date" hint="Select an available date" required>
-  <civ-date-picker name="appointment" min="2026-01-01" max="2026-12-31" required></civ-date-picker>
-</civ-form-field>
+<civ-date-picker label="Appointment date" hint="Select an available date" name="appointment" min="2026-01-01" max="2026-12-31" required></civ-date-picker>
 \`\`\`
 
 ---
@@ -391,9 +377,7 @@ Drag-and-drop file upload with validation.
 
 **Example:**
 \`\`\`html
-<civ-form-field label="Supporting documents" hint="Upload PDF or image files" required>
-  <civ-file-upload name="documents" accept=".pdf,.jpg,.png,image/*" multiple max-size="5242880" max-files="5" required></civ-file-upload>
-</civ-form-field>
+<civ-file-upload label="Supporting documents" hint="Upload PDF or image files" name="documents" accept=".pdf,.jpg,.png,image/*" multiple max-size="5242880" max-files="5" required></civ-file-upload>
 \`\`\`
 
 ---
@@ -406,10 +390,7 @@ Wrapper for single-value form inputs. Renders label, hint, error, and required i
 
 **Example:**
 \`\`\`html
-<civ-form-field label="Email address" hint="We'll send confirmation here" required
-  required-message="Enter your email address">
-  <civ-text-input name="email" type="email" required autocomplete="email"></civ-text-input>
-</civ-form-field>
+<civ-text-input label="Email address" hint="We'll send confirmation here" required-message="Enter your email address" name="email" type="email" required autocomplete="email"></civ-text-input>
 \`\`\`
 
 **Heading promotion:** Set \`heading-level="1"\` (and typically \`size="xl"\`) when the field doubles as the page \`<h1>\` (single-question-per-page pattern). See **Heading hierarchy** below.
@@ -446,18 +427,10 @@ Structural grouping wrapper. Not a form-participating element.
 **Example:**
 \`\`\`html
 <civ-fieldset legend="Mailing address" hint="Enter your current mailing address">
-  <civ-form-field label="Street address" required>
-    <civ-text-input name="street" required></civ-text-input>
-  </civ-form-field>
-  <civ-form-field label="City" required>
-    <civ-text-input name="city" required></civ-text-input>
-  </civ-form-field>
-  <civ-form-field label="State" required>
-    <civ-select name="state" preset="us-state" required></civ-select>
-  </civ-form-field>
-  <civ-form-field label="ZIP code" required>
-    <civ-text-input name="zip" required pattern="[0-9]{5}(-[0-9]{4})?"></civ-text-input>
-  </civ-form-field>
+  <civ-text-input label="Street address" name="street" required></civ-text-input>
+  <civ-text-input label="City" name="city" required></civ-text-input>
+  <civ-select label="State" name="state" preset="us-state" required></civ-select>
+  <civ-text-input label="ZIP code" name="zip" required pattern="[0-9]{5}(-[0-9]{4})?"></civ-text-input>
 </civ-fieldset>
 \`\`\`
 
@@ -478,15 +451,9 @@ Form validation coordinator. Renders error summary, handles submit/reset.
 **Example:**
 \`\`\`html
 <civ-form @civ-submit="\${handleSubmit}" @civ-invalid="\${handleErrors}">
-  <civ-form-field label="Full name" required>
-    <civ-text-input name="name" required></civ-text-input>
-  </civ-form-field>
-  <civ-form-field label="Email" required>
-    <civ-text-input name="email" type="email" required></civ-text-input>
-  </civ-form-field>
-  <civ-form-field label="Message" required>
-    <civ-textarea name="message" required></civ-textarea>
-  </civ-form-field>
+  <civ-text-input label="Full name" name="name" required></civ-text-input>
+  <civ-text-input label="Email" name="email" type="email" required></civ-text-input>
+  <civ-textarea label="Message" name="message" required></civ-textarea>
   <button type="submit">Submit</button>
   <button type="reset">Clear</button>
 </civ-form>
@@ -880,9 +847,7 @@ Pre-configured wrappers with built-in masking, validation, and labeling. Wrap in
 | \`<civ-country>\` | \`us-first\`, \`include\`, \`exclude\` |
 
 \`\`\`html
-<civ-form-field label="Social Security number" required>
-  <civ-ssn name="ssn"></civ-ssn>
-</civ-form-field>
+<civ-ssn label="Social Security number" required name="ssn"></civ-ssn>
 \`\`\`
 
 ---
@@ -930,40 +895,27 @@ Pre-configured wrappers with built-in masking, validation, and labeling. Wrap in
 \`\`\`html
 <civ-form @civ-submit="\${this._onSubmit}" @civ-invalid="\${this._onInvalid}">
   <civ-fieldset legend="Personal information">
-    <civ-form-field label="Full name" required>
-      <civ-text-input name="fullName" required autocomplete="name"></civ-text-input>
-    </civ-form-field>
+    <civ-text-input label="Full name" name="fullName" required autocomplete="name"></civ-text-input>
 
-    <civ-form-field label="Email address" required>
-      <civ-text-input name="email" type="email" required autocomplete="email"></civ-text-input>
-    </civ-form-field>
+    <civ-text-input label="Email address" name="email" type="email" required autocomplete="email"></civ-text-input>
 
-    <civ-form-field label="Phone number" hint="Include area code">
-      <civ-text-input name="phone" type="tel" autocomplete="tel" inputmode="tel"></civ-text-input>
-    </civ-form-field>
+    <civ-text-input label="Phone number" hint="Include area code" name="phone" type="tel" autocomplete="tel" inputmode="tel"></civ-text-input>
   </civ-fieldset>
 
   <civ-fieldset legend="Application details">
     <civ-memorable-date legend="Date of birth" hint="For example: January 15 1990" required name="dob"></civ-memorable-date>
 
-    <civ-form-field label="Application type" required>
-      <civ-select name="appType" required
+    <civ-select label="Application type" name="appType" required
         .options="\${[
           { value: 'new', label: 'New application' },
           { value: 'renewal', label: 'Renewal' },
           { value: 'amendment', label: 'Amendment' }
-        ]}"
-      ></civ-select>
-    </civ-form-field>
+        ]}"></civ-select>
 
-    <civ-form-field label="Additional comments">
-      <civ-textarea name="comments" maxlength="1000"></civ-textarea>
-    </civ-form-field>
+    <civ-textarea label="Additional comments" name="comments" maxlength="1000"></civ-textarea>
   </civ-fieldset>
 
-  <civ-form-field label="Supporting documents">
-    <civ-file-upload name="docs" accept=".pdf,.jpg,.png" multiple max-size="10485760"></civ-file-upload>
-  </civ-form-field>
+  <civ-file-upload label="Supporting documents" name="docs" accept=".pdf,.jpg,.png" multiple max-size="10485760"></civ-file-upload>
 
   <civ-checkbox
     label="I certify the information above is accurate"
@@ -1087,9 +1039,7 @@ CivUI exposes two opt-in props on \`civ-form-field\`, \`civ-form-fieldset\`, \`c
 **Single-question page:**
 
 \`\`\`html
-<civ-form-field label="What is your email address?" heading-level="1" size="xl" required>
-  <civ-text-input type="email" name="email"></civ-text-input>
-</civ-form-field>
+<civ-text-input label="What is your email address?" heading-level="1" size="xl" required type="email" name="email"></civ-text-input>
 \`\`\`
 
 **Multi-question page with a fieldset as h2:**
@@ -1123,12 +1073,8 @@ Government forms must use clear, jargon-free labels. CivUI supports this through
 Always mark required fields with the \`required\` attribute:
 
 \`\`\`html
-<civ-form-field label="Social Security number" required
-  required-message="Enter your Social Security number"
-  hint="We need this to verify your identity">
-  <civ-text-input name="ssn" required type="tel" inputmode="numeric"
+<civ-text-input label="Social Security number" required-message="Enter your Social Security number" hint="We need this to verify your identity" name="ssn" required type="tel" inputmode="numeric"
     pattern="[0-9]{3}-?[0-9]{2}-?[0-9]{4}"></civ-text-input>
-</civ-form-field>
 \`\`\`
 
 ### Date input rules for government forms
@@ -1156,14 +1102,11 @@ Most components support label customization for i18n:
 
 \`\`\`html
 <!-- Spanish date picker -->
-<civ-form-field label="Fecha de cita">
-  <civ-date-picker name="appointment" locale="es-US"
+<civ-date-picker label="Fecha de cita" name="appointment" locale="es-US"
     choose-date-label="Elegir fecha"
     dialog-label="Elegir fecha"
     previous-month-label="Mes anterior"
-    next-month-label="Mes siguiente"
-  ></civ-date-picker>
-</civ-form-field>
+    next-month-label="Mes siguiente"></civ-date-picker>
 \`\`\`
 
 ---
@@ -1353,7 +1296,7 @@ import { fixture, cleanupFixtures, elementUpdated, pressKey, typeText } from '@c
 afterEach(cleanupFixtures);
 
 // Create component
-const el = await fixture('<civ-form-field label="Name"><civ-text-input name="name"></civ-text-input></civ-form-field>');
+const el = await fixture('<civ-text-input label="Name" name="name"></civ-text-input>');
 
 // Update and wait
 el.value = 'test';

@@ -106,19 +106,7 @@ export class CivCombobox extends LegendHeadingMixin(CivFormElement) {
   }
 
 
-  /** True when wrapped in `<civ-form-field>`; the wrapper renders the chrome. */
-  private _wrappedInFormField = false;
-
-  override connectedCallback(): void {
-    super.connectedCallback();
-    this._wrappedInFormField = !!this.closest('civ-form-field');
-  }
-
   protected override get _ariaDescribedBy(): string {
-    // When wrapped, IDs cascade via `describedByExtra`. Standalone, we own
-    // them. Listbox / activedescendant are wired separately via
-    // `aria-controls` / `aria-activedescendant`, not describedby.
-    if (this._wrappedInFormField) return this.describedByExtra;
     const ids: string[] = [];
     if (this.hint) ids.push(this._hintId);
     if (this.error) ids.push(this._errorId);
@@ -243,8 +231,6 @@ export class CivCombobox extends LegendHeadingMixin(CivFormElement) {
         </div>
       </div>
     `;
-
-    if (this._wrappedInFormField) return inner;
 
     return html`
       <div class="civ-mb-4">

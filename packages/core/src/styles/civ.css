@@ -132,7 +132,6 @@ summary:focus,
   }
 
   /* Prevent page breaks inside form fields */
-  civ-form-field,
   civ-form-fieldset,
   .civ-fieldset {
     break-inside: avoid;

@@ -14,16 +14,6 @@ const STATES = [
 afterEach(cleanupFixtures);
 
 describe('civ-combobox', () => {
-  it('renders label when wrapped in civ-form-field', async () => {
-    const wrapper = await fixture(
-      '<civ-form-field label="State"><civ-combobox></civ-combobox></civ-form-field>',
-    );
-
-    const label = wrapper.querySelector('label');
-    expect(label).not.toBeNull();
-    expect(label!.textContent).toContain('State');
-  });
-
   it('renders a text input with combobox role', async () => {
     const el = await fixture('<civ-combobox label="State" name="state"></civ-combobox>');
 
@@ -167,29 +157,11 @@ describe('civ-combobox', () => {
     expect(el._open).toBe(false);
   });
 
-  it('renders error with alert role when wrapped in form-field', async () => {
-    const wrapper = await fixture(
-      '<civ-form-field label="State" error="Required"><civ-combobox></civ-combobox></civ-form-field>',
-    );
-
-    const errorEl = wrapper.querySelector('[role="alert"]');
-    expect(errorEl).not.toBeNull();
-  });
-
   it('sets aria-invalid when error is present', async () => {
     const el = await fixture('<civ-combobox label="State" error="Bad"></civ-combobox>');
 
     const input = el.querySelector('input');
     expect(input!.getAttribute('aria-invalid')).toBe('true');
-  });
-
-  it('shows required indicator when wrapped in form-field', async () => {
-    const wrapper = await fixture(
-      '<civ-form-field label="State" required><civ-combobox></civ-combobox></civ-form-field>',
-    );
-
-    const requiredMark = wrapper.querySelector('.civ-required-mark');
-    expect(requiredMark).not.toBeNull();
   });
 
   it('renders disabled state', async () => {
@@ -232,22 +204,19 @@ describe('civ-combobox', () => {
   });
 
   it('uses aria-labelledby on listbox instead of aria-label', async () => {
-    const wrapper = await fixture(
-      '<civ-form-field label="State"><civ-combobox></civ-combobox></civ-form-field>',
-    ) as any;
-    const el = wrapper.querySelector('civ-combobox') as any;
+    const el = await fixture('<civ-combobox label="State"></civ-combobox>') as any;
     el.options = STATES;
     el._open = true;
     await elementUpdated(el);
 
-    const listbox = wrapper.querySelector('[role="listbox"]');
+    const listbox = el.querySelector('[role="listbox"]');
     expect(listbox).not.toBeNull();
     expect(listbox!.hasAttribute('aria-label')).toBe(false);
 
     const labelledBy = listbox!.getAttribute('aria-labelledby');
     expect(labelledBy).toBeTruthy();
 
-    const label = wrapper.querySelector('label');
+    const label = el.querySelector('label');
     expect(label).not.toBeNull();
   });
 

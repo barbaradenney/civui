@@ -7,24 +7,6 @@ import '@civui/core';
 afterEach(cleanupFixtures);
 
 describe('civ-text-input', () => {
-  it('renders label, hint, and error when wrapped in civ-form-field', async () => {
-    const wrapper = await fixture(
-      '<civ-form-field label="Email" hint="Enter your work email" error="Email is required"><civ-text-input></civ-text-input></civ-form-field>',
-    );
-
-    const label = wrapper.querySelector('label');
-    expect(label).not.toBeNull();
-    expect(label!.textContent).toContain('Email');
-
-    const hint = wrapper.querySelector('span');
-    expect(hint).not.toBeNull();
-    expect(hint!.textContent).toBe('Enter your work email');
-
-    const errorEl = wrapper.querySelector('[role="alert"]');
-    expect(errorEl).not.toBeNull();
-    expect(errorEl!.textContent).toBe('Email is required');
-  });
-
   it('renders an input element', async () => {
     const el = await fixture('<civ-text-input label="Name" name="name"></civ-text-input>');
 
@@ -32,28 +14,6 @@ describe('civ-text-input', () => {
     expect(input).not.toBeNull();
     expect(input!.type).toBe('text');
     expect(input!.name).toBe('name');
-  });
-
-  it('associates form-field label with input via for/id', async () => {
-    const wrapper = await fixture(
-      '<civ-form-field label="Email"><civ-text-input></civ-text-input></civ-form-field>',
-    );
-    const child = wrapper.querySelector('civ-text-input')!;
-    await elementUpdated(child);
-
-    const label = wrapper.querySelector('label');
-    const input = wrapper.querySelector('input');
-    expect(label!.getAttribute('for')).toBe(input!.id);
-  });
-
-  it('shows required indicator when wrapped in required form-field', async () => {
-    const wrapper = await fixture(
-      '<civ-form-field label="Email" required><civ-text-input></civ-text-input></civ-form-field>',
-    );
-
-    const requiredMark = wrapper.querySelector('.civ-required-mark');
-    expect(requiredMark).not.toBeNull();
-    expect(requiredMark!.textContent).toContain('required');
   });
 
   it('sets aria-invalid when error is present', async () => {
@@ -70,27 +30,6 @@ describe('civ-text-input', () => {
 
     const input = el.querySelector('input');
     expect(input!.getAttribute('aria-invalid')).toBeNull();
-  });
-
-  it('form-field wires aria-describedby for hint and error', async () => {
-    const wrapper = await fixture(
-      '<civ-form-field label="Email" hint="Hint text" error="Error text"><civ-text-input></civ-text-input></civ-form-field>',
-    );
-    const child = wrapper.querySelector('civ-text-input')!;
-    await elementUpdated(child);
-    await elementUpdated(wrapper);
-
-    const input = wrapper.querySelector('input');
-    const describedBy = input!.getAttribute('aria-describedby');
-    expect(describedBy).toBeTruthy();
-
-    const ids = describedBy!.split(' ');
-    expect(ids.length).toBe(2);
-
-    // Both IDs should reference existing elements
-    for (const id of ids) {
-      expect(wrapper.querySelector(`#${id}`)).not.toBeNull();
-    }
   });
 
   it('renders with different input types', async () => {
@@ -379,7 +318,6 @@ describe('text-input mask', () => {
 
   it('auto-populates hint from SSN preset', async () => {
     const el = await fixture<CivTextInput>('<civ-text-input label="SSN" mask="ssn"></civ-text-input>');
-    // Hint is now rendered by civ-form-field, but the component still sets the hint property
     expect(el.hint).toContain('123-45-6789');
   });
 
@@ -1063,18 +1001,5 @@ describe('text-input inline icons', () => {
       expect(input.getAttribute('aria-invalid')).toBe('true');
     });
 
-    it('does NOT render its own chrome when wrapped in civ-form-field (avoids double-rendering)', async () => {
-      const wrapper = await fixture(
-        '<civ-form-field label="Email" error="Required"><civ-text-input></civ-text-input></civ-form-field>'
-      );
-      const child = wrapper.querySelector('civ-text-input') as CivTextInput;
-      // form-field renders the chrome; the child should not render its own.
-      // Count labels in the child element's direct subtree (exclude wrapper).
-      const childLabel = child.querySelector('label');
-      // The only label visible to the child's subtree is form-field's, which
-      // form-field renders OUTSIDE the data-civ-form-field-content slot —
-      // so the child element itself has no label child element.
-      expect(childLabel).toBeNull();
-    });
   });
 });

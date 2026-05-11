@@ -43,12 +43,8 @@ dependents[1].last-name
 \`\`\`html
 <div data-civ-repeatable="dependents" data-civ-repeatable-min="0" data-civ-repeatable-max="10" aria-live="polite">
   <civ-fieldset legend="Dependent 1">
-    <civ-form-field label="First name">
-      <civ-text-input name="dependents[0].first-name"></civ-text-input>
-    </civ-form-field>
-    <civ-form-field label="Last name">
-      <civ-text-input name="dependents[0].last-name"></civ-text-input>
-    </civ-form-field>
+    <civ-text-input label="First name" name="dependents[0].first-name"></civ-text-input>
+    <civ-text-input label="Last name" name="dependents[0].last-name"></civ-text-input>
     <button type="button" data-civ-repeatable-remove>Remove this dependent</button>
   </civ-fieldset>
   <button type="button" data-civ-repeatable-add>Add another dependent</button>
@@ -318,9 +314,7 @@ Use \`optionsFrom\` on a FormField to create dependent option lists (e.g., State
 ### Generated HTML
 
 \`\`\`html
-<civ-form-field label="County">
-  <civ-select name="county" data-civ-options-from="state"></civ-select>
-</civ-form-field>
+<civ-select label="County" name="county" data-civ-options-from="state"></civ-select>
 <script type="application/json" data-civ-options-map="county">{"CA":[...],"TX":[...]}</script>
 \`\`\`
 

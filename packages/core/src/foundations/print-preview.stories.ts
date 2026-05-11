@@ -105,14 +105,12 @@ export const TextareaAndSelect: Story = {
 
     <civ-textarea label="Describe your condition" name="condition" value="Lower back pain that limits my ability to stand for more than 20 minutes. Diagnosed in 2019 by Dr. Johnson at the VA Medical Center." hint="Include how it affects your daily activities" rows="4"></civ-textarea>
 
-    <civ-form-field label="State of residence">
-      <civ-select name="state" value="CA">
+    <civ-select label="State of residence" name="state" value="CA">
         <option value="">- Select -</option>
         <option value="CA">California</option>
         <option value="NY">New York</option>
         <option value="TX">Texas</option>
       </civ-select>
-    </civ-form-field>
   `,
 };
 

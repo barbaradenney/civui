@@ -96,20 +96,6 @@ describe('civ-toggle', () => {
     expect(desc!.textContent).toContain('Get push notifications');
   });
 
-  it('renders hint and error when wrapped in form-field', async () => {
-    const wrapper = await fixture(
-      '<civ-form-field label="Dark mode" hint="Reduces eye strain" error="You must accept"><civ-toggle></civ-toggle></civ-form-field>',
-    );
-
-    const spans = wrapper.querySelectorAll('span');
-    const hintSpan = Array.from(spans).find((s) => s.textContent === 'Reduces eye strain');
-    expect(hintSpan).not.toBeNull();
-
-    const errorEl = wrapper.querySelector('[role="alert"]');
-    expect(errorEl).not.toBeNull();
-    expect(errorEl!.textContent).toBe('You must accept');
-  });
-
   it('disabled state prevents toggle', async () => {
     const el = await fixture('<civ-toggle label="Dark mode" disabled></civ-toggle>') as any;
 
@@ -135,22 +121,6 @@ describe('civ-toggle', () => {
     expect(btn.getAttribute('aria-required')).toBe('true');
   });
 
-  it('links description, hint, and error via aria-describedby when wrapped in form-field', async () => {
-    const wrapper = await fixture(
-      '<civ-form-field hint="Hint" error="Error"><civ-toggle label="Notifications" description="Desc"></civ-toggle></civ-form-field>',
-    );
-
-    const btn = wrapper.querySelector('button[role="switch"]') as HTMLButtonElement;
-    const describedBy = btn.getAttribute('aria-describedby')!;
-    expect(describedBy).toBeTruthy();
-    const ids = describedBy.split(' ');
-    // description is rendered by toggle; hint + error are rendered by form-field
-    expect(ids.length).toBeGreaterThanOrEqual(2);
-
-    for (const id of ids) {
-      expect(wrapper.querySelector(`#${id}`)).not.toBeNull();
-    }
-  });
 
   it('has static formAssociated = true', () => {
     const Ctor = customElements.get('civ-toggle') as any;

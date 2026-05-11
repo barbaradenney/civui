@@ -275,17 +275,12 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
     return file.abortController;
   }
 
-  /** True when wrapped in `<civ-form-field>`; the wrapper renders the chrome. */
-  private _wrappedInFormField = false;
-
   override render() {
     const inner = html`
         ${this.readonly ? nothing : this._renderTrigger()}
         ${this._renderHiddenInput()}
         ${this._renderFileList()}
     `;
-
-    if (this._wrappedInFormField) return inner;
 
     return html`
       <div class="civ-mb-4">
@@ -460,16 +455,10 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
 
   override connectedCallback(): void {
     super.connectedCallback();
-    this._wrappedInFormField = !!this.closest('civ-form-field');
     this._maybeHydrateInitialFiles();
   }
 
-
   protected override get _ariaDescribedBy(): string {
-    // When wrapped, IDs cascade via `describedByExtra`. Standalone, we own
-    // hint/error. The files-list ID is appended separately by the dropzone
-    // template binding.
-    if (this._wrappedInFormField) return this.describedByExtra;
     const ids: string[] = [];
     if (this.hint) ids.push(this._hintId);
     if (this.error) ids.push(this._errorId);

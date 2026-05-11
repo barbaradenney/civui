@@ -89,12 +89,8 @@ Example:
 </civ-radio-group>
 
 <civ-fieldset legend="Disability details" data-civ-show-when="has-disability=yes">
-  <civ-form-field label="Type of disability">
-    <civ-text-input name="disability-type"></civ-text-input>
-  </civ-form-field>
-  <civ-form-field label="Description">
-    <civ-textarea name="disability-description"></civ-textarea>
-  </civ-form-field>
+  <civ-text-input label="Type of disability" name="disability-type"></civ-text-input>
+  <civ-textarea label="Description" name="disability-description"></civ-textarea>
 </civ-fieldset>
 \`\`\`
 

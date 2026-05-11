@@ -240,25 +240,13 @@ export class CivDatePicker extends LegendHeadingMixin(CivFormElement) {
     },
   ]);
 
-  /** True when wrapped in `<civ-form-field>`; the wrapper renders the chrome. */
-  private _wrappedInFormField = false;
-
-  override connectedCallback(): void {
-    super.connectedCallback();
-    this._wrappedInFormField = !!this.closest('civ-form-field');
-  }
-
   override disconnectedCallback(): void {
     super.disconnectedCallback();
     this._clickOutside.remove();
     this._cleanupTrap?.();
   }
 
-
   protected override get _ariaDescribedBy(): string {
-    // When wrapped in `<civ-form-field>`, IDs cascade via `describedByExtra`.
-    // Standalone, we own the hint/error and reference our own IDs.
-    if (this._wrappedInFormField) return this.describedByExtra;
     const ids: string[] = [];
     if (this.hint) ids.push(this._hintId);
     if (this.error) ids.push(this._errorId);
@@ -335,8 +323,6 @@ export class CivDatePicker extends LegendHeadingMixin(CivFormElement) {
         ${this._open ? this._renderDialog(selectedDate) : nothing}
       </div>
     `;
-
-    if (this._wrappedInFormField) return inner;
 
     return html`
       <div class="civ-mb-4">

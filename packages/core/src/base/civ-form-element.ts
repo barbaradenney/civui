@@ -42,15 +42,6 @@ export class CivFormElement extends CivBaseElement {
   @property({ type: String }) label = '';
   @property({ type: String, attribute: 'required-message' }) requiredMessage = '';
 
-  /**
-   * IDs the wrapping `civ-form-field` / `civ-form-fieldset` cascades onto
-   * the child so the child's own `aria-describedby` template binding
-   * survives re-renders. Without this, a child re-render (e.g. a char-count
-   * toggle) would emit `aria-describedby` with only the child's own IDs,
-   * clobbering whatever the wrapper had set imperatively. Bare controls
-   * include this in `_ariaDescribedBy`; consumers should not set it.
-   */
-  @property({ type: String, attribute: 'described-by-extra' }) describedByExtra = '';
   /** Hides the "(required)" text while keeping validation active. Used by compound components. */
   @property({ type: Boolean, attribute: 'hide-required-indicator' }) hideRequiredIndicator = false;
 
@@ -177,13 +168,6 @@ export class CivFormElement extends CivBaseElement {
   protected get _ariaDescribedBy(): string {
     return [this.hint && this._hintId, this.error && this._errorId].filter(Boolean).join(' ');
   }
-
-  // (Earlier rounds had a `_warnIfStandalone` helper here to catch the
-  // case where a "bare control" was used without a `<civ-form-field>`
-  // wrapper — silent label/hint/error was a Section 508 risk. Phase 1
-  // of the bare-control unification (commit 09a58e02 + follow-ups) made
-  // every bare control render its own chrome when standalone, so the
-  // warning is no longer meaningful and was removed.)
 
   /**
    * Update the form value via ElementInternals.
@@ -366,11 +350,10 @@ export class CivFormElement extends CivBaseElement {
       this._updateValidity();
     }
     if (changed.has('error')) {
-      // Bubble error changes up so a wrapping civ-form-field /
-      // civ-form-fieldset can mirror the child's internal validation
-      // state (e.g. date-picker rejecting an unparseable typed value).
-      // The wrapper's listener is loop-safe because it only updates when
-      // the value actually differs.
+      // Bubble error changes up so a wrapping civ-form-fieldset can mirror
+      // the child's internal validation state (e.g. date-picker rejecting
+      // an unparseable typed value). The wrapper's listener is loop-safe
+      // because it only updates when the value actually differs.
       this.dispatchEvent(new CustomEvent('civ-error-change', {
         detail: { error: this.error },
         bubbles: true,

@@ -6,42 +6,12 @@ import '@civui/core';
 afterEach(cleanupFixtures);
 
 describe('civ-textarea', () => {
-  it('renders label, hint, error when wrapped in civ-form-field', async () => {
-    const wrapper = await fixture(
-      '<civ-form-field label="Comments" hint="Keep it brief" error="Too short"><civ-textarea></civ-textarea></civ-form-field>',
-    );
-
-    const label = wrapper.querySelector('label');
-    expect(label).not.toBeNull();
-    expect(label!.textContent).toContain('Comments');
-
-    const hint = wrapper.querySelector('span:not([role])');
-    expect(hint).not.toBeNull();
-    expect(hint!.textContent).toBe('Keep it brief');
-
-    const errorEl = wrapper.querySelector('[role="alert"]');
-    expect(errorEl).not.toBeNull();
-    expect(errorEl!.textContent).toBe('Too short');
-  });
-
   it('renders a textarea element', async () => {
     const el = await fixture('<civ-textarea label="Comments" name="comments"></civ-textarea>');
 
     const textarea = el.querySelector('textarea');
     expect(textarea).not.toBeNull();
     expect(textarea!.name).toBe('comments');
-  });
-
-  it('associates form-field label with textarea via for/id', async () => {
-    const wrapper = await fixture(
-      '<civ-form-field label="Comments"><civ-textarea></civ-textarea></civ-form-field>',
-    );
-    const child = wrapper.querySelector('civ-textarea')!;
-    await elementUpdated(child);
-
-    const label = wrapper.querySelector('label');
-    const textarea = wrapper.querySelector('textarea');
-    expect(label!.getAttribute('for')).toBe(textarea!.id);
   });
 
   it('renders with configurable rows', async () => {
@@ -93,16 +63,6 @@ describe('civ-textarea', () => {
 
     const textarea = el.querySelector('textarea');
     expect(textarea!.getAttribute('aria-invalid')).toBe('true');
-  });
-
-  it('shows required indicator when wrapped in form-field', async () => {
-    const wrapper = await fixture(
-      '<civ-form-field label="Bio" required><civ-textarea></civ-textarea></civ-form-field>',
-    );
-
-    const requiredMark = wrapper.querySelector('.civ-required-mark');
-    expect(requiredMark).not.toBeNull();
-    expect(requiredMark!.textContent).toContain('required');
   });
 
   it('renders disabled state', async () => {
@@ -170,22 +130,6 @@ describe('civ-textarea', () => {
     const charCount = el.querySelector(`#${charCountId}`);
     expect(charCount).not.toBeNull();
     expect(charCount!.textContent).toContain('characters remaining');
-  });
-
-  it('includes hint, error, and character count in aria-describedby when wrapped in form-field', async () => {
-    const wrapper = await fixture(
-      '<civ-form-field label="Bio" hint="Keep brief" error="Too short"><civ-textarea maxlength="200"></civ-textarea></civ-form-field>',
-    );
-
-    const textarea = wrapper.querySelector('textarea');
-    const describedBy = textarea!.getAttribute('aria-describedby')!;
-    const ids = describedBy.split(' ');
-    // form-field wires hint + error IDs; the char count ID is on the component
-    expect(ids.length).toBeGreaterThanOrEqual(2);
-
-    for (const id of ids) {
-      expect(wrapper.querySelector(`#${id}`)).not.toBeNull();
-    }
   });
 
   it('has static formAssociated = true', () => {

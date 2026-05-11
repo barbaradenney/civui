@@ -12,7 +12,7 @@ type Constructor<T = {}> = new (...args: any[]) => T;
  *    segmented-control, yes-no, memorable-date, date-range-picker)
  *  - Compound components (name, address, direct-deposit, signature,
  *    relationship, partnership-history, service-history, race-ethnicity)
- *  - Form-field wrappers (civ-form-field, civ-form-fieldset, civ-fieldset)
+ *  - Fieldset wrappers (civ-form-fieldset, civ-fieldset)
  *  - Other heading-bearing UI (modal, alert, form-step, repeater,
  *    section-intro, support-resources)
  *

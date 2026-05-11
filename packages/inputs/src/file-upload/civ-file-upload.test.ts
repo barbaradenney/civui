@@ -6,16 +6,6 @@ import '@civui/core';
 afterEach(cleanupFixtures);
 
 describe('civ-file-upload', () => {
-  it('renders label when wrapped in civ-form-field', async () => {
-    const wrapper = await fixture(
-      '<civ-form-field label="Upload document"><civ-file-upload></civ-file-upload></civ-form-field>',
-    );
-
-    const label = wrapper.querySelector('label');
-    expect(label).not.toBeNull();
-    expect(label!.textContent).toContain('Upload document');
-  });
-
   it('renders a hidden file input', async () => {
     const el = await fixture('<civ-file-upload label="Upload" name="file"></civ-file-upload>');
 
@@ -58,23 +48,6 @@ describe('civ-file-upload', () => {
 
     const input = el.querySelector('input[type="file"]') as HTMLInputElement;
     expect(input.multiple).toBe(true);
-  });
-
-  it('renders error, required, and hint when wrapped in form-field', async () => {
-    const wrapper = await fixture(
-      '<civ-form-field label="Upload" error="File too large" required hint="PDF or image files only"><civ-file-upload></civ-file-upload></civ-form-field>',
-    );
-
-    const errorEl = wrapper.querySelector('[role="alert"]');
-    expect(errorEl).not.toBeNull();
-    expect(errorEl!.textContent).toBe('File too large');
-
-    const requiredMark = wrapper.querySelector('.civ-required-mark');
-    expect(requiredMark).not.toBeNull();
-
-    const spans = wrapper.querySelectorAll('span');
-    const hint = Array.from(spans).find((s) => s.textContent === 'PDF or image files only');
-    expect(hint).not.toBeNull();
   });
 
   it('dropzone is keyboard accessible', async () => {

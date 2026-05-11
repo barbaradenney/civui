@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivFormElement, LegendHeadingMixin, dispatch, renderLegend, renderFormHeader, buildDescribedBy, t } from '@civui/core';
+import { CivCompoundElement, LegendHeadingMixin, dispatch, renderLegend, renderFormHeader, buildDescribedBy, t } from '@civui/core';
 import type { SelectLike } from '@civui/core';
 import '@civui/inputs/text-input';
 import '@civui/inputs/select';
@@ -58,7 +58,9 @@ const EMPTY_RELATIONSHIP: RelationshipValue = {
  * @fires civ-change - On committed field change, detail: { value: RelationshipValue }
  */
 @customElement('civ-relationship')
-export class CivRelationship extends LegendHeadingMixin(CivFormElement) {
+export class CivRelationship extends LegendHeadingMixin(CivCompoundElement) {
+  protected override _empty: RelationshipValue = { ...EMPTY_RELATIONSHIP };
+
   @property({ type: String }) legend = '';
   @property({ type: String }) preset: RelationshipPreset = 'general';
   @property({ type: Array }) options?: RelationshipTypeConfig[];
@@ -79,7 +81,7 @@ export class CivRelationship extends LegendHeadingMixin(CivFormElement) {
   @property({ type: String, attribute: 'date-of-death-error' }) dateOfDeathError = '';
   @property({ type: String, attribute: 'other-description-error' }) otherDescriptionError = '';
 
-  @state() private _data: RelationshipValue = { ...EMPTY_RELATIONSHIP };
+  @state() protected override _data: RelationshipValue = { ...EMPTY_RELATIONSHIP };
 
   private get _activeOptions(): RelationshipTypeConfig[] {
     if (this.options) return this.options;
@@ -101,9 +103,11 @@ export class CivRelationship extends LegendHeadingMixin(CivFormElement) {
   }
 
   override connectedCallback(): void {
+    // Base CivCompoundElement hydrates `_data` from `this.value`. We then
+    // apply the `deceased-assumed` policy as a post-hydration step so
+    // consumers can declaratively force the deceased state.
     super.connectedCallback();
-    this._data = this.parseStructuredValue(this.value, EMPTY_RELATIONSHIP);
-    if (this.deceasedAssumed) {
+    if (this.deceasedAssumed && this._data.deceased !== 'yes') {
       this._data = { ...this._data, deceased: 'yes' };
       this.value = JSON.stringify(this._data);
     }

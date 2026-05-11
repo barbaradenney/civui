@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivFormElement, LegendHeadingMixin, dispatch, renderLegend, renderFormHeader, buildDescribedBy, t } from '@civui/core';
+import { CivCompoundElement, LegendHeadingMixin, dispatch, renderLegend, renderFormHeader, buildDescribedBy, t } from '@civui/core';
 import type { SelectLike } from '@civui/core';
 import '@civui/inputs/text-input';
 import '@civui/inputs/textarea';
@@ -106,7 +106,9 @@ const EMPTY_ADDRESS: AddressValue = { country: 'US', street1: '', street2: '', s
  * @fires civ-change - On committed field change, detail: { value: AddressValue }
  */
 @customElement('civ-address')
-export class CivAddress extends LegendHeadingMixin(CivFormElement) {
+export class CivAddress extends LegendHeadingMixin(CivCompoundElement) {
+  protected override _empty: AddressValue = { ...EMPTY_ADDRESS };
+
   /**
    * Address variant:
    * - `default` — full address form (street, city, state, zip)
@@ -147,27 +149,20 @@ export class CivAddress extends LegendHeadingMixin(CivFormElement) {
    *  suggested address. Returns null if no suggestion is needed. */
   @property({ attribute: false }) validateAddress: ValidateAddressFn | null = null;
 
-  @state() private _address: AddressValue = { ...EMPTY_ADDRESS };
+  @state() protected override _data: AddressValue = { ...EMPTY_ADDRESS };
   @state() private _showValidationModal = false;
   @state() private _suggestion: AddressSuggestion | null = null;
   @state() private _validating = false;
 
   /** Get the current address value as a structured object. */
   get addressValue(): AddressValue {
-    return { ...this._address };
+    return { ...this._data };
   }
 
   /** Set the address value from a structured object. */
   set addressValue(val: AddressValue) {
-    this._address = { ...val };
-    this.value = JSON.stringify(this._address);
-  }
-
-  override connectedCallback(): void {
-    super.connectedCallback();
-    // Hydrate before the first render so we don't trigger a second render
-    // (Lit warns when reactive state mutates during/after `updated`).
-    this._address = this.parseStructuredValue(this.value, EMPTY_ADDRESS);
+    this._data = { ...val };
+    this.value = JSON.stringify(this._data);
   }
 
   override firstUpdated(): void {
@@ -178,7 +173,7 @@ export class CivAddress extends LegendHeadingMixin(CivFormElement) {
   override updated(changed: Map<string, unknown>): void {
     super.updated(changed);
     // Re-sync select options when country changes
-    if (changed.has('_address')) {
+    if (changed.has('_data')) {
       this.updateComplete.then(() => this._syncSelectOptions());
     }
   }
@@ -206,7 +201,7 @@ export class CivAddress extends LegendHeadingMixin(CivFormElement) {
         ${this._renderTextField('city', t('addressCity'), 'address-level2', { error: this.cityError, required: this.required })}
         ${this._renderStateField()}
         ${this._showPostalCode
-          ? this._renderTextField('zip', this._address.country === 'US' ? t('addressZip') : t('addressPostalCode'), 'postal-code', { error: this.zipError, required: this.required })
+          ? this._renderTextField('zip', this._data.country === 'US' ? t('addressZip') : t('addressPostalCode'), 'postal-code', { error: this.zipError, required: this.required })
           : nothing}
       </fieldset>
 
@@ -231,7 +226,7 @@ export class CivAddress extends LegendHeadingMixin(CivFormElement) {
       <civ-form-field label="${label}" error="${error}" ?required="${required}">
         <civ-text-input
           name="${this.name ? `${this.name}.${field}` : ''}"
-          value="${this._address[field]}"
+          value="${this._data[field]}"
           error="${error}"
           autocomplete="${autocomplete}"
           ?disabled="${this.disabled}"
@@ -249,7 +244,7 @@ export class CivAddress extends LegendHeadingMixin(CivFormElement) {
       <civ-form-field label="${t('addressCountry')}">
         <civ-country
           name="${this.name ? `${this.name}.country` : ''}"
-          value="${this._address.country}"
+          value="${this._data.country}"
           us-first
           ?disabled="${this.disabled}"
           data-address-country
@@ -271,7 +266,7 @@ export class CivAddress extends LegendHeadingMixin(CivFormElement) {
         <civ-form-field label="${t('addressState')}" error="${this.stateError}" ?required="${this.required}">
           <civ-select
             name="${this.name ? `${this.name}.state` : ''}"
-            value="${this._address.state}"
+            value="${this._data.state}"
             error="${this.stateError}"
             autocomplete="address-level1"
             ?disabled="${this.disabled}"
@@ -296,7 +291,7 @@ export class CivAddress extends LegendHeadingMixin(CivFormElement) {
         <civ-form-field label="${t('housingGeneralLocation')}">
           <civ-text-input
             name="${this.name ? `${this.name}.city` : ''}"
-            value="${this._address.city}"
+            value="${this._data.city}"
             ?disabled="${this.disabled}"
             ?readonly="${this.readonly}"
             @civ-input="${(e: CustomEvent) => this._onSubInput('city', e)}"
@@ -308,7 +303,7 @@ export class CivAddress extends LegendHeadingMixin(CivFormElement) {
           <civ-form-field label="${t('addressState')}" ?required="${this.required}">
             <civ-select
               name="${this.name ? `${this.name}.state` : ''}"
-              value="${this._address.state}"
+              value="${this._data.state}"
               ?disabled="${this.disabled}"
               data-address-state
               @civ-change="${(e: CustomEvent) => this._onSubSelectChange('state', e)}"
@@ -344,9 +339,9 @@ export class CivAddress extends LegendHeadingMixin(CivFormElement) {
           <div class="civ-flex civ-flex-col civ-gap-6">
             <div>
               <p class="civ-font-semibold civ-mb-1">${t('addressValidationOriginalLabel')}</p>
-              <p class="civ-text-body civ-m-0">${this._address.street1}</p>
-              ${this._address.street2 ? html`<p class="civ-text-body civ-m-0">${this._address.street2}</p>` : nothing}
-              <p class="civ-text-body civ-m-0">${this._address.city}, ${this._address.state} ${this._address.zip}</p>
+              <p class="civ-text-body civ-m-0">${this._data.street1}</p>
+              ${this._data.street2 ? html`<p class="civ-text-body civ-m-0">${this._data.street2}</p>` : nothing}
+              <p class="civ-text-body civ-m-0">${this._data.city}, ${this._data.state} ${this._data.zip}</p>
             </div>
             <div>
               <p class="civ-font-semibold civ-mb-1">${t('addressValidationSuggestedLabel')}</p>
@@ -376,7 +371,7 @@ export class CivAddress extends LegendHeadingMixin(CivFormElement) {
     this._showValidationModal = true;
 
     try {
-      const suggestion = await this.validateAddress(this._address);
+      const suggestion = await this.validateAddress(this._data);
       this._validating = false;
 
       if (!suggestion) {
@@ -408,17 +403,17 @@ export class CivAddress extends LegendHeadingMixin(CivFormElement) {
 
   private _onValidationUseSuggested(): void {
     if (this._suggestion) {
-      this._address = {
-        ...this._address,
+      this._data = {
+        ...this._data,
         street1: this._suggestion.street1,
         street2: this._suggestion.street2 ?? '',
         city: this._suggestion.city,
         state: this._suggestion.state,
         zip: this._suggestion.zip,
       };
-      this.value = JSON.stringify(this._address);
+      this.value = JSON.stringify(this._data);
       this._syncFormValue();
-      dispatch(this, 'civ-change', { value: { ...this._address } });
+      dispatch(this, 'civ-change', { value: { ...this._data } });
     }
     this._showValidationModal = false;
     this._suggestion = null;
@@ -430,20 +425,20 @@ export class CivAddress extends LegendHeadingMixin(CivFormElement) {
    * US ships with a full state list (50 states + territories + military codes).
    * Other countries fall back to free-text entry until province lists are added. */
   private get _useSelectForState(): boolean {
-    return this._address.country === 'US';
+    return this._data.country === 'US';
   }
 
   private get _showState(): boolean {
-    return !NO_STATE_COUNTRIES.has(this._address.country);
+    return !NO_STATE_COUNTRIES.has(this._data.country);
   }
 
   private get _showPostalCode(): boolean {
-    return !NO_POSTAL_CODE_COUNTRIES.has(this._address.country);
+    return !NO_POSTAL_CODE_COUNTRIES.has(this._data.country);
   }
 
   /** State/province options for the current country. */
   private get _stateOptions(): Array<{ value: string; label: string }> {
-    if (this._address.country === 'US') {
+    if (this._data.country === 'US') {
       return [...US_STATES, ...MILITARY_STATES];
     }
     return US_STATES;
@@ -455,45 +450,28 @@ export class CivAddress extends LegendHeadingMixin(CivFormElement) {
     if (stateSelect) stateSelect.options = this._stateOptions;
   }
 
-  private _onSubInput(field: keyof AddressValue, e: CustomEvent<{ value: string }>): void {
-    e.stopPropagation();
-
-    this._address = this._patchStructured(this._address, { [field]: e.detail.value } as Partial<AddressValue>);
-  }
-
-  private _onSubChange(field: keyof AddressValue, e: CustomEvent<{ value: string }>): void {
-    e.stopPropagation();
-
-    this._address = this._patchStructured(this._address, { [field]: e.detail.value } as Partial<AddressValue>, ['change']);
-    // Sub-component already fires civ-analytics; don't duplicate
-  }
-
   /** Combined handler for select sub-fields (fires both civ-input and civ-change in one update). */
   private _onSubSelectChange(field: keyof AddressValue, e: CustomEvent<{ value: string }>): void {
     e.stopPropagation();
     // Reset dependent fields when country changes
     if (field === 'country') {
-      this._address = { ...this._address, country: e.detail.value, state: '', zip: '' };
+      this._data = { ...this._data, country: e.detail.value, state: '', zip: '' };
     } else {
-      this._address = { ...this._address, [field]: e.detail.value };
+      this._data = { ...this._data, [field]: e.detail.value };
     }
-    this.value = JSON.stringify(this._address);
-    dispatch(this, 'civ-input', { value: { ...this._address } });
-    dispatch(this, 'civ-change', { value: { ...this._address } });
-  }
-
-  protected override _syncFormValue(): void {
-    this.syncFormDataFromState(this._address, this.name || 'address');
+    this.value = JSON.stringify(this._data);
+    dispatch(this, 'civ-input', { value: { ...this._data } });
+    dispatch(this, 'civ-change', { value: { ...this._data } });
   }
 
   override formResetCallback(): void {
-    this._address = { ...EMPTY_ADDRESS };
+    this._data = { ...EMPTY_ADDRESS };
     this._resetCompound(['streetError', 'cityError', 'stateError', 'zipError']);
   }
 
   /** Check if the address has any filled fields. */
   isEmpty(): boolean {
-    return !this._address.street1 && !this._address.city && !this._address.state && !this._address.zip;
+    return !this._data.street1 && !this._data.city && !this._data.state && !this._data.zip;
   }
 
   /**
@@ -501,7 +479,7 @@ export class CivAddress extends LegendHeadingMixin(CivFormElement) {
    * are all filled. street2/street3 are optional and country has a default.
    */
   private _isComplete(): boolean {
-    const a = this._address;
+    const a = this._data;
     return !!(a.street1.trim() && a.city.trim() && a.state.trim() && a.zip.trim());
   }
 

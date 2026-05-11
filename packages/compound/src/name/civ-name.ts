@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivFormElement, LegendHeadingMixin, renderLegend, renderFormHeader, buildDescribedBy, t } from '@civui/core';
+import { CivCompoundElement, LegendHeadingMixin, renderLegend, renderFormHeader, buildDescribedBy, t } from '@civui/core';
 import type { LabelSize, SelectLike } from '@civui/core';
 import { resolvePresetOptions } from '@civui/core';
 import '@civui/inputs/text-input';
@@ -34,7 +34,10 @@ const EMPTY_NAME: NameValue = { first: '', middle: '', last: '', suffix: '' };
  * @fires civ-change - On committed field change, detail: { value: NameValue }
  */
 @customElement('civ-name')
-export class CivName extends LegendHeadingMixin(CivFormElement) {
+export class CivName extends LegendHeadingMixin(CivCompoundElement) {
+  protected override _empty: NameValue = { ...EMPTY_NAME };
+  @state() protected override _data: NameValue = { ...EMPTY_NAME };
+
   /**
    * Fieldset legend displayed above the name fields. This component is
    * self-contained — render it on its own, not inside `<civ-form-fieldset>`,
@@ -66,24 +69,15 @@ export class CivName extends LegendHeadingMixin(CivFormElement) {
   /** Error for last name field. */
   @property({ type: String, attribute: 'last-error' }) lastError = '';
 
-  @state() private _name: NameValue = { ...EMPTY_NAME };
-
   /** Get the current name as a structured object. */
   get nameValue(): NameValue {
-    return { ...this._name };
+    return { ...this._data };
   }
 
   /** Set the name from a structured object. */
   set nameValue(val: NameValue) {
-    this._name = { ...val };
-    this.value = JSON.stringify(this._name);
-  }
-
-  override connectedCallback(): void {
-    super.connectedCallback();
-    // Hydrate before the first render so we don't trigger a second render
-    // (Lit warns when reactive state mutates during/after `updated`).
-    this._name = this.parseStructuredValue(this.value, EMPTY_NAME);
+    this._data = { ...val };
+    this.value = JSON.stringify(this._data);
   }
 
   override firstUpdated(): void {
@@ -93,7 +87,7 @@ export class CivName extends LegendHeadingMixin(CivFormElement) {
 
   override updated(changed: Map<string, unknown>): void {
     super.updated(changed);
-    if (changed.has('_name') || changed.has('showSuffix')) {
+    if (changed.has('_data') || changed.has('showSuffix')) {
       this._syncSuffixOptions();
     }
   }
@@ -121,7 +115,7 @@ export class CivName extends LegendHeadingMixin(CivFormElement) {
         <civ-form-field label="${firstLabel}" error="${this.firstError}" ?required="${this.required}">
           <civ-text-input
             name="${this.name ? `${this.name}.first` : ''}"
-            value="${this._name.first}"
+            value="${this._data.first}"
             error="${this.firstError}"
             autocomplete="given-name"
             ?disabled="${this.disabled}"
@@ -135,7 +129,7 @@ export class CivName extends LegendHeadingMixin(CivFormElement) {
           <civ-form-field label="${t('nameMiddle')}" error="${this.middleError}">
             <civ-text-input
               name="${this.name ? `${this.name}.middle` : ''}"
-              value="${this._name.middle}"
+              value="${this._data.middle}"
               error="${this.middleError}"
               autocomplete="additional-name"
               ?disabled="${this.disabled}"
@@ -149,7 +143,7 @@ export class CivName extends LegendHeadingMixin(CivFormElement) {
         <civ-form-field label="${lastLabel}" error="${this.lastError}" ?required="${this.required}">
           <civ-text-input
             name="${this.name ? `${this.name}.last` : ''}"
-            value="${this._name.last}"
+            value="${this._data.last}"
             error="${this.lastError}"
             autocomplete="family-name"
             ?disabled="${this.disabled}"
@@ -164,7 +158,7 @@ export class CivName extends LegendHeadingMixin(CivFormElement) {
             <civ-form-field label="${t('nameSuffix')}">
               <civ-select
                 name="${this.name ? `${this.name}.suffix` : ''}"
-                value="${this._name.suffix}"
+                value="${this._data.suffix}"
                 autocomplete="honorific-suffix"
                 ?disabled="${this.disabled}"
                 data-name-suffix
@@ -177,24 +171,10 @@ export class CivName extends LegendHeadingMixin(CivFormElement) {
     `;
   }
 
-  private _onSubInput(field: keyof NameValue, e: CustomEvent<{ value: string }>): void {
-    e.stopPropagation();
-    this._name = this._patchStructured(this._name, { [field]: e.detail.value } as Partial<NameValue>);
-  }
-
-  private _onSubChange(field: keyof NameValue, e: CustomEvent<{ value: string }>): void {
-    e.stopPropagation();
-    this._name = this._patchStructured(this._name, { [field]: e.detail.value } as Partial<NameValue>, ['change']);
-  }
-
   /** Combined handler for select sub-fields (fires both civ-input and civ-change in one update). */
   private _onSubSelectChange(field: keyof NameValue, e: CustomEvent<{ value: string }>): void {
     e.stopPropagation();
-    this._name = this._patchStructured(this._name, { [field]: e.detail.value } as Partial<NameValue>, ['input', 'change']);
-  }
-
-  protected override _syncFormValue(): void {
-    this.syncFormDataFromState(this._name, this.name || 'name');
+    this._data = this._patchStructured(this._data, { [field]: e.detail.value } as Partial<NameValue>, ['input', 'change']);
   }
 
   /**
@@ -202,7 +182,7 @@ export class CivName extends LegendHeadingMixin(CivFormElement) {
    * are filled. Middle and suffix remain optional.
    */
   private _isComplete(): boolean {
-    return !!(this._name.first.trim() && this._name.last.trim());
+    return !!(this._data.first.trim() && this._data.last.trim());
   }
 
   protected override get _fieldName(): string {
@@ -216,7 +196,7 @@ export class CivName extends LegendHeadingMixin(CivFormElement) {
   }
 
   override formResetCallback(): void {
-    this._name = { ...EMPTY_NAME };
+    this._data = { ...EMPTY_NAME };
     this._resetCompound(['firstError', 'middleError', 'lastError']);
   }
 }

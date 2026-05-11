@@ -119,7 +119,7 @@ describe('civ-service-history sub-component event handlers', () => {
     }));
     await elementUpdated(el);
 
-    expect(el._service.dischargeType).toBe('honorable');
+    expect(el._data.dischargeType).toBe('honorable');
     expect(inputs).toHaveLength(1);
     expect(changes).toHaveLength(1);
   });
@@ -132,10 +132,10 @@ describe('civ-service-history sub-component event handlers', () => {
     expect(startDate).not.toBeNull();
     startDate.dispatchEvent(new CustomEvent('civ-input', { detail: { value: '2010-01-01' }, bubbles: true }));
     await elementUpdated(el);
-    expect(el._service.startDate).toBe('2010-01-01');
+    expect(el._data.startDate).toBe('2010-01-01');
 
     startDate.dispatchEvent(new CustomEvent('civ-change', { detail: { value: '2010-01-01' }, bubbles: true }));
     await elementUpdated(el);
-    expect(el._service.startDate).toBe('2010-01-01');
+    expect(el._data.startDate).toBe('2010-01-01');
   });
 });

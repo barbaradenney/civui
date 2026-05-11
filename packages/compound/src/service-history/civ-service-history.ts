@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivFormElement, LegendHeadingMixin, dispatch, renderLegend, renderFormHeader, buildDescribedBy, t } from '@civui/core';
+import { CivCompoundElement, LegendHeadingMixin, dispatch, renderLegend, renderFormHeader, buildDescribedBy, t } from '@civui/core';
 import { resolvePresetOptions } from '@civui/core';
 import type { SelectLike } from '@civui/core';
 import '@civui/inputs/text-input';
@@ -35,7 +35,9 @@ const DISCHARGE_OPTIONS = resolvePresetOptions('discharge-type');
  * @fires civ-change - On committed field change, detail: { value: ServicePeriodValue }
  */
 @customElement('civ-service-history')
-export class CivServiceHistory extends LegendHeadingMixin(CivFormElement) {
+export class CivServiceHistory extends LegendHeadingMixin(CivCompoundElement) {
+  protected override _empty: ServicePeriodValue = { ...EMPTY_SERVICE };
+
   @property({ type: String }) legend = '';
   @property({ type: Boolean, attribute: 'show-service-number' }) showServiceNumber = false;
 
@@ -45,20 +47,15 @@ export class CivServiceHistory extends LegendHeadingMixin(CivFormElement) {
   @property({ type: String, attribute: 'discharge-error' }) dischargeError = '';
   @property({ type: String, attribute: 'service-number-error' }) serviceNumberError = '';
 
-  @state() private _service: ServicePeriodValue = { ...EMPTY_SERVICE };
+  @state() protected override _data: ServicePeriodValue = { ...EMPTY_SERVICE };
 
   get serviceValue(): ServicePeriodValue {
-    return { ...this._service };
+    return { ...this._data };
   }
 
   set serviceValue(val: ServicePeriodValue) {
-    this._service = { ...EMPTY_SERVICE, ...val };
-    this.value = JSON.stringify(this._service);
-  }
-
-  override connectedCallback(): void {
-    super.connectedCallback();
-    this._service = this.parseStructuredValue(this.value, EMPTY_SERVICE);
+    this._data = { ...EMPTY_SERVICE, ...val };
+    this.value = JSON.stringify(this._data);
   }
 
   override firstUpdated(): void {
@@ -68,7 +65,7 @@ export class CivServiceHistory extends LegendHeadingMixin(CivFormElement) {
 
   override updated(changed: Map<string, unknown>): void {
     super.updated(changed);
-    if (changed.has('_service')) {
+    if (changed.has('_data')) {
       this.updateComplete.then(() => this._syncSelectOptions());
     }
   }
@@ -90,7 +87,7 @@ export class CivServiceHistory extends LegendHeadingMixin(CivFormElement) {
         <civ-form-field label="${t('serviceBranchLabel')}" error="${this.branchError}">
           <civ-select
             name="${prefix}.branch"
-            value="${this._service.branch}"
+            value="${this._data.branch}"
             error="${this.branchError}"
             ?disabled="${this.disabled}"
             data-service-branch
@@ -102,7 +99,7 @@ export class CivServiceHistory extends LegendHeadingMixin(CivFormElement) {
           legend="${t('serviceStartDateLegend')}"
           hint="${t('serviceStartDateHint')}"
           name="${prefix}.startDate"
-          value="${this._service.startDate}"
+          value="${this._data.startDate}"
           error="${this.startDateError}"
           ?disabled="${this.disabled}"
           @civ-input="${(e: CustomEvent) => this._onFieldInput('startDate', e)}"
@@ -113,7 +110,7 @@ export class CivServiceHistory extends LegendHeadingMixin(CivFormElement) {
           legend="${t('serviceEndDateLegend')}"
           hint="${t('serviceEndDateHint')}"
           name="${prefix}.endDate"
-          value="${this._service.endDate}"
+          value="${this._data.endDate}"
           error="${this.endDateError}"
           ?disabled="${this.disabled}"
           @civ-input="${(e: CustomEvent) => this._onFieldInput('endDate', e)}"
@@ -123,7 +120,7 @@ export class CivServiceHistory extends LegendHeadingMixin(CivFormElement) {
         <civ-form-field label="${t('serviceDischargeLabel')}" error="${this.dischargeError}">
           <civ-select
             name="${prefix}.dischargeType"
-            value="${this._service.dischargeType}"
+            value="${this._data.dischargeType}"
             error="${this.dischargeError}"
             ?disabled="${this.disabled}"
             data-service-discharge
@@ -135,7 +132,7 @@ export class CivServiceHistory extends LegendHeadingMixin(CivFormElement) {
           <civ-form-field label="${t('serviceNumberLabel')}" hint="${t('serviceNumberHint')}" error="${this.serviceNumberError}">
             <civ-text-input
               name="${prefix}.serviceNumber"
-              value="${this._service.serviceNumber}"
+              value="${this._data.serviceNumber}"
               hint="${t('serviceNumberHint')}"
               error="${this.serviceNumberError}"
               ?disabled="${this.disabled}"
@@ -159,38 +156,38 @@ export class CivServiceHistory extends LegendHeadingMixin(CivFormElement) {
 
   private _onBranchChange(e: CustomEvent): void {
     e.stopPropagation();
-    this._service = { ...this._service, branch: e.detail.value };
-    this.value = JSON.stringify(this._service);
-    dispatch(this, 'civ-input', { value: { ...this._service } });
-    dispatch(this, 'civ-change', { value: { ...this._service } });
+    this._data = { ...this._data, branch: e.detail.value };
+    this.value = JSON.stringify(this._data);
+    dispatch(this, 'civ-input', { value: { ...this._data } });
+    dispatch(this, 'civ-change', { value: { ...this._data } });
   }
 
   private _onDischargeChange(e: CustomEvent): void {
     e.stopPropagation();
-    this._service = { ...this._service, dischargeType: e.detail.value };
-    this.value = JSON.stringify(this._service);
-    dispatch(this, 'civ-input', { value: { ...this._service } });
-    dispatch(this, 'civ-change', { value: { ...this._service } });
+    this._data = { ...this._data, dischargeType: e.detail.value };
+    this.value = JSON.stringify(this._data);
+    dispatch(this, 'civ-input', { value: { ...this._data } });
+    dispatch(this, 'civ-change', { value: { ...this._data } });
   }
 
   private _onFieldInput(field: keyof ServicePeriodValue, e: CustomEvent): void {
     e.stopPropagation();
 
-    this._service = this._patchStructured(this._service, { [field]: e.detail.value } as Partial<ServicePeriodValue>);
+    this._data = this._patchStructured(this._data, { [field]: e.detail.value } as Partial<ServicePeriodValue>);
   }
 
   private _onFieldChange(field: keyof ServicePeriodValue, e: CustomEvent): void {
     e.stopPropagation();
 
-    this._service = this._patchStructured(this._service, { [field]: e.detail.value } as Partial<ServicePeriodValue>, ['change']);
+    this._data = this._patchStructured(this._data, { [field]: e.detail.value } as Partial<ServicePeriodValue>, ['change']);
   }
 
   protected override _syncFormValue(): void {
-    this.syncFormDataFromState(this._service, this.name || 'service');
+    this.syncFormDataFromState(this._data, this.name || 'service');
   }
 
   override formResetCallback(): void {
-    this._service = { ...EMPTY_SERVICE };
+    this._data = { ...EMPTY_SERVICE };
     this._resetCompound([
       'branchError', 'startDateError', 'endDateError', 'dischargeError',
       'serviceNumberError',

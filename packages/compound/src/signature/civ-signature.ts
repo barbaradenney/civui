@@ -1,7 +1,7 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
-import { CivFormElement, LegendHeadingMixin, dispatch, renderLegend, renderFormHeader, buildDescribedBy, interpolate, t } from '@civui/core';
+import { CivCompoundElement, LegendHeadingMixin, dispatch, renderLegend, renderFormHeader, buildDescribedBy, interpolate, t } from '@civui/core';
 import type { LabelSize } from '@civui/core';
 import '@civui/inputs/text-input';
 import '@civui/controls/checkbox';
@@ -65,7 +65,9 @@ const EMPTY_SIGNATURE: InternalSignature = { name: '', certified: false, signedA
  * @fires civ-change - On committed field change, detail: { value: SignatureValue }
  */
 @customElement('civ-signature')
-export class CivSignature extends LegendHeadingMixin(CivFormElement) {
+export class CivSignature extends LegendHeadingMixin(CivCompoundElement) {
+  protected override _empty: InternalSignature = { ...EMPTY_SIGNATURE };
+
   /** Fieldset legend. */
   @property({ type: String }) legend = '';
 
@@ -105,17 +107,17 @@ export class CivSignature extends LegendHeadingMixin(CivFormElement) {
    */
   @property({ type: Boolean }) card = true;
 
-  @state() private _signature: InternalSignature = { ...EMPTY_SIGNATURE };
+  @state() protected override _data: InternalSignature = { ...EMPTY_SIGNATURE };
 
   /** Get the current signature value. */
   get signatureValue(): SignatureValue {
-    return { ...this._signature };
+    return { ...this._data };
   }
 
   /** Set the signature value. Missing fields fall back to the empty defaults. */
   set signatureValue(val: SignatureValue) {
-    this._signature = { ...EMPTY_SIGNATURE, ...val, signedAt: val.signedAt ?? '' };
-    this.value = JSON.stringify(this._signature);
+    this._data = { ...EMPTY_SIGNATURE, ...val, signedAt: val.signedAt ?? '' };
+    this.value = JSON.stringify(this._data);
   }
 
   /**
@@ -127,14 +129,13 @@ export class CivSignature extends LegendHeadingMixin(CivFormElement) {
    * is the exception because the affirmation is binary.
    */
   get isComplete(): boolean {
-    return this._signature.name.trim().length > 0 && this._signature.certified;
+    return this._data.name.trim().length > 0 && this._data.certified;
   }
 
   override connectedCallback(): void {
+    // Base CivCompoundElement.connectedCallback hydrates `_data` from
+    // `this.value` via `parseStructuredValue`.
     super.connectedCallback();
-    // Hydrate before the first render so we don't trigger a second render
-    // (Lit warns when reactive state mutates during/after `updated`).
-    this._signature = this.parseStructuredValue(this.value, EMPTY_SIGNATURE);
 
     // Light DOM: capture any `slot="statement"` children before Lit's first
     // render destroys them. Multiple children get joined; their content is
@@ -163,8 +164,8 @@ export class CivSignature extends LegendHeadingMixin(CivFormElement) {
    * showing nothing.
    */
   private _formatSignedAt(): string {
-    if (!this._signature.signedAt) return '';
-    const d = new Date(this._signature.signedAt);
+    if (!this._data.signedAt) return '';
+    const d = new Date(this._data.signedAt);
     if (isNaN(d.getTime())) return '';
     try {
       return d.toLocaleString(undefined, { dateStyle: 'long', timeStyle: 'short' });
@@ -197,7 +198,7 @@ export class CivSignature extends LegendHeadingMixin(CivFormElement) {
         <civ-form-field label="${t('signatureName')}" hint="${t('signatureNameHint')}" error="${this.nameError}">
           <civ-text-input
             name="${this.name ? `${this.name}.name` : ''}"
-            value="${this._signature.name}"
+            value="${this._data.name}"
             hint="${t('signatureNameHint')}"
             error="${this.nameError}"
             autocomplete="off"
@@ -212,7 +213,7 @@ export class CivSignature extends LegendHeadingMixin(CivFormElement) {
           label="${t('signatureCertify')}"
           name="${this.name ? `${this.name}.certified` : ''}"
           value="true"
-          ?checked="${this._signature.certified}"
+          ?checked="${this._data.certified}"
           ?disabled="${this.disabled}"
           error="${this.certifyError}"
           extra-describedby="${this._hasStatement ? this._statementId : nothing}"
@@ -231,7 +232,7 @@ export class CivSignature extends LegendHeadingMixin(CivFormElement) {
           value is already announced by the screen reader.
         -->
         <div class="civ-signature-preview" aria-hidden="true">
-          <span class="civ-signature-preview__cursive">${this._signature.name.trim() || ' '}</span>
+          <span class="civ-signature-preview__cursive">${this._data.name.trim() || ' '}</span>
         </div>
 
         <!--
@@ -243,7 +244,7 @@ export class CivSignature extends LegendHeadingMixin(CivFormElement) {
           content changes rather than detecting a freshly-appended node.
         -->
         <div class="civ-signature-signed-at civ-text-sm" role="status" aria-live="polite">
-          ${this._signature.certified && this._signature.signedAt
+          ${this._data.certified && this._data.signedAt
             ? interpolate(t('signatureSignedAt'), { date: this._formatSignedAt() })
             : nothing}
         </div>
@@ -257,16 +258,16 @@ export class CivSignature extends LegendHeadingMixin(CivFormElement) {
 
   private _onNameInput(e: CustomEvent<{ value: string }>): void {
     e.stopPropagation();
-    this._signature = { ...this._signature, name: e.detail.value };
-    this.value = JSON.stringify(this._signature);
-    dispatch(this, 'civ-input', { value: { ...this._signature } });
+    this._data = { ...this._data, name: e.detail.value };
+    this.value = JSON.stringify(this._data);
+    dispatch(this, 'civ-input', { value: { ...this._data } });
   }
 
   private _onNameChange(e: CustomEvent<{ value: string }>): void {
     e.stopPropagation();
-    this._signature = { ...this._signature, name: e.detail.value };
-    this.value = JSON.stringify(this._signature);
-    dispatch(this, 'civ-change', { value: { ...this._signature } });
+    this._data = { ...this._data, name: e.detail.value };
+    this.value = JSON.stringify(this._data);
+    dispatch(this, 'civ-change', { value: { ...this._data } });
   }
 
   private _onCertifyChange(e: CustomEvent<{ checked: boolean }>): void {
@@ -275,14 +276,14 @@ export class CivSignature extends LegendHeadingMixin(CivFormElement) {
     // uncheck so we never report a stale time. Re-checking captures a
     // fresh timestamp.
     const signedAt = e.detail.checked ? new Date().toISOString() : '';
-    this._signature = {
-      ...this._signature,
+    this._data = {
+      ...this._data,
       certified: e.detail.checked,
       signedAt,
     };
-    this.value = JSON.stringify(this._signature);
-    dispatch(this, 'civ-input', { value: { ...this._signature } });
-    dispatch(this, 'civ-change', { value: { ...this._signature } });
+    this.value = JSON.stringify(this._data);
+    dispatch(this, 'civ-input', { value: { ...this._data } });
+    dispatch(this, 'civ-change', { value: { ...this._data } });
   }
 
   /**
@@ -292,16 +293,16 @@ export class CivSignature extends LegendHeadingMixin(CivFormElement) {
    * `${name}.signedAt`.
    */
   get signedAt(): string {
-    return this._signature.signedAt;
+    return this._data.signedAt;
   }
 
   protected override _syncFormValue(): void {
     const fd = new FormData();
     const prefix = this.name || 'signature';
-    fd.append(`${prefix}.name`, this._signature.name);
-    fd.append(`${prefix}.certified`, this._signature.certified ? 'true' : 'false');
-    if (this._signature.signedAt) {
-      fd.append(`${prefix}.signedAt`, this._signature.signedAt);
+    fd.append(`${prefix}.name`, this._data.name);
+    fd.append(`${prefix}.certified`, this._data.certified ? 'true' : 'false');
+    if (this._data.signedAt) {
+      fd.append(`${prefix}.signedAt`, this._data.signedAt);
     }
     this.updateFormValue(fd);
   }
@@ -319,7 +320,7 @@ export class CivSignature extends LegendHeadingMixin(CivFormElement) {
   }
 
   override formResetCallback(): void {
-    this._signature = { ...EMPTY_SIGNATURE };
+    this._data = { ...EMPTY_SIGNATURE };
     this._resetCompound(['nameError', 'certifyError']);
   }
 }

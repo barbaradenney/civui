@@ -395,8 +395,8 @@ describe('civ-partnership-history sub-component event handlers', () => {
     }));
     await elementUpdated(el);
 
-    expect(el._marriage.spouseFirst).toBe('Alice');
-    expect(el._marriage.spouseLast).toBe('Smith');
+    expect(el._data.spouseFirst).toBe('Alice');
+    expect(el._data.spouseLast).toBe('Smith');
     expect(inputs).toHaveLength(1);
   });
 
@@ -426,10 +426,10 @@ describe('civ-partnership-history sub-component event handlers', () => {
     expect(date).not.toBeNull();
     date.dispatchEvent(new CustomEvent('civ-input', { detail: { value: '2010-06-15' }, bubbles: true }));
     await elementUpdated(el);
-    expect(el._marriage.marriageDate).toBe('2010-06-15');
+    expect(el._data.marriageDate).toBe('2010-06-15');
 
     date.dispatchEvent(new CustomEvent('civ-change', { detail: { value: '2010-06-15' }, bubbles: true }));
     await elementUpdated(el);
-    expect(el._marriage.marriageDate).toBe('2010-06-15');
+    expect(el._data.marriageDate).toBe('2010-06-15');
   });
 });

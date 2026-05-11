@@ -463,7 +463,7 @@ describe('civ-signature', () => {
       }));
       await elementUpdated(el);
 
-      expect(el._signature.name).toBe('Jane Doe');
+      expect(el._data.name).toBe('Jane Doe');
       expect(changes).toHaveLength(1);
       expect(changes[0].name).toBe('Jane Doe');
     });

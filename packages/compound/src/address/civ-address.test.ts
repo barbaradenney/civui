@@ -442,8 +442,8 @@ describe('civ-address country/state cascade', () => {
     ) as any;
     await elementUpdated(el);
 
-    expect(el._address.state).toBe('TX');
-    expect(el._address.zip).toBe('78701');
+    expect(el._data.state).toBe('TX');
+    expect(el._data.zip).toBe('78701');
 
     const country = el.querySelector('civ-country')!;
     country.dispatchEvent(new CustomEvent('civ-change', {
@@ -451,9 +451,9 @@ describe('civ-address country/state cascade', () => {
     }));
     await elementUpdated(el);
 
-    expect(el._address.country).toBe('CA');
-    expect(el._address.state).toBe('');
-    expect(el._address.zip).toBe('');
+    expect(el._data.country).toBe('CA');
+    expect(el._data.state).toBe('');
+    expect(el._data.zip).toBe('');
   });
 
   it('updates `value` and fires civ-input + civ-change when state changes', async () => {
@@ -473,7 +473,7 @@ describe('civ-address country/state cascade', () => {
     }));
     await elementUpdated(el);
 
-    expect(el._address.state).toBe('CA');
+    expect(el._data.state).toBe('CA');
     expect(inputs).toHaveLength(1);
     expect(changes).toHaveLength(1);
   });

@@ -2,6 +2,7 @@
 export { CivBaseElement } from './base/civ-base-element.js';
 export { CivFormElement } from './base/civ-form-element.js';
 export { CivBooleanFormElement } from './base/civ-boolean-form-element.js';
+export { CivCompoundElement } from './base/civ-compound-element.js';
 export { LightDomSlotMixin, LightDomTextMixin } from './base/light-dom-mixins.js';
 export type { SlotConfig } from './base/light-dom-mixins.js';
 export type { SelectLike, FormControlLike } from './types/sub-components.js';

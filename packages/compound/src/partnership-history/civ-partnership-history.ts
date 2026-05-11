@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivFormElement, LegendHeadingMixin, dispatch, renderLegend, renderFormHeader, buildDescribedBy, t } from '@civui/core';
+import { CivCompoundElement, LegendHeadingMixin, dispatch, renderLegend, renderFormHeader, buildDescribedBy, t } from '@civui/core';
 import type { SelectLike } from '@civui/core';
 import '@civui/inputs/text-input';
 import '@civui/inputs/select';
@@ -84,7 +84,9 @@ const EMPTY_MARRIAGE: MarriageValue = {
  * @fires civ-change - On committed field change, detail: { value: MarriageValue }
  */
 @customElement('civ-partnership-history')
-export class CivPartnershipHistory extends LegendHeadingMixin(CivFormElement) {
+export class CivPartnershipHistory extends LegendHeadingMixin(CivCompoundElement) {
+  protected override _empty: MarriageValue = { ...EMPTY_MARRIAGE };
+
   @property({ type: String }) legend = '';
   /** Show the marriage type selector (civil union, common law, etc.). */
   @property({ type: Boolean, attribute: 'show-marriage-type' }) showMarriageType = false;
@@ -116,10 +118,10 @@ export class CivPartnershipHistory extends LegendHeadingMixin(CivFormElement) {
   @property({ type: String, attribute: 'status-error' }) statusError = '';
   @property({ type: String, attribute: 'end-date-error' }) endDateError = '';
 
-  @state() private _marriage: MarriageValue = { ...EMPTY_MARRIAGE };
+  @state() protected override _data: MarriageValue = { ...EMPTY_MARRIAGE };
 
   private get _typeCategory(): PartnershipTypeCategory {
-    return TYPE_CATEGORIES[this._marriage.marriageType] ?? 'none';
+    return TYPE_CATEGORIES[this._data.marriageType] ?? 'none';
   }
 
   /**
@@ -132,7 +134,7 @@ export class CivPartnershipHistory extends LegendHeadingMixin(CivFormElement) {
    *    end-date label as the safe default.
    */
   private _endDateLegend(): string {
-    const s = this._marriage.status;
+    const s = this._data.status;
     if (s === 'widowed' || s === 'partner-deceased') {
       return t('marriageEndDateWidowedLegend');
     }
@@ -143,29 +145,30 @@ export class CivPartnershipHistory extends LegendHeadingMixin(CivFormElement) {
   }
 
   get marriageValue(): MarriageValue {
-    return { ...this._marriage };
+    return { ...this._data };
   }
 
   set marriageValue(val: MarriageValue) {
-    this._marriage = { ...EMPTY_MARRIAGE, ...val };
-    this.value = JSON.stringify(this._marriage);
+    this._data = { ...EMPTY_MARRIAGE, ...val };
+    this.value = JSON.stringify(this._data);
   }
 
   override connectedCallback(): void {
+    // Base CivCompoundElement hydrates `_data`. Post-hydration: apply
+    // `status-assumed` policy so consumers can force a status declaratively.
     super.connectedCallback();
-    this._marriage = this.parseStructuredValue(this.value, EMPTY_MARRIAGE);
-    if (this.statusAssumed) {
-      this._marriage = { ...this._marriage, status: this.statusAssumed };
-      this.value = JSON.stringify(this._marriage);
+    if (this.statusAssumed && this._data.status !== this.statusAssumed) {
+      this._data = { ...this._data, status: this.statusAssumed };
+      this.value = JSON.stringify(this._data);
     }
   }
 
   override willUpdate(changed: Map<string, unknown>): void {
     // Sync derived state before render so we don't trigger a second update
     // cycle from `updated()`.
-    if (changed.has('statusAssumed') && this.statusAssumed && this._marriage.status !== this.statusAssumed) {
-      this._marriage = { ...this._marriage, status: this.statusAssumed };
-      this.value = JSON.stringify(this._marriage);
+    if (changed.has('statusAssumed') && this.statusAssumed && this._data.status !== this.statusAssumed) {
+      this._data = { ...this._data, status: this.statusAssumed };
+      this.value = JSON.stringify(this._data);
     }
   }
 
@@ -176,7 +179,7 @@ export class CivPartnershipHistory extends LegendHeadingMixin(CivFormElement) {
 
   override updated(changed: Map<string, unknown>): void {
     super.updated(changed);
-    if (changed.has('_marriage')) {
+    if (changed.has('_data')) {
       this.updateComplete.then(() => this._syncStatusOptions());
     }
   }
@@ -223,10 +226,10 @@ export class CivPartnershipHistory extends LegendHeadingMixin(CivFormElement) {
   /** Step 1: who — partner name + (optional) partnership type. */
   private _renderWho(prefix: string) {
     const nameJson = JSON.stringify({
-      first: this._marriage.spouseFirst,
-      middle: this._marriage.spouseMiddle,
-      last: this._marriage.spouseLast,
-      suffix: this._marriage.spouseSuffix,
+      first: this._data.spouseFirst,
+      middle: this._data.spouseMiddle,
+      last: this._data.spouseLast,
+      suffix: this._data.spouseSuffix,
     });
     return html`
       <civ-name
@@ -245,7 +248,7 @@ export class CivPartnershipHistory extends LegendHeadingMixin(CivFormElement) {
         <civ-form-field label="${t('marriageTypeLabel')}" error="${this.marriageTypeError}">
           <civ-select
             name="${prefix}.marriageType"
-            value="${this._marriage.marriageType}"
+            value="${this._data.marriageType}"
             error="${this.marriageTypeError}"
             ?disabled="${this.disabled}"
             data-marriage-type
@@ -270,7 +273,7 @@ export class CivPartnershipHistory extends LegendHeadingMixin(CivFormElement) {
         <civ-radio-group
           legend="${isMarriageStatusVocab ? t('marriageStatusLegend') : t('partnershipStatusLegend')}"
           name="${prefix}.status"
-          value="${this._marriage.status}"
+          value="${this._data.status}"
           error="${this.statusError}"
           variant="list"
           ?disabled="${this.disabled}"
@@ -292,11 +295,11 @@ export class CivPartnershipHistory extends LegendHeadingMixin(CivFormElement) {
         </civ-radio-group>
       `}
 
-      ${this._marriage.status && this._marriage.status !== 'current' ? html`
+      ${this._data.status && this._data.status !== 'current' ? html`
         <civ-memorable-date
           legend="${this._endDateLegend()}"
           name="${prefix}.endDate"
-          value="${this._marriage.endDate}"
+          value="${this._data.endDate}"
           error="${this.endDateError}"
           ?disabled="${this.disabled}"
           @civ-input="${(e: CustomEvent) => this._onFieldInput('endDate', e)}"
@@ -312,18 +315,18 @@ export class CivPartnershipHistory extends LegendHeadingMixin(CivFormElement) {
     if (cat === 'marriage' || !this.showMarriageType) {
       return html`
         <civ-memorable-date legend="${t('marriageDateLegend')}" name="${prefix}.marriageDate"
-          value="${this._marriage.marriageDate}" error="${this.marriageDateError}" ?disabled="${this.disabled}"
+          value="${this._data.marriageDate}" error="${this.marriageDateError}" ?disabled="${this.disabled}"
           @civ-input="${(e: CustomEvent) => this._onFieldInput('marriageDate', e)}"
           @civ-change="${(e: CustomEvent) => this._onFieldChange('marriageDate', e)}"></civ-memorable-date>
         <civ-form-field label="${t('marriageCityLabel')}" error="${this.cityError}">
           <civ-text-input name="${prefix}.marriageCity"
-            value="${this._marriage.marriageCity}" error="${this.cityError}" ?disabled="${this.disabled}" ?readonly="${this.readonly}"
+            value="${this._data.marriageCity}" error="${this.cityError}" ?disabled="${this.disabled}" ?readonly="${this.readonly}"
             @civ-input="${(e: CustomEvent) => this._onFieldInput('marriageCity', e)}"
             @civ-change="${(e: CustomEvent) => this._onFieldChange('marriageCity', e)}"></civ-text-input>
         </civ-form-field>
         <civ-form-field label="${t('marriageStateLabel')}" error="${this.stateError}">
           <civ-text-input name="${prefix}.marriageState"
-            value="${this._marriage.marriageState}" error="${this.stateError}" ?disabled="${this.disabled}" ?readonly="${this.readonly}"
+            value="${this._data.marriageState}" error="${this.stateError}" ?disabled="${this.disabled}" ?readonly="${this.readonly}"
             @civ-input="${(e: CustomEvent) => this._onFieldInput('marriageState', e)}"
             @civ-change="${(e: CustomEvent) => this._onFieldChange('marriageState', e)}"></civ-text-input>
         </civ-form-field>
@@ -333,12 +336,12 @@ export class CivPartnershipHistory extends LegendHeadingMixin(CivFormElement) {
     if (cat === 'civil-union') {
       return html`
         <civ-memorable-date legend="${t('marriageRegistrationDateLegend')}" name="${prefix}.marriageDate"
-          value="${this._marriage.marriageDate}" error="${this.marriageDateError}" ?disabled="${this.disabled}"
+          value="${this._data.marriageDate}" error="${this.marriageDateError}" ?disabled="${this.disabled}"
           @civ-input="${(e: CustomEvent) => this._onFieldInput('marriageDate', e)}"
           @civ-change="${(e: CustomEvent) => this._onFieldChange('marriageDate', e)}"></civ-memorable-date>
         <civ-form-field label="${t('marriageJurisdictionLabel')}" error="${this.jurisdictionError}">
           <civ-text-input name="${prefix}.jurisdiction"
-            value="${this._marriage.jurisdiction}" error="${this.jurisdictionError}" ?disabled="${this.disabled}" ?readonly="${this.readonly}"
+            value="${this._data.jurisdiction}" error="${this.jurisdictionError}" ?disabled="${this.disabled}" ?readonly="${this.readonly}"
             @civ-input="${(e: CustomEvent) => this._onFieldInput('jurisdiction', e)}"
             @civ-change="${(e: CustomEvent) => this._onFieldChange('jurisdiction', e)}"></civ-text-input>
         </civ-form-field>
@@ -348,12 +351,12 @@ export class CivPartnershipHistory extends LegendHeadingMixin(CivFormElement) {
     if (cat === 'cohabitation') {
       return html`
         <civ-memorable-date legend="${t('marriageCohabitationStartLegend')}" name="${prefix}.cohabitationStartDate"
-          value="${this._marriage.cohabitationStartDate}" error="${this.cohabitationStartError}" ?disabled="${this.disabled}"
+          value="${this._data.cohabitationStartDate}" error="${this.cohabitationStartError}" ?disabled="${this.disabled}"
           @civ-input="${(e: CustomEvent) => this._onFieldInput('cohabitationStartDate', e)}"
           @civ-change="${(e: CustomEvent) => this._onFieldChange('cohabitationStartDate', e)}"></civ-memorable-date>
         <civ-form-field label="${t('marriageCohabitationStateLabel')}" error="${this.cohabitationStateError}">
           <civ-text-input name="${prefix}.cohabitationState"
-            value="${this._marriage.cohabitationState}" error="${this.cohabitationStateError}" ?disabled="${this.disabled}" ?readonly="${this.readonly}"
+            value="${this._data.cohabitationState}" error="${this.cohabitationStateError}" ?disabled="${this.disabled}" ?readonly="${this.readonly}"
             @civ-input="${(e: CustomEvent) => this._onFieldInput('cohabitationState', e)}"
             @civ-change="${(e: CustomEvent) => this._onFieldChange('cohabitationState', e)}"></civ-text-input>
         </civ-form-field>
@@ -364,7 +367,7 @@ export class CivPartnershipHistory extends LegendHeadingMixin(CivFormElement) {
     if (cat === 'other') {
       return html`
         <civ-memorable-date legend="${t('marriageApproxDateLegend')}" name="${prefix}.marriageDate"
-          value="${this._marriage.marriageDate}" error="${this.marriageDateError}" ?disabled="${this.disabled}"
+          value="${this._data.marriageDate}" error="${this.marriageDateError}" ?disabled="${this.disabled}"
           @civ-input="${(e: CustomEvent) => this._onFieldInput('marriageDate', e)}"
           @civ-change="${(e: CustomEvent) => this._onFieldChange('marriageDate', e)}"></civ-memorable-date>
         ${this._renderDescriptionField(prefix)}
@@ -378,7 +381,7 @@ export class CivPartnershipHistory extends LegendHeadingMixin(CivFormElement) {
     return html`
       <civ-form-field label="${t('marriageTypeDescriptionLabel')}" hint="${t('marriageTypeDescriptionHint')}">
         <civ-text-input name="${prefix}.marriageTypeDescription"
-          value="${this._marriage.marriageTypeDescription}" hint="${t('marriageTypeDescriptionHint')}"
+          value="${this._data.marriageTypeDescription}" hint="${t('marriageTypeDescriptionHint')}"
           ?disabled="${this.disabled}" ?readonly="${this.readonly}"
           @civ-input="${(e: CustomEvent) => this._onFieldInput('marriageTypeDescription', e)}"
           @civ-change="${(e: CustomEvent) => this._onFieldChange('marriageTypeDescription', e)}"></civ-text-input>
@@ -404,93 +407,93 @@ export class CivPartnershipHistory extends LegendHeadingMixin(CivFormElement) {
   private _onMarriageTypeChange(e: CustomEvent): void {
     e.stopPropagation();
     const oldCategory = this._typeCategory;
-    this._marriage = { ...this._marriage, marriageType: e.detail.value };
+    this._data = { ...this._data, marriageType: e.detail.value };
     const newCategory = this._typeCategory;
 
     // Clear fields that no longer apply when category changes
     if (oldCategory !== newCategory) {
       if (oldCategory === 'marriage') {
-        this._marriage = { ...this._marriage, marriageDate: '', marriageCity: '', marriageState: '' };
+        this._data = { ...this._data, marriageDate: '', marriageCity: '', marriageState: '' };
         this.marriageDateError = '';
         this.cityError = '';
         this.stateError = '';
       } else if (oldCategory === 'civil-union') {
-        this._marriage = { ...this._marriage, marriageDate: '', jurisdiction: '' };
+        this._data = { ...this._data, marriageDate: '', jurisdiction: '' };
         this.marriageDateError = '';
         this.jurisdictionError = '';
       } else if (oldCategory === 'cohabitation') {
-        this._marriage = { ...this._marriage, cohabitationStartDate: '', cohabitationState: '', marriageTypeDescription: '' };
+        this._data = { ...this._data, cohabitationStartDate: '', cohabitationState: '', marriageTypeDescription: '' };
         this.cohabitationStartError = '';
         this.cohabitationStateError = '';
       } else if (oldCategory === 'other') {
-        this._marriage = { ...this._marriage, marriageDate: '', marriageTypeDescription: '' };
+        this._data = { ...this._data, marriageDate: '', marriageTypeDescription: '' };
         this.marriageDateError = '';
       }
     }
 
-    this.value = JSON.stringify(this._marriage);
-    dispatch(this, 'civ-input', { value: { ...this._marriage } });
-    dispatch(this, 'civ-change', { value: { ...this._marriage } });
+    this.value = JSON.stringify(this._data);
+    dispatch(this, 'civ-input', { value: { ...this._data } });
+    dispatch(this, 'civ-change', { value: { ...this._data } });
   }
 
   private _onNameInput(e: CustomEvent): void {
     e.stopPropagation();
     const v = typeof e.detail?.value === 'object' ? e.detail.value : {};
-    this._marriage = {
-      ...this._marriage,
-      spouseFirst: v.first ?? this._marriage.spouseFirst,
-      spouseMiddle: v.middle ?? this._marriage.spouseMiddle,
-      spouseLast: v.last ?? this._marriage.spouseLast,
-      spouseSuffix: v.suffix ?? this._marriage.spouseSuffix,
+    this._data = {
+      ...this._data,
+      spouseFirst: v.first ?? this._data.spouseFirst,
+      spouseMiddle: v.middle ?? this._data.spouseMiddle,
+      spouseLast: v.last ?? this._data.spouseLast,
+      spouseSuffix: v.suffix ?? this._data.spouseSuffix,
     };
-    this.value = JSON.stringify(this._marriage);
-    dispatch(this, 'civ-input', { value: { ...this._marriage } });
+    this.value = JSON.stringify(this._data);
+    dispatch(this, 'civ-input', { value: { ...this._data } });
   }
 
   private _onNameChange(e: CustomEvent): void {
     e.stopPropagation();
     const v = typeof e.detail?.value === 'object' ? e.detail.value : {};
-    this._marriage = {
-      ...this._marriage,
-      spouseFirst: v.first ?? this._marriage.spouseFirst,
-      spouseMiddle: v.middle ?? this._marriage.spouseMiddle,
-      spouseLast: v.last ?? this._marriage.spouseLast,
-      spouseSuffix: v.suffix ?? this._marriage.spouseSuffix,
+    this._data = {
+      ...this._data,
+      spouseFirst: v.first ?? this._data.spouseFirst,
+      spouseMiddle: v.middle ?? this._data.spouseMiddle,
+      spouseLast: v.last ?? this._data.spouseLast,
+      spouseSuffix: v.suffix ?? this._data.spouseSuffix,
     };
-    this.value = JSON.stringify(this._marriage);
-    dispatch(this, 'civ-change', { value: { ...this._marriage } });
+    this.value = JSON.stringify(this._data);
+    dispatch(this, 'civ-change', { value: { ...this._data } });
   }
 
   private _onStatusChange(e: CustomEvent): void {
     e.stopPropagation();
-    this._marriage = { ...this._marriage, status: e.detail.value };
-    if (this._marriage.status === 'current') {
-      this._marriage = { ...this._marriage, endDate: '' };
+    this._data = { ...this._data, status: e.detail.value };
+    if (this._data.status === 'current') {
+      this._data = { ...this._data, endDate: '' };
       this.endDateError = '';
     }
-    this.value = JSON.stringify(this._marriage);
-    dispatch(this, 'civ-input', { value: { ...this._marriage } });
-    dispatch(this, 'civ-change', { value: { ...this._marriage } });
+    this.value = JSON.stringify(this._data);
+    dispatch(this, 'civ-input', { value: { ...this._data } });
+    dispatch(this, 'civ-change', { value: { ...this._data } });
   }
 
   private _onFieldInput(field: keyof MarriageValue, e: CustomEvent): void {
     e.stopPropagation();
 
-    this._marriage = this._patchStructured(this._marriage, { [field]: e.detail.value } as Partial<MarriageValue>);
+    this._data = this._patchStructured(this._data, { [field]: e.detail.value } as Partial<MarriageValue>);
   }
 
   private _onFieldChange(field: keyof MarriageValue, e: CustomEvent): void {
     e.stopPropagation();
 
-    this._marriage = this._patchStructured(this._marriage, { [field]: e.detail.value } as Partial<MarriageValue>, ['change']);
+    this._data = this._patchStructured(this._data, { [field]: e.detail.value } as Partial<MarriageValue>, ['change']);
   }
 
   protected override _syncFormValue(): void {
-    this.syncFormDataFromState(this._marriage, this.name || 'marriage');
+    this.syncFormDataFromState(this._data, this.name || 'marriage');
   }
 
   override formResetCallback(): void {
-    this._marriage = { ...EMPTY_MARRIAGE };
+    this._data = { ...EMPTY_MARRIAGE };
     this._resetCompound([
       'spouseError', 'marriageTypeError', 'marriageDateError', 'cityError',
       'stateError', 'jurisdictionError', 'cohabitationStartError',

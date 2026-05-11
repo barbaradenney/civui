@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivFormElement, LegendHeadingMixin, dispatch, renderLegend, renderFormHeader, buildDescribedBy, t } from '@civui/core';
+import { CivCompoundElement, LegendHeadingMixin, dispatch, renderLegend, renderFormHeader, buildDescribedBy, t } from '@civui/core';
 import '@civui/inputs/text-input';
 import '@civui/inputs/routing-number';
 import '@civui/controls/radio';
@@ -31,7 +31,9 @@ const EMPTY_DEPOSIT: DirectDepositValue = { accountType: '', routingNumber: '', 
  * @fires civ-change - On committed field change, detail: { value: DirectDepositValue }
  */
 @customElement('civ-direct-deposit')
-export class CivDirectDeposit extends LegendHeadingMixin(CivFormElement) {
+export class CivDirectDeposit extends LegendHeadingMixin(CivCompoundElement) {
+  protected override _empty: DirectDepositValue = { ...EMPTY_DEPOSIT };
+
   /** Fieldset legend. */
   @property({ type: String }) legend = '';
 
@@ -44,22 +46,17 @@ export class CivDirectDeposit extends LegendHeadingMixin(CivFormElement) {
   /** Error for account type. */
   @property({ type: String, attribute: 'type-error' }) typeError = '';
 
-  @state() private _deposit: DirectDepositValue = { ...EMPTY_DEPOSIT };
+  @state() protected override _data: DirectDepositValue = { ...EMPTY_DEPOSIT };
 
   /** Get the current deposit value. */
   get depositValue(): DirectDepositValue {
-    return { ...this._deposit };
+    return { ...this._data };
   }
 
   /** Set the deposit value. */
   set depositValue(val: DirectDepositValue) {
-    this._deposit = { ...val };
-    this.value = JSON.stringify(this._deposit);
-  }
-
-  override connectedCallback(): void {
-    super.connectedCallback();
-    this._deposit = this.parseStructuredValue(this.value, EMPTY_DEPOSIT);
+    this._data = { ...val };
+    this.value = JSON.stringify(this._data);
   }
 
   override render() {
@@ -77,7 +74,7 @@ export class CivDirectDeposit extends LegendHeadingMixin(CivFormElement) {
         <civ-radio-group
           legend="${t('directDepositAccountType')}"
           name="${this.name ? `${this.name}.accountType` : 'accountType'}"
-          value="${this._deposit.accountType}"
+          value="${this._data.accountType}"
           ?disabled="${this.disabled}"
           error="${this.typeError}"
           @civ-input="${(e: CustomEvent) => e.stopPropagation()}"
@@ -90,7 +87,7 @@ export class CivDirectDeposit extends LegendHeadingMixin(CivFormElement) {
         <civ-form-field label="${t('directDepositRouting')}" hint="${t('directDepositRoutingHint')}" error="${this.routingError}">
           <civ-routing-number
             name="${this.name ? `${this.name}.routingNumber` : ''}"
-            value="${this._deposit.routingNumber}"
+            value="${this._data.routingNumber}"
             hint="${t('directDepositRoutingHint')}"
             error="${this.routingError}"
             ?disabled="${this.disabled}"
@@ -103,7 +100,7 @@ export class CivDirectDeposit extends LegendHeadingMixin(CivFormElement) {
         <civ-form-field label="${t('directDepositAccount')}" hint="${t('directDepositAccountHint')}" error="${this.accountError}">
           <civ-text-input
             name="${this.name ? `${this.name}.accountNumber` : ''}"
-            value="${this._deposit.accountNumber}"
+            value="${this._data.accountNumber}"
             hint="${t('directDepositAccountHint')}"
             error="${this.accountError}"
             inputmode="numeric"
@@ -120,26 +117,16 @@ export class CivDirectDeposit extends LegendHeadingMixin(CivFormElement) {
   private _onRadioChange(e: CustomEvent<{ value: string }>): void {
     e.stopPropagation(); // Prevent the radio group's event from bubbling past this component
     const type = e.detail.value as 'checking' | 'savings';
-    this._deposit = { ...this._deposit, accountType: type };
-    this.value = JSON.stringify(this._deposit);
-    dispatch(this, 'civ-input', { value: { ...this._deposit } });
-    dispatch(this, 'civ-change', { value: { ...this._deposit } });
-  }
-
-  private _onSubInput(field: keyof DirectDepositValue, e: CustomEvent<{ value: string }>): void {
-    e.stopPropagation();
-
-    this._deposit = this._patchStructured(this._deposit, { [field]: e.detail.value } as Partial<DirectDepositValue>);
-  }
-
-  private _onSubChange(field: keyof DirectDepositValue, e: CustomEvent<{ value: string }>): void {
-    e.stopPropagation();
-
-    this._deposit = this._patchStructured(this._deposit, { [field]: e.detail.value } as Partial<DirectDepositValue>, ['change']);
+    this._data = { ...this._data, accountType: type };
+    this.value = JSON.stringify(this._data);
+    dispatch(this, 'civ-input', { value: { ...this._data } });
+    dispatch(this, 'civ-change', { value: { ...this._data } });
   }
 
   protected override _syncFormValue(): void {
-    this.syncFormDataFromState(this._deposit, this.name || 'deposit');
+    // Custom prefix `deposit` (not the tagName-stripped default
+    // `direct-deposit`) — matches the form-field name consumers expect.
+    this.syncFormDataFromState(this._data, this.name || 'deposit');
   }
 
   /**
@@ -148,7 +135,7 @@ export class CivDirectDeposit extends LegendHeadingMixin(CivFormElement) {
    * account-number length validation belong to dedicated validators.
    */
   private _isComplete(): boolean {
-    const d = this._deposit;
+    const d = this._data;
     return !!(d.accountType && d.routingNumber.trim() && d.accountNumber.trim());
   }
 
@@ -159,7 +146,7 @@ export class CivDirectDeposit extends LegendHeadingMixin(CivFormElement) {
   }
 
   override formResetCallback(): void {
-    this._deposit = { ...EMPTY_DEPOSIT };
+    this._data = { ...EMPTY_DEPOSIT };
     this._resetCompound(['routingError', 'accountError', 'typeError']);
   }
 }

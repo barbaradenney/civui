@@ -22,12 +22,14 @@ Government forms often require uploaded documents to be categorized — the user
   legend="Supporting documents"
   name="documents"
   item-label="document"
-  mode="form-steps"
   min="1"
 >
-  <civ-form-field label="Document type" required>
-    <civ-select name="docType" preset="document-type" required></civ-select>
-  </civ-form-field>
+  <civ-select label="Document type" name="docType" required>
+    <option value="">- Select -</option>
+    <option value="dd214">DD214 (Discharge papers)</option>
+    <option value="medical">Medical records</option>
+    <option value="other">Other</option>
+  </civ-select>
   <civ-file-upload
     name="file"
     accept=".pdf,.jpg,.png"
@@ -36,6 +38,8 @@ Government forms often require uploaded documents to be categorized — the user
   ></civ-file-upload>
 </civ-repeater>
 ```
+
+There is no `document-type` preset baked into `civ-select` — provide the categories your form needs as inline `<option>` children, or pass an `options` array via JS.
 
 ## Why category first
 
@@ -54,15 +58,13 @@ For forms that need one categorized file (not a repeating list):
 
 ```html
 <civ-fieldset legend="Upload supporting document">
-  <civ-form-field label="Document type" required>
-    <civ-select name="docType">
-      <option value="">- Select -</option>
-      <option value="dd214">DD214 (Discharge papers)</option>
-      <option value="medical">Medical records</option>
-      <option value="buddy">Buddy statement</option>
-      <option value="other">Other</option>
-    </civ-select>
-  </civ-form-field>
+  <civ-select label="Document type" name="docType" required>
+    <option value="">- Select -</option>
+    <option value="dd214">DD214 (Discharge papers)</option>
+    <option value="medical">Medical records</option>
+    <option value="buddy">Buddy statement</option>
+    <option value="other">Other</option>
+  </civ-select>
 
   <civ-conditional when="docType" has-value>
     <civ-file-upload
@@ -81,32 +83,27 @@ The file upload only appears after a category is selected, reinforcing the categ
 
 <StoryEmbed id="forms-patterns-categorized-upload--multiple-documents" />
 
-Use `civ-repeater` in detail mode so each document entry has its own category + file pair:
+Use `civ-repeater` (inline mode) so each document entry has its own category + file pair, all visible at once:
 
 ```html
 <civ-repeater
   legend="Supporting documents"
   name="documents"
   item-label="document"
-  mode="form-steps"
   min="0"
   max="10"
 >
-  <civ-form-field label="Document type" required>
-    <civ-select name="docType">
-      <option value="">- Select -</option>
-      <option value="dd214">DD214 (Discharge papers)</option>
-      <option value="medical">Medical records</option>
-      <option value="buddy">Buddy statement</option>
-      <option value="id">Government-issued ID</option>
-      <option value="other">Other</option>
-    </civ-select>
-  </civ-form-field>
+  <civ-select label="Document type" name="docType" required>
+    <option value="">- Select -</option>
+    <option value="dd214">DD214 (Discharge papers)</option>
+    <option value="medical">Medical records</option>
+    <option value="buddy">Buddy statement</option>
+    <option value="id">Government-issued ID</option>
+    <option value="other">Other</option>
+  </civ-select>
 
   <civ-conditional when="docType" equals="other">
-    <civ-form-field label="Describe the document" required>
-      <civ-text-input name="docDescription"></civ-text-input>
-    </civ-form-field>
+    <civ-text-input label="Describe the document" name="docDescription" required></civ-text-input>
   </civ-conditional>
 
   <civ-file-upload

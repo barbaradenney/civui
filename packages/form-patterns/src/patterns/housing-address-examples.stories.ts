@@ -91,7 +91,13 @@ export const WithSupportResources: Story = {
     },
   },
   render: () => html`
-    <civ-form support-resources="If you or someone you know is experiencing homelessness, call the National Call Center for Homeless Veterans at 1-877-4AID-VET (1-877-424-3838).">
+    <civ-form
+      support-resources='[
+        {"label":"National Call Center for Homeless Veterans","href":"tel:18774243838","description":"Call 1-877-4AID-VET (1-877-424-3838), 24/7"},
+        {"label":"Veterans Crisis Line","href":"tel:988","description":"Call or text 988, then press 1"},
+        {"label":"SAMHSA Disaster Distress Helpline","href":"tel:18009855990","description":"Call or text 1-800-985-5990 for immediate crisis counseling"}
+      ]'
+    >
       <civ-section-intro heading="Your mailing address" tone="sensitive">
         <p>We need a way to send you important documents. If you don't have a permanent address, we can work with you on other options.</p>
       </civ-section-intro>

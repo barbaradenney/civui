@@ -18,7 +18,7 @@ When a form submission fails validation, `civ-form` renders an error summary at 
 
 ## Server-side errors
 
-Inject server-side validation errors after a failed submission using the `setErrors()` method:
+Inject server-side validation errors after a failed submission using the `setServerErrors()` method:
 
 <StoryEmbed id="forms-form-form--set-server-errors" />
 
@@ -34,25 +34,33 @@ form.addEventListener('civ-submit', async (e) => {
   if (!response.ok) {
     const errors = await response.json();
     // errors: { fieldName: 'Error message', ... }
-    form.setErrors(errors);
+    form.setServerErrors(errors);
   }
 });
 ```
+
+Pass an empty object `{}` to clear all server errors, or call `form.clearErrors()`.
 
 ## Field-level errors
 
 Each field shows its error below the input with `role="alert"` for screen readers. Error borders use color + text (never color alone).
 
 ```html
-<!-- Declarative validation via validate attribute -->
-<civ-form-field label="Email address" required>
-  <civ-text-input name="email" validate="email"></civ-text-input>
-</civ-form-field>
+<!-- Declarative validation via the validate attribute -->
+<civ-text-input
+  label="Email address"
+  name="email"
+  validate="email"
+  required
+></civ-text-input>
 
-<!-- Custom required message -->
-<civ-form-field label="Social Security number" required required-message="We need your SSN to verify your identity">
-  <civ-ssn name="ssn"></civ-ssn>
-</civ-form-field>
+<!-- Custom required message — overrides the default "Enter your {label}" -->
+<civ-ssn
+  label="Social Security number"
+  name="ssn"
+  required
+  required-message="We need your SSN to verify your identity"
+></civ-ssn>
 ```
 
 ## Built-in validators
@@ -95,5 +103,4 @@ Follow plain language principles for government forms:
 ## Components used
 
 - [`civ-form`](/components/form) — form container with validation and error summary
-- [`civ-form-field`](/components/form/form-group) — field wrapper that displays errors
-- All input components support `error`, `required`, and `validate` props
+- All input components render their own error chrome and support `error`, `required`, `required-message`, and `validate` props directly

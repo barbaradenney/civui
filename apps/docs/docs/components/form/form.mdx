@@ -18,35 +18,43 @@ Validation coordinator with accessible error summary. Validates child CivUI form
 
 <StoryEmbed id="forms-form-form--default" />
 
-### With Hint
+### With validation
 
-<StoryEmbed id="forms-form-form--with-hint" />
+Fields declare client-side rules via `validate="..."` and `required`. The form blocks submit and renders the error summary if anything fails.
 
-### With Error
+<StoryEmbed id="forms-form-form--with-validation" />
+
+### With error summary
+
+Pre-set errors on each field to demonstrate the error-summary layout (heading + anchor list) at the top of the form.
 
 <StoryEmbed id="forms-form-form--with-error" />
 
-### Required
+### Persist draft
 
-<StoryEmbed id="forms-form-form--required" />
+`persist="key"` auto-saves form data to `sessionStorage` on every change and restores it on page reload.
 
-### Disabled
+<StoryEmbed id="forms-form-form--persist-draft" />
 
-<StoryEmbed id="forms-form-form--disabled" />
+### Dirty tracking
 
-### All States
+`track-dirty` raises a `civ-dirty` event when any field is modified and shows a beforeunload warning if the user tries to navigate away.
+
+<StoryEmbed id="forms-form-form--dirty-tracking" />
+
+### All states
 
 <StoryEmbed id="forms-form-form--all-states" />
 
-### Density Scale
+### Density scale
 
 <StoryEmbed id="forms-form-form--density-scale" />
 
-### Government Inquiry Form
+### Government inquiry form
 
 <StoryEmbed id="forms-form-form--government-inquiry-form" />
 
-### Server Error Injection
+### Server error injection
 
 After an async submit fails, call `form.setServerErrors({ fieldName: 'message' })` to populate the error summary and per-field errors. Behaves like a client-validation failure (focuses the summary, announces, anchor links). Pass an empty object to clear.
 

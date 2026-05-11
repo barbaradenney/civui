@@ -47,7 +47,7 @@ export const Default: Story = {
 
 // ── Individual States ─────────────────────────────────────────
 
-export const WithHint: Story = {
+export const WithValidation: Story = {
   name: 'With Validation',
   render: () => html`
     <civ-form
@@ -71,7 +71,7 @@ export const WithHint: Story = {
 };
 
 export const WithError: Story = {
-  name: 'Error Summary',
+  name: 'With Error Summary',
   render: () => html`
     <civ-form form-label="Benefits application">
       <civ-text-input label="Full name" name="fullName" error="Enter your full name" required></civ-text-input>
@@ -82,7 +82,7 @@ export const WithError: Story = {
   `,
 };
 
-export const Required: Story = {
+export const PersistDraft: Story = {
   name: 'Persist Draft',
   render: () => html`
     <civ-form persist="demo-form" form-label="Draft application">
@@ -98,7 +98,7 @@ export const Required: Story = {
   `,
 };
 
-export const Disabled: Story = {
+export const DirtyTracking: Story = {
   name: 'Dirty Tracking',
   render: () => html`
     <civ-form track-dirty form-label="Profile update">
@@ -298,7 +298,19 @@ export const SetServerErrors: Story = {
     },
   },
   render: () => html`
-    <civ-form id="server-error-form">
+    <civ-form
+      id="server-error-form"
+      @civ-submit="${(e: Event) => {
+        // Pretend the server rejected the input.
+        const form = e.currentTarget as HTMLElement & {
+          setServerErrors: (errors: Record<string, string>) => void;
+        };
+        form.setServerErrors({
+          email: 'This email is already registered.',
+          phone: 'Please enter a 10-digit number.',
+        });
+      }}"
+    >
       <civ-text-input label="Email" name="email" type="email"></civ-text-input>
       <civ-text-input label="Phone" name="phone" type="tel"></civ-text-input>
       <civ-text-input label="ZIP" name="zip" inputmode="numeric"></civ-text-input>
@@ -308,24 +320,13 @@ export const SetServerErrors: Story = {
           type="button"
           variant="secondary"
           @click="${() => {
-            const f = document.querySelector('#server-error-form') as any;
+            const f = document.querySelector('#server-error-form') as HTMLElement & {
+              clearErrors: () => void;
+            };
             f?.clearErrors();
           }}"
         >Clear errors</civ-button>
       </div>
     </civ-form>
-    <script>
-      (function() {
-        const f = document.querySelector('#server-error-form');
-        if (!f) return;
-        f.addEventListener('civ-submit', () => {
-          // Pretend the server rejected the input.
-          f.setServerErrors({
-            email: 'This email is already registered.',
-            phone: 'Please enter a 10-digit number.',
-          });
-        });
-      })();
-    </script>
   `,
 };

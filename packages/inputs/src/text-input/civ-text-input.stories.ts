@@ -54,22 +54,7 @@ export const Default: Story = {
     disabled: false,
   },
   render: (args) => html`
-    <civ-form-field
-      label="${args.label}"
-      hint="${args.hint}"
-      error="${args.error}"
-      ?required="${args.required}"
-      ?disabled="${args.disabled}"
-    >
-      <civ-text-input
-        name="${args.name}"
-        placeholder="${args.placeholder}"
-        type="${args.type}"
-        width="${args.width}"
-        ?required="${args.required}"
-        ?disabled="${args.disabled}"
-      ></civ-text-input>
-    </civ-form-field>
+    <civ-text-input label="${args.label}" name="${args.name}" hint="${args.hint}" error="${args.error}" placeholder="${args.placeholder}" type="${args.type}" width="${args.width}" ?required="${args.required}" ?disabled="${args.disabled}"></civ-text-input>
   `,
 };
 
@@ -77,33 +62,25 @@ export const Default: Story = {
 
 export const WithHint: Story = {
   render: () => html`
-    <civ-form-field label="Full name" hint="Enter your legal first and last name">
-      <civ-text-input name="full-name"></civ-text-input>
-    </civ-form-field>
+    <civ-text-input label="Full name" name="full-name" hint="Enter your legal first and last name"></civ-text-input>
   `,
 };
 
 export const WithError: Story = {
   render: () => html`
-    <civ-form-field label="Full name" error="Enter your full name">
-      <civ-text-input name="full-name"></civ-text-input>
-    </civ-form-field>
+    <civ-text-input label="Full name" name="full-name" error="Enter your full name"></civ-text-input>
   `,
 };
 
 export const Required: Story = {
   render: () => html`
-    <civ-form-field label="Full name" required>
-      <civ-text-input name="full-name" required></civ-text-input>
-    </civ-form-field>
+    <civ-text-input label="Full name" name="full-name" required></civ-text-input>
   `,
 };
 
 export const Disabled: Story = {
   render: () => html`
-    <civ-form-field label="Full name" disabled>
-      <civ-text-input name="full-name" value="Jane Doe" disabled></civ-text-input>
-    </civ-form-field>
+    <civ-text-input label="Full name" name="full-name" value="Jane Doe" disabled></civ-text-input>
   `,
 };
 
@@ -113,21 +90,11 @@ export const AllStates: Story = {
   name: 'All States',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-6">
-      <civ-form-field label="Normal">
-        <civ-text-input name="normal"></civ-text-input>
-      </civ-form-field>
-      <civ-form-field label="With hint" hint="Provide your legal first and last name">
-        <civ-text-input name="hint"></civ-text-input>
-      </civ-form-field>
-      <civ-form-field label="With error" error="Enter your full name">
-        <civ-text-input name="error"></civ-text-input>
-      </civ-form-field>
-      <civ-form-field label="Required" required>
-        <civ-text-input name="required" required></civ-text-input>
-      </civ-form-field>
-      <civ-form-field label="Disabled" disabled>
-        <civ-text-input name="disabled" value="Cannot edit" disabled></civ-text-input>
-      </civ-form-field>
+      <civ-text-input label="Normal" name="normal"></civ-text-input>
+      <civ-text-input label="With hint" name="hint" hint="Provide your legal first and last name"></civ-text-input>
+      <civ-text-input label="With error" name="error" error="Enter your full name"></civ-text-input>
+      <civ-text-input label="Required" name="required" required></civ-text-input>
+      <civ-text-input label="Disabled" name="disabled" value="Cannot edit" disabled></civ-text-input>
     </div>
   `,
 };
@@ -140,21 +107,15 @@ export const DensityScale: Story = {
     <div class="civ-flex civ-flex-col civ-gap-6">
       <div data-civ-scale="dense">
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Dense</p>
-        <civ-form-field label="Full name" hint="Legal first and last name">
-          <civ-text-input name="dense-name"></civ-text-input>
-        </civ-form-field>
+        <civ-text-input label="Full name" name="dense-name" hint="Legal first and last name"></civ-text-input>
       </div>
       <div>
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Default</p>
-        <civ-form-field label="Full name" hint="Legal first and last name">
-          <civ-text-input name="default-name"></civ-text-input>
-        </civ-form-field>
+        <civ-text-input label="Full name" name="default-name" hint="Legal first and last name"></civ-text-input>
       </div>
       <div data-civ-scale="spacious">
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Spacious</p>
-        <civ-form-field label="Full name" hint="Legal first and last name">
-          <civ-text-input name="spacious-name"></civ-text-input>
-        </civ-form-field>
+        <civ-text-input label="Full name" name="spacious-name" hint="Legal first and last name"></civ-text-input>
       </div>
     </div>
   `,
@@ -165,30 +126,14 @@ export const DensityScale: Story = {
 export const WidthVariants: Story = {
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-4">
-      <civ-form-field label="2xs width">
-        <civ-text-input name="w-2xs" width="2xs"></civ-text-input>
-      </civ-form-field>
-      <civ-form-field label="xs width">
-        <civ-text-input name="w-xs" width="xs"></civ-text-input>
-      </civ-form-field>
-      <civ-form-field label="sm width">
-        <civ-text-input name="w-sm" width="sm"></civ-text-input>
-      </civ-form-field>
-      <civ-form-field label="md width">
-        <civ-text-input name="w-md" width="md"></civ-text-input>
-      </civ-form-field>
-      <civ-form-field label="lg width">
-        <civ-text-input name="w-lg" width="lg"></civ-text-input>
-      </civ-form-field>
-      <civ-form-field label="xl width">
-        <civ-text-input name="w-xl" width="xl"></civ-text-input>
-      </civ-form-field>
-      <civ-form-field label="2xl width">
-        <civ-text-input name="w-2xl" width="2xl"></civ-text-input>
-      </civ-form-field>
-      <civ-form-field label="Default (full width)">
-        <civ-text-input name="w-default"></civ-text-input>
-      </civ-form-field>
+      <civ-text-input label="2xs width" name="w-2xs" width="2xs"></civ-text-input>
+      <civ-text-input label="xs width" name="w-xs" width="xs"></civ-text-input>
+      <civ-text-input label="sm width" name="w-sm" width="sm"></civ-text-input>
+      <civ-text-input label="md width" name="w-md" width="md"></civ-text-input>
+      <civ-text-input label="lg width" name="w-lg" width="lg"></civ-text-input>
+      <civ-text-input label="xl width" name="w-xl" width="xl"></civ-text-input>
+      <civ-text-input label="2xl width" name="w-2xl" width="2xl"></civ-text-input>
+      <civ-text-input label="Default (full width)" name="w-default"></civ-text-input>
     </div>
   `,
 };
@@ -198,18 +143,10 @@ export const WidthVariants: Story = {
 export const InputTypes: Story = {
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-4">
-      <civ-form-field label="Text">
-        <civ-text-input name="text" type="text"></civ-text-input>
-      </civ-form-field>
-      <civ-form-field label="Password">
-        <civ-text-input name="password" type="password"></civ-text-input>
-      </civ-form-field>
-      <civ-form-field label="Search">
-        <civ-text-input name="search" type="search" leading-icon="search"></civ-text-input>
-      </civ-form-field>
-      <civ-form-field label="Number">
-        <civ-text-input name="number" type="number"></civ-text-input>
-      </civ-form-field>
+      <civ-text-input label="Text" name="text" type="text"></civ-text-input>
+      <civ-text-input label="Password" name="password" type="password"></civ-text-input>
+      <civ-text-input label="Search" name="search" type="search" leading-icon="search"></civ-text-input>
+      <civ-text-input label="Number" name="number" type="number"></civ-text-input>
     </div>
   `,
 };
@@ -219,9 +156,7 @@ export const InputTypes: Story = {
 export const MaskCustom: Story = {
   name: 'Mask: Custom pattern',
   render: () => html`
-    <civ-form-field label="Reference code" hint="For example: ABC-1234">
-      <civ-text-input name="ref-code" mask-pattern="AAA-####"></civ-text-input>
-    </civ-form-field>
+    <civ-text-input label="Reference code" name="ref-code" hint="For example: ABC-1234" mask-pattern="AAA-####"></civ-text-input>
   `,
 };
 
@@ -230,22 +165,14 @@ export const MaskCustom: Story = {
 export const CharacterCounter: Story = {
   name: 'Character counter',
   render: () => html`
-    <civ-form-field label="Short bio" hint="A one-line description for the directory">
-      <civ-text-input name="bio" maxlength="60"></civ-text-input>
-    </civ-form-field>
+    <civ-text-input label="Short bio" name="bio" hint="A one-line description for the directory" maxlength="60"></civ-text-input>
   `,
 };
 
 export const CharacterCounterShortLimit: Story = {
   name: 'Character counter — over-limit styling',
   render: () => html`
-    <civ-form-field label="Headline">
-      <civ-text-input
-        name="headline"
-        maxlength="20"
-        value="This headline is way too long for the limit"
-      ></civ-text-input>
-    </civ-form-field>
+    <civ-text-input label="Headline" name="headline" value="This headline is way too long for the limit" maxlength="20"></civ-text-input>
   `,
 };
 
@@ -254,42 +181,21 @@ export const CharacterCounterShortLimit: Story = {
 export const LeadingIcon: Story = {
   name: 'Inline: Leading icon',
   render: () => html`
-    <civ-form-field label="Search">
-      <civ-text-input
-        name="search"
-        type="search"
-        leading-icon="search"
-        placeholder="Find a benefit"
-      ></civ-text-input>
-    </civ-form-field>
+    <civ-text-input label="Search" name="search" type="search" leading-icon="search" placeholder="Find a benefit"></civ-text-input>
   `,
 };
 
 export const TrailingIcon: Story = {
   name: 'Inline: Trailing icon',
   render: () => html`
-    <civ-form-field label="Username" hint="3-20 characters, letters and numbers only">
-      <civ-text-input
-        name="username"
-        trailing-icon="info"
-        trailing-icon-label="More info"
-      ></civ-text-input>
-    </civ-form-field>
+    <civ-text-input label="Username" name="username" hint="3-20 characters, letters and numbers only" trailing-icon="info" trailing-icon-label="More info"></civ-text-input>
   `,
 };
 
 export const LeadingAndTrailingIcons: Story = {
   name: 'Inline: Leading + trailing icons',
   render: () => html`
-    <civ-form-field label="Search filings">
-      <civ-text-input
-        name="filing-search"
-        type="search"
-        leading-icon="search"
-        trailing-icon="info"
-        trailing-icon-label="Search tips"
-      ></civ-text-input>
-    </civ-form-field>
+    <civ-text-input label="Search filings" name="filing-search" type="search" leading-icon="search" trailing-icon="info" trailing-icon-label="Search tips"></civ-text-input>
   `,
 };
 
@@ -298,18 +204,14 @@ export const LeadingAndTrailingIcons: Story = {
 export const Prefix: Story = {
   name: 'Prefix',
   render: () => html`
-    <civ-form-field label="Social handle">
-      <civ-text-input name="handle" prefix="@" width="md"></civ-text-input>
-    </civ-form-field>
+    <civ-text-input label="Social handle" name="handle" prefix="@" width="md"></civ-text-input>
   `,
 };
 
 export const Suffix: Story = {
   name: 'Suffix',
   render: () => html`
-    <civ-form-field label="Weight">
-      <civ-text-input name="weight" suffix="lbs" inputmode="decimal" width="sm"></civ-text-input>
-    </civ-form-field>
+    <civ-text-input label="Weight" name="weight" suffix="lbs" inputmode="decimal" width="sm"></civ-text-input>
   `,
 };
 
@@ -320,99 +222,77 @@ export const Suffix: Story = {
 export const SSN: Story = {
   name: 'Preset: Social Security Number',
   render: () => html`
-    <civ-form-field label="Social Security number" required>
-      <civ-ssn name="ssn" required></civ-ssn>
-    </civ-form-field>
+    <civ-ssn label="Social Security number" name="ssn" required></civ-ssn>
   `,
 };
 
 export const SSNLast4: Story = {
   name: 'Preset: SSN (Last 4)',
   render: () => html`
-    <civ-form-field label="Last 4 digits of Social Security number" required>
-      <civ-ssn name="ssn" mode="last4" required></civ-ssn>
-    </civ-form-field>
+    <civ-ssn label="Last 4 digits of Social Security number" name="ssn" required mode="last4"></civ-ssn>
   `,
 };
 
 export const EIN: Story = {
   name: 'Preset: Employer ID Number',
   render: () => html`
-    <civ-form-field label="Employer Identification Number" required>
-      <civ-ein name="ein" required></civ-ein>
-    </civ-form-field>
+    <civ-ein label="Employer Identification Number" name="ein" required></civ-ein>
   `,
 };
 
 export const ZIPCode: Story = {
   name: 'Preset: ZIP Code',
   render: () => html`
-    <civ-form-field label="ZIP code" required>
-      <civ-zip name="zip" required></civ-zip>
-    </civ-form-field>
+    <civ-zip label="ZIP code" name="zip" required></civ-zip>
   `,
 };
 
 export const ZIPPlus4: Story = {
   name: 'Preset: ZIP+4',
   render: () => html`
-    <civ-form-field label="ZIP+4 code">
-      <civ-zip name="zip" extended></civ-zip>
-    </civ-form-field>
+    <civ-zip label="ZIP+4 code" name="zip" extended></civ-zip>
   `,
 };
 
 export const PhoneUS: Story = {
   name: 'Preset: Phone (US)',
   render: () => html`
-    <civ-form-field label="Phone number" required>
-      <civ-phone name="phone" required></civ-phone>
-    </civ-form-field>
+    <civ-phone label="Phone number" name="phone" required></civ-phone>
   `,
 };
 
 export const PhoneInternational: Story = {
   name: 'Preset: Phone (International)',
   render: () => html`
-    <civ-form-field label="Phone number">
-      <civ-phone name="phone" international></civ-phone>
-    </civ-form-field>
+    <civ-phone label="Phone number" name="phone" international></civ-phone>
   `,
 };
 
 export const Email: Story = {
   name: 'Preset: Email',
   render: () => html`
-    <civ-form-field label="Email address" required>
-      <civ-email name="email" required></civ-email>
-    </civ-form-field>
+    <civ-email label="Email address" name="email" required></civ-email>
   `,
 };
 
 export const Currency: Story = {
   name: 'Preset: Currency',
   render: () => html`
-    <civ-form-field label="Annual income">
-      <civ-currency name="income"></civ-currency>
-    </civ-form-field>
+    <civ-currency label="Annual income" name="income"></civ-currency>
   `,
 };
 
 export const RoutingNumber: Story = {
   name: 'Preset: Routing Number',
   render: () => html`
-    <civ-form-field label="Routing number" required>
-      <civ-routing-number name="routing" required></civ-routing-number>
-    </civ-form-field>
+    <civ-routing-number label="Routing number" name="routing" required></civ-routing-number>
   `,
 };
 
 export const VAFileNumber: Story = {
   name: 'Preset: VA File Number',
   render: () => html`
-    <civ-form-field label="VA file number">
-      <civ-va-file-number name="vaFileNumber"></civ-va-file-number>
-    </civ-form-field>
+    <civ-va-file-number label="VA file number" name="vaFileNumber"></civ-va-file-number>
   `,
 };
 
@@ -420,30 +300,14 @@ export const AllPresets: Story = {
   name: 'All Presets',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-2" style="max-width: 480px;">
-      <civ-form-field label="Social Security number">
-        <civ-ssn name="ssn"></civ-ssn>
-      </civ-form-field>
-      <civ-form-field label="Employer ID Number">
-        <civ-ein name="ein"></civ-ein>
-      </civ-form-field>
-      <civ-form-field label="ZIP code">
-        <civ-zip name="zip"></civ-zip>
-      </civ-form-field>
-      <civ-form-field label="Phone number">
-        <civ-phone name="phone"></civ-phone>
-      </civ-form-field>
-      <civ-form-field label="Email address">
-        <civ-email name="email"></civ-email>
-      </civ-form-field>
-      <civ-form-field label="Annual income">
-        <civ-currency name="income"></civ-currency>
-      </civ-form-field>
-      <civ-form-field label="Routing number">
-        <civ-routing-number name="routing"></civ-routing-number>
-      </civ-form-field>
-      <civ-form-field label="VA file number">
-        <civ-va-file-number name="vaFileNumber"></civ-va-file-number>
-      </civ-form-field>
+      <civ-ssn label="Social Security number" name="ssn"></civ-ssn>
+      <civ-ein label="Employer ID Number" name="ein"></civ-ein>
+      <civ-zip label="ZIP code" name="zip"></civ-zip>
+      <civ-phone label="Phone number" name="phone"></civ-phone>
+      <civ-email label="Email address" name="email"></civ-email>
+      <civ-currency label="Annual income" name="income"></civ-currency>
+      <civ-routing-number label="Routing number" name="routing"></civ-routing-number>
+      <civ-va-file-number label="VA file number" name="vaFileNumber"></civ-va-file-number>
     </div>
   `,
 };

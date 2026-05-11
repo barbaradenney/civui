@@ -28,20 +28,12 @@ export const SimpleForm: Story = {
   render: () => html`
     <civ-form @civ-submit="${(e: CustomEvent) => alert('Submitted: ' + JSON.stringify(e.detail.formData))}">
       <civ-fieldset legend="Contact information">
-        <civ-form-field label="Full name" required>
-          <civ-text-input name="name" required autocomplete="name"></civ-text-input>
-        </civ-form-field>
-        <civ-form-field label="Email" required>
-          <civ-text-input name="email" type="email" required autocomplete="email"></civ-text-input>
-        </civ-form-field>
-        <civ-form-field label="Phone">
-          <civ-text-input name="phone" type="tel" autocomplete="tel"></civ-text-input>
-        </civ-form-field>
+        <civ-text-input label="Full name" name="name" required autocomplete="name"></civ-text-input>
+        <civ-text-input label="Email" name="email" required type="email" autocomplete="email"></civ-text-input>
+        <civ-text-input label="Phone" name="phone" type="tel" autocomplete="tel"></civ-text-input>
       </civ-fieldset>
 
-      <civ-form-field label="Message" required>
-        <civ-textarea name="message" required></civ-textarea>
-      </civ-form-field>
+      <civ-textarea label="Message" name="message" required></civ-textarea>
 
       <civ-button type="submit" label="Submit" class="civ-mt-4"></civ-button>
     </civ-form>
@@ -111,9 +103,7 @@ export const TraumaInformedForm: Story = {
       <civ-form-step>
         <div data-step-label="Your information">
           <civ-name legend="Your name" name="claimant" required></civ-name>
-          <civ-form-field label="Phone number">
-            <civ-text-input name="phone" type="tel"></civ-text-input>
-          </civ-form-field>
+          <civ-text-input label="Phone number" name="phone" type="tel"></civ-text-input>
         </div>
 
         <div data-step-label="About the person who died">

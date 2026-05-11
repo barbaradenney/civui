@@ -37,15 +37,9 @@ export const Default: Story = {
       method="${args.method}"
       form-label="${args['form-label']}"
     >
-      <civ-form-field label="Full name" required>
-        <civ-text-input name="name" required></civ-text-input>
-      </civ-form-field>
-      <civ-form-field label="Email address" required>
-        <civ-text-input name="email" type="email" required></civ-text-input>
-      </civ-form-field>
-      <civ-form-field label="Message">
-        <civ-textarea name="message"></civ-textarea>
-      </civ-form-field>
+      <civ-text-input label="Full name" name="name" required></civ-text-input>
+      <civ-text-input label="Email address" name="email" required type="email"></civ-text-input>
+      <civ-textarea label="Message" name="message"></civ-textarea>
       <civ-button type="submit">Submit</civ-button>
     </civ-form>
   `,
@@ -65,18 +59,10 @@ export const WithHint: Story = {
         console.log('Validation failed:', e.detail.errors);
       }}"
     >
-      <civ-form-field label="First name" required>
-        <civ-text-input name="firstName" required></civ-text-input>
-      </civ-form-field>
-      <civ-form-field label="Last name" required>
-        <civ-text-input name="lastName" required></civ-text-input>
-      </civ-form-field>
-      <civ-form-field label="Email address" required>
-        <civ-text-input name="email" type="email" required validate="email"></civ-text-input>
-      </civ-form-field>
-      <civ-form-field label="Phone number" hint="For example: (555) 123-4567">
-        <civ-text-input name="phone" type="tel"></civ-text-input>
-      </civ-form-field>
+      <civ-text-input label="First name" name="firstName" required></civ-text-input>
+      <civ-text-input label="Last name" name="lastName" required></civ-text-input>
+      <civ-text-input label="Email address" name="email" required type="email" validate="email"></civ-text-input>
+      <civ-text-input label="Phone number" name="phone" hint="For example: (555) 123-4567" type="tel"></civ-text-input>
       <div class="civ-mt-4 civ-flex civ-gap-2">
         <civ-button type="submit">Submit</civ-button>
       </div>
@@ -88,15 +74,9 @@ export const WithError: Story = {
   name: 'Error Summary',
   render: () => html`
     <civ-form form-label="Benefits application">
-      <civ-form-field label="Full name" required error="Enter your full name">
-        <civ-text-input name="fullName" required></civ-text-input>
-      </civ-form-field>
-      <civ-form-field label="Email address" required error="Enter a valid email address">
-        <civ-text-input name="email" type="email" required></civ-text-input>
-      </civ-form-field>
-      <civ-form-field label="Phone number" hint="For example: (555) 123-4567">
-        <civ-text-input name="phone"></civ-text-input>
-      </civ-form-field>
+      <civ-text-input label="Full name" name="fullName" error="Enter your full name" required></civ-text-input>
+      <civ-text-input label="Email address" name="email" error="Enter a valid email address" required type="email"></civ-text-input>
+      <civ-text-input label="Phone number" name="phone" hint="For example: (555) 123-4567"></civ-text-input>
       <civ-button type="submit">Submit application</civ-button>
     </civ-form>
   `,
@@ -107,15 +87,9 @@ export const Required: Story = {
   render: () => html`
     <civ-form persist="demo-form" form-label="Draft application">
       <p class="civ-text-sm civ-text-muted civ-mb-4">This form auto-saves your progress to session storage. Refresh the page to see your data restored.</p>
-      <civ-form-field label="Full name">
-        <civ-text-input name="fullName"></civ-text-input>
-      </civ-form-field>
-      <civ-form-field label="Email address">
-        <civ-text-input name="email" type="email"></civ-text-input>
-      </civ-form-field>
-      <civ-form-field label="Additional comments">
-        <civ-textarea name="comments"></civ-textarea>
-      </civ-form-field>
+      <civ-text-input label="Full name" name="fullName"></civ-text-input>
+      <civ-text-input label="Email address" name="email" type="email"></civ-text-input>
+      <civ-textarea label="Additional comments" name="comments"></civ-textarea>
       <div class="civ-mt-4 civ-flex civ-gap-2">
         <civ-button type="submit">Submit</civ-button>
         <civ-button type="reset" variant="secondary">Clear saved draft</civ-button>
@@ -129,15 +103,9 @@ export const Disabled: Story = {
   render: () => html`
     <civ-form track-dirty form-label="Profile update">
       <p class="civ-text-sm civ-text-muted civ-mb-4">Modify any field to see the dirty state indicator appear on the form.</p>
-      <civ-form-field label="First name">
-        <civ-text-input name="firstName" value="Jane"></civ-text-input>
-      </civ-form-field>
-      <civ-form-field label="Last name">
-        <civ-text-input name="lastName" value="Doe"></civ-text-input>
-      </civ-form-field>
-      <civ-form-field label="Email address">
-        <civ-text-input name="email" type="email" value="jane.doe@agency.gov"></civ-text-input>
-      </civ-form-field>
+      <civ-text-input label="First name" name="firstName" value="Jane"></civ-text-input>
+      <civ-text-input label="Last name" name="lastName" value="Doe"></civ-text-input>
+      <civ-text-input label="Email address" name="email" value="jane.doe@agency.gov" type="email"></civ-text-input>
       <civ-button type="submit">Save changes</civ-button>
     </civ-form>
   `,
@@ -152,24 +120,16 @@ export const AllStates: Story = {
       <div>
         <h3 class="civ-m-0 civ-mb-2 civ-font-semibold">Standard form</h3>
         <civ-form form-label="Standard form">
-          <civ-form-field label="Full name" required>
-            <civ-text-input name="name" required></civ-text-input>
-          </civ-form-field>
-          <civ-form-field label="Email address">
-            <civ-text-input name="email" type="email"></civ-text-input>
-          </civ-form-field>
+          <civ-text-input label="Full name" name="name" required></civ-text-input>
+          <civ-text-input label="Email address" name="email" type="email"></civ-text-input>
           <civ-button type="submit">Submit</civ-button>
         </civ-form>
       </div>
       <div>
         <h3 class="civ-m-0 civ-mb-2 civ-font-semibold">With errors displayed</h3>
         <civ-form form-label="Form with errors">
-          <civ-form-field label="Full name" required error="Enter your full name">
-            <civ-text-input name="name" required></civ-text-input>
-          </civ-form-field>
-          <civ-form-field label="Email address" required error="Enter a valid email">
-            <civ-text-input name="email" type="email" required></civ-text-input>
-          </civ-form-field>
+          <civ-text-input label="Full name" name="name" error="Enter your full name" required></civ-text-input>
+          <civ-text-input label="Email address" name="email" error="Enter a valid email" required type="email"></civ-text-input>
           <civ-button type="submit">Submit</civ-button>
         </civ-form>
       </div>
@@ -186,36 +146,24 @@ export const DensityScale: Story = {
       <div data-civ-scale="dense">
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Dense</p>
         <civ-form form-label="Dense form">
-          <civ-form-field label="Full name" required>
-            <civ-text-input name="name" required></civ-text-input>
-          </civ-form-field>
-          <civ-form-field label="Email address">
-            <civ-text-input name="email" type="email"></civ-text-input>
-          </civ-form-field>
+          <civ-text-input label="Full name" name="name" required></civ-text-input>
+          <civ-text-input label="Email address" name="email" type="email"></civ-text-input>
           <civ-button type="submit">Submit</civ-button>
         </civ-form>
       </div>
       <div>
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Default</p>
         <civ-form form-label="Default form">
-          <civ-form-field label="Full name" required>
-            <civ-text-input name="name" required></civ-text-input>
-          </civ-form-field>
-          <civ-form-field label="Email address">
-            <civ-text-input name="email" type="email"></civ-text-input>
-          </civ-form-field>
+          <civ-text-input label="Full name" name="name" required></civ-text-input>
+          <civ-text-input label="Email address" name="email" type="email"></civ-text-input>
           <civ-button type="submit">Submit</civ-button>
         </civ-form>
       </div>
       <div data-civ-scale="spacious">
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Spacious</p>
         <civ-form form-label="Spacious form">
-          <civ-form-field label="Full name" required>
-            <civ-text-input name="name" required></civ-text-input>
-          </civ-form-field>
-          <civ-form-field label="Email address">
-            <civ-text-input name="email" type="email"></civ-text-input>
-          </civ-form-field>
+          <civ-text-input label="Full name" name="name" required></civ-text-input>
+          <civ-text-input label="Email address" name="email" type="email"></civ-text-input>
           <civ-button type="submit">Submit</civ-button>
         </civ-form>
       </div>
@@ -257,15 +205,9 @@ export const PrefillSrc: Story = {
         console.log('Prefill error:', e.detail);
       }}"
     >
-      <civ-form-field label="Full name" required>
-        <civ-text-input name="name" required></civ-text-input>
-      </civ-form-field>
-      <civ-form-field label="Email address" required>
-        <civ-text-input name="email" type="email" required></civ-text-input>
-      </civ-form-field>
-      <civ-form-field label="Phone number" hint="For example: (555) 123-4567">
-        <civ-text-input name="phone" type="tel"></civ-text-input>
-      </civ-form-field>
+      <civ-text-input label="Full name" name="name" required></civ-text-input>
+      <civ-text-input label="Email address" name="email" required type="email"></civ-text-input>
+      <civ-text-input label="Phone number" name="phone" hint="For example: (555) 123-4567" type="tel"></civ-text-input>
       <civ-button type="submit">Submit</civ-button>
     </civ-form>
   `,
@@ -281,15 +223,9 @@ export const PrefillApplied: Story = {
         console.log('Prefill applied:', e.detail);
       }}"
     >
-      <civ-form-field label="Full name" required>
-        <civ-text-input name="name" required></civ-text-input>
-      </civ-form-field>
-      <civ-form-field label="Email address" required>
-        <civ-text-input name="email" type="email" required></civ-text-input>
-      </civ-form-field>
-      <civ-form-field label="Phone number">
-        <civ-text-input name="phone" type="tel"></civ-text-input>
-      </civ-form-field>
+      <civ-text-input label="Full name" name="name" required></civ-text-input>
+      <civ-text-input label="Email address" name="email" required type="email"></civ-text-input>
+      <civ-text-input label="Phone number" name="phone" type="tel"></civ-text-input>
       <civ-button type="submit">Submit</civ-button>
     </civ-form>
   `,
@@ -319,9 +255,7 @@ export const WithSupportResources: Story = {
       ]}"
     >
       <h3 class="civ-heading-md">How have you been feeling this week?</h3>
-      <civ-form-field label="Describe any concerns you'd like to share">
-        <civ-textarea name="concerns"></civ-textarea>
-      </civ-form-field>
+      <civ-textarea label="Describe any concerns you'd like to share" name="concerns"></civ-textarea>
       <div class="civ-mt-4">
         <civ-button type="submit">Continue</civ-button>
       </div>
@@ -339,18 +273,10 @@ export const GovernmentInquiryForm: Story = {
       }}"
     >
       <h3 class="civ-heading-md">Submit an inquiry</h3>
-      <civ-form-field label="Full name" required>
-        <civ-text-input name="name" required></civ-text-input>
-      </civ-form-field>
-      <civ-form-field label="Email address" required hint="For example: name@agency.gov">
-        <civ-text-input name="email" type="email" required validate="email"></civ-text-input>
-      </civ-form-field>
-      <civ-form-field label="Phone number" hint="For example: (555) 123-4567">
-        <civ-text-input name="phone" type="tel" mask="phone-us"></civ-text-input>
-      </civ-form-field>
-      <civ-form-field label="Describe your question or concern" required hint="Provide as much detail as possible">
-        <civ-textarea name="message" required maxlength="2000"></civ-textarea>
-      </civ-form-field>
+      <civ-text-input label="Full name" name="name" required></civ-text-input>
+      <civ-text-input label="Email address" name="email" hint="For example: name@agency.gov" required type="email" validate="email"></civ-text-input>
+      <civ-text-input label="Phone number" name="phone" hint="For example: (555) 123-4567" type="tel" mask="phone-us"></civ-text-input>
+      <civ-textarea label="Describe your question or concern" name="message" hint="Provide as much detail as possible" required maxlength="2000"></civ-textarea>
       <civ-checkbox label="I would like a response by email" name="email-response" checked></civ-checkbox>
       <div class="civ-mt-4">
         <civ-button type="submit">Submit inquiry</civ-button>
@@ -373,15 +299,9 @@ export const SetServerErrors: Story = {
   },
   render: () => html`
     <civ-form id="server-error-form">
-      <civ-form-field label="Email">
-        <civ-text-input name="email" type="email"></civ-text-input>
-      </civ-form-field>
-      <civ-form-field label="Phone">
-        <civ-text-input name="phone" type="tel"></civ-text-input>
-      </civ-form-field>
-      <civ-form-field label="ZIP">
-        <civ-text-input name="zip" inputmode="numeric"></civ-text-input>
-      </civ-form-field>
+      <civ-text-input label="Email" name="email" type="email"></civ-text-input>
+      <civ-text-input label="Phone" name="phone" type="tel"></civ-text-input>
+      <civ-text-input label="ZIP" name="zip" inputmode="numeric"></civ-text-input>
       <div class="civ-mt-4 civ-flex civ-gap-2">
         <civ-button type="submit">Submit (will fail)</civ-button>
         <civ-button

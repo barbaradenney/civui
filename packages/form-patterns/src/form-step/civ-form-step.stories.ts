@@ -242,9 +242,7 @@ export const Sensitive: Story = {
       <div data-step-label="Your service history">
         <h3 class="civ-heading-md">About your service-connected trauma</h3>
         <p>These questions may be hard to answer. Your answers are saved as you go — you can pause and come back any time.</p>
-        <civ-form-field label="Briefly describe the event" hint="You can come back and add detail later">
-          <civ-textarea name="event"></civ-textarea>
-        </civ-form-field>
+        <civ-textarea label="Briefly describe the event" name="event" hint="You can come back and add detail later"></civ-textarea>
       </div>
     </civ-form-step>
   `,
@@ -259,15 +257,11 @@ export const WithPauseAndResume: Story = {
     >
       <div data-step-label="Medical history">
         <h3 class="civ-heading-md">Medical history</h3>
-        <civ-form-field label="Any conditions we should know about?">
-          <civ-textarea name="conditions"></civ-textarea>
-        </civ-form-field>
+        <civ-textarea label="Any conditions we should know about?" name="conditions"></civ-textarea>
       </div>
       <div data-step-label="Current medications">
         <h3 class="civ-heading-md">Current medications</h3>
-        <civ-form-field label="List any medications you take">
-          <civ-textarea name="meds"></civ-textarea>
-        </civ-form-field>
+        <civ-textarea label="List any medications you take" name="meds"></civ-textarea>
       </div>
     </civ-form-step>
   `,
@@ -282,18 +276,12 @@ export const GovernmentBenefitApplication: Story = {
       <div data-step-label="Personal information">
         <civ-name legend="Your name" name="name" required size="lg"></civ-name>
         <civ-memorable-date legend="Date of birth" required hint="For example: January 15 1990" size="lg" name="dob"></civ-memorable-date>
-        <civ-form-field label="Social Security number" required hint="We need this to verify your identity">
-          <civ-text-input name="ssn" required mask="ssn" validate="ssn" type="tel"></civ-text-input>
-        </civ-form-field>
+        <civ-text-input label="Social Security number" name="ssn" hint="We need this to verify your identity" required mask="ssn" validate="ssn" type="tel"></civ-text-input>
       </div>
       <div data-step-label="Contact information">
         <civ-address legend="Mailing address" name="address" required size="lg"></civ-address>
-        <civ-form-field label="Home phone number">
-          <civ-text-input name="homePhone" type="tel" mask="phone-us" validate="phone"></civ-text-input>
-        </civ-form-field>
-        <civ-form-field label="Email address" required>
-          <civ-text-input name="email" type="email" required validate="email"></civ-text-input>
-        </civ-form-field>
+        <civ-text-input label="Home phone number" name="homePhone" type="tel" mask="phone-us" validate="phone"></civ-text-input>
+        <civ-text-input label="Email address" name="email" required type="email" validate="email"></civ-text-input>
       </div>
       <div data-step-label="Certification">
         <civ-signature
@@ -321,14 +309,10 @@ export const HeaderPrimary: Story = {
   render: () => html`
     <civ-form-step header-size="primary" step-title="Personal information">
       <div data-step-label="Personal information">
-        <civ-form-field label="Full name" required>
-          <civ-text-input name="name"></civ-text-input>
-        </civ-form-field>
+        <civ-text-input label="Full name" name="name" required></civ-text-input>
       </div>
       <div data-step-label="Contact information">
-        <civ-form-field label="Email address" required>
-          <civ-text-input name="email" type="email"></civ-text-input>
-        </civ-form-field>
+        <civ-text-input label="Email address" name="email" required type="email"></civ-text-input>
       </div>
       <div data-step-label="Review">
         <p>Review your information before submitting.</p>
@@ -349,14 +333,10 @@ export const HeaderSecondary: Story = {
   render: () => html`
     <civ-form-step header-size="secondary" step-title="Personal information">
       <div data-step-label="Personal information">
-        <civ-form-field label="Full name" required>
-          <civ-text-input name="name"></civ-text-input>
-        </civ-form-field>
+        <civ-text-input label="Full name" name="name" required></civ-text-input>
       </div>
       <div data-step-label="Contact information">
-        <civ-form-field label="Email address" required>
-          <civ-text-input name="email" type="email"></civ-text-input>
-        </civ-form-field>
+        <civ-text-input label="Email address" name="email" required type="email"></civ-text-input>
       </div>
     </civ-form-step>
   `,
@@ -374,14 +354,10 @@ export const HeaderTertiary: Story = {
   render: () => html`
     <civ-form-step header-size="tertiary" step-title="Personal information">
       <div data-step-label="Personal information">
-        <civ-form-field label="Full name" required>
-          <civ-text-input name="name"></civ-text-input>
-        </civ-form-field>
+        <civ-text-input label="Full name" name="name" required></civ-text-input>
       </div>
       <div data-step-label="Contact information">
-        <civ-form-field label="Email address" required>
-          <civ-text-input name="email" type="email"></civ-text-input>
-        </civ-form-field>
+        <civ-text-input label="Email address" name="email" required type="email"></civ-text-input>
       </div>
     </civ-form-step>
   `,
@@ -418,14 +394,10 @@ export const AsyncValidation: Story = {
       >
         <div data-step-label="Personal information">
           <p class="civ-mb-4 civ-text-sm" style="color: var(--civ-color-base-dark)">Click Continue to trigger a simulated server validation (1.5s delay, 50% chance of failing on step 1).</p>
-          <civ-form-field label="Full name" required>
-            <civ-text-input name="name"></civ-text-input>
-          </civ-form-field>
+          <civ-text-input label="Full name" name="name" required></civ-text-input>
         </div>
         <div data-step-label="Contact information">
-          <civ-form-field label="Email address" required>
-            <civ-text-input name="email" type="email"></civ-text-input>
-          </civ-form-field>
+          <civ-text-input label="Email address" name="email" required type="email"></civ-text-input>
         </div>
         <div data-step-label="Review">
           <p>All validations passed. Review and submit.</p>

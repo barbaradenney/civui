@@ -88,21 +88,13 @@ export const TextInputs: Story = {
   render: () => html`
     <h2 class="civ-text-lg civ-font-bold civ-mb-4">Text Inputs — Print Preview</h2>
 
-    <civ-form-field label="Full legal name" hint="As it appears on your government-issued ID" required>
-      <civ-text-input name="name" value="Jane A. Smith" required></civ-text-input>
-    </civ-form-field>
+    <civ-text-input label="Full legal name" name="name" value="Jane A. Smith" hint="As it appears on your government-issued ID" required></civ-text-input>
 
-    <civ-form-field label="Email address">
-      <civ-text-input type="email" name="email" value="jane.smith@example.gov"></civ-text-input>
-    </civ-form-field>
+    <civ-text-input label="Email address" name="email" value="jane.smith@example.gov" type="email"></civ-text-input>
 
-    <civ-form-field label="Social Security number" hint="For example: 123-45-6789">
-      <civ-text-input name="ssn" value="***-**-6789" mask="ssn"></civ-text-input>
-    </civ-form-field>
+    <civ-text-input label="Social Security number" name="ssn" value="***-**-6789" hint="For example: 123-45-6789" mask="ssn"></civ-text-input>
 
-    <civ-form-field label="Phone number">
-      <civ-text-input name="phone" value="(555) 123-4567" mask="phone-us"></civ-text-input>
-    </civ-form-field>
+    <civ-text-input label="Phone number" name="phone" value="(555) 123-4567" mask="phone-us"></civ-text-input>
   `,
 };
 
@@ -111,9 +103,7 @@ export const TextareaAndSelect: Story = {
   render: () => html`
     <h2 class="civ-text-lg civ-font-bold civ-mb-4">Textarea &amp; Select — Print Preview</h2>
 
-    <civ-form-field label="Describe your condition" hint="Include how it affects your daily activities">
-      <civ-textarea name="condition" rows="4" value="Lower back pain that limits my ability to stand for more than 20 minutes. Diagnosed in 2019 by Dr. Johnson at the VA Medical Center."></civ-textarea>
-    </civ-form-field>
+    <civ-textarea label="Describe your condition" name="condition" value="Lower back pain that limits my ability to stand for more than 20 minutes. Diagnosed in 2019 by Dr. Johnson at the VA Medical Center." hint="Include how it affects your daily activities" rows="4"></civ-textarea>
 
     <civ-form-field label="State of residence">
       <civ-select name="state" value="CA">
@@ -155,9 +145,7 @@ export const DateFields: Story = {
 
     <civ-memorable-date legend="Date of birth" hint="For example: January 15 1990" required name="dob" value="1990-01-15"></civ-memorable-date>
 
-    <civ-form-field label="Appointment date">
-      <civ-date-picker name="appointment" value="2026-05-15"></civ-date-picker>
-    </civ-form-field>
+    <civ-date-picker label="Appointment date" name="appointment" value="2026-05-15"></civ-date-picker>
   `,
 };
 
@@ -193,17 +181,11 @@ export const CompleteForm: Story = {
 
     <civ-memorable-date legend="Date of birth" required name="dob" value="1990-01-15"></civ-memorable-date>
 
-    <civ-form-field label="Social Security number" required>
-      <civ-text-input name="ssn" value="***-**-6789" mask="ssn" required></civ-text-input>
-    </civ-form-field>
+    <civ-text-input label="Social Security number" name="ssn" value="***-**-6789" required mask="ssn"></civ-text-input>
 
-    <civ-form-field label="Email address">
-      <civ-text-input type="email" name="email" value="jane.smith@example.gov"></civ-text-input>
-    </civ-form-field>
+    <civ-text-input label="Email address" name="email" value="jane.smith@example.gov" type="email"></civ-text-input>
 
-    <civ-form-field label="Phone number">
-      <civ-text-input name="phone" value="(555) 123-4567" mask="phone-us"></civ-text-input>
-    </civ-form-field>
+    <civ-text-input label="Phone number" name="phone" value="(555) 123-4567" mask="phone-us"></civ-text-input>
 
     <civ-address
       legend="Mailing address"
@@ -224,8 +206,6 @@ export const CompleteForm: Story = {
       <civ-checkbox value="healthcare" label="VA healthcare"></civ-checkbox>
     </civ-checkbox-group>
 
-    <civ-form-field label="Additional information" hint="Describe any supporting details for your application">
-      <civ-textarea name="notes" rows="4" value="I am filing this claim based on service-connected injuries sustained during deployment in 2018. Medical records are available through the VA Medical Center in Richmond, VA."></civ-textarea>
-    </civ-form-field>
+    <civ-textarea label="Additional information" name="notes" value="I am filing this claim based on service-connected injuries sustained during deployment in 2018. Medical records are available through the VA Medical Center in Richmond, VA." hint="Describe any supporting details for your application" rows="4"></civ-textarea>
   `,
 };

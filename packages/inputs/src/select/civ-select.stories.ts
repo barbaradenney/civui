@@ -308,9 +308,7 @@ export const GovernmentBenefitsForm: Story = {
   name: 'Usage: Benefits Application',
   render: () => html`
     <div style="max-width: 480px;">
-      <civ-form-field label="State of residence" required>
-        <civ-select name="state" preset="us-state" required></civ-select>
-      </civ-form-field>
+      <civ-select label="State of residence" name="state" required preset="us-state"></civ-select>
       <civ-form-field label="Benefit type" hint="Select the benefit you are applying for" required>
         <civ-select name="benefit" required>
           <option value="health">Health care</option>
@@ -328,198 +326,154 @@ export const GovernmentBenefitsForm: Story = {
 export const PresetUsState: Story = {
   name: 'Preset: US State',
   render: () => html`
-    <civ-form-field label="State" required>
-      <civ-select name="state" preset="us-state" required></civ-select>
-    </civ-form-field>
+    <civ-select label="State" name="state" required preset="us-state"></civ-select>
   `,
 };
 
 export const PresetUsStateWithTerritories: Story = {
   name: 'Preset: US State + Territories',
   render: () => html`
-    <civ-form-field label="State or territory" required>
-      <civ-select name="state" preset="us-state" preset-variant="territories" required></civ-select>
-    </civ-form-field>
+    <civ-select label="State or territory" name="state" required preset="us-state" preset-variant="territories"></civ-select>
   `,
 };
 
 export const PresetServiceBranch: Story = {
   name: 'Preset: Service Branch',
   render: () => html`
-    <civ-form-field label="Branch of service" required>
-      <civ-select name="branch" preset="service-branch" required></civ-select>
-    </civ-form-field>
+    <civ-select label="Branch of service" name="branch" required preset="service-branch"></civ-select>
   `,
 };
 
 export const PresetServiceBranchAll: Story = {
   name: 'Preset: Service Branch (All Tiers)',
   render: () => html`
-    <civ-form-field label="Branch of service" hint="Includes reserve, guard, and historical branches" required>
-      <civ-select name="branch" preset="service-branch" preset-variant="all" required></civ-select>
-    </civ-form-field>
+    <civ-select label="Branch of service" name="branch" hint="Includes reserve, guard, and historical branches" required preset="service-branch" preset-variant="all"></civ-select>
   `,
 };
 
 export const PresetDischargeType: Story = {
   name: 'Preset: Discharge Type',
   render: () => html`
-    <civ-form-field label="Type of discharge" required>
-      <civ-select name="discharge" preset="discharge-type" required></civ-select>
-    </civ-form-field>
+    <civ-select label="Type of discharge" name="discharge" required preset="discharge-type"></civ-select>
   `,
 };
 
 export const PresetSuffix: Story = {
   name: 'Preset: Suffix',
   render: () => html`
-    <civ-form-field label="Suffix">
-      <civ-select name="suffix" preset="suffix"></civ-select>
-    </civ-form-field>
+    <civ-select label="Suffix" name="suffix" preset="suffix"></civ-select>
   `,
 };
 
 export const PresetRelationshipType: Story = {
   name: 'Preset: Relationship',
   render: () => html`
-    <civ-form-field label="Relationship to veteran" required>
-      <civ-select name="relationship" preset="relationship-type" required></civ-select>
-    </civ-form-field>
+    <civ-select label="Relationship to veteran" name="relationship" required preset="relationship-type"></civ-select>
   `,
 };
 
 export const PresetRelationshipDependent: Story = {
   name: 'Preset: Relationship (Dependent)',
   render: () => html`
-    <civ-form-field label="Relationship to veteran" required>
-      <civ-select name="relationship" preset="relationship-type" preset-variant="dependent" required></civ-select>
-    </civ-form-field>
+    <civ-select label="Relationship to veteran" name="relationship" required preset="relationship-type" preset-variant="dependent"></civ-select>
   `,
 };
 
 export const PresetMaritalStatus: Story = {
   name: 'Preset: Marital Status',
   render: () => html`
-    <civ-form-field label="Marital status" required>
-      <civ-select name="maritalStatus" preset="marital-status" required></civ-select>
-    </civ-form-field>
+    <civ-select label="Marital status" name="maritalStatus" required preset="marital-status"></civ-select>
   `,
 };
 
 export const PresetEthnicity: Story = {
   name: 'Preset: Ethnicity (OMB)',
   render: () => html`
-    <civ-form-field label="Ethnicity" required>
-      <civ-select name="ethnicity" preset="ethnicity" required></civ-select>
-    </civ-form-field>
+    <civ-select label="Ethnicity" name="ethnicity" required preset="ethnicity"></civ-select>
   `,
 };
 
 export const PresetGender: Story = {
   name: 'Preset: Gender',
   render: () => html`
-    <civ-form-field label="Gender">
-      <civ-select name="gender" preset="gender"></civ-select>
-    </civ-form-field>
+    <civ-select label="Gender" name="gender" preset="gender"></civ-select>
   `,
 };
 
 export const PresetGenderBinary: Story = {
   name: 'Preset: Gender (Binary)',
   render: () => html`
-    <civ-form-field label="Sex">
-      <civ-select name="sex" preset="gender" preset-variant="binary"></civ-select>
-    </civ-form-field>
+    <civ-select label="Sex" name="sex" preset="gender" preset-variant="binary"></civ-select>
   `,
 };
 
 export const PresetLanguage: Story = {
   name: 'Preset: Language',
   render: () => html`
-    <civ-form-field label="Preferred language">
-      <civ-select name="language" preset="language"></civ-select>
-    </civ-form-field>
+    <civ-select label="Preferred language" name="language" preset="language"></civ-select>
   `,
 };
 
 export const PresetHousingStatus: Story = {
   name: 'Preset: Housing Status',
   render: () => html`
-    <civ-form-field label="Housing status" required>
-      <civ-select name="housing" preset="housing-status" required></civ-select>
-    </civ-form-field>
+    <civ-select label="Housing status" name="housing" required preset="housing-status"></civ-select>
   `,
 };
 
 export const PresetEducationLevel: Story = {
   name: 'Preset: Education Level',
   render: () => html`
-    <civ-form-field label="Highest education level" required>
-      <civ-select name="education" preset="education-level" required></civ-select>
-    </civ-form-field>
+    <civ-select label="Highest education level" name="education" required preset="education-level"></civ-select>
   `,
 };
 
 export const PresetEmploymentStatus: Story = {
   name: 'Preset: Employment Status',
   render: () => html`
-    <civ-form-field label="Employment status" required>
-      <civ-select name="employment" preset="employment-status" required></civ-select>
-    </civ-form-field>
+    <civ-select label="Employment status" name="employment" required preset="employment-status"></civ-select>
   `,
 };
 
 export const PresetIncomeSource: Story = {
   name: 'Preset: Income Source',
   render: () => html`
-    <civ-form-field label="Primary source of income">
-      <civ-select name="incomeSource" preset="income-source"></civ-select>
-    </civ-form-field>
+    <civ-select label="Primary source of income" name="incomeSource" preset="income-source"></civ-select>
   `,
 };
 
 export const PresetVeteranStatus: Story = {
   name: 'Preset: Veteran Status',
   render: () => html`
-    <civ-form-field label="Veteran status" required>
-      <civ-select name="veteranStatus" preset="veteran-status" required></civ-select>
-    </civ-form-field>
+    <civ-select label="Veteran status" name="veteranStatus" required preset="veteran-status"></civ-select>
   `,
 };
 
 export const PresetDisabilityType: Story = {
   name: 'Preset: Disability Type',
   render: () => html`
-    <civ-form-field label="Type of disability">
-      <civ-select name="disabilityType" preset="disability-type"></civ-select>
-    </civ-form-field>
+    <civ-select label="Type of disability" name="disabilityType" preset="disability-type"></civ-select>
   `,
 };
 
 export const PresetCitizenshipStatus: Story = {
   name: 'Preset: Citizenship Status',
   render: () => html`
-    <civ-form-field label="Citizenship status" required>
-      <civ-select name="citizenshipStatus" preset="citizenship-status" required></civ-select>
-    </civ-form-field>
+    <civ-select label="Citizenship status" name="citizenshipStatus" required preset="citizenship-status"></civ-select>
   `,
 };
 
 export const PresetPayFrequency: Story = {
   name: 'Preset: Pay Frequency',
   render: () => html`
-    <civ-form-field label="How often are you paid?" required>
-      <civ-select name="payFrequency" preset="pay-frequency" required></civ-select>
-    </civ-form-field>
+    <civ-select label="How often are you paid?" name="payFrequency" required preset="pay-frequency"></civ-select>
   `,
 };
 
 export const PresetContactPreference: Story = {
   name: 'Preset: Contact Preference',
   render: () => html`
-    <civ-form-field label="Preferred contact method">
-      <civ-select name="contactPreference" preset="contact-preference"></civ-select>
-    </civ-form-field>
+    <civ-select label="Preferred contact method" name="contactPreference" preset="contact-preference"></civ-select>
   `,
 };
 
@@ -529,60 +483,24 @@ export const AllPresets: Story = {
   name: 'All Presets',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-2" style="max-width: 480px;">
-      <civ-form-field label="US State">
-        <civ-select preset="us-state"></civ-select>
-      </civ-form-field>
-      <civ-form-field label="Branch of service">
-        <civ-select preset="service-branch"></civ-select>
-      </civ-form-field>
-      <civ-form-field label="Discharge type">
-        <civ-select preset="discharge-type"></civ-select>
-      </civ-form-field>
-      <civ-form-field label="Suffix">
-        <civ-select preset="suffix"></civ-select>
-      </civ-form-field>
-      <civ-form-field label="Relationship">
-        <civ-select preset="relationship-type"></civ-select>
-      </civ-form-field>
-      <civ-form-field label="Marital status">
-        <civ-select preset="marital-status"></civ-select>
-      </civ-form-field>
-      <civ-form-field label="Ethnicity">
-        <civ-select preset="ethnicity"></civ-select>
-      </civ-form-field>
-      <civ-form-field label="Gender">
-        <civ-select preset="gender"></civ-select>
-      </civ-form-field>
-      <civ-form-field label="Preferred language">
-        <civ-select preset="language"></civ-select>
-      </civ-form-field>
-      <civ-form-field label="Housing status">
-        <civ-select preset="housing-status"></civ-select>
-      </civ-form-field>
-      <civ-form-field label="Education level">
-        <civ-select preset="education-level"></civ-select>
-      </civ-form-field>
-      <civ-form-field label="Employment status">
-        <civ-select preset="employment-status"></civ-select>
-      </civ-form-field>
-      <civ-form-field label="Income source">
-        <civ-select preset="income-source"></civ-select>
-      </civ-form-field>
-      <civ-form-field label="Veteran status">
-        <civ-select preset="veteran-status"></civ-select>
-      </civ-form-field>
-      <civ-form-field label="Disability type">
-        <civ-select preset="disability-type"></civ-select>
-      </civ-form-field>
-      <civ-form-field label="Citizenship status">
-        <civ-select preset="citizenship-status"></civ-select>
-      </civ-form-field>
-      <civ-form-field label="Pay frequency">
-        <civ-select preset="pay-frequency"></civ-select>
-      </civ-form-field>
-      <civ-form-field label="Contact preference">
-        <civ-select preset="contact-preference"></civ-select>
-      </civ-form-field>
+      <civ-select label="US State" preset="us-state"></civ-select>
+      <civ-select label="Branch of service" preset="service-branch"></civ-select>
+      <civ-select label="Discharge type" preset="discharge-type"></civ-select>
+      <civ-select label="Suffix" preset="suffix"></civ-select>
+      <civ-select label="Relationship" preset="relationship-type"></civ-select>
+      <civ-select label="Marital status" preset="marital-status"></civ-select>
+      <civ-select label="Ethnicity" preset="ethnicity"></civ-select>
+      <civ-select label="Gender" preset="gender"></civ-select>
+      <civ-select label="Preferred language" preset="language"></civ-select>
+      <civ-select label="Housing status" preset="housing-status"></civ-select>
+      <civ-select label="Education level" preset="education-level"></civ-select>
+      <civ-select label="Employment status" preset="employment-status"></civ-select>
+      <civ-select label="Income source" preset="income-source"></civ-select>
+      <civ-select label="Veteran status" preset="veteran-status"></civ-select>
+      <civ-select label="Disability type" preset="disability-type"></civ-select>
+      <civ-select label="Citizenship status" preset="citizenship-status"></civ-select>
+      <civ-select label="Pay frequency" preset="pay-frequency"></civ-select>
+      <civ-select label="Contact preference" preset="contact-preference"></civ-select>
     </div>
   `,
 };

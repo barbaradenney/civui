@@ -210,10 +210,10 @@ export class CivAddress extends LegendHeadingMixin(CivCompoundElement) {
   }
 
   /**
-   * Render a single `<civ-form-field><civ-text-input>` row keyed off
-   * `_address[field]`. Centralizes the repetitive name/value/event/disabled
-   * wiring shared by every text address field. `error` and `required` are
-   * passed in because they vary per field.
+   * Render a single `<civ-text-input>` row keyed off `_data[field]`.
+   * Centralizes the repetitive name/value/event/disabled wiring shared by
+   * every text address field. `error` and `required` are passed in because
+   * they vary per field.
    */
   private _renderTextField(
     field: 'street1' | 'street2' | 'street3' | 'city' | 'state' | 'zip',

@@ -17,15 +17,9 @@ export const FormStack: Story = {
   name: 'Vertical Form Stack',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-4">
-      <civ-form-field label="First name">
-        <civ-text-input name="first"></civ-text-input>
-      </civ-form-field>
-      <civ-form-field label="Last name">
-        <civ-text-input name="last"></civ-text-input>
-      </civ-form-field>
-      <civ-form-field label="Email">
-        <civ-text-input name="email" type="email"></civ-text-input>
-      </civ-form-field>
+      <civ-text-input label="First name" name="first"></civ-text-input>
+      <civ-text-input label="Last name" name="last"></civ-text-input>
+      <civ-text-input label="Email" name="email" type="email"></civ-text-input>
     </div>
   `,
 };

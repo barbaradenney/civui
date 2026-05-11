@@ -78,21 +78,7 @@ export const Default: Story = {
     disabled: false,
   },
   render: (args) => html`
-    <civ-form-field
-      label="${args.label}"
-      hint="${args.hint}"
-      error="${args.error}"
-      ?required="${args.required}"
-      ?disabled="${args.disabled}"
-    >
-      <civ-combobox
-        name="${args.name}"
-        placeholder="${args.placeholder}"
-        .options="${STATES}"
-        ?required="${args.required}"
-        ?disabled="${args.disabled}"
-      ></civ-combobox>
-    </civ-form-field>
+    <civ-combobox label="${args.label}" name="${args.name}" hint="${args.hint}" error="${args.error}" placeholder="${args.placeholder}" .options="${STATES}" ?required="${args.required}" ?disabled="${args.disabled}"></civ-combobox>
   `,
 };
 
@@ -100,33 +86,25 @@ export const Default: Story = {
 
 export const WithHint: Story = {
   render: () => html`
-    <civ-form-field label="State of residence" hint="Type to search or use arrow keys to browse">
-      <civ-combobox name="state" .options="${STATES}"></civ-combobox>
-    </civ-form-field>
+    <civ-combobox label="State of residence" name="state" hint="Type to search or use arrow keys to browse" .options="${STATES}"></civ-combobox>
   `,
 };
 
 export const WithError: Story = {
   render: () => html`
-    <civ-form-field label="State of residence" error="Select a valid state" required>
-      <civ-combobox name="state" .options="${STATES}" required></civ-combobox>
-    </civ-form-field>
+    <civ-combobox label="State of residence" name="state" error="Select a valid state" required .options="${STATES}"></civ-combobox>
   `,
 };
 
 export const Required: Story = {
   render: () => html`
-    <civ-form-field label="State of residence" required>
-      <civ-combobox name="state" .options="${STATES}" required></civ-combobox>
-    </civ-form-field>
+    <civ-combobox label="State of residence" name="state" required .options="${STATES}"></civ-combobox>
   `,
 };
 
 export const Disabled: Story = {
   render: () => html`
-    <civ-form-field label="State of residence" disabled>
-      <civ-combobox name="state" value="CA" .options="${STATES}" disabled></civ-combobox>
-    </civ-form-field>
+    <civ-combobox label="State of residence" name="state" value="CA" .options="${STATES}" disabled></civ-combobox>
   `,
 };
 
@@ -136,21 +114,11 @@ export const AllStates: Story = {
   name: 'All States',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-4">
-      <civ-form-field label="Normal">
-        <civ-combobox name="normal" .options="${STATES}"></civ-combobox>
-      </civ-form-field>
-      <civ-form-field label="With hint" hint="Type to search">
-        <civ-combobox name="hint" .options="${STATES}"></civ-combobox>
-      </civ-form-field>
-      <civ-form-field label="With error" error="Select a state" required>
-        <civ-combobox name="error" .options="${STATES}" required></civ-combobox>
-      </civ-form-field>
-      <civ-form-field label="Required" required>
-        <civ-combobox name="required" .options="${STATES}" required></civ-combobox>
-      </civ-form-field>
-      <civ-form-field label="Disabled" disabled>
-        <civ-combobox name="disabled" value="TX" .options="${STATES}" disabled></civ-combobox>
-      </civ-form-field>
+      <civ-combobox label="Normal" name="normal" .options="${STATES}"></civ-combobox>
+      <civ-combobox label="With hint" name="hint" hint="Type to search" .options="${STATES}"></civ-combobox>
+      <civ-combobox label="With error" name="error" error="Select a state" required .options="${STATES}"></civ-combobox>
+      <civ-combobox label="Required" name="required" required .options="${STATES}"></civ-combobox>
+      <civ-combobox label="Disabled" name="disabled" value="TX" .options="${STATES}" disabled></civ-combobox>
     </div>
   `,
 };
@@ -163,21 +131,15 @@ export const DensityScale: Story = {
     <div class="civ-flex civ-flex-col civ-gap-6">
       <div data-civ-scale="dense">
         <p class="civ-text-sm civ-font-semibold civ-mb-2">Dense</p>
-        <civ-form-field label="State" hint="Type to search">
-          <civ-combobox name="dense-state" .options="${STATES}"></civ-combobox>
-        </civ-form-field>
+        <civ-combobox label="State" name="dense-state" hint="Type to search" .options="${STATES}"></civ-combobox>
       </div>
       <div>
         <p class="civ-text-sm civ-font-semibold civ-mb-2">Default</p>
-        <civ-form-field label="State" hint="Type to search">
-          <civ-combobox name="default-state" .options="${STATES}"></civ-combobox>
-        </civ-form-field>
+        <civ-combobox label="State" name="default-state" hint="Type to search" .options="${STATES}"></civ-combobox>
       </div>
       <div data-civ-scale="spacious">
         <p class="civ-text-sm civ-font-semibold civ-mb-2">Spacious</p>
-        <civ-form-field label="State" hint="Type to search">
-          <civ-combobox name="spacious-state" .options="${STATES}"></civ-combobox>
-        </civ-form-field>
+        <civ-combobox label="State" name="spacious-state" hint="Type to search" .options="${STATES}"></civ-combobox>
       </div>
     </div>
   `,
@@ -187,18 +149,14 @@ export const DensityScale: Story = {
 
 export const OptionGroups: Story = {
   render: () => html`
-    <civ-form-field label="Office location" hint="Search offices...">
-      <civ-combobox name="office" placeholder="Search offices..." .options="${OFFICES}"></civ-combobox>
-    </civ-form-field>
+    <civ-combobox label="Office location" name="office" hint="Search offices..." placeholder="Search offices..." .options="${OFFICES}"></civ-combobox>
   `,
 };
 
 export const GovernmentOfficeSearch: Story = {
   name: 'Usage: Office Location Search',
   render: () => html`
-    <civ-form-field label="Nearest field office" hint="Search by city or office name" required>
-      <civ-combobox name="office" placeholder="Type a city or office name..." .options="${OFFICES}" required></civ-combobox>
-    </civ-form-field>
+    <civ-combobox label="Nearest field office" name="office" hint="Search by city or office name" required placeholder="Type a city or office name..." .options="${OFFICES}"></civ-combobox>
   `,
 };
 
@@ -206,21 +164,11 @@ export const WidthVariants: Story = {
   name: 'Width variants',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-4">
-      <civ-form-field label="xs width">
-        <civ-combobox width="xs" .options="${STATES}"></civ-combobox>
-      </civ-form-field>
-      <civ-form-field label="sm width">
-        <civ-combobox width="sm" .options="${STATES}"></civ-combobox>
-      </civ-form-field>
-      <civ-form-field label="md width">
-        <civ-combobox width="md" .options="${STATES}"></civ-combobox>
-      </civ-form-field>
-      <civ-form-field label="lg width">
-        <civ-combobox width="lg" .options="${STATES}"></civ-combobox>
-      </civ-form-field>
-      <civ-form-field label="default (full width)">
-        <civ-combobox .options="${STATES}"></civ-combobox>
-      </civ-form-field>
+      <civ-combobox label="xs width" width="xs" .options="${STATES}"></civ-combobox>
+      <civ-combobox label="sm width" width="sm" .options="${STATES}"></civ-combobox>
+      <civ-combobox label="md width" width="md" .options="${STATES}"></civ-combobox>
+      <civ-combobox label="lg width" width="lg" .options="${STATES}"></civ-combobox>
+      <civ-combobox label="default (full width)" .options="${STATES}"></civ-combobox>
     </div>
   `,
 };
@@ -228,9 +176,7 @@ export const WidthVariants: Story = {
 export const ChevronToggle: Story = {
   name: 'Chevron toggle',
   render: () => html`
-    <civ-form-field label="State">
-      <civ-combobox name="state" .options="${STATES}"></civ-combobox>
-    </civ-form-field>
+    <civ-combobox label="State" name="state" .options="${STATES}"></civ-combobox>
   `,
 };
 
@@ -303,17 +249,13 @@ export const AsyncError: Story = {
 export const Country: Story = {
   name: 'Preset: Country',
   render: () => html`
-    <civ-form-field label="Country" required>
-      <civ-country name="country" required></civ-country>
-    </civ-form-field>
+    <civ-country label="Country" name="country" required></civ-country>
   `,
 };
 
 export const CountryOfBirth: Story = {
   name: 'Preset: Country of Birth',
   render: () => html`
-    <civ-form-field label="Country of birth" required>
-      <civ-country name="birthCountry" label="Country of birth" required></civ-country>
-    </civ-form-field>
+    <civ-country label="Country of birth" name="birthCountry" required></civ-country>
   `,
 };

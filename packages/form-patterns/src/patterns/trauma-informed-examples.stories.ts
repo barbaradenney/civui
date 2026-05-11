@@ -42,9 +42,7 @@ export const FormStepSensitive: Story = {
         <civ-yes-no legend="Have you experienced military sexual trauma?" name="mst" skip-label="Prefer not to answer"></civ-yes-no>
       </div>
       <div data-step-label="Additional details">
-        <civ-form-field label="Is there anything else you'd like us to know?" hint="This is optional">
-          <civ-textarea name="additional"></civ-textarea>
-        </civ-form-field>
+        <civ-textarea label="Is there anything else you'd like us to know?" name="additional" hint="This is optional"></civ-textarea>
       </div>
     </civ-form-step>
   `,
@@ -102,12 +100,8 @@ export const SupportResources: Story = {
     <civ-form
       support-resources='[{"label":"Veterans Crisis Line","href":"tel:988","description":"Call or text 988, then press 1"},{"label":"Crisis Text Line","href":"sms:838255","description":"Text HOME to 838255"},{"label":"Safe Helpline","href":"tel:18779955247","description":"For survivors of sexual assault"}]'
     >
-      <civ-form-field label="Your name" required>
-        <civ-text-input name="name" required></civ-text-input>
-      </civ-form-field>
-      <civ-form-field label="Tell us about your situation">
-        <civ-textarea name="details"></civ-textarea>
-      </civ-form-field>
+      <civ-text-input label="Your name" name="name" required></civ-text-input>
+      <civ-textarea label="Tell us about your situation" name="details"></civ-textarea>
     </civ-form>
   `,
 };
@@ -144,9 +138,7 @@ export const CompleteSurvivorForm: Story = {
       <civ-form-step>
         <div data-step-label="Your information">
           <civ-name legend="Your name" name="claimant" required></civ-name>
-          <civ-form-field label="Phone number">
-            <civ-text-input name="phone" type="tel"></civ-text-input>
-          </civ-form-field>
+          <civ-text-input label="Phone number" name="phone" type="tel"></civ-text-input>
         </div>
 
         <div data-step-label="About the person who died">

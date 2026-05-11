@@ -70,9 +70,7 @@ export const SingleWithOther: Story = {
       </civ-form-field>
 
       <civ-conditional when="docType" equals="other">
-        <civ-form-field label="Describe the document" required>
-          <civ-text-input name="docDescription"></civ-text-input>
-        </civ-form-field>
+        <civ-text-input label="Describe the document" name="docDescription" required></civ-text-input>
       </civ-conditional>
 
       <civ-conditional when="docType" has-value>
@@ -111,9 +109,7 @@ export const MultipleDocuments: Story = {
       </civ-form-field>
 
       <civ-conditional when="docType" equals="other">
-        <civ-form-field label="Describe the document" required>
-          <civ-text-input name="docDescription"></civ-text-input>
-        </civ-form-field>
+        <civ-text-input label="Describe the document" name="docDescription" required></civ-text-input>
       </civ-conditional>
 
       <civ-file-upload
@@ -153,9 +149,7 @@ export const VADisabilityEvidence: Story = {
       </civ-form-field>
 
       <civ-conditional when="evidenceType" equals="other">
-        <civ-form-field label="Description of evidence" required>
-          <civ-textarea name="evidenceDescription" hint="Briefly describe what this document is"></civ-textarea>
-        </civ-form-field>
+        <civ-textarea label="Description of evidence" name="evidenceDescription" hint="Briefly describe what this document is" required></civ-textarea>
       </civ-conditional>
 
       <civ-conditional when="evidenceType" has-value>

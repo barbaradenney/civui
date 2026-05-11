@@ -47,43 +47,12 @@ export const MedicationList: Story = {
   render: () => html`
     <civ-repeater legend="Current medications" name="medications" add-label="Add another medication">
       <div slot="entry">
-        <civ-form-field label="Medication name" required>
-          <civ-combobox
-            name="medication_name"
-            placeholder="Search or type medication name"
-            .options=${[
-              { value: 'lisinopril', label: 'Lisinopril' },
-              { value: 'metformin', label: 'Metformin' },
-              { value: 'amlodipine', label: 'Amlodipine' },
-              { value: 'metoprolol', label: 'Metoprolol' },
-              { value: 'omeprazole', label: 'Omeprazole' },
-              { value: 'levothyroxine', label: 'Levothyroxine' },
-              { value: 'atorvastatin', label: 'Atorvastatin' },
-              { value: 'losartan', label: 'Losartan' },
-              { value: 'gabapentin', label: 'Gabapentin' },
-              { value: 'sertraline', label: 'Sertraline' },
-            ]}
-          ></civ-combobox>
-        </civ-form-field>
+        <civ-combobox label="Medication name" name="medication_name" required placeholder="Search or type medication name" .options="${[" { value: 'lisinopril', label: 'Lisinopril' }, { value: 'metformin', label: 'Metformin' }, { value: 'amlodipine', label: 'Amlodipine' }, { value: 'metoprolol', label: 'Metoprolol' }, { value: 'omeprazole', label: 'Omeprazole' }, { value: 'levothyroxine', label: 'Levothyroxine' }, { value: 'atorvastatin', label: 'Atorvastatin' }, { value: 'losartan', label: 'Losartan' }, { value: 'gabapentin', label: 'Gabapentin' }, { value: 'sertraline', label: 'Sertraline' }, ]}></civ-combobox>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-          <civ-form-field label="Dosage" hint="For example: 10mg" required>
-            <civ-text-input name="dosage"></civ-text-input>
-          </civ-form-field>
-          <civ-form-field label="Frequency" required>
-            <civ-select name="frequency" .options=${[
-              { value: 'once-daily', label: 'Once daily' },
-              { value: 'twice-daily', label: 'Twice daily' },
-              { value: 'three-daily', label: 'Three times daily' },
-              { value: 'four-daily', label: 'Four times daily' },
-              { value: 'as-needed', label: 'As needed' },
-              { value: 'weekly', label: 'Weekly' },
-              { value: 'monthly', label: 'Monthly' },
-            ]}></civ-select>
-          </civ-form-field>
+          <civ-text-input label="Dosage" name="dosage" hint="For example: 10mg" required></civ-text-input>
+          <civ-select label="Frequency" name="frequency" required .options="${[" { value: 'once-daily', label: 'Once daily' }, { value: 'twice-daily', label: 'Twice daily' }, { value: 'three-daily', label: 'Three times daily' }, { value: 'four-daily', label: 'Four times daily' }, { value: 'as-needed', label: 'As needed' }, { value: 'weekly', label: 'Weekly' }, { value: 'monthly', label: 'Monthly' }, ]}></civ-select>
         </div>
-        <civ-form-field label="Prescribing provider" hint="Doctor or clinic that prescribed this medication">
-          <civ-text-input name="prescriber"></civ-text-input>
-        </civ-form-field>
+        <civ-text-input label="Prescribing provider" name="prescriber" hint="Doctor or clinic that prescribed this medication"></civ-text-input>
       </div>
     </civ-repeater>
   `,
@@ -103,38 +72,9 @@ export const ProviderSelection: Story = {
   },
   render: () => html`
     <div style="max-width: 480px; display: grid; gap: 1rem;">
-      <civ-form-field label="Specialty" hint="Narrow results by provider specialty">
-        <civ-select name="specialty" empty-label="All specialties" .options=${[
-          { value: 'primary-care', label: 'Primary care' },
-          { value: 'cardiology', label: 'Cardiology' },
-          { value: 'dermatology', label: 'Dermatology' },
-          { value: 'endocrinology', label: 'Endocrinology' },
-          { value: 'mental-health', label: 'Mental health' },
-          { value: 'neurology', label: 'Neurology' },
-          { value: 'ophthalmology', label: 'Ophthalmology' },
-          { value: 'orthopedics', label: 'Orthopedics' },
-          { value: 'physical-therapy', label: 'Physical therapy' },
-          { value: 'podiatry', label: 'Podiatry' },
-        ]}></civ-select>
-      </civ-form-field>
-      <civ-form-field label="Provider" required hint="Search by provider name">
-        <civ-combobox
-          name="provider"
-          placeholder="Type a provider name"
-          .options=${[
-            { value: 'dr-chen', label: 'Dr. Maria Chen — Primary care' },
-            { value: 'dr-johnson', label: 'Dr. Robert Johnson — Cardiology' },
-            { value: 'dr-patel', label: 'Dr. Anita Patel — Endocrinology' },
-            { value: 'dr-williams', label: 'Dr. Sarah Williams — Mental health' },
-            { value: 'dr-garcia', label: 'Dr. Carlos Garcia — Neurology' },
-            { value: 'dr-kim', label: 'Dr. James Kim — Orthopedics' },
-            { value: 'dr-thompson', label: 'Dr. Lisa Thompson — Dermatology' },
-          ]}
-        ></civ-combobox>
-      </civ-form-field>
-      <civ-form-field label="Reason for visit">
-        <civ-textarea name="reason" placeholder="Briefly describe why you need to see this provider"></civ-textarea>
-      </civ-form-field>
+      <civ-select label="Specialty" name="specialty" hint="Narrow results by provider specialty" empty-label="All specialties" .options="${[" { value: 'primary-care', label: 'Primary care' }, { value: 'cardiology', label: 'Cardiology' }, { value: 'dermatology', label: 'Dermatology' }, { value: 'endocrinology', label: 'Endocrinology' }, { value: 'mental-health', label: 'Mental health' }, { value: 'neurology', label: 'Neurology' }, { value: 'ophthalmology', label: 'Ophthalmology' }, { value: 'orthopedics', label: 'Orthopedics' }, { value: 'physical-therapy', label: 'Physical therapy' }, { value: 'podiatry', label: 'Podiatry' }, ]}></civ-select>
+      <civ-combobox label="Provider" name="provider" hint="Search by provider name" required placeholder="Type a provider name" .options="${[" { value: 'dr-chen', label: 'Dr. Maria Chen — Primary care' }, { value: 'dr-johnson', label: 'Dr. Robert Johnson — Cardiology' }, { value: 'dr-patel', label: 'Dr. Anita Patel — Endocrinology' }, { value: 'dr-williams', label: 'Dr. Sarah Williams — Mental health' }, { value: 'dr-garcia', label: 'Dr. Carlos Garcia — Neurology' }, { value: 'dr-kim', label: 'Dr. James Kim — Orthopedics' }, { value: 'dr-thompson', label: 'Dr. Lisa Thompson — Dermatology' }, ]}></civ-combobox>
+      <civ-textarea label="Reason for visit" name="reason" placeholder="Briefly describe why you need to see this provider"></civ-textarea>
     </div>
   `,
 };
@@ -157,31 +97,13 @@ export const InsuranceCardUpload: Story = {
         Please upload clear photos of the front and back of your insurance card.
         Accepted formats: JPG, PNG, or PDF.
       </civ-alert>
-      <civ-form-field label="Front of insurance card" required>
-        <civ-file-upload
-          name="insurance_front"
-          accept="image/*,.pdf"
-          max-size="10"
-        ></civ-file-upload>
-      </civ-form-field>
-      <civ-form-field label="Back of insurance card" required>
-        <civ-file-upload
-          name="insurance_back"
-          accept="image/*,.pdf"
-          max-size="10"
-        ></civ-file-upload>
-      </civ-form-field>
+      <civ-file-upload label="Front of insurance card" name="insurance_front" required accept="image/*,.pdf" max-size="10"></civ-file-upload>
+      <civ-file-upload label="Back of insurance card" name="insurance_back" required accept="image/*,.pdf" max-size="10"></civ-file-upload>
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-        <civ-form-field label="Insurance company">
-          <civ-text-input name="insurance_company" autocomplete="organization"></civ-text-input>
-        </civ-form-field>
-        <civ-form-field label="Member ID">
-          <civ-text-input name="member_id"></civ-text-input>
-        </civ-form-field>
+        <civ-text-input label="Insurance company" name="insurance_company" autocomplete="organization"></civ-text-input>
+        <civ-text-input label="Member ID" name="member_id"></civ-text-input>
       </div>
-      <civ-form-field label="Group number">
-        <civ-text-input name="group_number"></civ-text-input>
-      </civ-form-field>
+      <civ-text-input label="Group number" name="group_number"></civ-text-input>
     </div>
   `,
 };
@@ -204,17 +126,13 @@ export const AllergyList: Story = {
       <civ-conditional when="has_allergies" equals="yes">
         <civ-repeater legend="Allergies" name="allergies" add-label="Add another allergy">
           <div slot="entry">
-            <civ-form-field label="Allergen" required hint="Medication, food, or environmental allergen">
-              <civ-text-input name="allergen"></civ-text-input>
-            </civ-form-field>
+            <civ-text-input label="Allergen" name="allergen" hint="Medication, food, or environmental allergen" required></civ-text-input>
             <civ-radio-group legend="Severity" required name="severity">
               <civ-radio label="Mild" value="mild" description="Rash, itching, or minor swelling"></civ-radio>
               <civ-radio label="Moderate" value="moderate" description="Hives, significant swelling, or breathing difficulty"></civ-radio>
               <civ-radio label="Severe" value="severe" description="Anaphylaxis or life-threatening reaction"></civ-radio>
             </civ-radio-group>
-            <civ-form-field label="Reaction" hint="Describe what happens when exposed">
-              <civ-textarea name="reaction" rows="2"></civ-textarea>
-            </civ-form-field>
+            <civ-textarea label="Reaction" name="reaction" hint="Describe what happens when exposed" rows="2"></civ-textarea>
           </div>
         </civ-repeater>
       </civ-conditional>
@@ -286,9 +204,7 @@ export const SymptomChecker: Story = {
       </civ-checkbox-group>
 
       <civ-conditional when="symptoms" equals="fever">
-        <civ-form-field label="What is your current temperature?" hint="For example: 101.2">
-          <civ-text-input name="temperature" type="number" inputmode="decimal"></civ-text-input>
-        </civ-form-field>
+        <civ-text-input label="What is your current temperature?" name="temperature" hint="For example: 101.2" type="number" inputmode="decimal"></civ-text-input>
       </civ-conditional>
 
       <civ-conditional when="symptoms" equals="breathing">
@@ -302,19 +218,9 @@ export const SymptomChecker: Story = {
         </civ-radio-group>
       </civ-conditional>
 
-      <civ-form-field label="How long have you had these symptoms?" required>
-        <civ-select name="duration" .options=${[
-          { value: 'today', label: 'Started today' },
-          { value: '2-3-days', label: '2–3 days' },
-          { value: '4-7-days', label: '4–7 days' },
-          { value: '1-2-weeks', label: '1–2 weeks' },
-          { value: 'more-than-2-weeks', label: 'More than 2 weeks' },
-        ]}></civ-select>
-      </civ-form-field>
+      <civ-select label="How long have you had these symptoms?" name="duration" required .options="${[" { value: 'today', label: 'Started today' }, { value: '2-3-days', label: '2–3 days' }, { value: '4-7-days', label: '4–7 days' }, { value: '1-2-weeks', label: '1–2 weeks' }, { value: 'more-than-2-weeks', label: 'More than 2 weeks' }, ]}></civ-select>
 
-      <civ-form-field label="Additional details" hint="Anything else your provider should know">
-        <civ-textarea name="details" rows="3"></civ-textarea>
-      </civ-form-field>
+      <civ-textarea label="Additional details" name="details" hint="Anything else your provider should know" rows="3"></civ-textarea>
     </div>
   `,
 };
@@ -354,18 +260,7 @@ export const PharmacySelection: Story = {
       <civ-divider></civ-divider>
 
       <p style="margin: 0; font-weight: 600;">Or search for a community pharmacy</p>
-      <civ-form-field label="Pharmacy name or ZIP code" hint="Search nearby pharmacies">
-        <civ-combobox
-          name="community_pharmacy"
-          placeholder="Type a pharmacy name or ZIP"
-          .options=${[
-            { value: 'cvs-22301', label: 'CVS Pharmacy — 789 Main St, 22301' },
-            { value: 'walgreens-22302', label: 'Walgreens — 321 Elm Ave, 22302' },
-            { value: 'rite-aid-22301', label: 'Rite Aid — 555 Oak Ln, 22301' },
-            { value: 'costco-22305', label: 'Costco Pharmacy — 100 Commerce Dr, 22305' },
-          ]}
-        ></civ-combobox>
-      </civ-form-field>
+      <civ-combobox label="Pharmacy name or ZIP code" name="community_pharmacy" hint="Search nearby pharmacies" placeholder="Type a pharmacy name or ZIP" .options="${[" { value: 'cvs-22301', label: 'CVS Pharmacy — 789 Main St, 22301' }, { value: 'walgreens-22302', label: 'Walgreens — 321 Elm Ave, 22302' }, { value: 'rite-aid-22301', label: 'Rite Aid — 555 Oak Ln, 22301' }, { value: 'costco-22305', label: 'Costco Pharmacy — 100 Commerce Dr, 22305' }, ]}></civ-combobox>
     </div>
   `,
 };
@@ -391,9 +286,7 @@ export const MedicalHistoryScreening: Story = {
       <civ-yes-no legend="Have you ever been diagnosed with high blood pressure (hypertension)?" name="hypertension"></civ-yes-no>
       <civ-conditional when="hypertension" equals="yes">
         <div style="padding-left: 1.5rem; border-left: 4px solid var(--civ-color-primary); display: grid; gap: 1rem;">
-          <civ-form-field label="Year diagnosed" hint="For example: 2018">
-            <civ-text-input name="hypertension_year" type="number" inputmode="numeric"></civ-text-input>
-          </civ-form-field>
+          <civ-text-input label="Year diagnosed" name="hypertension_year" hint="For example: 2018" type="number" inputmode="numeric"></civ-text-input>
           <civ-yes-no legend="Are you currently taking medication for this?" name="hypertension_medication"></civ-yes-no>
         </div>
       </civ-conditional>
@@ -406,18 +299,14 @@ export const MedicalHistoryScreening: Story = {
             <civ-radio label="Type 2" value="type2"></civ-radio>
             <civ-radio label="Not sure" value="unsure"></civ-radio>
           </civ-radio-group>
-          <civ-form-field label="Year diagnosed">
-            <civ-text-input name="diabetes_year" type="number" inputmode="numeric"></civ-text-input>
-          </civ-form-field>
+          <civ-text-input label="Year diagnosed" name="diabetes_year" type="number" inputmode="numeric"></civ-text-input>
         </div>
       </civ-conditional>
 
       <civ-yes-no legend="Have you ever been diagnosed with heart disease?" name="heart_disease"></civ-yes-no>
       <civ-conditional when="heart_disease" equals="yes">
         <div style="padding-left: 1.5rem; border-left: 4px solid var(--civ-color-primary); display: grid; gap: 1rem;">
-          <civ-form-field label="Describe the condition" hint="For example: coronary artery disease, heart failure, arrhythmia">
-            <civ-textarea name="heart_details" rows="2"></civ-textarea>
-          </civ-form-field>
+          <civ-textarea label="Describe the condition" name="heart_details" hint="For example: coronary artery disease, heart failure, arrhythmia" rows="2"></civ-textarea>
         </div>
       </civ-conditional>
 
@@ -426,12 +315,8 @@ export const MedicalHistoryScreening: Story = {
         <div style="padding-left: 1.5rem; border-left: 4px solid var(--civ-color-primary);">
           <civ-repeater legend="Surgeries" name="surgeries" add-label="Add another surgery">
             <div slot="entry">
-              <civ-form-field label="Surgery or procedure" required>
-                <civ-text-input name="surgery_name"></civ-text-input>
-              </civ-form-field>
-              <civ-form-field label="Approximate date" hint="For example: March 2020">
-                <civ-text-input name="surgery_date"></civ-text-input>
-              </civ-form-field>
+              <civ-text-input label="Surgery or procedure" name="surgery_name" required></civ-text-input>
+              <civ-text-input label="Approximate date" name="surgery_date" hint="For example: March 2020"></civ-text-input>
             </div>
           </civ-repeater>
         </div>

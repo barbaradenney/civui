@@ -4,6 +4,8 @@ sidebar_position: 2
 sidebar_label: Prefill
 ---
 
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
 # Prefill
 
 CivUI provides a prefill system that populates form fields from user profiles, APIs, or saved state. This is common in government applications where agencies already have data about the user (e.g., from a VA.gov profile or login.gov identity).
@@ -22,10 +24,21 @@ When a signed-in user opens a multi-chapter form with prefilled data, the flow i
 Task List Hub → Chapter Review → (Edit Steps if needed) → Save & Complete → Hub
 ```
 
-1. **Hub** -- The task list shows chapters with status tags. Prefilled chapters show a hint and a "Review" status tag.
-2. **Chapter review** -- Clicking into a prefilled chapter shows a summary of prefilled data with edit links. A `<civ-alert>` banner explains where the data came from.
-3. **Edit** -- Clicking "Edit" on a row opens the form fields for that data.
-4. **Complete** -- After reviewing, "Save and complete" marks the chapter done and returns to the hub.
+1. **Hub** — The task list shows chapters with status badges. Prefilled chapters show a hint and a "Needs review" badge.
+
+   <StoryEmbed id="forms-patterns-prefill-chapter-flow--step-1-hub" />
+
+2. **Chapter review** — Clicking into a prefilled chapter shows a summary of prefilled data with edit links. A `<civ-alert>` banner explains where the data came from.
+
+   <StoryEmbed id="forms-patterns-prefill-chapter-flow--step-2b-prefill-with-more-steps" />
+
+3. **Edit** — Clicking "Edit" on a row opens the form fields for that data.
+
+   <StoryEmbed id="forms-patterns-prefill-chapter-flow--step-3-edit-step" />
+
+4. **Complete** — After reviewing, "Save and complete" marks the chapter done and returns to the hub with a "Complete" badge.
+
+   <StoryEmbed id="forms-patterns-prefill-chapter-flow--step-4-chapter-complete" />
 
 ## Using `prefillData` property
 
@@ -174,6 +187,10 @@ Use a standard `<civ-alert>` to explain where prefilled data came from:
 <button>Save and complete</button>
 ```
 
-## Storybook examples
+## Variants
 
-See the [Prefill Chapter Flow](pathname:///civui/storybook/?path=/story/forms-patterns-prefill-chapter-flow--step-1-hub) stories for a complete interactive walkthrough of the hub, review, edit, and complete flow.
+Locked profile data (the user can't edit it inline — they're directed back to profile settings):
+
+<StoryEmbed id="forms-patterns-prefill-chapter-flow--step-2a-locked-chapter" />
+
+[Open the full walkthrough in Storybook →](pathname:///civui/storybook/?path=/story/forms-patterns-prefill-chapter-flow--step-1-hub)

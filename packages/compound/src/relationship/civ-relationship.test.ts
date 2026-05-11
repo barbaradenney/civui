@@ -479,3 +479,41 @@ describe('civ-relationship sub-component event handlers', () => {
     expect(changes[0].otherDescription).toBe('Cousin');
   });
 });
+
+describe('civ-relationship hide-name + show-name trap', () => {
+  it('renders name fields by default', async () => {
+    const el = await fixture('<civ-relationship name="rel"></civ-relationship>');
+    await elementUpdated(el);
+    expect(el.querySelector('civ-name')).not.toBeNull();
+  });
+
+  it('hides name fields when hide-name is set', async () => {
+    const el = await fixture('<civ-relationship name="rel" hide-name></civ-relationship>');
+    await elementUpdated(el);
+    expect(el.querySelector('civ-name')).toBeNull();
+  });
+
+  it('warns when show-name="false" is used (HTML-boolean trap)', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    try {
+      await fixture('<civ-relationship name="rel" show-name="false"></civ-relationship>');
+      expect(warn).toHaveBeenCalled();
+      const msg = warn.mock.calls.map(c => c[0]).join(' ');
+      expect(msg).toMatch(/show-name="false"/);
+      expect(msg).toMatch(/hide-name/);
+    } finally {
+      warn.mockRestore();
+    }
+  });
+
+  it('does not warn when show-name is used correctly (no value)', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    try {
+      await fixture('<civ-relationship name="rel" show-name></civ-relationship>');
+      const showNameWarns = warn.mock.calls.filter(c => String(c[0]).includes('show-name'));
+      expect(showNameWarns).toHaveLength(0);
+    } finally {
+      warn.mockRestore();
+    }
+  });
+});

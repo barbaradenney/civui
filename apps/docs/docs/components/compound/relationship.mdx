@@ -161,7 +161,7 @@ When the user switches relationship types and the category changes, stale condit
 
 ### Without name fields
 
-Use `show-name="false"` when the name is captured in a separate component:
+Use `hide-name` when the name is captured in a separate component:
 
 ```html
 <civ-name legend="Spouse's name" name="spouseName" required></civ-name>
@@ -169,6 +169,8 @@ Use `show-name="false"` when the name is captured in a separate component:
   legend="Relationship details"
   name="spouse"
   preset="general"
-  show-name="false"
+  hide-name
 ></civ-relationship>
 ```
+
+**Heads up: `show-name="false"` does NOT work.** HTML boolean attributes are truthy whenever present, so `show-name="false"` still reads as `true`. Use `hide-name` (no value) to disable from HTML, or bind the property directly in lit-html: `.showName=${false}`.

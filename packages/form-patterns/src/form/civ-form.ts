@@ -2,7 +2,7 @@
 
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivBaseElement, LightDomSlotMixin, dispatch, generateId, t, interpolate } from '@civui/core';
+import { CivBaseElement, LightDomSlotMixin, dispatch, generateId, t, interpolate, warnInvalidProp } from '@civui/core';
 import type { SlotConfig } from '@civui/core';
 import type { PrefillData, PrefillMeta } from '../prefill/types.js';
 
@@ -133,8 +133,11 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
         if (!val) return [];
         try {
           const parsed = JSON.parse(val);
-          return Array.isArray(parsed) ? parsed : [];
+          if (Array.isArray(parsed)) return parsed;
+          warnInvalidProp('civ-form', 'support-resources', 'a JSON array of {label, href, description?} objects', val);
+          return [];
         } catch {
+          warnInvalidProp('civ-form', 'support-resources', 'a valid JSON-string array of {label, href, description?} objects', val);
           return [];
         }
       },

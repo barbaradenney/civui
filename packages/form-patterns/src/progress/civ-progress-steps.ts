@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBaseElement, announce, dispatch, t, interpolate } from '@civui/core';
+import { CivBaseElement, announce, dispatch, t, interpolate, warnInvalidProp } from '@civui/core';
 
 /**
  * CivUI Progress
@@ -35,9 +35,14 @@ export class CivProgressSteps extends CivBaseElement {
   private _getStepData(): Array<{ label: string }> {
     if (this._cachedSteps === this.steps) return this._cachedStepData;
     this._cachedSteps = this.steps;
+    if (!this.steps) {
+      this._cachedStepData = [];
+      return this._cachedStepData;
+    }
     try {
       const parsed = JSON.parse(this.steps);
       if (!Array.isArray(parsed)) {
+        warnInvalidProp('civ-progress-steps', 'steps', 'an array of step labels (strings or {label} objects)', this.steps);
         this._cachedStepData = [];
         return this._cachedStepData;
       }
@@ -45,6 +50,7 @@ export class CivProgressSteps extends CivBaseElement {
         typeof item === 'string' ? { label: item } : item
       );
     } catch {
+      warnInvalidProp('civ-progress-steps', 'steps', 'a JSON array of step labels', this.steps);
       this._cachedStepData = [];
     }
     return this._cachedStepData;
@@ -53,10 +59,20 @@ export class CivProgressSteps extends CivBaseElement {
   private _getErrorSet(): Set<number> {
     if (this._cachedErrorSteps === this.errorSteps) return this._cachedErrorSet;
     this._cachedErrorSteps = this.errorSteps;
+    if (!this.errorSteps) {
+      this._cachedErrorSet = new Set();
+      return this._cachedErrorSet;
+    }
     try {
       const parsed = JSON.parse(this.errorSteps);
-      this._cachedErrorSet = new Set(Array.isArray(parsed) ? parsed : []);
+      if (!Array.isArray(parsed)) {
+        warnInvalidProp('civ-progress-steps', 'error-steps', 'a JSON array of step indices', this.errorSteps);
+        this._cachedErrorSet = new Set();
+      } else {
+        this._cachedErrorSet = new Set(parsed);
+      }
     } catch {
+      warnInvalidProp('civ-progress-steps', 'error-steps', 'a JSON array of step indices', this.errorSteps);
       this._cachedErrorSet = new Set();
     }
     return this._cachedErrorSet;

@@ -43,9 +43,15 @@ const schema: ComponentSchema = {
     },
     showName: {
       type: 'boolean',
-      description: 'Render the relative-name input',
+      description: 'Render the relative-name input. Defaults to true. **HTML-boolean trap:** `show-name="false"` does NOT disable it (Lit treats any present boolean attribute as truthy). Use `hide-name` or bind the property directly in lit-html with `.showName=${false}`.',
       default: true,
       attribute: 'show-name',
+    },
+    hideName: {
+      type: 'boolean',
+      description: 'Inverse of `show-name` — present in HTML disables the inner name fields. Use when an enclosing repeater step already captures the name and you want to avoid duplicating it inside civ-relationship.',
+      default: false,
+      attribute: 'hide-name',
     },
     showDeceased: {
       type: 'boolean',

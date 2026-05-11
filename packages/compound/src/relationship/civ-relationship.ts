@@ -64,7 +64,23 @@ export class CivRelationship extends LegendHeadingMixin(CivCompoundElement) {
   @property({ type: String }) legend = '';
   @property({ type: String }) preset: RelationshipPreset = 'general';
   @property({ type: Array }) options?: RelationshipTypeConfig[];
+  /**
+   * Render the inner name fields. Defaults to true.
+   *
+   * **HTML-boolean trap:** because Lit treats any non-null value of a
+   * Boolean attribute as truthy, you cannot disable this from HTML
+   * with `show-name="false"`. Either:
+   *  - omit `show-name` and use the inverse `hide-name` attribute
+   *    (present = hide the name fields), or
+   *  - bind the property directly in lit-html: `.showName=${false}`.
+   */
   @property({ type: Boolean, attribute: 'show-name' }) showName = true;
+  /**
+   * Inverse of `show-name` — present in HTML disables the inner name
+   * fields. Use when an enclosing repeater step already captures the
+   * name and you want to avoid duplicating it inside civ-relationship.
+   */
+  @property({ type: Boolean, attribute: 'hide-name' }) hideName = false;
   @property({ type: Boolean, attribute: 'show-deceased' }) showDeceased = false;
   /** Skip the "Is this person deceased?" question — assume yes and show date of death directly. */
   @property({ type: Boolean, attribute: 'deceased-assumed' }) deceasedAssumed = false;
@@ -110,6 +126,21 @@ export class CivRelationship extends LegendHeadingMixin(CivCompoundElement) {
     if (this.deceasedAssumed && this._data.deceased !== 'yes') {
       this._data = { ...this._data, deceased: 'yes' };
       this.value = JSON.stringify(this._data);
+    }
+    // Detect the show-name="false" HTML-boolean trap: the attribute is
+    // present so Lit reads it as true, but the literal value "false"
+    // signals the consumer intended to disable. Warn loudly and point
+    // them at the `hide-name` attribute.
+    const raw = this.getAttribute('show-name');
+    if (raw !== null && raw.toLowerCase() === 'false') {
+      if (typeof console !== 'undefined' && (globalThis as { CIV_DEV?: unknown }).CIV_DEV !== false) {
+        console.warn(
+          '[civ-relationship] `show-name="false"` does nothing — HTML boolean ' +
+          'attributes are truthy whenever present. Use `hide-name` (no value) ' +
+          'to disable the inner name fields, or bind the property directly: ' +
+          '`.showName=${false}`.',
+        );
+      }
     }
   }
 
@@ -157,7 +188,7 @@ export class CivRelationship extends LegendHeadingMixin(CivCompoundElement) {
       >
         ${renderFormHeader({ label: renderLegend({ legend, required: false, headingLevel: this.headingLevel, size: this.size }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
 
-        ${this.showName ? html`
+        ${(this.showName && !this.hideName) ? html`
           <civ-name
             legend="${t('relationshipNameLegend')}"
             size="md"

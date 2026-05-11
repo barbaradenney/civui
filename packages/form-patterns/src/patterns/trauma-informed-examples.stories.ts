@@ -72,22 +72,36 @@ export const DeceasedAssumed: Story = {
   name: 'Deceased Assumed vs Show Deceased',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-8">
-      <div>
-        <p class="civ-font-semibold civ-mb-2">Good: deceased-assumed (skips the question)</p>
+      <div class="civ-border civ-border-s-4 civ-border-success civ-bg-success-lighter civ-p-4 civ-rounded">
+        <p class="civ-font-semibold civ-mb-1 civ-text-success-darkest">✓ Good — deceased-assumed</p>
+        <p class="civ-text-sm civ-mb-4">
+          The form is a survivor benefit claim, so the context already
+          establishes that the Veteran died. Skip "Is this person deceased?"
+          and ask for the date directly.
+        </p>
         <civ-relationship
-          legend="About the person who died"
+          legend="About the Veteran who died"
           name="good"
           preset="survivor"
           deceased-assumed
+          .showName=${false}
+          value='{"relationship":"spouse","marriageDate":"2015-06-12"}'
         ></civ-relationship>
       </div>
-      <div>
-        <p class="civ-font-semibold civ-mb-2">Avoid: show-deceased (asks a redundant question)</p>
+      <div class="civ-border civ-border-s-4 civ-border-error civ-bg-error-lighter civ-p-4 civ-rounded">
+        <p class="civ-font-semibold civ-mb-1 civ-text-error-dark">✗ Avoid — show-deceased</p>
+        <p class="civ-text-sm civ-mb-4">
+          Making a grieving family member confirm "Yes, this person is
+          deceased" before they can enter the date is insensitive and
+          repeats information the form already knows.
+        </p>
         <civ-relationship
-          legend="About the person who died"
+          legend="About the Veteran who died"
           name="avoid"
           preset="survivor"
           show-deceased
+          .showName=${false}
+          value='{"relationship":"spouse","marriageDate":"2015-06-12"}'
         ></civ-relationship>
       </div>
     </div>

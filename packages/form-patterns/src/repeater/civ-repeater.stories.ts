@@ -267,7 +267,7 @@ export const FormStepsWithRelationship: Story = {
           legend="Relationship details"
           name="rel"
           preset="dependent"
-          show-name="false"
+          .showName=${false}
           show-adoption-date
           required
         ></civ-relationship>

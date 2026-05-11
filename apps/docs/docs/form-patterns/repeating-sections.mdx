@@ -8,32 +8,36 @@ import StoryEmbed from "@site/src/components/StoryEmbed";
 
 # Repeating Sections
 
-Collect variable-length lists of items — dependents, service periods, previous addresses, employment history. CivUI supports three modes depending on item complexity.
+Collect variable-length lists of items — dependents, service periods, previous addresses, employment history. `civ-repeater` has two modes; pick based on how much information you collect per item.
 
-## Inline mode (simple items)
+## Inline mode (1–3 fields per item)
 
-Best for 1-3 fields per item. Fields are visible on the page with add/remove buttons.
+Default. Every row's fields are visible on the page at the same time with add / remove buttons in line.
 
 <StoryEmbed id="forms-form-repeater--default" />
 
 ```html
-<civ-repeater
-  legend="Other phone numbers"
-  name="phones"
-  item-label="phone number"
-  min="0"
-  max="5"
->
-  <civ-phone name="phone" required></civ-phone>
-  <civ-text-input label="Label" name="phoneLabel" hint="For example: Work, Partner"></civ-text-input>
+<civ-repeater legend="Dependents" name="dependents" item-label="dependent">
+  <civ-text-input label="Full name" name="fullName"></civ-text-input>
 </civ-repeater>
 ```
 
-## Detail mode (complex items)
-
-Best for 4+ fields. Shows summary cards for existing items. Clicking "Add" or "Edit" opens a focused detail view.
+A more substantial inline example with multiple fields per row:
 
 <StoryEmbed id="forms-form-repeater--multiple-fields" />
+
+```html
+<civ-repeater legend="Dependents" name="dependents" item-label="dependent">
+  <civ-text-input label="First name" name="firstName"></civ-text-input>
+  <civ-text-input label="Last name" name="lastName"></civ-text-input>
+</civ-repeater>
+```
+
+## Form-steps mode (4+ fields, or multi-step entry)
+
+Set `mode="form-steps"`. Existing rows render as compact summary cards; clicking **Add** or **Edit** opens a step-by-step entry flow, one section at a time. Use this when each item has enough fields that an inline row would overwhelm the page.
+
+<StoryEmbed id="forms-form-repeater--form-steps-mode" />
 
 ```html
 <civ-repeater
@@ -41,21 +45,19 @@ Best for 4+ fields. Shows summary cards for existing items. Clicking "Add" or "E
   name="dependents"
   item-label="dependent"
   mode="form-steps"
-  min="0"
-  max="20"
 >
-  <civ-text-input label="First name" name="firstName" required></civ-text-input>
-  <civ-text-input label="Last name" name="lastName" required></civ-text-input>
-  <civ-memorable-date legend="Date of birth" required name="dob"></civ-memorable-date>
-  <civ-ssn name="ssn"></civ-ssn>
+  <div data-step-label="Name">
+    <civ-text-input label="First name" name="firstName" required></civ-text-input>
+    <civ-text-input label="Last name" name="lastName" required></civ-text-input>
+  </div>
+  <div data-step-label="Contact">
+    <civ-text-input label="Email" name="email" type="email"></civ-text-input>
+    <civ-text-input label="Phone" name="phone" type="tel"></civ-text-input>
+  </div>
 </civ-repeater>
 ```
 
-## Form-steps mode (multi-step items)
-
-For items complex enough to warrant their own multi-step flow. Each item is added through a step-by-step form.
-
-<StoryEmbed id="forms-form-repeater--form-steps-mode" />
+Form-steps mode also composes with the compound components — here, a dependents list that captures a name in step 1 and a relationship in step 2:
 
 <StoryEmbed id="forms-form-repeater--form-steps-with-relationship" />
 
@@ -86,10 +88,10 @@ Pre-built compositions for common government form sections:
 
 ## Which mode to use
 
-| Item complexity | Fields per item | Mode | Example |
-|----------------|----------------|------|---------|
-| Simple | 1-3 | `inline` | Phone numbers, email addresses |
-| Complex | 4+ or multi-step | `form-steps` | Dependents, employment history, service periods |
+| Fields per item | Mode | Example |
+|----------------|------|---------|
+| 1–3 simple fields | `inline` (default) | Phone numbers, email addresses, other phone numbers |
+| 4+ fields, or multi-step entry | `form-steps` | Dependents, employment history, service periods |
 
 ## Components used
 

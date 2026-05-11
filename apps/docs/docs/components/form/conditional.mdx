@@ -67,11 +67,11 @@ A declarative show/hide wrapper that reveals its content only when a named field
 
 ## Behavior
 
-- Content starts hidden
-- The component listens for `civ-input` and `civ-change` events from the field matching the `when` name
-- When the condition is met, content is revealed with `aria-hidden="false"` for screen readers
-- When the condition is no longer met, content is hidden
-- Uses CSS transitions for smooth show/hide
+- Content starts hidden (`display: none`, `aria-hidden="true"`).
+- The component listens for `civ-input` and `civ-change` events scoped to the nearest form ancestor (see "Event Scoping" below).
+- When the condition becomes true, the wrapper switches to `display: block` and `aria-hidden="false"`. When it becomes false, it flips back.
+- Hiding via `display: none` (rather than DOM removal) preserves child state — typed values, focus history, and uploaded files survive a hide/show cycle — and keeps screen readers from announcing the content while it's hidden.
+- Because hidden children remain in the DOM, a `required` field inside a hidden conditional will still be picked up by `civ-form.validate()`. Either drop `required` from such fields or gate validation via the trigger.
 
 ## Supported field types
 

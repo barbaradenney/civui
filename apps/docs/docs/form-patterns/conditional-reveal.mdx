@@ -12,35 +12,48 @@ Show or hide form fields based on the user's answers. This keeps forms short by 
 
 ## Basic example
 
+A single trigger reveals different follow-up fields depending on which value the user selects:
+
 <StoryEmbed id="forms-form-conditional--default" />
 
 ```html
-<civ-yes-no legend="Are you a veteran?" name="veteran" required></civ-yes-no>
+<civ-select
+  label="What is your employment status?"
+  name="employment"
+  options='[
+    {"label":"Select one","value":""},
+    {"label":"Employed","value":"employed"},
+    {"label":"Self-employed","value":"self-employed"},
+    {"label":"Unemployed","value":"unemployed"}
+  ]'
+></civ-select>
 
-<civ-conditional when="veteran" equals="yes">
-  <civ-text-input label="Service branch" name="branch" required></civ-text-input>
+<civ-conditional when="employment" equals="employed">
+  <civ-text-input label="Employer name" name="employer"></civ-text-input>
+</civ-conditional>
+
+<civ-conditional when="employment" equals="self-employed">
+  <civ-text-input label="Business name" name="business"></civ-text-input>
 </civ-conditional>
 ```
 
-## Multiple conditions
+## Nested conditions
 
-Show different fields based on a selection:
+Conditions can nest — the inner trigger is only watched while its outer parent is visible:
 
 <StoryEmbed id="forms-form-conditional--multiple-conditions" />
 
 ```html
-<civ-radio-group legend="What type of benefit?" name="benefitType">
-  <civ-radio label="Education" value="education"></civ-radio>
-  <civ-radio label="Housing" value="housing"></civ-radio>
-  <civ-radio label="Healthcare" value="healthcare"></civ-radio>
-</civ-radio-group>
+<civ-yes-no legend="Are you a veteran?" name="veteran"></civ-yes-no>
 
-<civ-conditional when="benefitType" equals="education">
-  <civ-text-input label="School name" name="schoolName" required></civ-text-input>
-</civ-conditional>
+<civ-conditional when="veteran" equals="yes">
+  <civ-text-input label="Branch of service" name="branch"></civ-text-input>
 
-<civ-conditional when="benefitType" equals="housing">
-  <civ-address legend="Property address" name="propertyAddress" required></civ-address>
+  <civ-select label="Discharge type" name="discharge" options='[...]'></civ-select>
+
+  <civ-conditional when="discharge" equals="other">
+    <civ-text-input label="Please describe your discharge type" name="discharge-other"></civ-text-input>
+  </civ-conditional>
 </civ-conditional>
 ```
 
@@ -56,42 +69,18 @@ Show different fields based on a selection:
 | `has-value` | Show when field has any non-empty value |
 | `matches` | Show when field value matches a regex pattern |
 
-## Nested conditions
-
-Conditions can be nested for multi-level branching:
-
-```html
-<civ-yes-no legend="Are you a veteran?" name="isVeteran" required></civ-yes-no>
-
-<civ-conditional when="isVeteran" equals="yes">
-  <civ-yes-no legend="Were you honorably discharged?" name="honorable" required></civ-yes-no>
-
-  <civ-conditional when="honorable" equals="yes">
-    <civ-alert variant="success" heading="You may be eligible">
-      Based on your answers, you may qualify for this benefit.
-    </civ-alert>
-  </civ-conditional>
-</civ-conditional>
-
-<civ-conditional when="isVeteran" equals="no">
-  <civ-alert variant="info" heading="You may not be eligible">
-    This benefit is available to veterans and active-duty service members.
-  </civ-alert>
-</civ-conditional>
-```
-
 ## Eligibility screening
 
-Use conditional reveal to build an eligibility screener at the start of a form:
+Conditional reveals chain naturally into multi-branch eligibility flows. The example below combines veteran / dependent branches with a nested disability-rating reveal:
 
 <StoryEmbed id="forms-form-conditional--with-form" />
 
 ## Behavior
 
-- Hidden fields are removed from the DOM (not just visually hidden)
-- Hidden fields don't participate in form validation
-- When a controlling field changes, dependent fields reset to their default values
-- Transitions are instantaneous (no animation) to respect reduced-motion preferences
+- The slotted content is kept in the DOM and toggled with `display: none` plus `aria-hidden="true"` when the condition isn't met. Screen readers skip hidden content and focus order excludes it.
+- Event scoping: civ-conditional listens for `civ-input` and `civ-change` on the nearest `civ-form` / `<form>` / `civ-fieldset` ancestor, so hundreds of conditionals on one page don't fight over global listeners.
+- No animation: the wrapper just flips `display`, so there's no transition to disable for `prefers-reduced-motion`.
+- **Form-validation caveat:** because hidden content stays in the DOM, a `required` field inside a hidden conditional will still be picked up by `civ-form.validate()`. If a hidden field could block submit, either remove `required` from it or gate validation through the trigger.
 
 ## Components used
 

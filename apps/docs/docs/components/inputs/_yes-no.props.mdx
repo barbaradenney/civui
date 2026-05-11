@@ -1,0 +1,14 @@
+{/* Generated from @civui/schema by tools/sync-doc-tables.ts.
+    Do not edit by hand — run `pnpm sync:doc-tables` to regenerate. */}
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `legend` | `string` | `''` | Question text rendered as the fieldset legend. The component is self-contained — do not wrap in civ-form-fieldset. |
+| `heading-level` | `number` | — | When set, promotes the legend to a heading via role="heading" + aria-level=N |
+| `size` | `'sm'` \| `'md'` \| `'lg'` \| `'xl'` | — | Visual size of the legend |
+| `yes-label` | `string` | `'Yes'` | Visible label for the affirmative button |
+| `no-label` | `string` | `'No'` | Visible label for the negative button |
+| `unsure-label` | `string` | `''` | Visible label for the optional third button. When empty, only Yes/No are rendered |
+| `unsure-value` | `string` | `'unsure'` | Form value submitted when the third button is selected |
+| `skip-label` | `string` | `''` | When non-empty, renders a "Prefer not to answer" affordance below the buttons. Outside the roving tabindex |
+| `skip-value` | `string` | `'skip'` | Form value submitted when the skip affordance is selected |

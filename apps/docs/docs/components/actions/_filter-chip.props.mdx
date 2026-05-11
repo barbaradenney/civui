@@ -1,0 +1,13 @@
+{/* Generated from @civui/schema by tools/sync-doc-tables.ts.
+    Do not edit by hand — run `pnpm sync:doc-tables` to regenerate. */}
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `selected` | `boolean` | `false` | Active state. Reflects to the host attribute. In `select` role this is managed by the parent group |
+| `removable` | `boolean` | `false` | Render a trailing × button. Fires `civ-remove` when clicked |
+| `chip-style` | `'primary'` \| `'secondary'` | `'secondary'` | Visual treatment. `primary` = solid filled when selected; `secondary` = subtle background |
+| `chip-role` | `'toggle'` \| `'select'` | `'toggle'` | Interaction model. `toggle` = standalone on/off; `select` = single member of a multi-select group |
+| `spacing` | `'default'` \| `'sm'` | `'default'` | Padding density. `default` for standalone; `sm` for dense filter strips |
+| `icon-start` | `string` | `''` | Leading icon name (e.g. category emoji-replacement) |
+| `icon-end` | `string` | `''` | Trailing icon name (note: `removable` overrides this with a × icon) |
+| `count` | `number` | — | Optional count badge appended after the label (e.g. `Open jobs (12)`). `null` hides the badge |

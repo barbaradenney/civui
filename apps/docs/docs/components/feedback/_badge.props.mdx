@@ -1,0 +1,13 @@
+{/* Generated from @civui/schema by tools/sync-doc-tables.ts.
+    Do not edit by hand — run `pnpm sync:doc-tables` to regenerate. */}
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `dot` | `boolean` | `false` | Render as a colored dot (no text). For notification indicators |
+| `variant` | `'info'` \| `'success'` \| `'warning'` \| `'error'` \| `'neutral'` | `'neutral'` | Semantic tone. Drives color palette and (with `with-icon`) the auto-rendered icon |
+| `badge-style` | `'primary'` \| `'secondary'` | `'secondary'` | Visual treatment. `primary` = solid fill; `secondary` = subtle background |
+| `spacing` | `'default'` \| `'sm'` | `'default'` | Padding density. `default` for standalone badges; `sm` for inline / table contexts |
+| `overlay` | `boolean` | `false` | Position the badge as an overlay over a parent element (notification-count style) |
+| `with-icon` | `boolean` | `false` | Auto-render the icon corresponding to the variant (info / success / warning / error) |
+| `icon-start` | `string` | `''` | Override the leading icon name. Takes precedence over with-icon when both are set |
+| `icon-end` | `string` | `''` | Trailing icon name (e.g. dismiss / chevron) |

@@ -1,0 +1,18 @@
+{/* Generated from @civui/schema by tools/sync-doc-tables.ts.
+    Do not edit by hand — run `pnpm sync:doc-tables` to regenerate. */}
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `continue-label` | `string` | `''` | Visible label on the next-step button. Defaults to the i18n string "Continue" |
+| `complete-label` | `string` | `''` | Visible label on the final-step button. Defaults to the i18n string "Submit" |
+| `nav-disabled` | `boolean` | `false` | Disable the navigation buttons (e.g. while submitting). Independent of `validate` |
+| `hide-nav` | `boolean` | `false` | Suppress the built-in navigation buttons entirely. Use when the consumer renders its own buttons |
+| `progress` | `'minimal'` \| `'steps'` \| `'bar'` | `'minimal'` | Progress affordance rendered above the step content. minimal = "Step N of M" text only; steps = horizontal step indicator; bar = single progress bar |
+| `before-continue` | `string` | — | Async hook `(stepEl, stepIndex) => Promise<boolean> \| boolean` invoked before advancing. Return false to block navigation (e.g. server-side validation failed). Set programmatically (not as an attribute) |
+| `validate` | `boolean` | `true` | Run native form validation on Continue. When false, lets users advance with invalid fields (used for save-and-resume drafts) |
+| `sensitive` | `boolean` | `false` | Mark the step as containing sensitive data — auto-pauses persistence on navigation away and warns before unload |
+| `step-title` | `string` | `''` | Optional in-step title rendered above the form fields |
+| `header-size` | `'primary'` \| `'secondary'` \| `'tertiary'` | `'secondary'` | Size of the step title heading |
+| `heading-level` | `number` | `2` | Aria-level for the step title heading |
+| `show-pause` | `boolean` | `false` | Render a "Save and continue later" pause affordance |
+| `pause-label` | `string` | `''` | Visible label on the pause affordance. Defaults to the i18n string "Save and continue later" |

@@ -1,0 +1,221 @@
+# CivUI Common Traps
+
+Single-page reference for the recurring CivUI gotchas an AI agent (or
+human) should know before writing or editing stories, doc pages, or
+component code. Each entry has a one-line rule, the failure mode it
+prevents, and how the lints surface it.
+
+If you add a new component or refactor an existing one and discover a
+new failure mode, **append it here**. Future agents read this file
+on every CivUI session.
+
+---
+
+## Self-contained controls — no civ-form-field wrapper
+
+Every CivUI input renders its own label / hint / error chrome from
+its own props. Pass `label="..."` (or `legend="..."` on group
+components) **directly on the control**.
+
+```html
+<!-- ✓ good -->
+<civ-text-input label="Email" name="email" type="email" required></civ-text-input>
+
+<!-- ✗ stale — civ-form-field was deleted in Phase 4 -->
+<civ-form-field label="Email" required>
+  <civ-text-input name="email" type="email"></civ-text-input>
+</civ-form-field>
+```
+
+`<civ-form-fieldset>` survives, but only for **multi-field grouping**
+(several unrelated controls under one section heading). Do not wrap a
+single input or a self-contained group component in it.
+
+**Caught by:** `pnpm lint:story-embeds` (dead component refs in doc
+embeds), and the stories themselves stop rendering chrome correctly.
+
+---
+
+## HTML boolean attributes are truthy whenever present
+
+`<civ-relationship show-name="false">` does **not** disable the inner
+name fields. HTML boolean attributes read as `true` for any non-null
+value, so `"false"` is just a (truthy) string.
+
+For props that default to `true` and need an HTML-only off-switch,
+pair the prop with an inverse attribute:
+
+```html
+<!-- ✓ good — `hide-name` (no value) flips showName off -->
+<civ-relationship preset="dependent" hide-name></civ-relationship>
+
+<!-- ✗ silent no-op — name fields still render -->
+<civ-relationship preset="dependent" show-name="false"></civ-relationship>
+
+<!-- ✓ also good — bind the property directly in lit-html -->
+<civ-relationship preset="dependent" .showName=${false}></civ-relationship>
+```
+
+Today this trap is documented + warned for `civ-relationship`. If
+you add another default-true boolean prop, also add the inverse
+attribute (or accept that consumers must use lit-html property
+binding).
+
+**Caught by:** runtime `console.warn` from `civ-relationship`
+when the literal `"false"` string is detected, and a regression test
+in `civ-relationship.test.ts`.
+
+---
+
+## JSON-string attributes must be valid JSON arrays
+
+`support-resources`, `civ-progress-steps`' `steps`, and similar
+attributes are parsed with `JSON.parse`. Pass a JSON-encoded array,
+not a plain English sentence:
+
+```html
+<!-- ✓ good -->
+<civ-form support-resources='[
+  {"label":"Crisis Line","href":"tel:988"}
+]'></civ-form>
+
+<!-- ✗ silent no-op — JSON.parse fails, supportResources falls back to [] -->
+<civ-form support-resources="Call 988 for help"></civ-form>
+```
+
+**Caught by:** the converter calls `warnInvalidProp(...)` from
+`@civui/core` in dev mode; suppressed in prod by
+`globalThis.CIV_DEV = false`.
+
+---
+
+## Storybook export name → URL slug
+
+Doc `<StoryEmbed id="..." />` references resolve by **export name**
+(kebab-cased), not by `name:` display title. Two consequences:
+
+1. Renaming a story export breaks every doc embed pointing at the old
+   slug. Run `pnpm lint:story-embeds` after any rename.
+2. Storybook's `startCase` inserts a dash between digits and letters:
+   `Step1_Hub` → `step-1-hub`, `Step2a_LockedChapter` →
+   `step-2-a-locked-chapter`. **Not** `step1-hub` or
+   `step-2a-locked-chapter`.
+
+**Caught by:** `pnpm lint:story-embeds`.
+
+---
+
+## Stories ≠ component implementation
+
+A story attribute that isn't a declared `@property` on the component
+silently does nothing. Past examples that wasted reader time:
+
+- `<civ-repeater add-label="Add another medication">` — there is no
+  `add-label` prop; use `item-label="medication"` instead and the
+  i18n template interpolates "Add another medication".
+- `<civ-select preset="document-type">` — there is no such preset;
+  pass inline `<option>` children or set `options=` via JS.
+- `<civ-card heading="Title">` — civ-card uses a `data-card-header`
+  slot, not a `heading` prop:
+  `<civ-card><h3 slot="data-card-header">Title</h3>…</civ-card>`.
+- `<civ-progress-bar>` is not a registered element. The real
+  component is `civ-progress-percent` (same props).
+
+**Caught by:** `pnpm lint:story-props`.
+
+---
+
+## Hidden civ-conditional content is still in the DOM
+
+`civ-conditional` toggles its slotted content with `display: none`
+plus `aria-hidden="true"` — children stay in the DOM. **`civ-form`
+already excludes hidden-conditional fields** from `validate()`,
+`getFormData()`, and `toFormData()`, so a `required` field inside a
+hidden branch will *not* block submit or send a stale value.
+
+If you write a non-civ-form orchestrator that iterates
+`[data-civ-form-field]`, walk up via
+`closest('[data-civ-conditional-content][aria-hidden="true"]')` and
+skip those fields too.
+
+---
+
+## Group components are self-contained — no extra fieldset
+
+`civ-radio-group`, `civ-checkbox-group`, `civ-segmented-control`,
+`civ-yes-no`, `civ-memorable-date`, and `civ-date-range-picker`
+render their own `<fieldset>` + `<legend>`. Wrapping any of them in
+`<civ-form-fieldset>` produces nested fieldsets and double-rendered
+legends.
+
+```html
+<!-- ✓ good -->
+<civ-yes-no legend="Are you a veteran?" name="vet"></civ-yes-no>
+
+<!-- ✗ nested fieldset, double legend -->
+<civ-form-fieldset legend="Are you a veteran?">
+  <civ-yes-no name="vet"></civ-yes-no>
+</civ-form-fieldset>
+```
+
+**Caught by:** `pnpm lint:fieldsets`.
+
+---
+
+## Story display name should describe the story
+
+A `StoryObj` whose `name:` is unrelated to its export silently lies to
+the reader — the Storybook panel title and the actual content don't
+match. Past examples:
+
+- export `WithError`, display name `"Custom Button Labels"` — embedded
+  as `forms-form-form-step--with-error` and confused everyone who
+  clicked through. Renamed the body to a real validation example.
+
+If you want a longer display name (`"Required Decision (No Close)"`
+for export `RequiredDecision`), extend the export's name into the
+display — keep the export's substantive token in the display.
+
+**Caught by:** `pnpm lint:story-names`.
+
+---
+
+## Doc tables drift unless they're generated from the schema
+
+Hand-written Props / Events tables in `apps/docs/docs/components/**`
+drift. The overview page kept listing `civ-form-field` as a current
+component months after it was deleted.
+
+The `apps/docs/docs/components/{category}/_{component}.props.mdx` and
+`_{component}.events.mdx` partials are **generated from
+`@civui/schema`** by `pnpm sync:doc-tables`. Doc pages should import
+those partials instead of hand-writing tables:
+
+```mdx
+import PropsTable from './_civ-text-input.props.mdx';
+
+## Props
+<PropsTable />
+```
+
+CI runs `pnpm sync:doc-tables && git diff --exit-code` to catch
+out-of-band edits.
+
+---
+
+## Local-first commit / push workflow
+
+The project's convention is to commit locally and push only when
+explicitly asked. Don't chain `git push` onto commit commands — CI
+minutes are billable, and noisy partial pushes confuse reviewers.
+
+---
+
+## Where to look next
+
+- `CLAUDE.md` — project structure and architecture.
+- `.claude/rules/government-patterns.md` — government-form-specific
+  accessibility rules.
+- `docs/ai-guide.md` — long-form component reference.
+- `packages/schema/src/components/*.schema.ts` — source of truth for
+  every component's props, events, and accessibility requirements.

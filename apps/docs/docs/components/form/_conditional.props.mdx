@@ -1,0 +1,11 @@
+{/* Generated from @civui/schema by tools/sync-doc-tables.ts.
+    Do not edit by hand — run `pnpm sync:doc-tables` to regenerate. */}
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `when` | `string` | `''` | Name of the field to watch (matches the `name` attribute of a sibling form control) |
+| `equals` | `string` | `''` | Show content when the watched field exactly equals this value. For booleans, use `equals="true"` / `equals="false"` |
+| `not-equals` | `string` | `''` | Show content when the watched field does NOT equal this value |
+| `includes` | `string` | `''` | Comma-separated list of values. For multi-value fields (checkbox-group), shows when the field includes any of these values |
+| `has-value` | `boolean` | `false` | Show content when the watched field has any non-empty value |
+| `matches` | `string` | `''` | Regex pattern. Show content when the watched field value matches the pattern |

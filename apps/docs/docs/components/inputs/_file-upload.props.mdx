@@ -1,0 +1,24 @@
+{/* Generated from @civui/schema by tools/sync-doc-tables.ts.
+    Do not edit by hand — run `pnpm sync:doc-tables` to regenerate. */}
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `accept` | `string` | `''` | Accepted file types. Web: comma-separated MIME types / extensions (`image/*,application/pdf`) for the HTML `accept` attribute. Native: a typed array of platform-idiomatic types (`[UTType]` on iOS, `List<String>` of MIME types on Android). Conceptually the same constraint, different wire format per platform |
+| `multiple` | `boolean` | `false` | Whether multiple files can be selected |
+| `show-preview` | `boolean` | `false` | When true, image files render as thumbnails in the file list |
+| `capture` | `''` \| `'user'` \| `'environment'` | `''` | On mobile, hint which camera to open. Empty string keeps the standard file picker |
+| `variant` | `'default'` \| `'compact'` \| `'full'` | `'default'` | Dropzone visual variant. compact = file-name + button row, default = standard dropzone, full = larger drag-target |
+| `initial-files` | `array` | — | Server-resident files hydrated on mount (e.g. draft restore). Each item: {id, name, size, url?, type?} |
+| `max-size` | `number` | `0` | Maximum file size in bytes (0 = no limit) |
+| `max-files` | `number` | `0` | Maximum number of files (0 = no limit) |
+| `drag-text` | `string` | `'Drag files here or'` | Text shown in the dropzone |
+| `browse-text` | `string` | `'choose from folder'` | Text for the browse link in the dropzone |
+| `accepted-label` | `string` | `'Accepted: '` | Label prefix for accepted types display |
+| `max-size-label` | `string` | `'Max size: '` | Label prefix for max size display |
+| `remove-aria-label` | `string` | `'Remove {name}'` | Aria label template for remove button ({name} interpolated) |
+| `files-list-label` | `string` | `'Selected files'` | Aria label for the file list region |
+| `file-added-message` | `string` | `'{count} file(s) added. {total} file(s) selected.'` | Screen reader announcement when files are added ({count}, {total} interpolated) |
+| `file-removed-message` | `string` | `'File removed. {total} file(s) selected.'` | Screen reader announcement when a file is removed ({total} interpolated) |
+| `file-size-error` | `string` | `'{name} exceeds maximum size of {size}'` | Error template for oversized files ({name}, {size} interpolated) |
+| `file-type-error` | `string` | `'{name} is not an accepted file type'` | Error template for invalid file types ({name} interpolated) |
+| `max-files-error` | `string` | `'Maximum of {max} files allowed'` | Error template when file limit is exceeded ({max} interpolated) |

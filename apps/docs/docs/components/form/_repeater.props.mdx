@@ -1,0 +1,14 @@
+{/* Generated from @civui/schema by tools/sync-doc-tables.ts.
+    Do not edit by hand — run `pnpm sync:doc-tables` to regenerate. */}
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `legend` | `string` | `''` | Top-level legend rendered above the repeated instances |
+| `heading-level` | `number` | — | When set, promotes the legend to a heading via role="heading" + aria-level=N |
+| `size` | `'sm'` \| `'md'` \| `'lg'` \| `'xl'` | — | Visual size of the legend |
+| `item-label` | `string` | `'item'` | Singular noun for the repeated thing — interpolated into "Add another {item}" and remove labels |
+| `mode` | `'inline'` \| `'form-steps'` | `'inline'` | Layout mode. inline = stacked instances visible at once; form-steps = each instance is a separate form-step in a wizard |
+| `form-steps-sensitive` | `boolean` | `false` | In form-steps mode, treat the repeater as a sensitive flow — auto-pause / save state on navigation away |
+| `form-steps-show-pause` | `boolean` | `false` | In form-steps mode, render an explicit "Save and continue later" affordance on each step |
+| `min` | `number` | `1` | Minimum number of instances. Below this, remove buttons are hidden |
+| `max` | `number` | `0` | Maximum number of instances. 0 = no limit. Above this, the "Add another" button is hidden |

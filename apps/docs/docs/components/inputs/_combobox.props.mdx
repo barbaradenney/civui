@@ -1,0 +1,14 @@
+{/* Generated from @civui/schema by tools/sync-doc-tables.ts.
+    Do not edit by hand — run `pnpm sync:doc-tables` to regenerate. */}
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `options` | `array` | `[]` | Array of selectable options |
+| `placeholder` | `string` | `''` | Placeholder text for the input |
+| `no-results-text` | `string` | `'No results found'` | Text shown when filter matches no options |
+| `width` | `'default'` \| `'2xs'` \| `'xs'` \| `'sm'` \| `'md'` \| `'lg'` \| `'xl'` \| `'2xl'` | `'default'` | Width variant |
+| `load-options` | `string` | — | Async loader function `(query: string) => Promise<ComboboxOption[]>` for remote-driven option lists. Set programmatically (not as an attribute) |
+| `load-debounce` | `number` | `300` | Debounce in ms before invoking loadOptions on input |
+| `min-query-length` | `number` | `0` | Minimum query length before loadOptions is called. 0 means call on first focus |
+| `loading-text` | `string` | `''` | Text shown in the dropdown while loadOptions is in flight |
+| `loading-error-text` | `string` | `''` | Text shown when loadOptions rejects |

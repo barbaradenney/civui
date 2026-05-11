@@ -1,0 +1,13 @@
+{/* Generated from @civui/schema by tools/sync-doc-tables.ts.
+    Do not edit by hand — run `pnpm sync:doc-tables` to regenerate. */}
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `legend` | `string` | `''` | Top-level legend rendered above the two sub-groups |
+| `heading-level` | `number` | — | When set, promotes the legend to a heading via role="heading" + aria-level=N |
+| `size` | `'sm'` \| `'md'` \| `'lg'` \| `'xl'` | — | Visual size of the legend |
+| `ethnicity-legend` | `string` | `''` | Sub-legend for the Ethnicity radio group. Defaults to "Ethnicity" |
+| `race-legend` | `string` | `''` | Sub-legend for the Race checkbox group. Defaults to "Race" |
+| `ethnicity-error` | `string` | `''` | Per-field error for the ethnicity radio group |
+| `race-error` | `string` | `''` | Per-field error for the race checkbox group |
+| `variant` | `'auto'` \| `'card'` \| `'list'` | `'auto'` | Tile rendering variant forwarded to both inner groups. auto picks card for ≤4 options and list for 5+ — Race (6 options) renders as list, Ethnicity (3 options) stays card |

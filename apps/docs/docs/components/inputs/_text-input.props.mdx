@@ -1,0 +1,25 @@
+{/* Generated from @civui/schema by tools/sync-doc-tables.ts.
+    Do not edit by hand — run `pnpm sync:doc-tables` to regenerate. */}
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `type` | `'text'` \| `'email'` \| `'number'` \| `'password'` \| `'search'` \| `'tel'` \| `'url'` | `'text'` | HTML input type controlling keyboard and secure entry |
+| `width` | `'default'` \| `'2xs'` \| `'xs'` \| `'sm'` \| `'md'` \| `'lg'` \| `'xl'` \| `'2xl'` | `'default'` | Width variant |
+| `placeholder` | `string` | `''` | Placeholder text (never use as sole label) |
+| `pattern` | `string` | `''` | Validation regex pattern |
+| `maxlength` | `number` | — | Maximum character length |
+| `minlength` | `number` | — | Minimum character length |
+| `hide-char-count` | `boolean` | `false` | When maxlength is set, suppresses the visual character counter and aria-live announcements |
+| `autocomplete` | `string` | `''` | Autocomplete hint |
+| `inputmode` | `string` | `''` | Input mode hint for virtual keyboards |
+| `mask` | `''` \| `'ssn'` \| `'phone-us'` \| `'zip'` \| `'zip4'` \| `'ein'` \| `'currency'` | `''` | Built-in mask preset (blur-mode formatting). Empty string means no mask |
+| `mask-pattern` | `string` | `''` | Custom mask pattern: # = digit, A = letter, * = any printable char. Other chars are literal inserts |
+| `mask-mode` | `'blur'` \| `'live'` | `'blur'` | Mask formatting mode. blur (default) is accessible; live formats as user types |
+| `validate` | `''` \| `'email'` \| `'phone'` \| `'phoneIntl'` \| `'ssn'` \| `'ein'` \| `'routing'` \| `'zip'` \| `'zip4'` \| `'usState'` \| `'url'` \| `'currency'` \| `'alphanumeric'` | `''` | Declarative validation preset — auto-validates on blur. Empty string means no validation |
+| `prefix` | `string` | `''` | Inline prefix label rendered to the left of the input (e.g. "$"). Mutually exclusive with leadingIcon |
+| `suffix` | `string` | `''` | Inline suffix label rendered to the right of the input (e.g. ".com"). Mutually exclusive with trailingIcon and the clear button |
+| `clearable` | `boolean` | `false` | When true and the value is non-empty, renders a clear button on the trailing edge |
+| `leading-icon` | `string` | `''` | Icon rendered inside the input on the leading edge. Any civ-icon name. Ignored when prefix is set |
+| `leading-icon-label` | `string` | `''` | Accessible label for the leading icon. When omitted, icon is decorative (aria-hidden) |
+| `trailing-icon` | `string` | `''` | Icon rendered inside the input on the trailing edge. Ignored when suffix is set or the clear button is showing |
+| `trailing-icon-label` | `string` | `''` | Accessible label for the trailing icon. When omitted, icon is decorative |

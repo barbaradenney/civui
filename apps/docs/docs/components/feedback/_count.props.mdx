@@ -1,0 +1,12 @@
+{/* Generated from @civui/schema by tools/sync-doc-tables.ts.
+    Do not edit by hand — run `pnpm sync:doc-tables` to regenerate. */}
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `count` | `number` | — | Current count. `null` hides the badge entirely |
+| `max` | `number` | `99` | Display cap. Counts above this render as `${max}+` |
+| `variant` | `'info'` \| `'success'` \| `'warning'` \| `'error'` \| `'neutral'` | `'neutral'` | Semantic tone |
+| `count-style` | `'primary'` \| `'secondary'` | `'secondary'` | Visual treatment. `primary` = solid; `secondary` = subtle |
+| `spacing` | `'default'` \| `'sm'` | `'default'` | Padding density. `default` for standalone; `sm` for inline / overlay contexts |
+| `overlay` | `boolean` | `false` | Position as overlay over a parent (notification-count style) |
+| `live` | `'off'` \| `'polite'` \| `'assertive'` | `'off'` | aria-live politeness for dynamic count changes. `off` (default) skips announcements; `polite` announces on idle; `assertive` interrupts |

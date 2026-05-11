@@ -1,0 +1,10 @@
+{/* Generated from @civui/schema by tools/sync-doc-tables.ts.
+    Do not edit by hand — run `pnpm sync:doc-tables` to regenerate. */}
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `label` | `string` | `''` | Accessible label for the filterable region (rendered on the wrapper for assistive tech) |
+| `no-results-message` | `string` | `''` | Message shown when zero items match the active filters / query |
+| `announce-delay` | `number` | `300` | Debounce in ms before the matching-count is announced to screen readers. Tuned so rapid keystrokes don't spam the live region |
+| `result-count-hidden` | `boolean` | `false` | When true, suppresses the visible result count. The screen-reader announcement still fires |
+| `filter-attribute` | `string` | `'data-filter'` | HTML attribute on each item that holds the searchable text (default: `data-filter`). Items without this attribute are filtered out of search but still counted |

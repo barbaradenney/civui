@@ -1,0 +1,10 @@
+{/* Generated from @civui/schema by tools/sync-doc-tables.ts.
+    Do not edit by hand — run `pnpm sync:doc-tables` to regenerate. */}
+
+| Event | Detail | Description |
+|-------|--------|-------------|
+| `civ-input` | `{ files: File[] }` | Fires when files are added or removed |
+| `civ-change` | `{ files: File[] }` | Fires when files are added or removed (same timing as civ-input) |
+| `civ-upload-cancel` | `{ index: number, name: string }` | Fires when the user cancels an in-progress upload |
+| `civ-upload-retry` | `{ index: number, name: string, file: string }` | Fires when the user retries a failed upload |
+| `civ-file-removed` | `{ index: number, name: string, isInitial: boolean, id: string }` | Fires when a file is removed from the list (after upload completes or user-initiated) |

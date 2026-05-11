@@ -1,0 +1,12 @@
+{/* Generated from @civui/schema by tools/sync-doc-tables.ts.
+    Do not edit by hand — run `pnpm sync:doc-tables` to regenerate. */}
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `type` | `'phone'` \| `'email'` \| `'address'` \| `'download'` | `'phone'` | Action variant. Drives the href scheme and the leading icon |
+| `number` | `string` | `''` | Phone number for `type="phone"`. Stripped of formatting before being used in `tel:` |
+| `address` | `string` | `''` | Address for `type="address"`. Used as the geo / map link target |
+| `subject` | `string` | `''` | Email subject for `type="email"`. URL-encoded into the mailto: query string |
+| `href` | `string` | `''` | Override the auto-generated href. Useful for `type="download"` where the URL is dynamic |
+| `filename` | `string` | `''` | Filename annotation for `type="download"`. Rendered alongside the link label |
+| `file-size` | `string` | `''` | Human-readable file size for `type="download"` (e.g. "2.4 MB") |

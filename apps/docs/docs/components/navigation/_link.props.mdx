@@ -1,0 +1,14 @@
+{/* Generated from @civui/schema by tools/sync-doc-tables.ts.
+    Do not edit by hand — run `pnpm sync:doc-tables` to regenerate. */}
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `href` | `string` | `''` | Link destination. Empty href renders the link as a non-interactive span |
+| `variant` | `'primary'` \| `'secondary'` \| `'tertiary'` | `'tertiary'` | Visual emphasis. `tertiary` (default) = standard underlined link; `primary` and `secondary` apply heavier styling for prominent inline links |
+| `danger` | `boolean` | `false` | Apply destructive-action styling (red palette) |
+| `icon-start` | `string` | `''` | Leading icon name |
+| `icon-end` | `string` | `''` | Trailing icon name (e.g. external-link arrow) |
+| `target` | `string` | `''` | HTML `target` attribute. Web-only — use `new-tab` for the common "open in new tab" case |
+| `rel` | `string` | `''` | HTML `rel` attribute. Web-only — `new-tab` automatically sets `rel="noopener noreferrer"` |
+| `download` | `string` | `''` | HTML `download` attribute (suggested filename). Web-only — native platforms handle downloads via OS share/save sheets |
+| `new-tab` | `boolean` | `false` | Open the link in a new tab/window. Sets `target="_blank"` + `rel="noopener noreferrer"` and adds an external-link icon. Web-only — native platforms route URLs through the OS, which has no "new tab" concept |

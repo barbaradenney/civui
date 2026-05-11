@@ -3,17 +3,12 @@ import type { ComponentSchema } from '../schema.types.js';
 const schema: ComponentSchema = {
   $schema: '1.0',
   name: 'civ-form-step',
-  description: 'Single step in a multi-step form wizard. Provides Continue/Complete navigation, optional pause-and-save affordance, per-step validation gate, and per-step persistence keyed by `persist`.',
+  description: 'Single step in a multi-step form wizard. Provides Continue/Complete navigation, optional pause-and-save affordance, and per-step validation gate. Pair with a parent `<civ-form persist="key">` to auto-save field values to sessionStorage.',
   category: 'form-container',
   extends: 'CivBaseElement',
   isGroup: false,
 
   props: {
-    persist: {
-      type: 'string',
-      description: 'Storage key for persisting this step\'s draft state. Empty = no persistence',
-      default: '',
-    },
     continueLabel: {
       type: 'string',
       description: 'Visible label on the next-step button. Defaults to the i18n string "Continue"',

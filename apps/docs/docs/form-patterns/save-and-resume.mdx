@@ -12,15 +12,24 @@ Government benefit forms can take 30-60 minutes. Users may need to pause — to 
 
 ## Client-side persistence
 
-Add `persist` to `civ-form` or `civ-form-step` to auto-save form state to `sessionStorage`. State restores automatically on page reload.
+Add `persist` to `civ-form` to auto-save field values to `sessionStorage` as the user types (debounced 500 ms). Values restore automatically on page reload until the tab is closed or the form is submitted.
+
+<StoryEmbed id="forms-form-form--persist-draft" />
 
 ```html
 <civ-form persist="va-form-21-526ez">
-  <!-- Form fields auto-save as the user types -->
+  <!-- Field values auto-save as the user types -->
 </civ-form>
 ```
 
-The persist key (`va-form-21-526ez`) scopes the storage so multiple forms on the same domain don't collide.
+The persist key (`va-form-21-526ez`) scopes the storage so multiple forms on the same domain don't collide. The key is stored under `civ-form:${persist}` in `sessionStorage`.
+
+**Auto-excluded from persistence:**
+- Fields with `data-civ-pii` (e.g. `civ-ssn`, `civ-ein` — masked inputs flagged as PII)
+- Fields with `data-persist-exclude` (consumer-applied opt-out)
+- `disabled` fields
+
+Persisted state is cleared automatically when the form submits successfully (via `civ-submit`) or when the user calls `form.reset()`.
 
 ## Pause action
 
@@ -66,26 +75,33 @@ form.addEventListener('civ-step-pause', async (e) => {
 
 ## Restoring a draft
 
-On page load, hydrate the form from the saved draft:
+On page load, hydrate the form from a saved draft by setting `prefillData` — a `Record<fieldName, { value, source, locked? }>` object:
 
 ```js
 const draft = await fetch('/api/drafts/va-21-526ez').then(r => r.json());
 
 const form = document.querySelector('civ-form');
-form.prefillData = {
-  fields: draft.fields,
-};
+
+// Convert your server response into the PrefillData shape.
+form.prefillData = Object.fromEntries(
+  Object.entries(draft.fields).map(([name, value]) => [
+    name,
+    { value, source: 'saved' },
+  ]),
+);
 ```
+
+`source: 'saved'` flags the value as a restored draft (vs. `'profile'` or `'api'`), which civ-form uses to render a "Restored from a saved draft" notice. Set `locked: true` on any field that the user shouldn't be able to edit inline (server-of-truth values).
 
 ## What gets persisted
 
 | Data | `persist` (sessionStorage) | Server-side |
 |------|---------------------------|-------------|
-| Text input values | Yes | Yes |
-| Select/radio/checkbox state | Yes | Yes |
-| File uploads | No (too large) | Yes (separate upload) |
-| Current step index | Yes | Yes |
-| Validation errors | No (re-validated) | No |
+| Text input / select / radio / checkbox values | Yes | Yes |
+| File uploads | No (Files can't be JSON-serialized) | Yes (separate upload endpoint) |
+| Current step index | No (re-enters at step 1 on reload) | Recommended |
+| PII fields (`civ-ssn`, `civ-ein`, anything with `data-civ-pii`) | No (auto-excluded) | Up to you |
+| Validation errors | No (re-validated on submit) | No |
 
 ## Save and finish later button
 

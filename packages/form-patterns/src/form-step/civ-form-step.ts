@@ -25,7 +25,6 @@ import '../progress/civ-progress-header.js';
  *   - 'steps': segmented step indicators (civ-progress-steps)
  *   - 'bar': percentage progress bar (civ-progress-percent)
  *   Back link is rendered above all three indicators on non-first steps.
- * @prop {string} persist - Storage key for civ-form persistence
  * @prop {string} continueLabel - Label for continue button
  * @prop {string} completeLabel - Label for final step button
  * @prop {boolean} validate - Enable built-in required field validation (default: true)
@@ -42,7 +41,7 @@ import '../progress/civ-progress-header.js';
  *
  * @example
  * ```html
- * <civ-form-step persist="form-21-526ez-personal">
+ * <civ-form-step>
  *   <div data-step-label="Your name">
  *     <civ-name legend="Your name" name="fullName" required></civ-name>
  *   </div>
@@ -54,9 +53,6 @@ import '../progress/civ-progress-header.js';
  */
 @customElement('civ-form-step')
 export class CivFormStep extends LightDomSlotMixin(CivBaseElement) {
-  /** Storage key for civ-form persistence. */
-  @property({ type: String }) persist = '';
-
   /** Label for the continue button. */
   @property({ type: String, attribute: 'continue-label' }) continueLabel = '';
 

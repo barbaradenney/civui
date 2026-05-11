@@ -42,19 +42,19 @@ Break long government forms into manageable steps. Each step covers one concept 
 
 ## Progress indicators
 
-Use `civ-progress` for forms with a known number of steps:
+Three modes are available via the `progress` attribute. See all three side by side:
 
-<StoryEmbed id="forms-form-form-step--default" />
+<StoryEmbed id="forms-form-form-step--all-progress-modes" />
 
-Use `civ-progress-bar` for forms with a dynamic or unknown step count:
+Use `progress="steps"` for a known step count with section labels:
 
-```html
-<civ-progress-bar
-  value="40"
-  label="Application progress"
-  status="2 of 5 sections complete"
-></civ-progress-bar>
-```
+<StoryEmbed id="forms-form-form-step--with-segmented-steps" />
+
+Use `progress="bar"` for a dynamic / unknown step count where a percentage reads better than circles:
+
+<StoryEmbed id="forms-form-form-step--with-progress-bar" />
+
+The default (`progress="minimal"`, shown above as the first example) is just "Step N of M" text — appropriate for short forms where a visual progress indicator would feel heavy.
 
 ## Step validation
 
@@ -64,9 +64,11 @@ Each step validates its fields before allowing navigation to the next step. Inva
 
 ## Sensitive steps with pause
 
-For emotionally difficult sections, mark the step as `sensitive`. This adds a screen reader announcement and enables a "Save and come back later" action.
+For emotionally difficult sections, mark the step as `sensitive`. This adds a polite screen reader announcement on step entry and auto-enables the "Save and come back later" action:
 
 <StoryEmbed id="forms-form-form-step--sensitive" />
+
+You can also opt into the pause affordance alone (without the trauma-informed announcement) by setting `show-pause` directly — useful for long but not emotionally heavy sections that users might want to save and resume:
 
 <StoryEmbed id="forms-form-form-step--with-pause-and-resume" />
 

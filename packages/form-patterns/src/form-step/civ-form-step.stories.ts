@@ -11,7 +11,6 @@ const meta: Meta = {
   tags: ['autodocs'],
   argTypes: {
     progress: { control: 'select', options: ['minimal', 'steps', 'bar'] },
-    backLabel: { control: 'text' },
     continueLabel: { control: 'text' },
     completeLabel: { control: 'text' },
     navDisabled: { control: 'boolean' },
@@ -121,6 +120,40 @@ export const WithProgressBarTertiary: Story = {
 };
 
 export const WithError: Story = {
+  name: 'With Validation Error',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Each step validates its required fields before advancing. Click "Continue" without filling the required input to see the per-field error and the form-step error summary at the top.',
+      },
+    },
+  },
+  render: () => html`
+    <civ-form-step>
+      <div data-step-label="Personal information">
+        <civ-text-input
+          label="Full name"
+          name="name"
+          required
+          required-message="Enter your full name"
+        ></civ-text-input>
+        <civ-text-input
+          label="Email address"
+          name="email"
+          type="email"
+          required
+          required-message="Enter a valid email address"
+        ></civ-text-input>
+      </div>
+      <div data-step-label="Review">
+        <p>Review your information before submitting.</p>
+      </div>
+    </civ-form-step>
+  `,
+};
+
+export const CustomButtonLabels: Story = {
   name: 'Custom Button Labels',
   render: () => html`
     <civ-form-step
@@ -140,7 +173,7 @@ export const WithError: Story = {
   `,
 };
 
-export const Required: Story = {
+export const TwoSteps: Story = {
   name: 'Two Steps',
   render: () => html`
     <civ-form-step>
@@ -154,7 +187,7 @@ export const Required: Story = {
   `,
 };
 
-export const Disabled: Story = {
+export const NavDisabled: Story = {
   name: 'Navigation Disabled',
   render: () => html`
     <civ-form-step nav-disabled>
@@ -170,7 +203,7 @@ export const Disabled: Story = {
 
 // ── All States ────────────────────────────────────────────────
 
-export const AllStates: Story = {
+export const AllProgressModes: Story = {
   name: 'All Progress Modes',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-12">

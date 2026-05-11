@@ -513,11 +513,11 @@ function generateTaskListHub(form: ReturnType<typeof getFormDefinition> & {}, ch
     <span data-subheading>VA Form ${escapeHtml(form.formNumber)}</span>
   </civ-page-header>
 
-  <civ-progress-bar
+  <civ-progress-percent
     value="0"
     label="Application progress"
     status="0 of ${chapters.filter(ch => ch.id !== 'review-submit').length} sections complete"
-  ></civ-progress-bar>
+  ></civ-progress-percent>
 
   <h3 class="civ-heading-md civ-mt-6 civ-mb-2">Fill out your application</h3>
   <civ-list dividers>

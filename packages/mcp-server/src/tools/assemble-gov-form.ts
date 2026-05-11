@@ -275,7 +275,7 @@ ${chapterHeadings}
       }
 
       // Update progress bar
-      const progressBar = document.querySelector('civ-progress-bar');
+      const progressBar = document.querySelector('civ-progress-percent');
       if (progressBar) {
         const pct = Math.round((doneCount / totalChapters) * 100);
         progressBar.setAttribute('value', String(pct));
@@ -607,7 +607,7 @@ export default function ${toPascal(formNumber)}App() {
             <span data-subheading>VA Form ${escapeHtml(result.formNumber)}</span>
           </civ-page-header>
 
-          <civ-progress-bar
+          <civ-progress-percent
             value={progress}
             label="Application progress"
             status={\`\${completed.size} of ${chapters.length} sections complete\`}

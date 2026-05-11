@@ -102,7 +102,7 @@ Horizontal rule. Prop: \`spacing\` (default/sm).
 ### civ-list / civ-list-item
 Generic list primitive. \`<civ-list>\` renders \`<ul role="list">\` with optional \`dividers\` prop. \`<civ-list-item>\` renders \`<li>\`; setting \`href\` makes the whole row a clickable anchor. Trailing content (status tag, switch, etc.) is placed via the \`data-list-item-end\` attribute on a child. Use this for task lists, side nav, link collections, search results.
 
-### civ-progress-bar
+### civ-progress-percent
 Overall progress. Props: \`value\`, \`label\`, \`status\`.
 
 ### civ-progress

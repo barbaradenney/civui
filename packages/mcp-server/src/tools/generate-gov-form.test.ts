@@ -47,7 +47,7 @@ describe('generateGovForm', async () => {
     const result = await generateGovForm('21-526EZ');
     expect(result.taskListHub.html).toContain('civ-list');
     expect(result.taskListHub.html).toContain('civ-list-item');
-    expect(result.taskListHub.html).toContain('civ-progress-bar');
+    expect(result.taskListHub.html).toContain('civ-progress-percent');
   });
 
   it('chapters use CivUI components', async () => {

@@ -203,7 +203,8 @@ export const AppointmentConfirmation: Story = {
       <civ-alert variant="success" heading="Appointment confirmed">
         Your appointment has been scheduled. You will receive a confirmation email shortly.
       </civ-alert>
-      <civ-card heading="Appointment details">
+      <civ-card>
+        <h3 slot="data-card-header" class="civ-m-0">Appointment details</h3>
         <civ-data-field label="Date" value="Monday, May 5, 2026"></civ-data-field>
         <civ-data-field label="Time" value="10:30 AM — 11:00 AM"></civ-data-field>
         <civ-data-field label="Provider" value="Dr. Maria Chen"></civ-data-field>
@@ -214,7 +215,7 @@ export const AppointmentConfirmation: Story = {
         <civ-divider spacing="sm"></civ-divider>
         <div style="display: flex; gap: 1rem;">
           <civ-action-link label="Reschedule appointment" href="#reschedule"></civ-action-link>
-          <civ-action-link label="Cancel appointment" href="#cancel" variant="secondary"></civ-action-link>
+          <civ-action-link label="Cancel appointment" href="#cancel"></civ-action-link>
         </div>
       </civ-card>
       <civ-alert variant="info" slim>
@@ -398,7 +399,8 @@ export const VitalsDisplay: Story = {
   },
   render: () => html`
     <div style="max-width: 480px; display: grid; gap: 1rem;">
-      <civ-card heading="Vitals — May 1, 2026">
+      <civ-card>
+        <h3 slot="data-card-header" class="civ-m-0">Vitals — May 1, 2026</h3>
         <div style="display: grid; gap: 0.5rem;">
           <div style="display: flex; align-items: center; gap: 0.5rem;">
             <civ-data-field label="Blood pressure" value="128/82 mmHg" style="flex: 1;"></civ-data-field>
@@ -450,7 +452,8 @@ export const ReferralStatusTracker: Story = {
   },
   render: () => html`
     <div style="max-width: 480px; display: grid; gap: 1rem;">
-      <civ-card heading="Referral to Cardiology">
+      <civ-card>
+        <h3 slot="data-card-header" class="civ-m-0">Referral to Cardiology</h3>
         <div style="display: grid; gap: 0.5rem; margin-bottom: 1rem;">
           <civ-data-field label="Referral number" value="REF-2026-04-1192"></civ-data-field>
           <civ-data-field label="Referred by" value="Dr. Maria Chen — Primary care"></civ-data-field>

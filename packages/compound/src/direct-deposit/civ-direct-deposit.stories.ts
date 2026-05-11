@@ -41,7 +41,7 @@ export const Default: Story = {
 
 // ── Individual States ─────────────────────────────────────────
 
-export const WithHint: Story = {
+export const Prefilled: Story = {
   name: 'Prefilled',
   render: () => html`
     <civ-direct-deposit legend="Direct deposit information" size="lg" name="bank"></civ-direct-deposit>

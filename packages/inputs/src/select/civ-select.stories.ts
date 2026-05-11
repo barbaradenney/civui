@@ -144,7 +144,7 @@ export const OptionGroups: Story = {
 };
 
 export const SlottedOptions: Story = {
-  name: 'Declarative <option> slot',
+  name: 'Slotted <option> children (declarative)',
   render: () => html`
     <civ-select label="State" name="state">
         <option value="CA">California</option>

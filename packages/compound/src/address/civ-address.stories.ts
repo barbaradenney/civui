@@ -160,7 +160,7 @@ export const FullOptions: Story = {
 // ── Usage Example ─────────────────────────────────────────────
 
 export const GovernmentMailingForm: Story = {
-  name: 'Usage: Correspondence Address',
+  name: 'Usage: Government Mailing (Correspondence Address)',
   render: () => html`
     <h3 class="civ-m-0 civ-mb-4 civ-text-xl">Where should we send correspondence?</h3>
     <civ-address

@@ -115,7 +115,7 @@ export const TextareaAndSelect: Story = {
 };
 
 export const SelectionControls: Story = {
-  name: 'Checkboxes & Radios',
+  name: 'Selection Controls (Checkboxes & Radios)',
   render: () => html`
     <h2 class="civ-text-lg civ-font-bold civ-mb-4">Selection Controls — Print Preview</h2>
 

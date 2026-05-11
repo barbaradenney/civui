@@ -220,7 +220,7 @@ export const Suffix: Story = {
 // Each provides default label, hint, mask, validation, and inputmode.
 
 export const SSN: Story = {
-  name: 'Preset: Social Security Number',
+  name: 'Preset: SSN (Social Security Number)',
   render: () => html`
     <civ-ssn label="Social Security number" name="ssn" required></civ-ssn>
   `,
@@ -234,7 +234,7 @@ export const SSNLast4: Story = {
 };
 
 export const EIN: Story = {
-  name: 'Preset: Employer ID Number',
+  name: 'Preset: EIN (Employer ID Number)',
   render: () => html`
     <civ-ein label="Employer Identification Number" name="ein" required></civ-ein>
   `,

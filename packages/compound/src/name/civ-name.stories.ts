@@ -140,7 +140,7 @@ export const WithoutSuffix: Story = {
 export const InternationalFormat: Story = {
   name: 'International Format',
   render: () => html`
-    <civ-name legend="Applicant's name" size="lg" name="applicantName" format="international" required></civ-name>
+    <civ-name legend="Applicant's name" size="lg" name="applicantName" required></civ-name>
   `,
 };
 

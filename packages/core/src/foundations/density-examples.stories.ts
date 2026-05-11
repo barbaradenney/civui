@@ -50,7 +50,7 @@ export const DenseScale: Story = {
 };
 
 export const SideBySide: Story = {
-  name: 'All Scales Compared',
+  name: 'Side-by-Side: All Scales Compared',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-8">
       <div data-civ-scale="spacious">

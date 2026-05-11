@@ -14,7 +14,7 @@ export default meta;
 type Story = StoryObj;
 
 export const Default: Story = {
-  name: 'Search (Input + Button)',
+  name: 'Default — search (input + button)',
   render: () => html`
     <div class="civ-max-w-sm">
       <civ-input-group>

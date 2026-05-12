@@ -90,6 +90,13 @@
 
   /* ── List (civ-list / civ-list-item) ───────────────────────── */
 
+  /* Custom elements default to `display: inline`, and borders don't
+     paint on inline boxes — without this the `.civ-list--dividers`
+     `border-top` rule silently computes 1px but renders nothing. */
+  civ-list-item {
+    display: block;
+  }
+
   .civ-list-item__row {
     @apply civ-py-3 civ-px-0 civ-text-base;
   }

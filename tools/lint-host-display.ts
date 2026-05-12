@@ -93,86 +93,111 @@ function findAllTags(): Map<string, string> {
  * itself. `civ-foo { display: ... }` and `civ-foo.modifier { display:
  * ... }` and `civ-foo[attr] { display: ... }` do satisfy it.
  */
+/**
+ * Pure variant of the CSS scanner — accepts CSS text, returns the set
+ * of `civ-X` tags that have an explicit top-level `display:` rule.
+ *
+ * Exported for unit testing with fixture CSS strings. `tagsWithDisplayRules`
+ * is the file-reading wrapper used by the lint at runtime.
+ */
+export function tagsWithDisplayRulesIn(css: string): Set<string> {
+  const satisfied = new Set<string>();
+  // Strip /* … */ comments to keep the scanner simple.
+  const stripped = css.replace(/\/\*[\s\S]*?\*\//g, '');
+  // Track only the @media-block nesting depth. Rules inside an @media
+  // block (e.g. `@media print`) don't define the host's default screen
+  // display — `display: none` on print is a hiding rule, not a layout
+  // declaration. `@layer` (Tailwind wraps everything in
+  // `@layer components { … }`) is transparent: rules inside count.
+  let mediaDepth = 0;
+  // Stack of "was this block a media block?" so `}` knows whether to
+  // decrement mediaDepth.
+  const blockIsMedia: boolean[] = [];
+  let i = 0;
+  let selectorStart = 0;
+  while (i < stripped.length) {
+    const ch = stripped[i];
+    if (ch === '{') {
+      const selector = stripped.slice(selectorStart, i).trim();
+      const isMedia = /^@media\b/.test(selector);
+      const isAtRule = selector.startsWith('@');
+      const blockStart = i + 1;
+      let scan = blockStart;
+      let nestedDepth = 1;
+      while (scan < stripped.length && nestedDepth > 0) {
+        if (stripped[scan] === '{') nestedDepth++;
+        else if (stripped[scan] === '}') nestedDepth--;
+        if (nestedDepth === 0) break;
+        scan++;
+      }
+      const body = stripped.slice(blockStart, scan);
+      const hasNestedBlock = /\{[^}]*\}/.test(body);
+      if (!hasNestedBlock && !isAtRule) {
+        // Leaf rule. Only count if we're not inside an @media block.
+        if (mediaDepth === 0 && /(^|;|\s)display\s*:/.test(body)) {
+          for (const sel of selector.split(',')) {
+            const tag = extractFinalTag(sel.trim());
+            if (tag) satisfied.add(tag);
+          }
+        }
+        i = scan + 1;
+        selectorStart = i;
+        continue;
+      }
+      // Container block (@media, @layer, or a nested selector list).
+      // Track depth; walk inside.
+      if (isMedia) mediaDepth++;
+      blockIsMedia.push(isMedia);
+      i = blockStart;
+      selectorStart = i;
+      continue;
+    }
+    if (ch === '}') {
+      if (blockIsMedia.length > 0) {
+        const wasMedia = blockIsMedia.pop()!;
+        if (wasMedia) mediaDepth--;
+      }
+      i++;
+      selectorStart = i;
+      continue;
+    }
+    i++;
+  }
+  return satisfied;
+}
+
 function tagsWithDisplayRules(): Set<string> {
   const satisfied = new Set<string>();
   for (const rel of STYLESHEET_PATHS) {
     let text: string;
     try { text = readFileSync(join(ROOT, rel), 'utf-8'); }
     catch { continue; }
-    // Strip /* … */ comments to keep the scanner simple.
-    const stripped = text.replace(/\/\*[\s\S]*?\*\//g, '');
-    // Track the @media-block stack as we walk. Rules inside an @media
-    // block (e.g. `@media print`) don't define the host's default
-    // screen display — `display: none` on print is a hiding rule, not
-    // a layout declaration. We only count rules outside @media wrappers.
-    // @layer is fine: Tailwind wraps all our component rules in
-    // `@layer components { … }`, and those count.
-    const mediaStack: boolean[] = []; // true at this depth means "inside @media"
-    let i = 0;
-    let selectorStart = 0;
-    while (i < stripped.length) {
-      const ch = stripped[i];
-      if (ch === '{') {
-        const selector = stripped.slice(selectorStart, i).trim();
-        const isMedia = /^@media\b/.test(selector);
-        const isLayer = /^@layer\b/.test(selector);
-        const isAtRule = selector.startsWith('@');
-        const blockStart = i + 1;
-        let scan = blockStart;
-        let nestedDepth = 1;
-        while (scan < stripped.length && nestedDepth > 0) {
-          if (stripped[scan] === '{') nestedDepth++;
-          else if (stripped[scan] === '}') nestedDepth--;
-          if (nestedDepth === 0) break;
-          scan++;
-        }
-        const body = stripped.slice(blockStart, scan);
-        const hasNestedBlock = /\{[^}]*\}/.test(body);
-        if (!hasNestedBlock && !isAtRule) {
-          // Leaf rule. Only count if we're not inside an @media block.
-          const insideMedia = mediaStack.some(Boolean);
-          if (!insideMedia && /(^|;|\s)display\s*:/.test(body)) {
-            for (const sel of selector.split(',')) {
-              const tag = extractFinalTag(sel.trim());
-              if (tag) satisfied.add(tag);
-            }
-          }
-          i = scan + 1;
-          selectorStart = i;
-          continue;
-        }
-        // Container block (@media, @layer, or a nested selector list).
-        // Push media flag; walk inside.
-        mediaStack.push(isMedia);
-        i = blockStart;
-        selectorStart = i;
-        continue;
-      }
-      if (ch === '}') {
-        if (mediaStack.length > 0) mediaStack.pop();
-        i++;
-        selectorStart = i;
-        continue;
-      }
-      i++;
-    }
+    for (const tag of tagsWithDisplayRulesIn(text)) satisfied.add(tag);
   }
   return satisfied;
 }
 
 /**
- * If `selector` ends with a bare `civ-X` (optionally followed by
- * class/attribute/pseudo modifiers but NO descendant/child/sibling
- * combinator), return the tag name. Otherwise return null.
+ * Return the host tag name when `selector`'s rightmost (subject)
+ * compound selector is a `civ-X` element selector — optionally with
+ * class / attribute / pseudo-class modifiers. Return null when the
+ * subject isn't a `civ-X` tag or when the rule's pseudo-element makes
+ * it style a generated box rather than the host itself.
+ *
+ * The "subject" is the element a CSS rule actually styles (CSS Selectors
+ * Level 4 §3.1) — the rightmost compound after combinators. For our
+ * lint, that's the box the `display:` property applies to.
  *
  * Examples:
  *   "civ-foo"                       → "civ-foo"
  *   "civ-foo.modifier"              → "civ-foo"
  *   "civ-foo[disabled]"             → "civ-foo"
  *   "civ-foo:focus-within"          → "civ-foo"
- *   ".parent civ-foo"               → null  (descendant, doesn't define foo's display)
- *   ".parent > civ-foo"             → null  (child combinator)
- *   "civ-foo + civ-bar"             → "civ-bar"  (sibling: bar is the final tag)
+ *   ".parent civ-foo"               → "civ-foo"  (descendant: foo is subject)
+ *   ".parent > civ-foo"             → "civ-foo"  (child: foo is subject)
+ *   "civ-foo + civ-bar"             → "civ-bar"  (sibling: bar is subject)
+ *   "civ-foo > div"                 → null       (subject is `div`, not civ-*)
+ *   "civ-foo::before"               → null       (pseudo-element box)
  */
 export function extractFinalTag(selector: string): string | null {
   // Take the rightmost compound selector (everything after the last

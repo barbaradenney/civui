@@ -29,12 +29,16 @@
      author has thought about which box model applies.
      Enforced by `pnpm lint:host-display` (tools/lint-host-display.ts). */
 
+  /* Inline: text-in-context elements that should wrap mid-text. */
+  civ-link {
+    display: inline;
+  }
+
   /* Inline-block: intrinsic-size interactive boxes that flow with text. */
   civ-action-button,
   civ-action-link,
   civ-button,
   civ-icon,
-  civ-link,
   civ-segment {
     display: inline-block;
   }

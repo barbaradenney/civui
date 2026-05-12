@@ -11,7 +11,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { extractFinalTag, runLint } from '../lint-host-display.js';
+import { extractFinalTag, runLint, tagsWithDisplayRulesIn } from '../lint-host-display.js';
 
 describe('extractFinalTag', () => {
   it('returns the tag for a bare host selector', () => {
@@ -62,6 +62,92 @@ describe('extractFinalTag', () => {
     expect(extractFinalTag('')).toBeNull();
     expect(extractFinalTag('button')).toBeNull();
     expect(extractFinalTag('input.foo')).toBeNull();
+  });
+});
+
+describe('tagsWithDisplayRulesIn (CSS walker)', () => {
+  it('picks up a bare top-level display rule', () => {
+    const css = `civ-foo { display: block; }`;
+    expect([...tagsWithDisplayRulesIn(css)]).toEqual(['civ-foo']);
+  });
+
+  it('splits a multi-selector rule and credits every civ-* host', () => {
+    const css = `
+      civ-foo,
+      civ-bar,
+      civ-baz { display: inline-block; }
+    `;
+    const result = [...tagsWithDisplayRulesIn(css)].sort();
+    expect(result).toEqual(['civ-bar', 'civ-baz', 'civ-foo']);
+  });
+
+  it('counts rules wrapped in @layer (Tailwind container)', () => {
+    // Production CSS wraps everything in `@layer components { ... }`.
+    // The walker must descend into @layer transparently.
+    const css = `
+      @layer components {
+        civ-foo { display: block; }
+      }
+    `;
+    expect([...tagsWithDisplayRulesIn(css)]).toEqual(['civ-foo']);
+  });
+
+  it('ignores rules inside @media print (hiding, not layout)', () => {
+    // Print-only display: none is a hiding rule, not a screen-default
+    // layout declaration. civ-foo should NOT be marked as satisfied
+    // by this rule alone.
+    const css = `
+      @media print {
+        civ-foo { display: none; }
+      }
+    `;
+    expect([...tagsWithDisplayRulesIn(css)]).toEqual([]);
+  });
+
+  it('ignores @media inside @layer (any @media nesting suppresses)', () => {
+    const css = `
+      @layer components {
+        @media print {
+          civ-foo { display: none; }
+        }
+      }
+    `;
+    expect([...tagsWithDisplayRulesIn(css)]).toEqual([]);
+  });
+
+  it('counts a non-@media rule even when a @media rule for the same tag exists', () => {
+    // Tag must have at least one non-print declaration; print-only
+    // additions don't disqualify a real screen declaration.
+    const css = `
+      civ-foo { display: block; }
+      @media print {
+        civ-foo { display: none; }
+      }
+    `;
+    expect([...tagsWithDisplayRulesIn(css)]).toEqual(['civ-foo']);
+  });
+
+  it('skips rules whose body has no `display:` declaration', () => {
+    const css = `
+      civ-foo { color: red; padding: 4px; }
+      civ-bar { display: block; }
+    `;
+    expect([...tagsWithDisplayRulesIn(css)]).toEqual(['civ-bar']);
+  });
+
+  it('skips descendant rules (subject is not a civ-* tag)', () => {
+    const css = `
+      civ-parent > div { display: flex; }
+    `;
+    expect([...tagsWithDisplayRulesIn(css)]).toEqual([]);
+  });
+
+  it('strips block comments before scanning', () => {
+    const css = `
+      /* civ-fake { display: block; } */
+      civ-real { display: block; }
+    `;
+    expect([...tagsWithDisplayRulesIn(css)]).toEqual(['civ-real']);
   });
 });
 

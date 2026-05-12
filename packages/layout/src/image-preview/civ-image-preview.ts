@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBaseElement } from '@civui/core';
+import { CivBaseElement, devWarn } from '@civui/core';
 
 export type ImagePreviewSize = 'sm' | 'md' | 'lg' | 'full';
 
@@ -62,16 +62,15 @@ export class CivImagePreview extends CivBaseElement {
   override render() {
     if (!this.src) return nothing;
     // Dev-only nudge: warn once per instance when alt is missing.
-    // Gated on `globalThis.CIV_DEV !== false` so production builds can
-    // opt out, and tracked per-instance so consumers don't flood the
-    // console with the same warning on every render.
-    if (
-      !this.alt &&
-      !this._warnedMissingAlt &&
-      typeof console !== 'undefined' &&
-      (globalThis as { CIV_DEV?: unknown }).CIV_DEV !== false
-    ) {
-      console.warn(`[civ-image-preview] is missing an alt attribute. Images without alt text are inaccessible (WCAG 1.1.1). If the image is purely decorative, set alt="" explicitly.`);
+    // `devWarn` handles the CIV_DEV gate; the instance flag stays so the
+    // warning doesn't fire on every render of the same element. Helper's
+    // built-in `dedupeKey` would collapse across instances, which would
+    // hide a legitimate second consumer making the same mistake.
+    if (!this.alt && !this._warnedMissingAlt) {
+      devWarn(
+        'civ-image-preview',
+        'is missing an alt attribute. Images without alt text are inaccessible (WCAG 1.1.1). If the image is purely decorative, set alt="" explicitly.',
+      );
       this._warnedMissingAlt = true;
     }
 

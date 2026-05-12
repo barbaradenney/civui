@@ -108,7 +108,7 @@ jobs:
         run: pnpm validate:schemas
 
   drift-lints:
-    name: Drift lints (12 static checks across repo)
+    name: Drift lints (13 static checks across repo)
     runs-on: ubuntu-latest
     # Fast static lints that catch drift across the whole repo, not
     # just form patterns. None of these read files at runtime — they
@@ -181,6 +181,15 @@ jobs:
     #                          connectedCallback / firstUpdated has
     #                          a matching removeEventListener in the
     #                          same class.
+    #   lint:host-display    - Every @customElement('civ-*') has an
+    #                          explicit `display` rule for its host
+    #                          in core/styles/components.css or civ.css.
+    #                          Catches the civ-list-item dividers class
+    #                          of bug — borders/padding/background do
+    #                          NOT paint on `display: inline` (the
+    #                          browser default for custom elements), so
+    #                          host-targeted rules silently render zero
+    #                          pixels. Print-only rules don't count.
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v2

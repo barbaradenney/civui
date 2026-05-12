@@ -21,6 +21,87 @@
     --civ-border-width-accent: 3px;
   }
 
+  /* ── Custom-element host display defaults ───────────────────── */
+  /* Browsers default unknown elements to `display: inline`. Borders,
+     padding, background, width, and height **silently do not paint**
+     on inline boxes — see the civ-list-item dividers bug (commit
+     c7a937ff). Every `<civ-*>` host needs an explicit display so the
+     author has thought about which box model applies.
+     Enforced by `pnpm lint:host-display` (tools/lint-host-display.ts). */
+
+  /* Inline-block: intrinsic-size interactive boxes that flow with text. */
+  civ-action-button,
+  civ-action-link,
+  civ-button,
+  civ-icon,
+  civ-link,
+  civ-segment {
+    display: inline-block;
+  }
+
+  /* Block: form fields, compounds, sections, overlays, layout wrappers. */
+  civ-action-sheet,
+  civ-address,
+  civ-alert,
+  civ-button-group,
+  civ-card,
+  civ-checkbox,
+  civ-checkbox-group,
+  civ-combobox,
+  civ-conditional,
+  civ-country,
+  civ-currency,
+  civ-data-field,
+  civ-date-picker,
+  civ-date-range-picker,
+  civ-direct-deposit,
+  civ-divider,
+  civ-ein,
+  civ-email,
+  civ-fieldset,
+  civ-file-upload,
+  civ-filter-chip-group,
+  civ-filterable-list,
+  civ-form,
+  civ-form-step,
+  civ-image-preview,
+  civ-input-group,
+  civ-link-card,
+  civ-list,
+  civ-list-item,
+  civ-memorable-date,
+  civ-modal,
+  civ-name,
+  civ-page-header,
+  civ-partnership-history,
+  civ-phone,
+  civ-progress-header,
+  civ-progress-percent,
+  civ-progress-steps,
+  civ-race-ethnicity,
+  civ-radio,
+  civ-radio-group,
+  civ-relationship,
+  civ-repeater,
+  civ-routing-number,
+  civ-section-intro,
+  civ-segmented-control,
+  civ-select,
+  civ-service-history,
+  civ-signature,
+  civ-skip-link,
+  civ-ssn,
+  civ-summary,
+  civ-support-resources,
+  civ-text-input,
+  civ-textarea,
+  civ-toggle,
+  civ-va-file-number,
+  civ-yes-no,
+  civ-zip {
+    display: block;
+  }
+
   /* ── Shared form primitives ─────────────────────────────────── */
 
   .civ-label,
@@ -89,13 +170,9 @@
   }
 
   /* ── List (civ-list / civ-list-item) ───────────────────────── */
-
-  /* Custom elements default to `display: inline`, and borders don't
-     paint on inline boxes — without this the `.civ-list--dividers`
-     `border-top` rule silently computes 1px but renders nothing. */
-  civ-list-item {
-    display: block;
-  }
+  /* `civ-list-item { display: block }` lives in the host-display
+     defaults section above. Without it, borders don't paint on the
+     `.civ-list--dividers` rule (custom elements default to inline). */
 
   .civ-list-item__row {
     @apply civ-py-3 civ-px-0 civ-text-base;

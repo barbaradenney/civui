@@ -1,6 +1,6 @@
 import { html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBaseElement, LightDomTextMixin, t } from '@civui/core';
+import { CivBaseElement, LightDomTextMixin, sanitizeHref, t } from '@civui/core';
 
 /**
  * CivUI Skip Link
@@ -30,7 +30,7 @@ export class CivSkipLink extends LightDomTextMixin(CivBaseElement) {
   override render() {
     return html`
       <a
-        href="${this.href}"
+        href="${sanitizeHref(this.href)}"
         class="civ-skip-link"
       >${this._text}</a>
     `;

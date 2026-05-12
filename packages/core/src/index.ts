@@ -19,6 +19,7 @@ export { generateId, resetIdCounter } from './utils/id-generator.js';
 export { debounce } from './utils/debounce.js';
 export { dispatch, forwardTileClick } from './utils/events.js';
 export { warnInvalidProp, devWarn } from './utils/dev-warn.js';
+export { isSafeHref, sanitizeHref } from './utils/href-safety.js';
 export { interpolate } from './utils/interpolate.js';
 export { isRtl } from './utils/direction.js';
 export { syncGroupDisabled, stopChildEvent } from './utils/group-utils.js';

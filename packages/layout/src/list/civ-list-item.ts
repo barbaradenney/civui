@@ -1,10 +1,7 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBaseElement, LightDomSlotMixin, renderError } from '@civui/core';
+import { CivBaseElement, LightDomSlotMixin, renderError, sanitizeHref } from '@civui/core';
 import type { SlotConfig } from '@civui/core';
-
-/** Protocols that are never allowed in link href values. */
-const UNSAFE_HREF_PATTERN = /^\s*javascript\s*:/i;
 
 /**
  * CivUI List Item
@@ -102,8 +99,7 @@ export class CivListItem extends LightDomSlotMixin(CivBaseElement) {
   }
 
   private get _safeHref(): string {
-    if (UNSAFE_HREF_PATTERN.test(this.href)) return '';
-    return this.href;
+    return sanitizeHref(this.href);
   }
 
   override render() {

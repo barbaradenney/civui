@@ -1,11 +1,8 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBaseElement, LightDomTextMixin, t } from '@civui/core';
+import { CivBaseElement, LightDomTextMixin, devWarn, sanitizeHref, t } from '@civui/core';
 
 export type LinkVariant = 'primary' | 'secondary' | 'tertiary' | 'back';
-
-/** Protocols that are never allowed in link href values. */
-const UNSAFE_HREF_PATTERN = /^\s*javascript\s*:/i;
 
 /**
  * CivUI Link
@@ -74,13 +71,31 @@ export class CivLink extends LightDomTextMixin(CivBaseElement) {
     return name ? html`<civ-icon name="${name}"></civ-icon>` : '';
   }
 
+  /** Tracks whether the icon-only-without-label dev warning has fired for this instance. */
+  private _warnedNoAccessibleName = false;
+
   /** Return sanitized href, stripping dangerous protocols. */
   private get _safeHref(): string {
-    if (UNSAFE_HREF_PATTERN.test(this.href)) return '';
-    return this.href;
+    return sanitizeHref(this.href);
   }
 
   override render() {
+    // Dev-only nudge: an icon-only link with no label / text content
+    // has no accessible name. `civ-icon` defaults to `aria-hidden="true"`
+    // when no `label` is set, so the link renders empty to AT.
+    // Fires once per instance.
+    if (
+      (this.iconStart || this.iconEnd) &&
+      !this._text &&
+      !this._warnedNoAccessibleName
+    ) {
+      devWarn(
+        'civ-link',
+        'icon-only link has no accessible name. Set `label="…"` so screen-reader users hear where the link goes.',
+      );
+      this._warnedNoAccessibleName = true;
+    }
+
     if (this.disabled) {
       return html`
         <a

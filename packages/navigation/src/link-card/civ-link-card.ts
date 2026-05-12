@@ -1,13 +1,10 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBaseElement, LightDomSlotMixin, t } from '@civui/core';
+import { CivBaseElement, LightDomSlotMixin, sanitizeHref, t } from '@civui/core';
 import type { SlotConfig } from '@civui/core';
 
 export type LinkCardVariant = 'primary' | 'secondary' | 'tertiary' | 'critical' | 'danger';
 export type LinkCardColor = 'blue' | 'teal' | 'red' | 'green' | 'yellow' | 'orange' | 'purple' | 'gray';
-
-/** Protocols that are never allowed in link href values. */
-const UNSAFE_HREF_PATTERN = /^\s*javascript\s*:/i;
 
 /**
  * CivUI Link Card
@@ -88,8 +85,7 @@ export class CivLinkCard extends LightDomSlotMixin(CivBaseElement) {
 
   /** Return sanitized href, stripping dangerous protocols. */
   private get _safeHref(): string {
-    if (UNSAFE_HREF_PATTERN.test(this.href)) return '';
-    return this.href;
+    return sanitizeHref(this.href);
   }
 
   override _getSlotConfig(): SlotConfig {

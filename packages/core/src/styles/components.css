@@ -1397,13 +1397,18 @@
     border-right: 0;
   }
 
-  /* Ensure buttons match input height */
+  /* Ensure buttons match input height. The bare `.civ-action-btn` only
+     pads horizontally (line-height + border ≈ 38px), but `.civ-input`
+     adds `civ-py-2` (8px top + 8px bottom) which makes the rendered
+     `<input>` ≈ 48px. Apply the same vertical padding to the button
+     when inside an input-group so the heights line up exactly. */
   .civ-input-group > civ-action-button {
     @apply civ-flex-shrink-0;
   }
 
-  .civ-input-group > civ-action-button button {
-    height: 100%;
+  .civ-input-group > civ-action-button button,
+  .civ-input-group > button {
+    @apply civ-py-2;
   }
 
   /* ── Link variants (rendered when href is set) ─────────────── */

@@ -1,6 +1,7 @@
 import { html, svg, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { CivBaseElement } from '../base/civ-base-element.js';
+import { devWarn } from '../utils/dev-warn.js';
 import { icons } from './icon-library.js';
 import type { IconDef } from './icon-library.js';
 
@@ -68,8 +69,15 @@ export class CivIcon extends CivBaseElement {
   override render() {
     const def = this._getIconDef();
     if (!def) {
+      // Dev-only warning. Dedupes per icon name so the same typo doesn't
+      // spam the console on every render (or for every instance of the
+      // same `<civ-icon name="typo">` element).
       if (this.name) {
-        console.warn(`[civ-icon] Unknown icon name: "${this.name}". Register it with registerIcon() or check icon-library.ts for available names.`);
+        devWarn(
+          'civ-icon',
+          `Unknown icon name: "${this.name}". Register it with registerIcon() or check icon-library.ts for available names.`,
+          /* dedupeKey */ this.name,
+        );
       }
       return nothing;
     }

@@ -51,3 +51,34 @@ export function warnInvalidProp(
     `Falling back to default — no value applied.`,
   );
 }
+
+/** Tracks which (tag + dedupeKey) pairs have already warned this session. */
+const _warned = new Set<string>();
+
+/**
+ * General-purpose dev-mode console.warn helper. Gates on
+ * `globalThis.CIV_DEV !== false` so production bundles can suppress
+ * via `globalThis.CIV_DEV = false`. Pass a `dedupeKey` to fire at most
+ * once per (tag + key) pair within the session — useful when a render
+ * path could re-fire the same warning many times.
+ *
+ * For per-instance dedup (fire once per `<civ-foo>` element), leave
+ * `dedupeKey` undefined and track the dedup with a private field on
+ * the instance — this helper's session-global dedup would collapse
+ * legitimate warnings across multiple instances.
+ *
+ * @param tag        Component tag (e.g. `'civ-icon'`).
+ * @param message    The warning message body. The tag prefix is added.
+ * @param dedupeKey  Optional session-global dedup key. When supplied,
+ *                   subsequent calls with the same (tag, dedupeKey)
+ *                   are silently dropped.
+ */
+export function devWarn(tag: string, message: string, dedupeKey?: string): void {
+  if (!isDev()) return;
+  if (dedupeKey !== undefined) {
+    const key = `${tag}::${dedupeKey}`;
+    if (_warned.has(key)) return;
+    _warned.add(key);
+  }
+  console.warn(`[${tag}] ${message}`);
+}

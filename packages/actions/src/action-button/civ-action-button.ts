@@ -1,7 +1,7 @@
 import { html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
-import { CivBaseElement } from '@civui/core';
+import { CivBaseElement, devWarn } from '@civui/core';
 
 export type ActionButtonVariant = 'primary' | 'secondary' | 'tertiary';
 
@@ -47,6 +47,9 @@ export class CivActionButton extends CivBaseElement {
   @property({ type: String, attribute: 'icon-start' }) iconStart = '';
   @property({ type: String, attribute: 'icon-end' }) iconEnd = '';
 
+  /** Tracks whether the icon-only-without-label dev warning has fired for this instance. */
+  private _warnedNoAccessibleName = false;
+
   private get _classes(): string {
     const variantClass = this.danger
       ? `civ-action-btn--${this.variant}-danger`
@@ -67,6 +70,22 @@ export class CivActionButton extends CivBaseElement {
     const ariaPressed = this.pressed !== undefined
       ? (this.pressed ? 'true' : 'false')
       : undefined;
+
+    // Dev-only nudge: an icon-only button with no label has no
+    // accessible name. `civ-icon` defaults to `aria-hidden="true"`
+    // when no `label` is set, so the button renders empty to AT.
+    // Fires once per instance.
+    if (
+      (this.iconStart || this.iconEnd) &&
+      !this.label &&
+      !this._warnedNoAccessibleName
+    ) {
+      devWarn(
+        'civ-action-button',
+        'icon-only button has no accessible name. Set `label="…"` so screen-reader users hear what the button does.',
+      );
+      this._warnedNoAccessibleName = true;
+    }
 
     return html`
       <button

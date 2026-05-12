@@ -1,6 +1,6 @@
 import { html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBaseElement, LightDomTextMixin } from '@civui/core';
+import { CivBaseElement, LightDomTextMixin, devWarn } from '@civui/core';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'tertiary';
 export type ButtonType = 'button' | 'submit' | 'reset';
@@ -38,6 +38,9 @@ export class CivButton extends LightDomTextMixin(CivBaseElement) {
   @property({ type: String, attribute: 'icon-start' }) iconStart = '';
   @property({ type: String, attribute: 'icon-end' }) iconEnd = '';
 
+  /** Tracks whether the icon-only-without-label dev warning has fired for this instance. */
+  private _warnedNoAccessibleName = false;
+
   private get _text(): string {
     return this.label || this._initialText;
   }
@@ -57,6 +60,23 @@ export class CivButton extends LightDomTextMixin(CivBaseElement) {
   }
 
   override render() {
+    // Dev-only nudge: an icon-only button with no label / text content
+    // has no accessible name. `civ-icon` defaults to `aria-hidden="true"`
+    // when no `label` is set, so the button renders empty to AT.
+    // Fires once per instance so consumers see the warning during
+    // development without flooding the console.
+    if (
+      (this.iconStart || this.iconEnd) &&
+      !this._text &&
+      !this._warnedNoAccessibleName
+    ) {
+      devWarn(
+        'civ-button',
+        'icon-only button has no accessible name. Set `label="…"` so screen-reader users hear what the button does.',
+      );
+      this._warnedNoAccessibleName = true;
+    }
+
     return html`
       <button
         type="${this.type}"

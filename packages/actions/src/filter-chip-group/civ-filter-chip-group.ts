@@ -24,7 +24,12 @@ export type FilterChipGroupMode = 'single' | 'multi';
  * @element civ-filter-chip-group
  *
  * @prop {FilterChipGroupMode} mode - 'single' or 'multi' (default)
- * @prop {string} label - Accessible label (aria-label on the wrapper)
+ * @prop {string} label - **Strongly recommended.** Accessible name for
+ *   the wrapper (`aria-label`). The wrapper carries `role="toolbar"` in
+ *   multi mode or `role="radiogroup"` in single mode; both roles require
+ *   a name per WAI-ARIA. Without one, AT users navigating by landmark
+ *   see an unnamed group. Omit only when the surrounding context already
+ *   names the group.
  *
  * @fires civ-change - `{ value: string | string[] }` when selection changes
  *

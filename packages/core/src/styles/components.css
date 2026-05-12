@@ -1324,8 +1324,25 @@
 
   /* ── Input Group ────────────────────────────────────────────── */
 
+  /* Bottom-align children so the rendered <input> / <button> row lines
+     up regardless of whether a sibling carries a stacked label above.
+     `civ-text-input` / `civ-select` / `civ-combobox` render
+     [label, hint, input] top-to-bottom, so their <input> sits at the
+     wrapper bottom — `align-items: end` makes that bottom flush with
+     the natural-height action-button beside it. Using `stretch` instead
+     made the button wrapper grow to the full label+input height and
+     the inner <button>'s `height: 100%` filled it, producing a button
+     visibly taller than the input. */
   .civ-input-group {
-    @apply civ-flex civ-items-stretch;
+    @apply civ-flex civ-items-end;
+  }
+
+  /* Strip the input wrappers' default 16px bottom margin while inside
+     an input-group — flex doesn't collapse margins, so it would push
+     the input visually above the bottom-aligned button. The margin only
+     exists to separate stacked sibling fields outside an input-group. */
+  .civ-input-group > * > .civ-mb-4 {
+    @apply civ-mb-0;
   }
 
   /* Children of an input-group sit edge-to-edge (border-radius / border

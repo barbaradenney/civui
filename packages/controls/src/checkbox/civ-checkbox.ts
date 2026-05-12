@@ -31,7 +31,6 @@ export class CivCheckbox extends CivBooleanFormElement {
             .checked="${this.checked}"
             ?disabled="${this.disabled}"
             ?required="${this.required}"
-            aria-required="${this.required || nothing}"
             aria-invalid="${this.error ? 'true' : nothing}"
             aria-describedby="${this._ariaDescribedBy || nothing}"
             @change="${this._onCheckboxChange}"

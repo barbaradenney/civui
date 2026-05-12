@@ -186,11 +186,12 @@ describe('civ-checkbox accessibility', () => {
     expect(input.getAttribute('aria-invalid')).toBeNull();
   });
 
-  it('sets aria-required when required', async () => {
+  it('sets native required on the inner input', async () => {
     const el = await fixture('<civ-checkbox label="Agree" required></civ-checkbox>');
 
     const input = el.querySelector('input') as HTMLInputElement;
-    expect(input.getAttribute('aria-required')).toBe('true');
+    expect(input.required).toBe(true);
+    expect(input.hasAttribute('required')).toBe(true);
   });
 
   it('includes description in aria-describedby', async () => {

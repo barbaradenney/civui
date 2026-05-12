@@ -222,6 +222,13 @@ export class CivCheckboxGroup extends LegendHeadingMixin(GroupListenerMixin(Ligh
 
     const describedBy = buildDescribedBy(this._hintId, this.hint, this._errorId, this.error);
 
+    // ARIA attributes live on the outer <fieldset> here — not on an
+    // inner role-bearing div like civ-radio-group / civ-segmented-control
+    // do. Checkboxes aren't mutually exclusive, so this group does NOT
+    // use `role="radiogroup"`; native fieldset + legend semantics are
+    // sufficient. With no overriding role, the fieldset itself is the
+    // accessible group, and aria-describedby / aria-invalid / aria-required
+    // belong directly on it.
     return html`
       <fieldset
         class="civ-fieldset"

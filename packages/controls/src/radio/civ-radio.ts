@@ -61,7 +61,6 @@ export class CivRadio extends CivBaseElement {
             ?disabled="${this.disabled}"
             ?required="${this.required}"
             tabindex="${this.managedTabIndex ?? nothing}"
-            aria-required="${this.required || nothing}"
             aria-describedby="${this._ariaDescribedBy || nothing}"
             @change="${this._onRadioChange}"
           />

@@ -274,6 +274,10 @@ Audit the native counterparts for every web component. This is a **mandatory** a
 
 ## Audit Process
 
+### Before you start: read open audit debt
+
+Read `.claude/rules/audit-debt.md` first. Items deferred from prior audits are tracked there with file paths and rationale — if you find one of those issues during your pass, don't re-report it; either advance the existing entry or close it out.
+
 ### For a single component:
 
 1. Read the component source file(s) in full
@@ -348,7 +352,31 @@ Audit the native counterparts for every web component. This is a **mandatory** a
 
 ### Minor (nice to have)
 - [ ] (fix)
+
+### Deferred (tracked in `.claude/rules/audit-debt.md`)
+- (item title) — one-line reason for deferral
 ```
+
+### Deferred items section
+
+Any audit finding the user accepts as "real, but too big for this round" goes into `.claude/rules/audit-debt.md` rather than evaporating between sessions. Common deferral reasons:
+
+- Native platform stub work (iOS/Android UI implementation pass).
+- Multi-day refactors of large components where the existing test suite would need substantial rework.
+- Cross-cutting design-system decisions (consolidation of near-duplicates, prop API breaking changes).
+
+When you defer:
+
+1. Add an entry under the appropriate section in `.claude/rules/audit-debt.md` with:
+   - **Surfaced:** audit type + date (e.g. "Form-patterns audit, 2026-05-12").
+   - **Files:** absolute or repo-relative paths with LOC counts.
+   - **State:** what the code looks like today.
+   - **Why deferred:** one sentence on scope / risk.
+   - **What to watch for in the meantime** (optional): guidance for keeping things from getting worse.
+2. Reference the entry in your audit response so the user sees it tracked.
+3. When the item is later fixed, delete the entry in the same commit.
+
+Do not silently swallow deferred items into the audit response. The whole point of the file is that the next audit session can pick them up.
 
 ### Full Audit (all)
 

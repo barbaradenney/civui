@@ -45,6 +45,10 @@ export interface CivLocaleStrings {
   // Close button
   closeLabel: string;
 
+  // Action sheet — generic fallback label when the consumer does not
+  // provide a more specific one. Announced by AT as the dialog name.
+  actionSheetLabel: string;
+
   // File upload
   fileUploadShowAll: string; // "Show all {count} files"
   fileUploadDragText: string;
@@ -666,6 +670,8 @@ const defaultStrings: CivLocaleStrings = {
   filterChipRemoveLabel: 'Remove {label} filter',
 
   closeLabel: 'Close',
+
+  actionSheetLabel: 'Action sheet',
 
   fileUploadShowAll: 'Show all {count} files',
   fileUploadDragText: 'Drag files here or',

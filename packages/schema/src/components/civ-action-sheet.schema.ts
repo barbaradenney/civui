@@ -21,6 +21,11 @@ const schema: ComponentSchema = {
       default: '50vh',
       attribute: 'max-height',
     },
+    label: {
+      type: 'string',
+      description: 'Accessible label for the sheet (announced by assistive tech as the dialog name). When omitted the panel falls back to a generic "Action sheet" label; supply this when the sheet has a clear single purpose (e.g. "Filter results", "Select state").',
+      default: '',
+    },
     trapFocus: {
       type: 'boolean',
       description: 'Trap keyboard focus inside the sheet while open. Web-specific behavior — native platforms manage focus via the OS sheet primitive',

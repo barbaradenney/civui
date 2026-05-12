@@ -11,7 +11,8 @@ import androidx.compose.ui.Modifier
 fun CivActionSheet(
     open: Boolean = false,
     maxHeight: String = "50vh",
-    trapFocusProp: Boolean = false,
+    label: String = "",
+    trapFocus: Boolean = false,
     noClickOutside: Boolean = false,
     onClose: (() -> Unit)? = null,
     modifier: Modifier = Modifier,

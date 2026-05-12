@@ -21,19 +21,34 @@ describe('civ-modal', () => {
     expect(dialog.open).toBe(false);
   });
 
-  it('renders heading with correct id', async () => {
+  it('renders heading text and gives it a unique id', async () => {
     const el = await fixture('<civ-modal heading="Confirm action" open><p>Content</p></civ-modal>');
     await elementUpdated(el);
-    const heading = el.querySelector('#civ-modal-heading');
+    const heading = el.querySelector('[role="heading"]');
     expect(heading).not.toBeNull();
     expect(heading!.textContent).toContain('Confirm action');
+    // Heading ID is generated per-instance (not the old hardcoded
+    // `civ-modal-heading`) so two modals on the same page don't
+    // collide on aria-labelledby.
+    expect(heading!.id).toMatch(/^civ-modal-[\w-]+-heading$/);
   });
 
-  it('sets aria-labelledby when heading is present', async () => {
+  it('sets aria-labelledby to the heading id when heading is present', async () => {
     const el = await fixture('<civ-modal heading="My Dialog" open><p>Content</p></civ-modal>');
     await elementUpdated(el);
     const dialog = el.querySelector('dialog');
-    expect(dialog!.getAttribute('aria-labelledby')).toBe('civ-modal-heading');
+    const heading = el.querySelector('[role="heading"]');
+    expect(dialog!.getAttribute('aria-labelledby')).toBe(heading!.id);
+  });
+
+  it('two open modals on the page have unique heading ids', async () => {
+    const a = await fixture('<civ-modal heading="A" open><p>A</p></civ-modal>');
+    const b = await fixture('<civ-modal heading="B" open><p>B</p></civ-modal>');
+    await elementUpdated(a);
+    await elementUpdated(b);
+    const idA = a.querySelector('[role="heading"]')!.id;
+    const idB = b.querySelector('[role="heading"]')!.id;
+    expect(idA).not.toBe(idB);
   });
 
   it('does not set aria-labelledby when heading is empty', async () => {
@@ -147,6 +162,20 @@ describe('civ-modal body scroll lock', () => {
     el.open = false;
     await elementUpdated(el);
     expect(document.body.style.overflow).toBe('');
+  });
+
+  it('restores the prior body overflow value rather than clearing it', async () => {
+    // Host page set its own inline overflow before the modal opened.
+    document.body.style.overflow = 'visible';
+
+    const el = await fixture('<civ-modal heading="Test" open><p>Content</p></civ-modal>') as any;
+    await elementUpdated(el);
+    expect(document.body.style.overflow).toBe('hidden');
+
+    el.open = false;
+    await elementUpdated(el);
+    // Modal must restore the prior value, not blank it.
+    expect(document.body.style.overflow).toBe('visible');
   });
 });
 

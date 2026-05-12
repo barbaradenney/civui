@@ -18,6 +18,7 @@ import type { SlotConfig } from '@civui/core';
  *
  * @prop {boolean} open - Controls visibility
  * @prop {string} maxHeight - Max height on mobile (default '50vh')
+ * @prop {string} label - Accessible label announced as the dialog name
  * @prop {boolean} trapFocus - Enable focus trapping (default false). HTML attribute: `trap-focus`.
  * @prop {boolean} noClickOutside - Disable click-outside close (default false)
  *
@@ -25,7 +26,7 @@ import type { SlotConfig } from '@civui/core';
  *
  * @example
  * ```html
- * <civ-action-sheet ?open="${this._open}" max-height="60vh" trap-focus>
+ * <civ-action-sheet ?open="${this._open}" label="Filter results" max-height="60vh" trap-focus>
  *   <div>Popup content</div>
  * </civ-action-sheet>
  * ```
@@ -34,6 +35,7 @@ import type { SlotConfig } from '@civui/core';
 export class CivActionSheet extends LightDomSlotMixin(CivBaseElement) {
   @property({ type: Boolean, reflect: true }) open = false;
   @property({ type: String, attribute: 'max-height' }) maxHeight = '50vh';
+  @property({ type: String }) label = '';
   @property({ type: Boolean, attribute: 'trap-focus' }) trapFocus = false;
   @property({ type: Boolean, attribute: 'no-click-outside' }) noClickOutside = false;
 
@@ -75,6 +77,9 @@ export class CivActionSheet extends LightDomSlotMixin(CivBaseElement) {
       ></div>
       <div
         class="civ-action-sheet civ-action-sheet--open civ-bottom-sheet"
+        role="dialog"
+        aria-modal="true"
+        aria-label="${this.label || t('actionSheetLabel')}"
         style="--civ-action-sheet-max-height: ${this.maxHeight}"
       >
         <div class="civ-action-sheet__mobile-close">
@@ -90,19 +95,24 @@ export class CivActionSheet extends LightDomSlotMixin(CivBaseElement) {
     `;
   }
 
-  private _onOpen(): void {
+  private async _onOpen(): Promise<void> {
     if (!this.noClickOutside) {
       this._clickOutside.add();
     }
     document.addEventListener('keydown', this._boundOnKeydown);
 
     if (this.trapFocus) {
-      this.updateComplete.then(() => {
+      try {
+        await this.updateComplete;
         const container = this.querySelector('[data-civ-action-sheet-content]');
         if (container instanceof HTMLElement) {
           this._cleanupTrap = runTrapFocus(container);
         }
-      });
+      } catch (err) {
+        // Surface focus-trap setup failure (e.g. no focusable children)
+        // rather than swallowing it as an unobserved promise rejection.
+        console.error('civ-action-sheet: failed to install focus trap', err);
+      }
     }
   }
 

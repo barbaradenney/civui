@@ -23,8 +23,11 @@ public struct CivActionSheet<Content: View>: View {
     /// Maximum height of the sheet (e.g., "50vh").
     public var maxHeight: String
 
+    /// Accessible label announced as the sheet's dialog name.
+    public var label: String
+
     /// Whether to trap focus within the sheet.
-    public var trapFocusProp: Bool
+    public var isTrapFocus: Bool
 
     /// Whether to prevent closing by tapping outside.
     public var noClickOutside: Bool
@@ -44,14 +47,16 @@ public struct CivActionSheet<Content: View>: View {
     public init(
         open: Bool = false,
         maxHeight: String = "50vh",
-        trapFocusProp: Bool = false,
+        label: String = "",
+        isTrapFocus: Bool = false,
         noClickOutside: Bool = false,
         onClose: (() -> Void)? = nil,
         @ViewBuilder content: () -> Content
     ) {
         self.open = open
         self.maxHeight = maxHeight
-        self.trapFocusProp = trapFocusProp
+        self.label = label
+        self.isTrapFocus = isTrapFocus
         self.noClickOutside = noClickOutside
         self.onClose = onClose
         self.content = content()

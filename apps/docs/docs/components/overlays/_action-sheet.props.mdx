@@ -5,5 +5,6 @@
 |-----------|------|---------|-------------|
 | `open` | `boolean` | `false` | Whether the action sheet is visible. Reflects to the host attribute |
 | `max-height` | `string` | `'50vh'` | Maximum height of the sheet. CSS length value on web (e.g. `50vh`, `400px`) |
+| `label` | `string` | `''` | Accessible label for the sheet (announced by assistive tech as the dialog name). When omitted the panel falls back to a generic "Action sheet" label; supply this when the sheet has a clear single purpose (e.g. "Filter results", "Select state"). |
 | `trap-focus` | `boolean` | `false` | Trap keyboard focus inside the sheet while open. Web-specific behavior — native platforms manage focus via the OS sheet primitive |
 | `no-click-outside` | `boolean` | `false` | Disable click-outside-to-close. Force users to the explicit dismiss affordance |

@@ -16,6 +16,10 @@ props:
       title: Max height
       type: string
       description: 'Maximum height of the sheet'
+    label:
+      title: Label
+      type: string
+      description: 'Accessible label announced as the dialog name'
     trap_focus:
       title: Trap focus
       type: boolean

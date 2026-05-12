@@ -90,3 +90,28 @@ describe('civ-action-sheet', () => {
     expect(el.querySelector('.civ-action-sheet--open')).toBeNull();
   });
 });
+
+describe('civ-action-sheet accessibility', () => {
+  it('exposes role="dialog" and aria-modal="true" on the panel', async () => {
+    const el = await fixture('<civ-action-sheet open><p>Content</p></civ-action-sheet>');
+    await elementUpdated(el);
+    const panel = el.querySelector('.civ-action-sheet--open')!;
+    expect(panel.getAttribute('role')).toBe('dialog');
+    expect(panel.getAttribute('aria-modal')).toBe('true');
+  });
+
+  it('uses the consumer-supplied label as the accessible name', async () => {
+    const el = await fixture('<civ-action-sheet open label="Filter results"><p>Content</p></civ-action-sheet>');
+    await elementUpdated(el);
+    const panel = el.querySelector('.civ-action-sheet--open')!;
+    expect(panel.getAttribute('aria-label')).toBe('Filter results');
+  });
+
+  it('falls back to the generic i18n label when no label is supplied', async () => {
+    const el = await fixture('<civ-action-sheet open><p>Content</p></civ-action-sheet>');
+    await elementUpdated(el);
+    const panel = el.querySelector('.civ-action-sheet--open')!;
+    expect(panel.getAttribute('aria-label')).toBeTruthy();
+    expect(panel.getAttribute('aria-label')!.length).toBeGreaterThan(0);
+  });
+});

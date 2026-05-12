@@ -46,6 +46,8 @@ export class CivModal extends LightDomSlotMixin(CivBaseElement) {
   @property({ type: Boolean, attribute: 'no-escape-close' }) noEscapeClose = false;
 
   private _previouslyFocused: Element | null = null;
+  private _priorBodyOverflow = '';
+  private _headingId = this.generateId('heading');
 
   override _getSlotConfig(): SlotConfig {
     return {
@@ -73,7 +75,7 @@ export class CivModal extends LightDomSlotMixin(CivBaseElement) {
     return html`
       <dialog
         class="civ-modal"
-        aria-labelledby="${this.heading ? 'civ-modal-heading' : nothing}"
+        aria-labelledby="${this.heading ? this._headingId : nothing}"
         aria-label="${!this.heading && this.label ? this.label : nothing}"
         @cancel="${this._onCancel}"
         @close="${this._onNativeClose}"
@@ -82,7 +84,7 @@ export class CivModal extends LightDomSlotMixin(CivBaseElement) {
         ${this.heading || !this.noCloseButton ? html`
           <div class="civ-modal__header">
             ${this.heading ? html`
-              <span id="civ-modal-heading" class="civ-heading-lg civ-m-0" role="heading" aria-level="${this.headingLevel}">${this.heading}</span>
+              <span id="${this._headingId}" class="civ-heading-lg civ-m-0" role="heading" aria-level="${this.headingLevel}">${this.heading}</span>
             ` : nothing}
             ${!this.noCloseButton ? html`
               <button
@@ -102,16 +104,23 @@ export class CivModal extends LightDomSlotMixin(CivBaseElement) {
     `;
   }
 
-  private _onOpen(): void {
+  private async _onOpen(): Promise<void> {
     this._previouslyFocused = document.activeElement;
+    // Snapshot the prior inline overflow so we restore it on close
+    // instead of always clearing to '' (which would clobber a host
+    // page that had its own `body { overflow: visible }` inline rule).
+    this._priorBodyOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
 
-    this.updateComplete.then(() => {
+    try {
+      await this.updateComplete;
       const dialog = this.querySelector('dialog') as HTMLDialogElement | null;
       if (dialog && !dialog.open && typeof dialog.showModal === 'function') {
         dialog.showModal();
       }
-    });
+    } catch (err) {
+      console.error('civ-modal: failed to open dialog', err);
+    }
   }
 
   private _onClose(): void {
@@ -120,7 +129,8 @@ export class CivModal extends LightDomSlotMixin(CivBaseElement) {
       dialog.close();
     }
 
-    document.body.style.overflow = '';
+    document.body.style.overflow = this._priorBodyOverflow;
+    this._priorBodyOverflow = '';
 
     // Return focus to the element that opened the modal
     if (this._previouslyFocused instanceof HTMLElement) {

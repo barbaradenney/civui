@@ -153,17 +153,27 @@ export class CivRelationship extends LegendHeadingMixin(CivCompoundElement) {
     }
   }
 
-  override firstUpdated(): void {
+  override async firstUpdated(): Promise<void> {
     super.firstUpdated();
-    // Defer option sync — form-field wrappers need their slot relocation
-    // to complete before querySelector can find the select.
-    this.updateComplete.then(() => this._syncSelectOptions());
+    // Defer option sync — sub-component civ-select needs its first
+    // render to complete before its `options` setter is available.
+    try {
+      await this.updateComplete;
+      this._syncSelectOptions();
+    } catch (err) {
+      console.error('civ-relationship: failed to sync select options on first render', err);
+    }
   }
 
-  override updated(changed: Map<string, unknown>): void {
+  override async updated(changed: Map<string, unknown>): Promise<void> {
     super.updated(changed);
     if (changed.has('preset') || changed.has('options')) {
-      this.updateComplete.then(() => this._syncSelectOptions());
+      try {
+        await this.updateComplete;
+        this._syncSelectOptions();
+      } catch (err) {
+        console.error('civ-relationship: failed to re-sync select options after preset/options change', err);
+      }
     }
   }
 
@@ -186,7 +196,7 @@ export class CivRelationship extends LegendHeadingMixin(CivCompoundElement) {
         aria-invalid="${this.error ? 'true' : nothing}"
         ?disabled="${this.disabled}"
       >
-        ${renderFormHeader({ label: renderLegend({ legend, required: false, headingLevel: this.headingLevel, size: this.size }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
+        ${renderFormHeader({ label: renderLegend({ legend, required: this.required, headingLevel: this.headingLevel, size: this.size }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
 
         ${(this.showName && !this.hideName) ? html`
           <civ-name

@@ -172,15 +172,25 @@ export class CivPartnershipHistory extends LegendHeadingMixin(CivCompoundElement
     }
   }
 
-  override firstUpdated(): void {
+  override async firstUpdated(): Promise<void> {
     super.firstUpdated();
-    this.updateComplete.then(() => this._syncStatusOptions());
+    try {
+      await this.updateComplete;
+      this._syncStatusOptions();
+    } catch (err) {
+      console.error('civ-partnership-history: failed to sync status options on first render', err);
+    }
   }
 
-  override updated(changed: Map<string, unknown>): void {
+  override async updated(changed: Map<string, unknown>): Promise<void> {
     super.updated(changed);
     if (changed.has('_data')) {
-      this.updateComplete.then(() => this._syncStatusOptions());
+      try {
+        await this.updateComplete;
+        this._syncStatusOptions();
+      } catch (err) {
+        console.error('civ-partnership-history: failed to re-sync status options after data change', err);
+      }
     }
   }
 
@@ -214,7 +224,7 @@ export class CivPartnershipHistory extends LegendHeadingMixin(CivCompoundElement
         aria-invalid="${this.error ? 'true' : nothing}"
         ?disabled="${this.disabled}"
       >
-        ${renderFormHeader({ label: renderLegend({ legend: this._legendForStep(), required: false, headingLevel: this.headingLevel, size: this.size }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
+        ${renderFormHeader({ label: renderLegend({ legend: this._legendForStep(), required: this.required, headingLevel: this.headingLevel, size: this.size }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
 
         ${showWho ? this._renderWho(prefix) : nothing}
         ${showDetails ? this._renderCategoryFields(prefix) : nothing}

@@ -165,16 +165,29 @@ export class CivAddress extends LegendHeadingMixin(CivCompoundElement) {
     this.value = JSON.stringify(this._data);
   }
 
-  override firstUpdated(): void {
+  override async firstUpdated(): Promise<void> {
     super.firstUpdated();
-    this.updateComplete.then(() => this._syncSelectOptions());
+    // Defer one microtask via `await updateComplete` so the inner
+    // civ-select children have upgraded their `options` setter before
+    // we write to them. async/await surfaces a thrown sync error
+    // through the unhandled-rejection channel instead of swallowing it.
+    try {
+      await this.updateComplete;
+      this._syncSelectOptions();
+    } catch (err) {
+      console.error('civ-address: failed to sync select options on first render', err);
+    }
   }
 
-  override updated(changed: Map<string, unknown>): void {
+  override async updated(changed: Map<string, unknown>): Promise<void> {
     super.updated(changed);
-    // Re-sync select options when country changes
     if (changed.has('_data')) {
-      this.updateComplete.then(() => this._syncSelectOptions());
+      try {
+        await this.updateComplete;
+        this._syncSelectOptions();
+      } catch (err) {
+        console.error('civ-address: failed to re-sync select options after data change', err);
+      }
     }
   }
 
@@ -192,7 +205,7 @@ export class CivAddress extends LegendHeadingMixin(CivCompoundElement) {
         aria-invalid="${this.error ? 'true' : nothing}"
         ?disabled="${this.disabled}"
       >
-        ${renderFormHeader({ label: renderLegend({ legend: this.legend || this.label, required: false, headingLevel: this.headingLevel, size: this.size }), hintId: this._hintId, hint: generalDeliveryHint || this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
+        ${renderFormHeader({ label: renderLegend({ legend: this.legend || this.label, required: this.required, headingLevel: this.headingLevel, size: this.size }), hintId: this._hintId, hint: generalDeliveryHint || this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
 
         ${this._renderCountryField()}
         ${this._renderTextField('street1', t('addressStreet1'), 'address-line1', { error: this.streetError, required: this.required })}
@@ -285,7 +298,7 @@ export class CivAddress extends LegendHeadingMixin(CivCompoundElement) {
         aria-describedby="${describedBy || nothing}"
         ?disabled="${this.disabled}"
       >
-        ${renderFormHeader({ label: renderLegend({ legend: this.legend || this.label, required: false, headingLevel: this.headingLevel, size: this.size }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
+        ${renderFormHeader({ label: renderLegend({ legend: this.legend || this.label, required: this.required, headingLevel: this.headingLevel, size: this.size }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
 
         <civ-text-input
           label="${t('housingGeneralLocation')}"

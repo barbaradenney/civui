@@ -39,6 +39,18 @@ const EMPTY_VALUE: RaceEthnicityValue = { ethnicity: '', race: [] };
  * Race is presented first because it's the more granular, multi-select
  * question; ethnicity follows as a single-choice radio group.
  *
+ * **Base class:** Extends `CivFormElement` directly rather than the
+ * shared `CivCompoundElement`. The other compounds (`civ-name`,
+ * `civ-address`, …) all extend `CivCompoundElement` for its
+ * `_data + _onSubInput / _onSubChange` plumbing. Race / ethnicity is
+ * deliberately *two* independent answers to two OMB questions, not a
+ * single structured value — the inner groups dispatch their own
+ * `civ-change` events with array/string shapes and we forward them
+ * with custom merging logic (no field-keyed patching). Reusing the
+ * compound base here would force a misleading "field-of-a-struct"
+ * mental model onto two genuinely separate questions, so we keep the
+ * lightweight `CivFormElement + local _data` shape.
+ *
  * @element civ-race-ethnicity
  *
  * @fires civ-input - On every change, detail: { value: RaceEthnicityValue }

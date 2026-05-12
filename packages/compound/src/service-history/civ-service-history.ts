@@ -58,15 +58,25 @@ export class CivServiceHistory extends LegendHeadingMixin(CivCompoundElement) {
     this.value = JSON.stringify(this._data);
   }
 
-  override firstUpdated(): void {
+  override async firstUpdated(): Promise<void> {
     super.firstUpdated();
-    this.updateComplete.then(() => this._syncSelectOptions());
+    try {
+      await this.updateComplete;
+      this._syncSelectOptions();
+    } catch (err) {
+      console.error('civ-service-history: failed to sync select options on first render', err);
+    }
   }
 
-  override updated(changed: Map<string, unknown>): void {
+  override async updated(changed: Map<string, unknown>): Promise<void> {
     super.updated(changed);
     if (changed.has('_data')) {
-      this.updateComplete.then(() => this._syncSelectOptions());
+      try {
+        await this.updateComplete;
+        this._syncSelectOptions();
+      } catch (err) {
+        console.error('civ-service-history: failed to re-sync select options after data change', err);
+      }
     }
   }
 

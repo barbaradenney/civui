@@ -4,8 +4,6 @@ import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 // @ts-ignore
 import template from '../../../drupal/civui/components/form-step/form-step.twig';
 // @ts-ignore
-import formFieldTemplate from '../../../drupal/civui/components/form-field/form-field.twig';
-// @ts-ignore
 import textInputTemplate from '../../../drupal/civui/components/text-input/text-input.twig';
 
 const render = (props: Record<string, any>) => html`${unsafeHTML(template(props))}`;
@@ -19,11 +17,7 @@ type Story = StoryObj;
 
 export const Default: Story = {
   render: () => {
-    const nameField = formFieldTemplate({
-      label: 'Full name',
-      required: true,
-      default: textInputTemplate({ name: 'fullName', required: true }),
-    });
+    const nameField = textInputTemplate({ name: 'fullName', required: true, label: 'Full name' });
     return render({ default: nameField });
   },
 };
@@ -31,22 +25,9 @@ export const Default: Story = {
 export const MultipleFields: Story = {
   name: 'Multiple Fields',
   render: () => {
-    const firstName = formFieldTemplate({
-      label: 'First name',
-      required: true,
-      default: textInputTemplate({ name: 'firstName', required: true }),
-    });
-    const lastName = formFieldTemplate({
-      label: 'Last name',
-      required: true,
-      default: textInputTemplate({ name: 'lastName', required: true }),
-    });
-    const email = formFieldTemplate({
-      label: 'Email address',
-      hint: 'Work email preferred',
-      required: true,
-      default: textInputTemplate({ name: 'email', type: 'email', required: true }),
-    });
+    const firstName = textInputTemplate({ name: 'firstName', required: true, label: 'First name' });
+    const lastName = textInputTemplate({ name: 'lastName', required: true, label: 'Last name' });
+    const email = textInputTemplate({ name: 'email', type: 'email', required: true, label: 'Email address', hint: 'Work email preferred' });
     return render({ default: firstName + lastName + email });
   },
 };
@@ -54,12 +35,7 @@ export const MultipleFields: Story = {
 export const WithErrors: Story = {
   name: 'With Errors',
   render: () => {
-    const nameField = formFieldTemplate({
-      label: 'Full name',
-      required: true,
-      error: 'Enter your full name',
-      default: textInputTemplate({ name: 'fullName', required: true }),
-    });
+    const nameField = textInputTemplate({ name: 'fullName', required: true, label: 'Full name', error: 'Enter your full name' });
     return render({ default: nameField });
   },
 };

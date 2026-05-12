@@ -108,10 +108,10 @@ jobs:
         run: pnpm validate:schemas
 
   pattern-drift:
-    name: Pattern drift (story embeds, names, props, prose refs, doc tables, fieldsets)
+    name: Pattern drift (fieldsets, stories, prose refs, color classes, JSDoc props, doc tables)
     runs-on: ubuntu-latest
     # Catches the recurring drift modes surfaced by the form-pattern
-    # audit (May 2026). The umbrella runs six gates in one job:
+    # audit (May 2026). The umbrella runs eight gates in one job:
     #
     #   lint:fieldsets       - No self-contained group component is
     #                          wrapped in civ-form-fieldset (would
@@ -141,6 +141,20 @@ jobs:
     #                          — e.g. the civ-form-field bullet that
     #                          outlived the component, or
     #                          civ-progress-bar refs across 7 files.
+    #   lint:color-classes   - Every civ-{text|bg|border|ring|fill|
+    #                          stroke|divide|outline}-{family}-{shade}
+    #                          class anywhere in the repo resolves to
+    #                          a real `--civ-color-*` token. Catches
+    #                          typos like civ-text-success-darker (no
+    #                          such shade on success) before they
+    #                          ship as silently-unstyled text.
+    #   lint:jsdoc-props     - Every `@prop` tag in a component's
+    #                          class-level JSDoc names a declared
+    #                          `@property` on that class (or an
+    #                          inherited prop from the base class).
+    #                          Catches docstring drift like the
+    #                          civ-action-sheet `trapFocus` doc that
+    #                          actually mapped to `trapFocusProp`.
     #   sync:doc-tables      - Regenerate _<component>.props.mdx and
     #                          _<component>.events.mdx partials from
     #                          @civui/schema, then `git diff
@@ -212,6 +226,40 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - name: Build Docusaurus (regenerates contract pages via prebuild hook)
         run: cd apps/docs && pnpm build
+        env:
+          NODE_OPTIONS: '--max-old-space-size=4096'
+
+  storybook-build:
+    name: Storybook build smoke (catches story render-time errors)
+    runs-on: ubuntu-latest
+    # The story-embed / story-name / story-props lints catch *static*
+    # drift (dead refs, mismatched names, phantom attributes). They do
+    # NOT catch render-time errors: a story whose render() throws, an
+    # import that fails to resolve, an MDX docs page with a syntax
+    # error, or a contract-page generator that emits invalid markup.
+    #
+    # `storybook build` parses every *.stories.ts and every MDX file
+    # under .storybook/contract/, runs Vite + Rollup, and produces a
+    # static bundle. If any story file fails to compile or any
+    # entry-point throws at module load, the build fails — exactly
+    # the regression mode we want to catch before merge.
+    #
+    # Note: this is a *static* build (no headless story execution).
+    # If render-time bugs that only surface at runtime become a
+    # recurring issue, install @storybook/test-runner and run it
+    # against the built bundle here.
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Build Storybook (prestorybook hook regenerates contract MDX)
+        run: pnpm storybook:build
         env:
           NODE_OPTIONS: '--max-old-space-size=4096'
 

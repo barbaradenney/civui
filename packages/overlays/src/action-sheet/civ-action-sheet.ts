@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBaseElement, LightDomSlotMixin, dispatch, trapFocus, clickOutside, t } from '@civui/core';
+import { CivBaseElement, LightDomSlotMixin, dispatch, trapFocus as runTrapFocus, clickOutside, t } from '@civui/core';
 import type { SlotConfig } from '@civui/core';
 
 /**
@@ -18,7 +18,7 @@ import type { SlotConfig } from '@civui/core';
  *
  * @prop {boolean} open - Controls visibility
  * @prop {string} maxHeight - Max height on mobile (default '50vh')
- * @prop {boolean} trapFocus - Enable focus trapping (default false)
+ * @prop {boolean} trapFocus - Enable focus trapping (default false). HTML attribute: `trap-focus`.
  * @prop {boolean} noClickOutside - Disable click-outside close (default false)
  *
  * @fires civ-action-sheet-close - When the sheet wants to close
@@ -34,7 +34,7 @@ import type { SlotConfig } from '@civui/core';
 export class CivActionSheet extends LightDomSlotMixin(CivBaseElement) {
   @property({ type: Boolean, reflect: true }) open = false;
   @property({ type: String, attribute: 'max-height' }) maxHeight = '50vh';
-  @property({ type: Boolean, attribute: 'trap-focus' }) trapFocusProp = false;
+  @property({ type: Boolean, attribute: 'trap-focus' }) trapFocus = false;
   @property({ type: Boolean, attribute: 'no-click-outside' }) noClickOutside = false;
 
   private _clickOutside = clickOutside(this, () => this._requestClose());
@@ -96,11 +96,11 @@ export class CivActionSheet extends LightDomSlotMixin(CivBaseElement) {
     }
     document.addEventListener('keydown', this._boundOnKeydown);
 
-    if (this.trapFocusProp) {
+    if (this.trapFocus) {
       this.updateComplete.then(() => {
         const container = this.querySelector('[data-civ-action-sheet-content]');
         if (container instanceof HTMLElement) {
-          this._cleanupTrap = trapFocus(container);
+          this._cleanupTrap = runTrapFocus(container);
         }
       });
     }

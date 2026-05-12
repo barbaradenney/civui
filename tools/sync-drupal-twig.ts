@@ -72,6 +72,12 @@ const COMPONENTS = [
   'civ-icon',
   'civ-filter-chip',
   'civ-filter-chip-group',
+  // Preset input wrappers — each is a self-contained web component
+  // that extends text-input with a baked-in mask and validation.
+  // Drupal SDCs mirror that shape: a thin pass-through twig that
+  // forwards label/hint/error/required/disabled to the web element.
+  'civ-ssn', 'civ-ein', 'civ-phone', 'civ-email', 'civ-zip',
+  'civ-currency', 'civ-routing-number', 'civ-va-file-number', 'civ-country',
 ];
 
 function camelToKebab(name: string): string {

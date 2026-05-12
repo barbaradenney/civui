@@ -31,6 +31,8 @@
     "lint:story-names": "tsx tools/lint-story-names.ts",
     "lint:story-props": "tsx tools/lint-story-props.ts",
     "lint:prose-refs": "tsx tools/lint-prose-refs.ts",
+    "lint:color-classes": "tsx tools/lint-color-classes.ts",
+    "lint:jsdoc-props": "tsx tools/lint-jsdoc-props.ts",
     "storybook:contract": "tsx tools/generate-contract-docs.ts",
     "scaffold:component": "tsx tools/scaffold-component.ts",
     "test:tools": "vitest run --config tools/vitest.config.ts",
@@ -40,7 +42,7 @@
     "sync:drupal:twig": "tsx tools/sync-drupal-twig.ts",
     "consistency": "node --experimental-strip-types tools/consistency-check.ts",
     "build:cdn": "node scripts/build-cdn.js",
-    "validate:patterns": "pnpm lint:fieldsets && pnpm lint:story-embeds && pnpm lint:story-names && pnpm lint:story-props && pnpm lint:prose-refs && pnpm sync:doc-tables && git diff --exit-code -- 'apps/docs/docs/components/**/_*.props.mdx' 'apps/docs/docs/components/**/_*.events.mdx'",
+    "validate:patterns": "pnpm lint:fieldsets && pnpm lint:story-embeds && pnpm lint:story-names && pnpm lint:story-props && pnpm lint:prose-refs && pnpm lint:color-classes && pnpm lint:jsdoc-props && pnpm sync:doc-tables && git diff --exit-code -- 'apps/docs/docs/components/**/_*.props.mdx' 'apps/docs/docs/components/**/_*.events.mdx'",
     "validate": "pnpm lint && pnpm typecheck && pnpm test && pnpm parity:schema --platforms && pnpm validate:schemas && pnpm validate:patterns && pnpm test:tools"
   },
   "devDependencies": {
@@ -62,6 +64,7 @@
     "eslint-plugin-storybook": "10.3.6",
     "http-server": "^14.1.1",
     "jsdom": "^28.1.0",
+    "locutus": "^3.0.14",
     "postcss": "^8.4.0",
     "prettier": "^3.0.0",
     "storybook": "10.3.6",

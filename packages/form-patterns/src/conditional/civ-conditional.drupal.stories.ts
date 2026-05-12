@@ -4,8 +4,6 @@ import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 // @ts-ignore
 import template from '../../../drupal/civui/components/conditional/conditional.twig';
 // @ts-ignore
-import formFieldTemplate from '../../../drupal/civui/components/form-field/form-field.twig';
-// @ts-ignore
 import textInputTemplate from '../../../drupal/civui/components/text-input/text-input.twig';
 
 const render = (props: Record<string, any>) => html`${unsafeHTML(template(props))}`;
@@ -19,10 +17,7 @@ type Story = StoryObj;
 
 export const Default: Story = {
   render: () => {
-    const conditionalContent = formFieldTemplate({
-      label: 'VA file number',
-      default: textInputTemplate({ name: 'va_file', required: true }),
-    });
+    const conditionalContent = textInputTemplate({ name: 'va_file', required: true, label: 'VA file number' });
     return render({
       when: 'veteran',
       equals: 'yes',
@@ -34,16 +29,8 @@ export const Default: Story = {
 export const MultipleFields: Story = {
   name: 'Multiple Conditional Fields',
   render: () => {
-    const field1 = formFieldTemplate({
-      label: 'Service branch',
-      required: true,
-      default: textInputTemplate({ name: 'branch', required: true }),
-    });
-    const field2 = formFieldTemplate({
-      label: 'Discharge date',
-      required: true,
-      default: textInputTemplate({ name: 'discharge_date', required: true }),
-    });
+    const field1 = textInputTemplate({ name: 'branch', required: true, label: 'Service branch' });
+    const field2 = textInputTemplate({ name: 'discharge_date', required: true, label: 'Discharge date' });
     return render({
       when: 'veteran',
       equals: 'yes',

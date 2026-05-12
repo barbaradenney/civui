@@ -2,11 +2,23 @@ $schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schema
 name: Combobox
 status: stable
 group: CivUI Inputs
-description: 'Autocomplete combobox with filterable option list. Wrap in form-field for label/hint/error.'
+description: 'Autocomplete combobox with filterable option list.'
 
 props:
   type: object
   properties:
+    label:
+      title: Label
+      type: string
+      description: 'Visible label rendered above the control'
+    hint:
+      title: Hint
+      type: string
+      description: 'Hint text rendered below the label'
+    error:
+      title: Error
+      type: string
+      description: 'Error message text. When present, switches the control to error styling and is announced via role="alert"'
     name:
       title: Name
       type: string

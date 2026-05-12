@@ -84,6 +84,9 @@ importers:
       jsdom:
         specifier: ^28.1.0
         version: 28.1.0
+      locutus:
+        specifier: ^3.0.14
+        version: 3.0.34
       postcss:
         specifier: ^8.5.10
         version: 8.5.14

@@ -1,4 +1,7 @@
 <civ-date-picker
+  {% if label %}label="{{ label }}"{% endif %}
+  {% if hint %}hint="{{ hint }}"{% endif %}
+  {% if error %}error="{{ error }}"{% endif %}
   {% if name %}name="{{ name }}"{% endif %}
   {% if value %}value="{{ value }}"{% endif %}
   {% if min %}min="{{ min }}"{% endif %}

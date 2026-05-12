@@ -21,7 +21,7 @@ const schema: ComponentSchema = {
       default: '50vh',
       attribute: 'max-height',
     },
-    trapFocusProp: {
+    trapFocus: {
       type: 'boolean',
       description: 'Trap keyboard focus inside the sheet while open. Web-specific behavior — native platforms manage focus via the OS sheet primitive',
       default: false,

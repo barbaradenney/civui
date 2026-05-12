@@ -205,6 +205,65 @@ out-of-band edits.
 
 ---
 
+## Color-utility class typos silently render unstyled text
+
+`civ-text-success-darker` looks plausible but `success` has no
+`darker` shade — only `lightest / lighter / DEFAULT / dark / darkest`.
+A class that doesn't resolve to a real
+`--civ-color-{family}-{shade}` token renders as plain inherited text
+with no visual error.
+
+```html
+<!-- ✗ silent no-op — no `darker` shade on success -->
+<p class="civ-text-success-darker">All set.</p>
+
+<!-- ✓ good — `dark` is a real shade -->
+<p class="civ-text-success-dark">All set.</p>
+```
+
+**Caught by:** `pnpm lint:color-classes` — every
+`civ-{text|bg|border|ring|fill|stroke|divide|outline}-{family}-{shade}`
+class used anywhere in the repo must resolve to a real token. The
+lint scans `packages/`, `apps/docs/docs/`, and `.twig` / `.mdx`
+files; it's wired into `pnpm validate:patterns` and the
+pattern-drift CI gate.
+
+---
+
+## JSDoc @prop tags drift from real @property declarations
+
+A component's class-level JSDoc declares its public API with
+`@prop {Type} name - …` tags. Those tags must match the actual
+`@property` declarations below. When they drift, the docs lie:
+
+```ts
+/** @prop {boolean} trapFocus - Enable focus trapping. */
+@customElement('civ-action-sheet')
+export class CivActionSheet extends … {
+  // ✗ silent docstring drift — JSDoc says trapFocus, JS says trapFocusProp
+  @property({ type: Boolean, attribute: 'trap-focus' }) trapFocusProp = false;
+}
+```
+
+This trap shipped in `civ-action-sheet` for months — the imported
+`trapFocus` utility from `@civui/core` collided with the prop name,
+so the author renamed the prop to `trapFocusProp` but never updated
+the docs. The fix is to alias the import (`trapFocus as runTrapFocus`)
+and keep the prop name aligned with the documented API.
+
+The lint normalizes camelCase ↔ kebab-case (`@prop us-first` matches
+`@property usFirst`) and seeds inherited props from known base
+classes (`CivFormElement`, `CivBooleanFormElement`,
+`CivCompoundElement`, `PresetInputWrapper`, `LegendHeadingMixin`) so
+you don't need to re-declare `name`, `value`, `error`, etc.
+
+**Caught by:** `pnpm lint:jsdoc-props` — every `@prop` tag must
+correspond to a declared `@property` on the class (or an inherited
+prop from one of the known base classes). Wired into
+`pnpm validate:patterns` and the pattern-drift CI gate.
+
+---
+
 ## Local-first commit / push workflow
 
 The project's convention is to commit locally and push only when

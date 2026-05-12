@@ -50,9 +50,21 @@ const config: StorybookConfig = {
 
     // Resolve workspace packages to TypeScript source so Storybook dev
     // works without running `pnpm build` first.
+    //
+    // The `locutus/php/...` alias works around a packaging mismatch
+    // between drupal-twig-extensions and locutus. drupal-twig-extensions
+    // imports `locutus/php/datetime/date.js` (with `.js`); locutus's
+    // exports map `./*` → `./esm/*.js` would resolve that to
+    // `./esm/.../date.js.js` (non-existent). CJS resolution forgives
+    // this at runtime (the Twig dev server works), but Rollup's strict
+    // ESM resolution does not, breaking `pnpm storybook:build`. The
+    // alias points the offending subpath directly at the real ESM
+    // file. Remove this when drupal-twig-extensions ships an import
+    // without the `.js` suffix.
     config.resolve = config.resolve || {};
     config.resolve.alias = {
       ...(config.resolve.alias as Record<string, string> | undefined),
+      'locutus/php/datetime/date.js': resolve(root, 'node_modules/locutus/php/datetime/date.js'),
       '@civui/core/icon': resolve(root, 'packages/core/src/icon/index.ts'),
       '@civui/core': resolve(root, 'packages/core/src/index.ts'),
       '@civui/inputs/ssn': resolve(root, 'packages/inputs/src/ssn/index.ts'),

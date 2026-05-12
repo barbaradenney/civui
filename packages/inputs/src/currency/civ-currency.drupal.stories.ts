@@ -3,8 +3,6 @@ import { html } from 'lit';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 // @ts-ignore
 import template from '../../../drupal/civui/components/currency/currency.twig';
-// @ts-ignore
-import FormFieldTwig from '../../../drupal/civui/components/form-field/form-field.twig';
 
 const render = (twigFn: (ctx: Record<string, any>) => string, props: Record<string, any>) =>
   html`${unsafeHTML(twigFn(props))}`;
@@ -24,58 +22,35 @@ export const Default: Story = {
 
 export const WithHint: Story = {
   render: () => {
-    const input = template({ name: 'income' });
-    return render(FormFieldTwig, { label: 'Annual income', hint: 'Enter amount in US dollars', required: true, default: input });
+    return render(template, { name: 'income', label: 'Annual income', hint: 'Enter amount in US dollars', required: true });
   },
 };
 
 export const WithError: Story = {
   render: () => {
-    const input = template({ name: 'income' });
-    return render(FormFieldTwig, { label: 'Annual income', error: 'Enter a valid dollar amount', default: input });
+    return render(template, { name: 'income', label: 'Annual income', error: 'Enter a valid dollar amount' });
   },
 };
 
 export const Required: Story = {
   render: () => {
-    const input = template({ name: 'income', required: true });
-    return render(FormFieldTwig, { label: 'Annual income', required: true, default: input });
+    return render(template, { name: 'income', required: true, label: 'Annual income' });
   },
 };
 
 export const Disabled: Story = {
   render: () => {
-    const input = template({ name: 'income', disabled: true });
-    return render(FormFieldTwig, { label: 'Annual income', disabled: true, default: input });
+    return render(template, { name: 'income', disabled: true, label: 'Annual income' });
   },
 };
 
 export const AllStates: Story = {
   render: () => {
-    const defaultField = FormFieldTwig({
-      label: 'Default',
-      default: template({ name: 'f1' }),
-    });
-    const hintField = FormFieldTwig({
-      label: 'With hint',
-      hint: 'Enter amount in US dollars',
-      default: template({ name: 'f2' }),
-    });
-    const errorField = FormFieldTwig({
-      label: 'With error',
-      error: 'Enter a valid amount',
-      default: template({ name: 'f3' }),
-    });
-    const requiredField = FormFieldTwig({
-      label: 'Required',
-      required: true,
-      default: template({ name: 'f4', required: true }),
-    });
-    const disabledField = FormFieldTwig({
-      label: 'Disabled',
-      disabled: true,
-      default: template({ name: 'f5', disabled: true }),
-    });
+    const defaultField = template({ name: 'f1', label: 'Default' });
+    const hintField = template({ name: 'f2', label: 'With hint', hint: 'Enter amount in US dollars' });
+    const errorField = template({ name: 'f3', label: 'With error', error: 'Enter a valid amount' });
+    const requiredField = template({ name: 'f4', required: true, label: 'Required' });
+    const disabledField = template({ name: 'f5', disabled: true, label: 'Disabled' });
     return html`${unsafeHTML(defaultField + hintField + errorField + requiredField + disabledField)}`;
   },
 };

@@ -46,6 +46,9 @@ export class CivImagePreview extends CivBaseElement {
   /** Preview size. */
   @property({ type: String }) size: ImagePreviewSize = 'md';
 
+  /** Tracks whether the missing-alt dev warning has fired for this instance. */
+  private _warnedMissingAlt = false;
+
   private get _maxWidth(): string {
     switch (this.size) {
       case 'sm': return '120px';
@@ -58,8 +61,18 @@ export class CivImagePreview extends CivBaseElement {
 
   override render() {
     if (!this.src) return nothing;
-    if (!this.alt && typeof console !== 'undefined') {
-      console.warn(`<civ-image-preview> is missing an alt attribute. Images without alt text are inaccessible (WCAG 1.1.1).`);
+    // Dev-only nudge: warn once per instance when alt is missing.
+    // Gated on `globalThis.CIV_DEV !== false` so production builds can
+    // opt out, and tracked per-instance so consumers don't flood the
+    // console with the same warning on every render.
+    if (
+      !this.alt &&
+      !this._warnedMissingAlt &&
+      typeof console !== 'undefined' &&
+      (globalThis as { CIV_DEV?: unknown }).CIV_DEV !== false
+    ) {
+      console.warn(`[civ-image-preview] is missing an alt attribute. Images without alt text are inaccessible (WCAG 1.1.1). If the image is purely decorative, set alt="" explicitly.`);
+      this._warnedMissingAlt = true;
     }
 
     return html`

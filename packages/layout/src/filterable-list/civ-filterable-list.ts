@@ -25,7 +25,10 @@ import type { SlotConfig } from '@civui/core';
  *
  * @element civ-filterable-list
  *
- * @prop {string} label - Accessible label for the region.
+ * @prop {string} label - **Strongly recommended.** Accessible name for the
+ *   region (`aria-label`). `role="region"` requires a name to be useful as a
+ *   landmark — without one, AT users navigating by landmark see an unnamed
+ *   region. Omit only when the surrounding markup already names the section.
  * @prop {string} noResultsMessage - Shown when zero items match.
  * @prop {number} announceDelay - Debounce ms for SR announcements.
  * @prop {boolean} resultCountHidden - Hide visible count.
@@ -172,7 +175,7 @@ export class CivFilterableList extends LightDomSlotMixin(CivBaseElement) {
           aria-atomic="true"
         >
           ${showCount ? html`
-            <p class="civ-filterable-list__count civ-text-sm civ-text-base-dark civ-py-2 civ-m-0">
+            <p class="civ-filterable-list__count civ-text-sm civ-py-2 civ-m-0">
               ${this._statusText}
             </p>
           ` : nothing}

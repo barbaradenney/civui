@@ -13,11 +13,15 @@ import type { SlotConfig } from '@civui/core';
  * @element civ-button-group
  *
  * @prop {'horizontal' | 'vertical'} orientation - Layout direction
- * @prop {string} label - Accessible label for the toolbar (aria-label)
+ * @prop {string} label - **Strongly recommended.** Accessible name for the
+ *   toolbar (`aria-label`). `role="toolbar"` requires a name per WAI-ARIA;
+ *   without one, AT users navigating by landmark see an unnamed toolbar.
+ *   Omit only when the surrounding context (e.g. an outer `<section
+ *   aria-label="…">`) already names the group.
  *
  * @example
  * ```html
- * <civ-button-group>
+ * <civ-button-group label="Text formatting">
  *   <civ-action-button label="Bold"></civ-action-button>
  *   <civ-action-button label="Italic"></civ-action-button>
  *   <civ-action-button label="Underline"></civ-action-button>

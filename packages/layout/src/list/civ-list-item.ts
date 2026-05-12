@@ -71,6 +71,13 @@ export class CivListItem extends LightDomSlotMixin(CivBaseElement) {
   /** Error text below the content. */
   @property({ type: String }) error = '';
 
+  /**
+   * Stable id for the error element. Cached here rather than computed in
+   * `render()` so subsequent renders produce the same id — important if
+   * a consumer ever wires `aria-describedby` to it.
+   */
+  private _errorId = this.generateId('error');
+
   override _getSlotConfig(): SlotConfig {
     return {
       'data-list-item-start': '[data-civ-list-item-start-slot]',
@@ -143,7 +150,7 @@ export class CivListItem extends LightDomSlotMixin(CivBaseElement) {
         ${headingContent}
         ${descriptionContent}
         <span data-civ-list-item-content-slot></span>
-        ${renderError(this.generateId('error'), this.error)}
+        ${renderError(this._errorId, this.error)}
       </span>
       ${hasEnd ? html`
         <span class="civ-flex-shrink-0 civ-flex civ-items-center civ-gap-1" data-civ-list-item-end-slot></span>

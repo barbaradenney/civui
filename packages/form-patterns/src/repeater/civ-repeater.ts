@@ -102,7 +102,6 @@ export class CivRepeater extends CivBaseElement {
   @state() private _formStepsActive = false;
   @state() private _formStepsEditIndex = -1;
   private _rowData: Map<number, Record<string, string>> = new Map();
-  private _formStepsAbort: AbortController | null = null;
 
   private _template: Node[] = [];
   private _hintId = this.generateId('hint');
@@ -157,10 +156,17 @@ export class CivRepeater extends CivBaseElement {
       >
         ${renderFormHeader({ label: renderLegend({ legend: legendText, required: showList ? this.required : false, headingLevel: this.headingLevel, size: this.size }), hintId: this._hintId, hint: showList ? this.hint : '', errorId: this._errorId, error: showList ? this.error : '', fieldset: true })}
 
-        <div data-civ-repeater-rows class="${this._formStepsActive ? 'civ-hidden' : ''}"></div>
+        <div
+          data-civ-repeater-rows
+          class="${this._formStepsActive ? 'civ-hidden' : ''}"
+          @click="${this._onRowsClick}"
+        ></div>
 
         ${this._formStepsActive ? html`
-          <div data-civ-repeater-form-steps></div>
+          <div
+            data-civ-repeater-form-steps
+            @civ-step-complete="${this._onStepComplete}"
+          ></div>
           <div class="civ-mt-4">
             <civ-button
               variant="secondary"
@@ -184,6 +190,41 @@ export class CivRepeater extends CivBaseElement {
     `;
   }
 
+  /**
+   * Delegated click handler bound via Lit on `[data-civ-repeater-rows]`.
+   * Dispatches to remove / edit based on the action attribute on the
+   * clicked button. Routing through one Lit-managed listener keeps every
+   * per-row button cleanup-free (Lit disconnects this listener on host
+   * teardown).
+   */
+  private _onRowsClick = (e: Event): void => {
+    const target = (e.target as Element | null)?.closest<HTMLElement>(
+      '[data-civ-repeater-action]',
+    );
+    if (!target) return;
+    const row = target.closest('[data-civ-repeater-row]');
+    if (!row) return;
+    const index = this._getRowIndex(row);
+    if (index < 0) return;
+    const action = target.getAttribute('data-civ-repeater-action');
+    if (action === 'remove') {
+      this.removeRow(index);
+    } else if (action === 'edit') {
+      this._openFormStepsForEdit(index);
+    }
+  };
+
+  /**
+   * Delegated `civ-step-complete` listener bound via Lit on
+   * `[data-civ-repeater-form-steps]`. Replaces the per-form-step
+   * AbortController previously used to deregister the listener — Lit
+   * owns the lifecycle now.
+   */
+  private _onStepComplete = (): void => {
+    const index = this._formStepsEditIndex >= 0 ? this._formStepsEditIndex : this._rowCount;
+    this._saveFormSteps(index);
+  };
+
   /** Programmatically add a row. */
   addRow(): void {
     if (this.max > 0 && this._rowCount >= this.max) return;
@@ -194,8 +235,6 @@ export class CivRepeater extends CivBaseElement {
   removeRow(index: number): void {
     // Close form-steps if editing the row being removed
     if (this._formStepsActive && this._formStepsEditIndex === index) {
-      this._formStepsAbort?.abort();
-      this._formStepsAbort = null;
       this._formStepsActive = false;
       this._formStepsEditIndex = -1;
     } else if (this._formStepsActive && this._formStepsEditIndex > index) {
@@ -275,18 +314,18 @@ export class CivRepeater extends CivBaseElement {
     // Index field names
     this._indexRowFields(row, index);
 
-    // Add remove button if allowed
+    // Add remove button if allowed. Click is handled by the delegated
+    // `_onRowsClick` listener bound via Lit on the rows container — keeping
+    // listener lifecycle owned by Lit (auto-cleanup on host disconnect).
     if (this._rowCount >= this.min || index >= this.min) {
       const removeBtn = document.createElement('civ-action-button');
       removeBtn.setAttribute('variant', 'tertiary');
       removeBtn.setAttribute('danger', '');
       removeBtn.setAttribute('label', t('repeaterRemoveButton'));
       removeBtn.classList.add('civ-mt-2');
+      removeBtn.setAttribute('data-civ-repeater-action', 'remove');
       removeBtn.setAttribute('aria-label',
         interpolate(t('repeaterRemoveAriaLabel'), { item: this.itemLabel, index: String(index + 1) }));
-      removeBtn.addEventListener('click', () => {
-        this.removeRow(this._getRowIndex(row));
-      });
       row.appendChild(removeBtn);
     }
 
@@ -353,9 +392,6 @@ export class CivRepeater extends CivBaseElement {
     const container = this.querySelector('[data-civ-repeater-form-steps]');
     if (!container) return;
 
-    // Clean up previous form-steps listeners
-    this._formStepsAbort?.abort();
-    this._formStepsAbort = new AbortController();
     container.innerHTML = '';
 
     const formStep = document.createElement('civ-form-step');
@@ -372,10 +408,9 @@ export class CivRepeater extends CivBaseElement {
       formStep.appendChild(clone);
     }
 
-    formStep.addEventListener('civ-step-complete', () => {
-      this._saveFormSteps(index);
-    }, { signal: this._formStepsAbort.signal });
-
+    // The civ-step-complete listener lives on the form-steps container
+    // (bound via Lit's @civ-step-complete in render). Events bubble up
+    // from this civ-form-step and are picked up by `_onStepComplete`.
     container.appendChild(formStep);
   }
 
@@ -436,8 +471,6 @@ export class CivRepeater extends CivBaseElement {
     if (isNew && this.max > 0 && this._rowCount >= this.max) return;
 
     this._rowData.set(index, data);
-    this._formStepsAbort?.abort();
-    this._formStepsAbort = null;
 
     if (isNew) {
       this._addFormStepsSummaryCard(index, data);
@@ -465,8 +498,6 @@ export class CivRepeater extends CivBaseElement {
 
   private _cancelFormSteps(): void {
     const index = this._formStepsEditIndex >= 0 ? this._formStepsEditIndex : this._rowCount;
-    this._formStepsAbort?.abort();
-    this._formStepsAbort = null;
     dispatch(this, 'civ-repeater-form-steps-close', { index, action: 'cancel' });
     this._formStepsActive = false;
     this._formStepsEditIndex = -1;
@@ -499,25 +530,24 @@ export class CivRepeater extends CivBaseElement {
     const actions = document.createElement('span');
     actions.classList.add('civ-list-item__actions');
 
+    // Edit + remove clicks are handled by the delegated `_onRowsClick`
+    // listener bound via Lit on the rows container — keeping listener
+    // lifecycle owned by Lit (auto-cleanup on host disconnect).
     const editBtn = document.createElement('civ-action-button');
     editBtn.setAttribute('variant', 'tertiary');
     editBtn.setAttribute('label', t('repeaterEditButton'));
+    editBtn.setAttribute('data-civ-repeater-action', 'edit');
     editBtn.setAttribute('aria-label',
       interpolate(t('repeaterEditAriaLabel'), { item: this.itemLabel, index: String(index + 1) }));
-    editBtn.addEventListener('click', () => {
-      this._openFormStepsForEdit(this._getRowIndex(row));
-    });
     actions.appendChild(editBtn);
 
     const removeBtn = document.createElement('civ-action-button');
     removeBtn.setAttribute('variant', 'tertiary');
     removeBtn.setAttribute('danger', '');
     removeBtn.setAttribute('label', t('repeaterRemoveButton'));
+    removeBtn.setAttribute('data-civ-repeater-action', 'remove');
     removeBtn.setAttribute('aria-label',
       interpolate(t('repeaterRemoveAriaLabel'), { item: this.itemLabel, index: String(index + 1) }));
-    removeBtn.addEventListener('click', () => {
-      this.removeRow(this._getRowIndex(row));
-    });
     actions.appendChild(removeBtn);
 
     summary.appendChild(actions);

@@ -6,30 +6,21 @@ When you finish an audit, the audit skill writes new findings here (see `.claude
 
 ---
 
-## Native platform implementation
+## Native platform implementation pass (iOS + Android)
 
-### `CivModal` / `CivActionSheet` (iOS, Android)
-- **Surfaced:** Overlays audit, 2026-05-11.
-- **Files:** `packages/ios/Sources/CivUI/CivModal.swift`, `packages/ios/Sources/CivUI/CivActionSheet.swift`, `packages/android/src/main/kotlin/gov/civui/components/CivModal.kt`, `packages/android/src/main/kotlin/gov/civui/components/CivActionSheet.kt`.
-- **State:** iOS bodies return `EmptyView()`; Android bodies render only their child `content()` in a `Column` with no sheet/dialog presentation. The prop surface satisfies schema-parity, so parity passes — but there's no actual modal/sheet UI.
-- **Why deferred:** Implementing native presentations (SwiftUI `.sheet` / `.confirmationDialog`, Compose `ModalBottomSheet` / `Dialog`) is a platform-implementation pass, not a parity correction.
-
-### Compound-component Android stubs
-- **Surfaced:** Compound audit, 2026-05-11.
-- **Files:** `packages/android/src/main/kotlin/gov/civui/components/CivPartnershipHistory.kt` (41 LOC), `CivRelationship.kt` (43 LOC), `CivServiceHistory.kt` (33 LOC).
-- **State:** Each declares the schema's prop surface but renders only `Column { if (open) content() }`. No real Compose UI.
-- **Why deferred:** iOS counterparts are 150–500 LOC of working SwiftUI; Android implementation is a separate platform work item.
-
----
-
-## Web-side technical debt
-
-### `civ-repeater` is the largest fragile surface in form-patterns
-- **Surfaced:** Form-patterns audit, 2026-05-12.
-- **File:** `packages/form-patterns/src/repeater/civ-repeater.ts` (567 LOC).
-- **State:** Builds rows via imperative `document.createElement` + manual `addEventListener` attachment for edit/remove buttons (rather than Lit templates). Listener cleanup relies on the buttons being GC'd with their parent row, plus one `AbortController` for the cloned form-step listener.
-- **Why deferred:** Refactoring to a Lit-template-driven row model is a multi-day rewrite; the current code passes `lint:event-listener-leak` and works under the existing 470-test suite, so risk of regression is real.
-- **What to watch for in the meantime:** Any new dynamically-added listener on a repeater row needs its own cleanup (signal-based or row-removal-based). Don't accept PRs that `addEventListener` on a child created outside a Lit template without an explicit teardown path.
+- **Surfaced:** Overlays + Compound audits, 2026-05-11. Scope corrected 2026-05-12.
+- **Scale:** Larger than originally reported. **15 iOS components** return `EmptyView()` today, not the 4 the original audit-debt entry implied. Android stubs follow the same pattern (no real Compose body).
+- **Stubbed iOS components** (those whose `public var body: some View` is `EmptyView()`):
+  - Overlays: `CivModal`, `CivActionSheet`
+  - Actions: `CivActionLink` (has `// TODO`)
+  - Feedback: `CivBadge`, `CivCount`
+  - Inputs: `CivCountry`, `CivDateRangePicker`
+  - Filter: `CivFilterChip`, `CivFilterChipGroup`, `CivFilterableList` (has `// TODO`)
+  - Layout: `CivImagePreview` (has `// TODO`), `CivInputGroup`
+  - Compound: `CivPartnershipHistory`, `CivRelationship`, `CivServiceHistory`
+- **State:** Each declares the schema's prop surface (so `schema-parity` is satisfied), but renders no actual native UI. Android equivalents render only `Column { ... }` placeholders.
+- **Why deferred:** This is a real native-implementation pass, not a quick port. SwiftUI/Compose work without device verification is risky — modal/sheet presentation in particular has platform-specific quirks (focus trap, dismiss gestures, scrim, keyboard insets) that LLMs cannot test blind. The schema-driven prop surface keeps the parity contract stable; UI implementation should be scheduled as dedicated work with someone who can run the simulators.
+- **What to watch for in the meantime:** When adding new props to a covered component, add them to the iOS/Android stubs too — schema parity requires it. Don't try to "fix" the empty bodies one component at a time without device testing.
 
 ---
 

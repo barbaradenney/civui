@@ -29,6 +29,11 @@ public struct CivRelationship: View {
     /// Whether to show the name fields.
     public var showName: Bool
 
+    /// Inverse of `showName` — when true, hides the inner name fields.
+    /// Use when an enclosing repeater step already captures the name and
+    /// you want to avoid duplicating it inside CivRelationship.
+    public var isHideName: Bool
+
     /// Whether to show the deceased fields.
     public var showDeceased: Bool
 
@@ -108,6 +113,7 @@ public struct CivRelationship: View {
         legend: String = "",
         preset: String = "",
         showName: Bool = true,
+        isHideName: Bool = false,
         showDeceased: Bool = false,
         deceasedAssumed: Bool = false,
         showDivorceDate: Bool = false,
@@ -135,6 +141,7 @@ public struct CivRelationship: View {
         self.legend = legend
         self.preset = preset
         self.showName = showName
+        self.isHideName = isHideName
         self.showDeceased = showDeceased
         self.deceasedAssumed = deceasedAssumed
         self.showDivorceDate = showDivorceDate

@@ -6,7 +6,7 @@ import radioTemplate from '../../../drupal/civui/components/radio/radio.twig';
 // @ts-ignore
 import radioGroupTemplate from '../../../drupal/civui/components/radio-group/radio-group.twig';
 // @ts-ignore
-import FormFieldsetTwig from '../../../drupal/civui/components/form-fieldset/form-fieldset.twig';
+import FieldsetTwig from '../../../drupal/civui/components/fieldset/fieldset.twig';
 
 const render = (twigFn: (ctx: Record<string, any>) => string, props: Record<string, any>) =>
   html`${unsafeHTML(twigFn(props))}`;
@@ -45,7 +45,7 @@ export const WithHint: Story = {
       radioTemplate({ label: 'Phone', name: 'contact_h', value: 'phone' }),
     ].join('');
     const group = radioGroupTemplate({ default: children });
-    return render(FormFieldsetTwig, { legend: 'Preferred contact method', hint: 'We will use this to reach you about your application', required: true, default: group });
+    return render(FieldsetTwig, { legend: 'Preferred contact method', hint: 'We will use this to reach you about your application', required: true, default: group });
   },
 };
 
@@ -56,7 +56,7 @@ export const WithError: Story = {
       radioTemplate({ label: 'Phone', name: 'contact_e', value: 'phone' }),
     ].join('');
     const group = radioGroupTemplate({ default: children });
-    return render(FormFieldsetTwig, { legend: 'Preferred contact method', error: 'Select a contact method', default: group });
+    return render(FieldsetTwig, { legend: 'Preferred contact method', error: 'Select a contact method', default: group });
   },
 };
 
@@ -67,7 +67,7 @@ export const Disabled: Story = {
       radioTemplate({ label: 'Phone', name: 'contact_d', value: 'phone', disabled: true }),
     ].join('');
     const group = radioGroupTemplate({ default: children });
-    return render(FormFieldsetTwig, { legend: 'Preferred contact method', disabled: true, default: group });
+    return render(FieldsetTwig, { legend: 'Preferred contact method', disabled: true, default: group });
   },
 };
 
@@ -79,7 +79,7 @@ export const AllStates: Story = {
         radioTemplate({ label: 'Phone', name, value: 'phone' }),
       ].join('');
       const group = radioGroupTemplate({ default: children });
-      return FormFieldsetTwig({ legend, default: group, ...extra });
+      return FieldsetTwig({ legend, default: group, ...extra });
     };
     const defaultGroup = makeGroup('r1', 'Default');
     const hintGroup = makeGroup('r2', 'With hint', { hint: 'Hint text here' });

@@ -44,12 +44,12 @@ describe('generateA11yTests', () => {
 
   it('generates arrow key test for radio groups', () => {
     const html = `
-      <civ-form-fieldset legend="Color">
+      <civ-fieldset legend="Color">
         <civ-radio-group name="color">
           <civ-radio label="Red" value="red"></civ-radio>
           <civ-radio label="Blue" value="blue"></civ-radio>
         </civ-radio-group>
-      </civ-form-fieldset>
+      </civ-fieldset>
     `;
     const result = generateA11yTests(html);
     expect(result.code).toContain('arrow key');

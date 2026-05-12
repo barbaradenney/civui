@@ -81,7 +81,7 @@ describe('civ-yes-no', () => {
     expect(changeHandler.mock.calls[0][0].detail).toEqual({ value: 'yes' });
   });
 
-  it('renders hint and error when wrapped in civ-form-fieldset', async () => {
+  it('renders hint and error from its own props', async () => {
     const wrapper = await fixture(
       '<civ-yes-no legend="Question" hint="Select one option" error="Please select an answer"></civ-yes-no>',
     );

@@ -138,7 +138,7 @@ export const DensityScale: Story = {
 };
 
 // ── Group Variants ────────────────────────────────────────────
-// Note: civ-checkbox-group needs civ-form-fieldset wrapping
+// Note: civ-checkbox-group is self-contained — pass `legend` directly.
 
 export const Group: Story = {
   render: () => html`

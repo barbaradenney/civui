@@ -93,7 +93,7 @@ If iOS and Android happen to also declare a webOnly prop (as a no-op or convenie
 
 These components do **not** have schemas because they're web-specific layout / orchestration wrappers without cross-platform contracts:
 
-- `civ-form-fieldset`, `civ-fieldset` — abstract over how form headers are rendered on web. Native platforms compose the same affordances differently and don't need a contract translation.
+- `civ-fieldset` — abstracts over how form headers are rendered on web for multi-field grouping. Native platforms compose the same affordances differently and don't need a contract translation.
 - `civ-form` — top-level form orchestration; native uses framework-native form patterns (SwiftUI `Form`, Compose `Column`).
 
 These are tracked in `tools/schema-parity.ts` as deliberately out of scope (see the comment header in `COVERED_COMPONENTS`).

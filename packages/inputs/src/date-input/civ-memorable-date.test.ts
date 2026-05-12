@@ -34,7 +34,7 @@ describe('civ-memorable-date rendering', () => {
     expect(select.options[11].label).toBe('December');
   });
 
-  it('renders hint and error when wrapped in civ-form-fieldset', async () => {
+  it('renders hint and error from its own props', async () => {
     const wrapper = await fixture(
       '<civ-memorable-date legend="Date of birth" hint="For example: January 19 2000" error="Date is required" name="dob"></civ-memorable-date>',
     );
@@ -48,7 +48,7 @@ describe('civ-memorable-date rendering', () => {
     expect(errorEl!.textContent).toBe('Date is required');
   });
 
-  it('shows required indicator when wrapped in civ-form-fieldset', async () => {
+  it('shows required indicator on its own legend', async () => {
     const wrapper = await fixture(
       '<civ-memorable-date legend="Date of birth" required name="dob"></civ-memorable-date>',
     );

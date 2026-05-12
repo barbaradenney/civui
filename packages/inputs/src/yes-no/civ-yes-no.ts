@@ -10,7 +10,7 @@ import { CivFormElement, LegendHeadingMixin, dispatch, buildDescribedBy, resolve
  * (Yes / No). Uses ElementInternals for form participation.
  *
  * Renders its own legend / hint / error — do **not** wrap in
- * `<civ-form-fieldset>` (you'd get nested fieldsets with double
+ * `<civ-fieldset>` (you'd get nested fieldsets with double
  * legends). Use the `legend` prop directly on the component.
  *
  * @element civ-yes-no

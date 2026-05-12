@@ -1,6 +1,17 @@
 import { describe, it, expect, afterEach } from 'vitest';
+import { html } from 'lit';
+import { customElement } from 'lit/decorators.js';
 import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
+import { CivFormElement } from '@civui/core';
 import './civ-fieldset.js';
+import type { CivFieldset } from './civ-fieldset.js';
+
+@customElement('test-form-child')
+class TestFormChild extends CivFormElement {
+  override render() {
+    return html`<input />`;
+  }
+}
 
 afterEach(cleanupFixtures);
 
@@ -75,6 +86,62 @@ describe('civ-fieldset', () => {
     expect(el.shadowRoot).toBeNull();
   });
 
+  it('reflects tight-hint as an attribute for CSS targeting', async () => {
+    const el = await fixture<CivFieldset>('<civ-fieldset legend="Race" hint="Select one or more" tight-hint></civ-fieldset>');
+
+    expect(el.tightHint).toBe(true);
+    expect(el.hasAttribute('tight-hint')).toBe(true);
+  });
+
+  it('absorbs civ-error-change events from children and re-renders the error', async () => {
+    const el = await fixture<CivFieldset>(`
+      <civ-fieldset legend="Date of birth">
+        <span id="child">child</span>
+      </civ-fieldset>
+    `);
+    const child = el.querySelector('#child')!;
+    child.dispatchEvent(new CustomEvent('civ-error-change', {
+      detail: { error: 'Enter a valid date' },
+      bubbles: true,
+    }));
+    await elementUpdated(el);
+
+    expect(el.error).toBe('Enter a valid date');
+    const alert = el.querySelector('[role="alert"]');
+    expect(alert!.textContent).toContain('Enter a valid date');
+  });
+
+  it('does not echo its own civ-error-change events', async () => {
+    const el = await fixture<CivFieldset>('<civ-fieldset legend="X" error="initial"></civ-fieldset>');
+
+    el.dispatchEvent(new CustomEvent('civ-error-change', {
+      detail: { error: 'should not apply' },
+      bubbles: true,
+    }));
+    await elementUpdated(el);
+
+    expect(el.error).toBe('initial');
+  });
+
+  it('mirrors a real CivFormElement child\'s error via the dispatched civ-error-change event', async () => {
+    // End-to-end check that CivFormElement.update() dispatches civ-error-change
+    // in the shape civ-fieldset's listener expects.
+    const wrapper = await fixture<CivFieldset>(`
+      <civ-fieldset legend="Date of birth">
+        <test-form-child name="dob"></test-form-child>
+      </civ-fieldset>
+    `);
+    await elementUpdated(wrapper);
+
+    const child = wrapper.querySelector('test-form-child') as TestFormChild;
+    child.error = 'Enter a valid date';
+    await elementUpdated(wrapper);
+    expect(wrapper.error).toBe('Enter a valid date');
+
+    child.error = '';
+    await elementUpdated(wrapper);
+    expect(wrapper.error).toBe('');
+  });
 });
 
 describe('fieldset disabled', () => {

@@ -53,9 +53,9 @@ export function extractStrings(html: string): ExtractStringsResult {
       }
     }
 
-    // civ-form-fieldset can carry a group-level legend / hint that applies
+    // civ-fieldset can carry a group-level legend / hint that applies
     // to the inner controls.
-    const wrapper = $el.closest('civ-form-fieldset');
+    const wrapper = $el.closest('civ-fieldset');
     if (wrapper.length > 0) {
       for (const attr of TEXT_ATTRIBUTES) {
         const key = `${name}.${attr}`;

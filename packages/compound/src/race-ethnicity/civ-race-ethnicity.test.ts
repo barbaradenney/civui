@@ -129,8 +129,8 @@ describe('civ-race-ethnicity', () => {
     await elementUpdated(el);
 
     // The compound's outer legend is "Demographics"; sub-section legends
-    // appear inside civ-form-fieldset (Race / checkbox-group) and inside
-    // civ-radio-group's own self-contained fieldset (Ethnicity).
+    // appear inside civ-checkbox-group (Race) and inside civ-radio-group
+    // (Ethnicity), each of which renders its own self-contained fieldset.
     const allLegends = Array.from(el.querySelectorAll('legend')).map(
       (l) => l.textContent?.replace(/\(required\)/g, '').trim(),
     );

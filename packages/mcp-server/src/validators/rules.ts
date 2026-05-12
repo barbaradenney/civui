@@ -112,9 +112,9 @@ const missingLegend: Rule = {
       $(tag).each((_, el) => {
         const legend = $(el).attr('legend');
         if (!legend || legend.trim() === '') {
-          // civ-form-fieldset still exists for multi-field grouping — accept
+          // civ-fieldset still exists for multi-field grouping — accept
           // its legend as covering an inner group.
-          const wrapper = $(el).closest('civ-form-fieldset');
+          const wrapper = $(el).closest('civ-fieldset');
           if (wrapper.length > 0 && wrapper.attr('legend')?.trim()) return;
           violations.push({
             rule: 'missing-legend',

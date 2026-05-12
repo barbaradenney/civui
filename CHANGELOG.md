@@ -39,7 +39,7 @@ across all 21 components.
 
 ### Added
 
-- **`civ-form-field` / `civ-form-fieldset` / `civ-fieldset` / `civ-repeater` / all 8 compound components** — `heading-level` (1-6) and `size` (sm/md/lg/xl) props. `heading-level` promotes the `<label>`/`<legend>` to a heading via `role="heading"` + `aria-level=N` for screen-reader navigation while preserving the native element. `size` is an independent visual size variant for use as a section/page heading. Supports the VA.gov / GOV.UK "one question per page" pattern (WCAG 2.4.6 / 2.4.10).
+- **`civ-fieldset` / `civ-repeater` / all 8 compound components** — `heading-level` (1-6) and `size` (sm/md/lg/xl) props. `heading-level` promotes the `<label>`/`<legend>` to a heading via `role="heading"` + `aria-level=N` for screen-reader navigation while preserving the native element. `size` is an independent visual size variant for use as a section/page heading. Supports the VA.gov / GOV.UK "one question per page" pattern (WCAG 2.4.6 / 2.4.10).
 - **`civ-text-input`** — Character counter when `maxlength` is set (visual + 1s-debounced `aria-live` polite announcement). Suppressed when a mask is active.
 - **`civ-text-input`** — `leading-icon` / `trailing-icon` attributes (decorative civ-icon overlay inside the input). Optional `leading-icon-label` / `trailing-icon-label` exposes the icon as `role="img"` for assistive tech. Prefix/suffix and the clear button take precedence on the same edge.
 - **`civ-textarea`** — `minlength` prop (was missing) and declarative `validate="length"` that runs on blur against `minlength` / `maxlength`.

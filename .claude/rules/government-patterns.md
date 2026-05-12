@@ -9,9 +9,9 @@ globs:
 
 ## Render order
 - Every form control renders its own chrome: label → hint → error → control via `renderFormHeader()` from `@civui/core`.
-- `civ-form-fieldset` enforces: legend → hint → error → controls (multi-field grouping only).
+- `civ-fieldset` enforces: legend → hint → error → controls (multi-field grouping only).
 - Single-input components (text-input, textarea, select, combobox, date-picker, file-upload) are self-contained — they render their own label/hint/error from props.
-- Group components (radio-group, checkbox-group, segmented-control, yes-no, memorable-date, date-range-picker) are **self-contained** — they render their own legend/hint/error from a `legend` prop. Do NOT wrap in `<civ-form-fieldset>`.
+- Group components (radio-group, checkbox-group, segmented-control, yes-no, memorable-date, date-range-picker) are **self-contained** — they render their own legend/hint/error from a `legend` prop. Do NOT wrap in `<civ-fieldset>`.
 
 ## Section 508 non-negotiables
 - Every single input MUST have a visible `label` prop set directly on the control.

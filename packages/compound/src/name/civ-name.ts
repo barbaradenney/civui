@@ -40,7 +40,7 @@ export class CivName extends LegendHeadingMixin(CivCompoundElement) {
 
   /**
    * Fieldset legend displayed above the name fields. This component is
-   * self-contained — render it on its own, not inside `<civ-form-fieldset>`,
+   * self-contained — render it on its own, not inside `<civ-fieldset>`,
    * or you'll get two stacked legends.
    */
   @property({ type: String }) legend = '';

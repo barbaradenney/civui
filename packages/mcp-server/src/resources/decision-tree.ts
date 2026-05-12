@@ -57,7 +57,7 @@ Use this guide to select the correct CivUI component for each form field.
 - **Single-value input** (text, textarea, select, combobox, date-picker, file-upload) → Set \`label="..."\` directly on the control.
 - **Group component** (radio-group, checkbox-group, memorable-date, segmented-control, yes-no, date-range-picker) → Set \`legend="..."\` directly on the control.
 - **Self-contained compound** (civ-address, civ-name, civ-signature, civ-checkbox, civ-toggle) → Pass \`label\` / \`legend\` directly; no wrapper.
-- **Multi-field grouping** (rare — e.g. a custom block of related controls) → Wrap in \`<civ-form-fieldset legend="...">\`.
+- **Multi-field grouping** (rare — e.g. a custom block of related controls) → Wrap in \`<civ-fieldset legend="...">\`.
 
 ### Should I group fields?
 - **Yes, if fields are logically related** → Wrap in \`<civ-fieldset legend="...">\`
@@ -83,7 +83,7 @@ Use this guide to select the correct CivUI component for each form field.
 |---------|---------|-----|
 | \`<civ-form-group>\` / \`<civ-form-field>\` | Removed | Set \`label\` directly on the control |
 | \`<civ-us-state>\` / \`<civ-service-branch>\` | Removed | Use \`<civ-select preset="us-state|service-branch">\` |
-| Wrapping a single input in \`<civ-form-fieldset>\` | Use the control's own \`label\` | Move label/hint/error to the control directly |
+| Wrapping a single input in \`<civ-fieldset>\` | Use the control's own \`label\` | Move label/hint/error to the control directly |
 | \`placeholder\` without \`label\` | Not accessible — placeholder is not a label | Always provide a \`label\` attribute |
 | Radio group with 1 option | Semantically incorrect | Use \`<civ-checkbox>\` instead |
 | Radio group with 8+ options | Too many options for radio | Use \`<civ-select>\` or \`<civ-combobox>\` |

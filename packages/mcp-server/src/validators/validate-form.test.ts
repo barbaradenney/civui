@@ -122,7 +122,7 @@ describe('validateForm', () => {
     });
 
     it('does not flag when legend is on wrapper', () => {
-      const result = validateForm('<civ-form-fieldset legend="Choose one"><civ-radio-group name="x"></civ-radio-group></civ-form-fieldset>');
+      const result = validateForm('<civ-fieldset legend="Choose one"><civ-radio-group name="x"></civ-radio-group></civ-fieldset>');
       expect(result.errors.filter((e) => e.rule === 'missing-legend')).toHaveLength(0);
     });
 
@@ -169,11 +169,11 @@ describe('validateForm', () => {
 
     it('does not flag civ-radio inside civ-radio-group', () => {
       const result = validateForm(`
-        <civ-form-fieldset legend="Pick one">
+        <civ-fieldset legend="Pick one">
           <civ-radio-group name="x">
             <civ-radio label="Option A" value="a"></civ-radio>
           </civ-radio-group>
-        </civ-form-fieldset>
+        </civ-fieldset>
       `);
       expect(result.errors.filter((e) => e.rule === 'orphaned-radio')).toHaveLength(0);
     });
@@ -187,11 +187,11 @@ describe('validateForm', () => {
 
     it('does not flag civ-segment inside civ-segmented-control', () => {
       const result = validateForm(`
-        <civ-form-fieldset legend="View">
+        <civ-fieldset legend="View">
           <civ-segmented-control name="x">
             <civ-segment label="Tab 1" value="1"></civ-segment>
           </civ-segmented-control>
-        </civ-form-fieldset>
+        </civ-fieldset>
       `);
       expect(result.errors.filter((e) => e.rule === 'orphaned-segment')).toHaveLength(0);
     });
@@ -204,7 +204,7 @@ describe('validateForm', () => {
     });
 
     it('does not flag group component with legend on wrapper', () => {
-      const result = validateForm('<civ-form-fieldset legend="Pick one"><civ-radio-group name="x"></civ-radio-group></civ-form-fieldset>');
+      const result = validateForm('<civ-fieldset legend="Pick one"><civ-radio-group name="x"></civ-radio-group></civ-fieldset>');
       expect(result.errors.filter((e) => e.rule === 'label-on-group')).toHaveLength(0);
     });
   });
@@ -462,29 +462,29 @@ describe('validateForm', () => {
 
   describe('radio-group-single-option', () => {
     it('flags radio group with 0 radios', () => {
-      const result = validateForm('<civ-form-fieldset legend="Pick"><civ-radio-group name="x"></civ-radio-group></civ-form-fieldset>');
+      const result = validateForm('<civ-fieldset legend="Pick"><civ-radio-group name="x"></civ-radio-group></civ-fieldset>');
       expect(result.errors.some((e) => e.rule === 'radio-group-single-option')).toBe(true);
     });
 
     it('flags radio group with 1 radio', () => {
       const result = validateForm(`
-        <civ-form-fieldset legend="Pick">
+        <civ-fieldset legend="Pick">
           <civ-radio-group name="x">
             <civ-radio label="Only" value="only"></civ-radio>
           </civ-radio-group>
-        </civ-form-fieldset>
+        </civ-fieldset>
       `);
       expect(result.errors.some((e) => e.rule === 'radio-group-single-option')).toBe(true);
     });
 
     it('does not flag radio group with 2 radios', () => {
       const result = validateForm(`
-        <civ-form-fieldset legend="Pick">
+        <civ-fieldset legend="Pick">
           <civ-radio-group name="x">
             <civ-radio label="A" value="a"></civ-radio>
             <civ-radio label="B" value="b"></civ-radio>
           </civ-radio-group>
-        </civ-form-fieldset>
+        </civ-fieldset>
       `);
       expect(result.errors.filter((e) => e.rule === 'radio-group-single-option')).toHaveLength(0);
     });
@@ -523,7 +523,7 @@ describe('validateForm', () => {
         `<civ-radio label="Opt ${i}" value="${i}"></civ-radio>`
       ).join('\n');
       const result = validateForm(`
-        <civ-form-fieldset legend="Pick"><civ-radio-group name="x">${radios}</civ-radio-group></civ-form-fieldset>
+        <civ-fieldset legend="Pick"><civ-radio-group name="x">${radios}</civ-radio-group></civ-fieldset>
       `);
       expect(result.warnings.some((w) => w.rule === 'large-radio-group')).toBe(true);
     });
@@ -533,7 +533,7 @@ describe('validateForm', () => {
         `<civ-radio label="Opt ${i}" value="${i}"></civ-radio>`
       ).join('\n');
       const result = validateForm(`
-        <civ-form-fieldset legend="Pick"><civ-radio-group name="x">${radios}</civ-radio-group></civ-form-fieldset>
+        <civ-fieldset legend="Pick"><civ-radio-group name="x">${radios}</civ-radio-group></civ-fieldset>
       `);
       expect(result.warnings.filter((w) => w.rule === 'large-radio-group')).toHaveLength(0);
     });

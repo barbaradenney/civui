@@ -91,8 +91,7 @@ Use CivUI components in any Twig template:
 - `civui:alert` — Info, warning, error, success messages
 
 ### Form Patterns
-- `civui:form-field` — Label/hint/error wrapper for inputs
-- `civui:form-fieldset` — Legend/hint/error wrapper for groups
+- `civui:fieldset` — Legend/hint/error wrapper for multi-field groups
 - `civui:form` — Form container with validation
 
 ### Overlays

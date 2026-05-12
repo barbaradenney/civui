@@ -14,6 +14,15 @@ const meta: Meta = {
     error: { control: 'text' },
     required: { control: 'boolean' },
     disabled: { control: 'boolean' },
+    size: {
+      control: 'select',
+      options: [undefined, 'sm', 'md', 'lg', 'xl'],
+    },
+    headingLevel: {
+      control: 'select',
+      options: [undefined, 1, 2, 3, 4, 5, 6],
+    },
+    tightHint: { control: 'boolean' },
   },
 };
 
@@ -35,6 +44,9 @@ export const Default: Story = {
       error="${args.error}"
       ?required="${args.required}"
       ?disabled="${args.disabled}"
+      .size="${args.size as any}"
+      .headingLevel="${args.headingLevel as any}"
+      ?tight-hint="${args.tightHint}"
     >
       <civ-text-input label="First name" name="first-name"></civ-text-input>
       <civ-text-input label="Last name" name="last-name"></civ-text-input>
@@ -84,6 +96,25 @@ export const Nested: Story = {
         <civ-text-input label="First name" name="secondary-first"></civ-text-input>
         <civ-text-input label="Last name" name="secondary-last"></civ-text-input>
       </civ-fieldset>
+    </civ-fieldset>
+  `,
+};
+
+export const PromotedHeading: Story = {
+  name: 'Promoted to heading (level 2)',
+  args: {
+    legend: 'Mailing address',
+    headingLevel: 2,
+    size: 'lg',
+  },
+  render: Default.render,
+};
+
+export const TightHint: Story = {
+  name: 'Tight hint (compact compound)',
+  render: () => html`
+    <civ-fieldset legend="Race" hint="Select one or more" size="md" tight-hint>
+      <civ-text-input label="Note" name="race-note" hint="(placeholder body — would be a checkbox group in production)"></civ-text-input>
     </civ-fieldset>
   `,
 };

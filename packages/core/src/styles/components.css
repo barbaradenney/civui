@@ -204,9 +204,9 @@
   }
 
   /* Pull the group hint flush with the controls when `tight-hint` is set on
-     the wrapping civ-form-fieldset. Used by compact compounds (e.g. the OMB
+     the wrapping civ-fieldset. Used by compact compounds (e.g. the OMB
      race group) where the legend + hint should read as one stacked header. */
-  civ-form-fieldset[tight-hint] .civ-fieldset > .civ-hint--group,
+  civ-fieldset[tight-hint] .civ-fieldset > .civ-hint--group,
   civ-checkbox-group[tight-hint] .civ-fieldset > .civ-hint--group,
   civ-radio-group[tight-hint] .civ-fieldset > .civ-hint--group {
     margin-bottom: 0;
@@ -416,7 +416,7 @@
 
   /* Remove bottom margin on the last nested fieldset (compound inside compound).
      Match the inner fieldset only when its wrapper is the outer fieldset's
-     last direct child — without the wrapper hop, each civ-form-fieldset
+     last direct child — without the wrapper hop, each civ-fieldset
      looks like its own :last-child and every section loses its margin. */
   .civ-fieldset > .civ-fieldset:last-child,
   .civ-fieldset > :last-child .civ-fieldset {

@@ -21,12 +21,12 @@ describe('extractStrings', () => {
 
   it('extracts legend from fieldset wrapper', () => {
     const html = `
-      <civ-form-fieldset legend="Branch of service">
+      <civ-fieldset legend="Branch of service">
         <civ-radio-group name="branch">
           <civ-radio label="Army" value="army"></civ-radio>
           <civ-radio label="Navy" value="navy"></civ-radio>
         </civ-radio-group>
-      </civ-form-fieldset>
+      </civ-fieldset>
     `;
     const result = extractStrings(html);
     expect(result.strings['branch.legend']).toBe('Branch of service');
@@ -34,12 +34,12 @@ describe('extractStrings', () => {
 
   it('extracts option labels from radio group children', () => {
     const html = `
-      <civ-form-fieldset legend="Color">
+      <civ-fieldset legend="Color">
         <civ-radio-group name="color">
           <civ-radio label="Red" value="red"></civ-radio>
           <civ-radio label="Blue" value="blue"></civ-radio>
         </civ-radio-group>
-      </civ-form-fieldset>
+      </civ-fieldset>
     `;
     const result = extractStrings(html);
     expect(result.strings['color.option.red']).toBe('Red');
@@ -48,12 +48,12 @@ describe('extractStrings', () => {
 
   it('extracts option labels from checkbox group children', () => {
     const html = `
-      <civ-form-fieldset legend="Toppings">
+      <civ-fieldset legend="Toppings">
         <civ-checkbox-group name="toppings">
           <civ-checkbox label="Cheese" value="cheese"></civ-checkbox>
           <civ-checkbox label="Pepperoni" value="pepperoni"></civ-checkbox>
         </civ-checkbox-group>
-      </civ-form-fieldset>
+      </civ-fieldset>
     `;
     const result = extractStrings(html);
     expect(result.strings['toppings.option.cheese']).toBe('Cheese');

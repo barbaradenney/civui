@@ -222,28 +222,31 @@ describe('civ-address', () => {
     expect(el.error).toBe('');
   });
 
-  it('cascades aria-required to required sub-fields (not the fieldset)', async () => {
+  it('cascades required to sub-fields (not aria-required on the fieldset)', async () => {
     const el = await fixture<CivAddress>('<civ-address legend="Address" name="addr" required></civ-address>');
 
     // aria-required is not a valid ARIA attribute on <fieldset> (axe rule
     // `aria-allowed-attr`). The required state is communicated via the
-    // legend's "(required)" text and via aria-required on the underlying
-    // form controls.
+    // legend's "(required)" text and via the native `required` attribute
+    // on the underlying form controls (AT correctly maps native required
+    // to the required state — no aria-required duplicate signal needed).
     const fieldset = el.querySelector('fieldset')!;
     expect(fieldset.hasAttribute('aria-required')).toBe(false);
 
     const streetInput = el.querySelector('civ-text-input')!;
-    expect(streetInput.querySelector('input')!.getAttribute('aria-required')).toBe('true');
+    const innerInput = streetInput.querySelector('input')!;
+    expect(innerInput.required).toBe(true);
+    expect(innerInput.hasAttribute('required')).toBe(true);
   });
 
-  it('omits aria-required when not required', async () => {
+  it('omits required when the wrapper is not required', async () => {
     const el = await fixture<CivAddress>('<civ-address legend="Address" name="addr"></civ-address>');
 
     const inputs = el.querySelectorAll('input');
     const select = el.querySelector('select')!;
 
-    expect(inputs[0].hasAttribute('aria-required')).toBe(false);
-    expect(select.hasAttribute('aria-required')).toBe(false);
+    expect((inputs[0] as HTMLInputElement).required).toBe(false);
+    expect(select.hasAttribute('required')).toBe(false);
   });
 
   it('disables via formDisabledCallback', async () => {

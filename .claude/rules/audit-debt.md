@@ -31,13 +31,6 @@ When you finish an audit, the audit skill writes new findings here (see `.claude
 - **Why deferred:** Refactoring to a Lit-template-driven row model is a multi-day rewrite; the current code passes `lint:event-listener-leak` and works under the existing 470-test suite, so risk of regression is real.
 - **What to watch for in the meantime:** Any new dynamically-added listener on a repeater row needs its own cleanup (signal-based or row-removal-based). Don't accept PRs that `addEventListener` on a child created outside a Lit template without an explicit teardown path.
 
-### `civ-fieldset` ↔ `civ-form-fieldset` near-duplication
-- **Surfaced:** Form-patterns audit, 2026-05-12.
-- **Files:** `packages/form-patterns/src/fieldset/civ-fieldset.ts` (74 LOC), `packages/core/src/form-field/civ-form-fieldset.ts` (141 LOC).
-- **State:** Both render `<fieldset>` + legend + hint + error. `civ-form-fieldset` adds `tightHint`, `requiredMessage`, and child `civ-error-change` event absorption. The differences are real but small.
-- **Resolution so far:** Documented when-to-use-which in `apps/docs/docs/components/form/fieldset.mdx`. Consolidation deferred.
-- **Why deferred:** Both are deliberately out-of-scope for cross-platform parity (CLAUDE.md: "Out of scope — web-specific layout wrappers"). Merging is a breaking change for consumers using `<civ-fieldset>` and the differences may be load-bearing for some compound forms. Decide consolidation strategy before changing.
-
 ---
 
 ## Process

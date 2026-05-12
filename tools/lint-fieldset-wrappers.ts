@@ -4,7 +4,7 @@
  *
  * The six "group" form components are self-contained — they render their
  * own <fieldset> + legend / hint / error when given a `legend` prop, and
- * **must not** be wrapped in an external <civ-form-fieldset>. Doing so
+ * **must not** be wrapped in an external <civ-fieldset>. Doing so
  * produces nested fieldsets with double legends and breaks slot
  * relocation.
  *
@@ -104,7 +104,7 @@ function* walk(path: string): Generator<string> {
 
 /**
  * Strip inline-backtick spans from a line so markdown prose like
- * `<civ-form-fieldset>` (a tag NAME, not a tag USE) doesn't get counted
+ * `<civ-fieldset>` (a tag NAME, not a tag USE) doesn't get counted
  * as either an open or a close. We only strip single-backtick spans —
  * triple-backtick fenced blocks contain real example HTML that the
  * linter SHOULD scan (anti-patterns in code samples propagate).
@@ -114,7 +114,7 @@ function stripInlineTicks(line: string): string {
 }
 
 /**
- * Walk lines tracking civ-form-fieldset open/close depth. When a
+ * Walk lines tracking civ-fieldset open/close depth. When a
  * self-contained group component opens at depth > 0, emit a violation.
  *
  * Triple-backtick fences (```html ... ```) toggle a code-block flag —
@@ -127,15 +127,15 @@ function lintFile(filePath: string): Violation[] {
   const text = readFileSync(filePath, 'utf-8');
   const lines = text.split('\n');
 
-  // Stack of line numbers where civ-form-fieldset opens are pending close
+  // Stack of line numbers where civ-fieldset opens are pending close
   const openStack: number[] = [];
 
   for (let i = 0; i < lines.length; i++) {
     const raw = lines[i];
     const line = stripInlineTicks(raw);
 
-    const opens = (line.match(/<civ-form-fieldset\b/g) || []).length;
-    const closes = (line.match(/<\/civ-form-fieldset>/g) || []).length;
+    const opens = (line.match(/<civ-fieldset\b/g) || []).length;
+    const closes = (line.match(/<\/civ-fieldset>/g) || []).length;
 
     for (let o = 0; o < opens; o++) openStack.push(i + 1);
 
@@ -184,12 +184,12 @@ function main(): number {
   const { violations, filesScanned } = runLint();
 
   if (violations.length === 0) {
-    console.log(`✓ ${filesScanned} files scanned — no self-contained group components wrapped in civ-form-fieldset.`);
+    console.log(`✓ ${filesScanned} files scanned — no self-contained group components wrapped in civ-fieldset.`);
     return 0;
   }
 
   console.log(`✗ ${violations.length} violations found across ${filesScanned} files scanned.\n`);
-  console.log('Self-contained group components must NOT be wrapped in <civ-form-fieldset>.');
+  console.log('Self-contained group components must NOT be wrapped in <civ-fieldset>.');
   console.log('Pass `legend` directly on the component — it renders its own fieldset.\n');
 
   for (const v of violations) {

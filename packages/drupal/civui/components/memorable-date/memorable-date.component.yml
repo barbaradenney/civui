@@ -2,7 +2,7 @@ $schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schema
 name: Memorable Date
 status: stable
 group: CivUI Inputs
-description: 'Three-field date input for known dates like birthdays. Use with form-fieldset.'
+description: 'Three-field date input for known dates like birthdays. Self-contained — pass `legend`, `hint`, and `error` directly.'
 
 props:
   type: object
@@ -74,7 +74,7 @@ props:
     legend:
       title: Legend
       type: string
-      description: 'Fieldset legend rendered above the date sub-fields. The component is self-contained — do not wrap in civ-form-fieldset.'
+      description: 'Fieldset legend rendered above the date sub-fields. The component is self-contained — do not wrap in civ-fieldset.'
 
 
 

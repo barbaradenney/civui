@@ -366,8 +366,8 @@ function checkNativeCounterparts(comp: ComponentFile) {
   if (comp.name === 'civ-icon') return;
   if (comp.name === 'civ-conditional' || comp.name === 'civ-progress-bar') return;
   if (CHILD_COMPONENTS.has(comp.name)) return; // Part of parent component on native
-  // civ-form-fieldset is a web-only layout wrapper — no native counterpart needed
-  if (comp.name === 'civ-form-fieldset') return;
+  // civ-fieldset is a web-only layout wrapper — no native counterpart needed
+  if (comp.name === 'civ-fieldset') return;
   if (comp.name === 'civ-race-ethnicity') return; // Compound web component
   if (comp.src.includes('extends PresetInputWrapper')) return; // Preset wrappers
 

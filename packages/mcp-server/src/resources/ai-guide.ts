@@ -29,7 +29,7 @@ For architecture and internals, see \`CLAUDE.md\` in the repo root.
 | \`<civ-date-picker>\` | Date | \`min\`, \`max\`, \`placeholder\`, \`locale\`, \`weekStartsOn\` | \`{ value }\` |
 | \`<civ-memorable-date>\` | Date | \`legend\`, \`monthLabel\`, \`dayLabel\`, \`yearLabel\`, \`locale\` | \`{ value, month, day, year }\` |
 | \`<civ-file-upload>\` | File | \`accept\`, \`multiple\`, \`maxSize\`, \`maxFiles\` | \`{ files: File[] }\` |
-| \`<civ-form-fieldset>\` | Wrapper | \`legend\`, \`hint\`, \`error\`, \`required\`, \`touched\`, \`heading-level\` (1-6), \`size\` (sm/md/lg/xl) | — |
+| \`<civ-fieldset>\` | Wrapper | \`legend\`, \`hint\`, \`error\`, \`required\`, \`touched\`, \`heading-level\` (1-6), \`size\` (sm/md/lg/xl) | — |
 | \`<civ-fieldset>\` | Layout | \`legend\`, \`hint\`, \`error\`, \`required\`, \`disabled\`, \`heading-level\` (1-6), \`size\` (sm/md/lg/xl) | — |
 | \`<civ-form>\` | Layout | \`action\`, \`method\` | \`civ-submit: { formData }\`, \`civ-invalid: { errors }\` |
 | \`<civ-button>\` | Action | \`variant\` (primary/secondary/tertiary), \`danger\`, \`type\`, \`disabled\` | \`civ-analytics\` |
@@ -77,7 +77,7 @@ For architecture and internals, see \`CLAUDE.md\` in the repo root.
 
 **All form-participating components** also have: \`name\`, \`value\`, \`required\`, \`disabled\`.
 
-**Self-contained pattern:** Every CivUI control renders its own label / legend chrome — set \`label="..."\` directly on single inputs and \`legend="..."\` directly on group components (\`radio-group\`, \`checkbox-group\`, \`segmented-control\`, \`yes-no\`, \`memorable-date\`, \`date-range-picker\`). \`<civ-form-fieldset>\` exists only for genuine multi-field grouping.
+**Self-contained pattern:** Every CivUI control renders its own label / legend chrome — set \`label="..."\` directly on single inputs and \`legend="..."\` directly on group components (\`radio-group\`, \`checkbox-group\`, \`segmented-control\`, \`yes-no\`, \`memorable-date\`, \`date-range-picker\`). \`<civ-fieldset>\` exists only for genuine multi-field grouping.
 
 ---
 
@@ -391,13 +391,13 @@ Every CivUI control renders its own label / legend / hint / error / required ind
 
 ---
 
-### civ-form-fieldset
+### civ-fieldset
 
 Wrapper for multi-field grouping — e.g. a custom block of related controls sharing one section heading. Renders legend, hint, error, and required indicator. Tracks per-field \`touched\` state.
 
-Single inputs and self-contained group components (radio-group, checkbox-group, segmented-control, yes-no, memorable-date, date-range-picker) already carry their own label / legend — **do not wrap them in \`civ-form-fieldset\`** or you'll get nested fieldsets with double legends.
+Single inputs and self-contained group components (radio-group, checkbox-group, segmented-control, yes-no, memorable-date, date-range-picker) already carry their own label / legend — **do not wrap them in \`civ-fieldset\`** or you'll get nested fieldsets with double legends.
 
-**Props:** \`legend\`, \`hint\`, \`error\`, \`required\`, \`requiredMessage\`, \`hide-required-indicator\`, \`touched\`, \`heading-level\` (1-6), \`size\` (sm/md/lg/xl)
+**Props:** \`legend\`, \`hint\`, \`error\`, \`required\`, \`disabled\`, \`tight-hint\` (pull hint flush with controls below), \`heading-level\` (1-6), \`size\` (sm/md/lg/xl)
 
 **Example:**
 \`\`\`html
@@ -896,9 +896,9 @@ Pre-configured wrappers with built-in masking, validation, and labeling. Set \`l
     <civ-text-input label="Phone number" hint="Include area code" name="phone" type="tel" autocomplete="tel" inputmode="tel"></civ-text-input>
   </civ-fieldset>
 
-  <civ-fieldset legend="Application details">
-    <civ-memorable-date legend="Date of birth" hint="For example: January 15 1990" required name="dob"></civ-memorable-date>
+  <civ-memorable-date legend="Date of birth" hint="For example: January 15 1990" required name="dob"></civ-memorable-date>
 
+  <civ-fieldset legend="Application details">
     <civ-select label="Application type" name="appType" required
         .options="\${[
           { value: 'new', label: 'New application' },
@@ -1018,7 +1018,7 @@ Government forms commonly follow the **VA.gov / GOV.UK "one question per page" p
 - Lets screen-reader users navigate forms by heading.
 - Satisfies WCAG 2.4.6 (Headings and Labels) and 2.4.10 (Section Headings).
 
-CivUI exposes two opt-in props on every chrome-rendering control (every form input and group component, \`civ-form-fieldset\`, \`civ-fieldset\`, \`civ-repeater\`, and every compound component):
+CivUI exposes two opt-in props on every chrome-rendering control (every form input and group component, \`civ-fieldset\`, \`civ-repeater\`, and every compound component):
 
 - **\`heading-level\`** (1-6) — adds \`role="heading"\` + \`aria-level=N\` to the rendered \`<label>\`/\`<legend>\`. The native element is preserved, so click-to-focus and \`for\`/\`aria-labelledby\` keep working — heading promotion is purely an accessibility-tree affordance.
 - **\`size\`** (\`sm\` | \`md\` | \`lg\` | \`xl\`) — visual size variant. \`sm\` (default, omitted) = body size; \`md\` ≈ \`text-lg\`; \`lg\` ≈ \`text-xl\`; \`xl\` ≈ \`text-2xl\`. Independent of \`heading-level\`.
@@ -1153,7 +1153,7 @@ Avoid these common mistakes when using CivUI components:
 
 3. **Never use \`civ-toggle\` for choices that require form submission.** Toggles have immediate-effect semantics. Use \`civ-checkbox\` for choices that take effect on submit.
 
-4. **Always put label/hint/error directly on the input control.** Every CivUI control renders its own chrome — there is no separate wrapper for single inputs. Group components carry \`legend\` instead of \`label\`. \`<civ-form-fieldset>\` is only for multi-field grouping.
+4. **Always put label/hint/error directly on the input control.** Every CivUI control renders its own chrome — there is no separate wrapper for single inputs. Group components carry \`legend\` instead of \`label\`. \`<civ-fieldset>\` is only for multi-field grouping.
 
 5. **Never use \`civ-form-group\` or \`civ-form-field\`.** Both have been retired — set \`label\` directly on single inputs and \`legend\` directly on group components.
 

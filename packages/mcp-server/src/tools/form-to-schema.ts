@@ -111,9 +111,9 @@ function extractField($: ReturnType<typeof load>, el: any, insideRepeatable = fa
   const type = resolveFieldType(tag, inputType) as FormField['type'];
   const rawName = $el.attr('name') ?? '';
   const name = insideRepeatable ? stripArrayPrefix(rawName) : rawName;
-  // civ-form-fieldset still wraps multi-field groups; otherwise label/legend
+  // civ-fieldset still wraps multi-field groups; otherwise label/legend
   // is on the component itself.
-  const $wrapper = $el.closest('civ-form-fieldset');
+  const $wrapper = $el.closest('civ-fieldset');
   let label = $el.attr('label') ?? $el.attr('legend') ?? $el.attr('aria-label') ?? '';
   if (!label && $wrapper.length > 0) {
     label = $wrapper.attr('legend') ?? '';

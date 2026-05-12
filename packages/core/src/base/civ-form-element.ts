@@ -350,7 +350,7 @@ export class CivFormElement extends CivBaseElement {
       this._updateValidity();
     }
     if (changed.has('error')) {
-      // Bubble error changes up so a wrapping civ-form-fieldset can mirror
+      // Bubble error changes up so a wrapping civ-fieldset can mirror
       // the child's internal validation state (e.g. date-picker rejecting
       // an unparseable typed value). The wrapper's listener is loop-safe
       // because it only updates when the value actually differs.

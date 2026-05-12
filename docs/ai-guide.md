@@ -32,7 +32,7 @@ For architecture and internals, see `CLAUDE.md` in the repo root.
 | `<civ-fieldset>` | Layout | `legend`, `hint`, `error`, `required`, `disabled`, `heading-level` (1-6), `size` (sm/md/lg/xl) | — |
 | `<civ-form>` | Layout | `action`, `method`, `supportResources` | `civ-submit: { formData }`, `civ-invalid: { errors }` |
 | `<civ-form-step>` | Layout | `persist`, `sensitive`, `show-pause`, `continue-label`, `complete-label`, `pause-label`, `nav-disabled`, `validate` | `civ-step-change`, `civ-step-pause`, `civ-step-complete` |
-| `<civ-form-fieldset>` | Wrapper | `legend`, `hint`, `error`, `required`, `disabled`, `requiredMessage`, `heading-level` (1-6), `size` (sm/md/lg/xl) | — |
+| `<civ-fieldset>` | Wrapper | `legend`, `hint`, `error`, `required`, `disabled`, `requiredMessage`, `heading-level` (1-6), `size` (sm/md/lg/xl) | — |
 | `<civ-repeater>` | Layout | `legend`, `name`, `min`, `max`, `addLabel`, `removeLabel`, `heading-level` (1-6), `size` (sm/md/lg/xl) | `civ-change: { value }` |
 | `<civ-section-intro>` | Layout | `heading`, `headingLevel`, `tone` | — |
 | `<civ-summary>` | Display | `data`, `editLabel` | `civ-edit: { section }` |
@@ -86,7 +86,7 @@ For architecture and internals, see `CLAUDE.md` in the repo root.
 
 **Compound components** (address, name, signature, etc.) render their own legend and the per-field chrome of their nested controls.
 
-`<civ-form-fieldset>` is reserved for genuine **multi-field grouping** — a custom block of several unrelated controls under one section heading. Don't wrap a single input or a self-contained group component in it (you'd get nested fieldsets).
+`<civ-fieldset>` is reserved for genuine **multi-field grouping** — a custom block of several unrelated controls under one section heading. Don't wrap a single input or a self-contained group component in it (you'd get nested fieldsets).
 
 **Per-field state:** All form components have `touched` (set on first blur) and `pristine` (inverse of touched) for validation UX.
 
@@ -1385,8 +1385,9 @@ Drupal stories are co-located next to web component source as `*.drupal.stories.
     ></civ-text-input>
   </civ-fieldset>
 
+  <civ-memorable-date legend="Date of birth" hint="For example: January 15 1990" required name="dob"></civ-memorable-date>
+
   <civ-fieldset legend="Application details">
-    <civ-memorable-date legend="Date of birth" hint="For example: January 15 1990" required name="dob"></civ-memorable-date>
     <civ-select
       label="Application type"
       name="appType"
@@ -1521,7 +1522,7 @@ Government forms commonly follow the **VA.gov / GOV.UK "one question per page" p
 - Satisfies WCAG 2.4.6 (Headings and Labels) and 2.4.10 (Section Headings).
 - Reinforces that the form is a sequence of single decisions, not a dense grid.
 
-CivUI supports this through two opt-in props on every chrome-rendering control (every form input and group component, `civ-form-fieldset`, every compound component, and `civ-fieldset` / `civ-repeater`):
+CivUI supports this through two opt-in props on every chrome-rendering control (every form input and group component, `civ-fieldset`, every compound component, and `civ-fieldset` / `civ-repeater`):
 
 - **`heading-level`** (`1` through `6`) — adds `role="heading"` + `aria-level=N` to the rendered `<label>`/`<legend>`. The native element is preserved, so click-to-focus and `for`/`aria-labelledby` still work; the heading promotion is purely an accessibility-tree affordance.
 - **`size`** (`sm` | `md` | `lg` | `xl`) — visual size variant. `sm` (default, omitted) = body size; `md` ≈ `text-lg`; `lg` ≈ `text-xl`; `xl` ≈ `text-2xl`. Independent of `heading-level`, so visual prominence and screen-reader semantics can be tuned separately.

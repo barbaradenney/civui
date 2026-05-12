@@ -27,7 +27,7 @@ components) **directly on the control**.
 </civ-form-field>
 ```
 
-`<civ-form-fieldset>` survives, but only for **multi-field grouping**
+`<civ-fieldset>` survives, but only for **multi-field grouping**
 (several unrelated controls under one section heading). Do not wrap a
 single input or a self-contained group component in it.
 
@@ -147,7 +147,7 @@ skip those fields too.
 `civ-radio-group`, `civ-checkbox-group`, `civ-segmented-control`,
 `civ-yes-no`, `civ-memorable-date`, and `civ-date-range-picker`
 render their own `<fieldset>` + `<legend>`. Wrapping any of them in
-`<civ-form-fieldset>` produces nested fieldsets and double-rendered
+`<civ-fieldset>` produces nested fieldsets and double-rendered
 legends.
 
 ```html
@@ -155,9 +155,9 @@ legends.
 <civ-yes-no legend="Are you a veteran?" name="vet"></civ-yes-no>
 
 <!-- ✗ nested fieldset, double legend -->
-<civ-form-fieldset legend="Are you a veteran?">
+<civ-fieldset legend="Are you a veteran?">
   <civ-yes-no name="vet"></civ-yes-no>
-</civ-form-fieldset>
+</civ-fieldset>
 ```
 
 **Caught by:** `pnpm lint:fieldsets`.

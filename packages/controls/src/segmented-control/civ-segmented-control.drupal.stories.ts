@@ -4,7 +4,7 @@ import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 // @ts-ignore
 import template from '../../../drupal/civui/components/segmented-control/segmented-control.twig';
 // @ts-ignore
-import FormFieldsetTwig from '../../../drupal/civui/components/form-fieldset/form-fieldset.twig';
+import FieldsetTwig from '../../../drupal/civui/components/fieldset/fieldset.twig';
 
 const render = (twigFn: (ctx: Record<string, any>) => string, props: Record<string, any>) =>
   html`${unsafeHTML(twigFn(props))}`;
@@ -26,14 +26,14 @@ export const Default: Story = {
 export const WithHint: Story = {
   render: () => {
     const control = template({ legend: 'View', name: 'view_h' });
-    return render(FormFieldsetTwig, { legend: 'Display mode', hint: 'Choose how to view your records', default: control });
+    return render(FieldsetTwig, { legend: 'Display mode', hint: 'Choose how to view your records', default: control });
   },
 };
 
 export const WithError: Story = {
   render: () => {
     const control = template({ legend: 'View', name: 'view_e' });
-    return render(FormFieldsetTwig, { legend: 'Display mode', error: 'Select a view option', default: control });
+    return render(FieldsetTwig, { legend: 'Display mode', error: 'Select a view option', default: control });
   },
 };
 

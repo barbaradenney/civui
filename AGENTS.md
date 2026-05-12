@@ -205,7 +205,7 @@ In scope:
 - Components a contractor would need to implement on a new platform
 
 Out of scope:
-- Web-specific layout wrappers (`civ-form-fieldset`, `civ-fieldset`, `civ-form`)
+- Web-specific layout wrappers (`civ-fieldset`, `civ-fieldset`, `civ-form`)
 - Child components bundled into parents on native (`civ-list-item`, `civ-radio` singular)
 - Preset wrappers that inherit everything from a parent (`civ-ssn`, `civ-ein`, `civ-phone` — sugar over `civ-text-input`)
 

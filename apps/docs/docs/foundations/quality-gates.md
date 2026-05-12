@@ -160,7 +160,7 @@ pnpm validate:lints
 
 Twelve fast static lints over the whole repo. Each parses source and exits in under a second:
 
-- **`lint:fieldsets`** — No self-contained group component (`civ-radio-group`, `civ-checkbox-group`, `civ-segmented-control`, `civ-yes-no`, `civ-memorable-date`, `civ-date-range-picker`) is wrapped in `<civ-form-fieldset>`. Wrapping would produce nested fieldsets with double legends and broken slot relocation.
+- **`lint:fieldsets`** — No self-contained group component (`civ-radio-group`, `civ-checkbox-group`, `civ-segmented-control`, `civ-yes-no`, `civ-memorable-date`, `civ-date-range-picker`) is wrapped in `<civ-fieldset>`. Wrapping would produce nested fieldsets with double legends and broken slot relocation.
 - **`lint:story-embeds`** — Every `<StoryEmbed id="..."/>` in `apps/docs` resolves to a real story export. Catches renames, slug typos (note: Storybook's `startCase` inserts dashes between digits and letters, so `Step1_Hub` becomes `step-1-hub`), and references to deleted components.
 - **`lint:story-names`** — Every `StoryObj`'s export name and `name:` display title share at least one substantive token. Catches the failure mode where `export const WithError` had display name `"Custom Button Labels"`, so the Storybook panel title contradicted the rendered content.
 - **`lint:story-props`** — Every `<civ-*>` attribute used in any `*.stories.ts` corresponds to a declared `@property` on the underlying component (or one of its known base classes). Catches phantom attributes like `<civ-repeater add-label="...">` (no such prop — should be `item-label`) or `<civ-select preset="document-type">` (presets aren't a thing on civ-select).

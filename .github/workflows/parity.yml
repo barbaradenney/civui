@@ -116,7 +116,7 @@ jobs:
     # `pnpm validate:lints` for local use.
     #
     #   lint:fieldsets       - No self-contained group component is
-    #                          wrapped in civ-form-fieldset (would
+    #                          wrapped in civ-fieldset (would
     #                          produce nested fieldsets with double
     #                          legends + broken slot relocation).
     #   lint:story-embeds    - Every <StoryEmbed id="..."/> in

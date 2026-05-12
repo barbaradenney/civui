@@ -72,9 +72,6 @@ export {
 } from './templates/form-templates.js';
 export type { InputWidth, HeadingLevel, LabelSize } from './templates/form-templates.js';
 
-// Form field wrappers
-export { CivFormFieldset } from './form-field/civ-form-fieldset.js';
-
 // Preset data
 export { resolvePresetOptions } from './data/select-presets.js';
 export type { PresetOption, SelectPresetName } from './data/select-presets.js';

@@ -25,7 +25,7 @@ Every CivUI form control renders its own label / legend / hint / error / require
 </civ-radio-group>
 ```
 
-The only wrapper that remains is [`<civ-form-fieldset>`](/components/form/fieldset), reserved for **multi-field grouping** — a custom block of several unrelated controls under one section heading (e.g. a hand-rolled address composed from individual `civ-text-input`s).
+The only wrapper that remains is [`<civ-fieldset>`](/components/form/fieldset), reserved for **multi-field grouping** — a custom block of several unrelated controls under one section heading (e.g. a hand-rolled address composed from individual `civ-text-input`s).
 
 ## Self-contained components
 
@@ -33,7 +33,7 @@ These components render their own labels and do **not** need wrappers:
 
 - `<civ-checkbox>` and `<civ-toggle>` — inline labels
 - `<civ-address>`, `<civ-name>`, `<civ-direct-deposit>`, `<civ-signature>` — compound components that render their own internal chrome and sub-control labels
-- All self-contained group components (`<civ-radio-group>`, `<civ-checkbox-group>`, `<civ-segmented-control>`, `<civ-yes-no>`, `<civ-memorable-date>`, `<civ-date-range-picker>`) — pass `legend` directly; do NOT wrap in `<civ-form-fieldset>` (you'd get nested fieldsets with double legends)
+- All self-contained group components (`<civ-radio-group>`, `<civ-checkbox-group>`, `<civ-segmented-control>`, `<civ-yes-no>`, `<civ-memorable-date>`, `<civ-date-range-picker>`) — pass `legend` directly; do NOT wrap in `<civ-fieldset>` (you'd get nested fieldsets with double legends)
 
 ## Heading hierarchy
 
@@ -80,4 +80,4 @@ The `heading-level` prop adds `role="heading"` + `aria-level=N` to the rendered 
 </civ-radio-group>
 ```
 
-The same `heading-level` and `size` props are available on every form control, `<civ-fieldset>`, `<civ-form-fieldset>`, `<civ-repeater>`, and every compound component (`<civ-name>`, `<civ-address>`, `<civ-direct-deposit>`, `<civ-partnership-history>`, `<civ-race-ethnicity>`, `<civ-relationship>`, `<civ-service-history>`, `<civ-signature>`).
+The same `heading-level` and `size` props are available on every form control, `<civ-fieldset>`, `<civ-repeater>`, and every compound component (`<civ-name>`, `<civ-address>`, `<civ-direct-deposit>`, `<civ-partnership-history>`, `<civ-race-ethnicity>`, `<civ-relationship>`, `<civ-service-history>`, `<civ-signature>`).

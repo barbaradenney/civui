@@ -41,12 +41,12 @@ describe('formToSchema', () => {
 
   it('extracts radio group with child options', () => {
     const html = `
-      <civ-form-fieldset legend="Preference">
+      <civ-fieldset legend="Preference">
         <civ-radio-group name="pref">
           <civ-radio label="Option A" value="a"></civ-radio>
           <civ-radio label="Option B" value="b"></civ-radio>
         </civ-radio-group>
-      </civ-form-fieldset>
+      </civ-fieldset>
     `;
     const schema = formToSchema(html);
     const field = schema.sections[0].fields[0];
@@ -145,20 +145,21 @@ describe('formToSchema', () => {
 
   it('parses conditional visibility attributes', () => {
     const html = `
-      <civ-form-fieldset legend="Married?">
+      <civ-fieldset legend="Married?">
         <civ-radio-group name="married">
           <civ-radio label="Yes" value="yes"></civ-radio>
           <civ-radio label="No" value="no"></civ-radio>
         </civ-radio-group>
-      </civ-form-fieldset>
+      </civ-fieldset>
       <civ-text-input label="Spouse name" name="spouse-name" data-civ-show-when="married=yes"></civ-text-input>
       <civ-text-input label="Service dates" name="service-dates" data-civ-require-when="is-veteran=yes"></civ-text-input>
     `;
     const schema = formToSchema(html);
-    const spouseField = schema.sections[0].fields.find((f) => f.name === 'spouse-name');
+    const allFields = schema.sections.flatMap((s) => s.fields);
+    const spouseField = allFields.find((f) => f.name === 'spouse-name');
     expect(spouseField?.visibleWhen).toEqual({ field: 'married', operator: 'eq', value: 'yes' });
 
-    const serviceField = schema.sections[0].fields.find((f) => f.name === 'service-dates');
+    const serviceField = allFields.find((f) => f.name === 'service-dates');
     expect(serviceField?.requiredWhen).toEqual({ field: 'is-veteran', operator: 'eq', value: 'yes' });
   });
 

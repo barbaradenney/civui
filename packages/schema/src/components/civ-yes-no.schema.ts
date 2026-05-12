@@ -11,7 +11,7 @@ const schema: ComponentSchema = {
   props: {
     legend: {
       type: 'string',
-      description: 'Question text rendered as the fieldset legend. The component is self-contained — do not wrap in civ-form-fieldset.',
+      description: 'Question text rendered as the fieldset legend. The component is self-contained — do not wrap in civ-fieldset.',
       default: '',
     },
     headingLevel: {

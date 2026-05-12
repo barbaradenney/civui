@@ -22,11 +22,10 @@ export const COMPONENT_CATALOG = `# CivUI Component Catalog
 | \`<civ-date-picker>\` | Date | \`min\`, \`max\`, \`placeholder\`, \`locale\`, \`weekStartsOn\` | \`{ value }\` |
 | \`<civ-memorable-date>\` | Date | \`legend\`, \`monthLabel\`, \`dayLabel\`, \`yearLabel\`, \`locale\` | \`{ value, month, day, year }\` |
 | \`<civ-file-upload>\` | File | \`accept\`, \`multiple\`, \`maxSize\`, \`maxFiles\` | \`{ files: File[] }\` |
-| \`<civ-form-fieldset>\` | Wrapper | \`legend\`, \`hint\`, \`error\`, \`required\`, \`requiredMessage\`, \`touched\`, \`heading-level\` (1-6), \`size\` (sm/md/lg/xl) | — |
-| \`<civ-fieldset>\` | Layout | \`legend\`, \`hint\`, \`error\`, \`required\`, \`disabled\`, \`heading-level\` (1-6), \`size\` (sm/md/lg/xl) | — |
+| \`<civ-fieldset>\` | Wrapper | \`legend\`, \`hint\`, \`error\`, \`required\`, \`disabled\`, \`tight-hint\`, \`heading-level\` (1-6), \`size\` (sm/md/lg/xl) | — |
 | \`<civ-form>\` | Layout | \`action\`, \`method\` | \`civ-submit: { formData }\`, \`civ-invalid: { errors }\` |
 
-**Self-contained pattern:** Every CivUI control renders its own label / legend chrome — set \`label="..."\` directly on single inputs and \`legend="..."\` directly on group components. \`<civ-form-fieldset>\` is only for genuine multi-field grouping (a section heading over several controls).
+**Self-contained pattern:** Every CivUI control renders its own label / legend chrome — set \`label="..."\` directly on single inputs and \`legend="..."\` directly on group components. \`<civ-fieldset>\` is only for genuine multi-field grouping (a section heading over several controls).
 **All form-participating components** also have: \`name\`, \`value\`, \`required\`, \`disabled\`.
 
 ---
@@ -42,8 +41,8 @@ Multi-line text input. Props: \`rows\` (default 5), \`maxlength\` (enables chara
 ### civ-select
 Dropdown select. Props: \`options\` (Array<{value, label, disabled?}>), \`emptyLabel\` (default "- Select -"), \`preset\` (pre-built list: \`'us-state'\`, \`'service-branch'\`, \`'discharge-type'\`, \`'suffix'\`, \`'gender'\`, \`'marital-status'\`, etc.), \`preset-variant\` (e.g., \`'territories'\`, \`'all'\`, \`'binary'\`). Presets also work on \`civ-radio-group\` and \`civ-checkbox-group\`. Use \`import { resolvePresetOptions } from '@civui/core'\` for programmatic access.
 
-### civ-form-fieldset
-Wrapper for multi-field groups (e.g., a custom address block with street/city/state inside). Renders legend, hint, error, required indicator. Props: \`legend\`, \`hint\`, \`error\`, \`required\`, \`requiredMessage\`, \`hide-required-indicator\`, \`touched\`, \`heading-level\` (1-6), \`size\` (sm/md/lg/xl). Single inputs and self-contained group components (radio-group, checkbox-group, etc.) already carry their own label / legend — do not wrap them here.
+### civ-fieldset
+Wrapper for multi-field groups (e.g., a custom address block with street/city/state inside). Renders legend, hint, error, and required indicator; native \`disabled\` cascades to all child form controls; absorbs \`civ-error-change\` events from children so their internal validation state surfaces in the wrapper's error slot. Props: \`legend\`, \`hint\`, \`error\`, \`required\`, \`disabled\`, \`tight-hint\` (pull hint flush with controls), \`heading-level\` (1-6), \`size\` (sm/md/lg/xl). Single inputs and self-contained group components (radio-group, checkbox-group, etc.) already carry their own label / legend — do not wrap them here.
 
 ### civ-combobox
 Searchable dropdown with type-ahead. Props: \`options\`, \`placeholder\`, \`noResultsText\`.

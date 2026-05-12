@@ -90,7 +90,7 @@ Every form input renders its own label / hint / error chrome from `label`, `hint
 <civ-text-input label="Email address" name="email" type="email" hint="Work email preferred" required></civ-text-input>
 ```
 
-Group components (radio-group, checkbox-group, segmented-control, yes-no, memorable-date, date-range-picker) are **self-contained** — pass `legend` directly, do **not** wrap in `<civ-form-fieldset>` (you'd get nested fieldsets with double legends). The `fieldset-wrappers` CI gate enforces this.
+Group components (radio-group, checkbox-group, segmented-control, yes-no, memorable-date, date-range-picker) are **self-contained** — pass `legend` directly, do **not** wrap in `<civ-fieldset>` (you'd get nested fieldsets with double legends). The `fieldset-wrappers` CI gate enforces this.
 
 ```html
 <civ-radio-group legend="Preferred contact method" name="contact" required>
@@ -99,7 +99,7 @@ Group components (radio-group, checkbox-group, segmented-control, yes-no, memora
 </civ-radio-group>
 ```
 
-`civ-form-fieldset` is reserved for **genuine multi-field grouping** — putting one section heading over several controls (e.g. an address with street/city/state inside).
+`civ-fieldset` is reserved for **genuine multi-field grouping** — putting one section heading over several controls (e.g. an address with street/city/state inside).
 
 **Self-contained components** (every input, checkbox, toggle, all compound components, and all six group components above) render their own labels inline and do not need wrappers.
 
@@ -117,7 +117,7 @@ Group components (radio-group, checkbox-group, segmented-control, yes-no, memora
 
 ### Rendering Order
 Every form control renders its own chrome in this order: label/legend → hint → error → control → supplementary info.
-`civ-form-fieldset` (multi-field grouping) enforces: legend → hint → error → child controls.
+`civ-fieldset` (multi-field grouping) enforces: legend → hint → error → child controls.
 All paths use `renderFormHeader()` from `@civui/core` internally.
 
 ### Mobile Popups — Bottom Sheet Rule
@@ -260,7 +260,7 @@ Mark genuinely web-specific props (Tailwind size variants, ARIA heading-level pr
 
 When the Drupal SDC YAMLs drift, regenerate from schemas with `pnpm sync:drupal` (runs both `sync-drupal-sdc.ts` and `sync-drupal-twig.ts` — idempotent; only appends missing props and rewrites the Twig from the YAML). Native platform updates are hand-edited Swift / Kotlin. See `packages/schema/README.md` for the full naming-convention map and "how to add a new schema" walk-through.
 
-**Out of scope (web-specific layout wrappers):** `civ-form-fieldset`, `civ-fieldset`, `civ-form` — these abstract over how form-headers are rendered on web; native platforms compose the same affordances differently and don't need a contract translation.
+**Out of scope (web-specific layout wrappers):** `civ-fieldset`, `civ-fieldset`, `civ-form` — these abstract over how form-headers are rendered on web; native platforms compose the same affordances differently and don't need a contract translation.
 
 **If you modify a covered component**, update its schema in the same change. Run `pnpm parity:schema` before committing — the check fails on missing/added/renamed/retyped props. Inherited form props (`label`, `name`, `value`, `hint`, `error`, `required`, `disabled`, `readonly`, etc.) are filtered on both sides; you don't need to declare them.
 

@@ -38,14 +38,14 @@ function violationsFor(filePath: string) {
 }
 
 describe('lint-fieldset-wrappers', () => {
-  it('flags civ-radio-group wrapped in civ-form-fieldset (multi-line)', () => {
+  it('flags civ-radio-group wrapped in civ-fieldset (multi-line)', () => {
     const path = makeFile('flag-radio.mdx', `
 \`\`\`html
-<civ-form-fieldset legend="Pick">
+<civ-fieldset legend="Pick">
   <civ-radio-group name="x">
     <civ-radio value="a"></civ-radio>
   </civ-radio-group>
-</civ-form-fieldset>
+</civ-fieldset>
 \`\`\`
 `);
     const v = violationsFor(path);
@@ -56,7 +56,7 @@ describe('lint-fieldset-wrappers', () => {
   it('flags single-line wrap', () => {
     const path = makeFile('inline.mdx', `
 \`\`\`html
-<civ-form-fieldset legend="X"><civ-memorable-date name="d"></civ-memorable-date></civ-form-fieldset>
+<civ-fieldset legend="X"><civ-memorable-date name="d"></civ-memorable-date></civ-fieldset>
 \`\`\`
 `);
     const v = violationsFor(path);
@@ -75,15 +75,15 @@ describe('lint-fieldset-wrappers', () => {
     expect(violationsFor(path)).toEqual([]);
   });
 
-  it('does NOT flag civ-form-fieldset wrapping non-self-contained controls', () => {
-    // address is a compound, not a self-contained group; multiple text-inputs
-    // wrapped in civ-form-fieldset for grouping is the legitimate use case.
+  it('does NOT flag civ-fieldset wrapping non-self-contained controls', () => {
+    // Multiple text-inputs wrapped in civ-fieldset for grouping is the
+    // legitimate use case the wrapper exists for.
     const path = makeFile('genuine-grouping.mdx', `
 \`\`\`html
-<civ-form-fieldset legend="Mailing address">
-  <civ-form-field label="Street"><civ-text-input name="street"></civ-text-input></civ-form-field>
-  <civ-form-field label="City"><civ-text-input name="city"></civ-text-input></civ-form-field>
-</civ-form-fieldset>
+<civ-fieldset legend="Mailing address">
+  <civ-text-input label="Street" name="street"></civ-text-input>
+  <civ-text-input label="City" name="city"></civ-text-input>
+</civ-fieldset>
 \`\`\`
 `);
     expect(violationsFor(path)).toEqual([]);
@@ -92,7 +92,7 @@ describe('lint-fieldset-wrappers', () => {
   it('ignores tag mentions inside inline backticks (markdown prose)', () => {
     const path = makeFile('prose.md', `
 Group components like \`<civ-radio-group>\` and \`<civ-memorable-date>\`
-used to require \`<civ-form-fieldset>\` wrapping. They are now self-contained.
+used to require \`<civ-fieldset>\` wrapping. They are now self-contained.
 `);
     expect(violationsFor(path)).toEqual([]);
   });
@@ -102,9 +102,9 @@ used to require \`<civ-form-fieldset>\` wrapping. They are now self-contained.
 Use the new pattern:
 
 \`\`\`html
-<civ-form-fieldset legend="X">
+<civ-fieldset legend="X">
   <civ-checkbox-group name="x"></civ-checkbox-group>
-</civ-form-fieldset>
+</civ-fieldset>
 \`\`\`
 `);
     const v = violationsFor(path);
@@ -115,9 +115,9 @@ Use the new pattern:
   it('reports the line of the GROUP component, not the wrapping fieldset', () => {
     const path = makeFile('lines.mdx', `
 \`\`\`html
-<civ-form-fieldset legend="Y">
+<civ-fieldset legend="Y">
   <civ-yes-no name="y"></civ-yes-no>
-</civ-form-fieldset>
+</civ-fieldset>
 \`\`\`
 `);
     const v = violationsFor(path);
@@ -133,13 +133,13 @@ Use the new pattern:
     // the second fieldset wraps an address (legit) and should NOT flag.
     const path = makeFile('nested.mdx', `
 \`\`\`html
-<civ-form-fieldset legend="A">
+<civ-fieldset legend="A">
   <civ-radio-group name="a"></civ-radio-group>
-</civ-form-fieldset>
+</civ-fieldset>
 
-<civ-form-fieldset legend="B">
+<civ-fieldset legend="B">
   <civ-address name="b"></civ-address>
-</civ-form-fieldset>
+</civ-fieldset>
 \`\`\`
 `);
     const v = violationsFor(path);

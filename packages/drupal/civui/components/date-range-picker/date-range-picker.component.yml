@@ -78,7 +78,7 @@ props:
     legend:
       title: Legend
       type: string
-      description: 'Group legend rendered as <legend>. The component is self-contained — do not wrap in civ-form-fieldset.'
+      description: 'Group legend rendered as <legend>. The component is self-contained — do not wrap in civ-fieldset.'
 
 
 

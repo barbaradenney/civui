@@ -14,7 +14,7 @@ export const CHANGELOG = `# CivUI Changelog
 - For scheduling / appointment dates: use \`<civ-date-picker>\`
 
 ### \`civ-form-field\` and \`civ-form-group\` removed
-\`<civ-form-field>\` (the single-input wrapper) and the older \`<civ-form-group>\` have both been removed. Every CivUI control now renders its own label / legend / hint / error chrome — set those props directly on the control. \`<civ-form-fieldset>\` is reserved for genuine multi-field grouping (multiple unrelated controls sharing one section heading).
+\`<civ-form-field>\` (the single-input wrapper) and the older \`<civ-form-group>\` have both been removed. Every CivUI control now renders its own label / legend / hint / error chrome — set those props directly on the control. \`<civ-fieldset>\` is reserved for genuine multi-field grouping (multiple unrelated controls sharing one section heading).
 
 \`\`\`html
 <!-- Before (removed) -->
@@ -72,8 +72,8 @@ Physical CSS properties (\`civ-ml-\`, \`civ-mr-\`, \`civ-pl-\`, \`civ-pr-\`, \`c
 
 ## New Components
 
-### \`civ-form-fieldset\`
-Wrapper for multi-field grouping (one section heading over several related controls). Renders legend, hint, error, required indicator, and per-field \`touched\` tracking. Single inputs and self-contained group components already render their own chrome — set those props on the control directly.
+### \`civ-fieldset\`
+Wrapper for multi-field grouping (one section heading over several related controls). Renders legend, hint, error, and required indicator; native \`disabled\` cascades to children; absorbs \`civ-error-change\` events from children so their internal validation state surfaces in the wrapper's error slot. Single inputs and self-contained group components already render their own chrome — set those props on the control directly.
 
 ### \`civ-select preset\` attribute
 Pre-built option lists for common data: \`us-state\`, \`us-territory\`, \`country\`, \`service-branch\`, \`suffix\`, \`month\`. Replaces removed data-list components (\`civ-us-state\`, \`civ-service-branch\`, etc.).

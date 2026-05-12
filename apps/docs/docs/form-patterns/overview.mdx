@@ -50,8 +50,7 @@ Not every form needs every layer. A simple contact form might just use `civ-form
 
 | Component | Purpose |
 |-----------|---------|
-| `civ-fieldset` | Groups related fields with a `<fieldset>` and `<legend>`. Disabled state cascades to all children automatically. |
-| `civ-form-fieldset` | Wraps a custom multi-field block with fieldset, legend, hint, and error chrome. Use when several unrelated controls share one section heading. Single inputs and self-contained group components already render their own chrome — set `label` / `legend` directly on them. |
+| `civ-fieldset` | Wraps a custom multi-field block with `<fieldset>` + `<legend>`, hint, error, and required indicator. Native `disabled` cascades to all children. Use when several unrelated controls share one section heading. Single inputs and self-contained group components already render their own chrome — set `label` / `legend` directly on them. |
 | `civ-conditional` | Shows or hides content based on another field's value. Supports `equals`, `not-equals`, `includes`, `has-value`, and `matches` operators. |
 
 ### Repeating sections

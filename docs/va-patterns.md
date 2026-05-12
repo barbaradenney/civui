@@ -358,40 +358,40 @@ VA pattern: [Ask users for Contact preferences](https://design.va.gov/patterns/a
 VA pattern: [Ask users for Direct deposit](https://design.va.gov/patterns/ask-users-for/direct-deposit)
 
 ```html
-<civ-fieldset legend="Direct deposit information">
-  <civ-radio-group
-    legend="Account type"
-    name="accountType"
-    required
-    required-message="Select an account type"
-    orientation="horizontal"
-  >
-    <civ-radio label="Checking" value="checking"></civ-radio>
-    <civ-radio label="Savings" value="savings"></civ-radio>
-  </civ-radio-group>
+<h2>Direct deposit information</h2>
 
-  <civ-text-input
-    label="Bank routing number"
-    name="routingNumber"
-    required
-    required-message="Enter a routing number"
-    hint="The 9-digit number on the bottom left of a check"
-    type="tel"
-    inputmode="numeric"
-    maxlength="9"
-    validate="length(9,9)"
-  ></civ-text-input>
+<civ-radio-group
+  legend="Account type"
+  name="accountType"
+  required
+  required-message="Select an account type"
+  orientation="horizontal"
+>
+  <civ-radio label="Checking" value="checking"></civ-radio>
+  <civ-radio label="Savings" value="savings"></civ-radio>
+</civ-radio-group>
 
-  <civ-text-input
-    label="Bank account number"
-    name="accountNumber"
-    required
-    required-message="Enter a bank account number"
-    hint="The account number on the bottom of a check"
-    type="tel"
-    inputmode="numeric"
-  ></civ-text-input>
-</civ-fieldset>
+<civ-text-input
+  label="Bank routing number"
+  name="routingNumber"
+  required
+  required-message="Enter a routing number"
+  hint="The 9-digit number on the bottom left of a check"
+  type="tel"
+  inputmode="numeric"
+  maxlength="9"
+  validate="length(9,9)"
+></civ-text-input>
+
+<civ-text-input
+  label="Bank account number"
+  name="accountNumber"
+  required
+  required-message="Enter a bank account number"
+  hint="The account number on the bottom of a check"
+  type="tel"
+  inputmode="numeric"
+></civ-text-input>
 ```
 
 **VA guidance:**
@@ -672,19 +672,19 @@ VA pattern: [Ask users for Marital information](https://design.va.gov/patterns/a
 </civ-radio-group>
 
 <civ-conditional when="maritalStatus" equals="married">
-  <civ-fieldset legend="Spouse information">
-    <civ-text-input label="Spouse's first name" name="spouseFirstName" required></civ-text-input>
-    <civ-text-input label="Spouse's last name" name="spouseLastName" required></civ-text-input>
-    <civ-memorable-date legend="Date of marriage" required name="marriageDate"></civ-memorable-date>
-    <civ-text-input
-      label="Spouse's Social Security number"
-      name="spouseSsn"
-      mask="ssn"
-      validate="ssn"
-      type="tel"
-    ></civ-text-input>
-    <civ-yes-no legend="Is your spouse a Veteran?" name="spouseIsVeteran"></civ-yes-no>
-  </civ-fieldset>
+  <h3>Spouse information</h3>
+
+  <civ-text-input label="Spouse's first name" name="spouseFirstName" required></civ-text-input>
+  <civ-text-input label="Spouse's last name" name="spouseLastName" required></civ-text-input>
+  <civ-memorable-date legend="Date of marriage" required name="marriageDate"></civ-memorable-date>
+  <civ-text-input
+    label="Spouse's Social Security number"
+    name="spouseSsn"
+    mask="ssn"
+    validate="ssn"
+    type="tel"
+  ></civ-text-input>
+  <civ-yes-no legend="Is your spouse a Veteran?" name="spouseIsVeteran"></civ-yes-no>
 </civ-conditional>
 ```
 

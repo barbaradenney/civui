@@ -2,7 +2,7 @@ $schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schema
 name: Checkbox Group
 status: stable
 group: CivUI Controls
-description: 'Group of checkboxes for multi-select. Use with form-fieldset for legend/hint/error.'
+description: 'Group of checkboxes for multi-select. Self-contained — pass `legend`, `hint`, and `error` directly.'
 
 props:
   type: object

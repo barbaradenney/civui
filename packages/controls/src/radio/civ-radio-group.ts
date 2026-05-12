@@ -14,7 +14,7 @@ import './civ-radio.js';
  * Radio Group pattern with roving tabindex.
  *
  * Renders its own legend / hint / error — do **not** wrap in
- * `<civ-form-fieldset>` (you'd get nested fieldsets with double
+ * `<civ-fieldset>` (you'd get nested fieldsets with double
  * legends). Use the `legend` prop directly on the component.
  *
  * @element civ-radio-group

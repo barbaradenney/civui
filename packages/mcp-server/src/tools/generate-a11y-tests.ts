@@ -74,10 +74,10 @@ export function generateA11yTests(html: string, suiteName?: string): A11yTestsRe
     if ($el.parents('civ-radio-group, civ-checkbox-group, civ-segmented-control').length > 0) return;
 
     // Check label/legend on the component itself, falling back to a wrapping
-    // civ-form-fieldset's legend for multi-field groups.
+    // civ-fieldset's legend for multi-field groups.
     let label = $el.attr('label') ?? $el.attr('legend') ?? '';
     if (!label) {
-      const formFieldset = $el.closest('civ-form-fieldset');
+      const formFieldset = $el.closest('civ-fieldset');
       if (formFieldset.length > 0) {
         label = formFieldset.attr('legend') ?? '';
       }

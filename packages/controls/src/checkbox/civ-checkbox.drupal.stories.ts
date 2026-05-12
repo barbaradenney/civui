@@ -6,7 +6,7 @@ import checkboxTemplate from '../../../drupal/civui/components/checkbox/checkbox
 // @ts-ignore
 import checkboxGroupTemplate from '../../../drupal/civui/components/checkbox-group/checkbox-group.twig';
 // @ts-ignore
-import FormFieldsetTwig from '../../../drupal/civui/components/form-fieldset/form-fieldset.twig';
+import FieldsetTwig from '../../../drupal/civui/components/fieldset/fieldset.twig';
 
 const render = (twigFn: (ctx: Record<string, any>) => string, props: Record<string, any>) =>
   html`${unsafeHTML(twigFn(props))}`;
@@ -53,7 +53,7 @@ export const WithError: Story = {
       checkboxTemplate({ label: 'Education', name: 'benefits', value: 'education' }),
     ].join('');
     const group = checkboxGroupTemplate({ default: children });
-    return render(FormFieldsetTwig, { legend: 'Select benefits', error: 'Select at least one benefit', default: group });
+    return render(FieldsetTwig, { legend: 'Select benefits', error: 'Select at least one benefit', default: group });
   },
 };
 

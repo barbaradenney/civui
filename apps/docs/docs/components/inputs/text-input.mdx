@@ -102,7 +102,7 @@ Text rendered inside the input border on the trailing edge (e.g., "lbs", "USD").
 
 ## Shared Props
 
-Props like `label`, `hint`, `error`, `required`, and `disabled` go on the `<civ-form-field>` wrapper. The component itself receives `name`, `value`, and component-specific props.
+Set `label`, `hint`, `error`, `required`, and `disabled` directly on the component along with `name`, `value`, and component-specific props. The component renders its own label / hint / error chrome.
 
 ## Component-Specific Props
 
@@ -171,14 +171,10 @@ Default label: "Social Security number"
 <StoryEmbed id="forms-inputs-text-input--ssn-last-4" />
 
 ```html
-<civ-form-field label="Social Security number" required>
-  <civ-ssn name="ssn" required></civ-ssn>
-</civ-form-field>
+<civ-ssn label="Social Security number" name="ssn" required></civ-ssn>
 
 <!-- Last 4 digits only -->
-<civ-form-field label="Last 4 of Social Security number" required>
-  <civ-ssn name="ssn-last4" mode="last4" required></civ-ssn>
-</civ-form-field>
+<civ-ssn label="Last 4 of Social Security number" name="ssn-last4" mode="last4" required></civ-ssn>
 ```
 
 ### EIN (`<civ-ein>`)
@@ -190,9 +186,7 @@ Default label: "Employer Identification Number (EIN)"
 <StoryEmbed id="forms-inputs-text-input--ein" />
 
 ```html
-<civ-form-field label="Employer Identification Number" required>
-  <civ-ein name="ein" required></civ-ein>
-</civ-form-field>
+<civ-ein label="Employer Identification Number" name="ein" required></civ-ein>
 ```
 
 ### ZIP Code (`<civ-zip>`)
@@ -211,14 +205,10 @@ Default label: "ZIP code"
 
 ```html
 <!-- Standard 5-digit ZIP code -->
-<civ-form-field label="ZIP code" required>
-  <civ-zip name="zip" required></civ-zip>
-</civ-form-field>
+<civ-zip label="ZIP code" name="zip" required></civ-zip>
 
 <!-- ZIP+4 format -->
-<civ-form-field label="ZIP code" required>
-  <civ-zip name="zip" extended required></civ-zip>
-</civ-form-field>
+<civ-zip label="ZIP code" name="zip" extended required></civ-zip>
 ```
 
 ### Phone (`<civ-phone>`)
@@ -237,14 +227,10 @@ Default label: "Phone number"
 
 ```html
 <!-- US phone number -->
-<civ-form-field label="Phone number" required>
-  <civ-phone name="phone" required></civ-phone>
-</civ-form-field>
+<civ-phone label="Phone number" name="phone" required></civ-phone>
 
 <!-- International phone number -->
-<civ-form-field label="Phone number" required>
-  <civ-phone name="phone" international required></civ-phone>
-</civ-form-field>
+<civ-phone label="Phone number" name="phone" international required></civ-phone>
 ```
 
 ### Email (`<civ-email>`)
@@ -256,9 +242,7 @@ Default label: "Email address"
 <StoryEmbed id="forms-inputs-text-input--email" />
 
 ```html
-<civ-form-field label="Email address" required>
-  <civ-email name="email" required></civ-email>
-</civ-form-field>
+<civ-email label="Email address" name="email" required></civ-email>
 ```
 
 ### Currency (`<civ-currency>`)
@@ -270,9 +254,7 @@ Default label: "Amount"
 <StoryEmbed id="forms-inputs-text-input--currency" />
 
 ```html
-<civ-form-field label="Monthly income" required>
-  <civ-currency name="amount" required></civ-currency>
-</civ-form-field>
+<civ-currency label="Monthly income" name="amount" required></civ-currency>
 ```
 
 ### Routing Number (`<civ-routing-number>`)
@@ -284,9 +266,7 @@ Default label: "Routing number"
 <StoryEmbed id="forms-inputs-text-input--routing-number" />
 
 ```html
-<civ-form-field label="Routing number" required>
-  <civ-routing-number name="routing" required></civ-routing-number>
-</civ-form-field>
+<civ-routing-number label="Routing number" name="routing" required></civ-routing-number>
 ```
 
 ### VA File Number (`<civ-va-file-number>`)
@@ -298,36 +278,24 @@ Default label: "VA file number"
 <StoryEmbed id="forms-inputs-text-input--va-file-number" />
 
 ```html
-<civ-form-field label="VA file number" required>
-  <civ-va-file-number name="vaFileNumber" required></civ-va-file-number>
-</civ-form-field>
+<civ-va-file-number label="VA file number" name="vaFileNumber" required></civ-va-file-number>
 ```
 
 ## Usage
 
 ```html
 <!-- Basic text input -->
-<civ-form-field label="Full name" required>
-  <civ-text-input name="fullName" required></civ-text-input>
-</civ-form-field>
+<civ-text-input label="Full name" name="fullName" required></civ-text-input>
 
 <!-- Custom mask pattern -->
-<civ-form-field label="Case number" hint="For example: ABC-1234">
-  <civ-text-input name="caseNumber" mask-pattern="AAA-####"></civ-text-input>
-</civ-form-field>
+<civ-text-input label="Case number" hint="For example: ABC-1234" name="caseNumber" mask-pattern="AAA-####"></civ-text-input>
 
 <!-- With prefix -->
-<civ-form-field label="Social handle">
-  <civ-text-input name="handle" prefix="@" width="md"></civ-text-input>
-</civ-form-field>
+<civ-text-input label="Social handle" name="handle" prefix="@" width="md"></civ-text-input>
 
 <!-- With suffix -->
-<civ-form-field label="Weight">
-  <civ-text-input name="weight" suffix="lbs" inputmode="decimal" width="sm"></civ-text-input>
-</civ-form-field>
+<civ-text-input label="Weight" name="weight" suffix="lbs" inputmode="decimal" width="sm"></civ-text-input>
 
 <!-- With character counter -->
-<civ-form-field label="Short bio">
-  <civ-text-input name="bio" maxlength="60"></civ-text-input>
-</civ-form-field>
+<civ-text-input label="Short bio" name="bio" maxlength="60"></civ-text-input>
 ```

@@ -73,7 +73,7 @@ Populate options via slotted `<option>` and `<optgroup>` children — works with
 
 ## Shared Props
 
-Props like `label`, `hint`, `error`, `required`, and `disabled` go on the `<civ-form-field>` wrapper. The component itself receives `name`, `value`, and component-specific props.
+Set `label`, `hint`, `error`, `required`, and `disabled` directly on the component along with `name`, `value`, and component-specific props. The component renders its own label / hint / error chrome.
 
 ## Component-Specific Props
 
@@ -128,14 +128,10 @@ The `preset` prop pre-populates the select with a standard option list. Use `pre
 
 ```html
 <!-- US states and DC -->
-<civ-form-field label="State" required>
-  <civ-select name="state" preset="us-state" required></civ-select>
-</civ-form-field>
+<civ-select label="State" name="state" preset="us-state" required></civ-select>
 
 <!-- Include territories -->
-<civ-form-field label="State or territory" required>
-  <civ-select name="state" preset="us-state" preset-variant="territories" required></civ-select>
-</civ-form-field>
+<civ-select label="State or territory" name="state" preset="us-state" preset-variant="territories" required></civ-select>
 ```
 
 ### Service Branch
@@ -145,14 +141,10 @@ The `preset` prop pre-populates the select with a standard option list. Use `pre
 <StoryEmbed id="forms-inputs-select--preset-service-branch-all" />
 
 ```html
-<civ-form-field label="Branch of service" required>
-  <civ-select name="branch" preset="service-branch" required></civ-select>
-</civ-form-field>
+<civ-select label="Branch of service" name="branch" preset="service-branch" required></civ-select>
 
 <!-- All tiers including reserve, guard, and historical -->
-<civ-form-field label="Branch of service" hint="Includes reserve, guard, and historical branches" required>
-  <civ-select name="branch" preset="service-branch" preset-variant="all" required></civ-select>
-</civ-form-field>
+<civ-select label="Branch of service" hint="Includes reserve, guard, and historical branches" name="branch" preset="service-branch" preset-variant="all" required></civ-select>
 ```
 
 ### Gender
@@ -162,14 +154,10 @@ The `preset` prop pre-populates the select with a standard option list. Use `pre
 <StoryEmbed id="forms-inputs-select--preset-gender-binary" />
 
 ```html
-<civ-form-field label="Gender">
-  <civ-select name="gender" preset="gender"></civ-select>
-</civ-form-field>
+<civ-select label="Gender" name="gender" preset="gender"></civ-select>
 
 <!-- Binary variant -->
-<civ-form-field label="Sex">
-  <civ-select name="sex" preset="gender" preset-variant="binary"></civ-select>
-</civ-form-field>
+<civ-select label="Sex" name="sex" preset="gender" preset-variant="binary"></civ-select>
 ```
 
 ### Marital Status
@@ -177,9 +165,7 @@ The `preset` prop pre-populates the select with a standard option list. Use `pre
 <StoryEmbed id="forms-inputs-select--preset-marital-status" />
 
 ```html
-<civ-form-field label="Marital status" required>
-  <civ-select name="maritalStatus" preset="marital-status" required></civ-select>
-</civ-form-field>
+<civ-select label="Marital status" name="maritalStatus" preset="marital-status" required></civ-select>
 ```
 
 ### All Presets
@@ -193,12 +179,10 @@ Presets are a starting point — you can modify them or provide your own options
 **Override with your own options** (ignore presets):
 
 ```html
-<civ-form-field label="Status">
-  <civ-select name="status">
+<civ-select label="Status" name="status">
     <option value="active">Active</option>
     <option value="inactive">Inactive</option>
   </civ-select>
-</civ-form-field>
 ```
 
 **Start from a preset and modify in JavaScript:**
@@ -239,8 +223,7 @@ All preset data is sourced from federal standards and regulations. Each preset i
 
 ```html
 <!-- Basic select with slotted options -->
-<civ-form-field label="Branch of service" required>
-  <civ-select name="branch" required>
+<civ-select label="Branch of service" name="branch" required>
     <option value="army">Army</option>
     <option value="navy">Navy</option>
     <option value="airforce">Air Force</option>
@@ -248,11 +231,9 @@ All preset data is sourced from federal standards and regulations. Each preset i
     <option value="coastguard">Coast Guard</option>
     <option value="spaceforce">Space Force</option>
   </civ-select>
-</civ-form-field>
 
 <!-- With grouped options -->
-<civ-form-field label="Document type" hint="Choose a document type">
-  <civ-select name="docType">
+<civ-select label="Document type" hint="Choose a document type" name="docType">
     <optgroup label="Military">
       <option value="dd214">DD214</option>
       <option value="dd215">DD215</option>
@@ -262,10 +243,7 @@ All preset data is sourced from federal standards and regulations. Each preset i
       <option value="license">Driver's license</option>
     </optgroup>
   </civ-select>
-</civ-form-field>
 
 <!-- Using a preset -->
-<civ-form-field label="State" required>
-  <civ-select name="state" preset="us-state" required></civ-select>
-</civ-form-field>
+<civ-select label="State" name="state" preset="us-state" required></civ-select>
 ```

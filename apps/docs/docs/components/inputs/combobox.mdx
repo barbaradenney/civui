@@ -86,7 +86,7 @@ Set `loadOptions` to a `(query: string) => Promise<ComboboxOption[]>` and the co
 
 ## Shared Props
 
-Props like `label`, `hint`, `error`, `required`, and `disabled` go on the `<civ-form-field>` wrapper. The component itself receives `name`, `value`, and component-specific props.
+Set `label`, `hint`, `error`, `required`, and `disabled` directly on the component along with `name`, `value`, and component-specific props. The component renders its own label / hint / error chrome.
 
 ## Component-Specific Props
 
@@ -146,32 +146,22 @@ Default label: "Country"
 
 ```html
 <!-- Country select with US listed first -->
-<civ-form-field label="Country" required>
-  <civ-country name="country" required></civ-country>
-</civ-form-field>
+<civ-country label="Country" name="country" required></civ-country>
 
 <!-- North America only -->
-<civ-form-field label="Country" required>
-  <civ-country name="country" include="US,CA,MX" required></civ-country>
-</civ-form-field>
+<civ-country label="Country" name="country" include="US,CA,MX" required></civ-country>
 
 <!-- Country of birth with custom label -->
-<civ-form-field label="Country of birth" required>
-  <civ-country name="birthCountry" required></civ-country>
-</civ-form-field>
+<civ-country label="Country of birth" name="birthCountry" required></civ-country>
 ```
 
 ## Usage
 
 ```html
 <!-- Basic combobox -->
-<civ-form-field label="State or territory" required>
-  <civ-combobox
-    name="state"
+<civ-combobox label="State or territory" name="state"
     placeholder="Start typing a state name"
-    required
-  ></civ-combobox>
-</civ-form-field>
+    required></civ-combobox>
 
 <script>
   document.querySelector('civ-combobox').options = [
@@ -182,12 +172,8 @@ Default label: "Country"
 </script>
 
 <!-- With grouped options -->
-<civ-form-field label="Medical facility">
-  <civ-combobox
-    name="facility"
-    placeholder="Search by name or city"
-  ></civ-combobox>
-</civ-form-field>
+<civ-combobox label="Medical facility" name="facility"
+    placeholder="Search by name or city"></civ-combobox>
 
 <script>
   document.querySelector('[name="facility"]').options = [

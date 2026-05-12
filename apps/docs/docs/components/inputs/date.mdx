@@ -18,11 +18,11 @@ import StoryEmbed from "@site/src/components/StoryEmbed";
 
 Three date components for different use cases:
 
-| Use case | Component | Wrapper | Example |
-|----------|-----------|---------|---------|
-| **Known dates** (birthday, document dates) | `<civ-memorable-date>` | None — self-contained, pass `legend` | Date of birth, discharge date |
-| **Scheduling** (appointments, deadlines) | `<civ-date-picker>` | `<civ-form-field>` | Appointment date, filing deadline |
-| **Date ranges** (start/end pairs) | `<civ-date-range-picker>` | None — self-contained, pass `legend` | Leave dates, service period |
+| Use case | Component | Label prop | Example |
+|----------|-----------|------------|---------|
+| **Known dates** (birthday, document dates) | `<civ-memorable-date>` | `legend="..."` (self-contained group) | Date of birth, discharge date |
+| **Scheduling** (appointments, deadlines) | `<civ-date-picker>` | `label="..."` (single input) | Appointment date, filing deadline |
+| **Date ranges** (start/end pairs) | `<civ-date-range-picker>` | `legend="..."` (self-contained group) | Leave dates, service period |
 
 ---
 
@@ -124,9 +124,7 @@ ISO `YYYY-MM-DD` regardless of display locale.
 ### Usage
 
 ```html
-<civ-form-field label="Appointment date" hint="Choose an available date" required>
-  <civ-date-picker name="appointment" min="2026-01-01" max="2026-12-31" required></civ-date-picker>
-</civ-form-field>
+<civ-date-picker label="Appointment date" hint="Choose an available date" name="appointment" min="2026-01-01" max="2026-12-31" required></civ-date-picker>
 ```
 
 [Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-inputs-date-picker--default)

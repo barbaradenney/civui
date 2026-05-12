@@ -108,10 +108,10 @@ jobs:
         run: pnpm validate:schemas
 
   pattern-drift:
-    name: Pattern drift (story embeds, names, props, doc tables, fieldsets)
+    name: Pattern drift (story embeds, names, props, prose refs, doc tables, fieldsets)
     runs-on: ubuntu-latest
     # Catches the recurring drift modes surfaced by the form-pattern
-    # audit (May 2026). The umbrella runs five gates in one job:
+    # audit (May 2026). The umbrella runs six gates in one job:
     #
     #   lint:fieldsets       - No self-contained group component is
     #                          wrapped in civ-form-fieldset (would
@@ -133,6 +133,14 @@ jobs:
     #                          Catches phantom attrs like add-label,
     #                          preset="document-type", invented
     #                          variants on civ-action-link, etc.
+    #   lint:prose-refs      - Every <civ-X> tag reference in long-
+    #                          form docs (CLAUDE.md, AGENTS.md,
+    #                          .claude/rules/, apps/docs/docs/**/
+    #                          *.mdx) resolves to a registered custom
+    #                          element. Catches narrative-only drift
+    #                          — e.g. the civ-form-field bullet that
+    #                          outlived the component, or
+    #                          civ-progress-bar refs across 7 files.
     #   sync:doc-tables      - Regenerate _<component>.props.mdx and
     #                          _<component>.events.mdx partials from
     #                          @civui/schema, then `git diff

@@ -32,7 +32,9 @@ components) **directly on the control**.
 single input or a self-contained group component in it.
 
 **Caught by:** `pnpm lint:story-embeds` (dead component refs in doc
-embeds), and the stories themselves stop rendering chrome correctly.
+embeds), `pnpm lint:prose-refs` (dead `<civ-X>` references anywhere
+in long-form prose: CLAUDE.md, AGENTS.md, `.claude/rules/`, doc body
+text), and the stories themselves stop rendering chrome correctly.
 
 ---
 

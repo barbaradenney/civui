@@ -293,7 +293,6 @@ export class CivDatePicker extends LegendHeadingMixin(CivFormElement) {
               placeholder="${this.placeholder || t('datePickerPlaceholder')}"
               ?disabled="${this.disabled}"
               ?required="${this.required}"
-              aria-required="${this.required || nothing}"
               aria-describedby="${this._ariaDescribedBy || nothing}"
               aria-invalid="${this.error ? 'true' : nothing}"
               @input="${this._onTextInput}"
@@ -738,11 +737,7 @@ export class CivDatePicker extends LegendHeadingMixin(CivFormElement) {
     this._displayYear = year;
     this._focusedDate = newFocus;
     this.announce(`${this._monthNames[month]} ${year}`);
-    this.updateComplete.then(() => {
-      const iso = toISODateString(newFocus);
-      const btn = this.querySelector(`[data-date="${iso}"]`) as HTMLElement | null;
-      btn?.focus();
-    });
+    void this._focusDayAfterUpdate(newFocus);
   }
 
   private _moveFocus(newDate: Date): void {
@@ -755,13 +750,27 @@ export class CivDatePicker extends LegendHeadingMixin(CivFormElement) {
       this._displayYear = newDate.getFullYear();
     }
     this._focusedDate = newDate;
-    // Focus the button after render and announce the date for screen readers
-    this.updateComplete.then(() => {
-      const iso = toISODateString(newDate);
+    void this._focusDayAfterUpdate(newDate, /* announceDate */ true);
+  }
+
+  /**
+   * Focus the day-grid button for `date` after the next render. Optionally
+   * announce the long-form date string (used when arrow-key navigation
+   * crosses days). Errors are surfaced via console.error rather than
+   * swallowed as an unobserved promise rejection.
+   */
+  private async _focusDayAfterUpdate(date: Date, announceDate = false): Promise<void> {
+    try {
+      await this.updateComplete;
+      const iso = toISODateString(date);
       const btn = this.querySelector(`[data-date="${iso}"]`) as HTMLElement | null;
       btn?.focus();
-      this.announce(formatDateLong(newDate, this.locale));
-    });
+      if (announceDate) {
+        this.announce(formatDateLong(date, this.locale));
+      }
+    } catch (err) {
+      console.error('civ-date-picker: failed to focus day cell after update', err);
+    }
   }
 
   /**

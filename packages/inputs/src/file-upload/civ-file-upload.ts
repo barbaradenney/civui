@@ -573,10 +573,24 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
     const previouslyVisible = CivFileUpload._FILE_LIST_LIMIT;
     this._showAllFiles = true;
     this.announce(interpolate(t('fileUploadShowAllAnnounce'), { count: this._files.length }));
-    this.updateComplete.then(() => {
+    void this._afterUpdate('focus first newly-revealed remove button', () => {
       const buttons = this.querySelectorAll<HTMLButtonElement>('[data-file-remove]');
       buttons[previouslyVisible]?.focus();
     });
+  }
+
+  /**
+   * Run a callback after the next render completes. Surfaces a thrown
+   * error through console.error rather than swallowing it as an
+   * unobserved promise rejection.
+   */
+  private async _afterUpdate(context: string, fn: () => void): Promise<void> {
+    try {
+      await this.updateComplete;
+      fn();
+    } catch (err) {
+      console.error(`civ-file-upload: failed after update (${context})`, err);
+    }
   }
 
   private _onDragOver(e: DragEvent): void {
@@ -764,7 +778,7 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
     this.announce(interpolate(this.fileRemovedMessage || t('fileUploadFileRemovedMessage'), { name: removed?.name ?? '', total: this._files.length }));
 
     // Move focus to the next remove button, or the dropzone if no files remain
-    this.updateComplete.then(() => {
+    void this._afterUpdate('restore focus after file removal', () => {
       const buttons = this.querySelectorAll<HTMLButtonElement>('[data-file-remove]');
       if (buttons.length > 0) {
         const next = buttons[Math.min(index, buttons.length - 1)];

@@ -182,11 +182,12 @@ describe('civ-combobox', () => {
     expect(Ctor.formAssociated).toBe(true);
   });
 
-  it('sets aria-required when required', async () => {
+  it('sets native required on the inner combobox input', async () => {
     const el = await fixture('<civ-combobox label="State" required></civ-combobox>');
 
-    const input = el.querySelector('input');
-    expect(input!.getAttribute('aria-required')).toBe('true');
+    const input = el.querySelector('input')!;
+    expect(input.required).toBe(true);
+    expect(input.hasAttribute('required')).toBe(true);
   });
 
   it('opens dropdown on ArrowUp when closed', async () => {

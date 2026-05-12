@@ -183,7 +183,6 @@ export class CivCombobox extends LegendHeadingMixin(CivFormElement) {
             placeholder="${this.placeholder || nothing}"
             ?disabled="${this.disabled}"
             ?required="${this.required}"
-            aria-required="${this.required || nothing}"
             autocomplete="off"
             @input="${this._onFilterInput}"
             @focus="${this._onFocus}"

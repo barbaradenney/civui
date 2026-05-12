@@ -162,7 +162,6 @@ export class CivSelect extends LegendHeadingMixin(CivFormElement) {
           .value="${this.value}"
           ?disabled="${this.disabled || this.readonly}"
           ?required="${this.required}"
-          aria-required="${this.required || nothing}"
           autocomplete="${this.autocomplete || nothing}"
           aria-describedby="${this._ariaDescribedBy || nothing}"
           aria-invalid="${this.error ? 'true' : nothing}"

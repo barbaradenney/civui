@@ -50,11 +50,12 @@ describe('civ-date-picker', () => {
       expect(button.disabled).toBe(true);
     });
 
-    it('sets aria-required when required', async () => {
+    it('sets native required on the inner input', async () => {
       const el = await fixture('<civ-date-picker label="Date" required></civ-date-picker>');
 
-      const input = el.querySelector('input');
-      expect(input!.getAttribute('aria-required')).toBe('true');
+      const input = el.querySelector('input')!;
+      expect(input.required).toBe(true);
+      expect(input.hasAttribute('required')).toBe(true);
     });
 
     it('sets placeholder on input', async () => {

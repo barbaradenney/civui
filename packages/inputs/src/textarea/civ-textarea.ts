@@ -144,7 +144,6 @@ export class CivTextarea extends LegendHeadingMixin(CivFormElement) {
           ?disabled="${this.disabled}"
           ?readonly="${this.readonly}"
           ?required="${this.required}"
-          aria-required="${this.required || nothing}"
           aria-describedby="${this._ariaDescribedBy || nothing}"
           aria-invalid="${this.error ? 'true' : nothing}"
           @input="${this._onInput}"

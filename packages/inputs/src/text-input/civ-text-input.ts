@@ -366,7 +366,6 @@ export class CivTextInput extends LegendHeadingMixin(CivFormElement) {
         ?disabled="${this.disabled}"
         ?readonly="${this.readonly}"
         ?required="${this.required}"
-        aria-required="${this.required || nothing}"
         pattern="${this.pattern || nothing}"
         maxlength="${effectiveMaxlength ?? nothing}"
         minlength="${this.minlength && this.minlength > 0 ? this.minlength : nothing}"

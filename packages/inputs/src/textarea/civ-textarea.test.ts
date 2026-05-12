@@ -111,11 +111,12 @@ describe('civ-textarea', () => {
     expect(el.querySelector('textarea')).not.toBeNull();
   });
 
-  it('sets aria-required when required', async () => {
+  it('sets native required on the inner textarea', async () => {
     const el = await fixture('<civ-textarea label="Bio" required></civ-textarea>');
 
-    const textarea = el.querySelector('textarea');
-    expect(textarea!.getAttribute('aria-required')).toBe('true');
+    const textarea = el.querySelector('textarea')!;
+    expect(textarea.required).toBe(true);
+    expect(textarea.hasAttribute('required')).toBe(true);
   });
 
   it('includes character count in aria-describedby when maxlength is set', async () => {

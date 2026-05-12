@@ -49,6 +49,11 @@ export interface CivLocaleStrings {
   // provide a more specific one. Announced by AT as the dialog name.
   actionSheetLabel: string;
 
+  // Country picker — fallback label for civ-country when no label prop
+  // is provided. Other locale strings live in the consumer's locale
+  // override.
+  countryLabel: string;
+
   // File upload
   fileUploadShowAll: string; // "Show all {count} files"
   fileUploadDragText: string;
@@ -672,6 +677,8 @@ const defaultStrings: CivLocaleStrings = {
   closeLabel: 'Close',
 
   actionSheetLabel: 'Action sheet',
+
+  countryLabel: 'Country',
 
   fileUploadShowAll: 'Show all {count} files',
   fileUploadDragText: 'Drag files here or',

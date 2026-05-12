@@ -1,6 +1,7 @@
 import { html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivFormElement, dispatch } from '@civui/core';
+import { dispatch, t } from '@civui/core';
+import { PresetInputWrapper } from '../preset-input/preset-input-wrapper.js';
 import '../combobox/civ-combobox.js';
 import { COUNTRIES } from './countries.js';
 
@@ -29,7 +30,7 @@ import { COUNTRIES } from './countries.js';
  * ```
  */
 @customElement('civ-country')
-export class CivCountry extends CivFormElement {
+export class CivCountry extends PresetInputWrapper {
   /** Pin United States to the top of the list. */
   @property({ type: Boolean, attribute: 'us-first' }) usFirst = true;
 
@@ -64,7 +65,7 @@ export class CivCountry extends CivFormElement {
   }
 
   override render() {
-    const label = this.label || 'Country';
+    const label = this.label || t('countryLabel');
 
     return html`
       <civ-combobox
@@ -78,31 +79,22 @@ export class CivCountry extends CivFormElement {
         ?required="${this.required}"
         required-message="${this.requiredMessage || ''}"
         ?disabled="${this.disabled}"
+        ?readonly="${this.readonly}"
         @civ-input="${this._onInput}"
         @civ-change="${this._onChange}"
       ></civ-combobox>
     `;
   }
 
-  protected override _onInput(e: Event): void {
-    const ce = e as CustomEvent<{ value: string }>;
-    ce.stopPropagation();
-    this.value = ce.detail.value;
-    dispatch(this, 'civ-input', { value: this.value });
-  }
-
-  protected override _onChange(e: Event): void {
-    const ce = e as CustomEvent<{ value: string; label: string }>;
-    ce.stopPropagation();
-    this.value = ce.detail.value;
-    dispatch(this, 'civ-change', { value: this.value, label: ce.detail.label });
-  }
-
-  override formResetCallback(): void {
-    this.value = '';
-    this.error = '';
-    this.updateFormValue(null);
-    dispatch(this, 'civ-reset');
+  /**
+   * Override only `_onChange` to preserve combobox's `{ value, label }`
+   * detail shape. `_onInput` and `formResetCallback` come from
+   * `PresetInputWrapper` unchanged.
+   */
+  protected override _onChange(e: CustomEvent<{ value: string; label?: string }>): void {
+    e.stopPropagation();
+    this.value = e.detail.value;
+    dispatch(this, 'civ-change', { value: this.value, label: e.detail.label ?? '' });
   }
 }
 

@@ -102,11 +102,12 @@ describe('civ-select', () => {
     expect(el.querySelector('select')).not.toBeNull();
   });
 
-  it('sets aria-required when required', async () => {
+  it('sets native required on the inner select', async () => {
     const el = await fixture('<civ-select label="State" required></civ-select>');
 
-    const select = el.querySelector('select');
-    expect(select!.getAttribute('aria-required')).toBe('true');
+    const select = el.querySelector('select')!;
+    expect(select.required).toBe(true);
+    expect(select.hasAttribute('required')).toBe(true);
   });
 
   it('has static formAssociated = true', () => {

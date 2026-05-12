@@ -121,18 +121,20 @@ describe('civ-text-input', () => {
     expect(input!.className).toContain('civ-w-24');
   });
 
-  it('sets aria-required when required', async () => {
+  it('sets native required on the inner input', async () => {
     const el = await fixture('<civ-text-input label="Email" required></civ-text-input>');
 
-    const input = el.querySelector('input');
-    expect(input!.getAttribute('aria-required')).toBe('true');
+    const input = el.querySelector('input')!;
+    expect(input.required).toBe(true);
+    expect(input.hasAttribute('required')).toBe(true);
   });
 
-  it('omits aria-required when not required', async () => {
+  it('omits required on the inner input when not required', async () => {
     const el = await fixture('<civ-text-input label="Email"></civ-text-input>');
 
-    const input = el.querySelector('input');
-    expect(input!.hasAttribute('aria-required')).toBe(false);
+    const input = el.querySelector('input')!;
+    expect(input.required).toBe(false);
+    expect(input.hasAttribute('required')).toBe(false);
   });
 
   it('has static formAssociated = true', () => {

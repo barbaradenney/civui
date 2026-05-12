@@ -108,7 +108,7 @@ jobs:
         run: pnpm validate:schemas
 
   drift-lints:
-    name: Drift lints (fieldsets, stories, prose refs, color classes, JSDoc props)
+    name: Drift lints (12 static checks across repo)
     runs-on: ubuntu-latest
     # Fast static lints that catch drift across the whole repo, not
     # just form patterns. None of these read files at runtime — they
@@ -157,6 +157,30 @@ jobs:
     #                          Catches docstring drift like the
     #                          civ-action-sheet `trapFocus` doc that
     #                          actually mapped to `trapFocusProp`.
+    #   lint:jsdoc-events    - Companion to lint:jsdoc-props for
+    #                          events. Every @fires tag must match
+    #                          a real dispatch(this, 'civ-X') or
+    #                          new CustomEvent('civ-X') in the same
+    #                          class.
+    #   lint:safelist-stale  - Every entry in tailwind.config.ts
+    #                          safelist must protect a real Tailwind
+    #                          utility — not a plain CSS rule from
+    #                          components.css (where safelist has
+    #                          no effect).
+    #   lint:hardcoded-tokens- No literal motion durations, z-index
+    #                          values (beyond the single-layer-stack
+    #                          idiom), or arbitrary Tailwind values
+    #                          in component source/CSS. Use the
+    #                          var(--civ-*) tokens instead.
+    #   lint:coverage-trinity- Every @customElement has a co-located
+    #                          *.test.ts, *.stories.ts, and (for
+    #                          cross-platform components) a schema.
+    #                          Paired components may share the
+    #                          parent's test / stories file.
+    #   lint:event-listener-leak - Every addEventListener call in
+    #                          connectedCallback / firstUpdated has
+    #                          a matching removeEventListener in the
+    #                          same class.
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v2

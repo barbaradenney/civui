@@ -158,7 +158,7 @@ A separate set of CI jobs guards against narrative and pattern drift across the 
 pnpm validate:lints
 ```
 
-Seven fast static lints over the whole repo. Each parses source and exits in under a second:
+Twelve fast static lints over the whole repo. Each parses source and exits in under a second:
 
 - **`lint:fieldsets`** — No self-contained group component (`civ-radio-group`, `civ-checkbox-group`, `civ-segmented-control`, `civ-yes-no`, `civ-memorable-date`, `civ-date-range-picker`) is wrapped in `<civ-form-fieldset>`. Wrapping would produce nested fieldsets with double legends and broken slot relocation.
 - **`lint:story-embeds`** — Every `<StoryEmbed id="..."/>` in `apps/docs` resolves to a real story export. Catches renames, slug typos (note: Storybook's `startCase` inserts dashes between digits and letters, so `Step1_Hub` becomes `step-1-hub`), and references to deleted components.
@@ -167,6 +167,11 @@ Seven fast static lints over the whole repo. Each parses source and exits in und
 - **`lint:prose-refs`** — Every `<civ-X>` tag reference in long-form documentation (`CLAUDE.md`, `AGENTS.md`, `.claude/rules/`, `apps/docs/docs/**/*.mdx`) resolves to a registered custom element. Catches narrative drift — e.g. a `civ-form-field` bullet that outlives the deleted component, or `civ-progress-bar` references that should be `civ-progress-percent`.
 - **`lint:color-classes`** — Every `civ-{text|bg|border|ring|fill|stroke|divide|outline}-{family}-{shade}` class anywhere in the repo resolves to a real `--civ-color-*` token defined by `packages/tokens`. Catches shades that don't exist on a family — e.g. the `success` family only has `lightest / lighter / DEFAULT / dark / darkest`, so a `darker` suffix would silently render as plain inherited-coloured text rather than throwing.
 - **`lint:jsdoc-props`** — Every `@prop` tag in a component's class-level JSDoc names a declared `@property` on that class, or an inherited prop from a known base class (`CivFormElement`, `CivBooleanFormElement`, `CivCompoundElement`, `PresetInputWrapper`, `LegendHeadingMixin`). The lint normalises camelCase ↔ kebab-case automatically. Catches docstring drift like the `civ-action-sheet` `@prop trapFocus` that actually mapped to property `trapFocusProp`.
+- **`lint:jsdoc-events`** — Companion to `lint:jsdoc-props`, but for events. Every `@fires civ-X` tag in a component's class-level JSDoc must correspond to a real `dispatch(this, 'civ-X')` or `new CustomEvent('civ-X')` call in the same class. Inherited dispatches from `CivBaseElement.sendAnalytics()` and `CivFormElement._handleInput()/_handleChange()` are seeded automatically.
+- **`lint:safelist-stale`** — Every entry in `tailwind.config.ts` `safelist` must protect a class that Tailwind would otherwise purge. Flags entries that target classes already declared as plain CSS in `packages/core/src/styles/` (where Tailwind has no purge authority) or that no source file references — both shapes are dead weight that Tailwind itself only logs as a warning.
+- **`lint:hardcoded-tokens`** — Component source and CSS must use the token system instead of literals. Three sub-checks: motion durations must use `var(--civ-motion-duration-*)`, z-index above the single-layer-stack idiom must use `var(--civ-z-*)`, and Tailwind arbitrary values (`civ-p-[13px]`) are forbidden anywhere in component source.
+- **`lint:coverage-trinity`** — Every `@customElement('civ-X')` declaration must have a co-located `*.test.ts` and `*.stories.ts` (or a sibling file in the same directory that references the tag — paired components like radio + radio-group are allowed to share). Cross-platform components in `COVERED_COMPONENTS` must additionally have a schema at `packages/schema/src/components/civ-X.schema.ts`.
+- **`lint:event-listener-leak`** — Every `addEventListener` call inside `connectedCallback` or `firstUpdated` must have a matching `removeEventListener` somewhere in the same class. Catches the recurring leak shape where a component attaches a document-level keydown / click handler on mount and forgets to detach it on unmount — every reconnect cycle accumulates dead listeners and keeps the host alive.
 
 The lints scan everything under `packages/`, `apps/docs/docs/`, and (for prose-refs and color-classes) the long-form `.md` / `.mdx` / `.twig` files. They are not pattern-specific — adding a new component category gets the same coverage automatically.
 
@@ -266,7 +271,7 @@ This ensures contributors don't forget to update native counterparts when changi
 | Drupal sync clean (regenerator output matches commit) | 0 diff | Yes |
 | Tool tests (parity / sync helpers) | 59/59 pass | Yes |
 | Drupal SDC validation | All 71 SDCs valid | Yes |
-| Drift lints (7 lints across repo) | 0 violations | Yes |
+| Drift lints (12 lints across repo) | 0 violations | Yes |
 | Doc tables sync (schema → MDX partials) | 0 diff | Yes |
 | Storybook build (story / MDX / Vite resolution) | Builds successfully | Yes |
 | Consistency errors | 0 errors | Yes |

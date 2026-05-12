@@ -42,8 +42,10 @@
     "sync:drupal:twig": "tsx tools/sync-drupal-twig.ts",
     "consistency": "node --experimental-strip-types tools/consistency-check.ts",
     "build:cdn": "node scripts/build-cdn.js",
-    "validate:patterns": "pnpm lint:fieldsets && pnpm lint:story-embeds && pnpm lint:story-names && pnpm lint:story-props && pnpm lint:prose-refs && pnpm lint:color-classes && pnpm lint:jsdoc-props && pnpm sync:doc-tables && git diff --exit-code -- 'apps/docs/docs/components/**/_*.props.mdx' 'apps/docs/docs/components/**/_*.events.mdx'",
-    "validate": "pnpm lint && pnpm typecheck && pnpm test && pnpm parity:schema --platforms && pnpm validate:schemas && pnpm validate:patterns && pnpm test:tools"
+    "validate:lints": "pnpm lint:fieldsets && pnpm lint:story-embeds && pnpm lint:story-names && pnpm lint:story-props && pnpm lint:prose-refs && pnpm lint:color-classes && pnpm lint:jsdoc-props",
+    "validate:doc-tables": "pnpm sync:doc-tables && git diff --exit-code -- 'apps/docs/docs/components/**/_*.props.mdx' 'apps/docs/docs/components/**/_*.events.mdx'",
+    "validate:drift": "pnpm validate:lints && pnpm validate:doc-tables",
+    "validate": "pnpm lint && pnpm typecheck && pnpm test && pnpm parity:schema --platforms && pnpm validate:schemas && pnpm validate:drift && pnpm test:tools"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.11.3",

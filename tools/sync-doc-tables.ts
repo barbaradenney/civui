@@ -15,8 +15,8 @@
  * component was deleted). Generating from the schema means the docs
  * track the schema, full stop.
  *
- * Run via `pnpm sync:doc-tables`. CI / `pnpm validate:patterns` runs
- * `git diff --exit-code` on the output to catch drift.
+ * Run via `pnpm sync:doc-tables`. CI / `pnpm validate:doc-tables`
+ * runs `git diff --exit-code` on the output to catch drift.
  */
 import { promises as fs } from 'node:fs';
 import path from 'node:path';

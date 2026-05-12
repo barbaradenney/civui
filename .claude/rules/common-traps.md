@@ -225,8 +225,10 @@ with no visual error.
 `civ-{text|bg|border|ring|fill|stroke|divide|outline}-{family}-{shade}`
 class used anywhere in the repo must resolve to a real token. The
 lint scans `packages/`, `apps/docs/docs/`, and `.twig` / `.mdx`
-files; it's wired into `pnpm validate:patterns` and the
-pattern-drift CI gate.
+files; it's wired into `pnpm validate:lints` and the
+drift-lints CI gate.
+
+
 
 ---
 
@@ -260,7 +262,7 @@ you don't need to re-declare `name`, `value`, `error`, etc.
 **Caught by:** `pnpm lint:jsdoc-props` — every `@prop` tag must
 correspond to a declared `@property` on the class (or an inherited
 prop from one of the known base classes). Wired into
-`pnpm validate:patterns` and the pattern-drift CI gate.
+`pnpm validate:lints` and the drift-lints CI gate.
 
 ---
 

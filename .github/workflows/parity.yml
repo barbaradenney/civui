@@ -107,11 +107,13 @@ jobs:
       - name: Run validateAll over every schema
         run: pnpm validate:schemas
 
-  pattern-drift:
-    name: Pattern drift (fieldsets, stories, prose refs, color classes, JSDoc props, doc tables)
+  drift-lints:
+    name: Drift lints (fieldsets, stories, prose refs, color classes, JSDoc props)
     runs-on: ubuntu-latest
-    # Catches the recurring drift modes surfaced by the form-pattern
-    # audit (May 2026). The umbrella runs eight gates in one job:
+    # Fast static lints that catch drift across the whole repo, not
+    # just form patterns. None of these read files at runtime — they
+    # parse source and exit in seconds. Wired together as
+    # `pnpm validate:lints` for local use.
     #
     #   lint:fieldsets       - No self-contained group component is
     #                          wrapped in civ-form-fieldset (would
@@ -155,14 +157,6 @@ jobs:
     #                          Catches docstring drift like the
     #                          civ-action-sheet `trapFocus` doc that
     #                          actually mapped to `trapFocusProp`.
-    #   sync:doc-tables      - Regenerate _<component>.props.mdx and
-    #                          _<component>.events.mdx partials from
-    #                          @civui/schema, then `git diff
-    #                          --exit-code` to fail if they drifted
-    #                          since the last commit.
-    #
-    # The umbrella is `pnpm validate:patterns` locally; CI invokes it
-    # the same way so failure modes match.
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v2
@@ -173,14 +167,34 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - name: Run pattern-drift umbrella
-        run: pnpm validate:patterns
+      - name: Run drift lints
+        run: pnpm validate:lints
+
+  doc-tables-sync:
+    name: Doc tables in sync with schema
+    runs-on: ubuntu-latest
+    # Regenerates the auto-generated _<component>.props.mdx and
+    # _<component>.events.mdx partials from @civui/schema and fails if
+    # the working tree changed — catches hand-edits to a generated
+    # partial. Split from drift-lints because it has a different
+    # remediation step: run `pnpm sync:doc-tables` and commit the
+    # diff. Cheap enough to run on every PR.
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Regenerate doc tables and verify clean tree
+        run: pnpm validate:doc-tables
       - name: Show drift diff on failure
         if: failure()
         run: |
-          echo "::error::Pattern drift detected. Run \`pnpm validate:patterns\` locally to reproduce."
-          echo ""
-          echo "If the failure was in the doc-table drift check, regenerate with:"
+          echo "::error::Doc-table partials drift from @civui/schema. Run:"
           echo "  pnpm sync:doc-tables"
           echo "  git add apps/docs/docs/components/**/_*.mdx"
           echo "  git commit -m \"docs: sync doc tables\""

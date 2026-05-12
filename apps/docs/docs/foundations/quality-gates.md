@@ -146,6 +146,54 @@ The Storybook site includes a [Contract](pathname:///civui/storybook/?path=/docs
 
 Pages are regenerated from `@civui/schema` on every `pnpm storybook` / `pnpm storybook:build` via the `prestorybook` hook (`pnpm storybook:contract`), so the documentation can never drift from the canonical schema. The generated directory (`.storybook/contract/`) is gitignored — pages are byproducts of the schema, not source. Each Docusaurus component page also carries an auto-injected admonition that links across to the matching Storybook contract page.
 
+## Drift-Prevention Gates
+
+A separate set of CI jobs guards against narrative and pattern drift across the whole repo — typos in Tailwind colour classes, stale `<civ-X>` references in long-form docs, story attributes that don't match a real `@property`, JSDoc tags that lie about the API. These gates surfaced from the May 2026 form-pattern audit and they apply to every component, not just form patterns.
+
+### Drift Lints
+
+**Workflow:** `.github/workflows/parity.yml` (job: `drift-lints`)
+
+```bash
+pnpm validate:lints
+```
+
+Seven fast static lints over the whole repo. Each parses source and exits in under a second:
+
+- **`lint:fieldsets`** — No self-contained group component (`civ-radio-group`, `civ-checkbox-group`, `civ-segmented-control`, `civ-yes-no`, `civ-memorable-date`, `civ-date-range-picker`) is wrapped in `<civ-form-fieldset>`. Wrapping would produce nested fieldsets with double legends and broken slot relocation.
+- **`lint:story-embeds`** — Every `<StoryEmbed id="..."/>` in `apps/docs` resolves to a real story export. Catches renames, slug typos (note: Storybook's `startCase` inserts dashes between digits and letters, so `Step1_Hub` becomes `step-1-hub`), and references to deleted components.
+- **`lint:story-names`** — Every `StoryObj`'s export name and `name:` display title share at least one substantive token. Catches the failure mode where `export const WithError` had display name `"Custom Button Labels"`, so the Storybook panel title contradicted the rendered content.
+- **`lint:story-props`** — Every `<civ-*>` attribute used in any `*.stories.ts` corresponds to a declared `@property` on the underlying component (or one of its known base classes). Catches phantom attributes like `<civ-repeater add-label="...">` (no such prop — should be `item-label`) or `<civ-select preset="document-type">` (presets aren't a thing on civ-select).
+- **`lint:prose-refs`** — Every `<civ-X>` tag reference in long-form documentation (`CLAUDE.md`, `AGENTS.md`, `.claude/rules/`, `apps/docs/docs/**/*.mdx`) resolves to a registered custom element. Catches narrative drift — e.g. a `civ-form-field` bullet that outlives the deleted component, or `civ-progress-bar` references that should be `civ-progress-percent`.
+- **`lint:color-classes`** — Every `civ-{text|bg|border|ring|fill|stroke|divide|outline}-{family}-{shade}` class anywhere in the repo resolves to a real `--civ-color-*` token defined by `packages/tokens`. Catches shades that don't exist on a family — e.g. the `success` family only has `lightest / lighter / DEFAULT / dark / darkest`, so a `darker` suffix would silently render as plain inherited-coloured text rather than throwing.
+- **`lint:jsdoc-props`** — Every `@prop` tag in a component's class-level JSDoc names a declared `@property` on that class, or an inherited prop from a known base class (`CivFormElement`, `CivBooleanFormElement`, `CivCompoundElement`, `PresetInputWrapper`, `LegendHeadingMixin`). The lint normalises camelCase ↔ kebab-case automatically. Catches docstring drift like the `civ-action-sheet` `@prop trapFocus` that actually mapped to property `trapFocusProp`.
+
+The lints scan everything under `packages/`, `apps/docs/docs/`, and (for prose-refs and color-classes) the long-form `.md` / `.mdx` / `.twig` files. They are not pattern-specific — adding a new component category gets the same coverage automatically.
+
+### Doc Tables Sync
+
+**Workflow:** `.github/workflows/parity.yml` (job: `doc-tables-sync`)
+
+```bash
+pnpm validate:doc-tables
+```
+
+Regenerates the auto-generated `_<component>.props.mdx` and `_<component>.events.mdx` partials from `@civui/schema` (via `pnpm sync:doc-tables`), then fails if `git diff` produces any output. Catches hand-edits to a generated partial — the schema is the source of truth for the Props and Events tables on every component page.
+
+Split from the drift-lints job because it has a different remediation step: run `pnpm sync:doc-tables` locally and commit the diff.
+
+### Storybook Build
+
+**Workflow:** `.github/workflows/parity.yml` (job: `storybook-build`)
+
+```bash
+pnpm storybook:build
+```
+
+Builds the full Storybook static bundle on every PR. Catches story render-time errors that the static lints miss: a story whose `render()` throws, an import that fails to resolve, an MDX docs page with a syntax error, a Vite/Rollup module-resolution failure, or a contract-page generator that emits invalid markup.
+
+The `prestorybook:build` hook regenerates the contract MDX pages first, so this gate also covers the schema → contract page generator. Native bundle size is currently ~1MB ungzipped — the bundle-size CI gate tracks regressions on that separately.
+
 ### Native Compile Check
 
 **Workflow:** `.github/workflows/native.yml`
@@ -218,6 +266,9 @@ This ensures contributors don't forget to update native counterparts when changi
 | Drupal sync clean (regenerator output matches commit) | 0 diff | Yes |
 | Tool tests (parity / sync helpers) | 59/59 pass | Yes |
 | Drupal SDC validation | All 71 SDCs valid | Yes |
+| Drift lints (7 lints across repo) | 0 violations | Yes |
+| Doc tables sync (schema → MDX partials) | 0 diff | Yes |
+| Storybook build (story / MDX / Vite resolution) | Builds successfully | Yes |
 | Consistency errors | 0 errors | Yes |
 | Consistency warnings | Unlimited | No |
 | Native compile (Swift) | Must parse | Yes |

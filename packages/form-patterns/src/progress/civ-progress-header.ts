@@ -24,7 +24,6 @@ import { CivBaseElement, announce, t, interpolate } from '@civui/core';
  * @prop {'primary'|'secondary'|'tertiary'} size - Visual size variant
  * @prop {number} headingLevel - Semantic heading level (1–6)
  */
-// Tailwind JIT: civ-progress-header--primary civ-progress-header--secondary civ-progress-header--tertiary
 @customElement('civ-progress-header')
 export class CivProgressHeader extends CivBaseElement {
   /** Current step index (0-based). Clamped to valid range. */

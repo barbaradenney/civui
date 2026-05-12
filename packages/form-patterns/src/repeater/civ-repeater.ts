@@ -322,17 +322,31 @@ export class CivRepeater extends CivBaseElement {
     this._formStepsEditIndex = -1;
     this._formStepsActive = true;
     dispatch(this, 'civ-repeater-form-steps-open', { index: this._rowCount, isNew: true });
-    this.updateComplete.then(() => this._buildFormSteps(this._rowCount));
+    void this._afterUpdate('opening form steps for add', () => this._buildFormSteps(this._rowCount));
   };
 
   private _openFormStepsForEdit(index: number): void {
     this._formStepsEditIndex = index;
     this._formStepsActive = true;
     dispatch(this, 'civ-repeater-form-steps-open', { index, isNew: false });
-    this.updateComplete.then(() => {
+    void this._afterUpdate('opening form steps for edit', () => {
       this._buildFormSteps(index);
       this._populateFormStepsFromRowData(index);
     });
+  }
+
+  /**
+   * Run a callback after the next render completes, surfacing any
+   * thrown error to the console with a context tag rather than
+   * swallowing it as an unobserved promise rejection.
+   */
+  private async _afterUpdate(context: string, fn: () => void): Promise<void> {
+    try {
+      await this.updateComplete;
+      fn();
+    } catch (err) {
+      console.error(`civ-repeater: failed after update (${context})`, err);
+    }
   }
 
   private _buildFormSteps(index: number): void {
@@ -439,7 +453,7 @@ export class CivRepeater extends CivBaseElement {
     this._formStepsActive = false;
     this._formStepsEditIndex = -1;
 
-    this.updateComplete.then(() => {
+    void this._afterUpdate('restoring focus after save', () => {
       if (isNew) {
         this.querySelector<HTMLElement>(':scope > fieldset > civ-button')?.focus();
       } else {
@@ -457,7 +471,7 @@ export class CivRepeater extends CivBaseElement {
     this._formStepsActive = false;
     this._formStepsEditIndex = -1;
 
-    this.updateComplete.then(() => {
+    void this._afterUpdate('restoring focus after cancel', () => {
       this.querySelector<HTMLElement>(':scope > fieldset > civ-button')?.focus();
     });
   }

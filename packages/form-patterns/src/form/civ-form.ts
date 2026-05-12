@@ -301,7 +301,7 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
                       <li class="civ-mb-1">
                         <a href="${r.href}" class="civ-link civ-underline">${r.label}</a>
                         ${r.description
-                          ? html`<span class="civ-text-muted civ-ms-2">${r.description}</span>`
+                          ? html`<span class="civ-text-sm civ-ms-2">${r.description}</span>`
                           : nothing}
                       </li>
                     `,
@@ -462,16 +462,28 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
     if (collected.length === 0) return;
 
     // Focus the error summary and announce, mirroring the validation-fail flow.
-    this.updateComplete.then(() => {
+    void this._focusErrorSummary(collected.length);
+  }
+
+  /**
+   * Focus the rendered error summary element and announce the error
+   * count to assistive tech. Awaits one render cycle so the summary
+   * is in the DOM before focusing. Errors are logged rather than
+   * swallowed silently (compared to the previous `.then(...)` shape).
+   */
+  private async _focusErrorSummary(count: number): Promise<void> {
+    try {
+      await this.updateComplete;
       const summary = this.querySelector(`[data-civ-error-summary]`) as HTMLElement | null;
-      if (summary) {
-        summary.focus();
-        this.announce(
-          interpolate(t(collected.length === 1 ? 'formErrorAnnouncementSingular' : 'formErrorAnnouncementPlural'), { count: collected.length }),
-          'assertive',
-        );
-      }
-    });
+      if (!summary) return;
+      summary.focus();
+      this.announce(
+        interpolate(t(count === 1 ? 'formErrorAnnouncementSingular' : 'formErrorAnnouncementPlural'), { count }),
+        'assertive',
+      );
+    } catch (err) {
+      console.error('civ-form: failed to focus error summary', err);
+    }
   }
 
   /**
@@ -779,17 +791,8 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
       dispatch(this, 'civ-invalid', { errors });
       this.sendAnalytics('invalid', { errorCount: errors.length });
 
-      // Focus the error summary after render
-      this.updateComplete.then(() => {
-        const summary = this.querySelector(`[data-civ-error-summary]`) as HTMLElement | null;
-        if (summary) {
-          summary.focus();
-          this.announce(
-            interpolate(t(errors.length === 1 ? 'formErrorAnnouncementSingular' : 'formErrorAnnouncementPlural'), { count: errors.length }),
-            'assertive',
-          );
-        }
-      });
+      // Focus the error summary after render.
+      void this._focusErrorSummary(errors.length);
       return;
     }
 

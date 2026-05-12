@@ -48,6 +48,24 @@ Native fieldset wrapper with legend, hint, and error support. Uses native `<fiel
 | `heading-level` | `1`–`6` | — | Promote the legend to a heading via `role="heading"` + `aria-level=N`. See [Heading hierarchy](/components/form/form-group#heading-hierarchy). |
 | `size` | `'sm' \| 'md' \| 'lg' \| 'xl'` | `'sm'` | Visual size. `sm` = body size; `md`/`lg`/`xl` step up for section/page heading use. |
 
+## `civ-fieldset` vs `civ-form-fieldset`
+
+CivUI ships two fieldset wrappers. They render the same underlying `<fieldset>` + `<legend>` chrome, but exist for slightly different purposes:
+
+| | `civ-fieldset` | `civ-form-fieldset` |
+|---|---|---|
+| **Purpose** | Plain structural grouping. | Multi-field grouping for compound forms. |
+| **Render** | `<fieldset>` + `<legend>` + hint + error. | Same chrome, with child-error-event absorption. |
+| **`tight-hint` prop** | — | Yes (pulls the hint flush with the controls below). |
+| **`required-message` prop** | — | Yes (field-specific required-message text). |
+| **Bubbles `civ-error-change` from children** | — | Yes — re-renders the group's error when a child's internal error state changes (e.g. `civ-memorable-date` rejecting an invalid date). |
+
+**Use `civ-fieldset`** when you just want a `<fieldset disabled>` cascade and a single legend over a few related inputs — for example, an "Emergency contact" or "Previous employment" block with no per-child error coordination.
+
+**Use `civ-form-fieldset`** when the group is a compound entry where children may surface their own errors that should bubble up — for example, the dates inside a marriage history block, or any custom block whose children dispatch `civ-error-change` events.
+
+Neither variant should wrap a single input or a self-contained group component (`civ-radio-group`, `civ-checkbox-group`, `civ-segmented-control`, `civ-yes-no`, `civ-memorable-date`, `civ-date-range-picker`) — those already render their own chrome and you'd get nested fieldsets. The `lint:fieldsets` check enforces this.
+
 ## Disabled Cascade
 
 Setting `disabled` on `civ-fieldset` uses the native `<fieldset disabled>` behavior, which automatically disables all form controls within it without needing to set `disabled` on each child individually.

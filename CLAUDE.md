@@ -244,11 +244,12 @@ Why schemas matter:
 - Layout + UI: `civ-filterable-list`, `civ-card`, `civ-divider`, `civ-tag`, `civ-list`, `civ-page-header`, `civ-icon`
 - Actions + navigation: `civ-button`, `civ-link`, `civ-link-card`, `civ-skip-link`, `civ-action-button`, `civ-action-link`, `civ-button-group`, `civ-filter-chip`, `civ-filter-chip-group`
 
-Four CI gates protect the contract (`.github/workflows/parity.yml`):
+Five CI gates protect the contract (`.github/workflows/parity.yml`):
 - **`schema-parity`** runs `pnpm parity:schema --platforms` — fails on Lit ↔ schema ↔ iOS ↔ Android ↔ Drupal SDC drift.
 - **`schema-validate`** runs `pnpm validate:schemas` — fails on structural typos (invalid category / extends / valueMode / requiredIndicator, enum defaults outside the values list, malformed renderOrder).
 - **`drupal-sync-clean`** runs `pnpm sync:drupal && git diff --exit-code` — catches hand-edits to Twig / SDC YAML that diverge from regenerator output.
-- **`tool-tests`** runs `pnpm test:tools` — guards regressions in the parity / sync helper functions themselves (53 tests covering prop normalization, snake↔camel, Twig rendering).
+- **`doc-tables-sync`** runs `pnpm validate:doc-tables` — re-syncs `apps/docs/docs/components/**/_<slug>.{props,events}.mdx` from the schemas and fails on `git diff --exit-code`. Catches hand-edits to a generated partial; doc pages import these partials, so the on-page Props / Events tables can't drift.
+- **`tool-tests`** runs `pnpm test:tools` — guards regressions in the parity / sync helper functions themselves (151 tests covering prop normalization, snake↔camel, Twig rendering, MDX-safe table-cell escaping).
 
 The check validates **prop name coverage** on all platforms, plus **prop type matching on Drupal SDC YAML** (a `boolean` schema prop must surface as `type: boolean` in Drupal; iOS / Android type-parsing is intentionally not enforced — Swift / Kotlin type expressions are too varied to compare reliably). Naming conventions are normalized automatically:
 - iOS `is`-prefix for booleans (`required` → `isRequired`, `tile` → `isTile`)
@@ -260,7 +261,7 @@ Mark genuinely web-specific props (Tailwind size variants, ARIA heading-level pr
 
 When the Drupal SDC YAMLs drift, regenerate from schemas with `pnpm sync:drupal` (runs both `sync-drupal-sdc.ts` and `sync-drupal-twig.ts` — idempotent; only appends missing props and rewrites the Twig from the YAML). Native platform updates are hand-edited Swift / Kotlin. See `packages/schema/README.md` for the full naming-convention map and "how to add a new schema" walk-through.
 
-**Out of scope (web-specific layout wrappers):** `civ-fieldset`, `civ-fieldset`, `civ-form` — these abstract over how form-headers are rendered on web; native platforms compose the same affordances differently and don't need a contract translation.
+**Out of scope (web-specific layout wrappers):** `civ-fieldset`, `civ-form` — these abstract over how form-headers are rendered on web; native platforms compose the same affordances differently and don't need a contract translation.
 
 **If you modify a covered component**, update its schema in the same change. Run `pnpm parity:schema` before committing — the check fails on missing/added/renamed/retyped props. Inherited form props (`label`, `name`, `value`, `hint`, `error`, `required`, `disabled`, `readonly`, etc.) are filtered on both sides; you don't need to declare them.
 

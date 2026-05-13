@@ -16,14 +16,15 @@ It is **not** a code generator. The previous `@civui/codegen` package was retire
 
 ## How drift is enforced
 
-Four CI gates protect the contract (`.github/workflows/parity.yml`):
+Five CI gates protect the contract (`.github/workflows/parity.yml`):
 
 | Gate | Tool | Catches |
 |------|------|---------|
 | `schema-parity` | `tools/schema-parity.ts --platforms` | Lit ↔ schema ↔ iOS ↔ Android ↔ Drupal SDC prop drift, plus Drupal SDC YAML type-drift (a `boolean` schema prop must surface as `type: boolean` in YAML, etc.) |
 | `schema-validate` | `pnpm validate:schemas` | Structural typos that TypeScript misses — invalid `category` / `extends` / `valueMode` / `requiredIndicator`, enum defaults outside the values list, malformed `renderOrder` |
 | `drupal-sync-clean` | `tools/sync-drupal-{sdc,twig}.ts` + `git diff --exit-code` | Hand-edits to SDC YAML / Twig that diverge from regenerator output |
-| `tool-tests` | `pnpm test:tools` | Regressions in the parity / sync helper functions themselves (84 unit tests) |
+| `doc-tables-sync` | `tools/sync-doc-tables.ts` + `git diff --exit-code` | Hand-edits to a generated Props / Events partial under `apps/docs/docs/components/**/_<slug>.{props,events}.mdx` |
+| `tool-tests` | `pnpm test:tools` | Regressions in the parity / sync helper functions themselves (151 unit tests) |
 
 iOS / Android type-parsing is intentionally **not** enforced — Swift / Kotlin type expressions vary too much (`Bool`, `@Binding<Bool>`, `Int?`, custom enums like `LinkCardVariant`, etc.) to diff reliably without a full type system. The check covers names on all platforms and types on Drupal SDC, where YAML directly declares them.
 
@@ -88,6 +89,12 @@ If iOS and Android happen to also declare a webOnly prop (as a no-op or convenie
    ```
 
 5. **CI picks it up automatically** — no workflow changes needed. The `schema-parity` job iterates `COVERED_COMPONENTS`.
+
+## Docs site Props / Events tables
+
+The schema is also the source of truth for the Props and Events tables on every component doc page. `tools/sync-doc-tables.ts` walks all schemas and writes a `_<slug>.props.mdx` + `_<slug>.events.mdx` partial next to the corresponding doc page; the page imports the partials instead of hand-writing the tables. CI re-syncs and `git diff --exit-code`s on every PR via the `doc-tables-sync` job, so the tables can't drift from the schema.
+
+For a component whose schema lives in this package but whose doc lives as a sub-section of a sibling component's page (e.g. `civ-checkbox-group` is documented inside `controls/checkbox.mdx`, not its own page), add an entry to `HOST_PAGE_OVERRIDES` at the top of `tools/sync-doc-tables.ts` so the generator knows where to write its partial.
 
 ## Out of scope
 

@@ -188,20 +188,51 @@ Hand-written Props / Events tables in `apps/docs/docs/components/**`
 drift. The overview page kept listing `civ-form-field` as a current
 component months after it was deleted.
 
-The `apps/docs/docs/components/{category}/_{component}.props.mdx` and
-`_{component}.events.mdx` partials are **generated from
-`@civui/schema`** by `pnpm sync:doc-tables`. Doc pages should import
-those partials instead of hand-writing tables:
+The `apps/docs/docs/components/{category}/_{slug}.props.mdx` and
+`_{slug}.events.mdx` partials are **generated from `@civui/schema`**
+by `pnpm sync:doc-tables` (where `{slug}` is the component name with
+the `civ-` prefix stripped — e.g. `text-input`, `checkbox-group`).
+Every component doc page imports those partials instead of
+hand-writing tables:
 
 ```mdx
-import PropsTable from './_civ-text-input.props.mdx';
+import PropsTable from './_text-input.props.mdx';
+import EventsTable from './_text-input.events.mdx';
 
 ## Props
 <PropsTable />
+
+## Events
+<EventsTable />
 ```
 
-CI runs `pnpm sync:doc-tables && git diff --exit-code` to catch
-out-of-band edits.
+**Multi-component pages** (e.g. `controls/checkbox.mdx` covers both
+`civ-checkbox` and `civ-checkbox-group`) import each partial under an
+aliased name:
+
+```mdx
+import CheckboxProps from './_checkbox.props.mdx';
+import CheckboxGroupProps from './_checkbox-group.props.mdx';
+```
+
+**Sub-components without their own MDX page** (e.g.
+`civ-checkbox-group` is documented inside `controls/checkbox.mdx`,
+not on its own page) declare their host in `HOST_PAGE_OVERRIDES` at
+the top of `tools/sync-doc-tables.ts`. Add an entry when you create a
+schema for a component that lives as a sub-section of a sibling's
+page rather than on its own.
+
+**JSX safety in descriptions.** Schema descriptions can use bare HTML
+tag syntax (`<select>`) or interpolation placeholders (`{name}`) —
+the generator escapes them to HTML entities outside code spans so
+MDX doesn't try to parse them as JSX. Inside backticks (`` `<select>` ``)
+they're emitted literally. Either is safe; the backtick form reads
+better in rendered tables.
+
+**Caught by:** CI runs `pnpm validate:doc-tables` which re-syncs and
+fails on `git diff --exit-code` against the partials. Run
+`pnpm sync:doc-tables` locally and commit the regenerated partials
+when a schema changes.
 
 ---
 

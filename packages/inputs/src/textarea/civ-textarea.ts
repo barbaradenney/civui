@@ -189,6 +189,7 @@ export class CivTextarea extends LegendHeadingMixin(CivFormElement) {
             label: this.label,
             inputId: this._inputId,
             required: this.required,
+            showRequired: !this.hideRequiredIndicator && this.required,
             headingLevel: this.headingLevel,
             size: this.size,
           }),

@@ -230,7 +230,7 @@ export class CivMemorableDate extends LegendHeadingMixin(CivFormElement) {
       >
         ${this.legend
           ? renderFormHeader({
-              label: renderLegend({ legend: this.legend, required: this.required, headingLevel: this.headingLevel, size: this.size }),
+              label: renderLegend({ legend: this.legend, required: this.required, showRequired: !this.hideRequiredIndicator && this.required, headingLevel: this.headingLevel, size: this.size }),
               hintId: this._hintId,
               hint: this.hint,
               errorId: this._errorId,

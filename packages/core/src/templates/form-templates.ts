@@ -90,6 +90,10 @@ export function renderLabel({
  * Render a fieldset legend with optional required indicator.
  * Used by radio-group, checkbox-group, fieldset, memorable-date.
  *
+ * @param showRequired - Override required indicator visibility. When false,
+ *   the "(required)" text is hidden even if required is true. Used by compound
+ *   components whose parent legend already shows the required indicator.
+ *   Defaults to the value of `required`.
  * @param headingLevel - When set, promotes the legend to a heading via
  *   `role="heading"` + `aria-level=N` for screen-reader navigation.
  * @param size - Visual size variant. Defaults to body size (`sm`).
@@ -100,6 +104,7 @@ export function renderLabel({
 export function renderLegend({
   legend,
   required,
+  showRequired,
   legendId,
   size,
   headingLevel,
@@ -107,14 +112,16 @@ export function renderLegend({
 }: {
   legend: string;
   required: boolean;
+  showRequired?: boolean;
   legendId?: string;
   size?: LabelSize;
   headingLevel?: HeadingLevel;
   srOnly?: boolean;
 }) {
   if (!legend) return nothing;
+  const indicatorVisible = showRequired ?? required;
   if (srOnly) {
-    return html`<legend class="civ-sr-only">${legend}${required ? html` <span>${t('required')}</span>` : nothing}</legend>`;
+    return html`<legend class="civ-sr-only">${legend}${indicatorVisible ? html` <span>${t('required')}</span>` : nothing}</legend>`;
   }
   const sizeClass = labelSizeClass('civ-legend', size);
   const { role, ariaLevel } = headingAttrs(headingLevel);
@@ -126,7 +133,7 @@ export function renderLegend({
       aria-level="${ariaLevel}"
     >
       ${legend}
-      ${required
+      ${indicatorVisible
         ? html`<span class="civ-required-mark">${t('required')}</span>`
         : nothing}
     </legend>

@@ -91,7 +91,7 @@ export class CivSegmentedControl extends LegendHeadingMixin(GroupListenerMixin(L
       >
         ${this.legend
           ? renderFormHeader({
-              label: renderLegend({ legend: this.legend, required: this.required, legendId: this._legendId, headingLevel: this.headingLevel, size: this.size }),
+              label: renderLegend({ legend: this.legend, required: this.required, showRequired: !this.hideRequiredIndicator && this.required, legendId: this._legendId, headingLevel: this.headingLevel, size: this.size }),
               hintId: this._hintId,
               hint: this.hint,
               errorId: this._errorId,

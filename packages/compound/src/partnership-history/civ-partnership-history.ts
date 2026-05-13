@@ -224,7 +224,7 @@ export class CivPartnershipHistory extends LegendHeadingMixin(CivCompoundElement
         aria-invalid="${this.error ? 'true' : nothing}"
         ?disabled="${this.disabled}"
       >
-        ${renderFormHeader({ label: renderLegend({ legend: this._legendForStep(), required: this.required, headingLevel: this.headingLevel, size: this.size }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
+        ${renderFormHeader({ label: renderLegend({ legend: this._legendForStep(), required: this.required, showRequired: !this.hideRequiredIndicator && this.required, headingLevel: this.headingLevel, size: this.size }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
 
         ${showWho ? this._renderWho(prefix) : nothing}
         ${showDetails ? this._renderCategoryFields(prefix) : nothing}

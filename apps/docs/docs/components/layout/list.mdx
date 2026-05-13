@@ -5,7 +5,8 @@ sidebar_label: List
 ---
 
 import StoryEmbed from "@site/src/components/StoryEmbed";
-import PropsTable from "./_list.props.mdx";
+import ListProps from "./_list.props.mdx";
+import ListItemProps from "./_list-item.props.mdx";
 
 # List
 
@@ -102,17 +103,11 @@ For the **task list pattern** (status badges, sequential unlocking), see the
 
 ## civ-list Props
 
-<PropsTable />
+<ListProps />
 
 ## civ-list-item Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `href` | `string` | `''` | Navigation target. When set, the row becomes a clickable anchor with link-card-style heading. |
-| `current` | `boolean` | `false` | Mark as the current page (`aria-current="page"`). For side navigation. |
-| `heading` | `string` | `''` | Shorthand bold heading. Linked rows render it underlined in primary color. |
-| `description` | `string` | `''` | Shorthand secondary text below heading. |
-| `error` | `string` | `''` | Error text below content with `role="alert"`. |
+<ListItemProps />
 
 ## Slots
 

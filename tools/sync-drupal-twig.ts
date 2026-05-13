@@ -38,7 +38,7 @@ function isCliInvocation(): boolean {
 }
 
 const COMPONENTS = [
-  'civ-text-input', 'civ-checkbox', 'civ-radio-group', 'civ-yes-no',
+  'civ-text-input', 'civ-checkbox', 'civ-radio-group', 'civ-radio', 'civ-yes-no',
   'civ-checkbox-group', 'civ-combobox', 'civ-date-picker', 'civ-file-upload',
   'civ-memorable-date', 'civ-segmented-control', 'civ-select', 'civ-textarea',
   'civ-toggle', 'civ-address', 'civ-repeater', 'civ-name', 'civ-direct-deposit',
@@ -60,6 +60,7 @@ const COMPONENTS = [
   'civ-divider',
   'civ-tag',
   'civ-list',
+  'civ-list-item',
   'civ-page-header',
   'civ-section-intro',
   'civ-button',

@@ -1,0 +1,9 @@
+{/* Generated from @civui/schema by tools/sync-doc-tables.ts.
+    Do not edit by hand — run `pnpm sync:doc-tables` to regenerate. */}
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `href` | `string` | `''` | When set, the row renders as an anchor that navigates on click. Sanitized — `javascript:` / `data:` schemes are rejected |
+| `current` | `boolean` | `false` | Mark this row as the current page. Adds `aria-current="page"` to the anchor (only meaningful when `href` is set) |
+| `heading` | `string` | `''` | Convenience shorthand for the bold heading text. The `data-list-item-heading` slot takes precedence when present |
+| `description` | `string` | `''` | Convenience shorthand for the secondary text below the heading. The `data-list-item-description` slot takes precedence when present |

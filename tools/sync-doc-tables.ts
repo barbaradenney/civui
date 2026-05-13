@@ -134,7 +134,10 @@ function renderEvents(name: string, events: Record<string, EventDef>): string {
  */
 const HOST_PAGE_OVERRIDES: Record<string, string> = {
   'civ-checkbox-group': 'controls/checkbox.mdx',
+  'civ-radio': 'controls/radio.mdx',
   'civ-radio-group': 'controls/radio.mdx',
+  'civ-segment': 'controls/segmented-control.mdx',
+  'civ-list-item': 'layout/list.mdx',
   'civ-filter-chip-group': 'actions/filter-chip.mdx',
   'civ-memorable-date': 'inputs/date.mdx',
   'civ-date-picker': 'inputs/date.mdx',

@@ -5,6 +5,8 @@ sidebar_label: Radio
 ---
 
 import StoryEmbed from "@site/src/components/StoryEmbed";
+import RadioProps from "./_radio.props.mdx";
+import RadioEvents from "./_radio.events.mdx";
 import RadioGroupProps from "./_radio-group.props.mdx";
 import RadioGroupEvents from "./_radio-group.events.mdx";
 
@@ -74,14 +76,11 @@ Child element used within `civ-radio-group`. Not usable standalone.
 
 ### Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `label` | `string` | `''` | Radio label text |
-| `value` | `string` | `''` | Form submission value when selected |
-| `description` | `string` | `''` | Description text below the label |
-| `checked` | `boolean` | `false` | Whether this radio is selected (managed by parent) |
-| `tile` | `boolean` | `false` | Tile variant (managed by parent) |
-| `disabled` | `boolean` | `false` | Whether the radio is disabled |
+<RadioProps />
+
+### Events
+
+<RadioEvents />
 
 ---
 

@@ -5,7 +5,10 @@ sidebar_label: Segmented Control
 ---
 
 import StoryEmbed from "@site/src/components/StoryEmbed";
-import PropsTable from "./_segmented-control.props.mdx";
+import SegmentedControlProps from "./_segmented-control.props.mdx";
+import SegmentedControlEvents from "./_segmented-control.events.mdx";
+import SegmentProps from "./_segment.props.mdx";
+import SegmentEvents from "./_segment.events.mdx";
 
 # Segmented Control & Segment
 
@@ -63,14 +66,11 @@ A segmented control (button-style radio group) that provides a compact single-se
 
 ### Props
 
-<PropsTable />
+<SegmentedControlProps />
 
 ### Events
 
-| Event | Detail | Description |
-|-------|--------|-------------|
-| `civ-input` | `{ value: string }` | Fires when selection changes |
-| `civ-change` | `{ value: string }` | Fires when selection changes |
+<SegmentedControlEvents />
 
 ---
 
@@ -80,11 +80,11 @@ Individual segment option. Must be used as a child of `civ-segmented-control`.
 
 ### Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `label` | `string` | `''` | Segment label text |
-| `value` | `string` | `''` | Value when this segment is selected |
-| `disabled` | `boolean` | `false` | Whether this segment is disabled |
+<SegmentProps />
+
+### Events
+
+<SegmentEvents />
 
 ## Keyboard Navigation
 

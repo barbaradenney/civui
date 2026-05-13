@@ -66,6 +66,12 @@ const schema: ComponentSchema = {
       type: 'array',
       description: 'Host-owned array of row objects. Only used in `mode="route"`. The repeater renders one summary card per entry and never mutates this array',
       default: [],
+      items: {
+        // Row shape is host-defined; `id` is the only field the repeater
+        // itself reads (via `idField`). Anything else is consumed by
+        // `summaryFields` / `rowSummary` on the consumer side.
+        id: { type: 'string', description: 'Stable identifier — property name is configurable via `id-field`. Other row fields are host-defined' },
+      },
     },
     addHref: {
       type: 'string',

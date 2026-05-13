@@ -216,6 +216,50 @@ describe('civ-repeater', () => {
     expect(addBtn.getAttribute('label')).toContain('dependent');
   });
 
+  it('uses "Add {item}" copy when the list is empty', async () => {
+    const el = await fixture<CivRepeater>(`
+      <civ-repeater legend="Deps" name="deps" item-label="dependent">
+        <input type="text" name="name" />
+      </civ-repeater>
+    `);
+    const addBtn = el.querySelector('civ-button[variant="secondary"]')!;
+    // First-add reads "Add dependent" — NOT "Add another dependent", which
+    // would falsely imply something already exists.
+    expect(addBtn.getAttribute('label')).toBe('Add dependent');
+  });
+
+  it('switches to "Add another {item}" after the first row is added', async () => {
+    const el = await fixture<CivRepeater>(`
+      <civ-repeater legend="Deps" name="deps" item-label="dependent">
+        <input type="text" name="name" />
+      </civ-repeater>
+    `) as CivRepeater;
+    el.addRow();
+    await elementUpdated(el);
+    const addBtn = el.querySelector('civ-button[variant="secondary"]')!;
+    expect(addBtn.getAttribute('label')).toBe('Add another dependent');
+  });
+
+  it('uses "Add {item}" copy when the list seeds with min rows but then drops to empty (route mode)', async () => {
+    const el = await fixture<CivRepeater>(`
+      <civ-repeater
+        mode="route"
+        legend="Deps"
+        item-label="dependent"
+        add-href="/dependents/new"
+      ></civ-repeater>
+    `) as CivRepeater;
+    // route mode starts with empty rows → first-add copy
+    const add = el.querySelector(':scope > fieldset > civ-link') as HTMLElement;
+    expect(add.getAttribute('label')).toBe('Add dependent');
+
+    // Set rows on the route-mode repeater; copy flips
+    el.rows = [{ id: 'a', firstName: 'Alex' }];
+    await elementUpdated(el);
+    const add2 = el.querySelector(':scope > fieldset > civ-link') as HTMLElement;
+    expect(add2.getAttribute('label')).toBe('Add another dependent');
+  });
+
   it('renders add button with plus icon', async () => {
     const el = await fixture<CivRepeater>(`
       <civ-repeater legend="Items" name="items" item-label="item">

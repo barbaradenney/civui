@@ -69,16 +69,23 @@ export const WithHint: Story = {
   `,
 };
 
+// What the repeater looks like AFTER a submit attempt failed validation —
+// the user has at least one row but it isn't complete. This is the realistic
+// "with-error" state. The previous version of this story showed the error
+// alongside an empty list, which was confusing: the message implied the
+// user had done something wrong before they'd had a chance to add anything.
 export const WithError: Story = {
+  name: 'With Error (after submit)',
   render: () => html`
     <civ-repeater
       legend="Dependents"
       name="dependents"
       item-label="dependent"
-      error="At least one dependent must be listed"
+      error="Complete each dependent's name before submitting."
       required
+      min="1"
     >
-      <civ-text-input label="Full name" name="fullName"></civ-text-input>
+      <civ-text-input label="Full name" name="fullName" required></civ-text-input>
     </civ-repeater>
   `,
 };
@@ -122,8 +129,8 @@ export const AllStates: Story = {
       <civ-repeater legend="With hint" name="hint" item-label="item" hint="Add items as needed">
         <civ-text-input label="Name" name="name"></civ-text-input>
       </civ-repeater>
-      <civ-repeater legend="With error" name="error" item-label="item" error="Add at least one item" required>
-        <civ-text-input label="Name" name="name"></civ-text-input>
+      <civ-repeater legend="With error" name="error" item-label="item" error="Complete each item before submitting." required min="1">
+        <civ-text-input label="Name" name="name" required></civ-text-input>
       </civ-repeater>
       <civ-repeater legend="Disabled" name="disabled" item-label="item" disabled>
         <civ-text-input label="Name" name="name"></civ-text-input>

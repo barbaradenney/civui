@@ -306,7 +306,8 @@ export interface CivLocaleStrings {
   dataFieldLabel: string; // fallback if no label
 
   // Repeater
-  repeaterAddButton: string; // "Add another {item}"
+  repeaterAddFirstButton: string; // "Add {item}" — used when the list is empty
+  repeaterAddButton: string; // "Add another {item}" — used when the list has ≥1 row
   repeaterRemoveButton: string;
   repeaterRemoveLabel: string; // "Remove {item}" — visible remove-button label
   repeaterRemoveAriaLabel: string; // "Remove {item} {index}"
@@ -909,6 +910,7 @@ const defaultStrings: CivLocaleStrings = {
 
   dataFieldLabel: 'Information',
 
+  repeaterAddFirstButton: 'Add {item}',
   repeaterAddButton: 'Add another {item}',
   repeaterRemoveButton: 'Remove',
   repeaterRemoveLabel: 'Remove {item}',

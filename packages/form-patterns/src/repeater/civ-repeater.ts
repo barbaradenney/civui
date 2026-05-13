@@ -337,7 +337,7 @@ export class CivRepeater extends CivBaseElement {
           <civ-button
             variant="secondary"
             icon-start="plus"
-            label="${interpolate(t('repeaterAddButton'), { item: this.itemLabel })}"
+            label="${interpolate(t(this._rowCount === 0 ? 'repeaterAddFirstButton' : 'repeaterAddButton'), { item: this.itemLabel })}"
             ?disabled="${this.disabled}"
             @click="${this.mode === 'form-steps' ? this._openFormStepsForAdd : this._addRow}"
             class="civ-mt-3"
@@ -382,7 +382,7 @@ export class CivRepeater extends CivBaseElement {
             href="${sanitizeHref(this.addHref)}"
             variant="secondary"
             icon-start="plus"
-            label="${interpolate(t('repeaterAddButton'), { item: this.itemLabel })}"
+            label="${interpolate(t(this.rows.length === 0 ? 'repeaterAddFirstButton' : 'repeaterAddButton'), { item: this.itemLabel })}"
             class="civ-mt-3"
           ></civ-link>
         ` : nothing}

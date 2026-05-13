@@ -73,10 +73,28 @@ describe('civ-action-button', () => {
     expect(icon!.getAttribute('name')).toBe('chevron-down');
   });
 
-  it('applies danger class', async () => {
-    const el = await fixture('<civ-action-button label="Delete" danger></civ-action-button>');
+  // Note: each variant is asserted by its full resolved class name
+  // (e.g. `civ-action-btn--primary-danger`, not `toContain('danger')`)
+  // so Tailwind's content scanner sees the literal strings. Without
+  // them, Tailwind purges the `civ-action-btn--*-danger` rules from
+  // components.css and danger buttons render without colors.
+  // See tailwind.config.ts for the full explanation.
+  it('applies the primary-danger variant class', async () => {
+    const el = await fixture('<civ-action-button label="Delete" danger variant="primary"></civ-action-button>');
     const btn = el.querySelector('button');
-    expect(btn!.className).toContain('danger');
+    expect(btn!.className).toContain('civ-action-btn--primary-danger');
+  });
+
+  it('applies the secondary-danger variant class', async () => {
+    const el = await fixture('<civ-action-button label="Remove" danger variant="secondary"></civ-action-button>');
+    const btn = el.querySelector('button');
+    expect(btn!.className).toContain('civ-action-btn--secondary-danger');
+  });
+
+  it('applies the tertiary-danger variant class', async () => {
+    const el = await fixture('<civ-action-button label="Cancel" danger variant="tertiary"></civ-action-button>');
+    const btn = el.querySelector('button');
+    expect(btn!.className).toContain('civ-action-btn--tertiary-danger');
   });
 
   it('sets type attribute on button', async () => {

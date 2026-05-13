@@ -108,7 +108,7 @@ jobs:
         run: pnpm validate:schemas
 
   drift-lints:
-    name: Drift lints (14 static checks across repo)
+    name: Drift lints (16 static checks across repo)
     runs-on: ubuntu-latest
     # Fast static lints that catch drift across the whole repo, not
     # just form patterns. None of these read files at runtime — they
@@ -200,6 +200,27 @@ jobs:
     #                          anywhere in scanned content. Template-
     #                          literal class construction is invisible
     #                          to the scanner.
+    #   lint:undefined-css-vars - Every var(--civ-*) reference in CSS
+    #                          or TS resolves to a token defined in
+    #                          packages/tokens/dist/css/tokens.css (or
+    #                          a local declaration). var() falls back
+    #                          silently when the variable is missing —
+    #                          typos like var(--civ-color-error-darker)
+    #                          (no such shade, only -dark) render with
+    #                          the initial value, not a token color.
+    #   lint:dead-properties - Every @property declaration on a Lit
+    #                          component is read via `this.fieldName`
+    #                          somewhere in the same class. Catches
+    #                          the civ-form-fieldset requiredMessage
+    #                          class of bug — props declared in the
+    #                          contract and documented as supported,
+    #                          but nothing in render() consumes them
+    #                          so setting the attribute does nothing.
+    #                          `reflect: true` props are exempt (they
+    #                          drive CSS attribute selectors / external
+    #                          JS reads). Inherited base-class props
+    #                          and known external-API hooks are listed
+    #                          in the lint's allowlist.
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v2

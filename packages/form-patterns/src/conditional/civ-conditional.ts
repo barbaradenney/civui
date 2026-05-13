@@ -14,7 +14,7 @@ function ensureConditionalStyles(): void {
     .civ-conditional--visible {
       display: block;
       opacity: 1;
-      transition: opacity var(--civ-motion-duration-fast) var(--civ-motion-easing-standard);
+      transition: opacity var(--civ-motion-duration-fast) var(--civ-motion-easing-ease-in-out);
     }
     .civ-conditional--hidden {
       display: none;

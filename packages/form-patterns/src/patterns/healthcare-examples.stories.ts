@@ -345,7 +345,7 @@ export const MedicalHistoryScreening: Story = {
 
       <civ-yes-no legend="Have you ever been diagnosed with high blood pressure (hypertension)?" name="hypertension"></civ-yes-no>
       <civ-conditional when="hypertension" equals="yes">
-        <div style="padding-left: 1.5rem; border-left: 4px solid var(--civ-color-primary); display: grid; gap: 1rem;">
+        <div style="padding-left: 1.5rem; border-left: 4px solid var(--civ-color-primary-DEFAULT); display: grid; gap: 1rem;">
           <civ-text-input label="Year diagnosed" hint="For example: 2018" name="hypertension_year" type="number" inputmode="numeric"></civ-text-input>
           <civ-yes-no legend="Are you currently taking medication for this?" name="hypertension_medication"></civ-yes-no>
         </div>
@@ -353,7 +353,7 @@ export const MedicalHistoryScreening: Story = {
 
       <civ-yes-no legend="Have you ever been diagnosed with diabetes?" name="diabetes"></civ-yes-no>
       <civ-conditional when="diabetes" equals="yes">
-        <div style="padding-left: 1.5rem; border-left: 4px solid var(--civ-color-primary); display: grid; gap: 1rem;">
+        <div style="padding-left: 1.5rem; border-left: 4px solid var(--civ-color-primary-DEFAULT); display: grid; gap: 1rem;">
           <civ-radio-group legend="Type of diabetes" required name="diabetes_type">
             <civ-radio label="Type 1" value="type1"></civ-radio>
             <civ-radio label="Type 2" value="type2"></civ-radio>
@@ -365,14 +365,14 @@ export const MedicalHistoryScreening: Story = {
 
       <civ-yes-no legend="Have you ever been diagnosed with heart disease?" name="heart_disease"></civ-yes-no>
       <civ-conditional when="heart_disease" equals="yes">
-        <div style="padding-left: 1.5rem; border-left: 4px solid var(--civ-color-primary); display: grid; gap: 1rem;">
+        <div style="padding-left: 1.5rem; border-left: 4px solid var(--civ-color-primary-DEFAULT); display: grid; gap: 1rem;">
           <civ-textarea label="Describe the condition" hint="For example: coronary artery disease, heart failure, arrhythmia" name="heart_details" rows="2"></civ-textarea>
         </div>
       </civ-conditional>
 
       <civ-yes-no legend="Have you ever had surgery?" name="surgery"></civ-yes-no>
       <civ-conditional when="surgery" equals="yes">
-        <div style="padding-left: 1.5rem; border-left: 4px solid var(--civ-color-primary);">
+        <div style="padding-left: 1.5rem; border-left: 4px solid var(--civ-color-primary-DEFAULT);">
           <civ-repeater legend="Surgeries" name="surgeries" item-label="surgery">
             <div>
               <civ-text-input label="Surgery or procedure" required name="surgery_name"></civ-text-input>

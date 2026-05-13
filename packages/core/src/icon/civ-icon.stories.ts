@@ -123,7 +123,7 @@ export const AllIcons: Story = {
           (name) => html`
             <div class="civ-flex civ-flex-col civ-items-center civ-gap-1 civ-p-2 civ-border civ-rounded">
               <civ-icon name="${name}" size="xl"></civ-icon>
-              <span style="font-size: 0.65em; color: var(--civ-color-base-500, #666)">${name}</span>
+              <span style="font-size: 0.65em; color: var(--civ-color-base-DEFAULT, #666)">${name}</span>
             </div>
           `,
         )}

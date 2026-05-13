@@ -5,6 +5,8 @@ sidebar_label: Link Card
 ---
 
 import StoryEmbed from "@site/src/components/StoryEmbed";
+import PropsTable from "./_link-card.props.mdx";
+import EventsTable from "./_link-card.events.mdx";
 
 # Link Card
 
@@ -84,23 +86,11 @@ A clickable card that navigates to a destination. The entire card is the click t
 
 ## Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `href` | `string` | `''` | Navigation destination (required) |
-| `eyebrow` | `string` | `''` | Small uppercase text rendered above the heading (uses shared `.civ-eyebrow` style) |
-| `heading` | `string` | `''` | Card heading text |
-| `description` | `string` | `''` | Descriptive text below the heading |
-| `variant` | `'primary' \| 'secondary' \| 'tertiary' \| 'critical' \| 'danger'` | `'primary'` | Visual variant |
-| `color` | `'blue' \| 'teal' \| 'red' \| 'green' \| 'yellow' \| 'orange' \| 'purple' \| 'gray'` | `''` | Color variant (same palette as civ-card and civ-tag). When set with `variant="primary"`, uses filled dark background. Otherwise uses light tint. |
-| `spacing` | `'default' \| 'sm'` | `'default'` | Compact variant with smaller padding |
-| `icon-start` | `string` | `''` | Icon name to render before the heading |
-| `icon-end` | `string` | `''` | Icon name to render after the heading |
+<PropsTable />
 
 ## Events
 
-| Event | Detail | Description |
-|-------|--------|-------------|
-| `civ-analytics` | — | Analytics tracking event fired on click |
+<EventsTable />
 
 ## Variants
 

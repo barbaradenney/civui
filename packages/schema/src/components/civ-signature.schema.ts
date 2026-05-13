@@ -29,7 +29,7 @@ const schema: ComponentSchema = {
     },
     statement: {
       type: 'string',
-      description: 'Certification statement rendered above the certify checkbox. May contain inline HTML (rendered via unsafeHTML for <a> links). Empty = no statement block',
+      description: 'Certification statement rendered above the certify checkbox. May contain inline HTML (rendered via unsafeHTML for `<a>` links). Empty = no statement block',
       default: '',
     },
     nameError: {

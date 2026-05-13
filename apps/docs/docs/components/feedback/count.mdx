@@ -5,6 +5,7 @@ sidebar_label: Count
 ---
 
 import StoryEmbed from "@site/src/components/StoryEmbed";
+import PropsTable from "./_count.props.mdx";
 
 # Count
 
@@ -50,15 +51,7 @@ For status text or dot indicators use [`civ-badge`](./badge). For categorization
 
 ## Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `count` | `number \| null` | `null` | Numeric value to render. `null` means render nothing. |
-| `max` | `number` | `99` | Overflow threshold; values above render as `{max}+` |
-| `variant` | `'info' \| 'warning' \| 'error' \| 'success' \| 'neutral'` | `'neutral'` | Semantic color |
-| `count-style` | `'primary' \| 'secondary'` | `'secondary'` | `secondary` is bare colored text (for inline use); `primary` is a filled rounded pill (for standalone or notification counters) |
-| `spacing` | `'default' \| 'sm'` | `'default'` | Compact size |
-| `overlay` | `boolean` | `false` | Position absolutely in the top-end corner of a relatively-positioned parent |
-| `live` | `'off' \| 'polite' \| 'assertive'` | `'off'` | Controls `aria-live` and `role="status"`. Default `off` — use `polite` for counters that change as data updates and should announce. |
+<PropsTable />
 
 ## Modes
 

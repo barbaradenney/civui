@@ -5,6 +5,7 @@ sidebar_label: Section Intro
 ---
 
 import StoryEmbed from "@site/src/components/StoryEmbed";
+import PropsTable from "./_section-intro.props.mdx";
 
 # Section Intro
 
@@ -68,11 +69,7 @@ The `.civ-callout` class is a shared utility that `civ-section-intro` uses inter
 
 ## Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `heading` | `string` | `''` | Section heading text. Used as the accessible name via `aria-labelledby`. |
-| `heading-level` | `2` &#124; `3` &#124; `4` &#124; `5` &#124; `6` | `3` | Semantic heading level. |
-| `tone` | `'info'` &#124; `'sensitive'` &#124; `'neutral'` | `'info'` | Visual treatment. `sensitive` uses a softer palette suitable for trauma-informed sections. |
+<PropsTable />
 
 ## Accessibility
 

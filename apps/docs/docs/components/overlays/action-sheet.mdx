@@ -5,6 +5,8 @@ sidebar_label: Action Sheet
 ---
 
 import StoryEmbed from "@site/src/components/StoryEmbed";
+import PropsTable from "./_action-sheet.props.mdx";
+import EventsTable from "./_action-sheet.events.mdx";
 
 # Action Sheet
 
@@ -38,18 +40,11 @@ The parent component controls the `open` state. The action sheet fires `civ-acti
 
 ## Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `open` | `boolean` | `false` | Controls visibility |
-| `max-height` | `string` | `'50vh'` | Max height on mobile bottom sheet |
-| `trap-focus` | `boolean` | `false` | Enable focus trapping (for modal-like behavior) |
-| `no-click-outside` | `boolean` | `false` | Disable click-outside close |
+<PropsTable />
 
 ## Events
 
-| Event | Detail | Description |
-|-------|--------|-------------|
-| `civ-action-sheet-close` | — | Fires when the sheet wants to close (escape, click outside, backdrop tap) |
+<EventsTable />
 
 ## Behavior
 

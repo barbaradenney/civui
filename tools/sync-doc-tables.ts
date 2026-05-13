@@ -29,8 +29,43 @@ const DOCS_DIR = path.join(REPO_ROOT, 'apps/docs/docs/components');
 const GENERATED_BANNER = `{/* Generated from @civui/schema by tools/sync-doc-tables.ts.
     Do not edit by hand — run \`pnpm sync:doc-tables\` to regenerate. */}\n\n`;
 
-function escapeCell(input: string): string {
-  return input.replace(/\|/g, '\\|').replace(/\n/g, ' ');
+/**
+ * Render a description / detail string into an MDX table cell.
+ *
+ * Four escapes are needed — MDX parses both JSX tags and JSX
+ * expression slots inside markdown text:
+ *
+ *   1. `|` collides with the table-cell delimiter — backslash-escape.
+ *   2. Newlines collapse the cell — replace with spaces.
+ *   3. Bare `<tag>` patterns outside backticks parse as JSX — convert
+ *      `<` / `>` to HTML entities.
+ *   4. Bare `{…}` outside backticks parses as a JSX expression slot
+ *      (`{name}` becomes a missing-variable reference) — convert
+ *      `{` / `}` to HTML entities.
+ *
+ * Backticked code spans are left untouched — MDX renders code-span
+ * content literally, so `` `<select>` `` and `` `{id}` `` already
+ * work. The entities ensure a single missed backtick in a schema
+ * description can't break `pnpm build`.
+ */
+export function escapeCell(input: string): string {
+  let out = '';
+  let inCode = false;
+  for (const ch of input) {
+    if (ch === '`') {
+      inCode = !inCode;
+      out += ch;
+      continue;
+    }
+    if (!inCode) {
+      if (ch === '<') { out += '&lt;'; continue; }
+      if (ch === '>') { out += '&gt;'; continue; }
+      if (ch === '{') { out += '&lcub;'; continue; }
+      if (ch === '}') { out += '&rcub;'; continue; }
+    }
+    out += ch;
+  }
+  return out.replace(/\|/g, '\\|').replace(/\n/g, ' ');
 }
 
 function formatDefault(def: PropDef): string {

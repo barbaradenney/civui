@@ -5,6 +5,7 @@ sidebar_label: Badge
 ---
 
 import StoryEmbed from "@site/src/components/StoryEmbed";
+import PropsTable from "./_badge.props.mdx";
 
 # Badge
 
@@ -62,17 +63,7 @@ For **numeric counts** ("5", "99+", or notification overlays like "3 unread"), u
 
 ## Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `label` | `string` | `''` | Badge text (or accessible name when `dot` is set) |
-| `dot` | `boolean` | `false` | Render as a small colored dot only |
-| `variant` | `'info' \| 'warning' \| 'error' \| 'success' \| 'neutral'` | `'neutral'` | Semantic color |
-| `badge-style` | `'primary' \| 'secondary'` | `'secondary'` | Emphasis: primary (filled dark bg, light text) or secondary (light tint, dark text) |
-| `spacing` | `'default' \| 'sm'` | `'default'` | Compact variant with smaller padding |
-| `overlay` | `boolean` | `false` | Position absolutely in the top-end corner of a relatively-positioned parent (notification mode) |
-| `with-icon` | `boolean` | `false` | Auto-render the variant's semantic icon at the start (success → check-circle, warning → warning, error → error, info → info; neutral has no auto-icon) |
-| `icon-start` | `string` | `''` | Explicit leading icon name. Overrides `with-icon`'s variant default. |
-| `icon-end` | `string` | `''` | Explicit trailing icon name. |
+<PropsTable />
 
 ## Modes
 

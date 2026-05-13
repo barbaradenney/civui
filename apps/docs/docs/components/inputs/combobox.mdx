@@ -5,6 +5,8 @@ sidebar_label: Combobox
 ---
 
 import StoryEmbed from "@site/src/components/StoryEmbed";
+import PropsTable from "./_combobox.props.mdx";
+import EventsTable from "./_combobox.events.mdx";
 
 # Combobox
 
@@ -90,16 +92,7 @@ Set `label`, `hint`, `error`, `required`, and `disabled` directly on the compone
 
 ## Component-Specific Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `options` | `Array<{ value: string, label: string, group?: string }>` | `[]` | Available options. Ignored when `loadOptions` is set. |
-| `placeholder` | `string` | `''` | Placeholder text for the input |
-| `no-results-text` | `string` | `'No results found'` | Message shown when filter matches nothing |
-| `loadOptions` | `(query: string) => Promise<ComboboxOption[]>` | `null` | Async loader. When set, switches the combobox into remote mode. |
-| `load-debounce` | `number` | `300` | Debounce delay (ms) before `loadOptions` is called after the user types. |
-| `min-query-length` | `number` | `0` | Minimum query length before `loadOptions` runs. Below the threshold the dropdown shows a "type at least N characters" prompt. |
-| `loading-text` | `string` | `'Loading…'` | Override the in-flight message. |
-| `loading-error-text` | `string` | _(error.message or `'Could not load results. Try again.'`)_ | Override the error message shown when `loadOptions` rejects. |
+<PropsTable />
 
 ## Typeahead Filtering
 
@@ -119,10 +112,7 @@ As the user types, options are filtered by substring match (case-insensitive). M
 
 ## Events
 
-| Event | Detail | Description |
-|-------|--------|-------------|
-| `civ-input` | `{ value: string }` | Fires when filter text changes |
-| `civ-change` | `{ value: string }` | Fires when an option is selected |
+<EventsTable />
 
 ## Country Preset
 

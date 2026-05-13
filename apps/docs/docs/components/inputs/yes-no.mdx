@@ -5,6 +5,8 @@ sidebar_label: Yes/No
 ---
 
 import StoryEmbed from "@site/src/components/StoryEmbed";
+import EventsTable from "./_yes-no.events.mdx";
+import PropsTable from "./_yes-no.props.mdx";
 
 # Yes / No
 
@@ -74,18 +76,7 @@ A simple boolean question component for yes/no questions in government forms. Re
 
 Uses `legend` instead of `label` because it renders as a fieldset with radio semantics.
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `legend` | `string` | `''` | Question text |
-| `name` | `string` | `''` | Form field name |
-| `value` | `string` | `''` | Selected value (`'yes'`, `'no'`, or `''`) |
-| `hint` | `string` | `''` | Hint text below the question |
-| `error` | `string` | `''` | Error message |
-| `yes-label` | `string` | `'Yes'` | Label for the Yes button |
-| `no-label` | `string` | `'No'` | Label for the No button |
-| `required` | `boolean` | `false` | Whether a selection is required |
-| `disabled` | `boolean` | `false` | Disable both buttons |
-| `readonly` | `boolean` | `false` | Make the control read-only |
+<PropsTable />
 
 ## Keyboard Navigation
 
@@ -97,10 +88,7 @@ Uses `legend` instead of `label` because it renders as a fieldset with radio sem
 
 ## Events
 
-| Event | Detail | Description |
-|-------|--------|-------------|
-| `civ-input` | `{ value: string }` | Fires when selection changes |
-| `civ-change` | `{ value: string }` | Fires when selection changes |
+<EventsTable />
 
 ## Usage
 

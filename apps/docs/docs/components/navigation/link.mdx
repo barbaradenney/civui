@@ -5,6 +5,8 @@ sidebar_label: Link
 ---
 
 import StoryEmbed from "@site/src/components/StoryEmbed";
+import PropsTable from "./_link.props.mdx";
+import EventsTable from "./_link.events.mdx";
 
 # Link
 
@@ -72,21 +74,11 @@ An accessible link component that always renders an `<a>` element. For buttons, 
 
 ## Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `label` | `string` | `''` | Link text (preferred over child text) |
-| `href` | `string` | `''` | Link destination (required) |
-| `variant` | `'primary' \| 'secondary' \| 'tertiary' \| 'back'` | `'tertiary'` | Visual variant |
-| `danger` | `boolean` | `false` | Destructive action styling (red text) |
-| `disabled` | `boolean` | `false` | Disabled state (sets `aria-disabled` and removes href) |
-| `icon-start` | `string` | `''` | Icon name before link text (overrides back variant default chevron-left) |
-| `icon-end` | `string` | `''` | Icon name after link text (overrides secondary variant default chevron-right) |
+<PropsTable />
 
 ## Events
 
-| Event | Detail | Description |
-|-------|--------|-------------|
-| `civ-analytics` | — | Analytics tracking event fired on click |
+<EventsTable />
 
 ## Variants
 

@@ -5,6 +5,8 @@ sidebar_label: Address
 ---
 
 import StoryEmbed from "@site/src/components/StoryEmbed";
+import PropsTable from "./_address.props.mdx";
+import EventsTable from "./_address.events.mdx";
 
 # Address
 
@@ -64,18 +66,7 @@ All form components share these props: `name`, `value`, `hint`, `error`, `requir
 
 ## Component-Specific Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `legend` | `string` | `''` | Fieldset legend text |
-| `variant` | `'default' \| 'general-delivery' \| 'contact'` | `'default'` | Address variant (see below) |
-| `heading-level` | `1`–`6` | — | Promote the legend to a heading via `role="heading"` + `aria-level=N`. |
-| `size` | `'sm' \| 'md' \| 'lg' \| 'xl'` | `'sm'` | Visual size of the legend. |
-| `show-street2` | `boolean` | `true` | Show Street address line 2 |
-| `show-street3` | `boolean` | `false` | Show Street address line 3 |
-| `street-error` | `string` | `''` | Error for street address field |
-| `city-error` | `string` | `''` | Error for city field |
-| `state-error` | `string` | `''` | Error for state field |
-| `zip-error` | `string` | `''` | Error for ZIP code field |
+<PropsTable />
 
 ## Variants
 
@@ -130,10 +121,7 @@ Fields automatically set appropriate `autocomplete` values:
 
 ## Events
 
-| Event | Detail | Description |
-|-------|--------|-------------|
-| `civ-input` | `{ value: AddressValue }` | Fires on every field change |
-| `civ-change` | `{ value: AddressValue }` | Fires on committed field change |
+<EventsTable />
 
 ## Usage
 

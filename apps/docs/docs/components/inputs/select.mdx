@@ -5,6 +5,8 @@ sidebar_label: Select
 ---
 
 import StoryEmbed from "@site/src/components/StoryEmbed";
+import PropsTable from "./_select.props.mdx";
+import EventsTable from "./_select.events.mdx";
 
 # Select
 
@@ -77,12 +79,7 @@ Set `label`, `hint`, `error`, `required`, and `disabled` directly on the compone
 
 ## Component-Specific Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `options` | `Array<{ value: string, label: string, disabled?: boolean, group?: string }>` | `[]` | Array of options to render |
-| `empty-label` | `string` | `'- Select -'` | Label for the empty/default option |
-| `preset` | `string` | — | Pre-populated option list. See [Presets](#presets) below. |
-| `preset-variant` | `string` | — | Variant of the preset (e.g., `"territories"`, `"all"`, `"binary"`). |
+<PropsTable />
 
 ## Option Groups
 
@@ -90,10 +87,7 @@ Options with a `group` property are rendered inside `<optgroup>` elements. Ungro
 
 ## Events
 
-| Event | Detail | Description |
-|-------|--------|-------------|
-| `civ-input` | `{ value: string }` | Fires when selection changes |
-| `civ-change` | `{ value: string }` | Fires when selection changes |
+<EventsTable />
 
 ## Presets
 

@@ -5,6 +5,8 @@ sidebar_label: Relationship
 ---
 
 import StoryEmbed from "@site/src/components/StoryEmbed";
+import PropsTable from "./_relationship.props.mdx";
+import EventsTable from "./_relationship.events.mdx";
 
 # Relationship
 
@@ -62,39 +64,11 @@ Use the `preset` prop for pre-defined option lists, or pass custom `options` to 
 
 ## Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `legend` | `string` | `'About this person'` | Fieldset legend text |
-| `heading-level` | `1`–`6` | — | Promote the legend to a heading via `role="heading"` + `aria-level=N`. See [Heading hierarchy](/components/form/form-group#heading-hierarchy). |
-| `size` | `'sm' \| 'md' \| 'lg' \| 'xl'` | `'sm'` | Visual size. `sm` = body size; `md`/`lg`/`xl` step up for section/page heading use. |
-| `name` | `string` | `''` | Form field name prefix |
-| `preset` | `'general' \| 'dependent' \| 'survivor' \| 'benefits-survivor' \| 'immigration' \| 'tax'` | `'general'` | Relationship type preset |
-| `options` | `RelationshipTypeConfig[]` | — | Custom options (overrides preset) |
-| `show-name` | `boolean` | `true` | Include name fields |
-| `show-deceased` | `boolean` | `false` | Include deceased yes/no and date of death |
-| `show-divorce-date` | `boolean` | `false` | Show divorce date for spousal types |
-| `show-adoption-date` | `boolean` | `false` | Show adoption date for child types |
-| `value` | `string` | `''` | JSON-serialized RelationshipValue |
-| `required` | `boolean` | `false` | Shows required indicator on legend |
-| `disabled` | `boolean` | `false` | Disables all fields |
-| `hint` | `string` | `''` | Hint text below legend |
-| `error` | `string` | `''` | Group-level error message |
-| `name-error` | `string` | `''` | Error for name fields |
-| `relationship-error` | `string` | `''` | Error for relationship select |
-| `marriage-date-error` | `string` | `''` | Error for marriage date |
-| `divorce-date-error` | `string` | `''` | Error for divorce date |
-| `date-of-birth-error` | `string` | `''` | Error for date of birth |
-| `adoption-date-error` | `string` | `''` | Error for adoption date |
-| `date-of-death-error` | `string` | `''` | Error for date of death |
-| `other-description-error` | `string` | `''` | Error for other description |
+<PropsTable />
 
 ## Events
 
-| Event | Detail | Description |
-|-------|--------|-------------|
-| `civ-input` | `{ value: RelationshipValue }` | Fires on every field change |
-| `civ-change` | `{ value: RelationshipValue }` | Fires on committed field change |
-| `civ-reset` | — | Fires when the form is reset |
+<EventsTable />
 
 ## Presets
 

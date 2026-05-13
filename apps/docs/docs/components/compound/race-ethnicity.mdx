@@ -5,6 +5,8 @@ sidebar_label: Race & Ethnicity
 ---
 
 import StoryEmbed from "@site/src/components/StoryEmbed";
+import PropsTable from "./_race-ethnicity.props.mdx";
+import EventsTable from "./_race-ethnicity.events.mdx";
 
 # Race & Ethnicity
 
@@ -46,15 +48,7 @@ All form components share these props: `label`, `name`, `value`, `hint`, `error`
 
 ## Component-Specific Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `legend` | `string` | `''` | Outer fieldset legend |
-| `heading-level` | `1`–`6` | — | Promote the legend to a heading via `role="heading"` + `aria-level=N`. See [Heading hierarchy](/components/form/form-group#heading-hierarchy). |
-| `size` | `'sm' \| 'md' \| 'lg' \| 'xl'` | `'sm'` | Visual size. `sm` = body size; `md`/`lg`/`xl` step up for section/page heading use. |
-| `ethnicity-legend` | `string` | `'Ethnicity'` | Override the ethnicity sub-section legend |
-| `race-legend` | `string` | `'Race'` | Override the race sub-section legend |
-| `ethnicity-error` | `string` | `''` | Error message for the ethnicity field |
-| `race-error` | `string` | `''` | Error message for the race field |
+<PropsTable />
 
 ## Value Structure
 
@@ -88,10 +82,7 @@ interface RaceEthnicityValue {
 
 ## Events
 
-| Event | Detail | Description |
-|-------|--------|-------------|
-| `civ-input` | `{ value: RaceEthnicityValue }` | Fires on every change (ethnicity or race) |
-| `civ-change` | `{ value: RaceEthnicityValue }` | Fires on committed change |
+<EventsTable />
 
 ## Usage
 

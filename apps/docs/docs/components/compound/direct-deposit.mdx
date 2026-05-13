@@ -5,6 +5,8 @@ sidebar_label: Direct Deposit
 ---
 
 import StoryEmbed from "@site/src/components/StoryEmbed";
+import PropsTable from "./_direct-deposit.props.mdx";
+import EventsTable from "./_direct-deposit.events.mdx";
 
 # Direct Deposit
 
@@ -66,14 +68,7 @@ All form components share these props: `name`, `value`, `hint`, `error`, `requir
 
 ## Component-Specific Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `legend` | `string` | `''` | Fieldset legend text |
-| `heading-level` | `1`–`6` | — | Promote the legend to a heading via `role="heading"` + `aria-level=N`. See [Heading hierarchy](/components/form/form-group#heading-hierarchy). |
-| `size` | `'sm' \| 'md' \| 'lg' \| 'xl'` | `'sm'` | Visual size. `sm` = body size; `md`/`lg`/`xl` step up for section/page heading use. |
-| `routing-error` | `string` | `''` | Error message for routing number field |
-| `account-error` | `string` | `''` | Error message for account number field |
-| `type-error` | `string` | `''` | Error message for account type radio group |
+<PropsTable />
 
 ## Value Structure
 
@@ -111,10 +106,7 @@ deposit.depositValue; // { accountType: 'checking', routingNumber: '123456789', 
 
 ## Events
 
-| Event | Detail | Description |
-|-------|--------|-------------|
-| `civ-input` | `{ value: DirectDepositValue }` | Fires on every field change |
-| `civ-change` | `{ value: DirectDepositValue }` | Fires on committed field change |
+<EventsTable />
 
 ## Usage
 

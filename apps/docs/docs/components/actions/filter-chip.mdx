@@ -5,6 +5,8 @@ sidebar_label: Filter Chip
 ---
 
 import StoryEmbed from "@site/src/components/StoryEmbed";
+import PropsTable from "./_filter-chip.props.mdx";
+import EventsTable from "./_filter-chip.events.mdx";
 
 # Filter Chip
 
@@ -64,27 +66,11 @@ When you have more than two or three chips, wrap them in `<civ-filter-chip-group
 
 ## Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `label` | `string` | `''` | Chip text content |
-| `value` | `string` | `''` | Filter identifier; passed in event detail |
-| `selected` | `boolean` | `false` | Active state (reflected attribute) |
-| `removable` | `boolean` | `false` | Renders trailing `×` dismiss button |
-| `disabled` | `boolean` | `false` | Disabled state (reflected attribute) |
-| `chip-style` | `'primary' \| 'secondary'` | `'secondary'` | Selected-state emphasis: primary (filled) or secondary (light tint) |
-| `spacing` | `'default' \| 'sm'` | `'default'` | Compact variant with smaller padding |
-| `icon-start` | `string` | `''` | Leading icon name (replaced by check on selection) |
-| `icon-end` | `string` | `''` | Trailing icon (kept on selection — useful for chevrons or open/close hints) |
-| `count` | `number \| null` | `null` | Match count rendered after the label via [`civ-count`](../feedback/count). Slightly de-emphasised so the label stays primary. |
-| `chip-role` | `'toggle' \| 'radio'` | `'toggle'` | ARIA mode. `civ-filter-chip-group` sets `radio` automatically in single-select mode. |
+<PropsTable />
 
 ## Events
 
-| Event | Detail | Fires when |
-|-------|--------|------------|
-| `civ-change` | `{ value, selected }` | The chip body is clicked, toggling selection |
-| `civ-remove` | `{ value }` | The `×` is clicked or activated (removable mode only) |
-| `civ-analytics` | `{ action }` | On any click — `change` (body toggle) or `remove` |
+<EventsTable />
 
 ## Accessibility
 

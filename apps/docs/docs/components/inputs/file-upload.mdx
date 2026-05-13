@@ -5,6 +5,8 @@ sidebar_label: File Upload
 ---
 
 import StoryEmbed from "@site/src/components/StoryEmbed";
+import PropsTable from "./_file-upload.props.mdx";
+import EventsTable from "./_file-upload.events.mdx";
 
 # File Upload
 
@@ -103,14 +105,7 @@ All form components share these props: `label`, `name`, `value`, `hint`, `error`
 
 ## Component-Specific Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `accept` | `string` | `''` | Accepted file types (e.g., `'.pdf,.jpg,image/*'`) |
-| `multiple` | `boolean` | `false` | Allow multiple files |
-| `max-size` | `number` | `0` | Maximum file size in bytes per file (0 = unlimited) |
-| `max-files` | `number` | `0` | Maximum number of files (0 = unlimited) |
-| `variant` | `'default' \| 'compact' \| 'full'` | `'default'` | Upload zone display variant |
-| `show-preview` | `boolean` | `false` | Show image thumbnail previews in file list |
+<PropsTable />
 
 ### Variant Descriptions
 
@@ -147,12 +142,7 @@ const controller = upload.getAbortController(0);
 
 ## Events
 
-| Event | Detail | Description |
-|-------|--------|-------------|
-| `civ-input` | `{ files: File[] }` | Fires when files change |
-| `civ-change` | `{ files: File[] }` | Fires when files are added or removed |
-| `civ-upload-cancel` | `{ index: number, name: string }` | Fires when upload is cancelled |
-| `civ-upload-retry` | `{ index: number, name: string, file: File }` | Fires when upload is retried |
+<EventsTable />
 
 ## Usage
 

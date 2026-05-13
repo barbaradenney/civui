@@ -5,6 +5,8 @@ sidebar_label: Name
 ---
 
 import StoryEmbed from "@site/src/components/StoryEmbed";
+import PropsTable from "./_name.props.mdx";
+import EventsTable from "./_name.events.mdx";
 
 # Name
 
@@ -68,16 +70,7 @@ All form components share these props: `name`, `value`, `hint`, `error`, `requir
 
 ## Component-Specific Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `legend` | `string` | `''` | Fieldset legend text |
-| `heading-level` | `1`–`6` | — | Promote the legend to a heading via `role="heading"` + `aria-level=N`. See [Heading hierarchy](/components/form/form-group#heading-hierarchy). |
-| `size` | `'sm' \| 'md' \| 'lg' \| 'xl'` | `'md'` | Visual size of the legend. Defaults to `md` so the compound field reads as a section heading; `sm` matches body text. |
-| `show-middle` | `boolean` | `true` | Whether to show the middle name field |
-| `show-suffix` | `boolean` | `true` | Whether to show the suffix select |
-| `first-error` | `string` | `''` | Error message for the first name field |
-| `middle-error` | `string` | `''` | Error message for the middle name field |
-| `last-error` | `string` | `''` | Error message for the last name field |
+<PropsTable />
 
 ## Value Structure
 
@@ -124,10 +117,7 @@ name.nameValue; // { first: 'Jane', middle: 'A', last: 'Doe', suffix: '' }
 
 ## Events
 
-| Event | Detail | Description |
-|-------|--------|-------------|
-| `civ-input` | `{ value: NameValue }` | Fires on every field change |
-| `civ-change` | `{ value: NameValue }` | Fires on committed field change |
+<EventsTable />
 
 ## Usage
 

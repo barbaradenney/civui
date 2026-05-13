@@ -5,6 +5,8 @@ sidebar_label: Form Step
 ---
 
 import StoryEmbed from "@site/src/components/StoryEmbed";
+import PropsTable from "./_form-step.props.mdx";
+import EventsTable from "./_form-step.events.mdx";
 
 # Form Step
 
@@ -110,32 +112,11 @@ Compact, small font. Pairs well with progress-steps and progress-percent bars.
 
 ## Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `progress` | `'minimal' \| 'steps' \| 'bar'` | `'minimal'` | Progress indicator style |
-| `header-size` | `'primary' \| 'secondary' \| 'tertiary'` | `'secondary'` | Step header size |
-| `heading-level` | `number` | `2` | Semantic heading level (2–6) |
-| `step-title` | `string` | `''` | Title override for the current step |
-| `persist` | `string` | `''` | Storage key for auto-saving form data via `civ-form` |
-| `continue-label` | `string` | `'Continue'` | Label for the continue button |
-| `complete-label` | `string` | `'Save'` | Label for the final step's button |
-| `validate` | `boolean` | `true` | Enable built-in required field validation before advancing |
-| `nav-disabled` | `boolean` | `false` | Disable navigation buttons |
-| `hide-nav` | `boolean` | `false` | Hide all navigation UI |
-| `sensitive` | `boolean` | `false` | Marks the step as emotionally sensitive |
-| `show-pause` | `boolean` | `false` | Render a "Save and come back later" action |
-| `pause-label` | `string` | `''` | Override the pause action label |
-| `beforeContinue` | `(stepEl, index) => Promise<boolean> \| boolean` | — | Async validation callback (JS property only) |
+<PropsTable />
 
 ## Events
 
-| Event | Detail | Description |
-|-------|--------|-------------|
-| `civ-step-change` | `{ current, total, label }` | When the step changes |
-| `civ-step-back` | `{ from, to }` | When back is clicked |
-| `civ-step-continue` | `{ from, to }` | When continue is clicked and validation passes |
-| `civ-step-complete` | `{ total }` | When the last step is completed |
-| `civ-step-pause` | `{ current, label }` | When pause is clicked |
+<EventsTable />
 
 ## Usage
 

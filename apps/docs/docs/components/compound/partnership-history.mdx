@@ -5,6 +5,7 @@ sidebar_label: Partnership History
 ---
 
 import StoryEmbed from "@site/src/components/StoryEmbed";
+import PropsTable from "./_partnership-history.props.mdx";
 
 # Partnership History
 
@@ -40,27 +41,7 @@ The component adapts its status vocabulary by the selected partnership type:
 
 ## Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `legend` | `string` | `'About this partnership'` | Fieldset legend. Set to `'About this marriage'` for marriage-specific forms. Step-specific defaults apply when `step` is set and `legend` is omitted. |
-| `heading-level` | `1`–`6` | — | Promote the legend to a heading via `role="heading"` + `aria-level=N`. See [Heading hierarchy](/components/form/form-group#heading-hierarchy). |
-| `size` | `'sm' \| 'md' \| 'lg' \| 'xl'` | `'sm'` | Visual size. `sm` = body size; `md`/`lg`/`xl` step up for section/page heading use. |
-| `name` | `string` | `''` | Form field name prefix |
-| `value` | `string` | `''` | JSON-serialized partnership value |
-| `show-marriage-type` | `boolean` | `false` | When true, renders a type dropdown (legal marriage, civil union, domestic partnership, common-law, tribal, other) and shows type-specific fields. The status vocabulary adapts automatically. |
-| `step` | `'who' \| 'details' \| 'status'` | — | Render only one section of the compound. See [Splitting across multiple pages](#splitting-across-multiple-pages). When unset, all sections render on one page. |
-| `status-assumed` | `string` | `''` | Skip the status question and assume this value. Useful when the relationship's status is already established by an earlier form step. |
-| `required` | `boolean` | `false` | Shows required indicator on legend |
-| `disabled` | `boolean` | `false` | Disables all fields |
-| `spouse-error` | `string` | `''` | Error for partner name fields |
-| `marriage-date-error` | `string` | `''` | Error for relationship start date |
-| `city-error` | `string` | `''` | Error for marriage city (ceremony types) |
-| `state-error` | `string` | `''` | Error for marriage state (ceremony types) |
-| `jurisdiction-error` | `string` | `''` | Error for jurisdiction (civil union types) |
-| `cohabitation-start-error` | `string` | `''` | Error for cohabitation start date |
-| `cohabitation-state-error` | `string` | `''` | Error for cohabitation state |
-| `status-error` | `string` | `''` | Error for partnership status |
-| `end-date-error` | `string` | `''` | Error for end date |
+<PropsTable />
 
 ## Conditional fields
 

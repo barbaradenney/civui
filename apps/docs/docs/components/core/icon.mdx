@@ -5,6 +5,7 @@ sidebar_label: Icon
 ---
 
 import StoryEmbed from "@site/src/components/StoryEmbed";
+import PropsTable from "./_icon.props.mdx";
 
 # Icon
 
@@ -68,13 +69,7 @@ A built-in Storybook playground for editing existing icons or authoring new ones
 
 ## Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `name` | `string` | `''` | The icon name from the built-in library |
-| `label` | `string` | `''` | Accessible label. When set, renders `role="img"` + `aria-label`. When omitted, renders `aria-hidden="true"` (decorative). |
-| `size` | `string` | `''` | Size shorthand: `sm` (0.75em), `md` (1em), `lg` (1.5em), `xl` (2em), `2xl` (3em), or any CSS length |
-| `rotate` | `number` | — | Rotation in degrees (e.g., 90, 180, 270) |
-| `flip` | `string` | — | Flip direction: `'horizontal'`, `'vertical'`, or `'both'` |
+<PropsTable />
 
 ## Built-In Icons
 

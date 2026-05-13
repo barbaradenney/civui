@@ -5,6 +5,7 @@ sidebar_label: Conditional
 ---
 
 import StoryEmbed from "@site/src/components/StoryEmbed";
+import PropsTable from "./_conditional.props.mdx";
 
 # Conditional
 
@@ -56,14 +57,7 @@ A declarative show/hide wrapper that reveals its content only when a named field
 
 ## Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `when` | `string` | `''` | The `name` of the field to watch |
-| `equals` | `string` | `''` | Show when the field value matches exactly |
-| `not-equals` | `string` | `''` | Show when the field value does NOT match |
-| `includes` | `string` | `''` | Show when the field value is in this comma-separated list |
-| `has-value` | `boolean` | `false` | Show when the field has any non-empty value |
-| `matches` | `string` | `''` | Show when the field value matches this regex pattern |
+<PropsTable />
 
 ## Behavior
 

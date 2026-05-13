@@ -5,6 +5,8 @@ sidebar_label: Alert
 ---
 
 import StoryEmbed from "@site/src/components/StoryEmbed";
+import PropsTable from "./_alert.props.mdx";
+import EventsTable from "./_alert.events.mdx";
 
 # Alert
 
@@ -76,23 +78,11 @@ An accessible alert component for informational, warning, error, or success mess
 
 ## Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `variant` | `'info' \| 'warning' \| 'error' \| 'success'` | `'info'` | Alert type (sets colors and ARIA role) |
-| `alert-style` | `'primary' \| 'secondary' \| 'tertiary'` | `'secondary'` | Visual treatment/emphasis |
-| `heading` | `string` | `''` | Optional heading text |
-| `heading-level` | `2 \| 3 \| 4 \| 5 \| 6` | `4` | Heading element level for accessibility |
-| `label` | `string` | `''` | Body text (preferred over child text) |
-| `dismissible` | `boolean` | `false` | Shows close button |
-| `slim` | `boolean` | `false` | Compact single-line variant (no heading) |
-| `spacing` | `'default' \| 'sm'` | `'default'` | Compact variant with smaller padding |
+<PropsTable />
 
 ## Events
 
-| Event | Detail | Description |
-|-------|--------|-------------|
-| `civ-dismiss` | — | Fired when close button is clicked (cancelable) |
-| `civ-analytics` | — | Analytics tracking event on dismiss |
+<EventsTable />
 
 ## Accessibility
 

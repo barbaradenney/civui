@@ -5,6 +5,7 @@ sidebar_label: Data Field
 ---
 
 import StoryEmbed from "@site/src/components/StoryEmbed";
+import PropsTable from "./_data-field.props.mdx";
 
 # Data Field
 
@@ -44,15 +45,7 @@ Displays a label and value as a flat row with an optional inline edit link. Used
 
 ## Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `label` | `string` | `''` | Field label (left side) |
-| `value` | `string` | `''` | Display value (right side, bold) |
-| `values` | `string[]` | `[]` | Multiple values, each on its own line (JS property) |
-| `edit-href` | `string` | `''` | Edit link destination (renders inline "Edit" link) |
-| `edit-label` | `string` | `'Edit'` | Custom edit link text |
-| `hint` | `string` | `''` | Optional hint text below the row |
-| `spacing` | `'default' \| 'sm'` | `'default'` | Compact variant with smaller padding |
+<PropsTable />
 
 ## Usage
 

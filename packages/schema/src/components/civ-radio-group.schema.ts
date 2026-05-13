@@ -11,7 +11,7 @@ const schema: ComponentSchema = {
   props: {
     legend: {
       type: 'string',
-      description: 'Group legend text (rendered as <legend>). The component is self-contained — do not wrap in civ-fieldset.',
+      description: 'Group legend text (rendered as `<legend>`). The component is self-contained — do not wrap in civ-fieldset.',
       default: '',
     },
     headingLevel: {
@@ -48,7 +48,7 @@ const schema: ComponentSchema = {
     },
     preset: {
       type: 'enum',
-      description: 'Pre-built option list. Renders <civ-radio> children automatically when no slotted children are present',
+      description: 'Pre-built option list. Renders `<civ-radio>` children automatically when no slotted children are present',
       values: ['us-state', 'service-branch', 'discharge-type', 'suffix', 'relationship-type', 'marital-status', 'ethnicity', 'gender', 'language', 'housing-status', 'education-level', 'employment-status', 'income-source', 'veteran-status'],
     },
     presetVariant: {

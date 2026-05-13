@@ -3,7 +3,7 @@ import type { ComponentSchema } from '../schema.types.js';
 const schema: ComponentSchema = {
   $schema: '1.0',
   name: 'civ-select',
-  description: 'Accessible dropdown select with label, hint, error, and option list. Uses native <select> on web for maximum accessibility.',
+  description: 'Accessible dropdown select with label, hint, error, and option list. Uses native `<select>` on web for maximum accessibility.',
   category: 'form-control',
   extends: 'CivFormElement',
   isGroup: false,
@@ -33,7 +33,7 @@ const schema: ComponentSchema = {
     },
     autocomplete: {
       type: 'string',
-      description: 'Autocomplete hint forwarded to the underlying <select>',
+      description: 'Autocomplete hint forwarded to the underlying `<select>`',
       default: '',
     },
     preset: {

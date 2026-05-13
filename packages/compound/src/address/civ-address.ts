@@ -207,7 +207,7 @@ export class CivAddress extends LegendHeadingMixin(CivCompoundElement) {
       >
         ${renderFormHeader({ label: renderLegend({ legend: this.legend || this.label, required: this.required, headingLevel: this.headingLevel, size: this.size }), hintId: this._hintId, hint: generalDeliveryHint || this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
 
-        ${this._renderCountryField()}
+        ${this.showCountry ? this._renderCountryField() : nothing}
         ${this._renderTextField('street1', t('addressStreet1'), 'address-line1', { error: this.streetError, required: this.required })}
         ${this.showStreet2 ? this._renderTextField('street2', t('addressStreet2'), 'address-line2') : nothing}
         ${this.showStreet3 ? this._renderTextField('street3', t('addressStreet3'), 'address-line3') : nothing}

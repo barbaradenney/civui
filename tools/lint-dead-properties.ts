@@ -78,12 +78,6 @@ const KNOWN_UNREAD_PROPS = new Map<string, string>([
   // TODO: thread `showRequired: this.required && !this.hideRequiredIndicator`
   // into renderFormHeader and renderLabel calls, then drop this entry.
   ['CivFormElement.hideRequiredIndicator', 'TODO: wire into renderLabel via showRequired'],
-  // Schema declares conditional country rendering
-  // ({ condition: 'showCountry', name: 'country' }), but the
-  // implementation always renders the country selector. Tests
-  // currently match the implementation; the schema is the drifter.
-  // TODO: align schema, implementation, and tests on one behavior.
-  ['CivAddress.showCountry', 'TODO: resolve schema vs. implementation drift'],
 ]);
 
 interface DeadProp {

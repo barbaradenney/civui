@@ -18,14 +18,25 @@ describe('civ-address', () => {
     expect(legend!.textContent).toContain('Mailing address');
   });
 
-  it('renders all six fields by default (country, street1, street2, city, state, zip)', async () => {
+  it('renders four fields by default (street1, street2, city, zip — country is opt-in)', async () => {
     const el = await fixture<CivAddress>('<civ-address legend="Address" name="addr"></civ-address>');
 
     const inputs = el.querySelectorAll('input');
-    expect(inputs.length).toBe(5); // country (combobox), street1, street2, city, zip
+    expect(inputs.length).toBe(4); // street1, street2, city, zip
 
     const selects = el.querySelectorAll('select');
     expect(selects.length).toBe(1); // state
+
+    // Country selector is opt-in via show-country (schema-driven).
+    expect(el.querySelector('civ-country')).toBeNull();
+  });
+
+  it('renders the country selector when show-country is set', async () => {
+    const el = await fixture<CivAddress>('<civ-address legend="Address" name="addr" show-country></civ-address>');
+
+    expect(el.querySelector('civ-country')).not.toBeNull();
+    const inputs = el.querySelectorAll('input');
+    expect(inputs.length).toBe(5); // country (combobox) + street1 + street2 + city + zip
   });
 
   it('hides street2 when showStreet2 is false', async () => {
@@ -34,7 +45,7 @@ describe('civ-address', () => {
     await elementUpdated(el);
 
     const inputs = el.querySelectorAll('input');
-    expect(inputs.length).toBe(4); // country (combobox), street1, city, zip — no street2
+    expect(inputs.length).toBe(3); // street1, city, zip — no street2, no country (default)
   });
 
   it('uses Light DOM (no shadow root)', async () => {
@@ -441,7 +452,7 @@ describe('civ-address country/state cascade', () => {
 
   it('clears state and zip when country changes', async () => {
     const el = await fixture<CivAddress>(
-      '<civ-address legend="Mailing address" name="addr" value=\'{"country":"US","street1":"1 Main","city":"Austin","state":"TX","zip":"78701"}\'></civ-address>'
+      '<civ-address legend="Mailing address" name="addr" show-country value=\'{"country":"US","street1":"1 Main","city":"Austin","state":"TX","zip":"78701"}\'></civ-address>'
     ) as any;
     await elementUpdated(el);
 

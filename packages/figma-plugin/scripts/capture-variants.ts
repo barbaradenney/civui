@@ -216,7 +216,11 @@ async function main(): Promise<void> {
   let browser: Browser | undefined;
   try {
     console.log('▸ launching chromium');
-    browser = await chromium.launch();
+    // Honor PLAYWRIGHT_CHROMIUM_EXECUTABLE for sandboxed environments where
+    // Playwright's bundled browser version isn't installed. When unset,
+    // Playwright uses its default-installed browser.
+    const executablePath = process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE;
+    browser = await chromium.launch(executablePath ? { executablePath } : {});
     const page = await browser.newPage({ viewport: { width: 1024, height: 768 } });
     page.on('pageerror', (e) => console.error('  page error:', e.message));
     await page.goto(URL, { waitUntil: 'load' });

@@ -108,7 +108,7 @@ jobs:
         run: pnpm validate:schemas
 
   drift-lints:
-    name: Drift lints (13 static checks across repo)
+    name: Drift lints (14 static checks across repo)
     runs-on: ubuntu-latest
     # Fast static lints that catch drift across the whole repo, not
     # just form patterns. None of these read files at runtime — they
@@ -190,6 +190,16 @@ jobs:
     #                          browser default for custom elements), so
     #                          host-targeted rules silently render zero
     #                          pixels. Print-only rules don't count.
+    #   lint:purged-variants - Every `.civ-X--Y` BEM modifier selector
+    #                          in components.css has a literal-string
+    #                          reference in some TS file. Catches the
+    #                          civ-action-btn--*-danger class of bug —
+    #                          Tailwind's content scanner purges plain
+    #                          CSS rules in @layer components when the
+    #                          selector isn't seen as a static string
+    #                          anywhere in scanned content. Template-
+    #                          literal class construction is invisible
+    #                          to the scanner.
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v2

@@ -5,6 +5,11 @@ import type { CivCount } from './civ-count.js';
 
 afterEach(cleanupFixtures);
 
+// Tailwind content-scanner protection (`pnpm lint:purged-variants`).
+// civ-count builds variant classes via template literal:
+//   civ-count--error  civ-count--info  civ-count--success  civ-count--warning
+//   civ-count--style-tertiary
+
 describe('civ-count', () => {
   it('renders the count number', async () => {
     const el = await fixture<CivCount>('<civ-count count="24"></civ-count>');

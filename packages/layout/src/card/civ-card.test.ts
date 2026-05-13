@@ -4,6 +4,23 @@ import './civ-card.js';
 
 afterEach(cleanupFixtures);
 
+// Tailwind content-scanner protection. civ-card builds variant classes
+// via template literal (`civ-card--${color}` / `civ-card--${color}-primary`
+// / `civ-card--${cardStyle}`), so the resolved names aren't visible to
+// Tailwind's static analyzer. Listing each as a literal here keeps the
+// matching rules in components.css from being silently purged.
+// Enforced by `pnpm lint:purged-variants`. See tailwind.config.ts.
+//
+//   civ-card--blue          civ-card--blue-primary
+//   civ-card--gray          civ-card--gray-primary
+//   civ-card--green         civ-card--green-primary
+//   civ-card--orange        civ-card--orange-primary
+//   civ-card--purple        civ-card--purple-primary
+//   civ-card--red           civ-card--red-primary
+//   civ-card--teal          civ-card--teal-primary
+//   civ-card--yellow        civ-card--yellow-primary
+//   civ-card--primary       civ-card--secondary       civ-card--tertiary
+
 describe('civ-card', () => {
   it('renders a bordered container', async () => {
     const el = await fixture('<civ-card><p>Content</p></civ-card>');

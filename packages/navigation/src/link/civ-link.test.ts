@@ -4,6 +4,11 @@ import './civ-link.js';
 
 afterEach(cleanupFixtures);
 
+// Tailwind content-scanner protection (`pnpm lint:purged-variants`).
+// civ-link builds the danger classes via template literal
+// `civ-link--${variant}-danger`:
+//   civ-link--primary-danger  civ-link--secondary-danger  civ-link--tertiary-danger
+
 describe('civ-link', () => {
   it('renders an <a> element', async () => {
     const el = await fixture('<civ-link href="/next">Continue</civ-link>');

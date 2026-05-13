@@ -4,6 +4,11 @@ import './civ-tag.js';
 
 afterEach(cleanupFixtures);
 
+// Tailwind content-scanner protection (`pnpm lint:purged-variants`).
+// civ-tag builds variant classes via template literal — list any that
+// aren't already asserted by full name elsewhere in this file:
+//   civ-tag--gray-primary  civ-tag--orange  civ-tag--orange-primary  civ-tag--purple
+
 describe('civ-tag', () => {
   it('renders label text', async () => {
     const el = await fixture('<civ-tag label="Healthcare"></civ-tag>');

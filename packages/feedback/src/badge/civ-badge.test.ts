@@ -5,6 +5,10 @@ import type { CivBadge } from './civ-badge.js';
 
 afterEach(cleanupFixtures);
 
+// Tailwind content-scanner protection (`pnpm lint:purged-variants`).
+// civ-badge builds variant classes via template literal:
+//   civ-badge--error  civ-badge--info  civ-badge--success  civ-badge--warning
+
 describe('civ-badge', () => {
   it('renders label text', async () => {
     const el = await fixture<CivBadge>('<civ-badge label="Approved" variant="success"></civ-badge>');

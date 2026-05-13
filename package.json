@@ -39,6 +39,7 @@
     "lint:coverage-trinity": "tsx tools/lint-coverage-trinity.ts",
     "lint:event-listener-leak": "tsx tools/lint-event-listener-leak.ts",
     "lint:host-display": "tsx tools/lint-host-display.ts",
+    "lint:purged-variants": "tsx tools/lint-purged-variant-classes.ts",
     "storybook:contract": "tsx tools/generate-contract-docs.ts",
     "scaffold:component": "tsx tools/scaffold-component.ts",
     "test:tools": "vitest run --config tools/vitest.config.ts",
@@ -48,7 +49,7 @@
     "sync:drupal:twig": "tsx tools/sync-drupal-twig.ts",
     "consistency": "node --experimental-strip-types tools/consistency-check.ts",
     "build:cdn": "node scripts/build-cdn.js",
-    "validate:lints": "pnpm lint:fieldsets && pnpm lint:story-embeds && pnpm lint:story-names && pnpm lint:story-props && pnpm lint:prose-refs && pnpm lint:color-classes && pnpm lint:jsdoc-props && pnpm lint:jsdoc-events && pnpm lint:safelist-stale && pnpm lint:hardcoded-tokens && pnpm lint:coverage-trinity && pnpm lint:event-listener-leak && pnpm lint:host-display",
+    "validate:lints": "pnpm lint:fieldsets && pnpm lint:story-embeds && pnpm lint:story-names && pnpm lint:story-props && pnpm lint:prose-refs && pnpm lint:color-classes && pnpm lint:jsdoc-props && pnpm lint:jsdoc-events && pnpm lint:safelist-stale && pnpm lint:hardcoded-tokens && pnpm lint:coverage-trinity && pnpm lint:event-listener-leak && pnpm lint:host-display && pnpm lint:purged-variants",
     "validate:doc-tables": "pnpm sync:doc-tables && git diff --exit-code -- 'apps/docs/docs/components/**/_*.props.mdx' 'apps/docs/docs/components/**/_*.events.mdx'",
     "validate:drift": "pnpm validate:lints && pnpm validate:doc-tables",
     "validate": "pnpm lint && pnpm typecheck && pnpm test && pnpm parity:schema --platforms && pnpm validate:schemas && pnpm validate:drift && pnpm test:tools"

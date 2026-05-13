@@ -5,6 +5,12 @@ import type { CivAlert } from './civ-alert.js';
 
 afterEach(cleanupFixtures);
 
+// Tailwind content-scanner protection (`pnpm lint:purged-variants`).
+// civ-alert builds card-style classes via template literal:
+//   civ-alert--style-primary
+//   civ-alert--style-secondary
+//   civ-alert--style-tertiary
+
 describe('civ-alert', () => {
   it('renders with default info variant', async () => {
     const el = await fixture('<civ-alert>This is informational.</civ-alert>');

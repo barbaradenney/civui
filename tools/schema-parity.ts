@@ -468,9 +468,16 @@ export function parseKotlinPropNamesFromSource(src: string, displayName: string)
  * (`List<String>`), and lambda types (`(String) -> Unit`).
  */
 export function parseKotlinPropsFromSource(src: string, displayName: string): NativeProp[] {
+  // Strip `// …` line comments and `/* … */` block comments before parsing.
+  // Without this, a comment inside the parameter list (e.g. grouping
+  // related props with `// Route mode props`) leaks into the next
+  // parameter's name and the parser silently drops it.
+  const stripped = src
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .replace(/\/\/[^\n]*/g, '');
   // Find the @Composable function signature for the matching component.
   // Pattern: `fun CivXxx(\n  param1: Type,\n  param2: Type,...)`
-  const fnStart = src.search(new RegExp(`fun\\s+${displayName}\\s*\\(`));
+  const fnStart = stripped.search(new RegExp(`fun\\s+${displayName}\\s*\\(`));
   if (fnStart < 0) return [];
   // Walk forward and capture the parameter list up to the matching `)`.
   // Skip only the FIRST `(` (the function-signature opener); all
@@ -478,8 +485,8 @@ export function parseKotlinPropsFromSource(src: string, displayName: string): Na
   // literals like `(AddressValue) -> Unit` — are part of the body.
   let depth = 0;
   let body = '';
-  for (let i = fnStart; i < src.length; i++) {
-    const ch = src[i];
+  for (let i = fnStart; i < stripped.length; i++) {
+    const ch = stripped[i];
     if (ch === '(') {
       depth++;
       if (depth === 1) continue; // skip the signature-opening paren only

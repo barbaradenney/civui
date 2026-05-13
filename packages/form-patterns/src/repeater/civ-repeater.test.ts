@@ -19,9 +19,23 @@ describe('civ-repeater', () => {
     expect(legend!.textContent).toContain('Dependents');
   });
 
-  it('renders initial row from template', async () => {
+  it('renders no rows by default (just the add button)', async () => {
     const el = await fixture<CivRepeater>(`
       <civ-repeater legend="Dependents" name="deps" item-label="dependent">
+        <input type="text" name="firstName" />
+      </civ-repeater>
+    `);
+
+    const rows = el.querySelectorAll('[data-civ-repeater-row]');
+    expect(rows.length).toBe(0);
+
+    const addBtn = el.querySelector('civ-button[variant="secondary"]');
+    expect(addBtn).not.toBeNull();
+  });
+
+  it('renders initial rows when min is set', async () => {
+    const el = await fixture<CivRepeater>(`
+      <civ-repeater legend="Dependents" name="deps" item-label="dependent" min="1">
         <input type="text" name="firstName" />
       </civ-repeater>
     `);
@@ -43,7 +57,7 @@ describe('civ-repeater', () => {
 
   it('indexes field names with prefix[index].fieldName', async () => {
     const el = await fixture<CivRepeater>(`
-      <civ-repeater legend="Items" name="items" item-label="item">
+      <civ-repeater legend="Items" name="items" item-label="item" min="1">
         <input type="text" name="val" />
       </civ-repeater>
     `);
@@ -64,7 +78,7 @@ describe('civ-repeater', () => {
     await elementUpdated(el);
 
     const rows = el.querySelectorAll('[data-civ-repeater-row]');
-    expect(rows.length).toBe(2);
+    expect(rows.length).toBe(1);
   });
 
   it('indexes new row fields correctly', async () => {
@@ -79,8 +93,8 @@ describe('civ-repeater', () => {
     await elementUpdated(el);
 
     const rows = el.querySelectorAll('[data-civ-repeater-row]');
-    const secondInput = rows[1].querySelector('input')!;
-    expect(secondInput.getAttribute('name')).toBe('items[1].val');
+    const firstInput = rows[0].querySelector('input')!;
+    expect(firstInput.getAttribute('name')).toBe('items[0].val');
   });
 
   it('fires civ-repeater-add event on add', async () => {
@@ -99,7 +113,7 @@ describe('civ-repeater', () => {
     addBtn.click();
 
     expect(eventDetail).not.toBeNull();
-    expect(eventDetail.index).toBe(1);
+    expect(eventDetail.index).toBe(0);
   });
 
   it('removes a row and fires civ-repeater-remove', async () => {
@@ -145,7 +159,7 @@ describe('civ-repeater', () => {
 
   it('does not add above max rows', async () => {
     const el = await fixture<CivRepeater>(`
-      <civ-repeater legend="Items" name="items" item-label="item" max="2">
+      <civ-repeater legend="Items" name="items" item-label="item" min="1" max="2">
         <input type="text" name="val" />
       </civ-repeater>
     `) as CivRepeater;
@@ -162,7 +176,7 @@ describe('civ-repeater', () => {
 
   it('hides add button when max is reached', async () => {
     const el = await fixture<CivRepeater>(`
-      <civ-repeater legend="Items" name="items" item-label="item" max="1">
+      <civ-repeater legend="Items" name="items" item-label="item" min="1" max="1">
         <input type="text" name="val" />
       </civ-repeater>
     `);
@@ -252,9 +266,9 @@ describe('civ-repeater', () => {
     expect(el.querySelector('fieldset')).not.toBeNull();
   });
 
-  it('rows have role="group" and aria-label', async () => {
+  it('rows have role="group" labelled by a visible heading', async () => {
     const el = await fixture<CivRepeater>(`
-      <civ-repeater legend="Dependents" name="deps" item-label="dependent">
+      <civ-repeater legend="Dependents" name="deps" item-label="dependent" min="1">
         <input type="text" name="firstName" />
       </civ-repeater>
     `) as CivRepeater;
@@ -264,11 +278,40 @@ describe('civ-repeater', () => {
 
     const rows = el.querySelectorAll('[data-civ-repeater-row]');
     expect(rows[0].getAttribute('role')).toBe('group');
-    expect(rows[0].getAttribute('aria-label')).toBe('dependent 1');
-    expect(rows[1].getAttribute('aria-label')).toBe('dependent 2');
+    expect(rows[0].getAttribute('aria-label')).toBeNull();
+
+    const heading0 = rows[0].querySelector('.civ-repeater-row-heading')!;
+    // Default headingLevel is undefined → legend treated as h2 → rows are h3.
+    expect(heading0.tagName).toBe('H3');
+    expect(heading0.textContent).toBe('dependent 1');
+    expect(rows[0].getAttribute('aria-labelledby')).toBe(heading0.id);
+
+    const heading1 = rows[1].querySelector('.civ-repeater-row-heading')!;
+    expect(heading1.textContent).toBe('dependent 2');
   });
 
-  it('updates row aria-labels after removal', async () => {
+  it('per-row heading level is derived from headingLevel (rows sit one level deeper)', async () => {
+    const el = await fixture<CivRepeater>(`
+      <civ-repeater legend="Items" name="items" item-label="item" min="1" heading-level="3">
+        <input type="text" name="val" />
+      </civ-repeater>
+    `);
+    const heading = el.querySelector('.civ-repeater-row-heading')!;
+    // headingLevel=3 → row heading should be h4.
+    expect(heading.tagName).toBe('H4');
+  });
+
+  it('per-row heading level is clamped at h6', async () => {
+    const el = await fixture<CivRepeater>(`
+      <civ-repeater legend="X" name="x" item-label="x" min="1" heading-level="6">
+        <input type="text" name="val" />
+      </civ-repeater>
+    `);
+    const heading = el.querySelector('.civ-repeater-row-heading')!;
+    expect(heading.tagName).toBe('H6');
+  });
+
+  it('updates row headings and aria-labels after removal', async () => {
     const el = await fixture<CivRepeater>(`
       <civ-repeater legend="Items" name="items" item-label="item" min="1">
         <input type="text" name="val" />
@@ -283,8 +326,27 @@ describe('civ-repeater', () => {
     await elementUpdated(el);
 
     const rows = el.querySelectorAll('[data-civ-repeater-row]');
-    expect(rows[0].getAttribute('aria-label')).toBe('item 1');
-    expect(rows[1].getAttribute('aria-label')).toBe('item 2');
+    expect(rows[0].querySelector('.civ-repeater-row-heading')!.textContent).toBe('item 1');
+    expect(rows[1].querySelector('.civ-repeater-row-heading')!.textContent).toBe('item 2');
+    // Remove-button aria-label tracks the new index too
+    expect(rows[1].querySelector('civ-action-button[danger]')!.getAttribute('aria-label'))
+      .toBe('Remove item 2');
+  });
+
+  it('remove button visible label includes the item label', async () => {
+    const el = await fixture<CivRepeater>(`
+      <civ-repeater legend="Dependents" name="deps" item-label="dependent" min="1">
+        <input type="text" name="firstName" />
+      </civ-repeater>
+    `) as CivRepeater;
+
+    el.addRow();
+    await elementUpdated(el);
+
+    const removeBtn = el.querySelector('[data-civ-repeater-row] civ-action-button[danger]')!;
+    expect(removeBtn.getAttribute('label')).toBe('Remove dependent');
+    // Aria-label still carries the index for unambiguous SR announcement
+    expect(removeBtn.getAttribute('aria-label')).toBe('Remove dependent 1');
   });
 
   it('exposes rowCount', async () => {
@@ -294,10 +356,10 @@ describe('civ-repeater', () => {
       </civ-repeater>
     `) as CivRepeater;
 
-    expect(el.rowCount).toBe(1);
+    expect(el.rowCount).toBe(0);
 
     el.addRow();
-    expect(el.rowCount).toBe(2);
+    expect(el.rowCount).toBe(1);
   });
 });
 
@@ -466,5 +528,233 @@ describe('civ-repeater form-steps mode', () => {
     const formStep = el.querySelector('civ-form-step');
     expect(formStep).not.toBeNull();
     expect(formStep!.hasAttribute('show-pause')).toBe(true);
+  });
+});
+
+describe('civ-repeater route mode', () => {
+  type Row = { id: string; firstName: string; lastName: string };
+
+  const sampleRows: Row[] = [
+    { id: 'a', firstName: 'Alex', lastName: 'Chen' },
+    { id: 'b', firstName: 'Jordan', lastName: 'Lee' },
+  ];
+
+  /**
+   * Mount a route-mode repeater with the given rows. Helper to keep test
+   * setup compact — assigning the JS `rows` / `rowSummary` props after
+   * fixture() (since neither serializes through HTML attributes).
+   */
+  async function mountRouted(opts: {
+    rows?: Row[];
+    addHref?: string;
+    editHrefPattern?: string;
+    idField?: string;
+    summaryFields?: string;
+    rowSummary?: (row: Row, i: number) => string;
+    min?: number;
+    max?: number;
+  } = {}): Promise<CivRepeater> {
+    const el = await fixture<CivRepeater>(`
+      <civ-repeater
+        mode="route"
+        legend="Dependents"
+        item-label="dependent"
+        add-href="${opts.addHref ?? '/dependents/new'}"
+        edit-href-pattern="${opts.editHrefPattern ?? '/dependents/{id}/edit'}"
+        ${opts.idField !== undefined ? `id-field="${opts.idField}"` : ''}
+        ${opts.summaryFields !== undefined ? `summary-fields="${opts.summaryFields}"` : ''}
+        ${opts.min !== undefined ? `min="${opts.min}"` : ''}
+        ${opts.max !== undefined ? `max="${opts.max}"` : ''}
+      ></civ-repeater>
+    `);
+    el.rows = opts.rows ?? sampleRows;
+    if (opts.rowSummary) el.rowSummary = opts.rowSummary as any;
+    await elementUpdated(el);
+    return el;
+  }
+
+  it('renders one summary card per row', async () => {
+    const el = await mountRouted();
+    const rows = el.querySelectorAll('[data-civ-repeater-row]');
+    expect(rows.length).toBe(2);
+  });
+
+  it('renders a per-row heading like "dependent 1"', async () => {
+    const el = await mountRouted();
+    const headings = el.querySelectorAll('.civ-repeater-row-heading');
+    expect(headings.length).toBe(2);
+    expect(headings[0].textContent?.trim()).toBe('dependent 1');
+    expect(headings[1].textContent?.trim()).toBe('dependent 2');
+  });
+
+  it('joins summary-fields values for the summary line', async () => {
+    const el = await mountRouted({ summaryFields: 'firstName,lastName' });
+    const summaries = el.querySelectorAll('.civ-list-item__content');
+    expect(summaries[0].textContent?.trim()).toBe('Alex Chen');
+    expect(summaries[1].textContent?.trim()).toBe('Jordan Lee');
+  });
+
+  it('rowSummary fn wins over summary-fields', async () => {
+    const el = await mountRouted({
+      summaryFields: 'firstName,lastName',
+      rowSummary: (row) => `${row.lastName.toUpperCase()}, ${row.firstName}`,
+    });
+    const summaries = el.querySelectorAll('.civ-list-item__content');
+    expect(summaries[0].textContent?.trim()).toBe('CHEN, Alex');
+  });
+
+  it('falls back to "{itemLabel} {index+1}" when neither summary source is set', async () => {
+    const el = await mountRouted();
+    const summaries = el.querySelectorAll('.civ-list-item__content');
+    expect(summaries[0].textContent?.trim()).toBe('dependent 1');
+  });
+
+  it('Add affordance is a real <a href> with the addHref', async () => {
+    const el = await mountRouted({ addHref: '/dependents/new' });
+    // The Add link is the fieldset-level civ-link, NOT one of the per-row
+    // Edit links — scope the query so the test reflects the role split.
+    const add = el.querySelector(':scope > fieldset > civ-link') as HTMLElement;
+    expect(add).not.toBeNull();
+    expect(add.getAttribute('href')).toBe('/dependents/new');
+  });
+
+  it('Edit per-row interpolates {id} from row[idField]', async () => {
+    const el = await mountRouted({
+      editHrefPattern: '/dependents/{id}/edit',
+      idField: 'id',
+    });
+    const editLinks = el.querySelectorAll('[data-civ-repeater-row] civ-link');
+    expect(editLinks[0].getAttribute('href')).toBe('/dependents/a/edit');
+    expect(editLinks[1].getAttribute('href')).toBe('/dependents/b/edit');
+  });
+
+  it('Edit per-row interpolates {index} when pattern uses it', async () => {
+    const el = await mountRouted({
+      editHrefPattern: '/d/{index}',
+    });
+    const editLinks = el.querySelectorAll('[data-civ-repeater-row] civ-link');
+    expect(editLinks[0].getAttribute('href')).toBe('/d/0');
+    expect(editLinks[1].getAttribute('href')).toBe('/d/1');
+  });
+
+  it('falls back to {index} and warns when {id} is missing on a row', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+    try {
+      const el = await fixture<CivRepeater>(`
+        <civ-repeater
+          mode="route"
+          legend="Items"
+          add-href="/new"
+          edit-href-pattern="/items/{id}/edit"
+        ></civ-repeater>
+      `);
+      el.rows = [{ firstName: 'no-id' } as any];
+      await elementUpdated(el);
+
+      const editLink = el.querySelector('[data-civ-repeater-row] civ-link');
+      expect(editLink?.getAttribute('href')).toBe('/items/0/edit');
+      expect(warn).toHaveBeenCalled();
+    } finally {
+      warn.mockRestore();
+    }
+  });
+
+  it('warns ONCE about missing id even when many rows lack it', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+    try {
+      const el = await fixture<CivRepeater>(`
+        <civ-repeater mode="route" legend="X" add-href="/new" edit-href-pattern="/i/{id}"></civ-repeater>
+      `);
+      el.rows = Array.from({ length: 10 }, (_, i) => ({ name: `x${i}` }));
+      await elementUpdated(el);
+      // Force another render
+      el.rows = [...el.rows];
+      await elementUpdated(el);
+      const repeaterWarnings = warn.mock.calls.filter(c => String(c[0]).includes('edit-href-pattern uses {id}'));
+      expect(repeaterWarnings.length).toBe(1);
+    } finally {
+      warn.mockRestore();
+    }
+  });
+
+  it('URI-encodes id values to keep slashes / spaces safe in URLs', async () => {
+    const el = await mountRouted({
+      rows: [{ id: 'a/b', firstName: 'x', lastName: 'y' }],
+      editHrefPattern: '/items/{id}',
+    });
+    const editLink = el.querySelector('[data-civ-repeater-row] civ-link');
+    expect(editLink?.getAttribute('href')).toBe('/items/a%2Fb');
+  });
+
+  it('Remove fires civ-repeater-remove with index, id, and row payload', async () => {
+    const el = await mountRouted();
+    let detail: any = null;
+    el.addEventListener('civ-repeater-remove', ((e: CustomEvent) => {
+      detail = e.detail;
+    }) as EventListener);
+
+    const removeBtn = el.querySelector('[data-civ-repeater-row] civ-action-button[danger]') as HTMLElement;
+    removeBtn.click();
+    await elementUpdated(el);
+
+    expect(detail).not.toBeNull();
+    expect(detail.index).toBe(0);
+    expect(detail.id).toBe('a');
+    expect(detail.row).toEqual({ id: 'a', firstName: 'Alex', lastName: 'Chen' });
+  });
+
+  it('does not mutate the rows array on remove (host owns it)', async () => {
+    const el = await mountRouted();
+    const originalRows = el.rows;
+    const removeBtn = el.querySelector('[data-civ-repeater-row] civ-action-button[danger]') as HTMLElement;
+    removeBtn.click();
+    await elementUpdated(el);
+    // Repeater never touches `rows` — host updates it in response to the event.
+    expect(el.rows).toBe(originalRows);
+    expect(el.rows.length).toBe(2);
+  });
+
+  it('does not fire remove below min', async () => {
+    const el = await mountRouted({ min: 2 });
+    let detail: any = null;
+    el.addEventListener('civ-repeater-remove', ((e: CustomEvent) => {
+      detail = e.detail;
+    }) as EventListener);
+    const removeBtn = el.querySelector('[data-civ-repeater-row] civ-action-button[danger]') as HTMLElement;
+    removeBtn.click();
+    await elementUpdated(el);
+    expect(detail).toBeNull();
+  });
+
+  it('hides the Add affordance when at max', async () => {
+    const el = await mountRouted({ max: 2 });
+    expect(el.querySelectorAll('[data-civ-repeater-row]').length).toBe(2);
+    // The top-level add affordance — `civ-link` outside any row.
+    const topLevelAdd = el.querySelector(':scope > fieldset > civ-link');
+    expect(topLevelAdd).toBeNull();
+  });
+
+  it('warns when slotted children are passed in route mode', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+    try {
+      await fixture<CivRepeater>(`
+        <civ-repeater mode="route" add-href="/new">
+          <civ-text-input label="ignored" name="ignored"></civ-text-input>
+        </civ-repeater>
+      `);
+      expect(warn).toHaveBeenCalled();
+      const calls = warn.mock.calls.map(c => String(c[0]));
+      expect(calls.some(s => s.includes('route mode'))).toBe(true);
+    } finally {
+      warn.mockRestore();
+    }
+  });
+
+  it('re-renders when rows is replaced (controlled prop)', async () => {
+    const el = await mountRouted({ rows: sampleRows.slice(0, 1) });
+    expect(el.querySelectorAll('[data-civ-repeater-row]').length).toBe(1);
+    el.rows = sampleRows;
+    await elementUpdated(el);
+    expect(el.querySelectorAll('[data-civ-repeater-row]').length).toBe(2);
   });
 });

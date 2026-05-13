@@ -18,6 +18,7 @@ export default defineConfig({
       '@civui/layout': resolve(__dirname, '../layout/src/index.ts'),
       '@civui/actions/button': resolve(__dirname, '../actions/src/button/index.ts'),
       '@civui/actions/action-button': resolve(__dirname, '../actions/src/action-button/index.ts'),
+      '@civui/actions/action-link': resolve(__dirname, '../actions/src/action-link/index.ts'),
       '@civui/actions': resolve(__dirname, '../actions/src/index.ts'),
     },
   },

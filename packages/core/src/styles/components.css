@@ -2567,6 +2567,17 @@
     border-top: 1px solid var(--civ-color-base-lighter);
   }
 
+  /* ── Repeater row heading ─────────────────────────────────────
+     Each row in <civ-repeater> renders an `<h3>` with this class as
+     a visible group label ("Dependent 1"). `text-transform: capitalize`
+     lets consumers keep the lowercase `item-label` they already use
+     for the Add button and announcements. */
+
+  .civ-repeater-row-heading {
+    @apply civ-text-lg civ-font-bold civ-m-0 civ-mb-3;
+    text-transform: capitalize;
+  }
+
   /* ── Divider ──────────────────────────────────────────────── */
 
   .civ-divider {

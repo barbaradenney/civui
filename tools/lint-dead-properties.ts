@@ -40,7 +40,13 @@ import { pathToFileURL } from 'node:url';
 const ROOT = join(import.meta.dirname, '..');
 
 const SOURCE_ROOTS = ['packages'];
-const SKIP_DIRS = new Set(['node_modules', 'dist', 'build', 'storybook-static', '.next', '.turbo', '__audit__']);
+const SKIP_DIRS = new Set([
+  'node_modules', 'dist', 'build', 'storybook-static', '.next', '.turbo', '__audit__',
+  // Non-design-system packages: contract drift is the host app's concern
+  // for these, not part of the design-system catalog the drift lints
+  // protect.
+  'storybook-utils',
+]);
 const SOURCE_EXTS = new Set(['.ts', '.tsx']);
 
 // Properties inherited from these base classes are managed by the
@@ -68,16 +74,16 @@ const KNOWN_UNREAD_PROPS = new Map<string, string>([
   // consumer's own handler.
   ['CivForm.action', 'External-only API hook'],
   ['CivForm.method', 'External-only API hook'],
-  // hide-required-indicator is meant to suppress the "(required)"
-  // mark on form fields whose required state is owned by a parent
-  // compound (e.g. memorable-date renders the asterisk once on its
-  // own legend and tells the child month/day/year inputs to hide
-  // theirs). Declared in CivFormElement and set on memorable-date
-  // children via `?hide-required-indicator`, but nothing reads it —
-  // the wiring into renderLabel was never landed.
-  // TODO: thread `showRequired: this.required && !this.hideRequiredIndicator`
-  // into renderFormHeader and renderLabel calls, then drop this entry.
-  ['CivFormElement.hideRequiredIndicator', 'TODO: wire into renderLabel via showRequired'],
+  // hide-required-indicator suppresses the "(required)" mark on form
+  // fields whose required state is owned by a parent compound (e.g.
+  // memorable-date renders the asterisk once on its own legend and
+  // tells the child month/day/year inputs to hide theirs). Declared
+  // on CivFormElement and read by subclass `render()` methods via the
+  // `showRequired` param on renderLabel / renderLegend / renderGroupLabel.
+  // The lint only counts reads inside the declaring class — subclass
+  // reads don't satisfy it — so this stays allowlisted on principle,
+  // not as a bug.
+  ['CivFormElement.hideRequiredIndicator', 'Read by subclass render() via the showRequired param on renderLabel/renderLegend'],
 ]);
 
 interface DeadProp {

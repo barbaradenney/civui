@@ -53,7 +53,7 @@ async function walk(dir: string): Promise<string[]> {
       const base = path.basename(p);
       if (base === 'node_modules' || base === 'dist' || base === '.turbo') return;
       // Skip non-Lit-component packages.
-      if (base === 'mcp-server' || base === 'cli' || base === 'content' || base === 'test-utils' || base === 'tokens') return;
+      if (base === 'mcp-server' || base === 'cli' || base === 'content' || base === 'test-utils' || base === 'tokens' || base === 'storybook-utils') return;
       for (const name of await fs.readdir(p)) {
         await visit(path.join(p, name));
       }

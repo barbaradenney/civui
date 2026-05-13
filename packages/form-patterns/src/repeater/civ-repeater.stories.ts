@@ -4,6 +4,8 @@ import '@civui/core';
 import './civ-repeater.js';
 import '@civui/inputs';
 import '@civui/compound';
+import '@civui/storybook-utils/demo-frame';
+import '@civui/storybook-utils/demo-frame.css';
 
 const meta: Meta = {
   title: 'Forms/Form/Repeater',
@@ -292,5 +294,103 @@ export const FormStepsWithMax: Story = {
         <civ-text-input label="Relationship" name="relationship" required></civ-text-input>
       </div>
     </civ-repeater>
+  `,
+};
+
+// ── Route Mode ────────────────────────────────────────────────
+// Demoed inside <civ-demo-frame> so the multi-page flow is visible
+// in the Storybook canvas. The frame intercepts anchor clicks on
+// /dependents/new and /dependents/:id/edit and swaps which
+// <civ-demo-page> is visible. Browser back is simulated by the
+// frame's back button. See @civui/storybook-utils for the helper.
+
+type Dependent = { id: string; firstName: string; lastName: string; relationship: string };
+
+const initialDependents: Dependent[] = [
+  { id: 'a1', firstName: 'Alex', lastName: 'Chen', relationship: 'Child' },
+  { id: 'b2', firstName: 'Jordan', lastName: 'Lee', relationship: 'Spouse' },
+];
+
+export const RouteMode: Story = {
+  name: 'Route Mode',
+  render: () => {
+    // Story-level mutable state shared between pages — mirrors what a
+    // real host app does with its router/store.
+    const state: { rows: Dependent[] } = { rows: [...initialDependents] };
+
+    // The remove handler reassigns `state.rows` then writes the new
+    // array onto the repeater. `e.currentTarget` IS the repeater (the
+    // listener is attached directly to it via the `@civ-repeater-remove`
+    // binding below), so we can assign rows on it directly — no parent
+    // lookup needed.
+    return html`
+      <civ-demo-frame initial-path="/dependents">
+        <civ-demo-page path="/dependents">
+          <civ-repeater
+            legend="Your dependents"
+            item-label="dependent"
+            mode="route"
+            add-href="/dependents/new"
+            edit-href-pattern="/dependents/{id}/edit"
+            id-field="id"
+            summary-fields="firstName,lastName"
+            .rows=${state.rows}
+            @civ-repeater-remove=${(e: CustomEvent) => {
+              state.rows = state.rows.filter((r) => r.id !== e.detail.id);
+              (e.currentTarget as { rows: Dependent[] }).rows = state.rows;
+            }}
+          ></civ-repeater>
+        </civ-demo-page>
+
+        <civ-demo-page path="/dependents/new">
+          <h2 class="civ-heading-md">Add a dependent</h2>
+          <civ-text-input label="First name" name="firstName"></civ-text-input>
+          <civ-text-input label="Last name" name="lastName"></civ-text-input>
+          <civ-text-input label="Relationship" name="relationship"></civ-text-input>
+          <div class="civ-mt-4 civ-flex civ-gap-2">
+            <civ-link href="/dependents" variant="primary" label="Save"></civ-link>
+            <civ-link href="/dependents" variant="tertiary" label="Cancel"></civ-link>
+          </div>
+        </civ-demo-page>
+
+        <civ-demo-page path="/dependents/:id/edit">
+          <h2 class="civ-heading-md">Edit dependent</h2>
+          <p class="civ-text-sm">Editing the row whose id matches the URL.</p>
+          <civ-text-input label="First name" name="firstName"></civ-text-input>
+          <civ-text-input label="Last name" name="lastName"></civ-text-input>
+          <civ-text-input label="Relationship" name="relationship"></civ-text-input>
+          <div class="civ-mt-4 civ-flex civ-gap-2">
+            <civ-link href="/dependents" variant="primary" label="Save"></civ-link>
+            <civ-link href="/dependents" variant="tertiary" label="Cancel"></civ-link>
+          </div>
+        </civ-demo-page>
+      </civ-demo-frame>
+    `;
+  },
+};
+
+export const RouteModeEmpty: Story = {
+  name: 'Route Mode: Empty State',
+  render: () => html`
+    <civ-demo-frame initial-path="/dependents">
+      <civ-demo-page path="/dependents">
+        <civ-repeater
+          legend="Your dependents"
+          item-label="dependent"
+          mode="route"
+          add-href="/dependents/new"
+          edit-href-pattern="/dependents/{id}/edit"
+          hint="No dependents yet — click Add to create one."
+          .rows=${[]}
+        ></civ-repeater>
+      </civ-demo-page>
+      <civ-demo-page path="/dependents/new">
+        <h2 class="civ-heading-md">Add a dependent</h2>
+        <civ-text-input label="First name" name="firstName"></civ-text-input>
+        <div class="civ-mt-4">
+          <civ-link href="/dependents" variant="tertiary" label="Cancel"></civ-link>
+        </div>
+      </civ-demo-page>
+    </civ-demo-frame>
   `,
 };

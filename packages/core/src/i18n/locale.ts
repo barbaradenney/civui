@@ -308,6 +308,7 @@ export interface CivLocaleStrings {
   // Repeater
   repeaterAddButton: string; // "Add another {item}"
   repeaterRemoveButton: string;
+  repeaterRemoveLabel: string; // "Remove {item}" — visible remove-button label
   repeaterRemoveAriaLabel: string; // "Remove {item} {index}"
   repeaterItemAdded: string; // "{item} {index} added"
   repeaterItemRemoved: string; // "{item} {index} removed"
@@ -910,6 +911,7 @@ const defaultStrings: CivLocaleStrings = {
 
   repeaterAddButton: 'Add another {item}',
   repeaterRemoveButton: 'Remove',
+  repeaterRemoveLabel: 'Remove {item}',
   repeaterRemoveAriaLabel: 'Remove {item} {index}',
   repeaterItemAdded: '{item} {index} added',
   repeaterItemRemoved: '{item} {index} removed',

@@ -13,6 +13,11 @@
   {% if disabled %}disabled{% endif %}
   {% if form_steps_sensitive %}form-steps-sensitive{% endif %}
   {% if form_steps_show_pause %}form-steps-show-pause{% endif %}
+  {% if rows %}rows="{{ rows }}"{% endif %}
+  {% if add_href %}add-href="{{ add_href }}"{% endif %}
+  {% if edit_href_pattern %}edit-href-pattern="{{ edit_href_pattern }}"{% endif %}
+  {% if id_field %}id-field="{{ id_field }}"{% endif %}
+  {% if summary_fields %}summary-fields="{{ summary_fields }}"{% endif %}
 >
   {% block default %}{{ default }}{% endblock %}
 </civ-repeater>

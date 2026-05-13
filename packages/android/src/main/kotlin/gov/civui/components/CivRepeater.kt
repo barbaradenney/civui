@@ -87,6 +87,15 @@ fun CivRepeater(
     size: String = "sm",
     formStepsSensitive: Boolean = false,
     formStepsShowPause: Boolean = false,
+    // Route mode props — only meaningful when mode == "route". The host
+    // owns `rows` and renders the Add / Edit form on its own NavHost
+    // destinations; the repeater shows summary cards and triggers
+    // navigation via the host-provided href patterns.
+    rows: List<Any> = emptyList(),
+    addHref: String = "",
+    editHrefPattern: String = "",
+    idField: String = "id",
+    summaryFields: String = "",
     onAdd: ((Int) -> Unit)? = null,
     onRemove: ((Int) -> Unit)? = null,
     onWizardOpen: ((Int) -> Unit)? = null,

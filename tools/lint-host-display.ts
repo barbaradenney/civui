@@ -42,10 +42,19 @@ const SKIP_DIRS = new Set(['node_modules', 'dist', 'build', 'storybook-static', 
 const SOURCE_EXTS = new Set(['.ts', '.tsx']);
 
 // Where to look for the CSS rules that satisfy the requirement.
-const STYLESHEET_PATHS = [
-  'packages/core/src/styles/components.css',
-  'packages/core/src/styles/civ.css',
-];
+// Walks every `.css` file under any package's `src/` directory — matches
+// what the docstring promises and handles per-package stylesheets
+// (storybook-utils demo-frame.css, etc.) without hardcoding paths.
+function collectStylesheets(): string[] {
+  const out: string[] = [];
+  for (const file of walk(join(ROOT, 'packages'))) {
+    if (!file.endsWith('.css')) continue;
+    // Skip CSS that lives in dist/build output (the walker already
+    // skips node_modules / dist directories, but be defensive).
+    out.push(file);
+  }
+  return out;
+}
 
 const CUSTOM_ELEMENT_RE = /@customElement\(\s*['"](civ-[a-z][a-z0-9-]*)['"]\s*\)/g;
 
@@ -168,9 +177,9 @@ export function tagsWithDisplayRulesIn(css: string): Set<string> {
 
 function tagsWithDisplayRules(): Set<string> {
   const satisfied = new Set<string>();
-  for (const rel of STYLESHEET_PATHS) {
+  for (const abs of collectStylesheets()) {
     let text: string;
-    try { text = readFileSync(join(ROOT, rel), 'utf-8'); }
+    try { text = readFileSync(abs, 'utf-8'); }
     catch { continue; }
     for (const tag of tagsWithDisplayRulesIn(text)) satisfied.add(tag);
   }

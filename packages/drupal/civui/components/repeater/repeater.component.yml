@@ -68,6 +68,29 @@ props:
       type: boolean
       default: false
       description: 'Show pause button in form-steps mode'
+    rows:
+      title: Rows
+      type: array
+      default: 
+      description: 'Host-owned array of row objects. Only used in `mode="route"`. The repeater renders one summary card per entry and never mutates this array'
+    add_href:
+      title: Add href
+      type: string
+      description: 'URL the "Add" affordance links to in `mode="route"`. Required when route mode is used'
+    edit_href_pattern:
+      title: Edit href pattern
+      type: string
+      description: 'URL template for the "Edit" link on each row in `mode="route"`. Interpolates `{id}` (from `row[idField]`) and `{index}` (zero-based). Example: `/dependents/{id}/edit`'
+    id_field:
+      title: Id field
+      type: string
+      default: 'id'
+      description: 'Name of the row property that holds the stable identifier interpolated into `{id}` in `editHrefPattern`'
+    summary_fields:
+      title: Summary fields
+      type: string
+      description: 'Comma-separated row property names joined into each summary card. Declarative alternative to the JS `rowSummary` function for non-JS hosts'
+
 
 slots:
   default:

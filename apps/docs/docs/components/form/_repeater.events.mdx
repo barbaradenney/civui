@@ -4,6 +4,6 @@
 | Event | Detail | Description |
 |-------|--------|-------------|
 | `civ-repeater-add` | `{ index: number }` | Fires when a new instance is added |
-| `civ-repeater-remove` | `{ index: number }` | Fires when an instance is removed |
+| `civ-repeater-remove` | `{ index: number, id: string, row: object }` | Fires when an instance is removed |
 | `civ-repeater-form-steps-open` | `{ index: number, isNew: boolean }` | Fires when an instance opens for editing in form-steps mode (either a new instance being added or an existing one re-opened) |
 | `civ-repeater-form-steps-close` | `{ index: number, action: string }` | Fires when the form-steps editor closes — either via Save or Cancel |

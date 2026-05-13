@@ -83,6 +83,30 @@ public struct CivRepeater<Content: View>: View {
     /// Whether to show a pause button in form-steps mode.
     public var formStepsShowPause: Bool
 
+    // MARK: - Route mode props
+    // Only meaningful when `mode == "route"`. In that mode the host owns
+    // the rows array and renders the Add / Edit form on its own routes;
+    // the repeater shows summary cards with NavigationLinks built from
+    // `addHref` and `editHrefPattern`.
+
+    /// Host-owned rows in route mode. Untyped array — each row is a
+    /// dictionary or arbitrary struct chosen by the host.
+    public var rows: [Any]
+
+    /// Destination for the "Add" affordance in route mode.
+    public var addHref: String
+
+    /// URL-pattern template for the "Edit" affordance on each row.
+    /// Supports `{id}` (from `row[idField]`) and `{index}` interpolation.
+    public var editHrefPattern: String
+
+    /// Row property name carrying the stable identifier interpolated
+    /// into `{id}` in `editHrefPattern`.
+    public var idField: String
+
+    /// Comma-separated row property names joined into each summary card.
+    public var summaryFields: String
+
     /// Content builder that receives the row index.
     @ViewBuilder public var content: (Int) -> Content
 
@@ -111,6 +135,11 @@ public struct CivRepeater<Content: View>: View {
         size: String = "sm",
         formStepsSensitive: Bool = false,
         formStepsShowPause: Bool = false,
+        rows: [Any] = [],
+        addHref: String = "",
+        editHrefPattern: String = "",
+        idField: String = "id",
+        summaryFields: String = "",
         @ViewBuilder content: @escaping (Int) -> Content
     ) {
         self.legend = legend
@@ -131,6 +160,11 @@ public struct CivRepeater<Content: View>: View {
         self.size = size
         self.formStepsSensitive = formStepsSensitive
         self.formStepsShowPause = formStepsShowPause
+        self.rows = rows
+        self.addHref = addHref
+        self.editHrefPattern = editHrefPattern
+        self.idField = idField
+        self.summaryFields = summaryFields
         self.content = content
     }
 

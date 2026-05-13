@@ -34,9 +34,9 @@ const schema: ComponentSchema = {
     },
     mode: {
       type: 'enum',
-      description: 'Layout mode. inline = stacked instances visible at once; form-steps = each instance is a separate form-step in a wizard',
+      description: 'Layout mode. `inline` = all rows visible at once; `form-steps` = summary cards with an in-place wizard on add/edit (same page); `route` = summary cards with Add/Edit linking to host-rendered routes (separate page, controlled `rows` prop)',
       default: 'inline',
-      values: ['inline', 'form-steps'],
+      values: ['inline', 'form-steps', 'route'],
     },
     formStepsSensitive: {
       type: 'boolean',
@@ -52,13 +52,49 @@ const schema: ComponentSchema = {
     },
     min: {
       type: 'number',
-      description: 'Minimum number of instances. Below this, remove buttons are hidden',
-      default: 1,
+      description: 'Minimum number of instances. Defaults to 0 — the repeater renders only the "Add" button until the user clicks to create the first instance. Set higher to render that many rows up front. Also acts as the floor for removal',
+      default: 0,
     },
     max: {
       type: 'number',
       description: 'Maximum number of instances. 0 = no limit. Above this, the "Add another" button is hidden',
       default: 0,
+    },
+
+    // ── Route mode props ────────────────────────────────────
+    rows: {
+      type: 'array',
+      description: 'Host-owned array of row objects. Only used in `mode="route"`. The repeater renders one summary card per entry and never mutates this array',
+      default: [],
+    },
+    addHref: {
+      type: 'string',
+      description: 'URL the "Add" affordance links to in `mode="route"`. Required when route mode is used',
+      default: '',
+      attribute: 'add-href',
+    },
+    editHrefPattern: {
+      type: 'string',
+      description: 'URL template for the "Edit" link on each row in `mode="route"`. Interpolates `{id}` (from `row[idField]`) and `{index}` (zero-based). Example: `/dependents/{id}/edit`',
+      default: '',
+      attribute: 'edit-href-pattern',
+    },
+    idField: {
+      type: 'string',
+      description: 'Name of the row property that holds the stable identifier interpolated into `{id}` in `editHrefPattern`',
+      default: 'id',
+      attribute: 'id-field',
+    },
+    summaryFields: {
+      type: 'string',
+      description: 'Comma-separated row property names joined into each summary card. Declarative alternative to the JS `rowSummary` function for non-JS hosts',
+      default: '',
+      attribute: 'summary-fields',
+    },
+    rowSummary: {
+      type: 'string',
+      description: 'Function `(row: object, index: number) => string` that returns the summary line for each row in `mode="route"`. Set programmatically (not as an attribute). When set, takes precedence over `summary-fields`',
+      webOnly: true,
     },
   },
 
@@ -73,6 +109,8 @@ const schema: ComponentSchema = {
       description: 'Fires when an instance is removed',
       detail: {
         index: { type: 'number', description: 'Index of the removed instance' },
+        id: { type: 'string', description: 'Stable id of the removed row (route mode only — value of `row[idField]`)' },
+        row: { type: 'object', description: 'The full row object that was removed (route mode only)' },
       },
     },
     'civ-repeater-form-steps-open': {

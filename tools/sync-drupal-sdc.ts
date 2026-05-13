@@ -284,7 +284,14 @@ async function syncComponent(c: ComponentMapping): Promise<SyncResult> {
   // Trim trailing blank lines inside the block so spacing stays clean.
   while (endIdx > propsLineIdx + 1 && lines[endIdx - 1].trim() === '') endIdx--;
   const before = lines.slice(0, endIdx).join('\n');
-  const after = lines.slice(endIdx).join('\n');
+  // Strip any leading blank lines from `after` — the original file
+  // typically separates the props block from the next top-level key
+  // with one blank line, and `sep` re-adds exactly that separation.
+  // Without this strip, the new prop ends up with two blank lines
+  // before the next section.
+  let afterStart = endIdx;
+  while (afterStart < lines.length && lines[afterStart].trim() === '') afterStart++;
+  const after = lines.slice(afterStart).join('\n');
   const sep = after.length > 0 ? '\n\n' : '\n';
   const newYaml = `${before}\n${additions}${sep}${after}`;
 

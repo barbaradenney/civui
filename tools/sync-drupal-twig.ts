@@ -132,6 +132,17 @@ function parseSdcProps(yamlPath: string): YamlProp[] {
   return parseSdcPropsFromYaml(readFileSync(yamlPath, 'utf-8'));
 }
 
+/**
+ * Parse the `slots:` block of a Drupal SDC YAML and return the slot
+ * names in **declaration order**.
+ *
+ * Order matters: the rendered Twig emits one `{% block %}` per slot in
+ * the order returned here, and Twig blocks render at their lexical
+ * position. A page-level `start` slot declared *after* `default` would
+ * render leading content visually after the body — almost always
+ * wrong. Author SDC YAMLs with slots in the natural reading order
+ * (start → default → end → footer / extras).
+ */
 export function parseSdcSlotsFromYaml(src: string): string[] {
   const lines = src.split('\n');
   const slots: string[] = [];

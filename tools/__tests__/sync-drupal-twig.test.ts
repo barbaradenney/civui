@@ -124,4 +124,34 @@ props:
 `;
     expect(parseSdcSlotsFromYaml(yaml)).toEqual([]);
   });
+
+  it('preserves declaration order (regression: list-item start/default/end)', () => {
+    // The Twig regenerator emits `{% block %}` for each slot in the order
+    // returned here; that order becomes the visual page order. A list-item
+    // with `start` declared AFTER `default` would render its leading slot
+    // below the body — almost always wrong.
+    const yaml = `
+slots:
+  start:
+    title: Start
+  default:
+    title: Default
+  end:
+    title: End
+`;
+    expect(parseSdcSlotsFromYaml(yaml)).toEqual(['start', 'default', 'end']);
+  });
+
+  it('does NOT alphabetize — order is taken straight from the YAML', () => {
+    const yaml = `
+slots:
+  zeta:
+    title: Z
+  alpha:
+    title: A
+  middle:
+    title: M
+`;
+    expect(parseSdcSlotsFromYaml(yaml)).toEqual(['zeta', 'alpha', 'middle']);
+  });
 });

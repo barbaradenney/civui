@@ -40,6 +40,9 @@ const schema: ComponentSchema = {
     },
   },
 
+  // `civ-analytics` is dispatched on click (when `href` is set) but is
+  // declared on the base class and filtered by the parity tool, so it
+  // doesn't appear here. No locally-owned events.
   events: {},
 
   a11y: {

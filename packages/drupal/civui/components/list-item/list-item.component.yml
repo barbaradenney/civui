@@ -30,15 +30,17 @@ props:
       description: 'Error message for the item'
 
 slots:
+  # Slot order is load-bearing — sync-drupal-twig.ts renders blocks in
+  # the order declared here, so this dictates the on-page visual order.
+  start:
+    title: Start
+    description: 'Content at the start of the item (icons, avatars)'
   default:
     title: Default
     description: 'Item content'
-  start:
-    title: Start
-    description: 'Content at the start of the item'
   end:
     title: End
-    description: 'Content at the end of the item'
+    description: 'Content at the end of the item (badges, buttons)'
 
 libraryOverrides:
   dependencies:

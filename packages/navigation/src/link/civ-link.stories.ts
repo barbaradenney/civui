@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html } from 'lit';
 import './civ-link.js';
+import '@civui/storybook-utils/demo-frame';
+import '@civui/storybook-utils/demo-frame.css';
 
 const meta: Meta = {
   title: 'Navigation/Link',
@@ -186,5 +188,38 @@ export const BenefitsNavigation: Story = {
         </div>
       </div>
     </div>
+  `,
+};
+
+// ── Back-link Demo ────────────────────────────────────────────
+// The `back` variant only really makes sense in a two-page context —
+// start on a detail page, click Back, land on the previous page.
+// Wrapped in <civ-demo-frame> so the navigation actually happens.
+
+export const BackNavigationDemo: Story = {
+  name: 'Back Navigation Demo',
+  render: () => html`
+    <civ-demo-frame initial-path="/claims/12345">
+      <civ-demo-page path="/claims">
+        <h2 class="civ-heading-md">Your claims</h2>
+        <ul>
+          <li><civ-link href="/claims/12345" variant="primary">Claim #12345 — Disability</civ-link></li>
+          <li><civ-link href="/claims/67890" variant="primary">Claim #67890 — Healthcare</civ-link></li>
+        </ul>
+      </civ-demo-page>
+
+      <civ-demo-page path="/claims/12345">
+        <civ-link href="/claims" variant="back" label="Back to your claims"></civ-link>
+        <h2 class="civ-heading-md civ-mt-2">Claim #12345 — Disability compensation</h2>
+        <p>Filed January 15, 2026. Status: In Progress.</p>
+        <p>Click "Back to your claims" above to return to the list.</p>
+      </civ-demo-page>
+
+      <civ-demo-page path="/claims/67890">
+        <civ-link href="/claims" variant="back" label="Back to your claims"></civ-link>
+        <h2 class="civ-heading-md civ-mt-2">Claim #67890 — Health care</h2>
+        <p>Filed February 3, 2026. Status: Decision made.</p>
+      </civ-demo-page>
+    </civ-demo-frame>
   `,
 };

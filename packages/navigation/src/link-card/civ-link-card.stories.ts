@@ -3,6 +3,8 @@ import { html } from 'lit';
 import './civ-link-card.js';
 import '@civui/layout/tag';
 import '@civui/feedback/badge';
+import '@civui/storybook-utils/demo-frame';
+import '@civui/storybook-utils/demo-frame.css';
 
 const meta: Meta = {
   title: 'Navigation/Link Card',
@@ -409,5 +411,57 @@ export const WithEyebrow: Story = {
         ></civ-link-card>
       </div>
     </div>
+  `,
+};
+
+// ── Navigation Demo ───────────────────────────────────────────
+// Wrapped in <civ-demo-frame> so clicking a card actually navigates
+// to its destination page inside the canvas. Without the frame, the
+// cards are visually accurate but functionally dead — they go
+// nowhere when clicked.
+
+export const NavigationDemo: Story = {
+  name: 'Navigation Demo',
+  render: () => html`
+    <civ-demo-frame initial-path="/benefits">
+      <civ-demo-page path="/benefits">
+        <h2 class="civ-heading-md">Choose a benefit</h2>
+        <div class="civ-flex civ-flex-col civ-gap-3 civ-max-w-lg">
+          <civ-link-card
+            href="/benefits/disability"
+            heading="Disability compensation"
+            description="File a claim for a service-connected condition."
+          ></civ-link-card>
+          <civ-link-card
+            href="/benefits/healthcare"
+            heading="Health care"
+            description="Apply for VA health care benefits."
+            variant="secondary"
+          ></civ-link-card>
+          <civ-link-card
+            href="/benefits/education"
+            heading="Education benefits"
+            description="Apply for GI Bill and other education programs."
+            variant="tertiary"
+          ></civ-link-card>
+        </div>
+      </civ-demo-page>
+
+      <civ-demo-page path="/benefits/disability">
+        <h2 class="civ-heading-md">Disability compensation</h2>
+        <p>File a claim for a new or worsening service-connected condition.</p>
+        <p>This is the destination page the card linked to.</p>
+      </civ-demo-page>
+
+      <civ-demo-page path="/benefits/healthcare">
+        <h2 class="civ-heading-md">Health care</h2>
+        <p>Apply for VA health care benefits and manage appointments.</p>
+      </civ-demo-page>
+
+      <civ-demo-page path="/benefits/education">
+        <h2 class="civ-heading-md">Education benefits</h2>
+        <p>Apply for GI Bill and other VA education and training programs.</p>
+      </civ-demo-page>
+    </civ-demo-frame>
   `,
 };

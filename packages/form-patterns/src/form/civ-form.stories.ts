@@ -5,6 +5,9 @@ import './civ-form.js';
 import '@civui/inputs';
 import '@civui/controls';
 import '@civui/actions';
+import '@civui/navigation/link';
+import '@civui/storybook-utils/demo-frame';
+import '@civui/storybook-utils/demo-frame.css';
 
 const meta: Meta = {
   title: 'Forms/Form/Form',
@@ -328,5 +331,49 @@ export const SetServerErrors: Story = {
         >Clear errors</civ-button>
       </div>
     </civ-form>
+  `,
+};
+
+// ── Submission Flow Demo ──────────────────────────────────────
+// Most form stories show the form alone and use alert() to fake
+// the submit. In a real .gov flow, submit navigates the user to a
+// confirmation page with a reference number. This story wraps the
+// form in <civ-demo-frame> so the canvas shows the whole flow:
+// fill form → submit → land on /confirmation.
+
+export const SubmissionFlowDemo: Story = {
+  name: 'Submission Flow Demo',
+  render: () => html`
+    <civ-demo-frame initial-path="/inquiry">
+      <civ-demo-page path="/inquiry">
+        <h2 class="civ-heading-md">Submit a general inquiry</h2>
+        <civ-form
+          @civ-submit="${(e: CustomEvent) => {
+            // Intercept the bubbling submit so it doesn't propagate to the
+            // host page, then ask the demo-frame to navigate. The
+            // confirmation page reads any URL params we add.
+            e.preventDefault();
+            const frame = (e.currentTarget as Element).closest('civ-demo-frame') as any;
+            const ref = 'INQ-2026-' + Math.floor(Math.random() * 9999).toString().padStart(4, '0');
+            frame?.navigate(\`/inquiry/confirmation?ref=\${ref}\`);
+          }}"
+        >
+          <civ-text-input label="Your name" name="name" required></civ-text-input>
+          <civ-text-input label="Email address" name="email" type="email" required></civ-text-input>
+          <civ-textarea label="Inquiry" name="inquiry" rows="4" required></civ-textarea>
+          <div class="civ-mt-4">
+            <civ-button type="submit">Submit inquiry</civ-button>
+          </div>
+        </civ-form>
+      </civ-demo-page>
+
+      <civ-demo-page path="/inquiry/confirmation">
+        <h2 class="civ-heading-md">Inquiry submitted</h2>
+        <p>Thanks — we got your message. Your reference number will arrive by email.</p>
+        <p class="civ-mt-2">
+          <civ-link href="/inquiry" variant="back" label="Back to the form"></civ-link>
+        </p>
+      </civ-demo-page>
+    </civ-demo-frame>
   `,
 };

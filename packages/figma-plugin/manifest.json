@@ -1,0 +1,19 @@
+{
+  "name": "CivUI Sync",
+  "id": "civui-sync",
+  "api": "1.0.0",
+  "main": "dist/code.js",
+  "ui": "dist/ui.html",
+  "editorType": ["figma"],
+  "documentAccess": "dynamic-page",
+  "capabilities": [],
+  "menu": [
+    { "name": "Sync component sets from @civui/schema", "command": "sync" },
+    { "separator": true },
+    { "name": "Settings", "command": "settings" }
+  ],
+  "networkAccess": {
+    "allowedDomains": ["none"],
+    "reasoning": "Variant manifest and tokens are bundled at build time — the plugin does not fetch over the network."
+  }
+}

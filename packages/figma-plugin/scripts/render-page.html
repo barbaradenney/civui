@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>CivUI Figma Capture Page</title>
+    <link rel="stylesheet" href="./civui-tokens.css" />
+    <link rel="stylesheet" href="./civui-styles.css" />
+    <style>
+      html, body { margin: 0; padding: 0; background: transparent; }
+      body { font-family: 'Source Sans Pro', system-ui, sans-serif; }
+      /* Render area: each variant lands here one at a time. We give it a
+         generous max-width so wide inputs aren't clipped, and `display: inline-block`
+         so the bounding box hugs the content for accurate screenshot crops. */
+      #stage {
+        display: inline-block;
+        padding: 16px;
+        background: #ffffff;
+      }
+      /* Simulated interaction states. The capture script sets data-state on
+         the stage and we apply matching effects to the contained component.
+         Native :focus/:hover are hard to script reliably under Playwright; we
+         use classes that mimic the visual treatment instead. */
+      #stage[data-state="focus"] :where(button, input, [tabindex]) {
+        outline: 4px solid #fee685;
+        outline-offset: 0;
+        box-shadow: inset 0 0 0 2px #1b1b1b;
+      }
+      #stage[data-state="hover"] :where(button) {
+        filter: brightness(0.92);
+      }
+      #stage[data-state="disabled"] :where(button, input, [tabindex]) {
+        opacity: 0.5;
+        pointer-events: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="stage"></div>
+    <script type="module" src="./render-page.js"></script>
+  </body>
+</html>

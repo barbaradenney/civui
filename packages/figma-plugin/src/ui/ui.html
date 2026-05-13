@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>CivUI Sync</title>
+    <style>
+      :root {
+        --bg: #ffffff;
+        --fg: #1b1b1b;
+        --muted: #565c65;
+        --border: #dfe1e2;
+        --primary: #005ea2;
+        --primary-hover: #1a4480;
+        --row-hover: #f5f7fa;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #1e1e1e;
+          --fg: #f4f4f4;
+          --muted: #a9aeb1;
+          --border: #3d4551;
+          --row-hover: #2a2a2a;
+        }
+      }
+      html, body { margin: 0; padding: 0; height: 100%; background: var(--bg); color: var(--fg); font: 13px system-ui, sans-serif; }
+      .layout { display: flex; flex-direction: column; height: 100vh; }
+      header { padding: 12px 16px; border-bottom: 1px solid var(--border); }
+      header h1 { margin: 0; font-size: 14px; font-weight: 600; }
+      header p { margin: 4px 0 0; color: var(--muted); font-size: 12px; }
+      .list { flex: 1; overflow-y: auto; padding: 4px 0; }
+      .row { display: flex; align-items: center; padding: 8px 16px; gap: 10px; cursor: pointer; }
+      .row:hover { background: var(--row-hover); }
+      .row input { margin: 0; }
+      .row .name { flex: 1; font-weight: 500; }
+      .row .count { color: var(--muted); font-size: 11px; }
+      footer { padding: 12px 16px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+      footer .status { color: var(--muted); font-size: 11px; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      button { font: inherit; padding: 6px 14px; border-radius: 6px; border: 1px solid var(--border); background: var(--bg); color: var(--fg); cursor: pointer; }
+      button:hover { background: var(--row-hover); }
+      button.primary { background: var(--primary); color: white; border-color: var(--primary); }
+      button.primary:hover { background: var(--primary-hover); border-color: var(--primary-hover); }
+      button:disabled { opacity: 0.5; cursor: not-allowed; }
+      .empty { padding: 24px 16px; color: var(--muted); text-align: center; font-size: 12px; }
+    </style>
+  </head>
+  <body>
+    <div class="layout">
+      <header>
+        <h1>CivUI Sync</h1>
+        <p>Generate variant-aware Figma components from <code>@civui/schema</code>.</p>
+      </header>
+      <div class="list" id="list">
+        <div class="empty" id="empty">Loading components…</div>
+      </div>
+      <footer>
+        <div class="status" id="status">Select components, then click Sync.</div>
+        <button id="cancel">Cancel</button>
+        <button id="sync" class="primary" disabled>Sync</button>
+      </footer>
+    </div>
+    <!-- UI_BUNDLE -->
+  </body>
+</html>

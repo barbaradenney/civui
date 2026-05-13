@@ -1,0 +1,20 @@
+{/* Generated from @civui/schema by tools/sync-doc-tables.ts.
+    Do not edit by hand — run `pnpm sync:doc-tables` to regenerate. */}
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `legend` | `string` | `''` | Group legend rendered as `<legend>`. The component is self-contained — do not wrap in civ-fieldset. |
+| `heading-level` | `number` | — | When set, promotes the legend to a heading via role="heading" + aria-level=N |
+| `size` | `'sm'` \| `'md'` \| `'lg'` \| `'xl'` | — | Visual size of the legend |
+| `min` | `string` | `''` | Outer lower bound for both pickers (ISO yyyy-mm-dd). Empty disables the bound |
+| `max` | `string` | `''` | Outer upper bound for both pickers (ISO yyyy-mm-dd). Empty disables the bound |
+| `min-range-days` | `number` | `0` | Inclusive minimum range duration in days. 0 disables the cross-field check |
+| `max-range-days` | `number` | `0` | Inclusive maximum range duration in days. 0 disables the cross-field check |
+| `start-label` | `string` | `''` | Label for the start date picker. Defaults to the i18n string "Start date" |
+| `end-label` | `string` | `''` | Label for the end date picker. Defaults to the i18n string "End date" |
+| `start-hint` | `string` | `''` | Hint text shown under the start picker |
+| `end-hint` | `string` | `''` | Hint text shown under the end picker |
+| `start-error` | `string` | `''` | Field-level error rendered on the start picker (independent of host-level cross-field errors) |
+| `end-error` | `string` | `''` | Field-level error rendered on the end picker |
+| `locale` | `string` | `'en-US'` | BCP-47 locale forwarded to both pickers for date formatting |
+| `week-starts-on` | `number` | `0` | Day-of-week the calendar starts on (0 = Sunday, 1 = Monday). Forwarded to both pickers |

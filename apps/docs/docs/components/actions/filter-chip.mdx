@@ -7,6 +7,8 @@ sidebar_label: Filter Chip
 import StoryEmbed from "@site/src/components/StoryEmbed";
 import PropsTable from "./_filter-chip.props.mdx";
 import EventsTable from "./_filter-chip.events.mdx";
+import GroupProps from "./_filter-chip-group.props.mdx";
+import GroupEvents from "./_filter-chip-group.events.mdx";
 
 # Filter Chip
 
@@ -154,16 +156,11 @@ Use `removable` to show currently-active filters that the user can dismiss:
 
 ### Group props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `mode` | `'single' \| 'multi'` | `'multi'` | `single` enforces radio-like behavior (one chip selected); `multi` lets each chip toggle independently. The wrapper role changes accordingly: `radiogroup` for single, `toolbar` for multi. |
-| `label` | `string` | `''` | Accessible label, applied as `aria-label` on the wrapper |
+<GroupProps />
 
 ### Group events
 
-| Event | Detail | Fires when |
-|-------|--------|------------|
-| `civ-change` | `{ value: string \| string[], aggregated: true }` | Any child chip toggles. `value` is a single string in single mode, an array in multi mode. The per-chip `civ-change` is stopped at the group, so listeners attached to the group only receive the aggregate. |
+<GroupEvents />
 
 ### Group properties
 

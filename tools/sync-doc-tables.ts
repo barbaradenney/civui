@@ -121,8 +121,44 @@ function renderEvents(name: string, events: Record<string, EventDef>): string {
   );
 }
 
+/**
+ * Sub-components that share a host MDX page with a sibling component
+ * (e.g. `civ-checkbox-group` lives inside `controls/checkbox.mdx`,
+ * not its own `checkbox-group.mdx`). The value is the page's relative
+ * path under `apps/docs/docs/components/`. Partial files get written
+ * next to the host page (e.g. `controls/_checkbox-group.props.mdx`).
+ *
+ * Add an entry when you create a schema for a component that's
+ * documented as a sub-section of a sibling's MDX page rather than on
+ * its own page.
+ */
+const HOST_PAGE_OVERRIDES: Record<string, string> = {
+  'civ-checkbox-group': 'controls/checkbox.mdx',
+  'civ-radio-group': 'controls/radio.mdx',
+  'civ-filter-chip-group': 'actions/filter-chip.mdx',
+  'civ-memorable-date': 'inputs/date.mdx',
+  'civ-date-picker': 'inputs/date.mdx',
+  'civ-date-range-picker': 'inputs/date.mdx',
+  'civ-progress-steps': 'form/progress.mdx',
+  'civ-progress-header': 'form/progress.mdx',
+  'civ-progress-percent': 'form/progress.mdx',
+};
+
 /** Locate the component doc page directory for a given schema component name. */
 async function findDocDir(componentName: string): Promise<string | null> {
+  // Sub-components register their host page explicitly — short-circuit
+  // the directory walk and return the override's parent dir.
+  const override = HOST_PAGE_OVERRIDES[componentName];
+  if (override) {
+    const overridePath = path.join(DOCS_DIR, override);
+    try {
+      await fs.access(overridePath);
+      return path.dirname(overridePath);
+    } catch {
+      // Configured host page doesn't exist — fall through to the
+      // default search and the schema will be reported as skipped.
+    }
+  }
   // Walk apps/docs/docs/components/* looking for {component}.mdx
   const entries = await fs.readdir(DOCS_DIR, { withFileTypes: true });
   const tag = componentName.replace(/^civ-/, '');

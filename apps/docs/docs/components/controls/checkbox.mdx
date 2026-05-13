@@ -5,7 +5,10 @@ sidebar_label: Checkbox
 ---
 
 import StoryEmbed from "@site/src/components/StoryEmbed";
-import PropsTable from "./_checkbox.props.mdx";
+import CheckboxProps from "./_checkbox.props.mdx";
+import CheckboxEvents from "./_checkbox.events.mdx";
+import CheckboxGroupProps from "./_checkbox-group.props.mdx";
+import CheckboxGroupEvents from "./_checkbox-group.events.mdx";
 
 # Checkbox & Checkbox Group
 
@@ -93,14 +96,11 @@ All form components share these props: `label`, `name`, `value`, `hint`, `error`
 
 ### Component-Specific Props
 
-<PropsTable />
+<CheckboxProps />
 
 ### Events
 
-| Event | Detail | Description |
-|-------|--------|-------------|
-| `civ-input` | `{ checked: boolean, value: string }` | Fires on change |
-| `civ-change` | `{ checked: boolean, value: string }` | Fires on change |
+<CheckboxEvents />
 
 ---
 
@@ -110,26 +110,11 @@ Groups multiple `civ-checkbox` elements with a shared legend, hint, and error. U
 
 ### Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `legend` | `string` | `''` | Group legend text |
-| `name` | `string` | `''` | Shared form field name |
-| `value` | `string` | `''` | Comma-separated checked values |
-| `hint` | `string` | `''` | Hint text below legend |
-| `error` | `string` | `''` | Error message for the group |
-| `tile` | `boolean` | `false` | Apply tile variant to all child checkboxes |
-| `orientation` | `'vertical' \| 'horizontal'` | `'vertical'` | Layout direction |
-| `show-select-all` | `boolean` | `false` | Show a "Select all" / "Deselect all" button |
-| `max-selections` | `number` | — | Maximum number of checkboxes that can be checked |
-| `required` | `boolean` | `false` | Whether at least one selection is required |
-| `disabled` | `boolean` | `false` | Disable all child checkboxes |
+<CheckboxGroupProps />
 
 ### Events
 
-| Event | Detail | Description |
-|-------|--------|-------------|
-| `civ-input` | `{ values: string[] }` | Fires when checked values change |
-| `civ-change` | `{ values: string[] }` | Fires when checked values change |
+<CheckboxGroupEvents />
 
 ## Usage
 

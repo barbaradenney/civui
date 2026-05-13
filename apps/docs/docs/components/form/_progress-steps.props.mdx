@@ -1,0 +1,9 @@
+{/* Generated from @civui/schema by tools/sync-doc-tables.ts.
+    Do not edit by hand — run `pnpm sync:doc-tables` to regenerate. */}
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `steps` | `string` | `'[]'` | Step list. On web: JSON-encoded array of `{id, label, status?}` (HTML attributes are strings). On native: a typed `[String]` / `List<String>` of step labels. Conceptually the same data, different wire format per platform |
+| `current` | `number` | `0` | Index of the current step (0-based) |
+| `clickable` | `boolean` | `false` | Render completed steps as buttons that navigate back when clicked. Fires civ-step-click |
+| `error-steps` | `string` | `'[]'` | Step IDs to render in error state. Web: JSON-encoded array string; native: typed list. See `steps` for the same wire-format note |

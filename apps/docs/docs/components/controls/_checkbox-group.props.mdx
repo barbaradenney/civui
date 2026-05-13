@@ -1,0 +1,17 @@
+{/* Generated from @civui/schema by tools/sync-doc-tables.ts.
+    Do not edit by hand — run `pnpm sync:doc-tables` to regenerate. */}
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `legend` | `string` | `''` | Group legend text (rendered as `<legend>`). The component is self-contained — do not wrap in civ-fieldset. |
+| `heading-level` | `number` | — | When set, promotes the legend to a heading via role="heading" + aria-level=N |
+| `size` | `'sm'` \| `'md'` \| `'lg'` \| `'xl'` | — | Visual size of the legend |
+| `tight-hint` | `boolean` | `false` | Pull the hint visually flush with the controls below it. Useful for compact compounds where legend + hint should read as one stacked header. |
+| `tile` | `boolean` | `true` | Tile variant with bordered card styling for child checkboxes. Default true — tiles are the standard treatment |
+| `orientation` | `'vertical'` \| `'horizontal'` | `'vertical'` | Layout orientation for child checkboxes |
+| `variant` | `'auto'` \| `'card'` \| `'list'` | `'auto'` | Tile rendering variant. auto picks card for ≤4 options and list for 5+. Vertical + tile only |
+| `show-select-all` | `boolean` | `false` | When true, renders a "Select all" / "Deselect all" toggle button above the group |
+| `preset` | `'us-state'` \| `'service-branch'` \| `'discharge-type'` \| `'suffix'` \| `'relationship-type'` \| `'marital-status'` \| `'ethnicity'` \| `'gender'` \| `'language'` \| `'housing-status'` \| `'education-level'` \| `'employment-status'` \| `'income-source'` \| `'veteran-status'` | — | Pre-built option list. Renders `<civ-checkbox>` children automatically when no slotted children are present |
+| `preset-variant` | `string` | — | Variant of the preset (e.g. "territories", "all", "binary") |
+| `max-selections` | `number` | — | Maximum number of options the user may check. Blocks the over-pick interactively + auto-appends a "Select up to N" hint |
+| `min-selections` | `number` | — | Minimum required count. Positive value implicitly marks the group as required and surfaces "Select at least N" on submit |

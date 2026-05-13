@@ -5,6 +5,12 @@ sidebar_label: Progress
 ---
 
 import StoryEmbed from "@site/src/components/StoryEmbed";
+import ProgressStepsProps from "./_progress-steps.props.mdx";
+import ProgressStepsEvents from "./_progress-steps.events.mdx";
+import ProgressHeaderProps from "./_progress-header.props.mdx";
+import ProgressHeaderEvents from "./_progress-header.events.mdx";
+import ProgressPercentProps from "./_progress-percent.props.mdx";
+import ProgressPercentEvents from "./_progress-percent.events.mdx";
 
 # Progress
 
@@ -50,18 +56,11 @@ Each step is a small rectangle — filled for completed, highlighted for current
 
 ### Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `steps` | `string` | `'[]'` | JSON array of step labels or step objects (`{label}`) |
-| `current` | `number` | `0` | Current step index (0-based) |
-| `clickable` | `boolean` | `false` | When true, completed segments become clickable |
-| `error-steps` | `string` | `'[]'` | JSON array of step indices with validation errors |
+<ProgressStepsProps />
 
 ### Events
 
-| Event | Detail | Description |
-|-------|--------|-------------|
-| `civ-step-click` | `{ step: number }` | Fired when a completed segment is clicked (requires `clickable`) |
+<ProgressStepsEvents />
 
 ### Usage
 
@@ -115,13 +114,11 @@ Compact heading that pairs with progress-steps or progress-percent bars.
 
 ### Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `current` | `number` | `0` | Current step index (0-based, clamped) |
-| `total` | `number` | `0` | Total number of steps |
-| `step-title` | `string` | `''` | Title of the current step |
-| `size` | `'primary' \| 'secondary' \| 'tertiary'` | `'primary'` | Visual size variant |
-| `heading-level` | `number` | `2` | Semantic heading level (1–6) |
+<ProgressHeaderProps />
+
+### Events
+
+<ProgressHeaderEvents />
 
 ### Usage
 
@@ -139,12 +136,11 @@ Compact heading that pairs with progress-steps or progress-percent bars.
 
 ### Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `value` | `number` | `0` | Current progress percentage (0–100, clamped) |
-| `label` | `string` | `'Progress'` | Accessible label for the bar |
-| `status` | `string` | `''` | Optional status text (e.g., "3 of 8 sections complete") |
-| `show-percent` | `boolean` | `true` | Show percentage text |
+<ProgressPercentProps />
+
+### Events
+
+<ProgressPercentEvents />
 
 ### Usage
 

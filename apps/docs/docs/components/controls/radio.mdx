@@ -5,6 +5,8 @@ sidebar_label: Radio
 ---
 
 import StoryEmbed from "@site/src/components/StoryEmbed";
+import RadioGroupProps from "./_radio-group.props.mdx";
+import RadioGroupEvents from "./_radio-group.events.mdx";
 
 # Radio & Radio Group
 
@@ -89,17 +91,7 @@ Groups multiple `civ-radio` elements with mutual exclusivity, roving tabindex ke
 
 ### Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `legend` | `string` | `''` | Group legend text |
-| `name` | `string` | `''` | Shared form field name |
-| `value` | `string` | `''` | Currently selected value |
-| `hint` | `string` | `''` | Hint text below legend |
-| `error` | `string` | `''` | Error message for the group |
-| `tile` | `boolean` | `false` | Apply tile variant to all child radios |
-| `orientation` | `'vertical' \| 'horizontal'` | `'vertical'` | Layout direction |
-| `required` | `boolean` | `false` | Whether a selection is required |
-| `disabled` | `boolean` | `false` | Disable all child radios |
+<RadioGroupProps />
 
 ### Keyboard Navigation
 
@@ -114,10 +106,7 @@ Selection follows focus (WAI-ARIA pattern). RTL direction is automatically detec
 
 ### Events
 
-| Event | Detail | Description |
-|-------|--------|-------------|
-| `civ-input` | `{ value: string }` | Fires when selection changes |
-| `civ-change` | `{ value: string }` | Fires when selection changes |
+<RadioGroupEvents />
 
 ## Usage
 

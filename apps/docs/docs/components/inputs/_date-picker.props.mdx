@@ -1,0 +1,26 @@
+{/* Generated from @civui/schema by tools/sync-doc-tables.ts.
+    Do not edit by hand — run `pnpm sync:doc-tables` to regenerate. */}
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `min` | `string` | `''` | Minimum selectable date (YYYY-MM-DD) |
+| `max` | `string` | `''` | Maximum selectable date (YYYY-MM-DD) |
+| `placeholder` | `string` | `'mm/dd/yyyy'` | Input placeholder showing expected format |
+| `locale` | `string` | `'en-US'` | Locale for date formatting |
+| `week-starts-on` | `number` | `0` | Day the week starts on (0=Sunday, 1=Monday) |
+| `choose-date-label` | `string` | `'Choose date'` | Aria label for the calendar toggle button |
+| `selected-date-label` | `string` | `'Choose date, selected date is {date}'` | Aria label template when a date is selected (&lcub;date&rcub; interpolated) |
+| `dialog-label` | `string` | `'Choose Date'` | Aria label for the calendar dialog |
+| `previous-month-label` | `string` | `'Previous month'` | Aria label for previous month button |
+| `next-month-label` | `string` | `'Next month'` | Aria label for next month button |
+| `dialog-opened-message` | `string` | `'Calendar dialog opened'` | Screen reader announcement when calendar opens |
+| `date-selected-message` | `string` | `'Selected {date}'` | Screen reader announcement when date is selected (&lcub;date&rcub; interpolated) |
+| `today-label` | `string` | `'today'` | Text appended to today's date for screen readers |
+| `disabled-dates` | `string` | `''` | Comma-separated list of YYYY-MM-DD dates to mark unselectable (e.g. holidays) |
+| `clear-label` | `string` | `''` | Aria label for the clear (×) button when a value is set |
+| `today-button-label` | `string` | `''` | Visible label on the "today" shortcut button inside the calendar dialog |
+| `hide-today-button` | `boolean` | `false` | Suppress the "today" shortcut button. Useful for date-of-birth and other historical-only fields |
+| `invalid-format-message` | `string` | `''` | Validation error shown when typed text doesn't parse as MM/DD/YYYY |
+| `date-range-message` | `string` | `''` | Validation error shown when selected date is outside min/max |
+| `min-date-message` | `string` | `''` | Validation error shown when selected date is before min (&lcub;min&rcub; interpolated) |
+| `max-date-message` | `string` | `''` | Validation error shown when selected date is after max (&lcub;max&rcub; interpolated) |

@@ -8,7 +8,7 @@ import StoryEmbed from "@site/src/components/StoryEmbed";
 
 # Repeating Sections
 
-Collect variable-length lists of items — dependents, service periods, previous addresses, employment history. `civ-repeater` has two modes; pick based on how much information you collect per item.
+Collect variable-length lists of items — dependents, service periods, previous addresses, employment history. `civ-repeater` has three modes; pick based on how much information you collect per item and whether each item deserves its own URL.
 
 ## Inline mode (1–3 fields per item)
 
@@ -61,6 +61,28 @@ Form-steps mode also composes with the compound components — here, a dependent
 
 <StoryEmbed id="forms-form-repeater--form-steps-with-relationship" />
 
+## Route mode (separate page per item)
+
+Set `mode="route"`. The repeater is **controlled** — the host owns the `rows` array — and **Add** / **Edit** are real `<a href>` links pointing at host-rendered pages. Browser back, deep linking, "open in new tab", and save-and-resume all work naturally. Use this when each item is complex enough that filling it deserves its own page (8+ fields, multi-section items, items the user might come back to tomorrow).
+
+<StoryEmbed id="forms-form-repeater--route-mode" />
+
+```html
+<civ-repeater
+  legend="Your dependents"
+  item-label="dependent"
+  mode="route"
+  add-href="/dependents/new"
+  edit-href-pattern="/dependents/{id}/edit"
+  id-field="id"
+  summary-fields="firstName,lastName"
+  .rows=${this.dependents}
+  @civ-repeater-remove=${(e) => this.removeDependent(e.detail.id)}
+></civ-repeater>
+```
+
+Slotted children are ignored in this mode — the form lives on the destination page that the host renders. **Remove** fires `civ-repeater-remove` with `{ index, id, row }`; the host updates its own array and re-passes via `.rows`.
+
 ## Min and max constraints
 
 Set `min` and `max` to control the allowed number of items:
@@ -88,10 +110,11 @@ Pre-built compositions for common government form sections:
 
 ## Which mode to use
 
-| Fields per item | Mode | Example |
-|----------------|------|---------|
-| 1–3 simple fields | `inline` (default) | Phone numbers, email addresses, other phone numbers |
-| 4+ fields, or multi-step entry | `form-steps` | Dependents, employment history, service periods |
+| Fields per item | URL changes? | Mode | Example |
+|----------------|--------------|------|---------|
+| 1–3 simple fields | No | `inline` (default) | Phone numbers, email addresses |
+| 4–10 fields, stay on page | No | `form-steps` | Inline wizard for dependents, employment history |
+| 8+ fields, own page / save-and-resume | Yes | `route` | Dependent profile (name + address + SSN + employment) on its own URL |
 
 ## Components used
 

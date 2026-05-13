@@ -408,7 +408,7 @@ VA pattern: [Ask users for Direct deposit](https://design.va.gov/patterns/ask-us
 
 VA pattern: [Ask users for Service history](https://design.va.gov/patterns/ask-users-for/service-history)
 
-Use `civ-repeater` for multiple service periods:
+Use `civ-repeater` for multiple service periods. For 1–3 quick fields, inline mode works; for the typical multi-section service period (branch + dates + discharge + optional service number) consider `mode="form-steps"` to keep the page calm, or `mode="route"` if each period should have its own URL (helpful for save-and-resume on long forms — see [`civ-repeater` modes](/components/form/repeater#modes)):
 
 ```html
 <civ-repeater

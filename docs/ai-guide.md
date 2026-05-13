@@ -33,7 +33,7 @@ For architecture and internals, see `CLAUDE.md` in the repo root.
 | `<civ-form>` | Layout | `action`, `method`, `supportResources` | `civ-submit: { formData }`, `civ-invalid: { errors }` |
 | `<civ-form-step>` | Layout | `persist`, `sensitive`, `show-pause`, `continue-label`, `complete-label`, `pause-label`, `nav-disabled`, `validate` | `civ-step-change`, `civ-step-pause`, `civ-step-complete` |
 | `<civ-fieldset>` | Wrapper | `legend`, `hint`, `error`, `required`, `disabled`, `requiredMessage`, `heading-level` (1-6), `size` (sm/md/lg/xl) | — |
-| `<civ-repeater>` | Layout | `legend`, `name`, `min`, `max`, `addLabel`, `removeLabel`, `heading-level` (1-6), `size` (sm/md/lg/xl) | `civ-change: { value }` |
+| `<civ-repeater>` | Layout | `legend`, `name`, `item-label`, `mode` (`inline`/`form-steps`/`route`), `min` (default 0 — starts empty), `max`, `hint`, `error`, `required`, `disabled`, `heading-level` (1-6), `size` (sm/md/lg/xl), `form-steps-sensitive`, `form-steps-show-pause`; route mode adds `.rows`, `add-href`, `edit-href-pattern`, `id-field`, `summary-fields`, `.rowSummary` | `civ-repeater-add: { index }`, `civ-repeater-remove: { index, id, row }`, `civ-repeater-form-steps-open: { index, isNew }`, `civ-repeater-form-steps-close: { index, action }` |
 | `<civ-section-intro>` | Layout | `heading`, `headingLevel`, `tone` | — |
 | `<civ-summary>` | Display | `data`, `editLabel` | `civ-edit: { section }` |
 | `<civ-data-field>` | Display | `label`, `value` | — |

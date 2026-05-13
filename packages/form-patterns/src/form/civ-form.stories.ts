@@ -8,6 +8,8 @@ import '@civui/actions';
 import '@civui/navigation/link';
 import '@civui/storybook-utils/demo-frame';
 import '@civui/storybook-utils/demo-frame.css';
+import type { CivDemoFrame } from '@civui/storybook-utils';
+import type { CivForm } from './civ-form.js';
 
 const meta: Meta = {
   title: 'Forms/Form/Form',
@@ -349,11 +351,14 @@ export const SubmissionFlowDemo: Story = {
         <h2 class="civ-heading-md">Submit a general inquiry</h2>
         <civ-form
           @civ-submit="${(e: CustomEvent) => {
-            // Intercept the bubbling submit so it doesn't propagate to the
-            // host page, then ask the demo-frame to navigate. The
-            // confirmation page reads any URL params we add.
-            e.preventDefault();
-            const frame = (e.currentTarget as Element).closest('civ-demo-frame') as any;
+            // Reset the form on submit so a "Back to the form" click after
+            // the confirmation page lands the user on a clean form —
+            // matches what a real .gov flow does on post-submit redirect.
+            // (Without this, the demo-page keeps the inputs mounted with
+            // the previously-submitted values, which reads confusingly.)
+            const form = e.currentTarget as CivForm;
+            form.reset();
+            const frame = form.closest('civ-demo-frame') as CivDemoFrame | null;
             const ref = 'INQ-2026-' + Math.floor(Math.random() * 9999).toString().padStart(4, '0');
             frame?.navigate(\`/inquiry/confirmation?ref=\${ref}\`);
           }}"

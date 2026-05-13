@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": ".",
+    "composite": false,
+    "noEmit": true,
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "types": ["node"]
+  },
+  "include": ["scripts/**/*.ts", "src/ui/**/*.ts", "src/shared/**/*.ts", "pilot.config.ts"],
+  "exclude": ["dist", "manifest-data", "src/code.ts", "src/builders/**/*.ts"]
+}

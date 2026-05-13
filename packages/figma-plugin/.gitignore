@@ -1,0 +1,4 @@
+dist/
+manifest-data/variants.json
+manifest-data/tokens.json
+manifest-data/captured/

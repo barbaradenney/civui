@@ -143,7 +143,7 @@ export class CivYesNo extends LegendHeadingMixin(CivFormElement) {
           ? html`
               <button
                 type="button"
-                class="civ-yes-no__skip civ-link--tertiary"
+                class="civ-yes-no__skip civ-link--secondary"
                 aria-pressed="${this.value === this.skipValue ? 'true' : 'false'}"
                 data-civ-skip
                 ?disabled="${this.disabled}"

@@ -18,7 +18,7 @@ import EventsTable from "./_link.events.mdx";
 
 `<civ-link>`
 
-An accessible link component that always renders an `<a>` element. For buttons, use `<civ-button>` instead. All variants are underlined for accessibility.
+An accessible link component that always renders an `<a>` element. For a navigation affordance that should look like a button, use `<civ-button href="…">` — that renders an `<a>` with button chrome plus an underline so the link identity stays visible. All link variants are underlined for accessibility.
 
 ## Examples
 
@@ -33,10 +33,6 @@ An accessible link component that always renders an `<a>` element. For buttons, 
 ### Secondary
 
 <StoryEmbed id="navigation-link--secondary" />
-
-### Tertiary
-
-<StoryEmbed id="navigation-link--tertiary" />
 
 ### Back
 
@@ -84,23 +80,15 @@ An accessible link component that always renders an `<a>` element. For buttons, 
 
 ### Primary
 
-Button-styled link with filled blue background and underlined text.
+Bold underlined link with a trailing chevron-right caret. Most emphasis — use for the main next-step link in a section.
 
 ```html
-<civ-link href="/apply" variant="primary" label="Start application"></civ-link>
+<civ-link href="/benefits" variant="primary" label="View all benefits"></civ-link>
 ```
 
-### Secondary
+### Secondary (default)
 
-Underlined text link with a trailing chevron-right icon.
-
-```html
-<civ-link href="/benefits" variant="secondary" label="View all benefits"></civ-link>
-```
-
-### Tertiary
-
-Plain underlined link (default variant).
+Plain underlined link. Use for inline navigation that doesn't need extra emphasis.
 
 ```html
 <civ-link href="/privacy" label="Privacy policy"></civ-link>
@@ -119,13 +107,13 @@ Back-navigation link with a leading chevron-left icon.
 Add `danger` to any variant for destructive action styling.
 
 ```html
-<civ-link href="/delete" variant="secondary" danger label="Remove application"></civ-link>
+<civ-link href="/delete" variant="primary" danger label="Remove application"></civ-link>
 ```
 
 ## Disabled state
 
 ```html
-<civ-link href="/locked" variant="secondary" disabled label="Locked section"></civ-link>
+<civ-link href="/locked" variant="primary" disabled label="Locked section"></civ-link>
 ```
 
 ---

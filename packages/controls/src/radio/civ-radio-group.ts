@@ -212,7 +212,7 @@ export class CivRadioGroup extends LegendHeadingMixin(GroupListenerMixin(LightDo
           ? html`
               <button
                 type="button"
-                class="civ-radio-group__skip civ-link--tertiary"
+                class="civ-radio-group__skip civ-link--secondary"
                 aria-pressed="${this.value === this.skipValue ? 'true' : 'false'}"
                 data-civ-skip
                 ?disabled="${this.disabled}"

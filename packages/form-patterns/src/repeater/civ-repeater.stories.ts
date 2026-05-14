@@ -367,7 +367,7 @@ export const RouteMode: Story = {
           <civ-text-input label="Relationship" name="relationship"></civ-text-input>
           <div class="civ-mt-4 civ-flex civ-gap-2">
             <civ-link href="/dependents" variant="primary" label="Save"></civ-link>
-            <civ-link href="/dependents" variant="tertiary" label="Cancel"></civ-link>
+            <civ-link href="/dependents" variant="primary" label="Cancel"></civ-link>
           </div>
         </civ-demo-page>
 
@@ -379,7 +379,7 @@ export const RouteMode: Story = {
           <civ-text-input label="Relationship" name="relationship"></civ-text-input>
           <div class="civ-mt-4 civ-flex civ-gap-2">
             <civ-link href="/dependents" variant="primary" label="Save"></civ-link>
-            <civ-link href="/dependents" variant="tertiary" label="Cancel"></civ-link>
+            <civ-link href="/dependents" variant="primary" label="Cancel"></civ-link>
           </div>
         </civ-demo-page>
       </civ-demo-frame>
@@ -406,7 +406,7 @@ export const RouteModeEmpty: Story = {
         <h2 class="civ-heading-md">Add a dependent</h2>
         <civ-text-input label="First name" name="firstName"></civ-text-input>
         <div class="civ-mt-4">
-          <civ-link href="/dependents" variant="tertiary" label="Cancel"></civ-link>
+          <civ-link href="/dependents" variant="primary" label="Cancel"></civ-link>
         </div>
       </civ-demo-page>
     </civ-demo-frame>

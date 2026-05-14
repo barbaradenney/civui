@@ -35,7 +35,7 @@ For architecture and internals, see \`CLAUDE.md\` in the repo root.
 | \`<civ-button>\` | Action | \`variant\` (primary/secondary/tertiary), \`danger\`, \`type\`, \`disabled\` | \`civ-analytics\` |
 | \`<civ-filter-chip>\` | Action | \`label\`, \`value\`, \`selected\`, \`removable\`, \`disabled\`, \`chip-style\` (primary/secondary), \`chip-role\` (toggle/radio — set automatically by group in single mode), \`spacing\` (default/sm), \`icon-start\`, \`icon-end\`, \`count\`. Renders a non-interactive wrapper with sibling toggle + remove buttons. | \`civ-change\`, \`civ-remove\`, \`civ-analytics\` |
 | \`<civ-filter-chip-group>\` | Action | \`mode\` (single/multi), \`label\`. Wraps a row of chips with roving tabindex (arrow-key navigation) and an aggregated \`civ-change\` event carrying \`value\` (string in single mode, array in multi). | \`civ-change\` |
-| \`<civ-link>\` | Navigation | \`href\`, \`variant\` (primary/secondary/tertiary/back/danger), \`danger\`, \`disabled\` | \`civ-analytics\` |
+| \`<civ-link>\` | Navigation | \`href\`, \`variant\` (primary/secondary/back), \`type\` (phone/email/download), \`danger\`, \`disabled\` | \`civ-analytics\` |
 | \`<civ-tag>\` | Layout | \`label\`, \`variant\` (blue/orange/purple/gray), \`tag-style\` (primary/secondary), \`spacing\` (default/sm), \`icon-start\`. Categorization only — use \`<civ-badge>\` for status. | — |
 | \`<civ-badge>\` | Feedback | \`label\`, \`dot\`, \`variant\` (info/warning/error/success/neutral), \`badge-style\` (primary/secondary), \`spacing\` (default/sm), \`overlay\`, \`with-icon\` (auto variant icon), \`icon-start\`, \`icon-end\`. Status pills + notification dots with \`role="status"\`. | — |
 | \`<civ-count>\` | Feedback | \`count\`, \`max\`, \`variant\`, \`count-style\` (primary/secondary), \`spacing\`, \`overlay\`, \`live\` (off/polite/assertive). Numeric annotation; lighter chrome than badge. Used inside chips, list items, and as notification overlays. | — |
@@ -475,9 +475,9 @@ Navigation link. Always renders an \`<a>\` element. For actions, use \`<civ-butt
 **Props:** \`label\`, \`href\`, \`variant\`, \`danger\` (boolean), \`disabled\`
 
 \`\`\`html
-<civ-link href="/details" variant="secondary">View details</civ-link>
+<civ-link href="/details" variant="primary">View details</civ-link>
 <civ-link href="/hub" variant="back" label="Back to task list"></civ-link>
-<civ-link href="/remove" variant="tertiary" danger>Remove item</civ-link>
+<civ-link href="/remove" variant="primary" danger>Remove item</civ-link>
 \`\`\`
 
 ### civ-tag
@@ -566,7 +566,7 @@ Structured container with header, body, and footer slots.
   </div>
   <p>Filed: March 10, 2026</p>
   <div data-card-footer>
-    <civ-link href="#" variant="secondary">View details</civ-link>
+    <civ-link href="#" variant="primary">View details</civ-link>
   </div>
 </civ-card>
 \`\`\`

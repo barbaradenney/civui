@@ -113,7 +113,7 @@ export const WithHeaderAndFooter: Story = {
       <p>Filed: March 10, 2026</p>
       <p>Step 3 of 5: Evidence gathering</p>
       <div data-card-footer>
-        <civ-link href="#" variant="secondary">View claim details</civ-link>
+        <civ-link href="#" variant="primary">View claim details</civ-link>
       </div>
     </civ-card>
   `,
@@ -136,7 +136,7 @@ export const WithTagAndActions: Story = {
       <p>Filed: March 10, 2026</p>
       <p>Step 3 of 5: Evidence gathering</p>
       <div data-card-footer>
-        <civ-link href="#" variant="secondary">View claim details</civ-link>
+        <civ-link href="#" variant="primary">View claim details</civ-link>
       </div>
     </civ-card>
   `,
@@ -170,7 +170,7 @@ export const DensityScale: Story = {
           </div>
           <p>Filed: March 10, 2026</p>
           <div data-card-footer>
-            <civ-link href="#" variant="secondary">View details</civ-link>
+            <civ-link href="#" variant="primary">View details</civ-link>
           </div>
         </civ-card>
       </div>
@@ -187,7 +187,7 @@ export const DensityScale: Story = {
           </div>
           <p>Filed: March 10, 2026</p>
           <div data-card-footer>
-            <civ-link href="#" variant="secondary">View details</civ-link>
+            <civ-link href="#" variant="primary">View details</civ-link>
           </div>
         </civ-card>
       </div>
@@ -204,7 +204,7 @@ export const DensityScale: Story = {
           </div>
           <p>Filed: March 10, 2026</p>
           <div data-card-footer>
-            <civ-link href="#" variant="secondary">View details</civ-link>
+            <civ-link href="#" variant="primary">View details</civ-link>
           </div>
         </civ-card>
       </div>
@@ -236,7 +236,7 @@ export const AppointmentCards: Story = {
         <p>Dr. Johnson — January 18, 2026 at 10:00 AM</p>
         <p>VA Video Connect</p>
         <div data-card-footer>
-          <civ-link href="#" variant="secondary">Join video session</civ-link>
+          <civ-link href="#" variant="primary">Join video session</civ-link>
         </div>
       </civ-card>
 
@@ -248,7 +248,7 @@ export const AppointmentCards: Story = {
         <p>January 10, 2026</p>
         <p>VA Medical Center, Lab</p>
         <div data-card-footer>
-          <civ-link href="#" variant="secondary">View results</civ-link>
+          <civ-link href="#" variant="primary">View results</civ-link>
         </div>
       </civ-card>
     </div>

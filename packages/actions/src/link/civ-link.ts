@@ -2,7 +2,7 @@ import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { CivBaseElement, LightDomTextMixin, devWarn, sanitizeHref, t } from '@civui/core';
 
-export type LinkVariant = 'primary' | 'secondary' | 'tertiary' | 'back';
+export type LinkVariant = 'primary' | 'secondary' | 'back';
 export type LinkType = 'phone' | 'email' | 'download';
 
 /**
@@ -11,10 +11,14 @@ export type LinkType = 'phone' | 'email' | 'download';
  * An accessible link component. Renders an `<a>` element.
  *
  * **Variants** (visual style):
- * - `primary` — button-styled link (filled blue, underlined)
- * - `secondary` — underlined text with trailing caret icon
- * - `tertiary` — plain underlined link
- * - `back` — back navigation link with leading left chevron
+ * - `primary` — bold underlined link with trailing caret icon (most emphasis)
+ * - `secondary` (default) — plain underlined link
+ * - `back` — back-navigation link with leading left chevron
+ *
+ * For a navigation affordance that should look like a button, use
+ * `<civ-button href="…">` or `<civ-action-button href="…">` — those
+ * render an `<a>` with full button chrome plus an underline so the
+ * link identity stays visible.
  *
  * **Type** (device-action shorthand, orthogonal to variant):
  * - `phone` — `tel:` href with phone icon and `(800) 555-0000` formatting
@@ -43,7 +47,7 @@ export type LinkType = 'phone' | 'email' | 'download';
 export class CivLink extends LightDomTextMixin(CivBaseElement) {
   @property({ type: String }) label = '';
   @property({ type: String }) href = '';
-  @property({ type: String }) variant: LinkVariant = 'tertiary';
+  @property({ type: String }) variant: LinkVariant = 'secondary';
   @property({ type: String }) type?: LinkType;
   @property({ type: Boolean, reflect: true }) danger = false;
   @property({ type: Boolean, reflect: true }) disabled = false;
@@ -125,7 +129,7 @@ export class CivLink extends LightDomTextMixin(CivBaseElement) {
   }
 
   private get _trailingIcon() {
-    const name = this.iconEnd || (this.newTab ? 'external-link' : '') || (this.variant === 'secondary' ? 'chevron-right' : '');
+    const name = this.iconEnd || (this.newTab ? 'external-link' : '') || (this.variant === 'primary' ? 'chevron-right' : '');
     return name ? html`<civ-icon name="${name}"></civ-icon>` : '';
   }
 

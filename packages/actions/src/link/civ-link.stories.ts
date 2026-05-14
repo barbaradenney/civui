@@ -14,7 +14,7 @@ const meta: Meta = {
     href: { control: 'text' },
     variant: {
       control: 'select',
-      options: ['primary', 'secondary', 'tertiary', 'back'],
+      options: ['primary', 'secondary', 'back'],
     },
     type: {
       control: 'select',
@@ -39,7 +39,7 @@ export const Default: Story = {
   args: {
     label: 'Learn more about VA benefits',
     href: '#',
-    variant: 'tertiary',
+    variant: 'secondary',
     disabled: false,
   },
   render: (args) => html`
@@ -60,13 +60,7 @@ export const Primary: Story = {
 
 export const Secondary: Story = {
   render: () => html`
-    <civ-link href="#" variant="secondary">Download your benefit letter</civ-link>
-  `,
-};
-
-export const Tertiary: Story = {
-  render: () => html`
-    <civ-link href="#" variant="tertiary">Learn more</civ-link>
+    <civ-link href="#" variant="secondary">Learn more</civ-link>
   `,
 };
 
@@ -85,7 +79,6 @@ export const AllVariants: Story = {
         <div class="civ-flex civ-gap-4 civ-flex-wrap civ-items-center">
           <civ-link href="#" variant="primary">Primary link</civ-link>
           <civ-link href="#" variant="secondary">Secondary link</civ-link>
-          <civ-link href="#" variant="tertiary">Tertiary link</civ-link>
           <civ-link href="#" variant="back" label="Back"></civ-link>
         </div>
       </div>
@@ -94,7 +87,6 @@ export const AllVariants: Story = {
         <div class="civ-flex civ-gap-4 civ-flex-wrap civ-items-center">
           <civ-link href="#" variant="primary" danger>Primary danger</civ-link>
           <civ-link href="#" variant="secondary" danger>Secondary danger</civ-link>
-          <civ-link href="#" variant="tertiary" danger>Tertiary danger</civ-link>
         </div>
       </div>
       <div>
@@ -102,7 +94,6 @@ export const AllVariants: Story = {
         <div class="civ-flex civ-gap-4 civ-flex-wrap civ-items-center">
           <civ-link href="#" variant="primary" disabled>Primary disabled</civ-link>
           <civ-link href="#" variant="secondary" disabled>Secondary disabled</civ-link>
-          <civ-link href="#" variant="tertiary" disabled>Tertiary disabled</civ-link>
         </div>
       </div>
     </div>
@@ -112,9 +103,8 @@ export const AllVariants: Story = {
 export const Danger: Story = {
   render: () => html`
     <div class="civ-flex civ-gap-4 civ-flex-wrap civ-items-center">
-      <civ-link href="#" variant="primary" danger>Delete account</civ-link>
-      <civ-link href="#" variant="secondary" danger>Remove item</civ-link>
-      <civ-link href="#" variant="tertiary" danger>Cancel request</civ-link>
+      <civ-link href="#" variant="primary" danger>Remove item</civ-link>
+      <civ-link href="#" variant="secondary" danger>Cancel request</civ-link>
     </div>
   `,
 };
@@ -124,7 +114,6 @@ export const Disabled: Story = {
     <div class="civ-flex civ-gap-4 civ-flex-wrap civ-items-center">
       <civ-link href="#" variant="primary" disabled>Disabled primary</civ-link>
       <civ-link href="#" variant="secondary" disabled>Disabled secondary</civ-link>
-      <civ-link href="#" variant="tertiary" disabled>Disabled tertiary</civ-link>
     </div>
   `,
 };
@@ -136,7 +125,7 @@ export const WithCustomIcons: Story = {
       <civ-link href="#" icon-start="download">Download your form</civ-link>
       <civ-link href="#" icon-end="external-link">Visit VA.gov</civ-link>
       <civ-link href="#" icon-start="print" icon-end="external-link">Print and mail</civ-link>
-      <civ-link href="#" variant="secondary" icon-end="arrow-right">Continue to next step</civ-link>
+      <civ-link href="#" variant="primary" icon-end="arrow-right">Continue to next step</civ-link>
       <civ-link href="#" variant="back" icon-start="home">Back to homepage</civ-link>
     </div>
   `,
@@ -150,24 +139,21 @@ export const DensityScale: Story = {
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Dense</p>
         <div class="civ-flex civ-gap-4 civ-flex-wrap civ-items-center">
           <civ-link href="#" variant="primary">View claim</civ-link>
-          <civ-link href="#" variant="secondary">Download letter</civ-link>
-          <civ-link href="#" variant="tertiary">Learn more</civ-link>
+          <civ-link href="#" variant="secondary">Learn more</civ-link>
         </div>
       </div>
       <div>
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Default</p>
         <div class="civ-flex civ-gap-4 civ-flex-wrap civ-items-center">
           <civ-link href="#" variant="primary">View claim</civ-link>
-          <civ-link href="#" variant="secondary">Download letter</civ-link>
-          <civ-link href="#" variant="tertiary">Learn more</civ-link>
+          <civ-link href="#" variant="secondary">Learn more</civ-link>
         </div>
       </div>
       <div data-civ-scale="spacious">
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Spacious</p>
         <div class="civ-flex civ-gap-4 civ-flex-wrap civ-items-center">
           <civ-link href="#" variant="primary">View claim</civ-link>
-          <civ-link href="#" variant="secondary">Download letter</civ-link>
-          <civ-link href="#" variant="tertiary">Learn more</civ-link>
+          <civ-link href="#" variant="secondary">Learn more</civ-link>
         </div>
       </div>
     </div>

@@ -12,6 +12,27 @@ across all 21 components.
 
 ### Breaking
 
+- **`civ-link` variant scale collapsed to two tiers + back.**
+  - Removed: `variant="primary"` (filled-blue button-styled link) and
+    `variant="tertiary"`.
+  - Renamed: old `secondary` (bold + caret) → new `primary`. Old
+    `tertiary` (plain underlined) → new `secondary`, which is also
+    the new default.
+  - Kept: `variant="back"` (leading chevron-left).
+  - **Migration:**
+    - `<civ-link variant="primary">` (filled button look) →
+      `<civ-button href="…" variant="primary">` — the button
+      polymorphism renders an `<a>` with button chrome plus an
+      underline.
+    - `<civ-link variant="secondary">` → `<civ-link variant="primary">`
+      (same bold + caret visual under the new name).
+    - `<civ-link variant="tertiary">` → `<civ-link variant="secondary">`
+      or drop the prop (it's the new default).
+  - Rationale: the filled-button "primary" link was redundant once
+    `civ-button[href]` existed, and dropping it lets the link's own
+    scale read as a clean emphasis hierarchy (`primary` > `secondary`)
+    instead of three styles that all meant slightly different things.
+
 - **`@civui/navigation` package removed.** `civ-link`, `civ-link-card`,
   and `civ-skip-link` are now exported from `@civui/actions`. The
   polymorphism that landed in the same release — `civ-button[href]` /

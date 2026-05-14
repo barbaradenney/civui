@@ -1515,49 +1515,39 @@
     @apply civ-py-2;
   }
 
-  /* ── Link variants (rendered when href is set) ─────────────── */
+  /* ── Link variants ─────────────────────────────────────────── */
+  /* Two-tier scale — no button-shaped link variant. For navigation
+     that should look like a button, use `<civ-button href>` (the
+     polymorphic href renders an <a> with button chrome + underline). */
 
-  /* Primary link — looks like a primary button, underlined */
+  /* Primary link — bold underlined text with trailing caret. Most
+     emphasis; suitable for the main next-step link in a section. */
   .civ-link--primary {
-    @apply civ-inline-flex civ-items-center civ-justify-center civ-gap-2
-           civ-font-sans civ-font-bold civ-rounded
-           civ-px-5 civ-py-3 civ-border civ-cursor-pointer
-           civ-transition-colors civ-underline
-           civ-bg-primary civ-text-white civ-border-primary;
-    font-size: var(--civ-typography-fontSize-base);
-    text-decoration-color: currentColor;
-  }
-  .civ-link--primary:hover:not([aria-disabled="true"]) {
-    @apply civ-bg-primary-dark civ-border-primary-dark;
-  }
-
-  /* Secondary link — underlined text with trailing caret */
-  .civ-link--secondary {
     @apply civ-inline-flex civ-items-center civ-gap-1
            civ-font-sans civ-font-bold civ-cursor-pointer
            civ-text-primary civ-underline;
     font-size: var(--civ-typography-fontSize-base);
   }
-  .civ-link--secondary:hover:not([aria-disabled="true"]) {
+  .civ-link--primary:hover:not([aria-disabled="true"]) {
     @apply civ-text-primary-dark;
   }
 
-  /* Tertiary link — plain underlined link. Works on both <a> and
-     <button>; the bg-transparent / border-0 / p-0 resets are no-ops
-     for anchors and undo the browser-default button chrome so a
-     button styled with this class reads as a link. */
-  .civ-link--tertiary {
+  /* Secondary link — plain underlined link. Default variant. Works
+     on both <a> and <button>; the bg-transparent / border-0 / p-0
+     resets undo the browser-default button chrome so a <button>
+     styled with this class reads as a link. */
+  .civ-link--secondary {
     @apply civ-inline-flex civ-items-center
            civ-bg-transparent civ-border-0 civ-p-0
            civ-font-sans civ-cursor-pointer
            civ-text-primary civ-underline;
     font-size: var(--civ-typography-fontSize-base);
   }
-  .civ-link--tertiary:hover:not(:disabled):not([aria-disabled="true"]) {
+  .civ-link--secondary:hover:not(:disabled):not([aria-disabled="true"]) {
     @apply civ-text-primary-dark;
   }
 
-  /* Back link — leading arrow, used for navigation */
+  /* Back link — leading arrow, used for back-navigation */
   .civ-link--back {
     @apply civ-inline-flex civ-items-center civ-gap-1
            civ-font-sans civ-cursor-pointer
@@ -1571,35 +1561,22 @@
   /* ── Danger link variants ──────────────────────────────────── */
 
   .civ-link--primary-danger {
-    @apply civ-inline-flex civ-items-center civ-justify-center civ-gap-2
-           civ-font-sans civ-font-bold civ-rounded
-           civ-px-5 civ-py-3 civ-border civ-cursor-pointer
-           civ-transition-colors civ-underline
-           civ-bg-error civ-text-white civ-border-error;
-    font-size: var(--civ-typography-fontSize-base);
-    text-decoration-color: currentColor;
-  }
-  .civ-link--primary-danger:hover:not([aria-disabled="true"]) {
-    @apply civ-bg-error-dark civ-border-error-dark;
-  }
-
-  .civ-link--secondary-danger {
     @apply civ-inline-flex civ-items-center civ-gap-1
            civ-font-sans civ-font-bold civ-cursor-pointer
            civ-text-error civ-underline;
     font-size: var(--civ-typography-fontSize-base);
   }
-  .civ-link--secondary-danger:hover:not([aria-disabled="true"]) {
+  .civ-link--primary-danger:hover:not([aria-disabled="true"]) {
     @apply civ-text-error-dark;
   }
 
-  .civ-link--tertiary-danger {
+  .civ-link--secondary-danger {
     @apply civ-inline-flex civ-items-center
            civ-font-sans civ-cursor-pointer
            civ-text-error civ-underline;
     font-size: var(--civ-typography-fontSize-base);
   }
-  .civ-link--tertiary-danger:hover:not([aria-disabled="true"]) {
+  .civ-link--secondary-danger:hover:not([aria-disabled="true"]) {
     @apply civ-text-error-dark;
   }
 

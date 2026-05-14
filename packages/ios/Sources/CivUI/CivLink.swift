@@ -1,25 +1,29 @@
 // CivUI — CivLink for SwiftUI
 // Accessible link component with variant styles.
-// Variants: primary (button-styled), secondary (with caret), tertiary (plain), back (with chevron)
+// Variants: primary (bold + caret), secondary (plain, default), back (with chevron-back)
 
 import SwiftUI
 
 /// Link variant determines the visual treatment.
 public enum LinkVariant: String, CaseIterable {
-    case primary, secondary, tertiary, back
+    case primary, secondary, back
 }
 
 /// Accessible link for government applications.
 ///
-/// Always renders as a tappable link (never a button). Supports four
+/// Always renders as a tappable link (never a button). Three
 /// variants and an optional danger modifier for destructive actions.
 /// All variants are underlined for accessibility compliance.
 ///
+/// For navigation that should look like a button, use `CivButton`
+/// with `href` — that renders the platform link affordance with
+/// button chrome plus an underline.
+///
 /// Usage:
 /// ```swift
-/// CivLink(label: "View details", href: "/claims/123", variant: .secondary)
+/// CivLink(label: "View details", href: "/claims/123", variant: .primary)
 /// CivLink(label: "Go back", variant: .back, onTap: { navigateBack() })
-/// CivLink(label: "Remove file", variant: .tertiary, isDanger: true)
+/// CivLink(label: "Remove file", variant: .secondary, isDanger: true)
 /// ```
 public struct CivLink: View {
     // MARK: - Properties
@@ -88,7 +92,7 @@ public struct CivLink: View {
     public init(
         label: String,
         href: String = "",
-        variant: LinkVariant = .tertiary,
+        variant: LinkVariant = .secondary,
         isDanger: Bool = false,
         isDisabled: Bool = false,
         iconStart: String = "",
@@ -197,7 +201,7 @@ public struct CivLink: View {
                 light: CivTokens.Colors.White.default_,
                 dark: CivTokens.DarkColors.White.default_
             )
-        case .secondary, .tertiary, .back:
+        case .secondary, .back:
             return adaptiveColor(
                 light: CivTokens.Colors.Primary.default_,
                 dark: CivTokens.DarkColors.Primary.default_
@@ -243,9 +247,9 @@ struct CivLink_Previews: PreviewProvider {
                 VStack(alignment: .leading, spacing: CivTokens.Spacing._4) {
                     CivLink(label: "Primary link", href: "#", variant: .primary)
                     CivLink(label: "Secondary link", href: "#", variant: .secondary)
-                    CivLink(label: "Tertiary link", href: "#", variant: .tertiary)
+                    CivLink(label: "Tertiary link", href: "#", variant: .secondary)
                     CivLink(label: "Go back", variant: .back)
-                    CivLink(label: "Delete file", variant: .tertiary, isDanger: true)
+                    CivLink(label: "Delete file", variant: .secondary, isDanger: true)
                     CivLink(label: "Disabled link", href: "#", variant: .secondary, isDisabled: true)
                 }
                 .padding()

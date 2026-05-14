@@ -1,6 +1,6 @@
 // CivUI — CivLink for Jetpack Compose
 // Accessible link component with variant styles.
-// Variants: primary (button-styled), secondary (with caret), tertiary (plain), back (with chevron)
+// Variants: primary (bold + caret), secondary (plain, default), back (with chevron-back)
 
 package gov.civui.components
 
@@ -9,7 +9,6 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
@@ -19,8 +18,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
@@ -44,7 +41,7 @@ import gov.civui.tokens.CivTokens
  * ```kotlin
  * CivLink(label = "View details", href = "/claims/123", variant = "secondary")
  * CivLink(label = "Go back", variant = "back", onTap = { navigateBack() })
- * CivLink(label = "Remove file", variant = "tertiary", danger = true)
+ * CivLink(label = "Remove file", variant = "secondary", danger = true)
  * ```
  */
 @Composable
@@ -55,7 +52,7 @@ fun CivLink(
     target: String = "",
     rel: String = "",
     download: String = "",
-    variant: String = "tertiary",
+    variant: String = "secondary",
     danger: Boolean = false,
     disabled: Boolean = false,
     iconStart: String = "",
@@ -73,20 +70,9 @@ fun CivLink(
     val uriHandler = LocalUriHandler.current
 
     val primaryColor = if (isDark) CivTokens.DarkColors.Primary.default_ else CivTokens.Colors.Primary.default_
-    val whiteColor = if (isDark) CivTokens.DarkColors.White.default_ else CivTokens.Colors.White.default_
     val errorColor = if (isDark) CivTokens.DarkColors.Error.default_ else CivTokens.Colors.Error.default_
 
-    val textColor = when {
-        danger -> errorColor
-        variant == "primary" -> whiteColor
-        else -> primaryColor
-    }
-
-    val bgColor = when {
-        variant == "primary" && danger -> errorColor
-        variant == "primary" -> primaryColor
-        else -> null
-    }
+    val textColor = if (danger) errorColor else primaryColor
 
     val fontSize = if (variant == "back") CivTokens.Typography.FontSize.sm else CivTokens.Typography.FontSize.base
     val fontWeight = if (variant == "primary") FontWeight.SemiBold else FontWeight.Normal
@@ -104,16 +90,7 @@ fun CivLink(
     Row(
         modifier = modifier
             .alpha(if (disabled) 0.5f else 1f)
-            .then(
-                if (bgColor != null) {
-                    Modifier
-                        .clip(RoundedCornerShape(CivTokens.Border.Radius.default_))
-                        .drawBehind { drawRect(bgColor) }
-                        .padding(horizontal = CivTokens.Spacing._6, vertical = CivTokens.Spacing._2_5)
-                } else {
-                    Modifier.padding(vertical = CivTokens.Spacing._1)
-                }
-            )
+            .padding(vertical = CivTokens.Spacing._1)
             .clickable(
                 enabled = !disabled,
                 role = Role.Button,
@@ -144,7 +121,7 @@ fun CivLink(
             color = textColor,
         )
 
-        if (variant == "secondary") {
+        if (variant == "primary") {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                 contentDescription = null,
@@ -163,9 +140,9 @@ private fun CivLinkPreview() {
     Column(modifier = Modifier.padding(16.dp)) {
         CivLink(label = "Primary link", href = "#", variant = "primary")
         CivLink(label = "Secondary link", href = "#", variant = "secondary")
-        CivLink(label = "Tertiary link", href = "#", variant = "tertiary")
+        CivLink(label = "Default link", href = "#", variant = "secondary")
         CivLink(label = "Go back", variant = "back")
-        CivLink(label = "Delete file", variant = "tertiary", danger = true)
+        CivLink(label = "Delete file", variant = "secondary", danger = true)
         CivLink(label = "Disabled link", href = "#", variant = "secondary", disabled = true)
     }
 }

@@ -31,7 +31,7 @@ export const ReviewPageFiles: Story = {
     <div style="max-width: 600px;">
       <h3 style="font-weight: bold; margin-bottom: 4px;">Supporting documents</h3>
       <p style="margin-bottom: 12px;">
-        <civ-link href="#/documents" variant="tertiary">Change</civ-link>
+        <civ-link href="#/documents" variant="primary">Change</civ-link>
       </p>
       <civ-data-field label="DD214" value="DD214.pdf (2.3 MB)" href="#/files/dd214.pdf"></civ-data-field>
       <civ-data-field label="Medical records" value="medical-records.pdf (7.7 MB)" href="#/files/medical.pdf"></civ-data-field>
@@ -48,7 +48,7 @@ export const ReviewPageImages: Story = {
     <div style="max-width: 600px;">
       <h3 style="font-weight: bold; margin-bottom: 4px;">ID documents</h3>
       <p style="margin-bottom: 12px;">
-        <civ-link href="#/id-upload" variant="tertiary">Change</civ-link>
+        <civ-link href="#/id-upload" variant="primary">Change</civ-link>
       </p>
       <div style="display: flex; gap: 16px; flex-wrap: wrap;">
         <civ-image-preview

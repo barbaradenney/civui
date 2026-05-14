@@ -7,7 +7,7 @@ afterEach(cleanupFixtures);
 // Tailwind content-scanner protection (`pnpm lint:purged-variants`).
 // civ-link builds the danger classes via template literal
 // `civ-link--${variant}-danger`:
-//   civ-link--primary-danger  civ-link--secondary-danger  civ-link--tertiary-danger
+//   civ-link--primary-danger  civ-link--secondary-danger
 
 describe('civ-link', () => {
   it('renders an <a> element', async () => {
@@ -18,32 +18,24 @@ describe('civ-link', () => {
     expect(link!.textContent).toContain('Continue');
   });
 
-  it('defaults to tertiary variant', async () => {
+  it('defaults to secondary variant (plain underlined link)', async () => {
     const el = await fixture('<civ-link href="/next">Go</civ-link>');
     const link = el.querySelector('a')!;
-    expect(link.className).toContain('civ-link--tertiary');
+    expect(link.className).toContain('civ-link--secondary');
   });
 
-  it('applies primary variant class', async () => {
-    const el = await fixture('<civ-link href="/next" variant="primary">Go</civ-link>');
+  it('applies primary variant class with trailing caret', async () => {
+    const el = await fixture('<civ-link href="/next" variant="primary">Details</civ-link>');
     const link = el.querySelector('a')!;
     expect(link.className).toContain('civ-link--primary');
-  });
-
-  it('applies secondary variant with caret icon', async () => {
-    const el = await fixture('<civ-link href="/next" variant="secondary">Details</civ-link>');
-    const link = el.querySelector('a')!;
-    expect(link.className).toContain('civ-link--secondary');
     const icon = el.querySelector('civ-icon');
     expect(icon).not.toBeNull();
     expect(icon!.getAttribute('name')).toBe('chevron-right');
   });
 
-  it('does not show caret for primary or tertiary', async () => {
-    for (const variant of ['primary', 'tertiary']) {
-      const el = await fixture(`<civ-link href="/next" variant="${variant}">Go</civ-link>`);
-      expect(el.querySelector('civ-icon')).toBeNull();
-    }
+  it('does not show caret on the secondary (default) variant', async () => {
+    const el = await fixture('<civ-link href="/next" variant="secondary">Go</civ-link>');
+    expect(el.querySelector('civ-icon')).toBeNull();
   });
 
   it('disabled link has aria-disabled, no href, tabindex=-1', async () => {
@@ -110,8 +102,8 @@ describe('civ-link', () => {
     expect(icon!.getAttribute('name')).toBe('external-link');
   });
 
-  it('icon-end overrides secondary default chevron', async () => {
-    const el = await fixture('<civ-link href="/next" variant="secondary" icon-end="arrow-right">Next</civ-link>');
+  it('icon-end overrides the primary variant default chevron', async () => {
+    const el = await fixture('<civ-link href="/next" variant="primary" icon-end="arrow-right">Next</civ-link>');
     const icon = el.querySelector('civ-icon');
     expect(icon!.getAttribute('name')).toBe('arrow-right');
   });

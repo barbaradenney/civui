@@ -195,6 +195,9 @@ importers:
         specifier: ^3.2.0
         version: 3.3.2
     devDependencies:
+      '@civui/storybook-utils':
+        specifier: workspace:*
+        version: link:../storybook-utils
       '@civui/test-utils':
         specifier: workspace:*
         version: link:../test-utils

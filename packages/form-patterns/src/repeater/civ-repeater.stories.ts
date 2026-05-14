@@ -19,7 +19,6 @@ const meta: Meta = {
     error: { control: 'text' },
     min: { control: 'number' },
     max: { control: 'number' },
-    required: { control: 'boolean' },
     disabled: { control: 'boolean' },
   },
 };
@@ -36,7 +35,6 @@ export const Default: Story = {
     itemLabel: 'dependent',
     hint: '',
     error: '',
-    required: false,
     disabled: false,
   },
   render: (args) => html`
@@ -46,7 +44,6 @@ export const Default: Story = {
       item-label="${args.itemLabel}"
       hint="${args.hint}"
       error="${args.error}"
-      ?required="${args.required}"
       ?disabled="${args.disabled}"
     >
       <civ-text-input label="Full name" name="fullName"></civ-text-input>
@@ -82,24 +79,9 @@ export const WithError: Story = {
       name="dependents"
       item-label="dependent"
       error="Complete each dependent's name before submitting."
-      required
       min="1"
     >
       <civ-text-input label="Full name" name="fullName" required></civ-text-input>
-    </civ-repeater>
-  `,
-};
-
-export const Required: Story = {
-  render: () => html`
-    <civ-repeater
-      legend="Dependents"
-      name="dependents"
-      item-label="dependent"
-      required
-      min="1"
-    >
-      <civ-text-input label="Full name" name="fullName"></civ-text-input>
     </civ-repeater>
   `,
 };
@@ -129,7 +111,7 @@ export const AllStates: Story = {
       <civ-repeater legend="With hint" name="hint" item-label="item" hint="Add items as needed">
         <civ-text-input label="Name" name="name"></civ-text-input>
       </civ-repeater>
-      <civ-repeater legend="With error" name="error" item-label="item" error="Complete each item before submitting." required min="1">
+      <civ-repeater legend="With error" name="error" item-label="item" error="Complete each item before submitting." min="1">
         <civ-text-input label="Name" name="name" required></civ-text-input>
       </civ-repeater>
       <civ-repeater legend="Disabled" name="disabled" item-label="item" disabled>

@@ -137,7 +137,11 @@ const schema: ComponentSchema = {
 
   a11y: {
     role: 'group',
-    requiredIndicator: 'asterisk',
+    // The repeater is a list manager, not a form control — it does not
+    // mark itself "(required)" on the legend. List-level constraints
+    // come from `min`, field-level constraints come from the inner
+    // fields' own `required` markers.
+    requiredIndicator: 'none',
     errorAnnouncement: 'assertive',
     describedBy: ['hint', 'error'],
   },

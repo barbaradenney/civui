@@ -48,11 +48,6 @@ props:
       title: Error
       type: string
       description: 'Error message'
-    required:
-      title: Required
-      type: boolean
-      default: false
-      description: 'Whether at least one entry is required'
     disabled:
       title: Disabled
       type: boolean

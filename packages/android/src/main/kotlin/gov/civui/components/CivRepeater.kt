@@ -78,7 +78,6 @@ fun CivRepeater(
     itemLabel: String = "item",
     hint: String = "",
     error: String = "",
-    required: Boolean = false,
     disabled: Boolean = false,
     min: Int = 1,
     max: Int = 0,
@@ -122,7 +121,6 @@ fun CivRepeater(
             .semantics {
                 contentDescription = buildString {
                     append(legend)
-                    if (required) append(", required")
                     append(". $rowCount ${if (rowCount == 1) itemLabel else "${itemLabel}s"}")
                     if (error.isNotEmpty()) append(". Error: $error")
                 }
@@ -134,7 +132,7 @@ fun CivRepeater(
         // 1. Legend
         CivLabel(
             label = legend,
-            required = required,
+            required = false,
             labelColor = labelColor,
             errorColor = errorColor,
         )
@@ -246,7 +244,6 @@ private fun CivRepeaterPreview() {
             rowCount = rowCount,
             itemLabel = "dependent",
             hint = "Add all dependents you wish to claim",
-            required = true,
             min = 1,
             max = 5,
             onAdd = {
@@ -285,7 +282,6 @@ private fun CivRepeaterPreview() {
             rowCount = 0,
             itemLabel = "reference",
             error = "At least one reference is required",
-            required = true,
             min = 1,
         ) { /* empty */ }
     }

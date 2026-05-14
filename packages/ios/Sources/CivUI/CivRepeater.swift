@@ -47,9 +47,6 @@ public struct CivRepeater<Content: View>: View {
     /// Error message. When set, renders with VoiceOver announcement.
     public var error: String?
 
-    /// Whether at least one row is required.
-    public var isRequired: Bool
-
     /// Whether the component is disabled.
     public var isDisabled: Bool
 
@@ -123,7 +120,6 @@ public struct CivRepeater<Content: View>: View {
         rowCount: Binding<Int>,
         hint: String? = nil,
         error: String? = nil,
-        isRequired: Bool = false,
         isDisabled: Bool = false,
         min: Int = 1,
         max: Int = 0,
@@ -148,7 +144,6 @@ public struct CivRepeater<Content: View>: View {
         self._rowCount = rowCount
         self.hint = hint
         self.error = error
-        self.isRequired = isRequired
         self.isDisabled = isDisabled
         self.min = min
         self.max = max
@@ -246,26 +241,13 @@ public struct CivRepeater<Content: View>: View {
     // MARK: - Subviews
 
     private var legendView: some View {
-        HStack(spacing: CivTokens.Spacing._0_5) {
-            Text(legend)
-                .font(.system(size: CivTokens.Typography.FontSize.lg,
-                              weight: CivTokens.Typography.FontWeight.bold))
-                .foregroundColor(adaptiveColor(
-                    light: CivTokens.Colors.Base.darkest,
-                    dark: CivTokens.DarkColors.Base.darkest
-                ))
-
-            if isRequired {
-                Text("*")
-                    .font(.system(size: CivTokens.Typography.FontSize.lg,
-                                  weight: CivTokens.Typography.FontWeight.bold))
-                    .foregroundColor(adaptiveColor(
-                        light: CivTokens.Colors.Error.default_,
-                        dark: CivTokens.DarkColors.Error.default_
-                    ))
-                    .accessibilityLabel("required")
-            }
-        }
+        Text(legend)
+            .font(.system(size: CivTokens.Typography.FontSize.lg,
+                          weight: CivTokens.Typography.FontWeight.bold))
+            .foregroundColor(adaptiveColor(
+                light: CivTokens.Colors.Base.darkest,
+                dark: CivTokens.DarkColors.Base.darkest
+            ))
     }
 
     private func rowView(index: Int) -> some View {
@@ -351,7 +333,6 @@ struct CivRepeater_Previews: PreviewProvider {
                         itemLabel: "dependent",
                         rowCount: $count,
                         hint: "Add all household members",
-                        isRequired: true,
                         min: 1,
                         max: 5
                     ) { index in
@@ -373,7 +354,6 @@ struct CivRepeater_Previews: PreviewProvider {
                         itemLabel: "reference",
                         rowCount: $count,
                         error: "At least one reference is required",
-                        isRequired: true,
                         min: 1,
                         max: 3
                     ) { index in

@@ -185,9 +185,6 @@ export class CivRepeater extends CivBaseElement {
   /** Error text displayed below the hint. */
   @property({ type: String }) error = '';
 
-  /** Whether at least one row is required. */
-  @property({ type: Boolean, reflect: true }) required = false;
-
   /** Whether the component is disabled. */
   @property({ type: Boolean, reflect: true }) disabled = false;
 
@@ -311,7 +308,7 @@ export class CivRepeater extends CivBaseElement {
         aria-invalid="${this.error ? 'true' : nothing}"
         ?disabled="${this.disabled}"
       >
-        ${renderFormHeader({ label: renderLegend({ legend: legendText, required: showList ? this.required : false, headingLevel: this.headingLevel, size: this.size }), hintId: this._hintId, hint: showList ? this.hint : '', errorId: this._errorId, error: showList ? this.error : '', fieldset: true })}
+        ${renderFormHeader({ label: renderLegend({ legend: legendText, required: false, headingLevel: this.headingLevel, size: this.size }), hintId: this._hintId, hint: showList ? this.hint : '', errorId: this._errorId, error: showList ? this.error : '', fieldset: true })}
 
         <div
           data-civ-repeater-rows
@@ -365,7 +362,7 @@ export class CivRepeater extends CivBaseElement {
         ?disabled="${this.disabled}"
       >
         ${renderFormHeader({
-          label: renderLegend({ legend: this.legend, required: this.required, headingLevel: this.headingLevel, size: this.size }),
+          label: renderLegend({ legend: this.legend, required: false, headingLevel: this.headingLevel, size: this.size }),
           hintId: this._hintId,
           hint: this.hint,
           errorId: this._errorId,

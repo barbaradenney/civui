@@ -191,9 +191,6 @@ importers:
       '@civui/feedback':
         specifier: workspace:*
         version: link:../feedback
-      '@civui/navigation':
-        specifier: workspace:*
-        version: link:../navigation
       lit:
         specifier: ^3.2.0
         version: 3.3.2
@@ -407,9 +404,6 @@ importers:
       '@civui/layout':
         specifier: workspace:*
         version: link:../layout
-      '@civui/navigation':
-        specifier: workspace:*
-        version: link:../navigation
       lit:
         specifier: ^3.2.0
         version: 3.3.2
@@ -495,34 +489,6 @@ importers:
       '@types/pdf-parse':
         specifier: ^1.1.4
         version: 1.1.5
-      typescript:
-        specifier: ^5.6.0
-        version: 5.9.3
-      vitest:
-        specifier: ^2.0.0
-        version: 2.1.9(@types/node@25.5.0)(jiti@1.21.7)(jsdom@28.1.0)(lightningcss@1.32.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.4)
-
-  packages/navigation:
-    dependencies:
-      '@civui/core':
-        specifier: workspace:*
-        version: link:../core
-      '@civui/layout':
-        specifier: workspace:*
-        version: link:../layout
-      lit:
-        specifier: ^3.2.0
-        version: 3.3.2
-    devDependencies:
-      '@civui/storybook-utils':
-        specifier: workspace:*
-        version: link:../storybook-utils
-      '@civui/test-utils':
-        specifier: workspace:*
-        version: link:../test-utils
-      '@civui/tokens':
-        specifier: workspace:*
-        version: link:../tokens
       typescript:
         specifier: ^5.6.0
         version: 5.9.3

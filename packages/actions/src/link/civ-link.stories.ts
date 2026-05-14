@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html } from 'lit';
 import './civ-link.js';
+import '../button/civ-button.js';
 import '@civui/storybook-utils/demo-frame';
 import '@civui/storybook-utils/demo-frame.css';
 
@@ -221,5 +222,45 @@ export const BackNavigationDemo: Story = {
         <p>Filed February 3, 2026. Status: Decision made.</p>
       </civ-demo-page>
     </civ-demo-frame>
+  `,
+};
+
+// ── Button-styled link comparison ─────────────────────────────
+// Both <civ-link variant="primary"> and <civ-button href> render an
+// `<a>` element wearing primary-button chrome. The button-with-href
+// path adds an underline by default so the link affordance stays
+// visible — useful when the link sits next to a real button and a
+// reader needs to tell them apart at a glance.
+
+export const ButtonStyledLinkComparison: Story = {
+  name: 'Button-Styled: Link vs Button[href]',
+  render: () => html`
+    <div class="civ-flex civ-flex-col civ-gap-6">
+      <div>
+        <p class="civ-m-0 civ-mb-2 civ-text-sm civ-font-semibold">
+          civ-link with button-shaped variants
+        </p>
+        <div class="civ-flex civ-flex-wrap civ-gap-3 civ-items-center">
+          <civ-link href="/start" variant="primary" label="Start application"></civ-link>
+          <civ-link href="/details" variant="secondary" label="View details"></civ-link>
+        </div>
+      </div>
+      <div>
+        <p class="civ-m-0 civ-mb-2 civ-text-sm civ-font-semibold">
+          civ-button with href (renders as &lt;a&gt; with underline)
+        </p>
+        <div class="civ-flex civ-flex-wrap civ-gap-3 civ-items-center">
+          <civ-button href="/start" variant="primary">Start application</civ-button>
+          <civ-button href="/details" variant="secondary">View details</civ-button>
+        </div>
+      </div>
+      <p class="civ-m-0 civ-text-sm">
+        Both produce a real <code>&lt;a&gt;</code>. Pick <code>civ-link</code> when
+        the affordance is primarily a link that happens to wear button chrome;
+        pick <code>civ-button href</code> when it sits alongside real buttons
+        and the underline helps a reader distinguish navigation from in-page
+        action.
+      </p>
+    </div>
   `,
 };

@@ -120,3 +120,38 @@ export const DangerButtonGroup: Story = {
     </civ-button-group>
   `,
 };
+
+export const AsLink: Story = {
+  name: 'As Link (with href)',
+  render: () => html`
+    <div class="civ-flex civ-flex-col civ-gap-4">
+      <p class="civ-m-0 civ-text-sm">
+        Setting <code>href</code> renders an <code>&lt;a&gt;</code> with action-
+        button chrome plus an underline. Useful in list rows where the Edit
+        affordance navigates to a route while Remove stays an in-page action —
+        same visual weight, different semantics under the hood.
+      </p>
+      <div class="civ-card">
+        <div class="civ-list-item">
+          <span class="civ-list-item__content civ-font-medium">Alex Chen</span>
+          <span class="civ-list-item__actions">
+            <civ-action-button href="/dependents/1/edit" variant="tertiary" label="Edit"></civ-action-button>
+            <civ-action-button variant="tertiary" danger label="Remove"></civ-action-button>
+          </span>
+        </div>
+        <div class="civ-list-item">
+          <span class="civ-list-item__content civ-font-medium">Jordan Lee</span>
+          <span class="civ-list-item__actions">
+            <civ-action-button href="/dependents/2/edit" variant="tertiary" label="Edit"></civ-action-button>
+            <civ-action-button variant="tertiary" danger label="Remove"></civ-action-button>
+          </span>
+        </div>
+      </div>
+      <p class="civ-m-0 civ-text-sm">
+        Underline tells a sighted reader at a glance which affordance navigates.
+        Screen readers hear the role as "link" vs "button" via the rendered
+        element.
+      </p>
+    </div>
+  `,
+};

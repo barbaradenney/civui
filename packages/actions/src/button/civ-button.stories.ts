@@ -129,6 +129,30 @@ export const WithIcons: Story = {
   `,
 };
 
+export const AsLink: Story = {
+  name: 'As Link (with href)',
+  render: () => html`
+    <div class="civ-flex civ-flex-col civ-gap-4">
+      <p class="civ-m-0 civ-text-sm">
+        Setting <code>href</code> makes <code>civ-button</code> render as an
+        <code>&lt;a&gt;</code> with the same button chrome, plus an underline so the
+        link identity stays visible. Right-click "open in new tab", back-button
+        history, and screen-reader role all behave as a real link.
+      </p>
+      <div class="civ-flex civ-flex-wrap civ-gap-3 civ-items-center">
+        <civ-button href="/dependents/new" variant="primary">Add dependent</civ-button>
+        <civ-button href="/forms/21-526ez" variant="secondary" icon-start="plus">Start new claim</civ-button>
+        <civ-button href="/help" variant="tertiary">Get help</civ-button>
+      </div>
+      <p class="civ-m-0 civ-text-sm">External links — pair with <code>new-tab</code> for the standard "open in new tab" treatment.</p>
+      <div class="civ-flex civ-flex-wrap civ-gap-3 civ-items-center">
+        <civ-button href="https://www.va.gov" variant="secondary" new-tab>VA.gov</civ-button>
+        <civ-button href="https://www.benefits.va.gov" variant="tertiary" new-tab icon-end="external-link">Benefits site</civ-button>
+      </div>
+    </div>
+  `,
+};
+
 export const DensityScale: Story = {
   name: 'Density Scale',
   render: () => html`

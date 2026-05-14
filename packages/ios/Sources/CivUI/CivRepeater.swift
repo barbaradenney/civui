@@ -104,6 +104,12 @@ public struct CivRepeater<Content: View>: View {
     /// Comma-separated row property names joined into each summary card.
     public var summaryFields: String
 
+    /// Format string with {prop} placeholders for each summary line.
+    public var summaryTemplate: String
+
+    /// Hint shown when the list is empty.
+    public var emptyStateText: String
+
     /// Content builder that receives the row index.
     @ViewBuilder public var content: (Int) -> Content
 
@@ -136,6 +142,8 @@ public struct CivRepeater<Content: View>: View {
         editHrefPattern: String = "",
         idField: String = "id",
         summaryFields: String = "",
+        summaryTemplate: String = "",
+        emptyStateText: String = "",
         @ViewBuilder content: @escaping (Int) -> Content
     ) {
         self.legend = legend
@@ -160,6 +168,8 @@ public struct CivRepeater<Content: View>: View {
         self.editHrefPattern = editHrefPattern
         self.idField = idField
         self.summaryFields = summaryFields
+        self.summaryTemplate = summaryTemplate
+        self.emptyStateText = emptyStateText
         self.content = content
     }
 

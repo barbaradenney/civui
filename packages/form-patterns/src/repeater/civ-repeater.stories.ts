@@ -167,6 +167,35 @@ export const MinMax: Story = {
   `,
 };
 
+export const EmptyState: Story = {
+  name: 'Empty State Hint',
+  render: () => html`
+    <civ-repeater
+      legend="Dependents"
+      name="dependents"
+      item-label="dependent"
+      empty-state-text="No dependents added yet — click Add to start."
+    >
+      <civ-text-input label="Full name" name="fullName"></civ-text-input>
+    </civ-repeater>
+  `,
+};
+
+export const MaxReached: Story = {
+  name: 'Max Reached Hint',
+  render: () => html`
+    <civ-repeater
+      legend="Emergency contacts"
+      name="contacts"
+      item-label="contact"
+      min="3"
+      max="3"
+    >
+      <civ-text-input label="Full name" name="fullName"></civ-text-input>
+    </civ-repeater>
+  `,
+};
+
 export const MultipleFields: Story = {
   render: () => html`
     <civ-repeater
@@ -369,7 +398,7 @@ export const RouteModeEmpty: Story = {
           mode="route"
           add-href="/dependents/new"
           edit-href-pattern="/dependents/{id}/edit"
-          hint="No dependents yet — click Add to create one."
+          empty-state-text="No dependents added yet."
           .rows=${[]}
         ></civ-repeater>
       </civ-demo-page>
@@ -379,6 +408,35 @@ export const RouteModeEmpty: Story = {
         <div class="civ-mt-4">
           <civ-link href="/dependents" variant="tertiary" label="Cancel"></civ-link>
         </div>
+      </civ-demo-page>
+    </civ-demo-frame>
+  `,
+};
+
+export const RouteModeSummaryTemplate: Story = {
+  name: 'Route Mode: Summary Template',
+  render: () => html`
+    <civ-demo-frame initial-path="/dependents">
+      <civ-demo-page path="/dependents">
+        <civ-repeater
+          legend="Your dependents"
+          item-label="dependent"
+          mode="route"
+          add-href="/dependents/new"
+          edit-href-pattern="/dependents/{id}/edit"
+          id-field="id"
+          summary-template="{firstName} {lastName} ({relationship})"
+          .rows=${[
+            { id: 'a1', firstName: 'Alex', lastName: 'Chen', relationship: 'Spouse' },
+            { id: 'b2', firstName: 'Jordan', lastName: 'Lee', relationship: 'Child' },
+          ]}
+        ></civ-repeater>
+      </civ-demo-page>
+      <civ-demo-page path="/dependents/new">
+        <h2 class="civ-heading-md">Add a dependent</h2>
+      </civ-demo-page>
+      <civ-demo-page path="/dependents/:id/edit">
+        <h2 class="civ-heading-md">Edit dependent</h2>
       </civ-demo-page>
     </civ-demo-frame>
   `,

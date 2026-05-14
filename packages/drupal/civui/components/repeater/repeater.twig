@@ -17,6 +17,8 @@
   {% if edit_href_pattern %}edit-href-pattern="{{ edit_href_pattern }}"{% endif %}
   {% if id_field %}id-field="{{ id_field }}"{% endif %}
   {% if summary_fields %}summary-fields="{{ summary_fields }}"{% endif %}
+  {% if summary_template %}summary-template="{{ summary_template }}"{% endif %}
+  {% if empty_state_text %}empty-state-text="{{ empty_state_text }}"{% endif %}
 >
   {% block default %}{{ default }}{% endblock %}
 </civ-repeater>

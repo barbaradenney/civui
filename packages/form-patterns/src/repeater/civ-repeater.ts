@@ -165,22 +165,45 @@ export class CivRepeater extends CivBaseElement {
    * renders "Alex Chen" given a row `{ firstName: 'Alex', lastName: 'Chen' }`.
    *
    * Declarative alternative to `rowSummary` for hosts that can't pass a
-   * function (Drupal Twig, SSR, etc.). When both are set, `rowSummary`
-   * wins.
+   * function (Drupal Twig, SSR, etc.). When `summaryTemplate` or
+   * `rowSummary` is also set, those take precedence.
    */
   @property({ type: String, attribute: 'summary-fields' }) summaryFields = '';
+
+  /**
+   * Format string for the summary line with `{prop}` placeholders.
+   * Example: `summary-template="{firstName} {lastName} ({relationship})"`
+   * renders "Alex Chen (Spouse)" given a row `{ firstName: 'Alex',
+   * lastName: 'Chen', relationship: 'Spouse' }`.
+   *
+   * Cross-platform alternative to `rowSummary` for hosts that can't
+   * pass a function but need more control than the comma-join of
+   * `summary-fields`. When `rowSummary` is also set, the function wins.
+   * Missing properties interpolate as empty strings.
+   */
+  @property({ type: String, attribute: 'summary-template' }) summaryTemplate = '';
 
   /**
    * Function called for each row to produce the summary line. Receives
    * the row object and zero-based index, returns the string to display
    * on the summary card.
    *
-   * Web-only — for cross-platform / Drupal hosts, use `summary-fields`.
+   * Web-only — for cross-platform / Drupal hosts, use `summary-template`
+   * or `summary-fields`.
    */
   @property({ attribute: false }) rowSummary?: RepeaterRowSummary;
 
   /** Hint text displayed below the legend. */
   @property({ type: String }) hint = '';
+
+  /**
+   * Hint shown when the list is empty (no rows added yet). Rendered
+   * between the header and the Add button. Leave blank to omit — the
+   * Add button alone is often signal enough that the list starts empty.
+   *
+   * Example: `empty-state-text="No dependents yet — click Add to start."`
+   */
+  @property({ type: String, attribute: 'empty-state-text' }) emptyStateText = '';
 
   /** Error text displayed below the hint. */
   @property({ type: String }) error = '';
@@ -316,6 +339,10 @@ export class CivRepeater extends CivBaseElement {
           @click="${this._onRowsClick}"
         ></div>
 
+        ${showList && this._rowCount === 0 && this.emptyStateText ? html`
+          <p class="civ-repeater-empty-state">${this.emptyStateText}</p>
+        ` : nothing}
+
         ${this._formStepsActive ? html`
           <div
             data-civ-repeater-form-steps
@@ -339,6 +366,12 @@ export class CivRepeater extends CivBaseElement {
             @click="${this.mode === 'form-steps' ? this._openFormStepsForAdd : this._addRow}"
             class="civ-mt-3"
           ></civ-button>
+        ` : nothing}
+
+        ${showList && !canAdd && this.max > 0 ? html`
+          <p class="civ-repeater-max-hint civ-mt-3" role="status">
+            ${interpolate(t('repeaterMaxReached'), { max: String(this.max), item: this.itemLabel })}
+          </p>
         ` : nothing}
       </fieldset>
     `;
@@ -374,6 +407,10 @@ export class CivRepeater extends CivBaseElement {
           ${this.rows.map((row, i) => this._renderRoutedSummaryCard(row, i))}
         </div>
 
+        ${this.rows.length === 0 && this.emptyStateText ? html`
+          <p class="civ-repeater-empty-state">${this.emptyStateText}</p>
+        ` : nothing}
+
         ${canAdd && this.addHref ? html`
           <civ-link
             href="${sanitizeHref(this.addHref)}"
@@ -382,6 +419,12 @@ export class CivRepeater extends CivBaseElement {
             label="${interpolate(t(this.rows.length === 0 ? 'repeaterAddFirstButton' : 'repeaterAddButton'), { item: this.itemLabel })}"
             class="civ-mt-3"
           ></civ-link>
+        ` : nothing}
+
+        ${!canAdd && this.max > 0 ? html`
+          <p class="civ-repeater-max-hint civ-mt-3" role="status">
+            ${interpolate(t('repeaterMaxReached'), { max: String(this.max), item: this.itemLabel })}
+          </p>
         ` : nothing}
       </fieldset>
     `;
@@ -428,11 +471,17 @@ export class CivRepeater extends CivBaseElement {
 
   /**
    * Resolve the summary text for a row through the documented fallback chain:
-   *   rowSummary fn → summary-fields join → "{itemLabel} {index+1}".
+   *   rowSummary fn → summary-template → summary-fields join → "{itemLabel} {index+1}".
    */
   private _resolveSummary(row: RepeaterRow, index: number): string {
     if (typeof this.rowSummary === 'function') {
       return this.rowSummary(row, index);
+    }
+    if (this.summaryTemplate) {
+      return this.summaryTemplate.replace(/\{([\w$]+)\}/g, (_, key: string) => {
+        const v = row[key];
+        return v == null ? '' : String(v);
+      });
     }
     if (this.summaryFields) {
       const parts = this.summaryFields

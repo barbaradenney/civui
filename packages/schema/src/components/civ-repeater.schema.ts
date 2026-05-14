@@ -97,10 +97,22 @@ const schema: ComponentSchema = {
       default: '',
       attribute: 'summary-fields',
     },
+    summaryTemplate: {
+      type: 'string',
+      description: 'Format string with `{prop}` placeholders for the per-row summary line (e.g. `"{firstName} {lastName} ({relationship})"`). Cross-platform; takes precedence over `summary-fields` when set; loses to `rowSummary` function when both are set',
+      default: '',
+      attribute: 'summary-template',
+    },
     rowSummary: {
       type: 'string',
-      description: 'Function `(row: object, index: number) => string` that returns the summary line for each row in `mode="route"`. Set programmatically (not as an attribute). When set, takes precedence over `summary-fields`',
+      description: 'Function `(row: object, index: number) => string` that returns the summary line for each row in `mode="route"`. Set programmatically (not as an attribute). When set, takes precedence over `summary-template` and `summary-fields`',
       webOnly: true,
+    },
+    emptyStateText: {
+      type: 'string',
+      description: 'Hint shown between the header and the Add button when the list has no rows. Leave blank to omit',
+      default: '',
+      attribute: 'empty-state-text',
     },
   },
 

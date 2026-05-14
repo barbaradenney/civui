@@ -95,6 +95,8 @@ fun CivRepeater(
     editHrefPattern: String = "",
     idField: String = "id",
     summaryFields: String = "",
+    summaryTemplate: String = "",
+    emptyStateText: String = "",
     onAdd: ((Int) -> Unit)? = null,
     onRemove: ((Int) -> Unit)? = null,
     onWizardOpen: ((Int) -> Unit)? = null,

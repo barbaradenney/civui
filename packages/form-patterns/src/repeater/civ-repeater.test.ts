@@ -185,6 +185,49 @@ describe('civ-repeater', () => {
     expect(addBtn).toBeNull(); // Already at max (1 row, max 1)
   });
 
+  it('renders a max-reached hint when at max', async () => {
+    const el = await fixture<CivRepeater>(`
+      <civ-repeater legend="Items" name="items" item-label="item" min="1" max="1">
+        <input type="text" name="val" />
+      </civ-repeater>
+    `);
+    const hint = el.querySelector('.civ-repeater-max-hint');
+    expect(hint).not.toBeNull();
+    expect(hint!.textContent).toContain('1');
+    expect(hint!.textContent).toContain('item');
+  });
+
+  it('does not render max-reached hint when max is 0 (unlimited)', async () => {
+    const el = await fixture<CivRepeater>(`
+      <civ-repeater legend="Items" name="items" item-label="item">
+        <input type="text" name="val" />
+      </civ-repeater>
+    `);
+    expect(el.querySelector('.civ-repeater-max-hint')).toBeNull();
+  });
+
+  it('renders empty-state-text when list is empty', async () => {
+    const el = await fixture<CivRepeater>(`
+      <civ-repeater legend="Items" name="items" item-label="item" empty-state-text="No items yet.">
+        <input type="text" name="val" />
+      </civ-repeater>
+    `);
+    const empty = el.querySelector('.civ-repeater-empty-state');
+    expect(empty?.textContent?.trim()).toBe('No items yet.');
+  });
+
+  it('hides empty-state-text once a row is added', async () => {
+    const el = await fixture<CivRepeater>(`
+      <civ-repeater legend="Items" name="items" item-label="item" empty-state-text="No items yet.">
+        <input type="text" name="val" />
+      </civ-repeater>
+    `) as CivRepeater;
+    expect(el.querySelector('.civ-repeater-empty-state')).not.toBeNull();
+    el.addRow();
+    await elementUpdated(el);
+    expect(el.querySelector('.civ-repeater-empty-state')).toBeNull();
+  });
+
   it('reindexes rows after removal', async () => {
     const el = await fixture<CivRepeater>(`
       <civ-repeater legend="Items" name="items" item-label="item" min="1">
@@ -651,6 +694,73 @@ describe('civ-repeater route mode', () => {
     const el = await mountRouted();
     const summaries = el.querySelectorAll('.civ-list-item__content');
     expect(summaries[0].textContent?.trim()).toBe('dependent 1');
+  });
+
+  it('summary-template interpolates {prop} placeholders', async () => {
+    const el = await fixture<CivRepeater>(`
+      <civ-repeater
+        mode="route"
+        legend="Deps"
+        item-label="dependent"
+        add-href="/new"
+        summary-template="{firstName} {lastName}"
+      ></civ-repeater>
+    `);
+    el.rows = [{ id: 'a', firstName: 'Alex', lastName: 'Chen' }];
+    await elementUpdated(el);
+    const summary = el.querySelector('.civ-list-item__content');
+    expect(summary?.textContent?.trim()).toBe('Alex Chen');
+  });
+
+  it('summary-template wins over summary-fields when both are set', async () => {
+    const el = await fixture<CivRepeater>(`
+      <civ-repeater
+        mode="route"
+        legend="Deps"
+        item-label="dependent"
+        add-href="/new"
+        summary-template="{lastName}, {firstName}"
+        summary-fields="firstName,lastName"
+      ></civ-repeater>
+    `);
+    el.rows = [{ id: 'a', firstName: 'Alex', lastName: 'Chen' }];
+    await elementUpdated(el);
+    const summary = el.querySelector('.civ-list-item__content');
+    expect(summary?.textContent?.trim()).toBe('Chen, Alex');
+  });
+
+  it('rowSummary fn still wins over summary-template', async () => {
+    const el = await fixture<CivRepeater>(`
+      <civ-repeater
+        mode="route"
+        legend="Deps"
+        item-label="dependent"
+        add-href="/new"
+        summary-template="{firstName} {lastName}"
+      ></civ-repeater>
+    `) as CivRepeater;
+    el.rows = [{ id: 'a', firstName: 'Alex', lastName: 'Chen' }] as any;
+    el.rowSummary = (row) => `FN: ${row.firstName}`;
+    await elementUpdated(el);
+    const summary = el.querySelector('.civ-list-item__content');
+    expect(summary?.textContent?.trim()).toBe('FN: Alex');
+  });
+
+  it('summary-template renders empty string for missing properties', async () => {
+    const el = await fixture<CivRepeater>(`
+      <civ-repeater
+        mode="route"
+        legend="Deps"
+        item-label="dependent"
+        add-href="/new"
+        summary-template="{firstName} {middleName} {lastName}"
+      ></civ-repeater>
+    `);
+    el.rows = [{ id: 'a', firstName: 'Alex', lastName: 'Chen' }];
+    await elementUpdated(el);
+    const summary = el.querySelector('.civ-list-item__content');
+    // Double space where middleName was — that's the literal template, not a bug.
+    expect(summary?.textContent?.trim()).toBe('Alex  Chen');
   });
 
   it('Add affordance is a real <a href> with the addHref', async () => {

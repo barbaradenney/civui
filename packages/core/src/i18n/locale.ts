@@ -323,6 +323,7 @@ export interface CivLocaleStrings {
   repeaterFormStepsAddTitle: string; // "Add {item}"
   repeaterFormStepsEditTitle: string; // "Edit {item} {index}"
   repeaterMinReached: string; // "At least {min} {item} required"
+  repeaterMaxReached: string; // "You've added the maximum of {max} {item}." — shown in place of the Add button when at limit
 
   // Partnership history (covers marriage, civil union, domestic partnership,
   // cohabitation, and other long-term partner relationships).
@@ -927,6 +928,7 @@ const defaultStrings: CivLocaleStrings = {
   repeaterFormStepsAddTitle: 'Add {item}',
   repeaterFormStepsEditTitle: 'Edit {item} {index}',
   repeaterMinReached: 'At least {min} {item} required',
+  repeaterMaxReached: "You've added the maximum of {max} {item}.",
 
   marriageLegend: 'About this marriage',
   marriageSpouseLegend: 'Spouse\'s name',

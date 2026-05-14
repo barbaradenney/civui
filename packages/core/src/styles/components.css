@@ -2578,6 +2578,20 @@
     text-transform: capitalize;
   }
 
+  /* Auto-generated hint shown in place of the "Add another" button when
+     `max` has been reached. Same visual weight as `civ-hint--group` —
+     small, gray, subordinate — so it reads as guidance not as an error. */
+
+  .civ-repeater-max-hint {
+    @apply civ-text-sm civ-m-0;
+    color: var(--civ-color-base-dark);
+  }
+
+  .civ-repeater-empty-state {
+    @apply civ-text-sm civ-m-0 civ-mb-3 civ-italic;
+    color: var(--civ-color-base-dark);
+  }
+
   /* ── Divider ──────────────────────────────────────────────── */
 
   .civ-divider {

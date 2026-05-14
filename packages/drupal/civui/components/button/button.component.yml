@@ -39,7 +39,10 @@ props:
       title: Icon end
       type: string
       description: 'Trailing icon name'
-
+    href:
+      title: Href
+      type: string
+      description: 'When set, renders as `<a href>` instead of `<button>` — for navigation affordances that visually belong with other buttons (e.g. an "Add another" link styled as a secondary button). The label is underlined so the link identity stays visible'
 
 slots:
   default:

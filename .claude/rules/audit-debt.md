@@ -24,6 +24,16 @@ When you finish an audit, the audit skill writes new findings here (see `.claude
 
 ---
 
+## civ-link variant dedup vs civ-button[href] polymorphism
+
+- **Surfaced:** 2026-05-14 alongside the polymorphic-href landing on civ-button + civ-action-button.
+- **What overlaps now:** `civ-button[href] variant="primary"` and `civ-link variant="primary"` produce visually similar filled-button-shaped `<a>` affordances. Same for `secondary`. The `civ-link variant="tertiary"` (plain underlined text) and `variant="back"` (chevron-left navigation) have no button equivalent — those stay unique.
+- **Why deferred:** The duplication is narrow (1–2 variants) and we don't yet have evidence about which API consumers reach for in real apps. Removing `civ-link variant="primary|secondary"` is a breaking change that cascades through schema + iOS + Android + Drupal SDC + 50+ doc pages and any consumer code. Better to let the polymorphism bake and watch real usage.
+- **What to watch for:** During the next two audit rounds, grep `civ-link variant="primary"` and `civ-link variant="secondary"` usage in the docs site and in any tracked consumer apps. If both stay at zero or near-zero adoption after the polymorphism is GA, schedule the dedup. If consumers actively pick civ-link for these, keep both.
+- **Adjacent decision:** Package merge (`@civui/actions` + `@civui/navigation` → one package) is a separate question. Cheap to do (mostly imports), but doesn't pay off until we also dedup the components — otherwise we just move the same surface under a new name. Bundle both into one breaking change when we land the dedup.
+
+---
+
 ## Process
 
 Run `pnpm validate:drift` after each audit to confirm fixes don't introduce drift. Items in this file should be reviewed at the start of each audit round — if an entry is still here after three audits, escalate (file an issue or schedule the work).

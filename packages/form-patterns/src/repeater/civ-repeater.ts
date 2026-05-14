@@ -413,13 +413,13 @@ export class CivRepeater extends CivBaseElement {
         ` : nothing}
 
         ${canAdd && this.addHref ? html`
-          <civ-link
+          <civ-button
             href="${sanitizeHref(this.addHref)}"
             variant="secondary"
             icon-start="plus"
             label="${interpolate(t(this.rows.length === 0 ? 'repeaterAddFirstButton' : 'repeaterAddButton'), { item: this.itemLabel })}"
             class="civ-mt-3"
-          ></civ-link>
+          ></civ-button>
         ` : nothing}
 
         ${!canAdd && this.max > 0 ? html`

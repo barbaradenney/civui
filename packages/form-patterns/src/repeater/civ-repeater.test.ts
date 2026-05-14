@@ -358,13 +358,13 @@ describe('civ-repeater', () => {
       ></civ-repeater>
     `) as CivRepeater;
     // route mode starts with empty rows → first-add copy
-    const add = el.querySelector(':scope > fieldset > civ-link') as HTMLElement;
+    const add = el.querySelector(':scope > fieldset > civ-button[href]') as HTMLElement;
     expect(add.getAttribute('label')).toBe('Add dependent');
 
     // Set rows on the route-mode repeater; copy flips
     el.rows = [{ id: 'a', firstName: 'Alex' }];
     await elementUpdated(el);
-    const add2 = el.querySelector(':scope > fieldset > civ-link') as HTMLElement;
+    const add2 = el.querySelector(':scope > fieldset > civ-button[href]') as HTMLElement;
     expect(add2.getAttribute('label')).toBe('Add another dependent');
   });
 
@@ -832,7 +832,7 @@ describe('civ-repeater route mode', () => {
     const el = await mountRouted({ addHref: '/dependents/new' });
     // The Add link is the fieldset-level civ-link, NOT one of the per-row
     // Edit links — scope the query so the test reflects the role split.
-    const add = el.querySelector(':scope > fieldset > civ-link') as HTMLElement;
+    const add = el.querySelector(':scope > fieldset > civ-button[href]') as HTMLElement;
     expect(add).not.toBeNull();
     expect(add.getAttribute('href')).toBe('/dependents/new');
   });
@@ -949,7 +949,7 @@ describe('civ-repeater route mode', () => {
     const el = await mountRouted({ max: 2 });
     expect(el.querySelectorAll('[data-civ-repeater-row]').length).toBe(2);
     // The top-level add affordance — `civ-link` outside any row.
-    const topLevelAdd = el.querySelector(':scope > fieldset > civ-link');
+    const topLevelAdd = el.querySelector(':scope > fieldset > civ-button[href]');
     expect(topLevelAdd).toBeNull();
   });
 

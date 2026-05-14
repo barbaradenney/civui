@@ -1184,6 +1184,14 @@
     @apply civ-bg-error-dark civ-text-white civ-border-error-dark;
   }
 
+  /* Link mode — civ-button rendered as <a href>. Underlines the
+     label so the link affordance stays visible even when wearing
+     button chrome. Pairs with any variant + danger combination. */
+  .civ-btn--link {
+    @apply civ-underline;
+    text-decoration-color: currentColor;
+  }
+
   /* Full-width buttons on mobile. Action buttons (toolbar/inline) are
      intentionally excluded. */
   @media (max-width: 480px) {

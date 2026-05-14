@@ -39,6 +39,36 @@ const schema: ComponentSchema = {
       default: '',
       attribute: 'icon-end',
     },
+    href: {
+      type: 'string',
+      description: 'When set, renders as `<a href>` instead of `<button>` — for navigation affordances that visually belong with other buttons (e.g. an "Add another" link styled as a secondary button). The label is underlined so the link identity stays visible',
+      default: '',
+    },
+    target: {
+      type: 'string',
+      description: 'HTML `target` attribute (link mode only). Web-only — use `new-tab` for the common "open in new tab" case',
+      default: '',
+      webOnly: true,
+    },
+    rel: {
+      type: 'string',
+      description: 'HTML `rel` attribute (link mode only). Web-only — `new-tab` automatically sets `rel="noopener noreferrer"`',
+      default: '',
+      webOnly: true,
+    },
+    download: {
+      type: 'string',
+      description: 'HTML `download` attribute (link mode only, suggested filename). Web-only — native platforms handle downloads via OS share/save sheets',
+      default: '',
+      webOnly: true,
+    },
+    newTab: {
+      type: 'boolean',
+      description: 'Open the link in a new tab/window (link mode only). Sets `target="_blank"` + `rel="noopener noreferrer"`. Web-only — native platforms route URLs through the OS, which has no "new tab" concept',
+      default: false,
+      attribute: 'new-tab',
+      webOnly: true,
+    },
   },
 
   events: {},

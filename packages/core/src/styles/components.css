@@ -182,6 +182,35 @@
     @apply civ-py-3 civ-px-0 civ-text-base;
   }
 
+  /* Row layout — content on the left, action cluster on the right.
+     Applies via :has() so it only kicks in when consumers actually
+     use the `__content` / `__actions` BEM children. Without that
+     guard, the bare .civ-list-item host (custom element) would also
+     get the flex layout and break its existing block rendering.
+     The actions cluster always sits at the row-end on desktop. */
+  .civ-list-item:has(> .civ-list-item__content),
+  .civ-list-item:has(> .civ-list-item__actions) {
+    @apply civ-flex civ-items-start civ-justify-between civ-gap-3;
+  }
+
+  .civ-list-item__content {
+    @apply civ-flex-1 civ-min-w-0;
+    word-break: break-word;
+  }
+
+  .civ-list-item__actions {
+    @apply civ-flex civ-items-center civ-gap-1 civ-shrink-0;
+  }
+
+  /* Mobile: stack content + actions so neither gets squeezed.
+     Actions still left-align under the content (not full-width). */
+  @media (max-width: 480px) {
+    .civ-list-item:has(> .civ-list-item__content),
+    .civ-list-item:has(> .civ-list-item__actions) {
+      @apply civ-flex-col civ-items-start;
+    }
+  }
+
   /* Heading slot: bold, lg size, no margin */
   [data-civ-list-item-heading-slot] > *,
   .civ-list-item-heading-prop {

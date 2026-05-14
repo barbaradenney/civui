@@ -61,6 +61,13 @@ globs:
 - Per-field `touched` tracking: fields have a `touched` property (set on first blur, reset on form reset).
 - Use `civ-text-input[touched]` CSS selector to style touched vs pristine fields.
 
+## Row-action layout
+- Action clusters at the end of a data-list row (Edit / Remove / View on a card row, summary card, or table-style line item) right-align via the row-end position. Don't render them inline immediately after the row content.
+- Use the `civ-list-item__content` + `civ-list-item__actions` BEM pair to get this for free: the parent row picks up `flex` + `justify-between` automatically (via `:has()`) when both children are present.
+- Below the 480px mobile breakpoint, the row stacks: content on top, actions left-aligned beneath. The actions never go full-width — they retain natural button width so the destructive affordance doesn't grow to consume the screen.
+- Keep destructive actions specific in their label (`Remove dependent`, not `Remove`) so right-alignment doesn't sever the link between the action and the content it affects.
+- For inline prose ("you can change your email address here"), the link stays inline. The right-align rule is specifically for **row-level** action clusters — Edit / Remove next to a summary card, a list row, or a data field.
+
 ## Mobile design
 - All popups, dropdowns, and dialogs MUST use bottom sheets on mobile (≤480px).
 - No absolute-positioned dropdowns on small screens — they overflow and are hard to tap.

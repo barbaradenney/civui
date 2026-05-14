@@ -16,6 +16,15 @@ const meta: Meta = {
       control: 'select',
       options: ['primary', 'secondary', 'tertiary', 'back'],
     },
+    type: {
+      control: 'select',
+      options: [undefined, 'phone', 'email', 'download'],
+    },
+    number: { control: 'text' },
+    address: { control: 'text' },
+    subject: { control: 'text' },
+    filename: { control: 'text' },
+    fileSize: { control: 'text' },
     danger: { control: 'boolean' },
     disabled: { control: 'boolean' },
     iconStart: { control: 'text' },
@@ -261,6 +270,107 @@ export const ButtonStyledLinkComparison: Story = {
         and the underline helps a reader distinguish navigation from in-page
         action.
       </p>
+    </div>
+  `,
+};
+
+// ── Device-action types (folded from the former civ-action-link) ──
+// The `type` prop turns a civ-link into a device-action shortcut.
+// `phone` builds a `tel:` href + phone icon; `email` builds a
+// `mailto:` href + mail icon + optional subject; `download` passes
+// the `href` through and adds a download icon + optional file-size
+// suffix. All three are orthogonal to `variant` — a download link
+// can wear the primary button chrome if needed.
+
+export const Phone: Story = {
+  render: () => html`
+    <civ-link type="phone" number="8005551234"></civ-link>
+  `,
+};
+
+export const PhoneWithLabel: Story = {
+  name: 'Phone with Label',
+  render: () => html`
+    <civ-link type="phone" number="8005551234" label="Call the VA help desk"></civ-link>
+  `,
+};
+
+export const PhoneInternational: Story = {
+  name: 'Phone International',
+  render: () => html`
+    <civ-link type="phone" number="+44 20 7946 0958"></civ-link>
+  `,
+};
+
+export const Email: Story = {
+  render: () => html`
+    <civ-link type="email" address="help@va.gov"></civ-link>
+  `,
+};
+
+export const EmailWithLabel: Story = {
+  name: 'Email with Label',
+  render: () => html`
+    <civ-link type="email" address="support@va.gov" label="Contact VA support"></civ-link>
+  `,
+};
+
+export const EmailWithSubject: Story = {
+  name: 'Email with Subject',
+  render: () => html`
+    <civ-link type="email" address="benefits@va.gov" subject="Question about my claim"></civ-link>
+  `,
+};
+
+export const Download: Story = {
+  render: () => html`
+    <civ-link type="download" href="/forms/10-10EZ.pdf" filename="10-10EZ.pdf"></civ-link>
+  `,
+};
+
+export const DownloadWithSize: Story = {
+  name: 'Download with File Size',
+  render: () => html`
+    <civ-link type="download" href="/forms/21-526EZ.pdf" filename="21-526EZ.pdf" file-size="2.4 MB" label="VA Form 21-526EZ"></civ-link>
+  `,
+};
+
+export const TypeDisabled: Story = {
+  name: 'Device-Action Types — Disabled',
+  render: () => html`
+    <div class="civ-flex civ-flex-col civ-gap-2">
+      <civ-link type="phone" number="8005551234" disabled></civ-link>
+      <civ-link type="email" address="help@va.gov" disabled></civ-link>
+      <civ-link type="download" href="/file.pdf" filename="file.pdf" disabled></civ-link>
+    </div>
+  `,
+};
+
+export const AllDeviceActionTypes: Story = {
+  name: 'All Device-Action Types',
+  render: () => html`
+    <div class="civ-flex civ-flex-col civ-gap-3">
+      <civ-link type="phone" number="8005271000" label="VA benefits hotline"></civ-link>
+      <civ-link type="phone" number="8008271000"></civ-link>
+      <civ-link type="phone" number="711" label="TTY: 711"></civ-link>
+      <civ-link type="email" address="help@va.gov"></civ-link>
+      <civ-link type="email" address="benefits@va.gov" subject="Claim status" label="Email about your claim"></civ-link>
+      <civ-link type="download" href="/forms/10-10EZ.pdf" filename="10-10EZ.pdf" file-size="1.2 MB"></civ-link>
+    </div>
+  `,
+};
+
+export const GovernmentContactSection: Story = {
+  name: 'Government Contact Section',
+  render: () => html`
+    <div style="max-width: 400px;">
+      <h3 class="civ-mb-3 civ-font-semibold">Need help?</h3>
+      <div class="civ-flex civ-flex-col civ-gap-2">
+        <civ-link type="phone" number="8008271000" label="Call us"></civ-link>
+        <civ-link type="phone" number="711" label="TTY: 711"></civ-link>
+        <civ-link type="email" address="help@va.gov" label="Email us"></civ-link>
+        <civ-link type="download" href="/guides/applying-for-benefits.pdf" filename="applying-for-benefits.pdf" file-size="850 KB" label="Download the application guide"></civ-link>
+      </div>
     </div>
   `,
 };

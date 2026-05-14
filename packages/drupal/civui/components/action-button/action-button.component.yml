@@ -44,7 +44,10 @@ props:
       title: Icon end
       type: string
       description: 'Trailing icon name'
-
+    href:
+      title: Href
+      type: string
+      description: 'When set, renders as `<a href>` instead of `<button>` — for navigation affordances that visually belong with other action buttons (e.g. an Edit link next to a Remove button in a list row). The label gets underlined so the link identity s...'
 
 libraryOverrides:
   dependencies:

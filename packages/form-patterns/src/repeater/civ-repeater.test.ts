@@ -842,7 +842,7 @@ describe('civ-repeater route mode', () => {
       editHrefPattern: '/dependents/{id}/edit',
       idField: 'id',
     });
-    const editLinks = el.querySelectorAll('[data-civ-repeater-row] civ-link');
+    const editLinks = el.querySelectorAll('[data-civ-repeater-row] civ-action-button[href]');
     expect(editLinks[0].getAttribute('href')).toBe('/dependents/a/edit');
     expect(editLinks[1].getAttribute('href')).toBe('/dependents/b/edit');
   });
@@ -851,7 +851,7 @@ describe('civ-repeater route mode', () => {
     const el = await mountRouted({
       editHrefPattern: '/d/{index}',
     });
-    const editLinks = el.querySelectorAll('[data-civ-repeater-row] civ-link');
+    const editLinks = el.querySelectorAll('[data-civ-repeater-row] civ-action-button[href]');
     expect(editLinks[0].getAttribute('href')).toBe('/d/0');
     expect(editLinks[1].getAttribute('href')).toBe('/d/1');
   });
@@ -870,7 +870,7 @@ describe('civ-repeater route mode', () => {
       el.rows = [{ firstName: 'no-id' } as any];
       await elementUpdated(el);
 
-      const editLink = el.querySelector('[data-civ-repeater-row] civ-link');
+      const editLink = el.querySelector('[data-civ-repeater-row] civ-action-button[href]');
       expect(editLink?.getAttribute('href')).toBe('/items/0/edit');
       expect(warn).toHaveBeenCalled();
     } finally {
@@ -901,7 +901,7 @@ describe('civ-repeater route mode', () => {
       rows: [{ id: 'a/b', firstName: 'x', lastName: 'y' }],
       editHrefPattern: '/items/{id}',
     });
-    const editLink = el.querySelector('[data-civ-repeater-row] civ-link');
+    const editLink = el.querySelector('[data-civ-repeater-row] civ-action-button[href]');
     expect(editLink?.getAttribute('href')).toBe('/items/a%2Fb');
   });
 

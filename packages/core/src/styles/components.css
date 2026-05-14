@@ -1364,6 +1364,14 @@
     background-color: var(--civ-color-error-lighter);
   }
 
+  /* Link mode — civ-action-button rendered as <a href>. Underlines
+     the label so the link affordance stays visible even when wearing
+     button chrome. Pairs with any variant + danger combination. */
+  .civ-action-btn--link {
+    @apply civ-underline;
+    text-decoration-color: currentColor;
+  }
+
   /* ── Button Group ──────────────────────────────────────────── */
 
   .civ-button-group {

@@ -450,12 +450,12 @@ export class CivRepeater extends CivBaseElement {
           </span>
           <span class="civ-list-item__actions">
             ${editHref ? html`
-              <civ-link
-                href="${editHref}"
+              <civ-action-button
                 variant="tertiary"
+                href="${editHref}"
                 label="${t('repeaterEditButton')}"
                 aria-label="${interpolate(t('repeaterEditAriaLabel'), { item: this.itemLabel, index: String(index + 1) })}"
-              ></civ-link>
+              ></civ-action-button>
             ` : nothing}
             <civ-action-button
               variant="tertiary"

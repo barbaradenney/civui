@@ -57,6 +57,11 @@ public struct CivActionButton: View {
     /// Icon name rendered after the label text.
     public var iconEnd: String
 
+    /// When non-empty, the button acts as a navigation link instead of an in-place
+    /// action. On native iOS we resolve URLs through the standard environment
+    /// `openURL` action rather than rendering an `<a>` element.
+    public var href: String
+
     // MARK: - Internal State
 
     @Environment(\.colorScheme) private var colorScheme
@@ -73,7 +78,8 @@ public struct CivActionButton: View {
         onAnalytics: ((String, [String: Any]?) -> Void)? = nil,
         type: String = "button",
         iconStart: String = "",
-        iconEnd: String = ""
+        iconEnd: String = "",
+        href: String = ""
     ) {
         self.label = label
         self.variant = variant
@@ -85,6 +91,7 @@ public struct CivActionButton: View {
         self.type = type
         self.iconStart = iconStart
         self.iconEnd = iconEnd
+        self.href = href
     }
 
     // MARK: - Body

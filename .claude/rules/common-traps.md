@@ -297,6 +297,40 @@ prop from one of the known base classes). Wired into
 
 ---
 
+## Double-labelled form controls
+
+A single native `<input>` / `<select>` / `<textarea>` must have at
+most one direct labelling element. Two patterns produced the bug
+historically:
+
+1. **Wrapping `<label>` + child component's own `<label for>`.**
+   Memorable-date wrapped each sub-field in
+   `<label class="…"><span>Month</span><civ-select label="Month">`,
+   so the user saw "Month" rendered twice — once by the wrapping
+   `<span>`, once by civ-select's own self-contained label.
+
+2. **Single-control fieldset whose only control has its own
+   `<label for>`.** Civ-relationship's outer fieldset legend
+   ("Relationship details") sat above the inner civ-select's own
+   label ("Relationship to you") with nothing else inside — two
+   labels for one control. Multi-control fieldsets (address, name,
+   direct-deposit) are correct grouping and are left alone.
+
+When a compound's outer legend already provides the accessible name,
+drop the inner control's `label=` attribute — the fieldset/legend
+pattern propagates the legend to every contained control
+automatically. Do NOT add `aria-label` on the custom element; ARIA
+attributes on the host don't propagate to the inner native control.
+
+**Caught by:** `pnpm lint:double-labels` — runs a Vitest sweep that
+fixtures a representative set of compound components into jsdom and
+counts the distinct labelling elements directly associated with each
+native form control. Wired into `pnpm validate:lints` and the
+drift-lints CI gate. To extend, add a fixture line to
+`packages/compound/src/_lint/double-labels.test.ts`.
+
+---
+
 ## Local-first commit / push workflow
 
 The project's convention is to commit locally and push only when

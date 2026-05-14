@@ -214,12 +214,12 @@ export class CivRelationship extends LegendHeadingMixin(CivCompoundElement) {
         ` : nothing}
 
         <civ-select
-          label="${t('relationshipTypeLabel')}"
           name="${prefix}.relationship"
           value="${this._data.relationship}"
           error="${this.relationshipError}"
           ?required="${this.required}"
           ?disabled="${this.disabled}"
+          ?hide-required-indicator="${this.required}"
           data-relationship-type
           @civ-change="${this._onRelationshipChange}"
         ></civ-select>

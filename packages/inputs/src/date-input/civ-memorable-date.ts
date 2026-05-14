@@ -168,8 +168,7 @@ export class CivMemorableDate extends LegendHeadingMixin(CivFormElement) {
 
     const fields = html`
       <div class="civ-memorable-date-fields" data-civ-memorable-date>
-          <label class="civ-memorable-date-month">
-            <span class="civ-font-semibold civ-block civ-mb-1">${monthLabel}</span>
+          <div class="civ-memorable-date-month">
             <civ-select
               label="${monthLabel}"
               name="${this.name ? `${this.name}-month` : 'month'}"
@@ -181,9 +180,8 @@ export class CivMemorableDate extends LegendHeadingMixin(CivFormElement) {
               ?hide-required-indicator="${this.required}"
               disable-analytics
             ></civ-select>
-          </label>
-          <label class="civ-memorable-date-day">
-            <span class="civ-font-semibold civ-block civ-mb-1">${dayLabel}</span>
+          </div>
+          <div class="civ-memorable-date-day">
             <civ-text-input
               label="${dayLabel}"
               name="${this.name ? `${this.name}-day` : 'day'}"
@@ -199,9 +197,8 @@ export class CivMemorableDate extends LegendHeadingMixin(CivFormElement) {
               ?hide-required-indicator="${this.required}"
               disable-analytics
             ></civ-text-input>
-          </label>
-          <label class="civ-memorable-date-year">
-            <span class="civ-font-semibold civ-block civ-mb-1">${yearLabel}</span>
+          </div>
+          <div class="civ-memorable-date-year">
             <civ-text-input
               label="${yearLabel}"
               name="${this.name ? `${this.name}-year` : 'year'}"
@@ -217,7 +214,7 @@ export class CivMemorableDate extends LegendHeadingMixin(CivFormElement) {
               ?hide-required-indicator="${this.required}"
               disable-analytics
             ></civ-text-input>
-          </label>
+          </div>
         </div>
     `;
 

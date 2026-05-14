@@ -187,10 +187,16 @@
      use the `__content` / `__actions` BEM children. Without that
      guard, the bare .civ-list-item host (custom element) would also
      get the flex layout and break its existing block rendering.
-     The actions cluster always sits at the row-end on desktop. */
+     The actions cluster always sits at the row-end on desktop.
+     `list-style: none` + `padding-inline-start: 0` is defensive —
+     consumers rendering this BEM pair on a `<div>` or `<li>` should
+     never inherit a bullet marker from a surrounding `<ul>` or
+     anything else upstream. */
   .civ-list-item:has(> .civ-list-item__content),
   .civ-list-item:has(> .civ-list-item__actions) {
     @apply civ-flex civ-items-start civ-justify-between civ-gap-3;
+    list-style: none;
+    padding-inline-start: 0;
   }
 
   .civ-list-item__content {

@@ -117,7 +117,7 @@ describe('civ-file-upload', () => {
     el._addFiles([new File(['a'], 'alpha.pdf', { type: 'application/pdf' })]);
     await elementUpdated(el);
 
-    el._removeFile(0);
+    el.removeFile(0);
     await new Promise((r) => requestAnimationFrame(r));
 
     const liveRegion = document.querySelector('[aria-live]');
@@ -233,7 +233,7 @@ describe('civ-file-upload', () => {
       const handler = vi.fn();
       el.addEventListener('civ-analytics', handler as EventListener);
 
-      el._removeFile(0);
+      el.removeFile(0);
 
       const removeCall = handler.mock.calls.find((c: any) => c[0].detail.action === 'remove');
       expect(removeCall).toBeTruthy();
@@ -443,11 +443,85 @@ describe('aria-required', () => {
     const removeButtons = el.querySelectorAll('[data-file-remove]');
     expect(removeButtons.length).toBe(2);
 
-    el._removeFile(0);
+    el.removeFile(0);
     await el.updateComplete;
 
     expect(el.files.length).toBe(1);
     expect(el.files[0].name).toBe('b.pdf');
+  });
+});
+
+describe('civ-file-upload destructive-action hook', () => {
+  afterEach(cleanupFixtures);
+
+  it('fires cancelable civ-file-upload-before-remove that aborts on preventDefault', async () => {
+    const el = await fixture('<civ-file-upload label="Upload" name="doc" multiple></civ-file-upload>') as any;
+    el._addFiles([new File(['a'], 'alpha.pdf', { type: 'application/pdf' })]);
+    await el.updateComplete;
+    expect(el.files.length).toBe(1);
+
+    let removed = false;
+    el.addEventListener('civ-file-removed', () => { removed = true; });
+    el.addEventListener('civ-file-upload-before-remove', (e: Event) => e.preventDefault());
+
+    el.removeFile(0);
+    await el.updateComplete;
+
+    // Nothing changed — file still in the list, civ-file-removed didn't fire.
+    expect(el.files.length).toBe(1);
+    expect(removed).toBe(false);
+  });
+
+  it('skipConfirm: true bypasses the cancelable hook', async () => {
+    const el = await fixture('<civ-file-upload label="Upload" name="doc" multiple></civ-file-upload>') as any;
+    el._addFiles([new File(['a'], 'alpha.pdf', { type: 'application/pdf' })]);
+    await el.updateComplete;
+
+    // Consumer pattern: preventDefault on the first pass, then re-call
+    // with skipConfirm: true from the modal's confirm handler.
+    let beforeCalls = 0;
+    el.addEventListener('civ-file-upload-before-remove', (e: CustomEvent) => {
+      beforeCalls++;
+      e.preventDefault();
+      el.removeFile(e.detail.index, { skipConfirm: true });
+    });
+
+    el.removeFile(0);
+    await el.updateComplete;
+
+    // Only one before-remove fired (re-entry was skipped), file IS gone.
+    expect(beforeCalls).toBe(1);
+    expect(el.files.length).toBe(0);
+  });
+
+  it('civ-file-upload-before-remove is cancelable and carries the removal payload', async () => {
+    const el = await fixture('<civ-file-upload label="Upload" name="doc"></civ-file-upload>') as any;
+    el._addFiles([new File(['a'], 'alpha.pdf', { type: 'application/pdf' })]);
+    await el.updateComplete;
+
+    let captured: CustomEvent | null = null;
+    el.addEventListener('civ-file-upload-before-remove', (e: CustomEvent) => { captured = e; });
+    el.removeFile(0);
+
+    expect(captured).not.toBeNull();
+    expect(captured!.cancelable).toBe(true);
+    expect(captured!.detail.index).toBe(0);
+    expect(captured!.detail.name).toBe('alpha.pdf');
+    expect(captured!.detail.isInitial).toBe(false);
+  });
+
+  it('without listeners, the normal removal path still works', async () => {
+    const el = await fixture('<civ-file-upload label="Upload" name="doc" multiple></civ-file-upload>') as any;
+    el._addFiles([new File(['a'], 'alpha.pdf', { type: 'application/pdf' })]);
+    await el.updateComplete;
+
+    let removed = false;
+    el.addEventListener('civ-file-removed', () => { removed = true; });
+    el.removeFile(0);
+    await el.updateComplete;
+
+    expect(el.files.length).toBe(0);
+    expect(removed).toBe(true);
   });
 });
 
@@ -490,7 +564,7 @@ describe('civ-file-upload duplicate detection', () => {
     await el.updateComplete;
     expect(el.files.length).toBe(1);
 
-    el._removeFile(0);
+    el.removeFile(0);
     await el.updateComplete;
     expect(el.files.length).toBe(0);
 
@@ -615,7 +689,7 @@ describe('civ-file-upload initialFiles (draft restore)', () => {
     let captured: any = null;
     el.addEventListener('civ-file-removed', ((e: CustomEvent) => { captured = e.detail; }) as EventListener);
 
-    el._removeFile(0);
+    el.removeFile(0);
     await elementUpdated(el);
 
     expect(captured).not.toBeNull();
@@ -634,7 +708,7 @@ describe('civ-file-upload initialFiles (draft restore)', () => {
     let captured: any = null;
     el.addEventListener('civ-file-removed', ((e: CustomEvent) => { captured = e.detail; }) as EventListener);
 
-    el._removeFile(0);
+    el.removeFile(0);
     await elementUpdated(el);
 
     expect(captured.isInitial).toBe(false);
@@ -652,7 +726,7 @@ describe('civ-file-upload initialFiles (draft restore)', () => {
 
     expect(el.keptInitialFileIds).toEqual(['srv-1', 'srv-2', 'srv-3']);
 
-    el._removeFile(1);
+    el.removeFile(1);
     await elementUpdated(el);
     expect(el.keptInitialFileIds).toEqual(['srv-1', 'srv-3']);
     expect(el.removedInitialFileIds).toEqual(['srv-2']);
@@ -663,7 +737,7 @@ describe('civ-file-upload initialFiles (draft restore)', () => {
     el.initialFiles = [{ id: 'srv-1', name: 'a.pdf', size: 100 }];
     await elementUpdated(el);
 
-    el._removeFile(0);
+    el.removeFile(0);
     await elementUpdated(el);
     expect(el.files.length).toBe(0);
     expect(el.removedInitialFileIds).toEqual(['srv-1']);

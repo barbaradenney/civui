@@ -76,12 +76,13 @@ a `civ-modal`, and on confirm calls the component's `<action>(index, {
 skipConfirm: true })` method (or equivalent) to perform the action
 without re-firing the hook.
 
-Today, `civ-repeater` has this hook:
+Components currently emitting the hook:
 
 | Component | Cancelable event | Confirm method |
 |---|---|---|
 | `civ-repeater` (inline / form-steps) | `civ-repeater-before-remove` | `removeRow(index, { skipConfirm: true })` |
 | `civ-repeater` (route mode) | n/a — consumer already owns the array mutation in `civ-repeater-remove` | n/a |
+| `civ-file-upload` | `civ-file-upload-before-remove` | `removeFile(index, { skipConfirm: true })` |
 
 When other components grow destructive affordances, follow the same
 shape: `civ-<X>-before-<action>` cancelable event + `skipConfirm` (or

@@ -154,6 +154,7 @@ function formatAcceptedTypes(accept: string): string {
  * @fires civ-change - When files are added or removed, detail: { files: File[] }
  * @fires civ-upload-cancel - When a file upload is cancelled, detail: { index, name }
  * @fires civ-upload-retry - When a file upload is retried, detail: { index, name, file }
+ * @fires civ-file-upload-before-remove - Cancelable. Fires before a file is removed. `preventDefault()` aborts the removal — wire this up to insert a confirmation step (e.g. a `civ-modal`), then re-call `removeFile(index, { skipConfirm: true })` from the confirm handler. Detail: { index, name, isInitial, id? }
  * @fires civ-file-removed - When any file is removed, detail: { index, name, isInitial, id? }
  *   For initial-files (isInitial=true), `id` echoes the server identifier so the
  *   consumer can issue a DELETE; for browser-side files, isInitial=false and no id.
@@ -444,7 +445,7 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
               class="civ-close-btn"
               aria-label="${interpolate(this.removeAriaLabel || t('fileUploadRemoveAriaLabel'), { name: file.name })}"
               ?disabled="${this.disabled}"
-              @click="${() => this._removeFile(index)}"
+              @click="${() => this.removeFile(index)}"
               data-file-remove
             ><civ-icon name="close" aria-hidden="true"></civ-icon></button>
           ` : nothing}
@@ -738,30 +739,25 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
     this.announce(interpolate(this.fileAddedMessage || t('fileUploadFileAddedMessage'), { count: validated.length, total: this._files.length }));
   }
 
-  private _removeFile(index: number): void {
+  /**
+   * Remove a file by index. Fires a cancelable
+   * `civ-file-upload-before-remove` event first; consumers wiring
+   * confirmation call `e.preventDefault()` and then re-call
+   * `removeFile(index, { skipConfirm: true })` from their confirm
+   * handler to bypass the hook on the re-entry pass.
+   *
+   * @param opts.skipConfirm  Bypass the cancelable hook. Used by the
+   *   consumer's confirmation flow when they've already gathered
+   *   user intent via a modal.
+   */
+  removeFile(index: number, opts: { skipConfirm?: boolean } = {}): void {
     const removed = this._files[index];
-    if (removed) {
-      this._revokePreviewUrl(removed.file);
-      // Abort any in-progress upload
-      if (removed.abortController) {
-        removed.abortController.abort();
-      }
-      if (removed.isInitial && removed.id) {
-        this._removedInitialIds.add(removed.id);
-      }
-    }
-    this._files = this._files.filter((_, i) => i !== index);
-    if (this._files.length === 0) this.error = '';
-    if (this._files.length <= CivFileUpload._FILE_LIST_LIMIT) {
-      this._showAllFiles = false;
-    }
-    if (removed) {
-      this._progressMilestones.delete(removed.name);
-    }
-    this._updateFormData();
-    this._dispatchChange();
-    if (removed) {
-      const detail: {
+    if (!removed) return;
+
+    // Cancelable pre-flight — match the shape of `civ-file-removed`
+    // so the listener has everything it needs to build the modal copy.
+    if (!opts.skipConfirm) {
+      const beforeDetail: {
         index: number;
         name: string;
         isInitial: boolean;
@@ -771,11 +767,46 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
         name: removed.name,
         isInitial: !!removed.isInitial,
       };
-      if (removed.id) detail.id = removed.id;
-      dispatch(this, 'civ-file-removed', detail);
+      if (removed.id) beforeDetail.id = removed.id;
+      const allowed = dispatch(
+        this,
+        'civ-file-upload-before-remove',
+        beforeDetail,
+        /* cancelable */ true,
+      );
+      if (!allowed) return;
     }
+
+    this._revokePreviewUrl(removed.file);
+    // Abort any in-progress upload
+    if (removed.abortController) {
+      removed.abortController.abort();
+    }
+    if (removed.isInitial && removed.id) {
+      this._removedInitialIds.add(removed.id);
+    }
+    this._files = this._files.filter((_, i) => i !== index);
+    if (this._files.length === 0) this.error = '';
+    if (this._files.length <= CivFileUpload._FILE_LIST_LIMIT) {
+      this._showAllFiles = false;
+    }
+    this._progressMilestones.delete(removed.name);
+    this._updateFormData();
+    this._dispatchChange();
+    const detail: {
+      index: number;
+      name: string;
+      isInitial: boolean;
+      id?: string;
+    } = {
+      index,
+      name: removed.name,
+      isInitial: !!removed.isInitial,
+    };
+    if (removed.id) detail.id = removed.id;
+    dispatch(this, 'civ-file-removed', detail);
     this.sendAnalytics('remove', { fileCount: this._files.length });
-    this.announce(interpolate(this.fileRemovedMessage || t('fileUploadFileRemovedMessage'), { name: removed?.name ?? '', total: this._files.length }));
+    this.announce(interpolate(this.fileRemovedMessage || t('fileUploadFileRemovedMessage'), { name: removed.name, total: this._files.length }));
 
     // Move focus to the next remove button, or the dropzone if no files remain
     void this._afterUpdate('restore focus after file removal', () => {

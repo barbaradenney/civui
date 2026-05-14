@@ -144,6 +144,41 @@ const controller = upload.getAbortController(0);
 
 <EventsTable />
 
+## Adding confirmation to Remove
+
+The default Remove (✕) button next to each file is one-click. Real
+.gov flows often involve uploads that took the user real time and
+effort to produce — a 12 MB DD-214, an evidence packet — and an
+accidental click loses that work. Insert a confirmation step.
+
+CivUI's rule is **modal-only for destructive confirmations** — inline
+two-click patterns are an accessibility hazard. See
+[Destructive actions](/foundations/destructive-actions) for the
+full rationale.
+
+The pattern: listen for the cancelable `civ-file-upload-before-remove`
+event, call `preventDefault()` to abort the auto-remove, open your own
+`civ-modal`, and on confirm re-call `removeFile(index, { skipConfirm:
+true })`:
+
+```ts
+const upload = document.querySelector('civ-file-upload');
+const modal = document.querySelector('#confirm-remove');
+
+upload.addEventListener('civ-file-upload-before-remove', (e) => {
+  e.preventDefault();
+  const { index, name } = e.detail;
+  modal.heading = `Remove ${name}?`;
+  modal.body = `${name} will be removed from your upload. This can't be undone.`;
+  modal.onConfirm = () => upload.removeFile(index, { skipConfirm: true });
+  modal.open();
+});
+```
+
+For server-resident files (the `initialFiles` set), `e.detail.id`
+echoes the server identifier so you can issue a DELETE to the
+backend in the same confirm handler.
+
 ## Usage
 
 ```html

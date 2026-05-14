@@ -157,6 +157,15 @@ const schema: ComponentSchema = {
         file: { type: 'string', description: 'The File object being retried' },
       },
     },
+    'civ-file-upload-before-remove': {
+      description: 'Cancelable. Fires before a file is removed. `preventDefault()` aborts — listen here to insert a confirmation step (typically a `civ-modal`), then re-call `removeFile(index, { skipConfirm: true })` from the confirm handler. Detail matches `civ-file-removed` so the listener has everything it needs to build the modal copy',
+      detail: {
+        index: { type: 'number', description: 'Index of the file being removed' },
+        name: { type: 'string', description: 'File name' },
+        isInitial: { type: 'boolean', description: 'True if the file was hydrated from initialFiles (server-resident)' },
+        id: { type: 'string', description: 'Stable identifier from initialFiles, when present' },
+      },
+    },
     'civ-file-removed': {
       description: 'Fires when a file is removed from the list (after upload completes or user-initiated)',
       detail: {

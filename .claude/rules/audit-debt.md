@@ -24,13 +24,12 @@ When you finish an audit, the audit skill writes new findings here (see `.claude
 
 ---
 
-## civ-link variant dedup vs civ-button[href] polymorphism
+## civ-link variant dedup (open watch)
 
-- **Surfaced:** 2026-05-14 alongside the polymorphic-href landing on civ-button + civ-action-button.
-- **What overlaps now:** `civ-button[href] variant="primary"` and `civ-link variant="primary"` produce visually similar filled-button-shaped `<a>` affordances. Same for `secondary`. The `civ-link variant="tertiary"` (plain underlined text) and `variant="back"` (chevron-left navigation) have no button equivalent — those stay unique.
-- **Why deferred:** The duplication is narrow (1–2 variants) and we don't yet have evidence about which API consumers reach for in real apps. Removing `civ-link variant="primary|secondary"` is a breaking change that cascades through schema + iOS + Android + Drupal SDC + 50+ doc pages and any consumer code. Better to let the polymorphism bake and watch real usage.
-- **What to watch for:** During the next two audit rounds, grep `civ-link variant="primary"` and `civ-link variant="secondary"` usage in the docs site and in any tracked consumer apps. If both stay at zero or near-zero adoption after the polymorphism is GA, schedule the dedup. If consumers actively pick civ-link for these, keep both.
-- **Adjacent decision:** Package merge (`@civui/actions` + `@civui/navigation` → one package) is a separate question. Cheap to do (mostly imports), but doesn't pay off until we also dedup the components — otherwise we just move the same surface under a new name. Bundle both into one breaking change when we land the dedup.
+- **Surfaced:** 2026-05-14. **Adjacent decision resolved:** the package merge (`@civui/navigation` → `@civui/actions`) and the `civ-action-link` → `civ-link[type]` fold both landed on 2026-05-14, so the original "Bundle both into one breaking change when we land the dedup" coupling no longer applies — the breaking-change window for those is already used.
+- **What still overlaps:** `civ-button[href] variant="primary"` and `civ-link variant="primary"` produce visually similar filled-button-shaped `<a>` affordances. Same for `secondary`. The `civ-link variant="tertiary"` (plain underlined text) and `variant="back"` (chevron-left navigation) have no button equivalent — those stay unique.
+- **Why still deferred:** The duplication is narrow (1–2 variants) and we don't yet have evidence about which API consumers reach for in real apps. Removing `civ-link variant="primary|secondary"` is its own breaking change. Better to let the polymorphism bake and watch real usage.
+- **What to watch for:** During the next two audit rounds, grep `civ-link variant="primary"` and `civ-link variant="secondary"` usage in the docs site and in any tracked consumer apps. If both stay at zero or near-zero adoption, schedule the dedup. If consumers actively pick civ-link for these, keep both.
 
 ---
 

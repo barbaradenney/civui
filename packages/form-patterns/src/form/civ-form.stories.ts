@@ -5,7 +5,7 @@ import './civ-form.js';
 import '@civui/inputs';
 import '@civui/controls';
 import '@civui/actions';
-import '@civui/navigation/link';
+import '@civui/actions/link';
 import '@civui/storybook-utils/demo-frame';
 import '@civui/storybook-utils/demo-frame.css';
 import type { CivDemoFrame } from '@civui/storybook-utils';

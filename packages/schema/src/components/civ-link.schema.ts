@@ -3,7 +3,7 @@ import type { ComponentSchema } from '../schema.types.js';
 const schema: ComponentSchema = {
   $schema: '1.0',
   name: 'civ-link',
-  description: 'Anchor-based link with three visual variants (primary / secondary / tertiary). Renders a real `<a>` on web (native focus ring applied automatically); native platforms map to a styled tappable Text. Automatically appends `target="_blank" rel="noopener noreferrer"` when `new-tab` is set.',
+  description: 'Anchor-based link with four visual variants (primary / secondary / tertiary / back). Renders a real `<a>` on web (native focus ring applied automatically); native platforms map to a styled tappable Text. Set `type` to `phone` / `email` / `download` for device-action shortcuts that auto-build the href, leading icon, and display text. Automatically appends `target="_blank" rel="noopener noreferrer"` when `new-tab` is set.',
   category: 'navigation',
   extends: 'CivBaseElement',
   isGroup: false,
@@ -16,9 +16,40 @@ const schema: ComponentSchema = {
     },
     variant: {
       type: 'enum',
-      description: 'Visual emphasis. `tertiary` (default) = standard underlined link; `primary` and `secondary` apply heavier styling for prominent inline links',
+      description: 'Visual emphasis. `tertiary` (default) = standard underlined link; `primary` and `secondary` apply heavier styling for prominent inline links; `back` adds a leading left chevron for back-navigation',
       default: 'tertiary',
-      values: ['primary', 'secondary', 'tertiary'],
+      values: ['primary', 'secondary', 'tertiary', 'back'],
+    },
+    type: {
+      type: 'enum',
+      description: 'Device-action type — auto-builds the href, leading icon, and default display text. `phone` → `tel:` with phone icon; `email` → `mailto:` with mail icon and optional subject; `download` → passthrough href with download icon and optional filename / file-size suffix',
+      values: ['phone', 'email', 'download'],
+    },
+    number: {
+      type: 'string',
+      description: 'Phone number when `type="phone"`. Stripped of non-digit characters before being used in `tel:`. Formatted as `(NNN) NNN-NNNN` for the display text when 10 digits',
+      default: '',
+    },
+    address: {
+      type: 'string',
+      description: 'Email address when `type="email"`. Used both as the `mailto:` target and as the default display text',
+      default: '',
+    },
+    subject: {
+      type: 'string',
+      description: 'Pre-filled email subject when `type="email"`. URL-encoded into the mailto: query string',
+      default: '',
+    },
+    filename: {
+      type: 'string',
+      description: 'Suggested download filename when `type="download"`. Falls back as the value of the underlying `download` attribute and as the default display text',
+      default: '',
+    },
+    fileSize: {
+      type: 'string',
+      description: 'Human-readable file size suffix when `type="download"` (e.g. "1.2 MB"). Rendered as small parenthetical text after the link label',
+      default: '',
+      attribute: 'file-size',
     },
     danger: {
       type: 'boolean',

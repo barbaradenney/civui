@@ -91,12 +91,14 @@ const config: StorybookConfig = {
       '@civui/feedback/badge': resolve(root, 'packages/feedback/src/badge/index.ts'),
       '@civui/feedback/count': resolve(root, 'packages/feedback/src/count/index.ts'),
       '@civui/feedback': resolve(root, 'packages/feedback/src/index.ts'),
-      // Actions
+      // Actions (button, action-button, filter-chip, link, link-card, skip-link)
       '@civui/actions/button': resolve(root, 'packages/actions/src/button/index.ts'),
       '@civui/actions/action-button': resolve(root, 'packages/actions/src/action-button/index.ts'),
       '@civui/actions/filter-chip': resolve(root, 'packages/actions/src/filter-chip/index.ts'),
       '@civui/actions/filter-chip-group': resolve(root, 'packages/actions/src/filter-chip-group/index.ts'),
-      '@civui/actions/action-link': resolve(root, 'packages/actions/src/action-link/index.ts'),
+      '@civui/actions/link': resolve(root, 'packages/actions/src/link/index.ts'),
+      '@civui/actions/link-card': resolve(root, 'packages/actions/src/link-card/index.ts'),
+      '@civui/actions/skip-link': resolve(root, 'packages/actions/src/skip-link/index.ts'),
       '@civui/actions': resolve(root, 'packages/actions/src/index.ts'),
       // Overlays
       '@civui/overlays/modal': resolve(root, 'packages/overlays/src/modal/index.ts'),
@@ -112,11 +114,6 @@ const config: StorybookConfig = {
       '@civui/layout/button-group': resolve(root, 'packages/layout/src/button-group/index.ts'),
       '@civui/layout/image-preview': resolve(root, 'packages/layout/src/image-preview/index.ts'),
       '@civui/layout': resolve(root, 'packages/layout/src/index.ts'),
-      // Navigation
-      '@civui/navigation/skip-link': resolve(root, 'packages/navigation/src/skip-link/index.ts'),
-      '@civui/navigation/link': resolve(root, 'packages/navigation/src/link/index.ts'),
-      '@civui/navigation/link-card': resolve(root, 'packages/navigation/src/link-card/index.ts'),
-      '@civui/navigation': resolve(root, 'packages/navigation/src/index.ts'),
       '@civui/tokens/css': resolve(root, 'packages/tokens/dist/css/tokens.css'),
     };
     return config;

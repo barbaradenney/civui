@@ -70,7 +70,6 @@ For architecture and internals, see \`CLAUDE.md\` in the repo root.
 | \`<civ-routing-number>\` | Preset | — | \`{ value }\` |
 | \`<civ-va-file-number>\` | Preset | — | \`{ value }\` |
 | \`<civ-country>\` | Preset | \`us-first\`, \`include\`, \`exclude\` | \`{ value }\` |
-| \`<civ-action-link>\` | Action | \`type\` (\`phone\`/\`email\`/\`download\`), \`number\`, \`address\`, \`label\`, \`subject\`, \`href\`, \`filename\`, \`file-size\` | — |
 | \`<civ-image-preview>\` | Layout | \`src\`, \`alt\`, \`filename\`, \`file-size\`, \`size\` | — |
 | \`<civ-skip-link>\` | Navigation | \`label\`, \`href\` | — |
 | \`<civ-icon>\` | UI | \`name\`, \`label\` | — |
@@ -846,11 +845,11 @@ Pre-configured wrappers with built-in masking, validation, and labeling. Set \`l
 
 ---
 
-### Specialized Link Components
+### Specialized Link Modes
 
-| Component | Key props | Description |
-|-----------|-----------|-------------|
-| \`<civ-action-link>\` | \`type\` (\`phone\`/\`email\`/\`download\`), \`number\`, \`address\`, \`label\`, \`subject\`, \`href\`, \`filename\`, \`file-size\` | Phone, email, or download link with icon |
+\`civ-link\` accepts a \`type\` prop for device-action shortcuts: \`phone\` builds a \`tel:\` href + phone icon, \`email\` builds a \`mailto:\` href + mail icon, \`download\` passes the \`href\` through and renders a download icon + optional file-size suffix. Use \`civ-link\` for every anchor case — variant for visual emphasis, type for device-action shorthand.
+
+Key props for typed modes: \`type\`, \`number\`, \`address\`, \`label\`, \`subject\`, \`filename\`, \`file-size\`.
 
 ---
 

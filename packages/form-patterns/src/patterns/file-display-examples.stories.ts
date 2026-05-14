@@ -3,8 +3,7 @@ import { html } from 'lit';
 import '@civui/core';
 import '@civui/layout/image-preview';
 import '@civui/feedback/alert';
-import '@civui/actions/action-link';
-import '@civui/navigation/link';
+import '@civui/actions/link';
 
 const meta: Meta = {
   title: 'Forms/Patterns/File Display',
@@ -87,7 +86,7 @@ export const ConfirmationPage: Story = {
       <civ-data-field label="ID photo" value="id-front.jpg (1.7 MB)"></civ-data-field>
 
       <p style="margin-top: 16px;">
-        <civ-action-link type="download" href="#/receipt.pdf" label="Download confirmation receipt" file-size="45 KB"></civ-action-link>
+        <civ-link type="download" href="#/receipt.pdf" label="Download confirmation receipt" file-size="45 KB"></civ-link>
       </p>
     </div>
   `,

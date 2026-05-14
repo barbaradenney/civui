@@ -134,7 +134,7 @@ jobs:
     #                          (or one of its known base classes).
     #                          Catches phantom attrs like add-label,
     #                          preset="document-type", invented
-    #                          variants on civ-action-link, etc.
+    #                          variants on civ-select, etc.
     #   lint:prose-refs      - Every <civ-X> tag reference in long-
     #                          form docs (CLAUDE.md, AGENTS.md,
     #                          .claude/rules/, apps/docs/docs/**/

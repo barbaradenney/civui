@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html } from 'lit';
 import './civ-support-resources.js';
-import '@civui/actions/action-link';
+import '@civui/actions/link';
 
 const meta: Meta = {
   title: 'Forms/Form/Support Resources',
@@ -23,8 +23,8 @@ type Story = StoryObj;
 export const Default: Story = {
   render: () => html`
     <civ-support-resources heading="If you need support">
-      <civ-action-link type="phone" number="988" label="Veterans Crisis Line (call or text 988, press 1)"></civ-action-link>
-      <civ-action-link type="phone" number="18774243838" label="National Homeless Veterans Hotline"></civ-action-link>
+      <civ-link type="phone" number="988" label="Veterans Crisis Line (call or text 988, press 1)"></civ-link>
+      <civ-link type="phone" number="18774243838" label="National Homeless Veterans Hotline"></civ-link>
     </civ-support-resources>
   `,
 };
@@ -40,8 +40,8 @@ export const CrisisTone: Story = {
   },
   render: () => html`
     <civ-support-resources heading="Need immediate help?" tone="crisis">
-      <civ-action-link type="phone" number="911" label="Emergency services: 911"></civ-action-link>
-      <civ-action-link type="phone" number="988" label="Suicide & Crisis Lifeline: 988"></civ-action-link>
+      <civ-link type="phone" number="911" label="Emergency services: 911"></civ-link>
+      <civ-link type="phone" number="988" label="Suicide & Crisis Lifeline: 988"></civ-link>
     </civ-support-resources>
   `,
 };
@@ -50,9 +50,9 @@ export const MultipleContactTypes: Story = {
   name: 'Multiple contact types',
   render: () => html`
     <civ-support-resources heading="Contact us">
-      <civ-action-link type="phone" number="18008271000" label="VA Benefits Helpline"></civ-action-link>
-      <civ-action-link type="phone" number="18554886368" label="Health Benefits Hotline"></civ-action-link>
-      <civ-action-link type="email" address="benefits@va.gov" label="Email VA benefits support"></civ-action-link>
+      <civ-link type="phone" number="18008271000" label="VA Benefits Helpline"></civ-link>
+      <civ-link type="phone" number="18554886368" label="Health Benefits Hotline"></civ-link>
+      <civ-link type="email" address="benefits@va.gov" label="Email VA benefits support"></civ-link>
     </civ-support-resources>
   `,
 };
@@ -69,7 +69,7 @@ export const WithCustomContent: Story = {
   render: () => html`
     <civ-support-resources heading="Housing assistance">
       <p>If you are experiencing homelessness or at risk of losing your housing:</p>
-      <civ-action-link type="phone" number="18774243838" label="National Call Center for Homeless Veterans"></civ-action-link>
+      <civ-link type="phone" number="18774243838" label="National Call Center for Homeless Veterans"></civ-link>
       <p class="civ-mt-2 civ-text-sm">Available 24/7. Counselors can connect you with local housing resources, shelters, and VA programs.</p>
     </civ-support-resources>
   `,

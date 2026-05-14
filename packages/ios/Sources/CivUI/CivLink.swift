@@ -60,6 +60,25 @@ public struct CivLink: View {
     /// Download filename. When non-empty, triggers download behavior.
     public var download: String
 
+    /// Device-action type ("phone" / "email" / "download"). Optional; when set, the
+    /// platform builds an appropriate href and chooses a leading icon.
+    public var type: String
+
+    /// Phone number when `type == "phone"`. Stripped of formatting before being used.
+    public var number: String
+
+    /// Email address when `type == "email"`. Also used as default display text.
+    public var address: String
+
+    /// Pre-filled email subject when `type == "email"`.
+    public var subject: String
+
+    /// Suggested filename when `type == "download"`. Also used as default display text.
+    public var filename: String
+
+    /// Human-readable file size suffix when `type == "download"` (e.g. "1.2 MB").
+    public var fileSize: String
+
     // MARK: - Internal State
 
     @Environment(\.colorScheme) private var colorScheme
@@ -78,7 +97,13 @@ public struct CivLink: View {
         onAnalytics: ((String, [String: Any]?) -> Void)? = nil,
         target: String = "",
         rel: String = "",
-        download: String = ""
+        download: String = "",
+        type: String = "",
+        number: String = "",
+        address: String = "",
+        subject: String = "",
+        filename: String = "",
+        fileSize: String = ""
     ) {
         self.label = label
         self.href = href
@@ -92,6 +117,12 @@ public struct CivLink: View {
         self.target = target
         self.rel = rel
         self.download = download
+        self.type = type
+        self.number = number
+        self.address = address
+        self.subject = subject
+        self.filename = filename
+        self.fileSize = fileSize
     }
 
     private var leadingIconName: String {

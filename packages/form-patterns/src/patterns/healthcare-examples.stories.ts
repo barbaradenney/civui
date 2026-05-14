@@ -6,7 +6,7 @@ import '@civui/controls';
 import '@civui/actions';
 import '@civui/layout';
 import '@civui/feedback';
-import '@civui/navigation';
+import '@civui/actions';
 import '../repeater/civ-repeater.js';
 import '../fieldset/civ-fieldset.js';
 import '../conditional/civ-conditional.js';
@@ -214,8 +214,8 @@ export const AppointmentConfirmation: Story = {
         <civ-data-field label="Confirmation number" value="APT-2026-05-0847"></civ-data-field>
         <civ-divider spacing="sm"></civ-divider>
         <div style="display: flex; gap: 1rem;">
-          <civ-action-link label="Reschedule appointment" href="#reschedule"></civ-action-link>
-          <civ-action-link label="Cancel appointment" href="#cancel"></civ-action-link>
+          <civ-link label="Reschedule appointment" href="#reschedule"></civ-link>
+          <civ-link label="Cancel appointment" href="#cancel"></civ-link>
         </div>
       </civ-card>
       <civ-alert variant="info" slim>

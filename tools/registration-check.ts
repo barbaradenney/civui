@@ -45,7 +45,6 @@ const TAG_TO_PACKAGE: Record<string, string> = {
   'civ-button-group': '@civui/layout',
   'civ-filter-chip': '@civui/actions',
   'civ-filter-chip-group': '@civui/actions',
-  'civ-action-link': '@civui/actions',
   'civ-card': '@civui/layout',
   'civ-tag': '@civui/layout',
   'civ-divider': '@civui/layout',
@@ -53,9 +52,9 @@ const TAG_TO_PACKAGE: Record<string, string> = {
   'civ-list': '@civui/layout',
   'civ-list-item': '@civui/layout',
   'civ-page-header': '@civui/layout',
-  'civ-link': '@civui/navigation',
-  'civ-link-card': '@civui/navigation',
-  'civ-skip-link': '@civui/navigation',
+  'civ-link': '@civui/actions',
+  'civ-link-card': '@civui/actions',
+  'civ-skip-link': '@civui/actions',
   'civ-modal': '@civui/overlays',
   'civ-action-sheet': '@civui/overlays',
   'civ-icon': '@civui/core',
@@ -68,7 +67,6 @@ const TAG_TO_PACKAGE: Record<string, string> = {
 const COMPOSING_PACKAGES = [
   join(ROOT, 'packages/compound/src'),
   join(ROOT, 'packages/form-patterns/src'),
-  join(ROOT, 'packages/navigation/src'),
 ];
 
 interface Issue {

@@ -3,7 +3,7 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { CivBaseElement, LightDomSlotMixin, dispatch, announce, interpolate, t } from '@civui/core';
 import type { SlotConfig } from '@civui/core';
 import '@civui/actions/button';
-import '@civui/navigation/link';
+import '@civui/actions/link';
 import '../progress/civ-progress-steps.js';
 import '../progress/civ-progress-percent.js';
 import '../progress/civ-progress-header.js';

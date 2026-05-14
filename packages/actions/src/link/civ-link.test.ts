@@ -177,4 +177,92 @@ describe('civ-link', () => {
     const srSpan = el.querySelector('.civ-sr-only');
     expect(srSpan).not.toBeNull();
   });
+
+  // ── Type modes (folded from the former civ-action-link) ───────
+
+  it('type="phone" builds a tel: href from `number`', async () => {
+    const el = await fixture('<civ-link type="phone" number="8005551234"></civ-link>');
+    const link = el.querySelector('a')!;
+    expect(link.getAttribute('href')).toBe('tel:8005551234');
+  });
+
+  it('type="phone" formats a 10-digit number as (NNN) NNN-NNNN for display', async () => {
+    const el = await fixture('<civ-link type="phone" number="8005551234"></civ-link>');
+    const link = el.querySelector('a')!;
+    expect(link.textContent).toContain('(800) 555-1234');
+  });
+
+  it('type="phone" strips formatting before building tel:', async () => {
+    const el = await fixture('<civ-link type="phone" number="(800) 555-1234"></civ-link>');
+    const link = el.querySelector('a')!;
+    expect(link.getAttribute('href')).toBe('tel:8005551234');
+  });
+
+  it('type="phone" renders an empty href when number is empty', async () => {
+    const el = await fixture('<civ-link type="phone" number=""></civ-link>');
+    const link = el.querySelector('a')!;
+    expect(link.getAttribute('href')).toBe('');
+  });
+
+  it('type="phone" uses the phone icon as leading icon', async () => {
+    const el = await fixture('<civ-link type="phone" number="8005551234"></civ-link>');
+    const icon = el.querySelector('civ-icon');
+    expect(icon?.getAttribute('name')).toBe('phone');
+  });
+
+  it('type="email" builds a mailto: href from `address`', async () => {
+    const el = await fixture('<civ-link type="email" address="help@va.gov"></civ-link>');
+    const link = el.querySelector('a')!;
+    expect(link.getAttribute('href')).toBe('mailto:help@va.gov');
+  });
+
+  it('type="email" includes URL-encoded subject', async () => {
+    const el = await fixture('<civ-link type="email" address="help@va.gov" subject="Question about benefits"></civ-link>');
+    const link = el.querySelector('a')!;
+    expect(link.getAttribute('href')).toBe('mailto:help@va.gov?subject=Question%20about%20benefits');
+  });
+
+  it('type="email" uses the mail icon as leading icon', async () => {
+    const el = await fixture('<civ-link type="email" address="a@b.com"></civ-link>');
+    const icon = el.querySelector('civ-icon');
+    expect(icon?.getAttribute('name')).toBe('mail');
+  });
+
+  it('type="download" passes the `href` through and sets the download attribute', async () => {
+    const el = await fixture('<civ-link type="download" href="/forms/10-10EZ.pdf" filename="10-10EZ.pdf"></civ-link>');
+    const link = el.querySelector('a')!;
+    expect(link.getAttribute('href')).toBe('/forms/10-10EZ.pdf');
+    expect(link.getAttribute('download')).toBe('10-10EZ.pdf');
+  });
+
+  it('type="download" uses the download icon as leading icon', async () => {
+    const el = await fixture('<civ-link type="download" href="/file.pdf"></civ-link>');
+    const icon = el.querySelector('civ-icon');
+    expect(icon?.getAttribute('name')).toBe('download');
+  });
+
+  it('type="download" renders the file size suffix when set', async () => {
+    const el = await fixture('<civ-link type="download" href="/file.pdf" file-size="2.4 MB"></civ-link>');
+    const sizeSpan = el.querySelector('span.civ-text-sm');
+    expect(sizeSpan).not.toBeNull();
+    expect(sizeSpan!.textContent).toContain('2.4 MB');
+  });
+
+  it('type="download" falls back to filename as display text when no label', async () => {
+    const el = await fixture('<civ-link type="download" href="/forms/10-10EZ.pdf" filename="10-10EZ.pdf"></civ-link>');
+    const link = el.querySelector('a')!;
+    expect(link.textContent).toContain('10-10EZ.pdf');
+  });
+
+  it('label prop wins over type-derived display text', async () => {
+    const el = await fixture('<civ-link type="phone" number="8005551234" label="Call us"></civ-link>');
+    const link = el.querySelector('a')!;
+    expect(link.textContent).toContain('Call us');
+  });
+
+  it('iconStart wins over type-derived icon', async () => {
+    const el = await fixture('<civ-link type="phone" number="8005551234" icon-start="info"></civ-link>');
+    const icon = el.querySelector('civ-icon');
+    expect(icon?.getAttribute('name')).toBe('info');
+  });
 });

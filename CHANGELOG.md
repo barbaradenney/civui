@@ -12,6 +12,26 @@ across all 21 components.
 
 ### Breaking
 
+- **`@civui/navigation` package removed.** `civ-link`, `civ-link-card`,
+  and `civ-skip-link` are now exported from `@civui/actions`. The
+  polymorphism that landed in the same release — `civ-button[href]` /
+  `civ-action-button[href]` (render as `<a>`) and `civ-link[type]`
+  (device-action shorthand) — means the action / navigation split was
+  no longer a meaningful package boundary. Migration: rename imports
+  (`@civui/navigation` → `@civui/actions`, `@civui/navigation/link` →
+  `@civui/actions/link`, etc.); no API changes to the moved
+  components.
+- **`civ-action-link` removed.** Its functionality is folded into
+  `civ-link` via a new `type` prop. Migration: replace
+  `<civ-action-link type="phone" number="...">` with
+  `<civ-link type="phone" number="...">` (same prop names: `type`,
+  `number`, `address`, `subject`, `filename`, `file-size`).
+- **`civ-button` + `civ-action-button` accept an `href` prop.** When
+  set, they render as `<a>` instead of `<button>` and underline the
+  label to keep the link affordance visible. Lets navigation
+  affordances wear button chrome without losing right-click "open in
+  new tab", back-button history, or screen-reader role. No migration
+  needed — the prop is opt-in.
 - **`civ-list-item`** no longer renders a literal `<li>` element. The
   custom-element host now carries `role="listitem"` so the parent
   `<civ-list>`'s `<ul role="list">` accessibility tree still sees a

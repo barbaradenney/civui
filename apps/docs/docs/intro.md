@@ -52,11 +52,10 @@ import '@civui/form-patterns';
 | `@civui/controls` | Selection controls (checkbox, radio, segmented-control) |
 | `@civui/compound` | Compound fields (address, name, direct-deposit, signature) |
 | `@civui/form-patterns` | Form orchestration (form, form-step, repeater, summary, prefill) |
-| `@civui/actions` | Action components (button, link, action-button, link-card, button-group) |
+| `@civui/actions` | Action + navigation affordances (button, action-button, link, link-card, skip-link, filter-chip) |
 | `@civui/overlays` | Overlay components (modal, action-sheet) |
 | `@civui/layout` | Layout components (card, divider, input-group, page-header, tag) |
 | `@civui/feedback` | Alert, progress bar |
-| `@civui/navigation` | Skip link, task list |
 | `@civui/drupal` | Drupal SDC module (69 components for Drupal 10.3+/11) |
 | `@civui/mcp-server` | 80-tool MCP server for form generation |
 

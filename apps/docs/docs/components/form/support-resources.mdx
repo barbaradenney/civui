@@ -45,13 +45,13 @@ A structured container for support and crisis contact information. Renders as an
 
 ## Slots
 
-The default slot accepts any content — typically `civ-action-link` components for phone/email:
+The default slot accepts any content — typically `civ-link` components with `type="phone"` / `"email"` for contact info:
 
 ```html
 <civ-support-resources heading="If you need support">
-  <civ-action-link type="phone" number="988" label="Veterans Crisis Line (press 1)"></civ-action-link>
-  <civ-action-link type="phone" number="18774243838" label="Homeless Veterans Hotline"></civ-action-link>
-  <civ-action-link type="email" address="help@va.gov" label="Email VA support"></civ-action-link>
+  <civ-link type="phone" number="988" label="Veterans Crisis Line (press 1)"></civ-link>
+  <civ-link type="phone" number="18774243838" label="Homeless Veterans Hotline"></civ-link>
+  <civ-link type="email" address="help@va.gov" label="Email VA support"></civ-link>
 </civ-support-resources>
 ```
 
@@ -60,7 +60,7 @@ You can also include paragraphs, lists, or any custom HTML:
 ```html
 <civ-support-resources heading="Housing assistance">
   <p>If you are experiencing homelessness or at risk of losing your housing:</p>
-  <civ-action-link type="phone" number="18774243838" label="National Call Center for Homeless Veterans"></civ-action-link>
+  <civ-link type="phone" number="18774243838" label="National Call Center for Homeless Veterans"></civ-link>
   <p class="civ-mt-2 civ-text-sm">Available 24/7.</p>
 </civ-support-resources>
 ```
@@ -75,4 +75,4 @@ You can also include paragraphs, lists, or any custom HTML:
 ## Related
 
 - [Housing & Address pattern](/form-patterns/housing-address) — pairs with support resources for housing-insecure forms
-- [`civ-action-link`](/components/actions/action-link) — phone, email, and download links used inside support resources
+- [`civ-link`](/components/navigation/link) — with `type="phone"` / `"email"` / `"download"` for the contact links inside support resources

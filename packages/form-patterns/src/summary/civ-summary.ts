@@ -1,7 +1,7 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { CivBaseElement, dispatch, interpolate, t } from '@civui/core';
-import '@civui/navigation/link';
+import '@civui/actions/link';
 import '@civui/layout/divider';
 import '@civui/layout/list';
 import '../data-field/civ-data-field.js';

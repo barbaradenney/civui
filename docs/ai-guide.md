@@ -55,7 +55,6 @@ For architecture and internals, see `CLAUDE.md` in the repo root.
 | `<civ-filter-chip>` | UI | `label`, `value`, `selected`, `removable`, `disabled`, `chip-style`, `chip-role` (toggle/radio), `spacing`, `icon-start`, `icon-end`, `count` | `civ-change`, `civ-remove`, `civ-analytics` |
 | `<civ-filter-chip-group>` | UI | `mode` (single/multi), `label`. Roving tabindex + keyboard nav. | `civ-change` (aggregated) |
 | `<civ-input-group>` | UI | — (layout container) | — |
-| `<civ-action-link>` | UI | `type` (`phone`/`email`/`download`), `number`, `address`, `label`, `subject`, `href`, `filename`, `file-size` | `civ-analytics` |
 | `<civ-ssn>` | Preset | `mode` (`'full'` \| `'last4'`) | `civ-input`, `civ-change` |
 | `<civ-ein>` | Preset | — (inherits standard) | `civ-input`, `civ-change` |
 | `<civ-phone>` | Preset | `international` | `civ-input`, `civ-change` |
@@ -1163,20 +1162,16 @@ Pre-configured wrappers around `civ-text-input` and `civ-combobox` with built-in
 
 ---
 
-### Specialized Link Components
+### Specialized Link Modes
 
-| Component | Description | Key props | Package |
-|---|---|---|---|
-| `<civ-action-link>` | Clickable phone (`tel:`), email (`mailto:`), or download link with icon | `type`, `number`, `address`, `label`, `subject`, `href`, `filename`, `file-size` | `@civui/actions` |
-
-`civ-link` and `civ-link-card` live in `@civui/navigation` (wayfinding to a destination). Use `<civ-link new-tab>` for links that open in a new tab. `civ-action-link` lives in `@civui/actions` (it triggers device actions: dial, compose, download).
+`civ-link` supports a `type` prop for device-action shortcuts (orthogonal to `variant`): `phone` builds a `tel:` href + phone icon, `email` builds a `mailto:` href + mail icon (with optional `subject`), `download` passes through `href` and renders a download icon + optional file size suffix. Use `civ-link` for all anchor cases — variant for visual emphasis, type for device-action shorthand. `civ-link-card` is for full-width card-style navigation.
 
 **Example:**
 ```html
-<civ-action-link type="phone" number="1-800-827-1000" label="VA benefits hotline"></civ-action-link>
-<civ-action-link type="email" address="help@va.gov"></civ-action-link>
+<civ-link type="phone" number="1-800-827-1000" label="VA benefits hotline"></civ-link>
+<civ-link type="email" address="help@va.gov"></civ-link>
 <civ-link href="https://va.gov/find-forms" label="Find VA forms" new-tab></civ-link>
-<civ-action-link type="download" href="/forms/21-526EZ.pdf" label="VA Form 21-526EZ" file-size="2.4 MB"></civ-action-link>
+<civ-link type="download" href="/forms/21-526EZ.pdf" label="VA Form 21-526EZ" file-size="2.4 MB"></civ-link>
 ```
 
 ---

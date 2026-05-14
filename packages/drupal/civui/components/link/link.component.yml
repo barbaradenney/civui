@@ -42,7 +42,31 @@ props:
       title: Icon end
       type: string
       description: 'Trailing icon name (e.g. external-link arrow)'
-
+    type:
+      title: Type
+      type: string
+      enum: ['phone', 'email', 'download']
+      description: 'Device-action type — auto-builds the href, leading icon, and default display text. `phone` → `tel:` with phone icon; `email` → `mailto:` with mail icon and optional subject; `download` → passthrough href with download icon and optional f...'
+    number:
+      title: Number
+      type: string
+      description: 'Phone number when `type="phone"`. Stripped of non-digit characters before being used in `tel:`. Formatted as `(NNN) NNN-NNNN` for the display text when 10 digits'
+    address:
+      title: Address
+      type: string
+      description: 'Email address when `type="email"`. Used both as the `mailto:` target and as the default display text'
+    subject:
+      title: Subject
+      type: string
+      description: 'Pre-filled email subject when `type="email"`. URL-encoded into the mailto: query string'
+    filename:
+      title: Filename
+      type: string
+      description: 'Suggested download filename when `type="download"`. Falls back as the value of the underlying `download` attribute and as the default display text'
+    file_size:
+      title: File size
+      type: string
+      description: 'Human-readable file size suffix when `type="download"` (e.g. "1.2 MB"). Rendered as small parenthetical text after the link label'
 
 libraryOverrides:
   dependencies:

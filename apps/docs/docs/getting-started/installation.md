@@ -23,9 +23,6 @@ npm install @civui/overlays
 # Layout components (card, divider, input-group, page-header, tag)
 npm install @civui/layout
 
-# Navigation components (task list, skip link)
-npm install @civui/navigation
-
 # Feedback components (alert, progress bar)
 npm install @civui/feedback
 ```

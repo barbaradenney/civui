@@ -44,13 +44,12 @@ export default [{
           { name: '@civui/overlays', message: 'Use sub-path imports: `import \'@civui/overlays/modal\'`.' },
           { name: '@civui/layout', message: 'Use sub-path imports: `import \'@civui/layout/card\'`.' },
           { name: '@civui/feedback', message: 'Use sub-path imports: `import \'@civui/feedback/alert\'`.' },
-          { name: '@civui/navigation', message: 'Use sub-path imports: `import \'@civui/navigation/link\'`.' },
           { name: '@civui/form-patterns', message: 'Use sub-path imports: `import \'@civui/form-patterns/form\'`.' },
           { name: '@civui/compound', message: 'Use sub-path imports: `import \'@civui/compound/address\'`.' },
         ],
         patterns: [
           {
-            group: ['@civui/inputs', '@civui/inputs/*', '@civui/controls', '@civui/controls/*', '@civui/compound', '@civui/compound/*', '@civui/actions', '@civui/actions/*', '@civui/overlays', '@civui/overlays/*', '@civui/layout', '@civui/layout/*', '@civui/feedback', '@civui/feedback/*', '@civui/navigation', '@civui/navigation/*', '@civui/form-patterns', '@civui/form-patterns/*'],
+            group: ['@civui/inputs', '@civui/inputs/*', '@civui/controls', '@civui/controls/*', '@civui/compound', '@civui/compound/*', '@civui/actions', '@civui/actions/*', '@civui/overlays', '@civui/overlays/*', '@civui/layout', '@civui/layout/*', '@civui/feedback', '@civui/feedback/*', '@civui/form-patterns', '@civui/form-patterns/*'],
             importNamePattern: '^Civ',
             message: 'Named class imports get tree-shaken — custom-element registration is a side effect. Use a side-effect sub-path import instead: `import \'@civui/inputs/text-input\'`.',
           },

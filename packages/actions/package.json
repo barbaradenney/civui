@@ -1,7 +1,7 @@
 {
   "name": "@civui/actions",
   "version": "0.1.0",
-  "description": "CivUI action components — Button, ActionButton, ButtonGroup, FilterChip, ActionLink",
+  "description": "CivUI action + navigation affordances — Button, ActionButton, FilterChip, Link, LinkCard, SkipLink",
   "license": "MIT",
   "type": "module",
   "main": "dist/index.js",
@@ -12,7 +12,9 @@
     "./action-button": "./dist/action-button/index.js",
     "./filter-chip": "./dist/filter-chip/index.js",
     "./filter-chip-group": "./dist/filter-chip-group/index.js",
-    "./action-link": "./dist/action-link/index.js"
+    "./link": "./dist/link/index.js",
+    "./link-card": "./dist/link-card/index.js",
+    "./skip-link": "./dist/skip-link/index.js"
   },
   "files": [
     "dist"
@@ -29,7 +31,6 @@
   "dependencies": {
     "@civui/core": "workspace:*",
     "@civui/feedback": "workspace:*",
-    "@civui/navigation": "workspace:*",
     "lit": "^3.2.0"
   },
   "devDependencies": {

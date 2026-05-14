@@ -4,7 +4,7 @@ import './civ-card.js';
 import '../tag/civ-tag.js';
 import '@civui/feedback/badge';
 import '@civui/actions/button';
-import '@civui/navigation/link';
+import '@civui/actions/link';
 import '@civui/actions/action-button';
 
 const meta: Meta = {

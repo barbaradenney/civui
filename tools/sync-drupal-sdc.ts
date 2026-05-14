@@ -82,7 +82,6 @@ const COMPONENTS: ComponentMapping[] = [
   { schema: 'civ-link-card', drupal: 'link-card' },
   { schema: 'civ-skip-link', drupal: 'skip-link' },
   { schema: 'civ-action-button', drupal: 'action-button' },
-  { schema: 'civ-action-link', drupal: 'action-link' },
   { schema: 'civ-button-group', drupal: 'button-group' },
   { schema: 'civ-icon', drupal: 'icon' },
   { schema: 'civ-filter-chip', drupal: 'filter-chip' },

@@ -4,7 +4,7 @@ import { CivBaseElement, dispatch, renderLegend, renderFormHeader, buildDescribe
 import type { HeadingLevel, LabelSize } from '@civui/core';
 import '@civui/actions/button';
 import '@civui/actions/action-button';
-import '@civui/navigation/link';
+import '@civui/actions/link';
 import '../form-step/civ-form-step.js';
 
 /** Arbitrary row object held by the host in route mode. The repeater never mutates it. */

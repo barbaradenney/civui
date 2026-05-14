@@ -75,12 +75,12 @@ After submission, show what was submitted. No download links (the submission is 
 <civ-data-field label="Medical records" value="medical-records.pdf (7.7 MB)"></civ-data-field>
 <civ-data-field label="ID photo" value="id-front.jpg (1.7 MB)"></civ-data-field>
 
-<civ-action-link
+<civ-link
   type="download"
   href="/receipt.pdf"
   label="Download confirmation receipt"
   file-size="45 KB"
-></civ-action-link>
+></civ-link>
 ```
 
 ## Mixed documents and photos
@@ -127,7 +127,7 @@ Summary/print        → civ-summary with file metadata as text
 - [`civ-data-field`](/components/form/data-field) — read-only file display with optional download link
 - [`civ-image-preview`](/components/layout/image-preview) — image display
 - [`civ-summary`](/components/form/summary) — structured review sections
-- [`civ-action-link`](/components/actions/action-link) — download receipt
+- [`civ-link`](/components/navigation/link) — with `type="download"` for the receipt link
 - [`civ-alert`](/components/feedback/alert) — confirmation message
 
 [Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-patterns-file-display--review-page-files)

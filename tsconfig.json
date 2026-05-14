@@ -32,7 +32,6 @@
     { "path": "./packages/actions" },
     { "path": "./packages/overlays" },
     { "path": "./packages/layout" },
-    { "path": "./packages/feedback" },
-    { "path": "./packages/navigation" }
+    { "path": "./packages/feedback" }
   ]
 }

@@ -22,7 +22,6 @@ const COMPONENT_DIRS = [
   join(ROOT, 'packages/actions/src'),
   join(ROOT, 'packages/overlays/src'),
   join(ROOT, 'packages/layout/src'),
-  join(ROOT, 'packages/navigation/src'),
   join(ROOT, 'packages/feedback/src'),
 ];
 const CORE_ICON = join(ROOT, 'packages/core/src/icon/civ-icon.ts');
@@ -345,11 +344,10 @@ const NO_ANALYTICS = new Set([
   // Wrappers that delegate to a single child input — the child's
   // sendAnalytics fires for the actual user interaction.
   'civ-country', 'civ-date-range-picker',
-  // civ-action-link wraps civ-link (which has sendAnalytics('click')).
   // civ-filter-chip-group's individual chips each fire sendAnalytics on
   // change / remove. Aggregate group-level analytics would be redundant
   // with the per-chip events.
-  'civ-action-link', 'civ-filter-chip-group',
+  'civ-filter-chip-group',
   // Orchestration components delegate to child fields/buttons
   'civ-form-step', 'civ-repeater',
   // Display / progress / overlay / layout components — no user-action surface

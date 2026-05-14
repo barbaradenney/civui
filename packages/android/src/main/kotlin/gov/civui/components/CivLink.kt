@@ -60,6 +60,12 @@ fun CivLink(
     disabled: Boolean = false,
     iconStart: String = "",
     iconEnd: String = "",
+    type: String = "",
+    number: String = "",
+    address: String = "",
+    subject: String = "",
+    filename: String = "",
+    fileSize: String = "",
     onTap: (() -> Unit)? = null,
     onAnalytics: ((event: String, data: Map<String, Any>?) -> Unit)? = null,
 ) {

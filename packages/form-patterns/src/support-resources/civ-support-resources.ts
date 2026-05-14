@@ -21,13 +21,13 @@ export type SupportResourcesTone = 'default' | 'crisis';
  * @prop {number} headingLevel - Semantic heading level (2–6, default 3)
  * @prop {SupportResourcesTone} tone - 'default' or 'crisis' (error border for urgency)
  *
- * @slot - Action links and contact information (civ-action-link, civ-link, text)
+ * @slot - Contact links and information (civ-link with type="phone" | "email" | "download", or plain civ-link)
  *
  * @example
  * ```html
  * <civ-support-resources heading="If you need support">
- *   <civ-action-link type="phone" number="988" label="Veterans Crisis Line"></civ-action-link>
- *   <civ-action-link type="phone" number="18774243838" label="Homeless Veterans Hotline"></civ-action-link>
+ *   <civ-link type="phone" number="988" label="Veterans Crisis Line"></civ-link>
+ *   <civ-link type="phone" number="18774243838" label="Homeless Veterans Hotline"></civ-link>
  * </civ-support-resources>
  * ```
  */

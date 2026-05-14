@@ -526,7 +526,7 @@ import '@civui/form-patterns';
 import '@civui/actions';
 import '@civui/overlays';
 import '@civui/layout';
-import '@civui/navigation';
+import '@civui/actions';
 import '@civui/feedback';
 import '@civui/core/styles/civ.css';
 

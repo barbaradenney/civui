@@ -68,7 +68,6 @@ const COMPONENTS = [
   'civ-link-card',
   'civ-skip-link',
   'civ-action-button',
-  'civ-action-link',
   'civ-button-group',
   'civ-icon',
   'civ-filter-chip',

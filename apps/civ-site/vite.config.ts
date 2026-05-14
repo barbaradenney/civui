@@ -46,12 +46,14 @@ export default defineConfig({
       '@civui/controls': resolve(packages, 'controls/src/index.ts'),
       '@civui/compound': resolve(packages, 'compound/src/index.ts'),
       '@civui/form-patterns': resolve(packages, 'form-patterns/src/index.ts'),
-      // Actions
+      // Actions (button, action-button, filter-chip, link, link-card, skip-link)
       '@civui/actions/button': resolve(packages, 'actions/src/button/index.ts'),
       '@civui/actions/action-button': resolve(packages, 'actions/src/action-button/index.ts'),
       '@civui/actions/filter-chip': resolve(packages, 'actions/src/filter-chip/index.ts'),
       '@civui/actions/filter-chip-group': resolve(packages, 'actions/src/filter-chip-group/index.ts'),
-      '@civui/actions/action-link': resolve(packages, 'actions/src/action-link/index.ts'),
+      '@civui/actions/link': resolve(packages, 'actions/src/link/index.ts'),
+      '@civui/actions/link-card': resolve(packages, 'actions/src/link-card/index.ts'),
+      '@civui/actions/skip-link': resolve(packages, 'actions/src/skip-link/index.ts'),
       '@civui/actions': resolve(packages, 'actions/src/index.ts'),
       // Overlays
       '@civui/overlays/modal': resolve(packages, 'overlays/src/modal/index.ts'),
@@ -67,11 +69,6 @@ export default defineConfig({
       '@civui/layout/button-group': resolve(packages, 'layout/src/button-group/index.ts'),
       '@civui/layout/image-preview': resolve(packages, 'layout/src/image-preview/index.ts'),
       '@civui/layout': resolve(packages, 'layout/src/index.ts'),
-      // Navigation
-      '@civui/navigation/skip-link': resolve(packages, 'navigation/src/skip-link/index.ts'),
-      '@civui/navigation/link': resolve(packages, 'navigation/src/link/index.ts'),
-      '@civui/navigation/link-card': resolve(packages, 'navigation/src/link-card/index.ts'),
-      '@civui/navigation': resolve(packages, 'navigation/src/index.ts'),
       '@civui/feedback/alert': resolve(packages, 'feedback/src/alert/index.ts'),
       '@civui/feedback/badge': resolve(packages, 'feedback/src/badge/index.ts'),
       '@civui/feedback/count': resolve(packages, 'feedback/src/count/index.ts'),

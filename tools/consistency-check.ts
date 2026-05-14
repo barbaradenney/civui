@@ -84,8 +84,18 @@ function discoverComponents(): ComponentFile[] {
 
 // ── Rules ────────────────────────────────────────────────────
 
-const FORM_CLASS_RE = /extends\s+(CivFormElement|CivBooleanFormElement|LightDomSlotMixin\(CivFormElement\)|LightDomTextMixin\(CivFormElement\)|PresetInputWrapper)/;
-const BASE_CLASS_RE = /extends\s+(CivBaseElement|LightDomSlotMixin\(CivBaseElement\)|LightDomTextMixin\(CivBaseElement\))/;
+// Match the base class anywhere inside the `extends` clause so the
+// regex doesn't need to enumerate every mixin permutation. Components
+// commonly stack mixins like `LegendHeadingMixin(CivFormElement)` or
+// `LegendHeadingMixin(GroupListenerMixin(LightDomSlotMixin(CivFormElement)))`
+// — the form-element / base-element token still appears somewhere in
+// the chain.
+//
+// `[^{]*` keeps the match scoped to the extends line (before the
+// class body opens), so we don't accidentally pick up the same names
+// referenced elsewhere in the file.
+const FORM_CLASS_RE = /extends\s+[^{]*\b(CivFormElement|CivBooleanFormElement|CivCompoundElement|PresetInputWrapper)\b/;
+const BASE_CLASS_RE = /extends\s+[^{]*\b(CivBaseElement)\b/;
 
 // Preset wrapper components that delegate to an inner civ-text-input or
 // civ-combobox child. They don't call renderLabel/renderHint/renderError

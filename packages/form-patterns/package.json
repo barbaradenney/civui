@@ -36,7 +36,6 @@
     "@civui/core": "workspace:*",
     "@civui/actions": "workspace:*",
     "@civui/layout": "workspace:*",
-    "@civui/actions": "workspace:*",
     "lit": "^3.2.0"
   },
   "devDependencies": {

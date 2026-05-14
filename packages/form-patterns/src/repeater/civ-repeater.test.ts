@@ -2,6 +2,16 @@ import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
 import './civ-repeater.js';
 import type { CivRepeater } from './civ-repeater.js';
+import {
+  getRows,
+  getRow,
+  getRowsContainer,
+  getAddButton,
+  getRowRemoveButton,
+  getRowEditLink,
+  getRowSummary,
+  rowCount,
+} from './repeater-test-helpers.js';
 
 afterEach(cleanupFixtures);
 
@@ -26,7 +36,7 @@ describe('civ-repeater', () => {
       </civ-repeater>
     `);
 
-    const rows = el.querySelectorAll('[data-civ-repeater-row]');
+    const rows = getRows(el);
     expect(rows.length).toBe(0);
 
     const addBtn = el.querySelector('civ-button[variant="secondary"]');
@@ -40,7 +50,7 @@ describe('civ-repeater', () => {
       </civ-repeater>
     `);
 
-    const rows = el.querySelectorAll('[data-civ-repeater-row]');
+    const rows = getRows(el);
     expect(rows.length).toBe(1);
   });
 
@@ -51,7 +61,7 @@ describe('civ-repeater', () => {
       </civ-repeater>
     `);
 
-    const rows = el.querySelectorAll('[data-civ-repeater-row]');
+    const rows = getRows(el);
     expect(rows.length).toBe(3);
   });
 
@@ -77,7 +87,7 @@ describe('civ-repeater', () => {
     addBtn.click();
     await elementUpdated(el);
 
-    const rows = el.querySelectorAll('[data-civ-repeater-row]');
+    const rows = getRows(el);
     expect(rows.length).toBe(1);
   });
 
@@ -92,7 +102,7 @@ describe('civ-repeater', () => {
     addBtn.click();
     await elementUpdated(el);
 
-    const rows = el.querySelectorAll('[data-civ-repeater-row]');
+    const rows = getRows(el);
     const firstInput = rows[0].querySelector('input')!;
     expect(firstInput.getAttribute('name')).toBe('items[0].val');
   });
@@ -126,7 +136,7 @@ describe('civ-repeater', () => {
     // Add a second row
     el.addRow();
     await elementUpdated(el);
-    expect(el.querySelectorAll('[data-civ-repeater-row]').length).toBe(2);
+    expect(rowCount(el)).toBe(2);
 
     let eventDetail: any = null;
     el.addEventListener('civ-repeater-remove', ((e: CustomEvent) => {
@@ -136,7 +146,7 @@ describe('civ-repeater', () => {
     el.removeRow(1);
     await elementUpdated(el);
 
-    expect(el.querySelectorAll('[data-civ-repeater-row]').length).toBe(1);
+    expect(rowCount(el)).toBe(1);
     expect(eventDetail).not.toBeNull();
     expect(eventDetail.index).toBe(1);
   });
@@ -149,7 +159,7 @@ describe('civ-repeater', () => {
     `) as CivRepeater;
     el.addRow();
     await elementUpdated(el);
-    expect(el.querySelectorAll('[data-civ-repeater-row]').length).toBe(2);
+    expect(rowCount(el)).toBe(2);
 
     let removed = false;
     el.addEventListener('civ-repeater-remove', () => { removed = true; });
@@ -159,7 +169,7 @@ describe('civ-repeater', () => {
     await elementUpdated(el);
 
     // Nothing changed — neither DOM count nor the after-event fired.
-    expect(el.querySelectorAll('[data-civ-repeater-row]').length).toBe(2);
+    expect(rowCount(el)).toBe(2);
     expect(removed).toBe(false);
   });
 
@@ -188,7 +198,7 @@ describe('civ-repeater', () => {
 
     // Only ONE before-remove fired (the original), and the row IS gone.
     expect(beforeCalls).toBe(1);
-    expect(el.querySelectorAll('[data-civ-repeater-row]').length).toBe(1);
+    expect(rowCount(el)).toBe(1);
   });
 
   it('civ-repeater-before-remove is cancelable (sanity)', async () => {
@@ -213,13 +223,13 @@ describe('civ-repeater', () => {
       </civ-repeater>
     `) as CivRepeater;
 
-    expect(el.querySelectorAll('[data-civ-repeater-row]').length).toBe(2);
+    expect(rowCount(el)).toBe(2);
 
     el.removeRow(0);
     await elementUpdated(el);
 
     // Should still have 2 rows
-    expect(el.querySelectorAll('[data-civ-repeater-row]').length).toBe(2);
+    expect(rowCount(el)).toBe(2);
   });
 
   it('does not add above max rows', async () => {
@@ -231,12 +241,12 @@ describe('civ-repeater', () => {
 
     el.addRow();
     await elementUpdated(el);
-    expect(el.querySelectorAll('[data-civ-repeater-row]').length).toBe(2);
+    expect(rowCount(el)).toBe(2);
 
     el.addRow();
     await elementUpdated(el);
     // Should still be 2 — max enforced
-    expect(el.querySelectorAll('[data-civ-repeater-row]').length).toBe(2);
+    expect(rowCount(el)).toBe(2);
   });
 
   it('hides add button when max is reached', async () => {
@@ -307,7 +317,7 @@ describe('civ-repeater', () => {
     el.removeRow(0);
     await elementUpdated(el);
 
-    const rows = el.querySelectorAll('[data-civ-repeater-row]');
+    const rows = getRows(el);
     expect(rows.length).toBe(2);
     expect(rows[0].querySelector('input')!.getAttribute('name')).toBe('items[0].val');
     expect(rows[1].querySelector('input')!.getAttribute('name')).toBe('items[1].val');
@@ -358,13 +368,13 @@ describe('civ-repeater', () => {
       ></civ-repeater>
     `) as CivRepeater;
     // route mode starts with empty rows → first-add copy
-    const add = el.querySelector(':scope > fieldset > civ-button[href]') as HTMLElement;
+    const add = getAddButton(el) as HTMLElement;
     expect(add.getAttribute('label')).toBe('Add dependent');
 
     // Set rows on the route-mode repeater; copy flips
     el.rows = [{ id: 'a', firstName: 'Alex' }];
     await elementUpdated(el);
-    const add2 = el.querySelector(':scope > fieldset > civ-button[href]') as HTMLElement;
+    const add2 = getAddButton(el) as HTMLElement;
     expect(add2.getAttribute('label')).toBe('Add another dependent');
   });
 
@@ -428,7 +438,7 @@ describe('civ-repeater', () => {
     el.addRow();
     await elementUpdated(el);
 
-    const rows = el.querySelectorAll('[data-civ-repeater-row]');
+    const rows = getRows(el);
     expect(rows[0].getAttribute('role')).toBe('group');
     expect(rows[0].getAttribute('aria-label')).toBeNull();
 
@@ -477,7 +487,7 @@ describe('civ-repeater', () => {
     el.removeRow(0);
     await elementUpdated(el);
 
-    const rows = el.querySelectorAll('[data-civ-repeater-row]');
+    const rows = getRows(el);
     expect(rows[0].querySelector('.civ-repeater-row-heading')!.textContent).toBe('item 1');
     expect(rows[1].querySelector('.civ-repeater-row-heading')!.textContent).toBe('item 2');
     // Remove-button aria-label tracks the new index too
@@ -495,7 +505,7 @@ describe('civ-repeater', () => {
     el.addRow();
     await elementUpdated(el);
 
-    const removeBtn = el.querySelector('[data-civ-repeater-row] civ-action-button[danger]')!;
+    const removeBtn = getRowRemoveButton(el, 0)!;
     expect(removeBtn.getAttribute('label')).toBe('Remove dependent');
     // Aria-label still carries the index for unambiguous SR announcement
     expect(removeBtn.getAttribute('aria-label')).toBe('Remove dependent 1');
@@ -532,7 +542,7 @@ describe('civ-repeater form-steps mode', () => {
     await elementUpdated(el);
 
     expect(el.rowCount).toBe(0);
-    const rows = el.querySelectorAll('[data-civ-repeater-row]');
+    const rows = getRows(el);
     expect(rows.length).toBe(0);
     const addBtn = el.querySelector('civ-button');
     expect(addBtn).not.toBeNull();
@@ -727,7 +737,7 @@ describe('civ-repeater route mode', () => {
 
   it('renders one summary card per row', async () => {
     const el = await mountRouted();
-    const rows = el.querySelectorAll('[data-civ-repeater-row]');
+    const rows = getRows(el);
     expect(rows.length).toBe(2);
   });
 
@@ -832,7 +842,7 @@ describe('civ-repeater route mode', () => {
     const el = await mountRouted({ addHref: '/dependents/new' });
     // The Add link is the fieldset-level civ-link, NOT one of the per-row
     // Edit links — scope the query so the test reflects the role split.
-    const add = el.querySelector(':scope > fieldset > civ-button[href]') as HTMLElement;
+    const add = getAddButton(el) as HTMLElement;
     expect(add).not.toBeNull();
     expect(add.getAttribute('href')).toBe('/dependents/new');
   });
@@ -870,7 +880,7 @@ describe('civ-repeater route mode', () => {
       el.rows = [{ firstName: 'no-id' } as any];
       await elementUpdated(el);
 
-      const editLink = el.querySelector('[data-civ-repeater-row] civ-action-button[href]');
+      const editLink = getRowEditLink(el, 0);
       expect(editLink?.getAttribute('href')).toBe('/items/0/edit');
       expect(warn).toHaveBeenCalled();
     } finally {
@@ -901,7 +911,7 @@ describe('civ-repeater route mode', () => {
       rows: [{ id: 'a/b', firstName: 'x', lastName: 'y' }],
       editHrefPattern: '/items/{id}',
     });
-    const editLink = el.querySelector('[data-civ-repeater-row] civ-action-button[href]');
+    const editLink = getRowEditLink(el, 0);
     expect(editLink?.getAttribute('href')).toBe('/items/a%2Fb');
   });
 
@@ -912,7 +922,7 @@ describe('civ-repeater route mode', () => {
       detail = e.detail;
     }) as EventListener);
 
-    const removeBtn = el.querySelector('[data-civ-repeater-row] civ-action-button[danger]') as HTMLElement;
+    const removeBtn = getRowRemoveButton(el, 0) as HTMLElement;
     removeBtn.click();
     await elementUpdated(el);
 
@@ -925,7 +935,7 @@ describe('civ-repeater route mode', () => {
   it('does not mutate the rows array on remove (host owns it)', async () => {
     const el = await mountRouted();
     const originalRows = el.rows;
-    const removeBtn = el.querySelector('[data-civ-repeater-row] civ-action-button[danger]') as HTMLElement;
+    const removeBtn = getRowRemoveButton(el, 0) as HTMLElement;
     removeBtn.click();
     await elementUpdated(el);
     // Repeater never touches `rows` — host updates it in response to the event.
@@ -939,7 +949,7 @@ describe('civ-repeater route mode', () => {
     el.addEventListener('civ-repeater-remove', ((e: CustomEvent) => {
       detail = e.detail;
     }) as EventListener);
-    const removeBtn = el.querySelector('[data-civ-repeater-row] civ-action-button[danger]') as HTMLElement;
+    const removeBtn = getRowRemoveButton(el, 0) as HTMLElement;
     removeBtn.click();
     await elementUpdated(el);
     expect(detail).toBeNull();
@@ -947,9 +957,9 @@ describe('civ-repeater route mode', () => {
 
   it('hides the Add affordance when at max', async () => {
     const el = await mountRouted({ max: 2 });
-    expect(el.querySelectorAll('[data-civ-repeater-row]').length).toBe(2);
+    expect(rowCount(el)).toBe(2);
     // The top-level add affordance — `civ-link` outside any row.
-    const topLevelAdd = el.querySelector(':scope > fieldset > civ-button[href]');
+    const topLevelAdd = getAddButton(el);
     expect(topLevelAdd).toBeNull();
   });
 
@@ -971,9 +981,9 @@ describe('civ-repeater route mode', () => {
 
   it('re-renders when rows is replaced (controlled prop)', async () => {
     const el = await mountRouted({ rows: sampleRows.slice(0, 1) });
-    expect(el.querySelectorAll('[data-civ-repeater-row]').length).toBe(1);
+    expect(rowCount(el)).toBe(1);
     el.rows = sampleRows;
     await elementUpdated(el);
-    expect(el.querySelectorAll('[data-civ-repeater-row]').length).toBe(2);
+    expect(rowCount(el)).toBe(2);
   });
 });

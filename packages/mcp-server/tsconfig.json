@@ -5,9 +5,10 @@
     "rootDir": "src",
     "composite": true,
     "experimentalDecorators": false,
-    "useDefineForClassFields": true
+    "useDefineForClassFields": true,
+    "resolveJsonModule": true
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "src/**/*.json"],
   "exclude": ["src/**/*.test.ts"],
   "references": []
 }

@@ -21,6 +21,9 @@ import {
   analyzeRelationships,
   visualizeFormFlow,
 } from '../tools/index.js';
+import { searchComponents } from '../tools/search-components.js';
+import { getComponentExamples, listComponentsWithExamples } from '../tools/get-component-examples.js';
+import { getComponentGuide } from '../tools/get-component-guide.js';
 import type { ToolDefinition } from './types.js';
 import { MAX_HTML_LENGTH } from './constants.js';
 
@@ -201,5 +204,39 @@ export const UTILITY_TOOLS: ToolDefinition[] = [
       schema: FormSchema.describe('Form schema to visualize'),
     },
     handler: ({ schema }) => visualizeFormFlow(schema),
+  },
+  {
+    name: 'search_components',
+    description: 'Find CivUI components by natural-language intent. Searches across schema descriptions, categories, and prop docs to rank matches for queries like "user uploads ID and signs" or "checkbox group with an unsure option". Returns up to N results with their schema summary so the caller can decide without re-fetching each contract. Pair with `get_component_guide` for deep-dive on the chosen component.',
+    params: {
+      query: z.string().min(2).describe('Free-form description of what you are trying to build'),
+      limit: z.number().int().positive().max(20).optional().describe('Max results to return (default 5)'),
+      category: z.string().optional().describe('Restrict results to a category bucket (e.g. "form-control", "ui", "layout")'),
+    },
+    handler: ({ query, limit, category }) => searchComponents({ query, limit, category }),
+  },
+  {
+    name: 'get_component_examples',
+    description: 'Return canonical usage snippets for a CivUI component, extracted from its `*.stories.ts` files at build time. Each result includes the story name, the rendered HTML template, and the source file. Pair with `search_components` (find the right component) and `get_component_guide` (props + a11y reference). Suggests close-matching component names if the requested tag is unknown.',
+    params: {
+      name: z.string().describe('Component tag — e.g. "civ-text-input"'),
+      limit: z.number().int().positive().max(20).optional().describe('Max examples to return (default 6)'),
+    },
+    handler: ({ name, limit }) => getComponentExamples({ name, limit }),
+  },
+  {
+    name: 'list_components_with_examples',
+    description: 'List every CivUI component that has at least one extracted Storybook example, with the per-component count. Use this to discover what is available before calling `get_component_examples`.',
+    params: {},
+    handler: () => listComponentsWithExamples(),
+  },
+  {
+    name: 'get_component_guide',
+    description: 'Per-component focused reference synthesized on demand from the schema, the extracted examples, and any matching trap entries from common-traps.md. Returns props (with types and descriptions), events, accessibility attributes, the top N canonical examples, related components in the same category, and trap excerpts that mention the component. Cheaper than loading the full ai-guide resource when the agent only needs to use one component.',
+    params: {
+      name: z.string().describe('Component tag — e.g. "civ-text-input"'),
+      exampleLimit: z.number().int().positive().max(10).optional().describe('Max examples to embed in the guide (default 3)'),
+    },
+    handler: ({ name, exampleLimit }) => getComponentGuide({ name, exampleLimit }),
   },
 ];

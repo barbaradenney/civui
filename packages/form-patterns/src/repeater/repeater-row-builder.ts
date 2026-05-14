@@ -215,6 +215,31 @@ export function appendFormStepsSummaryCard(opts: AppendFormStepsSummaryCardOptio
 }
 
 /**
+ * Extract `{ name: value }` pairs from every form field inside a
+ * form-steps container. Used after `civ-step-complete` to capture the
+ * values the user just typed into the wizard.
+ *
+ * Only CivUI custom elements (tagName starts with `CIV-`) and the three
+ * standard form elements (input / select / textarea) are captured —
+ * inner rendered inputs from CivUI components manage their own names,
+ * and picking those up would produce duplicate entries with the same
+ * key.
+ */
+export function extractFormStepsValues(container: Element): Record<string, string> {
+  const data: Record<string, string> = {};
+  for (const field of container.querySelectorAll('[name]')) {
+    const name = field.getAttribute('name');
+    if (!name) continue;
+    const val = (field as HTMLElement & { value?: string }).value;
+    if (val === undefined) continue;
+    const tag = field.tagName;
+    if (!(tag.startsWith('CIV-') || tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA')) continue;
+    data[name] = val;
+  }
+  return data;
+}
+
+/**
  * Refresh the summary line on an existing form-steps card. Used when
  * the user edits a row and saves — only the summary text needs to
  * change; the action cluster and heading are reused.

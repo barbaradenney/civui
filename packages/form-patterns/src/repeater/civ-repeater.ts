@@ -18,6 +18,7 @@ import {
   appendFormStepsSummaryCard,
   buildFormStepShell,
   updateFormStepsSummaryText,
+  extractFormStepsValues,
 } from './repeater-row-builder.js';
 
 export type { RepeaterRow, RepeaterRowSummary, RepeaterMode } from './repeater-types.js';
@@ -639,6 +640,27 @@ export class CivRepeater extends CivBaseElement {
   }
 
   // ── Form-steps mode ─────────────────────────────────────────
+  //
+  // Why these methods live on the host rather than in a separate
+  // controller / strategy file:
+  //
+  // 1. The DOM-building work for form-steps rows is already extracted —
+  //    `appendFormStepsSummaryCard`, `updateFormStepsSummaryText`,
+  //    `buildFormStepShell`, `extractFormStepsValues` are pure
+  //    builders in `repeater-row-builder.ts` and unit-tested there.
+  // 2. What remains here is orchestration: toggling `_formStepsActive`
+  //    / `_formStepsEditIndex` (both `@state`, which means Lit's
+  //    reactivity is built into the host), maintaining the `_rowData`
+  //    Map across reindex on remove, dispatching events, and focus
+  //    restoration via `_afterUpdate`.
+  // 3. A Lit `ReactiveController` could own that state, but every
+  //    state mutation would need an explicit `host.requestUpdate()`,
+  //    and the `_rowData` reindex logic in `removeRow()` would still
+  //    need to reach in. Net cost (indirection + manual updates)
+  //    exceeds the benefit (~80 lines moved into a wrapper file) for
+  //    a single consumer.
+  //
+  // Revisit if a second component needs the same pattern.
 
   private _openFormStepsForAdd = (): void => {
     if (this.max > 0 && this._rowCount >= this.max) return;
@@ -708,18 +730,7 @@ export class CivRepeater extends CivBaseElement {
     const container = this.querySelector('[data-civ-repeater-form-steps]');
     if (!container) return;
 
-    // Extract field values from the wizard. Only capture CivUI components
-    // (tagName starts with CIV-) or standard form elements; not their
-    // internal rendered inputs.
-    const data: Record<string, string> = {};
-    for (const field of container.querySelectorAll('[name]')) {
-      const name = field.getAttribute('name');
-      const val = (field as HTMLElement & { value?: string }).value;
-      if (name && val !== undefined && (field.tagName.startsWith('CIV-') || field.tagName === 'INPUT' || field.tagName === 'SELECT' || field.tagName === 'TEXTAREA')) {
-        data[name] = val;
-      }
-    }
-
+    const data = extractFormStepsValues(container);
     const isNew = this._formStepsEditIndex < 0;
 
     if (isNew && this.max > 0 && this._rowCount >= this.max) return;

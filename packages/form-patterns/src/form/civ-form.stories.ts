@@ -360,7 +360,7 @@ export const SubmissionFlowDemo: Story = {
             form.reset();
             const frame = form.closest('civ-demo-frame') as CivDemoFrame | null;
             const ref = 'INQ-2026-' + Math.floor(Math.random() * 9999).toString().padStart(4, '0');
-            frame?.navigate(\`/inquiry/confirmation?ref=\${ref}\`);
+            frame?.navigate(`/inquiry/confirmation?ref=${ref}`);
           }}"
         >
           <civ-text-input label="Your name" name="name" required></civ-text-input>

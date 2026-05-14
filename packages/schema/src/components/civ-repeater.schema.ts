@@ -123,6 +123,12 @@ const schema: ComponentSchema = {
         index: { type: 'number', description: 'Index of the new instance' },
       },
     },
+    'civ-repeater-before-remove': {
+      description: 'Cancelable. Fires before an instance is removed (inline / form-steps modes). `preventDefault()` aborts — listen here to insert a confirmation step (typically a `civ-modal`), then re-call `removeRow(index, { skipConfirm: true })` from the confirm handler. Route mode does not need this event because the repeater never mutates the host\'s `rows` array; the consumer wraps confirmation around their own array update in the `civ-repeater-remove` handler',
+      detail: {
+        index: { type: 'number', description: 'Index of the instance being removed' },
+      },
+    },
     'civ-repeater-remove': {
       description: 'Fires when an instance is removed',
       detail: {

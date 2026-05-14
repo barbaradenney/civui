@@ -4,6 +4,7 @@
 | Event | Detail | Description |
 |-------|--------|-------------|
 | `civ-repeater-add` | `{ index: number }` | Fires when a new instance is added |
+| `civ-repeater-before-remove` | `{ index: number }` | Cancelable. Fires before an instance is removed (inline / form-steps modes). `preventDefault()` aborts — listen here to insert a confirmation step (typically a `civ-modal`), then re-call `removeRow(index, { skipConfirm: true })` from the confirm handler. Route mode does not need this event because the repeater never mutates the host's `rows` array; the consumer wraps confirmation around their own array update in the `civ-repeater-remove` handler |
 | `civ-repeater-remove` | `{ index: number, id: string, row: object }` | Fires when an instance is removed |
 | `civ-repeater-form-steps-open` | `{ index: number, isNew: boolean }` | Fires when an instance opens for editing in form-steps mode (either a new instance being added or an existing one re-opened) |
 | `civ-repeater-form-steps-close` | `{ index: number, action: string }` | Fires when the form-steps editor closes — either via Save or Cancel |

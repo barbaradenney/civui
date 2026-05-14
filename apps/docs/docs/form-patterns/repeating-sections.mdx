@@ -116,6 +116,10 @@ Pre-built compositions for common government form sections:
 | 4–10 fields, stay on page | No | `form-steps` | Inline wizard for dependents, employment history |
 | 8+ fields, own page / save-and-resume | Yes | `route` | Dependent profile (name + address + SSN + employment) on its own URL |
 
+## Confirming destructive removals
+
+The default Remove button is one-click — fine for short scratch lists. When removed content is harder to recover (typed dependent info, uploaded files), add a confirmation step. CivUI's rule is modal-only — see [Destructive actions](/foundations/destructive-actions) for the full pattern and the [repeater docs](/components/form/repeater#adding-confirmation-to-remove) for the wiring snippet.
+
 ## Components used
 
 - [`civ-repeater`](/components/form/repeater) — repeating section container

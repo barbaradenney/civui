@@ -172,6 +172,41 @@ repeater.rows = repeater.rows.filter(r => r.id !== removedId);
 
 <EventsTable />
 
+## Adding confirmation to Remove
+
+The default Remove button is one-click — appropriate for short scratch
+lists where re-entering data is trivial. For lists where removed
+content is harder to recover (entered dependent info, uploaded files,
+typed addresses), insert a confirmation step.
+
+CivUI's rule is **modal-only for destructive confirmations** — inline
+two-click patterns are an accessibility hazard. See
+[Destructive actions](/foundations/destructive-actions) for the
+full rationale.
+
+The pattern: listen for the cancelable `civ-repeater-before-remove`
+event, call `preventDefault()` to abort the auto-remove, open your own
+`civ-modal`, and on confirm re-call `removeRow(index, { skipConfirm:
+true })`:
+
+```ts
+const repeater = document.querySelector('civ-repeater');
+const modal = document.querySelector('#confirm-remove');
+
+repeater.addEventListener('civ-repeater-before-remove', (e) => {
+  e.preventDefault();
+  const index = e.detail.index;
+  modal.heading = `Remove ${repeater.itemLabel} ${index + 1}?`;
+  modal.body = `This can't be undone.`;
+  modal.onConfirm = () => repeater.removeRow(index, { skipConfirm: true });
+  modal.open();
+});
+```
+
+In **route mode**, the consumer already owns the rows array. There's
+no separate before-remove event — wrap the modal logic around your
+`civ-repeater-remove` handler, splicing the array only after confirm.
+
 ## Usage
 
 ```html

@@ -77,6 +77,7 @@ export type RepeaterRowSummary = (row: RepeaterRow, index: number) => string;
  * ```
  *
  * @fires civ-repeater-add - (inline / form-steps) Row added, detail: { index: number }
+ * @fires civ-repeater-before-remove - (inline / form-steps) Cancelable. Fires before a row is removed. `preventDefault()` aborts the removal — wire this up to insert a confirmation step (e.g. a `civ-modal`), then re-call `removeRow(index, { skipConfirm: true })` from the confirm handler.
  * @fires civ-repeater-remove - Row removed. inline/form-steps detail: { index }; route detail: { index, id, row }
  * @fires civ-repeater-form-steps-open - (form-steps) Wizard opens, detail: { index, isNew }
  * @fires civ-repeater-form-steps-close - (form-steps) Wizard closes, detail: { index, action: 'save' | 'cancel' }
@@ -597,16 +598,17 @@ export class CivRepeater extends CivBaseElement {
     this._addRow();
   }
 
-  /** Programmatically remove a row by index. */
-  removeRow(index: number): void {
-    // Close form-steps if editing the row being removed
-    if (this._formStepsActive && this._formStepsEditIndex === index) {
-      this._formStepsActive = false;
-      this._formStepsEditIndex = -1;
-    } else if (this._formStepsActive && this._formStepsEditIndex > index) {
-      // Adjust edit index if a row before it was removed
-      this._formStepsEditIndex--;
-    }
+  /**
+   * Programmatically remove a row by index.
+   *
+   * Fires a cancelable `civ-repeater-before-remove` event first.
+   * Consumers wire confirmation (typically a `civ-modal`) by listening
+   * for that event and calling `e.preventDefault()` to abort. From the
+   * confirm handler they call `removeRow(index, { skipConfirm: true })`
+   * to actually perform the removal without re-firing the cancelable
+   * hook.
+   */
+  removeRow(index: number, opts: { skipConfirm?: boolean } = {}): void {
     const container = this.querySelector('[data-civ-repeater-rows]');
     if (!container) return;
     const rows = this._getRows();
@@ -617,6 +619,23 @@ export class CivRepeater extends CivBaseElement {
         'assertive',
       );
       return;
+    }
+    // Cancelable pre-flight — consumers preventDefault to insert a
+    // confirmation step. `skipConfirm: true` bypasses for the confirm
+    // handler's follow-up call.
+    if (!opts.skipConfirm) {
+      const allowed = dispatch(this, 'civ-repeater-before-remove', { index }, /* cancelable */ true);
+      if (!allowed) return;
+    }
+    // Close form-steps if editing the row being removed. Done AFTER the
+    // cancelable hook so consumers preventing default don't see the
+    // wizard collapse out from under them.
+    if (this._formStepsActive && this._formStepsEditIndex === index) {
+      this._formStepsActive = false;
+      this._formStepsEditIndex = -1;
+    } else if (this._formStepsActive && this._formStepsEditIndex > index) {
+      // Adjust edit index if a row before it was removed
+      this._formStepsEditIndex--;
     }
     rows[index].remove();
     this._rowCount--;

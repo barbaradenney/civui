@@ -141,6 +141,71 @@ describe('civ-repeater', () => {
     expect(eventDetail.index).toBe(1);
   });
 
+  it('fires cancelable civ-repeater-before-remove that aborts on preventDefault', async () => {
+    const el = await fixture<CivRepeater>(`
+      <civ-repeater legend="Items" name="items" item-label="item" min="1">
+        <input type="text" name="val" />
+      </civ-repeater>
+    `) as CivRepeater;
+    el.addRow();
+    await elementUpdated(el);
+    expect(el.querySelectorAll('[data-civ-repeater-row]').length).toBe(2);
+
+    let removed = false;
+    el.addEventListener('civ-repeater-remove', () => { removed = true; });
+    el.addEventListener('civ-repeater-before-remove', (e) => e.preventDefault());
+
+    el.removeRow(1);
+    await elementUpdated(el);
+
+    // Nothing changed — neither DOM count nor the after-event fired.
+    expect(el.querySelectorAll('[data-civ-repeater-row]').length).toBe(2);
+    expect(removed).toBe(false);
+  });
+
+  it('skipConfirm: true bypasses civ-repeater-before-remove (for confirm-handler re-entry)', async () => {
+    const el = await fixture<CivRepeater>(`
+      <civ-repeater legend="Items" name="items" item-label="item" min="1">
+        <input type="text" name="val" />
+      </civ-repeater>
+    `) as CivRepeater;
+    el.addRow();
+    await elementUpdated(el);
+
+    // Simulate the confirm-handler pattern: listener calls preventDefault
+    // on the first pass; the modal's confirm handler re-calls removeRow
+    // with skipConfirm: true and the removal proceeds without re-firing.
+    let beforeCalls = 0;
+    el.addEventListener('civ-repeater-before-remove', (e) => {
+      beforeCalls++;
+      e.preventDefault();
+      // Simulate the consumer's modal confirming:
+      el.removeRow((e as CustomEvent).detail.index, { skipConfirm: true });
+    });
+
+    el.removeRow(1);
+    await elementUpdated(el);
+
+    // Only ONE before-remove fired (the original), and the row IS gone.
+    expect(beforeCalls).toBe(1);
+    expect(el.querySelectorAll('[data-civ-repeater-row]').length).toBe(1);
+  });
+
+  it('civ-repeater-before-remove is cancelable (sanity)', async () => {
+    const el = await fixture<CivRepeater>(`
+      <civ-repeater legend="Items" name="items" item-label="item" min="1">
+        <input type="text" name="val" />
+      </civ-repeater>
+    `) as CivRepeater;
+    el.addRow();
+    await elementUpdated(el);
+    let captured: Event | null = null;
+    el.addEventListener('civ-repeater-before-remove', (e) => { captured = e; });
+    el.removeRow(1);
+    expect(captured).not.toBeNull();
+    expect(captured!.cancelable).toBe(true);
+  });
+
   it('does not remove below min rows', async () => {
     const el = await fixture<CivRepeater>(`
       <civ-repeater legend="Items" name="items" item-label="item" min="2">

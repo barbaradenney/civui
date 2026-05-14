@@ -752,6 +752,10 @@ function generateReport(): string {
       'type',
       // Task 'href' is web-only — native uses onTap/onClick callbacks
       'href',
+      // Anchor extras — web-only attributes on the <a> element. Native
+      // URL routing has no concept of target/rel/download attributes
+      // or "open in new tab" (it routes through the OS).
+      'target', 'rel', 'download', 'newTab',
       // Address international/military mode flags — available on native now but excluded from parity
       'showCountry', 'showMilitary', 'showStreet3',
       // FormStep: navDisabled is web-only (native handles button disabled natively)

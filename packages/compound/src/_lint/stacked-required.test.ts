@@ -38,6 +38,8 @@ import '../direct-deposit/civ-direct-deposit.js';
 import '../relationship/civ-relationship.js';
 import '../partnership-history/civ-partnership-history.js';
 import '../service-history/civ-service-history.js';
+import '../race-ethnicity/civ-race-ethnicity.js';
+import '../signature/civ-signature.js';
 
 // civ-fieldset lives in @civui/form-patterns (a higher layer in the
 // build order). It follows the same rule — `showRequired: false` is
@@ -60,6 +62,8 @@ const FIXTURES: Fixture[] = [
   { name: 'civ-direct-deposit', html: '<civ-direct-deposit legend="Direct deposit" required></civ-direct-deposit>' },
   { name: 'civ-partnership-history', html: '<civ-partnership-history legend="Partnership history" required></civ-partnership-history>' },
   { name: 'civ-service-history', html: '<civ-service-history legend="Service history" required></civ-service-history>' },
+  { name: 'civ-race-ethnicity', html: '<civ-race-ethnicity legend="Race and ethnicity" required></civ-race-ethnicity>' },
+  { name: 'civ-signature', html: '<civ-signature legend="Certification and signature" required></civ-signature>' },
 ];
 
 interface Violation {
@@ -82,6 +86,8 @@ const MULTI_FIELD_COMPOUNDS = new Set([
   'civ-direct-deposit',
   'civ-partnership-history',
   'civ-service-history',
+  'civ-race-ethnicity',
+  'civ-signature',
 ]);
 
 function legendOwner(legend: Element): string | null {

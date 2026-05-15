@@ -89,6 +89,17 @@ export class CivRelationship extends LegendHeadingMixin(CivCompoundElement) {
 
   // Field-level errors
   @property({ type: String, attribute: 'name-error' }) nameError = '';
+  /**
+   * Per-name-sub-field errors. Forwarded to the inner civ-name so each
+   * required name input can be flagged independently — what a real
+   * orchestrator (civ-form) produces when validation runs against an
+   * empty required compound. Without these, only the relationship
+   * select carries error chrome and the rest look fine even though
+   * they're invalid.
+   */
+  @property({ type: String, attribute: 'first-error' }) firstError = '';
+  @property({ type: String, attribute: 'middle-error' }) middleError = '';
+  @property({ type: String, attribute: 'last-error' }) lastError = '';
   @property({ type: String, attribute: 'relationship-error' }) relationshipError = '';
   @property({ type: String, attribute: 'marriage-date-error' }) marriageDateError = '';
   @property({ type: String, attribute: 'divorce-date-error' }) divorceDateError = '';
@@ -205,6 +216,9 @@ export class CivRelationship extends LegendHeadingMixin(CivCompoundElement) {
             name="${prefix}.name"
             value="${nameJson}"
             error="${this.nameError}"
+            first-error="${this.firstError}"
+            middle-error="${this.middleError}"
+            last-error="${this.lastError}"
             ?required="${this.required}"
             ?disabled="${this.disabled}"
             ?readonly="${this.readonly}"
@@ -431,7 +445,8 @@ export class CivRelationship extends LegendHeadingMixin(CivCompoundElement) {
   override formResetCallback(): void {
     this._data = { ...EMPTY_RELATIONSHIP };
     this._resetCompound([
-      'nameError', 'relationshipError', 'marriageDateError', 'divorceDateError',
+      'nameError', 'firstError', 'middleError', 'lastError',
+      'relationshipError', 'marriageDateError', 'divorceDateError',
       'dateOfBirthError', 'adoptionDateError', 'dateOfDeathError',
       'otherDescriptionError',
     ]);

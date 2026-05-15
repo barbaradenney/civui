@@ -123,6 +123,8 @@ export const WithErrors: Story = {
       name="dep"
       preset="general"
       required
+      first-error="Enter the dependent's first name"
+      last-error="Enter the dependent's last name"
       relationship-error="Select a relationship"
     ></civ-relationship>
   `,

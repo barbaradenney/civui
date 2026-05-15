@@ -46,8 +46,17 @@ public struct CivRelationship: View {
     /// Whether to show the adoption date field.
     public var showAdoptionDate: Bool
 
-    /// Error message for the name field.
+    /// Compound-level error message for the name section.
     public var nameError: String
+
+    /// Per-field error for the first-name input.
+    public var firstError: String
+
+    /// Per-field error for the middle-name input.
+    public var middleError: String
+
+    /// Per-field error for the last-name input.
+    public var lastError: String
 
     /// Error message for the relationship field.
     public var relationshipError: String
@@ -119,6 +128,9 @@ public struct CivRelationship: View {
         showDivorceDate: Bool = false,
         showAdoptionDate: Bool = false,
         nameError: String = "",
+        firstError: String = "",
+        middleError: String = "",
+        lastError: String = "",
         relationshipError: String = "",
         marriageDateError: String = "",
         divorceDateError: String = "",
@@ -147,6 +159,9 @@ public struct CivRelationship: View {
         self.showDivorceDate = showDivorceDate
         self.showAdoptionDate = showAdoptionDate
         self.nameError = nameError
+        self.firstError = firstError
+        self.middleError = middleError
+        self.lastError = lastError
         self.relationshipError = relationshipError
         self.marriageDateError = marriageDateError
         self.divorceDateError = divorceDateError

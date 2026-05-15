@@ -79,9 +79,27 @@ const schema: ComponentSchema = {
     },
     nameError: {
       type: 'string',
-      description: 'Per-field error for the relative-name input',
+      description: 'Compound-level error for the relative-name section',
       default: '',
       attribute: 'name-error',
+    },
+    firstError: {
+      type: 'string',
+      description: 'Per-field error for the first-name input inside the relative-name section',
+      default: '',
+      attribute: 'first-error',
+    },
+    middleError: {
+      type: 'string',
+      description: 'Per-field error for the middle-name input inside the relative-name section',
+      default: '',
+      attribute: 'middle-error',
+    },
+    lastError: {
+      type: 'string',
+      description: 'Per-field error for the last-name input inside the relative-name section',
+      default: '',
+      attribute: 'last-error',
     },
     relationshipError: {
       type: 'string',

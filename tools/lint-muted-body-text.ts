@@ -58,7 +58,10 @@ const SCAN_EXTENSIONS = new Set(['.stories.ts', '.mdx', '.twig']);
  */
 const EXTRA_PATH_PATTERNS: RegExp[] = [
   /packages\/mcp-server\/src\/tools\/generate-[^/]+\.ts$/,
-  /packages\/mcp-server\/src\/resources\/[^/]+\.json$/,
+  // Only the example HTML resource — other JSON files (e.g.
+  // common-traps.json) contain documentation that intentionally
+  // shows the forbidden pattern as a "don't do this" example.
+  /packages\/mcp-server\/src\/resources\/component-examples\.json$/,
 ];
 
 /**

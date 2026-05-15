@@ -93,8 +93,18 @@ props:
       type: boolean
       default: false
       description: 'Inverse of `show-name` — present in HTML disables the inner name fields. Use when an enclosing repeater step already captures the name and you want to avoid duplicating it inside civ-relationship.'
-
-
+    first_error:
+      title: First error
+      type: string
+      description: 'Per-field error for the first-name input inside the relative-name section'
+    middle_error:
+      title: Middle error
+      type: string
+      description: 'Per-field error for the middle-name input inside the relative-name section'
+    last_error:
+      title: Last error
+      type: string
+      description: 'Per-field error for the last-name input inside the relative-name section'
 
 libraryOverrides:
   dependencies:

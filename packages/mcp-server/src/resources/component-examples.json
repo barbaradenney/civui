@@ -3332,7 +3332,7 @@
       "story": "WithErrors",
       "name": "With Errors",
       "category": "Forms/Compound/Relationship",
-      "html": "<civ-relationship\n      size=\"lg\" legend=\"About the dependent\"\n      name=\"dep\"\n      preset=\"general\"\n      required\n      relationship-error=\"Select a relationship\"\n    ></civ-relationship>",
+      "html": "<civ-relationship\n      size=\"lg\" legend=\"About the dependent\"\n      name=\"dep\"\n      preset=\"general\"\n      required\n      first-error=\"Enter the dependent's first name\"\n      last-error=\"Enter the dependent's last name\"\n      relationship-error=\"Select a relationship\"\n    ></civ-relationship>",
       "source": "packages/compound/src/relationship/civ-relationship.stories.ts"
     },
     {

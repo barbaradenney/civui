@@ -25,6 +25,11 @@ export default defineConfig({
       '@civui/overlays': resolve(__dirname, '../overlays/src/index.ts'),
       '@civui/actions/button': resolve(__dirname, '../actions/src/button/index.ts'),
       '@civui/actions': resolve(__dirname, '../actions/src/index.ts'),
+      // Resolve test-utils to source so the lint:double-labels test
+      // works in CI without a prebuilt @civui/test-utils dist (the
+      // package's package.json points at dist/index.js, which fresh
+      // CI checkouts don't have until something runs `pnpm build`).
+      '@civui/test-utils': resolve(__dirname, '../test-utils/src/index.ts'),
     },
   },
 });

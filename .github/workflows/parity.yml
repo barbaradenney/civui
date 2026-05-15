@@ -231,6 +231,12 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      # `lint:undefined-css-vars` reads packages/tokens/dist/css/tokens.css
+      # to know which CSS custom properties are real. Build the tokens
+      # package first so the lint has its reference set; otherwise the
+      # script bails with "tokens.css not found" before it can do anything.
+      - name: Build tokens (required for undefined-css-vars lint)
+        run: pnpm --filter @civui/tokens build
       - name: Run drift lints
         run: pnpm validate:lints
 
@@ -282,6 +288,13 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      # The lint-undefined-css-vars regression test reads
+      # packages/tokens/dist/css/tokens.css to know which CSS custom
+      # properties are real. Build the tokens package first so the
+      # test has its reference set; otherwise it bails before doing
+      # anything useful.
+      - name: Build tokens (required for undefined-css-vars test)
+        run: pnpm --filter @civui/tokens build
       - name: Run tool unit tests
         run: pnpm test:tools
 

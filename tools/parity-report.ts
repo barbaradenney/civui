@@ -774,6 +774,15 @@ function generateReport(): string {
       'managedTabIndex', 'inputId',
       // Date picker web-only (native uses system locale/settings)
       'weekStartsOn',
+      // Fieldset: tightHint collapses the spacing between hint + first
+      // control. CSS-only knob; native platforms use platform-default
+      // spacing tokens.
+      'tightHint',
+      // Repeater: rowSummary is a JS callback (function-typed prop).
+      // Native equivalents pass the summary as a string via the row
+      // model itself, not as a callback. Same pattern as
+      // loadOptions / beforeContinue / validateAddress already documented.
+      'rowSummary',
     ]);
 
     // Props that are native-only and should not count as "missing on web"
@@ -799,6 +808,16 @@ function generateReport(): string {
       'civ-step-back', // FormStep: web-only navigation event, native handles internally
       'civ-step-continue', // FormStep: web-only navigation event, native handles internally
       'civ-filter', // FilterableList: web-only event, native uses callback
+      // Repeater form-steps mode is a web orchestration pattern (open
+      // an in-place wizard, save/cancel back to the list). Native
+      // platforms typically push a modal sheet or navigate, with
+      // their own platform-native lifecycle events.
+      'civ-repeater-form-steps-open',
+      'civ-repeater-form-steps-close',
+      // Cancelable confirmation hook — consumer wraps a modal around
+      // it. Native confirmations use platform-native dialog APIs that
+      // don't bubble through DOM events.
+      'civ-repeater-before-remove',
     ]);
 
     // Native-only events/callbacks (not real events, excluded from parity)

@@ -106,19 +106,19 @@ export const RichHeadingSlot: Story = {
     <civ-list dividers>
       <civ-list-item href="#/personal">
         <h2 data-list-item-heading class="civ-font-bold civ-text-lg civ-m-0">Personal information</h2>
-        <p data-list-item-description class="civ-text-sm civ-text-base-dark civ-m-0">Name, date of birth, SSN</p>
+        <p data-list-item-description class="civ-text-sm civ-m-0">Name, date of birth, SSN</p>
         <civ-badge data-list-item-end label="Complete" variant="success" badge-style="primary" with-icon></civ-badge>
       </civ-list-item>
       <civ-list-item href="#/contact">
         <h2 data-list-item-heading class="civ-font-bold civ-text-lg civ-m-0">Contact information</h2>
-        <p data-list-item-description class="civ-text-sm civ-text-base-dark civ-m-0">
+        <p data-list-item-description class="civ-text-sm civ-m-0">
           Phone, email, and <a href="#/address">mailing address</a>
         </p>
         <civ-badge data-list-item-end label="In progress" variant="info" badge-style="primary" with-icon></civ-badge>
       </civ-list-item>
       <civ-list-item>
         <h2 data-list-item-heading class="civ-font-bold civ-text-lg civ-m-0">Service history</h2>
-        <p data-list-item-description class="civ-text-sm civ-text-base-dark civ-m-0">Complete previous sections first</p>
+        <p data-list-item-description class="civ-text-sm civ-m-0">Complete previous sections first</p>
         <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary"></civ-badge>
       </civ-list-item>
     </civ-list>
@@ -130,13 +130,13 @@ export const RichDescriptionSlot: Story = {
   render: () => html`
     <civ-list dividers>
       <civ-list-item heading="Disability compensation">
-        <p data-list-item-description class="civ-text-sm civ-text-base-dark civ-m-0">
+        <p data-list-item-description class="civ-text-sm civ-m-0">
           Learn about <a href="#/eligibility">eligibility requirements</a> and
           <a href="#/rates">current compensation rates</a>.
         </p>
       </civ-list-item>
       <civ-list-item heading="Education benefits">
-        <p data-list-item-description class="civ-text-sm civ-text-base-dark civ-m-0">
+        <p data-list-item-description class="civ-text-sm civ-m-0">
           Includes <strong>GI Bill</strong>, scholarships, and <a href="#/vettec">VET TEC</a> programs.
         </p>
       </civ-list-item>

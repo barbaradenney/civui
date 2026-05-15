@@ -59,7 +59,7 @@ export const Step1_Hub: Story = {
   render: () => html`
     <div class="civ-max-w-2xl">
       <h1 class="civ-heading-xl civ-mb-2">Apply for disability compensation</h1>
-      <p class="civ-text-muted civ-mb-4">VA Form 21-526EZ</p>
+      <p class="civ-mb-4">VA Form 21-526EZ</p>
 
       <h3 class="civ-heading-md civ-mt-6 civ-mb-2">Your information</h3>
       <civ-list dividers>
@@ -212,7 +212,7 @@ export const Step3_EditStep: Story = {
 
       <h2 class="civ-heading-xl civ-mt-3 civ-mb-4">Edit phone number</h2>
 
-      <p class="civ-text-muted civ-mb-4">Any changes you make here will also update your VA.gov profile.</p>
+      <p class="civ-mb-4">Any changes you make here will also update your VA.gov profile.</p>
 
       <civ-text-input label="Mobile phone number" name="phone" value="(555) 123-4567" required mask="phone-us"></civ-text-input>
 
@@ -279,7 +279,7 @@ export const Step5_HubAfterComplete: Story = {
   render: () => html`
     <div class="civ-max-w-2xl">
       <h1 class="civ-heading-xl civ-mb-2">Apply for disability compensation</h1>
-      <p class="civ-text-muted civ-mb-4">VA Form 21-526EZ</p>
+      <p class="civ-mb-4">VA Form 21-526EZ</p>
 
       <h3 class="civ-heading-md civ-mt-6 civ-mb-2">Your information</h3>
       <civ-list dividers>

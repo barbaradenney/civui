@@ -33,7 +33,7 @@ export const VADisabilityApplication: Story = {
   render: () => html`
     <div class="civ-max-w-2xl">
       <h1 class="civ-m-0 civ-mb-2 civ-text-2xl civ-font-bold">Apply for disability compensation</h1>
-      <p class="civ-m-0 civ-mb-6 civ-text-muted">VA Form 21-526EZ</p>
+      <p class="civ-m-0 civ-mb-6">VA Form 21-526EZ</p>
 
       <h3 class="civ-heading-md civ-mb-2">Prepare</h3>
       <civ-list dividers>

@@ -138,7 +138,7 @@ export const GovernmentPaymentSetup: Story = {
   name: 'Usage: Benefit Payment Setup',
   render: () => html`
     <h3 class="civ-m-0 civ-mb-4 civ-text-xl">Set up direct deposit for benefit payments</h3>
-    <p class="civ-m-0 civ-mb-4 civ-text-muted">
+    <p class="civ-m-0 civ-mb-4">
       Provide your bank account information so we can deposit your benefit payments directly.
       You can find your routing and account numbers on a check or by contacting your bank.
     </p>

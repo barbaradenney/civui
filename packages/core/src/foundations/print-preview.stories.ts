@@ -169,7 +169,7 @@ export const CompleteForm: Story = {
   name: 'Complete Form (Paper Filing)',
   render: () => html`
     <h2 class="civ-text-lg civ-font-bold civ-mb-4">Benefits Application — Print Preview</h2>
-    <p class="civ-text-sm civ-text-muted civ-mb-4">This demonstrates how a complete form renders when printed. Interactive elements are hidden; only labels and values remain.</p>
+    <p class="civ-text-sm civ-mb-4">This demonstrates how a complete form renders when printed. Interactive elements are hidden; only labels and values remain.</p>
 
     <civ-name
       legend="Applicant name"

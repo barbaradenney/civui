@@ -236,6 +236,44 @@ when a schema changes.
 
 ---
 
+## Muted/gray text classes on `<p>` body text
+
+Per CLAUDE.md and government-patterns.md: body text inherits the
+default color (`base-darkest`). Visual hierarchy comes from font
+size and weight, not color muting. Gray text is reserved for hint
+text (which uses `.civ-hint` internally), disabled states (via
+`.civ-opacity-disabled`), and placeholders.
+
+Putting `civ-text-muted`, `civ-text-base-dark`, `civ-text-base-light`,
+`civ-text-base-lighter`, `civ-text-base-lightest`, or bare
+`civ-text-base` on a `<p>` body paragraph violates this — the user
+sees descriptive prose ("Provide your bank account information…")
+rendered in light gray.
+
+```html
+<!-- ✗ muted descriptive paragraph — caught by lint:muted-body-text -->
+<p class="civ-m-0 civ-mb-4 civ-text-muted">
+  Provide your bank account information so we can deposit your benefit payments directly.
+</p>
+
+<!-- ✓ default color (base-darkest), inherited -->
+<p class="civ-m-0 civ-mb-4">
+  Provide your bank account information so we can deposit your benefit payments directly.
+</p>
+```
+
+**Caught by:** `pnpm lint:muted-body-text` — scans `.stories.ts`,
+`.mdx`, and `.twig` files under `packages/` and `apps/docs/docs/`
+for `<p>` tags whose `class=` attribute contains any of the
+forbidden tokens. Two files demonstrate the muted token by design
+(`packages/core/src/colors/colors.stories.ts`,
+`packages/core/src/typography/typography.stories.ts`) and are
+allowlisted. Wired into `pnpm validate:lints` and the drift-lints
+CI gate. To extend the allowlist, edit `ALLOWLIST` in
+`tools/lint-muted-body-text.ts`.
+
+---
+
 ## Color-utility class typos silently render unstyled text
 
 `civ-text-success-darker` looks plausible but `success` has no

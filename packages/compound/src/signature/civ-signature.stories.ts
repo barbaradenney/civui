@@ -142,7 +142,7 @@ export const GovernmentCertification: Story = {
   name: 'Usage: Application Certification',
   render: () => html`
     <h3 class="civ-m-0 civ-mb-4 civ-text-xl">Certification and signature</h3>
-    <p class="civ-m-0 civ-mb-4 civ-text-muted">By signing below, you are certifying that the statements in this application are true and complete.</p>
+    <p class="civ-m-0 civ-mb-4">By signing below, you are certifying that the statements in this application are true and complete.</p>
     <civ-signature
       legend="Applicant certification"
       name="applicant-sig"

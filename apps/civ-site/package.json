@@ -6,7 +6,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "regen-forms": "tsx scripts/regen-forms.ts"
+    "regen-forms": "tsx scripts/regen-forms.ts",
+    "verify-form": "tsx scripts/verify-form.ts"
   },
   "dependencies": {
     "lit": "^3.2.0"

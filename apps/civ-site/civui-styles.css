@@ -1,41 +1,48 @@
 /* Import the full CivUI stylesheet (tokens + components + Tailwind) */
 @import '../../packages/core/src/styles/civ.css';
 
-/* Base typography for plain HTML elements used in form pages */
-body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  color: var(--civ-color-base-darkest);
-  background-color: var(--civ-color-white-DEFAULT);
-  line-height: 1.5;
-}
+/* Base typography for plain HTML elements used in form pages.
+ * `@layer base` so utility classes (civ-no-underline, civ-text-inherit,
+ * civ-text-primary, etc.) emitted by Tailwind into @layer utilities
+ * can win the cascade. Unlayered rules always beat layered ones, so
+ * leaving these rules unlayered meant `civ-list-item`'s linked-row
+ * <a> stayed underlined + blue despite its civ-no-underline class. */
+@layer base {
+  body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    color: var(--civ-color-base-darkest);
+    background-color: var(--civ-color-white-DEFAULT);
+    line-height: 1.5;
+  }
 
-p {
-  margin-bottom: 1em;
-}
+  p {
+    margin-bottom: 1em;
+  }
 
-ul, ol {
-  margin-bottom: 1em;
-  padding-left: 1.5em;
-}
+  ul, ol {
+    margin-bottom: 1em;
+    padding-left: 1.5em;
+  }
 
-li {
-  margin-bottom: 0.25em;
-}
+  li {
+    margin-bottom: 0.25em;
+  }
 
-h1, h2, h3, h4, h5, h6 {
-  color: var(--civ-color-base-darkest);
-  font-weight: 700;
-  line-height: 1.25;
-}
+  h1, h2, h3, h4, h5, h6 {
+    color: var(--civ-color-base-darkest);
+    font-weight: 700;
+    line-height: 1.25;
+  }
 
-h1 { font-size: var(--civ-typography-fontSize-2xl); margin-bottom: 1em; }
-h2 { font-size: var(--civ-typography-fontSize-xl); margin-bottom: 0.75em; }
-h3 { font-size: var(--civ-typography-fontSize-lg); margin-bottom: 0.5em; }
+  h1 { font-size: var(--civ-typography-fontSize-2xl); margin-bottom: 1em; }
+  h2 { font-size: var(--civ-typography-fontSize-xl); margin-bottom: 0.75em; }
+  h3 { font-size: var(--civ-typography-fontSize-lg); margin-bottom: 0.5em; }
 
-a {
-  color: var(--civ-color-primary-DEFAULT);
-  text-decoration: underline;
-}
-a:hover {
-  color: var(--civ-color-primary-dark);
+  a {
+    color: var(--civ-color-primary-DEFAULT);
+    text-decoration: underline;
+  }
+  a:hover {
+    color: var(--civ-color-primary-dark);
+  }
 }

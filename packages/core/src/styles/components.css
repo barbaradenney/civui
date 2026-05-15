@@ -178,8 +178,34 @@
      defaults section above. Without it, borders don't paint on the
      `.civ-list--dividers` rule (custom elements default to inline). */
 
+  /* Row: vertical + horizontal padding, no color side-effect.
+     `civ-text-base` would emit `font-size: var(...base...)` AND
+     `color: var(--civ-color-base-DEFAULT)` because Tailwind generates
+     both a font-size utility and a color utility under the same name
+     (the `base` key collides between the colors and fontSize scales).
+     The color rule grayed every non-linked row's text. We want only
+     the font-size, so set it explicitly. */
   .civ-list-item__row {
-    @apply civ-py-3 civ-px-0 civ-text-base;
+    @apply civ-py-3 civ-px-6;
+    font-size: var(--civ-typography-fontSize-base);
+  }
+
+  /* Edge-to-edge modifier: lets a civ-list extend past its container's
+     horizontal padding so the row's hover/focus background reads as
+     full-width. Paired with the row's own civ-px-6 internal padding,
+     content inside the row still aligns with surrounding page chrome
+     that's positioned at the same 24px indent (e.g. civ-page-header
+     above the list). Apply to the civ-list host:
+
+       <civ-list dividers class="civ-list--bleed">
+         <civ-list-item>...</civ-list-item>
+       </civ-list>
+
+     The -1.5rem matches civ-p-6 — the default padding on the form
+     pages' <main> wrapper. Override via the consumer's parent
+     spacing if a different container padding is in use. */
+  .civ-list--bleed {
+    margin-inline: -1.5rem;
   }
 
   /* Row layout — content on the left, action cluster on the right.
@@ -217,11 +243,14 @@
     }
   }
 
-  /* Heading slot: bold, lg size, no margin */
+  /* Heading slot: bold, base size, no margin. Hierarchy against the
+     description comes from font-weight, not font-size — base matches
+     the row body text and is enough to differentiate when paired with
+     the bold weight (and the link color/underline on linked rows). */
   [data-civ-list-item-heading-slot] > *,
   .civ-list-item-heading-prop {
     @apply civ-font-bold civ-m-0;
-    font-size: var(--civ-typography-fontSize-lg);
+    font-size: var(--civ-typography-fontSize-base);
     display: block;
   }
 
@@ -242,7 +271,7 @@
   }
 
   .civ-list--sm .civ-list-item__row {
-    @apply civ-py-2 civ-px-0 civ-text-sm;
+    @apply civ-py-2 civ-px-6 civ-text-sm;
   }
 
   .civ-list--sm [data-civ-list-item-heading-slot] > *,

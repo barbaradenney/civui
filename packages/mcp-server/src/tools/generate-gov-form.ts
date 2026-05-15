@@ -496,11 +496,11 @@ function generateTaskListHub(form: ReturnType<typeof getFormDefinition> & {}, ch
       // Only the first chapter starts as navigable; rest are locked until unlocked
       const href = i === 0 ? ` href="#/${slugify(ch.id)}"` : '';
       const tag = i === 0
-        ? '<civ-badge data-list-item-end label="Not started" variant="info" badge-style="secondary" with-icon></civ-badge>'
-        : '<civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>';
+        ? '<civ-badge data-list-item-end label="Not started" variant="info" badge-style="secondary" spacing="sm" with-icon></civ-badge>'
+        : '<civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" spacing="sm" with-icon></civ-badge>';
       return `      <civ-list-item data-chapter-id="${slugify(ch.id)}"${href}>
-        <span class="civ-block civ-font-bold">${escapeHtml(ch.heading)}</span>
-        <span class="civ-block civ-text-sm civ-text-muted">${escapeHtml(ch.hint)}</span>
+        <span data-list-item-heading>${escapeHtml(ch.heading)}</span>
+        <span data-list-item-description class="civ-text-sm">${escapeHtml(ch.hint)}</span>
         ${tag}
       </civ-list-item>`;
     })
@@ -520,16 +520,16 @@ function generateTaskListHub(form: ReturnType<typeof getFormDefinition> & {}, ch
   ></civ-progress-percent>
 
   <h3 class="civ-heading-md civ-mt-6 civ-mb-2">Fill out your application</h3>
-  <civ-list dividers>
+  <civ-list dividers class="civ-list--bleed">
 ${chapterRows}
   </civ-list>
 
   <h3 class="civ-heading-md civ-mt-6 civ-mb-2">Review and submit</h3>
-  <civ-list dividers>
+  <civ-list dividers class="civ-list--bleed">
     <civ-list-item data-review>
-      <span class="civ-block civ-font-bold">Review your application</span>
-      <span class="civ-block civ-text-sm civ-text-muted">Complete all sections before reviewing</span>
-      <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
+      <span data-list-item-heading>Review your application</span>
+      <span data-list-item-description class="civ-text-sm">Complete all sections before reviewing</span>
+      <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" spacing="sm" with-icon></civ-badge>
     </civ-list-item>
   </civ-list>
 </div>`;

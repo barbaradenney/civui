@@ -60,12 +60,16 @@ describe('civ-fieldset', () => {
     }
   });
 
-  it('shows required indicator on legend', async () => {
+  it('does not show a (required) indicator on its section legend', async () => {
+    // civ-fieldset is a multi-field grouping wrapper — its legend is a
+    // section heading, not a question, so it passes showRequired: false
+    // to renderLegend. The `(required)` marker belongs on each leaf input
+    // inside, not on the section heading. Enforced structurally by
+    // packages/compound/src/_lint/stacked-required.test.ts.
     const el = await fixture('<civ-fieldset legend="Address" required></civ-fieldset>');
 
     const requiredMark = el.querySelector('.civ-required-mark');
-    expect(requiredMark).not.toBeNull();
-    expect(requiredMark!.textContent).toContain('required');
+    expect(requiredMark).toBeNull();
   });
 
   it('renders slotted children', async () => {

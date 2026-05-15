@@ -546,6 +546,18 @@
     @apply civ-mb-0;
   }
 
+  /* Drop the bottom-margin wrapper inside the last form control of a
+     fieldset. Native <fieldset> creates an anonymous content box that
+     prevents margin collapse between its last child and its own
+     margin-bottom — so a compound like civ-name (whose Suffix select
+     ends with `<div class="civ-mb-4">`) stacks 16px on top of the
+     inner fieldset's own civ-mb-4, doubling the gap before the next
+     sibling at the outer level. Zero out the trailing wrapper so the
+     spacing comes from the fieldset's own bottom margin alone. */
+  .civ-fieldset > :last-child > .civ-mb-4 {
+    @apply civ-mb-0;
+  }
+
   /* Fieldset-level error. civ-fieldset / civ-repeater / the self-contained
      group components all set aria-invalid="true" on their inner <fieldset>
      when their `error` prop is set; without a style rule the error text

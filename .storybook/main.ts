@@ -114,6 +114,14 @@ const config: StorybookConfig = {
       '@civui/layout/button-group': resolve(root, 'packages/layout/src/button-group/index.ts'),
       '@civui/layout/image-preview': resolve(root, 'packages/layout/src/image-preview/index.ts'),
       '@civui/layout': resolve(root, 'packages/layout/src/index.ts'),
+      // Storybook utilities — used by stories that wrap demos in
+      // `<civ-demo-frame>`. Resolve to source so the storybook build
+      // works without a prebuilt @civui/storybook-utils dist (the
+      // package's exports point at dist/demo-frame/index.js, which
+      // fresh CI checkouts don't have until something runs `pnpm build`).
+      '@civui/storybook-utils/demo-frame': resolve(root, 'packages/storybook-utils/src/demo-frame/index.ts'),
+      '@civui/storybook-utils/demo-frame.css': resolve(root, 'packages/storybook-utils/src/demo-frame/demo-frame.css'),
+      '@civui/storybook-utils': resolve(root, 'packages/storybook-utils/src/index.ts'),
       '@civui/tokens/css': resolve(root, 'packages/tokens/dist/css/tokens.css'),
     };
     return config;

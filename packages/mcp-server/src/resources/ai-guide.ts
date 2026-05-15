@@ -9,6 +9,13 @@ web component library for government applications built on Lit 3 and Tailwind CS
 
 For architecture and internals, see \`CLAUDE.md\` in the repo root.
 
+> **Working through the MCP server?** Reach for the focused per-component tools before pulling this whole guide into context — they're cheaper and more current:
+> - \`search_components({ query: "user uploads ID and signs" })\` — natural-language → ranked component matches
+> - \`get_component_examples({ name: "civ-text-input" })\` — canonical snippets pulled from \`*.stories.ts\`
+> - \`get_component_guide({ name: "civ-text-input" })\` — schema + examples + matching trap excerpts in one focused payload
+>
+> Use this guide for the broad catalog overview, the component-selection tables, and the cross-cutting design rules. Use the tools when you know the affordance you need.
+
 ---
 
 ## Component Quick Reference

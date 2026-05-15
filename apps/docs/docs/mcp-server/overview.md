@@ -106,6 +106,23 @@ The server also exposes read-only resources for reference:
 | `civui://decision-tree` | Which component to use when |
 | `civui://tailwind` | CivUI Tailwind classes and design tokens |
 
+## Component Discovery
+
+Three tools turn the schemas + Storybook stories + trap docs into a focused query surface so an agent can find the right component without reading the full 2,000-line AI guide:
+
+```
+search_components({ query: "user uploads ID and signs", limit: 5 })
+  →  ranked schema matches with prop names + event names attached
+
+get_component_examples({ name: "civ-text-input" })
+  →  canonical HTML snippets pulled from *.stories.ts (709 examples / 62 components)
+
+get_component_guide({ name: "civ-text-input", exampleLimit: 3 })
+  →  per-component reference: schema + props + a11y + top examples + trap excerpts
+```
+
+**Recommended workflow:** `search_components` to find candidates → `get_component_guide` to check the API + caveats → only fetch the full `civui://ai-guide` resource when you need the catalog overview.
+
 ## Quick Example
 
 Generate a complete VA disability form in one call:

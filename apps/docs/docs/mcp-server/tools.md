@@ -91,6 +91,19 @@ All 80 MCP tools organized by category. Each tool shows its tier:
 | `generate_content_registry` | Internal | Generate content registry |
 | `sync_content_registry` | Internal | Sync with content system |
 
+## Component Discovery (4 tools)
+
+Find the right CivUI component for an intent, see canonical usage snippets, or get a focused per-component reference. Pair these to avoid loading the full `civui://ai-guide` resource when an agent only needs to use one or two components.
+
+| Tool | Tier | Description |
+|------|------|-------------|
+| `search_components` | Essential | Natural-language query → ranked component matches. Tokenizes the query, scans every schema's name / category / description / prop docs, weights matches by field, and returns up to N results with their prop+event lists attached. Per-field score breakdown shows *why* a result matched. |
+| `get_component_examples` | Essential | Canonical HTML snippets for a component, extracted from its `*.stories.ts` files at build time. Returns story name, optional display name, source file, and the rendered template. Suggests close-matching component names if the requested tag is unknown (`civ-input` → suggests `civ-text-input`). |
+| `list_components_with_examples` | Essential | Catalog of every component with at least one extracted example, plus the per-component count. Use to discover what's available before calling `get_component_examples`. |
+| `get_component_guide` | Essential | Per-component focused reference synthesized on demand from the schema + the top N examples + matching trap excerpts from `common-traps.md` + same-category neighbors. Cheaper than loading the full `civui://ai-guide` resource when only one component is needed. |
+
+**Workflow:** `search_components({ query })` → pick a result → `get_component_guide({ name })` → write the markup. Fetch `civui://ai-guide` only for the broader catalog overview.
+
 ## Utility (14 tools)
 
 | Tool | Tier | Description |

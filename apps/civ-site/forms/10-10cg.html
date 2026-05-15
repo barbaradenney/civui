@@ -43,35 +43,39 @@
   ></civ-progress-percent>
 
   <h3 class="civ-heading-md civ-mt-6 civ-mb-2">Fill out your application</h3>
-  <civ-list dividers class="civ-list--bleed">
+  <civ-list dividers>
       <civ-list-item data-chapter-id="personal-info" href="#/personal-info">
+        <civ-icon data-list-item-start name="chevron-right" label="" class="civ-text-primary"></civ-icon>
         <span data-list-item-heading>Personal information</span>
         <span data-list-item-description class="civ-text-sm">Name, date of birth, Social Security number</span>
-        <civ-badge data-list-item-end label="Not started" variant="info" badge-style="secondary" spacing="sm" with-icon></civ-badge>
+        <civ-badge data-list-item-end label="Not started" variant="info" badge-style="secondary" with-icon></civ-badge>
       </civ-list-item>
       <civ-list-item data-chapter-id="contact-info">
+        
         <span data-list-item-heading>Contact information</span>
         <span data-list-item-description class="civ-text-sm">Address, phone, email</span>
-        <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" spacing="sm" with-icon></civ-badge>
+        <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
       </civ-list-item>
       <civ-list-item data-chapter-id="veteran-info">
+        
         <span data-list-item-heading>Veteran being cared for</span>
         <span data-list-item-description class="civ-text-sm">Information about the Veteran you provide care for</span>
-        <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" spacing="sm" with-icon></civ-badge>
+        <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
       </civ-list-item>
       <civ-list-item data-chapter-id="caregiver-info">
+        
         <span data-list-item-heading>Primary caregiver</span>
         <span data-list-item-description class="civ-text-sm">Information about the primary caregiver</span>
-        <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" spacing="sm" with-icon></civ-badge>
+        <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
       </civ-list-item>
   </civ-list>
 
   <h3 class="civ-heading-md civ-mt-6 civ-mb-2">Review and submit</h3>
-  <civ-list dividers class="civ-list--bleed">
+  <civ-list dividers>
     <civ-list-item data-review>
       <span data-list-item-heading>Review your application</span>
       <span data-list-item-description class="civ-text-sm">Complete all sections before reviewing</span>
-      <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" spacing="sm" with-icon></civ-badge>
+      <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
     </civ-list-item>
   </civ-list>
 </div>
@@ -92,7 +96,7 @@
   <div data-prefill-review hidden data-chapter-fields="fullName,dateOfBirth,ssn">
     <civ-alert variant="info" alert-style="secondary" heading="We've prefilled some of your information" label="We pulled this information from your account. If any of this is wrong, you can correct it here."></civ-alert>
     <civ-summary data-prefill-summary></civ-summary>
-    <p class="civ-mt-4">If this information is accurate, press continue to fill out the rest of the form.</p>
+    <p class="civ-mt-4" data-prefill-hint>If this information is accurate, press continue.</p>
     <div class="civ-mt-4">
       <civ-button label="Continue" data-prefill-continue></civ-button>
     </div>
@@ -138,7 +142,7 @@
   <div data-prefill-review hidden data-chapter-fields="mailingAddress,homePhone,mobilePhone,email,contactMethod">
     <civ-alert variant="info" alert-style="secondary" heading="We've prefilled some of your information" label="We pulled this information from your account. If any of this is wrong, you can correct it here."></civ-alert>
     <civ-summary data-prefill-summary></civ-summary>
-    <p class="civ-mt-4">If this information is accurate, press continue to fill out the rest of the form.</p>
+    <p class="civ-mt-4" data-prefill-hint>If this information is accurate, press continue.</p>
     <div class="civ-mt-4">
       <civ-button label="Continue" data-prefill-continue></civ-button>
     </div>
@@ -198,7 +202,7 @@
   <div data-prefill-review hidden data-chapter-fields="veteranName,veteranSsn,relationshipToVeteran">
     <civ-alert variant="info" alert-style="secondary" heading="We've prefilled some of your information" label="We pulled this information from your account. If any of this is wrong, you can correct it here."></civ-alert>
     <civ-summary data-prefill-summary></civ-summary>
-    <p class="civ-mt-4">If this information is accurate, press continue to fill out the rest of the form.</p>
+    <p class="civ-mt-4" data-prefill-hint>If this information is accurate, press continue.</p>
     <div class="civ-mt-4">
       <civ-button label="Continue" data-prefill-continue></civ-button>
     </div>
@@ -238,7 +242,7 @@
   <div data-prefill-review hidden data-chapter-fields="certifyPersonalCare,caregivingStartDate,hoursPerWeek">
     <civ-alert variant="info" alert-style="secondary" heading="We've prefilled some of your information" label="We pulled this information from your account. If any of this is wrong, you can correct it here."></civ-alert>
     <civ-summary data-prefill-summary></civ-summary>
-    <p class="civ-mt-4">If this information is accurate, press continue to fill out the rest of the form.</p>
+    <p class="civ-mt-4" data-prefill-hint>If this information is accurate, press continue.</p>
     <div class="civ-mt-4">
       <civ-button label="Continue" data-prefill-continue></civ-button>
     </div>
@@ -603,10 +607,39 @@
         var steps = review.parentElement && review.parentElement.querySelector('[data-chapter-steps]');
         if (steps) steps.hidden = true;
 
-        // Continue button toggles back to form steps
+        // When every field in the chapter has a prefilled value the user
+        // is done — confirming returns them to the task list and marks
+        // the chapter complete. When only some fields are prefilled,
+        // confirming still drops them into the form steps for whatever
+        // remains unfilled.
+        // Note: the inner forEach above var-declares its own chapter
+        // local, so referencing that name here throws ReferenceError
+        // and silently kills the rest of this block (including the
+        // click-listener bind) — that is the "Continue does nothing"
+        // bug. Re-resolve the chapter element from the review host.
+        var reviewChapter = review.closest('[data-chapter]');
+        var chapterIdForReview = reviewChapter ? reviewChapter.getAttribute('data-chapter') : null;
+        var allPrefilled = prefillItems.length === chapterFieldNames.length;
+
+        // Update the body copy to match the actual outcome so the
+        // prefill UX doesn't read like a partial flow when nothing
+        // is left to fill out.
+        var hint = review.querySelector('[data-prefill-hint]');
+        if (hint) {
+          hint.textContent = allPrefilled
+            ? 'If this information is accurate, press continue to finish this section.'
+            : 'If this information is accurate, press continue to fill out the rest of this section.';
+        }
+
         var continueBtn = review.querySelector('[data-prefill-continue]');
         if (continueBtn) {
           continueBtn.addEventListener('click', function() {
+            if (allPrefilled && chapterIdForReview) {
+              completedChapters.add(chapterIdForReview);
+              updateTaskList();
+              showPage('hub');
+              return;
+            }
             review.hidden = true;
             if (steps) steps.hidden = false;
           });

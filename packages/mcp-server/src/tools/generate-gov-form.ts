@@ -279,7 +279,7 @@ ${fieldHtml}
   <div data-prefill-review hidden data-chapter-fields="${fieldNames.join(',')}">
     <civ-alert variant="info" alert-style="secondary" heading="We've prefilled some of your information" label="We pulled this information from your account. If any of this is wrong, you can correct it here."></civ-alert>
     <civ-summary data-prefill-summary></civ-summary>
-    <p class="civ-mt-4">If this information is accurate, press continue to fill out the rest of the form.</p>
+    <p class="civ-mt-4" data-prefill-hint>If this information is accurate, press continue.</p>
     <div class="civ-mt-4">
       <civ-button label="Continue" data-prefill-continue></civ-button>
     </div>
@@ -494,11 +494,19 @@ function generateTaskListHub(form: ReturnType<typeof getFormDefinition> & {}, ch
   const chapterRows = filteredChapters
     .map((ch, i) => {
       // Only the first chapter starts as navigable; rest are locked until unlocked
-      const href = i === 0 ? ` href="#/${slugify(ch.id)}"` : '';
-      const tag = i === 0
-        ? '<civ-badge data-list-item-end label="Not started" variant="info" badge-style="secondary" spacing="sm" with-icon></civ-badge>'
-        : '<civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" spacing="sm" with-icon></civ-badge>';
+      const isActive = i === 0;
+      const href = isActive ? ` href="#/${slugify(ch.id)}"` : '';
+      // Decorative chevron points at the next-up task — purely visual,
+      // empty label so screen readers don't announce "Next, Personal
+      // information" (the heading already names the chapter).
+      const startIcon = isActive
+        ? '<civ-icon data-list-item-start name="chevron-right" label="" class="civ-text-primary"></civ-icon>'
+        : '';
+      const tag = isActive
+        ? '<civ-badge data-list-item-end label="Not started" variant="info" badge-style="secondary" with-icon></civ-badge>'
+        : '<civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>';
       return `      <civ-list-item data-chapter-id="${slugify(ch.id)}"${href}>
+        ${startIcon}
         <span data-list-item-heading>${escapeHtml(ch.heading)}</span>
         <span data-list-item-description class="civ-text-sm">${escapeHtml(ch.hint)}</span>
         ${tag}
@@ -520,16 +528,16 @@ function generateTaskListHub(form: ReturnType<typeof getFormDefinition> & {}, ch
   ></civ-progress-percent>
 
   <h3 class="civ-heading-md civ-mt-6 civ-mb-2">Fill out your application</h3>
-  <civ-list dividers class="civ-list--bleed">
+  <civ-list dividers>
 ${chapterRows}
   </civ-list>
 
   <h3 class="civ-heading-md civ-mt-6 civ-mb-2">Review and submit</h3>
-  <civ-list dividers class="civ-list--bleed">
+  <civ-list dividers>
     <civ-list-item data-review>
       <span data-list-item-heading>Review your application</span>
       <span data-list-item-description class="civ-text-sm">Complete all sections before reviewing</span>
-      <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" spacing="sm" with-icon></civ-badge>
+      <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
     </civ-list-item>
   </civ-list>
 </div>`;

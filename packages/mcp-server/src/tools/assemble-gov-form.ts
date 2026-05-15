@@ -393,10 +393,39 @@ ${chapterHeadings}
         var steps = review.parentElement && review.parentElement.querySelector('[data-chapter-steps]');
         if (steps) steps.hidden = true;
 
-        // Continue button toggles back to form steps
+        // When every field in the chapter has a prefilled value the user
+        // is done — confirming returns them to the task list and marks
+        // the chapter complete. When only some fields are prefilled,
+        // confirming still drops them into the form steps for whatever
+        // remains unfilled.
+        // Note: the inner forEach above var-declares its own chapter
+        // local, so referencing that name here throws ReferenceError
+        // and silently kills the rest of this block (including the
+        // click-listener bind) — that is the "Continue does nothing"
+        // bug. Re-resolve the chapter element from the review host.
+        var reviewChapter = review.closest('[data-chapter]');
+        var chapterIdForReview = reviewChapter ? reviewChapter.getAttribute('data-chapter') : null;
+        var allPrefilled = prefillItems.length === chapterFieldNames.length;
+
+        // Update the body copy to match the actual outcome so the
+        // prefill UX doesn't read like a partial flow when nothing
+        // is left to fill out.
+        var hint = review.querySelector('[data-prefill-hint]');
+        if (hint) {
+          hint.textContent = allPrefilled
+            ? 'If this information is accurate, press continue to finish this section.'
+            : 'If this information is accurate, press continue to fill out the rest of this section.';
+        }
+
         var continueBtn = review.querySelector('[data-prefill-continue]');
         if (continueBtn) {
           continueBtn.addEventListener('click', function() {
+            if (allPrefilled && chapterIdForReview) {
+              completedChapters.add(chapterIdForReview);
+              updateTaskList();
+              showPage('hub');
+              return;
+            }
             review.hidden = true;
             if (steps) steps.hidden = false;
           });

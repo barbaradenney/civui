@@ -278,6 +278,100 @@ async function verifyForm(browser: Browser, form: string): Promise<FormResult> {
   return { form, checks };
 }
 
+/**
+ * Exercise the signed-in / prefill flow on one representative form.
+ * The runtime that handles prefill is generated identically into every
+ * form, so testing once at the end of a sweep is enough.
+ *
+ * Asserts: pressing the prefill Continue button when every field in
+ * the chapter is prefilled marks the chapter Complete and lands the
+ * user back on the hub (regression caught by this: a scope bug threw
+ * silently inside the prefill setup and the Continue click did
+ * nothing).
+ */
+async function verifyPrefillFlow(browser: Browser): Promise<FormResult> {
+  const form = '21-526ez';
+  const url = `http://localhost:5173/forms/${form}.html`;
+  const context = await browser.newContext();
+  const page = await context.newPage();
+  const checks: CheckResult[] = [];
+  const record = (name: string, pass: boolean, detail?: string): void => {
+    checks.push({ name, pass, detail });
+  };
+
+  const consoleErrors: string[] = [];
+  page.on('console', (msg) => {
+    if (msg.type() === 'error') consoleErrors.push(msg.text());
+  });
+  page.on('pageerror', (err) => {
+    consoleErrors.push(`pageerror: ${err.message}`);
+  });
+
+  try {
+    await page.goto(url, { waitUntil: 'load', timeout: 15_000 });
+    await page.waitForFunction(() => customElements.get('civ-button') !== undefined, null, {
+      timeout: 10_000,
+    });
+    await page.waitForTimeout(200);
+
+    // Signed-in path applies the sample prefill before opening the hub.
+    await page.locator('civ-button[data-start-signed-in]').click();
+    await page.waitForTimeout(300);
+
+    // Personal info gets every field prefilled in the sample data, so
+    // its prefill review should be the visible content inside the
+    // chapter.
+    await page.locator('civ-list-item[data-chapter-id="personal-info"] a').click();
+    await page.waitForTimeout(300);
+
+    const reviewState = await page.evaluate(() => {
+      const review = document.querySelector('[data-chapter="personal-info"] [data-prefill-review]');
+      const steps = document.querySelector('[data-chapter="personal-info"] [data-chapter-steps]');
+      return {
+        reviewShown: review ? !(review as HTMLElement).hidden : false,
+        stepsHidden: steps ? (steps as HTMLElement).hidden : false,
+      };
+    });
+    record('prefill review is visible on the prefilled chapter', reviewState.reviewShown);
+    record('chapter form steps are hidden behind the review', reviewState.stepsHidden);
+
+    await page.locator('[data-chapter="personal-info"] [data-prefill-continue]').click();
+    await page.waitForTimeout(300);
+
+    const after = await page.evaluate(() => {
+      const hub = document.querySelector('section[data-page="hub"]') as HTMLElement | null;
+      const item = document.querySelector('civ-list-item[data-chapter-id="personal-info"]');
+      const badge = item && item.querySelector('civ-badge');
+      return {
+        hubVisible: hub ? !hub.hidden : false,
+        badgeLabel: badge ? badge.getAttribute('label') : null,
+        badgeVariant: badge ? badge.getAttribute('variant') : null,
+      };
+    });
+    record(
+      'clicking prefill Continue lands on the hub',
+      after.hubVisible,
+      after.hubVisible ? 'hub visible' : 'hub still hidden',
+    );
+    record(
+      'clicking prefill Continue marks the chapter Complete',
+      after.badgeLabel === 'Complete' && after.badgeVariant === 'success',
+      `badge=${after.badgeLabel}/${after.badgeVariant}`,
+    );
+    record(
+      'no console errors during prefill flow',
+      consoleErrors.length === 0,
+      consoleErrors.length > 0 ? consoleErrors.join('\n      ') : '0 errors',
+    );
+  } catch (err) {
+    record('prefill flow ran to completion', false, (err as Error).message);
+  } finally {
+    await context.close();
+  }
+
+  return { form: 'prefill flow (' + form + ')', checks };
+}
+
 function printSingleFormReport(result: FormResult): boolean {
   console.log(`Verifying http://localhost:5173/forms/${result.form}.html\n`);
   let allPass = true;
@@ -327,17 +421,29 @@ async function main(): Promise<void> {
       const pass = isSweep ? printSweepRow(result) : printSingleFormReport(result);
       if (!pass) failedForms.push(form);
     }
+
+    // Sweep mode also exercises the signed-in / prefill flow once at
+    // the end. The runtime is generated identically into every form,
+    // so a single pass is enough — and a regression here is invisible
+    // to the per-form check, which only walks the guest path.
+    let prefillPassed = true;
     if (isSweep) {
+      const prefillResult = await verifyPrefillFlow(browser);
+      prefillPassed = printSweepRow(prefillResult);
       console.log('');
-      if (failedForms.length === 0) {
-        console.log(`All ${forms.length} form(s) passed every check.`);
-      } else {
-        console.error(
-          `${failedForms.length} of ${forms.length} form(s) failed: ${failedForms.join(', ')}`,
-        );
-      }
+      const totalLine =
+        failedForms.length === 0 && prefillPassed
+          ? `All ${forms.length} form(s) passed every check, prefill flow OK.`
+          : (failedForms.length > 0
+              ? `${failedForms.length} of ${forms.length} form(s) failed: ${failedForms.join(', ')}`
+              : '')
+            + (!prefillPassed
+              ? `${failedForms.length > 0 ? '\n' : ''}prefill flow failed.`
+              : '');
+      if (failedForms.length === 0 && prefillPassed) console.log(totalLine);
+      else console.error(totalLine);
     }
-    if (failedForms.length > 0) process.exit(1);
+    if (failedForms.length > 0 || !prefillPassed) process.exit(1);
   } finally {
     await browser.close();
     await server.teardown();

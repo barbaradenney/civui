@@ -24,9 +24,16 @@
  * 1. Walk story / mdx / twig files (we don't scan component source —
  *    components legitimately use these tokens inside `.civ-hint`,
  *    `.civ-required-mark`, disabled-state opacity, etc.).
- * 2. For each file, regex-scan `<p>` tags and check the `class`
+ * 2. Also walk MCP-server HTML generators
+ *    (`packages/mcp-server/src/tools/generate-*.ts`) and the example
+ *    resource JSON (`packages/mcp-server/src/resources/*.json`).
+ *    These produce HTML for downstream consumers, so a forbidden
+ *    class in a template propagates to every form built with the
+ *    MCP server. The regex matches both raw HTML (`<p class="…">`)
+ *    and JSON-escaped HTML (`<p class=\"…\">`).
+ * 3. For each file, regex-scan `<p>` tags and check the `class`
  *    attribute for any of FORBIDDEN_CLASSES.
- * 3. Skip the allowlisted files — `colors.stories.ts` and
+ * 4. Skip the allowlisted files — `colors.stories.ts` and
  *    `typography.stories.ts` exist specifically to demonstrate the
  *    muted tokens.
  */
@@ -41,6 +48,18 @@ const SCAN_ROOTS: string[] = [
 ];
 
 const SCAN_EXTENSIONS = new Set(['.stories.ts', '.mdx', '.twig']);
+
+/**
+ * Path-suffix patterns that opt extra files into the scan even
+ * though their extension isn't in SCAN_EXTENSIONS. We want to lint
+ * the MCP-server HTML generators (which emit `<p>` tags inside
+ * string templates) and the example resource JSON (which contains
+ * JSON-escaped HTML snippets).
+ */
+const EXTRA_PATH_PATTERNS: RegExp[] = [
+  /packages\/mcp-server\/src\/tools\/generate-[^/]+\.ts$/,
+  /packages\/mcp-server\/src\/resources\/[^/]+\.json$/,
+];
 
 /**
  * Class names forbidden on `<p>` body text. `civ-text-base-darkest`
@@ -65,6 +84,18 @@ const ALLOWLIST = new Set([
   'packages/core/src/typography/typography.stories.ts',
 ]);
 
+/**
+ * Per-line content escape hatch — when a scanned line contains one
+ * of these substrings, treat it as a known demonstration of the
+ * muted token and skip the check for that line. Used to allow the
+ * typography swatch entry inside `component-examples.json` to keep
+ * its `<p class="civ-text-muted">Muted (16px, lighter)</p>` side-by-
+ * side row.
+ */
+const LINE_CONTENT_EXEMPTIONS: string[] = [
+  'Muted (16px, lighter)',
+];
+
 interface Finding {
   file: string;
   line: number;
@@ -75,6 +106,9 @@ interface Finding {
 function hasScanExtension(filename: string): boolean {
   for (const ext of SCAN_EXTENSIONS) {
     if (filename.endsWith(ext)) return true;
+  }
+  for (const re of EXTRA_PATH_PATTERNS) {
+    if (re.test(filename)) return true;
   }
   return false;
 }
@@ -101,12 +135,22 @@ async function walk(dir: string): Promise<string[]> {
 }
 
 function scanLine(line: string): string[] {
+  for (const marker of LINE_CONTENT_EXEMPTIONS) {
+    if (line.includes(marker)) return [];
+  }
   // Match <p ... class="..."> openers. We DO NOT match the closing
   // `>` because in multi-line templates the class attribute can be
   // on the same line while the opener spans further. The class
   // attribute alone is enough to flag.
+  //
+  // Two attribute shapes are accepted:
+  //   <p class="foo bar">             ← raw HTML in stories / mdx / twig
+  //   <p class=\"foo bar\">           ← JSON-escaped HTML in component-examples.json
+  // The leading `\\?` lets the regex consume the optional backslash
+  // produced by JSON string-escaping, and the character class
+  // `[^"'\\]+` stops at either kind of quote terminator.
   const out: string[] = [];
-  for (const m of line.matchAll(/<p\b[^>]*?\bclass\s*=\s*["']([^"']+)["']/g)) {
+  for (const m of line.matchAll(/<p\b[^>]*?\bclass\s*=\s*\\?["']([^"'\\]+)\\?["']/g)) {
     const classes = m[1].split(/\s+/);
     for (const forbidden of FORBIDDEN_CLASSES) {
       // Special-case bare `civ-text-base` — must not match
@@ -145,7 +189,7 @@ async function main(): Promise<void> {
   }
 
   if (findings.length === 0) {
-    console.log(`✓ no <p> body text in stories / mdx / twig uses muted/gray text classes.`);
+    console.log(`✓ no <p> body text in stories / mdx / twig / mcp-server templates uses muted/gray text classes.`);
     return;
   }
 

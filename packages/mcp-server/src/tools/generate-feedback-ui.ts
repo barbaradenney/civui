@@ -112,7 +112,7 @@ export function generateFeedbackUi(
         );
       }
     } else {
-      htmlParts.push(`  <p class="civ-text-sm civ-text-base-dark">No comments</p>`);
+      htmlParts.push(`  <p class="civ-text-sm">No comments</p>`);
     }
 
     if (mode === 'reviewer') {

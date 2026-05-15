@@ -49,7 +49,7 @@ export function generateAuditTrail(
   ];
 
   if (sorted.length === 0) {
-    htmlParts.push(`  <p class="civ-text-base-dark">No history recorded.</p>`);
+    htmlParts.push(`  <p>No history recorded.</p>`);
   } else {
     features.push('timeline');
     htmlParts.push(`  <ol data-civ-audit-trail class="civ-list-none civ-p-0">`);
@@ -65,7 +65,7 @@ export function generateAuditTrail(
 
       if (entry.stateFrom && entry.stateTo) {
         htmlParts.push(
-          `      <p class="civ-text-sm civ-text-base-dark">${escapeHtml(entry.stateFrom)} → ${escapeHtml(entry.stateTo)}</p>`,
+          `      <p class="civ-text-sm">${escapeHtml(entry.stateFrom)} → ${escapeHtml(entry.stateTo)}</p>`,
         );
       }
 

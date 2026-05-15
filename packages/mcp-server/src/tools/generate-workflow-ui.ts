@@ -79,7 +79,7 @@ export function generateWorkflowUi(
 
   const html =
     `<civ-card>\n` +
-    `  <p class="civ-text-sm civ-text-base-dark">Current status</p>\n` +
+    `  <p class="civ-text-sm">Current status</p>\n` +
     `  <p class="civ-text-lg civ-font-bold" data-civ-workflow-state="${escapeHtml(resolvedState)}">${escapeHtml(stateObj.label)}</p>` +
     buttonsHtml +
     `\n</civ-card>`;

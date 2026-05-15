@@ -480,7 +480,7 @@ function generateConfirmationPage(form: ReturnType<typeof getFormDefinition> & {
     Confirmation text goes here.
   </civ-alert>
 
-  <p class="civ-text-muted civ-mt-6">Confirmation details go here.</p>
+  <p class="civ-mt-6">Confirmation details go here.</p>
 </div>`;
 
   const javascript = '';

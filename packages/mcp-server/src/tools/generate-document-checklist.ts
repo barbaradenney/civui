@@ -72,13 +72,13 @@ export function generateDocumentChecklist(schema: FormSchema): DocumentChecklist
 
     if (req.acceptedFormats) {
       htmlParts.push(
-        `      <p class="civ-text-xs civ-text-base-dark civ-mt-1">Accepted formats: ${escapeHtml(req.acceptedFormats.join(', '))}</p>`,
+        `      <p class="civ-text-xs civ-mt-1">Accepted formats: ${escapeHtml(req.acceptedFormats.join(', '))}</p>`,
       );
     }
 
     if (req.maxSizeMb) {
       htmlParts.push(
-        `      <p class="civ-text-xs civ-text-base-dark">Maximum file size: ${req.maxSizeMb} MB</p>`,
+        `      <p class="civ-text-xs">Maximum file size: ${req.maxSizeMb} MB</p>`,
       );
     }
 

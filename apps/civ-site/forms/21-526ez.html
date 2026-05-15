@@ -5,17 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Apply for disability compensation | VA Form 21-526EZ</title>
 
-  <!-- CivUI Design System -->
-  <link rel="stylesheet" href="https://unpkg.com/@civui/core/dist/styles/civ.css">
-  <script type="module" src="https://unpkg.com/@civui/core/dist/index.js"></script>
-  <script type="module" src="https://unpkg.com/@civui/inputs/dist/index.js"></script>
-  <script type="module" src="https://unpkg.com/@civui/controls/dist/index.js"></script>
-  <script type="module" src="https://unpkg.com/@civui/compound/dist/index.js"></script>
-  <script type="module" src="https://unpkg.com/@civui/form-patterns/dist/index.js"></script>
-  <script type="module" src="https://unpkg.com/@civui/actions/dist/index.js"></script>
-  <script type="module" src="https://unpkg.com/@civui/overlays/dist/index.js"></script>
-  <script type="module" src="https://unpkg.com/@civui/layout/dist/index.js"></script>
-  <script type="module" src="https://unpkg.com/@civui/feedback/dist/index.js"></script>
+  <!-- CivUI Design System (civ-site dev: resolved via Vite aliases) -->
+  <script type="module" src="/src/civui.ts"></script>
 </head>
 <body>
   <main id="main-content" class="civ-p-6" style="max-width: 720px; margin: 0 auto;">
@@ -28,7 +19,7 @@
     <span data-subheading>VA Form 21-526EZ</span>
   </civ-page-header>
 
-  <p class="civ-text-muted civ-mb-6">Use this form to apply for VA benefits. If you're signed in, we can prefill some of your information to save you time.</p>
+  <p class="civ-mb-6">Use this form to apply for VA benefits. If you're signed in, we can prefill some of your information to save you time.</p>
 
   <div class="civ-flex civ-gap-3">
     <civ-button label="Sign in and start" variant="primary" data-start-signed-in></civ-button>
@@ -45,11 +36,11 @@
     <span data-subheading>VA Form 21-526EZ</span>
   </civ-page-header>
 
-  <civ-progress-bar
+  <civ-progress-percent
     value="0"
     label="Application progress"
     status="0 of 5 sections complete"
-  ></civ-progress-bar>
+  ></civ-progress-percent>
 
   <h3 class="civ-heading-md civ-mt-6 civ-mb-2">Fill out your application</h3>
   <civ-list dividers>
@@ -118,12 +109,14 @@
       <civ-name name="fullName" legend="Your name" required></civ-name>
     </div>
     <div data-step data-step-label="Date of birth">
-      <civ-memorable-date legend="Date of birth" hint="For example: January 15 1990" name="dateOfBirth"
-          required></civ-memorable-date>
+      <civ-memorable-date
+        legend="Date of birth"
+        name="dateOfBirth"
+        hint="For example: January 15 1990" required
+      ></civ-memorable-date>
     </div>
     <div data-step data-step-label="Social Security number">
-      <civ-text-input label="Social Security number" hint="We need this to verify your identity" name="ssn"
-          required
+      <civ-text-input label="Social Security number" hint="We need this to verify your identity" required name="ssn"
           autocomplete="off"
           inputmode="numeric"
           type="tel"
@@ -168,25 +161,27 @@
           type="tel"></civ-text-input>
     </div>
     <div data-step data-step-label="Mobile phone number">
-      <civ-text-input label="Mobile phone number" name="mobilePhone"
+      <civ-text-input label="Mobile phone number"  name="mobilePhone"
           autocomplete="tel"
           inputmode="numeric"
           type="tel"></civ-text-input>
     </div>
     <div data-step data-step-label="Email address">
-      <civ-text-input label="Email address" name="email"
-          required
+      <civ-text-input label="Email address" required name="email"
           autocomplete="email"
           type="email"></civ-text-input>
     </div>
     <div data-step data-step-label="How should we contact you if we have questions?">
-      <civ-radio-group legend="How should we contact you if we have questions?" name="contactMethod"
-          required>
-          <civ-radio label="Email" value="email"></civ-radio>
-          <civ-radio label="Home phone" value="homePhone"></civ-radio>
-          <civ-radio label="Mobile phone" value="mobilePhone"></civ-radio>
-          <civ-radio label="U.S. mail" value="mail"></civ-radio>
-        </civ-radio-group>
+      <civ-radio-group
+        legend="How should we contact you if we have questions?"
+        name="contactMethod"
+        required
+      >
+        <civ-radio label="Email" value="email"></civ-radio>
+        <civ-radio label="Home phone" value="homePhone"></civ-radio>
+        <civ-radio label="Mobile phone" value="mobilePhone"></civ-radio>
+        <civ-radio label="U.S. mail" value="mail"></civ-radio>
+      </civ-radio-group>
     </div>
     </civ-form-step>
   </div>
@@ -214,14 +209,18 @@
       min="1"
       max="20"
     >
-      <civ-combobox label="Branch of service" name="branch"
-          required></civ-combobox>
-      <civ-memorable-date legend="Service start date" hint="If you don&#39;t know the exact date, enter your best estimate" name="serviceStartDate"
-          required></civ-memorable-date>
-      <civ-memorable-date legend="Service end date" hint="If you don&#39;t know the exact date, enter your best estimate" name="serviceEndDate"
-          required></civ-memorable-date>
-      <civ-select label="Character of service" name="dischargeType"
-          required></civ-select>
+      <civ-combobox label="Branch of service" required name="branch"></civ-combobox>
+      <civ-memorable-date
+        legend="Service start date"
+        name="serviceStartDate"
+        hint="If you don&#39;t know the exact date, enter your best estimate" required
+      ></civ-memorable-date>
+      <civ-memorable-date
+        legend="Service end date"
+        name="serviceEndDate"
+        hint="If you don&#39;t know the exact date, enter your best estimate" required
+      ></civ-memorable-date>
+      <civ-select label="Character of service" required name="dischargeType"></civ-select>
     </civ-repeater>
 
     <div class="civ-mt-6">
@@ -252,16 +251,22 @@
       min="1"
       max="20"
     >
-      <civ-text-input label="Name of condition" hint="For example: PTSD, tinnitus, knee pain" name="conditionName"
-          required
+      <civ-text-input label="Name of condition" hint="For example: PTSD, tinnitus, knee pain" required name="conditionName"
           type="text"></civ-text-input>
-      <civ-memorable-date legend="Approximate date condition began" hint="Enter your best estimate" name="conditionOnsetDate"></civ-memorable-date>
-      <civ-radio-group legend="What caused this condition?" name="conditionCause"
-          required>
-          <civ-radio label="Caused by service" value="in-service"></civ-radio>
-          <civ-radio label="Caused by another service-connected condition" value="secondary"></civ-radio>
-          <civ-radio label="Made worse by service" value="aggravated"></civ-radio>
-        </civ-radio-group>
+      <civ-memorable-date
+        legend="Approximate date condition began"
+        name="conditionOnsetDate"
+        hint="Enter your best estimate"
+      ></civ-memorable-date>
+      <civ-radio-group
+        legend="What caused this condition?"
+        name="conditionCause"
+        required
+      >
+        <civ-radio label="Caused by service" value="in-service"></civ-radio>
+        <civ-radio label="Caused by another service-connected condition" value="secondary"></civ-radio>
+        <civ-radio label="Made worse by service" value="aggravated"></civ-radio>
+      </civ-radio-group>
     </civ-repeater>
 
     <div class="civ-mt-6">
@@ -295,7 +300,7 @@
   <div data-chapter-steps>
     <civ-form-step complete-label="Save and continue">
     <div data-step data-step-label="Upload supporting documents">
-      <civ-file-upload label="Upload supporting documents" hint="Upload PDF, JPG, or PNG files. Maximum file size: 20MB" name="documents"
+      <civ-file-upload label="Upload supporting documents" ${headerAttrs} name="documents"
           accept=".pdf,.jpg,.jpeg,.png"
           multiple
           max-size="20000000"
@@ -344,7 +349,7 @@
     Confirmation text goes here.
   </civ-alert>
 
-  <p class="civ-text-muted civ-mt-6">Confirmation details go here.</p>
+  <p class="civ-mt-6">Confirmation details go here.</p>
 </div>
     </section>
 
@@ -522,7 +527,7 @@
       }
 
       // Update progress bar
-      const progressBar = document.querySelector('civ-progress-bar');
+      const progressBar = document.querySelector('civ-progress-percent');
       if (progressBar) {
         const pct = Math.round((doneCount / totalChapters) * 100);
         progressBar.setAttribute('value', String(pct));

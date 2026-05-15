@@ -27,54 +27,36 @@ export default defineConfig({
     },
   },
   resolve: {
-    alias: {
-      '@civui/core/icon': resolve(packages, 'core/src/icon/index.ts'),
-      '@civui/core': resolve(packages, 'core/src/index.ts'),
-      '@civui/inputs/ssn': resolve(packages, 'inputs/src/ssn/index.ts'),
-      '@civui/inputs/phone': resolve(packages, 'inputs/src/phone/index.ts'),
-      '@civui/inputs/email': resolve(packages, 'inputs/src/email/index.ts'),
-      '@civui/inputs/zip': resolve(packages, 'inputs/src/zip/index.ts'),
-      '@civui/inputs/ein': resolve(packages, 'inputs/src/ein/index.ts'),
-      '@civui/inputs/currency': resolve(packages, 'inputs/src/currency/index.ts'),
-      '@civui/inputs/routing-number': resolve(packages, 'inputs/src/routing-number/index.ts'),
-      '@civui/inputs/country': resolve(packages, 'inputs/src/country/index.ts'),
-      '@civui/inputs/va-file-number': resolve(packages, 'inputs/src/va-file-number/index.ts'),
-      '@civui/inputs/select': resolve(packages, 'inputs/src/select/index.ts'),
-      '@civui/inputs': resolve(packages, 'inputs/src/index.ts'),
-      '@civui/controls/checkbox': resolve(packages, 'controls/src/checkbox/index.ts'),
-      '@civui/controls/radio': resolve(packages, 'controls/src/radio/index.ts'),
-      '@civui/controls': resolve(packages, 'controls/src/index.ts'),
-      '@civui/compound': resolve(packages, 'compound/src/index.ts'),
-      '@civui/form-patterns': resolve(packages, 'form-patterns/src/index.ts'),
-      // Actions (button, action-button, filter-chip, link, link-card, skip-link)
-      '@civui/actions/button': resolve(packages, 'actions/src/button/index.ts'),
-      '@civui/actions/action-button': resolve(packages, 'actions/src/action-button/index.ts'),
-      '@civui/actions/filter-chip': resolve(packages, 'actions/src/filter-chip/index.ts'),
-      '@civui/actions/filter-chip-group': resolve(packages, 'actions/src/filter-chip-group/index.ts'),
-      '@civui/actions/link': resolve(packages, 'actions/src/link/index.ts'),
-      '@civui/actions/link-card': resolve(packages, 'actions/src/link-card/index.ts'),
-      '@civui/actions/skip-link': resolve(packages, 'actions/src/skip-link/index.ts'),
-      '@civui/actions': resolve(packages, 'actions/src/index.ts'),
-      // Overlays
-      '@civui/overlays/modal': resolve(packages, 'overlays/src/modal/index.ts'),
-      '@civui/overlays/action-sheet': resolve(packages, 'overlays/src/action-sheet/index.ts'),
-      '@civui/overlays': resolve(packages, 'overlays/src/index.ts'),
-      // Layout
-      '@civui/layout/card': resolve(packages, 'layout/src/card/index.ts'),
-      '@civui/layout/divider': resolve(packages, 'layout/src/divider/index.ts'),
-      '@civui/layout/input-group': resolve(packages, 'layout/src/input-group/index.ts'),
-      '@civui/layout/list': resolve(packages, 'layout/src/list/index.ts'),
-      '@civui/layout/page-header': resolve(packages, 'layout/src/page-header/index.ts'),
-      '@civui/layout/tag': resolve(packages, 'layout/src/tag/index.ts'),
-      '@civui/layout/button-group': resolve(packages, 'layout/src/button-group/index.ts'),
-      '@civui/layout/image-preview': resolve(packages, 'layout/src/image-preview/index.ts'),
-      '@civui/layout': resolve(packages, 'layout/src/index.ts'),
-      '@civui/feedback/alert': resolve(packages, 'feedback/src/alert/index.ts'),
-      '@civui/feedback/badge': resolve(packages, 'feedback/src/badge/index.ts'),
-      '@civui/feedback/count': resolve(packages, 'feedback/src/count/index.ts'),
-      '@civui/feedback': resolve(packages, 'feedback/src/index.ts'),
-      '@civui/tokens/css': resolve(packages, 'tokens/dist/css/tokens.css'),
-      '@civui/test-utils': resolve(packages, 'test-utils/src/index.ts'),
-    },
+    // Array form so we can mix explicit-file aliases with regex-based
+    // sub-path resolution. Vite walks entries in order, first match wins.
+    alias: [
+      // ── Explicit non-pattern targets ──
+      // These don't follow the `packages/PKG/src/SUBPATH/index.ts` shape, so
+      // they need a specific entry before the regex catch-all.
+      { find: '@civui/tokens/css', replacement: resolve(packages, 'tokens/dist/css/tokens.css') },
+      // memorable-date is publicly exposed as `@civui/inputs/memorable-date`
+      // but its source lives at `inputs/src/date-input/` (one-off remap
+      // documented in inputs/package.json exports field).
+      { find: '@civui/inputs/memorable-date', replacement: resolve(packages, 'inputs/src/date-input/index.ts') },
+
+      // ── Regex catch-all for component sub-paths ──
+      // Matches `@civui/PKG/SUBPATH` → `packages/PKG/src/SUBPATH/index.ts`.
+      // Sub-paths are the canonical CivUI import style per CLAUDE.md and
+      // are enforced by an ESLint rule in component source. Listing each
+      // one explicitly drifts every time a new component is added; the
+      // regex keeps the config small and self-maintaining.
+      {
+        find: /^@civui\/([\w-]+)\/([\w-]+)$/,
+        replacement: resolve(packages, '$1/src/$2/index.ts'),
+      },
+
+      // ── Regex catch-all for bare packages ──
+      // Matches `@civui/PKG` → `packages/PKG/src/index.ts`. Used by tests
+      // / stories that pull the whole barrel.
+      {
+        find: /^@civui\/([\w-]+)$/,
+        replacement: resolve(packages, '$1/src/index.ts'),
+      },
+    ],
   },
 });

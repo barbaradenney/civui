@@ -553,9 +553,15 @@
      ends with `<div class="civ-mb-4">`) stacks 16px on top of the
      inner fieldset's own civ-mb-4, doubling the gap before the next
      sibling at the outer level. Zero out the trailing wrapper so the
-     spacing comes from the fieldset's own bottom margin alone. */
-  .civ-fieldset > :last-child > .civ-mb-4 {
-    @apply civ-mb-0;
+     spacing comes from the fieldset's own bottom margin alone.
+
+     Attribute selector (`[class~="civ-mb-4"]`) instead of `.civ-mb-4`:
+     Tailwind's circular-dependency check inside `@layer components`
+     flags any selector that literally references a generated utility
+     class. The `[class~="…"]` form matches the same element but is
+     opaque to that check. */
+  .civ-fieldset > :last-child > [class~="civ-mb-4"] {
+    margin-bottom: 0;
   }
 
   /* Fieldset-level error. civ-fieldset / civ-repeater / the self-contained
@@ -1515,9 +1521,12 @@
   /* Strip the input wrappers' default 16px bottom margin while inside
      an input-group — flex doesn't collapse margins, so it would push
      the input visually above the bottom-aligned button. The margin only
-     exists to separate stacked sibling fields outside an input-group. */
-  .civ-input-group > * > .civ-mb-4 {
-    @apply civ-mb-0;
+     exists to separate stacked sibling fields outside an input-group.
+     Attribute selector (`[class~="civ-mb-4"]`) dodges Tailwind's
+     circular-dependency check inside `@layer components`; same
+     workaround as the fieldset rule above. */
+  .civ-input-group > * > [class~="civ-mb-4"] {
+    margin-bottom: 0;
   }
 
   /* Children of an input-group sit edge-to-edge (border-radius / border

@@ -5,17 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Apply for CHAMPVA benefits | VA Form 10-10D</title>
 
-  <!-- CivUI Design System -->
-  <link rel="stylesheet" href="https://unpkg.com/@civui/core/dist/styles/civ.css">
-  <script type="module" src="https://unpkg.com/@civui/core/dist/index.js"></script>
-  <script type="module" src="https://unpkg.com/@civui/inputs/dist/index.js"></script>
-  <script type="module" src="https://unpkg.com/@civui/controls/dist/index.js"></script>
-  <script type="module" src="https://unpkg.com/@civui/compound/dist/index.js"></script>
-  <script type="module" src="https://unpkg.com/@civui/form-patterns/dist/index.js"></script>
-  <script type="module" src="https://unpkg.com/@civui/actions/dist/index.js"></script>
-  <script type="module" src="https://unpkg.com/@civui/overlays/dist/index.js"></script>
-  <script type="module" src="https://unpkg.com/@civui/layout/dist/index.js"></script>
-  <script type="module" src="https://unpkg.com/@civui/feedback/dist/index.js"></script>
+  <!-- CivUI Design System (civ-site dev: resolved via Vite aliases) -->
+  <script type="module" src="/src/civui.ts"></script>
 </head>
 <body>
   <main id="main-content" class="civ-p-6" style="max-width: 720px; margin: 0 auto;">
@@ -28,7 +19,7 @@
     <span data-subheading>VA Form 10-10D</span>
   </civ-page-header>
 
-  <p class="civ-text-muted civ-mb-6">Use this form to apply for VA benefits. If you're signed in, we can prefill some of your information to save you time.</p>
+  <p class="civ-mb-6">Use this form to apply for VA benefits. If you're signed in, we can prefill some of your information to save you time.</p>
 
   <div class="civ-flex civ-gap-3">
     <civ-button label="Sign in and start" variant="primary" data-start-signed-in></civ-button>
@@ -45,11 +36,11 @@
     <span data-subheading>VA Form 10-10D</span>
   </civ-page-header>
 
-  <civ-progress-bar
+  <civ-progress-percent
     value="0"
     label="Application progress"
     status="0 of 5 sections complete"
-  ></civ-progress-bar>
+  ></civ-progress-percent>
 
   <h3 class="civ-heading-md civ-mt-6 civ-mb-2">Fill out your application</h3>
   <civ-list dividers>
@@ -118,12 +109,14 @@
       <civ-name name="fullName" legend="Your name" required></civ-name>
     </div>
     <div data-step data-step-label="Date of birth">
-      <civ-memorable-date legend="Date of birth" hint="For example: January 15 1990" name="dateOfBirth"
-          required></civ-memorable-date>
+      <civ-memorable-date
+        legend="Date of birth"
+        name="dateOfBirth"
+        hint="For example: January 15 1990" required
+      ></civ-memorable-date>
     </div>
     <div data-step data-step-label="Social Security number">
-      <civ-text-input label="Social Security number" hint="We need this to verify your identity" name="ssn"
-          required
+      <civ-text-input label="Social Security number" hint="We need this to verify your identity" required name="ssn"
           autocomplete="off"
           inputmode="numeric"
           type="tel"
@@ -168,25 +161,27 @@
           type="tel"></civ-text-input>
     </div>
     <div data-step data-step-label="Mobile phone number">
-      <civ-text-input label="Mobile phone number" name="mobilePhone"
+      <civ-text-input label="Mobile phone number"  name="mobilePhone"
           autocomplete="tel"
           inputmode="numeric"
           type="tel"></civ-text-input>
     </div>
     <div data-step data-step-label="Email address">
-      <civ-text-input label="Email address" name="email"
-          required
+      <civ-text-input label="Email address" required name="email"
           autocomplete="email"
           type="email"></civ-text-input>
     </div>
     <div data-step data-step-label="How should we contact you if we have questions?">
-      <civ-radio-group legend="How should we contact you if we have questions?" name="contactMethod"
-          required>
-          <civ-radio label="Email" value="email"></civ-radio>
-          <civ-radio label="Home phone" value="homePhone"></civ-radio>
-          <civ-radio label="Mobile phone" value="mobilePhone"></civ-radio>
-          <civ-radio label="U.S. mail" value="mail"></civ-radio>
-        </civ-radio-group>
+      <civ-radio-group
+        legend="How should we contact you if we have questions?"
+        name="contactMethod"
+        required
+      >
+        <civ-radio label="Email" value="email"></civ-radio>
+        <civ-radio label="Home phone" value="homePhone"></civ-radio>
+        <civ-radio label="Mobile phone" value="mobilePhone"></civ-radio>
+        <civ-radio label="U.S. mail" value="mail"></civ-radio>
+      </civ-radio-group>
     </div>
     </civ-form-step>
   </div>
@@ -217,32 +212,41 @@
   <div data-chapter-steps>
     <civ-form-step complete-label="Save and continue">
     <div data-step data-step-label="Sponsor Veteran&#39;s full name">
-      <civ-text-input label="Sponsor Veteran&#39;s full name" name="sponsorVeteranName"
-          required
+      <civ-text-input label="Sponsor Veteran&#39;s full name" required name="sponsorVeteranName"
           type="text"></civ-text-input>
     </div>
     <div data-step data-step-label="Sponsor Veteran&#39;s Social Security number">
-      <civ-text-input label="Sponsor Veteran&#39;s Social Security number" name="sponsorVeteranSsn"
-          required
+      <civ-text-input label="Sponsor Veteran&#39;s Social Security number" required name="sponsorVeteranSsn"
           type="tel"
           mask="ssn"
           validate="ssn"></civ-text-input>
     </div>
     <div data-step data-step-label="Sponsor Veteran&#39;s date of birth">
-      <civ-memorable-date legend="Sponsor Veteran&#39;s date of birth" name="sponsorVeteranDob"></civ-memorable-date>
+      <civ-memorable-date
+        legend="Sponsor Veteran&#39;s date of birth"
+        name="sponsorVeteranDob"
+        
+      ></civ-memorable-date>
     </div>
     <div data-step data-step-label="Is the sponsor Veteran permanently and totally disabled?">
-      <civ-radio-group legend="Is the sponsor Veteran permanently and totally disabled?" name="sponsorPermanentlyDisabled"
-          required>
-          <civ-radio label="Yes" value="yes"></civ-radio>
-          <civ-radio label="No" value="no"></civ-radio>
-        </civ-radio-group>
+      <civ-radio-group
+        legend="Is the sponsor Veteran permanently and totally disabled?"
+        name="sponsorPermanentlyDisabled"
+        required
+      >
+        <civ-radio label="Yes" value="yes"></civ-radio>
+        <civ-radio label="No" value="no"></civ-radio>
+      </civ-radio-group>
     </div>
     <div data-step data-step-label="Is the sponsor Veteran deceased?">
-      <civ-radio-group legend="Is the sponsor Veteran deceased?" name="sponsorDeceased">
-          <civ-radio label="Yes" value="yes"></civ-radio>
-          <civ-radio label="No" value="no"></civ-radio>
-        </civ-radio-group>
+      <civ-radio-group
+        legend="Is the sponsor Veteran deceased?"
+        name="sponsorDeceased"
+        
+      >
+        <civ-radio label="Yes" value="yes"></civ-radio>
+        <civ-radio label="No" value="no"></civ-radio>
+      </civ-radio-group>
     </div>
     </civ-form-step>
   </div>
@@ -273,33 +277,42 @@
   <div data-chapter-steps>
     <civ-form-step complete-label="Save and continue">
     <div data-step data-step-label="Your relationship to the sponsor">
-      <civ-select label="Your relationship to the sponsor" name="relationshipToSponsor"
-          required></civ-select>
+      <civ-select label="Your relationship to the sponsor" required name="relationshipToSponsor"></civ-select>
     </div>
     <div data-step data-step-label="Your date of birth">
-      <civ-memorable-date legend="Your date of birth" name="beneficiaryDob"
-          required></civ-memorable-date>
+      <civ-memorable-date
+        legend="Your date of birth"
+        name="beneficiaryDob"
+        required
+      ></civ-memorable-date>
     </div>
     <div data-step data-step-label="Do you have other health insurance?">
-      <civ-radio-group legend="Do you have other health insurance?" name="otherInsurance"
-          required>
-          <civ-radio label="Yes" value="yes"></civ-radio>
-          <civ-radio label="No" value="no"></civ-radio>
-        </civ-radio-group>
+      <civ-radio-group
+        legend="Do you have other health insurance?"
+        name="otherInsurance"
+        required
+      >
+        <civ-radio label="Yes" value="yes"></civ-radio>
+        <civ-radio label="No" value="no"></civ-radio>
+      </civ-radio-group>
     </div>
     <div data-step data-step-label="Other insurance provider">
-      <civ-text-input label="Other insurance provider" name="otherInsuranceProvider"
+      <civ-text-input label="Other insurance provider"  name="otherInsuranceProvider"
           type="text"></civ-text-input>
     </div>
     <div data-step data-step-label="Other insurance policy number">
-      <civ-text-input label="Other insurance policy number" name="otherInsurancePolicyNumber"
+      <civ-text-input label="Other insurance policy number"  name="otherInsurancePolicyNumber"
           type="text"></civ-text-input>
     </div>
     <div data-step data-step-label="Are you eligible for Medicare?">
-      <civ-radio-group legend="Are you eligible for Medicare?" name="medicareEligible">
-          <civ-radio label="Yes" value="yes"></civ-radio>
-          <civ-radio label="No" value="no"></civ-radio>
-        </civ-radio-group>
+      <civ-radio-group
+        legend="Are you eligible for Medicare?"
+        name="medicareEligible"
+        
+      >
+        <civ-radio label="Yes" value="yes"></civ-radio>
+        <civ-radio label="No" value="no"></civ-radio>
+      </civ-radio-group>
     </div>
     </civ-form-step>
   </div>
@@ -330,7 +343,7 @@
   <div data-chapter-steps>
     <civ-form-step complete-label="Save and continue">
     <div data-step data-step-label="Upload supporting documents">
-      <civ-file-upload label="Upload supporting documents" hint="Upload PDF, JPG, or PNG files. Maximum file size: 20MB" name="documents"
+      <civ-file-upload label="Upload supporting documents" ${headerAttrs} name="documents"
           accept=".pdf,.jpg,.jpeg,.png"
           multiple
           max-size="20000000"
@@ -379,7 +392,7 @@
     Confirmation text goes here.
   </civ-alert>
 
-  <p class="civ-text-muted civ-mt-6">Confirmation details go here.</p>
+  <p class="civ-mt-6">Confirmation details go here.</p>
 </div>
     </section>
 
@@ -557,7 +570,7 @@
       }
 
       // Update progress bar
-      const progressBar = document.querySelector('civ-progress-bar');
+      const progressBar = document.querySelector('civ-progress-percent');
       if (progressBar) {
         const pct = Math.round((doneCount / totalChapters) * 100);
         progressBar.setAttribute('value', String(pct));

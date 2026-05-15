@@ -5,17 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Appoint a Veterans Service Organization as your representative | VA Form 21-22</title>
 
-  <!-- CivUI Design System -->
-  <link rel="stylesheet" href="https://unpkg.com/@civui/core/dist/styles/civ.css">
-  <script type="module" src="https://unpkg.com/@civui/core/dist/index.js"></script>
-  <script type="module" src="https://unpkg.com/@civui/inputs/dist/index.js"></script>
-  <script type="module" src="https://unpkg.com/@civui/controls/dist/index.js"></script>
-  <script type="module" src="https://unpkg.com/@civui/compound/dist/index.js"></script>
-  <script type="module" src="https://unpkg.com/@civui/form-patterns/dist/index.js"></script>
-  <script type="module" src="https://unpkg.com/@civui/actions/dist/index.js"></script>
-  <script type="module" src="https://unpkg.com/@civui/overlays/dist/index.js"></script>
-  <script type="module" src="https://unpkg.com/@civui/layout/dist/index.js"></script>
-  <script type="module" src="https://unpkg.com/@civui/feedback/dist/index.js"></script>
+  <!-- CivUI Design System (civ-site dev: resolved via Vite aliases) -->
+  <script type="module" src="/src/civui.ts"></script>
 </head>
 <body>
   <main id="main-content" class="civ-p-6" style="max-width: 720px; margin: 0 auto;">
@@ -28,7 +19,7 @@
     <span data-subheading>VA Form 21-22</span>
   </civ-page-header>
 
-  <p class="civ-text-muted civ-mb-6">Use this form to apply for VA benefits. If you're signed in, we can prefill some of your information to save you time.</p>
+  <p class="civ-mb-6">Use this form to apply for VA benefits. If you're signed in, we can prefill some of your information to save you time.</p>
 
   <div class="civ-flex civ-gap-3">
     <civ-button label="Sign in and start" variant="primary" data-start-signed-in></civ-button>
@@ -45,11 +36,11 @@
     <span data-subheading>VA Form 21-22</span>
   </civ-page-header>
 
-  <civ-progress-bar
+  <civ-progress-percent
     value="0"
     label="Application progress"
     status="0 of 3 sections complete"
-  ></civ-progress-bar>
+  ></civ-progress-percent>
 
   <h3 class="civ-heading-md civ-mt-6 civ-mb-2">Fill out your application</h3>
   <civ-list dividers>
@@ -81,7 +72,7 @@
 </div>
   <!-- Workflow Status -->
   <civ-card>
-  <p class="civ-text-sm civ-text-base-dark">Current status</p>
+  <p class="civ-text-sm">Current status</p>
   <p class="civ-text-lg civ-font-bold" data-civ-workflow-state="draft">Draft</p>
   <div data-civ-workflow-actions class="civ-mt-4 civ-flex civ-gap-2">
     <civ-button data-civ-workflow-action="submitted" label="Submit for review"></civ-button>
@@ -122,12 +113,14 @@
       <civ-name name="fullName" legend="Your name" required></civ-name>
     </div>
     <div data-step data-step-label="Date of birth">
-      <civ-memorable-date legend="Date of birth" hint="For example: January 15 1990" name="dateOfBirth"
-          required></civ-memorable-date>
+      <civ-memorable-date
+        legend="Date of birth"
+        name="dateOfBirth"
+        hint="For example: January 15 1990" required
+      ></civ-memorable-date>
     </div>
     <div data-step data-step-label="Social Security number">
-      <civ-text-input label="Social Security number" hint="We need this to verify your identity" name="ssn"
-          required
+      <civ-text-input label="Social Security number" hint="We need this to verify your identity" required name="ssn"
           autocomplete="off"
           inputmode="numeric"
           type="tel"
@@ -140,7 +133,7 @@
   <!-- Feedback Panel -->
   <button type="button" data-civ-feedback-trigger="Personal information" aria-expanded="false" aria-controls="feedback-personal-information" class="civ-text-sm civ-text-primary civ-underline">Add comment</button>
 <div id="feedback-personal-information" data-civ-feedback-panel="Personal information" role="complementary" aria-label="Feedback for Personal information" class="civ-p-4 civ-border civ-rounded civ-mt-2" hidden>
-  <p class="civ-text-sm civ-text-base-dark">No comments</p>
+  <p class="civ-text-sm">No comments</p>
   <div class="civ-mt-2">
     <label for="comment-personal-information" class="civ-text-sm civ-font-bold">Add comment</label>
     <textarea id="comment-personal-information" class="civ-input civ-mt-1" rows="3"></textarea>
@@ -149,7 +142,7 @@
 </div>
 <button type="button" data-civ-feedback-trigger="Contact information" aria-expanded="false" aria-controls="feedback-contact-information" class="civ-text-sm civ-text-primary civ-underline">Add comment</button>
 <div id="feedback-contact-information" data-civ-feedback-panel="Contact information" role="complementary" aria-label="Feedback for Contact information" class="civ-p-4 civ-border civ-rounded civ-mt-2" hidden>
-  <p class="civ-text-sm civ-text-base-dark">No comments</p>
+  <p class="civ-text-sm">No comments</p>
   <div class="civ-mt-2">
     <label for="comment-contact-information" class="civ-text-sm civ-font-bold">Add comment</label>
     <textarea id="comment-contact-information" class="civ-input civ-mt-1" rows="3"></textarea>
@@ -158,7 +151,7 @@
 </div>
 <button type="button" data-civ-feedback-trigger="Representative information" aria-expanded="false" aria-controls="feedback-representative-information" class="civ-text-sm civ-text-primary civ-underline">Add comment</button>
 <div id="feedback-representative-information" data-civ-feedback-panel="Representative information" role="complementary" aria-label="Feedback for Representative information" class="civ-p-4 civ-border civ-rounded civ-mt-2" hidden>
-  <p class="civ-text-sm civ-text-base-dark">No comments</p>
+  <p class="civ-text-sm">No comments</p>
   <div class="civ-mt-2">
     <label for="comment-representative-information" class="civ-text-sm civ-font-bold">Add comment</label>
     <textarea id="comment-representative-information" class="civ-input civ-mt-1" rows="3"></textarea>
@@ -167,7 +160,7 @@
 </div>
 <button type="button" data-civ-feedback-trigger="Review your application" aria-expanded="false" aria-controls="feedback-review-your-application" class="civ-text-sm civ-text-primary civ-underline">Add comment</button>
 <div id="feedback-review-your-application" data-civ-feedback-panel="Review your application" role="complementary" aria-label="Feedback for Review your application" class="civ-p-4 civ-border civ-rounded civ-mt-2" hidden>
-  <p class="civ-text-sm civ-text-base-dark">No comments</p>
+  <p class="civ-text-sm">No comments</p>
   <div class="civ-mt-2">
     <label for="comment-review-your-application" class="civ-text-sm civ-font-bold">Add comment</label>
     <textarea id="comment-review-your-application" class="civ-input civ-mt-1" rows="3"></textarea>
@@ -209,25 +202,27 @@
           type="tel"></civ-text-input>
     </div>
     <div data-step data-step-label="Mobile phone number">
-      <civ-text-input label="Mobile phone number" name="mobilePhone"
+      <civ-text-input label="Mobile phone number"  name="mobilePhone"
           autocomplete="tel"
           inputmode="numeric"
           type="tel"></civ-text-input>
     </div>
     <div data-step data-step-label="Email address">
-      <civ-text-input label="Email address" name="email"
-          required
+      <civ-text-input label="Email address" required name="email"
           autocomplete="email"
           type="email"></civ-text-input>
     </div>
     <div data-step data-step-label="How should we contact you if we have questions?">
-      <civ-radio-group legend="How should we contact you if we have questions?" name="contactMethod"
-          required>
-          <civ-radio label="Email" value="email"></civ-radio>
-          <civ-radio label="Home phone" value="homePhone"></civ-radio>
-          <civ-radio label="Mobile phone" value="mobilePhone"></civ-radio>
-          <civ-radio label="U.S. mail" value="mail"></civ-radio>
-        </civ-radio-group>
+      <civ-radio-group
+        legend="How should we contact you if we have questions?"
+        name="contactMethod"
+        required
+      >
+        <civ-radio label="Email" value="email"></civ-radio>
+        <civ-radio label="Home phone" value="homePhone"></civ-radio>
+        <civ-radio label="Mobile phone" value="mobilePhone"></civ-radio>
+        <civ-radio label="U.S. mail" value="mail"></civ-radio>
+      </civ-radio-group>
     </div>
     </civ-form-step>
   </div>
@@ -235,7 +230,7 @@
   <!-- Feedback Panel -->
   <button type="button" data-civ-feedback-trigger="Personal information" aria-expanded="false" aria-controls="feedback-personal-information" class="civ-text-sm civ-text-primary civ-underline">Add comment</button>
 <div id="feedback-personal-information" data-civ-feedback-panel="Personal information" role="complementary" aria-label="Feedback for Personal information" class="civ-p-4 civ-border civ-rounded civ-mt-2" hidden>
-  <p class="civ-text-sm civ-text-base-dark">No comments</p>
+  <p class="civ-text-sm">No comments</p>
   <div class="civ-mt-2">
     <label for="comment-personal-information" class="civ-text-sm civ-font-bold">Add comment</label>
     <textarea id="comment-personal-information" class="civ-input civ-mt-1" rows="3"></textarea>
@@ -244,7 +239,7 @@
 </div>
 <button type="button" data-civ-feedback-trigger="Contact information" aria-expanded="false" aria-controls="feedback-contact-information" class="civ-text-sm civ-text-primary civ-underline">Add comment</button>
 <div id="feedback-contact-information" data-civ-feedback-panel="Contact information" role="complementary" aria-label="Feedback for Contact information" class="civ-p-4 civ-border civ-rounded civ-mt-2" hidden>
-  <p class="civ-text-sm civ-text-base-dark">No comments</p>
+  <p class="civ-text-sm">No comments</p>
   <div class="civ-mt-2">
     <label for="comment-contact-information" class="civ-text-sm civ-font-bold">Add comment</label>
     <textarea id="comment-contact-information" class="civ-input civ-mt-1" rows="3"></textarea>
@@ -253,7 +248,7 @@
 </div>
 <button type="button" data-civ-feedback-trigger="Representative information" aria-expanded="false" aria-controls="feedback-representative-information" class="civ-text-sm civ-text-primary civ-underline">Add comment</button>
 <div id="feedback-representative-information" data-civ-feedback-panel="Representative information" role="complementary" aria-label="Feedback for Representative information" class="civ-p-4 civ-border civ-rounded civ-mt-2" hidden>
-  <p class="civ-text-sm civ-text-base-dark">No comments</p>
+  <p class="civ-text-sm">No comments</p>
   <div class="civ-mt-2">
     <label for="comment-representative-information" class="civ-text-sm civ-font-bold">Add comment</label>
     <textarea id="comment-representative-information" class="civ-input civ-mt-1" rows="3"></textarea>
@@ -262,7 +257,7 @@
 </div>
 <button type="button" data-civ-feedback-trigger="Review your application" aria-expanded="false" aria-controls="feedback-review-your-application" class="civ-text-sm civ-text-primary civ-underline">Add comment</button>
 <div id="feedback-review-your-application" data-civ-feedback-panel="Review your application" role="complementary" aria-label="Feedback for Review your application" class="civ-p-4 civ-border civ-rounded civ-mt-2" hidden>
-  <p class="civ-text-sm civ-text-base-dark">No comments</p>
+  <p class="civ-text-sm">No comments</p>
   <div class="civ-mt-2">
     <label for="comment-review-your-application" class="civ-text-sm civ-font-bold">Add comment</label>
     <textarea id="comment-review-your-application" class="civ-input civ-mt-1" rows="3"></textarea>
@@ -295,22 +290,19 @@
   <div data-chapter-steps>
     <civ-form-step complete-label="Save and continue">
     <div data-step data-step-label="Veterans Service Organization name">
-      <civ-text-input label="Veterans Service Organization name" hint="For example: Disabled American Veterans, American Legion" name="organizationName"
-          required
+      <civ-text-input label="Veterans Service Organization name" hint="For example: Disabled American Veterans, American Legion" required name="organizationName"
           type="text"></civ-text-input>
     </div>
     <div data-step data-step-label="Representative name">
-      <civ-text-input label="Representative name" name="representativeName"
-          required
+      <civ-text-input label="Representative name" required name="representativeName"
           type="text"></civ-text-input>
     </div>
     <div data-step data-step-label="Representative email">
-      <civ-text-input label="Representative email" name="representativeEmail"
-          required
+      <civ-text-input label="Representative email" required name="representativeEmail"
           type="email"></civ-text-input>
     </div>
     <div data-step data-step-label="Representative phone number">
-      <civ-text-input label="Representative phone number" name="representativePhone"
+      <civ-text-input label="Representative phone number"  name="representativePhone"
           type="tel"></civ-text-input>
     </div>
     </civ-form-step>
@@ -319,7 +311,7 @@
   <!-- Feedback Panel -->
   <button type="button" data-civ-feedback-trigger="Personal information" aria-expanded="false" aria-controls="feedback-personal-information" class="civ-text-sm civ-text-primary civ-underline">Add comment</button>
 <div id="feedback-personal-information" data-civ-feedback-panel="Personal information" role="complementary" aria-label="Feedback for Personal information" class="civ-p-4 civ-border civ-rounded civ-mt-2" hidden>
-  <p class="civ-text-sm civ-text-base-dark">No comments</p>
+  <p class="civ-text-sm">No comments</p>
   <div class="civ-mt-2">
     <label for="comment-personal-information" class="civ-text-sm civ-font-bold">Add comment</label>
     <textarea id="comment-personal-information" class="civ-input civ-mt-1" rows="3"></textarea>
@@ -328,7 +320,7 @@
 </div>
 <button type="button" data-civ-feedback-trigger="Contact information" aria-expanded="false" aria-controls="feedback-contact-information" class="civ-text-sm civ-text-primary civ-underline">Add comment</button>
 <div id="feedback-contact-information" data-civ-feedback-panel="Contact information" role="complementary" aria-label="Feedback for Contact information" class="civ-p-4 civ-border civ-rounded civ-mt-2" hidden>
-  <p class="civ-text-sm civ-text-base-dark">No comments</p>
+  <p class="civ-text-sm">No comments</p>
   <div class="civ-mt-2">
     <label for="comment-contact-information" class="civ-text-sm civ-font-bold">Add comment</label>
     <textarea id="comment-contact-information" class="civ-input civ-mt-1" rows="3"></textarea>
@@ -337,7 +329,7 @@
 </div>
 <button type="button" data-civ-feedback-trigger="Representative information" aria-expanded="false" aria-controls="feedback-representative-information" class="civ-text-sm civ-text-primary civ-underline">Add comment</button>
 <div id="feedback-representative-information" data-civ-feedback-panel="Representative information" role="complementary" aria-label="Feedback for Representative information" class="civ-p-4 civ-border civ-rounded civ-mt-2" hidden>
-  <p class="civ-text-sm civ-text-base-dark">No comments</p>
+  <p class="civ-text-sm">No comments</p>
   <div class="civ-mt-2">
     <label for="comment-representative-information" class="civ-text-sm civ-font-bold">Add comment</label>
     <textarea id="comment-representative-information" class="civ-input civ-mt-1" rows="3"></textarea>
@@ -346,7 +338,7 @@
 </div>
 <button type="button" data-civ-feedback-trigger="Review your application" aria-expanded="false" aria-controls="feedback-review-your-application" class="civ-text-sm civ-text-primary civ-underline">Add comment</button>
 <div id="feedback-review-your-application" data-civ-feedback-panel="Review your application" role="complementary" aria-label="Feedback for Review your application" class="civ-p-4 civ-border civ-rounded civ-mt-2" hidden>
-  <p class="civ-text-sm civ-text-base-dark">No comments</p>
+  <p class="civ-text-sm">No comments</p>
   <div class="civ-mt-2">
     <label for="comment-review-your-application" class="civ-text-sm civ-font-bold">Add comment</label>
     <textarea id="comment-review-your-application" class="civ-input civ-mt-1" rows="3"></textarea>
@@ -393,7 +385,7 @@
     Confirmation text goes here.
   </civ-alert>
 
-  <p class="civ-text-muted civ-mt-6">Confirmation details go here.</p>
+  <p class="civ-mt-6">Confirmation details go here.</p>
 </div>
     </section>
 
@@ -569,7 +561,7 @@
       }
 
       // Update progress bar
-      const progressBar = document.querySelector('civ-progress-bar');
+      const progressBar = document.querySelector('civ-progress-percent');
       if (progressBar) {
         const pct = Math.round((doneCount / totalChapters) * 100);
         progressBar.setAttribute('value', String(pct));

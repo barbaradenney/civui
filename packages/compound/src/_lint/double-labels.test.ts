@@ -149,6 +149,18 @@ function ruleSingleControlFieldset(host: HTMLElement, fixtureName: string): Viol
     const legendText = visibleText(legend);
     if (!legendText) return;
 
+    // If the fieldset already contains a nested fieldset with its own
+    // legend, the outer legend is functioning as a section heading over
+    // multiple labelled sub-sections — not as the lone label for a
+    // single inner control. Skip the single-control check in that case.
+    // (Relationship's outer "About the dependent" legend sits above
+    // <civ-name> + the relationship select; the name fieldset counts as
+    // visible content, so the select still needs its own label.)
+    const nestedFieldsets = Array.from(fs.querySelectorAll<HTMLFieldSetElement>('fieldset'))
+      .filter((nested) => nested !== fs && nested.parentElement?.closest('fieldset') === fs)
+      .filter((nested) => visibleText(nested.querySelector(':scope > legend')));
+    if (nestedFieldsets.length > 0) return;
+
     // Count native form controls inside this fieldset that have their
     // own direct label. Don't recurse into nested fieldsets — those
     // are their own scope.

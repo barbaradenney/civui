@@ -297,6 +297,76 @@ prop from one of the known base classes). Wired into
 
 ---
 
+## Section legends don't carry (required); leaf inputs do
+
+CivUI distinguishes two kinds of `<legend>`:
+
+- **Question legends** on self-contained group components
+  (`civ-radio-group`, `civ-checkbox-group`, `civ-yes-no`,
+  `civ-segmented-control`, `civ-memorable-date`,
+  `civ-date-range-picker`). The legend IS the question — "Are you a
+  veteran?", "What is your date of birth?". `(required)` belongs here
+  because the user answers the legend.
+- **Section legends** on multi-field grouping compounds
+  (`civ-fieldset`, `civ-address`, `civ-name`, `civ-relationship`,
+  `civ-direct-deposit`, `civ-partnership-history`,
+  `civ-service-history`). The legend is a section heading —
+  "Mailing address", "About the dependent". The user can't act on a
+  section heading; they act on the leaf inputs inside. `(required)`
+  on a section legend is decorative, and combined with the `required`
+  cascade to children it produces stacked indicators
+  ("(required)" once per nesting level — the bug the
+  civ-relationship "With Errors" story showed before this rule).
+
+Section-legend compounds therefore pass `showRequired: false` to
+`renderLegend(...)` in their `render()`:
+
+```ts
+renderLegend({ legend, required: this.required, showRequired: false, ... })
+```
+
+The compound still cascades `required` down to its children so each
+leaf input shows its own `(required)` on its own label. That's the
+single source of truth.
+
+**Caught by:** `pnpm lint:stacked-required` — fixtures each
+multi-field compound with `required` and asserts no
+`.civ-required-mark` appears inside any `<legend>` owned by a host
+in the `MULTI_FIELD_COMPOUNDS` set. Nested self-contained groups
+(e.g. the `civ-radio-group` inside `civ-partnership-history`) keep
+their question-level `(required)` mark and are ignored. Wired into
+`pnpm validate:lints` and the drift-lints CI gate. To extend, add
+the new compound tag to the `MULTI_FIELD_COMPOUNDS` set and a
+fixture to
+`packages/compound/src/_lint/stacked-required.test.ts`.
+
+---
+
+## Unlabelled form controls inside compound components
+
+A compound component that renders a native `<input>` / `<select>` /
+`<textarea>` must give it a labeller — `label=` on the CivUI wrapper,
+a wrapping `<label>`, or `aria-labelledby`. Outer fieldset legends
+alone don't count: they name the *group*, not each control, so the
+user sees a section heading but no per-field label.
+
+Past example: `civ-relationship` dropped the `label=` on its inner
+relationship-type `<civ-select>` to dodge a single-control-fieldset
+double-label warning. The "Dependent" preset rendered "About the
+dependent" → "Their name" → first/middle/last → an unlabeled
+`- Select -` at the bottom, because the compound actually has
+multiple controls when name fields are shown. The fix was to restore
+the label and tighten the double-labels rule so it doesn't fire when
+the fieldset contains nested fieldsets with their own legends.
+
+**Caught by:** `pnpm lint:missing-labels` — renders a curated set of
+compound fixtures (including `civ-relationship` with its `dependent`
+preset) and flags any native control with zero labellers. Wired into
+`pnpm validate:lints` and the drift-lints CI gate. To extend, add a
+fixture to `packages/compound/src/_lint/missing-labels.test.ts`.
+
+---
+
 ## Double-labelled form controls
 
 A single native `<input>` / `<select>` / `<textarea>` must have at

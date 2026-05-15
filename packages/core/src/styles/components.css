@@ -546,6 +546,16 @@
     @apply civ-mb-0;
   }
 
+  /* Fieldset-level error. civ-fieldset / civ-repeater / the self-contained
+     group components all set aria-invalid="true" on their inner <fieldset>
+     when their `error` prop is set; without a style rule the error text
+     showed in red but the group itself had no visible boundary marking it
+     as in-error. Mirror the .civ-input red start-border treatment so the
+     boundary reads the same as a single input in error. */
+  .civ-fieldset[aria-invalid="true"] {
+    @apply civ-border-s-4 civ-border-error civ-ps-3;
+  }
+
   .civ-group-layout--vertical {
     @apply civ-flex civ-flex-col civ-gap-1;
   }

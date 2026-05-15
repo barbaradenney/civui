@@ -43,6 +43,8 @@
     "lint:undefined-css-vars": "tsx tools/lint-undefined-css-vars.ts",
     "lint:dead-properties": "tsx tools/lint-dead-properties.ts",
     "lint:double-labels": "pnpm --filter @civui/compound exec vitest run src/_lint/double-labels.test.ts",
+    "lint:missing-labels": "pnpm --filter @civui/compound exec vitest run src/_lint/missing-labels.test.ts",
+    "lint:stacked-required": "pnpm --filter @civui/compound exec vitest run src/_lint/stacked-required.test.ts",
     "storybook:contract": "tsx tools/generate-contract-docs.ts",
     "scaffold:component": "tsx tools/scaffold-component.ts",
     "test:tools": "vitest run --config tools/vitest.config.ts",
@@ -52,7 +54,7 @@
     "sync:drupal:twig": "tsx tools/sync-drupal-twig.ts",
     "consistency": "node --experimental-strip-types tools/consistency-check.ts",
     "build:cdn": "node scripts/build-cdn.js",
-    "validate:lints": "pnpm lint:fieldsets && pnpm lint:story-embeds && pnpm lint:story-names && pnpm lint:story-props && pnpm lint:prose-refs && pnpm lint:color-classes && pnpm lint:jsdoc-props && pnpm lint:jsdoc-events && pnpm lint:safelist-stale && pnpm lint:hardcoded-tokens && pnpm lint:coverage-trinity && pnpm lint:event-listener-leak && pnpm lint:host-display && pnpm lint:purged-variants && pnpm lint:undefined-css-vars && pnpm lint:dead-properties && pnpm lint:double-labels",
+    "validate:lints": "pnpm lint:fieldsets && pnpm lint:story-embeds && pnpm lint:story-names && pnpm lint:story-props && pnpm lint:prose-refs && pnpm lint:color-classes && pnpm lint:jsdoc-props && pnpm lint:jsdoc-events && pnpm lint:safelist-stale && pnpm lint:hardcoded-tokens && pnpm lint:coverage-trinity && pnpm lint:event-listener-leak && pnpm lint:host-display && pnpm lint:purged-variants && pnpm lint:undefined-css-vars && pnpm lint:dead-properties && pnpm lint:double-labels && pnpm lint:missing-labels && pnpm lint:stacked-required",
     "validate:doc-tables": "pnpm sync:doc-tables && git diff --exit-code -- 'apps/docs/docs/components/**/_*.props.mdx' 'apps/docs/docs/components/**/_*.events.mdx'",
     "validate:drift": "pnpm validate:lints && pnpm validate:doc-tables",
     "validate": "pnpm lint && pnpm typecheck && pnpm test && pnpm parity:schema --platforms && pnpm validate:schemas && pnpm validate:drift && pnpm test:tools"

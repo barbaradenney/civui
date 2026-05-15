@@ -1061,6 +1061,20 @@
     @apply civ-border-error civ-border-s-4;
   }
 
+  /* Group-level error cascade. civ-radio-group / civ-checkbox-group
+     set aria-invalid on their grouping container (the inner
+     role="radiogroup" div for radio, the outer <fieldset> for
+     checkbox) but don't propagate it down to each child input — so
+     the :has rule above doesn't fire when the group as a whole is
+     invalid (e.g. "Select account type" on an unchecked required
+     group). Style descendant tiles directly from the group-level
+     marker so the visual matches the text-input pattern: when the
+     group is in error, every option tile reads as invalid. */
+  [role="radiogroup"][aria-invalid="true"] .civ-check-tile,
+  .civ-fieldset[aria-invalid="true"] .civ-check-tile {
+    @apply civ-border-error civ-border-s-4;
+  }
+
   /* In tile mode, the focus ring lives on the checkbox / radio input
      itself (via the `.civ-check-input:focus` rule above) — NOT on the
      surrounding tile. Tile-level rings on long horizontal rows (the

@@ -32,12 +32,94 @@
 // `@playwright/test` re-exports the browser API; the standalone
 // `playwright` package isn't a devDep on this repo.
 import { chromium, type Browser } from '@playwright/test';
-import { readdirSync } from 'node:fs';
+import { spawn, type ChildProcess } from 'node:child_process';
+import { existsSync, readdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const FORMS_DIR = join(__dirname, '..', 'forms');
+const DIST_DIR = join(__dirname, '..', 'dist');
+const SERVER_URL = 'http://localhost:5173';
+const SERVER_PORT = 5173;
+
+interface ServerHandle {
+  /** Stop the server we started, or no-op if we adopted an existing one. */
+  teardown: () => Promise<void>;
+  /** True when we spawned http-server against `dist/`; false when we adopted an existing dev server. */
+  spawned: boolean;
+}
+
+async function isPortAlive(): Promise<boolean> {
+  try {
+    const resp = await fetch(SERVER_URL, { signal: AbortSignal.timeout(500) });
+    // Any HTTP response means something's listening; we don't care about status here.
+    return resp.status > 0;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Make sure something is serving on :5173 before we hand the URL to
+ * Playwright. Strategy:
+ *
+ *   1. If a server already responds — use it. The developer is running
+ *      `pnpm --filter civ-site dev` and we adopt that session.
+ *   2. Otherwise spawn `npx http-server dist/` and wait for it to come
+ *      up. Used by `pnpm validate` after `validate:builds` produces
+ *      dist/. Self-contained, no manual dev-server prep.
+ *
+ * Errors out clearly if neither option is available (no port, no dist).
+ */
+async function ensureServer(): Promise<ServerHandle> {
+  if (await isPortAlive()) {
+    return { teardown: async () => {}, spawned: false };
+  }
+
+  if (!existsSync(join(DIST_DIR, 'forms'))) {
+    throw new Error(
+      `Nothing is serving ${SERVER_URL} and ${DIST_DIR} doesn't exist.\n` +
+        `Either:\n` +
+        `  - run \`pnpm --filter civ-site dev\` in another shell (hot-reloading), or\n` +
+        `  - run \`pnpm --filter civ-site build\` first to produce dist/.`,
+    );
+  }
+
+  // `npx http-server -s` is silent so it doesn't clutter validate output.
+  // The package itself is downloaded once and cached by npm.
+  const proc = spawn('npx', ['--yes', 'http-server', DIST_DIR, '-p', String(SERVER_PORT), '-s'], {
+    stdio: 'pipe',
+    detached: false,
+  });
+  // Surface fatal spawn errors but otherwise discard the noise.
+  proc.on('error', (err) => {
+    console.error(`failed to start http-server: ${err.message}`);
+  });
+
+  // Poll until the port responds, max ~10s.
+  const deadline = Date.now() + 10_000;
+  while (Date.now() < deadline) {
+    if (await isPortAlive()) {
+      return { teardown: () => stopServer(proc), spawned: true };
+    }
+    await new Promise((r) => setTimeout(r, 100));
+  }
+
+  await stopServer(proc);
+  throw new Error(`http-server failed to come up on :${SERVER_PORT} within 10s.`);
+}
+
+async function stopServer(proc: ChildProcess): Promise<void> {
+  if (proc.exitCode !== null) return; // already exited
+  proc.kill('SIGTERM');
+  // Give it a tick to exit cleanly, then SIGKILL.
+  for (let i = 0; i < 10; i++) {
+    if (proc.exitCode !== null) return;
+    await new Promise((r) => setTimeout(r, 100));
+  }
+  if (proc.exitCode === null) proc.kill('SIGKILL');
+}
 
 interface CheckResult {
   name: string;
@@ -99,6 +181,15 @@ async function verifyForm(browser: Browser, form: string): Promise<FormResult> {
       // Fall through — the registration check below will record the failure.
     }
 
+    // The generator's runtime wraps click-handler wiring in
+    // `onReady` with `setTimeout(fn, 100)` after DOMContentLoaded.
+    // In dist mode the bundled JS finishes so fast that the
+    // `customElements.get(...)` poll above unblocks before that
+    // setTimeout fires, so Playwright clicked the start button
+    // before any listener was attached. A short post-registration
+    // wait (longer than the generator's 100ms timer) closes the race.
+    await page.waitForTimeout(200);
+
     // Custom elements: sample every `<civ-*>` tag and check whether
     // the browser has a constructor for it.
     const customElementReport = await page.evaluate(() => {
@@ -142,17 +233,26 @@ async function verifyForm(browser: Browser, form: string): Promise<FormResult> {
     record('intro page has "Start guest" button', startButtons.hasGuest);
     record('start buttons rendered a native <button>', startButtons.signedInRendered);
 
-    // Intro → hub transition.
+    // Intro → hub transition. Poll for the section swap rather than a
+    // fixed wait — the click handler runs through the generator's
+    // runtime script which can take a beat to wire up after component
+    // registration, especially with the bundled dist/ output where
+    // every form's JS is loaded as one file.
     await page.locator('civ-button[data-start-guest]').click();
-    await page.waitForTimeout(200);
-    const hubVisible = await page.evaluate(() => {
-      const hub = document.querySelector('section[data-page="hub"]');
-      const intro = document.querySelector('section[data-page="intro"]');
-      return {
-        hubHidden: hub?.hasAttribute('hidden') ?? true,
-        introHidden: intro?.hasAttribute('hidden') ?? false,
-      };
-    });
+    let hubVisible = { hubHidden: true, introHidden: false };
+    const transitionDeadline = Date.now() + 3000;
+    while (Date.now() < transitionDeadline) {
+      hubVisible = await page.evaluate(() => {
+        const hub = document.querySelector('section[data-page="hub"]');
+        const intro = document.querySelector('section[data-page="intro"]');
+        return {
+          hubHidden: hub?.hasAttribute('hidden') ?? true,
+          introHidden: intro?.hasAttribute('hidden') ?? false,
+        };
+      });
+      if (!hubVisible.hubHidden && hubVisible.introHidden) break;
+      await page.waitForTimeout(100);
+    }
     record('clicking start guest reveals the hub section', !hubVisible.hubHidden);
     record('clicking start guest hides the intro section', hubVisible.introHidden);
 
@@ -214,10 +314,12 @@ async function main(): Promise<void> {
   const isSweep = arg === 'all';
   const forms = isSweep ? listAllForms() : [arg];
 
+  const server = await ensureServer();
   const browser = await chromium.launch({ headless: true });
   try {
     if (isSweep) {
-      console.log(`Sweeping ${forms.length} form(s) against http://localhost:5173\n`);
+      const source = server.spawned ? `dist/ via http-server` : `existing dev server`;
+      console.log(`Sweeping ${forms.length} form(s) against ${SERVER_URL} (${source})\n`);
     }
     const failedForms: string[] = [];
     for (const form of forms) {
@@ -238,6 +340,7 @@ async function main(): Promise<void> {
     if (failedForms.length > 0) process.exit(1);
   } finally {
     await browser.close();
+    await server.teardown();
   }
 }
 

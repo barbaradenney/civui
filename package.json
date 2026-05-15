@@ -59,7 +59,8 @@
     "validate:doc-tables": "pnpm sync:doc-tables && git diff --exit-code -- 'apps/docs/docs/components/**/_*.props.mdx' 'apps/docs/docs/components/**/_*.events.mdx'",
     "validate:drift": "pnpm validate:lints && pnpm validate:doc-tables",
     "validate:builds": "pnpm --filter civ-site build",
-    "validate": "pnpm lint && pnpm typecheck && pnpm test && pnpm parity:schema --platforms && pnpm validate:schemas && pnpm validate:drift && pnpm validate:builds && pnpm test:tools"
+    "validate:verify-forms": "pnpm --filter civ-site verify-form all",
+    "validate": "pnpm lint && pnpm typecheck && pnpm test && pnpm parity:schema --platforms && pnpm validate:schemas && pnpm validate:drift && pnpm validate:builds && pnpm validate:verify-forms && pnpm test:tools"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.11.3",

@@ -499,3 +499,99 @@ describe('civ-time-picker — min/max strict ISO parsing', () => {
     expect(combo.options[0].value).toBe('09:00');
   });
 });
+
+describe('civ-time-picker — combo mode: nearest-slot snap suggestion', () => {
+  // The combobox's noMatchSuggestions callback is provided by the
+  // time-picker so dropdowns don't dead-end on near-miss input like
+  // "9:27" (not on the 15-min grid). The callback returns a
+  // one-element option array that the combobox renders alongside
+  // the standard filter results when the regular filter is empty.
+
+  function getSuggestion(el: any, filter: string) {
+    // Reach into the prop the time-picker forwards to the combobox.
+    const combo = el.querySelector('civ-combobox') as any;
+    return combo.noMatchSuggestions(filter);
+  }
+
+  it('snaps "9:27" to "9:30 AM" at 15-min step', async () => {
+    const el = await fixture<CivTimePicker>('<civ-time-picker label="When" minute-step="15"></civ-time-picker>');
+    const out = getSuggestion(el, '9:27');
+    expect(out).toEqual([{ value: '09:30', label: '9:30 AM' }]);
+  });
+
+  it('snaps "927" (no colon) the same as "9:27"', async () => {
+    const el = await fixture<CivTimePicker>('<civ-time-picker label="When" minute-step="15"></civ-time-picker>');
+    const out = getSuggestion(el, '927');
+    expect(out).toEqual([{ value: '09:30', label: '9:30 AM' }]);
+  });
+
+  it('honors PM hint: "9:27p" → 9:30 PM', async () => {
+    const el = await fixture<CivTimePicker>('<civ-time-picker label="When" minute-step="15"></civ-time-picker>');
+    const out = getSuggestion(el, '9:27p');
+    expect(out).toEqual([{ value: '21:30', label: '9:30 PM' }]);
+  });
+
+  it('honors AM/PM hint "PM"', async () => {
+    const el = await fixture<CivTimePicker>('<civ-time-picker label="When" minute-step="15"></civ-time-picker>');
+    const out = getSuggestion(el, '9:27 PM');
+    expect(out).toEqual([{ value: '21:30', label: '9:30 PM' }]);
+  });
+
+  it('"1430" with 12-hour format snaps to nearest afternoon slot', async () => {
+    const el = await fixture<CivTimePicker>('<civ-time-picker label="When" minute-step="15"></civ-time-picker>');
+    const out = getSuggestion(el, '1430');
+    expect(out).toEqual([{ value: '14:30', label: '2:30 PM' }]);
+  });
+
+  it('"1430" with 24-hour format renders 24-hour label', async () => {
+    const el = await fixture<CivTimePicker>('<civ-time-picker label="When" format="24" minute-step="15"></civ-time-picker>');
+    const out = getSuggestion(el, '1430');
+    expect(out).toEqual([{ value: '14:30', label: '14:30' }]);
+  });
+
+  it('snaps 4-digit "0927" to the same nearest slot as "9:27"', async () => {
+    const el = await fixture<CivTimePicker>('<civ-time-picker label="When" minute-step="15"></civ-time-picker>');
+    const out = getSuggestion(el, '0927');
+    expect(out).toEqual([{ value: '09:30', label: '9:30 AM' }]);
+  });
+
+  it('respects min/max bounds — snaps to nearest in-range slot', async () => {
+    // min=09:00, max=17:00. Type "06:00" — that's outside bounds,
+    // the nearest in-range slot is 09:00.
+    const el = await fixture<CivTimePicker>('<civ-time-picker label="When" min="09:00" max="17:00" minute-step="30"></civ-time-picker>');
+    const out = getSuggestion(el, '6:00');
+    expect(out[0].value).toBe('09:00');
+  });
+
+  it('returns [] for pure-letter input (no digits)', async () => {
+    const el = await fixture<CivTimePicker>('<civ-time-picker label="When"></civ-time-picker>');
+    const out = getSuggestion(el, 'noon');
+    expect(out).toEqual([]);
+  });
+
+  it('returns [] for malformed minutes (e.g. ":99")', async () => {
+    const el = await fixture<CivTimePicker>('<civ-time-picker label="When"></civ-time-picker>');
+    const out = getSuggestion(el, '9:99');
+    expect(out).toEqual([]);
+  });
+
+  it('returns [] when typed hour is out of 0-23 range', async () => {
+    const el = await fixture<CivTimePicker>('<civ-time-picker label="When"></civ-time-picker>');
+    // "25" — not a valid hour.
+    const out = getSuggestion(el, '25:00');
+    expect(out).toEqual([]);
+  });
+
+  it('"12 AM" snaps to "12:00 AM" (00:00 ISO)', async () => {
+    const el = await fixture<CivTimePicker>('<civ-time-picker label="When" minute-step="15"></civ-time-picker>');
+    const out = getSuggestion(el, '12 AM');
+    expect(out).toEqual([{ value: '00:00', label: '12:00 AM' }]);
+  });
+
+  it('"12 PM" snaps to "12:00 PM" (12:00 ISO, noon)', async () => {
+    const el = await fixture<CivTimePicker>('<civ-time-picker label="When" minute-step="15"></civ-time-picker>');
+    const out = getSuggestion(el, '12 PM');
+    expect(out).toEqual([{ value: '12:00', label: '12:00 PM' }]);
+  });
+});
+

@@ -360,6 +360,7 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
         name="${this.name || nothing}"
         .options="${this._comboOptions()}"
         .value="${this.value}"
+        .noMatchSuggestions="${(filter: string) => this._nearestSlotSuggestion(filter)}"
         placeholder="${placeholder}"
         hint="${this.hint}"
         error="${this.error}"
@@ -372,6 +373,98 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
       ></civ-combobox>
     `;
   }
+
+  /**
+   * Snap a typed filter to the nearest slot when civ-combobox's
+   * filter found no exact match. Wired into the combobox via
+   * `noMatchSuggestions`. Returns a single-option array — the
+   * suggestion appears in the dropdown like any other slot, the
+   * user picks it normally (no auto-commit, no surprise).
+   *
+   * Returns `[]` when the typed filter can't be parsed as a partial
+   * time (pure letters, gibberish, empty after digit-stripping) —
+   * civ-combobox then shows its standard "No results found" message.
+   */
+  private _nearestSlotSuggestion(filter: string): ComboboxOption[] {
+    const minutes = this._parseFilterToMinutes(filter);
+    if (minutes == null) return [];
+    const opts = this._comboOptions();
+    if (opts.length === 0) return [];
+
+    let nearest = opts[0];
+    let nearestDelta = Infinity;
+    for (const opt of opts) {
+      const m = this._parseTimeToMinutes(opt.value);
+      if (m == null) continue;
+      const delta = Math.abs(m - minutes);
+      if (delta < nearestDelta) {
+        nearestDelta = delta;
+        nearest = opt;
+      }
+    }
+    return [nearest];
+  }
+
+  /**
+   * Parse a free-form filter string to minutes-since-midnight.
+   * Handles the natural shapes users type:
+   *   - "9" / "9:00"         → 9 * 60 = 540
+   *   - "927" / "9:27"       → 9 * 60 + 27 = 567
+   *   - "1430"               → 14 * 60 + 30 = 870 (24-hour input)
+   *   - "9p" / "9 PM"        → 21 * 60 = 1260
+   *   - "9:27 PM"            → 21 * 60 + 27 = 1287
+   *
+   * In `format="12"`, hour values > 12 are treated as 24-hour input
+   * so "1430" still snaps to a sensible afternoon slot. AM/PM hints
+   * (any "a"/"p" letter in the filter) override.
+   *
+   * Returns `null` when the filter has no parseable digits or the
+   * parsed time is out of range (e.g. minute > 59).
+   */
+  private _parseFilterToMinutes(filter: string): number | null {
+    const lower = filter.trim().toLowerCase();
+    if (!lower) return null;
+
+    // Loose AM/PM detection — any "a" or "p" letter in the filter
+    // counts as the hint. Good enough for typical user input
+    // ("9a", "9 am", "9:27 pm") without parsing word boundaries.
+    const hasAm = /a/.test(lower);
+    const hasPm = /p/.test(lower);
+
+    const cleaned = lower.replace(/[^\d:]/g, '');
+    if (!cleaned) return null;
+
+    let h: number;
+    let m: number;
+    if (cleaned.includes(':')) {
+      const [hStr, mStr] = cleaned.split(':');
+      h = Number(hStr);
+      m = Number(mStr) || 0;
+    } else if (cleaned.length <= 2) {
+      h = Number(cleaned);
+      m = 0;
+    } else if (cleaned.length === 3) {
+      h = Number(cleaned[0]);
+      m = Number(cleaned.slice(1));
+    } else {
+      h = Number(cleaned.slice(0, 2));
+      m = Number(cleaned.slice(2, 4));
+    }
+
+    if (!Number.isFinite(h) || !Number.isFinite(m)) return null;
+    if (m < 0 || m > 59) return null;
+
+    if (this.format === '12') {
+      if (h === 12 && hasAm) h = 0;
+      else if (h < 12 && hasPm) h += 12;
+      // hour > 12 with no period hint: treat as 24-hour input,
+      // leave as-is so "1430" → 14:30.
+    }
+
+    if (h < 0 || h > 23) return null;
+    return h * 60 + m;
+  }
+
 
   /**
    * Select mode: three selects (hour, minute, AM/PM) inside a fieldset.

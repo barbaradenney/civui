@@ -94,6 +94,21 @@ describe('civ-disclosure', () => {
     expect(el.querySelector('p')!.textContent).toBe('Why we collect this');
   });
 
+  it('relocates slotted content INSIDE the <details> wrapper', async () => {
+    // Regression: previously the template carried a literal `<slot>`
+    // element, which is inert in Light DOM. The user's content stayed
+    // as the first child of `<civ-disclosure>` (before `<details>`),
+    // so it was always visible and the toggle appeared to do nothing.
+    const el = await fixture<CivDisclosure>(
+      '<civ-disclosure><p data-test="content">Hidden by default</p></civ-disclosure>'
+    );
+    const p = el.querySelector('[data-test="content"]')!;
+    const details = el.querySelector('details')!;
+    const contentDiv = el.querySelector('.civ-disclosure__content')!;
+    expect(details.contains(p)).toBe(true);
+    expect(contentDiv.contains(p)).toBe(true);
+  });
+
   it('relies on native details/summary semantics — no manual aria-controls', async () => {
     // Native <details>/<summary> exposes the expand/collapse relationship
     // intrinsically; adding aria-controls is redundant and not announced
@@ -106,7 +121,7 @@ describe('civ-disclosure', () => {
   it('applies sm size class', async () => {
     const el = await fixture<CivDisclosure>('<civ-disclosure size="sm">Text</civ-disclosure>');
     const trigger = el.querySelector('.civ-disclosure__trigger')!;
-    expect(trigger.classList.contains('civ-text-sm')).toBe(true);
+    expect(trigger.classList.contains('civ-disclosure__trigger--sm')).toBe(true);
   });
 
   it('falls back to the locale-aware default when label is cleared', async () => {

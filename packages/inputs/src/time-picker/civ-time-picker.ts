@@ -10,6 +10,7 @@ import {
   renderFormHeader,
   renderLegend,
   t,
+  warnInvalidProp,
 } from '@civui/core';
 
 // Side-effect imports register the child custom elements.
@@ -169,7 +170,11 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
   }
 
   private get _minuteOptions(): { value: string; label: string }[] {
-    const step = this.minuteStep > 0 ? Math.floor(this.minuteStep) : 5;
+    let step = this.minuteStep;
+    if (!Number.isFinite(step) || step <= 0 || step !== Math.floor(step)) {
+      warnInvalidProp('civ-time-picker', 'minute-step', 'a positive integer (e.g. 1, 5, 15, 30)', String(this.minuteStep));
+      step = 5;
+    }
     const opts: { value: string; label: string }[] = [];
     for (let m = 0; m < 60; m += step) {
       const s = String(m).padStart(2, '0');

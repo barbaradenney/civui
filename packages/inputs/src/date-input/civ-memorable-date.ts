@@ -225,16 +225,26 @@ export class CivMemorableDate extends LegendHeadingMixin(CivFormElement) {
         aria-invalid="${this.error ? 'true' : nothing}"
         ?disabled="${this.disabled}"
       >
-        ${this.legend
-          ? renderFormHeader({
-              label: renderLegend({ legend: this.legend, required: this.required, showRequired: !this.hideRequiredIndicator && this.required, headingLevel: this.headingLevel, size: this.size }),
-              hintId: this._hintId,
-              hint: this.hint,
-              errorId: this._errorId,
-              error: this.error,
-              fieldset: true,
-            })
-          : nothing}
+        ${renderFormHeader({
+          label: renderLegend({
+            // Section 508 requires every fieldset to have a non-empty
+            // legend. When the consumer omits one we fall back to a
+            // visually-hidden "Date" so AT users still get a label
+            // and the aria-describedby IDs (hint/error) remain
+            // anchored to live spans.
+            legend: this.legend || t('memorableDateDefaultLegend'),
+            required: this.required,
+            showRequired: !this.hideRequiredIndicator && this.required,
+            headingLevel: this.headingLevel,
+            size: this.size,
+            srOnly: !this.legend,
+          }),
+          hintId: this._hintId,
+          hint: this.hint,
+          errorId: this._errorId,
+          error: this.error,
+          fieldset: true,
+        })}
         ${fields}
       </fieldset>
     `;

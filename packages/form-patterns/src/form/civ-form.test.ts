@@ -902,6 +902,39 @@ describe('civ-form confirm-before-submit', () => {
     // First click cancelled, second click fires a fresh confirm.
     expect(confirmHandler).toHaveBeenCalledTimes(2);
   });
+
+  it('proceed() called after the form is removed from DOM still fires civ-submit on the (now-disconnected) host', async () => {
+    // The consumer might hold the proceed reference past unmount (e.g.,
+    // navigation away before they call it). civ-submit still dispatches
+    // on the disconnected element — listeners on that element receive
+    // it. Document this behavior rather than crashing.
+    const el = await fixture(`
+      <civ-form form-label="Test" confirm-before-submit>
+        <civ-text-input label="Name" name="name" value="Ada"></civ-text-input>
+        <button type="submit">Submit</button>
+      </civ-form>
+    `);
+
+    let pending: { proceed: () => void; cancel: () => void } | null = null;
+    el.addEventListener('civ-submit-confirm', ((e: CustomEvent) => {
+      pending = e.detail;
+    }) as EventListener);
+
+    const submitHandler = vi.fn();
+    el.addEventListener('civ-submit', submitHandler as EventListener);
+
+    (el.querySelector('button') as HTMLButtonElement).click();
+    await elementUpdated(el);
+    expect(pending).not.toBeNull();
+
+    el.remove();
+    // Calling proceed on a detached host MUST NOT throw; whether
+    // civ-submit fires is documented (it does, on the detached
+    // element). Consumers should check `el.isConnected` if they want
+    // to short-circuit.
+    expect(() => pending!.proceed()).not.toThrow();
+    expect(submitHandler).toHaveBeenCalledTimes(1);
+  });
 });
 
 describe('civ-form excludePii filtering on getFormData', () => {

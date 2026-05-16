@@ -100,7 +100,13 @@ export class CivFormAutosave extends CivBaseElement {
   private _hostForm: FormHostLike | null = null;
   private _boundOnInput = this._onInput.bind(this);
   private _boundOnSubmit = this._onSubmit.bind(this);
-  private _debouncedSave = debounce(() => this._save(), 0); // re-created in connectedCallback
+  /**
+   * Initialized lazily in `connectedCallback` from the live `debounceMs`
+   * prop. The non-null assertion is safe because every call site
+   * (`_onInput`, `disconnectedCallback`, `updated`) runs only after
+   * `connectedCallback` has assigned it.
+   */
+  private _debouncedSave!: ReturnType<typeof debounce>;
 
   override connectedCallback(): void {
     super.connectedCallback();

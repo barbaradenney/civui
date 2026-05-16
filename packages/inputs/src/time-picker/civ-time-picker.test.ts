@@ -215,4 +215,25 @@ describe('civ-time-picker', () => {
     // that the host carries a string-coerced value attribute mirror.
     expect(el.value).toBe('09:00');
   });
+
+  it('rejects an invalid 12-hour value like "13:00" gracefully (parse path)', async () => {
+    const el = await fixture<CivTimePicker>('<civ-time-picker legend="When" value="13:00"></civ-time-picker>');
+    await elementUpdated(el);
+    // 13:00 is valid as 24-hour ISO; in 12-hour display it maps to 1 PM.
+    expect((el.querySelector('civ-select[name="hour"]') as any).value).toBe('1');
+    expect((el.querySelector('civ-select[name="period"]') as any).value).toBe('PM');
+  });
+
+  it('warns on invalid minute-step but still renders sane options', async () => {
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    try {
+      const el = await fixture<CivTimePicker>('<civ-time-picker legend="When" minute-step="-5"></civ-time-picker>');
+      await elementUpdated(el);
+      const minuteSel = el.querySelector('civ-select[name="minute"]') as any;
+      // Falls back to step=5 → 12 options.
+      expect(minuteSel.options.length).toBe(12);
+    } finally {
+      warnSpy.mockRestore();
+    }
+  });
 });

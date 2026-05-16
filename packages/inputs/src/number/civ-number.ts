@@ -96,6 +96,7 @@ export class CivNumber extends LegendHeadingMixin(CivFormElement) {
         @input="${this._onInput}"
         @change="${this._onChange}"
         @blur="${this._onBlur}"
+        @paste="${this._onPaste}"
       />
     `;
 
@@ -179,6 +180,25 @@ export class CivNumber extends LegendHeadingMixin(CivFormElement) {
       } catch { /* unsupported input type */ }
     }
     dispatch(this, 'civ-input', { value: this.value });
+  }
+
+  /**
+   * Paste handler that politely announces when the filter strips
+   * pasted content. Typing one-by-one already produces no visible
+   * feedback for filtered characters (the digit appears, the letter
+   * doesn't), so a screen-reader user can tell. Paste is the case
+   * where multiple stripped characters disappear at once with no cue.
+   */
+  private _onPaste(e: ClipboardEvent): void {
+    const pasted = e.clipboardData?.getData('text') ?? '';
+    if (!pasted) return;
+    const filteredPaste = this._filterValue(pasted);
+    if (filteredPaste !== pasted) {
+      this.announce(t('numberPasteFiltered'), 'polite');
+    }
+    // Don't preventDefault — let the native paste run; _onInput picks
+    // it up and filters the full input value (which catches
+    // selection-replace paste correctly).
   }
 
   protected override _onChange(_e: Event): void {

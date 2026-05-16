@@ -11,7 +11,7 @@ const schema: ComponentSchema = {
   props: {
     label: {
       type: 'string',
-      description: 'Trigger text. Defaults to "Why we ask?" when empty.',
+      description: 'Trigger text. When empty, falls back to the locale-aware default (English: "Why we ask?"). Override via the `t()` registry or set explicitly.',
       default: '',
     },
     open: {

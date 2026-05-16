@@ -110,6 +110,7 @@ export interface CivLocaleStrings {
   dateRangeMaxRangeError: string; // "Range must be at most {count} days"
 
   // Memorable date
+  memorableDateDefaultLegend: string;
   memorableDateMonthLabel: string;
   memorableDateDayLabel: string;
   memorableDateYearLabel: string;
@@ -156,6 +157,9 @@ export interface CivLocaleStrings {
   textareaWordsRemaining: string; // "{count} words remaining"
   textareaWordsOverLimit: string; // "{count} {count, plural, one {word} other {words}} over the limit"
   textareaWordLimit: string; // "Word limit: {max}"
+
+  // Number input
+  numberPasteFiltered: string; // polite SR announce when paste stripped non-digits
 
   // Disclosure
   disclosureDefaultLabel: string; // "Why we ask?"
@@ -767,6 +771,7 @@ const defaultStrings: CivLocaleStrings = {
   dateRangeMinRangeError: 'Range must be at least {count} days',
   dateRangeMaxRangeError: 'Range must be at most {count} days',
 
+  memorableDateDefaultLegend: 'Date',
   memorableDateMonthLabel: 'Month',
   memorableDateDayLabel: 'Day',
   memorableDateYearLabel: 'Year',
@@ -810,6 +815,8 @@ const defaultStrings: CivLocaleStrings = {
   textareaWordsRemaining: '{count} words remaining',
   textareaWordsOverLimit: '{count} too many words',
   textareaWordLimit: 'Word limit: {max}',
+
+  numberPasteFiltered: 'Non-numeric characters were removed from the pasted value.',
 
   disclosureDefaultLabel: 'Why we ask?',
 

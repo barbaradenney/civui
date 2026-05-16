@@ -108,4 +108,13 @@ describe('civ-disclosure', () => {
     const trigger = el.querySelector('.civ-disclosure__trigger')!;
     expect(trigger.classList.contains('civ-text-sm')).toBe(true);
   });
+
+  it('falls back to the locale-aware default when label is cleared', async () => {
+    const el = await fixture<CivDisclosure>('<civ-disclosure label="Custom prompt">Text</civ-disclosure>');
+    expect(el.querySelector('summary')!.textContent).toContain('Custom prompt');
+
+    el.label = '';
+    await elementUpdated(el);
+    expect(el.querySelector('summary')!.textContent).toContain('Why we ask?');
+  });
 });

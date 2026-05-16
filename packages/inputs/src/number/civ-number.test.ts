@@ -269,4 +269,15 @@ describe('civ-number', () => {
     // Should NOT have been filtered while composing.
     expect(input.value).toBe('あ12');
   });
+
+  it('drops a second minus sign mid-string when allow-negative is set', async () => {
+    const el = await fixture<CivNumber>('<civ-number label="Temp" allow-negative></civ-number>');
+    const input = el.querySelector('input')!;
+    input.value = '-1-2';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    await elementUpdated(el);
+    // Only the leading minus is kept; inner minus is stripped along with
+    // every other non-digit. Result: "-12".
+    expect(el.value).toBe('-12');
+  });
 });

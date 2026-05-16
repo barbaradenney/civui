@@ -648,13 +648,16 @@ describe('civ-time-picker — text mode', () => {
     await elementUpdated(ti);
   }
 
-  it('renders a fieldset with a masked text-input + AM/PM segmented-control (12-hour)', async () => {
+  it('renders a fieldset with a text-input + AM/PM segmented-control (12-hour)', async () => {
     const el = await fixture<CivTimePicker>('<civ-time-picker mode="text" label="Incident time" name="t"></civ-time-picker>');
     expect(el.querySelector('fieldset')).not.toBeNull();
     const ti = el.querySelector('civ-text-input[name="t-time"]') as any;
     expect(ti).not.toBeNull();
-    expect(ti.maskPattern).toBe('##:##');
+    // No mask — formatting is done by the host so we control how
+    // 3-digit input renders (no surprise leading zero).
+    expect(ti.maskPattern).toBe('');
     expect(ti.inputmode).toBe('numeric');
+    expect(ti.maxlength).toBe(5);
     expect(el.querySelector('civ-segmented-control[name="t-period"]')).not.toBeNull();
     expect(el.querySelector('civ-select')).toBeNull();
     expect(el.querySelector('civ-combobox')).toBeNull();
@@ -714,21 +717,22 @@ describe('civ-time-picker — text mode', () => {
     const el = await fixture<CivTimePicker>('<civ-time-picker mode="text" label="When" name="t" value="09:30"></civ-time-picker>');
     await elementUpdated(el);
     const ti = el.querySelector('civ-text-input[name="t-time"]') as any;
-    expect(ti.value).toBe('0930');
+    // 12-hour mode: 09:30 displays as "9:30" (no leading zero on hour).
+    expect(ti.value).toBe('9:30');
     const period = el.querySelector('civ-segmented-control[name="t-period"]') as any;
     expect(period.value).toBe('AM');
   });
 
-  it('format change re-derives the text-input raw digits', async () => {
+  it('format change re-derives the text input display', async () => {
     const el = await fixture<CivTimePicker>('<civ-time-picker mode="text" label="When" name="t" value="14:30"></civ-time-picker>');
     await elementUpdated(el);
     const ti = el.querySelector('civ-text-input[name="t-time"]') as any;
-    expect(ti.value).toBe('0230'); // 12-hour display: 2:30
+    expect(ti.value).toBe('2:30'); // 12-hour display: 2:30
 
     el.format = '24';
     await elementUpdated(el);
     const ti24 = el.querySelector('civ-text-input[name="t-time"]') as any;
-    expect(ti24.value).toBe('1430'); // 24-hour display: 14:30
+    expect(ti24.value).toBe('14:30'); // 24-hour display: 14:30
   });
 
   it('uses sr-only fallback legend when only `label` is set', async () => {
@@ -755,7 +759,7 @@ describe('civ-time-picker — text mode', () => {
     await elementUpdated(el);
     const ti = el.querySelector('civ-text-input[name="time"]') as any;
     expect(ti).not.toBeNull();
-    expect(ti.value).toBe('0230');
+    expect(ti.value).toBe('2:30');
     expect(el.value).toBe('14:30');
   });
 
@@ -1018,31 +1022,98 @@ describe('civ-time-picker — Now button avoids disabled slots (combo mode)', ()
 });
 
 describe('civ-time-picker — text mode: prefill edge cases', () => {
-  it('renders 12 AM (00:00) as raw "1200" with period AM', async () => {
+  it('renders 12 AM (00:00) as "12:00" with period AM', async () => {
     const el = await fixture<CivTimePicker>('<civ-time-picker mode="text" name="t" value="00:00"></civ-time-picker>');
     await elementUpdated(el);
     const ti = el.querySelector('civ-text-input[name="t-time"]') as any;
-    expect(ti.value).toBe('1200');
+    expect(ti.value).toBe('12:00');
     const period = el.querySelector('civ-segmented-control[name="t-period"]') as any;
     expect(period.value).toBe('AM');
   });
 
-  it('renders 12 PM (12:00) as raw "1200" with period PM', async () => {
+  it('renders 12 PM (12:00) as "12:00" with period PM', async () => {
     const el = await fixture<CivTimePicker>('<civ-time-picker mode="text" name="t" value="12:00"></civ-time-picker>');
     await elementUpdated(el);
     const ti = el.querySelector('civ-text-input[name="t-time"]') as any;
-    expect(ti.value).toBe('1200');
+    expect(ti.value).toBe('12:00');
     const period = el.querySelector('civ-segmented-control[name="t-period"]') as any;
     expect(period.value).toBe('PM');
   });
 
-  it('renders 13:00 as raw "0100" with period PM in 12-hour mode', async () => {
+  it('renders 13:00 as "1:00" with period PM in 12-hour mode', async () => {
+    // 13:00 ISO → 1 PM display. The 12-hour hour is unpadded ("1") so
+    // the field shows "1:00" — not "01:00" with a leading zero the
+    // user didn't type.
     const el = await fixture<CivTimePicker>('<civ-time-picker mode="text" name="t" value="13:00"></civ-time-picker>');
     await elementUpdated(el);
     const ti = el.querySelector('civ-text-input[name="t-time"]') as any;
-    expect(ti.value).toBe('0100');
+    expect(ti.value).toBe('1:00');
     const period = el.querySelector('civ-segmented-control[name="t-period"]') as any;
     expect(period.value).toBe('PM');
+  });
+});
+
+describe('civ-time-picker — text mode: 3-digit input does not gain a leading zero', () => {
+  // Regression test for the leading-zero bug: typing "236" must not
+  // turn into "0236" while the user is still in the field, nor show
+  // up as "02:36" after blur. Both formats sneak in a leading zero
+  // the user never typed.
+  async function typeIntoTextField(el: HTMLElement, name: string, raw: string) {
+    const ti = el.querySelector(`civ-text-input[name="${name}"]`)!;
+    const inner = ti.querySelector('input') as HTMLInputElement;
+    inner.value = raw;
+    inner.dispatchEvent(new Event('input', { bubbles: true }));
+    await elementUpdated(ti);
+  }
+
+  it('keeps the user-typed "236" in the DOM input while typing (no leading zero)', async () => {
+    const el = await fixture<CivTimePicker>('<civ-time-picker mode="text" name="t" label="When"></civ-time-picker>');
+    await typeIntoTextField(el, 't-time', '236');
+    const inner = el.querySelector('civ-text-input[name="t-time"] input') as HTMLInputElement;
+    // Critically: the DOM input.value is unchanged from what the user typed.
+    expect(inner.value).toBe('236');
+  });
+
+  it('displays "2:36" (no leading zero) after the user blurs', async () => {
+    const el = await fixture<CivTimePicker>('<civ-time-picker mode="text" name="t" label="When"></civ-time-picker>');
+    const ti = el.querySelector('civ-text-input[name="t-time"]')!;
+    const inner = ti.querySelector('input') as HTMLInputElement;
+    inner.value = '236';
+    inner.dispatchEvent(new Event('input', { bubbles: true }));
+    inner.dispatchEvent(new Event('change', { bubbles: true }));
+    await elementUpdated(el);
+    const tiAfter = el.querySelector('civ-text-input[name="t-time"]') as any;
+    expect(tiAfter.value).toBe('2:36');
+    // The DOM input also picks up the formatted display because the
+    // text-input's own template binding writes .value through.
+    const innerAfter = el.querySelector('civ-text-input[name="t-time"] input') as HTMLInputElement;
+    expect(innerAfter.value).toBe('2:36');
+  });
+
+  it('accepts colon-separated user input ("2:36") and routes correctly', async () => {
+    const el = await fixture<CivTimePicker>('<civ-time-picker mode="text" name="t" label="When"></civ-time-picker>');
+    const ti = el.querySelector('civ-text-input[name="t-time"]')!;
+    const inner = ti.querySelector('input') as HTMLInputElement;
+    inner.value = '2:36';
+    inner.dispatchEvent(new Event('input', { bubbles: true }));
+    inner.dispatchEvent(new Event('change', { bubbles: true }));
+    await elementUpdated(el);
+    // Internal split honors the colon position, not a length-based heuristic.
+    expect((el as any)._hour).toBe('2');
+    expect((el as any)._minute).toBe('36');
+  });
+
+  it('preserves a partial "12:" typed by the user (does not collapse the colon)', async () => {
+    // Without the colon, length-3 ("123") would be parsed as h="1", m="23".
+    // The explicit colon disambiguates: h="12", m="" (still typing).
+    const el = await fixture<CivTimePicker>('<civ-time-picker mode="text" name="t" label="When"></civ-time-picker>');
+    const ti = el.querySelector('civ-text-input[name="t-time"]')!;
+    const inner = ti.querySelector('input') as HTMLInputElement;
+    inner.value = '12:';
+    inner.dispatchEvent(new Event('input', { bubbles: true }));
+    await elementUpdated(el);
+    expect((el as any)._hour).toBe('12');
+    expect((el as any)._minute).toBe('');
   });
 });
 

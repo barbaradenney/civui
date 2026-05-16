@@ -137,8 +137,24 @@ export class CivCombobox extends LegendHeadingMixin(CivFormElement) {
       return this._cachedFilteredOptions;
     }
     const lower = this._filter.toLowerCase();
+    // Build a "compact" form of the filter that strips non-alphanumeric
+    // characters. This lets a user type "230" and match the label
+    // "2:30 PM" (compact form "230pm") — the key affordance the time
+    // picker relies on. Plain substring still wins for typed colons
+    // ("2:30") and AM/PM modifiers ("9 AM" → "9am").
+    const compact = lower.replace(/[^a-z0-9]/g, '');
     this._cachedFilter = this._filter;
-    this._cachedFilteredOptions = this.options.filter((o) => o.label.toLowerCase().includes(lower));
+    this._cachedFilteredOptions = this.options.filter((o) => {
+      const label = o.label.toLowerCase();
+      if (label.includes(lower)) return true;
+      // Only fall back to compact matching when the filter has at
+      // least one digit. Pure-letter substrings would otherwise
+      // produce surprising matches against label fragments (e.g.
+      // typing "PM" matching every afternoon slot's compact form).
+      if (!compact || !/\d/.test(compact)) return false;
+      const labelCompact = label.replace(/[^a-z0-9]/g, '');
+      return labelCompact.includes(compact);
+    });
     return this._cachedFilteredOptions;
   }
 
@@ -455,8 +471,29 @@ export class CivCombobox extends LegendHeadingMixin(CivFormElement) {
       // If focus moved outside the combobox wrapper, close
       if (wrapper && !wrapper.contains(active)) {
         this._setOpen(false);
+        this._reconcileFilterOnBlur();
       }
     });
+  }
+
+  /**
+   * When the user blurs without picking an option, the input might
+   * still show their typed filter while `value === ''`. That's a stale
+   * display: form data is empty but the user sees text. Reconcile so
+   * the input either shows the selected option's label (when one is
+   * still selected) or clears entirely.
+   */
+  private _reconcileFilterOnBlur(): void {
+    const selected = this.options.find((o) => o.value === this.value)
+      ?? this._remoteOptions.find((o) => o.value === this.value);
+    if (selected) {
+      // Snap display back to the canonical label.
+      if (this._filter !== selected.label) this._filter = selected.label;
+      return;
+    }
+    // No selection — clear the typed-but-unmatched text so the user
+    // doesn't see a value the form won't submit.
+    if (this._filter) this._filter = '';
   }
 
   /** Prevent blur when clicking inside the listbox (options, scrollbar). */
@@ -583,7 +620,17 @@ export class CivCombobox extends LegendHeadingMixin(CivFormElement) {
       }
 
       case 'Tab':
-        this._setOpen(false);
+        // Commit the active option (if any) before yielding focus. This
+        // matches the WAI-ARIA combobox guidance: a highlighted option
+        // is "selectable" via Tab. Without this, a user who typed,
+        // arrow-navigated to a match, then Tabbed away would lose the
+        // selection — the listbox just closed and `value` was already
+        // cleared by `_onFilterInput`.
+        if (this._open && this._activeIndex >= 0 && this._activeIndex < filtered.length) {
+          this._selectOption(filtered[this._activeIndex]);
+        } else {
+          this._setOpen(false);
+        }
         break;
     }
   }

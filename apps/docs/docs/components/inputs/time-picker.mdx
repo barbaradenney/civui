@@ -160,13 +160,29 @@ either an exact match for a slot or empty.
 
 ### Combo mode
 - Single `<input role="combobox">` with an associated listbox. Arrow keys
-  navigate, Enter selects, Escape closes. Typing filters the slot list by
-  substring match.
-- The slot list is bounded — typing an unmatched value clears the
-  selection rather than committing arbitrary text. This means users can't
-  type "14:37" and have it accepted unless that slot exists; pick
-  `minute-step` accordingly, or fall back to select mode for free-form
-  precision.
+  navigate, Enter and Tab both commit the highlighted slot, Escape
+  restores the previous selection.
+- **Digit-aware filter.** Typing matches both the visible label and the
+  digit-only form of the label, so `"230"` finds `"2:30 AM"` and
+  `"2:30 PM"`, and `"9 AM"` finds `"9:00 AM"`. The full label substring
+  also matches (`"5:30"` → 5:30 AM/PM), as does the AM/PM modifier
+  combined with digits (`"9p"` → 9:00 PM, 9:15 PM, …).
+- **Out-of-grid / out-of-bounds `value`.** If the consumer sets
+  `value="14:37"` with `minute-step="15"`, OR `value="08:00"` with
+  `min="09:00"`, the value doesn't match a generated slot. The
+  component injects a synthetic option so the input still renders the
+  formatted label — the user sees what's submitted. Picking a real
+  slot replaces it.
+- **Free-typed unmatched text.** Typing a string the filter can't
+  match leaves the form value empty. On blur, the input snaps back
+  to the selected option's label, or clears entirely if there's no
+  selection.
+
+### Combo mode props
+- Use `label` for combo mode (the combobox renders a `<label for>`).
+  `legend` is accepted as a fallback so consumers sharing markup
+  between modes don't have to swap props — but `label` is the
+  canonical surface in combo mode.
 
 ### Select mode
 - Real `<fieldset>` with a `<legend>`. If no `legend` is set, a

@@ -773,3 +773,175 @@ describe('civ-combobox async loadOptions', () => {
     }
   });
 });
+
+describe('civ-combobox — digit-aware filter (time-picker affordance)', () => {
+  it('matches by digit-only filter against digit-stripped label', async () => {
+    const el = await fixture(`
+      <civ-combobox label="Time">
+      </civ-combobox>
+    `) as any;
+    el.options = [
+      { value: '02:30', label: '2:30 AM' },
+      { value: '14:30', label: '2:30 PM' },
+      { value: '09:00', label: '9:00 AM' },
+    ];
+    await elementUpdated(el);
+
+    // The user types "230" — no colon, no space. Both 2:30 AM and 2:30 PM
+    // should match because their digit-only forms are "230am" and "230pm".
+    const input = el.querySelector('input') as HTMLInputElement;
+    input.value = '230';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    await elementUpdated(el);
+
+    const visible = el.querySelectorAll('.civ-combobox-option');
+    const labels = Array.from(visible).map((n: any) => n.textContent.trim());
+    expect(labels).toEqual(expect.arrayContaining(['2:30 AM', '2:30 PM']));
+    expect(labels).not.toContain('9:00 AM');
+  });
+
+  it('still matches by full label substring (existing behavior preserved)', async () => {
+    const el = await fixture(`
+      <civ-combobox label="Time"></civ-combobox>
+    `) as any;
+    el.options = [
+      { value: '02:30', label: '2:30 AM' },
+      { value: '14:30', label: '2:30 PM' },
+    ];
+    await elementUpdated(el);
+
+    const input = el.querySelector('input') as HTMLInputElement;
+    input.value = '2:30';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    await elementUpdated(el);
+
+    expect(el.querySelectorAll('.civ-combobox-option').length).toBe(2);
+  });
+
+  it('does NOT fall back to digit-stripped match for pure-letter input', async () => {
+    // Typing "AM" should NOT match every morning slot's compact form
+    // "1200am" / "100am" / etc. Letter-only filters are full-label only.
+    const el = await fixture(`
+      <civ-combobox label="Time"></civ-combobox>
+    `) as any;
+    el.options = [
+      { value: '08:00', label: '8:00 AM' },
+      { value: '20:00', label: '8:00 PM' },
+    ];
+    await elementUpdated(el);
+
+    const input = el.querySelector('input') as HTMLInputElement;
+    input.value = 'am';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    await elementUpdated(el);
+
+    // Full-label substring match wins — "am" matches "8:00 am" but
+    // not "8:00 pm".
+    const labels = Array.from(el.querySelectorAll('.civ-combobox-option')).map((n: any) => n.textContent.trim());
+    expect(labels).toEqual(['8:00 AM']);
+  });
+});
+
+describe('civ-combobox — blur reconciliation', () => {
+  it('clears the typed filter on blur when no option is selected', async () => {
+    const el = await fixture(`
+      <civ-combobox label="Pick"></civ-combobox>
+    `) as any;
+    el.options = [
+      { value: 'a', label: 'Apple' },
+      { value: 'b', label: 'Banana' },
+    ];
+    await elementUpdated(el);
+
+    const input = el.querySelector('input') as HTMLInputElement;
+    input.value = 'zzz';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    await elementUpdated(el);
+
+    // Form value is empty, but display still shows the typed text.
+    expect(el.value).toBe('');
+    expect(input.value).toBe('zzz');
+
+    // Blur — focus moves outside the wrapper.
+    input.dispatchEvent(new Event('blur'));
+    await new Promise<void>((r) => requestAnimationFrame(() => r()));
+    await elementUpdated(el);
+
+    // Now the display is cleared.
+    expect(input.value).toBe('');
+  });
+
+  it('snaps back to the selected option label on blur', async () => {
+    const el = await fixture(`
+      <civ-combobox label="Pick" value="a"></civ-combobox>
+    `) as any;
+    el.options = [
+      { value: 'a', label: 'Apple' },
+    ];
+    await elementUpdated(el);
+
+    const input = el.querySelector('input') as HTMLInputElement;
+    // User mid-typing alters the display.
+    input.value = 'Banan';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    await elementUpdated(el);
+
+    // Filter cleared the value (typing started fresh).
+    expect(el.value).toBe('');
+
+    // Re-select via JS to simulate a state where value still matches a known option.
+    el.value = 'a';
+    await elementUpdated(el);
+
+    input.dispatchEvent(new Event('blur'));
+    await new Promise<void>((r) => requestAnimationFrame(() => r()));
+    await elementUpdated(el);
+
+    expect(input.value).toBe('Apple');
+  });
+});
+
+describe('civ-combobox — Tab commits the highlighted option', () => {
+  it('selects the active option when Tab is pressed with the listbox open', async () => {
+    const el = await fixture(`
+      <civ-combobox label="Pick"></civ-combobox>
+    `) as any;
+    el.options = [
+      { value: 'a', label: 'Apple' },
+      { value: 'b', label: 'Banana' },
+    ];
+    await elementUpdated(el);
+
+    const input = el.querySelector('input') as HTMLInputElement;
+    input.focus();
+    // Open the listbox via ArrowDown.
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    await elementUpdated(el);
+    // Advance to the second option.
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    await elementUpdated(el);
+
+    // Tab away — should commit 'b' (Banana), not silently discard.
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true }));
+    await elementUpdated(el);
+
+    expect(el.value).toBe('b');
+    expect(input.value).toBe('Banana');
+  });
+
+  it('Tab without an active option just closes the listbox (no change)', async () => {
+    const el = await fixture(`
+      <civ-combobox label="Pick"></civ-combobox>
+    `) as any;
+    el.options = [
+      { value: 'a', label: 'Apple' },
+    ];
+    await elementUpdated(el);
+
+    const input = el.querySelector('input') as HTMLInputElement;
+    // Tab with listbox closed — no-op.
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true }));
+    await elementUpdated(el);
+    expect(el.value).toBe('');
+  });
+});

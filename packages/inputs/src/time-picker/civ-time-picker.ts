@@ -97,6 +97,11 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
   override connectedCallback(): void {
     super.connectedCallback();
     this._parseValue();
+    // Select-mode children bubble civ-input/civ-change to the host;
+    // we re-dispatch as the host's own assembled event. Combo mode
+    // uses an explicit `@civ-change` template binding instead, so
+    // these listeners no-op when `mode === 'combo'`. Registered
+    // unconditionally so a runtime mode switch keeps working.
     this.addEventListener('civ-input', this._boundFieldInput as EventListener);
     this.addEventListener('civ-change', this._boundFieldChange as EventListener);
   }
@@ -132,15 +137,22 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
   /**
    * Effective minute step with mode-aware default: combo mode defaults
    * to 15 (scheduling-friendly slot density), select mode defaults to
-   * 5 (most precision without an unwieldy dropdown). Explicit
-   * `minute-step` overrides both.
+   * 5 (most precision without an unwieldy dropdown).
+   *
+   * `minute-step` defaults to 0 as an "unset" sentinel — the prop type
+   * is `number` so we can't use `undefined` from HTML attributes.
+   * Explicit positive integers override the mode default. Negative
+   * values, non-integers, and explicit `0` all fall back with a warn,
+   * because there's no sensible "step = 0" semantics for time slots.
    */
   private _effectiveMinuteStep(): number {
     if (this.minuteStep > 0 && this.minuteStep === Math.floor(this.minuteStep)) {
       return this.minuteStep;
     }
-    if (this.minuteStep !== 0 && this.minuteStep !== undefined) {
-      // Non-zero but invalid — warn (zero is the unset sentinel).
+    // Skip the warn for the genuine unset case (no attribute supplied
+    // by the consumer, leaving Lit's default of 0 from the @property
+    // decoration).
+    if (this.minuteStep !== 0) {
       warnInvalidProp('civ-time-picker', 'minute-step', 'a positive integer (e.g. 1, 5, 15, 30)', String(this.minuteStep));
     }
     return this.mode === 'combo' ? 15 : 5;
@@ -246,6 +258,13 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
    * `ComboboxOption` with `value` as 24-hour ISO `HH:MM` and `label`
    * formatted per the `format` prop. Bounded by `min` and `max` when
    * set; otherwise covers the full day.
+   *
+   * When `this.value` is set but doesn't match a generated slot
+   * (because of `minute-step` granularity OR out-of-`min`/`max`
+   * bounds), the actual value is injected as a synthetic option so
+   * the combobox can find and display it. Without this, the input
+   * would render blank while `el.value` still held the unmatched
+   * string — submitting a value the user cannot see.
    */
   private _comboOptions(): ComboboxOption[] {
     const step = this._effectiveMinuteStep();
@@ -261,17 +280,43 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
         opts.push({ value: iso, label: this._formatTimeForDisplay(h, m) });
       }
     }
+    // Synthetic option: the consumer's `value` doesn't align with the
+    // slot grid (e.g. value="14:37" with minute-step=15) or sits
+    // outside min/max bounds. Insert it sorted by time so the dropdown
+    // stays ordered.
+    if (this.value && !opts.some((o) => o.value === this.value)) {
+      const parsed = this._parseTimeToMinutes(this.value);
+      if (parsed != null) {
+        const h = Math.floor(parsed / 60);
+        const m = parsed % 60;
+        const synthetic = { value: this.value, label: this._formatTimeForDisplay(h, m) };
+        // Sort-insert by total minutes.
+        let inserted = false;
+        for (let i = 0; i < opts.length; i++) {
+          const optMinutes = this._parseTimeToMinutes(opts[i].value);
+          if (optMinutes != null && optMinutes > parsed) {
+            opts.splice(i, 0, synthetic);
+            inserted = true;
+            break;
+          }
+        }
+        if (!inserted) opts.push(synthetic);
+      }
+    }
     return opts;
   }
 
   /**
-   * Parse an `HH:MM` (24-hour) string to minutes-since-midnight, or
-   * null when the input is empty / malformed. Used for `min`/`max`
-   * bounds in combo mode.
+   * Parse a strict 24-hour `HH:MM` string to minutes-since-midnight,
+   * or null when the input is empty / malformed. Requires zero-padded
+   * hours (`"09:00"`, not `"9:00"`) so the documented schema contract
+   * matches the parser — important for cross-platform implementations
+   * that consume `min` / `max` from the same string. The `value` prop
+   * is also validated through here.
    */
   private _parseTimeToMinutes(s: string): number | null {
     if (!s) return null;
-    const match = s.match(/^(\d{1,2}):(\d{2})$/);
+    const match = s.match(/^(\d{2}):(\d{2})$/);
     if (!match) return null;
     const h = Number(match[1]);
     const m = Number(match[2]);
@@ -462,9 +507,14 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
    * `civ-change` with `{ value }` where value is the picked option's
    * value (our 24-hour ISO string). We just need to re-parse sub-fields
    * and forward the host event with the standard detail shape.
+   *
+   * Guarded against `disabled` so a stray event in flight when the
+   * form disables mid-render doesn't mutate the host value. Symmetric
+   * with civ-form's expectation that disabled fields stay inert.
    */
   private _onComboChange(e: CustomEvent<{ value: string }>): void {
     if (e.target === this) return;
+    if (this.disabled) return;
     e.stopImmediatePropagation();
     this.value = e.detail.value || '';
     this._parseValue();

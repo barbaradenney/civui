@@ -365,3 +365,89 @@ describe('civ-time-picker — combo mode (USWDS pattern)', () => {
     expect(el.querySelector('fieldset')).not.toBeNull();
   });
 });
+
+describe('civ-time-picker — combo mode: synthetic option for unmatched value', () => {
+  it('injects a synthetic option when value does not align with minute-step', async () => {
+    // value="14:37" but minute-step=15 → 14:37 isn't on the grid.
+    // Without a synthetic option, the input would render empty.
+    const el = await fixture<CivTimePicker>('<civ-time-picker label="When" value="14:37" minute-step="15"></civ-time-picker>');
+    await elementUpdated(el);
+    const combo = el.querySelector('civ-combobox') as any;
+    const match = combo.options.find((o: any) => o.value === '14:37');
+    expect(match).toBeDefined();
+    expect(match.label).toBe('2:37 PM');
+  });
+
+  it('injects a synthetic option when value is outside min/max bounds', async () => {
+    const el = await fixture<CivTimePicker>('<civ-time-picker label="When" value="08:00" min="09:00" max="17:00"></civ-time-picker>');
+    await elementUpdated(el);
+    const combo = el.querySelector('civ-combobox') as any;
+    const match = combo.options.find((o: any) => o.value === '08:00');
+    expect(match).toBeDefined();
+    expect(match.label).toBe('8:00 AM');
+  });
+
+  it('sorts the synthetic option by time alongside the regular slots', async () => {
+    const el = await fixture<CivTimePicker>('<civ-time-picker label="When" value="14:37" minute-step="60"></civ-time-picker>');
+    await elementUpdated(el);
+    const combo = el.querySelector('civ-combobox') as any;
+    const idx14 = combo.options.findIndex((o: any) => o.value === '14:00');
+    const idx1437 = combo.options.findIndex((o: any) => o.value === '14:37');
+    const idx15 = combo.options.findIndex((o: any) => o.value === '15:00');
+    expect(idx14).toBeLessThan(idx1437);
+    expect(idx1437).toBeLessThan(idx15);
+  });
+
+  it('does NOT inject a synthetic option when value already matches a slot', async () => {
+    const el = await fixture<CivTimePicker>('<civ-time-picker label="When" value="09:00" min="09:00" max="17:00" minute-step="15"></civ-time-picker>');
+    await elementUpdated(el);
+    const combo = el.querySelector('civ-combobox') as any;
+    const matches = combo.options.filter((o: any) => o.value === '09:00');
+    expect(matches.length).toBe(1);
+  });
+
+  it('does NOT inject a synthetic option when value is malformed', async () => {
+    const el = await fixture<CivTimePicker>('<civ-time-picker label="When" value="not-a-time"></civ-time-picker>');
+    await elementUpdated(el);
+    const combo = el.querySelector('civ-combobox') as any;
+    // No synthetic — every option came from the grid (all are valid ISO).
+    expect(combo.options.every((o: any) => /^\d{2}:\d{2}$/.test(o.value))).toBe(true);
+  });
+});
+
+describe('civ-time-picker — combo mode: disabled guard', () => {
+  it('_onComboChange does not mutate value when host is disabled', async () => {
+    // The combobox's own civ-change still bubbles to external listeners
+    // (we can't suppress events from a child we don't control). But the
+    // host's re-dispatch with assembled detail must NOT fire, and
+    // `this.value` must NOT change. That's what the disabled guard
+    // protects.
+    const el = await fixture<CivTimePicker>('<civ-time-picker label="When" disabled></civ-time-picker>');
+    const combo = el.querySelector('civ-combobox') as HTMLElement;
+    combo.dispatchEvent(new CustomEvent('civ-change', {
+      detail: { value: '14:30' },
+      bubbles: true,
+    }));
+    await elementUpdated(el);
+    expect(el.value).toBe('');
+  });
+});
+
+describe('civ-time-picker — min/max strict ISO parsing', () => {
+  it('rejects single-digit hour like "9:00" in min/max', async () => {
+    // Non-zero-padded hour is not the documented contract; treating it
+    // as invalid keeps cross-platform parsers consistent. The invalid
+    // min silently falls back to "no min bound" — the max bound still
+    // applies (00:00 → 17:00 inclusive at 15-min step = 69 slots).
+    const el = await fixture<CivTimePicker>('<civ-time-picker label="When" min="9:00" max="17:00"></civ-time-picker>');
+    const combo = el.querySelector('civ-combobox') as any;
+    expect(combo.options[0].value).toBe('00:00');
+    expect(combo.options[combo.options.length - 1].value).toBe('17:00');
+  });
+
+  it('accepts zero-padded "09:00" for min', async () => {
+    const el = await fixture<CivTimePicker>('<civ-time-picker label="When" min="09:00" max="17:00" minute-step="30"></civ-time-picker>');
+    const combo = el.querySelector('civ-combobox') as any;
+    expect(combo.options[0].value).toBe('09:00');
+  });
+});

@@ -888,6 +888,153 @@ describe('text-input inline icons', () => {
     });
   });
 
+  describe('currency: whole-dollar mode (decimals=0)', () => {
+    it('strips the decimal point and fractional digits during typing', async () => {
+      const el = await fixture<CivTextInput>(
+        '<civ-text-input label="Amount" mask="currency" decimals="0"></civ-text-input>'
+      );
+      const input = el.querySelector('input') as HTMLInputElement;
+      input.value = '1234.56';
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      await elementUpdated(el);
+      expect(el.value).toBe('123456');
+    });
+
+    it('normalizes by rounding (not truncating) on blur', async () => {
+      const el = await fixture<CivTextInput>(
+        '<civ-text-input label="Amount" mask="currency" decimals="0"></civ-text-input>'
+      );
+      el.value = '1234.6';
+      const input = el.querySelector('input') as HTMLInputElement;
+      input.dispatchEvent(new Event('blur', { bubbles: true }));
+      await el.updateComplete;
+      expect(el.value).toBe('1235');
+    });
+
+    it('formats display without trailing ".00" suffix', async () => {
+      const el = await fixture<CivTextInput>(
+        '<civ-text-input label="Amount" mask="currency" decimals="0" value="1234"></civ-text-input>'
+      );
+      await el.updateComplete;
+      const input = el.querySelector('input') as HTMLInputElement;
+      expect(input.value).toBe('1,234');
+    });
+  });
+
+  describe('currency: min/max bounds', () => {
+    it('flags an inline error when the value is below `min`', async () => {
+      const el = await fixture<CivTextInput>(
+        '<civ-text-input label="Amount" mask="currency" min="100"></civ-text-input>'
+      );
+      el.value = '50';
+      const input = el.querySelector('input') as HTMLInputElement;
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+      await elementUpdated(el);
+      expect(el.error).toContain('at least');
+      expect(el.error).toContain('$100');
+    });
+
+    it('flags an inline error when the value exceeds `max`', async () => {
+      const el = await fixture<CivTextInput>(
+        '<civ-text-input label="Amount" mask="currency" max="10000"></civ-text-input>'
+      );
+      el.value = '15000';
+      const input = el.querySelector('input') as HTMLInputElement;
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+      await elementUpdated(el);
+      expect(el.error).toContain('at most');
+      expect(el.error).toContain('$10,000');
+    });
+
+    it('clears the bounds error once the value returns to range', async () => {
+      const el = await fixture<CivTextInput>(
+        '<civ-text-input label="Amount" mask="currency" min="100" max="10000"></civ-text-input>'
+      );
+      const input = el.querySelector('input') as HTMLInputElement;
+      el.value = '50';
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+      await elementUpdated(el);
+      expect(el.error).toBeTruthy();
+
+      el.value = '500';
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+      await elementUpdated(el);
+      expect(el.error).toBe('');
+    });
+
+    it('formats bound error messages with the active decimals', async () => {
+      const el = await fixture<CivTextInput>(
+        '<civ-text-input label="Amount" mask="currency" decimals="0" max="500"></civ-text-input>'
+      );
+      el.value = '1000';
+      const input = el.querySelector('input') as HTMLInputElement;
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+      await elementUpdated(el);
+      // No ".00" tail in whole-dollar mode.
+      expect(el.error).toContain('$500');
+      expect(el.error).not.toContain('$500.00');
+    });
+  });
+
+  describe('currency: allow-negative', () => {
+    it('rejects negative values by default', async () => {
+      const el = await fixture<CivTextInput>(
+        '<civ-text-input label="Amount" mask="currency"></civ-text-input>'
+      );
+      el.value = '-50';
+      const input = el.querySelector('input') as HTMLInputElement;
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+      await elementUpdated(el);
+      expect(el.error).toBeTruthy();
+    });
+
+    it('accepts negative values when `allow-negative` is set', async () => {
+      const el = await fixture<CivTextInput>(
+        '<civ-text-input label="Adjustment" mask="currency" allow-negative></civ-text-input>'
+      );
+      el.value = '-50';
+      const input = el.querySelector('input') as HTMLInputElement;
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+      await elementUpdated(el);
+      expect(el.error).toBe('');
+    });
+
+    it('preserves the leading minus during input filtering', async () => {
+      const el = await fixture<CivTextInput>(
+        '<civ-text-input label="Adjustment" mask="currency" allow-negative></civ-text-input>'
+      );
+      const input = el.querySelector('input') as HTMLInputElement;
+      input.value = '-1234.56';
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      await elementUpdated(el);
+      expect(el.value).toBe('-1234.56');
+    });
+
+    it('formats negative values with a leading minus in the locale display', async () => {
+      const el = await fixture<CivTextInput>(
+        '<civ-text-input label="Adjustment" mask="currency" allow-negative value="-1234.5"></civ-text-input>'
+      );
+      // Trigger normalization via blur.
+      el.value = '-1234.5';
+      const input = el.querySelector('input') as HTMLInputElement;
+      input.dispatchEvent(new Event('blur', { bubbles: true }));
+      await el.updateComplete;
+      // toLocaleString renders negatives with a leading "-" by default.
+      expect(input.value).toBe('-1,234.50');
+    });
+
+    it('still applies min/max checks when allow-negative is on', async () => {
+      const el = await fixture<CivTextInput>(
+        '<civ-text-input label="Adjustment" mask="currency" allow-negative min="-100"></civ-text-input>'
+      );
+      el.value = '-500';
+      const input = el.querySelector('input') as HTMLInputElement;
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+      await elementUpdated(el);
+      expect(el.error).toContain('at least');
+    });
+  });
+
   describe('live-mode mask handlers', () => {
     it('paste filters non-digits and reformats (mask-mode=live)', async () => {
       const el = await fixture<CivTextInput>(

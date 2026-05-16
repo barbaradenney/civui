@@ -23,3 +23,7 @@
 | `leading-icon-label` | `string` | `''` | Accessible label for the leading icon. When omitted, icon is decorative (aria-hidden) |
 | `trailing-icon` | `string` | `''` | Icon rendered inside the input on the trailing edge. Ignored when suffix is set or the clear button is showing |
 | `trailing-icon-label` | `string` | `''` | Accessible label for the trailing icon. When omitted, icon is decorative |
+| `decimals` | `number` | `2` | Currency-mask only: decimal places to keep ("1,234.56" with 2, "1,234" with 0). `0` is whole-dollar mode for tax-style fields (W-4 line 4c, VA benefits) |
+| `min` | `number` | — | Currency-mask only: minimum allowed amount. Out-of-range values surface an inline error on blur |
+| `max` | `number` | — | Currency-mask only: maximum allowed amount. Out-of-range values surface an inline error on blur |
+| `allow-negative` | `boolean` | `false` | Currency-mask only: accept negative amounts (refunds, adjustments). Standard mode rejects values below zero |

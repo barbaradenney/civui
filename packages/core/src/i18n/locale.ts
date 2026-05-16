@@ -151,6 +151,8 @@ export interface CivLocaleStrings {
   maskPatternError: string;
   maskCurrencyHint: string;
   maskCurrencyError: string;
+  maskCurrencyMinError: string; // "Amount must be at least {min}"
+  maskCurrencyMaxError: string; // "Amount must be at most {max}"
 
   // Input char/word counts (shared by civ-text-input and civ-textarea)
   inputCharsRemaining: string; // "{count} characters remaining"
@@ -822,6 +824,8 @@ const defaultStrings: CivLocaleStrings = {
   maskPatternError: '{label} does not match the expected format',
   maskCurrencyHint: 'For example: 1,234.56',
   maskCurrencyError: 'Enter a valid dollar amount',
+  maskCurrencyMinError: 'Amount must be at least {min}',
+  maskCurrencyMaxError: 'Amount must be at most {max}',
 
   inputCharsRemaining: '{count} characters remaining',
   textareaWordsRemaining: '{count} words remaining',

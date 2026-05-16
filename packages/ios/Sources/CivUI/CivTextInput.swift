@@ -207,6 +207,18 @@ public struct CivTextInput: View {
     /// Accessible label for the trailing icon.
     public var trailingIconLabel: String
 
+    /// Currency mask only: decimal places (0 = whole-dollar mode).
+    public var decimals: Int
+
+    /// Currency mask only: minimum allowed amount.
+    public var min: Double?
+
+    /// Currency mask only: maximum allowed amount.
+    public var max: Double?
+
+    /// Currency mask only: accept negative amounts.
+    public var allowNegative: Bool
+
     /// Mask display mode (e.g., "blur", "always").
     public var maskMode: String
 
@@ -255,7 +267,11 @@ public struct CivTextInput: View {
         trailingIcon: String = "",
         trailingIconLabel: String = "",
         maskMode: String = "blur",
-        validateType: String = ""
+        validateType: String = "",
+        decimals: Int = 2,
+        min: Double? = nil,
+        max: Double? = nil,
+        allowNegative: Bool = false
     ) {
         self.label = label
         self._value = value
@@ -292,6 +308,10 @@ public struct CivTextInput: View {
         self.trailingIconLabel = trailingIconLabel
         self.maskMode = maskMode
         self.validateType = validateType
+        self.decimals = decimals
+        self.min = min
+        self.max = max
+        self.allowNegative = allowNegative
     }
 
     // MARK: - Body

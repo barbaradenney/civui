@@ -47,6 +47,33 @@ For non-currency numeric input (quantities, ages, percentages) use
 
 <StoryEmbed id="forms-inputs-currency--government-form-example" />
 
+### Whole dollars (`decimals="0"`)
+
+<StoryEmbed id="forms-inputs-currency--whole-dollars" />
+
+For tax-style fields that ask for whole-dollar amounts (W-4 line 4c,
+partial FAFSA income lines, VA benefit applications). The decimal key
+is rejected during typing, blur rounds to the nearest dollar, and the
+display omits the `.00` suffix.
+
+### Min / max bounds
+
+<StoryEmbed id="forms-inputs-currency--with-min-max" />
+
+Inline bounds validation. Out-of-range values surface an error on blur
+rather than waiting for a server round-trip. Pair with `required` for
+hard-stop submission.
+
+### Allow negative (refunds / adjustments)
+
+<StoryEmbed id="forms-inputs-currency--allow-negative" />
+
+The default validator rejects negative amounts ("Enter a valid dollar
+amount"). Opt in with `allow-negative` for refunds, adjustments, and
+expense-report fields where a debit is meaningful. Min/max bounds still
+apply when negatives are allowed (e.g. `min="-1000" max="1000"` for a
+±$1,000 adjustment window).
+
 [Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-inputs-currency--default)
 
 ## Shared Props

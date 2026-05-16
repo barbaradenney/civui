@@ -38,4 +38,25 @@ describe('civ-currency', () => {
     el.formResetCallback();
     expect(el.value).toBe('');
   });
+
+  it('forwards decimals="0" to switch the inner input into whole-dollar mode', async () => {
+    const el = await fixture('<civ-currency name="amount" decimals="0"></civ-currency>') as CivCurrency;
+    const input = el.querySelector('civ-text-input') as any;
+    expect(input.getAttribute('decimals')).toBe('0');
+    // Decimal-mode keyboard switches to numeric (no decimal key).
+    expect(input.getAttribute('inputmode')).toBe('numeric');
+  });
+
+  it('forwards min and max bounds to the inner input', async () => {
+    const el = await fixture('<civ-currency name="amount" min="100" max="10000"></civ-currency>') as CivCurrency;
+    const input = el.querySelector('civ-text-input') as any;
+    expect(input.getAttribute('min')).toBe('100');
+    expect(input.getAttribute('max')).toBe('10000');
+  });
+
+  it('forwards allow-negative to the inner input', async () => {
+    const el = await fixture('<civ-currency name="amount" allow-negative></civ-currency>') as CivCurrency;
+    const input = el.querySelector('civ-text-input') as any;
+    expect(input.hasAttribute('allow-negative')).toBe(true);
+  });
 });

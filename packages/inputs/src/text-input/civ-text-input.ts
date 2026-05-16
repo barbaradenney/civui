@@ -103,6 +103,54 @@ export class CivTextInput extends LegendHeadingMixin(CivFormElement) {
   @property({ type: String, attribute: 'mask-mode' }) maskMode: 'blur' | 'live' = 'blur';
 
   /**
+   * Currency-mask only: number of decimal places to keep / display.
+   * Defaults to `2` ("1,234.56"). Set to `0` for whole-dollar mode
+   * — input rejects the decimal key, blur normalizes to an integer
+   * value, display omits the `.00` suffix ("1,234"). Government
+   * forms with whole-dollar amount fields (W-4 line 4c, VA benefit
+   * applications) use `decimals="0"`.
+   *
+   * Ignored when the currency mask is not active.
+   */
+  @property({ type: Number }) decimals = 2;
+
+  /**
+   * Currency-mask only: minimum allowed dollar amount. When set and
+   * the user enters a smaller value, blur produces an inline error
+   * ("Amount must be at least $X"). Defaults to undefined (no floor).
+   *
+   * Negative values are independently controlled by the currency
+   * validator (negatives are rejected unless overridden); set
+   * `min="0"` for the explicit "no negative" message instead of the
+   * generic "Enter a valid dollar amount".
+   *
+   * Ignored when the currency mask is not active.
+   */
+  @property({ type: Number }) min?: number;
+
+  /**
+   * Currency-mask only: maximum allowed dollar amount. When set and
+   * the user enters a larger value, blur produces an inline error
+   * ("Amount must be at most $X"). Defaults to undefined (no ceiling).
+   *
+   * Ignored when the currency mask is not active.
+   */
+  @property({ type: Number }) max?: number;
+
+  /**
+   * Currency-mask only: accept negative amounts. Defaults to `false`
+   * — the standard currency validator rejects values below zero
+   * ("Enter a valid dollar amount"). Set to `true` for refund,
+   * adjustment, or expense-report fields where a debit makes sense.
+   *
+   * When enabled, the input accepts a leading minus sign ("-1234.56")
+   * and the display uses the locale-aware negative format ("-$1,234.56").
+   *
+   * Ignored when the currency mask is not active.
+   */
+  @property({ type: Boolean, attribute: 'allow-negative' }) allowNegative = false;
+
+  /**
    * Declarative validation — auto-validates on blur using the built-in
    * validator. No JavaScript needed.
    *
@@ -546,29 +594,45 @@ export class CivTextInput extends LegendHeadingMixin(CivFormElement) {
   }
 
   /**
-   * Handle input events for currency mask.
-   * Filters to digits and one decimal point, limits to 2 decimal places.
+   * Handle input events for currency mask. Filters to digits (and a
+   * single decimal point when `decimals > 0`, plus an optional
+   * leading minus when `allowNegative`), caps the fractional tail
+   * to `decimals` digits. In whole-dollar mode (`decimals=0`) the
+   * decimal point is stripped entirely along with anything that
+   * follows — typing `1234.56` reduces to `1234`.
    */
   private _onCurrencyInput(e: InputEvent): void {
     const input = e.target as HTMLInputElement;
     let raw = input.value;
 
-    // Remove all characters except digits and decimal point
-    raw = raw.replace(/[^\d.]/g, '');
-
-    // Allow only one decimal point
-    const parts = raw.split('.');
-    if (parts.length > 2) {
-      raw = parts[0] + '.' + parts.slice(1).join('');
+    // Preserve a single leading minus when `allowNegative` is on.
+    // Anywhere else (or any subsequent `-`) gets stripped along with
+    // other non-digit input.
+    let sign = '';
+    if (this.allowNegative && raw.trimStart().startsWith('-')) {
+      sign = '-';
+      raw = raw.replace(/-/g, '');
     }
 
-    // Re-split after dedup to get fresh parts for decimal check
-    const finalParts = raw.split('.');
-    if (finalParts.length === 2 && finalParts[1].length > 2) {
-      finalParts[1] = finalParts[1].substring(0, 2);
-      raw = finalParts.join('.');
+    if (this.decimals === 0) {
+      // Whole-dollar mode: digits only.
+      raw = raw.replace(/\D/g, '');
+    } else {
+      // Allow digits and a single decimal point.
+      raw = raw.replace(/[^\d.]/g, '');
+      const parts = raw.split('.');
+      if (parts.length > 2) {
+        raw = parts[0] + '.' + parts.slice(1).join('');
+      }
+      // Cap fractional digits.
+      const finalParts = raw.split('.');
+      if (finalParts.length === 2 && finalParts[1].length > this.decimals) {
+        finalParts[1] = finalParts[1].substring(0, this.decimals);
+        raw = finalParts.join('.');
+      }
     }
 
+    raw = sign + raw;
     this.value = raw;
     input.value = raw;
     dispatch(this, 'civ-input', { value: this.value });
@@ -597,16 +661,21 @@ export class CivTextInput extends LegendHeadingMixin(CivFormElement) {
       this.value = '';
       return;
     }
-    this.value = num.toFixed(2);
+    // Whole-dollar mode rounds away anything the user might have typed
+    // before clamping; standard mode normalizes to `decimals` places.
+    const normalized = this.decimals === 0
+      ? String(Math.round(num))
+      : num.toFixed(this.decimals);
+    this.value = normalized;
     void this.updateComplete.then(() => this._applyCurrencyDisplay());
   }
 
   /**
-   * Write the comma-formatted display ("1,234.50") into the DOM
-   * input. Single source of truth — called from `updated()` on value
-   * changes and from `_onCurrencyBlur` after `updateComplete`.
-   * Skipped when the input is focused so we don't fight the user's
-   * raw editing view.
+   * Write the comma-formatted display ("1,234.50", or "1,234" in
+   * whole-dollar mode) into the DOM input. Single source of truth —
+   * called from `updated()` on value changes and from
+   * `_onCurrencyBlur` after `updateComplete`. Skipped when the input
+   * is focused so we don't fight the user's raw editing view.
    */
   private _applyCurrencyDisplay(): void {
     if (!this._isCurrency) return;
@@ -618,9 +687,10 @@ export class CivTextInput extends LegendHeadingMixin(CivFormElement) {
     }
     const num = Number(this.value);
     if (Number.isFinite(num)) {
+      const fractionDigits = this.decimals === 0 ? 0 : this.decimals;
       input.value = num.toLocaleString('en-US', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
+        minimumFractionDigits: fractionDigits,
+        maximumFractionDigits: fractionDigits,
       });
     }
   }
@@ -637,14 +707,29 @@ export class CivTextInput extends LegendHeadingMixin(CivFormElement) {
   }
 
   /**
-   * Handle change events for currency mask.
-   * Validates and dispatches civ-change.
+   * Handle change events for currency mask. Validates the entered
+   * amount against the standard currency rules (non-negative, finite)
+   * AND the optional `min` / `max` bounds. Errors are tracked via
+   * `_maskError` so we can later clear our own diagnostic without
+   * clobbering a consumer-set error.
    */
   private _onCurrencyChange(): void {
     if (this.value) {
       const num = Number(this.value);
-      if (isNaN(num) || num < 0) {
-        this.error = t('maskCurrencyError');
+      let msg = '';
+      if (isNaN(num)) {
+        msg = t('maskCurrencyError');
+      } else if (!this.allowNegative && num < 0) {
+        // Standard mode rejects negatives. Opt in via `allow-negative`
+        // for refunds / adjustments. Min/max checks still apply.
+        msg = t('maskCurrencyError');
+      } else if (this.min != null && num < this.min) {
+        msg = interpolate(t('maskCurrencyMinError'), { min: this._formatCurrencyForError(this.min) });
+      } else if (this.max != null && num > this.max) {
+        msg = interpolate(t('maskCurrencyMaxError'), { max: this._formatCurrencyForError(this.max) });
+      }
+      if (msg) {
+        this.error = msg;
         this._maskError = true;
       } else if (this._maskError) {
         this.error = '';
@@ -657,6 +742,20 @@ export class CivTextInput extends LegendHeadingMixin(CivFormElement) {
 
     dispatch(this, 'civ-change', { value: this.value });
     this.sendAnalytics('change');
+  }
+
+  /**
+   * Format a numeric currency bound for embedding in an error
+   * message. Includes the `$` prefix and respects the active
+   * `decimals` so a `min=100` shows as "$100" in whole-dollar mode
+   * and "$100.00" in standard mode.
+   */
+  private _formatCurrencyForError(amount: number): string {
+    const fractionDigits = this.decimals === 0 ? 0 : this.decimals;
+    return '$' + amount.toLocaleString('en-US', {
+      minimumFractionDigits: fractionDigits,
+      maximumFractionDigits: fractionDigits,
+    });
   }
 
   /**

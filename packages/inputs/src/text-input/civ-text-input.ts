@@ -257,6 +257,20 @@ export class CivTextInput extends LegendHeadingMixin(CivFormElement) {
         input.value = this.value ? applyMask(this.value, this._activePattern) : '';
       }
     }
+    // Same story for the currency mask: the blur handler used to
+    // imperatively write a comma-formatted display ("1,234.50") into
+    // the DOM input, but Lit's reactive `.value="${this.value}"`
+    // binding then overwrote it back to the raw form ("1234.50") on
+    // re-render. Without this hook, the user saw no commas after
+    // their first blur — they had to focus + blur again, because on
+    // the second blur `this.value` didn't change so Lit didn't
+    // re-render to wipe the formatted display.
+    //
+    // Also covers prefilled `value="1234"` rendering as "1,234.00"
+    // on initial mount (first updated() with `value` in changedProps).
+    if (changed.has('value') && this._isCurrency) {
+      this._applyCurrencyDisplay();
+    }
   }
 
   protected override get _ariaDescribedBy(): string {
@@ -561,29 +575,53 @@ export class CivTextInput extends LegendHeadingMixin(CivFormElement) {
   }
 
   /**
-   * Handle blur events for currency mask.
-   * Formats display with commas and pads to 2 decimal places.
+   * Handle blur events for currency mask. Normalizes the value to
+   * 2 decimal places and triggers the comma-formatted display.
+   *
+   * We rely on `updated()` to write the formatted display when the
+   * value actually changes (first blur, prefill, external value
+   * change). For the re-blur case where `this.value` is already
+   * normalized — Lit detects no change and `updated()` doesn't see
+   * `value` in changedProperties — we explicitly apply the display
+   * via `updateComplete`. Waiting for `updateComplete` ensures
+   * Lit's `.value="${this.value}"` template binding has already
+   * settled, so our imperative write isn't immediately overwritten.
    */
   private _onCurrencyBlur(): void {
-    if (!this.value) return;
-    const input = this.querySelector('input') as HTMLInputElement;
+    if (!this.value) {
+      void this.updateComplete.then(() => this._applyCurrencyDisplay());
+      return;
+    }
     const num = Number(this.value);
     if (isNaN(num) || this.value === '.') {
       this.value = '';
-      if (input) input.value = '';
       return;
     }
-
-    // Normalize raw value to 2 decimal places
     this.value = num.toFixed(2);
+    void this.updateComplete.then(() => this._applyCurrencyDisplay());
+  }
 
-    const formatted = num.toLocaleString('en-US', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    });
-
-    if (input) {
-      input.value = formatted;
+  /**
+   * Write the comma-formatted display ("1,234.50") into the DOM
+   * input. Single source of truth — called from `updated()` on value
+   * changes and from `_onCurrencyBlur` after `updateComplete`.
+   * Skipped when the input is focused so we don't fight the user's
+   * raw editing view.
+   */
+  private _applyCurrencyDisplay(): void {
+    if (!this._isCurrency) return;
+    const input = this.querySelector('input') as HTMLInputElement | null;
+    if (!input || document.activeElement === input) return;
+    if (!this.value) {
+      input.value = '';
+      return;
+    }
+    const num = Number(this.value);
+    if (Number.isFinite(num)) {
+      input.value = num.toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
     }
   }
 

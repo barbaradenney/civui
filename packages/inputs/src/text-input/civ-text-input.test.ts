@@ -825,6 +825,67 @@ describe('text-input inline icons', () => {
       await elementUpdated(el);
       expect(el.error).toBe('');
     });
+
+    it('shows comma-formatted display after a SINGLE blur (no second-blur required)', async () => {
+      // Regression: the blur handler imperatively wrote "1,234.50" to
+      // the DOM input, but Lit's reactive `.value="${this.value}"`
+      // template binding then overwrote it back to raw "1234.50" on
+      // re-render (because `this.value` had just changed from "1234.5"
+      // → "1234.50"). On the SECOND blur, `this.value` was already
+      // normalized so Lit didn't re-render and the formatted display
+      // stuck. Users saw no commas on first blur — only on second.
+      const el = await fixture<CivTextInput>(
+        '<civ-text-input label="Amount" mask="currency"></civ-text-input>'
+      );
+      const input = el.querySelector('input') as HTMLInputElement;
+      input.focus();
+      input.value = '1234.5';
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      await elementUpdated(el);
+      // Move focus off the input — blur fires with no focus owner.
+      input.blur();
+      input.dispatchEvent(new Event('blur', { bubbles: true }));
+      await elementUpdated(el);
+      // Wait for updateComplete to ensure the post-blur format pass ran.
+      await el.updateComplete;
+      expect(input.value).toBe('1,234.50');
+      expect(el.value).toBe('1234.50');
+    });
+
+    it('formats a prefilled value with commas on initial mount (no focus required)', async () => {
+      // Before the fix, a prefilled `value="1234.5"` rendered as raw
+      // "1234.5" until the user focused and blurred. After: the
+      // `updated()` hook formats the display on first paint.
+      const el = await fixture<CivTextInput>(
+        '<civ-text-input label="Amount" mask="currency" value="1234.5"></civ-text-input>'
+      );
+      await el.updateComplete;
+      const input = el.querySelector('input') as HTMLInputElement;
+      expect(input.value).toBe('1,234.50');
+    });
+
+    it('keeps the comma-formatted display on a re-blur with no value change', async () => {
+      // Focus → blur once: formats. Focus → blur a second time with
+      // no edit: `this.value` doesn't change, but the focus handler
+      // already stripped the commas — so we need a non-Lit path to
+      // re-apply formatting. `updateComplete.then(_applyCurrencyDisplay)`
+      // handles this.
+      const el = await fixture<CivTextInput>(
+        '<civ-text-input label="Amount" mask="currency" value="1234.50"></civ-text-input>'
+      );
+      await el.updateComplete;
+      const input = el.querySelector('input') as HTMLInputElement;
+      input.focus();
+      input.dispatchEvent(new Event('focus', { bubbles: true }));
+      await elementUpdated(el);
+      // Focus handler stripped to raw view.
+      expect(input.value).toBe('1234.50');
+      // Blur without editing.
+      input.blur();
+      input.dispatchEvent(new Event('blur', { bubbles: true }));
+      await el.updateComplete;
+      expect(input.value).toBe('1,234.50');
+    });
   });
 
   describe('live-mode mask handlers', () => {

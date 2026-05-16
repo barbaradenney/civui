@@ -2,7 +2,8 @@
 
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBaseElement, t } from '@civui/core';
+import { CivBaseElement, LightDomSlotMixin, t } from '@civui/core';
+import type { SlotConfig } from '@civui/core';
 
 /**
  * CivUI Disclosure
@@ -32,7 +33,7 @@ import { CivBaseElement, t } from '@civui/core';
  * @slot - Disclosure content rendered when open
  */
 @customElement('civ-disclosure')
-export class CivDisclosure extends CivBaseElement {
+export class CivDisclosure extends LightDomSlotMixin(CivBaseElement) {
   /** Trigger text displayed beside the icon. */
   @property({ type: String }) label = '';
 
@@ -48,9 +49,13 @@ export class CivDisclosure extends CivBaseElement {
   /** Trigger size: 'default' or 'sm'. */
   @property({ type: String }) size: 'default' | 'sm' = 'default';
 
+  override _getSlotConfig(): SlotConfig {
+    return { default: '[data-civ-disclosure-content]' };
+  }
+
   override render() {
     const labelText = this.label || t('disclosureDefaultLabel');
-    const sizeClass = this.size === 'sm' ? 'civ-text-sm' : '';
+    const sizeClass = this.size === 'sm' ? 'civ-disclosure__trigger--sm' : '';
     return html`
       <details
         class="civ-disclosure"
@@ -63,9 +68,7 @@ export class CivDisclosure extends CivBaseElement {
             : nothing}
           <span class="civ-disclosure__label">${labelText}</span>
         </summary>
-        <div class="civ-disclosure__content">
-          <slot></slot>
-        </div>
+        <div class="civ-disclosure__content" data-civ-disclosure-content></div>
       </details>
     `;
   }

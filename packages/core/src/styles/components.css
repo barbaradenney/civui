@@ -416,8 +416,22 @@
       display: flex;
     }
 
-    .civ-time-picker-period .civ-segment-btn {
+    /*
+     * The flex children of [data-civ-segment-content] are the
+     * <civ-segment> custom elements, NOT the inner buttons — so
+     * `flex: 1` has to live on civ-segment to make each segment
+     * grow. The inner .civ-segment-btn is then stretched to 100%
+     * of its segment so the tap target fills the row width.
+     * Default `display: inline-block` on civ-segment is overridden
+     * here so width: 100% / flex: 1 work as expected.
+     */
+    .civ-time-picker-period civ-segment {
       flex: 1;
+      display: block;
+    }
+
+    .civ-time-picker-period .civ-segment-btn {
+      width: 100%;
     }
   }
 

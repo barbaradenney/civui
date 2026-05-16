@@ -13,6 +13,13 @@ import {
   warnInvalidProp,
 } from '@civui/core';
 import type { ComboboxOption } from '../combobox/civ-combobox.js';
+import {
+  formatTimeForDisplay,
+  nearestSlot,
+  parseFilterToMinutes,
+  parseTimeToMinutes,
+  type TimePickerFormat,
+} from './time-utils.js';
 
 // Side-effect imports register the child custom elements.
 import '../select/civ-select.js';
@@ -20,7 +27,7 @@ import '../combobox/civ-combobox.js';
 import '../text-input/civ-text-input.js';
 import '@civui/controls/segmented-control';
 
-export type TimePickerFormat = '12' | '24';
+export type { TimePickerFormat } from './time-utils.js';
 export type TimePickerMode = 'select' | 'combo' | 'text';
 
 /**
@@ -80,12 +87,17 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
   @property({ type: String, attribute: 'period-label' }) periodLabel = '';
 
   /**
-   * Earliest allowed time, 24-hour `HH:MM`. Combo mode only; ignored
-   * in select mode (the select shows the full 12- or 24-hour range).
+   * Earliest allowed time, 24-hour `HH:MM`, or the literal string
+   * `"now"` to resolve at render time to the device's current local
+   * time (zero-padded). Combo mode only. Ignored in select mode (the
+   * select shows the full 12- or 24-hour range).
    */
   @property({ type: String }) min = '';
 
-  /** Latest allowed time, 24-hour `HH:MM`. Combo mode only. */
+  /**
+   * Latest allowed time, 24-hour `HH:MM`, or the literal string
+   * `"now"` (see `min`). Combo mode only.
+   */
   @property({ type: String }) max = '';
 
   /**
@@ -96,18 +108,43 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
   @property({ type: String }) placeholder = '';
 
   /**
-   * Hide the "Now" quick-button. Defaults to false — the button is
-   * shown by default, mirroring civ-date-picker's "Today" affordance.
-   * Hide on forms where "now" doesn't make semantic sense (recording
-   * past events without time-of-day relevance).
+   * Show the "Now" quick-button. Defaults to false — opt in only on
+   * forms where "current time" is a meaningful default (callback
+   * scheduling, incident reports where now-ish times are common,
+   * forward-looking appointment selection with `min="now"`). Most
+   * scheduling forms don't need it; the slot picker is fast enough.
    */
-  @property({ type: Boolean, attribute: 'hide-now-button' }) hideNowButton = false;
+  @property({ type: Boolean, attribute: 'show-now-button' }) showNowButton = false;
 
   /**
    * Override the "Now" button label. Defaults to the locale-aware
    * `timePickerNowButton` string ("Now" in English).
    */
   @property({ type: String, attribute: 'now-button-label' }) nowButtonLabel = '';
+
+  /**
+   * Combo-mode only: list of 24-hour `HH:MM` strings to render as
+   * disabled (greyed, non-selectable) options in the dropdown. Useful
+   * for appointment scheduling where some slots are already booked.
+   *
+   * Disabled slots still appear in the listbox (so users see them and
+   * know to pick a neighbor), but click / keyboard activation is a
+   * no-op and arrow navigation skips them. The "snap-to-nearest"
+   * suggestion also avoids disabled slots — a typed "9:30" snaps past
+   * a booked 9:30 to the closest available time.
+   *
+   * Slots are matched against the same 24-hour ISO values that the
+   * combo dropdown emits. Out-of-grid entries (values not produced by
+   * the current `minute-step`) are accepted; they simply have no
+   * effect because no option exists to disable. The default is an
+   * empty array (no slots disabled).
+   *
+   * @example
+   * ```html
+   * <civ-time-picker disabled-slots='["09:00","09:30","13:00"]'></civ-time-picker>
+   * ```
+   */
+  @property({ type: Array, attribute: 'disabled-slots' }) disabledSlots: string[] = [];
 
   @state() private _hour = '';
   @state() private _minute = '';
@@ -295,6 +332,9 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
    * formatted per the `format` prop. Bounded by `min` and `max` when
    * set; otherwise covers the full day.
    *
+   * Slots whose ISO value appears in `disabledSlots` are marked
+   * `disabled: true` so the combobox renders them as non-selectable.
+   *
    * When `this.value` is set but doesn't match a generated slot
    * (because of `minute-step` granularity OR out-of-`min`/`max`
    * bounds), the actual value is injected as a synthetic option so
@@ -304,8 +344,9 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
    */
   private _comboOptions(): ComboboxOption[] {
     const step = this._effectiveMinuteStep();
-    const minMinutes = this._parseTimeToMinutes(this.min);
-    const maxMinutes = this._parseTimeToMinutes(this.max);
+    const minMinutes = this._resolveBoundMinutes(this.min);
+    const maxMinutes = this._resolveBoundMinutes(this.max);
+    const disabled = new Set(this.disabledSlots ?? []);
     const opts: ComboboxOption[] = [];
     for (let h = 0; h < 24; h++) {
       for (let m = 0; m < 60; m += step) {
@@ -313,23 +354,27 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
         if (minMinutes != null && total < minMinutes) continue;
         if (maxMinutes != null && total > maxMinutes) continue;
         const iso = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
-        opts.push({ value: iso, label: this._formatTimeForDisplay(h, m) });
+        const opt: ComboboxOption = { value: iso, label: this._displayLabel(h, m) };
+        if (disabled.has(iso)) opt.disabled = true;
+        opts.push(opt);
       }
     }
     // Synthetic option: the consumer's `value` doesn't align with the
     // slot grid (e.g. value="14:37" with minute-step=15) or sits
     // outside min/max bounds. Insert it sorted by time so the dropdown
-    // stays ordered.
+    // stays ordered. Synthetic options are never disabled — they
+    // represent the current value, which has to remain visible /
+    // selectable so the combobox can re-pick its own value.
     if (this.value && !opts.some((o) => o.value === this.value)) {
-      const parsed = this._parseTimeToMinutes(this.value);
+      const parsed = parseTimeToMinutes(this.value);
       if (parsed != null) {
         const h = Math.floor(parsed / 60);
         const m = parsed % 60;
-        const synthetic = { value: this.value, label: this._formatTimeForDisplay(h, m) };
+        const synthetic: ComboboxOption = { value: this.value, label: this._displayLabel(h, m) };
         // Sort-insert by total minutes.
         let inserted = false;
         for (let i = 0; i < opts.length; i++) {
-          const optMinutes = this._parseTimeToMinutes(opts[i].value);
+          const optMinutes = parseTimeToMinutes(opts[i].value);
           if (optMinutes != null && optMinutes > parsed) {
             opts.splice(i, 0, synthetic);
             inserted = true;
@@ -343,45 +388,39 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
   }
 
   /**
-   * Parse a strict 24-hour `HH:MM` string to minutes-since-midnight,
-   * or null when the input is empty / malformed. Requires zero-padded
-   * hours (`"09:00"`, not `"9:00"`) so the documented schema contract
-   * matches the parser — important for cross-platform implementations
-   * that consume `min` / `max` from the same string. The `value` prop
-   * is also validated through here.
+   * Thin wrapper that injects the locale strings into the pure
+   * `formatTimeForDisplay` helper. Lives on the component so callers
+   * inside `render()` don't need to repeat the i18n lookup.
    */
-  private _parseTimeToMinutes(s: string): number | null {
-    if (!s) return null;
-    const match = s.match(/^(\d{2}):(\d{2})$/);
-    if (!match) return null;
-    const h = Number(match[1]);
-    const m = Number(match[2]);
-    if (h < 0 || h > 23 || m < 0 || m > 59) return null;
-    return h * 60 + m;
+  private _displayLabel(h: number, m: number): string {
+    return formatTimeForDisplay(h, m, {
+      format: this.format,
+      amLabel: t('timePickerAm'),
+      pmLabel: t('timePickerPm'),
+      midnightLabel: t('timePickerMidnight'),
+      noonLabel: t('timePickerNoon'),
+    });
   }
 
   /**
-   * Render a (24-hour) hour/minute pair as the display string the
-   * user sees in the combo slot list and (when matched) in the input.
-   *
-   * Exactly-midnight (00:00) and exactly-noon (12:00) get a "(midnight)"
-   * / "(noon)" annotation — the conventional disambiguation for 12 AM
-   * vs 12 PM that confuses every user the first time they encounter it.
-   * The annotation appears in 24-hour format too: "00:00 (midnight)",
-   * "12:00 (noon)". Only exact zero-minute slots qualify (12:15 AM is
-   * not midnight).
+   * Resolve a bound prop (`min` / `max`) to minutes-since-midnight.
+   * Honors the literal `"now"` shorthand by snapping the device's
+   * current local time to the active `minute-step` grid so the
+   * resulting bound aligns with the dropdown slots — otherwise a
+   * `min="now"` at 9:27 with a 15-min step would still surface the
+   * (out-of-grid) 9:27 boundary and orphan the 9:30 slot. Other
+   * unknown strings parse via the strict ISO parser, returning null.
    */
-  private _formatTimeForDisplay(h: number, m: number): string {
-    const minutePart = String(m).padStart(2, '0');
-    const annotation = m === 0 && (h === 0 || h === 12)
-      ? ` (${h === 0 ? t('timePickerMidnight') : t('timePickerNoon')})`
-      : '';
-    if (this.format === '24') {
-      return `${String(h).padStart(2, '0')}:${minutePart}${annotation}`;
+  private _resolveBoundMinutes(bound: string): number | null {
+    if (bound === 'now') {
+      const now = new Date();
+      const step = this._effectiveMinuteStep();
+      const snapped = Math.round(now.getMinutes() / step) * step;
+      const h = (now.getHours() + (snapped === 60 ? 1 : 0)) % 24;
+      const m = snapped === 60 ? 0 : snapped;
+      return h * 60 + m;
     }
-    const period = h < 12 ? t('timePickerAm') : t('timePickerPm');
-    const twelveHour = h === 0 ? 12 : h > 12 ? h - 12 : h;
-    return `${twelveHour}:${minutePart} ${period}${annotation}`;
+    return parseTimeToMinutes(bound);
   }
 
   override formDisabledCallback(disabled: boolean): void {
@@ -437,10 +476,10 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
    *  - text mode: sets the exact current time, minute-precision.
    *  - select mode: snaps minute to `minute-step` grid like combo.
    *
-   * Suppressed via `hide-now-button`. Disabled with the host.
+   * Opt-in via `show-now-button`. Disabled with the host.
    */
   private _renderNowButton() {
-    if (this.hideNowButton || this.readonly) return nothing;
+    if (!this.showNowButton || this.readonly) return nothing;
     const label = this.nowButtonLabel || t('timePickerNowButton');
     return html`
       <div class="civ-time-picker-footer">
@@ -479,8 +518,8 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
     // "Now" outside business hours snaps to the nearest in-range
     // edge rather than producing an out-of-range value.
     if (this.mode === 'combo') {
-      const minMin = this._parseTimeToMinutes(this.min);
-      const maxMin = this._parseTimeToMinutes(this.max);
+      const minMin = this._resolveBoundMinutes(this.min);
+      const maxMin = this._resolveBoundMinutes(this.max);
       let total = h * 60 + m;
       if (minMin != null && total < minMin) total = minMin;
       if (maxMin != null && total > maxMin) total = maxMin;
@@ -516,88 +555,19 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
    * suggestion appears in the dropdown like any other slot, the
    * user picks it normally (no auto-commit, no surprise).
    *
+   * Disabled slots are skipped (via `nearestSlot`), so a snap past a
+   * booked time lands on the closest available neighbor instead.
+   *
    * Returns `[]` when the typed filter can't be parsed as a partial
    * time (pure letters, gibberish, empty after digit-stripping) —
    * civ-combobox then shows its standard "No results found" message.
    */
   private _nearestSlotSuggestion(filter: string): ComboboxOption[] {
-    const minutes = this._parseFilterToMinutes(filter);
+    const minutes = parseFilterToMinutes(filter, this.format);
     if (minutes == null) return [];
     const opts = this._comboOptions();
-    if (opts.length === 0) return [];
-
-    let nearest = opts[0];
-    let nearestDelta = Infinity;
-    for (const opt of opts) {
-      const m = this._parseTimeToMinutes(opt.value);
-      if (m == null) continue;
-      const delta = Math.abs(m - minutes);
-      if (delta < nearestDelta) {
-        nearestDelta = delta;
-        nearest = opt;
-      }
-    }
-    return [nearest];
-  }
-
-  /**
-   * Parse a free-form filter string to minutes-since-midnight.
-   * Handles the natural shapes users type:
-   *   - "9" / "9:00"         → 9 * 60 = 540
-   *   - "927" / "9:27"       → 9 * 60 + 27 = 567
-   *   - "1430"               → 14 * 60 + 30 = 870 (24-hour input)
-   *   - "9p" / "9 PM"        → 21 * 60 = 1260
-   *   - "9:27 PM"            → 21 * 60 + 27 = 1287
-   *
-   * In `format="12"`, hour values > 12 are treated as 24-hour input
-   * so "1430" still snaps to a sensible afternoon slot. AM/PM hints
-   * (any "a"/"p" letter in the filter) override.
-   *
-   * Returns `null` when the filter has no parseable digits or the
-   * parsed time is out of range (e.g. minute > 59).
-   */
-  private _parseFilterToMinutes(filter: string): number | null {
-    const lower = filter.trim().toLowerCase();
-    if (!lower) return null;
-
-    // Loose AM/PM detection — any "a" or "p" letter in the filter
-    // counts as the hint. Good enough for typical user input
-    // ("9a", "9 am", "9:27 pm") without parsing word boundaries.
-    const hasAm = /a/.test(lower);
-    const hasPm = /p/.test(lower);
-
-    const cleaned = lower.replace(/[^\d:]/g, '');
-    if (!cleaned) return null;
-
-    let h: number;
-    let m: number;
-    if (cleaned.includes(':')) {
-      const [hStr, mStr] = cleaned.split(':');
-      h = Number(hStr);
-      m = Number(mStr) || 0;
-    } else if (cleaned.length <= 2) {
-      h = Number(cleaned);
-      m = 0;
-    } else if (cleaned.length === 3) {
-      h = Number(cleaned[0]);
-      m = Number(cleaned.slice(1));
-    } else {
-      h = Number(cleaned.slice(0, 2));
-      m = Number(cleaned.slice(2, 4));
-    }
-
-    if (!Number.isFinite(h) || !Number.isFinite(m)) return null;
-    if (m < 0 || m > 59) return null;
-
-    if (this.format === '12') {
-      if (h === 12 && hasAm) h = 0;
-      else if (h < 12 && hasPm) h += 12;
-      // hour > 12 with no period hint: treat as 24-hour input,
-      // leave as-is so "1430" → 14:30.
-    }
-
-    if (h < 0 || h > 23) return null;
-    return h * 60 + m;
+    const nearest = nearestSlot(opts, minutes);
+    return nearest ? [nearest] : [];
   }
 
 
@@ -942,14 +912,25 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
   }
 
   /**
-   * Diagnose a complete-looking-but-empty text-mode commit. Returns a
+   * Diagnose an unambiguously-wrong text-mode commit. Returns a
    * localized error message when:
-   *   - the user typed at least 3 digits (HMM or HHMM — enough for a
-   *     "looks complete" reading), AND
-   *   - `_assembleValue()` returned "" (the input didn't actually
-   *     produce a valid 24-hour time)
+   *   - the user typed at least 3 digits (HMM or HHMM — "looks
+   *     complete"), AND
+   *   - `_assembleValue()` returned "" because of a real range error
+   *     (hour > 12 in 12-hour, hour > 23 in 24-hour, minute > 59)
+   *
+   * Intentionally does NOT surface a "Missing period" error for the
+   * common case where the user typed valid digits but hasn't picked
+   * AM/PM yet. The text input's civ-change fires the moment focus
+   * leaves the field — including when the user is on their way to
+   * click the AM/PM segmented control. Yelling "Select AM or PM" in
+   * that fraction-of-a-second between text-input blur and the
+   * AM/PM click would flash an error during the exact gesture the
+   * user is performing. Missing period is instead caught by required
+   * validation on form submit.
+   *
    * Returns `''` when there's no error to surface (still typing,
-   * assembly succeeded, etc.).
+   * assembly succeeded, missing period, etc.).
    */
   private _textModeErrorMessage(): string {
     // Only surface text-mode validation diagnostics.
@@ -970,14 +951,14 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
       if (Number.isFinite(h) && (h < 1 || h > 12)) {
         return t('timePickerInvalidHour12');
       }
-      if (!this._period) {
-        return t('timePickerMissingPeriod');
-      }
-    } else if (!Number.isFinite(h) || h < 0 || h > 23) {
+      // Missing-period state is incomplete, not invalid. Don't flash
+      // an error while the user is mid-gesture to pick AM/PM.
+      return '';
+    }
+    if (!Number.isFinite(h) || h < 0 || h > 23) {
       return t('timePickerInvalidHour24');
     }
-    // Catch-all (shouldn't reach here in practice).
-    return t('timePickerInvalidTime');
+    return '';
   }
 }
 

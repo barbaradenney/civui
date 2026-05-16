@@ -64,11 +64,11 @@ props:
       title: Period label
       type: string
       description: 'Custom label for the AM/PM select (select mode)'
-    hide_now_button:
-      title: Hide Now button
+    show_now_button:
+      title: Show Now button
       type: boolean
       default: false
-      description: 'Hide the "Now" quick-button (shown by default)'
+      description: 'Show the "Now" quick-button (off by default; opt in for forms where current time is a meaningful default)'
     now_button_label:
       title: Now button label
       type: string
@@ -81,6 +81,10 @@ props:
       title: Disabled
       type: boolean
       default: false
+    disabled_slots:
+      title: Disabled slots
+      type: array
+      description: 'Combo-mode only: 24-hour `HH:MM` strings to render as disabled / non-selectable (e.g. booked appointment slots).'
 
 libraryOverrides:
   dependencies:

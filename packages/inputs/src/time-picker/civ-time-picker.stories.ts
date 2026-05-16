@@ -204,3 +204,53 @@ export const TextModeRequired: Story = {
     ></civ-time-picker>
   `,
 };
+
+export const BookedSlots: Story = {
+  name: 'Booked slots (disabled-slots)',
+  render: () => html`
+    <civ-time-picker
+      label="Appointment time"
+      name="appt_time"
+      min="09:00"
+      max="12:00"
+      minute-step="30"
+      .disabledSlots=${['09:00', '09:30', '11:00']}
+      hint="Greyed times are already booked. Type to filter or pick from the list."
+      required
+    ></civ-time-picker>
+  `,
+};
+
+export const MinNow: Story = {
+  name: 'min="now" — no past times today',
+  render: () => html`
+    <civ-time-picker
+      label="Callback time"
+      name="callback_time"
+      min="now"
+      minute-step="30"
+      hint="Only future times are offered. The list updates relative to your device clock."
+    ></civ-time-picker>
+  `,
+};
+
+export const WithNowButton: Story = {
+  name: 'With "Now" quick-button (show-now-button)',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'The Now quick-button is **opt-in** via `show-now-button`. Use it on forms where "current time" is a meaningful starting point — incident reports, callback scheduling, or paired with `min="now"` to bias the picker toward "right now-ish".',
+      },
+    },
+  },
+  render: () => html`
+    <civ-time-picker
+      label="When did the incident occur?"
+      name="incident_time"
+      mode="text"
+      hint="Tap Now to anchor to the current time, then adjust as needed."
+      show-now-button
+    ></civ-time-picker>
+  `,
+};

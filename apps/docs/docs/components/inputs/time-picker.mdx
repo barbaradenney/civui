@@ -101,6 +101,23 @@ where the user knows the time and a slot grid would slow them down.
 
 <StoryEmbed id="forms-inputs-time-picker--text-mode-required" />
 
+### Booked slots (`disabled-slots`)
+
+<StoryEmbed id="forms-inputs-time-picker--booked-slots" />
+
+### `min="now"` — no past times today
+
+<StoryEmbed id="forms-inputs-time-picker--min-now" />
+
+### With "Now" quick-button (opt-in)
+
+<StoryEmbed id="forms-inputs-time-picker--with-now-button" />
+
+The Now button is **off by default**. Opt in with `show-now-button` only
+when "current time" is a sensible starting point — incident reports,
+callback scheduling, or any flow where the user often picks a time near
+the present moment.
+
 [Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-inputs-time-picker--default)
 
 ## When to use which mode
@@ -175,6 +192,25 @@ either an exact match for a slot or empty.
   name="fall_time"
   hint="Type the time as accurately as you remember (e.g. 2:34)"
   required
+></civ-time-picker>
+
+<!-- Appointment scheduling with some slots already booked -->
+<civ-time-picker
+  label="Appointment time"
+  name="appt_time"
+  min="09:00"
+  max="17:00"
+  minute-step="30"
+  disabled-slots='["09:00","09:30","13:00"]'
+  required
+></civ-time-picker>
+
+<!-- Forward-looking scheduling — earliest time is the device clock -->
+<civ-time-picker
+  label="Callback time today"
+  name="callback_time"
+  min="now"
+  minute-step="30"
 ></civ-time-picker>
 
 <!-- Text mode in 24-hour format — no AM/PM control -->

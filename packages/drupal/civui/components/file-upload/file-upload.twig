@@ -12,7 +12,7 @@
   {% if show_preview %}show-preview{% endif %}
   {% if capture %}capture="{{ capture }}"{% endif %}
   {% if variant %}variant="{{ variant }}"{% endif %}
-  {% if initial_files %}initial-files="{{ initial_files }}"{% endif %}
+  {% if initial_files %}initial-files='{{ initial_files|json_encode|raw }}'{% endif %}
   {% if drag_text %}drag-text="{{ drag_text }}"{% endif %}
   {% if browse_text %}browse-text="{{ browse_text }}"{% endif %}
   {% if accepted_label %}accepted-label="{{ accepted_label }}"{% endif %}

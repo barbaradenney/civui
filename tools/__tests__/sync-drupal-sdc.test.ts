@@ -107,6 +107,20 @@ describe('renderPropYaml', () => {
     expect(boolYaml).not.toContain("default: 'true'");
     expect(numYaml).not.toContain("default: '5'");
   });
+
+  it('omits the default line for an empty array (invalid YAML otherwise)', () => {
+    const yaml = renderPropYaml('slots', { type: 'array', default: [], description: 'S' }, '    ');
+    expect(yaml).not.toContain('default:');
+  });
+
+  it('emits a non-empty array default as a YAML flow sequence', () => {
+    const yaml = renderPropYaml(
+      'frequencies',
+      { type: 'array', default: ['weekly', 'monthly'], description: 'F' },
+      '    ',
+    );
+    expect(yaml).toContain("default: ['weekly', 'monthly']");
+  });
 });
 
 describe('camelToSnake (sync-drupal-sdc)', () => {

@@ -86,6 +86,7 @@ const COMPONENTS: ComponentMapping[] = [
   { schema: 'civ-icon', drupal: 'icon' },
   { schema: 'civ-filter-chip', drupal: 'filter-chip' },
   { schema: 'civ-filter-chip-group', drupal: 'filter-chip-group' },
+  { schema: 'civ-time-picker', drupal: 'time-picker' },
 ];
 
 import { INHERITED_FORM_PROPS } from './lib/inherited.js';
@@ -157,6 +158,13 @@ export function renderPropYaml(propName: string, def: any, indent: string): stri
   if (def.default !== undefined && def.default !== '') {
     if (typeof def.default === 'string') {
       lines.push(`${indent}  default: ${escapeYamlString(def.default)}`);
+    } else if (Array.isArray(def.default)) {
+      // Empty arrays render as YAML flow sequence; non-empty stringify naively.
+      // Skip the line for empty arrays — `default:` (no value) is invalid YAML
+      // in strict Drupal SDC parsers.
+      if (def.default.length > 0) {
+        lines.push(`${indent}  default: [${def.default.map((v) => typeof v === 'string' ? escapeYamlString(v) : String(v)).join(', ')}]`);
+      }
     } else {
       lines.push(`${indent}  default: ${def.default}`);
     }

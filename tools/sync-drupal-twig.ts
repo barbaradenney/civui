@@ -78,6 +78,7 @@ const COMPONENTS = [
   // forwards label/hint/error/required/disabled to the web element.
   'civ-ssn', 'civ-ein', 'civ-phone', 'civ-email', 'civ-zip',
   'civ-currency', 'civ-routing-number', 'civ-va-file-number', 'civ-country',
+  'civ-time-picker',
 ];
 
 function camelToKebab(name: string): string {
@@ -211,6 +212,12 @@ export function htmlAttrFor(snakeKey: string, schemaAttrs: AttrLookup): string {
 export function renderTwigLine(prop: YamlProp, attrName: string): string {
   if (prop.type === 'boolean') {
     return `  {% if ${prop.key} %}${attrName}{% endif %}`;
+  }
+  if (prop.type === 'array') {
+    // Arrays render as JSON-encoded attribute values so the web
+    // component's JSON-parsing prop converters can read them. Single-
+    // quoted so embedded double-quotes in JSON don't terminate early.
+    return `  {% if ${prop.key} %}${attrName}='{{ ${prop.key}|json_encode|raw }}'{% endif %}`;
   }
   return `  {% if ${prop.key} %}${attrName}="{{ ${prop.key} }}"{% endif %}`;
 }

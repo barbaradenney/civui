@@ -1030,6 +1030,16 @@
     font-size: var(--civ-typography-fontSize-base);
   }
 
+  /* Disabled options stay visible (so users see the unavailable slot
+     and know to pick a neighbor) but are visually muted and inert.
+     `aria-disabled="true"` is set on the <li> so AT users hear them
+     announced as unavailable; keyboard arrow nav skips them in JS. */
+  .civ-combobox-option-disabled {
+    color: var(--civ-color-base-dark);
+    opacity: var(--civ-opacity-disabled);
+    cursor: not-allowed;
+  }
+
   .civ-combobox-highlight {
     background: transparent;
     color: currentColor;

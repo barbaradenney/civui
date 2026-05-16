@@ -7,11 +7,12 @@
 | `legend` | `string` | `''` | Fieldset legend (select mode) or label fallback (combo mode) |
 | `format` | `'12'` \| `'24'` | `'12'` | Display format: "12" (with AM/PM) or "24" |
 | `minute-step` | `number` | `0` | Increment for the minute slots. Defaults to 15 in combo mode (scheduling-friendly slot density), 5 in select mode. Use 1 for arbitrary precision (best with select mode). |
-| `min` | `string` | `''` | Earliest allowed time, 24-hour `HH:MM`. Combo mode only — restricts the slot list (e.g. `"09:00"` for business hours). |
-| `max` | `string` | `''` | Latest allowed time, 24-hour `HH:MM`. Combo mode only. |
+| `min` | `string` | `''` | Earliest allowed time, 24-hour `HH:MM`, or the literal string `"now"` (resolves at render time to the device's current local time, snapped to `minute-step`). Combo mode only — restricts the slot list (e.g. `"09:00"` for business hours, `"now"` for "no past times today"). |
+| `max` | `string` | `''` | Latest allowed time, 24-hour `HH:MM`, or the literal string `"now"` (see `min`). Combo mode only. |
 | `placeholder` | `string` | `''` | Placeholder for the combo-mode input. Defaults to the locale `timePickerPlaceholder` ("e.g. 9:00 AM"). Ignored in select mode. |
 | `hour-label` | `string` | `''` | Custom label for the hour select (select mode only) |
 | `minute-label` | `string` | `''` | Custom label for the minute select (select mode only) |
 | `period-label` | `string` | `''` | Custom label for the AM/PM select (select mode only) |
-| `hide-now-button` | `boolean` | `false` | Hide the "Now" quick-button. Defaults to false — the button is shown by default, mirroring civ-date-picker's "Today" affordance. |
+| `show-now-button` | `boolean` | `false` | Show the "Now" quick-button. Defaults to false — opt in only on forms where "current time" is a meaningful default (callback scheduling, incident reports, forward-looking appointments with `min="now"`). |
 | `now-button-label` | `string` | `''` | Override the "Now" button label. Defaults to the locale-aware `timePickerNowButton` string ("Now" in English). |
+| `disabled-slots` | `array` | `[]` | Combo-mode only: 24-hour `HH:MM` strings to render as disabled / non-selectable (e.g. booked appointment slots). Disabled slots stay visible in the dropdown so users see the unavailability; arrow-key nav skips them and "snap-to-nearest" picks the closest available neighbor. Defaults to an empty array. |

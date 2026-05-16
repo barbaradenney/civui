@@ -128,7 +128,24 @@ props:
       title: Trailing icon label
       type: string
       description: 'Accessible label for the trailing icon. When omitted, icon is decorative'
-
+    decimals:
+      title: Decimals
+      type: integer
+      default: 2
+      description: 'Currency-mask only: decimal places to keep ("1,234.56" with 2, "1,234" with 0). `0` is whole-dollar mode for tax-style fields (W-4 line 4c, VA benefits)'
+    min:
+      title: Min
+      type: integer
+      description: 'Currency-mask only: minimum allowed amount. Out-of-range values surface an inline error on blur'
+    max:
+      title: Max
+      type: integer
+      description: 'Currency-mask only: maximum allowed amount. Out-of-range values surface an inline error on blur'
+    allow_negative:
+      title: Allow negative
+      type: boolean
+      default: false
+      description: 'Currency-mask only: accept negative amounts (refunds, adjustments). Standard mode rejects values below zero'
 
 libraryOverrides:
   dependencies:

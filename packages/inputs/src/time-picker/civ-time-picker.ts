@@ -1,6 +1,6 @@
 // Schema: packages/schema/src/components/civ-time-picker.schema.ts
 
-import { html, nothing } from 'lit';
+import { html, noChange, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import {
   CivFormElement,
@@ -151,6 +151,17 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
   @state() private _period: 'AM' | 'PM' | '' = '';
 
   /**
+   * True between a text-input keystroke (civ-input) and its commit
+   * (civ-change on blur). While true, the host suppresses its own
+   * push of the formatted display back into the text input — so the
+   * user can keep typing without the DOM input.value being
+   * overwritten with a normalized version of their partial input.
+   * On blur, we resume pushing the formatted display so the field
+   * shows the canonical "H:MM" / "HH:MM" form.
+   */
+  @state() private _textInputUserTyping = false;
+
+  /**
    * True when `this.error` was set by the text-mode assembly check
    * (e.g. "Hour must be 1–12"). Lets us clear our own error when the
    * input becomes valid without clobbering errors the consumer set
@@ -183,6 +194,10 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
       this.error = '';
       this._textModeError = false;
     }
+    // Release any text-input typing-suppression — the reset wipes
+    // the field, so the next render should freely push the cleared
+    // display back to the DOM input.
+    this._textInputUserTyping = false;
     this._parseValue();
   }
 
@@ -630,12 +645,34 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
     const periodLabel = this.periodLabel || t('timePickerPeriodLabel');
     const placeholder = this.placeholder || (this.format === '24' ? '14:30' : '2:34');
     const describedBy = buildDescribedBy(this._hintId, this.hint, this._errorId, this.error);
-    // Pack _hour + _minute back into the raw digit form the
-    // text-input mask expects (no colon, no separators). civ-text-input
-    // applies the mask to display "HH:MM" on blur.
-    const rawDigits = this._hour && this._minute
-      ? `${this._hour.padStart(2, '0')}${this._minute.padStart(2, '0')}`
+    // The displayed value uses a real colon separator with NO leading
+    // zero on the hour ("2:36", "12:34"). We previously fed raw 4-digit
+    // strings ("0236") through a `##:##` mask, but that mask formats
+    // positionally — so 3-digit input either:
+    //   - gets left-padded ("0236" → "02:36", leading zero the user
+    //     never typed), OR
+    //   - feeds the mask unpadded ("236" → "23:6", positionally wrong
+    //     for time semantics: minute should be the LAST two digits).
+    // Neither produces the natural "2:36" the user expects. Dropping
+    // the mask and computing the display string ourselves resolves
+    // both problems.
+    //
+    // Minute is shown as-is (no padStart) so a partial "2:3" stays
+    // "2:3" while the user types — padding to "2:03" would change
+    // the user's intended minute mid-keystroke. Server-provided
+    // values already arrive zero-padded through `_parseValue`.
+    const displayValue = this._hour && this._minute
+      ? `${this._hour}:${this._minute}`
       : this._hour || '';
+
+    // Skip the .value binding while the user is actively typing.
+    // Without this, every keystroke fires civ-input → host re-renders
+    // → Lit's template binding overwrites the DOM input.value with our
+    // computed display string. For "236", that turns "236" into "2:36"
+    // immediately and bounces the cursor — disruptive mid-type. On
+    // blur (civ-change), we clear the flag so the formatted display
+    // flows back into the field.
+    const valueBinding = this._textInputUserTyping ? noChange : displayValue;
 
     // Required-mark routing. When `legend` is explicitly set, the
     // visible legend carries the (required) marker and children
@@ -676,9 +713,9 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
               name="${this.name ? `${this.name}-time` : 'time'}"
               type="text"
               inputmode="numeric"
-              mask-pattern="##:##"
+              maxlength="5"
               placeholder="${placeholder}"
-              .value="${rawDigits}"
+              .value="${valueBinding}"
               hide-char-count
               ?required="${this.required}"
               ?disabled="${this.disabled}"
@@ -822,30 +859,41 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
     if (periodCtrl) this._period = (periodCtrl.value as 'AM' | 'PM' | '') || '';
 
     if (this.mode === 'text') {
-      // Text mode: read the masked input's raw digits and split into
-      // hour / minute. 3-digit input is H+MM ("234" → 2:34);
-      // 4-digit is HH+MM ("1234" → 12:34). Shorter inputs leave
-      // _hour/_minute partial so _assembleValue returns "".
+      // Text mode: parse the user's typed value. Two shapes accepted:
+      //  - colon-separated ("2:36", "12:34", "12:") — use the colon
+      //    as the explicit hour/minute boundary so "12:3" stays as
+      //    h=12, m=3 (partial), not h=1, m=23.
+      //  - digit-only ("236", "1234") — infer the split by length:
+      //    3 digits = H + MM, 4 digits = HH + MM. Matches the typing
+      //    convention where the LAST two digits are always minutes.
+      // Shorter inputs leave _minute empty so _assembleValue returns
+      // "" (partial input is incomplete, not invalid).
       const textInput = this.querySelector(
         `civ-text-input[name="${baseName ? `${baseName}-time` : 'time'}"]`,
       ) as (HTMLElement & { value: string }) | null;
-      const raw = textInput?.value ?? '';
-      if (!raw) {
+      const rawInput = textInput?.value ?? '';
+      if (!rawInput) {
         this._hour = '';
         this._minute = '';
         return;
       }
       let h: string, m: string;
-      if (raw.length <= 2) {
-        // Just hour digits typed so far — wait for minutes.
-        h = raw;
-        m = '';
-      } else if (raw.length === 3) {
-        h = raw[0];
-        m = raw.slice(1);
+      if (rawInput.includes(':')) {
+        const parts = rawInput.split(':');
+        h = (parts[0] || '').replace(/\D/g, '');
+        m = (parts[1] || '').replace(/\D/g, '');
       } else {
-        h = raw.slice(0, 2);
-        m = raw.slice(2, 4);
+        const cleaned = rawInput.replace(/\D/g, '');
+        if (cleaned.length <= 2) {
+          h = cleaned;
+          m = '';
+        } else if (cleaned.length === 3) {
+          h = cleaned[0];
+          m = cleaned.slice(1);
+        } else {
+          h = cleaned.slice(0, 2);
+          m = cleaned.slice(2, 4);
+        }
       }
       this._hour = h;
       this._minute = m;
@@ -871,6 +919,14 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
     // control) fire civ-input → host reads them via _readChildValues
     // → assembles a 24-hour ISO value.
     if (this.mode === 'combo') return;
+    // Mark text-mode typing so the host stops echoing a re-formatted
+    // display string back into the DOM input mid-keystroke. The flag
+    // is cleared on civ-change (blur), letting the canonical "H:MM"
+    // display flow back in.
+    const target = e.target as HTMLElement;
+    if (this.mode === 'text' && target?.tagName === 'CIV-TEXT-INPUT') {
+      this._textInputUserTyping = true;
+    }
     // Suppress the child's event from reaching consumer listeners on
     // this host — they should only see the parent's assembled event.
     e.stopImmediatePropagation();
@@ -880,6 +936,13 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
   private _onFieldChange(e: CustomEvent): void {
     if (e.target === this) return;
     if (this.mode === 'combo') return;
+    // Text input committed (blur). Release the typing-suppression flag
+    // so the next render writes the formatted display back into the
+    // DOM input.
+    const target = e.target as HTMLElement;
+    if (this.mode === 'text' && target?.tagName === 'CIV-TEXT-INPUT') {
+      this._textInputUserTyping = false;
+    }
     e.stopImmediatePropagation();
     this._updateFromChildren(true);
   }

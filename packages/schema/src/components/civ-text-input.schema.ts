@@ -120,6 +120,25 @@ const schema: ComponentSchema = {
       default: '',
       attribute: 'trailing-icon-label',
     },
+    decimals: {
+      type: 'number',
+      description: 'Currency-mask only: decimal places to keep ("1,234.56" with 2, "1,234" with 0). `0` is whole-dollar mode for tax-style fields (W-4 line 4c, VA benefits)',
+      default: 2,
+    },
+    min: {
+      type: 'number',
+      description: 'Currency-mask only: minimum allowed amount. Out-of-range values surface an inline error on blur',
+    },
+    max: {
+      type: 'number',
+      description: 'Currency-mask only: maximum allowed amount. Out-of-range values surface an inline error on blur',
+    },
+    allowNegative: {
+      type: 'boolean',
+      description: 'Currency-mask only: accept negative amounts (refunds, adjustments). Standard mode rejects values below zero',
+      default: false,
+      attribute: 'allow-negative',
+    },
   },
 
   events: {

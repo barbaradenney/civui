@@ -385,6 +385,23 @@
     .civ-time-picker-period {
       width: 100%;
     }
+
+    /*
+     * Stretch the AM/PM segmented control to fill the full-width
+     * row, then split the two segments 50/50. Without this the
+     * segmented control's inner `.civ-inline-flex` sizes to the
+     * two buttons' content — leaving most of the row empty and the
+     * tap targets uncomfortably narrow on a phone.
+     */
+    .civ-time-picker-period civ-segmented-control,
+    .civ-time-picker-period [data-civ-segment-content] {
+      display: flex;
+      width: 100%;
+    }
+
+    .civ-time-picker-period .civ-segment-btn {
+      flex: 1;
+    }
   }
 
   /* Fieldset header spacing — mirrors .civ-form-header for consistency */
@@ -867,9 +884,17 @@
 
   /* ── Segment ────────────────────────────────────────────────── */
 
+  /*
+   * Segment buttons use the same base font-size and padding as
+   * `.civ-input` so a segmented control rendered alongside other
+   * form controls (e.g. the AM/PM picker beside hour/minute selects
+   * in civ-time-picker) lines up at the same height. Earlier the
+   * button used `civ-text-sm`, which produced a shorter row.
+   */
   .civ-segment-btn {
-    @apply civ-px-4 civ-py-2 civ-text-sm civ-font-sans civ-font-medium civ-border
+    @apply civ-px-4 civ-py-2 civ-font-sans civ-font-medium civ-border
            civ-bg-white civ-text-base-darkest civ-border-base civ-cursor-pointer;
+    font-size: var(--civ-typography-fontSize-base);
   }
 
   /* ── File Upload ────────────────────────────────────────────── */

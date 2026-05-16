@@ -764,9 +764,18 @@ describe('civ-time-picker — text mode: contextual error on invalid commit', ()
     await pickPeriod(el, 't-period', 'PM');
     expect(el.value).toBe('');
     expect(el.error).toContain('1 and 12');
-    // Error also propagates to the text input visually.
+    // The error message renders ONCE — on the host fieldset only.
+    // Earlier we passed `error` through to the inner text-input and
+    // segmented-control, which produced three copies of the same
+    // message on screen. Children are not given the error prop so
+    // they don't double-render it.
     const ti = el.querySelector('civ-text-input') as any;
-    expect(ti.error).toContain('1 and 12');
+    expect(ti.error).toBe('');
+    const seg = el.querySelector('civ-segmented-control') as any;
+    expect(seg.error).toBe('');
+    // The error text appears exactly once across the whole picker DOM.
+    const errorOccurrences = el.querySelectorAll('.civ-error-text, .civ-error-text--group').length;
+    expect(errorOccurrences).toBe(1);
   });
 
   it('does NOT flash a "Select AM or PM" error when the user typed valid digits but has not yet picked the period', async () => {
@@ -869,6 +878,112 @@ describe('civ-time-picker — text mode: required-mark routing', () => {
     expect(legend!.querySelector('.civ-required-mark')).toBeNull();
     const ti = el.querySelector('civ-text-input') as any;
     expect(ti.hideRequiredIndicator).toBe(true);
+  });
+});
+
+describe('civ-time-picker — select mode: required-mark routing', () => {
+  it('puts the (required) marker on the legend when `legend` is explicit', async () => {
+    const el = await fixture<CivTimePicker>(
+      '<civ-time-picker mode="select" legend="Appointment time" required></civ-time-picker>'
+    );
+    const legend = el.querySelector('fieldset > legend');
+    expect(legend!.classList.contains('civ-sr-only')).toBe(false);
+    expect(legend!.querySelector('.civ-required-mark')).not.toBeNull();
+    // Children suppress their own marker.
+    const hourSel = el.querySelector('civ-select[name="hour"]') as any;
+    expect(hourSel.hideRequiredIndicator).toBe(true);
+  });
+
+  it('puts the marker on children when no explicit legend is provided (sr-only fallback)', async () => {
+    // Without a user-supplied legend, the fallback "Time" renders as
+    // sr-only. The (required) marker on an sr-only legend is invisible
+    // to sighted users — so children render their own markers instead.
+    // Earlier, the marker was nowhere visible (a real a11y bug for
+    // sighted users).
+    const el = await fixture<CivTimePicker>(
+      '<civ-time-picker mode="select" required></civ-time-picker>'
+    );
+    const legend = el.querySelector('fieldset > legend');
+    expect(legend!.classList.contains('civ-sr-only')).toBe(true);
+    expect(legend!.querySelector('.civ-required-mark')).toBeNull();
+    // Children render their own indicators instead.
+    const hourSel = el.querySelector('civ-select[name="hour"]') as any;
+    expect(hourSel.hideRequiredIndicator).toBe(false);
+    const minuteSel = el.querySelector('civ-select[name="minute"]') as any;
+    expect(minuteSel.hideRequiredIndicator).toBe(false);
+    const periodCtrl = el.querySelector('civ-segmented-control[name="period"]') as any;
+    expect(periodCtrl.hideRequiredIndicator).toBe(false);
+  });
+
+  it('respects host `hide-required-indicator` — suppresses everywhere', async () => {
+    const el = await fixture<CivTimePicker>(
+      '<civ-time-picker mode="select" required hide-required-indicator></civ-time-picker>'
+    );
+    const legend = el.querySelector('fieldset > legend');
+    expect(legend!.querySelector('.civ-required-mark')).toBeNull();
+    const hourSel = el.querySelector('civ-select[name="hour"]') as any;
+    expect(hourSel.hideRequiredIndicator).toBe(true);
+  });
+});
+
+describe('civ-time-picker — Now button avoids disabled slots (combo mode)', () => {
+  function withFakeNow(h: number, m: number, fn: () => Promise<void> | void) {
+    const realNow = Date;
+    (globalThis as any).Date = class extends realNow {
+      constructor() { super(); }
+      getHours(): number { return h; }
+      getMinutes(): number { return m; }
+    };
+    return Promise.resolve(fn()).finally(() => {
+      (globalThis as any).Date = realNow;
+    });
+  }
+
+  it('advances Now past a disabled slot to the next available one', async () => {
+    await withFakeNow(9, 0, async () => {
+      const el = await fixture<CivTimePicker>(
+        '<civ-time-picker label="When" show-now-button minute-step="30" disabled-slots=\'["09:00"]\'></civ-time-picker>'
+      );
+      (el.querySelector('.civ-time-picker-now-btn') as HTMLButtonElement).click();
+      await elementUpdated(el);
+      expect(el.value).toBe('09:30');
+    });
+  });
+
+  it('walks past multiple consecutive disabled slots', async () => {
+    await withFakeNow(9, 0, async () => {
+      const el = await fixture<CivTimePicker>(
+        '<civ-time-picker label="When" show-now-button minute-step="15" disabled-slots=\'["09:00","09:15","09:30"]\'></civ-time-picker>'
+      );
+      (el.querySelector('.civ-time-picker-now-btn') as HTMLButtonElement).click();
+      await elementUpdated(el);
+      expect(el.value).toBe('09:45');
+    });
+  });
+
+  it('does not advance past max bound', async () => {
+    // Now is 09:45 (the max). 09:45 is disabled. There's no enabled
+    // slot in range — fall back to the clamped (disabled) value so
+    // the user knows where they were trying to land.
+    await withFakeNow(9, 45, async () => {
+      const el = await fixture<CivTimePicker>(
+        '<civ-time-picker label="When" show-now-button min="09:00" max="09:45" minute-step="15" disabled-slots=\'["09:45"]\'></civ-time-picker>'
+      );
+      (el.querySelector('.civ-time-picker-now-btn') as HTMLButtonElement).click();
+      await elementUpdated(el);
+      expect(el.value).toBe('09:45');
+    });
+  });
+
+  it('leaves Now unchanged when the snapped slot is enabled', async () => {
+    await withFakeNow(9, 0, async () => {
+      const el = await fixture<CivTimePicker>(
+        '<civ-time-picker label="When" show-now-button minute-step="30" disabled-slots=\'["09:30","10:00"]\'></civ-time-picker>'
+      );
+      (el.querySelector('.civ-time-picker-now-btn') as HTMLButtonElement).click();
+      await elementUpdated(el);
+      expect(el.value).toBe('09:00');
+    });
   });
 });
 

@@ -516,7 +516,10 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
 
     // Honor combo min/max if set. Clamp to the bounded range so
     // "Now" outside business hours snaps to the nearest in-range
-    // edge rather than producing an out-of-range value.
+    // edge rather than producing an out-of-range value. Then walk
+    // past any disabled slots — if "now" lands on a booked
+    // appointment, advance to the next available slot rather than
+    // committing a value the user can't re-select.
     if (this.mode === 'combo') {
       const minMin = this._resolveBoundMinutes(this.min);
       const maxMin = this._resolveBoundMinutes(this.max);
@@ -525,6 +528,28 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
       if (maxMin != null && total > maxMin) total = maxMin;
       h = Math.floor(total / 60);
       m = total % 60;
+
+      const disabled = new Set(this.disabledSlots ?? []);
+      if (disabled.size > 0) {
+        const step = this._effectiveMinuteStep();
+        // Walk forward by step looking for the next enabled slot
+        // inside the allowed range. If everything from "now" to
+        // max (or end-of-day) is disabled, fall back to the clamped
+        // (disabled) value — `value` still shows it, the user just
+        // has to manually pick a neighbor.
+        const dayEnd = 24 * 60 - step;
+        const upperBound = maxMin != null ? Math.min(maxMin, dayEnd) : dayEnd;
+        const isoFor = (mins: number) =>
+          `${String(Math.floor(mins / 60)).padStart(2, '0')}:${String(mins % 60).padStart(2, '0')}`;
+        let candidate = total;
+        while (candidate <= upperBound && disabled.has(isoFor(candidate))) {
+          candidate += step;
+        }
+        if (candidate <= upperBound && !disabled.has(isoFor(candidate))) {
+          h = Math.floor(candidate / 60);
+          m = candidate % 60;
+        }
+      }
     }
 
     const iso = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
@@ -645,7 +670,6 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
               mask-pattern="##:##"
               placeholder="${placeholder}"
               .value="${rawDigits}"
-              error="${this.error}"
               hide-char-count
               ?required="${this.required}"
               ?disabled="${this.disabled}"
@@ -661,7 +685,6 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
                     legend="${periodLabel}"
                     name="${this.name ? `${this.name}-period` : 'period'}"
                     .value="${this._period}"
-                    error="${this.error}"
                     ?required="${this.required}"
                     ?disabled="${this.disabled}"
                     ?hide-required-indicator="${hideMarkerOnChildren}"
@@ -690,6 +713,19 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
     const describedBy = buildDescribedBy(this._hintId, this.hint, this._errorId, this.error);
     const legendText = this.legend || t('timePickerDefaultLegend');
 
+    // Required-mark routing (mirrors text mode). When `legend` is
+    // explicitly set, the visible legend carries the marker and
+    // children suppress theirs (single visible marker). When only
+    // the fallback "Time" legend is rendered (sr-only), the marker
+    // on the legend is invisible to sighted users — so children
+    // render the marker on their own labels instead. Without this,
+    // a required time-picker with no user-supplied legend renders
+    // no visible "(required)" indicator anywhere — an accessibility
+    // bug for sighted users who rely on the marker.
+    const legendIsVisible = !!this.legend;
+    const markerOnLegend = legendIsVisible && !this.hideRequiredIndicator && this.required;
+    const hideMarkerOnChildren = legendIsVisible || this.hideRequiredIndicator;
+
     const fields = html`
       <div class="civ-time-picker-fields">
         <div class="civ-time-picker-hour">
@@ -700,7 +736,7 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
             .value="${this._hour}"
             ?required="${this.required}"
             ?disabled="${this.disabled}"
-            ?hide-required-indicator="${this.required}"
+            ?hide-required-indicator="${hideMarkerOnChildren}"
             disable-analytics
           ></civ-select>
         </div>
@@ -712,7 +748,7 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
             .value="${this._minute}"
             ?required="${this.required}"
             ?disabled="${this.disabled}"
-            ?hide-required-indicator="${this.required}"
+            ?hide-required-indicator="${hideMarkerOnChildren}"
             disable-analytics
           ></civ-select>
         </div>
@@ -725,7 +761,7 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
                   .value="${this._period}"
                   ?required="${this.required}"
                   ?disabled="${this.disabled}"
-                  ?hide-required-indicator="${this.required}"
+                  ?hide-required-indicator="${hideMarkerOnChildren}"
                   disable-analytics
                 >
                   <civ-segment value="AM" label="${t('timePickerAm')}"></civ-segment>
@@ -751,10 +787,10 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
             // visually-hidden "Time" so AT users still get a label.
             legend: legendText,
             required: this.required,
-            showRequired: !this.hideRequiredIndicator && this.required,
+            showRequired: markerOnLegend,
             headingLevel: this.headingLevel,
             size: this.size,
-            srOnly: !this.legend,
+            srOnly: !legendIsVisible,
           }),
           hintId: this._hintId,
           hint: this.hint,

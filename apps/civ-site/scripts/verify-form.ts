@@ -340,12 +340,23 @@ async function verifyPrefillFlow(browser: Browser): Promise<FormResult> {
 
     const after = await page.evaluate(() => {
       const hub = document.querySelector('section[data-page="hub"]') as HTMLElement | null;
-      const item = document.querySelector('civ-list-item[data-chapter-id="personal-info"]');
-      const badge = item && item.querySelector('civ-badge');
+      const personalItem = document.querySelector('civ-list-item[data-chapter-id="personal-info"]');
+      const personalBadge = personalItem && personalItem.querySelector('civ-badge');
+      // The next chapter is the one that should newly unlock as
+      // "Not started" once personal-info is complete. The slot
+      // re-relocation bug that motivated this check left this row
+      // with a missing heading + missing badge (Lit re-rendered the
+      // host when `href` was set and the previously-relocated slot
+      // children weren't re-appended).
+      const contactItem = document.querySelector('civ-list-item[data-chapter-id="contact-info"]');
+      const contactBadge = contactItem && contactItem.querySelector('civ-badge');
+      const contactHeading = contactItem && contactItem.querySelector('[data-list-item-heading]');
       return {
         hubVisible: hub ? !hub.hidden : false,
-        badgeLabel: badge ? badge.getAttribute('label') : null,
-        badgeVariant: badge ? badge.getAttribute('variant') : null,
+        personalBadgeLabel: personalBadge ? personalBadge.getAttribute('label') : null,
+        personalBadgeVariant: personalBadge ? personalBadge.getAttribute('variant') : null,
+        contactBadgeLabel: contactBadge ? contactBadge.getAttribute('label') : null,
+        contactHeadingText: contactHeading ? contactHeading.textContent?.trim() : null,
       };
     });
     record(
@@ -355,8 +366,13 @@ async function verifyPrefillFlow(browser: Browser): Promise<FormResult> {
     );
     record(
       'clicking prefill Continue marks the chapter Complete',
-      after.badgeLabel === 'Complete' && after.badgeVariant === 'success',
-      `badge=${after.badgeLabel}/${after.badgeVariant}`,
+      after.personalBadgeLabel === 'Complete' && after.personalBadgeVariant === 'success',
+      `badge=${after.personalBadgeLabel}/${after.personalBadgeVariant}`,
+    );
+    record(
+      'next chapter is now visible with heading + Not started badge',
+      after.contactBadgeLabel === 'Not started' && (after.contactHeadingText ?? '').length > 0,
+      `contact-info badge=${after.contactBadgeLabel}, heading="${after.contactHeadingText}"`,
     );
     record(
       'no console errors during prefill flow',

@@ -113,17 +113,77 @@ export function LightDomSlotMixin<T extends Constructor<LitElement>>(superClass:
      * Relocate captured children into their rendered containers.
      * Call this in firstUpdated() or override firstUpdated() to
      * call _relocateSlots() after the template is in the DOM.
+     *
+     * Each child is only re-appended when it's NOT already attached
+     * to the target container. The guard matters on re-renders that
+     * leave previously-relocated children in place — calling
+     * `appendChild` on an already-attached child still fires a
+     * `childList` mutation (it counts as remove-then-insert per the
+     * DOM spec), and consumers like civ-filterable-list observe
+     * those mutations to drive re-filter logic.
      */
     protected _relocateSlots(): void {
       const config = this._getSlotConfig();
       for (const [key, selector] of Object.entries(config)) {
         if (!selector) continue;
         const container = this.querySelector(selector);
+        if (!container) continue;
         const children = this._slottedChildren.get(key) || [];
-        if (container) {
-          for (const child of children) {
+        for (const child of children) {
+          if (child.parentNode !== container) {
             container.appendChild(child);
           }
+        }
+      }
+    }
+
+    /**
+     * Re-relocate captured children after every render — not just the
+     * first. Lit re-renders the host when a reflected `@property`
+     * changes (e.g. setting `href` on a civ-list-item to flip its row
+     * from a `<div>` into an `<a>`), and the new template starts with
+     * the slot-target containers empty. Without re-relocation, the
+     * captured children sit detached in `_slottedChildren` and the
+     * row renders as an empty stub — the symptom that surfaced as
+     * "contact-info row goes blank with an extra divider after
+     * personal-info is marked complete".
+     *
+     * `_relocateSlots()` is idempotent: appending an already-attached
+     * child to the same parent is a no-op, so calling this on every
+     * render is safe.
+     */
+    /**
+     * Re-relocate captured children after every render, but only when
+     * the slot target is empty.
+     *
+     * Lit re-renders the host when a reflected `@property` changes
+     * (e.g. setting `href` on a civ-list-item to flip its row from a
+     * `<div>` into an `<a>`), and a template-defined slot-target like
+     * `<span data-civ-list-item-heading-slot></span>` gets reset to
+     * empty. Without this re-relocation, the captured children sit
+     * detached in `_slottedChildren` and the row renders as an empty
+     * stub — the "contact-info row goes blank" bug at the task list.
+     *
+     * The empty-only guard is important: when a parent component's
+     * Lit template inserts NEW slotted children into our host on its
+     * own re-render (e.g. civ-partnership-history swapping the radio
+     * set inside its civ-radio-group), the parent's ChildPart fills
+     * our slot target with the new content. Re-appending our original
+     * cached children there would duplicate them on top of Lit's new
+     * ones. If the slot target has any content after Lit's render,
+     * we treat that as authoritative and leave it alone.
+     */
+    override updated(changed: Map<PropertyKey, unknown>): void {
+      super.updated(changed);
+      const config = this._getSlotConfig();
+      for (const [key, selector] of Object.entries(config)) {
+        if (!selector) continue;
+        const container = this.querySelector(selector);
+        if (!container) continue;
+        if (container.childNodes.length > 0) continue;
+        const children = this._slottedChildren.get(key) || [];
+        for (const child of children) {
+          container.appendChild(child);
         }
       }
     }

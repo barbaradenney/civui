@@ -1,0 +1,171 @@
+---
+title: Currency
+sidebar_position: 6
+sidebar_label: Currency
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
+# Currency
+
+`<civ-currency>`
+
+Pre-configured input for US dollar amounts with automatic formatting,
+masking, and validation. Use this for any field that captures a dollar
+value — income, expenses, fees, refunds, benefit amounts, claim amounts.
+
+For non-currency numeric input (quantities, ages, percentages) use
+[`<civ-number>`](./number.mdx).
+
+## Examples
+
+### Default
+
+<StoryEmbed id="forms-inputs-currency--default" />
+
+### With hint
+
+<StoryEmbed id="forms-inputs-currency--with-hint" />
+
+### Required
+
+<StoryEmbed id="forms-inputs-currency--required" />
+
+### With error
+
+<StoryEmbed id="forms-inputs-currency--with-error" />
+
+### Disabled
+
+<StoryEmbed id="forms-inputs-currency--disabled" />
+
+### All states
+
+<StoryEmbed id="forms-inputs-currency--all-states" />
+
+### Government form example
+
+<StoryEmbed id="forms-inputs-currency--government-form-example" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-inputs-currency--default)
+
+## Shared Props
+
+All form components share these props: `label`, `name`, `value`, `hint`,
+`error`, `required`, `disabled`, `readonly`, `required-message`.
+
+Defaults that differ from `<civ-text-input>`:
+
+| Prop | Default |
+| --- | --- |
+| `label` | `t('currencyLabel')` ("Amount") |
+| `hint` | `t('maskCurrencyHint')` ("For example: 1,234.56") |
+
+## Events
+
+| Event | Detail | Description |
+| --- | --- | --- |
+| `civ-input` | `{ value: string }` | Fires on every keystroke. Value is the raw numeric string (no commas, no `$`). |
+| `civ-change` | `{ value: string }` | Fires on committed value change. Same detail shape. |
+
+## Formatting Behavior
+
+`<civ-currency>` is implemented as a thin wrapper over `<civ-text-input>`
+with `mask="currency"`, `validate="currency"`, `inputmode="decimal"`, and a
+`$` prefix. The mask handles:
+
+- **Blur formatting** — typed `1234.5` becomes `1,234.50` when the user
+  leaves the field. Commas insert at thousands boundaries; decimals
+  pad/truncate to exactly two places.
+- **Focus normalization** — re-entering the field shows the raw value
+  (`1234.5`) so the user can edit without fighting the formatter.
+- **Storage format** — `el.value` is always the raw numeric string
+  (`"1234.5"` or `"1234.50"`). Commas and the `$` prefix are display only.
+
+## Validation
+
+The built-in `validate.currency()` validator runs on blur. It accepts
+any string that parses as a finite positive number (or zero). Rejects:
+
+- Negative values (use `civ-number` with `allow-negative` for those)
+- Non-numeric characters surviving the mask
+- More than 2 decimal places
+
+Custom errors via the `error` prop override the built-in message.
+
+## Usage
+
+```html
+<!-- Basic amount field (uses default "Amount" label) -->
+<civ-currency name="amount" required></civ-currency>
+
+<!-- Custom label and hint -->
+<civ-currency
+  label="Monthly gross income"
+  name="gross_income"
+  hint="Before taxes and deductions"
+  required
+></civ-currency>
+
+<!-- Prefilled from server response -->
+<civ-currency
+  label="Refund amount"
+  name="refund"
+  value="2400.00"
+  readonly
+></civ-currency>
+
+<!-- Programmatic error (e.g. server-side validation) -->
+<civ-currency
+  label="Claim amount"
+  name="claim"
+  error="Claim exceeds the program maximum of $25,000"
+></civ-currency>
+```
+
+## When to Use Currency vs Number
+
+| Scenario | Component | Why |
+| --- | --- | --- |
+| Dollar amount: income, expense, fee | **`civ-currency`** | Auto-format, `$` prefix, decimal handling |
+| Quantity, count, age, household size | **`civ-number`** | Generic numeric, no currency formatting |
+| Percentage, ratio, score | **`civ-number`** | Use `suffix="%"` and `min` / `max` |
+| Weight, distance, measurement | **`civ-number`** | Use `allow-decimal` and a unit suffix |
+| Temperature, deltas | **`civ-number`** | Use `allow-negative` |
+
+## Composition
+
+`<civ-currency>` is used as a sub-field by [`<civ-income>`](../compound/income.mdx)
+(amount + frequency pair) and by [`<civ-direct-deposit>`](../compound/direct-deposit.mdx)
+patterns. Consumers building their own compound forms (rent, mortgage,
+asset estimates) should compose `civ-currency` directly rather than
+re-implementing the masking and validation.
+
+## Accessibility
+
+- The `$` prefix is rendered as a visual `<span class="civ-input-prefix">`
+  marked `aria-hidden="true"` — screen readers announce the field as
+  "Amount" (the label) without the symbol leaking into the announcement.
+- `inputmode="decimal"` triggers the mobile decimal keyboard (digits
+  plus `.`) on iOS and Android.
+- Validation errors are announced assertively by the underlying
+  `<civ-text-input>` (the form-element base class wires the live
+  region).
+- The blur-mode mask (formatting only happens on blur, not as you
+  type) avoids the cursor-jumping accessibility problems of live
+  currency masks.
+
+## Localization
+
+Three locale strings drive the default labels and messages:
+
+| Key | English | Notes |
+| --- | --- | --- |
+| `currencyLabel` | `"Amount"` | Falls back when `label` is empty |
+| `maskCurrencyHint` | `"For example: 1,234.56"` | Falls back when `hint` is empty |
+| `maskCurrencyError` | `"Enter a valid dollar amount"` | Surfaced on validation failure |
+
+Override via `setLocale()` (global) or pass `label` / `hint` / `error`
+explicitly (per-component). Locales that use a different decimal
+separator (e.g. `,` in many European locales) require a separate effort —
+the current implementation is hard-wired to US dollar conventions.

@@ -76,6 +76,24 @@ public struct CivForm<Content: View>: View {
     /// Heading for the support resources section.
     public var supportResourcesHeading: String
 
+    /// Render "* indicates a required field" legend in the form footer.
+    public var requiredLegend: Bool
+
+    /// Intercept validated submits and dispatch a confirm event before
+    /// firing the actual submit. The consumer's `onSubmitConfirm`
+    /// closure is called with a `proceed` callback that fires
+    /// `onSubmit`; calling `cancel` instead triggers
+    /// `onSubmitCancelled`.
+    public var confirmBeforeSubmit: Bool
+
+    /// Called when `confirmBeforeSubmit` is set and validation passes.
+    /// Mirrors the web `civ-submit-confirm` event.
+    public var onSubmitConfirm: ((@escaping () -> Void, @escaping () -> Void) -> Void)?
+
+    /// Called when a submit confirmation was cancelled. Mirrors
+    /// `civ-submit-cancelled`.
+    public var onSubmitCancelled: (() -> Void)?
+
     /// Content rendered inside the form.
     public let content: Content
 
@@ -100,6 +118,10 @@ public struct CivForm<Content: View>: View {
         prefillSrc: String = "",
         prefillHeaders: String = "",
         supportResourcesHeading: String = "",
+        requiredLegend: Bool = false,
+        confirmBeforeSubmit: Bool = false,
+        onSubmitConfirm: ((@escaping () -> Void, @escaping () -> Void) -> Void)? = nil,
+        onSubmitCancelled: (() -> Void)? = nil,
         @ViewBuilder content: () -> Content
     ) {
         self._errors = errors
@@ -116,6 +138,10 @@ public struct CivForm<Content: View>: View {
         self.prefillSrc = prefillSrc
         self.prefillHeaders = prefillHeaders
         self.supportResourcesHeading = supportResourcesHeading
+        self.requiredLegend = requiredLegend
+        self.confirmBeforeSubmit = confirmBeforeSubmit
+        self.onSubmitConfirm = onSubmitConfirm
+        self.onSubmitCancelled = onSubmitCancelled
         self.content = content()
     }
 

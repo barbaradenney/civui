@@ -88,6 +88,7 @@ fun CivCombobox(
     disabled: Boolean = false,
     readonly: Boolean = false,
     placeholder: String? = null,
+    inputmode: String = "",
     noResultsText: String = CivLocale.t("comboboxNoResults"),
     name: String = "",
     width: String = "full",

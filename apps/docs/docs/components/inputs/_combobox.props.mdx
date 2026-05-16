@@ -5,6 +5,7 @@
 |-----------|------|---------|-------------|
 | `options` | `array` | `[]` | Array of selectable options |
 | `placeholder` | `string` | `''` | Placeholder text for the input |
+| `inputmode` | `''` \| `'text'` \| `'numeric'` \| `'decimal'` \| `'tel'` \| `'search'` \| `'email'` \| `'url'` | `''` | Mobile keyboard hint passed through to the inner `<input>`. Use `"numeric"` for digit-keyed option lists (time slots, ZIP/postal lookups). Empty (default) lets the browser pick the alphabetic keyboard. |
 | `no-results-text` | `string` | `'No results found'` | Text shown when filter matches no options |
 | `width` | `'default'` \| `'2xs'` \| `'xs'` \| `'sm'` \| `'md'` \| `'lg'` \| `'xl'` \| `'2xl'` | `'default'` | Width variant |
 | `load-options` | `string` | — | Async loader function `(query: string) => Promise<ComboboxOption[]>` for remote-driven option lists. Set programmatically (not as an attribute) |

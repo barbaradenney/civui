@@ -945,3 +945,17 @@ describe('civ-combobox — Tab commits the highlighted option', () => {
     expect(el.value).toBe('');
   });
 });
+
+describe('civ-combobox — inputmode prop', () => {
+  it('omits the inputmode attribute when unset (browser default)', async () => {
+    const el = await fixture(`<civ-combobox label="Pick"></civ-combobox>`) as any;
+    const input = el.querySelector('input') as HTMLInputElement;
+    expect(input.hasAttribute('inputmode')).toBe(false);
+  });
+
+  it('forwards inputmode="numeric" to the inner input', async () => {
+    const el = await fixture(`<civ-combobox label="Pick" inputmode="numeric"></civ-combobox>`) as any;
+    const input = el.querySelector('input') as HTMLInputElement;
+    expect(input.getAttribute('inputmode')).toBe('numeric');
+  });
+});

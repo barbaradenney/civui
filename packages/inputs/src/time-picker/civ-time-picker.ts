@@ -363,6 +363,7 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
         placeholder="${placeholder}"
         hint="${this.hint}"
         error="${this.error}"
+        inputmode="numeric"
         ?required="${this.required}"
         ?disabled="${this.disabled}"
         ?readonly="${this.readonly}"

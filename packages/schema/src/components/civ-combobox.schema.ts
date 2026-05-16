@@ -23,6 +23,12 @@ const schema: ComponentSchema = {
       description: 'Placeholder text for the input',
       default: '',
     },
+    inputmode: {
+      type: 'enum',
+      description: 'Mobile keyboard hint passed through to the inner `<input>`. Use `"numeric"` for digit-keyed option lists (time slots, ZIP/postal lookups). Empty (default) lets the browser pick the alphabetic keyboard.',
+      default: '',
+      values: ['', 'text', 'numeric', 'decimal', 'tel', 'search', 'email', 'url'],
+    },
     noResultsText: {
       type: 'string',
       description: 'Text shown when filter matches no options',

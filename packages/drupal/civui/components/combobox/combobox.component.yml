@@ -31,6 +31,10 @@ props:
       title: Placeholder
       type: string
       description: 'Placeholder text'
+    inputmode:
+      title: Inputmode
+      type: string
+      description: 'Mobile keyboard hint passed to the inner input (numeric, decimal, tel, etc.)'
     no_results_text:
       title: No results text
       type: string

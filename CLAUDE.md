@@ -129,7 +129,9 @@ All popups, dropdowns, and dialogs **must** render as bottom sheets on mobile (â
 
 The `.civ-bottom-sheet` class is defined in `components.css` and applies bottom-anchored fixed positioning with rounded top corners on mobile. For components that can't add the class (because they have their own CSS), copy the same pattern.
 
-Components using this: `civ-modal` (via native `<dialog>` + CSS), `civ-action-sheet`, `civ-datepicker-dialog`, `civ-combobox-listbox`. Native `<select>` gets OS-level bottom sheet automatically.
+Components using this: `civ-modal` (via native `<dialog>` + CSS), `civ-action-sheet`, `civ-datepicker-dialog`. Native `<select>` gets OS-level bottom sheet automatically.
+
+**Documented exception â€” `civ-combobox`.** The combobox listbox does NOT use the bottom-sheet pattern. The bottom-sheet idiom assumes tap-to-open with no keyboard expected; combobox has a typing surface, so the soft keyboard is always up while the listbox is open. A bottom-anchored sheet under those conditions collapses to a sliver between the keyboard top and the visible viewport bottom. Material UI, USWDS, Apple HIG, and Bootstrap typeaheads all use anchored popovers for the same reason. The mobile rule on `.civ-combobox-listbox` uses `position: absolute` + `max-height: 50dvh` (dynamic viewport height auto-excludes the keyboard on iOS Safari 15.4+ / Chrome 108+ / Firefox 101+, with `50vh` as the fallback).
 
 ### Text Color
 Do **not** use gray text classes (`civ-text-base-dark`, `civ-text-base-light`, `civ-text-base`) on labels, headings, descriptions, or body text. All text inherits the default color (`base-darkest`). Visual hierarchy is achieved through **font size and weight**, not color muting. Gray text is acceptable for: **hint text**, disabled states, and placeholder text.

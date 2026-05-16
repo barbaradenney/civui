@@ -739,3 +739,217 @@ describe('civ-time-picker — text mode', () => {
     expect(period.disabled).toBe(true);
   });
 });
+
+describe('civ-time-picker — text mode: contextual error on invalid commit', () => {
+  async function pickPeriod(el: HTMLElement, name: string, value: string) {
+    const group = el.querySelector(`civ-segmented-control[name="${name}"]`)!;
+    const segment = group.querySelector(`civ-segment[value="${value}"]`)!;
+    (segment.querySelector('button') as HTMLButtonElement).click();
+    await elementUpdated(group);
+  }
+
+  async function typeTimeWithChange(el: HTMLElement, name: string, raw: string) {
+    const ti = el.querySelector(`civ-text-input[name="${name}"]`)!;
+    const inner = ti.querySelector('input') as HTMLInputElement;
+    inner.value = raw;
+    inner.dispatchEvent(new Event('input', { bubbles: true }));
+    inner.dispatchEvent(new Event('change', { bubbles: true }));
+    inner.dispatchEvent(new Event('blur'));
+    await elementUpdated(ti);
+  }
+
+  it('sets an "Hour must be 1–12" error when 12-hour input exceeds 12', async () => {
+    const el = await fixture<CivTimePicker>('<civ-time-picker mode="text" label="When" name="t"></civ-time-picker>');
+    await typeTimeWithChange(el, 't-time', '1430');
+    await pickPeriod(el, 't-period', 'PM');
+    expect(el.value).toBe('');
+    expect(el.error).toContain('1 and 12');
+    // Error also propagates to the text input visually.
+    const ti = el.querySelector('civ-text-input') as any;
+    expect(ti.error).toContain('1 and 12');
+  });
+
+  it('sets a "Select AM or PM" error when 12-hour hour valid but period unset', async () => {
+    const el = await fixture<CivTimePicker>('<civ-time-picker mode="text" label="When" name="t"></civ-time-picker>');
+    await typeTimeWithChange(el, 't-time', '234');
+    expect(el.value).toBe('');
+    expect(el.error).toContain('AM or PM');
+  });
+
+  it('sets an "Hour must be 0–23" error in 24-hour mode for out-of-range', async () => {
+    const el = await fixture<CivTimePicker>('<civ-time-picker mode="text" label="When" name="t" format="24"></civ-time-picker>');
+    await typeTimeWithChange(el, 't-time', '2530');
+    expect(el.value).toBe('');
+    expect(el.error).toContain('0 and 23');
+  });
+
+  it('clears the text-mode error once the input becomes valid', async () => {
+    const el = await fixture<CivTimePicker>('<civ-time-picker mode="text" label="When" name="t"></civ-time-picker>');
+    await typeTimeWithChange(el, 't-time', '1430');
+    await pickPeriod(el, 't-period', 'PM');
+    expect(el.error).toBeTruthy();
+
+    // Fix it: 02:30 + PM.
+    await typeTimeWithChange(el, 't-time', '0230');
+    expect(el.value).toBe('14:30');
+    expect(el.error).toBe('');
+  });
+
+  it('does not surface a text-mode error for partial input (still typing)', async () => {
+    const el = await fixture<CivTimePicker>('<civ-time-picker mode="text" label="When" name="t"></civ-time-picker>');
+    await typeTimeWithChange(el, 't-time', '23'); // only 2 digits — not "complete-looking"
+    expect(el.error).toBe('');
+  });
+
+  it('does not clobber a consumer-set error', async () => {
+    const el = await fixture<CivTimePicker>(
+      '<civ-time-picker mode="text" label="When" name="t" error="Server says no"></civ-time-picker>'
+    );
+    // Commit a valid value — our auto-clear should leave the
+    // server-set error intact because we never set _textModeError.
+    await typeTimeWithChange(el, 't-time', '0230');
+    const period = el.querySelector('civ-segmented-control[name="t-period"]') as any;
+    const segPm = period.querySelector('civ-segment[value="PM"]') as any;
+    (segPm.querySelector('button') as HTMLButtonElement).click();
+    await elementUpdated(el);
+    expect(el.error).toBe('Server says no');
+  });
+
+  it('clears the text-mode error on formResetCallback', async () => {
+    const el = await fixture<CivTimePicker>('<civ-time-picker mode="text" label="When" name="t"></civ-time-picker>');
+    await typeTimeWithChange(el, 't-time', '1430');
+    await pickPeriod(el, 't-period', 'PM');
+    expect(el.error).toBeTruthy();
+    el.formResetCallback();
+    await elementUpdated(el);
+    expect(el.error).toBe('');
+  });
+});
+
+describe('civ-time-picker — text mode: required-mark routing', () => {
+  it('puts the (required) marker on the legend when `legend` is explicit', async () => {
+    const el = await fixture<CivTimePicker>(
+      '<civ-time-picker mode="text" legend="Time of incident" required></civ-time-picker>'
+    );
+    const legend = el.querySelector('fieldset > legend');
+    expect(legend!.classList.contains('civ-sr-only')).toBe(false);
+    expect(legend!.querySelector('.civ-required-mark')).not.toBeNull();
+    // Children suppress their own marker (single visible mark).
+    const ti = el.querySelector('civ-text-input') as any;
+    expect(ti.hideRequiredIndicator).toBe(true);
+  });
+
+  it('puts the marker on children when only `label` is set (legend sr-only)', async () => {
+    // sr-only legend hides the marker from sighted users, so the
+    // visible cue moves to the children's labels.
+    const el = await fixture<CivTimePicker>(
+      '<civ-time-picker mode="text" label="Incident time" required></civ-time-picker>'
+    );
+    const legend = el.querySelector('fieldset > legend');
+    expect(legend!.classList.contains('civ-sr-only')).toBe(true);
+    // Legend no longer carries the marker (would be invisible there).
+    expect(legend!.querySelector('.civ-required-mark')).toBeNull();
+    // Children render their own indicators instead.
+    const ti = el.querySelector('civ-text-input') as any;
+    expect(ti.hideRequiredIndicator).toBe(false);
+    const period = el.querySelector('civ-segmented-control') as any;
+    expect(period.hideRequiredIndicator).toBe(false);
+  });
+
+  it('respects host `hide-required-indicator` — suppresses everywhere', async () => {
+    const el = await fixture<CivTimePicker>(
+      '<civ-time-picker mode="text" label="When" required hide-required-indicator></civ-time-picker>'
+    );
+    const legend = el.querySelector('fieldset > legend');
+    expect(legend!.querySelector('.civ-required-mark')).toBeNull();
+    const ti = el.querySelector('civ-text-input') as any;
+    expect(ti.hideRequiredIndicator).toBe(true);
+  });
+});
+
+describe('civ-time-picker — text mode: prefill edge cases', () => {
+  it('renders 12 AM (00:00) as raw "1200" with period AM', async () => {
+    const el = await fixture<CivTimePicker>('<civ-time-picker mode="text" name="t" value="00:00"></civ-time-picker>');
+    await elementUpdated(el);
+    const ti = el.querySelector('civ-text-input[name="t-time"]') as any;
+    expect(ti.value).toBe('1200');
+    const period = el.querySelector('civ-segmented-control[name="t-period"]') as any;
+    expect(period.value).toBe('AM');
+  });
+
+  it('renders 12 PM (12:00) as raw "1200" with period PM', async () => {
+    const el = await fixture<CivTimePicker>('<civ-time-picker mode="text" name="t" value="12:00"></civ-time-picker>');
+    await elementUpdated(el);
+    const ti = el.querySelector('civ-text-input[name="t-time"]') as any;
+    expect(ti.value).toBe('1200');
+    const period = el.querySelector('civ-segmented-control[name="t-period"]') as any;
+    expect(period.value).toBe('PM');
+  });
+
+  it('renders 13:00 as raw "0100" with period PM in 12-hour mode', async () => {
+    const el = await fixture<CivTimePicker>('<civ-time-picker mode="text" name="t" value="13:00"></civ-time-picker>');
+    await elementUpdated(el);
+    const ti = el.querySelector('civ-text-input[name="t-time"]') as any;
+    expect(ti.value).toBe('0100');
+    const period = el.querySelector('civ-segmented-control[name="t-period"]') as any;
+    expect(period.value).toBe('PM');
+  });
+});
+
+describe('civ-time-picker — event-detail shape across modes', () => {
+  it('combo, select, and text modes all emit civ-change with the standard shape', async () => {
+    // Combo mode: simulate a combobox selection.
+    const combo = await fixture<CivTimePicker>('<civ-time-picker label="When" name="t" value="14:30"></civ-time-picker>');
+    const comboHandler = vi.fn();
+    combo.addEventListener('civ-change', comboHandler as EventListener);
+    const comboEl = combo.querySelector('civ-combobox') as HTMLElement;
+    comboEl.dispatchEvent(new CustomEvent('civ-change', {
+      detail: { value: '14:30' },
+      bubbles: true,
+    }));
+    await elementUpdated(combo);
+    expect(comboHandler).toHaveBeenCalled();
+    const comboDetail = (comboHandler.mock.calls[0][0] as CustomEvent).detail;
+    expect(typeof comboDetail.value).toBe('string');
+    expect(typeof comboDetail.hour).toBe('string');
+    expect(typeof comboDetail.minute).toBe('string');
+    expect(typeof comboDetail.period).toBe('string');
+
+    // Select mode: drive sub-fields directly.
+    const select = await fixture<CivTimePicker>(
+      '<civ-time-picker mode="select" legend="When" name="s" minute-step="15"></civ-time-picker>'
+    );
+    const selectHandler = vi.fn();
+    select.addEventListener('civ-change', selectHandler as EventListener);
+    const hourSel = select.querySelector('civ-select[name="s-hour"]') as any;
+    const hourInner = hourSel.querySelector('select') as HTMLSelectElement;
+    hourInner.value = '2';
+    hourInner.dispatchEvent(new Event('change', { bubbles: true }));
+    await elementUpdated(hourSel);
+    expect(selectHandler).toHaveBeenCalled();
+    const selectDetail = (selectHandler.mock.calls[0][0] as CustomEvent).detail;
+    expect(typeof selectDetail.value).toBe('string');
+    expect(typeof selectDetail.hour).toBe('string');
+    expect(typeof selectDetail.minute).toBe('string');
+    expect(typeof selectDetail.period).toBe('string');
+
+    // Text mode.
+    const text = await fixture<CivTimePicker>(
+      '<civ-time-picker mode="text" label="When" name="x"></civ-time-picker>'
+    );
+    const textHandler = vi.fn();
+    text.addEventListener('civ-change', textHandler as EventListener);
+    const ti = text.querySelector('civ-text-input[name="x-time"]')!;
+    const inner = ti.querySelector('input') as HTMLInputElement;
+    inner.value = '230';
+    inner.dispatchEvent(new Event('input', { bubbles: true }));
+    inner.dispatchEvent(new Event('change', { bubbles: true }));
+    await elementUpdated(ti);
+    expect(textHandler).toHaveBeenCalled();
+    const textDetail = (textHandler.mock.calls[textHandler.mock.calls.length - 1][0] as CustomEvent).detail;
+    expect(typeof textDetail.value).toBe('string');
+    expect(typeof textDetail.hour).toBe('string');
+    expect(typeof textDetail.minute).toBe('string');
+    expect(typeof textDetail.period).toBe('string');
+  });
+});

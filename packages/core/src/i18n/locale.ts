@@ -173,6 +173,12 @@ export interface CivLocaleStrings {
   timePickerAm: string;
   timePickerPm: string;
   timePickerPlaceholder: string; // combo-mode placeholder, e.g. "e.g. 9:00 AM"
+  // Text-mode commit-time error messages
+  timePickerInvalidHour12: string;
+  timePickerInvalidHour24: string;
+  timePickerInvalidMinute: string;
+  timePickerMissingPeriod: string;
+  timePickerInvalidTime: string;
 
   // Form footer
   formRequiredLegend: string; // "indicates a required field"
@@ -830,6 +836,11 @@ const defaultStrings: CivLocaleStrings = {
   timePickerAm: 'AM',
   timePickerPm: 'PM',
   timePickerPlaceholder: 'e.g. 9:00 AM',
+  timePickerInvalidHour12: 'Hour must be between 1 and 12',
+  timePickerInvalidHour24: 'Hour must be between 0 and 23',
+  timePickerInvalidMinute: 'Minutes must be between 0 and 59',
+  timePickerMissingPeriod: 'Select AM or PM',
+  timePickerInvalidTime: 'Enter a valid time',
 
   formRequiredLegend: 'indicates a required field',
 

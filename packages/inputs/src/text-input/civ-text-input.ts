@@ -245,6 +245,18 @@ export class CivTextInput extends LegendHeadingMixin(CivFormElement) {
     if (changed.has('value') && this._showCharCount) {
       this._debouncedAnnounceCharCount();
     }
+    // Re-apply the blur-mode mask when `value` is changed externally
+    // (e.g. the time-picker host flipping `format` from 12 → 24
+    // re-derives the raw digits string). Without this the inner
+    // input shows raw digits until the user focuses + blurs the
+    // field. Skip when the input is currently focused — that means
+    // the user is editing and we'd fight them by overwriting.
+    if (changed.has('value') && this._activePattern && this.maskMode === 'blur') {
+      const input = this.querySelector('input') as HTMLInputElement | null;
+      if (input && document.activeElement !== input) {
+        input.value = this.value ? applyMask(this.value, this._activePattern) : '';
+      }
+    }
   }
 
   protected override get _ariaDescribedBy(): string {

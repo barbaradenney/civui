@@ -99,6 +99,14 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
   @state() private _minute = '';
   @state() private _period: 'AM' | 'PM' | '' = '';
 
+  /**
+   * True when `this.error` was set by the text-mode assembly check
+   * (e.g. "Hour must be 1–12"). Lets us clear our own error when the
+   * input becomes valid without clobbering errors the consumer set
+   * for other reasons (server-side validation, custom rules).
+   */
+  private _textModeError = false;
+
   private _boundFieldInput = this._onFieldInput.bind(this);
   private _boundFieldChange = this._onFieldChange.bind(this);
 
@@ -112,6 +120,19 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
     // unconditionally so a runtime mode switch keeps working.
     this.addEventListener('civ-input', this._boundFieldInput as EventListener);
     this.addEventListener('civ-change', this._boundFieldChange as EventListener);
+  }
+
+  override formResetCallback(): void {
+    super.formResetCallback();
+    // Clear our text-mode validation error (if we set one) so the
+    // reset field doesn't keep "Hour must be 1–12" stuck on the
+    // legend until the next user interaction. Re-parse rebuilds
+    // _hour / _minute / _period from the (now-reset) value.
+    if (this._textModeError) {
+      this.error = '';
+      this._textModeError = false;
+    }
+    this._parseValue();
   }
 
   override disconnectedCallback(): void {
@@ -507,6 +528,16 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
       ? `${this._hour.padStart(2, '0')}${this._minute.padStart(2, '0')}`
       : this._hour || '';
 
+    // Required-mark routing. When `legend` is explicitly set, the
+    // visible legend carries the (required) marker and children
+    // suppress theirs (single visible marker). When only `label` was
+    // set, the legend is sr-only — putting the marker there hides it
+    // from sighted users, so the children render the marker on their
+    // own labels instead. Matches the multi-field-compound pattern.
+    const legendIsVisible = !!this.legend;
+    const markerOnLegend = legendIsVisible && !this.hideRequiredIndicator && this.required;
+    const hideMarkerOnChildren = legendIsVisible || this.hideRequiredIndicator;
+
     return html`
       <fieldset
         class="civ-fieldset"
@@ -518,14 +549,10 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
           label: renderLegend({
             legend: label,
             required: this.required,
-            showRequired: !this.hideRequiredIndicator && this.required,
+            showRequired: markerOnLegend,
             headingLevel: this.headingLevel,
             size: this.size,
-            // Hide the legend visually when only `label` was set (not
-            // `legend`) — combo and text modes prefer a single label
-            // on the input control, and a duplicate visible legend
-            // would read as redundant.
-            srOnly: !this.legend,
+            srOnly: !legendIsVisible,
           }),
           hintId: this._hintId,
           hint: this.hint,
@@ -543,11 +570,12 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
               mask-pattern="##:##"
               placeholder="${placeholder}"
               .value="${rawDigits}"
+              error="${this.error}"
               hide-char-count
               ?required="${this.required}"
               ?disabled="${this.disabled}"
               ?readonly="${this.readonly}"
-              ?hide-required-indicator="${this.required}"
+              ?hide-required-indicator="${hideMarkerOnChildren}"
               disable-analytics
             ></civ-text-input>
           </div>
@@ -558,9 +586,10 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
                     legend="${periodLabel}"
                     name="${this.name ? `${this.name}-period` : 'period'}"
                     .value="${this._period}"
+                    error="${this.error}"
                     ?required="${this.required}"
                     ?disabled="${this.disabled}"
-                    ?hide-required-indicator="${this.required}"
+                    ?hide-required-indicator="${hideMarkerOnChildren}"
                     disable-analytics
                   >
                     <civ-segment value="AM" label="${t('timePickerAm')}"></civ-segment>
@@ -767,6 +796,31 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
     this.value = assembled;
     this.updateFormValue(this.value);
 
+    // Text mode: on commit, set/clear a contextual error when the
+    // user has provided enough digits to look complete but the
+    // assembly failed (hour > 12 in 12-hour, minute > 59, etc.).
+    // Without this, the user sees a fully-formatted "14:30" with no
+    // feedback that it's invalid — they submit and get nothing.
+    //
+    // Only manage `error` when WE set it (tracked by `_textModeError`)
+    // so consumer-provided errors don't get clobbered.
+    if (this.mode === 'text' && fireChange) {
+      const msg = this._textModeErrorMessage();
+      if (msg) {
+        // Only auto-set when there's no existing error, OR when the
+        // existing error came from us (i.e. update our own). Consumer-
+        // set errors (server-side validation, custom rules) stay
+        // intact.
+        if (!this.error || this._textModeError) {
+          this.error = msg;
+          this._textModeError = true;
+        }
+      } else if (this._textModeError) {
+        this.error = '';
+        this._textModeError = false;
+      }
+    }
+
     const detail = {
       value: this.value,
       hour: this._hour,
@@ -778,6 +832,45 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
       dispatch(this, 'civ-change', detail);
       this.sendAnalytics('change');
     }
+  }
+
+  /**
+   * Diagnose a complete-looking-but-empty text-mode commit. Returns a
+   * localized error message when:
+   *   - the user typed at least 3 digits (HMM or HHMM — enough for a
+   *     "looks complete" reading), AND
+   *   - `_assembleValue()` returned "" (the input didn't actually
+   *     produce a valid 24-hour time)
+   * Returns `''` when there's no error to surface (still typing,
+   * assembly succeeded, etc.).
+   */
+  private _textModeErrorMessage(): string {
+    // Only surface text-mode validation diagnostics.
+    if (this.mode !== 'text') return '';
+    // Read the raw digits the user typed by re-deriving from _hour /
+    // _minute. Empty / partial input shouldn't trigger an error.
+    const digitCount = (this._hour?.length || 0) + (this._minute?.length || 0);
+    if (digitCount < 3) return '';
+    // Assembled OK → no error.
+    if (this.value) return '';
+
+    const h = Number(this._hour);
+    const m = Number(this._minute);
+    if (!Number.isFinite(m) || m > 59) {
+      return t('timePickerInvalidMinute');
+    }
+    if (this.format === '12') {
+      if (Number.isFinite(h) && (h < 1 || h > 12)) {
+        return t('timePickerInvalidHour12');
+      }
+      if (!this._period) {
+        return t('timePickerMissingPeriod');
+      }
+    } else if (!Number.isFinite(h) || h < 0 || h > 23) {
+      return t('timePickerInvalidHour24');
+    }
+    // Catch-all (shouldn't reach here in practice).
+    return t('timePickerInvalidTime');
   }
 }
 

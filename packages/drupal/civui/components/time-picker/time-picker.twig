@@ -6,15 +6,16 @@
   {% if hint %}hint="{{ hint }}"{% endif %}
   {% if error %}error="{{ error }}"{% endif %}
   {% if format %}format="{{ format }}"{% endif %}
-  {% if minute_step is not null %}minute-step="{{ minute_step }}"{% endif %}
+  {% if minute_step %}minute-step="{{ minute_step }}"{% endif %}
   {% if min %}min="{{ min }}"{% endif %}
   {% if max %}max="{{ max }}"{% endif %}
   {% if placeholder %}placeholder="{{ placeholder }}"{% endif %}
   {% if hour_label %}hour-label="{{ hour_label }}"{% endif %}
   {% if minute_label %}minute-label="{{ minute_label }}"{% endif %}
   {% if period_label %}period-label="{{ period_label }}"{% endif %}
-  {% if hide_now_button %}hide-now-button{% endif %}
+  {% if show_now_button %}show-now-button{% endif %}
   {% if now_button_label %}now-button-label="{{ now_button_label }}"{% endif %}
   {% if required %}required{% endif %}
   {% if disabled %}disabled{% endif %}
+  {% if disabled_slots %}disabled-slots='{{ disabled_slots|json_encode|raw }}'{% endif %}
 ></civ-time-picker>

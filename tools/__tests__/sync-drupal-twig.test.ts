@@ -58,6 +58,14 @@ describe('renderTwigLine', () => {
     const line = renderTwigLine({ key: 'show_middle', type: 'boolean' }, 'show-middle');
     expect(line).toBe('  {% if show_middle %}show-middle{% endif %}');
   });
+
+  it('JSON-encodes arrays with single-quoted attribute values', () => {
+    // Array attributes need json_encode|raw so the web component's
+    // prop converters can parse them. Double-quoted attribute values
+    // would break on embedded double-quotes inside JSON.
+    const line = renderTwigLine({ key: 'disabled_slots', type: 'array' }, 'disabled-slots');
+    expect(line).toBe(`  {% if disabled_slots %}disabled-slots='{{ disabled_slots|json_encode|raw }}'{% endif %}`);
+  });
 });
 
 describe('parseSdcPropsFromYaml', () => {

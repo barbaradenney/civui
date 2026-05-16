@@ -8,6 +8,15 @@ export interface ComboboxOption {
   value: string;
   label: string;
   group?: string;
+  /**
+   * When `true`, the option is rendered as visually muted, gets
+   * `aria-disabled="true"`, and is non-selectable (mouse click and
+   * keyboard Enter/Tab no-op). Arrow-key navigation skips disabled
+   * options so a sighted keyboard user doesn't get stuck on one.
+   * Useful for time-picker booked slots and select-with-availability
+   * patterns. Defaults to unset (selectable).
+   */
+  disabled?: boolean;
 }
 
 /** Signature for async option loaders. Reject (or throw) to surface a load error. */
@@ -357,19 +366,22 @@ export class CivCombobox extends LegendHeadingMixin(CivFormElement) {
   }
 
   private _renderOption(option: ComboboxOption, i: number): TemplateResult {
+    const isDisabled = !!option.disabled;
     return html`
       <li
         id="${this._listboxId}-option-${i}"
         role="option"
         class="civ-combobox-option
-          ${i !== this._activeIndex ? 'hover:civ-bg-base-lightest' : ''}
+          ${isDisabled ? 'civ-combobox-option-disabled' : ''}
+          ${!isDisabled && i !== this._activeIndex ? 'hover:civ-bg-base-lightest' : ''}
           ${option.value === this.value && i !== this._activeIndex
             ? 'civ-font-bold'
             : ''}"
         aria-selected="${option.value === this.value}"
+        aria-disabled="${isDisabled ? 'true' : nothing}"
         data-active="${i === this._activeIndex ? '' : nothing}"
         @click="${() => this._selectOption(option)}"
-        @mouseenter="${() => { this._activeIndex = i; }}"
+        @mouseenter="${() => { if (!isDisabled) this._activeIndex = i; }}"
       >
         ${this._highlightMatch(option.label, this._filter)}
       </li>
@@ -608,7 +620,7 @@ export class CivCombobox extends LegendHeadingMixin(CivFormElement) {
         if (!this._open) {
           this._setOpen(true);
         } else {
-          this._activeIndex = (this._activeIndex + 1) % filtered.length;
+          this._activeIndex = this._nextEnabledIndex(filtered, this._activeIndex, 1);
         }
         break;
 
@@ -618,23 +630,22 @@ export class CivCombobox extends LegendHeadingMixin(CivFormElement) {
           this._setOpen(true);
         } else {
           // APG: ArrowUp from no selection goes to last item
-          this._activeIndex = this._activeIndex <= 0
-            ? filtered.length - 1
-            : this._activeIndex - 1;
+          const start = this._activeIndex <= 0 ? filtered.length : this._activeIndex;
+          this._activeIndex = this._nextEnabledIndex(filtered, start, -1);
         }
         break;
 
       case 'Home':
         if (this._open && filtered.length > 0) {
           e.preventDefault();
-          this._activeIndex = 0;
+          this._activeIndex = this._nextEnabledIndex(filtered, -1, 1);
         }
         break;
 
       case 'End':
         if (this._open && filtered.length > 0) {
           e.preventDefault();
-          this._activeIndex = filtered.length - 1;
+          this._activeIndex = this._nextEnabledIndex(filtered, filtered.length, -1);
         }
         break;
 
@@ -676,7 +687,33 @@ export class CivCombobox extends LegendHeadingMixin(CivFormElement) {
     }
   }
 
+  /**
+   * Walk `filtered` from `from` (exclusive) in `step` direction (+1 / -1)
+   * and return the index of the next non-disabled option, wrapping at
+   * the list boundaries. Returns `from` clamped if no enabled option
+   * exists in the list — the caller's selection logic still guards
+   * against committing a disabled entry.
+   */
+  private _nextEnabledIndex(
+    filtered: ComboboxOption[],
+    from: number,
+    step: 1 | -1,
+  ): number {
+    const len = filtered.length;
+    if (len === 0) return -1;
+    let idx = from;
+    for (let i = 0; i < len; i++) {
+      idx = ((idx + step) % len + len) % len;
+      if (!filtered[idx]?.disabled) return idx;
+    }
+    return Math.max(0, Math.min(len - 1, from));
+  }
+
   private _selectOption(option: ComboboxOption): void {
+    // Disabled options are inert — clicking / Enter / Tab on one is a
+    // no-op. The listbox stays open so the user can pick a neighbor
+    // without re-typing.
+    if (option.disabled) return;
     this.value = option.value;
     this._filter = option.label;
     this._setOpen(false);

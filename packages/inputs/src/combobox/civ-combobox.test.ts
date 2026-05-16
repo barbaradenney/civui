@@ -1003,3 +1003,126 @@ describe('civ-combobox — noMatchSuggestions callback', () => {
     expect(el.querySelectorAll('.civ-combobox-option').length).toBe(0);
   });
 });
+
+describe('civ-combobox — disabled options', () => {
+  const STATES_WITH_DISABLED = [
+    { value: 'CA', label: 'California' },
+    { value: 'CO', label: 'Colorado', disabled: true },
+    { value: 'CT', label: 'Connecticut' },
+  ];
+
+  async function makeOpenCombobox() {
+    const el = await fixture('<civ-combobox label="State" name="state"></civ-combobox>') as any;
+    el.options = STATES_WITH_DISABLED;
+    await elementUpdated(el);
+    const input = el.querySelector('input') as HTMLInputElement;
+    input.focus();
+    await elementUpdated(el);
+    return { el, input };
+  }
+
+  it('renders disabled options with aria-disabled and the disabled style class', async () => {
+    const { el } = await makeOpenCombobox();
+    const items = el.querySelectorAll('.civ-combobox-option') as NodeListOf<HTMLLIElement>;
+    expect(items.length).toBe(3);
+    expect(items[1].getAttribute('aria-disabled')).toBe('true');
+    expect(items[1].classList.contains('civ-combobox-option-disabled')).toBe(true);
+    expect(items[0].getAttribute('aria-disabled')).toBeNull();
+    expect(items[2].getAttribute('aria-disabled')).toBeNull();
+  });
+
+  it('does not commit selection when a disabled option is clicked', async () => {
+    const { el } = await makeOpenCombobox();
+    const items = el.querySelectorAll('.civ-combobox-option') as NodeListOf<HTMLLIElement>;
+    items[1].click();
+    await elementUpdated(el);
+    expect((el as any).value).toBe('');
+  });
+
+  it('commits selection when an enabled option is clicked (regression)', async () => {
+    const { el } = await makeOpenCombobox();
+    const items = el.querySelectorAll('.civ-combobox-option') as NodeListOf<HTMLLIElement>;
+    items[0].click();
+    await elementUpdated(el);
+    expect((el as any).value).toBe('CA');
+  });
+
+  it('arrow-down skips disabled options', async () => {
+    const { el, input } = await makeOpenCombobox();
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    await elementUpdated(el);
+    expect((el as any)._activeIndex).toBe(0);
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    await elementUpdated(el);
+    // Skips index 1 (disabled Colorado) and lands on index 2 (Connecticut).
+    expect((el as any)._activeIndex).toBe(2);
+  });
+
+  it('arrow-up skips disabled options', async () => {
+    const { el, input } = await makeOpenCombobox();
+    // Land on Connecticut (index 2)
+    (el as any)._activeIndex = 2;
+    await elementUpdated(el);
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true }));
+    await elementUpdated(el);
+    // Should skip Colorado (disabled) and land on California (index 0).
+    expect((el as any)._activeIndex).toBe(0);
+  });
+
+  it('Home key lands on the first enabled option', async () => {
+    const optionsFirstDisabled = [
+      { value: 'CA', label: 'California', disabled: true },
+      { value: 'CO', label: 'Colorado' },
+      { value: 'CT', label: 'Connecticut' },
+    ];
+    const el = await fixture('<civ-combobox label="State"></civ-combobox>') as any;
+    el.options = optionsFirstDisabled;
+    await elementUpdated(el);
+    const input = el.querySelector('input') as HTMLInputElement;
+    input.focus();
+    await elementUpdated(el);
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home', bubbles: true }));
+    await elementUpdated(el);
+    expect(el._activeIndex).toBe(1);
+  });
+
+  it('End key lands on the last enabled option', async () => {
+    const optionsLastDisabled = [
+      { value: 'CA', label: 'California' },
+      { value: 'CO', label: 'Colorado' },
+      { value: 'CT', label: 'Connecticut', disabled: true },
+    ];
+    const el = await fixture('<civ-combobox label="State"></civ-combobox>') as any;
+    el.options = optionsLastDisabled;
+    await elementUpdated(el);
+    const input = el.querySelector('input') as HTMLInputElement;
+    input.focus();
+    await elementUpdated(el);
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'End', bubbles: true }));
+    await elementUpdated(el);
+    expect(el._activeIndex).toBe(1);
+  });
+
+  it('does not commit on Enter when active option is disabled', async () => {
+    const { el, input } = await makeOpenCombobox();
+    // Force the active index to the disabled option (simulating mouseenter
+    // suppression bypass, e.g. test harness manipulation).
+    (el as any)._activeIndex = 1;
+    await elementUpdated(el);
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    await elementUpdated(el);
+    expect((el as any).value).toBe('');
+  });
+
+  it('mouseenter on a disabled option does not change the active index', async () => {
+    const { el } = await makeOpenCombobox();
+    const items = el.querySelectorAll('.civ-combobox-option') as NodeListOf<HTMLLIElement>;
+    items[0].dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
+    await elementUpdated(el);
+    expect((el as any)._activeIndex).toBe(0);
+    items[1].dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
+    await elementUpdated(el);
+    // _activeIndex unchanged from the disabled hover.
+    expect((el as any)._activeIndex).toBe(0);
+  });
+});

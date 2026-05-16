@@ -34,12 +34,12 @@ const schema: ComponentSchema = {
     },
     min: {
       type: 'string',
-      description: 'Earliest allowed time, 24-hour `HH:MM`. Combo mode only — restricts the slot list (e.g. `"09:00"` for business hours).',
+      description: 'Earliest allowed time, 24-hour `HH:MM`, or the literal string `"now"` (resolves at render time to the device\'s current local time, snapped to `minute-step`). Combo mode only — restricts the slot list (e.g. `"09:00"` for business hours, `"now"` for "no past times today").',
       default: '',
     },
     max: {
       type: 'string',
-      description: 'Latest allowed time, 24-hour `HH:MM`. Combo mode only.',
+      description: 'Latest allowed time, 24-hour `HH:MM`, or the literal string `"now"` (see `min`). Combo mode only.',
       default: '',
     },
     placeholder: {
@@ -65,17 +65,24 @@ const schema: ComponentSchema = {
       default: '',
       attribute: 'period-label',
     },
-    hideNowButton: {
+    showNowButton: {
       type: 'boolean',
-      description: 'Hide the "Now" quick-button. Defaults to false — the button is shown by default, mirroring civ-date-picker\'s "Today" affordance.',
+      description: 'Show the "Now" quick-button. Defaults to false — opt in only on forms where "current time" is a meaningful default (callback scheduling, incident reports, forward-looking appointments with `min="now"`).',
       default: false,
-      attribute: 'hide-now-button',
+      attribute: 'show-now-button',
     },
     nowButtonLabel: {
       type: 'string',
       description: 'Override the "Now" button label. Defaults to the locale-aware `timePickerNowButton` string ("Now" in English).',
       default: '',
       attribute: 'now-button-label',
+    },
+    disabledSlots: {
+      type: 'array',
+      description: 'Combo-mode only: 24-hour `HH:MM` strings to render as disabled / non-selectable (e.g. booked appointment slots). Disabled slots stay visible in the dropdown so users see the unavailability; arrow-key nav skips them and "snap-to-nearest" picks the closest available neighbor. Defaults to an empty array.',
+      default: [],
+      items: { value: { type: 'string', description: '24-hour HH:MM time string' } },
+      attribute: 'disabled-slots',
     },
   },
 

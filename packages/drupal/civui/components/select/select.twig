@@ -9,7 +9,7 @@
   {% if empty_label %}empty-label="{{ empty_label }}"{% endif %}
   {% if required %}required{% endif %}
   {% if disabled %}disabled{% endif %}
-  {% if options %}options="{{ options }}"{% endif %}
+  {% if options %}options='{{ options|json_encode|raw }}'{% endif %}
   {% if width %}width="{{ width }}"{% endif %}
   {% if autocomplete %}autocomplete="{{ autocomplete }}"{% endif %}
 >

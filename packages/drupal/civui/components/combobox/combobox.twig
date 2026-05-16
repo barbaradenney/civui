@@ -9,7 +9,7 @@
   {% if no_results_text %}no-results-text="{{ no_results_text }}"{% endif %}
   {% if required %}required{% endif %}
   {% if disabled %}disabled{% endif %}
-  {% if options %}options="{{ options }}"{% endif %}
+  {% if options %}options='{{ options|json_encode|raw }}'{% endif %}
   {% if width %}width="{{ width }}"{% endif %}
   {% if load_debounce %}load-debounce="{{ load_debounce }}"{% endif %}
   {% if min_query_length %}min-query-length="{{ min_query_length }}"{% endif %}

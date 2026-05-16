@@ -6,7 +6,7 @@
   {% if show_deceased %}show-deceased{% endif %}
   {% if required %}required{% endif %}
   {% if disabled %}disabled{% endif %}
-  {% if options %}options="{{ options }}"{% endif %}
+  {% if options %}options='{{ options|json_encode|raw }}'{% endif %}
   {% if deceased_assumed %}deceased-assumed{% endif %}
   {% if show_divorce_date %}show-divorce-date{% endif %}
   {% if show_adoption_date %}show-adoption-date{% endif %}

@@ -416,8 +416,22 @@
       display: flex;
     }
 
-    .civ-time-picker-period .civ-segment-btn {
+    /*
+     * The flex children of [data-civ-segment-content] are the
+     * <civ-segment> custom elements, NOT the inner buttons — so
+     * `flex: 1` has to live on civ-segment to make each segment
+     * grow. The inner .civ-segment-btn is then stretched to 100%
+     * of its segment so the tap target fills the row width.
+     * Default `display: inline-block` on civ-segment is overridden
+     * here so width: 100% / flex: 1 work as expected.
+     */
+    .civ-time-picker-period civ-segment {
       flex: 1;
+      display: block;
+    }
+
+    .civ-time-picker-period .civ-segment-btn {
+      width: 100%;
     }
   }
 
@@ -1028,6 +1042,16 @@
   .civ-combobox-option {
     @apply civ-px-3 civ-py-2 civ-cursor-pointer;
     font-size: var(--civ-typography-fontSize-base);
+  }
+
+  /* Disabled options stay visible (so users see the unavailable slot
+     and know to pick a neighbor) but are visually muted and inert.
+     `aria-disabled="true"` is set on the <li> so AT users hear them
+     announced as unavailable; keyboard arrow nav skips them in JS. */
+  .civ-combobox-option-disabled {
+    color: var(--civ-color-base-dark);
+    opacity: var(--civ-opacity-disabled);
+    cursor: not-allowed;
   }
 
   .civ-combobox-highlight {

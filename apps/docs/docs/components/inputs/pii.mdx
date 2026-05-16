@@ -1,0 +1,144 @@
+---
+title: PII (Sensitive Identifiers)
+sidebar_position: 8
+sidebar_label: PII
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
+# PII (Sensitive Identifiers)
+
+`<civ-ssn>` `<civ-ein>` `<civ-va-file-number>`
+
+Pre-configured text-input wrappers for the identifier fields that
+require extra protection: Social Security numbers, Employer
+Identification Numbers, and VA file numbers. Each component ships with
+the right mask, validator, default label, hint, and — for the
+PII-flagged identifiers (SSN and EIN) — the `data-civ-pii` attribute
+that the autosave system uses to keep sensitive values out of
+`localStorage`.
+
+All three extend [`civ-text-input`](./text-input.mdx) and dispatch the
+same events (`civ-input`, `civ-change` with `{ value: string }`).
+
+## PII protections
+
+The components below carry the `data-civ-pii` marker on the rendered
+DOM element. CivUI surfaces it in two places:
+
+- **Autosave filter**: `civ-form-autosave` excludes any field flagged
+  PII from its `localStorage` snapshot, so a draft restore doesn't
+  leak a Social Security number to other tabs or to an unencrypted
+  storage backend.
+- **Analytics**: when the field dispatches `civ-analytics`, the
+  payload sets `piiMasked: true` so an analytics adapter can mask the
+  value before it goes to Google Analytics / Mixpanel / etc.
+
+| Component | `pii: true` in mask preset | Autosave-excluded |
+| --- | --- | --- |
+| `<civ-ssn>` | ✓ | ✓ |
+| `<civ-ein>` | ✓ | ✓ |
+| `<civ-va-file-number>` | (no mask preset — uses validator only) | Mark with `data-persist-exclude` to opt in |
+
+If you collect a VA file number through `<civ-form-autosave>`, add
+`data-persist-exclude` to keep it out of the localStorage snapshot,
+matching the treatment of SSN and EIN.
+
+## SSN (`<civ-ssn>`)
+
+Pre-configured input for Social Security numbers with automatic
+masking, validation, and PII-aware blur-mode masking. Supports full
+9-digit or last-4-only modes.
+
+Default label: "Social Security number"
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `mode` | `'full' \| 'last4'` | `'full'` | Whether to collect full 9-digit SSN or last 4 digits only |
+
+### Full SSN
+
+<StoryEmbed id="forms-inputs-text-input--ssn" />
+
+### Last 4 digits
+
+<StoryEmbed id="forms-inputs-text-input--ssn-last-4" />
+
+### Usage
+
+```html
+<civ-ssn label="Social Security number" name="ssn" required></civ-ssn>
+
+<!-- Last 4 digits only -->
+<civ-ssn label="Last 4 of Social Security number" name="ssn-last4" mode="last4" required></civ-ssn>
+```
+
+## EIN (`<civ-ein>`)
+
+Pre-configured input for Employer Identification Numbers with
+automatic masking, validation, and PII-aware blur-mode masking. Uses
+the `##-#######` IRS format.
+
+Default label: "Employer Identification Number (EIN)"
+
+<StoryEmbed id="forms-inputs-text-input--ein" />
+
+### Usage
+
+```html
+<civ-ein label="Employer Identification Number" name="ein" required></civ-ein>
+```
+
+## VA File Number (`<civ-va-file-number>`)
+
+Pre-configured input for VA file numbers with built-in 8-9 digit
+validation and plain-language labeling. Used on VA benefit
+applications, claim status forms, and Veterans Affairs internal
+identifiers.
+
+Default label: "VA file number"
+
+<StoryEmbed id="forms-inputs-text-input--va-file-number" />
+
+### Usage
+
+```html
+<civ-va-file-number label="VA file number" name="vaFileNumber" required></civ-va-file-number>
+```
+
+## Accessibility
+
+All three components inherit the [`civ-text-input`](./text-input.mdx)
+accessibility contract:
+
+- Labels are required (plain-language consumer-supplied labels are
+  preferred over the defaults).
+- Validation errors fire on blur and announce via `role="alert"`.
+- `aria-describedby` wires up hint and error to the inner `<input>`.
+
+Per Section 508 guidance: when collecting a Social Security number,
+include a hint explaining the use case (e.g. "Used to verify your
+identity. We do not share this number."). Don't make the user guess
+why they're being asked.
+
+## Composition
+
+All three components emit raw, unmasked values — `123456789`, not
+`123-45-6789`. Server-side handlers stay simple, and re-prefilling
+from a saved draft round-trips cleanly.
+
+```html
+<civ-form>
+  <civ-fieldset legend="Identity verification">
+    <civ-ssn name="ssn" required></civ-ssn>
+    <civ-va-file-number name="vaFile" data-persist-exclude></civ-va-file-number>
+  </civ-fieldset>
+</civ-form>
+```
+
+```html
+<!-- Business tax filing -->
+<civ-form>
+  <civ-ein name="employerId" required></civ-ein>
+</civ-form>
+```

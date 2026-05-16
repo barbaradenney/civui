@@ -16,9 +16,9 @@ import EventsTable from "./_text-input.events.mdx";
 
 <!-- contract-link:end -->
 
-`<civ-text-input>` `<civ-ssn>` `<civ-ein>` `<civ-zip>` `<civ-phone>` `<civ-email>` `<civ-currency>` `<civ-routing-number>` `<civ-va-file-number>`
+`<civ-text-input>` `<civ-zip>` `<civ-routing-number>`
 
-Accessible text input with label, hint, error, and width variants. Supports input masking, declarative validation, prefix/suffix text, and inline icons. Uses ElementInternals for native form participation. [Specialized presets](#specialized-presets) for SSN, phone, email, ZIP, EIN, currency, routing number, and VA file number are documented below.
+Accessible text input with label, hint, error, and width variants. Supports input masking, declarative validation, prefix/suffix text, and inline icons. Uses ElementInternals for native form participation. The remaining single-input presets (ZIP code, routing number) are documented [below](#specialized-presets); contact fields live on [**Contact**](./contact.mdx), sensitive identifiers on [**PII**](./pii.mdx), and dollar amounts on [**Currency**](./currency.mdx).
 
 ## Examples
 
@@ -133,44 +133,11 @@ All other characters are inserted as literals.
 
 ## Specialized Presets
 
-These components extend `<civ-text-input>` with pre-configured masking, validation, labels, hints, and HTML attributes. All share the same events (`civ-input`, `civ-change` with `{ value: string }` detail).
-
-### SSN (`<civ-ssn>`)
-
-Pre-configured input for Social Security numbers with automatic masking, validation, and PII-aware blur-mode masking. Supports full 9-digit or last-4-only modes.
-
-Default label: "Social Security number"
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `mode` | `'full' \| 'last4'` | `'full'` | Whether to collect full 9-digit SSN or last 4 digits only |
-
-<StoryEmbed id="forms-inputs-text-input--ssn" />
-
-<StoryEmbed id="forms-inputs-text-input--ssn-last-4" />
-
-```html
-<civ-ssn label="Social Security number" name="ssn" required></civ-ssn>
-
-<!-- Last 4 digits only -->
-<civ-ssn label="Last 4 of Social Security number" name="ssn-last4" mode="last4" required></civ-ssn>
-```
-
-### EIN (`<civ-ein>`)
-
-Pre-configured input for Employer Identification Numbers with automatic masking, validation, and PII-aware blur-mode masking.
-
-Default label: "Employer Identification Number (EIN)"
-
-<StoryEmbed id="forms-inputs-text-input--ein" />
-
-```html
-<civ-ein label="Employer Identification Number" name="ein" required></civ-ein>
-```
+These wrappers extend `<civ-text-input>` with pre-configured masking, validation, default labels, hints, and HTML attributes. They share the same events (`civ-input`, `civ-change` with `{ value: string }` detail). The presets below are general-purpose text-input wrappers; identifier presets that need PII protection are on the [**PII**](./pii.mdx) page, contact presets on [**Contact**](./contact.mdx), and dollar amounts on [**Currency**](./currency.mdx).
 
 ### ZIP Code (`<civ-zip>`)
 
-Pre-configured input for US ZIP codes with automatic masking and validation. Supports standard 5-digit and extended ZIP+4 formats.
+Pre-configured input for US ZIP codes with automatic masking and validation. Supports standard 5-digit and extended ZIP+4 formats. Used as a leaf field in `<civ-address>`.
 
 Default label: "ZIP code"
 
@@ -190,54 +157,9 @@ Default label: "ZIP code"
 <civ-zip label="ZIP code" name="zip" extended required></civ-zip>
 ```
 
-### Phone (`<civ-phone>`)
-
-Pre-configured input for phone numbers with automatic formatting, masking, and validation. Supports US and international formats.
-
-Default label: "Phone number"
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `international` | `boolean` | `false` | Enable international phone number format |
-
-<StoryEmbed id="forms-inputs-text-input--phone-us" />
-
-<StoryEmbed id="forms-inputs-text-input--phone-international" />
-
-```html
-<!-- US phone number -->
-<civ-phone label="Phone number" name="phone" required></civ-phone>
-
-<!-- International phone number -->
-<civ-phone label="Phone number" name="phone" international required></civ-phone>
-```
-
-### Email (`<civ-email>`)
-
-Pre-configured input for email addresses with built-in validation and plain-language labeling.
-
-Default label: "Email address"
-
-<StoryEmbed id="forms-inputs-text-input--email" />
-
-```html
-<civ-email label="Email address" name="email" required></civ-email>
-```
-
-### Currency (`<civ-currency>`)
-
-Pre-configured input for US dollar amounts with automatic formatting,
-masking, and validation. See the dedicated
-[**Currency** page](./currency.mdx) for full documentation, examples,
-and the Currency-vs-Number decision table.
-
-```html
-<civ-currency label="Monthly income" name="amount" required></civ-currency>
-```
-
 ### Routing Number (`<civ-routing-number>`)
 
-Pre-configured input for bank routing numbers with built-in 9-digit validation and plain-language labeling.
+Pre-configured input for bank routing numbers with built-in 9-digit validation and plain-language labeling. Used in `<civ-direct-deposit>` alongside an account number and `<civ-currency>` deposit amount.
 
 Default label: "Routing number"
 
@@ -245,18 +167,6 @@ Default label: "Routing number"
 
 ```html
 <civ-routing-number label="Routing number" name="routing" required></civ-routing-number>
-```
-
-### VA File Number (`<civ-va-file-number>`)
-
-Pre-configured input for VA file numbers with built-in 8-9 digit validation and plain-language labeling.
-
-Default label: "VA file number"
-
-<StoryEmbed id="forms-inputs-text-input--va-file-number" />
-
-```html
-<civ-va-file-number label="VA file number" name="vaFileNumber" required></civ-va-file-number>
 ```
 
 ## Usage

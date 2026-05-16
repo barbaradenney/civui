@@ -2929,16 +2929,18 @@
   }
 
   /*
-   * Trigger mirrors `.civ-time-picker-now-btn` — a button-like
-   * affordance smaller than a primary action: transparent
-   * background, primary-colored text, light-tint hover. Distinct
+   * Trigger uses the secondary-button palette — a button-like
+   * affordance smaller than a primary action: `primary-lightest`
+   * background tint, `primary-dark` text, light-tint hover. Distinct
    * from a true link (no underline) so the user reads it as a
    * toggle, not navigation away.
    */
   .civ-disclosure__trigger {
     @apply civ-inline-flex civ-items-center civ-gap-1 civ-cursor-pointer
            civ-px-2 civ-py-1 civ-rounded civ-text-sm civ-font-semibold
-           civ-text-primary civ-bg-transparent civ-border-0;
+           civ-border-0;
+    background-color: var(--civ-color-primary-lightest);
+    color: var(--civ-color-primary-dark);
     list-style: none;
   }
 
@@ -2955,7 +2957,11 @@
   }
 
   .civ-disclosure__trigger:hover {
-    @apply civ-bg-primary-lightest;
+    background-color: var(--civ-color-primary-lighter);
+  }
+
+  .civ-disclosure__trigger:active {
+    background-color: var(--civ-color-primary-light);
   }
 
   /*

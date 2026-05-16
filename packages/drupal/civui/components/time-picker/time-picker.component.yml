@@ -2,15 +2,19 @@ $schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schema
 name: Time Picker
 status: stable
 group: CivUI Inputs
-description: 'Self-contained time-of-day input. Stores its value in 24-hour ISO format (HH:MM); the format prop controls display only.'
+description: 'Self-contained time-of-day input. Two modes: `combo` (default, USWDS-style typeable combobox) and `select` (three dropdowns). Stores its value in 24-hour ISO format (HH:MM).'
 
 props:
   type: object
   properties:
+    mode:
+      title: Mode
+      type: string
+      description: 'Input mode: "combo" (default) or "select"'
     legend:
       title: Legend
       type: string
-      description: 'Fieldset legend rendered above the sub-fields'
+      description: 'Fieldset legend (select mode) or label fallback (combo mode)'
     name:
       title: Name
       type: string
@@ -34,20 +38,32 @@ props:
     minute_step:
       title: Minute step
       type: integer
-      default: 5
-      description: 'Increment for the minute select'
+      default: 0
+      description: 'Increment for the minute slots (default 15 in combo, 5 in select)'
+    min:
+      title: Min time
+      type: string
+      description: 'Earliest allowed time (24-hour HH:MM, combo mode only)'
+    max:
+      title: Max time
+      type: string
+      description: 'Latest allowed time (24-hour HH:MM, combo mode only)'
+    placeholder:
+      title: Placeholder
+      type: string
+      description: 'Placeholder for the combo-mode input'
     hour_label:
       title: Hour label
       type: string
-      description: 'Custom label for the hour select'
+      description: 'Custom label for the hour select (select mode)'
     minute_label:
       title: Minute label
       type: string
-      description: 'Custom label for the minute select'
+      description: 'Custom label for the minute select (select mode)'
     period_label:
       title: Period label
       type: string
-      description: 'Custom label for the AM/PM select'
+      description: 'Custom label for the AM/PM select (select mode)'
     required:
       title: Required
       type: boolean

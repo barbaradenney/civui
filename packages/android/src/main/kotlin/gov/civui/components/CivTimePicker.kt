@@ -1,8 +1,10 @@
 // CivUI — CivTimePicker for Jetpack Compose
 // Time-of-day input (mirrors the web civ-time-picker component).
 //
-// Placeholder body — the prop surface satisfies schema parity. Implementation
-// should use Material3 TimePicker or TimeInput. See audit-debt.md.
+// Placeholder body — the prop surface satisfies schema parity.
+// Implementation should use Material3 TimePicker or TimeInput. The
+// `mode` prop maps to TimePicker (combo) vs TimeInput (select) per
+// Material guidelines. See audit-debt.md.
 
 package gov.civui.components
 
@@ -16,13 +18,17 @@ import androidx.compose.ui.Modifier
  */
 @Composable
 fun CivTimePicker(
+    mode: String = "combo",
     legend: String = "",
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     name: String = "",
     format: String = "12",
-    minuteStep: Int = 5,
+    minuteStep: Int = 0,
+    min: String = "",
+    max: String = "",
+    placeholder: String = "",
     hourLabel: String = "",
     minuteLabel: String = "",
     periodLabel: String = "",

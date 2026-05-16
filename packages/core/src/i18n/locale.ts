@@ -171,6 +171,7 @@ export interface CivLocaleStrings {
   timePickerPeriodLabel: string;
   timePickerAm: string;
   timePickerPm: string;
+  timePickerPlaceholder: string; // combo-mode placeholder, e.g. "e.g. 9:00 AM"
 
   // Form footer
   formRequiredLegend: string; // "indicates a required field"
@@ -826,6 +827,7 @@ const defaultStrings: CivLocaleStrings = {
   timePickerPeriodLabel: 'AM/PM',
   timePickerAm: 'AM',
   timePickerPm: 'PM',
+  timePickerPlaceholder: 'e.g. 9:00 AM',
 
   formRequiredLegend: 'indicates a required field',
 

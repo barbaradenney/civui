@@ -3,15 +3,21 @@ import type { ComponentSchema } from '../schema.types.js';
 const schema: ComponentSchema = {
   $schema: '1.0',
   name: 'civ-time-picker',
-  description: 'Self-contained time input rendered as three selects: hour, minute, and AM/PM (12-hour mode only). Always stores its value in 24-hour ISO format (`HH:MM`) — the format prop controls display, not storage. Use it for appointment scheduling, hearing times, and any time-of-day question.',
+  description: 'Self-contained time input with two modes: `combo` (USWDS-style typeable combobox with pre-built slots — default, best for scheduling) and `select` (three dropdowns for hour, minute, AM/PM — predictable on every device). Always stores its value in 24-hour ISO `HH:MM`; the format prop controls display, not storage. Use for appointment scheduling, hearing times, and any time-of-day prompt.',
   category: 'form-group',
   extends: 'CivFormElement',
   isGroup: true,
 
   props: {
+    mode: {
+      type: 'enum',
+      description: 'Input mode. `combo` (default) renders a single typeable combobox with pre-built slots — fastest for scheduling. `select` renders three dropdowns (hour, minute, AM/PM) — best for free-form precision or when slot filtering would be confusing.',
+      default: 'combo',
+      values: ['combo', 'select'],
+    },
     legend: {
       type: 'string',
-      description: 'Fieldset legend rendered above the sub-fields',
+      description: 'Fieldset legend (select mode) or label fallback (combo mode)',
       default: '',
     },
     format: {
@@ -22,25 +28,40 @@ const schema: ComponentSchema = {
     },
     minuteStep: {
       type: 'number',
-      description: 'Increment for the minute select. Defaults to 5; use 1 for fine-grained, 15/30 for coarser.',
-      default: 5,
+      description: 'Increment for the minute slots. Defaults to 15 in combo mode (scheduling-friendly slot density), 5 in select mode. Use 1 for arbitrary precision (best with select mode).',
+      default: 0,
       attribute: 'minute-step',
+    },
+    min: {
+      type: 'string',
+      description: 'Earliest allowed time, 24-hour `HH:MM`. Combo mode only — restricts the slot list (e.g. `"09:00"` for business hours).',
+      default: '',
+    },
+    max: {
+      type: 'string',
+      description: 'Latest allowed time, 24-hour `HH:MM`. Combo mode only.',
+      default: '',
+    },
+    placeholder: {
+      type: 'string',
+      description: 'Placeholder for the combo-mode input. Defaults to the locale `timePickerPlaceholder` ("e.g. 9:00 AM"). Ignored in select mode.',
+      default: '',
     },
     hourLabel: {
       type: 'string',
-      description: 'Custom label for the hour select',
+      description: 'Custom label for the hour select (select mode only)',
       default: '',
       attribute: 'hour-label',
     },
     minuteLabel: {
       type: 'string',
-      description: 'Custom label for the minute select',
+      description: 'Custom label for the minute select (select mode only)',
       default: '',
       attribute: 'minute-label',
     },
     periodLabel: {
       type: 'string',
-      description: 'Custom label for the AM/PM select',
+      description: 'Custom label for the AM/PM select (select mode only)',
       default: '',
       attribute: 'period-label',
     },
@@ -48,7 +69,7 @@ const schema: ComponentSchema = {
 
   events: {
     'civ-input': {
-      description: 'Fires when any sub-field changes',
+      description: 'Fires when the value changes (every keystroke in combo mode, every sub-field commit in select mode)',
       detail: {
         value: { type: 'string', description: '24-hour ISO time string (HH:MM)' },
         hour: { type: 'string', description: 'Hour sub-field value as shown to the user' },
@@ -57,7 +78,7 @@ const schema: ComponentSchema = {
       },
     },
     'civ-change': {
-      description: 'Fires when any sub-field commits',
+      description: 'Fires when the value commits',
       detail: {
         value: { type: 'string', description: '24-hour ISO time string (HH:MM)' },
         hour: { type: 'string', description: 'Hour sub-field value' },

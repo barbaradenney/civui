@@ -18,41 +18,80 @@ import EventsTable from "./_time-picker.events.mdx";
 
 `<civ-time-picker>`
 
-Self-contained time input rendered as three selects: hour, minute, and AM/PM
-(12-hour mode only). Always stores its value in 24-hour ISO format (`HH:MM`) —
-the `format` prop controls display, not storage. Use it for appointment
-scheduling, hearing times, and any "time of day" prompt.
+Self-contained time input. Always stores its value in 24-hour ISO format
+(`HH:MM`) regardless of display format or input mode — the wire format
+never changes.
 
 For known past dates use [`<civ-memorable-date>`](./date.mdx); for future
 dates use [`<civ-date-picker>`](./date.mdx).
 
+## Two input modes
+
+The component picks between two interaction patterns via the `mode` prop:
+
+### `mode="combo"` (default, recommended) — USWDS pattern
+
+A single typeable combobox with pre-built time slots driven by
+`minute-step`. Users can type to filter (`"230"` → "2:30 AM"/"2:30 PM"),
+or pick from the dropdown. Optional `min` / `max` bounds restrict the
+slot list to business hours. Best for **scheduling** — appointments,
+hearing times, callback windows.
+
+Matches the [USWDS time picker](https://designsystem.digital.gov/components/time-picker/) pattern.
+Composes the existing [`<civ-combobox>`](./combobox.mdx).
+
+### `mode="select"` — three dropdowns
+
+Three selects (hour, minute, AM/PM) inside a fieldset. Predictable,
+every-device-safe, no typing required. Use when slot-list filtering
+would be confusing — capturing an arbitrary incident time, or
+`minute-step="1"` precision that would create a 1,440-slot combobox.
+
 ## Examples
 
-### Default
+### Default (combo mode)
 
 <StoryEmbed id="forms-inputs-time-picker--default" />
+
+### Business hours (`min` / `max` + 30-min step)
+
+<StoryEmbed id="forms-inputs-time-picker--business-hours" />
 
 ### 24-hour format
 
 <StoryEmbed id="forms-inputs-time-picker--twenty-four-hour" />
 
-### Fine-grained (minute step = 1)
-
-<StoryEmbed id="forms-inputs-time-picker--fine-grained" />
-
 ### Prefilled value
 
 <StoryEmbed id="forms-inputs-time-picker--prefilled" />
-
-### Required field
-
-<StoryEmbed id="forms-inputs-time-picker--required" />
 
 ### With error
 
 <StoryEmbed id="forms-inputs-time-picker--with-error" />
 
+### Select mode (three dropdowns)
+
+<StoryEmbed id="forms-inputs-time-picker--select-mode" />
+
+### Select mode — fine-grained (minute step = 1)
+
+<StoryEmbed id="forms-inputs-time-picker--select-mode-fine-grained" />
+
+### Select mode — required
+
+<StoryEmbed id="forms-inputs-time-picker--select-mode-required" />
+
 [Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-inputs-time-picker--default)
+
+## When to use which mode
+
+| Scenario | Mode | Why |
+| --- | --- | --- |
+| Schedule an appointment, hearing, callback | **combo** | Pre-built slots match the mental model ("pick a time slot"); typing skips to a slot fast |
+| Pick from business-hours offering | **combo** | `min` / `max` keep the slot list short |
+| Record an arbitrary incident time | **select** | No fixed slots — user types/picks any minute |
+| Need minute-level precision (`minute-step="1"`) | **select** | A 1,440-slot combobox is unwieldy |
+| Form will be filled on devices with poor IME support | **select** | No typing needed |
 
 ## Shared Props
 
@@ -67,72 +106,106 @@ All form components share these props: `name`, `value`, `hint`, `error`,
 
 <EventsTable />
 
-## Value Format
+## Value format
 
-The `value` is always a 24-hour ISO time string (`HH:MM`), regardless of the
-`format` prop. This means a server-rendered "14:30" displays as "2:30 PM" in
-12-hour mode and "14:30" in 24-hour mode — the wire format never changes.
+The `value` is always a 24-hour ISO time string (`HH:MM`), regardless of
+the `format` prop. A server-rendered `value="14:30"` displays as "2:30 PM"
+in 12-hour mode and "14:30" in 24-hour mode — the wire format never
+changes.
 
-When the user hasn't picked all three sub-fields, `value` is `""`. In
-12-hour mode the AM/PM select must be set for the value to assemble; in
-24-hour mode only hour + minute are required.
+When the user hasn't fully picked a time, `value` is `""`. In 12-hour
+select mode the AM/PM select must be set for the value to assemble; in
+24-hour mode only hour + minute are required. In combo mode, the value is
+either an exact match for a slot or empty.
 
 ## Usage
 
 ```html
-<!-- Appointment scheduling, 30-minute slots -->
+<!-- Schedule an appointment (default combo, 15-min slots, business hours) -->
 <civ-time-picker
-  legend="Appointment time"
+  label="Appointment time"
   name="appt_time"
-  hint="Choose a 30-minute slot during business hours"
+  min="09:00"
+  max="17:00"
   minute-step="30"
+  required
 ></civ-time-picker>
 
-<!-- 24-hour format for military / scheduling systems -->
+<!-- 24-hour format (military / international scheduling) -->
 <civ-time-picker
-  legend="Hearing time"
-  name="hearing_time"
+  label="Hearing time"
+  name="hearing"
   format="24"
-  minute-step="15"
-></civ-time-picker>
-
-<!-- Fine-grained selection (every minute) -->
-<civ-time-picker
-  legend="Exact time of incident"
-  name="incident_time"
-  minute-step="1"
+  min="08:00"
+  max="18:00"
 ></civ-time-picker>
 
 <!-- Pre-populated from server data -->
 <civ-time-picker
-  legend="Departure time"
+  label="Departure time"
   name="departure"
   value="14:30"
-  minute-step="15"
+></civ-time-picker>
+
+<!-- Free-form precision: three dropdowns + minute-step=1 -->
+<civ-time-picker
+  mode="select"
+  legend="Exact time of incident"
+  name="incident_time"
+  minute-step="1"
 ></civ-time-picker>
 ```
 
 ## Accessibility
 
-- Renders a real `<fieldset>` with a `<legend>`. If no `legend` is set, a
+### Combo mode
+- Single `<input role="combobox">` with an associated listbox. Arrow keys
+  navigate, Enter and Tab both commit the highlighted slot, Escape
+  restores the previous selection.
+- **Digit-aware filter.** Typing matches both the visible label and the
+  digit-only form of the label, so `"230"` finds `"2:30 AM"` and
+  `"2:30 PM"`, and `"9 AM"` finds `"9:00 AM"`. The full label substring
+  also matches (`"5:30"` → 5:30 AM/PM), as does the AM/PM modifier
+  combined with digits (`"9p"` → 9:00 PM, 9:15 PM, …).
+- **Out-of-grid / out-of-bounds `value`.** If the consumer sets
+  `value="14:37"` with `minute-step="15"`, OR `value="08:00"` with
+  `min="09:00"`, the value doesn't match a generated slot. The
+  component injects a synthetic option so the input still renders the
+  formatted label — the user sees what's submitted. Picking a real
+  slot replaces it.
+- **Free-typed unmatched text.** Typing a string the filter can't
+  match leaves the form value empty. On blur, the input snaps back
+  to the selected option's label, or clears entirely if there's no
+  selection.
+
+### Combo mode props
+- Use `label` for combo mode (the combobox renders a `<label for>`).
+  `legend` is accepted as a fallback so consumers sharing markup
+  between modes don't have to swap props — but `label` is the
+  canonical surface in combo mode.
+
+### Select mode
+- Real `<fieldset>` with a `<legend>`. If no `legend` is set, a
   visually-hidden "Time" fallback ensures the fieldset stays Section 508
-  compliant — assistive tech still gets a group label.
-- Each sub-field is a real `<civ-select>` with its own labelled `<select>`
-  element. Keyboard navigation between hour/minute/period uses native tab
-  order.
+  compliant.
+- Each sub-field is a real `<civ-select>` with its own labelled
+  `<select>` element. Keyboard navigation between hour/minute/period uses
+  native tab order.
 - `aria-describedby` chains the legend → hint → error so screen readers
   announce them in order on focus.
 
 ## Localization
 
-Hour/minute/period sub-field labels and the AM/PM strings come from the
-locale registry:
+All user-facing strings come from the locale registry:
 
-- `timePickerHourLabel` (default `"Hour"`)
-- `timePickerMinuteLabel` (default `"Minute"`)
-- `timePickerPeriodLabel` (default `"AM/PM"`)
+- `timePickerDefaultLegend` (default `"Time"`, used when no `legend` /
+  `label` is set)
+- `timePickerPlaceholder` (default `"e.g. 9:00 AM"`, combo-mode input
+  placeholder)
+- `timePickerHourLabel` (default `"Hour"`, select mode)
+- `timePickerMinuteLabel` (default `"Minute"`, select mode)
+- `timePickerPeriodLabel` (default `"AM/PM"`, select mode)
 - `timePickerAm` / `timePickerPm` (defaults `"AM"` / `"PM"`)
-- `timePickerDefaultLegend` (default `"Time"`, used when `legend` is empty)
 
-Override via `setLocale()` or per-component with the `hour-label`,
-`minute-label`, `period-label` props.
+Override via `setLocale()` or per-component with the `placeholder`,
+`hour-label`, `minute-label`, `period-label` props.

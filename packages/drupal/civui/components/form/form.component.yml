@@ -24,6 +24,16 @@ props:
       type: integer
       default: 3
       description: 'Heading level for the error summary'
+    required_legend:
+      title: Required-field legend
+      type: boolean
+      default: false
+      description: 'Render "* indicates a required field" in the form footer'
+    confirm_before_submit:
+      title: Confirm before submit
+      type: boolean
+      default: false
+      description: 'Intercept submits and dispatch a confirm event before firing'
 
 slots:
   default:

@@ -1019,6 +1019,12 @@ function mapEventName(name: string): string {
     onPrefillApplied: 'civ-prefill-applied',
     onInvalid: 'civ-invalid',
     onClose: 'civ-dismiss',
+    onToggle: 'civ-toggle',
+    onSubmitConfirm: 'civ-submit-confirm',
+    onSubmitCancelled: 'civ-submit-cancelled',
+    onAutosaveLoaded: 'civ-autosave-loaded',
+    onAutosaveSaved: 'civ-autosave-saved',
+    onAutosaveCleared: 'civ-autosave-cleared',
     'civ-action-sheet-close': 'civ-dismiss', // web action-sheet close -> dismiss
     'civ-modal-close': 'civ-dismiss', // web modal close -> dismiss
     onUploadCancel: 'civ-upload-cancel',

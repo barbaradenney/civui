@@ -13,20 +13,40 @@ async function setSelectValue(el: HTMLElement, name: string, value: string) {
   await elementUpdated(select);
 }
 
+/**
+ * Click the matching civ-segment inside a civ-segmented-control. Used
+ * for the AM/PM sub-control in select mode (which is rendered as a
+ * segmented control rather than a dropdown so the two-option binary
+ * choice is a single tap on every viewport).
+ */
+async function setSegmentedValue(el: HTMLElement, name: string, value: string) {
+  const group = el.querySelector(`civ-segmented-control[name="${name}"]`) as HTMLElement & { value: string };
+  const segment = group.querySelector(`civ-segment[value="${value}"]`) as HTMLElement;
+  const button = segment.querySelector('button') as HTMLButtonElement;
+  button.click();
+  await elementUpdated(group);
+}
+
 describe('civ-time-picker', () => {
-  it('renders a fieldset with three selects in 12-hour mode', async () => {
+  it('renders a fieldset with hour/minute selects + AM-PM segmented-control in 12-hour mode', async () => {
     const el = await fixture<CivTimePicker>('<civ-time-picker mode="select" legend="Appointment time" name="appt"></civ-time-picker>');
     expect(el.querySelector('fieldset')).not.toBeNull();
     expect(el.querySelector('civ-select[name="appt-hour"]')).not.toBeNull();
     expect(el.querySelector('civ-select[name="appt-minute"]')).not.toBeNull();
-    expect(el.querySelector('civ-select[name="appt-period"]')).not.toBeNull();
+    // AM/PM is rendered as civ-segmented-control (two-option binary
+    // choice — single tap, no dropdown overhead) rather than a third
+    // civ-select. The host's _readChildValues reads from this control
+    // via the segmented-control selector.
+    expect(el.querySelector('civ-segmented-control[name="appt-period"]')).not.toBeNull();
+    expect(el.querySelector('civ-segment[value="AM"]')).not.toBeNull();
+    expect(el.querySelector('civ-segment[value="PM"]')).not.toBeNull();
   });
 
   it('hides AM/PM in 24-hour mode', async () => {
     const el = await fixture<CivTimePicker>('<civ-time-picker mode="select" legend="When" name="t" format="24"></civ-time-picker>');
     expect(el.querySelector('civ-select[name="t-hour"]')).not.toBeNull();
     expect(el.querySelector('civ-select[name="t-minute"]')).not.toBeNull();
-    expect(el.querySelector('civ-select[name="t-period"]')).toBeNull();
+    expect(el.querySelector('civ-segmented-control[name="t-period"]')).toBeNull();
   });
 
   it('renders the legend text', async () => {
@@ -63,7 +83,7 @@ describe('civ-time-picker', () => {
     await elementUpdated(el);
     const hourSel = el.querySelector('civ-select[name="hour"]') as any;
     const minuteSel = el.querySelector('civ-select[name="minute"]') as any;
-    const periodSel = el.querySelector('civ-select[name="period"]') as any;
+    const periodSel = el.querySelector('civ-segmented-control[name="period"]') as any;
     expect(hourSel.value).toBe('2');
     expect(minuteSel.value).toBe('30');
     expect(periodSel.value).toBe('PM');
@@ -73,7 +93,7 @@ describe('civ-time-picker', () => {
     const el = await fixture<CivTimePicker>('<civ-time-picker mode="select" legend="When" value="00:00"></civ-time-picker>');
     await elementUpdated(el);
     const hourSel = el.querySelector('civ-select[name="hour"]') as any;
-    const periodSel = el.querySelector('civ-select[name="period"]') as any;
+    const periodSel = el.querySelector('civ-segmented-control[name="period"]') as any;
     expect(hourSel.value).toBe('12');
     expect(periodSel.value).toBe('AM');
   });
@@ -82,7 +102,7 @@ describe('civ-time-picker', () => {
     const el = await fixture<CivTimePicker>('<civ-time-picker mode="select" legend="When" value="12:00"></civ-time-picker>');
     await elementUpdated(el);
     const hourSel = el.querySelector('civ-select[name="hour"]') as any;
-    const periodSel = el.querySelector('civ-select[name="period"]') as any;
+    const periodSel = el.querySelector('civ-segmented-control[name="period"]') as any;
     expect(hourSel.value).toBe('12');
     expect(periodSel.value).toBe('PM');
   });
@@ -94,7 +114,7 @@ describe('civ-time-picker', () => {
 
     await setSelectValue(el, 't-hour', '2');
     await setSelectValue(el, 't-minute', '30');
-    await setSelectValue(el, 't-period', 'PM');
+    await setSegmentedValue(el, 't-period', 'PM');
 
     expect(el.value).toBe('14:30');
     expect(handler).toHaveBeenCalled();
@@ -113,7 +133,7 @@ describe('civ-time-picker', () => {
     const el = await fixture<CivTimePicker>('<civ-time-picker mode="select" legend="When" name="t" minute-step="15"></civ-time-picker>');
     await setSelectValue(el, 't-hour', '12');
     await setSelectValue(el, 't-minute', '00');
-    await setSelectValue(el, 't-period', 'AM');
+    await setSegmentedValue(el, 't-period', 'AM');
     expect(el.value).toBe('00:00');
   });
 
@@ -145,6 +165,22 @@ describe('civ-time-picker', () => {
     });
   });
 
+  it('cascades disabled to the AM/PM segmented-control via formDisabledCallback', async () => {
+    const el = await fixture<CivTimePicker>('<civ-time-picker mode="select" legend="When"></civ-time-picker>');
+    el.formDisabledCallback(true);
+    await elementUpdated(el);
+    const segGroup = el.querySelector('civ-segmented-control') as any;
+    expect(segGroup.disabled).toBe(true);
+  });
+
+  it('uses the locale strings for the AM/PM segment labels', async () => {
+    const el = await fixture<CivTimePicker>('<civ-time-picker mode="select" legend="When"></civ-time-picker>');
+    const am = el.querySelector('civ-segment[value="AM"]') as any;
+    const pm = el.querySelector('civ-segment[value="PM"]') as any;
+    expect(am.label).toBe('AM');
+    expect(pm.label).toBe('PM');
+  });
+
   it('renders the hint and error in the fieldset header', async () => {
     const el = await fixture<CivTimePicker>(
       '<civ-time-picker mode="select" legend="When" hint="Local time" error="Required"></civ-time-picker>'
@@ -168,14 +204,14 @@ describe('civ-time-picker', () => {
     el.format = '24';
     await elementUpdated(el);
     expect((el.querySelector('civ-select[name="hour"]') as any).value).toBe('14');
-    expect(el.querySelector('civ-select[name="period"]')).toBeNull();
+    expect(el.querySelector('civ-segmented-control[name="period"]')).toBeNull();
   });
 
   it('clears _minute when minute-step change orphans the current selection', async () => {
     const el = await fixture<CivTimePicker>('<civ-time-picker mode="select" legend="When" name="t" minute-step="1"></civ-time-picker>');
     await setSelectValue(el, 't-hour', '2');
     await setSelectValue(el, 't-minute', '17');
-    await setSelectValue(el, 't-period', 'AM');
+    await setSegmentedValue(el, 't-period', 'AM');
     expect(el.value).toBe('02:17');
 
     el.minuteStep = 15;
@@ -209,7 +245,7 @@ describe('civ-time-picker', () => {
     const el = await fixture<CivTimePicker>('<civ-time-picker mode="select" legend="When" name="t" minute-step="15"></civ-time-picker>');
     await setSelectValue(el, 't-hour', '9');
     await setSelectValue(el, 't-minute', '00');
-    await setSelectValue(el, 't-period', 'AM');
+    await setSegmentedValue(el, 't-period', 'AM');
     // ElementInternals form value is set via updateFormValue → setFormValue.
     // jsdom doesn't expose internals.value directly; assert el.value and
     // that the host carries a string-coerced value attribute mirror.
@@ -221,7 +257,7 @@ describe('civ-time-picker', () => {
     await elementUpdated(el);
     // 13:00 is valid as 24-hour ISO; in 12-hour display it maps to 1 PM.
     expect((el.querySelector('civ-select[name="hour"]') as any).value).toBe('1');
-    expect((el.querySelector('civ-select[name="period"]') as any).value).toBe('PM');
+    expect((el.querySelector('civ-segmented-control[name="period"]') as any).value).toBe('PM');
   });
 
   it('warns on invalid minute-step but still renders sane options', async () => {

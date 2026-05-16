@@ -368,10 +368,22 @@
       row-gap: var(--civ-spacing-1, 4px);
     }
 
+    /*
+     * Mobile layout: hour and minute split the row 50/50; AM/PM
+     * (rendered as civ-segmented-control) drops to a full-width row
+     * underneath. Mirrors the civ-memorable-date pattern where the
+     * compact sub-fields share a row and the higher-information
+     * affordance gets its own. The segmented control's two large
+     * tap targets work better full-width than squeezed into a third
+     * of the screen.
+     */
     .civ-time-picker-hour,
-    .civ-time-picker-minute,
+    .civ-time-picker-minute {
+      width: calc(50% - var(--civ-spacing-2, 10px));
+    }
+
     .civ-time-picker-period {
-      width: calc(33% - var(--civ-spacing-2, 10px));
+      width: 100%;
     }
   }
 

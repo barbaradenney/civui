@@ -112,10 +112,12 @@ const schema: ComponentSchema = {
         { type: 'error', condition: 'error', bindings: { text: 'error' } },
         { type: 'select', bindings: { name: 'hour' } },
         { type: 'select', bindings: { name: 'minute' } },
-        // AM/PM select is rendered only in 12-hour mode. `condition` is
-        // a free-form hint to platform implementers — the literal token
+        // AM/PM is rendered only in 12-hour mode. Implemented as a
+        // segmented control (two-option binary choice — single-tap on
+        // every viewport, no dropdown overhead). `condition` is a
+        // free-form hint to platform implementers — the literal token
         // describes the predicate, not the prop name.
-        { type: 'select', condition: "format === '12'", bindings: { name: 'period' } },
+        { type: 'button', condition: "format === '12'", bindings: { name: 'period' } },
       ],
     },
   ],

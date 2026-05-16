@@ -17,6 +17,7 @@ import type { ComboboxOption } from '../combobox/civ-combobox.js';
 // Side-effect imports register the child custom elements.
 import '../select/civ-select.js';
 import '../combobox/civ-combobox.js';
+import '@civui/controls/segmented-control';
 
 export type TimePickerFormat = '12' | '24';
 export type TimePickerMode = 'select' | 'combo';
@@ -246,13 +247,6 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
     return opts;
   }
 
-  private get _periodOptions(): { value: string; label: string }[] {
-    return [
-      { value: 'AM', label: t('timePickerAm') },
-      { value: 'PM', label: t('timePickerPm') },
-    ];
-  }
-
   /**
    * Build the full list of time slots for combo mode. Each slot is a
    * `ComboboxOption` with `value` as 24-hour ISO `HH:MM` and `label`
@@ -344,6 +338,8 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
     selects.forEach((s) => { s.disabled = disabled; });
     const combo = this.querySelector('civ-combobox') as (HTMLElement & { disabled: boolean }) | null;
     if (combo) combo.disabled = disabled;
+    const period = this.querySelector('civ-segmented-control') as (HTMLElement & { disabled: boolean }) | null;
+    if (period) period.disabled = disabled;
   }
 
   override render() {
@@ -422,16 +418,18 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
         ${this.format === '12'
           ? html`
               <div class="civ-time-picker-period">
-                <civ-select
-                  label="${periodLabel}"
+                <civ-segmented-control
+                  legend="${periodLabel}"
                   name="${this.name ? `${this.name}-period` : 'period'}"
-                  .options="${this._periodOptions}"
                   .value="${this._period}"
                   ?required="${this.required}"
                   ?disabled="${this.disabled}"
                   ?hide-required-indicator="${this.required}"
                   disable-analytics
-                ></civ-select>
+                >
+                  <civ-segment value="AM" label="${t('timePickerAm')}"></civ-segment>
+                  <civ-segment value="PM" label="${t('timePickerPm')}"></civ-segment>
+                </civ-segmented-control>
               </div>
             `
           : nothing}
@@ -477,13 +475,16 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
     const minuteSel = this.querySelector(
       `civ-select[name="${baseName ? `${baseName}-minute` : 'minute'}"]`,
     ) as (HTMLElement & { value: string }) | null;
-    const periodSel = this.querySelector(
-      `civ-select[name="${baseName ? `${baseName}-period` : 'period'}"]`,
+    // Period is a segmented-control (two-option binary choice) so it
+    // can be a single tap on every viewport. The selector matches the
+    // segmented-control's `name`, not a select.
+    const periodCtrl = this.querySelector(
+      `civ-segmented-control[name="${baseName ? `${baseName}-period` : 'period'}"]`,
     ) as (HTMLElement & { value: string }) | null;
 
     if (hourSel) this._hour = hourSel.value || '';
     if (minuteSel) this._minute = minuteSel.value || '';
-    if (periodSel) this._period = (periodSel.value as 'AM' | 'PM' | '') || '';
+    if (periodCtrl) this._period = (periodCtrl.value as 'AM' | 'PM' | '') || '';
   }
 
   private _onFieldInput(e: CustomEvent): void {

@@ -21,6 +21,13 @@ that the autosave system uses to keep sensitive values out of
 All three extend [`civ-text-input`](./text-input.mdx) and dispatch the
 same events (`civ-input`, `civ-change` with `{ value: string }`).
 
+:::tip Cross-cutting strategy
+For the full end-to-end story — autosave defaults, analytics
+masking, anti-patterns, and the "Last 4 of SSN" minimization
+pattern — see [**Handling PII**](../../foundations/handling-pii.mdx)
+in Foundations.
+:::
+
 ## PII protections
 
 The components below carry the `data-civ-pii` marker on the rendered

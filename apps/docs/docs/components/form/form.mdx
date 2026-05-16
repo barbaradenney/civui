@@ -73,6 +73,8 @@ After an async submit fails, call `form.setServerErrors({ fieldName: 'message' }
 | `prefill` | `boolean` | `false` | Pre-fill fields from URL query parameters |
 | `track-dirty` | `boolean` | `false` | Track whether any field has been modified |
 | `error-heading-level` | `3 \| 4 \| 5 \| 6` | `3` | Heading level for the error summary |
+| `required-legend` | `boolean` | `false` | Render "&#42; indicates a required field" in the form footer |
+| `confirm-before-submit` | `boolean` | `false` | Intercept validated submits and dispatch `civ-submit-confirm` with `proceed()` / `cancel()` callbacks |
 
 ## Persistence
 
@@ -118,6 +120,8 @@ form.dirty;             // Whether any field has been modified
 | `civ-submit` | `{ formData: FormData }` | Fires when validation passes |
 | `civ-invalid` | `{ errors: FormFieldError[] }` | Fires when validation fails |
 | `civ-dirty` | `{ dirty: boolean }` | Fires when dirty state changes |
+| `civ-submit-confirm` | `{ formData, data, proceed, cancel }` | Fires before `civ-submit` when `confirm-before-submit` is set. Call `proceed()` to fire the actual submit; `cancel()` to abort |
+| `civ-submit-cancelled` | — | Fires when `cancel()` was called on the matching `civ-submit-confirm` |
 
 ## Submission
 
@@ -156,3 +160,81 @@ Native form submission is prevented. Handle the `civ-submit` event to process th
   <civ-text-input label="Last name" name="lastName"></civ-text-input>
 </civ-form>
 ```
+
+## Required-field legend
+
+Federal forms commonly end with a "&#42; indicates a required field"
+legend so users know what the asterisk means. Pass the `required-legend`
+prop and the legend renders in the form footer:
+
+```html
+<civ-form required-legend>
+  <civ-text-input label="Full name" name="name" required></civ-text-input>
+  <civ-text-input label="Email" name="email"></civ-text-input>
+  <civ-button type="submit">Submit</civ-button>
+</civ-form>
+```
+
+## Statutory disclosures slot
+
+Federal forms typically end with Privacy Act, Paperwork Reduction Act, and
+OMB Control Number statements. Pass a child block tagged
+`data-civ-form-disclosures` and it relocates into a styled footer slot
+beneath the form content, separated by a subtle top border:
+
+```html
+<civ-form required-legend>
+  <!-- fields and submit button -->
+
+  <div data-civ-form-disclosures>
+    <p>
+      <strong>Privacy Act Statement:</strong> Authority — 5 U.S.C. § 301
+      and Public Law 89-554. Purpose — collect identifying information to
+      process your application…
+    </p>
+    <p>
+      <strong>Paperwork Reduction Act:</strong> OMB Control No. 1234-5678.
+      Public reporting burden is estimated at 15 minutes per response.
+    </p>
+  </div>
+</civ-form>
+```
+
+## Confirm before submit
+
+For irreversible submissions (filing a claim, signing a tax return), add
+`confirm-before-submit`. After validation passes, the form dispatches
+`civ-submit-confirm` with `proceed()` and `cancel()` callbacks instead of
+firing `civ-submit` immediately. The consumer shows their own confirmation
+UI — a modal, a confirmation page, or an inline prompt — and decides
+whether to proceed:
+
+```html
+<civ-form
+  confirm-before-submit
+  @civ-submit-confirm="${(e) => {
+    const ok = window.confirm('File this claim? It cannot be edited after submission.');
+    if (ok) e.detail.proceed();
+    else e.detail.cancel();
+  }}"
+  @civ-submit="${handleSubmit}"
+  @civ-submit-cancelled="${handleCancelled}"
+>
+  <civ-text-input label="Claim type" name="type" required></civ-text-input>
+  <civ-textarea label="Description" name="desc" required></civ-textarea>
+  <civ-button type="submit">File claim</civ-button>
+</civ-form>
+```
+
+Repeat submit attempts while a confirmation is pending are deduped —
+only the first `civ-submit-confirm` is authoritative. A second click
+no-ops until the consumer resolves the first one with `proceed()` or
+`cancel()`.
+
+## Draft persistence
+
+For multi-session form drafts (benefits applications, tax forms, immigration
+forms), use [`<civ-form-autosave>`](./form-autosave.mdx) as a child of
+`civ-form`. The autosave element persists in-progress answers to
+`localStorage` / `sessionStorage` / a custom adapter and restores them on
+the next page load — automatically excluding PII-flagged fields.

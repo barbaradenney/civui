@@ -1,0 +1,138 @@
+---
+title: Time Picker
+sidebar_position: 14
+sidebar_label: Time Picker
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+import PropsTable from "./_time-picker.props.mdx";
+import EventsTable from "./_time-picker.events.mdx";
+
+# Time Picker
+
+<!-- contract-link:start -->
+
+> **Contract reference:** [`civ-time-picker`](pathname:///civui/storybook/?path=/docs/contract-civ-time-picker--docs) — auto-generated structured contract for cross-platform implementation.
+
+<!-- contract-link:end -->
+
+`<civ-time-picker>`
+
+Self-contained time input rendered as three selects: hour, minute, and AM/PM
+(12-hour mode only). Always stores its value in 24-hour ISO format (`HH:MM`) —
+the `format` prop controls display, not storage. Use it for appointment
+scheduling, hearing times, and any "time of day" prompt.
+
+For known past dates use [`<civ-memorable-date>`](./date.mdx); for future
+dates use [`<civ-date-picker>`](./date.mdx).
+
+## Examples
+
+### Default
+
+<StoryEmbed id="forms-inputs-time-picker--default" />
+
+### 24-hour format
+
+<StoryEmbed id="forms-inputs-time-picker--twenty-four-hour" />
+
+### Fine-grained (minute step = 1)
+
+<StoryEmbed id="forms-inputs-time-picker--fine-grained" />
+
+### Prefilled value
+
+<StoryEmbed id="forms-inputs-time-picker--prefilled" />
+
+### Required field
+
+<StoryEmbed id="forms-inputs-time-picker--required" />
+
+### With error
+
+<StoryEmbed id="forms-inputs-time-picker--with-error" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-inputs-time-picker--default)
+
+## Shared Props
+
+All form components share these props: `name`, `value`, `hint`, `error`,
+`required`, `disabled`.
+
+## Component-Specific Props
+
+<PropsTable />
+
+## Events
+
+<EventsTable />
+
+## Value Format
+
+The `value` is always a 24-hour ISO time string (`HH:MM`), regardless of the
+`format` prop. This means a server-rendered "14:30" displays as "2:30 PM" in
+12-hour mode and "14:30" in 24-hour mode — the wire format never changes.
+
+When the user hasn't picked all three sub-fields, `value` is `""`. In
+12-hour mode the AM/PM select must be set for the value to assemble; in
+24-hour mode only hour + minute are required.
+
+## Usage
+
+```html
+<!-- Appointment scheduling, 30-minute slots -->
+<civ-time-picker
+  legend="Appointment time"
+  name="appt_time"
+  hint="Choose a 30-minute slot during business hours"
+  minute-step="30"
+></civ-time-picker>
+
+<!-- 24-hour format for military / scheduling systems -->
+<civ-time-picker
+  legend="Hearing time"
+  name="hearing_time"
+  format="24"
+  minute-step="15"
+></civ-time-picker>
+
+<!-- Fine-grained selection (every minute) -->
+<civ-time-picker
+  legend="Exact time of incident"
+  name="incident_time"
+  minute-step="1"
+></civ-time-picker>
+
+<!-- Pre-populated from server data -->
+<civ-time-picker
+  legend="Departure time"
+  name="departure"
+  value="14:30"
+  minute-step="15"
+></civ-time-picker>
+```
+
+## Accessibility
+
+- Renders a real `<fieldset>` with a `<legend>`. If no `legend` is set, a
+  visually-hidden "Time" fallback ensures the fieldset stays Section 508
+  compliant — assistive tech still gets a group label.
+- Each sub-field is a real `<civ-select>` with its own labelled `<select>`
+  element. Keyboard navigation between hour/minute/period uses native tab
+  order.
+- `aria-describedby` chains the legend → hint → error so screen readers
+  announce them in order on focus.
+
+## Localization
+
+Hour/minute/period sub-field labels and the AM/PM strings come from the
+locale registry:
+
+- `timePickerHourLabel` (default `"Hour"`)
+- `timePickerMinuteLabel` (default `"Minute"`)
+- `timePickerPeriodLabel` (default `"AM/PM"`)
+- `timePickerAm` / `timePickerPm` (defaults `"AM"` / `"PM"`)
+- `timePickerDefaultLegend` (default `"Time"`, used when `legend` is empty)
+
+Override via `setLocale()` or per-component with the `hour-label`,
+`minute-label`, `period-label` props.

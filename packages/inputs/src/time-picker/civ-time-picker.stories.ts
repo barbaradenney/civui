@@ -3,7 +3,7 @@ import { html } from 'lit';
 import './civ-time-picker.js';
 
 const meta: Meta = {
-  title: 'Inputs/Time Picker',
+  title: 'Forms/Inputs/Time Picker',
   component: 'civ-time-picker',
   tags: ['autodocs'],
   parameters: {

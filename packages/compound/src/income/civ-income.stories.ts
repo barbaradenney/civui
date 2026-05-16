@@ -3,7 +3,7 @@ import { html } from 'lit';
 import './civ-income.js';
 
 const meta: Meta = {
-  title: 'Compound/Income',
+  title: 'Forms/Compound/Income',
   component: 'civ-income',
   tags: ['autodocs'],
   parameters: {

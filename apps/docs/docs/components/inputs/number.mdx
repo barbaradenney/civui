@@ -1,0 +1,153 @@
+---
+title: Number
+sidebar_position: 13
+sidebar_label: Number
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+import PropsTable from "./_number.props.mdx";
+import EventsTable from "./_number.events.mdx";
+
+# Number
+
+<!-- contract-link:start -->
+
+> **Contract reference:** [`civ-number`](pathname:///civui/storybook/?path=/docs/contract-civ-number--docs) — auto-generated structured contract for cross-platform implementation.
+
+<!-- contract-link:end -->
+
+`<civ-number>`
+
+Generic numeric input for quantities, counts, ages, and other non-currency
+numbers. Renders `<input type="text" inputmode="numeric">` (or
+`inputmode="decimal"` when `allow-decimal` is set) — this is more accessible
+than the native `<input type="number">`, which has known issues: scroll-wheel
+mutation, locale-specific decimal separators, and inconsistent iOS spinners.
+
+For dollar amounts use [`<civ-currency>`](./text-input.mdx); for SSN, ZIP,
+EIN, phone numbers, etc. use the dedicated preset components.
+
+## Examples
+
+### Default
+
+<StoryEmbed id="forms-inputs-number--default" />
+
+### With min/max range
+
+<StoryEmbed id="forms-inputs-number--with-range" />
+
+### Decimal values
+
+<StoryEmbed id="forms-inputs-number--decimal" />
+
+### With suffix unit
+
+<StoryEmbed id="forms-inputs-number--with-suffix" />
+
+### With prefix
+
+<StoryEmbed id="forms-inputs-number--with-prefix" />
+
+### Allows negative values
+
+<StoryEmbed id="forms-inputs-number--negative" />
+
+### Government form example — household size
+
+<StoryEmbed id="forms-inputs-number--household-size" />
+
+### With error
+
+<StoryEmbed id="forms-inputs-number--with-error" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-inputs-number--default)
+
+## Shared Props
+
+All form components share these props: `label`, `name`, `value`, `hint`,
+`error`, `required`, `disabled`.
+
+## Component-Specific Props
+
+<PropsTable />
+
+## Events
+
+<EventsTable />
+
+## When to Use Number vs Currency vs Text Input
+
+- **Number** — quantities, ages, counts, percentages, measurements. Generic
+  numeric input with min/max validation. Optional `allow-decimal` and
+  `allow-negative`.
+- **Currency** — dollar amounts. Auto-formats with commas + 2 decimal places,
+  PII-safe mask handling.
+- **Text Input with `type="number"`** — avoid this for numeric input.
+  `civ-number` is the accessible replacement.
+
+## Usage
+
+```html
+<!-- Basic integer input -->
+<civ-number label="Number of dependents" name="dependents"></civ-number>
+
+<!-- Bounded range with validation -->
+<civ-number
+  label="Age"
+  name="age"
+  min="0"
+  max="120"
+  hint="Enter a whole number between 0 and 120"
+  required
+></civ-number>
+
+<!-- Decimal values, e.g. weight -->
+<civ-number
+  label="Weight (kg)"
+  name="weight"
+  allow-decimal
+  min="0"
+  width="small"
+></civ-number>
+
+<!-- Suffix unit for percentages -->
+<civ-number
+  label="Discount applied"
+  name="discount"
+  suffix="%"
+  min="0"
+  max="100"
+  width="small"
+></civ-number>
+
+<!-- Negative values allowed (e.g. temperature) -->
+<civ-number
+  label="Temperature (°C)"
+  name="temp"
+  allow-decimal
+  allow-negative
+  width="small"
+></civ-number>
+```
+
+## Validation
+
+`civ-number` runs `validate.range()` on blur when `min` or `max` is set,
+producing standard "Must be at least N", "Must be no more than N", or "Must
+be between N and M" error messages from the locale.
+
+Empty values skip range validation — required-field validation is handled
+by `civ-form`. Lone `-`, `.`, or `-.` partials are cleared on blur so the
+form sees `""` instead of `NaN`.
+
+## Accessibility
+
+- Native `type="text"` with `inputmode="numeric"` / `inputmode="decimal"`.
+  Mobile keyboards show the numeric keypad without the spinner UX of
+  `type="number"`.
+- `aria-valuemin` / `aria-valuemax` are set when `min` / `max` are provided.
+- IME composition (CJK input methods) is respected — filtering pauses while
+  the user is composing.
+- Paste handler announces politely to assistive tech when clipboard content
+  was filtered (e.g., pasting "$1,234.56" into an integer-only field).

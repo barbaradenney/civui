@@ -6,7 +6,7 @@ import '@civui/inputs';
 import '@civui/actions/button';
 
 const meta: Meta = {
-  title: 'Form Patterns/Form Autosave',
+  title: 'Forms/Form/Form Autosave',
   component: 'civ-form-autosave',
   tags: ['autodocs'],
   parameters: {

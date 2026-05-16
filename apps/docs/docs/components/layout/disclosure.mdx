@@ -1,0 +1,133 @@
+---
+title: Disclosure
+sidebar_position: 9
+sidebar_label: Disclosure
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+import PropsTable from "./_disclosure.props.mdx";
+import EventsTable from "./_disclosure.events.mdx";
+
+# Disclosure
+
+<!-- contract-link:start -->
+
+> **Contract reference:** [`civ-disclosure`](pathname:///civui/storybook/?path=/docs/contract-civ-disclosure--docs) — auto-generated structured contract for cross-platform implementation.
+
+<!-- contract-link:end -->
+
+`<civ-disclosure>`
+
+Inline expandable content with a clickable trigger. Use it for "Why we ask?"
+justifications next to PII fields, definitions of jargon, or any
+supplementary text that doesn't need to be visible by default.
+
+Built on the native `<details>` / `<summary>` elements so it works without
+JavaScript and is announced as a disclosure widget by assistive tech.
+Content is passed via the default slot.
+
+## Examples
+
+### Default
+
+<StoryEmbed id="layout-disclosure--default" />
+
+### Next to a sensitive field
+
+<StoryEmbed id="layout-disclosure--next-to-a-sensitive-field" />
+
+### Custom label
+
+<StoryEmbed id="layout-disclosure--custom-label" />
+
+### Chevron variant (rotates on open)
+
+<StoryEmbed id="layout-disclosure--chevron-variant" />
+
+### No icon
+
+<StoryEmbed id="layout-disclosure--no-icon" />
+
+### Open by default
+
+<StoryEmbed id="layout-disclosure--open-by-default" />
+
+### Small size
+
+<StoryEmbed id="layout-disclosure--small" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/layout-disclosure--default)
+
+## Component-Specific Props
+
+<PropsTable />
+
+## Events
+
+<EventsTable />
+
+## When to Use Disclosure
+
+- **"Why we ask?" next to PII fields** — Social Security number, date of
+  birth, financial account info. Lets users understand the data request
+  before they provide sensitive information.
+- **Definitions of jargon** — domestic partner, spouse equivalent, gross
+  income vs net income. Avoids cluttering the form with parenthetical
+  definitions.
+- **Optional deeper context** — eligibility requirements, edge cases that
+  apply to a minority of users.
+
+Do **not** use a disclosure to hide required content. Anything the user MUST
+read or fill in belongs in the primary flow. Disclosures are for users who
+opt in to extra detail.
+
+## Usage
+
+```html
+<!-- "Why we ask?" with default info icon -->
+<civ-ssn label="Social Security number" name="ssn" required></civ-ssn>
+<civ-disclosure>
+  <p>
+    We use your Social Security number to verify your identity and prevent
+    duplicate accounts. It is encrypted in transit and at rest.
+  </p>
+</civ-disclosure>
+
+<!-- Custom label for jargon -->
+<civ-disclosure label="What does this mean?">
+  <p>
+    A <strong>spouse equivalent</strong> includes a registered domestic
+    partner, civil union partner, or a person you cohabit with in a
+    marriage-like relationship.
+  </p>
+</civ-disclosure>
+
+<!-- Chevron variant — rotates on open -->
+<civ-disclosure icon="chevron-down" label="See additional eligibility requirements">
+  <ul>
+    <li>You must have served at least 24 months of active duty</li>
+    <li>You must have been discharged under conditions other than dishonorable</li>
+  </ul>
+</civ-disclosure>
+
+<!-- No icon -->
+<civ-disclosure icon="" label="Read about our verification process">
+  <p>Our verification process takes 3–5 business days...</p>
+</civ-disclosure>
+```
+
+## Accessibility
+
+- Built on native `<details>` / `<summary>` — the expand/collapse state and
+  associated content are announced as a disclosure widget by every modern
+  screen reader. No `aria-controls` or `aria-expanded` is added (native
+  semantics already cover this).
+- `civ-toggle` event fires on every state change but does NOT bubble or
+  compose — disclosures often live inside `civ-form` and form-level
+  listeners should not see disclosure events. Subscribe directly on the
+  `civ-disclosure` element.
+- Keyboard accessible by default: Enter or Space on the summary toggles
+  the content. Tab order is preserved.
+- The label is locale-aware. The default `"Why we ask?"` comes from
+  `t('disclosureDefaultLabel')` — override via the locale registry or
+  set the `label` prop directly.

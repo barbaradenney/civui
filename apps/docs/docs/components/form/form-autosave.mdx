@@ -1,0 +1,183 @@
+---
+title: Form Autosave
+sidebar_position: 14
+sidebar_label: Form Autosave
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+import PropsTable from "./_form-autosave.props.mdx";
+import EventsTable from "./_form-autosave.events.mdx";
+import MethodsTable from "./_form-autosave.methods.mdx";
+
+# Form Autosave
+
+<!-- contract-link:start -->
+
+> **Contract reference:** [`civ-form-autosave`](pathname:///civui/storybook/?path=/docs/contract-civ-form-autosave--docs) — auto-generated structured contract for cross-platform implementation.
+
+<!-- contract-link:end -->
+
+`<civ-form-autosave>`
+
+Drops inside a [`<civ-form>`](./form.mdx) to persist in-progress answers so
+users can return later and resume where they left off. Long government
+applications (benefits, immigration, tax) often span multiple sessions —
+losing typed input to a page refresh, tab close, or network drop is one of
+the highest-impact paper cuts the design system can close.
+
+## Lifecycle
+
+1. **On mount** — the configured adapter loads any saved snapshot for the
+   given `storage-key` and the host form's `prefillData` is populated.
+   Every matching field is restored. The element announces "Resumed from
+   your saved progress" politely (suppress with `silent-resume`).
+2. **On every `civ-input`** inside the form — the autosave element
+   debounces (default 1s) and writes the form's current data to the
+   adapter.
+3. **On `civ-submit`** — the saved snapshot is cleared so a fresh
+   application doesn't see stale draft data.
+
+PII-flagged fields (`data-civ-pii`) and explicitly-excluded fields
+(`data-persist-exclude`) are NEVER persisted. The default adapter writes
+to unencrypted `localStorage`; using it for sensitive data with a
+permissive `excludePii` policy is a security bug.
+
+## Examples
+
+### Default (localStorage, 500ms debounce)
+
+<StoryEmbed id="forms-form-form-autosave--default" />
+
+### Session storage (cleared when tab closes)
+
+<StoryEmbed id="forms-form-form-autosave--session-storage" />
+
+### With "saved X minutes ago" indicator
+
+<StoryEmbed id="forms-form-form-autosave--with-saved-indicator" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-form-form-autosave--default)
+
+## Component-Specific Props
+
+<PropsTable />
+
+## Events
+
+<EventsTable />
+
+## Methods
+
+<MethodsTable />
+
+## Storage Adapters
+
+Three built-in adapters cover the common cases. For server-side draft
+persistence, provide a custom adapter via the `.adapter` property.
+
+### `localStorage` (default)
+
+Survives reloads and cross-tab; cleared when the user wipes site data.
+Visible to anyone with access to the device. Default for fast,
+single-device-per-user benefit flows.
+
+```html
+<civ-form-autosave storage-key="va-21-526ez-draft"></civ-form-autosave>
+```
+
+### `sessionStorage`
+
+Survives reloads of the same tab; cleared when the tab closes. Useful for
+shared-device scenarios (library kiosks, public access terminals).
+
+```html
+<civ-form-autosave
+  storage-key="va-21-526ez-draft"
+  storage="session"
+></civ-form-autosave>
+```
+
+### Custom adapter
+
+For server-side drafts or encrypted local storage, implement the
+`AutosaveAdapter` interface and set it via the `.adapter` property:
+
+```ts
+import type { AutosaveAdapter } from '@civui/form-patterns/autosave';
+
+const serverAdapter: AutosaveAdapter = {
+  async load(key) {
+    const res = await fetch(`/api/drafts/${key}`);
+    if (!res.ok) return null;
+    return res.json();
+  },
+  async save(key, snapshot) {
+    await fetch(`/api/drafts/${key}`, {
+      method: 'PUT',
+      body: JSON.stringify(snapshot),
+    });
+  },
+  async clear(key) {
+    await fetch(`/api/drafts/${key}`, { method: 'DELETE' });
+  },
+};
+
+const autosave = document.querySelector('civ-form-autosave');
+autosave.storage = 'custom';
+autosave.adapter = serverAdapter;
+```
+
+## Usage
+
+```html
+<!-- Most common: localStorage, default debounce, default events -->
+<civ-form>
+  <civ-form-autosave storage-key="ssa-disability-draft"></civ-form-autosave>
+  <civ-form-step ...>...</civ-form-step>
+</civ-form>
+
+<!-- With saved-indicator UI -->
+<civ-form id="my-form">
+  <civ-form-autosave
+    id="autosave"
+    storage-key="my-form-draft"
+    debounce-ms="500"
+  ></civ-form-autosave>
+  <civ-text-input label="Name" name="name"></civ-text-input>
+  <p id="saved-indicator" class="civ-text-sm">Not yet saved.</p>
+</civ-form>
+
+<script>
+  const autosave = document.getElementById('autosave');
+  const indicator = document.getElementById('saved-indicator');
+  autosave.addEventListener('civ-autosave-saved', () => {
+    indicator.textContent = autosave.describeLastSave();
+  });
+</script>
+```
+
+## Security Notes
+
+- PII fields (`data-civ-pii`, e.g., `<civ-ssn>`, `<civ-ein>`) are
+  automatically excluded from the persisted snapshot. The autosave element
+  passes `excludePii: true` to `getFormData()` so the data NEVER reaches
+  unencrypted browser storage. Preset wrappers like `<civ-ssn>` host an
+  inner `<civ-text-input>` with the PII flag; `getFormData` checks
+  descendants so the wrapper's value is also filtered.
+- Storage exceptions (quota exceeded, disabled storage) are swallowed
+  silently. The form remains usable; the user just doesn't get this
+  snapshot saved.
+- Custom adapters must enforce their own access control. Don't rely on
+  obscurity of the storage key — anyone with read access to the storage
+  can list every key in the same scope.
+
+## Accessibility
+
+- Renders no visible markup — the element is a controller, not a UI
+  surface.
+- On restore, announces "Resumed from your saved progress" through the
+  shared screen-reader live region. Suppress with `silent-resume` if your
+  consumer renders its own toast or status banner.
+- Consumers who want a visible "Last saved" indicator should subscribe to
+  `civ-autosave-saved` and render their own status region with appropriate
+  `aria-live` semantics.

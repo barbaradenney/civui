@@ -24,7 +24,6 @@ fun CivNumber(
     name: String = "",
     min: Double? = null,
     max: Double? = null,
-    step: Double? = null,
     allowDecimal: Boolean = false,
     allowNegative: Boolean = false,
     placeholder: String = "",

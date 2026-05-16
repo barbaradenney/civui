@@ -557,7 +557,15 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
     for (const el of formElements) {
       const formEl = el as unknown as CivFormFieldLike;
       if (formEl.disabled) continue;
-      if (opts.excludePii && (el.hasAttribute('data-civ-pii') || el.hasAttribute('data-persist-exclude'))) continue;
+      // Preset wrappers (civ-ssn, civ-ein) host an inner civ-text-input
+      // that carries the data-civ-pii flag. Check the descendant tree
+      // too so the filter catches the wrapper as well as the inner control.
+      if (opts.excludePii && (
+        el.hasAttribute('data-civ-pii') ||
+        el.hasAttribute('data-persist-exclude') ||
+        el.querySelector('[data-civ-pii]') ||
+        el.querySelector('[data-persist-exclude]')
+      )) continue;
       if (this._isInHiddenConditional(el)) continue;
       if (formEl.name) {
         data[formEl.name] = formEl.value ?? '';

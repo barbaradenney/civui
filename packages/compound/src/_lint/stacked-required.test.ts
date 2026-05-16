@@ -40,6 +40,7 @@ import '../partnership-history/civ-partnership-history.js';
 import '../service-history/civ-service-history.js';
 import '../race-ethnicity/civ-race-ethnicity.js';
 import '../signature/civ-signature.js';
+import '../income/civ-income.js';
 
 // civ-fieldset lives in @civui/form-patterns (a higher layer in the
 // build order). It follows the same rule — `showRequired: false` is
@@ -64,6 +65,7 @@ const FIXTURES: Fixture[] = [
   { name: 'civ-service-history', html: '<civ-service-history legend="Service history" required></civ-service-history>' },
   { name: 'civ-race-ethnicity', html: '<civ-race-ethnicity legend="Race and ethnicity" required></civ-race-ethnicity>' },
   { name: 'civ-signature', html: '<civ-signature legend="Certification and signature" required></civ-signature>' },
+  { name: 'civ-income', html: '<civ-income legend="Monthly income" required></civ-income>' },
 ];
 
 interface Violation {
@@ -88,6 +90,7 @@ const MULTI_FIELD_COMPOUNDS = new Set([
   'civ-service-history',
   'civ-race-ethnicity',
   'civ-signature',
+  'civ-income',
 ]);
 
 function legendOwner(legend: Element): string | null {

@@ -188,4 +188,85 @@ describe('civ-number', () => {
     const el = await fixture<CivNumber>('<civ-number label="Age" required></civ-number>');
     expect(el.querySelector('.civ-required-mark')).not.toBeNull();
   });
+
+  it('clears value and range error on formResetCallback', async () => {
+    const el = await fixture<CivNumber>('<civ-number label="Age" name="age" min="0" max="120"></civ-number>');
+    el.value = '999';
+    await elementUpdated(el);
+    const input = el.querySelector('input')!;
+    input.dispatchEvent(new Event('blur'));
+    await elementUpdated(el);
+    expect(el.error).toBeTruthy();
+
+    el.formResetCallback();
+    await elementUpdated(el);
+    expect(el.value).toBe('');
+    expect(el.error).toBe('');
+  });
+
+  it('re-runs range validation on blur after min changes at runtime', async () => {
+    const el = await fixture<CivNumber>('<civ-number label="Age" min="0"></civ-number>');
+    el.value = '5';
+    await elementUpdated(el);
+    el.querySelector('input')!.dispatchEvent(new Event('blur'));
+    await elementUpdated(el);
+    expect(el.error).toBe('');
+
+    el.min = 18;
+    await elementUpdated(el);
+    el.querySelector('input')!.dispatchEvent(new Event('blur'));
+    await elementUpdated(el);
+    expect(el.error).toBeTruthy();
+  });
+
+  it('accepts boundary values equal to min and max', async () => {
+    const el = await fixture<CivNumber>('<civ-number label="Age" min="18" max="65"></civ-number>');
+    const input = el.querySelector('input')!;
+
+    el.value = '18';
+    await elementUpdated(el);
+    input.dispatchEvent(new Event('blur'));
+    await elementUpdated(el);
+    expect(el.error).toBe('');
+
+    el.value = '65';
+    await elementUpdated(el);
+    input.dispatchEvent(new Event('blur'));
+    await elementUpdated(el);
+    expect(el.error).toBe('');
+  });
+
+  it('clears lone "-" / "." / "-." on blur instead of producing NaN range error', async () => {
+    const el = await fixture<CivNumber>('<civ-number label="Temp" min="-100" max="100" allow-decimal allow-negative></civ-number>');
+    const input = el.querySelector('input')!;
+    el.value = '-';
+    await elementUpdated(el);
+    input.dispatchEvent(new Event('blur'));
+    await elementUpdated(el);
+    expect(el.value).toBe('');
+    expect(el.error).toBe('');
+  });
+
+  it('preserves caret position after filter shortens the value', async () => {
+    const el = await fixture<CivNumber>('<civ-number label="Qty"></civ-number>');
+    const input = el.querySelector('input')!;
+    // Simulate paste of "1a2b3" with caret at end — filter strips to "123"
+    input.value = '1a2b3';
+    input.setSelectionRange(5, 5);
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    await elementUpdated(el);
+    expect(input.value).toBe('123');
+    expect(input.selectionStart).toBe(3);
+  });
+
+  it('does not filter mid-IME composition (isComposing flag)', async () => {
+    const el = await fixture<CivNumber>('<civ-number label="Qty"></civ-number>');
+    const input = el.querySelector('input')!;
+    input.value = 'あ12';
+    const ev = new (globalThis as any).InputEvent('input', { bubbles: true, isComposing: true });
+    input.dispatchEvent(ev);
+    await elementUpdated(el);
+    // Should NOT have been filtered while composing.
+    expect(input.value).toBe('あ12');
+  });
 });

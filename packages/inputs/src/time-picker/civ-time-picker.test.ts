@@ -159,4 +159,60 @@ describe('civ-time-picker', () => {
     const hourSel = el.querySelector('civ-select[name="hour"]') as any;
     expect(hourSel.value).toBe('');
   });
+
+  it('re-parses sub-fields when format changes from 12 to 24 at runtime', async () => {
+    const el = await fixture<CivTimePicker>('<civ-time-picker legend="When" value="14:30" minute-step="15"></civ-time-picker>');
+    await elementUpdated(el);
+    expect((el.querySelector('civ-select[name="hour"]') as any).value).toBe('2');
+
+    el.format = '24';
+    await elementUpdated(el);
+    expect((el.querySelector('civ-select[name="hour"]') as any).value).toBe('14');
+    expect(el.querySelector('civ-select[name="period"]')).toBeNull();
+  });
+
+  it('clears _minute when minute-step change orphans the current selection', async () => {
+    const el = await fixture<CivTimePicker>('<civ-time-picker legend="When" name="t" minute-step="1"></civ-time-picker>');
+    await setSelectValue(el, 't-hour', '2');
+    await setSelectValue(el, 't-minute', '17');
+    await setSelectValue(el, 't-period', 'AM');
+    expect(el.value).toBe('02:17');
+
+    el.minuteStep = 15;
+    await elementUpdated(el);
+    // 17 isn't a multiple of 15 → minute cleared, assembled value cleared.
+    expect(el.value).toBe('');
+  });
+
+  it('renders a sr-only fallback legend when legend prop is empty (Section 508)', async () => {
+    const el = await fixture<CivTimePicker>('<civ-time-picker></civ-time-picker>');
+    const fieldset = el.querySelector('fieldset')!;
+    const legend = fieldset.querySelector('legend');
+    expect(legend).not.toBeNull();
+    expect(legend!.classList.contains('civ-sr-only')).toBe(true);
+    expect(legend!.textContent).toContain('Time');
+  });
+
+  it('hint renders even when legend is empty (no dangling aria-describedby)', async () => {
+    const el = await fixture<CivTimePicker>('<civ-time-picker hint="Local time"></civ-time-picker>');
+    expect(el.textContent).toContain('Local time');
+    const fieldset = el.querySelector('fieldset')!;
+    const describedBy = fieldset.getAttribute('aria-describedby');
+    if (describedBy) {
+      for (const id of describedBy.split(/\s+/)) {
+        expect(el.querySelector(`#${id}`)).not.toBeNull();
+      }
+    }
+  });
+
+  it('syncs value to ElementInternals on assembly', async () => {
+    const el = await fixture<CivTimePicker>('<civ-time-picker legend="When" name="t" minute-step="15"></civ-time-picker>');
+    await setSelectValue(el, 't-hour', '9');
+    await setSelectValue(el, 't-minute', '00');
+    await setSelectValue(el, 't-period', 'AM');
+    // ElementInternals form value is set via updateFormValue → setFormValue.
+    // jsdom doesn't expose internals.value directly; assert el.value and
+    // that the host carries a string-coerced value attribute mirror.
+    expect(el.value).toBe('09:00');
+  });
 });

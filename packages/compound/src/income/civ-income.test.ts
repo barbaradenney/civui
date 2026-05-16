@@ -146,4 +146,43 @@ describe('civ-income', () => {
     await elementUpdated(el);
     expect(el.incomeValue).toEqual({ amount: '2500', frequency: 'monthly' });
   });
+
+  it('renders required marker on the child controls (section-legend rule)', async () => {
+    const el = await fixture<CivIncome>('<civ-income legend="Wages" required></civ-income>');
+    // The section legend should NOT carry (required) — multi-field
+    // compound rule. The child controls should.
+    const legendMarks = el.querySelectorAll('legend .civ-required-mark');
+    expect(legendMarks.length).toBe(0);
+
+    const childMarks = el.querySelectorAll('civ-currency .civ-required-mark, civ-select .civ-required-mark');
+    expect(childMarks.length).toBeGreaterThan(0);
+  });
+
+  it('serializes _data into value as JSON on sub-field change', async () => {
+    const el = await fixture<CivIncome>('<civ-income legend="Wages" name="wages"></civ-income>');
+    await setCurrencyValue(el, 'wages.amount', '1200');
+    await setSelectValue(el, 'wages.frequency', 'monthly');
+    await elementUpdated(el);
+    // CivCompoundElement.syncFormDataFromState serializes _data; the
+    // public surface to assert is incomeValue (parsed) and value (JSON).
+    expect(JSON.parse(el.value)).toEqual({ amount: '1200', frequency: 'monthly' });
+  });
+
+  it('is discoverable by parent civ-form via data-civ-form-field', async () => {
+    // Avoid importing form-patterns from compound (build-order
+    // boundary). Stub the discovery selector the same way civ-form
+    // would — civ-income's host should carry data-civ-form-field.
+    const el = await fixture<CivIncome>('<civ-income legend="Wages" name="wages"></civ-income>');
+    expect(el.hasAttribute('data-civ-form-field')).toBe(true);
+    expect((el as unknown as { name: string }).name).toBe('wages');
+  });
+
+  it('re-renders frequency options when the frequencies prop changes', async () => {
+    const el = await fixture<CivIncome>('<civ-income legend="Wages"></civ-income>');
+    expect((el.querySelector('civ-select') as any).options.length).toBe(7);
+
+    el.frequencies = ['weekly', 'monthly'];
+    await elementUpdated(el);
+    expect((el.querySelector('civ-select') as any).options.length).toBe(2);
+  });
 });

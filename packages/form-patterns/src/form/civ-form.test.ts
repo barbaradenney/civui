@@ -857,4 +857,89 @@ describe('civ-form confirm-before-submit', () => {
     expect(confirmHandler).not.toHaveBeenCalled();
     expect(submitHandler).not.toHaveBeenCalled();
   });
+
+  it('drops repeat submits while a confirm is pending (single-flight)', async () => {
+    const el = await fixture(`
+      <civ-form form-label="Test" confirm-before-submit>
+        <civ-text-input label="Name" name="name" value="Ada"></civ-text-input>
+        <button type="submit">Submit</button>
+      </civ-form>
+    `);
+
+    const confirmHandler = vi.fn();
+    const submitHandler = vi.fn();
+    el.addEventListener('civ-submit-confirm', confirmHandler as EventListener);
+    el.addEventListener('civ-submit', submitHandler as EventListener);
+
+    // Don't resolve — just click twice. Without the in-flight guard,
+    // each click would dispatch its own civ-submit-confirm with a
+    // fresh {proceed, cancel} pair.
+    const button = el.querySelector('button') as HTMLButtonElement;
+    button.click();
+    button.click();
+    await elementUpdated(el);
+
+    expect(confirmHandler).toHaveBeenCalledTimes(1);
+  });
+
+  it('lets a new confirm happen after the first resolves', async () => {
+    const el = await fixture(`
+      <civ-form form-label="Test" confirm-before-submit>
+        <civ-text-input label="Name" name="name" value="Ada"></civ-text-input>
+        <button type="submit">Submit</button>
+      </civ-form>
+    `);
+
+    const confirmHandler = vi.fn((e: CustomEvent) => e.detail.cancel());
+    el.addEventListener('civ-submit-confirm', confirmHandler as EventListener);
+
+    const button = el.querySelector('button') as HTMLButtonElement;
+    button.click();
+    await elementUpdated(el);
+    button.click();
+    await elementUpdated(el);
+
+    // First click cancelled, second click fires a fresh confirm.
+    expect(confirmHandler).toHaveBeenCalledTimes(2);
+  });
+});
+
+describe('civ-form excludePii filtering on getFormData', () => {
+  it('includes PII fields by default (existing behavior)', async () => {
+    const el = await fixture(`
+      <civ-form form-label="Test">
+        <civ-text-input label="Name" name="name" value="Ada"></civ-text-input>
+        <civ-ssn name="ssn" value="123456789"></civ-ssn>
+      </civ-form>
+    `) as any;
+    const data = el.getFormData();
+    expect(data.name).toBe('Ada');
+    // civ-ssn carries data-civ-pii — by default it's still included so
+    // submit handlers see it; the excludePii option is opt-in.
+    expect(data.ssn).toBeTruthy();
+  });
+
+  it('excludes PII fields when excludePii: true', async () => {
+    const el = await fixture(`
+      <civ-form form-label="Test">
+        <civ-text-input label="Name" name="name" value="Ada"></civ-text-input>
+        <civ-ssn name="ssn" value="123456789"></civ-ssn>
+      </civ-form>
+    `) as any;
+    const data = el.getFormData({ excludePii: true });
+    expect(data.name).toBe('Ada');
+    expect(data.ssn).toBeUndefined();
+  });
+
+  it('excludes data-persist-exclude fields when excludePii: true', async () => {
+    const el = await fixture(`
+      <civ-form form-label="Test">
+        <civ-text-input label="Public" name="pub" value="yes"></civ-text-input>
+        <civ-text-input label="Internal" name="internal" value="hidden" data-persist-exclude></civ-text-input>
+      </civ-form>
+    `) as any;
+    const data = el.getFormData({ excludePii: true });
+    expect(data.pub).toBe('yes');
+    expect(data.internal).toBeUndefined();
+  });
 });

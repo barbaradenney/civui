@@ -1,4 +1,5 @@
 <civ-time-picker
+  {% if mode %}mode="{{ mode }}"{% endif %}
   {% if legend %}legend="{{ legend }}"{% endif %}
   {% if name %}name="{{ name }}"{% endif %}
   {% if value %}value="{{ value }}"{% endif %}
@@ -6,6 +7,9 @@
   {% if error %}error="{{ error }}"{% endif %}
   {% if format %}format="{{ format }}"{% endif %}
   {% if minute_step is not null %}minute-step="{{ minute_step }}"{% endif %}
+  {% if min %}min="{{ min }}"{% endif %}
+  {% if max %}max="{{ max }}"{% endif %}
+  {% if placeholder %}placeholder="{{ placeholder }}"{% endif %}
   {% if hour_label %}hour-label="{{ hour_label }}"{% endif %}
   {% if minute_label %}minute-label="{{ minute_label }}"{% endif %}
   {% if period_label %}period-label="{{ period_label }}"{% endif %}

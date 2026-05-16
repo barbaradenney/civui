@@ -3,6 +3,6 @@
 
 | Event | Detail | Description |
 |-------|--------|-------------|
-| `civ-input` | `{ value: string, hour: string, minute: string, period: string }` | Fires when any sub-field changes |
-| `civ-change` | `{ value: string, hour: string, minute: string, period: string }` | Fires when any sub-field commits |
+| `civ-input` | `{ value: string, hour: string, minute: string, period: string }` | Fires when the value changes (every keystroke in combo mode, every sub-field commit in select mode) |
+| `civ-change` | `{ value: string, hour: string, minute: string, period: string }` | Fires when the value commits |
 | `civ-analytics` | `{ componentName: string, action: string }` | Analytics tracking event on commit |

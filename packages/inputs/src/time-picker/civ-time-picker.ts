@@ -12,44 +12,80 @@ import {
   t,
   warnInvalidProp,
 } from '@civui/core';
+import type { ComboboxOption } from '../combobox/civ-combobox.js';
 
 // Side-effect imports register the child custom elements.
 import '../select/civ-select.js';
+import '../combobox/civ-combobox.js';
 
 export type TimePickerFormat = '12' | '24';
+export type TimePickerMode = 'select' | 'combo';
 
 /**
  * CivUI Time Picker
  *
- * Self-contained time input rendered as three selects: hour, minute,
- * and AM/PM (12-hour mode only). The component always stores its
- * value in 24-hour ISO format (`HH:MM`) — the format prop controls
- * the display, not the storage.
+ * Self-contained time input. Always stores its value in 24-hour ISO
+ * format (`HH:MM`) regardless of display format or input mode.
  *
- * Use this for appointment scheduling, hearing times, and any other
- * "time of day" prompt. For known dates use `civ-memorable-date`, for
- * future dates use `civ-date-picker`.
+ * Two input modes:
+ *
+ * - `mode="combo"` (default, USWDS pattern): a single typeable
+ *   combobox with pre-built time slots driven by `minute-step`. Users
+ *   can type to filter (`"230"` → "2:30 AM"/"2:30 PM"), or pick from
+ *   the dropdown. Optional `min`/`max` bounds restrict the slot
+ *   list to business hours. Best for scheduling — appointments,
+ *   hearing times, callback windows.
+ *
+ * - `mode="select"`: three selects (hour, minute, AM/PM). Predictable,
+ *   every-device-safe, no typing required. Use when slot-list
+ *   filtering would be confusing (e.g. capturing an arbitrary
+ *   incident time) or when minute-level precision (`minute-step="1"`)
+ *   would create too long a combobox list.
+ *
+ * For known past dates use `civ-memorable-date`; for future dates use
+ * `civ-date-picker`.
  *
  * @element civ-time-picker
  *
- * @prop {string} legend - Fieldset legend rendered above the fields
- * @prop {string} name - Base form field name (sub-fields named {name}-hour, {name}-minute, {name}-period)
+ * @prop {string} mode - Input mode: 'combo' (default, USWDS combobox) or 'select' (three dropdowns)
+ * @prop {string} legend - Fieldset legend rendered above the fields (select mode)
+ * @prop {string} label - Label for the combobox input (combo mode)
+ * @prop {string} name - Base form field name
  * @prop {string} value - Time value in 24-hour ISO format (HH:MM); empty when unset
  * @prop {string} format - Display format: '12' (default, with AM/PM) or '24'
- * @prop {number} minuteStep - Increment for the minute select. Defaults to 5; use 1 for fine-grained selection or 15/30 for coarser steps.
+ * @prop {number} minuteStep - Increment for the minute slots / select options. Defaults to 15 for combo mode (scheduling-friendly), 5 for select mode.
+ * @prop {string} min - Earliest allowed time, 24-hour HH:MM (combo mode only)
+ * @prop {string} max - Latest allowed time, 24-hour HH:MM (combo mode only)
  *
- * @fires civ-input - When any sub-field changes, detail: { value, hour, minute, period }
- * @fires civ-change - When any sub-field commits, detail: { value, hour, minute, period }
+ * @fires civ-input - When any sub-field or the combobox value changes, detail: { value, hour, minute, period }
+ * @fires civ-change - When the value commits, detail: { value, hour, minute, period }
  * @fires civ-analytics - Analytics tracking on change
  */
 @customElement('civ-time-picker')
 export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
+  @property({ type: String }) mode: TimePickerMode = 'combo';
   @property({ type: String }) legend = '';
   @property({ type: String }) format: TimePickerFormat = '12';
-  @property({ type: Number, attribute: 'minute-step' }) minuteStep = 5;
+  @property({ type: Number, attribute: 'minute-step' }) minuteStep = 0;
   @property({ type: String, attribute: 'hour-label' }) hourLabel = '';
   @property({ type: String, attribute: 'minute-label' }) minuteLabel = '';
   @property({ type: String, attribute: 'period-label' }) periodLabel = '';
+
+  /**
+   * Earliest allowed time, 24-hour `HH:MM`. Combo mode only; ignored
+   * in select mode (the select shows the full 12- or 24-hour range).
+   */
+  @property({ type: String }) min = '';
+
+  /** Latest allowed time, 24-hour `HH:MM`. Combo mode only. */
+  @property({ type: String }) max = '';
+
+  /**
+   * Placeholder for the combo-mode input. Defaults to the locale-aware
+   * `timePickerPlaceholder` (English: "e.g. 9:00 AM"). Ignored in
+   * select mode.
+   */
+  @property({ type: String }) placeholder = '';
 
   @state() private _hour = '';
   @state() private _minute = '';
@@ -79,16 +115,35 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
     if ((changed.has('value') || changed.has('format')) && !changed.has('_hour')) {
       this._parseValue();
     }
-    if (changed.has('minuteStep') && this._minute) {
+    if (changed.has('minuteStep') && this._minute && this.mode === 'select') {
       // If the current minute isn't in the new option set, clear it so
       // the select doesn't display an orphaned value the user can't
-      // re-select.
-      const step = this.minuteStep > 0 ? Math.floor(this.minuteStep) : 5;
+      // re-select. Combo mode handles its own slot list; the value
+      // there isn't bound to the minute-step grid (we accept any value
+      // that matches an HH:MM ISO string, regardless of step).
+      const step = this._effectiveMinuteStep();
       if (Number(this._minute) % step !== 0) {
         this._minute = '';
         this.value = '';
       }
     }
+  }
+
+  /**
+   * Effective minute step with mode-aware default: combo mode defaults
+   * to 15 (scheduling-friendly slot density), select mode defaults to
+   * 5 (most precision without an unwieldy dropdown). Explicit
+   * `minute-step` overrides both.
+   */
+  private _effectiveMinuteStep(): number {
+    if (this.minuteStep > 0 && this.minuteStep === Math.floor(this.minuteStep)) {
+      return this.minuteStep;
+    }
+    if (this.minuteStep !== 0 && this.minuteStep !== undefined) {
+      // Non-zero but invalid — warn (zero is the unset sentinel).
+      warnInvalidProp('civ-time-picker', 'minute-step', 'a positive integer (e.g. 1, 5, 15, 30)', String(this.minuteStep));
+    }
+    return this.mode === 'combo' ? 15 : 5;
   }
 
   /**
@@ -169,12 +224,8 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
     });
   }
 
-  private get _minuteOptions(): { value: string; label: string }[] {
-    let step = this.minuteStep;
-    if (!Number.isFinite(step) || step <= 0 || step !== Math.floor(step)) {
-      warnInvalidProp('civ-time-picker', 'minute-step', 'a positive integer (e.g. 1, 5, 15, 30)', String(this.minuteStep));
-      step = 5;
-    }
+  private get _selectMinuteOptions(): { value: string; label: string }[] {
+    const step = this._effectiveMinuteStep();
     const opts: { value: string; label: string }[] = [];
     for (let m = 0; m < 60; m += step) {
       const s = String(m).padStart(2, '0');
@@ -190,13 +241,103 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
     ];
   }
 
+  /**
+   * Build the full list of time slots for combo mode. Each slot is a
+   * `ComboboxOption` with `value` as 24-hour ISO `HH:MM` and `label`
+   * formatted per the `format` prop. Bounded by `min` and `max` when
+   * set; otherwise covers the full day.
+   */
+  private _comboOptions(): ComboboxOption[] {
+    const step = this._effectiveMinuteStep();
+    const minMinutes = this._parseTimeToMinutes(this.min);
+    const maxMinutes = this._parseTimeToMinutes(this.max);
+    const opts: ComboboxOption[] = [];
+    for (let h = 0; h < 24; h++) {
+      for (let m = 0; m < 60; m += step) {
+        const total = h * 60 + m;
+        if (minMinutes != null && total < minMinutes) continue;
+        if (maxMinutes != null && total > maxMinutes) continue;
+        const iso = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+        opts.push({ value: iso, label: this._formatTimeForDisplay(h, m) });
+      }
+    }
+    return opts;
+  }
+
+  /**
+   * Parse an `HH:MM` (24-hour) string to minutes-since-midnight, or
+   * null when the input is empty / malformed. Used for `min`/`max`
+   * bounds in combo mode.
+   */
+  private _parseTimeToMinutes(s: string): number | null {
+    if (!s) return null;
+    const match = s.match(/^(\d{1,2}):(\d{2})$/);
+    if (!match) return null;
+    const h = Number(match[1]);
+    const m = Number(match[2]);
+    if (h < 0 || h > 23 || m < 0 || m > 59) return null;
+    return h * 60 + m;
+  }
+
+  /**
+   * Render a (24-hour) hour/minute pair as the display string the
+   * user sees in the combo slot list and (when matched) in the input.
+   */
+  private _formatTimeForDisplay(h: number, m: number): string {
+    const minutePart = String(m).padStart(2, '0');
+    if (this.format === '24') {
+      return `${String(h).padStart(2, '0')}:${minutePart}`;
+    }
+    const period = h < 12 ? t('timePickerAm') : t('timePickerPm');
+    const twelveHour = h === 0 ? 12 : h > 12 ? h - 12 : h;
+    return `${twelveHour}:${minutePart} ${period}`;
+  }
+
   override formDisabledCallback(disabled: boolean): void {
     super.formDisabledCallback(disabled);
     const selects = this.querySelectorAll('civ-select') as NodeListOf<HTMLElement & { disabled: boolean }>;
     selects.forEach((s) => { s.disabled = disabled; });
+    const combo = this.querySelector('civ-combobox') as (HTMLElement & { disabled: boolean }) | null;
+    if (combo) combo.disabled = disabled;
   }
 
   override render() {
+    return this.mode === 'combo' ? this._renderComboMode() : this._renderSelectMode();
+  }
+
+  /**
+   * Combo mode: a single typeable combobox with pre-built slots.
+   * Matches the USWDS time-picker pattern. Stores value as 24-hour
+   * ISO `HH:MM`; display labels come from `format` (12 or 24).
+   */
+  private _renderComboMode() {
+    const label = this.label || this.legend || t('timePickerDefaultLegend');
+    const placeholder = this.placeholder || t('timePickerPlaceholder');
+    return html`
+      <civ-combobox
+        label="${label}"
+        name="${this.name || nothing}"
+        .options="${this._comboOptions()}"
+        .value="${this.value}"
+        placeholder="${placeholder}"
+        hint="${this.hint}"
+        error="${this.error}"
+        ?required="${this.required}"
+        ?disabled="${this.disabled}"
+        ?readonly="${this.readonly}"
+        ?hide-required-indicator="${this.hideRequiredIndicator}"
+        @civ-change="${this._onComboChange}"
+      ></civ-combobox>
+    `;
+  }
+
+  /**
+   * Select mode: three selects (hour, minute, AM/PM) inside a fieldset.
+   * The original CivUI default; predictable and every-device-safe.
+   * Useful when slot-list filtering doesn't fit (free-form precision,
+   * or minute-step=1 which would create 1440 slots).
+   */
+  private _renderSelectMode() {
     const hourLabel = this.hourLabel || t('timePickerHourLabel');
     const minuteLabel = this.minuteLabel || t('timePickerMinuteLabel');
     const periodLabel = this.periodLabel || t('timePickerPeriodLabel');
@@ -225,7 +366,7 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
           <civ-select
             label="${minuteLabel}"
             name="${this.name ? `${this.name}-minute` : 'minute'}"
-            .options="${this._minuteOptions}"
+            .options="${this._selectMinuteOptions}"
             .value="${this._minute}"
             ?required="${this.required}"
             ?disabled="${this.disabled}"
@@ -302,6 +443,7 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
 
   private _onFieldInput(e: CustomEvent): void {
     if (e.target === this) return;
+    if (this.mode !== 'select') return;
     // Suppress the child's event from reaching consumer listeners on
     // this host — they should only see the parent's assembled event.
     e.stopImmediatePropagation();
@@ -310,8 +452,32 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
 
   private _onFieldChange(e: CustomEvent): void {
     if (e.target === this) return;
+    if (this.mode !== 'select') return;
     e.stopImmediatePropagation();
     this._updateFromChildren(true);
+  }
+
+  /**
+   * Combo-mode change handler — `civ-combobox` already dispatches
+   * `civ-change` with `{ value }` where value is the picked option's
+   * value (our 24-hour ISO string). We just need to re-parse sub-fields
+   * and forward the host event with the standard detail shape.
+   */
+  private _onComboChange(e: CustomEvent<{ value: string }>): void {
+    if (e.target === this) return;
+    e.stopImmediatePropagation();
+    this.value = e.detail.value || '';
+    this._parseValue();
+    this.updateFormValue(this.value);
+    const detail = {
+      value: this.value,
+      hour: this._hour,
+      minute: this._minute,
+      period: this._period,
+    };
+    dispatch(this, 'civ-input', detail);
+    dispatch(this, 'civ-change', detail);
+    this.sendAnalytics('change');
   }
 
   private _updateFromChildren(fireChange: boolean): void {

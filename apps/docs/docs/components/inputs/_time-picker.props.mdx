@@ -3,9 +3,13 @@
 
 | Attribute | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `legend` | `string` | `''` | Fieldset legend rendered above the sub-fields |
+| `mode` | `'combo'` \| `'select'` | `'combo'` | Input mode. `combo` (default) renders a single typeable combobox with pre-built slots — fastest for scheduling. `select` renders three dropdowns (hour, minute, AM/PM) — best for free-form precision or when slot filtering would be confusing. |
+| `legend` | `string` | `''` | Fieldset legend (select mode) or label fallback (combo mode) |
 | `format` | `'12'` \| `'24'` | `'12'` | Display format: "12" (with AM/PM) or "24" |
-| `minute-step` | `number` | `5` | Increment for the minute select. Defaults to 5; use 1 for fine-grained, 15/30 for coarser. |
-| `hour-label` | `string` | `''` | Custom label for the hour select |
-| `minute-label` | `string` | `''` | Custom label for the minute select |
-| `period-label` | `string` | `''` | Custom label for the AM/PM select |
+| `minute-step` | `number` | `0` | Increment for the minute slots. Defaults to 15 in combo mode (scheduling-friendly slot density), 5 in select mode. Use 1 for arbitrary precision (best with select mode). |
+| `min` | `string` | `''` | Earliest allowed time, 24-hour `HH:MM`. Combo mode only — restricts the slot list (e.g. `"09:00"` for business hours). |
+| `max` | `string` | `''` | Latest allowed time, 24-hour `HH:MM`. Combo mode only. |
+| `placeholder` | `string` | `''` | Placeholder for the combo-mode input. Defaults to the locale `timePickerPlaceholder` ("e.g. 9:00 AM"). Ignored in select mode. |
+| `hour-label` | `string` | `''` | Custom label for the hour select (select mode only) |
+| `minute-label` | `string` | `''` | Custom label for the minute select (select mode only) |
+| `period-label` | `string` | `''` | Custom label for the AM/PM select (select mode only) |

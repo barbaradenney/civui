@@ -1,0 +1,62 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Time Picker
+status: stable
+group: CivUI Inputs
+description: 'Self-contained time-of-day input. Stores its value in 24-hour ISO format (HH:MM); the format prop controls display only.'
+
+props:
+  type: object
+  properties:
+    legend:
+      title: Legend
+      type: string
+      description: 'Fieldset legend rendered above the sub-fields'
+    name:
+      title: Name
+      type: string
+      description: 'Base form field name'
+    value:
+      title: Value
+      type: string
+      description: 'Time value in 24-hour ISO format (HH:MM)'
+    hint:
+      title: Hint
+      type: string
+      description: 'Hint text below the legend'
+    error:
+      title: Error
+      type: string
+      description: 'Error message'
+    format:
+      title: Format
+      type: string
+      description: 'Display format ("12" or "24")'
+    minute_step:
+      title: Minute step
+      type: integer
+      default: 5
+      description: 'Increment for the minute select'
+    hour_label:
+      title: Hour label
+      type: string
+      description: 'Custom label for the hour select'
+    minute_label:
+      title: Minute label
+      type: string
+      description: 'Custom label for the minute select'
+    period_label:
+      title: Period label
+      type: string
+      description: 'Custom label for the AM/PM select'
+    required:
+      title: Required
+      type: boolean
+      default: false
+    disabled:
+      title: Disabled
+      type: boolean
+      default: false
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

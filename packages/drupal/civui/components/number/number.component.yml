@@ -1,0 +1,75 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Number
+status: stable
+group: CivUI Inputs
+description: 'Generic numeric input for quantities, counts, ages, and other non-currency numbers. Self-contained — does not need form-field wrapper.'
+
+props:
+  type: object
+  properties:
+    label:
+      title: Label
+      type: string
+      description: 'Input label text'
+    name:
+      title: Name
+      type: string
+      description: 'Form field name'
+    value:
+      title: Value
+      type: string
+      description: 'Current value as a string'
+    hint:
+      title: Hint
+      type: string
+      description: 'Hint text below the label'
+    error:
+      title: Error
+      type: string
+      description: 'Error message'
+    min:
+      title: Min
+      type: number
+      description: 'Minimum allowed value'
+    max:
+      title: Max
+      type: number
+      description: 'Maximum allowed value'
+    step:
+      title: Step
+      type: number
+      description: 'Step increment (informational)'
+    allow_decimal:
+      title: Allow decimal
+      type: boolean
+      default: false
+      description: 'Allow decimal digits'
+    allow_negative:
+      title: Allow negative
+      type: boolean
+      default: false
+      description: 'Allow a leading minus sign'
+    placeholder:
+      title: Placeholder
+      type: string
+      description: 'Placeholder text'
+    prefix:
+      title: Prefix
+      type: string
+      description: 'Prefix text rendered before the input'
+    suffix:
+      title: Suffix
+      type: string
+      description: 'Suffix text rendered after the input'
+    required:
+      title: Required
+      type: boolean
+      default: false
+    disabled:
+      title: Disabled
+      type: boolean
+      default: false
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

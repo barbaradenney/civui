@@ -9,6 +9,7 @@
   "exports": {
     ".": "./dist/index.js",
     "./card": "./dist/card/index.js",
+    "./disclosure": "./dist/disclosure/index.js",
     "./divider": "./dist/divider/index.js",
     "./input-group": "./dist/input-group/index.js",
     "./list": "./dist/list/index.js",

@@ -157,6 +157,16 @@ export interface CivLocaleStrings {
   textareaWordsOverLimit: string; // "{count} {count, plural, one {word} other {words}} over the limit"
   textareaWordLimit: string; // "Word limit: {max}"
 
+  // Disclosure
+  disclosureDefaultLabel: string; // "Why we ask?"
+
+  // Time Picker
+  timePickerHourLabel: string;
+  timePickerMinuteLabel: string;
+  timePickerPeriodLabel: string;
+  timePickerAm: string;
+  timePickerPm: string;
+
   // Alert
   alertDismissLabel: string;
   alertDismissedMessage: string;
@@ -778,6 +788,14 @@ const defaultStrings: CivLocaleStrings = {
   textareaWordsRemaining: '{count} words remaining',
   textareaWordsOverLimit: '{count} too many words',
   textareaWordLimit: 'Word limit: {max}',
+
+  disclosureDefaultLabel: 'Why we ask?',
+
+  timePickerHourLabel: 'Hour',
+  timePickerMinuteLabel: 'Minute',
+  timePickerPeriodLabel: 'AM/PM',
+  timePickerAm: 'AM',
+  timePickerPm: 'PM',
 
   alertDismissLabel: 'Dismiss alert',
   alertDismissedMessage: 'Alert dismissed',

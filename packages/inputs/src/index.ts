@@ -2,11 +2,13 @@
 // Named re-exports alone can be tree-shaken by bundlers.
 import './text-input/civ-text-input.js';
 import './textarea/civ-textarea.js';
+import './number/civ-number.js';
 import './select/civ-select.js';
 import './combobox/civ-combobox.js';
 import './date-picker/civ-date-picker.js';
 import './date-range-picker/civ-date-range-picker.js';
 import './date-input/civ-memorable-date.js';
+import './time-picker/civ-time-picker.js';
 import './file-upload/civ-file-upload.js';
 import './toggle/civ-toggle.js';
 import './yes-no/civ-yes-no.js';
@@ -30,6 +32,9 @@ export type { TextInputType, TextInputMask, TextInputValidate } from './text-inp
 // Textarea
 export { CivTextarea } from './textarea/index.js';
 
+// Number
+export { CivNumber } from './number/index.js';
+
 // Select
 export { CivSelect } from './select/index.js';
 export type { SelectOption } from './select/index.js';
@@ -47,6 +52,10 @@ export type { DateRangeValue } from './date-range-picker/index.js';
 
 // Memorable Date
 export { CivMemorableDate } from './date-input/index.js';
+
+// Time Picker
+export { CivTimePicker } from './time-picker/index.js';
+export type { TimePickerFormat } from './time-picker/index.js';
 
 // File Upload
 export { CivFileUpload } from './file-upload/index.js';

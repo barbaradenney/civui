@@ -1,0 +1,17 @@
+<civ-number
+  {% if label %}label="{{ label }}"{% endif %}
+  {% if name %}name="{{ name }}"{% endif %}
+  {% if value is not null %}value="{{ value }}"{% endif %}
+  {% if hint %}hint="{{ hint }}"{% endif %}
+  {% if error %}error="{{ error }}"{% endif %}
+  {% if min is not null %}min="{{ min }}"{% endif %}
+  {% if max is not null %}max="{{ max }}"{% endif %}
+  {% if step is not null %}step="{{ step }}"{% endif %}
+  {% if allow_decimal %}allow-decimal{% endif %}
+  {% if allow_negative %}allow-negative{% endif %}
+  {% if placeholder %}placeholder="{{ placeholder }}"{% endif %}
+  {% if prefix %}prefix="{{ prefix }}"{% endif %}
+  {% if suffix %}suffix="{{ suffix }}"{% endif %}
+  {% if required %}required{% endif %}
+  {% if disabled %}disabled{% endif %}
+></civ-number>

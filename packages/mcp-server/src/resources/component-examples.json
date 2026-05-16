@@ -1208,6 +1208,42 @@
       "source": "packages/compound/src/direct-deposit/civ-direct-deposit.stories.ts"
     }
   ],
+  "civ-disclosure": [
+    {
+      "story": "ChevronVariant",
+      "name": "Chevron variant (rotates on open)",
+      "category": "Layout/Disclosure",
+      "html": "<civ-disclosure icon=\"chevron-down\" label=\"See additional eligibility requirements\">\n      <ul class=\"civ-m-0 civ-ps-6\">\n        <li>You must have served at least 24 months of active duty</li>\n        <li>You must have been discharged under conditions other than dishonorable</li>\n        <li>You must have a valid VA file number</li>\n      </ul>\n    </civ-disclosure>",
+      "source": "packages/layout/src/disclosure/civ-disclosure.stories.ts"
+    },
+    {
+      "story": "CustomLabel",
+      "name": "Custom label",
+      "category": "Layout/Disclosure",
+      "html": "<civ-disclosure label=\"What does this mean?\">\n      <p>\n        A <strong>spouse equivalent</strong> includes a registered domestic\n        partner, civil union partner, or a person you cohabit with in a\n        marriage-like relationship.\n      </p>\n    </civ-disclosure>",
+      "source": "packages/layout/src/disclosure/civ-disclosure.stories.ts"
+    },
+    {
+      "story": "Default",
+      "category": "Layout/Disclosure",
+      "html": "<civ-disclosure>\n      <p>\n        We use your Social Security number to verify your identity and\n        match your records with our system. We never share it with third\n        parties without your consent.\n      </p>\n    </civ-disclosure>",
+      "source": "packages/layout/src/disclosure/civ-disclosure.stories.ts"
+    },
+    {
+      "story": "NoIcon",
+      "name": "No icon",
+      "category": "Layout/Disclosure",
+      "html": "<civ-disclosure icon=\"\" label=\"Read about our verification process\">\n      <p>\n        Our verification process takes 3–5 business days. You'll receive an\n        email when your application is reviewed.\n      </p>\n    </civ-disclosure>",
+      "source": "packages/layout/src/disclosure/civ-disclosure.stories.ts"
+    },
+    {
+      "story": "OpenByDefault",
+      "name": "Open by default",
+      "category": "Layout/Disclosure",
+      "html": "<civ-disclosure open label=\"About this question\">\n      <p>\n        This disclosure was opened by default — most consumers should leave\n        it closed so the page stays scannable. Use the open state only for\n        announcements that need to be visible on first load.\n      </p>\n    </civ-disclosure>",
+      "source": "packages/layout/src/disclosure/civ-disclosure.stories.ts"
+    }
+  ],
   "civ-divider": [
     {
       "story": "AllStyles",
@@ -4108,6 +4144,13 @@
       "source": "packages/inputs/src/ssn/civ-ssn.stories.ts"
     },
     {
+      "story": "NextToASensitiveField",
+      "name": "Next to a sensitive field",
+      "category": "Layout/Disclosure",
+      "html": "<civ-ssn label=\"Social Security number\" name=\"ssn\" required></civ-ssn>\n    <civ-disclosure>\n      <p>\n        We use your Social Security number to verify your identity and\n        prevent duplicate accounts. It is encrypted in transit and at rest.\n      </p>\n    </civ-disclosure>",
+      "source": "packages/layout/src/disclosure/civ-disclosure.stories.ts"
+    },
+    {
       "story": "Required",
       "category": "Forms/Inputs/SSN",
       "html": "<civ-ssn name=\"ssn\" required></civ-ssn>",
@@ -4440,6 +4483,13 @@
       "category": "Foundations/Density Examples",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-8\">\n      <div data-civ-scale=\"spacious\">\n        <p class=\"civ-text-caption civ-mb-2\">Spacious (1.5x spacing)</p>\n        <civ-text-input label=\"Full name\" name=\"spacious\" hint=\"Public-facing, large touch targets\"></civ-text-input>\n      </div>\n      <div>\n        <p class=\"civ-text-caption civ-mb-2\">Default (1x spacing)</p>\n        <civ-text-input label=\"Full name\" name=\"default\" hint=\"Standard forms and applications\"></civ-text-input>\n      </div>\n      <div data-civ-scale=\"dense\">\n        <p class=\"civ-text-caption civ-mb-2\">Dense (0.75x spacing)</p>\n        <civ-text-input label=\"Full name\" name=\"dense\" hint=\"Dashboards and admin panels\"></civ-text-input>\n      </div>\n    </div>",
       "source": "packages/core/src/foundations/density-examples.stories.ts"
+    },
+    {
+      "story": "Small",
+      "name": "Small size",
+      "category": "Layout/Disclosure",
+      "html": "<civ-text-input label=\"Routing number\" name=\"routing\"></civ-text-input>\n    <civ-disclosure size=\"sm\" label=\"Where do I find this?\">\n      <p class=\"civ-text-sm\">\n        The routing number is the 9-digit number on the bottom left of your\n        check, before your account number.\n      </p>\n    </civ-disclosure>",
+      "source": "packages/layout/src/disclosure/civ-disclosure.stories.ts"
     },
     {
       "story": "SpacousScale",

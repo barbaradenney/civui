@@ -55,6 +55,10 @@ public struct CivCombobox: View {
     /// Placeholder text for the input.
     public var placeholder: String?
 
+    /// Mobile keyboard hint passed through to the input. On iOS this
+    /// maps to `.keyboardType` (numberPad / decimalPad / etc.).
+    public var inputmode: String
+
     /// Text shown when no results match the filter.
     public var noResultsText: String
 
@@ -127,6 +131,7 @@ public struct CivCombobox: View {
         hint: String? = nil,
         error: String? = nil,
         placeholder: String? = nil,
+        inputmode: String = "",
         noResultsText: String? = nil,
         isRequired: Bool = false,
         isDisabled: Bool = false,
@@ -152,6 +157,7 @@ public struct CivCombobox: View {
         self.hint = hint
         self.error = error
         self.placeholder = placeholder
+        self.inputmode = inputmode
         self.noResultsText = noResultsText ?? CivLocale.shared.t("comboboxNoResults")
         self.isRequired = isRequired
         self.isDisabled = isDisabled

@@ -369,6 +369,18 @@ describe('civ-time-picker — combo mode (USWDS pattern)', () => {
     expect(combo.placeholder).toBe('e.g. 9:00 AM');
   });
 
+  it('passes inputmode="numeric" to the combobox (mobile numeric keypad)', async () => {
+    // The digit-aware filter makes a numeric keypad the right input
+    // method on mobile — typing "230" matches "2:30 AM"/"2:30 PM"
+    // without needing the alphabetic keys.
+    const el = await fixture<CivTimePicker>('<civ-time-picker label="When"></civ-time-picker>');
+    const combo = el.querySelector('civ-combobox') as any;
+    expect(combo.inputmode).toBe('numeric');
+    // And the inputmode attribute reaches the actual <input>.
+    const input = combo.querySelector('input') as HTMLInputElement;
+    expect(input.getAttribute('inputmode')).toBe('numeric');
+  });
+
   it('propagates a custom placeholder', async () => {
     const el = await fixture<CivTimePicker>('<civ-time-picker label="When" placeholder="Pick a slot"></civ-time-picker>');
     const combo = el.querySelector('civ-combobox') as any;

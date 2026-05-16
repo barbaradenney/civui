@@ -40,6 +40,20 @@ export type LoadOptionsFn = (query: string) => Promise<ComboboxOption[]>;
 export class CivCombobox extends LegendHeadingMixin(CivFormElement) {
   @property({ type: Array }) options: ComboboxOption[] = [];
   @property({ type: String }) placeholder = '';
+
+  /**
+   * `inputmode` for the typeable input. Mobile keyboards honor this
+   * to show the right layout. Defaults to empty (browser default —
+   * alphabetic on mobile). Consumers whose options are digit-keyed
+   * (time picker, ZIP / postal lookups) should pass `'numeric'` to
+   * surface the numeric keypad on phones.
+   *
+   * The digit-aware filter (see `_filteredOptions`) makes
+   * `inputmode="numeric"` viable for time picking — typing "230"
+   * matches "2:30 AM" / "2:30 PM" without needing the colon or
+   * AM/PM letters.
+   */
+  @property({ type: String }) inputmode: '' | 'text' | 'numeric' | 'decimal' | 'tel' | 'search' | 'email' | 'url' = '';
   @property({ type: String, attribute: 'no-results-text' }) noResultsText = '';
   @property({ type: String }) width: InputWidth = 'default';
 
@@ -197,6 +211,7 @@ export class CivCombobox extends LegendHeadingMixin(CivFormElement) {
             aria-invalid="${this.error ? 'true' : nothing}"
             .value="${this._displayValue}"
             placeholder="${this.placeholder || nothing}"
+            inputmode="${this.inputmode || nothing}"
             ?disabled="${this.disabled}"
             ?required="${this.required}"
             autocomplete="off"

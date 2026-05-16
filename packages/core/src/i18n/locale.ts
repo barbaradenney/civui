@@ -169,6 +169,7 @@ export interface CivLocaleStrings {
   timePickerHourLabel: string;
   timePickerMinuteLabel: string;
   timePickerPeriodLabel: string;
+  timePickerTimeLabel: string; // text-mode label for the HH:MM input
   timePickerAm: string;
   timePickerPm: string;
   timePickerPlaceholder: string; // combo-mode placeholder, e.g. "e.g. 9:00 AM"
@@ -825,6 +826,7 @@ const defaultStrings: CivLocaleStrings = {
   timePickerHourLabel: 'Hour',
   timePickerMinuteLabel: 'Minute',
   timePickerPeriodLabel: 'AM/PM',
+  timePickerTimeLabel: 'Time',
   timePickerAm: 'AM',
   timePickerPm: 'PM',
   timePickerPlaceholder: 'e.g. 9:00 AM',

@@ -359,6 +359,16 @@
     width: 5.5rem;
   }
 
+  /*
+   * text-mode renders a single masked text input ("HH:MM") plus the
+   * AM/PM segmented control. Width sits between the select-mode
+   * hour width (5.5rem) and the combo input (default) — enough room
+   * for a leading "12:" and trailing padding.
+   */
+  .civ-time-picker-time-input {
+    width: 7rem;
+  }
+
   .civ-time-picker-period {
     width: 6rem;
   }
@@ -382,6 +392,7 @@
       width: calc(50% - var(--civ-spacing-2, 10px));
     }
 
+    .civ-time-picker-time-input,
     .civ-time-picker-period {
       width: 100%;
     }

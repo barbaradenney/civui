@@ -3,7 +3,7 @@
 
 | Attribute | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `mode` | `'combo'` \| `'select'` | `'combo'` | Input mode. `combo` (default) renders a single typeable combobox with pre-built slots — fastest for scheduling. `select` renders three dropdowns (hour, minute, AM/PM) — best for free-form precision or when slot filtering would be confusing. |
+| `mode` | `'combo'` \| `'select'` \| `'text'` | `'combo'` | Input mode. `combo` (default) renders a typeable combobox with pre-built slots — fastest for scheduling. `select` renders hour + minute selects plus an AM/PM segmented control — best for discrete picking. `text` renders a masked text input (`HH:MM`) plus the AM/PM control — best for arbitrary precision (incident reports, exact event times). `minute-step` is ignored in `text` mode. |
 | `legend` | `string` | `''` | Fieldset legend (select mode) or label fallback (combo mode) |
 | `format` | `'12'` \| `'24'` | `'12'` | Display format: "12" (with AM/PM) or "24" |
 | `minute-step` | `number` | `0` | Increment for the minute slots. Defaults to 15 in combo mode (scheduling-friendly slot density), 5 in select mode. Use 1 for arbitrary precision (best with select mode). |

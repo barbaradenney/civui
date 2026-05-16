@@ -3,7 +3,7 @@ import type { ComponentSchema } from '../schema.types.js';
 const schema: ComponentSchema = {
   $schema: '1.0',
   name: 'civ-time-picker',
-  description: 'Self-contained time input with two modes: `combo` (USWDS-style typeable combobox with pre-built slots — default, best for scheduling) and `select` (three dropdowns for hour, minute, AM/PM — predictable on every device). Always stores its value in 24-hour ISO `HH:MM`; the format prop controls display, not storage. Use for appointment scheduling, hearing times, and any time-of-day prompt.',
+  description: 'Self-contained time input with three modes: `combo` (USWDS-style typeable combobox with pre-built slots — default, best for scheduling), `select` (hour + minute dropdowns plus AM/PM segmented control — predictable picking), and `text` (free-form masked text input plus AM/PM segmented control — best for arbitrary-precision input like incident reports). Always stores its value in 24-hour ISO `HH:MM`; the format prop controls display, not storage.',
   category: 'form-group',
   extends: 'CivFormElement',
   isGroup: true,
@@ -11,9 +11,9 @@ const schema: ComponentSchema = {
   props: {
     mode: {
       type: 'enum',
-      description: 'Input mode. `combo` (default) renders a single typeable combobox with pre-built slots — fastest for scheduling. `select` renders three dropdowns (hour, minute, AM/PM) — best for free-form precision or when slot filtering would be confusing.',
+      description: 'Input mode. `combo` (default) renders a typeable combobox with pre-built slots — fastest for scheduling. `select` renders hour + minute selects plus an AM/PM segmented control — best for discrete picking. `text` renders a masked text input (`HH:MM`) plus the AM/PM control — best for arbitrary precision (incident reports, exact event times). `minute-step` is ignored in `text` mode.',
       default: 'combo',
-      values: ['combo', 'select'],
+      values: ['combo', 'select', 'text'],
     },
     legend: {
       type: 'string',

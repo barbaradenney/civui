@@ -25,9 +25,9 @@ never changes.
 For known past dates use [`<civ-memorable-date>`](./date.mdx); for future
 dates use [`<civ-date-picker>`](./date.mdx).
 
-## Two input modes
+## Three input modes
 
-The component picks between two interaction patterns via the `mode` prop:
+The component picks between three interaction patterns via the `mode` prop:
 
 ### `mode="combo"` (default, recommended) — USWDS pattern
 
@@ -38,14 +38,22 @@ slot list to business hours. Best for **scheduling** — appointments,
 hearing times, callback windows.
 
 Matches the [USWDS time picker](https://designsystem.digital.gov/components/time-picker/) pattern.
-Composes the existing [`<civ-combobox>`](./combobox.mdx).
+Composes the existing [`<civ-combobox>`](./combobox.mdx). When the user
+types a time that isn't on the slot grid (e.g. "9:27" with 15-min slots),
+the dropdown shows the nearest slot ("9:30 AM") instead of "No results."
 
-### `mode="select"` — three dropdowns
+### `mode="select"` — selects + AM/PM segmented control
 
-Three selects (hour, minute, AM/PM) inside a fieldset. Predictable,
-every-device-safe, no typing required. Use when slot-list filtering
-would be confusing — capturing an arbitrary incident time, or
-`minute-step="1"` precision that would create a 1,440-slot combobox.
+Hour + minute selects plus an AM/PM segmented control. Predictable
+picking for discrete time choices; no typing required.
+
+### `mode="text"` — masked text input + AM/PM segmented control
+
+A single text input (`HH:MM` with auto-formatting mask) plus the same
+AM/PM segmented control. Best for **arbitrary precision** — incident
+reports, medical event times, "exactly when did this happen" prompts
+where the user knows the time and a slot grid would slow them down.
+`minute-step` is ignored in this mode (any minute 00–59 is valid).
 
 ## Examples
 
@@ -81,6 +89,18 @@ would be confusing — capturing an arbitrary incident time, or
 
 <StoryEmbed id="forms-inputs-time-picker--select-mode-required" />
 
+### Text mode (free-form HH:MM)
+
+<StoryEmbed id="forms-inputs-time-picker--text-mode" />
+
+### Text mode — 24-hour (no AM/PM)
+
+<StoryEmbed id="forms-inputs-time-picker--text-mode-24-hour" />
+
+### Text mode — required
+
+<StoryEmbed id="forms-inputs-time-picker--text-mode-required" />
+
 [Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-inputs-time-picker--default)
 
 ## When to use which mode
@@ -88,10 +108,11 @@ would be confusing — capturing an arbitrary incident time, or
 | Scenario | Mode | Why |
 | --- | --- | --- |
 | Schedule an appointment, hearing, callback | **combo** | Pre-built slots match the mental model ("pick a time slot"); typing skips to a slot fast |
-| Pick from business-hours offering | **combo** | `min` / `max` keep the slot list short |
-| Record an arbitrary incident time | **select** | No fixed slots — user types/picks any minute |
-| Need minute-level precision (`minute-step="1"`) | **select** | A 1,440-slot combobox is unwieldy |
-| Form will be filled on devices with poor IME support | **select** | No typing needed |
+| Pick from a business-hours offering | **combo** | `min` / `max` keep the slot list short |
+| User knows the exact time (incident, fall, medical event) | **text** | Free-form `HH:MM` input; no slot grid to fight |
+| Need any-minute precision (every minute of the day valid) | **text** | A 1,440-slot combobox is unwieldy; selects would scroll forever |
+| Discrete picks where typing isn't faster than tapping | **select** | Predictable dropdowns, every-device-safe |
+| User-facing self-service in trauma-sensitive flows | **select** | No on-focus dropdown surprise, no typing pressure |
 
 ## Shared Props
 
@@ -147,12 +168,21 @@ either an exact match for a slot or empty.
   value="14:30"
 ></civ-time-picker>
 
-<!-- Free-form precision: three dropdowns + minute-step=1 -->
+<!-- Free-form precision via text input + AM/PM -->
 <civ-time-picker
-  mode="select"
-  legend="Exact time of incident"
-  name="incident_time"
-  minute-step="1"
+  mode="text"
+  label="Exact time of fall"
+  name="fall_time"
+  hint="Type the time as accurately as you remember (e.g. 2:34)"
+  required
+></civ-time-picker>
+
+<!-- Text mode in 24-hour format — no AM/PM control -->
+<civ-time-picker
+  mode="text"
+  label="Event timestamp"
+  name="event_time"
+  format="24"
 ></civ-time-picker>
 ```
 
@@ -188,11 +218,26 @@ either an exact match for a slot or empty.
 - Real `<fieldset>` with a `<legend>`. If no `legend` is set, a
   visually-hidden "Time" fallback ensures the fieldset stays Section 508
   compliant.
-- Each sub-field is a real `<civ-select>` with its own labelled
-  `<select>` element. Keyboard navigation between hour/minute/period uses
-  native tab order.
+- Hour and minute are real `<civ-select>` elements with their own
+  labelled `<select>` controls. AM/PM is a `<civ-segmented-control>` —
+  single-tap binary choice on every viewport, full-width on mobile.
 - `aria-describedby` chains the legend → hint → error so screen readers
   announce them in order on focus.
+
+### Text mode
+- Same fieldset semantics as select mode. When only `label` is set
+  (not `legend`), the fieldset legend is visually-hidden so the text
+  input's own label is the canonical surface (single control, one
+  visible label).
+- `<civ-text-input>` with `mask-pattern="##:##"` and
+  `inputmode="numeric"`. Mobile shows the numeric keypad; the colon
+  is inserted automatically on blur. Raw value stored as 4 digits
+  (no colon).
+- Keyboard: type digits, tab to the AM/PM control, arrow keys
+  toggle the segments.
+- 12-hour format requires hour 1–12 + an AM/PM selection to
+  assemble. Inputs outside that range (hour 0, hour > 12) leave the
+  form value empty until corrected.
 
 ## Localization
 
@@ -204,7 +249,9 @@ All user-facing strings come from the locale registry:
   placeholder)
 - `timePickerHourLabel` (default `"Hour"`, select mode)
 - `timePickerMinuteLabel` (default `"Minute"`, select mode)
-- `timePickerPeriodLabel` (default `"AM/PM"`, select mode)
+- `timePickerPeriodLabel` (default `"AM/PM"`, select + text modes)
+- `timePickerTimeLabel` (default `"Time"`, text mode — sr-only label
+  on the masked text input when the consumer hasn't set one)
 - `timePickerAm` / `timePickerPm` (defaults `"AM"` / `"PM"`)
 
 Override via `setLocale()` or per-component with the `placeholder`,

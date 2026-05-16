@@ -595,3 +595,147 @@ describe('civ-time-picker — combo mode: nearest-slot snap suggestion', () => {
   });
 });
 
+
+describe('civ-time-picker — text mode', () => {
+  /**
+   * Click the matching civ-segment inside a civ-segmented-control by
+   * name + value. Same helper as setSegmentedValue earlier, copied
+   * here for the test block's locality.
+   */
+  async function pickPeriod(el: HTMLElement, name: string, value: string) {
+    const group = el.querySelector(`civ-segmented-control[name="${name}"]`)!;
+    const segment = group.querySelector(`civ-segment[value="${value}"]`)!;
+    (segment.querySelector('button') as HTMLButtonElement).click();
+    await elementUpdated(group);
+  }
+
+  /** Fire a typed-input event on the masked text input. */
+  async function typeTime(el: HTMLElement, name: string, raw: string) {
+    const ti = el.querySelector(`civ-text-input[name="${name}"]`)!;
+    const inner = ti.querySelector('input') as HTMLInputElement;
+    inner.value = raw;
+    inner.dispatchEvent(new Event('input', { bubbles: true }));
+    await elementUpdated(ti);
+  }
+
+  it('renders a fieldset with a masked text-input + AM/PM segmented-control (12-hour)', async () => {
+    const el = await fixture<CivTimePicker>('<civ-time-picker mode="text" label="Incident time" name="t"></civ-time-picker>');
+    expect(el.querySelector('fieldset')).not.toBeNull();
+    const ti = el.querySelector('civ-text-input[name="t-time"]') as any;
+    expect(ti).not.toBeNull();
+    expect(ti.maskPattern).toBe('##:##');
+    expect(ti.inputmode).toBe('numeric');
+    expect(el.querySelector('civ-segmented-control[name="t-period"]')).not.toBeNull();
+    expect(el.querySelector('civ-select')).toBeNull();
+    expect(el.querySelector('civ-combobox')).toBeNull();
+  });
+
+  it('skips the period control in 24-hour format', async () => {
+    const el = await fixture<CivTimePicker>('<civ-time-picker mode="text" label="When" name="t" format="24"></civ-time-picker>');
+    expect(el.querySelector('civ-text-input[name="t-time"]')).not.toBeNull();
+    expect(el.querySelector('civ-segmented-control')).toBeNull();
+  });
+
+  it('assembles 24-hour ISO from typed digits + period (3-digit input)', async () => {
+    const el = await fixture<CivTimePicker>('<civ-time-picker mode="text" label="When" name="t"></civ-time-picker>');
+    await typeTime(el, 't-time', '234');
+    await pickPeriod(el, 't-period', 'PM');
+    expect(el.value).toBe('14:34');
+  });
+
+  it('assembles from 4-digit input', async () => {
+    const el = await fixture<CivTimePicker>('<civ-time-picker mode="text" label="When" name="t"></civ-time-picker>');
+    await typeTime(el, 't-time', '1245');
+    await pickPeriod(el, 't-period', 'PM');
+    expect(el.value).toBe('12:45');
+  });
+
+  it('assembles in 24-hour format with no period control', async () => {
+    const el = await fixture<CivTimePicker>('<civ-time-picker mode="text" label="When" name="t" format="24"></civ-time-picker>');
+    await typeTime(el, 't-time', '1430');
+    expect(el.value).toBe('14:30');
+  });
+
+  it('AM at 12 still maps to 00 hour (midnight)', async () => {
+    const el = await fixture<CivTimePicker>('<civ-time-picker mode="text" label="When" name="t"></civ-time-picker>');
+    await typeTime(el, 't-time', '1200');
+    await pickPeriod(el, 't-period', 'AM');
+    expect(el.value).toBe('00:00');
+  });
+
+  it('partial input (hour-only) leaves value empty until minutes typed', async () => {
+    const el = await fixture<CivTimePicker>('<civ-time-picker mode="text" label="When" name="t"></civ-time-picker>');
+    await typeTime(el, 't-time', '12');
+    await pickPeriod(el, 't-period', 'PM');
+    expect(el.value).toBe('');
+  });
+
+  it('rejects invalid 12-hour input (hour > 12) — value stays empty', async () => {
+    // Power-user "type 24-hour" courtesy is intentionally NOT
+    // implemented in text mode; combo mode handles that via snap.
+    const el = await fixture<CivTimePicker>('<civ-time-picker mode="text" label="When" name="t"></civ-time-picker>');
+    await typeTime(el, 't-time', '1430');
+    await pickPeriod(el, 't-period', 'PM');
+    // Hour 14 > 12 in 12-hour mode → assembly returns "".
+    expect(el.value).toBe('');
+  });
+
+  it('parses an initial value back into the text input + period', async () => {
+    const el = await fixture<CivTimePicker>('<civ-time-picker mode="text" label="When" name="t" value="09:30"></civ-time-picker>');
+    await elementUpdated(el);
+    const ti = el.querySelector('civ-text-input[name="t-time"]') as any;
+    expect(ti.value).toBe('0930');
+    const period = el.querySelector('civ-segmented-control[name="t-period"]') as any;
+    expect(period.value).toBe('AM');
+  });
+
+  it('format change re-derives the text-input raw digits', async () => {
+    const el = await fixture<CivTimePicker>('<civ-time-picker mode="text" label="When" name="t" value="14:30"></civ-time-picker>');
+    await elementUpdated(el);
+    const ti = el.querySelector('civ-text-input[name="t-time"]') as any;
+    expect(ti.value).toBe('0230'); // 12-hour display: 2:30
+
+    el.format = '24';
+    await elementUpdated(el);
+    const ti24 = el.querySelector('civ-text-input[name="t-time"]') as any;
+    expect(ti24.value).toBe('1430'); // 24-hour display: 14:30
+  });
+
+  it('uses sr-only fallback legend when only `label` is set', async () => {
+    // Same convention as combo mode — text mode treats `label` as the
+    // canonical surface (it's a single input control), and avoids
+    // duplicating it as a visible fieldset legend.
+    const el = await fixture<CivTimePicker>('<civ-time-picker mode="text" label="Incident time"></civ-time-picker>');
+    const legend = el.querySelector('fieldset > legend');
+    expect(legend!.classList.contains('civ-sr-only')).toBe(true);
+  });
+
+  it('uses a real visible legend when `legend` is set', async () => {
+    const el = await fixture<CivTimePicker>('<civ-time-picker mode="text" legend="Time of incident"></civ-time-picker>');
+    const legend = el.querySelector('fieldset > legend');
+    expect(legend!.classList.contains('civ-sr-only')).toBe(false);
+    expect(legend!.textContent).toContain('Time of incident');
+  });
+
+  it('runtime mode flip from combo → text preserves the value', async () => {
+    const el = await fixture<CivTimePicker>('<civ-time-picker label="When" value="14:30"></civ-time-picker>');
+    expect(el.mode).toBe('combo');
+
+    el.mode = 'text';
+    await elementUpdated(el);
+    const ti = el.querySelector('civ-text-input[name="time"]') as any;
+    expect(ti).not.toBeNull();
+    expect(ti.value).toBe('0230');
+    expect(el.value).toBe('14:30');
+  });
+
+  it('cascades disabled to the text input and segmented control', async () => {
+    const el = await fixture<CivTimePicker>('<civ-time-picker mode="text" label="When"></civ-time-picker>');
+    el.formDisabledCallback(true);
+    await elementUpdated(el);
+    const ti = el.querySelector('civ-text-input') as any;
+    const period = el.querySelector('civ-segmented-control') as any;
+    expect(ti.disabled).toBe(true);
+    expect(period.disabled).toBe(true);
+  });
+});

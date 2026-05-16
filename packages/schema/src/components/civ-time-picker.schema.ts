@@ -65,6 +65,18 @@ const schema: ComponentSchema = {
       default: '',
       attribute: 'period-label',
     },
+    hideNowButton: {
+      type: 'boolean',
+      description: 'Hide the "Now" quick-button. Defaults to false — the button is shown by default, mirroring civ-date-picker\'s "Today" affordance.',
+      default: false,
+      attribute: 'hide-now-button',
+    },
+    nowButtonLabel: {
+      type: 'string',
+      description: 'Override the "Now" button label. Defaults to the locale-aware `timePickerNowButton` string ("Now" in English).',
+      default: '',
+      attribute: 'now-button-label',
+    },
   },
 
   events: {

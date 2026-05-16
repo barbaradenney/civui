@@ -64,6 +64,15 @@ props:
       title: Period label
       type: string
       description: 'Custom label for the AM/PM select (select mode)'
+    hide_now_button:
+      title: Hide Now button
+      type: boolean
+      default: false
+      description: 'Hide the "Now" quick-button (shown by default)'
+    now_button_label:
+      title: Now button label
+      type: string
+      description: 'Override the "Now" button label'
     required:
       title: Required
       type: boolean

@@ -95,6 +95,20 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
    */
   @property({ type: String }) placeholder = '';
 
+  /**
+   * Hide the "Now" quick-button. Defaults to false — the button is
+   * shown by default, mirroring civ-date-picker's "Today" affordance.
+   * Hide on forms where "now" doesn't make semantic sense (recording
+   * past events without time-of-day relevance).
+   */
+  @property({ type: Boolean, attribute: 'hide-now-button' }) hideNowButton = false;
+
+  /**
+   * Override the "Now" button label. Defaults to the locale-aware
+   * `timePickerNowButton` string ("Now" in English).
+   */
+  @property({ type: String, attribute: 'now-button-label' }) nowButtonLabel = '';
+
   @state() private _hour = '';
   @state() private _minute = '';
   @state() private _period: 'AM' | 'PM' | '' = '';
@@ -349,15 +363,25 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
   /**
    * Render a (24-hour) hour/minute pair as the display string the
    * user sees in the combo slot list and (when matched) in the input.
+   *
+   * Exactly-midnight (00:00) and exactly-noon (12:00) get a "(midnight)"
+   * / "(noon)" annotation — the conventional disambiguation for 12 AM
+   * vs 12 PM that confuses every user the first time they encounter it.
+   * The annotation appears in 24-hour format too: "00:00 (midnight)",
+   * "12:00 (noon)". Only exact zero-minute slots qualify (12:15 AM is
+   * not midnight).
    */
   private _formatTimeForDisplay(h: number, m: number): string {
     const minutePart = String(m).padStart(2, '0');
+    const annotation = m === 0 && (h === 0 || h === 12)
+      ? ` (${h === 0 ? t('timePickerMidnight') : t('timePickerNoon')})`
+      : '';
     if (this.format === '24') {
-      return `${String(h).padStart(2, '0')}:${minutePart}`;
+      return `${String(h).padStart(2, '0')}:${minutePart}${annotation}`;
     }
     const period = h < 12 ? t('timePickerAm') : t('timePickerPm');
     const twelveHour = h === 0 ? 12 : h > 12 ? h - 12 : h;
-    return `${twelveHour}:${minutePart} ${period}`;
+    return `${twelveHour}:${minutePart} ${period}${annotation}`;
   }
 
   override formDisabledCallback(disabled: boolean): void {
@@ -401,7 +425,88 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
         ?hide-required-indicator="${this.hideRequiredIndicator}"
         @civ-change="${this._onComboChange}"
       ></civ-combobox>
+      ${this._renderNowButton()}
     `;
+  }
+
+  /**
+   * "Now" quick-button. Mirrors civ-date-picker's "Today" affordance.
+   * Sets `value` to the device's current local time:
+   *  - combo mode: snaps to the nearest slot honoring `min`/`max`/
+   *    `minute-step` (so a 15-min combo gets the closest 15-min slot).
+   *  - text mode: sets the exact current time, minute-precision.
+   *  - select mode: snaps minute to `minute-step` grid like combo.
+   *
+   * Suppressed via `hide-now-button`. Disabled with the host.
+   */
+  private _renderNowButton() {
+    if (this.hideNowButton || this.readonly) return nothing;
+    const label = this.nowButtonLabel || t('timePickerNowButton');
+    return html`
+      <div class="civ-time-picker-footer">
+        <button
+          type="button"
+          class="civ-time-picker-now-btn"
+          ?disabled="${this.disabled}"
+          @click="${this._onNowClick}"
+        >${label}</button>
+      </div>
+    `;
+  }
+
+  /**
+   * Compute the current local time, format it for the active mode,
+   * write it through the normal assembly path so all the event /
+   * form-value plumbing fires.
+   */
+  private _onNowClick(): void {
+    if (this.disabled || this.readonly) return;
+    const now = new Date();
+    let h = now.getHours();
+    let m = now.getMinutes();
+
+    // Snap to minute-step for combo + select modes — typing-free
+    // modes should commit a slot that's actually in the grid.
+    // Text mode skips snapping; the user expects exact minute
+    // precision when they pick a text input.
+    if (this.mode !== 'text') {
+      const step = this._effectiveMinuteStep();
+      m = Math.round(m / step) * step;
+      if (m === 60) { h = (h + 1) % 24; m = 0; }
+    }
+
+    // Honor combo min/max if set. Clamp to the bounded range so
+    // "Now" outside business hours snaps to the nearest in-range
+    // edge rather than producing an out-of-range value.
+    if (this.mode === 'combo') {
+      const minMin = this._parseTimeToMinutes(this.min);
+      const maxMin = this._parseTimeToMinutes(this.max);
+      let total = h * 60 + m;
+      if (minMin != null && total < minMin) total = minMin;
+      if (maxMin != null && total > maxMin) total = maxMin;
+      h = Math.floor(total / 60);
+      m = total % 60;
+    }
+
+    const iso = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+    this.value = iso;
+    this._parseValue();
+    this.updateFormValue(this.value);
+    const detail = {
+      value: this.value,
+      hour: this._hour,
+      minute: this._minute,
+      period: this._period,
+    };
+    dispatch(this, 'civ-input', detail);
+    dispatch(this, 'civ-change', detail);
+    this.sendAnalytics('change');
+    // Clear any text-mode auto-error the user might have triggered
+    // before clicking Now.
+    if (this._textModeError) {
+      this.error = '';
+      this._textModeError = false;
+    }
   }
 
   /**
@@ -599,6 +704,7 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
               `
             : nothing}
         </div>
+        ${this._renderNowButton()}
       </fieldset>
     `;
   }
@@ -687,6 +793,7 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
           fieldset: true,
         })}
         ${fields}
+        ${this._renderNowButton()}
       </fieldset>
     `;
   }

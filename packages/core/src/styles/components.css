@@ -1166,6 +1166,26 @@
     @apply civ-text-base-light civ-cursor-not-allowed;
   }
 
+  /*
+   * Time picker "Now" quick-button — mirrors the date picker's
+   * "Today" affordance. Renders below the input(s) on its own
+   * row, left-aligned (the inputs are left-aligned too; the
+   * date picker footer right-aligns because its dialog is wider).
+   */
+  .civ-time-picker-footer {
+    @apply civ-mt-1 civ-flex civ-justify-start;
+  }
+  .civ-time-picker-now-btn {
+    @apply civ-px-2 civ-py-1 civ-rounded civ-text-sm civ-font-semibold
+           civ-text-primary civ-bg-transparent civ-border-0 civ-cursor-pointer;
+  }
+  .civ-time-picker-now-btn:hover:not(:disabled) {
+    @apply civ-bg-primary-lightest;
+  }
+  .civ-time-picker-now-btn:disabled {
+    @apply civ-text-base-light civ-cursor-not-allowed;
+  }
+
   .civ-datepicker-cal-btn {
     @apply civ-border civ-border-s-0 civ-border-base civ-rounded-e
            civ-px-2 civ-py-2 civ-bg-base-lightest;

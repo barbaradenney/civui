@@ -179,6 +179,10 @@ export interface CivLocaleStrings {
   timePickerInvalidMinute: string;
   timePickerMissingPeriod: string;
   timePickerInvalidTime: string;
+  // Slot annotations + Now quick-button
+  timePickerMidnight: string; // appended to 12:00 AM / 00:00 in combo dropdown
+  timePickerNoon: string;     // appended to 12:00 PM / 12:00 in combo dropdown
+  timePickerNowButton: string; // "Now" quick-button label
 
   // Form footer
   formRequiredLegend: string; // "indicates a required field"
@@ -841,6 +845,9 @@ const defaultStrings: CivLocaleStrings = {
   timePickerInvalidMinute: 'Minutes must be between 0 and 59',
   timePickerMissingPeriod: 'Select AM or PM',
   timePickerInvalidTime: 'Enter a valid time',
+  timePickerMidnight: 'midnight',
+  timePickerNoon: 'noon',
+  timePickerNowButton: 'Now',
 
   formRequiredLegend: 'indicates a required field',
 

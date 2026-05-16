@@ -60,6 +60,50 @@ export interface PropDef {
 }
 
 // ---------------------------------------------------------------------------
+// Method types
+// ---------------------------------------------------------------------------
+
+export type MethodValueType =
+  | 'string'
+  | 'number'
+  | 'boolean'
+  | 'object'
+  | 'array'
+  | 'void'
+  | 'Promise<void>'
+  | 'Promise<string>'
+  | 'Promise<number>'
+  | 'Promise<boolean>'
+  | 'Promise<object>';
+
+export interface MethodParam {
+  /** Parameter name as it appears in the public signature */
+  name: string;
+  /** Parameter value type */
+  type: Exclude<MethodValueType, 'void' | `Promise<${string}>`>;
+  /** Human-readable description of the parameter's purpose */
+  description: string;
+  /** True when the parameter is optional (TypeScript `?`) */
+  optional?: boolean;
+}
+
+export interface MethodDef {
+  /** Human-readable description of what the method does */
+  description: string;
+  /** Parameters in declaration order. Omit for zero-arg methods. */
+  params?: MethodParam[];
+  /** Return type. Defaults to `void`. Use `Promise<*>` for async methods. */
+  returns?: MethodValueType;
+  /**
+   * Mark methods that don't have a clean cross-platform mapping. Native
+   * implementations (iOS/Android) don't model imperative APIs in the
+   * schema-parity check today; setting `webOnly` is documentary —
+   * future cross-platform parity for methods would consult this flag.
+   */
+  webOnly?: boolean;
+}
+
+// ---------------------------------------------------------------------------
 // Event types
 // ---------------------------------------------------------------------------
 
@@ -239,6 +283,16 @@ export interface ComponentSchema {
 
   /** Custom events this component fires */
   events: Record<string, EventDef>;
+
+  /**
+   * Imperative methods on the component instance. Use sparingly —
+   * declarative props + events are the primary surface. Reserve this
+   * for components that genuinely need a callable API (force-save
+   * a draft, focus a sub-control, open/close a popover). Methods are
+   * NOT inherited from base classes the way props are; each entry
+   * documents a method the consumer can call on the host element.
+   */
+  methods?: Record<string, MethodDef>;
 
   /** Accessibility contract */
   a11y: A11yDef;

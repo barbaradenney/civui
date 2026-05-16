@@ -74,12 +74,17 @@ export interface CivFormFieldLike extends HTMLElement {
  * @fires civ-submit - When validation passes
  * @fires civ-invalid - When validation fails, detail contains errors
  * @fires civ-dirty - When dirty state changes, detail: { dirty: boolean }
+ * @fires civ-submit-confirm - When validation passes and `confirm-before-submit` is set; detail carries `proceed()` and `cancel()` callbacks
+ * @fires civ-submit-cancelled - When the consumer calls `cancel()` on a `civ-submit-confirm` event
  * @fires civ-analytics - Analytics tracking event on submit
  */
 @customElement('civ-form')
 export class CivForm extends LightDomSlotMixin(CivBaseElement) {
   override _getSlotConfig(): SlotConfig {
-    return { default: '[data-civ-form-content]' };
+    return {
+      'data-civ-form-disclosures': '[data-civ-form-disclosures-slot]',
+      default: '[data-civ-form-content]',
+    };
   }
 
   @property({ type: String }) action = '';
@@ -148,7 +153,40 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
   /** Override the support resources heading. Defaults to `t('supportResourcesHeading')`. */
   @property({ type: String, attribute: 'support-resources-heading' }) supportResourcesHeading = '';
 
+  /**
+   * Render "* indicates a required field" footer text beneath the form
+   * content. Use on any federal form that includes a required-mark
+   * disclosure ("Required fields are marked with an asterisk").
+   *
+   * Defaults to false — every form decides whether the legend adds value
+   * over the per-field `(required)` marker.
+   */
+  @property({ type: Boolean, attribute: 'required-legend' }) requiredLegend = false;
+
+  /**
+   * When true, intercept validated submits and dispatch a
+   * `civ-submit-confirm` event before actually submitting. The detail
+   * object carries `proceed()` and `cancel()` callbacks; the actual
+   * `civ-submit` event fires only when the consumer calls `proceed()`.
+   *
+   * Use for irreversible submissions (filing a benefit claim, signing
+   * a tax return) where the user should see a "Submit your
+   * application?" confirmation. Compose with `civ-modal` and
+   * `civ-summary` in the consumer.
+   */
+  @property({ type: Boolean, attribute: 'confirm-before-submit' }) confirmBeforeSubmit = false;
+
   @state() private _errors: FormFieldError[] = [];
+
+  /**
+   * Guard against repeated submits while a `civ-submit-confirm` is
+   * pending. The consumer holds the resume on a per-event closure;
+   * tracking the same flag on the instance prevents a second click
+   * from spawning a second {proceed,cancel} pair (each closure has its
+   * own `resolved` guard, but proceeding on either still fires
+   * `civ-submit` once).
+   */
+  private _confirmPending = false;
   @state() private _dirty = false;
   @state() private _prefillLoading = false;
   @state() private _prefillError = '';
@@ -226,6 +264,10 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
   }
 
   override updated(changed: Map<string, unknown>): void {
+    // Forward to LightDomSlotMixin so captured children (form content,
+    // disclosures slot) get re-relocated if Lit's render replaces the
+    // destination containers on subsequent renders.
+    super.updated(changed);
     if (changed.has('formLabel')) {
       if (this.formLabel) {
         this.setAttribute('aria-label', this.formLabel);
@@ -283,6 +325,15 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
           `
         : nothing}
       <div data-civ-form-content></div>
+      ${this.requiredLegend
+        ? html`
+            <p class="civ-form-required-legend civ-text-sm civ-mt-2">
+              <span class="civ-required-mark" aria-hidden="true">*</span>
+              ${t('formRequiredLegend')}
+            </p>
+          `
+        : nothing}
+      <div data-civ-form-disclosures-slot></div>
       ${this.supportResources.length > 0
         ? html`
             <aside
@@ -491,8 +542,13 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
    * For file-upload fields, the value is a comma-joined string of file names.
    * For checkbox-group, the value is a comma-joined string of checked values.
    * Use `toFormData()` when you need actual File objects or multi-value fields.
+   *
+   * @param opts.excludePii - Skip fields flagged `data-civ-pii` (SSN, EIN,
+   *   etc.) and `data-persist-exclude`. Default false for the existing
+   *   submit/preview use cases; pass `true` when serializing for storage
+   *   adapters that don't encrypt (civ-form-autosave does this).
    */
-  getFormData(): Record<string, string> {
+  getFormData(opts: { excludePii?: boolean } = {}): Record<string, string> {
     const data: Record<string, string> = {};
     const formElements = this.querySelectorAll<HTMLElement>(
       '[data-civ-form-field]',
@@ -501,6 +557,15 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
     for (const el of formElements) {
       const formEl = el as unknown as CivFormFieldLike;
       if (formEl.disabled) continue;
+      // Preset wrappers (civ-ssn, civ-ein) host an inner civ-text-input
+      // that carries the data-civ-pii flag. Check the descendant tree
+      // too so the filter catches the wrapper as well as the inner control.
+      if (opts.excludePii && (
+        el.hasAttribute('data-civ-pii') ||
+        el.hasAttribute('data-persist-exclude') ||
+        el.querySelector('[data-civ-pii]') ||
+        el.querySelector('[data-persist-exclude]')
+      )) continue;
       if (this._isInHiddenConditional(el)) continue;
       if (formEl.name) {
         data[formEl.name] = formEl.value ?? '';
@@ -717,6 +782,13 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
         // Don't overwrite user edits restored from sessionStorage
         if (this._persistedFieldNames.has(field.name)) return;
 
+        // For 'saved' source (autosave restore), never overwrite a field
+        // the user has already typed into. Restore runs after
+        // connectedCallback + a microtask, so a fast typer can land
+        // input before the snapshot lands. Cold load → field is empty
+        // → restore wins. Warm reload after typing → user wins.
+        if (prefill.source === 'saved' && field.value) return;
+
         field.value = prefill.value;
         field.setAttribute('data-civ-prefill-source', prefill.source);
 
@@ -796,6 +868,37 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
       return;
     }
 
+    if (this.confirmBeforeSubmit) {
+      // Ignore re-submits while a confirm is already in flight — the
+      // first proceed() is the authoritative one.
+      if (this._confirmPending) return;
+      this._confirmPending = true;
+      let resolved = false;
+      const proceed = (): void => {
+        if (resolved) return;
+        resolved = true;
+        this._confirmPending = false;
+        this._finalizeSubmit();
+      };
+      const cancel = (): void => {
+        if (resolved) return;
+        resolved = true;
+        this._confirmPending = false;
+        dispatch(this, 'civ-submit-cancelled');
+      };
+      dispatch(this, 'civ-submit-confirm', {
+        formData: this.toFormData(),
+        data: this.getFormData(),
+        proceed,
+        cancel,
+      });
+      return;
+    }
+
+    this._finalizeSubmit();
+  }
+
+  private _finalizeSubmit(): void {
     this._clearPersistedData();
     if (this.trackDirty) {
       this._dirty = false;

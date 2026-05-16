@@ -11,6 +11,7 @@ import { describe, it, expect } from 'vitest';
 import {
   parseLitPropsFromSource,
   parseLitEventsFromSource,
+  parsePublicMethods,
   parseSwiftPropNamesFromSource,
   parseSwiftPropsFromSource,
   parseKotlinPropNamesFromSource,
@@ -624,5 +625,123 @@ describe('expectedDrupalType', () => {
   it('falls back to string for unknown / string types', () => {
     expect(expectedDrupalType('string')).toBe('string');
     expect(expectedDrupalType('something-weird')).toBe('string');
+  });
+});
+
+describe('parsePublicMethods', () => {
+  it('finds plain methods', () => {
+    const src = `
+@customElement('civ-x')
+export class CivX extends CivBaseElement {
+  saveNow(): void {
+    this.value = 'saved';
+  }
+
+  clear(): void {
+    this.value = '';
+  }
+}`;
+    const methods = parsePublicMethods(src);
+    expect(methods.has('saveNow')).toBe(true);
+    expect(methods.has('clear')).toBe(true);
+  });
+
+  it('finds async methods', () => {
+    const src = `
+class CivX extends CivBaseElement {
+  async saveNow(): Promise<void> {
+    await fetch('/save');
+  }
+}`;
+    const methods = parsePublicMethods(src);
+    expect(methods.has('saveNow')).toBe(true);
+  });
+
+  it('finds methods with default-expression params containing nested parens', () => {
+    // Regression: describeLastSave(now: number = Date.now()): string {
+    // The naive `\([^)]*\)` regex stops at Date.now()'s closing paren.
+    const src = `
+class CivX extends CivBaseElement {
+  describeLastSave(now: number = Date.now()): string {
+    return String(now);
+  }
+}`;
+    const methods = parsePublicMethods(src);
+    expect(methods.has('describeLastSave')).toBe(true);
+  });
+
+  it('skips private methods (leading underscore)', () => {
+    const src = `
+class CivX extends CivBaseElement {
+  _internal(): void {}
+  public(): void {}
+}`;
+    const methods = parsePublicMethods(src);
+    expect(methods.has('_internal')).toBe(false);
+  });
+
+  it('skips methods declared private/protected', () => {
+    const src = `
+class CivX extends CivBaseElement {
+  private hidden(): void {}
+  protected shielded(): void {}
+}`;
+    const methods = parsePublicMethods(src);
+    expect(methods.has('hidden')).toBe(false);
+    expect(methods.has('shielded')).toBe(false);
+  });
+
+  it('skips lifecycle hooks (Lit / form-associated callbacks)', () => {
+    const src = `
+class CivX extends CivBaseElement {
+  override connectedCallback(): void {}
+  override render() {}
+  formResetCallback(): void {}
+  formDisabledCallback(disabled: boolean): void {}
+  saveNow(): void {}
+}`;
+    const methods = parsePublicMethods(src);
+    expect(methods.has('connectedCallback')).toBe(false);
+    expect(methods.has('render')).toBe(false);
+    expect(methods.has('formResetCallback')).toBe(false);
+    expect(methods.has('formDisabledCallback')).toBe(false);
+    // Real public method still found.
+    expect(methods.has('saveNow')).toBe(true);
+  });
+
+  it('does not match control-flow keywords or method calls inside bodies', () => {
+    const src = `
+class CivX extends CivBaseElement {
+  saveNow(): void {
+    if (this.dirty) {
+      this.persist();
+      for (const f of this.fields) {
+        await this.flush(f);
+      }
+    }
+  }
+}`;
+    const methods = parsePublicMethods(src);
+    expect(methods.has('if')).toBe(false);
+    expect(methods.has('for')).toBe(false);
+    expect(methods.has('persist')).toBe(false); // method call, not declaration
+    expect(methods.has('flush')).toBe(false);
+    expect(methods.has('saveNow')).toBe(true);
+  });
+
+  it('does not match function-property assignments inside methods', () => {
+    // Confirms the "must start the line at class-body indent" rule
+    // rejects callbacks assigned to local variables in method bodies.
+    const src = `
+class CivX extends CivBaseElement {
+  doStuff(): void {
+    const handler = (e: Event) => {
+      this.value = (e.target as HTMLInputElement).value;
+    };
+  }
+}`;
+    const methods = parsePublicMethods(src);
+    expect(methods.has('handler')).toBe(false);
+    expect(methods.has('doStuff')).toBe(true);
   });
 });

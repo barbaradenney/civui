@@ -110,6 +110,7 @@ export interface CivLocaleStrings {
   dateRangeMaxRangeError: string; // "Range must be at most {count} days"
 
   // Memorable date
+  memorableDateDefaultLegend: string;
   memorableDateMonthLabel: string;
   memorableDateDayLabel: string;
   memorableDateYearLabel: string;
@@ -156,6 +157,41 @@ export interface CivLocaleStrings {
   textareaWordsRemaining: string; // "{count} words remaining"
   textareaWordsOverLimit: string; // "{count} {count, plural, one {word} other {words}} over the limit"
   textareaWordLimit: string; // "Word limit: {max}"
+
+  // Number input
+  numberPasteFiltered: string; // polite SR announce when paste stripped non-digits
+
+  // Disclosure
+  disclosureDefaultLabel: string; // "Why we ask?"
+
+  // Time Picker
+  timePickerDefaultLegend: string;
+  timePickerHourLabel: string;
+  timePickerMinuteLabel: string;
+  timePickerPeriodLabel: string;
+  timePickerAm: string;
+  timePickerPm: string;
+
+  // Form footer
+  formRequiredLegend: string; // "indicates a required field"
+
+  // Form Autosave
+  formAutosaveResumed: string;
+  formAutosaveJustNow: string;
+  formAutosaveSecondsAgo: string;
+  formAutosaveMinutesAgo: string;
+
+  // Income compound (amount + frequency)
+  incomeAmountLabel: string;
+  incomeFrequencyLabel: string;
+  incomeFrequencyEmptyLabel: string;
+  incomeFrequency_weekly: string;
+  incomeFrequency_biweekly: string;
+  incomeFrequency_semimonthly: string;
+  incomeFrequency_monthly: string;
+  incomeFrequency_quarterly: string;
+  incomeFrequency_annually: string;
+  'incomeFrequency_one-time': string;
 
   // Alert
   alertDismissLabel: string;
@@ -735,6 +771,7 @@ const defaultStrings: CivLocaleStrings = {
   dateRangeMinRangeError: 'Range must be at least {count} days',
   dateRangeMaxRangeError: 'Range must be at most {count} days',
 
+  memorableDateDefaultLegend: 'Date',
   memorableDateMonthLabel: 'Month',
   memorableDateDayLabel: 'Day',
   memorableDateYearLabel: 'Year',
@@ -778,6 +815,35 @@ const defaultStrings: CivLocaleStrings = {
   textareaWordsRemaining: '{count} words remaining',
   textareaWordsOverLimit: '{count} too many words',
   textareaWordLimit: 'Word limit: {max}',
+
+  numberPasteFiltered: 'Non-numeric characters were removed from the pasted value.',
+
+  disclosureDefaultLabel: 'Why we ask?',
+
+  timePickerDefaultLegend: 'Time',
+  timePickerHourLabel: 'Hour',
+  timePickerMinuteLabel: 'Minute',
+  timePickerPeriodLabel: 'AM/PM',
+  timePickerAm: 'AM',
+  timePickerPm: 'PM',
+
+  formRequiredLegend: 'indicates a required field',
+
+  formAutosaveResumed: 'Resumed from your saved progress.',
+  formAutosaveJustNow: 'Saved just now',
+  formAutosaveSecondsAgo: 'Saved {count} seconds ago',
+  formAutosaveMinutesAgo: 'Saved {count} minutes ago',
+
+  incomeAmountLabel: 'Amount',
+  incomeFrequencyLabel: 'How often?',
+  incomeFrequencyEmptyLabel: '- Select frequency -',
+  incomeFrequency_weekly: 'Every week',
+  incomeFrequency_biweekly: 'Every two weeks',
+  incomeFrequency_semimonthly: 'Twice a month',
+  incomeFrequency_monthly: 'Every month',
+  incomeFrequency_quarterly: 'Every three months',
+  incomeFrequency_annually: 'Once a year',
+  'incomeFrequency_one-time': 'One-time payment',
 
   alertDismissLabel: 'Dismiss alert',
   alertDismissedMessage: 'Alert dismissed',

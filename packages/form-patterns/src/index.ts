@@ -32,3 +32,8 @@ export { CivProgressSteps, CivProgressPercent, CivProgressHeader } from './progr
 
 // Prefill Types
 export type { PrefillField, PrefillData, PrefillMeta } from './prefill/index.js';
+
+// Autosave (resume-in-progress)
+export { CivFormAutosave } from './autosave/index.js';
+export type { AutosaveStorage, AutosaveAdapter, AutosaveSnapshot } from './autosave/index.js';
+export { localStorageAdapter, sessionStorageAdapter, toPrefillData } from './autosave/index.js';

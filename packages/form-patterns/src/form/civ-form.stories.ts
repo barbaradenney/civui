@@ -382,3 +382,85 @@ export const SubmissionFlowDemo: Story = {
     </civ-demo-frame>
   `,
 };
+
+// ── Required-field legend + federal disclosures footer ─────────
+// Most federal forms end with two affordances: a brief "required field"
+// legend (so users know the asterisk meaning) and a block of statutory
+// disclosures (Privacy Act, Paperwork Reduction Act, OMB Control No.).
+// civ-form has both — pass `required-legend` to render the "*
+// indicates a required field" footer and a `data-civ-form-disclosures`
+// child block for the statutory text. The slot is auto-styled with a
+// subtle top border and smaller text.
+
+export const WithRequiredLegendAndDisclosures: Story = {
+  name: 'Required Legend + Disclosures',
+  render: () => html`
+    <civ-form required-legend form-label="Benefit application">
+      <h2 class="civ-heading-md">Apply for benefits</h2>
+      <civ-text-input label="Full legal name" name="name" required></civ-text-input>
+      <civ-text-input label="Date of birth" name="dob" type="date" required></civ-text-input>
+      <civ-text-input label="Email address" name="email" type="email"></civ-text-input>
+      <div class="civ-mt-4">
+        <civ-button type="submit">Submit application</civ-button>
+      </div>
+
+      <div data-civ-form-disclosures>
+        <p>
+          <strong>Privacy Act Statement:</strong> Authority — 5 U.S.C. § 301
+          and Public Law 89-554. Purpose — collect identifying information to
+          process your benefit application. Routine uses — sharing with the
+          Department of the Treasury for payment disbursement. Disclosure is
+          voluntary, but failure to provide the requested information will
+          prevent your application from being processed.
+        </p>
+        <p>
+          <strong>Paperwork Reduction Act:</strong> OMB Control No. 1234-5678.
+          Public reporting burden is estimated at 15 minutes per response.
+        </p>
+      </div>
+    </civ-form>
+  `,
+};
+
+// ── Confirm-before-submit pattern ──────────────────────────────
+// For irreversible submissions (filing a claim, signing a tax return),
+// add `confirm-before-submit` to intercept the validated submit and
+// dispatch `civ-submit-confirm` with `proceed()` and `cancel()`
+// callbacks. The consumer shows their own confirmation UI — a modal,
+// a confirmation page, an inline prompt — and calls `proceed()` to
+// actually submit.
+
+export const ConfirmBeforeSubmit: Story = {
+  name: 'Confirm Before Submit (event-hook pattern)',
+  render: () => html`
+    <civ-form
+      id="confirm-form"
+      confirm-before-submit
+      form-label="Submit benefit claim"
+      @civ-submit-confirm="${(e: CustomEvent) => {
+        const ok = window.confirm(
+          'File this claim?\n\nOnce submitted, this claim cannot be edited from the public portal. Continue?'
+        );
+        if (ok) e.detail.proceed();
+        else e.detail.cancel();
+      }}"
+      @civ-submit="${() => {
+        const status = document.getElementById('confirm-status') as HTMLElement;
+        if (status) status.textContent = 'Submitted. Reference: CLM-2026-0123';
+      }}"
+      @civ-submit-cancelled="${() => {
+        const status = document.getElementById('confirm-status') as HTMLElement;
+        if (status) status.textContent = 'Submission cancelled.';
+      }}"
+    >
+      <h2 class="civ-heading-md">File benefit claim</h2>
+      <civ-text-input label="Claim type" name="type" value="Disability — initial" required></civ-text-input>
+      <civ-textarea label="Description of injury or condition" name="desc" required></civ-textarea>
+      <div class="civ-mt-4">
+        <civ-button type="submit">File claim</civ-button>
+      </div>
+    </civ-form>
+
+    <p id="confirm-status" class="civ-mt-4 civ-text-sm"></p>
+  `,
+};

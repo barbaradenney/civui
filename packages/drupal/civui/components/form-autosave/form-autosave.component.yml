@@ -1,0 +1,31 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Form Autosave
+status: stable
+group: CivUI Form Patterns
+description: 'Persists in-progress form answers so users can resume later. Drop inside a civ-form.'
+
+props:
+  type: object
+  properties:
+    storage_key:
+      title: Storage key
+      type: string
+      description: 'Unique key for this form (e.g., "ssa-disability-draft")'
+    storage:
+      title: Storage type
+      type: string
+      description: 'local (default), session, or custom'
+    debounce_ms:
+      title: Debounce (ms)
+      type: integer
+      default: 1000
+      description: 'Save debounce in milliseconds'
+    silent_resume:
+      title: Silent resume
+      type: boolean
+      default: false
+      description: 'Suppress the "Resumed" screen reader announcement'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

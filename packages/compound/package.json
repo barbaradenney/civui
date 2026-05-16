@@ -11,6 +11,7 @@
     "./address": "./dist/address/index.js",
     "./name": "./dist/name/index.js",
     "./direct-deposit": "./dist/direct-deposit/index.js",
+    "./income": "./dist/income/index.js",
     "./signature": "./dist/signature/index.js",
     "./partnership-history": "./dist/partnership-history/index.js",
     "./service-history": "./dist/service-history/index.js",

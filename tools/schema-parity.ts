@@ -89,15 +89,18 @@ const COVERED_COMPONENTS: ComponentSpec[] = [
   { name: 'civ-date-picker',       source: 'packages/inputs/src/date-picker/civ-date-picker.ts',                                      ios: 'packages/ios/Sources/CivUI/CivDatePicker.swift',       android: 'packages/android/src/main/kotlin/gov/civui/components/CivDatePicker.kt',       drupal: 'packages/drupal/civui/components/date-picker/date-picker.component.yml' },
   { name: 'civ-file-upload',       source: 'packages/inputs/src/file-upload/civ-file-upload.ts',                                      ios: 'packages/ios/Sources/CivUI/CivFileUpload.swift',       android: 'packages/android/src/main/kotlin/gov/civui/components/CivFileUpload.kt',       drupal: 'packages/drupal/civui/components/file-upload/file-upload.component.yml' },
   { name: 'civ-memorable-date',    source: 'packages/inputs/src/date-input/civ-memorable-date.ts',                                    ios: 'packages/ios/Sources/CivUI/CivMemorableDate.swift',    android: 'packages/android/src/main/kotlin/gov/civui/components/CivMemorableDate.kt',    drupal: 'packages/drupal/civui/components/memorable-date/memorable-date.component.yml' },
+  { name: 'civ-time-picker',       source: 'packages/inputs/src/time-picker/civ-time-picker.ts',                                      ios: 'packages/ios/Sources/CivUI/CivTimePicker.swift',       android: 'packages/android/src/main/kotlin/gov/civui/components/CivTimePicker.kt',       drupal: 'packages/drupal/civui/components/time-picker/time-picker.component.yml' },
   { name: 'civ-segmented-control', source: 'packages/controls/src/segmented-control/civ-segmented-control.ts',                       ios: 'packages/ios/Sources/CivUI/CivSegmentedControl.swift', android: 'packages/android/src/main/kotlin/gov/civui/components/CivSegmentedControl.kt', drupal: 'packages/drupal/civui/components/segmented-control/segmented-control.component.yml' },
   { name: 'civ-segment',           source: 'packages/controls/src/segmented-control/civ-segment.ts',                                  ios: 'packages/ios/Sources/CivUI/CivSegmentedControl.swift', android: 'packages/android/src/main/kotlin/gov/civui/components/CivSegmentedControl.kt' },
   { name: 'civ-select',            source: 'packages/inputs/src/select/civ-select.ts',                                                ios: 'packages/ios/Sources/CivUI/CivSelect.swift',           android: 'packages/android/src/main/kotlin/gov/civui/components/CivSelect.kt',           drupal: 'packages/drupal/civui/components/select/select.component.yml' },
   { name: 'civ-textarea',          source: 'packages/inputs/src/textarea/civ-textarea.ts',                                            ios: 'packages/ios/Sources/CivUI/CivTextarea.swift',         android: 'packages/android/src/main/kotlin/gov/civui/components/CivTextarea.kt',         drupal: 'packages/drupal/civui/components/textarea/textarea.component.yml' },
+  { name: 'civ-number',            source: 'packages/inputs/src/number/civ-number.ts',                                                ios: 'packages/ios/Sources/CivUI/CivNumber.swift',           android: 'packages/android/src/main/kotlin/gov/civui/components/CivNumber.kt',           drupal: 'packages/drupal/civui/components/number/number.component.yml' },
   { name: 'civ-toggle',            source: 'packages/inputs/src/toggle/civ-toggle.ts',                 isBoolean: true,                ios: 'packages/ios/Sources/CivUI/CivToggle.swift',           android: 'packages/android/src/main/kotlin/gov/civui/components/CivToggle.kt',           drupal: 'packages/drupal/civui/components/toggle/toggle.component.yml' },
   { name: 'civ-address',           source: 'packages/compound/src/address/civ-address.ts',                                            ios: 'packages/ios/Sources/CivUI/CivAddress.swift',          android: 'packages/android/src/main/kotlin/gov/civui/components/CivAddress.kt',          drupal: 'packages/drupal/civui/components/address/address.component.yml' },
   { name: 'civ-repeater',          source: 'packages/form-patterns/src/repeater/civ-repeater.ts',                                     ios: 'packages/ios/Sources/CivUI/CivRepeater.swift',         android: 'packages/android/src/main/kotlin/gov/civui/components/CivRepeater.kt',         drupal: 'packages/drupal/civui/components/repeater/repeater.component.yml' },
   { name: 'civ-name',              source: 'packages/compound/src/name/civ-name.ts',                                                  ios: 'packages/ios/Sources/CivUI/CivName.swift',             android: 'packages/android/src/main/kotlin/gov/civui/components/CivName.kt',             drupal: 'packages/drupal/civui/components/name/name.component.yml' },
   { name: 'civ-direct-deposit',    source: 'packages/compound/src/direct-deposit/civ-direct-deposit.ts',                              ios: 'packages/ios/Sources/CivUI/CivDirectDeposit.swift',    android: 'packages/android/src/main/kotlin/gov/civui/components/CivDirectDeposit.kt',    drupal: 'packages/drupal/civui/components/direct-deposit/direct-deposit.component.yml' },
+  { name: 'civ-income',            source: 'packages/compound/src/income/civ-income.ts',                                              ios: 'packages/ios/Sources/CivUI/CivIncome.swift',           android: 'packages/android/src/main/kotlin/gov/civui/components/CivIncome.kt',           drupal: 'packages/drupal/civui/components/income/income.component.yml' },
   { name: 'civ-signature',         source: 'packages/compound/src/signature/civ-signature.ts',                                        ios: 'packages/ios/Sources/CivUI/CivSignature.swift',        android: 'packages/android/src/main/kotlin/gov/civui/components/CivSignature.kt',        drupal: 'packages/drupal/civui/components/signature/signature.component.yml' },
   { name: 'civ-form-step',         source: 'packages/form-patterns/src/form-step/civ-form-step.ts',                                   ios: 'packages/ios/Sources/CivUI/CivFormStep.swift',         android: 'packages/android/src/main/kotlin/gov/civui/components/CivFormStep.kt',         drupal: 'packages/drupal/civui/components/form-step/form-step.component.yml' },
   { name: 'civ-progress-steps',    source: 'packages/form-patterns/src/progress/civ-progress-steps.ts',                               ios: 'packages/ios/Sources/CivUI/CivProgressSteps.swift',    android: 'packages/android/src/main/kotlin/gov/civui/components/CivProgressSteps.kt' },
@@ -112,6 +115,9 @@ const COVERED_COMPONENTS: ComponentSpec[] = [
   { name: 'civ-progress-header',   source: 'packages/form-patterns/src/progress/civ-progress-header.ts',                              ios: 'packages/ios/Sources/CivUI/CivProgressHeader.swift', android: 'packages/android/src/main/kotlin/gov/civui/components/CivProgressHeader.kt', drupal: 'packages/drupal/civui/components/progress-header/progress-header.component.yml' },
   { name: 'civ-data-field',        source: 'packages/form-patterns/src/data-field/civ-data-field.ts',                                  ios: 'packages/ios/Sources/CivUI/CivDataField.swift',     android: 'packages/android/src/main/kotlin/gov/civui/components/CivDataField.kt',     drupal: 'packages/drupal/civui/components/data-field/data-field.component.yml' },
   { name: 'civ-conditional',       source: 'packages/form-patterns/src/conditional/civ-conditional.ts',                                ios: 'packages/ios/Sources/CivUI/CivConditional.swift',   android: 'packages/android/src/main/kotlin/gov/civui/components/CivConditional.kt',   drupal: 'packages/drupal/civui/components/conditional/conditional.component.yml' },
+  // civ-form-autosave is a JS-only orchestration utility — no shared
+  // native UI; iOS/Android apps wire their own UserDefaults / DataStore.
+  { name: 'civ-form-autosave',     source: 'packages/form-patterns/src/autosave/civ-form-autosave.ts',                                                                                                                                                                                                  drupal: 'packages/drupal/civui/components/form-autosave/form-autosave.component.yml' },
   { name: 'civ-summary',           source: 'packages/form-patterns/src/summary/civ-summary.ts',                                        ios: 'packages/ios/Sources/CivUI/CivSummary.swift',       android: 'packages/android/src/main/kotlin/gov/civui/components/CivSummary.kt',       drupal: 'packages/drupal/civui/components/summary/summary.component.yml' },
   { name: 'civ-modal',             source: 'packages/overlays/src/modal/civ-modal.ts',                                                ios: 'packages/ios/Sources/CivUI/CivModal.swift',         android: 'packages/android/src/main/kotlin/gov/civui/components/CivModal.kt',         drupal: 'packages/drupal/civui/components/modal/modal.component.yml' },
   { name: 'civ-action-sheet',      source: 'packages/overlays/src/action-sheet/civ-action-sheet.ts',                                  ios: 'packages/ios/Sources/CivUI/CivActionSheet.swift',   android: 'packages/android/src/main/kotlin/gov/civui/components/CivActionSheet.kt',   drupal: 'packages/drupal/civui/components/action-sheet/action-sheet.component.yml' },
@@ -120,6 +126,7 @@ const COVERED_COMPONENTS: ComponentSpec[] = [
   { name: 'civ-count',             source: 'packages/feedback/src/count/civ-count.ts',                                                ios: 'packages/ios/Sources/CivUI/CivCount.swift',         android: 'packages/android/src/main/kotlin/gov/civui/components/CivCount.kt',         drupal: 'packages/drupal/civui/components/count/count.component.yml' },
   { name: 'civ-card',              source: 'packages/layout/src/card/civ-card.ts',                                                    ios: 'packages/ios/Sources/CivUI/CivCard.swift',          android: 'packages/android/src/main/kotlin/gov/civui/components/CivCard.kt',          drupal: 'packages/drupal/civui/components/card/card.component.yml' },
   { name: 'civ-divider',           source: 'packages/layout/src/divider/civ-divider.ts',                                              ios: 'packages/ios/Sources/CivUI/CivDivider.swift',       android: 'packages/android/src/main/kotlin/gov/civui/components/CivDivider.kt',       drupal: 'packages/drupal/civui/components/divider/divider.component.yml' },
+  { name: 'civ-disclosure',        source: 'packages/layout/src/disclosure/civ-disclosure.ts',                                        ios: 'packages/ios/Sources/CivUI/CivDisclosure.swift',    android: 'packages/android/src/main/kotlin/gov/civui/components/CivDisclosure.kt',    drupal: 'packages/drupal/civui/components/disclosure/disclosure.component.yml' },
   { name: 'civ-tag',               source: 'packages/layout/src/tag/civ-tag.ts',                                                      ios: 'packages/ios/Sources/CivUI/CivTag.swift',           android: 'packages/android/src/main/kotlin/gov/civui/components/CivTag.kt',           drupal: 'packages/drupal/civui/components/tag/tag.component.yml' },
   { name: 'civ-list',              source: 'packages/layout/src/list/civ-list.ts',                                                    ios: 'packages/ios/Sources/CivUI/CivList.swift',          android: 'packages/android/src/main/kotlin/gov/civui/components/CivList.kt',          drupal: 'packages/drupal/civui/components/list/list.component.yml' },
   { name: 'civ-list-item',         source: 'packages/layout/src/list/civ-list-item.ts',                                               ios: 'packages/ios/Sources/CivUI/CivList.swift',          android: 'packages/android/src/main/kotlin/gov/civui/components/CivList.kt',          drupal: 'packages/drupal/civui/components/list-item/list-item.component.yml' },
@@ -219,6 +226,61 @@ export function parseLitPropsFromSource(src: string, isBoolean: boolean): LitPro
 
 function parseLitProps(filePath: string, isBoolean: boolean): LitProp[] {
   return parseLitPropsFromSource(readFileSync(filePath, 'utf-8'), isBoolean);
+}
+
+/**
+ * Collect the set of public method names declared on the component
+ * class. "Public" = not prefixed with `_` and not annotated `private`
+ * or `protected`. Lifecycle hooks (`connectedCallback` and friends)
+ * are filtered out so they don't drown out the user-callable API.
+ *
+ * This is a one-way check: methods declared in the schema must exist
+ * in source. Extras in source are not reported because every class
+ * inherits methods from `LitElement` / `CivBaseElement` /
+ * `CivFormElement` that a consumer can legitimately call.
+ */
+export function parsePublicMethods(src: string): Set<string> {
+  const methods = new Set<string>();
+  // Match the start of a method declaration: indent (2+ spaces) +
+  // optional modifiers + camelCase name + opening paren. We don't try
+  // to parse the parameter list (it can contain nested parens like
+  // `Date.now()` default expressions) — finding `name(` after the
+  // class indent and the keyword filter is enough to distinguish a
+  // declaration from a call.
+  const re = /^\s{2,}(?:override\s+)?(?:public\s+)?(?:async\s+)?([a-z][a-zA-Z0-9]*)\s*\(/gm;
+  const LIFECYCLE = new Set([
+    'connectedCallback', 'disconnectedCallback', 'firstUpdated', 'updated',
+    'willUpdate', 'createRenderRoot', 'render', 'formAssociatedCallback',
+    'formDisabledCallback', 'formResetCallback', 'formStateRestoreCallback',
+    'attributeChangedCallback', 'adoptedCallback', 'constructor',
+  ]);
+  // Control-flow keywords that the regex would otherwise match — they
+  // appear at the same indent level as class members in nested blocks.
+  const KEYWORDS = new Set([
+    'if', 'for', 'while', 'switch', 'return', 'catch', 'do',
+    'function', 'await', 'throw', 'new', 'typeof', 'void', 'yield',
+  ]);
+  let match: RegExpExecArray | null;
+  while ((match = re.exec(src)) !== null) {
+    const name = match[1];
+    if (KEYWORDS.has(name)) continue;
+    if (LIFECYCLE.has(name)) continue;
+    // The matched line must look like a method declaration, not a
+    // method call inside another method's body. A declaration starts
+    // a line in the class body; a call is preceded by `this.`,
+    // `await`, `=`, etc. Confirm by checking that nothing precedes
+    // the name on the line except optional modifier keywords.
+    const lineStart = src.lastIndexOf('\n', match.index) + 1;
+    const beforeName = src.slice(lineStart, match.index + match[0].indexOf(name));
+    if (!/^\s+(?:override\s+|public\s+|async\s+)*$/.test(beforeName)) continue;
+    // Skip explicitly-private methods. (`private` / `protected` aren't
+    // in the regex prefix; if a method line carries one, the regex
+    // above will already reject because `beforeName` won't match —
+    // but be defensive.)
+    if (/\b(private|protected)\s+\w+\s*\(/.test(src.slice(lineStart, match.index + 60))) continue;
+    methods.add(name);
+  }
+  return methods;
 }
 
 /**
@@ -1046,6 +1108,7 @@ interface DriftItem {
     | 'event-missing-from-schema'
     | 'event-removed-from-source'
     | 'event-detail-mismatch'
+    | 'method-removed-from-source'
     | 'platform-prop-missing'
     | 'platform-type-mismatch';
   message: string;
@@ -1089,6 +1152,8 @@ function fixForKind(item: Omit<DriftItem, 'fix'>, componentName: string): string
       return `Remove \`${d.event}\` from the schema's \`events\` map (or restore the dispatch call in the Lit source).`;
     case 'event-detail-mismatch':
       return `\`${d.event}\` detail keys diverge — schema declares ${JSON.stringify(d.schemaKeys)}, source dispatches ${JSON.stringify(d.sourceKeys)}. Update one to match.`;
+    case 'method-removed-from-source':
+      return `Remove \`${d.method}\` from the schema's \`methods\` map (or add the public method back to the Lit class).`;
     case 'platform-prop-missing': {
       const platform = d.platform as string;
       const prop = d.prop as string;
@@ -1132,10 +1197,23 @@ async function buildReport(strict: boolean, explain: boolean): Promise<DriftRepo
     const schema = await loadSchema(spec.name);
     const schemaProps = schemaPropsFrom(schema, !!spec.isBoolean);
     const schemaEvents = schemaEventsFrom(schema);
+    const schemaMethods: string[] = Object.keys((schema as any).methods ?? {});
     const litProps = parseLitProps(sourcePath, !!spec.isBoolean);
     const litEvents = parseLitEvents(sourcePath);
+    const litMethods = parsePublicMethods(readFileSync(sourcePath, 'utf-8'));
     const propResult = diffProps(schemaProps, litProps);
     const eventResult = diffEvents(schemaEvents, litEvents);
+
+    // Methods: one-way check. Every schema-declared method must exist
+    // as a public method on the Lit class. Extras in source aren't
+    // flagged — inherited base-class methods (validate, reset, etc.)
+    // are legitimately callable but don't need to be documented per
+    // component.
+    for (const m of schemaMethods) {
+      if (!litMethods.has(m)) {
+        drift.push({ kind: 'method-removed-from-source', message: `method declared in schema but not found on the Lit class: ${m}()`, data: { method: m } });
+      }
+    }
 
     for (const prop of propResult.missingFromSchema) {
       drift.push({ kind: 'prop-missing-from-schema', message: `prop in source but missing from schema: ${prop}`, data: { prop } });

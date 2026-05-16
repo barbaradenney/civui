@@ -1,0 +1,14 @@
+<civ-income
+  {% if legend %}legend="{{ legend }}"{% endif %}
+  {% if name %}name="{{ name }}"{% endif %}
+  {% if value %}value='{{ value }}'{% endif %}
+  {% if hint %}hint="{{ hint }}"{% endif %}
+  {% if error %}error="{{ error }}"{% endif %}
+  {% if amount_label %}amount-label="{{ amount_label }}"{% endif %}
+  {% if frequency_label %}frequency-label="{{ frequency_label }}"{% endif %}
+  {% if amount_error %}amount-error="{{ amount_error }}"{% endif %}
+  {% if frequency_error %}frequency-error="{{ frequency_error }}"{% endif %}
+  {% if frequencies %}frequencies='{{ frequencies|json_encode|raw }}'{% endif %}
+  {% if required %}required{% endif %}
+  {% if disabled %}disabled{% endif %}
+></civ-income>

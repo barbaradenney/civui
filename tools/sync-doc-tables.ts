@@ -20,7 +20,7 @@
  */
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
-import type { ComponentSchema, PropDef, EventDef } from '@civui/schema';
+import type { ComponentSchema, PropDef, EventDef, MethodDef } from '@civui/schema';
 
 const REPO_ROOT = path.resolve(import.meta.dirname, '..');
 const SCHEMA_DIR = path.join(REPO_ROOT, 'packages/schema/src/components');
@@ -122,6 +122,34 @@ function renderEvents(name: string, events: Record<string, EventDef>): string {
 }
 
 /**
+ * Render the imperative-methods table for a component. Returns an empty
+ * banner-only partial when the schema has no `methods` block (so doc
+ * pages can unconditionally import the partial without breaking).
+ */
+function renderMethods(name: string, methods: Record<string, MethodDef> | undefined): string {
+  const entries = Object.entries(methods ?? {});
+  if (entries.length === 0) {
+    return `${GENERATED_BANNER}_${name} does not expose any imperative methods. Use props and events for everything._\n`;
+  }
+
+  const rows = entries.map(([methodName, def]) => {
+    const params = (def.params ?? [])
+      .map((p) => `${p.name}${p.optional ? '?' : ''}: ${p.type}`)
+      .join(', ');
+    const sig = `\`${methodName}(${params})\``;
+    const ret = def.returns ?? 'void';
+    return `| ${sig} | \`${ret}\` | ${escapeCell(def.description)} |`;
+  });
+
+  return (
+    `${GENERATED_BANNER}` +
+    `| Method | Returns | Description |\n` +
+    `|--------|---------|-------------|\n` +
+    `${rows.join('\n')}\n`
+  );
+}
+
+/**
  * Sub-components that share a host MDX page with a sibling component
  * (e.g. `civ-checkbox-group` lives inside `controls/checkbox.mdx`,
  * not its own `checkbox-group.mdx`). The value is the page's relative
@@ -183,6 +211,7 @@ async function main(): Promise<void> {
 
   let propsWritten = 0;
   let eventsWritten = 0;
+  let methodsWritten = 0;
   let skippedNoDoc = 0;
 
   for (const file of schemaFiles) {
@@ -205,9 +234,20 @@ async function main(): Promise<void> {
 
     await fs.writeFile(eventsPath, renderEvents(schema.name, schema.events ?? {}));
     eventsWritten++;
+
+    // Only emit a methods partial when the schema actually declares
+    // methods. Most components don't expose any imperative API, and
+    // writing 60 "no methods" partials would mostly add noise to the
+    // file tree without adding value to doc pages.
+    if (schema.methods && Object.keys(schema.methods).length > 0) {
+      const methodsPath = path.join(dir, `_${tag}.methods.mdx`);
+      await fs.writeFile(methodsPath, renderMethods(schema.name, schema.methods));
+      methodsWritten++;
+    }
   }
 
-  console.log(`✓ wrote ${propsWritten} props partials + ${eventsWritten} events partials`);
+  const methodsSummary = methodsWritten > 0 ? ` + ${methodsWritten} methods partials` : '';
+  console.log(`✓ wrote ${propsWritten} props partials + ${eventsWritten} events partials${methodsSummary}`);
   if (skippedNoDoc > 0) {
     console.log(`  (${skippedNoDoc} schema(s) had no matching doc page — skipped)`);
   }

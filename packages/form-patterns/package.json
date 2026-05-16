@@ -18,7 +18,8 @@
     "./data-field": "./dist/data-field/index.js",
     "./section-intro": "./dist/section-intro/index.js",
     "./progress": "./dist/progress/index.js",
-    "./prefill": "./dist/prefill/index.js"
+    "./prefill": "./dist/prefill/index.js",
+    "./autosave": "./dist/autosave/index.js"
   },
   "files": [
     "dist"

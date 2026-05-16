@@ -710,3 +710,269 @@ describe('civ-form + civ-conditional', () => {
     expect(data.branch).toBeUndefined();
   });
 });
+
+describe('civ-form required-legend', () => {
+  it('does not render the legend by default', async () => {
+    const el = await fixture('<civ-form form-label="Test"></civ-form>');
+    expect(el.querySelector('.civ-form-required-legend')).toBeNull();
+  });
+
+  it('renders "* indicates a required field" when required-legend is set', async () => {
+    const el = await fixture('<civ-form form-label="Test" required-legend></civ-form>');
+    const legend = el.querySelector('.civ-form-required-legend');
+    expect(legend).not.toBeNull();
+    expect(legend!.textContent).toContain('indicates a required field');
+    expect(legend!.querySelector('.civ-required-mark')).not.toBeNull();
+  });
+});
+
+describe('civ-form disclosures slot', () => {
+  it('relocates children marked with data-civ-form-disclosures into the footer', async () => {
+    const el = await fixture(`
+      <civ-form form-label="Test">
+        <civ-text-input label="Name" name="name"></civ-text-input>
+        <div data-civ-form-disclosures>
+          <p>Privacy Act Notice — provided per 5 USC § 552a.</p>
+          <p>Paperwork Reduction Act — OMB Control No. 1234-5678.</p>
+        </div>
+      </civ-form>
+    `);
+    const slot = el.querySelector('[data-civ-form-disclosures-slot]')!;
+    expect(slot).not.toBeNull();
+    expect(slot.textContent).toContain('Privacy Act');
+    expect(slot.textContent).toContain('Paperwork Reduction');
+  });
+});
+
+describe('civ-form confirm-before-submit', () => {
+  it('does not fire civ-submit immediately when confirm-before-submit is set', async () => {
+    const el = await fixture(`
+      <civ-form form-label="Test" confirm-before-submit>
+        <civ-text-input label="Name" name="name" value="Ada"></civ-text-input>
+        <button type="submit">Submit</button>
+      </civ-form>
+    `);
+
+    const submitHandler = vi.fn();
+    const confirmHandler = vi.fn();
+    el.addEventListener('civ-submit', submitHandler as EventListener);
+    el.addEventListener('civ-submit-confirm', confirmHandler as EventListener);
+
+    const button = el.querySelector('button') as HTMLButtonElement;
+    button.click();
+    await elementUpdated(el);
+
+    expect(confirmHandler).toHaveBeenCalledTimes(1);
+    expect(submitHandler).not.toHaveBeenCalled();
+  });
+
+  it('fires civ-submit when proceed() is called', async () => {
+    const el = await fixture(`
+      <civ-form form-label="Test" confirm-before-submit>
+        <civ-text-input label="Name" name="name" value="Ada"></civ-text-input>
+        <button type="submit">Submit</button>
+      </civ-form>
+    `);
+
+    const submitHandler = vi.fn();
+    el.addEventListener('civ-submit', submitHandler as EventListener);
+
+    el.addEventListener('civ-submit-confirm', ((e: CustomEvent) => {
+      e.detail.proceed();
+    }) as EventListener);
+
+    const button = el.querySelector('button') as HTMLButtonElement;
+    button.click();
+    await elementUpdated(el);
+
+    expect(submitHandler).toHaveBeenCalledTimes(1);
+  });
+
+  it('fires civ-submit-cancelled when cancel() is called', async () => {
+    const el = await fixture(`
+      <civ-form form-label="Test" confirm-before-submit>
+        <civ-text-input label="Name" name="name" value="Ada"></civ-text-input>
+        <button type="submit">Submit</button>
+      </civ-form>
+    `);
+
+    const cancelHandler = vi.fn();
+    const submitHandler = vi.fn();
+    el.addEventListener('civ-submit', submitHandler as EventListener);
+    el.addEventListener('civ-submit-cancelled', cancelHandler as EventListener);
+
+    el.addEventListener('civ-submit-confirm', ((e: CustomEvent) => {
+      e.detail.cancel();
+    }) as EventListener);
+
+    const button = el.querySelector('button') as HTMLButtonElement;
+    button.click();
+    await elementUpdated(el);
+
+    expect(cancelHandler).toHaveBeenCalledTimes(1);
+    expect(submitHandler).not.toHaveBeenCalled();
+  });
+
+  it('proceed() and cancel() are idempotent', async () => {
+    const el = await fixture(`
+      <civ-form form-label="Test" confirm-before-submit>
+        <civ-text-input label="Name" name="name" value="Ada"></civ-text-input>
+        <button type="submit">Submit</button>
+      </civ-form>
+    `);
+
+    const submitHandler = vi.fn();
+    el.addEventListener('civ-submit', submitHandler as EventListener);
+
+    el.addEventListener('civ-submit-confirm', ((e: CustomEvent) => {
+      e.detail.proceed();
+      e.detail.proceed();
+      e.detail.cancel();
+    }) as EventListener);
+
+    (el.querySelector('button') as HTMLButtonElement).click();
+    await elementUpdated(el);
+    expect(submitHandler).toHaveBeenCalledTimes(1);
+  });
+
+  it('still blocks submit when validation fails (confirm only fires after validation passes)', async () => {
+    const el = await fixture(`
+      <civ-form form-label="Test" confirm-before-submit>
+        <civ-text-input label="Name" name="name" required></civ-text-input>
+        <button type="submit">Submit</button>
+      </civ-form>
+    `);
+
+    const submitHandler = vi.fn();
+    const confirmHandler = vi.fn();
+    const invalidHandler = vi.fn();
+    el.addEventListener('civ-submit', submitHandler as EventListener);
+    el.addEventListener('civ-submit-confirm', confirmHandler as EventListener);
+    el.addEventListener('civ-invalid', invalidHandler as EventListener);
+
+    (el.querySelector('button') as HTMLButtonElement).click();
+    await elementUpdated(el);
+
+    expect(invalidHandler).toHaveBeenCalledTimes(1);
+    expect(confirmHandler).not.toHaveBeenCalled();
+    expect(submitHandler).not.toHaveBeenCalled();
+  });
+
+  it('drops repeat submits while a confirm is pending (single-flight)', async () => {
+    const el = await fixture(`
+      <civ-form form-label="Test" confirm-before-submit>
+        <civ-text-input label="Name" name="name" value="Ada"></civ-text-input>
+        <button type="submit">Submit</button>
+      </civ-form>
+    `);
+
+    const confirmHandler = vi.fn();
+    const submitHandler = vi.fn();
+    el.addEventListener('civ-submit-confirm', confirmHandler as EventListener);
+    el.addEventListener('civ-submit', submitHandler as EventListener);
+
+    // Don't resolve — just click twice. Without the in-flight guard,
+    // each click would dispatch its own civ-submit-confirm with a
+    // fresh {proceed, cancel} pair.
+    const button = el.querySelector('button') as HTMLButtonElement;
+    button.click();
+    button.click();
+    await elementUpdated(el);
+
+    expect(confirmHandler).toHaveBeenCalledTimes(1);
+  });
+
+  it('lets a new confirm happen after the first resolves', async () => {
+    const el = await fixture(`
+      <civ-form form-label="Test" confirm-before-submit>
+        <civ-text-input label="Name" name="name" value="Ada"></civ-text-input>
+        <button type="submit">Submit</button>
+      </civ-form>
+    `);
+
+    const confirmHandler = vi.fn((e: CustomEvent) => e.detail.cancel());
+    el.addEventListener('civ-submit-confirm', confirmHandler as EventListener);
+
+    const button = el.querySelector('button') as HTMLButtonElement;
+    button.click();
+    await elementUpdated(el);
+    button.click();
+    await elementUpdated(el);
+
+    // First click cancelled, second click fires a fresh confirm.
+    expect(confirmHandler).toHaveBeenCalledTimes(2);
+  });
+
+  it('proceed() called after the form is removed from DOM still fires civ-submit on the (now-disconnected) host', async () => {
+    // The consumer might hold the proceed reference past unmount (e.g.,
+    // navigation away before they call it). civ-submit still dispatches
+    // on the disconnected element — listeners on that element receive
+    // it. Document this behavior rather than crashing.
+    const el = await fixture(`
+      <civ-form form-label="Test" confirm-before-submit>
+        <civ-text-input label="Name" name="name" value="Ada"></civ-text-input>
+        <button type="submit">Submit</button>
+      </civ-form>
+    `);
+
+    let pending: { proceed: () => void; cancel: () => void } | null = null;
+    el.addEventListener('civ-submit-confirm', ((e: CustomEvent) => {
+      pending = e.detail;
+    }) as EventListener);
+
+    const submitHandler = vi.fn();
+    el.addEventListener('civ-submit', submitHandler as EventListener);
+
+    (el.querySelector('button') as HTMLButtonElement).click();
+    await elementUpdated(el);
+    expect(pending).not.toBeNull();
+
+    el.remove();
+    // Calling proceed on a detached host MUST NOT throw; whether
+    // civ-submit fires is documented (it does, on the detached
+    // element). Consumers should check `el.isConnected` if they want
+    // to short-circuit.
+    expect(() => pending!.proceed()).not.toThrow();
+    expect(submitHandler).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('civ-form excludePii filtering on getFormData', () => {
+  it('includes PII fields by default (existing behavior)', async () => {
+    const el = await fixture(`
+      <civ-form form-label="Test">
+        <civ-text-input label="Name" name="name" value="Ada"></civ-text-input>
+        <civ-ssn name="ssn" value="123456789"></civ-ssn>
+      </civ-form>
+    `) as any;
+    const data = el.getFormData();
+    expect(data.name).toBe('Ada');
+    // civ-ssn carries data-civ-pii — by default it's still included so
+    // submit handlers see it; the excludePii option is opt-in.
+    expect(data.ssn).toBeTruthy();
+  });
+
+  it('excludes PII fields when excludePii: true', async () => {
+    const el = await fixture(`
+      <civ-form form-label="Test">
+        <civ-text-input label="Name" name="name" value="Ada"></civ-text-input>
+        <civ-ssn name="ssn" value="123456789"></civ-ssn>
+      </civ-form>
+    `) as any;
+    const data = el.getFormData({ excludePii: true });
+    expect(data.name).toBe('Ada');
+    expect(data.ssn).toBeUndefined();
+  });
+
+  it('excludes data-persist-exclude fields when excludePii: true', async () => {
+    const el = await fixture(`
+      <civ-form form-label="Test">
+        <civ-text-input label="Public" name="pub" value="yes"></civ-text-input>
+        <civ-text-input label="Internal" name="internal" value="hidden" data-persist-exclude></civ-text-input>
+      </civ-form>
+    `) as any;
+    const data = el.getFormData({ excludePii: true });
+    expect(data.pub).toBe('yes');
+    expect(data.internal).toBeUndefined();
+  });
+});

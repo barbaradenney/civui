@@ -32,6 +32,7 @@ import '../name/civ-name.js';
 import '../direct-deposit/civ-direct-deposit.js';
 import '../relationship/civ-relationship.js';
 import '../race-ethnicity/civ-race-ethnicity.js';
+import '../income/civ-income.js';
 
 afterEach(cleanupFixtures);
 
@@ -59,6 +60,9 @@ const FIXTURES: Fixture[] = [
   { name: 'civ-address', html: '<civ-address legend="Mailing address"></civ-address>' },
   { name: 'civ-name', html: '<civ-name legend="Full name"></civ-name>' },
   { name: 'civ-direct-deposit', html: '<civ-direct-deposit legend="Direct deposit"></civ-direct-deposit>' },
+  { name: 'civ-income', html: '<civ-income legend="Wages"></civ-income>' },
+  { name: 'civ-time-picker (with legend)', html: '<civ-time-picker legend="Appointment time"></civ-time-picker>' },
+  { name: 'civ-time-picker (no legend)', html: '<civ-time-picker></civ-time-picker>' },
 ];
 
 interface Violation {

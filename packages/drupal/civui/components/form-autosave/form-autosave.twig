@@ -1,0 +1,6 @@
+<civ-form-autosave
+  {% if storage_key %}storage-key="{{ storage_key }}"{% endif %}
+  {% if storage %}storage="{{ storage }}"{% endif %}
+  {% if debounce_ms is not null %}debounce-ms="{{ debounce_ms }}"{% endif %}
+  {% if silent_resume %}silent-resume{% endif %}
+></civ-form-autosave>

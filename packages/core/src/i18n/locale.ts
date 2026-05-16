@@ -161,6 +161,7 @@ export interface CivLocaleStrings {
   disclosureDefaultLabel: string; // "Why we ask?"
 
   // Time Picker
+  timePickerDefaultLegend: string;
   timePickerHourLabel: string;
   timePickerMinuteLabel: string;
   timePickerPeriodLabel: string;
@@ -812,6 +813,7 @@ const defaultStrings: CivLocaleStrings = {
 
   disclosureDefaultLabel: 'Why we ask?',
 
+  timePickerDefaultLegend: 'Time',
   timePickerHourLabel: 'Hour',
   timePickerMinuteLabel: 'Minute',
   timePickerPeriodLabel: 'AM/PM',

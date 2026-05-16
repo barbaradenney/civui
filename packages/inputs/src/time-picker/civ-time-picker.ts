@@ -71,8 +71,22 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
   }
 
   override willUpdate(changed: Map<string, unknown>): void {
-    if (changed.has('value') && !changed.has('_hour')) {
+    // Re-parse on any input that changes how the stored ISO `value`
+    // maps to sub-fields: a new value, a 12↔24 format flip, or a
+    // minute-step change that may invalidate the current minute
+    // selection.
+    if ((changed.has('value') || changed.has('format')) && !changed.has('_hour')) {
       this._parseValue();
+    }
+    if (changed.has('minuteStep') && this._minute) {
+      // If the current minute isn't in the new option set, clear it so
+      // the select doesn't display an orphaned value the user can't
+      // re-select.
+      const step = this.minuteStep > 0 ? Math.floor(this.minuteStep) : 5;
+      if (Number(this._minute) % step !== 0) {
+        this._minute = '';
+        this.value = '';
+      }
     }
   }
 
@@ -181,7 +195,12 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
     const hourLabel = this.hourLabel || t('timePickerHourLabel');
     const minuteLabel = this.minuteLabel || t('timePickerMinuteLabel');
     const periodLabel = this.periodLabel || t('timePickerPeriodLabel');
+    // describedBy only includes IDs that will actually have elements in
+    // the DOM. Hint/error are rendered inside `renderFormHeader`, which
+    // we always invoke below — so the IDs are always live when hint/error
+    // are set, regardless of whether `legend` was provided.
     const describedBy = buildDescribedBy(this._hintId, this.hint, this._errorId, this.error);
+    const legendText = this.legend || t('timePickerDefaultLegend');
 
     const fields = html`
       <div class="civ-time-picker-fields">
@@ -235,22 +254,24 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
         aria-invalid="${this.error ? 'true' : nothing}"
         ?disabled="${this.disabled}"
       >
-        ${this.legend
-          ? renderFormHeader({
-              label: renderLegend({
-                legend: this.legend,
-                required: this.required,
-                showRequired: !this.hideRequiredIndicator && this.required,
-                headingLevel: this.headingLevel,
-                size: this.size,
-              }),
-              hintId: this._hintId,
-              hint: this.hint,
-              errorId: this._errorId,
-              error: this.error,
-              fieldset: true,
-            })
-          : nothing}
+        ${renderFormHeader({
+          label: renderLegend({
+            // Section 508 requires every fieldset to have a non-empty
+            // legend. When the consumer omits one we fall back to a
+            // visually-hidden "Time" so AT users still get a label.
+            legend: legendText,
+            required: this.required,
+            showRequired: !this.hideRequiredIndicator && this.required,
+            headingLevel: this.headingLevel,
+            size: this.size,
+            srOnly: !this.legend,
+          }),
+          hintId: this._hintId,
+          hint: this.hint,
+          errorId: this._errorId,
+          error: this.error,
+          fieldset: true,
+        })}
         ${fields}
       </fieldset>
     `;

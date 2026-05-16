@@ -74,6 +74,8 @@ export interface CivFormFieldLike extends HTMLElement {
  * @fires civ-submit - When validation passes
  * @fires civ-invalid - When validation fails, detail contains errors
  * @fires civ-dirty - When dirty state changes, detail: { dirty: boolean }
+ * @fires civ-submit-confirm - When validation passes and `confirm-before-submit` is set; detail carries `proceed()` and `cancel()` callbacks
+ * @fires civ-submit-cancelled - When the consumer calls `cancel()` on a `civ-submit-confirm` event
  * @fires civ-analytics - Analytics tracking event on submit
  */
 @customElement('civ-form')
@@ -175,6 +177,16 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
   @property({ type: Boolean, attribute: 'confirm-before-submit' }) confirmBeforeSubmit = false;
 
   @state() private _errors: FormFieldError[] = [];
+
+  /**
+   * Guard against repeated submits while a `civ-submit-confirm` is
+   * pending. The consumer holds the resume on a per-event closure;
+   * tracking the same flag on the instance prevents a second click
+   * from spawning a second {proceed,cancel} pair (each closure has its
+   * own `resolved` guard, but proceeding on either still fires
+   * `civ-submit` once).
+   */
+  private _confirmPending = false;
   @state() private _dirty = false;
   @state() private _prefillLoading = false;
   @state() private _prefillError = '';
@@ -252,6 +264,10 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
   }
 
   override updated(changed: Map<string, unknown>): void {
+    // Forward to LightDomSlotMixin so captured children (form content,
+    // disclosures slot) get re-relocated if Lit's render replaces the
+    // destination containers on subsequent renders.
+    super.updated(changed);
     if (changed.has('formLabel')) {
       if (this.formLabel) {
         this.setAttribute('aria-label', this.formLabel);
@@ -526,8 +542,13 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
    * For file-upload fields, the value is a comma-joined string of file names.
    * For checkbox-group, the value is a comma-joined string of checked values.
    * Use `toFormData()` when you need actual File objects or multi-value fields.
+   *
+   * @param opts.excludePii - Skip fields flagged `data-civ-pii` (SSN, EIN,
+   *   etc.) and `data-persist-exclude`. Default false for the existing
+   *   submit/preview use cases; pass `true` when serializing for storage
+   *   adapters that don't encrypt (civ-form-autosave does this).
    */
-  getFormData(): Record<string, string> {
+  getFormData(opts: { excludePii?: boolean } = {}): Record<string, string> {
     const data: Record<string, string> = {};
     const formElements = this.querySelectorAll<HTMLElement>(
       '[data-civ-form-field]',
@@ -536,6 +557,7 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
     for (const el of formElements) {
       const formEl = el as unknown as CivFormFieldLike;
       if (formEl.disabled) continue;
+      if (opts.excludePii && (el.hasAttribute('data-civ-pii') || el.hasAttribute('data-persist-exclude'))) continue;
       if (this._isInHiddenConditional(el)) continue;
       if (formEl.name) {
         data[formEl.name] = formEl.value ?? '';
@@ -752,6 +774,13 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
         // Don't overwrite user edits restored from sessionStorage
         if (this._persistedFieldNames.has(field.name)) return;
 
+        // For 'saved' source (autosave restore), never overwrite a field
+        // the user has already typed into. Restore runs after
+        // connectedCallback + a microtask, so a fast typer can land
+        // input before the snapshot lands. Cold load → field is empty
+        // → restore wins. Warm reload after typing → user wins.
+        if (prefill.source === 'saved' && field.value) return;
+
         field.value = prefill.value;
         field.setAttribute('data-civ-prefill-source', prefill.source);
 
@@ -832,17 +861,21 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
     }
 
     if (this.confirmBeforeSubmit) {
-      // Dispatch a pending event with proceed/cancel callbacks. The actual
-      // civ-submit only fires when the consumer calls proceed().
+      // Ignore re-submits while a confirm is already in flight — the
+      // first proceed() is the authoritative one.
+      if (this._confirmPending) return;
+      this._confirmPending = true;
       let resolved = false;
       const proceed = (): void => {
         if (resolved) return;
         resolved = true;
+        this._confirmPending = false;
         this._finalizeSubmit();
       };
       const cancel = (): void => {
         if (resolved) return;
         resolved = true;
+        this._confirmPending = false;
         dispatch(this, 'civ-submit-cancelled');
       };
       dispatch(this, 'civ-submit-confirm', {

@@ -2,7 +2,7 @@
 
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBaseElement, dispatch, t } from '@civui/core';
+import { CivBaseElement, t } from '@civui/core';
 
 /**
  * CivUI Disclosure
@@ -48,8 +48,6 @@ export class CivDisclosure extends CivBaseElement {
   /** Trigger size: 'default' or 'sm'. */
   @property({ type: String }) size: 'default' | 'sm' = 'default';
 
-  private _contentId = this.generateId('content');
-
   override render() {
     const labelText = this.label || t('disclosureDefaultLabel');
     const sizeClass = this.size === 'sm' ? 'civ-text-sm' : '';
@@ -59,27 +57,35 @@ export class CivDisclosure extends CivBaseElement {
         ?open="${this.open}"
         @toggle="${this._onToggle}"
       >
-        <summary
-          class="civ-disclosure__trigger ${sizeClass}"
-          aria-controls="${this._contentId}"
-        >
+        <summary class="civ-disclosure__trigger ${sizeClass}">
           ${this.icon
             ? html`<civ-icon name="${this.icon}" class="civ-disclosure__icon" aria-hidden="true"></civ-icon>`
             : nothing}
           <span class="civ-disclosure__label">${labelText}</span>
         </summary>
-        <div id="${this._contentId}" class="civ-disclosure__content">
+        <div class="civ-disclosure__content">
           <slot></slot>
         </div>
       </details>
     `;
   }
 
+  /**
+   * Fire `civ-toggle` as a local (non-bubbling, non-composed) event.
+   * Disclosures often live inside `civ-form`; if the event composed
+   * and bubbled, every form-level `civ-input` / `civ-change` listener
+   * would see a non-form-field payload. Consumers who want the event
+   * subscribe directly on the `civ-disclosure` element.
+   */
   private _onToggle(e: Event): void {
     const details = e.target as HTMLDetailsElement;
     if (details.open === this.open) return;
     this.open = details.open;
-    dispatch(this, 'civ-toggle', { open: this.open });
+    this.dispatchEvent(new CustomEvent('civ-toggle', {
+      detail: { open: this.open },
+      bubbles: false,
+      composed: false,
+    }));
     this.sendAnalytics('change', { open: this.open });
   }
 }

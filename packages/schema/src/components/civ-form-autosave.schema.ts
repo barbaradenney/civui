@@ -61,9 +61,11 @@ const schema: ComponentSchema = {
     errorAnnouncement: 'polite',
   },
 
-  renderOrder: [
-    { type: 'container', bindings: { tag: 'span' } },
-  ],
+  // Controller element — the host is present in the DOM only as an
+  // event sink. We model this as a `container` with no children and no
+  // bindings to flag to platform implementers that there is no
+  // user-visible affordance to render.
+  renderOrder: [{ type: 'container' }],
 
   form: {
     valueMode: 'string',

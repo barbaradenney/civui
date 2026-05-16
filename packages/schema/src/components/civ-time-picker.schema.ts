@@ -65,6 +65,13 @@ const schema: ComponentSchema = {
         period: { type: 'string', description: 'AM/PM (empty in 24-hour mode)' },
       },
     },
+    'civ-analytics': {
+      description: 'Analytics tracking event on commit',
+      detail: {
+        componentName: { type: 'string', description: 'Tag name of the dispatcher' },
+        action: { type: 'string', description: 'The user action (`change`)' },
+      },
+    },
   },
 
   a11y: {
@@ -84,7 +91,10 @@ const schema: ComponentSchema = {
         { type: 'error', condition: 'error', bindings: { text: 'error' } },
         { type: 'select', bindings: { name: 'hour' } },
         { type: 'select', bindings: { name: 'minute' } },
-        { type: 'select', condition: 'format', bindings: { name: 'period' } },
+        // AM/PM select is rendered only in 12-hour mode. `condition` is
+        // a free-form hint to platform implementers — the literal token
+        // describes the predicate, not the prop name.
+        { type: 'select', condition: "format === '12'", bindings: { name: 'period' } },
       ],
     },
   ],

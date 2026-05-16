@@ -66,6 +66,13 @@ const schema: ComponentSchema = {
         value: { type: 'string', description: 'Current value as a string' },
       },
     },
+    'civ-analytics': {
+      description: 'Analytics tracking event on commit',
+      detail: {
+        componentName: { type: 'string', description: 'Tag name of the dispatcher' },
+        action: { type: 'string', description: 'The user action (`change`)' },
+      },
+    },
   },
 
   a11y: {

@@ -51,7 +51,7 @@ const EMPTY_INCOME: IncomeValue = { amount: '', frequency: '' };
  * @prop {string} name - Base form field name; sub-fields named `${name}.amount` and `${name}.frequency`
  * @prop {string} amountLabel - Override the default amount label
  * @prop {string} frequencyLabel - Override the default frequency label
- * @prop {string[]} frequencies - Restrict the available frequency options. Defaults to all eight.
+ * @prop {string[]} frequencies - Restrict the available frequency options. Defaults to all seven.
  *
  * @fires civ-input - On every sub-field change, detail: { value: IncomeValue }
  * @fires civ-change - On committed sub-field change, detail: { value: IncomeValue }
@@ -72,6 +72,9 @@ export class CivIncome extends LegendHeadingMixin(CivCompoundElement) {
    *
    *   `<civ-income frequencies='["weekly","monthly"]'>`
    */
+  // Seven built-in frequencies; consumers can restrict the list with
+  // `frequencies='["weekly","monthly"]'` (HTML JSON attribute) or by
+  // setting the property in JS.
   @property({ type: Array }) frequencies: IncomeFrequency[] = [
     'weekly',
     'biweekly',
@@ -132,12 +135,11 @@ export class CivIncome extends LegendHeadingMixin(CivCompoundElement) {
             <civ-currency
               label="${amountLabel}"
               name="${this.name ? `${this.name}.amount` : 'amount'}"
-              value="${this._data.amount}"
+              .value="${this._data.amount}"
               error="${this.amountError}"
               ?required="${this.required}"
               ?disabled="${this.disabled}"
               ?readonly="${this.readonly}"
-              ?hide-required-indicator="${this.required}"
               @civ-input="${(e: CustomEvent) => this._onSubInput('amount', e)}"
               @civ-change="${(e: CustomEvent) => this._onSubChange('amount', e)}"
             ></civ-currency>
@@ -152,7 +154,6 @@ export class CivIncome extends LegendHeadingMixin(CivCompoundElement) {
               error="${this.frequencyError}"
               ?required="${this.required}"
               ?disabled="${this.disabled}"
-              ?hide-required-indicator="${this.required}"
               @civ-input="${(e: CustomEvent) => this._onSubInput('frequency', e)}"
               @civ-change="${(e: CustomEvent) => this._onSubChange('frequency', e)}"
             ></civ-select>

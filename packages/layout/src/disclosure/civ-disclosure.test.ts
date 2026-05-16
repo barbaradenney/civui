@@ -94,13 +94,13 @@ describe('civ-disclosure', () => {
     expect(el.querySelector('p')!.textContent).toBe('Why we collect this');
   });
 
-  it('aria-controls links summary to content region', async () => {
+  it('relies on native details/summary semantics — no manual aria-controls', async () => {
+    // Native <details>/<summary> exposes the expand/collapse relationship
+    // intrinsically; adding aria-controls is redundant and not announced
+    // by every screen reader. Asserting the absence locks the choice.
     const el = await fixture<CivDisclosure>('<civ-disclosure>Text</civ-disclosure>');
     const summary = el.querySelector('summary')!;
-    const content = el.querySelector('.civ-disclosure__content')!;
-    const controls = summary.getAttribute('aria-controls');
-    expect(controls).toBeTruthy();
-    expect(content.id).toBe(controls);
+    expect(summary.hasAttribute('aria-controls')).toBe(false);
   });
 
   it('applies sm size class', async () => {

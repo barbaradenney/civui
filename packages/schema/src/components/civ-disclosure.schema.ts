@@ -40,6 +40,14 @@ const schema: ComponentSchema = {
         open: { type: 'boolean', description: 'Whether the disclosure is now open' },
       },
     },
+    'civ-analytics': {
+      description: 'Analytics tracking event on toggle',
+      detail: {
+        componentName: { type: 'string', description: 'Tag name of the dispatcher' },
+        action: { type: 'string', description: 'The user action (`change`)' },
+        details: { type: 'object', description: '{ open: boolean } — the resulting state' },
+      },
+    },
   },
 
   a11y: {

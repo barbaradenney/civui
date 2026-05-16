@@ -41,7 +41,7 @@ const schema: ComponentSchema = {
     frequencies: {
       type: 'array',
       description: 'Restrict the available frequency options. Defaults to all seven. Order is preserved.',
-      default: '["weekly","biweekly","semimonthly","monthly","quarterly","annually","one-time"]',
+      default: ['weekly', 'biweekly', 'semimonthly', 'monthly', 'quarterly', 'annually', 'one-time'],
       items: { value: { type: 'string', description: 'A frequency identifier' } },
     },
   },
@@ -63,7 +63,10 @@ const schema: ComponentSchema = {
 
   a11y: {
     role: 'group',
-    requiredIndicator: 'asterisk',
+    // Multi-field compound (address-style). The legend is a section
+    // heading; `required` cascades to leaf controls (amount, frequency),
+    // which render their own per-control "(required)" markers.
+    requiredIndicator: 'none',
     errorAnnouncement: 'assertive',
     describedBy: ['hint', 'error'],
   },
@@ -83,6 +86,12 @@ const schema: ComponentSchema = {
   ],
 
   form: {
+    // String transport — the structured `{ amount, frequency }` shape
+    // is JSON-stringified into `value` for ElementInternals form
+    // participation, matching the civ-address / civ-name convention.
+    // Sub-fields are ALSO exposed as separate form values
+    // (`${name}.amount`, `${name}.frequency`) for servers that prefer
+    // flat keys.
     valueMode: 'string',
     formAssociated: true,
     resetBehavior: 'restore-default-value',

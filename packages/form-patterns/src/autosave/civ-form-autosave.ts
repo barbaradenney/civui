@@ -20,7 +20,7 @@ export type AutosaveStorage = 'local' | 'session' | 'custom';
  * form-patterns layer without a circular dependency with itself.
  */
 interface FormHostLike extends HTMLElement {
-  getFormData(): Record<string, string>;
+  getFormData(opts?: { excludePii?: boolean }): Record<string, string>;
   prefillData: PrefillData;
 }
 
@@ -161,9 +161,20 @@ export class CivFormAutosave extends CivBaseElement {
 
   private async _save(): Promise<void> {
     if (!this._hostForm || !this.storageKey) return;
-    const data = this._hostForm.getFormData();
+    // Always exclude PII-flagged fields. The default adapter writes to
+    // unencrypted localStorage; consumers who really want to persist
+    // SSN/EIN must override with a custom adapter that encrypts and
+    // collect the raw payload themselves.
+    const data = this._hostForm.getFormData({ excludePii: true });
     const snapshot: AutosaveSnapshot = { v: 1, savedAt: Date.now(), data };
-    await Promise.resolve(this._adapter.save(this.storageKey, snapshot));
+    try {
+      await Promise.resolve(this._adapter.save(this.storageKey, snapshot));
+    } catch {
+      // Storage exception (quota / disabled / custom adapter throws) —
+      // skip the save silently. The form remains usable; the user just
+      // doesn't get this snapshot.
+      return;
+    }
     this.lastSavedAt = snapshot.savedAt;
     dispatch(this, 'civ-autosave-saved', { savedAt: snapshot.savedAt });
   }
@@ -185,7 +196,10 @@ export class CivFormAutosave extends CivBaseElement {
     dispatch(this, 'civ-autosave-cleared');
   }
 
-  private async _onSubmit(): Promise<void> {
+  private async _onSubmit(e: Event): Promise<void> {
+    // `civ-submit` bubbles, so a nested civ-form's submit would otherwise
+    // clear the parent's snapshot. Only act on our own host's event.
+    if (e.target !== this._hostForm) return;
     await this.clear();
   }
 

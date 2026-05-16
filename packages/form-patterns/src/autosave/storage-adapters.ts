@@ -22,6 +22,22 @@ export interface AutosaveSnapshot {
   data: Record<string, string>;
 }
 
+/**
+ * Validate a deserialized snapshot before handing it back to the
+ * autosave element. Returns true only for `{ v: 1, savedAt: number,
+ * data: plain object }`. Rejects arrays / strings / null in `data` so
+ * a malicious or corrupt storage entry can't make `Object.entries`
+ * yield surprising shapes downstream.
+ */
+function isValidSnapshot(parsed: unknown): parsed is AutosaveSnapshot {
+  if (!parsed || typeof parsed !== 'object') return false;
+  const s = parsed as Partial<AutosaveSnapshot>;
+  if (s.v !== 1) return false;
+  if (typeof s.savedAt !== 'number') return false;
+  if (!s.data || typeof s.data !== 'object' || Array.isArray(s.data)) return false;
+  return true;
+}
+
 export interface AutosaveAdapter {
   /** Return the saved snapshot, or null when nothing is saved. */
   load(key: string): Promise<AutosaveSnapshot | null> | AutosaveSnapshot | null;
@@ -44,10 +60,8 @@ export const localStorageAdapter: AutosaveAdapter = {
       const raw = globalThis.localStorage?.getItem(key);
       if (!raw) return null;
       const parsed = JSON.parse(raw) as AutosaveSnapshot;
-      if (parsed && parsed.v === 1 && parsed.data && typeof parsed.savedAt === 'number') {
-        return parsed;
-      }
-      return null;
+      if (!isValidSnapshot(parsed)) return null;
+      return parsed;
     } catch {
       return null;
     }
@@ -79,10 +93,8 @@ export const sessionStorageAdapter: AutosaveAdapter = {
       const raw = globalThis.sessionStorage?.getItem(key);
       if (!raw) return null;
       const parsed = JSON.parse(raw) as AutosaveSnapshot;
-      if (parsed && parsed.v === 1 && parsed.data && typeof parsed.savedAt === 'number') {
-        return parsed;
-      }
-      return null;
+      if (!isValidSnapshot(parsed)) return null;
+      return parsed;
     } catch {
       return null;
     }

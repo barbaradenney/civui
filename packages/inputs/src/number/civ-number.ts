@@ -160,10 +160,24 @@ export class CivNumber extends LegendHeadingMixin(CivFormElement) {
   }
 
   protected override _onInput(e: Event): void {
+    // Defer reformatting while the user is composing (CJK IMEs,
+    // dead keys). Filtering mid-composition strips the partial
+    // glyphs and resets the cursor inside the IME's candidate window.
+    if (e instanceof InputEvent && e.isComposing) return;
+
     const target = e.target as HTMLInputElement;
     const filtered = this._filterValue(target.value);
     this.value = filtered;
-    if (target.value !== filtered) target.value = filtered;
+    if (target.value !== filtered) {
+      // Preserve caret position when filtering shortens the value
+      // (e.g., paste with separators). selectionStart is null for
+      // input types that don't support selection — defensive cast.
+      const caret = target.selectionStart ?? filtered.length;
+      target.value = filtered;
+      try {
+        target.setSelectionRange(Math.min(caret, filtered.length), Math.min(caret, filtered.length));
+      } catch { /* unsupported input type */ }
+    }
     dispatch(this, 'civ-input', { value: this.value });
   }
 
@@ -191,6 +205,21 @@ export class CivNumber extends LegendHeadingMixin(CivFormElement) {
       this.value = this.value.slice(0, -1);
       const input = this.querySelector('input') as HTMLInputElement | null;
       if (input) input.value = this.value;
+    }
+
+    // Reject values the filter accepts as partial typing states but that
+    // aren't actually numeric on commit: a lone `-`, an empty decimal `.`,
+    // or a leading-only `-.` (when allow-decimal + allow-negative are
+    // both set). Clear them so the form sees `""` instead of `NaN`.
+    if (this.value === '-' || this.value === '.' || this.value === '-.') {
+      this.value = '';
+      const input = this.querySelector('input') as HTMLInputElement | null;
+      if (input) input.value = '';
+      if (this._rangeError) {
+        this.error = '';
+        this._rangeError = false;
+      }
+      return;
     }
 
     if (this.min == null && this.max == null) return;

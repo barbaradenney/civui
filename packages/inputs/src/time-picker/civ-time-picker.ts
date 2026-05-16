@@ -17,10 +17,11 @@ import type { ComboboxOption } from '../combobox/civ-combobox.js';
 // Side-effect imports register the child custom elements.
 import '../select/civ-select.js';
 import '../combobox/civ-combobox.js';
+import '../text-input/civ-text-input.js';
 import '@civui/controls/segmented-control';
 
 export type TimePickerFormat = '12' | '24';
-export type TimePickerMode = 'select' | 'combo';
+export type TimePickerMode = 'select' | 'combo' | 'text';
 
 /**
  * CivUI Time Picker
@@ -28,7 +29,7 @@ export type TimePickerMode = 'select' | 'combo';
  * Self-contained time input. Always stores its value in 24-hour ISO
  * format (`HH:MM`) regardless of display format or input mode.
  *
- * Two input modes:
+ * Three input modes:
  *
  * - `mode="combo"` (default, USWDS pattern): a single typeable
  *   combobox with pre-built time slots driven by `minute-step`. Users
@@ -37,18 +38,24 @@ export type TimePickerMode = 'select' | 'combo';
  *   list to business hours. Best for scheduling — appointments,
  *   hearing times, callback windows.
  *
- * - `mode="select"`: three selects (hour, minute, AM/PM). Predictable,
- *   every-device-safe, no typing required. Use when slot-list
- *   filtering would be confusing (e.g. capturing an arbitrary
- *   incident time) or when minute-level precision (`minute-step="1"`)
- *   would create too long a combobox list.
+ * - `mode="select"`: hour + minute selects plus an AM/PM segmented
+ *   control. Predictable, every-device-safe, no typing required. Use
+ *   when picking from a discrete list is easier than typing — e.g.
+ *   when the consumer wants to constrain to specific 5/15/30-minute
+ *   buckets without slot-list filtering.
+ *
+ * - `mode="text"`: free-form text input (`HH:MM` with auto-formatting
+ *   mask) plus the same AM/PM segmented control. Best for arbitrary
+ *   precision — incident reports, medical event times, "exactly when
+ *   did this happen" prompts where the user knows the time and would
+ *   be slowed by a slot grid. `minute-step` is ignored in this mode.
  *
  * For known past dates use `civ-memorable-date`; for future dates use
  * `civ-date-picker`.
  *
  * @element civ-time-picker
  *
- * @prop {string} mode - Input mode: 'combo' (default, USWDS combobox) or 'select' (three dropdowns)
+ * @prop {string} mode - Input mode: 'combo' (default, USWDS combobox), 'select' (dropdowns), or 'text' (free-form text + AM/PM)
  * @prop {string} legend - Fieldset legend rendered above the fields (select mode)
  * @prop {string} label - Label for the combobox input (combo mode)
  * @prop {string} name - Base form field name
@@ -92,6 +99,14 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
   @state() private _minute = '';
   @state() private _period: 'AM' | 'PM' | '' = '';
 
+  /**
+   * True when `this.error` was set by the text-mode assembly check
+   * (e.g. "Hour must be 1–12"). Lets us clear our own error when the
+   * input becomes valid without clobbering errors the consumer set
+   * for other reasons (server-side validation, custom rules).
+   */
+  private _textModeError = false;
+
   private _boundFieldInput = this._onFieldInput.bind(this);
   private _boundFieldChange = this._onFieldChange.bind(this);
 
@@ -105,6 +120,19 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
     // unconditionally so a runtime mode switch keeps working.
     this.addEventListener('civ-input', this._boundFieldInput as EventListener);
     this.addEventListener('civ-change', this._boundFieldChange as EventListener);
+  }
+
+  override formResetCallback(): void {
+    super.formResetCallback();
+    // Clear our text-mode validation error (if we set one) so the
+    // reset field doesn't keep "Hour must be 1–12" stuck on the
+    // legend until the next user interaction. Re-parse rebuilds
+    // _hour / _minute / _period from the (now-reset) value.
+    if (this._textModeError) {
+      this.error = '';
+      this._textModeError = false;
+    }
+    this._parseValue();
   }
 
   override disconnectedCallback(): void {
@@ -343,7 +371,9 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
   }
 
   override render() {
-    return this.mode === 'combo' ? this._renderComboMode() : this._renderSelectMode();
+    if (this.mode === 'combo') return this._renderComboMode();
+    if (this.mode === 'text') return this._renderTextMode();
+    return this._renderSelectMode();
   }
 
   /**
@@ -360,6 +390,7 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
         name="${this.name || nothing}"
         .options="${this._comboOptions()}"
         .value="${this.value}"
+        .noMatchSuggestions="${(filter: string) => this._nearestSlotSuggestion(filter)}"
         placeholder="${placeholder}"
         hint="${this.hint}"
         error="${this.error}"
@@ -374,11 +405,204 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
   }
 
   /**
+   * Snap a typed filter to the nearest slot when civ-combobox's
+   * filter found no exact match. Wired into the combobox via
+   * `noMatchSuggestions`. Returns a single-option array — the
+   * suggestion appears in the dropdown like any other slot, the
+   * user picks it normally (no auto-commit, no surprise).
+   *
+   * Returns `[]` when the typed filter can't be parsed as a partial
+   * time (pure letters, gibberish, empty after digit-stripping) —
+   * civ-combobox then shows its standard "No results found" message.
+   */
+  private _nearestSlotSuggestion(filter: string): ComboboxOption[] {
+    const minutes = this._parseFilterToMinutes(filter);
+    if (minutes == null) return [];
+    const opts = this._comboOptions();
+    if (opts.length === 0) return [];
+
+    let nearest = opts[0];
+    let nearestDelta = Infinity;
+    for (const opt of opts) {
+      const m = this._parseTimeToMinutes(opt.value);
+      if (m == null) continue;
+      const delta = Math.abs(m - minutes);
+      if (delta < nearestDelta) {
+        nearestDelta = delta;
+        nearest = opt;
+      }
+    }
+    return [nearest];
+  }
+
+  /**
+   * Parse a free-form filter string to minutes-since-midnight.
+   * Handles the natural shapes users type:
+   *   - "9" / "9:00"         → 9 * 60 = 540
+   *   - "927" / "9:27"       → 9 * 60 + 27 = 567
+   *   - "1430"               → 14 * 60 + 30 = 870 (24-hour input)
+   *   - "9p" / "9 PM"        → 21 * 60 = 1260
+   *   - "9:27 PM"            → 21 * 60 + 27 = 1287
+   *
+   * In `format="12"`, hour values > 12 are treated as 24-hour input
+   * so "1430" still snaps to a sensible afternoon slot. AM/PM hints
+   * (any "a"/"p" letter in the filter) override.
+   *
+   * Returns `null` when the filter has no parseable digits or the
+   * parsed time is out of range (e.g. minute > 59).
+   */
+  private _parseFilterToMinutes(filter: string): number | null {
+    const lower = filter.trim().toLowerCase();
+    if (!lower) return null;
+
+    // Loose AM/PM detection — any "a" or "p" letter in the filter
+    // counts as the hint. Good enough for typical user input
+    // ("9a", "9 am", "9:27 pm") without parsing word boundaries.
+    const hasAm = /a/.test(lower);
+    const hasPm = /p/.test(lower);
+
+    const cleaned = lower.replace(/[^\d:]/g, '');
+    if (!cleaned) return null;
+
+    let h: number;
+    let m: number;
+    if (cleaned.includes(':')) {
+      const [hStr, mStr] = cleaned.split(':');
+      h = Number(hStr);
+      m = Number(mStr) || 0;
+    } else if (cleaned.length <= 2) {
+      h = Number(cleaned);
+      m = 0;
+    } else if (cleaned.length === 3) {
+      h = Number(cleaned[0]);
+      m = Number(cleaned.slice(1));
+    } else {
+      h = Number(cleaned.slice(0, 2));
+      m = Number(cleaned.slice(2, 4));
+    }
+
+    if (!Number.isFinite(h) || !Number.isFinite(m)) return null;
+    if (m < 0 || m > 59) return null;
+
+    if (this.format === '12') {
+      if (h === 12 && hasAm) h = 0;
+      else if (h < 12 && hasPm) h += 12;
+      // hour > 12 with no period hint: treat as 24-hour input,
+      // leave as-is so "1430" → 14:30.
+    }
+
+    if (h < 0 || h > 23) return null;
+    return h * 60 + m;
+  }
+
+
+  /**
    * Select mode: three selects (hour, minute, AM/PM) inside a fieldset.
    * The original CivUI default; predictable and every-device-safe.
    * Useful when slot-list filtering doesn't fit (free-form precision,
    * or minute-step=1 which would create 1440 slots).
    */
+
+  /**
+   * Text mode: free-form text input with `##:##` mask (digits only,
+   * auto-formats on blur with a colon) plus the same AM/PM segmented
+   * control as select mode. For arbitrary precision — incident
+   * reports, exact event times. Skips the period control in
+   * 24-hour format.
+   *
+   * The mask stores raw digits in the text input's value ("234",
+   * "1234"); _readChildValues splits last-2 as minutes, rest as
+   * hour. 12-hour mode still requires the period segment to assemble
+   * a value; consumers who want "type any hour 0-23" should use
+   * format="24".
+   */
+  private _renderTextMode() {
+    const label = this.label || this.legend || t('timePickerDefaultLegend');
+    const periodLabel = this.periodLabel || t('timePickerPeriodLabel');
+    const placeholder = this.placeholder || (this.format === '24' ? '14:30' : '2:34');
+    const describedBy = buildDescribedBy(this._hintId, this.hint, this._errorId, this.error);
+    // Pack _hour + _minute back into the raw digit form the
+    // text-input mask expects (no colon, no separators). civ-text-input
+    // applies the mask to display "HH:MM" on blur.
+    const rawDigits = this._hour && this._minute
+      ? `${this._hour.padStart(2, '0')}${this._minute.padStart(2, '0')}`
+      : this._hour || '';
+
+    // Required-mark routing. When `legend` is explicitly set, the
+    // visible legend carries the (required) marker and children
+    // suppress theirs (single visible marker). When only `label` was
+    // set, the legend is sr-only — putting the marker there hides it
+    // from sighted users, so the children render the marker on their
+    // own labels instead. Matches the multi-field-compound pattern.
+    const legendIsVisible = !!this.legend;
+    const markerOnLegend = legendIsVisible && !this.hideRequiredIndicator && this.required;
+    const hideMarkerOnChildren = legendIsVisible || this.hideRequiredIndicator;
+
+    return html`
+      <fieldset
+        class="civ-fieldset"
+        aria-describedby="${describedBy || nothing}"
+        aria-invalid="${this.error ? 'true' : nothing}"
+        ?disabled="${this.disabled}"
+      >
+        ${renderFormHeader({
+          label: renderLegend({
+            legend: label,
+            required: this.required,
+            showRequired: markerOnLegend,
+            headingLevel: this.headingLevel,
+            size: this.size,
+            srOnly: !legendIsVisible,
+          }),
+          hintId: this._hintId,
+          hint: this.hint,
+          errorId: this._errorId,
+          error: this.error,
+          fieldset: true,
+        })}
+        <div class="civ-time-picker-fields">
+          <div class="civ-time-picker-time-input">
+            <civ-text-input
+              label="${t('timePickerTimeLabel')}"
+              name="${this.name ? `${this.name}-time` : 'time'}"
+              type="text"
+              inputmode="numeric"
+              mask-pattern="##:##"
+              placeholder="${placeholder}"
+              .value="${rawDigits}"
+              error="${this.error}"
+              hide-char-count
+              ?required="${this.required}"
+              ?disabled="${this.disabled}"
+              ?readonly="${this.readonly}"
+              ?hide-required-indicator="${hideMarkerOnChildren}"
+              disable-analytics
+            ></civ-text-input>
+          </div>
+          ${this.format === '12'
+            ? html`
+                <div class="civ-time-picker-period">
+                  <civ-segmented-control
+                    legend="${periodLabel}"
+                    name="${this.name ? `${this.name}-period` : 'period'}"
+                    .value="${this._period}"
+                    error="${this.error}"
+                    ?required="${this.required}"
+                    ?disabled="${this.disabled}"
+                    ?hide-required-indicator="${hideMarkerOnChildren}"
+                    disable-analytics
+                  >
+                    <civ-segment value="AM" label="${t('timePickerAm')}"></civ-segment>
+                    <civ-segment value="PM" label="${t('timePickerPm')}"></civ-segment>
+                  </civ-segmented-control>
+                </div>
+              `
+            : nothing}
+        </div>
+      </fieldset>
+    `;
+  }
+
   private _renderSelectMode() {
     const hourLabel = this.hourLabel || t('timePickerHourLabel');
     const minuteLabel = this.minuteLabel || t('timePickerMinuteLabel');
@@ -470,27 +694,61 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
   /** Read the latest values from the child selects. */
   private _readChildValues(): void {
     const baseName = this.name || '';
+    const periodCtrl = this.querySelector(
+      `civ-segmented-control[name="${baseName ? `${baseName}-period` : 'period'}"]`,
+    ) as (HTMLElement & { value: string }) | null;
+    if (periodCtrl) this._period = (periodCtrl.value as 'AM' | 'PM' | '') || '';
+
+    if (this.mode === 'text') {
+      // Text mode: read the masked input's raw digits and split into
+      // hour / minute. 3-digit input is H+MM ("234" → 2:34);
+      // 4-digit is HH+MM ("1234" → 12:34). Shorter inputs leave
+      // _hour/_minute partial so _assembleValue returns "".
+      const textInput = this.querySelector(
+        `civ-text-input[name="${baseName ? `${baseName}-time` : 'time'}"]`,
+      ) as (HTMLElement & { value: string }) | null;
+      const raw = textInput?.value ?? '';
+      if (!raw) {
+        this._hour = '';
+        this._minute = '';
+        return;
+      }
+      let h: string, m: string;
+      if (raw.length <= 2) {
+        // Just hour digits typed so far — wait for minutes.
+        h = raw;
+        m = '';
+      } else if (raw.length === 3) {
+        h = raw[0];
+        m = raw.slice(1);
+      } else {
+        h = raw.slice(0, 2);
+        m = raw.slice(2, 4);
+      }
+      this._hour = h;
+      this._minute = m;
+      return;
+    }
+
+    // Select mode: read the hour / minute selects.
     const hourSel = this.querySelector(
       `civ-select[name="${baseName ? `${baseName}-hour` : 'hour'}"]`,
     ) as (HTMLElement & { value: string }) | null;
     const minuteSel = this.querySelector(
       `civ-select[name="${baseName ? `${baseName}-minute` : 'minute'}"]`,
     ) as (HTMLElement & { value: string }) | null;
-    // Period is a segmented-control (two-option binary choice) so it
-    // can be a single tap on every viewport. The selector matches the
-    // segmented-control's `name`, not a select.
-    const periodCtrl = this.querySelector(
-      `civ-segmented-control[name="${baseName ? `${baseName}-period` : 'period'}"]`,
-    ) as (HTMLElement & { value: string }) | null;
-
     if (hourSel) this._hour = hourSel.value || '';
     if (minuteSel) this._minute = minuteSel.value || '';
-    if (periodCtrl) this._period = (periodCtrl.value as 'AM' | 'PM' | '') || '';
   }
 
   private _onFieldInput(e: CustomEvent): void {
     if (e.target === this) return;
-    if (this.mode !== 'select') return;
+    // Combo mode uses its own template-bound `@civ-change` and never
+    // benefits from re-assembly here. Select + text modes both rely
+    // on this path — children (selects / text-input / segmented
+    // control) fire civ-input → host reads them via _readChildValues
+    // → assembles a 24-hour ISO value.
+    if (this.mode === 'combo') return;
     // Suppress the child's event from reaching consumer listeners on
     // this host — they should only see the parent's assembled event.
     e.stopImmediatePropagation();
@@ -499,7 +757,7 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
 
   private _onFieldChange(e: CustomEvent): void {
     if (e.target === this) return;
-    if (this.mode !== 'select') return;
+    if (this.mode === 'combo') return;
     e.stopImmediatePropagation();
     this._updateFromChildren(true);
   }
@@ -538,6 +796,31 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
     this.value = assembled;
     this.updateFormValue(this.value);
 
+    // Text mode: on commit, set/clear a contextual error when the
+    // user has provided enough digits to look complete but the
+    // assembly failed (hour > 12 in 12-hour, minute > 59, etc.).
+    // Without this, the user sees a fully-formatted "14:30" with no
+    // feedback that it's invalid — they submit and get nothing.
+    //
+    // Only manage `error` when WE set it (tracked by `_textModeError`)
+    // so consumer-provided errors don't get clobbered.
+    if (this.mode === 'text' && fireChange) {
+      const msg = this._textModeErrorMessage();
+      if (msg) {
+        // Only auto-set when there's no existing error, OR when the
+        // existing error came from us (i.e. update our own). Consumer-
+        // set errors (server-side validation, custom rules) stay
+        // intact.
+        if (!this.error || this._textModeError) {
+          this.error = msg;
+          this._textModeError = true;
+        }
+      } else if (this._textModeError) {
+        this.error = '';
+        this._textModeError = false;
+      }
+    }
+
     const detail = {
       value: this.value,
       hour: this._hour,
@@ -549,6 +832,45 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
       dispatch(this, 'civ-change', detail);
       this.sendAnalytics('change');
     }
+  }
+
+  /**
+   * Diagnose a complete-looking-but-empty text-mode commit. Returns a
+   * localized error message when:
+   *   - the user typed at least 3 digits (HMM or HHMM — enough for a
+   *     "looks complete" reading), AND
+   *   - `_assembleValue()` returned "" (the input didn't actually
+   *     produce a valid 24-hour time)
+   * Returns `''` when there's no error to surface (still typing,
+   * assembly succeeded, etc.).
+   */
+  private _textModeErrorMessage(): string {
+    // Only surface text-mode validation diagnostics.
+    if (this.mode !== 'text') return '';
+    // Read the raw digits the user typed by re-deriving from _hour /
+    // _minute. Empty / partial input shouldn't trigger an error.
+    const digitCount = (this._hour?.length || 0) + (this._minute?.length || 0);
+    if (digitCount < 3) return '';
+    // Assembled OK → no error.
+    if (this.value) return '';
+
+    const h = Number(this._hour);
+    const m = Number(this._minute);
+    if (!Number.isFinite(m) || m > 59) {
+      return t('timePickerInvalidMinute');
+    }
+    if (this.format === '12') {
+      if (Number.isFinite(h) && (h < 1 || h > 12)) {
+        return t('timePickerInvalidHour12');
+      }
+      if (!this._period) {
+        return t('timePickerMissingPeriod');
+      }
+    } else if (!Number.isFinite(h) || h < 0 || h > 23) {
+      return t('timePickerInvalidHour24');
+    }
+    // Catch-all (shouldn't reach here in practice).
+    return t('timePickerInvalidTime');
   }
 }
 

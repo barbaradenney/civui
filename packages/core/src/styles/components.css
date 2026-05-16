@@ -359,6 +359,16 @@
     width: 5.5rem;
   }
 
+  /*
+   * text-mode renders a single masked text input ("HH:MM") plus the
+   * AM/PM segmented control. Width sits between the select-mode
+   * hour width (5.5rem) and the combo input (default) — enough room
+   * for a leading "12:" and trailing padding.
+   */
+  .civ-time-picker-time-input {
+    width: 7rem;
+  }
+
   .civ-time-picker-period {
     width: 6rem;
   }
@@ -382,21 +392,28 @@
       width: calc(50% - var(--civ-spacing-2, 10px));
     }
 
+    .civ-time-picker-time-input,
     .civ-time-picker-period {
       width: 100%;
     }
 
     /*
      * Stretch the AM/PM segmented control to fill the full-width
-     * row, then split the two segments 50/50. Without this the
-     * segmented control's inner `.civ-inline-flex` sizes to the
-     * two buttons' content — leaving most of the row empty and the
-     * tap targets uncomfortably narrow on a phone.
+     * row, then split the two segments 50/50. The full chain has to
+     * be 100%-wide: host (civ-segmented-control) → its fieldset →
+     * the inner radiogroup div. Setting only the host or only the
+     * inner div leaves the fieldset between them sized to its
+     * content, which collapses the radiogroup back to the two
+     * buttons' natural width.
      */
     .civ-time-picker-period civ-segmented-control,
+    .civ-time-picker-period civ-segmented-control fieldset,
+    .civ-time-picker-period [data-civ-segment-content] {
+      width: 100%;
+    }
+
     .civ-time-picker-period [data-civ-segment-content] {
       display: flex;
-      width: 100%;
     }
 
     .civ-time-picker-period .civ-segment-btn {
@@ -973,7 +990,40 @@
            civ-overflow-y-auto civ-list-none civ-p-0 civ-m-0;
   }
 
-  /* Combobox listbox uses the shared .civ-bottom-sheet pattern on mobile */
+  /*
+   * Mobile combobox listbox: anchored popover, NOT bottom-sheet.
+   *
+   * The CivUI rule "popups use bottom sheets on mobile" applies to
+   * tap-to-open affordances (civ-modal, civ-action-sheet,
+   * civ-datepicker-dialog) where no soft keyboard is expected.
+   * civ-combobox is the documented exception — it has a typing
+   * surface, so the keyboard is always up while the listbox is open.
+   * A bottom-anchored sheet under those conditions collapses to a
+   * sliver between the keyboard top and the bottom of the visible
+   * viewport (the user-reported bug). Material UI, USWDS, Apple HIG,
+   * and Bootstrap typeaheads all use anchored popovers for this
+   * reason.
+   *
+   * The desktop rule (civ-absolute + civ-max-h-60) is already an
+   * anchored popover. This block only re-asserts the absolute
+   * positioning at the mobile breakpoint (defending against the
+   * .civ-bottom-sheet class accidentally landing on the listbox
+   * via copy-paste) and switches max-height to the dynamic
+   * viewport unit `dvh`, which automatically excludes the keyboard
+   * on iOS Safari 15.4+ / Chrome 108+ / Firefox 101+. `vh` is the
+   * fallback for older browsers.
+   */
+  @media (max-width: 480px) {
+    .civ-combobox-listbox {
+      position: absolute;
+      top: auto;
+      left: 0;
+      right: 0;
+      width: 100%;
+      max-height: 50vh;
+      max-height: 50dvh;
+    }
+  }
 
   .civ-combobox-option {
     @apply civ-px-3 civ-py-2 civ-cursor-pointer;

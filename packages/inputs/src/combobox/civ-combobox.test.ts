@@ -959,3 +959,47 @@ describe('civ-combobox — inputmode prop', () => {
     expect(input.getAttribute('inputmode')).toBe('numeric');
   });
 });
+
+describe('civ-combobox — noMatchSuggestions callback', () => {
+  it('is consulted only when the regular filter returns no matches', async () => {
+    const supplier = vi.fn(() => [{ value: 'fallback', label: 'Fallback' }]);
+    const el = await fixture(`<civ-combobox label="Pick"></civ-combobox>`) as any;
+    el.options = [
+      { value: 'a', label: 'Apple' },
+      { value: 'b', label: 'Banana' },
+    ];
+    el.noMatchSuggestions = supplier;
+    await elementUpdated(el);
+
+    const input = el.querySelector('input') as HTMLInputElement;
+
+    // Match exists → supplier NOT called.
+    input.value = 'app';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    await elementUpdated(el);
+    expect(supplier).not.toHaveBeenCalled();
+    expect(el.querySelectorAll('.civ-combobox-option').length).toBe(1);
+
+    // No match → supplier consulted, suggestion rendered.
+    input.value = 'zzz';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    await elementUpdated(el);
+    expect(supplier).toHaveBeenCalledWith('zzz');
+    const labels = Array.from(el.querySelectorAll('.civ-combobox-option')).map((n: any) => n.textContent.trim());
+    expect(labels).toEqual(['Fallback']);
+  });
+
+  it('an empty array from the supplier shows the no-results UI', async () => {
+    const el = await fixture(`<civ-combobox label="Pick"></civ-combobox>`) as any;
+    el.options = [{ value: 'a', label: 'Apple' }];
+    el.noMatchSuggestions = () => [];
+    await elementUpdated(el);
+
+    const input = el.querySelector('input') as HTMLInputElement;
+    input.value = 'zzz';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    await elementUpdated(el);
+    // No options rendered, but the supplier was consulted.
+    expect(el.querySelectorAll('.civ-combobox-option').length).toBe(0);
+  });
+});

@@ -54,6 +54,24 @@ export class CivCombobox extends LegendHeadingMixin(CivFormElement) {
    * AM/PM letters.
    */
   @property({ type: String }) inputmode: '' | 'text' | 'numeric' | 'decimal' | 'tel' | 'search' | 'email' | 'url' = '';
+
+  /**
+   * Optional fallback supplier called when the standard filter
+   * returns zero matches. Use it to suggest a "nearest" option for
+   * free-form input that doesn't exactly match a slot — e.g.
+   * civ-time-picker passes a callback that snaps a typed `"9:27"`
+   * to the nearest slot `"9:30"` so the dropdown isn't empty.
+   *
+   * Receives the current filter text; returns an array of
+   * ComboboxOption to show in place of the empty result. The
+   * supplier is consulted only when the regular filter is empty —
+   * exact matches always win.
+   *
+   * Plain field (not a Lit `@property`) because it's a function
+   * reference, set in JS only. Won't appear in cross-platform
+   * parity diffs.
+   */
+  noMatchSuggestions?: (filter: string) => ComboboxOption[];
   @property({ type: String, attribute: 'no-results-text' }) noResultsText = '';
   @property({ type: String }) width: InputWidth = 'default';
 
@@ -169,6 +187,14 @@ export class CivCombobox extends LegendHeadingMixin(CivFormElement) {
       const labelCompact = label.replace(/[^a-z0-9]/g, '');
       return labelCompact.includes(compact);
     });
+    // Exact / substring matches always win. When the regular filter
+    // returns nothing, consult the consumer's noMatchSuggestions
+    // callback (e.g. the time picker snapping "9:27" to "9:30").
+    // Not memoized via the cache key above — the supplier is
+    // expected to be cheap, and the empty-result branch is rare.
+    if (this._cachedFilteredOptions.length === 0 && this.noMatchSuggestions) {
+      return this.noMatchSuggestions(this._filter);
+    }
     return this._cachedFilteredOptions;
   }
 
@@ -247,7 +273,7 @@ export class CivCombobox extends LegendHeadingMixin(CivFormElement) {
                 <ul
                   id="${this._listboxId}"
                   role="listbox"
-                  class="civ-combobox-listbox civ-bottom-sheet"
+                  class="civ-combobox-listbox"
                   aria-labelledby="${this.label ? this._labelId : nothing}"
                   aria-describedby="${this._ariaDescribedBy || nothing}"
                   aria-busy="${this._loading ? 'true' : nothing}"

@@ -13,7 +13,7 @@ const meta: Meta = {
 Self-contained time input. Always stores its value in 24-hour ISO format
 (\`HH:MM\`) regardless of display format or input mode.
 
-**Two input modes:**
+**Three input modes:**
 
 - **\`mode="combo"\` (default)** — a single typeable combobox with pre-built
   slots driven by \`minute-step\`. Users can type to filter (\`"230"\` →
@@ -22,10 +22,14 @@ Self-contained time input. Always stores its value in 24-hour ISO format
   Optional \`min\` / \`max\` bounds restrict slots to business hours. Best
   for scheduling — appointments, hearing times, callback windows.
 
-- **\`mode="select"\`** — three selects (hour, minute, AM/PM) in a fieldset.
-  Predictable, every-device-safe, no typing required. Use when slot-list
-  filtering would be confusing (free-form precision) or when \`minute-step="1"\`
-  would create an unwieldy combobox list.
+- **\`mode="select"\`** — hour + minute selects plus an AM/PM segmented
+  control. Predictable picking for discrete time choices.
+
+- **\`mode="text"\`** — a single masked text input (\`HH:MM\`) plus the
+  AM/PM segmented control. Best for arbitrary precision — incident
+  reports, medical event times, "exactly when did this happen"
+  prompts where the user knows the time and a slot grid would slow
+  them down. \`minute-step\` is ignored.
 
 For known past dates use \`civ-memorable-date\`; for future dates use
 \`civ-date-picker\`.
@@ -34,7 +38,7 @@ For known past dates use \`civ-memorable-date\`; for future dates use
     },
   },
   argTypes: {
-    mode: { control: 'select', options: ['combo', 'select'] },
+    mode: { control: 'select', options: ['combo', 'select', 'text'] },
     label: { control: 'text' },
     legend: { control: 'text' },
     name: { control: 'text' },
@@ -156,6 +160,46 @@ export const SelectModeRequired: Story = {
       name="contact_time"
       hint="Required — we will call within 1 hour of this time"
       minute-step="30"
+      required
+    ></civ-time-picker>
+  `,
+};
+
+// ── Text mode (arbitrary precision: incident times, exact event times) ──
+
+export const TextMode: Story = {
+  name: 'Text mode (free-form HH:MM)',
+  render: () => html`
+    <civ-time-picker
+      mode="text"
+      label="Time of incident"
+      name="incident_time"
+      hint="Type the time as accurately as you remember (e.g. 2:34)"
+    ></civ-time-picker>
+  `,
+};
+
+export const TextMode24Hour: Story = {
+  name: 'Text mode — 24-hour (no AM/PM)',
+  render: () => html`
+    <civ-time-picker
+      mode="text"
+      label="Event timestamp"
+      name="event_time"
+      format="24"
+      hint="Enter the time in 24-hour format (e.g. 14:34)"
+    ></civ-time-picker>
+  `,
+};
+
+export const TextModeRequired: Story = {
+  name: 'Text mode — required',
+  render: () => html`
+    <civ-time-picker
+      mode="text"
+      label="Exact time of fall"
+      name="fall_time"
+      hint="Required — used to calculate symptom onset"
       required
     ></civ-time-picker>
   `,

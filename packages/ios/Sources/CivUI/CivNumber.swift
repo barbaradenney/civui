@@ -14,7 +14,6 @@ public struct CivNumber: View {
     @Binding public var value: String
     public var min: Double?
     public var max: Double?
-    public var step: Double?
     public var allowDecimal: Bool
     public var allowNegative: Bool
     public var placeholder: String
@@ -34,7 +33,6 @@ public struct CivNumber: View {
         value: Binding<String>,
         min: Double? = nil,
         max: Double? = nil,
-        step: Double? = nil,
         allowDecimal: Bool = false,
         allowNegative: Bool = false,
         placeholder: String = "",
@@ -53,7 +51,6 @@ public struct CivNumber: View {
         self._value = value
         self.min = min
         self.max = max
-        self.step = step
         self.allowDecimal = allowDecimal
         self.allowNegative = allowNegative
         self.placeholder = placeholder

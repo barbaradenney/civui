@@ -1773,6 +1773,19 @@
       "source": "packages/form-patterns/src/patterns/overview-examples.stories.ts"
     },
     {
+      "story": "ConfirmBeforeSubmit",
+      "name": "Confirm Before Submit (event-hook pattern)",
+      "category": "Forms/Form/Form",
+      "html": "<civ-form\n      id=\"confirm-form\"\n      confirm-before-submit\n      form-label=\"Submit benefit claim\"\n      @civ-submit-confirm=\"${(e: CustomEvent) => {\n        const ok = window.confirm(\n          'File this claim?\\n\\nOnce submitted, this claim cannot be edited from the public portal. Continue?'\n        );\n        if (ok) e.detail.proceed();\n        else e.detail.cancel();\n      }}\"\n      @civ-submit=\"${() => {\n        const status = document.getElementById('confirm-status') as HTMLElement;\n        if (status) status.textContent = 'Submitted. Reference: CLM-2026-0123';\n      }}\"\n      @civ-submit-cancelled=\"${() => {\n        const status = document.getElementById('confirm-status') as HTMLElement;\n        if (status) status.textContent = 'Submission cancelled.';\n      }}\"\n    >\n      <h2 class=\"civ-heading-md\">File benefit claim</h2>\n      <civ-text-input label=\"Claim type\" name=\"type\" value=\"Disability — initial\" required></civ-text-input>\n      <civ-textarea label=\"Description of injury or condition\" name=\"desc\" required></civ-textarea>\n      <div class=\"civ-mt-4\">\n        <civ-button type=\"submit\">File claim</civ-button>\n      </div>\n    </civ-form>\n\n    <p id=\"confirm-status\" class=\"civ-mt-4 civ-text-sm\"></p>",
+      "source": "packages/form-patterns/src/form/civ-form.stories.ts"
+    },
+    {
+      "story": "Default",
+      "category": "Form Patterns/Form Autosave",
+      "html": "<p class=\"civ-mb-4\">\n      Type in any field below, then refresh the page — your draft will resume.\n    </p>\n    <civ-form>\n      <civ-form-autosave storage-key=\"civui-autosave-demo\" debounce-ms=\"500\"></civ-form-autosave>\n      <civ-text-input label=\"First name\" name=\"first-name\"></civ-text-input>\n      <civ-text-input label=\"Last name\" name=\"last-name\"></civ-text-input>\n      <civ-text-input label=\"Email\" name=\"email\" type=\"email\" validate=\"email\"></civ-text-input>\n      <civ-button type=\"submit\">Submit application</civ-button>\n    </civ-form>",
+      "source": "packages/form-patterns/src/autosave/civ-form-autosave.stories.ts"
+    },
+    {
       "story": "Default",
       "category": "Forms/Form/Form",
       "html": "<civ-form\n      action=\"${args.action}\"\n      method=\"${args.method}\"\n      form-label=\"${args['form-label']}\"\n    >\n      <civ-text-input label=\"Full name\" name=\"name\" required></civ-text-input>\n      <civ-text-input label=\"Email address\" name=\"email\" required type=\"email\"></civ-text-input>\n      <civ-textarea label=\"Message\" name=\"message\"></civ-textarea>\n      <civ-button type=\"submit\">Submit</civ-button>\n    </civ-form>",
@@ -1874,6 +1887,20 @@
       "category": "Forms/Form/Conditional",
       "html": "<civ-form form-label=\"Veteran benefits application\">\n      <civ-text-input label=\"Full name\" name=\"fullName\" required></civ-text-input>\n      <civ-text-input label=\"Email address\" name=\"email\" required type=\"email\"></civ-text-input>\n\n      <civ-yes-no legend=\"Are you a veteran?\" name=\"isVeteran\" required></civ-yes-no>\n\n      <civ-conditional when=\"isVeteran\" equals=\"yes\">\n        <civ-text-input label=\"Branch of service\" name=\"branch\" hint=\"For example: Army, Navy, Air Force, Marine Corps, Coast Guard\" required></civ-text-input>\n\n        <civ-text-input label=\"Years of service\" name=\"yearsOfService\" hint=\"For example: 4\" width=\"sm\"></civ-text-input>\n\n        <civ-yes-no legend=\"Do you have a service-connected disability?\" name=\"hasDisability\"></civ-yes-no>\n\n        <civ-conditional when=\"hasDisability\" equals=\"yes\">\n          <civ-select label=\"Disability rating\" name=\"disabilityRating\" required options='[{\"label\":\"Select one\",\"value\":\"\"},{\"label\":\"10%\",\"value\":\"10\"},{\"label\":\"20%\",\"value\":\"20\"},{\"label\":\"30%\",\"value\":\"30\"},{\"label\":\"40%\",\"value\":\"40\"},{\"label\":\"50%\",\"value\":\"50\"},{\"label\":\"60%\",\"value\":\"60\"},{\"label\":\"70%\",\"value\":\"70\"},{\"label\":\"80%\",\"value\":\"80\"},{\"label\":\"90%\",\"value\":\"90\"},{\"label\":\"100%\",\"value\":\"100\"}]'></civ-select>\n          <civ-textarea label=\"Describe your service-connected condition\" name=\"disabilityDescription\" hint=\"Provide a brief description of your condition\"></civ-textarea>\n        </civ-conditional>\n      </civ-conditional>\n\n      <civ-conditional when=\"isVeteran\" equals=\"no\">\n        <civ-yes-no legend=\"Are you a dependent of a veteran?\" name=\"isDependent\"></civ-yes-no>\n\n        <civ-conditional when=\"isDependent\" equals=\"yes\">\n          <civ-text-input label=\"Veteran's full name\" name=\"veteranName\" required></civ-text-input>\n          <civ-select label=\"Your relationship to the veteran\" name=\"relationship\" required options='[{\"label\":\"Select one\",\"value\":\"\"},{\"label\":\"Spouse\",\"value\":\"spouse\"},{\"label\":\"Child\",\"value\":\"child\"},{\"label\":\"Parent\",\"value\":\"parent\"}]'></civ-select>\n        </civ-conditional>\n      </civ-conditional>\n\n      <civ-button type=\"submit\" class=\"civ-mt-4\">Submit application</civ-button>\n    </civ-form>",
       "source": "packages/form-patterns/src/conditional/civ-conditional.stories.ts"
+    },
+    {
+      "story": "WithRequiredLegendAndDisclosures",
+      "name": "Required Legend + Disclosures",
+      "category": "Forms/Form/Form",
+      "html": "<civ-form required-legend form-label=\"Benefit application\">\n      <h2 class=\"civ-heading-md\">Apply for benefits</h2>\n      <civ-text-input label=\"Full legal name\" name=\"name\" required></civ-text-input>\n      <civ-text-input label=\"Date of birth\" name=\"dob\" type=\"date\" required></civ-text-input>\n      <civ-text-input label=\"Email address\" name=\"email\" type=\"email\"></civ-text-input>\n      <div class=\"civ-mt-4\">\n        <civ-button type=\"submit\">Submit application</civ-button>\n      </div>\n\n      <div data-civ-form-disclosures>\n        <p>\n          <strong>Privacy Act Statement:</strong> Authority — 5 U.S.C. § 301\n          and Public Law 89-554. Purpose — collect identifying information to\n          process your benefit application. Routine uses — sharing with the\n          Department of the Treasury for payment disbursement. Disclosure is\n          voluntary, but failure to provide the requested information will\n          prevent your application from being processed.\n        </p>\n        <p>\n          <strong>Paperwork Reduction Act:</strong> OMB Control No. 1234-5678.\n          Public reporting burden is estimated at 15 minutes per response.\n        </p>\n      </div>\n    </civ-form>",
+      "source": "packages/form-patterns/src/form/civ-form.stories.ts"
+    },
+    {
+      "story": "WithSavedIndicator",
+      "name": "With ",
+      "category": "Form Patterns/Form Autosave",
+      "html": "<p class=\"civ-mb-4\">\n      Hook into <code>civ-autosave-saved</code> to show a \"Saved a moment ago\"\n      indicator. The element exposes <code>describeLastSave()</code> for\n      localized strings.\n    </p>\n    <civ-form id=\"indicator-form\">\n      <civ-form-autosave id=\"autosave-indicator\" storage-key=\"indicator-demo\" debounce-ms=\"500\"></civ-form-autosave>\n      <civ-text-input label=\"What brings you here today?\" name=\"reason\"></civ-text-input>\n      <div id=\"saved-indicator\" class=\"civ-text-sm civ-mt-2 civ-text-muted\">Not yet saved.</div>\n    </civ-form>\n    <script>\n      const autosave = document.getElementById('autosave-indicator');\n      const indicator = document.getElementById('saved-indicator');\n      autosave.addEventListener('civ-autosave-saved', () => {\n        indicator.textContent = autosave.describeLastSave();\n      });\n      autosave.addEventListener('civ-autosave-loaded', () => {\n        indicator.textContent = autosave.describeLastSave();\n      });\n    </script>",
+      "source": "packages/form-patterns/src/autosave/civ-form-autosave.stories.ts"
     },
     {
       "story": "WithSupportResources",
@@ -2157,6 +2184,42 @@
       "category": "Layout/Image Preview",
       "html": "<div style=\"display: flex; gap: 24px; flex-wrap: wrap; align-items: start;\">\n      <div>\n        <p style=\"font-weight: bold; margin-bottom: 8px;\">sm (120px)</p>\n        <civ-image-preview\n          src=\"${SAMPLE_IMAGE}\"\n          alt=\"Small preview\"\n          filename=\"photo.jpg\"\n          size=\"sm\"\n        ></civ-image-preview>\n      </div>\n      <div>\n        <p style=\"font-weight: bold; margin-bottom: 8px;\">md (240px, default)</p>\n        <civ-image-preview\n          src=\"${SAMPLE_IMAGE}\"\n          alt=\"Medium preview\"\n          filename=\"photo.jpg\"\n          file-size=\"2.4 MB\"\n          size=\"md\"\n        ></civ-image-preview>\n      </div>\n      <div>\n        <p style=\"font-weight: bold; margin-bottom: 8px;\">lg (360px)</p>\n        <civ-image-preview\n          src=\"${SAMPLE_IMAGE}\"\n          alt=\"Large preview\"\n          filename=\"photo.jpg\"\n          file-size=\"2.4 MB\"\n          size=\"lg\"\n        ></civ-image-preview>\n      </div>\n    </div>",
       "source": "packages/layout/src/image-preview/civ-image-preview.stories.ts"
+    }
+  ],
+  "civ-income": [
+    {
+      "story": "Default",
+      "category": "Compound/Income",
+      "html": "<civ-income legend=\"Wages from employment\" name=\"wages\"></civ-income>",
+      "source": "packages/compound/src/income/civ-income.stories.ts"
+    },
+    {
+      "story": "Prefilled",
+      "name": "Prefilled value",
+      "category": "Compound/Income",
+      "html": "<civ-income\n      legend=\"Wages\"\n      name=\"wages\"\n      value='{\"amount\":\"3250.00\",\"frequency\":\"biweekly\"}'\n    ></civ-income>",
+      "source": "packages/compound/src/income/civ-income.stories.ts"
+    },
+    {
+      "story": "Required",
+      "name": "Required (means-tested benefit)",
+      "category": "Compound/Income",
+      "html": "<civ-income\n      legend=\"Gross household income\"\n      name=\"household_income\"\n      hint=\"Include all wages, self-employment, retirement, and other regular income before taxes.\"\n      required\n    ></civ-income>",
+      "source": "packages/compound/src/income/civ-income.stories.ts"
+    },
+    {
+      "story": "RestrictedFrequencies",
+      "name": "Restricted frequency list",
+      "category": "Compound/Income",
+      "html": "<civ-income\n      legend=\"Mortgage payment\"\n      name=\"mortgage\"\n      .frequencies=\"${['monthly', 'biweekly']}\"\n      hint=\"Most mortgages are paid monthly; some borrowers pay biweekly.\"\n    ></civ-income>",
+      "source": "packages/compound/src/income/civ-income.stories.ts"
+    },
+    {
+      "story": "WithErrors",
+      "name": "With sub-field errors",
+      "category": "Compound/Income",
+      "html": "<civ-income\n      legend=\"Monthly rent payment\"\n      name=\"rent\"\n      amount-error=\"Enter an amount greater than $0\"\n      frequency-error=\"Pick a frequency\"\n    ></civ-income>",
+      "source": "packages/compound/src/income/civ-income.stories.ts"
     }
   ],
   "civ-input-group": [
@@ -2819,6 +2882,63 @@
       "source": "packages/compound/src/name/civ-name.stories.ts"
     }
   ],
+  "civ-number": [
+    {
+      "story": "Decimal",
+      "name": "Decimal values",
+      "category": "Inputs/Number",
+      "html": "<civ-number\n      label=\"Weight (kg)\"\n      name=\"weight\"\n      allow-decimal\n      min=\"0\"\n      hint=\"Decimal values allowed\"\n      width=\"small\"\n    ></civ-number>",
+      "source": "packages/inputs/src/number/civ-number.stories.ts"
+    },
+    {
+      "story": "Default",
+      "category": "Inputs/Number",
+      "html": "<civ-number label=\"Number of dependents\" name=\"dependents\"></civ-number>",
+      "source": "packages/inputs/src/number/civ-number.stories.ts"
+    },
+    {
+      "story": "HouseholdSize",
+      "name": "Government form example — household size",
+      "category": "Inputs/Number",
+      "html": "<civ-number\n      label=\"How many people live in your household?\"\n      name=\"household_size\"\n      hint=\"Include yourself, your spouse or partner, and any dependents.\"\n      min=\"1\"\n      max=\"20\"\n      required\n      width=\"small\"\n    ></civ-number>",
+      "source": "packages/inputs/src/number/civ-number.stories.ts"
+    },
+    {
+      "story": "Negative",
+      "name": "Allows negative values",
+      "category": "Inputs/Number",
+      "html": "<civ-number\n      label=\"Temperature (°C)\"\n      name=\"temp\"\n      allow-decimal\n      allow-negative\n      hint=\"Negative values allowed\"\n      width=\"small\"\n    ></civ-number>",
+      "source": "packages/inputs/src/number/civ-number.stories.ts"
+    },
+    {
+      "story": "WithError",
+      "name": "With error",
+      "category": "Inputs/Number",
+      "html": "<civ-number\n      label=\"Age\"\n      name=\"age\"\n      value=\"200\"\n      min=\"0\"\n      max=\"120\"\n      error=\"Age must be between 0 and 120\"\n    ></civ-number>",
+      "source": "packages/inputs/src/number/civ-number.stories.ts"
+    },
+    {
+      "story": "WithPrefix",
+      "name": "With prefix",
+      "category": "Inputs/Number",
+      "html": "<civ-number\n      label=\"Item code\"\n      name=\"item\"\n      prefix=\"#\"\n      width=\"small\"\n    ></civ-number>",
+      "source": "packages/inputs/src/number/civ-number.stories.ts"
+    },
+    {
+      "story": "WithRange",
+      "name": "With min/max range",
+      "category": "Inputs/Number",
+      "html": "<civ-number\n      label=\"Age\"\n      name=\"age\"\n      min=\"0\"\n      max=\"120\"\n      hint=\"Enter a whole number between 0 and 120\"\n      required\n    ></civ-number>",
+      "source": "packages/inputs/src/number/civ-number.stories.ts"
+    },
+    {
+      "story": "WithSuffix",
+      "name": "With suffix unit",
+      "category": "Inputs/Number",
+      "html": "<civ-number\n      label=\"Discount applied\"\n      name=\"discount\"\n      suffix=\"%\"\n      min=\"0\"\n      max=\"100\"\n      width=\"small\"\n    ></civ-number>",
+      "source": "packages/inputs/src/number/civ-number.stories.ts"
+    }
+  ],
   "civ-page-header": [
     {
       "story": "AllSlotCombinations",
@@ -2853,6 +2973,13 @@
       "category": "Layout/Page Header",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <div data-civ-scale=\"dense\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Dense</p>\n        <civ-page-header>\n          <span data-eyebrow>Benefits</span>\n          <h1 data-heading class=\"civ-heading-xl\">\n            Disability compensation\n            <civ-badge label=\"In progress\" variant=\"info\"></civ-badge>\n          </h1>\n          <span data-subheading>VA Form 21-526EZ</span>\n        </civ-page-header>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Default</p>\n        <civ-page-header>\n          <span data-eyebrow>Benefits</span>\n          <h1 data-heading class=\"civ-heading-xl\">\n            Disability compensation\n            <civ-badge label=\"In progress\" variant=\"info\"></civ-badge>\n          </h1>\n          <span data-subheading>VA Form 21-526EZ</span>\n        </civ-page-header>\n      </div>\n      <div data-civ-scale=\"spacious\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Spacious</p>\n        <civ-page-header>\n          <span data-eyebrow>Benefits</span>\n          <h1 data-heading class=\"civ-heading-xl\">\n            Disability compensation\n            <civ-badge label=\"In progress\" variant=\"info\"></civ-badge>\n          </h1>\n          <span data-subheading>VA Form 21-526EZ</span>\n        </civ-page-header>\n      </div>\n    </div>",
       "source": "packages/layout/src/page-header/civ-page-header.stories.ts"
+    },
+    {
+      "story": "FormExample",
+      "name": "In a real form — household income",
+      "category": "Compound/Income",
+      "html": "<civ-page-header>\n      <h2 slot=\"heading\">Household income</h2>\n    </civ-page-header>\n    <civ-income\n      legend=\"Wages from employment\"\n      name=\"wages\"\n      hint=\"Pay before taxes and deductions\"\n      required\n    ></civ-income>\n    <civ-income\n      legend=\"Self-employment income\"\n      name=\"self_employment\"\n      hint=\"Net income (after business expenses)\"\n    ></civ-income>\n    <civ-income\n      legend=\"Social Security or other retirement income\"\n      name=\"retirement\"\n    ></civ-income>",
+      "source": "packages/compound/src/income/civ-income.stories.ts"
     },
     {
       "story": "FormPageHeader",
@@ -4623,6 +4750,49 @@
       "category": "Forms/Inputs/Textarea",
       "html": "<civ-textarea label=\"Personal statement\" name=\"statement\" hint=\"Describe your qualifications in 250 words or fewer\" maxwords=\"250\" rows=\"8\"></civ-textarea>",
       "source": "packages/inputs/src/textarea/civ-textarea.stories.ts"
+    }
+  ],
+  "civ-time-picker": [
+    {
+      "story": "Default",
+      "category": "Inputs/Time Picker",
+      "html": "<civ-time-picker\n      legend=\"Appointment time\"\n      name=\"appt_time\"\n      hint=\"Choose a 30-minute slot during business hours\"\n      minute-step=\"30\"\n    ></civ-time-picker>",
+      "source": "packages/inputs/src/time-picker/civ-time-picker.stories.ts"
+    },
+    {
+      "story": "FineGrained",
+      "name": "Fine-grained (minute step = 1)",
+      "category": "Inputs/Time Picker",
+      "html": "<civ-time-picker\n      legend=\"Exact time of incident\"\n      name=\"incident_time\"\n      minute-step=\"1\"\n    ></civ-time-picker>",
+      "source": "packages/inputs/src/time-picker/civ-time-picker.stories.ts"
+    },
+    {
+      "story": "Prefilled",
+      "name": "Prefilled value",
+      "category": "Inputs/Time Picker",
+      "html": "<civ-time-picker\n      legend=\"Departure time\"\n      name=\"departure\"\n      value=\"14:30\"\n      minute-step=\"15\"\n    ></civ-time-picker>",
+      "source": "packages/inputs/src/time-picker/civ-time-picker.stories.ts"
+    },
+    {
+      "story": "Required",
+      "name": "Required field",
+      "category": "Inputs/Time Picker",
+      "html": "<civ-time-picker\n      legend=\"When would you like to be contacted?\"\n      name=\"contact_time\"\n      hint=\"Required — we'll call within 1 hour of this time\"\n      minute-step=\"30\"\n      required\n    ></civ-time-picker>",
+      "source": "packages/inputs/src/time-picker/civ-time-picker.stories.ts"
+    },
+    {
+      "story": "TwentyFourHour",
+      "name": "24-hour format",
+      "category": "Inputs/Time Picker",
+      "html": "<civ-time-picker\n      legend=\"Hearing time\"\n      name=\"hearing_time\"\n      format=\"24\"\n      hint=\"Times shown in 24-hour format (military time)\"\n      minute-step=\"15\"\n    ></civ-time-picker>",
+      "source": "packages/inputs/src/time-picker/civ-time-picker.stories.ts"
+    },
+    {
+      "story": "WithError",
+      "name": "With error",
+      "category": "Inputs/Time Picker",
+      "html": "<civ-time-picker\n      legend=\"Appointment time\"\n      name=\"appt\"\n      error=\"Please select a time during business hours (9 AM – 5 PM)\"\n      minute-step=\"15\"\n    ></civ-time-picker>",
+      "source": "packages/inputs/src/time-picker/civ-time-picker.stories.ts"
     }
   ],
   "civ-toggle": [

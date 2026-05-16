@@ -59,6 +59,7 @@
   civ-date-picker,
   civ-date-range-picker,
   civ-direct-deposit,
+  civ-disclosure,
   civ-divider,
   civ-ein,
   civ-email,
@@ -67,8 +68,10 @@
   civ-filter-chip-group,
   civ-filterable-list,
   civ-form,
+  civ-form-autosave,
   civ-form-step,
   civ-image-preview,
+  civ-income,
   civ-input-group,
   civ-link-card,
   civ-list,
@@ -76,6 +79,7 @@
   civ-memorable-date,
   civ-modal,
   civ-name,
+  civ-number,
   civ-page-header,
   civ-partnership-history,
   civ-phone,
@@ -99,6 +103,7 @@
   civ-support-resources,
   civ-text-input,
   civ-textarea,
+  civ-time-picker,
   civ-toggle,
   civ-va-file-number,
   civ-yes-no,
@@ -312,6 +317,33 @@
     .civ-memorable-date-day,
     .civ-memorable-date-year {
       width: calc(50% - var(--civ-spacing-2, 10px));
+    }
+  }
+
+  /* ── Income ───────────────────────────────────────────────── */
+
+  .civ-income-fields {
+    @apply civ-flex civ-flex-wrap civ-items-end;
+    gap: var(--civ-spacing-4, 16px);
+  }
+
+  .civ-income-amount {
+    width: 12rem;
+  }
+
+  .civ-income-frequency {
+    flex: 1;
+    min-width: 14rem;
+  }
+
+  @media (max-width: 480px) {
+    .civ-income-fields {
+      row-gap: var(--civ-spacing-1, 4px);
+    }
+
+    .civ-income-amount,
+    .civ-income-frequency {
+      width: 100%;
     }
   }
 
@@ -1072,6 +1104,39 @@
 
   .civ-form-error-heading {
     @apply civ-text-error civ-font-bold civ-text-lg civ-mt-0 civ-mb-2;
+  }
+
+  /*
+   * Required-field footer legend ("* indicates a required field").
+   * Sits below the form content; kept muted so it doesn't compete with
+   * the primary action.
+   */
+  .civ-form-required-legend {
+    color: var(--civ-color-base-dark);
+  }
+
+  .civ-form-required-legend .civ-required-mark {
+    @apply civ-me-1;
+  }
+
+  /*
+   * Footer slot for Privacy Act / Paperwork Reduction Act / OMB control
+   * number disclosures. Rendered as a small-text block separated from
+   * the form by a subtle top border so the disclosures don't visually
+   * collide with the submit action above.
+   */
+  [data-civ-form-disclosures-slot]:not(:empty) {
+    @apply civ-mt-6 civ-pt-4 civ-text-sm;
+    border-top: 1px solid var(--civ-color-base-lighter);
+    color: var(--civ-color-base-dark);
+  }
+
+  [data-civ-form-disclosures-slot] p {
+    @apply civ-mt-0 civ-mb-2;
+  }
+
+  [data-civ-form-disclosures-slot] p:last-child {
+    @apply civ-mb-0;
   }
 
   /* ── Read-only mode ──────────────────────────────────────────── */
@@ -2734,8 +2799,8 @@
 
   .civ-disclosure__trigger {
     @apply civ-inline-flex civ-items-center civ-gap-1 civ-cursor-pointer civ-rounded;
-    color: var(--civ-color-primary-default);
-    font-weight: var(--civ-typography-fontWeight-medium);
+    color: var(--civ-color-primary-DEFAULT);
+    font-weight: var(--civ-typography-fontWeight-semibold);
     text-decoration: underline;
     text-underline-offset: 2px;
     list-style: none;
@@ -2761,7 +2826,7 @@
    */
   .civ-disclosure[open] > .civ-disclosure__trigger > civ-icon[name='chevron-down'] {
     transform: rotate(180deg);
-    transition: transform var(--civ-motion-duration-fast) var(--civ-motion-easing-standard);
+    transition: transform var(--civ-motion-duration-fast, 100ms) var(--civ-motion-easing-ease-out, ease);
   }
 
   .civ-disclosure__content {

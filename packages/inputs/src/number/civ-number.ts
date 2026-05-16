@@ -32,7 +32,6 @@ import type { InputWidth } from '@civui/core';
  *
  * @prop {number} min - Minimum allowed value (inclusive)
  * @prop {number} max - Maximum allowed value (inclusive)
- * @prop {number} step - Step increment (informational; native increment buttons are not rendered)
  * @prop {boolean} allowDecimal - Allow decimal digits. When false (default), only integers are accepted.
  * @prop {boolean} allowNegative - Allow a leading minus sign. Defaults to false; set true for things like temperature.
  * @prop {string} placeholder - Placeholder text
@@ -48,7 +47,6 @@ import type { InputWidth } from '@civui/core';
 export class CivNumber extends LegendHeadingMixin(CivFormElement) {
   @property({ type: Number }) min?: number;
   @property({ type: Number }) max?: number;
-  @property({ type: Number }) step?: number;
   @property({ type: Boolean, attribute: 'allow-decimal' }) allowDecimal = false;
   @property({ type: Boolean, attribute: 'allow-negative' }) allowNegative = false;
   @property({ type: String }) placeholder = '';

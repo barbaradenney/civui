@@ -29,16 +29,12 @@ props:
       description: 'Error message'
     min:
       title: Min
-      type: number
+      type: integer
       description: 'Minimum allowed value'
     max:
       title: Max
-      type: number
+      type: integer
       description: 'Maximum allowed value'
-    step:
-      title: Step
-      type: number
-      description: 'Step increment (informational)'
     allow_decimal:
       title: Allow decimal
       type: boolean

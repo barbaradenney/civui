@@ -10,6 +10,10 @@ export type { NameValue } from './name/index.js';
 export { CivDirectDeposit } from './direct-deposit/index.js';
 export type { DirectDepositValue } from './direct-deposit/index.js';
 
+// Income (amount + frequency)
+export { CivIncome } from './income/index.js';
+export type { IncomeValue, IncomeFrequency } from './income/index.js';
+
 // Signature
 export { CivSignature } from './signature/index.js';
 export type { SignatureValue } from './signature/index.js';

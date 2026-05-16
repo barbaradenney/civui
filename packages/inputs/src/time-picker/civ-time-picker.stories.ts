@@ -60,7 +60,7 @@ export const TwentyFourHour: Story = {
 };
 
 export const FineGrained: Story = {
-  name: 'Minute step = 1',
+  name: 'Fine-grained (minute step = 1)',
   render: () => html`
     <civ-time-picker
       legend="Exact time of incident"
@@ -71,7 +71,7 @@ export const FineGrained: Story = {
 };
 
 export const Prefilled: Story = {
-  name: 'Pre-filled value',
+  name: 'Prefilled value',
   render: () => html`
     <civ-time-picker
       legend="Departure time"

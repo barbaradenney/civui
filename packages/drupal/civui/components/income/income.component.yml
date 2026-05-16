@@ -1,0 +1,61 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Income
+status: stable
+group: CivUI Compound
+description: 'Compound field for dollar amount + pay frequency. Used for income, expenses, and support payments.'
+
+props:
+  type: object
+  properties:
+    legend:
+      title: Legend
+      type: string
+      description: 'Fieldset legend rendered above the sub-fields'
+    name:
+      title: Name
+      type: string
+      description: 'Base form field name'
+    value:
+      title: Value
+      type: string
+      description: 'JSON-encoded {amount, frequency}'
+    hint:
+      title: Hint
+      type: string
+      description: 'Hint text below the legend'
+    error:
+      title: Error
+      type: string
+      description: 'Error message'
+    amount_label:
+      title: Amount label
+      type: string
+      description: 'Override the default amount label'
+    frequency_label:
+      title: Frequency label
+      type: string
+      description: 'Override the default frequency label'
+    amount_error:
+      title: Amount error
+      type: string
+      description: 'Error message for the amount sub-field'
+    frequency_error:
+      title: Frequency error
+      type: string
+      description: 'Error message for the frequency sub-field'
+    frequencies:
+      title: Frequencies
+      type: array
+      description: 'Restrict the available frequency options'
+    required:
+      title: Required
+      type: boolean
+      default: false
+    disabled:
+      title: Disabled
+      type: boolean
+      default: false
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

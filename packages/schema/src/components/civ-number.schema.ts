@@ -17,10 +17,6 @@ const schema: ComponentSchema = {
       type: 'number',
       description: 'Maximum allowed value (inclusive). Validates on blur.',
     },
-    step: {
-      type: 'number',
-      description: 'Step increment (informational; no native spinner is rendered).',
-    },
     allowDecimal: {
       type: 'boolean',
       description: 'Allow a decimal separator. When false (default), only integers are accepted.',

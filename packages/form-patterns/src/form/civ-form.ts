@@ -79,7 +79,10 @@ export interface CivFormFieldLike extends HTMLElement {
 @customElement('civ-form')
 export class CivForm extends LightDomSlotMixin(CivBaseElement) {
   override _getSlotConfig(): SlotConfig {
-    return { default: '[data-civ-form-content]' };
+    return {
+      'data-civ-form-disclosures': '[data-civ-form-disclosures-slot]',
+      default: '[data-civ-form-content]',
+    };
   }
 
   @property({ type: String }) action = '';
@@ -147,6 +150,29 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
 
   /** Override the support resources heading. Defaults to `t('supportResourcesHeading')`. */
   @property({ type: String, attribute: 'support-resources-heading' }) supportResourcesHeading = '';
+
+  /**
+   * Render "* indicates a required field" footer text beneath the form
+   * content. Use on any federal form that includes a required-mark
+   * disclosure ("Required fields are marked with an asterisk").
+   *
+   * Defaults to false — every form decides whether the legend adds value
+   * over the per-field `(required)` marker.
+   */
+  @property({ type: Boolean, attribute: 'required-legend' }) requiredLegend = false;
+
+  /**
+   * When true, intercept validated submits and dispatch a
+   * `civ-submit-confirm` event before actually submitting. The detail
+   * object carries `proceed()` and `cancel()` callbacks; the actual
+   * `civ-submit` event fires only when the consumer calls `proceed()`.
+   *
+   * Use for irreversible submissions (filing a benefit claim, signing
+   * a tax return) where the user should see a "Submit your
+   * application?" confirmation. Compose with `civ-modal` and
+   * `civ-summary` in the consumer.
+   */
+  @property({ type: Boolean, attribute: 'confirm-before-submit' }) confirmBeforeSubmit = false;
 
   @state() private _errors: FormFieldError[] = [];
   @state() private _dirty = false;
@@ -283,6 +309,15 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
           `
         : nothing}
       <div data-civ-form-content></div>
+      ${this.requiredLegend
+        ? html`
+            <p class="civ-form-required-legend civ-text-sm civ-mt-2">
+              <span class="civ-required-mark" aria-hidden="true">*</span>
+              ${t('formRequiredLegend')}
+            </p>
+          `
+        : nothing}
+      <div data-civ-form-disclosures-slot></div>
       ${this.supportResources.length > 0
         ? html`
             <aside
@@ -796,6 +831,33 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
       return;
     }
 
+    if (this.confirmBeforeSubmit) {
+      // Dispatch a pending event with proceed/cancel callbacks. The actual
+      // civ-submit only fires when the consumer calls proceed().
+      let resolved = false;
+      const proceed = (): void => {
+        if (resolved) return;
+        resolved = true;
+        this._finalizeSubmit();
+      };
+      const cancel = (): void => {
+        if (resolved) return;
+        resolved = true;
+        dispatch(this, 'civ-submit-cancelled');
+      };
+      dispatch(this, 'civ-submit-confirm', {
+        formData: this.toFormData(),
+        data: this.getFormData(),
+        proceed,
+        cancel,
+      });
+      return;
+    }
+
+    this._finalizeSubmit();
+  }
+
+  private _finalizeSubmit(): void {
     this._clearPersistedData();
     if (this.trackDirty) {
       this._dirty = false;

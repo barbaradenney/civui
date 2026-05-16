@@ -167,6 +167,27 @@ export interface CivLocaleStrings {
   timePickerAm: string;
   timePickerPm: string;
 
+  // Form footer
+  formRequiredLegend: string; // "indicates a required field"
+
+  // Form Autosave
+  formAutosaveResumed: string;
+  formAutosaveJustNow: string;
+  formAutosaveSecondsAgo: string;
+  formAutosaveMinutesAgo: string;
+
+  // Income compound (amount + frequency)
+  incomeAmountLabel: string;
+  incomeFrequencyLabel: string;
+  incomeFrequencyEmptyLabel: string;
+  incomeFrequency_weekly: string;
+  incomeFrequency_biweekly: string;
+  incomeFrequency_semimonthly: string;
+  incomeFrequency_monthly: string;
+  incomeFrequency_quarterly: string;
+  incomeFrequency_annually: string;
+  'incomeFrequency_one-time': string;
+
   // Alert
   alertDismissLabel: string;
   alertDismissedMessage: string;
@@ -796,6 +817,24 @@ const defaultStrings: CivLocaleStrings = {
   timePickerPeriodLabel: 'AM/PM',
   timePickerAm: 'AM',
   timePickerPm: 'PM',
+
+  formRequiredLegend: 'indicates a required field',
+
+  formAutosaveResumed: 'Resumed from your saved progress.',
+  formAutosaveJustNow: 'Saved just now',
+  formAutosaveSecondsAgo: 'Saved {count} seconds ago',
+  formAutosaveMinutesAgo: 'Saved {count} minutes ago',
+
+  incomeAmountLabel: 'Amount',
+  incomeFrequencyLabel: 'How often?',
+  incomeFrequencyEmptyLabel: '- Select frequency -',
+  incomeFrequency_weekly: 'Every week',
+  incomeFrequency_biweekly: 'Every two weeks',
+  incomeFrequency_semimonthly: 'Twice a month',
+  incomeFrequency_monthly: 'Every month',
+  incomeFrequency_quarterly: 'Every three months',
+  incomeFrequency_annually: 'Once a year',
+  'incomeFrequency_one-time': 'One-time payment',
 
   alertDismissLabel: 'Dismiss alert',
   alertDismissedMessage: 'Alert dismissed',

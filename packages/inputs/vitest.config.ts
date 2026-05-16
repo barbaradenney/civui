@@ -10,6 +10,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@civui/controls/checkbox': resolve(__dirname, '../controls/src/checkbox/index.ts'),
+      '@civui/controls/segmented-control': resolve(__dirname, '../controls/src/segmented-control/index.ts'),
       '@civui/controls': resolve(__dirname, '../controls/src/index.ts'),
     },
   },

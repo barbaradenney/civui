@@ -20,6 +20,7 @@ export default defineConfig({
       '@civui/inputs': resolve(__dirname, '../inputs/src/index.ts'),
       '@civui/controls/checkbox': resolve(__dirname, '../controls/src/checkbox/index.ts'),
       '@civui/controls/radio': resolve(__dirname, '../controls/src/radio/index.ts'),
+      '@civui/controls/segmented-control': resolve(__dirname, '../controls/src/segmented-control/index.ts'),
       '@civui/controls': resolve(__dirname, '../controls/src/index.ts'),
       '@civui/core': resolve(__dirname, '../core/src/index.ts'),
       '@civui/overlays/modal': resolve(__dirname, '../overlays/src/modal/index.ts'),

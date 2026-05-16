@@ -1,0 +1,153 @@
+---
+title: Handling PII
+sidebar_position: 6.5
+sidebar_label: Handling PII
+---
+
+# Handling PII
+
+PII (personally identifiable information) — Social Security numbers,
+EINs, dates of birth, anything that can identify a specific person —
+needs more care than ordinary form data. CivUI ships a handful of
+defaults that catch the easy mistakes for you and a few explicit
+opt-ins for the cases the library can't infer.
+
+This page is the **cross-cutting reference**: what's automatic, what
+you have to mark, and the foot-guns to avoid. For per-component
+detail, see [**PII components**](../components/inputs/pii.mdx). For
+autosave specifics, see
+[**civ-form-autosave**](../components/form/form-autosave.mdx).
+
+:::info PHI is not PII
+HIPAA-regulated Protected Health Information (medical record numbers,
+diagnoses, treatment data) overlaps with PII in spirit but carries
+stricter retention, audit-log, and breach-notification requirements
+than this page covers. If you're collecting PHI, consult your
+CIO/CISO and treat the PII defaults below as a floor, not a ceiling.
+:::
+
+## What CivUI flags as PII
+
+A component is "PII-aware" when it carries the `data-civ-pii`
+attribute on its rendered DOM element. The library sets this
+automatically for the built-in PII presets:
+
+| Component | `data-civ-pii` source | Notes |
+| --- | --- | --- |
+| `<civ-ssn>` | Inherits from `mask="ssn"` (`pii: true`) | Full + last-4 modes |
+| `<civ-ein>` | Inherits from `mask="ein"` (`pii: true`) | Business tax ID |
+| `<civ-va-file-number>` | **Not** auto-flagged — uses validator only | Add `data-persist-exclude` for the same autosave protection |
+| `<civ-text-input mask="ssn">` | Inherits from mask preset | Same protection as `<civ-ssn>` |
+| `<civ-text-input mask="ein">` | Inherits from mask preset | Same protection as `<civ-ein>` |
+| Any other input | **Not** flagged automatically | Add `data-civ-pii` to opt in |
+
+VA file number is the one preset that doesn't carry the marker
+automatically (no mask preset; uses the validator instead). Add
+`data-persist-exclude` to keep its value out of autosave snapshots.
+
+## The four protection layers
+
+The protections fire in this order across the form lifecycle. Each
+layer is independent — turning one off doesn't disable the others.
+
+1. **DOM marker** — `<civ-text-input>` reads its active mask
+   preset's `pii` flag and writes `data-civ-pii` onto itself. No
+   consumer code required.
+2. **Form-data filter** — `civForm.getFormData({ excludePii: true })`
+   walks `[data-civ-form-field]` descendants and skips any element
+   (or wrapper containing such an element) with `data-civ-pii` OR
+   `data-persist-exclude`. Use this when serializing for
+   non-submission flows (debug logging, draft preview, sharing a
+   link).
+3. **Autosave exclusion** — `<civ-form-autosave>` uses
+   `getFormData({ excludePii: true })` internally. PII-flagged and
+   `data-persist-exclude` fields are NEVER persisted to localStorage
+   (or to whatever adapter you've wired up).
+4. **Analytics payload flag** — when a PII field dispatches
+   `civ-analytics`, the detail includes `piiMasked: true`. Your
+   analytics adapter is responsible for stripping or hashing the
+   value before it leaves the browser.
+
+## End-to-end checklist
+
+Six surfaces where PII can leak. Before you ship a form that
+collects PII, verify each one:
+
+| Surface | Default | What to verify |
+| --- | --- | --- |
+| **Client storage** | Excluded by `<civ-form-autosave>` | Confirm autosave is wired (or that you're not autosaving). For sensitive flows mark the step `sensitive` to pause persistence on navigation away |
+| **URL parameters** | Up to consumer | Never put SSN, DOB, account numbers, or session tokens in query strings — they're logged everywhere (web servers, proxies, browser history) |
+| **Analytics events** | `piiMasked: true` set | Your adapter has to honor the flag — strip or hash the value before sending to GA / Mixpanel / etc. |
+| **Error reporting** | Up to consumer | Configure Sentry / DataDog / Rollbar to scrub form-data attributes before transmission |
+| **Server transit** | Up to consumer | HTTPS for transport. POST not GET. Server-side: encrypt at rest, audit-log access |
+| **Confirmation pages** | Up to consumer | Display "Last 4: 1234" or "•••-••-1234", not the full identifier — even on success screens |
+
+## The "last 4 of SSN" pattern
+
+If you don't NEED the full nine digits, don't collect them. Most
+verification flows can match on the last four. `<civ-ssn>` ships
+with a `mode="last4"` opt-in that switches the mask to
+`####`, the validator to a 4-digit check, and the default label to
+"Last 4 of Social Security number":
+
+```html
+<civ-ssn label="Last 4 of Social Security number" name="ssn-last4" mode="last4" required></civ-ssn>
+```
+
+Same principle for other identifiers — collect the minimum the
+business process actually requires. Document the "why we ask" inline
+with `<civ-disclosure>`:
+
+```html
+<civ-ssn name="ssn" required></civ-ssn>
+<civ-disclosure summary="Why we ask">
+  We use the last 4 digits to verify your identity with the IRS.
+  We never share your full Social Security number.
+</civ-disclosure>
+```
+
+See the [disclosure component](../components/layout/disclosure.mdx)
+for the full "Why we ask?" pattern.
+
+## Anti-patterns
+
+| Don't | Do |
+| --- | --- |
+| Use the default localStorage adapter with PII you've manually flagged via `data-civ-pii` — wait, that's fine; PII is excluded automatically. The trap is **disabling** the filter ("we need the SSN in the draft") | If you genuinely need PII in a draft, write a custom storage adapter with encryption-at-rest. Don't pass `excludePii: false` and call it a day |
+| Log the form's `getFormData()` output in browser console / Sentry for debugging | Log `getFormData({ excludePii: true })` instead, OR scrub the payload before logging |
+| Put an SSN in a confirmation URL (`/confirm?ssn=123456789`) | POST it (server reads from session) or display from server-rendered HTML only |
+| Show the full SSN on a confirmation page ("You entered: 123-45-6789") | Show a masked version: "•••-••-1234" or "Last 4: 1234" |
+| Use `<civ-text-input>` with a custom regex for SSN to "save a dependency" | Use `<civ-ssn>` — you get the mask, the validator, the i18n hint, AND the `data-civ-pii` marker for free |
+| Forget to mark VA file number with `data-persist-exclude` | Add it — VA file number doesn't get the auto-flag and will land in localStorage otherwise |
+
+## Government-form patterns
+
+For trauma-informed / sensitive flows that go beyond PII handling
+proper, pair these primitives:
+
+- `<civ-form-step sensitive>` — pauses autosave persistence on
+  navigation away from the step and warns before page unload.
+- `<civ-section-intro tone="sensitive">` — context-setting panel
+  before the section ("the next questions ask about your military
+  service") so users aren't ambushed.
+- `<civ-disclosure>` — inline "Why we ask?" panels next to each PII
+  field. Lowers abandonment when users understand the necessity.
+- `<civ-support-resources>` — crisis-line / helpdesk contacts in the
+  form footer. Especially relevant on benefits, healthcare, and
+  veterans-affairs flows that ask for PII as part of difficult
+  topics.
+
+See [trauma-informed forms](../form-patterns/trauma-informed.mdx)
+for the composed pattern.
+
+## Further reading
+
+- [PII components](../components/inputs/pii.mdx) — per-component
+  prop reference for `<civ-ssn>`, `<civ-ein>`,
+  `<civ-va-file-number>`.
+- [`<civ-form-autosave>`](../components/form/form-autosave.mdx) —
+  the autosave guarantee and how to swap the storage adapter.
+- [`<civ-disclosure>`](../components/layout/disclosure.mdx) — the
+  "Why we ask?" pattern.
+- [Government Patterns](./government-patterns.md) — Section 508,
+  plain language, accessibility-first defaults.

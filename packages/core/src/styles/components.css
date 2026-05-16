@@ -388,15 +388,21 @@
 
     /*
      * Stretch the AM/PM segmented control to fill the full-width
-     * row, then split the two segments 50/50. Without this the
-     * segmented control's inner `.civ-inline-flex` sizes to the
-     * two buttons' content — leaving most of the row empty and the
-     * tap targets uncomfortably narrow on a phone.
+     * row, then split the two segments 50/50. The full chain has to
+     * be 100%-wide: host (civ-segmented-control) → its fieldset →
+     * the inner radiogroup div. Setting only the host or only the
+     * inner div leaves the fieldset between them sized to its
+     * content, which collapses the radiogroup back to the two
+     * buttons' natural width.
      */
     .civ-time-picker-period civ-segmented-control,
+    .civ-time-picker-period civ-segmented-control fieldset,
+    .civ-time-picker-period [data-civ-segment-content] {
+      width: 100%;
+    }
+
     .civ-time-picker-period [data-civ-segment-content] {
       display: flex;
-      width: 100%;
     }
 
     .civ-time-picker-period .civ-segment-btn {

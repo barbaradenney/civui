@@ -481,6 +481,36 @@ describe('civ-time-picker — combo mode: disabled guard', () => {
   });
 });
 
+describe('civ-time-picker — combo mode: form-data participation', () => {
+  it('contributes ONLY the host entry to FormData (no duplicate from inner combobox)', async () => {
+    // Before the fix, the inner civ-combobox carried the same `name`
+    // as the host, so both registered as data-civ-form-field elements
+    // with identical keys. civ-form.getFormData() / toFormData() would
+    // emit two entries with the same name and value — wasteful and
+    // confusing. The fix omits `name` on the inner combobox so only
+    // the host appears in form iteration.
+    const el = await fixture<CivTimePicker>('<civ-time-picker label="When" name="appt" value="14:30"></civ-time-picker>');
+    await elementUpdated(el);
+
+    // The host carries the form-field marker AND the name.
+    expect(el.hasAttribute('data-civ-form-field')).toBe(true);
+    expect(el.getAttribute('name')).toBe('appt');
+
+    // The inner combobox is still form-associated (its `data-civ-form-field`
+    // marker remains, because the base class always sets it) but has no
+    // `name`, so it's invisible to form iteration.
+    const combo = el.querySelector('civ-combobox') as HTMLElement;
+    expect(combo.hasAttribute('data-civ-form-field')).toBe(true);
+    expect(combo.getAttribute('name')).toBeNull();
+
+    // Simulated FormData walk: only the host appears.
+    const fields = el.parentElement!.querySelectorAll('[data-civ-form-field][name]');
+    const matching = Array.from(fields).filter((f) => f.getAttribute('name') === 'appt');
+    expect(matching.length).toBe(1);
+    expect(matching[0]).toBe(el);
+  });
+});
+
 describe('civ-time-picker — min/max strict ISO parsing', () => {
   it('rejects single-digit hour like "9:00" in min/max', async () => {
     // Non-zero-padded hour is not the documented contract; treating it

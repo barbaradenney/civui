@@ -447,10 +447,19 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
   private _renderComboMode() {
     const label = this.label || this.legend || t('timePickerDefaultLegend');
     const placeholder = this.placeholder || t('timePickerPlaceholder');
+    // Deliberately NO `name` on the inner combobox. The host
+    // civ-time-picker IS the form-participant for this control; if
+    // the combobox carries the same name, both elements appear as
+    // `data-civ-form-field` entries with the same key, and
+    // civ-form.getFormData() / toFormData() iterate both — producing
+    // a duplicate entry in the submitted FormData (text and select
+    // modes don't have this because their children carry suffixed
+    // names like `${name}-hour`). Skipping the name on the combobox
+    // makes the inner element invisible to form iteration while
+    // still preserving its internal ElementInternals + value state.
     return html`
       <civ-combobox
         label="${label}"
-        name="${this.name || nothing}"
         .options="${this._comboOptions()}"
         .value="${this.value}"
         .noMatchSuggestions="${(filter: string) => this._nearestSlotSuggestion(filter)}"

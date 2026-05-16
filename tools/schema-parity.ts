@@ -229,6 +229,61 @@ function parseLitProps(filePath: string, isBoolean: boolean): LitProp[] {
 }
 
 /**
+ * Collect the set of public method names declared on the component
+ * class. "Public" = not prefixed with `_` and not annotated `private`
+ * or `protected`. Lifecycle hooks (`connectedCallback` and friends)
+ * are filtered out so they don't drown out the user-callable API.
+ *
+ * This is a one-way check: methods declared in the schema must exist
+ * in source. Extras in source are not reported because every class
+ * inherits methods from `LitElement` / `CivBaseElement` /
+ * `CivFormElement` that a consumer can legitimately call.
+ */
+export function parsePublicMethods(src: string): Set<string> {
+  const methods = new Set<string>();
+  // Match the start of a method declaration: indent (2+ spaces) +
+  // optional modifiers + camelCase name + opening paren. We don't try
+  // to parse the parameter list (it can contain nested parens like
+  // `Date.now()` default expressions) — finding `name(` after the
+  // class indent and the keyword filter is enough to distinguish a
+  // declaration from a call.
+  const re = /^\s{2,}(?:override\s+)?(?:public\s+)?(?:async\s+)?([a-z][a-zA-Z0-9]*)\s*\(/gm;
+  const LIFECYCLE = new Set([
+    'connectedCallback', 'disconnectedCallback', 'firstUpdated', 'updated',
+    'willUpdate', 'createRenderRoot', 'render', 'formAssociatedCallback',
+    'formDisabledCallback', 'formResetCallback', 'formStateRestoreCallback',
+    'attributeChangedCallback', 'adoptedCallback', 'constructor',
+  ]);
+  // Control-flow keywords that the regex would otherwise match — they
+  // appear at the same indent level as class members in nested blocks.
+  const KEYWORDS = new Set([
+    'if', 'for', 'while', 'switch', 'return', 'catch', 'do',
+    'function', 'await', 'throw', 'new', 'typeof', 'void', 'yield',
+  ]);
+  let match: RegExpExecArray | null;
+  while ((match = re.exec(src)) !== null) {
+    const name = match[1];
+    if (KEYWORDS.has(name)) continue;
+    if (LIFECYCLE.has(name)) continue;
+    // The matched line must look like a method declaration, not a
+    // method call inside another method's body. A declaration starts
+    // a line in the class body; a call is preceded by `this.`,
+    // `await`, `=`, etc. Confirm by checking that nothing precedes
+    // the name on the line except optional modifier keywords.
+    const lineStart = src.lastIndexOf('\n', match.index) + 1;
+    const beforeName = src.slice(lineStart, match.index + match[0].indexOf(name));
+    if (!/^\s+(?:override\s+|public\s+|async\s+)*$/.test(beforeName)) continue;
+    // Skip explicitly-private methods. (`private` / `protected` aren't
+    // in the regex prefix; if a method line carries one, the regex
+    // above will already reject because `beforeName` won't match —
+    // but be defensive.)
+    if (/\b(private|protected)\s+\w+\s*\(/.test(src.slice(lineStart, match.index + 60))) continue;
+    methods.add(name);
+  }
+  return methods;
+}
+
+/**
  * Walk the source for `dispatch(this, '<name>', { detail-keys })` calls
  * and collect a deduped list. Detail-key parsing is shallow — picks up
  * the top-level keys of the literal object passed as the third arg —
@@ -1053,6 +1108,7 @@ interface DriftItem {
     | 'event-missing-from-schema'
     | 'event-removed-from-source'
     | 'event-detail-mismatch'
+    | 'method-removed-from-source'
     | 'platform-prop-missing'
     | 'platform-type-mismatch';
   message: string;
@@ -1096,6 +1152,8 @@ function fixForKind(item: Omit<DriftItem, 'fix'>, componentName: string): string
       return `Remove \`${d.event}\` from the schema's \`events\` map (or restore the dispatch call in the Lit source).`;
     case 'event-detail-mismatch':
       return `\`${d.event}\` detail keys diverge — schema declares ${JSON.stringify(d.schemaKeys)}, source dispatches ${JSON.stringify(d.sourceKeys)}. Update one to match.`;
+    case 'method-removed-from-source':
+      return `Remove \`${d.method}\` from the schema's \`methods\` map (or add the public method back to the Lit class).`;
     case 'platform-prop-missing': {
       const platform = d.platform as string;
       const prop = d.prop as string;
@@ -1139,10 +1197,23 @@ async function buildReport(strict: boolean, explain: boolean): Promise<DriftRepo
     const schema = await loadSchema(spec.name);
     const schemaProps = schemaPropsFrom(schema, !!spec.isBoolean);
     const schemaEvents = schemaEventsFrom(schema);
+    const schemaMethods: string[] = Object.keys((schema as any).methods ?? {});
     const litProps = parseLitProps(sourcePath, !!spec.isBoolean);
     const litEvents = parseLitEvents(sourcePath);
+    const litMethods = parsePublicMethods(readFileSync(sourcePath, 'utf-8'));
     const propResult = diffProps(schemaProps, litProps);
     const eventResult = diffEvents(schemaEvents, litEvents);
+
+    // Methods: one-way check. Every schema-declared method must exist
+    // as a public method on the Lit class. Extras in source aren't
+    // flagged — inherited base-class methods (validate, reset, etc.)
+    // are legitimately callable but don't need to be documented per
+    // component.
+    for (const m of schemaMethods) {
+      if (!litMethods.has(m)) {
+        drift.push({ kind: 'method-removed-from-source', message: `method declared in schema but not found on the Lit class: ${m}()`, data: { method: m } });
+      }
+    }
 
     for (const prop of propResult.missingFromSchema) {
       drift.push({ kind: 'prop-missing-from-schema', message: `prop in source but missing from schema: ${prop}`, data: { prop } });

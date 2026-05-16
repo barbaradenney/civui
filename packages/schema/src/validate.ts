@@ -82,6 +82,15 @@ export function validateSchema(schema: unknown): ValidationError[] {
     errors.push({ path: 'events', message: 'events must be an object', severity: 'error' });
   }
 
+  // Methods validation — optional; only validated when present.
+  if (s['methods'] !== undefined) {
+    if (isPlainObject(s['methods'])) {
+      validateMethods(s['methods'] as Record<string, unknown>, errors);
+    } else {
+      errors.push({ path: 'methods', message: 'methods must be an object when set', severity: 'error' });
+    }
+  }
+
   // A11y validation
   if (isPlainObject(s['a11y'])) {
     validateA11y(s['a11y'] as Record<string, unknown>, errors);
@@ -203,6 +212,71 @@ function validateEvents(events: Record<string, unknown>, errors: ValidationError
 
     if (!event['detail'] || typeof event['detail'] !== 'object') {
       errors.push({ path: `${path}.detail`, message: 'Event must have a detail object', severity: 'error' });
+    }
+  }
+}
+
+const VALID_METHOD_PARAM_TYPES = new Set([
+  'string', 'number', 'boolean', 'object', 'array',
+]);
+const VALID_METHOD_RETURN_TYPES = new Set([
+  'string', 'number', 'boolean', 'object', 'array', 'void',
+  'Promise<void>', 'Promise<string>', 'Promise<number>', 'Promise<boolean>', 'Promise<object>',
+]);
+
+function validateMethods(methods: Record<string, unknown>, errors: ValidationError[]): void {
+  for (const [name, methodRaw] of Object.entries(methods)) {
+    const path = `methods.${name}`;
+
+    if (!/^[a-z][a-zA-Z0-9]*$/.test(name)) {
+      errors.push({ path, message: `Method name "${name}" should be camelCase`, severity: 'warning' });
+    }
+
+    if (!methodRaw || typeof methodRaw !== 'object') {
+      errors.push({ path, message: 'Method definition must be an object', severity: 'error' });
+      continue;
+    }
+    const method = methodRaw as Record<string, unknown>;
+
+    if (!method['description'] || typeof method['description'] !== 'string') {
+      errors.push({ path: `${path}.description`, message: 'Method must have a string description', severity: 'warning' });
+    }
+
+    if (method['returns'] !== undefined && !VALID_METHOD_RETURN_TYPES.has(method['returns'] as string)) {
+      errors.push({
+        path: `${path}.returns`,
+        message: `Invalid return type "${method['returns']}". Must be one of: ${[...VALID_METHOD_RETURN_TYPES].join(', ')}`,
+        severity: 'error',
+      });
+    }
+
+    if (method['params'] !== undefined) {
+      if (!Array.isArray(method['params'])) {
+        errors.push({ path: `${path}.params`, message: 'params must be an array when set', severity: 'error' });
+        continue;
+      }
+      const params = method['params'] as unknown[];
+      for (let i = 0; i < params.length; i++) {
+        const paramPath = `${path}.params[${i}]`;
+        const param = params[i] as Record<string, unknown> | undefined;
+        if (!param || typeof param !== 'object') {
+          errors.push({ path: paramPath, message: 'Parameter definition must be an object', severity: 'error' });
+          continue;
+        }
+        if (!param['name'] || typeof param['name'] !== 'string') {
+          errors.push({ path: `${paramPath}.name`, message: 'Parameter must have a string name', severity: 'error' });
+        }
+        if (!param['type'] || !VALID_METHOD_PARAM_TYPES.has(param['type'] as string)) {
+          errors.push({
+            path: `${paramPath}.type`,
+            message: `Invalid param type "${param['type']}". Must be one of: ${[...VALID_METHOD_PARAM_TYPES].join(', ')}`,
+            severity: 'error',
+          });
+        }
+        if (!param['description'] || typeof param['description'] !== 'string') {
+          errors.push({ path: `${paramPath}.description`, message: 'Parameter must have a string description', severity: 'warning' });
+        }
+      }
     }
   }
 }

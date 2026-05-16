@@ -55,6 +55,24 @@ const schema: ComponentSchema = {
     },
   },
 
+  methods: {
+    saveNow: {
+      description: 'Force an immediate save, skipping the debounce. Useful for "Save now" buttons and beforeunload guards.',
+      returns: 'Promise<void>',
+    },
+    clear: {
+      description: 'Remove the saved snapshot from the adapter. Called automatically on civ-submit; available manually for "Discard draft" actions.',
+      returns: 'Promise<void>',
+    },
+    describeLastSave: {
+      description: 'Returns a localized string describing when the last save happened ("Saved a moment ago", "Saved 5 minutes ago"). Returns the empty string when no save has happened yet.',
+      params: [
+        { name: 'now', type: 'number', description: 'Optional reference timestamp (epoch ms). Defaults to Date.now(). Pass an explicit value when rendering server-side or under fake timers in tests.', optional: true },
+      ],
+      returns: 'string',
+    },
+  },
+
   a11y: {
     role: 'none',
     requiredIndicator: 'none',

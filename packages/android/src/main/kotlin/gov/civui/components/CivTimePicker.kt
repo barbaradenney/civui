@@ -32,6 +32,8 @@ fun CivTimePicker(
     hourLabel: String = "",
     minuteLabel: String = "",
     periodLabel: String = "",
+    hideNowButton: Boolean = false,
+    nowButtonLabel: String = "",
     hint: String = "",
     error: String = "",
     required: Boolean = false,

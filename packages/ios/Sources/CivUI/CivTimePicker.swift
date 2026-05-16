@@ -23,6 +23,8 @@ public struct CivTimePicker: View {
     public var hourLabel: String
     public var minuteLabel: String
     public var periodLabel: String
+    public var hideNowButton: Bool
+    public var nowButtonLabel: String
     public var hint: String?
     public var error: String?
     public var isRequired: Bool
@@ -44,6 +46,8 @@ public struct CivTimePicker: View {
         hourLabel: String = "",
         minuteLabel: String = "",
         periodLabel: String = "",
+        hideNowButton: Bool = false,
+        nowButtonLabel: String = "",
         hint: String? = nil,
         error: String? = nil,
         isRequired: Bool = false,
@@ -64,6 +68,8 @@ public struct CivTimePicker: View {
         self.hourLabel = hourLabel
         self.minuteLabel = minuteLabel
         self.periodLabel = periodLabel
+        self.hideNowButton = hideNowButton
+        self.nowButtonLabel = nowButtonLabel
         self.hint = hint
         self.error = error
         self.isRequired = isRequired

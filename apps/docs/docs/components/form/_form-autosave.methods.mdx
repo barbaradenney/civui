@@ -1,0 +1,8 @@
+{/* Generated from @civui/schema by tools/sync-doc-tables.ts.
+    Do not edit by hand — run `pnpm sync:doc-tables` to regenerate. */}
+
+| Method | Returns | Description |
+|--------|---------|-------------|
+| `saveNow()` | `Promise<void>` | Force an immediate save, skipping the debounce. Useful for "Save now" buttons and beforeunload guards. |
+| `clear()` | `Promise<void>` | Remove the saved snapshot from the adapter. Called automatically on civ-submit; available manually for "Discard draft" actions. |
+| `describeLastSave(now?: number)` | `string` | Returns a localized string describing when the last save happened ("Saved a moment ago", "Saved 5 minutes ago"). Returns the empty string when no save has happened yet. |

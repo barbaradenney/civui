@@ -3,7 +3,7 @@ import { html } from 'lit';
 import './civ-number.js';
 
 const meta: Meta = {
-  title: 'Inputs/Number',
+  title: 'Forms/Inputs/Number',
   component: 'civ-number',
   tags: ['autodocs'],
   parameters: {

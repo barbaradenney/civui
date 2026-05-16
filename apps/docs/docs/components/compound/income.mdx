@@ -1,0 +1,163 @@
+---
+title: Income
+sidebar_position: 8
+sidebar_label: Income
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+import PropsTable from "./_income.props.mdx";
+import EventsTable from "./_income.events.mdx";
+
+# Income
+
+<!-- contract-link:start -->
+
+> **Contract reference:** [`civ-income`](pathname:///civui/storybook/?path=/docs/contract-civ-income--docs) — auto-generated structured contract for cross-platform implementation.
+
+<!-- contract-link:end -->
+
+`<civ-income>`
+
+Compound field for dollar amount + pay frequency. Pairs
+[`<civ-currency>`](../inputs/text-input.mdx) (dollar input with mask and
+validation) with [`<civ-select>`](../inputs/select.mdx) (frequency) inside a
+single `<fieldset>`. Use for any means-tested benefit application — wages,
+household income, expense estimates, support payments.
+
+Value shape: `{ amount: string, frequency: IncomeFrequency }`. The compound
+serializes its state to JSON in `value`; sub-fields are ALSO exposed as
+separate form values (`${name}.amount` and `${name}.frequency`) for servers
+that prefer flat keys.
+
+## Examples
+
+### Default
+
+<StoryEmbed id="forms-compound-income--default" />
+
+### Required (means-tested benefit)
+
+<StoryEmbed id="forms-compound-income--required" />
+
+### Restricted frequency list
+
+<StoryEmbed id="forms-compound-income--restricted-frequencies" />
+
+### Prefilled value
+
+<StoryEmbed id="forms-compound-income--prefilled" />
+
+### With sub-field errors
+
+<StoryEmbed id="forms-compound-income--with-errors" />
+
+### In a real form — household income
+
+<StoryEmbed id="forms-compound-income--form-example" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-compound-income--default)
+
+## Shared Props
+
+All compound fields share these props: `name`, `value`, `hint`, `error`,
+`required`, `disabled`.
+
+## Component-Specific Props
+
+<PropsTable />
+
+## Events
+
+<EventsTable />
+
+## Frequencies
+
+The default seven frequencies, in order:
+
+| Value          | Display              |
+| -------------- | -------------------- |
+| `weekly`       | Every week           |
+| `biweekly`     | Every two weeks      |
+| `semimonthly`  | Twice a month        |
+| `monthly`      | Every month          |
+| `quarterly`    | Every three months   |
+| `annually`     | Once a year          |
+| `one-time`     | One-time payment     |
+
+Restrict the list with the `frequencies` prop — pass a JSON array attribute
+in HTML, or set the array directly in JavaScript:
+
+```html
+<!-- Mortgage payments: monthly or biweekly only -->
+<civ-income
+  legend="Mortgage payment"
+  name="mortgage"
+  frequencies='["monthly","biweekly"]'
+></civ-income>
+```
+
+## Usage
+
+```html
+<!-- Basic wages reporting -->
+<civ-income legend="Wages from employment" name="wages"></civ-income>
+
+<!-- Means-tested benefit — required, hint, gross income -->
+<civ-income
+  legend="Gross household income"
+  name="household_income"
+  hint="Include all wages, self-employment, retirement, and other regular income before taxes"
+  required
+></civ-income>
+
+<!-- Prefilled from server response -->
+<civ-income
+  legend="Wages"
+  name="wages"
+  value='{"amount":"3250.00","frequency":"biweekly"}'
+></civ-income>
+
+<!-- Sub-field-specific errors from server-side validation -->
+<civ-income
+  legend="Monthly rent payment"
+  name="rent"
+  amount-error="Enter an amount greater than $0"
+  frequency-error="Pick a frequency"
+></civ-income>
+```
+
+## Form Submission
+
+The compound is a single form field — `civ-form.getFormData()` returns the
+JSON-stringified value under `${name}`:
+
+```js
+form.getFormData();
+// {
+//   wages: '{"amount":"3250.00","frequency":"biweekly"}',
+//   ...
+// }
+```
+
+For form servers that prefer flat keys, the sub-fields are also exposed:
+
+```js
+form.getFormData();
+// {
+//   wages: '{"amount":"3250.00","frequency":"biweekly"}',
+//   "wages.amount": "3250.00",
+//   "wages.frequency": "biweekly",
+// }
+```
+
+Both shapes are written to `FormData` via `toFormData()` so server-side
+parsing can use whichever is convenient.
+
+## Accessibility
+
+`civ-income` is a **multi-field grouping compound** — the legend is a
+section heading, not the question the user answers. When `required` is set,
+the `(required)` indicator renders on each leaf control (amount + frequency),
+not on the legend itself. This matches the section-legend rule used by
+[`<civ-address>`](./address.mdx), [`<civ-name>`](./name.mdx), and
+[`<civ-direct-deposit>`](./direct-deposit.mdx).

@@ -840,7 +840,12 @@ const defaultStrings: CivLocaleStrings = {
 
   disclosureDefaultLabel: 'Why we ask?',
 
-  readMoreButton: 'Read more',
+  // U+2026 ellipsis (not three dots) — typographic standard for
+  // indicating continuation; signals "more content follows". Only on
+  // the collapsed label; "Read less" needs no continuation hint
+  // because collapsing reveals nothing further. Consumers override
+  // via the `more-label` / `less-label` props on civ-read-more.
+  readMoreButton: 'Read more…',
   readLessButton: 'Read less',
 
   timePickerDefaultLegend: 'Time',

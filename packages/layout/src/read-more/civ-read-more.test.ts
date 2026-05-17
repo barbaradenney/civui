@@ -114,6 +114,24 @@ describe('civ-read-more', () => {
     expect(button.textContent).toContain('Read less');
   });
 
+  it('default "Read more" label carries a U+2026 ellipsis (continuation hint)', async () => {
+    // Typographic ellipsis (single character `…`, not three dots)
+    // signals "more content follows" — a recognized convention. The
+    // "Read less" label gets none, because collapsing reveals nothing
+    // further. Consumers override either via `more-label` /
+    // `less-label`.
+    const el = await fixture<CivReadMore>(`
+      <civ-read-more><p>Teaser</p></civ-read-more>
+    `);
+    const button = el.querySelector('button')!;
+    expect(button.textContent).toContain('Read more…');
+    expect(button.textContent).not.toContain('Read more...');
+
+    el.expanded = true;
+    await elementUpdated(el);
+    expect(button.textContent).not.toContain('…');
+  });
+
   it('honors custom moreLabel / lessLabel overrides', async () => {
     const el = await fixture<CivReadMore>(`
       <civ-read-more more-label="Show details" less-label="Hide details">
@@ -242,15 +260,18 @@ describe('civ-read-more', () => {
       expect(el.hasAttribute('inline')).toBe(true);
     });
 
-    it('swaps the button chrome for the inline trigger class', async () => {
-      // Inline drops the `civ-toggle-btn` palette and adds the
-      // `--inline` modifier so CSS can collapse padding/background
-      // and turn the trigger into underlined inline emphasis.
+    it('composes the toggle-btn palette and adds the --inline modifier', async () => {
+      // Inline mode keeps the `civ-toggle-btn` palette (filled
+      // background, semibold, rounded — the affordance reads as a
+      // button, not an underlined link) and adds the `--inline`
+      // modifier so CSS can trim padding and zero out the top margin
+      // that otherwise pushes the inline-block button off the text
+      // baseline.
       const el = await fixture<CivReadMore>(`
         <civ-read-more inline>Teaser text.</civ-read-more>
       `);
       const trigger = el.querySelector('.civ-read-more__trigger')!;
-      expect(trigger.classList.contains('civ-toggle-btn')).toBe(false);
+      expect(trigger.classList.contains('civ-toggle-btn')).toBe(true);
       expect(trigger.classList.contains('civ-read-more__trigger--inline')).toBe(true);
     });
 

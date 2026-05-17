@@ -326,6 +326,12 @@
     },
     {
       "story": "Default",
+      "category": "Overlays/Drawer",
+      "html": "<div class=\"drawer-demo\">\n      <civ-button\n        label=\"Open drawer (start)\"\n        @click=${(e: Event) => open((e.target as HTMLElement).closest('.drawer-demo')!)}\n      ></civ-button>\n      <civ-drawer\n        heading=\"Filter results\"\n        position=\"start\"\n        @civ-drawer-close=${(e: Event) => close((e.target as HTMLElement).closest('.drawer-demo')!)}\n      >\n        <p class=\"civ-text-body\">Narrow your results by category. Slides in from the leading edge of the viewport.</p>\n        <civ-button label=\"Apply filters\"></civ-button>\n      </civ-drawer>\n    </div>",
+      "source": "packages/overlays/src/drawer/civ-drawer.stories.ts"
+    },
+    {
+      "story": "Default",
       "category": "Overlays/Modal",
       "html": "<div class=\"modal-demo\">\n        <civ-button label=\"Open modal\" @click=\"${toggle}\"></civ-button>\n        <civ-modal heading=\"Example Modal\" @civ-modal-close=\"${close}\">\n          <p class=\"civ-text-body\">This is a general-purpose modal dialog. On mobile it renders as a bottom sheet.</p>\n          <div data-modal-footer>\n            <civ-button variant=\"secondary\" label=\"Cancel\" @click=\"${close}\"></civ-button>\n            <civ-button label=\"Confirm\" @click=\"${close}\"></civ-button>\n          </div>\n        </civ-modal>\n      </div>",
       "source": "packages/overlays/src/modal/civ-modal.stories.ts"
@@ -344,11 +350,39 @@
       "source": "packages/actions/src/button/civ-button.stories.ts"
     },
     {
+      "story": "EndAnchored",
+      "name": "End-anchored (settings panel)",
+      "category": "Overlays/Drawer",
+      "html": "<div class=\"drawer-demo\">\n      <civ-button\n        label=\"Open settings\"\n        @click=${(e: Event) => open((e.target as HTMLElement).closest('.drawer-demo')!)}\n      ></civ-button>\n      <civ-drawer\n        heading=\"Display settings\"\n        position=\"end\"\n        width=\"360px\"\n        @civ-drawer-close=${(e: Event) => close((e.target as HTMLElement).closest('.drawer-demo')!)}\n      >\n        <div class=\"civ-flex civ-flex-col civ-gap-4\">\n          <civ-toggle label=\"Dark mode\"></civ-toggle>\n          <civ-toggle label=\"High contrast\"></civ-toggle>\n          <civ-toggle label=\"Reduce motion\"></civ-toggle>\n        </div>\n      </civ-drawer>\n    </div>",
+      "source": "packages/overlays/src/drawer/civ-drawer.stories.ts"
+    },
+    {
       "story": "FormActions",
       "name": "Form Actions",
       "category": "Actions/Button",
       "html": "<form\n      @submit=\"${(e: Event) => {\n        e.preventDefault();\n        alert('Form submitted!');\n      }}\"\n    >\n      <p class=\"civ-mb-4\">Complete your VA benefits application and submit for review.</p>\n      <div class=\"civ-flex civ-gap-3\">\n        <civ-button type=\"submit\">Submit application</civ-button>\n        <civ-button variant=\"secondary\">Save and continue later</civ-button>\n        <civ-button variant=\"tertiary\">Cancel</civ-button>\n      </div>\n    </form>",
       "source": "packages/actions/src/button/civ-button.stories.ts"
+    },
+    {
+      "story": "MainMenu",
+      "name": "Usage: Mobile main menu",
+      "category": "Overlays/Drawer",
+      "html": "<div class=\"drawer-demo\">\n      <civ-button\n        label=\"Open menu\"\n        @click=${(e: Event) => open((e.target as HTMLElement).closest('.drawer-demo')!)}\n      ></civ-button>\n      <civ-drawer\n        label=\"Main menu\"\n        position=\"start\"\n        @civ-drawer-close=${(e: Event) => close((e.target as HTMLElement).closest('.drawer-demo')!)}\n      >\n        <nav aria-label=\"Main\">\n          <ul class=\"civ-list-reset civ-flex civ-flex-col civ-gap-2\">\n            <li><civ-link href=\"#home\">Home</civ-link></li>\n            <li><civ-link href=\"#benefits\">Benefits</civ-link></li>\n            <li><civ-link href=\"#claims\">Claims</civ-link></li>\n            <li><civ-link href=\"#documents\">My documents</civ-link></li>\n            <li><civ-link href=\"#account\">Account settings</civ-link></li>\n          </ul>\n        </nav>\n      </civ-drawer>\n    </div>",
+      "source": "packages/overlays/src/drawer/civ-drawer.stories.ts"
+    },
+    {
+      "story": "NoCloseAffordance",
+      "name": "Custom dismiss (no built-in close)",
+      "category": "Overlays/Drawer",
+      "html": "<div class=\"drawer-demo\">\n      <civ-button\n        label=\"Open\"\n        @click=${(e: Event) => open((e.target as HTMLElement).closest('.drawer-demo')!)}\n      ></civ-button>\n      <civ-drawer\n        heading=\"Edit profile\"\n        position=\"end\"\n        no-close-button\n        @civ-drawer-close=${(e: Event) => close((e.target as HTMLElement).closest('.drawer-demo')!)}\n      >\n        <p class=\"civ-text-body\">Drawer renders no built-in close button — the sticky footer provides the dismiss action.</p>\n\n        <div data-drawer-footer>\n          <civ-button\n            variant=\"secondary\"\n            label=\"Cancel\"\n            @click=${(e: Event) => close((e.target as HTMLElement).closest('.drawer-demo')!)}\n          ></civ-button>\n          <civ-button\n            label=\"Save\"\n            @click=${(e: Event) => close((e.target as HTMLElement).closest('.drawer-demo')!)}\n          ></civ-button>\n        </div>\n      </civ-drawer>\n    </div>",
+      "source": "packages/overlays/src/drawer/civ-drawer.stories.ts"
+    },
+    {
+      "story": "NonStickyHeaderAndFooter",
+      "name": "Non-sticky header and footer (scroll with content)",
+      "category": "Overlays/Drawer",
+      "html": "<div class=\"drawer-demo\">\n      <civ-button\n        label=\"Open drawer\"\n        @click=${(e: Event) => open((e.target as HTMLElement).closest('.drawer-demo')!)}\n      ></civ-button>\n      <civ-drawer\n        heading=\"Article preview\"\n        position=\"end\"\n        width=\"400px\"\n        no-sticky-header\n        no-sticky-footer\n        @civ-drawer-close=${(e: Event) => close((e.target as HTMLElement).closest('.drawer-demo')!)}\n      >\n        <p class=\"civ-text-body\">Both header and footer scroll away with body content — useful for reading-mode drawers where you want the full viewport for content as the user reads.</p>\n        ${Array.from({ length: 15 }, (_, i) => html",
+      "source": "packages/overlays/src/drawer/civ-drawer.stories.ts"
     },
     {
       "story": "Primary",
@@ -368,6 +402,13 @@
       "category": "Actions/Button",
       "html": "<civ-button variant=\"secondary\">Save and continue later</civ-button>",
       "source": "packages/actions/src/button/civ-button.stories.ts"
+    },
+    {
+      "story": "StickyFooter",
+      "name": "Sticky footer with action buttons",
+      "category": "Overlays/Drawer",
+      "html": "<div class=\"drawer-demo\">\n      <civ-button\n        label=\"Open drawer\"\n        @click=${(e: Event) => open((e.target as HTMLElement).closest('.drawer-demo')!)}\n      ></civ-button>\n      <civ-drawer\n        heading=\"Filter results\"\n        position=\"end\"\n        width=\"380px\"\n        @civ-drawer-close=${(e: Event) => close((e.target as HTMLElement).closest('.drawer-demo')!)}\n      >\n        <p class=\"civ-text-body\">Long content scrolls behind the sticky header and footer. Try scrolling — the action buttons stay pinned at the bottom.</p>\n        ${Array.from({ length: 25 }, (_, i) => html",
+      "source": "packages/overlays/src/drawer/civ-drawer.stories.ts"
     },
     {
       "story": "Tertiary",
@@ -3465,10 +3506,24 @@
       "source": "packages/layout/src/read-more/civ-read-more.stories.ts"
     },
     {
+      "story": "NoFadeTrigger",
+      "name": "No fade trigger (plain button below text)",
+      "category": "Layout/Read More",
+      "html": "<civ-read-more no-fade-trigger>\n      <p>\n        You may be eligible for a benefit if you meet certain service and\n        discharge criteria.\n      </p>\n      <div data-rest>\n        <p>\n          Specifically, you must have served at least 24 months of active duty\n          and been discharged under conditions other than dishonorable. Some\n          benefits also require a documented service-connected disability.\n        </p>\n      </div>\n    </civ-read-more>",
+      "source": "packages/layout/src/read-more/civ-read-more.stories.ts"
+    },
+    {
       "story": "NoRestContent",
       "name": "Graceful with no rest content",
       "category": "Layout/Read More",
       "html": "<civ-read-more>\n      <p>\n        This is the entire message. The \"Read more\" button still renders but\n        clicking it reveals an empty region — useful when you author the rest\n        content conditionally and don't yet have something to show.\n      </p>\n    </civ-read-more>",
+      "source": "packages/layout/src/read-more/civ-read-more.stories.ts"
+    },
+    {
+      "story": "OnColoredBackground",
+      "name": "On a colored background (override --civ-read-more-bg)",
+      "category": "Layout/Read More",
+      "html": "<div\n      class=\"civ-p-6 civ-rounded\"\n      style=\"background-color: var(--civ-color-info-lighter);\"\n    >\n      <civ-read-more style=\"--civ-read-more-bg: var(--civ-color-info-lighter);\">\n        <p>\n          The fade defaults to white. On a colored card, override\n          <code>--civ-read-more-bg</code> with the card's fill so the gradient\n          resolves to the surrounding color instead of fading to white.\n        </p>\n        <div data-rest>\n          <p>\n            Without the override, the gradient would fade from the page text\n            into a white band — visually disconnected from the colored card it\n            sits in. With the override matched to the card color, the trigger\n            reads as part of the same surface.\n          </p>\n        </div>\n      </civ-read-more>\n    </div>",
       "source": "packages/layout/src/read-more/civ-read-more.stories.ts"
     },
     {

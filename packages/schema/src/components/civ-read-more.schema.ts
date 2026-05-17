@@ -17,7 +17,7 @@ const schema: ComponentSchema = {
     },
     moreLabel: {
       type: 'string',
-      description: 'Override the "Read more" trigger text. When empty, falls back to the locale-aware `readMoreButton` string (English: "Read more").',
+      description: 'Override the "Read more" trigger text. When empty, falls back to the locale-aware `readMoreButton` string (English: "Read more…" — typographic ellipsis as a continuation hint).',
       default: '',
       attribute: 'more-label',
     },

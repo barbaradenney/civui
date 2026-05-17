@@ -65,6 +65,26 @@ export const CustomItemName: Story = {
   `,
 };
 
+export const DensityScale: Story = {
+  name: 'Density Scale',
+  render: () => html`
+    <div class="civ-flex civ-flex-col civ-gap-6">
+      <div data-civ-scale="dense">
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Dense</p>
+        <civ-pagination total-items="847" page-size="25" page="3" item-name="application"></civ-pagination>
+      </div>
+      <div>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Default</p>
+        <civ-pagination total-items="847" page-size="25" page="3" item-name="application"></civ-pagination>
+      </div>
+      <div data-civ-scale="spacious">
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Spacious</p>
+        <civ-pagination total-items="847" page-size="25" page="3" item-name="application"></civ-pagination>
+      </div>
+    </div>
+  `,
+};
+
 export const Interactive: Story = {
   render: () => {
     let page = 1;

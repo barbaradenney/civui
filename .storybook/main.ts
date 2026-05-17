@@ -118,6 +118,8 @@ const config: StorybookConfig = {
       '@civui/layout/image-preview': resolve(root, 'packages/layout/src/image-preview/index.ts'),
       '@civui/layout/pagination': resolve(root, 'packages/layout/src/pagination/index.ts'),
       '@civui/layout/data-grid': resolve(root, 'packages/layout/src/data-grid/index.ts'),
+      '@civui/layout/toolbar': resolve(root, 'packages/layout/src/toolbar/index.ts'),
+      '@civui/layout/bulk-actions': resolve(root, 'packages/layout/src/bulk-actions/index.ts'),
       '@civui/layout': resolve(root, 'packages/layout/src/index.ts'),
       // Storybook utilities — used by stories that wrap demos in
       // `<civ-demo-frame>`. Resolve to source so the storybook build

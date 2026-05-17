@@ -1,0 +1,94 @@
+---
+title: Toolbar
+sidebar_position: 13
+sidebar_label: Toolbar
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+import PropsTable from "./_toolbar.props.mdx";
+import EventsTable from "./_toolbar.events.mdx";
+
+# Toolbar
+
+<!-- contract-link:start -->
+
+> **Contract reference:** [`civ-toolbar`](pathname:///civui/storybook/?path=/docs/contract-civ-toolbar--docs) — auto-generated structured contract for cross-platform implementation.
+
+<!-- contract-link:end -->
+
+`<civ-toolbar>`
+
+Horizontal layout container for the row of controls above a list, grid, or filtered collection — search input, filter chips, density toggle, "Add new" button. Children land on the leading edge by default; add `data-civ-toolbar-end` on a child to align it to the trailing edge.
+
+Renders as `<div role="group">` with the `label` prop applied as `aria-label`. Stacks vertically on viewports ≤480px so the controls stay reachable on mobile.
+
+> **Why not `role="toolbar"`?** The WAI-ARIA Toolbar Pattern requires arrow-key navigation across children with a single Tab stop into the toolbar. `civ-toolbar` is a layout primitive only and deliberately doesn't implement that, so claiming `role="toolbar"` would mislead screen-reader users. `role="group"` communicates the grouping without the keyboard contract.
+
+## Examples
+
+### Default
+
+<StoryEmbed id="layout-toolbar--default" />
+
+### With filter chips
+
+<StoryEmbed id="layout-toolbar--with-filters" />
+
+### Trailing actions only
+
+<StoryEmbed id="layout-toolbar--actions-only" />
+
+### Leading content only
+
+<StoryEmbed id="layout-toolbar--start-only" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/layout-toolbar--default)
+
+## Props
+
+<PropsTable />
+
+## Events
+
+<EventsTable />
+
+## Usage
+
+The toolbar is purely a layout primitive — it doesn't introduce any built-in controls. Compose with whatever children fit the use case:
+
+```html
+<civ-toolbar label="Applications toolbar">
+  <civ-text-input label="Search" type="search"></civ-text-input>
+  <civ-filter-chip-group label="Status">
+    <civ-filter-chip label="In review"></civ-filter-chip>
+    <civ-filter-chip label="Approved"></civ-filter-chip>
+  </civ-filter-chip-group>
+  <civ-button data-civ-toolbar-end variant="primary" label="Add application"></civ-button>
+</civ-toolbar>
+```
+
+## Composing with civ-data-grid
+
+The toolbar sits as a sibling above the data-grid. The consumer wires the
+search input and filter chips to its own data layer; the grid just renders
+the rows that come back:
+
+```ts
+const search = document.querySelector('civ-text-input')!;
+const grid = document.querySelector('civ-data-grid')!;
+
+search.addEventListener('civ-input', (e) => {
+  const query = (e as CustomEvent).detail.value;
+  grid.rows = filterRows(allRows, query);
+});
+```
+
+## Accessibility
+
+- `role="group"` is applied to the wrapper so AT announces the grouping
+  without implying the arrow-key navigation contract of `role="toolbar"`.
+- `label` is rendered as `aria-label` on the group. Set it whenever
+  the toolbar contains more than one or two controls — without it, screen
+  readers announce only an unnamed group.
+- Children inside the toolbar keep their own ARIA semantics and Tab-stop
+  behavior. The toolbar doesn't intercept focus or keyboard handling.

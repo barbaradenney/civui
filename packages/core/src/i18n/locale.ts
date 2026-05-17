@@ -77,6 +77,10 @@ export interface CivLocaleStrings {
   dataGridErrorLabel: string;     // "Failed to load data"
   dataGridSelectionStatus: string; // "{count} of {total} selected"
 
+  // Bulk actions — civ-bulk-actions selection-aware action bar.
+  bulkActionsSelectedLabel: string; // "{count} {itemName} selected"
+  bulkActionsClearLabel: string;    // "Clear"
+
   // Country picker — fallback label for civ-country when no label prop
   // is provided. Other locale strings live in the consumer's locale
   // override.
@@ -785,6 +789,8 @@ const defaultStrings: CivLocaleStrings = {
   dataGridLoading: 'Loading…',
   dataGridErrorLabel: 'Failed to load data',
   dataGridSelectionStatus: '{count} of {total} selected',
+  bulkActionsSelectedLabel: '{count} {itemName} selected',
+  bulkActionsClearLabel: 'Clear',
 
   countryLabel: 'Country',
 

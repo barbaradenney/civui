@@ -270,6 +270,46 @@
       "source": "packages/feedback/src/badge/civ-badge.stories.ts"
     }
   ],
+  "civ-bulk-actions": [
+    {
+      "story": "CustomClearLabel",
+      "category": "Layout/Bulk Actions",
+      "html": "<civ-bulk-actions count=\"4\" item-name=\"row\" clear-label=\"Deselect all\">\n      <civ-action-button variant=\"secondary\" label=\"Approve\"></civ-action-button>\n      <civ-action-button variant=\"secondary\" danger label=\"Reject\"></civ-action-button>\n    </civ-bulk-actions>",
+      "source": "packages/layout/src/bulk-actions/civ-bulk-actions.stories.ts"
+    },
+    {
+      "story": "CustomPlural",
+      "name": "Custom Plural (entries)",
+      "category": "Layout/Bulk Actions",
+      "html": "<civ-bulk-actions count=\"3\" item-name=\"entry\" item-name-plural=\"entries\">\n      <civ-action-button variant=\"secondary\" label=\"Archive\"></civ-action-button>\n    </civ-bulk-actions>",
+      "source": "packages/layout/src/bulk-actions/civ-bulk-actions.stories.ts"
+    },
+    {
+      "story": "Hidden",
+      "name": "Hidden (count=0)",
+      "category": "Layout/Bulk Actions",
+      "html": "<div>\n      <p>Bar is hidden because count is 0 — but the buttons still exist in the DOM:</p>\n      <civ-bulk-actions count=\"0\">\n        <civ-action-button variant=\"secondary\" label=\"Archive\"></civ-action-button>\n      </civ-bulk-actions>\n    </div>",
+      "source": "packages/layout/src/bulk-actions/civ-bulk-actions.stories.ts"
+    },
+    {
+      "story": "Interactive",
+      "category": "Layout/Bulk Actions",
+      "html": "<div>\n      <p>\n        <button id=\"bulk-add\" type=\"button\">Increment count</button>\n        <button id=\"bulk-reset\" type=\"button\">Reset count</button>\n      </p>\n      <civ-bulk-actions id=\"bulk-bar\" count=\"0\" item-name=\"row\">\n        <civ-action-button variant=\"secondary\" label=\"Archive\"></civ-action-button>\n        <civ-action-button variant=\"secondary\" danger label=\"Delete\"></civ-action-button>\n      </civ-bulk-actions>\n      <script>\n        (function () {\n          const bar = document.getElementById('bulk-bar');\n          if (!bar || bar.__wired) return;\n          bar.__wired = true;\n          document.getElementById('bulk-add').addEventListener('click', () => {\n            bar.count = (bar.count || 0) + 1;\n          });\n          document.getElementById('bulk-reset').addEventListener('click', () => {\n            bar.count = 0;\n          });\n          bar.addEventListener('civ-clear-selection', () => {\n            bar.count = 0;\n          });\n        })();\n      </script>\n    </div>",
+      "source": "packages/layout/src/bulk-actions/civ-bulk-actions.stories.ts"
+    },
+    {
+      "story": "MultipleSelection",
+      "category": "Layout/Bulk Actions",
+      "html": "<civ-bulk-actions count=\"7\" item-name=\"application\">\n      <civ-action-button variant=\"secondary\" icon-start=\"download\" label=\"Export\"></civ-action-button>\n      <civ-action-button variant=\"secondary\" icon-start=\"email\" label=\"Notify\"></civ-action-button>\n      <civ-action-button variant=\"secondary\" danger label=\"Delete\"></civ-action-button>\n    </civ-bulk-actions>",
+      "source": "packages/layout/src/bulk-actions/civ-bulk-actions.stories.ts"
+    },
+    {
+      "story": "SingleSelection",
+      "category": "Layout/Bulk Actions",
+      "html": "<civ-bulk-actions count=\"1\" item-name=\"application\">\n      <civ-action-button variant=\"secondary\" icon-start=\"download\" label=\"Export\"></civ-action-button>\n      <civ-action-button variant=\"secondary\" danger label=\"Delete\"></civ-action-button>\n    </civ-bulk-actions>",
+      "source": "packages/layout/src/bulk-actions/civ-bulk-actions.stories.ts"
+    }
+  ],
   "civ-button": [
     {
       "story": "ActionBar",
@@ -5185,6 +5225,46 @@
       "category": "Forms/Inputs/Toggle",
       "html": "<civ-toggle\n      label=\"Auto-save drafts\"\n      name=\"autosave\"\n      hint=\"Automatically saves your form progress every 30 seconds\"\n    ></civ-toggle>",
       "source": "packages/inputs/src/toggle/civ-toggle.stories.ts"
+    }
+  ],
+  "civ-toolbar": [
+    {
+      "story": "ActionsOnly",
+      "category": "Layout/Toolbar",
+      "html": "<civ-toolbar label=\"Quick actions\">\n      <civ-button data-civ-toolbar-end variant=\"tertiary\" icon-start=\"download\" label=\"Export\"></civ-button>\n      <civ-button data-civ-toolbar-end variant=\"primary\" label=\"Add new\"></civ-button>\n    </civ-toolbar>",
+      "source": "packages/layout/src/toolbar/civ-toolbar.stories.ts"
+    },
+    {
+      "story": "Default",
+      "category": "Layout/Toolbar",
+      "html": "<civ-toolbar label=\"Applications toolbar\">\n      <civ-text-input label=\"Search\" type=\"search\"></civ-text-input>\n      <civ-button data-civ-toolbar-end variant=\"primary\" label=\"Add application\"></civ-button>\n    </civ-toolbar>",
+      "source": "packages/layout/src/toolbar/civ-toolbar.stories.ts"
+    },
+    {
+      "story": "Empty",
+      "category": "Layout/Toolbar",
+      "html": "<civ-toolbar label=\"Empty toolbar\"></civ-toolbar>",
+      "source": "packages/layout/src/toolbar/civ-toolbar.stories.ts"
+    },
+    {
+      "story": "FullAdminLayout",
+      "name": "Full Admin Layout (toolbar + bulk actions)",
+      "category": "Layout/Data Grid",
+      "html": "<div style=\"display: flex; flex-direction: column; gap: 1rem;\">\n        <civ-toolbar label=\"Applications toolbar\">\n          <civ-text-input label=\"Search\" type=\"search\"></civ-text-input>\n          <civ-button data-civ-toolbar-end variant=\"primary\" label=\"Add application\"></civ-button>\n        </civ-toolbar>\n        <civ-bulk-actions class=\"story-full\" count=\"0\" item-name=\"application\">\n          <civ-action-button variant=\"secondary\" icon-start=\"download\" label=\"Export\"></civ-action-button>\n          <civ-action-button variant=\"secondary\" danger label=\"Delete\"></civ-action-button>\n        </civ-bulk-actions>\n        <civ-data-grid class=\"story-full\" caption=\"Applications\"></civ-data-grid>\n      </div>",
+      "source": "packages/layout/src/data-grid/civ-data-grid.stories.ts"
+    },
+    {
+      "story": "StartOnly",
+      "category": "Layout/Toolbar",
+      "html": "<civ-toolbar label=\"Search only\">\n      <civ-text-input label=\"Search\" type=\"search\"></civ-text-input>\n    </civ-toolbar>",
+      "source": "packages/layout/src/toolbar/civ-toolbar.stories.ts"
+    },
+    {
+      "story": "WithFilters",
+      "name": "With Filter Chips",
+      "category": "Layout/Toolbar",
+      "html": "<civ-toolbar label=\"Filtered applications\">\n      <civ-text-input label=\"Search\" type=\"search\"></civ-text-input>\n      <civ-filter-chip-group label=\"Status filters\">\n        <civ-filter-chip label=\"In review\"></civ-filter-chip>\n        <civ-filter-chip label=\"Approved\" selected></civ-filter-chip>\n        <civ-filter-chip label=\"Denied\"></civ-filter-chip>\n      </civ-filter-chip-group>\n      <civ-button data-civ-toolbar-end variant=\"primary\" label=\"Add application\"></civ-button>\n    </civ-toolbar>",
+      "source": "packages/layout/src/toolbar/civ-toolbar.stories.ts"
     }
   ],
   "civ-va-file-number": [

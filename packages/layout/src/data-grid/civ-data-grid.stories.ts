@@ -2,6 +2,11 @@ import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html } from 'lit';
 import './civ-data-grid.js';
 import '../pagination/civ-pagination.js';
+import '../toolbar/civ-toolbar.js';
+import '../bulk-actions/civ-bulk-actions.js';
+import '@civui/actions/button';
+import '@civui/actions/action-button';
+import '@civui/inputs/text-input';
 import type { GridColumn, GridRow } from './civ-data-grid.types.js';
 
 const meta: Meta = {
@@ -276,6 +281,73 @@ export const WithPagination: Story = {
         class="story-paginated"
         item-name="application"
       ></civ-pagination>
+    `;
+  },
+};
+
+export const FullAdminLayout: Story = {
+  name: 'Full Admin Layout (toolbar + bulk actions)',
+  render: () => {
+    setTimeout(() => {
+      const grid = document.querySelector('civ-data-grid.story-full') as any;
+      const bulk = document.querySelector('civ-bulk-actions.story-full') as any;
+      if (!grid || !bulk) return;
+      grid.columns = defaultColumns;
+      grid.rows = toRows(SAMPLE_DATA);
+      grid.selectable = 'multiple';
+      grid.selectedRowIds = [];
+      grid.addEventListener('civ-selection-change', (e: Event) => {
+        const ids = (e as CustomEvent).detail.selectedRowIds;
+        grid.selectedRowIds = ids;
+        bulk.count = ids.length;
+      });
+      bulk.addEventListener('civ-clear-selection', () => {
+        grid.selectedRowIds = [];
+        bulk.count = 0;
+      });
+    }, 0);
+    return html`
+      <div style="display: flex; flex-direction: column; gap: 1rem;">
+        <civ-toolbar label="Applications toolbar">
+          <civ-text-input label="Search" type="search"></civ-text-input>
+          <civ-button data-civ-toolbar-end variant="primary" label="Add application"></civ-button>
+        </civ-toolbar>
+        <civ-bulk-actions class="story-full" count="0" item-name="application">
+          <civ-action-button variant="secondary" icon-start="download" label="Export"></civ-action-button>
+          <civ-action-button variant="secondary" danger label="Delete"></civ-action-button>
+        </civ-bulk-actions>
+        <civ-data-grid class="story-full" caption="Applications"></civ-data-grid>
+      </div>
+    `;
+  },
+};
+
+export const DensityScale: Story = {
+  name: 'Density Scale',
+  render: () => {
+    setTimeout(() => {
+      ['dense', 'default', 'spacious'].forEach((scale) => {
+        const grid = document.querySelector(`civ-data-grid.story-density-${scale}`) as any;
+        if (!grid) return;
+        grid.columns = defaultColumns;
+        grid.rows = toRows(SAMPLE_DATA.slice(0, 3));
+      });
+    }, 0);
+    return html`
+      <div class="civ-flex civ-flex-col civ-gap-6">
+        <div data-civ-scale="dense">
+          <p class="civ-m-0 civ-mb-2 civ-font-semibold">Dense</p>
+          <civ-data-grid class="story-density-dense" caption="Applications (dense)"></civ-data-grid>
+        </div>
+        <div>
+          <p class="civ-m-0 civ-mb-2 civ-font-semibold">Default</p>
+          <civ-data-grid class="story-density-default" caption="Applications (default)"></civ-data-grid>
+        </div>
+        <div data-civ-scale="spacious">
+          <p class="civ-m-0 civ-mb-2 civ-font-semibold">Spacious</p>
+          <civ-data-grid class="story-density-spacious" caption="Applications (spacious)"></civ-data-grid>
+        </div>
+      </div>
     `;
   },
 };

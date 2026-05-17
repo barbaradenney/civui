@@ -11,6 +11,7 @@ import type {
   GridSortDirection,
   GridResponsiveMode,
   GridSelectionMode,
+  GridExpandTemplate,
 } from './civ-data-grid.types.js';
 
 export type {
@@ -20,6 +21,7 @@ export type {
   GridSortDirection,
   GridResponsiveMode,
   GridSelectionMode,
+  GridExpandTemplate,
 };
 
 /**
@@ -59,11 +61,14 @@ export type {
  * @prop {boolean} striped - Apply zebra striping to body rows.
  * @prop {boolean} bordered - Apply borders between cells.
  * @prop {boolean} interactive - When true, clicking a row (outside the select / actions cells) fires `civ-row-activate`. Use to wire a master-detail drawer or a navigate-to-record flow.
+ * @prop {Array} expandedRowIds - IDs of currently-expanded rows (controlled). Update in response to `civ-row-expand`.
+ * @prop {Function} expandTemplate - `(row) => string | TemplateResult` — renders the detail content shown when a row is expanded. Required when any row has `expandable: true`.
  *
  * @fires civ-sort - { column, direction } — user clicked a sortable column header
  * @fires civ-selection-change - { selectedRowIds } — selection changed via checkbox
  * @fires civ-row-action - { rowId, action, row } — user activated a row-action item
  * @fires civ-row-activate - { rowId, row } — user clicked a row body when `interactive` is set (master-detail trigger)
+ * @fires civ-row-expand - { rowId, expanded, row } — user toggled an expandable row's chevron
  *
  * **Pagination.** Render `<civ-pagination>` as a sibling next to the grid
  * and wire its `civ-page-change` event to update the grid's `rows`.
@@ -104,6 +109,8 @@ export class CivDataGrid extends CivBaseElement {
   @property({ type: Boolean }) striped = false;
   @property({ type: Boolean }) bordered = false;
   @property({ type: Boolean }) interactive = false;
+  @property({ attribute: false }) expandedRowIds: string[] = [];
+  @property({ attribute: false }) expandTemplate?: GridExpandTemplate;
 
   @state() private _instanceId = generateId('civ-data-grid');
 
@@ -143,6 +150,9 @@ export class CivDataGrid extends CivBaseElement {
           <caption class="${captionClass}">${caption}</caption>
           <thead class="civ-data-grid__thead">
             <tr>
+              ${this._hasAnyExpandable()
+                ? html`<th scope="col" class="civ-data-grid__th civ-data-grid__th--expand" aria-hidden="true"></th>`
+                : nothing}
               ${this.selectable === 'multiple'
                 ? html`
                     <th scope="col" class="civ-data-grid__th civ-data-grid__th--select">
@@ -214,7 +224,7 @@ export class CivDataGrid extends CivBaseElement {
     `;
   }
 
-  private _renderBody(): TemplateResult | TemplateResult[] {
+  private _renderBody(): TemplateResult | Array<TemplateResult | TemplateResult[]> {
     if (this.loading) {
       const colCount = this._totalColumnCount();
       return html`
@@ -253,31 +263,106 @@ export class CivDataGrid extends CivBaseElement {
     return this.rows.map((row, rowIndex) => this._renderRow(row, rowIndex));
   }
 
-  private _renderRow(row: GridRow, rowIndex: number): TemplateResult {
+  private _renderRow(row: GridRow, rowIndex: number): TemplateResult | TemplateResult[] {
     const isSelected = this.selectedRowIds.includes(row.id);
+    const isExpanded = this._isExpanded(row.id);
+    const showExpandColumn = this._hasAnyExpandable();
     const rowClass = [
       'civ-data-grid__tr',
       isSelected ? 'civ-data-grid__tr--selected' : '',
       row.disabled ? 'civ-data-grid__tr--disabled' : '',
       this.interactive && !row.disabled ? 'civ-data-grid__tr--interactive' : '',
+      isExpanded ? 'civ-data-grid__tr--expanded' : '',
     ].filter(Boolean).join(' ');
 
     const onRowClick = this.interactive && !row.disabled
       ? (e: Event) => this._onRowActivate(e, row)
       : undefined;
 
-    return html`
+    const detailId = `${this._instanceId}-detail-${row.id}`;
+
+    const dataRow = html`
       <tr
         class="${rowClass}"
         data-row-id="${row.id}"
         aria-selected="${this.selectable !== 'none' ? String(isSelected) : ''}"
         @click="${onRowClick}"
       >
+        ${showExpandColumn ? this._renderExpandCell(row, isExpanded, detailId) : nothing}
         ${this.selectable !== 'none' ? this._renderSelectCell(row, isSelected) : nothing}
         ${this._visibleColumns.map((col) => this._renderBodyCell(col, row, rowIndex))}
         ${this._hasAnyRowActions() ? this._renderActionsCell(row) : nothing}
       </tr>
     `;
+
+    if (!row.expandable || !isExpanded) {
+      return dataRow;
+    }
+
+    // Render the detail row immediately below the data row. The colspan
+    // covers every visible column including expand / select / actions.
+    const detailRow = html`
+      <tr class="civ-data-grid__tr--detail" data-detail-for="${row.id}">
+        <td
+          id="${detailId}"
+          class="civ-data-grid__td civ-data-grid__td--detail"
+          colspan="${this._totalColumnCount()}"
+        >${this._renderExpandTemplate(row)}</td>
+      </tr>
+    `;
+    return [dataRow, detailRow];
+  }
+
+  private _renderExpandCell(row: GridRow, isExpanded: boolean, detailId: string): TemplateResult {
+    if (!row.expandable) {
+      return html`<td class="civ-data-grid__td civ-data-grid__td--expand"></td>`;
+    }
+    const label = isExpanded
+      ? t('dataGridCollapseRow').replace('{row}', row.id)
+      : t('dataGridExpandRow').replace('{row}', row.id);
+    return html`
+      <td class="civ-data-grid__td civ-data-grid__td--expand">
+        <button
+          type="button"
+          class="civ-data-grid__expand-toggle"
+          aria-expanded="${isExpanded ? 'true' : 'false'}"
+          aria-controls="${detailId}"
+          aria-label="${label}"
+          ?disabled="${row.disabled}"
+          @click="${(e: Event) => this._onToggleExpand(e, row)}"
+        >
+          <civ-icon
+            name="${isExpanded ? 'chevron-down' : 'chevron-right'}"
+            aria-hidden="true"
+          ></civ-icon>
+        </button>
+      </td>
+    `;
+  }
+
+  private _renderExpandTemplate(row: GridRow): string | number | TemplateResult {
+    if (this.expandTemplate) return this.expandTemplate(row);
+    return '';
+  }
+
+  private _hasAnyExpandable(): boolean {
+    return this.rows.some((r) => r.expandable);
+  }
+
+  private _isExpanded(rowId: string): boolean {
+    return this.expandedRowIds.includes(rowId);
+  }
+
+  private _onToggleExpand(e: Event, row: GridRow): void {
+    // Don't bubble to the row-click activation handler.
+    e.stopPropagation();
+    if (row.disabled) return;
+    const nextExpanded = !this._isExpanded(row.id);
+    dispatch(this, 'civ-row-expand', {
+      rowId: row.id,
+      expanded: nextExpanded,
+      row,
+    });
   }
 
   private _onRowActivate(e: Event, row: GridRow): void {
@@ -489,6 +574,7 @@ export class CivDataGrid extends CivBaseElement {
     let count = this._visibleColumns.length;
     if (this.selectable !== 'none') count += 1;
     if (this._hasAnyRowActions()) count += 1;
+    if (this._hasAnyExpandable()) count += 1;
     return count;
   }
 

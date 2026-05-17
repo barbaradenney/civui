@@ -29,6 +29,8 @@ async function mountGrid(opts: Partial<{
   errorMessage: string;
   emptyMessage: string;
   interactive: boolean;
+  expandedRowIds: string[];
+  expandTemplate: (row: GridRow) => string | number | unknown;
 }> = {}): Promise<any> {
   const el = await fixture('<civ-data-grid></civ-data-grid>') as any;
   el.caption = opts.caption ?? 'Records';
@@ -42,6 +44,8 @@ async function mountGrid(opts: Partial<{
   if (opts.errorMessage !== undefined) el.errorMessage = opts.errorMessage;
   if (opts.emptyMessage !== undefined) el.emptyMessage = opts.emptyMessage;
   if (opts.interactive !== undefined) el.interactive = opts.interactive;
+  if (opts.expandedRowIds !== undefined) el.expandedRowIds = opts.expandedRowIds;
+  if (opts.expandTemplate !== undefined) el.expandTemplate = opts.expandTemplate;
   await elementUpdated(el);
   return el;
 }
@@ -542,5 +546,176 @@ describe('civ-data-grid — interactive row activation (master-detail)', () => {
     // only care that the row-activate skips when the click target is a link.
     link?.click();
     expect(handler).not.toHaveBeenCalled();
+  });
+});
+
+describe('civ-data-grid — expandable rows', () => {
+  it('does not render the expand column when no row is expandable', async () => {
+    const el = await mountGrid({
+      rows: [{ id: '1', cells: { name: 'A' } }, { id: '2', cells: { name: 'B' } }],
+    });
+    expect(el.querySelector('.civ-data-grid__th--expand')).toBeNull();
+    expect(el.querySelector('.civ-data-grid__td--expand')).toBeNull();
+  });
+
+  it('renders an expand column at the leading edge when any row is expandable', async () => {
+    const el = await mountGrid({
+      rows: [
+        { id: '1', cells: { name: 'A' }, expandable: true },
+        { id: '2', cells: { name: 'B' } },
+      ],
+    });
+    const header = el.querySelector('thead tr') as HTMLElement;
+    const firstHeaderCell = header.querySelector('th') as HTMLElement;
+    expect(firstHeaderCell.classList.contains('civ-data-grid__th--expand')).toBe(true);
+
+    const rows = Array.from(el.querySelectorAll('tbody tr')) as HTMLElement[];
+    // Expandable row gets a chevron toggle button.
+    expect(rows[0].querySelector('.civ-data-grid__expand-toggle')).not.toBeNull();
+    // Non-expandable row gets an empty expand cell (no button).
+    expect(rows[1].querySelector('.civ-data-grid__td--expand')).not.toBeNull();
+    expect(rows[1].querySelector('.civ-data-grid__expand-toggle')).toBeNull();
+  });
+
+  it('renders the chevron toggle button with aria-expanded reflecting current state', async () => {
+    const el = await mountGrid({
+      rows: [{ id: '1', cells: { name: 'A' }, expandable: true }],
+      expandedRowIds: [],
+    });
+    let toggle = el.querySelector('.civ-data-grid__expand-toggle') as HTMLButtonElement;
+    expect(toggle.getAttribute('aria-expanded')).toBe('false');
+
+    el.expandedRowIds = ['1'];
+    await elementUpdated(el);
+    toggle = el.querySelector('.civ-data-grid__expand-toggle') as HTMLButtonElement;
+    expect(toggle.getAttribute('aria-expanded')).toBe('true');
+  });
+
+  it('fires civ-row-expand with the target state when the chevron is clicked', async () => {
+    const el = await mountGrid({
+      rows: [{ id: '42', cells: { name: 'A' }, expandable: true }],
+      expandedRowIds: [],
+    });
+    const handler = vi.fn();
+    el.addEventListener('civ-row-expand', handler);
+
+    const toggle = el.querySelector('.civ-data-grid__expand-toggle') as HTMLButtonElement;
+    toggle.click();
+
+    expect(handler).toHaveBeenCalledOnce();
+    const detail = handler.mock.calls[0][0].detail;
+    expect(detail.rowId).toBe('42');
+    expect(detail.expanded).toBe(true);
+    expect(detail.row.id).toBe('42');
+  });
+
+  it('fires civ-row-expand with expanded=false when toggling an already-expanded row', async () => {
+    const el = await mountGrid({
+      rows: [{ id: '1', cells: { name: 'A' }, expandable: true }],
+      expandedRowIds: ['1'],
+    });
+    const handler = vi.fn();
+    el.addEventListener('civ-row-expand', handler);
+    const toggle = el.querySelector('.civ-data-grid__expand-toggle') as HTMLButtonElement;
+    toggle.click();
+    expect(handler.mock.calls[0][0].detail.expanded).toBe(false);
+  });
+
+  it('renders a detail row immediately after each expanded row', async () => {
+    const el = await mountGrid({
+      rows: [
+        { id: '1', cells: { name: 'A' }, expandable: true },
+        { id: '2', cells: { name: 'B' }, expandable: true },
+      ],
+      expandedRowIds: ['1'],
+      expandTemplate: (row) => `Details for ${(row.cells as any).name}`,
+    });
+    const tbodyRows = Array.from(el.querySelectorAll('tbody tr')) as HTMLElement[];
+    // Order: data1, detail1, data2 (not expanded).
+    expect(tbodyRows.length).toBe(3);
+    expect(tbodyRows[0].getAttribute('data-row-id')).toBe('1');
+    expect(tbodyRows[1].classList.contains('civ-data-grid__tr--detail')).toBe(true);
+    expect(tbodyRows[1].getAttribute('data-detail-for')).toBe('1');
+    expect(tbodyRows[2].getAttribute('data-row-id')).toBe('2');
+  });
+
+  it('passes the row to expandTemplate and renders the returned content', async () => {
+    const calls: any[] = [];
+    const el = await mountGrid({
+      rows: [{ id: '1', cells: { name: 'Smith' }, expandable: true }],
+      expandedRowIds: ['1'],
+      expandTemplate: (row) => {
+        calls.push(row);
+        return `Hello ${(row.cells as any).name}`;
+      },
+    });
+    expect(calls.length).toBe(1);
+    expect(calls[0].id).toBe('1');
+    const detail = el.querySelector('.civ-data-grid__td--detail') as HTMLElement;
+    expect(detail.textContent?.trim()).toBe('Hello Smith');
+  });
+
+  it('detail td colspan matches the total column count', async () => {
+    const el = await mountGrid({
+      columns: [{ key: 'name', header: 'Name' }, { key: 'age', header: 'Age' }],
+      rows: [{ id: '1', cells: { name: 'A', age: 30 }, expandable: true }],
+      expandedRowIds: ['1'],
+      selectable: 'multiple',
+      expandTemplate: () => 'd',
+    });
+    const detail = el.querySelector('.civ-data-grid__td--detail') as HTMLElement;
+    // 2 columns + select + expand = 4
+    expect(detail.getAttribute('colspan')).toBe('4');
+  });
+
+  it('disabled expandable rows have a disabled toggle button and do not dispatch', async () => {
+    const el = await mountGrid({
+      rows: [{ id: '1', cells: { name: 'A' }, expandable: true, disabled: true }],
+      expandedRowIds: [],
+    });
+    const toggle = el.querySelector('.civ-data-grid__expand-toggle') as HTMLButtonElement;
+    expect(toggle.disabled).toBe(true);
+    const handler = vi.fn();
+    el.addEventListener('civ-row-expand', handler);
+    // Clicking a disabled native button does nothing; assert no event fires.
+    toggle.click();
+    expect(handler).not.toHaveBeenCalled();
+  });
+
+  it('chevron click does not bubble to civ-row-activate when interactive=true', async () => {
+    const el = await mountGrid({
+      rows: [{ id: '1', cells: { name: 'A' }, expandable: true }],
+      expandedRowIds: [],
+      interactive: true,
+    });
+    const expandHandler = vi.fn();
+    const activateHandler = vi.fn();
+    el.addEventListener('civ-row-expand', expandHandler);
+    el.addEventListener('civ-row-activate', activateHandler);
+    const toggle = el.querySelector('.civ-data-grid__expand-toggle') as HTMLButtonElement;
+    toggle.click();
+    expect(expandHandler).toHaveBeenCalledOnce();
+    expect(activateHandler).not.toHaveBeenCalled();
+  });
+
+  it('adds expanded class to the data row when expanded', async () => {
+    const el = await mountGrid({
+      rows: [{ id: '1', cells: { name: 'A' }, expandable: true }],
+      expandedRowIds: ['1'],
+      expandTemplate: () => '',
+    });
+    const dataRow = el.querySelector('tbody tr[data-row-id="1"]') as HTMLElement;
+    expect(dataRow.classList.contains('civ-data-grid__tr--expanded')).toBe(true);
+  });
+
+  it('renders an empty detail when expandTemplate is not provided', async () => {
+    const el = await mountGrid({
+      rows: [{ id: '1', cells: { name: 'A' }, expandable: true }],
+      expandedRowIds: ['1'],
+      // No expandTemplate.
+    });
+    const detail = el.querySelector('.civ-data-grid__td--detail') as HTMLElement;
+    expect(detail).not.toBeNull();
+    expect(detail.textContent?.trim()).toBe('');
   });
 });

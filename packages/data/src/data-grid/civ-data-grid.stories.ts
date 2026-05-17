@@ -393,3 +393,104 @@ export const MasterDetailDrawer: Story = {
     `;
   },
 };
+
+export const ExpandableRows: Story = {
+  name: 'Expandable Rows (per-row detail)',
+  render: () => {
+    setTimeout(() => {
+      const grid = document.querySelector('civ-data-grid.story-expandable') as any;
+      if (!grid) return;
+      grid.columns = defaultColumns;
+      // Mix expandable + non-expandable rows so the chevron-cell behavior
+      // (rendered when any row has expandable=true; empty for rows that don't)
+      // is visible in the same table.
+      grid.rows = toRows(SAMPLE_DATA).map((r, i) => ({
+        ...r,
+        expandable: i % 2 === 0,
+      }));
+      grid.expandedRowIds = [];
+      grid.expandTemplate = (row: any) => html`
+        <div class="civ-flex civ-flex-col civ-gap-2">
+          <div><strong>Applicant notes for ${row.id}</strong></div>
+          <p class="civ-m-0">
+            Detail content rendered by the consumer's <code>expandTemplate</code>.
+            Could be a key/value list, a child <code>civ-data-grid</code>, a form,
+            or any arbitrary Lit template.
+          </p>
+          <dl class="civ-flex civ-flex-col civ-gap-1" style="margin: 0;">
+            <div class="civ-flex civ-gap-2">
+              <dt style="font-weight: 600; min-width: 8rem;">Status</dt>
+              <dd style="margin: 0;">${row.cells.status}</dd>
+            </div>
+            <div class="civ-flex civ-gap-2">
+              <dt style="font-weight: 600; min-width: 8rem;">Last updated</dt>
+              <dd style="margin: 0;">${row.cells.updated}</dd>
+            </div>
+          </dl>
+        </div>
+      `;
+      grid.addEventListener('civ-row-expand', (e: Event) => {
+        const { rowId, expanded } = (e as CustomEvent).detail;
+        grid.expandedRowIds = expanded
+          ? [...grid.expandedRowIds, rowId]
+          : grid.expandedRowIds.filter((id: string) => id !== rowId);
+      });
+    }, 0);
+    return html`<civ-data-grid class="story-expandable" caption="Applications with expandable detail"></civ-data-grid>`;
+  },
+};
+
+export const ExpandableNestedGrid: Story = {
+  name: 'Expandable Rows → nested civ-data-grid',
+  render: () => {
+    setTimeout(() => {
+      const grid = document.querySelector('civ-data-grid.story-nested') as any;
+      if (!grid) return;
+      grid.columns = [
+        { key: 'id', header: 'Application ID', width: '9rem' },
+        { key: 'applicant', header: 'Applicant' },
+        { key: 'documentCount', header: 'Documents', align: 'end' },
+      ];
+      grid.rows = SAMPLE_DATA.slice(0, 3).map((d, i) => ({
+        id: d.id,
+        cells: {
+          id: d.id,
+          applicant: d.applicant,
+          documentCount: (i + 1) * 2,
+        },
+        expandable: true,
+      }));
+      grid.expandedRowIds = [];
+      grid.expandTemplate = (row: any) => {
+        const docs = Array.from({ length: row.cells.documentCount }, (_, i) => ({
+          id: `${row.id}-doc-${i + 1}`,
+          cells: {
+            name: `Document ${i + 1}.pdf`,
+            type: ['Medical', 'Legal', 'Identity'][i % 3],
+            uploaded: `2026-04-${String(15 - i).padStart(2, '0')}`,
+          },
+        }));
+        return html`
+          <p class="civ-m-0 civ-mb-2"><strong>Supporting documents for ${row.id}</strong></p>
+          <civ-data-grid
+            caption="Documents for ${row.id}"
+            caption-hidden
+            .columns=${[
+              { key: 'name', header: 'Document name' },
+              { key: 'type', header: 'Type' },
+              { key: 'uploaded', header: 'Uploaded', align: 'end' },
+            ]}
+            .rows=${docs}
+          ></civ-data-grid>
+        `;
+      };
+      grid.addEventListener('civ-row-expand', (e: Event) => {
+        const { rowId, expanded } = (e as CustomEvent).detail;
+        grid.expandedRowIds = expanded
+          ? [...grid.expandedRowIds, rowId]
+          : grid.expandedRowIds.filter((id: string) => id !== rowId);
+      });
+    }, 0);
+    return html`<civ-data-grid class="story-nested" caption="Applications with nested document grid"></civ-data-grid>`;
+  },
+};

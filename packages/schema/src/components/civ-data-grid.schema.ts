@@ -98,6 +98,16 @@ const schema: ComponentSchema = {
       description: 'When true, clicking a row body fires `civ-row-activate`. Use to wire a master-detail drawer or navigate-to-record flow. Clicks that originate inside the selection checkbox cell, the row-actions cell, or any inner `<a>`/`<button>`/`<input>`/`<select>`/`<textarea>`/`[role="button"]` are ignored so those affordances retain their own behavior. Disabled rows (`row.disabled`) are not interactive even when this prop is set',
       default: false,
     },
+    expandedRowIds: {
+      type: 'array',
+      description: 'IDs of currently-expanded rows. Controlled — update in response to `civ-row-expand`. Pass `[]` for "none expanded". Only takes effect on rows whose `expandable` flag is true',
+      webOnly: true,
+    },
+    expandTemplate: {
+      type: 'string',
+      description: 'Render callback for expanded-row detail content. `(row) => string | number | TemplateResult`. Required when any row has `expandable: true` — without it the detail row renders empty. Web-only (Lit `TemplateResult` is web-specific)',
+      webOnly: true,
+    },
   },
 
   events: {
@@ -126,6 +136,14 @@ const schema: ComponentSchema = {
       description: 'Fires when the user clicks a row body and `interactive` is set. The master-detail trigger. Suppressed when the click originates inside the select cell, the actions cell, or any interactive descendant (`<a>`, `<button>`, `<input>`, `<select>`, `<textarea>`, `[role="button"]`) so those affordances retain their own behavior',
       detail: {
         rowId: { type: 'string', description: 'The activated row\'s `id`' },
+        row: { type: 'object', description: 'The full row object' },
+      },
+    },
+    'civ-row-expand': {
+      description: 'Fires when the user toggles an expandable row\'s chevron. Consumers should add `rowId` to `expandedRowIds` when `expanded === true`, or remove it when `expanded === false`. Disabled rows do not dispatch',
+      detail: {
+        rowId: { type: 'string', description: 'The toggled row\'s `id`' },
+        expanded: { type: 'boolean', description: 'Whether the row should now be expanded (the consumer\'s target state, not the previous state)' },
         row: { type: 'object', description: 'The full row object' },
       },
     },

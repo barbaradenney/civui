@@ -73,6 +73,14 @@ If you need spreadsheet-style 2D arrow-key navigation, the right answer is a sep
 
 <StoryEmbed id="layout-data-grid--master-detail-drawer" minHeight={400} />
 
+### Expandable rows
+
+<StoryEmbed id="layout-data-grid--expandable-rows" minHeight={400} />
+
+### Expandable rows → nested civ-data-grid
+
+<StoryEmbed id="layout-data-grid--expandable-nested-grid" minHeight={500} />
+
 [Open in Storybook →](pathname:///civui/storybook/?path=/story/layout-data-grid--default)
 
 ## Props
@@ -187,6 +195,56 @@ grid.addEventListener('civ-row-action', (e) => {
   if (e.detail.action === 'view') openDetail(e.detail.row);
 });
 ```
+
+## Expandable rows
+
+Set `row.expandable: true` on rows that should reveal an inline detail
+panel. When ANY row in the data set is expandable, the grid renders a
+leading chevron column. Non-expandable rows get an empty cell in that
+column; expandable rows get a chevron button that toggles between
+`chevron-right` and `chevron-down`.
+
+The detail content comes from `grid.expandTemplate` — a function
+`(row) => string | number | TemplateResult` you set as a JS property:
+
+```ts
+grid.rows = [
+  { id: '1', cells: { name: 'Smith' }, expandable: true },
+  { id: '2', cells: { name: 'Doe' } },        // not expandable; empty cell
+  { id: '3', cells: { name: 'Reyes' }, expandable: true },
+];
+
+grid.expandTemplate = (row) => html`
+  <p><strong>Notes for ${row.cells.name}</strong></p>
+  <p>${row.cells.notes ?? 'No notes recorded.'}</p>
+`;
+
+grid.expandedRowIds = [];
+grid.addEventListener('civ-row-expand', (e) => {
+  const { rowId, expanded } = e.detail;
+  grid.expandedRowIds = expanded
+    ? [...grid.expandedRowIds, rowId]
+    : grid.expandedRowIds.filter((id) => id !== rowId);
+});
+```
+
+**The detail row** is a new `<tr>` rendered immediately below the data
+row, with a single `<td>` spanning all visible columns. The td gets a
+tinted background (`--civ-color-base-lightest`) so the detail reads as
+a connected region under its parent.
+
+**Nesting a `civ-data-grid` inside `expandTemplate`** is supported and
+common for master-detail data hierarchies (e.g. applications → their
+supporting documents). See the "Expandable rows → nested civ-data-grid"
+story for the pattern.
+
+**Disabled rows** with `expandable: true` get a disabled chevron button
+— same opacity treatment as the rest of the row, and the toggle does
+not dispatch `civ-row-expand`.
+
+**Keyboard.** Unlike row activation, expand IS keyboard-accessible: the
+chevron is a real `<button>` with `aria-expanded` and `aria-controls`
+pointing at the detail `<td>`'s id. Tab focuses it, Enter/Space toggles.
 
 ## Responsive behavior
 

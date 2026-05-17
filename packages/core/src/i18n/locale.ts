@@ -72,6 +72,8 @@ export interface CivLocaleStrings {
   dataGridSelectRow: string;      // "Select row {row}"
   dataGridSelectAll: string;      // "Select all rows on this page"
   dataGridRowActions: string;     // "Actions for row {row}"
+  dataGridExpandRow: string;      // "Expand row {row}"
+  dataGridCollapseRow: string;    // "Collapse row {row}"
   dataGridEmpty: string;          // "No data to display"
   dataGridLoading: string;        // "Loading…"
   dataGridErrorLabel: string;     // "Failed to load data"
@@ -789,6 +791,8 @@ const defaultStrings: CivLocaleStrings = {
   dataGridSelectRow: 'Select row {row}',
   dataGridSelectAll: 'Select all rows on this page',
   dataGridRowActions: 'Actions for row {row}',
+  dataGridExpandRow: 'Expand row {row}',
+  dataGridCollapseRow: 'Collapse row {row}',
   dataGridEmpty: 'No data to display',
   dataGridLoading: 'Loading…',
   dataGridErrorLabel: 'Failed to load data',

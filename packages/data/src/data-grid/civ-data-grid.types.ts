@@ -16,6 +16,15 @@ export type GridSelectionMode = 'none' | 'single' | 'multiple';
 /** Horizontal text alignment within a cell. */
 export type GridCellAlign = 'start' | 'center' | 'end' | 'numeric';
 
+/** Input type for an editable cell. Drives which input element the grid swaps in. */
+export type GridCellInputType = 'text' | 'number' | 'select';
+
+/** Option for an editable column with `inputType: 'select'`. */
+export interface GridCellOption {
+  value: string;
+  label: string;
+}
+
 /**
  * Column definition. Set via the grid's `columns` JS property.
  */
@@ -42,6 +51,23 @@ export interface GridColumn {
    * The formatter receives `(value, row, rowIndex)`.
    */
   formatter?: (value: unknown, row: GridRow, rowIndex: number) => string | number | TemplateResult;
+  /**
+   * When true, cells in this column become click-to-edit. Disabled rows
+   * (`row.disabled`) are not editable even when this is set. Edit mode
+   * swaps the cell's text for an input of `inputType` (default `'text'`);
+   * Enter / blur / click-outside commit, Escape cancels.
+   */
+  editable?: boolean;
+  /** Input variant when the cell is editable. Defaults to `'text'`. */
+  inputType?: GridCellInputType;
+  /** Options for `inputType: 'select'`. Ignored for other input types. */
+  options?: GridCellOption[];
+  /**
+   * Per-cell validator. Returns an error message (non-empty string) to
+   * block commit and show the error inline, or `null` / empty string to
+   * accept. Runs on Enter / blur before the commit event fires.
+   */
+  validate?: (value: unknown, row: GridRow) => string | null;
 }
 
 /**

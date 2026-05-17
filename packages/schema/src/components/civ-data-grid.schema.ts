@@ -22,7 +22,7 @@ const schema: ComponentSchema = {
     },
     columns: {
       type: 'array',
-      description: 'Column definitions: `{ key, header, sortable?, align?, width?, formatter? }`. The formatter callback is web-only; native platforms render values through their own type-mapping logic',
+      description: 'Column definitions: `{ key, header, sortable?, align?, width?, hidden?, formatter?, editable?, inputType?, options?, validate? }`. Set `editable: true` + `inputType: \'text\' | \'number\' | \'select\'` to make cells in this column click-to-edit; provide `validate(value, row) => string | null` to block invalid commits. The formatter / validate callbacks are web-only; native platforms render and validate values through their own type-mapping logic',
       webOnly: true,
     },
     rows: {
@@ -144,6 +144,31 @@ const schema: ComponentSchema = {
       detail: {
         rowId: { type: 'string', description: 'The toggled row\'s `id`' },
         expanded: { type: 'boolean', description: 'Whether the row should now be expanded (the consumer\'s target state, not the previous state)' },
+        row: { type: 'object', description: 'The full row object' },
+      },
+    },
+    'civ-cell-edit-start': {
+      description: 'Fires when the user activates edit mode on an editable cell (click). Consumers can use this to track "currently editing" UI state or to fetch context for the edit',
+      detail: {
+        rowId: { type: 'string', description: 'The row being edited' },
+        columnKey: { type: 'string', description: 'The column key of the cell' },
+        row: { type: 'object', description: 'The full row object' },
+      },
+    },
+    'civ-cell-edit-commit': {
+      description: 'Fires when the user commits a valid new cell value (Enter / blur / click-outside). Consumers should update the underlying row data; the grid does not mutate `rows` directly. Validation errors block this event from firing',
+      detail: {
+        rowId: { type: 'string', description: 'The row that was edited' },
+        columnKey: { type: 'string', description: 'The column key of the cell' },
+        value: { type: 'object', description: 'The committed value. String for `inputType: text` / `select`; number for `inputType: number` (or empty string when blank)' },
+        row: { type: 'object', description: 'The full row object (pre-update)' },
+      },
+    },
+    'civ-cell-edit-cancel': {
+      description: 'Fires when the user cancels an in-progress edit (Escape). The cell reverts to its previous displayed value without any consumer state change',
+      detail: {
+        rowId: { type: 'string', description: 'The row whose edit was cancelled' },
+        columnKey: { type: 'string', description: 'The column key of the cell' },
         row: { type: 'object', description: 'The full row object' },
       },
     },

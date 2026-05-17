@@ -787,3 +787,230 @@ describe('civ-data-grid — expandable rows', () => {
     warn.mockRestore();
   });
 });
+
+describe('civ-data-grid — inline cell editing', () => {
+  it('does not show edit affordance for non-editable columns', async () => {
+    const el = await mountGrid({
+      columns: [{ key: 'name', header: 'Name' }],
+      rows: [{ id: '1', cells: { name: 'Smith' } }],
+    });
+    const cell = el.querySelector('tbody td') as HTMLElement;
+    expect(cell.classList.contains('civ-data-grid__td--editable')).toBe(false);
+    cell.click();
+    expect(el.querySelector('.civ-data-grid__edit-input')).toBeNull();
+  });
+
+  it('adds the --editable class to cells in editable columns', async () => {
+    const el = await mountGrid({
+      columns: [{ key: 'name', header: 'Name', editable: true }],
+      rows: [{ id: '1', cells: { name: 'Smith' } }],
+    });
+    const cell = el.querySelector('tbody td') as HTMLElement;
+    expect(cell.classList.contains('civ-data-grid__td--editable')).toBe(true);
+  });
+
+  it('starts edit mode and fires civ-cell-edit-start when an editable cell is clicked', async () => {
+    const el = await mountGrid({
+      columns: [{ key: 'name', header: 'Name', editable: true }],
+      rows: [{ id: '1', cells: { name: 'Smith' } }],
+    });
+    const handler = vi.fn();
+    el.addEventListener('civ-cell-edit-start', handler);
+    const cell = el.querySelector('tbody td') as HTMLElement;
+    cell.click();
+    await elementUpdated(el);
+    expect(handler).toHaveBeenCalledOnce();
+    expect(handler.mock.calls[0][0].detail).toMatchObject({ rowId: '1', columnKey: 'name' });
+    expect(el.querySelector('.civ-data-grid__edit-input')).not.toBeNull();
+  });
+
+  it('renders a <select> when inputType is "select"', async () => {
+    const el = await mountGrid({
+      columns: [{
+        key: 'status',
+        header: 'Status',
+        editable: true,
+        inputType: 'select',
+        options: [
+          { value: 'open', label: 'Open' },
+          { value: 'closed', label: 'Closed' },
+        ],
+      }],
+      rows: [{ id: '1', cells: { status: 'open' } }],
+    });
+    const cell = el.querySelector('tbody td') as HTMLElement;
+    cell.click();
+    await elementUpdated(el);
+    const select = el.querySelector('select.civ-data-grid__edit-input') as HTMLSelectElement;
+    expect(select).not.toBeNull();
+    expect(select.value).toBe('open');
+    expect(select.querySelectorAll('option').length).toBe(2);
+  });
+
+  it('renders type=number input when inputType is "number"', async () => {
+    const el = await mountGrid({
+      columns: [{ key: 'age', header: 'Age', editable: true, inputType: 'number' }],
+      rows: [{ id: '1', cells: { age: 42 } }],
+    });
+    const cell = el.querySelector('tbody td') as HTMLElement;
+    cell.click();
+    await elementUpdated(el);
+    const input = el.querySelector('.civ-data-grid__edit-input') as HTMLInputElement;
+    expect(input.type).toBe('number');
+    expect(input.value).toBe('42');
+  });
+
+  it('commits with civ-cell-edit-commit on Enter', async () => {
+    const el = await mountGrid({
+      columns: [{ key: 'name', header: 'Name', editable: true }],
+      rows: [{ id: '1', cells: { name: 'Smith' } }],
+    });
+    const handler = vi.fn();
+    el.addEventListener('civ-cell-edit-commit', handler);
+    (el.querySelector('tbody td') as HTMLElement).click();
+    await elementUpdated(el);
+    const input = el.querySelector('.civ-data-grid__edit-input') as HTMLInputElement;
+    input.value = 'Doe';
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    expect(handler).toHaveBeenCalledOnce();
+    expect(handler.mock.calls[0][0].detail).toMatchObject({
+      rowId: '1', columnKey: 'name', value: 'Doe',
+    });
+  });
+
+  it('commits with parsed numeric value when inputType is "number"', async () => {
+    const el = await mountGrid({
+      columns: [{ key: 'age', header: 'Age', editable: true, inputType: 'number' }],
+      rows: [{ id: '1', cells: { age: 42 } }],
+    });
+    const handler = vi.fn();
+    el.addEventListener('civ-cell-edit-commit', handler);
+    (el.querySelector('tbody td') as HTMLElement).click();
+    await elementUpdated(el);
+    const input = el.querySelector('.civ-data-grid__edit-input') as HTMLInputElement;
+    input.value = '99';
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    expect(handler.mock.calls[0][0].detail.value).toBe(99);
+    expect(typeof handler.mock.calls[0][0].detail.value).toBe('number');
+  });
+
+  it('cancels with civ-cell-edit-cancel on Escape and reverts to display mode', async () => {
+    const el = await mountGrid({
+      columns: [{ key: 'name', header: 'Name', editable: true }],
+      rows: [{ id: '1', cells: { name: 'Smith' } }],
+    });
+    const commitH = vi.fn();
+    const cancelH = vi.fn();
+    el.addEventListener('civ-cell-edit-commit', commitH);
+    el.addEventListener('civ-cell-edit-cancel', cancelH);
+    (el.querySelector('tbody td') as HTMLElement).click();
+    await elementUpdated(el);
+    const input = el.querySelector('.civ-data-grid__edit-input') as HTMLInputElement;
+    input.value = 'changed';
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+    await elementUpdated(el);
+    expect(cancelH).toHaveBeenCalledOnce();
+    expect(commitH).not.toHaveBeenCalled();
+    // Cell is back to display mode showing the original value.
+    expect(el.querySelector('.civ-data-grid__edit-input')).toBeNull();
+    expect(el.querySelector('tbody td')?.textContent?.trim()).toBe('Smith');
+  });
+
+  it('commits on blur', async () => {
+    const el = await mountGrid({
+      columns: [{ key: 'name', header: 'Name', editable: true }],
+      rows: [{ id: '1', cells: { name: 'Smith' } }],
+    });
+    const handler = vi.fn();
+    el.addEventListener('civ-cell-edit-commit', handler);
+    (el.querySelector('tbody td') as HTMLElement).click();
+    await elementUpdated(el);
+    const input = el.querySelector('.civ-data-grid__edit-input') as HTMLInputElement;
+    input.value = 'Doe';
+    input.dispatchEvent(new FocusEvent('blur', { bubbles: false }));
+    expect(handler).toHaveBeenCalledOnce();
+    expect(handler.mock.calls[0][0].detail.value).toBe('Doe');
+  });
+
+  it('blocks commit and shows inline error when validate returns a message', async () => {
+    const el = await mountGrid({
+      columns: [{
+        key: 'name',
+        header: 'Name',
+        editable: true,
+        validate: (v) => (typeof v === 'string' && v.length < 3 ? 'Too short' : null),
+      }],
+      rows: [{ id: '1', cells: { name: 'Smith' } }],
+    });
+    const handler = vi.fn();
+    el.addEventListener('civ-cell-edit-commit', handler);
+    (el.querySelector('tbody td') as HTMLElement).click();
+    await elementUpdated(el);
+    const input = el.querySelector('.civ-data-grid__edit-input') as HTMLInputElement;
+    input.value = 'No';
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    await elementUpdated(el);
+    expect(handler).not.toHaveBeenCalled();
+    const error = el.querySelector('.civ-data-grid__edit-error') as HTMLElement;
+    expect(error).not.toBeNull();
+    expect(error.textContent?.trim()).toBe('Too short');
+    expect(error.getAttribute('role')).toBe('alert');
+    // Still in edit mode.
+    expect(el.querySelector('.civ-data-grid__edit-input')).not.toBeNull();
+  });
+
+  it('commits a corrected value after a validation failure', async () => {
+    const el = await mountGrid({
+      columns: [{
+        key: 'name',
+        header: 'Name',
+        editable: true,
+        validate: (v) => (typeof v === 'string' && v.length < 3 ? 'Too short' : null),
+      }],
+      rows: [{ id: '1', cells: { name: 'Smith' } }],
+    });
+    const handler = vi.fn();
+    el.addEventListener('civ-cell-edit-commit', handler);
+    (el.querySelector('tbody td') as HTMLElement).click();
+    await elementUpdated(el);
+    let input = el.querySelector('.civ-data-grid__edit-input') as HTMLInputElement;
+    input.value = 'No';
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    await elementUpdated(el);
+    expect(handler).not.toHaveBeenCalled();
+    // Correct the value.
+    input = el.querySelector('.civ-data-grid__edit-input') as HTMLInputElement;
+    input.value = 'Doe';
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    expect(handler).toHaveBeenCalledOnce();
+    expect(handler.mock.calls[0][0].detail.value).toBe('Doe');
+  });
+
+  it('does not start edit mode on a disabled row', async () => {
+    const el = await mountGrid({
+      columns: [{ key: 'name', header: 'Name', editable: true }],
+      rows: [{ id: '1', cells: { name: 'Smith' }, disabled: true }],
+    });
+    const handler = vi.fn();
+    el.addEventListener('civ-cell-edit-start', handler);
+    const cell = el.querySelector('tbody td') as HTMLElement;
+    cell.click();
+    expect(handler).not.toHaveBeenCalled();
+    expect(el.querySelector('.civ-data-grid__edit-input')).toBeNull();
+  });
+
+  it('does not fire civ-row-activate when an editable cell is clicked on an interactive grid', async () => {
+    const el = await mountGrid({
+      columns: [{ key: 'name', header: 'Name', editable: true }],
+      rows: [{ id: '1', cells: { name: 'Smith' } }],
+      interactive: true,
+    });
+    const activate = vi.fn();
+    const editStart = vi.fn();
+    el.addEventListener('civ-row-activate', activate);
+    el.addEventListener('civ-cell-edit-start', editStart);
+    (el.querySelector('tbody td') as HTMLElement).click();
+    expect(editStart).toHaveBeenCalledOnce();
+    expect(activate).not.toHaveBeenCalled();
+  });
+});

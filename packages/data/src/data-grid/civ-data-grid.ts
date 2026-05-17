@@ -1,4 +1,5 @@
 import { html, nothing, type TemplateResult } from 'lit';
+import { ref } from 'lit/directives/ref.js';
 import { customElement, property, state } from 'lit/decorators.js';
 import { CivBaseElement, dispatch, t, generateId, devWarn } from '@civui/core';
 import '@civui/actions/action-button';
@@ -12,6 +13,8 @@ import type {
   GridResponsiveMode,
   GridSelectionMode,
   GridExpandTemplate,
+  GridCellInputType,
+  GridCellOption,
 } from './civ-data-grid.types.js';
 
 export type {
@@ -22,6 +25,8 @@ export type {
   GridResponsiveMode,
   GridSelectionMode,
   GridExpandTemplate,
+  GridCellInputType,
+  GridCellOption,
 };
 
 /**
@@ -69,6 +74,9 @@ export type {
  * @fires civ-row-action - { rowId, action, row } — user activated a row-action item
  * @fires civ-row-activate - { rowId, row } — user clicked a row body when `interactive` is set (master-detail trigger)
  * @fires civ-row-expand - { rowId, expanded, row } — user toggled an expandable row's chevron
+ * @fires civ-cell-edit-start - { rowId, columnKey, row } — user activated edit mode on an editable cell
+ * @fires civ-cell-edit-commit - { rowId, columnKey, value, row } — user committed a valid new value (Enter / blur / click-outside)
+ * @fires civ-cell-edit-cancel - { rowId, columnKey, row } — user cancelled an edit (Escape)
  *
  * **Pagination.** Render `<civ-pagination>` as a sibling next to the grid
  * and wire its `civ-page-change` event to update the grid's `rows`.
@@ -111,6 +119,11 @@ export class CivDataGrid extends CivBaseElement {
   @property({ type: Boolean }) interactive = false;
   @property({ attribute: false }) expandedRowIds: string[] = [];
   @property({ attribute: false }) expandTemplate?: GridExpandTemplate;
+
+  /** Internal edit-mode tracking — one cell at a time. */
+  @state() private _editingCell: { rowId: string; columnKey: string } | null = null;
+  /** Validation error from the current edit (rendered inline below the input). */
+  @state() private _editError = '';
 
   @state() private _instanceId = generateId('civ-data-grid');
 
@@ -462,13 +475,186 @@ export class CivDataGrid extends CivBaseElement {
 
   private _renderBodyCell(col: GridColumn, row: GridRow, rowIndex: number): TemplateResult {
     const raw = row.cells?.[col.key];
-    const value = col.formatter ? col.formatter(raw, row, rowIndex) : (raw ?? '');
     const alignClass = col.align ? `civ-data-grid__td--align-${col.align}` : '';
+    const isEditable = !!col.editable && !row.disabled;
+    const isEditing = isEditable && this._isEditing(row.id, col.key);
+
+    if (isEditing) {
+      return this._renderEditCell(col, row, raw, alignClass);
+    }
+
+    const value = col.formatter ? col.formatter(raw, row, rowIndex) : (raw ?? '');
+    const editableClass = isEditable ? 'civ-data-grid__td--editable' : '';
+    const onClick = isEditable
+      ? (e: Event) => this._onCellClick(e, row, col)
+      : undefined;
     // The mobile stacked pattern uses a data-label attribute so CSS can
     // render the column header next to the value in narrow viewports.
     return html`
-      <td class="civ-data-grid__td ${alignClass}" data-label="${col.header}">${value as unknown as TemplateResult}</td>
+      <td
+        class="civ-data-grid__td ${alignClass} ${editableClass}"
+        data-label="${col.header}"
+        @click="${onClick}"
+      >${value as unknown as TemplateResult}</td>
     `;
+  }
+
+  private _renderEditCell(
+    col: GridColumn,
+    row: GridRow,
+    raw: unknown,
+    alignClass: string,
+  ): TemplateResult {
+    const inputType = col.inputType ?? 'text';
+    const errorId = `${this._instanceId}-edit-error-${row.id}-${col.key}`;
+    const showError = this._editError !== '';
+    const errorClass = showError ? 'civ-data-grid__td--edit-error' : '';
+    return html`
+      <td
+        class="civ-data-grid__td civ-data-grid__td--editing ${alignClass} ${errorClass}"
+        data-label="${col.header}"
+      >
+        ${inputType === 'select'
+          ? this._renderEditSelect(col, row, raw, showError ? errorId : undefined)
+          : this._renderEditInput(col, row, raw, inputType, showError ? errorId : undefined)}
+        ${showError
+          ? html`<p
+              id="${errorId}"
+              class="civ-data-grid__edit-error"
+              role="alert"
+            >${this._editError}</p>`
+          : nothing}
+      </td>
+    `;
+  }
+
+  private _renderEditInput(
+    col: GridColumn,
+    row: GridRow,
+    raw: unknown,
+    inputType: 'text' | 'number',
+    errorId: string | undefined,
+  ): TemplateResult {
+    return html`
+      <input
+        class="civ-data-grid__edit-input"
+        type="${inputType}"
+        .value="${raw == null ? '' : String(raw)}"
+        aria-label="${col.header}"
+        aria-invalid="${errorId ? 'true' : 'false'}"
+        aria-describedby="${errorId ?? nothing}"
+        @keydown="${(e: KeyboardEvent) => this._onEditKeydown(e, row, col)}"
+        @blur="${(e: Event) => this._onEditBlur(e, row, col)}"
+        ${ref((el) => this._focusEditInput(el as HTMLInputElement | undefined))}
+      />
+    `;
+  }
+
+  private _renderEditSelect(
+    col: GridColumn,
+    row: GridRow,
+    raw: unknown,
+    errorId: string | undefined,
+  ): TemplateResult {
+    const options = col.options ?? [];
+    return html`
+      <select
+        class="civ-data-grid__edit-input"
+        .value="${raw == null ? '' : String(raw)}"
+        aria-label="${col.header}"
+        aria-invalid="${errorId ? 'true' : 'false'}"
+        aria-describedby="${errorId ?? nothing}"
+        @keydown="${(e: KeyboardEvent) => this._onEditKeydown(e, row, col)}"
+        @blur="${(e: Event) => this._onEditBlur(e, row, col)}"
+        ${ref((el) => this._focusEditInput(el as HTMLSelectElement | undefined))}
+      >
+        ${options.map(
+          (opt) => html`
+            <option value="${opt.value}" ?selected="${String(raw) === opt.value}">${opt.label}</option>
+          `,
+        )}
+      </select>
+    `;
+  }
+
+  private _focusEditInput(el: HTMLInputElement | HTMLSelectElement | undefined): void {
+    if (!el) return;
+    // Defer to next microtask so the input is attached when we focus.
+    queueMicrotask(() => {
+      if (!el.isConnected) return;
+      el.focus();
+      if ('select' in el && typeof el.select === 'function') {
+        try { el.select(); } catch { /* selects don't support .select */ }
+      }
+    });
+  }
+
+  private _isEditing(rowId: string, columnKey: string): boolean {
+    return this._editingCell?.rowId === rowId && this._editingCell?.columnKey === columnKey;
+  }
+
+  private _onCellClick(e: Event, row: GridRow, col: GridColumn): void {
+    // Don't fire civ-row-activate when an editable cell is clicked —
+    // the cell-click is the edit trigger. Stop propagation so the row's
+    // click handler skips this event.
+    if (this.interactive) e.stopPropagation();
+    if (!col.editable || row.disabled) return;
+    if (this._isEditing(row.id, col.key)) return;
+    this._editingCell = { rowId: row.id, columnKey: col.key };
+    this._editError = '';
+    dispatch(this, 'civ-cell-edit-start', { rowId: row.id, columnKey: col.key, row });
+  }
+
+  private _onEditKeydown(e: KeyboardEvent, row: GridRow, col: GridColumn): void {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      this._commitEdit(e.currentTarget as HTMLInputElement | HTMLSelectElement, row, col);
+    } else if (e.key === 'Escape') {
+      e.preventDefault();
+      this._cancelEdit(row, col);
+    }
+  }
+
+  private _onEditBlur(e: Event, row: GridRow, col: GridColumn): void {
+    // Blur commits — matches Google Sheets / Excel UX.
+    this._commitEdit(e.currentTarget as HTMLInputElement | HTMLSelectElement, row, col);
+  }
+
+  private _commitEdit(
+    input: HTMLInputElement | HTMLSelectElement,
+    row: GridRow,
+    col: GridColumn,
+  ): void {
+    if (!this._isEditing(row.id, col.key)) return;
+    const rawValue = input.value;
+    const value: unknown = col.inputType === 'number'
+      ? (rawValue === '' ? '' : Number(rawValue))
+      : rawValue;
+    if (col.validate) {
+      const error = col.validate(value, row);
+      if (error) {
+        this._editError = error;
+        // Keep the user in edit mode so they can correct.
+        // Re-focus the input next microtask in case blur caused this.
+        queueMicrotask(() => input.isConnected && input.focus());
+        return;
+      }
+    }
+    this._editError = '';
+    this._editingCell = null;
+    dispatch(this, 'civ-cell-edit-commit', {
+      rowId: row.id,
+      columnKey: col.key,
+      value,
+      row,
+    });
+  }
+
+  private _cancelEdit(row: GridRow, col: GridColumn): void {
+    if (!this._isEditing(row.id, col.key)) return;
+    this._editingCell = null;
+    this._editError = '';
+    dispatch(this, 'civ-cell-edit-cancel', { rowId: row.id, columnKey: col.key, row });
   }
 
   private _renderSelectCell(row: GridRow, isSelected: boolean): TemplateResult {

@@ -2202,6 +2202,48 @@
     background: transparent;
   }
 
+  /* Editable cells — hover hint that the cell is interactive; edit mode
+     swaps the cell content for an input. */
+  .civ-data-grid__td--editable {
+    cursor: text;
+  }
+
+  .civ-data-grid__td--editable:hover {
+    background-color: var(--civ-color-base-lightest);
+  }
+
+  .civ-data-grid__td--editing {
+    padding: var(--civ-spacing-1);
+    background-color: var(--civ-color-primary-lightest);
+  }
+
+  .civ-data-grid__td--edit-error {
+    background-color: var(--civ-color-error-lightest);
+  }
+
+  .civ-data-grid__edit-input {
+    @apply civ-w-full civ-border civ-rounded civ-px-2 civ-py-1 civ-bg-white;
+    border-color: var(--civ-color-base-light);
+    font: inherit;
+    font-size: var(--civ-typography-fontSize-base);
+    color: var(--civ-color-base-darkest);
+  }
+
+  .civ-data-grid__edit-input:focus {
+    outline: none;
+    border-color: var(--civ-color-primary-DEFAULT);
+  }
+
+  .civ-data-grid__edit-input[aria-invalid="true"] {
+    border-color: var(--civ-color-error-DEFAULT);
+  }
+
+  .civ-data-grid__edit-error {
+    @apply civ-m-0 civ-mt-1;
+    color: var(--civ-color-error-dark);
+    font-size: var(--civ-typography-fontSize-sm);
+  }
+
   .civ-data-grid__select-wrap {
     @apply civ-inline-flex civ-items-center civ-justify-center;
     cursor: pointer;

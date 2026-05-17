@@ -494,3 +494,50 @@ export const ExpandableNestedGrid: Story = {
     return html`<civ-data-grid class="story-nested" caption="Applications with nested document grid"></civ-data-grid>`;
   },
 };
+
+export const InlineCellEditing: Story = {
+  name: 'Inline Cell Editing',
+  render: () => {
+    setTimeout(() => {
+      const grid = document.querySelector('civ-data-grid.story-edit') as any;
+      if (!grid) return;
+      // Keep a mutable copy for in-place edits.
+      const data = toRows(SAMPLE_DATA);
+      grid.rows = data;
+      grid.columns = [
+        { key: 'id', header: 'Application ID', width: '9rem' },
+        { key: 'applicant', header: 'Applicant', editable: true,
+          validate: (v: unknown) =>
+            typeof v === 'string' && v.trim().length < 3
+              ? 'Applicant name must be at least 3 characters'
+              : null,
+        },
+        { key: 'type', header: 'Type', editable: true, inputType: 'select',
+          options: [
+            { value: 'Disability', label: 'Disability' },
+            { value: 'Pension', label: 'Pension' },
+            { value: 'Education', label: 'Education' },
+            { value: 'Healthcare', label: 'Healthcare' },
+          ],
+        },
+        { key: 'status', header: 'Status' },
+        { key: 'updated', header: 'Last updated', align: 'end' },
+      ];
+      grid.addEventListener('civ-cell-edit-commit', (e: Event) => {
+        const { rowId, columnKey, value } = (e as CustomEvent).detail;
+        grid.rows = data.map((r) =>
+          r.id === rowId ? { ...r, cells: { ...r.cells, [columnKey]: value } } : r,
+        );
+      });
+    }, 0);
+    return html`
+      <div>
+        <p class="civ-mb-3">
+          Click <strong>Applicant</strong> or <strong>Type</strong> cells to edit.
+          Enter or blur commits; Escape cancels. Applicant requires ≥3 characters.
+        </p>
+        <civ-data-grid class="story-edit" caption="Applications (editable)"></civ-data-grid>
+      </div>
+    `;
+  },
+};

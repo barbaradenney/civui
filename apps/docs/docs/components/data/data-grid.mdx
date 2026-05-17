@@ -81,6 +81,10 @@ If you need spreadsheet-style 2D arrow-key navigation, the right answer is a sep
 
 <StoryEmbed id="layout-data-grid--expandable-nested-grid" minHeight={500} />
 
+### Inline cell editing
+
+<StoryEmbed id="layout-data-grid--inline-cell-editing" minHeight={400} />
+
 [Open in Storybook →](pathname:///civui/storybook/?path=/story/layout-data-grid--default)
 
 ## Props
@@ -245,6 +249,61 @@ not dispatch `civ-row-expand`.
 **Keyboard.** Unlike row activation, expand IS keyboard-accessible: the
 chevron is a real `<button>` with `aria-expanded` and `aria-controls`
 pointing at the detail `<td>`'s id. Tab focuses it, Enter/Space toggles.
+
+## Inline cell editing
+
+Mark columns as `editable: true` to make their cells click-to-edit.
+The grid swaps the cell text for an input on click and commits on
+Enter / blur / click-outside. Escape cancels.
+
+```ts
+grid.columns = [
+  { key: 'name', header: 'Name', editable: true },
+  {
+    key: 'role',
+    header: 'Role',
+    editable: true,
+    inputType: 'select',
+    options: [
+      { value: 'admin', label: 'Admin' },
+      { value: 'editor', label: 'Editor' },
+      { value: 'viewer', label: 'Viewer' },
+    ],
+  },
+  {
+    key: 'quota',
+    header: 'Quota',
+    editable: true,
+    inputType: 'number',
+    validate: (v) => (typeof v === 'number' && v >= 0 ? null : 'Must be ≥ 0'),
+  },
+];
+
+grid.addEventListener('civ-cell-edit-commit', (e) => {
+  const { rowId, columnKey, value } = e.detail;
+  // The grid never mutates rows directly — update your source of truth.
+  rows = rows.map((r) =>
+    r.id === rowId ? { ...r, cells: { ...r.cells, [columnKey]: value } } : r,
+  );
+  grid.rows = rows;
+});
+```
+
+**Input types**: `'text'` (default), `'number'` (commits parsed to `Number`),
+`'select'` (requires `column.options`).
+
+**Validation**: `column.validate(value, row) => string | null`. Returning a
+non-empty string blocks `civ-cell-edit-commit`, keeps the cell in edit mode,
+and renders the error inline below the input with `role="alert"`.
+
+**Other events**: `civ-cell-edit-start` fires on click; `civ-cell-edit-cancel`
+fires on Escape. The grid never mutates `rows` — consumers reflect the new
+value back into their data and reassign `grid.rows`.
+
+**Edit mode and other features**:
+- Disabled rows (`row.disabled`) are not editable even when `column.editable` is set.
+- Editable cells in an `interactive` grid: clicking the cell starts edit mode but does NOT fire `civ-row-activate`. The cell-click stops propagation.
+- Only one cell is in edit mode at a time. Starting an edit on another cell would not be a v1 concern (consumer can blur first).
 
 ## Responsive behavior
 

@@ -1983,6 +1983,50 @@
     }
   }
 
+  /* ── Column Visibility ──────────────────────────────────────── */
+
+  civ-column-visibility {
+    position: relative;
+    display: inline-block;
+  }
+
+  .civ-column-visibility__panel {
+    @apply civ-absolute civ-bg-white civ-border civ-border-base-light
+           civ-rounded civ-shadow-lg civ-py-2;
+    top: calc(100% + var(--civ-spacing-1));
+    min-width: 14rem;
+    max-width: 20rem;
+    z-index: var(--civ-z-overlay);
+  }
+
+  .civ-column-visibility__panel--align-start {
+    inset-inline-start: 0;
+  }
+
+  .civ-column-visibility__panel--align-end {
+    inset-inline-end: 0;
+  }
+
+  .civ-column-visibility__option {
+    @apply civ-flex civ-items-center civ-gap-2 civ-px-3 civ-py-2 civ-cursor-pointer;
+    color: var(--civ-color-base-darkest);
+    user-select: none;
+  }
+
+  .civ-column-visibility__option:hover {
+    background-color: var(--civ-color-base-lightest);
+  }
+
+  .civ-column-visibility__option input[type="checkbox"] {
+    flex-shrink: 0;
+    accent-color: var(--civ-color-primary-DEFAULT);
+  }
+
+  .civ-column-visibility__option-label {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
   /* ── Data Grid ─────────────────────────────────────────────── */
 
   .civ-data-grid {

@@ -123,6 +123,7 @@ const config: StorybookConfig = {
       '@civui/data/toolbar': resolve(root, 'packages/data/src/toolbar/index.ts'),
       '@civui/data/bulk-actions': resolve(root, 'packages/data/src/bulk-actions/index.ts'),
       '@civui/data/filterable-list': resolve(root, 'packages/data/src/filterable-list/index.ts'),
+      '@civui/data/column-visibility': resolve(root, 'packages/data/src/column-visibility/index.ts'),
       '@civui/data': resolve(root, 'packages/data/src/index.ts'),
       // Storybook utilities — used by stories that wrap demos in
       // `<civ-demo-frame>`. Resolve to source so the storybook build

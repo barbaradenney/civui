@@ -1,0 +1,11 @@
+{/* Generated from @civui/schema by tools/sync-doc-tables.ts.
+    Do not edit by hand — run `pnpm sync:doc-tables` to regenerate. */}
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `columns` | `array` | — | The full column set, mirrored from the host data-grid. Each entry is a `GridColumn` with at least `key` and `header`. The component derives its checkbox list from this array |
+| `hidden-columns` | `array` | — | Keys of columns currently hidden. Controlled — the component never mutates this without dispatching `civ-column-visibility-change` first. Pass `[]` for "all visible" |
+| `label` | `string` | `''` | Trigger button text. Defaults to the i18n "Columns" string. Override for localization or to be more specific ("Show columns", "Columns visible") |
+| `min-visible` | `number` | `1` | Minimum number of columns that must stay visible. Prevents the user from hiding everything by unchecking the last checkbox — the component refuses the toggle and re-renders to restore the checked state. Default `1` |
+| `align` | `'start'` \| `'end'` | `'end'` | Horizontal alignment of the popover panel relative to the trigger. `end` (default) right-aligns; `start` left-aligns |
+| `open` | `boolean` | `false` | Controlled open state. Reflects as the host `open` attribute. Setting it programmatically opens / closes the panel; the component also toggles it internally on trigger click and Escape key |

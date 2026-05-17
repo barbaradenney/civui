@@ -150,7 +150,7 @@ export class CivDataGrid extends CivBaseElement {
               ${this.selectable === 'single'
                 ? html`<th scope="col" class="civ-data-grid__th civ-data-grid__th--select"><span class="civ-sr-only">${t('dataGridSelectRow').replace('{row}', '')}</span></th>`
                 : nothing}
-              ${this.columns.map((col) => this._renderHeaderCell(col))}
+              ${this._visibleColumns.map((col) => this._renderHeaderCell(col))}
               ${this._hasAnyRowActions() ? html`<th scope="col" class="civ-data-grid__th civ-data-grid__th--actions"><span class="civ-sr-only">Actions</span></th>` : nothing}
             </tr>
           </thead>
@@ -265,7 +265,7 @@ export class CivDataGrid extends CivBaseElement {
         aria-selected="${this.selectable !== 'none' ? String(isSelected) : ''}"
       >
         ${this.selectable !== 'none' ? this._renderSelectCell(row, isSelected) : nothing}
-        ${this.columns.map((col) => this._renderBodyCell(col, row, rowIndex))}
+        ${this._visibleColumns.map((col) => this._renderBodyCell(col, row, rowIndex))}
         ${this._hasAnyRowActions() ? this._renderActionsCell(row) : nothing}
       </tr>
     `;
@@ -421,8 +421,12 @@ export class CivDataGrid extends CivBaseElement {
     dispatch(this, 'civ-row-action', { rowId: row.id, action: action.id, row });
   }
 
+  private get _visibleColumns(): GridColumn[] {
+    return this.columns.filter((c) => !c.hidden);
+  }
+
   private _totalColumnCount(): number {
-    let count = this.columns.length;
+    let count = this._visibleColumns.length;
     if (this.selectable !== 'none') count += 1;
     if (this._hasAnyRowActions()) count += 1;
     return count;

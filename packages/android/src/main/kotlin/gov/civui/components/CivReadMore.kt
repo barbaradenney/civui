@@ -24,6 +24,7 @@ fun CivReadMore(
     icon: String = "",
     size: String = "default",
     inline: Boolean = false,
+    noFadeTrigger: Boolean = false,
     modifier: Modifier = Modifier,
     onToggle: ((Boolean) -> Unit)? = null,
     onAnalytics: ((event: String, data: Map<String, Any>?) -> Unit)? = null,

@@ -29,6 +29,11 @@ public struct CivReadMore: View {
     /// Render inline so the trigger flows as the last words of the teaser.
     public var isInline: Bool
 
+    /// Opt out of the default fade-and-overlay treatment (block mode only).
+    /// When true, the trigger sits below the teaser as a plain button instead
+    /// of floating over a gradient at the bottom of the text.
+    public var isNoFadeTrigger: Bool
+
     /// Called when the expanded state changes.
     public var onToggle: ((Bool) -> Void)?
 
@@ -42,6 +47,7 @@ public struct CivReadMore: View {
         icon: String = "",
         size: String = "default",
         isInline: Bool = false,
+        isNoFadeTrigger: Bool = false,
         onToggle: ((Bool) -> Void)? = nil,
         onAnalytics: ((String, [String: Any]?) -> Void)? = nil
     ) {
@@ -51,6 +57,7 @@ public struct CivReadMore: View {
         self.icon = icon
         self.size = size
         self.isInline = isInline
+        self.isNoFadeTrigger = isNoFadeTrigger
         self.onToggle = onToggle
         self.onAnalytics = onAnalytics
     }

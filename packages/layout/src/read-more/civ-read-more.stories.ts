@@ -30,6 +30,7 @@ disclosure when there is no useful teaser to show.
     icon: { control: 'text' },
     size: { control: 'select', options: ['default', 'sm'] },
     inline: { control: 'boolean' },
+    noFadeTrigger: { control: 'boolean' },
   },
 };
 
@@ -149,6 +150,51 @@ export const Inline: Story = {
         </span>
       </civ-read-more>
     </p>
+  `,
+};
+
+export const NoFadeTrigger: Story = {
+  name: 'No fade trigger (plain button below text)',
+  render: () => html`
+    <civ-read-more no-fade-trigger>
+      <p>
+        You may be eligible for a benefit if you meet certain service and
+        discharge criteria.
+      </p>
+      <div data-rest>
+        <p>
+          Specifically, you must have served at least 24 months of active duty
+          and been discharged under conditions other than dishonorable. Some
+          benefits also require a documented service-connected disability.
+        </p>
+      </div>
+    </civ-read-more>
+  `,
+};
+
+export const OnColoredBackground: Story = {
+  name: 'On a colored background (override --civ-read-more-bg)',
+  render: () => html`
+    <div
+      class="civ-p-6 civ-rounded"
+      style="background-color: var(--civ-color-info-lighter);"
+    >
+      <civ-read-more style="--civ-read-more-bg: var(--civ-color-info-lighter);">
+        <p>
+          The fade defaults to white. On a colored card, override
+          <code>--civ-read-more-bg</code> with the card's fill so the gradient
+          resolves to the surrounding color instead of fading to white.
+        </p>
+        <div data-rest>
+          <p>
+            Without the override, the gradient would fade from the page text
+            into a white band — visually disconnected from the colored card it
+            sits in. With the override matched to the card color, the trigger
+            reads as part of the same surface.
+          </p>
+        </div>
+      </civ-read-more>
+    </div>
   `,
 };
 

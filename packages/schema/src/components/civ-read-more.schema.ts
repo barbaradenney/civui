@@ -44,6 +44,13 @@ const schema: ComponentSchema = {
       default: false,
       reflect: true,
     },
+    noFadeTrigger: {
+      type: 'boolean',
+      description: 'Opt out of the default block-mode fade-and-overlay treatment. By default (collapsed, block mode), the teaser fades into `--civ-read-more-bg` at the bottom and the trigger sits centered over the fade so the affordance reads as part of the text. Setting this prop reverts to the older layout — plain button stacked below the teaser. Inline mode and the expanded state are unaffected either way.',
+      default: false,
+      reflect: true,
+      attribute: 'no-fade-trigger',
+    },
   },
 
   events: {
